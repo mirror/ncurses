@@ -33,14 +33,12 @@
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control
---  $Revision: 1.5 $
---  Binding Version 00.93
+--  $Revision: 1.8 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
-with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 with Sample.Form_Demo.Aux;
-with Sample.Explanation; use Sample.Explanation;
 
 package body Sample.Form_Demo.Handler is
 

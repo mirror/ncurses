@@ -26,19 +26,7 @@
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
 
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
-Caveats:
-
-   This is the first delivery of this binding. It has not been
-   extensively tested. So I declare this as BETA level software,
-   although it is delivered with an official release of ncurses.
-
-   You should install the ncurses distribution around this binding
-   first before you try to run the sample.
-
-   This Binding is currently strictly for the GNAT compiler, because
-   in one place I use a GNAT specfic runtime module (see doc.)
-
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 
 The documentation is provided in HTML format in the ./html 
 subdirectory. The main document is named index.html

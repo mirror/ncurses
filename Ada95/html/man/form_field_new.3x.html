@@ -1,0 +1,122 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>form_field_new</STRONG> - create and destroy form fields
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><form.h></STRONG>
+       FIELD *new_field(int height, int width,
+                        int toprow, int leftcol,
+                        int offscreen, int nbuffers);
+       FIELD *dup_field(FIELD *field, int toprow, int leftcol);
+       FIELD *link_field(FIELD *field, int toprow, int leftcol);
+       int free_field(FIELD *field);
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  function <STRONG>new_field</STRONG> allocates a new field and initial-
+       izes it from the parameters given: height, width,  row  of
+       upper-left  corner,  column  of  upper-left corner, number
+       off-screen rows, and number of additional working buffers.
+
+       The  function  <STRONG>dup_field</STRONG> duplicates a field at a new loca-
+       tion.  Most attributes (including current contents,  size,
+       validation  type, buffer count, growth threshold, justifi-
+       cation, foreground, background,  pad  character,  options,
+       and  user pointer) are copied.  Field status and the field
+       page bit are not copied.
+
+       The function <STRONG>link_field</STRONG> acts like <STRONG>dup_field</STRONG>, but  the  new
+       field  shares  buffers with its parent.  Attribute data is
+       separate.
+
+       The function <STRONG>free_field</STRONG>  de-allocates  storage  associated
+       with a field.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The function, <STRONG>new_field</STRONG>, <STRONG>dup_field</STRONG>, <STRONG>link_field</STRONG> return <STRONG>NULL</STRONG>
+       on error.
+
+       The function <STRONG>free_field</STRONG> returns one of the following:
+
+       <STRONG>E_OK</STRONG> The routine succeeded.
+
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
+
+       <STRONG>E_BAD_ARGUMENT</STRONG>
+            Routine detected an incorrect or  out-of-range  argu-
+            ment.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3X)</A></STRONG>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The header file <STRONG><form.h></STRONG> automatically includes the header
+       file <STRONG><curses.h></STRONG>.
+       These routines emulate the System V forms  library.   They
+       were not supported on Version 7 or BSD versions.
+
+       It  may be unwise to count on the set of attributes copied
+       by  <STRONG><A HREF="dup_field.3x.html">dup_field(3X)</A></STRONG>  being  portable;  the  System  V  forms
+       library  documents  are  not  very  explicit  on what gets
+       copied and was not.
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
+       curses by Eric S. Raymond.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

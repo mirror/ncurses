@@ -28,14 +28,14 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1997             *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
  ****************************************************************************/
 
 #include "cursesf.h"
 #include "cursesapp.h"
 #include "internal.h"
 
-MODULE_ID("$Id: cursesf.cc,v 1.7 1998/02/11 12:13:41 tom Exp $")
+MODULE_ID("$Id: cursesf.cc,v 1.9 1999/05/16 17:29:36 juergen Exp $")
   
 NCursesFormField::~NCursesFormField () {
   if (field)

@@ -1,0 +1,70 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>addchstr</STRONG>,  <STRONG>addchnstr</STRONG>,  <STRONG>waddchstr</STRONG>,  <STRONG>waddchnstr</STRONG>, <STRONG>mvaddchstr</STRONG>,
+       <STRONG>mvaddchnstr</STRONG>, <STRONG>mvwaddchstr</STRONG>, <STRONG>mvwaddchnstr</STRONG> - add a  string  of
+       characters (and attributes) to a <STRONG>curses</STRONG> window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>int</STRONG> <STRONG>addchstr(const</STRONG> <STRONG>chtype</STRONG> <STRONG>*chstr);</STRONG>
+       <STRONG>int</STRONG> <STRONG>addchnstr(const</STRONG> <STRONG>chtype</STRONG> <STRONG>*chstr,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddchstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>*chstr);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddchnstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>*chstr,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvaddchstr(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>*chstr);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvaddchnstr(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>*chstr,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwaddchstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG>  <STRONG>x,</STRONG>  <STRONG>const</STRONG>  <STRONG>chtype</STRONG>
+       <STRONG>*chstr);</STRONG>
+       <STRONG>int</STRONG>  <STRONG>mvwaddchnstr(WINDOW</STRONG>  <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG>
+       <STRONG>*chstr,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These routines copy <EM>chstr</EM> into the window image  structure
+       at  and  after the current cursor position.  The four rou-
+       tines with <EM>n</EM> as the last argument copy at most <EM>n</EM> elements,
+       but  no  more than will fit on the line.  If <STRONG>n</STRONG>=<STRONG>-1</STRONG> then the
+       whole string is copied, to the maximum number  of  charac-
+       ters that will fit on the line.
+
+       The window cursor is <EM>not</EM> advanced, and these routines work
+       faster than <STRONG>waddnstr</STRONG>.  On the other hand, they don't  per-
+       form  any  kind  of  checking  (such  as  for the newline,
+       backspace, or  carriage  return  characters),  they  don't
+       advance  the  current  cursor  position, they don't expand
+       other control characters to ^-escapes, and  they  truncate
+       the  string  if  it  crosses the right margin, rather then
+       wrapping it around to the new line.
+
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+       All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on
+       success  (the  SVr4 manuals specify only "an integer value
+       other than <STRONG>ERR</STRONG>") upon successful completion, unless other-
+       wise noted in the preceding routine descriptions.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that all routines except <STRONG>waddchnstr</STRONG> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       All  these  entry  points  are described in the XSI Curses
+       standard, Issue 4.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>.
+
+</PRE>
+</BODY>
+</HTML>

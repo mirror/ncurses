@@ -4,9 +4,9 @@
  *   written by Anatoly Ivasyuk (anatoly@nick.csh.rit.edu)
  *
  *   Demo code for NCursesMenu and NCursesForm written by
- *   Juergen Pfeifer <Juergen.Pfeifer@T-Online.de>
+ *   Juergen Pfeifer <juergen.pfeifer@gmx.net>
  *
- * $Id: demo.cc,v 1.13 1998/02/19 16:54:54 florian Exp $
+ * $Id: demo.cc,v 1.18 1999/09/11 18:57:54 tom Exp $
  */
 
 #include "cursesapp.h"
@@ -19,10 +19,12 @@
 
 extern "C" unsigned int sleep(unsigned int);
 
+#undef index	// needed for NeXT
+
 //
 // -------------------------------------------------------------------------
 //
-class SillyDemo 
+class SillyDemo
 {
   public:
   void run(int sleeptime) {
@@ -128,8 +130,8 @@ class UserData
 private:
   int u;
 public:
-  UserData(int x) : u(x) {} 
-  int sleeptime() const { return u; }  
+  UserData(int x) : u(x) {}
+  int sleeptime() const { return u; }
 };
 //
 // -------------------------------------------------------------------------
@@ -146,7 +148,7 @@ public:
 
   bool action() {
     SillyDemo a;
-    a.run(UserData()->sleeptime());
+    a.run(NCursesUserItem<T>::UserData()->sleeptime());
     return FALSE;
   }
 };
@@ -167,7 +169,7 @@ public:
 class Label : public NCursesFormField
 {
 public:
-  Label(const char*title,
+  Label(const char* title,
 	int row, int col)
     : NCursesFormField(1,(int)::strlen(title),row,col) {
       set_value(title);
@@ -203,10 +205,10 @@ private:
   Enumeration_Field *eft;
 
   static char *weekdays[];
-  
+
 public:
   TestForm() : NCursesForm(13,51,(lines()-15)/2,(cols()-53)/2) {
-    
+
     F     = new NCursesFormField*[10];
     mft   = new MyFieldType('X');
     ift   = new Integer_Field(0,1,10);
@@ -222,10 +224,10 @@ public:
     F[7]  = new NCursesFormField(1,12,3,35);
     F[8]  = new NCursesFormField(4,46,6,1,2);
     F[9]  = new NCursesFormField();
-  
+
     InitForm(F,TRUE,TRUE);
     boldframe();
-    
+
     F[5]->set_fieldtype(*eft);
     F[6]->set_fieldtype(*ift);
 
@@ -274,6 +276,48 @@ public:
 //
 // -------------------------------------------------------------------------
 //
+class PadAction : public NCursesMenuItem
+{
+public:
+  PadAction(const char* s) : NCursesMenuItem(s) {
+  }
+
+  bool action() {
+    const int GRIDSIZE = 3;
+    const int PADSIZE  = 200;
+    unsigned gridcount = 0;
+
+    NCursesPanel std;
+    NCursesPanel P(std.lines()-2,std.cols()-2,1,1);
+    NCursesFramedPad FP(P,PADSIZE,PADSIZE);
+
+    for (int i=0; i < PADSIZE; i++) {
+      for (int j=0; j < PADSIZE; j++) {
+	if (i % GRIDSIZE == 0 && j % GRIDSIZE == 0) {
+	  if (i==0 || j==0)
+	    FP.addch('+');
+	  else
+	    FP.addch((chtype)('A' + (gridcount++ % 26)));
+	}
+	else if (i % GRIDSIZE == 0)
+	  FP.addch('-');
+	else if (j % GRIDSIZE == 0)
+	  FP.addch('|');
+	else
+	  FP.addch(' ');
+      }
+    }
+
+    P.label("Pad Demo",NULL);
+    FP();
+    P.clear();
+    return FALSE;
+  }
+};
+
+//
+// -------------------------------------------------------------------------
+//
 class PassiveItem : public NCursesMenuItem {
 public:
   PassiveItem(const char* text) : NCursesMenuItem(text) {
@@ -289,24 +333,26 @@ private:
   NCursesPanel* P;
   NCursesMenuItem** I;
   UserData *u;
+  #define n_items 7
 
 public:
-  MyMenu () 
-    : NCursesMenu (8, 8, (lines()-10)/2, (cols()-10)/2)
+  MyMenu ()
+    : NCursesMenu (n_items+2, 8, (lines()-10)/2, (cols()-10)/2)
   {
     u = new UserData(1);
-    I = new NCursesMenuItem*[7];
+    I = new NCursesMenuItem*[1+n_items];
     I[0] = new PassiveItem("One");
     I[1] = new PassiveItem("Two");
     I[2] = new MyAction<UserData> ("Silly", u);
     I[3] = new FormAction("Form");
-    I[4] = new PassiveItem("Five");
-    I[5] = new QuitItem();
-    I[6] = new NCursesMenuItem(); // Terminating empty item
+    I[4] = new PadAction("Pad");
+    I[5] = new PassiveItem("Six");
+    I[6] = new QuitItem();
+    I[7] = new NCursesMenuItem(); // Terminating empty item
 
     InitMenu(I,TRUE,TRUE);
-    
-    P = new NCursesPanel(1,6,LINES-1,1);
+
+    P = new NCursesPanel(1,n_items,LINES-1,1);
     boldframe("Demo","Silly");
     P->show();
   }
@@ -387,7 +433,7 @@ void TestApplication::title() {
 
   titleWindow->bkgd(screen_titles());
   titleWindow->addstr(0,(titleWindow->cols()-len)/2,title);
-  titleWindow->noutrefresh();  
+  titleWindow->noutrefresh();
 }
 
 

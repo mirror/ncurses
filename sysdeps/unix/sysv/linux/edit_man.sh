@@ -23,7 +23,7 @@ case $i in
 		$MKDIRS $mandir/man$section
 	fi
 	source=`basename $i`
-	target=`grep "^$source" man/man_db.renames | mawk '{print $2}'`
+	target=`grep "^$source" man/man_db.renames | awk '{print $2}'` 
 	if test -z "$target" ; then
 		echo '? missing rename for '$source
 		target="$source"

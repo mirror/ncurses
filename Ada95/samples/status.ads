@@ -33,16 +33,20 @@
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control
---  $Revision: 1.3 $
---  Binding Version 00.93
+--  $Revision: 1.7 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  This package has been contributed by Laurent Pautet <pautet@gnat.com>   --
 --                                                                          --
 with Ada.Interrupts.Names;
 
 package Status is
+
+   pragma Warnings (Off);  --  the next pragma exists since 3.11p
+   pragma Unreserve_All_Interrupts;
+   pragma Warnings (On);
 
    protected Process is
       procedure Stop;

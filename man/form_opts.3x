@@ -1,4 +1,33 @@
 '\" t
+.\"***************************************************************************
+.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\"                                                                          *
+.\" Permission is hereby granted, free of charge, to any person obtaining a  *
+.\" copy of this software and associated documentation files (the            *
+.\" "Software"), to deal in the Software without restriction, including      *
+.\" without limitation the rights to use, copy, modify, merge, publish,      *
+.\" distribute, distribute with modifications, sublicense, and/or sell       *
+.\" copies of the Software, and to permit persons to whom the Software is    *
+.\" furnished to do so, subject to the following conditions:                 *
+.\"                                                                          *
+.\" The above copyright notice and this permission notice shall be included  *
+.\" in all copies or substantial portions of the Software.                   *
+.\"                                                                          *
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+.\" IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+.\" DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+.\" OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+.\" THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+.\"                                                                          *
+.\" Except as contained in this notice, the name(s) of the above copyright   *
+.\" holders shall not be used in advertising or otherwise to promote the     *
+.\" sale, use or other dealings in this Software without prior written       *
+.\" authorization.                                                           *
+.\"***************************************************************************
+.\"
+.\" $Id: form_opts.3x,v 1.6 1998/11/29 01:07:53 Rick.Ohnemus Exp $
 .TH form_opts 3X ""
 .SH NAME
 \fBform_opts\fR - set and get form options
@@ -23,17 +52,17 @@ others alone.
 The function \fBform_opts_off\fR turns off the given option bits, and leaves
 others alone.
 
-The function \fBform_opts\fR returns the form's current option bits.  
+The function \fBform_opts\fR returns the form's current option bits.
 
 The following options are defined (all are on by default):
 .TP 5
 O_NL_OVERLOAD
 Overload the \fBREQ_NEW_LINE\fR forms driver request so that calling it at the
-end of a field goes to the next field. 
+end of a field goes to the next field.
 .TP 5
 O_BS_OVERLOAD
 Overload the \fBREQ_DEL_PREV\fR forms driver request so that calling it at the
-beginning of a field goes to the previous field. 
+beginning of a field goes to the previous field.
 .SH RETURN VALUE
 Except for \fBform_opts\fR, each routine returns one of the following:
 .TP 5

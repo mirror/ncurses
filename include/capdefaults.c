@@ -31,7 +31,7 @@
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  ****************************************************************************/
 
-/* $Id: capdefaults.c,v 1.7 1998/02/11 12:13:45 tom Exp $ */
+/* $Id: capdefaults.c,v 1.8 1998/07/04 22:31:04 tom Exp $ */
 
 	/*
 	 * Compute obsolete capabilities.  The reason this is an include file
@@ -59,14 +59,14 @@
 		if (!VALID_STRING(termcap_init2) && VALID_STRING(init_3string))
 		{
 			termcap_init2 = init_3string;
-			init_3string = (char *)NULL;
+			init_3string = (char *)0;
 		}
 		if (VALID_STRING(reset_1string)
 			&& !VALID_STRING(reset_2string)
 			&& VALID_STRING(reset_3string))
 		{
-			termcap_reset = reset_1string;
-			reset_1string = (char *)NULL;
+			termcap_reset = reset_2string;
+			reset_2string = (char *)0;
 		}
 #if USE_XMC_SUPPORT
 		if (magic_cookie_glitch_ul < 0 && magic_cookie_glitch && VALID_STRING(enter_underline_mode))

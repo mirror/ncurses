@@ -1,0 +1,785 @@
+<HEAD><TITLE>terminal_interface-curses-forms.ads</TITLE></HEAD>
+<BODY>
+<HR><DIV ALIGN="center"><H1> File : terminal_interface-curses-forms.ads </H1></DIV><HR>
+<PRE>
+
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                      Terminal_Interface.Curses.Form                      --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
+<FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
+<FONT COLOR=green><EM>-- "Software"), to deal in the Software without restriction, including      --</EM></FONT>
+<FONT COLOR=green><EM>-- without limitation the rights to use, copy, modify, merge, publish,      --</EM></FONT>
+<FONT COLOR=green><EM>-- distribute, distribute with modifications, sublicense, and/or sell       --</EM></FONT>
+<FONT COLOR=green><EM>-- copies of the Software, and to permit persons to whom the Software is    --</EM></FONT>
+<FONT COLOR=green><EM>-- furnished to do so, subject to the following conditions:                 --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- The above copyright notice and this permission notice shall be included  --</EM></FONT>
+<FONT COLOR=green><EM>-- in all copies or substantial portions of the Software.                   --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</EM></FONT>
+<FONT COLOR=green><EM>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</EM></FONT>
+<FONT COLOR=green><EM>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</EM></FONT>
+<FONT COLOR=green><EM>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</EM></FONT>
+<FONT COLOR=green><EM>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</EM></FONT>
+<FONT COLOR=green><EM>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</EM></FONT>
+<FONT COLOR=green><EM>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- Except as contained in this notice, the name(s) of the above copyright   --</EM></FONT>
+<FONT COLOR=green><EM>-- holders shall not be used in advertising or otherwise to promote the     --</EM></FONT>
+<FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
+<FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> (<A HREF="mailto:juergen.pfeifer@gmx.net">juergen.pfeifer@gmx.net</A>) 1996                          --</EM></FONT>
+<FONT COLOR=green><EM>--  Version Control:</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.20 @</EM></FONT>
+<FONT COLOR=green><EM>--  Binding Version 00.93</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--  form binding.</EM></FONT>
+<FONT COLOR=green><EM>--  This module is generated. Please don't change it manually!</EM></FONT>
+<FONT COLOR=green><EM>--  Run the generator instead.</EM></FONT>
+<FONT COLOR=green><EM>--  |</EM></FONT>
+<b>with</b> <A HREF="ada__ads.htm<8_9">System</A>;
+<b>with</b> <A HREF="interfac__ads.htm>3_9">Ada</A>.Characters.Latin_1;
+<b>with</b> Interfaces.C;
+
+<b>package</b> Terminal_Interface.Curses.Forms <b>is</b>
+   <b>pragma</b> Preelaborate (Terminal_Interface.Curses.Forms);
+   <b>pragma</b> Linker_Options ("-lform");
+   <b>pragma</b> Linker_Options ("-lAdaCurses");
+   <b>pragma</b> Linker_Options ("-lncurses");
+
+   Space : Character <b>renames</b> Ada.Characters.Latin_1.Space;
+
+   <b>type</b> <FONT COLOR=red><A NAME="58_9">Field</A></FONT>        <b>is</b> <b>private</b>;
+   <b>type</b> Form         <b>is</b> <b>private</b>;
+
+   <FONT COLOR=red><A NAME="61_4">Null_Field</A></FONT>        : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm#58_9">Field</A>;
+   Null_Form         : <b>constant</b> Form;
+
+   <b>type</b> Field_Justification <b>is</b> (None,
+                                Left,
+                                Center,
+                                Right);
+
+   <b>pragma</b> Warnings (Off);
+   <b>type</b> Field_Option_Set <b>is</b>
+      <b>record</b>
+         Visible     : Boolean;
+         Active      : Boolean;
+         Public      : Boolean;
+         Edit        : Boolean;
+         Wrap        : Boolean;
+         Blank       : Boolean;
+         Auto_Skip   : Boolean;
+         Null_Ok     : Boolean;
+         Pass_Ok     : Boolean;
+         Static      : Boolean;
+      <b>end</b> <b>record</b><A HREF="terminal_interface-curses-forms__ads.htm#69_9">;</A>
+   <b>pragma</b> Pack (Field_Option_Set);
+   <b>pragma</b> Convention (C, Field_Option_Set);
+
+   <b>for</b> Field_Option_Set <b>use</b>
+      <b>record</b>
+         Visible     <b>at</b> 0 <b>range</b>  0 ..  0;
+         Active      <b>at</b> 0 <b>range</b>  1 ..  1;
+         Public      <b>at</b> 0 <b>range</b>  2 ..  2;
+         Edit        <b>at</b> 0 <b>range</b>  3 ..  3;
+         Wrap        <b>at</b> 0 <b>range</b>  4 ..  4;
+         Blank       <b>at</b> 0 <b>range</b>  5 ..  5;
+         Auto_Skip   <b>at</b> 0 <b>range</b>  6 ..  6;
+         Null_Ok     <b>at</b> 0 <b>range</b>  7 ..  7;
+         Pass_Ok     <b>at</b> 0 <b>range</b>  8 ..  8;
+         Static      <b>at</b> 0 <b>range</b>  9 ..  9;
+      <b>end</b> <b>record</b>;
+   <b>for</b> Field_Option_Set'Size <b>use</b> 32;
+  <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
+  <FONT COLOR=green><EM>--               different on your system.Dnl</EM></FONT>
+
+   <b>pragma</b> Warnings (On);
+
+   <b>function</b> Default_Field_Options <b>return</b> Field_Option_Set;
+  <FONT COLOR=green><EM>--  The initial defaults for the field options.</EM></FONT>
+   <b>pragma</b> Inline (Default_Field_Options);
+
+   <b>pragma</b> Warnings (Off);
+   <b>type</b> Form_Option_Set <b>is</b>
+      <b>record</b>
+         NL_Overload : Boolean;
+         BS_Overload : Boolean;
+      <b>end</b> <b>record</b><A HREF="terminal_interface-curses-forms__ads.htm<09_9">;</A>
+   <b>pragma</b> Pack (Form_Option_Set);
+   <b>pragma</b> Convention (C, Form_Option_Set);
+
+   <b>for</b> Form_Option_Set <b>use</b>
+      <b>record</b>
+         NL_Overload <b>at</b> 0 <b>range</b>  0 ..  0;
+         BS_Overload <b>at</b> 0 <b>range</b>  1 ..  1;
+      <b>end</b> <b>record</b>;
+   <b>for</b> Form_Option_Set'Size <b>use</b> 32;
+  <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
+  <FONT COLOR=green><EM>--               different on your system.Dnl</EM></FONT>
+
+   <b>pragma</b> Warnings (On);
+
+   <b>function</b> Default_Form_Options <b>return</b> Form_Option_Set;
+  <FONT COLOR=green><EM>--  The initial defaults for the form options.</EM></FONT>
+   <b>pragma</b> Inline (Default_Form_Options);
+
+   <b>type</b> Buffer_Number <b>is</b> <b>new</b> Natural;
+
+   <b>type</b> Field_Array <b>is</b> <b>array</b> (Positive <b>range</b> <>) <b>of</b> <b>aliased</b> Field;
+   <b>pragma</b> Convention (C, Field_Array);
+
+   <b>type</b> Field_Array_Access <b>is</b> <b>access</b> Field_Array;
+
+   <b>procedure</b> Free (FA          : <b>in</b> <b>out</b> Field_Array_Access;
+                   Free_Fields : <b>in</b> Boolean := False);
+  <FONT COLOR=green><EM>--  Release the memory for an allocated field array</EM></FONT>
+  <FONT COLOR=green><EM>--  If Free_Fields is True, call Delete() for all the fields in</EM></FONT>
+  <FONT COLOR=green><EM>--  the array.</EM></FONT>
+
+   <b>subtype</b> Form_Request_Code <b>is</b> Key_Code <b>range</b> (Key_Max + 1) .. (Key_Max + 57);
+
+  <FONT COLOR=green><EM>--  The prefix F_ stands for "Form Request"</EM></FONT>
+   F_Next_Page                : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 1;
+   F_Previous_Page            : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 2;
+   F_First_Page               : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 3;
+   F_Last_Page                : <b>constant</b> Form_Request_Code := Key_Max + 4;
+
+   F_Next_Field               : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 5;
+   F_Previous_Field           : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 6;
+   F_First_Field              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 7;
+   F_Last_Field               : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 8;
+   F_Sorted_Next_Field        : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 9;
+   F_Sorted_Previous_Field    : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 10;
+   F_Sorted_First_Field       : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 11;
+   F_Sorted_Last_Field        : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 12;
+   F_Left_Field               : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 13;
+   F_Right_Field              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 14;
+   F_Up_Field                 : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 15;
+   F_Down_Field               : <b>constant</b> Form_Request_Code := Key_Max + 16;
+
+   F_Next_Char                : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 17;
+   F_Previous_Char            : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 18;
+   F_Next_Line                : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 19;
+   F_Previous_Line            : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 20;
+   F_Next_Word                : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 21;
+   F_Previous_Word            : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 22;
+   F_Begin_Field              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 23;
+   F_End_Field                : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 24;
+   F_Begin_Line               : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 25;
+   F_End_Line                 : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 26;
+   F_Left_Char                : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 27;
+   F_Right_Char               : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 28;
+   F_Up_Char                  : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 29;
+   F_Down_Char                : <b>constant</b> Form_Request_Code := Key_Max + 30;
+
+   F_New_Line                 : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 31;
+   F_Insert_Char              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 32;
+   F_Insert_Line              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 33;
+   F_Delete_Char              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 34;
+   F_Delete_Previous          : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 35;
+   F_Delete_Line              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 36;
+   F_Delete_Word              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 37;
+   F_Clear_EOL                : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 38;
+   F_Clear_EOF                : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 39;
+   F_Clear_Field              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 40;
+   F_Overlay_Mode             : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 41;
+   F_Insert_Mode              : <b>constant</b> Form_Request_Code := Key_Max + 42;
+
+  <FONT COLOR=green><EM>--  Vertical Scrolling</EM></FONT>
+   F_ScrollForward_Line       : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 43;
+   F_ScrollBackward_Line      : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 44;
+   F_ScrollForward_Page       : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 45;
+   F_ScrollBackward_Page      : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 46;
+   F_ScrollForward_HalfPage   : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 47;
+   F_ScrollBackward_HalfPage  : <b>constant</b> Form_Request_Code := Key_Max + 48;
+
+  <FONT COLOR=green><EM>--  Horizontal Scrolling</EM></FONT>
+   F_HScrollForward_Char      : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 49;
+   F_HScrollBackward_Char     : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 50;
+   F_HScrollForward_Line      : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 51;
+   F_HScrollBackward_Line     : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 52;
+   F_HScrollForward_HalfLine  : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 53;
+   F_HScrollBackward_HalfLine : <b>constant</b> Form_Request_Code := Key_Max + 54;
+
+   F_Validate_Field           : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 55;
+   F_Next_Choice              : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> := Key_Max + 56;
+   F_Previous_Choice          : <b>constant</b> Form_Request_Code := Key_Max + 57;
+
+  <FONT COLOR=green><EM>--  For those who like the old 'C' style request names</EM></FONT>
+   REQ_NEXT_PAGE    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Next_Page;
+   REQ_PREV_PAGE    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Previous_Page;
+   REQ_FIRST_PAGE   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_First_Page;
+   REQ_LAST_PAGE    : Form_Request_Code <b>renames</b> F_Last_Page;
+
+   REQ_NEXT_FIELD   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Next_Field;
+   REQ_PREV_FIELD   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Previous_Field;
+   REQ_FIRST_FIELD  : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_First_Field;
+   REQ_LAST_FIELD   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Last_Field;
+   REQ_SNEXT_FIELD  : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Sorted_Next_Field;
+   REQ_SPREV_FIELD  : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Sorted_Previous_Field;
+   REQ_SFIRST_FIELD : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Sorted_First_Field;
+   REQ_SLAST_FIELD  : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Sorted_Last_Field;
+   REQ_LEFT_FIELD   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Left_Field;
+   REQ_RIGHT_FIELD  : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Right_Field;
+   REQ_UP_FIELD     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Up_Field;
+   REQ_DOWN_FIELD   : Form_Request_Code <b>renames</b> F_Down_Field;
+
+   REQ_NEXT_CHAR    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Next_Char;
+   REQ_PREV_CHAR    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Previous_Char;
+   REQ_NEXT_LINE    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Next_Line;
+   REQ_PREV_LINE    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Previous_Line;
+   REQ_NEXT_WORD    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Next_Word;
+   REQ_PREV_WORD    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Previous_Word;
+   REQ_BEG_FIELD    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Begin_Field;
+   REQ_END_FIELD    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_End_Field;
+   REQ_BEG_LINE     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Begin_Line;
+   REQ_END_LINE     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_End_Line;
+   REQ_LEFT_CHAR    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Left_Char;
+   REQ_RIGHT_CHAR   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Right_Char;
+   REQ_UP_CHAR      : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Up_Char;
+   REQ_DOWN_CHAR    : Form_Request_Code <b>renames</b> F_Down_Char;
+
+   REQ_NEW_LINE     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_New_Line;
+   REQ_INS_CHAR     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Insert_Char;
+   REQ_INS_LINE     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Insert_Line;
+   REQ_DEL_CHAR     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Delete_Char;
+   REQ_DEL_PREV     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Delete_Previous;
+   REQ_DEL_LINE     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Delete_Line;
+   REQ_DEL_WORD     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Delete_Word;
+   REQ_CLR_EOL      : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Clear_EOL;
+   REQ_CLR_EOF      : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Clear_EOF;
+   REQ_CLR_FIELD    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Clear_Field;
+   REQ_OVL_MODE     : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Overlay_Mode;
+   REQ_INS_MODE     : Form_Request_Code <b>renames</b> F_Insert_Mode;
+
+   REQ_SCR_FLINE    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_ScrollForward_Line;
+   REQ_SCR_BLINE    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_ScrollBackward_Line;
+   REQ_SCR_FPAGE    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_ScrollForward_Page;
+   REQ_SCR_BPAGE    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_ScrollBackward_Page;
+   REQ_SCR_FHPAGE   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_ScrollForward_HalfPage;
+   REQ_SCR_BHPAGE   : Form_Request_Code <b>renames</b> F_ScrollBackward_HalfPage;
+
+   REQ_SCR_FCHAR    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_HScrollForward_Char;
+   REQ_SCR_BCHAR    : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_HScrollBackward_Char;
+   REQ_SCR_HFLINE   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_HScrollForward_Line;
+   REQ_SCR_HBLINE   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_HScrollBackward_Line;
+   REQ_SCR_HFHALF   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_HScrollForward_HalfLine;
+   REQ_SCR_HBHALF   : Form_Request_Code <b>renames</b> F_HScrollBackward_HalfLine;
+
+   REQ_VALIDATION   : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Validate_Field;
+   REQ_NEXT_CHOICE  : <A HREF="terminal_interface-curses-forms__ads.htm<45_12">Form_Request_Code</A> <b>renames</b> F_Next_Choice;
+   REQ_PREV_CHOICE  : Form_Request_Code <b>renames</b> F_Previous_Choice;
+
+
+   <b>procedure</b> Request_Name (Key  : <b>in</b> Form_Request_Code;
+                           Name : <b>out</b> String);
+
+   <b>function</b>  Request_Name (Key : Form_Request_Code) <b>return</b> String;
+  <FONT COLOR=green><EM>--  Same as function</EM></FONT>
+   <b>pragma</b> Inline (Request_Name);
+
+  <FONT COLOR=green><EM>------------------</EM></FONT>
+  <FONT COLOR=green><EM>--  Exceptions  --</EM></FONT>
+  <FONT COLOR=green><EM>------------------</EM></FONT>
+   Form_Exception : <b>exception</b>;
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_field_new.3x.html">form_field_new.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_1">|</EM></FONT>
+   <b>function</b> Create (Height       : <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                    Width        : <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Count</A>;
+                    Top          : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                    Left         : Column_Position;
+                    Off_Screen   : <A HREF="terminal_interface-curses-forms__ads.htm<32_9">Natural</A> := 0;
+                    More_Buffers : Buffer_Number := Buffer_Number'First)
+                    <b>return</b> Field;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">new_field()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  An overloaded Create is defined later. Pragma Inline appears there.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_2">|</EM></FONT>
+   <b>function</b> New_Field (Height       : <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                       Width        : <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Count</A>;
+                       Top          : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                       Left         : Column_Position;
+                       Off_Screen   : <A HREF="terminal_interface-curses-forms__ads.htm<32_9">Natural</A> := 0;
+                       More_Buffers : Buffer_Number := Buffer_Number'First)
+                       <b>return</b> Field <b>renames</b> Create;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">new_field()</A></EM></FONT>
+   <b>pragma</b> Inline (New_Field);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_3">|</EM></FONT>
+   <b>procedure</b> Delete (Fld : <b>in</b> <b>out</b> Field);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">free_field()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Reset Fld to Null_Field</EM></FONT>
+  <FONT COLOR=green><EM>--  An overloaded Delete is defined later. Pragma Inline appears there.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_4">|</EM></FONT>
+   <b>function</b> Duplicate (Fld  : <A HREF="terminal_interface-curses__ads.htm#60_9">Field</A>;
+                       Top  : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                       Left : Column_Position) <b>return</b> Field;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">dup_field()</A></EM></FONT>
+   <b>pragma</b> Inline (Duplicate);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_5">|</EM></FONT>
+   <b>function</b> Link (Fld  : <A HREF="terminal_interface-curses__ads.htm#60_9">Field</A>;
+                  Top  : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                  Left : Column_Position) <b>return</b> Field;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">link_field()</A></EM></FONT>
+   <b>pragma</b> Inline (Link);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_field_just.3x.html">form_field_just.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_6">|</EM></FONT>
+   <b>procedure</b> Set_Justification (Fld  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#63_9">Field</A>;
+                                Just : <b>in</b> Field_Justification := None);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_just.3x.html">set_field_just()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Justification);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_7">|</EM></FONT>
+   <b>function</b> Get_Justification (Fld : Field) <b>return</b> Field_Justification;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_just.3x.html">field_just()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Justification);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_field_buffer.3x.html">form_field_buffer.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_8">|</EM></FONT>
+   <b>procedure</b> Set_Buffer
+     (Fld    : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm<32_9">Field</A>;
+      Buffer : <b>in</b> Buffer_Number := Buffer_Number'First;
+      Str    : <b>in</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">set_field_buffer()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Not inlined</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_9">|</EM></FONT>
+   <b>procedure</b> Get_Buffer
+     (Fld    : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm<32_9">Field</A>;
+      Buffer : <b>in</b> Buffer_Number := Buffer_Number'First;
+      Str    : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">field_buffer()</A></EM></FONT>
+
+   <b>function</b> Get_Buffer
+     (Fld    : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm<32_9">Field</A>;
+      Buffer : <b>in</b> Buffer_Number := Buffer_Number'First) <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">field_buffer()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Same but as function</EM></FONT>
+   <b>pragma</b> Inline (Get_Buffer);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_10">|</EM></FONT>
+   <b>procedure</b> Set_Status (Fld    : <b>in</b> Field;
+                         Status : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">set_field_status()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Status);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_11">|</EM></FONT>
+   <b>function</b> Changed (Fld : Field) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">field_status()</A></EM></FONT>
+   <b>pragma</b> Inline (Changed);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_12">|</EM></FONT>
+   <b>procedure</b> Set_Maximum_Size (Fld : <b>in</b> Field;
+                               Max : <b>in</b> Natural := 0);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">set_field_max()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Maximum_Size);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_field_opts.3x.html">form_field_opts.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_13">|</EM></FONT>
+   <b>procedure</b> Set_Options (Fld     : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#69_9">Field</A>;
+                          Options : <b>in</b> Field_Option_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_opts.3x.html">set_field_opts()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  An overloaded version is defined later. Pragma Inline appears there</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_14">|</EM></FONT>
+   <b>procedure</b> Switch_Options (Fld     : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#69_9">Field</A>;
+                             Options : <b>in</b> Field_Option_Set;
+                             On      : Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_opts.3x.html">field_opts_on()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: field_opts_off()</EM></FONT>
+  <FONT COLOR=green><EM>--  An overloaded version is defined later. Pragma Inline appears there</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_15">|</EM></FONT>
+   <b>procedure</b> Get_Options (Fld     : <b>in</b>  <A HREF="terminal_interface-curses-forms__ads.htm#69_9">Field</A>;
+                          Options : <b>out</b> Field_Option_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_opts.3x.html">field_opts()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_16">|</EM></FONT>
+   <b>function</b> Get_Options (Fld : Field := Null_Field)
+                         <b>return</b> Field_Option_Set;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_opts.3x.html">field_opts()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  An overloaded version is defined later. Pragma Inline appears there</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_field_attributes.3x.html">form_field_attributes.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_17">|</EM></FONT>
+   <b>procedure</b> Set_Foreground
+     (Fld   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Field</A>;
+      Fore  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">set_field_fore()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Foreground);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_18">|</EM></FONT>
+   <b>procedure</b> Foreground (Fld  : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Field</A>;
+                         Fore : <b>out</b> Character_Attribute_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_fore()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_19">|</EM></FONT>
+   <b>procedure</b> Foreground (Fld   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Field</A>;
+                         Fore  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A>;
+                         Color : <b>out</b> Color_Pair);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_fore()</A></EM></FONT>
+   <b>pragma</b> Inline (Foreground);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_20">|</EM></FONT>
+   <b>procedure</b> Set_Background
+     (Fld   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Field</A>;
+      Back  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">set_field_back()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Background);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_21">|</EM></FONT>
+   <b>procedure</b> Background (Fld  : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Field</A>;
+                         Back : <b>out</b> Character_Attribute_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_back()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_22">|</EM></FONT>
+   <b>procedure</b> Background (Fld   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Field</A>;
+                         Back  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A>;
+                         Color : <b>out</b> Color_Pair);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_back()</A></EM></FONT>
+   <b>pragma</b> Inline (Background);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_23">|</EM></FONT>
+   <b>procedure</b> Set_Pad_Character (Fld : <b>in</b> Field;
+                                Pad : <b>in</b> Character := Space);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">set_field_pad()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Pad_Character);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_24">|</EM></FONT>
+   <b>procedure</b> Pad_Character (Fld : <b>in</b>  Field;
+                            Pad : <b>out</b> Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_pad()</A></EM></FONT>
+   <b>pragma</b> Inline (Pad_Character);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_field_info.3x.html">form_field_info.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_25">|</EM></FONT>
+   <b>procedure</b> Info (Fld                : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#63_12">Field</A>;
+                   Lines              : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                   Columns            : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Count</A>;
+                   First_Row          : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                   First_Column       : <b>out</b> Column_Position;
+                   Off_Screen         : <b>out</b> <A HREF="terminal_interface-curses-forms__ads.htm<32_9">Natural</A>;
+                   Additional_Buffers : <b>out</b> Buffer_Number);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_info.3x.html">field_info()</A></EM></FONT>
+   <b>pragma</b> Inline (Info);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_26">|</EM></FONT>
+   <b>procedure</b> Dynamic_Info (Fld     : <b>in</b> Field;
+                           Lines   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                           Columns : <b>out</b> Column_Count;
+                           Max     : <b>out</b> Natural);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_info.3x.html">dynamic_field_info()</A></EM></FONT>
+   <b>pragma</b> Inline (Dynamic_Info);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_win.3x.html">form_win.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_27">|</EM></FONT>
+   <b>procedure</b> Set_Window (<FONT COLOR=red><A NAME="510_26">Frm</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Form</A>;
+                         Win : <b>in</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_win.3x.html">set_form_win()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_28">|</EM></FONT>
+   <b>function</b> Get_Window (Frm : Form) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_win.3x.html">form_win()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_29">|</EM></FONT>
+   <b>procedure</b> Set_Sub_Window (<FONT COLOR=red><A NAME="521_30">Frm</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Form</A>;
+                             Win : <b>in</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_win.3x.html">set_form_sub()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Sub_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_30">|</EM></FONT>
+   <b>function</b> Get_Sub_Window (Frm : Form) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_win.3x.html">form_sub()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Sub_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_31">|</EM></FONT>
+   <b>procedure</b> Scale (Frm     : <b>in</b> Form;
+                    Lines   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                    Columns : <b>out</b> Column_Count);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_win.3x.html">scale_form()</A></EM></FONT>
+   <b>pragma</b> Inline (Scale);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_hook.3x.html">form_hook.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+   <b>type</b> Form_Hook_Function <b>is</b> <b>access</b> <b>procedure</b> (Frm : <b>in</b> Form);
+   <b>pragma</b> Convention (C, Form_Hook_Function);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_32">|</EM></FONT>
+   <b>procedure</b> Set_Field_Init_Hook (Frm  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#541_9">Form</A>;
+                                  Proc : <b>in</b> Form_Hook_Function);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_hook.3x.html">set_field_init()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Field_Init_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_33">|</EM></FONT>
+   <b>procedure</b> Set_Field_Term_Hook (Frm  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#541_9">Form</A>;
+                                  Proc : <b>in</b> Form_Hook_Function);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_hook.3x.html">set_field_term()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Field_Term_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_34">|</EM></FONT>
+   <b>procedure</b> Set_Form_Init_Hook (Frm  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#541_9">Form</A>;
+                                 Proc : <b>in</b> Form_Hook_Function);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_hook.3x.html">set_form_init()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Form_Init_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_35">|</EM></FONT>
+   <b>procedure</b> Set_Form_Term_Hook (Frm  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#541_9">Form</A>;
+                                 Proc : <b>in</b> Form_Hook_Function);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_hook.3x.html">set_form_term()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Form_Term_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_36">|</EM></FONT>
+   <b>function</b> Get_Field_Init_Hook (Frm : Form) <b>return</b> Form_Hook_Function;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_hook.3x.html">field_init()</A></EM></FONT>
+   <b>pragma</b> Import (C, Get_Field_Init_Hook, "field_init");
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_37">|</EM></FONT>
+   <b>function</b> Get_Field_Term_Hook (Frm : Form) <b>return</b> Form_Hook_Function;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_hook.3x.html">field_term()</A></EM></FONT>
+   <b>pragma</b> Import (C, Get_Field_Term_Hook, "field_term");
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_38">|</EM></FONT>
+   <b>function</b> Get_Form_Init_Hook (Frm : Form) <b>return</b> Form_Hook_Function;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_hook.3x.html">form_init()</A></EM></FONT>
+   <b>pragma</b> Import (C, Get_Form_Init_Hook, "form_init");
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_39">|</EM></FONT>
+   <b>function</b> Get_Form_Term_Hook (Frm : Form) <b>return</b> Form_Hook_Function;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_hook.3x.html">form_term()</A></EM></FONT>
+   <b>pragma</b> Import (C, Get_Form_Term_Hook, "form_term");
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_field.3x.html">form_field.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_40">|</EM></FONT>
+   <b>procedure</b> Redefine (Frm  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm<37_9">Form</A>;
+                       Flds : <b>in</b> Field_Array_Access);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field.3x.html">set_form_fields()</A></EM></FONT>
+   <b>pragma</b> Inline (Redefine);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_41">|</EM></FONT>
+   <b>procedure</b> Set_Fields (Frm  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm<37_9">Form</A>;
+                         Flds : <b>in</b> Field_Array_Access) <b>renames</b> Redefine;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field.3x.html">set_form_fields()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Fields);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_42">|</EM></FONT>
+   <b>function</b> Fields (Frm   : Form;
+                    Index : Positive) <b>return</b> Field;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field.3x.html">form_fields()</A></EM></FONT>
+   <b>pragma</b> Inline (Fields);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_43">|</EM></FONT>
+   <b>function</b> Field_Count (Frm : Form) <b>return</b> Natural;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field.3x.html">field_count()</A></EM></FONT>
+   <b>pragma</b> Inline (Field_Count);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_44">|</EM></FONT>
+   <b>procedure</b> Move (Fld    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Field</A>;
+                   Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                   Column : <b>in</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field.3x.html">move_field()</A></EM></FONT>
+   <b>pragma</b> Inline (Move);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_new.3x.html">form_new.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_45">|</EM></FONT>
+   <b>function</b> Create (Fields : Field_Array_Access) <b>return</b> Form;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_new.3x.html">new_form()</A></EM></FONT>
+   <b>pragma</b> Inline (Create);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_46">|</EM></FONT>
+   <b>function</b> New_Form (Fields : Field_Array_Access) <b>return</b> Form
+     <b>renames</b> Create;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_new.3x.html">new_form()</A></EM></FONT>
+   <b>pragma</b> Inline (New_Form);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_47">|</EM></FONT>
+   <b>procedure</b> Delete (Frm : <b>in</b> <b>out</b> Form);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_new.3x.html">free_form()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Reset Frm to Null_Form</EM></FONT>
+   <b>pragma</b> Inline (Delete);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_opts.3x.html">form_opts.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_48">|</EM></FONT>
+   <b>procedure</b> Set_Options (Frm     : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm<09_9">Form</A>;
+                          Options : <b>in</b> Form_Option_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_opts.3x.html">set_form_opts()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Options);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_49">|</EM></FONT>
+   <b>procedure</b> Switch_Options (Frm     : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm<09_9">Form</A>;
+                             Options : <b>in</b> Form_Option_Set;
+                             On      : Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_opts.3x.html">form_opts_on()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: form_opts_off()</EM></FONT>
+   <b>pragma</b> Inline (Switch_Options);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_50">|</EM></FONT>
+   <b>procedure</b> Get_Options (Frm     : <b>in</b>  <A HREF="terminal_interface-curses-forms__ads.htm<09_9">Form</A>;
+                          Options : <b>out</b> Form_Option_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_opts.3x.html">form_opts()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_51">|</EM></FONT>
+   <b>function</b> Get_Options (Frm : Form := Null_Form) <b>return</b> Form_Option_Set;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_opts.3x.html">form_opts()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Options);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_post.3x.html">form_post.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_52">|</EM></FONT>
+   <b>procedure</b> Post (Frm  : <b>in</b> Form;
+                   Post : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_post.3x.html">post_form()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: unpost_form()</EM></FONT>
+   <b>pragma</b> Inline (Post);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_cursor.3x.html">form_cursor.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_53">|</EM></FONT>
+   <b>procedure</b> Position_Cursor (Frm : Form);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_cursor.3x.html">pos_form_cursor()</A></EM></FONT>
+   <b>pragma</b> Inline (Position_Cursor);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_data.3x.html">form_data.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_54">|</EM></FONT>
+   <b>function</b> Data_Ahead (Frm : Form) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_data.3x.html">data_ahead()</A></EM></FONT>
+   <b>pragma</b> Inline (Data_Ahead);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_55">|</EM></FONT>
+   <b>function</b> Data_Behind (Frm : Form) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_data.3x.html">data_behind()</A></EM></FONT>
+   <b>pragma</b> Inline (Data_Behind);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_driver.3x.html">form_driver.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+   <b>type</b> Driver_Result <b>is</b> (<FONT COLOR=red><A NAME="710_27">Form_Ok</A></FONT>,
+                          <FONT COLOR=red><A NAME="711_27">Request_Denied</A></FONT>,
+                          <FONT COLOR=red><A NAME="712_27">Unknown_Request</A></FONT>,
+                          Invalid_Field);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_56">|</EM></FONT>
+   <b>function</b> Driver (Frm : <A HREF="terminal_interface-curses__ads.htm#68_9">Form</A>;
+                    Key : Key_Code) <b>return</b> Driver_Result;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_driver.3x.html">form_driver()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Driver not inlined</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_page.3x.html">form_page.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+   <b>type</b> Page_Number <b>is</b> <b>new</b> Natural;
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_57">|</EM></FONT>
+   <b>procedure</b> Set_Current (<FONT COLOR=red><A NAME="728_27">Frm</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#57_9">Form</A>;
+                          Fld : <b>in</b> Field);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_page.3x.html">set_current_field()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Current);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_58">|</EM></FONT>
+   <b>function</b> Current (Frm : <b>in</b> Form) <b>return</b> Field;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_page.3x.html">current_field()</A></EM></FONT>
+   <b>pragma</b> Inline (Current);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_59">|</EM></FONT>
+   <b>procedure</b> Set_Page (Frm  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#724_9">Form</A>;
+                       Page : <b>in</b> Page_Number := Page_Number'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_page.3x.html">set_form_page()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Page);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_60">|</EM></FONT>
+   <b>function</b> Page (Frm : Form) <b>return</b> Page_Number;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_page.3x.html">form_page()</A></EM></FONT>
+   <b>pragma</b> Inline (Page);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_61">|</EM></FONT>
+   <b>function</b> Get_Index (Fld : Field) <b>return</b> Positive;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_page.3x.html">field_index()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Please note that in this binding we start the numbering of fields</EM></FONT>
+  <FONT COLOR=green><EM>--  with 1. So this is number is one more than you get from the low</EM></FONT>
+  <FONT COLOR=green><EM>--  level call.</EM></FONT>
+   <b>pragma</b> Inline (Get_Index);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_new_page.3x.html">form_new_page.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_62">|</EM></FONT>
+   <b>procedure</b> Set_New_Page (Fld      : <b>in</b> Field;
+                           New_Page : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_new_page.3x.html">set_new_page()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_New_Page);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_63">|</EM></FONT>
+   <b>function</b> Is_New_Page (Fld : Field) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_new_page.3x.html">new_page()</A></EM></FONT>
+   <b>pragma</b> Inline (Is_New_Page);
+
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<b>private</b>
+   <b>type</b> <A HREF="terminal_interface-curses-forms__ads.htm#58_9">Field</A> <b>is</b> <b>new</b> <A HREF="system__ads.htm>3_9">System</A>.<A HREF="s-stoele__ads.htm>2_16">Storage_Elements</A>.<A HREF="s-stoele__ads.htm#70_9">Integer_Address</A>;
+   <b>type</b> Form  <b>is</b> <b>new</b> System.Storage_Elements.Integer_Address;
+
+   <A HREF="terminal_interface-curses-forms__ads.htm#61_4">Null_Field</A> : <b>constant</b> <A HREF="terminal_interface-curses-forms__ads.htm#58_9">Field</A> := 0;
+   Null_Form  : <b>constant</b> Form  := 0;
+
+<b>end</b> Terminal_Interface.Curses.Forms;
+</PRE></BODY></HTML>

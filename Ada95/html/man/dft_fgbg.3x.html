@@ -1,0 +1,72 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>dft_fgbg</STRONG> - use terminal's default colors
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>int</STRONG> <STRONG>use_default_colors(void);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This  is  an  extension to the curses library.  It is used
+       with terminals that support ISO 6429 color, or equivalent.
+       These terminals allow the application to reset color to an
+       unspecified default value (e.g., with SGR 39 or  SGR  49).
+       Because  they  are  designed to support this, their design
+       usually includes features to change the default foreground
+       or background colors so that they do not match the assump-
+       tion in XSI curses of white on black.
+
+       Applications that paint  a  colored  background  over  the
+       whole  screen  are  not adversely impacted by this type of
+       terminal design.  However, there are applications that are
+       designed to work with the default background.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The  function  returns the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG>
+       on success.  It will fail if either the terminal does  not
+       support  the  <EM>orig</EM><STRONG>_</STRONG><EM>pair</EM> or <EM>orig</EM><STRONG>_</STRONG><EM>colors</EM> capability.  If the
+       <EM>initialize</EM><STRONG>_</STRONG><EM>pair</EM> capability is found, this causes an  error
+       as well.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Associated with this extension, the <STRONG><A HREF="init_pair.3x.html">init_pair(3X)</A></STRONG> function
+       accepts negative arguments to specify  default  foreground
+       or background colors.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  routines  are  specific  to ncurses.  They were not
+       supported on Version 7, BSD or System  V  implementations.
+       It  is recommended that any code depending on them be con-
+       ditioned using NCURSES_VERSION.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="curs_color.3x.html">curs_color(3X)</A></STRONG>, <STRONG><A HREF="ded.1.html">ded(1)</A></STRONG>.
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       Thomas Dickey (from an analysis of  the  requirements  for
+       color xterm for XFree86 3.1.2C, February 1996).
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

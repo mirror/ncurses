@@ -1,8 +1,10 @@
+-- $Id: TODO,v 1.4 1999/10/20 09:18:58 tom Exp $
+
 --  Intensive testing
     Perhaps the delivery of the Beta will help a bit.
 
 --  Documentation
-    Like most WEB pages: under continous construction
+    Like most WEB pages: under continuous construction
 
 --  Style cleanup
     	
@@ -10,9 +12,9 @@
     Comfort purpose
 
 --  Sample program
-    Under continous construction (and it's not a WEB page!!!)
+    Under continuous construction (and it's not a WEB page!!!)
 
---  Make the binding objects a shared libray
+--  Make the binding objects a shared library
     They are rather large, so it would make sense, otherwise Ada95
     would look too large, although the generated code is as compact
     as C or C++. I'll wait a bit until the GNAT people provide some

@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +37,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_req_name.c,v 1.5 1998/02/11 12:13:43 tom Exp $")
+MODULE_ID("$Id: frm_req_name.c,v 1.7 1999/05/16 17:21:53 juergen Exp $")
 
 static const char *request_names[ MAX_FORM_COMMAND - MIN_FORM_COMMAND + 1 ] = {
   "NEXT_PAGE"	 ,

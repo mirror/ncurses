@@ -1,4 +1,4 @@
-# Copyright (C) 1997 Free Software Foundation, Inc.
+# Copyright (C) 1997,1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,6 @@ libform-routines	= \
 			fld_stat \
 			fld_type \
 			fld_user \
-			frm_adabind \
 			frm_cursor \
 			frm_data \
 			frm_def \
@@ -81,132 +80,153 @@ libform-routines	= \
 			fty_regex
 
 libncurses-routines	= \
-			alloc_entry \
-			captoinfo \
+			base/define_key \
+			base/keybound \
+			base/keyok \
+			base/lib_addch \
+			base/lib_addstr \
+			base/lib_beep \
+			base/lib_bkgd \
+			base/lib_box \
+			base/lib_chgat \
+			base/lib_clear \
+			base/lib_clearok \
+			base/lib_clrbot \
+			base/lib_clreol \
+			base/lib_color \
+			base/lib_colorset \
+			base/lib_delch \
+			base/lib_delwin \
+			base/lib_dft_fgbg \
+			base/lib_echo \
+			base/lib_endwin \
+			base/lib_erase \
+			base/lib_flash \
+			base/lib_freeall \
+			base/lib_getch \
+			base/lib_getstr \
+			base/lib_hline \
+			base/lib_immedok \
+			base/lib_inchstr \
+			base/lib_initscr \
+			base/lib_insch \
+			base/lib_insdel \
+			base/lib_insstr \
+			base/lib_instr \
+			base/lib_isendwin \
+			base/lib_leaveok \
+			base/lib_mouse \
+			base/lib_move \
+			base/lib_mvwin \
+			base/lib_newterm \
+			base/lib_newwin \
+			base/lib_nl \
+			base/lib_overlay \
+			base/lib_pad \
+			base/lib_printw \
+			base/lib_redrawln \
+			base/lib_refresh \
+			base/lib_restart \
+			base/lib_scanw \
+			base/lib_screen \
+			base/lib_scroll \
+			base/lib_scrollok \
+			base/lib_scrreg \
+			base/lib_set_term \
+			base/lib_slk \
+			base/lib_slkatr_set \
+			base/lib_slkatrof \
+			base/lib_slkatron \
+			base/lib_slkatrset \
+			base/lib_slkattr \
+			base/lib_slkclear \
+			base/lib_slkcolor \
+			base/lib_slkinit \
+			base/lib_slklab \
+			base/lib_slkrefr \
+			base/lib_slkset \
+			base/lib_slktouch \
+			base/lib_touch \
+			base/lib_ungetch \
+			base/lib_vline \
+			base/lib_wattroff \
+			base/lib_wattron \
+			base/lib_winch \
+			base/lib_window \
+			base/memmove \
+			base/nc_panel \
+			base/resizeterm \
+			base/safe_sprintf \
+			base/sigaction \
+			base/tries \
+			base/version \
+			base/vsscanf \
+			base/wresize \
 			codes \
 			comp_captab \
-			comp_error \
-			comp_expand \
-			comp_hash \
-			comp_parse \
-			comp_scan \
-			define_key \
 			expanded \
 			fallback \
-			hardscroll \
-			hashmap \
-			keyok \
-			lib_acs \
-			lib_adabind \
-			lib_addch \
-			lib_addstr \
-			lib_baudrate \
-			lib_beep \
-			lib_bkgd \
-			lib_box \
-			lib_chgat \
-			lib_clear \
-			lib_clearok \
-			lib_clrbot \
-			lib_clreol \
-			lib_color \
-			lib_cur_term \
-			lib_data \
-			lib_delch \
-			lib_delwin \
-			lib_dft_fgbg \
-			lib_doupdate \
-			lib_echo \
-			lib_endwin \
-			lib_erase \
-			lib_flash \
-			lib_freeall \
 			lib_gen \
-			lib_getch \
-			lib_getstr \
-			lib_hline \
-			lib_immedok \
-			lib_inchstr \
-			lib_initscr \
-			lib_insch \
-			lib_insdel \
-			lib_insstr \
-			lib_instr \
-			lib_isendwin \
-			lib_kernel \
 			lib_keyname \
-			lib_leaveok \
-			lib_longname \
-			lib_mouse \
-			lib_move \
-			lib_mvcur \
-			lib_mvwin \
-			lib_napms \
-			lib_newterm \
-			lib_newwin \
-			lib_nl \
-			lib_options \
-			lib_overlay \
-			lib_pad \
-			lib_print \
-			lib_printw \
-			lib_raw \
-			lib_redrawln \
-			lib_refresh \
-			lib_restart \
-			lib_scanw \
-			lib_screen \
-			lib_scroll \
-			lib_scrollok \
-			lib_scrreg \
-			lib_set_term \
-			lib_setup \
-			lib_slk \
-			lib_slkatrof \
-			lib_slkatron \
-			lib_slkatrset \
-			lib_slkattr \
-			lib_slkclear \
-			lib_slkinit \
-			lib_slklab \
-			lib_slkrefr \
-			lib_slkset \
-			lib_slktouch \
-			lib_termcap \
-			lib_ti \
-			lib_touch \
-			lib_tparm \
-			lib_tputs \
-			lib_trace \
-			lib_traceatr \
-			lib_tracechr \
-			lib_tracedmp \
-			lib_tracemse \
-			lib_tstp \
-			lib_twait \
-			lib_ungetch \
-			lib_vidattr \
-			lib_vline \
-			lib_wattroff \
-			lib_wattron \
-			lib_window \
-			name_match \
 			names \
-			nc_panel \
-			parse_entry \
-			read_entry \
-			read_termcap \
-			resizeterm \
-			safe_sprintf \
-			softscroll \
-			trace_buf \
-			tries \
-			unctrl \
-			wresize \
-			write_entry
+			tinfo/access \
+			tinfo/add_tries \
+			tinfo/alloc_entry \
+			tinfo/alloc_ttype \
+			tinfo/captoinfo \
+			tinfo/comp_error \
+			tinfo/comp_expand \
+			tinfo/comp_hash \
+			tinfo/comp_parse \
+			tinfo/comp_scan \
+			tinfo/doalloc \
+			tinfo/free_ttype \
+			tinfo/getenv_num \
+			tinfo/home_terminfo \
+			tinfo/init_keytry \
+			tinfo/lib_acs \
+			tinfo/lib_baudrate \
+			tinfo/lib_cur_term \
+			tinfo/lib_data \
+			tinfo/lib_has_cap \
+			tinfo/lib_kernel \
+			tinfo/lib_longname \
+			tinfo/lib_napms \
+			tinfo/lib_options \
+			tinfo/lib_print \
+			tinfo/lib_raw \
+			tinfo/lib_setup \
+			tinfo/lib_termcap \
+			tinfo/lib_termname \
+			tinfo/lib_ti \
+			tinfo/lib_tparm \
+			tinfo/lib_tputs \
+			tinfo/lib_ttyflags \
+			tinfo/name_match \
+			tinfo/parse_entry \
+			tinfo/read_entry \
+			tinfo/read_termcap \
+			tinfo/setbuf \
+			tinfo/write_entry \
+			trace/lib_trace \
+			trace/lib_traceatr \
+			trace/lib_tracebits \
+			trace/lib_tracechr \
+			trace/lib_tracedmp \
+			trace/lib_tracemse \
+			trace/trace_buf \
+			trace/trace_tries \
+			trace/trace_xnames \
+			tty/hardscroll \
+			tty/hashmap \
+			tty/lib_mvcur \
+			tty/lib_tstp \
+			tty/lib_vidattr \
+			tty/lib_twait \
+			tty/tty_update \
+			unctrl
 
 libmenu-routines	= \
-			m_adabind \
 			m_attribs \
 			m_cursor \
 			m_driver \
@@ -265,15 +285,9 @@ tset-objs = tset.o dump_entry.o
 extra-objs = $(tic-objs) $(toe-objs) $(infocmp-objs) $(clear-objs) \
 		$(tput-objs) $(tset-objs)
 
-# mvcur won't compile
-test-srcs = tctest thardscroll thashmap \
-		blue bs firework firstlast gdc hanoi hashtest knight \
+test-srcs = blue bs cardfile ditto firework firstlast gdc hanoi hashtest knight \
 		lrtest ncurses newdemo rain tclock testaddch testcurs \
 		testscanw view worm xmas
-mvcur-objs = mvcur.o dump_entry.o
-tctest-objs = tctest.o
-thardscroll-objs = thardscroll.o
-thashmap-objs = thashmap.o hhardscroll.o
 
 include ../Rules
 
@@ -308,43 +322,7 @@ endif
 
 LDLIBS-tclock = math/libm
 
-tests: $(test-srcs:%=$(objpfx)%) 
-
-$(objpfx)mvcur.d: ncurses/lib_mvcur.c
-	$(CC) -M $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $? | \
-		sed -e 's/^lib_mvcur.o/mvcur.o/' > $@
-
-$(objpfx)mvcur.o: ncurses/lib_mvcur.c
-	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $?
-
-$(objpfx)tctest.d: ncurses/captoinfo.c
-	$(CC) -M $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $? | \
-		sed -e 's/^captoinfo.o/tctest.o/' > $@
-
-$(objpfx)tctest.o: ncurses/captoinfo.c
-	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $?
-
-$(objpfx)thardscroll.d: ncurses/hardscroll.c
-	$(CC) -M $(CFLAGS) $(CPPFLAGS) -DTRACE -DSCROLLDEBUG $? | \
-		sed -e 's/^hardscroll.o/thardscroll.o/' > $@
-
-$(objpfx)thardscroll.o: ncurses/hardscroll.c
-	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DSCROLLDEBUG $?
-
-$(objpfx)thashmap.d: ncurses/hashmap.c
-	$(CC) -M $(CFLAGS) $(CPPFLAGS) -DTRACE -DHASHDEBUG $? | \
-		sed -e 's/^hashmap.o/thashmap.o/' > $@
-
-$(objpfx)thashmap.o: ncurses/hashmap.c
-	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DHASHDEBUG $?
-
-$(objpfx)hhardscroll.o: ncurses/hardscroll.c
-	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DHASHDEBUG $?
-
-$(objpfx)mvcur: $(addprefix $(objpfx),$(mvcur-objs))
-$(objpfx)tctest: $(addprefix $(objpfx),$(tctest-objs))
-$(objpfx)thardscroll: $(addprefix $(objpfx),$(thardscroll-objs))
-$(objpfx)thashmap: $(addprefix $(objpfx),$(thashmap-objs))
+tests: $(test-srcs:%=$(objpfx)%)
 
 $(objpfx)clear: $(addprefix $(objpfx),$(clear-objs))
 $(objpfx)infocmp: $(addprefix $(objpfx),$(infocmp-objs))
@@ -403,7 +381,7 @@ $(inst_tabsetdir)/std: \
 	  echo installing $$f; \
 	  $(INSTALL_DATA) $$f $(inst_tabsetdir); \
 	done
-	
+
 
 ifeq (no,$(cross-compiling))
 subdir_install: $(inst_terminfodir)/v/vt100

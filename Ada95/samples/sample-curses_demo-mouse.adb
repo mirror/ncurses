@@ -33,10 +33,10 @@
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control
---  $Revision: 1.7 $
---  Binding Version 00.93
+--  $Revision: 1.11 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
 with Terminal_Interface.Curses.Panels; use Terminal_Interface.Curses.Panels;
@@ -73,7 +73,6 @@ package body Sample.Curses_Demo.Mouse is
       Msg   : Window;
       Ctl   : Controls;
       Pan   : Panel;
-      N     : constant Natural := Ctl'Length;
       K     : Real_Key_Code;
       V     : Cursor_Visibility := Invisible;
       W     : Window;
@@ -210,7 +209,7 @@ package body Sample.Curses_Demo.Mouse is
       Delete (Frame);
 
       Set_Cursor_Visibility (V);
-      End_Mouse;
+      End_Mouse (Mask);
 
       Pop_Environment;
       Update_Panels; Update_Screen;

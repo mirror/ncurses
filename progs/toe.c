@@ -38,10 +38,12 @@
 
 #include <progs.priv.h>
 
+#include <sys/stat.h>
+
 #include <dump_entry.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: toe.c,v 0.18 1998/02/11 12:14:02 tom Exp $")
+MODULE_ID("$Id: toe.c,v 0.19 1998/03/08 01:02:46 tom Exp $")
 
 const char *_nc_progname;
 
@@ -181,9 +183,11 @@ int main (int argc, char *argv[])
 	    if ((home = getenv("HOME")) != (char *)NULL)
 	    {
 		char	personal[PATH_MAX];
+		struct	stat sb;
 
 		(void) sprintf(personal, PRIVATE_INFO, home);
-		if (access(personal, F_OK) == 0)
+		if (stat(personal, &sb) == 0
+		 && (sb.st_mode & S_IFMT) == S_IFDIR)
 		    eargv[j++] = personal;
 	    }
 	    eargv[j++] = TERMINFO;

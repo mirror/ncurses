@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey <dickey@clark.net> 1996
 #
-# $Id: shlib,v 1.4 1998/02/11 12:13:50 tom Exp $
+# $Id: shlib,v 1.5 1998/05/31 00:29:38 mooney Exp $
 # Use this script as a wrapper when running executables linked to shared
 # libraries on systems that use the $LD_LIBRARY_PATH variable and don't embed
 # the soname's path within the linked executable (such as IRIX), e.g,
@@ -55,6 +55,15 @@
 # Using a conventional link, with -L and -l options on Linux results in a
 # statically linked executable, which we don't want at all.
 #
+
+#
+# Make sure that we use the PATH that was set in run_tic.sh
+#
+if test X$NEWPATH != X ; then
+	PATH=$NEWPATH
+	export PATH
+fi
+
 q=""
 for p in lib ../lib
 do

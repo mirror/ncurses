@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1999 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,31 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997                   *
+ *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997,1999              *
  ****************************************************************************/
 /* LINTLIBRARY */
 
-/* ./m_adabind.c */
+/* ./m_attribs.c */
 
 #include "menu.priv.h"
-
-#undef _nc_ada_normalize_menu_opts
-void	_nc_ada_normalize_menu_opts(
-		int	*opt)
-		{ /* void */ }
-
-#undef _nc_ada_normalize_item_opts
-void	_nc_ada_normalize_item_opts(
-		int	*opt)
-		{ /* void */ }
-
-#undef _nc_get_item
-ITEM	*_nc_get_item(
-		const MENU *menu, 
-		int	idx)
-		{ return(*(ITEM **)0); }
-
-/* ./m_attribs.c */
 
 #undef set_menu_fore
 int	set_menu_fore(
@@ -87,6 +69,14 @@ chtype	menu_grey(
 		{ return(*(chtype *)0); }
 
 /* ./m_cursor.c */
+
+#undef _nc_menu_cursor_pos
+int	_nc_menu_cursor_pos(
+		const MENU *menu, 
+		const ITEM *item, 
+		int	*pY, 
+		int	*pX)
+		{ return(*(int *)0); }
 
 #undef pos_menu_cursor
 int	pos_menu_cursor(

@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_opts.c,v 1.8 1998/02/11 12:13:49 tom Exp $")
+MODULE_ID("$Id: m_opts.c,v 1.12 1999/05/16 17:27:08 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -54,6 +54,8 @@ MODULE_ID("$Id: m_opts.c,v 1.8 1998/02/11 12:13:49 tom Exp $")
 +--------------------------------------------------------------------------*/
 int set_menu_opts(MENU * menu, Menu_Options opts)
 {
+  opts &= ALL_MENU_OPTS;
+
   if (opts & ~ALL_MENU_OPTS)
     RETURN(E_BAD_ARGUMENT);
 
@@ -112,6 +114,7 @@ int menu_opts_off(MENU *menu, Menu_Options  opts)
   MENU *cmenu = menu; /* use a copy because set_menu_opts must detect
                          NULL menu itself to adjust its behaviour */
 
+  opts &= ALL_MENU_OPTS;
   if (opts & ~ALL_MENU_OPTS)
     RETURN(E_BAD_ARGUMENT);
   else
@@ -140,6 +143,7 @@ int menu_opts_on(MENU * menu, Menu_Options opts)
   MENU *cmenu = menu; /* use a copy because set_menu_opts must detect
                          NULL menu itself to adjust its behaviour */
 
+  opts &= ALL_MENU_OPTS;
   if (opts & ~ALL_MENU_OPTS)
     RETURN(E_BAD_ARGUMENT);
   else

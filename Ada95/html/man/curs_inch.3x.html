@@ -1,0 +1,68 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>inch</STRONG>,  <STRONG>winch</STRONG>,  <STRONG>mvinch</STRONG>,  <STRONG>mvwinch</STRONG>  -  get  a  character  and
+       attributes from a <STRONG>curses</STRONG> window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>chtype</STRONG> <STRONG>inch(void);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>winch(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>mvinch(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>mvwinch(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These routines return the character, of  type  <STRONG>chtype</STRONG>,  at
+       the   current  position  in  the  named  window.   If  any
+       attributes are set for that  position,  their  values  are
+       OR'ed  into  the  value  returned.   Constants  defined in
+       <STRONG><curses.h></STRONG> can be used with the <STRONG>&</STRONG> (logical  AND)  operator
+       to extract the character or attributes alone.
+
+
+   <STRONG>Attributes</STRONG>
+       The  following  bit-masks  may  be  AND-ed with characters
+       returned by <STRONG>winch</STRONG>.
+
+       l  l  .   <STRONG>A_CHARTEXT</STRONG>     Bit-mask  to  extract   character
+       <STRONG>A_ATTRIBUTES</STRONG>   Bit-mask      to     extract     attributes
+       <STRONG>A_COLOR</STRONG>   Bit-mask to extract color-pair field information
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that all of these routines may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  functions are described in the XSI Curses standard,
+       Issue 4.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

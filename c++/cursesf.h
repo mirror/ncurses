@@ -28,10 +28,10 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1997             *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
  ****************************************************************************/
 
-// $Id: cursesf.h,v 1.6 1998/02/11 12:13:41 tom Exp $
+// $Id: cursesf.h,v 1.10 1999/05/16 17:31:42 juergen Exp $
 
 #ifndef _CURSESF_H
 #define _CURSESF_H
@@ -255,7 +255,7 @@ public:
 
   // Return the index of the field in the field array of a form
   // or -1 if the field is not associated to a form
-  inline int index() const {
+  inline int (index)() const {
     return ::field_index(field);
   }
 
@@ -712,7 +712,7 @@ public:
   Regular_Expression_Field(const char *expr)
     : NCursesFieldType(TYPE_REGEXP) {
       regex = new char[1+::strlen(expr)];
-      strcpy(regex,expr);
+      (strcpy)(regex,expr);
   }
 
   ~Regular_Expression_Field() {

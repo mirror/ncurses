@@ -1,5 +1,5 @@
 --  -*- ada -*-
-define(`HTMLNAME',`terminal_interface-curses-menus_s.html')dnl
+define(`HTMLNAME',`terminal_interface-curses-menus__ads.htm')dnl
 include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --                                                                          --
@@ -36,10 +36,10 @@ include(M4MACRO)dnl
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.12 $
---  Binding Version 00.93
+--  $Revision: 1.20 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Menu_Base_Defs')
 with System;
@@ -47,10 +47,9 @@ with Interfaces.C;
 with Ada.Characters.Latin_1;
 
 package Terminal_Interface.Curses.Menus is
-   pragma Preelaborate (Menus);
-include(`Menu_Linker_Options')
-
-
+   pragma Preelaborate (Terminal_Interface.Curses.Menus);
+include(`Menu_Linker_Options')dnl
+include(`Linker_Options')
    Space : Character renames Ada.Characters.Latin_1.Space;
 
    type Item is private;
@@ -117,8 +116,10 @@ include(`Menu_Linker_Options')
    --
    --  Menu options
    --
+   pragma Warnings (Off);
+include(`Menu_Opt_Rep')dnl
 
-include(`Menu_Opt_Rep')
+   pragma Warnings (On);
 
    function Default_Menu_Options return Menu_Option_Set;
    --  Initial default options for a menu.
@@ -126,7 +127,10 @@ include(`Menu_Opt_Rep')
    --
    --  Item options
    --
-include(`Item_Rep')
+   pragma Warnings (Off);
+include(`Item_Rep')dnl
+
+   pragma Warnings (On);
 
    function Default_Item_Options return Item_Option_Set;
    --  Initial default options for an item.
@@ -582,10 +586,10 @@ include(`Item_Rep')
 
 -------------------------------------------------------------------------------
 private
-   type Item   is new System.Address;
-   type Menu   is new System.Address;
+   type Item   is new System.Storage_Elements.Integer_Address;
+   type Menu   is new System.Storage_Elements.Integer_Address;
 
-   Null_Item : constant Item := Item (System.Null_Address);
-   Null_Menu : constant Menu := Menu (System.Null_Address);
+   Null_Item : constant Item := 0;
+   Null_Menu : constant Menu := 0;
 
 end Terminal_Interface.Curses.Menus;

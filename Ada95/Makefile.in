@@ -26,15 +26,18 @@
 # authorization.                                                             #
 ##############################################################################
 #
-#  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+#  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 #
 #  Version Control
-#  $Revision: 1.10 $
+#  $Revision: 1.12 $
 #
 SHELL		= /bin/sh
 THIS		= Makefile
 
 SUBDIRS         = @ADA_SUBDIRS@
+
+CF_MFLAGS 	= @cf_cv_makeflags@
+@SET_MAKE@
 
 all \
 sources \
@@ -43,19 +46,19 @@ install.libs \
 uninstall \
 uninstall.libs ::
 	for d in $(SUBDIRS); do \
-		(cd $$d ; $(MAKE) $@) ;\
+		(cd $$d ; $(MAKE) $(CF_MFLAGS) $@) ;\
 	done
 
 clean \
 mostlyclean ::
 	for d in $(SUBDIRS); do \
-		(cd $$d ; $(MAKE) $@) ;\
+		(cd $$d ; $(MAKE) $(CF_MFLAGS) $@) ;\
 	done
 
 distclean \
 realclean ::
 	for d in $(SUBDIRS); do \
-		(cd $$d ; $(MAKE) $@) ;\
+		(cd $$d ; $(MAKE) $(CF_MFLAGS) $@) ;\
 	done
 	rm -f Makefile
 

@@ -1,0 +1,1743 @@
+<HEAD><TITLE>terminal_interface-curses.ads</TITLE></HEAD>
+<BODY>
+<HR><DIV ALIGN="center"><H1> File : terminal_interface-curses.ads </H1></DIV><HR>
+<PRE>
+
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                         Terminal_Interface.Curses                        --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
+<FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
+<FONT COLOR=green><EM>-- "Software"), to deal in the Software without restriction, including      --</EM></FONT>
+<FONT COLOR=green><EM>-- without limitation the rights to use, copy, modify, merge, publish,      --</EM></FONT>
+<FONT COLOR=green><EM>-- distribute, distribute with modifications, sublicense, and/or sell       --</EM></FONT>
+<FONT COLOR=green><EM>-- copies of the Software, and to permit persons to whom the Software is    --</EM></FONT>
+<FONT COLOR=green><EM>-- furnished to do so, subject to the following conditions:                 --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- The above copyright notice and this permission notice shall be included  --</EM></FONT>
+<FONT COLOR=green><EM>-- in all copies or substantial portions of the Software.                   --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</EM></FONT>
+<FONT COLOR=green><EM>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</EM></FONT>
+<FONT COLOR=green><EM>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</EM></FONT>
+<FONT COLOR=green><EM>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</EM></FONT>
+<FONT COLOR=green><EM>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</EM></FONT>
+<FONT COLOR=green><EM>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</EM></FONT>
+<FONT COLOR=green><EM>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- Except as contained in this notice, the name(s) of the above copyright   --</EM></FONT>
+<FONT COLOR=green><EM>-- holders shall not be used in advertising or otherwise to promote the     --</EM></FONT>
+<FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
+<FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> (<A HREF="mailto:juergen.pfeifer@gmx.net">juergen.pfeifer@gmx.net</A>) 1996                          --</EM></FONT>
+<FONT COLOR=green><EM>--  Version Control:</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.24 @</EM></FONT>
+<FONT COLOR=green><EM>--  Binding Version 00.93</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--  curses binding.</EM></FONT>
+<FONT COLOR=green><EM>--  This module is generated. Please don't change it manually!</EM></FONT>
+<FONT COLOR=green><EM>--  Run the generator instead.</EM></FONT>
+<FONT COLOR=green><EM>--  |</EM></FONT>
+<b>with</b> <A HREF="interfac__ads.htm>3_9">System</A>.Storage_Elements;
+<b>with</b> Interfaces.C;  <FONT COLOR=green><EM>--  We need this for some assertions.</EM></FONT>
+
+<b>package</b> Terminal_Interface.Curses <b>is</b>
+   <b>pragma</b> Preelaborate (Terminal_Interface.Curses);
+   <b>pragma</b> Linker_Options ("-lAdaCurses");
+   <b>pragma</b> Linker_Options ("-lncurses");
+
+   <FONT COLOR=red><A NAME="54_4">NC_Major_Version</A></FONT> : <b>constant</b> := 5;<FONT COLOR=green><EM>--  Major version of the library</EM></FONT>
+   NC_Minor_Version : <b>constant</b> := 0;<FONT COLOR=green><EM>--  Minor version of the library</EM></FONT>
+   NC_Version : <b>constant</b> String := "5.0"; <FONT COLOR=green><EM>--  Version of library</EM></FONT>
+
+   <b>type</b> Window <b>is</b> <b>private</b>;
+   Null_Window : <b>constant</b> Window;
+
+   <b>type</b> <FONT COLOR=red><A NAME="61_9">Line_Position</A></FONT>   <b>is</b> <b>new</b> Natural;<FONT COLOR=green><EM>--  line coordinate</EM></FONT>
+   <b>type</b> Column_Position <b>is</b> <b>new</b> Natural;<FONT COLOR=green><EM>--  column coordinate</EM></FONT>
+
+   <b>subtype</b> Line_Count   <b>is</b> Line_Position   <b>range</b> 1 .. Line_Position'Last;
+  <FONT COLOR=green><EM>--  Type to count lines. We do not allow null windows, so must be positive</EM></FONT>
+   <b>subtype</b> Column_Count <b>is</b> Column_Position <b>range</b> 1 .. Column_Position'Last;
+  <FONT COLOR=green><EM>--  Type to count columns. We do not allow null windows, so must be positive</EM></FONT>
+
+   <b>type</b> Key_Code <b>is</b> <b>new</b> Natural;
+  <FONT COLOR=green><EM>--  That is anything including real characters, special keys and logical</EM></FONT>
+  <FONT COLOR=green><EM>--  request codes.</EM></FONT>
+
+   <b>subtype</b> Real_Key_Code <b>is</b> Key_Code <b>range</b> 0 .. 8#777#;
+  <FONT COLOR=green><EM>--  This are the codes that potentially represent a real keystroke.</EM></FONT>
+  <FONT COLOR=green><EM>--  Not all codes may be possible on a specific terminal. To check the</EM></FONT>
+  <FONT COLOR=green><EM>--  availability of a special key, the Has_Key function is provided.</EM></FONT>
+
+   <b>subtype</b> Special_Key_Code <b>is</b> Real_Key_Code
+     <b>range</b> 8#400# .. Real_Key_Code'Last;
+  <FONT COLOR=green><EM>--  Type for a function- or special key number</EM></FONT>
+
+   <b>subtype</b> Normal_Key_Code <b>is</b> Real_Key_Code <b>range</b>
+     Character'Pos (Character'First) .. Character'Pos (Character'Last);
+  <FONT COLOR=green><EM>--  This are the codes for regular (incl. non-graphical) characters.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  Constants for function- and special keys</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+   Key_None                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#400#;
+   Key_Code_Yes                   : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#400#;
+   Key_Min                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#401#;
+   Key_Break                      : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#401#;
+   Key_Cursor_Down                : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#402#;
+   Key_Cursor_Up                  : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#403#;
+   Key_Cursor_Left                : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#404#;
+   Key_Cursor_Right               : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#405#;
+   Key_Home                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#406#;
+   Key_Backspace                  : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#407#;
+   Key_F0                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#410#;
+   Key_F1                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#411#;
+   Key_F2                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#412#;
+   Key_F3                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#413#;
+   Key_F4                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#414#;
+   Key_F5                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#415#;
+   Key_F6                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#416#;
+   Key_F7                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#417#;
+   Key_F8                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#420#;
+   Key_F9                         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#421#;
+   Key_F10                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#422#;
+   Key_F11                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#423#;
+   Key_F12                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#424#;
+   Key_F13                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#425#;
+   Key_F14                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#426#;
+   Key_F15                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#427#;
+   Key_F16                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#430#;
+   Key_F17                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#431#;
+   Key_F18                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#432#;
+   Key_F19                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#433#;
+   Key_F20                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#434#;
+   Key_F21                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#435#;
+   Key_F22                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#436#;
+   Key_F23                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#437#;
+   Key_F24                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#440#;
+   Key_Delete_Line                : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#510#;
+   Key_Insert_Line                : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#511#;
+   Key_Delete_Char                : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#512#;
+   Key_Insert_Char                : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#513#;
+   Key_Exit_Insert_Mode           : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#514#;
+   Key_Clear_Screen               : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#515#;
+   Key_Clear_End_Of_Screen        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#516#;
+   Key_Clear_End_Of_Line          : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#517#;
+   Key_Scroll_1_Forward           : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#520#;
+   Key_Scroll_1_Backward          : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#521#;
+   Key_Next_Page                  : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#522#;
+   Key_Previous_Page              : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#523#;
+   Key_Set_Tab                    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#524#;
+   Key_Clear_Tab                  : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#525#;
+   Key_Clear_All_Tabs             : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#526#;
+   Key_Enter_Or_Send              : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#527#;
+   Key_Soft_Reset                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#530#;
+   Key_Reset                      : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#531#;
+   Key_Print                      : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#532#;
+   Key_Bottom                     : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#533#;
+   Key_Upper_Left_Of_Keypad       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#534#;
+   Key_Upper_Right_Of_Keypad      : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#535#;
+   Key_Center_Of_Keypad           : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#536#;
+   Key_Lower_Left_Of_Keypad       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#537#;
+   Key_Lower_Right_Of_Keypad      : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#540#;
+   Key_Back_Tab                   : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#541#;
+   Key_Beginning                  : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#542#;
+   Key_Cancel                     : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#543#;
+   Key_Close                      : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#544#;
+   Key_Command                    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#545#;
+   Key_Copy                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#546#;
+   Key_Create                     : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#547#;
+   Key_End                        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#550#;
+   Key_Exit                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#551#;
+   Key_Find                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#552#;
+   Key_Help                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#553#;
+   Key_Mark                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#554#;
+   Key_Message                    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#555#;
+   Key_Move                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#556#;
+   Key_Next                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#557#;
+   Key_Open                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#560#;
+   Key_Options                    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#561#;
+   Key_Previous                   : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#562#;
+   Key_Redo                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#563#;
+   Key_Reference                  : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#564#;
+   Key_Refresh                    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#565#;
+   Key_Replace                    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#566#;
+   Key_Restart                    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#567#;
+   Key_Resume                     : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#570#;
+   Key_Save                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#571#;
+   Key_Shift_Begin                : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#572#;
+   Key_Shift_Cancel               : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#573#;
+   Key_Shift_Command              : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#574#;
+   Key_Shift_Copy                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#575#;
+   Key_Shift_Create               : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#576#;
+   Key_Shift_Delete_Char          : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#577#;
+   Key_Shift_Delete_Line          : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#600#;
+   Key_Select                     : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#601#;
+   Key_Shift_End                  : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#602#;
+   Key_Shift_Clear_End_Of_Line    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#603#;
+   Key_Shift_Exit                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#604#;
+   Key_Shift_Find                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#605#;
+   Key_Shift_Help                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#606#;
+   Key_Shift_Home                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#607#;
+   Key_Shift_Insert_Char          : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#610#;
+   Key_Shift_Cursor_Left          : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#611#;
+   Key_Shift_Message              : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#612#;
+   Key_Shift_Move                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#613#;
+   Key_Shift_Next_Page            : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#614#;
+   Key_Shift_Options              : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#615#;
+   Key_Shift_Previous_Page        : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#616#;
+   Key_Shift_Print                : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#617#;
+   Key_Shift_Redo                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#620#;
+   Key_Shift_Replace              : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#621#;
+   Key_Shift_Cursor_Right         : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#622#;
+   Key_Shift_Resume               : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#623#;
+   Key_Shift_Save                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#624#;
+   Key_Shift_Suspend              : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#625#;
+   Key_Shift_Undo                 : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#626#;
+   Key_Suspend                    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#627#;
+   Key_Undo                       : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#630#;
+   Key_Mouse                      : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> := 8#631#;
+   Key_Resize                     : <b>constant</b> Special_Key_Code := 8#632#;
+
+   Key_Max                        : <b>constant</b> Special_Key_Code
+     := Special_Key_Code'Last;
+
+   <b>subtype</b> User_Key_Code <b>is</b> Key_Code
+     <b>range</b> (Key_Max + 129) .. Key_Code'Last;
+  <FONT COLOR=green><EM>--  This is reserved for user defined key codes. The range between Key_Max</EM></FONT>
+  <FONT COLOR=green><EM>--  and the first user code is reserved for subsystems like menu and forms.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  For those who like to use the original key names we produce them were</EM></FONT>
+  <FONT COLOR=green><EM>--  they differ from the original. Please note that they may differ in</EM></FONT>
+  <FONT COLOR=green><EM>--  lower/upper case.</EM></FONT>
+   KEY_DOWN         : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Cursor_Down;
+   KEY_UP           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Cursor_Up;
+   KEY_LEFT         : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Cursor_Left;
+   KEY_RIGHT        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Cursor_Right;
+   KEY_DL           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Delete_Line;
+   KEY_IL           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Insert_Line;
+   KEY_DC           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Delete_Char;
+   KEY_IC           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Insert_Char;
+   KEY_EIC          : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Exit_Insert_Mode;
+   KEY_CLEAR        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Clear_Screen;
+   KEY_EOS          : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Clear_End_Of_Screen;
+   KEY_EOL          : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Clear_End_Of_Line;
+   KEY_SF           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Scroll_1_Forward;
+   KEY_SR           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Scroll_1_Backward;
+   KEY_NPAGE        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Next_Page;
+   KEY_PPAGE        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Previous_Page;
+   KEY_STAB         : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Set_Tab;
+   KEY_CTAB         : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Clear_Tab;
+   KEY_CATAB        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Clear_All_Tabs;
+   KEY_ENTER        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Enter_Or_Send;
+   KEY_SRESET       : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Soft_Reset;
+   KEY_LL           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Bottom;
+   KEY_A1           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Upper_Left_Of_Keypad;
+   KEY_A3           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Upper_Right_Of_Keypad;
+   KEY_B2           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Center_Of_Keypad;
+   KEY_C1           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Lower_Left_Of_Keypad;
+   KEY_C3           : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Lower_Right_Of_Keypad;
+   KEY_BTAB         : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Back_Tab;
+   KEY_BEG          : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Beginning;
+   KEY_SBEG         : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Begin;
+   KEY_SCANCEL      : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Cancel;
+   KEY_SCOMMAND     : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Command;
+   KEY_SCOPY        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Copy;
+   KEY_SCREATE      : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Create;
+   KEY_SDC          : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Delete_Char;
+   KEY_SDL          : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Delete_Line;
+   KEY_SEND         : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_End;
+   KEY_SEOL         : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Clear_End_Of_Line;
+   KEY_SEXIT        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Exit;
+   KEY_SFIND        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Find;
+   KEY_SHELP        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Help;
+   KEY_SHOME        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Home;
+   KEY_SIC          : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Insert_Char;
+   KEY_SLEFT        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Cursor_Left;
+   KEY_SMESSAGE     : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Message;
+   KEY_SMOVE        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Move;
+   KEY_SNEXT        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Next_Page;
+   KEY_SOPTIONS     : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Options;
+   KEY_SPREVIOUS    : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Previous_Page;
+   KEY_SPRINT       : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Print;
+   KEY_SREDO        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Redo;
+   KEY_SREPLACE     : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Replace;
+   KEY_SRIGHT       : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Cursor_Right;
+   KEY_SRSUME       : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Resume;
+   KEY_SSAVE        : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Save;
+   KEY_SSUSPEND     : <A HREF="terminal_interface-curses__ads.htm#77_12">Special_Key_Code</A> <b>renames</b> Key_Shift_Suspend;
+   KEY_SUNDO        : Special_Key_Code <b>renames</b> Key_Shift_Undo;
+
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+
+   <b>type</b><A HREF="terminal_interface-curses__ads.htm>77_9"> </A>Color_Number <b>is</b> <b>range</b><A HREF="interfac__ads.htm>3_9"> </A>0 .. Integer<A HREF="i-c__ads.htm#36_9"> </A>(Interfaces.C.short'Last);
+   <b>for</b> Color_Number'Size <b>use</b> Interfaces.C.short'Size;
+  <FONT COLOR=green><EM>--  (n)curses uses a short for the color index</EM></FONT>
+  <FONT COLOR=green><EM>--  The model is, that a Color_Number is an index into an array of</EM></FONT>
+  <FONT COLOR=green><EM>--  (potentially) definable colors. Some of those indices are</EM></FONT>
+  <FONT COLOR=green><EM>--  predefined (see below), although they may not really exist.</EM></FONT>
+
+   Black    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A> := 0;
+   Red      : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A> := 1;
+   Green    : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A> := 2;
+   Yellow   : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A> := 3;
+   Blue     : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A> := 4;
+   Magenta  : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A> := 5;
+   Cyan     : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A> := 6;
+   White    : <b>constant</b> Color_Number := 7;
+
+   <b>type</b><A HREF="terminal_interface-curses__ads.htm>93_9"> </A>RGB_Value <b>is</b> <b>range</b><A HREF="interfac__ads.htm>3_9"> </A>0 .. Integer<A HREF="i-c__ads.htm#36_9"> </A>(Interfaces.C.short'Last);
+   <b>for</b> RGB_Value'Size <b>use</b> Interfaces.C.short'Size;
+  <FONT COLOR=green><EM>--  Some system may allow to redefine a color by setting RGB values.</EM></FONT>
+
+   <b>type</b><A HREF="terminal_interface-curses__ads.htm>97_9"> </A>Color_Pair <b>is</b> <b>range</b> 0 .. 255;
+   <b>for</b> Color_Pair'Size <b>use</b> 8;
+   <b>subtype</b> Redefinable_Color_Pair <b>is</b> Color_Pair <b>range</b> 1 .. 255;
+  <FONT COLOR=green><EM>--  (n)curses reserves 1 Byte for the color-pair number. Color Pair 0</EM></FONT>
+  <FONT COLOR=green><EM>--  is fixed (Black & White). A color pair is simply a combination of</EM></FONT>
+  <FONT COLOR=green><EM>--  two colors described by Color_Numbers, one for the foreground and</EM></FONT>
+  <FONT COLOR=green><EM>--  the other for the background</EM></FONT>
+
+   <b>type</b> Character_Attribute_Set <b>is</b>
+      <b>record</b>
+         Stand_Out               : Boolean;
+         Under_Line              : Boolean;
+         Reverse_Video           : Boolean;
+         Blink                   : Boolean;
+         Dim_Character           : Boolean;
+         Bold_Character          : Boolean;
+         Alternate_Character_Set : Boolean;
+         Invisible_Character     : Boolean;
+         Protected_Character     : Boolean;
+         Horizontal              : Boolean;
+         Left                    : Boolean;
+         Low                     : Boolean;
+         Right                   : Boolean;
+         Top                     : Boolean;
+         Vertical                : Boolean;
+      <b>end</b> <b>record</b><A HREF="terminal_interface-curses__ads.htm#305_9">;</A>
+   <b>pragma</b> Pack (Character_Attribute_Set);
+   <b>pragma</b> Convention (C, Character_Attribute_Set);
+
+   <b>for</b> Character_Attribute_Set <b>use</b>
+      <b>record</b>
+         Stand_Out               <b>at</b> 0 <b>range</b>  0 ..  0;
+         Under_Line              <b>at</b> 0 <b>range</b>  1 ..  1;
+         Reverse_Video           <b>at</b> 0 <b>range</b>  2 ..  2;
+         Blink                   <b>at</b> 0 <b>range</b>  3 ..  3;
+         Dim_Character           <b>at</b> 0 <b>range</b>  4 ..  4;
+         Bold_Character          <b>at</b> 0 <b>range</b>  5 ..  5;
+         Alternate_Character_Set <b>at</b> 0 <b>range</b>  6 ..  6;
+         Invisible_Character     <b>at</b> 0 <b>range</b>  7 ..  7;
+         Protected_Character     <b>at</b> 0 <b>range</b>  8 ..  8;
+         Horizontal              <b>at</b> 0 <b>range</b>  9 ..  9;
+         Left                    <b>at</b> 0 <b>range</b> 10 .. 10;
+         Low                     <b>at</b> 0 <b>range</b> 11 .. 11;
+         Right                   <b>at</b> 0 <b>range</b> 12 .. 12;
+         Top                     <b>at</b> 0 <b>range</b> 13 .. 13;
+         Vertical                <b>at</b> 0 <b>range</b> 14 .. 14;
+      <b>end</b> <b>record</b>;
+   <b>for</b> Character_Attribute_Set'Size <b>use</b> 16;
+  <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
+  <FONT COLOR=green><EM>--               different on your system.</EM></FONT>
+  <FONT COLOR=green><EM>--  (n)curses uses all but the lowes 16 Bits for Attributes.</EM></FONT>
+
+   Normal_Video : <b>constant</b> Character_Attribute_Set := (<b>others</b> => False);
+
+   <b>type</b> Attributed_Character <b>is</b>
+      <b>record</b>
+         Attr  : <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A>;
+         Color : Color_Pair;
+         Ch    : Character;
+      <b>end</b> <b>record</b>;
+   <b>pragma</b> Convention (C, Attributed_Character);
+  <FONT COLOR=green><EM>--  This is the counterpart for the chtype in C.</EM></FONT>
+
+   <b>for</b> Attributed_Character <b>use</b>
+      <b>record</b>
+         Ch    <b>at</b> 0 <b>range</b>  0 ..  7;
+         Color <b>at</b> 0 <b>range</b>  8 .. 15;
+         Attr  <b>at</b> 0 <b>range</b> 16 .. 31;
+      <b>end</b> <b>record</b>;
+   <b>for</b> Attributed_Character'Size <b>use</b> 32;
+     <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
+     <FONT COLOR=green><EM>--               different on your system.</EM></FONT>
+
+   Default_Character : <b>constant</b> Attributed_Character
+     := (Ch    => <A HREF="terminal_interface-curses__ads.htm>97_9">Character</A>'First,
+         Color => Color_Pair'First,
+         Attr  => (<b>others</b> => False)); <FONT COLOR=green><EM>--  preelaboratable Normal_Video</EM></FONT>
+
+   <b>type</b> Attributed_String <b>is</b> <b>array</b> (Positive <b>range</b> <>) <b>of</b> Attributed_Character;
+   <b>pragma</b> Pack (Attributed_String);
+  <FONT COLOR=green><EM>--  In this binding we allow strings of attributed characters.</EM></FONT>
+
+  <FONT COLOR=green><EM>------------------</EM></FONT>
+  <FONT COLOR=green><EM>--  Exceptions  --</EM></FONT>
+  <FONT COLOR=green><EM>------------------</EM></FONT>
+   <FONT COLOR=red><A NAME="383_4">Curses_Exception</A></FONT>     : <b>exception</b>;
+   Wrong_Curses_Version : <b>exception</b>;
+
+  <FONT COLOR=green><EM>--  Those exceptions are raised by the ETI (Extended Terminal Interface)</EM></FONT>
+  <FONT COLOR=green><EM>--  subpackets for Menu and Forms handling.</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+   <FONT COLOR=red><A NAME="389_4">Eti_System_Error</A></FONT>    : <b>exception</b>;
+   <FONT COLOR=red><A NAME="390_4">Eti_Bad_Argument</A></FONT>    : <b>exception</b>;
+   <FONT COLOR=red><A NAME="391_4">Eti_Posted</A></FONT>          : <b>exception</b>;
+   <FONT COLOR=red><A NAME="392_4">Eti_Connected</A></FONT>       : <b>exception</b>;
+   <FONT COLOR=red><A NAME="393_4">Eti_Bad_State</A></FONT>       : <b>exception</b>;
+   <FONT COLOR=red><A NAME="394_4">Eti_No_Room</A></FONT>         : <b>exception</b>;
+   <FONT COLOR=red><A NAME="395_4">Eti_Not_Posted</A></FONT>      : <b>exception</b>;
+   <FONT COLOR=red><A NAME="396_4">Eti_Unknown_Command</A></FONT> : <b>exception</b>;
+   <FONT COLOR=red><A NAME="397_4">Eti_No_Match</A></FONT>        : <b>exception</b>;
+   <FONT COLOR=red><A NAME="398_4">Eti_Not_Selectable</A></FONT>  : <b>exception</b>;
+   <FONT COLOR=red><A NAME="399_4">Eti_Not_Connected</A></FONT>   : <b>exception</b>;
+   <FONT COLOR=red><A NAME="400_4">Eti_Request_Denied</A></FONT>  : <b>exception</b>;
+   <FONT COLOR=red><A NAME="401_4">Eti_Invalid_Field</A></FONT>   : <b>exception</b>;
+   Eti_Current         : <b>exception</b>;
+
+  <FONT COLOR=green><EM>--------------------------------------------------------------------------</EM></FONT>
+  <FONT COLOR=green><EM>--  External C variables</EM></FONT>
+  <FONT COLOR=green><EM>--  Conceptually even in C this are kind of constants, but they are</EM></FONT>
+  <FONT COLOR=green><EM>--  initialized and sometimes changed by the library routines at runtime</EM></FONT>
+  <FONT COLOR=green><EM>--  depending on the type of terminal. I believe the best way to model</EM></FONT>
+  <FONT COLOR=green><EM>--  this is to use functions.</EM></FONT>
+  <FONT COLOR=green><EM>--------------------------------------------------------------------------</EM></FONT>
+
+   <b>function</b> Lines <A HREF="terminal_interface-curses__ads.htm#411_13"> </A>          <b>return</b> Line_Count;
+   <b>pragma</b> Inline (Lines);
+
+   <b>function</b> Columns          <b>return</b> Column_Count;
+   <b>pragma</b> Inline (Columns);
+
+   <b>function</b> Tab_Size         <b>return</b> Natural;
+   <b>pragma</b> Inline (Tab_Size);
+
+   <b>function</b> Number_Of_Colors <b>return</b> Natural;
+   <b>pragma</b> Inline (Number_Of_Colors);
+
+   <b>function</b> Number_Of_Color_Pairs <b>return</b> Natural;
+   <b>pragma</b> Inline (Number_Of_Color_Pairs);
+
+   ACS_Map : <b>array</b> (Character'Val (0) .. Character'Val (127)) <b>of</b>
+     Attributed_Character;
+   <b>pragma</b> Import (C, ACS_Map, "acs_map");
+  <FONT COLOR=green><EM>--</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+  <FONT COLOR=green><EM>--  Constants for several symbols from the Alternate Character Set</EM></FONT>
+  <FONT COLOR=green><EM>--  You must use this constants as indices into the ACS_Map array</EM></FONT>
+  <FONT COLOR=green><EM>--  to get the corresponding attributed character at runtime.</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+   ACS_Upper_Left_Corner    : <b>constant</b> Character := 'l';
+   ACS_Lower_Left_Corner    : <b>constant</b> Character := 'm';
+   ACS_Upper_Right_Corner   : <b>constant</b> Character := 'k';
+   ACS_Lower_Right_Corner   : <b>constant</b> Character := 'j';
+   ACS_Left_Tee             : <b>constant</b> Character := 't';
+   ACS_Right_Tee            : <b>constant</b> Character := 'u';
+   ACS_Bottom_Tee           : <b>constant</b> Character := 'v';
+   ACS_Top_Tee              : <b>constant</b> Character := 'w';
+   ACS_Horizontal_Line      : <b>constant</b> Character := 'q';
+   ACS_Vertical_Line        : <b>constant</b> Character := 'x';
+   ACS_Plus_Symbol          : <b>constant</b> Character := 'n';
+   ACS_Scan_Line_1          : <b>constant</b> Character := 'o';
+   ACS_Scan_Line_9          : <b>constant</b> Character := 's';
+   ACS_Diamond              : <b>constant</b> Character := Character'Val (96);
+   ACS_Checker_Board        : <b>constant</b> Character := 'a';
+   ACS_Degree               : <b>constant</b> Character := 'f';
+   ACS_Plus_Minus           : <b>constant</b> Character := 'g';
+   ACS_Bullet               : <b>constant</b> Character := '~';
+   ACS_Left_Arrow           : <b>constant</b> Character := ',';
+   ACS_Right_Arrow          : <b>constant</b> Character := '+';
+   ACS_Down_Arrow           : <b>constant</b> Character := '.';
+   ACS_Up_Arrow             : <b>constant</b> Character := '-';
+   ACS_Board_Of_Squares     : <b>constant</b> Character := 'h';
+   ACS_Lantern              : <b>constant</b> Character := 'i';
+   ACS_Solid_Block          : <b>constant</b> Character := '0';
+   ACS_Scan_Line_3          : <b>constant</b> Character := 'p';
+   ACS_Scan_Line_7          : <b>constant</b> Character := 'r';
+   ACS_Less_Or_Equal        : <b>constant</b> Character := 'y';
+   ACS_Greater_Or_Equal     : <b>constant</b> Character := 'z';
+   ACS_PI                   : <b>constant</b> Character := '{';
+   ACS_Not_Equal            : <b>constant</b> Character := '|';
+   ACS_Sterling             : <b>constant</b> Character := '}';
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_initscr.3x.html">curs_initscr.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Not implemented: newterm, set_term, delscreen</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_1">|</EM></FONT>
+   <b>function</b> Standard_Window <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_initscr.3x.html">stdscr</A></EM></FONT>
+   <b>pragma</b> Inline (Standard_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_2">|</EM></FONT>
+   <b>procedure</b> Init_Screen;
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_3">|</EM></FONT>
+   <b>procedure</b> Init_Windows <b>renames</b> Init_Screen;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_initscr.3x.html">initscr()</A></EM></FONT>
+   <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#482_14">Init_Screen</A>);
+   <b>pragma</b> Inline (Init_Windows);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_4">|</EM></FONT>
+   <b>procedure</b> End_Windows;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_initscr.3x.html">endwin()</A></EM></FONT>
+   <b>procedure</b> End_Screen <b>renames</b> End_Windows;
+   <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#490_14">End_Windows</A>);
+   <b>pragma</b> Inline (End_Screen);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_5">|</EM></FONT>
+   <b>function</b> Is_End_Window <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_initscr.3x.html">isendwin()</A></EM></FONT>
+   <b>pragma</b> Inline (Is_End_Window);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_move.3x.html">curs_move.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_6">|</EM></FONT>
+   <b>procedure</b> Move_Cursor (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                          Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                          Column : <b>in</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_move.3x.html">wmove()</A></EM></FONT>
+   <b>pragma</b> Inline (Move_Cursor);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_addch.3x.html">curs_addch.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_7">|</EM></FONT>
+   <b>procedure</b> Add (Win :  <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Window</A> := Standard_Window;
+                  Ch  :  <b>in</b> Attributed_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addch.3x.html">waddch()</A></EM></FONT>
+
+   <b>procedure</b> Add (Win :  <b>in</b> Window := Standard_Window;
+                  Ch  :  <b>in</b> Character);
+  <FONT COLOR=green><EM>--  Add a single character at the current logical cursor position to</EM></FONT>
+  <FONT COLOR=green><EM>--  the window. Use the current windows attributes.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_8">|</EM></FONT>
+   <b>procedure</b> Add
+     (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+      Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Column : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Column_Position</A>;
+      Ch     : <b>in</b> Attributed_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addch.3x.html">mvwaddch()</A></EM></FONT>
+
+   <b>procedure</b> Add
+     (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+      Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Column : <b>in</b> Column_Position;
+      Ch     : <b>in</b> Character);
+  <FONT COLOR=green><EM>--  Move to the position and add a single character into the window</EM></FONT>
+  <FONT COLOR=green><EM>--  There are more Add routines, so the Inline pragma follows later</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_9">|</EM></FONT>
+   <b>procedure</b> Add_With_Immediate_Echo
+     (Win : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Window</A> := Standard_Window;
+      Ch  : <b>in</b> Attributed_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addch.3x.html">wechochar()</A></EM></FONT>
+
+   <b>procedure</b> Add_With_Immediate_Echo
+     (Win : <b>in</b> Window := Standard_Window;
+      Ch  : <b>in</b> Character);
+  <FONT COLOR=green><EM>--  Add a character and do an immediate resfresh of the screen.</EM></FONT>
+   <b>pragma</b> Inline (Add_With_Immediate_Echo);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_window.3x.html">curs_window.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_10">|</EM></FONT>
+   <b>function</b> Create
+     (Number_Of_Lines       : <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+      Number_Of_Columns     : <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Count</A>;
+      First_Line_Position   : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      First_Column_Position : Column_Position) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">newwin()</A></EM></FONT>
+   <b>pragma</b> Inline (Create);
+
+   <b>function</b> New_Window
+     (Number_Of_Lines       : <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+      Number_Of_Columns     : <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Count</A>;
+      First_Line_Position   : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      First_Column_Position : Column_Position) <b>return</b> Window
+     <b>renames</b> Create;
+   <b>pragma</b> Inline (New_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_11">|</EM></FONT>
+   <b>procedure</b> Delete (Win : <b>in</b> <b>out</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">delwin()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Reset Win to Null_Window</EM></FONT>
+   <b>pragma</b> Inline (Delete);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_12">|</EM></FONT>
+   <b>function</b> Sub_Window
+     (Win                   : <A HREF="terminal_interface-curses__ads.htm#63_12">Window</A> := Standard_Window;
+      Number_Of_Lines       : <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+      Number_Of_Columns     : <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Count</A>;
+      First_Line_Position   : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      First_Column_Position : Column_Position) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">subwin()</A></EM></FONT>
+   <b>pragma</b> Inline (Sub_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_13">|</EM></FONT>
+   <b>function</b> Derived_Window
+     (Win                   : <A HREF="terminal_interface-curses__ads.htm#63_12">Window</A> := Standard_Window;
+      Number_Of_Lines       : <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+      Number_Of_Columns     : <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Count</A>;
+      First_Line_Position   : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      First_Column_Position : Column_Position) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">derwin()</A></EM></FONT>
+   <b>pragma</b> Inline (Derived_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_14">|</EM></FONT>
+   <b>function</b> Duplicate (Win : Window) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">dupwin()</A></EM></FONT>
+   <b>pragma</b> Inline (Duplicate);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_15">|</EM></FONT>
+   <b>procedure</b> Move_Window (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A>;
+                          Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                          Column : <b>in</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">mvwin()</A></EM></FONT>
+   <b>pragma</b> Inline (Move_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_16">|</EM></FONT>
+   <b>procedure</b> Move_Derived_Window (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A>;
+                                  Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                                  Column : <b>in</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">mvderwin()</A></EM></FONT>
+   <b>pragma</b> Inline (Move_Derived_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_17">|</EM></FONT>
+   <b>procedure</b> Synchronize_Upwards (Win : <b>in</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">wsyncup()</A></EM></FONT>
+   <b>pragma</b> Import (C, Synchronize_Upwards, "wsyncup");
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_18">|</EM></FONT>
+   <b>procedure</b> Synchronize_Downwards (Win : <b>in</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">wsyncdown()</A></EM></FONT>
+   <b>pragma</b> Import (C, Synchronize_Downwards, "wsyncdown");
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_19">|</EM></FONT>
+   <b>procedure</b> Set_Synch_Mode (Win  : <b>in</b> Window := Standard_Window;
+                             Mode : <b>in</b> Boolean := False);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_window.3x.html">syncok()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Synch_Mode);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_addstr.3x.html">curs_addstr.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_20">|</EM></FONT>
+   <b>procedure</b> Add (Win : <b>in</b> Window := Standard_Window;
+                  Str : <b>in</b> String;
+                  Len : <b>in</b> Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addstr.3x.html">waddnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: waddstr()</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_21">|</EM></FONT>
+   <b>procedure</b> Add (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                  Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                  Column : <b>in</b> Column_Position;
+                  Str    : <b>in</b> String;
+                  Len    : <b>in</b> Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addstr.3x.html">mvwaddnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: mvwaddstr()</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_addchstr.3x.html">curs_addchstr.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_22">|</EM></FONT>
+   <b>procedure</b> Add (Win : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#375_9">Window</A> := Standard_Window;
+                  Str : <b>in</b> Attributed_String;
+                  Len : <b>in</b> Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addchstr.3x.html">waddchnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: waddchstr()</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_23">|</EM></FONT>
+   <b>procedure</b> Add (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                  Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                  Column : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#375_9">Column_Position</A>;
+                  Str    : <b>in</b> Attributed_String;
+                  Len    : <b>in</b> Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addchstr.3x.html">mvwaddchnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: mvwaddchstr()</EM></FONT>
+   <b>pragma</b> Inline (Add);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_border.3x.html">curs_border.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_24">|</EM></FONT>
+   <b>procedure</b> Border
+     (Win                       : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Window</A> := Standard_Window;
+      Left_Side_Symbol          : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Attributed_Character</A> := Default_Character;
+      Right_Side_Symbol         : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Attributed_Character</A> := Default_Character;
+      Top_Side_Symbol           : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Attributed_Character</A> := Default_Character;
+      Bottom_Side_Symbol        : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Attributed_Character</A> := Default_Character;
+      Upper_Left_Corner_Symbol  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Attributed_Character</A> := Default_Character;
+      Upper_Right_Corner_Symbol : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Attributed_Character</A> := Default_Character;
+      Lower_Left_Corner_Symbol  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Attributed_Character</A> := Default_Character;
+      Lower_Right_Corner_Symbol : <b>in</b> Attributed_Character := Default_Character
+     );
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_border.3x.html">wborder()</A></EM></FONT>
+   <b>pragma</b> Inline (Border);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_25">|</EM></FONT>
+   <b>procedure</b> Box
+     (Win               : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Window</A> := Standard_Window;
+      Vertical_Symbol   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Attributed_Character</A> := Default_Character;
+      Horizontal_Symbol : <b>in</b> Attributed_Character := Default_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_border.3x.html">box()</A></EM></FONT>
+   <b>pragma</b> Inline (Box);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_26">|</EM></FONT>
+   <b>procedure</b> Horizontal_Line
+     (Win         : <b>in</b> Window := Standard_Window;
+      Line_Size   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Natural</A>;
+      Line_Symbol : <b>in</b> Attributed_Character := Default_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_border.3x.html">whline()</A></EM></FONT>
+   <b>pragma</b> Inline (Horizontal_Line);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_27">|</EM></FONT>
+   <b>procedure</b> Vertical_Line
+     (Win         : <b>in</b> Window := Standard_Window;
+      Line_Size   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Natural</A>;
+      Line_Symbol : <b>in</b> Attributed_Character := Default_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_border.3x.html">wvline()</A></EM></FONT>
+   <b>pragma</b> Inline (Vertical_Line);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_getch.3x.html">curs_getch.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_28">|</EM></FONT>
+   <b>function</b> Get_Keystroke (Win : Window := Standard_Window)
+                           <b>return</b> Real_Key_Code;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getch.3x.html">wgetch()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Get a character from the keyboard and echo it - if enabled - to the</EM></FONT>
+  <FONT COLOR=green><EM>--  window.</EM></FONT>
+  <FONT COLOR=green><EM>--  If for any reason (i.e. a timeout) we couldn't get a character the</EM></FONT>
+  <FONT COLOR=green><EM>--  returned keycode is Key_None.</EM></FONT>
+   <b>pragma</b> Inline (Get_Keystroke);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_29">|</EM></FONT>
+   <b>procedure</b> Undo_Keystroke (Key : <b>in</b> Real_Key_Code);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getch.3x.html">ungetch()</A></EM></FONT>
+   <b>pragma</b> Inline (Undo_Keystroke);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_30">|</EM></FONT>
+   <b>function</b> Has_Key (Key : Special_Key_Code) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getch.3x.html">has_key()</A></EM></FONT>
+   <b>pragma</b> Inline (Has_Key);
+
+  <FONT COLOR=green><EM>--  |</EM></FONT>
+  <FONT COLOR=green><EM>--  | Some helper functions</EM></FONT>
+  <FONT COLOR=green><EM>--  |</EM></FONT>
+   <b>function</b> Is_Function_Key (Key : Special_Key_Code) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  Return True if the Key is a function key (i.e. one of F0 .. F63)</EM></FONT>
+   <b>pragma</b> Inline (Is_Function_Key);
+
+   <b>subtype</b> Function_Key_Number <b>is</b> Integer <b>range</b> 0 .. 63;
+  <FONT COLOR=green><EM>--  (n)curses allows for 64 function keys.</EM></FONT>
+
+   <b>function</b> Function_Key (Key : Real_Key_Code) <b>return</b> Function_Key_Number;
+  <FONT COLOR=green><EM>--  Return the number of the function key. If the code is not a</EM></FONT>
+  <FONT COLOR=green><EM>--  function key, a CONSTRAINT_ERROR will be raised.</EM></FONT>
+   <b>pragma</b> Inline (Function_Key);
+
+   <b>function</b> Function_Key_Code (Key : Function_Key_Number) <b>return</b> Real_Key_Code;
+  <FONT COLOR=green><EM>--  Return the key code for a given functionkey number.</EM></FONT>
+   <b>pragma</b> Inline (Function_Key_Code);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_attr.3x.html">curs_attr.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_31">|</EM></FONT>
+   <b>procedure</b> Switch_Character_Attribute
+     (Win  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Window</A> := Standard_Window;
+      Attr : <b>in</b> Character_Attribute_Set := Normal_Video;
+      On   : <b>in</b> Boolean := True);<FONT COLOR=green><EM>--  if False we switch Off.</EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_attr.3x.html">wattron()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: wattroff()</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_32">|</EM></FONT>
+   <b>procedure</b> Set_Character_Attributes
+     (Win   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Window</A> := Standard_Window;
+      Attr  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_attr.3x.html">wattrset()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Character_Attributes);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_33">|</EM></FONT>
+   <b>function</b> Get_Character_Attribute
+     (Win : <b>in</b> Window := Standard_Window) <b>return</b> Character_Attribute_Set;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_attr.3x.html">wattr_get()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_34">|</EM></FONT>
+   <b>function</b> Get_Character_Attribute
+     (Win : <b>in</b> Window := Standard_Window) <b>return</b> Color_Pair;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_attr.3x.html">wattr_get()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Character_Attribute);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_35">|</EM></FONT>
+   <b>procedure</b> Set_Color (Win  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Window</A> := Standard_Window;
+                        Pair : <b>in</b> Color_Pair);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_attr.3x.html">wcolor_set()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Color);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_36">|</EM></FONT>
+   <b>procedure</b> Change_Attributes
+     (Win   : <b>in</b> Window := Standard_Window;
+      Count : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Integer</A> := -1;
+      Attr  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_attr.3x.html">wchgat()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_37">|</EM></FONT>
+   <b>procedure</b> Change_Attributes
+     (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+      Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A> := Line_Position'First;
+      Column : <b>in</b> Column_Position := Column_Position'First;
+      Count  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Integer</A> := -1;
+      Attr   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color  : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_attr.3x.html">mvwchgat()</A></EM></FONT>
+   <b>pragma</b> Inline (Change_Attributes);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_beep.3x.html">curs_beep.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_38">|</EM></FONT>
+   <b>procedure</b> Beep;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_beep.3x.html">beep()</A></EM></FONT>
+   <b>pragma</b> Inline (Beep);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_39">|</EM></FONT>
+   <b>procedure</b> Flash_Screen;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_beep.3x.html">flash()</A></EM></FONT>
+   <b>pragma</b> Inline (Flash_Screen);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_inopts.3x.html">curs_inopts.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  | Not implemented : typeahead</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+  <FONT COLOR=green><EM>--  <A NAME="AFU_40">|</EM></FONT>
+   <b>procedure</b> Set_Cbreak_Mode (SwitchOn : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">cbreak()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: nocbreak()</EM></FONT>
+   <b>pragma</b> Inline (Set_Cbreak_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_41">|</EM></FONT>
+   <b>procedure</b> Set_Raw_Mode (SwitchOn : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">raw()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: noraw()</EM></FONT>
+   <b>pragma</b> Inline (Set_Raw_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_42">|</EM></FONT>
+   <b>procedure</b> Set_Echo_Mode (SwitchOn : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">echo()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: noecho()</EM></FONT>
+   <b>pragma</b> Inline (Set_Echo_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_43">|</EM></FONT>
+   <b>procedure</b> Set_Meta_Mode (Win      : <b>in</b> Window := Standard_Window;
+                            SwitchOn : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">meta()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Meta_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_44">|</EM></FONT>
+   <b>procedure</b> Set_KeyPad_Mode (Win      : <b>in</b> Window := Standard_Window;
+                              SwitchOn : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">keypad()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_KeyPad_Mode);
+
+   <b>type</b> Half_Delay_Amount <b>is</b> <b>range</b> 1 .. 255;
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_45">|</EM></FONT>
+   <b>procedure</b> Half_Delay (Amount : <b>in</b> Half_Delay_Amount);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">halfdelay()</A></EM></FONT>
+   <b>pragma</b> Inline (Half_Delay);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_46">|</EM></FONT>
+   <b>procedure</b> Set_Flush_On_Interrupt_Mode
+     (Win  : <b>in</b> Window := Standard_Window;
+      Mode : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">intrflush()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Flush_On_Interrupt_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_47">|</EM></FONT>
+   <b>procedure</b> Set_Queue_Interrupt_Mode
+     (Win   : <b>in</b> Window := Standard_Window;
+      Flush : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">qiflush()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: noqiflush()</EM></FONT>
+   <b>pragma</b> Inline (Set_Queue_Interrupt_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_48">|</EM></FONT>
+   <b>procedure</b> Set_NoDelay_Mode
+     (Win  : <b>in</b> Window := Standard_Window;
+      Mode : <b>in</b> Boolean := False);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">nodelay()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_NoDelay_Mode);
+
+   <b>type</b> Timeout_Mode <b>is</b> (Blocking, Non_Blocking, Delayed);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_49">|</EM></FONT>
+   <b>procedure</b> Set_Timeout_Mode (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#896_9">Window</A> := Standard_Window;
+                               Mode   : <b>in</b> Timeout_Mode;
+                               Amount : <b>in</b> Natural);<FONT COLOR=green><EM>--  in Miliseconds</EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">wtimeout()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Instead of overloading the semantic of the sign of amount, we</EM></FONT>
+  <FONT COLOR=green><EM>--  introduce the Timeout_Mode parameter. This should improve</EM></FONT>
+  <FONT COLOR=green><EM>--  readability. For Blocking and Non_Blocking, the Amount is not</EM></FONT>
+  <FONT COLOR=green><EM>--  evaluated.</EM></FONT>
+  <FONT COLOR=green><EM>--  We don't inline this procedure.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_50">|</EM></FONT>
+   <b>procedure</b> Set_Escape_Timer_Mode
+     (Win       : <b>in</b> Window := Standard_Window;
+      Timer_Off : <b>in</b> Boolean := False);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inopts.3x.html">notimeout()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Escape_Timer_Mode);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_outopts.3x.html">curs_outopts.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_51">|</EM></FONT>
+   <b>procedure</b> Set_NL_Mode (SwitchOn : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_outopts.3x.html">nl()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: nonl()</EM></FONT>
+   <b>pragma</b> Inline (Set_NL_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_52">|</EM></FONT>
+   <b>procedure</b> Clear_On_Next_Update
+     (Win      : <b>in</b> Window := Standard_Window;
+      Do_Clear : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_outopts.3x.html">clearok()</A></EM></FONT>
+   <b>pragma</b> Inline (Clear_On_Next_Update);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_53">|</EM></FONT>
+   <b>procedure</b> Use_Insert_Delete_Line
+     (Win    : <b>in</b> Window := Standard_Window;
+      Do_Idl : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_outopts.3x.html">idlok()</A></EM></FONT>
+   <b>pragma</b> Inline (Use_Insert_Delete_Line);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_54">|</EM></FONT>
+   <b>procedure</b> Use_Insert_Delete_Character
+     (Win    : <b>in</b> Window := Standard_Window;
+      Do_Idc : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_outopts.3x.html">idcok()</A></EM></FONT>
+   <b>pragma</b> Inline (Use_Insert_Delete_Character);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_55">|</EM></FONT>
+   <b>procedure</b> Leave_Cursor_After_Update
+     (Win      : <b>in</b> Window := Standard_Window;
+      Do_Leave : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_outopts.3x.html">leaveok()</A></EM></FONT>
+   <b>pragma</b> Inline (Leave_Cursor_After_Update);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_56">|</EM></FONT>
+   <b>procedure</b> Immediate_Update_Mode
+     (Win  : <b>in</b> Window := Standard_Window;
+      Mode : <b>in</b> Boolean := False);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_outopts.3x.html">immedok()</A></EM></FONT>
+   <b>pragma</b> Inline (Immediate_Update_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_57">|</EM></FONT>
+   <b>procedure</b> Allow_Scrolling
+     (Win  : <b>in</b> Window := Standard_Window;
+      Mode : <b>in</b> Boolean := False);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_outopts.3x.html">scrollok()</A></EM></FONT>
+   <b>pragma</b> Inline (Allow_Scrolling);
+
+   <b>function</b> Scrolling_Allowed (Win : Window := Standard_Window) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  There is no such function in the C interface.</EM></FONT>
+   <b>pragma</b> Inline (Scrolling_Allowed);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_58">|</EM></FONT>
+   <b>procedure</b> Set_Scroll_Region
+     (Win         : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+      Top_Line    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Line_Position</A>;
+      Bottom_Line : <b>in</b> Line_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_outopts.3x.html">wsetscrreg()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Scroll_Region);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_refresh.3x.html">curs_refresh.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_59">|</EM></FONT>
+   <b>procedure</b> Update_Screen;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_refresh.3x.html">doupdate()</A></EM></FONT>
+   <b>pragma</b> Inline (Update_Screen);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_60">|</EM></FONT>
+   <b>procedure</b> Refresh (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_refresh.3x.html">wrefresh()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  There is an overloaded Refresh for Pads.</EM></FONT>
+  <FONT COLOR=green><EM>--  The Inline pragma appears there</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_61">|</EM></FONT>
+   <b>procedure</b> Refresh_Without_Update
+     (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_refresh.3x.html">wnoutrefresh()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  There is an overloaded Refresh_Without_Update for Pads.</EM></FONT>
+  <FONT COLOR=green><EM>--  The Inline pragma appears there</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_62">|</EM></FONT>
+   <b>procedure</b> Redraw (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_refresh.3x.html">redrawwin()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_63">|</EM></FONT>
+   <b>procedure</b> Redraw (Win        : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                     Begin_Line : <b>in</b> Line_Position;
+                     Line_Count : <b>in</b> Positive);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_refresh.3x.html">wredrawln()</A></EM></FONT>
+   <b>pragma</b> Inline (Redraw);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_clear.3x.html">curs_clear.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_64">|</EM></FONT>
+   <b>procedure</b> Erase (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_clear.3x.html">werase()</A></EM></FONT>
+   <b>pragma</b> Inline (Erase);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_65">|</EM></FONT>
+   <b>procedure</b> Clear
+     (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_clear.3x.html">wclear()</A></EM></FONT>
+   <b>pragma</b> Inline (Clear);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_66">|</EM></FONT>
+   <b>procedure</b> Clear_To_End_Of_Screen
+     (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_clear.3x.html">wclrtobot()</A></EM></FONT>
+   <b>pragma</b> Inline (Clear_To_End_Of_Screen);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_67">|</EM></FONT>
+   <b>procedure</b> Clear_To_End_Of_Line
+     (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_clear.3x.html">wclrtoeol()</A></EM></FONT>
+   <b>pragma</b> Inline (Clear_To_End_Of_Line);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_bkgd.3x.html">curs_bkgd.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_68">|</EM></FONT>
+   <b>procedure</b> Set_Background
+     (Win : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Window</A> := Standard_Window;
+      Ch  : <b>in</b> Attributed_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_bkgd.3x.html">wbkgdset()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Background);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_69">|</EM></FONT>
+   <b>procedure</b> Change_Background
+     (Win : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Window</A> := Standard_Window;
+      Ch  : <b>in</b> Attributed_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_bkgd.3x.html">wbkgd()</A></EM></FONT>
+   <b>pragma</b> Inline (Change_Background);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_70">|</EM></FONT>
+   <b>function</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Get_Background</A> (Win : Window := Standard_Window)
+     <b>return</b> Attributed_Character;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_bkgd.3x.html">wbkgdget()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Background);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_touch.3x.html">curs_touch.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_71">|</EM></FONT>
+   <b>procedure</b> Untouch (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_touch.3x.html">untouchwin()</A></EM></FONT>
+   <b>pragma</b> Inline (Untouch);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_72">|</EM></FONT>
+   <b>procedure</b> Touch (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_touch.3x.html">touchwin()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_73">|</EM></FONT>
+   <b>procedure</b> Touch (Win   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                    Start : <b>in</b> Line_Position;
+                    Count : <b>in</b> Positive);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_touch.3x.html">touchline()</A></EM></FONT>
+   <b>pragma</b> Inline (Touch);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_74">|</EM></FONT>
+   <b>procedure</b> Change_Lines_Status (Win   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                                  Start : <b>in</b> Line_Position;
+                                  Count : <b>in</b> Positive;
+                                  State : <b>in</b> Boolean);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_touch.3x.html">wtouchln()</A></EM></FONT>
+   <b>pragma</b> Inline (Change_Lines_Status);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_75">|</EM></FONT>
+   <b>function</b> Is_Touched (Win  : <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                        Line : Line_Position) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_touch.3x.html">is_linetouched()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_76">|</EM></FONT>
+   <b>function</b> Is_Touched (Win : Window := Standard_Window) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_touch.3x.html">is_wintouched()</A></EM></FONT>
+   <b>pragma</b> Inline (Is_Touched);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_overlay.3x.html">curs_overlay.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_77">|</EM></FONT>
+   <b>procedure</b> Copy
+     (<FONT COLOR=red><A NAME="1109_7">Source_Window</A></FONT>            : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Window</A>;
+      Destination_Window       : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A>;
+      Source_Top_Row           : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Source_Left_Column       : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A>;
+      Destination_Top_Row      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Destination_Left_Column  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A>;
+      Destination_Bottom_Row   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Destination_Right_Column : <b>in</b> Column_Position;
+      Non_Destructive_Mode     : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_overlay.3x.html">copywin()</A></EM></FONT>
+   <b>pragma</b> Inline (Copy);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_78">|</EM></FONT>
+   <b>procedure</b> Overwrite (<FONT COLOR=red><A NAME="1122_25">Source_Window</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Window</A>;
+                        Destination_Window : <b>in</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_overlay.3x.html">overwrite()</A></EM></FONT>
+   <b>pragma</b> Inline (Overwrite);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_79">|</EM></FONT>
+   <b>procedure</b> Overlay (<FONT COLOR=red><A NAME="1128_23">Source_Window</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Window</A>;
+                      Destination_Window : <b>in</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_overlay.3x.html">overlay()</A></EM></FONT>
+   <b>pragma</b> Inline (Overlay);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_deleteln.3x.html">curs_deleteln.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_80">|</EM></FONT>
+   <b>procedure</b> Insert_Delete_Lines
+     (Win   : <b>in</b> Window  := Standard_Window;
+      Lines : <b>in</b> Integer := 1);<FONT COLOR=green><EM>--  default is to insert one line above</EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_deleteln.3x.html">winsdelln()</A></EM></FONT>
+   <b>pragma</b> Inline (Insert_Delete_Lines);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_81">|</EM></FONT>
+   <b>procedure</b> Delete_Line (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_deleteln.3x.html">wdeleteln()</A></EM></FONT>
+   <b>pragma</b> Inline (Delete_Line);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_82">|</EM></FONT>
+   <b>procedure</b> Insert_Line (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_deleteln.3x.html">winsertln()</A></EM></FONT>
+   <b>pragma</b> Inline (Insert_Line);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_getyx.3x.html">curs_getyx.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_83">|</EM></FONT>
+   <b>procedure</b> Get_Size
+     (Win               : <b>in</b> Window := Standard_Window;
+      Number_Of_Lines   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+      Number_Of_Columns : <b>out</b> Column_Count);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getyx.3x.html">getmaxyx()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Size);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_84">|</EM></FONT>
+   <b>procedure</b> Get_Window_Position
+     (Win             : <b>in</b> Window := Standard_Window;
+      Top_Left_Line   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Top_Left_Column : <b>out</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getyx.3x.html">getbegyx()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Window_Position);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_85">|</EM></FONT>
+   <b>procedure</b> Get_Cursor_Position
+     (Win    : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+      Line   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Column : <b>out</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getyx.3x.html">getyx()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Cursor_Position);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_86">|</EM></FONT>
+   <b>procedure</b> Get_Origin_Relative_To_Parent
+     (Win                : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A>;
+      Top_Left_Line      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Top_Left_Column    : <b>out</b> Column_Position;
+      Is_Not_A_Subwindow : <b>out</b> Boolean);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getyx.3x.html">getparyx()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Instead of placing -1 in the coordinates as return, we use a boolean</EM></FONT>
+  <FONT COLOR=green><EM>--  to return the info that the window has no parent.</EM></FONT>
+   <b>pragma</b> Inline (Get_Origin_Relative_To_Parent);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_pad.3x.html">curs_pad.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_87">|</EM></FONT>
+   <b>function</b> New_Pad (Lines   : <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                     Columns : Column_Count) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_pad.3x.html">newpad()</A></EM></FONT>
+   <b>pragma</b> Inline (New_Pad);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_88">|</EM></FONT>
+   <b>function</b> Sub_Pad
+     (Pad                   : <A HREF="terminal_interface-curses__ads.htm#63_12">Window</A>;
+      Number_Of_Lines       : <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+      Number_Of_Columns     : <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Count</A>;
+      First_Line_Position   : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      First_Column_Position : Column_Position) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_pad.3x.html">subpad()</A></EM></FONT>
+   <b>pragma</b> Inline (Sub_Pad);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_89">|</EM></FONT>
+   <b>procedure</b> Refresh
+     (Pad                      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A>;
+      Source_Top_Row           : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Source_Left_Column       : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A>;
+      Destination_Top_Row      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Destination_Left_Column  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A>;
+      Destination_Bottom_Row   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Destination_Right_Column : <b>in</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_pad.3x.html">prefresh()</A></EM></FONT>
+   <b>pragma</b> Inline (Refresh);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_90">|</EM></FONT>
+   <b>procedure</b> Refresh_Without_Update
+     (Pad                      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A>;
+      Source_Top_Row           : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Source_Left_Column       : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A>;
+      Destination_Top_Row      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Destination_Left_Column  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A>;
+      Destination_Bottom_Row   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Destination_Right_Column : <b>in</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_pad.3x.html">pnoutrefresh()</A></EM></FONT>
+   <b>pragma</b> Inline (Refresh_Without_Update);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_91">|</EM></FONT>
+   <b>procedure</b> Add_Character_To_Pad_And_Echo_It
+     (Pad : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Window</A>;
+      Ch  : <b>in</b> Attributed_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_pad.3x.html">pechochar()</A></EM></FONT>
+
+   <b>procedure</b> Add_Character_To_Pad_And_Echo_It
+     (Pad : <b>in</b> Window;
+      Ch  : <b>in</b> Character);
+   <b>pragma</b> Inline (Add_Character_To_Pad_And_Echo_It);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_scroll.3x.html">curs_scroll.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_92">|</EM></FONT>
+   <b>procedure</b> Scroll (Win    : <b>in</b> Window  := Standard_Window;
+                     Amount : <b>in</b> Integer := 1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_scroll.3x.html">wscrl()</A></EM></FONT>
+   <b>pragma</b> Inline (Scroll);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_delch.3x.html">curs_delch.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_93">|</EM></FONT>
+   <b>procedure</b> Delete_Character (Win : <b>in</b> Window := Standard_Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_delch.3x.html">wdelch()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_94">|</EM></FONT>
+   <b>procedure</b> Delete_Character
+     (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+      Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Column : <b>in</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_delch.3x.html">mvwdelch()</A></EM></FONT>
+   <b>pragma</b> Inline (Delete_Character);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_inch.3x.html">curs_inch.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_95">|</EM></FONT>
+   <b>function</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Peek</A> (Win : Window := Standard_Window)
+     <b>return</b> Attributed_Character;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inch.3x.html">winch()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_96">|</EM></FONT>
+   <b>function</b> Peek
+     (Win    : <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+      Line   : <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Column : Column_Position) <b>return</b> Attributed_Character;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inch.3x.html">mvwinch()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  More Peek's follow, pragma Inline appears later.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_winch.3x.html">curs_winch.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_97">|</EM></FONT>
+   <b>procedure</b> Insert (Win : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Window</A> := Standard_Window;
+                     Ch  : <b>in</b> Attributed_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_winch.3x.html">winsch()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_98">|</EM></FONT>
+   <b>procedure</b> Insert (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                     Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                     Column : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#351_9">Column_Position</A>;
+                     Ch     : <b>in</b> Attributed_Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_winch.3x.html">mvwinsch()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_winch.3x.html">curs_winch.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_99">|</EM></FONT>
+   <b>procedure</b> Insert (Win : <b>in</b> Window := Standard_Window;
+                     Str : <b>in</b> String;
+                     Len : <b>in</b> Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_winch.3x.html">winsnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: winsstr()</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_100">|</EM></FONT>
+   <b>procedure</b> Insert (Win    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                     Line   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                     Column : <b>in</b> Column_Position;
+                     Str    : <b>in</b> String;
+                     Len    : <b>in</b> Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_winch.3x.html">mvwinsnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: mvwinsstr()</EM></FONT>
+   <b>pragma</b> Inline (Insert);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_instr.3x.html">curs_instr.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_101">|</EM></FONT>
+   <b>procedure</b> Peek (Win : <b>in</b>  Window := Standard_Window;
+                   Str : <b>out</b> String;
+                   Len : <b>in</b>  Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_instr.3x.html">winnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: winstr()</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_102">|</EM></FONT>
+   <b>procedure</b> Peek (Win    : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                   Line   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                   Column : <b>in</b>  Column_Position;
+                   Str    : <b>out</b> String;
+                   Len    : <b>in</b>  Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_instr.3x.html">mvwinnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: mvwinstr()</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_inchstr.3x.html">curs_inchstr.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_103">|</EM></FONT>
+   <b>procedure</b> Peek (Win : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#375_9">Window</A> := Standard_Window;
+                   Str : <b>out</b> Attributed_String;
+                   Len : <b>in</b>  Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inchstr.3x.html">winchnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: winchstr()</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_104">|</EM></FONT>
+   <b>procedure</b> Peek (Win    : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                   Line   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                   Column : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#375_9">Column_Position</A>;
+                   Str    : <b>out</b> Attributed_String;
+                   Len    : <b>in</b>  Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inchstr.3x.html">mvwinchnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: mvwinchstr()</EM></FONT>
+  <FONT COLOR=green><EM>--  We don't inline the Peek procedures</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_getstr.3x.html">curs_getstr.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_105">|</EM></FONT>
+   <b>procedure</b> Get (Win : <b>in</b>  Window := Standard_Window;
+                  Str : <b>out</b> String;
+                  Len : <b>in</b>  Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getstr.3x.html">wgetnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: wgetstr()</EM></FONT>
+
+   <b>procedure</b> Get (Win    : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#60_9">Window</A> := Standard_Window;
+                  Line   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                  Column : <b>in</b>  Column_Position;
+                  Str    : <b>out</b> String;
+                  Len    : <b>in</b>  Integer := -1);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_getstr.3x.html">wgetnstr()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  not specified in ncurses, should be: mvwgetnstr()</EM></FONT>
+  <FONT COLOR=green><EM>--       and mvwgetstr() (which exists)</EM></FONT>
+  <FONT COLOR=green><EM>--  Get is not inlined</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_slk.3x.html">curs_slk.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+   <b>type</b> Soft_Label_Key_Format <b>is</b> (Three_Two_Three,
+                                  Four_Four,
+                                  PC_Style,             <FONT COLOR=green><EM>--  ncurses specific</EM></FONT>
+        <FONT COLOR=red><A NAME="1397_9"> </A></FONT>                         PC_Style_With_Index); <FONT COLOR=green><EM>--  "</EM></FONT>
+   <b>type</b> <FONT COLOR=red><A NAME="1398_9">Label_Number</A></FONT> <b>is</b> <b>new</b> Positive <b>range</b> 1 .. 12;
+   <b>type</b> Label_Justification <b>is</b> (Left, Centered, Right);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_106">|</EM></FONT>
+   <b>procedure</b> Init_Soft_Label_Keys
+     (Format : <b>in</b> Soft_Label_Key_Format := Three_Two_Three);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_init()</A></EM></FONT>
+   <b>pragma</b> Inline (Init_Soft_Label_Keys);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_107">|</EM></FONT>
+   <b>procedure</b> Set_Soft_Label_Key (Label : <b>in</b> Label_Number;
+                                 Text  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm<398_9">String</A>;
+                                 Fmt   : <b>in</b> Label_Justification := Left);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_set()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  We don't inline this procedure</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_108">|</EM></FONT>
+   <b>procedure</b> Refresh_Soft_Label_Keys;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_refresh()</A></EM></FONT>
+   <b>pragma</b> Inline (Refresh_Soft_Label_Keys);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_109">|</EM></FONT>
+   <b>procedure</b> Refresh_Soft_Label_Keys_Without_Update;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_noutrefresh()</A></EM></FONT>
+   <b>pragma</b> Inline (Refresh_Soft_Label_Keys_Without_Update);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_110">|</EM></FONT>
+   <b>procedure</b> Get_Soft_Label_Key (Label : <b>in</b> Label_Number;
+                                 Text  : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_label()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_111">|</EM></FONT>
+   <b>function</b> Get_Soft_Label_Key (Label : <b>in</b> Label_Number) <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_label()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Same as function</EM></FONT>
+   <b>pragma</b> Inline (Get_Soft_Label_Key);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_112">|</EM></FONT>
+   <b>procedure</b> Clear_Soft_Label_Keys;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_clear()</A></EM></FONT>
+   <b>pragma</b> Inline (Clear_Soft_Label_Keys);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_113">|</EM></FONT>
+   <b>procedure</b> Restore_Soft_Label_Keys;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_restore()</A></EM></FONT>
+   <b>pragma</b> Inline (Restore_Soft_Label_Keys);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_114">|</EM></FONT>
+   <b>procedure</b> Touch_Soft_Label_Keys;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_touch()</A></EM></FONT>
+   <b>pragma</b> Inline (Touch_Soft_Label_Keys);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_115">|</EM></FONT>
+   <b>procedure</b> Switch_Soft_Label_Key_Attributes
+     (Attr : <b>in</b> Character_Attribute_Set;
+      On   : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_attron()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: slk_attroff()</EM></FONT>
+   <b>pragma</b> Inline (Switch_Soft_Label_Key_Attributes);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_116">|</EM></FONT>
+   <b>procedure</b> Set_Soft_Label_Key_Attributes
+     (Attr  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_attrset()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Soft_Label_Key_Attributes);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_117">|</EM></FONT>
+   <b>function</b> Get_Soft_Label_Key_Attributes <b>return</b> Character_Attribute_Set;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_attr()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_118">|</EM></FONT>
+   <b>function</b> Get_Soft_Label_Key_Attributes <b>return</b> Color_Pair;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_attr()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Soft_Label_Key_Attributes);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_119">|</EM></FONT>
+   <b>procedure</b> Set_Soft_Label_Key_Color (Pair : <b>in</b> Color_Pair);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_slk.3x.html">slk_color()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Soft_Label_Key_Color);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/keyok.3x.html">keyok.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_120">|</EM></FONT>
+   <b>procedure</b> Enable_Key (Key    : <b>in</b> Special_Key_Code;
+                         Enable : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/keyok.3x.html">keyok()</A></EM></FONT>
+   <b>pragma</b> Inline (Enable_Key);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/define_key.3x.html">define_key.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_121">|</EM></FONT>
+   <b>procedure</b> Define_Key (Definition : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#77_12">String</A>;
+                         Key        : <b>in</b> Special_Key_Code);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/define_key.3x.html">define_key()</A></EM></FONT>
+   <b>pragma</b> Inline (Define_Key);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_util.3x.html">curs_util.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  | Not implemented : filter, use_env, putwin, getwin</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+  <FONT COLOR=green><EM>--  <A NAME="AFU_122">|</EM></FONT>
+   <b>procedure</b> Key_Name (Key  : <b>in</b>  Real_Key_Code;
+                       Name : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_util.3x.html">keyname()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  The external name for a real keystroke.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_123">|</EM></FONT>
+   <b>function</b> Key_Name (Key  : <b>in</b>  Real_Key_Code) <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_util.3x.html">keyname()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Same as function</EM></FONT>
+  <FONT COLOR=green><EM>--  We don't inline this routine</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_124">|</EM></FONT>
+   <b>procedure</b> Un_Control (Ch  : <b>in</b> Attributed_Character;
+                         Str : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_util.3x.html">unctrl()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_125">|</EM></FONT>
+   <b>function</b> Un_Control (Ch  : <b>in</b> Attributed_Character) <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_util.3x.html">unctrl()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Same as function</EM></FONT>
+   <b>pragma</b> Inline (Un_Control);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_126">|</EM></FONT>
+   <b>procedure</b> Delay_Output (Msecs : <b>in</b> Natural);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_util.3x.html">delay_output()</A></EM></FONT>
+   <b>pragma</b> Inline (Delay_Output);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_127">|</EM></FONT>
+   <b>procedure</b> Flush_Input;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_util.3x.html">flushinp()</A></EM></FONT>
+   <b>pragma</b> Inline (Flush_Input);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_termattrs.3x.html">curs_termattrs.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_128">|</EM></FONT>
+   <b>function</b> Baudrate <b>return</b> Natural;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">baudrate()</A></EM></FONT>
+   <b>pragma</b> Inline (Baudrate);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_129">|</EM></FONT>
+   <b>function</b> Erase_Character <b>return</b> Character;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">erasechar()</A></EM></FONT>
+   <b>pragma</b> Inline (Erase_Character);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_130">|</EM></FONT>
+   <b>function</b> Kill_Character <b>return</b> Character;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">killchar()</A></EM></FONT>
+   <b>pragma</b> Inline (Kill_Character);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_131">|</EM></FONT>
+   <b>function</b> Has_Insert_Character <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">has_ic()</A></EM></FONT>
+   <b>pragma</b> Inline (Has_Insert_Character);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_132">|</EM></FONT>
+   <b>function</b> Has_Insert_Line <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">has_il()</A></EM></FONT>
+   <b>pragma</b> Inline (Has_Insert_Line);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_133">|</EM></FONT>
+   <b>function</b> Supported_Attributes <b>return</b> Character_Attribute_Set;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">termattrs()</A></EM></FONT>
+   <b>pragma</b> Inline (Supported_Attributes);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_134">|</EM></FONT>
+   <b>procedure</b> Long_Name (Name : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">longname()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_135">|</EM></FONT>
+   <b>function</b> Long_Name <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">longname()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Same as function</EM></FONT>
+   <b>pragma</b> Inline (Long_Name);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_136">|</EM></FONT>
+   <b>procedure</b> Terminal_Name (Name : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">termname()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_137">|</EM></FONT>
+   <b>function</b> Terminal_Name <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_termattrs.3x.html">termname()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Same as function</EM></FONT>
+   <b>pragma</b> Inline (Terminal_Name);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_color.3x.html">curs_color.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_138">|</EM></FONT>
+   <b>procedure</b> Start_Color;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">start_clolor()</A></EM></FONT>
+   <b>pragma</b> Import (C, Start_Color, "start_color");
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_139">|</EM></FONT>
+   <b>procedure</b> Init_Pair (Pair : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Redefinable_Color_Pair</A>;
+                        Fore : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A>;
+                        Back : <b>in</b> Color_Number);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">init_pair()</A></EM></FONT>
+   <b>pragma</b> Inline (Init_Pair);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_140">|</EM></FONT>
+   <b>procedure</b> Pair_Content (Pair : <b>in</b> Color_Pair;
+                           Fore : <b>out</b> <A HREF="terminal_interface-curses__ads.htm>77_9">Color_Number</A>;
+                           Back : <b>out</b> Color_Number);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">pair_content()</A></EM></FONT>
+   <b>pragma</b> Inline (Pair_Content);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_141">|</EM></FONT>
+   <b>function</b> Has_Colors <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">has_colors()</A></EM></FONT>
+   <b>pragma</b> Inline (Has_Colors);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_142">|</EM></FONT>
+   <b>procedure</b> Init_Color (Color : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>93_9">Color_Number</A>;
+                         Red   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>93_9">RGB_Value</A>;
+                         Green : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>93_9">RGB_Value</A>;
+                         Blue  : <b>in</b> RGB_Value);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">init_color()</A></EM></FONT>
+   <b>pragma</b> Inline (Init_Color);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_143">|</EM></FONT>
+   <b>function</b> Can_Change_Color <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">can_change_color()</A></EM></FONT>
+   <b>pragma</b> Inline (Can_Change_Color);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_144">|</EM></FONT>
+   <b>procedure</b> Color_Content (Color : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm>93_9">Color_Number</A>;
+                            Red   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm>93_9">RGB_Value</A>;
+                            Green : <b>out</b> <A HREF="terminal_interface-curses__ads.htm>93_9">RGB_Value</A>;
+                            Blue  : <b>out</b> RGB_Value);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">color_content()</A></EM></FONT>
+   <b>pragma</b> Inline (Color_Content);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_kernel.3x.html">curs_kernel.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  | Not implemented: getsyx, setsyx</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+   <b>type</b> Curses_Mode <b>is</b> (Curses, Shell);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_145">|</EM></FONT>
+   <b>procedure</b> Save_Curses_Mode (Mode : <b>in</b> Curses_Mode);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">def_prog_mode()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: def_shell_mode()</EM></FONT>
+   <b>pragma</b> Inline (Save_Curses_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_146">|</EM></FONT>
+   <b>procedure</b> Reset_Curses_Mode (Mode : <b>in</b> Curses_Mode);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">reset_prog_mode()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: reset_shell_mode()</EM></FONT>
+   <b>pragma</b> Inline (Reset_Curses_Mode);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_147">|</EM></FONT>
+   <b>procedure</b> Save_Terminal_State;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">savetty()</A></EM></FONT>
+   <b>pragma</b> Inline (Save_Terminal_State);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_148">|</EM></FONT>
+   <b>procedure</b> Reset_Terminal_State;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">resetty();</A></EM></FONT>
+   <b>pragma</b> Inline (Reset_Terminal_State);
+
+   <b>type</b> Stdscr_Init_Proc <b>is</b> <b>access</b>
+      <b>function</b> (Win     : <A HREF="terminal_interface-curses__ads.htm#65_12">Window</A>;
+                Columns :<A HREF="terminal_interface-curses__ads.htm<670_9"> </A>Column_Count) <b>return</b> Integer;
+   <b>pragma</b> Convention (C, Stdscr_Init_Proc);
+  <FONT COLOR=green><EM>--  N.B.: the return value is actually ignored, but it seems to be</EM></FONT>
+  <FONT COLOR=green><EM>--        a good practice to return 0 if you think all went fine</EM></FONT>
+  <FONT COLOR=green><EM>--        and -1 otherwise.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_149">|</EM></FONT>
+   <b>procedure</b> Rip_Off_Lines (Lines : <b>in</b> <A HREF="terminal_interface-curses__ads.htm<670_9">Integer</A>;
+                            Proc  : <b>in</b> Stdscr_Init_Proc);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">ripoffline()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  N.B.: to be more precise, this uses a ncurses specific enhancement of</EM></FONT>
+  <FONT COLOR=green><EM>--        ripoffline(), in which the Lines argument absolute value is the</EM></FONT>
+  <FONT COLOR=green><EM>--        number of lines to be ripped of. The official ripoffline() only</EM></FONT>
+  <FONT COLOR=green><EM>--        uses the sign of Lines to rip of a single line from bottom or top.</EM></FONT>
+   <b>pragma</b> Inline (Rip_Off_Lines);
+
+   <b>type</b> Cursor_Visibility <b>is</b> (Invisible, Normal, Very_Visible);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_150">|</EM></FONT>
+   <b>procedure</b> Set_Cursor_Visibility (Visibility : <b>in</b> <b>out</b> Cursor_Visibility);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">curs_set()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Cursor_Visibility);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_151">|</EM></FONT>
+   <b>procedure</b> Nap_Milli_Seconds (Ms : <b>in</b> Natural);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">napms()</A></EM></FONT>
+   <b>pragma</b> Inline (Nap_Milli_Seconds);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Some usefull helpers.</EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+   <b>type</b> Transform_Direction <b>is</b> (From_Screen, To_Screen);
+   <b>procedure</b> Transform_Coordinates
+     (W      : <b>in</b> Window := Standard_Window;
+      Line   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+      Column : <b>in</b> <b>out</b> Column_Position;
+      Dir    : <b>in</b> Transform_Direction := From_Screen);
+  <FONT COLOR=green><EM>--  This procedure transforms screen coordinates into coordinates relative</EM></FONT>
+  <FONT COLOR=green><EM>--  to the window and vice versa, depending on the Dir parmeter.</EM></FONT>
+  <FONT COLOR=green><EM>--  Screen coordinates are the position informations on the physical device.</EM></FONT>
+  <FONT COLOR=green><EM>--  An Curses_Exception will be raised if Line and Column are not in the</EM></FONT>
+  <FONT COLOR=green><EM>--  Window or if you pass the Null_Window as argument.</EM></FONT>
+  <FONT COLOR=green><EM>--  We don't inline this procedure</EM></FONT>
+
+<b>private</b>
+   <b>type</b> Window <b>is</b> <b>new</b> System.Storage_Elements.Integer_Address;
+   Null_Window : <b>constant</b> Window := 0;
+
+  <FONT COLOR=green><EM>--  The next constants are generated and may be different on your</EM></FONT>
+  <FONT COLOR=green><EM>--  architecture.</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+   Offset_maxy    : <b>constant</b> Natural :=  2;<FONT COLOR=green><EM>--  short</EM></FONT>
+   Offset_maxx    : <b>constant</b> Natural :=  3;<FONT COLOR=green><EM>--  short</EM></FONT>
+   Offset_begy    : <b>constant</b> Natural :=  4;<FONT COLOR=green><EM>--  short</EM></FONT>
+   Offset_begx    : <b>constant</b> Natural :=  5;<FONT COLOR=green><EM>--  short</EM></FONT>
+   Offset_cury    : <b>constant</b> Natural :=  0;<FONT COLOR=green><EM>--  short</EM></FONT>
+   Offset_curx    : <b>constant</b> Natural :=  1;<FONT COLOR=green><EM>--  short</EM></FONT>
+   Offset_yoffset : <b>constant</b> Natural := 36;<FONT COLOR=green><EM>--  short</EM></FONT>
+   Offset_pary    : <b>constant</b> Natural := 13;<FONT COLOR=green><EM>--  int</EM></FONT>
+   Offset_parx    : <b>constant</b> Natural := 12;<FONT COLOR=green><EM>--  int</EM></FONT>
+   Offset_scroll  : <b>constant</b> Natural := 27;<FONT COLOR=green><EM>--  char</EM></FONT>
+   Sizeof_bool    : <b>constant</b> Natural :=  1;<FONT COLOR=green><EM>--  bool</EM></FONT>
+   Offset_XY      : <b>constant</b> Natural :=  1;<FONT COLOR=green><EM>--  int</EM></FONT>
+
+
+<b>end</b> Terminal_Interface.Curses;
+</PRE></BODY></HTML>

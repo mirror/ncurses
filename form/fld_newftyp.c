@@ -27,12 +27,12 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_newftyp.c,v 1.2 1998/02/11 12:13:44 tom Exp $")
+MODULE_ID("$Id: fld_newftyp.c,v 1.5 1999/05/16 17:18:54 juergen Exp $")
 
 static FIELDTYPE const default_fieldtype = {
   0,                   /* status                                      */
@@ -71,7 +71,7 @@ FIELDTYPE *new_fieldtype(
 {
   FIELDTYPE *nftyp = (FIELDTYPE *)0;
   
-  if ( (field_check) && (char_check) )
+  if ( (field_check) || (char_check) )
     {
       nftyp = (FIELDTYPE *)malloc(sizeof(FIELDTYPE));
       if (nftyp)

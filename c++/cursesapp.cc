@@ -28,13 +28,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1997             *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
  ****************************************************************************/
 
 #include "cursesapp.h"
 #include "internal.h"
 
-MODULE_ID("$Id: cursesapp.cc,v 1.2 1998/02/11 12:13:41 tom Exp $")
+MODULE_ID("$Id: cursesapp.cc,v 1.4 1999/05/16 17:31:11 juergen Exp $")
 
 void
 NCursesApplication::init(bool bColors) {

@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_new.c,v 1.7 1998/02/11 12:13:49 tom Exp $")
+MODULE_ID("$Id: m_new.c,v 1.10 1999/05/16 17:26:59 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -57,6 +57,7 @@ MENU *new_menu(ITEM ** items)
   if (menu)
     {
       *menu = _nc_Default_Menu;
+      menu->status = 0;
       menu->rows = menu->frows;
       menu->cols = menu->fcols;
       if (items && *items)

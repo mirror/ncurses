@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@ DESCRIPTION
 AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
 
-$Id: ncurses.c,v 1.108 1998/02/28 01:11:47 tom Exp $
+$Id: ncurses.c,v 1.120 1999/10/23 20:01:30 tom Exp $
 
 ***************************************************************************/
 
@@ -185,6 +185,53 @@ static void ShellOut(bool message)
 	refresh();
 }
 
+#ifdef NCURSES_MOUSE_VERSION
+static const char *mouse_decode(MEVENT const *ep)
+{
+	static char buf[80];
+
+	(void) sprintf(buf, "id %2d  at (%2d, %2d, %2d) state %4lx = {",
+		       ep->id, ep->x, ep->y, ep->z, ep->bstate);
+
+#define SHOW(m, s) if ((ep->bstate & m)==m) {strcat(buf,s); strcat(buf, ", ");}
+	SHOW(BUTTON1_RELEASED,		"release-1")
+	SHOW(BUTTON1_PRESSED,		"press-1")
+	SHOW(BUTTON1_CLICKED,		"click-1")
+	SHOW(BUTTON1_DOUBLE_CLICKED,	"doubleclick-1")
+	SHOW(BUTTON1_TRIPLE_CLICKED,	"tripleclick-1")
+	SHOW(BUTTON1_RESERVED_EVENT,	"reserved-1")
+	SHOW(BUTTON2_RELEASED,		"release-2")
+	SHOW(BUTTON2_PRESSED,		"press-2")
+	SHOW(BUTTON2_CLICKED,		"click-2")
+	SHOW(BUTTON2_DOUBLE_CLICKED,	"doubleclick-2")
+	SHOW(BUTTON2_TRIPLE_CLICKED,	"tripleclick-2")
+	SHOW(BUTTON2_RESERVED_EVENT,	"reserved-2")
+	SHOW(BUTTON3_RELEASED,		"release-3")
+	SHOW(BUTTON3_PRESSED,		"press-3")
+	SHOW(BUTTON3_CLICKED,		"click-3")
+	SHOW(BUTTON3_DOUBLE_CLICKED,	"doubleclick-3")
+	SHOW(BUTTON3_TRIPLE_CLICKED,	"tripleclick-3")
+	SHOW(BUTTON3_RESERVED_EVENT,	"reserved-3")
+	SHOW(BUTTON4_RELEASED,		"release-4")
+	SHOW(BUTTON4_PRESSED,		"press-4")
+	SHOW(BUTTON4_CLICKED,		"click-4")
+	SHOW(BUTTON4_DOUBLE_CLICKED,	"doubleclick-4")
+	SHOW(BUTTON4_TRIPLE_CLICKED,	"tripleclick-4")
+	SHOW(BUTTON4_RESERVED_EVENT,	"reserved-4")
+	SHOW(BUTTON_CTRL,		"ctrl")
+	SHOW(BUTTON_SHIFT,		"shift")
+	SHOW(BUTTON_ALT,		"alt")
+	SHOW(ALL_MOUSE_EVENTS,		"all-events")
+	SHOW(REPORT_MOUSE_POSITION,	"position")
+#undef SHOW
+
+	if (buf[strlen(buf)-1] == ' ')
+		buf[strlen(buf)-2] = '\0';
+	(void) strcat(buf, "}");
+	return(buf);
+}
+#endif /* NCURSES_MOUSE_VERSION */
+
 /****************************************************************************
  *
  * Character input test
@@ -231,7 +278,7 @@ int y, x;
 		MEVENT	event;
 
 		getmouse(&event);
-		printw("KEY_MOUSE, %s\n", _tracemouse(&event));
+		printw("KEY_MOUSE, %s\n", mouse_decode(&event));
 	    }
 	    else
 #endif	/* NCURSES_MOUSE_VERSION */
@@ -304,6 +351,8 @@ int y, x;
 
 static int show_attr(int row, int skip, chtype attr, const char *name, bool once)
 {
+    int ncv = tigetnum("ncv");
+
     mvprintw(row, 8, "%s mode:", name);
     mvprintw(row, 24, "|");
     if (skip) printw("%*s", skip, " ");
@@ -316,8 +365,34 @@ static int show_attr(int row, int skip, chtype attr, const char *name, bool once
 	attroff(attr);
     if (skip) printw("%*s", skip, " ");
     printw("|");
-    if (attr != A_NORMAL && !(termattrs() & attr))
-	printw(" (N/A)");
+    if (attr != A_NORMAL) {
+	if (!(termattrs() & attr)) {
+	    printw(" (N/A)");
+	} else if (ncv > 0 && (getbkgd(stdscr) & A_COLOR)) {
+	    static const attr_t table[] = {
+		A_STANDOUT,
+		A_UNDERLINE,
+		A_REVERSE,
+		A_BLINK,
+		A_DIM,
+		A_BOLD,
+		A_INVIS,
+		A_PROTECT,
+		A_ALTCHARSET
+	    };
+	    unsigned n;
+	    bool found = FALSE;
+	    for (n = 0; n < sizeof(table)/sizeof(table[0]); n++) {
+		if ((table[n] & attr) != 0
+		 && ((1 << n) & ncv) != 0) {
+		    found = TRUE;
+		    break;
+		}
+	    }
+	    if (found)
+		printw(" (NCV)");
+	}
+    }
     return row + 2;
 }
 
@@ -355,7 +430,7 @@ static void attr_test(void)
 {
     int n;
     int skip = tigetnum("xmc");
-    int fg = COLOR_WHITE;
+    int fg = COLOR_BLACK;	/* color pair 0 is special */
     int bg = COLOR_BLACK;
     bool *pairs = (bool *)calloc(COLOR_PAIRS, sizeof(bool));
     pairs[0] = TRUE;
@@ -405,6 +480,7 @@ static void attr_test(void)
         refresh();
     } while (attr_getc(&n, &fg, &bg));
 
+    free((char *)pairs);
     bkgdset(A_NORMAL | BLANK);
     erase();
     endwin();
@@ -1440,17 +1516,6 @@ static void acs_and_scroll(void)
  ****************************************************************************/
 
 #if USE_LIBPANEL
-static PANEL *p1;
-static PANEL *p2;
-static PANEL *p3;
-static PANEL *p4;
-static PANEL *p5;
-static WINDOW *w1;
-static WINDOW *w2;
-static WINDOW *w3;
-static WINDOW *w4;
-static WINDOW *w5;
-
 static unsigned long nap_msec = 1;
 
 static NCURSES_CONST char *mod[] =
@@ -1499,17 +1564,24 @@ saywhat(NCURSES_CONST char *text)
 	mkpanel(rows,cols,tly,tlx) - alloc a win and panel and associate them
 --------------------------------------------------------------------------*/
 static PANEL *
-mkpanel(int rows, int cols, int tly, int tlx)
+mkpanel(int color, int rows, int cols, int tly, int tlx)
 {
-WINDOW *win = newwin(rows,cols,tly,tlx);
-PANEL *pan;
+WINDOW *win;
+PANEL *pan = 0;
 
-	if(!win)
-		return((PANEL *)0);
-	if((pan = new_panel(win)))
-		return(pan);
-	delwin(win);
-	return((PANEL *)0);
+	if ((win = newwin(rows, cols, tly, tlx)) != 0) {
+		if ((pan = new_panel(win)) == 0) {
+			delwin(win);
+		} else if (has_colors()) {
+			int fg = (color == COLOR_BLUE) ? COLOR_WHITE : COLOR_BLACK;
+			int bg = color;
+			init_pair(color, fg, bg);
+			wbkgdset(win, COLOR_PAIR(color) | ' ');
+		} else {
+			wbkgdset(win, A_BOLD | ' ');
+		}
+	}
+	return pan;
 }	/* end of mkpanel */
 
 /*+-------------------------------------------------------------------------
@@ -1543,9 +1615,10 @@ WINDOW *win = panel_window(pan);
 int num = ((const char *)panel_userptr(pan))[1];
 int y,x;
 
-	box(win, 0, 0);
 	wmove(win,1,1);
 	wprintw(win,"-pan%c-", num);
+	wclrtoeol(win);
+	box(win, 0, 0);
 	for(y = 2; y < getmaxy(win) - 1; y++)
 	{
 		for(x = 1; x < getmaxx(win) - 1; x++)
@@ -1559,7 +1632,7 @@ int y,x;
 static void demo_panels(void)
 {
 int itmp;
-register y,x;
+register int y,x;
 
 	refresh();
 
@@ -1570,24 +1643,25 @@ register y,x;
 	}
 	for(y = 0; y < 5; y++)
 	{
-		p1 = mkpanel(LINES/2 - 2, COLS/8 + 1, 0, 0);
-		w1 = panel_window(p1);
+		PANEL *p1;
+		PANEL *p2;
+		PANEL *p3;
+		PANEL *p4;
+		PANEL *p5;
+
+		p1 = mkpanel(COLOR_RED, LINES/2 - 2, COLS/8 + 1, 0, 0);
 		set_panel_userptr(p1,"p1");
 
-		p2 = mkpanel(LINES/2 + 1, COLS/7, LINES/4, COLS/10);
-		w2 = panel_window(p2);
+		p2 = mkpanel(COLOR_GREEN, LINES/2 + 1, COLS/7, LINES/4, COLS/10);
 		set_panel_userptr(p2,"p2");
 
-		p3 = mkpanel(LINES/4, COLS/10, LINES/2, COLS/9);
-		w3 = panel_window(p3);
+		p3 = mkpanel(COLOR_YELLOW, LINES/4, COLS/10, LINES/2, COLS/9);
 		set_panel_userptr(p3,"p3");
 
-		p4 = mkpanel(LINES/2 - 2, COLS/8, LINES/2 - 2, COLS/3);
-		w4 = panel_window(p4);
+		p4 = mkpanel(COLOR_BLUE, LINES/2 - 2, COLS/8, LINES/2 - 2, COLS/3);
 		set_panel_userptr(p4,"p4");
 
-		p5 = mkpanel(LINES/2 - 2, COLS/8, LINES/2, COLS/2 - 2);
-		w5 = panel_window(p5);
+		p5 = mkpanel(COLOR_MAGENTA, LINES/2 - 2, COLS/8, LINES/2, COLS/2 - 2);
 		set_panel_userptr(p5,"p5");
 
 		fill_panel(p1);
@@ -1678,6 +1752,9 @@ register y,x;
 
 		for(itmp = 0; itmp < 6; itmp++)
 		{
+			WINDOW *w4 = panel_window(p4);
+			WINDOW *w5 = panel_window(p5);
+
 			saywhat("m4; press any key to continue");
 			wmove(w4, LINES/8, 1);
 			waddstr(w4,mod[itmp]);
@@ -1686,6 +1763,7 @@ register y,x;
 			waddstr(w5,mod[itmp]);
 			pflush();
 			wait_a_while(nap_msec);
+
 			saywhat("m5; press any key to continue");
 			wmove(w4, LINES/6, 1);
 			waddstr(w4,mod[itmp]);
@@ -2219,14 +2297,25 @@ static int menu_virtualize(int c)
 {
     if (c == '\n' || c == KEY_EXIT)
 	return(MAX_COMMAND + 1);
+    else if (c == 'u')
+	return(REQ_SCR_ULINE);
+    else if (c == 'd')
+	return(REQ_SCR_DLINE);
+    else if (c == 'b' || c == KEY_NPAGE)
+	return(REQ_SCR_UPAGE);
+    else if (c == 'f' || c == KEY_PPAGE)
+	return(REQ_SCR_DPAGE);
     else if (c == 'n' || c == KEY_DOWN)
 	return(REQ_NEXT_ITEM);
     else if (c == 'p' || c == KEY_UP)
 	return(REQ_PREV_ITEM);
     else if (c == ' ')
 	return(REQ_TOGGLE_ITEM);
-    else
+    else {
+	if (c != KEY_MOUSE)
+	    beep();
 	return(c);
+    }
 }
 
 static const char *animals[] =
@@ -2241,13 +2330,17 @@ static void menu_test(void)
     ITEM	*items[SIZEOF(animals)];
     ITEM	**ip = items;
     const char	**ap;
-    int		mrows, mcols;
+    int		mrows, mcols, c;
     WINDOW	*menuwin;
 
+#ifdef NCURSES_MOUSE_VERSION
+    mousemask(ALL_MOUSE_EVENTS, (mmask_t *)0);
+#endif
     mvaddstr(0, 0, "This is the menu test:");
     mvaddstr(2, 0, "  Use up and down arrow to move the select bar.");
     mvaddstr(3, 0, "  'n' and 'p' act like arrows.");
-    mvaddstr(4, 0, "  Press return to exit.");
+    mvaddstr(4, 0, "  'b' and 'f' scroll up/down (page), 'u' and 'd' (line).");
+    mvaddstr(5, 0, "  Press return to exit.");
     refresh();
 
     for (ap = animals; *ap; ap++)
@@ -2256,6 +2349,7 @@ static void menu_test(void)
 
     m = new_menu(items);
 
+    set_menu_format(m, (SIZEOF(animals)+1)/2, 1);
     scale_menu(m, &mrows, &mcols);
 
     menuwin = newwin(mrows + 2, mcols +  2, MENU_Y, MENU_X);
@@ -2267,8 +2361,11 @@ static void menu_test(void)
 
     post_menu(m);
 
-    while (menu_driver(m, menu_virtualize(wGetchar(menuwin))) != E_UNKNOWN_COMMAND)
+    while ((c = menu_driver(m, menu_virtualize(wGetchar(menuwin)))) != E_UNKNOWN_COMMAND) {
+	if (c == E_REQUEST_DENIED)
+	    beep();
 	continue;
+    }
 
     (void) mvprintw(LINES - 2, 0,
 		     "You chose: %s\n", item_name(current_item(m)));
@@ -2281,6 +2378,9 @@ static void menu_test(void)
     free_menu(m);
     for (ip = items; *ip; ip++)
 	free_item(*ip);
+#ifdef NCURSES_MOUSE_VERSION
+    mousemask(0, (mmask_t *)0);
+#endif
 }
 
 #ifdef TRACE
@@ -2459,12 +2559,14 @@ static FIELD *make_label(int frow, int fcol, NCURSES_CONST char *label)
     return(f);
 }
 
-static FIELD *make_field(int frow, int fcol, int rows, int cols)
+static FIELD *make_field(int frow, int fcol, int rows, int cols, bool secure)
 {
-    FIELD	*f = new_field(rows, cols, frow, fcol, 0, 0);
+    FIELD	*f = new_field(rows, cols, frow, fcol, 0, secure ? 1 : 0);
 
-    if (f)
+    if (f) {
 	set_field_back(f, A_UNDERLINE);
+	set_field_userptr(f, (void *)0);
+    }
     return(f);
 }
 
@@ -2499,101 +2601,142 @@ static void erase_form(FORM *f)
     delwin(w);
 }
 
-static int form_virtualize(WINDOW *w)
+static int edit_secure(FIELD *me, int c)
 {
+    int rows, cols, frow, fcol, nbuf;
+
+    if (field_info(me, &rows, &cols, &frow, &fcol, (int *)0, &nbuf) == E_OK
+     && nbuf > 0) {
+	char temp[80];
+	long len;
+
+	strcpy(temp, field_buffer(me, 1));
+	len = (long)(char *) field_userptr(me);
+	if (c <= KEY_MAX) {
+	    if (isgraph(c)) {
+		temp[len++] = c;
+		temp[len] = 0;
+		set_field_buffer(me, 1, temp);
+		c = '*';
+	    } else {
+		c = 0;
+	    }
+	} else {
+	    switch (c) {
+	    case REQ_BEG_FIELD:
+	    case REQ_CLR_EOF:
+	    case REQ_CLR_EOL:
+	    case REQ_DEL_LINE:
+	    case REQ_DEL_WORD:
+	    case REQ_DOWN_CHAR:
+	    case REQ_END_FIELD:
+	    case REQ_INS_CHAR:
+	    case REQ_INS_LINE:
+	    case REQ_LEFT_CHAR:
+	    case REQ_NEW_LINE:
+	    case REQ_NEXT_WORD:
+	    case REQ_PREV_WORD:
+	    case REQ_RIGHT_CHAR:
+	    case REQ_UP_CHAR:
+		c = 0;		/* we don't want to do inline editing */
+		break;
+	    case REQ_CLR_FIELD:
+		if (len) {
+		    temp[0] = 0;
+		    set_field_buffer(me, 1, temp);
+		}
+		break;
+	    case REQ_DEL_CHAR:
+	    case REQ_DEL_PREV:
+		if (len) {
+		    temp[--len] = 0;
+		    set_field_buffer(me, 1, temp);
+		}
+	    	break;
+	    }
+	}
+	set_field_userptr(me, (void *)len);
+     }
+     return c;
+}
+
+static int form_virtualize(FORM *f, WINDOW *w)
+{
+    static const struct {
+	int code;
+	int result;
+    } lookup[] = {
+	{ CTRL('A'),     REQ_NEXT_CHOICE },
+	{ CTRL('B'),     REQ_PREV_WORD },
+	{ CTRL('C'),     REQ_CLR_EOL },
+	{ CTRL('D'),     REQ_DOWN_FIELD },
+	{ CTRL('E'),     REQ_END_FIELD },
+	{ CTRL('F'),     REQ_NEXT_PAGE },
+	{ CTRL('G'),     REQ_DEL_WORD },
+	{ CTRL('H'),     REQ_DEL_PREV },
+	{ CTRL('I'),     REQ_INS_CHAR },
+	{ CTRL('K'),     REQ_CLR_EOF },
+	{ CTRL('L'),     REQ_LEFT_FIELD },
+	{ CTRL('M'),     REQ_NEW_LINE },
+	{ CTRL('N'),     REQ_NEXT_FIELD },
+	{ CTRL('O'),     REQ_INS_LINE },
+	{ CTRL('P'),     REQ_PREV_FIELD },
+	{ CTRL('R'),     REQ_RIGHT_FIELD },
+	{ CTRL('S'),     REQ_BEG_FIELD },
+	{ CTRL('U'),     REQ_UP_FIELD },
+	{ CTRL('V'),     REQ_DEL_CHAR },
+	{ CTRL('W'),     REQ_NEXT_WORD },
+	{ CTRL('X'),     REQ_CLR_FIELD },
+	{ CTRL('Y'),     REQ_DEL_LINE },
+	{ CTRL('Z'),     REQ_PREV_CHOICE },
+	{ ESCAPE,        MAX_FORM_COMMAND + 1 },
+	{ KEY_BACKSPACE, REQ_DEL_PREV },
+	{ KEY_DOWN,      REQ_DOWN_CHAR },
+	{ KEY_END,       REQ_LAST_FIELD },
+	{ KEY_HOME,      REQ_FIRST_FIELD },
+	{ KEY_LEFT,      REQ_LEFT_CHAR },
+	{ KEY_LL,        REQ_LAST_FIELD },
+	{ KEY_NEXT,      REQ_NEXT_FIELD },
+	{ KEY_NPAGE,     REQ_NEXT_PAGE },
+	{ KEY_PPAGE,     REQ_PREV_PAGE },
+	{ KEY_PREVIOUS,  REQ_PREV_FIELD },
+	{ KEY_RIGHT,     REQ_RIGHT_CHAR },
+	{ KEY_UP,        REQ_UP_CHAR },
+	{ QUIT,          MAX_FORM_COMMAND + 1 }
+    };
+
     static int	mode = REQ_INS_MODE;
     int		c = wGetchar(w);
+    unsigned	n;
+    FIELD *me = current_field(f);
 
-    switch(c)
-    {
-    case QUIT:
-    case ESCAPE:
-	return(MAX_FORM_COMMAND + 1);
-
-    /* demo doesn't use these three, leave them in anyway as sample code */
-    case KEY_NPAGE:
-    case CTRL('F'):
-	return(REQ_NEXT_PAGE);
-    case KEY_PPAGE:
-	return(REQ_PREV_PAGE);
-
-    case KEY_NEXT:
-    case CTRL('N'):
-	return(REQ_NEXT_FIELD);
-    case KEY_PREVIOUS:
-    case CTRL('P'):
-	return(REQ_PREV_FIELD);
-
-    case KEY_HOME:
-	return(REQ_FIRST_FIELD);
-    case KEY_END:
-    case KEY_LL:
-	return(REQ_LAST_FIELD);
-
-    case CTRL('L'):
-	return(REQ_LEFT_FIELD);
-    case CTRL('R'):
-	return(REQ_RIGHT_FIELD);
-    case CTRL('U'):
-	return(REQ_UP_FIELD);
-    case CTRL('D'):
-	return(REQ_DOWN_FIELD);
-
-    case CTRL('W'):
-	return(REQ_NEXT_WORD);
-    case CTRL('B'):
-	return(REQ_PREV_WORD);
-    case CTRL('S'):
-	return(REQ_BEG_FIELD);
-    case CTRL('E'):
-	return(REQ_END_FIELD);
-
-    case KEY_LEFT:
-	return(REQ_LEFT_CHAR);
-    case KEY_RIGHT:
-	return(REQ_RIGHT_CHAR);
-    case KEY_UP:
-	return(REQ_UP_CHAR);
-    case KEY_DOWN:
-	return(REQ_DOWN_CHAR);
-
-    case CTRL('M'):
-	return(REQ_NEW_LINE);
-    case CTRL('I'):
-	return(REQ_INS_CHAR);
-    case CTRL('O'):
-	return(REQ_INS_LINE);
-    case CTRL('V'):
-	return(REQ_DEL_CHAR);
-
-    case CTRL('H'):
-    case KEY_BACKSPACE:
-	return(REQ_DEL_PREV);
-    case CTRL('Y'):
-	return(REQ_DEL_LINE);
-    case CTRL('G'):
-	return(REQ_DEL_WORD);
-
-    case CTRL('C'):
-	return(REQ_CLR_EOL);
-    case CTRL('K'):
-	return(REQ_CLR_EOF);
-    case CTRL('X'):
-	return(REQ_CLR_FIELD);
-    case CTRL('A'):
-	return(REQ_NEXT_CHOICE);
-    case CTRL('Z'):
-	return(REQ_PREV_CHOICE);
-
-    case CTRL(']'):
+    if (c == CTRL(']')) {
 	if (mode == REQ_INS_MODE)
-	    return(mode = REQ_OVL_MODE);
+	    mode = REQ_OVL_MODE;
 	else
-	    return(mode = REQ_INS_MODE);
-
-    default:
-	return(c);
+	    mode = REQ_INS_MODE;
+	c = mode;
+    } else {
+	for (n = 0; n < sizeof(lookup)/sizeof(lookup[0]); n++) {
+	    if (lookup[n].code == c) {
+		c = lookup[n].result;
+		break;
+	    }
+	}
     }
+
+    /*
+     * Force the field that the user is typing into to be in reverse video,
+     * while the other fields are shown underlined.
+     */
+    if (c <= KEY_MAX) {
+	c = edit_secure(me, c);
+	set_field_back(me, A_REVERSE);
+    } else if (c <= MAX_FORM_COMMAND) {
+	c = edit_secure(me, c);
+	set_field_back(me, A_UNDERLINE);
+    }
+    return c;
 }
 
 static int my_form_driver(FORM *form, int c)
@@ -2612,10 +2755,9 @@ static void demo_forms(void)
 {
     WINDOW	*w;
     FORM	*form;
-    FIELD	*f[10];
+    FIELD	*f[12], *secure;
     int		finished = 0, c;
-
-    mvaddstr(10, 57, "Forms Entry Test");
+    unsigned	n = 0;
 
     move(18, 0);
     addstr("Defined form-traversal keys:   ^Q/ESC- exit form\n");
@@ -2629,19 +2771,25 @@ static void demo_forms(void)
     addstr("^G   -- delete current word    ^C  -- clear to end of line\n");
     addstr("^K   -- clear to end of field  ^X  -- clear field\n");
     addstr("Arrow keys move within a field as you would expect.");
+
+    mvaddstr(4, 57, "Forms Entry Test");
+
     refresh();
 
     /* describe the form */
-    f[0] = make_label(0, 15, "Sample Form");
-    f[1] = make_label(2, 0, "Last Name");
-    f[2] = make_field(3, 0, 1, 18);
-    f[3] = make_label(2, 20, "First Name");
-    f[4] = make_field(3, 20, 1, 12);
-    f[5] = make_label(2, 34, "Middle Name");
-    f[6] = make_field(3, 34, 1, 12);
-    f[7] = make_label(5, 0, "Comments");
-    f[8] = make_field(6, 0, 4, 46);
-    f[9] = (FIELD *)0;
+    f[n++] = make_label(0, 15, "Sample Form");
+    f[n++] = make_label(2, 0, "Last Name");
+    f[n++] = make_field(3, 0, 1, 18, FALSE);
+    f[n++] = make_label(2, 20, "First Name");
+    f[n++] = make_field(3, 20, 1, 12, FALSE);
+    f[n++] = make_label(2, 34, "Middle Name");
+    f[n++] = make_field(3, 34, 1, 12, FALSE);
+    f[n++] = make_label(5, 0, "Comments");
+    f[n++] = make_field(6, 0, 4, 46, FALSE);
+    f[n++] = make_label(5, 20, "Password:");
+    secure =
+    f[n++] = make_field(5, 30, 1, 9, TRUE);
+    f[n++] = (FIELD *)0;
 
     form = new_form(f);
 
@@ -2651,9 +2799,12 @@ static void demo_forms(void)
     raw();
     while (!finished)
     {
-	switch(form_driver(form, c = form_virtualize(w)))
+	switch(form_driver(form, c = form_virtualize(form, w)))
 	{
 	case E_OK:
+	    mvaddstr(5, 57, field_buffer(secure, 1));
+	    clrtoeol();
+	    refresh();
 	    break;
 	case E_UNKNOWN_COMMAND:
 	    finished = my_form_driver(form, c);
@@ -3035,7 +3186,16 @@ main(int argc, char *argv[])
      */
     endwin();
 
+#if HAVE_CURSES_VERSION
+    (void) printf("Welcome to %s.  Press ? for help.\n", curses_version());
+#elif defined(NCURSES_VERSION_MAJOR) && defined(NCURSES_VERSION_MINOR) && defined(NCURSES_VERSION_PATCH)
+    (void) printf("Welcome to ncurses %d.%d.%d.  Press ? for help.\n",
+		NCURSES_VERSION_MAJOR,
+		NCURSES_VERSION_MINOR,
+		NCURSES_VERSION_PATCH);
+#else
     (void) puts("Welcome to ncurses.  Press ? for help.");
+#endif
 
     do {
 	(void) puts("This is the ncurses main menu");

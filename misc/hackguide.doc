@@ -8,7 +8,6 @@
           + Why System V Curses?
           + How to Design Extensions
      * Portability and Configuration
-          + If autoconf Fails
      * Documentation Conventions
      * How to Report Bugs
      * A Tour of the Ncurses Library
@@ -36,8 +35,8 @@
    
                            Objective of the Package
                                        
-   The objective of the ncurses package is to provide a freeware API for
-   character-cell terminals and terminal emulators with the following
+   The objective of the ncurses package is to provide a free software API
+   for character-cell terminals and terminal emulators with the following
    characteristics:
    
      * Source-compatible with historical curses implementations
@@ -105,33 +104,6 @@ How to Design Extensions
    specification files (configure.in and aclocal.m4) to set up a new
    feature macro, which you then use to condition your code.
    
-If autoconf Fails
-
-   The 'configure' script usually gets your system environment right
-   automatically. Here are some -D options you might need to compile with
-   if it fails:
-   
-   -DHAVE_UNISTD_H
-          if <unistd.h> is present
-          
-   -DHAVE_SIGACTION
-          if the sigaction function is present
-          
-   -DHAVE_USLEEP
-          if the usleep function is present
-          
-   -DSVR4_ACTION
-          if (e.g., svr4) you need _POSIX_SOURCE to have sigaction
-          
-   -DHAVE_TERMIOS_H
-          if you have <termios.h>
-          
-   -DHAVE_TERMIO_H
-          if you have <termio.h>; otherwise it uses <sgtty.h>
-          
-   -DBROKEN_TIOCGETWINSZ
-          on SVR4 and HPUX, the get window size ioctl is broken.
-          
                            Documentation Conventions
                                        
    There are three kinds of documentation associated with this package.
@@ -163,7 +135,7 @@ If autoconf Fails
                               How to Report Bugs
                                        
    The reporting address for bugs is bug-ncurses@gnu.org. This is a
-   majordomo list; to join, write to ncurses-request@gnu.org with a
+   majordomo list; to join, write to bug-ncurses-request@gnu.org with a
    message containing the line:
              subscribe <name>@<host.domain>
 
@@ -274,51 +246,71 @@ Library Overview
    interfaces to a small set of basic functions and data structures used
    to manipulate the virtual screen (in particular, none of this code
    does any I/O except through calls to more fundamental modules
-   described below). The files lib_addch.c, lib_bkgnd.c, lib_box.c,
-   lib_clear.c, lib_clrbot.c, lib_clreol.c, lib_data.c, lib_delch.c,
-   lib_delwin.c, lib_erase.c, lib_getstr.c, lib_inchstr.c, lib_insch.c,
-   lib_insdel.c, lib_insstr.c, lib_instr.c, lib_isendwin.c,
-   lib_keyname.c, lib_move.c, lib_mvwin.c, lib_overlay.c, lib_pad.c,
-   lib_printw.c, lib_scanw.c, lib_screen.c, lib_scroll.c, lib_scrreg.c,
-   lib_set_term.c, lib_slk.c, lib_touch.c, lib_unctrl.c, and lib_window.c
+   described below). The files
+   
+     lib_addch.c lib_bkgd.c lib_box.c lib_chgat.c lib_clear.c
+     lib_clearok.c lib_clrbot.c lib_clreol.c lib_colorset.c lib_data.c
+     lib_delch.c lib_delwin.c lib_echo.c lib_erase.c lib_gen.c
+     lib_getstr.c lib_hline.c lib_immedok.c lib_inchstr.c lib_insch.c
+     lib_insdel.c lib_insstr.c lib_instr.c lib_isendwin.c lib_keyname.c
+     lib_leaveok.c lib_move.c lib_mvwin.c lib_overlay.c lib_pad.c
+     lib_printw.c lib_redrawln.c lib_scanw.c lib_screen.c lib_scroll.c
+     lib_scrollok.c lib_scrreg.c lib_set_term.c lib_slk.c
+     lib_slkatr_set.c lib_slkatrof.c lib_slkatron.c lib_slkatrset.c
+     lib_slkattr.c lib_slkclear.c lib_slkcolor.c lib_slkinit.c
+     lib_slklab.c lib_slkrefr.c lib_slkset.c lib_slktouch.c lib_touch.c
+     lib_unctrl.c lib_vline.c lib_wattroff.c lib_wattron.c lib_window.c
+     
    are all in this category. They are very unlikely to need change,
    barring bugs or some fundamental reorganization in the underlying data
    structures.
    
-   The lib_trace.c, lib_traceatr.c, and lib_tracechr.c file are used only
-   for debugging support. It is rather unlikely you will ever need to
-   change these, unless you want to introduce a new debug trace level for
-   some reasoon.
+   These files are used only for debugging support:
+   
+     lib_trace.c lib_traceatr.c lib_tracebits.c lib_tracechr.c
+     lib_tracedmp.c lib_tracemse.c trace_buf.c
+     
+   It is rather unlikely you will ever need to change these, unless you
+   want to introduce a new debug trace level for some reasoon.
    
    There is another group of files that do direct I/O via tputs(),
    computations on the terminal capabilities, or queries to the OS
    environment, but nevertheless have only fairly low complexity. These
-   include: lib_acs.c, lib_beep.c, lib_color.c, lib_endwin.c,
-   lib_initscr.c, lib_longname.c, lib_newterm.c, lib_options.c,
-   lib_termcap.c, lib_ti.c, lib_tparm.c, lib_tputs.c, lib_vidattr.c, and
-   read_entry.c. These are likely to need revision only if ncurses is
-   being ported to an environment without an underlying terminfo
-   capability representation.
+   include:
    
-   The files lib_kernel.c, lib_baudrate.c, lib_raw.c, lib_tstp.c, and
-   lib_twait.c have serious hooks into the tty driver and signal
-   facilities. If you run into porting snafus moving the package to
-   another UNIX, the problem is likely to be in one of these files. The
-   file lib_print.c uses sleep(2) and also falls in this category.
+     lib_acs.c lib_beep.c lib_color.c lib_endwin.c lib_initscr.c
+     lib_longname.c lib_newterm.c lib_options.c lib_termcap.c lib_ti.c
+     lib_tparm.c lib_tputs.c lib_vidattr.c read_entry.c.
+     
+   They are likely to need revision only if ncurses is being ported to an
+   environment without an underlying terminfo capability representation.
    
-   Almost all of the real work is done in the files hashmap.c,
-   hardscroll.c, lib_addch.c, lib_doupdate.c, lib_mvcur.c, lib_getch.c,
-   lib_mouse.c, lib_refresh.c, and lib_setup.c. Most of the algorithmic
-   complexity in the library lives in these files. If there is a real bug
-   in ncurses itself, it's probably here. We'll tour some of these files
-   in detail below (see The Engine Room).
+   These files have serious hooks into the tty driver and signal
+   facilities:
+   
+     lib_kernel.c lib_baudrate.c lib_raw.c lib_tstp.c lib_twait.c
+     
+   If you run into porting snafus moving the package to another UNIX, the
+   problem is likely to be in one of these files. The file lib_print.c
+   uses sleep(2) and also falls in this category.
+   
+   Almost all of the real work is done in the files
+   
+     hardscroll.c hashmap.c lib_addch.c lib_doupdate.c lib_getch.c
+     lib_mouse.c lib_mvcur.c lib_refresh.c lib_setup.c lib_vidattr.c
+     
+   Most of the algorithmic complexity in the library lives in these
+   files. If there is a real bug in ncurses itself, it's probably here.
+   We'll tour some of these files in detail below (see The Engine Room).
    
    Finally, there is a group of files that is actually most of the
    terminfo compiler. The reason this code lives in the ncurses library
    is to support fallback to /etc/termcap. These files include
-   alloc_entry.c, captoinfo.c, comp_captab.c, comp_error.c, comp_hash.c,
-   comp_parse.c, comp_scan.c, and parse_entry.c, read_termcap.c, and
-   write_entry.c. We'll discuss these in the compiler tour.
+   
+     alloc_entry.c captoinfo.c comp_captab.c comp_error.c comp_hash.c
+     comp_parse.c comp_scan.c parse_entry.c read_termcap.c write_entry.c
+     
+   We'll discuss these in the compiler tour.
    
 The Engine Room
 
@@ -603,23 +595,24 @@ Source-Form Translation
    UNIX routines such as signal(2) or the stdio library. Thus, they
    should not need to be modified for single-terminal ports.
    
-   lib_addch.c lib_addstr.c lib_bkgd.c lib_box.c lib_clear.c lib_clrbot.c
-   lib_clreol.c lib_delch.c lib_delwin.c lib_erase.c lib_inchstr.c
-   lib_insch.c lib_insdel.c lib_insstr.c lib_keyname.c lib_move.c
-   lib_mvwin.c lib_newwin.c lib_overlay.c lib_pad.c lib_printw.c
-   lib_refresh.c lib_scanw.c lib_scroll.c lib_scrreg.c lib_set_term.c
-   lib_touch.c lib_tparm.c lib_tputs.c lib_unctrl.c lib_window.c panel.c
-   
+     lib_addch.c lib_addstr.c lib_bkgd.c lib_box.c lib_clear.c
+     lib_clrbot.c lib_clreol.c lib_delch.c lib_delwin.c lib_erase.c
+     lib_inchstr.c lib_insch.c lib_insdel.c lib_insstr.c lib_keyname.c
+     lib_move.c lib_mvwin.c lib_newwin.c lib_overlay.c lib_pad.c
+     lib_printw.c lib_refresh.c lib_scanw.c lib_scroll.c lib_scrreg.c
+     lib_set_term.c lib_touch.c lib_tparm.c lib_tputs.c lib_unctrl.c
+     lib_window.c panel.c
+     
    This module is pure curses, but calls outstr():
    
-   lib_getstr.c
-   
+     lib_getstr.c
+     
    These modules are pure curses, except that they use tputs() and
    putp():
    
-   lib_beep.c lib_endwin.c lib_color.c lib_options.c lib_slk.c
-   lib_vidattr.c
-   
+     lib_beep.c lib_color.c lib_endwin.c lib_options.c lib_slk.c
+     lib_vidattr.c
+     
    This modules assist in POSIX emulation on non-POSIX systems:
    
    sigaction.c
@@ -628,10 +621,10 @@ Source-Form Translation
    The following source files will not be needed for a
    single-terminal-type port.
    
-   captoinfo.c clear.c comp_captab.c comp_error.c comp_hash.c comp_main.c
-   comp_parse.c comp_scan.c alloc_entry.c dump_entry.c parse_entry.c
-   read_entry.c write_entry.c infocmp.c tput.c
-   
+     alloc_entry.c captoinfo.c clear.c comp_captab.c comp_error.c
+     comp_hash.c comp_main.c comp_parse.c comp_scan.c dump_entry.c
+     infocmp.c parse_entry.c read_entry.c tput.c write_entry.c
+     
    The following modules will use open()/read()/write()/close()/lseek()
    on files, but no other OS calls.
    
@@ -646,74 +639,51 @@ Source-Form Translation
    The following modules are `pure curses' but contain assumptions
    inappropriate for a memory-mapped port.
    
-lib_longname.c  -- assumes there may be multiple terminals
-        longname()              -- return long name of terminal
-lib_acs.c       -- assumes acs_map as a double indirection
-        init_acs()              -- initialize acs map
-lib_mvcur.c     -- assumes cursor moves have variable cost
-        mvcur_init()            -- initialize
-        mvcur()                 -- do physical cursor move
-        mvcur_wrap()            -- wrap
-        scrolln()               -- do physical scrolling
-lib_termcap.c   -- assumes there may be multiple terminals
-        tgetent()               -- load entry
-        tgetflag()              -- get boolean capability
-        tgetnum()               -- get numeric capability
-        tgetstr()               -- get string capability
-lib_ti.c        -- assumes there may be multiple terminals
-        tigetent()              -- load entry
-        tigetflag()             -- get boolean capability
-        tigetnum()              -- get numeric capability
-        tigetstr()              -- get string capability
-
-The following modules use UNIX-specific calls:
-
-lib_doupdate.c  -- input checking
-        doupdate()              -- repaint real screen to match virtual
-        _nc_outch()             -- put out a single character
-lib_getch.c     -- read()
-        wgetch()                -- get single character
-        wungetch()              -- push back single character
-lib_initscr.c   -- getenv()
-        initscr()               -- initialize curses functions
-lib_newterm.c
-        newterm()               -- set up new terminal screen
-lib_baudrate.c
-        baudrate()              -- return the baudrate
-lib_kernel.c    -- various tty-manipulation and system calls
-        reset_prog_mode()       -- reset ccurses-raw mode
-        reset_shell_mode()      -- reset cooked mode
-        erasechar()             -- return the erase char
-        killchar()              -- return the kill character
-        flushinp()              -- flush pending input
-        savetty()               -- save tty state
-        resetty()               -- reset tty to state at last savetty()
-lib_raw.c       -- various tty-manipulation calls
-        raw()
-        echo()
-        nl()
-        qiflush()
-        cbreak()
-        noraw()
-        noecho()
-        nonl()
-        noqiflush()
-        nocbreak()
-lib_setup.c     -- various tty-manipulation calls
-        use_env()
-        setupterm()
-lib_restart.c   -- various tty-manipulation calls
-        def_shell_mode()
-        def_prog_mode()
-        set_curterm()
-        del_curterm()
-lib_tstp.c      -- signal-manipulation calls
-        _nc_signal_handler()    -- enable/disable window-mode signal catching
-lib_twait.c     -- gettimeofday(), select().
-        usleep()                -- microsecond sleep
-        _nc_timed_wait()        -- timed wait for input
-
-   The package kernel could be made smaller.
+   lib_longname.c
+          assumes there may be multiple terminals
+          
+   lib_acs.c
+          assumes acs_map as a double indirection
+          
+   lib_mvcur.c
+          assumes cursor moves have variable cost
+          
+   lib_termcap.c
+          assumes there may be multiple terminals
+          
+   lib_ti.c
+          assumes there may be multiple terminals
+          
+   The following modules use UNIX-specific calls:
+   
+   lib_doupdate.c
+          input checking
+          
+   lib_getch.c
+          read()
+          
+   lib_initscr.c
+          getenv()
+          
+   lib_newterm.c
+   lib_baudrate.c
+   lib_kernel.c
+          various tty-manipulation and system calls
+          
+   lib_raw.c
+          various tty-manipulation calls
+          
+   lib_setup.c
+          various tty-manipulation calls
+          
+   lib_restart.c
+          various tty-manipulation calls
+          
+   lib_tstp.c
+          signal-manipulation calls
+          
+   lib_twait.c
+          gettimeofday(), select().
      _________________________________________________________________
    
    

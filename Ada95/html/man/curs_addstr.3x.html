@@ -1,0 +1,70 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>addstr</STRONG>,  <STRONG>addnstr</STRONG>,  <STRONG>waddstr</STRONG>, <STRONG>waddnstr</STRONG>, <STRONG>mvaddstr</STRONG>, <STRONG>mvaddnstr</STRONG>,
+       <STRONG>mvwaddstr</STRONG>, <STRONG>mvwaddnstr</STRONG> - add a string of  characters  to  a
+       <STRONG>curses</STRONG> window and advance cursor
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>int</STRONG> <STRONG>addstr(const</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
+       <STRONG>int</STRONG> <STRONG>addnstr(const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddnstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvaddstr(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvaddnstr(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwaddstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwaddnstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG>
+       <STRONG>int</STRONG> <STRONG>n);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These  routines  write  the characters of the (null-termi-
+       nated) character string <EM>str</EM> on the given  window.   It  is
+       similar  to  calling <STRONG>waddch</STRONG> once for each character in the
+       string.  The four routines with <EM>n</EM>  as  the  last  argument
+       write  at  most <EM>n</EM> characters.  If <EM>n</EM> is -1, then the entire
+       string will be added.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on
+       success  (the  SVr4 manuals specify only "an integer value
+       other than <STRONG>ERR</STRONG>") upon successful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note  that  all  of  these  routines  except  <STRONG>waddstr</STRONG>  and
+       <STRONG>waddnstr</STRONG> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       All  these  entry  points  are described in the XSI Curses
+       standard, Issue 4.  The XSI errors EILSEQ  and  EOVERFLOW,
+       associated  with  extended-level  conformance, are not yet
+       detected.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="curs_addch.3x.html">curs_addch(3X)</A></STRONG>.
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

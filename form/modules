@@ -1,4 +1,4 @@
-# $Id: modules,v 1.12 1998/02/11 12:13:44 tom Exp $
+# $Id: modules,v 1.13 1999/02/19 00:27:47 juergen Exp $
 ##############################################################################
 # Copyright (c) 1998 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -51,7 +51,6 @@ fld_page	lib		$(srcdir)	$(FORM_PRIV_H)
 fld_stat	lib		$(srcdir)	$(FORM_PRIV_H)
 fld_type	lib		$(srcdir)	$(FORM_PRIV_H)
 fld_user	lib		$(srcdir)	$(FORM_PRIV_H)
-frm_adabind	lib		$(srcdir)	$(FORM_PRIV_H)
 frm_cursor	lib		$(srcdir)	$(FORM_PRIV_H)
 frm_data	lib		$(srcdir)	$(FORM_PRIV_H)
 frm_def		lib		$(srcdir)	$(FORM_PRIV_H)

@@ -1,6 +1,6 @@
-# $Id: modules,v 1.42 1998/02/11 12:13:57 tom Exp $
+# $Id: modules,v 1.70 1999/10/23 12:39:12 tom Exp $
 ##############################################################################
-# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+# Copyright (c) 1998,1999 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -27,141 +27,161 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997
+# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997,1998
 #
 
 @ base
 # Library objects
-hardscroll	lib		$(srcdir)
-hashmap		lib		$(srcdir)
-lib_acs 	lib		$(srcdir)	../include/term.h
-lib_addch	lib		$(srcdir)
-lib_addstr	lib		$(srcdir)
-lib_baudrate	lib		$(srcdir)	../include/term.h
-lib_beep	lib		$(srcdir)	../include/term.h
-lib_bkgd	lib		$(srcdir)
-lib_box 	lib		$(srcdir)
-lib_chgat	lib		$(srcdir)
-lib_clear	lib		$(srcdir)
-lib_clearok	lib		$(srcdir)
-lib_clrbot	lib		$(srcdir)
-lib_clreol	lib		$(srcdir)
-lib_color	lib		$(srcdir)	../include/term.h
-lib_data	lib		$(srcdir)
-lib_delch	lib		$(srcdir)
-lib_delwin	lib		$(srcdir)
-lib_doupdate	lib		$(srcdir)	../include/term.h
-lib_echo	lib		$(srcdir)
-lib_endwin	lib		$(srcdir)
-lib_erase	lib		$(srcdir)
-lib_flash	lib		$(srcdir)	../include/term.h
+hardscroll	lib		$(serial)
+hashmap		lib		$(serial)	../include/term.h
+lib_addch	lib		$(base)
+lib_addstr	lib		$(base)
+lib_beep	lib		$(base)		../include/term.h
+lib_bkgd	lib		$(base)
+lib_box 	lib		$(base)
+lib_chgat	lib		$(base)
+lib_clear	lib		$(base)
+lib_clearok	lib		$(base)
+lib_clrbot	lib		$(base)
+lib_clreol	lib		$(base)
+lib_color	lib		$(base)		../include/term.h
+lib_colorset	lib		$(base)
+lib_delch	lib		$(base)
+lib_delwin	lib		$(base)
+lib_echo	lib		$(base)
+lib_endwin	lib		$(base)		../include/term.h
+lib_erase	lib		$(base)
+lib_flash	lib		$(base)		../include/term.h
 lib_gen 	lib		.		../include/curses.h
-lib_getch	lib		$(srcdir)
-lib_getstr	lib		$(srcdir)	../include/term.h
-lib_hline	lib		$(srcdir)
-lib_immedok	lib		$(srcdir)
-lib_inchstr	lib		$(srcdir)
-lib_initscr	lib		$(srcdir)
-lib_insch	lib		$(srcdir)
-lib_insdel	lib		$(srcdir)
-lib_insstr	lib		$(srcdir)
-lib_instr	lib		$(srcdir)
-lib_isendwin	lib		$(srcdir)
-lib_leaveok	lib		$(srcdir)
-lib_longname	lib		$(srcdir)
-lib_mouse	lib		$(srcdir)	../include/term.h
-lib_move	lib		$(srcdir)
-lib_mvcur	lib		$(srcdir)	../include/term.h
-lib_mvwin	lib		$(srcdir)
-lib_napms	lib		$(srcdir)
-lib_newterm	lib		$(srcdir)	../include/term.h
-lib_newwin	lib		$(srcdir)
-lib_nl		lib		$(srcdir)
-lib_overlay	lib		$(srcdir)
-lib_pad 	lib		$(srcdir)
-lib_print	lib		$(srcdir)	../include/term.h
-lib_printw	lib		$(srcdir)
-lib_redrawln	lib		$(srcdir)
-lib_refresh	lib		$(srcdir)
-lib_restart	lib		$(srcdir)
-lib_scanw	lib		$(srcdir)
-lib_screen	lib		$(srcdir)	../include/term.h
-lib_scroll	lib		$(srcdir)
-lib_scrollok	lib		$(srcdir)
-lib_scrreg	lib		$(srcdir)
-lib_set_term	lib		$(srcdir)	../include/term.h
-lib_slk 	lib		$(srcdir)	../include/term.h
-lib_slkatrof 	lib		$(srcdir)
-lib_slkatron 	lib		$(srcdir)
-lib_slkatrset 	lib		$(srcdir)
-lib_slkattr 	lib		$(srcdir)
-lib_slkclear 	lib		$(srcdir)
-lib_slkinit 	lib		$(srcdir)
-lib_slklab	lib		$(srcdir)
-lib_slkrefr	lib		$(srcdir)	../include/term.h
-lib_slkset	lib		$(srcdir)
-lib_slktouch	lib		$(srcdir)
-lib_touch	lib		$(srcdir)
-lib_traceatr	lib		$(srcdir)
-lib_tracedmp	lib		$(srcdir)
-lib_tracemse	lib		$(srcdir)
-lib_tstp	lib		$(srcdir)
-lib_ungetch	lib		$(srcdir)
-lib_vidattr	lib		$(srcdir)	../include/term.h
-lib_vline	lib		$(srcdir)
-lib_wattroff	lib		$(srcdir)
-lib_wattron	lib		$(srcdir)
-lib_window	lib		$(srcdir)
-nc_panel	lib		$(srcdir)
-safe_sprintf	lib		$(srcdir)
-write_entry	lib		$(srcdir)	../include/term.h $(INCDIR)/tic.h
+lib_getch	lib		$(base)
+lib_getstr	lib		$(base)		../include/term.h
+lib_hline	lib		$(base)
+lib_immedok	lib		$(base)
+lib_inchstr	lib		$(base)
+lib_initscr	lib		$(base)		$(INCDIR)/tic.h
+lib_insch	lib		$(base)
+lib_insdel	lib		$(base)
+lib_insstr	lib		$(base)
+lib_instr	lib		$(base)
+lib_isendwin	lib		$(base)
+lib_leaveok	lib		$(base)
+lib_mouse	lib		$(base)		../include/term.h
+lib_move	lib		$(base)
+lib_mvcur	lib		$(serial)	../include/term.h $(INCDIR)/tic.h
+lib_mvwin	lib		$(base)
+lib_newterm	lib		$(base)		../include/term.h
+lib_newwin	lib		$(base)
+lib_nl		lib		$(base)
+lib_overlay	lib		$(base)
+lib_pad 	lib		$(base)
+lib_printw	lib		$(base)
+lib_redrawln	lib		$(base)
+lib_refresh	lib		$(base)
+lib_restart	lib		$(base)		../include/term.h
+lib_scanw	lib		$(base)
+lib_screen	lib		$(base)		../include/term.h
+lib_scroll	lib		$(base)
+lib_scrollok	lib		$(base)
+lib_scrreg	lib		$(base)
+lib_set_term	lib		$(base)		../include/term.h
+lib_slk 	lib		$(base)		../include/term.h
+lib_slkatr_set	lib		$(base)
+lib_slkatrof 	lib		$(base)
+lib_slkatron 	lib		$(base)
+lib_slkatrset 	lib		$(base)
+lib_slkattr 	lib		$(base)
+lib_slkclear 	lib		$(base)
+lib_slkcolor 	lib		$(base)
+lib_slkinit 	lib		$(base)
+lib_slklab	lib		$(base)
+lib_slkrefr	lib		$(base)		../include/term.h
+lib_slkset	lib		$(base)
+lib_slktouch	lib		$(base)
+lib_touch	lib		$(base)
+lib_traceatr	lib		$(trace)	../include/term.h
+lib_tracedmp	lib		$(trace)
+lib_tracemse	lib		$(trace)
+lib_tstp	lib		$(serial)
+lib_ungetch	lib		$(base)
+lib_vidattr	lib		$(serial)	../include/term.h
+lib_vline	lib		$(base)
+lib_wattroff	lib		$(base)
+lib_wattron	lib		$(base)
+lib_winch	lib		$(base)
+lib_window	lib		$(base)
+nc_panel	lib		$(base)
+safe_sprintf	lib		$(base)
+tty_update	lib		$(serial)	../include/term.h
 
 # Modules for porting
-sigaction	lib		$(srcdir)
-vsscanf 	lib		$(srcdir)
+memmove		lib		$(base)
+sigaction	lib		$(base)
+vsscanf 	lib		$(base)
 
 # Extensions to the base library
 @ ext_funcs
-define_key	lib		$(srcdir)
+define_key	lib		$(base)
 expanded	lib		.
-keyok		lib		$(srcdir)
-lib_adabind	lib		$(srcdir)
-lib_dft_fgbg	lib		$(srcdir)
-lib_freeall	lib		$(srcdir)
-resizeterm	lib		$(srcdir)	../include/term.h
-softscroll	lib		$(srcdir)
-wresize		lib		$(srcdir)	../include/term.h
+keybound	lib		$(base)
+keyok		lib		$(base)
+lib_dft_fgbg	lib		$(base)		../include/term.h
+lib_freeall	lib		$(base)
+lib_print	lib		$(tinfo)	../include/term.h
+resizeterm	lib		$(base)		../include/term.h
+trace_xnames	lib		$(trace)	../include/term.h $(INCDIR)/term_entry.h
+tries		lib		$(base)
+version		lib		$(base)
+wresize		lib		$(base)		../include/term.h
 
 # Support for termcap (and tic, etc.), which can be a separate library
 @ termlib
-alloc_entry	lib		$(srcdir)	../include/term.h
-captoinfo	lib		$(srcdir)
+access		lib		$(tinfo)
+add_tries	lib		$(tinfo)
+alloc_entry	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h
+alloc_ttype	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h
+captoinfo	lib		$(tinfo)	$(INCDIR)/tic.h
 codes		lib		.
-comp_captab	lib		.		../include/term.h ../include/hashsize.h
-comp_error	lib		$(srcdir)
-comp_expand	lib		$(srcdir)	$(INCDIR)/tic.h
-comp_hash	lib		$(srcdir)	../include/term.h ../include/hashsize.h
-comp_parse	lib		$(srcdir)	../include/term.h $(INCDIR)/tic.h
-comp_scan	lib		$(srcdir)
+comp_captab	lib		.		$(INCDIR)/tic.h ../include/term.h ../include/hashsize.h
+comp_error	lib		$(tinfo)	$(INCDIR)/tic.h
+comp_expand	lib		$(tinfo)	$(INCDIR)/tic.h
+comp_hash	lib		$(tinfo)	../include/term.h $(INCDIR)/tic.h ../include/hashsize.h
+comp_parse	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h
+comp_scan	lib		$(tinfo)	$(INCDIR)/tic.h
+doalloc		lib		$(tinfo)
 fallback	lib		.		../include/term.h $(INCDIR)/tic.h
-lib_cur_term	lib		$(srcdir)
-lib_kernel	lib		$(srcdir)	../include/term.h
+free_ttype	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h
+getenv_num	lib		$(tinfo)
+home_terminfo	lib		$(tinfo)
+init_keytry	lib		$(tinfo)	../include/term.h $(INCDIR)/tic.h init_keytry.h
+lib_acs 	lib		$(tinfo)	../include/term.h
+lib_baudrate	lib		$(tinfo)	../include/term.h
+lib_cur_term	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h
+lib_data	lib		$(tinfo)
+lib_has_cap	lib		$(tinfo)	../include/term.h
+lib_kernel	lib		$(tinfo)	../include/term.h
 lib_keyname	lib		.		../include/term.h
-lib_options	lib		$(srcdir)	../include/term.h keys.tries
-lib_raw 	lib		$(srcdir)	../include/term.h
-lib_termcap	lib		$(srcdir)	../include/term.h
-lib_ti		lib		$(srcdir)	../include/term.h
-lib_tparm	lib		$(srcdir)	../include/term.h
-lib_tputs	lib		$(srcdir)	../include/term.h
-lib_trace	lib		$(srcdir)
-lib_tracechr	lib		$(srcdir)
-lib_twait	lib		$(srcdir)
-name_match	lib		$(srcdir)	../include/term.h $(INCDIR)/tic.h
+lib_longname	lib		$(tinfo)
+lib_napms	lib		$(tinfo)
+lib_options	lib		$(tinfo)	../include/term.h
+lib_raw 	lib		$(tinfo)	../include/term.h
+lib_setup	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h
+lib_termcap	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h
+lib_termname	lib		$(tinfo)	$(INCDIR)/tic.h
+lib_ti		lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h
+lib_tparm	lib		$(tinfo)	../include/term.h $(INCDIR)/tic.h
+lib_tputs	lib		$(tinfo)	../include/term.h $(INCDIR)/tic.h
+lib_trace	lib		$(trace)	$(INCDIR)/tic.h
+lib_tracebits	lib		$(trace)	../include/term.h
+lib_tracechr	lib		$(trace)
+lib_ttyflags	lib		$(tinfo)	../include/term.h
+lib_twait	lib		$(serial)
+name_match	lib		$(tinfo)	../include/term.h $(INCDIR)/tic.h
 names		lib		.
-parse_entry	lib		$(srcdir)	../include/term.h ../include/parametrized.h
-read_entry	lib		$(srcdir)	../include/term.h $(INCDIR)/tic.h
-read_termcap	lib		$(srcdir)	../include/term.h
-lib_setup	lib		$(srcdir)	../include/term.h
-trace_buf	lib		$(srcdir)
-tries		lib		$(srcdir)
+parse_entry	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h ../include/parametrized.h
+read_entry	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h
+read_termcap	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h
+setbuf		lib		$(tinfo)
+trace_buf	lib		$(trace)
+trace_tries	lib		$(trace)
 unctrl		lib		.
+write_entry	lib		$(tinfo)	../include/term.h $(INCDIR)/term_entry.h $(INCDIR)/tic.h

@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_item_opt.c,v 1.6 1998/02/11 12:13:49 tom Exp $")
+MODULE_ID("$Id: m_item_opt.c,v 1.10 1999/05/16 17:25:52 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -52,6 +52,8 @@ MODULE_ID("$Id: m_item_opt.c,v 1.6 1998/02/11 12:13:49 tom Exp $")
 +--------------------------------------------------------------------------*/
 int set_item_opts(ITEM *item, Item_Options opts)
 { 
+  opts &= ALL_ITEM_OPTS;
+
   if (opts & ~ALL_ITEM_OPTS)
     RETURN(E_BAD_ARGUMENT);
   
@@ -97,8 +99,8 @@ int item_opts_off(ITEM *item, Item_Options  opts)
     RETURN(E_BAD_ARGUMENT);
   else
     {
-      Normalize_Item(citem);
-      opts = citem->opt & ~opts;
+      Normalize_Item(citem);    
+      opts = citem->opt & ~(opts & ALL_ITEM_OPTS);
       return set_item_opts( item, opts );
     }
 }
@@ -117,6 +119,7 @@ int item_opts_on(ITEM *item, Item_Options opts)
   ITEM *citem = item; /* use a copy because set_item_opts must detect
                          NULL item itself to adjust its behaviour */
   
+  opts &= ALL_ITEM_OPTS;
   if (opts & ~ALL_ITEM_OPTS)
     RETURN(E_BAD_ARGUMENT);
   else

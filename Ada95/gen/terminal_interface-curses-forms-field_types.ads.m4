@@ -1,5 +1,5 @@
 --  -*- ada -*-
-define(`HTMLNAME',`terminal_interface-curses-forms-field_user_data_s.html')dnl
+define(`HTMLNAME',`terminal_interface-curses-forms-field_user_data__ads.htm')dnl
 include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --                                                                          --
@@ -36,15 +36,17 @@ include(M4MACRO)dnl
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.6 $
---  Binding Version 00.93
+--  $Revision: 1.12 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
-with Terminal_Interface.Curses.Aux;
+with Interfaces.C;
 
 package Terminal_Interface.Curses.Forms.Field_Types is
-   pragma Preelaborate (Field_Types);
+   pragma Preelaborate (Terminal_Interface.Curses.Forms.Field_Types);
+   use type Interfaces.C.int;
+   subtype C_Int is Interfaces.C.int;
 
    --  MANPAGE(`form_fieldtype.3x')
 
@@ -86,8 +88,6 @@ package Terminal_Interface.Curses.Forms.Field_Types is
    --  | Most of this is used by the implementations of the child packages.
    --  |
 private
-   use Terminal_Interface.Curses.Aux;
-
    type Makearg_Function is access
      function (Args : System.Address) return System.Address;
    pragma Convention (C, Makearg_Function);
@@ -117,8 +117,8 @@ private
    --  |
    type Low_Level_Field_Type is
       record
-         Status :              C_Short;
-         Ref_Count :           C_Long_Int;
+         Status :              Interfaces.C.short;
+         Ref_Count :           Interfaces.C.long;
          Left, Right :         System.Address;
          Makearg :             Makearg_Function;
          Copyarg :             Copyarg_Function;

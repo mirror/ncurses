@@ -33,14 +33,13 @@
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control
---  $Revision: 1.8 $
---  Binding Version 00.93
+--  $Revision: 1.11 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Text_IO;
 
-with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 with Ada.Exceptions; use Ada.Exceptions;
 
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
@@ -50,7 +49,6 @@ with Terminal_Interface.Curses.Menus.Menu_User_Data;
 with Terminal_Interface.Curses.Menus.Item_User_Data;
 
 with Sample.Manifest; use Sample.Manifest;
-with Sample.Helpers; use Sample.Helpers;
 with Sample.Function_Key_Setting; use Sample.Function_Key_Setting;
 with Sample.Keyboard_Handler; use Sample.Keyboard_Handler;
 with Sample.Header_Handler; use Sample.Header_Handler;

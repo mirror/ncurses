@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Laurent Pautet <pautet@gnat.com> 1997 (modified by J.Pfeifer)
 --  Version Control
---  $Revision: 1.3 $
---  Binding Version 00.93
+--  $Revision: 1.4 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 --                                                                          --
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;

@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.42 1998/02/19 16:54:54 florian Exp $
+# $Id: Makefile.in,v 1.51 1999/10/23 20:13:02 tom Exp $
 ##############################################################################
-# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+# Copyright (c) 1998,1999 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -36,6 +36,10 @@
 
 SHELL		= /bin/sh
 
+CF_MFLAGS 	= @cf_cv_makeflags@
+@SET_MAKE@
+x		= @PROG_EXT@
+
 MODEL		= ../@DFT_OBJ_SUBDIR@
 INSTALL_PREFIX	= @INSTALL_PREFIX@
 srcdir		= @srcdir@
@@ -56,24 +60,24 @@ CXXFLAGS	= @CXXFLAGS@
 CXXLIBS		= @CXXLIBS@
 
 INCDIR		= ../include
-CPPFLAGS	= -I../c++ -I$(INCDIR) -I$(srcdir) -DHAVE_CONFIG_H @CPPFLAGS@ 
+CPPFLAGS	= -I../c++ -I$(INCDIR) -I$(srcdir) -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CXXFLAGS)
 
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CXX_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
-CFLAGS_SHARED	= $(CCFLAGS) # @CC_SHARED_OPTS@
+CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
 
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 
 REL_VERSION     = @cf_cv_rel_version@
 ABI_VERSION	= @cf_cv_abi_version@
 
-LINK		= $(CXX)
+LINK		= @LINK_PROGS@ $(CXX) @CXXLDFLAGS@
 
 LIBROOT	= ncurses++
-LIBNAME	= ../lib/lib$(LIBROOT).a
+LIBNAME	= @LIB_PREFIX@$(LIBROOT).a
 
 LDFLAGS		= @EXTRA_LDFLAGS@ -L../lib -L$(libdir) \
 	-l$(LIBROOT) \
@@ -83,14 +87,14 @@ LDFLAGS		= @EXTRA_LDFLAGS@ -L../lib -L$(libdir) \
 LDFLAGS_NORMAL	= $(LDFLAGS)
 LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
 LDFLAGS_PROFILE	= $(LDFLAGS) -pg
-LDFLAGS_SHARED	= $(LDFLAGS) @CC_SHARED_OPTS@ # @LD_SHARED_OPTS@
+LDFLAGS_SHARED	= $(LDFLAGS) @LD_SHARED_OPTS@
 
 LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@)
 
 AUTO_SRC	= \
 		etip.h
 
-all:		$(AUTO_SRC) $(LIBNAME) demo
+all:		$(AUTO_SRC) ../lib/$(LIBNAME) demo$x
 
 sources :	$(AUTO_SRC)
 
@@ -101,12 +105,13 @@ LIB_OBJS = \
 	$(MODEL)/cursesf.o \
 	$(MODEL)/cursesm.o \
 	$(MODEL)/cursesw.o \
+	$(MODEL)/cursespad.o \
 	$(MODEL)/cursesp.o \
 	$(MODEL)/cursslk.o \
 	$(MODEL)/cursesapp.o \
 	$(MODEL)/cursesmain.o
 
-$(LIBNAME) : $(LIB_OBJS)
+../lib/$(LIBNAME) : $(LIB_OBJS)
 	$(AR) $(AR_OPTS) $@ $?
 	$(RANLIB) $@
 
@@ -115,8 +120,8 @@ OBJS_DEMO = $(MODEL)/demo.o
 $(MODEL)/demo.o : $(srcdir)/demo.cc \
 	$(cursesf_h) $(cursesm_h) $(cursesapp_h)
 
-demo:	$(OBJS_DEMO) \
-	$(LIBNAME)  \
+demo$x:	$(OBJS_DEMO) \
+	../lib/$(LIBNAME)  \
 	@TEST_DEPS@
 	@ECHO_LINK@ $(LINK) -o $@ $(OBJS_DEMO) $(LDFLAGS_DEFAULT)
 
@@ -128,8 +133,8 @@ $(INSTALL_PREFIX)$(libdir) :
 	$(srcdir)/../mkinstalldirs $@
 
 install \
-install.libs:: $(LIBNAME) $(INSTALL_PREFIX)$(libdir)
-	$(INSTALL) $(LIBNAME) $(INSTALL_PREFIX)$(libdir)/$(LIBNAME)
+install.libs:: ../lib/$(LIBNAME) $(INSTALL_PREFIX)$(libdir)
+	$(INSTALL) ../lib/$(LIBNAME) $(INSTALL_PREFIX)$(libdir)/$(LIBNAME)
 
 uninstall \
 uninstall.libs::
@@ -139,7 +144,7 @@ mostlyclean ::
 	-rm -f core tags TAGS *~ *.ln *.atac trace
 
 clean :: mostlyclean
-	-rm -f demo $(AUTO_SRC) $(LIBNAME) $(LIB_OBJS) $(OBJS_DEMO)
+	-rm -f demo$x $(AUTO_SRC) ../lib/$(LIBNAME) $(LIB_OBJS) $(OBJS_DEMO)
 
 distclean :: clean
 	-rm -f Makefile

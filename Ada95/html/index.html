@@ -7,8 +7,8 @@
 </HEAD>
 <BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
 <H1>Ada95 Binding for ncurses</H1>
-The ncurses Ada95 binding is &copy; 1996 by 
-<A HREF="mailto:Juergen.Pfeifer@T-Online.de">J&uuml;rgen Pfeifer</A>.
+The ncurses Ada95 binding is &copy; 1996-1999 by 
+<A HREF="mailto:juergen.pfeifer@gmx.net">J&uuml;rgen Pfeifer</A>.
 <P>
                                                                          
 Permission is hereby granted to reproduce and distribute this
@@ -24,14 +24,14 @@ This binding comes AS IS with no warranty, implied or expressed.
 <HR SIZE=3 NOSHADE>
 <H2>General Remarks</H2>
 <UL>
-<LI>This document describes Version 00.93 of the binding.</LI>
+<LI>This document describes Version 01.00 of the binding.</LI>
 <LI>The functionality is modelled to be compatible with the ncurses
 package, a clone of the SVr4 curses model.<BR>
 I did the development on an Intel box running 
-<A HREF="http://www.linux.org">Linux</A> 1.3.x and 2.0,
+<A HREF="http://www.linux.org">Linux</A> 1.3.x, 2.0, 2.2
 ncurses-4.x and the 
 <A HREF="http://www.gnat.com">GNU Ada Translator</A>
-gnat-3.09. For any older versions of ncurses and gnat
+gnat versions 3.10p to 3.11p. For any older versions of ncurses and gnat
 it is not guaranteed to work.</LI>
 <LI>You must have the m4 macroprocessor to build this package.
 If you don't have this program, you can get the FSF version
@@ -83,46 +83,47 @@ forms subsystem.</LI>
 
 <H2>Hierarchy of packages</H2>
 <UL>
-<LI><A HREF="terminal_interface_s.html">Terminal_Interface</A>
-    <UL><LI><A HREF="terminal_interface-curses_s.html">Curses</A>
-	<UL><LI><A HREF="terminal_interface-curses-mouse_s.html">Mouse</A>
-            <LI><A HREF="terminal_interface-curses-panels_s.html">Panels</A>
-            <UL><LI><A HREF="terminal_interface-curses-panels-user_data_s.html">User_Data</A>
+<LI><A HREF="ada/terminal_interface__ads.htm">Terminal_Interface</A>
+    <UL><LI><A HREF="ada/terminal_interface-curses__ads.htm">Curses</A>
+	<UL><LI><A HREF="ada/terminal_interface-curses-mouse__ads.htm">Mouse</A>
+            <LI><A HREF="ada/terminal_interface-curses-panels__ads.htm">Panels</A>
+            <UL><LI><A HREF="ada/terminal_interface-curses-panels-user_data__ads.htm">User_Data</A>
             </UL>
-	    <LI><A HREF="terminal_interface-curses-menus_s.html">Menus</A>
-	        <UL><LI><A HREF="terminal_interface-curses-menus-menu_user_data_s.html">Menu_User_Data</A>
-		    <LI><A HREF="terminal_interface-curses-menus-item_user_data_s.html">Item_User_Data</A>
+	    <LI><A HREF="ada/terminal_interface-curses-menus__ads.htm">Menus</A>
+	        <UL><LI><A HREF="ada/terminal_interface-curses-menus-menu_user_data__ads.htm">Menu_User_Data</A>
+		    <LI><A HREF="ada/terminal_interface-curses-menus-item_user_data__ads.htm">Item_User_Data</A>
 		</UL>    
-	    <LI><A HREF="terminal_interface-curses-forms_s.html">Forms</A>
-		<UL><LI><A HREF="terminal_interface-curses-forms-form_user_data_s.html">Form_User_Data</A>
-		    <LI><A HREF="terminal_interface-curses-forms-field_user_data_s.html">Field_User_Data</A>
-		    <LI><A HREF="terminal_interface-curses-forms-field_types_s.html">Field_Types</A>		     
-		    <UL><LI><A HREF="terminal_interface-curses-forms-field_types-alpha_s.html">Alpha</A>
-		        <LI><A HREF="terminal_interface-curses-forms-field_types-alphanumeric_s.html">AlphaNumeric</A>
-		        <LI><A HREF="terminal_interface-curses-forms-field_types-intfield_s.html">IntField</A>
-		        <LI><A HREF="terminal_interface-curses-forms-field_types-numeric_s.html">Numeric</A>
-		        <LI><A HREF="terminal_interface-curses-forms-field_types-regexp_s.html">RegExp</A>
-		        <LI><A HREF="terminal_interface-curses-forms-field_types-ipv4_address_s.html">IPV4_Address</A>
-		        <LI><A HREF="terminal_interface-curses-forms-field_types-enumeration_s.html">Enumeration</A>
-		        <UL><LI><A HREF="terminal_interface-curses-forms-field_types-enumeration-ada_s.html">Ada</A>
+	    <LI><A HREF="ada/terminal_interface-curses-forms__ads.htm">Forms</A>
+		<UL><LI><A HREF="ada/terminal_interface-curses-forms-form_user_data__ads.htm">Form_User_Data</A>
+		    <LI><A HREF="ada/terminal_interface-curses-forms-field_user_data__ads.htm">Field_User_Data</A>
+		    <LI><A HREF="ada/terminal_interface-curses-forms-field_types__ads.htm">Field_Types</A>		     
+		    <UL><LI><A HREF="ada/terminal_interface-curses-forms-field_types-alpha__ads.htm">Alpha</A>
+		        <LI><A HREF="ada/terminal_interface-curses-forms-field_types-alphanumeric__ads.htm">AlphaNumeric</A>
+		        <LI><A HREF="ada/terminal_interface-curses-forms-field_types-intfield__ads.htm">IntField</A>
+		        <LI><A HREF="ada/terminal_interface-curses-forms-field_types-numeric__ads.htm">Numeric</A>
+		        <LI><A HREF="ada/terminal_interface-curses-forms-field_types-regexp__ads.htm">RegExp</A>
+		        <LI><A HREF="ada/terminal_interface-curses-forms-field_types-ipv4_address__ads.htm">IPV4_Address</A>
+		        <LI><A HREF="ada/terminal_interface-curses-forms-field_types-enumeration__ads.htm">Enumeration</A>
+		        <UL><LI><A HREF="ada/terminal_interface-curses-forms-field_types-enumeration-ada__ads.htm">Ada</A>
 			</UL>
-			<LI><A HREF="terminal_interface-curses-forms-field_types-user_s.html">User</A>
-		        <UL><LI><A HREF="terminal_interface-curses-forms-field_types-user-choice_s.html">Choice</A>
+			<LI><A HREF="ada/terminal_interface-curses-forms-field_types-user__ads.htm">User</A>
+		        <UL><LI><A HREF="ada/terminal_interface-curses-forms-field_types-user-choice__ads.htm">Choice</A>
                         </UL>
                      </UL>   
 		</UL>   
-	    <LI><A HREF="terminal_interface-curses-text_io_s.html">Text_IO</A>
-		<UL><LI><A HREF="terminal_interface-curses-text_io-integer_io_s.html">Integer_IO</A>
-		    <LI><A HREF="terminal_interface-curses-text_io-float_io_s.html">Float_IO</A>
-		    <LI><A HREF="terminal_interface-curses-text_io-fixed_io_s.html">Fixed_IO</A>
-		    <LI><A HREF="terminal_interface-curses-text_io-decimal_io_s.html">Decimal_IO</A>
-		    <LI><A HREF="terminal_interface-curses-text_io-modular_io_s.html">Modular_IO</A>
-		    <LI><A HREF="terminal_interface-curses-text_io-enumeration_io_s.html">Enumeration_IO</A>
-		    <LI><A HREF="terminal_interface-curses-text_io-complex_io_s.html">Complex_IO</A>
+	    <LI><A HREF="ada/terminal_interface-curses-text_io__ads.htm">Text_IO</A>
+		<UL><LI><A HREF="ada/terminal_interface-curses-text_io-integer_io__ads.htm">Integer_IO</A>
+		    <LI><A HREF="ada/terminal_interface-curses-text_io-float_io__ads.htm">Float_IO</A>
+		    <LI><A HREF="ada/terminal_interface-curses-text_io-fixed_io__ads.htm">Fixed_IO</A>
+		    <LI><A HREF="ada/terminal_interface-curses-text_io-decimal_io__ads.htm">Decimal_IO</A>
+		    <LI><A HREF="ada/terminal_interface-curses-text_io-modular_io__ads.htm">Modular_IO</A>
+		    <LI><A HREF="ada/terminal_interface-curses-text_io-enumeration_io__ads.htm">Enumeration_IO</A>
+		    <LI><A HREF="ada/terminal_interface-curses-text_io-complex_io__ads.htm">Complex_IO</A>
 		</UL>
          </UL>
      </UL>        
 </UL>
+If you want to navigate through the html pages of the package specs, click <A HREF="ada/index.htm">here</A>.
 <H2>Implementation Details</H2>
 <H4>Behind the abstraction</H4>
 All the new types like <STRONG>Window</STRONG>, <STRONG>Panel</STRONG>,

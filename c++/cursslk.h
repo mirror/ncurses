@@ -28,10 +28,10 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1997             *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
  ****************************************************************************/
 
-// $Id: cursslk.h,v 1.2 1998/02/11 12:13:41 tom Exp $
+// $Id: cursslk.h,v 1.5 1999/05/16 17:30:08 juergen Exp $
 
 #ifndef _CURSSLK_H
 #define _CURSSLK_H
@@ -190,6 +190,11 @@ public:
   inline void attrset(attr_t attrs) {
     if (ERR==::slk_attrset(attrs))
       Error("slk_attrset");
+  }
+
+  inline void color(short color_pair_number) {
+    if (ERR==::slk_color(color_pair_number))
+      Error("slk_color");
   }
 
   inline attr_t attr() const {

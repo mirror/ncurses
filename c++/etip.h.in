@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,10 +28,10 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1997             *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
  ****************************************************************************/
 
-// $Id: etip.h.in,v 1.4 1998/02/17 09:01:38 juergen Exp $
+// $Id: etip.h.in,v 1.13 1999/09/12 02:01:59 tom Exp $
 
 #ifndef _ETIP_H
 #define _ETIP_H
@@ -41,12 +41,32 @@
 #define HAVE_BUILTIN_H 0
 #endif
 
+#ifndef HAVE_GXX_BUILTIN_H
+#define HAVE_GXX_BUILTIN_H 0
+#endif
+
+#ifndef HAVE_GPP_BUILTIN_H
+#define HAVE_GPP_BUILTIN_H 0
+#endif
+
 #ifndef HAVE_TYPEINFO
 #define HAVE_TYPEINFO 0
 #endif
 
 #ifndef HAVE_VALUES_H
 #define HAVE_VALUES_H 0
+#endif
+
+#ifndef ETIP_NEEDS_MATH_H
+#define ETIP_NEEDS_MATH_H 0
+#endif
+
+#ifndef ETIP_NEEDS_MATH_EXCEPTION
+#define ETIP_NEEDS_MATH_EXCEPTION 0
+#endif
+
+#ifndef CPP_HAS_PARAM_INIT
+#define CPP_HAS_PARAM_INIT 0
 #endif
 
 #ifdef __GNUG__
@@ -58,9 +78,23 @@
 #endif
 
 #if defined(__GNUG__)
-#  if HAVE_BUILTIN_H
+#  if HAVE_BUILTIN_H || HAVE_GXX_BUILTIN_H || HAVE_GPP_BUILTIN_H
+#    if ETIP_NEEDS_MATH_H
+#      if ETIP_NEEDS_MATH_EXCEPTION
+#        undef exception
+#        define exception math_exception
+#      endif
+#      include <math.h>
+#    endif
+#    undef exception
 #    define exception builtin_exception
-#    include <builtin.h>
+#    if HAVE_GPP_BUILTIN_H
+#     include <gpp/builtin.h>
+#    elif HAVE_GXX_BUILTIN_H
+#     include <g++/builtin.h>
+#    else
+#     include <builtin.h>
+#    endif
 #    undef exception
 #  endif
 #elif defined (__SUNPRO_CC)
@@ -80,6 +114,13 @@ extern "C" {
 #include <errno.h>
 }
 
+// Language features
+#if CPP_HAS_PARAM_INIT
+#define NCURSES_PARAM_INIT(value) = value
+#else
+#define NCURSES_PARAM_INIT(value) /*nothing*/
+#endif
+
 // Forward Declarations
 class NCursesPanel;
 class NCursesMenu;
@@ -88,8 +129,8 @@ class NCursesForm;
 class NCursesException
 {
 public:
-  int errorno;
   const char *message;
+  int errorno;
 
   NCursesException (const char* msg, int err)
     : message(msg), errorno (err)

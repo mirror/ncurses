@@ -7,13 +7,13 @@
  */
 /***************************************************************************
 *                                                                          *
-*  Author : Juergen Pfeifer, Juergen.Pfeifer@T-Online.de                   *
+*  Author : Juergen Pfeifer, juergen.pfeifer@gmx.net                       *
 *                                                                          *
 ***************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_regex.c,v 1.11 1997/10/18 19:32:35 tom Exp $")
+MODULE_ID("$Id: fty_regex.c,v 1.14 1999/05/16 17:23:38 juergen Exp $")
 
 #if HAVE_REGEX_H_FUNCS	/* We prefer POSIX regex */
 #include <regex.h>
@@ -66,9 +66,9 @@ typedef struct
 #endif
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void *Make_RegularExpression_Type(va_list * ap)
-|   
+|
 |   Description   :  Allocate structure for regex type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error
@@ -103,7 +103,7 @@ static void *Make_RegularExpression_Type(va_list * ap)
   RegExp_Arg *pArg;
 
   pArg = (RegExp_Arg *)malloc(sizeof(RegExp_Arg));
-  
+
   if (pArg)
     {
       int blen = RX_INCREMENT;
@@ -117,8 +117,8 @@ static void *Make_RegularExpression_Type(va_list * ap)
 	  {
 #if HAVE_REGEXP_H_FUNCS
 	    char *last_pos = compile (rx, buf, &buf[blen], '\0');
-#else
-	    char *last_pos = compile (rx, buf, &buf[blen], '\0');
+#else /* HAVE_REGEXPR_H_FUNCS */
+	    char *last_pos = compile (rx, buf, &buf[blen]);
 #endif
 	    if (reg_errno)
 	      {
@@ -126,7 +126,7 @@ static void *Make_RegularExpression_Type(va_list * ap)
 		if (reg_errno==50)
 		  blen += RX_INCREMENT;
 		else
-		  {		   
+		  {
 		    free(pArg);
 		    pArg = NULL;
 		    break;
@@ -152,11 +152,11 @@ static void *Make_RegularExpression_Type(va_list * ap)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void *Copy_RegularExpression_Type(
 |                                      const void * argp)
-|   
-|   Description   :  Copy structure for regex type argument.  
+|
+|   Description   :  Copy structure for regex type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error.
 +--------------------------------------------------------------------------*/
@@ -164,8 +164,8 @@ static void *Copy_RegularExpression_Type(const void * argp)
 {
 #if (HAVE_REGEX_H_FUNCS | HAVE_REGEXP_H_FUNCS | HAVE_REGEXPR_H_FUNCS)
   const RegExp_Arg *ap = (const RegExp_Arg *)argp;
-  const RegExp_Arg *result = (const RegExp_Arg *)0; 
-  
+  const RegExp_Arg *result = (const RegExp_Arg *)0;
+
   if (ap)
     {
       *(ap->refCount) += 1;
@@ -178,9 +178,9 @@ static void *Copy_RegularExpression_Type(const void * argp)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void Free_RegularExpression_Type(void * argp)
-|   
+|
 |   Description   :  Free structure for regex type argument.
 |
 |   Return Values :  -
@@ -213,11 +213,11 @@ static void Free_RegularExpression_Type(void * argp)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static bool Check_RegularExpression_Field(
 |                                      FIELD * field,
 |                                      const void  * argp)
-|   
+|
 |   Description   :  Validate buffer content to be a valid regular expression
 |
 |   Return Values :  TRUE  - field is valid

@@ -1,0 +1,675 @@
+<HEAD><TITLE>terminal_interface-curses-menus.ads</TITLE></HEAD>
+<BODY>
+<HR><DIV ALIGN="center"><H1> File : terminal_interface-curses-menus.ads </H1></DIV><HR>
+<PRE>
+
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                      Terminal_Interface.Curses.Menu                      --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
+<FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
+<FONT COLOR=green><EM>-- "Software"), to deal in the Software without restriction, including      --</EM></FONT>
+<FONT COLOR=green><EM>-- without limitation the rights to use, copy, modify, merge, publish,      --</EM></FONT>
+<FONT COLOR=green><EM>-- distribute, distribute with modifications, sublicense, and/or sell       --</EM></FONT>
+<FONT COLOR=green><EM>-- copies of the Software, and to permit persons to whom the Software is    --</EM></FONT>
+<FONT COLOR=green><EM>-- furnished to do so, subject to the following conditions:                 --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- The above copyright notice and this permission notice shall be included  --</EM></FONT>
+<FONT COLOR=green><EM>-- in all copies or substantial portions of the Software.                   --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</EM></FONT>
+<FONT COLOR=green><EM>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</EM></FONT>
+<FONT COLOR=green><EM>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</EM></FONT>
+<FONT COLOR=green><EM>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</EM></FONT>
+<FONT COLOR=green><EM>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</EM></FONT>
+<FONT COLOR=green><EM>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</EM></FONT>
+<FONT COLOR=green><EM>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</EM></FONT>
+<FONT COLOR=green><EM>--                                                                          --</EM></FONT>
+<FONT COLOR=green><EM>-- Except as contained in this notice, the name(s) of the above copyright   --</EM></FONT>
+<FONT COLOR=green><EM>-- holders shall not be used in advertising or otherwise to promote the     --</EM></FONT>
+<FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
+<FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> (<A HREF="mailto:juergen.pfeifer@gmx.net">juergen.pfeifer@gmx.net</A>) 1996                          --</EM></FONT>
+<FONT COLOR=green><EM>--  Version Control:</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.19 @</EM></FONT>
+<FONT COLOR=green><EM>--  Binding Version 00.93</EM></FONT>
+<FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
+<FONT COLOR=green><EM>--  menu binding.</EM></FONT>
+<FONT COLOR=green><EM>--  This module is generated. Please don't change it manually!</EM></FONT>
+<FONT COLOR=green><EM>--  Run the generator instead.</EM></FONT>
+<FONT COLOR=green><EM>--  |</EM></FONT>
+<b>with</b> <A HREF="interfac__ads.htm>3_9">System</A>;
+<b>with</b> <A HREF="ada__ads.htm<8_9">Interfaces</A>.C;
+<b>with</b> Ada.Characters.Latin_1;
+
+<b>package</b> Terminal_Interface.Curses.Menus <b>is</b>
+   <b>pragma</b> Preelaborate (Terminal_Interface.Curses.Menus);
+   <b>pragma</b> Linker_Options ("-lmenu");
+   <b>pragma</b> Linker_Options ("-lAdaCurses");
+   <b>pragma</b> Linker_Options ("-lncurses");
+
+   Space : Character <b>renames</b> Ada.Characters.Latin_1.Space;
+
+   <b>type</b> <FONT COLOR=red><A NAME="58_9">Item</A></FONT> <b>is</b> <b>private</b>;
+   <b>type</b> Menu <b>is</b> <b>private</b>;
+
+  <FONT COLOR=green><EM>---------------------------</EM></FONT>
+  <FONT COLOR=green><EM>--  Interface constants  --</EM></FONT>
+  <FONT COLOR=green><EM>---------------------------</EM></FONT>
+   <FONT COLOR=red><A NAME="64_4">Null_Item</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#58_9">Item</A>;
+   Null_Menu : <b>constant</b> Menu;
+
+   <b>subtype</b> Menu_Request_Code <b>is</b> Key_Code
+     <b>range</b> (Key_Max + 1) .. (Key_Max + 17);
+
+  <FONT COLOR=green><EM>--  The prefix M_ stands for "Menu Request"</EM></FONT>
+   M_Left_Item       : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 1;
+   M_Right_Item      : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 2;
+   M_Up_Item         : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 3;
+   M_Down_Item       : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 4;
+   M_ScrollUp_Line   : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 5;
+   M_ScrollDown_Line : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 6;
+   M_ScrollDown_Page : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 7;
+   M_ScrollUp_Page   : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 8;
+   M_First_Item      : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 9;
+   M_Last_Item       : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 10;
+   M_Next_Item       : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 11;
+   M_Previous_Item   : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 12;
+   M_Toggle_Item     : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 13;
+   M_Clear_Pattern   : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 14;
+   M_Back_Pattern    : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 15;
+   M_Next_Match      : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> := Key_Max + 16;
+   M_Previous_Match  : <b>constant</b> Menu_Request_Code := Key_Max + 17;
+
+  <FONT COLOR=green><EM>--  For those who like the old 'C' names for the request codes</EM></FONT>
+   REQ_LEFT_ITEM     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Left_Item;
+   REQ_RIGHT_ITEM    : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Right_Item;
+   REQ_UP_ITEM       : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Up_Item;
+   REQ_DOWN_ITEM     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Down_Item;
+   REQ_SCR_ULINE     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_ScrollUp_Line;
+   REQ_SCR_DLINE     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_ScrollDown_Line;
+   REQ_SCR_DPAGE     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_ScrollDown_Page;
+   REQ_SCR_UPAGE     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_ScrollUp_Page;
+   REQ_FIRST_ITEM    : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_First_Item;
+   REQ_LAST_ITEM     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Last_Item;
+   REQ_NEXT_ITEM     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Next_Item;
+   REQ_PREV_ITEM     : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Previous_Item;
+   REQ_TOGGLE_ITEM   : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Toggle_Item;
+   REQ_CLEAR_PATTERN : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Clear_Pattern;
+   REQ_BACK_PATTERN  : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Back_Pattern;
+   REQ_NEXT_MATCH    : <A HREF="terminal_interface-curses-menus__ads.htm#66_12">Menu_Request_Code</A> <b>renames</b> M_Next_Match;
+   REQ_PREV_MATCH    : Menu_Request_Code <b>renames</b> M_Previous_Match;
+
+   <b>procedure</b> Request_Name (Key  : <b>in</b> Menu_Request_Code;
+                           Name : <b>out</b> String);
+
+   <b>function</b>  Request_Name (Key : Menu_Request_Code) <b>return</b> String;
+  <FONT COLOR=green><EM>--  Same as function</EM></FONT>
+
+  <FONT COLOR=green><EM>------------------</EM></FONT>
+  <FONT COLOR=green><EM>--  Exceptions  --</EM></FONT>
+  <FONT COLOR=green><EM>------------------</EM></FONT>
+
+   Menu_Exception : <b>exception</b>;
+  <FONT COLOR=green><EM>--</EM></FONT>
+  <FONT COLOR=green><EM>--  Menu options</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+   <b>pragma</b> Warnings (Off);
+   <b>type</b> Menu_Option_Set <b>is</b>
+      <b>record</b>
+         One_Valued        : Boolean;
+         Show_Descriptions : Boolean;
+         Row_Major_Order   : Boolean;
+         Ignore_Case       : Boolean;
+         Show_Matches      : Boolean;
+         Non_Cyclic        : Boolean;
+      <b>end</b> <b>record</b><A HREF="terminal_interface-curses-menus__ads.htm<22_9">;</A>
+   <b>pragma</b> Pack (Menu_Option_Set);
+   <b>pragma</b> Convention (C, Menu_Option_Set);
+
+   <b>for</b> Menu_Option_Set <b>use</b>
+      <b>record</b>
+         One_Valued        <b>at</b> 0 <b>range</b>  0 ..  0;
+         Show_Descriptions <b>at</b> 0 <b>range</b>  1 ..  1;
+         Row_Major_Order   <b>at</b> 0 <b>range</b>  2 ..  2;
+         Ignore_Case       <b>at</b> 0 <b>range</b>  3 ..  3;
+         Show_Matches      <b>at</b> 0 <b>range</b>  4 ..  4;
+         Non_Cyclic        <b>at</b> 0 <b>range</b>  5 ..  5;
+      <b>end</b> <b>record</b>;
+   <b>for</b> Menu_Option_Set'Size <b>use</b> 32;
+  <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
+  <FONT COLOR=green><EM>--               different on your system.</EM></FONT>
+   <b>pragma</b> Warnings (On);
+
+   <b>function</b> Default_Menu_Options <b>return</b> Menu_Option_Set;
+  <FONT COLOR=green><EM>--  Initial default options for a menu.</EM></FONT>
+   <b>pragma</b> Inline (Default_Menu_Options);
+  <FONT COLOR=green><EM>--</EM></FONT>
+  <FONT COLOR=green><EM>--  Item options</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+   <b>pragma</b> Warnings (Off);
+   <b>type</b> Item_Option_Set <b>is</b>
+      <b>record</b>
+         Selectable  : Boolean;
+      <b>end</b> <b>record</b><A HREF="terminal_interface-curses-menus__ads.htm<55_9">;</A>
+   <b>pragma</b> Pack (Item_Option_Set);
+   <b>pragma</b> Convention (C, Item_Option_Set);
+
+   <b>for</b> Item_Option_Set <b>use</b>
+      <b>record</b>
+         Selectable  <b>at</b> 0 <b>range</b>  0 ..  0;
+      <b>end</b> <b>record</b>;
+   <b>for</b> Item_Option_Set'Size <b>use</b> 32;
+  <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
+  <FONT COLOR=green><EM>--               different on your system.</EM></FONT>
+   <b>pragma</b> Warnings (On);
+
+   <b>function</b> Default_Item_Options <b>return</b> Item_Option_Set;
+  <FONT COLOR=green><EM>--  Initial default options for an item.</EM></FONT>
+   <b>pragma</b> Inline (Default_Item_Options);
+
+  <FONT COLOR=green><EM>--</EM></FONT>
+  <FONT COLOR=green><EM>--  Item Array</EM></FONT>
+  <FONT COLOR=green><EM>--</EM></FONT>
+   <b>type</b> Item_Array <b>is</b> <b>array</b> (Positive <b>range</b> <>) <b>of</b> <b>aliased</b> Item;
+   <b>pragma</b> Convention (C, Item_Array);
+
+   <b>type</b> Item_Array_Access <b>is</b> <b>access</b> Item_Array;
+
+   <b>procedure</b> Free (IA         : <b>in</b> <b>out</b> Item_Array_Access;
+                   Free_Items : Boolean := False);
+  <FONT COLOR=green><EM>--  Release the memory for an allocated item array</EM></FONT>
+  <FONT COLOR=green><EM>--  If Free_Items is True, call Delete() for all the items in</EM></FONT>
+  <FONT COLOR=green><EM>--  the array.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/mitem_new.3x.html">mitem_new.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_1">|</EM></FONT>
+   <b>function</b> Create (Name        : String;
+                    Description : String := "") <b>return</b> Item;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_new.3x.html">new_item()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Not inlined.</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_2">|</EM></FONT>
+   <b>function</b> New_Item (Name        : String;
+             <A HREF="terminal_interface-curses-menus__ads.htm<94_13"> </A>        Description : String := "") <b>return</b> Item
+     <b>renames</b> Create;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_new.3x.html">new_item()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_3">|</EM></FONT>
+   <b>procedure</b> Delete (Itm : <b>in</b> <b>out</b> Item);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_new.3x.html">free_item()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Resets Itm to Null_Item</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/mitem_value.3x.html">mitem_value.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_4">|</EM></FONT>
+   <b>procedure</b> Set_Value (Itm   : <b>in</b> Item;
+                        Value : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_value.3x.html">set_item_value()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Value);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_5">|</EM></FONT>
+   <b>function</b> Value (Itm : Item) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_value.3x.html">item_value()</A></EM></FONT>
+   <b>pragma</b> Inline (Value);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/mitem_visible.3x.html">mitem_visible.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_6">|</EM></FONT>
+   <b>function</b> Visible (Itm : Item) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_visible.3x.html">item_visible()</A></EM></FONT>
+   <b>pragma</b> Inline (Visible);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/mitem_opts.3x.html">mitem_opts.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_7">|</EM></FONT>
+   <b>procedure</b> Set_Options (Itm     : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm<55_9">Item</A>;
+                          Options : <b>in</b> Item_Option_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_opts.3x.html">set_item_opts()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  An overloaded Set_Options is defined later. Pragma Inline appears there</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_8">|</EM></FONT>
+   <b>procedure</b> Switch_Options (Itm     : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm<55_9">Item</A>;
+                             Options : <b>in</b> Item_Option_Set;
+                             On      : Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_opts.3x.html">item_opts_on()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: item_opts_off()</EM></FONT>
+  <FONT COLOR=green><EM>--  An overloaded Switch_Options is defined later.</EM></FONT>
+  <FONT COLOR=green><EM>--  Pragma Inline appears there</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_9">|</EM></FONT>
+   <b>procedure</b> Get_Options (Itm     : <b>in</b>  <A HREF="terminal_interface-curses-menus__ads.htm<55_9">Item</A>;
+                          Options : <b>out</b> Item_Option_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_opts.3x.html">item_opts()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_10">|</EM></FONT>
+   <b>function</b> Get_Options (Itm : Item := Null_Item) <b>return</b> Item_Option_Set;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_opts.3x.html">item_opts()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  An overloaded Get_Options is defined later. Pragma Inline appears there</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/mitem_name.3x.html">mitem_name.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_11">|</EM></FONT>
+   <b>procedure</b> Name (Itm  : <b>in</b> Item;
+                   Name : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_name.3x.html">item_name()</A></EM></FONT>
+   <b>function</b>  Name (Itm : Item) <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_name.3x.html">item_name()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Implemented as function</EM></FONT>
+   <b>pragma</b> Inline (Name);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_12">|</EM></FONT>
+   <b>procedure</b> Description (Itm         : <b>in</b> Item;
+                          Description : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_name.3x.html">item_description();</A></EM></FONT>
+
+   <b>function</b>  Description (Itm : Item) <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_name.3x.html">item_description();</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Implemented as function</EM></FONT>
+   <b>pragma</b> Inline (Description);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/mitem_current.3x.html">mitem_current.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_13">|</EM></FONT>
+   <b>procedure</b> Set_Current (<FONT COLOR=red><A NAME="292_27">Men</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#57_9">Menu</A>;
+                          Itm : <b>in</b> Item);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_current.3x.html">set_current_item()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Current);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_14">|</EM></FONT>
+   <b>function</b> Current (Men : Menu) <b>return</b> Item;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_current.3x.html">current_item()</A></EM></FONT>
+   <b>pragma</b> Inline (Current);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_15">|</EM></FONT>
+   <b>procedure</b> Set_Top_Row (Men  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Menu</A>;
+                          Line : <b>in</b> Line_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_current.3x.html">set_top_row()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Top_Row);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_16">|</EM></FONT>
+   <b>function</b> Top_Row (Men : Menu) <b>return</b> Line_Position;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_current.3x.html">top_row()</A></EM></FONT>
+   <b>pragma</b> Inline (Top_Row);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_17">|</EM></FONT>
+   <b>function</b> Get_Index (Itm : Item) <b>return</b> Positive;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_current.3x.html">item_index()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Please note that in this binding we start the numbering of items</EM></FONT>
+  <FONT COLOR=green><EM>--  with 1. So this is number is one more than you get from the low</EM></FONT>
+  <FONT COLOR=green><EM>--  level call.</EM></FONT>
+   <b>pragma</b> Inline (Get_Index);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_post.3x.html">menu_post.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_18">|</EM></FONT>
+   <b>procedure</b> Post (Men  : <b>in</b> Menu;
+                   Post : <b>in</b> Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_post.3x.html">post_menu()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: unpost_menu()</EM></FONT>
+   <b>pragma</b> Inline (Post);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_opts.3x.html">menu_opts.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_19">|</EM></FONT>
+   <b>procedure</b> Set_Options (Men     : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm<22_9">Menu</A>;
+                          Options : <b>in</b> Menu_Option_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_opts.3x.html">set_menu_opts()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Options);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_20">|</EM></FONT>
+   <b>procedure</b> Switch_Options (Men     : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm<22_9">Menu</A>;
+                             Options : <b>in</b> Menu_Option_Set;
+                             On      : Boolean := True);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_opts.3x.html">menu_opts_on()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  AKA: menu_opts_off()</EM></FONT>
+   <b>pragma</b> Inline (Switch_Options);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_21">|</EM></FONT>
+   <b>procedure</b> Get_Options (Men     : <b>in</b>  <A HREF="terminal_interface-curses-menus__ads.htm<22_9">Menu</A>;
+                          Options : <b>out</b> Menu_Option_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_opts.3x.html">menu_opts()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_22">|</EM></FONT>
+   <b>function</b> Get_Options (Men : Menu := Null_Menu) <b>return</b> Menu_Option_Set;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_opts.3x.html">menu_opts()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Options);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_win.3x.html">menu_win.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_23">|</EM></FONT>
+   <b>procedure</b> Set_Window (<FONT COLOR=red><A NAME="365_26">Men</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Menu</A>;
+                         Win : <b>in</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_win.3x.html">set_menu_win()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_24">|</EM></FONT>
+   <b>function</b> Get_Window (Men : Menu) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_win.3x.html">menu_win()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_25">|</EM></FONT>
+   <b>procedure</b> Set_Sub_Window (<FONT COLOR=red><A NAME="376_30">Men</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Menu</A>;
+                             Win : <b>in</b> Window);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_win.3x.html">set_menu_sub()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Sub_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_26">|</EM></FONT>
+   <b>function</b> Get_Sub_Window (Men : Menu) <b>return</b> Window;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_win.3x.html">menu_sub()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Sub_Window);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_27">|</EM></FONT>
+   <b>procedure</b> Scale (Men     : <b>in</b> Menu;
+                    Lines   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                    Columns : <b>out</b> Column_Count);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_win.3x.html">scale_menu()</A></EM></FONT>
+   <b>pragma</b> Inline (Scale);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_cursor.3x.html">menu_cursor.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_28">|</EM></FONT>
+   <b>procedure</b> Position_Cursor (Men : Menu);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_cursor.3x.html">pos_menu_cursor()</A></EM></FONT>
+   <b>pragma</b> Inline (Position_Cursor);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_mark.3x.html">menu_mark.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_29">|</EM></FONT>
+   <b>procedure</b> Set_Mark (Men  : <b>in</b> Menu;
+                       Mark : <b>in</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_mark.3x.html">set_menu_mark()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Mark);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_30">|</EM></FONT>
+   <b>procedure</b> Mark (Men  : <b>in</b>  Menu;
+                   Mark : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_mark.3x.html">menu_mark()</A></EM></FONT>
+
+   <b>function</b>  Mark (Men : Menu) <b>return</b> String;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_mark.3x.html">menu_mark()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Implemented as function</EM></FONT>
+   <b>pragma</b> Inline (Mark);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_attribs.3x.html">menu_attribs.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_31">|</EM></FONT>
+   <b>procedure</b> Set_Foreground
+     (Men   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+      Fore  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">set_menu_fore()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Foreground);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_32">|</EM></FONT>
+   <b>procedure</b> Foreground (Men   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+                         Fore  : <b>out</b> Character_Attribute_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">menu_fore()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_33">|</EM></FONT>
+   <b>procedure</b> Foreground (Men   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+                         Fore  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A>;
+                         Color : <b>out</b> Color_Pair);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">menu_fore()</A></EM></FONT>
+   <b>pragma</b> Inline (Foreground);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_34">|</EM></FONT>
+   <b>procedure</b> Set_Background
+     (Men   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+      Back  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">set_menu_back()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Background);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_35">|</EM></FONT>
+   <b>procedure</b> Background (Men  : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+                         Back : <b>out</b> Character_Attribute_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">menu_back()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  <A NAME="AFU_36">|</EM></FONT>
+
+   <b>procedure</b> Background (Men   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+                         Back  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A>;
+                         Color : <b>out</b> Color_Pair);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">menu_back()</A></EM></FONT>
+   <b>pragma</b> Inline (Background);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_37">|</EM></FONT>
+   <b>procedure</b> Set_Grey
+     (Men   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+      Grey  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A> := Normal_Video;
+      Color : <b>in</b> Color_Pair := Color_Pair'First);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">set_menu_grey()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Grey);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_38">|</EM></FONT>
+   <b>procedure</b> Grey (Men  : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+                   Grey : <b>out</b> Character_Attribute_Set);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">menu_grey()</A></EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_39">|</EM></FONT>
+   <b>procedure</b> Grey
+     (Men   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#305_9">Menu</A>;
+      Grey  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm>97_9">Character_Attribute_Set</A>;
+      Color : <b>out</b> Color_Pair);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">menu_grey()</A></EM></FONT>
+   <b>pragma</b> Inline (Grey);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_40">|</EM></FONT>
+   <b>procedure</b> Set_Pad_Character (Men : <b>in</b> Menu;
+                                Pad : <b>in</b> Character := Space);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">set_menu_pad()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Pad_Character);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_41">|</EM></FONT>
+   <b>procedure</b> Pad_Character (Men : <b>in</b>  Menu;
+                            Pad : <b>out</b> Character);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_attribs.3x.html">menu_pad()</A></EM></FONT>
+   <b>pragma</b> Inline (Pad_Character);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_spacing.3x.html">menu_spacing.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_42">|</EM></FONT>
+   <b>procedure</b> Set_Spacing (Men   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Menu</A>;
+                          Descr : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A> := 0;
+                          Row   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>   := 0;
+                          Col   : <b>in</b> Column_Position := 0);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_spacing.3x.html">set_menu_spacing()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Spacing);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_43">|</EM></FONT>
+   <b>procedure</b> Spacing (Men   : <b>in</b> Menu;
+                      Descr : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A>;
+                      Row   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#61_9">Line_Position</A>;
+                      Col   : <b>out</b> Column_Position);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_spacing.3x.html">menu_spacing()</A></EM></FONT>
+   <b>pragma</b> Inline (Spacing);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_pattern.3x.html">menu_pattern.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_44">|</EM></FONT>
+   <b>function</b> Set_Pattern (Men  : Menu;
+                         Text : String) <b>return</b> Boolean;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_pattern.3x.html">set_menu_pattern()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Return TRUE if the pattern matches, FALSE otherwise</EM></FONT>
+   <b>pragma</b> Inline (Set_Pattern);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_45">|</EM></FONT>
+   <b>procedure</b> Pattern (Men  : <b>in</b>  Menu;
+                      Text : <b>out</b> String);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_pattern.3x.html">menu_pattern()</A></EM></FONT>
+   <b>pragma</b> Inline (Pattern);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_format.3x.html">menu_format.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_46">|</EM></FONT>
+   <b>procedure</b> Set_Format (Men     : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#63_12">Menu</A>;
+                         Lines   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                         Columns : <b>in</b> Column_Count);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_format.3x.html">set_menu_format()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Format);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_47">|</EM></FONT>
+   <b>procedure</b> Format (Men     : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#63_12">Menu</A>;
+                     Lines   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#65_12">Line_Count</A>;
+                     Columns : <b>out</b> Column_Count);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_format.3x.html">menu_format()</A></EM></FONT>
+   <b>pragma</b> Inline (Format);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_hook.3x.html">menu_hook.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+   <b>type</b> Menu_Hook_Function <b>is</b> <b>access</b> <b>procedure</b> (Men : <b>in</b> Menu);
+   <b>pragma</b> Convention (C, Menu_Hook_Function);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_48">|</EM></FONT>
+   <b>procedure</b> Set_Item_Init_Hook (Men  : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#557_9">Menu</A>;
+                                 Proc : <b>in</b> Menu_Hook_Function);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_hook.3x.html">set_item_init()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Item_Init_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_49">|</EM></FONT>
+   <b>procedure</b> Set_Item_Term_Hook (Men  : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#557_9">Menu</A>;
+                                 Proc : <b>in</b> Menu_Hook_Function);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_hook.3x.html">set_item_term()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Item_Term_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_50">|</EM></FONT>
+   <b>procedure</b> Set_Menu_Init_Hook (Men  : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#557_9">Menu</A>;
+                                 Proc : <b>in</b> Menu_Hook_Function);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_hook.3x.html">set_menu_init()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Menu_Init_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_51">|</EM></FONT>
+   <b>procedure</b> Set_Menu_Term_Hook (Men  : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#557_9">Menu</A>;
+                                 Proc : <b>in</b> Menu_Hook_Function);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_hook.3x.html">set_menu_term()</A></EM></FONT>
+   <b>pragma</b> Inline (Set_Menu_Term_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_52">|</EM></FONT>
+   <b>function</b> Get_Item_Init_Hook (Men : Menu) <b>return</b> Menu_Hook_Function;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_hook.3x.html">item_init()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Item_Init_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_53">|</EM></FONT>
+   <b>function</b> Get_Item_Term_Hook (Men : Menu) <b>return</b> Menu_Hook_Function;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_hook.3x.html">item_term()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Item_Term_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_54">|</EM></FONT>
+   <b>function</b> Get_Menu_Init_Hook (Men : Menu) <b>return</b> Menu_Hook_Function;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_hook.3x.html">menu_init()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Menu_Init_Hook);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_55">|</EM></FONT>
+   <b>function</b> Get_Menu_Term_Hook (Men : Menu) <b>return</b> Menu_Hook_Function;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_hook.3x.html">menu_term()</A></EM></FONT>
+   <b>pragma</b> Inline (Get_Menu_Term_Hook);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_items.3x.html">menu_items.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_56">|</EM></FONT>
+   <b>procedure</b> Redefine (Men   : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm<81_9">Menu</A>;
+                       Items : <b>in</b> Item_Array_Access);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_items.3x.html">set_menu_items()</A></EM></FONT>
+   <b>pragma</b> Inline (Redefine);
+
+   <b>procedure</b> Set_Items (Men   : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm<81_9">Menu</A>;
+                  <A HREF="terminal_interface-curses-menus__ads.htm#614_14"> </A>     Items : <b>in</b> Item_Array_Access) <b>renames</b> Redefine;
+   <b>pragma</b> Inline (Set_Items);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_57">|</EM></FONT>
+   <b>function</b> Items (Men   : Menu;
+                   Index : Positive) <b>return</b> Item;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_items.3x.html">menu_items()</A></EM></FONT>
+   <b>pragma</b> Inline (Items);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_58">|</EM></FONT>
+   <b>function</b> Item_Count (Men : Menu) <b>return</b> Natural;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_items.3x.html">item_count()</A></EM></FONT>
+   <b>pragma</b> Inline (Item_Count);
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_new.3x.html">menu_new.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_59">|</EM></FONT>
+   <b>function</b> Create (Items : Item_Array_Access) <b>return</b> Menu;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_new.3x.html">new_menu()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Not inlined</EM></FONT>
+
+   <b>function</b> New_Menu (Items : Item_Array_Access) <b>return</b> Menu <b>renames</b> Create;
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_60">|</EM></FONT>
+   <b>procedure</b> Delete (Men : <b>in</b> <b>out</b> Menu);
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_new.3x.html">free_menu()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Reset Men to Null_Menu</EM></FONT>
+  <FONT COLOR=green><EM>--  Not inlined</EM></FONT>
+
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+  <FONT COLOR=green><EM>--  | Man page <A HREF="../man/menu_new.3x.html">menu_new.3x</A></EM></FONT>
+  <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
+
+   <b>type</b> Driver_Result <b>is</b> (<FONT COLOR=red><A NAME="651_27">Menu_Ok</A></FONT>,
+                          <FONT COLOR=red><A NAME="652_27">Request_Denied</A></FONT>,
+                          <FONT COLOR=red><A NAME="653_27">Unknown_Request</A></FONT>,
+                          No_Match);
+
+  <FONT COLOR=green><EM>--  <A NAME="AFU_61">|</EM></FONT>
+   <b>function</b> Driver (Men : <A HREF="terminal_interface-curses__ads.htm#68_9">Menu</A>;
+                    Key : Key_Code) <b>return</b> Driver_Result;
+  <FONT COLOR=green><EM>--  AKA: <A HREF="../man/menu_new.3x.html">menu_driver()</A></EM></FONT>
+  <FONT COLOR=green><EM>--  Driver is not inlined</EM></FONT>
+
+<FONT COLOR=green><EM>-------------------------------------------------------------------------------</EM></FONT>
+<b>private</b>
+   <b>type</b> <A HREF="terminal_interface-curses-menus__ads.htm#58_9">Item</A>   <b>is</b> <b>new</b> <A HREF="system__ads.htm>3_9">System</A>.<A HREF="s-stoele__ads.htm>2_16">Storage_Elements</A>.<A HREF="s-stoele__ads.htm#70_9">Integer_Address</A>;
+   <b>type</b> Menu   <b>is</b> <b>new</b> System.Storage_Elements.Integer_Address;
+
+   <A HREF="terminal_interface-curses-menus__ads.htm#64_4">Null_Item</A> : <b>constant</b> <A HREF="terminal_interface-curses-menus__ads.htm#58_9">Item</A> := 0;
+   Null_Menu : <b>constant</b> Menu := 0;
+
+<b>end</b> Terminal_Interface.Curses.Menus;
+</PRE></BODY></HTML>

@@ -28,10 +28,10 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1997             *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
  ****************************************************************************/
 
-// $Id: cursesapp.h,v 1.3 1998/02/11 12:13:41 tom Exp $
+// $Id: cursesapp.h,v 1.5 1999/05/16 17:29:59 juergen Exp $
 
 #ifndef _CURSESAPP_H
 #define _CURSESAPP_H

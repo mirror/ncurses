@@ -28,17 +28,16 @@
 .\"
 .\" Author: Thomas E. Dickey <dickey@clark.net> 1997
 .\"
-.\" $Id: define_key.3x,v 1.4 1998/02/11 12:13:48 tom Exp $
+.\" $Id: define_key.3x,v 1.6 1999/02/19 11:43:17 tom Exp $
 .TH define_key 3X ""
-.
 .SH NAME
 \fBdefine_key\fP \- define a keycode
-.
+..
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 
 \fBint define_key(char *definition, int keycode);\fP
-.
+..
 .SH DESCRIPTION
 This is an extension to the curses library.
 It permits an application to define keycodes with their corresponding control
@@ -47,18 +46,20 @@ the predefined codes in the terminfo database.
 .PP
 If the given string is null, any existing definition for the keycode is
 removed.
-.
+Similarly, if the given keycode is negative or zero, any existing string
+for the given definition is removed.
+..
 .SH RETURN VALUE
 The keycode must be greater than zero, else ERR is returned.
-.
+..
 .SH PORTABILITY
 These routines are specific to ncurses.  They were not supported on
 Version 7, BSD or System V implementations.  It is recommended that
 any code depending on them be conditioned using NCURSES_VERSION.
-.
+..
 .SH SEE ALSO
 \fBkeyok\fR(3X).
-.
+..
 .SH AUTHOR
 Thomas Dickey.
 .\"#

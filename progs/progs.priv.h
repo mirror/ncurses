@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey <dickey@clark.net> 1997,1998                   *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.17 1998/02/11 12:14:03 tom Exp $
+ * $Id: progs.priv.h,v 1.19 1999/02/23 11:10:32 tom Exp $
  *
  *	progs.priv.h
  *
@@ -68,16 +68,6 @@
 # include <sys/param.h>
 #endif
 
-#ifndef PATH_MAX
-# if defined(_POSIX_PATH_MAX)
-#  define PATH_MAX _POSIX_PATH_MAX
-# elif defined(MAXPATHLEN)
-#  define PATH_MAX MAXPATHLEN
-# else
-#  define PATH_MAX 255	/* the Posix minimum pathsize */
-# endif
-#endif
-
 #if HAVE_DIRENT_H
 # include <dirent.h>
 # define NAMLEN(dirent) strlen((dirent)->d_name)
@@ -112,7 +102,7 @@ extern int optind;
 #endif /* HAVE_GETOPT_H */
 
 #include <curses.h>
-#include <term.h>
+#include <term_entry.h>
 #include <tic.h>
 #include <nc_alloc.h>
 
@@ -144,6 +134,17 @@ extern int optind;
 
 #ifndef STDERR_FILENO
 #define STDERR_FILENO 2
+#endif
+
+/* may be in limits.h, included from various places */
+#ifndef PATH_MAX
+# if defined(_POSIX_PATH_MAX)
+#  define PATH_MAX _POSIX_PATH_MAX
+# elif defined(MAXPATHLEN)
+#  define PATH_MAX MAXPATHLEN
+# else
+#  define PATH_MAX 255	/* the Posix minimum pathsize */
+# endif
 #endif
 
 /* We use isascii only to guard against use of 7-bit ctype tables in the

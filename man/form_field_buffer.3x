@@ -1,4 +1,33 @@
 '\" t
+.\"***************************************************************************
+.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\"                                                                          *
+.\" Permission is hereby granted, free of charge, to any person obtaining a  *
+.\" copy of this software and associated documentation files (the            *
+.\" "Software"), to deal in the Software without restriction, including      *
+.\" without limitation the rights to use, copy, modify, merge, publish,      *
+.\" distribute, distribute with modifications, sublicense, and/or sell       *
+.\" copies of the Software, and to permit persons to whom the Software is    *
+.\" furnished to do so, subject to the following conditions:                 *
+.\"                                                                          *
+.\" The above copyright notice and this permission notice shall be included  *
+.\" in all copies or substantial portions of the Software.                   *
+.\"                                                                          *
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+.\" IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+.\" DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+.\" OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+.\" THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+.\"                                                                          *
+.\" Except as contained in this notice, the name(s) of the above copyright   *
+.\" holders shall not be used in advertising or otherwise to promote the     *
+.\" sale, use or other dealings in this Software without prior written       *
+.\" authorization.                                                           *
+.\"***************************************************************************
+.\"
+.\" $Id: form_field_buffer.3x,v 1.8 1999/06/16 00:37:09 juergen Exp $
 .TH form_field_buffer 3X ""
 .SH NAME
 \fBform_field_buffer\fR - field buffer control
@@ -20,10 +49,17 @@ The function \fBset_field_buffer\fR sets the numbered buffer of the given field
 to contain a given string.  Buffer 0 is the displayed value of the field; other
 numbered buffers may be allocated by applications through the \fBnbuf\fR
 argument of (see \fBform_field_new\fR(3X)) but are not manipulated by the forms
-library.  The function \fBfield_buffer\fR returns the foreground attribute.
+library.  The function \fBfield_buffer\fR returns the address of the buffer.
+Please note that this buffer has always the length of the buffer, that means 
+that it may typically contain trailing spaces. If you entered leading spaces
+the buffer may also contain them. If you want the raw data, you must write your
+own routine that copies the value out of the buffer and removes the leading
+and trailing spaces. Please note also, that subsequent operations on the form
+will probably change the content of the buffer. So don't use it for long term
+storage of the entered form data.
 
-The function \fBset_field_status\fR sets the associated status flag of 
-\fIfield\fR; \fBfield_status\fR gets the current value.  The status flag 
+The function \fBset_field_status\fR sets the associated status flag of
+\fIfield\fR; \fBfield_status\fR gets the current value.  The status flag
 is set to a nonzero value whenever the field changes.
 
 The function \fBset_max_field\fR sets the maximum size for a dynamic field.

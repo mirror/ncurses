@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.45 1998/02/11 12:14:05 tom Exp $
+# $Id: Makefile.in,v 1.54 1999/10/23 20:01:19 tom Exp $
 ##############################################################################
-# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+# Copyright (c) 1998,1999 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -55,7 +55,7 @@ CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
-CFLAGS_SHARED	= $(CCFLAGS) # @CC_SHARED_OPTS@
+CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
 
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 
@@ -65,14 +65,14 @@ LOCAL_LIBS	= @TEST_DEPS@
 MATH_LIB	= @MATH_LIB@
 
 LD		= @LD@
-LINK		= $(CC)
+LINK		= @LINK_TESTS@ $(CC)
 
 LDFLAGS		= @LD_MODEL@ @TEST_ARGS@ @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ @LDFLAGS@
 
 LDFLAGS_NORMAL	= $(LDFLAGS)
 LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
 LDFLAGS_PROFILE	= $(LDFLAGS) -pg
-LDFLAGS_SHARED	= $(LDFLAGS) @CC_SHARED_OPTS@ # @LD_SHARED_OPTS@
+LDFLAGS_SHARED	= $(LDFLAGS) @LD_SHARED_OPTS@
 
 LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@)
 
@@ -83,11 +83,16 @@ LINT_LIBS	= -lform -lmenu -lpanel -lncurses @LIBS@
 TESTS = \
 	blue$x \
 	bs$x \
+	cardfile$x \
+	ditto$x \
+	dots$x \
+	filter$x \
 	firework$x \
 	firstlast$x \
 	gdc$x \
 	hanoi$x \
 	hashtest$x \
+	keynames$x \
 	knight$x \
 	lrtest$x \
 	ncurses$x \
@@ -111,6 +116,18 @@ blue$x: $(MODEL)/blue.o $(LOCAL_LIBS)
 bs$x: $(MODEL)/bs.o $(LOCAL_LIBS)
 	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/bs.o $(LDFLAGS_DEFAULT)
 
+cardfile$x: $(MODEL)/cardfile.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/cardfile.o $(LDFLAGS_DEFAULT)
+
+ditto$x: $(MODEL)/ditto.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/ditto.o $(LDFLAGS_DEFAULT)
+
+dots$x: $(MODEL)/dots.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/dots.o $(LDFLAGS_DEFAULT)
+
+filter$x: $(MODEL)/filter.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/filter.o $(LDFLAGS_DEFAULT)
+
 firework$x: $(MODEL)/firework.o $(LOCAL_LIBS)
 	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/firework.o $(LDFLAGS_DEFAULT)
 
@@ -125,6 +142,9 @@ hanoi$x: $(MODEL)/hanoi.o $(LOCAL_LIBS)
 
 hashtest$x: $(MODEL)/hashtest.o $(LOCAL_LIBS)
 	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/hashtest.o $(LDFLAGS_DEFAULT)
+
+keynames$x: $(MODEL)/keynames.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/keynames.o $(LDFLAGS_DEFAULT)
 
 knight$x: $(MODEL)/knight.o $(LOCAL_LIBS)
 	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/knight.o $(LDFLAGS_DEFAULT)

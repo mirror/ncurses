@@ -1,5 +1,5 @@
 --  -*- ada -*-
-define(`HTMLNAME',`terminal_interface-curses-forms_s.html')dnl
+define(`HTMLNAME',`terminal_interface-curses-forms__ads.htm')dnl
 include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --                                                                          --
@@ -36,10 +36,10 @@ include(M4MACRO)dnl
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.14 $
---  Binding Version 00.93
+--  $Revision: 1.23 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Form_Base_Defs')
 with System;
@@ -47,9 +47,9 @@ with Ada.Characters.Latin_1;
 with Interfaces.C;
 
 package Terminal_Interface.Curses.Forms is
-   pragma Preelaborate (Forms);
-include(`Form_Linker_Options')
-
+   pragma Preelaborate (Terminal_Interface.Curses.Forms);
+include(`Form_Linker_Options')dnl
+include(`Linker_Options')
    Space : Character renames Ada.Characters.Latin_1.Space;
 
    type Field        is private;
@@ -63,13 +63,19 @@ include(`Form_Linker_Options')
                                 Center,
                                 Right);
 
-include(`Field_Rep')
+   pragma Warnings (Off);
+include(`Field_Rep')Dnl
+
+   pragma Warnings (On);
 
    function Default_Field_Options return Field_Option_Set;
    --  The initial defaults for the field options.
    pragma Inline (Default_Field_Options);
 
-include(`Form_Opt_Rep')
+   pragma Warnings (Off);
+include(`Form_Opt_Rep')Dnl
+
+   pragma Warnings (On);
 
    function Default_Form_Options return Form_Option_Set;
    --  The initial defaults for the form options.
@@ -682,11 +688,10 @@ include(`Form_Opt_Rep')
 
 ------------------------------------------------------------------------------
 private
+   type Field is new System.Storage_Elements.Integer_Address;
+   type Form  is new System.Storage_Elements.Integer_Address;
 
-   type Field        is new System.Address;
-   type Form         is new System.Address;
-
-   Null_Field        : constant Field        := Field (System.Null_Address);
-   Null_Form         : constant Form         := Form  (System.Null_Address);
+   Null_Field : constant Field := 0;
+   Null_Form  : constant Form  := 0;
 
 end Terminal_Interface.Curses.Forms;

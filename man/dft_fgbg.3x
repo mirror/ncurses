@@ -28,17 +28,16 @@
 .\"
 .\" Author: Thomas E. Dickey <dickey@clark.net> 1997
 .\"
-.\" $Id: dft_fgbg.3x,v 1.5 1998/02/11 12:13:48 tom Exp $
+.\" $Id: dft_fgbg.3x,v 1.6 1998/03/14 23:43:15 tom Exp $
 .TH use_default_colors 3X ""
-.
 .SH NAME
 \fBdft_fgbg\fR \- use terminal's default colors
-.
+..
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 
 \fBint use_default_colors(void);\fP
-.
+..
 .SH DESCRIPTION
 This is an extension to the curses library.
 It is used with terminals that support ISO 6429 color, or equivalent.
@@ -52,28 +51,28 @@ Applications that paint a colored background over the whole screen
 are not adversely impacted by this type of terminal design.
 However, there are applications that are designed to work with
 the default background.
-.
+..
 .SH RETURN VALUE
 The function returns the integer \fBERR\fP upon failure and \fBOK\fP on success.
 It will fail if either the terminal does not support
 the \fIorig_pair\fP or \fIorig_colors\fP capability.
 If the \fIinitialize_pair\fP capability is found, this causes an
 error as well.
-.
+..
 .SH NOTES
 Associated with this extension, the \fBinit_pair\fR(3X) function accepts
 negative arguments to specify default foreground or background
 colors.
-.
+..
 .SH PORTABILITY
 These routines are specific to ncurses.  They were not supported on
 Version 7, BSD or System V implementations.  It is recommended that
 any code depending on them be conditioned using NCURSES_VERSION.
-.
+..
 .SH SEE ALSO
 \fBcurs_color\fR(3X),
 \fBded\fP(1).
-.
+..
 .SH AUTHOR
 Thomas Dickey (from an analysis of the requirements for color xterm
 for XFree86 3.1.2C, February 1996).

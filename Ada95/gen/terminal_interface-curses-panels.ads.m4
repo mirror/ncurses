@@ -1,5 +1,5 @@
 --  -*- ada -*-
-define(`HTMLNAME',`terminal_interface-curses-panels_s.html')dnl
+define(`HTMLNAME',`terminal_interface-curses-panels__ads.htm')dnl
 include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --                                                                          --
@@ -36,17 +36,17 @@ include(M4MACRO)dnl
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.7 $
---  Binding Version 00.93
+--  $Revision: 1.14 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
 
 package Terminal_Interface.Curses.Panels is
-   pragma Preelaborate (Panels);
-include(`Panel_Linker_Options')
-
+   pragma Preelaborate (Terminal_Interface.Curses.Panels);
+include(`Panel_Linker_Options')dnl
+include(`Linker_Options')
    type Panel is private;
 
    ---------------------------
@@ -140,7 +140,7 @@ include(`Panel_Linker_Options')
    pragma Inline (Delete);
 
    private
-      type Panel is new System.Address;
-      Null_Panel : constant Panel := Panel (System.Null_Address);
+      type Panel is new System.Storage_Elements.Integer_Address;
+      Null_Panel : constant Panel := 0;
 
 end Terminal_Interface.Curses.Panels;

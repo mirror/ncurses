@@ -1,4 +1,4 @@
-# $Id: mk-2nd.awk,v 1.10 1998/02/11 12:13:53 tom Exp $
+# $Id: mk-2nd.awk,v 1.11 1998/10/17 21:54:21 Alexander.V.Lukyanov Exp $
 ##############################################################################
 # Copyright (c) 1998 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -89,9 +89,12 @@ BEGIN	{
 					atsign="@"
 					printf "\t@echo 'compiling %s (%s)'\n", $1, model
 				}
-				if ( $3 == "." || srcdir == "." )
-					printf "\t%scd ../%s; $(%s) $(CFLAGS_%s) -c ../%s/%s%s", atsign, model, compile, MODEL, name, $1, suffix
-				else
+				if ( $3 == "." || srcdir == "." ) {
+					dir = $3 "/"
+					sub("^\\$\\(srcdir\\)/","",dir);
+					sub("^\\./","",dir);
+					printf "\t%scd ../%s; $(%s) $(CFLAGS_%s) -c ../%s/%s%s%s", atsign, model, compile, MODEL, name, dir, $1, suffix
+				} else
 					printf "\t%scd ../%s; $(%s) $(CFLAGS_%s) -c %s/%s%s", atsign, model, compile, MODEL, $3, $1, suffix
 			} else {
 				printf "%s", $1

@@ -7,7 +7,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.17 1997/09/20 17:45:04 tom Exp $
+ * $Id: testcurs.c,v 1.19 1999/02/14 00:42:28 tom Exp $
  */
 
 #include <test.priv.h>
@@ -187,7 +187,7 @@ scrollTest (WINDOW *win)
 {
     int i;
     int OldX, OldY;
-    const char *Message = "The window will now scroll slowly";
+    NCURSES_CONST char *Message = "The window will now scroll slowly";
 
     wclear(win);
     mvwprintw (win, height - 2, 1, Message);
@@ -359,6 +359,8 @@ inputTest (WINDOW *win)
     wrefresh(win);
     echo();
     noraw();
+    num = 0;
+    *buffer = 0;
     mvwscanw(win, 7, 6, "%d %s", &num,buffer);
     mvwprintw(win, 8, 6, "String: %s Number: %d", buffer,num);
     Continue(win);
@@ -476,10 +478,12 @@ outputTest (WINDOW *win)
     wrefresh(win);
     noraw();
     echo();
+    *Buffer = 0;
     wscanw (win, "%s", Buffer);
 
     printw("This is a formatted string in stdscr: %d %s\n", 42, "is it");
     mvaddstr(10, 1, "Enter a string: ");
+    *Buffer = 0;
     scanw ("%s", Buffer);
 
     if (tigetstr("cvvis") != 0) {

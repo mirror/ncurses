@@ -1,5 +1,33 @@
 '\" t
-.\" $Id: curs_addch.3x,v 1.10 1997/12/13 22:37:23 tom Exp $
+.\"***************************************************************************
+.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\"                                                                          *
+.\" Permission is hereby granted, free of charge, to any person obtaining a  *
+.\" copy of this software and associated documentation files (the            *
+.\" "Software"), to deal in the Software without restriction, including      *
+.\" without limitation the rights to use, copy, modify, merge, publish,      *
+.\" distribute, distribute with modifications, sublicense, and/or sell       *
+.\" copies of the Software, and to permit persons to whom the Software is    *
+.\" furnished to do so, subject to the following conditions:                 *
+.\"                                                                          *
+.\" The above copyright notice and this permission notice shall be included  *
+.\" in all copies or substantial portions of the Software.                   *
+.\"                                                                          *
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+.\" IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+.\" DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+.\" OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+.\" THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+.\"                                                                          *
+.\" Except as contained in this notice, the name(s) of the above copyright   *
+.\" holders shall not be used in advertising or otherwise to promote the     *
+.\" sale, use or other dealings in this Software without prior written       *
+.\" authorization.                                                           *
+.\"***************************************************************************
+.\"
+.\" $Id: curs_addch.3x,v 1.16 1999/02/07 03:47:42 tom Exp $
 .TH curs_addch 3X ""
 .SH NAME
 \fBaddch\fR, \fBwaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR,
@@ -37,8 +65,7 @@ on the last line).  Tabs are considered to be at every eighth column.
 If \fIch\fR is any control character other than tab, newline, or backspace, it
 is drawn in \fB^\fR\fIX\fR notation.  Calling \fBwinch\fR after adding a
 control character does not return the character itself, but instead returns
-the ^-representation of the control character.  (To emit control characters
-literally, use \fBechochar\fR.)
+the ^-representation of the control character.
 
 Video attributes can be combined with a character argument passed to
 \fBaddch\fR or related functions by logical-ORing them into the character.
@@ -65,38 +92,38 @@ l l l
 _ _ _
 l l l.
 \fIName\fR	\fIDefault\fR	\fIDescription\fR
-ACS_ULCORNER	+	upper left-hand corner
-ACS_LLCORNER	+	lower left-hand corner
-ACS_URCORNER	+	upper right-hand corner
-ACS_LRCORNER	+	lower right-hand corner
-ACS_RTEE	+	right tee
-ACS_LTEE	+	left tee
-ACS_BTEE	+	bottom tee
-ACS_TTEE	+	top tee
-ACS_HLINE	-	horizontal line
-ACS_VLINE	|	vertical line
-ACS_PLUS	+	plus
-ACS_S1	-	scan line 1
-ACS_S9	\&_	scan line 9
-ACS_DIAMOND	+	diamond
-ACS_CKBOARD	:	checker board (stipple)
-ACS_DEGREE	'	degree symbol
-ACS_PLMINUS	#	plus/minus
-ACS_BULLET	o	bullet
-ACS_LARROW	<	arrow pointing left
-ACS_RARROW	>	arrow pointing right
-ACS_DARROW	v	arrow pointing down
-ACS_UARROW	^	arrow pointing up
-ACS_BOARD	#	board of squares
-ACS_LANTERN	#	lantern symbol
 ACS_BLOCK	#	solid square block
+ACS_BOARD	#	board of squares
+ACS_BTEE	+	bottom tee
+ACS_BULLET	o	bullet
+ACS_CKBOARD	:	checker board (stipple)
+ACS_DARROW	v	arrow pointing down
+ACS_DEGREE	'	degree symbol
+ACS_DIAMOND	+	diamond
+ACS_GEQUAL	>	greater-than-or-equal-to
+ACS_HLINE	-	horizontal line
+ACS_LANTERN	#	lantern symbol
+ACS_LARROW	<	arrow pointing left
+ACS_LEQUAL	<	less-than-or-equal-to
+ACS_LLCORNER	+	lower left-hand corner
+ACS_LRCORNER	+	lower right-hand corner
+ACS_LTEE	+	left tee
+ACS_NEQUAL	!	not-equal
+ACS_PI	*	greek pi
+ACS_PLMINUS	#	plus/minus
+ACS_PLUS	+	plus
+ACS_RARROW	>	arrow pointing right
+ACS_RTEE	+	right tee
+ACS_S1	-	scan line 1
 ACS_S3	-	scan line 3
 ACS_S7	-	scan line 7
-ACS_LEQUAL	<	less-than-or-equal-to
-ACS_GEQUAL	>	greater-than-or-equal-to
-ACS_PI	*	greek pi
-ACS_NEQUAL	!	not-equal
+ACS_S9	\&_	scan line 9
 ACS_STERLING	f	pound-sterling symbol
+ACS_TTEE	+	top tee
+ACS_UARROW	^	arrow pointing up
+ACS_ULCORNER	+	upper left-hand corner
+ACS_URCORNER	+	upper right-hand corner
+ACS_VLINE	|	vertical line
 .TE
 
 .SH RETURN VALUE
@@ -107,32 +134,21 @@ descriptions.
 .SH NOTES
 Note that \fBaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR, and
 \fBechochar\fR may be macros.
-.SH EXTENSIONS
-The following extended \fBcurses\fR features are available only on PC-clone
-consoles and compatible terminals obeying the ANSI.SYS de-facto standard for
-terminal control sequences.  They are not part of XSI curses.
-
-The attribute A_ALTCHARSET actually forces literal display of PC ROM characters
-including the high-half graphics.  Your console driver may still capture or
-translate a few (such as ESC) but this feature should give you access to the
-card-suit characters, up and down-arrow, and most others in the range 0-32.
-(In a terminfo entry designed for use with \fBncurses\fR, the high-half 
-characters are obtained using this attribute with an \fBacsc\fR string in
-which the second of each pair is a high-half character.)
-
-Giving \fBwechochar\fR an argument with its high bit set will produce the
-corresponding high-half ASCII graphic (SVr4 curses also has this feature but
-does not document it).  A control-character argument, however, will not
-typically produce the corresponding graphic; characters such as CR, NL, FF and
-TAB are typically interpreted by the console driver itself, and ESC will be
-interpreted as the leader of a control sequence.
 .SH PORTABILITY
 All these functions are described in the XSI Curses standard, Issue 4.
 The defaults specified for forms-drawing characters apply in the POSIX locale.
 
-The seven ACS symbols starting with \fBACS_S3\fR were not documented in
+Some ACS symbols
+(ACS_S3,
+ACS_S7,
+ACS_LEQUAL,
+ACS_GEQUAL,
+ACS_PI,
+ACS_NEQUAL,
+ACS_STERLING)
+were not documented in
 any publicly released System V.  However, many publicly available terminfos
-include \fBacsc\fR strings in which their key characters (pryz{|}) are 
+include \fBacsc\fR strings in which their key characters (pryz{|}) are
 embedded, and a second-hand list of their character descriptions has come
 to light.  The ACS-prefixed names for them were invented for \fBncurses\fR(3X).
 .SH SEE ALSO

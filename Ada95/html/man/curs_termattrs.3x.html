@@ -1,0 +1,122 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>baudrate</STRONG>,  <STRONG>erasechar</STRONG>,  <STRONG>has_ic</STRONG>, <STRONG>has_il</STRONG>, <STRONG>killchar</STRONG>, <STRONG>longname</STRONG>,
+       <STRONG>termattrs</STRONG>, <STRONG>termname</STRONG> - <STRONG>curses</STRONG> environment query routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>int</STRONG> <STRONG>baudrate(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>erasechar(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>has_ic(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>has_il(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>killchar(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*longname(void);</STRONG>
+       <STRONG>attr_t</STRONG> <STRONG>termattrs(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*termname(void);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <STRONG>baudrate</STRONG> routine returns the output speed of the  ter-
+       minal.   The  number  returned  is in bits per second, for
+       example <STRONG>9600</STRONG>, and is an integer.
+
+       The <STRONG>erasechar</STRONG> routine returns  the  user's  current  erase
+       character.
+
+       The <STRONG>has_ic</STRONG> routine is true if the terminal has insert- and
+       delete- character capabilities.
+
+       The <STRONG>has_il</STRONG> routine is true if the terminal has insert- and
+       delete-line  capabilities,  or  can  simulate  them  using
+       scrolling regions.  This might be used to determine if  it
+       would  be  appropriate to turn on physical scrolling using
+       <STRONG>scrollok</STRONG>.
+
+       The <STRONG>killchar</STRONG> routine returns the user's current line  kill
+       character.
+
+       The  <STRONG>longname</STRONG>  routine  returns a pointer to a static area
+       containing a verbose description of the current  terminal.
+       The maximum length of a verbose description is 128 charac-
+       ters.  It is defined only after the  call  to  <STRONG>initscr</STRONG>  or
+       <STRONG>newterm</STRONG>.   The area is overwritten by each call to <STRONG>newterm</STRONG>
+       and is not restored by <STRONG>set_term</STRONG>, so the  value  should  be
+       saved  between calls to <STRONG>newterm</STRONG> if <STRONG>longname</STRONG> is going to be
+       used with multiple terminals.
+
+       If a given terminal doesn't support a video attribute that
+       an  application  program is trying to use, <STRONG>curses</STRONG> may sub-
+       stitute a different video attribute for it.  The <STRONG>termattrs</STRONG>
+       function returns a logical <STRONG>OR</STRONG> of all video attributes sup-
+       ported by the terminal.  This information is useful when a
+       <STRONG>curses</STRONG>  program needs complete control over the appearance
+       of the screen.
+
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       <STRONG>longname</STRONG> and <STRONG>termname</STRONG> return <STRONG>NULL</STRONG> on error.
+
+       Routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure
+       and  <STRONG>OK</STRONG>  (SVr4 only specifies "an integer value other than
+       <STRONG>ERR</STRONG>") upon successful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <STRONG>termattrs</STRONG> may be a macro.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses standard, Issue  4  describes  these  func-
+       tions.  It changes the return type of <STRONG>termattrs</STRONG> to the new
+       type <STRONG>attr_t</STRONG>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3X)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3X)</A></STRONG>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -27,12 +27,12 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_def.c,v 1.7 1998/02/11 12:13:42 tom Exp $")
+MODULE_ID("$Id: frm_def.c,v 1.9 1999/05/16 17:20:43 juergen Exp $")
 
 /* this can't be readonly */
 static FORM default_form = {

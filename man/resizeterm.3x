@@ -28,17 +28,16 @@
 .\"
 .\" Author: Thomas E. Dickey <dickey@clark.net> 1996,1997
 .\"
-.\" $Id: resizeterm.3x,v 1.6 1998/02/11 12:13:48 tom Exp $
+.\" $Id: resizeterm.3x,v 1.7 1998/03/14 23:42:52 tom Exp $
 .TH resizeterm 3X ""
-.
 .SH NAME
 \fBresizeterm\fR - change the curses terminal size
-.
+..
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 
 \fBint resizeterm(int lines, int columns);\fR
-.
+..
 .SH DESCRIPTION
 This is an extension to the curses library.
 It provides callers with a hook into the \fBncurses\fR data to resize windows,
@@ -55,18 +54,18 @@ The function attempts to resize all windows.
 However, due to the calling convention of pads,
 it is not possible to resize these
 without additional interaction with the application.
-.
+..
 .SH RETURN VALUE
 The function returns the integer \fBERR\fR upon failure and \fBOK\fR on success.
 It will fail if either of the dimensions less than or equal to zero,
 or if an error occurs while (re)allocating memory for the windows. 
-.
+..
 .SH NOTES
 While this function is intended to be used to support a signal handler
 (i.e., for SIGWINCH), care should be taken to avoid invoking it in a
 context where \fBmalloc\fR or \fBrealloc\fR may have been interrupted,
 since it uses those functions.
-.
+..
 .PP
 If ncurses is configured to supply its own SIGWINCH handler,
 the \fBresizeterm\fR function ungetch's a \fBKEY_RESIZE\fR which
@@ -74,10 +73,10 @@ will be read on the next call to \fBgetch\fR.
 This is used to alert an application that the screen size has changed,
 and that it should repaint special features such as pads that cannot
 be done automatically.
-.
+..
 .SH SEE ALSO
 \fBwresize\fR(3X).
-.
+..
 .SH AUTHOR
 Thomas Dickey (from an equivalent function written in 1988 for BSD curses).
 .\"#

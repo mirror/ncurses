@@ -1,0 +1,120 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>border</STRONG>,  <STRONG>wborder</STRONG>, <STRONG>box</STRONG>, <STRONG>hline</STRONG>, <STRONG>whline</STRONG>, <STRONG>vline</STRONG>, <STRONG>wvline</STRONG> - cre-
+       ate <STRONG>curses</STRONG> borders, horizontal and vertical lines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+       <STRONG>int</STRONG> <STRONG>border(chtype</STRONG> <STRONG>ls,</STRONG> <STRONG>chtype</STRONG> <STRONG>rs,</STRONG> <STRONG>chtype</STRONG> <STRONG>ts,</STRONG> <STRONG>chtype</STRONG> <STRONG>bs,</STRONG>
+          <STRONG>chtype</STRONG> <STRONG>tl,</STRONG> <STRONG>chtype</STRONG> <STRONG>tr,</STRONG> <STRONG>chtype</STRONG> <STRONG>bl,</STRONG> <STRONG>chtype</STRONG> <STRONG>br);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wborder(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>chtype</STRONG> <STRONG>ls,</STRONG> <STRONG>chtype</STRONG> <STRONG>rs,</STRONG>
+          <STRONG>chtype</STRONG> <STRONG>ts,</STRONG> <STRONG>chtype</STRONG> <STRONG>bs,</STRONG> <STRONG>chtype</STRONG> <STRONG>tl,</STRONG> <STRONG>chtype</STRONG> <STRONG>tr,</STRONG>
+          <STRONG>chtype</STRONG> <STRONG>bl,</STRONG> <STRONG>chtype</STRONG> <STRONG>br);</STRONG>
+       <STRONG>int</STRONG> <STRONG>box(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>chtype</STRONG> <STRONG>verch,</STRONG> <STRONG>chtype</STRONG> <STRONG>horch);</STRONG>
+       <STRONG>int</STRONG> <STRONG>hline(chtype</STRONG> <STRONG>ch,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>whline(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>chtype</STRONG> <STRONG>ch,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>vline(chtype</STRONG> <STRONG>ch,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wvline(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>chtype</STRONG> <STRONG>ch,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>mvhline(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>chtype</STRONG> <STRONG>ch,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>mvwhline(WINDOW</STRONG> <STRONG>*,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>chtype</STRONG> <STRONG>ch,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvvline(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>chtype</STRONG> <STRONG>ch,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwvline(WINDOW</STRONG> <STRONG>*,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>chtype</STRONG> <STRONG>ch,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <STRONG>border</STRONG>, <STRONG>wborder</STRONG> and <STRONG>box</STRONG> routines draw a box around the
+       edges  of  a  window.   The argument <EM>ls</EM> is a character and
+       attributes used for the left side  of  the  border,  <EM>rs</EM>  -
+       right  side,  <EM>ts</EM>  -  top  side, <EM>bs</EM> - bottom side, <EM>tl</EM> - top
+       left-hand corner, <EM>tr</EM> - top right-hand corner, <EM>bl</EM> -  bottom
+       left-hand  corner,  and <EM>br</EM> - bottom right-hand corner.  If
+       any of these arguments is zero, then the following default
+       values  (defined in <STRONG>curses.h</STRONG>) are used instead: <STRONG>ACS_VLINE</STRONG>,
+       <STRONG>ACS_VLINE</STRONG>,     <STRONG>ACS_HLINE</STRONG>,     <STRONG>ACS_HLINE</STRONG>,     <STRONG>ACS_ULCORNER</STRONG>,
+       <STRONG>ACS_URCORNER</STRONG>, <STRONG>ACS_LLCORNER</STRONG>, <STRONG>ACS_LRCORNER</STRONG>.
+
+       <STRONG>box(</STRONG><EM>win</EM><STRONG>,</STRONG>  <EM>verch</EM><STRONG>,</STRONG>  <EM>horch</EM><STRONG>)</STRONG>  is a shorthand for the following
+       call: <STRONG>wborder(</STRONG><EM>win</EM><STRONG>,</STRONG> <EM>verch</EM><STRONG>,</STRONG> <EM>verch</EM><STRONG>,</STRONG> <EM>horch</EM><STRONG>,</STRONG> <EM>horch</EM><STRONG>,</STRONG>  <STRONG>0,</STRONG>  <STRONG>0,</STRONG>  <STRONG>0,</STRONG>
+       <STRONG>0)</STRONG>.
+
+       The  <STRONG>hline</STRONG> and <STRONG>whline</STRONG> functions draw a horizontal (left to
+       right) line using <EM>ch</EM> starting at the current cursor  posi-
+       tion  in  the  window.  The current cursor position is not
+       changed.  The line is at most <EM>n</EM>  characters  long,  or  as
+       many as fit into the window.
+
+       The  <STRONG>vline</STRONG>  and  <STRONG>wvline</STRONG>  functions draw a vertical (top to
+       bottom) line using <EM>ch</EM> starting at the current cursor posi-
+       tion  in  the  window.  The current cursor position is not
+       changed.  The line is at most <EM>n</EM>  characters  long,  or  as
+       many as fit into the window.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All  routines  return  the  integer <STRONG>OK</STRONG>.  The SVr4.0 manual
+       says "or a non-negative integer if <STRONG>immedok</STRONG>  is  set",  but
+       this appears to be an error.
+       The  borders  generated by these functions are <EM>inside</EM> bor-
+       ders (this is also true of SVr4 curses, though the fact is
+       not documented).
+
+       Note that <STRONG>border</STRONG> and <STRONG>box</STRONG> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  functions are described in the XSI Curses standard,
+       Issue 4.  Additional functions <STRONG>mvhline</STRONG>, <STRONG>mvvline</STRONG>, <STRONG>mvwhline</STRONG>,
+       and <STRONG>mvwvline</STRONG> are described there which this implementation
+       does not yet support.  The standard  specifies  that  they
+       return  <STRONG>ERR</STRONG> on failure, but specifies no error conditions.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3X)</A></STRONG>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,120 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>tgetent</STRONG>, <STRONG>tgetflag</STRONG>, <STRONG>tgetnum</STRONG>, <STRONG>tgetstr</STRONG>, <STRONG>tgoto</STRONG>, <STRONG>tputs</STRONG> - direct
+       <STRONG>curses</STRONG> interface to the terminfo capability database
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+       <STRONG>#include</STRONG> <STRONG><term.h></STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetent(const</STRONG> <STRONG>char</STRONG> <STRONG>*bp,</STRONG> <STRONG>char</STRONG> <STRONG>*name);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetflag(const</STRONG> <STRONG>char</STRONG> <STRONG>*id);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetnum(const</STRONG> <STRONG>char</STRONG> <STRONG>*id);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*tgetstr(const</STRONG> <STRONG>char</STRONG> <STRONG>*id,</STRONG> <STRONG>char</STRONG> <STRONG>**area);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*tgoto(const</STRONG> <STRONG>char</STRONG> <STRONG>*cap,</STRONG> <STRONG>int</STRONG> <STRONG>col,</STRONG> <STRONG>int</STRONG> <STRONG>row);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tputs(const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>affcnt,</STRONG> <STRONG>int</STRONG> <STRONG>(*putc)(int));</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These routines are included as a conversion aid  for  pro-
+       grams  that use the <EM>termcap</EM> library.  Their parameters are
+       the same and the routines are emulated using the  <EM>terminfo</EM>
+       database.   Thus, they can only be used to query the capa-
+       bilities of entries for which a terminfo  entry  has  been
+       compiled.
+
+       The  <STRONG>tgetent</STRONG> routine loads the entry for <EM>name</EM>.  It returns
+       1 on success, 0 if there is no such entry, and -1  if  the
+       terminfo  database  could  not  be  found.   The emulation
+       ignores the buffer pointer <EM>bp</EM>.
+
+       The <STRONG>tgetflag</STRONG> routine gets the boolean  entry  for  <EM>id</EM>,  or
+       zero if it is not available.
+
+       The  <STRONG>tgetnum</STRONG>  routine gets the numeric entry for <EM>id</EM>, or -1
+       if it is not available.
+
+       The <STRONG>tgetstr</STRONG> routine returns the string entry  for  <EM>id</EM>,  or
+       zero  if  it  is  not  available.  Use <STRONG>tputs</STRONG> to output the
+       returned string.
+
+       The <STRONG>tgoto</STRONG> routine instantiates  the  parameters  into  the
+       given  capability.   The output from this routine is to be
+       passed to <STRONG>tputs</STRONG>.
+
+       The <STRONG>tputs</STRONG> routine is described  on  the  <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3X)</A></STRONG>
+       manual page.  It can retrieve capabilities by either term-
+       cap or terminfo name.
+
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       Except where explicitly noted,  routines  that  return  an
+       integer  return  <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4 only speci-
+       fies "an integer value other than  <STRONG>ERR</STRONG>")  upon  successful
+       completion.
+
+       Routines that return pointers return <STRONG>NULL</STRONG> on error.
+       If you call <STRONG>tgetstr</STRONG> to fetch <STRONG>ca</STRONG> or any other parameterized
+       string, be aware that it  will  be  returned  in  terminfo
+       notation,  not  the older and not-quite-compatible termcap
+       notation.  This won't cause problems if all you do with it
+       is  call <STRONG>tgoto</STRONG> or <STRONG>tparm</STRONG>, which both expand terminfo-style.
+
+       Because terminfo conventions for representing  padding  in
+       string  capabilities  differ  from termcap's, <STRONG>tputs("50");</STRONG>
+       will put out a literal "50" rather than  busy-waiting  for
+       50 milliseconds.  Cope with it.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The  XSI  Curses  standard,  Issue 4 describes these func-
+       tions.  However, they are marked TO BE WITHDRAWN  and  may
+       be removed in future versions.
+
+       Neither  the  XSI  Curses  standard nor the SVr4 man pages
+       documented the return values of <STRONG>tgetent</STRONG> correctly,  though
+       all three were in fact returned ever since SVr1.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG><A HREF="putc.3s.html">putc(3S)</A></STRONG>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

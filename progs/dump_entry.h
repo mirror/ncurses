@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,10 +51,10 @@
 #define S_TERMCAP	4	/* sort by termcap names */
 
 extern NCURSES_CONST char *nametrans(const char *);
-extern void dump_init(const char *, int, int, int, int);
-extern int fmt_entry(TERMTYPE *, int (*)(int, int), bool, bool);
-extern int dump_entry(TERMTYPE *, bool, int (*)(int, int));
+extern void dump_init(const char *, int, int, int, int, bool);
+extern int fmt_entry(TERMTYPE *, int (*)(int, int), bool, bool, int);
+extern int dump_entry(TERMTYPE *, bool, int, int (*)(int, int));
 extern int dump_uses(const char *, bool);
-extern void compare_entry(void (*)(int, int, const char *));
+extern void compare_entry(void (*)(int, int, const char *), TERMTYPE *);
 
 #define FAIL	-1

@@ -7,13 +7,13 @@
  */
 /***************************************************************************
 *                                                                          *
-*  Author : Juergen Pfeifer, Juergen.Pfeifer@T-Online.de                   *
+*  Author : Juergen Pfeifer, juergen.pfeifer@gmx.net                       *
 *                                                                          *
 ***************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_num.c,v 1.11 1997/10/18 19:32:58 tom Exp $")
+MODULE_ID("$Id: fty_num.c,v 1.13 1999/05/16 17:23:30 juergen Exp $")
 
 #if HAVE_LOCALE_H
 #include <locale.h>

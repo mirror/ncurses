@@ -26,10 +26,10 @@
 # authorization.                                                             #
 ##############################################################################
 #
-#  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+#  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 #
 #  Version Control
-#  $Revision: 1.18 $
+#  $Revision: 1.27 $
 #
 .SUFFIXES:
 
@@ -60,7 +60,6 @@ CPPFLAGS	= @ACPPFLAGS@ \
 		  -DHAVE_CONFIG_H -I$(srcdir)
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
-
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
@@ -73,19 +72,19 @@ LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS)
 
 RANLIB		= @RANLIB@
 
-LIB_CURSES      = -L ../../lib -lncurses
+LIB_CURSES      = -L../../lib -lncurses
 
 M4		= m4
 M4FLAGS		=
 
+GENERATE	= ./gen '@DFT_ARG_SUFFIX@'
 DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
 
 ################################################################################
 ALIB            = @cf_ada_package@
 ABASE		= $(ALIB)-curses
 
-ADA_SRCDIR	= ../ada_include
-ADA_OBJDIR      = ../ada_objects
+ADA_SRCDIR	= ../src
 
 GEN_FILES0      = Base_Defs
 
@@ -97,6 +96,7 @@ GEN_FILES1      = Key_Definitions              		\
 		  ACS_Map                      		\
 		  Linker_Options               		\
 		  Base_Defs			        \
+		  Window_Offsets                        \
 		  Version_Info
 
 GEN_FILES2      = Menu_Opt_Rep        		    	\
@@ -111,9 +111,14 @@ GEN_FILES3      = Form_Opt_Rep                 		\
 
 GEN_FILES4      = Mouse_Base_Defs              		\
 		  Mouse_Event_Rep			\
+		  Mouse_Events                          \
 		  Panel_Linker_Options
 
+GEN_FILES5	= Chtype_Def                            \
+		  Eti_Defs
+
 GEN_TARGETS     = $(ADA_SRCDIR)/$(ABASE).ads         			\
+	          $(ADA_SRCDIR)/$(ABASE)-aux.ads   			\
 	          $(ADA_SRCDIR)/$(ABASE)-menus.ads   			\
 	          $(ADA_SRCDIR)/$(ABASE)-forms.ads   			\
 	          $(ADA_SRCDIR)/$(ABASE)-mouse.ads 			\
@@ -126,6 +131,7 @@ GEN_TARGETS     = $(ADA_SRCDIR)/$(ABASE).ads         			\
 	          $(ADA_SRCDIR)/$(ABASE)-panels-user_data.ads
 
 GEN_SRC		= $(srcdir)/$(ABASE).ads.m4				\
+	          $(srcdir)/$(ABASE)-aux.ads.m4 	  		\
 	          $(srcdir)/$(ABASE)-menus.ads.m4 	  		\
 	          $(srcdir)/$(ABASE)-forms.ads.m4   			\
 	          $(srcdir)/$(ABASE)-mouse.ads.m4			\
@@ -138,36 +144,37 @@ GEN_SRC		= $(srcdir)/$(ABASE).ads.m4				\
 	          $(srcdir)/$(ABASE)-panels-user_data.ads.m4
 
 
-all:	$(ADA_OBJDIR) $(GEN_TARGETS)
+all:	$(GEN_TARGETS)
 	@
 
 sources:
 
-$(ADA_OBJDIR) \
 $(ADA_INCLUDE) \
 $(ADA_OBJECTS) :
-	$(top_srcdir)/mkinstalldirs $@
+	$(top_srcdir)/mkinstalldirs $(INSTALL_PREFIX)$@
 
 install \
 install.libs :: $(ADA_INCLUDE)
-	@echo installing package $(ABASE) in $(ADA_INCLUDE)
-	@$(top_srcdir)/tar-copy.sh '$(ABASE)[-.]*' $(ADA_SRCDIR) $(ADA_INCLUDE)
-	@test $(srcdir) != ./ && $(top_srcdir)/tar-copy.sh '$(ABASE)[-.]*' $(srcdir)/../ada_include $(ADA_INCLUDE)
+	@echo installing package $(ALIB) in $(INSTALL_PREFIX)$(ADA_INCLUDE)
+	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ad?' $(ADA_SRCDIR) $(INSTALL_PREFIX)$(ADA_INCLUDE)
+	@test $(srcdir) != ./ && $(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ad?' $(srcdir)/../src $(INSTALL_PREFIX)$(ADA_INCLUDE)
 
 install \
 install.libs :: $(ADA_OBJECTS)
-	@echo installing package $(ABASE) in $(ADA_OBJECTS)
-	@$(top_srcdir)/tar-copy.sh '$(ABASE)[-.]*' $(ADA_OBJDIR) $(ADA_OBJECTS)
+	@echo installing package $(ALIB) in $(INSTALL_PREFIX)$(ADA_OBJECTS)
+	@chmod a-wx $(ADA_SRCDIR)/*.ali
+	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ali' $(ADA_SRCDIR) $(INSTALL_PREFIX)$(ADA_OBJECTS)
+	@chmod u+x $(ADA_SRCDIR)/*.ali
 
 uninstall \
 uninstall.libs ::
-	@echo removing package $(ABASE) from $(ADA_INCLUDE)
-	-@cd $(ADA_INCLUDE) && rm -f $(ABASE)[-.]*
+	@echo removing package $(ALIB) from $(INSTALL_PREFIX)$(ADA_INCLUDE)
+	-@cd $(INSTALL_PREFIX)$(ADA_INCLUDE) && rm -f $(ALIB)[-.]*
 
 uninstall \
 uninstall.libs ::
-	@echo removing package $(ABASE) from $(ADA_OBJECTS)
-	-@cd $(ADA_OBJECTS) && rm -f $(ABASE)[-.]*
+	@echo removing package $(ALIB) from $(INSTALL_PREFIX)$(ADA_OBJECTS)
+	-@cd $(INSTALL_PREFIX)$(ADA_OBJECTS) && rm -f $(ALIB)[-.]*
 
 gen:	gen.o
 	@ECHO_LINK@ $(LINK) $(CFLAGS_NORMAL) gen.o $(LD_FLAGS) -o $@ $(LIB_CURSES)
@@ -176,69 +183,87 @@ gen.o:	$(srcdir)/gen.c
 	$(CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/gen.c
 
 Character_Attribute_Set_Rep: gen
-	./gen B A >$@
+	$(GENERATE) B A >$@
 
 Base_Defs: gen
-	./gen B B >$@
+	$(GENERATE) B B >$@
 
 Color_Defs: gen
-	./gen B C >$@
+	$(GENERATE) B C >$@
 
 Key_Definitions: gen
-	./gen B K >$@
+	$(GENERATE) B K >$@
 
 Old_Keys: gen
-	./gen B O >$@
+	$(GENERATE) B O >$@
 
 ACS_Map: gen
-	./gen B M >$@
+	$(GENERATE) B M >$@
 
 AC_Rep: gen
-	./gen B R >$@
+	$(GENERATE) B R >$@
 
 Linker_Options: gen
-	./gen B L >$@
+	$(GENERATE) B L >$@
 
 Version_Info: gen
-	./gen B V >$@
+	$(GENERATE) B V >$@
+
+Window_Offsets: gen
+	$(GENERATE) B D >$@
 
 Menu_Opt_Rep: gen
-	./gen M R >$@
+	$(GENERATE) M R >$@
 
 Menu_Base_Defs: gen
-	./gen M B >$@
+	$(GENERATE) M B >$@
 
 Menu_Linker_Options: gen
-	./gen M L >$@
+	$(GENERATE) M L >$@
 
 Item_Rep: gen
-	./gen M I >$@
+	$(GENERATE) M I >$@
 
 Form_Opt_Rep: gen
-	./gen F R >$@
+	$(GENERATE) F R >$@
 
 Form_Base_Defs: gen
-	./gen F B >$@
+	$(GENERATE) F B >$@
 
 Form_Linker_Options: gen
-	./gen F L >$@
+	$(GENERATE) F L >$@
 
 Field_Rep: gen
-	./gen F I >$@
+	$(GENERATE) F I >$@
 
 Mouse_Base_Defs: gen
-	./gen P B >$@
+	$(GENERATE) P B >$@
 
 Mouse_Event_Rep: gen
-	./gen P M >$@
+	$(GENERATE) P M >$@
+
+Mouse_Events: gen
+	$(GENERATE) B E >$@
 
 Panel_Linker_Options: gen
-	./gen P L >$@
+	$(GENERATE) P L >$@
+
+Chtype_Def: gen
+	$(GENERATE) E C >$@
+
+Eti_Defs: gen
+	$(GENERATE) E E >$@
 
 $(ADA_SRCDIR)/$(ABASE).ads: 	$(srcdir)/$(ABASE).ads.m4 \
 				$(GEN_FILES1) $(srcdir)/normal.m4
 	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
 	$(srcdir)/$(ABASE).ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-aux.ads: $(srcdir)/$(ABASE)-aux.ads.m4 \
+				$(GEN_FILES5) $(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-aux.ads.m4 |\
 	$(DEL_ADAMODE) >$@
 
 $(ADA_SRCDIR)/$(ABASE)-menus.ads: $(srcdir)/$(ABASE)-menus.ads.m4 \
@@ -321,6 +346,7 @@ mostlyclean ::
 	-rm -f $(GEN_FILES2)
 	-rm -f $(GEN_FILES3)
 	-rm -f $(GEN_FILES4)
+	-rm -f $(GEN_FILES5)
 
 clean :: mostlyclean
 	-rm -f $(GEN_TARGETS)

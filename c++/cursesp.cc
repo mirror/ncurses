@@ -28,13 +28,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1993,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1993,1997            *
  ****************************************************************************/
 
 #include "cursesp.h"
 #include "internal.h"
 
-MODULE_ID("$Id: cursesp.cc,v 1.11 1998/02/17 09:04:12 juergen Exp $")
+MODULE_ID("$Id: cursesp.cc,v 1.14 1999/05/16 17:30:51 juergen Exp $")
 
 NCursesPanel* NCursesPanel::dummy = (NCursesPanel*)0;
 
@@ -56,7 +56,6 @@ NCursesPanel::~NCursesPanel() {
   delete hook;
   ::del_panel(p);
   ::update_panels();
-  ::doupdate();
 }
 
 void

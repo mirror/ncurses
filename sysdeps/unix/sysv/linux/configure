@@ -23,7 +23,7 @@ rm -f ncurses/MKterm.h.awk \
 	ncurses/expanded.c \
 	ncurses/fallback.c \
 	ncurses/hashsize.h \
-	ncurses/keys.tries \
+	ncurses/init_keytry.h \
 	ncurses/lib_gen.c \
 	ncurses/lib_keyname.c \
 	ncurses/names.c \
@@ -46,6 +46,10 @@ s%@DEFS@%-DHAVE_CONFIG_H%g
 s%@NCURSES_MAJOR@%$NCURSES_MAJOR%g
 s%@NCURSES_MINOR@%$NCURSES_MINOR%g
 s%@NCURSES_PATCH@%$NCURSES_PATCH%g
+s%@NCURSES_CONST@%%g
+s%@NCURSES_XNAMES@%1%g
+s%@OSPEED_TYPE@%speed_t%g
+s%@OSPEED_INCLUDES@%#include <termios.h>%g
 s%@cf_cv_rel_version@%$cf_cv_rel_version%g
 s%@cf_cv_abi_version@%$cf_cv_abi_version%g
 s%@cf_cv_builtin_bool@%1%g
@@ -54,6 +58,7 @@ s%@cf_cv_shift_limit@%32%g
 s%@cf_cv_widec_shift@%8%g
 s%@cf_cv_typeof_chtype@%long%g
 s%@cf_cv_1UL@%1UL%g
+s%@cf_cv_cc_bool_type@%0%g
 
 EOF
 
@@ -189,9 +194,9 @@ for nc_file in .. $NC_CONFIG_HEADERS; do if test "x$nc_file" != x..; then
 #define GCC_SCANF 1
 #define GCC_UNUSED __attribute__((unused))
 #define GOOD_SELECT 1
-#define HAVE_ISASCII 1
 #define HAVE_BUILTIN_H 1
 #define HAVE_DIRENT_H 1
+#define HAVE_ERRNO 1
 #define HAVE_FCNTL_H 1
 #define HAVE_FORM_H 1
 #define HAVE_GETOPT_H 1
@@ -199,6 +204,7 @@ CEOF
   cat >> conftest.frag <<CEOF
 #define HAVE_GETTIMEOFDAY 1
 #define HAVE_GETTTYNAM 1
+#define HAVE_ISASCII 1
 #define HAVE_LIBFORM 1
 #define HAVE_LIBMENU 1
 #define HAVE_LIBPANEL 1
@@ -208,6 +214,7 @@ CEOF
 #define HAVE_LONG_FILE_NAMES 1
 #define HAVE_MEMCCPY 1
 #define HAVE_MENU_H 1
+#define HAVE_NANOSLEEP 1
 #define HAVE_NC_ALLOC_H 1
 CEOF
   cat >> conftest.frag <<CEOF
@@ -226,6 +233,7 @@ CEOF
 CEOF
   cat >> conftest.frag <<CEOF
 #define HAVE_STRDUP 1
+#define HAVE_SYMLINK 1
 #define HAVE_SYS_IOCTL_H 1
 #define HAVE_SYS_PARAM_H 1
 #define HAVE_SYS_SELECT_H 1
@@ -241,7 +249,6 @@ CEOF
   cat >> conftest.frag <<CEOF
 #define HAVE_TYPEINFO 1
 #define HAVE_UNISTD_H 1
-#define HAVE_USLEEP 1
 #define HAVE_VALUES_H 1
 #define HAVE_VFSCANF 1
 #define HAVE_VSNPRINTF 1
@@ -256,7 +263,11 @@ CEOF
 #define SYSTEM_NAME "linux-gnu"
 #define TYPEOF_CHTYPE long
 #define USE_DATABASE 1
+#define USE_HASHMAP 1
 #define USE_SCROLL_HINTS 1
+#define USE_LINKS 1
+#define NCURSES_NO_PADDING 1
+#define USE_SIGWINCH 1
 CEOF
   cat >> conftest.edit <<CEOF
 /@DEFS@/r conftest.frag
@@ -361,38 +372,37 @@ echo creating ncurses/termsort.c
 sh ${nc_given_srcdir}/progs/MKtermsort.sh "${NC_AWK}" ${nc_given_srcdir}/include/Caps > ncurses/termsort.c
 
 echo creating ncurses/fallback.c
-sh ${nc_given_srcdir}/ncurses/MKfallback.sh > ncurses/fallback.c
+sh ${nc_given_srcdir}/ncurses/tinfo/MKfallback.sh > ncurses/fallback.c
 
 echo creating ncurses/lib_gen.c
-sh ${nc_given_srcdir}/ncurses/MKlib_gen.sh "${NC_CPP}" "${NC_AWK}" < ncurses/curses.h > ncurses/lib_gen.c
+sh ${nc_given_srcdir}/ncurses/base/MKlib_gen.sh "${NC_CPP}" "${NC_AWK}" < ncurses/curses.h > ncurses/lib_gen.c
 
 echo creating ncurses/nomacros.h
-sh ${nc_given_srcdir}/ncurses/MKlib_gen.sh "${NC_CPP}" "${NC_AWK}" < ncurses/curses.h | fgrep undef > ncurses/nomacros.h
+sh ${nc_given_srcdir}/ncurses/base/MKlib_gen.sh "${NC_CPP}" "${NC_AWK}" < ncurses/curses.h | fgrep undef > ncurses/nomacros.h
 
 echo creating ncurses/expanded.c
-sh ${nc_given_srcdir}/ncurses/MKexpanded.sh "${NC_CPP}"
-mv expanded.c ncurses/expanded.c
+sh ${nc_given_srcdir}/ncurses/tty/MKexpanded.sh "${NC_CPP}" >ncurses/expanded.c
 
 echo creating ncurses/comp_captab.c
-${NC_CC} -o make_hash -DMAIN_PROGRAM ${nc_given_srcdir}/ncurses/comp_hash.c
-sh ${nc_given_srcdir}/ncurses/MKcaptab.awk "${NC_AWK}" ${nc_given_srcdir}/include/Caps > ncurses/comp_captab.c
+${NC_CC} -o make_hash -DMAIN_PROGRAM ${nc_given_srcdir}/ncurses/tinfo/comp_hash.c
+sh ${nc_given_srcdir}/ncurses/tinfo/MKcaptab.awk "${NC_AWK}" ${nc_given_srcdir}/include/Caps > ncurses/comp_captab.c
 rm -f make_hash
 
 echo creating ncurses/lib_keyname.c
-${NC_AWK} -f ${nc_given_srcdir}/ncurses/MKkeyname.awk ${nc_given_srcdir}/ncurses/keys.list > ncurses/lib_keyname.c
+${NC_AWK} -f ${nc_given_srcdir}/ncurses/base/MKkeyname.awk ${nc_given_srcdir}/ncurses/tinfo/keys.list > ncurses/lib_keyname.c
 
 echo creating ncurses/names.c and ncurses/codes.c
-${NC_AWK} -f ${nc_given_srcdir}/ncurses/MKnames.awk ${nc_given_srcdir}/include/Caps
+${NC_AWK} -f ${nc_given_srcdir}/ncurses/tinfo/MKnames.awk ${nc_given_srcdir}/include/Caps
 cat namehdr boolnames boolfnames numnames numfnames strnames strfnames nameftr >ncurses/names.c
 cat namehdr boolcodes numcodes strcodes codeftr > ncurses/codes.c
 rm -f namehdr nameftr codeftr boolnames boolfnames boolcodes numnames numfnames numcodes strnames strfnames strcodes
 
-echo creating ncurses/keys.tries
-${NC_CC} -o make_key ${nc_given_srcdir}/ncurses/make_keys.c
-./make_key ${nc_given_srcdir}/ncurses/keys.list > ncurses/keys.tries
+echo creating ncurses/init_keytry.h
+${NC_CC} -o make_key ${nc_given_srcdir}/ncurses/tinfo/make_keys.c
+./make_key ${nc_given_srcdir}/ncurses/keys.list > ncurses/init_keytry.h
 rm -f make_key
 
 echo creating ncurses/unctrl.c
-echo | ${NC_AWK} -f ${nc_given_srcdir}/ncurses/MKunctrl.awk > ncurses/unctrl.c
+echo | ${NC_AWK} -f ${nc_given_srcdir}/ncurses/base/MKunctrl.awk > ncurses/unctrl.c
 echo creating ncurses/terminfo.5
 sh ${nc_given_srcdir}/man/MKterminfo.sh ${nc_given_srcdir}/man/terminfo.head ${nc_given_srcdir}/include/Caps ${nc_given_srcdir}/man/terminfo.tail > ncurses/terminfo.5

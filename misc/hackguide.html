@@ -1,13 +1,13 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.0//EN">
 <!--
-  $Id: hackguide.html,v 1.17 1998/02/15 01:32:35 tom Exp $
+  $Id: hackguide.html,v 1.23 1999/01/17 00:15:48 tom Exp $
 -->
 <HTML>
 <HEAD>
 <TITLE>A Hacker's Guide to Ncurses Internals</TITLE>
-<link rev="made" href="mailto:esr@snark.thyrsus.com">
+<link rev="made" href="mailto:bugs-ncurses@gnu.org">
 <!--
-This document is self-contained, *except* that there is one relative link to 
+This document is self-contained, *except* that there is one relative link to
 the ncurses-intro.html document, expected to be in the same directory with
 this one.
 -->
@@ -26,7 +26,6 @@ this one.
 <LI><A HREF="#extensions">How to Design Extensions</A>
 </UL>
 <LI><A HREF="#portability">Portability and Configuration</A><UL>
-<LI><A HREF="#fooup">If autoconf Fails</A>
 </UL>
 <LI><A HREF="#documentation">Documentation Conventions</A>
 <P>
@@ -65,8 +64,8 @@ package. <P>
 
 <H1><A NAME="objective">Objective of the Package</A></H1>
 
-The objective of the <STRONG>ncurses</STRONG> package is to provide a freeware API for
-character-cell terminals and terminal emulators with the following 
+The objective of the <STRONG>ncurses</STRONG> package is to provide a free software API for
+character-cell terminals and terminal emulators with the following
 characteristics: <P>
 
 <UL>
@@ -74,7 +73,7 @@ characteristics: <P>
      the original BSD curses and System V curses.
 <P>
 <LI>Conformant with the XSI Curses standard issued as part of XPG4 by
-     X/Open. 
+     X/Open.
 <P>
 <LI>High-quality -- stable and reliable code, wide portability, good
      packaging, superior documentation.
@@ -136,32 +135,10 @@ not available under POSIX/ANSI, provided only that:  <P>
      in the <STRONG>ncurses</STRONG> API between platforms.
 </UL>
 
-We use GNU <CODE>autoconf(1)</CODE> as a tool to deal with portability issues.  
+We use GNU <CODE>autoconf(1)</CODE> as a tool to deal with portability issues.
 The right way to leverage an OS-specific feature is to modify the autoconf
 specification files (configure.in and aclocal.m4) to set up a new feature
 macro, which you then use to condition your code. <P>
-
-<H2><A NAME="fooup">If autoconf Fails</A></H2>
-
-The 'configure' script usually gets your system environment right
-automatically.  Here are some -D options you might need to compile
-with if it fails: <P>
-<DL>
-<DT>-DHAVE_UNISTD_H
-<DD>if &lt;unistd.h&gt; is present
-<DT>-DHAVE_SIGACTION
-<DD>if the sigaction function is present 
-<DT>-DHAVE_USLEEP
-<DD>if the usleep function is present
-<DT>-DSVR4_ACTION
-<DD>if (e.g., svr4) you need _POSIX_SOURCE to have sigaction
-<DT>-DHAVE_TERMIOS_H
-<DD>if you have &lt;termios.h&gt;
-<DT>-DHAVE_TERMIO_H
-<DD>if you have &lt;termio.h&gt;; otherwise it uses &lt;sgtty.h&gt;
-<DT>-DBROKEN_TIOCGETWINSZ
-<DD>on SVR4 and HPUX, the get window size ioctl is broken.
-</DL>
 
 <H1><A NAME="documentation">Documentation Conventions</A></H1>
 
@@ -193,7 +170,7 @@ The reason for choosing HTML is that it's (a) well-adapted for on-line
 browsing through viewers that are everywhere; (b) more easily readable
 as plain text than most other mark-ups, if you don't have a viewer; and (c)
 carries enough information that you can generate a nice-looking printed
-version from it.  Also, of course, it make exporting things like the 
+version from it.  Also, of course, it make exporting things like the
 announcement document to WWW pretty trivial.<P>
 
 <H1><A NAME="bugtrack">How to Report Bugs</A></H1>
@@ -201,7 +178,7 @@ announcement document to WWW pretty trivial.<P>
 The <A NAME="bugreport">reporting address for bugs</A> is
 <A HREF="mailto:bug-ncurses@gnu.org">bug-ncurses@gnu.org</A>.
 This is a majordomo list; to join, write
-to <CODE>ncurses-request@gnu.org</CODE> with a message containing the line:
+to <CODE>bug-ncurses-request@gnu.org</CODE> with a message containing the line:
 <PRE>
              subscribe &lt;name&gt;@&lt;host.domain&gt;
 </PRE>
@@ -210,7 +187,7 @@ The <CODE>ncurses</CODE> code is maintained by a small group of
 volunteers.  While we try our best to fix bugs promptly, we simply
 don't have a lot of hours to spend on elementary hand-holding.  We rely
 on intelligent cooperation from our users.  If you think you have
-found a bug in <CODE>ncurses</CODE>, there are some steps you can take 
+found a bug in <CODE>ncurses</CODE>, there are some steps you can take
 before contacting us that will help get the bug fixed quickly. <P>
 
 In order to use our bug-fixing time efficiently, we put people who
@@ -241,7 +218,7 @@ problem reproduces on other terminal types.  Usually you'll have both
 a console type and xterm available; please tell us whether or not your
 bug reproduces on both. <P>
 
-If you have xterm available, it is also good to collect xterm reports for 
+If you have xterm available, it is also good to collect xterm reports for
 different window sizes.  This is especially true if you normally use an
 unusual xterm window size -- a surprising number of the bugs we've seen
 are either triggered or masked by these.  <P>
@@ -332,62 +309,160 @@ Most of the library is superstructure -- fairly trivial convenience
 interfaces to a small set of basic functions and data structures used
 to manipulate the virtual screen (in particular, none of this code
 does any I/O except through calls to more fundamental modules
-described below).  The files <CODE>lib_addch.c</CODE>,
-<CODE>lib_bkgnd.c</CODE>, <CODE>lib_box.c</CODE>, <CODE>lib_clear.c</CODE>,
-<CODE>lib_clrbot.c</CODE>, <CODE>lib_clreol.c</CODE>, <CODE>lib_data.c</CODE>,
-<CODE>lib_delch.c</CODE>, <CODE>lib_delwin.c</CODE>, <CODE>lib_erase.c</CODE>,
-<CODE>lib_getstr.c</CODE>, <CODE>lib_inchstr.c</CODE>, <CODE>lib_insch.c</CODE>,
-<CODE>lib_insdel.c</CODE>, <CODE>lib_insstr.c</CODE>, <CODE>lib_instr.c</CODE>,
-<CODE>lib_isendwin.c</CODE>, <CODE>lib_keyname.c</CODE>, <CODE>lib_move.c</CODE>,
-<CODE>lib_mvwin.c</CODE>, <CODE>lib_overlay.c</CODE>, <CODE>lib_pad.c</CODE>,
-<CODE>lib_printw.c</CODE>, <CODE>lib_scanw.c</CODE>, <CODE>lib_screen.c</CODE>,
-<CODE>lib_scroll.c</CODE>, <CODE>lib_scrreg.c</CODE>, <CODE>lib_set_term.c</CODE>,
-<CODE>lib_slk.c</CODE>, <CODE>lib_touch.c</CODE>, <CODE>lib_unctrl.c</CODE>, and
-<CODE>lib_window.c</CODE> are all in this category.  They are very
+described below).  The files
+<blockquote>
+<CODE>
+lib_addch.c
+lib_bkgd.c
+lib_box.c
+lib_chgat.c
+lib_clear.c
+lib_clearok.c
+lib_clrbot.c
+lib_clreol.c
+lib_colorset.c
+lib_data.c
+lib_delch.c
+lib_delwin.c
+lib_echo.c
+lib_erase.c
+lib_gen.c
+lib_getstr.c
+lib_hline.c
+lib_immedok.c
+lib_inchstr.c
+lib_insch.c
+lib_insdel.c
+lib_insstr.c
+lib_instr.c
+lib_isendwin.c
+lib_keyname.c
+lib_leaveok.c
+lib_move.c
+lib_mvwin.c
+lib_overlay.c
+lib_pad.c
+lib_printw.c
+lib_redrawln.c
+lib_scanw.c
+lib_screen.c
+lib_scroll.c
+lib_scrollok.c
+lib_scrreg.c
+lib_set_term.c
+lib_slk.c
+lib_slkatr_set.c
+lib_slkatrof.c
+lib_slkatron.c
+lib_slkatrset.c
+lib_slkattr.c
+lib_slkclear.c
+lib_slkcolor.c
+lib_slkinit.c
+lib_slklab.c
+lib_slkrefr.c
+lib_slkset.c
+lib_slktouch.c
+lib_touch.c
+lib_unctrl.c
+lib_vline.c
+lib_wattroff.c
+lib_wattron.c
+lib_window.c
+</CODE>
+</blockquote>
+are all in this category.  They are very
 unlikely to need change, barring bugs or some fundamental
 reorganization in the underlying data structures. <P>
 
-The <CODE>lib_trace.c</CODE>, <CODE>lib_traceatr.c</CODE>, and
-<CODE>lib_tracechr.c</CODE> file are used only for debugging support. 
+These files are used only for debugging support:
+<blockquote><code>
+lib_trace.c
+lib_traceatr.c
+lib_tracebits.c
+lib_tracechr.c
+lib_tracedmp.c
+lib_tracemse.c
+trace_buf.c
+</blockquote></code>
 It is rather unlikely you will ever need to change these, unless
 you want to introduce a new debug trace level for some reasoon.<P>
 
 There is another group of files that do direct I/O via <EM>tputs()</EM>,
 computations on the terminal capabilities, or queries to the OS
 environment, but nevertheless have only fairly low complexity.  These
-include: <CODE>lib_acs.c</CODE>, <CODE>lib_beep.c</CODE>,
-<CODE>lib_color.c</CODE>, <CODE>lib_endwin.c</CODE>, <CODE>lib_initscr.c</CODE>,
-<CODE>lib_longname.c</CODE>, <CODE>lib_newterm.c</CODE>,
-<CODE>lib_options.c</CODE>, <CODE>lib_termcap.c</CODE>, <CODE>lib_ti.c</CODE>,
-<CODE>lib_tparm.c</CODE>, <CODE>lib_tputs.c</CODE>, <CODE>lib_vidattr.c</CODE>,
-and <CODE>read_entry.c</CODE>.  These are likely to need revision only if
+include:
+<blockquote><code>
+lib_acs.c
+lib_beep.c
+lib_color.c
+lib_endwin.c
+lib_initscr.c
+lib_longname.c
+lib_newterm.c
+lib_options.c
+lib_termcap.c
+lib_ti.c
+lib_tparm.c
+lib_tputs.c
+lib_vidattr.c
+read_entry.c.
+</blockquote></code>
+They are likely to need revision only if
 ncurses is being ported to an environment without an underlying
 terminfo capability representation. <P>
 
-The files <CODE>lib_kernel.c</CODE>, <CODE>lib_baudrate.c</CODE>, <CODE>lib_raw.c</CODE>,
-<CODE>lib_tstp.c</CODE>, and <CODE>lib_twait.c</CODE> have serious hooks into
-the tty driver and signal facilities.  If you run into porting snafus
+These files
+have serious hooks into
+the tty driver and signal facilities:
+<blockquote><code>
+lib_kernel.c
+lib_baudrate.c
+lib_raw.c
+lib_tstp.c
+lib_twait.c
+</blockquote></code>
+If you run into porting snafus
 moving the package to another UNIX, the problem is likely to be in one
-of these files.  The file <CODE>lib_print.c</CODE> uses sleep(2) and also
+of these files.
+The file <CODE>lib_print.c</CODE> uses sleep(2) and also
 falls in this category.<P>
 
-Almost all of the real work is done in the files 
-<CODE>hashmap.c</CODE>, <CODE>hardscroll.c</CODE>,
-<CODE>lib_addch.c</CODE>, <CODE>lib_doupdate.c</CODE>, <CODE>lib_mvcur.c</CODE>,
-<CODE>lib_getch.c</CODE>, <CODE>lib_mouse.c</CODE>, <CODE>lib_refresh.c</CODE>,
-and <CODE>lib_setup.c</CODE>.  Most of the algorithmic complexity in the
-library lives in these files.  If there is a real bug in <STRONG>ncurses</STRONG>
-itself, it's probably here.  We'll tour some of these files in detail
+Almost all of the real work is done in the files
+<blockquote><code>
+hardscroll.c
+hashmap.c
+lib_addch.c
+lib_doupdate.c
+lib_getch.c
+lib_mouse.c
+lib_mvcur.c
+lib_refresh.c
+lib_setup.c
+lib_vidattr.c
+</blockquote></code>
+Most of the algorithmic complexity in the
+library lives in these files.
+If there is a real bug in <STRONG>ncurses</STRONG> itself, it's probably here.
+We'll tour some of these files in detail
 below (see <A HREF="#engine">The Engine Room</A>). <P>
 
 Finally, there is a group of files that is actually most of the
 terminfo compiler.  The reason this code lives in the <STRONG>ncurses</STRONG>
 library is to support fallback to /etc/termcap.  These files include
-<CODE>alloc_entry.c</CODE>, <CODE>captoinfo.c</CODE>, <CODE>comp_captab.c</CODE>,
-<CODE>comp_error.c</CODE>, <CODE>comp_hash.c</CODE>, <CODE>comp_parse.c</CODE>,
-<CODE>comp_scan.c</CODE>, and <CODE>parse_entry.c</CODE>,
-<CODE>read_termcap.c</CODE>, and <CODE>write_entry.c</CODE>.  We'll discuss these
-in the compiler tour. <P>
+<blockquote><code>
+alloc_entry.c
+captoinfo.c
+comp_captab.c
+comp_error.c
+comp_hash.c
+comp_parse.c
+comp_scan.c
+parse_entry.c
+read_termcap.c
+write_entry.c
+</blockquote></code>
+We'll discuss these in the compiler tour. <P>
 
 <H2><A NAME="engine">The Engine Room</A></H2>
 
@@ -456,11 +531,11 @@ events) into a gesture (a high-level or composite event). <P>
 <H3><A NAME="output">Output and Screen Updating</A></H3>
 
 With the single exception of character echoes during a <CODE>wgetnstr()</CODE>
-call (which simulates cooked-mode line editing in an ncurses window), 
+call (which simulates cooked-mode line editing in an ncurses window),
 the library normally does all its output at refresh time. <P>
 
 The main job is to go from the current state of the screen (as represented
-in the <CODE>curscr</CODE> window structure) to the desired new state (as 
+in the <CODE>curscr</CODE> window structure) to the desired new state (as
 represented in the <CODE>newscr</CODE> window structure), while doing as
 little I/O as possible. <P>
 
@@ -483,7 +558,7 @@ insertion, and deletion operations to make the indices match.  It calls
 Then <CODE>lib_doupdate.c</CODE> goes to work.  Its job is to do line-by-line
 transformations of <CODE>curscr</CODE> lines to <CODE>newscr</CODE> lines.  Its main
 tool is the routine <CODE>mvcur()</CODE> in <CODE>lib_mvcur.c</CODE>.  This routine
-does cursor-movement optimization, attempting to get from given screen 
+does cursor-movement optimization, attempting to get from given screen
 location A to given location B in the fewest output characters posible. <P>
 
 If you want to work on screen optimizations, you should use the fact
@@ -538,8 +613,8 @@ and controls interpretation of the value. <P>
 
 One possibly interesting aspect of the implementation is the way the
 compiler tables are initialized.  All the tables are generated by various
-awk/sed/sh scripts from a master table <CODE>include/Caps</CODE>; these 
-scripts actually write C initializers which are linked to the compiler. 
+awk/sed/sh scripts from a master table <CODE>include/Caps</CODE>; these
+scripts actually write C initializers which are linked to the compiler.
 Furthermore, the hash table is generated in the same way, so it doesn't
 have to be generated at compiler startup time (another benefit of this
 organization is that the hash table can be in shareable text space). <P>
@@ -553,7 +628,7 @@ Translation</A>. <P>
 
 The background problem that makes <STRONG>tic</STRONG> tricky isn't the capability
 translation itself, it's the resolution of <STRONG>use</STRONG> capabilities.  Older
-versions would not handle forward <STRONG>use</STRONG> references for this reason 
+versions would not handle forward <STRONG>use</STRONG> references for this reason
 (that is, a using terminal always had to follow its use target in the
 source file).  By doing this, they got away with a simple implementation
 tactic; compile everything as it blows by, then resolve uses from compiled
@@ -564,7 +639,7 @@ compilation process has to be embeddable in the <STRONG>ncurses</STRONG> library
 so that it can be called by the startup code to translate termcap
 entries on the fly.  The embedded version can't go promiscuously writing
 everything it translates out to disk -- for one thing, it will typically
-be running with non-root permissions. <P> 
+be running with non-root permissions. <P>
 
 So our <STRONG>tic</STRONG> is designed to parse an entire terminfo file into a
 doubly-linked circular list of entry structures in-core, and then do
@@ -614,7 +689,7 @@ format. <P>
 
 The <CODE>include/Caps</CODE> file has a header comment describing ways you
 can specify source translations for nonstandard capabilities just by
-altering the master table.  It's possible to set up capability aliasing 
+altering the master table.  It's possible to set up capability aliasing
 or tell the compiler to plain ignore a given capability without writing
 any C code at all. <P>
 
@@ -633,7 +708,7 @@ function passed in to <CODE>dump_entry()</CODE> to control which
 capabilities are dumped.  This is necessary in order to handle both
 the ordinary De-compilation case and entry difference reporting. <P>
 
-The <STRONG>tput</STRONG> and <STRONG>clear</STRONG> utilities just do an entry load 
+The <STRONG>tput</STRONG> and <STRONG>clear</STRONG> utilities just do an entry load
 followed by a <CODE>tputs()</CODE> of a selected capability. <P>
 
 <H1><A NAME="style">Style Tips for Developers</A></H1>
@@ -678,7 +753,7 @@ call any other UNIX routines such as signal(2) or the stdio library.
 Thus, they should not need to be modified for single-terminal
 ports. <P>
 
-<CODE>
+<blockquote><code>
 lib_addch.c
 lib_addstr.c
 lib_bkgd.c
@@ -710,28 +785,28 @@ lib_tparm.c
 lib_tputs.c
 lib_unctrl.c
 lib_window.c
-panel.c 
-</CODE>
+panel.c
+</blockquote></code>
 <P>
 
 This module is pure curses, but calls outstr(): <P>
 
-<CODE>
+<blockquote><code>
 lib_getstr.c
-</CODE>
+</blockquote></code>
 <P>
 
 These modules are pure curses, except that they use <CODE>tputs()</CODE>
 and <CODE>putp()</CODE>: <P>
 
-<CODE>
+<blockquote><code>
 lib_beep.c
-lib_endwin.c
 lib_color.c
+lib_endwin.c
 lib_options.c
 lib_slk.c
 lib_vidattr.c
-</CODE>
+</blockquote></code>
 <P>
 
 This modules assist in POSIX emulation on non-POSIX systems: <P>
@@ -743,7 +818,8 @@ This modules assist in POSIX emulation on non-POSIX systems: <P>
 The following source files will not be needed for a
 single-terminal-type port. <P>
 
-<CODE>
+<blockquote><code>
+alloc_entry.c
 captoinfo.c
 clear.c
 comp_captab.c
@@ -752,24 +828,23 @@ comp_hash.c
 comp_main.c
 comp_parse.c
 comp_scan.c
-alloc_entry.c
 dump_entry.c
+infocmp.c
 parse_entry.c
 read_entry.c
-write_entry.c
-infocmp.c
 tput.c
-</CODE>
+write_entry.c
+</blockquote></code>
 <P>
 
 The following modules will use open()/read()/write()/close()/lseek() on files,
 but no other OS calls. <P>
 
 <DL>
-<DT> lib_screen.c
-<DD> used to read/write screen dumps
-<DT> lib_trace.c
-<DD> used to write trace data to the logfile
+<DT>lib_screen.c
+<DD>used to read/write screen dumps
+<DT>lib_trace.c
+<DD>used to write trace data to the logfile
 </DL>
 
 Modules that would have to be modified for a port start here: <P>
@@ -777,76 +852,29 @@ Modules that would have to be modified for a port start here: <P>
 The following modules are `pure curses' but contain assumptions inappropriate
 for a memory-mapped port. <P>
 
-<PRE>
-lib_longname.c	-- assumes there may be multiple terminals
-	longname()		-- return long name of terminal
-lib_acs.c	-- assumes acs_map as a double indirection
-	init_acs()		-- initialize acs map
-lib_mvcur.c	-- assumes cursor moves have variable cost
-	mvcur_init()		-- initialize
-	mvcur()			-- do physical cursor move
-	mvcur_wrap()		-- wrap
-	scrolln()		-- do physical scrolling
-lib_termcap.c	-- assumes there may be multiple terminals
-	tgetent()		-- load entry
-	tgetflag()		-- get boolean capability
-	tgetnum()		-- get numeric capability
-	tgetstr()		-- get string capability
-lib_ti.c	-- assumes there may be multiple terminals
-	tigetent()		-- load entry
-	tigetflag()		-- get boolean capability
-	tigetnum()		-- get numeric capability
-	tigetstr()		-- get string capability
+<dl>
+<dt>lib_longname.c<dd>assumes there may be multiple terminals
+<dt>lib_acs.c<dd>assumes acs_map as a double indirection
+<dt>lib_mvcur.c<dd>assumes cursor moves have variable cost
+<dt>lib_termcap.c<dd>assumes there may be multiple terminals
+<dt>lib_ti.c<dd>assumes there may be multiple terminals
+</dl>
 
 The following modules use UNIX-specific calls:
 
-lib_doupdate.c	-- input checking
-	doupdate()		-- repaint real screen to match virtual
-	_nc_outch()		-- put out a single character
-lib_getch.c	-- read()
-	wgetch()		-- get single character
-	wungetch()		-- push back single character
-lib_initscr.c	-- getenv()
-	initscr()		-- initialize curses functions
-lib_newterm.c
-	newterm()		-- set up new terminal screen
-lib_baudrate.c
-	baudrate()		-- return the baudrate
-lib_kernel.c	-- various tty-manipulation and system calls
-	reset_prog_mode()	-- reset ccurses-raw mode
-	reset_shell_mode()	-- reset cooked mode
-	erasechar()		-- return the erase char
-	killchar()		-- return the kill character
-	flushinp()		-- flush pending input
-	savetty()		-- save tty state
-	resetty()		-- reset tty to state at last savetty() 
-lib_raw.c	-- various tty-manipulation calls
-	raw()
-	echo()
-	nl()
-	qiflush()
-	cbreak()
-	noraw()
-	noecho()
-	nonl()
-	noqiflush()
-	nocbreak()
-lib_setup.c	-- various tty-manipulation calls
-	use_env()
-	setupterm()
-lib_restart.c	-- various tty-manipulation calls
-	def_shell_mode()
-	def_prog_mode()
-	set_curterm()
-	del_curterm()
-lib_tstp.c	-- signal-manipulation calls
-	_nc_signal_handler()	-- enable/disable window-mode signal catching
-lib_twait.c	-- gettimeofday(), select().
-	usleep()		-- microsecond sleep
-	_nc_timed_wait()	-- timed wait for input
-</PRE>
-
-The package kernel could be made smaller. <P>
+<dl>
+<dt>lib_doupdate.c<dd>input checking
+<dt>lib_getch.c<dd>read()
+<dt>lib_initscr.c<dd>getenv()
+<dt>lib_newterm.c
+<dt>lib_baudrate.c
+<dt>lib_kernel.c<dd>various tty-manipulation and system calls
+<dt>lib_raw.c<dd>various tty-manipulation calls
+<dt>lib_setup.c<dd>various tty-manipulation calls
+<dt>lib_restart.c<dd>various tty-manipulation calls
+<dt>lib_tstp.c<dd>signal-manipulation calls
+<dt>lib_twait.c<dd>gettimeofday(), select().
+</dl>
 
 <HR>
 <ADDRESS>Eric S. Raymond &lt;esr@snark.thyrsus.com&gt;</ADDRESS>

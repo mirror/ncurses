@@ -1,0 +1,68 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>scanw</STRONG>,  <STRONG>wscanw</STRONG>,  <STRONG>mvscanw</STRONG>, <STRONG>mvwscanw</STRONG>, <STRONG>vwscanw</STRONG> - convert for-
+       matted input from a <STRONG>curses</STRONG> widow
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>int</STRONG> <STRONG>scanw(char</STRONG> <STRONG>*fmt</STRONG> [<STRONG>,</STRONG> <STRONG>arg</STRONG>] <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wscanw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>char</STRONG> <STRONG>*fmt</STRONG> [<STRONG>,</STRONG> <STRONG>arg</STRONG>] <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvscanw(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>char</STRONG> <STRONG>*fmt</STRONG> [<STRONG>,</STRONG> <STRONG>arg</STRONG>] <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwscanw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG>
+             <STRONG>char</STRONG> <STRONG>*fmt</STRONG> [<STRONG>,</STRONG> <STRONG>arg]</STRONG> <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>vwscanw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>va_list</STRONG> <STRONG>varglist);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <STRONG>scanw</STRONG>, <STRONG>wscanw</STRONG> and <STRONG>mvscanw</STRONG> routines  are  analogous  to
+       <STRONG>scanf</STRONG> [see <STRONG><A HREF="scanf.3s.html">scanf(3S)</A></STRONG>].  The effect of these routines is as
+       though <STRONG>wgetstr</STRONG> were called on the window, and the  result-
+       ing line used as input for <STRONG><A HREF="sscanf.3.html">sscanf(3)</A></STRONG>.  Fields which do not
+       map to a variable in the <EM>fmt</EM> field are lost.
+
+       The <STRONG>vwscanw</STRONG> routine is similar to <STRONG>vwprintw</STRONG> in that it per-
+       forms  a <STRONG>wscanw</STRONG> using a variable argument list.  The third
+       argument is a <EM>va</EM>_<EM>list</EM>, a pointer to a list  of  arguments,
+       as defined in <STRONG><varargs.h></STRONG>.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       <STRONG>vwscanw</STRONG> returns <STRONG>ERR</STRONG> on failure and an integer equal to the
+       number of fields scanned on success.
+
+       Applications may use the  return  value  from  the  <STRONG>scanw</STRONG>,
+       <STRONG>wscanw</STRONG>,  <STRONG>mvscanw</STRONG>  and  <STRONG>mvwscanw</STRONG>  routines to determine the
+       number of fields which were mapped in the call.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses standard, Issue  4  describes  these  func-
+       tions.   The  function  <STRONG>vwscanw</STRONG> is marked TO BE WITHDRAWN,
+       and is to be replaced by a  function  <STRONG>vw_scanw</STRONG>  using  the
+       <STRONG><stdarg.h></STRONG> interface.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3X)</A></STRONG>, <STRONG><A HREF="curs_printw.3x.html">curs_printw(3X)</A></STRONG>, <STRONG><A HREF="scanf.3s.html">scanf(3S)</A></STRONG>
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

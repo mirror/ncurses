@@ -28,38 +28,37 @@
 .\"
 .\" Author: Thomas E. Dickey <dickey@clark.net> 1997
 .\"
-.\" $Id: keyok.3x,v 1.4 1998/02/11 12:13:47 tom Exp $
+.\" $Id: keyok.3x,v 1.5 1998/03/14 23:43:07 tom Exp $
 .TH keyok 3X ""
-.
 .SH NAME
 \fBkeyok\fP \- enable or disable a keycode
-.
+..
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 
 \fBint keyok(int keycode, bool enable);\fP
-.
+..
 .SH DESCRIPTION
 This is an extension to the curses library.
 It permits an application to disable specific keycodes, rather than
 use the \fIkeypad\fP function to disable all keycodes.
 Keys that have been disabled can be reenabled.
-.
+..
 .SH RETURN VALUE
 The keycode must be greater than zero, else ERR is returned.
 If it does not correspond to a defined key, then ERR is returned.
 If the \fIenable\fP parameter is true, then the key must have been disabled,
 and vice versa.
 Otherwise, the function returns OK.
-.
+..
 .SH PORTABILITY
 These routines are specific to ncurses.  They were not supported on
 Version 7, BSD or System V implementations.  It is recommended that
 any code depending on them be conditioned using NCURSES_VERSION.
-.
+..
 .SH SEE ALSO
 \fBdefine_key\fR(3X).
-.
+..
 .SH AUTHOR
 Thomas Dickey.
 .\"#

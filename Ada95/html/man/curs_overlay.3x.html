@@ -1,0 +1,70 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>overlay</STRONG>, <STRONG>overwrite</STRONG>, <STRONG>copywin</STRONG> - overlay and manipulate over-
+       lapped <STRONG>curses</STRONG> windows
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>int</STRONG> <STRONG>overlay(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*srcwin,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*dstwin);</STRONG>
+       <STRONG>int</STRONG> <STRONG>overwrite(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*srcwin,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*dstwin);</STRONG>
+       <STRONG>int</STRONG> <STRONG>copywin(WINDOW</STRONG> <STRONG>*srcwin,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*dstwin,</STRONG> <STRONG>int</STRONG> <STRONG>sminrow,</STRONG>
+             <STRONG>int</STRONG> <STRONG>smincol,</STRONG> <STRONG>int</STRONG> <STRONG>dminrow,</STRONG> <STRONG>int</STRONG> <STRONG>dmincol,</STRONG> <STRONG>int</STRONG> <STRONG>dmaxrow,</STRONG>
+             <STRONG>int</STRONG> <STRONG>dmaxcol,</STRONG> <STRONG>int</STRONG> <STRONG>overlay);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> routines overlay <EM>srcwin</EM>  on  top
+       of  <EM>dstwin</EM>.   <EM>scrwin</EM> and <EM>dstwin</EM> are not required to be the
+       same size; only text where  the  two  windows  overlap  is
+       copied.  The difference is that <STRONG>overlay</STRONG> is non-destructive
+       (blanks are not copied) whereas <STRONG>overwrite</STRONG> is  destructive.
+
+       The  <STRONG>copywin</STRONG>  routine provides a finer granularity of con-
+       trol over the <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> routines.  Like in the
+       <STRONG>prefresh</STRONG> routine, a rectangle is specified in the destina-
+       tion window, (<EM>dminrow</EM>, <EM>dmincol</EM>)  and  (<EM>dmaxrow</EM>,  <EM>dmaxcol</EM>),
+       and  the  upper-left-corner coordinates of the source win-
+       dow, (<EM>sminrow</EM>, <EM>smincol</EM>).  If the argument <EM>overlay</EM> is <STRONG>true</STRONG>,
+       then copying is non-destructive, as in <STRONG>overlay</STRONG>.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       Routines  that  return an integer return <STRONG>ERR</STRONG> upon failure,
+       and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value  other  than
+       <STRONG>ERR</STRONG>") upon successful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses standard, Issue 4 describes these functions
+       (adding the const qualifiers).  It further specifies their
+       behavior  in  the  presence  of characters with multi-byte
+       renditions (not yet supported in this implementation).
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="curs_pad.3x.html">curs_pad(3X)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3X)</A></STRONG>
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

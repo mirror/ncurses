@@ -31,10 +31,10 @@
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  ****************************************************************************/
 
-/* $Id: termcap.h.in,v 1.5 1998/02/11 12:13:45 tom Exp $ */
+/* $Id: termcap.h.in,v 1.10 1999/01/09 22:38:04 Uchiyama.Yasushi Exp $ */
 
-#ifndef _TERMCAP_H
-#define _TERMCAP_H	1
+#ifndef _NCU_TERMCAP_H
+#define _NCU_TERMCAP_H	1
 
 #undef  NCURSES_VERSION
 #define NCURSES_VERSION "@NCURSES_MAJOR@.@NCURSES_MINOR@"
@@ -45,23 +45,27 @@ extern "C"
 #endif /* __cplusplus */
 
 #include <sys/types.h>
+@OSPEED_INCLUDES@ 
+
+#undef  NCURSES_CONST 
+#define NCURSES_CONST @NCURSES_CONST@ 
 
 extern char PC;
 extern char *UP;
 extern char *BC;
-extern short ospeed;
+extern @OSPEED_TYPE@ ospeed; 
 
-extern int tgetent(char *, const char *);
-extern int tgetflag(const char *);
-extern int tgetnum(const char *);
-extern char *tgetstr(const char *, char **);
-
-extern int tputs(const char *, int, int (*)(int));
-
+#if !defined(_NCU_TERM_H)
+extern char *tgetstr(NCURSES_CONST char *, char **);
 extern char *tgoto(const char *, int, int);
+extern int tgetent(char *, const char *);
+extern int tgetflag(NCURSES_CONST char *);
+extern int tgetnum(NCURSES_CONST char *);
+extern int tputs(const char *, int, int (*)(int));
+#endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _TERMCAP_H */
+#endif /* _NCU_TERMCAP_H */

@@ -1,6 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.0//EN">
 <!--
-  $Id: ncurses-intro.html,v 1.23 1998/02/22 17:41:03 juergen Exp $
+  $Id: ncurses-intro.html,v 1.31 1999/05/16 17:02:31 juergen Exp $
 -->
 <HTML>
 <HEAD>
@@ -13,6 +13,7 @@
 
 <BLOCKQUOTE>
 by Eric S. Raymond and Zeyd M. Ben-Halim<BR>
+updates since release 1.9.9e by Thomas Dickey
 </BLOCKQUOTE>
 
 <H1>Contents</H1>
@@ -52,7 +53,7 @@ by Eric S. Raymond and Zeyd M. Ben-Halim<BR>
 <LI><A HREF="#hints">Hints, Tips, and Tricks</A>
 <UL>
 <LI><A HREF="#caution">Some Notes of Caution</A>
-<LI><A HREF="#leaving">Temporarily Leaving ncurses Mode</A> 
+<LI><A HREF="#leaving">Temporarily Leaving ncurses Mode</A>
 <LI><A HREF="#xterm">Using <CODE>ncurses</CODE> under <CODE>xterm</CODE></A>
 <LI><A HREF="#screens">Handling Multiple Terminal Screens</A>
 <LI><A HREF="#testing">Testing for Terminal Capabilities</A>
@@ -139,7 +140,7 @@ by Eric S. Raymond and Zeyd M. Ben-Halim<BR>
 <HR>
 <H1><A NAME="introduction">Introduction</A></H1>
 
-This document is an introduction to programming with <CODE>curses</CODE>. It is 
+This document is an introduction to programming with <CODE>curses</CODE>. It is
 not an exhaustive reference for the curses Application Programming Interface
 (API); that role is filled by the <CODE>curses</CODE> manual pages.  Rather, it
 is intended to help C programmers ease into using the package. <P>
@@ -148,7 +149,7 @@ This document is aimed at C applications programmers not yet specifically
 familiar with ncurses.  If you are already an experienced <CODE>curses</CODE>
 programmer, you should nevertheless read the sections on
 <A HREF="#mouse">Mouse Interfacing</A>, <A HREF="#debugging">Debugging</A>,
-<A HREF="compat">Compatibility with Older Versions</A>,
+<A HREF="#compat">Compatibility with Older Versions</A>,
 and <A HREF="#hints">Hints, Tips, and Tricks</A>.  These will bring you up
 to speed on the special features and quirks of the <CODE>ncurses</CODE>
 implementation.  If you are not so experienced, keep reading. <P>
@@ -189,7 +190,7 @@ more capabilities, going far beyond BSD curses in power and flexibility.<P>
 
 <H2><A NAME="scope">Scope of This Document</A></H2>
 
-This document describes <CODE>ncurses</CODE>, a freeware implementation of
+This document describes <CODE>ncurses</CODE>, a free implementation of
 the System V <CODE>curses</CODE> API with some clearly marked extensions.
 It includes the following System V curses features: <P>
 <UL>
@@ -213,20 +214,20 @@ mouse in some environments (notably, xterm under the X window system).  This
 document includes tips for using the mouse. <P>
 
 The <CODE>ncurses</CODE> package was originated by Pavel Curtis.  The original
-maintainer of the package is
+maintainer of this package is
 <A HREF="mailto:zmbenhal@netcom.com">Zeyd Ben-Halim</A>
 &lt;zmbenhal@netcom.com&gt;.
-<A HREF="mailto:esr@snark.thyrsus.com">Eric S. Raymond</A> 
+<A HREF="mailto:esr@snark.thyrsus.com">Eric S. Raymond</A>
 &lt;esr@snark.thyrsus.com&gt;
-wrote many of the new features in versions after 1.8.1 
+wrote many of the new features in versions after 1.8.1
 and wrote most of this introduction.
-<A HREF="mailto:Juergen.Pfeifer@T-Online.de">J&uuml;rgen Pfeifer</A>
-wrote all of the menu and forms code as well as the 
+<A HREF="mailto:juergen.pfeifer@gmx.net">J&uuml;rgen Pfeifer</A>
+wrote all of the menu and forms code as well as the
 <A HREF="http://www.adahome.com">Ada95</A> binding.
 Ongoing work is being done by
 <A HREF="mailto:dickey@clark.net">Thomas Dickey</A>
 and
-<A HREF="mailto:Juergen.Pfeifer@T-Online.de">J&uuml;rgen Pfeifer</A>.
+<A HREF="mailto:juergen.pfeifer@gmx.net">J&uuml;rgen Pfeifer</A>.
 <A HREF="mailto:florian@gnu.org">Florian La Roche</A>
 acts as the maintainer for the Free Software Foundation, which holds the
 copyright on ncurses.
@@ -234,7 +235,7 @@ Contact the current maintainers at
 <A HREF="mailto:bug-ncurses@gnu.org">bug-ncurses@gnu.org</A>.
 <P>
 
-This document also describes the <A HREF="panels">panels</A> extension library,
+This document also describes the <A HREF="#panels">panels</A> extension library,
 similarly modeled on the SVr4 panels facility.  This library allows you to
 associate backing store with each of a stack or deck of overlapping windows,
 and provides operations for moving windows around in the stack that change
@@ -253,17 +254,17 @@ consistency:
 
 <DL>
 <DT> window
-<DD> 
+<DD>
 A data structure describing a sub-rectangle of the screen (possibly the
 entire screen).  You can write to a window as though it were a miniature
 screen, scrolling independently of other windows on the physical screen. <P>
 <DT> screens
-<DD> 
+<DD>
 A subset of windows which are as large as the terminal screen, i.e., they start
 at the upper left hand corner and encompass the lower right hand corner.  One
 of these, <CODE>stdscr</CODE>, is automatically provided for the programmer. <P>
 <DT> terminal screen
-<DD> 
+<DD>
 The package's idea of what the terminal display currently looks like, i.e.,
 what the user sees now.  This is a special screen.
 </DL>
@@ -384,7 +385,7 @@ capabilities.
 The <CODE>curses.h</CODE> also introduces some <CODE>#define</CODE> constants and types
 of general usefulness:
 
-<DL> 
+<DL>
 <DT> <CODE>bool</CODE>
 <DD> boolean type, actually a `char' (e.g., <CODE>bool doneit;</CODE>)
 <DT> <CODE>TRUE</CODE>
@@ -587,21 +588,30 @@ is itself a compile-time constant and can be used in initializers. <P>
 
 <H3><A NAME="mouse">Mouse Interfacing</A></H3>
 
-The <CODE>ncurses</CODE> library also provides a mouse interface.  Note:
-his facility is original to <CODE>ncurses</CODE>, it is not part of either
+The <CODE>ncurses</CODE> library also provides a mouse interface.
+<!-- The 'note' tag is not portable enough -->
+<blockquote>
+<strong>NOTE:</strong> this facility is specific to <CODE>ncurses</CODE>, it is not part of either
 the XSI Curses standard, nor of System V Release 4, nor BSD curses.
+System V Release 4 curses contains code with similar interface definitions,
+however it is not documented.  Other than by disassembling the library, we
+have no way to determine exactly how that mouse code works.
 Thus, we recommend that you wrap mouse-related code in an #ifdef using the
 feature macro NCURSES_MOUSE_VERSION so it will not be compiled and linked
-on non-ncurses systems.  <P>
+on non-ncurses systems.
+</blockquote>
 
-Presently, mouse event reporting works only under xterm.  In the
-future, ncurses will detect the presence of <CODE>gpm</CODE>(1), Alessandro
-Rubini's freeware mouse server for Linux systems, and accept mouse
-reports through it. <P>
-
+Presently, mouse event reporting works in the following environments:
+<ul>
+<li>xterm and similar programs such as rxvt.
+<li>Linux console, when configured with <CODE>gpm</CODE>(1), Alessandro
+Rubini's mouse server.
+<li>OS/2 EMX
+</ul>
+<P>
 The mouse interface is very simple.  To activate it, you use the function
 <CODE>mousemask()</CODE>, passing it as first argument a bit-mask that specifies
-what kinds of events you want your program to be able to see.  It will 
+what kinds of events you want your program to be able to see.  It will
 return the bit-mask of events that actually become visible, which may differ
 from the argument if the mouse device is not capable of reporting some of
 the event types you specify. <P>
@@ -616,13 +626,13 @@ in and make the first one inaccessible). <P>
 Each call to <CODE>getmouse()</CODE> fills a structure (the address of which you'll
 pass it) with mouse event data.  The event data includes zero-origin,
 screen-relative character-cell coordinates of the mouse pointer.  It also
-includes an event mask.  Bits in this mask will be set, corresponding 
+includes an event mask.  Bits in this mask will be set, corresponding
 to the event type being reported. <P>
 
 The mouse structure contains two additional fields which may be
 significant in the future as ncurses interfaces to new kinds of
 pointing device.  In addition to x and y coordinates, there is a slot
-for a z coordinate; this might be useful with touch-screens that can 
+for a z coordinate; this might be useful with touch-screens that can
 return a pressure or duration parameter.  There is also a device ID
 field, which could be used to distinguish between multiple pointing
 devices. <P>
@@ -766,7 +776,10 @@ yourself if need be.
 
 <H3><A NAME="debugging">Debugging</A></H3>
 
-NOTE: These functions are not part of the standard curses API! <P>
+<!-- The 'note' tag is not portable enough -->
+<blockquote>
+<strong>NOTE:</strong> These functions are not part of the standard curses API!
+</blockquote>
 
 <DL>
 <DT> <CODE>trace()</CODE>
@@ -780,7 +793,7 @@ in the <CODE>curses.h</CODE> file for details.  (It is also possible to set
 a trace level by assigning a trace level value to the environment variable
 <CODE>NCURSES_TRACE</CODE>).
 <DT> <CODE>_tracef()</CODE>
-<DD> 
+<DD>
 This function can be used to output your own debugging information.  It is only
 available only if you link with -lncurses_g.  It can be used the same way as
 <CODE>printf()</CODE>, only it outputs a newline after the end of arguments.
@@ -811,8 +824,8 @@ some control bits set before you started your application.  Also, they
 have always been poorly documented, and are likely to hurt your
 application's usability with other curses libraries. <P>
 
-Bear in mind that <CODE>refresh()</CODE> is a synonym for <CODE>wrefresh(stdscr)</CODE>,
-and don't try to mix use of <CODE>stdscr</CODE> with use of windows declared
+Bear in mind that <CODE>refresh()</CODE> is a synonym for <CODE>wrefresh(stdscr)</CODE>.
+Don't try to mix use of <CODE>stdscr</CODE> with use of windows declared
 by <CODE>newwin()</CODE>; a <CODE>refresh()</CODE> call will blow them off the
 screen.  The right way to handle this is to use <CODE>subwin()</CODE>, or
 not touch <CODE>stdscr</CODE> at all and tile your screen with declared
@@ -826,7 +839,7 @@ curses support for overlapping windows has been weak, fragile, and poorly
 documented.  The <CODE>ncurses</CODE> library is not yet an exception to this
 rule. <P>
 
-There is a freeware panels library included in the <CODE>ncurses</CODE>
+There is a panels library included in the <CODE>ncurses</CODE>
 distribution that does a pretty good job of strengthening the
 overlapping-windows facilities. <P>
 
@@ -835,7 +848,7 @@ Try to avoid using the global variables LINES and COLS.  Use
 your code may be ported to run in an environment with window resizes,
 in which case several screens could be open with different sizes. <P>
 
-<H3><A NAME="leaving">Temporarily Leaving <CODE>ncurses</CODE> Mode</A></H3>
+<H3><A NAME="leaving">Temporarily Leaving NCURSES Mode</A></H3>
 
 Sometimes you will want to write a program that spends most of its time in
 screen mode, but occasionally returns to ordinary `cooked' mode.  A common
@@ -864,17 +877,30 @@ Here is some sample code for shellout:
     refresh();                 /* restore save modes, repaint screen */
 </PRE>
 
-<H3><A NAME="xterm">Using <CODE>ncurses</CODE> Under <CODE>xterm</CODE></A></H3>
+<H3><A NAME="xterm">Using NCURSES under XTERM</A></H3>
 
 A resize operation in X sends SIGWINCH to the application running under xterm.
-The <CODE>ncurses</CODE> library does not catch this signal, because it cannot in
-general know how you want the screen re-painted.  You will have to write the
-SIGWINCH handler yourself. <P>
+The <CODE>ncurses</CODE> library provides an experimental signal
+handler, but in general does not catch this signal, because it cannot
+know how you want the screen re-painted.  You will usually have to write the
+SIGWINCH handler yourself.  Ncurses can give you some help. <P>
 
 The easiest way to code your SIGWINCH handler is to have it do an
 <CODE>endwin</CODE>, followed by an <CODE>refresh</CODE> and a screen repaint you code
 yourself.  The <CODE>refresh</CODE> will pick up the new screen size from the
-xterm's environment.
+xterm's environment. <P>
+
+That is the standard way, of course (it even works with some vendor's curses
+implementations).
+Its drawback is that it clears the screen to reinitialize the display, and does
+not resize subwindows which must be shrunk.
+<CODE>Ncurses</CODE> provides an extension which works better, the
+<CODE>resizeterm</CODE> function.  That function ensures that all windows
+are limited to the new screen dimensions, and pads <CODE>stdscr</CODE>
+with blanks if the screen is larger. <P>
+
+Finally, ncurses can be configured to provide its own SIGWINCH handler,
+based on <CODE>resizeterm</CODE>.
 
 <H3><A NAME="screens">Handling Multiple Terminal Screens</A></H3>
 
@@ -910,14 +936,26 @@ screen-painting of text when you know the text doesn't contain any
 control characters.  Try to make attribute changes infrequent on your
 screens.  Don't use the <CODE>immedok()</CODE> option! <P>
 
-<H3><A NAME="special">Special Features of <CODE>ncurses</CODE></A></H3>
+<H3><A NAME="special">Special Features of NCURSES</A></H3>
 
-When running on PC-clones, <CODE>ncurses</CODE> has enhanced support for
-the IBM high-half and ROM characters.  The <CODE>A_ALTCHARSET</CODE> highlight,
-enables display of both high-half ACS graphics and the PC ROM graphics
-0-31 that are normally interpreted as control characters. <P>
+The <CODE>wresize()</CODE> function allows you to resize a window in place.
+The associated <CODE>resizeterm()</CODE> function simplifies the construction
+of <a HREF="#xterm">SIGWINCH</a> handlers, for resizing all windows.  <P>
 
-The <CODE>wresize()</CODE> function allows you to resize a window in place. <P>
+The <CODE>define_key()</CODE> function allows you
+to define at runtime function-key control sequences which are not in the
+terminal description.
+The <CODE>keyok()</CODE> function allows you to temporarily
+enable or disable interpretation of any function-key control sequence. <P>
+
+The <CODE>use_default_colors()</CODE> function allows you to construct
+applications which can use the terminal's default foreground and
+background colors as an additional "default" color.
+Several terminal emulators support this feature, which is based on ISO 6429. <P>
+
+Ncurses supports up 16 colors, unlike SVr4 curses which defines only 8.
+While most terminals which provide color allow only 8 colors, about
+a quarter (including XFree86 xterm) support 16 colors.
 
 <H2><A NAME="compat">Compatibility with Older Versions</A></H2>
 
@@ -943,7 +981,7 @@ intervals. <P>
 What happens to the overlapping region depends on what <CODE>wnoutrefresh()</CODE>
 does with its argument -- what portions of the argument window it copies to the
 virtual screen.  Some implementations do "change copy", copying down only
-locations in the window that have changed (or been marked changed with 
+locations in the window that have changed (or been marked changed with
 <CODE>wtouchln()</CODE> and friends).  Some implementations do  "entire copy",
 copying <EM>all</EM> window locations to the virtual screen whether or not
 they have changed. <P>
@@ -978,7 +1016,7 @@ all your updates. <P>
 
 <H3><A NAME="backbug">Background Erase</A></H3>
 
-If you have been using a very old versions of <CODE>ncurses</CODE> (1.8.7 or 
+If you have been using a very old versions of <CODE>ncurses</CODE> (1.8.7 or
 older) you may be surprised by the behavior of the erase functions.  In older
 versions, erased areas of a window were filled with a blank modified by the
 window's current attribute (as set by <STRONG>wattrset()</STRONG>, <STRONG>wattron()</STRONG>,
@@ -994,7 +1032,7 @@ the XSI Curses standard. <P>
 <H2><A NAME="xsifuncs">XSI Curses Conformance</A></H2>
 
 The <CODE>ncurses</CODE> library is intended to be base-level conformant with the
-XSI Curses standard from X/Open.  Many extended-level features (in fact, almost 
+XSI Curses standard from X/Open.  Many extended-level features (in fact, almost
 all features not directly concerned with wide characters and
 internationalization) are also supported. <P>
 
@@ -1021,7 +1059,7 @@ visibility stack or pop to the top at runtime, the resulting book-keeping
 can be tedious and difficult to get right.  Hence the panels library. <P>
 
 The <CODE>panel</CODE> library first appeared in AT&amp;T System V.  The
-version documented here is the freeware <CODE>panel</CODE> code distributed
+version documented here is the <CODE>panel</CODE> code distributed
 with <CODE>ncurses</CODE>.
 
 <H2><A NAME="pcompile">Compiling With the Panels Library</A></H2>
@@ -1132,7 +1170,7 @@ extension that supports easy programming of menu hierarchies with a
 uniform but flexible interface. <P>
 
 The <CODE>menu</CODE> library first appeared in AT&amp;T System V.  The
-version documented here is the freeware <CODE>menu</CODE> code distributed
+version documented here is the <CODE>menu</CODE> code distributed
 with <CODE>ncurses</CODE>. <P>
 
 <H2><A NAME="mcompile">Compiling With the menu Library</A></H2>
@@ -1190,7 +1228,7 @@ Both types always have a <DFN>current item</DFN>. <P>
 
 From a single-valued menu you can read the selected value simply by looking
 at the current item.  From a multi-valued menu, you get the selected set
-by looping through the items applying the <CODE>item_value()</CODE> 
+by looping through the items applying the <CODE>item_value()</CODE>
 predicate function.  Your menu-processing code can use the function
 <CODE>set_item_value()</CODE> to flag the items in the select set. <P>
 
@@ -1218,9 +1256,9 @@ to display menu items.  You can retrieve any format associated with a
 menu with <CODE>menu_format()</CODE>. The default format is rows=16,
 columns=1. <P>
 
-The actual menu page may be smaller than the format size.  This depends 
+The actual menu page may be smaller than the format size.  This depends
 on the item number and size and whether O_ROWMAJOR is on.  This option
-(on by default) causes menu items to be displayed in a `raster-scan' 
+(on by default) causes menu items to be displayed in a `raster-scan'
 pattern, so that if more than one item will fit horizontally the first
 couple of items are side-by-side in the top row.  The alternative is
 column-major display, which tries to put the first several items in
@@ -1235,7 +1273,7 @@ Each menu has a <DFN>mark string</DFN> used to visually tag selected items;
 see the <CODE>menu_mark(3x)</CODE> manual page for details.  The mark
 string length also influences the menu page size. <P>
 
-The function <CODE>scale_menu()</CODE> returns the minimum display size 
+The function <CODE>scale_menu()</CODE> returns the minimum display size
 that the menu code computes from all these factors.
 
 There are other menu display attributes including a select attribute,
@@ -1283,7 +1321,7 @@ partially displayed. <P>
 
 There are explicit requests for scrolling which also change the
 current item (because the select location does not change, but the
-item there does).  These are <CODE>REQ_SCR_DLINE</CODE>, 
+item there does).  These are <CODE>REQ_SCR_DLINE</CODE>,
 <CODE>REQ_SCR_ULINE</CODE>, <CODE>REQ_SCR_DPAGE</CODE>, and
 <CODE>REQ_SCR_UPAGE</CODE>. <P>
 
@@ -1303,7 +1341,7 @@ Some requests change the pattern buffer directly:
 <CODE>REQ_CLEAR_PATTERN</CODE>, <CODE>REQ_BACK_PATTERN</CODE>,
 <CODE>REQ_NEXT_MATCH</CODE>, <CODE>REQ_PREV_MATCH</CODE>.  The latter
 two are useful when pattern buffer input matches more than one item
-in a multi-valued menu. <P>  
+in a multi-valued menu. <P>
 
 Each successful scroll or item navigation request clears the pattern
 buffer.  It is also possible to set the pattern buffer explicitly
@@ -1342,7 +1380,7 @@ The <CODE>form</CODE> library is a curses extension that supports easy
 programming of on-screen forms for data entry and program control. <P>
 
 The <CODE>form</CODE> library first appeared in AT&amp;T System V.  The
-version documented here is the freeware <CODE>form</CODE> code distributed
+version documented here is the <CODE>form</CODE> code distributed
 with <CODE>ncurses</CODE>. <P>
 
 <H2><A NAME="fcompile">Compiling With the form Library</A></H2>
@@ -1379,7 +1417,7 @@ form library allows you (the forms designer) to bind each navigation
 and editing key to any keystroke accepted by <CODE>curses</CODE>
 
 Fields may have validation conditions on them, so that they check input
-data for type and value.  The form library supplies a rich set of 
+data for type and value.  The form library supplies a rich set of
 pre-defined field types, and makes it relatively easy to define new ones. <P>
 
 Once its transaction is completed (or aborted), a form may be
@@ -1407,7 +1445,7 @@ designed to resemble that of the <A HREF="#menu">menu library</A>
 wherever possible. <P>
 
 In forms programs, however, the `process user requests' is somewhat more
-complicated than for menus.  Besides menu-like navigation operations, 
+complicated than for menus.  Besides menu-like navigation operations,
 the menu driver loop has to support field editing and data validation. <P>
 
 <H2><A NAME="fcreate">Creating and Freeing Fields and Forms</A></H2>
@@ -1415,7 +1453,7 @@ the menu driver loop has to support field editing and data validation. <P>
 The basic function for creating fields is <CODE>new_field()</CODE>: <P>
 
 <PRE>
-FIELD *new_field(int height, int width,   /* new field size */ 
+FIELD *new_field(int height, int width,   /* new field size */
                  int top, int left,       /* upper left corner */
                  int offscreen,           /* number of offscreen rows */
                  int nbuf);               /* number of working buffers */
@@ -1434,8 +1472,8 @@ need not be <CODE>stdscr</CODE> if you've done an explicit
 <CODE>set_form_window()</CODE> call. <P>
 
 The fifth argument allows you to specify a number of off-screen rows.  If
-this is zero, the entire field will always be displayed.  If it is 
-nonzero, the form will be scrollable, with only one screen-full (initially 
+this is zero, the entire field will always be displayed.  If it is
+nonzero, the form will be scrollable, with only one screen-full (initially
 the top part) displayed at any given time.  If you make a field dynamic
 and grow it so it will no longer fit on the screen, the form will become
 scrollable even if the <CODE>offscreen</CODE> argument was initially zero. <P>
@@ -1519,19 +1557,19 @@ You can retrieve field sizes and locations through: <P>
 
 <PRE>
 int field_info(FIELD *field,              /* field from which to fetch */
-               int *height, *int width,   /* field size */ 
+               int *height, *int width,   /* field size */
                int *top, int *left,       /* upper left corner */
                int *offscreen,            /* number of offscreen rows */
                int *nbuf);                /* number of working buffers */
 </PRE>
 
-This function is a sort of inverse of <CODE>new_field()</CODE>; instead of 
+This function is a sort of inverse of <CODE>new_field()</CODE>; instead of
 setting size and location attributes of a new field, it fetches them
 from an existing one.  <P>
 
 <H3><A NAME="flocation">Changing the Field Location</A></H3>
 
-If is possible to move a field's location on the screen:  <P>
+It is possible to move a field's location on the screen:  <P>
 
 <PRE>
 int move_field(FIELD *field,              /* field to alter */
@@ -1569,22 +1607,22 @@ in the field buffer. <P>
 
 <PRE>
 int set_field_fore(FIELD *field,          /* field to alter */
-                   chtype attr);          /* attribute to set */ 
+                   chtype attr);          /* attribute to set */
 
 chtype field_fore(FIELD *field);          /* field to query */
 
 int set_field_back(FIELD *field,          /* field to alter */
-                   chtype attr);          /* attribute to set */ 
+                   chtype attr);          /* attribute to set */
 
 chtype field_back(FIELD *field);          /* field to query */
 
 int set_field_pad(FIELD *field,           /* field to alter */
-                 int pad);                /* pad character to set */ 
+                 int pad);                /* pad character to set */
 
 chtype field_pad(FIELD *field);
 
 int set_new_page(FIELD *field,            /* field to alter */
-                 int flag);               /* TRUE to force new page */ 
+                 int flag);               /* TRUE to force new page */
 
 chtype new_page(FIELD *field);            /* field to query */
 </PRE>
@@ -1604,13 +1642,13 @@ functions:
 
 <PRE>
 int set_field_opts(FIELD *field,          /* field to alter */
-                   int attr);             /* attribute to set */ 
+                   int attr);             /* attribute to set */
 
 int field_opts_on(FIELD *field,           /* field to alter */
-                  int attr);              /* attributes to turn on */ 
+                  int attr);              /* attributes to turn on */
 
 int field_opts_off(FIELD *field,          /* field to alter */
-                   int attr);             /* attributes to turn off */ 
+                   int attr);             /* attributes to turn off */
 
 int field_opts(FIELD *field);             /* field to query */
 </PRE>
@@ -1627,19 +1665,19 @@ visited by form navigation keys).  Can be used to make labels or derived
 fields with buffer values alterable by the forms application, not the user.
 <DT> O_PUBLIC
 <DD> Controls whether data is displayed during field entry.  If this option is
-turned off on a field, the library will accept and edit data in that field, 
+turned off on a field, the library will accept and edit data in that field,
 but it will not be displayed and the visible field cursor will not move.
 You can turn off the O_PUBLIC bit to define password fields.
 <DT> O_EDIT
 <DD> Controls whether the field's data can be modified.  When this option is
-off, all editing requests except <CODE>REQ_PREV_CHOICE</CODE> and 
+off, all editing requests except <CODE>REQ_PREV_CHOICE</CODE> and
 <CODE>REQ_NEXT_CHOICE</CODE> will fail.  Such read-only fields may be useful for
 help messages.
 <DT> O_WRAP
 <DD> Controls word-wrapping in multi-line fields.  Normally, when any
 character of a (blank-separated) word reaches the end of the current line, the
 entire word is wrapped to the next line (assuming there is one).  When this
-option is off, the word will be split across the line break.  
+option is off, the word will be split across the line break.
 <DT> O_BLANK
 <DD> Controls field blanking.  When this option is on, entering a character at
 the first field position erases the entire field (except for the just-entered
@@ -1652,7 +1690,7 @@ user's cursor will hang at the end of the field.  This option is ignored
 in dynamic fields that have not reached their size limit.
 <DT> O_NULLOK
 <DD> Controls whether <A HREF="#fvalidation">validation</A> is applied to
-blank fields.  Normally, it is not; the user can leave a field blank 
+blank fields.  Normally, it is not; the user can leave a field blank
 without invoking the usual validation check on exit.  If this option is
 off on a field, exit from it will invoke a validation check.
 <DT> O_PASSOK
@@ -1690,7 +1728,7 @@ form repeatedly, looking for modified fields each time. <P>
 
 Calling <CODE>field_status()</CODE> on a field not currently selected
 for input will return a correct value.  Calling <CODE>field_status()</CODE> on a
-field that is currently selected for input may not necessarily give a 
+field that is currently selected for input may not necessarily give a
 correct field status value, because entered data isn't necessarily copied to
 buffer zero before the exit validation check.
 
@@ -1716,7 +1754,7 @@ char *field_userptr(FIELD *field);        /* fetch mode of field */
 (Properly, this user pointer field ought to have <CODE>(void *)</CODE> type.
 The <CODE>(char *)</CODE> type is retained for System V compatibility.) <P>
 
-It is valid to set the user pointer of the default field (with a 
+It is valid to set the user pointer of the default field (with a
 <CODE>set_field_userptr()</CODE> call passed a NULL field pointer.)
 When a new field is created, the default-field user pointer is copied
 to initialize the new field's user pointer. <P>
@@ -1742,7 +1780,7 @@ it with this function: <P>
 
 <PRE>
 int set_max_field(FIELD *field,     /* field to alter (may not be NULL) */
-                   int max_size);   /* upper limit on field size */ 
+                   int max_size);   /* upper limit on field size */
 </PRE>
 
 If the field is one-line, <CODE>max_size</CODE> is taken to be a column size
@@ -1755,9 +1793,9 @@ The following properties of a field change when it becomes dynamic:
 <UL>
 <LI>If there is no growth limit, there is no final position of the field;
 therefore <CODE>O_AUTOSKIP</CODE> and <CODE>O_NL_OVERLOAD</CODE> are ignored.
-<LI>Field justification will be ignored (though whatever justification is 
+<LI>Field justification will be ignored (though whatever justification is
 set up will be retained internally and can be queried).
-<LI>The <CODE>dup_field()</CODE> and <CODE>link_field()</CODE> calls copy 
+<LI>The <CODE>dup_field()</CODE> and <CODE>link_field()</CODE> calls copy
 dynamic-buffer sizes.  If the <CODE>O_STATIC</CODE> option is set on one of a
 collection of links, buffer resizing will occur only when the field is
 edited through that link.
@@ -1770,7 +1808,7 @@ the field; use <CODE>dynamic_field_info()</CODE> to get the actual dynamic size.
 By default, a field will accept any data that will fit in its input buffer.
 However, it is possible to attach a validation type to a field.  If you do
 this, any attempt to leave the field while it contains data that doesn't
-match the validation type will fail.  Some validation types also have a 
+match the validation type will fail.  Some validation types also have a
 character-validity check for each time a character is entered in the field. <P>
 
 A field's validation check (if any) is not called when
@@ -1853,7 +1891,7 @@ has been entered, it is of course valid.  But it is also possible to enter a
 prefix of a valid string and have it completed for you. <P>
 
 By default, if you enter such a prefix and it matches more than one value
-in the string list, the prefix will be completed to the first matching 
+in the string list, the prefix will be completed to the first matching
 value.  But the <CODE>checkunique</CODE> argument, if true, requires prefix
 matches to be unique in order to be valid. <P>
 
@@ -1894,7 +1932,7 @@ int set_field_type(FIELD *field,              /* field to alter */
 
 Valid characters consist of an optional leading minus and digits. possibly
 including a decimal point. If your system supports locale's, the decimal point
-character used must be the one defined by your locale. The range check is 
+character used must be the one defined by your locale. The range check is
 performed on exit. If the range maximum is less than or equal to the minimum,
 the range is ignored. <P>
 
@@ -1947,7 +1985,7 @@ to fit. <P>
 Calling <CODE>field_buffer()</CODE> with a null field pointer will raise an
 error.  Calling <CODE>field_buffer()</CODE> on a field not currently selected
 for input will return a correct value.  Calling <CODE>field_buffer()</CODE> on a
-field that is currently selected for input may not necessarily give a 
+field that is currently selected for input may not necessarily give a
 correct field buffer value, because entered data isn't necessarily copied to
 buffer zero before the exit validation check.
 
@@ -2049,9 +2087,9 @@ scrollable field is actually displayed within the menu subwindow.  Use
 these functions: <P>
 
 <PRE>
-int data_ahead(FORM *form);               /* form to be queried */ 
+int data_ahead(FORM *form);               /* form to be queried */
 
-int data_behind(FORM *form);              /* form to be queried */ 
+int data_behind(FORM *form);              /* form to be queried */
 </PRE>
 
 The function <CODE>data_ahead()</CODE> returns TRUE if (a) the current
@@ -2084,7 +2122,7 @@ int form_driver(FORM *form,               /* form to pass input to */
 </PRE>
 
 Your input virtualization function needs to take input and then convert it
-to either an alphanumeric character (which is treated as data to be 
+to either an alphanumeric character (which is treated as data to be
 entered in the currently-selected field), or a forms processing request. <P>
 
 The forms driver provides hooks (through input-validation and
@@ -2337,7 +2375,7 @@ there are requests that can fetch that value into the field buffer: <P>
 </DL>
 
 Of the built-in field types, only <CODE>TYPE_ENUM</CODE> has built-in successor
-and predecessor functions.  When you define a field type of your own 
+and predecessor functions.  When you define a field type of your own
 (see <A HREF="#fcustom">Custom Validation Types</A>), you can associate
 our own ordering functions. <P>
 
@@ -2457,13 +2495,13 @@ or queried with these functions: <P>
 
 <PRE>
 int set_form_opts(FORM *form,             /* form to alter */
-                  int attr);              /* attribute to set */ 
+                  int attr);              /* attribute to set */
 
 int form_opts_on(FORM *form,              /* form to alter */
-                 int attr);               /* attributes to turn on */ 
+                 int attr);               /* attributes to turn on */
 
 int form_opts_off(FORM *form,             /* form to alter */
-                  int attr);              /* attributes to turn off */ 
+                  int attr);              /* attributes to turn off */
 
 int form_opts(FORM *form);                /* form to query */
 </PRE>
@@ -2500,7 +2538,7 @@ The simplest way to create a custom data type is to compose it from two
 preexisting ones:  <P>
 
 <PRE>
-FIELD *link_fieldtype(FIELDTYPE *type1, 
+FIELD *link_fieldtype(FIELDTYPE *type1,
                       FIELDTYPE *type2);
 </PRE>
 
@@ -2620,7 +2658,7 @@ int set_fieldtype_arg(FIELDTYPE *type,    /* type to alter */
 
 The successor and predecessor arguments will each be passed two arguments;
 a field pointer, and a pile pointer (as for the validation functions).  They
-are expected to use the function <CODE>field_buffer()</CODE> to read the 
+are expected to use the function <CODE>field_buffer()</CODE> to read the
 current value, and <CODE>set_field_buffer()</CODE> on buffer 0 to set the next
 or previous value.  Either hook may return TRUE to indicate success (a
 legal next or previous value was set) or FALSE to indicate failure. <P>

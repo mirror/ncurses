@@ -40,7 +40,7 @@
 
 #include <curses.h>
 
-MODULE_ID("$Id: clear.c,v 1.7 1998/02/11 12:14:02 tom Exp $")
+MODULE_ID("$Id: clear.c,v 1.8 1998/09/26 11:42:50 tom Exp $")
 
 static int putch(int c)
 {
@@ -52,8 +52,7 @@ int main(
 	char *argv[] GCC_UNUSED)
 {
 	setupterm((char *) 0, STDOUT_FILENO, (int *) 0);
-	if (clear_screen == (char *) 0)
-		return EXIT_FAILURE;
-	tputs(clear_screen, lines > 0 ? lines : 1, putch);
-	return EXIT_SUCCESS;
+	return (tputs(clear_screen, lines > 0 ? lines : 1, putch) == ERR)
+		? EXIT_FAILURE
+		: EXIT_SUCCESS;
 }

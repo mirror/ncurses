@@ -1,0 +1,122 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>form_field_buffer</STRONG> - field buffer control
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><form.h></STRONG>
+       int  set_field_buffer(FIELD  *field,  int  buf, const char
+       *value);
+       char *field_buffer(const FIELD *field, int buffer);
+       int set_field_status(FIELD *field, bool status);
+       bool field_status(const FIELD *field);
+       int set_max_field(FIELD *field, int max);
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The function <STRONG>set_field_buffer</STRONG> sets the numbered buffer  of
+       the  given  field  to contain a given string.  Buffer 0 is
+       the displayed value of the field; other  numbered  buffers
+       may be allocated by applications through the <STRONG>nbuf</STRONG> argument
+       of (see <STRONG><A HREF="form_field_new.3x.html">form_field_new(3X)</A></STRONG>) but are not manipulated by the
+       forms  library.   The  function  <STRONG>field_buffer</STRONG>  returns the
+       address of the buffer.
+
+       The function <STRONG>set_field_status</STRONG> sets the  associated  status
+       flag  of  <EM>field</EM>; <STRONG>field_status</STRONG> gets the current value.  The
+       status flag is set to a nonzero value whenever  the  field
+       changes.
+
+       The  function  <STRONG>set_max_field</STRONG>  sets  the maximum size for a
+       dynamic field.  An argument of 0  turns  off  any  maximum
+       size threshold for that field.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The <STRONG>field_buffer</STRONG> function returns NULL on error.
+
+       The <STRONG>field_status</STRONG> function returns <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>.
+
+       The remaining routines return one of the following:
+
+       <STRONG>E_OK</STRONG> The routine succeeded.
+
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
+
+       <STRONG>E_BAD_ARGUMENT</STRONG>
+            Routine  detected  an incorrect or out-of-range argu-
+            ment.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG> and 3X pages  whose  names  begin  "form_"  for
+       detailed descriptions of the entry points.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The header file <STRONG><form.h></STRONG> automatically includes the header
+       file <STRONG><curses.h></STRONG>.
+       These routines emulate the System V forms  library.   They
+       were not supported on Version 7 or BSD versions.
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
+       curses by Eric S. Raymond.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

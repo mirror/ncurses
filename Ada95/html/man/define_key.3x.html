@@ -1,0 +1,70 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>define_key</STRONG> - define a keycode
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>int</STRONG> <STRONG>define_key(char</STRONG> <STRONG>*definition,</STRONG> <STRONG>int</STRONG> <STRONG>keycode);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This is an extension to the curses library.  It permits an
+       application to define keycodes  with  their  corresponding
+       control  strings,  so that the ncurses library will inter-
+       pret them just as it would the  predefined  codes  in  the
+       terminfo database.
+
+       If  the  given string is null, any existing definition for
+       the keycode is removed.  Similarly, if the  given  keycode
+       is  negative  or  zero,  any existing string for the given
+       definition is removed.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The keycode  must  be  greater  than  zero,  else  ERR  is
+       returned.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  routines  are  specific  to ncurses.  They were not
+       supported on Version 7, BSD or System  V  implementations.
+       It  is recommended that any code depending on them be con-
+       ditioned using NCURSES_VERSION.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="keyok.3x.html">keyok(3X)</A></STRONG>.
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       Thomas Dickey.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -2,6 +2,10 @@ This is a log of changes that the ncurses C++ binding has gone
 through starting with the integration of menu and forms integration
 into the binding.
 
+990731  + Improve support for pads. A viewport window may now be added to
+          a pad. It will then be possible to use a builtin panning mechanism
+          to view the pad.
+
 970908	+ Improve NCursesWindow class: added additional methods to
 	  cover more ncurses functionality. Make refresh() and 
 	  noutrefresh() virtual members to allow different implementation

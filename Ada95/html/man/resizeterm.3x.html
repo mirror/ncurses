@@ -1,0 +1,70 @@
+<HTML>
+<BODY>
+<PRE>
+       <STRONG>resizeterm</STRONG> - change the curses terminal size
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG><curses.h></STRONG>
+
+       <STRONG>int</STRONG> <STRONG>resizeterm(int</STRONG> <STRONG>lines,</STRONG> <STRONG>int</STRONG> <STRONG>columns);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This  is  an extension to the curses library.  It provides
+       callers with a hook into the <STRONG>ncurses</STRONG> data to  resize  win-
+       dows, primarily for use by programs running in an X Window
+       terminal (e.g., xterm).  The function  <STRONG>resizeterm</STRONG>  resizes
+       the  standard  and current windows to the specified dimen-
+       sions, and adjusts other  bookkeeping  data  used  by  the
+       <STRONG>ncurses</STRONG> library that record the window dimensions.
+
+       When  resizing  the  windows, the function blank-fills the
+       areas that are extended. The  calling  application  should
+       fill in these areas with appropriate data.
+
+       The function attempts to resize all windows.  However, due
+       to the calling convention of pads, it is not  possible  to
+       resize  these  without  additional  interaction  with  the
+       application.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The function returns the integer <STRONG>ERR</STRONG> upon failure  and  <STRONG>OK</STRONG>
+       on success.  It will fail if either of the dimensions less
+       than or equal  to  zero,  or  if  an  error  occurs  while
+       (re)allocating memory for the windows.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       While  this  function  is intended to be used to support a
+       signal handler (i.e., for SIGWINCH), care should be  taken
+       to  avoid invoking it in a context where <STRONG>malloc</STRONG> or <STRONG>realloc</STRONG>
+       may have been interrupted, since it uses those  functions.
+
+       If  ncurses  is configured to supply its own SIGWINCH han-
+       dler, the <STRONG>resizeterm</STRONG> function ungetch's a <STRONG>KEY_RESIZE</STRONG> which
+       will  be  read on the next call to <STRONG>getch</STRONG>.  This is used to
+       alert an application that the screen size has changed, and
+       that  it should repaint special features such as pads that
+       cannot be done automatically.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="wresize.3x.html">wresize(3X)</A></STRONG>.
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       Thomas Dickey (from an equivalent function written in 1988
+       for BSD curses).
+
+
+</PRE>
+</BODY>
+</HTML>

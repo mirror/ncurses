@@ -22,7 +22,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.26 1997/11/15 22:36:41 tom Exp $
+ * $Id: view.c,v 1.27 1998/08/22 18:33:41 tom Exp $
  */
 
 #include <test.priv.h>
@@ -348,9 +348,9 @@ static void show_all(void)
 	for (i = 1; i < LINES; i++) {
 	    move(i, 0);
 	    if ((s = lptr[i-1]) != 0 && (int)strlen(s) > shift)
-		printw("%3d:%.*s", lptr+i-lines, COLS-4, s + shift);
+		printw("%3ld:%.*s", (long) (lptr+i-lines), COLS-4, s + shift);
 	    else
-		printw("%3d:", lptr+i-lines);
+		printw("%3ld:", (long) (lptr+i-lines));
 	    clrtoeol();
 	}
 	setscrreg(1, LINES-1);

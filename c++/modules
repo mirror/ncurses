@@ -1,5 +1,5 @@
 # Program modules
-# $Id: modules,v 1.5 1998/02/11 12:13:41 tom Exp $
+# $Id: modules,v 1.6 1999/07/31 09:46:54 juergen Exp $
 ##############################################################################
 # Copyright (c) 1998 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -36,6 +36,7 @@ cursesf		c++		$(srcdir)	$(cursesf_h) $(cursesapp_h)
 cursesm		c++		$(srcdir)	$(cursesm_h) $(cursesapp_h)
 cursesp		c++		$(srcdir)	$(cursesp_h)
 cursesw		c++		$(srcdir)	$(cursesw_h)
+cursespad	c++		$(srcdir)	$(cursesw_h)
 cursslk		c++		$(srcdir)	$(cursslk_h) $(cursesapp_h)
 cursesapp	c++		$(srcdir)	$(cursesapp_h)
 cursesmain	c++		$(srcdir)	$(cursesapp_h)

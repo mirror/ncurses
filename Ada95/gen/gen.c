@@ -27,12 +27,12 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996             *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996                 *
  ****************************************************************************/
 
 /*
     Version Control
-    $Revision: 1.14 $
+    $Revision: 1.29 $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -41,6 +41,8 @@
   to produce the real source.
   */
 
+#include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
@@ -50,16 +52,17 @@
 
 #define RES_NAME "Reserved"
 
+static const char *model = "";
 static int little_endian = 0;
 
 typedef struct {
   const char *name;
-  unsigned int attr;
+  unsigned long attr;
 } name_attribute_pair;
 
 static int find_pos (char *s, unsigned len, int *low, int *high)
 {
-  unsigned int i,j; 
+  unsigned int i,j;
   int l = 0;
 
   *high = -1;
@@ -98,30 +101,19 @@ static int find_pos (char *s, unsigned len, int *low, int *high)
  * We are only dealing with record types which are of 32 or 16
  * bit size, i.e. they fit into an (u)int or a (u)short.
  */
-static void gen_reps
+static void
+gen_reps
 (const name_attribute_pair *nap, /* array of name_attribute_pair records */
  const char *name,               /* name of the represented record type  */
- int len)                        /* size of the record in bytes          */
+ int len,                        /* size of the record in bytes          */
+ int bias)
 {
-  int i,l,cnt = 0,low,high;
-  int width = strlen(RES_NAME);
-  int bias = 0;
-  unsigned int a;
-  unsigned int mask = 0;
-  char *suffix;
+  int i,n,l,cnt = 0,low,high;
+  int width = strlen(RES_NAME) + 3;
+  unsigned long a;
+  unsigned long mask = 0;
 
-  assert (nap);
-
-  if (len == sizeof(int)/2)
-    {
-      bias = little_endian ? 8 * len : 0;
-      suffix = " / 2";
-    }
-  else
-    {
-      assert(len==sizeof(int));
-      suffix = "";
-    }
+  assert (nap!=NULL);
 
   for (i=0; nap[i].name != (char *)0; i++)
     {
@@ -137,10 +129,6 @@ static void gen_reps
   for (i=0; nap[i].name != (char *)0; i++)
     {
       printf("         %-*s : Boolean;\n",width,nap[i].name);
-    }  
-  if (cnt != 8*len)
-    {
-      printf("         %-*s : Boolean;\n",width,RES_NAME);
     }
   printf("      end record;\n");
   printf("   pragma Pack (%s);\n",name);
@@ -155,33 +143,25 @@ static void gen_reps
       mask |= a;
       l = find_pos( (char *)&a,sizeof(a),&low,&high );
       if (l>=0)
-	printf("         %-*s at 0 range %2d .. %2d;\n",width,nap[i].name,low-bias,high-bias);
-    }  
-  if (cnt != 8*len)
-    {
-      mask = ~mask;
-      assert(mask);
-      if (little_endian)
-	l = 8*len - 1;
-      else
-	l = 0;
-      printf("         %-*s at 0 range %2d .. %2d;\n",width,RES_NAME,l,l);
+	printf("         %-*s at 0 range %2d .. %2d;\n",width,nap[i].name,
+	       low-bias,high-bias);
     }
+  i = 1; n = cnt;
   printf("      end record;\n");
-  printf("   for %s'Size use Interfaces.C.int'Size%s;\n", name, suffix);
+  printf("   for %s'Size use %d;\n", name, 8*len);
   printf("   --  Please note: this rep. clause is generated and may be\n");
   printf("   --               different on your system.");
 }
 
 
-static void chtype_rep (const char *name, int mask)
+static void chtype_rep (const char *name, attr_t mask)
 {
-  int x = -1;
-  int t = x & mask;
+  attr_t x = -1;
+  attr_t t = x & mask;
   int low, high;
   int l = find_pos ((char *)&t, sizeof(t), &low, &high);
   if (l>=0)
-    printf("         %-5s at 0 range %2d .. %2d;\n",name,low,high); 
+    printf("         %-5s at 0 range %2d .. %2d;\n",name,low,high);
 }
 
 static void gen_chtype_rep(const char *name)
@@ -190,7 +170,7 @@ static void gen_chtype_rep(const char *name)
   chtype_rep("Ch",A_CHARTEXT);
   chtype_rep("Color",A_COLOR);
   chtype_rep("Attr",(A_ATTRIBUTES&~A_COLOR));
-  printf("      end record;\n   for %s'Size use Interfaces.C.int'Size;\n",name);
+  printf("      end record;\n   for %s'Size use %d;\n",name,8*sizeof(chtype));
   printf("      --  Please note: this rep. clause is generated and may be\n");
   printf("      --               different on your system.\n");
 }
@@ -201,7 +181,7 @@ static void mrep_rep (const char *name, void *rec)
   int low, high;
   int l = find_pos((char *)rec, sizeof(MEVENT), &low, &high);
   if (l>=0)
-    printf("         %-7s at 0 range %3d .. %3d;\n",name,low,high); 
+    printf("         %-7s at 0 range %3d .. %3d;\n",name,low,high);
 }
 
 
@@ -286,7 +266,20 @@ static void gen_attr_set( const char *name )
 #endif
     {(char *)0,                 0}
   };
-  gen_reps (nap, name, sizeof(int)/2);
+  chtype attr = A_ATTRIBUTES & ~A_COLOR;
+  int start=-1, len=0, i, set;
+  for(i=0;i<(int)(8*sizeof(chtype));i++) {
+    set = attr&1;
+    if (set) {
+      if (start<0)
+	start = i;
+      if (start>=0) {
+	len++;
+      }
+    }
+    attr = attr >> 1;
+  }
+  gen_reps (nap, name, (len+7)/8, little_endian?start:0);
 }
 
 static void gen_menu_opt_rep(const char *name)
@@ -312,7 +305,7 @@ static void gen_menu_opt_rep(const char *name)
 #endif
     {(char *)0, 0}
   };
-  gen_reps (nap, name, sizeof(int));
+  gen_reps (nap, name, sizeof(int),0);
 }
 
 static void gen_item_opt_rep(const char *name)
@@ -322,8 +315,8 @@ static void gen_item_opt_rep(const char *name)
     {"Selectable", O_SELECTABLE},
 #endif
     {(char *)0   , 0}
-  };  
-  gen_reps (nap, name, sizeof(int));
+  };
+  gen_reps (nap, name, sizeof(int),0);
 }
 
 static void gen_form_opt_rep(const char *name)
@@ -337,7 +330,7 @@ static void gen_form_opt_rep(const char *name)
 #endif
     {(char *)0    , 0}
   };
-  gen_reps (nap, name, sizeof(int));
+  gen_reps (nap, name, sizeof(int),0);
 }
 
 /*
@@ -378,7 +371,7 @@ static void gen_field_opt_rep(const char *name)
 #endif
     {(char *)0, 0}
   };
-  gen_reps (nap, name, sizeof(int));
+  gen_reps (nap, name, sizeof(int),0);
 }
 
 /*
@@ -398,7 +391,7 @@ static void keydef(const char *name, const char *old_name, int value, int mode)
 	printf("   %-16s : Special_Key_Code renames %s;\n",old_name,name);
     }
 }
-  
+
 /*
  * Generate constants for the key codes. When called with mode==0, a
  * complete list with nice constant names in proper casing style will
@@ -695,10 +688,10 @@ static void gen_keydefs (int mode)
 #endif
 #ifdef KEY_MOUSE
   keydef("Key_Mouse","KEY_MOUSE",KEY_MOUSE,mode);
-#endif  
+#endif
 #ifdef KEY_RESIZE
   keydef("Key_Resize","KEY_RESIZE",KEY_RESIZE,mode);
-#endif  
+#endif
 }
 
 /*
@@ -819,6 +812,138 @@ static void gen_acs (void)
 #endif
 }
 
+
+#define GEN_EVENT(name,value) \
+   printf("   %-25s : constant Event_Mask := 8#%011lo#;\n", \
+          #name, value)
+
+#define GEN_MEVENT(name) \
+   printf("   %-25s : constant Event_Mask := 8#%011lo#;\n", \
+          #name, name)
+
+static
+void gen_mouse_events(void)
+{
+  mmask_t all1 = 0;
+  mmask_t all2 = 0;
+  mmask_t all3 = 0;
+  mmask_t all4 = 0;
+
+#ifdef BUTTON1_RELEASED
+  GEN_MEVENT(BUTTON1_RELEASED);
+  all1 |= BUTTON1_RELEASED;
+#endif
+#ifdef BUTTON1_PRESSED
+  GEN_MEVENT(BUTTON1_PRESSED);
+  all1 |= BUTTON1_PRESSED;
+#endif
+#ifdef BUTTON1_CLICKED
+  GEN_MEVENT(BUTTON1_CLICKED);
+  all1 |= BUTTON1_CLICKED;
+#endif
+#ifdef BUTTON1_DOUBLE_CLICKED
+  GEN_MEVENT(BUTTON1_DOUBLE_CLICKED);
+  all1 |= BUTTON1_DOUBLE_CLICKED;
+#endif
+#ifdef BUTTON1_TRIPLE_CLICKED
+  GEN_MEVENT(BUTTON1_TRIPLE_CLICKED);
+  all1 |= BUTTON1_TRIPLE_CLICKED;
+#endif
+#ifdef BUTTON1_RESERVED_EVENT
+  GEN_MEVENT(BUTTON1_RESERVED_EVENT);
+  all1 |= BUTTON1_RESERVED_EVENT;
+#endif
+#ifdef BUTTON2_RELEASED
+  GEN_MEVENT(BUTTON2_RELEASED);
+  all2 |= BUTTON2_RELEASED;
+#endif
+#ifdef BUTTON2_PRESSED
+  GEN_MEVENT(BUTTON2_PRESSED);
+  all2 |= BUTTON2_PRESSED;
+#endif
+#ifdef BUTTON2_CLICKED
+  GEN_MEVENT(BUTTON2_CLICKED);
+  all2 |= BUTTON2_CLICKED;
+#endif
+#ifdef BUTTON2_DOUBLE_CLICKED
+  GEN_MEVENT(BUTTON2_DOUBLE_CLICKED);
+  all2 |= BUTTON2_DOUBLE_CLICKED;
+#endif
+#ifdef BUTTON2_TRIPLE_CLICKED
+  GEN_MEVENT(BUTTON2_TRIPLE_CLICKED);
+  all2 |= BUTTON2_TRIPLE_CLICKED;
+#endif
+#ifdef BUTTON2_RESERVED_EVENT
+  GEN_MEVENT(BUTTON2_RESERVED_EVENT);
+  all2 |= BUTTON2_RESERVED_EVENT;
+#endif
+#ifdef BUTTON3_RELEASED
+  GEN_MEVENT(BUTTON3_RELEASED);
+  all3 |= BUTTON3_RELEASED;
+#endif
+#ifdef BUTTON3_PRESSED
+  GEN_MEVENT(BUTTON3_PRESSED);
+  all3 |= BUTTON3_PRESSED;
+#endif
+#ifdef BUTTON3_CLICKED
+  GEN_MEVENT(BUTTON3_CLICKED);
+  all3 |= BUTTON3_CLICKED;
+#endif
+#ifdef BUTTON3_DOUBLE_CLICKED
+  GEN_MEVENT(BUTTON3_DOUBLE_CLICKED);
+  all3 |= BUTTON3_DOUBLE_CLICKED;
+#endif
+#ifdef BUTTON3_TRIPLE_CLICKED
+  GEN_MEVENT(BUTTON3_TRIPLE_CLICKED);
+  all3 |= BUTTON3_TRIPLE_CLICKED;
+#endif
+#ifdef BUTTON3_RESERVED_EVENT
+  GEN_MEVENT(BUTTON3_RESERVED_EVENT);
+  all3 |= BUTTON3_RESERVED_EVENT;
+#endif
+#ifdef BUTTON4_RELEASED
+  GEN_MEVENT(BUTTON4_RELEASED);
+  all4 |= BUTTON4_RELEASED;
+#endif
+#ifdef BUTTON4_PRESSED
+  GEN_MEVENT(BUTTON4_PRESSED);
+  all4 |= BUTTON4_PRESSED;
+#endif
+#ifdef BUTTON4_CLICKED
+  GEN_MEVENT(BUTTON4_CLICKED);
+  all4 |= BUTTON4_CLICKED;
+#endif
+#ifdef BUTTON4_DOUBLE_CLICKED
+  GEN_MEVENT(BUTTON4_DOUBLE_CLICKED);
+  all4 |= BUTTON4_DOUBLE_CLICKED;
+#endif
+#ifdef BUTTON4_TRIPLE_CLICKED
+  GEN_MEVENT(BUTTON4_TRIPLE_CLICKED);
+  all4 |= BUTTON4_TRIPLE_CLICKED;
+#endif
+#ifdef BUTTON4_RESERVED_EVENT
+  GEN_MEVENT(BUTTON4_RESERVED_EVENT);
+  all4 |= BUTTON4_RESERVED_EVENT;
+#endif
+#ifdef BUTTON_CTRL
+  GEN_MEVENT(BUTTON_CTRL);
+#endif
+#ifdef BUTTON_SHIFT
+  GEN_MEVENT(BUTTON_SHIFT);
+#endif
+#ifdef BUTTON_ALT
+  GEN_MEVENT(BUTTON_ALT);
+#endif
+#ifdef ALL_MOUSE_EVENTS
+  GEN_MEVENT(ALL_MOUSE_EVENTS);
+#endif
+
+GEN_EVENT(BUTTON1_EVENTS,all1);
+GEN_EVENT(BUTTON2_EVENTS,all2);
+GEN_EVENT(BUTTON3_EVENTS,all3);
+GEN_EVENT(BUTTON4_EVENTS,all4);
+}
+
 /*
  * Output some comment lines indicating that the file is generated.
  * The name parameter is the name of the facility to be used in
@@ -830,7 +955,8 @@ static void prologue(const char *name)
   printf("--  This module is generated. Please don't change it manually!\n");
   printf("--  Run the generator instead.\n--  |");
 
-  printf("define(`M4_BIT_ORDER',`%s_Order_First')",little_endian ? "Low":"High");
+  printf("define(`M4_BIT_ORDER',`%s_Order_First')",
+	 little_endian ? "Low":"High");
 }
 
 /*
@@ -922,7 +1048,8 @@ static void gen_color (void)
  */
 static void gen_linkopts (void)
 {
-   printf("   pragma Linker_Options (\"-lncurses\");\n");
+   printf("   pragma Linker_Options (\"-lAdaCurses%s\");\n", model);
+   printf("   pragma Linker_Options (\"-lncurses%s\");\n", model);
 }
 
 /*
@@ -930,7 +1057,7 @@ static void gen_linkopts (void)
  */
 static void gen_menu_linkopts (void)
 {
-   printf("   pragma Linker_Options (\"-lmenu\");\n");
+   printf("   pragma Linker_Options (\"-lmenu%s\");\n", model);
 }
 
 /*
@@ -938,7 +1065,7 @@ static void gen_menu_linkopts (void)
  */
 static void gen_form_linkopts (void)
 {
-   printf("   pragma Linker_Options (\"-lform\");\n");
+   printf("   pragma Linker_Options (\"-lform%s\");\n", model);
 }
 
 /*
@@ -946,14 +1073,77 @@ static void gen_form_linkopts (void)
  */
 static void gen_panel_linkopts (void)
 {
-   printf("   pragma Linker_Options (\"-lpanel\");\n");
+   printf("   pragma Linker_Options (\"-lpanel%s\");\n", model);
 }
 
 static void gen_version_info (void)
 {
-   printf("   NC_Major_Version : constant := %d; --  Major version of ncurses library\n", NCURSES_VERSION_MAJOR);
-   printf("   NC_Minor_Version : constant := %d; --  Minor version of ncurses library\n", NCURSES_VERSION_MINOR);
-   printf("   NC_Version : constant String := %c%d.%d%c;  --  Version of ncurses library\n", '"',NCURSES_VERSION_MAJOR,NCURSES_VERSION_MINOR,'"');
+  static const char* v1 =
+    "   NC_Major_Version : constant := %d; --  Major version of the library\n";
+  static const char* v2 =
+    "   NC_Minor_Version : constant := %d; --  Minor version of the library\n";
+  static const char* v3 =
+    "   NC_Version : constant String := %c%d.%d%c;  --  Version of library\n";
+
+  printf(v1, NCURSES_VERSION_MAJOR);
+  printf(v2, NCURSES_VERSION_MINOR);
+  printf(v3, '"',NCURSES_VERSION_MAJOR,NCURSES_VERSION_MINOR,'"');
+}
+
+static int
+eti_gen(char*buf, int code, const char* name, int* etimin, int* etimax)
+{
+  sprintf(buf,"   E_%-16s : constant Eti_Error := %d;\n",name,code);
+  if (code < *etimin)
+    *etimin = code;
+  if (code > *etimax)
+    *etimax = code;
+  return strlen(buf);
+}
+
+#define GEN_OFFSET(member,itype)                                   \
+  if (sizeof(((WINDOW*)0)->member)==sizeof(itype)) {               \
+    o = offsetof(WINDOW, member);                                  \
+    if ((o%sizeof(itype) == 0)) {                                  \
+       printf("   Offset%-*s : constant Natural := %2d; --  %s\n", \
+              8, #member, o/sizeof(itype),#itype);                 \
+    }                                                              \
+  }
+  
+static void
+gen_offsets(void)
+{
+  int o;
+  const char* s_bool = "";
+
+  GEN_OFFSET(_maxy,short);
+  GEN_OFFSET(_maxx,short);
+  GEN_OFFSET(_begy,short);
+  GEN_OFFSET(_begx,short);
+  GEN_OFFSET(_cury,short);
+  GEN_OFFSET(_curx,short);
+  GEN_OFFSET(_yoffset,short);
+  GEN_OFFSET(_pary,int);
+  GEN_OFFSET(_parx,int);
+  if (sizeof(bool) == sizeof(char)) {
+    GEN_OFFSET(_scroll,char);
+    s_bool = "char";
+  } else if (sizeof(bool) == sizeof(short)) {
+    GEN_OFFSET(_scroll,short);
+    s_bool = "short";
+  } else if (sizeof(bool) == sizeof(int)) {
+    GEN_OFFSET(_scroll,int);
+    s_bool = "int";
+  }
+  printf("   Sizeof%-*s : constant Natural := %2d; --  %s\n",
+	 8, "_bool",sizeof(bool),"bool");
+  /* In ncurses _maxy and _maxx needs an offset for the "public"
+   * value
+   */
+  printf("   Offset%-*s : constant Natural := %2d; --  %s\n",
+	 8, "_XY",1,"int");
+  printf("\n");
+  printf("   type Curses_Bool is mod 2 ** Interfaces.C.%s'Size;\n",s_bool);
 }
 
 /*
@@ -964,6 +1154,7 @@ static void gen_version_info (void)
  *   M - Menus
  *   F - Forms
  *   P - Pointer Device (Mouse)
+ *   E - ETI base definitions
  *
  * The second character then denotes the specific output that should be
  * generated for the selected facility.
@@ -976,11 +1167,13 @@ int main(int argc, char *argv[])
   if (*s == 0x78)
     little_endian = 1;
 
-  if (argc!=3)
+  if (argc!=4)
     exit(1);
+  model = *++argv;
 
   switch(argv[1][0])
     {
+      /* ---------------------------------------------------------------*/   
     case 'B': /* The Base facility */
       switch(argv[2][0])
 	{
@@ -995,6 +1188,12 @@ int main(int argc, char *argv[])
 	  break;
 	case 'C': /* generate color constants */
 	  gen_color();
+	  break;
+	case 'D': /* generate displacements of fields in WINDOW struct. */
+	  gen_offsets();
+	  break;
+	case 'E': /* generate Mouse Event codes */
+	  gen_mouse_events();
 	  break;
 	case 'M': /* generate constants for the ACS characters */
 	  gen_acs();
@@ -1015,6 +1214,7 @@ int main(int argc, char *argv[])
 	  break;
 	}
       break;
+      /* ---------------------------------------------------------------*/   
     case 'M': /* The Menu facility */
       switch(argv[2][0])
 	{
@@ -1034,6 +1234,7 @@ int main(int argc, char *argv[])
 	  break;
 	}
       break;
+      /* ---------------------------------------------------------------*/   
     case 'F': /* The Form facility */
       switch(argv[2][0])
 	{
@@ -1053,9 +1254,9 @@ int main(int argc, char *argv[])
 	  break;
 	}
       break;
+      /* ---------------------------------------------------------------*/   
     case 'P': /* The Pointer(=Mouse) facility */
-      switch(argv[2][0])
-	{
+      switch(argv[2][0]) {
 	case 'B': /* write some initial comment lines */
 	  mouse_basedefs();
 	  break;
@@ -1069,8 +1270,110 @@ int main(int argc, char *argv[])
 	  break;
 	}
 	break;
+      /* ---------------------------------------------------------------*/   
+    case 'E' : /* chtype size detection */
+      switch(argv[2][0]) {
+      case 'C':
+	{
+	  const char* fmt  = "   type    C_Chtype   is new %s;\n";
+	  const char* afmt = "   type    C_AttrType is new %s;\n";
+
+	  if (sizeof(chtype)==sizeof(int)) {
+	    if (sizeof(int)==sizeof(long))
+	      printf(fmt,"C_ULong");
+	    else
+	      printf(fmt,"C_UInt");
+	  }
+	  else if (sizeof(chtype)==sizeof(long)) {
+	    printf(fmt,"C_ULong");
+	  }
+	  else
+	    printf("Error\n");
+
+	  if (sizeof(attr_t)==sizeof(int)) {
+	    if (sizeof(int)==sizeof(long))
+	      printf(afmt,"C_ULong");
+	    else
+	      printf(afmt,"C_UInt");
+	  }
+	  else if (sizeof(attr_t)==sizeof(long)) {
+	    printf(afmt,"C_ULong");
+	  }
+	  else
+	    printf("Error\n");
+
+	  printf("define(`CF_CURSES_OK',`%d')",OK);
+	  printf("define(`CF_CURSES_ERR',`%d')",ERR);
+	  printf("define(`CF_CURSES_TRUE',`%d')",TRUE);
+	  printf("define(`CF_CURSES_FALSE',`%d')",FALSE);
+	}
+	break;
+      case 'E':
+	{
+	  char* buf  = (char*)malloc(2048);
+	  char* p    = buf;
+	  int etimin = E_OK;
+	  int etimax = E_OK;
+	  if (p) {
+	    p += eti_gen(p, E_OK, "Ok", &etimin, &etimax);
+	    p += eti_gen(p, E_SYSTEM_ERROR,"System_Error", &etimin, &etimax);
+	    p += eti_gen(p, E_BAD_ARGUMENT, "Bad_Argument", &etimin, &etimax);
+	    p += eti_gen(p, E_POSTED, "Posted", &etimin, &etimax);
+	    p += eti_gen(p, E_CONNECTED, "Connected", &etimin, &etimax);
+	    p += eti_gen(p, E_BAD_STATE, "Bad_State", &etimin, &etimax);
+	    p += eti_gen(p, E_NO_ROOM, "No_Room", &etimin, &etimax);
+	    p += eti_gen(p, E_NOT_POSTED, "Not_Posted", &etimin, &etimax);
+	    p += eti_gen(p, E_UNKNOWN_COMMAND,
+			 "Unknown_Command", &etimin, &etimax);
+	    p += eti_gen(p, E_NO_MATCH, "No_Match", &etimin, &etimax);
+	    p += eti_gen(p, E_NOT_SELECTABLE,
+			 "Not_Selectable", &etimin, &etimax);
+	    p += eti_gen(p, E_NOT_CONNECTED,
+			 "Not_Connected", &etimin, &etimax);
+	    p += eti_gen(p, E_REQUEST_DENIED,
+			 "Request_Denied", &etimin, &etimax);
+	    p += eti_gen(p, E_INVALID_FIELD,
+			 "Invalid_Field", &etimin, &etimax);
+	    p += eti_gen(p, E_CURRENT,
+			 "Current", &etimin, &etimax);
+	  }
+	  printf("   subtype Eti_Error is C_Int range %d .. %d;\n\n",
+		 etimin,etimax);
+	  printf(buf);
+	}
+	break;
+      default:
+	break;
+      }
+      break;
+      /* ---------------------------------------------------------------*/   
+    case 'V' : /* plain version dump */
+      {
+	switch(argv[2][0]) {
+	case '1': /* major version */
+#ifdef NCURSES_VERSION_MAJOR
+	  printf("%d",NCURSES_VERSION_MAJOR);
+#endif
+	  break;
+	case '2': /* minor version */
+#ifdef NCURSES_VERSION_MINOR
+	  printf("%d",NCURSES_VERSION_MINOR);
+#endif
+	  break;
+	case '3': /* patch level */
+#ifdef NCURSES_VERSION_PATCH
+	  printf("%d",NCURSES_VERSION_PATCH);
+#endif
+	  break;
+	default:
+	  break;
+	}
+      }
+      break;
+      /* ---------------------------------------------------------------*/	
     default:
       break;
     }
   return 0;
 }
+  

@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_spacing.c,v 1.9 1998/02/11 12:13:49 tom Exp $")
+MODULE_ID("$Id: m_spacing.c,v 1.11 1999/05/16 17:28:09 juergen Exp $")
 
 #define MAX_SPC_DESC ((TABSIZE) ? (TABSIZE) : 8)
 #define MAX_SPC_COLS ((TABSIZE) ? (TABSIZE) : 8)

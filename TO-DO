@@ -1,8 +1,11 @@
--- $Id: TO-DO,v 1.38 1997/10/11 14:47:42 tom Exp $
+-- $Id: TO-DO,v 1.39 1998/07/12 00:25:39 tom Exp $
 
 SHORT-TERM TO-DO ITEMS:
 
 Known Problems:
+
+* GNAT does not put libraries in the correct order, so a build only links
+  properly if you use shared libraries since -lncurses is first.
 
 * XPG4 specifies that the enhanced features are not available unless the
   _XOPEN_SOURCE_EXTENDED test macro is defined by the application.  Ncurses uses

@@ -26,10 +26,10 @@
 # authorization.                                                             #
 ##############################################################################
 #
-#  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+#  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 #
 #  Version Control
-#  $Revision: 1.16 $
+#  $Revision: 1.21 $
 #
 .SUFFIXES:
 
@@ -41,8 +41,6 @@ prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
 includedir	= @includedir@
-datadir		= @datadir@
-ticdir		= $(datadir)/terminfo
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -70,8 +68,7 @@ LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 RANLIB		= @RANLIB@
 ################################################################################
-ada_srcdir=../ada_include
-ada_objdir=../ada_objects
+ada_srcdir=../src
 
 LD_FLAGS     = @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS)
 
@@ -79,13 +76,13 @@ ADA          = @cf_ada_compiler@
 ADAFLAGS     = @ADAFLAGS@ -I$(srcdir)
 
 ADAMAKE      = @cf_ada_make@
-ADAMAKEFLAGS = -aI$(srcdir) -aI$(ada_srcdir) -aI$(srcdir)/$(ada_srcdir) -aO$(ada_objdir)
+ADAMAKEFLAGS = -a -A$(srcdir) -A$(ada_srcdir) -A$(srcdir)/$(ada_srcdir)
 
 ALIB         = @cf_ada_package@
 ABASE        = $(ALIB)-curses
 
 CARGS        =-cargs $(ADAFLAGS)
-LARGS        =-largs -L../../lib $(LD_FLAGS)
+LARGS        =-largs -L../../lib $(LD_FLAGS) -lncurses
 
 PROGS        = tour rain
 

@@ -345,29 +345,6 @@ void	*field_userptr(
 		const FIELD *field)
 		{ return(*(void **)0); }
 
-/* ./frm_adabind.c */
-
-#undef _nc_ada_normalize_field_opts
-void	_nc_ada_normalize_field_opts(
-		int	*opt)
-		{ /* void */ }
-
-#undef _nc_ada_normalize_form_opts
-void	_nc_ada_normalize_form_opts(
-		int	*opt)
-		{ /* void */ }
-
-#undef _nc_ada_getvarg
-void	*_nc_ada_getvarg(
-		va_list	*ap)
-		{ return(*(void **)0); }
-
-#undef _nc_get_field
-FIELD	*_nc_get_field(
-		const FORM *frm, 
-		int	idx)
-		{ return(*(FIELD **)0); }
-
 /* ./frm_cursor.c */
 
 #undef pos_form_cursor

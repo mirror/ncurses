@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998 Free Software Foundation, Inc.                        *
+dnl Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey <dickey@clark.net> 1996,1997,1998
 dnl
-dnl $Id: aclocal.m4,v 1.121 1998/02/11 12:13:40 tom Exp $
+dnl $Id: aclocal.m4,v 1.179 1999/10/23 21:49:25 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl ---------------------------------------------------------------------------
@@ -55,6 +55,72 @@ fi
 AC_SUBST(ACPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl This is adapted from the macros 'fp_PROG_CC_STDC' and 'fp_C_PROTOTYPES'
+dnl in the sharutils 4.2 distribution.
+AC_DEFUN([CF_ANSI_CC_CHECK],
+[
+AC_MSG_CHECKING(for ${CC-cc} option to accept ANSI C)
+AC_CACHE_VAL(cf_cv_ansi_cc,[
+cf_cv_ansi_cc=no
+cf_save_CFLAGS="$CFLAGS"
+# Don't try gcc -ansi; that turns off useful extensions and
+# breaks some systems' header files.
+# AIX			-qlanglvl=ansi
+# Ultrix and OSF/1	-std1
+# HP-UX			-Aa -D_HPUX_SOURCE
+# SVR4			-Xc
+# UnixWare 1.2		(cannot use -Xc, since ANSI/POSIX clashes)
+for cf_arg in "-DCC_HAS_PROTOS" \
+	"" \
+	-qlanglvl=ansi \
+	-std1 \
+	"-Aa -D_HPUX_SOURCE +e" \
+	"-Aa -D_HPUX_SOURCE" \
+	-Xc
+do
+	CFLAGS="$cf_save_CFLAGS $cf_arg"
+	AC_TRY_COMPILE(
+[
+#ifndef CC_HAS_PROTOS
+#if !defined(__STDC__) || (__STDC__ != 1)
+choke me
+#endif
+#endif
+],[
+	int test (int i, double x);
+	struct s1 {int (*f) (int a);};
+	struct s2 {int (*f) (double a);};],
+	[cf_cv_ansi_cc="$cf_arg"; break])
+done
+CFLAGS="$cf_save_CFLAGS"
+])
+AC_MSG_RESULT($cf_cv_ansi_cc)
+
+if test "$cf_cv_ansi_cc" != "no"; then
+if test ".$cf_cv_ansi_cc" != ".-DCC_HAS_PROTOS"; then
+	CFLAGS="$CFLAGS $cf_cv_ansi_cc"
+else
+	AC_DEFINE(CC_HAS_PROTOS)
+fi
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl For programs that must use an ANSI compiler, obtain compiler options that
+dnl will make it recognize prototypes.  We'll do preprocessor checks in other
+dnl macros, since tools such as unproto can fake prototypes, but only part of
+dnl the preprocessor.
+AC_DEFUN([CF_ANSI_CC_REQD],
+[AC_REQUIRE([CF_ANSI_CC_CHECK])
+if test "$cf_cv_ansi_cc" = "no"; then
+	AC_ERROR(
+[Your compiler does not appear to recognize prototypes.
+You have the following choices:
+	a. adjust your compiler options
+	b. get an up-to-date compiler
+	c. use a wrapper such as unproto])
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl Test if 'bool' is a builtin type in the configured C++ compiler.  Some
 dnl older compilers (e.g., gcc 2.5.8) don't support 'bool' directly; gcc
 dnl 2.6.3 does, in anticipation of the ANSI C++ standard.
@@ -63,13 +129,16 @@ dnl Treat the configuration-variable specially here, since we're directly
 dnl substituting its value (i.e., 1/0).
 AC_DEFUN([CF_BOOL_DECL],
 [
-AC_MSG_CHECKING([for builtin c++ bool type])
-AC_CACHE_VAL(cf_cv_builtin_bool,[
-	AC_TRY_COMPILE([],[bool x = false],
-		[cf_cv_builtin_bool=1],
-		[cf_cv_builtin_bool=0])
+AC_MSG_CHECKING([for builtin ifelse(AC_LANG,[C],$CC,$CXX) bool type])
+AC_CACHE_VAL(ifelse($1,,cf_cv_builtin_bool,[$1]),[
+	AC_TRY_COMPILE([
+#include <stdio.h>
+#include <sys/types.h>
+],[bool x = false],
+		[ifelse($1,,cf_cv_builtin_bool,[$1])=1],
+		[ifelse($1,,cf_cv_builtin_bool,[$1])=0])
 	])
-if test $cf_cv_builtin_bool = 1
+if test $ifelse($1,,cf_cv_builtin_bool,[$1]) = 1
 then	AC_MSG_RESULT(yes)
 else	AC_MSG_RESULT(no)
 fi
@@ -79,13 +148,17 @@ dnl Test for the size of 'bool' in the configured C++ compiler (e.g., a type).
 dnl Don't bother looking for bool.h, since it's been deprecated.
 AC_DEFUN([CF_BOOL_SIZE],
 [
-AC_MSG_CHECKING([for size of c++ bool])
+AC_MSG_CHECKING([for size of ifelse(AC_LANG,[C],$CC,$CXX) bool])
 AC_CACHE_VAL(cf_cv_type_of_bool,[
 	rm -f cf_test.out
 	AC_TRY_RUN([
 #include <stdlib.h>
 #include <stdio.h>
-#if HAVE_BUILTIN_H
+#if HAVE_GXX_BUILTIN_H
+#include <g++/builtin.h>
+#elif HAVE_GPP_BUILTIN_H
+#include <gpp/builtin.h>
+#elif HAVE_BUILTIN_H
 #include <builtin.h>
 #endif
 main()
@@ -93,7 +166,7 @@ main()
 	FILE *fp = fopen("cf_test.out", "w");
 	if (fp != 0) {
 		bool x = true;
-		if ((-x) >= 0)
+		if ((bool)(-x) >= 0)
 			fputs("unsigned ", fp);
 		if (sizeof(x) == sizeof(int))       fputs("int",  fp);
 		else if (sizeof(x) == sizeof(char)) fputs("char", fp);
@@ -168,47 +241,6 @@ AC_MSG_RESULT($includedir)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl Check for data that is usually declared in <stdio.h> or <errno.h>
-dnl $1 = the name to check
-AC_DEFUN([CF_CHECK_ERRNO],
-[
-AC_MSG_CHECKING([declaration of $1])
-AC_CACHE_VAL(cf_cv_dcl_$1,[
-    AC_TRY_COMPILE([
-#include <stdio.h>
-#include <sys/types.h>
-#include <errno.h> ],
-    [long x = (long) $1],
-    [eval 'cf_cv_dcl_'$1'=yes'],
-    [eval 'cf_cv_dcl_'$1'=no]')])
-eval 'cf_result=$cf_cv_dcl_'$1
-AC_MSG_RESULT($cf_result)
-
-# It's possible (for near-UNIX clones) that the data doesn't exist
-AC_CACHE_VAL(cf_cv_have_$1,[
-if test $cf_result = no ; then
-    eval 'cf_result=DECL_'$1
-    CF_UPPER(cf_result,$cf_result)
-    AC_DEFINE_UNQUOTED($cf_result)
-    AC_MSG_CHECKING([existence of $1])
-        AC_TRY_LINK([
-#undef $1
-extern long $1;
-],
-            [$1 = 2],
-            [eval 'cf_cv_have_'$1'=yes'],
-            [eval 'cf_cv_have_'$1'=no'])
-        eval 'cf_result=$cf_cv_have_'$1
-        AC_MSG_RESULT($cf_result)
-else
-    eval 'cf_cv_have_'$1'=yes'
-fi
-])
-eval 'cf_result=HAVE_'$1
-CF_UPPER(cf_result,$cf_result)
-eval 'test $cf_cv_have_'$1' = yes && AC_DEFINE_UNQUOTED($cf_result)'
-])dnl
-dnl ---------------------------------------------------------------------------
 dnl Check if the terminal-capability database functions are available.  If not,
 dnl ncurses has a much-reduced version.
 AC_DEFUN([CF_CGETENT],[
@@ -234,7 +266,7 @@ dnl Check if we're accidentally using a cache from a different machine.
 dnl Derive the system name, as a check for reusing the autoconf cache.
 dnl
 dnl If we've packaged config.guess and config.sub, run that (since it does a
-dnl better job than uname). 
+dnl better job than uname).
 AC_DEFUN([CF_CHECK_CACHE],
 [
 if test -f $srcdir/config.guess ; then
@@ -258,26 +290,99 @@ if test ".$system_name" != ".$cf_cv_system_name" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl If we're trying to use g++, test if libg++ is installed (a rather common
-dnl problem :-).  If we have the compiler but no library, we'll be able to
-dnl configure, but won't be able to build the c++ demo program.
-AC_DEFUN([CF_CXX_LIBRARY],
+dnl Check for data that is usually declared in <stdio.h> or <errno.h>, e.g.,
+dnl the 'errno' variable.  Define a DECL_xxx symbol if we must declare it
+dnl ourselves.
+dnl
+dnl (I would use AC_CACHE_CHECK here, but it will not work when called in a
+dnl loop from CF_SYS_ERRLIST).
+dnl
+dnl $1 = the name to check
+AC_DEFUN([CF_CHECK_ERRNO],
 [
-cf_cxx_library=unknown
-if test $ac_cv_prog_gxx = yes; then
-	AC_MSG_CHECKING([for libg++])
-	cf_save="$LIBS"
-	LIBS="$LIBS -lg++ -lm"
-	AC_TRY_LINK([
-#include <builtin.h>
-	],
-	[float foo=abs(1.0)],
-	[cf_cxx_library=yes
-	 CXXLIBS="$CXXLIBS -lg++ -lm"],
-	[cf_cxx_library=no])
-	LIBS="$cf_save"
-	AC_MSG_RESULT($cf_cxx_library)
+AC_MSG_CHECKING(if external $1 is declared)
+AC_CACHE_VAL(cf_cv_dcl_$1,[
+    AC_TRY_COMPILE([
+#if HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+#include <stdio.h>
+#include <sys/types.h>
+#include <errno.h> ],
+    [long x = (long) $1],
+    [eval 'cf_cv_dcl_'$1'=yes'],
+    [eval 'cf_cv_dcl_'$1'=no]')
+])
+
+eval 'cf_result=$cf_cv_dcl_'$1
+AC_MSG_RESULT($cf_result)
+
+if test "$cf_result" = no ; then
+    eval 'cf_result=DECL_'$1
+    CF_UPPER(cf_result,$cf_result)
+    AC_DEFINE_UNQUOTED($cf_result)
 fi
+
+# It's possible (for near-UNIX clones) that the data doesn't exist
+CF_CHECK_EXTERN_DATA($1,int)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl Check for existence of external data in the current set of libraries.  If
+dnl we can modify it, it's real enough.
+dnl $1 = the name to check
+dnl $2 = its type
+AC_DEFUN([CF_CHECK_EXTERN_DATA],
+[
+AC_MSG_CHECKING(if external $1 exists)
+AC_CACHE_VAL(cf_cv_have_$1,[
+    AC_TRY_LINK([
+#undef $1
+extern $2 $1;
+],
+    [$1 = 2],
+    [eval 'cf_cv_have_'$1'=yes'],
+    [eval 'cf_cv_have_'$1'=no'])])
+
+eval 'cf_result=$cf_cv_have_'$1
+AC_MSG_RESULT($cf_result)
+
+if test "$cf_result" = yes ; then
+    eval 'cf_result=HAVE_'$1
+    CF_UPPER(cf_result,$cf_result)
+    AC_DEFINE_UNQUOTED($cf_result)
+fi
+
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl Check if the C++ compiler accepts duplicate parameter initialization.  This
+dnl is a late feature for the standard and is not in some recent compilers
+dnl (1999/9/11).
+AC_DEFUN([CF_CPP_PARAM_INIT],
+[
+if test -n "$CXX" ; then
+AC_CACHE_CHECK(if $CXX accepts parameter initialization,cf_cv_cpp_param_init,[
+	AC_LANG_CPLUSPLUS
+	AC_TRY_RUN([
+class TEST {
+private:
+	int value;
+public:
+	TEST(int x = 1);
+	~TEST();
+};
+
+TEST::TEST(int x = 1)	// some compilers do not like second initializer
+{
+	value = x;
+}
+void main() { }
+],
+	[cf_cv_cpp_param_init=yes],
+	[cf_cv_cpp_param_init=no],
+	[cf_cv_cpp_param_init=unknown])
+])
+fi
+test "$cf_cv_cpp_param_init" = yes && AC_DEFINE(CPP_HAS_PARAM_INIT)
 ])dnl
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([CF_DIRS_TO_MAKE],
@@ -300,6 +405,63 @@ AC_DEFUN([CF_ERRNO],
 [
 CF_CHECK_ERRNO(errno)
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl Test for conflicting definitions of exception in gcc 2.8.0, etc., between
+dnl math.h and builtin.h, only for ncurses
+AC_DEFUN([CF_ETIP_DEFINES],
+[
+AC_MSG_CHECKING(for special defines needed for etip.h)
+cf_save_CXXFLAGS="$CXXFLAGS"
+cf_result="none"
+for cf_math in "" MATH_H
+do
+for cf_excp in "" MATH_EXCEPTION
+do
+	CXXFLAGS="$cf_save_CXXFLAGS -I${srcdir}/c++ -I${srcdir}/menu"
+	test -n "$cf_math" && CXXFLAGS="$CXXFLAGS -DETIP_NEEDS_${cf_math}"
+	test -n "$cf_excp" && CXXFLAGS="$CXXFLAGS -DETIP_NEEDS_${cf_excp}"
+AC_TRY_COMPILE([
+#include <etip.h.in>
+],[],[
+	test -n "$cf_math" && AC_DEFINE_UNQUOTED(ETIP_NEEDS_${cf_math})
+	test -n "$cf_excp" && AC_DEFINE_UNQUOTED(ETIP_NEEDS_${cf_excp})
+	cf_result="$cf_math $cf_excp"
+	break
+],[])
+done
+done
+AC_MSG_RESULT($cf_result)
+CXXFLAGS="$cf_save_CXXFLAGS"
+])
+dnl ---------------------------------------------------------------------------
+dnl Check for memmove, or a bcopy that can handle overlapping copy.  If neither
+dnl is found, add our own version of memmove to the list of objects.
+AC_DEFUN([CF_FUNC_MEMMOVE],
+[
+AC_CHECK_FUNC(memmove,,[
+AC_CHECK_FUNC(bcopy,[
+	AC_CACHE_CHECK(if bcopy does overlapping moves,cf_cv_good_bcopy,[
+		AC_TRY_RUN([
+int main() {
+	static char data[] = "abcdefghijklmnopqrstuwwxyz";
+	char temp[40];
+	bcopy(data, temp, sizeof(data));
+	bcopy(temp+10, temp, 15);
+	bcopy(temp+5, temp+15, 10);
+	exit (strcmp(temp, "klmnopqrstuwwxypqrstuwwxyz"));
+}
+		],
+		[cf_cv_good_bcopy=yes],
+		[cf_cv_good_bcopy=no],
+		[cf_cv_good_bcopy=unknown])
+		])
+	],[cf_cv_good_bcopy=no])
+	if test $cf_cv_good_bcopy = yes ; then
+		AC_DEFINE(USE_OK_BCOPY)
+	else
+		AC_DEFINE(USE_MY_MEMMOVE)
+	fi
+])])dnl
 dnl ---------------------------------------------------------------------------
 dnl Test for availability of useful gcc __attribute__ directives to quiet
 dnl compiler warnings.  Though useful, not all are supported -- and contrary
@@ -324,7 +486,7 @@ cat > conftest.i <<EOF
 EOF
 if test -n "$GCC"
 then
-	AC_CHECKING([for gcc __attribute__ directives])
+	AC_CHECKING([for $CC __attribute__ directives])
 	changequote(,)dnl
 cat > conftest.$ac_ext <<EOF
 #line __oline__ "configure"
@@ -351,7 +513,7 @@ EOF
 	do
 		CF_UPPER(CF_ATTRIBUTE,$cf_attribute)
 		cf_directive="__attribute__(($cf_attribute))"
-		echo "checking for gcc $cf_directive" 1>&AC_FD_CC
+		echo "checking for $CC $cf_directive" 1>&AC_FD_CC
 		case $cf_attribute in
 		scanf|printf)
 		cat >conftest.h <<EOF
@@ -394,10 +556,10 @@ then
 	changequote(,)dnl
 	cat > conftest.$ac_ext <<EOF
 #line __oline__ "configure"
-int main(int argc, char *argv[]) { return argv[argc-1] == 0; }
+int main(int argc, char *argv[]) { return (argv[argc-1] == 0) ; }
 EOF
 	changequote([,])dnl
-	AC_CHECKING([for gcc warning options])
+	AC_CHECKING([for $CC warning options])
 	cf_save_CFLAGS="$CFLAGS"
 	EXTRA_CFLAGS="-W -Wall"
 	cf_warn_CONST=""
@@ -427,6 +589,29 @@ fi
 AC_SUBST(EXTRA_CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl Verify that a test program compiles and runs with GNAT
+dnl $cf_ada_make is set to the program that compiles/links
+AC_DEFUN([CF_GNAT_TRY_RUN],
+[
+rm -f conftest*
+cat >>conftest.ads <<CF_EOF
+$1
+CF_EOF
+cat >>conftest.adb <<CF_EOF
+$2
+CF_EOF
+if ( $cf_ada_make conftest 1>&AC_FD_CC 2>&1 ) ; then
+   if ( ./conftest 1>&AC_FD_CC 2>&1 ) ; then
+ifelse($3,,      :,[      $3])
+ifelse($4,,,[   else
+      $4])
+   fi
+ifelse($4,,,[else
+   $4])
+fi
+rm -f conftest*
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl Verify Version of GNAT.
 AC_DEFUN([CF_GNAT_VERSION],
 [
@@ -435,21 +620,67 @@ cf_cv_gnat_version=`$cf_ada_make -v 2>&1 | grep '[0-9].[0-9][0-9]*' |\
   sed -e 's/[^0-9 \.]//g' | $AWK '{print $<<1>>;}'`
 case $cf_cv_gnat_version in
   3.[1-9]*|[4-9].*)
-    ac_cv_prog_gnat_correct=yes
+    cf_cv_prog_gnat_correct=yes
     ;;
   *) echo Unsupported GNAT version $cf_cv_gnat_version. Required is 3.10 or better. Disabling Ada95 binding.
-     ac_cv_prog_gnat_correct=no
+     cf_cv_prog_gnat_correct=no
      ;;
 esac
 case $cf_cv_gnat_version in
   3.1*|[4-9].*)
       cf_compile_generics=generics
+      cf_generic_objects="\$(GENOBJS)"
       ;;
   *)  cf_compile_generics=
+      cf_generic_objects=
       ;;
 esac
 changequote([, ])dnl
 ])
+dnl ---------------------------------------------------------------------------
+dnl If we're trying to use g++, test if libg++ is installed (a rather common
+dnl problem :-).  If we have the compiler but no library, we'll be able to
+dnl configure, but won't be able to build the c++ demo program.
+AC_DEFUN([CF_GPP_LIBRARY],
+[
+cf_cxx_library=unknown
+case $cf_cv_system_name in #(vi
+os2*) #(vi
+	cf_gpp_libname=gpp
+	;;
+*)
+	cf_gpp_libname=g++
+	;;
+esac
+if test $ac_cv_prog_gxx = yes; then
+	AC_MSG_CHECKING([for lib$cf_gpp_libname])
+	cf_save="$LIBS"
+	LIBS="$LIBS -l$cf_gpp_libname -lm"
+	AC_TRY_LINK([
+#include <$cf_gpp_libname/builtin.h>
+	],
+	[//float foo=abs(1.0);
+	 two_arg_error_handler_t foo2 = lib_error_handler],
+	[cf_cxx_library=yes
+	 CXXLIBS="$CXXLIBS -l$cf_gpp_libname -lm"
+	 if test "$cf_gpp_libname" = cpp ; then
+	    AC_DEFINE(HAVE_GPP_BUILTIN_H)
+	 else
+	    AC_DEFINE(HAVE_GXX_BUILTIN_H)
+	 fi],
+	[AC_TRY_LINK([
+#include <builtin.h>
+	],
+	[//float foo=abs(1.0);
+	 two_arg_error_handler_t foo2 = lib_error_handler],
+	[cf_cxx_library=yes
+	 CXXLIBS="$CXXLIBS -l$cf_gpp_libname -lm"
+	 AC_DEFINE(HAVE_BUILTIN_H)],
+	[cf_cxx_library=no])])
+	LIBS="$cf_save"
+	AC_MSG_RESULT($cf_cxx_library)
+fi
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl Insert text into the help-message, for readability, from AC_ARG_WITH.
 AC_DEFUN([CF_HELP_MESSAGE],
@@ -493,6 +724,18 @@ AC_MSG_RESULT($cf_cv_have_isascii)
 test $cf_cv_have_isascii = yes && AC_DEFINE(HAVE_ISASCII)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl Compute the library-prefix for the given host system
+dnl $1 = variable to set
+AC_DEFUN([CF_LIB_PREFIX],
+[
+	case $cf_cv_system_name in
+	os2)	$1=''     ;;
+	*)	$1='lib'  ;;
+	esac
+	LIB_PREFIX=[$]$1
+	AC_SUBST(LIB_PREFIX)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
 dnl subdirectory is a library-source directory, modify the LIBRARIES list in
@@ -525,7 +768,7 @@ do
 				;;
 			*) #(vi
 				cf_item=`echo $cf_libs_to_make |sed -e s/$LIB_NAME/$TINFO_NAME/g`
-				cf_libs_to_make="$cf_libs_to_make $cf_item"
+				cf_libs_to_make="$cf_item $cf_libs_to_make"
 				;;
 			esac
 		fi
@@ -637,10 +880,12 @@ done
 
 cat >> Makefile <<CF_EOF
 
-install.data ::
+install.data \
+uninstall.data ::
 	cd misc && \$(MAKE) \$(CF_MFLAGS) \[$]@
 
-install.man ::
+install.man \
+uninstall.man ::
 	cd man && \$(MAKE) \$(CF_MFLAGS) \[$]@
 
 distclean ::
@@ -739,16 +984,6 @@ done
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl Compute the library-prefix for the given host system
-dnl $1 = variable to set
-AC_DEFUN([CF_LIB_PREFIX],
-[
-	case $cf_cv_system_name in
-	os2)	$1=''     ;;
-	*)	$1='lib'  ;;
-	esac
-])dnl
-dnl ---------------------------------------------------------------------------
 dnl Compute the library-suffix from the given model name
 dnl $1 = model name
 dnl $2 = variable to set
@@ -761,8 +996,15 @@ AC_DEFUN([CF_LIB_SUFFIX],
 	profile) $2='_p.a' ;;
 	shared)
 		case $cf_cv_system_name in
-		openbsd*|netbsd*|freebsd*)
+		openbsd*|freebsd*)
 			$2='.so.$(REL_VERSION)' ;;
+		netbsd*)
+			if test -f /usr/libexec/ld.elf_so; then
+				$2='.so'
+			else
+				$2='.so.$(REL_VERSION)'
+			fi
+			;;
 		hpux*)	$2='.sl'  ;;
 		*)	$2='.so'  ;;
 		esac
@@ -840,47 +1082,120 @@ AC_MSG_RESULT($cf_cv_link_dataonly)
 test $cf_cv_link_dataonly = no && AC_DEFINE(BROKEN_LINKER)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl Most Unix systems have both link and symlink, a few don't have symlink.
+dnl A few non-Unix systems implement symlink, but not link.
+dnl A few non-systems implement neither (or have nonfunctional versions).
+AC_DEFUN([CF_LINK_FUNCS],
+[
+AC_CHECK_FUNCS( \
+	remove \
+	unlink )
+
+if test "$ac_cv_prog_cc_cross" = yes ; then
+	AC_CHECK_FUNCS( \
+		link \
+		symlink )
+else
+	AC_CACHE_CHECK(if link/symlink functions work,cf_cv_link_funcs,[
+		cf_cv_link_funcs=
+		for cf_func in link symlink ; do
+			AC_TRY_RUN([
+#include <sys/types.h>
+#include <sys/stat.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+int main()
+{
+	int fail = 0;
+	char *src = "config.log";
+	char *dst = "conftest.chk";
+	struct stat src_sb;
+	struct stat dst_sb;
+
+	stat(src, &src_sb);
+	fail = ($cf_func("config.log", "conftest.chk") < 0)
+	    || (stat(dst, &dst_sb) < 0)
+	    || (dst_sb.st_mtime != src_sb.st_mtime);
+#ifdef HAVE_UNLINK
+	unlink(dst);
+#else
+	remove(dst);
+#endif
+	exit (fail);
+}
+			],[
+			cf_cv_link_funcs="$cf_cv_link_funcs $cf_func"
+			eval 'ac_cv_func_'$cf_func'=yes'
+			CF_UPPER(cf_FUNC,$cf_func)
+			AC_DEFINE_UNQUOTED(HAVE_$cf_FUNC)],[
+			eval 'ac_cv_func_'$cf_func'=no'],[
+			eval 'ac_cv_func_'$cf_func'=error'])
+		done
+		test -z "$cf_cv_link_funcs" && cf_cv_link_funcs=no
+	])
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl Some 'make' programs support $(MAKEFLAGS), some $(MFLAGS), to pass 'make'
 dnl options to lower-levels.  It's very useful for "make -n" -- if we have it.
-dnl (GNU 'make' does both :-)
+dnl (GNU 'make' does both, something POSIX 'make', which happens to make the
+dnl $(MAKEFLAGS) variable incompatible because it adds the assignments :-)
 AC_DEFUN([CF_MAKEFLAGS],
 [
 AC_MSG_CHECKING([for makeflags variable])
 AC_CACHE_VAL(cf_cv_makeflags,[
 	cf_cv_makeflags=''
-	for cf_option in '$(MFLAGS)' '-$(MAKEFLAGS)'
+	for cf_option in '-$(MAKEFLAGS)' '$(MFLAGS)'
 	do
 		cat >cf_makeflags.tmp <<CF_EOF
 all :
-	echo '.$cf_option'
+	@ echo '.$cf_option'
 CF_EOF
-		set cf_result=`${MAKE-make} -f cf_makeflags.tmp 2>/dev/null`
-		if test "$cf_result" != "."
-		then
-			cf_cv_makeflags=$cf_option
+		cf_result=`${MAKE-make} -k -f cf_makeflags.tmp 2>/dev/null`
+		case "$cf_result" in
+		.*k)
+			cf_result=`${MAKE-make} -k -f cf_makeflags.tmp CC=cc 2>/dev/null`
+			case "$cf_result" in
+			.*CC=*)	cf_cv_makeflags=
+				;;
+			*)	cf_cv_makeflags=$cf_option
+				;;
+			esac
 			break
-		fi
+			;;
+		*)	echo no match "$cf_result"
+			;;
+		esac
 	done
 	rm -f cf_makeflags.tmp])
 AC_MSG_RESULT($cf_cv_makeflags)
 AC_SUBST(cf_cv_makeflags)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl Try to determine if the man-pages on the system are compressed, and if
-dnl so, what format is used.  Use this information to construct a script that
-dnl will install man-pages.
-AC_DEFUN([CF_MAN_PAGES],
-[AC_MSG_CHECKING(format of man-pages)
+dnl Option to allow user to override automatic configuration of manpage format.
+dnl There are several special cases.
+AC_DEFUN([CF_MANPAGE_FORMAT],
+[ AC_MSG_CHECKING(format of man-pages)
+
+AC_ARG_WITH(manpage-format,
+	[  --with-manpage-format   specify manpage-format: gzip/compress/BSDI/normal and
+                          optionally formatted, e.g., gzip,formatted],
+	[cf_manpage_form=$withval],
+	[cf_manpage_form=unknown])
+
+case ".$cf_manpage_form" in
+.gzip|.compress|.BSDI|.normal|.formatted) # (vi
+  ;;
+.unknown|.) # (vi
   if test -z "$MANPATH" ; then
     MANPATH="/usr/man:/usr/share/man"
   fi
   # look for the 'date' man-page (it's most likely to be installed!)
   IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  cf_form=unknown
+  cf_manpage_form=unknown
   for cf_dir in $MANPATH; do
     test -z "$cf_dir" && cf_dir=/usr/man
-    cf_rename=""
-    cf_format=no
 changequote({{,}})dnl
     for cf_name in $cf_dir/*/date.[01]* $cf_dir/*/date
 changequote([,])dnl
@@ -888,41 +1203,97 @@ changequote([,])dnl
        cf_test=`echo $cf_name | sed -e 's/*//'`
        if test "x$cf_test" = "x$cf_name" ; then
 	  case "$cf_name" in
-	  *.gz) cf_form=gzip;     cf_name=`basename $cf_name .gz`;;
-	  *.Z)  cf_form=compress; cf_name=`basename $cf_name .Z`;;
-	  *.0)	cf_form=BSDI; cf_format=yes;;
-	  *)    cf_form=cat;;
+	  *.gz) cf_manpage_form=gzip;;
+	  *.Z)  cf_manpage_form=compress;;
+	  *.0)	cf_manpage_form=BSDI,formatted;;
+	  *)    cf_manpage_form=normal;;
 	  esac
 	  break
        fi
     done
-    if test "$cf_form" != "unknown" ; then
+    if test "$cf_manpage_form" != "unknown" ; then
        break
     fi
   done
   IFS="$ac_save_ifs"
+  ;;
+.*) # (vi
+  AC_MSG_WARN(Unexpected manpage-format)
+  ;;
+esac
+
+AC_MSG_RESULT($cf_manpage_form)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl The Debian people have their own naming convention for manpages.  This
+dnl option lets us override the name of the file containing renaming, or
+dnl disable it altogether.
+AC_DEFUN([CF_MANPAGE_RENAMES],
+[
+AC_MSG_CHECKING(for manpage renaming)
+
+AC_ARG_WITH(manpage-renames,
+	[  --with-manpage-renames  specify manpage-renaming],
+	[cf_manpage_renames=$withval],
+	[cf_manpage_renames=yes])
+
+case ".$cf_manpage_renames" in #(vi
+.no) #(vi
+  ;;
+.|.yes)
+  # Debian 'man' program?
+  if test -f /etc/debian_version ; then
+    cf_manpage_renames=`cd $srcdir && pwd`/man/man_db.renames
+  else
+    cf_manpage_renames=no
+  fi
+  ;;
+esac
+
+if test "$cf_manpage_renames" != no ; then
+  if test ! -f $cf_manpage_renames ; then
+    AC_MSG_ERROR(not a filename: $cf_manpage_renames)
+  fi
+
+  test ! -d man && mkdir man
+
+  # Construct a sed-script to perform renaming within man-pages
+  if test -n "$cf_manpage_renames" ; then
+    test ! -d man && mkdir man
+    $srcdir/man/make_sed.sh $cf_manpage_renames >man/edit_man.sed
+  fi
+fi
+
+AC_MSG_RESULT($cf_manpage_renames)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl Try to determine if the man-pages on the system are compressed, and if
+dnl so, what format is used.  Use this information to construct a script that
+dnl will install man-pages.
+AC_DEFUN([CF_MAN_PAGES],
+[
+CF_HELP_MESSAGE(Options to Specify How Manpages are Installed:)
+CF_MANPAGE_FORMAT
+CF_MANPAGE_RENAMES
+
   if test "$prefix" = "NONE" ; then
      cf_prefix="$ac_default_prefix"
   else
      cf_prefix="$prefix"
   fi
 
-  # Debian 'man' program?
-  test -f /etc/debian_version && \
-  cf_rename=`cd $srcdir && pwd`/man/man_db.renames
-
-  test ! -d man && mkdir man
-
-  # Construct a sed-script to perform renaming within man-pages
-  if test -n "$cf_rename" ; then
-    $srcdir/man/make_sed.sh $cf_rename >man/edit_man.sed
-  fi
-  if test $cf_format = yes ; then
+  case "$cf_manpage_form" in # (vi
+  *formatted*) # (vi
     cf_subdir='$mandir/cat'
-  else
+    cf_format=yes
+    ;;
+  *)
     cf_subdir='$mandir/man'
-  fi
+    cf_format=no
+    ;;
+  esac
 
+test ! -d man && mkdir man
 cat >man/edit_man.sh <<CF_EOF
 changequote({{,}})dnl
 #! /bin/sh
@@ -941,9 +1312,9 @@ shift
 mandir=\{{$}}1
 shift
 
-for i in \{{$}}*
-do
-case \$i in
+for i in \{{$}}* ; do
+case \$i in #(vi
+*.orig|*.rej) ;; #(vi
 *.[0-9]*)
 	section=\`expr "\$i" : '.*\\.\\([0-9]\\)[xm]*'\`;
 	if test \$verb = installing ; then
@@ -953,14 +1324,14 @@ case \$i in
 	fi
 	source=\`basename \$i\`
 CF_EOF
-if test -z "$cf_rename" ; then
+if test "$cf_manpage_renames" = no ; then
 cat >>man/edit_man.sh <<CF_EOF
 	target=$cf_subdir\${section}/\$source
 	sed -e "s,@DATADIR@,\$datadir," < \$i >\$TMP
 CF_EOF
 else
 cat >>man/edit_man.sh <<CF_EOF
-	target=\`grep "^\$source" $cf_rename | $AWK '{print \{{$}}2}'\`
+	target=\`grep "^\$source" $cf_manpage_renames | $AWK '{print \{{$}}2}'\`
 	if test -z "\$target" ; then
 		echo '? missing rename for '\$source
 		target="\$source"
@@ -969,16 +1340,14 @@ cat >>man/edit_man.sh <<CF_EOF
 	test \$verb = installing && sed -e "s,@DATADIR@,\$datadir," < \$i | sed -f edit_man.sed >\$TMP
 CF_EOF
 fi
-if test \$verb = installing ; then
 if test $cf_format = yes ; then
 cat >>man/edit_man.sh <<CF_EOF
 	nroff -man \$TMP >\$TMP.out
 	mv \$TMP.out \$TMP
 CF_EOF
 fi
-fi
-case "$cf_form" in
-compress)
+case "$cf_manpage_form" in #(vi
+*compress*) #(vi
 cat >>man/edit_man.sh <<CF_EOF
 	if test \$verb = installing ; then
 	if ( compress -f \$TMP )
@@ -989,7 +1358,7 @@ cat >>man/edit_man.sh <<CF_EOF
 	target="\$target.Z"
 CF_EOF
   ;;
-gzip)
+*gzip*) #(vi
 cat >>man/edit_man.sh <<CF_EOF
 	if test \$verb = installing ; then
 	if ( gzip -f \$TMP )
@@ -1000,7 +1369,7 @@ cat >>man/edit_man.sh <<CF_EOF
 	target="\$target.gz"
 CF_EOF
   ;;
-BSDI)
+*BSDI*)
 cat >>man/edit_man.sh <<CF_EOF
 	# BSDI installs only .0 suffixes in the cat directories
 	target="\`echo \$target|sed -e 's/\.[1-9]\+.\?/.0/'\`"
@@ -1016,11 +1385,11 @@ cat >>man/edit_man.sh <<CF_EOF
 	fi
 	;;
 esac
-done 
+done
 CF_EOF
 changequote([,])dnl
 chmod 755 man/edit_man.sh
-AC_MSG_RESULT($cf_form)
+
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl Compute the object-directory name from the given model name
@@ -1034,23 +1403,49 @@ AC_DEFUN([CF_OBJ_SUBDIR],
 	esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl Within AC_OUTPUT, check if the given file differs from the target, and
-dnl update it if so.  Otherwise, remove the generated file.
-dnl
-dnl Parameters:
-dnl $1 = input, which configure has done substitutions upon
-dnl $2 = target file
-dnl
-AC_DEFUN([CF_OUTPUT_IF_CHANGED],[
-if ( cmp -s $1 $2 2>/dev/null )
-then
-	echo "$2 is unchanged"
-	rm -f $1
-else
-	echo "creating $2"
-	rm -f $2
-	mv $1 $2
-fi
+dnl Check the argument to see that it looks like a pathname.  Rewrite it if it
+dnl begins with one of the prefix/exec_prefix variables, and then again if the
+dnl result begins with 'NONE'.  This is necessary to workaround autoconf's
+dnl delayed evaluation of those symbols.
+AC_DEFUN([CF_PATH_SYNTAX],[
+case ".[$]$1" in #(vi
+./*) #(vi
+  ;;
+.\[$]{*prefix}*) #(vi
+  eval $1="[$]$1"
+  case ".[$]$1" in #(vi
+  .NONE/*)
+    $1=`echo [$]$1 | sed -e s@NONE@$ac_default_prefix@`
+    ;;
+  esac
+  ;; #(vi
+.NONE/*)
+  $1=`echo [$]$1 | sed -e s@NONE@$ac_default_prefix@`
+  ;;
+*)
+  AC_ERROR(expected a pathname)
+  ;;
+esac
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl Compute $PROG_EXT, used for non-Unix ports, such as OS/2 EMX.
+AC_DEFUN([CF_PROG_EXT],
+[
+AC_REQUIRE([CF_CHECK_CACHE])
+PROG_EXT=
+case $cf_cv_system_name in
+os2*)
+    # We make sure -Zexe is not used -- it would interfere with @PROG_EXT@
+    CFLAGS="$CFLAGS -Zmt -D__ST_MT_ERRNO__"
+    CXXFLAGS="$CXXFLAGS -Zmt -D__ST_MT_ERRNO__"
+    LDFLAGS=`echo "$LDFLAGS -Zmt -Zcrtdll" | sed "s/-Zexe//g"`
+    PROG_EXT=".exe"
+    ;;
+cygwin*)
+    PROG_EXT=".exe"
+    ;;
+esac
+AC_SUBST(PROG_EXT)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
@@ -1103,55 +1498,10 @@ case $cf_cv_regex in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl This bypasses the normal autoconf process because we're generating an
-dnl arbitrary number of NEED_xxxx definitions with the CF_HAVE_FUNCS macro. 
-dnl Rather than populate an aclocal.h file with all of those definitions, we do
-dnl it here.
-dnl
-dnl Parameters:
-dnl $1 = input, which configure has done substitutions upon (will delete)
-dnl $2 = target file
-dnl $3 = preamble, if any (a 'here' document)
-dnl $4 = trailer, if any (a 'here' document)
-dnl
-AC_DEFUN([CF_SED_CONFIG_H],[
-cf_config_h=conf$$
-rm -f $cf_config_h
-## PREAMBLE
-ifelse($3,,[
-echo '/* generated by configure-script */' >$cf_config_h
-],[cat >$cf_config_h <<CF_EOF
-$3[]dnl
-CF_EOF])
-## DEFINITIONS
-if test -n "$ac_cv_path_TD_CONFIG" ; then
-	$ac_cv_path_TD_CONFIG $1 |egrep -v '^#' >$cf_config_h
-	$ac_cv_path_TD_CONFIG $1 |egrep '^#' | sort >>$cf_config_h
-else
-grep -v '^ -D' $1 >>$cf_config_h
-changequote(,)dnl
-sed	-e '/^ -D/!d' \
-	-e '/^# /d' \
-	-e 's/ -D/\
-#define /g' \
-	-e 's/\(#define [A-Za-z_][A-Za-z0-9_]*\)=/\1	/g' \
-	-e 's@\\@@g' \
-	$1 | sort >>$cf_config_h
-changequote([,])dnl
-fi
-## TRAILER
-ifelse($4,,,
-[cat >>$cf_config_h <<CF_EOF
-$4[]dnl
-CF_EOF])
-CF_OUTPUT_IF_CHANGED($cf_config_h,$2)
-rm -f $1 $cf_config_h
-])dnl
-dnl ---------------------------------------------------------------------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
 dnl library.
 dnl
-dnl Note: $(LOCAL_LDFLAGS) is used to link executables that will run within the 
+dnl Note: $(LOCAL_LDFLAGS) is used to link executables that will run within the
 dnl build-tree, i.e., by making use of the libraries that are compiled in ../lib
 dnl We avoid compiling-in a ../lib path for the shared library since that can
 dnl lead to unexpected results at runtime.
@@ -1160,6 +1510,9 @@ dnl are compiled in ../../lib
 dnl
 dnl The variable 'cf_cv_do_symlinks' is used to control whether we configure
 dnl to install symbolic links to the rel/abi versions of shared libraries.
+dnl
+dnl The variable 'cf_cv_shlib_version' controls whether we use the rel or abi
+dnl version when making symbolic links.
 dnl
 dnl Some loaders leave 'so_locations' lying around.  It's nice to clean up.
 AC_DEFUN([CF_SHARED_OPTS],
@@ -1171,26 +1524,60 @@ AC_DEFUN([CF_SHARED_OPTS],
 	INSTALL_LIB="-m 644"
 
 	cf_cv_do_symlinks=no
+
+	AC_MSG_CHECKING(if release/abi version should be used for shared libs)
+	AC_ARG_WITH(shlib-version,
+	[  --with-shlib-version=X  Specify rel or abi version for shared libs],
+	[test -z "$withval" && withval=auto
+	case $withval in #(vi
+	yes) #(vi
+		cf_cv_shlib_version=auto
+		;;
+	rel|abi|auto|no) #(vi
+		cf_cv_shlib_version=$withval
+		;;
+	*)
+		AC_ERROR([option value must be one of: rel, abi, auto or no])
+		;;
+	esac
+	],[cf_cv_shlib_version=auto])
+	AC_MSG_RESULT($cf_cv_shlib_version)
+
 	cf_cv_rm_so_locs=no
 
 	case $cf_cv_system_name in
-	hpux*)
+	hpux10.*)
 		# (tested with gcc 2.7.2 -- I don't have c89)
-		if test "${CC}" = "gcc"; then
+		if test -n "$GCC"; then
 			CC_SHARED_OPTS='-fPIC'
 			LD_SHARED_OPTS='-Xlinker +b -Xlinker $(libdir)'
 		else
 			CC_SHARED_OPTS='+Z'
-			LD_SHARED_OPTS='+b $(libdir)'
+			LD_SHARED_OPTS='-Wl,+b,$(libdir)'
 		fi
-		MK_SHARED_LIB='$(LD) -b -o $[@]'
+		MK_SHARED_LIB='$(LD) +b $(libdir) -b +h `basename $[@]` -o $[@]'
+		# HP-UX shared libraries must be executable, and should be
+		# readonly to exploit a quirk in the memory manager.
+		INSTALL_LIB="-m 555"
+		cf_cv_do_symlinks=reverse
+		;;
+	hpux*)
+		# (tested with gcc 2.7.2 -- I don't have c89)
+		if test -n "$GCC"; then
+			CC_SHARED_OPTS='-fPIC'
+			LD_SHARED_OPTS='-Xlinker +b -Xlinker $(libdir)'
+		else
+			CC_SHARED_OPTS='+Z'
+			LD_SHARED_OPTS='-Wl,+b,$(libdir)'
+		fi
+		MK_SHARED_LIB='$(LD) +b $(libdir) -b -o $[@]'
 		# HP-UX shared libraries must be executable, and should be
 		# readonly to exploit a quirk in the memory manager.
 		INSTALL_LIB="-m 555"
 		;;
 	irix*)
 		# tested with IRIX 5.2 and 'cc'.
-		if test "${CC}" = "gcc"; then
+		if test -n "$GCC"; then
 			CC_SHARED_OPTS='-fPIC'
 		else
 			CC_SHARED_OPTS='-KPIC'
@@ -1198,39 +1585,77 @@ AC_DEFUN([CF_SHARED_OPTS],
 		MK_SHARED_LIB='$(LD) -shared -rdata_shared -soname `basename $[@]` -o $[@]'
 		cf_cv_rm_so_locs=yes
 		;;
-	linux*)
+	linux*|gnu*)
 		# tested with Linux 2.0.29 and gcc 2.7.2 (ELF)
-		CC_SHARED_OPTS='-fPIC'
- 		MK_SHARED_LIB='gcc -o $[@].$(REL_VERSION) -L../lib -L\$(libdir) -shared -Wl,-soname,`basename $[@].$(ABI_VERSION)`,-stats,$(SHLIB_LIST)-lc'
+		CC_SHARED_OPTS='-fpic'
 		test $cf_cv_ld_rpath = yes && cf_ld_rpath_opt="-Wl,-rpath,"
 		if test $DFT_LWR_MODEL = "shared" ; then
  			LOCAL_LDFLAGS='-Wl,-rpath,../lib'
  			LOCAL_LDFLAGS2='-Wl,-rpath,../../lib'
 		fi
-		cf_cv_do_symlinks=yes
+		test $cf_cv_shlib_version = auto && cf_cv_shlib_version=rel
+		if test $cf_cv_shlib_version = no ; then
+			MK_SHARED_LIB='$(CC) -shared -Wl,-stats,-lc -o $[@]'
+		else
+			MK_SHARED_LIB='$(CC) -shared -Wl,-soname,`basename $[@].$(ABI_VERSION)`,-stats,-lc -o $[@]'
+		fi
 		;;
-	openbsd*|netbsd*|freebsd*)
+	openbsd2*)
+		CC_SHARED_OPTS='-fpic -DPIC'
+		MK_SHARED_LIB='$(LD) -Bshareable -soname,`basename $[@].$(ABI_VERSION)` -o $[@]'
+		;;
+	openbsd*|freebsd*)
 		CC_SHARED_OPTS='-fpic -DPIC'
 		MK_SHARED_LIB='$(LD) -Bshareable -o $[@]'
+		test $cf_cv_shlib_version = auto && cf_cv_shlib_version=rel
+		;;
+	netbsd*)
+		CC_SHARED_OPTS='-fpic -DPIC'
+		test $cf_cv_ld_rpath = yes && cf_ld_rpath_opt="-Wl,-rpath,"
+		if test $DFT_LWR_MODEL = "shared" && test $cf_cv_ld_rpath = yes ; then
+			LOCAL_LDFLAGS='-Wl,-rpath,../lib'
+			LOCAL_LDFLAGS2='-Wl,-rpath,../../lib'
+			EXTRA_LDFLAGS="-Wl,-rpath,\$(libdir) $EXTRA_LDFLAGS"
+			MK_SHARED_LIB='$(CC) -shared -Wl,-soname,`basename $[@].$(ABI_VERSION)` -o $[@]'
+			test $cf_cv_shlib_version = auto && cf_cv_shlib_version=rel
+		else
+			MK_SHARED_LIB='$(LD) -Bshareable -o $[@]'
+		fi
 		;;
 	osf*|mls+*)
 		# tested with OSF/1 V3.2 and 'cc'
 		# tested with OSF/1 V3.2 and gcc 2.6.3 (but the c++ demo didn't
 		# link with shared libs).
 		CC_SHARED_OPTS=''
- 		MK_SHARED_LIB='$(LD) -o $[@].$(REL_VERSION) -set_version $(ABI_VERSION):$(REL_VERSION) -expect_unresolved "*" -shared -soname `basename $[@].$(ABI_VERSION)`'
+ 		MK_SHARED_LIB='$(LD) -set_version $(REL_VERSION):$(ABI_VERSION) -expect_unresolved "*" -shared -soname `basename $[@]`'
 		test $cf_cv_ld_rpath = yes && cf_ld_rpath_opt="-rpath"
 		case $host_os in
 		osf4*)
  			MK_SHARED_LIB="${MK_SHARED_LIB} -msym"
 			;;
 		esac
+		MK_SHARED_LIB="${MK_SHARED_LIB}"' -o $[@]'
 		if test $DFT_LWR_MODEL = "shared" ; then
  			LOCAL_LDFLAGS='-Wl,-rpath,../lib'
  			LOCAL_LDFLAGS2='-Wl,-rpath,../../lib'
 		fi
-		cf_cv_do_symlinks=yes
 		cf_cv_rm_so_locs=yes
+		;;
+	sco3.2v5*)  # (also uw2* and UW7) hops 13-Apr-98
+		# tested with osr5.0.5
+		if test $ac_cv_prog_gcc = yes; then
+			CC_SHARED_OPTS='-fpic'
+		else
+			CC_SHARED_OPTS='-belf -KPIC'
+		fi
+		MK_SHARED_LIB='$(LD) -dy -G -h `basename [$]@.$(ABI_VERSION)` -o [$]@'
+		if test $cf_cv_ld_rpath = yes ; then
+			# only way is to set LD_RUN_PATH but no switch for it
+			RUN_PATH=$libdir
+		fi
+		test $cf_cv_shlib_version = auto && cf_cv_shlib_version=rel
+		LINK_PROGS='LD_RUN_PATH=$(libdir)'
+		LINK_TESTS='Pwd=`pwd`;LD_RUN_PATH=`dirname $${Pwd}`/lib'
 		;;
 	sunos4*)
 		# tested with SunOS 4.1.1 and gcc 2.7.0
@@ -1239,8 +1664,8 @@ AC_DEFUN([CF_SHARED_OPTS],
 		else
 			CC_SHARED_OPTS='-KPIC'
 		fi
-		MK_SHARED_LIB='$(LD) -assert pure-text -o $[@].$(REL_VERSION)'
-		cf_cv_do_symlinks=yes
+		MK_SHARED_LIB='$(LD) -assert pure-text -o $[@]'
+		test $cf_cv_shlib_version = auto && cf_cv_shlib_version=rel
 		;;
 	solaris2*)
 		# tested with SunOS 5.5.1 (solaris 2.5.1) and gcc 2.7.2
@@ -1249,12 +1674,12 @@ AC_DEFUN([CF_SHARED_OPTS],
 		else
 			CC_SHARED_OPTS='-KPIC'
 		fi
-		MK_SHARED_LIB='$(LD) -dy -G -h `basename $[@].$(ABI_VERSION)` -o $[@].$(REL_VERSION)'
+		MK_SHARED_LIB='$(LD) -dy -G -h `basename $[@].$(ABI_VERSION)` -o $[@]'
 		if test $cf_cv_ld_rpath = yes ; then
 			cf_ld_rpath_opt="-R"
 			EXTRA_LDFLAGS="-R ../lib:\$(libdir) $EXTRA_LDFLAGS"
 		fi
-		cf_cv_do_symlinks=yes
+		test $cf_cv_shlib_version = auto && cf_cv_shlib_version=rel
 		;;
 	unix_sv*)
 		# tested with UnixWare 1.1.2
@@ -1264,6 +1689,28 @@ AC_DEFUN([CF_SHARED_OPTS],
 	*)
 		CC_SHARED_OPTS='unknown'
 		MK_SHARED_LIB='echo unknown'
+		;;
+	esac
+
+	# This works if the last tokens in $MK_SHARED_LIB are the -o target.
+	case "$cf_cv_shlib_version" in #(vi
+	rel|abi)
+		case "$MK_SHARED_LIB" in #(vi
+		*'-o $[@]')
+			if test "$cf_cv_do_symlinks" = reverse ; then
+				AC_ERROR(cannot use --with-shlib-version with this platform)
+			fi
+			if test "$cf_cv_shlib_version" = rel ; then
+				MK_SHARED_LIB="$MK_SHARED_LIB"'.$(REL_VERSION)'
+			else
+				MK_SHARED_LIB="$MK_SHARED_LIB"'.$(ABI_VERSION)'
+			fi
+			cf_cv_do_symlinks=yes
+			;;
+		*)
+			AC_MSG_WARN(ignored --with-shlib-version)
+			;;
+		esac
 		;;
 	esac
 
@@ -1281,6 +1728,8 @@ AC_DEFUN([CF_SHARED_OPTS],
 	AC_SUBST(CC_SHARED_OPTS)
 	AC_SUBST(LD_SHARED_OPTS)
 	AC_SUBST(MK_SHARED_LIB)
+	AC_SUBST(LINK_PROGS)
+	AC_SUBST(LINK_TESTS)
 	AC_SUBST(EXTRA_LDFLAGS)
 	AC_SUBST(LOCAL_LDFLAGS)
 	AC_SUBST(LOCAL_LDFLAGS2)
@@ -1353,19 +1802,24 @@ dnl Check for datatype 'speed_t', which is normally declared via either
 dnl sys/types.h or termios.h
 AC_DEFUN([CF_SPEED_TYPE],
 [
-AC_MSG_CHECKING([for speed_t])
-AC_CACHE_VAL(cf_cv_type_speed_t,[
-	AC_TRY_COMPILE([
-#include <sys/types.h>
-#if HAVE_TERMIOS_H
-#include <termios.h>
-#endif],
-	[speed_t x = 0],
-	[cf_cv_type_speed_t=yes],
-	[cf_cv_type_speed_t=no])
-	])
-AC_MSG_RESULT($cf_cv_type_speed_t)
-test $cf_cv_type_speed_t != yes && AC_DEFINE(speed_t,unsigned)
+AC_MSG_CHECKING(for speed_t)
+OSPEED_INCLUDES=
+AC_TRY_COMPILE([#include <sys/types.h>],
+	[speed_t some_variable = 0],
+	[OSPEED_TYPE=speed_t],
+	[OSPEED_TYPE=unsigned])
+AC_TRY_COMPILE([#include <termios.h>],
+	[speed_t some_variable = 0],
+	[OSPEED_TYPE=speed_t
+	 OSPEED_INCLUDES="#include <termios.h>"],[])
+AC_SUBST(OSPEED_TYPE)
+AC_SUBST(OSPEED_INCLUDES)
+if test "$OSPEED_TYPE" = "unsigned" ; then
+	AC_MSG_RESULT(no)
+	AC_DEFINE(speed_t,unsigned)
+else
+	AC_MSG_RESULT(yes)
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl For each parameter, test if the source-directory exists, and if it contains
@@ -1433,12 +1887,12 @@ do
 	SRC_SUBDIRS="$SRC_SUBDIRS $cf_dir"
 done
 SRC_SUBDIRS="$SRC_SUBDIRS misc test"
-test $cf_cxx_library != no && SRC_SUBDIRS="$SRC_SUBDIRS c++"
+test $cf_with_cxx_binding != no && SRC_SUBDIRS="$SRC_SUBDIRS c++"
 
 ADA_SUBDIRS=
-if test "$ac_cv_prog_gnat_correct" = yes && test -d $srcdir/Ada95; then
+if test "$cf_cv_prog_gnat_correct" = yes && test -d $srcdir/Ada95; then
    SRC_SUBDIRS="$SRC_SUBDIRS Ada95"
-   ADA_SUBDIRS="gen ada_include samples"
+   ADA_SUBDIRS="gen src samples"
 fi
 
 SUB_MAKEFILES=
@@ -1449,10 +1903,39 @@ done
 
 if test -n "$ADA_SUBDIRS"; then
    for cf_dir in $ADA_SUBDIRS
-   do	
+   do
       SUB_MAKEFILES="$SUB_MAKEFILES Ada95/$cf_dir/Makefile"
    done
    AC_SUBST(ADA_SUBDIRS)
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl Check for -lstdc++, which is GNU's standard C++ library.
+AC_DEFUN([CF_STDCPP_LIBRARY],
+[
+if test -n "$GXX" ; then
+case $cf_cv_system_name in #(vi
+os2*) #(vi
+	cf_stdcpp_libname=stdcpp
+	;;
+*)
+	cf_stdcpp_libname=stdc++
+	;;
+esac
+AC_CACHE_CHECK(for library $cf_stdcpp_libname,cf_cv_libstdcpp,[
+	cf_save="$LIBS"
+	LIBS="$LIBS -l$cf_stdcpp_libname -lm"
+AC_TRY_LINK([
+#include <strstream.h>],[
+char buf[80];
+strstreambuf foo(buf, sizeof(buf))
+//destroy foo
+],
+	[cf_cv_libstdcpp=yes],
+	[cf_cv_libstdcpp=no])
+	LIBS="$cf_save"
+])
+test $cf_cv_libstdcpp = yes && CXXLIBS="$CXXLIBS -l$cf_stdcpp_libname"
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -1546,8 +2029,9 @@ AC_SUBST(NCURSES_PATCH)
 dnl We need these values in the generated makefiles
 AC_SUBST(cf_cv_rel_version)
 AC_SUBST(cf_cv_abi_version)
+AC_SUBST(cf_cv_cc_bool_type)
 AC_SUBST(cf_cv_builtin_bool)
-AC_SUBST(cf_cv_type_of_bool)
+AC_SUBST(cf_cv_type_of_bool)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl Check if we can include <sys/time.h> with <sys/select.h>; this breaks on
@@ -1741,24 +2225,33 @@ dnl
 AC_DEFUN([CF_WITH_PATH],
 [AC_ARG_WITH($1,[$2 ](default: ifelse($4,,empty,$4)),,
 ifelse($4,,[withval="${$3}"],[withval="${$3-ifelse($5,,$4,$5)}"]))dnl
-case ".$withval" in #(vi
-./*) #(vi
-  ;;
-.\[$]{*prefix}*) #(vi
-  eval withval="$withval"
-  case ".$withval" in #(vi
-  .NONE/*)
-    withval=`echo $withval | sed -e s@NONE@$ac_default_prefix@`
-    ;;
-  esac
-  ;; #(vi
-.NONE/*)
-  withval=`echo $withval | sed -e s@NONE@$ac_default_prefix@`
-  ;;
-*)
-  AC_ERROR(expected a pathname for $1)
-  ;;
-esac
+CF_PATH_SYNTAX(withval)
 eval $3="$withval"
+AC_SUBST($3)dnl
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl Process an option specifying a list of colon-separated paths.
+dnl
+dnl $1 = option name
+dnl $2 = help-text
+dnl $3 = environment variable to set
+dnl $4 = default value, shown in the help-message, must be a constant
+dnl $5 = default value, if it's an expression & cannot be in the help-message
+dnl
+AC_DEFUN([CF_WITH_PATHLIST],[
+AC_ARG_WITH($1,[$2 ](default: ifelse($4,,empty,$4)),,
+ifelse($4,,[withval="${$3}"],[withval="${$3-ifelse($5,,$4,$5)}"]))dnl
+
+IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
+cf_dst_path=
+for cf_src_path in $withval
+do
+  CF_PATH_SYNTAX(cf_src_path)
+  test -n "$cf_dst_path" && cf_dst_path="${cf_dst_path}:"
+  cf_dst_path="${cf_dst_path}${cf_src_path}"
+done
+IFS="$ac_save_ifs"
+
+eval $3="$cf_dst_path"
 AC_SUBST($3)dnl
 ])dnl

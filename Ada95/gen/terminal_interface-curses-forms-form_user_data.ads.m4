@@ -1,5 +1,5 @@
 --  -*- ada -*-
-define(`HTMLNAME',`terminal_interface-curses-forms-form_user_data_s.html')dnl
+define(`HTMLNAME',`terminal_interface-curses-forms-form_user_data__ads.htm')dnl
 include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --                                                                          --
@@ -36,17 +36,17 @@ include(M4MACRO)dnl
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.8 $
---  Binding Version 00.93
+--  $Revision: 1.12 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 
 generic
    type User is limited private;
    type User_Access is access User;
 package Terminal_Interface.Curses.Forms.Form_User_Data is
-   pragma Preelaborate (Form_User_Data);
+   pragma Preelaborate (Terminal_Interface.Curses.Forms.Form_User_Data);
 
    --  MANPAGE(`form_userptr.3x')
 

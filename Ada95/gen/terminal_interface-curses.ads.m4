@@ -1,5 +1,5 @@
 --  -*- ada -*-
-define(`HTMLNAME',`terminal_interface-curses_s.html')dnl
+define(`HTMLNAME',`terminal_interface-curses__ads.htm')dnl
 include(M4MACRO)------------------------------------------------------------------------------
 --                                                                          --
 --                           GNAT ncurses Binding                           --
@@ -35,17 +35,17 @@ include(M4MACRO)----------------------------------------------------------------
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.15 $
---  Binding Version 00.93
+--  $Revision: 1.26 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Base_Defs')
-with System;
+with System.Storage_Elements;
 with Interfaces.C;   --  We need this for some assertions.
 
 package Terminal_Interface.Curses is
-   pragma Preelaborate (Curses);
+   pragma Preelaborate (Terminal_Interface.Curses);
 include(`Linker_Options')
 include(`Version_Info')
    type Window is private;
@@ -91,7 +91,7 @@ include(`Key_Definitions')
    --  For those who like to use the original key names we produce them were
    --  they differ from the original. Please note that they may differ in
    --  lower/upper case.
-include(`Old_Keys')
+include(`Old_Keys')dnl
 
 ------------------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ include(`Old_Keys')
    --  predefined (see below), although they may not really exist.
 
 include(`Color_Defs')
-   type RGB_Value is range 0 .. Integer (Interfaces.C.Short'Last);
+   type RGB_Value is range 0 .. Integer (Interfaces.C.short'Last);
    for RGB_Value'Size use Interfaces.C.short'Size;
    --  Some system may allow to redefine a color by setting RGB values.
 
@@ -116,15 +116,15 @@ include(`Color_Defs')
    --  the other for the background
 
 include(`Character_Attribute_Set_Rep')
-   --  (n)curses uses half of an integer for attributes.
+   --  (n)curses uses all but the lowes 16 Bits for Attributes.
 
    Normal_Video : constant Character_Attribute_Set := (others => False);
 
    type Attributed_Character is
       record
-         Attr  : Character_Attribute_Set := Normal_Video;
-         Color : Color_Pair := 0;
-         Ch    : Character  := ' ';
+         Attr  : Character_Attribute_Set;
+         Color : Color_Pair;
+         Ch    : Character;
       end record;
    pragma Convention (C, Attributed_Character);
    --  This is the counterpart for the chtype in C.
@@ -133,7 +133,7 @@ include(`AC_Rep')
    Default_Character : constant Attributed_Character
      := (Ch    => Character'First,
          Color => Color_Pair'First,
-         Attr  => Normal_Video);
+         Attr  => (others => False));  --  preelaboratable Normal_Video
 
    type Attributed_String is array (Positive range <>) of Attributed_Character;
    pragma Pack (Attributed_String);
@@ -195,7 +195,7 @@ include(`AC_Rep')
    --  You must use this constants as indices into the ACS_Map array
    --  to get the corresponding attributed character at runtime.
    --
-include(`ACS_Map')
+include(`ACS_Map')dnl
 
    --  MANPAGE(`curs_initscr.3x')
    --  | Not implemented: newterm, set_term, delscreen
@@ -502,6 +502,12 @@ include(`ACS_Map')
      (Win : in Window := Standard_Window) return Color_Pair;
    --  AKA
    pragma Inline (Get_Character_Attribute);
+
+   --  ANCHOR(`wcolor_set()',`Set_Color')
+   procedure Set_Color (Win  : in Window := Standard_Window;
+                        Pair : in Color_Pair);
+   --  AKA
+   pragma Inline (Set_Color);
 
    --  ANCHOR(`wchgat()',`Change_Attributes')
    procedure Change_Attributes
@@ -1138,6 +1144,11 @@ include(`ACS_Map')
    --  AKA
    pragma Inline (Get_Soft_Label_Key_Attributes);
 
+   --  ANCHOR(`slk_color()',`Set_Soft_Label_Key_Color')
+   procedure Set_Soft_Label_Key_Color (Pair : in Color_Pair);
+   --  AKA
+   pragma Inline (Set_Soft_Label_Key_Color);
+
    --  MANPAGE(`keyok.3x')
 
    --  ANCHOR(`keyok()',`Enable_Key')
@@ -1365,7 +1376,13 @@ include(`ACS_Map')
    --  We don't inline this procedure
 
 private
-   type Window is new System.Address;
-   Null_Window : constant Window := Window (System.Null_Address);
+   type Window is new System.Storage_Elements.Integer_Address;
+   Null_Window : constant Window := 0;
+
+   --  The next constants are generated and may be different on your
+   --  architecture.
+   --
+include(`Window_Offsets')dnl
+   Curses_Bool_False : constant Curses_Bool := 0;
 
 end Terminal_Interface.Curses;

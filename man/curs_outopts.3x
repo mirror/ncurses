@@ -1,4 +1,32 @@
-.\" $Id: curs_outopts.3x,v 1.10 1998/02/07 21:56:39 tom Exp $
+.\"***************************************************************************
+.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\"                                                                          *
+.\" Permission is hereby granted, free of charge, to any person obtaining a  *
+.\" copy of this software and associated documentation files (the            *
+.\" "Software"), to deal in the Software without restriction, including      *
+.\" without limitation the rights to use, copy, modify, merge, publish,      *
+.\" distribute, distribute with modifications, sublicense, and/or sell       *
+.\" copies of the Software, and to permit persons to whom the Software is    *
+.\" furnished to do so, subject to the following conditions:                 *
+.\"                                                                          *
+.\" The above copyright notice and this permission notice shall be included  *
+.\" in all copies or substantial portions of the Software.                   *
+.\"                                                                          *
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+.\" IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+.\" DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+.\" OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+.\" THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+.\"                                                                          *
+.\" Except as contained in this notice, the name(s) of the above copyright   *
+.\" holders shall not be used in advertising or otherwise to promote the     *
+.\" sale, use or other dealings in this Software without prior written       *
+.\" authorization.                                                           *
+.\"***************************************************************************
+.\"
+.\" $Id: curs_outopts.3x,v 1.13 1998/12/26 20:02:04 tom Exp $
 .TH curs_outopts 3X ""
 .SH NAME
 \fBclearok\fR, \fBidlok\fR, \fBidcok immedok\fR,
@@ -90,7 +118,7 @@ also necessary to call \fBidlok\fR).
 The \fBnl\fR and \fBnonl\fR routines control whether the underlying display
 device translates the return key into newline on input, and whether it
 translates newline into return and line-feed on output (in either case, the
-call \fBaddch('\n')\fR does the equivalent of return and line feed on the
+call \fBaddch('\\n')\fR does the equivalent of return and line feed on the
 virtual screen).  Initially, these translations do occur.  If you disable them
 using \fBnonl\fR, \fBcurses\fR will be able to make better use of the line-feed
 capability, resulting in faster cursor motion.  Also, \fBcurses\fR will then be
@@ -122,7 +150,7 @@ time.
 
 The XSI Curses standard does not mention that the cursor should be
 made invisible as a side-effect of \fBleaveok\fR.
-SVr4 curses does this.
+SVr4 curses documentation does this, but the code does not.
 .SH NOTES
 Note that \fBclearok\fR, \fBleaveok\fR, \fBscrollok\fR, \fBidcok\fR, \fBnl\fR,
 \fBnonl\fR and \fBsetscrreg\fR may be macros.

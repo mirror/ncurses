@@ -9,11 +9,11 @@
  *****************************************************************************/
 
 /*
- * Compile this with the command `cc -O blue.c -lcurses -o blue'. For best
- * results, use the portable freeware ncurses(3) library.  On non-Intel
- * machines, SVr4 curses is just as good.
+ * Compile this with the command `cc -O blue.c -lcurses -o blue'.  For best
+ * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is
+ * just as good.
  *
- * $Id: blue.c,v 1.15 1997/03/09 00:47:41 tom Exp $
+ * $Id: blue.c,v 1.18 1999/01/17 00:11:56 tom Exp $
  */
 
 #include <test.priv.h>
@@ -78,25 +78,29 @@ static chtype ranks[SUIT_LENGTH][2] =
    Color values should not be or'ed in. This
    only works, because the characters used here
    are plain and have no color attribute themselves. */
+#ifdef COLOR_PAIR
+#define OR_COLORS(value,pair) ((value) | COLOR_PAIR(pair))
+#else
+#define OR_COLORS(value,pair) (value)
+#endif
+
+#define PC_COLORS(value,pair) (OR_COLORS(value,pair) | A_ALTCHARSET)
+
 static chtype letters[4] =
 {
-#ifdef COLOR_PAIR
-    'h' | COLOR_PAIR(RED_ON_WHITE),	/* hearts */
-    's' | COLOR_PAIR(BLACK_ON_WHITE),	/* spades */
-    'd' | COLOR_PAIR(RED_ON_WHITE),	/* diamonds */
-    'c' | COLOR_PAIR(BLACK_ON_WHITE),	/* clubs */
-#endif
+    OR_COLORS('h', RED_ON_WHITE),	/* hearts */
+    OR_COLORS('s', BLACK_ON_WHITE),	/* spades */
+    OR_COLORS('d', RED_ON_WHITE),	/* diamonds */
+    OR_COLORS('c', BLACK_ON_WHITE),	/* clubs */
 };
 
 #if defined(__i386__)
 static chtype glyphs[] =
 {
-#ifdef COLOR_PAIR
-    '\003' | A_ALTCHARSET | COLOR_PAIR(RED_ON_WHITE),	/* hearts */
-    '\006' | A_ALTCHARSET | COLOR_PAIR(BLACK_ON_WHITE),	/* spades */
-    '\004' | A_ALTCHARSET | COLOR_PAIR(RED_ON_WHITE),	/* diamonds */
-    '\005' | A_ALTCHARSET | COLOR_PAIR(BLACK_ON_WHITE),	/* clubs */
-#endif
+    PC_COLORS('\003', RED_ON_WHITE),	/* hearts */
+    PC_COLORS('\006', BLACK_ON_WHITE),	/* spades */
+    PC_COLORS('\004', RED_ON_WHITE),	/* diamonds */
+    PC_COLORS('\005', BLACK_ON_WHITE),	/* clubs */
 };
 #endif /* __i386__ */
 
@@ -391,15 +395,15 @@ int main(int argc, char *argv[])
     init_pair(BLACK_ON_WHITE,  COLOR_BLACK, COLOR_WHITE);
 
 #ifndef COLOR_PAIR
-    letters[0] = 'h' | COLOR_PAIR(RED_ON_WHITE);	/* hearts */
-    letters[1] = 's' | COLOR_PAIR(BLACK_ON_WHITE);	/* spades */
-    letters[2] = 'd' | COLOR_PAIR(RED_ON_WHITE);	/* diamonds */
-    letters[3] = 'c' | COLOR_PAIR(BLACK_ON_WHITE);	/* clubs */
+    letters[0] = OR_COLORS('h', RED_ON_WHITE);		/* hearts */
+    letters[1] = OR_COLORS('s', BLACK_ON_WHITE);	/* spades */
+    letters[2] = OR_COLORS('d', RED_ON_WHITE);		/* diamonds */
+    letters[3] = OR_COLORS('c', BLACK_ON_WHITE);	/* clubs */
 #if defined(__i386__) && defined(A_ALTCHARSET)
-    glyphs[0]  = '\003' | A_ALTCHARSET | COLOR_PAIR(RED_ON_WHITE);	/* hearts */
-    glyphs[1]  = '\006' | A_ALTCHARSET | COLOR_PAIR(BLACK_ON_WHITE);	/* spades */
-    glyphs[2]  = '\004' | A_ALTCHARSET | COLOR_PAIR(RED_ON_WHITE);	/* diamonds */
-    glyphs[3]  = '\005' | A_ALTCHARSET | COLOR_PAIR(BLACK_ON_WHITE);	/* clubs */
+    glyphs[0]  = PC_COLORS('\003', RED_ON_WHITE);	/* hearts */
+    glyphs[1]  = PC_COLORS('\006', BLACK_ON_WHITE);	/* spades */
+    glyphs[2]  = PC_COLORS('\004', RED_ON_WHITE);	/* diamonds */
+    glyphs[3]  = PC_COLORS('\005', BLACK_ON_WHITE);	/* clubs */
 #endif
 #endif
 

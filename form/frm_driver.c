@@ -27,11 +27,11 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.31 1998/02/11 12:13:45 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.35 1999/05/16 17:20:52 juergen Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -844,7 +844,7 @@ static int Display_Or_Erase_Field(FIELD * field, bool bEraseFlag)
       if (field->opts & O_VISIBLE)
 	Set_Field_Window_Attributes(field,win);
       else
-	wattr_set(win,wattr_get(fwin));
+	wattrset(win,getattrs(fwin));
       werase(win);
     }
 

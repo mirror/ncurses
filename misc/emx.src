@@ -1,4 +1,4 @@
-# $Id: emx.src,v 1.4 1998/02/01 00:03:44 tom Exp $
+# $Id: emx.src,v 1.6 1999/08/15 01:56:54 tom Exp $
 # This is a reformatted copy of the terminfo source for OS/2 EMX from
 # Juan Jose Garcia Ripoll <worm@arrakis.es>.
 # http://www.arrakis.es/~worm/
@@ -209,6 +209,7 @@ ansi.sys|ANSI.SYS 3.1 and later versions,
 # no_color_video to inform the application that standout(1), underline(2)
 # reverse(4) and invisible(64) don't work with color.
 emx-base|DOS special keys,
+	bw,
 	ncv#71,
 	bel=^G,
 	ka1=\0G,
@@ -295,12 +296,13 @@ emx-base|DOS special keys,
 ansi|ANSI.SYS color,
 	blink=\E[5m,
 	bold=\E[1m,
+	kmous=\E[M,
 	rev=\E[7m,
 	rmcup=\E[0m,
 	rmso=\E[0m,
 	rmul@,
 	sgr0=\E[0m,
-	smcup=\E[0;30;47m,
+	smcup=\E[0;37;40m,
 	smso=\E[7m,
 	smul@,
 	use=emx-base,
@@ -309,10 +311,10 @@ window|ANSI.SYS window,
 	bold=\E[1;37;47m,
 	rev=\E[1;37;47m,
 	rmcup=\E[0m,
-	rmso=\E[0;30;47m,
-	rmul=\E[0;30;47m,
-	sgr0=\E[0;30;47m,
-	smcup=\E[0;30;47m,
+	rmso=\E[0;37;40m,
+	rmul=\E[0;37;40m,
+	sgr0=\E[0;37;40m,
+	smcup=\E[0;37;40m,
 	smso=\E[1;37;47m,
 	smul=\E[1;31;47m,
 	use=emx-base,

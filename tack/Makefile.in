@@ -1,53 +1,21 @@
-# $Id: Makefile.in,v 1.6 1998/02/11 12:14:03 tom Exp $
-##############################################################################
-# Copyright (c) 1998 Free Software Foundation, Inc.                          #
-#                                                                            #
-# Permission is hereby granted, free of charge, to any person obtaining a    #
-# copy of this software and associated documentation files (the "Software"), #
-# to deal in the Software without restriction, including without limitation  #
-# the rights to use, copy, modify, merge, publish, distribute, distribute    #
-# with modifications, sublicense, and/or sell copies of the Software, and to #
-# permit persons to whom the Software is furnished to do so, subject to the  #
-# following conditions:                                                      #
-#                                                                            #
-# The above copyright notice and this permission notice shall be included in #
-# all copies or substantial portions of the Software.                        #
-#                                                                            #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
-# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
-# DEALINGS IN THE SOFTWARE.                                                  #
-#                                                                            #
-# Except as contained in this notice, the name(s) of the above copyright     #
-# holders shall not be used in advertising or otherwise to promote the sale, #
-# use or other dealings in this Software without prior written               #
-# authorization.                                                             #
-##############################################################################
+# $Id: Makefile.in,v 1.9 1999/09/18 23:33:48 tom Exp $
+# Makefile for tack
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1997
+# The variable 'srcdir' refers to the source-distribution, and can be set with
+# the configure script by "--srcdir=DIR".
 #
-# Makefile for terminfo/termcap test program
-#
-# The following pre-processor variables may be set.
-# 
-# SELECT	Use this define if your operating system has the select
-#		system call.
-#
-# WAIT_MODE	Use this define if your operating system cannot tell if
-#		a chracter is ready in the input queue.  Funtion keys
-#		must be padded with blanks.
-#
-# 	If generated without pre-processor variables, a terminfo test
-#	program will be generated for System V Release 3.
+# The rules are organized to produce the libraries for the configured models,
+# and the programs with the configured default model.
 
 # turn off _all_ suffix rules; we'll generate our own
 .SUFFIXES:
 
 SHELL		= /bin/sh
 THIS		= Makefile
+
+CF_MFLAGS 	= @cf_cv_makeflags@
+@SET_MAKE@
+x		= @PROG_EXT@
 
 MODEL		= ../@DFT_OBJ_SUBDIR@
 INSTALL_PREFIX	= @INSTALL_PREFIX@
@@ -56,16 +24,22 @@ prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 bindir		= @bindir@
 libdir		= @libdir@
+includedir	= @includedir@
+datadir		= @datadir@
+
+ticdir		= $(datadir)/terminfo
 
 INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+
+AWK		= @AWK@
+LN_S		= @LN_S@
 
 CC		= @CC@
 CFLAGS		= @CFLAGS@
 
 INCDIR		= $(srcdir)/../include
-CPPFLAGS	= -I../tack -I$(srcdir) @CPPFLAGS@ \
-		  -DHAVE_CONFIG_H -DSELECT 
+CPPFLAGS	= -DHAVE_CONFIG_H -I../tack -I$(srcdir) @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
@@ -79,14 +53,12 @@ CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 LD		= @LD@
 LINK		= $(CC)
 LDFLAGS		= @EXTRA_LDFLAGS@ \
-		-L../lib \
-		-L$(libdir) \
-		-lncurses@DFT_ARG_SUFFIX@ @LDFLAGS@ @LD_MODEL@ @LIBS@ @EXTRA_LIBS@
+		@PROG_ARGS@ @LDFLAGS@ @LD_MODEL@ @LIBS@ @EXTRA_LIBS@
 
 LDFLAGS_NORMAL	= $(LDFLAGS)
 LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
 LDFLAGS_PROFILE	= $(LDFLAGS) -pg
-LDFLAGS_SHARED	= $(LDFLAGS) @CC_SHARED_OPTS@ @LD_SHARED_OPTS@
+LDFLAGS_SHARED	= $(LDFLAGS) @CC_SHARED_OPTS@ # @LD_SHARED_OPTS@
 
 LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@)
 
@@ -94,8 +66,37 @@ LINT		= @LINT@
 LINT_OPTS	= @LINT_OPTS@
 LINT_LIBS	= -lncurses @LIBS@
 
-# This would be $(SHARED_OBJS), but make cannot handle this much forward ref.
-TACK_DEPS	= \
+PROGS = tack$x
+
+# Default library, for linking applications
+DEPS_CURSES = ../lib/libncurses@DFT_DEP_SUFFIX@
+
+################################################################################
+all:	$(PROGS)
+
+sources:
+
+install: install.tack
+uninstall: uninstall.tack
+
+# this line simplifies the configure-script
+install.libs:
+uninstall.libs:
+
+install.tack: $(PROGS) $(INSTALL_PREFIX)$(bindir)
+	$(INSTALL_PROGRAM) tack$x    $(INSTALL_PREFIX)$(bindir)/tack$x
+
+uninstall.tack:
+	-@rm -f $(INSTALL_PREFIX)$(bindir)/tack$x
+
+$(INSTALL_PREFIX)$(bindir) :
+	$(srcdir)/../mkinstalldirs $@
+
+#
+# Rules for building tack
+#
+
+DEPS_TACK = \
 	$(MODEL)/ansi.o \
 	$(MODEL)/charset.o \
 	$(MODEL)/color.o \
@@ -113,55 +114,45 @@ TACK_DEPS	= \
 	$(MODEL)/sysdep.o \
 	$(MODEL)/tack.o
 
-TARGET		= tack
+tack$x: $(DEPS_TACK) $(DEPS_CURSES)
+	@ECHO_LINK@ $(LINK) $(DEPS_TACK) $(LDFLAGS_DEFAULT) -o $@
 
-all:	$(TACK_DEPS) $(TARGET) 
+#
+# Utility productions start here
+#
 
-sources:
+tags:
+	ctags *.[ch]
 
-$(TARGET): $(TACK_DEPS)
-	@ echo linking $@ ... ; $(LINK) $(TACK_DEPS) $(LDFLAGS_DEFAULT) -o $@
+TAGS:
+	etags *.[ch]
 
-$(TACK_DEPS): $(srcdir)/tack.h
-
-lint:
-	lint $(C_SRC)
-
-mostlyclean :
-	-rm -f core tags TAGS *~ *.ln *.atac trace
-
-clean :: mostlyclean 
-	rm -f $(TACK_DEPS) $(TARGET) tack.tar tack.tar.gz
+clean ::
+	-rm -f tags TAGS do.tic *~
+	-rm -f $(PROGS)
 
 distclean :: clean
 	-rm -f Makefile
 
-realclean : distclean
+mostlyclean :: clean
 
-# vi tags
-tags: $(C_SRC) $(DIR)/tack.h
-	ctags $(>)
+realclean :: distclean
 
-# emacs tags
-TAGS: $(C_SRC)
-	etags $(C_SRC)
+tack.tar: Makefile.in modules *.[ch] tack.1 HISTORY COPYING
+	tar -cvf tack.tar Makefile.in modules *.[ch] tack.1 HISTORY COPYING
 
-install: $(TARGET)
-	$(INSTALL_PROGRAM) $(TARGET) $(INSTALL_PREFIX)$(bindir)/$(TARGET)
+# These rules are used to allow "make -n" to work on a clean directory-tree
+../include/hashsize.h \
+../include/parametrized.h \
+../include/term.h :
+	cd ../include; $(MAKE) $(CF_MFLAGS)
 
-list: $(srcdir)/tack.h $(C_SRC)
-	for name in $(>) ; \
-	do \
-		ucb cat -n $$name | ucb pr -h "$$name" | ucb lpr ; \
-	done
+$(DEPS_CURSES) :
+	cd ../ncurses; $(MAKE) $(CF_MFLAGS)
 
-#	archive a backup copy
-arch: $(srcdir)/Makefile $(srcdir)/tack.h $(C_SRC)
-	rm -f tack.a
-	ar q tack.a $(>)
+lint:
+	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/clear.c                          $(LINT_LIBS)
 
-tack.tar.gz: tack.tar
-	gzip tack.tar
-
-tack.tar: makefile *.[ch] tack.1 HISTORY
-	tar -cvf tack.tar makefile *.[ch] tack.1 HISTORY
+###############################################################################
+# The remainder of this file is automatically generated during configuration
+###############################################################################

@@ -28,10 +28,10 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1997             *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
  ****************************************************************************/
 
-// $Id: internal.h,v 1.3 1998/02/11 12:13:40 tom Exp $
+// $Id: internal.h,v 1.5 1999/05/16 17:29:25 juergen Exp $
 
 #ifndef _CPLUS_INTERNAL_H
 #define _CPLUS_INTERNAL_H 1

@@ -1,4 +1,4 @@
-# $Id: modules,v 1.13 1998/02/11 12:13:50 tom Exp $
+# $Id: modules,v 1.14 1999/02/18 22:39:04 juergen Exp $
 ##############################################################################
 # Copyright (c) 1998 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -32,7 +32,6 @@
 
 @ base
 # Library objects
-m_adabind	lib		$(srcdir)	$(MENU_PRIV_H)
 m_attribs	lib		$(srcdir)	$(MENU_PRIV_H)
 m_cursor	lib		$(srcdir)	$(MENU_PRIV_H)
 m_driver	lib		$(srcdir)	$(MENU_PRIV_H)

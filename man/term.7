@@ -1,4 +1,32 @@
-.\" $Id: term.7,v 1.7 1997/12/14 01:50:43 tom Exp $
+.\"***************************************************************************
+.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\"                                                                          *
+.\" Permission is hereby granted, free of charge, to any person obtaining a  *
+.\" copy of this software and associated documentation files (the            *
+.\" "Software"), to deal in the Software without restriction, including      *
+.\" without limitation the rights to use, copy, modify, merge, publish,      *
+.\" distribute, distribute with modifications, sublicense, and/or sell       *
+.\" copies of the Software, and to permit persons to whom the Software is    *
+.\" furnished to do so, subject to the following conditions:                 *
+.\"                                                                          *
+.\" The above copyright notice and this permission notice shall be included  *
+.\" in all copies or substantial portions of the Software.                   *
+.\"                                                                          *
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+.\" IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+.\" DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+.\" OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+.\" THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+.\"                                                                          *
+.\" Except as contained in this notice, the name(s) of the above copyright   *
+.\" holders shall not be used in advertising or otherwise to promote the     *
+.\" sale, use or other dealings in this Software without prior written       *
+.\" authorization.                                                           *
+.\"***************************************************************************
+.\"
+.\" $Id: term.7,v 1.11 1999/01/24 02:35:14 Todd.Miller Exp $
 .TH TERM 7
 .ds n 5
 .ds d @DATADIR@/terminfo
@@ -27,7 +55,7 @@ can almost always be avoided by explicitly exporting `vt100' (assuming you
 are in fact using a VT100-superset console, terminal, or terminal emulator.)
 .PP
 In any case, you are free to override the system \fBTERM\fR setting to your
-taste in your shell profile.  The \fBtset\fB(1) utility may be of assistance;
+taste in your shell profile.  The \fBtset\fP(1) utility may be of assistance;
 you can give it a set of rules for deducing or requesting a terminal type based
 on the tty device and baud rate.
 .PP
@@ -36,7 +64,7 @@ custom entry incorporating options (such as visual bell or reverse-video)
 which you wish to override the system default type for your line.
 .PP
 Terminal type descriptions are stored as files of capability data underneath
-\*d.  To browse a list of all terminal names recognized by the system, do 
+\*d.  To browse a list of all terminal names recognized by the system, do
 
 	toe | more
 
@@ -50,7 +78,7 @@ follows:
 where \fIentry-name\fR is the name of the type you wish to examine (and the
 name of its capability file the subdirectory of \*d named for its first
 letter).  This command dumps a capability file in the text format described by
-\fBterminfo\fR(\*n).  
+\fBterminfo\fR(\*n).
 .PP
 The first line of a \fBterminfo\fR(\*n) description gives the names by which
 terminfo knows a terminal, separated by `|' (pipe-bar) characters with the last
@@ -86,7 +114,7 @@ The root name prefix should be followed when appropriate by a model number;
 thus \fBvt100\fR, \fBhp2621\fR, \fBwy50\fR.
 .PP
 The root name for a PC-Unix console type should be the OS name,
-i.e. \fBlinux\fR, \fBbsdos\fR, \fBfreebsd\fB, \fBnetbsd\fR.  It should
+i.e. \fBlinux\fR, \fBbsdos\fR, \fBfreebsd\fR, \fBnetbsd\fR.  It should
 \fInot\fR be \fBconsole\fR or any other generic that might cause confusion in a
 multi-platform environment!  If a model number follows, it should indicate
 either the OS release level or the console driver release level.
@@ -141,13 +169,13 @@ Use visible bell (flash) rather than beep.
 -w
 Wide; terminal is in 132 column mode.
 .PP
-Conventionally, if your terminal type is a variant intended to specify a 
+Conventionally, if your terminal type is a variant intended to specify a
 line height, that suffix should go first.  So, for a hypothetical FuBarCo
 model 2317 terminal in 30-line mode with reverse video, best form would be
 \fBfubar-30-rv\fR (rather than, say, `fubar-rv-30').
 .PP
 Terminal types that are written not as standalone entries, but rather as
-components to be plugged into other entries via \fBuse\fB capabilities,
+components to be plugged into other entries via \fBuse\fP capabilities,
 are distinguished by using embedded plus signs rather than dashes.
 .PP
 Commands which use a terminal type to control display often accept a -T
@@ -167,7 +195,7 @@ tty line initialization (AT&T-like UNIXes).
 /etc/ttys
 tty line initialization (BSD-like UNIXes).
 .SH "SEE ALSO"
-\fBcurses\fR(3X), \fBterminfo\fR(\*n), \fBterm\fR(\*d).
+\fBcurses\fR(3X), \fBterminfo\fR(\*n), \fBterm\fR(\*n).
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:

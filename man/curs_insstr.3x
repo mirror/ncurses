@@ -1,3 +1,32 @@
+.\"***************************************************************************
+.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\"                                                                          *
+.\" Permission is hereby granted, free of charge, to any person obtaining a  *
+.\" copy of this software and associated documentation files (the            *
+.\" "Software"), to deal in the Software without restriction, including      *
+.\" without limitation the rights to use, copy, modify, merge, publish,      *
+.\" distribute, distribute with modifications, sublicense, and/or sell       *
+.\" copies of the Software, and to permit persons to whom the Software is    *
+.\" furnished to do so, subject to the following conditions:                 *
+.\"                                                                          *
+.\" The above copyright notice and this permission notice shall be included  *
+.\" in all copies or substantial portions of the Software.                   *
+.\"                                                                          *
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+.\" OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+.\" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+.\" IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+.\" DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+.\" OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+.\" THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+.\"                                                                          *
+.\" Except as contained in this notice, the name(s) of the above copyright   *
+.\" holders shall not be used in advertising or otherwise to promote the     *
+.\" sale, use or other dealings in this Software without prior written       *
+.\" authorization.                                                           *
+.\"***************************************************************************
+.\"
+.\" $Id: curs_insstr.3x,v 1.10 1998/07/25 20:32:57 Todd.Miller Exp $
 .TH curs_insstr 3X ""
 .SH NAME
 \fBinsstr\fR, \fBinsnstr\fR, \fBwinsstr\fR, \fBwinsnstr\fR,
@@ -38,7 +67,7 @@ to be at every eighth column.  If a character in \fIstr\fR is another
 control character, it is drawn in the \fB^\fR\fIX\fR notation.
 Calling \fBwinch\fR after adding a control character (and moving to
 it, if necessary) does not return the control character, but instead
-returns a character in the the ^-representation of the control character.
+returns a character in the ^-representation of the control character.
 .SH RETURN VALUE
 All routines that return an integer return \fBERR\fR upon failure and OK (SVr4
 specifies only "an integer value other than \fBERR\fR") upon successful

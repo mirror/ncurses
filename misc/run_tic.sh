@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey <dickey@clark.net> 1996
 #
-# $Id: run_tic.sh,v 1.9 1998/02/11 12:13:50 tom Exp $
+# $Id: run_tic.sh,v 1.10 1998/05/31 00:29:34 mooney Exp $
 # This script is used to install terminfo.src using tic.  We use a script
 # because the path checking is too awkward to do in a makefile.
 #
@@ -84,6 +84,16 @@ case "$PATH" in
 *) PATH=../progs:$IP$bindir:$PATH ;;
 esac
 export PATH
+
+#
+# set another env var that doesn't get reset when `shlib' runs, so `shlib' uses
+# the PATH we just set.
+#
+NEWPATH=$PATH
+export NEWPATH
+PROG_BIN_DIR=$IP$bindir
+export PROG_BIN_DIR
+
 TERMINFO=$IP$ticdir ; export TERMINFO
 umask 022
 

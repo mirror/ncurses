@@ -1,5 +1,5 @@
 --  -*- ada -*-
-define(`HTMLNAME',`terminal_interface-curses-mouse_s.html')dnl
+define(`HTMLNAME',`terminal_interface-curses-mouse__ads.htm')dnl
 include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --                                                                          --
@@ -36,16 +36,16 @@ include(M4MACRO)dnl
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+--  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.12 $
---  Binding Version 00.93
+--  $Revision: 1.19 $
+--  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Mouse_Base_Defs')
 with System;
 
 package Terminal_Interface.Curses.Mouse is
-   pragma Preelaborate (Mouse);
+   pragma Preelaborate (Terminal_Interface.Curses.Mouse);
 
    --  MANPAGE(`curs_mouse.3x')
    --  Please note, that in ncurses-1.9.9e documentation mouse support
@@ -64,11 +64,21 @@ package Terminal_Interface.Curses.Mouse is
                          Shift,    -- Shift Key
                          Alt);     -- ALT Key
 
+   subtype Real_Buttons  is Mouse_Button range Left .. Button4;
+   subtype Modifier_Keys is Mouse_Button range Control .. Alt;
+
    type Button_State is (Released,
                          Pressed,
                          Clicked,
                          Double_Clicked,
                          Triple_Clicked);
+
+   type Button_States is array (Button_State) of Boolean;
+   pragma Pack (Button_States);
+
+   All_Clicks : constant Button_States := (Clicked .. Triple_Clicked => True,
+                                           others => False);
+   All_States : constant Button_States := (others => True);
 
    type Mouse_Event is private;
 
@@ -78,22 +88,32 @@ package Terminal_Interface.Curses.Mouse is
    --  Return true if a mouse device is supported, false otherwise.
 
    procedure Register_Reportable_Event
-     (B    : in Mouse_Button;
-      S    : in Button_State;
-      Mask : in out Event_Mask);
+     (Button : in Mouse_Button;
+      State  : in Button_State;
+      Mask   : in out Event_Mask);
    --  Stores the event described by the button and the state in the mask.
    --  Before you call this the first time, you should init the mask
    --  with the Empty_Mask constant
    pragma Inline (Register_Reportable_Event);
 
+   procedure Register_Reportable_Events
+     (Button : in Mouse_Button;
+      State  : in Button_States;
+      Mask   : in out Event_Mask);
+   --  Register all events described by the Button and the State bitmap.
+   --  Before you call this the first time, you should init the mask
+   --  with the Empty_Mask constant
+
    --  ANCHOR(`mousemask()',`Start_Mouse')
+   --  There is one difference to mousmask(): we return the value of the
+   --  old mask, that means the event mask value before this call.
    function Start_Mouse (Mask : Event_Mask := All_Events)
                          return Event_Mask;
    --  AKA
    pragma Inline (Start_Mouse);
 
-   procedure End_Mouse;
-   --  Terminates the mouse
+   procedure End_Mouse (Mask : in Event_Mask := No_Events);
+   --  Terminates the mouse, restores the specified event mask
    pragma Inline (End_Mouse);
 
    --  ANCHOR(`getmouse()',`Get_Mouse')
@@ -128,14 +148,12 @@ package Terminal_Interface.Curses.Mouse is
    pragma Inline (Mouse_Interval);
 
 private
-   type Event_Mask is new Interfaces.C.int;
-   No_Events  : constant Event_Mask := 0;
-   All_Events : constant Event_Mask := -1;
+   type Event_Mask is new Interfaces.C.unsigned_long;
 
    type Mouse_Event is
       record
          Id      : Integer range Integer (Interfaces.C.short'First) ..
-                                 Integer (Interfaces.C.Short'Last);
+                                 Integer (Interfaces.C.short'Last);
          X, Y, Z : Integer range Integer (Interfaces.C.int'First) ..
                                  Integer (Interfaces.C.int'Last);
          Bstate  : Event_Mask;
@@ -146,5 +164,10 @@ private
 include(`Mouse_Event_Rep')
    Generation_Bit_Order : constant System.Bit_Order := System.M4_BIT_ORDER;
    --  This constant may be different on your system.
+
+include(`Mouse_Events')
+
+   No_Events  : constant Event_Mask := 0;
+   All_Events : constant Event_Mask := ALL_MOUSE_EVENTS;
 
 end Terminal_Interface.Curses.Mouse;

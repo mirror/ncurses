@@ -27,11 +27,11 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
  ****************************************************************************/
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_opts.c,v 1.2 1998/02/11 12:13:44 tom Exp $")
+MODULE_ID("$Id: fld_opts.c,v 1.6 1999/05/16 17:19:06 juergen Exp $")
 
 /*----------------------------------------------------------------------------
   Field-Options manipulation routines
@@ -52,6 +52,7 @@ MODULE_ID("$Id: fld_opts.c,v 1.2 1998/02/11 12:13:44 tom Exp $")
 int set_field_opts(FIELD * field, Field_Options opts)
 {
   int res = E_BAD_ARGUMENT;
+  opts &= ALL_FIELD_OPTS;
   if (!(opts & ~ALL_FIELD_OPTS))
     res = _nc_Synchronize_Options( Normalize_Field(field), opts );
   RETURN(res);
@@ -86,6 +87,7 @@ int field_opts_on(FIELD * field, Field_Options opts)
 {
   int res = E_BAD_ARGUMENT;
 
+  opts &= ALL_FIELD_OPTS;
   if (!(opts & ~ALL_FIELD_OPTS))
     {
       Normalize_Field( field );
@@ -110,6 +112,7 @@ int field_opts_off(FIELD  * field, Field_Options opts)
 {
   int res = E_BAD_ARGUMENT;
 
+  opts &= ALL_FIELD_OPTS;
   if (!(opts & ~ALL_FIELD_OPTS))
     {
       Normalize_Field( field );
