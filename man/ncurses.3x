@@ -27,11 +27,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.40 2000/07/08 13:10:31 tom Exp $
+.\" $Id: ncurses.3x,v 1.44 2000/10/08 01:39:26 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ds n 5
-.ds d @DATADIR@/terminfo
+.ds d @TERMINFO@
 .SH NAME
 \fBncurses\fR - CRT screen handling and optimization package
 .SH SYNOPSIS
@@ -214,7 +214,7 @@ addchnstr/\fBcurs_addchstr\fR(3X)
 addchstr/\fBcurs_addchstr\fR(3X)
 addnstr/\fBcurs_addstr\fR(3X)
 addstr/\fBcurs_addstr\fR(3X)
-assume_default_colors/\fBdft_fgbg\fR(3X)*
+assume_default_colors/\fBdefault_colors\fR(3X)*
 attr_get/\fBcurs_attr\fR(3X)
 attr_off/\fBcurs_attr\fR(3X)
 attr_on/\fBcurs_attr\fR(3X)
@@ -447,7 +447,7 @@ unctrl/\fBcurs_util\fR(3X)
 ungetch/\fBcurs_getch\fR(3X)
 ungetmouse/\fBcurs_mouse\fR(3X)*
 untouchwin/\fBcurs_touch\fR(3X)
-use_default_colors/\fBdft_fgbg\fR(3X)*
+use_default_colors/\fBdefault_colors\fR(3X)*
 use_env/\fBcurs_util\fR(3X)
 use_extended_names/\fBcurs_extend\fR(3X)*
 vidattr/\fBcurs_terminfo\fR(3X)
@@ -694,7 +694,7 @@ directories listed in the TERMINFO_DIRS symbol
 -
 one or more directories whose names are configured and compiled into the
 ncurses library, e.g.,
-@DATADIR@/terminfo
+@TERMINFO@
 .RE
 .TP 5
 TERMINFO_DIRS
@@ -709,11 +709,16 @@ the TERMPATH symbol.
 This is a list of filenames separated by colons (i.e., ":").
 If the TERMPATH symbol is not set, \fBncurses\fR looks in the files
 /etc/termcap, /usr/share/misc/termcap and $HOME/.termcap, in that order.
+.PP
+The library may be configured to disregard the following variables when the
+current user is the superuser (root), or if the application uses setuid or
+setgid permissions:
+$TERMINFO, $TERMINFO_DIRS, $TERMPATH, as well as $HOME.
 .SH FILES
 .TP 5
 @DATADIR@/tabset
 directory containing initialization files for the terminal capability database
-@DATADIR@/terminfo
+@TERMINFO@
 terminal capability database
 .SH SEE ALSO
 \fBterminfo\fR(\*n) and 3X pages whose names begin "curs_" for detailed routine

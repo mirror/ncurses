@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control
---  $Revision: 1.8 $
+--  $Revision: 1.9 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Numerics.Generic_Elementary_Functions;
@@ -119,7 +119,7 @@ package body Sample.Text_IO_Demo is
       Default_Labels;
       Notepad ("TEXTIO-PAD00");
 
-      Set_Echo_Mode (FALSE);
+      Set_Echo_Mode (False);
       Set_Meta_Mode;
       Set_KeyPad_Mode;
       W := Sub_Window (Standard_Window, Lines - 2, Columns - 2, 1, 1);

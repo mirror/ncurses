@@ -38,13 +38,12 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.23 $
+--  $Revision: 1.24 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Form_Base_Defs')
 with System;
 with Ada.Characters.Latin_1;
-with Interfaces.C;
 
 package Terminal_Interface.Curses.Forms is
    pragma Preelaborate (Terminal_Interface.Curses.Forms);

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.28 2000/05/28 01:40:18 tom Exp $
+# $Id: Makefile.in,v 1.31 2000/10/14 17:57:02 Johnny.C.Lam Exp $
 ##############################################################################
 # Copyright (c) 1998-2000 Free Software Foundation, Inc.                     #
 #                                                                            #
@@ -46,12 +46,14 @@ SHELL		= /bin/sh
 THIS		= Makefile
 
 MODEL		= @DFT_LWR_MODEL@
-INSTALL_PREFIX	= @INSTALL_PREFIX@
+DESTDIR		= @DESTDIR@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
 includedir	= @includedir@
+
+LIBTOOL		= @LIBTOOL@
 
 INSTALL		= @INSTALL@
 INSTALL_LIB	= @INSTALL@ @INSTALL_LIB@
@@ -72,6 +74,7 @@ CPPFLAGS	= @CPPFLAGS@ \
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
+CFLAGS_LIBTOOL	= $(CCFLAGS)
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
@@ -79,7 +82,7 @@ CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
 
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 
-LINK		= $(CC)
+LINK		= $(LIBTOOL) $(CC)
 LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 SHLIB_DIRS	= -L../lib -L$(libdir)
@@ -87,6 +90,8 @@ SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@LIB_SUFFIX@ @SHLIB_LIST@
 
 MK_SHARED_LIB	= @MK_SHARED_LIB@
 
+NCURSES_MAJOR	= @NCURSES_MAJOR@
+NCURSES_MINOR	= @NCURSES_MINOR@
 REL_VERSION	= @cf_cv_rel_version@
 ABI_VERSION	= @cf_cv_abi_version@
 
@@ -108,7 +113,7 @@ install ::	$(AUTO_SRC) $(LIBRARIES)
 
 sources :	$(AUTO_SRC)
 
-$(INSTALL_PREFIX)$(libdir) :
+$(DESTDIR)$(libdir) :
 	$(srcdir)/../mkinstalldirs $@
 
 # make copies to simplify include-paths while still keeping form's include
@@ -127,8 +132,8 @@ FORM_PRIV_H = \
 tags:
 	ctags *.[ch]
 
-TAGS:
-	etags *.[ch]
+@MAKE_UPPER_TAGS@TAGS:
+@MAKE_UPPER_TAGS@	etags *.[ch]
 
 mostlyclean ::
 	-rm -f core tags TAGS *~ *.ln *.atac trace

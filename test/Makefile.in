@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.58 2000/05/28 01:28:39 tom Exp $
+# $Id: Makefile.in,v 1.60 2000/10/14 22:51:19 tom Exp $
 ##############################################################################
 # Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -45,6 +45,8 @@ exec_prefix	= @exec_prefix@
 libdir		= @libdir@
 includedir	= @includedir@
 
+LIBTOOL		= @LIBTOOL@
+
 CC		= @CC@
 CPP		= @CPP@
 
@@ -53,6 +55,7 @@ CPPFLAGS	=  -I../test -I$(srcdir) @CPPFLAGS@ -DHAVE_CONFIG_H
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
+CFLAGS_LIBTOOL	= $(CCFLAGS)
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
@@ -66,10 +69,11 @@ LOCAL_LIBS	= @TEST_DEPS@
 MATH_LIB	= @MATH_LIB@
 
 LD		= @LD@
-LINK		= @LINK_TESTS@ $(CC)
+LINK		= @LINK_TESTS@ $(LIBTOOL) $(CC)
 
 LDFLAGS		= @LD_MODEL@ @TEST_ARGS@ @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ @LDFLAGS@
 
+LDFLAGS_LIBTOOL	= $(LDFLAGS)
 LDFLAGS_NORMAL	= $(LDFLAGS)
 LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
 LDFLAGS_PROFILE	= $(LDFLAGS) -pg
@@ -200,7 +204,7 @@ mostlyclean ::
 	-rm -f core tags TAGS *~ *.ln *.atac trace
 
 clean :: mostlyclean
-	-rm -rf *.o screendump *.lis $(TESTS)
+	-rm -rf *.o screendump *.lis $(TESTS) .libs
 
 distclean :: clean
 	-rm -f Makefile ncurses_cfg.h config.*

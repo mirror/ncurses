@@ -39,7 +39,7 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author: <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> &lt;<A HREF="mailto:juergen.pfeifer@gmx.net">&lt;juergen.pfeifer@gmx.net&gt;</A>&gt; 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.25 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.26 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> System;
@@ -926,7 +926,7 @@
          <b>when</b> <A HREF="terminal_interface-curses__ads.htm#895_36">Non_Blocking</A> =&gt; <A HREF="terminal_interface-curses__adb.htm#918_7">Time</A> := 0;
          <b>when</b> <A HREF="terminal_interface-curses__ads.htm#895_50">Delayed</A>      =&gt;
             <b>if</b> <A HREF="terminal_interface-curses__ads.htm#900_32">Amount</A> = 0 <b>then</b>
-               <b>raise</b> CONSTRAINT_ERROR;
+               <b>raise</b> Constraint_Error;
             <b>end</b> <b>if</b>;
             <A HREF="terminal_interface-curses__adb.htm#918_7">Time</A> := <A HREF="terminal_interface-curses-aux__ads.htm#55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#900_32">Amount</A>);
       <b>end</b> <b>case</b>;

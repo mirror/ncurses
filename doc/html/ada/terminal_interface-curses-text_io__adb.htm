@@ -39,7 +39,7 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author: <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> &lt;<A HREF="mailto:juergen.pfeifer@gmx.net">&lt;juergen.pfeifer@gmx.net&gt;</A>&gt; 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.11 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.12 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>package</b> <b>body</b> Terminal_Interface.Curses.<A HREF="terminal_interface-curses-text_io__ads.htm#44_35">Text_IO</A><FONT COLOR=red><A NAME="41_40"></A></FONT> <b>is</b>
@@ -139,7 +139,7 @@
          <b>if</b> <A HREF="terminal_interface-curses-text_io__adb.htm#128_7">P_Size</A> &gt; 0 <b>and</b> <b>then</b> <A HREF="terminal_interface-curses-text_io__ads.htm#102_13">Line</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#86_24">Win</A>) &gt;= <A HREF="terminal_interface-curses-text_io__adb.htm#128_7">P_Size</A> <b>then</b>
             <A HREF="terminal_interface-curses-text_io__ads.htm#90_14">New_Page</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#86_24">Win</A>);
          <b>else</b>
-            <A HREF="terminal_interface-curses__ads.htm#665_14">Add</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#86_24">Win</A>, Ascii.LF);
+            <A HREF="terminal_interface-curses__ads.htm#665_14">Add</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#86_24">Win</A>, ASCII.LF);
          <b>end</b> <b>if</b>;
       <b>end</b> <b>loop</b>;
    <b>end</b> New_Line;

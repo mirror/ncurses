@@ -23,27 +23,27 @@
 
        If no <I>file</I> is given, then the environment variable <B>TERMCAP</B>
        is used for the filename or entry.  If <B>TERMCAP</B> is  a  full
-       pathname to a file, only the terminal whose name is speci-
-       fied in the environment variable <B>TERM</B>  is  extracted  from
-       that  file.   If  the  environment variable <B>TERMCAP</B> is not
-       set, then the file <B>@DATADIR@/terminfo</B> is read.
+       pathname  to  a  file,  only  the  terminal  whose name is
+       specified in the environment variable  <B>TERM</B>  is  extracted
+       from  that  file.   If the environment variable <B>TERMCAP</B> is
+       not set, then the file <B>/usr/share/terminfo</B> is read.
 
        <B>-v</B>   print out tracing information on  standard  error  as
             the program runs.
 
-       <B>-V</B>   print  out the version of the program in use on stan-
-            dard error and exit.
+       <B>-V</B>   print  out  the  version  of  the  program  in use on
+            standard error and exit.
 
-       <B>-1</B>   cause the fields to print out one to a line.   Other-
-            wise, the fields will be printed several to a line to
-            a maximum width of 60 characters.
+       <B>-1</B>   cause  the  fields  to  print  out  one  to  a  line.
+            Otherwise,  the  fields  will be printed several to a
+            line to a maximum width of 60 characters.
 
        <B>-w</B>   change the output to <I>width</I> characters.
 
 
 </PRE>
 <H2>FILES</H2><PRE>
-       @DATADIR@/terminfo  Compiled     terminal      description
+       /usr/share/terminfo Compiled     terminal      description
                            database.
 
 
@@ -51,8 +51,8 @@
 <H2>TRANSLATIONS FROM NONSTANDARD CAPABILITIES</H2><PRE>
        Some  obsolete nonstandard capabilities will automatically
        be translated into  standard  (SVr4/XSI  Curses)  terminfo
-       capabilities  by  <B>captoinfo</B>.   Whenever one of these auto-
-       matic translations is done,  the  program  will  issue  an
+       capabilities   by   <B>captoinfo</B>.    Whenever  one  of  these
+       automatic translations is done, the program will issue  an
        notification to stderr, inviting the user to check that it
        has not mistakenly translated  a  completely  unknown  and
        random capability and/or syntax error.
@@ -90,9 +90,9 @@
        FC       Sf     Tek     set_foreground
        HS       mh     Iris    enter_dim_mode
 
-       XENIX  termcap  also used to have a set of extension capa-
-       bilities for forms drawing, designed to take advantage  of
-       the IBM PC high-half graphics.  They were as follows:
+       XENIX  termcap  also  used  to  have  a  set  of extension
+       capabilities for forms drawing, designed to take advantage
+       of the IBM PC high-half graphics.  They were as follows:
 
        Cap          Graphic
        -----------------------------
@@ -122,12 +122,12 @@
 
        If  the  single-line  capabilities occur in an entry, they
        will automatically be composed into an <B>acsc</B>  string.   The
-       double-line capabilities and <B>GG</B> are discarded with a warn-
-       ing message.
+       double-line  capabilities  and  <B>GG</B>  are  discarded  with a
+       warning message.
 
-       IBM's AIX has a terminfo facility descended from SVr1 ter-
-       minfo but incompatible with the SVr4 format. The following
-       AIX extensions are automatically translated:
+       IBM's AIX has a  terminfo  facility  descended  from  SVr1
+       terminfo  but  incompatible  with  the  SVr4  format.  The
+       following AIX extensions are automatically translated:
 
         IBM    XSI
        -------------
@@ -138,13 +138,13 @@
        font2   s2ds
        font3   s3ds
 
-       Additionally, the AIX <B>box1</B> capability  will  be  automati-
-       cally translated to an <B>acsc</B> string.
+       Additionally,   the   AIX   <B>box1</B>   capability   will    be
+       automatically translated to an <B>acsc</B> string.
 
-       Hewlett-Packard's  terminfo  library supports two nonstan-
-       dard terminfo capabilities <B>meml</B>  (memory  lock)  and  <B>memu</B>
-       (memory  unlock).   These will be discarded with a warning
-       message.
+       Hewlett-Packard's    terminfo    library    supports   two
+       nonstandard terminfo capabilities <B>meml</B> (memory  lock)  and
+       <B>memu</B>  (memory  unlock).   These  will  be discarded with a
+       warning message.
 
 
 </PRE>

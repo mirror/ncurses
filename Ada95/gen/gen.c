@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Revision: 1.31 $
+    $Revision: 1.32 $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -170,7 +170,7 @@ static void gen_chtype_rep(const char *name)
   chtype_rep("Ch",A_CHARTEXT);
   chtype_rep("Color",A_COLOR);
   chtype_rep("Attr",(A_ATTRIBUTES&~A_COLOR));
-  printf("      end record;\n   for %s'Size use %d;\n",name,8*sizeof(chtype));
+  printf("      end record;\n   for %s'Size use %ld;\n", name, (long)(8*sizeof(chtype)));
   printf("      --  Please note: this rep. clause is generated and may be\n");
   printf("      --               different on your system.\n");
 }
@@ -1103,19 +1103,19 @@ eti_gen(char*buf, int code, const char* name, int* etimin, int* etimax)
   return strlen(buf);
 }
 
-#define GEN_OFFSET(member,itype)                                   \
-  if (sizeof(((WINDOW*)0)->member)==sizeof(itype)) {               \
-    o = offsetof(WINDOW, member);                                  \
-    if ((o%sizeof(itype) == 0)) {                                  \
-       printf("   Offset%-*s : constant Natural := %2d; --  %s\n", \
-              8, #member, o/sizeof(itype),#itype);                 \
-    }                                                              \
+#define GEN_OFFSET(member,itype)                                    \
+  if (sizeof(((WINDOW*)0)->member)==sizeof(itype)) {                \
+    o = offsetof(WINDOW, member);                                   \
+    if ((o%sizeof(itype) == 0)) {                                   \
+       printf("   Offset%-*s : constant Natural := %2ld; --  %s\n", \
+              8, #member, o/sizeof(itype),#itype);                  \
+    }                                                               \
   }
   
 static void
 gen_offsets(void)
 {
-  int o;
+  long o;
   const char* s_bool = "";
 
   GEN_OFFSET(_maxy,short);
@@ -1137,8 +1137,8 @@ gen_offsets(void)
     GEN_OFFSET(_scroll,int);
     s_bool = "int";
   }
-  printf("   Sizeof%-*s : constant Natural := %2d; --  %s\n",
-	 8, "_bool",sizeof(bool),"bool");
+  printf("   Sizeof%-*s : constant Natural := %2ld; --  %s\n",
+	 8, "_bool", (long) sizeof(bool),"bool");
   /* In ncurses _maxy and _maxx needs an offset for the "public"
    * value
    */

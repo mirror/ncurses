@@ -50,13 +50,13 @@
 
    <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_14">Set_Field_Type</A><FONT COLOR=red><A NAME="49_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_30">Fld</A> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_14">Set_Field_Type</A><FONT COLOR=red><A NAME="49_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_30">Fld</A> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                              <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#71_30">Typ</A> : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>)
    <b>is</b>
       <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#63_16">Allocate_Arg</A><FONT COLOR=red><A NAME="52_16"></A></FONT> (<FONT COLOR=red><A NAME="52_30">T</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>'Class)
                              <b>return</b> Argument_Access;
 
-      <b>function</b> <FONT COLOR=red><A NAME="55_16">Set_Fld_Type</A></FONT> (<FONT COLOR=red><A NAME="55_30">F</A></FONT>    : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_30">Fld</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="55_16">Set_Fld_Type</A></FONT> (<FONT COLOR=red><A NAME="55_30">F</A></FONT>    : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_30">Fld</A>;
                              Cft  : C_Field_Type := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#81_13">C_Generic_Type</A>;
                              Arg1 : Argument_Access)
                              <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A>;
@@ -84,7 +84,7 @@
    <b>function</b> <FONT COLOR=red><A NAME="80_13">To_Argument_Access</A></FONT> <b>is</b> <b>new</b> Ada.Unchecked_Conversion
      (System.Address, Argument_Access);
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_13">Generic_Field_Check</A><FONT COLOR=red><A NAME="83_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_34">Fld</A> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_13">Generic_Field_Check</A><FONT COLOR=red><A NAME="83_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_34">Fld</A> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                                  <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#84_34">Usr</A> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A>
    <b>is</b>
       <FONT COLOR=red><A NAME="86_7">Result</A></FONT> : Boolean;
@@ -117,7 +117,7 @@
          T := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#222_13">New_Fieldtype</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_13">Generic_Field_Check</A>'<b>Access</b>,
                              <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#90_13">Generic_Char_Check</A>'<b>Access</b>);
          <b>if</b> T = Null_Field_Type <b>then</b>
-            <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#289_4">Form_Exception</A>;
+            <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#288_4">Form_Exception</A>;
          <b>else</b>
             <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#109_7">Res</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#227_13">Set_Fieldtype_Arg</A> (T,
                                       <A HREF="terminal_interface-curses-forms-field_types__ads.htm#162_13">Make_Arg</A>'<b>Access</b>,

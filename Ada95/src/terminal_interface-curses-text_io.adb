@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package body Terminal_Interface.Curses.Text_IO is
@@ -135,7 +135,7 @@ package body Terminal_Interface.Curses.Text_IO is
          if P_Size > 0 and then Line (Win) >= P_Size then
             New_Page (Win);
          else
-            Add (Win, Ascii.LF);
+            Add (Win, ASCII.LF);
          end if;
       end loop;
    end New_Line;

@@ -35,18 +35,14 @@
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control
---  $Revision: 1.7 $
+--  $Revision: 1.8 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and
 --  then reads the lines up to the next key. Those lines are presented in
 --  a window as help or explanation.
 --
-with Terminal_Interface.Curses;
-
 package Sample.Explanation is
-
-   package Curses renames Terminal_Interface.Curses;
 
    procedure Explain (Key : in String);
    --  Retrieve the text associated with this key and display it.

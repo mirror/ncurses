@@ -1728,6 +1728,11 @@ char	*_tracechtype(
 		chtype	ch)
 		{ return(*(char **)0); }
 
+#undef _nc_retrace_chtype
+attr_t	_nc_retrace_chtype(
+		attr_t	code)
+		{ return(*(attr_t *)0); }
+
 /* ./trace/lib_tracedmp.c */
 
 #undef _tracedump
@@ -1949,11 +1954,6 @@ void	_nc_toggle_attr_off(
 		attr_t	at)
 		{ /* void */ }
 
-#undef _nc_can_clear_with
-int	_nc_can_clear_with(
-		chtype	ch)
-		{ return(*(int *)0); }
-
 #undef _nc_DelCharCost
 int	_nc_DelCharCost(
 		int	count)
@@ -2067,10 +2067,19 @@ int	wresize(
 
 /* ./tinfo/access.c */
 
+#undef _nc_basename
+char	*_nc_basename(
+		char	*path)
+		{ return(*(char **)0); }
+
 #undef _nc_access
 int	_nc_access(
 		const char *path, 
 		int	mode)
+		{ return(*(int *)0); }
+
+#undef _nc_env_access
+int	_nc_env_access(void)
 		{ return(*(int *)0); }
 
 /* ./tinfo/add_tries.c */
@@ -2391,8 +2400,8 @@ void	_nc_init_acs(void)
 #include <termcap.h>
 
 struct speed {
-	speed_t s;
-	int sp;
+    int s;	
+    int sp;	
 };
 
 #undef _nc_baudrate
@@ -2654,17 +2663,19 @@ char	*tgetstr(
 		char	**area)
 		{ return(*(char **)0); }
 
+/* ./tinfo/lib_termname.c */
+
+#undef termname
+char	*termname(void)
+		{ return(*(char **)0); }
+
+/* ./tinfo/lib_tgoto.c */
+
 #undef tgoto
 char	*tgoto(
 		const char *string, 
 		int	x, 
 		int	y)
-		{ return(*(char **)0); }
-
-/* ./tinfo/lib_termname.c */
-
-#undef termname
-char	*termname(void)
 		{ return(*(char **)0); }
 
 /* ./tinfo/lib_ti.c */
@@ -2686,9 +2697,12 @@ char	*tigetstr(
 
 /* ./tinfo/lib_tparm.c */
 
-typedef union {
-	unsigned int	num;
-	char	       *str;
+typedef struct {
+    union {
+	unsigned int num;
+	char *str;
+    } data;
+    bool num_type;
 } stack_frame;
 
 #undef tparm
@@ -2702,7 +2716,7 @@ char	*tparm(
 #undef PC
 char	PC;
 #undef ospeed
-speed_t	ospeed;
+short	ospeed;
 #undef _nc_nulls_sent
 int	_nc_nulls_sent;
 
@@ -2929,6 +2943,39 @@ void	_nc_set_buffer(
 		FILE	*ofp, 
 		bool	buffered)
 		{ /* void */ }
+
+/* ./tinfo/strings.c */
+
+#undef _nc_str_init
+string_desc *_nc_str_init(
+		string_desc *dst, 
+		char	*src, 
+		size_t	len)
+		{ return(*(string_desc **)0); }
+
+#undef _nc_str_null
+string_desc *_nc_str_null(
+		string_desc *dst, 
+		size_t	len)
+		{ return(*(string_desc **)0); }
+
+#undef _nc_str_copy
+string_desc *_nc_str_copy(
+		string_desc *dst, 
+		string_desc *src)
+		{ return(*(string_desc **)0); }
+
+#undef _nc_safe_strcat
+bool	_nc_safe_strcat(
+		string_desc *dst, 
+		const char *src)
+		{ return(*(bool *)0); }
+
+#undef _nc_safe_strcpy
+bool	_nc_safe_strcpy(
+		string_desc *dst, 
+		const char *src)
+		{ return(*(bool *)0); }
 
 /* ./trace/trace_buf.c */
 

@@ -49,13 +49,13 @@
 
    <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#51_14">Set_Field_Type</A><FONT COLOR=red><A NAME="48_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#51_30">Fld</A> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#51_14">Set_Field_Type</A><FONT COLOR=red><A NAME="48_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#51_30">Fld</A> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                              <A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#52_30">Typ</A> : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#44_9">Integer_Field</A>)
    <b>is</b>
       C_Integer_Field_Type : C_Field_Type;
       <b>pragma</b> Import (C, C_Integer_Field_Type, "TYPE_INTEGER");
 
-      <b>function</b> <FONT COLOR=red><A NAME="54_16">Set_Fld_Type</A></FONT> (<FONT COLOR=red><A NAME="54_30">F</A></FONT>    : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A> := <A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#51_30">Fld</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="54_16">Set_Fld_Type</A></FONT> (<FONT COLOR=red><A NAME="54_30">F</A></FONT>    : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A> := <A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#51_30">Fld</A>;
                              Cft  : C_Field_Type := C_Integer_Field_Type;
                              <FONT COLOR=red><A NAME="56_30">Arg1</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#46_12">C_Int</A>;
                              <FONT COLOR=red><A NAME="57_30">Arg2</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#57_12">C_Long_Int</A>;

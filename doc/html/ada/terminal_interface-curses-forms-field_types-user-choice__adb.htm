@@ -53,7 +53,7 @@
    <b>function</b> <FONT COLOR=red><A NAME="49_13">To_Argument_Access</A></FONT> <b>is</b> <b>new</b> Ada.Unchecked_Conversion
      (System.Address, Argument_Access);
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#82_13">Generic_Next</A><FONT COLOR=red><A NAME="52_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#82_27">Fld</A> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#82_13">Generic_Next</A><FONT COLOR=red><A NAME="52_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#82_27">Fld</A> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                           <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#83_27">Usr</A> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#48_12">C_Int</A>
    <b>is</b>
       <FONT COLOR=red><A NAME="55_7">Result</A></FONT> : Boolean;
@@ -65,7 +65,7 @@
       <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#48_12">C_Int</A> (Boolean'Pos (<A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#55_7">Result</A>));
    <b>end</b> Generic_Next;
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#89_13">Generic_Prev</A><FONT COLOR=red><A NAME="64_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#89_27">Fld</A> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#89_13">Generic_Prev</A><FONT COLOR=red><A NAME="64_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#89_27">Fld</A> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                           <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#90_27">Usr</A> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#48_12">C_Int</A>
    <b>is</b>
       <FONT COLOR=red><A NAME="67_7">Result</A></FONT> : Boolean;
@@ -88,7 +88,7 @@
          T := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#222_13">New_Fieldtype</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_13">Generic_Field_Check</A>'<b>Access</b>,
                              <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#90_13">Generic_Char_Check</A>'<b>Access</b>);
          <b>if</b> T = Null_Field_Type <b>then</b>
-            <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#289_4">Form_Exception</A>;
+            <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#288_4">Form_Exception</A>;
          <b>else</b>
             <A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#80_7">Res</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#227_13">Set_Fieldtype_Arg</A> (T,
                                       <A HREF="terminal_interface-curses-forms-field_types__ads.htm#162_13">Make_Arg</A>'<b>Access</b>,

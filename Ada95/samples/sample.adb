@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Text_IO;
@@ -195,7 +195,7 @@ package body Sample is
 
       Init_Keyboard_Handler;
 
-      Set_Echo_Mode (FALSE);
+      Set_Echo_Mode (False);
       Set_Raw_Mode;
       Set_Meta_Mode;
       Set_KeyPad_Mode;

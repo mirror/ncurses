@@ -29,7 +29,7 @@
 #  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 #
 #  Version Control
-#  $Revision: 1.20 $
+#  $Revision: 1.22 $
 #
 .SUFFIXES:
 
@@ -37,13 +37,10 @@ SHELL		= /bin/sh
 THIS		= Makefile
 
 MODEL		= ../../@DFT_OBJ_SUBDIR@
+DESTDIR		= @DESTDIR@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
-libdir		= @libdir@
-includedir	= @includedir@
-datadir		= @datadir@
-ticdir		= $(datadir)/terminfo
 ADA_INCLUDE	= @ADA_INCLUDE@
 
 INSTALL		= @INSTALL@
@@ -192,7 +189,7 @@ distclean :: clean
 
 realclean :: distclean
 
-BASEDEPS=$(ABASE).ads $(srcdir)/$(ABASE)-aux.ads $(srcdir)/$(ABASE).adb
+BASEDEPS=$(ABASE).ads $(ABASE)-aux.ads $(srcdir)/$(ABASE).adb
 
 $(ALIB).o: $(srcdir)/$(ALIB).ads
 	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ALIB).ads

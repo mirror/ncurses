@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.28 2000/08/19 19:15:44 tom Exp $
+# $Id: ncurses_defs,v 1.4 2000/10/08 01:04:00 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,2000 Free Software Foundation, Inc.                     #
+# Copyright (c) 2000 Free Software Foundation, Inc.                          #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -27,49 +27,125 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997
+# See "MKncurses_def.sh" for an explanation.
 #
-# Makefile for ncurses manual pages.
-#
-# NOTE: When you add or rename a man page, make sure you update both
-# the top-level MANIFEST and any man/*.renames files!
+# (hint: don't try to define NDEBUG ;-)
 
-SHELL		= /bin/sh
-
-DESTDIR		= @DESTDIR@
-srcdir		= @srcdir@
-prefix		= @prefix@
-exec_prefix	= @exec_prefix@
-datadir		= @datadir@
-mandir		= @mandir@
-
-INSTALL		= @INSTALL@
-INSTALL_DATA	= @INSTALL_DATA@
-
-all \
-sources:	terminfo.5
-
-$(DESTDIR)$(mandir) :
-	$(srcdir)/../mkinstalldirs $@
-
-EDITARGS = $(DESTDIR)$(mandir) $(srcdir) terminfo.5 $(srcdir)/*.[0-9]*
-
-install install.man : terminfo.5 $(DESTDIR)$(mandir)
-	sh ./edit_man.sh installing $(EDITARGS)
-
-uninstall uninstall.man :
-	-sh ./edit_man.sh removing $(EDITARGS)
-
-# We compose terminfo.5 from the real sources...
-CAPLIST=$(srcdir)/../include/Caps
-terminfo.5: $(srcdir)/terminfo.head $(CAPLIST) $(srcdir)/terminfo.tail Makefile $(srcdir)/MKterminfo.sh
-	sh $(srcdir)/MKterminfo.sh $(srcdir)/terminfo.head $(CAPLIST) $(srcdir)/terminfo.tail >terminfo.5
-
-mostlyclean :
-	-rm -f core tags TAGS *~ *.ln *.atac trace
-
-clean:	mostlyclean
-	rm -f terminfo.5
-
-distclean realclean: clean
-	rm -f Makefile edit_man.*
+BROKEN_LINKER
+BSD_TPUTS
+CC_HAS_INLINE_FUNCS
+CC_HAS_PROTOS
+CPP_HAS_PARAM_INIT
+DECL_ERRNO
+ETIP_NEEDS_MATH_H
+GCC_NORETURN	/* nothing */
+GCC_UNUSED	/* nothing */
+HAVE_BIG_CORE
+HAVE_BSD_CGETENT
+HAVE_BUILTIN_H
+HAVE_DIRENT_H
+HAVE_ERRNO
+HAVE_FCNTL_H
+HAVE_FORM_H
+HAVE_GETCWD
+HAVE_GETEGID
+HAVE_GETEUID
+HAVE_GETOPT_H
+HAVE_GETTIMEOFDAY
+HAVE_GETTTYNAM
+HAVE_GPP_BUILTIN_H
+HAVE_GXX_BUILTIN_H
+HAVE_HAS_KEY
+HAVE_ISASCII
+HAVE_ISSETUGID
+HAVE_LIBDBMALLOC
+HAVE_LIBDMALLOC
+HAVE_LIBFORM
+HAVE_LIBGPM
+HAVE_LIBMENU
+HAVE_LIBPANEL
+HAVE_LIMITS_H
+HAVE_LINK
+HAVE_LOCALE_H
+HAVE_LONG_FILE_NAMES
+HAVE_MEMCCPY
+HAVE_MENU_H
+HAVE_MKSTEMP
+HAVE_NANOSLEEP
+HAVE_NC_ALLOC_H
+HAVE_PANEL_H
+HAVE_POLL
+HAVE_POLL_H
+HAVE_REGEXPR_H_FUNCS
+HAVE_REGEXP_H_FUNCS
+HAVE_REGEX_H_FUNCS
+HAVE_REMOVE
+HAVE_RESIZETERM
+HAVE_SELECT
+HAVE_SETBUF
+HAVE_SETBUFFER
+HAVE_SETVBUF
+HAVE_SIGACTION
+HAVE_SIGVEC
+HAVE_SIZECHANGE
+HAVE_STRDUP
+HAVE_STRSTR
+HAVE_SYMLINK
+HAVE_SYS_BSDTYPES_H
+HAVE_SYS_IOCTL_H
+HAVE_SYS_PARAM_H
+HAVE_SYS_POLL_H
+HAVE_SYS_SELECT_H
+HAVE_SYS_TERMIO_H
+HAVE_SYS_TIMES_H
+HAVE_SYS_TIME_H
+HAVE_SYS_TIME_SELECT
+HAVE_TCGETATTR
+HAVE_TCGETPGRP
+HAVE_TELL
+HAVE_TERMIOS_H
+HAVE_TERMIO_H
+HAVE_TIMES
+HAVE_TTYENT_H
+HAVE_TYPEINFO
+HAVE_TYPE_SIGACTION
+HAVE_UNISTD_H
+HAVE_UNLINK
+HAVE_USE_DEFAULT_COLORS
+HAVE_VFSCANF
+HAVE_VSNPRINTF
+HAVE_VSSCANF
+HAVE_WORKING_POLL
+HAVE_WRESIZE
+MIXEDCASE_FILENAMES
+NCURSES_EXPANDED
+NCURSES_EXT_FUNCS
+NCURSES_NOMACROS
+NCURSES_NO_PADDING
+NDEBUG
+NEED_PTEM_H
+NO_LEAKS
+PURE_TERMINFO
+RETSIGTYPE
+STDC_HEADERS
+SVR4_ACTION
+SVR4_TERMIO
+SYSTEM_NAME	"unknown"
+TERMINFO	"none"
+TYPEOF_CHTYPE
+USE_COLORFGBG
+USE_DATABASE
+USE_GETCAP
+USE_GETCAP_CACHE
+USE_HARD_TABS
+USE_HASHMAP
+USE_LINKS
+USE_MY_MEMMOVE
+USE_OK_BCOPY
+USE_RCS_IDS
+USE_SAFE_SPRINTF
+USE_SCROLL_HINTS
+USE_SIGWINCH
+USE_SYMLINKS
+USE_WIDEC_SUPPORT
+USE_XMC_SUPPORT

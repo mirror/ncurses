@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_trace.3x,v 1.2 2000/07/08 12:42:51 tom Exp $
+.\" $Id: curs_trace.3x,v 1.3 2000/07/29 16:34:24 tom Exp $
 .TH curs_trace 3X ""
 .SH NAME
 \fB_tracef\fR,
@@ -121,6 +121,9 @@ trace per-character calls.
 .TP 5
 TRACE_DATABASE
 trace read/write of terminfo/termcap data.
+.TP 5
+TRACE_ATTRS
+trace changes to video attributes and colors.
 .TP 5
 TRACE_MAXIMUM
 maximum trace level, enables all of the separate trace features.

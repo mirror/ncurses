@@ -29,12 +29,14 @@
 #  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 #
 #  Version Control
-#  $Revision: 1.24 $
+#  $Revision: 1.25 $
 #
 .SUFFIXES:
 
 SHELL		= /bin/sh
 THIS		= Makefile
+
+x		= @PROG_EXT@
 
 srcdir		= @srcdir@
 prefix		= @prefix@
@@ -96,7 +98,7 @@ TOUR_OBJS    =	tour.o sample.o sample-curses_demo.o sample-explanation.o 	\
 
 RAIN_OBJS    =	rain.o status.o
 
-all ::  demo1 rainy_day
+all ::  tour$x rain$x
 	@
 
 sources :
@@ -111,13 +113,13 @@ uninstall \
 uninstall.libs ::
 	@
 
-demo1:	explain.msg
+tour$x :	explain.msg
 	$(ADAMAKE) $(ADAMAKEFLAGS) tour $(CARGS) $(LARGS)
 
 explain.msg:	$(srcdir)/explain.txt
 	cp $(srcdir)/explain.txt $@
 
-rainy_day:
+rain$x :
 	$(ADAMAKE) $(ADAMAKEFLAGS) rain $(CARGS) $(LARGS)
 
 mostlyclean:

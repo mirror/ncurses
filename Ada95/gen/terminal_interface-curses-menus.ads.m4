@@ -38,12 +38,11 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.20 $
+--  $Revision: 1.21 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Menu_Base_Defs')
 with System;
-with Interfaces.C;
 with Ada.Characters.Latin_1;
 
 package Terminal_Interface.Curses.Menus is

@@ -16,13 +16,13 @@
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        Compiled terminfo descriptions are placed under the direc-
-       tory <B>@DATADIR@/terminfo</B>.   In  order  to  avoid  a  linear
+       tory <B>/usr/share/terminfo</B>.  In  order  to  avoid  a  linear
        search of a huge UNIX system directory, a two-level scheme
        is used: <B>/c/name</B> where <I>name</I> is the name of  the  terminal,
        and  <I>c</I>  is the first character of <I>name</I>.  Thus, <I>act4</I> can be
-       found in the file <B>@DATADIR@/terminfo/a/act4</B>.  Synonyms for
-       the same terminal are implemented by multiple links to the
-       same compiled file.
+       found in the  file  <B>/usr/share/terminfo/a/act4</B>.   Synonyms
+       for the same terminal are implemented by multiple links to
+       the same compiled file.
 
        The format has been chosen so that it will be the same  on
        all  hardware.   An  8 or more bit byte is assumed, but no
@@ -156,7 +156,7 @@
 
 </PRE>
 <H2>FILES</H2><PRE>
-       @DATADIR@/terminfo/*/*   compiled terminal capability data
+       /usr/share/terminfo/*/*  compiled terminal capability data
        base
 
 

@@ -5,7 +5,8 @@
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>tput</B> - initialize a terminal or query terminfo database
+       <B>tput</B>,  <B>reset</B>  -  initialize  a  terminal or query terminfo
+       database
 
 
 </PRE>
@@ -15,50 +16,54 @@
        <B>tput</B> [<B>-T</B><I>type</I>] <B>reset</B>
        <B>tput</B> [<B>-T</B><I>type</I>] <B>longname</B>
        <B>tput</B> <B>-S</B>  <B>&lt;&lt;</B>
+       <B>tput</B> <B>-V</B>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The  <B>tput</B>  utility  uses the <B>terminfo</B> database to make the
-       values of terminal-dependent capabilities and  information
+       The <B>tput</B> utility uses the <B>terminfo</B> database  to  make  the
+       values  of terminal-dependent capabilities and information
        available to the shell (see <B><A HREF="sh.1.html">sh(1)</A></B>), to initialize or reset
-       the terminal, or return the long  name  of  the  requested
-       terminal  type.   <B>tput</B>  outputs  a string if the attribute
-       (<I>cap</I>ability <I>name</I>) is of type string, or an integer if  the
+       the  terminal,  or  return  the long name of the requested
+       terminal type.  <B>tput</B> outputs a  string  if  the  attribute
+       (<I>cap</I>ability  <I>name</I>) is of type string, or an integer if the
        attribute is of type integer.  If the attribute is of type
        boolean, <B>tput</B> simply sets the exit code (<B>0</B> for TRUE if the
-       terminal  has the capability, <B>1</B> for FALSE if it does not),
-       and produces no output.  Before using a value returned  on
-       standard  output,  the user should test the exit code [<B>$?</B>,
-       see <B><A HREF="sh.1.html">sh(1)</A></B>] to be sure it is <B>0</B>.  (See the  <B>EXIT</B>  <B>CODES</B>  and
-       <B>DIAGNOSTICS</B>  sections.)   For a complete list of capabili-
-       ties and  the  <I>capname</I>  associated  with  each,  see  <B>ter-</B>
+       terminal has the capability, <B>1</B> for FALSE if it does  not),
+       and  produces no output.  Before using a value returned on
+       standard output, the user should test the exit  code  [<B>$?</B>,
+       see  <B><A HREF="sh.1.html">sh(1)</A></B>]  to  be sure it is <B>0</B>.  (See the <B>EXIT</B> <B>CODES</B> and
+       <B>DIAGNOSTICS</B> sections.)  For a complete list  of  capabili-
+       ties  and  the  <I>capname</I>  associated  with  each,  see <B>ter-</B>
        <B><A HREF="minfo.5.html">minfo(5)</A></B>.
 
-       <B>-T</B><I>type</I> indicates  the  <I>type</I>  of  terminal.   Normally this
+       <B>-T</B><I>type</I> indicates the  <I>type</I>  of  terminal.   Normally  this
               option is unnecessary, because the default is taken
               from the environment variable <B>TERM</B>.  If <B>-T</B> is spec-
-              ified, then the shell variables <B>LINES</B>  and  <B>COLUMNS</B>
-              will  be  ignored,and the operating system will not
+              ified,  then  the shell variables <B>LINES</B> and <B>COLUMNS</B>
+              will be ignored,and the operating system  will  not
               be queried for the actual screen size.
 
        <I>capname</I>
               indicates the attribute from the <B>terminfo</B> database.
-              When  <B>termcap</B>  support  is compiled in, the <B>termcap</B>
+              When <B>termcap</B> support is compiled  in,  the  <B>termcap</B>
               name for the attribute is also accepted.
 
        <I>parms</I>  If the attribute is a string that takes parameters,
-              the  arguments  <I>parms</I> will be instantiated into the
-              string.  An all numeric argument will be passed  to
+              the arguments <I>parms</I> will be instantiated  into  the
+              string.   An all numeric argument will be passed to
               the attribute as a number.
 
-       <B>-S</B>     allows  more  than one capability per invocation of
+       <B>-S</B>     allows more than one capability per  invocation  of
               <B>tput</B>.  The capabilities must be passed to <B>tput</B> from
               the standard input instead of from the command line
-              (see example).  Only one  <I>capname</I>  is  allowed  per
-              line.   The  <B>-S</B> option changes the meaning of the <B>0</B>
-              and <B>1</B> boolean and string exit codes (see  the  EXIT
+              (see  example).   Only  one  <I>capname</I> is allowed per
+              line.  The <B>-S</B> option changes the meaning of  the  <B>0</B>
+              and  <B>1</B>  boolean and string exit codes (see the EXIT
               CODES section).
+
+       <B>-V</B>     reports the version of ncurses which  was  used  in
+              this program, and exits.
 
        <B>init</B>   If  the  <B>terminfo</B>  database is present and an entry
               for the user's terminal exists (see <B>-T</B><I>type</I>, above),
@@ -88,6 +93,10 @@
               the terminal's description in the <B>terminfo</B> database
               [see <B><A HREF="term.5.html">term(5)</A></B>].
 
+       If  <B>tput</B>  is  invoked  by a link named <B>reset</B>, this has the
+       same effect as <B>tput</B> <B>reset</B>.  See <B>tset</B> for comparison, which
+       has similar behavior.
+
 
 </PRE>
 <H2>EXAMPLES</H2><PRE>
@@ -108,15 +117,14 @@
             as the "home" cursor position).
 
        <B>tput</B> <B>clear</B>
-            Echo the clear-screen sequence for the current termi-
-            nal.
+            Echo  the  clear-screen  sequence  for  the   current
+            terminal.
 
        <B>tput</B> <B>cols</B>
             Print the number of columns for the current terminal.
 
        <B>tput</B> <B>-T450</B> <B>cols</B>
             Print the number of columns for the 450 terminal.
-
 
        <B>bold=`tput</B> <B>smso`</B> <B>offbold=`tput</B> <B>rmso`</B>
             Set the shell variables <B>bold</B>, to begin stand-out mode
@@ -138,11 +146,11 @@
             the  type  of terminal specified in the environmental
             variable <B>TERM</B>.
 
-       <B>tput</B> <B>-S</B> <B>&lt;&lt;!</B>
-       <B>&gt;</B> <B>clear</B>
-       <B>&gt;</B> <B>cup</B> <B>10</B> <B>10</B>
-       <B>&gt;</B> <B>bold</B>
-       <B>&gt;</B> <B>!</B>
+            <B>tput</B> <B>-S</B> <B>&lt;&lt;!</B>
+            <B>&gt;</B> <B>clear</B>
+            <B>&gt;</B> <B>cup</B> <B>10</B> <B>10</B>
+            <B>&gt;</B> <B>bold</B>
+            <B>&gt;</B> <B>!</B>
 
             This example shows tput processing several  capabili-
             ties  in  one  invocation.   This  example clears the
@@ -153,7 +161,7 @@
 
 </PRE>
 <H2>FILES</H2><PRE>
-       <B>@DATADIR@/terminfo</B>
+       <B>/usr/share/terminfo</B>
               compiled terminal description database
 
        <B>/usr/include/curses.h</B>
@@ -162,7 +170,7 @@
        <B>/usr/include/term.h</B>
               <B>terminfo</B> header file
 
-       <B>@DATADIR@/tabset/*</B>
+       <B>/usr/share/tabset/*</B>
               tab settings for some terminals, in a format appro-
               priate   to  be  output  to  the  terminal  (escape
               sequences that set  margins  and  tabs);  for  more
@@ -211,13 +219,15 @@
        responding exit codes.
 
        exit code   error message
-       <B>0</B>           (<I>capname</I> is a numeric variable that is not specified in the
-                   <B><A HREF="terminfo.5.html">terminfo(5)</A></B> database for this terminal type, e.g.
+       ---------------------------------------------------------------------
+       <B>0</B>           (<I>capname</I> is a numeric variable that is not specified  in
+                   the  <B><A HREF="terminfo.5.html">terminfo(5)</A></B>  database  for this terminal type, e.g.
                    <B>tput</B> <B>-T450</B> <B>lines</B> and <B>tput</B> <B>-T2621</B> <B>xmc</B>)
        <B>1</B>           no error message is printed, see the <B>EXIT</B> <B>CODES</B> section.
        <B>2</B>           usage error
        <B>3</B>           unknown terminal <I>type</I> or no <B>terminfo</B> database
        <B>4</B>           unknown <B>terminfo</B> capability <I>capname</I>
+       ---------------------------------------------------------------------
 
 
 </PRE>
@@ -225,16 +235,6 @@
        The <B>longname</B> and <B>-S</B> options, and  the  parameter-substitu-
        tion  features  used in the <B>cup</B> example, are not supported
        in BSD curses or in AT&amp;T/USL curses before SVr4.
-
-
-
-
-
-
-
-
-
-
 
 </PRE>
 <HR>

@@ -56,10 +56,10 @@
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>procedure</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#53_14">Set_User_Data</A><FONT COLOR=red><A NAME="55_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#53_29">Frm</A>  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#57_9">Form</A>;
+   <b>procedure</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#53_14">Set_User_Data</A><FONT COLOR=red><A NAME="55_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#53_29">Frm</A>  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Form</A>;
                             <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#54_29">Data</A> : <b>in</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#44_9">User_Access</A>)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="58_16">Set_Form_Userptr</A></FONT> (<FONT COLOR=red><A NAME="58_34">Frm</A></FONT>  : <A HREF="terminal_interface-curses-forms__ads.htm#57_9">Form</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="58_16">Set_Form_Userptr</A></FONT> (<FONT COLOR=red><A NAME="58_34">Frm</A></FONT>  : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Form</A>;
                                  <FONT COLOR=red><A NAME="59_34">Data</A></FONT> : <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#44_9">User_Access</A>)  <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#55_12">C_Int</A>;
       <b>pragma</b> Import (C, <A HREF="terminal_interface-curses-forms-form_user_data__adb.htm#58_16">Set_Form_Userptr</A>, "set_form_userptr");
 
@@ -72,15 +72,15 @@
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>function</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#64_13">Get_User_Data</A><FONT COLOR=red><A NAME="71_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#64_28">Frm</A>  : <b>in</b>  <A HREF="terminal_interface-curses-forms__ads.htm#57_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#44_9">User_Access</A>
+   <b>function</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#64_13">Get_User_Data</A><FONT COLOR=red><A NAME="71_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#64_28">Frm</A>  : <b>in</b>  <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#44_9">User_Access</A>
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="73_16">Form_Userptr</A></FONT> (<FONT COLOR=red><A NAME="73_30">Frm</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#57_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#44_9">User_Access</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="73_16">Form_Userptr</A></FONT> (<FONT COLOR=red><A NAME="73_30">Frm</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#44_9">User_Access</A>;
       <b>pragma</b> Import (C, <A HREF="terminal_interface-curses-forms-form_user_data__adb.htm#73_16">Form_Userptr</A>, "form_userptr");
    <b>begin</b>
       <b>return</b> <A HREF="terminal_interface-curses-forms-form_user_data__adb.htm#73_16">Form_Userptr</A> (<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#64_28">Frm</A>);
    <b>end</b> Get_User_Data;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#59_14">Get_User_Data</A><FONT COLOR=red><A NAME="79_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#59_29">Frm</A>  : <b>in</b>  <A HREF="terminal_interface-curses-forms__ads.htm#57_9">Form</A>;
+   <b>procedure</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#59_14">Get_User_Data</A><FONT COLOR=red><A NAME="79_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#59_29">Frm</A>  : <b>in</b>  <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Form</A>;
                             <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#60_29">Data</A> : <b>out</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#44_9">User_Access</A>)
    <b>is</b>
    <b>begin</b>

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@SHELL@
 ##############################################################################
 # Copyright (c) 1998,2000 Free Software Foundation, Inc.                     #
 #                                                                            #
@@ -27,61 +27,38 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1996
+# Author: Thomas E. Dickey 1996,2000
 #
-# $Id: run_tic.sh,v 1.12 2000/07/01 19:25:13 tom Exp $
+# $Id: run_tic.in,v 1.10 2000/10/09 22:57:35 tom Exp $
 # This script is used to install terminfo.src using tic.  We use a script
 # because the path checking is too awkward to do in a makefile.
 #
-# Parameters:
-#	$1 = nominal directory in which to find 'tic', i.e., $(bindir).
-#	$2 = source-directory, i.e., $(srcdir)
-#	$3 = destination-directory path, i.e., $(ticdir)
-#	$4 = install-prefix, if any
-#
 # Assumes:
-#	The leaf directory names (bin, lib, shared, tabset, terminfo)
+#	The leaf directory names (lib, tabset, terminfo)
 #
 echo '** Building terminfo database, please wait...'
 #
-# Parameter parsing is primarily for debugging.  The script is designed to
-# be run from the misc/Makefile as
+# The script is designed to be run from the misc/Makefile as
 #	make install.data
-prefix=/usr/local
-if test $# != 0 ; then
-	bindir=$1
-	shift
-	PREFIX=`echo $bindir | sed -e 's/\/bin$//'`
-	test -n "$PREFIX" && test "x$PREFIX" != "x$bindir" && prefix=$PREFIX
-else
-	bindir=$prefix/bin
-fi
 
-if test $# != 0 ; then
-	srcdir=$1
-	shift
-else
-	srcdir=.
-fi
+: ${suffix=@PROG_EXT@}
+: ${DESTDIR=@DESTDIR@}
+: ${prefix=@prefix@}
+: ${exec_prefix=@exec_prefix@}
+: ${bindir=@bindir@}
+: ${top_srcdir=@top_srcdir@}
+: ${srcdir=@srcdir@}
+: ${datadir=@datadir@}
+: ${ticdir=@TERMINFO@}
+: ${source=@TERMINFO_SRC@}
+: ${LN_S="@LN_S@"}
 
-if test $# != 0 ; then
-	ticdir=$1
-	shift
-else
-	ticdir=$prefix/share/terminfo
-fi
-
-if test $# != 0 ; then
-	IP=$1
-	shift
-else
-	IP=""
-fi
+test -z "${DESTDIR}" && DESTDIR=
 
 # Allow tic to run either from the install-path, or from the build-directory
 case "$PATH" in
-:*) PATH=../progs:$IP$bindir$PATH ;;
-*) PATH=../progs:$IP$bindir:$PATH ;;
+:*) PATH=../progs:${DESTDIR}$bindir$PATH ;;
+*) PATH=../progs:${DESTDIR}$bindir:$PATH ;;
 esac
 export PATH
 
@@ -91,31 +68,30 @@ export PATH
 #
 NEWPATH=$PATH
 export NEWPATH
-PROG_BIN_DIR=$IP$bindir
+PROG_BIN_DIR=${DESTDIR}$bindir
 export PROG_BIN_DIR
 
-TERMINFO=$IP$ticdir ; export TERMINFO
+TERMINFO=${DESTDIR}$ticdir ; export TERMINFO
 umask 022
 
 # Construct the name of the old (obsolete) pathname, e.g., /usr/lib/terminfo.
-TICDIR=`echo $TERMINFO | sed -e 's/\/share\//\/lib\//'`
+TICDIR=`echo $TERMINFO | sed -e 's@/share/@/lib/@'`
 
 # Remove the old terminfo stuff; we don't care if it existed before, and it
 # would generate a lot of confusing error messages if we tried to overwrite it.
 # We explicitly remove its contents rather than the directory itself, in case
 # the directory is actually a symbolic link.
-( rm -fr $TERMINFO/[0-9A-Za-z] 2>/dev/null )
+( cd $TERMINFO && rm -fr ? 2>/dev/null )
 
 # If we're not installing into /usr/share/, we'll have to adjust the location
 # of the tabset files in terminfo.src (which are in a parallel directory).
-TABSET=`echo $ticdir | sed -e 's/\/terminfo$/\/tabset/'`
-SRC=$srcdir/terminfo.src
+TABSET=`echo $ticdir | sed -e 's@/terminfo$@/tabset@'`
 if test "x$TABSET" != "x/usr/share/tabset" ; then
 	echo '** adjusting tabset paths'
 	TMP=${TMPDIR-/tmp}/$$
-	sed -e s:/usr/share/tabset:$TABSET:g $SRC >$TMP
+	sed -e s:/usr/share/tabset:$TABSET:g $source >$TMP
 	trap "rm -f $TMP" 0 1 2 5 15
-	SRC=$TMP
+	source=$TMP
 fi
 
 cat <<EOF
@@ -129,7 +105,7 @@ Running tic to install $TERMINFO ...
 	problems for older ncurses applications.
 
 EOF
-if ( $srcdir/shlib tic -s $SRC )
+if ( $srcdir/shlib tic$suffix -s -o $TERMINFO $source )
 then
 	echo '** built new '$TERMINFO
 else
@@ -155,14 +131,14 @@ if test "$TICDIR" != "$TERMINFO" ; then
 			echo "Otherwise, remove $TICDIR and link it to $TERMINFO."
 		fi
 	else
-		cd $IP$prefix
+		cd ${DESTDIR}$prefix
 		# Construct a symbolic link that only assumes $ticdir has the
 		# same $prefix as the other installed directories.
 		RELATIVE=`echo $ticdir|sed -e 's:^'$prefix'/::'`
 		if test "$RELATIVE" != "$ticdir" ; then
 			RELATIVE=../`echo $ticdir|sed -e 's:^'$prefix'/::' -e 's:^/::'`
 		fi
-		if ( ln -s $RELATIVE $TICDIR )
+		if ( @LN_S@ $RELATIVE $TICDIR )
 		then
 			echo '** linked '$TICDIR' for compatibility'
 		fi

@@ -44,9 +44,9 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C;
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#43_53">User</A>.<A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#45_63">Choice</A><FONT COLOR=red><A NAME="43_58"></A></FONT> <b>is</b>
+<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#43_53">User</A>.<A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#45_63">Choice</A><FONT COLOR=red><A NAME="43_58"></A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate
-     (<A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#43_53">User</A>.<A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#43_58">Choice</A>);
+     (<A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#43_53">User</A>.<A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#43_58">Choice</A>);
 
    <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int;
    <b>subtype</b> <FONT COLOR=red><A NAME="48_12">C_Int</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int;
@@ -62,14 +62,14 @@
      <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#50_9">User_Defined_Field_Type_With_Choice</A>'Class;
 
    <b>function</b> <FONT COLOR=red><A NAME="60_13">Next</A></FONT>
-     (<FONT COLOR=red><A NAME="61_7">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+     (<FONT COLOR=red><A NAME="61_7">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
       <FONT COLOR=red><A NAME="62_7">Typ</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#50_9">User_Defined_Field_Type_With_Choice</A>) <b>return</b> Boolean
       <b>is</b> <b>abstract</b>;
    <FONT COLOR=green><EM>--  If True is returned, the function successfully generated a next</EM></FONT>
    <FONT COLOR=green><EM>--  value into the fields buffer.</EM></FONT>
 
    <b>function</b> <FONT COLOR=red><A NAME="67_13">Previous</A></FONT>
-     (<FONT COLOR=red><A NAME="68_7">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+     (<FONT COLOR=red><A NAME="68_7">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
       <FONT COLOR=red><A NAME="69_7">Typ</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#50_9">User_Defined_Field_Type_With_Choice</A>) <b>return</b> Boolean
       <b>is</b> <b>abstract</b>;
    <FONT COLOR=green><EM>--  If True is returned, the function successfully generated a previous</EM></FONT>
@@ -83,14 +83,14 @@
 
    <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#78_13">C_Generic_Choice</A><FONT COLOR=red><A NAME="80_13"></A></FONT> <b>return</b> C_Field_Type;
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#52_13">Generic_Next</A><FONT COLOR=red><A NAME="82_13"></A></FONT> (<FONT COLOR=red><A NAME="82_27">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#52_13">Generic_Next</A><FONT COLOR=red><A NAME="82_13"></A></FONT> (<FONT COLOR=red><A NAME="82_27">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                           <FONT COLOR=red><A NAME="83_27">Usr</A></FONT> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#48_12">C_Int</A>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#82_13">Generic_Next</A>);
    <FONT COLOR=green><EM>--  This is the generic next Choice_Function for the low-level fieldtype</EM></FONT>
    <FONT COLOR=green><EM>--  representing all the User_Defined_Field_Type derivates. It routes</EM></FONT>
    <FONT COLOR=green><EM>--  the call to the Next implementation for the type.</EM></FONT>
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#64_13">Generic_Prev</A><FONT COLOR=red><A NAME="89_13"></A></FONT> (<FONT COLOR=red><A NAME="89_27">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__adb.htm#64_13">Generic_Prev</A><FONT COLOR=red><A NAME="89_13"></A></FONT> (<FONT COLOR=red><A NAME="89_27">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                           <FONT COLOR=red><A NAME="90_27">Usr</A></FONT> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#48_12">C_Int</A>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types-user-choice__ads.htm#89_13">Generic_Prev</A>);
    <FONT COLOR=green><EM>--  This is the generic prev Choice_Function for the low-level fieldtype</EM></FONT>

@@ -29,23 +29,22 @@
 #  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 #
 #  Version Control
-#  $Revision: 1.30 $
+#  $Revision: 1.34 $
 #
 .SUFFIXES:
 
 SHELL		= /bin/sh
 THIS		= Makefile
 
+x		= @PROG_EXT@
+
 top_srcdir	= @top_srcdir@
+DESTDIR		= @DESTDIR@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
-libdir		= @libdir@
-includedir	= @includedir@
-datadir		= @datadir@
-ticdir		= $(datadir)/terminfo
-ADA_INCLUDE	= @ADA_INCLUDE@
-ADA_OBJECTS	= @ADA_OBJECTS@
+ADA_INCLUDE	= $(DESTDIR)@ADA_INCLUDE@
+ADA_OBJECTS	= $(DESTDIR)@ADA_OBJECTS@
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -53,7 +52,7 @@ INSTALL_DATA	= @INSTALL_DATA@
 AWK		= @AWK@
 LN_S		= @LN_S@
 
-CC		= @CC@
+HOST_CC		= @BUILD_CC@
 CFLAGS		= @CFLAGS@
 
 CPPFLAGS	= @ACPPFLAGS@ \
@@ -67,7 +66,7 @@ CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
 
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 
-LINK		= $(CC)
+LINK		= $(HOST_CC)
 LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS)
 
 RANLIB		= @RANLIB@
@@ -77,7 +76,7 @@ LIB_CURSES      = -L../../lib -lncurses@LIB_SUFFIX@
 M4		= m4
 M4FLAGS		=
 
-GENERATE	= ./gen '@DFT_ARG_SUFFIX@'
+GENERATE	= ./gen$x '@DFT_ARG_SUFFIX@'
 DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
 
 GNATHTML	= `type -p gnathtml || type -p gnathtml.pl`
@@ -157,107 +156,107 @@ sources:
 
 $(ADA_INCLUDE) \
 $(ADA_OBJECTS) :
-	$(top_srcdir)/mkinstalldirs $(INSTALL_PREFIX)$@
+	$(top_srcdir)/mkinstalldirs $@
 
 install \
 install.libs :: $(ADA_INCLUDE)
-	@echo installing package $(ALIB) in $(INSTALL_PREFIX)$(ADA_INCLUDE)
-	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ad?' $(ADA_SRCDIR) $(INSTALL_PREFIX)$(ADA_INCLUDE)
-	@test $(srcdir) != ./ && $(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ad?' $(srcdir)/../src $(INSTALL_PREFIX)$(ADA_INCLUDE)
+	@echo installing package $(ALIB) in $(ADA_INCLUDE)
+	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ad?' $(ADA_SRCDIR) $(ADA_INCLUDE)
+	@test $(srcdir) != ./ && $(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ad?' $(srcdir)/../src $(ADA_INCLUDE)
 
 install \
 install.libs :: $(ADA_OBJECTS)
-	@echo installing package $(ALIB) in $(INSTALL_PREFIX)$(ADA_OBJECTS)
+	@echo installing package $(ALIB) in $(ADA_OBJECTS)
 	@chmod a-wx $(ADA_SRCDIR)/*.ali
-	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ali' $(ADA_SRCDIR) $(INSTALL_PREFIX)$(ADA_OBJECTS)
+	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ali' $(ADA_SRCDIR) $(ADA_OBJECTS)
 	@chmod u+x $(ADA_SRCDIR)/*.ali
 
 uninstall \
 uninstall.libs ::
-	@echo removing package $(ALIB) from $(INSTALL_PREFIX)$(ADA_INCLUDE)
-	-@cd $(INSTALL_PREFIX)$(ADA_INCLUDE) && rm -f $(ALIB)[-.]*
+	@echo removing package $(ALIB) from $(ADA_INCLUDE)
+	-@cd $(ADA_INCLUDE) && rm -f $(ALIB)[-.]*
 
 uninstall \
 uninstall.libs ::
-	@echo removing package $(ALIB) from $(INSTALL_PREFIX)$(ADA_OBJECTS)
-	-@cd $(INSTALL_PREFIX)$(ADA_OBJECTS) && rm -f $(ALIB)[-.]*
+	@echo removing package $(ALIB) from $(ADA_OBJECTS)
+	-@cd $(ADA_OBJECTS) && rm -f $(ALIB)[-.]*
 
-gen:	gen.o
+gen$x:	gen.o
 	@ECHO_LINK@ $(LINK) $(CFLAGS_NORMAL) gen.o $(LD_FLAGS) -o $@ $(LIB_CURSES)
 
 gen.o:	$(srcdir)/gen.c
-	$(CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/gen.c
+	$(HOST_CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/gen.c
 
-Character_Attribute_Set_Rep: gen
+Character_Attribute_Set_Rep: gen$x
 	$(GENERATE) B A >$@
 
-Base_Defs: gen
+Base_Defs: gen$x
 	$(GENERATE) B B >$@
 
-Color_Defs: gen
+Color_Defs: gen$x
 	$(GENERATE) B C >$@
 
-Key_Definitions: gen
+Key_Definitions: gen$x
 	$(GENERATE) B K >$@
 
-Old_Keys: gen
+Old_Keys: gen$x
 	$(GENERATE) B O >$@
 
-ACS_Map: gen
+ACS_Map: gen$x
 	$(GENERATE) B M >$@
 
-AC_Rep: gen
+AC_Rep: gen$x
 	$(GENERATE) B R >$@
 
-Linker_Options: gen
+Linker_Options: gen$x
 	$(GENERATE) B L >$@
 
-Version_Info: gen
+Version_Info: gen$x
 	$(GENERATE) B V >$@
 
-Window_Offsets: gen
+Window_Offsets: gen$x
 	$(GENERATE) B D >$@
 
-Menu_Opt_Rep: gen
+Menu_Opt_Rep: gen$x
 	$(GENERATE) M R >$@
 
-Menu_Base_Defs: gen
+Menu_Base_Defs: gen$x
 	$(GENERATE) M B >$@
 
-Menu_Linker_Options: gen
+Menu_Linker_Options: gen$x
 	$(GENERATE) M L >$@
 
-Item_Rep: gen
+Item_Rep: gen$x
 	$(GENERATE) M I >$@
 
-Form_Opt_Rep: gen
+Form_Opt_Rep: gen$x
 	$(GENERATE) F R >$@
 
-Form_Base_Defs: gen
+Form_Base_Defs: gen$x
 	$(GENERATE) F B >$@
 
-Form_Linker_Options: gen
+Form_Linker_Options: gen$x
 	$(GENERATE) F L >$@
 
-Field_Rep: gen
+Field_Rep: gen$x
 	$(GENERATE) F I >$@
 
-Mouse_Base_Defs: gen
+Mouse_Base_Defs: gen$x
 	$(GENERATE) P B >$@
 
-Mouse_Event_Rep: gen
+Mouse_Event_Rep: gen$x
 	$(GENERATE) P M >$@
 
-Mouse_Events: gen
+Mouse_Events: gen$x
 	$(GENERATE) B E >$@
 
-Panel_Linker_Options: gen
+Panel_Linker_Options: gen$x
 	$(GENERATE) P L >$@
 
-Chtype_Def: gen
+Chtype_Def: gen$x
 	$(GENERATE) E C >$@
 
-Eti_Defs: gen
+Eti_Defs: gen$x
 	$(GENERATE) E E >$@
 
 $(ADA_SRCDIR)/$(ABASE).ads: 	$(srcdir)/$(ABASE).ads.m4 \
@@ -347,7 +346,7 @@ TAGS:
 	etags *.[ch]
 
 mostlyclean ::
-	-rm -f a.out core gen *.o
+	-rm -f a.out core gen$x *.o
 	-rm -f $(GEN_FILES1)
 	-rm -f $(GEN_FILES2)
 	-rm -f $(GEN_FILES3)

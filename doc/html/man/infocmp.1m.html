@@ -160,15 +160,15 @@
        The location of the compiled <B>terminfo</B>  database  is  taken
        from  the environment variable <B>TERMINFO</B> .  If the variable
        is not defined, or the terminal is not found in that loca-
-       tion, the system <B>terminfo</B> database, in <B>@DATADIR@/terminfo</B>,
-       will be used.  The options <B>-A</B> and <B>-B</B> may be used to  over-
-       ride  this  location.  The <B>-A</B> option will set <B>TERMINFO</B> for
-       the first <I>termname</I> and the <B>-B</B> option will set <B>TERMINFO</B> for
-       the other <I>termnames</I>.  With this, it is possible to compare
-       descriptions for a terminal with the same name located  in
-       two  different  databases.   This  is useful for comparing
-       descriptions for the same terminal  created  by  different
-       people.
+       tion,  the  system  <B>terminfo</B>  database, in <B>/usr/share/ter-</B>
+       <B>minfo</B>, will be used.  The options <B>-A</B> and <B>-B</B> may be used to
+       override  this  location.  The <B>-A</B> option will set <B>TERMINFO</B>
+       for the first <I>termname</I> and the <B>-B</B> option will set <B>TERMINFO</B>
+       for  the  other  <I>termnames</I>.   With this, it is possible to
+       compare descriptions for a terminal  with  the  same  name
+       located  in  two  different databases.  This is useful for
+       comparing descriptions for the same  terminal  created  by
+       different people.
 
    <B>Other</B>  <B>Options</B>  <B>[-s</B> <B>d|i|l|c]</B> <B>[-1FTVefip]</B> <B>[-Rsubset]</B> <B>[-v</B> <I>n</I>] [-w
        <I>width</I>]
@@ -236,8 +236,8 @@
             the compiled descriptions are limited (e.g., 1023 for
             termcap, 4096 for terminfo).
 
-       <B>-V</B>   prints out the version of the program in use on stan-
-            dard error and exits.
+       <B>-V</B>   reports the version of ncurses which was used in this
+            program, and exits.
 
        <B>-e</B>   Dump the capabilities of the given terminal  as  a  C
             initializer  for  a  TERMTYPE structure (the terminal
@@ -330,14 +330,14 @@
 
 </PRE>
 <H2>FILES</H2><PRE>
-       @DATADIR@/terminfo  Compiled     terminal      description
+       /usr/share/terminfo Compiled     terminal      description
                            database.
 
 
 
 </PRE>
 <H2>EXTENSIONS</H2><PRE>
-       The  <B>-E</B>,  <B>-F</B>,  <B>-G</B>,  <B>-R</B>, <B>-T</B>, <B>-a</B>, <B>-e</B>, <B>-f</B>, <B>-g</B>, <B>-i</B>, <B>-p</B>, and <B>-q</B>
+       The <B>-E</B>, <B>-F</B>, <B>-G</B>, <B>-R</B>, <B>-T</B>, <B>-V</B>, <B>-a</B>, <B>-e</B>, <B>-f</B>, <B>-g</B>, <B>-i</B>, <B>-p</B>, and <B>-q</B>
        options are not supported in SVr4 curses.
 
        The <B>-r</B> option's notion of `termcap' capabilities is System

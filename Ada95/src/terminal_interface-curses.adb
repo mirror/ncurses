@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.25 $
+--  $Revision: 1.26 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -922,7 +922,7 @@ package body Terminal_Interface.Curses is
          when Non_Blocking => Time := 0;
          when Delayed      =>
             if Amount = 0 then
-               raise CONSTRAINT_ERROR;
+               raise Constraint_Error;
             end if;
             Time := C_Int (Amount);
       end case;

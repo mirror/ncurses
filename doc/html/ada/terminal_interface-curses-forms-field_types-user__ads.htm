@@ -44,8 +44,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C;
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#45_58">User</A><FONT COLOR=red><A NAME="43_53"></A></FONT> <b>is</b>
-   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#43_53">User</A>);
+<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#45_58">User</A><FONT COLOR=red><A NAME="43_53"></A></FONT> <b>is</b>
+   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#43_53">User</A>);
    <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int;
    <b>subtype</b> <FONT COLOR=red><A NAME="46_12">C_Int</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int;
 
@@ -58,7 +58,7 @@
      <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>'Class;
 
    <b>function</b> <FONT COLOR=red><A NAME="56_13">Field_Check</A></FONT>
-     (<FONT COLOR=red><A NAME="57_7">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+     (<FONT COLOR=red><A NAME="57_7">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
       <FONT COLOR=red><A NAME="58_7">Typ</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>) <b>return</b> Boolean
       <b>is</b> <b>abstract</b>;
    <FONT COLOR=green><EM>--  If True is returned, the field is considered valid, otherwise it is</EM></FONT>
@@ -71,7 +71,7 @@
    <FONT COLOR=green><EM>--  If True is returned, the character is considered as valid for the</EM></FONT>
    <FONT COLOR=green><EM>--  field, otherwise as invalid.</EM></FONT>
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#49_14">Set_Field_Type</A><FONT COLOR=red><A NAME="70_14"></A></FONT> (<FONT COLOR=red><A NAME="70_30">Fld</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#49_14">Set_Field_Type</A><FONT COLOR=red><A NAME="70_14"></A></FONT> (<FONT COLOR=red><A NAME="70_30">Fld</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                              <FONT COLOR=red><A NAME="71_30">Typ</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>);
    <FONT COLOR=green><EM>--  This should work for all types derived from User_Defined_Field_Type.</EM></FONT>
    <FONT COLOR=green><EM>--  No need to reimplement it for your derived type.</EM></FONT>
@@ -84,7 +84,7 @@
 
    <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#107_13">C_Generic_Type</A><FONT COLOR=red><A NAME="81_13"></A></FONT>   <b>return</b> C_Field_Type;
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#83_13">Generic_Field_Check</A><FONT COLOR=red><A NAME="83_13"></A></FONT> (<FONT COLOR=red><A NAME="83_34">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#83_13">Generic_Field_Check</A><FONT COLOR=red><A NAME="83_13"></A></FONT> (<FONT COLOR=red><A NAME="83_34">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
                                  <FONT COLOR=red><A NAME="84_34">Usr</A></FONT> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_13">Generic_Field_Check</A>);
    <FONT COLOR=green><EM>--  This is the generic Field_Check_Function for the low-level fieldtype</EM></FONT>

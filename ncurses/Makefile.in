@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.66 2000/05/28 01:39:56 tom Exp $
+# $Id: Makefile.in,v 1.71 2000/10/14 22:55:35 tom Exp $
 ##############################################################################
 # Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -54,7 +54,7 @@ CF_MFLAGS 	= @cf_cv_makeflags@
 @SET_MAKE@
 
 MODEL		= @DFT_LWR_MODEL@
-INSTALL_PREFIX	= @INSTALL_PREFIX@
+DESTDIR		= @DESTDIR@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
@@ -62,7 +62,7 @@ libdir		= @libdir@
 includedir	= @includedir@
 datadir		= @datadir@
 
-ticdir		= $(datadir)/terminfo
+LIBTOOL		= @LIBTOOL@
 
 INSTALL		= @INSTALL@
 INSTALL_LIB	= @INSTALL@ @INSTALL_LIB@
@@ -80,7 +80,7 @@ CFLAGS		= @CFLAGS@
 
 INCDIR		= $(srcdir)/../include
 CPPFLAGS	= -I../ncurses -I$(srcdir) @CPPFLAGS@ \
-		  -DHAVE_CONFIG_H -DTERMINFO=\"$(ticdir)\"
+		  -DHAVE_CONFIG_H
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
@@ -88,6 +88,7 @@ HOSTCC		= @BUILD_CC@
 HOSTCCFLAGS	= @CFLAGS@ $(CPPFLAGS)
 HOSTLDFLAGS	= @LDFLAGS@ @LIBS@
 
+CFLAGS_LIBTOOL	= $(CCFLAGS)
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
@@ -95,7 +96,7 @@ CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
 
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 
-LINK		= $(CC)
+LINK		= $(LIBTOOL) $(CC)
 LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 SHLIB_DIRS	= -L../lib -L$(libdir)
@@ -104,6 +105,8 @@ TINFO_LIST	= $(SHLIB_DIRS) @TINFO_LIST@
 
 MK_SHARED_LIB	= @MK_SHARED_LIB@
 
+NCURSES_MAJOR	= @NCURSES_MAJOR@
+NCURSES_MINOR	= @NCURSES_MINOR@
 REL_VERSION	= @cf_cv_rel_version@
 ABI_VERSION	= @cf_cv_abi_version@
 
@@ -150,7 +153,7 @@ libs ::		$(AUTO_SRC) ../lib $(LIBRARIES)
 
 sources:	$(AUTO_SRC)
 
-$(INSTALL_PREFIX)$(libdir) :
+$(DESTDIR)$(libdir) :
 	$(srcdir)/../mkinstalldirs $@
 
 ../lib : ; mkdir $@
@@ -202,8 +205,8 @@ make_hash$x : \
 tags:
 	ctags *.[ch]
 
-TAGS:
-	etags *.[ch]
+@MAKE_UPPER_TAGS@TAGS:
+@MAKE_UPPER_TAGS@	etags *.[ch]
 
 mostlyclean ::
 	-rm -f core tags TAGS *~ *.ln *.atac trace
@@ -213,6 +216,7 @@ clean :: mostlyclean
 	-rm -f $(AUTO_SRC)
 	-rm -f make_keys$x
 	-rm -f make_hash$x
+	-rm -rf .libs
 
 distclean :: clean
 	-rm -f Makefile

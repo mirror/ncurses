@@ -1,4 +1,4 @@
--- $Id: INSTALL,v 1.38 2000/07/08 22:46:08 tom Exp $
+-- $Id: INSTALL,v 1.46 2000/10/14 17:57:02 Johnny.C.Lam Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -30,6 +30,9 @@ read the USING NCURSES WITH GPM section below.
 
 If you are running over the Andrew File System see the note below on
 USING NCURSES WITH AFS.
+
+If you are cross-compiling, see the note below on BUILDING NCURSES WITH A
+CROSS-COMPILER.
 
 If you want to build the Ada95 binding, go to the Ada95 directory and
 follow the instructions there.  The Ada95 binding is not covered below.
@@ -101,6 +104,8 @@ INSTALLATION PROCEDURE:
 
 	libncurses_p.a (profile)
 
+	libncurses.la (libtool)
+
     If you do not specify any models, the normal and debug libraries will be
     configured.  Typing `configure' with no arguments is equivalent to:
 
@@ -122,6 +127,13 @@ INSTALLATION PROCEDURE:
     of host system and compiler.  We've been testing shared libraries on Linux
     and SunOS with gcc, but more work needs to be done to make shared libraries
     work on other systems.
+
+    If you have libtool installed, you can type
+
+	./configure --with-libtool
+
+    to generate the appropriate static and/or shared libraries for your
+    platform using libtool.
 
     You can make curses and terminfo fall back to an existing file of termcap
     definitions by configuring with --enable-termcap.  If you do this, the
@@ -173,7 +185,8 @@ INSTALLATION PROCEDURE:
     The terminfo(5) manual page must be preprocessed with tbl(1) before
     being formatted by nroff(1).  Modern man(1) implementations tend to do
     this by default, but you may want to look at your version's manual page
-    to be sure.
+    to be sure.  You may also install the manual pages after preprocessing
+    with tbl(1) by specifying the configure option --with-manpage-tbl.
 
     If the system already has a curses library that you need to keep using
     for some bizarre binary-compatibility reason, you'll need to distinguish
@@ -244,6 +257,15 @@ SUMMARY OF CONFIGURE OPTIONS:
     The other options are specific to this package.  We list them in alphabetic
     order.
 
+    --disable-assumed-color
+	With ncurses 5.1, we introduced a new function, assume_default_colors()
+	which allows applications to specify what the default foreground and
+	background color are assumed to be.  Most color applications use
+	full-screen color; but a few do not color the background.  While the
+	assumed values can be overridden by invoking assume_default_colors(),
+	you may find it useful to set the assumed values to the pre-5.1
+	convention, using this configure option.
+
     --disable-big-core
 	Assume machine has little memory.  The configure script attempts to
 	determine if your machine has enough memory (about 6Mb) to compile the
@@ -261,6 +283,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Disable function-extensions.  Configure ncurses without the functions
 	that are not specified by XSI.  See ncurses/modules for the exact
 	list of library modules that would be suppressed.
+
+    --disable-hashmap
+	Compile without hashmap scrolling-optimization code.  This algorithm is
+	the default.
 
     --disable-leaks
 	For testing, compile-in code that frees memory that normally would not
@@ -280,6 +306,12 @@ SUMMARY OF CONFIGURE OPTIONS:
 	installed into a subdirectory, e.g., /usr/local/include/ncurses,
 	rather than the include directory.  This makes it simpler to avoid
 	compile-time conflicts with other versions of curses.h
+
+    --disable-root-environ
+	Compile with environment restriction, so certain environment variables
+	are not available when running as root, or via a setuid/setgid
+	application.  These are (for example $TERMINFO) those that allow the
+	search path for the terminfo or termcap entry to be customized.
 
     --disable-scroll-hints
 	Compile without scroll-hints code.  This option is ignored when
@@ -367,10 +399,6 @@ SUMMARY OF CONFIGURE OPTIONS:
 	may not be accurate, or that your stty settings have disabled the use
 	of tabs.
 
-    --enable-hashmap
-	Compile with hashmap scrolling-optimization code.  This is the default,
-	replacing an older scrolling-hints algorithm.
-
     --enable-no-padding
 	Compile-in support for the $NCURSES_NO_PADDING environment variable,
 	which allows you to suppress the effect of non-mandatory padding in
@@ -378,8 +406,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	extended functions.
 
     --enable-rpath
-	Use rpath option when generating shared libraries.  This applies mainly
-	to systems using the GNU linker (read the manpage).
+	Use rpath option when generating shared libraries, and with some
+	restrictions when linking the corresponding programs.  This applies
+	mainly to systems using the GNU linker (read the manpage).
 
     --enable-safe-sprintf
 	Compile with experimental safe-sprintf code.  You may consider using
@@ -435,12 +464,22 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-ada-objects=DIR
 	Tell where to install the Ada objects (default:  PREFIX/lib/ada/adalib)
 
+    --with-database=XXX
+	Specify the terminfo source file to install.  Usually you will wish
+	to install ncurses' default (misc/terminfo.src).  Certain systems
+	have special requirements, e.g, OS/2 EMX has a customized terminfo
+	source file.
+
     --with-dbmalloc
 	For testing, compile and link with Conor Cahill's dbmalloc library.
 
     --with-debug
 	Generate debug-libraries (default).  These are named by adding "_g"
 	to the root, e.g., libncurses_g.a
+
+    --with-default-terminfo-dir=XXX
+	Specify the default terminfo database directory.  This is normally
+	DATADIR/terminfo, e.g., /usr/share/terminfo.
 
     --with-develop
 	Enable experimental/development options.  This does not count those
@@ -465,6 +504,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	NOTE:  a few systems build shared libraries with fixed pathnames; this
 	option probably will not work for those configurations.
 
+     --with-libtool
+	Generate libraries with libtool.  If this option is selected, then
+	it overrides all other library model specifications.
+
     --with-manpage-format=XXX
 	Tell the configure script how you would like to install man-pages.  The
 	option value must be one of these:  gzip, compress, BSDI, normal,
@@ -483,6 +526,11 @@ SUMMARY OF CONFIGURE OPTIONS:
 	can be disabled for systems that provide this automatically.  Doing
 	this on systems that do not support symbolic links will result in
 	copying the man-page for each alias.
+
+    --with-manpage-tbl
+	Tell the configure script that you with to preprocess the manpages
+	by running them through tbl to generate tables understandable by
+	nroff.
 
     --with-normal
 	Generate normal (i.e., static) libraries (default).
@@ -516,8 +564,8 @@ SUMMARY OF CONFIGURE OPTIONS:
 	script.
 
     --with-terminfo-dirs=XXX
-	Specify a search-list of terminfo directories which will be compiled into
-	the ncurses library (default: DATADIR/terminfo)
+	Specify a search-list of terminfo directories which will be compiled
+	into the ncurses library (default: DATADIR/terminfo)
 
     --with-termlib
 	When building the ncurses library, organize this as two parts:  the
@@ -528,6 +576,11 @@ SUMMARY OF CONFIGURE OPTIONS:
     --without-ada
 	Suppress the configure script's check for Ada95, do not build the
 	Ada95 binding and related demo.
+
+    --without-curses-h
+	Don't install the ncurses header with the name "curses.h".  Rather,
+	install as "ncurses.h" and modify the installed headers and manpages
+	accordingly.
 
     --without-cxx
 	XSI curses declares "bool" as part of the interface.  C++ also declares
@@ -979,11 +1032,28 @@ USING NCURSES WITH GPM:
 	are slow to update this library.  Current distributions of gpm can
 	be configured properly using the --without-curses option.
 
+BUILDING NCURSES WITH A CROSS-COMPILER
+	Ncurses can be built with a cross-compiler.  Some parts must be built
+	with the host's compiler since they are used for building programs
+	(e.g., ncurses/make_hash and ncurses/make_keys) that generate tables
+	that are compiled into the ncurses library.  You should set the
+	BUILD_CC environment variable to your host's compiler, and run the
+	configure script configuring for the cross-compiler.
+
+	Note that all of the generated source-files which are part of ncurses
+	will be made if you use
+
+		make sources
+
+	This would be useful in porting to an environment which has little
+	support for the tools used to generate the sources, e.g., sed, awk and
+	Bourne-shell.
+
 BUGS:
 	Send any feedback to the ncurses mailing list at
 	bug-ncurses@gnu.org. To subscribe send mail to
 	bug-ncurses-request@gnu.org with body that reads:
 	subscribe ncurses <your-email-address-here>
 
-	The Hacker's Guide in the misc directory includes some guidelines
+	The Hacker's Guide in the doc directory includes some guidelines
 	on how to report bugs in ways that will get them fixed most quickly.
