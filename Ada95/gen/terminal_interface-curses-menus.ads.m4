@@ -36,9 +36,10 @@ include(M4MACRO)dnl
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+--  Author:  Juergen Pfeifer, 1996
+--  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control:
---  $Revision: 1.21 $
+--  $Revision: 1.23 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Menu_Base_Defs')
@@ -473,6 +474,13 @@ include(`Item_Rep')dnl
    procedure Set_Format (Men     : in Menu;
                          Lines   : in Line_Count;
                          Columns : in Column_Count);
+   --  Not implemented: 0 argument for Lines or Columns;
+   --  instead use Format to get the current sizes
+   --      The  default  format  is  16  rows,  1  column.    Calling
+   --      set_menu_format  with a null menu pointer will change this
+   --      default.  A zero row or column argument to set_menu_format
+   --      is  interpreted  as  a  request  not to change the current
+   --      value.
    --  AKA
    pragma Inline (Set_Format);
 
@@ -570,7 +578,7 @@ include(`Item_Rep')dnl
    --  Reset Men to Null_Menu
    --  Not inlined
 
-   --  MANPAGE(`menu_new.3x')
+   --  MANPAGE(`menu_driver.3x')
 
    type Driver_Result is (Menu_Ok,
                           Request_Denied,
@@ -583,6 +591,8 @@ include(`Item_Rep')dnl
    --  AKA
    --  Driver is not inlined
 
+   --  ANCHOR(`menu_requestname.3x')
+   --  Not Implemented: menu_request_name, menu_request_by_name
 -------------------------------------------------------------------------------
 private
    type Item   is new System.Storage_Elements.Integer_Address;

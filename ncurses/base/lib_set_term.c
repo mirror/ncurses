@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,9 +43,9 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.58 2000/10/04 22:05:48 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.71 2002/09/14 22:48:00 tom Exp $")
 
-SCREEN *
+NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN * screenp)
 {
     SCREEN *oldSP;
@@ -61,7 +61,7 @@ set_term(SCREEN * screenp)
     stdscr = SP->_stdscr;
     COLORS = SP->_color_count;
     COLOR_PAIRS = SP->_pair_count;
-    memcpy(acs_map, SP->_acs_map, sizeof(chtype) * ACS_LEN);
+    memcpy(acs_map, SP->_acs_map, sizeof(SP->_acs_map[0]) * ACS_LEN);
 
     T((T_RETURN("%p"), oldSP));
     return (oldSP);
@@ -80,7 +80,7 @@ _nc_free_keytry(struct tries *kt)
 /*
  * Free the storage associated with the given SCREEN sp.
  */
-void
+NCURSES_EXPORT(void)
 delscreen(SCREEN * sp)
 {
     SCREEN **scan = &_nc_screen_chain;
@@ -95,17 +95,29 @@ delscreen(SCREEN * sp)
 	scan = &(*scan)->_next_screen;
     }
 
-    _nc_freewin(sp->_curscr);
-    _nc_freewin(sp->_newscr);
-    _nc_freewin(sp->_stdscr);
+    (void) _nc_freewin(sp->_curscr);
+    (void) _nc_freewin(sp->_newscr);
+    (void) _nc_freewin(sp->_stdscr);
+
+    if (sp->_slk != 0) {
+	FreeIfNeeded(sp->_slk->ent);
+	FreeIfNeeded(sp->_slk->buffer);
+	free(sp->_slk);
+	sp->_slk = 0;
+    }
+
     _nc_free_keytry(sp->_keytry);
+    sp->_keytry = 0;
+
     _nc_free_keytry(sp->_key_ok);
+    sp->_key_ok = 0;
 
     FreeIfNeeded(sp->_color_table);
     FreeIfNeeded(sp->_color_pairs);
 
     FreeIfNeeded(sp->oldhash);
     FreeIfNeeded(sp->newhash);
+    FreeIfNeeded(sp->hashtab);
 
     del_curterm(sp->_term);
 
@@ -141,7 +153,7 @@ delscreen(SCREEN * sp)
 
 static ripoff_t rippedoff[5];
 static ripoff_t *rsp = rippedoff;
-#define N_RIPS SIZEOF(rippedoff)
+#define N_RIPS SIZEOF(SP->_rippedoff)
 
 static bool
 no_mouse_event(SCREEN * sp GCC_UNUSED)
@@ -181,7 +193,7 @@ extract_fgbg(char *src, int *result)
     if (dst == 0) {
 	dst = src;
     } else if (value >= 0) {
-	*result = value % max_colors;
+	*result = value;
     }
     while (*dst != 0 && *dst != ';')
 	dst++;
@@ -191,16 +203,17 @@ extract_fgbg(char *src, int *result)
 }
 #endif
 
-int
+NCURSES_EXPORT(int)
 _nc_setupscreen(short slines, short const scolumns, FILE * output)
 /* OS-independent screen initializations */
 {
     int bottom_stolen = 0;
     size_t i;
 
+    T((T_CALLED("_nc_setupscreen(%d, %d, %p)"), slines, scolumns, output));
     assert(SP == 0);		/* has been reset in newterm() ! */
     if (!_nc_alloc_screen())
-	return ERR;
+	returnCode(ERR);
 
     SP->_next_screen = _nc_screen_chain;
     _nc_screen_chain = SP;
@@ -224,7 +237,7 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
 #if NCURSES_NO_PADDING
     SP->_no_padding = getenv("NCURSES_NO_PADDING") != 0;
     TR(TRACE_CHARPUT | TRACE_MOVE, ("padding will%s be used",
-	    SP->_no_padding ? " not" : ""));
+				    SP->_no_padding ? " not" : ""));
 #endif
 
 #if NCURSES_EXT_FUNCS
@@ -258,6 +271,26 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
     SP->_default_bg = C_MASK;
 #endif
 
+    /*
+     * Allow those assumed/default color assumptions to be overridden at
+     * runtime:
+     */
+    if (getenv("NCURSES_ASSUMED_COLORS") != 0) {
+	char *p = getenv("NCURSES_ASSUMED_COLORS");
+	int fg, bg;
+	char sep1, sep2;
+	int count = sscanf(p, "%d%c%d%c", &fg, &sep1, &bg, &sep2);
+	if (count >= 1) {
+	    SP->_default_fg = (fg >= 0 && fg < max_colors) ? fg : C_MASK;
+	    if (count >= 3) {
+		SP->_default_bg = (bg >= 0 && bg < max_colors) ? bg : C_MASK;
+	    }
+	    TR(TRACE_CHARPUT | TRACE_MOVE,
+	       ("from environment assumed fg=%d, bg=%d",
+		SP->_default_fg,
+		SP->_default_bg));
+	}
+    }
 #if USE_COLORFGBG
     /*
      * If rxvt's $COLORFGBG variable is set, use it to specify the assumed
@@ -267,8 +300,29 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
      */
     if (getenv("COLORFGBG") != 0) {
 	char *p = getenv("COLORFGBG");
+	TR(TRACE_CHARPUT | TRACE_MOVE, ("decoding COLORFGBG %s", p));
 	p = extract_fgbg(p, &(SP->_default_fg));
 	p = extract_fgbg(p, &(SP->_default_bg));
+	if (*p)			/* assume rxvt was compiled with xpm support */
+	    p = extract_fgbg(p, &(SP->_default_bg));
+	TR(TRACE_CHARPUT | TRACE_MOVE, ("decoded fg=%d, bg=%d",
+					SP->_default_fg, SP->_default_bg));
+	if (SP->_default_fg >= max_colors) {
+	    if (set_a_foreground != ABSENT_STRING
+		&& !strcmp(set_a_foreground, "\033[3%p1%dm")) {
+		set_a_foreground = "\033[3%?%p1%{8}%>%t9%e%p1%d%;m";
+	    } else {
+		SP->_default_fg %= max_colors;
+	    }
+	}
+	if (SP->_default_bg >= max_colors) {
+	    if (set_a_background != ABSENT_STRING
+		&& !strcmp(set_a_background, "\033[4%p1%dm")) {
+		set_a_background = "\033[4%?%p1%{8}%>%t9%e%p1%d%;m";
+	    } else {
+		SP->_default_bg %= max_colors;
+	    }
+	}
     }
 #endif
 #endif /* NCURSES_EXT_FUNCS */
@@ -295,14 +349,14 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
     if (magic_cookie_glitch > 0) {
 
 	SP->_xmc_triggers = termattrs() & (
-	    A_ALTCHARSET |
-	    A_BLINK |
-	    A_BOLD |
-	    A_REVERSE |
-	    A_STANDOUT |
-	    A_UNDERLINE
+					      A_ALTCHARSET |
+					      A_BLINK |
+					      A_BOLD |
+					      A_REVERSE |
+					      A_STANDOUT |
+					      A_UNDERLINE
 	    );
-	SP->_xmc_suppress = SP->_xmc_triggers & (chtype) ~ (A_BOLD);
+	SP->_xmc_suppress = SP->_xmc_triggers & (chtype) ~(A_BOLD);
 
 	T(("magic cookie attributes %s", _traceattr(SP->_xmc_suppress)));
 #if USE_XMC_SUPPORT
@@ -318,7 +372,12 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
 	acs_chars = 0;
 #endif
     }
+
+    /* initialize normal acs before wide, since we use mapping in the latter */
     _nc_init_acs();
+#if USE_WIDEC_SUPPORT
+    _nc_init_wacs();
+#endif
     memcpy(SP->_acs_map, acs_map, sizeof(chtype) * ACS_LEN);
 
     _nc_idcok = TRUE;
@@ -331,11 +390,11 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
 
     T(("creating newscr"));
     if ((newscr = newwin(slines, scolumns, 0, 0)) == 0)
-	return ERR;
+	returnCode(ERR);
 
     T(("creating curscr"));
     if ((curscr = newwin(slines, scolumns, 0, 0)) == 0)
-	return ERR;
+	returnCode(ERR);
 
     SP->_newscr = newscr;
     SP->_curscr = curscr;
@@ -346,68 +405,69 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
     newscr->_clear = TRUE;
     curscr->_clear = FALSE;
 
+    def_shell_mode();
+    def_prog_mode();
+
     for (i = 0, rsp = rippedoff; rsp->line && (i < N_RIPS); rsp++, i++) {
+	T(("ripping off line %d at %s", i, rsp->line < 0 ? "bottom" : "top"));
+	SP->_rippedoff[i] = rippedoff[i];
 	if (rsp->hook) {
-	    WINDOW *w;
 	    int count = (rsp->line < 0) ? -rsp->line : rsp->line;
 
-	    if (rsp->line < 0) {
-		w = newwin(count, scolumns, SP->_lines_avail - count, 0);
-		if (w) {
-		    rsp->w = w;
-		    rsp->hook(w, scolumns);
-		    bottom_stolen += count;
-		} else
-		    return ERR;
-	    } else {
-		w = newwin(count, scolumns, 0, 0);
-		if (w) {
-		    rsp->w = w;
-		    rsp->hook(w, scolumns);
-		    SP->_topstolen += count;
-		} else
-		    return ERR;
-	    }
+	    SP->_rippedoff[i].w = newwin(count,
+					 scolumns,
+					 ((rsp->line < 0)
+					  ? SP->_lines_avail - count
+					  : 0),
+					 0);
+	    if (SP->_rippedoff[i].w != 0)
+		SP->_rippedoff[i].hook(SP->_rippedoff[i].w, scolumns);
+	    else
+		returnCode(ERR);
+	    if (rsp->line < 0)
+		bottom_stolen += count;
+	    else
+		SP->_topstolen += count;
 	    SP->_lines_avail -= count;
 	}
 	rsp->line = 0;
     }
+    SP->_rip_count = i;
     /* reset the stack */
     rsp = rippedoff;
 
     T(("creating stdscr"));
     assert((SP->_lines_avail + SP->_topstolen + bottom_stolen) == slines);
     if ((stdscr = newwin(LINES = SP->_lines_avail, scolumns, 0, 0)) == 0)
-	return ERR;
+	returnCode(ERR);
     SP->_stdscr = stdscr;
 
-    def_shell_mode();
-    def_prog_mode();
-
-    return OK;
+    returnCode(OK);
 }
 
 /* The internal implementation interprets line as the number of
    lines to rip off from the top or bottom.
    */
-int
+NCURSES_EXPORT(int)
 _nc_ripoffline(int line, int (*init) (WINDOW *, int))
 {
-    if (line == 0)
-	return (OK);
+    T((T_CALLED("_nc_ripoffline(%d, %p)"), line, init));
 
-    if (rsp >= rippedoff + N_RIPS)
-	return (ERR);
+    if (line != 0) {
 
-    rsp->line = line;
-    rsp->hook = init;
-    rsp->w = 0;
-    rsp++;
+	if (rsp >= rippedoff + N_RIPS)
+	    returnCode(ERR);
 
-    return (OK);
+	rsp->line = line;
+	rsp->hook = init;
+	rsp->w = 0;
+	rsp++;
+    }
+
+    returnCode(OK);
 }
 
-int
+NCURSES_EXPORT(int)
 ripoffline(int line, int (*init) (WINDOW *, int))
 {
     T((T_CALLED("ripoffline(%d,%p)"), line, init));

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1996-2000                   *
+ *  Author: Thomas E. Dickey 1996-2001,2002                                 *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -48,16 +48,6 @@ void	_nc_linedump(void)
 
 /* ./tty/hashmap.c */
 
-#include <term.h>
-
-typedef struct
-{
-    unsigned long	hashval;
-    int		oldcount, newcount;
-    int		oldindex, newindex;
-}
-    sym;
-
 #undef _nc_hash_map
 void	_nc_hash_map(void)
 		{ /* void */ }
@@ -77,11 +67,6 @@ void	_nc_scroll_oldhash(
 /* ./base/lib_addch.c */
 
 #include <ctype.h>
-
-#undef _nc_background
-chtype	_nc_background(
-		WINDOW	*win)
-		{ return(*(chtype *)0); }
 
 #undef _nc_render
 chtype	_nc_render(
@@ -112,14 +97,14 @@ int	wechochar(
 #undef waddnstr
 int	waddnstr(
 		WINDOW	*win, 
-		const char *const astr, 
+		const char *astr, 
 		int	n)
 		{ return(*(int *)0); }
 
 #undef waddchnstr
 int	waddchnstr(
 		WINDOW	*win, 
-		const chtype *const astr, 
+		const chtype *astr, 
 		int	n)
 		{ return(*(int *)0); }
 
@@ -140,7 +125,7 @@ void	wbkgdset(
 #undef wbkgd
 int	wbkgd(
 		WINDOW	*win, 
-		const chtype ch)
+		chtype	ch)
 		{ return(*(int *)0); }
 
 /* ./base/lib_box.c */
@@ -181,7 +166,7 @@ int	wclear(
 #undef clearok
 int	clearok(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 /* ./base/lib_clrbot.c */
@@ -227,12 +212,12 @@ int	init_color(
 		{ return(*(int *)0); }
 
 #undef can_change_color
-bool	can_change_color(void)
-		{ return(*(bool *)0); }
+NCURSES_BOOL can_change_color(void)
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef has_colors
-bool	has_colors(void)
-		{ return(*(bool *)0); }
+NCURSES_BOOL has_colors(void)
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef color_content
 int	color_content(
@@ -253,7 +238,7 @@ int	pair_content(
 void	_nc_do_color(
 		int	old_pair, 
 		int	pair, 
-		bool	reverse, 
+		NCURSES_BOOL reverse, 
 		int	(*outc)(
 		int	p1))
 		{ /* void */ }
@@ -1027,11 +1012,11 @@ int	wstandend(
 		{ return(*(int *)0); }
 
 #undef mouse_trafo
-bool	mouse_trafo(
+NCURSES_BOOL mouse_trafo(
 		int	*a1, 
 		int	*a2, 
-		bool	z)
-		{ return(*(bool *)0); }
+		NCURSES_BOOL z)
+		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./base/lib_getch.c */
 
@@ -1039,6 +1024,13 @@ bool	mouse_trafo(
 
 #undef ESCDELAY
 int	ESCDELAY;
+
+#undef _nc_wgetch
+int	_nc_wgetch(
+		WINDOW	*win, 
+		unsigned long *result, 
+		int	use_meta)
+		{ return(*(int *)0); }
 
 #undef wgetch
 int	wgetch(
@@ -1068,7 +1060,7 @@ int	whline(
 #undef immedok
 void	immedok(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ /* void */ }
 
 /* ./base/lib_inchstr.c */
@@ -1123,15 +1115,15 @@ int	winnstr(
 /* ./base/lib_isendwin.c */
 
 #undef isendwin
-bool	isendwin(void)
-		{ return(*(bool *)0); }
+NCURSES_BOOL isendwin(void)
+		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./base/lib_leaveok.c */
 
 #undef leaveok
 int	leaveok(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 /* ./base/lib_mouse.c */
@@ -1153,11 +1145,11 @@ mmask_t	mousemask(
 		{ return(*(mmask_t *)0); }
 
 #undef wenclose
-bool	wenclose(
+NCURSES_BOOL wenclose(
 		const WINDOW *win, 
 		int	y, 
 		int	x)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef mouseinterval
 int	mouseinterval(
@@ -1169,12 +1161,12 @@ int	_nc_has_mouse(void)
 		{ return(*(int *)0); }
 
 #undef wmouse_trafo
-bool	wmouse_trafo(
+NCURSES_BOOL wmouse_trafo(
 		const WINDOW *win, 
 		int	*pY, 
 		int	*pX, 
-		bool	to_screen)
-		{ return(*(bool *)0); }
+		NCURSES_BOOL to_screen)
+		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./base/lib_move.c */
 
@@ -1241,9 +1233,9 @@ SCREEN	*newterm(
 /* ./base/lib_newwin.c */
 
 #undef _nc_freewin
-void	_nc_freewin(
+int	_nc_freewin(
 		WINDOW	*win)
-		{ /* void */ }
+		{ return(*(int *)0); }
 
 #undef newwin
 WINDOW	*newwin(
@@ -1472,9 +1464,6 @@ int	mvwscanw(
 
 /* ./base/lib_screen.c */
 
-#include <sys/stat.h>
-#include <time.h>
-
 #undef getwin
 WINDOW	*getwin(
 		FILE	*filep)
@@ -1528,7 +1517,7 @@ int	wscrl(
 #undef scrollok
 int	scrollok(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 /* ./base/lib_scrreg.c */
@@ -1681,15 +1670,15 @@ int	slk_touch(void)
 /* ./base/lib_touch.c */
 
 #undef is_linetouched
-bool	is_linetouched(
+NCURSES_BOOL is_linetouched(
 		WINDOW	*win, 
 		int	line)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef is_wintouched
-bool	is_wintouched(
+NCURSES_BOOL is_wintouched(
 		WINDOW	*win)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef wtouchln
 int	wtouchln(
@@ -1716,6 +1705,12 @@ char	*_traceattr(
 attr_t	_nc_retrace_attr_t(
 		attr_t	code)
 		{ return(*(attr_t *)0); }
+
+#undef _nc_altcharset_name
+const char *_nc_altcharset_name(
+		attr_t	attr, 
+		chtype	ch)
+		{ return(*(const char **)0); }
 
 #undef _tracechtype2
 char	*_tracechtype2(
@@ -1750,12 +1745,11 @@ char	*_tracemouse(
 
 /* ./tty/lib_tstp.c */
 
-#include <signal.h>
 #include <SigAction.h>
 
 #undef _nc_signal_handler
 void	_nc_signal_handler(
-		bool	enable)
+		NCURSES_BOOL enable)
 		{ /* void */ }
 
 /* ./base/lib_ungetch.c */
@@ -1773,14 +1767,14 @@ int	ungetch(
 
 #undef vidputs
 int	vidputs(
-		attr_t	newmode, 
+		chtype	newmode, 
 		int	(*outc)(
 		int	p1))
 		{ return(*(int *)0); }
 
 #undef vidattr
 int	vidattr(
-		attr_t	newmode)
+		chtype	newmode)
 		{ return(*(int *)0); }
 
 #undef termattrs
@@ -1838,7 +1832,7 @@ int	mvderwin(
 #undef syncok
 int	syncok(
 		WINDOW	*win, 
-		bool	bf)
+		NCURSES_BOOL bf)
 		{ return(*(int *)0); }
 
 #undef wsyncup
@@ -1914,6 +1908,18 @@ void	_nc_do_xmc_glitch(
 		attr_t	previous)
 		{ /* void */ }
 
+/* ./trace/varargs.c */
+
+typedef enum {
+    atUnknown = 0, atInteger, atFloat, atPoint, atString
+} ARGTYPE;
+
+#undef _nc_varargs
+char	*_nc_varargs(
+		const char *fmt, 
+		va_list	ap)
+		{ return(*(char **)0); }
+
 /* ./base/memmove.c */
 
 #undef _nc_memmove
@@ -1982,7 +1988,7 @@ char	*keybound(
 #undef keyok
 int	keyok(
 		int	c, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 /* ./base/lib_dft_fgbg.c */
@@ -2014,6 +2020,18 @@ int	mcprint(
 		{ return(*(int *)0); }
 
 /* ./base/resizeterm.c */
+
+#undef is_term_resized
+NCURSES_BOOL is_term_resized(
+		int	ToLines, 
+		int	ToCols)
+		{ return(*(NCURSES_BOOL *)0); }
+
+#undef resize_term
+int	resize_term(
+		int	ToLines, 
+		int	ToCols)
+		{ return(*(int *)0); }
 
 #undef resizeterm
 int	resizeterm(
@@ -2067,6 +2085,11 @@ int	wresize(
 
 /* ./tinfo/access.c */
 
+#undef _nc_rootname
+char	*_nc_rootname(
+		char	*path)
+		{ return(*(char **)0); }
+
 #undef _nc_basename
 char	*_nc_basename(
 		char	*path)
@@ -2110,7 +2133,8 @@ char	*_nc_save_str(
 
 #undef _nc_wrap_entry
 void	_nc_wrap_entry(
-		ENTRY	*const ep)
+		ENTRY	*const ep, 
+		NCURSES_BOOL copy_strings)
 		{ /* void */ }
 
 #undef _nc_merge_entry
@@ -2137,15 +2161,15 @@ void	_nc_copy_termtype(
 
 #undef _nc_captoinfo
 char	*_nc_captoinfo(
-		 const char *cap, 
-		 const char *s, 
+		const char *cap, 
+		const char *s, 
 		int const parametrized)
 		{ return(*(char **)0); }
 
 #undef _nc_infotocap
 char	*_nc_infotocap(
-		 const char *cap, 
-		 const char *str, 
+		const char *cap, 
+		const char *str, 
 		int const parametrized)
 		{ return(*(char **)0); }
 
@@ -2173,18 +2197,18 @@ const struct alias _nc_infoalias_table[] = {0};
 
 #undef _nc_get_table
 const struct name_table_entry *_nc_get_table(
-		bool	termcap)
+		NCURSES_BOOL termcap)
 		{ return(*(const struct name_table_entry **)0); }
 
 #undef _nc_get_hash_table
 const struct name_table_entry *const *_nc_get_hash_table(
-		bool	termcap)
+		NCURSES_BOOL termcap)
 		{ return(*(const struct name_table_entry **)0); }
 
 /* ./tinfo/comp_error.c */
 
 #undef _nc_suppress_warnings
-bool	_nc_suppress_warnings;
+NCURSES_BOOL _nc_suppress_warnings;
 #undef _nc_curr_line
 int	_nc_curr_line;
 #undef _nc_curr_col
@@ -2228,7 +2252,7 @@ void	_nc_syserr_abort(
 #undef _nc_tic_expand
 char	*_nc_tic_expand(
 		const char *srcp, 
-		bool	tic_format, 
+		NCURSES_BOOL tic_format, 
 		int	numbers)
 		{ return(*(char **)0); }
 
@@ -2265,24 +2289,24 @@ void	_nc_free_entries(
 		{ /* void */ }
 
 #undef _nc_entry_match
-bool	_nc_entry_match(
+NCURSES_BOOL _nc_entry_match(
 		char	*n1, 
 		char	*n2)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef _nc_read_entry_source
 void	_nc_read_entry_source(
 		FILE	*fp, 
 		char	*buf, 
 		int	literal, 
-		bool	silent, 
-		bool	(*hook)(
+		NCURSES_BOOL silent, 
+		NCURSES_BOOL (*hook)(
 		ENTRY	*p1))
 		{ /* void */ }
 
 #undef _nc_resolve_uses
 int	_nc_resolve_uses(
-		bool	fullresolve)
+		NCURSES_BOOL fullresolve)
 		{ return(*(int *)0); }
 
 /* ./tinfo/comp_scan.c */
@@ -2300,10 +2324,11 @@ long	_nc_start_line;
 #undef _nc_curr_token
 struct token _nc_curr_token;
 #undef _nc_disable_period
-bool	_nc_disable_period;
+NCURSES_BOOL _nc_disable_period;
 
 #undef _nc_get_token
-int	_nc_get_token(void)
+int	_nc_get_token(
+		NCURSES_BOOL silent)
 		{ return(*(int *)0); }
 
 #undef _nc_trans_string
@@ -2351,11 +2376,11 @@ void	_nc_free_termtype(
 		{ /* void */ }
 
 #undef _nc_user_definable
-bool	_nc_user_definable;
+NCURSES_BOOL _nc_user_definable;
 
 #undef use_extended_names
 int	use_extended_names(
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 /* ./tinfo/getenv_num.c */
@@ -2400,8 +2425,8 @@ void	_nc_init_acs(void)
 #include <termcap.h>
 
 struct speed {
-    int s;	
-    int sp;	
+    int s;			
+    int sp;			
 };
 
 #undef _nc_baudrate
@@ -2449,12 +2474,12 @@ SCREEN	*SP;
 /* ./tinfo/lib_has_cap.c */
 
 #undef has_ic
-bool	has_ic(void)
-		{ return(*(bool *)0); }
+NCURSES_BOOL has_ic(void)
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef has_il
-bool	has_il(void)
-		{ return(*(bool *)0); }
+NCURSES_BOOL has_il(void)
+		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./tinfo/lib_kernel.c */
 
@@ -2472,10 +2497,6 @@ int	flushinp(void)
 
 /* ./lib_keyname.c */
 
-#include <stdlib.h>
-#include <string.h>
-#include <curses.h>
-
 #undef _nc_key_names
 const struct kn _nc_key_names[] = {0};
 
@@ -2492,6 +2513,8 @@ char	*longname(void)
 
 /* ./tinfo/lib_napms.c */
 
+#include <time.h>
+
 #undef napms
 int	napms(
 		int	ms)
@@ -2502,13 +2525,13 @@ int	napms(
 #undef idlok
 int	idlok(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 #undef idcok
 void	idcok(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ /* void */ }
 
 #undef halfdelay
@@ -2519,13 +2542,13 @@ int	halfdelay(
 #undef nodelay
 int	nodelay(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 #undef notimeout
 int	notimeout(
 		WINDOW	*win, 
-		bool	f)
+		NCURSES_BOOL f)
 		{ return(*(int *)0); }
 
 #undef wtimeout
@@ -2537,13 +2560,13 @@ void	wtimeout(
 #undef keypad
 int	keypad(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 #undef meta
 int	meta(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 #undef curs_set
@@ -2563,7 +2586,7 @@ int	has_key(
 
 #undef _nc_keypad
 int	_nc_keypad(
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 /* ./tinfo/lib_raw.c */
@@ -2595,7 +2618,7 @@ void	noqiflush(void)
 #undef intrflush
 int	intrflush(
 		WINDOW	*win, 
-		bool	flag)
+		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
 /* ./tinfo/lib_setup.c */
@@ -2604,7 +2627,7 @@ int	intrflush(
 
 #undef use_env
 void	use_env(
-		bool	f)
+		NCURSES_BOOL f)
 		{ /* void */ }
 
 #undef LINES
@@ -2699,11 +2722,14 @@ char	*tigetstr(
 
 typedef struct {
     union {
-	unsigned int num;
+	int num;
 	char *str;
     } data;
-    bool num_type;
+    NCURSES_BOOL  num_type;
 } stack_frame;
+
+#undef _nc_tparm_err
+int	_nc_tparm_err;
 
 #undef tparm
 char	*tparm(
@@ -2716,7 +2742,7 @@ char	*tparm(
 #undef PC
 char	PC;
 #undef ospeed
-short	ospeed;
+NCURSES_OSPEED	ospeed;
 #undef _nc_nulls_sent
 int	_nc_nulls_sent;
 
@@ -2761,17 +2787,6 @@ void	trace(
 		const unsigned int tracelevel)
 		{ /* void */ }
 
-#undef _nc_visbuf2
-const char *_nc_visbuf2(
-		int	bufnum, 
-		const char *buf)
-		{ return(*(const char **)0); }
-
-#undef _nc_visbuf
-const char *_nc_visbuf(
-		const char *buf)
-		{ return(*(const char **)0); }
-
 #undef _tracef
 void	_tracef(
 		const char *fmt, 
@@ -2788,6 +2803,11 @@ char	*_nc_retrace_ptr(
 		char	*code)
 		{ return(*(char **)0); }
 
+#undef _nc_retrace_sp
+SCREEN	*_nc_retrace_sp(
+		SCREEN	*code)
+		{ return(*(SCREEN **)0); }
+
 #undef _nc_retrace_win
 WINDOW	*_nc_retrace_win(
 		WINDOW	*code)
@@ -2800,6 +2820,11 @@ typedef struct {
     const char *name;
 } BITNAMES;
 
+#undef _nc_trace_ttymode
+char	*_nc_trace_ttymode(
+		struct termios *tty)
+		{ return(*(char **)0); }
+
 #undef _nc_tracebits
 char	*_nc_tracebits(void)
 		{ return(*(char **)0); }
@@ -2808,7 +2833,7 @@ char	*_nc_tracebits(void)
 
 #undef _tracechar
 char	*_tracechar(
-		const unsigned char ch)
+		int	ch)
 		{ return(*(char **)0); }
 
 /* ./tinfo/lib_ttyflags.c */
@@ -2891,7 +2916,7 @@ char	*const strfnames[] = {0};
 int	_nc_parse_entry(
 		struct entry *entryp, 
 		int	literal, 
-		bool	silent)
+		NCURSES_BOOL silent)
 		{ return(*(int *)0); }
 
 #undef _nc_capcmp
@@ -2932,16 +2957,18 @@ int	_nc_read_entry(
 
 /* ./tinfo/read_termcap.c */
 
-#undef _nc_read_termcap
-void	_nc_read_termcap(void)
-		{ /* void */ }
+#undef _nc_read_termcap_entry
+int	_nc_read_termcap_entry(
+		const char *const tn, 
+		TERMTYPE *const tp)
+		{ return(*(int *)0); }
 
 /* ./tinfo/setbuf.c */
 
 #undef _nc_set_buffer
 void	_nc_set_buffer(
 		FILE	*ofp, 
-		bool	buffered)
+		NCURSES_BOOL buffered)
 		{ /* void */ }
 
 /* ./tinfo/strings.c */
@@ -2966,22 +2993,22 @@ string_desc *_nc_str_copy(
 		{ return(*(string_desc **)0); }
 
 #undef _nc_safe_strcat
-bool	_nc_safe_strcat(
+NCURSES_BOOL _nc_safe_strcat(
 		string_desc *dst, 
 		const char *src)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef _nc_safe_strcpy
-bool	_nc_safe_strcpy(
+NCURSES_BOOL _nc_safe_strcpy(
 		string_desc *dst, 
 		const char *src)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./trace/trace_buf.c */
 
 typedef struct {
-	char *text;
-	size_t size;
+    char *text;
+    size_t size;
 } LIST;
 
 #undef _nc_trace_buf
@@ -3003,6 +3030,19 @@ void	_nc_trace_tries(
 char	*unctrl(
 		 chtype	ch)
 		{ return(*(char **)0); }
+
+/* ./trace/visbuf.c */
+
+#undef _nc_visbuf2
+const char *_nc_visbuf2(
+		int	bufnum, 
+		const char *buf)
+		{ return(*(const char **)0); }
+
+#undef _nc_visbuf
+const char *_nc_visbuf(
+		const char *buf)
+		{ return(*(const char **)0); }
 
 /* ./tinfo/write_entry.c */
 

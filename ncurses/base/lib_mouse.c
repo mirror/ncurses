@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.55 2000/10/10 00:07:28 Ilya.Zakharevich Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.61 2002/09/28 16:08:58 tom Exp $")
 
 #define MY_TRACE TRACE_ICALLS|TRACE_IEVENT
 
@@ -327,17 +327,18 @@ _nc_mouse_init(void)
     }
 }
 
+/*
+ * Query to see if there is a pending mouse event.  This is called from
+ * fifo_push() in lib_getch.c
+ */
 static bool
 _nc_mouse_event(SCREEN * sp GCC_UNUSED)
-/* query to see if there is a pending mouse event */
 {
 #if USE_GPM_SUPPORT
     /* GPM: query server for event, return TRUE if we find one */
     Gpm_Event ev;
 
-    if (gpm_fd >= 0
-	&& (_nc_timed_wait(3, 0, (int *) 0) & 2) != 0
-	&& Gpm_GetEvent(&ev) == 1) {
+    if (Gpm_GetEvent(&ev) == 1) {
 	eventp->id = 0;		/* there's only one mouse... */
 
 	eventp->bstate = 0;
@@ -373,8 +374,7 @@ _nc_mouse_event(SCREEN * sp GCC_UNUSED)
 #endif
 
 #ifdef USE_EMX_MOUSE
-    if (SP->_mouse_fd >= 0
-	&& (_nc_timed_wait(3, 0, (int *) 0) & 2) != 0) {
+    {
 	char kbuf[3];
 
 	int i, res = read(M_FD(sp), &kbuf, 3);	/* Eat the prefix */
@@ -655,7 +655,7 @@ _nc_mouse_parse(int runcount)
     /* first pass; merge press/release pairs */
     do {
 	merge = FALSE;
-	for (ep = runp; next = NEXT(ep), next != eventp; ep = next) {
+	for (ep = runp; (next = NEXT(ep)) != eventp; ep = next) {
 	    if (ep->x == next->x && ep->y == next->y
 		&& (ep->bstate & (BUTTON1_PRESSED | BUTTON2_PRESSED | BUTTON3_PRESSED))
 		&& (!(ep->bstate & BUTTON1_PRESSED)
@@ -720,7 +720,7 @@ _nc_mouse_parse(int runcount)
 	MEVENT *follower;
 
 	merge = FALSE;
-	for (ep = runp; next = NEXT(ep), next != eventp; ep = next)
+	for (ep = runp; (next = NEXT(ep)) != eventp; ep = next)
 	    if (ep->id != INVALID_EVENT) {
 		if (next->id != INVALID_EVENT)
 		    continue;
@@ -863,7 +863,7 @@ _nc_mouse_resume(SCREEN * sp GCC_UNUSED)
  *
  **************************************************************************/
 
-int
+NCURSES_EXPORT(int)
 getmouse(MEVENT * aevent)
 /* grab a copy of the current mouse event */
 {
@@ -886,10 +886,12 @@ getmouse(MEVENT * aevent)
     returnCode(ERR);
 }
 
-int
+NCURSES_EXPORT(int)
 ungetmouse(MEVENT * aevent)
 /* enqueue a synthesized mouse event to be seen by the next wgetch() */
 {
+    T((T_CALLED("ungetmouse(%p)"), aevent));
+
     /* stick the given event in the next-free slot */
     *eventp = *aevent;
 
@@ -897,10 +899,10 @@ ungetmouse(MEVENT * aevent)
     eventp = NEXT(eventp);
 
     /* push back the notification event on the keyboard queue */
-    return ungetch(KEY_MOUSE);
+    returnCode(ungetch(KEY_MOUSE));
 }
 
-mmask_t
+NCURSES_EXPORT(mmask_t)
 mousemask(mmask_t newmask, mmask_t * oldmask)
 /* set the mouse event mask */
 {
@@ -912,7 +914,7 @@ mousemask(mmask_t newmask, mmask_t * oldmask)
 	*oldmask = eventmask;
 
     if (!newmask && !initialized)
-	returnCode(0);
+	returnBits(0);
 
     _nc_mouse_init();
     if (mousetype != M_NONE) {
@@ -930,28 +932,34 @@ mousemask(mmask_t newmask, mmask_t * oldmask)
 	result = eventmask;
     }
 
-    returnCode(result);
+    returnBits(result);
 }
 
-bool
+NCURSES_EXPORT(bool)
 wenclose(const WINDOW *win, int y, int x)
 /* check to see if given window encloses given screen location */
 {
-    if (win) {
+    bool result = FALSE;
+
+    T((T_CALLED("wenclose(%p,%d,%d)"), win, y, x));
+
+    if (win != 0) {
 	y -= win->_yoffset;
-	return ((win->_begy <= y &&
-		 win->_begx <= x &&
-		 (win->_begx + win->_maxx) >= x &&
-		 (win->_begy + win->_maxy) >= y) ? TRUE : FALSE);
+	result = ((win->_begy <= y &&
+		   win->_begx <= x &&
+		   (win->_begx + win->_maxx) >= x &&
+		   (win->_begy + win->_maxy) >= y) ? TRUE : FALSE);
     }
-    return FALSE;
+    returnBool(result);
 }
 
-int
+NCURSES_EXPORT(int)
 mouseinterval(int maxclick)
 /* set the maximum mouse interval within which to recognize a click */
 {
     int oldval;
+
+    T((T_CALLED("mouseinterval(%d)"), maxclick));
 
     if (SP != 0) {
 	oldval = SP->_maxclick;
@@ -961,21 +969,23 @@ mouseinterval(int maxclick)
 	oldval = DEFAULT_MAXCLICK;
     }
 
-    return (oldval);
+    returnCode(oldval);
 }
 
 /* This may be used by other routines to ask for the existence of mouse
    support */
-int
+NCURSES_EXPORT(int)
 _nc_has_mouse(void)
 {
     return (mousetype == M_NONE ? 0 : 1);
 }
 
-bool
+NCURSES_EXPORT(bool)
 wmouse_trafo(const WINDOW *win, int *pY, int *pX, bool to_screen)
 {
     bool result = FALSE;
+
+    T((T_CALLED("wmouse_trafo(%p,%p,%p,%d)"), win, pY, pX, to_screen));
 
     if (win && pY && pX) {
 	int y = *pY;
@@ -998,7 +1008,7 @@ wmouse_trafo(const WINDOW *win, int *pY, int *pX, bool to_screen)
 	    *pY = y;
 	}
     }
-    return (result);
+    returnBool(result);
 }
 
 /* lib_mouse.c ends here */

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,22 +45,11 @@
 #if HAVE_SYS_TIME_H
 #include <sys/time.h>		/* needed for MacOS X DP3 */
 #endif
-#elif USE_FUNC_POLL
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#elif HAVE_SELECT
-#if HAVE_SYS_TIME_H && HAVE_SYS_TIME_SELECT
-#include <sys/time.h>
-#endif
-#if HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
 #endif
 
-MODULE_ID("$Id: lib_napms.c,v 1.9 2000/04/29 23:42:56 tom Exp $")
+MODULE_ID("$Id: lib_napms.c,v 1.13 2002/09/01 17:46:11 tom Exp $")
 
-int
+NCURSES_EXPORT(int)
 napms(int ms)
 {
     T((T_CALLED("napms(%d)"), ms));
@@ -72,18 +61,9 @@ napms(int ms)
 	ts.tv_nsec = (ms % 1000) * 1000000;
 	nanosleep(&ts, NULL);
     }
-#elif USE_FUNC_POLL
-    {
-	struct pollfd fds[1];
-	poll(fds, 0, ms);
-    }
-#elif HAVE_SELECT
-    {
-	struct timeval tval;
-	tval.tv_sec = ms / 1000;
-	tval.tv_usec = (ms % 1000) * 1000;
-	select(0, NULL, NULL, NULL, &tval);
-    }
+#else
+    _nc_timed_wait(0, ms, (int *) 0 EVENTLIST_2nd(0));
 #endif
+
     returnCode(OK);
 }

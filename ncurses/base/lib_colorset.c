@@ -27,7 +27,8 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1998                  *
+ *  Author: Juergen Pfeifer, 1998                                           *
+ *  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en              *
  ****************************************************************************/
 
 /*
@@ -40,10 +41,11 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_colorset.c,v 1.6 2000/07/29 16:37:19 tom Exp $")
+MODULE_ID("$Id: lib_colorset.c,v 1.8 2002/07/13 11:35:08 juergen Exp $")
 
-int
-wcolor_set(WINDOW *win, short color_pair_number, void *opts)
+NCURSES_EXPORT(int)
+wcolor_set
+(WINDOW *win, short color_pair_number, void *opts)
 {
     T((T_CALLED("wcolor_set(%p,%d)"), win, color_pair_number));
     if (win

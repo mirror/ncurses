@@ -33,9 +33,10 @@
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+--  Author:  Juergen Pfeifer, 1996
+--  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control
---  $Revision: 1.12 $
+--  $Revision: 1.14 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and
@@ -317,7 +318,7 @@ package body Sample.Explanation is
       Reset (F);
       Outer :
       loop
-         exit when not Next_Line;
+         exit Outer when not Next_Line;
          if Last = (1 + Key'Length) and then Key = Buffer (2 .. Last)
            and then Buffer (1) = '#' then
             loop

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,9 +47,9 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_restart.c,v 1.3 2000/09/02 18:09:44 tom Exp $")
+MODULE_ID("$Id: lib_restart.c,v 1.5 2002/08/31 22:30:10 Philippe.Blain Exp $")
 
-int
+NCURSES_EXPORT(int)
 restartterm(NCURSES_CONST char *termp, int filenum, int *errret)
 {
     int saveecho = SP->_echo;
@@ -59,7 +59,8 @@ restartterm(NCURSES_CONST char *termp, int filenum, int *errret)
 
     T((T_CALLED("restartterm(%s,%d,%p)"), termp, filenum, errret));
 
-    setupterm(termp, filenum, errret);
+    if (setupterm(termp, filenum, errret) != OK)
+	returnCode(ERR);
 
     if (saveecho)
 	echo();

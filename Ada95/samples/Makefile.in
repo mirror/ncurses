@@ -26,10 +26,11 @@
 # authorization.                                                             #
 ##############################################################################
 #
-#  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+#  Author:  Juergen Pfeifer, 1996
+#  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 #
 #  Version Control
-#  $Revision: 1.25 $
+#  $Revision: 1.29 $
 #
 .SUFFIXES:
 
@@ -84,9 +85,9 @@ ALIB         = @cf_ada_package@
 ABASE        = $(ALIB)-curses
 
 CARGS        =-cargs $(ADAFLAGS)
-LARGS        =-largs -L../../lib $(LD_FLAGS) -lAdaCurses -lncurses@LIB_SUFFIX@
-
-PROGS        = tour rain
+LARGS        =-largs -L../../lib @TEST_ARGS@ $(LD_FLAGS) -lAdaCurses @EXTRA_LIBS@
+ 
+PROGS        = tour rain ncurses 
 
 TOUR_OBJS    =	tour.o sample.o sample-curses_demo.o sample-explanation.o 	\
 		sample-form_demo.o sample-function_key_setting.o 		\
@@ -98,7 +99,19 @@ TOUR_OBJS    =	tour.o sample.o sample-curses_demo.o sample-explanation.o 	\
 
 RAIN_OBJS    =	rain.o status.o
 
-all ::  tour$x rain$x
+NCURSES_OBJS = ncurses.o        	ncurses2-getch_test.o \
+	ncurses2-acs_and_scroll.o       ncurses2-m.o \
+	ncurses2-acs_display.o          ncurses2-menu_test.o \
+	ncurses2-attr_test.o            ncurses2-overlap_test.o \
+	ncurses2-color_edit.o           ncurses2-slk_test.o \
+	ncurses2-color_test.o           ncurses2-test_sgr_attributes.o \
+	ncurses2-demo_forms.o           ncurses2-trace_set.o \
+	ncurses2-demo_pad.o             ncurses2-util.o \
+	ncurses2-demo_panels.o          ncurses2.o \
+	ncurses2-flushinp_test.o
+
+
+all ::  tour$x rain$x ncurses$x
 	@
 
 sources :
@@ -113,6 +126,9 @@ uninstall \
 uninstall.libs ::
 	@
 
+ncurses$x :
+	$(ADAMAKE) $(ADAMAKEFLAGS) ncurses $(CARGS) $(LARGS)
+
 tour$x :	explain.msg
 	$(ADAMAKE) $(ADAMAKEFLAGS) tour $(CARGS) $(LARGS)
 
@@ -126,7 +142,8 @@ mostlyclean:
 	@
 
 clean :: mostlyclean
-	rm -f *.o *.ali b_t*.* *.s $(PROGS) a.out core b_*_test.c *.xr[bs] explain.msg
+	rm -f *.o *.ali b_t*.* *.s $(PROGS) a.out core b_*_test.c *.xr[bs] \
+	explain.msg trace screendump 
 
 distclean :: clean
 	rm -f Makefile

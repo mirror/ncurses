@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,12 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_arg.c,v 1.4 1999/05/16 17:16:04 juergen Exp $")
+MODULE_ID("$Id: fld_arg.c,v 1.6 2002/07/06 15:33:27 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -60,10 +61,12 @@ MODULE_ID("$Id: fld_arg.c,v 1.4 1999/05/16 17:16:04 juergen Exp $")
 |   Return Values :  E_OK           - success
 |                    E_BAD_ARGUMENT - invalid argument
 +--------------------------------------------------------------------------*/
-int set_fieldtype_arg(FIELDTYPE * typ,
-		      void * (* const make_arg)(va_list *),
-		      void * (* const copy_arg)(const void *),
-		      void   (* const free_arg)(void *))
+NCURSES_EXPORT(int)
+set_fieldtype_arg
+    (FIELDTYPE * typ,
+     void * (* const make_arg)(va_list *),
+     void * (* const copy_arg)(const void *),
+     void   (* const free_arg)(void *))
 {
   if ( !typ || !make_arg )
     RETURN(E_BAD_ARGUMENT);
@@ -83,7 +86,8 @@ int set_fieldtype_arg(FIELDTYPE * typ,
 |
 |   Return Values :  Pointer to structure or NULL if none is defined.
 +--------------------------------------------------------------------------*/
-void *field_arg(const FIELD * field)
+NCURSES_EXPORT(void *)
+field_arg (const FIELD * field)
 {
   return Normalize_Field(field)->arg;
 }

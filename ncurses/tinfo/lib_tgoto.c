@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2000 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2000-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include <termcap.h>
 
-MODULE_ID("$Id: lib_tgoto.c,v 1.2 2000/09/24 00:19:14 tom Exp $")
+MODULE_ID("$Id: lib_tgoto.c,v 1.10 2002/08/31 22:14:47 Philippe.Blain Exp $")
 
 #if !PURE_TERMINFO
 static bool
@@ -43,20 +43,24 @@ is_termcap(const char *string)
 {
     bool result = TRUE;
 
-    while ((*string != '\0') && result) {
-	if (*string == '%') {
-	    switch (*++string) {
-	    case 'p':
+    if (string == 0 || *string == '\0') {
+	result = FALSE;		/* tparm() handles empty strings */
+    } else {
+	while ((*string != '\0') && result) {
+	    if (*string == '%') {
+		switch (*++string) {
+		case 'p':
+		    result = FALSE;
+		    break;
+		case '\0':
+		    string--;
+		    break;
+		}
+	    } else if (string[0] == '$' && string[1] == '<') {
 		result = FALSE;
-		break;
-	    case '\0':
-		string--;
-		break;
 	    }
-	} else if (string[0] == '$' && string[1] == '<') {
-	    result = FALSE;
+	    string++;
 	}
-	string++;
     }
     return result;
 }
@@ -84,13 +88,13 @@ tgoto_internal(const char *string, int x, int y)
     while (*string != 0) {
 	if ((used + need) > length) {
 	    length += (used + need);
-	    if ((result = _nc_doalloc(result, length)) == 0) {
+	    if ((result = typeRealloc(char, length, result)) == 0) {
 		length = 0;
 		break;
 	    }
 	}
 	if (*string == '%') {
-	    char *fmt = 0;
+	    const char *fmt = 0;
 
 	    switch (*++string) {
 	    case '\0':
@@ -108,7 +112,7 @@ tgoto_internal(const char *string, int x, int y)
 		*value %= 1000;
 		break;
 	    case '+':
-		*value += (*++string & 0xff);
+		*value += UChar(*++string);
 		/* FALLTHRU */
 	    case '.':
 		/*
@@ -168,11 +172,13 @@ tgoto_internal(const char *string, int x, int y)
 	}
 	string++;
     }
-    if (need_BC) {
-	strcpy(result + used, BC);
-	used += strlen(BC);
+    if (result != 0) {
+	if (need_BC) {
+	    strcpy(result + used, BC);
+	    used += strlen(BC);
+	}
+	result[used] = '\0';
     }
-    result[used] = '\0';
     return result;
 }
 #endif
@@ -181,7 +187,7 @@ tgoto_internal(const char *string, int x, int y)
  * Retained solely for upward compatibility.  Note the intentional reversing of
  * the last two arguments when invoking tparm().
  */
-char *
+NCURSES_EXPORT(char *)
 tgoto(const char *string, int x, int y)
 {
     char *result;

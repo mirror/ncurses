@@ -1,126 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  ****************************************************************************
+  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: curs_window.3x,v 1.9 2000/07/01 20:08:37 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>curs_window 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>curs_window 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>newwin</B>,  <B>delwin</B>,  <B>mvwin</B>, <B>subwin</B>, <B>derwin</B>, <B>mvderwin</B>, <B>dupwin</B>,
-       <B>wsyncup</B>, <B>syncok</B>, <B>wcursyncup</B>,  <B>wsyncdown</B>  -  create  <B>curses</B>
+       <STRONG>newwin</STRONG>,  <STRONG>delwin</STRONG>,  <STRONG>mvwin</STRONG>, <STRONG>subwin</STRONG>, <STRONG>derwin</STRONG>, <STRONG>mvderwin</STRONG>, <STRONG>dupwin</STRONG>,
+       <STRONG>wsyncup</STRONG>, <STRONG>syncok</STRONG>, <STRONG>wcursyncup</STRONG>,  <STRONG>wsyncdown</STRONG>  -  create  <STRONG>curses</STRONG>
        windows
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>WINDOW</B> <B>*newwin(int</B> <B>nlines,</B> <B>int</B> <B>ncols,</B> <B>int</B> <B>begin_y,</B>
-             <B>int</B> <B>begin_x);</B>
-       <B>int</B> <B>delwin(WINDOW</B> <B>*win);</B>
-       <B>int</B> <B>mvwin(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x);</B>
-       <B>WINDOW</B> <B>*subwin(WINDOW</B> <B>*orig,</B> <B>int</B> <B>nlines,</B> <B>int</B> <B>ncols,</B>
-             <B>int</B> <B>begin_y,</B> <B>int</B> <B>begin_x);</B>
-       <B>WINDOW</B> <B>*derwin(WINDOW</B> <B>*orig,</B> <B>int</B> <B>nlines,</B> <B>int</B> <B>ncols,</B>
-             <B>int</B> <B>begin_y,</B> <B>int</B> <B>begin_x);</B>
-       <B>int</B> <B>mvderwin(WINDOW</B> <B>*win,</B> <B>int</B> <B>par_y,</B> <B>int</B> <B>par_x);</B>
-       <B>WINDOW</B> <B>*dupwin(WINDOW</B> <B>*win);</B>
-       <B>void</B> <B>wsyncup(WINDOW</B> <B>*win);</B>
-       <B>int</B> <B>syncok(WINDOW</B> <B>*win,</B> <B>bool</B> <B>bf);</B>
-       <B>void</B> <B>wcursyncup(WINDOW</B> <B>*win);</B>
-       <B>void</B> <B>wsyncdown(WINDOW</B> <B>*win);</B>
+       <STRONG>WINDOW</STRONG> <STRONG>*newwin(int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG> <STRONG>int</STRONG> <STRONG>begin_y,</STRONG>
+             <STRONG>int</STRONG> <STRONG>begin_x);</STRONG>
+       <STRONG>int</STRONG> <STRONG>delwin(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwin(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*subwin(WINDOW</STRONG> <STRONG>*orig,</STRONG> <STRONG>int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG>
+             <STRONG>int</STRONG> <STRONG>begin_y,</STRONG> <STRONG>int</STRONG> <STRONG>begin_x);</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*derwin(WINDOW</STRONG> <STRONG>*orig,</STRONG> <STRONG>int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG>
+             <STRONG>int</STRONG> <STRONG>begin_y,</STRONG> <STRONG>int</STRONG> <STRONG>begin_x);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvderwin(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>par_y,</STRONG> <STRONG>int</STRONG> <STRONG>par_x);</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*dupwin(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>void</STRONG> <STRONG>wsyncup(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>int</STRONG> <STRONG>syncok(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
+       <STRONG>void</STRONG> <STRONG>wcursyncup(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>void</STRONG> <STRONG>wsyncdown(WINDOW</STRONG> <STRONG>*win);</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       Calling <B>newwin</B> creates and returns a pointer to a new win-
+       Calling <STRONG>newwin</STRONG> creates and returns a pointer to a new win-
        dow with the given number of lines and columns.  The upper
-       left-hand  corner of the window is at line <I>begin</I>_<I>y</I>, column
-       <I>begin</I>_<I>x</I>.  If either <I>nlines</I> or <I>ncols</I> is zero, they  default
-       to  <B>LINES</B> <B>-</B> <I>begin</I>_<I>y</I> and <B>COLS</B> <B>-</B> <I>begin</I>_<I>x</I>.  A new full-screen
-       window is created by calling <B>newwin(0,0,0,0)</B>.
+       left-hand  corner of the window is at line <EM>begin</EM>_<EM>y</EM>, column
+       <EM>begin</EM>_<EM>x</EM>.  If either <EM>nlines</EM> or <EM>ncols</EM> is zero, they  default
+       to  <STRONG>LINES</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>y</EM> and <STRONG>COLS</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>x</EM>.  A new full-screen
+       window is created by calling <STRONG>newwin(0,0,0,0)</STRONG>.
 
-       Calling <B>delwin</B> deletes the named window, freeing all  mem-
+       Calling <STRONG>delwin</STRONG> deletes the named window, freeing all  mem-
        ory  associated  with  it  (it does not actually erase the
        window's screen image).  Subwindows must be deleted before
        the main window can be deleted.
 
-       Calling <B>mvwin</B> moves the window so that the upper left-hand
-       corner is at position (<I>x</I>, <I>y</I>).  If the move would cause the
+       Calling <STRONG>mvwin</STRONG> moves the window so that the upper left-hand
+       corner is at position (<EM>x</EM>, <EM>y</EM>).  If the move would cause the
        window to be off the screen, it is an error and the window
        is not moved.  Moving subwindows is allowed, but should be
        avoided.
 
-       Calling <B>subwin</B> creates and returns a pointer to a new win-
-       dow with the given number of lines, <I>nlines</I>,  and  columns,
-       <I>ncols</I>.   The  window  is at position (<I>begin</I>_<I>y</I>, <I>begin</I>_<I>x</I>) on
+       Calling <STRONG>subwin</STRONG> creates and returns a pointer to a new win-
+       dow with the given number of lines, <EM>nlines</EM>,  and  columns,
+       <EM>ncols</EM>.   The  window  is at position (<EM>begin</EM>_<EM>y</EM>, <EM>begin</EM>_<EM>x</EM>) on
        the screen.  (This position is relative to the screen, and
-       not to the window <I>orig</I>.)  The window is made in the middle
-       of the window <I>orig</I>, so that changes  made  to  one  window
+       not to the window <EM>orig</EM>.)  The window is made in the middle
+       of the window <EM>orig</EM>, so that changes  made  to  one  window
        will  affect  both  windows.   The subwindow shares memory
-       with the window <I>orig</I>.  When using this routine, it is nec-
-       essary  to call <B>touchwin</B> or <B>touchline</B> on <I>orig</I> before call-
-       ing <B>wrefresh</B> on the subwindow.
+       with the window <EM>orig</EM>.  When using this routine, it is nec-
+       essary  to call <STRONG>touchwin</STRONG> or <STRONG>touchline</STRONG> on <EM>orig</EM> before call-
+       ing <STRONG>wrefresh</STRONG> on the subwindow.
 
-       Calling <B>derwin</B> is the same as calling <B>subwin,</B> except  that
-       <I>begin</I>_<I>y</I> and <I>begin</I>_<I>x</I> are relative to the origin of the win-
-       dow <I>orig</I> rather than the screen.  There is  no  difference
+       Calling <STRONG>derwin</STRONG> is the same as calling <STRONG>subwin,</STRONG> except  that
+       <EM>begin</EM>_<EM>y</EM> and <EM>begin</EM>_<EM>x</EM> are relative to the origin of the win-
+       dow <EM>orig</EM> rather than the screen.  There is  no  difference
        between the subwindows and the derived windows.
 
-       Calling  <B>mvderwin</B>  moves  a  derived window (or subwindow)
+       Calling  <STRONG>mvderwin</STRONG>  moves  a  derived window (or subwindow)
        inside its parent window.  The screen-relative  parameters
        of  the  window  are not changed.  This routine is used to
        display different parts of the parent window at  the  same
        physical position on the screen.
 
-       Calling  <B>dupwin</B>  creates  an exact duplicate of the window
-       <I>win</I>.
+       Calling  <STRONG>dupwin</STRONG>  creates  an exact duplicate of the window
+       <EM>win</EM>.
 
-       Calling <B>wsyncup</B> touches all locations in ancestors of  <I>win</I>
-       that  are changed in <I>win</I>.  If <B>syncok</B> is called with second
-       argument <B>TRUE</B> then <B>wsyncup</B> is called  automatically  when-
+       Calling <STRONG>wsyncup</STRONG> touches all locations in ancestors of  <EM>win</EM>
+       that  are changed in <EM>win</EM>.  If <STRONG>syncok</STRONG> is called with second
+       argument <STRONG>TRUE</STRONG> then <STRONG>wsyncup</STRONG> is called  automatically  when-
        ever there is a change in the window.
 
-       The  <B>wsyncdown</B>  routine  touches each location in <I>win</I> that
+       The  <STRONG>wsyncdown</STRONG>  routine  touches each location in <EM>win</EM> that
        has been touched in any of  its  ancestor  windows.   This
-       routine  is  called by <B>wrefresh</B>, so it should almost never
+       routine  is  called by <STRONG>wrefresh</STRONG>, so it should almost never
        be necessary to call it manually.
 
-       The routine <B>wcursyncup</B> updates the current cursor position
+       The routine <STRONG>wcursyncup</STRONG> updates the current cursor position
        of  all the ancestors of the window to reflect the current
        cursor position of the window.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Routines that return an integer  return  the  integer  <B>ERR</B>
-       upon failure and <B>OK</B> (SVr4 only specifies "an integer value
-       other than <B>ERR</B>") upon successful completion.
+       Routines that return an integer  return  the  integer  <STRONG>ERR</STRONG>
+       upon failure and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value
+       other than <STRONG>ERR</STRONG>") upon successful completion.
 
-       <B>delwin</B> returns the integer <B>ERR</B> upon failure  and  <B>OK</B>  upon
+       <STRONG>delwin</STRONG> returns the integer <STRONG>ERR</STRONG> upon failure  and  <STRONG>OK</STRONG>  upon
        successful completion.
 
-       Routines that return pointers return <B>NULL</B> on error.
+       Routines that return pointers return <STRONG>NULL</STRONG> on error.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       If  many small changes are made to the window, the <B>wsyncup</B>
+       If  many small changes are made to the window, the <STRONG>wsyncup</STRONG>
        option could degrade performance.
 
-       Note that <B>syncok</B> may be a macro.
+       Note that <STRONG>syncok</STRONG> may be a macro.
 
 
 </PRE>
 <H2>BUGS</H2><PRE>
-       The subwindow functions (<I>subwin</I>, <I>derwin</I>,  <I>mvderwin</I>,  <B>wsyn-</B>
-       <B>cup</B>,  <B>wsyncdown</B>,  <B>wcursyncup</B>,  <B>syncok</B>)  are  flaky, incom-
+       The subwindow functions (<EM>subwin</EM>, <EM>derwin</EM>,  <EM>mvderwin</EM>,  <STRONG>wsyn-</STRONG>
+       <STRONG>cup</STRONG>,  <STRONG>wsyncdown</STRONG>,  <STRONG>wcursyncup</STRONG>,  <STRONG>syncok</STRONG>)  are  flaky, incom-
        pletely implemented, and not well tested.
 
        The System V curses documentation is  very  unclear  about
-       what <B>wsyncup</B> and <B>wsyncdown</B> actually do.  It seems to imply
+       what <STRONG>wsyncup</STRONG> and <STRONG>wsyncdown</STRONG> actually do.  It seems to imply
        that they are only supposed to touch exactly  those  lines
        that are affected by ancestor changes.  The language here,
-       and the behavior of the  <B>curses</B>  implementation,  is  pat-
+       and the behavior of the  <STRONG>curses</STRONG>  implementation,  is  pat-
        terned  on the XPG4 curses standard.  The weaker XPG4 spec
        may result in slower updates.
 
@@ -133,7 +171,7 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></B>, <B><A HREF="curs_touch.3x.html">curs_touch(3x)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
 
 
 

@@ -1,51 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  ****************************************************************************
+  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: curs_addstr.3x,v 1.10 2002/03/09 23:09:29 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>curs_addstr 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>curs_addstr 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>addstr</B>,  <B>addnstr</B>,  <B>waddstr</B>, <B>waddnstr</B>, <B>mvaddstr</B>, <B>mvaddnstr</B>,
-       <B>mvwaddstr</B>, <B>mvwaddnstr</B> - add a string of  characters  to  a
-       <B>curses</B> window and advance cursor
+       <STRONG>addstr</STRONG>,  <STRONG>addnstr</STRONG>,  <STRONG>waddstr</STRONG>, <STRONG>waddnstr</STRONG>, <STRONG>mvaddstr</STRONG>, <STRONG>mvaddnstr</STRONG>,
+       <STRONG>mvwaddstr</STRONG>, <STRONG>mvwaddnstr</STRONG> - add a string of  characters  to  a
+       <STRONG>curses</STRONG> window and advance cursor
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>addstr(const</B> <B>char</B> <B>*str);</B>
-       <B>int</B> <B>addnstr(const</B> <B>char</B> <B>*str,</B> <B>int</B> <B>n);</B>
-       <B>int</B> <B>waddstr(WINDOW</B> <B>*win,</B> <B>const</B> <B>char</B> <B>*str);</B>
-       <B>int</B> <B>waddnstr(WINDOW</B> <B>*win,</B> <B>const</B> <B>char</B> <B>*str,</B> <B>int</B> <B>n);</B>
-       <B>int</B> <B>mvaddstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>char</B> <B>*str);</B>
-       <B>int</B> <B>mvaddnstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>char</B> <B>*str,</B> <B>int</B> <B>n);</B>
-       <B>int</B> <B>mvwaddstr(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>char</B> <B>*str);</B>
-       <B>int</B> <B>mvwaddnstr(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>char</B> <B>*str,</B>
-       <B>int</B> <B>n);</B>
+       <STRONG>int</STRONG> <STRONG>addstr(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>addnstr(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddnstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvaddstr(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvaddnstr(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwaddstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwaddnstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str,</EM> <EM>int</EM> <EM>n</EM><STRONG>);</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        These  routines  write  the characters of the (null-termi-
-       nated) character string <I>str</I> on the given  window.   It  is
-       similar  to  calling <B>waddch</B> once for each character in the
-       string.  The four routines with <I>n</I>  as  the  last  argument
-       write  at  most <I>n</I> characters.  If <I>n</I> is -1, then the entire
-       string will be added.
+       nated) character string <EM>str</EM> on the given  window.   It  is
+       similar  to  calling <STRONG>waddch</STRONG> once for each character in the
+       string.  The four routines with <EM>n</EM>  as  the  last  argument
+       write  at  most <EM>n</EM> characters.  If <EM>n</EM> is -1, then the entire
+       string will be added, up to the maximum number of  charac-
+       ters  that  will  fit  on the line, or until a terminating
+       null is reached.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       All routines return the integer <B>ERR</B> upon failure and <B>OK</B> on
+       All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on
        success  (the  SVr4 manuals specify only "an integer value
-       other than <B>ERR</B>") upon successful completion.
+       other than <STRONG>ERR</STRONG>") upon successful completion.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       Note  that  all  of  these  routines  except  <B>waddstr</B>  and
-       <B>waddnstr</B> may be macros.
+       Note  that  all  of  these  routines  except  <STRONG>waddstr</STRONG>  and
+       <STRONG>waddnstr</STRONG> may be macros.
 
 
 </PRE>
@@ -58,8 +97,7 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_addch.3x.html">curs_addch(3x)</A></B>.
-
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>.
 
 
 

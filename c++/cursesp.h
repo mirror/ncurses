@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,13 +28,14 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
+ *   Author: Juergen Pfeifer, 1997                                          *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
-#ifndef _CURSESP_H
-#define _CURSESP_H
+#ifndef NCURSES_CURSESP_H_incl
+#define NCURSES_CURSESP_H_incl 1
 
-// $Id: cursesp.h,v 1.12 1999/10/31 00:00:02 tom Exp $
+// $Id: cursesp.h,v 1.17 2002/07/06 15:47:52 juergen Exp $
 
 #include <cursesw.h>
 
@@ -42,7 +43,7 @@ extern "C" {
 #  include <panel.h>
 }
 
-class NCursesPanel : public NCursesWindow {
+class NCURSES_IMPEXP NCursesPanel : public NCursesWindow {
 protected:
   PANEL *p;
   static NCursesPanel *dummy;
@@ -78,6 +79,9 @@ protected:
   }
   // If err is equal to the curses error indicator ERR, an error handler
   // is called.
+
+  // Get a keystroke. Default implementation calls getch()
+  virtual int getKey(void);
 
 public:
   NCursesPanel(int lines,
@@ -215,4 +219,4 @@ public:
   // Associate the user panel with the user data pointed to by p_UserData.
 };
 
-#endif // _CURSESP_H
+#endif // NCURSES_CURSESP_H_incl

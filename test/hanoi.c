@@ -14,17 +14,15 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.19 2000/09/02 18:51:16 tom Exp $
+ * $Id: hanoi.c,v 1.24 2002/06/29 23:32:18 tom Exp $
  */
 
 #include <test.priv.h>
 
-#include <string.h>
-
 #define NPEGS			3	/* This is not configurable !! */
 #define MINTILES		3
 #define MAXTILES		9
-#define DEFAULTTILES	7
+#define DEFAULTTILES		7
 #define TOPLINE			6
 #define BASELINE		16
 #define STATUSLINE		(LINES-3)
@@ -70,7 +68,9 @@ int
 main(int argc, char **argv)
 {
     int NTiles, FromCol, ToCol;
-    unsigned char AutoFlag = 0;
+    bool AutoFlag = 0;
+
+    setlocale(LC_ALL, "");
 
     switch (argc) {
     case 1:
@@ -80,24 +80,24 @@ main(int argc, char **argv)
 	NTiles = atoi(argv[1]);
 	if (NTiles > MAXTILES || NTiles < MINTILES) {
 	    fprintf(stderr, "Range %d to %d\n", MINTILES, MAXTILES);
-	    return EXIT_FAILURE;
+	    ExitProgram(EXIT_FAILURE);
 	}
 	break;
     case 3:
 	if (strcmp(argv[2], "a")) {
 	    Usage();
-	    return EXIT_FAILURE;
+	    ExitProgram(EXIT_FAILURE);
 	}
 	NTiles = atoi(argv[1]);
 	if (NTiles > MAXTILES || NTiles < MINTILES) {
 	    fprintf(stderr, "Range %d to %d\n", MINTILES, MAXTILES);
-	    return EXIT_FAILURE;
+	    ExitProgram(EXIT_FAILURE);
 	}
 	AutoFlag = TRUE;
 	break;
     default:
 	Usage();
-	return EXIT_FAILURE;
+	ExitProgram(EXIT_FAILURE);
     }
 #ifdef TRACE
     trace(TRACE_MAXIMUM);
@@ -118,7 +118,7 @@ main(int argc, char **argv)
     if (LINES < 24) {
 	endwin();
 	fprintf(stderr, "Min screen length 24 lines\n");
-	return EXIT_FAILURE;
+	ExitProgram(EXIT_FAILURE);
     }
     if (AutoFlag) {
 	curs_set(0);
@@ -154,7 +154,7 @@ main(int argc, char **argv)
 	}
     }
     endwin();
-    return EXIT_SUCCESS;
+    ExitProgram(EXIT_SUCCESS);
 }
 
 static int
@@ -295,7 +295,7 @@ Solved(int NumTiles)
 }
 
 static void
-Usage()
+Usage(void)
 {
     fprintf(stderr, "Usage: hanoi [<No Of Tiles>] [a]\n");
     fprintf(stderr,

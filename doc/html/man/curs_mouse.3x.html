@@ -1,45 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  * t
+  ****************************************************************************
+  * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: curs_mouse.3x,v 1.20 2002/07/20 14:52:14 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>curs_mouse 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>curs_mouse 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>getmouse</B>,  <B>ungetmouse</B>,  <B>mousemask</B>,  <B>wenclose</B>, <B>mouse_trafo</B>,
-       <B>wmouse_trafo</B>,  <B>mouseinterval</B>  -  mouse  interface  through
+       <STRONG>getmouse</STRONG>,  <STRONG>ungetmouse</STRONG>,  <STRONG>mousemask</STRONG>,  <STRONG>wenclose</STRONG>, <STRONG>mouse_trafo</STRONG>,
+       <STRONG>wmouse_trafo</STRONG>,  <STRONG>mouseinterval</STRONG>  -  mouse  interface  through
        curses
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>typedef</B> <B>unsigned</B> <B>long</B> <B>mmask_t;</B>
+       <STRONG>typedef</STRONG> <STRONG>unsigned</STRONG> <STRONG>long</STRONG> <STRONG>mmask_t;</STRONG>
 
-       <B>typedef</B> <B>struct</B>
-       <B>{</B>
-           <B>short</B> <B>id;</B>         <I>/*</I> <I>ID</I> <I>to</I> <I>distinguish</I> <I>multiple</I> <I>devices</I> <I>*/</I>
-           <B>int</B> <B>x,</B> <B>y,</B> <B>z;</B>      <I>/*</I> <I>event</I> <I>coordinates</I> <I>*/</I>
-           <B>mmask_t</B> <B>bstate;</B>   <I>/*</I> <I>button</I> <I>state</I> <I>bits</I> <I>*/</I>
-       <B>}</B>
-       <B>MEVENT;</B>
-       <B>int</B> <B>getmouse(MEVENT</B> <B>*event);</B>
-       <B>int</B> <B>ungetmouse(MEVENT</B> <B>*event);</B>
-       <B>mmask_t</B> <B>mousemask(mmask_t</B> <B>newmask,</B> <B>mmask_t</B> <B>*oldmask);</B>
-       <B>bool</B> <B>wenclose(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x);</B>
-       <B>bool</B> <B>mouse_trafo(int*</B> <B>pY,</B> <B>int*</B> <B>pX,</B> <B>bool</B> <B>to_screen);</B>
-       <B>bool</B> <B>wmouse_trafo(const</B> <B>WINDOW*</B> <B>win,</B> <B>int*</B> <B>pY,</B> <B>int*</B> <B>pX,</B>
-            <B>bool</B> <B>to_screen);</B>
-       <B>int</B> <B>mouseinterval(int</B> <B>erval);</B>
+       <STRONG>typedef</STRONG> <STRONG>struct</STRONG>
+       <STRONG>{</STRONG>
+           <STRONG>short</STRONG> <STRONG>id;</STRONG>         <EM>/*</EM> <EM>ID</EM> <EM>to</EM> <EM>distinguish</EM> <EM>multiple</EM> <EM>devices</EM> <EM>*/</EM>
+           <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>y,</STRONG> <STRONG>z;</STRONG>      <EM>/*</EM> <EM>event</EM> <EM>coordinates</EM> <EM>*/</EM>
+           <STRONG>mmask_t</STRONG> <STRONG>bstate;</STRONG>   <EM>/*</EM> <EM>button</EM> <EM>state</EM> <EM>bits</EM> <EM>*/</EM>
+       <STRONG>}</STRONG>
+       <STRONG>MEVENT;</STRONG>
+       <STRONG>int</STRONG> <STRONG>getmouse(MEVENT</STRONG> <STRONG>*event);</STRONG>
+       <STRONG>int</STRONG> <STRONG>ungetmouse(MEVENT</STRONG> <STRONG>*event);</STRONG>
+       <STRONG>mmask_t</STRONG> <STRONG>mousemask(mmask_t</STRONG> <STRONG>newmask,</STRONG> <STRONG>mmask_t</STRONG> <STRONG>*oldmask);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>wenclose(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>mouse_trafo(int*</STRONG> <STRONG>pY,</STRONG> <STRONG>int*</STRONG> <STRONG>pX,</STRONG> <STRONG>bool</STRONG> <STRONG>to_screen);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>wmouse_trafo(const</STRONG> <STRONG>WINDOW*</STRONG> <STRONG>win,</STRONG> <STRONG>int*</STRONG> <STRONG>pY,</STRONG> <STRONG>int*</STRONG> <STRONG>pX,</STRONG>
+            <STRONG>bool</STRONG> <STRONG>to_screen);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mouseinterval(int</STRONG> <STRONG>erval);</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        These  functions provide an interface to mouse events from
-       <B><A HREF="ncurses.3x.html">ncurses(3x)</A></B>.  Mouse events are  represented  by  <B>KEY_MOUSE</B>
-       pseudo-key values in the <B>wgetch</B> input stream.
+       <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>.  Mouse events are  represented  by  <STRONG>KEY_MOUSE</STRONG>
+       pseudo-key values in the <STRONG>wgetch</STRONG> input stream.
 
-       To  make mouse events visible, use the <B>mousemask</B> function.
+       To  make mouse events visible, use the <STRONG>mousemask</STRONG> function.
        This will  set  the  mouse  events  to  be  reported.   By
        default,  no mouse events are reported.  The function will
        return a mask to indicate which  of  the  specified  mouse
@@ -54,7 +93,7 @@
 
        Here are the mouse event type masks:
 
-       <I>Name</I>                     <I>Description</I>
+       <EM>Name</EM>                     <EM>Description</EM>
        ---------------------------------------------------------------------
        BUTTON1_PRESSED          mouse button 1 down
        BUTTON1_RELEASED         mouse button 1 up
@@ -84,95 +123,96 @@
        REPORT_MOUSE_POSITION    report mouse movement
 
        Once a class of mouse events have been made visible  in  a
-       window,  calling  the  <B>wgetch</B>  function on that window may
-       return <B>KEY_MOUSE</B> as an indicator that a  mouse  event  has
+       window,  calling  the  <STRONG>wgetch</STRONG>  function on that window may
+       return <STRONG>KEY_MOUSE</STRONG> as an indicator that a  mouse  event  has
        been queued.  To read the event data and pop the event off
-       the queue, call <B>getmouse</B>.  This function will return <B>OK</B> if
-       a mouse event is actually visible in the given window, <B>ERR</B>
-       otherwise.  When <B>getmouse</B> returns <B>OK</B>, the  data  deposited
+       the queue, call <STRONG>getmouse</STRONG>.  This function will return <STRONG>OK</STRONG> if
+       a mouse event is actually visible in the given window, <STRONG>ERR</STRONG>
+       otherwise.  When <STRONG>getmouse</STRONG> returns <STRONG>OK</STRONG>, the  data  deposited
        as  y  and  x  in  the event structure coordinates will be
        screen-relative character-cell coordinates.  The  returned
        state  mask  will have exactly one bit set to indicate the
        event type.
 
-       The <B>ungetmouse</B> function behaves  analogously  to  <B>ungetch</B>.
-       It  pushes  a  <B>KEY_MOUSE</B>  event  onto the input queue, and
+       The <STRONG>ungetmouse</STRONG> function behaves  analogously  to  <STRONG>ungetch</STRONG>.
+       It  pushes  a  <STRONG>KEY_MOUSE</STRONG>  event  onto the input queue, and
        associates with  that  event  the  given  state  data  and
        screen-relative character-cell coordinates.
 
-       The  <B>wenclose</B>  function  tests  whether  a  given  pair of
+       The  <STRONG>wenclose</STRONG>  function  tests  whether  a  given  pair of
        screen-relative character-cell coordinates is enclosed  by
        a  given  window, returning TRUE if it is and FALSE other-
        wise.  It is useful for determining  what  subset  of  the
        screen windows enclose the location of a mouse event.
 
-       The <B>wmouse_trafo</B> function transforms a given pair of coor-
+       The <STRONG>wmouse_trafo</STRONG> function transforms a given pair of coor-
        dinates from stdscr-relative coordinates  to  screen-rela-
        tive  coordinates  or  vice  versa.  Please remember, that
        stdscr-relative coordinates are not  always  identical  to
        screen-relative   coordinates  due  to  the  mechanism  to
        reserve lines on top or bottom of  the  screen  for  other
-       purposes  (ripoff() call, see also slk_...  functions). If
-       the parameter <B>to_screen</B> is <B>TRUE</B>, the pointers <B>pY,</B> <B>pX</B>  must
+       purposes (ripoff() call, see also slk_...  functions).  If
+       the parameter <STRONG>to_screen</STRONG> is <STRONG>TRUE</STRONG>, the pointers <STRONG>pY,</STRONG> <STRONG>pX</STRONG>  must
        reference  the coordinates of a location inside the window
-       <B>win</B>. They are converted to screen-relative coordinates and
-       returned  through the pointers. If the conversion was suc-
-       cessful, the function returns <B>TRUE</B>. If one of the  parame-
-       ters  was  NULL  or the location is not inside the window,
-       <B>FALSE</B> is returned. If <B>to_screen</B> is <B>FALSE</B>, the pointers <B>pY,</B>
-       <B>pX</B>  must  reference  screen-relative coordinates. They are
-       converted to stdscr-relative coordinates if the window <B>win</B>
-       encloses  this  point.  In  this case the function returns
-       <B>TRUE</B>. If one of the parameters is NULL or the point is not
-       inside  the window, <B>FALSE</B> is returned. Please notice, that
-       the referenced coordinates are only replaced by  the  con-
-       verted coordinates if the transformation was successful.
+       <STRONG>win</STRONG>.  They are converted  to  screen-relative  coordinates
+       and  returned through the pointers.  If the conversion was
+       successful, the function returns  <STRONG>TRUE</STRONG>.   If  one  of  the
+       parameters was NULL or the location is not inside the win-
+       dow, <STRONG>FALSE</STRONG> is returned.  If <STRONG>to_screen</STRONG> is <STRONG>FALSE</STRONG>, the point-
+       ers  <STRONG>pY,</STRONG>  <STRONG>pX</STRONG>  must  reference screen-relative coordinates.
+       They are converted to stdscr-relative coordinates  if  the
+       window <STRONG>win</STRONG> encloses this point.  In this case the function
+       returns <STRONG>TRUE</STRONG>.  If one of the parameters  is  NULL  or  the
+       point is not inside the window, <STRONG>FALSE</STRONG> is returned.  Please
+       notice, that the referenced coordinates are only  replaced
+       by  the  converted  coordinates  if the transformation was
+       successful.
 
-       The <B>mouseinterval</B> function sets the maximum time (in thou-
-       sands of a second)  that  can  elapse  between  press  and
-       release  events  in  order  for them to be recognized as a
-       click.  This function returns the previous interval value.
-       The default is one fifth of a second.
+       The <STRONG>mouseinterval</STRONG> function sets the maximum time (in thou-
+       sands  of  a  second)  that  can  elapse between press and
+       release events for them to be recognized as a click.   Use
+       <STRONG>mouseinterval(-1)</STRONG> to disable click resolution.  This func-
+       tion returns the previous interval value.  The default  is
+       one sixth of a second.
 
        Note  that  mouse  events will be ignored when input is in
        cooked mode, and will cause an error beep when cooked mode
-       is  being simulated in a window by a function such as <B>get-</B>
-       <B>str</B> that expects a linefeed for input-loop termination.
+       is  being simulated in a window by a function such as <STRONG>get-</STRONG>
+       <STRONG>str</STRONG> that expects a linefeed for input-loop termination.
 
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       <B>getmouse</B>, <B>ungetmouse</B> and <B>mouseinterval</B> return the  integer
-       <B>ERR</B>  upon failure or <B>OK</B> upon successful completion. <B>mouse-</B>
-       <B>mask</B> returns the mask of reportable events.  <B>wenclose</B>  and
-       <B>wmouse_trafo</B> are boolean functions returning <B>TRUE</B> or <B>FALSE</B>
+       <STRONG>getmouse</STRONG>, <STRONG>ungetmouse</STRONG> and <STRONG>mouseinterval</STRONG> return the  integer
+       <STRONG>ERR</STRONG> upon failure or <STRONG>OK</STRONG> upon successful completion.  <STRONG>mouse-</STRONG>
+       <STRONG>mask</STRONG> returns the mask of reportable events.  <STRONG>wenclose</STRONG>  and
+       <STRONG>wmouse_trafo</STRONG> are boolean functions returning <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>
        depending on their test result.
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These calls were designed for  <B><A HREF="ncurses.3x.html">ncurses(3x)</A></B>,  and  are  not
+       These calls were designed for  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>,  and  are  not
        found in SVr4 curses, 4.4BSD curses, or any other previous
        version of curses.
 
-       The feature macro <B>NCURSES_MOUSE_VERSION</B> is provided so the
+       The feature macro <STRONG>NCURSES_MOUSE_VERSION</STRONG> is provided so the
        preprocessor  can  be  used to test whether these features
        are present  (its  value  is  1).   If  the  interface  is
-       changed, the value of <B>NCURSES_MOUSE_VERSION</B> will be incre-
+       changed, the value of <STRONG>NCURSES_MOUSE_VERSION</STRONG> will be incre-
        mented.
 
-       The order of the <B>MEVENT</B> structure members is  not  guaran-
+       The order of the <STRONG>MEVENT</STRONG> structure members is  not  guaran-
        teed.   Additional fields may be added to the structure in
        the future.
 
-       Under  <B><A HREF="ncurses.3x.html">ncurses(3x)</A></B>,  these  calls  are  implemented  using
+       Under  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>,  these  calls  are  implemented  using
        either  xterm's  built-in mouse-tracking API or Alessandro
        Rubini's gpm server.  If you  are  using  something  other
        than  xterm  and  there  is  no gpm daemon running on your
-       machine, mouse events will not be visible  to  <B><A HREF="ncurses.3x.html">ncurses(3x)</A></B>
-       (and the <B>wmousemask</B> function will always return <B>0</B>).
-
+       machine, mouse events will not be visible  to  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>
+       (and the <STRONG>wmousemask</STRONG> function will always return <STRONG>0</STRONG>).
        The z member in the event structure is not presently used.
        It is intended for use with touch screens  (which  may  be
        pressure-sensitive)   or   with   3D-mice/trackballs/power
@@ -182,28 +222,27 @@
 </PRE>
 <H2>BUGS</H2><PRE>
        Mouse events under xterm will not in fact be ignored  dur-
-       ing  cooked mode, if they have been enabled by <B>wmousemask</B>.
+       ing  cooked mode, if they have been enabled by <STRONG>wmousemask</STRONG>.
        Instead, the xterm mouse report sequence  will  appear  in
        the string read.
 
        Mouse events under xterm will not be detected correctly in
        a window with its keypad bit off, since  they  are  inter-
        preted  as  a  variety  of  function  key.   Your terminfo
-       description must have <B>kmous</B> set to "\E[M"  (the  beginning
+       description must have <STRONG>kmous</STRONG> set to "\E[M"  (the  beginning
        of the response from xterm for mouse clicks).
 
        Because  there  are  no  standard  terminal responses that
        would serve to identify terminals which support the  xterm
-       mouse  protocol,  <B>ncurses</B>  assumes  that  if your $DISPLAY
-       environment variable is set, and <B>kmous</B> is defined  in  the
-       terminal  description,  then  the  terminal may send mouse
+       mouse  protocol,  <STRONG>ncurses</STRONG> assumes that if your $TERM envi-
+       ronment variable contains "xterm", or <STRONG>kmous</STRONG> is defined  in
+       the terminal description, then the terminal may send mouse
        events.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>.
-
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
 
 
 

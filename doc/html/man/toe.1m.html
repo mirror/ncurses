@@ -1,21 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  ****************************************************************************
+  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: toe.1m,v 1.10 2000/08/19 18:51:05 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>toe 1m</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>toe 1m</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>toe</B> - table of (terminfo) entries
+       <STRONG>toe</STRONG> - table of (terminfo) entries
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>toe</B> [<B>-v</B>[<I>n</I>]] [<B>-huUV</B>] <I>file...</I>
+       <STRONG>toe</STRONG> [<STRONG>-v</STRONG>[<EM>n</EM>]] [<STRONG>-huUV</STRONG>] <EM>file...</EM>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       With no options, <B>toe</B> lists all available terminal types by
+       With no options, <STRONG>toe</STRONG> lists all available terminal types by
        primary name with descriptions.   File  arguments  specify
        the  directories  to  be scanned; if no such arguments are
        given, your default terminfo directory is scanned.  If you
@@ -25,7 +63,7 @@
        There are other options intended for use by terminfo  file
        maintainers:
 
-       <B>-u</B> <I>file</I>
+       <STRONG>-u</STRONG> <EM>file</EM>
               says to issue a report on dependencies in the given
               file. This report  condenses  the  `use'  relation:
               each  line consists of the primary name of a termi-
@@ -34,7 +72,7 @@
               of all terminals which occur in those use capabili-
               ties, followed by a newline
 
-       <B>-U</B> <I>file</I>
+       <STRONG>-U</STRONG> <EM>file</EM>
               says  to  issue a report on reverse dependencies in
               the given file.  This  report  reverses  the  `use'
               relation: each line consists of the primary name of
@@ -43,25 +81,25 @@
               rated primary names of all terminals  which  depend
               on it, followed by a newline.
 
-       <B>-v</B><I>n</I>    specifies that (verbose) output be written to stan-
-              dard  error   trace   information   showing   <B>toe</B>'s
-              progress.   The optional integer <I>n</I> is a number from
-              1 to 10, interpreted as for <B><A HREF="tic.1.html">tic(1)</A></B>.
+       <STRONG>-v</STRONG><EM>n</EM>    specifies that (verbose) output be written to stan-
+              dard  error   trace   information   showing   <STRONG>toe</STRONG>'s
+              progress.   The optional integer <EM>n</EM> is a number from
+              1 to 10, interpreted as for <STRONG><A HREF="tic.1.html">tic(1)</A></STRONG>.
 
-       <B>-V</B>   reports the version of ncurses which was used in this
+       <STRONG>-V</STRONG>   reports the version of ncurses which was used in this
             program, and exits.
 
 
 </PRE>
 <H2>FILES</H2><PRE>
-       <B>/usr/share/terminfo/?/*</B>
+       <STRONG>/usr/share/terminfo/?/*</STRONG>
             Compiled terminal description database.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="tic.1m.html">tic(1m)</A></B>,    <B><A HREF="infocmp.1m.html">infocmp(1m)</A></B>,   <B><A HREF="captoinfo.1m.html">captoinfo(1m)</A></B>,   <B><A HREF="infotocap.1m.html">infotocap(1m)</A></B>,
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="terminfo.5.html">terminfo(5)</A></B>.
+       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
 
 

@@ -37,32 +37,33 @@
 <FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
 <FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>--  Author: <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> &lt;<A HREF="mailto:juergen.pfeifer@gmx.net">&lt;juergen.pfeifer@gmx.net&gt;</A>&gt; 1996</EM></FONT>
+<FONT COLOR=green><EM>--  Author:  <A HREF="http://www.familiepfeifer.de/juergen">J&uuml;rgen Pfeifer</A>, 1996</EM></FONT>
+<FONT COLOR=green><EM>--  Contact: <A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">www.familiepfeifer.de/Contact.aspx?Lang=en</A></EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.9 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.10 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>generic</b>
-   <b>type</b> <FONT COLOR=red><A NAME="42_9">Num</A></FONT> <b>is</b> <b>mod</b> &lt;&gt;;
+   <b>type</b> <FONT COLOR=red><A NAME="43_9">Num</A></FONT> <b>is</b> <b>mod</b> &lt;&gt;;
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#44_35">Text_IO</A>.<FONT COLOR=red><A NAME="44_43">Modular_IO</A></FONT> <b>is</b>
+<b>package</b> <A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#45_35">Text_IO</A>.<FONT COLOR=red><A NAME="45_43">Modular_IO</A></FONT> <b>is</b>
 
-   <FONT COLOR=red><A NAME="46_4">Default_Width</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#42_9">Num</A>'Width;
-   <FONT COLOR=red><A NAME="47_4">Default_Base</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Number_Base</A> := 10;
+   <FONT COLOR=red><A NAME="47_4">Default_Width</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#43_9">Num</A>'Width;
+   <FONT COLOR=red><A NAME="48_4">Default_Base</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#52_12">Number_Base</A> := 10;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-modular_io__adb.htm#49_14">Put</A><FONT COLOR=red><A NAME="49_14"></A></FONT>
-     (<FONT COLOR=red><A NAME="50_7">Win</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#56_9">Window</A>;
-      <FONT COLOR=red><A NAME="51_7">Item</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#42_9">Num</A>;
-      <FONT COLOR=red><A NAME="52_7">Width</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#46_4">Default_Width</A>;
-      <FONT COLOR=red><A NAME="53_7">Base</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Number_Base</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#47_4">Default_Base</A>);
+   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-modular_io__adb.htm#50_14">Put</A><FONT COLOR=red><A NAME="50_14"></A></FONT>
+     (<FONT COLOR=red><A NAME="51_7">Win</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Window</A>;
+      <FONT COLOR=red><A NAME="52_7">Item</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#43_9">Num</A>;
+      <FONT COLOR=red><A NAME="53_7">Width</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#47_4">Default_Width</A>;
+      <FONT COLOR=red><A NAME="54_7">Base</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#52_12">Number_Base</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#48_4">Default_Base</A>);
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-modular_io__adb.htm#61_14">Put</A><FONT COLOR=red><A NAME="55_14"></A></FONT>
-     (<FONT COLOR=red><A NAME="56_7">Item</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#42_9">Num</A>;
-      <FONT COLOR=red><A NAME="57_7">Width</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#46_4">Default_Width</A>;
-      <FONT COLOR=red><A NAME="58_7">Base</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Number_Base</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#47_4">Default_Base</A>);
+   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-modular_io__adb.htm#62_14">Put</A><FONT COLOR=red><A NAME="56_14"></A></FONT>
+     (<FONT COLOR=red><A NAME="57_7">Item</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#43_9">Num</A>;
+      <FONT COLOR=red><A NAME="58_7">Width</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#47_4">Default_Width</A>;
+      <FONT COLOR=red><A NAME="59_7">Base</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#52_12">Number_Base</A> := <A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#48_4">Default_Base</A>);
 
 <b>private</b>
-   <b>pragma</b> Inline (<A HREF="terminal_interface-curses-text_io-modular_io__ads.htm#55_14">Put</A>);
+   <b>pragma</b> Inline (Put);
 
 <b>end</b> Terminal_Interface.Curses.Text_IO.Modular_IO;
 </PRE></BODY></HTML>

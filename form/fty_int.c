@@ -7,13 +7,14 @@
  */
 /***************************************************************************
 *                                                                          *
-*  Author : Juergen Pfeifer, juergen.pfeifer@gmx.net                       *
+*  Author : Juergen Pfeifer                                                *
+*  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en              *
 *                                                                          *
 ***************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_int.c,v 1.10 1999/05/16 17:23:22 juergen Exp $")
+MODULE_ID("$Id: fty_int.c,v 1.12 2002/07/06 15:33:27 juergen Exp $")
 
 typedef struct {
   int precision;
@@ -155,6 +156,6 @@ static FIELDTYPE typeINTEGER = {
   NULL
 };
 
-FIELDTYPE* TYPE_INTEGER = &typeINTEGER;
+NCURSES_EXPORT_VAR(FIELDTYPE*) TYPE_INTEGER = &typeINTEGER;
 
 /* fty_int.c ends here */

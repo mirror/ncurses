@@ -1,109 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  ****************************************************************************
+  * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: curs_termattrs.3x,v 1.8 2002/05/11 21:32:26 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>curs_termattrs 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>curs_termattrs 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>baudrate</B>,  <B>erasechar</B>,  <B>has_ic</B>, <B>has_il</B>, <B>killchar</B>, <B>longname</B>,
-       <B>termattrs</B>, <B>termname</B> - <B>curses</B> environment query routines
+       <STRONG>baudrate</STRONG>, <STRONG>erasechar</STRONG>, <STRONG>erasewchar</STRONG>, <STRONG>has_ic</STRONG>, <STRONG>has_il</STRONG>, <STRONG>killchar</STRONG>,
+       <STRONG>killwchar</STRONG>, <STRONG>longname</STRONG>,  <STRONG>term_attrs</STRONG>,  <STRONG>termattrs</STRONG>,  <STRONG>termname</STRONG>  -
+       <STRONG>curses</STRONG> environment query routines
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>baudrate(void);</B>
-       <B>char</B> <B>erasechar(void);</B>
-       <B>bool</B> <B>has_ic(void);</B>
-       <B>bool</B> <B>has_il(void);</B>
-       <B>char</B> <B>killchar(void);</B>
-       <B>char</B> <B>*longname(void);</B>
-       <B>attr_t</B> <B>termattrs(void);</B>
-       <B>char</B> <B>*termname(void);</B>
+       <STRONG>int</STRONG> <STRONG>baudrate(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>erasechar(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>erasewchar(wchar_t</STRONG> <STRONG>*</STRONG><EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>has_ic(void);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>has_il(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>killchar(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>killwchar(wchar_t</STRONG> <STRONG>*</STRONG><EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*longname(void);</STRONG>
+       <STRONG>attr_t</STRONG> <STRONG>term_attrs(void);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>termattrs(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*termname(void);</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The <B>baudrate</B> routine returns the output speed of the  ter-
-       minal.   The  number  returned  is in bits per second, for
-       example <B>9600</B>, and is an integer.
+       The  <STRONG>baudrate</STRONG> routine returns the output speed of the ter-
+       minal.  The number returned is in  bits  per  second,  for
+       example <STRONG>9600</STRONG>, and is an integer.
 
-       The <B>erasechar</B> routine returns  the  user's  current  erase
+       The  <STRONG>erasechar</STRONG>  routine  returns  the user's current erase
        character.
 
-       The <B>has_ic</B> routine is true if the terminal has insert- and
+       The <STRONG>erasewchar</STRONG> routine stores the current erase  character
+       in  the  location referenced by <EM>ch</EM>.  If no erase character
+       has been defined, the routine fails and the location  ref-
+       erenced by <EM>ch</EM> is not changed.
+
+       The <STRONG>has_ic</STRONG> routine is true if the terminal has insert- and
        delete- character capabilities.
 
-       The <B>has_il</B> routine is true if the terminal has insert- and
+       The <STRONG>has_il</STRONG> routine is true if the terminal has insert- and
        delete-line  capabilities,  or  can  simulate  them  using
        scrolling regions.  This might be used to determine if  it
        would  be  appropriate to turn on physical scrolling using
-       <B>scrollok</B>.
+       <STRONG>scrollok</STRONG>.
 
-       The <B>killchar</B> routine returns the user's current line  kill
+       The <STRONG>killchar</STRONG> routine returns the user's current line  kill
        character.
 
-       The  <B>longname</B>  routine  returns a pointer to a static area
-       containing a verbose description of the current  terminal.
+       The <STRONG>killwchar</STRONG> routine stores the current line-kill charac-
+       ter in the location referenced by  <EM>ch</EM>.   If  no  line-kill
+       character  has  been  defined,  the  routine fails and the
+       location referenced by <EM>ch</EM> is not changed.
+
+       The <STRONG>longname</STRONG> routine returns a pointer to  a  static  area
+       containing  a verbose description of the current terminal.
        The maximum length of a verbose description is 128 charac-
-       ters.  It is defined only after the  call  to  <B>initscr</B>  or
-       <B>newterm</B>.   The area is overwritten by each call to <B>newterm</B>
-       and is not restored by <B>set_term</B>, so the  value  should  be
-       saved  between calls to <B>newterm</B> if <B>longname</B> is going to be
+       ters.   It  is  defined  only after the call to <STRONG>initscr</STRONG> or
+       <STRONG>newterm</STRONG>.  The area is overwritten by each call to  <STRONG>newterm</STRONG>
+       and  is  not  restored by <STRONG>set_term</STRONG>, so the value should be
+       saved between calls to <STRONG>newterm</STRONG> if <STRONG>longname</STRONG> is going to  be
        used with multiple terminals.
 
        If a given terminal doesn't support a video attribute that
-       an  application  program is trying to use, <B>curses</B> may sub-
-       stitute a different video attribute for it.  The <B>termattrs</B>
-       function returns a logical <B>OR</B> of all video attributes sup-
-       ported by the terminal.  This information is useful when a
-       <B>curses</B>  program needs complete control over the appearance
+       an application program is trying to use, <STRONG>curses</STRONG>  may  sub-
+       stitute a different video attribute for it.  The <STRONG>termattrs</STRONG>
+       and <STRONG>term_attrs</STRONG> functions return a logical <STRONG>OR</STRONG> of all  video
+       attributes supported by the terminal using <EM>A</EM><STRONG>_</STRONG> and <EM>WA</EM><STRONG>_</STRONG> con-
+       stants respectively.  This information is  useful  when  a
+       <STRONG>curses</STRONG>  program needs complete control over the appearance
        of the screen.
 
-       The  <B>termname</B>   routine   returns   the   value   of   the
-       environmental  variable <B>TERM</B> (truncated to 14 characters).
+       The <STRONG>termname</STRONG> routine returns the value of the  environmen-
+       tal variable <STRONG>TERM</STRONG> (truncated to 14 characters).
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       <B>longname</B> and <B>termname</B> return <B>NULL</B> on error.
+       <STRONG>longname</STRONG> and <STRONG>termname</STRONG> return <STRONG>NULL</STRONG> on error.
 
-       Routines that return an integer return  <B>ERR</B>  upon  failure
-       and  <B>OK</B>  (SVr4 only specifies "an integer value other than
-       <B>ERR</B>") upon successful completion.
+       Routines  that  return  an integer return <STRONG>ERR</STRONG> upon failure
+       and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value  other  than
+       <STRONG>ERR</STRONG>") upon successful completion.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       Note that <B>termattrs</B> may be a macro.
+       Note that <STRONG>termattrs</STRONG> may be a macro.
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The XSI Curses standard, Issue  4  describes  these  func-
-       tions.  It changes the return type of <B>termattrs</B> to the new
-       type <B>attr_t</B>.
+       The  XSI  Curses  standard,  Issue 4 describes these func-
+       tions.  It changes the return type of <STRONG>termattrs</STRONG> to the new
+       type <STRONG>attr_t</STRONG>.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></B>, <B><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></B>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
 
 
 

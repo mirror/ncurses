@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_printw.3x,v 1.11 2000/07/01 20:11:32 tom Exp $
+.\" $Id: curs_printw.3x,v 1.12 2002/07/20 15:01:43 tom Exp $
 .TH curs_printw 3X ""
 .SH NAME
 \fBprintw\fR,
@@ -37,20 +37,17 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 
-\fBint printw(char *fmt\fR [\fB, arg\fR] \fB...);\fR
+\fBint printw(char *fmt, ...);\fR
 .br
-\fBint wprintw(WINDOW *win, char *fmt\fR [\fB, arg\fR] \fB...);\fR
+\fBint wprintw(WINDOW *win, char *fmt, ...);\fR
 .br
-\fBint mvprintw(int y, int x, char *fmt\fR [\fB, arg\fR] \fB...);\fR
+\fBint mvprintw(int y, int x, char *fmt, ...);\fR
 .br
-\fBint mvwprintw(WINDOW *win, int y, int x,\fR
-      \fBchar *fmt\fR [\fB, arg]\fR ...);
-
-\fB#include <varargs.h>\fR
+\fBint mvwprintw(WINDOW *win, int y, int x, char *fmt, ...);\fR
 .br
-\fBint vwprintw(WINDOW *win, char *fmt, varglist);\fR
+\fBint vwprintw(WINDOW *win, char *fmt, va_list varglist);\fR
 .br
-\fBint vw_printw(WINDOW *win, char *fmt, varglist);\fR
+\fBint vw_printw(WINDOW *win, char *fmt, va_list varglist);\fR
 .br
 .SH DESCRIPTION
 The \fBprintw\fR, \fBwprintw\fR, \fBmvprintw\fR and \fBmvwprintw\fR
@@ -58,10 +55,11 @@ routines are analogous to \fBprintf\fR [see \fBprintf\fR(3S)].  In
 effect, the string that would be output by \fBprintf\fR is output
 instead as though \fBwaddstr\fR were used on the given window.
 
-The \fBvwprintw\fR routine is analogous to \fBvprintf\fR [see
-\fBprintf\fR(3S)] and performs a \fBwprintw\fR using a variable
-argument list.  The third argument is a \fBva_list\fR, a pointer to a
-list of arguments, as defined in \fB<varargs.h>\fR.
+The \fBvwprintw\fR and \fBwv_printw\fR routines are analogous
+to \fBvprintf\fR [see \fBprintf\fR(3S)]
+and perform a \fBwprintw\fR using a variable argument list.
+The third argument is a \fBva_list\fR, a pointer to a
+list of arguments, as defined in \fB<stdarg.h>\fR.
 .SH RETURN VALUE
 Routines that return an integer return \fBERR\fR upon failure and \fBOK\fR
 (SVr4 only specifies "an integer value other than \fBERR\fR") upon successful
@@ -70,6 +68,12 @@ completion.
 The XSI Curses standard, Issue 4 describes these functions.  The function
 \fBvwprintw\fR is marked TO BE WITHDRAWN, and is to be replaced by a function
 \fBvw_printw\fR using the \fB<stdarg.h>\fR interface.
+The Single Unix Specification, Version 2 states that
+\fBvw_printw\fR  is preferred to \fBvwprintw\fR since the latter requires
+including \fB<varargs.h>\fR, which
+cannot be used in the same file as \fB<stdarg.h>\fR.
+This implementation uses \fB<stdarg.h>\fR for both, because that header
+is included in \fB<curses.h\fR>.
 .SH SEE ALSO
 \fBcurses\fR(3X), \fBprintf\fR(3S), \fBvprintf(3S)\fR
 .\"#

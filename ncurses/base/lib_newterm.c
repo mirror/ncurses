@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.48 2000/09/02 18:11:42 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.56 2002/10/12 15:24:08 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -64,18 +64,25 @@ MODULE_ID("$Id: lib_newterm.c,v 1.48 2000/09/02 18:11:42 tom Exp $")
 static inline int
 _nc_initscr(void)
 {
+    int result = ERR;
+
     /* for extended XPG4 conformance requires cbreak() at this point */
     /* (SVr4 curses does this anyway) */
-    cbreak();
+    if (cbreak() == OK) {
+	TTY buf;
 
+	buf = cur_term->Nttyb;
 #ifdef TERMIOS
-    cur_term->Nttyb.c_lflag &= ~(ECHO | ECHONL);
-    cur_term->Nttyb.c_iflag &= ~(ICRNL | INLCR | IGNCR);
-    cur_term->Nttyb.c_oflag &= ~(ONLCR);
+	buf.c_lflag &= ~(ECHO | ECHONL);
+	buf.c_iflag &= ~(ICRNL | INLCR | IGNCR);
+	buf.c_oflag &= ~(ONLCR);
 #else
-    cur_term->Nttyb.sg_flags &= ~(ECHO | CRMOD);
+	buf.sg_flags &= ~(ECHO | CRMOD);
 #endif
-    return _nc_set_tty_mode(&cur_term->Nttyb);
+	if ((result = _nc_set_tty_mode(&buf)) == OK)
+	    cur_term->Nttyb = buf;
+    }
+    return result;
 }
 
 /*
@@ -86,30 +93,27 @@ _nc_initscr(void)
  */
 static int filter_mode = FALSE;
 
-void
+NCURSES_EXPORT(void)
 filter(void)
 {
+    T((T_CALLED("filter")));
     filter_mode = TRUE;
+    returnVoid;
 }
 
-SCREEN *
+NCURSES_EXPORT(SCREEN *)
 newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
 {
     int errret;
     int slk_format = _nc_slk_format;
     SCREEN *current;
-#ifdef TRACE
-    int t = _nc_getenv_num("NCURSES_TRACE");
 
-    if (t >= 0)
-	trace(t);
-#endif
-
+    START_TRACE();
     T((T_CALLED("newterm(\"%s\",%p,%p)"), name, ofp, ifp));
 
     /* this loads the capability entry, then sets LINES and COLS */
     if (setupterm(name, fileno(ofp), &errret) == ERR)
-	return 0;
+	returnSP(0);
 
     /* implement filter mode */
     if (filter_mode) {
@@ -138,8 +142,8 @@ newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
     if (num_labels <= 0 || !SLK_STDFMT(slk_format))
 	if (slk_format) {
 	    if (ERR == _nc_ripoffline(-SLK_LINES(slk_format),
-		    _nc_slk_initialize))
-		return 0;
+				      _nc_slk_initialize))
+		returnSP(0);
 	}
     /* this actually allocates the screen structure, and saves the
      * original terminal settings.
@@ -148,7 +152,7 @@ newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
     _nc_set_screen(0);
     if (_nc_setupscreen(LINES, COLS, ofp) == ERR) {
 	_nc_set_screen(current);
-	return 0;
+	returnSP(0);
     }
 
     /* if the terminal type has real soft labels, set those up */
@@ -156,11 +160,10 @@ newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
 	_nc_slk_initialize(stdscr, COLS);
 
     SP->_ifd = fileno(ifp);
-    SP->_checkfd = fileno(ifp);
     typeahead(fileno(ifp));
 #ifdef TERMIOS
     SP->_use_meta = ((cur_term->Ottyb.c_cflag & CSIZE) == CS8 &&
-	!(cur_term->Ottyb.c_iflag & ISTRIP));
+		     !(cur_term->Ottyb.c_iflag & ISTRIP));
 #else
     SP->_use_meta = FALSE;
 #endif
@@ -171,8 +174,8 @@ newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
      * will be useless.
      */
     SP->_scrolling = ((scroll_forward && scroll_reverse) ||
-	((parm_rindex || parm_insert_line || insert_line) &&
-	    (parm_index || parm_delete_line || delete_line)));
+		      ((parm_rindex || parm_insert_line || insert_line) &&
+		       (parm_index || parm_delete_line || delete_line)));
 
     baudrate();			/* sets a field in the SP structure */
 
@@ -191,26 +194,6 @@ newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
     SP->_use_rmso = SGR0_TEST(exit_standout_mode);
     SP->_use_rmul = SGR0_TEST(exit_underline_mode);
 
-#if USE_WIDEC_SUPPORT
-    /*
-     * XFree86 xterm can be configured to support UTF-8 based on environment
-     * variable settings.
-     */
-    {
-	char *s;
-	s = getenv("LC_ALL");
-	if (s == NULL || *s == '\0') {
-	    s = getenv("LC_CTYPE");
-	    if (s == NULL || *s == '\0') {
-		s = getenv("LANG");
-	    }
-	}
-	if (s != NULL && *s != '\0' && strstr(s, "UTF-8") != NULL) {
-	    SP->_outch = _nc_utf8_outch;
-	}
-    }
-#endif
-
     /* compute movement costs so we can do better move optimization */
     _nc_mvcur_init();
 
@@ -222,6 +205,5 @@ newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
 
     _nc_signal_handler(TRUE);
 
-    T((T_RETURN("%p"), SP));
-    return (SP);
+    returnSP(SP);
 }

@@ -1,47 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  ****************************************************************************
+  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: curs_slk.3x,v 1.11 2001/03/03 21:05:41 Todd.C.Miller Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>curs_slk 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>curs_slk 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>slk_init</B>,     <B>slk_set</B>,    <B>slk_refresh</B>,    <B>slk_noutrefresh</B>,
-       <B>slk_label</B>, <B>slk_clear</B>, <B>slk_restore</B>, <B>slk_touch</B>,  <B>slk_attron</B>,
-       <B>slk_attrset</B>,   <B>slk_attroff</B>,   <B>slk_attr_on</B>,   <B>slk_attr_set</B>,
-       <B>slk_attr_off</B>, <B>slk_attr</B> <B>slk_color</B> - <B>curses</B> soft label  rou-
+       <STRONG>slk_init</STRONG>,     <STRONG>slk_set</STRONG>,    <STRONG>slk_refresh</STRONG>,    <STRONG>slk_noutrefresh</STRONG>,
+       <STRONG>slk_label</STRONG>, <STRONG>slk_clear</STRONG>, <STRONG>slk_restore</STRONG>, <STRONG>slk_touch</STRONG>,  <STRONG>slk_attron</STRONG>,
+       <STRONG>slk_attrset</STRONG>,   <STRONG>slk_attroff</STRONG>,   <STRONG>slk_attr_on</STRONG>,   <STRONG>slk_attr_set</STRONG>,
+       <STRONG>slk_attr_off</STRONG>, <STRONG>slk_attr</STRONG>, <STRONG>slk_color</STRONG> - <STRONG>curses</STRONG> soft label rou-
        tines
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>slk_init(int</B> <B>fmt);</B>
-       <B>int</B> <B>slk_set(int</B> <B>labnum,</B> <B>const</B> <B>char</B> <B>*label,</B> <B>int</B> <B>fmt);</B>
-       <B>int</B> <B>slk_refresh(void);</B>
-       <B>int</B> <B>slk_noutrefresh(void);</B>
-       <B>char</B> <B>*slk_label(int</B> <B>labnum);</B>
-       <B>int</B> <B>slk_clear(void);</B>
-       <B>int</B> <B>slk_restore(void);</B>
-       <B>int</B> <B>slk_touch(void);</B>
-       <B>int</B> <B>slk_attron(const</B> <B>chtype</B> <B>attrs);</B>
-       <B>int</B> <B>slk_attroff(const</B> <B>chtype</B> <B>attrs);</B>
-       <B>int</B> <B>slk_attrset(const</B> <B>chtype</B> <B>attrs);</B>
-       <B>int</B> <B>slk_attr_on(attr_t</B> <B>attrs,</B> <B>void*</B> <B>opts);</B>
-       <B>int</B> <B>slk_attr_off(const</B> <B>attr_t</B> <B>attrs,</B> <B>void</B> <B>*</B> <B>opts);</B>
-       <B>int</B> <B>slk_attr_set(const</B> <B>attr_t</B> <B>attrs,</B>
-            <B>short</B> <B>color_pair_number,</B> <B>void*</B> <B>opts);</B>
-       <B>attr_t</B> <B>slk_attr(void);</B>
-       <B>int</B> <B>slk_color(short</B> <B>color_pair_number);</B>
+       <STRONG>int</STRONG> <STRONG>slk_init(int</STRONG> <STRONG>fmt);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_set(int</STRONG> <STRONG>labnum,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*label,</STRONG> <STRONG>int</STRONG> <STRONG>fmt);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_refresh(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_noutrefresh(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*slk_label(int</STRONG> <STRONG>labnum);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_clear(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_restore(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_touch(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attron(const</STRONG> <STRONG>chtype</STRONG> <STRONG>attrs);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attroff(const</STRONG> <STRONG>chtype</STRONG> <STRONG>attrs);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attrset(const</STRONG> <STRONG>chtype</STRONG> <STRONG>attrs);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attr_on(attr_t</STRONG> <STRONG>attrs,</STRONG> <STRONG>void*</STRONG> <STRONG>opts);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attr_off(const</STRONG> <STRONG>attr_t</STRONG> <STRONG>attrs,</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG> <STRONG>opts);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attr_set(const</STRONG> <STRONG>attr_t</STRONG> <STRONG>attrs,</STRONG>
+            <STRONG>short</STRONG> <STRONG>color_pair_number,</STRONG> <STRONG>void*</STRONG> <STRONG>opts);</STRONG>
+       <STRONG>attr_t</STRONG> <STRONG>slk_attr(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_color(short</STRONG> <STRONG>color_pair_number);</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        The slk* functions manipulate the set of soft function-key
        labels that exist on many terminals.  For those  terminals
-       that do not have soft labels, <B>curses</B> takes over the bottom
-       line of <B>stdscr</B>, reducing the size of <B>stdscr</B> and the  vari-
-       able  <B>LINES</B>.  <B>curses</B> standardizes on eight labels of up to
+       that do not have soft labels, <STRONG>curses</STRONG> takes over the bottom
+       line of <STRONG>stdscr</STRONG>, reducing the size of <STRONG>stdscr</STRONG> and the  vari-
+       able  <STRONG>LINES</STRONG>.  <STRONG>curses</STRONG> standardizes on eight labels of up to
        eight characters each. In addition to  this,  the  ncurses
        implementation  supports  a  mode  where  it  simulates 12
        labels of up to five characters each. This is most  common
@@ -50,47 +88,47 @@
        at  the  bottom  of  the screen, it doesn't try to use any
        hardware support for this mode.
 
-       The <B>slk_init</B> routine must  be  called  before  <B>initscr</B>  or
-       <B>newterm</B> is called.  If <B>initscr</B> eventually uses a line from
-       <B>stdscr</B> to emulate the soft labels, then <I>fmt</I> determines how
-       the  labels  are arranged on the screen.  Setting <I>fmt</I> to <B>0</B>
-       indicates a 3-2-3 arrangement of the labels, <B>1</B> indicates a
-       4-4 arrangement and <B>2</B> indicates the PC like 4-4-4 mode. If
-       <B>fmt</B> is set to <B>3</B>, it is again the PC like 4-4-4  mode,  but
+       The <STRONG>slk_init</STRONG> routine must  be  called  before  <STRONG>initscr</STRONG>  or
+       <STRONG>newterm</STRONG> is called.  If <STRONG>initscr</STRONG> eventually uses a line from
+       <STRONG>stdscr</STRONG> to emulate the soft labels, then <EM>fmt</EM> determines how
+       the  labels  are arranged on the screen.  Setting <EM>fmt</EM> to <STRONG>0</STRONG>
+       indicates a 3-2-3 arrangement of the labels, <STRONG>1</STRONG> indicates a
+       4-4 arrangement and <STRONG>2</STRONG> indicates the PC like 4-4-4 mode. If
+       <STRONG>fmt</STRONG> is set to <STRONG>3</STRONG>, it is again the PC like 4-4-4  mode,  but
        in  addition  an index line is generated, helping the user
        to identify the key numbers easily.
 
-       The <B>slk_set</B> routine requires <I>labnum</I> to be a label  number,
-       from <B>1</B> to <B>8</B> (resp. <B>12</B>); <I>label</I> must be the string to be put
+       The <STRONG>slk_set</STRONG> routine requires <EM>labnum</EM> to be a label  number,
+       from <STRONG>1</STRONG> to <STRONG>8</STRONG> (resp. <STRONG>12</STRONG>); <EM>label</EM> must be the string to be put
        on the label, up  to  eight  (resp.  five)  characters  in
        length.   A  null string or a null pointer sets up a blank
-       label. <I>fmt</I> is either <B>0</B>, <B>1</B>, or <B>2</B>,  indicating  whether  the
+       label. <EM>fmt</EM> is either <STRONG>0</STRONG>, <STRONG>1</STRONG>, or <STRONG>2</STRONG>,  indicating  whether  the
        label  is  to be left-justified, centered, or right-justi-
        fied, respectively, within the label.
 
-       The <B>slk_refresh</B> and <B>slk_noutrefresh</B> routines correspond to
-       the <B>wrefresh</B> and <B>wnoutrefresh</B> routines.
+       The <STRONG>slk_refresh</STRONG> and <STRONG>slk_noutrefresh</STRONG> routines correspond to
+       the <STRONG>wrefresh</STRONG> and <STRONG>wnoutrefresh</STRONG> routines.
 
-       The  <B>slk_label</B> routine returns the current label for label
-       number <I>labnum</I>, with leading and trailing blanks  stripped.
+       The  <STRONG>slk_label</STRONG> routine returns the current label for label
+       number <EM>labnum</EM>, with leading and trailing blanks  stripped.
 
-       The  <B>slk_clear</B>  routine  clears  the  soft labels from the
+       The  <STRONG>slk_clear</STRONG>  routine  clears  the  soft labels from the
        screen.
 
-       The <B>slk_restore</B> routine, restores the soft labels  to  the
-       screen after a <B>slk_clear</B> has been performed.
+       The <STRONG>slk_restore</STRONG> routine, restores the soft labels  to  the
+       screen after a <STRONG>slk_clear</STRONG> has been performed.
 
-       The  <B>slk_touch</B>  routine  forces  all the soft labels to be
-       output the next time a <B>slk_noutrefresh</B> is performed.
+       The  <STRONG>slk_touch</STRONG>  routine  forces  all the soft labels to be
+       output the next time a <STRONG>slk_noutrefresh</STRONG> is performed.
 
-       The <B>slk_attron</B>, <B>slk_attrset</B>, <B>slk_attroff</B> and <B>slk_attr</B> rou-
-       tines correspond to <B>attron</B>, <B>attrset</B>, <B>attroff</B> and <B>attr_get</B>.
+       The <STRONG>slk_attron</STRONG>, <STRONG>slk_attrset</STRONG>, <STRONG>slk_attroff</STRONG> and <STRONG>slk_attr</STRONG> rou-
+       tines correspond to <STRONG>attron</STRONG>, <STRONG>attrset</STRONG>, <STRONG>attroff</STRONG> and <STRONG>attr_get</STRONG>.
        They have an effect only if soft labels are  simulated  on
        the  bottom line of the screen.  The default highlight for
        soft keys is A_STANDOUT (as in System V curses, which does
        not document this fact).
 
-       The  <B>slk_color</B> routine corresponds to <B>color_set</B>. It has an
+       The  <STRONG>slk_color</STRONG> routine corresponds to <STRONG>color_set</STRONG>. It has an
        effect only if soft labels are  simulated  on  the  bottom
        line of the screen.
 
@@ -98,35 +136,35 @@
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       These routines return <B>ERR</B> upon failure and OK (SVr4 speci-
-       fies only "an integer value other than <B>ERR</B>") upon success-
-       ful  completion.  <B>slk_attr</B>  returns the attribute used for
+       These routines return <STRONG>ERR</STRONG> upon failure and OK (SVr4 speci-
+       fies only "an integer value other than <STRONG>ERR</STRONG>") upon success-
+       ful  completion.  <STRONG>slk_attr</STRONG>  returns the attribute used for
        the soft keys.
 
-       <B>slk_label</B> returns <B>NULL</B> on error.
+       <STRONG>slk_label</STRONG> returns <STRONG>NULL</STRONG> on error.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       Most applications would use <B>slk_noutrefresh</B> because a <B>wre-</B>
-       <B>fresh</B> is likely to follow soon.
+       Most applications would use <STRONG>slk_noutrefresh</STRONG> because a <STRONG>wre-</STRONG>
+       <STRONG>fresh</STRONG> is likely to follow soon.
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
        The  XSI  Curses  standard, Issue 4, describes these func-
        tions.  It changes the argument  type  of  the  attribute-
-       manipulation     functions     <B>slk_attron</B>,    <B>slk_attroff</B>,
-       <B>slk_attrset</B> to be <B>attr_t</B>, and adds <B>const</B>  qualifiers.  The
-       format  codes  <B>2</B>  and  <B>3</B>  for  <B>slk_init()</B> and the function
-       <B>slk_attr</B> are specific to ncurses.
+       manipulation     functions     <STRONG>slk_attron</STRONG>,    <STRONG>slk_attroff</STRONG>,
+       <STRONG>slk_attrset</STRONG> to be <STRONG>attr_t</STRONG>, and adds <STRONG>const</STRONG>  qualifiers.  The
+       format  codes  <STRONG>2</STRONG>  and  <STRONG>3</STRONG>  for  <STRONG>slk_init()</STRONG> and the function
+       <STRONG>slk_attr</STRONG> are specific to ncurses.
 
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>,        <B><A HREF="curs_attr.3x.html">curs_attr(3x)</A></B>,        <B><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></B>,
-       <B><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,        <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,        <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,
+       <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>
 
 
 

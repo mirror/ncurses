@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,28 +40,28 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.34 2000/04/01 20:25:47 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.50 2002/10/12 15:20:15 tom Exp $")
 
-unsigned _nc_tracing = 0;	/* always define this */
+NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0;	/* always define this */
 
 #ifdef TRACE
-const char *_nc_tputs_trace = "";
-long _nc_outchars = 0;
+NCURSES_EXPORT_VAR(const char *) _nc_tputs_trace = "";
+NCURSES_EXPORT_VAR(long) _nc_outchars = 0;
 
 static FILE *tracefp;		/* default to writing to stderr */
 
-void
+NCURSES_EXPORT(void)
 trace(const unsigned int tracelevel GCC_UNUSED)
 {
     static bool been_here = FALSE;
     static char my_name[] = "trace";
 
-    _nc_tracing = tracelevel;
     if (!been_here && tracelevel) {
 	been_here = TRUE;
 
+	_nc_tracing = tracelevel;
 	if (_nc_access(my_name, W_OK) < 0
-	    || (tracefp = fopen(my_name, "w")) == 0) {
+	    || (tracefp = fopen(my_name, "wb")) == 0) {
 	    perror("curses: Can't open 'trace' file: ");
 	    exit(EXIT_FAILURE);
 	}
@@ -74,75 +74,15 @@ trace(const unsigned int tracelevel GCC_UNUSED)
 #elif HAVE_SETBUF		/* POSIX */
 	(void) setbuffer(tracefp, (char *) 0);
 #endif
-	_tracef("TRACING NCURSES version %s (%d)",
-	    NCURSES_VERSION, NCURSES_VERSION_PATCH);
+	_tracef("TRACING NCURSES version %s (tracelevel=%#x)",
+		curses_version(), tracelevel);
+    } else if (_nc_tracing != tracelevel) {
+	_nc_tracing = tracelevel;
+	_tracef("tracelevel=%#x", tracelevel);
     }
 }
-#endif
 
-const char *
-_nc_visbuf2(int bufnum, const char *buf)
-/* visibilize a given string */
-{
-    char *vbuf;
-    char *tp;
-    int c;
-
-    if (buf == 0)
-	return ("(null)");
-    if (buf == CANCELLED_STRING)
-	return ("(cancelled)");
-
-#ifdef TRACE
-    tp = vbuf = _nc_trace_buf(bufnum, (strlen(buf) * 4) + 5);
-#else
-    {
-    static char *mybuf[2];
-    mybuf[bufnum] = _nc_doalloc(mybuf[bufnum], (strlen(buf) * 4) + 5);
-    tp = vbuf = mybuf[bufnum];
-    }
-#endif
-    *tp++ = '"';
-    while ((c = *buf++) != '\0') {
-	if (c == '"') {
-	    *tp++ = '\\';
-	    *tp++ = '"';
-	} else if (is7bits(c) && (isgraph(c) || c == ' ')) {
-	    *tp++ = c;
-	} else if (c == '\n') {
-	    *tp++ = '\\';
-	    *tp++ = 'n';
-	} else if (c == '\r') {
-	    *tp++ = '\\';
-	    *tp++ = 'r';
-	} else if (c == '\b') {
-	    *tp++ = '\\';
-	    *tp++ = 'b';
-	} else if (c == '\033') {
-	    *tp++ = '\\';
-	    *tp++ = 'e';
-	} else if (is7bits(c) && iscntrl(c)) {
-	    *tp++ = '\\';
-	    *tp++ = '^';
-	    *tp++ = '@' + c;
-	} else {
-	    sprintf(tp, "\\%03o", c & 0xff);
-	    tp += strlen(tp);
-	}
-    }
-    *tp++ = '"';
-    *tp++ = '\0';
-    return (vbuf);
-}
-
-const char *
-_nc_visbuf(const char *buf)
-{
-    return _nc_visbuf2(0, buf);
-}
-
-#ifdef TRACE
-void
+NCURSES_EXPORT(void)
 _tracef(const char *fmt,...)
 {
     static const char Called[] = T_CALLED("");
@@ -190,24 +130,48 @@ _tracef(const char *fmt,...)
     errno = save_err;
 }
 
+/* Trace 'bool' return-values */
+NCURSES_EXPORT(NCURSES_BOOL)
+_nc_retrace_bool(NCURSES_BOOL code)
+{
+    T((T_RETURN("%s"), code ? "TRUE" : "FALSE"));
+    return code;
+}
+
 /* Trace 'int' return-values */
-int
+NCURSES_EXPORT(int)
 _nc_retrace_int(int code)
 {
     T((T_RETURN("%d"), code));
     return code;
 }
 
+/* Trace 'unsigned' return-values */
+NCURSES_EXPORT(unsigned)
+_nc_retrace_unsigned(unsigned code)
+{
+    T((T_RETURN("%#x"), code));
+    return code;
+}
+
 /* Trace 'char*' return-values */
-char *
+NCURSES_EXPORT(char *)
 _nc_retrace_ptr(char *code)
 {
     T((T_RETURN("%s"), _nc_visbuf(code)));
     return code;
 }
 
+/* Trace 'SCREEN *' return-values */
+NCURSES_EXPORT(SCREEN *)
+_nc_retrace_sp(SCREEN * code)
+{
+    T((T_RETURN("%p"), code));
+    return code;
+}
+
 /* Trace 'WINDOW *' return-values */
-WINDOW *
+NCURSES_EXPORT(WINDOW *)
 _nc_retrace_win(WINDOW *code)
 {
     T((T_RETURN("%p"), code));

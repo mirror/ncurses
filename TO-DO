@@ -1,4 +1,4 @@
--- $Id: TO-DO,v 1.39 1998/07/12 00:25:39 tom Exp $
+-- $Id: TO-DO,v 1.41 2002/08/31 21:32:43 tom Exp $
 
 SHORT-TERM TO-DO ITEMS:
 
@@ -6,12 +6,6 @@ Known Problems:
 
 * GNAT does not put libraries in the correct order, so a build only links
   properly if you use shared libraries since -lncurses is first.
-
-* XPG4 specifies that the enhanced features are not available unless the
-  _XOPEN_SOURCE_EXTENDED test macro is defined by the application.  Ncurses uses
-  this macro (incorrectly) to address a dependency upon wchar_t.  The functions
-  which use wchar_t are not implemented, so the effect of the test macro is
-  pointless.
 
 * The screen optimization has been tested only in an ad hoc manner.  We should
   develop a good set of regression tests to cover lib_doupdate.c and
@@ -36,6 +30,9 @@ Known Problems:
 
 * The window classes defined in the c++ subdirectory need documentation.
   Some C++ programmer could earn a lot of good karma by doing this...
+
+* The resizeterm() function does not handle ripped-off lines such as that
+  done for the slk_XXX functions.
 
 Portability (or lack thereof):
 
@@ -86,6 +83,8 @@ Untested features:
   label_on, plab_norm, lab_f*) has not been tested.  The label_format and
   lab_f* capabilities aren't presently used.
 
+* The wide-character input functions need testing.
+
 LONGER-TERM TO-DO ITEMS:
 
 1. Extended COSE conformance
@@ -95,68 +94,9 @@ of the SVr4 API.  The library is BASE conformant with this standard.
 We would like to make ncurses fully conformant at the EXTENDED level
 supporting internationalization.
 
-Here are page references to all material involving wide or multi-byte
-characters in Issue 4 of the XSI Curses standard, with notes on their
-status in this implementation:
-
-	Page 1 (1.1.2) New Features discussion of internationalization.
-	Page 12 (2.4): Definition of cchar_t, wchar_t.
-	Page 16 (3.3.2): Introduction of multi-column characters.
-	Page 17-18 (3.3.5): Description of non-spacing characters.
-	Page 19-21 (3.4.2): Basic character operations.
-	Page 34 (addnstr): These should now call underlying wide-
-character functions, and do (through waddnstr) if _XOPEN_SOURCE_EXTENDED is on).
-	Page 35 (addnwstr): wide-character add-string functions.  All macros 
-except waddnwstr() which is not yet defined.
-	Page 36 (add_wch): wide-character add-char functions.  All macros 
-except wadd_wch() which is not yet defined.
-	Page 39 (attr_get): implemented -- we've just made the current-
-attributes field of the window an attr_t.
-	Page 43 (bkgrnd):  None of these are implemented.
-	Page 45 (border_set): Neither of these is implemented.
-	Page 47 (box_set): box_set implemented as macro, but the underlying
-wborder_set() is not yet defined.
-	Page 78 (echo_wchar): echo_wchar() implemented as macro, underlying
-wecho_wchar() not yet implemented.
-	Page 81 (erasechar): Neither entry point is implemented.
-	Page 87 (getbkgrnd): Not implemented.
-	Page 88 (getcchar): Not implemented.
-	Page 93 (getn_wstr): All implemented (as macros) except the
-underlying wgetn_wstr().
-	Page 97 (get_wch):  All implemented (as macros) except the
-underlying wget_wch().
-	Page 99 (get_wstr): Xref to page 93.
-	Page 105 (hline_set): All implemented (as macros) except the
-underlying whline_set(), wvline_set().
-	Page 114 (innstr): Multi-byte character-completeness check is
-not implemented.
-	Page 115 (innwstr): All implemented (as macros) except the
-underlying winnw_str().
-	Page 119 (insnstr): Implementation may not be correct for multi-byte
-characters.
-	Page 120 (ins_nwstr): Not implemented.
-	Page 121 (insstr): Xref to page 119.
-	Page 122 (instr): Xref to page 119.
-	Page 123 (ins_wch): Not implemented.
-	Page 124 (ins_wstr): Xref to page 120.
-	Page 126 (in_wch): Not implemented.
-	Page 127 (in_wchnstr): Not implemented.
-	Page 128 (inwstr): Xref to page 115.
-	Page 133 (killwchar): killwchar not implemented.
-	Page 158 (pechochar): pecho_wchar() not implemented.
-	Page 176 (setcchar): Not implemented.
-	Page 181 (slk_attroff): slk_wset not implemented.
-	Page 200 (ungetch): unget_wch() not implemented.
-	Page 203 (vidattr): vid_attr() and vid_puts() not implemented.
-	Page 206 (vline_set): Xref to page 105.
-	Page 214 (wunctrl): Not implemented.
-	Page 216 (curses.h): cchar_t, wint_t, wchar_t references.
-	Page 220 (curses.h): KEY_CODE_YES
-
-Basically, the macro superstructure is there but the core is absent.  We
-need better multi-locale support guarantees from the OS to finish this.
-If you are working on internationalization support, please contact us so
-we can cooperate.
+Current status:
+	pecho_wchar() not implemented.
+	slk_wset not implemented.
 
 2. DOS port
 

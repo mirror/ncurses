@@ -27,12 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996                 *
+ *   Author:  Juergen Pfeifer, 1996                                         *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /*
     Version Control
-    $Revision: 1.32 $
+    $Revision: 1.35 $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -283,6 +284,26 @@ static void gen_attr_set( const char *name )
     attr = attr >> 1;
   }
   gen_reps (nap, name, (len+7)/8, little_endian?start:0);
+}
+
+static void gen_trace(const char *name)
+{  
+  static const name_attribute_pair nap[] = {
+    {"Times",               TRACE_TIMES},
+    {"Tputs",               TRACE_TPUTS},
+    {"Update",              TRACE_UPDATE},
+    {"Cursor_Move",         TRACE_MOVE},
+    {"Character_Output",    TRACE_CHARPUT},
+    {"Calls",               TRACE_CALLS},
+    {"Virtual_Puts",        TRACE_VIRTPUT},
+    {"Input_Events",        TRACE_IEVENT},
+    {"TTY_State",           TRACE_BITS},
+    {"Internal_Calls",      TRACE_ICALLS},
+    {"Character_Calls",     TRACE_CCALLS},
+    {"Termcap_TermInfo",    TRACE_DATABASE},
+    {(char *)0,                0}
+  };
+  gen_reps(nap,name,sizeof(int),0);
 }
 
 static void gen_menu_opt_rep(const char *name)
@@ -937,6 +958,9 @@ void gen_mouse_events(void)
 #ifdef BUTTON_ALT
   GEN_MEVENT(BUTTON_ALT);
 #endif
+#ifdef REPORT_MOUSE_POSITION
+  GEN_MEVENT(REPORT_MOUSE_POSITION);
+#endif   
 #ifdef ALL_MOUSE_EVENTS
   GEN_MEVENT(ALL_MOUSE_EVENTS);
 #endif
@@ -1012,14 +1036,19 @@ static void mouse_basedefs(void)
  */
 static void color_def (const char *name, int value)
 {
-  printf("   %-8s : constant Color_Number := %d;\n",name,value);
+  printf("   %-16s : constant Color_Number := %d;\n",name,value);
 }
+
+#define HAVE_USE_DEFAULT_COLORS 1
 
 /*
  * Generate all color definitions
  */
 static void gen_color (void)
 {
+#ifdef HAVE_USE_DEFAULT_COLORS
+  color_def ("Default_Color",-1);
+#endif
 #ifdef COLOR_BLACK
   color_def ("Black",COLOR_BLACK);
 #endif
@@ -1108,7 +1137,7 @@ eti_gen(char*buf, int code, const char* name, int* etimin, int* etimax)
     o = offsetof(WINDOW, member);                                   \
     if ((o%sizeof(itype) == 0)) {                                   \
        printf("   Offset%-*s : constant Natural := %2ld; --  %s\n", \
-              8, #member, o/sizeof(itype),#itype);                  \
+              12, #member, o/sizeof(itype),#itype);                 \
     }                                                               \
   }
   
@@ -1128,22 +1157,46 @@ gen_offsets(void)
   GEN_OFFSET(_pary,int);
   GEN_OFFSET(_parx,int);
   if (sizeof(bool) == sizeof(char)) {
+    GEN_OFFSET(_notimeout,char);
+    GEN_OFFSET(_clear,char);
+    GEN_OFFSET(_leaveok,char);
     GEN_OFFSET(_scroll,char);
+    GEN_OFFSET(_idlok,char);
+    GEN_OFFSET(_idcok,char);
+    GEN_OFFSET(_immed,char);
+    GEN_OFFSET(_sync,char);
+    GEN_OFFSET(_use_keypad,char);
     s_bool = "char";
   } else if (sizeof(bool) == sizeof(short)) {
+    GEN_OFFSET(_notimeout,short);
+    GEN_OFFSET(_clear,short);
+    GEN_OFFSET(_leaveok,short);
     GEN_OFFSET(_scroll,short);
+    GEN_OFFSET(_idlok,short);
+    GEN_OFFSET(_idcok,short);
+    GEN_OFFSET(_immed,short);
+    GEN_OFFSET(_sync,short);
+    GEN_OFFSET(_use_keypad,short);
     s_bool = "short";
   } else if (sizeof(bool) == sizeof(int)) {
+    GEN_OFFSET(_notimeout,int);
+    GEN_OFFSET(_clear,int);
+    GEN_OFFSET(_leaveok,int);
     GEN_OFFSET(_scroll,int);
+    GEN_OFFSET(_idlok,int);
+    GEN_OFFSET(_idcok,int);
+    GEN_OFFSET(_immed,int);
+    GEN_OFFSET(_sync,int);
+    GEN_OFFSET(_use_keypad,int);
     s_bool = "int";
   }
   printf("   Sizeof%-*s : constant Natural := %2ld; --  %s\n",
-	 8, "_bool", (long) sizeof(bool),"bool");
+	 12, "_bool", (long) sizeof(bool),"bool");
   /* In ncurses _maxy and _maxx needs an offset for the "public"
    * value
    */
   printf("   Offset%-*s : constant Natural := %2d; --  %s\n",
-	 8, "_XY",1,"int");
+	 12, "_XY",1,"int");
   printf("\n");
   printf("   type Curses_Bool is mod 2 ** Interfaces.C.%s'Size;\n",s_bool);
 }
@@ -1211,6 +1264,9 @@ int main(int argc, char *argv[])
 	  break;
 	case 'V': /* generate version info */
 	  gen_version_info();
+	  break;
+	case 'T': /* generate the Trace info */
+	  gen_trace("Trace_Attribute_Set");
 	  break;
 	default:
 	  break;

@@ -1,16 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  * t
+  ****************************************************************************
+  * Copyright (c) 1998,2002 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: menu_attributes.3x,v 1.7 2002/01/19 22:49:06 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>menu_attributes 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>menu_attributes 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>menu_attributes</B> - color and attribute control for menus
+       <STRONG>menu_attributes</STRONG> - color and attribute control for menus
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
        int set_menu_fore(MENU *menu, chtype attr);
        chtype menu_fore(const MENU *menu);
        int set_menu_back(MENU *menu, chtype attr);
@@ -23,26 +62,26 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The  function  <B>set_menu_fore</B> sets the foreground attribute
-       of <I>menu</I>. This is the  highlight  used  for  selected  menu
-       items.   <B>menu_fore</B>  returns the foreground attribute.  The
-       default is <B>A_STANDOUT</B>.
+       The  function  <STRONG>set_menu_fore</STRONG> sets the foreground attribute
+       of <EM>menu</EM>. This is the  highlight  used  for  selected  menu
+       items.   <STRONG>menu_fore</STRONG>  returns the foreground attribute.  The
+       default is <STRONG>A_STANDOUT</STRONG>.
 
-       The function <B>set_menu_back</B> sets the  background  attribute
-       of  <I>menu</I>.  This  is the highlight used for selectable (but
+       The function <STRONG>set_menu_back</STRONG> sets the  background  attribute
+       of  <EM>menu</EM>.  This  is the highlight used for selectable (but
        not  currently  selected)  menu   items.    The   function
-       <B>menu_back</B>  returns  the background attribute.  The default
-       is <B>A_NORMAL</B>.
+       <STRONG>menu_back</STRONG>  returns  the background attribute.  The default
+       is <STRONG>A_NORMAL</STRONG>.
 
-       The function <B>set_menu_grey</B>  sets  the  grey  attribute  of
-       <I>menu</I>.  This  is  the highlight used for un-selectable menu
+       The function <STRONG>set_menu_grey</STRONG>  sets  the  grey  attribute  of
+       <EM>menu</EM>.  This  is  the highlight used for un-selectable menu
        items in menus that permit more than one  selection.   The
-       function   <B>menu_grey</B>  returns  the  grey  attribute.   The
-       default is <B>A_UNDERLINE</B>.
+       function   <STRONG>menu_grey</STRONG>  returns  the  grey  attribute.   The
+       default is <STRONG>A_UNDERLINE</STRONG>.
 
-       The function <B>set_menu_pad</B> sets the character used to  fill
+       The function <STRONG>set_menu_pad</STRONG> sets the character used to  fill
        the space between the name and description parts of a menu
-       item.  <B>menu_pad</B> returns the given  menu's  pad  character.
+       item.  <STRONG>menu_pad</STRONG> returns the given  menu's  pad  character.
        The default is a blank.
 
 
@@ -50,27 +89,27 @@
 <H2>RETURN VALUE</H2><PRE>
        These routines return one of the following:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine  detected  an incorrect or out-of-range argu-
             ment.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B> and 3x pages  whose  names  begin  "menu_"  for
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> and related pages whose names begin "menu_" for
        detailed descriptions of the entry points.
 
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       The header file <B>&lt;menu.h&gt;</B> automatically includes the header
-       file <B>&lt;curses.h&gt;</B>.
+       The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
+       file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE>

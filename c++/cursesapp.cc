@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998,1999,2001 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,13 +28,14 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
+ *   Author: Juergen Pfeifer, 1997                                          *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
-#include "cursesapp.h"
 #include "internal.h"
+#include "cursesapp.h"
 
-MODULE_ID("$Id: cursesapp.cc,v 1.6 1999/10/30 23:59:37 tom Exp $")
+MODULE_ID("$Id: cursesapp.cc,v 1.9 2002/07/06 15:47:52 juergen Exp $")
 
 void
 NCursesApplication::init(bool bColors) {

@@ -1,36 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  ****************************************************************************
+  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: tset.1,v 1.12 2000/09/09 20:33:07 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>tset 1</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>tset 1</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>tset</B>, <B>reset</B> - terminal initialization
+       <STRONG>tset</STRONG>, <STRONG>reset</STRONG> - terminal initialization
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       tset  [-IQVqrs]  [-]  [-e <I>ch</I>] [-i <I>ch</I>] [-k <I>ch</I>] [-m <I>mapping</I>]
-       [<I>terminal</I>]
-       reset [-IQVqrs] [-] [-e <I>ch</I>] [-i <I>ch</I>] [-k <I>ch</I>]  [-m  <I>mapping</I>]
-       [<I>terminal</I>]
+       tset  [-IQVqrs]  [-]  [-e <EM>ch</EM>] [-i <EM>ch</EM>] [-k <EM>ch</EM>] [-m <EM>mapping</EM>]
+       [<EM>terminal</EM>]
+       reset [-IQVqrs] [-] [-e <EM>ch</EM>] [-i <EM>ch</EM>] [-k <EM>ch</EM>]  [-m  <EM>mapping</EM>]
+       [<EM>terminal</EM>]
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       <B>Tset</B>  initializes  terminals.   <B>Tset</B>  first determines the
+       <STRONG>Tset</STRONG>  initializes  terminals.   <STRONG>Tset</STRONG>  first determines the
        type of terminal that you are using.   This  determination
        is done as follows, using the first terminal type found.
 
-       1. The <B>terminal</B> argument specified on the command line.
+       1. The <STRONG>terminal</STRONG> argument specified on the command line.
 
-       2. The value of the <B>TERM</B> environmental variable.
+       2. The value of the <STRONG>TERM</STRONG> environmental variable.
 
        3.  (BSD  systems only.) The terminal type associated with
-       the standard error output device in  the  <I>/etc/ttys</I>  file.
-       (On Linux and System-V-like UNIXes, <I>getty</I> does this job by
-       setting <B>TERM</B>  according  to  the  type  passed  to  it  by
-       <I>/etc/inittab</I>.)
+       the standard error output device in  the  <EM>/etc/ttys</EM>  file.
+       (On Linux and System-V-like UNIXes, <EM>getty</EM> does this job by
+       setting <STRONG>TERM</STRONG>  according  to  the  type  passed  to  it  by
+       <EM>/etc/inittab</EM>.)
 
        4. The default terminal type, ``unknown''.
 
@@ -53,7 +91,7 @@
        have  changed,  or  are  not  set to their default values,
        their values are displayed to the standard error output.
 
-       When invoked as <B>reset</B>, <B>tset</B> sets cooked  and  echo  modes,
+       When invoked as <STRONG>reset</STRONG>, <STRONG>tset</STRONG> sets cooked  and  echo  modes,
        turns  off cbreak and raw modes, turns on newline transla-
        tion and resets any  unset  special  characters  to  their
        default  values  before  doing the terminal initialization
@@ -61,7 +99,7 @@
        leaving  a  terminal  in an abnormal state.  Note, you may
        have to type
 
-           <B>&lt;LF&gt;reset&lt;LF&gt;</B>
+           <STRONG>&lt;LF&gt;reset&lt;LF&gt;</STRONG>
 
        (the line-feed character is normally control-J) to get the
        terminal to work, as carriage-return may no longer work in
@@ -74,7 +112,7 @@
             put, and the terminal is not initialized in any  way.
             The option `-' by itself is equivalent but archaic.
 
-       -e   Set the erase character to <I>ch</I>.
+       -e   Set the erase character to <EM>ch</EM>.
 
        -I   Do  not  send  the  terminal  or  tab  initialization
             strings to the terminal.
@@ -82,12 +120,12 @@
        -Q   Don't display any values for the erase, interrupt and
             line kill characters.
 
-       <B>-V</B>   reports the version of ncurses which was used in this
+       <STRONG>-V</STRONG>   reports the version of ncurses which was used in this
             program, and exits.
 
-       -i   Set the interrupt character to <I>ch</I>.
+       -i   Set the interrupt character to <EM>ch</EM>.
 
-       -k   Set the line kill character to <I>ch</I>.
+       -k   Set the line kill character to <EM>ch</EM>.
 
        -m   Specify a mapping from a port  type  to  a  terminal.
             See below for more information.
@@ -95,7 +133,7 @@
        -r   Print the terminal type to the standard error output.
 
        -s   Print the sequence of shell  commands  to  initialize
-            the environment variable <B>TERM</B> to the standard output.
+            the environment variable <STRONG>TERM</STRONG> to the standard output.
             See the section below on setting the environment  for
             details.
 
@@ -112,11 +150,11 @@
 
        When the -s option is specified, the commands to enter the
        information  into  the  shell's environment are written to
-       the standard output.  If the <B>SHELL</B> environmental  variable
-       ends in ``csh'', the commands are for <B>csh</B>, otherwise, they
-       are for <B>sh</B>.  Note, the <B>csh</B>  commands  set  and  unset  the
-       shell  variable  <B>noglob</B>,  leaving it unset.  The following
-       line in the <B>.login</B> or <B>.profile</B> files will  initialize  the
+       the standard output.  If the <STRONG>SHELL</STRONG> environmental  variable
+       ends in ``csh'', the commands are for <STRONG>csh</STRONG>, otherwise, they
+       are for <STRONG>sh</STRONG>.  Note, the <STRONG>csh</STRONG>  commands  set  and  unset  the
+       shell  variable  <STRONG>noglob</STRONG>,  leaving it unset.  The following
+       line in the <STRONG>.login</STRONG> or <STRONG>.profile</STRONG> files will  initialize  the
        environment correctly:
 
            eval `tset -s options ... `
@@ -127,14 +165,14 @@
 <H2>TERMINAL TYPE MAPPING</H2><PRE>
        When the terminal is not hardwired into the system (or the
        current system information is incorrect) the terminal type
-       derived  from the <I>/etc/ttys</I> file or the <B>TERM</B> environmental
-       variable is often something generic like <B>network</B>,  <B>dialup</B>,
-       or  <B>unknown</B>.   When <B>tset</B> is used in a startup script it is
+       derived  from the <EM>/etc/ttys</EM> file or the <STRONG>TERM</STRONG> environmental
+       variable is often something generic like <STRONG>network</STRONG>,  <STRONG>dialup</STRONG>,
+       or  <STRONG>unknown</STRONG>.   When <STRONG>tset</STRONG> is used in a startup script it is
        often desirable to provide information about the  type  of
        terminal used on such ports.
 
        The  purpose  of  the -m option is to map from some set of
-       conditions to a terminal type, that is, to tell <B>tset</B>  ``If
+       conditions to a terminal type, that is, to tell <STRONG>tset</STRONG>  ``If
        I'm  on this port at a particular speed, guess that I'm on
        that kind of terminal''.
 
@@ -158,17 +196,17 @@
        ble mapping is used.
 
        For    example,    consider    the    following   mapping:
-       <B>dialup&gt;9600:vt100</B>.  The port type is dialup , the operator
+       <STRONG>dialup&gt;9600:vt100</STRONG>.  The port type is dialup , the operator
        is  &gt;, the baud rate specification is 9600, and the termi-
        nal type is vt100.  The result of this mapping is to spec-
-       ify that if the terminal type is <B>dialup</B>, and the baud rate
-       is greater than 9600 baud, a terminal type of  <B>vt100</B>  will
+       ify that if the terminal type is <STRONG>dialup</STRONG>, and the baud rate
+       is greater than 9600 baud, a terminal type of  <STRONG>vt100</STRONG>  will
        be used.
 
        If no baud rate is specified, the terminal type will match
        any baud rate.  If no port type is specified, the terminal
-       type   will   match   any  port  type.   For  example,  <B>-m</B>
-       <B>dialup:vt100</B>  <B>-m</B>  <B>:?xterm</B>  will  cause  any  dialup  port,
+       type   will   match   any  port  type.   For  example,  <STRONG>-m</STRONG>
+       <STRONG>dialup:vt100</STRONG>  <STRONG>-m</STRONG>  <STRONG>:?xterm</STRONG>  will  cause  any  dialup  port,
        regardless of baud rate, to match the terminal type vt100,
        and any non-dialup port type to match  the  terminal  type
        ?xterm.   Note,  because of the leading question mark, the
@@ -178,14 +216,14 @@
        No  whitespace  characters  are permitted in the -m option
        argument.  Also, to avoid problems  with  meta-characters,
        it  is  suggested  that  the  entire -m option argument be
-       placed within single quote characters, and that <B>csh</B>  users
+       placed within single quote characters, and that <STRONG>csh</STRONG>  users
        insert  a  backslash character (``\'') before any exclama-
        tion marks (``!'').
 
 
 </PRE>
 <H2>HISTORY</H2><PRE>
-       The <B>tset</B> command appeared in BSD 3.0.  The <B>ncurses</B>  imple-
+       The <STRONG>tset</STRONG> command appeared in BSD 3.0.  The <STRONG>ncurses</STRONG>  imple-
        mentation  was lightly adapted from the 4.4BSD sources for
        a terminfo environment by Eric S. Raymond &lt;esr@snark.thyr-
        sus.com&gt;.
@@ -193,18 +231,18 @@
 
 </PRE>
 <H2>COMPATIBILITY</H2><PRE>
-       The  <B>tset</B>  utility has been provided for backward-compati-
+       The  <STRONG>tset</STRONG>  utility has been provided for backward-compati-
        bility with BSD environments (under  most  modern  UNIXes,
-       <B>/etc/inittab</B>  and  <B><A HREF="getty.1.html">getty(1)</A></B> can set <B>TERM</B> appropriately for
-       each dial-up line; this  obviates  what  was  <B>tset</B>'s  most
+       <STRONG>/etc/inittab</STRONG>  and  <STRONG><A HREF="getty.1.html">getty(1)</A></STRONG> can set <STRONG>TERM</STRONG> appropriately for
+       each dial-up line; this  obviates  what  was  <STRONG>tset</STRONG>'s  most
        important  use).   This implementation behaves like 4.4BSD
        tset, with a few exceptions specified here.
 
        The -S option of BSD tset no longer works;  it  prints  an
        error message to stderr and dies.  The -s option only sets
-       <B>TERM</B>, not <B>TERMCAP</B>.  Both these  changes  are  because  the
-       <B>TERMCAP</B>  variable  is  no longer supported under terminfo-
-       based <B>ncurses</B>, which makes <B>tset</B> <B>-S</B> useless (we made it die
+       <STRONG>TERM</STRONG>, not <STRONG>TERMCAP</STRONG>.  Both these  changes  are  because  the
+       <STRONG>TERMCAP</STRONG>  variable  is  no longer supported under terminfo-
+       based <STRONG>ncurses</STRONG>, which makes <STRONG>tset</STRONG> <STRONG>-S</STRONG> useless (we made it die
        noisily rather than silently induce lossage).
 
        There  was  an  undocumented  4.4BSD feature that invoking
@@ -213,7 +251,7 @@
        upper-case only.  This feature has been omitted.
 
        The -A, -E, -h, -u and -v options were  deleted  from  the
-       <B>tset</B>  utility  in  4.4BSD. None of them were documented in
+       <STRONG>tset</STRONG>  utility  in  4.4BSD. None of them were documented in
        4.3BSD and all are of limited utility at best. The -a, -d,
        and -p options are similarly not documented or useful, but
        were retained as they appear to be in widespread use.   It
@@ -227,16 +265,16 @@
        mended that such usage be fixed to explicitly specify  the
        character.
 
-       As  of  4.4BSD,  executing <B>tset</B> as <B>reset</B> no longer implies
+       As  of  4.4BSD,  executing <STRONG>tset</STRONG> as <STRONG>reset</STRONG> no longer implies
        the -Q option.  Also, the interaction between the - option
-       and the <I>terminal</I> argument in some historic implementations
-       of <B>tset</B> has been removed.
+       and the <EM>terminal</EM> argument in some historic implementations
+       of <STRONG>tset</STRONG> has been removed.
 
 
 
 </PRE>
 <H2>ENVIRONMENT</H2><PRE>
-       The <B>tset</B> command uses the <B>SHELL</B> and <B>TERM</B> environment vari-
+       The <STRONG>tset</STRONG> command uses the <STRONG>SHELL</STRONG> and <STRONG>TERM</STRONG> environment vari-
        ables.
 
 
@@ -252,8 +290,8 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="csh.1.html">csh(1)</A></B>, <B><A HREF="sh.1.html">sh(1)</A></B>, <B><A HREF="stty.1.html">stty(1)</A></B>, <B><A HREF="tty.4.html">tty(4)</A></B>, <B><A HREF="termcap.5.html">termcap(5)</A></B>, <B><A HREF="ttys.5.html">ttys(5)</A></B>, envi-
-       <B><A HREF="ron.7.html">ron(7)</A></B>
+       <STRONG><A HREF="csh.1.html">csh(1)</A></STRONG>, <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>, <STRONG><A HREF="stty.1.html">stty(1)</A></STRONG>, <STRONG><A HREF="tty.4.html">tty(4)</A></STRONG>, <STRONG><A HREF="termcap.5.html">termcap(5)</A></STRONG>, <STRONG><A HREF="ttys.5.html">ttys(5)</A></STRONG>, envi-
+       <STRONG><A HREF="ron.7.html">ron(7)</A></STRONG>
 
 
 

@@ -29,10 +29,14 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997                   *
  ****************************************************************************/
-/* $Id: nc_alloc.h,v 1.8 2000/04/08 23:42:57 tom Exp $ */
+/* $Id: nc_alloc.h,v 1.11 2002/07/20 13:16:40 tom Exp $ */
 
 #ifndef NC_ALLOC_included
 #define NC_ALLOC_included 1
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if HAVE_LIBDMALLOC
 #include <dmalloc.h>    /* Gray Watson's library */
@@ -66,18 +70,22 @@ extern void _nc_leaks_dump_entry(void);
 #endif
 
 #ifndef ExitProgram
-#define ExitProgram(code) return code
+#define ExitProgram(code) exit(code)
 #endif
 
 /* doalloc.c */
-extern void *_nc_doalloc(void *, size_t);
+extern NCURSES_EXPORT(void *) _nc_doalloc(void *, size_t);
 #if !HAVE_STRDUP
 #define strdup _nc_strdup
-extern char *_nc_strdup(const char *);
+extern NCURSES_EXPORT(char *) _nc_strdup(const char *);
 #endif
 
 #define typeMalloc(type,elts) (type *)malloc((elts)*sizeof(type))
 #define typeCalloc(type,elts) (type *)calloc((elts),sizeof(type))
 #define typeRealloc(type,elts,ptr) (type *)_nc_doalloc(ptr, (elts)*sizeof(type))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* NC_ALLOC_included */

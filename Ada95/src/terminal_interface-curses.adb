@@ -33,9 +33,10 @@
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+--  Author: Juergen Pfeifer, 1996
+--  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control:
---  $Revision: 1.26 $
+--  $Revision: 1.28 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -88,6 +89,27 @@ package body Terminal_Interface.Curses is
    function W_Get_Int   is new W_Get_Element (C_Int);
    function W_Get_Short is new W_Get_Element (C_Short);
    function W_Get_Byte  is new W_Get_Element (Interfaces.C.unsigned_char);
+
+   function Get_Flag (Win    : Window;
+                      Offset : Natural) return Boolean;
+
+   function Get_Flag (Win    : Window;
+                      Offset : Natural) return Boolean
+   is
+      Res : C_Int;
+   begin
+      case Sizeof_bool is
+         when 1 => Res := C_Int (W_Get_Byte  (Win, Offset));
+         when 2 => Res := C_Int (W_Get_Short (Win, Offset));
+         when 4 => Res := C_Int (W_Get_Int   (Win, Offset));
+         when others => raise Curses_Exception;
+      end case;
+
+      case Res is
+         when 0       => return False;
+         when others  => return True;
+      end case;
+   end Get_Flag;
 
 ------------------------------------------------------------------------------
    function Key_Name (Key : in Real_Key_Code) return String
@@ -404,9 +426,8 @@ package body Terminal_Interface.Curses is
                   Str : in String;
                   Len : in Integer := -1)
    is
-      type Char_Ptr is access all Interfaces.C.char;
       function Waddnstr (Win : Window;
-                         Str : Char_Ptr;
+                         Str : char_array;
                          Len : C_Int := -1) return C_Int;
       pragma Import (C, Waddnstr, "waddnstr");
 
@@ -414,7 +435,7 @@ package body Terminal_Interface.Curses is
       Length : size_t;
    begin
       To_C (Str, Txt, Length);
-      if Waddnstr (Win, Txt (Txt'First)'Access, C_Int (Len)) = Curses_Err then
+      if Waddnstr (Win, Txt, C_Int (Len)) = Curses_Err then
          raise Curses_Exception;
       end if;
    end Add;
@@ -436,9 +457,8 @@ package body Terminal_Interface.Curses is
       Str : in Attributed_String;
       Len : in Integer := -1)
    is
-      type Chtype_Ptr is access all Attributed_Character;
       function Waddchnstr (Win : Window;
-                           Str : Chtype_Ptr;
+                           Str : chtype_array;
                            Len : C_Int := -1) return C_Int;
       pragma Import (C, Waddchnstr, "waddchnstr");
 
@@ -449,7 +469,7 @@ package body Terminal_Interface.Curses is
       end loop;
       Txt (Str'Length) := Default_Character;
       if Waddchnstr (Win,
-                     Txt (Txt'First)'Access,
+                     Txt,
                      C_Int (Len)) = Curses_Err then
          raise Curses_Exception;
       end if;
@@ -616,6 +636,26 @@ package body Terminal_Interface.Curses is
       return Real_Key_Code (Natural (Key_F0) + Natural (Key));
    end Function_Key_Code;
 ------------------------------------------------------------------------------
+   procedure Standout (Win : Window  := Standard_Window;
+                       On  : Boolean := True)
+   is
+      function wstandout (Win : Window) return C_Int;
+      pragma Import (C, wstandout, "wstandout");
+      function wstandend (Win : Window) return C_Int;
+      pragma Import (C, wstandend, "wstandend");
+
+      Err : C_Int;
+   begin
+      if On then
+         Err := wstandout (Win);
+      else
+         Err := wstandend (Win);
+      end if;
+      if Err = Curses_Err then
+         raise Curses_Exception;
+      end if;
+   end Standout;
+
    procedure Switch_Character_Attribute
      (Win  : in Window := Standard_Window;
       Attr : in Character_Attribute_Set := Normal_Video;
@@ -858,6 +898,13 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_KeyPad_Mode;
 
+   function Get_KeyPad_Mode (Win : in Window := Standard_Window)
+                             return Boolean
+   is
+   begin
+      return Get_Flag (Win, Offset_use_keypad);
+   end Get_KeyPad_Mode;
+
    procedure Half_Delay (Amount : in Half_Delay_Amount)
    is
       function Halfdelay (Amount : C_Int) return C_Int;
@@ -1036,21 +1083,11 @@ package body Terminal_Interface.Curses is
       end if;
    end Allow_Scrolling;
 
-   function Scrolling_Allowed (Win : Window := Standard_Window) return Boolean
+   function Scrolling_Allowed (Win : Window := Standard_Window)
+                               return Boolean
    is
-      Res : C_Int;
    begin
-      case Sizeof_bool is
-         when 1 => Res := C_Int (W_Get_Byte  (Win, Offset_scroll));
-         when 2 => Res := C_Int (W_Get_Short (Win, Offset_scroll));
-         when 4 => Res := C_Int (W_Get_Int   (Win, Offset_scroll));
-         when others => raise Curses_Exception;
-      end case;
-
-      case Res is
-         when 0       => return False;
-         when others  => return True;
-      end case;
+      return Get_Flag (Win, Offset_scroll);
    end Scrolling_Allowed;
 
    procedure Set_Scroll_Region
@@ -1636,9 +1673,8 @@ package body Terminal_Interface.Curses is
                      Str : in String;
                      Len : in Integer := -1)
    is
-      type Char_Ptr is access all Interfaces.C.char;
       function Winsnstr (Win : Window;
-                         Str : Char_Ptr;
+                         Str : char_array;
                          Len : Integer := -1) return C_Int;
       pragma Import (C, Winsnstr, "winsnstr");
 
@@ -1646,7 +1682,7 @@ package body Terminal_Interface.Curses is
       Length : size_t;
    begin
       To_C (Str, Txt, Length);
-      if Winsnstr (Win, Txt (Txt'First)'Access, Len) = Curses_Err then
+      if Winsnstr (Win, Txt, Len) = Curses_Err then
          raise Curses_Exception;
       end if;
    end Insert;
@@ -1658,11 +1694,10 @@ package body Terminal_Interface.Curses is
       Str    : in String;
       Len    : in Integer := -1)
    is
-      type Char_Ptr is access all Interfaces.C.char;
       function Mvwinsnstr (Win    : Window;
                            Line   : C_Int;
                            Column : C_Int;
-                           Str    : Char_Ptr;
+                           Str    : char_array;
                            Len    : C_Int) return C_Int;
       pragma Import (C, Mvwinsnstr, "mvwinsnstr");
 
@@ -1670,8 +1705,7 @@ package body Terminal_Interface.Curses is
       Length : size_t;
    begin
       To_C (Str, Txt, Length);
-      if Mvwinsnstr (Win, C_Int (Line), C_Int (Column),
-                     Txt (Txt'First)'Access, C_Int (Len))
+      if Mvwinsnstr (Win, C_Int (Line), C_Int (Column), Txt, C_Int (Len))
         = Curses_Err then
          raise Curses_Exception;
       end if;
@@ -1723,14 +1757,13 @@ package body Terminal_Interface.Curses is
       Str : out Attributed_String;
       Len : in  Integer := -1)
    is
-      type Chtype_Ptr is access all Attributed_Character;
       function Winchnstr (Win : Window;
-                          Str : Chtype_Ptr;
+                          Str : chtype_array;             -- out
                           Len : C_Int) return C_Int;
       pragma Import (C, Winchnstr, "winchnstr");
 
       N   : Integer := Len;
-      Txt : chtype_array (0 .. Str'Length);
+      Txt : chtype_array (0 .. Str'Length) := (0 => Default_Character);
       Cnt : Natural := 0;
    begin
       if N < 0 then
@@ -1739,7 +1772,7 @@ package body Terminal_Interface.Curses is
       if N > Str'Length then
          raise Constraint_Error;
       end if;
-      if Winchnstr (Win, Txt (Txt'First)'Access, C_Int (N)) = Curses_Err then
+      if Winchnstr (Win, Txt, C_Int (N)) = Curses_Err then
          raise Curses_Exception;
       end if;
       for To in Str'Range loop
@@ -1823,9 +1856,8 @@ package body Terminal_Interface.Curses is
                                  Text  : in String;
                                  Fmt   : in Label_Justification := Left)
    is
-      type Char_Ptr is access all Interfaces.C.char;
       function Slk_Set (Label : C_Int;
-                        Txt   : Char_Ptr;
+                        Txt   : char_array;
                         Fmt   : C_Int) return C_Int;
       pragma Import (C, Slk_Set, "slk_set");
 
@@ -1833,10 +1865,8 @@ package body Terminal_Interface.Curses is
       Len : size_t;
    begin
       To_C (Text, Txt, Len);
-      if Slk_Set (C_Int (Label),
-                  Txt (Txt'First)'Access,
-                  C_Int (Label_Justification'Pos (Fmt)))
-        = Curses_Err then
+      if Slk_Set (C_Int (Label), Txt,
+                  C_Int (Label_Justification'Pos (Fmt))) = Curses_Err then
          raise Curses_Exception;
       end if;
    end Set_Soft_Label_Key;
@@ -1995,8 +2025,7 @@ package body Terminal_Interface.Curses is
    procedure Define_Key (Definition : in String;
                          Key        : in Special_Key_Code)
    is
-      type Char_Ptr is access all Interfaces.C.char;
-      function Defkey (Def : Char_Ptr;
+      function Defkey (Def : char_array;
                        Key : C_Int) return C_Int;
       pragma Import (C, Defkey, "define_key");
 
@@ -2004,7 +2033,7 @@ package body Terminal_Interface.Curses is
       Length : size_t;
    begin
       To_C (Definition, Txt, Length);
-      if Defkey (Txt (Txt'First)'Access, C_Int (Key)) = Curses_Err then
+      if Defkey (Txt, C_Int (Key)) = Curses_Err then
          raise Curses_Exception;
       end if;
    end Define_Key;
@@ -2410,5 +2439,123 @@ package body Terminal_Interface.Curses is
          Column := Column_Position (X);
       end if;
    end Transform_Coordinates;
+------------------------------------------------------------------------------
+   procedure Use_Default_Colors is
+      function C_Use_Default_Colors return C_Int;
+      pragma Import (C, C_Use_Default_Colors, "use_default_colors");
+      Err : constant C_Int := C_Use_Default_Colors;
+   begin
+      if Err = Curses_Err then
+         raise Curses_Exception;
+      end if;
+   end Use_Default_Colors;
+
+   procedure Assume_Default_Colors (Fore : Color_Number := Default_Color;
+                                    Back : Color_Number := Default_Color)
+   is
+      function C_Assume_Default_Colors (Fore : C_Int;
+                                        Back : C_Int) return C_Int;
+      pragma Import (C, C_Assume_Default_Colors, "assume_default_colors");
+
+      Err : constant C_Int := C_Assume_Default_Colors (C_Int (Fore),
+                                                       C_Int (Black));
+   begin
+      if Err = Curses_Err then
+         raise Curses_Exception;
+      end if;
+   end Assume_Default_Colors;
+------------------------------------------------------------------------------
+   function Curses_Version return String
+   is
+      function curses_versionC return chars_ptr;
+      pragma Import (C, curses_versionC, "curses_version");
+      Result : constant chars_ptr := curses_versionC;
+   begin
+      return Fill_String (Result);
+   end Curses_Version;
+------------------------------------------------------------------------------
+   function Use_Extended_Names (Enable : Boolean) return Boolean
+   is
+      function use_extended_namesC (e : Curses_Bool) return C_Int;
+      pragma Import (C, use_extended_namesC, "use_extended_names");
+
+      Res : constant C_Int :=
+         use_extended_namesC (Curses_Bool (Boolean'Pos (Enable)));
+   begin
+      if Res = C_Int (Curses_Bool_False) then
+         return False;
+      else
+         return True;
+      end if;
+   end Use_Extended_Names;
+------------------------------------------------------------------------------
+   procedure Screen_Dump_To_File (Filename : in String)
+   is
+      function scr_dump (f : char_array) return C_Int;
+      pragma Import (C, scr_dump, "scr_dump");
+      Txt    : char_array (0 .. Filename'Length);
+      Length : size_t;
+   begin
+      To_C (Filename, Txt, Length);
+      if Curses_Err = scr_dump (Txt) then
+         raise Curses_Exception;
+      end if;
+   end Screen_Dump_To_File;
+
+   procedure Screen_Restore_From_File (Filename : in String)
+   is
+      function scr_restore (f : char_array) return C_Int;
+      pragma Import (C, scr_restore, "scr_restore");
+      Txt    : char_array (0 .. Filename'Length);
+      Length : size_t;
+   begin
+      To_C (Filename, Txt, Length);
+      if Curses_Err = scr_restore (Txt)  then
+         raise Curses_Exception;
+      end if;
+   end Screen_Restore_From_File;
+
+   procedure Screen_Init_From_File (Filename : in String)
+   is
+      function scr_init (f : char_array) return C_Int;
+      pragma Import (C, scr_init, "scr_init");
+      Txt    : char_array (0 .. Filename'Length);
+      Length : size_t;
+   begin
+      To_C (Filename, Txt, Length);
+      if Curses_Err = scr_init (Txt) then
+         raise Curses_Exception;
+      end if;
+   end Screen_Init_From_File;
+
+   procedure Screen_Set_File (Filename : in String)
+   is
+      function scr_set (f : char_array) return C_Int;
+      pragma Import (C, scr_set, "scr_set");
+      Txt    : char_array (0 .. Filename'Length);
+      Length : size_t;
+   begin
+      To_C (Filename, Txt, Length);
+      if Curses_Err = scr_set (Txt) then
+         raise Curses_Exception;
+      end if;
+   end Screen_Set_File;
+------------------------------------------------------------------------------
+   procedure Resize (Win               : Window := Standard_Window;
+                     Number_Of_Lines   : Line_Count;
+                     Number_Of_Columns : Column_Count) is
+      function wresize (win     : Window;
+                        lines   : C_Int;
+                        columns : C_Int) return C_Int;
+      pragma Import (C, wresize);
+   begin
+      if wresize (Win,
+                  C_Int (Number_Of_Lines),
+                  C_Int (Number_Of_Columns)) = Curses_Err then
+         raise Curses_Exception;
+      end if;
+   end Resize;
+------------------------------------------------------------------------------
 
 end Terminal_Interface.Curses;
+

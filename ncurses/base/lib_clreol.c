@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,9 +40,9 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_clreol.c,v 1.16 2000/04/29 21:14:54 tom Exp $")
+MODULE_ID("$Id: lib_clreol.c,v 1.21 2001/12/19 01:06:04 tom Exp $")
 
-int
+NCURSES_EXPORT(int)
 wclrtoeol(WINDOW *win)
 {
     int code = ERR;
@@ -50,8 +50,8 @@ wclrtoeol(WINDOW *win)
     T((T_CALLED("wclrtoeol(%p)"), win));
 
     if (win) {
-	chtype blank;
-	chtype *ptr, *end;
+	NCURSES_CH_T blank;
+	NCURSES_CH_T *ptr, *end;
 	struct ldat *line;
 	NCURSES_SIZE_T y = win->_cury;
 	NCURSES_SIZE_T x = win->_curx;
@@ -60,7 +60,7 @@ wclrtoeol(WINDOW *win)
 	 * If we have just wrapped the cursor, the clear applies to the
 	 * new line, unless we are at the lower right corner.
 	 */
-	if (win->_flags & _WRAPPED
+	if ((win->_flags & _WRAPPED) != 0
 	    && y < win->_maxy) {
 	    win->_flags &= ~_WRAPPED;
 	}
@@ -69,12 +69,12 @@ wclrtoeol(WINDOW *win)
 	 * There's no point in clearing if we're not on a legal
 	 * position, either.
 	 */
-	if (win->_flags & _WRAPPED
+	if ((win->_flags & _WRAPPED) != 0
 	    || y > win->_maxy
 	    || x > win->_maxx)
 	    returnCode(ERR);
 
-	blank = _nc_background(win);
+	blank = win->_nc_bkgd;
 	line = &win->_line[y];
 	CHANGED_TO_EOL(line, x, win->_maxx);
 

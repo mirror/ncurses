@@ -33,9 +33,11 @@
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+--  Author:  Laurent Pautet <pautet@gnat.com>
+--  Modified by:  Juergen Pfeifer, 1997
+--  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control
---  $Revision: 1.5 $
+--  $Revision: 1.6 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  This package has been contributed by Laurent Pautet <pautet@gnat.com>   --

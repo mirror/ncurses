@@ -1,6 +1,6 @@
-# $Id: manlinks.sed,v 1.9 2000/09/30 23:32:24 tom Exp $
+# $Id: manlinks.sed,v 1.10 2002/09/21 19:02:03 tom Exp $
 ##############################################################################
-# Copyright (c) 2000 Free Software Foundation, Inc.                          #
+# Copyright (c) 2000,2002 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -33,6 +33,7 @@
 /\.\\"/d
 /^\.br/d
 /^\.sp/d
+s/^\.IX//
 s/\\f.//g
 s/[:,]/ /g
 s/^[ 	][ 	]*//

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\" Copyright (c) 1998,2001 Free Software Foundation, Inc.                   *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.8 1998/03/11 21:12:53 juergen Exp $
+.\" $Id: curs_inopts.3x,v 1.9 2002/08/10 22:29:49 tom Exp $
 .TH curs_inopts 3X ""
 .SH NAME
 \fBcbreak\fR, \fBnocbreak\fR, \fBecho\fR,
@@ -128,7 +128,7 @@ To force 8 bits to be returned, invoke \fBmeta\fR(\fIwin\fR,
 \fBTRUE\fR); this is equivalent, under POSIX, to setting the CS8 flag
 on the terminal.  To force 7 bits to be returned, invoke
 \fBmeta\fR(\fIwin\fR, \fBFALSE\fR); this is equivalent, under POSIX,
-to setting the CS8 flag on the terminal.  The window argument,
+to setting the CS7 flag on the terminal.  The window argument,
 \fIwin\fR, is always ignored.  If the terminfo capabilities \fBsmm\fR
 (meta_on) and \fBrmm\fR (meta_off) are defined for the terminal,
 \fBsmm\fR is sent to the terminal when \fBmeta\fR(\fIwin\fR,

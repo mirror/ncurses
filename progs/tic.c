@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey 1996 on                                        *
  ****************************************************************************/
 
 /*
@@ -44,7 +45,7 @@
 #include <term_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.83 2000/10/14 17:30:26 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.102 2002/10/05 19:59:41 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -52,6 +53,7 @@ static FILE *log_fp;
 static FILE *tmp_fp;
 static bool showsummary = FALSE;
 static const char *to_remove;
+static int tparm_errs;
 
 static void (*save_check_termtype) (TERMTYPE *);
 static void check_termtype(TERMTYPE * tt);
@@ -87,24 +89,27 @@ usage(void)
     {
 	"Options:",
 	"  -1         format translation output one capability per line",
-	"  -C         translate entries to termcap source form",
-	"  -I         translate entries to terminfo source form",
-	"  -L         translate entries to full terminfo source form",
-	"  -N         disable smart defaults for source translation",
-	"  -R         restrict translation to given terminfo/termcap version",
-	"  -T         remove size-restrictions on compiled description",
-	"  -V         print version",
 #if NCURSES_XNAMES
 	"  -a         retain commented-out capabilities (sets -x also)",
 #endif
+	"  -C         translate entries to termcap source form",
 	"  -c         check only, validate input without compiling or translating",
+	"  -e<names>  translate/compile only entries named by comma-separated list",
 	"  -f         format complex strings for readability",
 	"  -G         format %{number} to %'char'",
 	"  -g         format %'char' to %{number}",
-	"  -e<names>  translate/compile only entries named by comma-separated list",
+	"  -I         translate entries to terminfo source form",
+	"  -L         translate entries to full terminfo source form",
+	"  -N         disable smart defaults for source translation",
 	"  -o<dir>    set output directory for compiled entry writes",
+	"  -R<name>   restrict translation to given terminfo/termcap version",
 	"  -r         force resolution of all use entries in source translation",
 	"  -s         print summary statistics",
+	"  -T         remove size-restrictions on compiled description",
+#if NCURSES_XNAMES
+	"  -t         suppress commented-out capabilities",
+#endif
+	"  -V         print version",
 	"  -v[n]      set verbosity level",
 	"  -w[n]      set format width for translation output",
 #if NCURSES_XNAMES
@@ -292,12 +297,12 @@ put_translate(int c)
 static char *
 stripped(char *src)
 {
-    while (isspace(*src))
+    while (isspace(UChar(*src)))
 	src++;
     if (*src != '\0') {
 	char *dst = strcpy(malloc(strlen(src) + 1), src);
 	size_t len = strlen(dst);
-	while (--len != 0 && isspace(dst[len]))
+	while (--len != 0 && isspace(UChar(dst[len])))
 	    dst[len] = '\0';
 	return dst;
     }
@@ -441,10 +446,11 @@ main(int argc, char *argv[])
     const char **namelst = 0;
     char *outdir = (char *) NULL;
     bool check_only = FALSE;
+    bool suppress_untranslatable = FALSE;
 
     log_fp = stderr;
 
-    _nc_progname = _nc_basename(argv[0]);
+    _nc_progname = _nc_rootname(argv[0]);
 
     if ((infodump = (strcmp(_nc_progname, PROG_CAPTOINFO) == 0)) != FALSE) {
 	outform = F_TERMINFO;
@@ -464,7 +470,7 @@ main(int argc, char *argv[])
      * be optional.
      */
     while ((this_opt = getopt(argc, argv,
-			      "0123456789CILNR:TVace:fGgo:rsvwx")) != EOF) {
+			      "0123456789CILNR:TVace:fGgo:rstvwx")) != EOF) {
 	if (isdigit(this_opt)) {
 	    switch (last_opt) {
 	    case 'v':
@@ -540,6 +546,10 @@ main(int argc, char *argv[])
 	    width = 0;
 	    break;
 #if NCURSES_XNAMES
+	case 't':
+	    _nc_disable_period = FALSE;
+	    suppress_untranslatable = TRUE;
+	    break;
 	case 'a':
 	    _nc_disable_period = TRUE;
 	    /* FALLTHRU */
@@ -658,7 +668,7 @@ main(int argc, char *argv[])
     if (check_only && (capdump || infodump)) {
 	for_entry_list(qp) {
 	    if (matches(namelst, qp->tterm.term_names)) {
-		int len = fmt_entry(&qp->tterm, NULL, TRUE, infodump, numbers);
+		int len = fmt_entry(&qp->tterm, NULL, FALSE, TRUE, infodump, numbers);
 
 		if (len > (infodump ? MAX_TERMINFO_LENGTH : MAX_TERMCAP_LENGTH))
 		    (void) fprintf(stderr,
@@ -697,7 +707,8 @@ main(int argc, char *argv[])
 			    put_translate(fgetc(tmp_fp));
 		    }
 
-		    len = dump_entry(&qp->tterm, limited, numbers, NULL);
+		    len = dump_entry(&qp->tterm, suppress_untranslatable,
+				     limited, 0, numbers, NULL);
 		    for (j = 0; j < qp->nuses; j++)
 			len += dump_uses(qp->uses[j].name, !capdump);
 		    (void) putchar('\n');
@@ -705,7 +716,7 @@ main(int argc, char *argv[])
 			printf("# length=%d\n", len);
 		}
 	    }
-	    if (!namelst) {
+	    if (!namelst && _nc_tail) {
 		int c, oldc = '\0';
 		bool in_comment = FALSE;
 		bool trailing_comment = FALSE;
@@ -761,13 +772,14 @@ TERMINAL *cur_term;		/* tweak to avoid linking lib_cur_term.c */
  * Returns the expected number of parameters for the given capability.
  */
 static int
-expected_params(char *name)
+expected_params(const char *name)
 {
     /* *INDENT-OFF* */
     static const struct {
 	const char *name;
 	int count;
     } table[] = {
+	{ "S0",			1 },	/* 'screen' extension */
 	{ "birep",		2 },
 	{ "chr",		1 },
 	{ "colornm",		1 },
@@ -820,8 +832,8 @@ expected_params(char *name)
 	{ "sgr1",		6 },
 	{ "slength",		1 },
 	{ "slines",		1 },
-	{ "smgbp",		2 },
-	{ "smglp",		2 },
+	{ "smgbp",		1 },	/* 2 if smgtp is not given */
+	{ "smglp",		1 },
 	{ "smglr",		2 },
 	{ "smgrp",		1 },
 	{ "smgtb",		2 },
@@ -853,13 +865,19 @@ expected_params(char *name)
  * markers.
  */
 static void
-check_params(TERMTYPE * tp, char *name, char *value)
+check_params(TERMTYPE * tp, const char *name, char *value)
 {
     int expected = expected_params(name);
     int actual = 0;
     int n;
     bool params[10];
     char *s = value;
+
+#ifdef set_top_margin_parm
+    if (!strcmp(name, "smgbp")
+	&& set_top_margin_parm == 0)
+	expected = 2;
+#endif
 
     for (n = 0; n < 10; n++)
 	params[n] = FALSE;
@@ -899,6 +917,14 @@ check_params(TERMTYPE * tp, char *name, char *value)
     }
 }
 
+static char *
+skip_delay(char *s)
+{
+    while (*s == '/' || isdigit(UChar(*s)))
+	++s;
+    return s;
+}
+
 /*
  * An sgr string may contain several settings other than the one we're
  * interested in, essentially sgr0 + rmacs + whatever.  As long as the
@@ -906,13 +932,57 @@ check_params(TERMTYPE * tp, char *name, char *value)
  * sanity check.
  */
 static bool
-similar_sgr(char *a, char *b)
+similar_sgr(int num, char *a, char *b)
 {
+    static const char *names[] =
+    {
+	"none"
+	,"standout"
+	,"underline"
+	,"reverse"
+	,"blink"
+	,"dim"
+	,"bold"
+	,"invis"
+	,"protect"
+	,"altcharset"
+    };
+    char *base_a = a;
+    char *base_b = b;
+    int delaying = 0;
+
     while (*b != 0) {
 	while (*a != *b) {
-	    if (*a == 0)
+	    if (*a == 0) {
+		if (b[0] == '$'
+		    && b[1] == '<') {
+		    _nc_warning("Did not find delay %s", _nc_visbuf(b));
+		} else {
+		    _nc_warning("checking sgr(%s) %s\n\tcompare to %s\n\tunmatched %s",
+				names[num], _nc_visbuf2(1, base_a),
+				_nc_visbuf2(2, base_b),
+				_nc_visbuf2(3, b));
+		}
 		return FALSE;
-	    a++;
+	    } else if (delaying) {
+		a = skip_delay(a);
+		b = skip_delay(b);
+	    } else {
+		a++;
+	    }
+	}
+	switch (*a) {
+	case '$':
+	    if (delaying == 0)
+		delaying = 1;
+	    break;
+	case '<':
+	    if (delaying == 1)
+		delaying = 2;
+	    break;
+	default:
+	    delaying = 0;
+	    break;
 	}
 	a++;
 	b++;
@@ -933,11 +1003,14 @@ check_sgr(TERMTYPE * tp, char *zero, int num, char *cap, const char *name)
 		       num == 7,
 		       num == 8,
 		       num == 9);
+    tparm_errs += _nc_tparm_err;
     if (test != 0) {
 	if (PRESENT(cap)) {
-	    if (!similar_sgr(test, cap)) {
-		_nc_warning("%s differs from sgr(%d): %s", name, num,
-			    _nc_visbuf(test));
+	    if (!similar_sgr(num, test, cap)) {
+		_nc_warning("%s differs from sgr(%d)\n\t%s=%s\n\tsgr(%d)=%s",
+			    name, num,
+			    name, _nc_visbuf2(1, cap),
+			    num, _nc_visbuf2(2, test));
 	    }
 	} else if (strcmp(test, zero)) {
 	    _nc_warning("sgr(%d) present, but not %s", num, name);
@@ -1008,8 +1081,9 @@ check_termtype(TERMTYPE * tp)
      * non-ANSI strings are misused.
      */
     if ((max_colors > 0) != (max_pairs > 0)
-	|| (max_colors > max_pairs))
-	_nc_warning("inconsistent values for max_colors and max_pairs");
+	|| ((max_colors > max_pairs) && (initialize_pair == 0)))
+	_nc_warning("inconsistent values for max_colors (%d) and max_pairs (%d)",
+		    max_colors, max_pairs);
 
     PAIRED(set_foreground, set_background);
     PAIRED(set_a_foreground, set_a_background);
@@ -1033,6 +1107,7 @@ check_termtype(TERMTYPE * tp)
     ANDMISSING(change_scroll_region, save_cursor);
     ANDMISSING(change_scroll_region, restore_cursor);
 
+    tparm_errs = 0;
     if (PRESENT(set_attributes)) {
 	char *zero = tparm(set_attributes, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -1047,17 +1122,19 @@ check_termtype(TERMTYPE * tp)
 	CHECK_SGR(8, enter_protected_mode);
 	CHECK_SGR(9, enter_alt_charset_mode);
 	free(zero);
+	if (tparm_errs)
+	    _nc_warning("stack error in sgr string");
     }
 
     /*
      * Some standard applications (e.g., vi) and some non-curses
-     * applications (e.g., jove) get confused if we have both ich/ich1 and
+     * applications (e.g., jove) get confused if we have both ich1 and
      * smir/rmir.  Let's be nice and warn about that, too, even though
      * ncurses handles it.
      */
     if ((PRESENT(enter_insert_mode) || PRESENT(exit_insert_mode))
-	&& (PRESENT(insert_character) || PRESENT(parm_ich))) {
-	_nc_warning("non-curses applications may be confused by ich/ich1 with smir/rmir");
+	&& PRESENT(parm_ich)) {
+	_nc_warning("non-curses applications may be confused by ich1 with smir/rmir");
     }
 
     /*

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.13 2000/07/01 20:10:57 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.16 2002/02/16 19:26:41 tom Exp $
 .TH curs_termcap 3X ""
 .ds n 5
 .SH NAME
@@ -41,13 +41,18 @@
 .br
 \fB#include <term.h>\fR
 .br
-\fBint tgetent(const char *bp, char *name);\fR
+\fBextern char PC;\fR
+\fBextern char * UP;\fR
+\fBextern char * BC;\fR
+\fBextern @NCURSES_OSPEED@ ospeed;\fR
 .br
-\fBint tgetflag(const char *id);\fR
+\fBint tgetent(char *bp, const char *name);\fR
 .br
-\fBint tgetnum(const char *id);\fR
+\fBint tgetflag(char *id);\fR
 .br
-\fBchar *tgetstr(const char *id, char **area);\fR
+\fBint tgetnum(char *id);\fR
+.br
+\fBchar *tgetstr(char *id, char **area);\fR
 .br
 \fBchar *tgoto(const char *cap, int col, int row);\fR
 .br
@@ -78,11 +83,31 @@ The return value will also be copied to the buffer pointed to by \fIarea\fR,
 and the \fIarea\fR value will be updated to point past the null ending
 this value.
 
+Only the first two characters of the \fBid\fR parameter of
+\fBtgetflag\fR,
+\fBtgetnum\fR and
+\fBtgetstr\fR are compared in lookups.
+
 The \fBtgoto\fR routine instantiates the parameters into the given capability.
 The output from this routine is to be passed to \fBtputs\fR.
 
 The \fBtputs\fR routine is described on the \fBcurs_terminfo\fR(3X) manual
 page.  It can retrieve capabilities by either termcap or terminfo name.
+
+The variables
+\fBPC\fR,
+\fBUP\fR and
+\fBBC\fR
+are set by \fBtgetent\fR to the terminfo entry's data for
+\fBpad_char\fR,
+\fBcursor_up\fR and
+\fBbackspace_if_not_bs\fR,
+respectively.
+\fBUP\fR is not used by ncurses.
+\fBPC\fR is used in the \fBtdelay_output\fR function.
+\fBBC\fR is used in the \fBtgoto\fR emulation.
+The variable \fBospeed\fR is set by ncurses in a system-specific coding
+to reflect the terminal speed.
 
 .SH RETURN VALUE
 Except where explicitly noted,
@@ -96,7 +121,11 @@ If you call \fBtgetstr\fR to fetch \fBca\fR or any other parameterized string,
 be aware that it will be returned in terminfo notation, not the older and
 not-quite-compatible termcap notation.  This won't cause problems if all
 you do with it is call \fBtgoto\fR or \fBtparm\fR, which both expand
-terminfo-style.
+terminfo-style strings as terminfo.
+(The \fBtgoto\fR function, if configured to support termcap, will check
+if the string is indeed terminfo-style by looking for "%p" parameters or
+"$<..>" delays, and invoke a termcap-style parser if the string does not
+appear to be terminfo).
 
 Because terminfo conventions for representing padding in string capabilities
 differ from termcap's, \fBtputs("50");\fR will put out a literal "50" rather
@@ -108,6 +137,17 @@ are marked TO BE WITHDRAWN and may be removed in future versions.
 Neither the XSI Curses standard nor the SVr4 man pages documented the return
 values of \fBtgetent\fR correctly, though all three were in fact returned ever
 since SVr1.
+In particular, an omission in the XSI Curses documentation has been
+misinterpreted to mean that \fBtgetent\fR returns \fBOK\fR or \fBERR\fR.
+Because the purpose of these functions is to provide compatibility with
+the \fItermcap\fR library, that is a defect in XCurses, Issue 4, Version 2
+rather than in ncurses.
+
+External variables are provided for support of certain termcap applications.
+However, termcap applications' use of those variables is poorly documented,
+e.g., not distinguishing between input and output.
+In particular, some applications are reported to declare and/or
+modify \fBospeed\fR.
 .SH SEE ALSO
 \fBcurses\fR(3X), \fBterminfo\fR(\*n), \fBputc\fR(3S).
 .\"#

@@ -26,10 +26,11 @@
 # authorization.                                                             #
 ##############################################################################
 #
-#  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+#  Author:  Juergen Pfeifer, 1996
+#  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 #
 #  Version Control
-#  $Revision: 1.34 $
+#  $Revision: 1.41 $
 #
 .SUFFIXES:
 
@@ -81,8 +82,8 @@ DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
 
 GNATHTML	= `type -p gnathtml || type -p gnathtml.pl`
 GNATHP          = www.gnat.com
-MAIL            = juergen.pfeifer@gmx.net
-HOMEP           = home.t-online.de/home/Juergen.Pfeifer
+MAIL            = www.familiepfeifer.de/Contact.aspx?Lang=en
+HOMEP           = www.familiepfeifer.de/juergen
 
 ################################################################################
 ALIB            = @cf_ada_package@
@@ -101,7 +102,8 @@ GEN_FILES1      = Key_Definitions              		\
 		  Linker_Options               		\
 		  Base_Defs			        \
 		  Window_Offsets                        \
-		  Version_Info
+		  Version_Info				\
+		  Trace_Defs
 
 GEN_FILES2      = Menu_Opt_Rep        		    	\
 		  Menu_Base_Defs               		\
@@ -123,6 +125,7 @@ GEN_FILES5	= Chtype_Def                            \
 
 GEN_TARGETS     = $(ADA_SRCDIR)/$(ABASE).ads         			\
 	          $(ADA_SRCDIR)/$(ABASE)-aux.ads   			\
+	          $(ADA_SRCDIR)/$(ABASE)-trace.ads   			\
 	          $(ADA_SRCDIR)/$(ABASE)-menus.ads   			\
 	          $(ADA_SRCDIR)/$(ABASE)-forms.ads   			\
 	          $(ADA_SRCDIR)/$(ABASE)-mouse.ads 			\
@@ -136,6 +139,7 @@ GEN_TARGETS     = $(ADA_SRCDIR)/$(ABASE).ads         			\
 
 GEN_SRC		= $(srcdir)/$(ABASE).ads.m4				\
 	          $(srcdir)/$(ABASE)-aux.ads.m4 	  		\
+	          $(srcdir)/$(ABASE)-trace.ads.m4 	  		\
 	          $(srcdir)/$(ABASE)-menus.ads.m4 	  		\
 	          $(srcdir)/$(ABASE)-forms.ads.m4   			\
 	          $(srcdir)/$(ABASE)-mouse.ads.m4			\
@@ -217,6 +221,9 @@ Version_Info: gen$x
 Window_Offsets: gen$x
 	$(GENERATE) B D >$@
 
+Trace_Defs: gen$x
+	$(GENERATE) B T >$@
+
 Menu_Opt_Rep: gen$x
 	$(GENERATE) M R >$@
 
@@ -269,6 +276,12 @@ $(ADA_SRCDIR)/$(ABASE)-aux.ads: $(srcdir)/$(ABASE)-aux.ads.m4 \
 				$(GEN_FILES5) $(srcdir)/normal.m4
 	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
 	$(srcdir)/$(ABASE)-aux.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-trace.ads: $(srcdir)/$(ABASE)-trace.ads.m4 \
+				$(GEN_FILES5) $(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-trace.ads.m4 |\
 	$(DEL_ADAMODE) >$@
 
 $(ADA_SRCDIR)/$(ABASE)-menus.ads: $(srcdir)/$(ABASE)-menus.ads.m4 \
@@ -406,9 +419,9 @@ adahtml:
 	   sed -e 's%&lt;A HREF%<A HREF%g' |\
 	   sed -e 's%"&gt;%">%g' |\
 	   sed -e 's/3X/3x/g' |\
-	   sed -e 's/$$\([A-Za-z0-9_]*:.*\)\$$/@\1@/' |\
+	   sed -e 's/$$\([ABCDEFGHIJKLMNOPQRSTUVWXZabcdefghijklmnopqrstuvwxz0123456789_]*:.*\)\$$/@\1@/' |\
 	   sed -e 's%Juergen Pfeifer%<A HREF="http://$(HOMEP)">J\&uuml;rgen Pfeifer</A>%g' |\
-	   sed -e 's%$(MAIL)%<A HREF="mailto:$(MAIL)">\&lt;$(MAIL)\&gt;</A>%g' |\
+	   sed -e 's%http://$(MAIL)%<A HREF="http://$(MAIL)">$(MAIL)</A>%g' |\
 	   sed -e 's%&lt;/A&gt;%</A>%g' > $$a.tmp ;\
            mv $$a.tmp $$f ;\
         done

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2002 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997                   *
+ *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997,2002              *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -119,10 +119,10 @@ void	_nc_Free_Argument(
 		{ /* void */ }
 
 #undef _nc_Copy_Type
-bool	_nc_Copy_Type(
+NCURSES_BOOL _nc_Copy_Type(
 		FIELD	*dst, 
 		FIELD const *src)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef _nc_Free_Type
 void	_nc_Free_Type(
@@ -158,10 +158,10 @@ FIELD	*dup_field(
 #undef set_fieldtype_choice
 int	set_fieldtype_choice(
 		FIELDTYPE *typ, 
-		bool	(*const next_choice)(
+		NCURSES_BOOL (*const next_choice)(
 		FIELD	*p1, 
 		const void *p2), 
-		bool	(*const prev_choice)(
+		NCURSES_BOOL (*const prev_choice)(
 		FIELD	*p1, 
 		const void *p2))
 		{ return(*(int *)0); }
@@ -241,10 +241,10 @@ const FIELDTYPE *_nc_Default_FieldType = {0};
 
 #undef new_fieldtype
 FIELDTYPE *new_fieldtype(
-		bool	(*const field_check)(
+		NCURSES_BOOL (*const field_check)(
 		FIELD	*p1, 
 		const void *p2), 
-		bool	(*const char_check)(
+		NCURSES_BOOL (*const char_check)(
 		int	p1, 
 		const void *p2))
 		{ return(*(FIELDTYPE **)0); }
@@ -297,26 +297,26 @@ int	field_pad(
 #undef set_new_page
 int	set_new_page(
 		FIELD	*field, 
-		bool	new_page_flag)
+		NCURSES_BOOL new_page_flag)
 		{ return(*(int *)0); }
 
 #undef new_page
-bool	new_page(
+NCURSES_BOOL new_page(
 		const FIELD *field)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./fld_stat.c */
 
 #undef set_field_status
 int	set_field_status(
 		FIELD	*field, 
-		bool	status)
+		NCURSES_BOOL status)
 		{ return(*(int *)0); }
 
 #undef field_status
-bool	field_status(
+NCURSES_BOOL field_status(
 		const FIELD *field)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./fld_type.c */
 
@@ -355,14 +355,14 @@ int	pos_form_cursor(
 /* ./frm_data.c */
 
 #undef data_behind
-bool	data_behind(
+NCURSES_BOOL data_behind(
 		const FORM *form)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef data_ahead
-bool	data_ahead(
+NCURSES_BOOL data_ahead(
 		const FORM *form)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./frm_def.c */
 
@@ -425,9 +425,9 @@ int	_nc_Set_Current_Field(
 		{ return(*(int *)0); }
 
 #undef _nc_Internal_Validation
-bool	_nc_Internal_Validation(
+NCURSES_BOOL _nc_Internal_Validation(
 		FORM	*form)
-		{ return(*(bool *)0); }
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef _nc_First_Active_Field
 FIELD	*_nc_First_Active_Field(
@@ -644,8 +644,8 @@ FIELDTYPE *TYPE_ALPHA;
 typedef struct {
   char **kwds;
   int  count;
-  bool checkcase;
-  bool checkunique;
+  NCURSES_BOOL  checkcase;
+  NCURSES_BOOL  checkunique;
 } enumARG;
 
 #undef TYPE_ENUM

@@ -37,24 +37,25 @@
 <FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
 <FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>--  Author: <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> &lt;<A HREF="mailto:juergen.pfeifer@gmx.net">&lt;juergen.pfeifer@gmx.net&gt;</A>&gt; 1996</EM></FONT>
+<FONT COLOR=green><EM>--  Author:  <A HREF="http://www.familiepfeifer.de/juergen">J&uuml;rgen Pfeifer</A>, 1996</EM></FONT>
+<FONT COLOR=green><EM>--  Contact: <A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">www.familiepfeifer.de/Contact.aspx?Lang=en</A></EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.9 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.10 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-intfield__adb.htm#44_58">IntField</A><FONT COLOR=red><A NAME="41_53"></A></FONT> <b>is</b>
-   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#41_53">IntField</A>);
+<b>package</b> <A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#44_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-intfield__adb.htm#45_58">IntField</A><FONT COLOR=red><A NAME="42_53"></A></FONT> <b>is</b>
+   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#44_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#42_53">IntField</A>);
 
-   <b>type</b> <FONT COLOR=red><A NAME="44_9">Integer_Field</A></FONT> <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#52_9">Field_Type</A> <b>with</b>
+   <b>type</b> <FONT COLOR=red><A NAME="45_9">Integer_Field</A></FONT> <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#53_9">Field_Type</A> <b>with</b>
       <b>record</b>
-         <FONT COLOR=red><A NAME="46_10">Precision</A></FONT>   : Natural;
-         <FONT COLOR=red><A NAME="47_10">Lower_Limit</A></FONT> : Integer;
-         <FONT COLOR=red><A NAME="48_10">Upper_Limit</A></FONT> : Integer;
+         <FONT COLOR=red><A NAME="47_10">Precision</A></FONT>   : Natural;
+         <FONT COLOR=red><A NAME="48_10">Lower_Limit</A></FONT> : Integer;
+         <FONT COLOR=red><A NAME="49_10">Upper_Limit</A></FONT> : Integer;
       <b>end</b> <b>record</b>;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-intfield__adb.htm#48_14">Set_Field_Type</A><FONT COLOR=red><A NAME="51_14"></A></FONT> (<FONT COLOR=red><A NAME="51_30">Fld</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
-                             <FONT COLOR=red><A NAME="52_30">Typ</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#44_9">Integer_Field</A>);
-   <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#51_14">Set_Field_Type</A>);
+   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-intfield__adb.htm#49_14">Set_Field_Type</A><FONT COLOR=red><A NAME="52_14"></A></FONT> (<FONT COLOR=red><A NAME="52_30">Fld</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+                             <FONT COLOR=red><A NAME="53_30">Typ</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types-intfield__ads.htm#45_9">Integer_Field</A>);
+   <b>pragma</b> Inline (Set_Field_Type);
 
 <b>end</b> Terminal_Interface.Curses.Forms.Field_Types.IntField;
 </PRE></BODY></HTML>

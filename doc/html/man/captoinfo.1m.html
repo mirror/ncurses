@@ -1,44 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  * t
+  ****************************************************************************
+  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: captoinfo.1m,v 1.16 2000/08/13 01:56:49 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>captoinfo 1m</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>captoinfo 1m</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>captoinfo</B>  - convert a <I>termcap</I> description into a <I>terminfo</I>
+       <STRONG>captoinfo</STRONG>  - convert a <EM>termcap</EM> description into a <EM>terminfo</EM>
        description
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>captoinfo</B> [<B>-v</B><I>n</I> <I>width</I>]  [<B>-V</B>] [<B>-1</B>] [<B>-w</B> <I>width</I>] <I>file</I> . . .
+       <STRONG>captoinfo</STRONG> [<STRONG>-v</STRONG><EM>n</EM> <EM>width</EM>]  [<STRONG>-V</STRONG>] [<STRONG>-1</STRONG>] [<STRONG>-w</STRONG> <EM>width</EM>] <EM>file</EM> . . .
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       <B>captoinfo</B> looks in <I>file</I>  for  <B>termcap</B>  descriptions.   For
-       each  one  found,  an  equivalent  <B>terminfo</B> description is
-       written to standard output.  Termcap <B>tc</B>  capabilities  are
-       translated directly to terminfo <B>use</B> capabilities.
+       <STRONG>captoinfo</STRONG> looks in <EM>file</EM>  for  <STRONG>termcap</STRONG>  descriptions.   For
+       each  one  found,  an  equivalent  <STRONG>terminfo</STRONG> description is
+       written to standard output.  Termcap <STRONG>tc</STRONG>  capabilities  are
+       translated directly to terminfo <STRONG>use</STRONG> capabilities.
 
-       If no <I>file</I> is given, then the environment variable <B>TERMCAP</B>
-       is used for the filename or entry.  If <B>TERMCAP</B> is  a  full
-       pathname  to  a  file,  only  the  terminal  whose name is
-       specified in the environment variable  <B>TERM</B>  is  extracted
-       from  that  file.   If the environment variable <B>TERMCAP</B> is
-       not set, then the file <B>/usr/share/terminfo</B> is read.
+       If no <EM>file</EM> is given, then the environment variable <STRONG>TERMCAP</STRONG>
+       is used for the filename or entry.  If <STRONG>TERMCAP</STRONG> is  a  full
+       pathname to a file, only the terminal whose name is speci-
+       fied in the environment variable <STRONG>TERM</STRONG>  is  extracted  from
+       that  file.   If  the  environment variable <STRONG>TERMCAP</STRONG> is not
+       set, then the file <STRONG>/usr/share/terminfo</STRONG> is read.
 
-       <B>-v</B>   print out tracing information on  standard  error  as
+       <STRONG>-v</STRONG>   print out tracing information on  standard  error  as
             the program runs.
 
-       <B>-V</B>   print  out  the  version  of  the  program  in use on
-            standard error and exit.
+       <STRONG>-V</STRONG>   print  out the version of the program in use on stan-
+            dard error and exit.
 
-       <B>-1</B>   cause  the  fields  to  print  out  one  to  a  line.
-            Otherwise,  the  fields  will be printed several to a
-            line to a maximum width of 60 characters.
+       <STRONG>-1</STRONG>   cause the fields to print out one to a line.   Other-
+            wise, the fields will be printed several to a line to
+            a maximum width of 60 characters.
 
-       <B>-w</B>   change the output to <I>width</I> characters.
+       <STRONG>-w</STRONG>   change the output to <EM>width</EM> characters.
 
 
 </PRE>
@@ -51,8 +90,8 @@
 <H2>TRANSLATIONS FROM NONSTANDARD CAPABILITIES</H2><PRE>
        Some  obsolete nonstandard capabilities will automatically
        be translated into  standard  (SVr4/XSI  Curses)  terminfo
-       capabilities   by   <B>captoinfo</B>.    Whenever  one  of  these
-       automatic translations is done, the program will issue  an
+       capabilities  by  <STRONG>captoinfo</STRONG>.   Whenever one of these auto-
+       matic translations is done,  the  program  will  issue  an
        notification to stderr, inviting the user to check that it
        has not mistakenly translated  a  completely  unknown  and
        random capability and/or syntax error.
@@ -90,9 +129,9 @@
        FC       Sf     Tek     set_foreground
        HS       mh     Iris    enter_dim_mode
 
-       XENIX  termcap  also  used  to  have  a  set  of extension
-       capabilities for forms drawing, designed to take advantage
-       of the IBM PC high-half graphics.  They were as follows:
+       XENIX  termcap  also used to have a set of extension capa-
+       bilities for forms drawing, designed to take advantage  of
+       the IBM PC high-half graphics.  They were as follows:
 
        Cap          Graphic
        -----------------------------
@@ -121,13 +160,13 @@
        GG    acs magic cookie count
 
        If  the  single-line  capabilities occur in an entry, they
-       will automatically be composed into an <B>acsc</B>  string.   The
-       double-line  capabilities  and  <B>GG</B>  are  discarded  with a
-       warning message.
+       will automatically be composed into an <STRONG>acsc</STRONG>  string.   The
+       double-line capabilities and <STRONG>GG</STRONG> are discarded with a warn-
+       ing message.
 
-       IBM's AIX has a  terminfo  facility  descended  from  SVr1
-       terminfo  but  incompatible  with  the  SVr4  format.  The
-       following AIX extensions are automatically translated:
+       IBM's AIX has a terminfo facility descended from SVr1 ter-
+       minfo but incompatible with the SVr4 format. The following
+       AIX extensions are automatically translated:
 
         IBM    XSI
        -------------
@@ -138,19 +177,19 @@
        font2   s2ds
        font3   s3ds
 
-       Additionally,   the   AIX   <B>box1</B>   capability   will    be
-       automatically translated to an <B>acsc</B> string.
+       Additionally, the AIX <STRONG>box1</STRONG> capability  will  be  automati-
+       cally translated to an <STRONG>acsc</STRONG> string.
 
-       Hewlett-Packard's    terminfo    library    supports   two
-       nonstandard terminfo capabilities <B>meml</B> (memory  lock)  and
-       <B>memu</B>  (memory  unlock).   These  will  be discarded with a
-       warning message.
+       Hewlett-Packard's  terminfo  library supports two nonstan-
+       dard terminfo capabilities <STRONG>meml</STRONG>  (memory  lock)  and  <STRONG>memu</STRONG>
+       (memory  unlock).   These will be discarded with a warning
+       message.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       This utility is actually a link to <B><A HREF="tic.1m.html">tic(1m)</A></B>, running in  <I>-I</I>
-       mode.  You can use other <I>tic</I> options such as <B>-f</B> and  <B>-x</B>.
+       This utility is actually a link to <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>, running in  <EM>-I</EM>
+       mode.  You can use other <EM>tic</EM> options such as <STRONG>-f</STRONG> and  <STRONG>-x</STRONG>.
 
        The  trace  option isn't identical to SVr4's.  Under SVr4,
        instead of following the -v with  a  trace  level  n,  you
@@ -159,7 +198,7 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="infocmp.1m.html">infocmp(1m)</A></B>, <B><A HREF="terminfo.5.html">terminfo(5)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
 
 </PRE>

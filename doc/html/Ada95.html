@@ -1,17 +1,15 @@
-<!DOCTYPE HTML
- PUBLIC "-//IETF//DTD HTML 3.0//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <!--
-  $Id: Ada95.html,v 1.1 2000/03/05 18:21:59 juergen Exp $
+  $Id: Ada95.html,v 1.3 2002/07/13 16:32:37 tom Exp $
 -->
 <HTML>
-
 <HEAD>
 <TITLE>Ada95 Binding for ncurses</Title>
 </HEAD>
 <BODY>
 <H1>Ada95 Binding for ncurses</H1>
 The ncurses Ada95 binding is &copy; 1996-2000 by 
-<A HREF="mailto:juergen.pfeifer@gmx.net">J&uuml;rgen Pfeifer</A>.
+<A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">J&uuml;rgen Pfeifer</A>.
 <P>
                                                                          
 Permission is hereby granted to reproduce and distribute this
@@ -28,7 +26,7 @@ This binding comes AS IS with no warranty, implied or expressed.
 <H2>General Remarks</H2>
 <UL>
 <LI>This document describes Version 01.00 of the binding.</LI>
-<LI>The functionality is modelled to be compatible with the ncurses
+<LI>The functionality is modeled to be compatible with the ncurses
 package, a clone of the SVr4 curses model.<BR>
 I did the development on an Intel box running the latest stable release of
 <A HREF="http://www.linux.org">Linux</A>, ncurses and the most recent released 
@@ -39,7 +37,7 @@ it is not guaranteed to work.</LI>
 If you don't have this program, you can get the FSF version
 <A HREF="ftp://prep.ai.mit.edu/pub/gnu/">here</A>.</LI>
 <LI>Ada programs are supposed to be readable. One of my
-favourite methods to make code readable is to use expressive
+favorite methods to make code readable is to use expressive
 names for the identifiers. You can find a list of a mapping
 of the cryptic curses names to the Ada names in this <A HREF="ada/table.html">table</A>.</LI>
 <LI>This is not a typical one-2-one interface mapping. It is 
@@ -143,16 +141,14 @@ sign of the parameter is evaluated. ncurses has internally implemented
 it in a way, that uses the line parameter also to control the amount of
 lines to steal. This mechanism is used in the <STRONG>Rip_Off_Lines</STRONG>
 routine of the binding.
-<A NAME="userpointer">
-<H4>How user defined field types work</H4>
+<H4><A NAME="userpointer">How user defined field types work</A></H4>
 TBD
 <H4>Enumeration fields handling</H4>
 The (n)curses documentation says, that the String arrays to be passed to
 an TYPE_ENUM fieldtype must not be automatic variables. This is not true
 in this binding, because it is internally arranged to safely copy these
 values.
-<A NAME="compiler">
-<H4>Using other Ada compilers</H4>
+<H4><A NAME="compiler">Using other Ada compilers</A></H4>
 This should basically not be a problem.
 <H4>Port to other curses implementations</H4>
 Basically it should not be too hard to make all this run on a regular SVr4

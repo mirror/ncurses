@@ -1,11 +1,16 @@
 ######## TERMINAL TYPE DESCRIPTIONS SOURCE FILE
 #
 # This version of terminfo.src is distributed with ncurses.
-# Report bugs to
+# Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
+# The original header is preserved below for reference.  It is noted that there
+# is a newer version which differs in some cosmetic details; we have decided
+# to not change the header unless there is also a change in content.
+#
+#------------------------------------------------------------------------------
 #	Version 10.2.1
-#	$Date: 2000/09/24 02:29:16 $
+#	$Date: 2002/10/05 18:40:53 $
 #	terminfo syntax
 #
 #	Eric S. Raymond		(current maintainer)
@@ -329,11 +334,11 @@ ansi+sgrul|ansi underline only,
 	rmul=\E[m, smul=\E[4m, 
 ansi+sgrbold|ansi graphic renditions; assuming terminal has bold; not dim, 
 	bold=\E[1m, 
-	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;m, 
+	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;%?%p7%t8;%;m, 
 	use=ansi+sgr, use=ansi+sgrso, use=ansi+sgrul, 
 ansi+sgrdim|ansi graphic renditions; assuming terminal has dim; not bold, 
 	dim=\E[2m, 
-	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p5%t2;%;m, 
+	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p5%t2;%;%?%p7%t8;%;m, 
 	use=ansi+sgr, use=ansi+sgrso, use=ansi+sgrul, 
 ansi+pp|ansi printer port, 
 	mc0=\E[0i, mc4=\E[4i, mc5=\E[5i, 
@@ -657,12 +662,6 @@ beterm|BeOS Terminal,
 # *                                                                         *
 # ***************************************************************************
 #
-# The 1.3.x kernels add color-change capabilities; if yours doesn't have this
-# and it matters, turn off <ccc>.  The %02x escape used to implement this is
-# not back-portable to SV curses and not supported in ncurses versions before
-# 1.9.9. All linux kernels since 1.2.13 (at least) set the screen size
-# themselves; this entry assumes that capability.
-#
 # This entry is good for the 1.2.13 or later version of the Linux console.
 #
 # ***************************************************************************
@@ -683,25 +682,18 @@ beterm|BeOS Terminal,
 # *                                                                         *
 # ***************************************************************************
 #
-# The 1.3.x kernels add color-change capabilities; if yours doesn't have this
-# and it matters, turn off <ccc>.  The %02x escape used to implement this is
-# not back-portable to SV curses and not supported in ncurses versions before
-# 1.9.9. All linux kernels since 1.2.13 (at least) set the screen size
+# All linux kernels since 1.2.13 (at least) set the screen size
 # themselves; this entry assumes that capability.
 #
-# The 2.2.x kernels add a private mode that sets the cursor type; use that to
-# get a block cursor for cvvis.
-# reported by Frank Heckenbach <frank@g-n-u.de>.
-linux|linux console, 
+linux-basic|linux console, 
 	am, bce, eo, mir, msgr, xenl, xon, 
 	it#8, ncv#18, 
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376, 
-	bel=^G, civis=\E[?25l\E[?1c, clear=\E[H\E[J, 
-	cnorm=\E[?25h\E[?0c, cr=^M, csr=\E[%i%p1%d;%p2%dr, 
+	bel=^G, clear=\E[H\E[J, cr=^M, csr=\E[%i%p1%d;%p2%dr, 
 	cub1=^H, cud1=^J, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, 
-	cuu1=\E[A, cvvis=\E[?25h\E[?8c, dch=\E[%p1%dP, dch1=\E[P, 
-	dim=\E[2m, dl=\E[%p1%dM, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, 
-	el=\E[K, el1=\E[1K, flash=\E[?5h\E[?5l$<200/>, home=\E[H, 
+	cuu1=\E[A, dch=\E[%p1%dP, dch1=\E[P, dim=\E[2m, 
+	dl=\E[%p1%dM, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K, 
+	el1=\E[1K, flash=\E[?5h\E[?5l$<200/>, home=\E[H, 
 	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@, 
 	il=\E[%p1%dL, il1=\E[L, ind=^J, kb2=\E[G, kbs=\177, 
 	kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, 
@@ -717,19 +709,32 @@ linux|linux console,
 	smir=\E[4h, smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR, 
 	u7=\E[6n, u8=\E[?6c, u9=\E[c, vpa=\E[%i%p1%dd, 
 	use=klone+sgr, use=ecma+color, 
+
 linux-m|Linux console no color, 
 	colors@, pairs@, 
 	setab@, setaf@, setb@, setf@, use=linux, 
-linux-c-nc|linux console 1.3.x hack for ncurses only, 
+
+# The 1.3.x kernels add color-change capabilities; if yours doesn't have this
+# and it matters, turn off <ccc>.  The %02x escape used to implement this is
+# not supposedly back-portable to older SV curses (although it has worked fine
+# on Solaris for several years) and not supported in ncurses versions before
+# 1.9.9.
+linux-c-nc|linux console with color-change, 
 	ccc, 
-	initc=\E]P%p1%x%p2%{255}%*%{1000}%/%02x%p3%{255}%*%{1000}%/%02x%p4%{255}%*%{1000}%/%02x, 
-	oc=\E]R, use=linux, 
+	initc=\E]P%p1%x%p2%{256}%*%{1000}%/%02x%p3%{256}%*%{1000}%/%02x%p4%{256}%*%{1000}%/%02x, 
+	oc=\E]R, use=linux-basic, 
 # From: Dennis Henriksen <opus@osrl.dk>, 9 July 1996
-linux-c|linux console 1.3.6+ with private palette for each virtual console, 
+linux-c|linux console 1.3.6+ for older ncurses, 
 	ccc, 
-	colors#8, pairs#64, 
-	initc=\E]P%?%p1%{9}%>%t%p1%{10}%-%'a'%+%c%e%p1%d%;%p2%{255}%&%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%p3%{255}%&%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%p4%{255}%&%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;, 
-	oc=\E]R, use=linux, 
+	initc=\E]P%?%p1%{9}%>%t%p1%{10}%-%'a'%+%c%e%p1%d%;%p2%{256}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%p3%{256}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%p4%{256}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;, 
+	oc=\E]R, use=linux-basic, 
+
+# The 2.2.x kernels add a private mode that sets the cursor type; use that to
+# get a block cursor for cvvis.
+# reported by Frank Heckenbach <frank@g-n-u.de>.
+linux|linux console, 
+	civis=\E[?25l\E[?1c, cnorm=\E[?25h\E[?0c, 
+	cvvis=\E[?25h\E[?8c, use=linux-c-nc, 
 
 # See the note on ICH/ICH1 VERSUS RMIR/SMIR near the end of file
 linux-nic|linux with ich/ich1 suppressed for non-curses programs, 
@@ -763,7 +768,7 @@ mach|Mach Console,
 	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, 
 	cuu=\E[%p1%dA, cuu1=\E[A, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, 
 	el=\E[K, home=\E[H, ht=^I, il=\E[%p1%dL, il1=\E[L, ind=^J, 
-	kbs=^H, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, 
+	kbs=\177, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, 
 	kdch1=\E[9, kend=\E[Y, kf1=\EOP, kf10=\EOY, kf2=\EOQ, 
 	kf3=\EOR, kf4=\EOS, kf5=\EOT, kf6=\EOU, kf7=\EOV, kf8=\EOW, 
 	kf9=\EOX, khome=\E[H, kich1=\E[@, kll=\E[F, knp=\E[U, 
@@ -799,21 +804,37 @@ pmcons|pmconsole|PMAX console,
 #
 # klone+sgr-dumb is an error since the acsc does not match -TD
 #
-# In this description based on SCO's keyboard(HW) manpage list of default function key
-# values:
+# In this description based on SCO's keyboard(HW) manpage list of default
+# function key values:
 #	F13-F24 are shifted F1-F12
 #	F25-F36 are control F1-F12
 #	F37-F48 are shift+control F1-F12
-scoansi|SCO Extended ANSI standard crt, 
-	OTbs, am, eo, xon, 
+#
+# hpa/vpa work in the console, but not in scoterm:
+#	hpa=\E[%p1%dG,
+#	vpa=\E[%p1%dd,
+#
+# SCO's terminfo uses
+#	kLFT=\E[d,
+#	kRIT=\E[c,
+# which do not work (console or scoterm).
+#
+# Console documents only 3 attributes can be set with SGR (so we don't use sgr).
+scoansi-old|SCO Extended ANSI standard crt (5.0.5), 
+	OTbs, am, bce, eo, xon, 
 	colors#8, cols#80, it#8, lines#25, pairs#64, 
-	acsc=0[5566778899\:\:;;<<==>>FFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXX`ja0fxgqh2jYk?lZm@nEqDtCu4vAwBx3~y, 
-	blink=\E[5m, bold=\E[1m, cbt=\E[Z, clear=\E[H\E[2J, 
-	cub1=\E[D, cud1=\E[B, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, 
-	cuu1=\E[A, dch1=\E[P, dl1=\E[M, ed=\E[J, el=\E[K, home=\E[H, 
-	ht=^I, ich1=\E[@, il1=\E[L, ind=\E[S, invis=\E[8m, kbeg=\E[E, 
-	kbs=^H, kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, 
-	kcuu1=\E[A, kend=\E[F, kf1=\E[M, kf10=\E[V, kf11=\E[W, 
+	acsc=-\230.\231\,.+/0[5566778899\:\:;;<<==>>FFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXX`\204a0fxgqh2jYk?lZm@nEqDtCu4vAwBx3yszr{c}\034~\207, 
+	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, 
+	civis=\E[=14;12C, clear=\E[H\E[2J, cnorm=\E[=10;12C, 
+	cub=\E[%p1%dD, cub1=^H, cud=\E[%p1%dB, cud1=\E[B, 
+	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, 
+	cuu=\E[%p1%dA, cuu1=\E[A, cvvis=\E[=0;12C, dch=\E[%p1%dP, 
+	dch1=\E[P, dispc=\E[=%p1%dg, dl=\E[%p1%dM, dl1=\E[M, 
+	ed=\E[m\E[J, el=\E[m\E[K, el1=\E[1K, home=\E[H, ht=^I, 
+	hts=\EH, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL, il1=\E[L, 
+	ind=\E[S, indn=\E[%p1%dS, invis=\E[8m, kbeg=\E[E, kbs=^H, 
+	kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, 
+	kdch1=\177, kend=\E[F, kf1=\E[M, kf10=\E[V, kf11=\E[W, 
 	kf12=\E[X, kf13=\E[Y, kf15=\E[a, kf16=\E[b, kf17=\E[c, 
 	kf18=\E[d, kf19=\E[e, kf2=\E[N, kf20=\E[f, kf21=\E[g, 
 	kf22=\E[h, kf23=\E[i, kf24=\E[j, kf25=\E[k, kf26=\E[l, 
@@ -823,11 +844,26 @@ scoansi|SCO Extended ANSI standard crt,
 	kf40=\E[z, kf41=\E[@, kf42=\E[[, kf43=\E[\\, kf44=\E[], 
 	kf45=\E[\^, kf46=\E[_, kf47=\E[`, kf48=\E[{, kf5=\E[Q, 
 	kf6=\E[R, kf7=\E[S, kf8=\E[T, kf9=\E[U, khome=\E[H, 
-	kich1=\E[L, knp=\E[G, kpp=\E[I, op=\E[37;40m, rev=\E[7m, 
-	ri=\E[T, rmacs=\E[10m, rmso=\E[m, rmul=\E[m, 
-	setab=\E[4%p1%dm, setaf=\E[3%p1%dm, 
-	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;12%;m, 
-	sgr0=\E[0;10m, smacs=\E[12m, smso=\E[7m, smul=\E[4m, 
+	kich1=\E[L, knp=\E[G, kpp=\E[I, op=\E[0;37;40m, rc=\E8, 
+	rev=\E[7m, ri=\E[T, rin=\E[%p1%dT, rmacs=\E[10m, 
+	rmam=\E[?7l, rmso=\E[m, rmul=\E[m, sc=\E7, 
+	setab=\E[4%p1%dm, setaf=\E[3%p1%dm, sgr0=\E[0;10m, 
+	smacs=\E[12m, smam=\E[?7h, smso=\E[7m, smul=\E[4m, 
+scoansi-new|SCO Extended ANSI standard crt (5.0.6), 
+	km, 
+	civis=\E[=0c, cnorm=\E[=1c, csr=\E[%i%p1%d;%p2%dr, 
+	cvvis=\E[=2c, mgc=\E[=r, oc=\E[51m, op=\E[50m, 
+	rep=\E[%p1%d;%p2%db, rmm=\E[=11L, 
+	sgr=\E[0%?%p1%p3%|%t;7%;%?%p2%t;4%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;12%;m, 
+	smgb=\E[=1;0m, smgbp=\E[=1;%i%p1%dm, 
+	smglp=\E[=2;%i%p1%dm, smgr=\E[=3;0m, 
+	smgrp=\E[=3;%i%p1%dm, smgt=\E[=0;0m, 
+	smgtp=\E[=0;%i%p1%dm, smm=\E[=10L, 
+	wind=\E[%i%p1%d;%p2%d;%i%p3%d;%p4%dr, 
+	use=scoansi-old, 
+# make this easy to change...
+scoansi|SCO Extended ANSI standard crt, 
+	use=scoansi-old, 
 
 # This actually describes the generic SVr4 display driver for Intel boxes.
 # The <dim=\E[2m> isn't documented and therefore may not be reliable.
@@ -1263,7 +1299,7 @@ qansi-g|QNX ANSI,
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, 
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m, 
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m, 
-	sgr=\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;%?%p4%t;5%;%?%p3%p1%|%t;7%;%?%p7%t;8%;m%?%p9%t\016%e\017%;, 
+	sgr=\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;%?%p4%t;5%;%?%p3%p1%|%t;7%;%?%p7%t;9%;m%?%p9%t\016%e\017%;, 
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smso=\E[7m, 
 	smul=\E[4m, tbc=\E[2g, 
 	tsl=\E7\E1;24r\E[?6l\E[25;%i%p1%dH, 
@@ -1365,6 +1401,16 @@ pcvt50w|dec vt220 emulation with 50 lines and 132 cols,
 	cols#132, lines#50, 
 	is2=\E[1;50r\E[50;1H, use=pcvtXX, 
 
+#	OpenBSD implements a color variation
+pcvt25-color|dec vt220 emulation with 25 lines and color, 
+	cols#80, lines#25, 
+	is2=\E[1;25r\E[25;1H, kf1=\EOP, kf10=\E[29~, kf11=\E[23~, 
+	kf12=\E[24~, kf13=\E[25~, kf14=\E[26~, kf15=\E[28~, 
+	kf16=\E[29~, kf17=\E[31~, kf18=\E[32~, kf19=\E[33~, 
+	kf2=\EOQ, kf20=\E[34~, kf3=\EOR, kf4=\EOS, kf5=\E[17~, 
+	kf6=\E[18~, kf7=\E[19~, kf8=\E[20~, kf9=\E[21~, use=pcvtXX, 
+	use=ecma+color, 
+
 # Terminfo entries to enable the use of the ncurses library in colour on a
 # NetBSD-arm32 console (only tested on a RiscPC).
 # Created by Dave Millen <dmill@globalnet.co.uk> 22.07.98
@@ -1385,11 +1431,11 @@ arm100|arm100-am|Arm(RiscPC) ncurses compatible (for 640x480),
 	kc1=\E[p, kc3=\E[n, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, 
 	kcuu1=\E[A, kent=\E[M, kf0=\E[y, kf1=\E[P, kf10=\E[x, 
 	kf2=\E[Q, kf3=\E[R, kf4=\E[S, kf5=\E[t, kf6=\E[u, kf7=\E[v, 
-	kf8=\E[l, kf9=\E[w, rc=\E8, rev=\E[6m$<2>, ri=\EM$<5>, 
+	kf8=\E[l, kf9=\E[w, rc=\E8, rev=\E[7m$<2>, ri=\EM$<5>, 
 	rmacs=^O, rmam=\E[?7l, rmkx=\E[?1l\E>, rmso=\E[m$<2>, 
 	rmul=\E[m$<2>, rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, 
 	sc=\E7, 
-	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;$<2>, 
 	sgr0=\E[m\017$<2>, smacs=^N, smam=\E[?7h, smkx=\E[?1h\E=, 
 	smso=\E[7m$<2>, smul=\E[4m$<2>, tbc=\E[3g, use=ecma+sgr, 
 	use=klone+color, 
@@ -1491,6 +1537,12 @@ mgterm,
 #
 # Setting colors turns off reverse; we cannot guarantee order, so use ncv.
 # Note that this disables standout with color.
+#
+# The emulator sends difference strings based on shift- and control-keys,
+# like scoansi:
+#	F13-F24 are shifted F1-F12
+#	F25-F36 are control F1-F12
+#	F37-F48 are shift+control F1-F12
 cons25w|ansiw|ansi80x25-raw|freebsd console (25-line raw mode), 
 	am, bce, bw, eo, msgr, npc, 
 	colors#8, cols#80, it#8, lines#25, ncv#21, pairs#64, 
@@ -1504,12 +1556,19 @@ cons25w|ansiw|ansi80x25-raw|freebsd console (25-line raw mode),
 	il=\E[%p1%dL, il1=\E[L, ind=\E[S, indn=\E[%p1%dS, kb2=\E[E, 
 	kbs=^H, kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, 
 	kcuu1=\E[A, kdch1=\177, kend=\E[F, kf1=\E[M, kf10=\E[V, 
-	kf11=\E[W, kf12=\E[X, kf2=\E[N, kf3=\E[O, kf4=\E[P, kf5=\E[Q, 
-	kf6=\E[R, kf7=\E[S, kf8=\E[T, kf9=\E[U, khome=\E[H, 
-	kich1=\E[L, knp=\E[G, kpp=\E[I, nel=\E[E, op=\E[x, rev=\E[7m, 
-	ri=\E[T, rin=\E[%p1%dT, rmso=\E[m, rs2=\E[x\E[m\Ec, 
-	setab=\E[4%p1%dm, setaf=\E[3%p1%dm, sgr0=\E[m, 
-	smso=\E[7m, vpa=\E[%i%p1%dd, 
+	kf11=\E[W, kf12=\E[X, kf13=\E[Y, kf14=\E[Z, kf15=\E[a, 
+	kf16=\E[b, kf17=\E[c, kf18=\E[d, kf19=\E[e, kf2=\E[N, 
+	kf20=\E[f, kf21=\E[g, kf22=\E[h, kf23=\E[i, kf24=\E[j, 
+	kf25=\E[k, kf26=\E[l, kf27=\E[m, kf28=\E[n, kf29=\E[o, 
+	kf3=\E[O, kf30=\E[p, kf31=\E[q, kf32=\E[r, kf33=\E[s, 
+	kf34=\E[t, kf35=\E[u, kf36=\E[v, kf37=\E[w, kf38=\E[x, 
+	kf39=\E[y, kf4=\E[P, kf40=\E[z, kf41=\E[@, kf42=\E[[, 
+	kf43=\E[\\, kf44=\E[], kf45=\E[\^, kf46=\E[_, kf47=\E[`, 
+	kf48=\E[{, kf5=\E[Q, kf6=\E[R, kf7=\E[S, kf8=\E[T, kf9=\E[U, 
+	khome=\E[H, kich1=\E[L, knp=\E[G, kpp=\E[I, nel=\E[E, 
+	op=\E[x, rev=\E[7m, ri=\E[T, rin=\E[%p1%dT, rmso=\E[m, 
+	rs2=\E[x\E[m\Ec, setab=\E[4%p1%dm, setaf=\E[3%p1%dm, 
+	sgr0=\E[m, smso=\E[7m, vpa=\E[%i%p1%dd, 
 cons25|ansis|ansi80x25|freebsd console (25-line ansi mode), 
 	acsc=-\030.^Y0\333`\004a\260f\370g\361h\261i\025j\331k\277l\332m\300n\305q\304t\303u\264v\301w\302x\263y\363z\362~\371, 
 	use=cons25w, 
@@ -1802,7 +1861,7 @@ vt100|vt100-am|dec vt100 (w/advanced video),
 	rev=\E[7m$<2>, ri=\EM$<5>, rmacs=^O, rmam=\E[?7l, 
 	rmkx=\E[?1l\E>, rmso=\E[m$<2>, rmul=\E[m$<2>, 
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7, 
-	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;$<2>, 
 	sgr0=\E[m\017$<2>, smacs=^N, smam=\E[?7h, smkx=\E[?1h\E=, 
 	smso=\E[7m$<2>, smul=\E[4m$<2>, tbc=\E[3g, 
 vt100nam|vt100-nam|vt100 no automargins, 
@@ -1925,7 +1984,7 @@ vt220-old|vt200-old|DEC VT220 in vt100 emulation mode,
 	ri=\EM$<14/>, rmacs=\E(B$<4>, rmam=\E[?7l, rmir=\E[4l, 
 	rmso=\E[27m, rmul=\E[24m, 
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7, 
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>, 
 	sgr0=\E[m$<2>, smacs=\E(0$<2>, smam=\E[?7h, smir=\E[4h, 
 	smso=\E[7m, smul=\E[4m, 
 
@@ -2030,7 +2089,7 @@ vt200-js|vt220-js|dec vt200 series with jump scroll,
 	is2=\E[61"p\E[H\E[?3l\E[?4l\E[?1l\E[?5l\E[?6l\E[?7h\E[?8h\E[?25h\E>\E[m, 
 	kbs=^H, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, 
 	kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, nel=^M\ED, rc=\E8, 
-	rf=/usr/lib/tabset/vt100, ri=\EM, rmdc=, rmir=\E[4l, 
+	rf=/usr/share/tabset/vt100, ri=\EM, rmdc=, rmir=\E[4l, 
 	rmkx=\E[?1l\E>, rmso=\E[27m$<5/>, rmul=\E[24m, 
 	rs1=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7, smdc=, 
 	smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m$<5/>, smul=\E[4m, 
@@ -2219,7 +2278,7 @@ vt420|DEC VT420,
 	rmam=\E[?7l, rmir=\E[4l, rmkx=\E>, 
 	rmsc=\E[?0;0r\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, 
 	rmso=\E[m, rmul=\E[m, rs3=\E[?67h\E[64;1"p, sc=\E7, 
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>, 
 	sgr0=\E[m$<2>, smacs=\E(0$<2>, smam=\E[?7h, smir=\E[4h, 
 	smkx=\E=, smso=\E[7m, smul=\E[4m, 
 
@@ -2317,7 +2376,7 @@ vt520|DEC VT520,
 	ri=\EM, rmacs=\E(B$<4>, rmam=\E[?7l, rmir=\E[4l, 
 	rmsc=\E[?0;0r\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, 
 	rmso=\E[m, rmul=\E[m, rs3=\E[?67h\E[64;1"p, sc=\E7, 
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>, 
 	sgr0=\E[m$<2>, smacs=\E(0$<2>, smam=\E[?7h, smir=\E[4h, 
 	smso=\E[7m, smul=\E[4m, 
 
@@ -2344,7 +2403,7 @@ vt525|DEC VT525,
 	ri=\EM, rmacs=\E(B$<4>, rmam=\E[?7l, rmir=\E[4l, 
 	rmsc=\E[?0;0r\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, 
 	rmso=\E[m, rmul=\E[m, rs3=\E[?67h\E[64;1"p, sc=\E7, 
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>, 
 	sgr0=\E[m$<2>, smacs=\E(0$<2>, smam=\E[?7h, smir=\E[4h, 
 	smso=\E[7m, smul=\E[4m, 
 
@@ -2386,6 +2445,57 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 	ncv@, 
 	hts=\EH, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c, 
 	use=vt220, use=ecma+color, 
+
+# PuTTY 0.51 (released 14 December 2000)
+# http://www.chiark.greenend.org.uk/~sgtatham/putty/
+#
+# This emulates vt100 + vt52 (plus a few vt220 features:  ech, SRM, DECTCEM, as
+# well as SCO and Atari, color palettes from Linux console).  Reading the code,
+# it is intended to be VT102 plus selected features By default, it sets $TERM
+# to xterm, which is incorrect, since several features are misimplemented:
+#
+#	Alt+key always sends ESC+key, so 'km' capability is removed.
+#
+#	Control responses, wrapping and tabs are buggy, failing a couple of
+#	screens in vttest.
+#
+#	xterm mouse support is not implemented (unrelease version may).
+#
+# Several features such as backspace/delete are optional; this entry documents
+# the default behavior -TD
+putty|xterm clone (win32), 
+	am, bw, ccc, km, mir, msgr, xenl, 
+	colors#8, cols#80, it#8, lines#24, pairs#64, 
+	acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~, 
+	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l, 
+	clear=\E[H\E[2J, cnorm=\E[?25h, cr=^M, 
+	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H, 
+	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C, 
+	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A, 
+	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M, 
+	ech=\E[%p1%dX, ed=\E[J, el=\E[K, enacs=\E)0, home=\E[H, 
+	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L, 
+	ind=^J, 
+	initc=\E]P%?%p1%{9}%>%t%p1%{10}%-%'a'%+%c%e%p1%d%;%p2%{255}%&%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%p3%{255}%&%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%p4%{255}%&%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'A'%+%c%e%gx%d%;, 
+	is2=\E7\E[r\E[m\E[?7h\E[?1;3;4;6l\E[4l\E8\E>, 
+	kbs=\177, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, 
+	kcuu1=\EOA, kdch1=\E[3~, kf1=\E[11~, kf10=\E[21~, 
+	kf11=\E[23~, kf12=\E[24~, kf13=\E[25~, kf14=\E[26~, 
+	kf15=\E[28~, kf16=\E[29~, kf17=\E[31~, kf18=\E[32~, 
+	kf19=\E[33~, kf2=\E[12~, kf20=\E[34~, kf3=\E[13~, 
+	kf4=\E[14~, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, 
+	kf9=\E[20~, kfnd=\E[1~, kich1=\E[2~, kmous=\E[M, knp=\E[6~, 
+	kpp=\E[5~, kslt=\E[4~, oc=\E]R, op=\E[39;49m, rc=\E8, 
+	rev=\E[7m, ri=\EM, rmacs=^O, rmam=\E[?7l, 
+	rmcup=\E[2J\E[?47l\E8, rmir=\E[4l, rmkx=\E[?1l\E>, 
+	rmso=\E[27m, rmul=\E[24m, 
+	rs2=\E7\E[r\E8\E[m\E[?7h\E[?1;3;4;6l\E[4l\E>, sc=\E7, 
+	setab=\E[4%p1%dm, setaf=\E[3%p1%dm, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	sgr0=\E[m, smacs=^N, smam=\E[?7h, smcup=\E7\E[?47h, 
+	smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, 
+	tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c, 
+	vpa=\E[%i%p1%dd, 
 
 # This entry is for Tera Term Pro version 2.3, for MS-Windows 95/NT written by
 # T. Teranishi dated Mar 10, 1998.  It is a free software terminal emulator
@@ -2448,11 +2558,31 @@ teraterm|Tera Term Pro,
 
 # Tested with WinNT 4.0, the telnet application assumes the screensize is
 # 25x80.  This entry uses the 'Terminal' font, to get line-drawing characters.
+#
+# Other notes:
+# a) Fails tack's cup (cursor-addressing) test, though cup works well enough
+#    for casual (occasional) use.  Also fails several of the vttest screens,
+#    but that is not unusual for vt100 "emulators".
+# b) Does not implement vt100 keypad
+# c) Recognizes a subset of vt52 controls.
 ms-vt100|MS telnet imitating dec vt100, 
 	lines#25, 
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376, 
-	tbc@, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?6c, u9=\E[c, 
-	use=vt100, 
+	ka1@, ka3@, kb2@, kc1@, kc3@, kent@, kf0@, kf1@, kf10@, kf2@, kf3@, kf4@, 
+	kf5@, kf6@, kf7@, kf8@, kf9@, tbc@, u6=\E[%i%d;%dR, u7=\E[6n, 
+	u8=\E[?6c, u9=\E[c, use=vt100, 
+
+# Tested with Windows 2000, the telnet application runs in a console window,
+# also using 'Terminal' font.
+#
+# Other notes:
+# a) This version has no function keys or numeric keypad.  Unlike the older
+#    version, the numeric keypad is entirely ignored.
+# b) The program sets $TERM to "ansi", which of course is inaccurate.
+ms-vt100-color|windows 2000 ansi (sic), 
+	bce, 
+	dch=\E[%p1%dP, ich=\E[%p1%d@, use=ecma+color, 
+	use=ms-vt100, 
 
 #### X terminal emulators
 #
@@ -2617,13 +2747,13 @@ xterm-xf86-v40|xterm terminal emulator (XFree86 4.0 Window System),
 	kf42=\E[17;6~, kf43=\E[18;6~, kf44=\E[19;6~, 
 	kf45=\E[20;6~, kf46=\E[21;6~, kf47=\E[23;6~, 
 	kf48=\E[24;6~, khome=\EOH, rmcup=\E[?1049l, 
-	sgr=\E[0%?%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
 	smcup=\E[?1049h, use=xterm-xf86-v333, 
 
 xterm-xfree86|xterm-new|xterm terminal emulator (XFree86 4.0 Window System), 
 	npc, 
-	kDC=\E[3;5~, kEND=\EO5F, kHOM=\EO5H, kIC=\E[2;5~, 
-	kLFT=\EO5D, kNXT=\E[6;5~, kPRV=\E[5;5~, kRIT=\EO5C, 
+	kDC=\E[3;2~, kEND=\EO2F, kHOM=\EO2H, kIC=\E[2;2~, 
+	kLFT=\EO2D, kNXT=\E[6;2~, kPRV=\E[5;2~, kRIT=\EO2C, 
 	kb2=\EOE, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, 
 	kcuu1=\EOA, kend=\EOF, kent=\EOM, kf1=\EOP, kf10=\E[21~, 
 	kf11=\E[23~, kf12=\E[24~, kf13=\EO2P, kf14=\EO2Q, 
@@ -2664,7 +2794,7 @@ xterm-basic|xterm terminal emulator - common (XFree86),
 	setaf=\E[3%p1%dm, 
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m, 
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m, 
-	sgr=\E[0%?%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;, 
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E[?1049h, 
 	smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, 
 	tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c, 
@@ -2676,12 +2806,7 @@ xterm-xi|xterm on XI Graphics Accelerated X under BSD/OS 3.1,
 
 # This is one of the variants of XFree86 3.3 xterm, updated for 4.0 (T.Dickey)
 xterm-16color|xterm with 16 colors like aixterm, 
-	colors#16, ncv#32, pairs#256, 
-	setab=\E[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm, 
-	setaf=\E[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm, 
-	setb=%p1%{8}%/%{6}%*%{4}%+\E[%d%p1%{8}%m%Pa%?%ga%{1}%=%t4%e%ga%{3}%=%t6%e%ga%{4}%=%t1%e%ga%{6}%=%t3%e%ga%d%;m, 
-	setf=%p1%{8}%/%{6}%*%{3}%+\E[%d%p1%{8}%m%Pa%?%ga%{1}%=%t4%e%ga%{3}%=%t6%e%ga%{4}%=%t1%e%ga%{6}%=%t3%e%ga%d%;m, 
-	use=xterm-xfree86, 
+	ncv#32, use=ibm+16color, use=xterm-xfree86, 
 
 # These variants of XFree86 3.9.16 xterm are built as a configure option.
 xterm-256color|xterm with 256 colors, 
@@ -2737,7 +2862,7 @@ xterm-8bit|xterm terminal emulator 8-bit controls (X Window System),
 	sc=\E7, setab=\2334%p1%dm, setaf=\2333%p1%dm, 
 	setb=\2334%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m, 
 	setf=\2333%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m, 
-	sgr=\2330%?%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;, 
+	sgr=\2330%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;, 
 	sgr0=\233m^O, smacs=^N, smam=\233?7h, smcup=\233?1049h, 
 	smir=\2334h, smkx=\233?1h\E=, smso=\2337m, smul=\2334m, 
 	tbc=\2333g, u6=\233[%i%d;%dR, u7=\E[6n, u8=\233[?1;2c, 
@@ -2822,10 +2947,13 @@ xterm-bold|xterm terminal emulator (X11R6 Window System) standout w/bold,
 # (kterm: this had extension capabilities ":KJ:TY=ascii:" -- esr)
 # (kterm should not invoke DEC Graphics as the alternate character set
 #  -- Kenji Rikitake)
+# (proper setting of enacs, smacs, rmacs makes kterm to use DEC Graphics
+#  -- MATSUMOTO Shoji)
 kterm|kterm kanji terminal emulator (X window system), 
 	eslok, hs, 
-	acsc@, csr=\E[%i%p1%d;%p2%dr, dsl=\E[?H, enacs@, fsl=\E[?F, 
-	kmous=\E[M, rc=\E8, rmacs@, sc=\E7, smacs@, 
+	acsc=++\,\,--..00II``aaffgghhjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~, 
+	csr=\E[%i%p1%d;%p2%dr, dsl=\E[?H, enacs=, fsl=\E[?F, 
+	kmous=\E[M, rc=\E8, rmacs=\E(B, sc=\E7, smacs=\E(0, 
 	tsl=\E[?E\E[?%i%dT, use=xterm-r6, use=ecma+color, 
 kterm-color|kterm-co|kterm with ANSI colors, 
 	ncv@, use=kterm, use=ecma+color, 
@@ -2882,16 +3010,108 @@ nxterm|xterm-color|generic color xterm,
 	op=\E[m, use=xterm-r6, use=klone+color, 
 
 # this describes the alpha-version of Gnome terminal shipped with Redhat 6.0
-gnome|Gnome terminal, 
+gnome-rh62|Gnome terminal, 
 	bce, 
 	kdch1=\177, kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, 
 	use=xterm-color, 
+
+# GNOME Terminal 1.4.0.4 (Redhat 7.2)
+#
+# This implements a subset of vt102 with a random selection of features from
+# other terminals such as color and function-keys.
+#
+# shift-f1 to shift-f10 are f11 to f20
+#
+# NumLock changes the application keypad to approximate vt100 keypad, except
+# that there is no escape sequence matching comma (,).
+#
+# Other defects observed:
+#	vt100 LNM mode is not implemented.
+#	vt100 80/132 column mode is not implemented.
+#	vt100 DECALN is not implemented.
+#	vt100 DECSCNM mode is not implemented, so flash does not work.
+#	vt100 TBC (tab reset) is not implemented.
+#	xterm alternate screen controls do not restore cursor position properly
+#	it hangs in tack after running function-keys test.
+gnome-rh72|GNOME Terminal, 
+	bce, 
+	civis=\E[?25l, cnorm=\E[?25h, kdch1=\E[3~, kf1=\EOP, 
+	kf2=\EOQ, kf3=\EOR, kf4=\EOS, rmam=\E[?7l, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m%?%p9%t\016%e\017%;, 
+	smam=\E[?7h, tbc@, use=xterm-color, 
+
+gnome|GNOME Terminal, 
+	use=gnome-rh72, 
 
 # This is kvt 0-18.7, shipped with Redhat 6.0 (though whether it supports bce
 # or not is debatable).
 kvt|KDE terminal, 
 	bce, km@, 
 	kdch1=\177, kend=\E[F, khome=\E[H, use=xterm-color, 
+
+# Konsole 1.0.1
+# (formerly known as kvt)
+#
+# This program hardcodes $TERM to 'xterm', which is not accurate.  However, to
+# simplify this entry (and point out why konsole isn't xterm), we base this on
+# xterm-r6.  The default keyboard appears to be 'linux'.
+#
+# Notes:
+# a) konsole implements several features from XFree86 xterm, though none of
+#    that is documented - except of course in its source code - apparently
+#    because its implementors are unaccustomed to reading documentation - as
+#    evidenced by the sparse and poorly edited documentation distributed with
+#    konsole.  Some features such as the 1049 private mode are recognized but
+#    incorrectly implemented as a duplicate of the 47 private mode.
+# b) even with the "vt100 (historical)" keyboard setting, the numeric keypad
+#    sends PC-style escapes rather than vt100.
+# c) fails vttest menu 3 (Test of character sets) because it does not properly
+#    parse some control sequences.  Also fails vttest Primary Device Attributes
+#    by sending a bogus code (in the source it says it's supposed to be a
+#    vt220, which is doubly incorrect because it does not implement vt220
+#    control sequences except for a few special cases).  Treat it as a
+#    mildly-broken vt102.
+konsole-base|KDE console window, 
+	bce, km@, npc, 
+	bel@, blink=\E[5m, civis=\E[?25l, cnorm=\E[?25h, 
+	ech=\E[%p1%dX, flash=\E[?5h$<100/>\E[?5l, 
+	hpa=\E[%i%p1%dG, kbs@, kdch1@, kend@, kf1@, kf10@, kf11@, kf12@, 
+	kf13@, kf14@, kf15@, kf16@, kf17@, kf18@, kf19@, kf2@, kf20@, kf3@, 
+	kf4@, kf5@, kf6@, kf7@, kf8@, kf9@, kfnd@, khome@, kslt@, 
+	rmam=\E[?7l, rmso=\E[27m, rmul=\E[24m, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	smam=\E[?7h, vpa=\E[%i%p1%dd, use=ecma+color, 
+	use=xterm-r6, 
+konsole-linux|KDE console window with linux keyboard, 
+	kdch1=\E[3~, kf1=\E[[A, kf10=\E[21~, kf11=\E[23~, 
+	kf12=\E[24~, kf13@, kf14@, kf15@, kf16@, kf17@, kf18@, kf19@, 
+	kf2=\E[[B, kf20@, kf3=\E[[C, kf4=\E[[D, kf5=\E[[E, 
+	kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, 
+	use=konsole-base, 
+# KDE's "XFree86 3.x.x" keyboard is based on reading the xterm terminfo rather
+# than testing the code.
+konsole-xf3x|KDE console window with keyboard for XFree86 3.x xterm, 
+	kend=\E[4~, khome=\E[1~, use=konsole-vt100, 
+# The value for kbs reflects local customization rather than the settings used
+# for XFree86 xterm.
+konsole-xf4x|KDE console window with keyboard for XFree86 4.x xterm, 
+	kbs=^H, kend=\EOF, kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, 
+	khome=\EOH, use=konsole-vt100, 
+# KDE's "vt100" keyboard has no relationship to any terminal that DEC made, but
+# it is still useful for deriving the other entries.
+konsole-vt100|KDE console window with vt100 (sic) keyboard, 
+	kbs=\177, kdch1=\E[3~, kend=\E[F, kf1=\E[11~, kf10=\E[21~, 
+	kf11=\E[23~, kf12=\E[24~, kf13@, kf14@, kf15@, kf16@, kf17@, 
+	kf18@, kf19@, kf2=\E[12~, kf20@, kf3=\E[13~, kf4=\E[14~, 
+	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, 
+	khome=\E[H, use=konsole-base, 
+konsole-vt420pc|KDE console window with vt420 pc keyboard, 
+	kbs=^H, kdch1=\177, use=konsole-vt100, 
+konsole-16color|klone of xterm-16color, 
+	ncv#32, use=ibm+16color, use=konsole, 
+# make a default entry for konsole
+konsole|KDE console window, 
+	use=konsole-linux, 
 
 # From: Thomas Dickey <dickey@clark.net> 04 Oct 1997
 # Updated: Oezguer Kesim <kesim@math.fu-berlin.de> 02 Nov 1997
@@ -2947,10 +3167,14 @@ rxvt|rxvt terminal emulator (X Window System),
 	ncv@, 
 	sgr0=\E[m\017, use=rxvt-basic, use=ecma+color, 
 
+# This variant is supposed to work with rxvt 2.7.7 when compiled with
+# NO_BRIGHTCOLOR defined.  rxvt needs more work...
+rxvt-16color|xterm with 16 colors like aixterm, 
+	ncv#32, use=ibm+16color, use=rxvt, 
+
 # From: Michael Jennings <mej@valinux.com>
 # removed kf0 which conflicts with kf10 -TD
 # remove cvvis which conflicts with cnorm -TD
-# There's no u6 because Eterm appears to lack CPR (cursor position report).
 Eterm|Eterm-color|Eterm with xterm-style color support (X Window System), 
 	am, bce, bw, eo, km, mc5i, mir, msgr, xenl, xon, 
 	btns#5, cols#80, it#8, lines#24, lm#0, ncv@, 
@@ -2986,8 +3210,8 @@ Eterm|Eterm-color|Eterm with xterm-style color support (X Window System),
 	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E7\E[?47h, 
 	smir=\E[4h, smkx=, smso=\E[7m, smul=\E[4m, tbc=\E[3g, 
-	u7=\E[6n, u8=\E[?1;2c, u9=\E[c, vpa=\E[%i%p1%dd, 
-	use=ecma+color, 
+	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c, 
+	vpa=\E[%i%p1%dd, use=ecma+color, 
 
 # These (xtermc and xtermm) are distributed with Solaris.  They refer to a
 # variant of xterm which is apparently no longer supported, but are interesting
@@ -2996,7 +3220,7 @@ xtermm|xterm terminal emulator (monocrome),
 	OTbs, am, km, mir, msgr, xenl, 
 	btns#3, cols#80, it#8, lines#24, 
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~, 
-	bel=^G, blink=@, bold=\E[1m, clear=\E[H\E[2J, cr=^M, 
+	bel=^G, blink@, bold=\E[1m, clear=\E[H\E[2J, cr=^M, 
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=\E[1D, 
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C, 
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A, 
@@ -3104,6 +3328,40 @@ emu|emu native mode,
 	setaf=\Er%i%p1%d;, sgr0=\ES, smacs=\0, smir=\EY, 
 	smso=\ES\ET, smul=\ES\EV, tbc=\Ej, 
 
+# A commercial product, Reportedly a version of Xterm with an OPEN LOOK UI,
+# print interface, ANSI X3.64 colour escape sequences, etc.  Newsgroup postings
+# indicate that it emulates more than one terminal, but incompletely.
+# 
+# This is dapted from a FreeBSD bug-report by Daniel Rudy <dcrudy@pacbell.net>
+# It is based on vt102's entry, with some subtle differences, but also
+#	has status line
+#	supports ANSI colors (except for 'op' string)
+#	apparently implements alternate screen like xterm
+#	does not use padding, of course.
+mvterm|vv100|SwitchTerm aka mvTERM, 
+	am, eslok, hs, km, mir, msgr, xenl, 
+	colors#8, cols#80, it#8, lines#24, pairs#64, 
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~, 
+	bel=^G, blink=\E[5m, bold=\E[1m, clear=\E[H\E[2J, cr=^M, 
+	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H, 
+	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C, 
+	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A, 
+	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M, 
+	dsl=\E[?E, ed=\E[J, el=\E[K, el1=\E[1K$<3>, enacs=\E(B\E)0, 
+	fsl=\E[?F, home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@, 
+	ich1=\E[@, il=\E[%p1%dL, il1=\E[L, ind=^J, ka1=\EOq, 
+	ka3=\EOs, kb2=\EOr, kbs=^H, kc1=\EOp, kc3=\EOn, kcub1=\EOD, 
+	kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kent=\EOM, kf0=\EOy, 
+	kf1=\EOP, kf10=\EOx, kf2=\EOQ, kf3=\EOR, kf4=\EOS, kf5=\EOt, 
+	kf6=\EOu, kf7=\EOv, kf8=\EOl, kf9=\EOw, op=\E[100m, rc=\E8, 
+	rev=\E[7m, ri=\EM, rmacs=^O, rmcup=\E[2J\E[?47l\E8, 
+	rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m, 
+	rs2=\E>\E[1;3;4;5;6l\E[?7h\E[100m\E[m\E[r\E[2J\E[H, 
+	sc=\E7, setab=\E[4%p1%dm, setaf=\E[3%p1%dm, 
+	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	sgr0=\E[m\017, smacs=^N, smcup=\E7\E[?47h, 
+	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g, 
+	tsl=\E[?E\E[?%i%p1%dT, 
 #### MGR
 #
 # MGR is a Bell Labs window system lighter-weight than X.
@@ -3189,6 +3447,8 @@ eterm|gnu emacs term.el terminal emulation,
 #                   (\E[39m / \E[49m).
 #      S0   (str)   Switch charset 'G0' to the specified charset.
 #      E0   (str)   Switch charset 'G0' back to standard charset.
+#
+# tested with screen 3.09.08
 screen|VT 100/ANSI X3.64 virtual terminal, 
 	OTbs, OTpt, am, km, mir, msgr, xenl, G0, 
 	colors#8, cols#80, it#8, lines#24, pairs#64, 
@@ -3201,16 +3461,56 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 	cvvis=\E[34l, dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, 
 	dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E(B\E)0, 
 	flash=\Eg, home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@, 
-	il=\E[%p1%dL, il1=\E[L, ind=^J, is2=\E)0, kbs=^H, kcub1=\EOD, 
-	kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kdch1=\E[3~, kf1=\EOP, 
-	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR, 
-	kf4=\EOS, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, 
-	kf9=\E[20~, khome=\E[1~, kich1=\E[2~, kll=\E[4~, knp=\E[6~, 
-	kpp=\E[5~, nel=\EE, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O, 
-	rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[23m, rmul=\E[24m, 
-	rs2=\Ec, sc=\E7, sgr0=\E[m, smacs=^N, smir=\E[4h, 
-	smkx=\E[?1h\E=, smso=\E[3m, smul=\E[4m, tbc=\E[3g, E0=\E(B, 
-	S0=\E(%p1%c, use=ecma+color, 
+	il=\E[%p1%dL, il1=\E[L, ind=^J, is2=\E)0, kbs=^H, kcbt=\E[Z, 
+	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, 
+	kdch1=\E[3~, kend=\E[4~, kf1=\EOP, kf10=\E[21~, 
+	kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR, kf4=\EOS, 
+	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, 
+	khome=\E[1~, kich1=\E[2~, kmous=\E[M, knp=\E[6~, kpp=\E[5~, 
+	nel=\EE, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O, rmir=\E[4l, 
+	rmkx=\E[?1l\E>, rmso=\E[23m, rmul=\E[24m, rs2=\Ec, sc=\E7, 
+	sgr0=\E[m, smacs=^N, smir=\E[4h, smkx=\E[?1h\E=, 
+	smso=\E[3m, smul=\E[4m, tbc=\E[3g, E0=\E(B, S0=\E(%p1%c, 
+	use=ecma+color, 
+
+# Read the fine manpage:
+#       When  screen  tries  to  figure  out  a  terminal name for
+#       itself, it first looks for an entry named "screen.<term>",
+#       where  <term>  is the contents of your $TERM variable.  If
+#       no such entry exists, screen tries "screen" (or "screen-w"
+#       if the terminal is wide (132 cols or more)).  If even this
+#       entry cannot be found, "vt100" is used as a substitute.
+#
+# Here are a few customized entries which are useful -TD
+#
+# Notes:
+# (a)	screen does not support invis.
+# (b)	screen's implementation of bw is incorrect according to tack.
+# (c)	screen appears to hardcode the strings for khome/kend, making it
+#	necessary to override the "use=" clause's values.
+# (d)	screen sets $TERMCAP to a termcap-formatted copy of the 'screen' entry,
+#	which is NOT the same as the terminfo screen.<term>.
+# (e)	when screen finds one of these customized entries, it sets $TERM to
+#	match.  Hence, no "screen.xterm" entry is provided, since that would
+#	create heartburn for people running remote xterm's.
+#
+#	xterm (-xfree86 or -r6) does not normally support kIC, kNXT and kPRV
+#	since the default translations override the built-in keycode
+#	translation.  They are suppressed here to show what is tested by tack.
+screen.xterm-xfree86|screen customized for XFree86 xterm, 
+	bce@, bw, 
+	invis@, kIC@, kNXT@, kPRV@, kend=\E[4~, khome=\E[1~, meml@, 
+	memu@, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	use=xterm-xfree86, 
+# xterm-r6 does not really support khome/kend unless it is propped up by
+# the translations resource.
+screen.xterm-r6|screen customized for X11R6 xterm, 
+	bw, use=xterm-r6, 
+# Color applications running in screen and TeraTerm do not play well together
+# on Solaris.
+screen.teraterm|disable ncv in teraterm, 
+	ncv#127, use=screen, 
 
 screen-w|VT 100/ANSI X3.64 virtual terminal with 132 cols, 
 	cols#132, use=screen, 
@@ -3339,6 +3639,45 @@ pilot|tgtelnet|Top Gun Telnet on the Palm Pilot Professional,
 	cup=\Em%p1%{32}%+%c%p2%{32}%+%c, home=\Em\s\s, ht=^I, 
 	ind=^J, kbs=^H, kcub1=^H, kcud1=^J, knp=^L, kpp=^K, nel=\Em~\s, 
 	rmso=\EB, smso=\Eb, 
+
+# From: Federico Bianchi <bianchi@www.arte.unipi.it>
+# These entries are for the Embeddable Linux Kernel System (ELKS)
+# project - an heavily stripped down Linux to be run on 16 bit
+# boxes or, eventually, to be used in embedded systems - and have been
+# adapted from the stock ELKS termcap. The project itself looks stalled,
+# and the latest improvements I know of date back to March 2000.
+#
+# To cope with the ELKS dumb console I added an "elks-glasstty" entry;
+# as an added bonus, this deals with all the capabilities common to
+# both VT52 and ANSI (or, eventually, "special") modes.
+
+elks-glasstty|ELKS glass-TTY capabilities, 
+	OTbs, am, 
+	cols#80, it#8, lines#25, 
+	bel=^G, cr=^M, ht=^I, ind=^J, kbs=^H, kcub1=^H, kcud1=^J, 
+	nel=^M^J, 
+
+elks-vt52|ELKS vt52 console, 
+	clear=\EH\EJ, cub1=\ED, cud1=\EB, cuf1=\EC, 
+	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, el=\EK, 
+	home=\EH, use=elks-glasstty, 
+
+elks-ansi|ELKS ANSI console, 
+	clear=\E[H\E[2J, cub1=\E[D, cud1=\E[B, cuf1=\E[C, 
+	cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, el=\E[K, home=\E[H, 
+	rmso=\E[m, smso=\E[7m, use=elks-glasstty, 
+
+# As a matter of fact, ELKS 0.0.83 on PCs defaults to ANSI emulation
+# instead of VT52, but the "elks" entry still refers to the latter.
+
+elks|default ELKS console, 
+	use=elks-vt52, 
+
+# Project SIBO (for Psion 3 palmtops) console is identical to the ELKS
+# one but in screen size
+
+sibo|ELKS SIBO console, 
+	cols#61, it#8, lines#20, use=elks-vt52, 
 
 ######## COMMERCIAL WORKSTATION CONSOLES
 #
@@ -3517,7 +3856,7 @@ news-unk|SONY NEWS vt100 emulator common entry,
 	cr=^M, csr=\E[%i%p1%d;%p2%dr, cub1=^H, cud1=^J, cuf1=\E[C, 
 	cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, dl=\E[%p1%dM, dl1=\E[M, 
 	ed=\E[J, el=\E[K, home=\E[H, ht=^I, 
-	if=/usr/lib/tabset/vt100, il=\E[%p1%dL, il1=\E[L, 
+	if=/usr/share/tabset/vt100, il=\E[%p1%dL, il1=\E[L, 
 	is2=\E[?7h\E[?1l\E[?3l\E7\E8, kbs=^H, kcub1=\EOD, 
 	kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kf0=\EOY, kf1=\EOP, 
 	kf2=\EOQ, kf3=\EOR, kf4=\EOS, kf5=\EOT, kf6=\EOU, kf7=\EOV, 
@@ -3565,7 +3904,7 @@ news-old-unk|SONY NEWS vt100 emulator common entry,
 	OTnl=^J, bel=^G, blink=\E[5m, bold=\E[1m, clear=\E[;H\E[2J, 
 	cr=^M, csr=\E[%i%p1%d;%p2%dr, cub1=^H, cud1=^J, cuf1=\E[C, 
 	cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, ed=\E[J, el=\E[K, 
-	home=\E[H, ht=^I, if=/usr/lib/tabset/vt100, kbs=^H, 
+	home=\E[H, ht=^I, if=/usr/share/tabset/vt100, kbs=^H, 
 	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kf1=\EOP, 
 	kf2=\EOQ, kf3=\EOR, kf4=\EOS, rc=\E8, rev=\E[7m, ri=\EM, 
 	rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m, 
@@ -3700,7 +4039,7 @@ dtterm|CDE desktop terminal,
 # Removed: rmacs=\E[10m, smacs=\E[11m, because OS/2 does not implement acs.
 ansi-emx|ANSI.SYS color, 
 	am, bce, eo, mir, msgr, xenl, xon, 
-	colors#16, cols#80, it#8, lines#25, pairs#64, 
+	colors#8, cols#80, it#8, lines#25, pairs#64, 
 	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l, 
 	clear=\E[1;33;44m\E[H\E[J, cnorm=\E[?25h, cr=^M, cub1=^H, 
 	cud1=^J, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, 
@@ -3717,7 +4056,7 @@ ansi-emx|ANSI.SYS color,
 	tbc=\E[3g, u8=\E[?6c, u9=\E[c, 
 ansi-color-2-emx|ANSI.SYS color 2, 
 	am, bce, eo, mir, msgr, xenl, xon, 
-	colors#16, cols#80, it#8, lines#25, pairs#64, 
+	colors#8, cols#80, it#8, lines#25, pairs#64, 
 	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l, 
 	clear=\E[0;37;44m\E[H\E[J, cnorm=\E[?25h, cr=^M, cub1=^H, 
 	cud1=^J, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, 
@@ -3734,7 +4073,7 @@ ansi-color-2-emx|ANSI.SYS color 2,
 	tbc=\E[3g, u8=\E[?6c, u9=\E[c, 
 ansi-color-3-emx|ANSI.SYS color 3, 
 	am, bce, eo, mir, msgr, xenl, xon, 
-	colors#16, cols#80, it#8, lines#25, pairs#64, 
+	colors#8, cols#80, it#8, lines#25, pairs#64, 
 	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l, 
 	clear=\E[0;37;40m\E[H\E[J, cnorm=\E[?25h, cr=^M, cub1=^H, 
 	cud1=^J, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, 
@@ -3763,7 +4102,7 @@ mono-emx|stupid monochrome ansi terminal with only one kind of emphasis,
 # Use this for cygwin32 (tested with beta 19.1)
 # underline is colored bright magenta
 # shifted kf1-kf12 are kf11-kf22
-cygwin|ansi emulation for cygwin32, 
+cygwinB19|ansi emulation for cygwin32, 
 	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, 
 	kdch1=\E[3~, kend=\E[4~, kf1=\E[[A, kf10=\E[21~, 
 	kf11=\E[23~, kf12=\E[24~, kf13=\E[25~, kf14=\E[26~, 
@@ -3772,6 +4111,36 @@ cygwin|ansi emulation for cygwin32,
 	kf5=\E[[E, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, 
 	khome=\E[1~, kich1=\E[2~, knp=\E[6~, kpp=\E[5~, rmam@, smam@, 
 	use=ansi.sys, 
+
+# Use this for cygwin (tested with version 1.1.0).
+# I've combined pcansi and linux.  Some values of course were different and
+# I've indicated which of these were and which I used.
+# Cheers, earnie_boyd@yahoo.com
+# several changes based on running with tack and comparing with older entry -TD
+cygwin|ansi emulation for Cygwin, 
+	am, eo, in, msgr, xon, 
+	colors#8, cols#80, it#8, lines#25, ncv#3, pairs#64, 
+	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376, 
+	bel=^G, bold=\E[1m, clear=\E[H\E[J, cr=^M, cub1=^H, 
+	cud1=\E[B, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, 
+	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, 
+	el=\E[K, el1=\E[1K, home=\E[H, hpa=\E[%i%p1%dG, ht=^I, 
+	hts=\EH, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL, il1=\E[L, 
+	ind=^J, invis=\E[8m, kbs=^H, kcub1=\E[D, kcud1=\E[B, 
+	kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[3~, kend=\E[4~, kf1=\E[[A, 
+	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf13=\E[25~, 
+	kf14=\E[26~, kf15=\E[28~, kf16=\E[29~, kf17=\E[31~, 
+	kf18=\E[32~, kf19=\E[33~, kf2=\E[[B, kf20=\E[34~, 
+	kf3=\E[[C, kf4=\E[[D, kf5=\E[[E, kf6=\E[17~, kf7=\E[18~, 
+	kf8=\E[19~, kf9=\E[20~, khome=\E[1~, kich1=\E[2~, 
+	knp=\E[6~, kpp=\E[5~, kspd=^Z, nel=^M^J, op=\E[39;49m, 
+	rc=\E8, rev=\E[7m, ri=\EM, rmir=\E[4l, rmpch=\E[10m, 
+	rmso=\E[27m, rmul=\E[24m, rs1=\Ec\E]R, sc=\E7, 
+	setab=\E[4%p1%dm, setaf=\E[3%p1%dm, 
+	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;11%;m, 
+	sgr0=\E[0;10m, smir=\E[4h, smpch=\E[11m, smso=\E[7m, 
+	smul=\E[4m, u6=\E[%i%d;%dR, u7=\E[6n, u9=\E[c, 
+	vpa=\E[%i%p1%dd, 
 
 # This entry fits the Windows NT console when the _POSIX_TERM environment
 # variable is set to 'on'.  While the Windows NT POSIX console is seldom used,
@@ -4890,7 +5259,7 @@ adm31-old|o31|old adm31,
 adm36|LSI ADM36, 
 	OTbs, OTpt, 
 	OTkn#4, 
-	if=/usr/lib/tabset/vt100, 
+	if=/usr/share/tabset/vt100, 
 	is2=\E<\E>\E[6;?2;?7;?8h\E[4;20;?1;?3;?4;?5;?6;?18;?19l, 
 	use=vt100, 
 # (adm42: removed obsolete ":ma=^K^P:" -- esr)
@@ -5034,7 +5403,7 @@ qvt103|qume qvt 103,
 	rev=\E[7m$<2>, ri=\EM$<5>, rmam=\E[?7l, rmkx=\E[?1l\E>, 
 	rmso=\E[m$<2>, rmul=\E[m$<2>, 
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7, 
-	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m, 
+	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m$<2>, 
 	sgr0=\E[m$<2>, smam=\E[?7h, smkx=\E[?1h\E=, 
 	smso=\E[7m$<2>, smul=\E[4m$<2>, tbc=\E[3g, 
 qvt103-w|qume qvt103 132 cols, 
@@ -7615,7 +7984,7 @@ v5410|att5410 in terms of a vt100,
 	rmacs=^O, rmam=\E[?7l, rmkx=\E[?1l\E>, rmso=\E[m$<2>, 
 	rmul=\E[m$<2>, rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, 
 	sc=\E7, 
-	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;$<2>, 
 	sgr0=\E[m\017$<2>, smacs=^N, smam=\E[?7h, smkx=\E[?1h\E=, 
 	smso=\E[1;7m$<2>, smul=\E[4m$<2>, tbc=\E[3g, 
 
@@ -11018,7 +11387,7 @@ ts100|ts100-sp|falco ts100-sp,
 	rev=\E[7m$<2>, ri=\EM$<5>, rmacs=^O, rmam=\E[?7l, 
 	rmkx=\E[?1l\E>, rmso=\E[m$<2>, rmul=\E[m$<2>, 
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7, 
-	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;$<2>, 
 	sgr0=\E[m\017$<2>, smacs=^N, smam=\E[?7h, smkx=\E[?1h\E=, 
 	smso=\E[1;7m$<2>, smul=\E[4m$<2>, tbc=\E[3g, 
 ts100-ctxt|falco ts-100 saving context, 
@@ -11651,6 +12020,12 @@ ibm+color|IBM color definitions,
 	op=\E[32m\E[40m, 
 	setb=\E[%?%p1%{0}%=%t40m%e%p1%{1}%=%t41m%e%p1%{2}%=%t42m%e%p1%{3}%=%t43m%e%p1%{4}%=%t44m%e%p1%{5}%=%t45m%e%p1%{6}%=%t46m%e%p1%{7}%=%t107m%;, 
 	setf=\E[%?%p1%{0}%=%t30m%e%p1%{1}%=%t31m%e%p1%{2}%=%t32m%e%p1%{3}%=%t33m%e%p1%{4}%=%t34m%e%p1%{5}%=%t35m%e%p1%{6}%=%t36m%e%p1%{7}%=%t97m%;, 
+ibm+16color|IBM aixterm color definitions, 
+	colors#16, pairs#256, 
+	setab=\E[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm, 
+	setaf=\E[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm, 
+	setb=%p1%{8}%/%{6}%*%{4}%+\E[%d%p1%{8}%m%Pa%?%ga%{1}%=%t4%e%ga%{3}%=%t6%e%ga%{4}%=%t1%e%ga%{6}%=%t3%e%ga%d%;m, 
+	setf=%p1%{8}%/%{6}%*%{3}%+\E[%d%p1%{8}%m%Pa%?%ga%{1}%=%t4%e%ga%{3}%=%t6%e%ga%{4}%=%t1%e%ga%{6}%=%t3%e%ga%d%;m, 
 ibm5154|IBM 5154 Color display, 
 	colors#8, ncv@, pairs#64, 
 	bold@, setab=\E[4%p1%dm, setaf=\E[3%p1%dm, use=ibm5151, 
@@ -11792,6 +12167,7 @@ ibm8514-c|IBM 8514 color display with standout and underline,
 #
 # AIX entries.  IBM ships these with AIX 3.2.5. 
 # -- added rc, sc based on manpage -TD
+# Note that we could use ibm+16color, but that is not how IBM defines this one.
 aixterm|IBM Aixterm Terminal Emulator, 
 	eslok, hs, 
 	acsc=jjkkllmmnnqqttuuvvwwxx, bold=\E[1m, dsl=\E[?E, 
@@ -13637,7 +14013,7 @@ tek4105-30|4015 emulating 30 line vt100,
 	rev=\E[7m$<2>, ri=\EM$<5>, rmacs=^O, rmam=\E[?7l, 
 	rmkx=\E[?1l\E>, rmso=\E[m$<2>, rmul=\E[m$<2>, 
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7, 
-	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;$<2>, 
 	sgr0=\E[m\017$<2>, smacs=^N, smam=\E[?7h, smkx=\E[?1h\E=, 
 	smso=\E[1;7m$<2>, smul=\E[4m$<2>, tbc=\E[3g, 
 
@@ -13739,7 +14115,7 @@ tek4107|tek4109|tektronix terminals 4107 4109,
 	kbs=^H, kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA, 
 	rev=\E%!1\E[7m$<2>\E%0, ri=\EI, 
 	rmso=\E%!1\E[m$<2>\E%!0, rmul=\E%!1\E[m$<2>\E%!0, 
-	sgr=\E%%!1\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m\E%%!0, 
+	sgr=\E%%!1\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m$<2>\E%%!0, 
 	sgr0=\E%!1\E[m$<2>\E%!0, smso=\E%!1\E[7;5m$<2>\E%!0, 
 	smul=\E%!1\E[4m$<2>\E%!0, 
 # Tektronix 4207 with sysline.  In the ancestral termcap file this was 4107-s;
@@ -14327,6 +14703,495 @@ mac|macintosh|Macintosh with MacTerminal,
 mac-w|macterminal-w|Apple Macintosh with Macterminal in 132 column mode, 
 	cols#132, use=mac, 
 
+# The AppKit Terminal.app descriptions all have names beginning with
+# "nsterm". Note that the statusline (-s) versions use the window
+# titlebar as a phony status line, and may produce warnings during
+# compilation as a result ("tsl uses 0 parameters, expected 1".) Ignore
+# these warnings, or even ignore these entries entirely. Apps which
+# need to position the cursor or do other fancy stuff inside the status
+# line won't work with these entries. They're primarily useful for
+# programs like Pine which provide simple notifications in the status
+# line. Please note that non-ASCII characters don't work right in the
+# status line, since Terminal.app incorrectly interprets their Unicode
+# codepoints as MacRoman codepoints.
+# 
+# * Renamed the AppKit Terminal.app entry from "Apple_Terminal" to
+#   "nsterm" to comply with the name length and case conventions and
+#   limitations of various software packages [notably Solaris terminfo
+#   and UNIX.] A single Apple_Terminal alias is retained for
+#   backwards-compatbility.
+# 
+# * Added function key support (F1-F4). These only work in Terminal.app
+#   version 51, hopefully the capabilities won't cause problems for people
+#   using version 41.
+# 
+# * Added "full color" (-c) entries which support the 16-color mode in
+#   version 51.
+# 
+# * By default, version 51 uses UTF-8 encoding with broken altcharset
+#   support, so "ASCII" (-7) entries without altcharset support were
+#   added.
+
+# nsterm - AppKit Terminal.app
+#
+# Apple's Mac OS X includes a Terminal.app derived from the old NeXT
+# Terminal.app. It is a partial VT100 emulation with some xterm-like
+# extensions. This terminfo was written to describe versions 41
+# (shipped with Mac OS X version 10.0) and 51 (shipped with Mac OS X
+# version 10.1) of Terminal.app.
+#
+# Terminal.app runs under the Mac OS X Quartz windowing system (and
+# other AppKit-supported windowing systems.)  On the Mac OS X machine I
+# use, the executable for Terminal.app is:
+# /Applications/Utilities/Terminal.app/Contents/MacOS/Terminal
+#
+# If you're looking for a description of the full-screen system
+# console which runs under Apple's Darwin operating system on PowerPC
+# platforms, see the "xnuppc" entry instead.
+#
+# There were no function keys in version 41. In version 51, there are
+# four working function keys (F1, F2, F3 and F4.) The function keys
+# are included in all of these entries.
+#
+# It does not support mouse pointer position reporting. Under some
+# circumstances the cursor can be positioned using option-click; this
+# works by comparing the cursor position and the selected position,
+# and simulating enough cursor-key presses to move the cursor to the
+# selected position. This technique fails in all but the simplest
+# applications.
+#
+# It provides partial ANSI color support (background colors interacted
+# badly with bold in version 41, though, as reflected in :ncv:.) The
+# monochrome (-m) entries are useful if you've disabled color support
+# or use a monochrome monitor. The full color (-c) entries are useful
+# in version 51, which doesn't exhibit the background color bug. They
+# also enable an xterm-compatible 16-color mode.
+#
+# The configurable titlebar is set using xterm-compatible sequences;
+# it is used as a status bar in the statusline (-s) entries. Its width
+# depends on font sizes and window sizes, but 50 characters seems to
+# be the default for an 80x24 window.
+#
+# The MacRoman character encoding is used for some of the alternate
+# characters in the "MacRoman" entries; the "ASCII" (-7) entries
+# disable alternate character set support entirely, and the "VT100"
+# (-acs) entries rely instead on Terminal.app's own buggy VT100
+# graphics emulation, which seems to think the character encoding is
+# the old NeXT charset instead of MacRoman. The "ASCII" (-7) entries
+# are useful in Terminal.app version 51, which supports UTF-8 and
+# other ASCII-compatible character encodings but does not correctly
+# implement VT100 graphics; once VT100 graphics are correctly
+# implemented in Terminal.app, the "VT100" (-acs) entries should be
+# usable in any ASCII-compatible character encoding [except perhaps
+# in UTF-8, where some experts argue for disallowing alternate
+# characters entirely.]
+#
+# Terminal.app reports "vt100" as the terminal type, but exports
+# several environment variables which may aid detection in a shell
+# profile (i.e. .profile or .login):
+#
+# TERM=vt100
+# TERM_PROGRAM=Apple_Terminal
+# TERM_PROGRAM_VERSION=41      # in Terminal.app version 41
+# TERM_PROGRAM_VERSION=51      # in Terminal.app version 51
+#
+# For example, the following Bourne shell script would detect the
+# correct terminal type:
+#
+# if [ :"$TERM" = :"vt100" -a :"$TERM_PROGRAM" = :"Apple_Terminal" ]
+# then
+#     export TERM
+#     if [ :"$TERM_PROGRAM_VERSION" = :41 ]
+#     then
+#         TERM="nsterm"
+#     else
+#         TERM="nsterm-c-7"
+#     fi
+# fi
+#
+# In a C shell derivative, this would be accomplished by:
+#
+# if ( $?TERM && $?TERM_PROGRAM && $?TERM_PROGRAM_VERSION) then
+#     if ( :"$TERM" == :"vt100" && :"$TERM_PROGRAM" == :"Apple_Terminal" ) then
+#          if ( :"$TERM_PROGRAM_VERSION" == :41 ) then
+#              setenv TERM "nsterm"
+#          else
+#              setenv TERM "nsterm-c-7"
+#          endif
+#     endif
+# endif
+
+# The '+' entries are building blocks
+nsterm+7|AppKit Terminal.app v41+ basic capabilities w/ASCII charset, 
+	am, bw, msgr, xenl, xon, 
+	cols#80, it#8, lines#24, 
+	bel=^G, blink=\E[5m, bold=\E[1m, clear=\E[H\E[J, cr=^M, 
+	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H, 
+	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C, 
+	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A, 
+	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K, 
+	home=\E[H, ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L, ind=^J, 
+	ka1=\EOq, ka3=\EOs, kb2=\EOr, kbs=\177, kc1=\EOp, kc3=\EOn, 
+	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kent=\EOM, 
+	kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, rc=\E8, rev=\E[7m, 
+	ri=\EM, rmam=\E[?7l, rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m, 
+	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m, 
+	sgr0=\E[m\017, smam=\E[?7h, smkx=\E[?1h\E=, smso=\E[7m, 
+	smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n, 
+	u8=\E[?1;2c, u9=\E[c, 
+
+nsterm+acs|AppKit Terminal.app v41+ basic capabilities w/VT100 alternate-charset, 
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~, 
+	enacs=\E(B\E)0, rmacs=^O, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	smacs=^N, use=nsterm+7, 
+
+nsterm+mac|AppKit Terminal.app v41+ basic capabilities w/MacRoman alternate-charset, 
+	acsc=0#`\327a\:f\241g\261h#i\360jjkkllmmnno\370p\370q\321rrssttuuvvwwxxy\262z\263{\271|\255}\243~\245+\335-\366\,\334.\377, 
+	enacs=\E(B\E)0, rmacs=^O, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;, 
+	smacs=^N, use=nsterm+7, 
+
+nsterm+s|AppKit Terminal.app v41+ status-line (window titlebar) support, 
+	hs, 
+	wsl#50, 
+	dsl=\E]2;\007, fsl=^G, tsl=\E]2;, 
+
+nsterm+c|AppKit Terminal.app v51+ full color support (including 16 colors), 
+	op=\E[0m, use=ibm+16color, 
+
+nsterm+c41|AppKit Terminal.app v41 color support, 
+	colors#8, ncv#37, pairs#64, 
+	op=\E[0m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm, 
+
+# These are different combinations of the building blocks
+
+# ASCII charset (-7)
+nsterm-m-7|nsterm-7-m|AppKit Terminal.app v41+ w/ASCII charset (monochrome), 
+	use=nsterm+7, 
+
+nsterm-m-s-7|nsterm-7-m-s|AppKit Terminal.app v41+ w/ASCII charset (monochrome w/statusline), 
+	use=nsterm+s, use=nsterm+7, 
+
+nsterm-7|AppKit Terminal.app v41+ w/ASCII charset (color), 
+	use=nsterm+c41, use=nsterm+7, 
+
+nsterm-7-c|nsterm-c-7|AppKit Terminal.app v51+ w/ASCII charset (full color), 
+	use=nsterm+c, use=nsterm+7, 
+
+nsterm-s-7|nsterm-7-s|AppKit Terminal.app v41+ w/ASCII charset (color w/statusline), 
+	use=nsterm+s, use=nsterm+c41, use=nsterm+7, 
+
+nsterm-c-s-7|nsterm-7-c-s|AppKit Terminal.app v51+ w/ASCII charset (full color w/statusline), 
+	use=nsterm+s, use=nsterm+c, use=nsterm+7, 
+
+# VT100 alternate-charset (-acs)
+nsterm-m-acs|nsterm-acs-m|AppKit Terminal.app v41+ w/VT100 alternate-charset (monochrome), 
+	use=nsterm+acs, 
+
+nsterm-m-s-acs|nsterm-acs-m-s|AppKit Terminal.app v41+ w/VT100 alternate-charset (monochrome w/statusline), 
+	use=nsterm+s, use=nsterm+acs, 
+
+nsterm-acs|AppKit Terminal.app v41+ w/VT100 alternate-charset (color), 
+	use=nsterm+c41, use=nsterm+acs, 
+
+nsterm-c-acs|nsterm-acs-c|AppKit Terminal.app v51+ w/VT100 alternate-charset (full color), 
+	use=nsterm+c, use=nsterm+acs, 
+
+nsterm-s-acs|nsterm-acs-s|AppKit Terminal.app v41+ w/VT100 alternate-charset (color w/statusline), 
+	use=nsterm+s, use=nsterm+c41, use=nsterm+acs, 
+
+nsterm-c-s-acs|nsterm-acs-c-s|AppKit Terminal.app v51+ w/VT100 alternate-charset (full color w/statusline), 
+	use=nsterm+s, use=nsterm+c, use=nsterm+acs, 
+
+# MacRoman charset
+nsterm-m|AppKit Terminal.app v41+ w/MacRoman charset (monochrome), 
+	use=nsterm+mac, 
+
+nsterm-m-s|AppKit Terminal.app v41+ w/MacRoman charset (monochrome w/statusline), 
+	use=nsterm+s, use=nsterm+mac, 
+
+nsterm|Apple_Terminal|AppKit Terminal.app v41+ w/MacRoman charset (color), 
+	use=nsterm+c41, use=nsterm+mac, 
+
+nsterm-c|AppKit Terminal.app v51+ w/MacRoman charset (full color), 
+	use=nsterm+c, use=nsterm+mac, 
+
+nsterm-s|AppKit Terminal.app v41+ w/MacRoman charset (color w/statusline), 
+	use=nsterm+s, use=nsterm+c41, use=nsterm+mac, 
+
+nsterm-c-s|AppKit Terminal.app v51+ w/MacRoman charset (full color w/statusline), 
+	use=nsterm+s, use=nsterm+c, use=nsterm+mac, 
+
+# xnuppc - Darwin PowerPC Console (a.k.a. "darwin")
+#
+# On PowerPC platforms, Apple's Darwin operating system uses a
+# full-screen system console derived from a NetBSD framebuffer
+# console. It is an ANSI-style terminal, and is not really VT-100
+# compatible.
+#
+# Under Mac OS X, this is the system console driver used while in
+# single-user mode [reachable by holding down Command-S during the
+# boot process] and when logged in using console mode [reachable by
+# typing ">console" at the graphical login prompt.]
+#
+# If you're looking for a description of the Terminal.app terminal
+# emulator which runs under the Mac OS X Quartz windowing system (and
+# other AppKit-supported windowing systems,) see the "nsterm"
+# entry instead.
+#
+# NOTE: Under Mac OS X version 10.1, the default login window does not
+# prompt for user name, instead requiring an icon to be selected from
+# a list of known users. Since the special ">console" login is not in
+# this list, you must make one of two changes in the Login Window
+# panel of the Login section of System Prefs to make the special
+# ">console" login accessible. The first option is to enable 'Show
+# "Other User" in list for network users', which will add a special
+# "Other..." icon to the graphical login panel. Selecting "Other..."
+# will present the regular graphical login prompt. The second option
+# is to change the 'Display Login Window as:' setting to 'Name and
+# password entry fields', which replaces the login panel with a
+# graphical login prompt.
+#
+# There are no function keys, at least not in Darwin 1.3.
+#
+# It has no mouse support.
+#
+# It has full ANSI color support, and color combines correctly with
+# all three supported attributes: bold, inverse-video and underline.
+# However, bold colored text is almost unreadable (bolding is
+# accomplished using shifting and or-ing, and looks smeared) so bold
+# has been excluded from the list of color-compatible attributes
+# [using (ncv)]. The monochrome entry (-m) is useful if you use a
+# monochrome monitor.
+#
+# There is one serious bug with this terminal emulation's color
+# support: repositioning the cursor onto a cell with non-matching
+# colors obliterates that cell's contents, replacing it with a blank
+# and displaying a colored cursor in the "current" colors. There is
+# no complete workaround at present [other than using the monochrome
+# (-m) entries,] but removing the (msgr) capability seemed to help.
+#
+# The "standout" chosen was simple reverse-video, although a colorful
+# standout might be more aesthetically pleasing. Similarly, the bold
+# chosen is the terminal's own smeared bold, although a simple
+# color-change might be more readable. The color-bold (-b) entries
+# uses magenta colored text for bolding instead. The fancy color (-f
+# and -f2) entries use color for bold, standout and underlined text
+# (underlined text is still underlined, though.)
+#
+# Apparently the terminal emulator does support a VT-100-style
+# alternate character set, but all the alternate character set
+# positions have been left blank in the font. For this reason, no
+# alternate character set capabilities have been included in this
+# description. The console driver appears to be ASCII-only, so (enacs)
+# has been excluded [although the VT-100 sequence does work.]
+#
+# The default Mac OS X and Darwin installation reports "vt100" as the
+# terminal type, and exports no helpful environment variables. To fix
+# this, change the "console" entry in /etc/ttys from "vt100" to
+# "xnuppc-WxH", where W and H are the character dimensions of your
+# console (see below.)
+#
+# The font used by the terminal emulator is apparently one originally
+# drawn by Ka-Ping Yee, and uses 8x16-pixel characters. This
+# file includes descriptions for the following geometries:
+#
+#     Pixels        Characters   Entry Name (append -m for monochrome)
+#    -------------------------------------------------------------------
+#     640x400       80x25        xnuppc-80x25
+#     640x480       80x30        xnuppc-80x30
+#     720x480       90x30        xnuppc-90x30
+#     800x600       100x37       xnuppc-100x37
+#     896x600       112x37       xnuppc-112x37
+#     1024x640      128x40       xnuppc-128x40
+#     1024x768      128x48       xnuppc-128x48
+#     1152x768      144x48       xnuppc-144x48
+#     1280x1024     160x64       xnuppc-160x64
+#     1600x1024     200x64       xnuppc-200x64
+#     1600x1200     200x75       xnuppc-200x75
+#     2048x1536     256x96       xnuppc-256x96
+#
+# The basic "xnuppc" entry includes no size information, and the
+# emulator includes no reporting capability, so you'll be at the mercy
+# of the TTY device (which reports incorrectly on my hardware.) The
+# color-bold entries do not include size information.
+
+# The '+' entries are building blocks
+xnuppc+basic|Darwin PowerPC Console basic capabilities, 
+	am, bce, mir, xenl, 
+	it#8, 
+	bold=\E[1m, clear=\E[H\E[J, cr=^M, csr=\E[%i%p1%d;%p2%dr, 
+	cub=\E[%p1%dD, cub1=\E[D, cud=\E[%p1%dB, cud1=\E[B, 
+	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, 
+	cuu=\E[%p1%dA, cuu1=\E[A, dsl=\E]2;\007, ed=\E[J, el=\E[K, 
+	el1=\E[1K, home=\E[H, ht=^I, hts=\EH, ind=^J, ka1=\EOq, 
+	ka3=\EOs, kb2=\EOr, kbs=\177, kc1=\EOp, kc3=\EOn, kcub1=\EOD, 
+	kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, rc=\E8, rev=\E[7m, 
+	ri=\EM, rmam=\E[?7l, rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m, 
+	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7, 
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m, 
+	sgr0=\E[m\017, smam=\E[?7h, smkx=\E[?1h\E=, smso=\E[7m, 
+	smul=\E[4m, tbc=\E[3g, 
+
+xnuppc+c|Darwin PowerPC Console ANSI color support, 
+	colors#8, ncv#32, pairs#64, 
+	op=\E[37;40m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm, 
+
+xnuppc+b|Darwin PowerPC Console color-bold support, 
+	ncv#32, 
+	bold=\E[35m, 
+	sgr=\E[0%?%p6%t;35%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m, 
+	use=xnuppc+basic, 
+
+xnuppc+f|Darwin PowerPC Console fancy color support, 
+	ncv#35, 
+	sgr=\E[0%?%p6%t;35%;%?%p2%t;36;4%;%?%p1%t;33;44%;%p3%t;7%;m, 
+	smso=\E[33;44m, smul=\E[36;4m, use=xnuppc+b, 
+
+xnuppc+f2|Darwin PowerPC Console alternate fancy color support, 
+	ncv#35, 
+	bold=\E[33m, 
+	sgr=\E[0%?%p6%t;33%;%?%p2%t;34%;%?%p1%t;31;47%;%p3%t;7%;m, 
+	smso=\E[31;47m, smul=\E[34m, use=xnuppc+basic, 
+
+# Building blocks for specific screen sizes
+xnuppc+80x25|Darwin PowerPC Console 80x25 support (640x400 pixels), 
+	cols#80, lines#25, 
+
+xnuppc+80x30|Darwin PowerPC Console 80x30 support (640x480 pixels), 
+	cols#80, lines#30, 
+
+xnuppc+90x30|Darwin PowerPC Console 90x30 support (720x480 pixels), 
+	cols#90, lines#30, 
+
+xnuppc+100x37|Darwin PowerPC Console 100x37 support (800x600 pixels), 
+	cols#100, lines#37, 
+
+xnuppc+112x37|Darwin PowerPC Console 112x37 support (896x600 pixels), 
+	cols#112, lines#37, 
+
+xnuppc+128x40|Darwin PowerPC Console 128x40 support (1024x640 pixels), 
+	cols#128, lines#40, 
+
+xnuppc+128x48|Darwin PowerPC Console 128x48 support (1024x768 pixels), 
+	cols#128, lines#48, 
+
+xnuppc+144x48|Darwin PowerPC Console 144x48 support (1152x768 pixels), 
+	cols#144, lines#48, 
+
+xnuppc+160x64|Darwin PowerPC Console 160x64 support (1280x1024 pixels), 
+	cols#160, lines#64, 
+
+xnuppc+200x64|Darwin PowerPC Console 200x64 support (1600x1024 pixels), 
+	cols#200, lines#64, 
+
+xnuppc+200x75|Darwin PowerPC Console 200x75 support (1600x1200 pixels), 
+	cols#200, lines#75, 
+
+xnuppc+256x96|Darwin PowerPC Console 256x96 support (2048x1536 pixels), 
+	cols#256, lines#96, 
+
+# These are different combinations of the building blocks
+
+xnuppc-m|darwin-m|Darwin PowerPC Console (monochrome), 
+	use=xnuppc+basic, 
+
+xnuppc|darwin|Darwin PowerPC Console (color), 
+	use=xnuppc+c, use=xnuppc+basic, 
+
+xnuppc-m-b|darwin-m-b|Darwin PowerPC Console (monochrome w/color-bold), 
+	use=xnuppc+b, 
+
+xnuppc-b|darwin-b|Darwin PowerPC Console (color w/color-bold), 
+	use=xnuppc+b, use=xnuppc+c, 
+
+xnuppc-m-f|darwin-m-f|Darwin PowerPC Console (fancy monochrome), 
+	use=xnuppc+f, 
+
+xnuppc-f|darwin-f|Darwin PowerPC Console (fancy color), 
+	use=xnuppc+f, use=xnuppc+c, 
+
+xnuppc-m-f2|darwin-m-f2|Darwin PowerPC Console (alternate fancy monochrome), 
+	use=xnuppc+f2, 
+
+xnuppc-f2|darwin-f2|Darwin PowerPC Console (alternate fancy color), 
+	use=xnuppc+f2, use=xnuppc+c, 
+
+# Combinations for specific screen sizes
+xnuppc-80x25-m|darwin-80x25-m|Darwin PowerPC Console (monochrome) 80x25, 
+	use=xnuppc+80x25, use=xnuppc+basic, 
+
+xnuppc-80x25|darwin-80x25|Darwin PowerPC Console (color) 80x25, 
+	use=xnuppc+c, use=xnuppc+80x25, use=xnuppc+basic, 
+
+xnuppc-80x30-m|darwin-80x30-m|Darwin PowerPC Console (monochrome) 80x30, 
+	use=xnuppc+80x30, use=xnuppc+basic, 
+
+xnuppc-80x30|darwin-80x30|Darwin PowerPC Console (color) 80x30, 
+	use=xnuppc+c, use=xnuppc+80x30, use=xnuppc+basic, 
+
+xnuppc-90x30-m|darwin-90x30-m|Darwin PowerPC Console (monochrome) 90x30, 
+	use=xnuppc+90x30, use=xnuppc+basic, 
+
+xnuppc-90x30|darwin-90x30|Darwin PowerPC Console (color) 90x30, 
+	use=xnuppc+c, use=xnuppc+90x30, use=xnuppc+basic, 
+
+xnuppc-100x37-m|darwin-100x37-m|Darwin PowerPC Console (monochrome) 100x37, 
+	use=xnuppc+100x37, use=xnuppc+basic, 
+
+xnuppc-100x37|darwin-100x37|Darwin PowerPC Console (color) 100x37, 
+	use=xnuppc+c, use=xnuppc+100x37, use=xnuppc+basic, 
+
+xnuppc-112x37-m|darwin-112x37-m|Darwin PowerPC Console (monochrome) 112x37, 
+	use=xnuppc+112x37, use=xnuppc+basic, 
+
+xnuppc-112x37|darwin-112x37|Darwin PowerPC Console (color) 112x37, 
+	use=xnuppc+c, use=xnuppc+112x37, use=xnuppc+basic, 
+
+xnuppc-128x40-m|darwin-128x40-m|Darwin PowerPC Console (monochrome) 128x40, 
+	use=xnuppc+128x40, use=xnuppc+basic, 
+
+xnuppc-128x40|darwin-128x40|Darwin PowerPC Console (color) 128x40, 
+	use=xnuppc+c, use=xnuppc+128x40, use=xnuppc+basic, 
+
+xnuppc-128x48-m|darwin-128x48-m|Darwin PowerPC Console (monochrome) 128x48, 
+	use=xnuppc+128x48, use=xnuppc+basic, 
+
+xnuppc-128x48|darwin-128x48|Darwin PowerPC Console (color) 128x48, 
+	use=xnuppc+c, use=xnuppc+128x48, use=xnuppc+basic, 
+
+xnuppc-144x48-m|darwin-144x48-m|Darwin PowerPC Console (monochrome) 144x48, 
+	use=xnuppc+144x48, use=xnuppc+basic, 
+
+xnuppc-144x48|darwin-144x48|Darwin PowerPC Console (color) 144x48, 
+	use=xnuppc+c, use=xnuppc+144x48, use=xnuppc+basic, 
+
+xnuppc-160x64-m|darwin-160x64-m|Darwin PowerPC Console (monochrome) 160x64, 
+	use=xnuppc+160x64, use=xnuppc+basic, 
+
+xnuppc-160x64|darwin-160x64|Darwin PowerPC Console (color) 160x64, 
+	use=xnuppc+c, use=xnuppc+160x64, use=xnuppc+basic, 
+
+xnuppc-200x64-m|darwin-200x64-m|Darwin PowerPC Console (monochrome) 200x64, 
+	use=xnuppc+200x64, use=xnuppc+basic, 
+
+xnuppc-200x64|darwin-200x64|Darwin PowerPC Console (color) 200x64, 
+	use=xnuppc+c, use=xnuppc+200x64, use=xnuppc+basic, 
+
+xnuppc-200x75-m|darwin-200x75-m|Darwin PowerPC Console (monochrome) 200x75, 
+	use=xnuppc+200x75, use=xnuppc+basic, 
+
+xnuppc-200x75|darwin-200x75|Darwin PowerPC Console (color) 200x75, 
+	use=xnuppc+c, use=xnuppc+200x75, use=xnuppc+basic, 
+
+xnuppc-256x96-m|darwin-256x96-m|Darwin PowerPC Console (monochrome) 256x96, 
+	use=xnuppc+256x96, use=xnuppc+basic, 
+
+xnuppc-256x96|darwin-256x96|Darwin PowerPC Console (color) 256x96, 
+	use=xnuppc+c, use=xnuppc+256x96, use=xnuppc+basic, 
+
 #### Radio Shack/Tandy
 #
 
@@ -14679,7 +15544,7 @@ mai|basic4|MAI Basic Four in ansi mode,
 	cr=^M, csr=\E[%i%p1%d;%p2%dr, cub1=^H, cud1=^J, cuf1=^X, 
 	cup=\E[%i%p1%d;%p2%dH, cuu1=^Z, cvvis=\E[?7l, dch1=\E[1P, 
 	dl1=\E[M, ed=^_, el=^^, home=^], ht=^I, 
-	if=/usr/lib/tabset/vt100, il1=\E[L, ind=\ED, 
+	if=/usr/share/tabset/vt100, il1=\E[L, ind=\ED, 
 	is2=\E>\E[?1h\E[?7h\E[?5l\017\E(B\E[m\E[20l\E[1;24r\E[24;1H, 
 	kbs=^H, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, 
 	kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, kf5=\EOT, kf6=\EOU, 
@@ -17058,7 +17923,7 @@ dwk|dwk-vt|dwk terminal,
 env230|envision230|envision 230 graphics terminal, 
 	xenl@, 
 	mc0=\E[0i, mc4=\E[4i, mc5=\E[5i, 
-	sgr=\E[%?%p1%t;1%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m, 
+	sgr=\E[%?%p1%t;1%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m$<2>, 
 	use=vt100, 
 # These execuports were impact-printer ttys with a 30- or maybe 15-cps acoustic
 # coupler attached, the whole rig fitting in a suitcase and more or less
@@ -18596,6 +19461,83 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* modify xterm-r6 and similar rs2 sequences which had \E7...\E8
 #	  bracketing sequences that reset video attributes (\E8 would restore
 #	  them) -TD
+#
+# 2000-11-11
+#	* rename cygwin to cygwinB19, adapt newer entry from Earnie Boyd -TD
+#
+# 2000-12-16
+#	* improved scoansi, based on SCO man-page, and testing console,
+#	  scoterm with tack -TD
+#
+# 2001-01-27
+#	* modify kterm to use acsc via SCS controls.
+#
+# 2001-02-10
+#	* screen 3.9.8 allows xterm mouse controls to pass-through
+#
+# 2001-03-11
+#	* remove spurious "%|" from some xterm entries.
+#
+# 2001-03-31
+#	* modify 'screen' khome/kend to match screen 3.09.08
+#	* add examples of 'screen' customization (screen.xterm-xfree86,
+#	  screen.xterm-r6, screen.teraterm) -TD
+#
+# 2001-04-14
+#	* correct definitions of shifted editing keys for xterm-xfree86 -TD
+#	* add "Apple_Terminal" entries -Benjamin Sittler
+#	* remove time-delays from "Apple_Terminal" entries -TD
+#	* make sgr entries time-delays consistent with individual caps -TD
+#
+# 2001-05-05
+#	* corrected/updated screen.xterm-xfree86
+#
+# 2001-05-19
+#	* ELKS descriptions, from Federico Bianchi
+#	* add u6 (CSR) to Eterm (Michael Jennings).
+#
+# 2001-07-21
+#	* renamed "Apple_Terminal" entries to "nsterm" to work with Solaris's
+#	  tic which handles names no longer than 14 characters.  Add
+#	  corresponding descriptions for the Darwin PowerPC console named
+#	  "xnuppc" -Benjamin Sittler
+#
+# 2001-09-01
+#	* change kbs in mach entries to ^? (Marcus Brinkmann).
+#
+# 2001-11-17
+#	* add "putty" entry -TD
+#	* updated "Apple_Terminal" entries -Benjamin Sittler
+#
+# 2001-11-24
+#	* add ms-vt100-color entry -TD
+#	* add "konsole" entries -TD
+#
+# 2001-12-08
+#	* update gnome entry to Redhat 7.2 -TD
+#
+# 2002-05-25
+#	* add kf13-kf48 strings to cons25w -TD
+#	* add pcvt25-color entry -TD
+#	* changed a few /usr/lib/tabset -> /usr/share/tabset.
+#	* improve some features of scoansi entry based on SCO's version -TD
+#	* add scoansi-new entry corresponding to OpenServer 5.0.6
+#
+# 2002-06-15
+#	* add kcbt to screen entry -TD
+#
+# 2002-06-22
+#	* add rxvt-16color, ibm+16color, mvterm entries -TD
+#
+# 2002-09-28
+#	* split out linux-basic entry, making linux-c inherit from that, and
+#	  in turn linux (with cnorm, etc) inherit from linux-c-nc to reflect
+#	  the history of this console type -TD
+#	* scaled the linux-c terminfo entry to match linux-c-nc, i.e., the
+#	  r/g/b parameters of initc are in the range 0 to 1000 -TD
+#
+# 2002-1005
+#	* minor fix for scale-factor of linux-c and linux-c-nc -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: edit_cfg.sh,v 1.8 2000/07/01 16:07:37 tom Exp $
+# $Id: edit_cfg.sh,v 1.12 2001/12/08 20:44:59 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,2000 Free Software Foundation, Inc.                     #
+# Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -42,10 +42,13 @@ for name in \
 	ETIP_NEEDS_MATH_EXCEPTION \
 	ETIP_NEEDS_MATH_H \
 	HAVE_BUILTIN_H \
-	HAVE_GXX_BUILTIN_H \
 	HAVE_GPP_BUILTIN_H \
+	HAVE_GXX_BUILTIN_H \
+	HAVE_STRSTREAM_H \
 	HAVE_TYPEINFO \
-	HAVE_VALUES_H
+	HAVE_VALUES_H \
+	USE_STRSTREAM_VSCAN \
+	USE_STRSTREAM_VSCAN_CAST
 do
 	mv $2 $2.bak
 	if ( grep "[ 	]$name[ 	]1" $1 2>&1 >/dev/null)

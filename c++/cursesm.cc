@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998,1999,2001 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,21 +28,22 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
+ *   Author: Juergen Pfeifer, 1997                                          *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
+#include "internal.h"
 #include "cursesm.h"
 #include "cursesapp.h"
-#include "internal.h"
 
-MODULE_ID("$Id: cursesm.cc,v 1.12 1999/10/30 23:59:37 tom Exp $")
-  
+MODULE_ID("$Id: cursesm.cc,v 1.17 2002/07/06 15:47:52 juergen Exp $")
+
 NCursesMenuItem::~NCursesMenuItem() {
   if (item)
     OnError(::free_item(item));
 }
 
-bool 
+bool
 NCursesMenuItem::action() {
   return FALSE;
 };
@@ -50,7 +51,7 @@ NCursesMenuItem::action() {
 NCursesMenuCallbackItem::~NCursesMenuCallbackItem() {
 }
 
-bool 
+bool
 NCursesMenuCallbackItem::action() {
   if (p_fct)
     return p_fct (*this);
@@ -60,7 +61,7 @@ NCursesMenuCallbackItem::action() {
 
 /* Internal hook functions. They will route the hook
  * calls to virtual methods of the NCursesMenu class,
- * so in C++ providing a hook is done simply by 
+ * so in C++ providing a hook is done simply by
  * implementing a virtual method in a derived class
  */
 void
@@ -91,21 +92,21 @@ NCursesMenu::itm_term(MENU *m) {
 ITEM**
 NCursesMenu::mapItems(NCursesMenuItem* nitems[]) {
   int itemCount = 0,lcv;
-  
+
   for (lcv=0; nitems[lcv]->item; ++lcv)
     ++itemCount;
-  
+
   ITEM** items = new ITEM*[itemCount + 1];
-  
+
   for (lcv=0;nitems[lcv]->item;++lcv) {
     items[lcv] = nitems[lcv]->item;
   }
   items[lcv] = NULL;
-  
+
   my_items = nitems;
-  
+
   if (menu)
-    delete[] ::menu_items(menu);  
+    delete[] ::menu_items(menu);
   return items;
 }
 
@@ -114,7 +115,7 @@ NCursesMenu::InitMenu(NCursesMenuItem* nitems[],
 		      bool with_frame,
 		      bool autoDelete_Items) {
   int mrows, mcols;
-  
+
   keypad(TRUE);
   meta(TRUE);
 
@@ -125,24 +126,24 @@ NCursesMenu::InitMenu(NCursesMenuItem* nitems[],
   menu = ::new_menu(mapItems(nitems));
   if (!menu)
     OnError (E_SYSTEM_ERROR);
-  
+
   UserHook* hook = new UserHook;
   hook->m_user   = NULL;
   hook->m_back   = this;
   hook->m_owner  = menu;
   ::set_menu_userptr(menu,(void*)hook);
-  
+
   ::set_menu_init (menu, NCursesMenu::mnu_init);
   ::set_menu_term (menu, NCursesMenu::mnu_term);
   ::set_item_init (menu, NCursesMenu::itm_init);
   ::set_item_term (menu, NCursesMenu::itm_term);
-  
+
   scale(mrows, mcols);
   ::set_menu_win(menu, w);
-  
+
   if (with_frame) {
     if ((mrows > height()-2) || (mcols > width()-2))
-      OnError(E_NO_ROOM);  
+      OnError(E_NO_ROOM);
     sub = new NCursesWindow(*this,mrows,mcols,1,1,'r');
     ::set_menu_sub(menu, sub->w);
     b_sub_owner = TRUE;
@@ -180,14 +181,14 @@ NCursesMenu::~NCursesMenu() {
     if (b_autoDelete) {
       if (cnt>0) {
 	for (int i=0; i <= cnt; i++)
-	  delete my_items[i];	 
+	  delete my_items[i];
       }
       delete[] my_items;
     }
 
     ::free_menu(menu);
     // It's essential to do this after free_menu()
-    delete[] itms;  
+    delete[] itms;
   }
 }
 
@@ -218,7 +219,7 @@ NCursesMenu::set_pattern (const char *pat) {
 }
 
 // call the menu driver and do basic error checking.
-int 
+int
 NCursesMenu::driver (int c) {
   int res = ::menu_driver (menu, c);
   switch (res) {
@@ -243,7 +244,7 @@ static const int CMD_ACTION = MAX_COMMAND + 2;
 // The default implementation provides a hopefully straightforward
 // mapping for the most common keystrokes and menu requests.
 // -------------------------------------------------------------------------
-int 
+int
 NCursesMenu::virtualize(int c) {
   switch(c) {
   case CTRL('X')     : return(CMD_QUIT);              // eXit
@@ -291,8 +292,8 @@ NCursesMenu::operator()(void) {
   show();
   refresh();
   
-  while (!b_action && ((drvCmnd = virtualize((c=getch()))) != CMD_QUIT)) {
-
+  while (!b_action && ((drvCmnd = virtualize((c=getKey()))) != CMD_QUIT)) {
+    
     switch((err=driver(drvCmnd))) {
     case E_REQUEST_DENIED:
       On_Request_Denied(c);
@@ -363,21 +364,20 @@ NCursesMenu::On_Item_Termination(NCursesMenuItem& item) {
 
 void
 NCursesMenu::On_Request_Denied(int c) const {
-  beep();
+  ::beep();
 }
 
 void
 NCursesMenu::On_Not_Selectable(int c) const {
-  beep();
+  ::beep();
 }
 
 void
 NCursesMenu::On_No_Match(int c) const {
-  beep();
+  ::beep();
 }
 
 void
 NCursesMenu::On_Unknown_Command(int c) const {
-  beep();
+  ::beep();
 }
-

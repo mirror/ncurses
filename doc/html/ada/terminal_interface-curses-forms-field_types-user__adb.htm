@@ -37,100 +37,101 @@
 <FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
 <FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>--  Author: <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> &lt;<A HREF="mailto:juergen.pfeifer@gmx.net">&lt;juergen.pfeifer@gmx.net&gt;</A>&gt; 1996</EM></FONT>
+<FONT COLOR=green><EM>--  Author:  <A HREF="http://www.familiepfeifer.de/juergen">J&uuml;rgen Pfeifer</A>, 1996</EM></FONT>
+<FONT COLOR=green><EM>--  Contact: <A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">www.familiepfeifer.de/Contact.aspx?Lang=en</A></EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.8 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.9 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> Ada.Unchecked_Conversion;
 <b>with</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C;
-<b>with</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#50_35">Aux</A>; <b>use</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#50_35">Aux</A>;
+<b>with</b> <A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#51_35">Aux</A>; <b>use</b> <A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#51_35">Aux</A>;
 
-<b>package</b> <b>body</b> Terminal_Interface.Curses.Forms.Field_Types.<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#43_53">User</A><FONT COLOR=red><A NAME="45_58"></A></FONT> <b>is</b>
+<b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#44_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#44_53">User</A><FONT COLOR=red><A NAME="46_58"></A></FONT> <b>is</b>
 
    <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_14">Set_Field_Type</A><FONT COLOR=red><A NAME="49_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_30">Fld</A> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
-                             <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#71_30">Typ</A> : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>)
+   <b>procedure</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#71_14">Set_Field_Type</A><FONT COLOR=red><A NAME="50_14"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#71_30">Fld</A> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+                             <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#72_30">Typ</A> : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#49_9">User_Defined_Field_Type</A>)
    <b>is</b>
-      <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#63_16">Allocate_Arg</A><FONT COLOR=red><A NAME="52_16"></A></FONT> (<FONT COLOR=red><A NAME="52_30">T</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>'Class)
-                             <b>return</b> Argument_Access;
+      <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#64_16">Allocate_Arg</A><FONT COLOR=red><A NAME="53_16"></A></FONT> (<FONT COLOR=red><A NAME="53_30">T</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#49_9">User_Defined_Field_Type</A>'Class)
+                             <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#217_9">Argument_Access</A>;
 
-      <b>function</b> <FONT COLOR=red><A NAME="55_16">Set_Fld_Type</A></FONT> (<FONT COLOR=red><A NAME="55_30">F</A></FONT>    : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#70_30">Fld</A>;
-                             Cft  : C_Field_Type := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#81_13">C_Generic_Type</A>;
-                             Arg1 : Argument_Access)
-                             <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#55_16">Set_Fld_Type</A>, "set_field_type");
+      <b>function</b> <FONT COLOR=red><A NAME="56_16">Set_Fld_Type</A></FONT> (<FONT COLOR=red><A NAME="56_30">F</A></FONT>    : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#71_30">Fld</A>;
+                             <FONT COLOR=red><A NAME="57_30">Cft</A></FONT>  : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#133_9">C_Field_Type</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#82_13">C_Generic_Type</A>;
+                             <FONT COLOR=red><A NAME="58_30">Arg1</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#217_9">Argument_Access</A>)
+                             <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#47_12">C_Int</A>;
+      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#56_16">Set_Fld_Type</A>, "set_field_type");
 
-      <FONT COLOR=red><A NAME="61_7">Res</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#78_12">Eti_Error</A>;
+      <FONT COLOR=red><A NAME="62_7">Res</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#79_12">Eti_Error</A>;
 
-      <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#52_16">Allocate_Arg</A><FONT COLOR=red><A NAME="63_16"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#52_30">T</A> : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>'Class)
-                             <b>return</b> Argument_Access
+      <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#53_16">Allocate_Arg</A><FONT COLOR=red><A NAME="64_16"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#53_30">T</A> : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#49_9">User_Defined_Field_Type</A>'Class)
+                             <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#217_9">Argument_Access</A>
       <b>is</b>
-         Ptr : Field_Type_Access := <b>new</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#48_9">User_Defined_Field_Type</A>'Class'(<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#52_30">T</A>);
+         <FONT COLOR=red><A NAME="67_10">Ptr</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#64_9">Field_Type_Access</A> := <b>new</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#49_9">User_Defined_Field_Type</A>'Class'(<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#53_30">T</A>);
       <b>begin</b>
-         <b>return</b> <b>new</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#211_9">Argument</A>'(Usr =&gt; System.Null_Address,
-                              Typ =&gt; Ptr,
-                              Cft =&gt; Null_Field_Type);
+         <b>return</b> <b>new</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#212_9">Argument</A>'(Usr =&gt; System.Null_Address,
+                              Typ =&gt; <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#67_10">Ptr</A>,
+                              Cft =&gt; <A HREF="terminal_interface-curses-forms-field_types__ads.htm#135_4">Null_Field_Type</A>);
       <b>end</b> Allocate_Arg;
 
    <b>begin</b>
-      <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#61_7">Res</A> := <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#55_16">Set_Fld_Type</A> (Arg1 =&gt; <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#52_16">Allocate_Arg</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#71_30">Typ</A>));
-      <b>if</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#61_7">Res</A> /= <A HREF="terminal_interface-curses-aux__ads.htm#80_4">E_Ok</A> <b>then</b>
-         <A HREF="terminal_interface-curses-aux__ads.htm#96_14">Eti_Exception</A> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#61_7">Res</A>);
+      <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#62_7">Res</A> := <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#56_16">Set_Fld_Type</A> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#58_30">Arg1</A> =&gt; <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#53_16">Allocate_Arg</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#72_30">Typ</A>));
+      <b>if</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#62_7">Res</A> /= <A HREF="terminal_interface-curses-aux__ads.htm#81_4">E_Ok</A> <b>then</b>
+         <A HREF="terminal_interface-curses-aux__ads.htm#97_14">Eti_Exception</A> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#62_7">Res</A>);
       <b>end</b> <b>if</b>;
    <b>end</b> Set_Field_Type;
 
-   <b>function</b> <FONT COLOR=red><A NAME="80_13">To_Argument_Access</A></FONT> <b>is</b> <b>new</b> Ada.Unchecked_Conversion
-     (System.Address, Argument_Access);
+   <b>function</b> <FONT COLOR=red><A NAME="81_13">To_Argument_Access</A></FONT> <b>is</b> <b>new</b> Ada.Unchecked_Conversion
+     (System.Address, <A HREF="terminal_interface-curses-forms-field_types__ads.htm#217_9">Argument_Access</A>);
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_13">Generic_Field_Check</A><FONT COLOR=red><A NAME="83_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_34">Fld</A> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
-                                 <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#84_34">Usr</A> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A>
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#84_13">Generic_Field_Check</A><FONT COLOR=red><A NAME="84_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#84_34">Fld</A> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
+                                 <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#85_34">Usr</A> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#47_12">C_Int</A>
    <b>is</b>
-      <FONT COLOR=red><A NAME="86_7">Result</A></FONT> : Boolean;
-      Udf    : User_Defined_Field_Type_Access :=
-        User_Defined_Field_Type_Access (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#80_13">To_Argument_Access</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#84_34">Usr</A>).Typ);
+      <FONT COLOR=red><A NAME="87_7">Result</A></FONT> : Boolean;
+      <FONT COLOR=red><A NAME="88_7">Udf</A></FONT>    : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#54_9">User_Defined_Field_Type_Access</A> :=
+        <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#54_9">User_Defined_Field_Type_Access</A> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#81_13">To_Argument_Access</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#85_34">Usr</A>).<A HREF="terminal_interface-curses-forms-field_types__ads.htm#213_7">Typ</A>);
    <b>begin</b>
-      <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#86_7">Result</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#56_13">Field_Check</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_34">Fld</A>, Udf.<b>all</b>);
-      <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A> (Boolean'Pos (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#86_7">Result</A>));
+      <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#87_7">Result</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#57_13">Field_Check</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#84_34">Fld</A>, <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#88_7">Udf</A>.<b>all</b>);
+      <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#47_12">C_Int</A> (Boolean'Pos (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#87_7">Result</A>));
    <b>end</b> Generic_Field_Check;
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#90_13">Generic_Char_Check</A><FONT COLOR=red><A NAME="94_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#90_33">Ch</A>  : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A>;
-                                <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#91_33">Usr</A> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A>
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#91_13">Generic_Char_Check</A><FONT COLOR=red><A NAME="95_13"></A></FONT> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#91_33">Ch</A>  : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#47_12">C_Int</A>;
+                                <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#92_33">Usr</A> : System.Address) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#47_12">C_Int</A>
    <b>is</b>
-      <FONT COLOR=red><A NAME="97_7">Result</A></FONT> : Boolean;
-      Udf    : User_Defined_Field_Type_Access :=
-        User_Defined_Field_Type_Access (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#80_13">To_Argument_Access</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#91_33">Usr</A>).Typ);
+      <FONT COLOR=red><A NAME="98_7">Result</A></FONT> : Boolean;
+      <FONT COLOR=red><A NAME="99_7">Udf</A></FONT>    : <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#54_9">User_Defined_Field_Type_Access</A> :=
+        <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#54_9">User_Defined_Field_Type_Access</A> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#81_13">To_Argument_Access</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#92_33">Usr</A>).<A HREF="terminal_interface-curses-forms-field_types__ads.htm#213_7">Typ</A>);
    <b>begin</b>
-      <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#97_7">Result</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#63_13">Character_Check</A> (Character'Val (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#90_33">Ch</A>), Udf.<b>all</b>);
-      <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#46_12">C_Int</A> (Boolean'Pos (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#97_7">Result</A>));
+      <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#98_7">Result</A> := <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#64_13">Character_Check</A> (Character'Val (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#91_33">Ch</A>), <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#99_7">Udf</A>.<b>all</b>);
+      <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#47_12">C_Int</A> (Boolean'Pos (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#98_7">Result</A>));
    <b>end</b> Generic_Char_Check;
 
    <FONT COLOR=green><EM>--  -----------------------------------------------------------------------</EM></FONT>
    <FONT COLOR=green><EM>--</EM></FONT>
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#81_13">C_Generic_Type</A><FONT COLOR=red><A NAME="107_13"></A></FONT> <b>return</b> C_Field_Type
+   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#82_13">C_Generic_Type</A><FONT COLOR=red><A NAME="108_13"></A></FONT> <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#133_9">C_Field_Type</A>
    <b>is</b>
-      <FONT COLOR=red><A NAME="109_7">Res</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#78_12">Eti_Error</A>;
-      T   : C_Field_Type;
+      <FONT COLOR=red><A NAME="110_7">Res</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#79_12">Eti_Error</A>;
+      <FONT COLOR=red><A NAME="111_7">T</A></FONT>   : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#133_9">C_Field_Type</A>;
    <b>begin</b>
-      <b>if</b> M_Generic_Type = Null_Field_Type <b>then</b>
-         T := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#222_13">New_Fieldtype</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#83_13">Generic_Field_Check</A>'<b>Access</b>,
-                             <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#90_13">Generic_Char_Check</A>'<b>Access</b>);
-         <b>if</b> T = Null_Field_Type <b>then</b>
-            <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#288_4">Form_Exception</A>;
+      <b>if</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#142_4">M_Generic_Type</A> = <A HREF="terminal_interface-curses-forms-field_types__ads.htm#135_4">Null_Field_Type</A> <b>then</b>
+         <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#111_7">T</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#223_13">New_Fieldtype</A> (<A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#84_13">Generic_Field_Check</A>'<b>Access</b>,
+                             <A HREF="terminal_interface-curses-forms-field_types-user__ads.htm#91_13">Generic_Char_Check</A>'<b>Access</b>);
+         <b>if</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#111_7">T</A> = <A HREF="terminal_interface-curses-forms-field_types__ads.htm#135_4">Null_Field_Type</A> <b>then</b>
+            <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#289_4">Form_Exception</A>;
          <b>else</b>
-            <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#109_7">Res</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#227_13">Set_Fieldtype_Arg</A> (T,
-                                      <A HREF="terminal_interface-curses-forms-field_types__ads.htm#162_13">Make_Arg</A>'<b>Access</b>,
-                                      <A HREF="terminal_interface-curses-forms-field_types__ads.htm#167_13">Copy_Arg</A>'<b>Access</b>,
-                                      <A HREF="terminal_interface-curses-forms-field_types__ads.htm#172_14">Free_Arg</A>'<b>Access</b>);
-            <b>if</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#109_7">Res</A> /= <A HREF="terminal_interface-curses-aux__ads.htm#80_4">E_Ok</A> <b>then</b>
-               <A HREF="terminal_interface-curses-aux__ads.htm#96_14">Eti_Exception</A> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#109_7">Res</A>);
+            <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#110_7">Res</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#228_13">Set_Fieldtype_Arg</A> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#111_7">T</A>,
+                                      <A HREF="terminal_interface-curses-forms-field_types__ads.htm#163_13">Make_Arg</A>'<b>Access</b>,
+                                      <A HREF="terminal_interface-curses-forms-field_types__ads.htm#168_13">Copy_Arg</A>'<b>Access</b>,
+                                      <A HREF="terminal_interface-curses-forms-field_types__ads.htm#173_14">Free_Arg</A>'<b>Access</b>);
+            <b>if</b> <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#110_7">Res</A> /= <A HREF="terminal_interface-curses-aux__ads.htm#81_4">E_Ok</A> <b>then</b>
+               <A HREF="terminal_interface-curses-aux__ads.htm#97_14">Eti_Exception</A> (<A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#110_7">Res</A>);
             <b>end</b> <b>if</b>;
          <b>end</b> <b>if</b>;
-         M_Generic_Type := T;
+         <A HREF="terminal_interface-curses-forms-field_types__ads.htm#142_4">M_Generic_Type</A> := <A HREF="terminal_interface-curses-forms-field_types-user__adb.htm#111_7">T</A>;
       <b>end</b> <b>if</b>;
-      <b>pragma</b> Assert (M_Generic_Type /= Null_Field_Type);
-      <b>return</b> M_Generic_Type;
+      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-forms-field_types__ads.htm#142_4">M_Generic_Type</A> /= <A HREF="terminal_interface-curses-forms-field_types__ads.htm#135_4">Null_Field_Type</A>);
+      <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#142_4">M_Generic_Type</A>;
    <b>end</b> C_Generic_Type;
 
 <b>end</b> Terminal_Interface.Curses.Forms.Field_Types.User;

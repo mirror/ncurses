@@ -1,22 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  ****************************************************************************
+  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: curs_delch.3x,v 1.7 2000/07/01 19:55:37 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>curs_delch 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>curs_delch 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>delch</B>,  <B>wdelch</B>, <B>mvdelch</B>, <B>mvwdelch</B> - delete character under
-       the cursor in a <B>curses</B> window
+       <STRONG>delch</STRONG>,  <STRONG>wdelch</STRONG>, <STRONG>mvdelch</STRONG>, <STRONG>mvwdelch</STRONG> - delete character under
+       the cursor in a <STRONG>curses</STRONG> window
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>delch(void);</B>
-       <B>int</B> <B>wdelch(WINDOW</B> <B>*win);</B>
-       <B>int</B> <B>mvdelch(int</B> <B>y,</B> <B>int</B> <B>x);</B>
-       <B>int</B> <B>mvwdelch(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x);</B>
+       <STRONG>int</STRONG> <STRONG>delch(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wdelch(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvdelch(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwdelch(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
 
 
 </PRE>
@@ -25,33 +63,33 @@
        characters to the right of the cursor on the same line are
        moved to the left one position and the last  character  on
        the line is filled with a blank.  The cursor position does
-       not change (after moving to <I>y</I>, <I>x</I>,  if  specified).   (This
+       not change (after moving to <EM>y</EM>, <EM>x</EM>,  if  specified).   (This
        does  not  imply use of the hardware delete character fea-
        ture.)
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       All routines return the integer <B>ERR</B> upon failure and an <B>OK</B>
-       (SVr4  specifies  only  "an integer value other than <B>ERR</B>")
+       All routines return the integer <STRONG>ERR</STRONG> upon failure and an <STRONG>OK</STRONG>
+       (SVr4  specifies  only  "an integer value other than <STRONG>ERR</STRONG>")
        upon successful completion.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       Note that <B>delch</B>, <B>mvdelch</B>, and <B>mvwdelch</B> may be macros.
+       Note that <STRONG>delch</STRONG>, <STRONG>mvdelch</STRONG>, and <STRONG>mvwdelch</STRONG> may be macros.
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
        These functions are described in the XSI Curses  standard,
-       Issue  4.   The standard specifies that they return <B>ERR</B> on
+       Issue  4.   The standard specifies that they return <STRONG>ERR</STRONG> on
        failure, but specifies no error conditions.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
 
 

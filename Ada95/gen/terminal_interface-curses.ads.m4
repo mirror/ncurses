@@ -35,9 +35,10 @@ include(M4MACRO)----------------------------------------------------------------
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+--  Author:  Juergen Pfeifer, 1996
+--  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control:
---  $Revision: 1.28 $
+--  $Revision: 1.30 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Base_Defs')
@@ -95,7 +96,7 @@ include(`Old_Keys')dnl
 
 ------------------------------------------------------------------------------
 
-   type Color_Number is range 0 .. Integer (Interfaces.C.short'Last);
+   type Color_Number is range -1 .. Integer (Interfaces.C.short'Last);
    for Color_Number'Size use Interfaces.C.short'Size;
    --  (n)curses uses a short for the color index
    --  The model is, that a Color_Number is an index into an array of
@@ -198,7 +199,7 @@ include(`AC_Rep')
 include(`ACS_Map')dnl
 
    --  MANPAGE(`curs_initscr.3x')
-   --  | Not implemented: newterm, set_term, delscreen
+   --  | Not implemented: newterm, set_term, delscreen, curscr
 
    --  ANCHOR(`stdscr',`Standard_Window')
    function Standard_Window return Window;
@@ -233,6 +234,7 @@ include(`ACS_Map')dnl
                           Line   : in Line_Position;
                           Column : in Column_Position);
    --  AKA
+   --  ALIAS(`move()')
    pragma Inline (Move_Cursor);
 
    --  MANPAGE(`curs_addch.3x')
@@ -241,6 +243,7 @@ include(`ACS_Map')dnl
    procedure Add (Win :  in Window := Standard_Window;
                   Ch  :  in Attributed_Character);
    --  AKA
+   --  ALIAS(`addch()')
 
    procedure Add (Win :  in Window := Standard_Window;
                   Ch  :  in Character);
@@ -254,6 +257,7 @@ include(`ACS_Map')dnl
       Column : in Column_Position;
       Ch     : in Attributed_Character);
    --  AKA
+   --  ALIAS(`mvaddch()')
 
    procedure Add
      (Win    : in Window := Standard_Window;
@@ -268,6 +272,7 @@ include(`ACS_Map')dnl
      (Win : in Window := Standard_Window;
       Ch  : in Attributed_Character);
    --  AKA
+   --  ALIAS(`echochar()')
 
    procedure Add_With_Immediate_Echo
      (Win : in Window := Standard_Window;
@@ -276,6 +281,7 @@ include(`ACS_Map')dnl
    pragma Inline (Add_With_Immediate_Echo);
 
    --  MANPAGE(`curs_window.3x')
+   --  Not Implemented: wcursyncup
 
    --  ANCHOR(`newwin()',`Create')
    function Create
@@ -283,6 +289,8 @@ include(`ACS_Map')dnl
       Number_Of_Columns     : Column_Count;
       First_Line_Position   : Line_Position;
       First_Column_Position : Column_Position) return Window;
+   --  Not Implemented: Default Number_Of_Lines, Number_Of_Columns
+   --  the C version lets them be 0, see the man page.
    --  AKA
    pragma Inline (Create);
 
@@ -363,6 +371,8 @@ include(`ACS_Map')dnl
                   Len : in Integer := -1);
    --  AKA
    --  ALIAS(`waddstr()')
+   --  ALIAS(`addnstr()')
+   --  ALIAS(`addstr()')
 
    --  ANCHOR(`mvwaddnstr()',`Add')
    procedure Add (Win    : in Window := Standard_Window;
@@ -372,6 +382,8 @@ include(`ACS_Map')dnl
                   Len    : in Integer := -1);
    --  AKA
    --  ALIAS(`mvwaddstr()')
+   --  ALIAS(`mvaddnstr()')
+   --  ALIAS(`mvaddstr()')
 
    --  MANPAGE(`curs_addchstr.3x')
 
@@ -381,6 +393,8 @@ include(`ACS_Map')dnl
                   Len : in Integer := -1);
    --  AKA
    --  ALIAS(`waddchstr()')
+   --  ALIAS(`addchnstr()')
+   --  ALIAS(`addchstr()')
 
    --  ANCHOR(`mvwaddchnstr()',`Add')
    procedure Add (Win    : in Window := Standard_Window;
@@ -390,9 +404,13 @@ include(`ACS_Map')dnl
                   Len    : in Integer := -1);
    --  AKA
    --  ALIAS(`mvwaddchstr()')
+   --  ALIAS(`mvaddchnstr()')
+   --  ALIAS(`mvaddchstr()')
    pragma Inline (Add);
 
    --  MANPAGE(`curs_border.3x')
+   --  | Not implemented: mvhline,  mvwhline, mvvline, mvwvline
+   --  | use Move_Cursor then Horizontal_Line or Vertical_Line
 
    --  ANCHOR(`wborder()',`Border')
    procedure Border
@@ -407,6 +425,7 @@ include(`ACS_Map')dnl
       Lower_Right_Corner_Symbol : in Attributed_Character := Default_Character
      );
    --  AKA
+   --  ALIAS(`border()')
    pragma Inline (Border);
 
    --  ANCHOR(`box()',`Box')
@@ -423,6 +442,7 @@ include(`ACS_Map')dnl
       Line_Size   : in Natural;
       Line_Symbol : in Attributed_Character := Default_Character);
    --  AKA
+   --  ALIAS(`hline()')
    pragma Inline (Horizontal_Line);
 
    --  ANCHOR(`wvline()',`Vertical_Line')
@@ -431,14 +451,17 @@ include(`ACS_Map')dnl
       Line_Size   : in Natural;
       Line_Symbol : in Attributed_Character := Default_Character);
    --  AKA
+   --  ALIAS(`vline()')
    pragma Inline (Vertical_Line);
 
    --  MANPAGE(`curs_getch.3x')
+   --  Not implemented: mvgetch, mvwgetch
 
    --  ANCHOR(`wgetch()',`Get_Keystroke')
    function Get_Keystroke (Win : Window := Standard_Window)
                            return Real_Key_Code;
    --  AKA
+   --  ALIAS(`getch()')
    --  Get a character from the keyboard and echo it - if enabled - to the
    --  window.
    --  If for any reason (i.e. a timeout) we couldn't get a character the
@@ -475,14 +498,28 @@ include(`ACS_Map')dnl
    pragma Inline (Function_Key_Code);
 
    --  MANPAGE(`curs_attr.3x')
+   --  | Not implemented attr_off,  wattr_off,
+   --  |  attr_on, wattr_on, attr_set, wattr_set
+
+   --  PAIR_NUMBER
+   --  PAIR_NUMBER(c) is the same as c.Color
+
+   --  ANCHOR(`standout()',`Standout')
+   procedure Standout (Win : Window  := Standard_Window;
+                       On  : Boolean := True);
+   --  ALIAS(`wstandout()')
+   --  ALIAS(`wstandend()')
 
    --  ANCHOR(`wattron()',`Switch_Character_Attribute')
    procedure Switch_Character_Attribute
      (Win  : in Window := Standard_Window;
       Attr : in Character_Attribute_Set := Normal_Video;
       On   : in Boolean := True); --  if False we switch Off.
+   --  Switches those Attributes set to true in the list.
    --  AKA
    --  ALIAS(`wattroff()')
+   --  ALIAS(`attron()')
+   --  ALIAS(`attroff()')
 
    --  ANCHOR(`wattrset()',`Set_Character_Attributes')
    procedure Set_Character_Attributes
@@ -490,12 +527,14 @@ include(`ACS_Map')dnl
       Attr  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   --  ALIAS(`attrset()')
    pragma Inline (Set_Character_Attributes);
 
    --  ANCHOR(`wattr_get()',`Get_Character_Attributes')
    function Get_Character_Attribute
      (Win : in Window := Standard_Window) return Character_Attribute_Set;
    --  AKA
+   --  ALIAS(`attr_get()')
 
    --  ANCHOR(`wattr_get()',`Get_Character_Attribute')
    function Get_Character_Attribute
@@ -507,6 +546,7 @@ include(`ACS_Map')dnl
    procedure Set_Color (Win  : in Window := Standard_Window;
                         Pair : in Color_Pair);
    --  AKA
+   --  ALIAS(`color_set()')
    pragma Inline (Set_Color);
 
    --  ANCHOR(`wchgat()',`Change_Attributes')
@@ -516,6 +556,7 @@ include(`ACS_Map')dnl
       Attr  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   --  ALIAS(`chgat()')
 
    --  ANCHOR(`mvwchgat()',`Change_Attributes')
    procedure Change_Attributes
@@ -526,6 +567,7 @@ include(`ACS_Map')dnl
       Attr   : in Character_Attribute_Set := Normal_Video;
       Color  : in Color_Pair := Color_Pair'First);
    --  AKA
+   --  ALIAS(`mvchgat()')
    pragma Inline (Change_Attributes);
 
    --  MANPAGE(`curs_beep.3x')
@@ -574,6 +616,11 @@ include(`ACS_Map')dnl
    --  AKA
    pragma Inline (Set_KeyPad_Mode);
 
+   function Get_KeyPad_Mode (Win : in Window := Standard_Window)
+                             return Boolean;
+   --  This has no pendant in C. There you've to look into the WINDOWS
+   --  structure to get the value. Bad practice, not repeated in Ada.
+
    type Half_Delay_Amount is range 1 .. 255;
 
    --  ANCHOR(`halfdelay()',`Half_Delay')
@@ -610,6 +657,7 @@ include(`ACS_Map')dnl
                                Mode   : in Timeout_Mode;
                                Amount : in Natural); --  in Milliseconds
    --  AKA
+   --  ALIAS(`timeout()')
    --  Instead of overloading the semantic of the sign of amount, we
    --  introduce the Timeout_Mode parameter. This should improve
    --  readability. For Blocking and Non_Blocking, the Amount is not
@@ -683,6 +731,7 @@ include(`ACS_Map')dnl
       Top_Line    : in Line_Position;
       Bottom_Line : in Line_Position);
    --  AKA
+   --  ALIAS(`setscrreg()')
    pragma Inline (Set_Scroll_Region);
 
    --  MANPAGE(`curs_refresh.3x')
@@ -697,6 +746,7 @@ include(`ACS_Map')dnl
    --  AKA
    --  There is an overloaded Refresh for Pads.
    --  The Inline pragma appears there
+   --  ALIAS(`refresh()')
 
    --  ANCHOR(`wnoutrefresh()',`Refresh_Without_Update')
    procedure Refresh_Without_Update
@@ -721,33 +771,41 @@ include(`ACS_Map')dnl
    --  ANCHOR(`werase()',`Erase')
    procedure Erase (Win : in Window := Standard_Window);
    --  AKA
+   --  ALIAS(`erase()')
    pragma Inline (Erase);
 
    --  ANCHOR(`wclear()',`Clear')
    procedure Clear
      (Win : in Window := Standard_Window);
    --  AKA
+   --  ALIAS(`clear()')
    pragma Inline (Clear);
 
    --  ANCHOR(`wclrtobot()',`Clear_To_End_Of_Screen')
    procedure Clear_To_End_Of_Screen
      (Win : in Window := Standard_Window);
    --  AKA
+   --  ALIAS(`clrtobot()')
    pragma Inline (Clear_To_End_Of_Screen);
 
    --  ANCHOR(`wclrtoeol()',`Clear_To_End_Of_Line')
    procedure Clear_To_End_Of_Line
      (Win : in Window := Standard_Window);
    --  AKA
+   --  ALIAS(`clrtoeol()')
    pragma Inline (Clear_To_End_Of_Line);
 
    --  MANPAGE(`curs_bkgd.3x')
 
    --  ANCHOR(`wbkgdset()',`Set_Background')
+   --  TODO: we could have Set_Background(Window; Character_Attribute_Set)
+   --  because in C it is common to see bkgdset(A_BOLD) or
+   --  bkgdset(COLOR_PAIR(n))
    procedure Set_Background
      (Win : in Window := Standard_Window;
       Ch  : in Attributed_Character);
    --  AKA
+   --  ALIAS(`bkgdset()')
    pragma Inline (Set_Background);
 
    --  ANCHOR(`wbkgd()',`Change_Background')
@@ -755,12 +813,15 @@ include(`ACS_Map')dnl
      (Win : in Window := Standard_Window;
       Ch  : in Attributed_Character);
    --  AKA
+   --  ALIAS(`bkgd()')
    pragma Inline (Change_Background);
 
    --  ANCHOR(`wbkgdget()',`Get_Background')
+   --  ? wbkgdget is not listed in curs_bkgd, getbkgd is thpough.
    function Get_Background (Win : Window := Standard_Window)
      return Attributed_Character;
    --  AKA
+   --  ALIAS(`bkgdget()')
    pragma Inline (Get_Background);
 
    --  MANPAGE(`curs_touch.3x')
@@ -834,16 +895,19 @@ include(`ACS_Map')dnl
      (Win   : in Window  := Standard_Window;
       Lines : in Integer := 1); --  default is to insert one line above
    --  AKA
+   --  ALIAS(`insdelln()')
    pragma Inline (Insert_Delete_Lines);
 
    --  ANCHOR(`wdeleteln()',`Delete_Line')
    procedure Delete_Line (Win : in Window := Standard_Window);
    --  AKA
+   --  ALIAS(`deleteln()')
    pragma Inline (Delete_Line);
 
    --  ANCHOR(`winsertln()',`Insert_Line')
    procedure Insert_Line (Win : in Window := Standard_Window);
    --  AKA
+   --  ALIAS(`insertln()')
    pragma Inline (Insert_Line);
 
    --  MANPAGE(`curs_getyx.3x')
@@ -942,6 +1006,8 @@ include(`ACS_Map')dnl
    procedure Scroll (Win    : in Window  := Standard_Window;
                      Amount : in Integer := 1);
    --  AKA
+   --  ALIAS(`scroll()')
+   --  ALIAS(`scrl()')
    pragma Inline (Scroll);
 
    --  MANPAGE(`curs_delch.3x')
@@ -949,6 +1015,7 @@ include(`ACS_Map')dnl
    --  ANCHOR(`wdelch()',`Delete_Character')
    procedure Delete_Character (Win : in Window := Standard_Window);
    --  AKA
+   --  ALIAS(`delch()')
 
    --  ANCHOR(`mvwdelch()',`Delete_Character')
    procedure Delete_Character
@@ -956,6 +1023,7 @@ include(`ACS_Map')dnl
       Line   : in Line_Position;
       Column : in Column_Position);
    --  AKA
+   --  ALIAS(`mvdelch()')
    pragma Inline (Delete_Character);
 
    --  MANPAGE(`curs_inch.3x')
@@ -963,6 +1031,7 @@ include(`ACS_Map')dnl
    --  ANCHOR(`winch()',`Peek')
    function Peek (Win : Window := Standard_Window)
      return Attributed_Character;
+   --  ALIAS(`inch()')
    --  AKA
 
    --  ANCHOR(`mvwinch()',`Peek')
@@ -971,14 +1040,16 @@ include(`ACS_Map')dnl
       Line   : Line_Position;
       Column : Column_Position) return Attributed_Character;
    --  AKA
+   --  ALIAS(`mvinch()')
    --  More Peek's follow, pragma Inline appears later.
 
-   --  MANPAGE(`curs_winch.3x')
+   --  MANPAGE(`curs_insch.3x')
 
    --  ANCHOR(`winsch()',`Insert')
    procedure Insert (Win : in Window := Standard_Window;
                      Ch  : in Attributed_Character);
    --  AKA
+   --  ALIAS(`insch()')
 
    --  ANCHOR(`mvwinsch()',`Insert')
    procedure Insert (Win    : in Window := Standard_Window;
@@ -986,8 +1057,9 @@ include(`ACS_Map')dnl
                      Column : in Column_Position;
                      Ch     : in Attributed_Character);
    --  AKA
+   --  ALIAS(`mvinsch()')
 
-   --  MANPAGE(`curs_winch.3x')
+   --  MANPAGE(`curs_insstr.3x')
 
    --  ANCHOR(`winsnstr()',`Insert')
    procedure Insert (Win : in Window := Standard_Window;
@@ -995,6 +1067,8 @@ include(`ACS_Map')dnl
                      Len : in Integer := -1);
    --  AKA
    --  ALIAS(`winsstr()')
+   --  ALIAS(`insnstr()')
+   --  ALIAS(`insstr()')
 
    --  ANCHOR(`mvwinsnstr()',`Insert')
    procedure Insert (Win    : in Window := Standard_Window;
@@ -1004,6 +1078,8 @@ include(`ACS_Map')dnl
                      Len    : in Integer := -1);
    --  AKA
    --  ALIAS(`mvwinsstr()')
+   --  ALIAS(`mvinsnstr()')
+   --  ALIAS(`mvinsstr()')
    pragma Inline (Insert);
 
    --  MANPAGE(`curs_instr.3x')
@@ -1014,6 +1090,8 @@ include(`ACS_Map')dnl
                    Len : in  Integer := -1);
    --  AKA
    --  ALIAS(`winstr()')
+   --  ALIAS(`innstr()')
+   --  ALIAS(`instr()')
 
    --  ANCHOR(`mvwinnstr()',`Peek')
    procedure Peek (Win    : in  Window := Standard_Window;
@@ -1023,6 +1101,8 @@ include(`ACS_Map')dnl
                    Len    : in  Integer := -1);
    --  AKA
    --  ALIAS(`mvwinstr()')
+   --  ALIAS(`mvinnstr()')
+   --  ALIAS(`mvinstr()')
 
    --  MANPAGE(`curs_inchstr.3x')
 
@@ -1032,6 +1112,8 @@ include(`ACS_Map')dnl
                    Len : in  Integer := -1);
    --  AKA
    --  ALIAS(`winchstr()')
+   --  ALIAS(`inchnstr()')
+   --  ALIAS(`inchstr()')
 
    --  ANCHOR(`mvwinchnstr()',`Peek')
    procedure Peek (Win    : in  Window := Standard_Window;
@@ -1041,6 +1123,8 @@ include(`ACS_Map')dnl
                    Len    : in  Integer := -1);
    --  AKA
    --  ALIAS(`mvwinchstr()')
+   --  ALIAS(`mvinchnstr()')
+   --  ALIAS(`mvinchstr()')
    --  We don't inline the Peek procedures
 
    --  MANPAGE(`curs_getstr.3x')
@@ -1051,18 +1135,26 @@ include(`ACS_Map')dnl
                   Len : in  Integer := -1);
    --  AKA
    --  ALIAS(`wgetstr()')
+   --  ALIAS(`getnstr()')
+   --  ALIAS(`getstr()')
+   --  actually getstr is not supported because that results in buffer
+   --  overflows.
 
+   --  ANCHOR(`mvwgetnstr()',`Get')
    procedure Get (Win    : in  Window := Standard_Window;
                   Line   : in  Line_Position;
                   Column : in  Column_Position;
                   Str    : out String;
                   Len    : in  Integer := -1);
    --  AKA
-   --  not specified in ncurses, should be: mvwgetnstr()
-   --       and mvwgetstr() (which exists)
+   --  ALIAS(`mvwgetstr()')
+   --  ALIAS(`mvgetnstr()')
+   --  ALIAS(`mvgetstr()')
    --  Get is not inlined
 
    --  MANPAGE(`curs_slk.3x')
+
+   --  Not Implemented: slk_attr_on, slk_attr_off, slk_attr_set
 
    type Soft_Label_Key_Format is (Three_Two_Three,
                                   Four_Four,
@@ -1149,6 +1241,9 @@ include(`ACS_Map')dnl
    --  AKA
    pragma Inline (Set_Soft_Label_Key_Color);
 
+   --  MANPAGE(`keybound.3x')
+   --  Not Implemented: keybound
+
    --  MANPAGE(`keyok.3x')
 
    --  ANCHOR(`keyok()',`Enable_Key')
@@ -1167,8 +1262,10 @@ include(`ACS_Map')dnl
 
    --  MANPAGE(`curs_util.3x')
 
-   --  | Not implemented : filter, use_env, putwin, getwin
+   --  | Not implemented : filter, use_env
+   --  | putwin, getwin are in the child package PutWin
    --
+
    --  ANCHOR(`keyname()',`Key_Name')
    procedure Key_Name (Key  : in  Real_Key_Code;
                        Name : out String);
@@ -1256,6 +1353,12 @@ include(`ACS_Map')dnl
 
    --  MANPAGE(`curs_color.3x')
 
+   --  COLOR_PAIR
+   --  COLOR_PAIR(n) in C is the same as
+   --  Attributed_Character(Ch => Nul, Color => n, Attr => Normal_Video)
+   --  In C you often see something like c = c | COLOR_PAIR(n);
+   --  This is equivalent to c.Color := n;
+
    --  ANCHOR(`start_color()',`Start_Color')
    procedure Start_Color;
    --  AKA
@@ -1302,7 +1405,6 @@ include(`ACS_Map')dnl
    pragma Inline (Color_Content);
 
    --  MANPAGE(`curs_kernel.3x')
-
    --  | Not implemented: getsyx, setsyx
    --
    type Curses_Mode is (Curses, Shell);
@@ -1374,6 +1476,73 @@ include(`ACS_Map')dnl
    --  An Curses_Exception will be raised if Line and Column are not in the
    --  Window or if you pass the Null_Window as argument.
    --  We don't inline this procedure
+
+   --  MANPAGE(`dft_fgbg.3x')
+
+   --  ANCHOR(`use_default_colors()',`Use_Default_Colors')
+   procedure Use_Default_Colors;
+   --  AKA
+   pragma Inline (Use_Default_Colors);
+
+   --  ANCHOR(`assume_default_colors()',`Assume_Default_Colors')
+   procedure Assume_Default_Colors (Fore : Color_Number := Default_Color;
+                                    Back : Color_Number := Default_Color);
+   --  AKA
+   pragma Inline (Assume_Default_Colors);
+
+   --  MANPAGE(`curs_extend.3x')
+
+   --  ANCHOR(`curses_version()',`Curses_Version')
+   function Curses_Version return String;
+   --  AKA
+
+   --  ANCHOR(`use_extended_names()',`Use_Extended_Names')
+   --  The returnvalue is the previous setting of the flag
+   function Use_Extended_Names (Enable : Boolean) return Boolean;
+   --  AKA
+
+   --  MANPAGE(`curs_scr_dump.3x')
+
+   --  ANCHOR(`scr_dump()',`Screen_Dump_To_File')
+   procedure Screen_Dump_To_File (Filename : in String);
+   --  AKA
+
+   --  ANCHOR(`scr_restore()',`Screen_Restore_From_File')
+   procedure Screen_Restore_From_File (Filename : in String);
+   --  AKA
+
+   --  ANCHOR(`scr_init()',`Screen_Init_From_File')
+   procedure Screen_Init_From_File (Filename : in String);
+   --  AKA
+
+   --  ANCHOR(`scr_set()',`Screen_Set_File')
+   procedure Screen_Set_File (Filename : in String);
+   --  AKA
+
+   --  MANPAGE(`curs_print.3x')
+   --  Not implemented:  mcprint
+
+   --  MANPAGE(`curs_printw.3x')
+   --  Not implemented: printw,  wprintw, mvprintw, mvwprintw, vwprintw,
+   --                   vw_printw
+   --  Please use the Ada style Text_IO child packages for formatted
+   --  printing. It doesn't make a lot of sense to map the printf style
+   --  C functions to Ada.
+
+   --  MANPAGE(`curs_scanw.3x')
+   --  Not implemented: scanw, wscanw, mvscanw, mvwscanw, vwscanw, vw_scanw
+
+
+   --  MANPAGE(`resizeterm.3x')
+   --  Not Implemented: resizeterm
+
+   --  MANPAGE(`wresize.3x')
+
+   --  ANCHOR(`wresize()',`Resize')
+   procedure Resize (Win               : Window := Standard_Window;
+                     Number_Of_Lines   : Line_Count;
+                     Number_Of_Columns : Column_Count);
+   --  AKA
 
 private
    type Window is new System.Storage_Elements.Integer_Address;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,8 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *  Author: Thomas E. Dickey 1996-2001                                      *
+ *     and: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  ****************************************************************************/
 
@@ -36,93 +37,110 @@
  */
 
 #include <curses.priv.h>
+#include <ctype.h>
 
-MODULE_ID("$Id: lib_tracedmp.c,v 1.13 1998/03/21 18:39:44 tom Exp $")
+MODULE_ID("$Id: lib_tracedmp.c,v 1.25 2002/09/22 22:21:38 tom Exp $")
 
 #ifdef TRACE
-void _tracedump(const char *name, WINDOW *win)
+NCURSES_EXPORT(void)
+_tracedump(const char *name, WINDOW *win)
 {
-    int	i, j, n, width;
+    static char *buf = 0;
+    static size_t used = 0;
+
+    int i, j, n, width;
 
     /* compute narrowest possible display width */
-    for (width = i = 0; i <= win->_maxy; i++)
-    {
+    for (width = i = 0; i <= win->_maxy; ++i) {
 	n = 0;
-	for (j = 0; j <= win->_maxx; j++)
-	  if (win->_line[i].text[j] != ' ')
-	    n = j;
+	for (j = 0; j <= win->_maxx; ++j)
+	    if (CharOf(win->_line[i].text[j]) != L(' ')
+		|| AttrOf(win->_line[i].text[j]) != A_NORMAL)
+		n = j;
 
 	if (n > width)
-	  width = n;
+	    width = n;
     }
     if (width < win->_maxx)
-      ++width;
+	++width;
+    if (++width + 1 > (int) used) {
+	used = 2 * (width + 1);
+	buf = typeRealloc(char, used, buf);
+    }
 
-    for (n = 0; n <= win->_maxy; n++)
-    {
-	char	buf[BUFSIZ], *ep;
+    for (n = 0; n <= win->_maxy; ++n) {
+	char *ep = buf;
 	bool haveattrs, havecolors;
 
-	/* dump A_CHARTEXT part */
-	(void) sprintf(buf, "%s[%2d] %3d%3d ='",
+	/*
+	 * Dump A_CHARTEXT part.  It is more important to make the grid line up
+	 * in the trace file than to represent control- and wide-characters, so
+	 * we map those to '.' and '?' respectively.
+	 */
+	for (j = 0; j < width; ++j) {
+	    chtype test = CharOf(win->_line[n].text[j]);
+	    ep[j] = (UChar(test) == test
+#if USE_WIDEC_SUPPORT
+		     && (win->_line[n].text[j].chars[1] == 0)
+#endif
+		)
+		? (iscntrl(UChar(test))
+		   ? '.'
+		   : UChar(test))
+		: '?';
+	}
+	ep[j] = '\0';
+	_tracef("%s[%2d] %3d%3d ='%s'",
 		name, n,
 		win->_line[n].firstchar,
-		win->_line[n].lastchar);
-	ep = buf + strlen(buf);
-	for (j = 0; j <= width; j++) {
-	    ep[j] = TextOf(win->_line[n].text[j]);
-	    if (ep[j] == 0)
-	    	ep[j] = '.';
-	}
-	ep[j] = '\'';
-	ep[j+1] = '\0';
-	_tracef("%s", buf);
+		win->_line[n].lastchar,
+		ep);
 
 	/* dump A_COLOR part, will screw up if there are more than 96 */
 	havecolors = FALSE;
-	for (j = 0; j <= width; j++)
-	    if (win->_line[n].text[j] & A_COLOR)
-	    {
+	for (j = 0; j < width; ++j)
+	    if (AttrOf(win->_line[n].text[j]) & A_COLOR) {
 		havecolors = TRUE;
 		break;
 	    }
-	if (havecolors)
-	{
-	    (void) sprintf(buf, "%*s[%2d]%*s='", (int)strlen(name), "colors", n, 8, " ");
-	    ep = buf + strlen(buf);
-	    for (j = 0; j <= width; j++)
-		ep[j] = ((win->_line[n].text[j] >> 8) & 0xff) + ' ';
-	    ep[j] = '\'';
-	    ep[j+1] = '\0';
-	    _tracef("%s", buf);
+	if (havecolors) {
+	    ep = buf;
+	    for (j = 0; j < width; ++j)
+		ep[j] = UChar(AttrOf(win->_line[n].text[j]) >>
+			      NCURSES_ATTR_SHIFT) + ' ';
+	    ep[j] = '\0';
+	    _tracef("%*s[%2d]%*s='%s'", (int) strlen(name),
+		    "colors", n, 8, " ", buf);
 	}
 
-	for (i = 0; i < 4; i++)
-	{
-	    const char	*hex = " 123456789ABCDEF";
-	    chtype	mask = (0xf << ((i + 4) * 4));
+	for (i = 0; i < 4; ++i) {
+	    const char *hex = " 123456789ABCDEF";
+	    attr_t mask = (0xf << ((i + 4) * 4));
 
 	    haveattrs = FALSE;
-	    for (j = 0; j <= width; j++)
-		if (win->_line[n].text[j] & mask)
-		{
+	    for (j = 0; j < width; ++j)
+		if (AttrOf(win->_line[n].text[j]) & mask) {
 		    haveattrs = TRUE;
 		    break;
 		}
-	    if (haveattrs)
-	    {
-		(void) sprintf(buf, "%*s%d[%2d]%*s='", (int)strlen(name)-1, "attrs", i, n, 8, " ");
-		ep = buf + strlen(buf);
-		for (j = 0; j <= width; j++)
-		    ep[j] = hex[(win->_line[n].text[j] & mask) >> ((i + 4) * 4)];
-		ep[j] = '\'';
-		ep[j+1] = '\0';
-		_tracef("%s", buf);
+	    if (haveattrs) {
+		ep = buf;
+		for (j = 0; j < width; ++j)
+		    ep[j] = hex[(AttrOf(win->_line[n].text[j]) & mask) >>
+				((i + 4) * 4)];
+		ep[j] = '\0';
+		_tracef("%*s%d[%2d]%*s='%s'", (int) strlen(name) -
+			1, "attrs", i, n, 8, " ", buf);
 	    }
 	}
     }
+#if NO_LEAKS
+    free(buf);
+    buf = 0;
+    used = 0;
+#endif
 }
+
 #else
-extern	void _nc_lib_tracedmp(void);
-	void _nc_lib_tracedmp(void) { }
+empty_module(_nc_lib_tracedmp)
 #endif /* TRACE */

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -52,7 +52,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.53 2000/10/04 02:32:14 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.58 2002/04/21 20:35:08 tom Exp $")
 
 static int total_written;
 
@@ -109,7 +109,7 @@ make_directory(const char *path)
     return rc;
 }
 
-void
+NCURSES_EXPORT(void)
 _nc_set_writedir(char *dir)
 /* set the write directory for compiled entries */
 {
@@ -117,7 +117,7 @@ _nc_set_writedir(char *dir)
     char actual[PATH_MAX];
 
     if (dir == 0
-     && use_terminfo_vars())
+	&& use_terminfo_vars())
 	dir = getenv("TERMINFO");
 
     if (dir != 0)
@@ -131,7 +131,7 @@ _nc_set_writedir(char *dir)
 	    destination = home;
 	    if (make_directory(destination) < 0)
 		_nc_err_abort("%s: permission denied (errno %d)",
-		    destination, errno);
+			      destination, errno);
 	}
     }
 
@@ -164,7 +164,7 @@ check_writeable(int code)
     static bool verified[sizeof(dirnames)];
 
     char dir[2];
-    char *s;
+    char *s = 0;
 
     if (code == 0 || (s = strchr(dirnames, code)) == 0)
 	_nc_err_abort("Illegal terminfo subdirectory \"%c\"", code);
@@ -214,6 +214,10 @@ _nc_write_entry(TERMTYPE * const tp)
     char linkname[PATH_MAX];
 #if USE_SYMLINKS
     char symlinkname[PATH_MAX];
+#if !HAVE_LINK
+#undef HAVE_LINK
+#define HAVE_LINK 1
+#endif
 #endif /* USE_SYMLINKS */
     static int call_count;
     static time_t start_time;	/* time at start of writes */
@@ -275,7 +279,7 @@ _nc_write_entry(TERMTYPE * const tp)
 	if (stat(filename, &statbuf) < 0
 	    || (start_time = statbuf.st_mtime) == 0) {
 	    _nc_syserr_abort("error obtaining time from %s/%s",
-		_nc_tic_dir(0), filename);
+			     _nc_tic_dir(0), filename);
 	}
     }
     while (*other_names != '\0') {
@@ -301,7 +305,7 @@ _nc_write_entry(TERMTYPE * const tp)
 	if (strcmp(filename, linkname) == 0) {
 	    _nc_warning("self-synonym ignored");
 	} else if (stat(linkname, &statbuf) >= 0 &&
-	    statbuf.st_mtime < start_time) {
+		   statbuf.st_mtime < start_time) {
 	    _nc_warning("alias %s multiply defined.", ptr);
 	} else if (_nc_access(linkname, W_OK) == 0)
 #if HAVE_LINK
@@ -333,10 +337,16 @@ _nc_write_entry(TERMTYPE * const tp)
 		 */
 		if (code == 0 && errno == EEXIST)
 		    _nc_warning("can't link %s to %s", filename, linkname);
-		else if (code == 0 && errno == EPERM)
+		else if (code == 0 && (errno == EPERM || errno == ENOENT))
 		    write_file(linkname, tp);
-		else
+		else {
+#if MIXEDCASE_FILENAMES
 		    _nc_syserr_abort("can't link %s to %s", filename, linkname);
+#else
+		    _nc_warning("can't link %s to %s (errno=%d)", filename,
+				linkname, errno);
+#endif
+		}
 	    } else {
 		DEBUG(1, ("Linked %s", linkname));
 	    }
@@ -355,10 +365,10 @@ _nc_write_entry(TERMTYPE * const tp)
 #define WRITE_STRING(str) (fwrite(str, sizeof(char), strlen(str) + 1, fp) == strlen(str) + 1)
 
 static int
-compute_offsets(char **Strings, int strmax, short *offsets)
+compute_offsets(char **Strings, unsigned strmax, short *offsets)
 {
     size_t nextfree = 0;
-    int i;
+    unsigned i;
 
     for (i = 0; i < strmax; i++) {
 	if (Strings[i] == ABSENT_STRING) {
@@ -375,9 +385,9 @@ compute_offsets(char **Strings, int strmax, short *offsets)
 }
 
 static void
-convert_shorts(unsigned char *buf, short *Numbers, int count)
+convert_shorts(unsigned char *buf, short *Numbers, unsigned count)
 {
-    int i;
+    unsigned i;
     for (i = 0; i < count; i++) {
 	if (Numbers[i] == ABSENT_NUMERIC) {	/* HI/LO won't work */
 	    buf[2 * i] = buf[2 * i + 1] = 0377;
@@ -520,7 +530,7 @@ write_object(FILE * fp, TERMTYPE * tp)
 	TRACE_OUT(("WRITE %d booleans @%ld", tp->ext_Booleans, ftell(fp)));
 	if (tp->ext_Booleans
 	    && fwrite(tp->Booleans + BOOLCOUNT, sizeof(char),
-		tp->ext_Booleans, fp) != tp->ext_Booleans)
+		      tp->ext_Booleans, fp) != tp->ext_Booleans)
 	      return (ERR);
 
 	if (even_boundary(tp->ext_Booleans))
@@ -549,7 +559,7 @@ write_object(FILE * fp, TERMTYPE * tp)
 	for (i = 0; i < tp->ext_Strings; i++) {
 	    if (VALID_STRING(tp->Strings[i + STRCOUNT])) {
 		TRACE_OUT(("WRITE ext_Strings[%d]=%s", i,
-			_nc_visbuf(tp->Strings[i + STRCOUNT])));
+			   _nc_visbuf(tp->Strings[i + STRCOUNT])));
 		if (!WRITE_STRING(tp->Strings[i + STRCOUNT]))
 		    return (ERR);
 	    }
@@ -574,7 +584,7 @@ write_object(FILE * fp, TERMTYPE * tp)
 /*
  * Returns the total number of entries written by this process
  */
-int
+NCURSES_EXPORT(int)
 _nc_tic_written(void)
 {
     return total_written;

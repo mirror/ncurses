@@ -1,16 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  * t
+  ****************************************************************************
+  * Copyright (c) 1998,2002 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: form_field_buffer.3x,v 1.9 2002/01/19 22:48:23 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>form_field_buffer 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>form_field_buffer 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>form_field_buffer</B> - field buffer control
+       <STRONG>form_field_buffer</STRONG> - field buffer control
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;form.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
        int  set_field_buffer(FIELD  *field,  int  buf, const char
        *value);
        char *field_buffer(const FIELD *field, int buffer);
@@ -21,12 +60,12 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The function <B>set_field_buffer</B> sets the numbered buffer  of
+       The function <STRONG>set_field_buffer</STRONG> sets the numbered buffer  of
        the  given  field  to contain a given string.  Buffer 0 is
        the displayed value of the field; other  numbered  buffers
-       may be allocated by applications through the <B>nbuf</B> argument
-       of (see <B><A HREF="form_field_new.3x.html">form_field_new(3x)</A></B>) but are not manipulated by the
-       forms  library.   The  function  <B>field_buffer</B>  returns the
+       may be allocated by applications through the <STRONG>nbuf</STRONG> argument
+       of (see <STRONG><A HREF="form_field_new.3x.html">form_field_new(3x)</A></STRONG>) but are not manipulated by the
+       forms  library.   The  function  <STRONG>field_buffer</STRONG>  returns the
        address of the buffer.  Please note that this  buffer  has
        always  the  length  of the buffer, that means that it may
        typically contain trailing spaces. If you entered  leading
@@ -38,44 +77,44 @@
        buffer. So don't use it  for  long  term  storage  of  the
        entered form data.
 
-       The  function  <B>set_field_status</B> sets the associated status
-       flag of <I>field</I>; <B>field_status</B> gets the current  value.   The
+       The  function  <STRONG>set_field_status</STRONG> sets the associated status
+       flag of <EM>field</EM>; <STRONG>field_status</STRONG> gets the current  value.   The
        status  flag  is set to a nonzero value whenever the field
        changes.
 
-       The function <B>set_max_field</B> sets the  maximum  size  for  a
+       The function <STRONG>set_max_field</STRONG> sets the  maximum  size  for  a
        dynamic  field.   An  argument  of 0 turns off any maximum
        size threshold for that field.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       The <B>field_buffer</B> function returns NULL on error.
+       The <STRONG>field_buffer</STRONG> function returns NULL on error.
 
-       The <B>field_status</B> function returns <B>TRUE</B> or <B>FALSE</B>.
+       The <STRONG>field_status</STRONG> function returns <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>.
 
        The remaining routines return one of the following:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or  out-of-range  argu-
             ment.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>  and  3x  pages  whose  names begin "form_" for
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> and related pages whose names begin "form_" for
        detailed descriptions of the entry points.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       The header file <B>&lt;form.h&gt;</B> automatically includes the header
-       file <B>&lt;curses.h&gt;</B>.
+       The header file <STRONG>&lt;form.h&gt;</STRONG> automatically includes the header
+       file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE>

@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.60 2000/10/14 22:51:19 tom Exp $
+# $Id: Makefile.in,v 1.63 2002/02/03 00:54:10 china Exp $
 ##############################################################################
-# Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.                #
+# Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.           #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -69,7 +69,7 @@ LOCAL_LIBS	= @TEST_DEPS@
 MATH_LIB	= @MATH_LIB@
 
 LD		= @LD@
-LINK		= @LINK_TESTS@ $(LIBTOOL) $(CC)
+LINK		= @LINK_TESTS@ $(LIBTOOL) $(CC) $(CFLAGS)
 
 LDFLAGS		= @LD_MODEL@ @TEST_ARGS@ @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ @LDFLAGS@
 
@@ -201,7 +201,7 @@ uninstall.libs:
 uninstall.test:
 
 mostlyclean ::
-	-rm -f core tags TAGS *~ *.ln *.atac trace
+	-rm -f core tags TAGS *~ *.bak *.i *.ln *.atac trace
 
 clean :: mostlyclean
 	-rm -rf *.o screendump *.lis $(TESTS) .libs

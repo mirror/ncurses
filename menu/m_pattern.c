@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,8 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_pattern.c,v 1.4 1999/05/16 17:27:28 juergen Exp $")
+MODULE_ID("$Id: m_pattern.c,v 1.7 2002/07/06 15:22:16 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -50,7 +51,8 @@ MODULE_ID("$Id: m_pattern.c,v 1.4 1999/05/16 17:27:28 juergen Exp $")
 |                                    pattern is stored
 |                    PatternString - as expected
 +--------------------------------------------------------------------------*/
-char *menu_pattern(const MENU * menu)
+NCURSES_EXPORT(char *)
+menu_pattern (const MENU * menu)
 {
   return (menu ? (menu->pattern ? menu->pattern : "") : (char *)0);
 }
@@ -68,7 +70,8 @@ char *menu_pattern(const MENU * menu)
 |                    E_BAD_STATE       - menu in user hook routine
 |                    E_NO_MATCH        - no item matches pattern
 +--------------------------------------------------------------------------*/
-int set_menu_pattern(MENU *menu, const char *p)
+NCURSES_EXPORT(int)
+set_menu_pattern (MENU *menu, const char *p)
 {
   ITEM *matchitem;
   int   matchpos;
@@ -99,7 +102,7 @@ int set_menu_pattern(MENU *menu, const char *p)
   
   while(*p)
     {
-      if ( !isprint(*p) || 
+      if ( !isprint((unsigned char)(*p)) || 
 	  (_nc_Match_Next_Character_In_Item_Name(menu,*p,&matchitem) != E_OK) )
 	{
 	  Reset_Pattern(menu);

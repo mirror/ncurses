@@ -26,10 +26,11 @@
 # authorization.                                                             #
 ##############################################################################
 #
-#  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+#  Author:  Juergen Pfeifer, 1996
+#  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 #
 #  Version Control
-#  $Revision: 1.13 $
+#  $Revision: 1.14 $
 #
 SHELL		= /bin/sh
 THIS		= Makefile

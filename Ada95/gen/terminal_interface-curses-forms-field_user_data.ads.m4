@@ -36,9 +36,10 @@ include(M4MACRO)dnl
 -- sale, use or other dealings in this Software without prior written       --
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
---  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+--  Author:  Juergen Pfeifer, 1996
+--  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control:
---  $Revision: 1.13 $
+--  $Revision: 1.14 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 

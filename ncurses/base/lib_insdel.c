@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,21 +42,22 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_insdel.c,v 1.8 1998/02/11 12:13:55 tom Exp $")
+MODULE_ID("$Id: lib_insdel.c,v 1.11 2001/12/19 01:10:49 tom Exp $")
 
-int
+NCURSES_EXPORT(int)
 winsdelln(WINDOW *win, int n)
 {
-int code = ERR;
+    int code = ERR;
 
-	T((T_CALLED("winsdel(%p,%d)"), win, n));
+    T((T_CALLED("winsdel(%p,%d)"), win, n));
 
-	if (win) {
-	  if (n != 0) {
-	    _nc_scroll_window(win, -n, win->_cury, win->_maxy, _nc_background(win));	  
+    if (win) {
+	if (n != 0) {
+	    _nc_scroll_window(win, -n, win->_cury, win->_maxy,
+			      win->_nc_bkgd);
 	    _nc_synchook(win);
-	  }
-	  code = OK;
 	}
-	returnCode(code);
+	code = OK;
+    }
+    returnCode(code);
 }

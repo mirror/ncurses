@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997                   *
+ *  Author: Thomas E. Dickey                                                *
  ****************************************************************************/
 
 /*
@@ -41,7 +41,219 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.7 1998/09/19 19:27:43 Alexander.V.Lukyanov Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.14 2002/07/13 21:32:57 tom Exp $")
+
+#define stolen_lines (screen_lines - SP->_lines_avail)
+
+NCURSES_EXPORT(bool)
+is_term_resized(int ToLines, int ToCols)
+{
+    return (ToLines != screen_lines
+	    || ToCols != screen_columns);
+}
+
+/*
+ * Return the number of levels of child-windows under the current window.
+ */
+static int
+child_depth(WINDOW *cmp)
+{
+    int depth = 0;
+
+    if (cmp != 0) {
+	WINDOWLIST *wp;
+
+	for (wp = _nc_windows; wp != 0; wp = wp->next) {
+	    WINDOW *tst = &(wp->win);
+	    if (tst->_parent == cmp) {
+		depth = 1 + child_depth(tst);
+		break;
+	    }
+	}
+    }
+    return depth;
+}
+
+/*
+ * Return the number of levels of parent-windows above the current window.
+ */
+static int
+parent_depth(WINDOW *cmp)
+{
+    int depth = 0;
+
+    if (cmp != 0) {
+	WINDOW *tst;
+	while ((tst = cmp->_parent) != 0) {
+	    ++depth;
+	    cmp = tst;
+	}
+    }
+    return depth;
+}
+
+/*
+ * FIXME: must adjust position so it's within the parent!
+ */
+static int
+adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
+{
+    int result;
+    int bottom = screen_lines + SP->_topstolen - stolen;
+    int myLines = win->_maxy + 1;
+    int myCols = win->_maxx + 1;
+
+    T((T_CALLED("adjust_window(%p,%d,%d) currently %dx%d at %d,%d"),
+       win, ToLines, ToCols,
+       getmaxy(win), getmaxx(win),
+       getbegy(win), getbegx(win)));
+
+    if (win->_begy >= bottom) {
+	win->_begy += (ToLines - screen_lines);
+    } else {
+	if (myLines == screen_lines - stolen
+	    && ToLines != screen_lines)
+	    myLines = ToLines - stolen;
+	else if (myLines == screen_lines
+		 && ToLines != screen_lines)
+	    myLines = ToLines;
+    }
+
+    if (myLines > ToLines)
+	myLines = ToLines;
+
+    if (myCols > ToCols)
+	myCols = ToCols;
+
+    if (myLines == screen_lines
+	&& ToLines != screen_lines)
+	myCols = ToLines;
+
+    if (myCols == screen_columns
+	&& ToCols != screen_columns)
+	myCols = ToCols;
+
+    result = wresize(win, myLines, myCols);
+    returnCode(result);
+}
+
+/*
+ * If we're decreasing size, recursively search for windows that have no
+ * children, decrease those to fit, then decrease the containing window, etc.
+ */
+static int
+decrease_size(int ToLines, int ToCols, int stolen)
+{
+    bool found;
+    int depth = 0;
+    WINDOWLIST *wp;
+
+    T((T_CALLED("decrease_size(%d, %d)"), ToLines, ToCols));
+
+    do {
+	found = FALSE;
+	TR(TRACE_UPDATE, ("decreasing size of windows to %dx%d, depth=%d",
+			  ToLines, ToCols, depth));
+	for (wp = _nc_windows; wp != 0; wp = wp->next) {
+	    WINDOW *win = &(wp->win);
+
+	    if (!(win->_flags & _ISPAD)) {
+		if (child_depth(win) == depth) {
+		    if (adjust_window(win, ToLines, ToCols, stolen) != OK)
+			returnCode(ERR);
+		}
+	    }
+	}
+	++depth;
+    } while (found);
+    returnCode(OK);
+}
+
+/*
+ * If we're increasing size, recursively search for windows that have no
+ * parent, increase those to fit, then increase the contained window, etc.
+ */
+static int
+increase_size(int ToLines, int ToCols, int stolen)
+{
+    bool found;
+    int depth = 0;
+    WINDOWLIST *wp;
+
+    T((T_CALLED("increase_size(%d, %d)"), ToLines, ToCols));
+
+    do {
+	found = FALSE;
+	TR(TRACE_UPDATE, ("increasing size of windows to %dx%d, depth=%d",
+			  ToLines, ToCols, depth));
+	for (wp = _nc_windows; wp != 0; wp = wp->next) {
+	    WINDOW *win = &(wp->win);
+
+	    if (!(win->_flags & _ISPAD)) {
+		if (parent_depth(win) == depth) {
+		    if (adjust_window(win, ToLines, ToCols, stolen) != OK)
+			returnCode(ERR);
+		}
+	    }
+	}
+	++depth;
+    } while (found);
+    returnCode(OK);
+}
+
+/*
+ * This function reallocates NCURSES window structures, with no side-effects
+ * such as ungetch().
+ */
+NCURSES_EXPORT(int)
+resize_term(int ToLines, int ToCols)
+{
+    int result = OK;
+    int was_stolen = (screen_lines - SP->_lines_avail);
+
+    T((T_CALLED("resize_term(%d,%d) old(%d,%d)"),
+       ToLines, ToCols,
+       screen_lines, screen_columns));
+
+    if (is_term_resized(ToLines, ToCols)) {
+	int myLines = screen_lines;
+	int myCols = screen_columns;
+
+	if (ToLines > screen_lines) {
+	    increase_size(myLines = ToLines, myCols, was_stolen);
+	}
+
+	if (ToCols > screen_columns) {
+	    increase_size(myLines, myCols = ToCols, was_stolen);
+	}
+
+	if (ToLines < myLines ||
+	    ToCols < myCols) {
+	    decrease_size(ToLines, ToCols, was_stolen);
+	}
+
+	screen_lines = lines = ToLines;
+	screen_columns = columns = ToCols;
+
+	SP->_lines_avail = lines - was_stolen;
+
+	if (SP->oldhash) {
+	    FreeAndNull(SP->oldhash);
+	}
+	if (SP->newhash) {
+	    FreeAndNull(SP->newhash);
+	}
+    }
+
+    /*
+     * Always update LINES, to allow for call from lib_doupdate.c which
+     * needs to have the count adjusted by the stolen (ripped off) lines.
+     */
+    LINES = ToLines - was_stolen;
+    COLS = ToCols;
+
+    returnCode(result);
+}
 
 /*
  * This function reallocates NCURSES window structures.  It is invoked in
@@ -51,71 +263,26 @@ MODULE_ID("$Id: resizeterm.c,v 1.7 1998/09/19 19:27:43 Alexander.V.Lukyanov Exp 
  * Because this performs memory allocation, it should not (in general) be
  * invoked directly from the signal handler.
  */
-int
+NCURSES_EXPORT(int)
 resizeterm(int ToLines, int ToCols)
 {
-	int stolen = screen_lines - SP->_lines_avail;
-	int bottom = screen_lines + SP->_topstolen - stolen;
+    int result = OK;
 
-	T((T_CALLED("resizeterm(%d,%d) old(%d,%d)"),
-		ToLines, ToCols,
-		screen_lines, screen_columns));
+    SP->_sig_winch = FALSE;
 
-	SP->_sig_winch = FALSE;
+    T((T_CALLED("resizeterm(%d,%d) old(%d,%d)"),
+       ToLines, ToCols,
+       screen_lines, screen_columns));
 
-	if (ToLines != screen_lines
-	 || ToCols  != screen_columns) {
-		WINDOWLIST *wp;
+    if (is_term_resized(ToLines, ToCols)) {
 
 #if USE_SIGWINCH
-		ungetch(KEY_RESIZE);	/* so application can know this */
-		clearok(curscr, TRUE);	/* screen contents are unknown */
+	ungetch(KEY_RESIZE);	/* so application can know this */
+	clearok(curscr, TRUE);	/* screen contents are unknown */
 #endif
 
-		for (wp = _nc_windows; wp != 0; wp = wp->next) {
-			WINDOW *win = wp->win;
-			int myLines = win->_maxy + 1;
-			int myCols  = win->_maxx + 1;
+	result = resize_term(ToLines, ToCols);
+    }
 
-			/* pads aren't treated this way */
-			if (win->_flags & _ISPAD)
-				continue;
-
-			if (win->_begy >= bottom) {
-				win->_begy += (ToLines - screen_lines);
-			} else {
-				if (myLines == screen_lines - stolen
-				 && ToLines != screen_lines)
-				 	myLines = ToLines - stolen;
-				else
-				if (myLines == screen_lines
-				 && ToLines != screen_lines)
-				 	myLines = ToLines;
-			}
-
-			if (myCols  == screen_columns
-			 && ToCols  != screen_columns)
-			 	myCols = ToCols;
-
-			if (wresize(win, myLines, myCols) != OK)
-				returnCode(ERR);
-		}
-
-		screen_lines   = lines    = ToLines;
-		screen_columns = columns  = ToCols;
-
-		SP->_lines_avail = lines - stolen;
-
-		if (SP->oldhash) { FreeAndNull(SP->oldhash); }
-		if (SP->newhash) { FreeAndNull(SP->newhash); }
-	}
-
-	/*
-	 * Always update LINES, to allow for call from lib_doupdate.c which
-	 * needs to have the count adjusted by the stolen (ripped off) lines.
-	 */
-	LINES = ToLines - stolen;
-	COLS  = ToCols;
-
-	returnCode(OK);
+    returnCode(result);
 }

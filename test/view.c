@@ -23,14 +23,13 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.31 2000/09/02 18:14:52 tom Exp $
+ * $Id: view.c,v 1.53 2002/06/29 23:28:27 tom Exp $
  */
 
-#include <test.priv.h>
-
-#include <string.h>
 #include <ctype.h>
-#include <signal.h>
+#include <time.h>
+
+#include <test.priv.h>
 
 #if HAVE_TERMIOS_H
 # include <termios.h>
@@ -44,6 +43,8 @@
 # endif
 #endif
 
+#define my_pair 1
+
 /* This is needed to compile 'struct winsize' */
 #if NEED_PTEM_H
 #include <sys/stream.h>
@@ -51,7 +52,7 @@
 #endif
 
 static RETSIGTYPE finish(int sig) GCC_NORETURN;
-static void show_all(void);
+static void show_all(const char *tag);
 
 #if defined(SIGWINCH) && defined(TIOCGWINSZ) && HAVE_RESIZETERM
 #define CAN_RESIZE 1
@@ -64,13 +65,13 @@ static RETSIGTYPE adjust(int sig);
 static int interrupted;
 #endif
 
-static int waiting;
-static int shift;
-static int utf8_mode = FALSE;
+static bool waiting = FALSE;
+static int shift = 0;
+static bool try_color = FALSE;
 
 static char *fname;
-static chtype **lines;
-static chtype **lptr;
+static NCURSES_CH_T **my_lines;
+static NCURSES_CH_T **lptr;
 
 static void
 usage(void)
@@ -80,28 +81,37 @@ usage(void)
 	"Usage: view [options] file"
 	,""
 	,"Options:"
+	," -c       use color if terminal supports it"
+	," -i       ignore INT, QUIT, TERM signals"
 	," -n NUM   specify maximum number of lines (default 1000)"
 #if defined(KEY_RESIZE)
-	," -r       use experimental KEY_RESIZE rather than our own handler"
+	," -r       use old-style sigwinch handler rather than KEY_RESIZE"
 #endif
 #ifdef TRACE
 	," -t       trace screen updates"
 	," -T NUM   specify trace mask"
 #endif
-	," -u       translate UTF-8 data"
     };
     size_t n;
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
-    exit(EXIT_FAILURE);
+    ExitProgram(EXIT_FAILURE);
 }
 
 static int
-ch_len(chtype * src)
+ch_len(NCURSES_CH_T * src)
 {
     int result = 0;
+#if USE_WIDEC_SUPPORT
+#endif
+
+#if USE_WIDEC_SUPPORT
+    while (getcchar(src++, NULL, NULL, NULL, NULL) > 0)
+	result++;
+#else
     while (*src++)
 	result++;
+#endif
     return result;
 }
 
@@ -109,78 +119,56 @@ ch_len(chtype * src)
  * Allocate a string into an array of chtype's.  If UTF-8 mode is
  * active, translate the string accordingly.
  */
-static chtype *
+static NCURSES_CH_T *
 ch_dup(char *src)
 {
     unsigned len = strlen(src);
-    chtype *dst = typeMalloc(chtype, len + 1);
+    NCURSES_CH_T *dst = typeMalloc(NCURSES_CH_T, len + 1);
     unsigned j, k;
-    unsigned utf_count = 0;
-    unsigned utf_char = 0;
+#if USE_WIDEC_SUPPORT
+    wchar_t wstr[CCHARW_MAX + 1];
+    wchar_t wch;
+    int l = 0;
+    mbstate_t state;
+    size_t rc;
+    int width;
+#endif
 
-#define UCS_REPL 0xfffd
-
+#if USE_WIDEC_SUPPORT
+    memset(&state, 0, sizeof(state));
+#endif
     for (j = k = 0; j < len; j++) {
-	if (utf8_mode) {
-	    unsigned c = src[j] & 0xff;
-	    /* Combine UTF-8 into Unicode */
-	    if (c < 0x80) {
-		/* We received an ASCII character */
-		if (utf_count > 0)
-		    dst[k++] = UCS_REPL;	/* prev. sequence incomplete */
-		dst[k++] = c;
-		utf_count = 0;
-	    } else if (c < 0xc0) {
-		/* We received a continuation byte */
-		if (utf_count < 1) {
-		    dst[k++] = UCS_REPL;	/* ... unexpectedly */
-		} else {
-		    if (!utf_char && !((c & 0x7f) >> (7 - utf_count))) {
-			utf_char = UCS_REPL;
-		    }
-		    /* characters outside UCS-2 become UCS_REPL */
-		    if (utf_char > 0x03ff) {
-			/* value would be >0xffff */
-			utf_char = UCS_REPL;
-		    } else {
-			utf_char <<= 6;
-			utf_char |= (c & 0x3f);
-		    }
-		    utf_count--;
-		    if (utf_count == 0)
-			dst[k++] = utf_char;
-		}
-	    } else {
-		/* We received a sequence start byte */
-		if (utf_count > 0)
-		    dst[k++] = UCS_REPL;	/* prev. sequence incomplete */
-		if (c < 0xe0) {
-		    utf_count = 1;
-		    utf_char = (c & 0x1f);
-		    if (!(c & 0x1e))
-			utf_char = UCS_REPL;	/* overlong sequence */
-		} else if (c < 0xf0) {
-		    utf_count = 2;
-		    utf_char = (c & 0x0f);
-		} else if (c < 0xf8) {
-		    utf_count = 3;
-		    utf_char = (c & 0x07);
-		} else if (c < 0xfc) {
-		    utf_count = 4;
-		    utf_char = (c & 0x03);
-		} else if (c < 0xfe) {
-		    utf_count = 5;
-		    utf_char = (c & 0x01);
-		} else {
-		    dst[k++] = UCS_REPL;
-		    utf_count = 0;
-		}
-	    }
-	} else {
-	    dst[k++] = src[j];
+#if USE_WIDEC_SUPPORT
+	rc = mbrtowc(&wch, src + j, len - j, &state);
+	if (rc == (size_t) -1 || rc == (size_t) -2)
+	    break;
+	j += rc - 1;
+	if ((width = wcwidth(wch)) < 0)
+	    break;
+	if ((width > 0 && l > 0) || l == CCHARW_MAX) {
+	    wstr[l] = L'\0';
+	    l = 0;
+	    if (setcchar(dst + k, wstr, 0, 0, NULL) != OK)
+		break;
+	    ++k;
 	}
+	if (width == 0 && l == 0)
+	    wstr[l++] = L' ';
+	wstr[l++] = wch;
+#else
+	dst[k++] = src[j];
+#endif
     }
+#if USE_WIDEC_SUPPORT
+    if (l > 0) {
+	wstr[l] = L'\0';
+	if (setcchar(dst + k, wstr, 0, 0, NULL) == OK)
+	    ++k;
+    }
+    setcchar(dst + k, L"", 0, 0, NULL);
+#else
     dst[k] = 0;
+#endif
     return dst;
 }
 
@@ -191,22 +179,44 @@ main(int argc, char *argv[])
     FILE *fp;
     char buf[BUFSIZ];
     int i;
-    chtype **olptr;
-    int done = FALSE;
+    int my_delay = 0;
+    NCURSES_CH_T **olptr;
     int length = 0;
+    int value = 0;
+    bool done = FALSE;
+    bool got_number = FALSE;
 #if CAN_RESIZE
-    bool use_resize = TRUE;
+    bool nonposix_resize = FALSE;
+#endif
+    const char *my_label = "Input";
+
+    setlocale(LC_ALL, "");
+
+#ifndef NCURSES_VERSION
+    /*
+     * We know ncurses will catch SIGINT if we don't establish our own handler.
+     * Other versions of curses may/may not catch it.
+     */
+    (void) signal(SIGINT, finish);	/* arrange interrupts to terminate */
 #endif
 
-    while ((i = getopt(argc, argv, "n:rtT:u")) != EOF) {
+    while ((i = getopt(argc, argv, "cin:rtT:")) != EOF) {
 	switch (i) {
+	case 'c':
+	    try_color = TRUE;
+	    break;
+	case 'i':
+	    signal(SIGINT, SIG_IGN);
+	    signal(SIGQUIT, SIG_IGN);
+	    signal(SIGTERM, SIG_IGN);
+	    break;
 	case 'n':
 	    if ((MAXLINES = atoi(optarg)) < 1)
 		usage();
 	    break;
 #if CAN_RESIZE
 	case 'r':
-	    use_resize = FALSE;
+	    nonposix_resize = TRUE;
 	    break;
 #endif
 #ifdef TRACE
@@ -217,9 +227,6 @@ main(int argc, char *argv[])
 	    trace(TRACE_CALLS);
 	    break;
 #endif
-	case 'u':
-	    utf8_mode = TRUE;
-	    break;
 	default:
 	    usage();
 	}
@@ -227,23 +234,21 @@ main(int argc, char *argv[])
     if (optind + 1 != argc)
 	usage();
 
-    if ((lines = typeMalloc(chtype *, MAXLINES + 2)) == 0)
+    if ((my_lines = typeMalloc(NCURSES_CH_T *, MAXLINES + 2)) == 0)
 	usage();
 
     fname = argv[optind];
     if ((fp = fopen(fname, "r")) == 0) {
 	perror(fname);
-	return EXIT_FAILURE;
+	ExitProgram(EXIT_FAILURE);
     }
-
-    (void) signal(SIGINT, finish);	/* arrange interrupts to terminate */
 #if CAN_RESIZE
-    if (use_resize)
+    if (nonposix_resize)
 	(void) signal(SIGWINCH, adjust);	/* arrange interrupts to resize */
 #endif
 
     /* slurp the file */
-    for (lptr = &lines[0]; (lptr - lines) < MAXLINES; lptr++) {
+    for (lptr = &my_lines[0]; (lptr - my_lines) < MAXLINES; lptr++) {
 	char temp[BUFSIZ], *s, *d;
 	int col;
 
@@ -259,40 +264,57 @@ main(int argc, char *argv[])
 		col = (col | 7) + 1;
 		while ((d - temp) != col)
 		    *d++ = ' ';
-	    } else if (isprint(*d) || utf8_mode) {
+	    } else
+#if USE_WIDEC_SUPPORT
+		col++, d++;
+#else
+	    if (isprint(UChar(*d))) {
 		col++;
 		d++;
 	    } else {
-		sprintf(d, "\\%03o", *s & 0xff);
+		sprintf(d, "\\%03o", UChar(*s));
 		d += strlen(d);
 		col = (d - temp);
 	    }
+#endif
 	}
 	*lptr = ch_dup(temp);
     }
     (void) fclose(fp);
-    length = lptr - lines;
+    length = lptr - my_lines;
 
     (void) initscr();		/* initialize the curses library */
     keypad(stdscr, TRUE);	/* enable keyboard mapping */
     (void) nonl();		/* tell curses not to do NL->CR/NL on output */
     (void) cbreak();		/* take input chars one at a time, no wait for \n */
     (void) noecho();		/* don't echo input */
+    nodelay(stdscr, TRUE);
     idlok(stdscr, TRUE);	/* allow use of insert/delete line */
 
-    lptr = lines;
+    if (try_color) {
+	if (has_colors()) {
+	    start_color();
+	    init_pair(my_pair, COLOR_WHITE, COLOR_BLUE);
+	    bkgd(COLOR_PAIR(my_pair));
+	} else {
+	    try_color = FALSE;
+	}
+    }
+
+    lptr = my_lines;
     while (!done) {
 	int n, c;
-	bool got_number;
 
-	show_all();
+	if (!got_number)
+	    show_all(my_label);
 
-	got_number = FALSE;
 	n = 0;
 	for (;;) {
 #if CAN_RESIZE
-	    if (interrupted)
+	    if (interrupted) {
 		adjust(0);
+		my_label = "interrupt";
+	    }
 #endif
 	    waiting = TRUE;
 	    c = getch();
@@ -303,20 +325,25 @@ main(int argc, char *argv[])
 		    clrtoeol();
 		}
 		addch(c);
-		n = 10 * n + (c - '0');
+		value = 10 * value + (c - '0');
 		got_number = TRUE;
 	    } else
 		break;
 	}
-	if (!got_number && n == 0)
+	if (got_number && value) {
+	    n = value;
+	} else {
 	    n = 1;
+	}
 
+	if (c != ERR)
+	    my_label = keyname(c);
 	switch (c) {
 	case KEY_DOWN:
 	case 'n':
 	    olptr = lptr;
 	    for (i = 0; i < n; i++)
-		if ((lptr - lines) < (length - LINES + 1))
+		if ((lptr - my_lines) < (length - LINES + 1))
 		    lptr++;
 		else
 		    break;
@@ -327,7 +354,7 @@ main(int argc, char *argv[])
 	case 'p':
 	    olptr = lptr;
 	    for (i = 0; i < n; i++)
-		if (lptr > lines)
+		if (lptr > my_lines)
 		    lptr--;
 		else
 		    break;
@@ -336,28 +363,29 @@ main(int argc, char *argv[])
 
 	case 'h':
 	case KEY_HOME:
-	    lptr = lines;
+	    lptr = my_lines;
 	    break;
 
 	case 'e':
 	case KEY_END:
 	    if (length > LINES)
-		lptr = lines + length - LINES + 1;
+		lptr = my_lines + length - LINES + 1;
 	    else
-		lptr = lines;
+		lptr = my_lines;
 	    break;
 
 	case 'r':
 	case KEY_RIGHT:
-	    shift++;
+	    shift += n;
 	    break;
 
 	case 'l':
 	case KEY_LEFT:
-	    if (shift)
-		shift--;
-	    else
+	    shift -= n;
+	    if (shift < 0) {
+		shift = 0;
 		beep();
+	    }
 	    break;
 
 	case 'q':
@@ -368,12 +396,29 @@ main(int argc, char *argv[])
 	case KEY_RESIZE:	/* ignore this; ncurses will repaint */
 	    break;
 #endif
-#if CAN_RESIZE
-	case ERR:
+	case 's':
+	    if (got_number) {
+		halfdelay(my_delay = n);
+	    } else {
+		nodelay(stdscr, FALSE);
+		my_delay = -1;
+	    }
 	    break;
-#endif
+	case ' ':
+	    nodelay(stdscr, TRUE);
+	    my_delay = 0;
+	    break;
+	case ERR:
+	    if (!my_delay)
+		napms(50);
+	    break;
 	default:
 	    beep();
+	    break;
+	}
+	if (c >= KEY_MIN || (c > 0 && !isdigit(c))) {
+	    got_number = FALSE;
+	    value = 0;
 	}
     }
 
@@ -384,14 +429,20 @@ static RETSIGTYPE
 finish(int sig)
 {
     endwin();
-    exit(sig != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
+    ExitProgram(sig != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 #if CAN_RESIZE
 /*
  * This uses functions that are "unsafe", but it seems to work on SunOS and
- * Linux.  The 'wrefresh(curscr)' is needed to force the refresh to start from
- * the top of the screen -- some xterms mangle the bitmap while resizing.
+ * Linux.  Usually:  the "unsafe" refers to the functions that POSIX lists
+ * which may be called from a signal handler.  Those do not include buffered
+ * I/O, which is used for instance in wrefresh().  To be really portable, you
+ * should use the KEY_RESIZE return (which relies on ncurses' sigwinch
+ * handler).
+ *
+ * The 'wrefresh(curscr)' is needed to force the refresh to start from the top
+ * of the screen -- some xterms mangle the bitmap while resizing.
  */
 static RETSIGTYPE
 adjust(int sig)
@@ -400,9 +451,9 @@ adjust(int sig)
 	struct winsize size;
 
 	if (ioctl(fileno(stdout), TIOCGWINSZ, &size) == 0) {
-	    resizeterm(size.ws_row, size.ws_col);
+	    resize_term(size.ws_row, size.ws_col);
 	    wrefresh(curscr);	/* Linux needs this */
-	    show_all();
+	    show_all(sig ? "SIGWINCH" : "interrupt");
 	}
 	interrupted = FALSE;
     } else {
@@ -413,14 +464,15 @@ adjust(int sig)
 #endif /* CAN_RESIZE */
 
 static void
-show_all(void)
+show_all(const char *tag)
 {
     int i;
     char temp[BUFSIZ];
-    chtype *s;
+    NCURSES_CH_T *s;
+    time_t this_time;
 
 #if CAN_RESIZE
-    sprintf(temp, "(%3dx%3d) col %d ", LINES, COLS, shift);
+    sprintf(temp, "%s (%3dx%3d) col %d ", tag, LINES, COLS, shift);
     i = strlen(temp);
     sprintf(temp + i, "view %.*s", (int) (sizeof(temp) - 7 - i), fname);
 #else
@@ -429,16 +481,29 @@ show_all(void)
     move(0, 0);
     printw("%.*s", COLS, temp);
     clrtoeol();
+    this_time = time((time_t *) 0);
+    strcpy(temp, ctime(&this_time));
+    if ((i = strlen(temp)) != 0) {
+	temp[--i] = 0;
+	if (move(0, COLS - i - 2) != ERR)
+	    printw("  %s", temp);
+    }
 
     scrollok(stdscr, FALSE);	/* prevent screen from moving */
     for (i = 1; i < LINES; i++) {
 	move(i, 0);
-	printw("%3ld:", (long) (lptr + i - lines));
+	printw("%3ld:", (long) (lptr + i - my_lines));
 	clrtoeol();
 	if ((s = lptr[i - 1]) != 0) {
 	    int len = ch_len(s);
 	    if (len > shift)
+#if USE_WIDEC_SUPPORT
+		add_wchstr(s + shift);
+#else
 		addchstr(s + shift);
+#endif
+	    if (try_color)
+		wchgat(stdscr, -1, A_NORMAL, my_pair, NULL);
 	}
     }
     setscrreg(1, LINES - 1);

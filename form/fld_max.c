@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,12 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_max.c,v 1.4 1999/05/16 17:18:34 juergen Exp $")
+MODULE_ID("$Id: fld_max.c,v 1.6 2002/07/06 15:33:27 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -44,7 +45,8 @@ MODULE_ID("$Id: fld_max.c,v 1.4 1999/05/16 17:18:34 juergen Exp $")
 |   Return Values :  E_OK           - success
 |                    E_BAD_ARGUMENT - invalid argument
 +--------------------------------------------------------------------------*/
-int set_max_field(FIELD *field, int maxgrow)
+NCURSES_EXPORT(int)
+set_max_field (FIELD *field, int maxgrow)
 {
   if (!field || (maxgrow<0))
     RETURN(E_BAD_ARGUMENT);

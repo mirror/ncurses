@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,12 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_win.c,v 1.8 1999/05/16 17:22:32 juergen Exp $")
+MODULE_ID("$Id: frm_win.c,v 1.10 2002/07/06 15:33:27 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -43,7 +44,8 @@ MODULE_ID("$Id: frm_win.c,v 1.8 1999/05/16 17:22:32 juergen Exp $")
 |   Return Values :  E_OK       - success
 |                    E_POSTED   - form is posted
 +--------------------------------------------------------------------------*/
-int set_form_win(FORM * form, WINDOW * win)
+NCURSES_EXPORT(int)
+set_form_win (FORM * form, WINDOW * win)
 {
   if (form && (form->status & _POSTED))	
     RETURN(E_POSTED);
@@ -60,7 +62,8 @@ int set_form_win(FORM * form, WINDOW * win)
 |
 |   Return Values :  The pointer to the Window or stdscr if there is none.
 +--------------------------------------------------------------------------*/
-WINDOW *form_win(const FORM * form)
+NCURSES_EXPORT(WINDOW *)
+form_win (const FORM * form)
 {
   const FORM* f = Normalize_Form( form );
   return (f->win ? f->win : stdscr);

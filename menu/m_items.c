@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,8 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_items.c,v 1.8 1999/05/16 17:26:50 juergen Exp $")
+MODULE_ID("$Id: m_items.c,v 1.10 2002/07/06 15:22:16 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -52,7 +53,8 @@ MODULE_ID("$Id: m_items.c,v 1.8 1999/05/16 17:26:50 juergen Exp $")
 |                    E_BAD_ARGUMENT - An incorrect menu or item array was
 |                                     passed to the function
 +--------------------------------------------------------------------------*/
-int set_menu_items(MENU * menu, ITEM ** items)
+NCURSES_EXPORT(int)
+set_menu_items (MENU * menu, ITEM ** items)
 {
   if (!menu || (items && !(*items)))
     RETURN(E_BAD_ARGUMENT);
@@ -81,7 +83,8 @@ int set_menu_items(MENU * menu, ITEM ** items)
 |
 |   Return Values :  NULL on error
 +--------------------------------------------------------------------------*/
-ITEM **menu_items(const MENU *menu)
+NCURSES_EXPORT(ITEM **)
+menu_items (const MENU *menu)
 {
   return(menu ? menu->items : (ITEM **)0);
 }
@@ -95,7 +98,8 @@ ITEM **menu_items(const MENU *menu)
 |
 |   Return Values :  Number of items or -1 to indicate error.
 +--------------------------------------------------------------------------*/
-int item_count(const MENU *menu)
+NCURSES_EXPORT(int)
+item_count (const MENU *menu)
 {
   return(menu ? menu->nitems : -1);
 }

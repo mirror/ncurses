@@ -26,10 +26,11 @@
 # authorization.                                                             #
 ##############################################################################
 #
-#  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
+#  Author:  Juergen Pfeifer, 1996
+#  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 #
 #  Version Control
-#  $Revision: 1.22 $
+#  $Revision: 1.26 $
 #
 .SUFFIXES:
 
@@ -72,6 +73,7 @@ LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 RANLIB		= @RANLIB@
 ################################################################################
 ADA             = @cf_ada_compiler@
+ADAPREP		= gnatprep
 ADAFLAGS        = @ADAFLAGS@ -I. -I$(srcdir)
 
 ADAMAKE         = @cf_ada_make@
@@ -86,6 +88,10 @@ ABASE           = $(ALIB)-curses
 LIBALIS=$(ALIB).ali              			\
 	$(ABASE)-aux.ali         			\
 	$(ABASE).ali             		        \
+	$(ABASE)-terminfo.ali				\
+	$(ABASE)-termcap.ali				\
+	$(ABASE)-putwin.ali				\
+	$(ABASE)-trace.ali				\
 	$(ABASE)-mouse.ali       			\
 	$(ABASE)-panels.ali      			\
 	$(ABASE)-menus.ali       			\
@@ -122,6 +128,10 @@ GENALIS=$(ABASE)-menus-menu_user_data.ali		\
 LIBOBJS=$(ALIB).o                			\
 	$(ABASE)-aux.o           			\
 	$(ABASE).o               			\
+	$(ABASE)-terminfo.o				\
+	$(ABASE)-termcap.o				\
+	$(ABASE)-putwin.o				\
+	$(ABASE)-trace.o				\
 	$(ABASE)-mouse.o         			\
 	$(ABASE)-panels.o        			\
 	$(ABASE)-menus.o         			\
@@ -182,7 +192,7 @@ mostlyclean ::
 	rm -f *.o *.ali b_t*.* *.s $(PROGS) a.out core b_*_test.c *.xr[bs] *.a
 
 clean :: mostlyclean
-	rm -f $(LIBALIS) $(GENALIS) $(LIBOBJS) $(GENOBJS)
+	rm -f $(LIBALIS) $(GENALIS) $(LIBOBJS) $(GENOBJS) $(ABASE)-trace.adb
 
 distclean :: clean
 	rm -f Makefile
@@ -201,6 +211,34 @@ $(ABASE)-aux.o: $(srcdir)/$(ABASE)-aux.adb $(BASEDEPS)
 
 $(ABASE).o: $(srcdir)/$(ABASE).adb $(BASEDEPS)
 	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE).adb
+
+
+$(ABASE)-terminfo.o: \
+		$(ABASE)-terminfo.ads \
+		$(srcdir)/$(ABASE)-terminfo.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-terminfo.adb
+
+
+$(ABASE)-termcap.o: \
+		$(ABASE)-termcap.ads \
+		$(srcdir)/$(ABASE)-termcap.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-termcap.adb
+
+
+$(ABASE)-putwin.o: \
+		$(ABASE)-putwin.ads \
+		$(srcdir)/$(ABASE)-putwin.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-putwin.adb
+
+
+$(ABASE)-trace.adb : $(srcdir)/$(ABASE)-trace.adb_p
+	rm -f $@
+	$(ADAPREP) -DADA_TRACE=@ADA_TRACE@ $(srcdir)/$(ABASE)-trace.adb_p $@
+
+$(ABASE)-trace.o: \
+		$(ABASE)-trace.ads \
+		$(ABASE)-trace.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(ABASE)-trace.adb
 
 
 $(ABASE)-mouse.o: \

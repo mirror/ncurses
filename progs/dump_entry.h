@@ -58,8 +58,8 @@
 
 extern NCURSES_CONST char *nametrans(const char *);
 extern void dump_init(const char *, int, int, int, int, bool);
-extern int fmt_entry(TERMTYPE *, int (*)(int, int), bool, bool, int);
-extern int dump_entry(TERMTYPE *, bool, int, int (*)(int, int));
+extern int fmt_entry(TERMTYPE *, int (*)(int, int), bool, bool, bool, int);
+extern int dump_entry(TERMTYPE *, bool, bool, int, int, int (*)(int, int));
 extern int dump_uses(const char *, bool);
 extern void compare_entry(void (*)(int, int, const char *), TERMTYPE *, bool);
 extern void repair_acsc(TERMTYPE * tp);

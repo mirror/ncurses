@@ -1,17 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  * t
+  ****************************************************************************
+  * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: form_field.3x,v 1.5 1998/11/29 01:05:52 Rick.Ohnemus Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>form_field 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>form_field 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>form_field</B> - make and break connections between fields and
+       <STRONG>form_field</STRONG> - make and break connections between fields and
        forms
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;form.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
        int set_form_fields(FORM *form, FIELD **fields);
        FIELD **form_fields(const FORM *form);
        int field_count(const FORM *form);
@@ -20,55 +59,55 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The function <B>set_form_fields</B>  changes  the  field  pointer
-       array  of the given <I>form</I>.  The array must be terminated by
-       a <B>NULL</B>.
+       The function <STRONG>set_form_fields</STRONG>  changes  the  field  pointer
+       array  of the given <EM>form</EM>.  The array must be terminated by
+       a <STRONG>NULL</STRONG>.
 
-       The function <B>form_fields</B> returns the field  array  of  the
+       The function <STRONG>form_fields</STRONG> returns the field  array  of  the
        given form.
 
-       The  function  <B>field_count</B>  returns the count of fields in
-       <I>form</I>.
+       The  function  <STRONG>field_count</STRONG>  returns the count of fields in
+       <EM>form</EM>.
 
-       The function <B>move_field</B> move the given field  (which  must
+       The function <STRONG>move_field</STRONG> move the given field  (which  must
        be disconnected) to a specified location on the screen.
 
 
 </PRE>
 <H2>RETURN VALUES</H2><PRE>
-       The function <B>form_fields</B> returns <B>NULL</B> on error.
+       The function <STRONG>form_fields</STRONG> returns <STRONG>NULL</STRONG> on error.
 
-       The  function  <B>field_count</B> returns <B>ERR</B> (the general <B>curses</B>
+       The  function  <STRONG>field_count</STRONG> returns <STRONG>ERR</STRONG> (the general <STRONG>curses</STRONG>
        error return value) on error.
 
-       The functions <B>set_form_fields</B> and <B>move_field</B> return one of
+       The functions <STRONG>set_form_fields</STRONG> and <STRONG>move_field</STRONG> return one of
        the following codes on error:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine  detected  an incorrect or out-of-range argu-
             ment.
 
-       <B>E_POSTED</B>
+       <STRONG>E_POSTED</STRONG>
             The form is already posted.
 
-       <B>E_CONNECTED</B>
+       <STRONG>E_CONNECTED</STRONG>
             The field is already connected to a form.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="form.3x.html">form(3x)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       The header file <B>&lt;form.h&gt;</B> automatically includes the header
-       file <B>&lt;curses.h&gt;</B>.
+       The header file <STRONG>&lt;form.h&gt;</STRONG> automatically includes the header
+       file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE>
@@ -77,7 +116,7 @@
        were not supported on Version 7 or BSD versions.
 
        The  SVr4  forms  library  documentation   specifies   the
-       <B>field_count</B> error value as -1 (which is the value of <B>ERR</B>).
+       <STRONG>field_count</STRONG> error value as -1 (which is the value of <STRONG>ERR</STRONG>).
 
 
 </PRE>

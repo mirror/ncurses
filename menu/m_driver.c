@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,8 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.17 1999/05/16 17:24:55 juergen Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.19 2002/07/06 15:22:16 juergen Exp $")
 
 /* Macros */
 
@@ -111,7 +112,9 @@ static bool Is_Sub_String(
 |   Return Values :  E_OK        - an item matching the pattern was found
 |                    E_NO_MATCH  - nothing found
 +--------------------------------------------------------------------------*/
-int _nc_Match_Next_Character_In_Item_Name(MENU *menu, int ch, ITEM **item)
+NCURSES_EXPORT(int)
+_nc_Match_Next_Character_In_Item_Name
+(MENU *menu, int ch, ITEM **item)
 {
   bool found = FALSE, passed = FALSE;
   int  idx, last;
@@ -198,7 +201,8 @@ int _nc_Match_Next_Character_In_Item_Name(MENU *menu, int ch, ITEM **item)
 |                    E_BAD_STATE     - menu is in user hook routine
 |                    E_NOT_POSTED    - menu is not posted
 +--------------------------------------------------------------------------*/
-int menu_driver(MENU * menu, int   c)
+NCURSES_EXPORT(int)
+menu_driver (MENU * menu, int   c)
 {
 #define NAVIGATE(dir) \
   if (!item->dir)\

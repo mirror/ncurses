@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.24 2000/10/05 00:05:04 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.31 2002/07/20 19:09:47 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -96,7 +96,7 @@ check_aliases(const char *name)
  * in tparm() to decide how to parse the varargs list.
  */
 static TParams
-tparm_type(char *name)
+tparm_type(const char *name)
 {
 #define TD(code, longname, ti, tc) {code,longname},{code,ti},{code,tc}
     TParams result = Numbers;
@@ -124,6 +124,25 @@ tparm_type(char *name)
 }
 
 static int
+exit_code(int token, int value)
+{
+    int result = 99;
+
+    switch (token) {
+    case BOOLEAN:
+	result = !value;	/* TRUE=0, FALSE=1 */
+	break;
+    case NUMBER:
+	result = 0;		/* always zero */
+	break;
+    case STRING:
+	result = value;		/* 0=normal, 1=missing */
+	break;
+    }
+    return result;
+}
+
+static int
 tput(int argc, char *argv[])
 {
     NCURSES_CONST char *name;
@@ -131,8 +150,11 @@ tput(int argc, char *argv[])
     int i, j, c;
     int status;
     FILE *f;
+    int token = UNDEF;
 
-    check_aliases(name = argv[0]);
+    if ((name = argv[0]) == 0)
+	name = "";
+    check_aliases(name);
     if (is_reset || is_init) {
 	if (init_prog != 0) {
 	    system(init_prog);
@@ -153,15 +175,21 @@ tput(int argc, char *argv[])
 	}
 	FLUSH;
 
+#ifdef set_lr_margin
 	if (set_lr_margin != 0) {
 	    PUTS(tparm(set_lr_margin, 0, columns - 1));
-	} else if (set_left_margin_parm != 0
-		   && set_right_margin_parm != 0) {
+	} else
+#endif
+#ifdef set_left_margin_parm
+	    if (set_left_margin_parm != 0
+		&& set_right_margin_parm != 0) {
 	    PUTS(tparm(set_left_margin_parm, 0));
 	    PUTS(tparm(set_right_margin_parm, columns - 1));
-	} else if (clear_margins != 0
-		   && set_left_margin != 0
-		   && set_right_margin != 0) {
+	} else
+#endif
+	    if (clear_margins != 0
+		&& set_left_margin != 0
+		&& set_right_margin != 0) {
 	    PUTS(clear_margins);
 	    if (carriage_return != 0) {
 		PUTS(carriage_return);
@@ -203,7 +231,7 @@ tput(int argc, char *argv[])
 	if (is_reset && reset_file != 0) {
 	    f = fopen(reset_file, "r");
 	    if (f == 0) {
-		quit(errno, "Can't open reset_file: '%s'", reset_file);
+		quit(4 + errno, "Can't open reset_file: '%s'", reset_file);
 	    }
 	    while ((c = fgetc(f)) != EOF) {
 		PUTCHAR(c);
@@ -212,7 +240,7 @@ tput(int argc, char *argv[])
 	} else if (init_file != 0) {
 	    f = fopen(init_file, "r");
 	    if (f == 0) {
-		quit(errno, "Can't open init_file: '%s'", init_file);
+		quit(4 + errno, "Can't open init_file: '%s'", init_file);
 	    }
 	    while ((c = fgetc(f)) != EOF) {
 		PUTCHAR(c);
@@ -259,13 +287,14 @@ tput(int argc, char *argv[])
 #endif
 
     if ((status = tigetflag(name)) != -1) {
-	return (status != 0);
+	return exit_code(BOOLEAN, status);
     } else if ((status = tigetnum(name)) != CANCELLED_NUMERIC) {
 	(void) printf("%d\n", status);
-	return (0);
+	return exit_code(NUMBER, 0);
     } else if ((s = tigetstr(name)) == CANCELLED_STRING) {
 	quit(4, "%s: unknown terminfo capability '%s'", prg_name, name);
     } else if (s != ABSENT_STRING) {
+	token = STRING;
 	if (argc > 1) {
 	    int k;
 	    int numbers[10];
@@ -306,9 +335,9 @@ tput(int argc, char *argv[])
 
 	/* use putp() in order to perform padding */
 	putp(s);
-	return (0);
+	return exit_code(STRING, 0);
     }
-    return (0);
+    return exit_code(STRING, 1);
 }
 
 int
@@ -319,9 +348,10 @@ main(int argc, char **argv)
     bool cmdline = TRUE;
     int c;
     char buf[BUFSIZ];
-    int errors = 0;
+    int result = 0;
+    int err;
 
-    check_aliases(prg_name = _nc_basename(argv[0]));
+    check_aliases(prg_name = _nc_rootname(argv[0]));
 
     term = getenv("TERM");
 
@@ -376,16 +406,23 @@ main(int argc, char **argv)
 
 	/* crack the argument list into a dope vector */
 	for (cp = buf; *cp; cp++) {
-	    if (isspace(*cp))
+	    if (isspace(UChar(*cp))) {
 		*cp = '\0';
-	    else if (cp == buf || cp[-1] == 0)
+	    } else if (cp == buf || cp[-1] == 0) {
 		argvec[argnum++] = cp;
+		if (argnum >= (int) SIZEOF(argvec) - 1)
+		    break;
+	    }
 	}
 	argvec[argnum] = 0;
 
-	if (tput(argnum, argvec) != 0)
-	    errors++;
+	if (argnum != 0
+	    && (err = tput(argnum, argvec)) != 0) {
+	    if (result == 0)
+		result = 4;	/* will return value >4 */
+	    ++result;
+	}
     }
 
-    return errors > 0;
+    return result;
 }

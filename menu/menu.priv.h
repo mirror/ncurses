@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,8 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -35,14 +36,20 @@
 * Top level private header file for all libnmenu modules                   *
 ***************************************************************************/
 
+#ifndef MENU_PRIV_H_incl
+#define MENU_PRIV_H_incl 1
+
+#include <ncurses_cfg.h>
+#include <curses.h>
+
 #include "mf_common.h"
 #include "menu.h"
 
 /* Backspace code */
 #define BS (8)
 
-extern ITEM _nc_Default_Item;
-extern MENU _nc_Default_Menu;
+extern NCURSES_EXPORT_VAR(ITEM) _nc_Default_Item;
+extern NCURSES_EXPORT_VAR(MENU) _nc_Default_Menu;
 
 /* Normalize item to default if none was given */
 #define Normalize_Item( item ) ((item)=(item)?(item):&_nc_Default_Item)
@@ -101,14 +108,16 @@ extern MENU _nc_Default_Menu;
     (menu)->pattern[0] = '\0'; }
 
 /* Internal functions. */
-extern void _nc_Draw_Menu(const MENU *);
-extern void _nc_Show_Menu(const MENU *);
-extern void _nc_Calculate_Item_Length_and_Width(MENU *);
-extern void _nc_Post_Item(const MENU *, const ITEM *);
-extern bool _nc_Connect_Items(MENU *, ITEM **);
-extern void _nc_Disconnect_Items(MENU *);
-extern void _nc_New_TopRow_and_CurrentItem(MENU *,int, ITEM *);
-extern void _nc_Link_Items(MENU *);
-extern int  _nc_Match_Next_Character_In_Item_Name(MENU*,int,ITEM**);
-extern int  _nc_menu_cursor_pos(const MENU* menu, const ITEM* item,
+extern NCURSES_EXPORT(void) _nc_Draw_Menu (const MENU *);
+extern NCURSES_EXPORT(void) _nc_Show_Menu (const MENU *);
+extern NCURSES_EXPORT(void) _nc_Calculate_Item_Length_and_Width (MENU *);
+extern NCURSES_EXPORT(void) _nc_Post_Item (const MENU *, const ITEM *);
+extern NCURSES_EXPORT(bool) _nc_Connect_Items (MENU *, ITEM **);
+extern NCURSES_EXPORT(void) _nc_Disconnect_Items (MENU *);
+extern NCURSES_EXPORT(void) _nc_New_TopRow_and_CurrentItem (MENU *,int, ITEM *);
+extern NCURSES_EXPORT(void) _nc_Link_Items (MENU *);
+extern NCURSES_EXPORT(int)  _nc_Match_Next_Character_In_Item_Name (MENU*,int,ITEM**);
+extern NCURSES_EXPORT(int)  _nc_menu_cursor_pos (const MENU* menu, const ITEM* item,
 				int* pY, int* pX);
+
+#endif /* MENU_PRIV_H_incl */

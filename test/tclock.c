@@ -1,7 +1,19 @@
+/* $Id: tclock.c,v 1.22 2002/06/29 23:34:13 tom Exp $ */
+
 #include "test.priv.h"
 
 #include <math.h>
-#include <time.h>
+
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
 
 /*
   tclock - analog/digital clock for curses.
@@ -103,12 +115,10 @@ dline(int pair, int from_x, int from_y, int x2, int y2, char ch)
 }
 
 int
-main(
-    int argc GCC_UNUSED,
-    char *argv[]GCC_UNUSED)
+main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     int i, cx, cy;
-    double mradius, hradius, mangle, hangle;
+    double cr, mradius, hradius, mangle, hangle;
     double sangle, sradius, hours;
     int hdx, hdy;
     int mdx, mdy;
@@ -119,6 +129,12 @@ main(
     struct tm *t;
     char szChar[10];
     int my_bg = COLOR_BLACK;
+#if HAVE_GETTIMEOFDAY
+    struct timeval current;
+    double fraction = 0.0;
+#endif
+
+    setlocale(LC_ALL, "");
 
     initscr();
     noecho();
@@ -142,14 +158,16 @@ main(
 #endif
     cx = (COLS - 1) / 2;	/* 39 */
     cy = LINES / 2;		/* 12 */
-    ch = (cx > cy) ? cy : cx;	/* usually cy */
-    mradius = (3 * cy) / 4;	/* 9 */
-    hradius = cy / 2;		/* 6 */
-    sradius = (2 * cy) / 3;	/* 8 */
+    if (cx / ASPECT < cy)
+	cr = cx / ASPECT;
+    else
+	cr = cy;
+    sradius = (5 * cr) / 6;	/* 10 */
+    mradius = (3 * cr) / 4;	/* 9 */
+    hradius = cr / 2;		/* 6 */
 
     for (i = 0; i < 12; i++) {
 	sangle = (i + 1) * (2.0 * PI) / 12.0;
-	sradius = (5 * cy) / 6;	/* 10 */
 	sdx = A2X(sangle, sradius);
 	sdy = A2Y(sangle, sradius);
 	sprintf(szChar, "%d", i + 1);
@@ -159,9 +177,9 @@ main(
 
     mvaddstr(0, 0, "ASCII Clock by Howard Jones (ha.jones@ic.ac.uk),1994");
 
-    sradius = 8;
+    sradius = (4 * sradius) / 5;
     for (;;) {
-	napms(1000);
+	napms(100);
 
 	tim = time(0);
 	t = localtime(&tim);
@@ -170,7 +188,7 @@ main(
 	if (hours > 12.0)
 	    hours -= 12.0;
 
-	mangle = ((t->tm_min) * (2 * PI) / 60.0);
+	mangle = ((t->tm_min + (t->tm_sec / 60.0)) * (2 * PI) / 60.0);
 	mdx = A2X(mangle, mradius);
 	mdy = A2Y(mangle, mradius);
 
@@ -178,7 +196,11 @@ main(
 	hdx = A2X(hangle, hradius);
 	hdy = A2Y(hangle, hradius);
 
-	sangle = ((t->tm_sec) * (2.0 * PI) / 60.0);
+#if HAVE_GETTIMEOFDAY
+	gettimeofday(&current, 0);
+	fraction = (current.tv_usec / 1.0e6);
+#endif
+	sangle = ((t->tm_sec + fraction) * (2.0 * PI) / 60.0);
 	sdx = A2X(sangle, sradius);
 	sdy = A2Y(sangle, sradius);
 
@@ -191,7 +213,7 @@ main(
 	if (has_colors())
 	    attrset(COLOR_PAIR(1));
 
-	plot(cx + sdx, cy - sdy, 'O');
+	dline(1, cx, cy, cx + sdx, cy - sdy, 'O');
 
 	if (has_colors())
 	    attrset(COLOR_PAIR(0));
@@ -199,7 +221,7 @@ main(
 	mvaddstr(LINES - 2, 0, ctime(&tim));
 	refresh();
 	if ((t->tm_sec % 5) == 0
-	 && t->tm_sec != lastbeep) {
+	    && t->tm_sec != lastbeep) {
 	    lastbeep = t->tm_sec;
 	    beep();
 	}
@@ -207,20 +229,22 @@ main(
 	if ((ch = getch()) != ERR) {
 #ifdef KEY_RESIZE
 	    if (ch == KEY_RESIZE) {
+		flash();
 		erase();
+		wrefresh(curscr);
 		goto restart;
 	    }
 #endif
 	    break;
 	}
 
-	plot(cx + sdx, cy - sdy, ' ');
 	dline(0, cx, cy, cx + hdx, cy - hdy, ' ');
 	dline(0, cx, cy, cx + mdx, cy - mdy, ' ');
+	dline(0, cx, cy, cx + sdx, cy - sdy, ' ');
 
     }
 
     curs_set(1);
     endwin();
-    return 0;
+    ExitProgram(EXIT_SUCCESS);
 }

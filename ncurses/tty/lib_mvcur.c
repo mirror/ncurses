@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -152,7 +152,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.72 2000/10/08 00:58:25 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.86 2002/09/14 23:02:06 Philippe.Blain Exp $")
 
 #define CURRENT_ROW	SP->_cursrow	/* phys cursor row */
 #define CURRENT_COLUMN	SP->_curscol	/* phys cursor column */
@@ -206,7 +206,7 @@ trace_normalized_cost(const char *capname, const char *cap, int affcnt)
 
 #endif
 
-int
+NCURSES_EXPORT(int)
 _nc_msec_cost(const char *const cap, int affcnt)
 /* compute the cost of a given operation */
 {
@@ -222,11 +222,11 @@ _nc_msec_cost(const char *const cap, int affcnt)
 		float number = 0.0;
 
 		for (cp += 2; *cp != '>'; cp++) {
-		    if (isdigit(*cp))
+		    if (isdigit(UChar(*cp)))
 			number = number * 10 + (*cp - '0');
 		    else if (*cp == '*')
 			number *= affcnt;
-		    else if (*cp == '.' && (*++cp != '>') && isdigit(*cp))
+		    else if (*cp == '.' && (*++cp != '>') && isdigit(UChar(*cp)))
 			number += (*cp - '0') / 10.0;
 		}
 
@@ -262,7 +262,7 @@ reset_scroll_region(void)
     }
 }
 
-void
+NCURSES_EXPORT(void)
 _nc_mvcur_resume(void)
 /* what to do at initialization time and after each shellout */
 {
@@ -292,7 +292,7 @@ _nc_mvcur_resume(void)
     }
 }
 
-void
+NCURSES_EXPORT(void)
 _nc_mvcur_init(void)
 /* initialize the cost structure */
 {
@@ -406,7 +406,7 @@ _nc_mvcur_init(void)
     _nc_mvcur_resume();
 }
 
-void
+NCURSES_EXPORT(void)
 _nc_mvcur_wrap(void)
 /* wrap up cursor-addressing mode */
 {
@@ -498,7 +498,9 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 		vcost = SP->_cud_cost;
 	    }
 
-	    if (cursor_down && (n * SP->_cud1_cost < vcost)) {
+	    if (cursor_down
+		&& (*cursor_down != '\n' || SP->_nl)
+		&& (n * SP->_cud1_cost < vcost)) {
 		vcost = repeated_append(_nc_str_copy(target, &save), 0,
 					SP->_cud1_cost, n, cursor_down);
 	    }
@@ -569,6 +571,8 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 #endif /* USE_HARD_TABS */
 
 #if defined(REAL_ATTR) && defined(WANT_CHAR)
+		if (n <= 0 || n >= (int) check.s_size)
+		    ovw = FALSE;
 #if BSD_TPUTS
 		/*
 		 * If we're allowing BSD-style padding in tputs, don't generate
@@ -581,7 +585,7 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 		    && n < (int) check.s_size
 		    && vcost == 0
 		    && str[0] == '\0'
-		    && isdigit(TextOf(WANT_CHAR(to_y, from_x))))
+		    && isdigit(CharOf(WANT_CHAR(to_y, from_x))))
 		    ovw = FALSE;
 #endif
 		/*
@@ -595,17 +599,23 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 		if (ovw) {
 		    int i;
 
-		    for (i = 0; i < n; i++)
-			if ((WANT_CHAR(to_y, from_x + i) & A_ATTRIBUTES) != CURRENT_ATTR) {
+		    for (i = 0; i < n; i++) {
+			NCURSES_CH_T ch = WANT_CHAR(to_y, from_x + i);
+			if (AttrOf(ch) != CURRENT_ATTR
+#if USE_WIDEC_SUPPORT
+			    || !Charable(ch)
+#endif
+			    ) {
 			    ovw = FALSE;
 			    break;
 			}
+		    }
 		}
 		if (ovw) {
 		    int i;
 
 		    for (i = 0; i < n; i++)
-			*check.s_tail++ = WANT_CHAR(to_y, from_x + i);
+			*check.s_tail++ = CharOf(WANT_CHAR(to_y, from_x + i));
 		    *check.s_tail = '\0';
 		    check.s_size -= n;
 		    lhcost += n * SP->_char_padding;
@@ -826,14 +836,18 @@ onscreen_mvcur(int yold, int xold, int ynew, int xnew, bool ovw)
 	return (ERR);
 }
 
-int
+NCURSES_EXPORT(int)
 mvcur(int yold, int xold, int ynew, int xnew)
 /* optimized cursor move from (yold, xold) to (ynew, xnew) */
 {
-    TR(TRACE_MOVE, ("mvcur(%d,%d,%d,%d) called", yold, xold, ynew, xnew));
+    TR(TRACE_CALLS | TRACE_MOVE, (T_CALLED("mvcur(%d,%d,%d,%d)"),
+				  yold, xold, ynew, xnew));
+
+    if (SP == 0)
+	returnCode(ERR);
 
     if (yold == ynew && xold == xnew)
-	return (OK);
+	returnCode(OK);
 
     /*
      * Most work here is rounding for terminal boundaries getting the
@@ -848,26 +862,35 @@ mvcur(int yold, int xold, int ynew, int xnew)
     if (xold >= screen_columns) {
 	int l;
 
-	l = (xold + 1) / screen_columns;
-	yold += l;
-	if (yold >= screen_lines)
-	    l -= (yold - screen_lines - 1);
+	if (SP->_nl) {
+	    l = (xold + 1) / screen_columns;
+	    yold += l;
+	    if (yold >= screen_lines)
+		l -= (yold - screen_lines - 1);
 
-	while (l > 0) {
-	    if (newline) {
-		TPUTS_TRACE("newline");
-		tputs(newline, 0, _nc_outch);
-	    } else
-		putchar('\n');
-	    l--;
-	    if (xold > 0) {
-		if (carriage_return) {
-		    TPUTS_TRACE("carriage_return");
-		    tputs(carriage_return, 0, _nc_outch);
+	    while (l > 0) {
+		if (newline) {
+		    TPUTS_TRACE("newline");
+		    tputs(newline, 0, _nc_outch);
 		} else
-		    putchar('\r');
-		xold = 0;
+		    putchar('\n');
+		l--;
+		if (xold > 0) {
+		    if (carriage_return) {
+			TPUTS_TRACE("carriage_return");
+			tputs(carriage_return, 0, _nc_outch);
+		    } else
+			putchar('\r');
+		    xold = 0;
+		}
 	    }
+	} else {
+	    /*
+	     * If caller set nonl(), we cannot really use newlines to position
+	     * to the next row.
+	     */
+	    xold = -1;
+	    yold = -1;
 	}
     }
 
@@ -877,11 +900,11 @@ mvcur(int yold, int xold, int ynew, int xnew)
 	ynew = screen_lines - 1;
 
     /* destination location is on screen now */
-    return (onscreen_mvcur(yold, xold, ynew, xnew, TRUE));
+    returnCode(onscreen_mvcur(yold, xold, ynew, xnew, TRUE));
 }
 
 #if defined(TRACE) || defined(NCURSES_TEST)
-int _nc_optimize_enable = OPTIMIZE_ALL;
+NCURSES_EXPORT_VAR(int) _nc_optimize_enable = OPTIMIZE_ALL;
 #endif
 
 #if defined(MAIN) || defined(NCURSES_TEST)
@@ -894,12 +917,12 @@ int _nc_optimize_enable = OPTIMIZE_ALL;
 #include <tic.h>
 #include <dump_entry.h>
 
-const char *_nc_progname = "mvcur";
+NCURSES_EXPORT_VAR(const char *) _nc_progname = "mvcur";
 
 static unsigned long xmits;
 
 /* these override lib_tputs.c */
-int
+NCURSES_EXPORT(int)
 tputs(const char *string, int affcnt GCC_UNUSED, int (*outc) (int) GCC_UNUSED)
 /* stub tputs() that dumps sequences in a visible form */
 {
@@ -910,24 +933,20 @@ tputs(const char *string, int affcnt GCC_UNUSED, int (*outc) (int) GCC_UNUSED)
     return (OK);
 }
 
-int
+NCURSES_EXPORT(int)
 putp(const char *string)
 {
     return (tputs(string, 1, _nc_outch));
 }
 
-int
+NCURSES_EXPORT(int)
 _nc_outch(int ch)
 {
     putc(ch, stdout);
     return OK;
 }
 
-char PC = 0;			/* used by termcap library */
-short ospeed = 0;		/* used by termcap library */
-int _nc_nulls_sent = 0;		/* used by 'tack' program */
-
-int
+NCURSES_EXPORT(int)
 delay_output(int ms GCC_UNUSED)
 {
     return OK;
@@ -1054,7 +1073,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    }
 	} else if (buf[0] == 'i') {
 	    dump_init((char *) NULL, F_TERMINFO, S_TERMINFO, 70, 0, FALSE);
-	    dump_entry(&cur_term->type, FALSE, TRUE, 0);
+	    dump_entry(&cur_term->type, FALSE, TRUE, 0, 0, 0);
 	    putchar('\n');
 	} else if (buf[0] == 'o') {
 	    if (_nc_optimize_enable & OPTIMIZE_MVCUR) {

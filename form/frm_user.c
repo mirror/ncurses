@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,12 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_user.c,v 1.8 1999/05/16 17:22:21 juergen Exp $")
+MODULE_ID("$Id: frm_user.c,v 1.10 2002/07/06 15:33:27 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -43,7 +44,8 @@ MODULE_ID("$Id: frm_user.c,v 1.8 1999/05/16 17:22:21 juergen Exp $")
 |
 |   Return Values :  E_OK         - on success
 +--------------------------------------------------------------------------*/
-int set_form_userptr(FORM * form, void *usrptr)
+NCURSES_EXPORT(int)
+set_form_userptr (FORM * form, void *usrptr)
 {
   Normalize_Form(form)->usrptr = usrptr;
   RETURN(E_OK);
@@ -59,7 +61,8 @@ int set_form_userptr(FORM * form, void *usrptr)
 |   Return Values :  Value of pointer. If no such pointer has been set,
 |                    NULL is returned
 +--------------------------------------------------------------------------*/
-void *form_userptr(const FORM * form)
+NCURSES_EXPORT(void *)
+form_userptr (const FORM * form)
 {
   return Normalize_Form(form)->usrptr;
 }

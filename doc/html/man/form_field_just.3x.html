@@ -1,24 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  * t
+  ****************************************************************************
+  * Copyright (c) 1998,2002 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: form_field_just.3x,v 1.6 2002/01/19 22:48:41 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>form_field_just 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>form_field_just 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>form_field_just</B> - retrieve field characteristics
+       <STRONG>form_field_just</STRONG> - retrieve field characteristics
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;form.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
        int set_field_just(FIELD *field, int justification);
        int field_just(const FIELD *field);
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The   function   <B>set_field_just</B>   sets  the  justification
-       attribute of a field; <B>field_just</B> returns a field's  justi-
+       The   function   <STRONG>set_field_just</STRONG>   sets  the  justification
+       attribute of a field; <STRONG>field_just</STRONG> returns a field's  justi-
        fication attribute.  The attribute may be one of NO_JUSTI-
        FICATION, JUSTIFY_RIGHT, JUSTIFY_LEFT, or  JUSTIFY_CENTER.
 
@@ -26,31 +65,31 @@
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       The  function <B>field_just</B> returns one of: NO_JUSTIFICATION,
+       The  function <STRONG>field_just</STRONG> returns one of: NO_JUSTIFICATION,
        JUSTIFY_RIGHT, JUSTIFY_LEFT, or JUSTIFY_CENTER.
 
-       The function <B>set_field_just</B> return one of the following:
+       The function <STRONG>set_field_just</STRONG> return one of the following:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or  out-of-range  argu-
             ment.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>  and  3x  pages  whose  names begin "form_" for
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> and related pages whose names begin "form_" for
        detailed descriptions of the entry points.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       The header file <B>&lt;form.h&gt;</B> automatically includes the header
-       file <B>&lt;curses.h&gt;</B>.
+       The header file <STRONG>&lt;form.h&gt;</STRONG> automatically includes the header
+       file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,11 +40,13 @@
 **	comments, none of the original code remains - T.Dickey).
 */
 
+#include <curses.priv.h>
+
 #ifdef __BEOS__
+#undef false
+#undef true
 #include <OS.h>
 #endif
-
-#include <curses.priv.h>
 
 #if USE_FUNC_POLL
 # if HAVE_SYS_TIME_H
@@ -59,7 +61,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: lib_twait.c,v 1.39 2000/08/26 19:34:15 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.46 2002/09/01 00:28:18 tom Exp $")
 
 static long
 _nc_gettime(bool first)
@@ -85,9 +87,33 @@ _nc_gettime(bool first)
     }
     res = (t1 - t0) * 1000;
 #endif
-    T(("%s time: %ld msec", first ? "get" : "elapsed", res));
+    TR(TRACE_IEVENT, ("%s time: %ld msec", first ? "get" : "elapsed", res));
     return res;
 }
+
+#ifdef NCURSES_WGETCH_EVENTS
+NCURSES_EXPORT(int)
+_nc_eventlist_timeout(_nc_eventlist * evl)
+{
+    _nc_event **ev, **last;
+    int event_delay = -1;
+
+    if (evl != 0) {
+
+	ev = evl->events;
+	last = ev + evl->count;
+
+	while (ev < last) {
+	    if ((*ev)->type == _NC_EVENT_TIMEOUT_MSEC) {
+		event_delay = (*ev)->data.timeout_msec;
+		if (event_delay < 0)
+		    event_delay = LONG_MAX;	/* FIXME Is this defined? */
+	    }
+	}
+    }
+    return event_delay;
+}
+#endif /* NCURSES_WGETCH_EVENTS */
 
 /*
  * Wait a specified number of milliseconds, returning nonzero if the timer
@@ -97,21 +123,33 @@ _nc_gettime(bool first)
  *	1 - ncurses' normal input-descriptor
  *	2 - mouse descriptor, if any
  *	3 - either input or mouse.
+ *
+ * Experimental:  if NCURSES_WGETCH_EVENTS is defined, (mode & 4) determines
+ * whether to pay attention to evl argument.  If set, the smallest of
+ * millisecond and of timeout of evl is taken.
+ *
  * We return a mask that corresponds to the mode (e.g., 2 for mouse activity).
  *
  * If the milliseconds given are -1, the wait blocks until activity on the
  * descriptors.
  */
-int
-_nc_timed_wait(int mode, int milliseconds, int *timeleft)
+NCURSES_EXPORT(int)
+_nc_timed_wait(int mode,
+	       int milliseconds,
+	       int *timeleft
+	       EVENTLIST_2nd(_nc_eventlist * evl))
 {
     int fd;
     int count;
-
     int result;
 
+#ifdef NCURSES_WGETCH_EVENTS
+    int timeout_is_event = 0;
+#endif
+
 #if USE_FUNC_POLL
-    struct pollfd fds[2];
+    struct pollfd fd_list[2];
+    struct pollfd *fds = fd_list;
 #elif defined(__BEOS__)
 #elif HAVE_SELECT
     static fd_set set;
@@ -119,7 +157,20 @@ _nc_timed_wait(int mode, int milliseconds, int *timeleft)
 
     long starttime, returntime;
 
-    T(("start twait: %d milliseconds, mode: %d", milliseconds, mode));
+    TR(TRACE_IEVENT, ("start twait: %d milliseconds, mode: %d",
+		      milliseconds, mode));
+
+#ifdef NCURSES_WGETCH_EVENTS
+    if (mode & 4) {
+	int event_delay = _nc_eventlist_timeout(evl);
+
+	if (event_delay >= 0
+	    && (milliseconds >= event_delay || milliseconds < 0)) {
+	    milliseconds = event_delay;
+	    timeout_is_event = 1;
+	}
+    }
+#endif
 
 #if PRECISE_GETTIME
   retry:
@@ -128,8 +179,19 @@ _nc_timed_wait(int mode, int milliseconds, int *timeleft)
 
     count = 0;
 
+#ifdef NCURSES_WGETCH_EVENTS
+    if ((mode & 4) && evl)
+	evl->result_flags = 0;
+#endif
+
 #if USE_FUNC_POLL
-    memset(fds, 0, sizeof(fds));
+    memset(fd_list, 0, sizeof(fd_list));
+
+#ifdef NCURSES_WGETCH_EVENTS
+    if ((mode & 4) && evl)
+	fds = typeMalloc(struct pollfd, 2 + evl->count);
+#endif
+
     if (mode & 1) {
 	fds[count].fd = SP->_ifd;
 	fds[count].events = POLLIN;
@@ -141,7 +203,53 @@ _nc_timed_wait(int mode, int milliseconds, int *timeleft)
 	fds[count].events = POLLIN;
 	count++;
     }
+#ifdef NCURSES_WGETCH_EVENTS
+    if ((mode & 4) && evl) {
+	_nc_event **ev = evl->events;
+	_nc_event **last = ev + evl->count;
+
+	while (ev < last) {
+	    if ((*ev)->type == _NC_EVENT_FILE
+		&& ((*ev)->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
+		fds[count].fd = (*ev)->data.fev.fd;
+		fds[count].events = POLLIN;
+		count++;
+	    }
+	}
+    }
+#endif
+
     result = poll(fds, count, milliseconds);
+
+#ifdef NCURSES_WGETCH_EVENTS
+    if ((mode & 4) && evl) {
+	_nc_event **ev = evl->events;
+	_nc_event **last = ev + evl->count;
+	int c;
+
+	if (!result)
+	    count = 0;
+	while (ev < last) {
+	    if ((*ev)->type == _NC_EVENT_FILE
+		&& ((*ev)->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
+		(*ev)->data.fev.result = 0;
+		for (c = 0; c < count; c++)
+		    if (fds[c].fd == (*ev)->data.fev.fd
+			&& fds[c].revents & POLLIN) {
+			(*ev)->data.fev.result |= _NC_EVENT_FILE_READABLE;
+			evl->result_flags |= _NC_EVENT_FILE_READABLE;
+		    }
+	    } else if ((*ev)->type == _NC_EVENT_TIMEOUT_MSEC
+		       && !result && timeout_is_event) {
+		evl->result_flags |= _NC_EVENT_TIMEOUT_MSEC;
+	    }
+	}
+    }
+
+    if (fds != fd_list)
+	free((char *) fds);
+
+#endif
 
 #elif defined(__BEOS__)
     /*
@@ -152,26 +260,34 @@ _nc_timed_wait(int mode, int milliseconds, int *timeleft)
      *
      * FIXME: the return values from the ioctl aren't very clear if we get
      * interrupted.
+     *
+     * FIXME: this assumes mode&1 if milliseconds < 0 (see lib_getch.c).
      */
     result = 0;
     if (mode & 1) {
+	int step = (milliseconds < 0) ? 0 : 5000;
 	bigtime_t d;
 	bigtime_t useconds = milliseconds * 1000;
 	int n, howmany;
 
-	if (useconds == 0)	/* we're here to go _through_ the loop */
+	if (useconds <= 0)	/* we're here to go _through_ the loop */
 	    useconds = 1;
 
-	for (d = 0; d < useconds; d += 5000) {
+	for (d = 0; d < useconds; d += step) {
 	    n = 0;
 	    howmany = ioctl(0, 'ichr', &n);
 	    if (howmany >= 0 && n > 0) {
 		result = 1;
 		break;
 	    }
-	    if (useconds > 1)
-		snooze(5000);
-	    milliseconds -= 5;
+	    if (useconds > 1 && step > 0) {
+		snooze(step);
+		milliseconds -= (step / 1000);
+		if (milliseconds <= 0) {
+		    milliseconds = 0;
+		    break;
+		}
+	    }
 	}
     } else if (milliseconds > 0) {
 	snooze(milliseconds * 1000);
@@ -193,6 +309,20 @@ _nc_timed_wait(int mode, int milliseconds, int *timeleft)
 	FD_SET(fd, &set);
 	count = max(fd, count) + 1;
     }
+#ifdef NCURSES_WGETCH_EVENTS
+    if ((mode & 4) && evl) {
+	_nc_event **ev = evl->events;
+	_nc_event **last = ev + evl->count;
+
+	while (ev < last) {
+	    if ((*ev)->type == _NC_EVENT_FILE
+		&& ((*ev)->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
+		FD_SET((*ev)->data.fev.fd, &set);
+		count = max((*ev)->data.fev.fd + 1, count);
+	    }
+	}
+    }
+#endif
 
     if (milliseconds >= 0) {
 	struct timeval ntimeout;
@@ -202,12 +332,53 @@ _nc_timed_wait(int mode, int milliseconds, int *timeleft)
     } else {
 	result = select(count, &set, NULL, NULL, NULL);
     }
+
+#ifdef NCURSES_WGETCH_EVENTS
+    if ((mode & 4) && evl) {
+	_nc_event **ev = evl->events;
+	_nc_event **last = ev + evl->count;
+
+	evl->result_flags = 0;
+	while (ev < last) {
+	    if ((*ev)->type == _NC_EVENT_FILE
+		&& ((*ev)->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
+		(*ev)->data.fev.result = 0;
+		if (FD_ISSET((*ev)->data.fev.fd, &set)) {
+		    (*ev)->data.fev.result |= _NC_EVENT_FILE_READABLE;
+		    evl->result_flags |= _NC_EVENT_FILE_READABLE;
+		}
+	    } else if ((*ev)->type == _NC_EVENT_TIMEOUT_MSEC
+		       && !result && timeout_is_event)
+		evl->result_flags |= _NC_EVENT_TIMEOUT_MSEC;
+	}
+    }
 #endif
+
+#endif /* USE_FUNC_POLL, etc */
 
     returntime = _nc_gettime(FALSE);
 
     if (milliseconds >= 0)
 	milliseconds -= (returntime - starttime);
+
+#ifdef NCURSES_WGETCH_EVENTS
+    if (evl) {
+	_nc_event **ev = evl->events;
+	_nc_event **last = ev + evl->count;
+
+	evl->result_flags = 0;
+	while (ev < last) {
+	    if ((*ev)->type == _NC_EVENT_TIMEOUT_MSEC) {
+		long diff = (returntime - starttime);
+		if ((*ev)->data.timeout_msec <= diff)
+		    (*ev)->data.timeout_msec = 0;
+		else
+		    (*ev)->data.timeout_msec -= diff;
+	    }
+
+	}
+    }
+#endif
 
 #if PRECISE_GETTIME
     /*
@@ -227,8 +398,8 @@ _nc_timed_wait(int mode, int milliseconds, int *timeleft)
     if (timeleft)
 	*timeleft = milliseconds;
 
-    T(("end twait: returned %d (%d), remaining time %d msec",
-       result, errno, milliseconds));
+    TR(TRACE_IEVENT, ("end twait: returned %d (%d), remaining time %d msec",
+		      result, errno, milliseconds));
 
     /*
      * Both 'poll()' and 'select()' return the number of file descriptors
@@ -260,6 +431,10 @@ _nc_timed_wait(int mode, int milliseconds, int *timeleft)
 	} else
 	    result = 0;
     }
+#ifdef NCURSES_WGETCH_EVENTS
+    if ((mode & 4) && evl && evl->result_flags)
+	result |= 4;
+#endif
 
     return (result);
 }

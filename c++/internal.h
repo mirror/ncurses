@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,13 +28,16 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
+ *   Author: Juergen Pfeifer, 1997                                          *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
-// $Id: internal.h,v 1.6 2000/09/02 18:22:23 tom Exp $
+// $Id: internal.h,v 1.9 2002/07/13 11:35:08 juergen Exp $
 
-#ifndef _CPLUS_INTERNAL_H
-#define _CPLUS_INTERNAL_H 1
+#ifndef NCURSES_CPLUS_INTERNAL_H
+#define NCURSES_CPLUS_INTERNAL_H 1
+
+#include <ncurses_cfg.h>
 
 #if USE_RCS_IDS
 #define MODULE_ID(id) static const char Ident[] = id;
@@ -44,4 +47,4 @@
 
 #define CTRL(x) ((x) & 0x1f)
 
-#endif
+#endif // NCURSES_CPLUS_INTERNAL_H

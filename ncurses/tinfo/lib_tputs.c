@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,16 +45,16 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.51 2000/10/08 00:22:24 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.60 2002/08/17 23:44:08 tom Exp $")
 
-char PC = 0;			/* used by termcap library */
-short ospeed = 0;		/* used by termcap library */
+NCURSES_EXPORT_VAR(char) PC = 0;		/* used by termcap library */
+NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;	/* used by termcap library */
 
-int _nc_nulls_sent = 0;		/* used by 'tack' program */
+NCURSES_EXPORT_VAR(int) _nc_nulls_sent = 0;	/* used by 'tack' program */
 
 static int (*my_outch) (int c) = _nc_outch;
 
-int
+NCURSES_EXPORT(int)
 delay_output(int ms)
 {
     T((T_CALLED("delay_output(%d)"), ms));
@@ -75,13 +75,13 @@ delay_output(int ms)
     returnCode(OK);
 }
 
-void
+NCURSES_EXPORT(void)
 _nc_flush(void)
 {
     (void) fflush(NC_OUTPUT);
 }
 
-int
+NCURSES_EXPORT(int)
 _nc_outch(int ch)
 {
 #ifdef TRACE
@@ -102,79 +102,13 @@ _nc_outch(int ch)
     return OK;
 }
 
-#if USE_WIDEC_SUPPORT
-/*
- * Reference: The Unicode Standard 2.0
- *
- * No surrogates supported (we're storing only one 16-bit Unicode value per
- * cell).
- */
-int
-_nc_utf8_outch(int ch)
-{
-    static const unsigned byteMask = 0xBF;
-    static const unsigned otherMark = 0x80;
-    static const unsigned firstMark[] =
-    {0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC};
-
-    int result[7], *ptr;
-    int count = 0;
-
-    if ((unsigned int) ch < 0x80)
-	count = 1;
-    else if ((unsigned int) ch < 0x800)
-	count = 2;
-    else if ((unsigned int) ch < 0x10000)
-	count = 3;
-    else if ((unsigned int) ch < 0x200000)
-	count = 4;
-    else if ((unsigned int) ch < 0x4000000)
-	count = 5;
-    else if ((unsigned int) ch <= 0x7FFFFFFF)
-	count = 6;
-    else {
-	count = 3;
-	ch = 0xFFFD;
-    }
-    ptr = result + count;
-    switch (count) {
-    case 6:
-	*--ptr = (ch | otherMark) & byteMask;
-	ch >>= 6;
-	/* FALLTHRU */
-    case 5:
-	*--ptr = (ch | otherMark) & byteMask;
-	ch >>= 6;
-	/* FALLTHRU */
-    case 4:
-	*--ptr = (ch | otherMark) & byteMask;
-	ch >>= 6;
-	/* FALLTHRU */
-    case 3:
-	*--ptr = (ch | otherMark) & byteMask;
-	ch >>= 6;
-	/* FALLTHRU */
-    case 2:
-	*--ptr = (ch | otherMark) & byteMask;
-	ch >>= 6;
-	/* FALLTHRU */
-    case 1:
-	*--ptr = (ch | firstMark[count]);
-	break;
-    }
-    while (count--)
-	_nc_outch(*ptr++);
-    return OK;
-}
-#endif
-
-int
+NCURSES_EXPORT(int)
 putp(const char *string)
 {
     return tputs(string, 1, _nc_outch);
 }
 
-int
+NCURSES_EXPORT(int)
 tputs(const char *string, int affcnt, int (*outc) (int))
 {
     bool always_delay;
@@ -225,19 +159,19 @@ tputs(const char *string, int affcnt, int (*outc) (int))
      * (like nethack) actually do the likes of tputs("50") to get delays.
      */
     trailpad = 0;
-    if (isdigit(*string)) {
-	while (isdigit(*string)) {
+    if (isdigit(UChar(*string))) {
+	while (isdigit(UChar(*string))) {
 	    trailpad = trailpad * 10 + (*string - '0');
 	    string++;
 	}
 	trailpad *= 10;
 	if (*string == '.') {
 	    string++;
-	    if (isdigit(*string)) {
+	    if (isdigit(UChar(*string))) {
 		trailpad += (*string - '0');
 		string++;
 	    }
-	    while (isdigit(*string))
+	    while (isdigit(UChar(*string)))
 		string++;
 	}
 
@@ -262,25 +196,26 @@ tputs(const char *string, int affcnt, int (*outc) (int))
 		bool mandatory;
 
 		string++;
-		if ((!isdigit(*string) && *string != '.') || !strchr(string, '>')) {
+		if ((!isdigit(UChar(*string)) && *string != '.')
+		    || !strchr(string, '>')) {
 		    (*outc) ('$');
 		    (*outc) ('<');
 		    continue;
 		}
 
 		number = 0;
-		while (isdigit(*string)) {
+		while (isdigit(UChar(*string))) {
 		    number = number * 10 + (*string - '0');
 		    string++;
 		}
 		number *= 10;
 		if (*string == '.') {
 		    string++;
-		    if (isdigit(*string)) {
+		    if (isdigit(UChar(*string))) {
 			number += (*string - '0');
 			string++;
 		    }
-		    while (isdigit(*string))
+		    while (isdigit(UChar(*string)))
 			string++;
 		}
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,6 @@
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  ****************************************************************************/
 
-
 /*
 **	lib_erase.c
 **
@@ -41,33 +40,34 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_erase.c,v 1.11 1998/02/11 12:13:54 tom Exp $")
+MODULE_ID("$Id: lib_erase.c,v 1.15 2001/12/19 01:06:13 tom Exp $")
 
-int  werase(WINDOW	*win)
+NCURSES_EXPORT(int)
+werase(WINDOW *win)
 {
-int     code = ERR;
-int	y;
-chtype	blank;
-chtype	*sp, *end, *start;
+    int code = ERR;
+    int y;
+    NCURSES_CH_T blank;
+    NCURSES_CH_T *sp, *end, *start;
 
-	T((T_CALLED("werase(%p)"), win));
+    T((T_CALLED("werase(%p)"), win));
 
-	if (win) {
-	  blank = _nc_background(win);
-	  for (y = 0; y <= win->_maxy; y++) {
+    if (win) {
+	blank = win->_nc_bkgd;
+	for (y = 0; y <= win->_maxy; y++) {
 	    start = win->_line[y].text;
 	    end = &start[win->_maxx];
-	    
+
 	    for (sp = start; sp <= end; sp++)
-	      *sp = blank;
-	    
+		*sp = blank;
+
 	    win->_line[y].firstchar = 0;
 	    win->_line[y].lastchar = win->_maxx;
-	  }
-	  win->_curx = win->_cury = 0;
-	  win->_flags &= ~_WRAPPED;
-	  _nc_synchook(win);
-	  code = OK;
 	}
-	returnCode(code);
+	win->_curx = win->_cury = 0;
+	win->_flags &= ~_WRAPPED;
+	_nc_synchook(win);
+	code = OK;
+    }
+    returnCode(code);
 }

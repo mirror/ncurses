@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey <dickey@clark.net> 1996                        *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.19 2000/09/02 19:31:58 tom Exp $ */
+/* $Id: test.priv.h,v 1.35 2002/06/29 23:36:12 tom Exp $ */
 
 #if HAVE_CONFIG_H
 #include <ncurses_cfg.h>
@@ -40,12 +40,48 @@
 #define HAVE_WRESIZE 0
 #endif
 
-#ifndef HAVE_NC_ALLOC_H
-#define HAVE_NC_ALLOC_H 0
+#ifndef HAVE_CURSES_VERSION
+#define HAVE_CURSES_VERSION 0
+#endif
+
+#ifndef HAVE_FORM_H
+#define HAVE_FORM_H 0
+#endif
+
+#ifndef HAVE_LIBFORM
+#define HAVE_LIBFORM 0
+#endif
+
+#ifndef HAVE_LIBMENU
+#define HAVE_LIBMENU 0
+#endif
+
+#ifndef HAVE_LIBPANEL
+#define HAVE_LIBPANEL 0
 #endif
 
 #ifndef HAVE_LOCALE_H
 #define HAVE_LOCALE_H 0
+#endif
+
+#ifndef HAVE_MENU_H
+#define HAVE_MENU_H 0
+#endif
+
+#ifndef HAVE_NAPMS
+#define HAVE_NAPMS 1
+#endif
+
+#ifndef HAVE_NC_ALLOC_H
+#define HAVE_NC_ALLOC_H 0
+#endif
+
+#ifndef HAVE_PANEL_H
+#define HAVE_PANEL_H 0
+#endif
+
+#ifndef HAVE_WRESIZE
+#define HAVE_WRESIZE 0
 #endif
 
 #ifndef NCURSES_NOMACROS
@@ -64,7 +100,10 @@
 #include <unistd.h>
 #endif
 
+#include <signal.h>	/* include before curses.h to work around glibc bug */
+
 #include <curses.h>
+#include <term.h>
 
 #if NCURSES_NOMACROS
 #include <nomacros.h>
@@ -80,6 +119,12 @@ extern char *optarg;
 extern int optind;
 #endif /* HAVE_GETOPT_H */
 
+#if HAVE_LOCALE_H
+#include <locale.h>
+#else
+#define setlocale(name,string) /* nothing */
+#endif
+
 #ifndef GCC_NORETURN
 #define GCC_NORETURN /* nothing */
 #endif
@@ -87,17 +132,74 @@ extern int optind;
 #define GCC_UNUSED /* nothing */
 #endif
 
+#ifndef HAVE_GETNSTR
+#define getnstr(s,n) getstr(s)
+#endif
+
+#ifndef USE_WIDEC_SUPPORT
+#if defined(_XOPEN_SOURCE_EXTENDED) && defined(WACS_ULCORNER)
+#define USE_WIDEC_SUPPORT 1
+#else
+#define USE_WIDEC_SUPPORT 0
+#endif
+#endif
+
+#ifndef HAVE_TYPE_ATTR_T
+#if !USE_WIDEC_SUPPORT
+#define attr_t long
+#endif
+#endif
+
+#ifndef NCURSES_CH_T
+#if !USE_WIDEC_SUPPORT
+#define NCURSES_CH_T chtype
+#else
+#define NCURSES_CH_T cchar_t
+#endif
+#endif
+
+#ifndef CCHARW_MAX
+#define CCHARW_MAX 5
+#endif
+
+#ifndef KEY_MIN
+#define KEY_MIN 256	/* not defined in Solaris 8 */
+#endif
+
+#ifndef getcurx
+#define getcurx(win)            ((win)?(win)->_curx:ERR)
+#define getcury(win)            ((win)?(win)->_cury:ERR)
+#endif
+
+#ifndef getbegx
+#define getbegx(win)            ((win)?(win)->_begx:ERR)
+#define getbegy(win)            ((win)?(win)->_begy:ERR)
+#endif
+
+#ifndef getmaxx
+#define getmaxx(win)            ((win)?((win)->_maxx + 1):ERR)
+#define getmaxy(win)            ((win)?((win)->_maxy + 1):ERR)
+#endif
+
+/* ncurses implements tparm() with varargs, X/Open with a fixed-parameter list
+ * (which is incompatible with legacy usage, doesn't solve any problems).
+ */
+#define tparm3(a,b,c) tparm(a,b,c,0,0,0,0,0,0,0)
+#define tparm2(a,b)   tparm(a,b,0,0,0,0,0,0,0,0)
+
+#define UChar(c)    ((unsigned char)(c))
+
 #define SIZEOF(table)	(sizeof(table)/sizeof(table[0]))
 
 #if defined(NCURSES_VERSION) && HAVE_NC_ALLOC_H
 #include <nc_alloc.h>
 #else
-#define typeMalloc(type,n) (type *) malloc(n * sizeof(type))
-#define typeRealloc(type,n,p) (type *) realloc(p, n * sizeof(type))
+#define typeMalloc(type,n) (type *) malloc((n) * sizeof(type))
+#define typeRealloc(type,n,p) (type *) realloc(p, (n) * sizeof(type))
 #endif
 
 #ifndef ExitProgram
-#define ExitProgram(code) return code
+#define ExitProgram(code) exit(code)
 #endif
 
 #ifndef EXIT_SUCCESS

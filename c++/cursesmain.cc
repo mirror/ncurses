@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2001 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,13 +28,14 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1997                 *
+ *   Author: Juergen Pfeifer, 1997                                          *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
-#include "cursesapp.h"
 #include "internal.h"
+#include "cursesapp.h"
 
-MODULE_ID("$Id: cursesmain.cc,v 1.5 1999/05/16 17:31:22 juergen Exp $")
+MODULE_ID("$Id: cursesmain.cc,v 1.9 2002/07/06 15:47:52 juergen Exp $")
 
 /* This is the default implementation of main() for a NCursesApplication.
  * You only have to instantiate a static NCursesApplication object in your
@@ -45,7 +46,13 @@ int main(int argc, char* argv[])
   NCursesApplication* A = NCursesApplication::getApplication();
   if (!A)
     return(1);
-  A->handleArgs(argc,argv);
-  ::endwin();
-  return((*A)());
+  else {
+    int res;
+
+    A->handleArgs(argc,argv);
+    ::endwin();
+    res = (*A)();
+    ::endwin();
+    return(res);
+  }
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,72 +39,104 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_printw.c,v 1.7 1998/04/11 22:53:44 tom Exp $")
+MODULE_ID("$Id: lib_printw.c,v 1.13 2002/10/05 22:52:21 tom Exp $")
 
-int printw(NCURSES_CONST char *fmt, ...)
+NCURSES_EXPORT(int)
+printw(NCURSES_CONST char *fmt,...)
 {
-	va_list argp;
-	int code;
+    va_list argp;
+    int code;
 
-	T(("printw(%s,...) called", _nc_visbuf(fmt)));
+#ifdef TRACE
+    va_start(argp, fmt);
+    T((T_CALLED("printw(%s%s)"),
+       _nc_visbuf(fmt), _nc_varargs(fmt, argp)));
+    va_end(argp);
+#endif
 
+    va_start(argp, fmt);
+    code = vwprintw(stdscr, fmt, argp);
+    va_end(argp);
+
+    returnCode(code);
+}
+
+NCURSES_EXPORT(int)
+wprintw(WINDOW *win, NCURSES_CONST char *fmt,...)
+{
+    va_list argp;
+    int code;
+
+#ifdef TRACE
+    va_start(argp, fmt);
+    T((T_CALLED("wprintw(%p,%s%s)"),
+       win, _nc_visbuf(fmt), _nc_varargs(fmt, argp)));
+    va_end(argp);
+#endif
+
+    va_start(argp, fmt);
+    code = vwprintw(win, fmt, argp);
+    va_end(argp);
+
+    returnCode(code);
+}
+
+NCURSES_EXPORT(int)
+mvprintw(int y, int x, NCURSES_CONST char *fmt,...)
+{
+    va_list argp;
+    int code;
+
+#ifdef TRACE
+    va_start(argp, fmt);
+    T((T_CALLED("mvprintw(%d,%d,%s%s)"),
+       y, x, _nc_visbuf(fmt), _nc_varargs(fmt, argp)));
+    va_end(argp);
+#endif
+
+    if ((code = move(y, x)) != ERR) {
 	va_start(argp, fmt);
 	code = vwprintw(stdscr, fmt, argp);
 	va_end(argp);
-
-	return code;
+    }
+    returnCode(code);
 }
 
-int wprintw(WINDOW *win, NCURSES_CONST char *fmt, ...)
+NCURSES_EXPORT(int)
+mvwprintw(WINDOW *win, int y, int x, NCURSES_CONST char *fmt,...)
 {
-	va_list argp;
-	int code;
+    va_list argp;
+    int code;
 
-	T(("wprintw(%p,%s,...) called", win, _nc_visbuf(fmt)));
+#ifdef TRACE
+    va_start(argp, fmt);
+    T((T_CALLED("mvwprintw(%d,%d,%p,%s%s)"),
+       y, x, win, _nc_visbuf(fmt), _nc_varargs(fmt, argp)));
+    va_end(argp);
+#endif
 
+    if ((code = wmove(win, y, x)) != ERR) {
 	va_start(argp, fmt);
 	code = vwprintw(win, fmt, argp);
 	va_end(argp);
-
-	return code;
+    }
+    returnCode(code);
 }
 
-int mvprintw(int y, int x, NCURSES_CONST char *fmt, ...)
+NCURSES_EXPORT(int)
+vwprintw(WINDOW *win, NCURSES_CONST char *fmt, va_list argp)
 {
-	va_list argp;
-	int code = move(y, x);
+    char *buf;
+    int code = ERR;
 
-	if (code != ERR) {
-		va_start(argp, fmt);
-		code = vwprintw(stdscr, fmt, argp);
-		va_end(argp);
-	}
-	return code;
-}
+    T((T_CALLED("vwprintw(%p,%s,%p)"),
+       win, _nc_visbuf(fmt), argp));
 
-int mvwprintw(WINDOW *win, int y, int x, NCURSES_CONST char *fmt, ...)
-{
-	va_list argp;
-	int code = wmove(win, y, x);
-
-	if (code != ERR) {
-		va_start(argp, fmt);
-		code = vwprintw(win, fmt, argp);
-		va_end(argp);
-	}
-	return code;
-}
-
-int vwprintw(WINDOW *win, NCURSES_CONST char *fmt, va_list argp)
-{
-	char *buf = _nc_printf_string(fmt, argp);
-	int code = ERR;
-
-	if (buf != 0) {
-		code = waddstr(win, buf);
+    if ((buf = _nc_printf_string(fmt, argp)) != 0) {
+	code = waddstr(win, buf);
 #if USE_SAFE_SPRINTF
-		free(buf);
+	free(buf);
 #endif
-	}
-	return code;
+    }
+    returnCode(code);
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.60 2000/09/02 18:13:12 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.70 2002/10/12 21:50:18 tom Exp $")
 
 /****************************************************************************
  *
@@ -94,13 +94,17 @@ static int _use_env = TRUE;
 
 static void do_prototype(void);
 
-void
+NCURSES_EXPORT(void)
 use_env(bool f)
 {
+    T((T_CALLED("use_env()")));
     _use_env = f;
+    returnVoid;
 }
 
-int LINES = 0, COLS = 0, TABSIZE = 0;
+NCURSES_EXPORT_VAR(int) LINES = 0;
+NCURSES_EXPORT_VAR(int) COLS = 0;
+NCURSES_EXPORT_VAR(int) TABSIZE = 0;
 
 static void
 _nc_get_screensize(int *linep, int *colp)
@@ -133,7 +137,7 @@ _nc_get_screensize(int *linep, int *colp)
 	    *colp = screendata[0];
 	    *linep = screendata[1];
 	    T(("EMX screen size: environment LINES = %d COLUMNS = %d",
-		    *linep, *colp));
+	       *linep, *colp));
 	}
 #endif
 #if HAVE_SIZECHANGE
@@ -165,15 +169,18 @@ _nc_get_screensize(int *linep, int *colp)
 #endif /* HAVE_SIZECHANGE */
 
 	/* if we can't get dynamic info about the size, use static */
-	if (*linep <= 0 || *colp <= 0)
-	    if (lines > 0 && columns > 0) {
-		*linep = (int) lines;
-		*colp = (int) columns;
-	    }
+	if (*linep <= 0) {
+	    *linep = (int) lines;
+	}
+	if (*colp <= 0) {
+	    *colp = (int) columns;
+	}
 
 	/* the ultimate fallback, assume fixed 24x80 size */
-	if (*linep <= 0 || *colp <= 0) {
+	if (*linep <= 0) {
 	    *linep = 24;
+	}
+	if (*colp <= 0) {
 	    *colp = 80;
 	}
 
@@ -196,7 +203,7 @@ _nc_get_screensize(int *linep, int *colp)
 }
 
 #if USE_SIZECHANGE
-void
+NCURSES_EXPORT(void)
 _nc_update_screensize(void)
 {
     int my_lines, my_cols;
@@ -229,7 +236,7 @@ _nc_update_screensize(void)
 					    exit(EXIT_FAILURE);\
 					}
 
-#if USE_DATABASE
+#if USE_DATABASE || USE_TERMCAP
 static int
 grab_entry(const char *const tn, TERMTYPE * const tp)
 /* return 1 if entry found, 0 if not found, -1 if database not accessible */
@@ -243,6 +250,7 @@ grab_entry(const char *const tn, TERMTYPE * const tp)
     if (strchr(tn, '/'))
 	return 0;
 
+#if USE_DATABASE
     if ((status = _nc_read_entry(tn, filename, tp)) != 1) {
 
 #if !PURE_TERMINFO
@@ -256,6 +264,9 @@ grab_entry(const char *const tn, TERMTYPE * const tp)
 #endif /* PURE_TERMINFO */
 
     }
+#else
+    status = _nc_read_termcap_entry(tn, tp);
+#endif
 
     /*
      * If we have an entry, force all of the cancelled strings to null
@@ -265,18 +276,20 @@ grab_entry(const char *const tn, TERMTYPE * const tp)
      */
     if (status == 1) {
 	int n;
-	for_each_boolean(n, tp)
+	for_each_boolean(n, tp) {
 	    if (!VALID_BOOLEAN(tp->Booleans[n]))
-	    tp->Booleans[n] = FALSE;
-	for_each_string(n, tp)
+		tp->Booleans[n] = FALSE;
+	}
+	for_each_string(n, tp) {
 	    if (tp->Strings[n] == CANCELLED_STRING)
-	    tp->Strings[n] = ABSENT_STRING;
+		tp->Strings[n] = ABSENT_STRING;
+	}
     }
     return (status);
 }
 #endif
 
-char ttytype[NAMESIZE] = "";
+NCURSES_EXPORT_VAR(char) ttytype[NAMESIZE] = "";
 
 /*
  *	setupterm(termname, Filedes, errret)
@@ -286,12 +299,13 @@ char ttytype[NAMESIZE] = "";
  *
  */
 
-int
+NCURSES_EXPORT(int)
 setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
 {
     struct term *term_ptr;
     int status;
 
+    START_TRACE();
     T((T_CALLED("setupterm(%s,%d,%p)"), _nc_visbuf(tname), Filedes, errret));
 
     if (tname == 0) {
@@ -302,7 +316,7 @@ setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
     }
     if (strlen(tname) > MAX_NAME_SIZE) {
 	ret_error(-1, "TERM environment must be <= %d characters.\n",
-	    MAX_NAME_SIZE);
+		  MAX_NAME_SIZE);
     }
 
     T(("your terminal name is %s", tname));
@@ -312,7 +326,7 @@ setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
     if (term_ptr == 0) {
 	ret_error0(-1, "Not enough memory to create terminal structure.\n");
     }
-#if USE_DATABASE
+#if USE_DATABASE || USE_TERMCAP
     status = grab_entry(tname, &term_ptr->type);
 #else
     status = 0;
@@ -361,13 +375,22 @@ setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
     ttytype[NAMESIZE - 1] = '\0';
 
     /*
-     * Allow output redirection.  This is what SVr3 does.
-     * If stdout is directed to a file, screen updates go
-     * to standard error.
+     * Allow output redirection.  This is what SVr3 does.  If stdout is
+     * directed to a file, screen updates go to standard error.
      */
     if (Filedes == STDOUT_FILENO && !isatty(Filedes))
 	Filedes = STDERR_FILENO;
     cur_term->Filedes = Filedes;
+
+    /*
+     * If an application calls setupterm() rather than initscr() or newterm(),
+     * we will not have the def_prog_mode() call in _nc_setupscreen().  Do it
+     * now anyway, so we can initialize the baudrate.
+     */
+    if (isatty(Filedes)) {
+	def_prog_mode();
+	baudrate();
+    }
 
     _nc_get_screensize(&LINES, &COLS);
 

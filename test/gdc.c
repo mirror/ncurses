@@ -6,14 +6,12 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.15 2000/09/02 18:40:39 tom Exp $
+ * $Id: gdc.c,v 1.23 2002/08/10 19:20:14 tom Exp $
  */
 
-#include <test.priv.h>
-
 #include <time.h>
-#include <signal.h>
-#include <string.h>
+
+#include <test.priv.h>
 
 #define YBASE	10
 #define XBASE	10
@@ -38,7 +36,7 @@ sighndl(int signo)
     sigtermed = signo;
     if (redirected) {
 	endwin();
-	exit(EXIT_FAILURE);
+	ExitProgram(EXIT_FAILURE);
     }
 }
 
@@ -97,7 +95,7 @@ set(int t, int n)
 
     m = 7 << n;
     for (i = 0; i < 5; i++) {
-	next[i] |= ((disp[t] >> (4 - i) * 3) & 07) << n;
+	next[i] |= ((disp[t] >> ((4 - i) * 3)) & 07) << n;
 	mask |= (next[i] ^ older[i]) & m;
     }
     if (mask & m)
@@ -120,7 +118,7 @@ usage(void)
     unsigned j;
     for (j = 0; j < SIZEOF(msg); j++)
 	fprintf(stderr, "%s\n", msg[j]);
-    exit(EXIT_FAILURE);
+    ExitProgram(EXIT_FAILURE);
 }
 
 int
@@ -135,9 +133,10 @@ main(int argc, char *argv[])
     FILE *ifp = stdin;
     bool scrol = FALSE;
 
+    setlocale(LC_ALL, "");
+
     signal(SIGINT, sighndl);
     signal(SIGTERM, sighndl);
-    signal(SIGKILL, sighndl);
 
     while ((k = getopt(argc, argv, "sn")) != EOF) {
 	switch (k) {
@@ -163,7 +162,7 @@ main(int argc, char *argv[])
 	if (name == 0
 	    || newterm(name, ofp, ifp) == 0) {
 	    fprintf(stderr, "cannot open terminal\n");
-	    exit(EXIT_FAILURE);
+	    ExitProgram(EXIT_FAILURE);
 	}
 
     } else {
@@ -304,13 +303,14 @@ main(int argc, char *argv[])
 		standend();
 		endwin();
 		fprintf(stderr, "gdc terminated by signal %d\n", sigtermed);
-		return EXIT_FAILURE;
+		ExitProgram(EXIT_FAILURE);
 	    }
+	    /* FALLTHRU */
 	default:
 	    continue;
 	}
     } while (--count);
     standend();
     endwin();
-    return EXIT_SUCCESS;
+    ExitProgram(EXIT_SUCCESS);
 }

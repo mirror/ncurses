@@ -1,4 +1,4 @@
-# $Id: dist.mk,v 1.227 2000/10/20 22:28:06 tom Exp $
+# $Id: dist.mk,v 1.327 2002/10/12 23:27:36 tom Exp $
 # Makefile for creating ncurses distributions.
 #
 # This only needs to be used directly as a makefile by developers, but
@@ -9,8 +9,8 @@ SHELL = /bin/sh
 
 # These define the major/minor/patch versions of ncurses.
 NCURSES_MAJOR = 5
-NCURSES_MINOR = 2
-NCURSES_PATCH = 20001021
+NCURSES_MINOR = 3
+NCURSES_PATCH = 20021012
 
 # We don't append the patch to the version, since this only applies to releases
 VERSION = $(NCURSES_MAJOR).$(NCURSES_MINOR)
@@ -63,17 +63,35 @@ manhtml: MANIFEST
 	     echo "s/$${xu}/$${x}/g" >> subst.tmp ;\
 	   fi ;\
 	done
+	# change some things to make weblint happy:
+	@echo 's/<B>/<STRONG>/g'     >> subst.tmp
+	@echo 's/<\/B>/<\/STRONG>/g' >> subst.tmp
+	@echo 's/<I>/<EM>/g'         >> subst.tmp
+	@echo 's/<\/I>/<\/EM>/g'     >> subst.tmp
 	@sort < subst.tmp | uniq > subst.sed
+	@echo '/<\/TITLE>/a\' >> subst.sed
+	@echo '<link rev=made href="mailto:bug-ncurses@gnu.org">\' >> subst.sed
+	@echo '<meta http-equiv="Content-Type" content="text\/html; charset=iso-8859-1">' >> subst.sed
 	@rm -f subst.tmp
 	@for f in man/*.[0-9]* ; do \
 	   m=`basename $$f` ;\
+	   T=`egrep '^.TH' $$f|sed -e 's/^.TH //' -e s'/"//g' -e 's/[ 	]\+$$//'` ; \
 	   g=$${m}.html ;\
 	   if [ -f doc/html/$$g ]; then chmod +w doc/html/$$g; fi;\
 	   echo "Converting $$m to HTML" ;\
-	   man/edit_man.sh editing /usr/man man $$f | $(MANPROG) | tr '\255' '-' | $(MAN2HTML) | \
+	   echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">' > doc/html/man/$$g ;\
+	   echo '<!-- ' >> doc/html/man/$$g ;\
+	   egrep '^.\\"[^#]' $$f | \
+	   	sed	-e 's/\$$/@/g' \
+			-e 's/^.../  */' \
+			-e 's/</\&lt;/g' \
+			-e 's/>/\&gt;/g' \
+	   >> doc/html/man/$$g ;\
+	   echo '-->' >> doc/html/man/$$g ;\
+	   man/edit_man.sh editing /usr/man man $$f | $(MANPROG) | tr '\255' '-' | $(MAN2HTML) -title "$$T" | \
 	   sed -f subst.sed |\
 	   sed -e 's/"curses.3x.html"/"ncurses.3x.html"/g' \
-	   > doc/html/man/$$g ;\
+	   >> doc/html/man/$$g ;\
 	done
 	@rm -f subst.sed
 	@sed -e "\%./doc/html/man/%d" < MANIFEST > MANIFEST.tmp

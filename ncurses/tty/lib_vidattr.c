@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -64,7 +64,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.33 2000/10/09 22:45:29 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.39 2001/08/26 00:40:46 Philippe.Blain Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 
@@ -86,14 +86,14 @@ MODULE_ID("$Id: lib_vidattr.c,v 1.33 2000/10/09 22:45:29 tom Exp $")
 		} \
 	}
 
-int
-vidputs(attr_t newmode, int (*outc) (int))
+NCURSES_EXPORT(int)
+vidputs
+(chtype newmode, int (*outc) (int))
 {
     static attr_t previous_attr = A_NORMAL;
     attr_t turn_on, turn_off;
     int pair;
     bool reverse = FALSE;
-    bool used_ncv = FALSE;
     bool can_color = (SP == 0 || SP->_coloron);
 #if NCURSES_EXT_FUNCS
     bool fix_pair0 = (SP != 0 && SP->_coloron && !SP->_default_color);
@@ -134,11 +134,13 @@ vidputs(attr_t newmode, int (*outc) (int))
 	 * A_ALTCHARSET (256) down 2 to line up.  We use the NCURSES_BITS
 	 * macro so this will work properly for the wide-character layout.
 	 */
-	attr_t mask = NCURSES_BITS((no_color_video & 63)
-				   | ((no_color_video & 192) << 1)
-				   | ((no_color_video & 256) >> 2), 8);
+	unsigned value = no_color_video;
+	attr_t mask = NCURSES_BITS((value & 63)
+				   | ((value & 192) << 1)
+				   | ((value & 256) >> 2), 8);
 
-	if (mask & A_REVERSE && newmode & A_REVERSE) {
+	if ((mask & A_REVERSE) != 0
+	    && (newmode & A_REVERSE) != 0) {
 	    reverse = TRUE;
 	    mask &= ~A_REVERSE;
 	}
@@ -179,7 +181,7 @@ vidputs(attr_t newmode, int (*outc) (int))
 	}
 
 	SetColorsIf((pair != 0) || fix_pair0, previous_attr);
-    } else if (set_attributes && !used_ncv) {
+    } else if (set_attributes) {
 	if (turn_on || turn_off) {
 	    TPUTS_TRACE("set_attributes");
 	    tputs(tparm(set_attributes,
@@ -227,12 +229,24 @@ vidputs(attr_t newmode, int (*outc) (int))
 	TurnOn(A_PROTECT,	enter_protected_mode);
 	TurnOn(A_INVIS,		enter_secure_mode);
 	TurnOn(A_UNDERLINE,	enter_underline_mode);
+#ifdef enter_horizontal_hl_mode
 	TurnOn(A_HORIZONTAL,	enter_horizontal_hl_mode);
+#endif
+#ifdef enter_left_hl_mode
 	TurnOn(A_LEFT,		enter_left_hl_mode);
+#endif
+#ifdef enter_low_hl_mode
 	TurnOn(A_LOW,		enter_low_hl_mode);
+#endif
+#ifdef enter_right_hl_mode
 	TurnOn(A_RIGHT,		enter_right_hl_mode);
+#endif
+#ifdef enter_top_hl_mode
 	TurnOn(A_TOP,		enter_top_hl_mode);
+#endif
+#ifdef enter_vertical_hl_mode
 	TurnOn(A_VERTICAL,	enter_vertical_hl_mode);
+#endif
 	/* *INDENT-ON* */
 
     }
@@ -248,15 +262,15 @@ vidputs(attr_t newmode, int (*outc) (int))
     returnCode(OK);
 }
 
-int
-vidattr(attr_t newmode)
+NCURSES_EXPORT(int)
+vidattr(chtype newmode)
 {
     T((T_CALLED("vidattr(%s)"), _traceattr(newmode)));
 
     returnCode(vidputs(newmode, _nc_outch));
 }
 
-chtype
+NCURSES_EXPORT(chtype)
 termattrs(void)
 {
     chtype attrs = A_NORMAL;

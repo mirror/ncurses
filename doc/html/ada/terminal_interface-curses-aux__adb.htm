@@ -37,57 +37,58 @@
 <FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
 <FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>--  Author: <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A> &lt;<A HREF="mailto:juergen.pfeifer@gmx.net">&lt;juergen.pfeifer@gmx.net&gt;</A>&gt; 1996</EM></FONT>
+<FONT COLOR=green><EM>--  Author:  <A HREF="http://www.familiepfeifer.de/juergen">J&uuml;rgen Pfeifer</A>, 1996</EM></FONT>
+<FONT COLOR=green><EM>--  Contact: <A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">www.familiepfeifer.de/Contact.aspx?Lang=en</A></EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.8 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.9 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<b>package</b> <b>body</b> Terminal_Interface.Curses.<A HREF="terminal_interface-curses-aux__ads.htm#50_35">Aux</A><FONT COLOR=red><A NAME="41_40"></A></FONT> <b>is</b>
+<b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#51_35">Aux</A><FONT COLOR=red><A NAME="42_40"></A></FONT> <b>is</b>
    <FONT COLOR=green><EM>--</EM></FONT>
    <FONT COLOR=green><EM>--  Some helpers</EM></FONT>
-   <b>procedure</b> <A HREF="terminal_interface-curses-aux__ads.htm#116_14">Fill_String</A><FONT COLOR=red><A NAME="44_14"></A></FONT> (<A HREF="terminal_interface-curses-aux__ads.htm#116_27">Cp</A>  : <b>in</b>  chars_ptr;
-                          <A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A> : <b>out</b> String)
+   <b>procedure</b> <A HREF="terminal_interface-curses-aux__ads.htm#117_14">Fill_String</A><FONT COLOR=red><A NAME="45_14"></A></FONT> (<A HREF="terminal_interface-curses-aux__ads.htm#117_27">Cp</A>  : <b>in</b>  chars_ptr;
+                          <A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A> : <b>out</b> String)
    <b>is</b>
       <FONT COLOR=green><EM>--  Fill the string with the characters referenced by the</EM></FONT>
       <FONT COLOR=green><EM>--  chars_ptr.</EM></FONT>
       <FONT COLOR=green><EM>--</EM></FONT>
-      <FONT COLOR=red><A NAME="50_7">Len</A></FONT> : Natural;
+      <FONT COLOR=red><A NAME="51_7">Len</A></FONT> : Natural;
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#116_27">Cp</A> /= Null_Ptr <b>then</b>
-         <A HREF="terminal_interface-curses-aux__adb.htm#50_7">Len</A> := Natural (Strlen (<A HREF="terminal_interface-curses-aux__ads.htm#116_27">Cp</A>));
-         <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A>'Length &lt; <A HREF="terminal_interface-curses-aux__adb.htm#50_7">Len</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#117_27">Cp</A> /= Null_Ptr <b>then</b>
+         <A HREF="terminal_interface-curses-aux__adb.htm#51_7">Len</A> := Natural (Strlen (<A HREF="terminal_interface-curses-aux__ads.htm#117_27">Cp</A>));
+         <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A>'Length &lt; <A HREF="terminal_interface-curses-aux__adb.htm#51_7">Len</A> <b>then</b>
             <b>raise</b> Constraint_Error;
          <b>end</b> <b>if</b>;
          <b>declare</b>
-            <FONT COLOR=red><A NAME="58_13">S</A></FONT> : String (1 .. <A HREF="terminal_interface-curses-aux__adb.htm#50_7">Len</A>);
+            <FONT COLOR=red><A NAME="59_13">S</A></FONT> : String (1 .. <A HREF="terminal_interface-curses-aux__adb.htm#51_7">Len</A>);
          <b>begin</b>
-            <A HREF="terminal_interface-curses-aux__adb.htm#58_13">S</A> := Value (<A HREF="terminal_interface-curses-aux__ads.htm#116_27">Cp</A>);
-            <A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A> (<A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A>'First .. (<A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A>'First + <A HREF="terminal_interface-curses-aux__adb.htm#50_7">Len</A> - 1)) := <A HREF="terminal_interface-curses-aux__adb.htm#58_13">S</A> (<A HREF="terminal_interface-curses-aux__adb.htm#58_13">S</A>'<b>Range</b>);
+            <A HREF="terminal_interface-curses-aux__adb.htm#59_13">S</A> := Value (<A HREF="terminal_interface-curses-aux__ads.htm#117_27">Cp</A>);
+            <A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A> (<A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A>'First .. (<A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A>'First + <A HREF="terminal_interface-curses-aux__adb.htm#51_7">Len</A> - 1)) := <A HREF="terminal_interface-curses-aux__adb.htm#59_13">S</A> (<A HREF="terminal_interface-curses-aux__adb.htm#59_13">S</A>'<b>Range</b>);
          <b>end</b>;
       <b>else</b>
-         <A HREF="terminal_interface-curses-aux__adb.htm#50_7">Len</A> := 0;
+         <A HREF="terminal_interface-curses-aux__adb.htm#51_7">Len</A> := 0;
       <b>end</b> <b>if</b>;
 
-      <b>if</b> <A HREF="terminal_interface-curses-aux__adb.htm#50_7">Len</A> &lt; <A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A>'Length <b>then</b>
-         <A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A> ((<A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A>'First + <A HREF="terminal_interface-curses-aux__adb.htm#50_7">Len</A>) .. <A HREF="terminal_interface-curses-aux__ads.htm#117_27">Str</A>'Last) := (<b>others</b> =&gt; ' ');
+      <b>if</b> <A HREF="terminal_interface-curses-aux__adb.htm#51_7">Len</A> &lt; <A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A>'Length <b>then</b>
+         <A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A> ((<A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A>'First + <A HREF="terminal_interface-curses-aux__adb.htm#51_7">Len</A>) .. <A HREF="terminal_interface-curses-aux__ads.htm#118_27">Str</A>'Last) := (<b>others</b> =&gt; ' ');
       <b>end</b> <b>if</b>;
 
    <b>end</b> Fill_String;
 
-   <b>function</b> <A HREF="terminal_interface-curses-aux__ads.htm#121_13">Fill_String</A><FONT COLOR=red><A NAME="73_13"></A></FONT> (<A HREF="terminal_interface-curses-aux__ads.htm#121_26">Cp</A> : chars_ptr) <b>return</b> String
+   <b>function</b> <A HREF="terminal_interface-curses-aux__ads.htm#122_13">Fill_String</A><FONT COLOR=red><A NAME="74_13"></A></FONT> (<A HREF="terminal_interface-curses-aux__ads.htm#122_26">Cp</A> : chars_ptr) <b>return</b> String
    <b>is</b>
-      <FONT COLOR=red><A NAME="75_7">Len</A></FONT> : Natural;
+      <FONT COLOR=red><A NAME="76_7">Len</A></FONT> : Natural;
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#121_26">Cp</A> /= Null_Ptr <b>then</b>
-         <A HREF="terminal_interface-curses-aux__adb.htm#75_7">Len</A> := Natural (Strlen (<A HREF="terminal_interface-curses-aux__ads.htm#121_26">Cp</A>));
-         <b>if</b> <A HREF="terminal_interface-curses-aux__adb.htm#75_7">Len</A> = 0 <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#122_26">Cp</A> /= Null_Ptr <b>then</b>
+         <A HREF="terminal_interface-curses-aux__adb.htm#76_7">Len</A> := Natural (Strlen (<A HREF="terminal_interface-curses-aux__ads.htm#122_26">Cp</A>));
+         <b>if</b> <A HREF="terminal_interface-curses-aux__adb.htm#76_7">Len</A> = 0 <b>then</b>
             <b>return</b> "";
          <b>else</b>
             <b>declare</b>
-               <FONT COLOR=red><A NAME="83_16">S</A></FONT> : String (1 .. <A HREF="terminal_interface-curses-aux__adb.htm#75_7">Len</A>);
+               <FONT COLOR=red><A NAME="84_16">S</A></FONT> : String (1 .. <A HREF="terminal_interface-curses-aux__adb.htm#76_7">Len</A>);
             <b>begin</b>
-               <A HREF="terminal_interface-curses-aux__ads.htm#121_13">Fill_String</A> (<A HREF="terminal_interface-curses-aux__ads.htm#121_26">Cp</A>, <A HREF="terminal_interface-curses-aux__adb.htm#83_16">S</A>);
-               <b>return</b> <A HREF="terminal_interface-curses-aux__adb.htm#83_16">S</A>;
+               <A HREF="terminal_interface-curses-aux__ads.htm#117_14">Fill_String</A> (<A HREF="terminal_interface-curses-aux__ads.htm#122_26">Cp</A>, <A HREF="terminal_interface-curses-aux__adb.htm#84_16">S</A>);
+               <b>return</b> <A HREF="terminal_interface-curses-aux__adb.htm#84_16">S</A>;
             <b>end</b>;
          <b>end</b> <b>if</b>;
       <b>else</b>
@@ -95,25 +96,25 @@
       <b>end</b> <b>if</b>;
    <b>end</b> Fill_String;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-aux__ads.htm#96_14">Eti_Exception</A><FONT COLOR=red><A NAME="94_14"></A></FONT> (<A HREF="terminal_interface-curses-aux__ads.htm#96_29">Code</A> : <A HREF="terminal_interface-curses-aux__ads.htm#78_12">Eti_Error</A>)
+   <b>procedure</b> <A HREF="terminal_interface-curses-aux__ads.htm#97_14">Eti_Exception</A><FONT COLOR=red><A NAME="95_14"></A></FONT> (<A HREF="terminal_interface-curses-aux__ads.htm#97_29">Code</A> : <A HREF="terminal_interface-curses-aux__ads.htm#79_12">Eti_Error</A>)
    <b>is</b>
    <b>begin</b>
-      <b>case</b> <A HREF="terminal_interface-curses-aux__ads.htm#96_29">Code</A> <b>is</b>
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#80_4">E_Ok</A>              =&gt; <b>null</b>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#81_4">E_System_Error</A>    =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#387_4">Eti_System_Error</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#82_4">E_Bad_Argument</A>    =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#388_4">Eti_Bad_Argument</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#83_4">E_Posted</A>          =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#389_4">Eti_Posted</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#84_4">E_Connected</A>       =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#390_4">Eti_Connected</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#85_4">E_Bad_State</A>       =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#391_4">Eti_Bad_State</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#86_4">E_No_Room</A>         =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#392_4">Eti_No_Room</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#87_4">E_Not_Posted</A>      =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#393_4">Eti_Not_Posted</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#88_4">E_Unknown_Command</A> =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#394_4">Eti_Unknown_Command</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#89_4">E_No_Match</A>        =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#395_4">Eti_No_Match</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#90_4">E_Not_Selectable</A>  =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#396_4">Eti_Not_Selectable</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#91_4">E_Not_Connected</A>   =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#397_4">Eti_Not_Connected</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#92_4">E_Request_Denied</A>  =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#398_4">Eti_Request_Denied</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#93_4">E_Invalid_Field</A>   =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#399_4">Eti_Invalid_Field</A>;
-         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#94_4">E_Current</A>         =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#400_4">Eti_Current</A>;
+      <b>case</b> <A HREF="terminal_interface-curses-aux__ads.htm#97_29">Code</A> <b>is</b>
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#81_4">E_Ok</A>              =&gt; <b>null</b>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#82_4">E_System_Error</A>    =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#389_4">Eti_System_Error</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#83_4">E_Bad_Argument</A>    =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#390_4">Eti_Bad_Argument</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#84_4">E_Posted</A>          =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#391_4">Eti_Posted</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#85_4">E_Connected</A>       =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#392_4">Eti_Connected</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#86_4">E_Bad_State</A>       =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#393_4">Eti_Bad_State</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#87_4">E_No_Room</A>         =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#394_4">Eti_No_Room</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#88_4">E_Not_Posted</A>      =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#395_4">Eti_Not_Posted</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#89_4">E_Unknown_Command</A> =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#396_4">Eti_Unknown_Command</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#90_4">E_No_Match</A>        =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#397_4">Eti_No_Match</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#91_4">E_Not_Selectable</A>  =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#398_4">Eti_Not_Selectable</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#92_4">E_Not_Connected</A>   =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#399_4">Eti_Not_Connected</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#93_4">E_Request_Denied</A>  =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#400_4">Eti_Request_Denied</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#94_4">E_Invalid_Field</A>   =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#401_4">Eti_Invalid_Field</A>;
+         <b>when</b> <A HREF="terminal_interface-curses-aux__ads.htm#95_4">E_Current</A>         =&gt; <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#402_4">Eti_Current</A>;
       <b>end</b> <b>case</b>;
    <b>end</b> Eti_Exception;
 

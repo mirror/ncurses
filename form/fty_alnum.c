@@ -7,13 +7,14 @@
  */
 /***************************************************************************
 *                                                                          *
-*  Author : Juergen Pfeifer, juergen.pfeifer@gmx.net                       *
+*  Author : Juergen Pfeifer                                                *
+*  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en              *
 *                                                                          *
 ***************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_alnum.c,v 1.9 1999/05/16 17:22:49 juergen Exp $")
+MODULE_ID("$Id: fty_alnum.c,v 1.11 2002/07/06 15:33:27 juergen Exp $")
 
 typedef struct {
   int width;
@@ -132,6 +133,6 @@ static FIELDTYPE typeALNUM = {
   NULL
 };
 
-FIELDTYPE* TYPE_ALNUM = &typeALNUM;
+NCURSES_EXPORT_VAR(FIELDTYPE*) TYPE_ALNUM = &typeALNUM;
 
 /* fty_alnum.c ends here */

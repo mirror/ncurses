@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,13 +40,13 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_pad.c,v 1.29 2000/04/29 21:19:44 tom Exp $")
+MODULE_ID("$Id: lib_pad.c,v 1.38 2002/08/03 23:29:26 Philippe.Blain Exp $")
 
-WINDOW *
+NCURSES_EXPORT(WINDOW *)
 newpad(int l, int c)
 {
     WINDOW *win;
-    chtype *ptr;
+    NCURSES_CH_T *ptr;
     int i;
 
     T((T_CALLED("newpad(%d, %d)"), l, c));
@@ -59,19 +59,20 @@ newpad(int l, int c)
 
     for (i = 0; i < l; i++) {
 	if_USE_SCROLL_HINTS(win->_line[i].oldindex = _NEWINDEX);
-	if ((win->_line[i].text = typeCalloc(chtype, ((size_t) c))) == 0) {
-	    _nc_freewin(win);
+	if ((win->_line[i].text = typeCalloc(NCURSES_CH_T, ((size_t) c))) == 0) {
+	    (void) _nc_freewin(win);
 	    returnWin(0);
 	}
-	for (ptr = win->_line[i].text; ptr < win->_line[i].text + c;)
-	    *ptr++ = ' ';
+	for (ptr = win->_line[i].text; ptr < win->_line[i].text + c; ptr++)
+	    SetChar(*ptr, BLANK_TEXT, BLANK_ATTR);
     }
 
     returnWin(win);
 }
 
-WINDOW *
-subpad(WINDOW *orig, int l, int c, int begy, int begx)
+NCURSES_EXPORT(WINDOW *)
+subpad
+(WINDOW *orig, int l, int c, int begy, int begx)
 {
     WINDOW *win = (WINDOW *) 0;
 
@@ -85,33 +86,38 @@ subpad(WINDOW *orig, int l, int c, int begy, int begx)
     returnWin(win);
 }
 
-int
-prefresh(WINDOW *win, int pminrow, int pmincol,
-    int sminrow, int smincol, int smaxrow, int smaxcol)
+NCURSES_EXPORT(int)
+prefresh
+(WINDOW *win, int pminrow, int pmincol,
+ int sminrow, int smincol, int smaxrow, int smaxcol)
 {
     T((T_CALLED("prefresh()")));
     if (pnoutrefresh(win, pminrow, pmincol, sminrow, smincol, smaxrow,
-	    smaxcol) != ERR
+		     smaxcol) != ERR
 	&& doupdate() != ERR) {
 	returnCode(OK);
     }
     returnCode(ERR);
 }
 
-int
-pnoutrefresh(WINDOW *win, int pminrow, int pmincol,
-    int sminrow, int smincol, int smaxrow, int smaxcol)
+NCURSES_EXPORT(int)
+pnoutrefresh
+(WINDOW *win, int pminrow, int pmincol,
+ int sminrow, int smincol, int smaxrow, int smaxcol)
 {
-    const int my_len = 2;	/* parameterize the threshold for hardscroll */
     NCURSES_SIZE_T i, j;
     NCURSES_SIZE_T m, n;
     NCURSES_SIZE_T pmaxrow;
     NCURSES_SIZE_T pmaxcol;
+
+#if USE_SCROLL_HINTS
+    const int my_len = 2;	/* parameterize the threshold for hardscroll */
     NCURSES_SIZE_T displaced;
     bool wide;
+#endif
 
     T((T_CALLED("pnoutrefresh(%p, %d, %d, %d, %d, %d, %d)"),
-	    win, pminrow, pmincol, sminrow, smincol, smaxrow, smaxcol));
+       win, pminrow, pmincol, sminrow, smincol, smaxrow, smaxcol));
 
     if (win == 0)
 	returnCode(ERR);
@@ -147,20 +153,22 @@ pnoutrefresh(WINDOW *win, int pminrow, int pmincol,
 	pmaxcol = pmincol + smaxcol - smincol;
     }
 
-    if (smaxrow > screen_lines
-	|| smaxcol > screen_columns
+    if (smaxrow >= screen_lines
+	|| smaxcol >= screen_columns
 	|| sminrow > smaxrow
 	|| smincol > smaxcol)
 	returnCode(ERR);
 
     T(("pad being refreshed"));
 
+#if USE_SCROLL_HINTS
     if (win->_pad._pad_y >= 0) {
 	displaced = pminrow - win->_pad._pad_y
 	    - (sminrow - win->_pad._pad_top);
 	T(("pad being shifted by %d line(s)", displaced));
     } else
 	displaced = 0;
+#endif
 
     /*
      * For pure efficiency, we'd want to transfer scrolling information
@@ -176,17 +184,30 @@ pnoutrefresh(WINDOW *win, int pminrow, int pmincol,
      * windows).  Note that changing this formula will not break any code,
      * merely change the costs of various update cases.
      */
+#if USE_SCROLL_HINTS
     wide = (smincol < my_len && smaxcol > (newscr->_maxx - my_len));
+#endif
 
     for (i = pminrow, m = sminrow + win->_yoffset;
-	i <= pmaxrow && m <= newscr->_maxy;
-	i++, m++) {
+	 i <= pmaxrow && m <= newscr->_maxy;
+	 i++, m++) {
 	register struct ldat *nline = &newscr->_line[m];
 	register struct ldat *oline = &win->_line[i];
-
 	for (j = pmincol, n = smincol; j <= pmaxcol; j++, n++) {
-	    if (oline->text[j] != nline->text[n]) {
-		nline->text[n] = oline->text[j];
+	    NCURSES_CH_T ch = oline->text[j];
+#if USE_WIDEC_SUPPORT
+	    /*
+	     * Special case for leftmost character of the displayed area.
+	     * Only half of a double-width character may be visible.
+	     */
+	    if (j == pmincol
+		&& j > 0
+		&& isnac(ch)) {
+		SetChar(ch, L(' '), AttrOf(oline->text[j - 1]));
+	    }
+#endif
+	    if (!CharEq(ch, nline->text[n])) {
+		nline->text[n] = ch;
 		CHANGED_CELL(nline, n);
 	    }
 	}
@@ -227,7 +248,7 @@ pnoutrefresh(WINDOW *win, int pminrow, int pmincol,
     for (i = pminrow - 1; (i >= 0) && (win->_line[i].oldindex >= 0); i--)
 	win->_line[i].oldindex = _NEWINDEX;
     for (i = pmaxrow + 1; (i <= win->_maxy)
-	&& (win->_line[i].oldindex >= 0); i++)
+	 && (win->_line[i].oldindex >= 0); i++)
 	win->_line[i].oldindex = _NEWINDEX;
 #endif
 
@@ -269,7 +290,7 @@ pnoutrefresh(WINDOW *win, int pminrow, int pmincol,
     returnCode(OK);
 }
 
-int
+NCURSES_EXPORT(int)
 pechochar(WINDOW *pad, const chtype ch)
 {
     T((T_CALLED("pechochar(%p, %s)"), pad, _tracechtype(ch)));
@@ -282,11 +303,11 @@ pechochar(WINDOW *pad, const chtype ch)
 
     waddch(pad, ch);
     prefresh(pad, pad->_pad._pad_y,
-	pad->_pad._pad_x,
-	pad->_pad._pad_top,
-	pad->_pad._pad_left,
-	pad->_pad._pad_bottom,
-	pad->_pad._pad_right);
+	     pad->_pad._pad_x,
+	     pad->_pad._pad_top,
+	     pad->_pad._pad_left,
+	     pad->_pad._pad_bottom,
+	     pad->_pad._pad_right);
 
     returnCode(OK);
 }

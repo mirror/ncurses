@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,8 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -37,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_opts.c,v 1.12 1999/05/16 17:27:08 juergen Exp $")
+MODULE_ID("$Id: m_opts.c,v 1.14 2002/07/06 15:22:16 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -52,7 +53,8 @@ MODULE_ID("$Id: m_opts.c,v 1.12 1999/05/16 17:27:08 juergen Exp $")
 |                    E_BAD_ARGUMENT - invalid menu options
 |                    E_POSTED       - menu is already posted
 +--------------------------------------------------------------------------*/
-int set_menu_opts(MENU * menu, Menu_Options opts)
+NCURSES_EXPORT(int)
+set_menu_opts (MENU * menu, Menu_Options opts)
 {
   opts &= ALL_MENU_OPTS;
 
@@ -109,7 +111,8 @@ int set_menu_opts(MENU * menu, Menu_Options opts)
 |                    E_BAD_ARGUMENT - invalid options
 |                    E_POSTED       - menu is already posted
 +--------------------------------------------------------------------------*/
-int menu_opts_off(MENU *menu, Menu_Options  opts)
+NCURSES_EXPORT(int)
+menu_opts_off (MENU *menu, Menu_Options  opts)
 {
   MENU *cmenu = menu; /* use a copy because set_menu_opts must detect
                          NULL menu itself to adjust its behaviour */
@@ -138,7 +141,8 @@ int menu_opts_off(MENU *menu, Menu_Options  opts)
 |                    E_BAD_ARGUMENT - invalid menu options
 |                    E_POSTED       - menu is already posted
 +--------------------------------------------------------------------------*/
-int menu_opts_on(MENU * menu, Menu_Options opts)
+NCURSES_EXPORT(int)
+menu_opts_on (MENU * menu, Menu_Options opts)
 {
   MENU *cmenu = menu; /* use a copy because set_menu_opts must detect
                          NULL menu itself to adjust its behaviour */
@@ -162,7 +166,8 @@ int menu_opts_on(MENU * menu, Menu_Options opts)
 |
 |   Return Values :  Menu options
 +--------------------------------------------------------------------------*/
-Menu_Options menu_opts(const MENU *menu)
+NCURSES_EXPORT(Menu_Options)
+menu_opts (const MENU *menu)
 {
   return (ALL_MENU_OPTS & Normalize_Menu( menu )->opt);
 }

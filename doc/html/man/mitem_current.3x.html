@@ -1,16 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  * t
+  ****************************************************************************
+  * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: mitem_current.3x,v 1.9 1998/12/26 19:52:34 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>mitem_current 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>mitem_current 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>mitem_current</B> - set and get current_menu_item
+       <STRONG>mitem_current</STRONG> - set and get current_menu_item
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
        int set_current_item(MENU *menu, const ITEM *item);
        ITEM *current_item(const MENU *menu);
        int set_top_row(MENU *menu, int row);
@@ -20,58 +59,58 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The  function  <B>set_current_item</B> sets the current item (the
-       item on  which  the  menu  cursor  is  positioned).   <B>cur-</B>
-       <B>rent_item</B>  returns  a  pointer  to the current item in the
+       The  function  <STRONG>set_current_item</STRONG> sets the current item (the
+       item on  which  the  menu  cursor  is  positioned).   <STRONG>cur-</STRONG>
+       <STRONG>rent_item</STRONG>  returns  a  pointer  to the current item in the
        given menu.
 
-       The function <B>set_top_row</B> sets the top row of the  menu  to
+       The function <STRONG>set_top_row</STRONG> sets the top row of the  menu  to
        show  the  given  row  (the top row is initially 0, and is
-       reset to this value whenever the <B>O_ROWMAJOR</B> option is tog-
+       reset to this value whenever the <STRONG>O_ROWMAJOR</STRONG> option is tog-
        gled).   The  item  leftmost on the given row becomes cur-
-       rent.  The function <B>top_row</B> returns the number of the  top
+       rent.  The function <STRONG>top_row</STRONG> returns the number of the  top
        menu row being displayed.
 
-       The function <B>item_index</B> returns the (zero-origin) index of
-       <I>item</I> in the menu's item pointer list.
+       The function <STRONG>item_index</STRONG> returns the (zero-origin) index of
+       <EM>item</EM> in the menu's item pointer list.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       <B>current_item</B> returns <B>NULL</B> on error.
+       <STRONG>current_item</STRONG> returns <STRONG>NULL</STRONG> on error.
 
-       <B>top_row</B> and <B>item_index</B>  return  <B>ERR</B>  (the  general  <B>curses</B>
+       <STRONG>top_row</STRONG> and <STRONG>item_index</STRONG>  return  <STRONG>ERR</STRONG>  (the  general  <STRONG>curses</STRONG>
        error value) on error.
 
-       <B>set_current_item</B> and <B>set_top_row</B> return one of the follow-
+       <STRONG>set_current_item</STRONG> and <STRONG>set_top_row</STRONG> return one of the follow-
        ing:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or  out-of-range  argu-
             ment.
 
-       <B>E_BAD_STATE</B>
+       <STRONG>E_BAD_STATE</STRONG>
             Routine was called from an initialization or termina-
             tion function.
 
-       <B>E_NOT_CONNECTED</B>
+       <STRONG>E_NOT_CONNECTED</STRONG>
             No items are connected to the menu.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="menu.3x.html">menu(3x)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       The header file <B>&lt;menu.h&gt;</B> automatically includes the header
-       file <B>&lt;curses.h&gt;</B>.
+       The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
+       file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE>
@@ -79,9 +118,9 @@
        These  routines  emulate  the System V menu library.  They
        were not supported on Version 7 or BSD versions.
 
-       The SVr4 menu library documentation specifies the  <B>top_row</B>
-       and  <B>index_item</B>  error  value as -1 (which is the value of
-       <B>ERR</B>).
+       The SVr4 menu library documentation specifies the  <STRONG>top_row</STRONG>
+       and  <STRONG>index_item</STRONG>  error  value as -1 (which is the value of
+       <STRONG>ERR</STRONG>).
 
 
 </PRE>

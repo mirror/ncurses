@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,15 +27,44 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1998,2000                   *
+ *  Author: Thomas E. Dickey <dickey@clark.net> 1998,2000,2001              *
  ****************************************************************************/
 
 #include <curses.priv.h>
 #include <tic.h>
+#include <nc_alloc.h>
 
-MODULE_ID("$Id: access.c,v 1.4 2000/10/08 01:25:06 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.9 2001/06/23 22:11:49 tom Exp $")
 
-char *
+#define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
+
+NCURSES_EXPORT(char *)
+_nc_rootname(char *path)
+{
+    char *result = _nc_basename(path);
+#if !defined(MIXEDCASE_FILENAMES) || defined(PROG_EXT)
+    static char *temp;
+    char *s;
+
+    temp = strdup(result);
+    result = temp;
+#if !defined(MIXEDCASE_FILENAMES)
+    int n;
+    for (s = result; *s != '\0'; ++s) {
+	*s = LOWERCASE(*s);
+    }
+#endif
+#if defined(PROG_EXT)
+    if ((s = strrchr(result, '.')) != 0) {
+	if (!strcmp(s, PROG_EXT))
+	    *s = '\0';
+    }
+#endif
+#endif
+    return result;
+}
+
+NCURSES_EXPORT(char *)
 _nc_basename(char *path)
 {
     char *result = strrchr(path, '/');
@@ -50,7 +79,7 @@ _nc_basename(char *path)
     return result;
 }
 
-int
+NCURSES_EXPORT(int)
 _nc_access(const char *path, int mode)
 {
     if (access(path, mode) < 0) {
@@ -78,7 +107,7 @@ _nc_access(const char *path, int mode)
  * Returns true if we allow application to use environment variables that are
  * used for searching lists of directories, etc.
  */
-int
+NCURSES_EXPORT(int)
 _nc_env_access(void)
 {
 #if HAVE_ISSETUGID
@@ -86,9 +115,9 @@ _nc_env_access(void)
 	return FALSE;
 #elif HAVE_GETEUID && HAVE_GETEGID
     if (getuid() != geteuid()
-     || getgid() != getegid())
+	|| getgid() != getegid())
 	return FALSE;
 #endif
-    return getuid() != 0;	/* ...finally, disallow root */
+    return getuid() != 0 && geteuid() != 0;	/* ...finally, disallow root */
 }
 #endif

@@ -1,240 +1,334 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  * t
+  ****************************************************************************
+  * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: tput.1,v 1.18 2002/10/12 13:53:20 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>tput 1</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>tput 1</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>tput</B>,  <B>reset</B>  -  initialize  a  terminal or query terminfo
+       <STRONG>tput</STRONG>,  <STRONG>reset</STRONG>  -  initialize  a  terminal or query terminfo
        database
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>tput</B> [<B>-T</B><I>type</I>] <I>capname</I> [<I>parms</I> ... ]
-       <B>tput</B> [<B>-T</B><I>type</I>] <B>init</B>
-       <B>tput</B> [<B>-T</B><I>type</I>] <B>reset</B>
-       <B>tput</B> [<B>-T</B><I>type</I>] <B>longname</B>
-       <B>tput</B> <B>-S</B>  <B>&lt;&lt;</B>
-       <B>tput</B> <B>-V</B>
+       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <EM>capname</EM> [<EM>parms</EM> ... ]
+       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>init</STRONG>
+       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>reset</STRONG>
+       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>longname</STRONG>
+       <STRONG>tput</STRONG> <STRONG>-S</STRONG>  <STRONG>&lt;&lt;</STRONG>
+       <STRONG>tput</STRONG> <STRONG>-V</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The <B>tput</B> utility uses the <B>terminfo</B> database  to  make  the
+       The <STRONG>tput</STRONG> utility uses the <STRONG>terminfo</STRONG> database  to  make  the
        values  of terminal-dependent capabilities and information
-       available to the shell (see <B><A HREF="sh.1.html">sh(1)</A></B>), to initialize or reset
+       available to the shell (see <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>), to initialize or reset
        the  terminal,  or  return  the long name of the requested
-       terminal type.  <B>tput</B> outputs a  string  if  the  attribute
-       (<I>cap</I>ability  <I>name</I>) is of type string, or an integer if the
+       terminal type.  <STRONG>tput</STRONG> outputs a  string  if  the  attribute
+       (<EM>cap</EM>ability  <EM>name</EM>) is of type string, or an integer if the
        attribute is of type integer.  If the attribute is of type
-       boolean, <B>tput</B> simply sets the exit code (<B>0</B> for TRUE if the
-       terminal has the capability, <B>1</B> for FALSE if it does  not),
+       boolean, <STRONG>tput</STRONG> simply sets the exit code (<STRONG>0</STRONG> for TRUE if the
+       terminal has the capability, <STRONG>1</STRONG> for FALSE if it does  not),
        and  produces no output.  Before using a value returned on
-       standard output, the user should test the exit  code  [<B>$?</B>,
-       see  <B><A HREF="sh.1.html">sh(1)</A></B>]  to  be sure it is <B>0</B>.  (See the <B>EXIT</B> <B>CODES</B> and
-       <B>DIAGNOSTICS</B> sections.)  For a complete list  of  capabili-
-       ties  and  the  <I>capname</I>  associated  with  each,  see <B>ter-</B>
-       <B><A HREF="minfo.5.html">minfo(5)</A></B>.
+       standard output, the user should test the exit  code  [<STRONG>$?</STRONG>,
+       see  <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>]  to  be sure it is <STRONG>0</STRONG>.  (See the <STRONG>EXIT</STRONG> <STRONG>CODES</STRONG> and
+       <STRONG>DIAGNOSTICS</STRONG> sections.)  For a complete list  of  capabili-
+       ties  and  the  <EM>capname</EM>  associated  with  each,  see <STRONG>ter-</STRONG>
+       <STRONG><A HREF="terminfo.1.html">minfo(1)</A></STRONG>.
 
-       <B>-T</B><I>type</I> indicates the  <I>type</I>  of  terminal.   Normally  this
+       <STRONG>-T</STRONG><EM>type</EM> indicates the  <EM>type</EM>  of  terminal.   Normally  this
               option is unnecessary, because the default is taken
-              from the environment variable <B>TERM</B>.  If <B>-T</B> is spec-
-              ified,  then  the shell variables <B>LINES</B> and <B>COLUMNS</B>
+              from the environment variable <STRONG>TERM</STRONG>.  If <STRONG>-T</STRONG> is spec-
+              ified,  then  the shell variables <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG>
               will be ignored,and the operating system  will  not
               be queried for the actual screen size.
 
-       <I>capname</I>
-              indicates the attribute from the <B>terminfo</B> database.
-              When <B>termcap</B> support is compiled  in,  the  <B>termcap</B>
+       <EM>capname</EM>
+              indicates the attribute from the <STRONG>terminfo</STRONG> database.
+              When <STRONG>termcap</STRONG> support is compiled  in,  the  <STRONG>termcap</STRONG>
               name for the attribute is also accepted.
 
-       <I>parms</I>  If the attribute is a string that takes parameters,
-              the arguments <I>parms</I> will be instantiated  into  the
-              string.   An all numeric argument will be passed to
+       <EM>parms</EM>  If the attribute is a string that takes parameters,
+              the arguments <EM>parms</EM> will be instantiated  into  the
+              string.   An all-numeric argument will be passed to
               the attribute as a number.
 
-       <B>-S</B>     allows more than one capability per  invocation  of
-              <B>tput</B>.  The capabilities must be passed to <B>tput</B> from
+              Only a few  terminfo  capabilities  require  string
+              parameters;  <STRONG>tput</STRONG>  uses  a table to decide which to
+              pass as strings.  Normally <STRONG>tput</STRONG> uses <STRONG>tparm</STRONG> (3x)  to
+              perform  the  substitution.   If  no parameters are
+              given for the attribute,  <STRONG>tput</STRONG>  writes  the  string
+              without performing the substitution.
+
+       <STRONG>-S</STRONG>     allows  more  than one capability per invocation of
+              <STRONG>tput</STRONG>.  The capabilities must be passed to <STRONG>tput</STRONG> from
               the standard input instead of from the command line
-              (see  example).   Only  one  <I>capname</I> is allowed per
-              line.  The <B>-S</B> option changes the meaning of  the  <B>0</B>
-              and  <B>1</B>  boolean and string exit codes (see the EXIT
+              (see example).  Only one  <EM>capname</EM>  is  allowed  per
+              line.   The  <STRONG>-S</STRONG> option changes the meaning of the <STRONG>0</STRONG>
+              and <STRONG>1</STRONG> boolean and string exit codes (see  the  EXIT
               CODES section).
 
-       <B>-V</B>     reports the version of ncurses which  was  used  in
+              Again, <STRONG>tput</STRONG> uses a table and the presence of param-
+              eters in its input to decide whether to  use  <STRONG>tparm</STRONG>
+              (3x), and how to interpret the parameters.
+
+       <STRONG>-V</STRONG>     reports  the  version  of ncurses which was used in
               this program, and exits.
 
-       <B>init</B>   If  the  <B>terminfo</B>  database is present and an entry
-              for the user's terminal exists (see <B>-T</B><I>type</I>, above),
-              the  following will occur: (1) if present, the ter-
-              minal's initialization strings will be output (<B>is1</B>,
-              <B>is2</B>,  <B>is3</B>,  <B>if</B>,  <B>iprog</B>), (2) any delays (e.g., new-
+       <STRONG>init</STRONG>   If the <STRONG>terminfo</STRONG> database is present  and  an  entry
+              for the user's terminal exists (see <STRONG>-T</STRONG><EM>type</EM>, above),
+              the following will occur: (1) if present, the  ter-
+              minal's initialization strings will be output (<STRONG>is1</STRONG>,
+              <STRONG>is2</STRONG>, <STRONG>is3</STRONG>, <STRONG>if</STRONG>, <STRONG>iprog</STRONG>), (2) any  delays  (e.g.,  new-
               line) specified in the entry will be set in the tty
               driver, (3) tabs expansion will be turned on or off
-              according to the specification in  the  entry,  and
+              according  to  the  specification in the entry, and
               (4) if tabs are not expanded, standard tabs will be
               set (every 8 spaces).  If an entry does not contain
-              the  information  needed  for any of the four above
+              the information needed for any of  the  four  above
               activities, that activity will silently be skipped.
 
-       <B>reset</B>  Instead  of putting out initialization strings, the
-              terminal's reset strings will be output if  present
-              (<B>rs1</B>,  <B>rs2</B>, <B>rs3</B>, <B>rf</B>).  If the reset strings are not
-              present, but initialization strings are,  the  ini-
-              tialization  strings  will  be  output.  Otherwise,
-              <B>reset</B> acts identically to <B>init</B>.
+       <STRONG>reset</STRONG>  Instead of putting out initialization strings,  the
+              terminal's  reset strings will be output if present
+              (<STRONG>rs1</STRONG>, <STRONG>rs2</STRONG>, <STRONG>rs3</STRONG>, <STRONG>rf</STRONG>).  If the reset strings are  not
+              present,  but  initialization strings are, the ini-
+              tialization strings  will  be  output.   Otherwise,
+              <STRONG>reset</STRONG> acts identically to <STRONG>init</STRONG>.
 
-       <B>longname</B>
-              If the <B>terminfo</B> database is present  and  an  entry
-              for  the user's terminal exists (see <B>-T</B><I>type</I> above),
+       <STRONG>longname</STRONG>
+              If  the  <STRONG>terminfo</STRONG>  database is present and an entry
+              for the user's terminal exists (see <STRONG>-T</STRONG><EM>type</EM>  above),
               then the long name of the terminal will be put out.
               The long name is the last name in the first line of
-              the terminal's description in the <B>terminfo</B> database
-              [see <B><A HREF="term.5.html">term(5)</A></B>].
+              the terminal's description in the <STRONG>terminfo</STRONG> database
+              [see <STRONG><A HREF="term.5.html">term(5)</A></STRONG>].
 
-       If  <B>tput</B>  is  invoked  by a link named <B>reset</B>, this has the
-       same effect as <B>tput</B> <B>reset</B>.  See <B>tset</B> for comparison, which
+       If <STRONG>tput</STRONG> is invoked by a link named  <STRONG>reset</STRONG>,  this  has  the
+       same effect as <STRONG>tput</STRONG> <STRONG>reset</STRONG>.  See <STRONG>tset</STRONG> for comparison, which
        has similar behavior.
 
 
 </PRE>
 <H2>EXAMPLES</H2><PRE>
-       <B>tput</B> <B>init</B>
+       <STRONG>tput</STRONG> <STRONG>init</STRONG>
             Initialize the terminal according to the type of ter-
-            minal in the environmental variable <B>TERM</B>.  This  com-
-            mand  should be included in everyone's .profile after
-            the environmental variable <B>TERM</B> has been exported, as
-            illustrated on the <B><A HREF="profile.4.html">profile(4)</A></B> manual page.
+            minal  in the environmental variable <STRONG>TERM</STRONG>.  This com-
+            mand should be included in everyone's .profile  after
+            the environmental variable <STRONG>TERM</STRONG> has been exported, as
+            illustrated on the <STRONG><A HREF="profile.5.html">profile(5)</A></STRONG> manual page.
 
-       <B>tput</B> <B>-T5620</B> <B>reset</B>
-            Reset  an  AT&amp;T 5620 terminal, overriding the type of
-            terminal in the environmental variable <B>TERM</B>.
+       <STRONG>tput</STRONG> <STRONG>-T5620</STRONG> <STRONG>reset</STRONG>
+            Reset an AT&amp;T 5620 terminal, overriding the  type  of
+            terminal in the environmental variable <STRONG>TERM</STRONG>.
 
-       <B>tput</B> <B>cup</B> <B>0</B> <B>0</B>
-            Send the sequence to move the cursor to row <B>0</B>, column
-            <B>0</B> (the upper left corner of the screen, usually known
+       <STRONG>tput</STRONG> <STRONG>cup</STRONG> <STRONG>0</STRONG> <STRONG>0</STRONG>
+            Send the sequence to move the cursor to row <STRONG>0</STRONG>, column
+            <STRONG>0</STRONG> (the upper left corner of the screen, usually known
             as the "home" cursor position).
 
-       <B>tput</B> <B>clear</B>
-            Echo  the  clear-screen  sequence  for  the   current
-            terminal.
+       <STRONG>tput</STRONG> <STRONG>clear</STRONG>
+            Echo the clear-screen sequence for the current termi-
+            nal.
 
-       <B>tput</B> <B>cols</B>
+       <STRONG>tput</STRONG> <STRONG>cols</STRONG>
             Print the number of columns for the current terminal.
 
-       <B>tput</B> <B>-T450</B> <B>cols</B>
+       <STRONG>tput</STRONG> <STRONG>-T450</STRONG> <STRONG>cols</STRONG>
             Print the number of columns for the 450 terminal.
 
-       <B>bold=`tput</B> <B>smso`</B> <B>offbold=`tput</B> <B>rmso`</B>
-            Set the shell variables <B>bold</B>, to begin stand-out mode
-            sequence, and <B>offbold</B>, to end standout mode sequence,
-            for the current terminal.  This might be followed  by
-            a  prompt:  <B>echo</B>  <B>"${bold}Please</B>  <B>type</B>  <B>in</B> <B>your</B> <B>name:</B>
-            <B>${offbold}\c"</B>
+       <STRONG>bold=`tput</STRONG> <STRONG>smso`</STRONG> <STRONG>offbold=`tput</STRONG> <STRONG>rmso`</STRONG>
+            Set the shell variables <STRONG>bold</STRONG>, to begin stand-out mode
+            sequence, and <STRONG>offbold</STRONG>, to end standout mode sequence,
+            for  the current terminal.  This might be followed by
+            a prompt: <STRONG>echo</STRONG>  <STRONG>"${bold}Please</STRONG>  <STRONG>type</STRONG>  <STRONG>in</STRONG>  <STRONG>your</STRONG>  <STRONG>name:</STRONG>
+            <STRONG>${offbold}\c"</STRONG>
 
-       <B>tput</B> <B>hc</B>
-            Set exit code to indicate if the current terminal  is
+       <STRONG>tput</STRONG> <STRONG>hc</STRONG>
+            Set  exit code to indicate if the current terminal is
             a hard copy terminal.
 
-       <B>tput</B> <B>cup</B> <B>23</B> <B>4</B>
-            Send  the sequence to move the cursor to row 23, col-
+       <STRONG>tput</STRONG> <STRONG>cup</STRONG> <STRONG>23</STRONG> <STRONG>4</STRONG>
+            Send the sequence to move the cursor to row 23,  col-
             umn 4.
 
-       <B>tput</B> <B>longname</B>
-            Print the long name from the  <B>terminfo</B>  database  for
+       <STRONG>tput</STRONG> <STRONG>cup</STRONG>
+            Send the terminfo string for cursor-movement, with no
+            parameters substituted.
+
+       <STRONG>tput</STRONG> <STRONG>longname</STRONG>
+            Print the long name from the  <STRONG>terminfo</STRONG>  database  for
             the  type  of terminal specified in the environmental
-            variable <B>TERM</B>.
+            variable <STRONG>TERM</STRONG>.
 
-            <B>tput</B> <B>-S</B> <B>&lt;&lt;!</B>
-            <B>&gt;</B> <B>clear</B>
-            <B>&gt;</B> <B>cup</B> <B>10</B> <B>10</B>
-            <B>&gt;</B> <B>bold</B>
-            <B>&gt;</B> <B>!</B>
+            <STRONG>tput</STRONG> <STRONG>-S</STRONG> <STRONG>&lt;&lt;!</STRONG>
+            <STRONG>&gt;</STRONG> <STRONG>clear</STRONG>
+            <STRONG>&gt;</STRONG> <STRONG>cup</STRONG> <STRONG>10</STRONG> <STRONG>10</STRONG>
+            <STRONG>&gt;</STRONG> <STRONG>bold</STRONG>
+            <STRONG>&gt;</STRONG> <STRONG>!</STRONG>
 
-            This example shows tput processing several  capabili-
-            ties  in  one  invocation.   This  example clears the
-            screen, moves the cursor to position 10, 10 and turns
-            on  bold (extra bright) mode.  The list is terminated
-            by an exclamation mark (<B>!</B>) on a line by itself.
+            This example shows <STRONG>tput</STRONG> processing several  capabili-
+            ties  in one invocation.  It clears the screen, moves
+            the cursor to position  10,  10  and  turns  on  bold
+            (extra  bright)  mode.   The list is terminated by an
+            exclamation mark (<STRONG>!</STRONG>) on a line by itself.
 
 
 </PRE>
 <H2>FILES</H2><PRE>
-       <B>/usr/share/terminfo</B>
+       <STRONG>/usr/share/terminfo</STRONG>
               compiled terminal description database
 
-       <B>/usr/include/curses.h</B>
-              <B><A HREF="ncurses.3x.html">curses(3x)</A></B> header file
+       <STRONG>/usr/include/curses.h</STRONG>
+              <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> header file
 
-       <B>/usr/include/term.h</B>
-              <B>terminfo</B> header file
+       <STRONG>/usr/include/term.h</STRONG>
+              <STRONG>terminfo</STRONG> header file
 
-       <B>/usr/share/tabset/*</B>
+       <STRONG>/usr/share/tabset/*</STRONG>
               tab settings for some terminals, in a format appro-
               priate   to  be  output  to  the  terminal  (escape
               sequences that set  margins  and  tabs);  for  more
               information, see the "Tabs and Initialization" sec-
-              tion of <B><A HREF="terminfo.4.html">terminfo(4)</A></B>
-
-
-</PRE>
-<H2>SEE ALSO</H2><PRE>
-       <B><A HREF="clear.1.html">clear(1)</A></B>, <B><A HREF="stty.1.html">stty(1)</A></B>, <B><A HREF="tabs.5.html">tabs(5)</A></B>.   <B><A HREF="profile.5.html">profile(5)</A></B>,  <B><A HREF="terminfo.4.html">terminfo(4)</A></B>  in
-       the  <I>System</I>  <I>Administrator</I>'<I>s</I> <I>Reference</I> <I>Manual</I>.  Chapter 10
-       of the <I>Programmer</I>'<I>s</I> <I>Guide</I>.
+              tion of <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
 
 </PRE>
 <H2>EXIT CODES</H2><PRE>
-       If <I>capname</I> is of type boolean, a value of  <B>0</B>  is  set  for
-       TRUE and <B>1</B> for FALSE unless the <B>-S</B> option is used.
+       If the <STRONG>-S</STRONG> option is used, <STRONG>tput</STRONG> checks for errors from each
+       line,  and if any errors are found, will set the exit code
+       to 4 plus the number of lines with errors.  If  no  errors
+       are  found,  the  exit  code is <STRONG>0</STRONG>.  No indication of which
+       line failed can be given so exit code <STRONG>1</STRONG> will never appear.
+       Exit  codes <STRONG>2</STRONG>, <STRONG>3</STRONG>, and <STRONG>4</STRONG> retain their usual interpretation.
+       If the <STRONG>-S</STRONG> option is not used, the exit code depends on the
+       type of <EM>capname</EM>:
 
-       If  <I>capname</I>  is of type string, a value of <B>0</B> is set if the
-       <I>capname</I> is defined for this terminal <I>type</I>  (the  value  of
-       <I>capname</I>  is  returned on standard output); a value of <B>1</B> is
-       set if <I>capname</I> is not defined for this  terminal  <I>type</I>  (a
-       null value is returned on standard output).
+            <EM>boolean</EM>
+                   a  value of <STRONG>0</STRONG> is set for TRUE and <STRONG>1</STRONG> for FALSE.
 
-       If  <I>capname</I> is of type boolean or string and the <B>-S</B> option
-       is used, a value of <B>0</B> is returned  to  indicate  that  all
-       lines were successful.  No indication of which line failed
-       can be given so exit code <B>1</B> will never appear.  Exit codes
-       <B>2</B>, <B>3</B>, and <B>4</B> retain their usual interpretation.
+            <EM>string</EM> a value of <STRONG>0</STRONG> is set if the <EM>capname</EM> is  defined
+                   for  this  terminal <EM>type</EM> (the value of <EM>capname</EM>
+                   is returned on standard output); a value of  <STRONG>1</STRONG>
+                   is set if <EM>capname</EM> is not defined for this ter-
+                   minal <EM>type</EM> (nothing  is  written  to  standard
+                   output).
 
-       If <I>capname</I> is of type integer, a value of <B>0</B> is always set,
-       whether or not <I>capname</I> is defined for this terminal  <I>type</I>.
-       To determine if <I>capname</I> is defined for this terminal <I>type</I>,
-       the user must test the value of standard output.  A  value
-       of  <B>-1</B> means that <I>capname</I> is not defined for this terminal
-       <I>type</I>.
+            <EM>integer</EM>
+                   a  value  of  <STRONG>0</STRONG>  is always set, whether or not
+                   <EM>capname</EM> is defined for this terminal <EM>type</EM>.  To
+                   determine  if <EM>capname</EM> is defined for this ter-
+                   minal <EM>type</EM>, the user must test the value writ-
+                   ten  to  standard output.  A value of <STRONG>-1</STRONG> means
+                   that <EM>capname</EM> is not defined for this  terminal
+                   <EM>type</EM>.
 
-       Any other exit code indicates an error; see  the  DIAGNOS-
+            <EM>other</EM>  <STRONG>reset</STRONG>  or  <STRONG>init</STRONG> may fail to find their respec-
+                   tive files.  In that case, the  exit  code  is
+                   set to 4 + <STRONG>errno</STRONG>.
+
+       Any  other  exit code indicates an error; see the DIAGNOS-
        TICS section.
+
 
 
 </PRE>
 <H2>DIAGNOSTICS</H2><PRE>
-       <B>tput</B> prints the following error messages and sets the cor-
+       <STRONG>tput</STRONG> prints the following error messages and sets the cor-
        responding exit codes.
 
        exit code   error message
        ---------------------------------------------------------------------
-       <B>0</B>           (<I>capname</I> is a numeric variable that is not specified  in
-                   the  <B><A HREF="terminfo.5.html">terminfo(5)</A></B>  database  for this terminal type, e.g.
-                   <B>tput</B> <B>-T450</B> <B>lines</B> and <B>tput</B> <B>-T2621</B> <B>xmc</B>)
-       <B>1</B>           no error message is printed, see the <B>EXIT</B> <B>CODES</B> section.
-       <B>2</B>           usage error
-       <B>3</B>           unknown terminal <I>type</I> or no <B>terminfo</B> database
-       <B>4</B>           unknown <B>terminfo</B> capability <I>capname</I>
+       <STRONG>0</STRONG>           (<EM>capname</EM>  is a numeric variable that is not specified in
+                   the <STRONG><A HREF="terminfo.1.html">terminfo(1)</A></STRONG> database for this  terminal  type,  e.g.
+                   <STRONG>tput</STRONG> <STRONG>-T450</STRONG> <STRONG>lines</STRONG> and <STRONG>tput</STRONG> <STRONG>-T2621</STRONG> <STRONG>xmc</STRONG>)
+       <STRONG>1</STRONG>           no error message is printed, see the <STRONG>EXIT</STRONG> <STRONG>CODES</STRONG> section.
+       <STRONG>2</STRONG>           usage error
+       <STRONG>3</STRONG>           unknown terminal <EM>type</EM> or no <STRONG>terminfo</STRONG> database
+       <STRONG>4</STRONG>           unknown <STRONG>terminfo</STRONG> capability <EM>capname</EM>
+       <STRONG>&gt;4</STRONG>          error occurred in -S
        ---------------------------------------------------------------------
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The <B>longname</B> and <B>-S</B> options, and  the  parameter-substitu-
-       tion  features  used in the <B>cup</B> example, are not supported
+       The  <STRONG>longname</STRONG>  and <STRONG>-S</STRONG> options, and the parameter-substitu-
+       tion features used in the <STRONG>cup</STRONG> example, are  not  supported
        in BSD curses or in AT&amp;T/USL curses before SVr4.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG><A HREF="stty.1.html">stty(1)</A></STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </PRE>
 <HR>

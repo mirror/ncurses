@@ -1,55 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- 
+  ****************************************************************************
+  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  *                                                                          *
+  * Permission is hereby granted, free of charge, to any person obtaining a  *
+  * copy of this software and associated documentation files (the            *
+  * "Software"), to deal in the Software without restriction, including      *
+  * without limitation the rights to use, copy, modify, merge, publish,      *
+  * distribute, distribute with modifications, sublicense, and/or sell       *
+  * copies of the Software, and to permit persons to whom the Software is    *
+  * furnished to do so, subject to the following conditions:                 *
+  *                                                                          *
+  * The above copyright notice and this permission notice shall be included  *
+  * in all copies or substantial portions of the Software.                   *
+  *                                                                          *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+  *                                                                          *
+  * Except as contained in this notice, the name(s) of the above copyright   *
+  * holders shall not be used in advertising or otherwise to promote the     *
+  * sale, use or other dealings in this Software without prior written       *
+  * authorization.                                                           *
+  ****************************************************************************
+  * @Id: curs_touch.3x,v 1.8 2000/07/08 11:07:57 tom Exp @
+-->
 <HTML>
+<HEAD>
+<TITLE>curs_touch 3x</TITLE>
+<link rev=made href="mailto:bug-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</HEAD>
 <BODY>
+<H1>curs_touch 3x</H1>
+<HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <B>touchwin</B>, <B>touchline</B>, <B>untouchwin</B>, <B>wtouchln</B>, <B>is_linetouched</B>,
-       <B>is_wintouched</B> - <B>curses</B> refresh control routines
+       <STRONG>touchwin</STRONG>, <STRONG>touchline</STRONG>, <STRONG>untouchwin</STRONG>, <STRONG>wtouchln</STRONG>, <STRONG>is_linetouched</STRONG>,
+       <STRONG>is_wintouched</STRONG> - <STRONG>curses</STRONG> refresh control routines
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
-       <B>int</B> <B>touchwin(WINDOW</B> <B>*win);</B>
-       <B>int</B> <B>touchline(WINDOW</B> <B>*win,</B> <B>int</B> <B>start,</B> <B>int</B> <B>count);</B>
-       <B>int</B> <B>untouchwin(WINDOW</B> <B>*win);</B>
-       <B>int</B> <B>wtouchln(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>n,</B> <B>int</B> <B>changed);</B>
-       <B>bool</B> <B>is_linetouched(WINDOW</B> <B>*win,</B> <B>int</B> <B>line);</B>
-       <B>bool</B> <B>is_wintouched(WINDOW</B> <B>*win);</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+       <STRONG>int</STRONG> <STRONG>touchwin(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>int</STRONG> <STRONG>touchline(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>start,</STRONG> <STRONG>int</STRONG> <STRONG>count);</STRONG>
+       <STRONG>int</STRONG> <STRONG>untouchwin(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wtouchln(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>n,</STRONG> <STRONG>int</STRONG> <STRONG>changed);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_linetouched(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>line);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_wintouched(WINDOW</STRONG> <STRONG>*win);</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The <B>touchwin</B> and <B>touchline</B> routines throw away  all  opti-
+       The <STRONG>touchwin</STRONG> and <STRONG>touchline</STRONG> routines throw away  all  opti-
        mization  information about which parts of the window have
        been touched, by pretending that  the  entire  window  has
        been  drawn  on.   This  is sometimes necessary when using
        overlapping windows, since a change to one window  affects
        the other window, but the records of which lines have been
        changed in the other window do  not  reflect  the  change.
-       The  routine <B>touchline</B> only pretends that <I>count</I> lines have
-       been changed, beginning with line <I>start</I>.
+       The  routine <STRONG>touchline</STRONG> only pretends that <EM>count</EM> lines have
+       been changed, beginning with line <EM>start</EM>.
 
-       The <B>untouchwin</B> routine marks all lines in  the  window  as
-       unchanged since the last call to <B>wrefresh</B>.
+       The <STRONG>untouchwin</STRONG> routine marks all lines in  the  window  as
+       unchanged since the last call to <STRONG>wrefresh</STRONG>.
 
-       The <B>wtouchln</B> routine makes <I>n</I> lines in the window, starting
-       at line <I>y</I>, look as if they have (<I>changed</I><B>=1</B>)  or  have  not
-       (<I>changed</I><B>=0</B>)  been changed since the last call to <B>wrefresh</B>.
+       The <STRONG>wtouchln</STRONG> routine makes <EM>n</EM> lines in the window, starting
+       at line <EM>y</EM>, look as if they have (<EM>changed</EM><STRONG>=1</STRONG>)  or  have  not
+       (<EM>changed</EM><STRONG>=0</STRONG>)  been changed since the last call to <STRONG>wrefresh</STRONG>.
 
-       The <B>is_linetouched</B> and <B>is_wintouched</B> routines return  <B>TRUE</B>
+       The <STRONG>is_linetouched</STRONG> and <STRONG>is_wintouched</STRONG> routines return  <STRONG>TRUE</STRONG>
        if  the  specified line/window was modified since the last
-       call to <B>wrefresh</B>; otherwise they return <B>FALSE</B>.   In  addi-
-       tion,  <B>is_linetouched</B> returns <B>ERR</B> if <I>line</I> is not valid for
+       call to <STRONG>wrefresh</STRONG>; otherwise they return <STRONG>FALSE</STRONG>.   In  addi-
+       tion,  <STRONG>is_linetouched</STRONG> returns <STRONG>ERR</STRONG> if <EM>line</EM> is not valid for
        the given window.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       All routines return the integer <B>ERR</B> upon  failure  and  an
-       integer  value  other than <B>ERR</B> upon successful completion,
+       All routines return the integer <STRONG>ERR</STRONG> upon  failure  and  an
+       integer  value  other than <STRONG>ERR</STRONG> upon successful completion,
        unless otherwise noted in the preceding  routine  descrip-
        tions.
 
@@ -61,18 +99,18 @@
 
        Some historic curses implementations had,  as  an  undocu-
        mented  feature,  the  ability  to  do  the  equivalent of
-       <B>clearok(...,</B> <B>1)</B> by saying <B>touchwin(stdscr)</B>  or  <B>clear(std-</B>
-       <B>scr)</B>.  This will not work under ncurses.
+       <STRONG>clearok(...,</STRONG> <STRONG>1)</STRONG> by saying <STRONG>touchwin(stdscr)</STRONG>  or  <STRONG>clear(std-</STRONG>
+       <STRONG>scr)</STRONG>.  This will not work under ncurses.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       Note that all routines except <B>wtouchln</B> may be macros.
+       Note that all routines except <STRONG>wtouchln</STRONG> may be macros.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>.
 
 
 

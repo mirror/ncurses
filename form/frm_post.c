@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,11 +27,12 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1995,1997            *
+ *   Author:  Juergen Pfeifer, 1995,1997                                    *
+ *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_post.c,v 1.4 1999/05/16 17:21:39 juergen Exp $")
+MODULE_ID("$Id: frm_post.c,v 1.6 2002/07/06 15:33:27 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -46,7 +47,8 @@ MODULE_ID("$Id: frm_post.c,v 1.4 1999/05/16 17:21:39 juergen Exp $")
 |                    E_NO_ROOM         - form doesn't fit into subwindow
 |                    E_SYSTEM_ERROR    - system error
 +--------------------------------------------------------------------------*/
-int post_form(FORM * form)
+NCURSES_EXPORT(int)
+post_form (FORM * form)
 {
   WINDOW *formwin;
   int err;
@@ -93,7 +95,8 @@ int post_form(FORM * form)
 |                    E_NOT_POSTED    - form isn't posted
 |                    E_BAD_STATE     - called from a hook routine
 +--------------------------------------------------------------------------*/
-int unpost_form(FORM * form)
+NCURSES_EXPORT(int)
+unpost_form (FORM * form)
 {
   if (!form)
     RETURN(E_BAD_ARGUMENT);

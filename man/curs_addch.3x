@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.17 2000/07/01 19:53:01 tom Exp $
+.\" $Id: curs_addch.3x,v 1.20 2002/08/10 22:12:36 tom Exp $
 .TH curs_addch 3X ""
 .SH NAME
 \fBaddch\fR, \fBwaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR,
@@ -36,17 +36,17 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 
-\fBint addch(chtype ch);\fR
+\fBint addch(const chtype ch);\fR
 .br
-\fBint waddch(WINDOW *win, chtype ch);\fR
+\fBint waddch(WINDOW *win, const chtype ch);\fR
 .br
-\fBint mvaddch(int y, int x, chtype ch);\fR
+\fBint mvaddch(int y, int x, const chtype ch);\fR
 .br
-\fBint mvwaddch(WINDOW *win, int y, int x, chtype ch);\fR
+\fBint mvwaddch(WINDOW *win, int y, int x, const chtype ch);\fR
 .br
-\fBint echochar(chtype ch);\fR
+\fBint echochar(const chtype ch);\fR
 .br
-\fBint wechochar(WINDOW *win, chtype ch);\fR
+\fBint wechochar(WINDOW *win, const chtype ch);\fR
 .br
 .SH DESCRIPTION
 The \fBaddch\fR, \fBwaddch\fR, \fBmvaddch\fR and \fBmvwaddch\fR routines put
@@ -56,11 +56,15 @@ If the advance is at the right margin, the cursor automatically wraps to the
 beginning of the next line.  At the bottom of the current scrolling region, if
 \fBscrollok\fR is enabled, the scrolling region is scrolled up one line.
 
-If \fIch\fR is a tab, newline, or backspace, the cursor is moved appropriately
-within the window.  Backspace moves the cursor one character left; at the left
-edge of a window it does nothing.  Newline does a \fBclrtoeol\fR, then moves
-the cursor to the window left margin on the next line, scrolling the window if
-on the last line).  Tabs are considered to be at every eighth column.
+If \fIch\fR is a tab, newline, or backspace,
+the cursor is moved appropriately within the window.
+Backspace moves the cursor one character left; at the left
+edge of a window it does nothing.
+Newline does a \fBclrtoeol\fR,
+then moves the cursor to the window left margin on the next line,
+scrolling the window if on the last line).
+Tabs are considered to be at every eighth column.
+The tab interval may be altered by setting the \fBTABSIZE\fR variable.
 
 If \fIch\fR is any control character other than tab, newline, or backspace, it
 is drawn in \fB^\fR\fIX\fR notation.  Calling \fBwinch\fR after adding a
@@ -137,7 +141,7 @@ Note that \fBaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR, and
 .SH PORTABILITY
 All these functions are described in the XSI Curses standard, Issue 4.
 The defaults specified for forms-drawing characters apply in the POSIX locale.
-
+.LP
 Some ACS symbols
 (ACS_S3,
 ACS_S7,
@@ -151,6 +155,9 @@ any publicly released System V.  However, many publicly available terminfos
 include \fBacsc\fR strings in which their key characters (pryz{|}) are
 embedded, and a second-hand list of their character descriptions has come
 to light.  The ACS-prefixed names for them were invented for \fBncurses\fR(3X).
+.LP
+The \fBTABSIZE\fR variable is implemented in some versions of curses,
+but is not part of X/Open curses.
 .SH SEE ALSO
 \fBcurses\fR(3X), \fBcurs_attr\fR(3X), \fBcurs_clear\fR(3X),
 \fBcurs_inch\fR(3X), \fBcurs_outopts\fR(3X), \fBcurs_refresh\fR(3X),

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,9 +40,9 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_refresh.c,v 1.25 2000/04/29 21:17:08 tom Exp $")
+MODULE_ID("$Id: lib_refresh.c,v 1.32 2002/05/26 00:17:04 tom Exp $")
 
-int
+NCURSES_EXPORT(int)
 wrefresh(WINDOW *win)
 {
     int code;
@@ -67,7 +67,7 @@ wrefresh(WINDOW *win)
     returnCode(code);
 }
 
-int
+NCURSES_EXPORT(int)
 wnoutrefresh(WINDOW *win)
 {
     NCURSES_SIZE_T limit_x;
@@ -75,7 +75,9 @@ wnoutrefresh(WINDOW *win)
     NCURSES_SIZE_T begx;
     NCURSES_SIZE_T begy;
     NCURSES_SIZE_T m, n;
+#if USE_SCROLL_HINTS
     bool wide;
+#endif
 
     T((T_CALLED("wnoutrefresh(%p)"), win));
 #ifdef TRACE
@@ -94,12 +96,13 @@ wnoutrefresh(WINDOW *win)
     begx = win->_begx;
     begy = win->_begy;
 
-    newscr->_bkgd = win->_bkgd;
+    newscr->_nc_bkgd = win->_nc_bkgd;
     newscr->_attrs = win->_attrs;
 
     /* merge in change information from all subwindows of this window */
     wsyncdown(win);
 
+#if USE_SCROLL_HINTS
     /*
      * For pure efficiency, we'd want to transfer scrolling information
      * from the window to newscr whenever the window is wide enough that
@@ -115,6 +118,7 @@ wnoutrefresh(WINDOW *win)
      * merely change the costs of various update cases.
      */
     wide = (begx <= 1 && win->_maxx >= (newscr->_maxx - 1));
+#endif
 
     win->_flags &= ~_HASMOVED;
 
@@ -128,12 +132,12 @@ wnoutrefresh(WINDOW *win)
     /* limit(n) */
     limit_x = win->_maxx;
     /* limit(j) */
-    if (limit_x > win->_maxx)
-	limit_x = win->_maxx;
+    if (limit_x > newscr->_maxx - begx)
+	limit_x = newscr->_maxx - begx;
 
     for (i = 0, m = begy + win->_yoffset;
-	i <= win->_maxy && m <= newscr->_maxy;
-	i++, m++) {
+	 i <= win->_maxy && m <= newscr->_maxy;
+	 i++, m++) {
 	register struct ldat *nline = &newscr->_line[m];
 	register struct ldat *oline = &win->_line[i];
 
@@ -144,7 +148,7 @@ wnoutrefresh(WINDOW *win)
 		last = limit_x;
 
 	    for (j = oline->firstchar, n = j + begx; j <= last; j++, n++) {
-		if (oline->text[j] != nline->text[n]) {
+		if (!CharEq(oline->text[j], nline->text[n])) {
 		    nline->text[n] = oline->text[j];
 		    CHANGED_CELL(nline, n);
 		}

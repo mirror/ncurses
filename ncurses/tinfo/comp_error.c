@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,6 @@
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  ****************************************************************************/
 
-
 /*
  *	comp_error.c -- Error message routines
  *
@@ -41,92 +40,100 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_error.c,v 1.17 1999/10/30 23:00:16 tom Exp $")
+MODULE_ID("$Id: comp_error.c,v 1.25 2002/09/07 20:05:07 tom Exp $")
 
-bool	_nc_suppress_warnings = FALSE;
-int	_nc_curr_line = 0;	/* current line # in input */
-int	_nc_curr_col = 0;	/* current column # in input */
+NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings = FALSE;
+NCURSES_EXPORT_VAR(int) _nc_curr_line = 0; /* current line # in input */
+NCURSES_EXPORT_VAR(int) _nc_curr_col = 0; /* current column # in input */
 
 static const char *sourcename;
-static char termtype[MAX_NAME_SIZE+1];
+static char *termtype;
 
-void _nc_set_source(const char *const name)
+NCURSES_EXPORT(void)
+_nc_set_source(const char *const name)
 {
-	sourcename = name;
+    sourcename = name;
 }
 
-void _nc_set_type(const char *const name)
+NCURSES_EXPORT(void)
+_nc_set_type(const char *const name)
 {
+    if (termtype == 0)
+	termtype = typeMalloc(char, MAX_NAME_SIZE + 1);
+    if (termtype != 0) {
+	termtype[0] = '\0';
 	if (name)
-		strncpy( termtype, name, MAX_NAME_SIZE );
-	else
-		termtype[0] = '\0';
+	    strncat(termtype, name, MAX_NAME_SIZE);
+    }
 }
 
-void _nc_get_type(char *name)
+NCURSES_EXPORT(void)
+_nc_get_type(char *name)
 {
-	strcpy( name, termtype );
+    strcpy(name, termtype != 0 ? termtype : "");
 }
 
-static inline void where_is_problem(void)
+static inline void
+where_is_problem(void)
 {
-	fprintf (stderr, "\"%s\"", sourcename);
-	if (_nc_curr_line >= 0)
-		fprintf (stderr, ", line %d", _nc_curr_line);
-	if (_nc_curr_col >= 0)
-		fprintf (stderr, ", col %d", _nc_curr_col);
-	if (termtype[0])
-		fprintf (stderr, ", terminal '%s'", termtype);
-	fputc(':', stderr);
-	fputc(' ', stderr);
+    fprintf(stderr, "\"%s\"", sourcename);
+    if (_nc_curr_line >= 0)
+	fprintf(stderr, ", line %d", _nc_curr_line);
+    if (_nc_curr_col >= 0)
+	fprintf(stderr, ", col %d", _nc_curr_col);
+    if (termtype != 0 && termtype[0] != '\0')
+	fprintf(stderr, ", terminal '%s'", termtype);
+    fputc(':', stderr);
+    fputc(' ', stderr);
 }
 
-void _nc_warning(const char *const fmt, ...)
+NCURSES_EXPORT(void)
+_nc_warning(const char *const fmt,...)
 {
-va_list argp;
+    va_list argp;
 
-	if (_nc_suppress_warnings)
-	    return;
+    if (_nc_suppress_warnings)
+	return;
 
-	where_is_problem();
-	va_start(argp,fmt);
-	vfprintf (stderr, fmt, argp);
-	fprintf (stderr, "\n");
-	va_end(argp);
+    where_is_problem();
+    va_start(argp, fmt);
+    vfprintf(stderr, fmt, argp);
+    fprintf(stderr, "\n");
+    va_end(argp);
 }
 
-
-void _nc_err_abort(const char *const fmt, ...)
+NCURSES_EXPORT(void)
+_nc_err_abort(const char *const fmt,...)
 {
-va_list argp;
+    va_list argp;
 
-	where_is_problem();
-	va_start(argp,fmt);
-	vfprintf (stderr, fmt, argp);
-	fprintf (stderr, "\n");
-	va_end(argp);
-	exit(EXIT_FAILURE);
+    where_is_problem();
+    va_start(argp, fmt);
+    vfprintf(stderr, fmt, argp);
+    fprintf(stderr, "\n");
+    va_end(argp);
+    exit(EXIT_FAILURE);
 }
 
-
-void _nc_syserr_abort(const char *const fmt, ...)
+NCURSES_EXPORT(void)
+_nc_syserr_abort(const char *const fmt,...)
 {
-va_list argp;
+    va_list argp;
 
-	where_is_problem();
-	va_start(argp,fmt);
-	vfprintf (stderr, fmt, argp);
-	fprintf (stderr, "\n");
-	va_end(argp);
+    where_is_problem();
+    va_start(argp, fmt);
+    vfprintf(stderr, fmt, argp);
+    fprintf(stderr, "\n");
+    va_end(argp);
 
-	/* If we're debugging, try to show where the problem occurred - this
-	 * will dump core.
-	 */
+    /* If we're debugging, try to show where the problem occurred - this
+     * will dump core.
+     */
 #if defined(TRACE) || !defined(NDEBUG)
-	abort();
+    abort();
 #else
-	/* Dumping core in production code is not a good idea.
-	 */
-	exit(EXIT_FAILURE);
+    /* Dumping core in production code is not a good idea.
+     */
+    exit(EXIT_FAILURE);
 #endif
 }
