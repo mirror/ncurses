@@ -1,25 +1,26 @@
 '\" t
-.TH forms 3X ""
+.\" $Id: form.3x,v 0.8 1997/12/14 01:44:04 tom Exp $
+.TH form 3X ""
 .SH NAME
-\fBforms\fR - curses extension for programming forms
+\fBform\fR - curses extension for programming forms
 .SH SYNOPSIS
 \fB#include <form.h>\fR
 .br
 .SH DESCRIPTION
-The \fBforms\fR library provides terminal-independent facilities for composing
+The \fBform\fR library provides terminal-independent facilities for composing
 form screens on character-cell terminals.  The library includes: field
 routines, which create and modify form fields; and form routines, which group
 fields into forms, display forms on the screen, and handle interaction with the
 user.
 
-The \fBforms\fR library uses the \fBcurses\fR libraries, and a curses
+The \fBform\fR library uses the \fBcurses\fR libraries, and a curses
 initialization routine such as \fBinitscr\fR must be called before using any of
-these functions.  To use the \fBforms\fR library, link with the options
+these functions.  To use the \fBform\fR library, link with the options
 \fB-lform -lcurses\fR.
 
 .SS Current Default Values for Field Attributes
 
-The \fBforms\fR library maintains a default value for field attributes.  You
+The \fBform\fR library maintains a default value for field attributes.  You
 can get or set this default by calling the appropriate \fBget_\fR or \fBset_\fR
 routine with a \fBNULL\fR field pointer.  Changing this default with a
 \fBset_\fR function affects future field creations, but does not change the
@@ -35,77 +36,77 @@ l l
 l l .
 \fBcurses\fR Routine Name	Manual Page Name
 =
-\fBcurrent_field\fR	form_page(3X)
-\fBdata_ahead\fR	form_data(3X)
-\fBdata_behind\fR	form_data(3X)
-\fBdup_field\fR	form_field_new(3X)
-\fBdynamic_fieldinfo\fR	form_field_info(3X)
-\fBfield_arg\fR	form_field_validation(3X)
-\fBfield_back\fR	form_field_attributes(3X)
-\fBfield_buffer\fR	form_field_buffer(3X)
-\fBfield_count\fR	form_field(3X)
-\fBfield_fore\fR	form_field_attributes(3X)
-\fBfield_index\fR	form_page(3X)
-\fBfield_info\fR	form_field_info(3X)
-\fBfield_init\fR	form_hook(3X)
-\fBfield_just\fR	form_field_just(3X)
-\fBfield_opts\fR	form_field_opts(3X)
-\fBfield_opts_off\fR	form_field_opts(3X)
-\fBfield_opts_on\fR	form_field_opts(3X)
-\fBfield_pad\fR	form_field_attributes(3X)
-\fBfield_status\fR	form_field_buffer(3X)
-\fBfield_term\fR	form_hook(3X)
-\fBfield_type\fR	form_field_validation(3X)
-\fBfield_userptr\fR	form_field_userptr(3X)
-\fBform_driver\fR	form_driver(3X)
-\fBform_fields\fR	form_field(3X)
-\fBform_init\fR	form_hook(3X)
-\fBform_opts\fR	form_opts(3X)
-\fBform_opts_off\fR	form_opts(3X)
-\fBform_opts_on\fR	form_opts(3X)
-\fBform_page\fR	form_page(3X)
-\fBform_request_by_name\fR	form_requestname(3X)
-\fBform_request_name\fR	form_requestname(3X)
-\fBform_sub\fR	form_win(3X)
-\fBform_term\fR	form_hook(3X)
-\fBform_userptr\fR	form_userptr(3X)
-\fBform_win\fR	form_win(3X)
-\fBfree_field\fR	form_field_new(3X)
-\fBfree_form\fR	form_new(3X)
-\fBlink_field\fR	form_field_new(3X)
-\fBlink_fieldtype\fR	link_fieldtype(3X)
-\fBmove_field\fR	form_field(3X)
-\fBnew_field\fR	form_field_new(3X)
-\fBnew_form\fR	form_new(3X)
-\fBnew_page\fR	form_new_page(3X)
-\fBpos_form_cursor\fR	form_cursor(3X)
-\fBpost_form\fR	form_post(3X)
-\fBscale_form\fR	form_win(3X)
-\fBset_current_field\fR	form_page(3X)
-\fBset_field_back\fR	form_field_attributes(3X)
-\fBset_field_buffer\fR	form_field_buffer(3X)
-\fBset_field_fore\fR	form_field_attributes(3X)
-\fBset_field_init\fR	form_hook(3X)
-\fBset_field_just\fR	form_field_just(3X)
-\fBset_field_opts\fR	form_field_opts(3X)
-\fBset_field_pad\fR	form_field_attributes(3X)
-\fBset_field_status\fR	form_field_buffer(3X)
-\fBset_field_term\fR	form_hook(3X)
-\fBset_field_type\fR	form_field_validation(3X)
-\fBset_field_userptr\fR	form_field_userptr(3X)
-\fBset_fieldtype_arg\fR	form_fieldtype(3X)
-\fBset_fieldtype_choice\fR	form_fieldtype(3X)
-\fBset_form_fields\fR	form_field(3X)
-\fBset_form_init\fR	form_hook(3X)
-\fBset_form_opts\fR	form_field_opts(3X)
-\fBset_form_page\fR	form_page(3X)
-\fBset_form_sub\fR	form_win(3X)
-\fBset_form_term\fR	form_hook(3X)
-\fBset_form_userptr\fR	form_userptr(3X)
-\fBset_form_win\fR	form_win(3X)
-\fBset_max_field\fR	form_field_buffer(3X)
-\fBset_new_page\fR	form_new_page(3X)
-\fBunpost_form\fR	form_post(3X)
+current_field	\fBform_page\fR(3X)
+data_ahead	\fBform_data\fR(3X)
+data_behind	\fBform_data\fR(3X)
+dup_field	\fBform_field_new\fR(3X)
+dynamic_fieldinfo	\fBform_field_info\fR(3X)
+field_arg	\fBform_field_validation\fR(3X)
+field_back	\fBform_field_attributes\fR(3X)
+field_buffer	\fBform_field_buffer\fR(3X)
+field_count	\fBform_field\fR(3X)
+field_fore	\fBform_field_attributes\fR(3X)
+field_index	\fBform_page\fR(3X)
+field_info	\fBform_field_info\fR(3X)
+field_init	\fBform_hook\fR(3X)
+field_just	\fBform_field_just\fR(3X)
+field_opts	\fBform_field_opts\fR(3X)
+field_opts_off	\fBform_field_opts\fR(3X)
+field_opts_on	\fBform_field_opts\fR(3X)
+field_pad	\fBform_field_attributes\fR(3X)
+field_status	\fBform_field_buffer\fR(3X)
+field_term	\fBform_hook\fR(3X)
+field_type	\fBform_field_validation\fR(3X)
+field_userptr	\fBform_field_userptr\fR(3X)
+form_driver	\fBform_driver\fR(3X)
+form_fields	\fBform_field\fR(3X)
+form_init	\fBform_hook\fR(3X)
+form_opts	\fBform_opts\fR(3X)
+form_opts_off	\fBform_opts\fR(3X)
+form_opts_on	\fBform_opts\fR(3X)
+form_page	\fBform_page\fR(3X)
+form_request_by_name	\fBform_requestname\fR(3X)
+form_request_name	\fBform_requestname\fR(3X)
+form_sub	\fBform_win\fR(3X)
+form_term	\fBform_hook\fR(3X)
+form_userptr	\fBform_userptr\fR(3X)
+form_win	\fBform_win\fR(3X)
+free_field	\fBform_field_new\fR(3X)
+free_form	\fBform_new\fR(3X)
+link_field	\fBform_field_new\fR(3X)
+link_fieldtype	\fBform_fieldtype\fR(3X)
+move_field	\fBform_field\fR(3X)
+new_field	\fBform_field_new\fR(3X)
+new_form	\fBform_new\fR(3X)
+new_page	\fBform_new_page\fR(3X)
+pos_form_cursor	\fBform_cursor\fR(3X)
+post_form	\fBform_post\fR(3X)
+scale_form	\fBform_win\fR(3X)
+set_current_field	\fBform_page\fR(3X)
+set_field_back	\fBform_field_attributes\fR(3X)
+set_field_buffer	\fBform_field_buffer\fR(3X)
+set_field_fore	\fBform_field_attributes\fR(3X)
+set_field_init	\fBform_hook\fR(3X)
+set_field_just	\fBform_field_just\fR(3X)
+set_field_opts	\fBform_field_opts\fR(3X)
+set_field_pad	\fBform_field_attributes\fR(3X)
+set_field_status	\fBform_field_buffer\fR(3X)
+set_field_term	\fBform_hook\fR(3X)
+set_field_type	\fBform_field_validation\fR(3X)
+set_field_userptr	\fBform_field_userptr\fR(3X)
+set_fieldtype_arg	\fBform_fieldtype\fR(3X)
+set_fieldtype_choice	\fBform_fieldtype\fR(3X)
+set_form_fields	\fBform_field\fR(3X)
+set_form_init	\fBform_hook\fR(3X)
+set_form_opts	\fBform_field_opts\fR(3X)
+set_form_page	\fBform_page\fR(3X)
+set_form_sub	\fBform_win\fR(3X)
+set_form_term	\fBform_hook\fR(3X)
+set_form_userptr	\fBform_userptr\fR(3X)
+set_form_win	\fBform_win\fR(3X)
+set_max_field	\fBform_field_buffer\fR(3X)
+set_new_page	\fBform_new_page\fR(3X)
+unpost_form	\fBform_post\fR(3X)
 .TE
 .SH RETURN VALUE
 Routines that return pointers return \fBNULL\fR on error.  Routines that return

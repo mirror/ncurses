@@ -11,9 +11,14 @@ int free_item(ITEM *item);
 .br
 .SH DESCRIPTION
 The function \fBnew_item\fR allocates a new item and initializes it from the
-\fBname\fR and \fBdescription\fR pointers.
+\fBname\fR and \fBdescription\fR pointers. Please notice that the item stores
+only the pointers to the name and description. Those pointers must be valid
+during the lifetime of the item. So you should be very carefull with names
+or descriptions allocated on the stack of some routines.
 .br
-The function \fBfree_item\fR de-allocates an item.
+The function \fBfree_item\fR de-allocates an item. Please notice that it
+is the responsibility of the application to release the memory for the
+name or the description of the item.
 .SH RETURN VALUE
 The function \fBnew_item\fR returns \fBNULL\fR on error.
 

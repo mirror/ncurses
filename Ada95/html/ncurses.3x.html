@@ -69,7 +69,7 @@
        be created with <STRONG>newwin</STRONG>.
 
        Note that <STRONG>curses</STRONG>  does  not  handle  overlapping  windows,
-       that's done by the <STRONG>panels(3x)</STRONG> library. This means that you
+       that's  done by the <STRONG><A HREF="panel.3x.html">panel(3X)</A></STRONG> library. This means that you
        can either use <STRONG>stdscr</STRONG> or divide the screen into tiled win-
        dows  and  not  using  <STRONG>stdscr</STRONG>  at all. Mixing the two will
        result in unpredictable, and undesired, effects.
@@ -182,14 +182,14 @@
        addstr/<STRONG><A HREF="curs_addstr.3x.html">curs_addstr(3X)</A></STRONG>               attroff/<STRONG><A HREF="curs_attr.3x.html">curs_attr(3X)</A></STRONG>
        attron/<STRONG><A HREF="curs_attr.3x.html">curs_attr(3X)</A></STRONG>       attrset/<STRONG><A HREF="curs_attr.3x.html">curs_attr(3X)</A></STRONG>      bau-
        drate/<STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3X)</A></STRONG>                beep/<STRONG><A HREF="curs_beep.3x.html">curs_beep(3X)</A></STRONG>
-       bkgd/<STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3X)</A></STRONG>  bkgdset/<STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3X)</A></STRONG> border/curs_bor-
+       bkgd/<STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3X)</A></STRONG>  bkgdset/<STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3X)</A></STRONG> border/<STRONG>curs_bor-</STRONG>
        <STRONG><A HREF="der.3x.html">der(3X)</A></STRONG>                                box/<STRONG><A HREF="curs_border.3x.html">curs_border(3X)</A></STRONG>
        can_change_color/<STRONG><A HREF="curs_color.3x.html">curs_color(3X)</A></STRONG>     cbreak/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>
        clear/<STRONG><A HREF="curs_clear.3x.html">curs_clear(3X)</A></STRONG>    clearok/<STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3X)</A></STRONG>    clrto-
        bot/<STRONG><A HREF="curs_clear.3x.html">curs_clear(3X)</A></STRONG>    clrtoeol/<STRONG><A HREF="curs_clear.3x.html">curs_clear(3X)</A></STRONG>   color_con-
        tent/<STRONG><A HREF="curs_color.3x.html">curs_color(3X)</A></STRONG>               copywin/<STRONG><A HREF="curs_overlay.3x.html">curs_overlay(3X)</A></STRONG>
        curs_set/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>     def_prog_mode/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>
-       def_shell_mode/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>       del_curterm/curs_ter-
+       def_shell_mode/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>       del_curterm/<STRONG>curs_ter-</STRONG>
        <STRONG><A HREF="minfo.3x.html">minfo(3X)</A></STRONG>  delay_output/<STRONG><A HREF="curs_util.3x.html">curs_util(3X)</A></STRONG> delch/<STRONG><A HREF="curs_delch.3x.html">curs_delch(3X)</A></STRONG>
        deleteln/<STRONG><A HREF="curs_deleteln.3x.html">curs_deleteln(3X)</A></STRONG> delscreen/<STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3X)</A></STRONG> del-
        win/<STRONG><A HREF="curs_window.3x.html">curs_window(3X)</A></STRONG>      derwin/<STRONG><A HREF="curs_window.3x.html">curs_window(3X)</A></STRONG>      doup-
@@ -241,17 +241,17 @@
        napms/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>                  newpad/<STRONG><A HREF="curs_pad.3x.html">curs_pad(3X)</A></STRONG>
        newterm/<STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3X)</A></STRONG>            newwin/<STRONG><A HREF="curs_window.3x.html">curs_window(3X)</A></STRONG>
        nl/<STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3X)</A></STRONG>     nocbreak/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>     node-
-       lay/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG> noecho/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>  nonl/curs_out-
+       lay/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG> noecho/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>  nonl/<STRONG>curs_out-</STRONG>
        <STRONG><A HREF="opts.3x.html">opts(3X)</A></STRONG>  noqiflush/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>  noraw/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>
        notimeout/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>  overlay/<STRONG><A HREF="curs_overlay.3x.html">curs_overlay(3X)</A></STRONG>  over-
        write/<STRONG><A HREF="curs_overlay.3x.html">curs_overlay(3X)</A></STRONG>         pair_content/<STRONG><A HREF="curs_color.3x.html">curs_color(3X)</A></STRONG>
        pechochar/<STRONG><A HREF="curs_pad.3x.html">curs_pad(3X)</A></STRONG>   pnoutrefresh/<STRONG><A HREF="curs_pad.3x.html">curs_pad(3X)</A></STRONG>    pre-
-       fresh/<STRONG><A HREF="curs_pad.3x.html">curs_pad(3X)</A></STRONG>  printw/<STRONG><A HREF="curs_printw.3x.html">curs_printw(3X)</A></STRONG>  putp/curs_ter-
+       fresh/<STRONG><A HREF="curs_pad.3x.html">curs_pad(3X)</A></STRONG>  printw/<STRONG><A HREF="curs_printw.3x.html">curs_printw(3X)</A></STRONG>  putp/<STRONG>curs_ter-</STRONG>
        <STRONG><A HREF="minfo.3x.html">minfo(3X)</A></STRONG>   putwin/<STRONG><A HREF="curs_util.3x.html">curs_util(3X)</A></STRONG>   qiflush/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>
        raw/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>             redrawwin/<STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3X)</A></STRONG>
        refresh/<STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3X)</A></STRONG>   reset_prog_mode/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>
        reset_shell_mode/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>   resetty/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>
-       resizeterm/<STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>*   restartterm/<STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3X)</A></STRONG>
+       resizeterm/<STRONG><A HREF="resizeterm.3x.html">resizeterm(3X)</A></STRONG>*   restartterm/<STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3X)</A></STRONG>
        ripoffline/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>         savetty/<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3X)</A></STRONG>
        scanw/<STRONG><A HREF="curs_scanw.3x.html">curs_scanw(3X)</A></STRONG>            scr_dump/<STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3X)</A></STRONG>
        scr_init/<STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3X)</A></STRONG>   scr_restore/<STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3X)</A></STRONG>
@@ -277,7 +277,7 @@
        tputs/<STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3X)</A></STRONG>    tputs/<STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3X)</A></STRONG>   typea-
        head/<STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3X)</A></STRONG>                  unctrl/<STRONG><A HREF="curs_util.3x.html">curs_util(3X)</A></STRONG>
        ungetch/<STRONG><A HREF="curs_getch.3x.html">curs_getch(3X)</A></STRONG> ungetmouse/<STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3X)</A></STRONG>* untouch-
-       win/<STRONG><A HREF="curs_touch.3x.html">curs_touch(3X)</A></STRONG> use_env/<STRONG><A HREF="curs_util.3x.html">curs_util(3X)</A></STRONG> vidattr/curs_ter-
+       win/<STRONG><A HREF="curs_touch.3x.html">curs_touch(3X)</A></STRONG> use_env/<STRONG><A HREF="curs_util.3x.html">curs_util(3X)</A></STRONG> vidattr/<STRONG>curs_ter-</STRONG>
        <STRONG><A HREF="minfo.3x.html">minfo(3X)</A></STRONG>  vidputs/<STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3X)</A></STRONG> vline/<STRONG><A HREF="curs_border.3x.html">curs_border(3X)</A></STRONG>
        vwprintw/<STRONG><A HREF="curs_printw.3x.html">curs_printw(3X)</A></STRONG>    vwscanw/<STRONG><A HREF="curs_scanw.3x.html">curs_scanw(3X)</A></STRONG>    wad-
        dch/<STRONG><A HREF="curs_addch.3x.html">curs_addch(3X)</A></STRONG>   waddchnstr/<STRONG><A HREF="curs_addchstr.3x.html">curs_addchstr(3X)</A></STRONG>  waddch-
@@ -299,7 +299,7 @@
        winsstr/<STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3X)</A></STRONG>              winstr/<STRONG><A HREF="curs_instr.3x.html">curs_instr(3X)</A></STRONG>
        wmove/<STRONG><A HREF="curs_move.3x.html">curs_move(3X)</A></STRONG>          wnoutrefresh/<STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3X)</A></STRONG>
        wprintw/<STRONG><A HREF="curs_printw.3x.html">curs_printw(3X)</A></STRONG>   wredrawln/<STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3X)</A></STRONG>  wre-
-       fresh/<STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3X)</A></STRONG>                wresize/<STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>*
+       fresh/<STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3X)</A></STRONG>                wresize/<STRONG><A HREF="wresize.3x.html">wresize(3X)</A></STRONG>*
        wscanw/<STRONG><A HREF="curs_scanw.3x.html">curs_scanw(3X)</A></STRONG>    wscrl/<STRONG><A HREF="curs_scroll.3x.html">curs_scroll(3X)</A></STRONG>    wsetscr-
        reg/<STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3X)</A></STRONG>    wstandend/<STRONG><A HREF="curs_attr.3x.html">curs_attr(3X)</A></STRONG>    wstand-
        out/<STRONG><A HREF="curs_attr.3x.html">curs_attr(3X)</A></STRONG>      wsyncdown/<STRONG><A HREF="curs_window.3x.html">curs_window(3X)</A></STRONG>     wsyn-
@@ -357,7 +357,7 @@
        Versions of <STRONG>curses</STRONG> compiled on PC clones  support  display
        of  the  PC ROM characters (including ROM characters 0-31,
        which stock SVr4 curses cannot display).  See  the  EXTEN-
-       SIONS sections of <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG> and <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>.
+       SIONS sections of <STRONG><A HREF="curs_addch.3x.html">curs_addch(3X)</A></STRONG> and <STRONG><A HREF="curs_attr.3x.html">curs_attr(3X)</A></STRONG>.
 
        The <STRONG>curses</STRONG> library includes facilities for capturing mouse
        events on certain terminals  (including  xterm).  See  the

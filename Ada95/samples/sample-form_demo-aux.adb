@@ -6,23 +6,37 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control
---  $Revision: 1.5 $
+--  $Revision: 1.9 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 
@@ -120,36 +134,40 @@ package body Sample.Form_Demo.Aux is
          K := Get_Key (W);
          if K in Special_Key_Code'Range then
             case K is
-               when HELP_CODE           => Explain_Context;
-               when EXPLAIN_CODE        => Explain ("FORMKEYS");
-               when Key_Home            => return F_First_Field;
-               when Key_End             => return F_Last_Field;
-               when QUIT_CODE           => return QUIT;
-               when Key_Cursor_Down     => return F_Down_Char;
-               when Key_Cursor_Up       => return F_Up_Char;
-               when Key_Cursor_Left     => return F_Left_Char;
-               when Key_Cursor_Right    => return F_Right_Char;
-               when Key_Next_Page       => return F_ScrollForward_Line;
-               when Key_Previous_Page   => return F_ScrollBackward_Line;
-               when Key_Backspace       => return F_Delete_Previous;
-               when others              => return K;
+               when HELP_CODE             => Explain_Context;
+               when EXPLAIN_CODE          => Explain ("FORMKEYS");
+               when Key_Home              => return F_First_Field;
+               when Key_End               => return F_Last_Field;
+               when QUIT_CODE             => return QUIT;
+               when Key_Cursor_Down       => return F_Down_Char;
+               when Key_Cursor_Up         => return F_Up_Char;
+               when Key_Cursor_Left       => return F_Previous_Char;
+               when Key_Cursor_Right      => return F_Next_Char;
+               when Key_Next_Page         => return F_Next_Page;
+               when Key_Previous_Page     => return F_Previous_Page;
+               when Key_Backspace         => return F_Delete_Previous;
+               when Key_Clear_Screen      => return F_Clear_Field;
+               when Key_Clear_End_Of_Line => return F_Clear_EOF;
+               when others                => return K;
             end case;
          elsif K in Normal_Key_Code'Range then
             Ch := Character'Val (K);
             case Ch is
-               when DC1 => return QUIT;                  -- CTRL-Q
-               when ACK => return F_Next_Page;           -- CTRL-F
-               when STX => return F_Previous_Page;       -- CTRL-B
-               when SO  => return F_Next_Field;          -- CTRL-N
-               when DLE => return F_Previous_Field;      -- CTRL-P
+               when CAN => return QUIT;                  -- CTRL-X
+
+               when ACK => return F_Next_Field;          -- CTRL-F
+               when STX => return F_Previous_Field;      -- CTRL-B
                when FF  => return F_Left_Field;          -- CTRL-L
                when DC2 => return F_Right_Field;         -- CTRL-R
                when NAK => return F_Up_Field;            -- CTRL-U
                when EOT => return F_Down_Field;          -- CTRL-D
+
                when ETB => return F_Next_Word;           -- CTRL-W
                when DC4 => return F_Previous_Word;       -- CTRL-T
-               when DC3 => return F_Begin_Field;         -- CTRL-S
+
+               when SOH => return F_Begin_Field;         -- CTRL-A
                when ENQ => return F_End_Field;           -- CTRL-E
+
                when HT  => return F_Insert_Char;         -- CTRL-I
                when SI  => return F_Insert_Line;         -- CTRL-O
                when SYN => return F_Delete_Char;         -- CTRL-V
@@ -157,9 +175,10 @@ package body Sample.Form_Demo.Aux is
                when EM  => return F_Delete_Line;         -- CTRL-Y
                when BEL => return F_Delete_Word;         -- CTRL-G
                when VT  => return F_Clear_EOF;           -- CTRL-K
-               when CAN => return F_Clear_Field;         -- CTRL-X
-               when SOH => return F_Next_Choice;         -- CTRL-A
-               when SUB => return F_Previous_Choice;     -- CTRL-Z
+
+               when SO  => return F_Next_Choice;         -- CTRL-N
+               when DLE => return F_Previous_Choice;     -- CTRL-P
+
                when CR | LF  =>
                   if Handle_CRLF then
                      return F_New_Line;
@@ -224,12 +243,11 @@ package body Sample.Form_Demo.Aux is
    is
       N : Natural := 0;
       O : Field_Option_Set;
-      A : constant Field_Array_Access := Fields (F);
       H : constant Natural := Field_Count (F);
    begin
       if H > 0 then
          for I in 1 .. H loop
-            Get_Options (A.all (I), O);
+            Get_Options (Fields (F, I), O);
             if O.Active then
                N := N + 1;
             end if;

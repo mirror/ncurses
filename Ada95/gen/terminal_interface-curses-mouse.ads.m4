@@ -9,28 +9,43 @@ include(M4MACRO)dnl
 --                                                                          --
 --                                 S P E C                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.6 $
+--  $Revision: 1.12 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 include(`Mouse_Base_Defs')
 with System;
 
 package Terminal_Interface.Curses.Mouse is
+   pragma Preelaborate (Mouse);
 
    --  MANPAGE(`curs_mouse.3x')
    --  Please note, that in ncurses-1.9.9e documentation mouse support
@@ -59,6 +74,9 @@ package Terminal_Interface.Curses.Mouse is
 
    --  MANPAGE(`curs_mouse.3x')
 
+   function Has_Mouse return Boolean;
+   --  Return true if a mouse device is supported, false otherwise.
+
    procedure Register_Reportable_Event
      (B    : in Mouse_Button;
       S    : in Button_State;
@@ -66,19 +84,22 @@ package Terminal_Interface.Curses.Mouse is
    --  Stores the event described by the button and the state in the mask.
    --  Before you call this the first time, you should init the mask
    --  with the Empty_Mask constant
+   pragma Inline (Register_Reportable_Event);
 
    --  ANCHOR(`mousemask()',`Start_Mouse')
    function Start_Mouse (Mask : Event_Mask := All_Events)
                          return Event_Mask;
    --  AKA
+   pragma Inline (Start_Mouse);
 
    procedure End_Mouse;
-   pragma Import (C, End_Mouse, "_nc_ada_unregister_mouse");
    --  Terminates the mouse
+   pragma Inline (End_Mouse);
 
    --  ANCHOR(`getmouse()',`Get_Mouse')
    function Get_Mouse return Mouse_Event;
    --  AKA
+   pragma Inline (Get_Mouse);
 
    procedure Get_Event (Event  : in  Mouse_Event;
                         Y      : out Line_Position;
@@ -87,20 +108,24 @@ package Terminal_Interface.Curses.Mouse is
                         State  : out Button_State);
    --  !!! Warning: X and Y are screen coordinates. Due to ripped of lines they
    --  may not be identical to window coordinates.
+   pragma Inline (Get_Event);
 
    --  ANCHOR(`ungetmouse()',`Unget_Mouse')
    procedure Unget_Mouse (Event : in Mouse_Event);
    --  AKA
+   pragma Inline (Unget_Mouse);
 
    --  ANCHOR(`wenclose()',`Enclosed_In_Window')
    function Enclosed_In_Window (Win    : Window := Standard_Window;
                                 Event  : Mouse_Event) return Boolean;
    --  AKA
    --  But : use event instead of screen coordinates.
+   pragma Inline (Enclosed_In_Window);
 
    --  ANCHOR(`mouseinterval()',`Mouse_Interval')
    function Mouse_Interval (Msec : Natural := 200) return Natural;
    --  AKA
+   pragma Inline (Mouse_Interval);
 
 private
    type Event_Mask is new Interfaces.C.int;

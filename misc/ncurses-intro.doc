@@ -175,9 +175,12 @@ Scope of This Document
    The ncurses package was originated by Pavel Curtis. The original
    maintainer of the package is Zeyd Ben-Halim <zmbenhal@netcom.com>.
    Eric S. Raymond <esr@snark.thyrsus.com> wrote many of the new features
-   in versions after 1.8.1 and wrote most of this introduction. The
-   current primary maintainers are Thomas Dickey <dickey@clark.net> and
-   Juergen Pfeifer. <Juergen.Pfeifer@T-Online.de>
+   in versions after 1.8.1 and wrote most of this introduction. Jürgen
+   Pfeifer wrote all of the menu and forms code as well as the Ada95
+   binding. Ongoing work is being done by Thomas Dickey and Jürgen
+   Pfeifer. Florian La Roche acts as the maintainer for the Free Software
+   Foundation, which holds the copyright on ncurses. Contact the current
+   maintainers at bug-ncurses@gnu.org.
    
    This document also describes the panels extension library, similarly
    modeled on the SVr4 panels facility. This library allows you to
@@ -188,8 +191,7 @@ Scope of This Document
    
    Finally, this document describes in detail the menus and forms
    extension libraries, also cloned from System V, which support easy
-   construction and sequences of menus and fill-in forms. This code was
-   contributed to the project by Jürgen Pfeifer.
+   construction and sequences of menus and fill-in forms.
    
 Terminology
 
@@ -220,7 +222,6 @@ An Overview of Curses
   
    In order to use the library, it is necessary to have certain types and
    variables defined. Therefore, the programmer must have a line:
-
           #include <curses.h>
 
    at the top of the program source. The screen package uses the Standard
@@ -282,7 +283,6 @@ An Overview of Curses
    order to avoid clumsiness, most I/O routines can be preceded by the
    prefix 'mv' and the desired (y, x) coordinates prepended to the
    arguments to the function. For example, the calls
-
           move(y, x);
           addch(ch);
 
@@ -304,7 +304,6 @@ An Overview of Curses
   
    The curses library sets some variables describing the terminal
    capabilities.
-
       type   name      description
       ------------------------------------------------------------------
       int    LINES     number of lines on the terminal
@@ -947,7 +946,6 @@ Compiling With the Panels Library
 
    Your panels-using modules must import the panels library declarations
    with
-
           #include <panel.h>
 
    and must be linked explicitly with the panels library using an -lpanel
@@ -1051,7 +1049,6 @@ Miscellaneous Other Facilities
 Compiling With the menu Library
 
    Your menu-using modules must import the menu library declarations with
-
           #include <menu.h>
 
    and must be linked explicitly with the menus library using an -lmenu
@@ -1244,7 +1241,6 @@ Miscellaneous Other Features
 Compiling With the form Library
 
    Your form-using modules must import the form library declarations with
-
           #include <form.h>
 
    and must be linked explicitly with the forms library using an -lform
@@ -1474,7 +1470,6 @@ chtype new_page(FIELD *field);            /* field to query */
    There is also a large collection of field option bits you can set to
    control various aspects of forms processing. You can manipulate them
    with these functions:
-
 int set_field_opts(FIELD *field,          /* field to alter */
                    int attr);             /* attribute to set */
 
@@ -1585,7 +1580,6 @@ Field User Pointer
    Each field structure contains one character pointer slot that is not
    used by the forms library. It is intended to be used by applications
    to store private per-field data. You can manipulate it with:
-
 int set_field_userptr(FIELD *field,       /* field to alter */
                    char *userptr);        /* mode to set */
 
@@ -1795,7 +1789,6 @@ char *field_buffer(FIELD *field,          /* field to query */
    by the user's editing actions on that field. It's sometimes useful to
    be able to set the value of the zero-numbered (or some other) buffer
    from your application:
-
 int set_field_buffer(FIELD *field,        /* field to alter */
                    int bufindex,          /* number of buffer to alter */
                    char *value);          /* string value to set */
@@ -1880,7 +1873,6 @@ int scale_form(FORM *form,                /* form to query */
    The form dimensions are passed back in the locations pointed to by the
    arguments. Once you have this information, you can use it to declare
    of windows, then use one of these functions:
-
 int set_form_win(FORM *form,              /* form to alter */
                  WINDOW *win);            /* frame window to connect */
 

@@ -134,6 +134,10 @@
        perform better vertical-motion  optimization  at  <STRONG>wrefresh</STRONG>
        time.
 
+       The  XSI  Curses standard does not mention that the cursor
+       should be made invisible  as  a  side-effect  of  <STRONG>leaveok</STRONG>.
+       SVr4 curses does this.
+
 
 </PRE>
 <H2>NOTES</H2><PRE>
@@ -148,10 +152,6 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>,         <STRONG><A HREF="curs_addch.3x.html">curs_addch(3X)</A></STRONG>,        <STRONG><A HREF="curs_clear.3x.html">curs_clear(3X)</A></STRONG>,
        <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3X)</A></STRONG>, <STRONG><A HREF="curs_scroll.3x.html">curs_scroll(3X)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3X)</A></STRONG>
-
-
-
-
 
 
 

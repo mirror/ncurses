@@ -6,7 +6,7 @@
  * This can't be part of the ncurses test-program, because ncurses rips off the
  * bottom line to do labels.
  *
- * $Id: lrtest.c,v 0.6 1997/04/26 23:47:42 tom Exp $
+ * $Id: lrtest.c,v 0.7 1998/02/12 23:49:11 tom Exp $
  */
 
 #include <test.priv.h>
@@ -33,7 +33,7 @@ main(
 	move(LINES/2+1, 4);
 	addstr("Please report this (with a copy of your terminfo entry).\n");
 	move(LINES/2+2, 4);
-	addstr("to the ncurses maintainers, at ncurses@bsdi.com.\n");
+	addstr("to the ncurses maintainers, at bug-ncurses@gnu.org.\n");
     }
 
     box(stdscr, 0, 0);

@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -29,40 +41,33 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_erase.c,v 1.7 1997/02/01 23:18:18 tom Exp $")
+MODULE_ID("$Id: lib_erase.c,v 1.11 1998/02/11 12:13:54 tom Exp $")
 
 int  werase(WINDOW	*win)
 {
+int     code = ERR;
 int	y;
-chtype	*sp, *end, *start, *maxx = NULL;
-short	minx;
+chtype	blank;
+chtype	*sp, *end, *start;
 
 	T((T_CALLED("werase(%p)"), win));
 
-	for (y = 0; y <= win->_maxy; y++) {
-		minx = _NOCHANGE;
-		start = win->_line[y].text;
-		end = &start[win->_maxx];
-
-		maxx = start;
-		for (sp = start; sp <= end; sp++) {
-			maxx = sp;
-			if (minx == _NOCHANGE)
-					minx = sp - start;
-			*sp = _nc_background(win);
-		}
-
-		if (minx != _NOCHANGE) {
-			if (win->_line[y].firstchar > minx ||
-			    win->_line[y].firstchar == _NOCHANGE)
-				win->_line[y].firstchar = minx;
-
-			if (win->_line[y].lastchar < maxx - win->_line[y].text)
-			    win->_line[y].lastchar = maxx - win->_line[y].text;
-		}
+	if (win) {
+	  blank = _nc_background(win);
+	  for (y = 0; y <= win->_maxy; y++) {
+	    start = win->_line[y].text;
+	    end = &start[win->_maxx];
+	    
+	    for (sp = start; sp <= end; sp++)
+	      *sp = blank;
+	    
+	    win->_line[y].firstchar = 0;
+	    win->_line[y].lastchar = win->_maxx;
+	  }
+	  win->_curx = win->_cury = 0;
+	  win->_flags &= ~_WRAPPED;
+	  _nc_synchook(win);
+	  code = OK;
 	}
-	win->_curx = win->_cury = 0;
-	win->_flags &= ~_WRAPPED;
-	_nc_synchook(win);
-	returnCode(OK);
+	returnCode(code);
 }

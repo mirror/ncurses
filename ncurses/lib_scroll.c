@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 
@@ -32,12 +44,11 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_scroll.c,v 1.11 1997/02/01 23:22:54 tom Exp $")
+MODULE_ID("$Id: lib_scroll.c,v 1.16 1998/02/11 12:13:55 tom Exp $")
 
-void _nc_scroll_window(WINDOW *win, int const n, short const top, short const bottom)
+void _nc_scroll_window(WINDOW *win, int const n, short const top, short const bottom, chtype blank)
 {
 int	line, j;
-chtype	blank = _nc_background(win);
 size_t	to_copy = (size_t)(sizeof(chtype) * (win->_maxx + 1));
 
 	TR(TRACE_MOVE, ("_nc_scroll_window(%p, %d, %d, %d)", win, n, top,bottom)); 
@@ -59,14 +70,12 @@ size_t	to_copy = (size_t)(sizeof(chtype) * (win->_maxx + 1));
 		    	memcpy(win->_line[line].text,
 			       win->_line[line+n].text,
 			       to_copy);
-			win->_line[line].oldindex = win->_line[line+n].oldindex;
+			if_USE_SCROLL_HINTS(win->_line[line].oldindex = win->_line[line+n].oldindex);
 		}
 		for (line = top; line < top-n; line++) {
 			for (j = 0; j <= win->_maxx; j ++)
 				win->_line[line].text[j] = blank;
-			win->_line[line].oldindex = _NEWINDEX;
-			win->_line[line].firstchar = 0;
-			win->_line[line].lastchar = win->_maxx;
+			if_USE_SCROLL_HINTS(win->_line[line].oldindex = _NEWINDEX);
 		}
     	}
 
@@ -76,16 +85,15 @@ size_t	to_copy = (size_t)(sizeof(chtype) * (win->_maxx + 1));
 		    	memcpy(win->_line[line].text,
 			       win->_line[line+n].text,
 			       to_copy);
-			win->_line[line].oldindex = win->_line[line+n].oldindex;
+			if_USE_SCROLL_HINTS(win->_line[line].oldindex = win->_line[line+n].oldindex);
 		}
 		for (line = bottom; line > bottom-n; line--) {
 			for (j = 0; j <= win->_maxx; j ++)
 				win->_line[line].text[j] = blank;
-			win->_line[line].oldindex = _NEWINDEX;
-			win->_line[line].firstchar = 0;
-			win->_line[line].lastchar = win->_maxx;
+			if_USE_SCROLL_HINTS(win->_line[line].oldindex = _NEWINDEX);
 		}
 	}
+	touchline(win, top, bottom-top+1);
 }
 
 int
@@ -93,7 +101,7 @@ wscrl(WINDOW *win, int n)
 {
 	T((T_CALLED("wscrl(%p,%d)"), win, n));
 
-	if (! win->_scroll)
+	if (!win || !win->_scroll)
 		returnCode(ERR);
 
 	if (n == 0)
@@ -103,8 +111,7 @@ wscrl(WINDOW *win, int n)
 	    (-n > (win->_regbottom - win->_regtop)))
 	    returnCode(ERR);
 
-	_nc_scroll_window(win, n, win->_regtop, win->_regbottom);
-	touchline(win, win->_regtop, (int)(win->_regbottom - win->_regtop + 1));
+	_nc_scroll_window(win, n, win->_regtop, win->_regbottom, _nc_background(win));
 
 	_nc_synchook(win);
     	returnCode(OK);

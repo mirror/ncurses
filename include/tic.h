@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
  *	tic.h - Global variables and structures for the terminfo
@@ -27,6 +39,10 @@
 
 #ifndef __TIC_H
 #define __TIC_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <curses.h>	/* for the _tracef() prototype, ERR/OK, bool defs */
 
@@ -59,9 +75,24 @@
 */
 
 #define MAGIC		0432	/* first two bytes of a compiled entry */
-#define MAX_NAME_SIZE	127	/* maximum legal name field size */
+
+/*
+ * The "maximum" here is misleading; XSI guarantees minimum values, which a
+ * given implementation may exceed.
+ */
+#define MAX_NAME_SIZE	512	/* maximum legal name field size (XSI:127) */
 #define MAX_ENTRY_SIZE	4096	/* maximum legal entry size */
-#define MAX_ALIAS	14	/* maximum size of individual name or alias */
+
+/* The maximum size of individual name or alias is guaranteed in XSI to
+ * be 14, since that corresponds to the older filename lengths.  Newer
+ * systems allow longer aliases, though not many terminal descriptions
+ * are written to use them.
+ */
+#if HAVE_LONG_FILE_NAMES
+#define MAX_ALIAS	32	/* POSIX minimum for PATH_MAX */
+#else
+#define MAX_ALIAS	14	/* SVr3 filename length */
+#endif
 
 /* location of user's personal info directory */
 #define PRIVATE_INFO	"%s/.terminfo"	/* plug getenv("HOME") into %s */
@@ -143,6 +174,8 @@ extern const struct name_table_entry	*_nc_get_table(bool);
 #define CANCELLED_NUMERIC	-2
 #define CANCELLED_STRING	(char *)-1
 
+#define VALID_STRING(s) ((s) != CANCELLED_STRING && (s) != ABSENT_STRING)
+
 /* termcap entries longer than this may break old binaries */
 #define MAX_TERMCAP_LENGTH	1023
 
@@ -183,9 +216,18 @@ extern void _nc_err_abort(const char *const,...) GCC_PRINTFLIKE(1,2) GCC_NORETUR
 extern void _nc_warning(const char *const,...) GCC_PRINTFLIKE(1,2);
 extern bool _nc_suppress_warnings;
 
+/* comp_expand.c: expand string into readable form */
+extern char *_nc_tic_expand(const char *, bool);
+
+/* comp_scan.c: decode string from readable form */
+extern char _nc_trans_string(char *);
+
 /* captoinfo.c: capability conversion */
-extern char *_nc_captoinfo(char *const, char *, int const);
-extern char *_nc_infotocap(char *const, char *, int const);
+extern char *_nc_captoinfo(const char *, const char *, int const);
+extern char *_nc_infotocap(const char *, const char *, int const);
+
+/* lib_tputs.c */
+extern int _nc_nulls_sent;		/* Add one for every null sent */
 
 /* comp_main.c: compiler main */
 extern const char *_nc_progname;
@@ -195,5 +237,9 @@ extern const char *_nc_tic_dir(const char *);
 
 /* write_entry.c */
 extern int _nc_tic_written(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __TIC_H */

@@ -22,22 +22,19 @@
   modified by Juergen Pfeifer (Juergen.Pfeifer@T-Online.de)	  
 */
 
+#include "cursesw.h"
 #include "internal.h"
 
-MODULE_ID("$Id: cursesw.cc,v 1.5 1997/05/05 20:04:59 tom Exp $")
-
-#pragma implementation
-
-#include "cursesw.h"
+MODULE_ID("$Id: cursesw.cc,v 1.10 1997/10/20 21:26:35 juergen Exp $")
 
 #define COLORS_NEED_INITIALIZATION  -1
 #define COLORS_NOT_INITIALIZED       0
 #define COLORS_MONOCHROME            1
 #define COLORS_ARE_REALLY_THERE      2
 
-
 // declare static variables for the class
-int NCursesWindow::count = 0;
+long NCursesWindow::count = 0L;
+bool NCursesWindow::b_initialized = FALSE;
 
 int
 NCursesWindow::scanw(const char* fmt, ...)
@@ -113,10 +110,9 @@ NCursesWindow::printw(int y, int x, const char * fmt, ...)
 void
 NCursesWindow::init(void)
 {
-    noecho();
-    cbreak();
     leaveok(0);
     keypad(1);
+    meta(1);
 }
 
 void
@@ -127,18 +123,32 @@ NCursesWindow::err_handler(const char *msg) const THROWS(NCursesException)
 
 void
 NCursesWindow::initialize() {
-  ::initscr();
-  if (colorInitialized==COLORS_NEED_INITIALIZATION) {
-    colorInitialized=COLORS_NOT_INITIALIZED;
-    count++;
-    useColors();
-    count--;
+  if (!b_initialized) {
+    ::initscr();
+    b_initialized = TRUE;
+    if (colorInitialized==COLORS_NEED_INITIALIZATION) {
+      colorInitialized=COLORS_NOT_INITIALIZED;
+      useColors();
+    }
+    ::noecho();
+    ::cbreak();
   }
+}
+
+NCursesWindow::NCursesWindow() {
+  if (!b_initialized)
+    initialize();
+  
+  w = (WINDOW *)0;
+  init();
+  alloced = FALSE;
+  subwins = par = sib = 0;
+  count++;
 }
 
 NCursesWindow::NCursesWindow(int lines, int cols, int begin_y, int begin_x)
 {
-    if (count==0)
+    if (!b_initialized)
       initialize();
 
     w = ::newwin(lines, cols, begin_y, begin_x);
@@ -147,40 +157,36 @@ NCursesWindow::NCursesWindow(int lines, int cols, int begin_y, int begin_x)
     }
     init();
 
-    alloced = 1;
+    alloced = TRUE;
     subwins = par = sib = 0;
     count++;
 }
 
 NCursesWindow::NCursesWindow(WINDOW* &window)
 {
-    if (count==0)
+    if (!b_initialized)
       initialize();
     
     w = window;
     init();
-    alloced = 0;
+    alloced = FALSE;
     subwins = par = sib = 0;
     count++;
 }
 
-
 NCursesWindow::NCursesWindow(NCursesWindow& win, int l, int c,
-			     int by, int bx, char absrel)
+			     int begin_y, int begin_x, char absrel)
 {
-    if (absrel == 'r') { // relative origin 
-	by += win.begy();
-	bx += win.begx();
+    if (absrel == 'a') { // absolute origin 
+	begin_y -= win.begy();
+	begin_x -= win.begx();
     }
 
     // Even though we treat subwindows as a tree, the standard curses
-    // library needs the `subwin' call to link to the root in
+    // library needs the `subwin' call to link to the parent in
     // order to correctly perform refreshes, etc.
-
-    NCursesWindow* root = &win;
-    while (root->par != 0) root = root->par;
-
-    w = subwin(root->w, l, c, by, bx);
+    // Friendly enough, this also works for pads.
+    w = ::derwin(win.w, l, c, begin_y, begin_x);
     if (w == 0) {
 	err_handler("Cannot construct subwindow");
     }
@@ -189,8 +195,53 @@ NCursesWindow::NCursesWindow(NCursesWindow& win, int l, int c,
     sib = win.subwins;
     win.subwins = this;
     subwins = 0;
-    alloced = 1;
+    alloced = TRUE;
     count++;
+}
+  
+NCursesWindow NCursesWindow::Clone() {
+  WINDOW *d = ::dupwin(w);
+  NCursesWindow W(d);
+  W.subwins = subwins;
+  W.sib = sib;
+  W.par = par;
+  W.alloced = alloced;
+  return W;
+}
+
+typedef int (*RIPOFFINIT)(NCursesWindow&);
+static RIPOFFINIT R_INIT[5];       // There can't be more
+static int r_init_idx   = 0;
+static RIPOFFINIT* prip = R_INIT;
+
+extern "C" int _nc_ripoffline(int,int (*init)(WINDOW*,int));
+
+NCursesWindow::NCursesWindow(WINDOW *win, int cols) {
+  w = win;
+  assert((w->_maxx+1)==cols);
+  alloced = FALSE;
+  subwins = par = sib = 0;
+}
+
+int NCursesWindow::ripoff_init(WINDOW *w, int cols)
+{
+  int res = ERR;
+
+  RIPOFFINIT init = *prip++;
+  if (init) {
+    NCursesWindow* W = new NCursesWindow(w,cols);
+    res = init(*W);
+  }
+  return res;
+}
+
+int NCursesWindow::ripoffline(int ripoff_lines,
+			      int (*init)(NCursesWindow& win)) {
+  int code = ::_nc_ripoffline(ripoff_lines,ripoff_init);
+  if (code==OK && init && ripoff_lines) {
+    R_INIT[r_init_idx++] = init;
+  }
+  return code;
 }
 
 bool
@@ -214,7 +265,7 @@ NCursesWindow::kill_subwindows()
 	if (p->alloced) {
 	    if (p->w != 0)
 		::delwin(p->w);
-	    p->alloced = 0;
+	    p->alloced = FALSE;
 	}
 	p->w = 0; // cause a run-time error if anyone attempts to use...
     }
@@ -247,11 +298,14 @@ NCursesWindow::~NCursesWindow()
     if (alloced && w != 0)
 	delwin(w);
 
-    --count;
-    if (count == 0)
-	endwin();
-    else if (count < 0) { // cannot happen!
+    if (alloced) {
+      --count;
+      if (count == 0) {
+	::endwin();
+      }
+      else if (count < 0) { // cannot happen!
 	err_handler("Too many windows destroyed");
+      }
     }
 }
 
@@ -264,9 +318,9 @@ void
 NCursesWindow::useColors(void)
 {
     if (colorInitialized == COLORS_NOT_INITIALIZED) {        
-      if (count>0) {
-	if (has_colors()) {
-	  start_color();
+      if (b_initialized) {
+	if (::has_colors()) {
+	  ::start_color();
 	  colorInitialized = COLORS_ARE_REALLY_THERE;
 	}
 	else
@@ -341,4 +395,20 @@ NCursesWindow::setcolor(short pair)
     attrset(COLOR_PAIR(pair));
   }
   return OK;
+}
+
+extern "C" int _nc_has_mouse(void);
+
+bool NCursesWindow::has_mouse() const {
+  return ((::has_key(KEY_MOUSE) || ::_nc_has_mouse()) 
+	  ? TRUE : FALSE);
+}
+
+NCursesPad::NCursesPad(int lines, int cols) : NCursesWindow() {
+  w = ::newpad(lines,cols);
+  if (w==(WINDOW*)0) {
+    count--;
+    err_handler("Cannot construct window");
+  }
+  alloced = TRUE;
 }

@@ -1,33 +1,43 @@
-/*-----------------------------------------------------------------------------+
-|           The ncurses menu library is  Copyright (C) 1995-1997               |
-|             by Juergen Pfeifer <Juergen.Pfeifer@T-Online.de>                 |
-|                          All Rights Reserved.                                |
-|                                                                              |
-| Permission to use, copy, modify, and distribute this software and its        |
-| documentation for any purpose and without fee is hereby granted, provided    |
-| that the above copyright notice appear in all copies and that both that      |
-| copyright notice and this permission notice appear in supporting             |
-| documentation, and that the name of the above listed copyright holder(s) not |
-| be used in advertising or publicity pertaining to distribution of the        |
-| software without specific, written prior permission.                         | 
-|                                                                              |
-| THE ABOVE LISTED COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO  |
-| THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FIT-  |
-| NESS, IN NO EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR   |
-| ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RE- |
-| SULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, |
-| NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH    |
-| THE USE OR PERFORMANCE OF THIS SOFTWARE.                                     |
-+-----------------------------------------------------------------------------*/
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
+
+/****************************************************************************
+ *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1995,1997        *
+ ****************************************************************************/
 
 /***************************************************************************
-* Module menu_driver and menu_pattern                                      *
-* Central dispatching routine and pattern matching handling                *
+* Module m_driver                                                          *
+* Central dispatching routine                                              *
 ***************************************************************************/
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.8 1997/05/01 16:47:26 juergen Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.10 1998/02/11 12:13:49 tom Exp $")
 
 /* Macros */
 
@@ -78,7 +88,7 @@ static bool Is_Sub_String(
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
-|   Function      :  static int Match_Next_Character_In_Item_Name(
+|   Function      :  int _nc_Match_Next_Character_In_Item_Name(
 |                           MENU *menu,
 |                           int  ch,
 |                           ITEM **item)
@@ -101,7 +111,7 @@ static bool Is_Sub_String(
 |   Return Values :  E_OK        - an item matching the pattern was found
 |                    E_NO_MATCH  - nothing found
 +--------------------------------------------------------------------------*/
-static int Match_Next_Character_In_Item_Name(MENU *menu, int ch, ITEM **item)
+int _nc_Match_Next_Character_In_Item_Name(MENU *menu, int ch, ITEM **item)
 {
   bool found = FALSE, passed = FALSE;
   int  idx, last;
@@ -175,81 +185,6 @@ static int Match_Next_Character_In_Item_Name(MENU *menu, int ch, ITEM **item)
     }		
   RETURN(E_NO_MATCH);
 }	
-
-/*---------------------------------------------------------------------------
-|   Facility      :  libnmenu  
-|   Function      :  char *menu_pattern(const MENU *menu)
-|   
-|   Description   :  Return the value of the pattern buffer.
-|
-|   Return Values :  NULL          - if there is no pattern buffer allocated
-|                    EmptyString   - if there is a pattern buffer but no
-|                                    pattern is stored
-|                    PatternString - as expected
-+--------------------------------------------------------------------------*/
-char *menu_pattern(const MENU * menu)
-{
-  return (menu ? (menu->pattern ? menu->pattern : "") : (char *)0);
-}
-
-/*---------------------------------------------------------------------------
-|   Facility      :  libnmenu  
-|   Function      :  int set_menu_pattern(MENU *menu, const char *p)
-|   
-|   Description   :  Set the match pattern for a menu and position to the
-|                    first item that matches.
-|
-|   Return Values :  E_OK              - success
-|                    E_BAD_ARGUMENT    - invalid menu or pattern pointer
-|                    E_NOT_CONNECTED   - no items connected to menu
-|                    E_BAD_STATE       - menu in user hook routine
-|                    E_NO_MATCH        - no item matches pattern
-+--------------------------------------------------------------------------*/
-int set_menu_pattern(MENU *menu, const char *p)
-{
-  ITEM *matchitem;
-  int   matchpos;
-  
-  if (!menu || !p)	
-    RETURN(E_BAD_ARGUMENT);
-  
-  if (!(menu->items))
-    RETURN(E_NOT_CONNECTED);
-  
-  if ( menu->status & _IN_DRIVER )
-    RETURN(E_BAD_STATE);
-  
-  Reset_Pattern(menu);
-  
-  if (!(*p))
-    {
-      pos_menu_cursor(menu);
-      RETURN(E_OK);
-    }
-  
-  if (menu->status & _LINK_NEEDED) 
-    _nc_Link_Items(menu);
-  
-  matchpos  = menu->toprow;
-  matchitem = menu->curitem;
-  assert(matchitem);
-  
-  while(*p)
-    {
-      if ( !isprint(*p) || 
-	  (Match_Next_Character_In_Item_Name(menu,*p,&matchitem) != E_OK) )
-	{
-	  Reset_Pattern(menu);
-	  pos_menu_cursor(menu);
-	  RETURN(E_NO_MATCH);
-	}
-      p++;
-    }			
-  
-  /* This is reached if there was a match. So we position to the new item */
-  Adjust_Current_Item(menu,matchpos,matchitem);
-  RETURN(E_OK);
-}
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -449,7 +384,7 @@ int menu_driver(MENU * menu, int   c)
 	  /*==================*/  
 	  assert(menu->pattern);
 	  if (menu->pattern[0])
-	    result = Match_Next_Character_In_Item_Name(menu,0,&item);
+	    result = _nc_Match_Next_Character_In_Item_Name(menu,0,&item);
 	  else
 	    {
 	      if ((item->index+1)<menu->nitems)
@@ -468,7 +403,7 @@ int menu_driver(MENU * menu, int   c)
 	  /*==================*/  
 	  assert(menu->pattern);
 	  if (menu->pattern[0])
-	    result = Match_Next_Character_In_Item_Name(menu,BS,&item);
+	    result = _nc_Match_Next_Character_In_Item_Name(menu,BS,&item);
 	  else
 	    {
 	      if (item->index)
@@ -492,7 +427,7 @@ int menu_driver(MENU * menu, int   c)
   else
     {				/* not a command */
       if ( !(c & ~((int)MAX_REGULAR_CHARACTER)) && isprint(c) )
-	result = Match_Next_Character_In_Item_Name( menu, c, &item );
+	result = _nc_Match_Next_Character_In_Item_Name( menu, c, &item );
       else
 	result = E_UNKNOWN_COMMAND;
     }

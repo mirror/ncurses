@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 
@@ -37,11 +49,26 @@
 #define S_ISDIR(mode) ((mode & S_IFMT) == S_IFDIR)
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.16 1997/05/10 17:33:12 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.22 1998/02/11 12:13:59 tom Exp $")
 
 static int total_written;
 
 static int write_object(FILE *, TERMTYPE *);
+
+static void write_file(char *filename, TERMTYPE *tp)
+{
+	FILE *fp = fopen(filename, "wb");
+	if (fp == 0) {
+		perror(filename);
+		_nc_syserr_abort("can't open %s/%s", _nc_tic_dir(0), filename);
+	}
+	DEBUG(1, ("Created %s", filename));
+
+	if (write_object(fp, tp) == ERR) {
+		_nc_syserr_abort("error writing %s/%s", _nc_tic_dir(0), filename);
+	}
+	fclose(fp);
+}
 
 /*
  *	make_directory(char *path)
@@ -64,9 +91,9 @@ const char *destination = _nc_tic_dir(0);
 		rc = mkdir(path, 0777);
 	} else {
 		if (access(path, R_OK|W_OK|X_OK) < 0) {
-			_nc_err_abort("%s: permission denied", fullpath);
+			rc = -1;	/* permission denied */
 		} else if (!(S_ISDIR(statbuf.st_mode))) {
-			_nc_err_abort("%s: not a directory", fullpath);
+			rc = -1;	/* not a directory */
 		}
 	}
 	return rc;
@@ -115,6 +142,8 @@ void  _nc_set_writedir(char *dir)
  *
  *	Check for access rights to destination directories
  *	Create any directories which don't exist.
+ *	Note: there's no reason to return the result of make_directory(), since
+ *	this function is called only in instances where that has to succeed.
  *
  */
 
@@ -134,7 +163,9 @@ char		*s;
 
 	dir[0] = code;
 	dir[1] = '\0';
-	(void) make_directory(dir);
+	if (make_directory(dir) < 0) {
+		_nc_err_abort("%s/%s: permission denied", _nc_tic_dir(0), dir);
+	}
 
 	verified[s-dirnames] = TRUE;
 }
@@ -164,7 +195,6 @@ char		*s;
 void _nc_write_entry(TERMTYPE *const tp)
 {
 struct stat	statbuf;
-FILE		*fp;
 char		name_list[MAX_TERMINFO_LENGTH];
 char		*first_name, *other_names;
 char		*ptr;
@@ -228,17 +258,7 @@ static time_t	start_time;		/* time at start of writes */
 	}
 
 	check_writeable(first_name[0]);
-	fp = fopen(filename, "w");
-	if (fp == NULL) {
-		perror(filename);
-		_nc_syserr_abort("can't open %s/%s", _nc_tic_dir(0), filename);
-	}
-	DEBUG(1, ("Created %s", filename));
-
-	if (write_object(fp, tp) == ERR) {
-		_nc_syserr_abort("error writing %s/%s", _nc_tic_dir(0), filename);
-	}
-	fclose(fp);
+	write_file(filename, tp);
 
 	if (start_time == 0) {
 		if (stat(filename, &statbuf) < 0
@@ -272,12 +292,17 @@ static time_t	start_time;		/* time at start of writes */
 			_nc_warning("alias %s multiply defined.", ptr);
 		}
 		else
+#if HAVE_LINK
 		{
 #if USE_SYMLINKS
 			strcpy(symlinkname, "../");
 			strcat(symlinkname, filename);
 #endif /* USE_SYMLINKS */
+#if HAVE_REMOVE
+			remove(linkname);
+#else
 			unlink(linkname);
+#endif
 #if USE_SYMLINKS
 			if (symlink(symlinkname, linkname) < 0)
 #else
@@ -286,6 +311,9 @@ static time_t	start_time;		/* time at start of writes */
 			    _nc_syserr_abort("can't link %s to %s", filename, linkname);
 			DEBUG(1, ("Linked %s", linkname));
 		}
+#else /* just make copies */
+		write_file(linkname, tp);
+#endif /* HAVE_LINK */
 	}
 }
 

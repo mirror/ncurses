@@ -1,23 +1,34 @@
-# $Id: Makefile.in,v 1.28 1997/05/10 20:21:06 tom Exp $
-################################################################################
-# Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                        #
-# All Rights Reserved.                                                         #
-#                                                                              #
-# Permission to use, copy, modify, and distribute this software and its        #
-# documentation for any purpose and without fee is hereby granted, provided    #
-# that the above copyright notice appear in all copies and that both that      #
-# copyright notice and this permission notice appear in supporting             #
-# documentation, and that the name of the above listed copyright holder(s) not #
-# be used in advertising or publicity pertaining to distribution of the        #
-# software without specific, written prior permission. THE ABOVE LISTED        #
-# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
-# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
-# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
-# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
-# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
-# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
-# PERFORMANCE OF THIS SOFTWARE.                                                #
-################################################################################
+# $Id: Makefile.in,v 1.46 1998/02/11 12:13:57 tom Exp $
+##############################################################################
+# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997
+#
 # Makefile for ncurses source code.
 #
 # This makes the following:
@@ -37,7 +48,9 @@
 SHELL		= /bin/sh
 THIS		= Makefile
 
-NC_MFLAGS 	= @nc_cv_makeflags@
+x		= @PROG_EXT@
+
+CF_MFLAGS 	= @cf_cv_makeflags@
 @SET_MAKE@
 
 MODEL		= @DFT_LWR_MODEL@
@@ -52,6 +65,7 @@ datadir		= @datadir@
 ticdir		= $(datadir)/terminfo
 
 INSTALL		= @INSTALL@
+INSTALL_LIB	= @INSTALL@ @INSTALL_LIB@
 INSTALL_DATA	= @INSTALL_DATA@
 
 AR		= @AR@
@@ -70,6 +84,10 @@ CPPFLAGS	= -I../ncurses -I$(srcdir) @CPPFLAGS@ \
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
+HOSTCC		= @CC@
+HOSTCCFLAGS	= @CFLAGS@ $(CPPFLAGS)
+HOSTLDFLAGS	= @LDFLAGS@ @LIBS@
+
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
@@ -80,9 +98,10 @@ CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 LINK		= $(CC)
 LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
+SHLIB_LIST	= @SHLIB_LIST@
 MK_SHARED_LIB	= @MK_SHARED_LIB@
-REL_VERSION	= @nc_cv_rel_version@
-ABI_VERSION	= @nc_cv_abi_version@
+REL_VERSION	= @cf_cv_rel_version@
+ABI_VERSION	= @cf_cv_abi_version@
 
 RANLIB		= @RANLIB@
 
@@ -91,6 +110,8 @@ LIBRARIES	= @LIBS_TO_MAKE@
 LINT		= @LINT@
 LINT_OPTS	= @LINT_OPTS@
 LINT_LIBS	= -lncurses @LIBS@
+
+FALLBACK_LIST	= @FALLBACK_LIST@
 
 AUTO_SRC = \
 	../include/nomacros.h \
@@ -104,8 +125,20 @@ AUTO_SRC = \
 	./names.c \
 	./unctrl.c
 
+TEST_DEPS	= @LIB_PREFIX@ncurses@DFT_DEP_SUFFIX@
+TEST_ARGS	= -L../lib -lncurses
+TEST_LDFLAGS	= @LD_MODEL@ $(TEST_ARGS) @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ @LDFLAGS@
+
+TEST_PROGS = \
+	captoinfo$x \
+	hardscroll$x \
+	hashmap$x \
+	lib_mvcur$x
+
 ################################################################################
-all ::	../lib $(AUTO_SRC) $(LIBRARIES)
+all ::		$(AUTO_SRC) ../lib $(LIBRARIES)
+
+sources:	$(AUTO_SRC)
 
 $(INSTALL_PREFIX)$(libdir) :
 	$(srcdir)/../mkinstalldirs $@
@@ -113,7 +146,7 @@ $(INSTALL_PREFIX)$(libdir) :
 ../lib : ; mkdir $@
 
 ./fallback.c : $(srcdir)/MKfallback.sh
-	sh $(srcdir)/MKfallback.sh >$@
+	sh $(srcdir)/MKfallback.sh $(FALLBACK_LIST) >$@
 
 ./lib_gen.c : $(srcdir)/MKlib_gen.sh ../include/curses.h
 	sh $(srcdir)/MKlib_gen.sh "$(CPP)" "$(AWK)" <../include/curses.h >$@
@@ -122,19 +155,24 @@ $(INSTALL_PREFIX)$(libdir) :
 	sh $(srcdir)/MKlib_gen.sh "$(CPP)" "$(AWK)" <../include/curses.h | \
 		fgrep undef >$@
 
-keys.tries: $(srcdir)/keys.list
-	$(AWK) -f $(srcdir)/MKkeys.awk $(srcdir)/keys.list > keys.tries
+keys.tries: make_keys$x $(srcdir)/keys.list 
+	./make_keys $(srcdir)/keys.list > keys.tries
 
-make_hash : \
+make_keys$x : \
+		$(srcdir)/make_keys.c \
+		./names.c
+	$(HOSTCC) -o $@ $(HOSTCCFLAGS) $(srcdir)/make_keys.c $(HOSTLDFLAGS)
+
+make_hash$x : \
 		$(srcdir)/comp_hash.c \
 		../include/hashsize.h
-	$(CC) -o $@ $(CCFLAGS) -DMAIN_PROGRAM $(srcdir)/comp_hash.c $(LDFLAGS)
+	$(HOSTCC) -o $@ $(HOSTCCFLAGS) -DMAIN_PROGRAM $(srcdir)/comp_hash.c $(HOSTLDFLAGS)
 
 ./expanded.c : $(srcdir)/MKexpanded.sh
 	sh $(srcdir)/MKexpanded.sh "$(CPP)" $(CPPFLAGS)
 
 ./comp_captab.c: \
-		make_hash \
+		make_hash$x \
 		../include/hashsize.h \
 		$(srcdir)/MKcaptab.awk
 	sh $(srcdir)/MKcaptab.awk $(AWK) $(srcdir)/../include/Caps > $@
@@ -158,10 +196,12 @@ TAGS:
 	etags *.[ch]
 
 mostlyclean ::
-	-rm -f tags TAGS *~
+	-rm -f core tags TAGS *~ *.ln *.atac trace
+	-rm -f $(TEST_PROGS)
 
 clean :: mostlyclean
 	-rm -f $(AUTO_SRC)
+	-rm -f make_keys
 	-rm -f make_hash
 
 distclean :: clean
@@ -173,7 +213,26 @@ realclean :: distclean
 ../include/hashsize.h \
 ../include/parametrized.h \
 ../include/term.h :
-	cd ../include; $(MAKE) $(NC_MFLAGS)
+	cd ../include; $(MAKE) $(CF_MFLAGS)
+
+# These rules build test-programs for the modules that have test-drivers
+test_progs : $(TEST_PROGS)
+
+captoinfo$x : $(srcdir)/captoinfo.c $(TEST_DEPS)
+	@ECHO_LINK@ $(CC) -o $@ $(CCFLAGS) -DMAIN $(srcdir)/captoinfo.c $(TEST_LDFLAGS)
+
+hardscroll$x : $(srcdir)/hardscroll.c $(TEST_DEPS)
+	@ECHO_LINK@ $(CC) -o $@ $(CCFLAGS) -DSCROLLDEBUG $(srcdir)/hardscroll.c $(TEST_LDFLAGS)
+
+hashmap$x : $(srcdir)/hashmap.c $(TEST_DEPS)
+	@ECHO_LINK@ $(CC) -o $@ $(CCFLAGS) -DHASHDEBUG $(srcdir)/hashmap.c $(TEST_LDFLAGS)
+
+lib_mvcur$x : $(srcdir)/lib_mvcur.c $(TEST_DEPS) \
+		../@DFT_OBJ_SUBDIR@/dump_entry.o
+	@ECHO_LINK@ $(CC) -o $@ $(CCFLAGS) -DNCURSES_TEST -I$(srcdir)/../progs $(srcdir)/lib_mvcur.c ../@DFT_OBJ_SUBDIR@/dump_entry.o $(TEST_LDFLAGS)
+
+../@DFT_OBJ_SUBDIR@/dump_entry.o:
+	cd ../progs && $(MAKE) ../@DFT_OBJ_SUBDIR@/dump_entry.o:
 
 ###############################################################################
 # The remainder of this file is automatically generated during configuration

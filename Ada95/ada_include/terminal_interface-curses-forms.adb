@@ -6,25 +6,38 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.9 $
+--  $Revision: 1.13 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
-with Ada.Tags; use Ada.Tags;
 with Ada.Unchecked_Deallocation;
 with Unchecked_Conversion;
 
@@ -32,7 +45,6 @@ with Interfaces.C; use Interfaces.C;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
 
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
-with GNAT.Htable;
 
 package body Terminal_Interface.Curses.Forms is
 
@@ -66,34 +78,15 @@ package body Terminal_Interface.Curses.Forms is
    begin
       Fill_String (Form_Request_Name (C_Int (Key)), Name);
    end Request_Name;
-------------------------------------------------------------------------------
-   procedure Free_Field_User_Wrapper is
-     new Ada.Unchecked_Deallocation (Field_User_Wrapper,
-                                     Field_User_Wrapper_Access);
 
-   procedure Release_User_Wrapper (A : in out Field_User_Wrapper_Access);
-   procedure Dup_User_Wrapper (A : in out Field_User_Wrapper_Access);
-
-   procedure Release_User_Wrapper (A : in out Field_User_Wrapper_Access)
+   function Request_Name (Key : Form_Request_Code) return String
    is
+      function Form_Request_Name (Key : C_Int) return chars_ptr;
+      pragma Import (C, Form_Request_Name, "form_request_name");
    begin
-      A.N := A.N - 1;
-      if A.N = 0 then
-         Free_Field_User_Wrapper (A);
-      end if;
-   end Release_User_Wrapper;
-   pragma Inline (Release_User_Wrapper);
-
-   procedure Dup_User_Wrapper (A : in out Field_User_Wrapper_Access)
-   is
-   begin
-      A.N := A.N + 1;
-   end Dup_User_Wrapper;
-   pragma Inline (Dup_User_Wrapper);
+      return Fill_String (Form_Request_Name (C_Int (Key)));
+   end Request_Name;
 ------------------------------------------------------------------------------
-   procedure Free_Form_User_Wrapper is
-     new Ada.Unchecked_Deallocation (Form_User_Wrapper,
-                                     Form_User_Wrapper_Access);
    --  |
    --  |
    --  |
@@ -118,21 +111,9 @@ package body Terminal_Interface.Curses.Forms is
                                         C_Int (Top), C_Int (Left),
                                         C_Int (Off_Screen),
                                         C_Int (More_Buffers));
-
-      A   : Field_User_Wrapper_Access;
-      Res : Eti_Error;
    begin
       if Fld = Null_Field then
          raise Form_Exception;
-      else
-         A := new Field_User_Wrapper'(U => System.Null_Address,
-                                      T => null,
-                                      N => 1);
-         Res := Set_Field_Userptr (Fld, A);
-         if Res /= E_Ok then
-            Free_Field_User_Wrapper (A);
-            Eti_Exception (Res);
-         end if;
       end if;
       return Fld;
    end Create;
@@ -143,19 +124,9 @@ package body Terminal_Interface.Curses.Forms is
    is
       function Free_Field (Fld : Field) return C_Int;
       pragma Import (C, Free_Field, "free_field");
-      procedure Free_Field_Type is
-        new Ada.Unchecked_Deallocation (Field_Type'Class,
-                                        Field_Type_Access);
 
-      A   : Field_User_Wrapper_Access := Field_Userptr (Fld);
       Res : Eti_Error;
    begin
-      if A /= null then
-         if A.T /= null then
-            Free_Field_Type (A.T);
-         end if;
-         Release_User_Wrapper (A);
-      end if;
       Res := Free_Field (Fld);
       if Res /= E_Ok then
          Eti_Exception (Res);
@@ -174,15 +145,12 @@ package body Terminal_Interface.Curses.Forms is
                           Left : C_Int) return Field;
       pragma Import (C, Dup_Field, "dup_field");
 
-      A : Field_User_Wrapper_Access := Field_Userptr (Fld);
       F : constant Field := Dup_Field (Fld,
                                        C_Int (Top),
                                        C_Int (Left));
    begin
       if F = Null_Field then
          raise Form_Exception;
-      else
-         Dup_User_Wrapper (A);
       end if;
       return F;
    end Duplicate;
@@ -198,15 +166,12 @@ package body Terminal_Interface.Curses.Forms is
                           Left : C_Int) return Field;
       pragma Import (C, Lnk_Field, "link_field");
 
-      A : Field_User_Wrapper_Access := Field_Userptr (Fld);
       F : constant Field := Lnk_Field (Fld,
                                        C_Int (Top),
                                        C_Int (Left));
    begin
       if F = Null_Field then
          raise Form_Exception;
-      else
-         Dup_User_Wrapper (A);
       end if;
       return F;
    end Link;
@@ -284,6 +249,17 @@ package body Terminal_Interface.Curses.Forms is
       pragma Import (C, Field_Buffer, "field_buffer");
    begin
       Fill_String (Field_Buffer (Fld, C_Int (Buffer)), Str);
+   end Get_Buffer;
+
+   function Get_Buffer
+     (Fld    : in Field;
+      Buffer : in Buffer_Number := Buffer_Number'First) return String
+   is
+      function Field_Buffer (Fld : Field;
+                             B   : C_Int) return chars_ptr;
+      pragma Import (C, Field_Buffer, "field_buffer");
+   begin
+      return Fill_String (Field_Buffer (Fld, C_Int (Buffer)));
    end Get_Buffer;
    --  |
    --  |
@@ -747,57 +723,39 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Free_Allocated_Fields is
-     new Ada.Unchecked_Deallocation (Field_Array, Field_Array_Access);
-   --  |
-   --  |
-   --  |
-   --  This is a bit delicate if we want to manipulate an Ada created form
-   --  from C routines or vice versa.
-   --  In Ada created forms we use the low level user pointer to maintain
-   --  binding internal additional informations about the form. This
-   --  internal information contains a hook for the Ada provided user pointer.
-   --  Unless you understand this implementation, the safest way in mixed
-   --  language programs to deal with user pointers is, that only the language
-   --  that created the form should also manipulate the user pointer for that
-   --  form.
    procedure Redefine (Frm  : in Form;
-                       Flds : in Field_Array)
+                       Flds : in Field_Array_Access)
    is
       function Set_Frm_Fields (Frm   : Form;
-                               Items : Field_Array) return C_Int;
+                               Items : System.Address) return C_Int;
       pragma Import (C, Set_Frm_Fields, "set_form_fields");
 
-      A   : constant Form_User_Wrapper_Access := Form_Userptr (Frm);
-      I   : Field_Array_Access;
       Res : Eti_Error;
    begin
-      if A = null or else A.I = null then raise Form_Exception;
+      pragma Assert (Flds (Flds'Last) = Null_Field);
+      if Flds (Flds'Last) /= Null_Field then
+         raise Form_Exception;
       else
-         I := new Field_Array (1 .. (Flds'Length + 1));
-         I.all (1 .. Flds'Length) := Flds (Flds'First .. Flds'Last);
-         I.all (Flds'Length + 1) := Null_Field;
-         Res := Set_Frm_Fields (Frm, I.all);
+         Res := Set_Frm_Fields (Frm, Flds (Flds'First)'Address);
          if  Res /= E_Ok then
-            Free_Allocated_Fields (I);
             Eti_Exception (Res);
-         else
-            Free_Allocated_Fields (A.I);
-            A.I := I;
          end if;
       end if;
    end Redefine;
    --  |
    --  |
    --  |
-   function Fields (Frm : Form) return Field_Array_Access
+   function Fields (Frm   : Form;
+                    Index : Positive) return Field
    is
-      A : constant Form_User_Wrapper_Access := Form_Userptr (Frm);
+      function F_Fields (Frm : Form;
+                         Idx : C_Int) return Field;
+      pragma Import (C, F_Fields, "_nc_get_field");
    begin
-      if A = null or else A.I = null then
+      if Frm = Null_Form or else Index not in 1 .. Field_Count (Frm) then
          raise Form_Exception;
       else
-         return A.I;
+         return F_Fields (Frm, C_Int (Index) - 1);
       end if;
    end Fields;
    --  |
@@ -833,32 +791,23 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   function Create (Fields : Field_Array) return Form
+   function Create (Fields : Field_Array_Access) return Form
    is
-      function NewForm (Fields : Field_Array) return Form;
+      function NewForm (Fields : System.Address) return Form;
       pragma Import (C, NewForm, "new_form");
 
       M   : Form;
-      I   : Field_Array_Access;
-      U   : Form_User_Wrapper_Access;
-      Res : Eti_Error;
    begin
-      I := new Field_Array (1 .. (Fields'Length + 1));
-      I.all (1 .. Fields'Length) := Fields (Fields'First .. Fields'Last);
-      I.all (Fields'Length + 1) := Null_Field;
-      M := NewForm (I.all);
-      if M = Null_Form then
-         Free_Allocated_Fields (I);
+      pragma Assert (Fields (Fields'Last) = Null_Field);
+      if Fields (Fields'Last) /= Null_Field then
          raise Form_Exception;
+      else
+         M := NewForm (Fields (Fields'First)'Address);
+         if M = Null_Form then
+            raise Form_Exception;
+         end if;
+         return M;
       end if;
-      U := new Form_User_Wrapper'(U => System.Null_Address, I => I);
-      Res := Set_Form_Userptr (M, U);
-      if  Res /= E_Ok then
-         Free_Allocated_Fields (I);
-         Free_Form_User_Wrapper (U);
-         Eti_Exception (Res);
-      end if;
-      return M;
    end Create;
    --  |
    --  |
@@ -868,17 +817,11 @@ package body Terminal_Interface.Curses.Forms is
       function Free (Frm : Form) return C_Int;
       pragma Import (C, Free, "free_form");
 
-      U   : Form_User_Wrapper_Access := Form_Userptr (Frm);
       Res : constant Eti_Error := Free (Frm);
    begin
       if Res /= E_Ok then
          Eti_Exception (Res);
       end if;
-      if U = null or else U.I = null then
-         raise Form_Exception;
-      end if;
-      Free_Allocated_Fields (U.I);
-      Free_Form_User_Wrapper (U);
       Frm := Null_Form;
    end Delete;
    --  |
@@ -1183,511 +1126,34 @@ package body Terminal_Interface.Curses.Forms is
       end if;
    end Is_New_Page;
 
-------------------------------------------------------------------------------
-   --  We use a GNAT internal hash table mechanism to create an association
-   --  between an Ada_Defined_Field_Type and it's low level C_Field_Type
-   --  peer.
-   --  It shouldn´t be too complicated to reimplent this hashing mechanism
-   --  for other compilers.
-   --
-   type Tag_Type_Pair;
-   type Tag_Pair_Access is access all Tag_Type_Pair;
-   pragma Controlled (Tag_Pair_Access);
-
-   Null_Tag_Pair : constant Tag_Pair_Access := Tag_Pair_Access'(null);
-
-   type Tag_Type_Pair is
-      record
-         Ada_Tag    : Tag;
-         Cft        : C_Field_Type;
-         Next       : Tag_Pair_Access;
-      end record;
-
-   type Htable_Headers is range 1 .. 31;
-   procedure Free_Tag_Type_Pair is
-     new Ada.Unchecked_Deallocation (Tag_Type_Pair, Tag_Pair_Access);
-
-   procedure Set_Pair_Link (T : Tag_Pair_Access; Next : Tag_Pair_Access);
-   function  Get_Pair_Link (T : Tag_Pair_Access) return Tag_Pair_Access;
-   function  Get_Pair_Tag  (T : Tag_Pair_Access) return Tag;
-
-   function Hash (T : Tag) return Htable_Headers;
-   function Equal (A, B : Tag) return Boolean;
-
-   package External_Pair_Htable is new GNAT.Htable.Static_Htable
-     (Header_Num => Htable_Headers,
-      Element    => Tag_Type_Pair,
-      Elmt_Ptr   => Tag_Pair_Access,
-      Null_Ptr   => Null_Tag_Pair,
-      Set_Next   => Set_Pair_Link,
-      Next       => Get_Pair_Link,
-      Key        => Tag,
-      Get_Key    => Get_Pair_Tag,
-      Hash       => Hash,
-      Equal      => Equal);
-
-   procedure Set_Pair_Link (T : Tag_Pair_Access; Next : Tag_Pair_Access)
+   procedure Free (FA          : in out Field_Array_Access;
+                   Free_Fields : in Boolean := False)
    is
+      procedure Release is new Ada.Unchecked_Deallocation
+        (Field_Array, Field_Array_Access);
    begin
-      T.all.Next := Next;
-   end Set_Pair_Link;
-
-   function  Get_Pair_Link (T : Tag_Pair_Access) return Tag_Pair_Access
-   is
-   begin
-      return T.all.Next;
-   end Get_Pair_Link;
-
-   function  Get_Pair_Tag  (T : Tag_Pair_Access) return Tag
-   is
-   begin
-      return T.all.Ada_Tag;
-   end Get_Pair_Tag;
-
-   function Equal (A, B : Tag) return Boolean
-   is
-   begin
-      return A = B;
-   end Equal;
-
-   function Hash (T : Tag) return Htable_Headers
-   is
-      function H is new GNAT.Htable.Hash (Htable_Headers);
-   begin
-      return H (External_Tag (T));
-   end Hash;
-
-   function Search_Type (T : Ada_Defined_Field_Type'Class)
-                         return C_Field_Type
-   is
-      P : Tag_Pair_Access := External_Pair_Htable.Get (T'Tag);
-   begin
-      if P /= null then
-         return P.Cft;
-      else
-         return Null_Field_Type;
+      if FA /= null and then Free_Fields then
+         for I in FA'First .. (FA'Last - 1) loop
+            if (FA (I) /= Null_Field) then
+               Delete (FA (I));
+            end if;
+         end loop;
       end if;
-   end Search_Type;
+      Release (FA);
+   end Free;
 
-   --  Register an Ada_Defined_Field_Type given by its Tag
-   --  with it's associated C_Field_Type.
-   procedure Register_Type (T   : in Ada_Defined_Field_Type'Class;
-                            Cft : in C_Field_Type)
-   is
-      C : C_Field_Type := Search_Type (T);
-      P : Tag_Pair_Access;
-   begin
-      if C /= Null_Field_Type then
-         raise Form_Exception;
-      else
-         P := new Tag_Type_Pair'(T'Tag, Cft, null);
-         External_Pair_Htable.Set (P);
-      end if;
-   end Register_Type;
-
-   --  Unregister an Ada_Defined_Field_Type given by it's tag
-   procedure Unregister_Type (T : in Ada_Defined_Field_Type'Class)
-   is
-      function Free_Fieldtype (Ft : C_Field_Type) return C_Int;
-      pragma Import (C, Free_Fieldtype, "free_fieldtype");
-
-      P   : Tag_Pair_Access := External_Pair_Htable.Get (T'Tag);
-      Ft  : C_Field_Type;
-      Res : C_Int;
-   begin
-      if P = null then
-         raise Form_Exception;
-      else
-         Ft := P.Cft;
-         External_Pair_Htable.Remove (T'Tag);
-         Free_Tag_Type_Pair (P);
-         Res := Free_Fieldtype (Ft);
-         if Res /= E_Ok then
-            Eti_Exception (Res);
-         end if;
-      end if;
-   end Unregister_Type;
-
-----------------------------------------------------------------------------
-   --  |
-   --  |
-   --  |
-   procedure Set_Type (Fld      : Field;
-                       Fld_Type : Ada_Defined_Field_Type)
-   is
-      function Set_Fld_Type (F    : Field := Fld;
-                             Ct   : C_Field_Type;
-                             Arg1 : Ada_Defined_Field_Type'Class)
-                             return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
-      function Field_Userptr (Fld : Field)
-                              return Field_User_Wrapper_Access;
-      pragma Import (C, Field_Userptr, "field_userptr");
-
-      Res : Eti_Error;
-      C   : constant C_Field_Type := Search_Type (Fld_Type);
-   begin
-      if C = Null_Field_Type then
-         raise Form_Exception;
-      else
-         Res := Set_Fld_Type (Fld, C, Fld_Type);
-         if Res /= E_Ok then
-            Eti_Exception (Res);
-         end if;
-      end if;
-   end Set_Type;
-   --  |
-   --  |
-   --  |
-   function Native_Type (Ftype : Ada_Defined_Field_Type)
-                         return C_Field_Type
-   is
-      C : constant C_Field_Type := Search_Type (Ftype);
-   begin
-      if C = Null_Field_Type then
-         raise Form_Exception;
-      else
-         return C;
-      end if;
-   end Native_Type;
-   --  |
-   --  |
-   --  |
-   function Native_Type (Ftype : Alpha_Field)
-                         return C_Field_Type
-   is
-      C_Alpha_Field_Type : C_Field_Type;
-      pragma Import (C, C_Alpha_Field_Type, "TYPE_ALPHA");
-   begin
-      return C_Alpha_Field_Type;
-   end Native_Type;
-   pragma Inline (Native_Type);
-   --  |
-   --  |
-   --  |
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Alpha_Field)
-   is
-      function Set_Fld_Type (F    : Field := Fld;
-                             Cft  : C_Field_Type := Native_Type (Fld_Type);
-                             Arg1 : C_Int) return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
-      function Field_Userptr (Fld : Field)
-                              return Field_User_Wrapper_Access;
-      pragma Import (C, Field_Userptr, "field_userptr");
-
-      A   : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-      Res : Eti_Error;
-   begin
-      Res := Set_Fld_Type (Arg1 => C_Int (Fld_Type.Minimum_Field_Width));
-      if Res /= E_Ok then
-         Eti_Exception (Res);
-      else
-         A.T := new Alpha_Field'(Fld_Type);
-      end if;
-   end Set_Type;
-   --  |
-   --  |
-   --  |
-   function Native_Type (Ftype : Alpha_Numeric_Field)
-                         return C_Field_Type
-   is
-      C_Alpha_Numeric_Field_Type : C_Field_Type;
-      pragma Import (C, C_Alpha_Numeric_Field_Type, "TYPE_ALNUM");
-   begin
-      return C_Alpha_Numeric_Field_Type;
-   end Native_Type;
-   pragma Inline (Native_Type);
-   --  |
-   --  |
-   --  |
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Alpha_Numeric_Field)
-   is
-      function Set_Fld_Type (F    : Field := Fld;
-                             Cft  : C_Field_Type := Native_Type (Fld_Type);
-                             Arg1 : C_Int) return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
-      function Field_Userptr (Fld : Field)
-                              return Field_User_Wrapper_Access;
-      pragma Import (C, Field_Userptr, "field_userptr");
-
-      A   : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-      Res : Eti_Error;
-   begin
-      Res := Set_Fld_Type (Arg1 => C_Int (Fld_Type.Minimum_Field_Width));
-      if Res /= E_Ok then
-         Eti_Exception (Res);
-      else
-         A.T := new Alpha_Numeric_Field'(Fld_Type);
-      end if;
-   end Set_Type;
-   --  |
-   --  |
-   --  |
-   function Native_Type (Ftype : Integer_Field)
-                         return C_Field_Type
-   is
-      C_Integer_Field_Type : C_Field_Type;
-      pragma Import (C, C_Integer_Field_Type, "TYPE_INTEGER");
-   begin
-      return C_Integer_Field_Type;
-   end Native_Type;
-   pragma Inline (Native_Type);
-   --  |
-   --  |
-   --  |
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Integer_Field)
-   is
-      function Set_Fld_Type (F    : Field := Fld;
-                             Cft  : C_Field_Type := Native_Type (Fld_Type);
-                             Arg1 : C_Int;
-                             Arg2 : C_Long_Int;
-                             Arg3 : C_Long_Int) return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
-      function Field_Userptr (Fld : Field)
-                              return Field_User_Wrapper_Access;
-      pragma Import (C, Field_Userptr, "field_userptr");
-
-      A   : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-      Res : Eti_Error;
-   begin
-      Res := Set_Fld_Type (Arg1 => C_Int (Fld_Type.Precision),
-                           Arg2 => C_Long_Int (Fld_Type.Lower_Limit),
-                           Arg3 => C_Long_Int (Fld_Type.Upper_Limit));
-      if Res /= E_Ok then
-         Eti_Exception (Res);
-      else
-         A.T := new Integer_Field'(Fld_Type);
-      end if;
-   end Set_Type;
-   --  |
-   --  |
-   --  |
-   function Native_Type (Ftype : Numeric_Field)
-                         return C_Field_Type
-   is
-      C_Numeric_Field_Type : C_Field_Type;
-      pragma Import (C, C_Numeric_Field_Type, "TYPE_NUMERIC");
-   begin
-      return C_Numeric_Field_Type;
-   end Native_Type;
-   pragma Inline (Native_Type);
-   --  |
-   --  |
-   --  |
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Numeric_Field)
-   is
-      type Double is new Interfaces.C.double;
-
-   function Set_Fld_Type (F    : Field := Fld;
-                          Cft  : C_Field_Type := Native_Type (Fld_Type);
-                          Arg1 : Double;
-                          Arg2 : Double;
-                          Arg3 : Double) return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
-      function Field_Userptr (Fld : Field)
-                              return Field_User_Wrapper_Access;
-      pragma Import (C, Field_Userptr, "field_userptr");
-
-      A   : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-      Res : Eti_Error;
-   begin
-      Res := Set_Fld_Type (Arg1 => Double (Fld_Type.Precision),
-                           Arg2 => Double (Fld_Type.Lower_Limit),
-                           Arg3 => Double (Fld_Type.Upper_Limit));
-      if Res /= E_Ok then
-         Eti_Exception (Res);
-      else
-         A.T := new Numeric_Field'(Fld_Type);
-      end if;
-   end Set_Type;
-   --  |
-   --  |
-   --  |
-   function Native_Type (Ftype : Regular_Expression_Field)
-                         return C_Field_Type
-   is
-      C_Regexp_Field_Type : C_Field_Type;
-      pragma Import (C, C_Regexp_Field_Type, "TYPE_REGEXP");
-   begin
-      return C_Regexp_Field_Type;
-   end Native_Type;
-   pragma Inline (Native_Type);
-   --  |
-   --  |
-   --  |
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Regular_Expression_Field)
-   is
-      type Char_Ptr is access all Interfaces.C.Char;
-      function Set_Fld_Type (F    : Field := Fld;
-                             Cft  : C_Field_Type := Native_Type (Fld_Type);
-                             Arg1 : Char_Ptr) return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
-      function Field_Userptr (Fld : Field)
-                              return Field_User_Wrapper_Access;
-      pragma Import (C, Field_Userptr, "field_userptr");
-
-      A   : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-      Txt : char_array (0 .. Fld_Type.Regular_Expression.all'Length);
-      Len : size_t;
-      Res : Eti_Error;
-   begin
-      To_C (Fld_Type.Regular_Expression.all, Txt, Len);
-      Res := Set_Fld_Type (Arg1 => Txt (Txt'First)'Access);
-      if Res /= E_Ok then
-         Eti_Exception (Res);
-      else
-         A.T := new Regular_Expression_Field'(Fld_Type);
-      end if;
-   end Set_Type;
-   --  |
-   --  |
-   --  |
-   function Native_Type (Ftype : Enumeration_Field)
-                         return C_Field_Type
-   is
-      C_Enum_Type : C_Field_Type;
-      pragma Import (C, C_Enum_Type, "TYPE_ENUM");
-   begin
-      return C_Enum_Type;
-   end Native_Type;
-   pragma Inline (Native_Type);
-   --  |
-   --  |
-   --  |
-   function Create (Info               : Enumeration_Info;
-                    Auto_Release_Names : Boolean := False)
-     return Enumeration_Field
-   is
-      procedure Release_String is
-        new Ada.Unchecked_Deallocation (String,
-                                        String_Access);
-      E : Enumeration_Field;
-      L : constant size_t := 1 + size_t (Info.C);
-      S : String_Access;
-   begin
-      E.Case_Sensitive       := Info.Case_Sensitive;
-      E.Match_Must_Be_Unique := Info.Match_Must_Be_Unique;
-      E.Arr := new chars_ptr_array (size_t (1) .. L);
-      for I in 1 .. Positive (L - 1) loop
-         if Info.Names (I) = null then
-            raise Form_Exception;
-         end if;
-         E.Arr (size_t (I)) := New_String (Info.Names (I).all);
-         if Auto_Release_Names then
-            S := Info.Names (I);
-            Release_String (S);
-         end if;
-      end loop;
-      E.Arr (L) := Null_Ptr;
-      return E;
-   end Create;
-
-   procedure Release (Enum : in out Enumeration_Field)
-   is
-      I : size_t := 0;
-      P : chars_ptr;
-   begin
-      loop
-         P := Enum.Arr (I);
-         exit when P = Null_Ptr;
-         Free (P);
-         Enum.Arr (I) := Null_Ptr;
-         I := I + 1;
-      end loop;
-      Enum.Arr := null;
-   end Release;
-
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Enumeration_Field)
-   is
-      function Set_Fld_Type (F    : Field := Fld;
-                             Cft  : C_Field_Type := Native_Type (Fld_Type);
-                             Arg1 : chars_ptr_array;
-                             Arg2 : C_Int;  -- case
-                             Arg3 : C_Int) return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
-      function Field_Userptr (Fld : Field)
-                              return Field_User_Wrapper_Access;
-      pragma Import (C, Field_Userptr, "field_userptr");
-
-      A   : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-      Res : Eti_Error;
-   begin
-      if Fld_Type.Arr = null then
-         raise Form_Exception;
-      end if;
-      Res := Set_Fld_Type (Arg1 => Fld_Type.Arr.all,
-                           Arg2 => C_Int (Boolean'Pos
-                                          (Fld_Type.Case_Sensitive)),
-                           Arg3 =>
-                             C_Int (Boolean'Pos
-                                    (Fld_Type.Match_Must_Be_Unique)));
-      if Res /= E_Ok then
-         Eti_Exception (Res);
-      else
-         A.T := new Enumeration_Field'(Fld_Type);
-      end if;
-   end Set_Type;
-
-
-   function Native_Type (Ftype : Internet_V4_Address_Field)
-                         return C_Field_Type
-   is
-      C_IPV4_Field_Type : C_Field_Type;
-      pragma Import (C, C_IPV4_Field_Type, "TYPE_IPV4");
-   begin
-      return C_IPV4_Field_Type;
-   end Native_Type;
-   pragma Inline (Native_Type);
-   --  |
-   --  |
-   --  |
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Internet_V4_Address_Field)
-   is
-      function Set_Fld_Type (F    : Field := Fld;
-                             Cft  : C_Field_Type := Native_Type (Fld_Type))
-                             return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
-      function Field_Userptr (Fld : Field)
-                              return Field_User_Wrapper_Access;
-      pragma Import (C, Field_Userptr, "field_userptr");
-
-      A   : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-      Res : Eti_Error;
-   begin
-      Res := Set_Fld_Type;
-      if Res /= E_Ok then
-         Eti_Exception (Res);
-      else
-         A.T := new Internet_V4_Address_Field'(Fld_Type);
-      end if;
-   end Set_Type;
-
-   --  |
    --  |=====================================================================
-   --  | man page form_field_validation.3x
-   --  |=====================================================================
-   --  |
-   --  |
-   --  |
-   function Get_Type (Fld : in Field) return Field_Type_Access
-   is
-      A : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-   begin
-      if A = null then
-         return null;
-      else
-         return A.T;
-      end if;
-   end Get_Type;
 
-begin
-   Default_Field_Options := Get_Options (Null_Field);
-   Default_Form_Options  := Get_Options (Null_Form);
+   function Default_Field_Options return Field_Option_Set
+   is
+   begin
+      return Get_Options (Null_Field);
+   end Default_Field_Options;
+
+   function Default_Form_Options return Form_Option_Set
+   is
+   begin
+      return Get_Options (Null_Form);
+   end Default_Form_Options;
+
 end Terminal_Interface.Curses.Forms;

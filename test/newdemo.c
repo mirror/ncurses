@@ -2,7 +2,7 @@
  *  newdemo.c	-	A demo program using PDCurses. The program illustrate
  *  	 		the use of colours for text output.
  *
- * $Id: newdemo.c,v 1.14 1997/04/06 01:43:32 tom Exp $
+ * $Id: newdemo.c,v 1.17 1997/09/20 15:11:26 tom Exp $
  */
 
 #include <test.priv.h>
@@ -62,8 +62,8 @@ main(
 	char *argv[] GCC_UNUSED)
 {
 WINDOW  *win;
-int     w, x, y, i, j, k, len;
-char    buffer[80];
+int     w, x, y, i, j, k;
+char    buffer[200];
 const char *message;
 int     width, height;
 chtype  save[80];
@@ -137,37 +137,31 @@ chtype  c;
 				/* Draw running messages */
 	init_pair(6,COLOR_YELLOW,COLOR_WHITE);
 	wattrset(win, COLOR_PAIR(6));
-	message = messages[0];
-	len = strlen(message);
-	j = 0;
-	i = 2;
+	message = messages[j = 0];
+	i = 1;
 	w = width-2;
-        while(j < NMESSAGES)
-        {   strncpy(buffer, message, (size_t)(w - i));
-            buffer[w-i] = 0;
-	    mvwaddstr(win, height/2, i, buffer);
-            if(w - i < len)
-            {   memset(buffer, ' ', (size_t)i);
-                strcpy(buffer, message + (w - i));
-                buffer[strlen(buffer)]   = ' ';
-                buffer[i-2] = '\0';
-                mvwaddstr(win, height/2, 2, buffer);
+	strcpy(buffer, message);
+        while(j < NMESSAGES) {
+	    while ((int)strlen(buffer) < w) {
+		strcat(buffer, " ... ");
+	        strcat(buffer, messages[++j % NMESSAGES]);
 	    }
+
+	    if (i < w)
+	        mvwaddnstr(win, height/2, w - i, buffer, i);
+            else
+	        mvwaddnstr(win, height/2, 1, buffer, w);
+
             wrefresh(win);
             nodelay(win,TRUE);
             if (wgetch(win) != ERR)
             {   flushinp();
 		break;
             }
-            mvwaddch(win, height/2, i, ' ');
-            i = ++i % w;
-            if(i < 2)
-            {   message = messages[++j%NMESSAGES];
-                memset(buffer, ' ', (size_t)(w-2));
-		buffer[w-2] = 0;
-                mvwaddstr(win, height/2, 2, buffer);
-                i = 2;
-            }
+	    if (i++ >= w) {
+	        for (k = 0; (buffer[k] = buffer[k+1]) != '\0'; k++)
+	    	    ;
+	    }
 	    delay_output(100);
         }
 
@@ -222,10 +216,8 @@ SubWinTest(WINDOW *win)
 int     w, h, sw, sh, bx, by;
 WINDOW  *swin1, *swin2, *swin3;
 
-    w  = win->_maxx;
-    h  = win->_maxy;
-    bx = win->_begx;
-    by = win->_begy;
+    getmaxyx(win, h,  w);
+    getbegyx(win, by, bx);
     sw = w / 3;
     sh = h / 3;
     if((swin1 = subwin(win, sh, sw, by+3, bx+5)) == NULL)
@@ -271,8 +263,7 @@ int     x1, y1, xd1, yd1;
 int     x2, y2, xd2, yd2;
 int     x3, y3, xd3, yd3;
 
-    w    = win->_maxx;
-    h    = win->_maxy;
+    getmaxyx(win, h, w);
     x1   = 2 + rand() % (w - 4);
     y1   = 2 + rand() % (h - 4);
     x2   = 2 + rand() % (w - 4);

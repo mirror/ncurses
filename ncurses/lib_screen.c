@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 #include <curses.priv.h>
@@ -26,22 +38,22 @@
 #include <time.h>
 #include <term.h>	/* exit_ca_mode, non_rev_rmcup */
 
-MODULE_ID("$Id: lib_screen.c,v 1.7 1997/02/02 00:41:10 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.11 1998/02/11 12:13:56 tom Exp $")
 
 static time_t	dumptime;
 
 WINDOW *getwin(FILE *filep)
 {
-	WINDOW	try, *nwin;
+	WINDOW	tmp, *nwin;
 	int	n;
 
 	T((T_CALLED("getwin(%p)"), filep));
 
-	(void) fread(&try, sizeof(WINDOW), 1, filep);
+	(void) fread(&tmp, sizeof(WINDOW), 1, filep);
 	if (ferror(filep))
 		returnWin(0);
 
-	if ((nwin = newwin(try._maxy+1, try._maxx+1, 0, 0)) == 0)
+	if ((nwin = newwin(tmp._maxy+1, tmp._maxx+1, 0, 0)) == 0)
 		returnWin(0);
 
 	/*
@@ -49,28 +61,28 @@ WINDOW *getwin(FILE *filep)
 	 * fields, because the window hierarchy within which they
 	 * made sense is probably gone.
 	 */
-	nwin->_curx       = try._curx;
-	nwin->_cury       = try._cury;
-	nwin->_maxy       = try._maxy;
-	nwin->_maxx       = try._maxx;
-	nwin->_begy       = try._begy;
-	nwin->_begx       = try._begx;
-	nwin->_yoffset    = try._yoffset;
-	nwin->_flags      = try._flags & ~(_SUBWIN|_ISPAD);
+	nwin->_curx       = tmp._curx;
+	nwin->_cury       = tmp._cury;
+	nwin->_maxy       = tmp._maxy;
+	nwin->_maxx       = tmp._maxx;
+	nwin->_begy       = tmp._begy;
+	nwin->_begx       = tmp._begx;
+	nwin->_yoffset    = tmp._yoffset;
+	nwin->_flags      = tmp._flags & ~(_SUBWIN|_ISPAD);
 
-	nwin->_attrs      = try._attrs;
-	nwin->_bkgd       = try._bkgd;
+	nwin->_attrs      = tmp._attrs;
+	nwin->_bkgd       = tmp._bkgd;
 
-	nwin->_clear      = try._clear;
-	nwin->_scroll     = try._scroll;
-	nwin->_leaveok    = try._leaveok;
-	nwin->_use_keypad = try._use_keypad;
-	nwin->_delay      = try._delay;
-	nwin->_immed      = try._immed;
-	nwin->_sync       = try._sync;
+	nwin->_clear      = tmp._clear;
+	nwin->_scroll     = tmp._scroll;
+	nwin->_leaveok    = tmp._leaveok;
+	nwin->_use_keypad = tmp._use_keypad;
+	nwin->_delay      = tmp._delay;
+	nwin->_immed      = tmp._immed;
+	nwin->_sync       = tmp._sync;
 
-	nwin->_regtop     = try._regtop;
-	nwin->_regbottom  = try._regbottom;
+	nwin->_regtop     = tmp._regtop;
+	nwin->_regbottom  = tmp._regbottom;
 
 	for (n = 0; n < nwin->_maxy + 1; n++)
 	{
@@ -89,23 +101,26 @@ WINDOW *getwin(FILE *filep)
 
 int putwin(WINDOW *win, FILE *filep)
 {
-	int	n;
+        int code = ERR; 
+	int n;
 
 	T((T_CALLED("putwin(%p,%p)"), win, filep));
 
-	(void) fwrite(win, sizeof(WINDOW), 1, filep);
-	if (ferror(filep))
-		returnCode(ERR);
+	if (win) {
+	  (void) fwrite(win, sizeof(WINDOW), 1, filep);
+	  if (ferror(filep))
+	    returnCode(code);
 
-	for (n = 0; n < win->_maxy + 1; n++)
-	{
-		(void) fwrite(win->_line[n].text,
-			      sizeof(chtype), (size_t)(win->_maxx + 1), filep);
-		if (ferror(filep))
-			returnCode(ERR);
+	  for (n = 0; n < win->_maxy + 1; n++)
+	    {
+	      (void) fwrite(win->_line[n].text,
+			    sizeof(chtype), (size_t)(win->_maxx + 1), filep);
+	      if (ferror(filep))
+		returnCode(code);
+	    }
+	  code = OK;
 	}
-
-	returnCode(OK);
+	returnCode(code);
 }
 
 int scr_restore(const char *file)
@@ -114,7 +129,7 @@ int scr_restore(const char *file)
 
 	T((T_CALLED("scr_restore(%s)"), _nc_visbuf(file)));
 
-	if ((fp = fopen(file, "r")) == 0)
+	if ((fp = fopen(file, "rb")) == 0)
 	    returnCode(ERR);
 	else
 	{
@@ -131,7 +146,7 @@ int scr_dump(const char *file)
 
 	T((T_CALLED("scr_dump(%s)"), _nc_visbuf(file)));
 
-	if ((fp = fopen(file, "w")) == 0)
+	if ((fp = fopen(file, "wb")) == 0)
 	    returnCode(ERR);
 	else
 	{
@@ -154,7 +169,7 @@ int scr_init(const char *file)
 	    returnCode(ERR);
 #endif /* exit_ca_mode */
 
-	if ((fp = fopen(file, "r")) == 0)
+	if ((fp = fopen(file, "rb")) == 0)
 	    returnCode(ERR);
 	else if (fstat(STDOUT_FILENO, &stb) || stb.st_mtime > dumptime)
 	    returnCode(ERR);

@@ -1,23 +1,34 @@
-# $Id: mk-0th.awk,v 1.3 1996/12/01 00:27:23 tom Exp $
-################################################################################
-# Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                        #
-# All Rights Reserved.                                                         #
-#                                                                              #
-# Permission to use, copy, modify, and distribute this software and its        #
-# documentation for any purpose and without fee is hereby granted, provided    #
-# that the above copyright notice appear in all copies and that both that      #
-# copyright notice and this permission notice appear in supporting             #
-# documentation, and that the name of the above listed copyright holder(s) not #
-# be used in advertising or publicity pertaining to distribution of the        #
-# software without specific, written prior permission. THE ABOVE LISTED        #
-# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
-# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
-# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
-# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
-# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
-# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
-# PERFORMANCE OF THIS SOFTWARE.                                                #
-################################################################################
+# $Id: mk-0th.awk,v 1.7 1998/02/11 12:13:52 tom Exp $
+##############################################################################
+# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997
+#
 # Generate list of sources for a library, together with lint/lintlib rules
 #
 # Variables:
@@ -29,20 +40,23 @@ BEGIN	{
 		print  ""
 		found = 0;
 	}
-	!/^#/ {
-		if ( $2 == "lib" )
+	!/^[@#]/ {
+		if ( $0 != "" )
 		{
 			if ( found == 0 )
 			{
 				printf "C_SRC ="
-				found = 1
+				if ( $2 == "lib" )
+					found = 1
+				else
+					found = 2
 			}
 			printf " \\\n\t%s/%s.c", $3, $1
 		}
 	}
 END	{
 		print  ""
-		if ( found != 0 )
+		if ( found == 1 )
 		{
 			print  ""
 			printf "# Producing llib-l%s is time-consuming, so there's no direct-dependency for\n", name
@@ -64,6 +78,7 @@ END	{
 		}
 		else
 		{
+			print  ""
 			print  "lintlib :"
 			print  "\t@echo no action needed"
 		}

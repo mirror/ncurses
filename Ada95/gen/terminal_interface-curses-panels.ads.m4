@@ -9,28 +9,42 @@ include(M4MACRO)dnl
 --                                                                          --
 --                                 S P E C                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.2 $
+--  $Revision: 1.7 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 with System;
 
 package Terminal_Interface.Curses.Panels is
-
+   pragma Preelaborate (Panels);
 include(`Panel_Linker_Options')
 
    type Panel is private;
@@ -51,22 +65,27 @@ include(`Panel_Linker_Options')
    --  ANCHOR(`new_panel()',`Create')
    function Create (Win : Window) return Panel;
    --  AKA
+   pragma Inline (Create);
 
    --  ANCHOR(`new_panel()',`New_Panel')
    function New_Panel (Win : Window) return Panel renames Create;
    --  AKA
+   pragma Inline (New_Panel);
 
    --  ANCHOR(`bottom_panel()',`Bottom')
    procedure Bottom (Pan : in Panel);
    --  AKA
+   pragma Inline (Bottom);
 
    --  ANCHOR(`top_panel()',`Top')
    procedure Top (Pan : in Panel);
    --  AKA
+   pragma Inline (Top);
 
    --  ANCHOR(`show_panel()',`Show')
    procedure Show (Pan : in Panel);
    --  AKA
+   pragma Inline (Show);
 
    --  ANCHOR(`update_panels()',`Update_Panels')
    procedure Update_Panels;
@@ -76,28 +95,34 @@ include(`Panel_Linker_Options')
    --  ANCHOR(`hide_panel()',`Hide')
    procedure Hide (Pan : in Panel);
    --  AKA
+   pragma Inline (Hide);
 
    --  ANCHOR(`panel_window()',`Get_Window')
    function Get_Window (Pan : Panel) return Window;
    --  AKA
+   pragma Inline (Get_Window);
 
    --  ANCHOR(`panel_window()',`Panel_Window')
    function Panel_Window (Pan : Panel) return Window renames Get_Window;
+   pragma Inline (Panel_Window);
 
    --  ANCHOR(`replace_panel()',`Replace')
    procedure Replace (Pan : in Panel;
                       Win : in Window);
    --  AKA
+   pragma Inline (Replace);
 
    --  ANCHOR(`move_panel()',`Move')
    procedure Move (Pan    : in Panel;
                    Line   : in Line_Position;
                    Column : in Column_Position);
    --  AKA
+   pragma Inline (Move);
 
    --  ANCHOR(`panel_hidden()',`Is_Hidden')
    function Is_Hidden (Pan : Panel) return Boolean;
    --  AKA
+   pragma Inline (Is_Hidden);
 
    --  ANCHOR(`panel_above()',`Above')
    function Above (Pan : Panel) return Panel;
@@ -112,6 +137,7 @@ include(`Panel_Linker_Options')
    --  ANCHOR(`del_panel()',`Delete')
    procedure Delete (Pan : in out Panel);
    --  AKA
+   pragma Inline (Delete);
 
    private
       type Panel is new System.Address;

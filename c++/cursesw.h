@@ -2,31 +2,20 @@
 #ifndef _CURSESW_H
 #define _CURSESW_H
 
-#include <ncurses_cfg.h>
+// $Id: cursesw.h,v 1.13 1998/01/20 16:53:50 Fred.Fish Exp $
 
-#pragma interface
-
+#include <etip.h>
 #include <stdio.h>
 #include <stdarg.h>
-
-#if defined(__GNUG__)
-#  if HAVE_BUILTIN_H
-#    define exception builtin_exception
-#    include <builtin.h>
-#    undef exception
-#  endif
-#else  // #elif defined (__SUNPRO_CC)
-#  include <generic.h>
-#  include <string.h>
-   extern "C" { unsigned sleep(int); }
-#endif
-
-#if HAVE_VALUES_H
-#  include <values.h>
-#endif
-
+#ifdef __MWERKS__
+/* This is a bogus check, stringstream is actually ANSI C++ standard,
+ * but old compilers like GCC don't have it, and new compilers like Metrowerks
+ * don't have strstream
+ */
+#include <sstream>
+#else
 #include <strstream.h>
-#include <etip.h>
+#endif
 
 extern "C" {
 #  include   <curses.h>
@@ -46,6 +35,18 @@ extern "C" {
 inline int UNDEF(addch)(chtype ch)  { return addch(ch); }
 #undef addch
 #define addch UNDEF(addch)
+#endif
+
+#ifdef echochar
+inline int UNDEF(echochar)(chtype ch)  { return echochar(ch); }
+#undef echochar
+#define echochar UNDEF(echochar)
+#endif
+
+#ifdef insdelln
+inline int UNDEF(insdelln)(int n)  { return insdelln(n); }
+#undef insdelln
+#define insdelln UNDEF(insdelln)
 #endif
 
 #ifdef addstr
@@ -86,6 +87,20 @@ inline int UNDEF(box)(WINDOW *win, int v, int h) { return box(win, v, h); }
 #define box UNDEF(box)
 #endif
 
+#ifdef mvwhline
+inline int UNDEF(mvwhline)(WINDOW *win,int y,int x,chtype c,int n) {
+  return mvwhline(win,y,x,c,n); }
+#undef mvwhline
+#define mvwhline UNDEF(mvwhline)
+#endif
+
+#ifdef mvwvline
+inline int UNDEF(mvwvline)(WINDOW *win,int y,int x,chtype c,int n) {
+  return mvwvline(win,y,x,c,n); }
+#undef mvwvline
+#define mvwvline UNDEF(mvwvline)
+#endif
+
 #ifdef clear
 inline int UNDEF(clear)()  { return clear(); }
 #undef clear
@@ -93,7 +108,7 @@ inline int UNDEF(clear)()  { return clear(); }
 #endif
 
 #ifdef clearok
-inline int UNDEF(clearok)(WINDOW* win, int bf)  { return clearok(win, bf); }
+inline int UNDEF(clearok)(WINDOW* win, bool bf)  { return clearok(win, bf); }
 #undef clearok
 #define clearok UNDEF(clearok)
 #else
@@ -131,7 +146,8 @@ inline int UNDEF(erase)()  { return erase(); }
 #endif
 
 #ifdef flushok
-inline int UNDEF(flushok)(WINDOW* _win, int _bf)  { return flushok(_win, _bf); }
+inline int UNDEF(flushok)(WINDOW* _win, bool _bf)  { 
+  return flushok(_win, _bf); }
 #undef flushok
 #define flushok UNDEF(flushok)
 #else
@@ -150,8 +166,90 @@ inline int UNDEF(getstr)(char *_str)  { return getstr(_str); }
 #define getstr UNDEF(getstr)
 #endif
 
+#ifdef instr
+inline int UNDEF(instr)(char *_str)  { return instr(_str); }
+#undef instr
+#define instr UNDEF(instr)
+#endif
+
+#ifdef innstr
+inline int UNDEF(innstr)(char *_str, int n)  { return innstr(_str,n); }
+#undef innstr
+#define innstr UNDEF(innstr)
+#endif
+
+#ifdef mvwinnstr
+inline int UNDEF(mvwinnstr)(WINDOW *win, int y, int x, char *_str, int n) { 
+  return mvwinnstr(win,y,x,_str,n); }
+#undef mvwinnstr
+#define mvwinnstr UNDEF(mvwinnstr)
+#endif
+
+#ifdef mvinnstr
+inline int UNDEF(mvinnstr)(int y, int x, char *_str, int n) { 
+  return mvinnstr(y,x,_str,n); }
+#undef mvinnstr
+#define mvinnstr UNDEF(mvinnstr)
+#endif
+
+#ifdef winsstr
+inline int UNDEF(winsstr)(WINDOW *w, const char *_str)  { 
+  return winsstr(w,_str); }
+#undef winsstr
+#define winsstr UNDEF(winsstr)
+#endif
+
+#ifdef mvwinsstr
+inline int UNDEF(mvwinsstr)(WINDOW *w, int y, int x,  const char *_str)  { 
+  return mvwinsstr(w,y,x,_str); }
+#undef mvwinsstr
+#define mvwinsstr UNDEF(mvwinsstr)
+#endif
+
+#ifdef insstr
+inline int UNDEF(insstr)(const char *_str)  { 
+  return insstr(_str); }
+#undef insstr
+#define insstr UNDEF(insstr)
+#endif
+
+#ifdef mvinsstr
+inline int UNDEF(mvinsstr)(int y, int x,const char *_str)  { 
+  return mvinsstr(y,x,_str); }
+#undef mvinsstr
+#define mvinsstr UNDEF(mvinsstr)
+#endif
+
+#ifdef insnstr
+inline int UNDEF(insnstr)(const char *_str, int n)  { 
+  return insnstr(_str,n); }
+#undef insnstr
+#define insnstr UNDEF(insnstr)
+#endif
+
+#ifdef mvwinsnstr
+inline int UNDEF(mvwinsnstr)(WINDOW *w, int y, int x,const char *_str, int n) {
+  return mvwinsnstr(w,y,x,_str,n); }
+#undef mvwinsnstr
+#define mvwinsnstr UNDEF(mvwinsnstr)
+#endif
+
+#ifdef mvinsnstr
+inline int UNDEF(mvinsnstr)(int y, int x,const char *_str, int n) {
+  return mvinsnstr(y,x,_str,n); }
+#undef mvinsnstr
+#define mvinsnstr UNDEF(mvinsnstr)
+#endif
+
+#ifdef getnstr
+inline int UNDEF(getnstr)(char *_str, int n)  { return getnstr(_str,n); }
+#undef getnstr
+#define getnstr UNDEF(getnstr)
+#endif
+
 #ifdef getyx
-inline void UNDEF(getyx)(WINDOW* win, int& y, int& x) { getyx(win, y, x); }
+inline void UNDEF(getyx)(const WINDOW* win, int& y, int& x) { 
+  getyx(win, y, x); }
 #undef getyx
 #define getyx UNDEF(getyx)
 #endif
@@ -175,7 +273,7 @@ inline int UNDEF(hline)(chtype ch, int n) { return hline(ch, n); }
 #endif
 
 #ifdef inch
-inline int UNDEF(inch)()  { return inch(); }
+inline chtype UNDEF(inch)()  { return inch(); }
 #undef inch
 #define inch UNDEF(inch)
 #endif
@@ -193,7 +291,7 @@ inline int UNDEF(insertln)()  { return insertln(); }
 #endif
 
 #ifdef leaveok
-inline int UNDEF(leaveok)(WINDOW* win, int bf)  { return leaveok(win, bf); }
+inline int UNDEF(leaveok)(WINDOW* win, bool bf)  { return leaveok(win, bf); }
 #undef leaveok
 #define leaveok UNDEF(leaveok)
 #else
@@ -212,6 +310,12 @@ inline int UNDEF(refresh)()  { return refresh(); }
 #define refresh UNDEF(refresh)
 #endif
 
+#ifdef redrawwin
+inline int UNDEF(redrawwin)(WINDOW *win)  { return redrawwin(win); }
+#undef redrawwin
+#define redrawwin UNDEF(redrawwin)
+#endif
+
 #ifdef scrl
 inline int UNDEF(scrl)(int l) { return scrl(l); }
 #undef scrl
@@ -225,7 +329,7 @@ inline int UNDEF(scroll)(WINDOW *win) { return scroll(win); }
 #endif
 
 #ifdef scrollok
-inline int UNDEF(scrollok)(WINDOW* win, int bf)  { return scrollok(win, bf); }
+inline int UNDEF(scrollok)(WINDOW* win, bool bf)  { return scrollok(win, bf); }
 #undef scrollok
 #define scrollok UNDEF(scrollok)
 #else
@@ -316,10 +420,34 @@ inline int UNDEF(wstandout)(WINDOW *win)  { return wstandout(win); }
 #define wstandout UNDEF(wstandout)
 #endif
 
+
 #ifdef wattroff
 inline int UNDEF(wattroff)(WINDOW *win, int att) { return wattroff(win, att); }
 #undef wattroff
 #define wattroff UNDEF(wattroff)
+#endif
+
+#ifdef chgat
+inline int UNDEF(chgat)(int n,attr_t attr, short color, const void *opts) { 
+  return chgat(n,attr,color,opts); }
+#undef chgat
+#define chgat UNDEF(chgat)
+#endif
+
+#ifdef mvchgat
+inline int UNDEF(mvchgat)(int y, int x, int n,
+			  attr_t attr, short color, const void *opts) { 
+  return mvchgat(y,x,n,attr,color,opts); }
+#undef mvchgat
+#define mvchgat UNDEF(mvchgat)
+#endif
+
+#ifdef mvwchgat
+inline int UNDEF(mvwchgat)(WINDOW *win, int y, int x, int n,
+			   attr_t attr, short color, const void *opts) { 
+  return mvwchgat(win,y,x,n,attr,color,opts); }
+#undef mvwchgat
+#define mvwchgat UNDEF(mvwchgat)
 #endif
 
 #ifdef wattrset
@@ -329,13 +457,13 @@ inline int UNDEF(wattrset)(WINDOW *win, int att) { return wattrset(win, att); }
 #endif
 
 #ifdef winch
-inline chtype UNDEF(winch)(WINDOW* win) { return winch(win); }
+inline chtype UNDEF(winch)(const WINDOW* win) { return winch(win); }
 #undef winch
 #define winch UNDEF(winch)
 #endif
 
 #ifdef mvwaddch
-inline int UNDEF(mvwaddch)(WINDOW *win, int y, int x, chtype ch)
+inline int UNDEF(mvwaddch)(WINDOW *win, int y, int x, const chtype ch)
 { return mvwaddch(win, y, x, ch); }
 #undef mvwaddch
 #define mvwaddch UNDEF(mvwaddch)
@@ -353,6 +481,13 @@ inline int UNDEF(mvwaddchstr)(WINDOW *win, int y, int x, chtype *str)
 { return mvwaddchstr(win, y, x, str); }
 #undef mvwaddchstr
 #define mvwaddchstr UNDEF(mvwaddchstr)
+#endif
+
+#ifdef addnstr
+inline int UNDEF(addnstr)(const char *str, int n)
+{ return addnstr((char*)str, n); }
+#undef addnstr
+#define addnstr UNDEF(addnstr)
 #endif
 
 #ifdef mvwaddnstr
@@ -389,8 +524,16 @@ inline int UNDEF(mvwgetstr)(WINDOW *win, int y, int x, char *str)
 #define mvwgetstr UNDEF(mvwgetstr)
 #endif
 
+#ifdef mvwgetnstr
+inline int UNDEF(mvwgetnstr)(WINDOW *win, int y, int x, char *str, int n)
+{return mvwgetnstr(win,y,x, str,n);}
+#undef mvwgetnstr
+#define mvwgetnstr UNDEF(mvwgetnstr)
+#endif
+
 #ifdef mvwinch
-inline int UNDEF(mvwinch)(WINDOW *win, int y, int x) { return mvwinch(win, y, x);}
+inline chtype UNDEF(mvwinch)(WINDOW *win, int y, int x) { 
+  return mvwinch(win, y, x);}
 #undef mvwinch
 #define mvwinch UNDEF(mvwinch)
 #endif
@@ -441,8 +584,15 @@ inline int UNDEF(mvgetstr)(int y, int x, char *str) {return mvgetstr(y, x, str);
 #define mvgetstr UNDEF(mvgetstr)
 #endif
 
+#ifdef mvgetnstr
+inline int UNDEF(mvgetnstr)(int y, int x, char *str, int n) {
+  return mvgetnstr(y, x, str,n);}
+#undef mvgetnstr
+#define mvgetnstr UNDEF(mvgetnstr)
+#endif
+
 #ifdef mvinch
-inline int UNDEF(mvinch)(int y, int x) { return mvinch(y, x);}
+inline chtype UNDEF(mvinch)(int y, int x) { return mvinch(y, x);}
 #undef mvinch
 #define mvinch UNDEF(mvinch)
 #endif
@@ -490,6 +640,24 @@ inline int UNDEF(nocrmode)(void) { return nocrmode(); }
 #define nocrmode UNDEF(nocrmode)
 #endif
 
+#ifdef getbkgd
+inline chtype UNDEF(getbkgd)(const WINDOW *win) { return getbkgd(win); }
+#undef getbkgd
+#define getbkgd UNDEF(getbkgd)
+#endif
+
+#ifdef bkgd
+inline int UNDEF(bkgd)(chtype ch) { return bkgd(ch); }
+#undef bkgd
+#define bkgd UNDEF(bkgd)
+#endif
+
+#ifdef bkgdset
+inline void UNDEF(bkgdset)(chtype ch) { bkgdset(ch); }
+#undef bkgdset
+#define bkgdset UNDEF(bkgdset)
+#endif
+
 /*
  *
  * C++ class for windows.
@@ -499,34 +667,49 @@ inline int UNDEF(nocrmode)(void) { return nocrmode(); }
 
 class NCursesWindow
 {
-  friend class NCursesMenu; friend class NCursesForm;
+  friend class NCursesMenu;
+  friend class NCursesForm;
   
 private:
+  static bool    b_initialized;
   static void    initialize();
-  void           init(); 
-  void           err_handler(const char *) const THROWS(NCursesException);
+  static int     ripoff_init(WINDOW *,int);
 
+  void           init(); 
+  
   short          getcolor(int getback) const;
 
   static int     setpalette(short fore, short back, short pair);
   static int     colorInitialized;
-  
+
+  // This private constructor is only used during the initialization
+  // of windows generated by ripoffline() calls.
+  NCursesWindow(WINDOW* win, int cols);
+
 protected:
-  static int     count;            // count of all active windows:
+  void           err_handler(const char *) const THROWS(NCursesException);
+  // Signal an error with the given message text.
+
+  static long count;        // count of all active windows:
   //   We rely on the c++ promise that
   //   all otherwise uninitialized
   //   static class vars are set to 0
   
-  WINDOW *       w;                // the curses WINDOW
+  WINDOW*        w;                // the curses WINDOW
   
-  int            alloced;          // true if we own the WINDOW
+  bool           alloced;          // TRUE if we own the WINDOW
   
   NCursesWindow* par;              // parent, if subwindow
   NCursesWindow* subwins;          // head of subwindows list
   NCursesWindow* sib;              // next subwindow of parent
   
   void           kill_subwindows(); // disable all subwindows
-  
+  // Destroy all subwindows.
+
+  /* Only for use by derived classes. They are then in charge to
+     fill the member variables correctly. */
+  NCursesWindow();
+
 public:
   NCursesWindow(WINDOW* &window);  // useful only for stdscr
   
@@ -538,171 +721,476 @@ public:
   NCursesWindow(NCursesWindow& par,// parent window
 		int lines,         // number of lines
 		int cols,          // number of columns
-		int by,            // absolute or relative
-		int bx,            //   origins:
+		int begin_y,       // absolute or relative
+		int begin_x,       //   origins:
 		char absrel = 'a');// if `a', by & bx are
-  // absolute screen pos,
-  // else if `r', they are
-  // relative to par origin
+  // absolute screen pos, else if `r', they are relative to par origin
+
   virtual ~NCursesWindow();
-  
+
+  NCursesWindow Clone();
+  // Make an exact copy of the window.
+
+  // Initialization.
   static void    useColors(void);
   // Call this routine very early if you want to have colors.
 
+  static int ripoffline(int ripoff_lines,
+			int (*init)(NCursesWindow& win));
+  // This function is used to generate a window of ripped-of lines.
+  // If the argument is positive, lines are removed from the top, if it
+  // is negative lines are removed from the bottom. This enhances the 
+  // lowlevel ripoffline() function because it uses the internal 
+  // implementation that allows to remove more than just a single line. 
+  // This function must be called before any other ncurses function. The
+  // creation of the window is defered until ncurses gets initialized.
+  // The initialization function is then called.
+
+  // -------------------------------------------------------------------------
   // terminal status
+  // -------------------------------------------------------------------------
   int            lines() const { return LINES; }
-  // number of lines on terminal, *not* window
+  // Number of lines on terminal, *not* window
+
   int            cols() const { return COLS; }
-  // number of cols  on terminal, *not* window
+  // Number of cols  on terminal, *not* window
+
+  int            tabsize() const { return TABSIZE; }
+  // Size of a tab on terminal, *not* window
+
   static int     NumberOfColors();
-  // number of available colors
+  // Number of available colors
+
   int     colors() const { return NumberOfColors(); }
-  // number of available colors
+  // Number of available colors
   
+  // -------------------------------------------------------------------------
   // window status
+  // -------------------------------------------------------------------------
   int            height() const { return maxy() + 1; }
-  // number of lines in this window
+  // Number of lines in this window
+
   int            width() const { return maxx() + 1; }
-  // number of cols in this window
+  // Number of columns in this window
+
   int            begx() const { return w->_begx; }
-  // smallest x coord in window
+  // Column of top left corner relative to stdscr
+
   int            begy() const { return w->_begy; }
-  // smallest y coord in window
+  // Line of top left corner relative to stdscr
+
   int            maxx() const { return w->_maxx; }
-  // largest  x coord in window
+  // Largest x coord in window
+
   int            maxy() const { return w->_maxy; }
-  // largest  x coord in window
+  // Largest y coord in window
+
   short  getcolor() const;
-  // actual color pair
+  // Actual color pair
+
   short  foreground() const { return getcolor(0); }
-  // actual foreground color
+  // Actual foreground color
+
   short  background() const { return getcolor(1); }
-  // actual background color
+  // Actual background color
+
   int    setpalette(short fore, short back);
-  // set color palette entry
+  // Set color palette entry
+
   int    setcolor(short pair);
-  // set actually used palette entry
+  // Set actually used palette entry
   
+  // -------------------------------------------------------------------------
   // window positioning
-  int            move(int y, int x) { return ::wmove(w, y, x); }
-  
+  // -------------------------------------------------------------------------
+  virtual int  mvwin(int begin_y, int begin_x) {
+    return ::mvwin(w,begin_y,begin_x); }
+  // Move window to new position with the new position as top left corner.
+  // This is virtual because it is redefined in NCursesPanel.
+
+  // -------------------------------------------------------------------------
   // coordinate positioning
-  void           getyx(int& y, int& x) { ::getyx(w, y, x); }
-  int            mvcur(int sy, int ey, int sx, int ex) { 
-    return ::mvcur(sy, ey, sx, ex); }
+  // -------------------------------------------------------------------------
+  int            move(int y, int x) { return ::wmove(w, y, x); }
+  // Move cursor the this position
+
+  void           getyx(int& y, int& x) const { ::getyx(w, y, x); }
+  // Get current position of the cursor 
+
+  int            mvcur(int oldrow, int oldcol, int newrow, int newcol) const { 
+    return ::mvcur(oldrow, oldcol, newrow, newcol); }
+  // Perform lowlevel cursor motion that takes effect immediately.
   
+  // -------------------------------------------------------------------------
   // input
+  // -------------------------------------------------------------------------
   int            getch() { return ::wgetch(w); }
-  int            getch(int y, int x) {
-    return (::wmove(w, y, x)==ERR) ? ERR : ::wgetch(w); }
-  int            getstr(char* str) { return ::wgetstr(w, str); }
-  int            getstr(int y, int x, char* str) { 
-    return (::wmove(w, y, x)==ERR) ? ERR : ::wgetstr(w, str); }
-  int            scanw(const char*, ...)
+  // Get a keystroke from the window.
+
+  int            getch(int y, int x) { return ::mvwgetch(w,y,x); }
+  // Move cursor to position and get a keystroke from the window
+
+  int            getstr(char* str, int n=-1) { 
+    return ::wgetnstr(w, str,n); }
+  // Read a series of characters into str until a newline or carriage return
+  // is received. Read at most n characters. If n is negative, the limit is
+  // ignored.
+
+  int            getstr(int y, int x, char* str, int n=-1) { 
+    return ::mvwgetnstr(w,y,x,str,n); }
+  // Move the cursor to the requested position and then perform the getstr()
+  // as described above.
+
+  int            instr(char *s, int n=-1) { return ::winnstr(w,s,n); }
+  // Get a string of characters from the window into the buffer s. Retrieve
+  // at most n characters, if n is negative retrieve all characters up to the
+  // end of the current line. Attributes are stripped from the characters.
+
+  int            instr(int y, int x, char *s, int n=-1) {
+    return ::mvwinnstr(w,y,x,s,n); }
+  // Move the cursor to the requested position and then perform the instr()
+  // as described above.
+
+  int            scanw(const char* fmt, ...)
+    // Perform a scanw function from the window. This only works if you're
+    // using the GNU C++ compiler.
 #if __GNUG__ >= 2
     __attribute__ ((format (scanf, 2, 3)));
 #else
   ;
 #endif
-  int            scanw(int, int, const char*, ...)
+
+  int            scanw(int y, int x, const char* fmt, ...)
+    // Move the cursor to the requested position and then perform a scanw
+    // from the window. This nly works if you're using the GNU C++ compiler.
 #if __GNUG__ >= 2
     __attribute__ ((format (scanf, 4, 5)));
 #else
   ;
 #endif
   
+  // -------------------------------------------------------------------------
   // output
+  // -------------------------------------------------------------------------
   int            addch(const chtype ch) { return ::waddch(w, ch); }
-  int            addch(int y, int x, chtype ch) {
-    return (::wmove(w, y, x)==ERR) ? ERR : ::waddch(w, ch); }
-  int            addstr(const char* str) { return ::waddstr(w, (char*)str); }
-  int            addstr(int y, int x, const char * str) {
-    return (::wmove(w, y, x)==ERR) ? ERR : ::waddstr(w, (char*)str); }
+  // Put attributed character to the window. 
+
+  int            addch(int y, int x, const chtype ch) {
+    return ::mvwaddch(w,y,x,ch); }
+  // Move cursor to the requested position and then put attributed character
+  // to the window.
+
+  int            echochar(const chtype ch) { return ::wechochar(w,ch); }
+  // Put attributed character to the window and refresh it immediately.
+
+  int            addstr(const char* str, int n=-1) { 
+    return ::waddnstr(w, (char*)str,n); }
+  // Write the string str to the window, stop writing if the terminating
+  // NUL or the limit n is reached. If n is negative, it is ignored. 
+
+  int            addstr(int y, int x, const char * str, int n=-1) {
+    return ::mvwaddnstr(w,y,x,(char*)str,n); }
+  // Move the cursor to the requested position and then perform the addstr
+  // as described above.
+
   int            printw(const char* fmt, ...)
+    // Do a formatted print to the window.
 #if __GNUG__ >= 2
     __attribute__ ((format (printf, 2, 3)));
 #else
   ;
 #endif
+
   int            printw(int y, int x, const char * fmt, ...)
+    // Move the cursor and then do a formatted print to the window.
 #if __GNUG__ >= 2
     __attribute__ ((format (printf, 4, 5)));
 #else
   ;
 #endif
-  int            inch() { return ::winch(w); }
-  int            inch(int y, int x) {
-    return (::wmove(w, y, x)==ERR) ? ERR : (int) ::winch(w); }
+
+  chtype         inch() const { return ::winch(w); }
+  // Retrieve attributed character under the current cursor position.
+
+  chtype         inch(int y, int x) { return ::mvwinch(w,y,x); }
+  // Move cursor to requested position and then retrieve attributed character
+  // at this position.
+
   int            insch(chtype ch) { return ::winsch(w, ch); }
+  // Insert attributed character into the window before current cursor
+  // position.
+
   int            insch(int y, int x, chtype ch) {
-    return (::wmove(w, y, x)==ERR) ? ERR : ::winsch(w, ch); }
-  int            insertln() { return ::winsertln(w); }
-  int            attron(chtype at) { return ::wattron(w, at); }
+    return ::mvwinsch(w,y,x,ch); }
+  // Move cursor to requested position and then insert the attributed
+  // character before that position.
+
+  int            insertln() { return ::winsdelln(w,1); }
+  // Insert an empty line above the current line.
+  
+  int            insdelln(int n=1) { return ::winsdelln(w,n); }
+  // If n>0 insert that many lines above the current line. If n<0 delete
+  // that many lines beginning with the current line.
+
+  int            insstr(const char *s, int n=-1) {
+    return ::winsnstr(w,s,n); }
+  // Insert the string into the window before the current cursor position.
+  // Insert stops at end of string or when the limit n is reached. If n is
+  // negative, it is ignored.
+  
+  int            insstr(int y, int x, const char *s, int n=-1) {
+    return ::mvwinsnstr(w,y,x,s,n); }
+  // Move the cursor to the requested position and then perform the insstr()
+  // as described above.
+
+  int            attron (chtype at) { return ::wattron (w, at); }
+  // Switch on the window attributes;
+  
   int            attroff(chtype at) { return ::wattroff(w, at); }
+  // Switch off the window attributes;
+
   int            attrset(chtype at) { return ::wattrset(w, at); }
-  
+  // Set the window attributes;
+
+  int            chgat(int n,attr_t attr, short color, const void *opts=NULL) {
+    return ::wchgat(w,n,attr,color,opts); }
+  // Change the attributes of the next n characters in the current line. If
+  // n is negative or greater than the number of remaining characters in the
+  // line, the attributes will be changed up to the end of the line.
+
+  int            chgat(int y, int x,
+		       int n,attr_t attr, short color, const void *opts=NULL) {
+    return ::mvwchgat(w,y,x,n,attr,color,opts); }
+  // Move the cursor to the requested position and then perform chgat() as
+  // described above.
+
+  // -------------------------------------------------------------------------
+  // background
+  // -------------------------------------------------------------------------
+  chtype         getbkgd() const { return ::getbkgd(w); }
+  // Get current background setting.
+
+  int            bkgd(const chtype ch) { return ::wbkgd(w,ch); }
+  // Set the background property and apply it to the window.
+
+  void           bkgdset(chtype ch) { ::wbkgdset(w,ch); }
+  // Set the background property.
+
+  // -------------------------------------------------------------------------
   // borders
-  int            box(chtype vert=0, chtype  hor=0) { return ::box(w, vert, hor); }
-  
+  // -------------------------------------------------------------------------
+  int            box(chtype vert=0, chtype  hor=0) { 
+    return ::wborder(w, vert, vert, hor, hor, 0, 0 ,0, 0); }
+  // Draw a box around the window with the given vertical and horizontal
+  // drawing characters. If you specifiy a zero as character, curses will try
+  // to find a "nice" character.
+
+  int            border(chtype left=0, chtype right=0,
+			chtype top =0, chtype bottom=0,
+			chtype top_left =0, chtype top_right=0,
+			chtype bottom_left =0, chtype bottom_right=0) {
+    return ::wborder(w,left,right,top,bottom,top_left,top_right,
+		     bottom_left,bottom_right); }
+  // Draw a border around the window with the given characters for the
+  // various parts of the border. If you pass zero for a character, curses
+  // will try to find "nice" characters.
+
+  // -------------------------------------------------------------------------
   // lines and boxes
-  int            hline(int y, int x, chtype ch, int len) {
-    return (::wmove(w, y, x)==ERR) ? ERR: ::whline(w, ch, len); }
-  int            hline(int y, int x, int len) {
-    return (::wmove(w, y, x)==ERR) ? ERR: ::whline(w, 0, len); }
-  int            hline(chtype ch, int len) { return ::whline(w, ch, len); }
-  int            hline(int len) { return ::whline(w, 0, len); }
-  int            vline(int y, int x, chtype ch, int len) {
-    return (::wmove(w, y, x)==ERR) ? ERR: ::wvline(w, ch, len); }
-  int            vline(int y, int x, int len) {
-    return (::wmove(w, y, x)==ERR) ? ERR: ::wvline(w, 0, len); }
-  int            vline(chtype ch, int len) { return ::wvline(w, ch, len); }
-  int            vline(int len) { return ::wvline(w, 0, len); }
+  // -------------------------------------------------------------------------
+  int            hline(int len, chtype ch=0) { return ::whline(w, ch, len); }
+  // Draw a horizontal line of len characters with the given character. If
+  // you pass zero for the character, curses will try to find a "nice" one. 
+
+  int            hline(int y, int x, int len, chtype ch=0) {
+    return ::mvwhline(w,y,x,ch,len); }
+  // Move the cursor to the requested position and then draw a horizontal line.
+
+  int            vline(int len, chtype ch=0) { return ::wvline(w, ch, len); }
+  // Draw a vertical line of len characters with the given character. If
+  // you pass zero for the character, curses will try to find a "nice" one.
+
+  int            vline(int y, int x, int len, chtype ch=0) {
+    return ::mvwvline(w,y,x,ch,len); }
+  // Move the cursor to the requested position and then draw a vertical line.
   
+  // -------------------------------------------------------------------------
   // erasure
+  // -------------------------------------------------------------------------
   int            erase() { return ::werase(w); }
+  // Erase the window.
+
   int            clear() { return ::wclear(w); }
-  int            clearok(int bf) { return ::clearok(w, bf); }
+  // Clear the window.
+
+  int            clearok(bool bf) { return ::clearok(w, bf); }
+  // Set/Reset the clear flag. If set, the next refresh() will clear the
+  // screen.
+
   int            clrtobot() { return ::wclrtobot(w); }
+  // Clear to the end of the window.
+
   int            clrtoeol() { return ::wclrtoeol(w); }
+  // Clear to the end of the line.
+
   int            delch() { return ::wdelch(w); }
-  int            delch(int y, int x) {
-    return (::wmove(w, y, x)==ERR) ? ERR : ::wdelch(w); }
-  int            deleteln() { return ::wdeleteln(w); }
-  
+  // Delete character under the cursor. 
+
+  int            delch(int y, int x) { return ::mvwdelch(w,y,x); }
+  // Move cursor to requested position and delete the character under the
+  // cursor.
+
+  int            deleteln() { return ::winsdelln(w,-1); }
+  // Delete the current line.
+
+  // -------------------------------------------------------------------------
   // screen control
-  int            scroll() { return ::scroll(w); }
-  int            scrollok(int bf) { return ::scrollok(w, bf); }
-  int            idlok(int bf) { return ::idlok(w, bf); }
-  int            touchwin() { return ::touchwin(w); }
-  int            refresh() { return ::wrefresh(w); }
-  int            leaveok(int bf) { return ::leaveok(w, bf); }
-  int            noutrefresh() { return ::wnoutrefresh(w); }
-  int            doupdate() { return ::doupdate(); }
+  // -------------------------------------------------------------------------
+  int            scroll(int amount=1) { return ::wscrl(w,amount); }
+  // Scroll amount lines. If amount is positive, scroll up, otherwise
+  // scroll down.
+
+  int            scrollok(bool bf) { return ::scrollok(w, bf); }
+  // If bf is TRUE, window scrolls if cursor is moved off the bottom
+  // edge of the window or a scrolling region, otherwise the cursor is left
+  // at the bottom line.
+
+  int            setscrreg(int from, int to) {
+    return ::wsetscrreg(w,from,to); }
+  // Define a soft scrolling region.
+
+  int            idlok(bool bf) { return ::idlok(w, bf); }
+  // If bf is TRUE, use insert/delete line hardware support if possible.
+  // Otherwise do it in software.
+
+
+  void           idcok(bool bf) { ::idcok(w, bf); }
+  // If bf is TRUE, use insert/delete character hardware support if possible.
+  // Otherwise do it in software.
+
+  int            touchwin()   { return ::wtouchln(w,0,height(),1); }
+  // Mark the whole window as modified.
+
+  int            untouchwin() { return ::wtouchln(w,0,height(),0); }
+  // Mark the whole window as unmodified.
+
+  int            touchln(int s, int cnt, bool changed=TRUE) { 
+    return ::wtouchln(w,s,cnt,(int)(changed?1:0)); }
+  // Mark cnt lines beginning from line s as changed or unchanged, depending
+  // on the value of the changed flag.
+
+  bool           is_linetouched(int line) const { 
+    return (::is_linetouched(w,line) ? TRUE:FALSE); }
+  // Return TRUE if line is marked as changed, FALSE otherwise 
+
+  bool           is_wintouched() const { 
+    return (::is_wintouched(w) ? TRUE:FALSE); }
+  // Return TRUE if window is marked as changed, FALSE otherwise 
+
+  int            leaveok(bool bf) { return ::leaveok(w, bf); }
+  // If bf is TRUE, curses will leave the cursor after an update whereever
+  // it is after the update.
+
+  int            redrawln(int from, int n) { return ::wredrawln(w,from,n); }
+  // Redraw n lines starting from the requested line
+
+  int            redrawwin() { return ::wredrawln(w,0,height()); }
+  // Redraw the whole window
+
+  int            doupdate()  { return ::doupdate(); }
+  // Do all outputs to make the physical screen looking like the virtual one
+
+  void           syncdown()  { ::wsyncdown(w); }
+  // Propagate the changes down to all descendant windows
+
+  void           syncup()    { ::wsyncup(w); }
+  // Propagate the changes up in the hierarchy
+
+  void           cursyncup() { ::wcursyncup(w); }
+  // Position the cursor in all ancestor windows corresponding to our setting
+
+  int            syncok(bool bf) { return ::syncok(w,bf); }
+  // If called with bf=TRUE, syncup() is called whenever the window is changed
+
 #ifndef _no_flushok
-  int            flushok(int bf) { return ::flushok(w, bf); }
+  int            flushok(bool bf) { return ::flushok(w, bf); }
 #endif
-  int            keypad(int bf) { return ::keypad(w, bf); }
+
+  void           immedok(bool bf) { ::immedok(w,bf); }
+  // If called with bf=TRUE, any change in the window will cause an
+  // automatic immediate refresh()
+
+  int            keypad(bool bf) { return ::keypad(w, bf); }
+  // If called with bf=TRUE, the application will interpret function keys.
+
+  int            meta(bool bf) { return ::meta(w,bf); }
+  // If called with bf=TRUE, keys may generate 8-Bit characters. Otherwise
+  // 7-Bit characters are generated. 
+
   int            standout() { return ::wstandout(w); }
+  // Enable "standout" attributes
+
   int            standend() { return ::wstandend(w); }
+  // Disable "standout" attributes
+
+  // -------------------------------------------------------------------------
+  // The next two are virtual, because we redefine them in the
+  // NCursesPanel class.
+  // -------------------------------------------------------------------------
+  virtual int    refresh() { return ::wrefresh(w); }
+  // Propagate the changes in this window to the virtual screen and call
+  // doupdate(). This is redefined in NCursesPanel.
+
+  virtual int    noutrefresh() { return ::wnoutrefresh(w); }
+  // Propagate the changes in this window to the virtual screen. This is 
+  // redefined in NCursesPanel.
   
+  // -------------------------------------------------------------------------
   // multiple window control
-  int            overlay(NCursesWindow &win) {
+  // -------------------------------------------------------------------------
+  int            overlay(NCursesWindow& win) {
     return ::overlay(w, win.w); }
-  int            overwrite(NCursesWindow &win) {
+  // Overlay this window over win.
+
+  int            overwrite(NCursesWindow& win) {
     return ::overwrite(w, win.w); }
-  
-  
+  // Overwrite win with this window.
+
+  int            copywin(NCursesWindow& win,
+			 int sminrow, int smincol,
+			 int dminrow, int dmincol,
+			 int dmaxrow, int dmaxcol, bool overlay=TRUE) {
+    return ::copywin(w,win.w,sminrow,smincol,dminrow,dmincol,
+		     dmaxrow,dmaxcol,(int)(overlay?1:0)); }
+  // Overlay or overwrite the rectangle in win given by dminrow,dmincol,
+  // dmaxrow,dmaxcol with the rectangle in this window beginning at
+  // sminrow,smincol.
+
+  // -------------------------------------------------------------------------
+  // Mouse related
+  // -------------------------------------------------------------------------
+  bool has_mouse() const;
+  // Return TRUE if terminal supports a mouse, FALSE otherwise
+
+  // -------------------------------------------------------------------------
   // traversal support
+  // -------------------------------------------------------------------------
   NCursesWindow*  child() { return subwins; }
+  // Get the first child window.
+
   NCursesWindow*  sibling() { return sib; }
+  // Get the next child of my parent.
+
   NCursesWindow*  parent() { return par; }
-  
-  // True if win is a child of this window. 
+  // Get my parent.
+
   bool isDescendant(NCursesWindow& win);
+  // Return TRUE if win is a descendant of this.
 };
 
-
+// -------------------------------------------------------------------------
 // We leave this here for compatibility reasons.
+// -------------------------------------------------------------------------
 class NCursesColorWindow : public NCursesWindow {
 public:
   NCursesColorWindow(WINDOW* &window)   // useful only for stdscr
@@ -719,12 +1207,46 @@ public:
   NCursesColorWindow(NCursesWindow& par,// parent window
 		     int lines,         // number of lines
 		     int cols,          // number of columns
-		     int by,            // absolute or relative
-		     int bx,            //   origins:
+		     int begin_y,       // absolute or relative
+		     int begin_x,       //   origins:
 		     char absrel = 'a') // if `a', by & bx are
     : NCursesWindow(par,lines,cols,     // absolute screen pos,
-		    by,bx) {            // else if `r', they are
-      useColors(); }                    // relative to par origin  
+		    begin_y,begin_x,    // else if `r', they are
+		    absrel ) {          // relative to par origin  
+      useColors(); }                      
+};
+
+class NCursesPad : public NCursesWindow {
+public:
+  NCursesPad(int lines, int cols);
+
+  int echochar(const chtype ch) { return ::pechochar(w,ch); }
+  // Put the attributed character onto the pad and immediately do a
+  // prefresh().
+  
+  // For Pad's we reimplement refresh() and noutrefresh() to do nothing.
+  // You should call the versions with the argument list that are specific
+  // for Pad's.
+  int refresh() { return OK; };
+  int noutrefresh() { return OK; };
+
+  int refresh(int pminrow, int pmincol,
+	      int sminrow, int smincol,
+	      int smaxrow, int smaxcol) {
+    return ::prefresh(w,pminrow,pmincol,
+		      sminrow,smincol,smaxrow,smaxcol);
+  }
+  // The coordinates sminrow,smincol,smaxrow,smaxcol describe a rectangle
+  // on the screen. <b>refresh</b> copies a rectangle of this size beginning
+  // with top left corner pminrow,pmincol onto the screen and calls doupdate().
+
+  int noutrefresh(int pminrow, int pmincol,
+		  int sminrow, int smincol,
+		  int smaxrow, int smaxcol) {
+    return ::pnoutrefresh(w,pminrow,pmincol,
+			  sminrow,smincol,smaxrow,smaxcol);
+  }
+  // Does the same like refresh() but without calling doupdate().
 };
 
 #endif // _CURSESW_H

@@ -1,3 +1,4 @@
+.\" $Id: curs_refresh.3x,v 1.6 1997/11/29 20:11:26 tom Exp $
 .TH curs_refresh 3X ""
 .SH NAME
 \fBrefresh\fR, \fBwrefresh\fR, \fBwnoutrefresh\fR,
@@ -55,10 +56,9 @@ changed.  (But see the section on \fBPORTABILITY\fR below for a warning about
 exploiting this behavior.)
 
 The \fBwredrawln\fR routine indicates to \fBcurses\fR that some screen lines
-are corrupted and should be thrown away before anything is written over them
-it touches the indicated lines (marking them changed) then does a refresh
-of the window. The routine \fBredrawwin\fR() touches the entire window and then
-refreshes it.
+are corrupted and should be thrown away before anything is written over them.
+It touches the indicated lines (marking them changed).
+The routine \fBredrawwin\fR() touches the entire window.
 .SH RETURN VALUE
 Routines that return an integer return \fBERR\fR upon failure, and \fBOK\fR
 (SVr4 only specifies "an integer value other than \fBERR\fR") upon successful

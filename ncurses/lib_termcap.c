@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 #include <curses.priv.h>
 
@@ -27,7 +39,7 @@
 #define __INTERNAL_CAPS_VISIBLE
 #include <term.h>
 
-MODULE_ID("$Id: lib_termcap.c,v 1.13 1996/12/21 14:24:06 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.17 1998/02/11 12:13:54 tom Exp $")
 
 /*
    some of the code in here was contributed by:
@@ -62,7 +74,7 @@ speed_t speed;
 #endif
 
 	T(("calling tgetent"));
-	setupterm((char *)name, STDOUT_FILENO, &errcode);
+	setupterm(name, STDOUT_FILENO, &errcode);
 
 	if (errcode != 1)
 		return(errcode);
@@ -125,7 +137,7 @@ speed_t speed;
 			B50,
 			B0,
 		};
-#define MAXSPEED	sizeof(speeds)/sizeof(speeds[0])
+#define MAXSPEED	SIZEOF(speeds)
 
 		for (sp = speeds; sp < speeds + MAXSPEED; sp++) {
 			if (sp[0] <= speed) {
@@ -161,9 +173,11 @@ int tgetflag(const char *id)
 int i;
 
 	T(("tgetflag: %s", id));
-	for (i = 0; i < BOOLCOUNT; i++)
-		if (!strcmp(id, boolcodes[i]))
-			return cur_term->type.Booleans[i];
+	if (cur_term != 0) {
+		for (i = 0; i < BOOLCOUNT; i++)
+			if (!strcmp(id, boolcodes[i]))
+				return cur_term->type.Booleans[i];
+	}
 	return ERR;
 }
 
@@ -181,9 +195,11 @@ int tgetnum(const char *id)
 int i;
 
 	T(("tgetnum: %s", id));
-	for (i = 0; i < NUMCOUNT; i++)
-		if (!strcmp(id, numcodes[i]))
-			return cur_term->type.Numbers[i];
+	if (cur_term != 0) {
+		for (i = 0; i < NUMCOUNT; i++)
+			if (!strcmp(id, numcodes[i]))
+				return cur_term->type.Numbers[i];
+	}
 	return ERR;
 }
 
@@ -201,11 +217,13 @@ char *tgetstr(const char *id, char **area GCC_UNUSED)
 int i;
 
 	T(("tgetstr: %s", id));
-	for (i = 0; i < STRCOUNT; i++) {
-		T(("trying %s", strcodes[i]));
-		if (!strcmp(id, strcodes[i])) {
-			T(("found match : %s", cur_term->type.Strings[i]));
-			return cur_term->type.Strings[i];
+	if (cur_term != 0) {
+		for (i = 0; i < STRCOUNT; i++) {
+			T(("trying %s", strcodes[i]));
+			if (!strcmp(id, strcodes[i])) {
+				T(("found match : %s", cur_term->type.Strings[i]));
+				return cur_term->type.Strings[i];
+			}
 		}
 	}
 	return NULL;
@@ -222,5 +240,5 @@ int i;
 
 char *tgoto(const char *string, int x, int y)
 {
-	return(tparm((char *)string, y, x));
+	return(tparm(string, y, x));
 }

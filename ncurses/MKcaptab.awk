@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: MKcaptab.awk,v 1.9 1997/04/05 23:38:24 tom Exp $
+# $Id: MKcaptab.awk,v 1.10 1997/09/11 17:40:46 tom Exp $
 AWK=${1-awk}
 DATA=${2-../include/Caps}
 
@@ -13,7 +13,6 @@ cat <<'EOF'
 #include <ncurses_cfg.h>
 #include <tic.h>
 #include <term.h>
-#include <hashsize.h>
 
 EOF
 

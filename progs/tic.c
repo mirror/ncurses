@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
  *	tic.c --- Main program for terminfo compiler
@@ -27,12 +39,10 @@
 
 #include <progs.priv.h>
 
-#include <ctype.h>
-
 #include <dump_entry.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: tic.c,v 1.21 1996/12/30 02:24:15 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.28 1998/02/11 12:14:02 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -152,7 +162,8 @@ static void put_translate(int c)
 	*sp++ = c;
     else		/* ah! candidate name! */
     {
-	char	*up, *tp;
+	char	*up;
+	NCURSES_CONST char *tp;
 
 	*sp++ = '\0';
 	in_name = FALSE;
@@ -166,7 +177,7 @@ static void put_translate(int c)
 	    *up = '\0';
 	}
 
-	if ((tp = nametrans(namebuf)) != (char *)NULL)
+	if ((tp = nametrans(namebuf)) != 0)
 	{
 	    (void) putchar(':');
 	    (void) fputs(tp, stdout);
@@ -262,7 +273,7 @@ static const char **make_namelist(char *src)
 static bool matches(const char **needle, const char *haystack)
 /* does entry in needle list match |-separated field in haystack? */
 {
-	int code = FALSE;
+	bool code = FALSE;
 	size_t n;
 
 	if (needle != 0)
@@ -319,7 +330,7 @@ bool	check_only = FALSE;
 	 * design decision to allow the numeric values for -w, -v options to
 	 * be optional.
 	 */
-	while ((this_opt = getopt(argc, argv, "0123456789CILNR:TVce:orsvw")) != EOF) {
+	while ((this_opt = getopt(argc, argv, "0123456789CILNR:TVce:o:rsvw")) != EOF) {
 		if (isdigit(this_opt)) {
 			switch (last_opt) {
 			case 'v':
@@ -509,9 +520,6 @@ bool	check_only = FALSE;
 	    }
 	    else
 	    {
-		bool	trailing_comment = FALSE;
-		int	c, oldc = '\0';
-
 		/* this is in case infotocap() generates warnings */
 		_nc_curr_col = _nc_curr_line = -1;
 
@@ -540,12 +548,23 @@ bool	check_only = FALSE;
 		    }
 		if (!namelst)
 		{
+		    int  c, oldc = '\0';
+		    bool in_comment = FALSE;
+		    bool trailing_comment = FALSE;
+
 		    (void) fseek(stdin, _nc_tail->cend, SEEK_SET);
 		    while ((c = getchar()) != EOF)
 		    {
-			if (oldc == '\n' && c == '#')
-			    trailing_comment = TRUE;
-			if (trailing_comment)
+			if (oldc == '\n') {
+			    if (c == '#') {
+				trailing_comment = TRUE;
+				in_comment = TRUE;
+			    } else {
+				in_comment = FALSE;
+			    }
+			}
+			if (trailing_comment
+			 && (in_comment || (oldc == '\n' && c == '\n')))
 			    putchar(c);
 			oldc = c;
 		    }

@@ -1,22 +1,35 @@
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
+
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
  *	comp_scan.c --- Lexical scanner for terminfo compiler.
@@ -36,7 +49,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.21 1997/04/24 10:37:34 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.30 1998/02/11 12:14:00 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -47,8 +60,6 @@ MODULE_ID("$Id: comp_scan.c,v 1.21 1997/04/24 10:37:34 tom Exp $")
 #define iswhite(ch)	(ch == ' '  ||  ch == '\t')
 
 int	_nc_syntax;		/* termcap or terminfo? */
-int	_nc_curr_line;		/* current line # in input */
-int	_nc_curr_col;		/* current column # in input */
 long	_nc_curr_file_pos;	/* file offset of current line */
 long	_nc_comment_start;	/* start of comment range before name */
 long	_nc_comment_end;	/* end of comment range before name */
@@ -68,7 +79,6 @@ static char pushname[MAX_NAME_SIZE+1];
 static int  next_char(void);
 static long stream_pos(void);
 static bool end_of_stream(void);
-static char trans_string(char *);
 static void push_back(char c);
 
 /* Assume we may be looking at a termcap-style continuation */
@@ -343,7 +353,7 @@ start_token:
 				break;
 
 			case '=':
-				ch = trans_string(ptr);
+				ch = _nc_trans_string(ptr);
 				if (ch != separator)
 					_nc_warning("Missing separator");
 				_nc_curr_token.tk_name = buffer;
@@ -436,13 +446,14 @@ end_of_token:
  *
  */
 
-static char
-trans_string(char *ptr)
+char
+_nc_trans_string(char *ptr)
 {
 int	count = 0;
 int	number;
 int	i, c;
 chtype	ch, last_ch = '\0';
+bool	ignored = FALSE;
 
 	while ((ch = c = next_char()) != (chtype)separator && c != EOF) {
 	    if ((_nc_syntax == SYN_TERMCAP) && c == '\n')
@@ -456,10 +467,13 @@ chtype	ch, last_ch = '\0';
 		    _nc_warning("Illegal ^ character - %s",
 			_tracechar((unsigned char)ch));
 		}
-		if (ch == '?')
+		if (ch == '?') {
 		    *(ptr++) = '\177';
-		else
-		    *(ptr++) = (char)(ch & 037);
+		} else {
+		    if ((ch &= 037) == 0)
+		        ch = 128;
+		    *(ptr++) = (char)(ch);
+		}
 	    }
 	    else if (ch == '\\') {
 		ch = c = next_char();
@@ -494,6 +508,8 @@ chtype	ch, last_ch = '\0';
 			case 'E':
 			case 'e':	*(ptr++) = '\033';	break;
 
+			case 'a':	*(ptr++) = '\007';	break;
+
 			case 'l':
 			case 'n':	*(ptr++) = '\n';	break;
 
@@ -509,7 +525,7 @@ chtype	ch, last_ch = '\0';
 
 			case '\\':	*(ptr++) = '\\';	break;
 
-			case '^':	*(ptr++) = '^'; 	break;
+			case '^':	*(ptr++) = '^';		break;
 
 			case ',':	*(ptr++) = ',';		break;
 
@@ -525,13 +541,18 @@ chtype	ch, last_ch = '\0';
 		    } /* endswitch (ch) */
 		} /* endelse (ch < '0' ||  ch > '7') */
 	    } /* end else if (ch == '\\') */
-	    else {
+	    else if (ch == '\n' && (_nc_syntax == SYN_TERMINFO)) {
+		/* newlines embedded in a terminfo string are ignored */
+		ignored = TRUE;
+	    } else {
 		*(ptr++) = (char)ch;
 	    }
 
-	    count ++;
-
-	    last_ch = ch;
+	    if (!ignored) {
+		last_ch = ch;
+		count ++;
+	    }
+	    ignored = FALSE;
 
 	    if (count > MAXCAPLEN)
 		_nc_warning("Very long string found.  Missing separator?");
@@ -549,7 +570,7 @@ chtype	ch, last_ch = '\0';
  *	get_token() call.
  */
 
-void _nc_push_token(int class)
+void _nc_push_token(int tokclass)
 {
     /*
      * This implementation is kind of bogus, it will fail if we ever do
@@ -557,7 +578,7 @@ void _nc_push_token(int class)
      * relies on the fact that curr_tok is static storage that nothing
      * but get_token() touches.
      */
-    pushtype = class;
+    pushtype = tokclass;
     _nc_get_type(pushname);
 
     DEBUG(3, ("pushing token: `%s', class %d",
@@ -648,6 +669,7 @@ next_char(void)
 	 * don't forget to hack push_back() correspondingly.
 	 */
 	static char line[LEXBUFSIZ];
+	size_t len;
 
 	do {
 	       _nc_curr_file_pos = ftell(yyin);
@@ -665,6 +687,18 @@ next_char(void)
 
 	while (iswhite(*bufptr))
 	    bufptr++;
+
+	/*
+	 * Treat a trailing <cr><lf> the same as a <newline> so we can read
+	 * files on OS/2, etc.
+	 */
+	if ((len = strlen(bufptr)) > 1) {
+	    if (bufptr[len-1] == '\n'
+	     && bufptr[len-2] == '\r') {
+		bufptr[len-2] = '\n';
+		bufptr[len-1] = '\0';
+	    }
+	}
     }
 
     first_column = (bufptr == bufstart);
@@ -690,7 +724,8 @@ static long stream_pos(void)
 static bool end_of_stream(void)
 /* are we at end of input? */
 {
-    return (yyin ? feof(yyin) : (bufptr && *bufptr == '\0'));
+    return ((yyin ? feof(yyin) : (bufptr && *bufptr == '\0'))
+	    ? TRUE : FALSE);
 }
 
 /* comp_scan.c ends here */

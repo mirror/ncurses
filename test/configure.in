@@ -1,23 +1,34 @@
-dnl*****************************************************************************
-dnl Copyright 1996,1997 by Thomas E. Dickey <dickey@clark.net>                 *
-dnl All Rights Reserved.                                                       *
-dnl                                                                            *
-dnl Permission to use, copy, modify, and distribute this software and its      *
-dnl documentation for any purpose and without fee is hereby granted, provided  *
-dnl that the above copyright notice appear in all copies and that both that    *
-dnl copyright notice and this permission notice appear in supporting           *
-dnl documentation, and that the name of the above listed copyright holder(s)   *
-dnl not be used in advertising or publicity pertaining to distribution of the  *
-dnl software without specific, written prior permission. THE ABOVE LISTED      *
-dnl COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,  *
-dnl INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO     *
-dnl EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY         *
-dnl SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER       *
-dnl RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF       *
-dnl CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN        *
-dnl CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                   *
-dnl*****************************************************************************
-dnl $Id: configure.in,v 1.15 1997/05/06 00:36:02 tom Exp $
+dnl***************************************************************************
+dnl Copyright (c) 1998 Free Software Foundation, Inc.                        *
+dnl                                                                          *
+dnl Permission is hereby granted, free of charge, to any person obtaining a  *
+dnl copy of this software and associated documentation files (the            *
+dnl "Software"), to deal in the Software without restriction, including      *
+dnl without limitation the rights to use, copy, modify, merge, publish,      *
+dnl distribute, distribute with modifications, sublicense, and/or sell       *
+dnl copies of the Software, and to permit persons to whom the Software is    *
+dnl furnished to do so, subject to the following conditions:                 *
+dnl                                                                          *
+dnl The above copyright notice and this permission notice shall be included  *
+dnl in all copies or substantial portions of the Software.                   *
+dnl                                                                          *
+dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+dnl OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+dnl MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+dnl IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+dnl DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+dnl OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+dnl THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+dnl                                                                          *
+dnl Except as contained in this notice, the name(s) of the above copyright   *
+dnl holders shall not be used in advertising or otherwise to promote the     *
+dnl sale, use or other dealings in this Software without prior written       *
+dnl authorization.                                                           *
+dnl***************************************************************************
+dnl
+dnl Author: Thomas E. Dickey <dickey@clark.net> 1996,1997,1998
+dnl
+dnl $Id: configure.in,v 1.23 1998/02/11 12:14:05 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -28,19 +39,33 @@ dnl
 dnl dickey@clark.net (Thomas Dickey)
 AC_PREREQ(2.12)
 AC_INIT(ncurses.c)
+AC_CONFIG_HEADER(ncurses_cfg.h:ncurses_tst.hin)
 
 AC_PROG_CC
 
+dnl Things that we don't need (or must override) if we're not building ncurses
 CC_G_OPT="-g"				AC_SUBST(CC_G_OPT)
 CC_SHARED_OPTS=unknown			AC_SUBST(CC_SHARED_OPTS)
 CPPFLAGS="$CPPFLAGS"			AC_SUBST(CPPFLAGS)
+DFT_DEP_SUFFIX=""			AC_SUBST(DFT_DEP_SUFFIX)
 DFT_OBJ_SUBDIR=`pwd|sed -e's:.*/::'`	AC_SUBST(DFT_OBJ_SUBDIR)
 DFT_UPR_MODEL="NORMAL"			AC_SUBST(DFT_UPR_MODEL)
+ECHO_LINK='@ echo linking $@ ... ;'	AC_SUBST(ECHO_LINK)
 EXTRA_LIBS=""				AC_SUBST(EXTRA_LIBS)
+LD="ld"					AC_SUBST(LD)
+LD_MODEL=""				AC_SUBST(LD_MODEL)
+LDFLAGS_SHARED=""			AC_SUBST(LDFLAGS_SHARED)
 LIB_NAME=curses				AC_SUBST(LIB_NAME)
+LIB_PREFIX="-l"				AC_SUBST(LIB_PREFIX)
 LINT=lint				AC_SUBST(LINT)
 LINT_OPTS=""				AC_SUBST(LINT_OPTS)
+LOCAL_LDFLAGS=""			AC_SUBST(LOCAL_LDFLAGS)
+MATH_LIB="-lm"				AC_SUBST(MATH_LIB)
+PROG_EXT=""				AC_SUBST(PROG_EXT)
 TEST_ARGS=""				AC_SUBST(TEST_ARGS)
+TEST_DEPS=""				AC_SUBST(TEST_DEPS)
+cf_cv_abi_version=""			AC_SUBST(cf_cv_abi_version)
+cf_cv_rel_version=""			AC_SUBST(cf_cv_rel_version)
 
 dnl SunOS 4.x
 AC_ARG_WITH(5lib,
@@ -51,7 +76,8 @@ AC_ARG_WITH(5lib,
 dnl Ncurses, installed in conventional location
 AC_ARG_WITH(ncurses,
 	[  --with-ncurses          use ncurses-libraries (installed)],
-	[AC_CHECK_LIB(gpm,Gpm_Open)
+	[AC_CHECK_FUNC(initscr,,[
+	 AC_CHECK_LIB(gpm,Gpm_Open)
 	 LIB_NAME=ncurses
 	 for p in $HOME /usr/local /usr
 	 do
@@ -70,17 +96,18 @@ AC_ARG_WITH(ncurses,
 			fi
 		fi
 	 done
-	],[test -d /usr/ccs/lib && LIBS="-L/usr/ccs/lib $LIBS"])
+	],[test -d /usr/ccs/lib && LIBS="-L/usr/ccs/lib $LIBS"])])
 
 dnl If we've not specified a library, assume we're using sysvr4 libraries
 dnl installed conventionally (e.g., SunOS 5.x - solaris).
 
 dnl Autoconf builds up the $LIBS in reverse order
 
-AC_CHECK_LIB($LIB_NAME,initscr)
-AC_CHECK_LIB(form,form_driver,,,-lcurses)
-AC_CHECK_LIB(menu,menu_driver,,,-lcurses)
-AC_CHECK_LIB(panel,new_panel,,,-lcurses)
+AC_CHECK_FUNC(initscr,,[
+AC_CHECK_LIB($LIB_NAME,initscr)])
+AC_CHECK_LIB(form,form_driver)
+AC_CHECK_LIB(menu,menu_driver)
+AC_CHECK_LIB(panel,new_panel)
 
 AC_TYPE_SIGNAL
 
@@ -107,76 +134,42 @@ strdup \
 vsscanf \
 )
 
-AC_CHECKING([for SCO by checking on /usr/bin/scosh])
-AC_PROGRAM_CHECK(COULD_BE_SCO, [scosh], maybe, maybenot)
-if test "$COULD_BE_SCO" = "maybe"
-then
-	AC_DEFINE(SYSTEM_LOOKS_LIKE_SCO)
-fi
-
-dnl Things that we don't need (or must override) if we're not building ncurses
-ECHO_LINK='@ echo linking $@ ... ;'
-AC_SUBST(ECHO_LINK)
-
-LD_MODEL=""
-AC_SUBST(LD_MODEL)
-
-LOCAL_LDFLAGS=""
-AC_SUBST(LOCAL_LDFLAGS)
-
-nc_cv_abi_version=""
-AC_SUBST(nc_cv_abi_version)
-
-TEST_DEPS=""
-AC_SUBST(TEST_DEPS)
-
-LIB_PREFIX="-l"
-AC_SUBST(LIB_PREFIX)
-
-DFT_DEP_SUFFIX=""
-AC_SUBST(DFT_DEP_SUFFIX)
-
-rm -f config_h.in
-echo '@DEFS@' >config_h.in
-
-changequote({,})dnl
-AC_OUTPUT(config_h Makefile,{
-
-### Special editing.  We generate ncurses_cfg.h directly to allow all filenames
-### to be MSDOS-compatible, as well as to make the list of definitions be
-### dynamically determined by the configuration script -- a consideration when
-### doing type-clean development testing.
-
-echo creating ncurses_cfg.h
-rm -f ncurses_cfg.h
-echo "/* generated by configure-script
- * On host: $SYS_NAME
- */
-#ifndef NC_CONFIG_H
-#define NC_CONFIG_H" >ncurses_cfg.h
-sed	-e '/^ -D/!d' \
-	-e 's/ -D/\
-#define /g' \
-	-e 's/\(#define [A-Za-z_][A-Za-z0-9_]*\)=/\1	/g' \
-	-e 's@\\@@g' \
-	config_h | sort >>ncurses_cfg.h
-echo "
-	/* The C compiler may not treat these properly, but C++ has to */
-#ifdef __cplusplus
-#undef const
-#undef inline
+dnl ---------------------------------------------------------------------------
+dnl [CF_SYS_TIME_SELECT]
+AC_MSG_CHECKING(if sys/time.h conflicts with sys/select.h)
+AC_CACHE_VAL(cf_cv_sys_time_select,[
+AC_TRY_COMPILE([
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
 #endif
+#if HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif
+],[],[cf_cv_sys_time_select=yes],
+     [cf_cv_sys_time_select=no])
+     ])
+AC_MSG_RESULT($cf_cv_sys_time_select)
+test $cf_cv_sys_time_select = yes && AC_DEFINE(HAVE_SYS_TIME_SELECT)
+dnl ---------------------------------------------------------------------------
 
-#endif /* NC_CONFIG_H */" >> ncurses_cfg.h
-echo removing config_h
-rm config_h
-},{
-### Special initialization commands, used to pass information from the
-### configuration-run into config.status
+AC_OUTPUT(Makefile,[
+	cat >>Makefile <<TEST_EOF
 
-SYS_NAME="`(uname -a || hostname) 2>/dev/null | sed 1q`"
-if test -z "\$SYS_NAME"; then SYS_NAME=unknown;fi
-})
-changequote([,])dnl
+# These rules are generated so we do not rely on suffix rules, which do not
+# work consistently for different make-programs (the '\$(MODEL)/' confuses
+# some, and the '\$x' confuses others).
+TEST_EOF
+LIST=`make echo_tests`
+LAST=`make echo_suffix`
+for n in $LIST
+do
+	N=`echo $n | sed -e s/${LAST}\$//`
+	cat >>Makefile <<TEST_EOF
 
-rm -f config_h.in
+\$(MODEL)/$N.o : $N.c \\
+	test.priv.h \\
+	ncurses_cfg.h
+	@echo compiling $N; \$(CC) -c \$(CFLAGS_DEFAULT) $N.c
+TEST_EOF
+done
+],[],sort)

@@ -1,7 +1,7 @@
 <HTML>
 <BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
 <PRE>
-       <STRONG>menus</STRONG> - curses extension for programming menus
+       <STRONG>menu</STRONG> - curses extension for programming menus
 
 
 </PRE>
@@ -11,21 +11,21 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The <STRONG>menus</STRONG> library provides terminal-independent facilities
+       The  <STRONG>menu</STRONG> library provides terminal-independent facilities
        for composing menu systems  on  character-cell  terminals.
        The library includes: item routines, which create and mod-
        ify menu items; and menu routines, which group items  into
        menus, display menus on the screen, and handle interaction
        with the user.
 
-       The <STRONG>menus</STRONG> library uses the <STRONG>curses</STRONG> libraries, and a  curses
+       The <STRONG>menu</STRONG> library uses the <STRONG>curses</STRONG> libraries, and  a  curses
        initialization  routine  such  as  <STRONG>initscr</STRONG>  must be called
-       before using any of these functions.   To  use  the  <STRONG>menus</STRONG>
+       before using any of these  functions.   To  use  the  <STRONG>menu</STRONG>
        library, link with the options <STRONG>-lmenu</STRONG> <STRONG>-lcurses</STRONG>.
 
 
    <STRONG>Current</STRONG> <STRONG>Default</STRONG> <STRONG>Values</STRONG> <STRONG>for</STRONG> <STRONG>Item</STRONG> <STRONG>Attributes</STRONG>
-       The  <STRONG>menus</STRONG>  library  maintains  a  default  value for item
+       The  <STRONG>menu</STRONG>  library  maintains  a  default  value  for item
        attributes.  You can get or set this  default  by  calling
        the  appropriate  <STRONG>get_</STRONG>  or  <STRONG>set_</STRONG>  routine with a <STRONG>NULL</STRONG> item
        pointer.  Changing  this  default  with  a  <STRONG>set_</STRONG>  function
@@ -38,49 +38,49 @@
        of the manual page on which it is described.
 
        l   l   .    <STRONG>curses</STRONG>   Routine   Name Manual  Page  Name  =
-       <STRONG>current_item</STRONG>   <STRONG><A HREF="mitem_current.3x.html">mitem_current(3X)</A></STRONG>                 <STRONG>free_item</STRONG>
-            <STRONG><A HREF="mitem_new.3x.html">mitem_new(3X)</A></STRONG>       <STRONG>free_menu</STRONG>            <STRONG><A HREF="menu_new.3x.html">menu_new(3X)</A></STRONG>
-       <STRONG>item_count</STRONG>     <STRONG><A HREF="menu_items.3x.html">menu_items(3X)</A></STRONG>
-       <STRONG>item_description</STRONG>    <STRONG><A HREF="mitem_name.3x.html">mitem_name(3X)</A></STRONG>
-       <STRONG>item_index</STRONG>     <STRONG><A HREF="mitem_current.3x.html">mitem_current(3X)</A></STRONG>                 <STRONG>item_init</STRONG>
-            <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG> <STRONG>item_name</STRONG>      <STRONG><A HREF="mitem_name.3x.html">mitem_name(3X)</A></STRONG> <STRONG>item_opts</STRONG>
-            <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG>          <STRONG>item_opts_off</STRONG>  <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG>
-       <STRONG>item_opts_on</STRONG>   <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG> <STRONG>item_term</STRONG>      <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG>
-       <STRONG>item_userptr</STRONG>   <STRONG><A HREF="mitem_userptr.3x.html">mitem_userptr(3X)</A></STRONG>
-       <STRONG>item_value</STRONG>     <STRONG><A HREF="mitem_value.3x.html">mitem_value(3X)</A></STRONG>  <STRONG>item_visible</STRONG>   mitem_visi-
-       <STRONG><A HREF="ble.3x.html">ble(3X)</A></STRONG>          <STRONG>menu_back</STRONG>                <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
-       <STRONG>menu_driver</STRONG>    <STRONG><A HREF="menu_driver.3x.html">menu_driver(3X)</A></STRONG>                   <STRONG>menu_fore</STRONG>
-            <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>       <STRONG>menu_format</STRONG>    <STRONG><A HREF="menu_format.3x.html">menu_format(3X)</A></STRONG>
-       <STRONG>menu_grey</STRONG>               <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>         <STRONG>menu_init</STRONG>
-            <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG> <STRONG>menu_items</STRONG>     <STRONG><A HREF="menu_items.3x.html">menu_items(3X)</A></STRONG> <STRONG>menu_mark</STRONG>
-            <STRONG><A HREF="menu_mark.3x.html">menu_mark(3X)</A></STRONG>       <STRONG>menu_opts</STRONG>           <STRONG><A HREF="menu_opts.3x.html">menu_opts(3X)</A></STRONG>
-       <STRONG>menu_opts_off</STRONG>  <STRONG><A HREF="menu_opts.3x.html">menu_opts(3X)</A></STRONG>  <STRONG>menu_opts_on</STRONG>   <STRONG><A HREF="menu_opts.3x.html">menu_opts(3X)</A></STRONG>
-       <STRONG>menu_pad</STRONG>        <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>  <STRONG>menu_pattern</STRONG>   menu_pat-
-       <STRONG><A HREF="tern.3x.html">tern(3X)</A></STRONG>     <STRONG>menu_request_by_name</STRONG>     <STRONG><A HREF="menu_requestname.3x.html">menu_requestname(3X)</A></STRONG>
-            <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>       <STRONG>menu_term</STRONG>            <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG>
-       <STRONG>menu_userptr</STRONG>   <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3X)</A></STRONG>                   <STRONG>menu_win</STRONG>
-            <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>  <STRONG>new_item</STRONG>        <STRONG><A HREF="mitem_new.3x.html">mitem_new(3X)</A></STRONG>  <STRONG>new_menu</STRONG>
-            <STRONG><A HREF="menu_new.3x.html">menu_new(3X)</A></STRONG>      <STRONG>pos_menu_cursor</STRONG>     <STRONG><A HREF="menu_cursor.3x.html">menu_cursor(3X)</A></STRONG>
-       <STRONG>post_menu</STRONG>     <STRONG><A HREF="menu_post.3x.html">menu_post(3X)</A></STRONG>    <STRONG>scale_menu</STRONG>     <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>
-       <STRONG>set_current_item</STRONG>    <STRONG><A HREF="menu_current_item.3x.html">menu_current_item(3X)</A></STRONG>
-       <STRONG>set_item_init</STRONG>  <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG> <STRONG>set_item_opts</STRONG>  <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG>
-       <STRONG>set_item_term</STRONG>  <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG>
-       <STRONG>set_item_userptr</STRONG>    <STRONG><A HREF="mitem_userptr.3x.html">mitem_userptr(3X)</A></STRONG>
-       <STRONG>set_item_value</STRONG> <STRONG><A HREF="mitem_value.3x.html">mitem_value(3X)</A></STRONG>
-       <STRONG>set_menu_back</STRONG>  <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
-       <STRONG>set_menu_fore</STRONG>  <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
-       <STRONG>set_menu_format</STRONG>     <STRONG><A HREF="menu_format.3x.html">menu_format(3X)</A></STRONG>
-       <STRONG>set_menu_grey</STRONG>  <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
-       <STRONG>set_menu_init</STRONG>  <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG> <STRONG>set_menu_items</STRONG> <STRONG><A HREF="menu_items.3x.html">menu_items(3X)</A></STRONG>
-       <STRONG>set_menu_mark</STRONG>  <STRONG><A HREF="menu_mark.3x.html">menu_mark(3X)</A></STRONG> <STRONG>set_menu_opts</STRONG>  <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG>
-       <STRONG>set_menu_pad</STRONG>   <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
-       <STRONG>set_menu_pattern</STRONG>    <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3X)</A></STRONG>
-       <STRONG>set_menu_spacing</STRONG>    <STRONG><A HREF="menu_spacing.3x.html">menu_spacing(3X)</A></STRONG>
-       <STRONG>set_menu_sub</STRONG>   <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>   <STRONG>set_menu_term</STRONG>  <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG>
-       <STRONG>set_menu_userptr</STRONG>    <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3X)</A></STRONG>
-       <STRONG>set_menu_win</STRONG>   <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>      <STRONG>set_top_row</STRONG>    mitem_cur-
-       <STRONG><A HREF="rent.3x.html">rent(3X)</A></STRONG>          <STRONG>top_row</STRONG>                <STRONG><A HREF="mitem_current.3x.html">mitem_current(3X)</A></STRONG>
-       <STRONG>unpost_menu</STRONG>    <STRONG><A HREF="menu_post.3x.html">menu_post(3X)</A></STRONG>
+       current_item   <STRONG><A HREF="mitem_current.3x.html">mitem_current(3X)</A></STRONG>                 free_item
+            <STRONG><A HREF="mitem_new.3x.html">mitem_new(3X)</A></STRONG>       free_menu            <STRONG><A HREF="menu_new.3x.html">menu_new(3X)</A></STRONG>
+       item_count     <STRONG><A HREF="menu_items.3x.html">menu_items(3X)</A></STRONG>
+       item_description    <STRONG><A HREF="mitem_name.3x.html">mitem_name(3X)</A></STRONG>
+       item_index     <STRONG><A HREF="mitem_current.3x.html">mitem_current(3X)</A></STRONG>                 item_init
+            <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG> item_name      <STRONG><A HREF="mitem_name.3x.html">mitem_name(3X)</A></STRONG> item_opts
+            <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG>          item_opts_off  <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG>
+       item_opts_on   <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG> item_term      <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG>
+       item_userptr   <STRONG><A HREF="mitem_userptr.3x.html">mitem_userptr(3X)</A></STRONG>
+       item_value     <STRONG><A HREF="mitem_value.3x.html">mitem_value(3X)</A></STRONG>  item_visible   <STRONG>mitem_visi-</STRONG>
+       <STRONG><A HREF="ble.3x.html">ble(3X)</A></STRONG>          menu_back                <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
+       menu_driver    <STRONG><A HREF="menu_driver.3x.html">menu_driver(3X)</A></STRONG>                   menu_fore
+            <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>       menu_format    <STRONG><A HREF="menu_format.3x.html">menu_format(3X)</A></STRONG>
+       menu_grey               <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>         menu_init
+            <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG> menu_items     <STRONG><A HREF="menu_items.3x.html">menu_items(3X)</A></STRONG> menu_mark
+            <STRONG><A HREF="menu_mark.3x.html">menu_mark(3X)</A></STRONG>       menu_opts           <STRONG><A HREF="menu_opts.3x.html">menu_opts(3X)</A></STRONG>
+       menu_opts_off  <STRONG><A HREF="menu_opts.3x.html">menu_opts(3X)</A></STRONG>  menu_opts_on   <STRONG><A HREF="menu_opts.3x.html">menu_opts(3X)</A></STRONG>
+       menu_pad        <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>  menu_pattern   <STRONG>menu_pat-</STRONG>
+       <STRONG><A HREF="tern.3x.html">tern(3X)</A></STRONG>     menu_request_by_name     <STRONG><A HREF="menu_requestname.3x.html">menu_requestname(3X)</A></STRONG>
+            <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>       menu_term            <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG>
+       menu_userptr   <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3X)</A></STRONG>                   menu_win
+            <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>  new_item        <STRONG><A HREF="mitem_new.3x.html">mitem_new(3X)</A></STRONG>  new_menu
+            <STRONG><A HREF="menu_new.3x.html">menu_new(3X)</A></STRONG>      pos_menu_cursor     <STRONG><A HREF="menu_cursor.3x.html">menu_cursor(3X)</A></STRONG>
+       post_menu     <STRONG><A HREF="menu_post.3x.html">menu_post(3X)</A></STRONG>    scale_menu     <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>
+       set_current_item    <STRONG><A HREF="mitem_current.3x.html">mitem_current(3X)</A></STRONG>
+       set_item_init  <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG> set_item_opts  <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG>
+       set_item_term  <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG>
+       set_item_userptr    <STRONG><A HREF="mitem_userptr.3x.html">mitem_userptr(3X)</A></STRONG>
+       set_item_value <STRONG><A HREF="mitem_value.3x.html">mitem_value(3X)</A></STRONG>
+       set_menu_back  <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
+       set_menu_fore  <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
+       set_menu_format     <STRONG><A HREF="menu_format.3x.html">menu_format(3X)</A></STRONG>
+       set_menu_grey  <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
+       set_menu_init  <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG> set_menu_items <STRONG><A HREF="menu_items.3x.html">menu_items(3X)</A></STRONG>
+       set_menu_mark  <STRONG><A HREF="menu_mark.3x.html">menu_mark(3X)</A></STRONG> set_menu_opts  <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3X)</A></STRONG>
+       set_menu_pad   <STRONG><A HREF="menu_attribs.3x.html">menu_attribs(3X)</A></STRONG>
+       set_menu_pattern    <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3X)</A></STRONG>
+       set_menu_spacing    <STRONG><A HREF="menu_spacing.3x.html">menu_spacing(3X)</A></STRONG>
+       set_menu_sub   <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>   set_menu_term  <STRONG><A HREF="menu_hook.3x.html">menu_hook(3X)</A></STRONG>
+       set_menu_userptr    <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3X)</A></STRONG>
+       set_menu_win   <STRONG><A HREF="menu_win.3x.html">menu_win(3X)</A></STRONG>      set_top_row    <STRONG>mitem_cur-</STRONG>
+       <STRONG><A HREF="rent.3x.html">rent(3X)</A></STRONG>          top_row                <STRONG><A HREF="mitem_current.3x.html">mitem_current(3X)</A></STRONG>
+       unpost_menu    <STRONG><A HREF="menu_post.3x.html">menu_post(3X)</A></STRONG>
 
 
 </PRE>

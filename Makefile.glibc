@@ -21,7 +21,7 @@
 #
 subdir	:= ncurses
 
-ncurses-version	= 4.1
+ncurses-version	= 4.2
 form-version	= $(ncurses-version)
 menu-version	= $(ncurses-version)
 panel-version	= $(ncurses-version)
@@ -38,51 +38,218 @@ subdir-dirs = $(extras) progs test
 vpath %.c $(subdir-dirs)
 vpath %.h $(subdir-dirs)
 
-libform-routines	= fld_def fld_stat fld_type fld_user \
-				frm_adabind frm_data frm_def \
-				frm_driver frm_hook frm_opts \
-				frm_req_name frm_user frm_win \
-				fty_alnum fty_alpha fty_enum fty_int \
-				fty_ipv4 fty_num fty_regex
+libform-routines	= \
+			fld_arg \
+			fld_attr \
+			fld_current \
+			fld_def \
+			fld_dup \
+			fld_ftchoice \
+			fld_ftlink \
+			fld_info \
+			fld_just \
+			fld_link \
+			fld_max \
+			fld_move \
+			fld_newftyp \
+			fld_opts \
+			fld_pad \
+			fld_page \
+			fld_stat \
+			fld_type \
+			fld_user \
+			frm_adabind \
+			frm_cursor \
+			frm_data \
+			frm_def \
+			frm_driver \
+			frm_hook \
+			frm_opts \
+			frm_page \
+			frm_post \
+			frm_req_name \
+			frm_scale \
+			frm_sub \
+			frm_user \
+			frm_win \
+			fty_alnum \
+			fty_alpha \
+			fty_enum \
+			fty_int \
+			fty_ipv4 \
+			fty_num \
+			fty_regex
 
-libncurses-routines	= alloc_entry captoinfo comp_error comp_hash \
-				comp_parse comp_scan hardscroll \
-				hashmap lib_acs lib_adabind lib_addch \
-				lib_addstr lib_baudrate \
-				lib_beep lib_bkgd lib_box lib_clear \
-				lib_clrbot lib_clreol lib_color \
-				lib_data lib_delch lib_delwin \
-				lib_dft_fgbg lib_doupdate lib_endwin \
-				lib_erase lib_freeall lib_getch \
-				lib_getstr lib_inchstr lib_initscr \
-				lib_insch lib_insdel lib_insstr \
-				lib_instr lib_isendwin lib_kernel \
-				lib_longname lib_mouse lib_move \
-				lib_mvcur lib_mvwin lib_newterm \
-				lib_newwin lib_options lib_overlay \
-				lib_pad lib_print lib_printw lib_raw \
-				lib_refresh lib_restart lib_scanw \
-				lib_screen lib_scroll lib_scrreg \
-				lib_set_term lib_setup lib_slk \
-				lib_termcap lib_ti lib_touch \
-				lib_tparm lib_tputs lib_trace \
-				lib_traceatr lib_tracechr \
-				lib_tracedmp lib_tracemse lib_tstp \
-				lib_twait lib_vidattr \
-				lib_window names parse_entry \
-				read_entry read_termcap resizeterm \
-				wresize write_entry \
-				codes comp_captab expanded fallback \
-				lib_gen names lib_keyname unctrl
+libncurses-routines	= \
+			alloc_entry \
+			captoinfo \
+			codes \
+			comp_captab \
+			comp_error \
+			comp_expand \
+			comp_hash \
+			comp_parse \
+			comp_scan \
+			define_key \
+			expanded \
+			fallback \
+			hardscroll \
+			hashmap \
+			keyok \
+			lib_acs \
+			lib_adabind \
+			lib_addch \
+			lib_addstr \
+			lib_baudrate \
+			lib_beep \
+			lib_bkgd \
+			lib_box \
+			lib_chgat \
+			lib_clear \
+			lib_clearok \
+			lib_clrbot \
+			lib_clreol \
+			lib_color \
+			lib_cur_term \
+			lib_data \
+			lib_delch \
+			lib_delwin \
+			lib_dft_fgbg \
+			lib_doupdate \
+			lib_echo \
+			lib_endwin \
+			lib_erase \
+			lib_flash \
+			lib_freeall \
+			lib_gen \
+			lib_getch \
+			lib_getstr \
+			lib_hline \
+			lib_immedok \
+			lib_inchstr \
+			lib_initscr \
+			lib_insch \
+			lib_insdel \
+			lib_insstr \
+			lib_instr \
+			lib_isendwin \
+			lib_kernel \
+			lib_keyname \
+			lib_leaveok \
+			lib_longname \
+			lib_mouse \
+			lib_move \
+			lib_mvcur \
+			lib_mvwin \
+			lib_napms \
+			lib_newterm \
+			lib_newwin \
+			lib_nl \
+			lib_options \
+			lib_overlay \
+			lib_pad \
+			lib_print \
+			lib_printw \
+			lib_raw \
+			lib_redrawln \
+			lib_refresh \
+			lib_restart \
+			lib_scanw \
+			lib_screen \
+			lib_scroll \
+			lib_scrollok \
+			lib_scrreg \
+			lib_set_term \
+			lib_setup \
+			lib_slk \
+			lib_slkatrof \
+			lib_slkatron \
+			lib_slkatrset \
+			lib_slkattr \
+			lib_slkclear \
+			lib_slkinit \
+			lib_slklab \
+			lib_slkrefr \
+			lib_slkset \
+			lib_slktouch \
+			lib_termcap \
+			lib_ti \
+			lib_touch \
+			lib_tparm \
+			lib_tputs \
+			lib_trace \
+			lib_traceatr \
+			lib_tracechr \
+			lib_tracedmp \
+			lib_tracemse \
+			lib_tstp \
+			lib_twait \
+			lib_ungetch \
+			lib_vidattr \
+			lib_vline \
+			lib_wattroff \
+			lib_wattron \
+			lib_window \
+			name_match \
+			names \
+			nc_panel \
+			parse_entry \
+			read_entry \
+			read_termcap \
+			resizeterm \
+			safe_sprintf \
+			softscroll \
+			trace_buf \
+			tries \
+			unctrl \
+			wresize \
+			write_entry
 
-libmenu-routines	= m_adabind m_attribs m_cursor m_driver \
-				m_format m_global m_hook m_item_cur \
-				m_item_nam m_item_new m_item_opt \
-				m_item_use m_item_val m_item_vis \
-				m_items m_new m_opts m_post \
-				m_req_name m_spacing m_userptr m_win
+libmenu-routines	= \
+			m_adabind \
+			m_attribs \
+			m_cursor \
+			m_driver \
+			m_format \
+			m_global \
+			m_hook \
+			m_item_cur \
+			m_item_nam \
+			m_item_new \
+			m_item_opt \
+			m_item_top \
+			m_item_use \
+			m_item_val \
+			m_item_vis \
+			m_items \
+			m_new \
+			m_opts \
+			m_pad \
+			m_pattern \
+			m_post \
+			m_req_name \
+			m_scale \
+			m_spacing \
+			m_sub \
+			m_userptr \
+			m_win
 
-libpanel-routines	= panel
+libpanel-routines	= \
+			panel \
+			p_above \
+			p_below \
+			p_bottom \
+			p_delete \
+			p_hide \
+			p_hidden \
+			p_move \
+			p_new \
+			p_replace \
+			p_show \
+			p_top \
+			p_update \
+			p_user \
+			p_win
 
 headers = curses.h eti.h form.h menu.h panel.h term.h termcap.h \
 	  unctrl.h
@@ -100,8 +267,9 @@ extra-objs = $(tic-objs) $(toe-objs) $(infocmp-objs) $(clear-objs) \
 
 # mvcur won't compile
 test-srcs = tctest thardscroll thashmap \
-		blue bs firework gdc hanoi hashtest knight lrtest \
-		ncurses newdemo rain tclock testcurs view worm xmas
+		blue bs firework firstlast gdc hanoi hashtest knight \
+		lrtest ncurses newdemo rain tclock testaddch testcurs \
+		testscanw view worm xmas
 mvcur-objs = mvcur.o dump_entry.o
 tctest-objs = tctest.o
 thardscroll-objs = thardscroll.o
@@ -131,17 +299,41 @@ ifndef inst_mandir
 inst_mandir		= $(install_root)/$(mandir)
 endif
 
-CPPFLAGS += -DTERMINFO='"$(terminfodir)"' -Iinclude -Incurses \
-	-Imenu -Iprogs -Itest -I$(objpfx)
+CPPFLAGS += -DTERMINFO='"$(terminfodir)"' -Iinclude -Iform -Incurses \
+	-Imenu -Ipanel -Iprogs -Itest
+
+ifneq ($(strip $(objpfx)),)
+CPPFLAGS += -I$(objpfx)
+endif
+
+LDLIBS-tclock = math/libm
+
+tests: $(test-srcs:%=$(objpfx)%) 
+
+$(objpfx)mvcur.d: ncurses/lib_mvcur.c
+	$(CC) -M $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $? | \
+		sed -e 's/^lib_mvcur.o/mvcur.o/' > $@
 
 $(objpfx)mvcur.o: ncurses/lib_mvcur.c
 	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $?
 
+$(objpfx)tctest.d: ncurses/captoinfo.c
+	$(CC) -M $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $? | \
+		sed -e 's/^captoinfo.o/tctest.o/' > $@
+
 $(objpfx)tctest.o: ncurses/captoinfo.c
 	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $?
 
+$(objpfx)thardscroll.d: ncurses/hardscroll.c
+	$(CC) -M $(CFLAGS) $(CPPFLAGS) -DTRACE -DSCROLLDEBUG $? | \
+		sed -e 's/^hardscroll.o/thardscroll.o/' > $@
+
 $(objpfx)thardscroll.o: ncurses/hardscroll.c
 	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DSCROLLDEBUG $?
+
+$(objpfx)thashmap.d: ncurses/hashmap.c
+	$(CC) -M $(CFLAGS) $(CPPFLAGS) -DTRACE -DHASHDEBUG $? | \
+		sed -e 's/^hashmap.o/thashmap.o/' > $@
 
 $(objpfx)thashmap.o: ncurses/hashmap.c
 	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DHASHDEBUG $?
@@ -175,10 +367,17 @@ $(test-srcs:%=$(objpfx)%): $(objpfx)libform.a $(objpfx)libmenu.a \
 # a statically-linked program that hasn't already loaded it.
 $(extras:%=$(objpfx)lib%.so): $(common-objpfx)libc.so
 
-subdir_install: $(inst_libdir)/libtermcap.a $(inst_libdir)/libcurses.a
+subdir_install: $(inst_libdir)/libtermcap.a $(inst_libdir)/libcurses.a \
+	$(inst_bindir)/reset $(inst_bindir)/captoinfo
 
 $(inst_libdir)/libtermcap.a $(inst_libdir)/libcurses.a: \
 		$(inst_libdir)/libncurses.a
+	$(make-link)
+
+$(inst_bindir)/reset: $(inst_bindir)/tset
+	$(make-link)
+
+$(inst_bindir)/captoinfo: $(inst_bindir)/tic
 	$(make-link)
 
 ifeq (yes,$(build-shared))

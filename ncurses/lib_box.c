@@ -1,39 +1,48 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 
 /*
 **	lib_box.c
 **
-**	line drawing routines:
-**	wborder()
-**	whline()
-**	wvline()
+**	The routine wborder().
 **
 */
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_box.c,v 1.7 1997/04/12 17:51:49 tom Exp $")
+MODULE_ID("$Id: lib_box.c,v 1.10 1998/02/11 12:13:56 tom Exp $")
 
 int wborder(WINDOW *win, chtype ls, chtype rs, chtype ts,
 	chtype bs, chtype tl, chtype tr, chtype bl, chtype br)
@@ -51,6 +60,9 @@ short endx, endy;
 	_tracechtype2(6,tr),
 	_tracechtype2(7,bl),
 	_tracechtype2(8,br)));
+
+        if (!win)
+          returnCode(ERR);
 
 	if (ls == 0) ls = ACS_VLINE;
 	if (rs == 0) rs = ACS_VLINE;
@@ -96,65 +108,3 @@ short endx, endy;
 	_nc_synchook(win);
 	returnCode(OK);
 }
-
-int whline(WINDOW *win, chtype ch, int n)
-{
-short line;
-short start;
-short end;
-
-	T((T_CALLED("whline(%p,%s,%d)"), win, _tracechtype(ch), n));
-
-	line = win->_cury;
-	start = win->_curx;
-	end = start + n - 1;
-	if (end > win->_maxx)
-		end = win->_maxx;
-
-	if (win->_line[line].firstchar == _NOCHANGE || win->_line[line].firstchar > start)
-		win->_line[line].firstchar = start;
-	if (win->_line[line].lastchar == _NOCHANGE || win->_line[line].lastchar < start)
-		win->_line[line].lastchar = end;
-
-	if (ch == 0)
-		ch = ACS_HLINE;
-	ch = _nc_render(win, ch);
-
-	while ( end >= start) {
-		win->_line[line].text[end] = ch;
-		end--;
-	}
-
-	returnCode(OK);
-}
-
-int wvline(WINDOW *win, chtype ch, int n)
-{
-short row, col;
-short end;
-
-	T((T_CALLED("wvline(%p,%s,%d)"), win, _tracechtype(ch), n));
-
-	row = win->_cury;
-	col = win->_curx;
-	end = row + n - 1;
-	if (end > win->_maxy)
-		end = win->_maxy;
-
-	if (ch == 0)
-		ch = ACS_VLINE;
-	ch = _nc_render(win, ch);
-
-	while(end >= row) {
-		win->_line[end].text[col] = ch;
-		if (win->_line[end].firstchar == _NOCHANGE || win->_line[end].firstchar > col)
-			win->_line[end].firstchar = col;
-		if (win->_line[end].lastchar == _NOCHANGE || win->_line[end].lastchar < col)
-			win->_line[end].lastchar = col;
-		end--;
-	}
-
-	_nc_synchook(win);
-	returnCode(OK);
-}
-

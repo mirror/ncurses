@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -29,13 +41,13 @@
 
 #include <curses.priv.h>
 
-#ifdef SVR4_TERMIO
+#if defined(SVR4_TERMIO) && !defined(_POSIX_SOURCE)
 #define _POSIX_SOURCE
 #endif
 
 #include <term.h>	/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.24 1997/03/08 21:25:44 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.37 1998/02/11 12:13:56 tom Exp $")
 
 /****************************************************************************
  *
@@ -43,9 +55,41 @@ MODULE_ID("$Id: lib_setup.c,v 1.24 1997/03/08 21:25:44 tom Exp $")
  *
  ****************************************************************************/
 
-#if !defined(sun) || !HAVE_TERMIOS_H
-#include <sys/ioctl.h>
+#if HAVE_SIZECHANGE
+# if !defined(sun) || !HAVE_TERMIOS_H
+#  if HAVE_SYS_IOCTL_H
+#   include <sys/ioctl.h>
+#  endif
+# endif
 #endif
+
+#if NEED_PTEM_H
+ /* On SCO, they neglected to define struct winsize in termios.h -- it's only
+  * in termio.h and ptem.h (the former conflicts with other definitions).
+  */
+# include <sys/stream.h>
+# include <sys/ptem.h>
+#endif
+
+/*
+ * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
+ * Solaris, IRIX) define TIOCGWINSZ and struct winsize.
+ */
+#ifdef TIOCGSIZE
+# define IOCTL_WINSIZE TIOCGSIZE
+# define STRUCT_WINSIZE struct ttysize
+# define WINSIZE_ROWS(n) (int)n.ts_lines
+# define WINSIZE_COLS(n) (int)n.ts_cols
+#else
+# ifdef TIOCGWINSZ
+#  define IOCTL_WINSIZE TIOCGWINSZ
+#  define STRUCT_WINSIZE struct winsize
+#  define WINSIZE_ROWS(n) (int)n.ws_row
+#  define WINSIZE_COLS(n) (int)n.ws_col
+# endif
+#endif
+
+extern TERMINAL *cur_term;
 
 static int _use_env = TRUE;
 
@@ -58,80 +102,80 @@ void use_env(bool f)
 
 int LINES, COLS, TABSIZE;
 
-void _nc_get_screensize(void)
-/* set LINES and COLS from the environment and/or terminfo entry */
+static void _nc_get_screensize(int *linep, int *colp)
+/* Obtain lines/columns values from the environment and/or terminfo entry */
 {
-char		*rows, *cols;
+char	*rows, *cols;
 
 	/* figure out the size of the screen */
 	T(("screen size: terminfo lines = %d columns = %d", lines, columns));
 
 	if (!_use_env)
 	{
-	    LINES = (int)lines;
-	    COLS  = (int)columns;
+	    *linep = (int)lines;
+	    *colp  = (int)columns;
 	}
 	else	/* usually want to query LINES and COLUMNS from environment */
 	{
-	    LINES = COLS = 0;
+	    *linep = *colp = 0;
 
 	    /* first, look for environment variables */
 	    rows = getenv("LINES");
-	    if (rows != (char *)NULL)
-		LINES = atoi(rows);
+	    if (rows != 0)
+		*linep = atoi(rows);
 	    cols = getenv("COLUMNS");
-	    if (cols != (char *)NULL)
-		COLS = atoi(cols);
-	    T(("screen size: environment LINES = %d COLUMNS = %d",LINES,COLS));
+	    if (cols != 0)
+		*colp = atoi(cols);
+	    T(("screen size: environment LINES = %d COLUMNS = %d",*linep,*colp));
 
-#if defined(TIOCGWINSZ) && !BROKEN_TIOCGWINSZ
+#if HAVE_SIZECHANGE
 	    /* if that didn't work, maybe we can try asking the OS */
-	    if (LINES <= 0 || COLS <= 0)
+	    if (*linep <= 0 || *colp <= 0)
 	    {
 		if (isatty(cur_term->Filedes))
 		{
-		    struct winsize size;
+		    STRUCT_WINSIZE size;
 
 		    errno = 0;
 		    do {
-			if (ioctl(cur_term->Filedes, TIOCGWINSZ, &size) < 0
+			if (ioctl(cur_term->Filedes, IOCTL_WINSIZE, &size) < 0
 				&& errno != EINTR)
 			    goto failure;
 		    } while
 			(errno == EINTR);
 
-		    LINES = (int)size.ws_row;
-		    COLS  = (int)size.ws_col;
+		    *linep = WINSIZE_ROWS(size);
+		    *colp  = WINSIZE_COLS(size);
 		}
 		/* FALLTHRU */
 	    failure:;
 	    }
-#endif /* defined(TIOCGWINSZ) && !defined(BROKEN_TIOCGWINSZ) */
+#endif /* HAVE_SIZECHANGE */
 
 	    /* if we can't get dynamic info about the size, use static */
-	    if (LINES <= 0 || COLS <= 0)
+	    if (*linep <= 0 || *colp <= 0)
 		if (lines > 0 && columns > 0)
 		{
-		    LINES = (int)lines;
-		    COLS  = (int)columns;
+		    *linep = (int)lines;
+		    *colp  = (int)columns;
 		}
 
 	    /* the ultimate fallback, assume fixed 24x80 size */
-	    if (LINES <= 0 || COLS <= 0)
+	    if (*linep <= 0 || *colp <= 0)
 	    {
-		LINES = 24;
-		COLS  = 80;
+		*linep = 24;
+		*colp  = 80;
 	    }
 
 	    /*
 	     * Put the derived values back in the screen-size caps, so
 	     * tigetnum() and tgetnum() will do the right thing.
 	     */
-	    lines   = (short)LINES;
-	    columns = (short)COLS;
+	    lines   = (short)(*linep);
+	    columns = (short)(*colp);
 	}
 
-	T(("screen size is %dx%d", LINES, COLS));
+	T(("screen size is %dx%d", *linep, *colp));
 
 #ifdef init_tabs
 	if (init_tabs != -1)
@@ -142,6 +186,17 @@ char		*rows, *cols;
 	T(("TABSIZE = %d", TABSIZE));
 
 }
+
+#if USE_SIZECHANGE
+void _nc_update_screensize(void)
+{
+	int my_lines, my_cols;
+
+	_nc_get_screensize(&my_lines, &my_cols);
+	if (SP != 0 && SP->_resize != 0)
+		SP->_resize(my_lines, my_cols);
+}
+#endif
 
 /****************************************************************************
  *
@@ -165,6 +220,7 @@ char		*rows, *cols;
 					    exit(EXIT_FAILURE);\
 					}
 
+#if USE_DATABASE
 static int grab_entry(const char *const tn, TERMTYPE *const tp)
 /* return 1 if entry found, 0 if not found, -1 if database not accessible */
 {
@@ -185,6 +241,7 @@ static int grab_entry(const char *const tn, TERMTYPE *const tp)
 
 	return(status);
 }
+#endif
 
 char ttytype[NAMESIZE];
 
@@ -203,9 +260,9 @@ int status;
 
 	T((T_CALLED("setupterm(\"%s\",%d,%p)"), tname, Filedes, errret));
 
-	if (tname == NULL) {
+	if (tname == 0) {
 		tname = getenv("TERM");
-		if (tname == NULL)
+		if (tname == 0 || *tname == '\0')
 			ret_error0(-1, "TERM environment variable not set.\n");
 	}
 
@@ -213,9 +270,13 @@ int status;
 
 	term_ptr = typeCalloc(TERMINAL, 1);
 
-	if (term_ptr == NULL)
+	if (term_ptr == 0)
 		ret_error0(-1, "Not enough memory to create terminal structure.\n") ;
+#if USE_DATABASE
 	status = grab_entry(tname, &term_ptr->type);
+#else
+	status = 0;
+#endif
 
 	/* try fallback list if entry on disk */
 	if (status != 1)
@@ -238,11 +299,7 @@ int status;
 		ret_error(0, "'%s': unknown terminal type.\n", tname);
 	}
 
-	cur_term = term_ptr;
-	if (generic_type)
-		ret_error(0, "'%s': I need something more specific.\n", tname);
-	if (hard_copy)
-		ret_error(1, "'%s': I can't handle hardcopy terminals.\n", tname);
+	set_curterm(term_ptr);
 
 	if (command_character  &&  getenv("CC"))
 		do_prototype();
@@ -259,12 +316,17 @@ int status;
 	    Filedes = STDERR_FILENO;
 	cur_term->Filedes = Filedes;
 
-	_nc_get_screensize();
+	_nc_get_screensize(&LINES, &COLS);
 
 	if (errret)
 		*errret = 1;
 
 	T((T_CREATE("screen %s %dx%d"), tname, LINES, COLS));
+
+	if (generic_type)
+		ret_error(0, "'%s': I need something more specific.\n", tname);
+	if (hard_copy)
+		ret_error(1, "'%s': I can't handle hardcopy terminals.\n", tname);
 
 	returnCode(OK);
 }

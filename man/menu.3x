@@ -1,25 +1,25 @@
 '\" t
-.\" $Id: menu.3x,v 1.9 1997/01/05 01:23:39 tom Exp $
-.TH menus 3X ""
+.\" $Id: menu.3x,v 1.10 1997/12/14 01:45:52 tom Exp $
+.TH menu 3X ""
 .SH NAME
-\fBmenus\fR - curses extension for programming menus
+\fBmenu\fR - curses extension for programming menus
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
 .br
 .SH DESCRIPTION
-The \fBmenus\fR library provides terminal-independent facilities for composing
+The \fBmenu\fR library provides terminal-independent facilities for composing
 menu systems on character-cell terminals.  The library includes: item routines,
 which create and modify menu items; and menu routines, which group items into
 menus, display menus on the screen, and handle interaction with the user.
 
-The \fBmenus\fR library uses the \fBcurses\fR libraries, and a curses
+The \fBmenu\fR library uses the \fBcurses\fR libraries, and a curses
 initialization routine such as \fBinitscr\fR must be called before using any of
-these functions.  To use the \fBmenus\fR library, link with the options 
+these functions.  To use the \fBmenu\fR library, link with the options 
 \fB-lmenu -lcurses\fR.
 
 .SS Current Default Values for Item Attributes
 
-The \fBmenus\fR library maintains a default value for item attributes.  You can
+The \fBmenu\fR library maintains a default value for item attributes.  You can
 get or set this default by calling the appropriate \fBget_\fR or \fBset_\fR
 routine with a \fBNULL\fR item pointer.  Changing this default with a
 \fBset_\fR function affects future item creations, but does not change the
@@ -34,70 +34,70 @@ the manual page on which it is described.
 l l .
 \fBcurses\fR Routine Name	Manual Page Name
 =
-\fBcurrent_item\fR	mitem_current(3X)
-\fBfree_item\fR 	mitem_new(3X)
-\fBfree_menu\fR 	menu_new(3X)
-\fBitem_count\fR	menu_items(3X)
-\fBitem_description\fR	mitem_name(3X)
-\fBitem_index\fR	mitem_current(3X)
-\fBitem_init\fR 	menu_hook(3X)
-\fBitem_name\fR 	mitem_name(3X)
-\fBitem_opts\fR 	mitem_opts(3X)
-\fBitem_opts_off\fR	mitem_opts(3X)
-\fBitem_opts_on\fR	mitem_opts(3X)
-\fBitem_term\fR 	menu_hook(3X)
-\fBitem_userptr\fR	mitem_userptr(3X)
-\fBitem_value\fR	mitem_value(3X)
-\fBitem_visible\fR	mitem_visible(3X)
-\fBmenu_back\fR 	menu_attribs(3X)
-\fBmenu_driver\fR	menu_driver(3X)
-\fBmenu_fore\fR 	menu_attribs(3X)
-\fBmenu_format\fR	menu_format(3X)
-\fBmenu_grey\fR 	menu_attribs(3X)
-\fBmenu_init\fR 	menu_hook(3X)
-\fBmenu_items\fR	menu_items(3X)
-\fBmenu_mark\fR 	menu_mark(3X)
-\fBmenu_opts\fR 	menu_opts(3X)
-\fBmenu_opts_off\fR	menu_opts(3X)
-\fBmenu_opts_on\fR	menu_opts(3X)
-\fBmenu_pad\fR  	menu_attribs(3X)
-\fBmenu_pattern\fR	menu_pattern(3X)
-\fBmenu_request_by_name\fR	menu_requestname(3X)
-\fBmenu_request_name\fR	menu_requestname(3X)
-\fBmenu_spacing\fR	menu_spacing(3X)
-\fBmenu_sub\fR  	menu_win(3X)
-\fBmenu_term\fR 	menu_hook(3X)
-\fBmenu_userptr\fR	menu_userptr(3X)
-\fBmenu_win\fR  	menu_win(3X)
-\fBnew_item\fR  	mitem_new(3X)
-\fBnew_menu\fR  	menu_new(3X)
-\fBpos_menu_cursor\fR	menu_cursor(3X)
-\fBpost_menu\fR 	menu_post(3X)
-\fBscale_menu\fR	menu_win(3X)
-\fBset_current_item\fR	menu_current_item(3X)
-\fBset_item_init\fR	menu_hook(3X)
-\fBset_item_opts\fR	mitem_opts(3X)
-\fBset_item_term\fR	menu_hook(3X)
-\fBset_item_userptr\fR	mitem_userptr(3X)
-\fBset_item_value\fR	mitem_value(3X)
-\fBset_menu_back\fR	menu_attribs(3X)
-\fBset_menu_fore\fR	menu_attribs(3X)
-\fBset_menu_format\fR	menu_format(3X)
-\fBset_menu_grey\fR	menu_attribs(3X)
-\fBset_menu_init\fR	menu_hook(3X)
-\fBset_menu_items\fR	menu_items(3X)
-\fBset_menu_mark\fR	menu_mark(3X)
-\fBset_menu_opts\fR	mitem_opts(3X)
-\fBset_menu_pad\fR	menu_attribs(3X)
-\fBset_menu_pattern\fR	menu_pattern(3X)
-\fBset_menu_spacing\fR	menu_spacing(3X)
-\fBset_menu_sub\fR	menu_win(3X)
-\fBset_menu_term\fR	menu_hook(3X)
-\fBset_menu_userptr\fR	menu_userptr(3X)
-\fBset_menu_win\fR	menu_win(3X)
-\fBset_top_row\fR	mitem_current(3X)
-\fBtop_row\fR   	mitem_current(3X)
-\fBunpost_menu\fR	menu_post(3X)
+current_item	\fBmitem_current\fR(3X)
+free_item 	\fBmitem_new\fR(3X)
+free_menu 	\fBmenu_new\fR(3X)
+item_count	\fBmenu_items\fR(3X)
+item_description	\fBmitem_name\fR(3X)
+item_index	\fBmitem_current\fR(3X)
+item_init 	\fBmenu_hook\fR(3X)
+item_name 	\fBmitem_name\fR(3X)
+item_opts 	\fBmitem_opts\fR(3X)
+item_opts_off	\fBmitem_opts\fR(3X)
+item_opts_on	\fBmitem_opts\fR(3X)
+item_term 	\fBmenu_hook\fR(3X)
+item_userptr	\fBmitem_userptr\fR(3X)
+item_value	\fBmitem_value\fR(3X)
+item_visible	\fBmitem_visible\fR(3X)
+menu_back 	\fBmenu_attribs\fR(3X)
+menu_driver	\fBmenu_driver\fR(3X)
+menu_fore 	\fBmenu_attribs\fR(3X)
+menu_format	\fBmenu_format\fR(3X)
+menu_grey 	\fBmenu_attribs\fR(3X)
+menu_init 	\fBmenu_hook\fR(3X)
+menu_items	\fBmenu_items\fR(3X)
+menu_mark 	\fBmenu_mark\fR(3X)
+menu_opts 	\fBmenu_opts\fR(3X)
+menu_opts_off	\fBmenu_opts\fR(3X)
+menu_opts_on	\fBmenu_opts\fR(3X)
+menu_pad  	\fBmenu_attribs\fR(3X)
+menu_pattern	\fBmenu_pattern\fR(3X)
+menu_request_by_name	\fBmenu_requestname\fR(3X)
+menu_request_name	\fBmenu_requestname\fR(3X)
+menu_spacing	\fBmenu_spacing\fR(3X)
+menu_sub  	\fBmenu_win\fR(3X)
+menu_term 	\fBmenu_hook\fR(3X)
+menu_userptr	\fBmenu_userptr\fR(3X)
+menu_win  	\fBmenu_win\fR(3X)
+new_item  	\fBmitem_new\fR(3X)
+new_menu  	\fBmenu_new\fR(3X)
+pos_menu_cursor	\fBmenu_cursor\fR(3X)
+post_menu 	\fBmenu_post\fR(3X)
+scale_menu	\fBmenu_win\fR(3X)
+set_current_item	\fBmitem_current\fR(3X)
+set_item_init	\fBmenu_hook\fR(3X)
+set_item_opts	\fBmitem_opts\fR(3X)
+set_item_term	\fBmenu_hook\fR(3X)
+set_item_userptr	\fBmitem_userptr\fR(3X)
+set_item_value	\fBmitem_value\fR(3X)
+set_menu_back	\fBmenu_attribs\fR(3X)
+set_menu_fore	\fBmenu_attribs\fR(3X)
+set_menu_format	\fBmenu_format\fR(3X)
+set_menu_grey	\fBmenu_attribs\fR(3X)
+set_menu_init	\fBmenu_hook\fR(3X)
+set_menu_items	\fBmenu_items\fR(3X)
+set_menu_mark	\fBmenu_mark\fR(3X)
+set_menu_opts	\fBmitem_opts\fR(3X)
+set_menu_pad	\fBmenu_attribs\fR(3X)
+set_menu_pattern	\fBmenu_pattern\fR(3X)
+set_menu_spacing	\fBmenu_spacing\fR(3X)
+set_menu_sub	\fBmenu_win\fR(3X)
+set_menu_term	\fBmenu_hook\fR(3X)
+set_menu_userptr	\fBmenu_userptr\fR(3X)
+set_menu_win	\fBmenu_win\fR(3X)
+set_top_row	\fBmitem_current\fR(3X)
+top_row   	\fBmitem_current\fR(3X)
+unpost_menu	\fBmenu_post\fR(3X)
 .TE
 .SH RETURN VALUE
 Routines that return pointers return \fBNULL\fR on error.  Routines that return

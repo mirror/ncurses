@@ -91,12 +91,16 @@
 /*                                                                            */
 /******************************************************************************/
 
+/*
+ * $Id: xmas.c,v 1.12 1998/01/18 01:13:47 tom Exp $
+ */
 #include <test.priv.h>
 
 #include <signal.h>
 
 #define FROMWHO "Mark Hessling - (M.Hessling@gu.edu.au)"
 
+static int my_bg = COLOR_BLACK;
 static int y_pos, x_pos;
 
 static WINDOW
@@ -127,6 +131,40 @@ static int reindeer(void);
 static int blinkit(void);
 static RETSIGTYPE done(int sig) GCC_NORETURN ;
 
+static void
+set_color(WINDOW *win, chtype color)
+{
+	if (has_colors()) {
+		static bool *pairs;
+		int n = (color + 1);
+		if (pairs == 0)
+			pairs = (bool *)calloc(COLORS+1, sizeof(bool));
+		if (!pairs[n]) {
+			init_pair(n, color, my_bg);
+			pairs[n] = TRUE;
+		}
+		wattroff(win, A_COLOR);
+		wattron(win, COLOR_PAIR(n));
+	}
+}
+
+static void
+unset_color(WINDOW *win)
+{
+	if (has_colors())
+		wattrset(win, COLOR_PAIR(0));
+}
+
+static void
+look_out(int msecs)
+{
+	napms(msecs);
+	if (getch() != ERR) {
+		beep();
+		done(0);
+	}
+}
+
 int main(
 	int argc GCC_UNUSED,
 	char **argv GCC_UNUSED)
@@ -143,6 +181,14 @@ int loopy;
 	signal(SIGHUP,done);
 	signal(SIGQUIT,done);
 #endif
+	if (has_colors()) {
+		start_color();
+#ifdef NCURSES_VERSION
+		if (use_default_colors() == OK)
+			my_bg = -1;
+#endif
+	}
+	curs_set(0);
 
 	treescrn = newwin(16,27,3,53);
 	treescrn2 = newwin(16,27,3,53);
@@ -389,7 +435,7 @@ int loopy;
 	/***********************************************/
 	cbreak();
 	nodelay(stdscr,TRUE);
-	do {
+	for (;;) {
 	  clear();
 	  werase(treescrn);
 	  touchwin(w_del_msg);
@@ -399,25 +445,25 @@ int loopy;
 	  werase(treescrn8);
 	  touchwin(treescrn8);
 	  refresh();
-	  napms(150);
+	  look_out(150);
 	  boxit();
 	  refresh();
-	  napms(150);
+	  look_out(150);
 	  seas();
 	  refresh();
-	  napms(150);
+	  look_out(150);
 	  greet();
 	  refresh();
-	  napms(150);
+	  look_out(150);
 	  fromwho();
 	  refresh();
-	  napms(150);
+	  look_out(150);
 	  tree();
-	  napms(150);
+	  look_out(150);
 	  balls();
-	  napms(150);
+	  look_out(150);
 	  star();
-	  napms(150);
+	  look_out(150);
 	  strng1();
 	  strng2();
 	  strng3();
@@ -596,14 +642,14 @@ int loopy;
 	   mvwaddch(treescrn7, 12, 14, ' ');
 
 
-	   napms(150);
+	   look_out(150);
 	   reindeer();
 
 	   touchwin(w_holiday);
 	   wrefresh(w_holiday);
 	   wrefresh(w_del_msg);
 
-	   napms(500);
+	   look_out(500);
 	   for(loopy = 0;loopy < 100;loopy++) {
 	    	blinkit();
 	   }
@@ -611,11 +657,7 @@ int loopy;
 #ifdef NOLOOP
 	   done(0);
 #endif
-
 	}
-	while(getch() == (ERR));
-/*  while(!typeahead(stdin));*/
-	done(0);
 	/*NOTREACHED*/
 }
 
@@ -684,6 +726,7 @@ static int fromwho(void)
 
 static int tree(void)
 {
+	set_color(treescrn, COLOR_GREEN);
 	mvwaddch(treescrn, 1, 11, (chtype)'/');
 	mvwaddch(treescrn, 2, 11, (chtype)'/');
 	mvwaddch(treescrn, 3, 10, (chtype)'/');
@@ -720,6 +763,7 @@ static int tree(void)
 	mvwaddstr(treescrn, 14, 11, "| |");
 	mvwaddstr(treescrn, 15, 11, "|_|");
 
+	unset_color(treescrn);
 	wrefresh(treescrn);
 	wrefresh(w_del_msg);
 
@@ -729,9 +773,9 @@ static int tree(void)
 
 static int balls(void)
 {
-
 	overlay(treescrn, treescrn2);
 
+	set_color(treescrn2, COLOR_BLUE);
 	mvwaddch(treescrn2, 3, 9, (chtype)'@');
 	mvwaddch(treescrn2, 3, 15, (chtype)'@');
 	mvwaddch(treescrn2, 4, 8, (chtype)'@');
@@ -749,6 +793,7 @@ static int balls(void)
 	mvwaddch(treescrn2, 12, 1, (chtype)'@');
 	mvwaddch(treescrn2, 12, 23, (chtype)'@');
 
+	unset_color(treescrn2);
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
 	return( 0 );
@@ -757,10 +802,13 @@ static int balls(void)
 
 static int star(void)
 {
-	wstandout(treescrn2);
+	wattrset(treescrn2, A_BOLD | A_BLINK);
+	set_color(treescrn2, COLOR_YELLOW);
+
 	mvwaddch(treescrn2, 0, 12, (chtype)'*');
 	wstandend(treescrn2);
 
+	unset_color(treescrn2);
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
 	return( 0 );
@@ -769,9 +817,15 @@ static int star(void)
 
 static int strng1(void)
 {
+	wattrset(treescrn2, A_BOLD | A_BLINK);
+	set_color(treescrn2, COLOR_WHITE);
+
 	mvwaddch(treescrn2, 3, 13, (chtype)'\'');
 	mvwaddch(treescrn2, 3, 12, (chtype)':');
 	mvwaddch(treescrn2, 3, 11, (chtype)'.');
+
+	wattroff(treescrn2, A_BOLD | A_BLINK);
+	unset_color(treescrn2);
 
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
@@ -781,12 +835,18 @@ static int strng1(void)
 
 static int strng2(void)
 {
+	wattrset(treescrn2, A_BOLD | A_BLINK);
+	set_color(treescrn2, COLOR_WHITE);
+
 	mvwaddch(treescrn2, 5, 14, (chtype)'\'');
 	mvwaddch(treescrn2, 5, 13, (chtype)':');
 	mvwaddch(treescrn2, 5, 12, (chtype)'.');
 	mvwaddch(treescrn2, 5, 11, (chtype)',');
 	mvwaddch(treescrn2, 6, 10, (chtype)'\'');
 	mvwaddch(treescrn2, 6, 9, (chtype)':');
+
+	wattroff(treescrn2, A_BOLD | A_BLINK);
+	unset_color(treescrn2);
 
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
@@ -796,6 +856,9 @@ static int strng2(void)
 
 static int strng3(void)
 {
+	wattrset(treescrn2, A_BOLD | A_BLINK);
+	set_color(treescrn2, COLOR_WHITE);
+
 	mvwaddch(treescrn2, 7, 16, (chtype)'\'');
 	mvwaddch(treescrn2, 7, 15, (chtype)':');
 	mvwaddch(treescrn2, 7, 14, (chtype)'.');
@@ -805,6 +868,9 @@ static int strng3(void)
 	mvwaddch(treescrn2, 8, 10, (chtype)'.');
 	mvwaddch(treescrn2, 8, 9, (chtype)',');
 
+	wattroff(treescrn2, A_BOLD | A_BLINK);
+	unset_color(treescrn2);
+
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
 	return( 0 );
@@ -813,6 +879,9 @@ static int strng3(void)
 
 static int strng4(void)
 {
+	wattrset(treescrn2, A_BOLD | A_BLINK);
+	set_color(treescrn2, COLOR_WHITE);
+
 	mvwaddch(treescrn2, 9, 17, (chtype)'\'');
 	mvwaddch(treescrn2, 9, 16, (chtype)':');
 	mvwaddch(treescrn2, 9, 15, (chtype)'.');
@@ -827,6 +896,9 @@ static int strng4(void)
 	mvwaddch(treescrn2, 11, 6, (chtype)',');
 	mvwaddch(treescrn2, 12, 5, (chtype)'\'');
 
+	wattroff(treescrn2, A_BOLD | A_BLINK);
+	unset_color(treescrn2);
+
 	wrefresh(treescrn2);
 	wrefresh(w_del_msg);
 	return( 0 );
@@ -835,6 +907,9 @@ static int strng4(void)
 
 static int strng5(void)
 {
+	wattrset(treescrn2, A_BOLD | A_BLINK);
+	set_color(treescrn2, COLOR_WHITE);
+
 	mvwaddch(treescrn2, 11, 19, (chtype)'\'');
 	mvwaddch(treescrn2, 11, 18, (chtype)':');
 	mvwaddch(treescrn2, 11, 17, (chtype)'.');
@@ -843,6 +918,9 @@ static int strng5(void)
 	mvwaddch(treescrn2, 12, 14, (chtype)':');
 	mvwaddch(treescrn2, 12, 13, (chtype)'.');
 	mvwaddch(treescrn2, 12, 12, (chtype)',');
+
+	wattroff(treescrn2, A_BOLD | A_BLINK);
+	unset_color(treescrn2);
 
 	/* save a fully lit tree */
 	overlay(treescrn2, treescrn);
@@ -910,7 +988,7 @@ deer_step(WINDOW *win, int y, int x)
 	    mvwin(win, y, x);
 	    wrefresh(win);
 	    wrefresh(w_del_msg);
-	    napms(5);
+	    look_out(5);
 }
 
 static int reindeer(void)
@@ -930,7 +1008,7 @@ static int reindeer(void)
 	    werase(dotdeer0);
 	    wrefresh(dotdeer0);
 	    wrefresh(w_del_msg);
-	    napms(50);
+	    look_out(50);
 	  }
 	}
 
@@ -1006,7 +1084,7 @@ static int reindeer(void)
 	  }
 	}
 
-	napms(300);
+	look_out(300);
 
 	y_pos = 1;
 
@@ -1062,8 +1140,9 @@ static RETSIGTYPE done(int sig GCC_UNUSED)
 	signal(SIGHUP,done);
 	signal(SIGQUIT,done);
 #endif
-	clear();
+	move(LINES-1,0);
 	refresh();
 	endwin();
+	curs_set(1);
 	exit(EXIT_SUCCESS);
 }

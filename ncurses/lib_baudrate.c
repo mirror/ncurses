@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -28,7 +40,7 @@
 #include <curses.priv.h>
 #include <term.h>	/* cur_term, pad_char */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.7 1997/04/26 17:41:48 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.11 1998/02/11 12:13:58 tom Exp $")
 
 /*
  *	int
@@ -58,36 +70,31 @@ static struct speed const speeds[] = {
 	{B2400, 2400},
 	{B4800, 4800},
 	{B9600, 9600},
-#define MAX_BAUD	B9600
 #ifdef B19200
-#undef MAX_BAUD
-#define MAX_BAUD	B19200
 	{B19200, 19200},
 #else
 #ifdef EXTA
-#define MAX_BAUD	EXTA
 	{EXTA, 19200},
 #endif
 #endif
 #ifdef B38400
-#undef MAX_BAUD
-#define MAX_BAUD	B38400
 	{B38400, 38400},
 #else
 #ifdef EXTB
-#define MAX_BAUD	EXTB
 	{EXTB, 38400},
 #endif
 #endif
 #ifdef B57600
-#undef MAX_BAUD
-#define MAX_BAUD        B57600
 	{B57600, 57600},
 #endif
 #ifdef B115200
-#undef MAX_BAUD
-#define MAX_BAUD        B115200
 	{B115200, 115200},
+#endif
+#ifdef B230400
+	{B230400, 230400},
+#endif
+#ifdef B460800
+	{B460800, 460800},
 #endif
 };
 
@@ -108,7 +115,7 @@ char *debug_rate;
 	 * that take into account costs that depend on baudrate.
 	 */
 #ifdef TRACE
-	if (!isatty(fileno(SP->_ofp))
+	if (SP && !isatty(fileno(SP->_ofp))
 	 && (debug_rate = getenv("BAUDRATE")) != 0) {
 		if (sscanf(debug_rate, "%d", &ret) != 1)
 			ret = 9600;
@@ -122,14 +129,14 @@ char *debug_rate;
 #else
 	ret = cur_term->Nttyb.sg_ospeed;
 #endif
-	if(ret < 0 || ret > MAX_BAUD)
+	if(ret < 0 || (speed_t)ret > speeds[SIZEOF(speeds)-1].s)
 		returnCode(ERR);
-	SP->_baudrate = ERR;
-	for (i = 0; i < (sizeof(speeds) / sizeof(struct speed)); i++)
+	cur_term->_baudrate = ERR;
+	for (i = 0; i < SIZEOF(speeds); i++)
 		if (speeds[i].s == (speed_t)ret)
 		{
-			SP->_baudrate = speeds[i].sp;
+			cur_term->_baudrate = speeds[i].sp;
 			break;
 		}
-	returnCode(SP->_baudrate);
+	returnCode(cur_term->_baudrate);
 }

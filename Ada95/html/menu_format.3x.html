@@ -14,17 +14,20 @@
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        The function <STRONG>set_menu_format</STRONG> sets the maximum display size
-       of the given window.  If this size is too small to display
-       all menu items, the menu will be made scrollable.
+       of the given menu.  If this size is too small  to  display
+       all  menu items, the menu will be made scrollable. If this
+       size is larger than the menus subwindow and the  subwindow
+       is  too  small to display all menu items, <STRONG>post_menu()</STRONG> will
+       fail.
 
-       The   default  format  is  16  rows,  1  column.   Calling
-       <STRONG>set_menu_format</STRONG> with a null menu pointer will change  this
+       The  default  format  is  16  rows,  1  column.    Calling
+       <STRONG>set_menu_format</STRONG>  with a null menu pointer will change this
        default.  A zero row or column argument to <STRONG>set_menu_format</STRONG>
-       is interpreted as a request  not  to  change  the  current
+       is  interpreted  as  a  request  not to change the current
        value.
 
-       The  function  <STRONG>menu_format</STRONG>  returns  the maximum-size con-
-       straints for the given menu into the storage addressed  by
+       The function <STRONG>menu_format</STRONG>  returns  the  maximum-size  con-
+       straints  for the given menu into the storage addressed by
        <STRONG>rows</STRONG> and <STRONG>cols</STRONG>.
 
 
@@ -38,7 +41,7 @@
             System error occurred (see <STRONG>errno</STRONG>).
 
        <STRONG>E_BAD_ARGUMENT</STRONG>
-            Routine  detected  an incorrect or out-of-range argu-
+            Routine detected an incorrect or  out-of-range  argu-
             ment.
 
        <STRONG>E_POSTED</STRONG>
@@ -58,14 +61,63 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These  routines  emulate  the System V menu library.  They
+       These routines emulate the System V  menu  library.   They
        were not supported on Version 7 or BSD versions.
 
 
 </PRE>
 <H2>AUTHORS</H2><PRE>
-       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
-       curses by Eric S. Raymond.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </PRE>
 </BODY>

@@ -14,8 +14,16 @@
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        The function <STRONG>new_item</STRONG> allocates a new item and initializes
-       it from the <STRONG>name</STRONG> and <STRONG>description</STRONG> pointers.
-       The function <STRONG>free_item</STRONG> de-allocates an item.
+       it  from  the <STRONG>name</STRONG> and <STRONG>description</STRONG> pointers. Please notice
+       that the item stores only the pointers  to  the  name  and
+       description. Those pointers must be valid during the life-
+       time of the item. So you  should  be  very  carefull  with
+       names  or descriptions allocated on the stack of some rou-
+       tines.
+       The function <STRONG>free_item</STRONG> de-allocates an item. Please notice
+       that  it  is  the  responsibility  of  the  application to
+       release the memory for the name or the description of  the
+       item.
 
 
 </PRE>
@@ -58,14 +66,6 @@
 <H2>AUTHORS</H2><PRE>
        Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
        curses by Eric S. Raymond.
-
-
-
-
-
-
-
-
 
 </PRE>
 </BODY>

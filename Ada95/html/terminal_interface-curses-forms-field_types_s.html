@@ -4,6 +4,7 @@
 </HEAD>
 <BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
 <PRE>
+
 <I>------------------------------------------------------------------------------</I>
 <I>--                                                                          --</I>
 <I>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</I>
@@ -12,48 +13,229 @@
 <I>--                                                                          --</I>
 <I>--                                 S P E C                                  --</I>
 <I>--                                                                          --</I>
-<I>--  Version 00.92                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</I>
 <I>--                                                                          --</I>
-<I>--  The ncurses Ada95 binding is copyrighted 1996 by                        --</I>
+<I>-- Permission is hereby granted, free of charge, to any person obtaining a  --</I>
+<I>-- copy of this software and associated documentation files (the            --</I>
+<I>-- "Software"), to deal in the Software without restriction, including      --</I>
+<I>-- without limitation the rights to use, copy, modify, merge, publish,      --</I>
+<I>-- distribute, distribute with modifications, sublicense, and/or sell       --</I>
+<I>-- copies of the Software, and to permit persons to whom the Software is    --</I>
+<I>-- furnished to do so, subject to the following conditions:                 --</I>
+<I>--                                                                          --</I>
+<I>-- The above copyright notice and this permission notice shall be included  --</I>
+<I>-- in all copies or substantial portions of the Software.                   --</I>
+<I>--                                                                          --</I>
+<I>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</I>
+<I>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</I>
+<I>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</I>
+<I>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</I>
+<I>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</I>
+<I>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</I>
+<I>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</I>
+<I>--                                                                          --</I>
+<I>-- Except as contained in this notice, the name(s) of the above copyright   --</I>
+<I>-- holders shall not be used in advertising or otherwise to promote the     --</I>
+<I>-- sale, use or other dealings in this Software without prior written       --</I>
+<I>-- authorization.                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
 <I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
-<I>--                                                                          --</I>
-<I>--  Permission is hereby granted to reproduce and distribute this           --</I>
-<I>--  binding by any means and for any fee, whether alone or as part          --</I>
-<I>--  of a larger distribution, in source or in binary form, PROVIDED         --</I>
-<I>--  this notice is included with any such distribution, and is not          --</I>
-<I>--  removed from any of its header files. Mention of ncurses and the        --</I>
-<I>--  author of this binding in any applications linked with it is            --</I>
-<I>--  highly appreciated.                                                     --</I>
-<I>--                                                                          --</I>
-<I>--  This binding comes AS IS with no warranty, implied or expressed.        --</I>
-<I>------------------------------------------------------------------------------</I>
 <I>--  Version Control:</I>
-<I>--  @Revision: 1.3 @</I>
+<I>--  @Revision: 1.1 @</I>
 <I>------------------------------------------------------------------------------</I>
-<B>with</B> Ada.Finalization; <B>use</B> Ada.Finalization;
+<B>with</B> Terminal_Interface.Curses.<A HREF="terminal_interface-curses-aux_s.html#32:35">Aux</A>;
 
-<I>--  You must instantiate this package for any user defined field type</I>
-<I>--  to make it visible to the runtime.</I>
-<I>--</I>
-<B>generic</B>
-   type User <B>is</B> <B>new</B> Ada_Defined_Field_Type <B>with</B> <B>private</B>;
-   type User_Access <B>is</B> <B>access</B> User;
-   <B>with</B> <B>function</B> Field_Check (Fld  : Field;
-                              Info : User_Access) <B>return</B> Boolean;
-   <B>with</B> <B>function</B> Character_Check (Ch   : Character;
-                                  Info : User_Access) <B>return</B> Boolean;
 <B>package</B> Terminal_Interface.Curses.Forms.Field_Types <B>is</B>
-<I>--</I>
-<I>--  Nothing public. All happens magically.</I>
-<I>--</I>
-<B>private</B>
-   type Tracker <B>is</B> <B>new</B> Limited_Controlled <B>with</B> <B>null</B> <B>record</B>;
 
-   <B>procedure</B> Initialize (Obj : <B>in</B> <B>out</B> Tracker);
-   <B>procedure</B> Finalize   (Obj : <B>in</B> <B>out</B> Tracker);
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_fieldtype.3x.html">form_fieldtype.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   type Field_Type <B>is</B> <B>abstract</B> <B>tagged</B> <B>null</B> <B>record</B>;
+   <I>--  Abstract base type for all field types. A concrete field type</I>
+   <I>--  is an extension that adds some data elements describing formats or</I>
+   <I>--  boundary values for the type and validation routines.</I>
+   <I>--  For the builtin low-level fieldtypes, the validation routines are</I>
+   <I>--  already defined by the low-level C library.</I>
+   <I>--  The builtin types like Alpha or AlphaNumeric etc. are defined in</I>
+   <I>--  child packages of this package. You may use one of them as example</I>
+   <I>--  how to create you own child packages for low-level field types that</I>
+   <I>--  you may have already written in C.</I>
+
+   type Field_Type_Access <B>is</B> <B>access</B> <B>all</B> Field_Type'Class;
+
+   <I>--  <A NAME="AFU_1">|</I>
+   <B>procedure</B> Set_Field_Type (Fld      : <B>in</B> Field;
+                             Fld_Type : <B>in</B> Field_Type) <B>is</B> <B>abstract</B>;
+   <I>--  AKA: <A HREF="form_fieldtype.3x.html">set_field_type()</A></I>
+   <I>--  But: we hide the vararg mechanism of the C interface. You always</I>
+   <I>--       have to pass a single Field_Type parameter.</I>
+
+   <I>--  ---------------------------------------------------------------------</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field_validation.3x.html">form_field_validation.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_2">|</I>
+   <B>function</B> Get_Type (Fld : <B>in</B> Field) <B>return</B> Field_Type_Access;
+   <I>--  AKA: <A HREF="form_field_validation.3x.html">field_type()</A></I>
+   <I>--  AKA: field_arg()</I>
+   <I>--  In Ada95 we can combine these. If you try to retrieve the field type</I>
+   <I>--  that is not defined as extension of the abstract tagged type above,</I>
+   <I>--  you will raise a Form_Exception.</I>
+
+   <I>--  +----------------------------------------------------------------------</I>
+   <I>--  | Private Part.</I>
+   <I>--  | Most of this is used by the implementations of the child packages.</I>
+   <I>--  |</I>
+<B>private</B>
+   <B>use</B> Terminal_Interface.Curses.<A HREF="terminal_interface-curses-aux_s.html#32:35">Aux</A>;
+
+   type Makearg_Function <B>is</B> <B>access</B>
+     <B>function</B> (Args : System.Address) <B>return</B> System.Address;
+   <B>pragma</B> Convention (C, Makearg_Function);
+
+   type Copyarg_Function <B>is</B> <B>access</B>
+     <B>function</B> (Usr : System.Address) <B>return</B> System.Address;
+   <B>pragma</B> Convention (C, Copyarg_Function);
+
+   type Freearg_Function <B>is</B> <B>access</B>
+     <B>procedure</B> (Usr : System.Address);
+   <B>pragma</B> Convention (C, Freearg_Function);
+
+   type Field_Check_Function <B>is</B> <B>access</B>
+     <B>function</B> (Fld : Field; Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Field_Check_Function);
+
+   type Char_Check_Function <B>is</B> <B>access</B>
+     <B>function</B> (Ch : <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>; Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Char_Check_Function);
+
+   type Choice_Function <B>is</B> <B>access</B>
+     <B>function</B> (Fld : Field; Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Choice_Function);
+
+   <I>--  +----------------------------------------------------------------------</I>
+   <I>--  | This must be in sync with the FIELDTYPE structure in form.h</I>
+   <I>--  |</I>
+   type Low_Level_Field_Type <B>is</B>
+      <B>record</B>
+         Status :              <A HREF="terminal_interface-curses-aux_s.html#37:12">C_Short</A>;
+         Ref_Count :           <A HREF="terminal_interface-curses-aux_s.html#38:12">C_Long_Int</A>;
+         Left, Right :         System.Address;
+         Makearg :             Makearg_Function;
+         Copyarg :             Copyarg_Function;
+         Freearg :             Freearg_Function;
+         Fcheck :              Field_Check_Function;
+         Ccheck :              Char_Check_Function;
+         Next, Prev :          Choice_Function;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Convention (C, Low_Level_Field_Type);
+   type C_Field_Type <B>is</B> <B>access</B> <B>all</B> Low_Level_Field_Type;
+
+   Null_Field_Type   : <B>constant</B> C_Field_Type := <B>null</B>;
+
+   <I>--  +----------------------------------------------------------------------</I>
+   <I>--  | This four low-level fieldtypes are the ones associated with</I>
+   <I>--  | fieldtypes handled by this binding. Any other low-level fieldtype</I>
+   <I>--  | will result in a Form_Exception is function Get_Type.</I>
+   <I>--  |</I>
+   C_Generic_Type   : C_Field_Type := Null_Field_Type;
+   C_Generic_Choice : C_Field_Type := Null_Field_Type;
+   C_Builtin_Router : C_Field_Type := Null_Field_Type;
+   C_Choice_Router  : C_Field_Type := Null_Field_Type;
+
+   <B>procedure</B> Wrap_Builtin (Fld : Field;
+                           Typ : Field_Type'Class;
+                           Cft : C_Field_Type := C_Builtin_Router);
+   <I>--  This procedure has to be called by the Set_Field_Type implementation</I>
+   <I>--  for builtin low-level fieldtypes to replace it by an Ada95</I>
+   <I>--  conformant Field_Type object.</I>
+   <I>--  The parameter Cft must be C_Builtin_Router for regular low-level</I>
+   <I>--  fieldtypes (like TYP_ALPHA or TYP_ALNUM) and C_Choice_Router for</I>
+   <I>--  low-level fieldtypes witch choice functions (like TYP_ENUM).</I>
+   <I>--  Any other value will raise a Form_Exception.</I>
+
+   <B>function</B> Make_Arg (Args : System.Address) <B>return</B> System.Address;
+   <B>pragma</B> Convention (C, Make_Arg);
+   <I>--  This is the Makearg_Function for the internal low-level types</I>
+   <I>--  introduced by this binding.</I>
+
+   <B>function</B> Copy_Arg (Usr : System.Address) <B>return</B> System.Address;
+   <B>pragma</B> Convention (C, Copy_Arg);
+   <I>--  This is the Copyarg_Function for the internal low-level types</I>
+   <I>--  introduced by this binding.</I>
+
+   <B>procedure</B> Free_Arg (Usr : System.Address);
+   <B>pragma</B> Convention (C, Free_Arg);
+   <I>--  This is the Freearg_Function for the internal low-level types</I>
+   <I>--  introduced by this binding.</I>
+
+   <B>function</B> Field_Check_Router (Fld : Field;
+                                Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Field_Check_Router);
+   <I>--  This is the Field_Check_Function for the internal low-level types</I>
+   <I>--  introduced to wrap the low-level types by a Field_Type derived</I>
+   <I>--  type. It routes the call to the corresponding low-level validation</I>
+   <I>--  function.</I>
+
+   <B>function</B> Char_Check_Router (Ch : <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+                               Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Char_Check_Router);
+   <I>--  This is the Char_Check_Function for the internal low-level types</I>
+   <I>--  introduced to wrap the low-level types by a Field_Type derived</I>
+   <I>--  type. It routes the call to the corresponding low-level validation</I>
+   <I>--  function.</I>
+
+   <B>function</B> Next_Router (Fld : Field;
+                         Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Next_Router);
+   <I>--  This is the Choice_Function for the internal low-level types</I>
+   <I>--  introduced to wrap the low-level types by a Field_Type derived</I>
+   <I>--  type. It routes the call to the corresponding low-level next_choice</I>
+   <I>--  function.</I>
+
+   <B>function</B> Prev_Router (Fld : Field;
+                         Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Prev_Router);
+   <I>--  This is the Choice_Function for the internal low-level types</I>
+   <I>--  introduced to wrap the low-level types by a Field_Type derived</I>
+   <I>--  type. It routes the call to the corresponding low-level prev_choice</I>
+   <I>--  function.</I>
+
+   <I>--  This is the Argument structure maintained by all low-level field types</I>
+   <I>--  introduced by this binding.</I>
+   type Argument <B>is</B> <B>record</B>
+      Typ : Field_Type_Access;   <I>--  the Field_Type creating this record</I>
+      Usr : System.Address;      <I>--  original arg for builtin low-level types</I>
+      Cft : C_Field_Type;        <I>--  the original low-level type</I>
+   <B>end</B> <B>record</B>;
+   type Argument_Access <B>is</B> <B>access</B> <B>all</B> Argument;
+
+   <I>--  +----------------------------------------------------------------------</I>
+   <I>--  |</I>
+   <I>--  | Some Imports of libform routines to deal with low-level fieldtypes.</I>
+   <I>--  |</I>
+   <B>function</B> New_Fieldtype (Fcheck : Field_Check_Function;
+                           Ccheck : Char_Check_Function)
+     <B>return</B> C_Field_Type;
+   <B>pragma</B> Import (C, New_Fieldtype, "new_fieldtype");
+
+   <B>function</B> Set_Fieldtype_Arg (Cft : C_Field_Type;
+                               Mak : Makearg_Function := Make_Arg'<B>Access</B>;
+                               Cop : Copyarg_Function := Copy_Arg'<B>Access</B>;
+                               Fre : Freearg_Function := Free_Arg'<B>Access</B>)
+     <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Import (C, Set_Fieldtype_Arg, "set_fieldtype_arg");
+
+   <B>function</B> Set_Fieldtype_Choice (Cft : C_Field_Type;
+                                  Next, Prev : Choice_Function)
+     <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Import (C, Set_Fieldtype_Choice, "set_fieldtype_choice");
 
 <B>end</B> Terminal_Interface.Curses.Forms.Field_Types;
-
 
 </PRE>
 

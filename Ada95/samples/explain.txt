@@ -3,7 +3,7 @@ This is Version 00.90.00 of the demo package.
 #MENUKEYS
 In a menu you can use the following Keys in the whole application:
 
-   - CTRL-Q        Quit the menu
+   - CTRL-X        eXit the menu
    - CTRL-N        Go to next item
    - CTRL-P        Go to previous item
    - CTRL-U        Scroll up one line
@@ -12,11 +12,11 @@ In a menu you can use the following Keys in the whole application:
    - PAGE DOWN     Scroll down one page
    - PAGE UP       Scroll back one page
    - CTRL-B        Scroll back one page
-   - CTRL-X        Clear pattern
+   - CTRL-Y        Clear pattern
    - CTRL-H        Delete last character from pattern
    - Backspace     Delete last character from pattern
    - CTRL-A        Next pattern match
-   - CTRL-Z        Previous pattern match
+   - CTRL-E        Previous pattern match
    - CTRL-T        Toggle item in a multi-selection menu
    - CR or LF      Select an item
    - HOME Key      Go to the first item
@@ -27,19 +27,20 @@ In a menu you can use the following Keys in the whole application:
    - Cursor Right  Right one item
    - END Key       Go to last item
 #FORMKEYS
-   - CTRL-Q	   Quit the form                   
-   - CTRL-F	   Go to the next page of the form          
-   - CTRL-B	   Go to the previous page of the form
-   - CTRL-N	   Go to the next field
-   - CTRL-P	   Go to the previous field   
+   - CTRL-X	   eXit the form                   
+   - CTRL-F	   Go forward to the next field
+   - CTRL-B	   Go backward to the previous field
    - CTRL-L	   Go to the field left of the current one           
    - CTRL-R	   Go to the field right of the current one
    - CTRL-U	   Go to the field above the current one  
    - CTRL-D	   Go to the field below the current one           
+
    - CTRL-W	   Go to the next word in the field           
    - CTRL-T	   Go to the previous word in the field
-   - CTRL-S	   Go to the beginning of the field
+
+   - CTRL-A	   Go to the beginning of the field
    - CTRL-E	   Go to the end of the field
+
    - CTRL-I	   Insert a blank character at the current position
    - CTRL-O	   Insert a line
    - CTRL-V	   Delete a character          
@@ -47,9 +48,9 @@ In a menu you can use the following Keys in the whole application:
    - CTRL-Y	   Delete a line          
    - CTRL-G	   Delete a word          
    - CTRL-K	   Clear to end of field          
-   - CTRL-X	   Clear the field          
-   - CTRL-A	   Next choice in a choice field (Enumerations etc.)         
-   - CTRL-Z	   Previous choice in a choice field.
+
+   - CTRL-N	   Next choice in a choice field (Enumerations etc.)         
+   - CTRL-P	   Previous choice in a choice field.
 #HELP
 #HELPKEYS
 You may scroll with the Cursor Up/Down Keys.
@@ -75,8 +76,8 @@ You may select this options:
 You may press at any place in this demo CTRL-C. This will give you a command
 window. You can just type in the Label-String of a function key, then this
 key will be simulated. This should help you to run the application even if
-you run it on a terminal with no or only a few function keys. With CTRL-A
-and CTRL-Z you may browse through the possible values in the command window.
+you run it on a terminal with no or only a few function keys. With CTRL-N
+and CTRL-P you may browse through the possible values in the command window.
 #MENU00
 Here we give you a selection of various menu demonstrations.
 #MENU-PAD00

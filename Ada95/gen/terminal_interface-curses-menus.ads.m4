@@ -9,23 +9,37 @@ include(M4MACRO)dnl
 --                                                                          --
 --                                 S P E C                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.7 $
+--  $Revision: 1.12 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 include(`Menu_Base_Defs')
 with System;
@@ -33,7 +47,7 @@ with Interfaces.C;
 with Ada.Characters.Latin_1;
 
 package Terminal_Interface.Curses.Menus is
-
+   pragma Preelaborate (Menus);
 include(`Menu_Linker_Options')
 
 
@@ -92,6 +106,9 @@ include(`Menu_Linker_Options')
    procedure Request_Name (Key  : in Menu_Request_Code;
                            Name : out String);
 
+   function  Request_Name (Key : Menu_Request_Code) return String;
+   --  Same as function
+
    ------------------
    --  Exceptions  --
    ------------------
@@ -103,16 +120,17 @@ include(`Menu_Linker_Options')
 
 include(`Menu_Opt_Rep')
 
-   Default_Menu_Options : Menu_Option_Set;
+   function Default_Menu_Options return Menu_Option_Set;
    --  Initial default options for a menu.
-
+   pragma Inline (Default_Menu_Options);
    --
    --  Item options
    --
 include(`Item_Rep')
 
-   Default_Item_Options : Item_Option_Set;
+   function Default_Item_Options return Item_Option_Set;
    --  Initial default options for an item.
+   pragma Inline (Default_Item_Options);
 
    --
    --  Item Array
@@ -120,7 +138,13 @@ include(`Item_Rep')
    type Item_Array is array (Positive range <>) of aliased Item;
    pragma Convention (C, Item_Array);
 
-   type Item_Array_Access is access all Item_Array;
+   type Item_Array_Access is access Item_Array;
+
+   procedure Free (IA         : in out Item_Array_Access;
+                   Free_Items : Boolean := False);
+   --  Release the memory for an allocated item array
+   --  If Free_Items is True, call Delete() for all the items in
+   --  the array.
 
    --  MANPAGE(`mitem_new.3x')
 
@@ -128,6 +152,7 @@ include(`Item_Rep')
    function Create (Name        : String;
                     Description : String := "") return Item;
    --  AKA
+   --  Not inlined.
 
    --  ANCHOR(`new_item()',`New_Item')
    function New_Item (Name        : String;
@@ -146,16 +171,19 @@ include(`Item_Rep')
    procedure Set_Value (Itm   : in Item;
                         Value : in Boolean := True);
    --  AKA
+   pragma Inline (Set_Value);
 
    --  ANCHOR(`item_value()',`Value')
    function Value (Itm : Item) return Boolean;
    --  AKA
+   pragma Inline (Value);
 
    --  MANPAGE(`mitem_visible.3x')
 
    --  ANCHOR(`item_visible()',`Visible')
    function Visible (Itm : Item) return Boolean;
    --  AKA
+   pragma Inline (Visible);
 
    --  MANPAGE(`mitem_opts.3x')
 
@@ -163,6 +191,7 @@ include(`Item_Rep')
    procedure Set_Options (Itm     : in Item;
                           Options : in Item_Option_Set);
    --  AKA
+   --  An overloaded Set_Options is defined later. Pragma Inline appears there
 
    --  ANCHOR(`item_opts_on()',`Switch_Options')
    procedure Switch_Options (Itm     : in Item;
@@ -170,6 +199,8 @@ include(`Item_Rep')
                              On      : Boolean := True);
    --  AKA
    --  ALIAS(`item_opts_off()')
+   --  An overloaded Switch_Options is defined later.
+   --  Pragma Inline appears there
 
    --  ANCHOR(`item_opts()',`Get_Options')
    procedure Get_Options (Itm     : in  Item;
@@ -179,6 +210,7 @@ include(`Item_Rep')
    --  ANCHOR(`item_opts()',`Get_Options')
    function Get_Options (Itm : Item := Null_Item) return Item_Option_Set;
    --  AKA
+   --  An overloaded Get_Options is defined later. Pragma Inline appears there
 
    --  MANPAGE(`mitem_name.3x')
 
@@ -186,11 +218,20 @@ include(`Item_Rep')
    procedure Name (Itm  : in Item;
                    Name : out String);
    --  AKA
+   function  Name (Itm : Item) return String;
+   --  AKA
+   --  Implemented as function
+   pragma Inline (Name);
 
    --  ANCHOR(`item_description();',`Description')
    procedure Description (Itm         : in Item;
                           Description : out String);
    --  AKA
+
+   function  Description (Itm : Item) return String;
+   --  AKA
+   --  Implemented as function
+   pragma Inline (Description);
 
    --  MANPAGE(`mitem_current.3x')
 
@@ -198,19 +239,23 @@ include(`Item_Rep')
    procedure Set_Current (Men : in Menu;
                           Itm : in Item);
    --  AKA
+   pragma Inline (Set_Current);
 
    --  ANCHOR(`current_item()',`Current')
    function Current (Men : Menu) return Item;
    --  AKA
+   pragma Inline (Current);
 
    --  ANCHOR(`set_top_row()',`Set_Top_Row')
    procedure Set_Top_Row (Men  : in Menu;
                           Line : in Line_Position);
    --  AKA
+   pragma Inline (Set_Top_Row);
 
    --  ANCHOR(`top_row()',`Top_Row')
    function Top_Row (Men : Menu) return Line_Position;
    --  AKA
+   pragma Inline (Top_Row);
 
    --  ANCHOR(`item_index()',`Get_Index')
    function Get_Index (Itm : Item) return Positive;
@@ -218,6 +263,7 @@ include(`Item_Rep')
    --  Please note that in this binding we start the numbering of items
    --  with 1. So this is number is one more than you get from the low
    --  level call.
+   pragma Inline (Get_Index);
 
    --  MANPAGE(`menu_post.3x')
 
@@ -226,6 +272,7 @@ include(`Item_Rep')
                    Post : in Boolean := True);
    --  AKA
    --  ALIAS(`unpost_menu()')
+   pragma Inline (Post);
 
    --  MANPAGE(`menu_opts.3x')
 
@@ -233,6 +280,7 @@ include(`Item_Rep')
    procedure Set_Options (Men     : in Menu;
                           Options : in Menu_Option_Set);
    --  AKA
+   pragma Inline (Set_Options);
 
    --  ANCHOR(`menu_opts_on()',`Switch_Options')
    procedure Switch_Options (Men     : in Menu;
@@ -240,6 +288,7 @@ include(`Item_Rep')
                              On      : Boolean := True);
    --  AKA
    --  ALIAS(`menu_opts_off()')
+   pragma Inline (Switch_Options);
 
    --  ANCHOR(`menu_opts()',`Get_Options')
    procedure Get_Options (Men     : in  Menu;
@@ -249,6 +298,7 @@ include(`Item_Rep')
    --  ANCHOR(`menu_opts()',`Get_Options')
    function Get_Options (Men : Menu := Null_Menu) return Menu_Option_Set;
    --  AKA
+   pragma Inline (Get_Options);
 
    --  MANPAGE(`menu_win.3x')
 
@@ -256,31 +306,37 @@ include(`Item_Rep')
    procedure Set_Window (Men : in Menu;
                          Win : in Window);
    --  AKA
+   pragma Inline (Set_Window);
 
    --  ANCHOR(`menu_win()',`Get_Window')
    function Get_Window (Men : Menu) return Window;
    --  AKA
+   pragma Inline (Get_Window);
 
    --  ANCHOR(`set_menu_sub()',`Set_Sub_Window')
    procedure Set_Sub_Window (Men : in Menu;
                              Win : in Window);
    --  AKA
+   pragma Inline (Set_Sub_Window);
 
    --  ANCHOR(`menu_sub()',`Get_Sub_Window')
    function Get_Sub_Window (Men : Menu) return Window;
    --  AKA
+   pragma Inline (Get_Sub_Window);
 
    --  ANCHOR(`scale_menu()',`Scale')
    procedure Scale (Men     : in Menu;
                     Lines   : out Line_Count;
                     Columns : out Column_Count);
    --  AKA
+   pragma Inline (Scale);
 
    --  MANPAGE(`menu_cursor.3x')
 
    --  ANCHOR(`pos_menu_cursor()',`Position_Cursor')
    procedure Position_Cursor (Men : Menu);
    --  AKA
+   pragma Inline (Position_Cursor);
 
    --  MANPAGE(`menu_mark.3x')
 
@@ -288,11 +344,17 @@ include(`Item_Rep')
    procedure Set_Mark (Men  : in Menu;
                        Mark : in String);
    --  AKA
+   pragma Inline (Set_Mark);
 
    --  ANCHOR(`menu_mark()',`Mark')
    procedure Mark (Men  : in  Menu;
                    Mark : out String);
    --  AKA
+
+   function  Mark (Men : Menu) return String;
+   --  AKA
+   --  Implemented as function
+   pragma Inline (Mark);
 
    --  MANPAGE(`menu_attribs.3x')
 
@@ -302,6 +364,7 @@ include(`Item_Rep')
       Fore  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   pragma Inline (Set_Foreground);
 
    --  ANCHOR(`menu_fore()',`Foreground')
    procedure Foreground (Men   : in  Menu;
@@ -313,6 +376,7 @@ include(`Item_Rep')
                          Fore  : out Character_Attribute_Set;
                          Color : out Color_Pair);
    --  AKA
+   pragma Inline (Foreground);
 
    --  ANCHOR(`set_menu_back()',`Set_Background')
    procedure Set_Background
@@ -320,6 +384,7 @@ include(`Item_Rep')
       Back  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   pragma Inline (Set_Background);
 
    --  ANCHOR(`menu_back()',`Background')
    procedure Background (Men  : in  Menu;
@@ -331,6 +396,7 @@ include(`Item_Rep')
                          Back  : out Character_Attribute_Set;
                          Color : out Color_Pair);
    --  AKA
+   pragma Inline (Background);
 
    --  ANCHOR(`set_menu_grey()',`Set_Grey')
    procedure Set_Grey
@@ -338,6 +404,7 @@ include(`Item_Rep')
       Grey  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   pragma Inline (Set_Grey);
 
    --  ANCHOR(`menu_grey()',`Grey')
    procedure Grey (Men  : in  Menu;
@@ -350,16 +417,19 @@ include(`Item_Rep')
       Grey  : out Character_Attribute_Set;
       Color : out Color_Pair);
    --  AKA
+   pragma Inline (Grey);
 
    --  ANCHOR(`set_menu_pad()',`Set_Pad_Character')
    procedure Set_Pad_Character (Men : in Menu;
                                 Pad : in Character := Space);
    --  AKA
+   pragma Inline (Set_Pad_Character);
 
    --  ANCHOR(`menu_pad()',`Pad_Character')
    procedure Pad_Character (Men : in  Menu;
                             Pad : out Character);
    --  AKA
+   pragma Inline (Pad_Character);
 
    --  MANPAGE(`menu_spacing.3x')
 
@@ -369,6 +439,7 @@ include(`Item_Rep')
                           Row   : in Line_Position   := 0;
                           Col   : in Column_Position := 0);
    --  AKA
+   pragma Inline (Set_Spacing);
 
    --  ANCHOR(`menu_spacing()',`Spacing')
    procedure Spacing (Men   : in Menu;
@@ -376,6 +447,7 @@ include(`Item_Rep')
                       Row   : out Line_Position;
                       Col   : out Column_Position);
    --  AKA
+   pragma Inline (Spacing);
 
    --  MANPAGE(`menu_pattern.3x')
 
@@ -384,11 +456,13 @@ include(`Item_Rep')
                          Text : String) return Boolean;
    --  AKA
    --  Return TRUE if the pattern matches, FALSE otherwise
+   pragma Inline (Set_Pattern);
 
    --  ANCHOR(`menu_pattern()',`Pattern')
    procedure Pattern (Men  : in  Menu;
                       Text : out String);
    --  AKA
+   pragma Inline (Pattern);
 
    --  MANPAGE(`menu_format.3x')
 
@@ -397,12 +471,14 @@ include(`Item_Rep')
                          Lines   : in Line_Count;
                          Columns : in Column_Count);
    --  AKA
+   pragma Inline (Set_Format);
 
    --  ANCHOR(`menu_format()',`Format')
    procedure Format (Men     : in  Menu;
                      Lines   : out Line_Count;
                      Columns : out Column_Count);
    --  AKA
+   pragma Inline (Format);
 
    --  MANPAGE(`menu_hook.3x')
 
@@ -413,70 +489,83 @@ include(`Item_Rep')
    procedure Set_Item_Init_Hook (Men  : in Menu;
                                  Proc : in Menu_Hook_Function);
    --  AKA
+   pragma Inline (Set_Item_Init_Hook);
 
    --  ANCHOR(`set_item_term()',`Set_Item_Term_Hook')
    procedure Set_Item_Term_Hook (Men  : in Menu;
                                  Proc : in Menu_Hook_Function);
    --  AKA
+   pragma Inline (Set_Item_Term_Hook);
 
    --  ANCHOR(`set_menu_init()',`Set_Menu_Init_Hook')
    procedure Set_Menu_Init_Hook (Men  : in Menu;
                                  Proc : in Menu_Hook_Function);
    --  AKA
+   pragma Inline (Set_Menu_Init_Hook);
 
    --  ANCHOR(`set_menu_term()',`Set_Menu_Term_Hook')
    procedure Set_Menu_Term_Hook (Men  : in Menu;
                                  Proc : in Menu_Hook_Function);
    --  AKA
+   pragma Inline (Set_Menu_Term_Hook);
 
    --  ANCHOR(`item_init()',`Get_Item_Init_Hook')
    function Get_Item_Init_Hook (Men : Menu) return Menu_Hook_Function;
    --  AKA
+   pragma Inline (Get_Item_Init_Hook);
 
    --  ANCHOR(`item_term()',`Get_Item_Term_Hook')
    function Get_Item_Term_Hook (Men : Menu) return Menu_Hook_Function;
    --  AKA
+   pragma Inline (Get_Item_Term_Hook);
 
    --  ANCHOR(`menu_init()',`Get_Menu_Init_Hook')
    function Get_Menu_Init_Hook (Men : Menu) return Menu_Hook_Function;
    --  AKA
+   pragma Inline (Get_Menu_Init_Hook);
 
    --  ANCHOR(`menu_term()',`Get_Menu_Term_Hook')
    function Get_Menu_Term_Hook (Men : Menu) return Menu_Hook_Function;
    --  AKA
+   pragma Inline (Get_Menu_Term_Hook);
 
    --  MANPAGE(`menu_items.3x')
 
    --  ANCHOR(`set_menu_items()',`Redefine')
    procedure Redefine (Men   : in Menu;
-                       Items : in Item_Array);
+                       Items : in Item_Array_Access);
    --  AKA
-   --  With a bit more comfort. You don´t need to terminate the Item_Array
-   --  with a null entry. This is handled internally in the binding.
+   pragma Inline (Redefine);
 
    procedure Set_Items (Men   : in Menu;
-                        Items : in Item_Array) renames Redefine;
+                        Items : in Item_Array_Access) renames Redefine;
+   pragma Inline (Set_Items);
 
    --  ANCHOR(`menu_items()',`Items')
-   function Items (Men : Menu) return Item_Array_Access;
+   function Items (Men   : Menu;
+                   Index : Positive) return Item;
    --  AKA
+   pragma Inline (Items);
 
    --  ANCHOR(`item_count()',`Item_Count')
    function Item_Count (Men : Menu) return Natural;
    --  AKA
+   pragma Inline (Item_Count);
 
    --  MANPAGE(`menu_new.3x')
 
    --  ANCHOR(`new_menu()',`Create')
-   function Create (Items : Item_Array) return Menu;
+   function Create (Items : Item_Array_Access) return Menu;
    --  AKA
+   --  Not inlined
 
-   function New_Menu (Items : Item_Array) return Menu renames Create;
+   function New_Menu (Items : Item_Array_Access) return Menu renames Create;
 
    --  ANCHOR(`free_menu()',`Delete')
    procedure Delete (Men : in out Menu);
    --  AKA
    --  Reset Men to Null_Menu
+   --  Not inlined
 
    --  MANPAGE(`menu_new.3x')
 
@@ -489,6 +578,7 @@ include(`Item_Rep')
    function Driver (Men : Menu;
                     Key : Key_Code) return Driver_Result;
    --  AKA
+   --  Driver is not inlined
 
 -------------------------------------------------------------------------------
 private
@@ -497,23 +587,5 @@ private
 
    Null_Item : constant Item := Item (System.Null_Address);
    Null_Menu : constant Menu := Menu (System.Null_Address);
-
-   --  This binding uses the original user pointer mechanism of a menu to store
-   --  specific informations about a menu. This wrapper record carries this
-   --  specifics and contains a field to maintain a new user pointer. Please
-   --  note that you must take this into account if you wan't to use the user
-   --  pointer mechanism of a menu created with this binding in low-level C
-   --  routines.
-   type Ada_User_Wrapper is
-      record
-         U : System.Address;
-         I : Item_Array_Access;
-      end record;
-   pragma Convention (C, Ada_User_Wrapper);
-   type Ada_User_Wrapper_Access is access all Ada_User_Wrapper;
-   pragma Controlled (Ada_User_Wrapper_Access);
-
-   Generation_Bit_Order : constant System.Bit_Order := System.M4_BIT_ORDER;
-   --  This constant may be different on your system.
 
 end Terminal_Interface.Curses.Menus;

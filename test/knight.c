@@ -6,7 +6,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.13 1997/01/19 00:55:17 tom Exp $
+ * $Id: knight.c,v 1.14 1997/08/20 16:22:38 hjl Exp $
  */
 
 #include <test.priv.h>
@@ -559,7 +559,7 @@ static bool chksqr (int r1, int c1)
 	return(FALSE);
     if ((c1 < 0) || (c1 > BWIDTH - 1))
 	return(FALSE);
-    return (!board[r1][c1]);
+    return ((!board[r1][c1]) ? TRUE : FALSE);
 }
 
 /* knight.c ends here */

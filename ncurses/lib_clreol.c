@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -29,49 +41,54 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_clreol.c,v 1.9 1997/02/01 23:22:54 tom Exp $")
+MODULE_ID("$Id: lib_clreol.c,v 1.14 1998/02/11 12:13:55 tom Exp $")
 
 int  wclrtoeol(WINDOW *win)
 {
-chtype	*maxx, *ptr, *end;
-short	y, x, minx;
+int     code = ERR;
+chtype	blank;
+chtype	*ptr, *end;
+short	y, x;
 
 	T((T_CALLED("wclrtoeol(%p)"), win));
 
-	y = win->_cury;
-	x = win->_curx;
+	if (win) {
 
-	/*
-	 * We don't want to clear if we just wrapped the cursor.  There's no
-	 * point in clearing if we're not on a legal position, either.
-	 */
-	if (win->_flags & _WRAPPED
-	 || y > win->_maxy
-	 || x > win->_maxx)
-		returnCode(ERR);
+	  y = win->_cury;
+	  x = win->_curx;
 
-	end = &win->_line[y].text[win->_maxx];
-	minx = _NOCHANGE;
-	maxx = &win->_line[y].text[x];
-
-	for (ptr = maxx; ptr <= end; ptr++) {
-	    chtype blank = _nc_background(win);
-
-	    if (*ptr != blank) {
-			maxx = ptr;
-			if (minx == _NOCHANGE)
-			    minx = ptr - win->_line[y].text;
-			*ptr = blank;
-	    }
+	  /*
+	   * If we have just wrapped the cursor, the clear applies to the new
+	   * line, unless we are at the lower right corner.
+	   */
+	  if (win->_flags & _WRAPPED
+	      && y < win->_maxy) {
+	    win->_flags &= ~_WRAPPED;
+	  }
+	  
+	  /*
+	   * There's no point in clearing if we're not on a legal position,
+	   * either.
+	   */
+	  if (win->_flags & _WRAPPED
+	      || y > win->_maxy
+	      || x > win->_maxx)
+	    returnCode(ERR);
+	  
+	  blank = _nc_background(win);
+	  end = &win->_line[y].text[win->_maxx];
+	  
+	  for (ptr = &win->_line[y].text[x]; ptr <= end; ptr++)
+	    *ptr = blank;
+	  
+	  if (win->_line[y].firstchar > win->_curx
+	      || win->_line[y].firstchar == _NOCHANGE)
+	    win->_line[y].firstchar = win->_curx;
+	  
+	  win->_line[y].lastchar = win->_maxx;
+	  
+	  _nc_synchook(win);
+	  code = OK;
 	}
-
-	if (minx != _NOCHANGE) {
-	    if (win->_line[y].firstchar > minx || win->_line[y].firstchar == _NOCHANGE)
-			win->_line[y].firstchar = minx;
-
-	    if (win->_line[y].lastchar < maxx - win->_line[y].text)
-			win->_line[y].lastchar = maxx - win->_line[y].text;
-	}
-	_nc_synchook(win);
-	returnCode(OK);
+	returnCode(code);
 }

@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /* lib_color.c
  *
@@ -29,7 +41,13 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_color.c,v 1.17 1997/05/03 19:16:05 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.24 1998/02/11 12:13:58 tom Exp $")
+
+/*
+ * Only 8 ANSI colors are defined; the ISO 6429 control sequences work only
+ * for 8 values (0-7).
+ */
+#define MAX_ANSI_COLOR 8
 
 /*
  * These should be screen structure members.  They need to be globals for
@@ -39,17 +57,24 @@ MODULE_ID("$Id: lib_color.c,v 1.17 1997/05/03 19:16:05 tom Exp $")
 int COLOR_PAIRS;
 int COLORS;
 
+/*
+ * Given a RGB range of 0..1000, we'll normally set the individual values
+ * to about 2/3 of the maximum, leaving full-range for bold/bright colors.
+ */
+#define RGB_ON  680
+#define RGB_OFF 0
+
 static const color_t cga_palette[] =
 {
-    /*  R	G	B */
-	{0,	0,	0},	/* COLOR_BLACK */
-	{1000,	0,	0},	/* COLOR_RED */
-	{0,	1000,	0},	/* COLOR_GREEN */
-	{1000,	1000,	0},	/* COLOR_YELLOW */
-	{0,	0,	1000},	/* COLOR_BLUE */
-	{1000,	0,	1000},	/* COLOR_MAGENTA */
-	{0,	1000,	1000},	/* COLOR_CYAN */
-	{1000,	1000,	1000},	/* COLOR_WHITE */
+    /*  R		G		B */
+	{RGB_OFF,	RGB_OFF,	RGB_OFF},	/* COLOR_BLACK */
+	{RGB_ON,	RGB_OFF,	RGB_OFF},	/* COLOR_RED */
+	{RGB_OFF,	RGB_ON,		RGB_OFF},	/* COLOR_GREEN */
+	{RGB_ON,	RGB_ON,		RGB_OFF},	/* COLOR_YELLOW */
+	{RGB_OFF,	RGB_OFF,	RGB_ON},	/* COLOR_BLUE */
+	{RGB_ON,	RGB_OFF,	RGB_ON},	/* COLOR_MAGENTA */
+	{RGB_OFF,	RGB_ON,		RGB_ON},	/* COLOR_CYAN */
+	{RGB_ON,	RGB_ON,		RGB_ON},	/* COLOR_WHITE */
 };
 static const color_t hls_palette[] =
 {
@@ -118,11 +143,12 @@ int start_color(void)
 }
 
 #ifdef hue_lightness_saturation
+/* This function was originally written by Daniel Weaver <danw@znyx.com> */
 static void rgb2hls(short r, short g, short b, short *h, short *l, short *s)
 /* convert RGB to HLS system */
 {
     short min, max, t;
-
+    
     if ((min = g < r ? g : r) > b) min = b;
     if ((max = g > r ? g : r) < b) max = b;
 
@@ -220,14 +246,8 @@ int init_color(short color, short r, short g, short b)
 
 	if (color < 0 || color >= COLORS)
 		returnCode(ERR);
-#ifdef hue_lightness_saturation
-	if (hue_lightness_saturation == TRUE)
-		if (r < 0 || r > 360 || g < 0 || g > 100 || b < 0 || b > 100)
-			returnCode(ERR);
-	if (hue_lightness_saturation == FALSE)
-#endif /* hue_lightness_saturation */
-		if (r < 0 || r > 1000 || g < 0 ||  g > 1000 || b < 0 || b > 1000)
-			returnCode(ERR);
+	if (r < 0 || r > 1000 || g < 0 ||  g > 1000 || b < 0 || b > 1000)
+		returnCode(ERR);
 
 #ifdef hue_lightness_saturation
 	if (hue_lightness_saturation)
@@ -256,19 +276,19 @@ int init_color(short color, short r, short g, short b)
 bool can_change_color(void)
 {
 	T((T_CALLED("can_change_color()")));
-	returnCode(can_change != 0);
+	returnCode ((can_change != 0) ? TRUE : FALSE);
 }
 
 bool has_colors(void)
 {
 	T((T_CALLED("has_colors()")));
-	returnCode((orig_pair != NULL || orig_colors != NULL)
-		&& (max_colors != -1) && (max_pairs != -1)
-		&&
-		(((set_foreground != NULL) && (set_background != NULL))
-		|| ((set_a_foreground != NULL) && (set_a_background != NULL))
-		|| set_color_pair)
-		);
+	returnCode (((orig_pair != NULL || orig_colors != NULL)
+		     && (max_colors != -1) && (max_pairs != -1)
+		     && (((set_foreground != NULL)
+			  && (set_background != NULL))
+			 || ((set_a_foreground != NULL)
+			     && (set_a_background != NULL))
+			 || set_color_pair)) ? TRUE : FALSE);
 }
 
 int color_content(short color, short *r, short *g, short *b)
@@ -277,9 +297,9 @@ int color_content(short color, short *r, short *g, short *b)
     if (color < 0 || color > COLORS)
 	returnCode(ERR);
 
-    *r = SP->_color_table[color].red;
-    *g = SP->_color_table[color].green;
-    *b = SP->_color_table[color].blue;
+    if (r) *r = SP->_color_table[color].red;
+    if (g) *g = SP->_color_table[color].green;
+    if (b) *b = SP->_color_table[color].blue;
     returnCode(OK);
 }
 
@@ -289,8 +309,8 @@ int pair_content(short pair, short *f, short *b)
 
 	if ((pair < 0) || (pair > COLOR_PAIRS))
 		returnCode(ERR);
-	*f = ((SP->_color_pairs[pair] >> C_SHIFT) & C_MASK);
-	*b =  (SP->_color_pairs[pair] & C_MASK);
+	if (f) *f = ((SP->_color_pairs[pair] >> C_SHIFT) & C_MASK);
+	if (b) *b =  (SP->_color_pairs[pair] & C_MASK);
 
 	returnCode(OK);
 }
@@ -311,9 +331,12 @@ static int toggled_colors(int c)
     return c;
 }
 
-void _nc_do_color(int pair, int  (*outc)(int))
+void _nc_do_color(int pair, bool reverse, int  (*outc)(int))
 {
     short fg, bg;
+
+    if (reverse)
+    	pair = -pair;
 
     if (pair == 0)
     {
@@ -333,6 +356,11 @@ void _nc_do_color(int pair, int  (*outc)(int))
 	else
 	{
 	    pair_content(pair, &fg, &bg);
+	    if (reverse) {
+		short xx = fg;
+		fg = bg;
+		bg = xx;
+	    }
 
 	    T(("setting colors: pair = %d, fg = %d, bg = %d", pair, fg, bg));
 
@@ -351,7 +379,7 @@ void _nc_do_color(int pair, int  (*outc)(int))
 	    }
 	    if (fg != C_MASK)
 	    {
-		if (set_a_foreground)
+		if (set_a_foreground && fg <= MAX_ANSI_COLOR)
 		{
 		    TPUTS_TRACE("set_a_foreground");
 		    tputs(tparm(set_a_foreground, fg), 1, outc);
@@ -364,7 +392,7 @@ void _nc_do_color(int pair, int  (*outc)(int))
 	    }
 	    if (bg != C_MASK)
 	    {
-		if (set_a_background)
+		if (set_a_background && bg <= MAX_ANSI_COLOR)
 		{
 		    TPUTS_TRACE("set_a_background");
 		    tputs(tparm(set_a_background, bg), 1, outc);

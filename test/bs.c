@@ -7,7 +7,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.17 1997/04/06 01:42:57 tom Exp $
+ * $Id: bs.c,v 1.22 1997/12/20 15:11:53 tom Exp $
  */
 
 #include <test.priv.h>
@@ -57,7 +57,7 @@ static int getcoord(int);
 /* display symbols */
 #define SHOWHIT		'*'
 #define SHOWSPLASH	' '
-#define IS_SHIP(c)	isupper(c)
+#define IS_SHIP(c)	(isupper(c) ? TRUE : FALSE)
 
 /* how to position us on player board */
 #define PYBASE	3
@@ -118,9 +118,9 @@ static int cury = (BDEPTH / 2);
 typedef struct
 {
     char *name;			/* name of the ship type */
-    unsigned hits;		/* how many times has this ship been hit? */
+    int hits;			/* how many times has this ship been hit? */
     char symbol;		/* symbol for game purposes */
-    unsigned char length;	/* length of ship */
+    int length;			/* length of ship */
     char x, y;			/* coordinates of ship start point */
     unsigned char dir;		/* direction of `bow' */
     bool placed;		/* has it been placed on the board? */
@@ -148,7 +148,8 @@ static ship_t cpuship[SHIPTYPES] =
 };
 
 /* "Hits" board, and main board. */
-static char hits[2][BWIDTH][BDEPTH], board[2][BWIDTH][BDEPTH];
+static char hits[2][BWIDTH][BDEPTH];
+static char board[2][BWIDTH][BDEPTH];
 
 static int turn;			/* 0=player, 1=computer */
 static int plywon=0, cpuwon=0;		/* How many games has each won? */
@@ -159,7 +160,7 @@ static int salvo, blitz, closepack;
 
 static RETSIGTYPE uninitgame(int sig)  GCC_NORETURN;
 
-static void uninitgame(int sig GCC_UNUSED)
+static RETSIGTYPE uninitgame(int sig GCC_UNUSED)
 /* end the game, either normally or due to signal */
 {
     clear();
@@ -334,9 +335,20 @@ static void initgame(void)
     for (i = 0; i < SHIPTYPES; i++)
     {
 	ss = cpuship + i;
-	ss->x = ss->y = ss->dir = ss->hits = ss->placed = 0;
+
+	ss->x =
+	ss->y =
+	ss->dir =
+	ss->hits = 0;
+	ss->placed = FALSE;
+
 	ss = plyship + i;
-	ss->x = ss->y = ss->dir = ss->hits = ss->placed = 0;
+
+	ss->x =
+	ss->y =
+	ss->dir =
+	ss->hits = 0;
+	ss->placed = FALSE;
     }
 
     /* draw empty boards */
@@ -626,13 +638,13 @@ static int getcoord(int atcpu)
     }
 }
 
-static int collidecheck(int b, int y, int x)
+static bool collidecheck(int b, int y, int x)
 /* is this location on the selected zboard adjacent to a ship? */
 {
-    int	collide;
+    bool collide;
 
     /* anything on the square */
-    if ((collide = IS_SHIP(board[b][x][y])) != 0)
+    if ((collide = IS_SHIP(board[b][x][y])) != FALSE)
 	return(collide);
 
     /* anything on the neighbors */
@@ -646,8 +658,11 @@ static int collidecheck(int b, int y, int x)
 
 	    yend = y + yincr[i];
 	    xend = x + xincr[i];
-	    if (ONBOARD(xend, yend))
-		collide += IS_SHIP(board[b][xend][yend]);
+	    if (ONBOARD(xend, yend)
+	     && IS_SHIP(board[b][xend][yend])) {
+		collide = TRUE;
+		break;
+	    }
 	}
     }
     return(collide);
@@ -675,7 +690,7 @@ static bool checkplace(int b, ship_t *ss, int vis)
 		error("Figure I won't find it if you put it there?");
 		break;
 	    }
-	return(0);
+	return(FALSE);
     }
 
     for(l = 0; l < ss->length; ++l)
@@ -809,7 +824,7 @@ static int plyturn(void)
 	    break;
     }
     hit = IS_SHIP(board[COMPUTER][curx][cury]);
-    hits[PLAYER][curx][cury] = hit ? MARK_HIT : MARK_MISS;
+    hits[PLAYER][curx][cury] = (hit ? MARK_HIT : MARK_MISS);
     cgoto(cury, curx);
 #ifdef A_COLOR
     if (has_colors())
@@ -848,7 +863,7 @@ static int plyturn(void)
 	(void)beep();
 	return(awinna() == -1);
     }
-    return(hit);
+    return (hit);
 }
 
 static int sgetc(const char *s)
@@ -935,7 +950,7 @@ static void randomfire(int *px, int *py)
 #define S_HIT	1
 #define S_SUNK	-1
 
-static bool cpufire(int x, int y)
+static int cpufire(int x, int y)
 /* fire away at given location */
 {
     bool hit, sunk;
@@ -961,7 +976,7 @@ static bool cpufire(int x, int y)
     attrset(0);
 #endif /* A_COLOR */
 
-    return(hit ? (sunk ? S_SUNK : S_HIT) : S_MISS);
+    return ((hit ? (sunk ? S_SUNK : S_HIT) : S_MISS) ? TRUE : FALSE);
 }
 
 /*
@@ -981,7 +996,8 @@ static bool cputurn(void)
     static int next = RANDOM_FIRE;
     static bool used[4];
     static ship_t ts;
-    int navail, x, y, d, n, hit = S_MISS;
+    int navail, x, y, d, n;
+    int hit = S_MISS;
 
     switch(next)
     {
@@ -1090,7 +1106,7 @@ static bool cputurn(void)
 		    "New state %d, x=%d, y=%d, d=%d",
 		    next, x, y, d);
 #endif /* DEBUG */
-    return(hit);
+    return ((hit) ? TRUE : FALSE);
 }
 
 static

@@ -1,50 +1,69 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
 **	lib_twait.c
 **
 **	The routine _nc_timed_wait().
 **
+**	(This file was originally written by Eric Raymond; however except for
+**	comments, none of the original code remains - T.Dickey).
 */
 
 #include <curses.priv.h>
 
 #if USE_FUNC_POLL
-#include <stropts.h>
-#include <poll.h>
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
+# include <stropts.h>
+# include <poll.h>
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# endif
 #elif HAVE_SELECT
-/* on SCO, <sys/time.h> conflicts with <sys/select.h> */
-#if HAVE_SYS_TIME_H && ! SYSTEM_LOOKS_LIKE_SCO
-#include <sys/time.h>
-#endif
-#if HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
+# if HAVE_SYS_TIME_H && HAVE_SYS_TIME_SELECT
+#  include <sys/time.h>
+# endif
+# if HAVE_SYS_SELECT_H
+#  include <sys/select.h>
+# endif
 #endif
 
-MODULE_ID("$Id: lib_twait.c,v 1.18 1997/02/15 18:27:51 tom Exp $")
+#ifdef __BEOS__
+/* BeOS select() only works on sockets.  Use the tty hack instead */
+#include <socket.h>
+#define select check_select
+#endif
+
+MODULE_ID("$Id: lib_twait.c,v 1.30 1998/02/11 12:14:01 tom Exp $")
 
 /*
  * We want to define GOOD_SELECT if the last argument of select(2) is
@@ -65,46 +84,20 @@ MODULE_ID("$Id: lib_twait.c,v 1.18 1997/02/15 18:27:51 tom Exp $")
 static void _nc_gettime(struct timeval *tp)
 {
 	gettimeofday(tp, (struct timezone *)0);
-	T(("time: %ld.%06ld", tp->tv_sec, tp->tv_usec));
+	T(("time: %ld.%06ld", (long) tp->tv_sec, (long) tp->tv_usec));
 }
 #endif
 #endif
-
-#if !HAVE_USLEEP
-int _nc_usleep(unsigned int usec)
-{
-int code;
-struct timeval tval;
-
-#if defined(TRACE) && HAVE_GETTIMEOFDAY
-	_nc_gettime(&tval);
-#endif
-#if USE_FUNC_POLL
-	{
-	struct pollfd fds[1];
-	code = poll(fds, 0, usec / 1000);
-	}
-#elif HAVE_SELECT
-	tval.tv_sec = usec / 1000000;
-	tval.tv_usec = usec % 1000000;
-	code = select(0, NULL, NULL, NULL, &tval);
-#endif
-
-#if defined(TRACE) && HAVE_GETTIMEOFDAY
-	_nc_gettime(&tval);
-#endif
-	return code;
-}
-#endif /* !HAVE_USLEEP */
 
 /*
- * Wait a specified number of milliseconds, returning true if the timer
+ * Wait a specified number of milliseconds, returning nonzero if the timer
  * didn't expire before there is activity on the specified file descriptors.
  * The file-descriptors are specified by the mode:
  *	0 - none (absolute time)
  *	1 - ncurses' normal input-descriptor
  *	2 - mouse descriptor, if any
  *	3 - either input or mouse.
+ * We return a mask that corresponds to the mode (e.g., 2 for mouse activity).
  *
  * If the milliseconds given are -1, the wait blocks until activity on the
  * descriptors.
@@ -140,13 +133,18 @@ long delta;
 		ntimeout.tv_usec = 0;
 	}
 
-	T(("start twait: %lu.%06lu secs", (long) ntimeout.tv_sec, (long) ntimeout.tv_usec));
+	T(("start twait: %lu.%06lu secs, mode: %d", (long) ntimeout.tv_sec, (long) ntimeout.tv_usec, mode));
 
+#ifdef HIDE_EINTR
 	/*
 	 * The do loop tries to make it look like we have restarting signals,
 	 * even if we don't.
 	 */
 	do {
+#endif /* HIDE_EINTR */
+#if !GOOD_SELECT && HAVE_GETTIMEOFDAY
+	retry:
+#endif
 		count = 0;
 #if USE_FUNC_POLL
 
@@ -156,12 +154,11 @@ long delta;
 			count++;
 		}
 		if ((mode & 2)
-		 && (fd = _nc_mouse_fd()) >= 0) {
+		 && (fd = SP->_mouse_fd) >= 0) {
 			fds[count].fd     = fd;
 			fds[count].events = POLLIN;
 			count++;
 		}
-
 		result = poll(fds, count, milliseconds);
 #elif HAVE_SELECT
 		/*
@@ -175,7 +172,7 @@ long delta;
 			count = SP->_ifd + 1;
 		}
 		if ((mode & 2)
-		 && (fd = _nc_mouse_fd()) >= 0) {
+		 && (fd = SP->_mouse_fd) >= 0) {
 			FD_SET(fd, &set);
 			count = max(fd, count) + 1;
 		}
@@ -219,17 +216,20 @@ long delta;
 		if (result == 0
 		 && (ntimeout.tv_sec != 0 || ntimeout.tv_usec > 100000)) {
 			napms(100);
-			continue;
+			goto retry;
 		}
 #endif
+#ifdef HIDE_EINTR
 	} while (result == -1 && errno == EINTR);
+#endif
 
 	/* return approximate time left on the ntimeout, in milliseconds */
 	if (timeleft)
 		*timeleft = (ntimeout.tv_sec * 1000) + (ntimeout.tv_usec / 1000);
 
-	T(("end twait: returned %d, remaining time %lu.%06lu secs (%d msec)",
-		result, (long) ntimeout.tv_sec, (long) ntimeout.tv_usec,
+	T(("end twait: returned %d (%d), remaining time %lu.%06lu secs (%d msec)",
+		result, errno,
+		(long) ntimeout.tv_sec, (long) (ntimeout.tv_usec / 1000),
 		timeleft ? *timeleft : -1));
 
 	/*
@@ -251,7 +251,7 @@ long delta;
 			}
 #elif HAVE_SELECT
 			if ((mode & 2)
-			 && (fd = _nc_mouse_fd()) >= 0
+			 && (fd = SP->_mouse_fd) >= 0
 			 && FD_ISSET(fd, &set))
 				result |= 2;
 			if ((mode & 1)

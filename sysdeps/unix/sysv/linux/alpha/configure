@@ -1,0 +1,2 @@
+# Alpha uses long as bool.
+nc_cv_type_of_bool=long

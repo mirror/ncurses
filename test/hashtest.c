@@ -3,7 +3,7 @@
  *
  * Generate timing statistics for vertical-motion optimization.
  *
- * $Id: hashtest.c,v 1.8 1997/01/18 19:09:30 tom Exp $
+ * $Id: hashtest.c,v 1.12 1997/08/09 14:25:18 tom Exp $
  */
 
 #define NCURSES_TRACE
@@ -25,13 +25,26 @@
 #define LO_CHAR ' '
 #define HI_CHAR '~'
 
-static void finish(int sig) GCC_NORETURN;
-
 static bool continuous = FALSE;
 static bool reverse_loops = FALSE;
+static bool single_step = FALSE;
 static bool extend_corner = FALSE;
 static int foot_lines = 0;
 static int head_lines = 0;
+
+static void cleanup(void)
+{
+	move(LINES-1,0);
+	clrtoeol();
+	refresh();
+	endwin();
+}
+
+static RETSIGTYPE finish(int sig GCC_UNUSED)
+{
+	cleanup();
+	exit(EXIT_FAILURE);
+}
 
 static void genlines(int base)
 {
@@ -43,6 +56,12 @@ static void genlines(int base)
 	else
 		Trace(("Painting `%c' screen", base));
 #endif
+
+	/* Do this so writes to lower-right corner don't cause a spurious
+	 * scrolling operation.  This _shouldn't_ break the scrolling
+	 * optimization, since that's computed in the refresh() call.
+	 */
+	scrollok(stdscr, FALSE);
 
 	move(0,0);
 	for (i = 0; i < head_lines; i++)
@@ -57,11 +76,18 @@ static void genlines(int base)
 			addch(c);
 	}
 
-	move(LINES - foot_lines, 0);
-	for (i = LINES - foot_lines; i < LINES; i++)
-		for (j = 0; j < extend_corner ? COLS : COLS - 1; j++)
+	for (i = LINES - foot_lines; i < LINES; i++) {
+		move(i, 0);
+		for (j = 0; j < (extend_corner ? COLS : COLS - 1); j++)
 			addch((j % 8 == 0) ? ('A' + j/8) : '-');
-	refresh();
+	}
+
+	scrollok(stdscr, TRUE);
+	if (single_step) {
+		move(LINES-1, 0);
+		getch();
+	} else
+		refresh();
 }
 
 static void one_cycle(int ch)
@@ -111,6 +137,7 @@ static void usage(void)
 		,"  -n      test the normal optimizer"
 		,"  -o      test the hashed optimizer"
 		,"  -r      reverse the loops"
+		,"  -s      single-step"
 		,"  -x      assume lower-right corner extension"
 	};
 	size_t n;
@@ -127,7 +154,7 @@ int main(int argc, char *argv[])
 	int test_normal = FALSE;
 	int test_optimize = FALSE;
 
-	while ((c = getopt(argc, argv, "cf:h:l:norx")) != EOF) {
+	while ((c = getopt(argc, argv, "cf:h:l:norsx")) != EOF) {
 		switch (c) {
 		case 'c':
 			continuous = TRUE;
@@ -149,6 +176,9 @@ int main(int argc, char *argv[])
 			break;
 		case 'r':
 			reverse_loops = TRUE;
+			break;
+		case 's':
+			single_step = TRUE;
 			break;
 		case 'x':
 			extend_corner = TRUE;
@@ -181,13 +211,7 @@ int main(int argc, char *argv[])
 			run_test(TRUE);
 	}
 
-	finish(0);               /* we're done */
+	cleanup();               /* we're done */
+	return(EXIT_SUCCESS);
 }
-
-static RETSIGTYPE finish(int sig)
-{
-	endwin();
-	exit(sig != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
-}
-
 /* hashtest.c ends here */

@@ -1,35 +1,54 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
-/*
-  written and
-  Copyright (C) 1993 by Anatoly Ivasyuk (anatoly@nick.csh.rit.edu)
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-  Modified by Juergen Pfeifer, April 1997
-*/
+/****************************************************************************
+ *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1993,1997        *
+ ****************************************************************************/
 
+#include "cursesp.h"
 #include "internal.h"
 
-MODULE_ID("$Id: cursesp.cc,v 1.6 1997/05/04 01:02:08 tom Exp $")
+MODULE_ID("$Id: cursesp.cc,v 1.11 1998/02/17 09:04:12 juergen Exp $")
 
-#pragma  implementation
-#include "cursesp.h"
+NCursesPanel* NCursesPanel::dummy = (NCursesPanel*)0;
 
-NCursesPanel::NCursesPanel(int lines,
-			   int cols,
-			   int begin_y,
-			   int begin_x)
-  : NCursesWindow(lines, cols, begin_y, begin_x) {
-    
-    p = ::new_panel(w);
-    if (!p)
-      OnError(ERR);
-    
-    UserHook* hook = new UserHook;
-    hook->m_user  = NULL;
-    hook->m_back  = this;
-    hook->m_owner = p;
-    ::set_panel_userptr(p, (const void *)hook);
-}
-
+void NCursesPanel::init() {
+  p = ::new_panel(w);
+  if (!p)
+    OnError(ERR);
+  
+  UserHook* hook = new UserHook;
+  hook->m_user  = NULL;
+  hook->m_back  = this;
+  hook->m_owner = p;
+  ::set_panel_userptr(p, (void *)hook);
+}  
 
 NCursesPanel::~NCursesPanel() {
   UserHook* hook = (UserHook*)::panel_userptr(p);
@@ -53,10 +72,16 @@ NCursesPanel::redraw() {
   ::doupdate();
 }
 
-void
+int
 NCursesPanel::refresh() {
   ::update_panels();
-  ::doupdate();
+  return doupdate();
+}
+
+int
+NCursesPanel::noutrefresh() {
+  ::update_panels();
+  return OK;
 }
 
 void
@@ -90,6 +115,10 @@ NCursesPanel::label(const char *tLabel, const char *bLabel) {
 
 void
 NCursesPanel::centertext(int row,const char *label) {
-  if (label) 
-    OnError(addstr(row,(maxx() - strlen(label)) / 2, label));
+  if (label) {
+    int x = (maxx() - strlen(label)) / 2;
+    if (x<0)
+      x=0;
+    OnError(addstr(row, x, label, width()));
+  }
 }

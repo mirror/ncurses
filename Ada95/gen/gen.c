@@ -1,28 +1,38 @@
-/*----------------------------------------------------------------------------
-//                                                                          --
-//                           GNAT ncurses Binding                           --
-//                                                                          --
-//                                  gen.c                                   --
-//                                                                          --
-//                                 B O D Y                                  --
-//                                                                          --
-//  Version 00.92                                                           --
-//                                                                          --
-//  The ncurses Ada95 binding is copyrighted 1996 by                        --
-//  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
-//                                                                          --
-//  Permission is hereby granted to reproduce and distribute this           --
-//  binding by any means and for any fee, whether alone or as part          --
-//  of a larger distribution, in source or in binary form, PROVIDED         --
-//  this notice is included with any such distribution, and is not          --
-//  removed from any of its header files. Mention of ncurses and the        --
-//  author of this binding in any applications linked with it is            --
-//  highly appreciated.                                                     --
-//                                                                          --
-//  This binding comes AS IS with no warranty, implied or expressed.        --
-//----------------------------------------------------------------------------
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
+
+/****************************************************************************
+ *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996             *
+ ****************************************************************************/
+
+/*
     Version Control
-    $Revision: 1.8 $
+    $Revision: 1.14 $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -34,7 +44,6 @@
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
-#include <time.h>
 
 #include <menu.h>
 #include <form.h>
@@ -83,9 +92,16 @@ static int find_pos (char *s, unsigned len, int *low, int *high)
   return (*high >= 0 && (*low <= *high)) ? *low : -1;
 }
 
-static void gen_reps ( const name_attribute_pair *nap,
-		       const char *name,
-		       int len)
+/*
+ * This helper routine generates a representation clause for a
+ * record type defined in the binding.
+ * We are only dealing with record types which are of 32 or 16
+ * bit size, i.e. they fit into an (u)int or a (u)short.
+ */
+static void gen_reps
+(const name_attribute_pair *nap, /* array of name_attribute_pair records */
+ const char *name,               /* name of the represented record type  */
+ int len)                        /* size of the record in bytes          */
 {
   int i,l,cnt = 0,low,high;
   int width = strlen(RES_NAME);
@@ -324,6 +340,9 @@ static void gen_form_opt_rep(const char *name)
   gen_reps (nap, name, sizeof(int));
 }
 
+/*
+ * Generate the representation clause for the Field_Option_Set record
+ */
 static void gen_field_opt_rep(const char *name)
 {
   static const name_attribute_pair nap[] = {
@@ -362,12 +381,17 @@ static void gen_field_opt_rep(const char *name)
   gen_reps (nap, name, sizeof(int));
 }
 
+/*
+ * Generate a single key code constant definition.
+ */
 static void keydef(const char *name, const char *old_name, int value, int mode)
 {
-  if (mode==0)
+  if (mode==0) /* Generate the new name */
     printf("   %-30s : constant Special_Key_Code := 8#%3o#;\n",name,value);
   else
-    {
+    { /* generate the old name, but only if it doesn't conflict with the old
+       * name (Ada95 isn't case sensitive!)
+       */
       const char *s = old_name; const char *t = name;
       while ( *s && *t && (toupper(*s++) == toupper(*t++)));
       if (*s || *t)
@@ -375,6 +399,13 @@ static void keydef(const char *name, const char *old_name, int value, int mode)
     }
 }
   
+/*
+ * Generate constants for the key codes. When called with mode==0, a
+ * complete list with nice constant names in proper casing style will
+ * be generated. Otherwise a list of old (i.e. C-style) names will be
+ * generated, given that the name wasn't already defined in the "nice"
+ * list.
+ */
 static void gen_keydefs (int mode)
 {
   char buf[16];
@@ -665,8 +696,16 @@ static void gen_keydefs (int mode)
 #ifdef KEY_MOUSE
   keydef("Key_Mouse","KEY_MOUSE",KEY_MOUSE,mode);
 #endif  
+#ifdef KEY_RESIZE
+  keydef("Key_Resize","KEY_RESIZE",KEY_RESIZE,mode);
+#endif  
 }
 
+/*
+ * Generate a constant with the given name. The second parameter
+ * is a reference to the ACS character in the acs_map[] array and
+ * will be translated into an index.
+ */
 static void acs_def (const char *name, chtype *a)
 {
   int c = a - &acs_map[0];
@@ -677,7 +716,9 @@ static void acs_def (const char *name, chtype *a)
     printf("Character'Val (%d);\n",c);
 }
 
-
+/*
+ * Generate the constants for the ACS characters
+ */
 static void gen_acs (void)
 {
 #ifdef ACS_ULCORNER
@@ -778,16 +819,24 @@ static void gen_acs (void)
 #endif
 }
 
+/*
+ * Output some comment lines indicating that the file is generated.
+ * The name parameter is the name of the facility to be used in
+ * the comment.
+ */
 static void prologue(const char *name)
 {
-  time_t t = time(NULL);
-  printf("--  %s binding, generated at %s",name,ctime(&t));
+  printf("--  %s binding.\n",name);
   printf("--  This module is generated. Please don't change it manually!\n");
   printf("--  Run the generator instead.\n--  |");
 
   printf("define(`M4_BIT_ORDER',`%s_Order_First')",little_endian ? "Low":"High");
 }
 
+/*
+ * Write the prologue for the curses facility and make sure that
+ * KEY_MIN and KEY_MAX are defined for the rest of this source.
+ */
 static void basedefs (void)
 {
   prologue("curses");
@@ -798,31 +847,48 @@ static void basedefs (void)
 #ifndef KEY_MIN
 #  define KEY_MIN 0401
 #endif
-  if (KEY_MIN == 256)
-    abort();
+  if (KEY_MIN == 256) {
+    fprintf(stderr,"Unexpected value for KEY_MIN: %d\n",KEY_MIN);
+    exit(1);
+  }
   printf("define(`M4_SPECIAL_FIRST',`8#%o#')",KEY_MIN - 1);
 }
 
+/*
+ * Write out the comment lines for the menu facility
+ */
 static void menu_basedefs (void)
 {
   prologue("menu");
 }
 
+/*
+ * Write out the comment lines for the form facility
+ */
 static void form_basedefs (void)
 {
   prologue("form");
 }
 
+/*
+ * Write out the comment lines for the mouse facility
+ */
 static void mouse_basedefs(void)
 {
   prologue("mouse");
 }
 
+/*
+ * Write the definition of a single color
+ */
 static void color_def (const char *name, int value)
 {
   printf("   %-8s : constant Color_Number := %d;\n",name,value);
 }
 
+/*
+ * Generate all color definitions
+ */
 static void gen_color (void)
 {
 #ifdef COLOR_BLACK
@@ -851,27 +917,57 @@ static void gen_color (void)
 #endif
 }
 
+/*
+ * Generate the linker options for the base facility
+ */
 static void gen_linkopts (void)
 {
    printf("   pragma Linker_Options (\"-lncurses\");\n");
 }
 
+/*
+ * Generate the linker options for the menu facility
+ */
 static void gen_menu_linkopts (void)
 {
    printf("   pragma Linker_Options (\"-lmenu\");\n");
 }
 
+/*
+ * Generate the linker options for the form facility
+ */
 static void gen_form_linkopts (void)
 {
    printf("   pragma Linker_Options (\"-lform\");\n");
 }
 
+/*
+ * Generate the linker options for the panel facility
+ */
 static void gen_panel_linkopts (void)
 {
    printf("   pragma Linker_Options (\"-lpanel\");\n");
 }
 
+static void gen_version_info (void)
+{
+   printf("   NC_Major_Version : constant := %d; --  Major version of ncurses library\n", NCURSES_VERSION_MAJOR);
+   printf("   NC_Minor_Version : constant := %d; --  Minor version of ncurses library\n", NCURSES_VERSION_MINOR);
+   printf("   NC_Version : constant String := %c%d.%d%c;  --  Version of ncurses library\n", '"',NCURSES_VERSION_MAJOR,NCURSES_VERSION_MINOR,'"');
+}
 
+/*
+ * main() expects two arguments on the commandline, both single characters.
+ * The first character denotes the facility for which we generate output.
+ * Possible values are
+ *   B - Base
+ *   M - Menus
+ *   F - Forms
+ *   P - Pointer Device (Mouse)
+ *
+ * The second character then denotes the specific output that should be
+ * generated for the selected facility.
+ */
 int main(int argc, char *argv[])
 {
   int x = 0x12345678;
@@ -885,85 +981,88 @@ int main(int argc, char *argv[])
 
   switch(argv[1][0])
     {
-    case 'B':
+    case 'B': /* The Base facility */
       switch(argv[2][0])
 	{
-	case 'A':
+	case 'A': /* chtype translation into Ada95 record type */
 	  gen_attr_set("Character_Attribute_Set");
 	  break;
-	case 'K':
+	case 'K': /* translation of keycodes */
 	  gen_keydefs(0);
 	  break;
-	case 'B':
+	case 'B': /* write some initial comment lines */
 	  basedefs();
 	  break;
-	case 'C':
+	case 'C': /* generate color constants */
 	  gen_color();
 	  break;
-	case 'M':
+	case 'M': /* generate constants for the ACS characters */
 	  gen_acs();
 	  break;
-	case 'L':
+	case 'L': /* generate the Linker_Options pragma */
 	  gen_linkopts();
 	  break;
-	case 'O':
+	case 'O': /* generate definitions of the old key code names */
 	  gen_keydefs(1);
 	  break;
-	case 'R':
+	case 'R': /* generate representation clause for Attributed character */
 	  gen_chtype_rep("Attributed_Character");
+	  break;
+	case 'V': /* generate version info */
+	  gen_version_info();
 	  break;
 	default:
 	  break;
 	}
       break;
-    case 'M':
+    case 'M': /* The Menu facility */
       switch(argv[2][0])
 	{
-	case 'R':
+	case 'R': /* generate representation clause for Menu_Option_Set */
 	  gen_menu_opt_rep("Menu_Option_Set");
 	  break;
-	case 'B':
+	case 'B': /* write some initial comment lines */
 	  menu_basedefs();
 	  break;
-	case 'L':
+	case 'L': /* generate the Linker_Options pragma */
 	  gen_menu_linkopts();
 	  break;
-	case 'I':
+	case 'I': /* generate representation clause for Item_Option_Set */
 	  gen_item_opt_rep("Item_Option_Set");
 	  break;
 	default:
 	  break;
 	}
       break;
-    case 'F':
+    case 'F': /* The Form facility */
       switch(argv[2][0])
 	{
-	case 'R':
+	case 'R': /* generate representation clause for Form_Option_Set */
 	  gen_form_opt_rep("Form_Option_Set");
 	  break;
-	case 'B':
+	case 'B': /* write some initial comment lines */
 	  form_basedefs();
 	  break;
-	case 'L':
+	case 'L': /* generate the Linker_Options pragma */
 	  gen_form_linkopts();
 	  break;
-	case 'I':
+	case 'I': /* generate representation clause for Field_Option_Set */
 	  gen_field_opt_rep("Field_Option_Set");
 	  break;
 	default:
 	  break;
 	}
       break;
-    case 'P':
+    case 'P': /* The Pointer(=Mouse) facility */
       switch(argv[2][0])
 	{
-	case 'B':
+	case 'B': /* write some initial comment lines */
 	  mouse_basedefs();
 	  break;
-	case 'M':
+	case 'M': /* generate representation clause for Mouse_Event */
 	  gen_mrep_rep("Mouse_Event");
 	  break;
-	case 'L':
+	case 'L': /* generate the Linker_Options pragma */
 	  gen_panel_linkopts();
 	  break;
 	default:

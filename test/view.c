@@ -7,7 +7,7 @@
  * modified by Thomas Dickey <dickey@clark.net> July 1995 to demonstrate
  * the use of 'resizeterm()'.
  *
- * Takes a filename argument.  It's a simple file-viewer with various 
+ * Takes a filename argument.  It's a simple file-viewer with various
  * scroll-up and scroll-down commands.
  *
  * n	-- scroll one line forward
@@ -22,7 +22,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.20 1997/04/26 18:16:38 tom Exp $
+ * $Id: view.c,v 1.26 1997/11/15 22:36:41 tom Exp $
  */
 
 #include <test.priv.h>
@@ -44,16 +44,14 @@
 #endif
 
 /* This is needed to compile 'struct winsize' */
-#if SYSTEM_LOOKS_LIKE_SCO
+#if NEED_PTEM_H
 #include <sys/stream.h>
 #include <sys/ptem.h>
 #endif
- 
-#define MAXLINES        256        /* most lines we can handle */
 
-static void finish(int sig) GCC_NORETURN;
+static RETSIGTYPE finish(int sig) GCC_NORETURN;
 static void show_all(void);
- 
+
 #if defined(SIGWINCH) && defined(TIOCGWINSZ) && defined(NCURSES_VERSION)
 #define CAN_RESIZE 1
 #else
@@ -69,10 +67,11 @@ static int          waiting;
 static int          shift;
 
 static char        *fname;
-static char        *lines[MAXLINES];
+static char        **lines;
 static char        **lptr;
 
 #if !HAVE_STRDUP
+#define strdup my_strdup
 static char *strdup (char *s)
 {
   char *p;
@@ -84,51 +83,88 @@ static char *strdup (char *s)
 }
 #endif /* not HAVE_STRDUP */
 
+static void usage(void)
+{
+    static const char *msg[] = {
+	 "Usage: view [options] file"
+	,""
+	,"Options:"
+	," -n NUM   specify maximum number of lines (default 1000)"
+#if defined(KEY_RESIZE)
+	," -r       use experimental KEY_RESIZE rather than our own handler"
+#endif
+#ifdef TRACE
+	," -t       trace screen updates"
+	," -T NUM   specify trace mask"
+#endif
+    };
+    size_t n;
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+    exit (EXIT_FAILURE);
+}
+
 int main(int argc, char *argv[])
 {
+int         MAXLINES = 1000;
 FILE        *fp;
 char        buf[BUFSIZ];
 int         i;
 char        **olptr;
 int         done = FALSE;
-
-#ifdef TRACE
-    trace(TRACE_UPDATE);
+int         length = 0;
+#if CAN_RESIZE
+bool        use_resize = TRUE;
 #endif
 
-    if (argc != 2) {
-        fprintf(stderr, "usage: view file\n");
-        return EXIT_FAILURE;
-    } else {
-	fname = argv[1];
-	if ((fp = fopen(fname, "r")) == (FILE *)NULL) {
-            perror(fname);
-            return EXIT_FAILURE;
+    while ((i = getopt(argc, argv, "n:rtT:")) != EOF) {
+	switch (i) {
+	case 'n':
+	    if ((MAXLINES = atoi(optarg)) < 1)
+		usage();
+	    break;
+#if CAN_RESIZE
+	case 'r':
+	    use_resize = FALSE;
+	    break;
+#endif
+#ifdef TRACE
+	case 'T':
+	    trace(atoi(optarg));
+	    break;
+	case 't':
+	    trace(TRACE_CALLS);
+	    break;
+#endif
+	default:
+	    usage();
 	}
+    }
+    if (optind + 1 != argc)
+	usage();
+
+    if ((lines = (char **)calloc(MAXLINES+2, sizeof(*lines))) == 0)
+	usage();
+
+    fname = argv[optind];
+    if ((fp = fopen(fname, "r")) == 0) {
+	perror(fname);
+	return EXIT_FAILURE;
     }
 
     (void) signal(SIGINT, finish);      /* arrange interrupts to terminate */
 #if CAN_RESIZE
-    (void) signal(SIGWINCH, adjust);    /* arrange interrupts to resize */
+    if (use_resize)
+	(void) signal(SIGWINCH, adjust); /* arrange interrupts to resize */
 #endif
 
-    (void) initscr();      /* initialize the curses library */
-    keypad(stdscr, TRUE);  /* enable keyboard mapping */
-    (void) nonl();         /* tell curses not to do NL->CR/NL on output */
-    (void) cbreak();       /* take input chars one at a time, no wait for \n */
-    (void) noecho();       /* don't echo input */
-    idlok(stdscr, TRUE);   /* allow use of insert/delete line */
-
     /* slurp the file */
-    for (lptr = &lines[0]; fgets(buf, BUFSIZ, fp) != (char *)NULL; lptr++) {
+    for (lptr = &lines[0]; (lptr - lines) < MAXLINES; lptr++) {
 	char temp[BUFSIZ], *s, *d;
 	int  col;
 
-        if (lptr - lines >= MAXLINES) {
-            endwin();
-            (void) fprintf(stderr, "%s: %s is too large\n", argv[0], argv[1]);
-            return EXIT_FAILURE;
-        }
+	if (fgets(buf, sizeof(buf), fp) == 0)
+	    break;
 
 	/* convert tabs so that shift will work properly */
 	for (s = buf, d = temp, col = 0; (*d = *s) != '\0'; s++) {
@@ -143,23 +179,31 @@ int         done = FALSE;
 		col++;
 		d++;
 	    } else {
-		sprintf(d, "\\%03o", *s);
+		sprintf(d, "\\%03o", *s & 0xff);
 		d += strlen(d);
 		col = (d - temp);
 	    }
 	}
-        *lptr = strdup(temp);
+	*lptr = strdup(temp);
     }
     (void) fclose(fp);
+    length = lptr - lines;
+
+    (void) initscr();      /* initialize the curses library */
+    keypad(stdscr, TRUE);  /* enable keyboard mapping */
+    (void) nonl();         /* tell curses not to do NL->CR/NL on output */
+    (void) cbreak();       /* take input chars one at a time, no wait for \n */
+    (void) noecho();       /* don't echo input */
+    idlok(stdscr, TRUE);   /* allow use of insert/delete line */
 
     lptr = lines;
     while (!done) {
-        int n, c;
-	bool explicit;
+	int n, c;
+	bool got_number;
 
 	show_all();
 
-	explicit = FALSE;
+	got_number = FALSE;
 	n = 0;
         for (;;) {
 #if CAN_RESIZE
@@ -169,41 +213,55 @@ int         done = FALSE;
 	    waiting = TRUE;
 	    c = getch();
 	    waiting = FALSE;
-	    if (c < 127 && isdigit(c)) {
+	    if ((c < 127) && isdigit(c)) {
+		if (!got_number) {
+		    mvprintw(0,0, "Count: ");
+		    clrtoeol();
+		}
+		addch(c);
 		n = 10 * n + (c - '0');
-		explicit = TRUE;
-	    } else
+		got_number = TRUE;
+	    }
+	    else
 		break;
 	}
-	if (!explicit && n == 0)
+	if (!got_number && n == 0)
 	    n = 1;
 
-        switch(c) {
-        case KEY_DOWN:
+	switch(c) {
+	case KEY_DOWN:
 	case 'n':
 	    olptr = lptr;
-	    for (i = 0; i < n; i++) 
-		if (lptr + LINES < lines + MAXLINES && lptr[LINES + 1]) 
+	    for (i = 0; i < n; i++)
+		if ((lptr - lines) < (length - LINES + 1))
 		    lptr++;
-	        else
+		else
 		    break;
 	    wscrl(stdscr, lptr - olptr);
-            break;
+	    break;
 
-        case KEY_UP:
+	case KEY_UP:
 	case 'p':
 	    olptr = lptr;
-	    for (i = 0; i < n; i++) 
+	    for (i = 0; i < n; i++)
 		if (lptr > lines)
 		    lptr--;
-	        else
+		else
 		    break;
 	    wscrl(stdscr, lptr - olptr);
-            break;
+	    break;
 
 	case 'h':
 	case KEY_HOME:
 	    lptr = lines;
+	    break;
+
+	case 'e':
+	case KEY_END:
+	    if (length > LINES)
+		lptr = lines + length - LINES + 1;
+	    else
+		lptr = lines;
 	    break;
 
 	case 'r':
@@ -214,7 +272,7 @@ int         done = FALSE;
 	case 'l':
 	case KEY_LEFT:
 	    if (shift)
-	        shift--;
+		shift--;
 	    else
 		beep();
 	    break;
@@ -223,12 +281,20 @@ int         done = FALSE;
 	    done = TRUE;
 	    break;
 
+#ifdef KEY_RESIZE
+	case KEY_RESIZE: 	/* ignore this; ncurses will repaint */
+	    break;
+#endif
+#if CAN_RESIZE
+	case ERR:
+	    break;
+#endif
 	default:
 	    beep();
 	}
     }
 
-    finish(0);               /* we're done */
+    finish(0);			/* we're done */
 }
 
 static RETSIGTYPE finish(int sig)
@@ -250,7 +316,6 @@ static RETSIGTYPE adjust(int sig)
 
 		if (ioctl(fileno(stdout), TIOCGWINSZ, &size) == 0) {
 			resizeterm(size.ws_row, size.ws_col);
-			beep();
 			wrefresh(curscr);	/* Linux needs this */
 			show_all();
 		}
@@ -280,14 +345,14 @@ static void show_all(void)
 	clrtoeol();
 
 	scrollok(stdscr, FALSE); /* prevent screen from moving */
-        for (i = 1; i < LINES; i++) {
-            move(i, 0);
-            if ((s = lptr[i-1]) != 0 && (int)strlen(s) > shift)
-                printw("%3d:%.*s", lptr+i-lines, COLS-4, s + shift);
+	for (i = 1; i < LINES; i++) {
+	    move(i, 0);
+	    if ((s = lptr[i-1]) != 0 && (int)strlen(s) > shift)
+		printw("%3d:%.*s", lptr+i-lines, COLS-4, s + shift);
 	    else
-                printw("%3d:", lptr+i-lines);
+		printw("%3d:", lptr+i-lines);
 	    clrtoeol();
-        }
+	}
 	setscrreg(1, LINES-1);
 	scrollok(stdscr, TRUE);
 	refresh();

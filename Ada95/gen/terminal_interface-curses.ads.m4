@@ -8,31 +8,46 @@ include(M4MACRO)----------------------------------------------------------------
 --                                                                          --
 --                                 S P E C                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.7 $
+--  $Revision: 1.15 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 include(`Base_Defs')
 with System;
 with Interfaces.C;   --  We need this for some assertions.
 
 package Terminal_Interface.Curses is
-
+   pragma Preelaborate (Curses);
 include(`Linker_Options')
+include(`Version_Info')
    type Window is private;
    Null_Window : constant Window;
 
@@ -127,7 +142,8 @@ include(`AC_Rep')
    ------------------
    --  Exceptions  --
    ------------------
-   Curses_Exception : exception;
+   Curses_Exception     : exception;
+   Wrong_Curses_Version : exception;
 
    --  Those exceptions are raised by the ETI (Extended Terminal Interface)
    --  subpackets for Menu and Forms handling.
@@ -195,15 +211,20 @@ include(`ACS_Map')
    --  ANCHOR(`initscr()',`Init_Windows')
    procedure Init_Windows renames Init_Screen;
    --  AKA
+   pragma Inline (Init_Screen);
+   pragma Inline (Init_Windows);
 
    --  ANCHOR(`endwin()',`End_Windows')
    procedure End_Windows;
    --  AKA
    procedure End_Screen renames End_Windows;
+   pragma Inline (End_Windows);
+   pragma Inline (End_Screen);
 
    --  ANCHOR(`isendwin()',`Is_End_Window')
    function Is_End_Window return Boolean;
    --  AKA
+   pragma Inline (Is_End_Window);
 
    --  MANPAGE(`curs_move.3x')
 
@@ -212,6 +233,7 @@ include(`ACS_Map')
                           Line   : in Line_Position;
                           Column : in Column_Position);
    --  AKA
+   pragma Inline (Move_Cursor);
 
    --  MANPAGE(`curs_addch.3x')
 
@@ -239,6 +261,7 @@ include(`ACS_Map')
       Column : in Column_Position;
       Ch     : in Character);
    --  Move to the position and add a single character into the window
+   --  There are more Add routines, so the Inline pragma follows later
 
    --  ANCHOR(`wechochar()',`Add_With_Immediate_Echo')
    procedure Add_With_Immediate_Echo
@@ -250,6 +273,7 @@ include(`ACS_Map')
      (Win : in Window := Standard_Window;
       Ch  : in Character);
    --  Add a character and do an immediate resfresh of the screen.
+   pragma Inline (Add_With_Immediate_Echo);
 
    --  MANPAGE(`curs_window.3x')
 
@@ -260,6 +284,7 @@ include(`ACS_Map')
       First_Line_Position   : Line_Position;
       First_Column_Position : Column_Position) return Window;
    --  AKA
+   pragma Inline (Create);
 
    function New_Window
      (Number_Of_Lines       : Line_Count;
@@ -267,11 +292,13 @@ include(`ACS_Map')
       First_Line_Position   : Line_Position;
       First_Column_Position : Column_Position) return Window
      renames Create;
+   pragma Inline (New_Window);
 
    --  ANCHOR(`delwin()',`Delete')
    procedure Delete (Win : in out Window);
    --  AKA
    --  Reset Win to Null_Window
+   pragma Inline (Delete);
 
    --  ANCHOR(`subwin()',`Sub_Window')
    function Sub_Window
@@ -281,6 +308,7 @@ include(`ACS_Map')
       First_Line_Position   : Line_Position;
       First_Column_Position : Column_Position) return Window;
    --  AKA
+   pragma Inline (Sub_Window);
 
    --  ANCHOR(`derwin()',`Derived_Window')
    function Derived_Window
@@ -290,22 +318,26 @@ include(`ACS_Map')
       First_Line_Position   : Line_Position;
       First_Column_Position : Column_Position) return Window;
    --  AKA
+   pragma Inline (Derived_Window);
 
    --  ANCHOR(`dupwin()',`Duplicate')
    function Duplicate (Win : Window) return Window;
    --  AKA
+   pragma Inline (Duplicate);
 
    --  ANCHOR(`mvwin()',`Move_Window')
    procedure Move_Window (Win    : in Window;
                           Line   : in Line_Position;
                           Column : in Column_Position);
    --  AKA
+   pragma Inline (Move_Window);
 
    --  ANCHOR(`mvderwin()',`Move_Derived_Window')
    procedure Move_Derived_Window (Win    : in Window;
                                   Line   : in Line_Position;
                                   Column : in Column_Position);
    --  AKA
+   pragma Inline (Move_Derived_Window);
 
    --  ANCHOR(`wsyncup()',`Synchronize_Upwards')
    procedure Synchronize_Upwards (Win : in Window);
@@ -321,6 +353,7 @@ include(`ACS_Map')
    procedure Set_Synch_Mode (Win  : in Window := Standard_Window;
                              Mode : in Boolean := False);
    --  AKA
+   pragma Inline (Set_Synch_Mode);
 
    --  MANPAGE(`curs_addstr.3x')
 
@@ -357,6 +390,7 @@ include(`ACS_Map')
                   Len    : in Integer := -1);
    --  AKA
    --  ALIAS(`mvwaddchstr()')
+   pragma Inline (Add);
 
    --  MANPAGE(`curs_border.3x')
 
@@ -373,6 +407,7 @@ include(`ACS_Map')
       Lower_Right_Corner_Symbol : in Attributed_Character := Default_Character
      );
    --  AKA
+   pragma Inline (Border);
 
    --  ANCHOR(`box()',`Box')
    procedure Box
@@ -380,6 +415,7 @@ include(`ACS_Map')
       Vertical_Symbol   : in Attributed_Character := Default_Character;
       Horizontal_Symbol : in Attributed_Character := Default_Character);
    --  AKA
+   pragma Inline (Box);
 
    --  ANCHOR(`whline()',`Horizontal_Line')
    procedure Horizontal_Line
@@ -387,6 +423,7 @@ include(`ACS_Map')
       Line_Size   : in Natural;
       Line_Symbol : in Attributed_Character := Default_Character);
    --  AKA
+   pragma Inline (Horizontal_Line);
 
    --  ANCHOR(`wvline()',`Vertical_Line')
    procedure Vertical_Line
@@ -394,6 +431,7 @@ include(`ACS_Map')
       Line_Size   : in Natural;
       Line_Symbol : in Attributed_Character := Default_Character);
    --  AKA
+   pragma Inline (Vertical_Line);
 
    --  MANPAGE(`curs_getch.3x')
 
@@ -405,19 +443,24 @@ include(`ACS_Map')
    --  window.
    --  If for any reason (i.e. a timeout) we couldn't get a character the
    --  returned keycode is Key_None.
+   pragma Inline (Get_Keystroke);
 
    --  ANCHOR(`ungetch()',`Undo_Keystroke')
    procedure Undo_Keystroke (Key : in Real_Key_Code);
    --  AKA
+   pragma Inline (Undo_Keystroke);
 
    --  ANCHOR(`has_key()',`Has_Key')
    function Has_Key (Key : Special_Key_Code) return Boolean;
    --  AKA
+   pragma Inline (Has_Key);
+
    --  |
    --  | Some helper functions
    --  |
    function Is_Function_Key (Key : Special_Key_Code) return Boolean;
    --  Return True if the Key is a function key (i.e. one of F0 .. F63)
+   pragma Inline (Is_Function_Key);
 
    subtype Function_Key_Number is Integer range 0 .. 63;
    --  (n)curses allows for 64 function keys.
@@ -425,9 +468,11 @@ include(`ACS_Map')
    function Function_Key (Key : Real_Key_Code) return Function_Key_Number;
    --  Return the number of the function key. If the code is not a
    --  function key, a CONSTRAINT_ERROR will be raised.
+   pragma Inline (Function_Key);
 
    function Function_Key_Code (Key : Function_Key_Number) return Real_Key_Code;
    --  Return the key code for a given functionkey number.
+   pragma Inline (Function_Key_Code);
 
    --  MANPAGE(`curs_attr.3x')
 
@@ -445,8 +490,9 @@ include(`ACS_Map')
       Attr  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   pragma Inline (Set_Character_Attributes);
 
-   --  ANCHOR(`wattr_get()',`Get_Character_Attribute')
+   --  ANCHOR(`wattr_get()',`Get_Character_Attributes')
    function Get_Character_Attribute
      (Win : in Window := Standard_Window) return Character_Attribute_Set;
    --  AKA
@@ -455,6 +501,7 @@ include(`ACS_Map')
    function Get_Character_Attribute
      (Win : in Window := Standard_Window) return Color_Pair;
    --  AKA
+   pragma Inline (Get_Character_Attribute);
 
    --  ANCHOR(`wchgat()',`Change_Attributes')
    procedure Change_Attributes
@@ -473,16 +520,19 @@ include(`ACS_Map')
       Attr   : in Character_Attribute_Set := Normal_Video;
       Color  : in Color_Pair := Color_Pair'First);
    --  AKA
+   pragma Inline (Change_Attributes);
 
    --  MANPAGE(`curs_beep.3x')
 
    --  ANCHOR(`beep()',`Beep')
    procedure Beep;
    --  AKA
+   pragma Inline (Beep);
 
    --  ANCHOR(`flash()',`Flash_Screen')
    procedure Flash_Screen;
    --  AKA
+   pragma Inline (Flash_Screen);
 
    --  MANPAGE(`curs_inopts.3x')
 
@@ -492,38 +542,45 @@ include(`ACS_Map')
    procedure Set_Cbreak_Mode (SwitchOn : in Boolean := True);
    --  AKA
    --  ALIAS(`nocbreak()')
+   pragma Inline (Set_Cbreak_Mode);
 
    --  ANCHOR(`raw()',`Set_Raw_Mode')
    procedure Set_Raw_Mode (SwitchOn : in Boolean := True);
    --  AKA
    --  ALIAS(`noraw()')
+   pragma Inline (Set_Raw_Mode);
 
    --  ANCHOR(`echo()',`Set_Echo_Mode')
    procedure Set_Echo_Mode (SwitchOn : in Boolean := True);
    --  AKA
    --  ALIAS(`noecho()')
+   pragma Inline (Set_Echo_Mode);
 
    --  ANCHOR(`meta()',`Set_Meta_Mode')
    procedure Set_Meta_Mode (Win      : in Window := Standard_Window;
                             SwitchOn : in Boolean := True);
    --  AKA
+   pragma Inline (Set_Meta_Mode);
 
    --  ANCHOR(`keypad()',`Set_KeyPad_Mode')
    procedure Set_KeyPad_Mode (Win      : in Window := Standard_Window;
                               SwitchOn : in Boolean := True);
    --  AKA
+   pragma Inline (Set_KeyPad_Mode);
 
    type Half_Delay_Amount is range 1 .. 255;
 
    --  ANCHOR(`halfdelay()',`Half_Delay')
    procedure Half_Delay (Amount : in Half_Delay_Amount);
    --  AKA
+   pragma Inline (Half_Delay);
 
    --  ANCHOR(`intrflush()',`Set_Flush_On_Interrupt_Mode')
    procedure Set_Flush_On_Interrupt_Mode
      (Win  : in Window := Standard_Window;
       Mode : in Boolean := True);
    --  AKA
+   pragma Inline (Set_Flush_On_Interrupt_Mode);
 
    --  ANCHOR(`qiflush()',`Set_Queue_Interrupt_Mode')
    procedure Set_Queue_Interrupt_Mode
@@ -531,12 +588,14 @@ include(`ACS_Map')
       Flush : in Boolean := True);
    --  AKA
    --  ALIAS(`noqiflush()')
+   pragma Inline (Set_Queue_Interrupt_Mode);
 
    --  ANCHOR(`nodelay()',`Set_NoDelay_Mode')
    procedure Set_NoDelay_Mode
      (Win  : in Window := Standard_Window;
       Mode : in Boolean := False);
    --  AKA
+   pragma Inline (Set_NoDelay_Mode);
 
    type Timeout_Mode is (Blocking, Non_Blocking, Delayed);
 
@@ -549,12 +608,14 @@ include(`ACS_Map')
    --  introduce the Timeout_Mode parameter. This should improve
    --  readability. For Blocking and Non_Blocking, the Amount is not
    --  evaluated.
+   --  We don't inline this procedure.
 
    --  ANCHOR(`notimeout()',`Set_Escape_Time_Mode')
    procedure Set_Escape_Timer_Mode
      (Win       : in Window := Standard_Window;
       Timer_Off : in Boolean := False);
    --  AKA
+   pragma Inline (Set_Escape_Timer_Mode);
 
    --  MANPAGE(`curs_outopts.3x')
 
@@ -562,45 +623,53 @@ include(`ACS_Map')
    procedure Set_NL_Mode (SwitchOn : in Boolean := True);
    --  AKA
    --  ALIAS(`nonl()')
+   pragma Inline (Set_NL_Mode);
 
    --  ANCHOR(`clearok()',`Clear_On_Next_Update')
    procedure Clear_On_Next_Update
      (Win      : in Window := Standard_Window;
       Do_Clear : in Boolean := True);
    --  AKA
+   pragma Inline (Clear_On_Next_Update);
 
    --  ANCHOR(`idlok()',`Use_Insert_Delete_Line')
    procedure Use_Insert_Delete_Line
      (Win    : in Window := Standard_Window;
       Do_Idl : in Boolean := True);
    --  AKA
+   pragma Inline (Use_Insert_Delete_Line);
 
    --  ANCHOR(`idcok()',`Use_Insert_Delete_Character')
    procedure Use_Insert_Delete_Character
      (Win    : in Window := Standard_Window;
       Do_Idc : in Boolean := True);
    --  AKA
+   pragma Inline (Use_Insert_Delete_Character);
 
    --  ANCHOR(`leaveok()',`Leave_Cursor_After_Update')
    procedure Leave_Cursor_After_Update
      (Win      : in Window := Standard_Window;
       Do_Leave : in Boolean := True);
    --  AKA
+   pragma Inline (Leave_Cursor_After_Update);
 
    --  ANCHOR(`immedok()',`Immediate_Update_Mode')
    procedure Immediate_Update_Mode
      (Win  : in Window := Standard_Window;
       Mode : in Boolean := False);
    --  AKA
+   pragma Inline (Immediate_Update_Mode);
 
    --  ANCHOR(`scrollok()',`Allow_Scrolling')
    procedure Allow_Scrolling
      (Win  : in Window := Standard_Window;
       Mode : in Boolean := False);
    --  AKA
+   pragma Inline (Allow_Scrolling);
 
    function Scrolling_Allowed (Win : Window := Standard_Window) return Boolean;
    --  There is no such function in the C interface.
+   pragma Inline (Scrolling_Allowed);
 
    --  ANCHOR(`wsetscrreg()',`Set_Scroll_Region')
    procedure Set_Scroll_Region
@@ -608,21 +677,27 @@ include(`ACS_Map')
       Top_Line    : in Line_Position;
       Bottom_Line : in Line_Position);
    --  AKA
+   pragma Inline (Set_Scroll_Region);
 
    --  MANPAGE(`curs_refresh.3x')
 
    --  ANCHOR(`doupdate()',`Update_Screen')
    procedure Update_Screen;
    --  AKA
+   pragma Inline (Update_Screen);
 
    --  ANCHOR(`wrefresh()',`Refresh')
    procedure Refresh (Win : in Window := Standard_Window);
    --  AKA
+   --  There is an overloaded Refresh for Pads.
+   --  The Inline pragma appears there
 
    --  ANCHOR(`wnoutrefresh()',`Refresh_Without_Update')
    procedure Refresh_Without_Update
      (Win : in Window := Standard_Window);
    --  AKA
+   --  There is an overloaded Refresh_Without_Update for Pads.
+   --  The Inline pragma appears there
 
    --  ANCHOR(`redrawwin()',`Redraw')
    procedure Redraw (Win : in Window := Standard_Window);
@@ -633,27 +708,32 @@ include(`ACS_Map')
                      Begin_Line : in Line_Position;
                      Line_Count : in Positive);
    --  AKA
+   pragma Inline (Redraw);
 
    --  MANPAGE(`curs_clear.3x')
 
    --  ANCHOR(`werase()',`Erase')
    procedure Erase (Win : in Window := Standard_Window);
    --  AKA
+   pragma Inline (Erase);
 
    --  ANCHOR(`wclear()',`Clear')
    procedure Clear
      (Win : in Window := Standard_Window);
    --  AKA
+   pragma Inline (Clear);
 
    --  ANCHOR(`wclrtobot()',`Clear_To_End_Of_Screen')
    procedure Clear_To_End_Of_Screen
      (Win : in Window := Standard_Window);
    --  AKA
+   pragma Inline (Clear_To_End_Of_Screen);
 
    --  ANCHOR(`wclrtoeol()',`Clear_To_End_Of_Line')
    procedure Clear_To_End_Of_Line
      (Win : in Window := Standard_Window);
    --  AKA
+   pragma Inline (Clear_To_End_Of_Line);
 
    --  MANPAGE(`curs_bkgd.3x')
 
@@ -662,26 +742,30 @@ include(`ACS_Map')
      (Win : in Window := Standard_Window;
       Ch  : in Attributed_Character);
    --  AKA
+   pragma Inline (Set_Background);
 
    --  ANCHOR(`wbkgd()',`Change_Background')
    procedure Change_Background
      (Win : in Window := Standard_Window;
       Ch  : in Attributed_Character);
    --  AKA
+   pragma Inline (Change_Background);
 
    --  ANCHOR(`wbkgdget()',`Get_Background')
    function Get_Background (Win : Window := Standard_Window)
      return Attributed_Character;
    --  AKA
+   pragma Inline (Get_Background);
 
    --  MANPAGE(`curs_touch.3x')
 
-   --  ANCHOR(`touchwin()',`Touch')
-   procedure Touch (Win : in Window := Standard_Window);
-   --  AKA
-
    --  ANCHOR(`untouchwin()',`Untouch')
    procedure Untouch (Win : in Window := Standard_Window);
+   --  AKA
+   pragma Inline (Untouch);
+
+   --  ANCHOR(`touchwin()',`Touch')
+   procedure Touch (Win : in Window := Standard_Window);
    --  AKA
 
    --  ANCHOR(`touchline()',`Touch')
@@ -689,6 +773,7 @@ include(`ACS_Map')
                     Start : in Line_Position;
                     Count : in Positive);
    --  AKA
+   pragma Inline (Touch);
 
    --  ANCHOR(`wtouchln()',`Change_Line_Status')
    procedure Change_Lines_Status (Win   : in Window := Standard_Window;
@@ -696,6 +781,7 @@ include(`ACS_Map')
                                   Count : in Positive;
                                   State : in Boolean);
    --  AKA
+   pragma Inline (Change_Lines_Status);
 
    --  ANCHOR(`is_linetouched()',`Is_Touched')
    function Is_Touched (Win  : Window := Standard_Window;
@@ -705,6 +791,7 @@ include(`ACS_Map')
    --  ANCHOR(`is_wintouched()',`Is_Touched')
    function Is_Touched (Win : Window := Standard_Window) return Boolean;
    --  AKA
+   pragma Inline (Is_Touched);
 
    --  MANPAGE(`curs_overlay.3x')
 
@@ -720,16 +807,19 @@ include(`ACS_Map')
       Destination_Right_Column : in Column_Position;
       Non_Destructive_Mode     : in Boolean := True);
    --  AKA
+   pragma Inline (Copy);
 
    --  ANCHOR(`overwrite()',`Overwrite')
    procedure Overwrite (Source_Window      : in Window;
                         Destination_Window : in Window);
    --  AKA
+   pragma Inline (Overwrite);
 
    --  ANCHOR(`overlay()',`Overlay')
    procedure Overlay (Source_Window      : in Window;
                       Destination_Window : in Window);
    --  AKA
+   pragma Inline (Overlay);
 
    --  MANPAGE(`curs_deleteln.3x')
 
@@ -738,14 +828,17 @@ include(`ACS_Map')
      (Win   : in Window  := Standard_Window;
       Lines : in Integer := 1); --  default is to insert one line above
    --  AKA
+   pragma Inline (Insert_Delete_Lines);
 
    --  ANCHOR(`wdeleteln()',`Delete_Line')
    procedure Delete_Line (Win : in Window := Standard_Window);
    --  AKA
+   pragma Inline (Delete_Line);
 
    --  ANCHOR(`winsertln()',`Insert_Line')
    procedure Insert_Line (Win : in Window := Standard_Window);
    --  AKA
+   pragma Inline (Insert_Line);
 
    --  MANPAGE(`curs_getyx.3x')
 
@@ -755,6 +848,7 @@ include(`ACS_Map')
       Number_Of_Lines   : out Line_Count;
       Number_Of_Columns : out Column_Count);
    --  AKA
+   pragma Inline (Get_Size);
 
    --  ANCHOR(`getbegyx()',`Get_Window_Position')
    procedure Get_Window_Position
@@ -762,6 +856,7 @@ include(`ACS_Map')
       Top_Left_Line   : out Line_Position;
       Top_Left_Column : out Column_Position);
    --  AKA
+   pragma Inline (Get_Window_Position);
 
    --  ANCHOR(`getyx()',`Get_Cursor_Position')
    procedure Get_Cursor_Position
@@ -769,6 +864,7 @@ include(`ACS_Map')
       Line   : out Line_Position;
       Column : out Column_Position);
    --  AKA
+   pragma Inline (Get_Cursor_Position);
 
    --  ANCHOR(`getparyx()',`Get_Origin_Relative_To_Parent')
    procedure Get_Origin_Relative_To_Parent
@@ -779,6 +875,7 @@ include(`ACS_Map')
    --  AKA
    --  Instead of placing -1 in the coordinates as return, we use a boolean
    --  to return the info that the window has no parent.
+   pragma Inline (Get_Origin_Relative_To_Parent);
 
    --  MANPAGE(`curs_pad.3x')
 
@@ -786,6 +883,7 @@ include(`ACS_Map')
    function New_Pad (Lines   : Line_Count;
                      Columns : Column_Count) return Window;
    --  AKA
+   pragma Inline (New_Pad);
 
    --  ANCHOR(`subpad()',`Sub_Pad')
    function Sub_Pad
@@ -795,6 +893,7 @@ include(`ACS_Map')
       First_Line_Position   : Line_Position;
       First_Column_Position : Column_Position) return Window;
    --  AKA
+   pragma Inline (Sub_Pad);
 
    --  ANCHOR(`prefresh()',`Refresh')
    procedure Refresh
@@ -806,6 +905,7 @@ include(`ACS_Map')
       Destination_Bottom_Row   : in Line_Position;
       Destination_Right_Column : in Column_Position);
    --  AKA
+   pragma Inline (Refresh);
 
    --  ANCHOR(`pnoutrefresh()',`Refresh_Without_Update')
    procedure Refresh_Without_Update
@@ -817,6 +917,7 @@ include(`ACS_Map')
       Destination_Bottom_Row   : in Line_Position;
       Destination_Right_Column : in Column_Position);
    --  AKA
+   pragma Inline (Refresh_Without_Update);
 
    --  ANCHOR(`pechochar()',`Add_Character_To_Pad_And_Echo_It')
    procedure Add_Character_To_Pad_And_Echo_It
@@ -827,6 +928,7 @@ include(`ACS_Map')
    procedure Add_Character_To_Pad_And_Echo_It
      (Pad : in Window;
       Ch  : in Character);
+   pragma Inline (Add_Character_To_Pad_And_Echo_It);
 
    --  MANPAGE(`curs_scroll.3x')
 
@@ -834,6 +936,7 @@ include(`ACS_Map')
    procedure Scroll (Win    : in Window  := Standard_Window;
                      Amount : in Integer := 1);
    --  AKA
+   pragma Inline (Scroll);
 
    --  MANPAGE(`curs_delch.3x')
 
@@ -847,6 +950,7 @@ include(`ACS_Map')
       Line   : in Line_Position;
       Column : in Column_Position);
    --  AKA
+   pragma Inline (Delete_Character);
 
    --  MANPAGE(`curs_inch.3x')
 
@@ -861,6 +965,7 @@ include(`ACS_Map')
       Line   : Line_Position;
       Column : Column_Position) return Attributed_Character;
    --  AKA
+   --  More Peek's follow, pragma Inline appears later.
 
    --  MANPAGE(`curs_winch.3x')
 
@@ -893,6 +998,7 @@ include(`ACS_Map')
                      Len    : in Integer := -1);
    --  AKA
    --  ALIAS(`mvwinsstr()')
+   pragma Inline (Insert);
 
    --  MANPAGE(`curs_instr.3x')
 
@@ -929,6 +1035,7 @@ include(`ACS_Map')
                    Len    : in  Integer := -1);
    --  AKA
    --  ALIAS(`mvwinchstr()')
+   --  We don't inline the Peek procedures
 
    --  MANPAGE(`curs_getstr.3x')
 
@@ -944,8 +1051,10 @@ include(`ACS_Map')
                   Column : in  Column_Position;
                   Str    : out String;
                   Len    : in  Integer := -1);
-   --  AKA: not specified in ncurses, should be: mvwgetnstr()
+   --  AKA
+   --  not specified in ncurses, should be: mvwgetnstr()
    --       and mvwgetstr() (which exists)
+   --  Get is not inlined
 
    --  MANPAGE(`curs_slk.3x')
 
@@ -960,37 +1069,50 @@ include(`ACS_Map')
    procedure Init_Soft_Label_Keys
      (Format : in Soft_Label_Key_Format := Three_Two_Three);
    --  AKA
+   pragma Inline (Init_Soft_Label_Keys);
 
    --  ANCHOR(`slk_set()',`Set_Soft_Label_Key')
    procedure Set_Soft_Label_Key (Label : in Label_Number;
                                  Text  : in String;
                                  Fmt   : in Label_Justification := Left);
    --  AKA
+   --  We don't inline this procedure
 
    --  ANCHOR(`slk_refresh()',`Refresh_Soft_Label_Key')
    procedure Refresh_Soft_Label_Keys;
    --  AKA
+   pragma Inline (Refresh_Soft_Label_Keys);
 
    --  ANCHOR(`slk_noutrefresh()',`Refresh_Soft_Label_Keys_Without_Update')
    procedure Refresh_Soft_Label_Keys_Without_Update;
    --  AKA
+   pragma Inline (Refresh_Soft_Label_Keys_Without_Update);
 
    --  ANCHOR(`slk_label()',`Get_Soft_Label_Key')
    procedure Get_Soft_Label_Key (Label : in Label_Number;
                                  Text  : out String);
    --  AKA
 
+   --  ANCHOR(`slk_label()',`Get_Soft_Label_Key')
+   function Get_Soft_Label_Key (Label : in Label_Number) return String;
+   --  AKA
+   --  Same as function
+   pragma Inline (Get_Soft_Label_Key);
+
    --  ANCHOR(`slk_clear()',`Clear_Soft_Label_Keys')
    procedure Clear_Soft_Label_Keys;
    --  AKA
+   pragma Inline (Clear_Soft_Label_Keys);
 
    --  ANCHOR(`slk_restore()',`Restore_Soft_Label_Keys')
    procedure Restore_Soft_Label_Keys;
    --  AKA
+   pragma Inline (Restore_Soft_Label_Keys);
 
    --  ANCHOR(`slk_touch()',`Touch_Soft_Label_Keys')
    procedure Touch_Soft_Label_Keys;
    --  AKA
+   pragma Inline (Touch_Soft_Label_Keys);
 
    --  ANCHOR(`slk_attron()',`Switch_Soft_Label_Key_Attributes')
    procedure Switch_Soft_Label_Key_Attributes
@@ -998,12 +1120,14 @@ include(`ACS_Map')
       On   : in Boolean := True);
    --  AKA
    --  ALIAS(`slk_attroff()')
+   pragma Inline (Switch_Soft_Label_Key_Attributes);
 
    --  ANCHOR(`slk_attrset()',`Set_Soft_Label_Key_Attributes')
    procedure Set_Soft_Label_Key_Attributes
      (Attr  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   pragma Inline (Set_Soft_Label_Key_Attributes);
 
    --  ANCHOR(`slk_attr()',`Get_Soft_Label_Key_Attributes')
    function Get_Soft_Label_Key_Attributes return Character_Attribute_Set;
@@ -1012,6 +1136,23 @@ include(`ACS_Map')
    --  ANCHOR(`slk_attr()',`Get_Soft_Label_Key_Attributes')
    function Get_Soft_Label_Key_Attributes return Color_Pair;
    --  AKA
+   pragma Inline (Get_Soft_Label_Key_Attributes);
+
+   --  MANPAGE(`keyok.3x')
+
+   --  ANCHOR(`keyok()',`Enable_Key')
+   procedure Enable_Key (Key    : in Special_Key_Code;
+                         Enable : in Boolean := True);
+   --  AKA
+   pragma Inline (Enable_Key);
+
+   --  MANPAGE(`define_key.3x')
+
+   --  ANCHOR(`define_key()',`Define_Key')
+   procedure Define_Key (Definition : in String;
+                         Key        : in Special_Key_Code);
+   --  AKA
+   pragma Inline (Define_Key);
 
    --  MANPAGE(`curs_util.3x')
 
@@ -1023,52 +1164,84 @@ include(`ACS_Map')
    --  AKA
    --  The external name for a real keystroke.
 
+   --  ANCHOR(`keyname()',`Key_Name')
+   function Key_Name (Key  : in  Real_Key_Code) return String;
+   --  AKA
+   --  Same as function
+   --  We don't inline this routine
+
    --  ANCHOR(`unctrl()',`Un_Control')
    procedure Un_Control (Ch  : in Attributed_Character;
                          Str : out String);
    --  AKA
 
+   --  ANCHOR(`unctrl()',`Un_Control')
+   function Un_Control (Ch  : in Attributed_Character) return String;
+   --  AKA
+   --  Same as function
+   pragma Inline (Un_Control);
+
    --  ANCHOR(`delay_output()',`Delay_Output')
    procedure Delay_Output (Msecs : in Natural);
    --  AKA
+   pragma Inline (Delay_Output);
 
    --  ANCHOR(`flushinp()',`Flush_Input')
    procedure Flush_Input;
    --  AKA
+   pragma Inline (Flush_Input);
 
    --  MANPAGE(`curs_termattrs.3x')
 
    --  ANCHOR(`baudrate()',`Baudrate')
    function Baudrate return Natural;
    --  AKA
+   pragma Inline (Baudrate);
 
    --  ANCHOR(`erasechar()',`Erase_Character')
    function Erase_Character return Character;
    --  AKA
+   pragma Inline (Erase_Character);
 
    --  ANCHOR(`killchar()',`Kill_Character')
    function Kill_Character return Character;
    --  AKA
+   pragma Inline (Kill_Character);
 
    --  ANCHOR(`has_ic()',`Has_Insert_Character')
    function Has_Insert_Character return Boolean;
    --  AKA
+   pragma Inline (Has_Insert_Character);
 
    --  ANCHOR(`has_il()',`Has_Insert_Line')
    function Has_Insert_Line return Boolean;
    --  AKA
+   pragma Inline (Has_Insert_Line);
 
    --  ANCHOR(`termattrs()',`Supported_Attributes')
    function Supported_Attributes return Character_Attribute_Set;
    --  AKA
+   pragma Inline (Supported_Attributes);
 
    --  ANCHOR(`longname()',`Long_Name')
    procedure Long_Name (Name : out String);
    --  AKA
 
+   --  ANCHOR(`longname()',`Long_Name')
+   function Long_Name return String;
+   --  AKA
+   --  Same as function
+   pragma Inline (Long_Name);
+
    --  ANCHOR(`termname()',`Terminal_Name')
    procedure Terminal_Name (Name : out String);
    --  AKA
+
+   --  ANCHOR(`termname()',`Terminal_Name')
+   function Terminal_Name return String;
+   --  AKA
+   --  Same as function
+   pragma Inline (Terminal_Name);
 
    --  MANPAGE(`curs_color.3x')
 
@@ -1082,16 +1255,19 @@ include(`ACS_Map')
                         Fore : in Color_Number;
                         Back : in Color_Number);
    --  AKA
+   pragma Inline (Init_Pair);
 
    --  ANCHOR(`pair_content()',`Pair_Content')
    procedure Pair_Content (Pair : in Color_Pair;
                            Fore : out Color_Number;
                            Back : out Color_Number);
    --  AKA
+   pragma Inline (Pair_Content);
 
    --  ANCHOR(`has_colors()',`Has_Colors')
    function Has_Colors return Boolean;
    --  AKA
+   pragma Inline (Has_Colors);
 
    --  ANCHOR(`init_color()',`Init_Color')
    procedure Init_Color (Color : in Color_Number;
@@ -1099,10 +1275,12 @@ include(`ACS_Map')
                          Green : in RGB_Value;
                          Blue  : in RGB_Value);
    --  AKA
+   pragma Inline (Init_Color);
 
    --  ANCHOR(`can_change_color()',`Can_Change_Color')
    function Can_Change_Color return Boolean;
    --  AKA
+   pragma Inline (Can_Change_Color);
 
    --  ANCHOR(`color_content()',`Color_Content')
    procedure Color_Content (Color : in  Color_Number;
@@ -1110,6 +1288,7 @@ include(`ACS_Map')
                             Green : out RGB_Value;
                             Blue  : out RGB_Value);
    --  AKA
+   pragma Inline (Color_Content);
 
    --  MANPAGE(`curs_kernel.3x')
 
@@ -1121,19 +1300,23 @@ include(`ACS_Map')
    procedure Save_Curses_Mode (Mode : in Curses_Mode);
    --  AKA
    --  ALIAS(`def_shell_mode()')
+   pragma Inline (Save_Curses_Mode);
 
    --  ANCHOR(`reset_prog_mode()',`Reset_Curses_Mode')
    procedure Reset_Curses_Mode (Mode : in Curses_Mode);
    --  AKA
    --  ALIAS(`reset_shell_mode()')
+   pragma Inline (Reset_Curses_Mode);
 
    --  ANCHOR(`savetty()',`Save_Terminal_State')
    procedure Save_Terminal_State;
    --  AKA
+   pragma Inline (Save_Terminal_State);
 
    --  ANCHOR(`resetty();',`Reset_Terminal_State')
    procedure Reset_Terminal_State;
    --  AKA
+   pragma Inline (Reset_Terminal_State);
 
    type Stdscr_Init_Proc is access
       function (Win     : Window;
@@ -1151,16 +1334,19 @@ include(`ACS_Map')
    --        ripoffline(), in which the Lines argument absolute value is the
    --        number of lines to be ripped of. The official ripoffline() only
    --        uses the sign of Lines to rip of a single line from bottom or top.
+   pragma Inline (Rip_Off_Lines);
 
    type Cursor_Visibility is (Invisible, Normal, Very_Visible);
 
    --  ANCHOR(`curs_set()',`Set_Cursor_Visibility')
    procedure Set_Cursor_Visibility (Visibility : in out Cursor_Visibility);
    --  AKA
+   pragma Inline (Set_Cursor_Visibility);
 
    --  ANCHOR(`napms()',`Nap_Milli_Seconds')
    procedure Nap_Milli_Seconds (Ms : in Natural);
    --  AKA
+   pragma Inline (Nap_Milli_Seconds);
 
    --  |=====================================================================
    --  | Some usefull helpers.
@@ -1176,12 +1362,10 @@ include(`ACS_Map')
    --  Screen coordinates are the position informations on the physical device.
    --  An Curses_Exception will be raised if Line and Column are not in the
    --  Window or if you pass the Null_Window as argument.
+   --  We don't inline this procedure
 
 private
    type Window is new System.Address;
    Null_Window : constant Window := Window (System.Null_Address);
-
-   Generation_Bit_Order : constant System.Bit_Order := System.M4_BIT_ORDER;
-   --  This constant may be different on your system.
 
 end Terminal_Interface.Curses;

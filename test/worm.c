@@ -34,7 +34,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.20 1997/05/03 18:38:57 tom Exp $
+  $Id: worm.c,v 1.21 1998/01/30 10:17:59 tom Exp $
 */
 
 #include <test.priv.h>
@@ -233,13 +233,13 @@ int last, bottom;
 	    bg = -1;
 #endif
  
-	init_pair(COLOR_GREEN,   COLOR_GREEN,   -1);
-	init_pair(COLOR_RED,     COLOR_RED,     -1);
-	init_pair(COLOR_CYAN,    COLOR_CYAN,    -1);
-	init_pair(COLOR_WHITE,   COLOR_WHITE,   -1);
-	init_pair(COLOR_MAGENTA, COLOR_MAGENTA, -1);
-	init_pair(COLOR_BLUE,    COLOR_BLUE,    -1);
-	init_pair(COLOR_YELLOW,  COLOR_YELLOW,  -1);
+	init_pair(COLOR_GREEN,   COLOR_GREEN,   bg);
+	init_pair(COLOR_RED,     COLOR_RED,     bg);
+	init_pair(COLOR_CYAN,    COLOR_CYAN,    bg);
+	init_pair(COLOR_WHITE,   COLOR_WHITE,   bg);
+	init_pair(COLOR_MAGENTA, COLOR_MAGENTA, bg);
+	init_pair(COLOR_BLUE,    COLOR_BLUE,    bg);
+	init_pair(COLOR_YELLOW,  COLOR_YELLOW,  bg);
 
 	flavor[0] |= COLOR_PAIR(COLOR_GREEN)   | A_BOLD;
 	flavor[1] |= COLOR_PAIR(COLOR_RED)     | A_BOLD;

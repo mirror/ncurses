@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
 **	lib_window.c
@@ -27,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_window.c,v 1.8 1997/02/02 01:14:43 tom Exp $")
+MODULE_ID("$Id: lib_window.c,v 1.11 1998/02/11 12:13:53 tom Exp $")
 
 void _nc_synchook(WINDOW *win)
 /* hook to be called after each window change */
@@ -39,12 +51,12 @@ void _nc_synchook(WINDOW *win)
 int mvderwin(WINDOW *win, int y, int x)
 /* move a derived window */
 {
-   WINDOW *orig = win->_parent;
+   WINDOW *orig;
    int i;
 
    T((T_CALLED("mvderwin(%p,%d,%d)"), win, y, x));
 
-   if (orig)
+   if (win && (orig = win->_parent))
    {
       if (win->_parx==x && win->_pary==y)
 	returnCode(OK);
@@ -182,9 +194,10 @@ int i;
 
 	T((T_CALLED("dupwin(%p)"), win));
 
-	if ((nwin = newwin(win->_maxy + 1, win->_maxx + 1, win->_begy, win->_begx)) == NULL)
-		returnWin(0);
-
+	if ((win==NULL) ||
+	    ((nwin = newwin(win->_maxy + 1, win->_maxx + 1, win->_begy, win->_begx)) == NULL))
+	  returnWin(0);
+	
 	nwin->_curx        = win->_curx;
 	nwin->_cury        = win->_cury;
 	nwin->_maxy        = win->_maxy;
@@ -193,7 +206,11 @@ int i;
 	nwin->_begx        = win->_begx;
 	nwin->_yoffset     = win->_yoffset;
 
-	nwin->_flags       = win->_flags;
+	nwin->_flags       = win->_flags & ~_SUBWIN;
+	/* Due to the use of newwin(), the clone is not a subwindow.
+	 * The text is really copied into the clone.
+	 */
+
 	nwin->_attrs       = win->_attrs;
 	nwin->_bkgd        = win->_bkgd;
 
@@ -204,9 +221,11 @@ int i;
 	nwin->_delay       = win->_delay;
 	nwin->_immed       = win->_immed;
 	nwin->_sync        = win->_sync;
-	nwin->_parx        = win->_parx;
-	nwin->_pary        = win->_pary;
-	nwin->_parent      = win->_parent;
+
+	nwin->_parx        = 0;
+	nwin->_pary        = 0;
+	nwin->_parent      = (WINDOW*)0; 
+	/* See above: the clone isn't a subwindow! */
 
 	nwin->_regtop      = win->_regtop;
 	nwin->_regbottom   = win->_regbottom;

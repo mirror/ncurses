@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
  *	vidputs(newmode, outc)
@@ -52,7 +64,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.14 1997/05/06 16:02:43 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.20 1998/02/11 12:13:56 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 
@@ -67,6 +79,8 @@ int vidputs(attr_t newmode, int  (*outc)(int))
 static attr_t previous_attr = A_NORMAL;
 attr_t turn_on, turn_off;
 int pair, current_pair;
+bool reverse = FALSE;
+bool used_ncv = FALSE;
 
 	T((T_CALLED("vidputs(%s)"), _traceattr(newmode)));
 
@@ -76,20 +90,65 @@ int pair, current_pair;
 
 	T(("previous attribute was %s", _traceattr(previous_attr)));
 
+#if !USE_XMC_SUPPORT
+	if (magic_cookie_glitch > 0)
+		newmode &= ~(SP->_xmc_suppress);
+#endif
+
+	/*
+	 * If we have a terminal that cannot combine color with video
+	 * attributes, use the colors in preference.
+	 */
+	if ((newmode & A_COLOR)
+	 && (no_color_video > 0)) {
+		static const struct {
+			attr_t video;
+			unsigned bit;
+		} table[] = {
+			{ A_STANDOUT,		1 },
+			{ A_UNDERLINE,		2 },
+			{ A_REVERSE,		4 },
+			{ A_BLINK,		8 },
+			{ A_DIM,		16 },
+			{ A_BOLD, 		32 },
+			{ A_INVIS,		64 },
+			{ A_PROTECT,		128 },
+			{ A_ALTCHARSET,		256 },
+		};
+		size_t n;
+		for (n = 0; n < SIZEOF(table); n++) {
+			if ((table[n].bit & no_color_video)
+			 && (table[n].video & newmode)) {
+				used_ncv = TRUE;
+				if (table[n].video == A_REVERSE)
+					reverse = TRUE;
+				else
+					newmode &= ~table[n].video;
+			}
+		}
+	}
+
 	if (newmode == previous_attr)
 		returnCode(OK);
 
-	turn_off = (~newmode & previous_attr) & ALL_BUT_COLOR;
-	turn_on  = (newmode & ~previous_attr) & ALL_BUT_COLOR;
-
 	pair = PAIR_NUMBER(newmode);
 	current_pair = PAIR_NUMBER(previous_attr);
+
+	if (reverse) {
+		newmode &= ~A_REVERSE;
+		pair = -pair;
+	}
+	if (previous_attr & A_REVERSE)
+		current_pair = -current_pair;
+
+	turn_off = (~newmode & previous_attr) & ALL_BUT_COLOR;
+	turn_on  = (newmode & ~previous_attr) & ALL_BUT_COLOR;
 
 	/* if there is no current screen, assume we *can* do color */
 	if ((!SP || SP->_coloron) && pair == 0) {
 		T(("old pair = %d -- new pair = %d", current_pair, pair));
 		if (pair != current_pair) {
-			_nc_do_color(pair, outc);
+			_nc_do_color(pair, reverse, outc);
 			previous_attr &= ~A_COLOR;
 		}
 	}
@@ -104,7 +163,7 @@ int pair, current_pair;
 			previous_attr &= ~A_COLOR;
 		}
 
-	} else if (set_attributes) {
+	} else if (set_attributes && !used_ncv) {
 		if (turn_on || turn_off) {
 			TPUTS_TRACE("set_attributes");
 			tputs(tparm(set_attributes,
@@ -157,9 +216,12 @@ int pair, current_pair;
 		current_pair = PAIR_NUMBER(previous_attr);
 		T(("old pair = %d -- new pair = %d", current_pair, pair));
 		if (pair != current_pair) {
-			_nc_do_color(pair, outc);
+			_nc_do_color(pair, reverse, outc);
 		}
 	}
+
+	if (reverse)
+		newmode |= A_REVERSE;
 
 	if (SP)
 		SP->_current_attr = newmode;
@@ -176,9 +238,9 @@ int vidattr(attr_t newmode)
 	returnCode(vidputs(newmode, _nc_outch));
 }
 
-attr_t termattrs(void)
+chtype termattrs(void)
 {
-	int attrs = A_NORMAL;
+	chtype attrs = A_NORMAL;
 
 	if (enter_alt_charset_mode)
 		attrs |= A_ALTCHARSET;

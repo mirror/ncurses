@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
  *	toe.c --- table of entries report generator
@@ -29,7 +41,7 @@
 #include <dump_entry.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: toe.c,v 0.15 1997/02/15 18:54:47 tom Exp $")
+MODULE_ID("$Id: toe.c,v 0.18 1998/02/11 12:14:02 tom Exp $")
 
 const char *_nc_progname;
 
@@ -90,6 +102,7 @@ int main (int argc, char *argv[])
     {
 	if (freopen(argv[optind], "r", stdin) == NULL)
 	{
+	    (void) fflush(stdout);
 	    fprintf(stderr, "%s: can't open %s\n", _nc_progname, argv[optind]);
 	    ExitProgram(EXIT_FAILURE);
 	}
@@ -157,12 +170,12 @@ int main (int argc, char *argv[])
     if (optind < argc) {
 	code = typelist(argc-optind, argv+optind, header, deschook);
     } else {
-	char	*explicit, *home, *eargv[3];
+	char	*by_env, *home, *eargv[3];
 	int	j;
 
 	j = 0;
-	if ((explicit = getenv("TERMINFO")) != (char *)NULL)
-	    eargv[j++] = explicit;
+	if ((by_env = getenv("TERMINFO")) != (char *)NULL)
+	    eargv[j++] = by_env;
 	else
 	{
 	    if ((home = getenv("HOME")) != (char *)NULL)
@@ -210,6 +223,7 @@ static int typelist(int eargc, char *eargv[],
 
 	if ((termdir = opendir(eargv[i])) == (DIR *)NULL)
 	{
+	    (void) fflush(stdout);
 	    (void) fprintf(stderr,
 			   "%s: can't open terminfo directory %s\n",
 			   _nc_progname, eargv[i]);
@@ -253,6 +267,7 @@ static int typelist(int eargc, char *eargv[],
 		status = _nc_read_file_entry(name_2, &lterm);
 		if (status <= 0)
 		{
+		    (void) fflush(stdout);
 		    (void) fprintf(stderr,
 				   "toe: couldn't open terminfo file %s.\n",
 				   name_2);

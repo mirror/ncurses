@@ -1,4 +1,5 @@
-.\" $Id: curs_attr.3x,v 1.12 1997/01/05 01:14:33 tom Exp $
+'\" t
+.\" $Id: curs_attr.3x,v 1.14 1997/12/13 22:38:46 tom Exp $
 .TH curs_attr 3X ""
 .SH NAME
 \fBattroff\fR, \fBwattroff\fR, \fBattron\fR, \fBwattron\fR,
@@ -84,7 +85,7 @@ than the remaining window width means to change attributes all the way to the
 end of the current line.  The \fBwchgat\fR function generalizes this to any
 window; the \fBmvwchgat\fR function does a cursor move before acting.  In these
 functions, the color argument is a color-pair index (as in the first argument
-of \fIinit_pair\fR, see \fBcurs_color\fR(3x)).  The \fBopts\fR argument is not
+of \fIinit_pair\fR, see \fBcurs_color\fR(3X)).  The \fBopts\fR argument is not
 presently used, but is reserved for the future (leave it \fBNULL\fR).
 .SS Attributes
 The following video attributes, defined in \fB<curses.h>\fR, can be passed to

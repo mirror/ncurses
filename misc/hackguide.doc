@@ -162,10 +162,9 @@ If autoconf Fails
    
                               How to Report Bugs
                                        
-   The reporting address for bugs is ncurses@bsdi.com. This is a
-   majordomo list; to join, write to ncurses-request@mailgate.bsdi.com
-   with a message containing the line:
-
+   The reporting address for bugs is bug-ncurses@gnu.org. This is a
+   majordomo list; to join, write to ncurses-request@gnu.org with a
+   message containing the line:
              subscribe <name>@<host.domain>
 
    The ncurses code is maintained by a small group of volunteers. While

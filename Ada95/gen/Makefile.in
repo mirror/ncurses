@@ -1,31 +1,42 @@
-#----------------------------------------------------------------------------
-#                                                                          --
-#                            GNAT ncurses Binding                          --
-#                                gen/Makefile                              --
-#                                                                          --
-#  Version 00.92                                                           --
-#                                                                          --
-#  The ncurses Ada95 binding is copyrighted 1996 by                        --
-#  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
-#                                                                          --
-#  Permission is hereby granted to reproduce and distribute this           --
-#  binding by any means and for any fee, whether alone or as part          --
-#  of a larger distribution, in source or in binary form, PROVIDED         --
-#  this notice is included with any such distribution, and is not          --
-#  removed from any of its header files. Mention of ncurses and the        --
-#  author of this binding in any applications linked with it is            --
-#  highly appreciated.                                                     --
-#                                                                          --
-#  This binding comes AS IS with no warranty, implied or expressed.        --
-#----------------------------------------------------------------------------
+##############################################################################
+# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+#  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+#
 #  Version Control
-#  $Revision: 1.8 $
+#  $Revision: 1.18 $
 #
 .SUFFIXES:
 
 SHELL		= /bin/sh
 THIS		= Makefile
 
+top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
@@ -33,6 +44,8 @@ libdir		= @libdir@
 includedir	= @includedir@
 datadir		= @datadir@
 ticdir		= $(datadir)/terminfo
+ADA_INCLUDE	= @ADA_INCLUDE@
+ADA_OBJECTS	= @ADA_OBJECTS@
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -68,12 +81,11 @@ M4FLAGS		=
 DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
 
 ################################################################################
-ALIB            = @nc_ada_package@
+ALIB            = @cf_ada_package@
 ABASE		= $(ALIB)-curses
 
 ADA_SRCDIR	= ../ada_include
 ADA_OBJDIR      = ../ada_objects
-OBJDIR          = ../objects
 
 GEN_FILES0      = Base_Defs
 
@@ -84,7 +96,8 @@ GEN_FILES1      = Key_Definitions              		\
 		  Color_Defs                   		\
 		  ACS_Map                      		\
 		  Linker_Options               		\
-		  Base_Defs
+		  Base_Defs			        \
+		  Version_Info
 
 GEN_FILES2      = Menu_Opt_Rep        		    	\
 		  Menu_Base_Defs               		\
@@ -108,6 +121,7 @@ GEN_TARGETS     = $(ADA_SRCDIR)/$(ABASE).ads         			\
 	          $(ADA_SRCDIR)/$(ABASE)-menus-menu_user_data.ads	\
 	          $(ADA_SRCDIR)/$(ABASE)-menus-item_user_data.ads	\
 	          $(ADA_SRCDIR)/$(ABASE)-forms-form_user_data.ads	\
+	          $(ADA_SRCDIR)/$(ABASE)-forms-field_types.ads		\
 	          $(ADA_SRCDIR)/$(ABASE)-forms-field_user_data.ads	\
 	          $(ADA_SRCDIR)/$(ABASE)-panels-user_data.ads
 
@@ -119,15 +133,41 @@ GEN_SRC		= $(srcdir)/$(ABASE).ads.m4				\
 	          $(srcdir)/$(ABASE)-menus-menu_user_data.ads.m4	\
 	          $(srcdir)/$(ABASE)-menus-item_user_data.ads.m4	\
 	          $(srcdir)/$(ABASE)-forms-form_user_data.ads.m4	\
+	          $(srcdir)/$(ABASE)-forms-field_types.ads.m4		\
 	          $(srcdir)/$(ABASE)-forms-field_user_data.ads.m4	\
 	          $(srcdir)/$(ABASE)-panels-user_data.ads.m4
 
 
-all:	$(GEN_TARGETS) dirs
+all:	$(ADA_OBJDIR) $(GEN_TARGETS)
 	@
 
-dirs:
-	@-mkdir $(OBJDIR) $(ADA_OBJDIR)
+sources:
+
+$(ADA_OBJDIR) \
+$(ADA_INCLUDE) \
+$(ADA_OBJECTS) :
+	$(top_srcdir)/mkinstalldirs $@
+
+install \
+install.libs :: $(ADA_INCLUDE)
+	@echo installing package $(ABASE) in $(ADA_INCLUDE)
+	@$(top_srcdir)/tar-copy.sh '$(ABASE)[-.]*' $(ADA_SRCDIR) $(ADA_INCLUDE)
+	@test $(srcdir) != ./ && $(top_srcdir)/tar-copy.sh '$(ABASE)[-.]*' $(srcdir)/../ada_include $(ADA_INCLUDE)
+
+install \
+install.libs :: $(ADA_OBJECTS)
+	@echo installing package $(ABASE) in $(ADA_OBJECTS)
+	@$(top_srcdir)/tar-copy.sh '$(ABASE)[-.]*' $(ADA_OBJDIR) $(ADA_OBJECTS)
+
+uninstall \
+uninstall.libs ::
+	@echo removing package $(ABASE) from $(ADA_INCLUDE)
+	-@cd $(ADA_INCLUDE) && rm -f $(ABASE)[-.]*
+
+uninstall \
+uninstall.libs ::
+	@echo removing package $(ABASE) from $(ADA_OBJECTS)
+	-@cd $(ADA_OBJECTS) && rm -f $(ABASE)[-.]*
 
 gen:	gen.o
 	@ECHO_LINK@ $(LINK) $(CFLAGS_NORMAL) gen.o $(LD_FLAGS) -o $@ $(LIB_CURSES)
@@ -158,6 +198,9 @@ AC_Rep: gen
 
 Linker_Options: gen
 	./gen B L >$@
+
+Version_Info: gen
+	./gen B V >$@
 
 Menu_Opt_Rep: gen
 	./gen M R >$@
@@ -243,6 +286,13 @@ $(ADA_SRCDIR)/$(ABASE)-forms-form_user_data.ads: \
 	$(srcdir)/$(ABASE)-forms-form_user_data.ads.m4 |\
 	$(DEL_ADAMODE) >$@
 
+$(ADA_SRCDIR)/$(ABASE)-forms-field_types.ads: \
+		$(srcdir)/$(ABASE)-forms-field_types.ads.m4 \
+		$(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-forms-field_types.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
 $(ADA_SRCDIR)/$(ABASE)-forms-field_user_data.ads: \
 		$(srcdir)/$(ABASE)-forms-field_user_data.ads.m4 \
 		$(srcdir)/normal.m4
@@ -257,10 +307,6 @@ $(ADA_SRCDIR)/$(ABASE)-panels-user_data.ads: \
 	$(srcdir)/$(ABASE)-panels-user_data.ads.m4 |\
 	$(DEL_ADAMODE) >$@
 
-install :: 
-
-install.libs ::
-
 install.progs ::
 
 tags:
@@ -269,13 +315,17 @@ tags:
 TAGS:
 	etags *.[ch]
 
-clean ::
-	rm -f a.out core gen *.o $(GEN_FILES1) $(GEN_FILES2) $(GEN_FILES3) \
-	$(GEN_FILES4) $(GEN_TARGETS)
+mostlyclean ::
+	-rm -f a.out core gen *.o
+	-rm -f $(GEN_FILES1)
+	-rm -f $(GEN_FILES2)
+	-rm -f $(GEN_FILES3)
+	-rm -f $(GEN_FILES4)
 
-mostlyclean :: clean
+clean :: mostlyclean
+	-rm -f $(GEN_TARGETS)
 
-distclean :: mostlyclean
+distclean :: clean
 	rm -f Makefile
 
 realclean :: distclean

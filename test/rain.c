@@ -1,5 +1,5 @@
 /*
- * $Id: rain.c,v 1.8 1997/05/03 18:38:27 tom Exp $
+ * $Id: rain.c,v 1.11 1997/09/18 18:36:46 tom Exp $
  */
 #include <test.priv.h>
 
@@ -9,10 +9,21 @@
 
 /* rain 11/3/1980 EPS/CITHEP */
 
-#define cursor(col,row) move(row,col)
-
 static float ranf(void);
 static void onsig(int sig);
+
+static int next_j(int j)
+{
+    if (j==0) j=4; else --j;
+    if (has_colors()) {
+	int z = (int)(3*ranf());
+	chtype color = COLOR_PAIR(z);
+	if (z)
+	    color |= A_BOLD;
+	attrset(color);
+    }
+    return j;
+}
 
 int
 main(
@@ -28,61 +39,75 @@ float c;
 	if (signal(j,SIG_IGN)!=SIG_IGN) signal(j,onsig);
 
     initscr();
+    if (has_colors()) {
+	int bg = COLOR_BLACK;
+	start_color();
+#ifdef NCURSES_VERSION
+	if (use_default_colors() == OK)
+		bg = -1;
+#endif
+	init_pair(1, COLOR_BLUE, bg);
+	init_pair(2, COLOR_CYAN, bg);
+    }
     nl();
     noecho();
     curs_set(0);
+    timeout(0);
 
     r = (float)(LINES - 4);
     c = (float)(COLS - 4);
     for (j=5;--j>=0;) {
-		xpos[j]=(int)(c* ranf())+2;
-		ypos[j]=(int)(r* ranf())+2;
+	xpos[j]=(int)(c* ranf())+2;
+	ypos[j]=(int)(r* ranf())+2;
     }
+
     for (j=0;;) {
-		x=(int)(c*ranf())+2;
-		y=(int)(r*ranf())+2;
+	x=(int)(c*ranf())+2;
+	y=(int)(r*ranf())+2;
 
-		cursor(x,y); addch('.');
+	mvaddch(y,x, '.');
 
-		cursor(xpos[j],ypos[j]); addch('o');
+	mvaddch(ypos[j], xpos[j], 'o');
 
-		if (j==0) j=4; else --j;
-		cursor(xpos[j],ypos[j]); addch('O');
+	j = next_j(j);
+	mvaddch(ypos[j], xpos[j], 'O');
 
-		if (j==0) j=4; else --j;
-		cursor(xpos[j],ypos[j]-1);
-		addch('-');
-		cursor(xpos[j]-1,ypos[j]);
-		addstr("|.|");
-		cursor(xpos[j],ypos[j]+1);
-		addch('-');
+	j = next_j(j);
+	mvaddch( ypos[j]-1, xpos[j],    '-');
+	mvaddstr(ypos[j],   xpos[j]-1, "|.|");
+	mvaddch( ypos[j]+1, xpos[j],    '-');
 
-		if (j==0) j=4; else --j;
-		cursor(xpos[j],ypos[j]-2);
-		addch('-');
-		cursor(xpos[j]-1,ypos[j]-1);
-		addstr("/ \\");
-		cursor(xpos[j]-2,ypos[j]);
-		addstr("| O |");
-		cursor(xpos[j]-1,ypos[j]+1);
-		addstr("\\ /");
-		cursor(xpos[j],ypos[j]+2);
-		addch('-');
+	j = next_j(j);
+	mvaddch( ypos[j]-2, xpos[j],     '-');
+	mvaddstr(ypos[j]-1, xpos[j]-1,  "/ \\");
+	mvaddstr(ypos[j],   xpos[j]-2,  "| O |");
+	mvaddstr(ypos[j]+1, xpos[j]-1,  "\\ /");
+	mvaddch( ypos[j]+2, xpos[j],     '-');
 
-		if (j==0) j=4; else --j;
-		cursor(xpos[j],ypos[j]-2);
-		addch(' ');
-		cursor(xpos[j]-1,ypos[j]-1);
-		addstr("   ");
-		cursor(xpos[j]-2,ypos[j]);
-		addstr("     ");
-		cursor(xpos[j]-1,ypos[j]+1);
-		addstr("   ");
-		cursor(xpos[j],ypos[j]+2);
-		addch(' ');
-		xpos[j]=x; ypos[j]=y;
-		refresh();
-		napms(50);
+	j = next_j(j);
+	mvaddch( ypos[j]-2, xpos[j],     ' ');
+	mvaddstr(ypos[j]-1, xpos[j]-1,  "   ");
+	mvaddstr(ypos[j],   xpos[j]-2, "     ");
+	mvaddstr(ypos[j]+1, xpos[j]-1,  "   ");
+	mvaddch( ypos[j]+2, xpos[j],     ' ');
+
+	xpos[j] = x; ypos[j] = y;
+
+	switch(getch())
+	{
+	case('q'):
+	case('Q'):
+	    curs_set(1);
+	    endwin();
+	    return(EXIT_SUCCESS);
+#ifdef KEY_RESIZE
+	case(KEY_RESIZE):
+	    r = (float)(LINES - 4);
+	    c = (float)(COLS - 4);
+	    break;
+#endif
+	}
+	napms(50);
     }
 }
 

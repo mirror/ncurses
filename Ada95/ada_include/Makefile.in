@@ -1,25 +1,35 @@
-#----------------------------------------------------------------------------
-#                                                                          --
-#                            GNAT ncurses Binding                          --
-#                                src/Makefile                              --
-#                                                                          --
-#  Version 00.92                                                           --
-#                                                                          --
-#  The ncurses Ada95 binding is copyrighted 1996 by                        --
-#  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
-#                                                                          --
-#  Permission is hereby granted to reproduce and distribute this           --
-#  binding by any means and for any fee, whether alone or as part          --
-#  of a larger distribution, in source or in binary form, PROVIDED         --
-#  this notice is included with any such distribution, and is not          --
-#  removed from any of its header files. Mention of ncurses and the        --
-#  author of this binding in any applications linked with it is            --
-#  highly appreciated.                                                     --
-#                                                                          --
-#  This binding comes AS IS with no warranty, implied or expressed.        --
-#----------------------------------------------------------------------------
+##############################################################################
+# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+#  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
+#
 #  Version Control
-#  $Revision: 1.6 $
+#  $Revision: 1.13 $
 #
 .SUFFIXES:
 
@@ -34,6 +44,7 @@ libdir		= @libdir@
 includedir	= @includedir@
 datadir		= @datadir@
 ticdir		= $(datadir)/terminfo
+ADA_INCLUDE	= @ADA_INCLUDE@
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -61,52 +72,115 @@ LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 RANLIB		= @RANLIB@
 ################################################################################
-ADA             = @nc_ada_compiler@
+ADA             = @cf_ada_compiler@
 ADAFLAGS        = @ADAFLAGS@ -I. -I$(srcdir)
 
-ADAMAKE         = @nc_ada_make@
+ADAMAKE         = @cf_ada_make@
 ADAMAKEFLAGS    = 
 
 CARGS           = -cargs $(ADAFLAGS)
 LARGS           =
 
-ALIB            = @nc_ada_package@
+ALIB            = @cf_ada_package@
 ABASE           = $(ALIB)-curses
 
 ADA_OBJDIR      = ../ada_objects
 OBJDIR          = ../objects
 
-LIBALIS=$(ADA_OBJDIR)/$(ALIB).ali              \
-	$(ADA_OBJDIR)/$(ABASE)-aux.ali         \
-	$(ADA_OBJDIR)/$(ABASE).ali             \
-	$(ADA_OBJDIR)/$(ABASE)-mouse.ali       \
-	$(ADA_OBJDIR)/$(ABASE)-panels.ali      \
-	$(ADA_OBJDIR)/$(ABASE)-menus.ali       \
-	$(ADA_OBJDIR)/$(ABASE)-forms.ali       \
-	$(ADA_OBJDIR)/$(ABASE)-text_io.ali     \
+LIBALIS=$(ADA_OBJDIR)/$(ALIB).ali              				\
+	$(ADA_OBJDIR)/$(ABASE)-aux.ali         				\
+	$(ADA_OBJDIR)/$(ABASE).ali             				\
+	$(ADA_OBJDIR)/$(ABASE)-mouse.ali       				\
+	$(ADA_OBJDIR)/$(ABASE)-panels.ali      				\
+	$(ADA_OBJDIR)/$(ABASE)-menus.ali       				\
+	$(ADA_OBJDIR)/$(ABASE)-forms.ali       				\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types.ali	        	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-alpha.ali      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-alphanumeric.ali       \
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-intfield.ali      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-numeric.ali      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-regexp.ali      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration.ali      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-ipv4_address.ali      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-user.ali	      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-user-choice.ali     	\
+	$(ADA_OBJDIR)/$(ABASE)-text_io.ali     				\
 	$(ADA_OBJDIR)/$(ABASE)-text_io-aux.ali
 
-LIBOBJS=$(ADA_OBJDIR)/$(ALIB).o                \
-	$(ADA_OBJDIR)/$(ABASE)-aux.o           \
-	$(ADA_OBJDIR)/$(ABASE).o               \
-	$(ADA_OBJDIR)/$(ABASE)-mouse.o         \
-	$(ADA_OBJDIR)/$(ABASE)-panels.o        \
-	$(ADA_OBJDIR)/$(ABASE)-menus.o         \
-	$(ADA_OBJDIR)/$(ABASE)-forms.o         \
-	$(ADA_OBJDIR)/$(ABASE)-text_io.o       \
+# Ada Library files for generic packages. Since gnat 3.10 they are
+# also compiled
+GENALIS=$(ADA_OBJDIR)/$(ABASE)-menus-menu_user_data.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-menus-item_user_data.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-forms-form_user_data.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_user_data.ali		\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration-ada.ali	\
+	$(ADA_OBJDIR)/$(ABASE)-panels-user_data.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-integer_io.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-float_io.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-fixed_io.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-decimal_io.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-enumeration_io.ali		\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-modular_io.ali			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-complex_io.ali
+
+LIBOBJS=$(ADA_OBJDIR)/$(ALIB).o                			\
+	$(ADA_OBJDIR)/$(ABASE)-aux.o           			\
+	$(ADA_OBJDIR)/$(ABASE).o               			\
+	$(ADA_OBJDIR)/$(ABASE)-mouse.o         			\
+	$(ADA_OBJDIR)/$(ABASE)-panels.o        			\
+	$(ADA_OBJDIR)/$(ABASE)-menus.o         			\
+	$(ADA_OBJDIR)/$(ABASE)-forms.o         			\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types.o      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-alpha.o      	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-alphanumeric.o	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-intfield.o     \
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-numeric.o     	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-regexp.o       \
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration.o	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-ipv4_address.o \
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-user.o 	\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-user-choice.o 	\
+	$(ADA_OBJDIR)/$(ABASE)-text_io.o       			\
 	$(ADA_OBJDIR)/$(ABASE)-text_io-aux.o
 
+# Ada object files for generic packages. Since gnat 3.10 they are
+# also compiled
+GENOBJS=$(ADA_OBJDIR)/$(ABASE)-menus-menu_user_data.o			\
+	$(ADA_OBJDIR)/$(ABASE)-menus-item_user_data.o			\
+	$(ADA_OBJDIR)/$(ABASE)-forms-form_user_data.o			\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_user_data.o			\
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration-ada.o	\
+	$(ADA_OBJDIR)/$(ABASE)-panels-user_data.o			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-integer_io.o			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-float_io.o			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-fixed_io.o			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-decimal_io.o			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-enumeration_io.o			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-modular_io.o			\
+	$(ADA_OBJDIR)/$(ABASE)-text_io-complex_io.o
 
-all :: $(LIBALIS)
+
+all :: $(LIBALIS) @cf_compile_generics@
 	@echo done
 
-clean ::
+sources :
+	@
+
+install ::
+install.libs ::
+uninstall ::
+uninstall.libs ::
+
+generics: $(GENALIS)
+	@
+
+mostlyclean ::
 	rm -f *.o *.ali b_t*.* *.s $(PROGS) a.out core b_*_test.c *.xr[bs] *.a
 
-mostlyclean :: clean
+clean :: mostlyclean
 	rm -f $(LIBALIS) $(LIBOBJS)
 
-distclean :: mostlyclean
+distclean :: clean
 	rm -f Makefile
 
 realclean :: distclean
@@ -184,6 +258,115 @@ $(ADA_OBJDIR)/$(ABASE)-forms.ali: $(ADA_OBJDIR)/$(ABASE)-forms.o
 	   rm -f $(ABASE)-forms.ali ;\
 	fi
 
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types.o: \
+		$(ABASE)-forms-field_types.ads \
+		$(srcdir)/$(ABASE)-forms-field_types.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types.o
+	if [ -f $(ABASE)-forms-field_types.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-alpha.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-alpha.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-alpha.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-alpha.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-alpha.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-alpha.o
+	if [ -f $(ABASE)-forms-field_types-alpha.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-alpha.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-alpha.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-alphanumeric.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-alphanumeric.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-alphanumeric.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-alphanumeric.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-alphanumeric.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-alphanumeric.o
+	if [ -f $(ABASE)-forms-field_types-alphanumeric.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-alphanumeric.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-alphanumeric.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-intfield.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-intfield.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-intfield.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-intfield.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-intfield.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-intfield.o
+	if [ -f $(ABASE)-forms-field_types-intfield.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-intfield.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-intfield.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-numeric.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-numeric.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-numeric.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-numeric.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-numeric.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-numeric.o
+	if [ -f $(ABASE)-forms-field_types-numeric.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-numeric.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-numeric.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-regexp.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-regexp.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-regexp.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-regexp.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-regexp.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-regexp.o
+	if [ -f $(ABASE)-forms-field_types-regexp.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-regexp.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-regexp.ali ;\
+	fi
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-enumeration.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-enumeration.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-enumeration.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration.o
+	if [ -f $(ABASE)-forms-field_types-enumeration.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-enumeration.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-enumeration.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-ipv4_address.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-ipv4_address.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-ipv4_address.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-ipv4_address.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-ipv4_address.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-ipv4_address.o
+	if [ -f $(ABASE)-forms-field_types-ipv4_address.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-ipv4_address.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-ipv4_address.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-user.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-user.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-user.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-user.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-user.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-user.o
+	if [ -f $(ABASE)-forms-field_types-user.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-user.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-user.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-user-choice.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-user-choice.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-user-choice.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-user-choice.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-user-choice.ali: $(ADA_OBJDIR)/$(ABASE)-forms-field_types-user-choice.o
+	if [ -f $(ABASE)-forms-field_types-user-choice.ali ]; then \
+	   ln -f $(ABASE)-forms-field_types-user-choice.ali $@ ;\
+	   rm -f $(ABASE)-forms-field_types-user-choice.ali ;\
+	fi
+
 $(ADA_OBJDIR)/$(ABASE)-text_io.o: \
 		$(srcdir)/$(ABASE)-text_io.ads \
 		$(srcdir)/$(ABASE)-text_io.adb $(BASEDEPS)
@@ -204,4 +387,160 @@ $(ADA_OBJDIR)/$(ABASE)-text_io-aux.ali: $(ADA_OBJDIR)/$(ABASE)-text_io-aux.o
 	if [ -f $(ABASE)-text_io-aux.ali ]; then \
 	   ln -f $(ABASE)-text_io-aux.ali $@ ;\
 	   rm -f $(ABASE)-text_io-aux.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-menus-menu_user_data.o: \
+		$(ABASE)-menus-menu_user_data.ads \
+		$(srcdir)/$(ABASE)-menus-menu_user_data.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-menus-menu_user_data.adb
+
+$(ADA_OBJDIR)/$(ABASE)-menus-menu_user_data.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-menus-menu_user_data.o
+	if [ -f $(ABASE)-menus-menu_user_data.ali ]; then \
+	   ln -f $(ABASE)-menus-menu_user_data.ali $@ ;\
+	   rm -f $(ABASE)-menus-menu_user_data.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-menus-item_user_data.o: \
+		$(ABASE)-menus-item_user_data.ads \
+		$(srcdir)/$(ABASE)-menus-item_user_data.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-menus-item_user_data.adb
+
+$(ADA_OBJDIR)/$(ABASE)-menus-item_user_data.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-menus-item_user_data.o
+	if [ -f $(ABASE)-menus-item_user_data.ali ]; then \
+	  ln -f $(ABASE)-menus-item_user_data.ali $@ ;\
+	  rm -f $(ABASE)-menus-item_user_data.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-form_user_data.o: \
+		$(ABASE)-forms-form_user_data.ads \
+		$(srcdir)/$(ABASE)-forms-form_user_data.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-form_user_data.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-form_user_data.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-forms-form_user_data.o
+	if [ -f $(ABASE)-forms-form_user_data.ali ]; then \
+	  ln -f $(ABASE)-forms-form_user_data.ali $@ ;\
+	  rm -f $(ABASE)-forms-form_user_data.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_user_data.o: \
+		$(ABASE)-forms-field_user_data.ads \
+		$(srcdir)/$(ABASE)-forms-field_user_data.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_user_data.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_user_data.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_user_data.o
+	if [ -f $(ABASE)-forms-field_user_data.ali ]; then \
+	  ln -f $(ABASE)-forms-field_user_data.ali $@ ;\
+	  rm -f $(ABASE)-forms-field_user_data.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration-ada.o: \
+		$(srcdir)/$(ABASE)-forms-field_types-enumeration-ada.ads \
+		$(srcdir)/$(ABASE)-forms-field_types-enumeration-ada.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-enumeration-ada.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration-ada.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-forms-field_types-enumeration-ada.o
+	if [ -f $(ABASE)-forms-field_types-enumeration-ada.ali ]; then \
+	  ln -f $(ABASE)-forms-field_types-enumeration-ada.ali $@ ;\
+	  rm -f $(ABASE)-forms-field_types-enumeration-ada.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-panels-user_data.o: \
+		$(ABASE)-panels-user_data.ads \
+		$(srcdir)/$(ABASE)-panels-user_data.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-panels-user_data.adb
+
+$(ADA_OBJDIR)/$(ABASE)-panels-user_data.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-panels-user_data.o
+	if [ -f $(ABASE)-panels-user_data.ali ]; then \
+	  ln -f $(ABASE)-panels-user_data.ali $@ ;\
+	  rm -f $(ABASE)-panels-user_data.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-integer_io.o: \
+		$(srcdir)/$(ABASE)-text_io-integer_io.ads \
+		$(srcdir)/$(ABASE)-text_io-integer_io.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-integer_io.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-integer_io.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-integer_io.o
+	if [ -f $(ABASE)-text_io-integer_io.ali ]; then \
+	  ln -f $(ABASE)-text_io-integer_io.ali $@ ;\
+	  rm -f $(ABASE)-text_io-integer_io.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-float_io.o: \
+		$(srcdir)/$(ABASE)-text_io-float_io.ads \
+		$(srcdir)/$(ABASE)-text_io-float_io.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-float_io.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-float_io.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-float_io.o
+	if [ -f $(ABASE)-text_io-float_io.ali ]; then \
+	  ln -f $(ABASE)-text_io-float_io.ali $@ ;\
+	  rm -f $(ABASE)-text_io-float_io.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-fixed_io.o: \
+		$(srcdir)/$(ABASE)-text_io-fixed_io.ads \
+		$(srcdir)/$(ABASE)-text_io-fixed_io.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-fixed_io.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-fixed_io.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-fixed_io.o
+	if [ -f $(ABASE)-text_io-fixed_io.ali ]; then \
+	  ln -f $(ABASE)-text_io-fixed_io.ali $@ ;\
+	  rm -f $(ABASE)-text_io-fixed_io.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-decimal_io.o: \
+		$(srcdir)/$(ABASE)-text_io-decimal_io.ads \
+		$(srcdir)/$(ABASE)-text_io-decimal_io.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-decimal_io.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-decimal_io.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-decimal_io.o
+	if [ -f $(ABASE)-text_io-decimal_io.ali ]; then \
+	  ln -f $(ABASE)-text_io-decimal_io.ali $@ ;\
+	  rm -f $(ABASE)-text_io-decimal_io.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-enumeration_io.o: \
+		$(srcdir)/$(ABASE)-text_io-enumeration_io.ads \
+		$(srcdir)/$(ABASE)-text_io-enumeration_io.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-enumeration_io.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-enumeration_io.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-enumeration_io.o
+	if [ -f $(ABASE)-text_io-enumeration_io.ali ]; then \
+	  ln -f $(ABASE)-text_io-enumeration_io.ali $@ ;\
+	  rm -f $(ABASE)-text_io-enumeration_io.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-modular_io.o: \
+		$(srcdir)/$(ABASE)-text_io-modular_io.ads \
+		$(srcdir)/$(ABASE)-text_io-modular_io.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-modular_io.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-modular_io.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-modular_io.o
+	if [ -f $(ABASE)-text_io-modular_io.ali ]; then \
+	  ln -f $(ABASE)-text_io-modular_io.ali $@ ;\
+	  rm -f $(ABASE)-text_io-modular_io.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-complex_io.o: \
+		$(srcdir)/$(ABASE)-text_io-complex_io.ads \
+		$(srcdir)/$(ABASE)-text_io-complex_io.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-complex_io.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-complex_io.ali: \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-complex_io.o
+	if [ -f $(ABASE)-text_io-complex_io.ali ]; then \
+	  ln -f $(ABASE)-text_io-complex_io.ali $@ ;\
+	  rm -f $(ABASE)-text_io-complex_io.ali ;\
 	fi

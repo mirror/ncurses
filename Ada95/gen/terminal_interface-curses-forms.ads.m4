@@ -9,45 +9,54 @@ include(M4MACRO)dnl
 --                                                                          --
 --                                 S P E C                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.9 $
+--  $Revision: 1.14 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 include(`Form_Base_Defs')
 with System;
-with Ada.Tags; use Ada.Tags;
 with Ada.Characters.Latin_1;
 with Interfaces.C;
-with Interfaces.C.Strings;
 
 package Terminal_Interface.Curses.Forms is
-
+   pragma Preelaborate (Forms);
 include(`Form_Linker_Options')
 
    Space : Character renames Ada.Characters.Latin_1.Space;
 
    type Field        is private;
    type Form         is private;
-   type C_Field_Type is private;
 
    Null_Field        : constant Field;
    Null_Form         : constant Form;
-   Null_Field_Type   : constant C_Field_Type;
-
 
    type Field_Justification is (None,
                                 Left,
@@ -56,20 +65,28 @@ include(`Form_Linker_Options')
 
 include(`Field_Rep')
 
-   Default_Field_Options : Field_Option_Set;
+   function Default_Field_Options return Field_Option_Set;
    --  The initial defaults for the field options.
+   pragma Inline (Default_Field_Options);
 
 include(`Form_Opt_Rep')
 
-   Default_Form_Options : Form_Option_Set;
+   function Default_Form_Options return Form_Option_Set;
    --  The initial defaults for the form options.
+   pragma Inline (Default_Form_Options);
 
    type Buffer_Number is new Natural;
 
    type Field_Array is array (Positive range <>) of aliased Field;
    pragma Convention (C, Field_Array);
 
-   type Field_Array_Access is access all Field_Array;
+   type Field_Array_Access is access Field_Array;
+
+   procedure Free (FA          : in out Field_Array_Access;
+                   Free_Fields : in Boolean := False);
+   --  Release the memory for an allocated field array
+   --  If Free_Fields is True, call Delete() for all the fields in
+   --  the array.
 
    subtype Form_Request_Code is Key_Code range (Key_Max + 1) .. (Key_Max + 57);
 
@@ -209,6 +226,10 @@ include(`Form_Opt_Rep')
    procedure Request_Name (Key  : in Form_Request_Code;
                            Name : out String);
 
+   function  Request_Name (Key : Form_Request_Code) return String;
+   --  Same as function
+   pragma Inline (Request_Name);
+
    ------------------
    --  Exceptions  --
    ------------------
@@ -225,6 +246,7 @@ include(`Form_Opt_Rep')
                     More_Buffers : Buffer_Number := Buffer_Number'First)
                     return Field;
    --  AKA
+   --  An overloaded Create is defined later. Pragma Inline appears there.
 
    --  ANCHOR(`new_field()',`New_Field')
    function New_Field (Height       : Line_Count;
@@ -235,23 +257,27 @@ include(`Form_Opt_Rep')
                        More_Buffers : Buffer_Number := Buffer_Number'First)
                        return Field renames Create;
    --  AKA
+   pragma Inline (New_Field);
 
    --  ANCHOR(`free_field()',`Delete')
    procedure Delete (Fld : in out Field);
    --  AKA
    --  Reset Fld to Null_Field
+   --  An overloaded Delete is defined later. Pragma Inline appears there.
 
    --  ANCHOR(`dup_field()',`Duplicate')
    function Duplicate (Fld  : Field;
                        Top  : Line_Position;
                        Left : Column_Position) return Field;
    --  AKA
+   pragma Inline (Duplicate);
 
    --  ANCHOR(`link_field()',`Link')
    function Link (Fld  : Field;
                   Top  : Line_Position;
                   Left : Column_Position) return Field;
    --  AKA
+   pragma Inline (Link);
 
    --  MANPAGE(`form_field_just.3x')
 
@@ -259,10 +285,12 @@ include(`Form_Opt_Rep')
    procedure Set_Justification (Fld  : in Field;
                                 Just : in Field_Justification := None);
    --  AKA
+   pragma Inline (Set_Justification);
 
    --  ANCHOR(`field_just()',`Get_Justification')
    function Get_Justification (Fld : Field) return Field_Justification;
    --  AKA
+   pragma Inline (Get_Justification);
 
    --  MANPAGE(`form_field_buffer.3x')
 
@@ -272,6 +300,7 @@ include(`Form_Opt_Rep')
       Buffer : in Buffer_Number := Buffer_Number'First;
       Str    : in String);
    --  AKA
+   --  Not inlined
 
    --  ANCHOR(`field_buffer()',`Get_Buffer')
    procedure Get_Buffer
@@ -280,19 +309,29 @@ include(`Form_Opt_Rep')
       Str    : out String);
    --  AKA
 
+   function Get_Buffer
+     (Fld    : in Field;
+      Buffer : in Buffer_Number := Buffer_Number'First) return String;
+   --  AKA
+   --  Same but as function
+   pragma Inline (Get_Buffer);
+
    --  ANCHOR(`set_field_status()',`Set_Status')
    procedure Set_Status (Fld    : in Field;
                          Status : in Boolean := True);
    --  AKA
+   pragma Inline (Set_Status);
 
    --  ANCHOR(`field_status()',`Changed')
    function Changed (Fld : Field) return Boolean;
    --  AKA
+   pragma Inline (Changed);
 
    --  ANCHOR(`set_field_max()',`Set_Maximum_Size')
    procedure Set_Maximum_Size (Fld : in Field;
                                Max : in Natural := 0);
    --  AKA
+   pragma Inline (Set_Maximum_Size);
 
    --  MANPAGE(`form_field_opts.3x')
 
@@ -300,6 +339,7 @@ include(`Form_Opt_Rep')
    procedure Set_Options (Fld     : in Field;
                           Options : in Field_Option_Set);
    --  AKA
+   --  An overloaded version is defined later. Pragma Inline appears there
 
    --  ANCHOR(`field_opts_on()',`Switch_Options')
    procedure Switch_Options (Fld     : in Field;
@@ -307,6 +347,7 @@ include(`Form_Opt_Rep')
                              On      : Boolean := True);
    --  AKA
    --  ALIAS(`field_opts_off()')
+   --  An overloaded version is defined later. Pragma Inline appears there
 
    --  ANCHOR(`field_opts()',`Get_Options')
    procedure Get_Options (Fld     : in  Field;
@@ -317,6 +358,7 @@ include(`Form_Opt_Rep')
    function Get_Options (Fld : Field := Null_Field)
                          return Field_Option_Set;
    --  AKA
+   --  An overloaded version is defined later. Pragma Inline appears there
 
    --  MANPAGE(`form_field_attributes.3x')
 
@@ -326,6 +368,7 @@ include(`Form_Opt_Rep')
       Fore  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   pragma Inline (Set_Foreground);
 
    --  ANCHOR(`field_fore()',`Foreground')
    procedure Foreground (Fld  : in  Field;
@@ -337,6 +380,7 @@ include(`Form_Opt_Rep')
                          Fore  : out Character_Attribute_Set;
                          Color : out Color_Pair);
    --  AKA
+   pragma Inline (Foreground);
 
    --  ANCHOR(`set_field_back()',`Set_Background')
    procedure Set_Background
@@ -344,6 +388,7 @@ include(`Form_Opt_Rep')
       Back  : in Character_Attribute_Set := Normal_Video;
       Color : in Color_Pair := Color_Pair'First);
    --  AKA
+   pragma Inline (Set_Background);
 
    --  ANCHOR(`field_back()',`Background')
    procedure Background (Fld  : in  Field;
@@ -355,16 +400,19 @@ include(`Form_Opt_Rep')
                          Back  : out Character_Attribute_Set;
                          Color : out Color_Pair);
    --  AKA
+   pragma Inline (Background);
 
    --  ANCHOR(`set_field_pad()',`Set_Pad_Character')
    procedure Set_Pad_Character (Fld : in Field;
                                 Pad : in Character := Space);
    --  AKA
+   pragma Inline (Set_Pad_Character);
 
    --  ANCHOR(`field_pad()',`Pad_Character')
    procedure Pad_Character (Fld : in  Field;
                             Pad : out Character);
    --  AKA
+   pragma Inline (Pad_Character);
 
    --  MANPAGE(`form_field_info.3x')
 
@@ -377,6 +425,7 @@ include(`Form_Opt_Rep')
                    Off_Screen         : out Natural;
                    Additional_Buffers : out Buffer_Number);
    --  AKA
+   pragma Inline (Info);
 
    --  ANCHOR(`dynamic_field_info()',`Dynamic_Info')
    procedure Dynamic_Info (Fld     : in Field;
@@ -384,6 +433,7 @@ include(`Form_Opt_Rep')
                            Columns : out Column_Count;
                            Max     : out Natural);
    --  AKA
+   pragma Inline (Dynamic_Info);
 
    --  MANPAGE(`form_win.3x')
 
@@ -391,25 +441,30 @@ include(`Form_Opt_Rep')
    procedure Set_Window (Frm : in Form;
                          Win : in Window);
    --  AKA
+   pragma Inline (Set_Window);
 
    --  ANCHOR(`form_win()',`Get_Window')
    function Get_Window (Frm : Form) return Window;
    --  AKA
+   pragma Inline (Get_Window);
 
    --  ANCHOR(`set_form_sub()',`Set_Sub_Window')
    procedure Set_Sub_Window (Frm : in Form;
                              Win : in Window);
    --  AKA
+   pragma Inline (Set_Sub_Window);
 
    --  ANCHOR(`form_sub()',`Get_Sub_Window')
    function Get_Sub_Window (Frm : Form) return Window;
    --  AKA
+   pragma Inline (Get_Sub_Window);
 
    --  ANCHOR(`scale_form()',`Scale')
    procedure Scale (Frm     : in Form;
                     Lines   : out Line_Count;
                     Columns : out Column_Count);
    --  AKA
+   pragma Inline (Scale);
 
    --  MANPAGE(`form_hook.3x')
 
@@ -420,21 +475,25 @@ include(`Form_Opt_Rep')
    procedure Set_Field_Init_Hook (Frm  : in Form;
                                   Proc : in Form_Hook_Function);
    --  AKA
+   pragma Inline (Set_Field_Init_Hook);
 
    --  ANCHOR(`set_field_term()',`Set_Field_Term_Hook')
    procedure Set_Field_Term_Hook (Frm  : in Form;
                                   Proc : in Form_Hook_Function);
    --  AKA
+   pragma Inline (Set_Field_Term_Hook);
 
    --  ANCHOR(`set_form_init()',`Set_Form_Init_Hook')
    procedure Set_Form_Init_Hook (Frm  : in Form;
                                  Proc : in Form_Hook_Function);
    --  AKA
+   pragma Inline (Set_Form_Init_Hook);
 
    --  ANCHOR(`set_form_term()',`Set_Form_Term_Hook')
    procedure Set_Form_Term_Hook (Frm  : in Form;
                                  Proc : in Form_Hook_Function);
    --  AKA
+   pragma Inline (Set_Form_Term_Hook);
 
    --  ANCHOR(`field_init()',`Get_Field_Init_Hook')
    function Get_Field_Init_Hook (Frm : Form) return Form_Hook_Function;
@@ -460,44 +519,52 @@ include(`Form_Opt_Rep')
 
    --  ANCHOR(`set_form_fields()',`Redefine')
    procedure Redefine (Frm  : in Form;
-                       Flds : in Field_Array);
+                       Flds : in Field_Array_Access);
    --  AKA
-   --  With a bit more comfort. You don´t need to terminate the Field_Array
-   --  with a null entry. This is handled internally in the binding.
+   pragma Inline (Redefine);
 
    --  ANCHOR(`set_form_fields()',`Set_Fields')
    procedure Set_Fields (Frm  : in Form;
-                         Flds : in Field_Array) renames Redefine;
+                         Flds : in Field_Array_Access) renames Redefine;
    --  AKA
+   pragma Inline (Set_Fields);
 
    --  ANCHOR(`form_fields()',`Fields')
-   function Fields (Frm : Form) return Field_Array_Access;
+   function Fields (Frm   : Form;
+                    Index : Positive) return Field;
    --  AKA
+   pragma Inline (Fields);
 
    --  ANCHOR(`field_count()',`Field_Count')
    function Field_Count (Frm : Form) return Natural;
    --  AKA
+   pragma Inline (Field_Count);
 
    --  ANCHOR(`move_field()',`Move')
    procedure Move (Fld    : in Field;
                    Line   : in Line_Position;
                    Column : in Column_Position);
    --  AKA
+   pragma Inline (Move);
 
    --  MANPAGE(`form_new.3x')
 
    --  ANCHOR(`new_form()',`Create')
-   function Create (Fields : Field_Array) return Form;
+   function Create (Fields : Field_Array_Access) return Form;
    --  AKA
+   pragma Inline (Create);
 
    --  ANCHOR(`new_form()',`New_Form')
-   function New_Form (Fields : Field_Array) return Form renames Create;
+   function New_Form (Fields : Field_Array_Access) return Form
+     renames Create;
    --  AKA
+   pragma Inline (New_Form);
 
    --  ANCHOR(`free_form()',`Delete')
    procedure Delete (Frm : in out Form);
    --  AKA
    --  Reset Frm to Null_Form
+   pragma Inline (Delete);
 
    --  MANPAGE(`form_opts.3x')
 
@@ -505,6 +572,7 @@ include(`Form_Opt_Rep')
    procedure Set_Options (Frm     : in Form;
                           Options : in Form_Option_Set);
    --  AKA
+   pragma Inline (Set_Options);
 
    --  ANCHOR(`form_opts_on()',`Switch_Options')
    procedure Switch_Options (Frm     : in Form;
@@ -512,6 +580,7 @@ include(`Form_Opt_Rep')
                              On      : Boolean := True);
    --  AKA
    --  ALIAS(`form_opts_off()')
+   pragma Inline (Switch_Options);
 
    --  ANCHOR(`form_opts()',`Get_Options')
    procedure Get_Options (Frm     : in  Form;
@@ -521,6 +590,7 @@ include(`Form_Opt_Rep')
    --  ANCHOR(`form_opts()',`Get_Options')
    function Get_Options (Frm : Form := Null_Form) return Form_Option_Set;
    --  AKA
+   pragma Inline (Get_Options);
 
    --  MANPAGE(`form_post.3x')
 
@@ -529,22 +599,26 @@ include(`Form_Opt_Rep')
                    Post : in Boolean := True);
    --  AKA
    --  ALIAS(`unpost_form()')
+   pragma Inline (Post);
 
    --  MANPAGE(`form_cursor.3x')
 
    --  ANCHOR(`pos_form_cursor()',`Position_Cursor')
    procedure Position_Cursor (Frm : Form);
    --  AKA
+   pragma Inline (Position_Cursor);
 
    --  MANPAGE(`form_data.3x')
 
    --  ANCHOR(`data_ahead()',`Data_Ahead')
    function Data_Ahead (Frm : Form) return Boolean;
    --  AKA
+   pragma Inline (Data_Ahead);
 
    --  ANCHOR(`data_behind()',`Data_Behind')
    function Data_Behind (Frm : Form) return Boolean;
    --  AKA
+   pragma Inline (Data_Behind);
 
    --  MANPAGE(`form_driver.3x')
 
@@ -557,6 +631,7 @@ include(`Form_Opt_Rep')
    function Driver (Frm : Form;
                     Key : Key_Code) return Driver_Result;
    --  AKA
+   --  Driver not inlined
 
    --  MANPAGE(`form_page.3x')
 
@@ -566,19 +641,23 @@ include(`Form_Opt_Rep')
    procedure Set_Current (Frm : in Form;
                           Fld : in Field);
    --  AKA
+   pragma Inline (Set_Current);
 
    --  ANCHOR(`current_field()',`Current')
    function Current (Frm : in Form) return Field;
    --  AKA
+   pragma Inline (Current);
 
    --  ANCHOR(`set_form_page()',`Set_Page')
    procedure Set_Page (Frm  : in Form;
                        Page : in Page_Number := Page_Number'First);
    --  AKA
+   pragma Inline (Set_Page);
 
    --  ANCHOR(`form_page()',`Page')
    function Page (Frm : Form) return Page_Number;
    --  AKA
+   pragma Inline (Page);
 
    --  ANCHOR(`field_index()',`Get_Index')
    function Get_Index (Fld : Field) return Positive;
@@ -586,6 +665,7 @@ include(`Form_Opt_Rep')
    --  Please note that in this binding we start the numbering of fields
    --  with 1. So this is number is one more than you get from the low
    --  level call.
+   pragma Inline (Get_Index);
 
    --  MANPAGE(`form_new_page.3x')
 
@@ -593,220 +673,20 @@ include(`Form_Opt_Rep')
    procedure Set_New_Page (Fld      : in Field;
                            New_Page : in Boolean := True);
    --  AKA
+   pragma Inline (Set_New_Page);
 
    --  ANCHOR(`new_page()',`Is_New_Page')
    function Is_New_Page (Fld : Field) return Boolean;
    --  AKA
-
-   --  MANPAGE(`form_fieldtype.3x')
-
-   type Field_Type is abstract tagged null record;
-   type Field_Type_Access is access all Field_Type'Class;
-
-   function Native_Type (Ftype : Field_Type)
-                         return C_Field_Type is abstract;
-   --  This function returns the C libraries handle to the field type.
-   --  May be you need this if you want to interface to lower level
-   --  routines in the form library.
-
-   --  ANCHOR(`set_field_type()',`Set_Type')
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Field_Type) is abstract;
-   --  AKA
-   --  But: we hide the vararg mechanism of the C interface. You always
-   --       have to pass a single Field_Type parameter.
-
-   type C_Defined_Field_Type is abstract new Field_Type with null record;
-   --  This is the root of all field typed defined in C, i.e. this are
-   --  the predefined field types in the form library.
-
-   type Alpha_Field is new C_Defined_Field_Type
-      with record
-         Minimum_Field_Width : Natural := 0;
-      end record;
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Alpha_Field);
-   function Native_Type (Ftype : Alpha_Field)
-                         return C_Field_Type;
-
-   type Alpha_Numeric_Field is new C_Defined_Field_Type with
-      record
-         Minimum_Field_Width : Natural := 0;
-      end record;
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Alpha_Numeric_Field);
-   function Native_Type (Ftype : Alpha_Numeric_Field)
-                         return C_Field_Type;
-
-   type Integer_Field is new C_Defined_Field_Type with
-      record
-         Precision   : Natural;
-         Lower_Limit : Integer;
-         Upper_Limit : Integer;
-      end record;
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Integer_Field);
-   function Native_Type (Ftype : Integer_Field)
-                         return C_Field_Type;
-
-   type Numeric_Field is new C_Defined_Field_Type with
-      record
-         Precision   : Natural;
-         Lower_Limit : Float;
-         Upper_Limit : Float;
-      end record;
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Numeric_Field);
-   function Native_Type (Ftype : Numeric_Field)
-                         return C_Field_Type;
-
-   type String_Access is access String;
-
-   type Regular_Expression_Field is new C_Defined_Field_Type with
-      record
-         Regular_Expression : String_Access;
-      end record;
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Regular_Expression_Field);
-   function Native_Type (Ftype : Regular_Expression_Field)
-                         return C_Field_Type;
-
-   type Enum_Array is array (Positive range <>)
-      of String_Access;
-
-   type Enumeration_Info (C : Positive) is
-      record
-         Names                : Enum_Array (1 .. C);
-         Case_Sensitive       : Boolean := False;
-         Match_Must_Be_Unique : Boolean := False;
-      end record;
-
-   type Enumeration_Field is new C_Defined_Field_Type with private;
-
-   function Create (Info : Enumeration_Info;
-                    Auto_Release_Names : Boolean := False)
-                    return Enumeration_Field;
-   --  Make an fieldtype from the info. Enumerations are special, because
-   --  they normally don't copy the enum values into a private store, so
-   --  we have to care for the lifetime of the info we provide.
-   --  The Auto_Release_Names flag may be used to automatically releases
-   --  the strings in the Names array of the Enumeration_Info.
-
-   function Make_Enumeration_Type (Info : Enumeration_Info;
-                                   Auto_Release_Names : Boolean := False)
-                                   return Enumeration_Field renames Create;
-
-   procedure Release (Enum : in out Enumeration_Field);
-   --  But we may want to release the field to release the memory allocated
-   --  by it internally. After that the Enumeration field is no longer usable.
-
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Enumeration_Field);
-   function Native_Type (Ftype : Enumeration_Field)
-                         return C_Field_Type;
-
-   --  The next type defintions are all ncurses extensions. They are typically
-   --  not available in other curses implementations.
-
-   type Internet_V4_Address_Field is new C_Defined_Field_Type
-     with null record;
-   procedure Set_Type (Fld      : in Field;
-                       Fld_Type : in Internet_V4_Address_Field);
-   function Native_Type (Ftype : Internet_V4_Address_Field)
-                         return C_Field_Type;
-
-
-   type Ada_Defined_Field_Type is abstract new Field_Type with null record;
-   --  This is the root of the mechanism we use to create field types in
-   --  Ada95. You don't have to redefine the Set_Field_Type and
-   --  Native_Field_Type methods, because they work generically on this
-   --  class.
-
-   procedure Set_Type (Fld      : Field;
-                       Fld_Type : Ada_Defined_Field_Type);
-
-   function Native_Type (Ftype : Ada_Defined_Field_Type)
-                         return C_Field_Type;
-
-   --  MANPAGE(`form_field_validation.3x')
-
-   --  ANCHOR(`field_type()',`Get_Type')
-   function Get_Type (Fld : in Field) return Field_Type_Access;
-   --  AKA
-   --  ALIAS(`field_arg()')
-   --  In Ada95 we can combine these
+   pragma Inline (Is_New_Page);
 
 ------------------------------------------------------------------------------
 private
 
    type Field        is new System.Address;
    type Form         is new System.Address;
-   type C_Field_Type is new System.Address;
 
    Null_Field        : constant Field        := Field (System.Null_Address);
    Null_Form         : constant Form         := Form  (System.Null_Address);
-   Null_Field_Type   : constant C_Field_Type :=
-     C_Field_Type (System.Null_Address);
-
-   type CPA_Access is access Interfaces.C.Strings.chars_ptr_array;
-
-   type Enumeration_Field is new C_Defined_Field_Type with
-      record
-         Case_Sensitive       : Boolean := False;
-         Match_Must_Be_Unique : Boolean := False;
-         Arr                  : CPA_Access := null;
-      end record;
-
-   --  In our binding we use the fields user pointer as hook to maintain
-   --  our own info structure about the field type. To be able to still
-   --  provide a user pointer, we use this wrapper.
-   --
-   type Field_User_Wrapper is
-      record
-         U : System.Address;    --  the hook we provide for the user
-         T : Field_Type_Access; --  may be null
-         N : Natural;           --  use counter
-      end record;
-   pragma Convention (C, Field_User_Wrapper);
-   type Field_User_Wrapper_Access is access all Field_User_Wrapper;
-   pragma Controlled (Field_User_Wrapper_Access);
-
-   function Set_Field_Userptr (Fld : Field;
-                               Wrp : Field_User_Wrapper_Access)
-                               return Interfaces.C.int;
-   pragma Import (C, Set_Field_Userptr, "set_field_userptr");
-
-   function Field_Userptr (Fld : Field) return Field_User_Wrapper_Access;
-   pragma Import (C, Field_Userptr, "field_userptr");
-
-   --  In our binding we use the forms user pointer as hook to maintain
-   --  our own info structure about the field association. To be able to still
-   --  provide a user pointer, we use this wrapper.
-   --
-   type Form_User_Wrapper is
-      record
-         U : System.Address;      --  the hook we provide for the user
-         I : Field_Array_Access;
-      end record;
-   pragma Convention (C, Form_User_Wrapper);
-   type Form_User_Wrapper_Access is access all Form_User_Wrapper;
-   pragma Controlled (Form_User_Wrapper_Access);
-
-   function Set_Form_Userptr (Frm : Form;
-                              Wrp : Form_User_Wrapper_Access)
-                              return Interfaces.C.int;
-   pragma Import (C, Set_Form_Userptr, "set_form_userptr");
-
-   function Form_Userptr (Frm : Form) return Form_User_Wrapper_Access;
-   pragma Import (C, Form_Userptr, "form_userptr");
-
-   procedure Register_Type   (T   : in Ada_Defined_Field_Type'Class;
-                              Cft : in C_Field_Type);
-   procedure Unregister_Type (T   : in Ada_Defined_Field_Type'Class);
-   function  Search_Type (T : Ada_Defined_Field_Type'Class)
-                          return C_Field_Type;
-
-   Generation_Bit_Order : constant System.Bit_Order := System.M4_BIT_ORDER;
-   --  This constant may be different on your system.
 
 end Terminal_Interface.Curses.Forms;

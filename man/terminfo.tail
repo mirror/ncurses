@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.12 1996/09/21 23:23:19 tom Exp $
+.\" $Id: terminfo.tail,v 1.15 1997/12/14 01:50:06 tom Exp $
 .\" Beginning of terminfo.tail file
 .ps +1
 .PP
@@ -451,7 +451,7 @@ and
 .B rc
 (save and restore cursor) commands may be useful for ensuring that 
 your synthesized insert/delete string does not move the cursor.
-(Note that the \fBncurses\fR\fR(3x) library does this synthesis
+(Note that the \fBncurses\fR(3X) library does this synthesis
 automatically, so you need not compose insert/delete strings for
 an entry with \fBcsr\fR).
 .PP
@@ -1375,7 +1375,7 @@ Supports both the SVr4 set and the AIX extensions.
 \*d/?/*
 files containing terminal descriptions
 .SH "SEE ALSO"
-tic(1m), curses(3X), printf(3S), term(\*n).
+\fBtic\fR(1M), \fBcurses\fR(3X), \fBprintf\fR(3S), \fBterm\fR(\*n).
 .SH AUTHORS
 Zeyd M. Ben-Halim, Eric S. Raymond.  Descends from the original pcurses
 by Pavel Curtis.

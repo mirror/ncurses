@@ -1,10 +1,16 @@
+.\" $Id: tic.1m,v 1.18 1998/01/17 21:11:30 tom Exp $
 .TH tic 1M ""
 .ds n 5
 .ds d @DATADIR@/terminfo
 .SH NAME
 \fBtic\fR - the \fIterminfo\fR entry-description compiler
 .SH SYNOPSIS
-\fBtic\fR [\fB-v\fR[\fIn\fR]] [\fB-w\fR[\fIn\fR]] [\fB-1hcpICNRrsTu\fR] [\fB-e\fR \fInames\fR] \fIfile\fR
+\fBtic\fR
+[\fB-v\fR[\fIn\fR]]
+[\fB-w\fR[\fIn\fR]]
+[\fB-1hcpICNRrsTu\fR]
+[\fB-e\fR \fInames\fR]
+[\fB-o\fR \fIdir\fR] \fIfile\fR
 .br
 .SH DESCRIPTION
 The command \fBtic\fR translates a \fBterminfo\fR file from source
@@ -68,7 +74,7 @@ using the long C variable names listed in <\fBterm.h\fR>
 .TP
 \fB-C\fR
 Force source translation to termcap format.  Note: this differs from the -C
-option of \fIinfocmp\fR(1m) in that it does not merely translate capability
+option of \fIinfocmp\fR(1M) in that it does not merely translate capability
 names, but also translates terminfo strings to termcap format.  Capabilities
 that are not translatable are left in the entry under their terminfo names
 but commented out with two preceding dots.
@@ -201,7 +207,7 @@ System V does not compile entries to or read entries from your
 \fB\*d/?/*\fR
 Compiled terminal description database.
 .SH SEE ALSO
-\fBinfocmp\fR(1m), \fBcaptoinfo\fR(1m), \fBinfotocap\fR(1m), \fBtoe\fR(1m),
+\fBinfocmp\fR(1M), \fBcaptoinfo\fR(1M), \fBinfotocap\fR(1M), \fBtoe\fR(1M),
 \fBcurses\fR(3X), \fBterminfo\fR(\*n).
 .\"#
 .\"# The following sets edit modes for GNU EMACS

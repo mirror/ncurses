@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE>
+</HEAD>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+<I>------------------------------------------------------------------------------</I>
+<I>--                                                                          --</I>
+<I>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</I>
+<I>--                                                                          --</I>
+<I>--           Terminal_Interface.Curses.Forms.Field_Types.Enumeration        --</I>
+<I>--                                                                          --</I>
+<I>--                                 S P E C                                  --</I>
+<I>--                                                                          --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</I>
+<I>--                                                                          --</I>
+<I>-- Permission is hereby granted, free of charge, to any person obtaining a  --</I>
+<I>-- copy of this software and associated documentation files (the            --</I>
+<I>-- "Software"), to deal in the Software without restriction, including      --</I>
+<I>-- without limitation the rights to use, copy, modify, merge, publish,      --</I>
+<I>-- distribute, distribute with modifications, sublicense, and/or sell       --</I>
+<I>-- copies of the Software, and to permit persons to whom the Software is    --</I>
+<I>-- furnished to do so, subject to the following conditions:                 --</I>
+<I>--                                                                          --</I>
+<I>-- The above copyright notice and this permission notice shall be included  --</I>
+<I>-- in all copies or substantial portions of the Software.                   --</I>
+<I>--                                                                          --</I>
+<I>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</I>
+<I>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</I>
+<I>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</I>
+<I>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</I>
+<I>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</I>
+<I>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</I>
+<I>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</I>
+<I>--                                                                          --</I>
+<I>-- Except as contained in this notice, the name(s) of the above copyright   --</I>
+<I>-- holders shall not be used in advertising or otherwise to promote the     --</I>
+<I>-- sale, use or other dealings in this Software without prior written       --</I>
+<I>-- authorization.                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
+<I>--  Version Control:</I>
+<I>--  @Revision: 1.1 @</I>
+<I>------------------------------------------------------------------------------</I>
+<B>with</B> Interfaces.C.Strings;
+
+<B>package</B> Terminal_Interface.Curses.Forms.Field_Types.Enumeration <B>is</B>
+
+   type String_Access <B>is</B> <B>access</B> String;
+
+   <I>--  Type_Set is used by the child package Ada</I>
+   type Type_Set <B>is</B> (Lower_Case, Upper_Case, Mixed_Case);
+
+   type Enum_Array <B>is</B> <B>array</B> (Positive <B>range</B> &lt;&gt;)
+     <B>of</B> String_Access;
+
+   type Enumeration_Info (C : Positive) <B>is</B>
+      <B>record</B>
+         Names                : Enum_Array (1 .. C);
+         Case_Sensitive       : Boolean := False;
+         Match_Must_Be_Unique : Boolean := False;
+      <B>end</B> <B>record</B>;
+
+   type Enumeration_Field <B>is</B> <B>new</B> Field_Type <B>with</B> <B>private</B>;
+
+   <B>function</B> Create (Info : Enumeration_Info;
+                    Auto_Release_Names : Boolean := False)
+                    <B>return</B> Enumeration_Field;
+   <I>--  Make an fieldtype from the info. Enumerations are special, because</I>
+   <I>--  they normally don't copy the enum values into a private store, so</I>
+   <I>--  we have to care for the lifetime of the info we provide.</I>
+   <I>--  The Auto_Release_Names flag may be used to automatically releases</I>
+   <I>--  the strings in the Names array of the Enumeration_Info.</I>
+
+   <B>function</B> Make_Enumeration_Type (Info : Enumeration_Info;
+                                   Auto_Release_Names : Boolean := False)
+                                   <B>return</B> Enumeration_Field <B>renames</B> Create;
+
+   <B>procedure</B> Release (Enum : <B>in</B> <B>out</B> Enumeration_Field);
+   <I>--  But we may want to release the field to release the memory allocated</I>
+   <I>--  by it internally. After that the Enumeration field is no longer usable.</I>
+
+   <I>--  The next type defintions are all ncurses extensions. They are typically</I>
+   <I>--  not available in other curses implementations.</I>
+
+   <B>procedure</B> Set_Field_Type (Fld : <B>in</B> Field;
+                             Typ : <B>in</B> Enumeration_Field);
+
+<B>private</B>
+   type CPA_Access <B>is</B> <B>access</B> Interfaces.C.Strings.chars_ptr_array;
+
+   type Enumeration_Field <B>is</B> <B>new</B> Field_Type <B>with</B>
+      <B>record</B>
+         Case_Sensitive       : Boolean := False;
+         Match_Must_Be_Unique : Boolean := False;
+         Arr                  : CPA_Access := <B>null</B>;
+      <B>end</B> <B>record</B>;
+
+<B>end</B> Terminal_Interface.Curses.Forms.Field_Types.Enumeration;
+
+</PRE>
+
+<P><HR><P>
+<P>
+This is BETA software. The interface is subject to change without notice.<P>
+<!-- Do NOT delete my name or the tool name from below; -->
+<!-- giving me credit is a condition of use of ada2html -->
+<P><I>This hypertext format was generated by <A HREF="http://www.adahome.com/Tutorials/Lovelace/dwheeler.htm">David A. Wheeler</A>'s <A HREF="http://www.adahome.com/Resources/Tools/ada2html/ada2html.htm">ada2html</A></I>
+</BODY>
+</HTML>
+

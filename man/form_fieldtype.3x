@@ -46,7 +46,10 @@ list of arguments you give \fBset_field_type\fR when attaching validation
 to a field; its job is to bundle these into an allocated argument-block 
 object which can later be passed to validation predicated.  The other two
 hook arguments should copy and free argument-block structures.  They will
-be used by the forms-driver code.
+be used by the forms-driver code. You must supply the \fImak_arg\fR function,
+the other two are optional, you may supply NULL for them. In this case it
+is assumed, that \fImak_arg\fR doesn't allocate memory but simply loads the
+argument into a single scalar value.
 
 The form driver requests \fBREQ_NEXT_CHOICE\fR and \fBREQ_PREV_CHOICE\fR assume
 that the possible values of a field form an ordered set, and provide the forms

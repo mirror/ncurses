@@ -1,87 +1,108 @@
-/******************************************************************************
- * Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                      *
- * All Rights Reserved.                                                       *
- *                                                                            *
- * Permission to use, copy, modify, and distribute this software and its      *
- * documentation for any purpose and without fee is hereby granted, provided  *
- * that the above copyright notice appear in all copies and that both that    *
- * copyright notice and this permission notice appear in supporting           *
- * documentation, and that the name of the above listed copyright holder(s)   *
- * not be used in advertising or publicity pertaining to distribution of the  *
- * software without specific, written prior permission. THE ABOVE LISTED      *
- * COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,  *
- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO     *
- * EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY         *
- * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER       *
- * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF       *
- * CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN        *
- * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                   *
- ******************************************************************************/
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
+
+/****************************************************************************
+ *  Author: Thomas E. Dickey <dickey@clark.net> 1997                        *
+ ****************************************************************************/
 /* LINTLIBRARY */
 
 /* ./panel.c */
 
 #include "panel.priv.h"
 
-#undef panel_window
-WINDOW	*panel_window(
-		const PANEL *pan)
-		{ return(*(WINDOW **)0); }
-
-#undef update_panels
-void	update_panels(void)
+#undef _nc_free_obscure
+void	_nc_free_obscure(
+		PANEL	*pan)
 		{ /* void */ }
 
-#undef hide_panel
-int	hide_panel(
-		 PANEL	*pan)
-		{ return(*(int *)0); }
+#undef _nc_override
+void	_nc_override(
+		const PANEL *pan, 
+		int	show)
+		{ /* void */ }
 
-#undef show_panel
-int	show_panel(
-		 PANEL	*pan)
-		{ return(*(int *)0); }
+#undef _nc_calculate_obscure
+void	_nc_calculate_obscure(void)
+		{ /* void */ }
 
-#undef top_panel
-int	top_panel(
-		 PANEL	*pan)
-		{ return(*(int *)0); }
+#undef _nc_panel_is_linked
+bool	_nc_panel_is_linked(
+		const PANEL *pan)
+		{ return(*(bool *)0); }
 
-#undef del_panel
-int	del_panel(
-		 PANEL	*pan)
-		{ return(*(int *)0); }
+#undef _nc_panel_link_bottom
+void	_nc_panel_link_bottom(
+		PANEL	*pan)
+		{ /* void */ }
 
-#undef bottom_panel
-int	bottom_panel(
-		 PANEL	*pan)
-		{ return(*(int *)0); }
-
-#undef new_panel
-PANEL	*new_panel(
-		WINDOW	*win)
-		{ return(*(PANEL **)0); }
+/* ./p_above.c */
 
 #undef panel_above
 PANEL	*panel_above(
 		const PANEL *pan)
 		{ return(*(PANEL **)0); }
 
+/* ./p_below.c */
+
 #undef panel_below
 PANEL	*panel_below(
 		const PANEL *pan)
 		{ return(*(PANEL **)0); }
 
-#undef set_panel_userptr
-int	set_panel_userptr(
-		PANEL	*pan, 
-		const void *uptr)
+/* ./p_bottom.c */
+
+#undef bottom_panel
+int	bottom_panel(
+		PANEL	*pan)
 		{ return(*(int *)0); }
 
-#undef panel_userptr
-const void *panel_userptr(
+/* ./p_delete.c */
+
+#undef del_panel
+int	del_panel(
+		PANEL	*pan)
+		{ return(*(int *)0); }
+
+/* ./p_hide.c */
+
+#undef hide_panel
+int	hide_panel(
+		 PANEL	*pan)
+		{ return(*(int *)0); }
+
+/* ./p_hidden.c */
+
+#undef panel_hidden
+int	panel_hidden(
 		const PANEL *pan)
-		{ return(*(const void **)0); }
+		{ return(*(int *)0); }
+
+/* ./p_move.c */
 
 #undef move_panel
 int	move_panel(
@@ -90,13 +111,57 @@ int	move_panel(
 		int	startx)
 		{ return(*(int *)0); }
 
+/* ./p_new.c */
+
+#undef new_panel
+PANEL	*new_panel(
+		WINDOW	*win)
+		{ return(*(PANEL **)0); }
+
+/* ./p_replace.c */
+
 #undef replace_panel
 int	replace_panel(
 		PANEL	*pan, 
 		WINDOW	*win)
 		{ return(*(int *)0); }
 
-#undef panel_hidden
-int	panel_hidden(
-		const PANEL *pan)
+/* ./p_show.c */
+
+#undef show_panel
+int	show_panel(
+		PANEL	*pan)
 		{ return(*(int *)0); }
+
+/* ./p_top.c */
+
+#undef top_panel
+int	top_panel(
+		PANEL	*pan)
+		{ return(*(int *)0); }
+
+/* ./p_update.c */
+
+#undef update_panels
+void	update_panels(void)
+		{ /* void */ }
+
+/* ./p_user.c */
+
+#undef set_panel_userptr
+int	set_panel_userptr(
+		PANEL	*pan, 
+		void	*uptr)
+		{ return(*(int *)0); }
+
+#undef panel_userptr
+void	*panel_userptr(
+		const PANEL *pan)
+		{ return(*(void **)0); }
+
+/* ./p_win.c */
+
+#undef panel_window
+WINDOW	*panel_window(
+		const PANEL *pan)
+		{ return(*(WINDOW **)0); }

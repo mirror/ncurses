@@ -1,4 +1,31 @@
 /****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
+/****************************************************************************
 
 NAME
    ncurses.c --- ncurses library exerciser
@@ -10,11 +37,9 @@ DESCRIPTION
    An interactive test module for the ncurses library.
 
 AUTHOR
-   This software is Copyright (C) 1993 by Eric S. Raymond, all rights reserved.
-It is issued with ncurses under the same terms and conditions as the ncurses
-library source.
+   Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
 
-$Id: ncurses.c,v 1.91 1997/05/10 18:19:48 tom Exp $
+$Id: ncurses.c,v 1.108 1998/02/28 01:11:47 tom Exp $
 
 ***************************************************************************/
 
@@ -26,8 +51,12 @@ $Id: ncurses.c,v 1.91 1997/05/10 18:19:48 tom Exp $
 #include <assert.h>
 #include <signal.h>
 
+#if HAVE_LOCALE_H
+#include <locale.h>
+#endif
+
 #if HAVE_GETTIMEOFDAY
-#if HAVE_SYS_TIME_H && ! SYSTEM_LOOKS_LIKE_SCO
+#if HAVE_SYS_TIME_H && HAVE_SYS_TIME_SELECT
 #include <sys/time.h>
 #endif
 #if HAVE_SYS_SELECT_H
@@ -86,7 +115,6 @@ extern int _nc_tracing;
 #define CTRL(x)		((x) & 0x1f)
 #endif
 
-#define SIZEOF(table)	(sizeof(table)/sizeof(table[0]))
 #define QUIT		CTRL('Q')
 #define ESCAPE		CTRL('[')
 #define BLANK		' '		/* this is the background character */
@@ -274,10 +302,11 @@ int y, x;
     endwin();
 }
 
-static int show_attr(int row, chtype attr, const char *name, bool once, const char *capname)
+static int show_attr(int row, int skip, chtype attr, const char *name, bool once)
 {
     mvprintw(row, 8, "%s mode:", name);
     mvprintw(row, 24, "|");
+    if (skip) printw("%*s", skip, " ");
     if (once)
 	attron(attr);
     else
@@ -285,38 +314,98 @@ static int show_attr(int row, chtype attr, const char *name, bool once, const ch
     addstr("abcde fghij klmno pqrst uvwxy z");
     if (once)
 	attroff(attr);
+    if (skip) printw("%*s", skip, " ");
     printw("|");
-    if (capname != 0 && tigetstr(capname) == 0)
+    if (attr != A_NORMAL && !(termattrs() & attr))
 	printw(" (N/A)");
     return row + 2;
+}
+
+static bool attr_getc(int *skip, int *fg, int *bg)
+{
+    int ch = Getchar();
+
+    if (isdigit(ch)) {
+	*skip = (ch - '0');
+	return TRUE;
+    } else if (ch == CTRL('L')) {
+	touchwin(stdscr);
+	touchwin(curscr);
+	return TRUE;
+    } else if (has_colors()) {
+	switch (ch) {
+	case 'f': *fg = (*fg + 1); break;
+	case 'F': *fg = (*fg - 1); break;
+	case 'b': *bg = (*bg + 1); break;
+	case 'B': *bg = (*bg - 1); break;
+	default:
+	    return FALSE;
+	}
+	if (*fg >= COLORS) *fg = 0;
+	if (*fg <  0)      *fg = COLORS - 1;
+	if (*bg >= COLORS) *bg = 0;
+	if (*bg <  0)      *bg = COLORS - 1;
+	return TRUE;
+    }
+    return FALSE;
 }
 
 static void attr_test(void)
 /* test text attributes */
 {
-    int row = 2;
-    refresh();
+    int n;
+    int skip = tigetnum("xmc");
+    int fg = COLOR_WHITE;
+    int bg = COLOR_BLACK;
+    bool *pairs = (bool *)calloc(COLOR_PAIRS, sizeof(bool));
+    pairs[0] = TRUE;
 
-    mvaddstr(0, 20, "Character attribute test display");
+    if (skip < 0)
+    	skip = 0;
 
-    row = show_attr(row, A_STANDOUT,  "STANDOUT",  TRUE, "smso");
-    row = show_attr(row, A_REVERSE,   "REVERSE",   TRUE, "rev");
-    row = show_attr(row, A_BOLD,      "BOLD",      TRUE, "bold");
-    row = show_attr(row, A_UNDERLINE, "UNDERLINE", TRUE, "smul");
-    row = show_attr(row, A_DIM,       "DIM",       TRUE, "dim");
-    row = show_attr(row, A_BLINK,     "BLINK",     TRUE, "blink");
-    row = show_attr(row, A_PROTECT,   "PROTECT",   TRUE, "prot");
-    row = show_attr(row, A_INVIS,     "INVISIBLE", TRUE, "invis");
-    row = show_attr(row, A_NORMAL,    "NORMAL",    FALSE,0);
+    n = skip;	/* make it easy */
 
-    mvprintw(row, 8,
+    do {
+	int row = 2;
+	int normal = A_NORMAL | BLANK;
+
+	if (has_colors()) {
+	    int pair = (fg * COLORS) + bg;
+	    if (!pairs[pair]) {
+	        init_pair(pair, fg, bg);
+		pairs[pair] = TRUE;
+	    }
+	    normal |= COLOR_PAIR(pair);
+	}
+	bkgdset(normal);
+	erase();
+
+	mvaddstr(0, 20, "Character attribute test display");
+
+	row = show_attr(row, n, A_STANDOUT,  "STANDOUT",  TRUE);
+	row = show_attr(row, n, A_REVERSE,   "REVERSE",   TRUE);
+	row = show_attr(row, n, A_BOLD,      "BOLD",      TRUE);
+	row = show_attr(row, n, A_UNDERLINE, "UNDERLINE", TRUE);
+	row = show_attr(row, n, A_DIM,       "DIM",       TRUE);
+	row = show_attr(row, n, A_BLINK,     "BLINK",     TRUE);
+	row = show_attr(row, n, A_PROTECT,   "PROTECT",   TRUE);
+	row = show_attr(row, n, A_INVIS,     "INVISIBLE", TRUE);
+	row = show_attr(row, n, A_NORMAL,    "NORMAL",    FALSE);
+
+	mvprintw(row, 8,
 	     "This terminal does %shave the magic-cookie glitch",
 	     tigetnum("xmc") > -1 ? "" : "not ");
+	mvprintw(row+1, 8,
+	     "Enter a digit to set gaps on each side of displayed attributes");
+	mvprintw(row+2, 8,
+	     "^L = repaint");
+	if (has_colors())
+	    printw(".  f/F/b/F toggle colors (now %d/%d)", fg, bg);
 
-    refresh();
+        refresh();
+    } while (attr_getc(&n, &fg, &bg));
 
-    Pause();
-
+    bkgdset(A_NORMAL | BLANK);
     erase();
     endwin();
 }
@@ -327,7 +416,7 @@ static void attr_test(void)
  *
  ****************************************************************************/
 
-static NCURSES_CONST char *colors[] =
+static NCURSES_CONST char *color_names[] =
 {
     "black",
     "red",
@@ -339,45 +428,51 @@ static NCURSES_CONST char *colors[] =
     "white"
 };
 
+static void show_color_name(int y, int x, int color)
+{
+    if (COLORS > 8)
+	mvprintw(y, x, "%02d   ", color);
+    else
+	mvaddstr(y, x, color_names[color]);
+}
+
 static void color_test(void)
 /* generate a color test pattern */
 {
     int i;
+    int base, top, width;
+    NCURSES_CONST char *hello;
 
     refresh();
     (void) printw("There are %d color pairs\n", COLOR_PAIRS);
 
-    (void) mvprintw(1, 0,
-	 "%dx%d matrix of foreground/background colors, bright *off*\n",
-	 COLORS, COLORS);
-    for (i = 0; i < COLORS; i++)
-	mvaddstr(2, (i+1) * 8, colors[i]);
-    for (i = 0; i < COLORS; i++)
-	mvaddstr(3 + i, 0, colors[i]);
-    for (i = 1; i < COLOR_PAIRS; i++)
-    {
-	init_pair(i, i % COLORS, i / COLORS);
-	attron((attr_t)COLOR_PAIR(i));
-	mvaddstr(3 + (i / COLORS), (i % COLORS + 1) * 8, "Hello");
-	attrset(A_NORMAL);
-    }
+    width = (COLORS > 8) ? 4 : 8;
+    hello = (COLORS > 8) ? "Test" : "Hello";
 
-    (void) mvprintw(COLORS + 4, 0,
-	   "%dx%d matrix of foreground/background colors, bright *on*\n",
-	   COLORS, COLORS);
-    for (i = 0; i < COLORS; i++)
-	mvaddstr(5 + COLORS, (i+1) * 8, colors[i]);
-    for (i = 0; i < COLORS; i++)
-	mvaddstr(6 + COLORS + i, 0, colors[i]);
-    for (i = 1; i < COLOR_PAIRS; i++)
+    for (base = 0; base < 2; base++)
     {
-	init_pair(i, i % COLORS, i / COLORS);
-	attron((attr_t)(COLOR_PAIR(i) | A_BOLD));
-	mvaddstr(6 + COLORS + (i / COLORS), (i % COLORS + 1) * 8, "Hello");
-	attrset(A_NORMAL);
+	top = (COLORS > 8) ? 0 : base * (COLORS+3);
+	clrtobot();
+	(void) mvprintw(top + 1, 0,
+		"%dx%d matrix of foreground/background colors, bright *%s*\n",
+		COLORS, COLORS,
+		base ? "on" : "off");
+	for (i = 0; i < COLORS; i++)
+	    show_color_name(top + 2, (i+1) * width, i);
+	for (i = 0; i < COLORS; i++)
+	    show_color_name(top + 3 + i, 0, i);
+	for (i = 1; i < COLOR_PAIRS; i++)
+	{
+	    init_pair(i, i % COLORS, i / COLORS);
+	    attron((attr_t)COLOR_PAIR(i));
+	    if (base)
+		attron((attr_t)A_BOLD);
+	    mvaddstr(top + 3 + (i / COLORS), (i % COLORS + 1) * width, hello);
+	    attrset(A_NORMAL);
+	}
+	if ((COLORS > 8) || base)
+	    Pause();
     }
-
-    Pause();
 
     erase();
     endwin();
@@ -432,8 +527,8 @@ static void color_edit(void)
         {
 	    mvprintw(2 + i, 0, "%c %-8s:",
 		     (i == current ? '>' : ' '),
-		     (i < (int) SIZEOF(colors)
-			? colors[i] : ""));
+		     (i < (int) SIZEOF(color_names)
+			? color_names[i] : ""));
 	    attrset(COLOR_PAIR(i));
 	    addstr("        ");
 	    attrset(A_NORMAL);
@@ -519,7 +614,7 @@ static void color_edit(void)
     P("currently selected will be reverse-video highlighted.");
     P("");
     P("To change a field, enter the digits of the new value; they are echoed");
-    P("echoed.  Finish by typing `='; the change will take effect instantly.");
+    P("as entered.  Finish by typing `='.  The change will take effect instantly.");
     P("To increment or decrement a value, use the same procedure, but finish");
     P("with a `+' or `-'.");
     P("");
@@ -1136,6 +1231,11 @@ static void acs_and_scroll(void)
 		neww->next->last = neww;
 	    }
 	    current = neww;
+	    /* SVr4 curses sets the keypad on all newly-created windows to
+	     * false.  Someone reported that PDCurses makes new windows inherit
+	     * this flag.  Remove the following 'keypad()' call to test this
+	     */
+	    keypad(current->wind, TRUE);
 	    current->do_keypad = HaveKeypad(current);
 	    current->do_scroll = HaveScroll(current);
 	    break;
@@ -1212,6 +1312,7 @@ static void acs_and_scroll(void)
 	    if (current)
 	    {
 		pair *tmp, ul, lr;
+		int mx, my;
 
 		move(0, 0); clrtoeol();
 		addstr("Use arrows to move cursor, anything else to mark new corner");
@@ -1233,15 +1334,16 @@ static void acs_and_scroll(void)
 		wnoutrefresh(stdscr);
 
 		/* strictly cosmetic hack for the test */
-		if (current->wind->_maxy > tmp->y - ul.y)
+		getmaxyx(current->wind, my, mx);
+		if (my > tmp->y - ul.y)
 		{
 		  getyx(current->wind, lr.y, lr.x);
 		  wmove(current->wind, tmp->y - ul.y + 1, 0);
 		  wclrtobot(current->wind);
 		  wmove(current->wind, lr.y, lr.x);
 		}
-		if (current->wind->_maxx > tmp->x - ul.x)
-		  for (i = 0; i < current->wind->_maxy; i++)
+		if (mx > tmp->x - ul.x)
+		  for (i = 0; i < my; i++)
 		  {
 		    wmove(current->wind, i, tmp->x - ul.x + 1);
 		    wclrtoeol(current->wind);
@@ -1314,7 +1416,7 @@ static void acs_and_scroll(void)
 	usescr = (current ? current->wind : stdscr);
 	wrefresh(usescr);
     } while
-	((c = wGetchar(usescr))
+	((c = wGetchar(usescr)) != QUIT
 	 && !((c == ESCAPE) && (usescr->_use_keypad))
 	 && (c != ERR));
 
@@ -1869,8 +1971,8 @@ static void panner(WINDOW *pad,
 	    int length  = (portx - top_x - 1);
 	    float ratio = ((float) length) / ((float) pxmax);
 
-	    lowend  = top_x + (basex * ratio);
-	    highend = top_x + ((basex + length) * ratio);
+	    lowend  = (int)(top_x + (basex * ratio));
+	    highend = (int)(top_x + ((basex + length) * ratio));
 
 	    do_h_line(porty - 1, top_x, ACS_HLINE, lowend);
 	    if (highend < portx) {
@@ -1886,8 +1988,8 @@ static void panner(WINDOW *pad,
 	    int length  = (porty - top_y - 1);
 	    float ratio = ((float) length) / ((float) pymax);
 
-	    lowend  = top_y + (basey * ratio);
-	    highend = top_y + ((basey + length) * ratio);
+	    lowend  = (int)(top_y + (basey * ratio));
+	    highend = (int)(top_y + ((basey + length) * ratio));
 
 	    do_v_line(top_y, portx - 1, ACS_VLINE, lowend);
 		if (highend < porty) {
@@ -1938,7 +2040,6 @@ int padgetch(WINDOW *win)
 {
     int	c;
 
-    while(1)
     switch(c = wGetchar(win))
     {
     case '!': ShellOut(FALSE); return KEY_REFRESH;
@@ -2024,10 +2125,8 @@ static void flushinp_test(WINDOW *win)
     WINDOW *subWin;
     wclear (win);
 
-    w  = win->_maxx;
-    h  = win->_maxy;
-    bx = win->_begx;
-    by = win->_begy;
+    getmaxyx(win, h,  w);
+    getbegyx(win, by, bx);
     sw = w / 3;
     sh = h / 3;
     if((subWin = subwin(win, sh, sw, by + h - sh - 2, bx + w - sw - 2)) == 0)
@@ -2048,7 +2147,14 @@ static void flushinp_test(WINDOW *win)
     mvwaddstr(subWin, 2, 1, "This is a subwindow");
     wrefresh(win);
 
-    nocbreak();
+    /*
+     * This used to set 'nocbreak()'.  However, Alexander Lukyanov says that
+     * it only happened to "work" on SVr4 because that implementation does not
+     * emulate nocbreak+noecho mode, whereas ncurses does.  To get the desired
+     * test behavior, we're using 'cbreak()', which will allow a single
+     * character to return without needing a newline. - T.Dickey 1997/10/11.
+     */
+    cbreak();
     mvwaddstr(win, 0, 1, "This is a test of the flushinp() call.");
 
     mvwaddstr(win, 2, 1, "Type random keys for 5 seconds.");
@@ -2209,7 +2315,7 @@ static char *tracetrace(int tlevel)
 	size_t need = 12;
 	for (n = 0; t_tbl[n].name != 0; n++)
 	    need += strlen(t_tbl[n].name) + 2;
-	buf = malloc(need);
+	buf = (char *)malloc(need);
     }
     sprintf(buf, "0x%02x = {", tlevel);
     if (tlevel == 0) {
@@ -2576,11 +2682,13 @@ static void demo_forms(void)
 static void fillwin(WINDOW *win, char ch)
 {
     int y, x;
+    int y1, x1;
 
-    for (y = 0; y <= win->_maxy; y++)
+    getmaxyx(win, y1, x1);
+    for (y = 0; y < y1; y++)
     {
 	wmove(win, y, 0);
-	for (x = 0; x <= win->_maxx; x++)
+	for (x = 0; x < x1; x++)
 	    waddch(win, ch);
     }
 }
@@ -2588,12 +2696,14 @@ static void fillwin(WINDOW *win, char ch)
 static void crosswin(WINDOW *win, char ch)
 {
     int y, x;
+    int y1, x1;
 
-    for (y = 0; y <= win->_maxy; y++)
+    getmaxyx(win, y1, x1);
+    for (y = 0; y < y1; y++)
     {
-	for (x = 0; x <= win->_maxx; x++)
-	    if (((x > win->_maxx / 3) && (x <= 2 * win->_maxx / 3))
-			|| (((y > win->_maxy / 3) && (y <= 2 * win->_maxy / 3))))
+	for (x = 0; x < x1; x++)
+	    if (((x > (x1 - 1) / 3) && (x <= (2 * (x1 - 1)) / 3))
+	    || (((y > (y1 - 1) / 3) && (y <= (2 * (y1 - 1)) / 3))))
 	    {
 		wmove(win, y, x);
 		waddch(win, ch);
@@ -2609,6 +2719,7 @@ static void overlap_test(void)
     WINDOW *win1 = newwin(9, 20, 3, 3);
     WINDOW *win2 = newwin(9, 20, 9, 16);
 
+    raw();
     refresh();
     move(0, 0);
     printw("This test shows the behavior of wnoutrefresh() with respect to\n");
@@ -2771,10 +2882,6 @@ do_single_test(const char c)
 #endif
 
     case '?':
-	(void) puts("This is the ncurses capability tester.");
-	(void) puts("You may select a test from the main menu by typing the");
-	(void) puts("key letter of the choice (the letter to left of the =)");
-	(void) puts("at the > prompt.  The commands `x' or `q' will exit.");
 	break;
 
     default:
@@ -2853,6 +2960,10 @@ main(int argc, char *argv[])
     int		command, c;
     int		my_e_param = 1;
 
+#if HAVE_LOCALE_H
+    setlocale(LC_CTYPE, "");
+#endif
+
     while ((c = getopt(argc, argv, "e:fhs:t:")) != EOF) {
 	switch (c) {
 	case 'e':
@@ -2871,9 +2982,11 @@ main(int argc, char *argv[])
 	case 'h':
 	    ripoffline(1, rip_header);
 	    break;
+#if USE_LIBPANEL
 	case 's':
 	    nap_msec = atol(optarg);
 	    break;
+#endif
 #ifdef TRACE
 	case 't':
 	    save_trace = atoi(optarg);
@@ -2989,6 +3102,12 @@ main(int argc, char *argv[])
 		clear();
 		refresh();
 		endwin();
+		if (command == '?') {
+			(void) puts("This is the ncurses capability tester.");
+			(void) puts("You may select a test from the main menu by typing the");
+			(void) puts("key letter of the choice (the letter to left of the =)");
+			(void) puts("at the > prompt.  The commands `x' or `q' will exit.");
+		}
 		continue;
 	}
     } while

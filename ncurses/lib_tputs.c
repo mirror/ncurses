@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -33,14 +45,22 @@
 #include <term.h>	/* padding_baud_rate, xon_xoff */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.18 1997/02/02 01:52:39 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.30 1998/02/11 12:14:00 tom Exp $")
+
+#define OUTPUT ((SP != 0) ? SP->_ofp : stdout)
+
+int _nc_nulls_sent;	/* used by 'tack' program */
+
+static int (*my_outch)(int c) = _nc_outch;
 
 int delay_output(int ms)
 {
 	T((T_CALLED("delay_output(%d)"), ms));
 
-	if (SP == 0 || SP->_baudrate <= 0)
-		returnCode(ERR);
+	if (cur_term == 0 || cur_term->_baudrate <= 0) {
+		(void) fflush(OUTPUT);
+		_nc_timed_wait(0, ms, (int *)0);
+	}
 #ifdef no_pad_char
 	else if (no_pad_char)
 		napms(ms);
@@ -54,9 +74,11 @@ int delay_output(int ms)
 			null = pad_char[0];
 #endif /* pad_char */
 
-		for (nullcount = ms * 1000 / SP->_baudrate; nullcount > 0; nullcount--)
-			putc(null, SP->_ofp);
-		(void) fflush(SP->_ofp);
+		nullcount = ms * cur_term->_baudrate / 10000;
+		for (_nc_nulls_sent += nullcount; nullcount > 0; nullcount--)
+			my_outch(null);
+		if (my_outch == _nc_outch)
+			(void) fflush(OUTPUT);
 	}
 
 	returnCode(OK);
@@ -68,10 +90,7 @@ int _nc_outch(int ch)
     	_nc_outchars++;
 #endif /* TRACE */
 
-	if (SP != NULL)
-		putc(ch, SP->_ofp);
-	else
-		putc(ch, stdout);
+	putc(ch, OUTPUT);
 	return OK;
 }
 
@@ -82,9 +101,11 @@ int putp(const char *string)
 
 int tputs(const char *string, int affcnt, int (*outc)(int))
 {
-float	number;
+bool	always_delay;
+bool	normal_delay;
+int	number;
 #ifdef BSD_TPUTS
-float	trailpad;
+int	trailpad;
 #endif /* BSD_TPUTS */
 
 #ifdef TRACE
@@ -103,9 +124,23 @@ char	addrbuf[17];
 		_nc_tputs_trace = (char *)NULL;
 	}
 #endif /* TRACE */
-
+	
 	if (string == ABSENT_STRING || string == CANCELLED_STRING)
 		return ERR;
+
+	if (cur_term == 0) {
+		always_delay = FALSE;
+		normal_delay = TRUE;
+	} else {
+		always_delay = (string == bell) || (string == flash_screen);
+		normal_delay =
+		 !xon_xoff
+#ifdef padding_baud_rate
+		 && padding_baud_rate
+		 && (!cur_term || cur_term->_baudrate >= padding_baud_rate)
+#endif
+		 ;
+	}
 
 #ifdef BSD_TPUTS
 	/*
@@ -113,17 +148,15 @@ char	addrbuf[17];
 	 * (like nethack) actually do the likes of tputs("50") to get delays.
 	 */
 	trailpad = 0;
-	number = 0;
-
 	while (isdigit(*string)) {
-		trailpad = trailpad * 10 + *string - '0';
+		trailpad = trailpad * 10 + (*string - '0');
 		string++;
 	}
-
+	trailpad *= 10;
 	if (*string == '.') {
 		string++;
 		if (isdigit(*string)) {
-			trailpad += (float) (*string - '0') / 10.;
+			trailpad += (*string - '0');
 			string++;
 		}
 		while (isdigit(*string))
@@ -136,6 +169,7 @@ char	addrbuf[17];
 	}
 #endif /* BSD_TPUTS */
 
+	my_outch = outc;	/* redirect delay_output() */
 	while (*string) {
 		if (*string != '$')
 			(*outc)(*string);
@@ -148,30 +182,30 @@ char	addrbuf[17];
 			} else {
 				bool mandatory;
 
-				number = 0;
 				string++;
-
 				if ((!isdigit(*string) && *string != '.') || !strchr(string, '>')) {
 					(*outc)('$');
 					(*outc)('<');
 					continue;
 				}
+
+				number = 0;
 				while (isdigit(*string)) {
-					number = number * 10 + *string - '0';
+					number = number * 10 + (*string - '0');
 					string++;
 				}
-
+				number *= 10;
 				if (*string == '.') {
 					string++;
 					if (isdigit(*string)) {
-						number += (float) (*string - '0') / 10.;
+						number += (*string - '0');
 						string++;
 					}
 					while (isdigit(*string))
 						string++;
 				}
 
-				mandatory = !xon_xoff;
+				mandatory = FALSE;
 				while (*string == '*' || *string == '/')
 				{
 					if (*string == '*') {
@@ -184,11 +218,11 @@ char	addrbuf[17];
 					}
 				}
 
-#ifdef padding_baud_rate
-				if (mandatory && number > 0 && padding_baud_rate && (!SP || SP->_baudrate >= padding_baud_rate))
-					delay_output(number);
-#endif /* padding_baud_rate */
-				number = 0;
+				if (number > 0
+				 && (always_delay
+				  || normal_delay
+				  || mandatory))
+					delay_output(number/10);
 
 			} /* endelse (*string == '<') */
 		} /* endelse (*string == '$') */
@@ -203,11 +237,11 @@ char	addrbuf[17];
 	/*
 	 * Emit any BSD-style prefix padding that we've accumulated now.
 	 */
-#ifdef padding_baud_rate
-	if (trailpad > 0 && !xon_xoff && padding_baud_rate && (!SP || SP->_baudrate >= padding_baud_rate))
-		delay_output(number);
-#endif /* padding_baud_rate */
+	if (trailpad > 0
+	 && (always_delay || normal_delay))
+		delay_output(trailpad/10);
 #endif /* BSD_TPUTS */
 
+	my_outch = _nc_outch;
 	return OK;
 }

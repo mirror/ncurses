@@ -1,44 +1,48 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 
 /*
  *	lib_refresh.c
  *
- *	The routines wredrawln(), wrefresh() and wnoutrefresh().
+ *	The routines wrefresh() and wnoutrefresh().
  *
  */
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_refresh.c,v 1.14 1997/02/02 01:05:26 tom Exp $")
-
-int wredrawln(WINDOW *win, int beg, int num)
-{
-	T((T_CALLED("wredrawln(%p,%d,%d)"), win, beg, num));
-	touchline(win, beg, num);
-	wrefresh(win);
-	returnCode(OK);
-}
+MODULE_ID("$Id: lib_refresh.c,v 1.19 1998/02/11 12:13:59 tom Exp $")
 
 int wrefresh(WINDOW *win)
 {
@@ -67,8 +71,8 @@ int code;
 int wnoutrefresh(WINDOW *win)
 {
 short	i, j;
-short	begx = win->_begx;
-short	begy = win->_begy;
+short	begx;
+short	begy;
 short	m, n;
 bool	wide;
 
@@ -84,6 +88,10 @@ bool	wide;
 	if ((win == 0)
 	 || (win->_flags & _ISPAD))
 		returnCode(ERR);
+
+	/* put them here so "win == 0" won't break our code */
+	begx = win->_begx;
+	begy = win->_begy;
 
 	/*
 	 * If 'newscr' has a different background than the window that we're
@@ -153,14 +161,16 @@ bool	wide;
 
 		}
 
+#if USE_SCROLL_HINTS
 		if (wide) {
 		    int	oind = oline->oldindex;
 
 		    nline->oldindex = (oind == _NEWINDEX) ? _NEWINDEX : begy + oind + win->_yoffset;
 		}
+#endif /* USE_SCROLL_HINTS */
 
 		oline->firstchar = oline->lastchar = _NOCHANGE;
-		oline->oldindex = i;
+		if_USE_SCROLL_HINTS(oline->oldindex = i);
 	}
 
 	if (win->_clear) {

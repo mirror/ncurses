@@ -3,7 +3,7 @@
 \fBdef_prog_mode\fR, \fBdef_shell_mode\fR,
 \fBreset_prog_mode\fR, \fBreset_shell_mode\fR, \fBresetty\fR,
 \fBsavetty\fR, \fBgetsyx\fR, \fBsetsyx\fR, \fBripoffline\fR,
-\fBcurs_set\fR, \fBnapms\fR - low-level \fBxscurses\fR routines
+\fBcurs_set\fR, \fBnapms\fR - low-level \fBcurses\fR routines
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 
@@ -70,7 +70,7 @@ at the beginning, do its manipulation of its own windows, do a
 \fBdoupdate\fR.
 
 The \fBripoffline\fR routine provides access to the same facility that
-\fBslk_init\fR [see curs_slk(3X)] uses to reduce the size of the
+\fBslk_init\fR [see \fBcurs_slk\fR(3X)] uses to reduce the size of the
 screen.  \fBripoffline\fR must be called before \fBinitscr\fR or
 \fBnewterm\fR is called.  If \fIline\fR is positive, a line is removed
 from the top of \fBstdscr\fR; if \fIline\fR is negative, a line is

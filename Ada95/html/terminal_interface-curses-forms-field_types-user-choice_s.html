@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE>
+</HEAD>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+<I>------------------------------------------------------------------------------</I>
+<I>--                                                                          --</I>
+<I>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</I>
+<I>--                                                                          --</I>
+<I>--           Terminal_Interface.Curses.Forms.Field_Types.User.Choice        --</I>
+<I>--                                                                          --</I>
+<I>--                                 S P E C                                  --</I>
+<I>--                                                                          --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</I>
+<I>--                                                                          --</I>
+<I>-- Permission is hereby granted, free of charge, to any person obtaining a  --</I>
+<I>-- copy of this software and associated documentation files (the            --</I>
+<I>-- "Software"), to deal in the Software without restriction, including      --</I>
+<I>-- without limitation the rights to use, copy, modify, merge, publish,      --</I>
+<I>-- distribute, distribute with modifications, sublicense, and/or sell       --</I>
+<I>-- copies of the Software, and to permit persons to whom the Software is    --</I>
+<I>-- furnished to do so, subject to the following conditions:                 --</I>
+<I>--                                                                          --</I>
+<I>-- The above copyright notice and this permission notice shall be included  --</I>
+<I>-- in all copies or substantial portions of the Software.                   --</I>
+<I>--                                                                          --</I>
+<I>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</I>
+<I>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</I>
+<I>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</I>
+<I>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</I>
+<I>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</I>
+<I>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</I>
+<I>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</I>
+<I>--                                                                          --</I>
+<I>-- Except as contained in this notice, the name(s) of the above copyright   --</I>
+<I>-- holders shall not be used in advertising or otherwise to promote the     --</I>
+<I>-- sale, use or other dealings in this Software without prior written       --</I>
+<I>-- authorization.                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
+<I>--  Version Control:</I>
+<I>--  @Revision: 1.1 @</I>
+<I>------------------------------------------------------------------------------</I>
+<B>with</B> Ada.Unchecked_Deallocation;
+<B>with</B> Terminal_Interface.Curses.<A HREF="terminal_interface-curses-aux_s.html#32:35">Aux</A>;
+
+<B>package</B> Terminal_Interface.Curses.Forms.Field_Types.User.Choice <B>is</B>
+
+   type User_Defined_Field_Type_With_Choice <B>is</B> <B>abstract</B> <B>new</B>
+     User_Defined_Field_Type <B>with</B> <B>null</B> <B>record</B>;
+   <I>--  This is the root of the mechanism we use to create field types in</I>
+   <I>--  Ada95 that allow the prev/next mechanism. You should your own type</I>
+   <I>--  derive from this one and implement the Field_Check, Character_Check</I>
+   <I>--  Next and Previous functions for your own type.</I>
+
+   type User_Defined_Field_Type_With_Choice_Access <B>is</B> <B>access</B> <B>all</B>
+     User_Defined_Field_Type_With_Choice'Class;
+
+   <B>function</B> Next
+     (Fld : Field;
+      Typ : User_Defined_Field_Type_With_Choice) <B>return</B> Boolean
+      <B>is</B> <B>abstract</B>;
+   <I>--  If True is returned, the function successfully generated a next</I>
+   <I>--  value into the fields buffer.</I>
+
+   <B>function</B> Previous
+     (Fld : Field;
+      Typ : User_Defined_Field_Type_With_Choice) <B>return</B> Boolean
+      <B>is</B> <B>abstract</B>;
+   <I>--  If True is returned, the function successfully generated a previous</I>
+   <I>--  value into the fields buffer.</I>
+
+   <I>--  +----------------------------------------------------------------------</I>
+   <I>--  | Private Part.</I>
+   <I>--  |</I>
+<B>private</B>
+   <B>use</B> type Interfaces.C.Int;
+
+   <B>function</B> Generic_Next (Fld : Field;
+                          Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Generic_Next);
+   <I>--  This is the generic next Choice_Function for the low-level fieldtype</I>
+   <I>--  representing all the User_Defined_Field_Type derivates. It routes</I>
+   <I>--  the call to the Next implementation for the type.</I>
+
+   <B>function</B> Generic_Prev (Fld : Field;
+                          Usr : System.Address) <B>return</B> <A HREF="terminal_interface-curses-aux_s.html#36:12">C_Int</A>;
+   <B>pragma</B> Convention (C, Generic_Prev);
+   <I>--  This is the generic prev Choice_Function for the low-level fieldtype</I>
+   <I>--  representing all the User_Defined_Field_Type derivates. It routes</I>
+   <I>--  the call to the Previous implementation for the type.</I>
+
+<B>end</B> Terminal_Interface.Curses.Forms.Field_Types.User.Choice;
+
+</PRE>
+
+<P><HR><P>
+<P>
+This is BETA software. The interface is subject to change without notice.<P>
+<!-- Do NOT delete my name or the tool name from below; -->
+<!-- giving me credit is a condition of use of ada2html -->
+<P><I>This hypertext format was generated by <A HREF="http://www.adahome.com/Tutorials/Lovelace/dwheeler.htm">David A. Wheeler</A>'s <A HREF="http://www.adahome.com/Resources/Tools/ada2html/ada2html.htm">ada2html</A></I>
+</BODY>
+</HTML>
+

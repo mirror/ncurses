@@ -1,5 +1,5 @@
 /*
- * $Id: firework.c,v 1.10 1997/05/03 18:37:56 tom Exp $
+ * $Id: firework.c,v 1.11 1997/11/01 19:36:25 tom Exp $
  */
 #include <test.priv.h>
 
@@ -12,7 +12,7 @@
 static int get_colour(chtype *);
 static void explode(int row, int col);
 static void showit(void);
-static void onsig(int sig);
+static RETSIGTYPE onsig(int sig);
 
 static int my_bg = COLOR_BLACK;
 

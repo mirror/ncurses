@@ -1,26 +1,42 @@
-# $Id: Makefile.in,v 1.29 1997/05/10 16:23:07 tom Exp $
-################################################################################
-# Copyright 1996,1997 by Thomas E. Dickey <dickey@clark.net>                   #
-# All Rights Reserved.                                                         #
-#                                                                              #
-# Permission to use, copy, modify, and distribute this software and its        #
-# documentation for any purpose and without fee is hereby granted, provided    #
-# that the above copyright notice appear in all copies and that both that      #
-# copyright notice and this permission notice appear in supporting             #
-# documentation, and that the name of the above listed copyright holder(s) not #
-# be used in advertising or publicity pertaining to distribution of the        #
-# software without specific, written prior permission. THE ABOVE LISTED        #
-# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
-# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
-# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
-# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
-# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
-# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
-# PERFORMANCE OF THIS SOFTWARE.                                                #
-################################################################################
+# $Id: Makefile.in,v 1.45 1998/02/11 12:14:05 tom Exp $
+##############################################################################
+# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997,1998
+#
 # Makefile for ncurses tests.
 
+# turn off _all_ suffix rules; we'll generate our own
+.SUFFIXES:
+
 SHELL		= /bin/sh
+
+x		= @PROG_EXT@
 
 MODEL		= ../@DFT_OBJ_SUBDIR@
 srcdir		= @srcdir@
@@ -39,12 +55,14 @@ CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
-CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
+CFLAGS_SHARED	= $(CCFLAGS) # @CC_SHARED_OPTS@
 
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 
-ABI_VERSION	= @nc_cv_abi_version@
+REL_VERSION	= @cf_cv_rel_version@
+ABI_VERSION	= @cf_cv_abi_version@
 LOCAL_LIBS	= @TEST_DEPS@
+MATH_LIB	= @MATH_LIB@
 
 LD		= @LD@
 LINK		= $(CC)
@@ -54,7 +72,7 @@ LDFLAGS		= @LD_MODEL@ @TEST_ARGS@ @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ @LDFLAGS@
 LDFLAGS_NORMAL	= $(LDFLAGS)
 LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
 LDFLAGS_PROFILE	= $(LDFLAGS) -pg
-LDFLAGS_SHARED	= $(LDFLAGS) @CC_SHARED_OPTS@
+LDFLAGS_SHARED	= $(LDFLAGS) @CC_SHARED_OPTS@ # @LD_SHARED_OPTS@
 
 LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@)
 
@@ -63,71 +81,111 @@ LINT_OPTS	= @LINT_OPTS@
 LINT_LIBS	= -lform -lmenu -lpanel -lncurses @LIBS@
 
 TESTS = \
-	blue \
-	bs \
-	firework \
-	gdc \
-	hanoi \
-	hashtest \
-	knight \
-	lrtest \
-	ncurses \
-	newdemo \
-	rain \
-	tclock \
-	testcurs \
-	view \
-	worm \
-	xmas
+	blue$x \
+	bs$x \
+	firework$x \
+	firstlast$x \
+	gdc$x \
+	hanoi$x \
+	hashtest$x \
+	knight$x \
+	lrtest$x \
+	ncurses$x \
+	newdemo$x \
+	rain$x \
+	tclock$x \
+	testaddch$x \
+	testcurs$x \
+	testscanw$x \
+	view$x \
+	worm$x \
+	xmas$x
 
 all: $(TESTS)
 
-blue: $(MODEL)/blue.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-bs: $(MODEL)/bs.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-firework: $(MODEL)/firework.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-gdc: $(MODEL)/gdc.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-hanoi: $(MODEL)/hanoi.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-hashtest: $(MODEL)/hashtest.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-knight: $(MODEL)/knight.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-lrtest: $(MODEL)/lrtest.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-ncurses: $(MODEL)/ncurses.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-newdemo: $(MODEL)/newdemo.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-rain: $(MODEL)/rain.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-tclock: $(MODEL)/tclock.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT) -lm
-testcurs: $(MODEL)/testcurs.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-view: $(MODEL)/view.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-worm: $(MODEL)/worm.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
-xmas: $(MODEL)/xmas.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+sources:
+
+blue$x: $(MODEL)/blue.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/blue.o $(LDFLAGS_DEFAULT)
+
+bs$x: $(MODEL)/bs.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/bs.o $(LDFLAGS_DEFAULT)
+
+firework$x: $(MODEL)/firework.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/firework.o $(LDFLAGS_DEFAULT)
+
+firstlast$x: $(MODEL)/firstlast.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/firstlast.o $(LDFLAGS_DEFAULT)
+
+gdc$x: $(MODEL)/gdc.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/gdc.o $(LDFLAGS_DEFAULT)
+
+hanoi$x: $(MODEL)/hanoi.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/hanoi.o $(LDFLAGS_DEFAULT)
+
+hashtest$x: $(MODEL)/hashtest.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/hashtest.o $(LDFLAGS_DEFAULT)
+
+knight$x: $(MODEL)/knight.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/knight.o $(LDFLAGS_DEFAULT)
+
+lrtest$x: $(MODEL)/lrtest.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/lrtest.o $(LDFLAGS_DEFAULT)
+
+ncurses$x: $(MODEL)/ncurses.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/ncurses.o $(LDFLAGS_DEFAULT)
+
+newdemo$x: $(MODEL)/newdemo.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/newdemo.o $(LDFLAGS_DEFAULT)
+
+rain$x: $(MODEL)/rain.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/rain.o $(LDFLAGS_DEFAULT)
+
+tclock$x: $(MODEL)/tclock.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/tclock.o $(LDFLAGS_DEFAULT) $(MATH_LIB)
+
+testaddch$x: $(MODEL)/testaddch.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testaddch.o $(LDFLAGS_DEFAULT)
+
+testcurs$x: $(MODEL)/testcurs.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testcurs.o $(LDFLAGS_DEFAULT)
+
+testscanw$x: $(MODEL)/testscanw.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testscanw.o $(LDFLAGS_DEFAULT)
+
+view$x: $(MODEL)/view.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/view.o $(LDFLAGS_DEFAULT)
+
+worm$x: $(MODEL)/worm.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/worm.o $(LDFLAGS_DEFAULT)
+
+xmas$x: $(MODEL)/xmas.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/xmas.o $(LDFLAGS_DEFAULT)
 
 install:
 install.libs:
 install.test:
 
-clean ::
-	-rm -rf *.o trace screendump *.atac *.lis core $(TESTS)
+uninstall:
+uninstall.libs:
+uninstall.test:
+
+mostlyclean ::
+	-rm -f core tags TAGS *~ *.ln *.atac trace
+
+clean :: mostlyclean
+	-rm -rf *.o screendump *.lis $(TESTS)
 
 distclean :: clean
 	-rm -f Makefile ncurses_cfg.h config.*
-
-mostlyclean :: clean
 
 realclean :: distclean
 
 lint:
 	sh -c 'for N in $(TESTS); do echo LINT:$$N; $(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/$$N.c $(LINT_LIBS); done'
+
+# Use this to get a list of test-programs for the standalone configure script.
+echo_tests :
+	@echo "$(TESTS)"
+echo_suffix :
+	@echo "$x"

@@ -1,33 +1,44 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 #define __INTERNAL_CAPS_VISIBLE
 #include <progs.priv.h>
 
-#include <ctype.h>
 #include "dump_entry.h"
 #include "termsort.c"		/* this C file is generated */
 #include "parametrized.h"	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.17 1997/05/10 17:35:30 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.25 1998/02/11 12:14:02 tom Exp $")
 
 #define INDENT			8
 
@@ -45,7 +56,9 @@ static size_t out_size;		/* ...and its allocated length */
 
 /* indirection pointers for implementing sort and display modes */
 static const int *bool_indirect, *num_indirect, *str_indirect;
-static char * const *bool_names, * const *num_names, * const *str_names;
+static NCURSES_CONST char * const *bool_names;
+static NCURSES_CONST char * const *num_names;
+static NCURSES_CONST char * const *str_names;
 
 static const char *separator, *trailer;
 
@@ -68,7 +81,7 @@ void _nc_leaks_dump_entry(void)
 }
 #endif
 
-char *nametrans(const char *name)
+NCURSES_CONST char *nametrans(const char *name)
 /* translate a capability name from termcap to terminfo */
 {
     const struct name_table_entry 	*np;
@@ -189,92 +202,6 @@ void dump_init(const char *version, int mode, int sort, int twidth, int traceval
 		       _nc_progname, width, tversion, outform);
 }
 
-static int trailing_spaces(const char *src)
-{
-	while (*src == ' ')
-		src++;
-	return *src == 0;
-}
-
-/* this deals with differences over whether 0x7f and 0x80..0x9f are controls */
-#define CHAR_OF(s) (*(unsigned const char *)(s))
-#define REALCTL(s) (CHAR_OF(s) < 127 && iscntrl(CHAR_OF(s)))
-#define REALPRINT(s) (CHAR_OF(s) < 127 && isprint(CHAR_OF(s)))
-
-char *expand(char *srcp)
-{
-static char	buffer[1024];
-int		bufp;
-const char	*ptr, *str = (srcp == ABSENT_STRING
-			   || srcp == CANCELLED_STRING) ? "" : srcp;
-bool		islong = (strlen(str) > 3);
-
-    	bufp = 0;
-    	ptr = str;
-    	while (*str) {
-		if (*str == '%' && REALPRINT(str+1)) {
-	    		buffer[bufp++] = *str++;
-	    		buffer[bufp++] = *str;
-		}
-		else if (*str == '\033') {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = 'E';
-		}
-		else if (*str == '\\' && (outform==F_TERMINFO) && (str == srcp || str[-1] != '^')) {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = '\\';
-		}
-		else if (*str == ' ' && (outform==F_TERMINFO) && (str == srcp || trailing_spaces(str))) {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = 's';
-		}
-		else if ((*str == ',' || *str == ':' || *str == '^') && (outform==F_TERMINFO)) {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = *str;
-		}
-		else if (REALPRINT(str) && (*str != ',' && *str != ':' && !(*str == '!' && outform!=F_TERMINFO) && *str != '^'))
-		    	buffer[bufp++] = *str;
-#if 0		/* FIXME: this would be more readable */
-		else if (*str == '\b') {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = 'b';
-		}
-		else if (*str == '\f') {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = 'f';
-		}
-		else if (*str == '\t' && islong) {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = 't';
-		}
-#endif
-		else if (*str == '\r' && (islong || (strlen(srcp) > 2 && str[1] == '\0'))) {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = 'r';
-		}
-		else if (*str == '\n' && islong) {
-	    		buffer[bufp++] = '\\';
-	    		buffer[bufp++] = 'n';
-		}
-#define UnCtl(c) ((0xff & (c)) + '@')
-		else if (REALCTL(str) && *str != '\\' && (!islong || isdigit(str[1])))
-		{
-			(void) sprintf(&buffer[bufp], "^%c", UnCtl(*str));
-			bufp += 2;
-		}
-		else
-		{
-			(void) sprintf(&buffer[bufp], "\\%03o", 0xff & *str);
-			bufp += 4;
-		}
-
-		str++;
-    	}
-
-    	buffer[bufp] = '\0';
-    	return(buffer);
-}
-
 static TERMTYPE	*cur_type;
 
 static int dump_predicate(int type, int idx)
@@ -298,6 +225,7 @@ static int dump_predicate(int type, int idx)
 }
 
 static void set_obsolete_termcaps(TERMTYPE *tp);
+static void repair_acsc(TERMTYPE *tp);
 
 /* is this the index of a function key string? */
 #define FNKEY(i)	(((i)<= 65 && (i)>= 75) || ((i)<= 216 && (i)>= 268))
@@ -314,11 +242,14 @@ static bool version_filter(int type, int idx)
 	switch (type)
 	{
 	case BOOLEAN:
-	    return (idx <= 20);	/* below and including xon_xoff */
+	    /* below and including xon_xoff */
+	    return ((idx <= 20) ? TRUE : FALSE);
 	case NUMBER:
-	    return (idx <= 7);	/* below and including width_status_line */
+	    /* below and including width_status_line */
+	    return ((idx <= 7) ? TRUE : FALSE);
 	case STRING:
-	    return (idx <= 144);	/* below and including prtr_non */
+	    /* below and including prtr_non */
+	    return ((idx <= 144) ? TRUE : FALSE);
 	}
 	break;
 
@@ -326,9 +257,11 @@ static bool version_filter(int type, int idx)
 	switch (type)
 	{
 	case BOOLEAN:
-	    return (idx <= 20);	/* below and including xon_xoff */
+	    /* below and including xon_xoff */
+	    return ((idx <= 20) ? TRUE : FALSE);
 	case NUMBER:
-	    return (idx <= 10);	/* below and including label_width */
+	    /* below and including label_width */
+	    return ((idx <= 10) ? TRUE : FALSE);
 	case STRING:
 	    if (idx <= 144)	/* below and including prtr_non */
 		return(TRUE);
@@ -345,9 +278,11 @@ static bool version_filter(int type, int idx)
 	switch (type)
 	{
 	case BOOLEAN:
-	    return (idx <= 20);	/* below and including xon_xoff */
+	    /* below and including xon_xoff */
+	    return ((idx <= 20) ? TRUE : FALSE);
 	case NUMBER:
-	    return (idx <= 7);	/* below and including width_status_line */
+	    /* below and including width_status_line */
+	    return ((idx <= 7) ? TRUE : FALSE);
 	case STRING:
 	    if (idx <= 144)	/* below and including prtr_non */
 		return(TRUE);
@@ -541,6 +476,7 @@ bool	outcount = 0;
     if (len & 1)
     	len++;
 
+    repair_acsc(tterm);
     for (j=0; j < STRCOUNT; j++) {
 	if (sortmode == S_NOSORT)
 	    i = j;
@@ -584,13 +520,12 @@ bool	outcount = 0;
 	    if (tterm->Strings[i] != ABSENT_STRING
 	     && i + 1 > num_strings)
 		num_strings = i + 1;
-	    if (tterm->Strings[i] == ABSENT_STRING
-	     || tterm->Strings[i] == CANCELLED_STRING)
+	    if (!VALID_STRING(tterm->Strings[i]))
 		sprintf(buffer, "%s@", str_names[i]);
 	    else if (outform == F_TERMCAP || outform == F_TCONVERR)
 	    {
-		char *srccap = expand(tterm->Strings[i]);
-		char *cv = _nc_infotocap(str_names[i], srccap,parametrized[i]);
+		char *srccap = _nc_tic_expand(tterm->Strings[i], FALSE);
+		char *cv = _nc_infotocap(str_names[i], srccap, parametrized[i]);
 
 		if (cv == (char *)NULL)
 		{
@@ -607,7 +542,7 @@ bool	outcount = 0;
 	    }
 	    else
 	    {
-		sprintf(buffer,"%s=%s",str_names[i],expand(tterm->Strings[i]));
+		sprintf(buffer, "%s=%s", str_names[i], _nc_tic_expand(tterm->Strings[i], outform==F_TERMINFO));
 		len += strlen(tterm->Strings[i]) + 1;
 	    }
 
@@ -637,7 +572,7 @@ bool	outcount = 0;
     }
     else if (tversion == V_AIX)
     {
-	if (acs_chars)
+	if (VALID_STRING(acs_chars))
 	{
 	    bool	box_ok = TRUE;
 	    const char	*acstrans = "lqkxjmwuvtn";
@@ -661,7 +596,7 @@ bool	outcount = 0;
 	    if (box_ok)
 	    {
 		(void) strcpy(buffer, "box1=");
-		(void) strcat(buffer, expand(boxchars));
+		(void) strcat(buffer, _nc_tic_expand(boxchars, outform==F_TERMINFO));
 		WRAP_CONCAT;
 	    }
 	}
@@ -845,4 +780,52 @@ void compare_entry(void (*hook)(int t, int i, const char *name))
 static void set_obsolete_termcaps(TERMTYPE *tp)
 {
 #include "capdefaults.c"
+}
+
+/*
+ * Convert an alternate-character-set string to canonical form: sorted and
+ * unique.
+ */
+static void repair_acsc(TERMTYPE *tp)
+{
+	if (VALID_STRING(acs_chars)) {
+	    size_t n, m;
+	    char mapped[256];
+	    char extra = 0;
+	    unsigned source;
+	    unsigned target;
+	    bool fix_needed = FALSE;
+
+	    for (n = 0, source = 0; acs_chars[n] != 0; n++) {
+		target = acs_chars[n];
+		if (source >= target) {
+		    fix_needed = TRUE;
+		    break;
+		}
+		source = target;
+		if (acs_chars[n+1])
+		    n++;
+	    }
+	    if (fix_needed) {
+		memset(mapped, 0, sizeof(mapped));
+		for (n = 0; acs_chars[n] != 0; n++) {
+		    source = acs_chars[n];
+		    if ((target = (unsigned char)acs_chars[n+1]) != 0) {
+		        mapped[source] = target;
+			n++;
+		    } else {
+			extra = source;
+		    }
+		}
+		for (n = m = 0; n < sizeof(mapped); n++) {
+		    if (mapped[n]) {
+			acs_chars[m++] = n;
+			acs_chars[m++] = mapped[n];
+		    }
+		}
+		if (extra)
+		    acs_chars[m++] = extra;	/* garbage in, garbage out */
+		acs_chars[m] = 0;
+	    }
+	}
 }

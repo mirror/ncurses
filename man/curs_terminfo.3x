@@ -1,4 +1,4 @@
-.\" $Id: curs_terminfo.3x,v 1.6 1996/06/15 22:45:50 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.7 1997/08/30 12:48:49 tom Exp $
 .TH curs_terminfo 3X ""
 .ds n 5
 .SH NAME
@@ -23,8 +23,6 @@ interfaces to terminfo database
 \fBint restartterm(const char *term, int fildes, int *errret);\fR
 .br
 \fBchar *tparm(const char *str, ...);\fR
-.br
-\fBchar *tparam(const char *str, char *buffer, int size, ...);\fR
 .br
 \fBint tputs(const char *str, int affcnt, int (*putc)(int));\fR
 .br
@@ -124,10 +122,6 @@ it saves various tty state bits, does a setupterm, and then restores the bits.
 The \fBtparm\fR routine instantiates the string \fIstr\fR with
 parameters \fIpi\fR.  A pointer is returned to the result of \fIstr\fR
 with the parameters applied.
-
-The \fBtparam\fR routine is included for compatibility with the GNU termcap
-implementation.  It works like \fBtparm\fR but you specify a buffer and buffer
-size to be filled with the expanded string.
 
 The \fBtputs\fR routine applies padding information to the string
 \fIstr\fR and outputs it.  The \fIstr\fR must be a terminfo string

@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
  * This module is intended to encapsulate ncurses's interface to pointing
@@ -61,18 +73,18 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 0.22 1997/02/15 22:33:37 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.35 1998/02/11 12:13:55 tom Exp $")
 
 #define MY_TRACE TRACE_ICALLS|TRACE_IEVENT
 
 #define INVALID_EVENT	-1
 
-int _nc_max_click_interval = 166;	/* max press/release separation */
-
 static int		mousetype;
 #define M_XTERM		-1	/* use xterm's mouse tracking? */
 #define M_NONE		0	/* no mouse device */
 #define M_GPM		1	/* use GPM */
+#define M_QNX		2	/* QNX mouse on console */
+#define M_QNX_TERM	3	/* QNX mouse on pterm/xterm (using qansi-m) */
 
 #if USE_GPM_SUPPORT
 #ifndef LINT
@@ -82,8 +94,16 @@ static Gpm_Connect gpm_connect;
 
 static mmask_t	eventmask;		/* current event mask */
 
+static bool _nc_mouse_parse(int);
+static void _nc_mouse_resume(SCREEN *);
+static void _nc_mouse_wrap(SCREEN *);
+
 /* maintain a circular list of mouse events */
-#define EV_MAX		8		/* size of circular event queue */
+
+/* The definition of the circular list size (EV_MAX), is in curses.priv.h, so
+ * wgetch() may refer to the size and call _nc_mouse_parse() before circular
+ * list overflow.
+ */
 static MEVENT	events[EV_MAX];		/* hold the last mouse event seen */
 static MEVENT	*eventp = events;	/* next free slot in event queue */
 #define NEXT(ep)	((ep == events + EV_MAX - 1) ? events : ep + 1)
@@ -101,10 +121,25 @@ static void _trace_slot(const char *tag)
 }
 #endif
 
-void _nc_mouse_init(SCREEN *sp GCC_UNUSED)
-/* initialize the mouse -- called at screen-setup time */
+/* FIXME: The list of names should be configurable */
+static int is_xterm(const char *name)
+{
+    return (!strncmp(name, "xterm", 5)
+      ||    !strncmp(name, "rxvt",  4)
+      ||    !strncmp(name, "kterm", 5)
+      ||    !strncmp(name, "color_xterm", 11));
+}
+
+static void _nc_mouse_init(void)
+/* initialize the mouse */
 {
     int i;
+    static int initialized;
+
+    if (initialized) {
+	return;
+    }
+    initialized = TRUE;
 
     TR(MY_TRACE, ("_nc_mouse_init() called"));
 
@@ -112,7 +147,8 @@ void _nc_mouse_init(SCREEN *sp GCC_UNUSED)
 	events[i].id = INVALID_EVENT;
 
     /* we know how to recognize mouse events under xterm */
-    if (!strncmp(cur_term->type.term_names, "xterm", 5) && key_mouse)
+    if (key_mouse != 0
+     && is_xterm(cur_term->type.term_names))
 	mousetype = M_XTERM;
 
 #if USE_GPM_SUPPORT
@@ -123,24 +159,17 @@ void _nc_mouse_init(SCREEN *sp GCC_UNUSED)
 	gpm_connect.defaultMask = ~gpm_connect.eventMask;
 	gpm_connect.minMod = 0;
 	gpm_connect.maxMod = ~0;
-	if (Gpm_Open (&gpm_connect, 0) >= 0) /* returns the file-descriptor */
+	if (Gpm_Open (&gpm_connect, 0) >= 0) { /* returns the file-descriptor */
 	    mousetype = M_GPM;
+	    SP->_mouse_fd = gpm_fd;
+	}
     }
 #endif
+
+    T(("_nc_mouse_init() set mousetype to %d", mousetype));
 }
 
-int _nc_mouse_fd(void)
-{
-	if (mousetype == M_XTERM)
-		return -1;
-#if USE_GPM_SUPPORT
-	else if (mousetype == M_GPM)
-		return gpm_fd;
-#endif
-	return -1;
-}
-
-bool _nc_mouse_event(SCREEN *sp GCC_UNUSED)
+static bool _nc_mouse_event(SCREEN *sp GCC_UNUSED)
 /* query to see if there is a pending mouse event */
 {
 #if USE_GPM_SUPPORT
@@ -153,7 +182,7 @@ bool _nc_mouse_event(SCREEN *sp GCC_UNUSED)
     {
 	eventp->id = 0;		/* there's only one mouse... */
 
-	eventp->bstate = 0;	
+	eventp->bstate = 0;
 	switch (ev.type & 0x0f)
 	{
 	case(GPM_DOWN):
@@ -172,18 +201,19 @@ bool _nc_mouse_event(SCREEN *sp GCC_UNUSED)
 
 	eventp->x = ev.x - 1;
 	eventp->y = ev.y - 1;
-	eventp->z = 0; 
+	eventp->z = 0;
 
 	/* bump the next-free pointer into the circular list */
 	eventp = NEXT(eventp);
 	return (TRUE);
     }
 #endif
+
     /* xterm: never have to query, mouse events are in the keyboard stream */
     return(FALSE);	/* no event waiting */
 }
 
-bool _nc_mouse_inline(SCREEN *sp)
+static bool _nc_mouse_inline(SCREEN *sp)
 /* mouse report received in the keyboard stream -- parse its info */
 {
     TR(MY_TRACE, ("_nc_mouse_inline() called"));
@@ -294,6 +324,9 @@ bool _nc_mouse_inline(SCREEN *sp)
 
 	/* bump the next-free pointer into the circular list */
 	eventp = NEXT(eventp);
+#if 0	/* this return would be needed for QNX's mods to lib_getch.c */
+	return(TRUE);
+#endif
     }
 
     return(FALSE);
@@ -301,20 +334,47 @@ bool _nc_mouse_inline(SCREEN *sp)
 
 static void mouse_activate(bool on)
 {
-    if (mousetype == M_XTERM)
-    {
-	if (on)
-	{
+    _nc_mouse_init();
+
+    if (on) {
+
+	switch (mousetype) {
+	case M_XTERM:
+#ifdef NCURSES_EXT_FUNCS
+	    keyok(KEY_MOUSE, on);
+#endif
 	    TPUTS_TRACE("xterm mouse initialization");
 	    putp("\033[?1000h");
+	    break;
+#if USE_GPM_SUPPORT
+	case M_GPM:
+	    SP->_mouse_fd = gpm_fd;
+	    break;
+#endif
 	}
-	else
-	{
+	/* Make runtime binding to cut down on object size of applications that
+	 * do not use the mouse (e.g., 'clear').
+	 */
+	SP->_mouse_event  = _nc_mouse_event;
+	SP->_mouse_inline = _nc_mouse_inline;
+	SP->_mouse_parse  = _nc_mouse_parse;
+	SP->_mouse_resume = _nc_mouse_resume;
+	SP->_mouse_wrap   = _nc_mouse_wrap;
+
+    } else {
+
+	switch (mousetype) {
+	case M_XTERM:
 	    TPUTS_TRACE("xterm mouse deinitialization");
 	    putp("\033[?1000l");
+	    break;
+#if USE_GPM_SUPPORT
+	case M_GPM:
+	    break;
+#endif
 	}
-	(void) fflush(SP->_ofp);
     }
+    (void) fflush(SP->_ofp);
 }
 
 /**************************************************************************
@@ -323,7 +383,7 @@ static void mouse_activate(bool on)
  *
  **************************************************************************/
 
-bool _nc_mouse_parse(int runcount)
+static bool _nc_mouse_parse(int runcount)
 /* parse a run of atomic mouse events into a gesture */
 {
     MEVENT	*ep, *runp, *next, *prev = PREV(eventp);
@@ -357,13 +417,16 @@ bool _nc_mouse_parse(int runcount)
     {
 	TR(MY_TRACE, ("_nc_mouse_parse: returning simple mouse event %s at slot %d",
 	   _tracemouse(prev), prev-events));
-	return (PREV(prev)->id >= 0) ? (PREV(prev)->bstate & eventmask) : 0;
+	return (prev->id >= 0)
+		? ((prev->bstate & eventmask) ? TRUE : FALSE)
+		: FALSE;
     }
 
     /* find the start of the run */
     runp = eventp;
-    for (n = runcount; n > 0; n--)
+    for (n = runcount; n > 0; n--) {
 	runp = PREV(runp);
+    }
 
 #ifdef TRACE
     if (_nc_tracing & TRACE_IEVENT)
@@ -536,8 +599,9 @@ bool _nc_mouse_parse(int runcount)
      * don't match the current event mask.
      */
     for (; runcount; prev = PREV(eventp), runcount--)
-	if (prev->id == INVALID_EVENT || !(prev->bstate & eventmask))
+	if (prev->id == INVALID_EVENT || !(prev->bstate & eventmask)) {
 	    eventp = prev;
+	}
 
 #ifdef TRACE
     if (_nc_tracing & TRACE_IEVENT)
@@ -556,19 +620,25 @@ bool _nc_mouse_parse(int runcount)
     return(PREV(eventp)->id != INVALID_EVENT);
 }
 
-void _nc_mouse_wrap(SCREEN *sp GCC_UNUSED)
+static void _nc_mouse_wrap(SCREEN *sp GCC_UNUSED)
 /* release mouse -- called by endwin() before shellout/exit */
 {
     TR(MY_TRACE, ("_nc_mouse_wrap() called"));
 
-    /* xterm: turn off reporting */
-    if (mousetype == M_XTERM && eventmask)
-	mouse_activate(FALSE);
-
-    /* GPM: pass all mouse events to next client */
+    switch (mousetype) {
+    case M_XTERM:
+        if (eventmask)
+            mouse_activate(FALSE);
+        break;
+#if USE_GPM_SUPPORT
+	/* GPM: pass all mouse events to next client */
+	case M_GPM:
+	    break;
+#endif
+    }
 }
 
-void _nc_mouse_resume(SCREEN *sp GCC_UNUSED)
+static void _nc_mouse_resume(SCREEN *sp GCC_UNUSED)
 /* re-connect to mouse -- called by doupdate() after shellout */
 {
     TR(MY_TRACE, ("_nc_mouse_resume() called"));
@@ -589,7 +659,9 @@ void _nc_mouse_resume(SCREEN *sp GCC_UNUSED)
 int getmouse(MEVENT *aevent)
 /* grab a copy of the current mouse event */
 {
-    if (aevent && (mousetype == M_XTERM || mousetype == M_GPM))
+    T((T_CALLED("getmouse(%p)"), aevent));
+
+    if (aevent && (mousetype != M_NONE))
     {
 	/* compute the current-event pointer */
 	MEVENT	*prev = PREV(eventp);
@@ -601,9 +673,9 @@ int getmouse(MEVENT *aevent)
 	    _tracemouse(prev), prev-events));
 
 	prev->id = INVALID_EVENT;	/* so the queue slot becomes free */
-	return(OK);
+	returnCode(OK);
     }
-    return(ERR);
+    returnCode(ERR);
 }
 
 int ungetmouse(MEVENT *aevent)
@@ -622,10 +694,15 @@ int ungetmouse(MEVENT *aevent)
 mmask_t mousemask(mmask_t newmask, mmask_t *oldmask)
 /* set the mouse event mask */
 {
+    mmask_t result = 0;
+
+    T((T_CALLED("mousemask(%#lx,%p)"), newmask, oldmask));
+
     if (oldmask)
 	*oldmask = eventmask;
 
-    if (mousetype == M_XTERM || mousetype == M_GPM)
+    _nc_mouse_init();
+    if ( mousetype != M_NONE )
     {
 	eventmask = newmask &
 	    (BUTTON_ALT | BUTTON_CTRL | BUTTON_SHIFT
@@ -638,22 +715,22 @@ mmask_t mousemask(mmask_t newmask, mmask_t *oldmask)
 
 	mouse_activate(eventmask != 0);
 
-	return(eventmask);
+	result = eventmask;
     }
 
-    return(0);
+    returnCode(result);
 }
 
-bool wenclose(WINDOW *win, int y, int x)
+bool wenclose(const WINDOW *win, int y, int x)
 /* check to see if given window encloses given screen location */
 {
     if (win)
     {
 	y -= win->_yoffset;
-	return (win->_begy <= y && 
-		win->_begx <= x &&
-		(win->_begx + win->_maxx) >= x && 
-		(win->_begy + win->_maxy) >= y);
+	return ((win->_begy <= y &&
+		 win->_begx <= x &&
+		 (win->_begx + win->_maxx) >= x &&
+		 (win->_begy + win->_maxy) >= y) ? TRUE : FALSE);
     }
     return FALSE;
 }
@@ -661,10 +738,23 @@ bool wenclose(WINDOW *win, int y, int x)
 int mouseinterval(int maxclick)
 /* set the maximum mouse interval within which to recognize a click */
 {
-    int	oldval = _nc_max_click_interval;
+    int oldval;
 
-    _nc_max_click_interval = maxclick;
+    if (SP != 0) {
+	oldval = SP->_maxclick;
+	if (maxclick >= 0)
+	    SP->_maxclick = maxclick;
+    } else {
+	oldval = DEFAULT_MAXCLICK;
+    }
+
     return(oldval);
+}
+
+/* This may be used by other routines to ask for the existence of mouse
+   support */
+int _nc_has_mouse(void) {
+  return (mousetype==M_NONE ? 0:1);
 }
 
 /* lib_mouse.c ends here */

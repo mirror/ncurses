@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -29,7 +41,7 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.18 1997/04/26 18:37:50 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.22 1998/02/11 12:13:54 tom Exp $")
 
 /*
  *	char *
@@ -150,6 +162,8 @@ static void save_number(const char *fmt, int number)
 static inline void save_char(int c)
 {
 	static char text[2];
+	if (c == 0)
+		c = 0200;
 	text[0] = c;
 	save_text(text);
 }
@@ -174,14 +188,16 @@ static inline char *spop(void)
 
 static inline char *tparam_internal(const char *string, va_list ap)
 {
+#define NUM_VARS 26
 int	param[9];
 int	popcount;
-int	variable[26];
+int	variable[NUM_VARS];
 char	len;
 int	number;
 int	level;
 int	x, y;
 int	i;
+int	varused = -1;
 register const char *cp;
 
 	out_used = 0;
@@ -329,14 +345,22 @@ register const char *cp;
 
 			case 'P':
 				string++;
-				if (*string >= 'a'  &&  *string <= 'z')
-					variable[*string - 'a'] = npop();
+				i = (*string - 'a');
+				if (i >= 0 && i < NUM_VARS) {
+					while (varused < i)
+						variable[++varused] = 0;
+					variable[i] = npop();
+				}
 				break;
 
 			case 'g':
 				string++;
-				if (*string >= 'a'  &&  *string <= 'z')
-					npush(variable[*string - 'a']);
+				i = (*string - 'a');
+				if (i >= 0 && i < NUM_VARS) {
+					while (varused < i)
+						variable[++varused] = 0;
+					npush(variable[i]);
+				}
 				break;
 
 			case '\'':
@@ -496,6 +520,11 @@ register const char *cp;
 		string++;
 	} /* endwhile (*string) */
 
+	if (out_buff == 0)
+		out_buff = calloc(1,1);
+	if (out_used == 0)
+		*out_buff = '\0';
+
 	T((T_RETURN("%s"), _nc_visbuf(out_buff)));
 	return(out_buff);
 }
@@ -530,4 +559,4 @@ char *result = 0;
 	va_end(ap);
 	return result;
 }
-#endif /* __UNUSED */
+#endif /* __UNUSED__ */

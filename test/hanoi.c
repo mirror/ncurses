@@ -14,7 +14,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.14 1997/05/06 23:07:55 tom Exp $
+ * $Id: hanoi.c,v 1.15 1997/10/18 20:11:20 tom Exp $
  */
 
 #include <test.priv.h>
@@ -191,7 +191,7 @@ InitTiles(int NTiles)
 static void
 DisplayTiles(void)
 {
-	int Line, Peg, SlotNo;
+	int Line, peg, SlotNo;
 	char TileBuf[BUFSIZ];
 
 	erase();
@@ -212,16 +212,16 @@ DisplayTiles(void)
 	attrset(A_NORMAL);
 
 	/* Draw tiles */
-	for(Peg=0; Peg<NPEGS; Peg++) {
-		for(SlotNo=0; SlotNo<Pegs[Peg].Count; SlotNo++) {
-			memset(TileBuf, ' ', Pegs[Peg].Length[SlotNo]);
-			TileBuf[Pegs[Peg].Length[SlotNo]] = '\0';
+	for(peg=0; peg<NPEGS; peg++) {
+		for(SlotNo=0; SlotNo<Pegs[peg].Count; SlotNo++) {
+			memset(TileBuf, ' ', Pegs[peg].Length[SlotNo]);
+			TileBuf[Pegs[peg].Length[SlotNo]] = '\0';
 			if (has_colors())
-				attrset(COLOR_PAIR(LENTOIND(Pegs[Peg].Length[SlotNo])));
+				attrset(COLOR_PAIR(LENTOIND(Pegs[peg].Length[SlotNo])));
 			else
 				attrset(A_REVERSE);
 			mvaddstr(BASELINE-(SlotNo+1),
-				(int)(PegPos[Peg] - Pegs[Peg].Length[SlotNo]/2),
+				(int)(PegPos[peg] - Pegs[peg].Length[SlotNo]/2),
 				TileBuf);
 		}
 	}

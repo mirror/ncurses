@@ -13,25 +13,38 @@
 <I>--                                                                          --</I>
 <I>--                                 S P E C                                  --</I>
 <I>--                                                                          --</I>
-<I>--  Version 00.92                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</I>
 <I>--                                                                          --</I>
-<I>--  The ncurses Ada95 binding is copyrighted 1996 by                        --</I>
+<I>-- Permission is hereby granted, free of charge, to any person obtaining a  --</I>
+<I>-- copy of this software and associated documentation files (the            --</I>
+<I>-- "Software"), to deal in the Software without restriction, including      --</I>
+<I>-- without limitation the rights to use, copy, modify, merge, publish,      --</I>
+<I>-- distribute, distribute with modifications, sublicense, and/or sell       --</I>
+<I>-- copies of the Software, and to permit persons to whom the Software is    --</I>
+<I>-- furnished to do so, subject to the following conditions:                 --</I>
+<I>--                                                                          --</I>
+<I>-- The above copyright notice and this permission notice shall be included  --</I>
+<I>-- in all copies or substantial portions of the Software.                   --</I>
+<I>--                                                                          --</I>
+<I>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</I>
+<I>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</I>
+<I>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</I>
+<I>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</I>
+<I>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</I>
+<I>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</I>
+<I>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</I>
+<I>--                                                                          --</I>
+<I>-- Except as contained in this notice, the name(s) of the above copyright   --</I>
+<I>-- holders shall not be used in advertising or otherwise to promote the     --</I>
+<I>-- sale, use or other dealings in this Software without prior written       --</I>
+<I>-- authorization.                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
 <I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
-<I>--                                                                          --</I>
-<I>--  Permission is hereby granted to reproduce and distribute this           --</I>
-<I>--  binding by any means and for any fee, whether alone or as part          --</I>
-<I>--  of a larger distribution, in source or in binary form, PROVIDED         --</I>
-<I>--  this notice is included with any such distribution, and is not          --</I>
-<I>--  removed from any of its header files. Mention of ncurses and the        --</I>
-<I>--  author of this binding in any applications linked with it is            --</I>
-<I>--  highly appreciated.                                                     --</I>
-<I>--                                                                          --</I>
-<I>--  This binding comes AS IS with no warranty, implied or expressed.        --</I>
-<I>------------------------------------------------------------------------------</I>
 <I>--  Version Control:</I>
-<I>--  @Revision: 1.7 @</I>
+<I>--  @Revision: 1.8 @</I>
 <I>------------------------------------------------------------------------------</I>
-<I>--  menu binding, generated at Sun Feb  2 17:21:44 1997</I>
+<I>--  menu binding.</I>
 <I>--  This module is generated. Please don't change it manually!</I>
 <I>--  Run the generator instead.</I>
 <I>--  |</I>
@@ -99,6 +112,9 @@
 
    <B>procedure</B> Request_Name (Key  : <B>in</B> Menu_Request_Code;
                            Name : <B>out</B> String);
+
+   <B>function</B>  Request_Name (Key : Menu_Request_Code) <B>return</B> String;
+   <I>--  Same as function</I>
 
    <I>------------------</I>
    <I>--  Exceptions  --</I>
@@ -168,7 +184,13 @@
    type Item_Array <B>is</B> <B>array</B> (Positive <B>range</B> &lt;&gt;) <B>of</B> <B>aliased</B> Item;
    <B>pragma</B> Convention (C, Item_Array);
 
-   type Item_Array_Access <B>is</B> <B>access</B> <B>all</B> Item_Array;
+   type Item_Array_Access <B>is</B> <B>access</B> Item_Array;
+
+   <B>procedure</B> Free (IA         : <B>in</B> <B>out</B> Item_Array_Access;
+                   Free_Items : Boolean := False);
+   <I>--  Release the memory for an allocated item array</I>
+   <I>--  If Free_Items is True, call Delete() for all the items in</I>
+   <I>--  the array.</I>
 
    <I>--  |=====================================================================</I>
    <I>--  | Man page <A HREF="mitem_new.3x.html">mitem_new.3x</A></I>
@@ -244,11 +266,18 @@
    <B>procedure</B> Name (Itm  : <B>in</B> Item;
                    Name : <B>out</B> String);
    <I>--  AKA: <A HREF="mitem_name.3x.html">item_name()</A></I>
+   <B>function</B>  Name (Itm : Item) <B>return</B> String;
+   <I>--  AKA: <A HREF="mitem_name.3x.html">item_name()</A></I>
+   <I>--  Implemented as function</I>
 
    <I>--  <A NAME="AFU_12">|</I>
    <B>procedure</B> Description (Itm         : <B>in</B> Item;
                           Description : <B>out</B> String);
    <I>--  AKA: <A HREF="mitem_name.3x.html">item_description();</A></I>
+
+   <B>function</B>  Description (Itm : Item) <B>return</B> String;
+   <I>--  AKA: <A HREF="mitem_name.3x.html">item_description();</A></I>
+   <I>--  Implemented as function</I>
 
    <I>--  |=====================================================================</I>
    <I>--  | Man page <A HREF="mitem_current.3x.html">mitem_current.3x</A></I>
@@ -363,6 +392,10 @@
    <B>procedure</B> Mark (Men  : <B>in</B>  Menu;
                    Mark : <B>out</B> String);
    <I>--  AKA: <A HREF="menu_mark.3x.html">menu_mark()</A></I>
+
+   <B>function</B>  Mark (Men : Menu) <B>return</B> String;
+   <I>--  AKA: <A HREF="menu_mark.3x.html">menu_mark()</A></I>
+   <I>--  Implemented as function</I>
 
    <I>--  |=====================================================================</I>
    <I>--  | Man page <A HREF="menu_attribs.3x.html">menu_attribs.3x</A></I>
@@ -531,16 +564,15 @@
 
    <I>--  <A NAME="AFU_56">|</I>
    <B>procedure</B> Redefine (Men   : <B>in</B> Menu;
-                       Items : <B>in</B> Item_Array);
+                       Items : <B>in</B> Item_Array_Access);
    <I>--  AKA: <A HREF="menu_items.3x.html">set_menu_items()</A></I>
-   <I>--  With a bit more comfort. You don´t need to terminate the Item_Array</I>
-   <I>--  with a null entry. This is handled internally in the binding.</I>
 
    <B>procedure</B> Set_Items (Men   : <B>in</B> Menu;
-                        Items : <B>in</B> Item_Array) <B>renames</B> Redefine;
+                        Items : <B>in</B> Item_Array_Access) <B>renames</B> Redefine;
 
    <I>--  <A NAME="AFU_57">|</I>
-   <B>function</B> Items (Men : Menu) <B>return</B> Item_Array_Access;
+   <B>function</B> Items (Men   : Menu;
+                   Index : Positive) <B>return</B> Item;
    <I>--  AKA: <A HREF="menu_items.3x.html">menu_items()</A></I>
 
    <I>--  <A NAME="AFU_58">|</I>
@@ -552,10 +584,10 @@
    <I>--  |=====================================================================</I>
 
    <I>--  <A NAME="AFU_59">|</I>
-   <B>function</B> Create (Items : Item_Array) <B>return</B> Menu;
+   <B>function</B> Create (Items : Item_Array_Access) <B>return</B> Menu;
    <I>--  AKA: <A HREF="menu_new.3x.html">new_menu()</A></I>
 
-   <B>function</B> New_Menu (Items : Item_Array) <B>return</B> Menu <B>renames</B> Create;
+   <B>function</B> New_Menu (Items : Item_Array_Access) <B>return</B> Menu <B>renames</B> Create;
 
    <I>--  <A NAME="AFU_60">|</I>
    <B>procedure</B> Delete (Men : <B>in</B> <B>out</B> Menu);
@@ -583,21 +615,6 @@
 
    Null_Item : <B>constant</B> Item := Item (System.Null_Address);
    Null_Menu : <B>constant</B> Menu := Menu (System.Null_Address);
-
-   <I>--  This binding uses the original user pointer mechanism of a menu to store</I>
-   <I>--  specific informations about a menu. This wrapper record carries this</I>
-   <I>--  specifics and contains a field to maintain a new user pointer. Please</I>
-   <I>--  note that you must take this into account if you wan't to use the user</I>
-   <I>--  pointer mechanism of a menu created with this binding in low-level C</I>
-   <I>--  routines.</I>
-   type Ada_User_Wrapper <B>is</B>
-      <B>record</B>
-         U : System.Address;
-         I : Item_Array_Access;
-      <B>end</B> <B>record</B>;
-   <B>pragma</B> Convention (C, Ada_User_Wrapper);
-   type Ada_User_Wrapper_Access <B>is</B> <B>access</B> <B>all</B> Ada_User_Wrapper;
-   <B>pragma</B> Controlled (Ada_User_Wrapper_Access);
 
    Generation_Bit_Order : <B>constant</B> System.Bit_Order := System.Low_Order_First;
    <I>--  This constant may be different on your system.</I>

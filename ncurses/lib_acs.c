@@ -1,32 +1,44 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 
 #include <curses.priv.h>
 #include <term.h>	/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.8 1997/04/24 11:04:07 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.13 1998/02/11 12:13:57 tom Exp $")
 
-chtype acs_map[128];
+chtype acs_map[ACS_LEN];
 
 void init_acs(void)
 {
@@ -79,7 +91,7 @@ void init_acs(void)
 #endif /* ena_acs */
 
 #ifdef acs_chars
-#define ALTCHAR(c)	(TextOf(c) | A_ALTCHARSET)
+#define ALTCHAR(c)	((chtype)(((unsigned char)(c)) | A_ALTCHARSET))
 
 	if (acs_chars != NULL) {
 	    size_t i = 0;
@@ -92,7 +104,7 @@ void init_acs(void)
 			case 'q':case 'x':case 'n':case 'o':
 			case 's':case '`':case 'a':case 'f':
 			case 'g':case '~':case ',':case '+':
-			case '.':case '-':case 'h':case 'I':
+			case '.':case '-':case 'h':case 'i':
 			case '0':case 'p':case 'r':case 'y':
 			case 'z':case '{':case '|':case '}':
 				acs_map[(unsigned int)acs_chars[i]] =
@@ -105,7 +117,6 @@ void init_acs(void)
 			}
 	}
 #ifdef TRACE
-#define SIZEOF(v) (sizeof(v)/sizeof(v[0]))
 	/* Show the equivalent mapping, noting if it does not match the
 	 * given attribute, whether by re-ordering or duplication.
 	 */

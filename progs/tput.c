@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -29,10 +41,9 @@
 
 #include <progs.priv.h>
 
-#include <ctype.h>
 #include <curses.h>
 
-MODULE_ID("$Id: tput.c,v 1.8 1996/12/21 17:34:36 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.11 1998/02/11 12:14:02 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -209,6 +220,8 @@ int main(int argc, char **argv)
 char *s, *term;
 int errret, cmdline = 1;
 int c;
+char	buf[BUFSIZ];
+int errors = 0;
 
 	prg_name = argv[0];
 	s = strrchr(prg_name, '/');
@@ -239,19 +252,14 @@ int c;
 		/* NOTREACHED */
 	}
 
-	if (term == NULL || *term == '\0') {
+	if (term == NULL || *term == '\0')
 		quit(2, "No value for $TERM and no -T specified");
-	}
 
-	setupterm(term, STDOUT_FILENO, &errret);
-	if (errret == ERR)
-	quit(3, "unknown terminal \"%s\"", term);
+	if (setupterm(term, STDOUT_FILENO, &errret) != OK)
+		quit(3, "unknown terminal \"%s\"", term);
 
 	if (cmdline)
-	return(tput(argc, argv));
-	else {
-	char	buf[BUFSIZ];
-	int errors = 0;
+		return tput(argc, argv);
 
 	while (fgets(buf, sizeof(buf), stdin) != (char *)NULL) {
 		char	*argvec[16];	/* command, 9 parms, null, & slop */
@@ -260,18 +268,17 @@ int c;
 
 		/* crack the argument list into a dope vector */
 		for (cp = buf; *cp; cp++) {
-		if (isspace(*cp))
-			*cp = '\0';
-		else if (cp == buf || cp[-1] == 0)
-			argvec[argnum++] = cp;
+			if (isspace(*cp))
+				*cp = '\0';
+			else if (cp == buf || cp[-1] == 0)
+				argvec[argnum++] = cp;
 		}
 		argvec[argnum] = (char *)NULL;
 
 		if (tput(argnum, argvec) != 0)
-		errors++;
+			errors++;
 	}
 
-	return(errors > 0);
-	}
+	return errors > 0;
 }
 

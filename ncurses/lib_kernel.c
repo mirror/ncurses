@@ -1,30 +1,41 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
  *	lib_kernel.c
  *
  *	Misc. low-level routines:
- *		napms()
  *		reset_prog_mode()
  *		reset_shell_mode()
  *		erasechar()
@@ -41,25 +52,19 @@
 #include <curses.priv.h>
 #include <term.h>	/* cur_term */
 
-MODULE_ID("$Id: lib_kernel.c,v 1.13 1997/02/02 00:33:14 tom Exp $")
-
-int napms(int ms)
-{
-	T((T_CALLED("napms(%d)"), ms));
-
-	usleep(1000*(unsigned)ms);
-	returnCode(OK);
-}
+MODULE_ID("$Id: lib_kernel.c,v 1.17 1998/02/11 12:13:57 tom Exp $")
 
 int reset_prog_mode(void)
 {
 	T((T_CALLED("reset_prog_mode()")));
 
-	SET_TTY(cur_term->Filedes, &cur_term->Nttyb);
-	if (SP && stdscr && stdscr->_use_keypad)
-		_nc_keypad(TRUE);
-
-	returnCode(OK);
+	if (cur_term != 0) {
+		_nc_set_curterm(&cur_term->Nttyb);
+		if (SP && stdscr && stdscr->_use_keypad)
+			_nc_keypad(TRUE);
+		returnCode(OK);
+	}
+	returnCode(ERR);
 }
 
 
@@ -67,14 +72,15 @@ int reset_shell_mode(void)
 {
 	T((T_CALLED("reset_shell_mode()")));
 
-	if (SP)
-	{
-		fflush(SP->_ofp);
-		_nc_keypad(FALSE);
+	if (cur_term != 0) {
+		if (SP)
+		{
+			fflush(SP->_ofp);
+			_nc_keypad(FALSE);
+		}
+		returnCode(_nc_set_curterm(&cur_term->Ottyb));
 	}
-
-	SET_TTY(cur_term->Filedes, &cur_term->Ottyb);
-	returnCode(OK);
+	returnCode(ERR);
 }
 
 /*
@@ -89,12 +95,14 @@ erasechar(void)
 {
 	T((T_CALLED("erasechar()")));
 
+	if (cur_term != 0) {
 #ifdef TERMIOS
-	returnCode(cur_term->Ottyb.c_cc[VERASE]);
+		returnCode(cur_term->Ottyb.c_cc[VERASE]);
 #else
-	returnCode(cur_term->Ottyb.sg_erase);
+		returnCode(cur_term->Ottyb.sg_erase);
 #endif
-
+	}
+	returnCode(ERR);
 }
 
 
@@ -111,11 +119,14 @@ killchar(void)
 {
 	T((T_CALLED("killchar()")));
 
+	if (cur_term != 0) {
 #ifdef TERMIOS
-	returnCode(cur_term->Ottyb.c_cc[VKILL]);
+		returnCode(cur_term->Ottyb.c_cc[VKILL]);
 #else
-	returnCode(cur_term->Ottyb.sg_kill);
+		returnCode(cur_term->Ottyb.sg_kill);
 #endif
+	}
+	returnCode(ERR);
 }
 
 
@@ -131,22 +142,24 @@ int flushinp(void)
 {
 	T((T_CALLED("flushinp()")));
 
+	if (cur_term != 0) {
 #ifdef TERMIOS
-	tcflush(cur_term->Filedes, TCIFLUSH);
+		tcflush(cur_term->Filedes, TCIFLUSH);
 #else
-	errno = 0;
-	do {
-	    ioctl(cur_term->Filedes, TIOCFLUSH, 0);
-	} while
-	    (errno == EINTR);
+		errno = 0;
+		do {
+		    ioctl(cur_term->Filedes, TIOCFLUSH, 0);
+		} while
+		    (errno == EINTR);
 #endif
-	if (SP) {
-		SP->_fifohead = -1;
-		SP->_fifotail = 0;
-		SP->_fifopeek = 0;
+		if (SP) {
+			SP->_fifohead = -1;
+			SP->_fifotail = 0;
+			SP->_fifopeek = 0;
+		}
+		returnCode(OK);
 	}
-	returnCode(OK);
-
+	returnCode(ERR);
 }
 
 /*
@@ -160,14 +173,12 @@ int savetty(void)
 {
 	T((T_CALLED("savetty()")));
 
-	GET_TTY(cur_term->Filedes, &buf);
-	returnCode(OK);
+	returnCode(_nc_get_curterm(&buf));
 }
 
 int resetty(void)
 {
 	T((T_CALLED("resetty()")));
 
-	SET_TTY(cur_term->Filedes, &buf);
-	returnCode(OK);
+	returnCode(_nc_set_curterm(&buf));
 }

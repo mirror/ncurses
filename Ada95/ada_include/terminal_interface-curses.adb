@@ -6,23 +6,37 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.7 $
+--  $Revision: 1.15 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 with System;
 
@@ -30,20 +44,21 @@ with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
 with Interfaces.C;                  use Interfaces.C;
 with Interfaces.C.Strings;          use Interfaces.C.Strings;
 with Ada.Characters.Handling;       use Ada.Characters.Handling;
+with Ada.Strings.Fixed;
 with Unchecked_Conversion;
 
 package body Terminal_Interface.Curses is
 
    use type System.Bit_Order;
 
+   package ASF renames Ada.Strings.Fixed;
+
    type chtype_array is array (size_t range <>)
       of aliased Attributed_Character;
-   pragma Pack (chtype_array);
    pragma Convention (C, chtype_array);
 
 ------------------------------------------------------------------------------
-   procedure Key_Name (Key  : in  Real_Key_Code;
-                       Name : out String)
+   function Key_Name (Key : in Real_Key_Code) return String
    is
       function Keyname (K : C_Int) return chars_ptr;
       pragma Import (C, Keyname, "keyname");
@@ -53,31 +68,49 @@ package body Terminal_Interface.Curses is
       if Key <= Character'Pos (Character'Last) then
          Ch := Character'Val (Key);
          if Is_Control (Ch) then
-            Un_Control (Attributed_Character'(Ch    => Ch,
-                                              Color => Color_Pair'First,
-                                              Attr  => Normal_Video),
-                        Name);
+            return Un_Control (Attributed_Character'(Ch    => Ch,
+                                                     Color => Color_Pair'First,
+                                                     Attr  => Normal_Video));
          elsif Is_Graphic (Ch) then
-            Fill_String (Null_Ptr, Name);
-            Name (Name'First) := Ch;
+            declare
+               S : String (1 .. 1);
+            begin
+               S (1) := Ch;
+               return S;
+            end;
          else
-            Fill_String (Null_Ptr, Name);
+            return "";
          end if;
       else
-         Fill_String (Keyname (C_Int (Key)), Name);
+         return Fill_String (Keyname (C_Int (Key)));
       end if;
    end Key_Name;
+
+   procedure Key_Name (Key  : in  Real_Key_Code;
+                       Name : out String)
+   is
+   begin
+      ASF.Move (Key_Name (Key), Name);
+   end Key_Name;
+
 ------------------------------------------------------------------------------
    procedure Init_Screen
    is
       function Initscr return Window;
       pragma Import (C, Initscr, "initscr");
 
+      function Check_Version (Major, Minor : C_Int) return C_Int;
+      pragma Import (C, Check_Version, "_nc_ada_vcheck");
+
       W : Window;
    begin
-      W := Initscr;
-      if W = Null_Window then
-         raise Curses_Exception;
+      if (Check_Version (NC_Major_Version, NC_Minor_Version) = 0) then
+         raise Wrong_Curses_Version;
+      else
+         W := Initscr;
+         if W = Null_Window then
+            raise Curses_Exception;
+         end if;
       end if;
    end Init_Screen;
 
@@ -349,14 +382,14 @@ package body Terminal_Interface.Curses is
       type Char_Ptr is access all Interfaces.C.Char;
       function Waddnstr (Win : Window;
                          Str : Char_Ptr;
-                         Len : Integer := -1) return C_Int;
+                         Len : C_Int := -1) return C_Int;
       pragma Import (C, Waddnstr, "waddnstr");
 
       Txt    : char_array (0 .. Str'Length);
       Length : size_t;
    begin
       To_C (Str, Txt, Length);
-      if Waddnstr (Win, Txt (Txt'First)'Access, Len) = Curses_Err then
+      if Waddnstr (Win, Txt (Txt'First)'Access, C_Int (Len)) = Curses_Err then
          raise Curses_Exception;
       end if;
    end Add;
@@ -381,7 +414,7 @@ package body Terminal_Interface.Curses is
       type Chtype_Ptr is access all Attributed_Character;
       function Waddchnstr (Win : Window;
                            Str : Chtype_Ptr;
-                           Len : Integer := -1) return C_Int;
+                           Len : C_Int := -1) return C_Int;
       pragma Import (C, Waddchnstr, "waddchnstr");
 
       Txt : chtype_array (0 .. Str'Length);
@@ -390,7 +423,9 @@ package body Terminal_Interface.Curses is
          Txt (Length - 1) := Str (Natural (Length));
       end loop;
       Txt (Str'Length) := Default_Character;
-      if Waddchnstr (Win, Txt (Txt'First)'Access, Len) = Curses_Err then
+      if Waddchnstr (Win,
+                     Txt (Txt'First)'Access,
+                     C_Int (Len)) = Curses_Err then
          raise Curses_Exception;
       end if;
    end Add;
@@ -1796,6 +1831,14 @@ package body Terminal_Interface.Curses is
       Fill_String (Slk_Label (C_Int (Label)), Text);
    end Get_Soft_Label_Key;
 
+   function Get_Soft_Label_Key (Label : in Label_Number) return String
+   is
+      function Slk_Label (Label : C_Int) return chars_ptr;
+      pragma Import (C, Slk_Label, "slk_label");
+   begin
+      return Fill_String (Slk_Label (C_Int (Label)));
+   end Get_Soft_Label_Key;
+
    procedure Clear_Soft_Label_Keys
    is
       function Slk_Clear return C_Int;
@@ -1886,6 +1929,35 @@ package body Terminal_Interface.Curses is
       return CInt_To_Chtype (Attr).Color;
    end Get_Soft_Label_Key_Attributes;
 ------------------------------------------------------------------------------
+   procedure Enable_Key (Key    : in Special_Key_Code;
+                         Enable : in Boolean := True)
+   is
+      function Keyok (Keycode : C_Int;
+                      On_Off  : C_Int) return C_Int;
+      pragma Import (C, Keyok, "keyok");
+   begin
+      if Keyok (C_Int (Key), Boolean'Pos (Enable)) = Curses_Err then
+         raise Curses_Exception;
+      end if;
+   end Enable_Key;
+------------------------------------------------------------------------------
+   procedure Define_Key (Definition : in String;
+                         Key        : in Special_Key_Code)
+   is
+      type Char_Ptr is access all Interfaces.C.Char;
+      function Defkey (Def : Char_Ptr;
+                       Key : C_Int) return C_Int;
+      pragma Import (C, Defkey, "define_key");
+
+      Txt    : char_array (0 .. Definition'Length);
+      Length : size_t;
+   begin
+      To_C (Definition, Txt, Length);
+      if Defkey (Txt (Txt'First)'Access, C_Int (Key)) = Curses_Err then
+         raise Curses_Exception;
+      end if;
+   end Define_Key;
+------------------------------------------------------------------------------
    procedure Un_Control (Ch  : in Attributed_Character;
                          Str : out String)
    is
@@ -1893,6 +1965,14 @@ package body Terminal_Interface.Curses is
       pragma Import (C, Unctrl, "unctrl");
    begin
       Fill_String (Unctrl (Chtype_To_CInt (Ch)), Str);
+   end Un_Control;
+
+   function Un_Control (Ch : in Attributed_Character) return String
+   is
+      function Unctrl (Ch : C_Int) return chars_ptr;
+      pragma Import (C, Unctrl, "unctrl");
+   begin
+      return Fill_String (Unctrl (Chtype_To_CInt (Ch)));
    end Un_Control;
 
    procedure Delay_Output (Msecs : in Natural)
@@ -1981,12 +2061,28 @@ package body Terminal_Interface.Curses is
       Fill_String (Longname, Name);
    end Long_Name;
 
+   function Long_Name return String
+   is
+      function Longname return chars_ptr;
+      pragma Import (C, Longname, "longname");
+   begin
+      return Fill_String (Longname);
+   end Long_Name;
+
    procedure Terminal_Name (Name : out String)
    is
       function Termname return chars_ptr;
       pragma Import (C, Termname, "termname");
    begin
       Fill_String (Termname, Name);
+   end Terminal_Name;
+
+   function Terminal_Name return String
+   is
+      function Termname return chars_ptr;
+      pragma Import (C, Termname, "termname");
+   begin
+      return Fill_String (Termname);
    end Terminal_Name;
 ------------------------------------------------------------------------------
    procedure Init_Pair (Pair : in Redefinable_Color_Pair;
@@ -2264,8 +2360,4 @@ package body Terminal_Interface.Curses is
       end if;
    end Transform_Coordinates;
 
-begin
-   if Generation_Bit_Order /= System.Default_Bit_Order then
-      raise Constraint_Error;
-   end if;
 end Terminal_Interface.Curses;

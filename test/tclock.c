@@ -32,6 +32,12 @@
 
 #define sign(_x) (_x<0?-1:1)
 
+#define ASPECT 2.2
+#define ROUND(value) ((int)((value) + 0.5))
+
+#define A2X(angle,radius) ROUND(ASPECT * radius * sin(angle))
+#define A2Y(angle,radius) ROUND(radius * cos(angle))
+
 /* Plot a point */
 static void
 plot(int x,int y,char col)
@@ -128,8 +134,8 @@ main(
 	  {
 	    sangle=(i+1)*(2.0*PI)/12.0;
 	    sradius=10;
-	    sdx=2.0*sradius*sin(sangle);
-	    sdy=sradius*cos(sangle);
+	    sdx = A2X(sangle, sradius);
+	    sdy = A2Y(sangle, sradius);
 	    sprintf(szChar,"%d",i+1);
 
 	    mvaddstr((int)(cy-sdy),(int)(cx+sdx),szChar);
@@ -138,35 +144,36 @@ main(
 	mvaddstr(0,0,"ASCII Clock by Howard Jones (ha.jones@ic.ac.uk),1994");
 
 	sradius=8;
-	while(1)
+	for(;;)
 	  {
-	    sleep(1);
+	    napms(1000);
 
-	    tim=time(0);
-	    t=localtime(&tim);
+	    tim = time(0);
+	    t = localtime(&tim);
 
-	    hours=(t->tm_hour + (t->tm_min/60.0));
-	    if(hours>12.0) hours-=12.0;
+	    hours = (t->tm_hour + (t->tm_min/60.0));
+	    if(hours>12.0) hours -= 12.0;
 
-	    mangle=(t->tm_min)*(2*PI)/60.0;
-	    mdx=2.0*mradius*sin(mangle);
-	    mdy=mradius*cos(mangle);
+	    mangle = ((t->tm_min) * (2 * PI)/60.0);
+	    mdx    = A2X(mangle, mradius);
+	    mdy    = A2Y(mangle, mradius);
 	    
-	    hangle=(hours)*(2.0*PI)/12.0;
-	    hdx=2.0*hradius*sin(hangle);
-	    hdy=hradius*cos(hangle);
+	    hangle = ((hours) * (2.0 * PI)/12.0);
+	    hdx    = A2X(hangle, hradius);
+	    hdy    = A2Y(hangle, hradius);
        
-	    sangle=(t->tm_sec%60)*(2.0*PI)/60.0;
-	    sdx=2.0*sradius*sin(sangle);
-	    sdy=sradius*cos(sangle);
+	    sangle = ((t->tm_sec) * (2.0 * PI)/60.0);
+	    sdx    = A2X(sangle, sradius);
+	    sdy    = A2Y(sangle, sradius);
 
 	    plot(cx+sdx,cy-sdy,'O');
 	    dline(cx,cy,cx+hdx,cy-hdy,'.');
 	    dline(cx,cy,cx+mdx,cy-mdy,'#');
 
 	    mvaddstr(23,0,ctime(&tim));
-	    
 	    refresh();
+	    if ((t->tm_sec % 5) == 0) beep();
+
 	    plot(cx+sdx,cy-sdy,' ');
 	    dline(cx,cy,cx+hdx,cy-hdy,' ');
 	    dline(cx,cy,cx+mdx,cy-mdy,' ');

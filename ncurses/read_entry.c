@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 
@@ -36,9 +48,11 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.31 1997/05/10 17:31:08 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.35 1998/02/11 12:13:59 tom Exp $")
 
-TERMINAL *cur_term;
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
 
 /*
  *	int
@@ -84,7 +98,7 @@ int _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
     int		i, fd, numread;
     char	buf[MAX_ENTRY_SIZE];
 
-    if ((fd = open(filename, O_RDONLY)) < 0)
+    if ((fd = open(filename, O_RDONLY|O_BINARY)) < 0)
 	return(0);
 
     T(("read terminfo %s", filename));
@@ -157,6 +171,11 @@ int _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
 
     if (str_count)
     {
+	if (str_count*2 >= MAX_ENTRY_SIZE)
+	{
+	    close(fd);
+	    return(0);
+	}
 	/* grab the string offsets */
 	numread = read(fd, buf, (unsigned)(str_count*2));
 	if (numread < str_count*2)
@@ -166,6 +185,8 @@ int _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
 	}
 	for (i = 0; i < numread/2; i++)
 	{
+	    if (i >= STRCOUNT)
+		break;
 	    if (IS_NEG1(buf + 2*i))
 		ptr->Strings[i] = ABSENT_STRING;
 	    else if (IS_NEG2(buf + 2*i))
@@ -279,49 +300,3 @@ char		ttn[MAX_ALIAS + 3];
 	return(_nc_read_tic_entry(filename, TERMINFO, ttn, tp));
 }
 
-/*
- *	_nc_first_name(char *names)
- *
- *	Extract the primary name from a compiled entry.
- */
-
-char *_nc_first_name(const char *const sp)
-/* get the first name from the given name list */
-{
-    static char	buf[MAX_NAME_SIZE];
-    register char *cp;
-
-    (void) strcpy(buf, sp);
-
-    cp = strchr(buf, '|');
-    if (cp)
-	*cp = '\0';
-
-    return(buf);
-}
-
-/*
- *	bool _nc_name_match(namelist, name, delim)
- *
- *	Is the given name matched in namelist?
- */
-
-int _nc_name_match(const char *const namelst, const char *const name, const char *const delim)
-/* microtune this, it occurs in several critical loops */
-{
-char namecopy[MAX_ENTRY_SIZE];	/* this may get called on a TERMCAP value */
-register char *cp;
-
-	if (namelst == 0)
-		return(FALSE);
-	(void) strcpy(namecopy, namelst);
-	if ((cp = strtok(namecopy, delim)) != 0) {
-		do {
-			/* avoid strcmp() function-call cost if possible */
-			if (cp[0] == name[0] && strcmp(cp, name) == 0)
-			    return(TRUE);
-		} while
-		    ((cp = strtok((char *)0, delim)) != 0);
-	}
-	return(FALSE);
-}

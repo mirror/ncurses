@@ -6,31 +6,48 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control
---  $Revision: 1.2 $
+--  $Revision: 1.5 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 with Ada.Strings; use Ada.Strings;
 with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 with Ada.Strings.Maps.Constants; use Ada.Strings.Maps.Constants;
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
+with Ada.Characters.Handling; use Ada.Characters.Handling;
 
 with Terminal_Interface.Curses.Panels; use Terminal_Interface.Curses.Panels;
 with Terminal_Interface.Curses.Forms; use Terminal_Interface.Curses.Forms;
+with Terminal_Interface.Curses.Forms.Field_Types.Enumeration;
+use  Terminal_Interface.Curses.Forms.Field_Types.Enumeration;
 
 with Sample.Header_Handler; use Sample.Header_Handler;
 with Sample.Form_Demo.Aux; use Sample.Form_Demo.Aux;
@@ -64,9 +81,10 @@ package body Sample.Keyboard_Handler is
 
          Labels : Label_Array;
 
-         FA : Field_Array (1 .. 2) := (Make (0, 0, "Command:"),
-                                       Make (Top => 0, Left => 9,
-                                             Width => Columns - 11));
+         FA : Field_Array_Access := new Field_Array'
+           (Make (0, 0, "Command:"),
+            Make (Top => 0, Left => 9, Width => Columns - 11),
+            Null_Field);
 
          K  : Real_Key_Code := Key_None;
          N  : Natural := 0;
@@ -93,7 +111,7 @@ package body Sample.Keyboard_Handler is
                         Get_Buffer (Fld => FA (2), Str => Buffer);
                         Trim (Buffer, Left);
                         if Buffer (1) /= ' ' then
-                           Cmdc := Buffer (Cmdc'Range);
+                           Cmdc := To_Upper (Buffer (Cmdc'Range));
                            for I in Labels'Range loop
                               if Cmdc = Labels (I) then
                                  K := Function_Key_Code
@@ -136,7 +154,7 @@ package body Sample.Keyboard_Handler is
                   end if;
                end loop;
                Enum_Field := Create (Enum_Info, True);
-               Set_Type (FA (2), Enum_Field);
+               Set_Field_Type (FA (2), Enum_Field);
                Set_Background (FA (2), Normal_Video);
 
                Fh.Drive_Me (Frm, Lines - 3, 0);
@@ -144,9 +162,7 @@ package body Sample.Keyboard_Handler is
                Update_Panels; Update_Screen;
             end;
          end if;
-         for I in FA'Range loop
-            Delete (FA (I));
-         end loop;
+         Free (FA, True);
          In_Command := False;
          return K;
       end Command;

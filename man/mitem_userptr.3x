@@ -5,9 +5,9 @@
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
 .br
-int set_item_userptr(ITEM *item, const void *userptr);
+int set_item_userptr(ITEM *item, void *userptr);
 .br
-const void *item_userptr(const ITEM *item);
+void *item_userptr(const ITEM *item);
 .br
 .SH DESCRIPTION
 Every menu item has a field that can be used to hold application-specific data

@@ -1,27 +1,57 @@
-/******************************************************************************
- * Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                      *
- * All Rights Reserved.                                                       *
- *                                                                            *
- * Permission to use, copy, modify, and distribute this software and its      *
- * documentation for any purpose and without fee is hereby granted, provided  *
- * that the above copyright notice appear in all copies and that both that    *
- * copyright notice and this permission notice appear in supporting           *
- * documentation, and that the name of the above listed copyright holder(s)   *
- * not be used in advertising or publicity pertaining to distribution of the  *
- * software without specific, written prior permission. THE ABOVE LISTED      *
- * COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,  *
- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO     *
- * EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY         *
- * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER       *
- * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF       *
- * CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN        *
- * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                   *
- ******************************************************************************/
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
+
+/****************************************************************************
+ *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997                   *
+ ****************************************************************************/
 /* LINTLIBRARY */
 
-/* ./m_attribs.c */
+/* ./m_adabind.c */
 
 #include "menu.priv.h"
+
+#undef _nc_ada_normalize_menu_opts
+void	_nc_ada_normalize_menu_opts(
+		int	*opt)
+		{ /* void */ }
+
+#undef _nc_ada_normalize_item_opts
+void	_nc_ada_normalize_item_opts(
+		int	*opt)
+		{ /* void */ }
+
+#undef _nc_get_item
+ITEM	*_nc_get_item(
+		const MENU *menu, 
+		int	idx)
+		{ return(*(ITEM **)0); }
+
+/* ./m_attribs.c */
 
 #undef set_menu_fore
 int	set_menu_fore(
@@ -56,17 +86,6 @@ chtype	menu_grey(
 		const MENU *menu)
 		{ return(*(chtype *)0); }
 
-#undef set_menu_pad
-int	set_menu_pad(
-		MENU	*menu, 
-		int	pad)
-		{ return(*(int *)0); }
-
-#undef menu_pad
-int	menu_pad(
-		const MENU *menu)
-		{ return(*(int *)0); }
-
 /* ./m_cursor.c */
 
 #undef pos_menu_cursor
@@ -76,15 +95,11 @@ int	pos_menu_cursor(
 
 /* ./m_driver.c */
 
-#undef menu_pattern
-char	*menu_pattern(
-		const MENU *menu)
-		{ return(*(char **)0); }
-
-#undef set_menu_pattern
-int	set_menu_pattern(
+#undef _nc_Match_Next_Character_In_Item_Name
+int	_nc_Match_Next_Character_In_Item_Name(
 		MENU	*menu, 
-		const char *p)
+		int	ch, 
+		ITEM	**item)
 		{ return(*(int *)0); }
 
 #undef menu_driver
@@ -213,17 +228,6 @@ int	item_index(
 		const ITEM *item)
 		{ return(*(int *)0); }
 
-#undef set_top_row
-int	set_top_row(
-		MENU	*menu, 
-		int	row)
-		{ return(*(int *)0); }
-
-#undef top_row
-int	top_row(
-		const MENU *menu)
-		{ return(*(int *)0); }
-
 /* ./m_item_nam.c */
 
 #undef item_name
@@ -285,18 +289,31 @@ Item_Options item_opts(
 		const ITEM *item)
 		{ return(*(Item_Options *)0); }
 
+/* ./m_item_top.c */
+
+#undef set_top_row
+int	set_top_row(
+		MENU	*menu, 
+		int	row)
+		{ return(*(int *)0); }
+
+#undef top_row
+int	top_row(
+		const MENU *menu)
+		{ return(*(int *)0); }
+
 /* ./m_item_use.c */
 
 #undef set_item_userptr
 int	set_item_userptr(
 		ITEM	*item, 
-		const void *userptr)
+		void	*userptr)
 		{ return(*(int *)0); }
 
 #undef item_userptr
-const void *item_userptr(
+void	*item_userptr(
 		const ITEM *item)
-		{ return(*(const void **)0); }
+		{ return(*(void **)0); }
 
 /* ./m_item_val.c */
 
@@ -373,6 +390,32 @@ Menu_Options menu_opts(
 		const MENU *menu)
 		{ return(*(Menu_Options *)0); }
 
+/* ./m_pad.c */
+
+#undef set_menu_pad
+int	set_menu_pad(
+		MENU	*menu, 
+		int	pad)
+		{ return(*(int *)0); }
+
+#undef menu_pad
+int	menu_pad(
+		const MENU *menu)
+		{ return(*(int *)0); }
+
+/* ./m_pattern.c */
+
+#undef menu_pattern
+char	*menu_pattern(
+		const MENU *menu)
+		{ return(*(char **)0); }
+
+#undef set_menu_pattern
+int	set_menu_pattern(
+		MENU	*menu, 
+		const char *p)
+		{ return(*(int *)0); }
+
 /* ./m_post.c */
 
 #undef _nc_Post_Item
@@ -408,6 +451,15 @@ int	menu_request_by_name(
 		const char *str)
 		{ return(*(int *)0); }
 
+/* ./m_scale.c */
+
+#undef scale_menu
+int	scale_menu(
+		const MENU *menu, 
+		int	*rows, 
+		int	*cols)
+		{ return(*(int *)0); }
+
 /* ./m_spacing.c */
 
 #undef set_menu_spacing
@@ -426,18 +478,31 @@ int	menu_spacing(
 		int	*s_col)
 		{ return(*(int *)0); }
 
+/* ./m_sub.c */
+
+#undef set_menu_sub
+int	set_menu_sub(
+		MENU	*menu, 
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+#undef menu_sub
+WINDOW	*menu_sub(
+		const MENU *menu)
+		{ return(*(WINDOW **)0); }
+
 /* ./m_userptr.c */
 
 #undef set_menu_userptr
 int	set_menu_userptr(
 		MENU	*menu, 
-		const void *userptr)
+		void	*userptr)
 		{ return(*(int *)0); }
 
 #undef menu_userptr
-const void *menu_userptr(
+void	*menu_userptr(
 		const MENU *menu)
-		{ return(*(const void **)0); }
+		{ return(*(void **)0); }
 
 /* ./m_win.c */
 
@@ -451,33 +516,3 @@ int	set_menu_win(
 WINDOW	*menu_win(
 		const MENU *menu)
 		{ return(*(WINDOW **)0); }
-
-#undef set_menu_sub
-int	set_menu_sub(
-		MENU	*menu, 
-		WINDOW	*win)
-		{ return(*(int *)0); }
-
-#undef menu_sub
-WINDOW	*menu_sub(
-		const MENU *menu)
-		{ return(*(WINDOW **)0); }
-
-#undef scale_menu
-int	scale_menu(
-		const MENU *menu, 
-		int	*rows, 
-		int	*cols)
-		{ return(*(int *)0); }
-
-/* ./m_adabind.c */
-
-#undef _nc_ada_normalize_menu_opts
-void	_nc_ada_normalize_menu_opts(
-		int	*opt)
-		{ /* void */ }
-
-#undef _nc_ada_normalize_item_opts
-void	_nc_ada_normalize_item_opts(
-		int	*opt)
-		{ /* void */ }

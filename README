@@ -1,3 +1,5 @@
+-- $Id: README,v 1.17 1998/02/15 01:26:47 tom Exp $
+-------------------------------------------------------------------------------
 		README file for the ncurses package
 
 See the file ANNOUNCE for a summary of ncurses features and ports.
@@ -12,11 +14,11 @@ Browse the file misc/hackguide.html for a tour of the package internals.
 
 ROADMAP AND PACKAGE OVERVIEW:
 
-You should be reading this file in a directory called: ncurses-d.d.d,
-where d.d.d is the current version number (see the dist.mk file in
-this directory for that).  There should be a number of subdirectories,
-including `c++', `form', `man', `menu', `misc', `ncurses', `panel',
-`progs', `test', and `Ada95'.
+You should be reading this file in a directory called:  ncurses-d.d, where d.d
+is the current version number (see the dist.mk file in this directory for
+that).  There should be a number of subdirectories, including `c++', `form',
+`man', `menu', `misc', `ncurses', `panel', `progs', `test', 'tack' and `Ada95'. 
+(The 'tack' program is distributed separately).
 
 A full build/install of this package typically installs several libraries, a
 handful of utilities, and a database hierarchy.  Here is an inventory of the
@@ -30,33 +32,36 @@ The libraries are:
 	libncurses_p.a     (profiling enabled)
 
 	libpanel.a         (normal)
+	libpanel.so        (shared)
 	libpanel_g.a       (debug and trace code enabled)
 
 	libmenu.a          (normal)
+	libmenu.so         (shared)
 	libmenu_g.a        (debug enabled)
 
 	libform.a          (normal)
+	libform.so         (shared)
 	libform_g.a        (debug enabled)
 
 The ncurses libraries implement the curses API.  The panel, menu and forms
-libraries implement clones of the SVr4 panel, menu and forms APIs.  The
-source code for these lives in the `ncurses', `panel', `menu', and
-`form' directories respectively.
+libraries implement clones of the SVr4 panel, menu and forms APIs.  The source
+code for these lives in the `ncurses', `panel', `menu', and `form' directories
+respectively.
 
 In the `c++' directory, you'll find code that defines an interface to the
-curses and panels library packaged as a C++ class, and a demo program in C++
-to test it.  These class definition modules are not installed anywhere by
-default; it's up to you what you do with them.
+curses, forms, menus and panels library packaged as C++ classes, and a demo program in C++
+to test it.  These class definition modules are not installed by the 'make
+install.libs' rule as libncurses++.
 
 In the `Ada95' directory, you'll find code and documentation for an
 Ada95 binding of the curses API, to be used with the GNAT compiler.
 This binding is built by a normal top-level `make' if configure detects
-an usable version of GNAT (3.05 or above). It is not installed automatically.
+an usable version of GNAT (3.10 or above). It is not installed automatically.
 See the Ada95 directory for more build and installation instructions and
 for documentation of the binding.
 
-In order to do its job, the ncurses code needs your terminal type to be set in
-the environment variable TERM (normally set by your OS; under UNIX, getty(1)
+To do its job, the ncurses code needs your terminal type to be set in the
+environment variable TERM (normally set by your OS; under UNIX, getty(1)
 typically does this, but you can override it in your .profile); and, it needs a
 database of terminal descriptions in which to look up your terminal type's
 capabilities.
@@ -72,7 +77,7 @@ second form.
 In the `misc' directory, there is a text file terminfo.src, in editable
 terminfo format, which can be used to generate the terminfo binaries (that's
 what make install.data does).  If the package was built with the
---with-termcap option enabled, and the ncurses library can't find a terminfo
+--enable-termcap option enabled, and the ncurses library cannot find a terminfo
 description for your terminal, it will fall back to the termcap file supplied
 with your system (which the ncurses package installation leaves strictly
 alone).
@@ -83,33 +88,23 @@ The utilities are as follows:
 	infocmp         -- terminfo binary to source decompiler/comparator
 	clear           -- emits clear-screen for current terminal
 	tput            -- shell-script access to terminal capabilities.
-	tset            -- terminal-initialization utility
 	toe		-- table of entries utility
+	tset            -- terminal-initialization utility
 
-The first two are used for manipulating terminfo descriptions; the next two
-are for use in shell scripts.  The last is provided for 4.4BSD compatibility.
-The source code for all of these lives in the `progs' directory.
+The first two (tic and infocmp) are used for manipulating terminfo
+descriptions; the next two (clear and tput) are for use in shell scripts.  The
+last (tset) is provided for 4.4BSD compatibility.  The source code for all of
+these lives in the `progs' directory.
 
 Detailed documentation for all libraries and utilities can be found in
 the `man' directory.  An HTML introduction to ncurses, panels, and
-menus programming lives in the `misc' directory.
+menus programming lives in the `misc' directory.  Manpages in HTML format
+are under `Ada95/html'.
 
-The `test' directory contains programs that can be used to verify the 
-functions of the ncurses libraries.  See test/README for descriptions of
-these programs.  Notably, the `ncurses' utility is designed to help you
-systematically exercise the library functions.
-
-RELATED RESOURCES:
-
-This distribution now includes (and uses) a copy of the master terminfo
-database maintained by Eric Raymond.  This database (which is the 
-official descendant of the 4.4BSD termcap file) changes faster than this
-code does.
-
-You can surf to a WWW page that carries the current terminfo master file,
-and news about ncurses, at
-
-	http://www.ccil.org/~esr/ncurses.html
+The `test' directory contains programs that can be used to verify or
+demonstrate the functions of the ncurses libraries.  See test/README for
+descriptions of these programs.  Notably, the `ncurses' utility is designed to
+help you systematically exercise the library functions.
 
 AUTHORS:
 
@@ -122,22 +117,29 @@ Zeyd M. Ben-Halim:
 Thomas Dickey (maintainer since 1.9.9e):
 	configuration scripts, porting, mods to adhere to XSI Curses in the
 	areas of background color, terminal modes.  Also memory leak testing,
-	the wresize extension and numerous bug fixes (more than half of those
-	enumerated in NEWS since release 1.9.2d)
+	the wresize, default colors and key definition extensions and numerous
+	bug fixes (more than half of those enumerated in NEWS beginning with
+	the internal release 1.8.9).
+
+Florian La Roche (official maintainer for FSF's ncurses 4.2)
+	Beginning with release 4.2, ncurses is distributed under an MIT-style
+	license.
 
 Eric S. Raymond:
 	the man pages, infocmp(1), tput(1), clear(1), captoinfo(1), tset(1),
-	toe(1), most of tic(1), src/lib_twait.c, trace levels, the HTML intro,
-	wgetnstr() and many other entry points,	the cursor-movement
-	optimization, the scroll-pack optimizer for vertical motions,
-	the mouse interface and xterm mouse support, and the ncurses
-	test program.
+	toe(1), most of tic(1), trace levels, the HTML intro, wgetnstr() and
+	many other entry points, the cursor-movement optimization, the
+	scroll-pack optimizer for vertical motions, the mouse interface and
+	xterm mouse support, and the ncurses test program.
 
 Juergen Pfeifer
-	The menu and form code, and the Ada95 binding.  Ongoing support for
-	panel.
+	The menu and form libraries, C++ bindings for ncurses, menus, forms and
+	panels, as well as the Ada95 binding.  Ongoing support for panel.
 
 CONTRIBUTORS:
+
+Alexander V. Lukyanov
+	for numerous fixes and improvements to the optimization logic.
 
 David MacKenzie
 	for first-class bug-chasing and methodical testing.
@@ -160,6 +162,9 @@ Jonathan Ross,
 Keith Bostic (maintainer of 4.4BSD curses)
 	for help, criticism, comments, bug-finding, and being willing to
 	deep-six BSD curses for this one when it grew up.
+
+Richard Stallman,
+	for his commitment to making ncurses free software.
 
 Countless other people have contributed by reporting bugs, sending fixes,
 suggesting improvements, and generally whining about ncurses :-)

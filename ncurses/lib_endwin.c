@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -30,39 +42,19 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_endwin.c,v 1.10 1997/02/02 00:36:41 tom Exp $")
+MODULE_ID("$Id: lib_endwin.c,v 1.14 1998/02/11 12:13:54 tom Exp $")
 
 int
 endwin(void)
 {
 	T((T_CALLED("endwin()")));
 
-	SP->_endwin = TRUE;
-
-	_nc_mouse_wrap(SP);
-
-	/* SP->_curs{row,col} may be used later in _nc_mvcur_wrap,save_curs */
-	mvcur(-1, -1, SP->_cursrow = screen_lines - 1, SP->_curscol = 0);
-
-	curs_set(1);	/* set cursor to normal mode */
-
-	if (SP->_coloron == TRUE && orig_pair)
-		putp(orig_pair);
-
-	_nc_mvcur_wrap();	/* wrap up cursor addressing */
-
-	if (SP  &&  (SP->_current_attr != A_NORMAL))
-	    vidattr(A_NORMAL);
-
-	/*
-	 * Reset terminal's tab counter.  There's a long-time bug that
-	 * if you exit a "curses" program such as vi or more, tab
-	 * forward, and then backspace, the cursor doesn't go to the
-	 * right place.  The problem is that the kernel counts the
-	 * escape sequences that reset things as column positions.
-	 * Utter a \r to reset this invisibly.
-	 */
-	_nc_outch('\r');
+	if (SP) {
+	  SP->_endwin = TRUE;
+	  SP->_mouse_wrap(SP);
+	  _nc_screen_wrap();
+	  _nc_mvcur_wrap();	/* wrap up cursor addressing */
+	}
 
 	returnCode(reset_shell_mode());
 }

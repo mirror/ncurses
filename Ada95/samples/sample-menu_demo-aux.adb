@@ -6,23 +6,37 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control
---  $Revision: 1.4 $
+--  $Revision: 1.7 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 
@@ -164,21 +178,21 @@ package body Sample.Menu_Demo.Aux is
          elsif K in Normal_Key_Code'Range then
             Ch := Character'Val (K);
             case Ch is
-               when DC1 => return QUIT;                  --  CTRL-Q
+               when CAN => return QUIT;                  --  CTRL-X
                when SO  => return REQ_NEXT_ITEM;         --  CTRL-N
                when DLE => return REQ_PREV_ITEM;         --  CTRL-P
                when NAK => return REQ_SCR_ULINE;         --  CTRL-U
                when EOT => return REQ_SCR_DLINE;         --  CTRL-D
                when ACK => return REQ_SCR_DPAGE;         --  CTRL-F
                when STX => return REQ_SCR_UPAGE;         --  CTRL-B
-               when CAN => return REQ_CLEAR_PATTERN;     --  CTRL-X
+               when EM  => return REQ_CLEAR_PATTERN;     --  CTRL-Y
                when BS  => return REQ_BACK_PATTERN;      --  CTRL-H
                when SOH => return REQ_NEXT_MATCH;        --  CTRL-A
-               when SUB => return REQ_PREV_MATCH;        --  CTRL-Z
+               when ENQ => return REQ_PREV_MATCH;        --  CTRL-E
                when DC4 => return REQ_TOGGLE_ITEM;       --  CTRL-T
-               when CR  => return SELECT_ITEM;           --  CTRL-M
-               when LF  => return SELECT_ITEM;           --  CTRL-J
-               when others => return K;
+
+               when CR | LF  => return SELECT_ITEM;
+               when others   => return K;
             end case;
          else
             return K;

@@ -9,51 +9,62 @@ include(M4MACRO)dnl
 --                                                                          --
 --                                 S P E C                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.2 $
+--  $Revision: 1.7 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 
 generic
    type User is limited private;
    type User_Access is access User;
 package Terminal_Interface.Curses.Menus.Menu_User_Data is
+   pragma Preelaborate (Menu_User_Data);
 
-   --  The binding uses the C level user pointer already for its own
-   --  internal purposes. So you can´t easily manipulate the user pointer
-   --  with the low level C routines for this menu without taking care of
-   --  this special situation. If you want to read or write with C routines
-   --  the user pointer of this menu, you should get first the low level
-   --  user pointer. This points to a record, that always has as its first
-   --  member the Ada95 user pointer for this menu. You should never change
-   --  the low level user pointer of an Ada created menu.
-   --
    --  MANPAGE(`menu_userptr.3x')
 
    --  ANCHOR(`set_menu_userptr',`Set_User_Data')
    procedure Set_User_Data (Men  : in Menu;
                             Data : in User_Access);
    --  AKA
-   pragma Convention (C, Set_User_Data);
+   pragma Inline (Set_User_Data);
 
    --  ANCHOR(`menu_userptr',`Get_User_Data')
    procedure Get_User_Data (Men  : in  Menu;
                             Data : out User_Access);
    --  AKA
-   pragma Convention (C, Get_User_Data);
+
+   --  ANCHOR(`menu_userptr',`Get_User_Data')
+   function Get_User_Data (Men  : in  Menu) return User_Access;
+   --  AKA
+   --  Same as function
+   pragma Inline (Get_User_Data);
 
 end Terminal_Interface.Curses.Menus.Menu_User_Data;

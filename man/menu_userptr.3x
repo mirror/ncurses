@@ -5,9 +5,9 @@
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
 .br
-int set_menu_userptr(MENU *menu, const void *userptr);
+int set_menu_userptr(MENU *menu, void *userptr);
 .br
-const void *menu_userptr(const MENU *menu);
+void *menu_userptr(const MENU *menu);
 .br
 .SH DESCRIPTION
 Every menu and every menu item has a field that can be used to hold

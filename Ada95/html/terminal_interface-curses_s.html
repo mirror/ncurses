@@ -14,25 +14,38 @@
 <I>--                                                                          --</I>
 <I>--                                 S P E C                                  --</I>
 <I>--                                                                          --</I>
-<I>--  Version 00.92                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</I>
 <I>--                                                                          --</I>
-<I>--  The ncurses Ada95 binding is copyrighted 1996 by                        --</I>
+<I>-- Permission is hereby granted, free of charge, to any person obtaining a  --</I>
+<I>-- copy of this software and associated documentation files (the            --</I>
+<I>-- "Software"), to deal in the Software without restriction, including      --</I>
+<I>-- without limitation the rights to use, copy, modify, merge, publish,      --</I>
+<I>-- distribute, distribute with modifications, sublicense, and/or sell       --</I>
+<I>-- copies of the Software, and to permit persons to whom the Software is    --</I>
+<I>-- furnished to do so, subject to the following conditions:                 --</I>
+<I>--                                                                          --</I>
+<I>-- The above copyright notice and this permission notice shall be included  --</I>
+<I>-- in all copies or substantial portions of the Software.                   --</I>
+<I>--                                                                          --</I>
+<I>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</I>
+<I>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</I>
+<I>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</I>
+<I>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</I>
+<I>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</I>
+<I>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</I>
+<I>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</I>
+<I>--                                                                          --</I>
+<I>-- Except as contained in this notice, the name(s) of the above copyright   --</I>
+<I>-- holders shall not be used in advertising or otherwise to promote the     --</I>
+<I>-- sale, use or other dealings in this Software without prior written       --</I>
+<I>-- authorization.                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
 <I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
-<I>--                                                                          --</I>
-<I>--  Permission is hereby granted to reproduce and distribute this           --</I>
-<I>--  binding by any means and for any fee, whether alone or as part          --</I>
-<I>--  of a larger distribution, in source or in binary form, PROVIDED         --</I>
-<I>--  this notice is included with any such distribution, and is not          --</I>
-<I>--  removed from any of its header files. Mention of ncurses and the        --</I>
-<I>--  author of this binding in any applications linked with it is            --</I>
-<I>--  highly appreciated.                                                     --</I>
-<I>--                                                                          --</I>
-<I>--  This binding comes AS IS with no warranty, implied or expressed.        --</I>
-<I>------------------------------------------------------------------------------</I>
 <I>--  Version Control:</I>
-<I>--  @Revision: 1.7 @</I>
+<I>--  @Revision: 1.9 @</I>
 <I>------------------------------------------------------------------------------</I>
-<I>--  curses binding, generated at Sun Feb  2 17:21:42 1997</I>
+<I>--  curses binding.</I>
 <I>--  This module is generated. Please don't change it manually!</I>
 <I>--  Run the generator instead.</I>
 <I>--  |</I>
@@ -190,6 +203,7 @@
    Key_Suspend                    : <B>constant</B> Special_Key_Code := 8#627#;
    Key_Undo                       : <B>constant</B> Special_Key_Code := 8#630#;
    Key_Mouse                      : <B>constant</B> Special_Key_Code := 8#631#;
+   Key_Resize                     : <B>constant</B> Special_Key_Code := 8#632#;
 
    Key_Max                        : <B>constant</B> Special_Key_Code
      := Special_Key_Code'Last;
@@ -445,7 +459,7 @@
    ACS_Down_Arrow           : <B>constant</B> Character := '.';
    ACS_Up_Arrow             : <B>constant</B> Character := '-';
    ACS_Board_Of_Squares     : <B>constant</B> Character := 'h';
-   ACS_Lantern              : <B>constant</B> Character := 'I';
+   ACS_Lantern              : <B>constant</B> Character := 'i';
    ACS_Solid_Block          : <B>constant</B> Character := '0';
    ACS_Scan_Line_3          : <B>constant</B> Character := 'p';
    ACS_Scan_Line_7          : <B>constant</B> Character := 'r';
@@ -1347,27 +1361,45 @@
    <I>--  AKA: <A HREF="curs_slk.3x.html">slk_attr()</A></I>
 
    <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="keyok.3x.html">keyok.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_117">|</I>
+   <B>procedure</B> Enable_Key (Key    : <B>in</B> Special_Key_Code;
+                         Enable : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="keyok.3x.html">keyok()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="define_key.3x.html">define_key.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_118">|</I>
+   <B>procedure</B> Define_Key (Definition : <B>in</B> String;
+                         Key        : <B>in</B> Special_Key_Code);
+   <I>--  AKA: <A HREF="define_key.3x.html">define_key()</A></I>
+
+   <I>--  |=====================================================================</I>
    <I>--  | Man page <A HREF="curs_util.3x.html">curs_util.3x</A></I>
    <I>--  |=====================================================================</I>
 
    <I>--  | Not implemented : filter, use_env, putwin, getwin</I>
    <I>--</I>
-   <I>--  <A NAME="AFU_117">|</I>
+   <I>--  <A NAME="AFU_119">|</I>
    <B>procedure</B> Key_Name (Key  : <B>in</B>  Real_Key_Code;
                        Name : <B>out</B> String);
    <I>--  AKA: <A HREF="curs_util.3x.html">keyname()</A></I>
    <I>--  The external name for a real keystroke.</I>
 
-   <I>--  <A NAME="AFU_118">|</I>
+   <I>--  <A NAME="AFU_120">|</I>
    <B>procedure</B> Un_Control (Ch  : <B>in</B> Attributed_Character;
                          Str : <B>out</B> String);
    <I>--  AKA: <A HREF="curs_util.3x.html">unctrl()</A></I>
 
-   <I>--  <A NAME="AFU_119">|</I>
+   <I>--  <A NAME="AFU_121">|</I>
    <B>procedure</B> Delay_Output (Msecs : <B>in</B> Natural);
    <I>--  AKA: <A HREF="curs_util.3x.html">delay_output()</A></I>
 
-   <I>--  <A NAME="AFU_120">|</I>
+   <I>--  <A NAME="AFU_122">|</I>
    <B>procedure</B> Flush_Input;
    <I>--  AKA: <A HREF="curs_util.3x.html">flushinp()</A></I>
 
@@ -1375,35 +1407,35 @@
    <I>--  | Man page <A HREF="curs_termattrs.3x.html">curs_termattrs.3x</A></I>
    <I>--  |=====================================================================</I>
 
-   <I>--  <A NAME="AFU_121">|</I>
+   <I>--  <A NAME="AFU_123">|</I>
    <B>function</B> Baudrate <B>return</B> Natural;
    <I>--  AKA: <A HREF="curs_termattrs.3x.html">baudrate()</A></I>
 
-   <I>--  <A NAME="AFU_122">|</I>
+   <I>--  <A NAME="AFU_124">|</I>
    <B>function</B> Erase_Character <B>return</B> Character;
    <I>--  AKA: <A HREF="curs_termattrs.3x.html">erasechar()</A></I>
 
-   <I>--  <A NAME="AFU_123">|</I>
+   <I>--  <A NAME="AFU_125">|</I>
    <B>function</B> Kill_Character <B>return</B> Character;
    <I>--  AKA: <A HREF="curs_termattrs.3x.html">killchar()</A></I>
 
-   <I>--  <A NAME="AFU_124">|</I>
+   <I>--  <A NAME="AFU_126">|</I>
    <B>function</B> Has_Insert_Character <B>return</B> Boolean;
    <I>--  AKA: <A HREF="curs_termattrs.3x.html">has_ic()</A></I>
 
-   <I>--  <A NAME="AFU_125">|</I>
+   <I>--  <A NAME="AFU_127">|</I>
    <B>function</B> Has_Insert_Line <B>return</B> Boolean;
    <I>--  AKA: <A HREF="curs_termattrs.3x.html">has_il()</A></I>
 
-   <I>--  <A NAME="AFU_126">|</I>
+   <I>--  <A NAME="AFU_128">|</I>
    <B>function</B> Supported_Attributes <B>return</B> Character_Attribute_Set;
    <I>--  AKA: <A HREF="curs_termattrs.3x.html">termattrs()</A></I>
 
-   <I>--  <A NAME="AFU_127">|</I>
+   <I>--  <A NAME="AFU_129">|</I>
    <B>procedure</B> Long_Name (Name : <B>out</B> String);
    <I>--  AKA: <A HREF="curs_termattrs.3x.html">longname()</A></I>
 
-   <I>--  <A NAME="AFU_128">|</I>
+   <I>--  <A NAME="AFU_130">|</I>
    <B>procedure</B> Terminal_Name (Name : <B>out</B> String);
    <I>--  AKA: <A HREF="curs_termattrs.3x.html">termname()</A></I>
 
@@ -1411,39 +1443,39 @@
    <I>--  | Man page <A HREF="curs_color.3x.html">curs_color.3x</A></I>
    <I>--  |=====================================================================</I>
 
-   <I>--  <A NAME="AFU_129">|</I>
+   <I>--  <A NAME="AFU_131">|</I>
    <B>procedure</B> Start_Color;
    <I>--  AKA: <A HREF="curs_color.3x.html">start_clolor()</A></I>
    <B>pragma</B> Import (C, Start_Color, "start_color");
 
-   <I>--  <A NAME="AFU_130">|</I>
+   <I>--  <A NAME="AFU_132">|</I>
    <B>procedure</B> Init_Pair (Pair : <B>in</B> Redefinable_Color_Pair;
                         Fore : <B>in</B> Color_Number;
                         Back : <B>in</B> Color_Number);
    <I>--  AKA: <A HREF="curs_color.3x.html">init_pair()</A></I>
 
-   <I>--  <A NAME="AFU_131">|</I>
+   <I>--  <A NAME="AFU_133">|</I>
    <B>procedure</B> Pair_Content (Pair : <B>in</B> Color_Pair;
                            Fore : <B>out</B> Color_Number;
                            Back : <B>out</B> Color_Number);
    <I>--  AKA: <A HREF="curs_color.3x.html">pair_content()</A></I>
 
-   <I>--  <A NAME="AFU_132">|</I>
+   <I>--  <A NAME="AFU_134">|</I>
    <B>function</B> Has_Colors <B>return</B> Boolean;
    <I>--  AKA: <A HREF="curs_color.3x.html">has_colors()</A></I>
 
-   <I>--  <A NAME="AFU_133">|</I>
+   <I>--  <A NAME="AFU_135">|</I>
    <B>procedure</B> Init_Color (Color : <B>in</B> Color_Number;
                          Red   : <B>in</B> RGB_Value;
                          Green : <B>in</B> RGB_Value;
                          Blue  : <B>in</B> RGB_Value);
    <I>--  AKA: <A HREF="curs_color.3x.html">init_color()</A></I>
 
-   <I>--  <A NAME="AFU_134">|</I>
+   <I>--  <A NAME="AFU_136">|</I>
    <B>function</B> Can_Change_Color <B>return</B> Boolean;
    <I>--  AKA: <A HREF="curs_color.3x.html">can_change_color()</A></I>
 
-   <I>--  <A NAME="AFU_135">|</I>
+   <I>--  <A NAME="AFU_137">|</I>
    <B>procedure</B> Color_Content (Color : <B>in</B>  Color_Number;
                             Red   : <B>out</B> RGB_Value;
                             Green : <B>out</B> RGB_Value;
@@ -1458,21 +1490,21 @@
    <I>--</I>
    type Curses_Mode <B>is</B> (Curses, Shell);
 
-   <I>--  <A NAME="AFU_136">|</I>
+   <I>--  <A NAME="AFU_138">|</I>
    <B>procedure</B> Save_Curses_Mode (Mode : <B>in</B> Curses_Mode);
    <I>--  AKA: <A HREF="curs_kernel.3x.html">def_prog_mode()</A></I>
    <I>--  AKA: def_shell_mode()</I>
 
-   <I>--  <A NAME="AFU_137">|</I>
+   <I>--  <A NAME="AFU_139">|</I>
    <B>procedure</B> Reset_Curses_Mode (Mode : <B>in</B> Curses_Mode);
    <I>--  AKA: <A HREF="curs_kernel.3x.html">reset_prog_mode()</A></I>
    <I>--  AKA: reset_shell_mode()</I>
 
-   <I>--  <A NAME="AFU_138">|</I>
+   <I>--  <A NAME="AFU_140">|</I>
    <B>procedure</B> Save_Terminal_State;
    <I>--  AKA: <A HREF="curs_kernel.3x.html">savetty()</A></I>
 
-   <I>--  <A NAME="AFU_139">|</I>
+   <I>--  <A NAME="AFU_141">|</I>
    <B>procedure</B> Reset_Terminal_State;
    <I>--  AKA: <A HREF="curs_kernel.3x.html">resetty();</A></I>
 
@@ -1484,7 +1516,7 @@
    <I>--        a good practice to return 0 if you think all went fine</I>
    <I>--        and -1 otherwise.</I>
 
-   <I>--  <A NAME="AFU_140">|</I>
+   <I>--  <A NAME="AFU_142">|</I>
    <B>procedure</B> Rip_Off_Lines (Lines : <B>in</B> Integer;
                             Proc  : <B>in</B> Stdscr_Init_Proc);
    <I>--  AKA: <A HREF="curs_kernel.3x.html">ripoffline()</A></I>
@@ -1495,11 +1527,11 @@
 
    type Cursor_Visibility <B>is</B> (Invisible, Normal, Very_Visible);
 
-   <I>--  <A NAME="AFU_141">|</I>
+   <I>--  <A NAME="AFU_143">|</I>
    <B>procedure</B> Set_Cursor_Visibility (Visibility : <B>in</B> <B>out</B> Cursor_Visibility);
    <I>--  AKA: <A HREF="curs_kernel.3x.html">curs_set()</A></I>
 
-   <I>--  <A NAME="AFU_142">|</I>
+   <I>--  <A NAME="AFU_144">|</I>
    <B>procedure</B> Nap_Milli_Seconds (Ms : <B>in</B> Natural);
    <I>--  AKA: <A HREF="curs_kernel.3x.html">napms()</A></I>
 

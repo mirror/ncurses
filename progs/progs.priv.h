@@ -1,31 +1,40 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
-
+/****************************************************************************
+ *  Author: Thomas E. Dickey <dickey@clark.net> 1997,1998                   *
+ ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.9 1997/04/05 23:38:08 tom Exp $
+ * $Id: progs.priv.h,v 1.17 1998/02/11 12:14:03 tom Exp $
  *
  *	progs.priv.h
  *
  *	Header file for curses utility programs
- *
  */
 
 #include <ncurses_cfg.h>
@@ -37,6 +46,7 @@
 #endif
 
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -87,7 +97,7 @@
 
 #include <errno.h>
 
-#if !HAVE_EXTERN_ERRNO
+#if DECL_ERRNO
 extern int errno;
 #endif
 
@@ -101,6 +111,7 @@ extern char *optarg;
 extern int optind;
 #endif /* HAVE_GETOPT_H */
 
+#include <curses.h>
 #include <term.h>
 #include <tic.h>
 #include <nc_alloc.h>
@@ -133,4 +144,16 @@ extern int optind;
 
 #ifndef STDERR_FILENO
 #define STDERR_FILENO 2
+#endif
+
+/* We use isascii only to guard against use of 7-bit ctype tables in the
+ * isprint test in infocmp.
+ */
+#ifndef HAVE_ISASCII
+# undef isascii
+# if ('z'-'a' == 25) && ('z' < 127) && ('Z'-'A' == 25) && ('Z' < 127) && ('9' < 127)
+#  define isascii(c) (((c) & 0xff) <= 127)
+# else
+#  define isascii(c) 1	/* not really ascii anyway */
+# endif
 #endif

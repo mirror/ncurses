@@ -1,3 +1,4 @@
+.\" $Id: curs_inopts.3x,v 1.7 1997/12/14 01:12:04 tom Exp $
 .TH curs_inopts 3X ""
 .SH NAME
 \fBcbreak\fR, \fBnocbreak\fR, \fBecho\fR,
@@ -53,7 +54,8 @@ mode.
 Initially the terminal may or may not be in \fBcbreak\fR mode, as the mode is
 inherited; therefore, a program should call \fBcbreak\fR or \fBnocbreak\fR
 explicitly.  Most interactive programs using \fBcurses\fR set the \fBcbreak\fR
-mode.  Note that \fBcbreak\fR overrides \fBraw\fR.  [See curs_getch(3X) for a
+mode.  Note that \fBcbreak\fR overrides \fBraw\fR.
+[See \fBcurs_getch\fR(3X) for a
 discussion of how these routines interact with \fBecho\fR and \fBnoecho\fR.]
 
 The \fBecho\fR and \fBnoecho\fR routines control whether characters typed by
@@ -61,7 +63,8 @@ the user are echoed by \fBgetch\fR as they are typed.  Echoing by the tty
 driver is always disabled, but initially \fBgetch\fR is in echo mode, so
 characters typed are echoed.  Authors of most interactive programs prefer to do
 their own echoing in a controlled area of the screen, or not to echo at all, so
-they disable echoing by calling \fBnoecho\fR.  [See curs_getch(3X) for a
+they disable echoing by calling \fBnoecho\fR.
+[See \fBcurs_getch\fR(3X) for a
 discussion of how these routines interact with \fBcbreak\fR and
 \fBnocbreak\fR.]
 

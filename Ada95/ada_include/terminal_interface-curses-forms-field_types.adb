@@ -6,28 +6,44 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.4 $
+--  $Revision: 1.8 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 with Interfaces.C;
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
-with Unchecked_Deallocation;
-
+with Ada.Unchecked_Deallocation;
+with Ada.Unchecked_Conversion;
+with Terminal_Interface.Curses.Forms.Field_Types.User;
+with Terminal_Interface.Curses.Forms.Field_Types.User.Choice;
 --  |
 --  |=====================================================================
 --  | man page form_fieldtype.3x
@@ -36,147 +52,238 @@ with Unchecked_Deallocation;
 package body Terminal_Interface.Curses.Forms.Field_Types is
 
    use type Interfaces.C.int;
+   use type System.Address;
 
-   type F_Check is access
-      function (Fld : Field; Info : User_Access) return C_Int;
-   pragma Convention (C, F_Check);
+   function To_Argument_Access is new Ada.Unchecked_Conversion
+     (System.Address, Argument_Access);
 
-   type C_Check is access
-      function (Ch : Character; Info : User_Access) return C_Int;
-   pragma Convention (C, C_Check);
+   function Get_Fieldtype (F : Field) return C_Field_Type;
+   pragma Import (C, Get_Fieldtype, "field_type");
 
-   procedure Free is new
-     Unchecked_Deallocation (User, User_Access);
-
-   --  Forward decls.
-   procedure Register_Field_Type;
-   procedure Unregister_Field_Type;
-
-   procedure Initialize (Obj : in out Tracker)
+   function Get_Arg (F : Field) return System.Address;
+   pragma Import (C, Get_Arg, "field_arg");
+   --  |
+   --  |=====================================================================
+   --  | man page form_field_validation.3x
+   --  |=====================================================================
+   --  |
+   --  |
+   --  |
+   function Get_Type (Fld : in Field) return Field_Type_Access
    is
+      Low_Level : constant C_Field_Type := Get_Fieldtype (Fld);
+      Arg : Argument_Access;
    begin
-      Register_Field_Type;
-   end Initialize;
+      if Low_Level = Null_Field_Type then
+         return null;
+      else
+         if Low_Level = M_Builtin_Router or else
+           Low_Level = M_Generic_Type or else
+           Low_Level = M_Choice_Router or else
+           Low_Level = M_Generic_Choice then
+            Arg := To_Argument_Access (Get_Arg (Fld));
+            if Arg = null then
+               raise Form_Exception;
+            else
+               return Arg.Typ;
+            end if;
+         else
+            raise Form_Exception;
+         end if;
+      end if;
+   end Get_Type;
 
-   procedure Finalize (Obj : in out Tracker)
+   function Make_Arg (Args : System.Address) return System.Address
    is
+      function Getarg (Arg : System.Address := Args)
+        return System.Address;
+      pragma Import (C, Getarg, "_nc_ada_getvarg");
    begin
-      Unregister_Field_Type;
-   end Finalize;
-
-   function Fc (Fld : Field; Info : User_Access) return C_Int;
-   pragma Convention (C, Fc);
-
-   function Cc (Ch : Character; Info : User_Access) return C_Int;
-   pragma Convention (C, Cc);
-
-   function Make_Arg (U : User_Access) return User_Access;
-   pragma Convention (C, Make_Arg);
-
-   function Copy_Arg (U : User_Access) return User_Access;
-   pragma Convention (C, Copy_Arg);
-
-   procedure Free_Arg (U : User_Access);
-   pragma Convention (C, Free_Arg);
-
-   function New_Fieldtype (Fc : F_Check;
-                           Cc : C_Check) return C_Field_Type;
-   pragma Import (C, New_Fieldtype, "new_fieldtype");
-
-   function Fc (Fld : Field; Info : User_Access) return C_Int
-   is
-   begin
-      return C_Int (Boolean'Pos (Field_Check (Fld, Info)));
-   end Fc;
-
-   function Cc (Ch : Character; Info : User_Access) return C_Int
-   is
-   begin
-      return C_Int (Boolean'Pos (Character_Check (Ch, Info)));
-   end Cc;
-
-   function Make_Arg (U : User_Access) return User_Access
-   is
-      function Fixme (U : User_Access) return User_Access;
-      pragma Import (C, Fixme, "_nc_ada_getvarg");
-      V : constant User_Access := Fixme (U);
-      I : constant User_Access := new User'(V.all);
-   begin
-      return I;
+      return Getarg;
    end Make_Arg;
 
-   function Copy_Arg (U : User_Access) return User_Access
+   function Copy_Arg (Usr : System.Address) return System.Address
    is
-      I : constant User_Access := new User'(U.all);
    begin
-      return I;
+      return Usr;
    end Copy_Arg;
 
-   procedure Free_Arg (U : User_Access)
+   procedure Free_Arg (Usr : in System.Address)
    is
+      procedure Free_Type is new Ada.Unchecked_Deallocation
+        (Field_Type'Class, Field_Type_Access);
+      procedure Freeargs is new Ada.Unchecked_Deallocation
+        (Argument, Argument_Access);
+
+      To_Be_Free : Argument_Access := To_Argument_Access (Usr);
+      Low_Level  : C_Field_Type;
    begin
-      null;
+      if To_Be_Free /= null then
+         if To_Be_Free.Usr /= System.Null_Address then
+            Low_Level := To_Be_Free.Cft;
+            if Low_Level.Freearg /= null then
+               Low_Level.Freearg (To_Be_Free.Usr);
+            end if;
+         end if;
+         if To_Be_Free.Typ /= null then
+            Free_Type (To_Be_Free.Typ);
+         end if;
+         Freeargs (To_Be_Free);
+      end if;
    end Free_Arg;
 
-   type M_Arg is access function (U : User_Access) return User_Access;
-   pragma Convention (C, M_Arg);
 
-   type C_Arg is access function (U : User_Access) return User_Access;
-   pragma Convention (C, C_Arg);
+   procedure Wrap_Builtin (Fld : Field;
+                           Typ : Field_Type'Class;
+                           Cft : C_Field_Type := C_Builtin_Router)
+   is
+      Usr_Arg   : System.Address := Get_Arg (Fld);
+      Low_Level : constant C_Field_Type := Get_Fieldtype (Fld);
+      Arg : Argument_Access;
+      Res : Eti_Error;
+      function Set_Fld_Type (F    : Field := Fld;
+                             Cf   : C_Field_Type := Cft;
+                             Arg1 : Argument_Access) return C_Int;
+      pragma Import (C, Set_Fld_Type, "set_field_type");
 
-   type F_Arg is access procedure (U : User_Access);
-   pragma Convention (C, F_Arg);
+   begin
+      pragma Assert (Low_Level /= Null_Field_Type);
+      if Cft /= C_Builtin_Router and then Cft /= C_Choice_Router then
+         raise Form_Exception;
+      else
+         Arg := new Argument'(Usr => System.Null_Address,
+                              Typ => new Field_Type'Class'(Typ),
+                              Cft => Get_Fieldtype (Fld));
+         if Usr_Arg /= System.Null_Address then
+            if Low_Level.Copyarg /= null then
+               Arg.Usr := Low_Level.Copyarg (Usr_Arg);
+            else
+               Arg.Usr := Usr_Arg;
+            end if;
+         end if;
 
-   function Set_Fieldtype_Arg (Typ : C_Field_Type;
-                               Ma  : M_Arg;
-                               Ca  : C_Arg;
-                               Fa  : F_Arg) return C_Int;
-   pragma Import (C, Set_Fieldtype_Arg, "set_fieldtype_arg");
-   --  |
-   --  |
-   --  |
+         Res := Set_Fld_Type (Arg1 => Arg);
+         if Res /= E_Ok then
+            Eti_Exception (Res);
+         end if;
+      end if;
+   end Wrap_Builtin;
 
-   procedure Register_Field_Type
+   function Field_Check_Router (Fld : Field;
+                                Usr : System.Address) return C_Int
+   is
+      Arg  : constant Argument_Access := To_Argument_Access (Usr);
+   begin
+      pragma Assert (Arg /= null and then Arg.Cft /= Null_Field_Type
+                     and then Arg.Typ /= null);
+      if Arg.Cft.Fcheck /= null then
+         return Arg.Cft.Fcheck (Fld, Arg.Usr);
+      else
+         return 1;
+      end if;
+   end Field_Check_Router;
+
+   function Char_Check_Router (Ch  : C_Int;
+                               Usr : System.Address) return C_Int
+   is
+      Arg  : constant Argument_Access := To_Argument_Access (Usr);
+   begin
+      pragma Assert (Arg /= null and then Arg.Cft /= Null_Field_Type
+                     and then Arg.Typ /= null);
+      if Arg.Cft.Ccheck /= null then
+         return Arg.Cft.Ccheck (Ch, Arg.Usr);
+      else
+         return 1;
+      end if;
+   end Char_Check_Router;
+
+   function Next_Router (Fld : Field;
+                         Usr : System.Address) return C_Int
+   is
+      Arg  : constant Argument_Access := To_Argument_Access (Usr);
+   begin
+      pragma Assert (Arg /= null and then Arg.Cft /= Null_Field_Type
+                     and then Arg.Typ /= null);
+      if Arg.Cft.Next /= null then
+         return Arg.Cft.Next (Fld, Arg.Usr);
+      else
+         return 1;
+      end if;
+   end Next_Router;
+
+   function Prev_Router (Fld : Field;
+                         Usr : System.Address) return C_Int
+   is
+      Arg  : constant Argument_Access := To_Argument_Access (Usr);
+   begin
+      pragma Assert (Arg /= null and then Arg.Cft /= Null_Field_Type
+                     and then Arg.Typ /= null);
+      if Arg.Cft.Prev /= null then
+         return Arg.Cft.Prev (Fld, Arg.Usr);
+      else
+         return 1;
+      end if;
+   end Prev_Router;
+
+   --  -----------------------------------------------------------------------
+   --
+   function C_Builtin_Router return C_Field_Type
    is
       Res : Eti_Error;
-      Cft : C_Field_Type;
-      P   : User_Access := new User;
-      --  we need an instance to call
-      --  the Register_Type procedure
+      T   : C_Field_Type;
    begin
-      Cft := New_Fieldtype (Fc'Access,
-                            Cc'Access);
-      if Cft = Null_Field_Type then
-         raise Form_Exception;
+      if M_Builtin_Router = Null_Field_Type then
+         T := New_Fieldtype (Field_Check_Router'Access,
+                             Char_Check_Router'Access);
+         if T = Null_Field_Type then
+            raise Form_Exception;
+         else
+            Res := Set_Fieldtype_Arg (T,
+                                      Make_Arg'Access,
+                                      Copy_Arg'Access,
+                                      Free_Arg'Access);
+            if Res /= E_Ok then
+               Eti_Exception (Res);
+            end if;
+         end if;
+         M_Builtin_Router := T;
       end if;
-      Res := Set_Fieldtype_Arg (Cft,
-                                Make_Arg'Access,
-                                Copy_Arg'Access,
-                                Free_Arg'Access);
-      if Res /= E_Ok then
-         Eti_Exception (Res);
-      end if;
+      pragma Assert (M_Builtin_Router /= Null_Field_Type);
+      return M_Builtin_Router;
+   end C_Builtin_Router;
 
-      Register_Type (P.all, Cft);
-      Free (P);
-   end Register_Field_Type;
-   --  |
-   --  |
-   --  |
-   procedure Unregister_Field_Type
+   --  -----------------------------------------------------------------------
+   --
+   function C_Choice_Router return C_Field_Type
    is
-      P : User_Access := new User;
-      --  we need an instance to call
-      --  the Unregister_Type procedure
+      Res : Eti_Error;
+      T   : C_Field_Type;
    begin
-      Unregister_Type (P.all);
-      Free (P);
-   end Unregister_Field_Type;
+      if M_Choice_Router = Null_Field_Type then
+         T := New_Fieldtype (Field_Check_Router'Access,
+                             Char_Check_Router'Access);
+         if T = Null_Field_Type then
+            raise Form_Exception;
+         else
+            Res := Set_Fieldtype_Arg (T,
+                                      Make_Arg'Access,
+                                      Copy_Arg'Access,
+                                      Free_Arg'Access);
+            if Res /= E_Ok then
+               Eti_Exception (Res);
+            end if;
 
-   Hook : Tracker;
+            Res := Set_Fieldtype_Choice (T,
+                                         Next_Router'Access,
+                                         Prev_Router'Access);
+            if Res /= E_Ok then
+               Eti_Exception (Res);
+            end if;
+         end if;
+         M_Choice_Router := T;
+      end if;
+      pragma Assert (M_Choice_Router /= Null_Field_Type);
+      return M_Choice_Router;
+   end C_Choice_Router;
+
 end Terminal_Interface.Curses.Forms.Field_Types;
-
-
-
-
-

@@ -6,7 +6,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.8 1997/01/19 00:59:28 tom Exp $
+ * $Id: gdc.c,v 1.10 1997/10/18 20:06:06 tom Exp $
  */
 
 #include <test.priv.h>
@@ -28,7 +28,7 @@ static short disp[11] = {
 	075557, 011111, 071747, 071717, 055711,
 	074717, 074757, 071111, 075757, 075717, 002020
 };
-static long old[6], next[6], new[6], mask;
+static long older[6], next[6], newer[6], mask;
 static char scrol;
 
 static int sigtermed = 0;
@@ -46,6 +46,36 @@ RETSIGTYPE sighndl(int signo)
 	sigtermed=signo;
 }
 
+static void
+drawbox(void)
+{
+	chtype bottom[XLENGTH+1];
+	int n;
+
+	if(hascolor)
+		attrset(COLOR_PAIR(3));
+
+	mvaddch(YBASE - 1,  XBASE - 1, ACS_ULCORNER);
+	hline(ACS_HLINE, XLENGTH);
+	mvaddch(YBASE - 1,  XBASE + XLENGTH, ACS_URCORNER);
+
+	mvaddch(YBASE + YDEPTH,  XBASE - 1, ACS_LLCORNER);
+	mvinchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
+	for (n = 0; n < XLENGTH; n++)
+		bottom[n] = ACS_HLINE | (bottom[n] & (A_ATTRIBUTES | A_COLOR));
+	mvaddchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
+	mvaddch(YBASE + YDEPTH,  XBASE + XLENGTH, ACS_LRCORNER);
+
+	move(YBASE,  XBASE - 1);
+	vline(ACS_VLINE, YDEPTH);
+
+	move(YBASE,  XBASE + XLENGTH);
+	vline(ACS_VLINE, YDEPTH);
+
+	if(hascolor)
+		attrset(COLOR_PAIR(2));
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -61,6 +91,7 @@ int n = 0;
 	cbreak();
 	noecho();
 	nodelay(stdscr, 1);
+    	curs_set(0);
 
 	hascolor = has_colors();
 
@@ -86,25 +117,7 @@ int n = 0;
 			n = atoi(*argv);
 	}
 
-	if(hascolor) {
-		attrset(COLOR_PAIR(3));
-
-		mvaddch(YBASE - 1,  XBASE - 1, ACS_ULCORNER);
-		hline(ACS_HLINE, XLENGTH);
-		mvaddch(YBASE - 1,  XBASE + XLENGTH, ACS_URCORNER);
-
-		mvaddch(YBASE + YDEPTH,  XBASE - 1, ACS_LLCORNER);
-		hline(ACS_HLINE, XLENGTH);
-		mvaddch(YBASE + YDEPTH,  XBASE + XLENGTH, ACS_LRCORNER);
-
-		move(YBASE,  XBASE - 1);
-		vline(ACS_VLINE, YDEPTH);
-
-		move(YBASE,  XBASE + XLENGTH);
-		vline(ACS_VLINE, YDEPTH);
-
-		attrset(COLOR_PAIR(2));
-	}
+	drawbox();
 	do {
 		char	buf[30];
 
@@ -122,15 +135,15 @@ int n = 0;
 		for(k=0; k<6; k++) {
 			if(scrol) {
 				for(i=0; i<5; i++)
-					new[i] = (new[i]&~mask) | (new[i+1]&mask);
-				new[5] = (new[5]&~mask) | (next[k]&mask);
+					newer[i] = (newer[i]&~mask) | (newer[i+1]&mask);
+				newer[5] = (newer[5]&~mask) | (next[k]&mask);
 			} else
-				new[k] = (new[k]&~mask) | (next[k]&mask);
+				newer[k] = (newer[k]&~mask) | (next[k]&mask);
 			next[k] = 0;
 			for(s=1; s>=0; s--) {
 				standt(s);
 				for(i=0; i<6; i++) {
-					if((a = (new[i]^old[i])&(s ? new : old)[i]) != 0) {
+					if((a = (newer[i]^older[i])&(s ? newer : older)[i]) != 0) {
 						for(j=0,t=1<<26; t; t>>=1,j++) {
 							if(a&t) {
 								if(!(a&(t<<1))) {
@@ -141,11 +154,15 @@ int n = 0;
 						}
 					}
 					if(!s) {
-						old[i] = new[i];
+						older[i] = newer[i];
 					}
 				}
 				if(!s) {
+					if (scrol)
+						drawbox();
 					refresh();
+					if (scrol)
+						napms(150);
 				}
 			}
 		}
@@ -156,6 +173,7 @@ int n = 0;
 		mvaddstr(16, 30, buf);
 
 		movto(6, 0);
+		drawbox();
 		refresh();
 		sleep(1);
 		while(wgetch(stdscr) != ERR)
@@ -164,6 +182,7 @@ int n = 0;
 			standend();
 			clear();
 			refresh();
+    			curs_set(1);
 			endwin();
 			fprintf(stderr, "gdc terminated by signal %d\n", sigtermed);
 			return EXIT_FAILURE;
@@ -172,6 +191,7 @@ int n = 0;
 	standend();
 	clear();
 	refresh();
+    	curs_set(1);
 	endwin();
 	return EXIT_SUCCESS;
 }
@@ -184,7 +204,7 @@ int i, m;
 	m = 7<<n;
 	for(i=0; i<5; i++) {
 		next[i] |= ((disp[t]>>(4-i)*3)&07)<<n;
-		mask |= (next[i]^old[i])&m;
+		mask |= (next[i]^older[i])&m;
 	}
 	if(mask&m)
 		mask |= m;

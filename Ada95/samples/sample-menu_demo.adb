@@ -6,23 +6,37 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control
---  $Revision: 1.4 $
+--  $Revision: 1.7 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
 with Terminal_Interface.Curses.Panels; use Terminal_Interface.Curses.Panels;
@@ -60,30 +74,20 @@ package body Sample.Menu_Demo is
 
          package Mh is new Sample.Menu_Demo.Handler (My_Driver);
 
-         I : constant Item_Array (1 .. 12) := (New_Item ("January",
-                                                         "31 Days"),
-                                               New_Item ("February",
-                                                         "28/29 Days"),
-                                               New_Item ("March",
-                                                         "31 Days"),
-                                               New_Item ("April",
-                                                         "30 Days"),
-                                               New_Item ("May",
-                                                         "31 Days"),
-                                               New_Item ("June",
-                                                         "30 Days"),
-                                               New_Item ("July",
-                                                         "31 Days"),
-                                               New_Item ("August",
-                                                         "31 Days"),
-                                               New_Item ("September",
-                                                         "30 Days"),
-                                               New_Item ("October",
-                                                         "31 Days"),
-                                               New_Item ("November",
-                                                         "30 Days"),
-                                               New_Item ("December",
-                                                         "31 Days"));
+         I : Item_Array_Access := new Item_Array'
+           (New_Item ("January",   "31 Days"),
+            New_Item ("February",  "28/29 Days"),
+            New_Item ("March",     "31 Days"),
+            New_Item ("April",     "30 Days"),
+            New_Item ("May",       "31 Days"),
+            New_Item ("June",      "30 Days"),
+            New_Item ("July",      "31 Days"),
+            New_Item ("August",    "31 Days"),
+            New_Item ("September", "30 Days"),
+            New_Item ("October",   "31 Days"),
+            New_Item ("November",  "30 Days"),
+            New_Item ("December",  "31 Days"),
+            Null_Item);
 
          M : Menu   := New_Menu (I);
          Flip_State : Boolean := True;
@@ -300,7 +304,7 @@ package body Sample.Menu_Demo is
 
          Pop_Environment;
          Delete (M);
-
+         Free (I, True);
       end Spacing_Test;
    end Spacing_Demo;
 
@@ -323,9 +327,10 @@ package body Sample.Menu_Demo is
 
       package Mh is new Sample.Menu_Demo.Handler (My_Driver);
 
-      Itm : constant Item_Array (1 .. 2) :=
+      Itm : Item_Array_Access := new Item_Array'
         (New_Item ("Menu Layout Options"),
-         New_Item ("Demo of Hook functions"));
+         New_Item ("Demo of Hook functions"),
+         Null_Item);
       M : Menu := New_Menu (Itm);
 
       U1 : User_Data_Access := new User_Data'(4711);
@@ -381,6 +386,7 @@ package body Sample.Menu_Demo is
 
       Pop_Environment;
       Delete (M);
+      Free (Itm, True);
    end Demo;
 
 end Sample.Menu_Demo;

@@ -6,27 +6,39 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control:
---  $Revision: 1.3 $
+--  $Revision: 1.7 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
-with Unchecked_Conversion;
-with Terminal_Interface.Curses.Aux;
-use  Terminal_Interface.Curses.Aux;
+with Terminal_Interface.Curses.Aux; use  Terminal_Interface.Curses.Aux;
 
 --  |
 --  |=====================================================================
@@ -34,48 +46,40 @@ use  Terminal_Interface.Curses.Aux;
 --  |=====================================================================
 --  |
 package body Terminal_Interface.Curses.Forms.Field_User_Data is
+   --  |
+   --  |
+   --  |
+   use type Interfaces.C.Int;
 
-   function To_Address is new Unchecked_Conversion (User_Access,
-                                                    System.Address);
-   function To_Pointer is new Unchecked_Conversion (System.Address,
-                                                    User_Access);
-   --  |
-   --  |
-   --  |
    procedure Set_User_Data (Fld  : in Field;
                             Data : in User_Access)
    is
-      A : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
-      B : Field_User_Wrapper_Access;
-      R : C_Int;
+      function Set_Field_Userptr (Fld : Field;
+                                  Usr : User_Access) return C_Int;
+      pragma Import (C, Set_Field_Userptr, "set_field_userptr");
+
+      Res : constant Eti_Error := Set_Field_Userptr (Fld, Data);
    begin
-      if A = null then
-         raise Form_Exception;
-      else
-         if A.N > 1 then
-            B := new Field_User_Wrapper'(T => A.T,
-                                         N => 1,
-                                         U => To_Address (Data));
-            R := Set_Field_Userptr (Fld, B);
-            A.N := A.N - 1;
-         else
-            A.U := To_Address (Data);
-         end if;
+      if Res /= E_Ok then
+         Eti_Exception (Res);
       end if;
    end Set_User_Data;
    --  |
    --  |
    --  |
+   function Get_User_Data (Fld  : in  Field) return User_Access
+   is
+      function Field_Userptr (Fld : Field) return User_Access;
+      pragma Import (C, Field_Userptr, "field_userptr");
+   begin
+      return Field_Userptr (Fld);
+   end Get_User_Data;
+
    procedure Get_User_Data (Fld  : in  Field;
                             Data : out User_Access)
    is
-      A : constant Field_User_Wrapper_Access := Field_Userptr (Fld);
    begin
-      if A = null then
-         raise Form_Exception;
-      else
-         Data := To_Pointer (A.U);
-      end if;
+      Data := Get_User_Data (Fld);
    end Get_User_Data;
-   
+
 end Terminal_Interface.Curses.Forms.Field_User_Data;

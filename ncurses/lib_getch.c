@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 /*
 **	lib_getch.c
@@ -28,34 +40,21 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.24 1997/02/15 21:12:16 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.40 1998/02/11 12:13:58 tom Exp $")
 
-#define head	SP->_fifohead
-#define tail	SP->_fifotail
-#define peek	SP->_fifopeek
-
-#define h_inc() { head == FIFO_SIZE-1 ? head = 0 : head++; if (head == tail) head = -1, tail = 0;}
-#define h_dec() { head == 0 ?  head = FIFO_SIZE-1 : head--; if (head == tail) tail = -1;}
-#define t_inc() { tail == FIFO_SIZE-1 ? tail = 0 : tail++; if (tail == head) tail = -1;}
-#define p_inc() { peek == FIFO_SIZE-1 ? peek = 0 : peek++;}
+#include <fifo_defs.h>
 
 int ESCDELAY = 1000;	/* max interval betw. chars in funkeys, in millisecs */
 
-static int fifo_peek(void)
+static inline int fifo_peek(void)
 {
-	T(("peeking at %d", peek+1));
-	return SP->_fifo[++peek];
+	int ch = SP->_fifo[peek];
+	T(("peeking at %d", peek));
+	
+	p_inc();
+	return ch;
 }
 
-#ifdef TRACE
-static inline void fifo_dump(void)
-{
-int i;
-	T(("head = %d, tail = %d, peek = %d", head, tail, peek));
-	for (i = 0; i < 10; i++)
-		T(("char %d = %s", i, _trace_key(SP->_fifo[i])));
-}
-#endif /* TRACE */
 
 static inline int fifo_pull(void)
 {
@@ -63,29 +62,18 @@ int ch;
 	ch = SP->_fifo[head];
 	T(("pulling %d from %d", ch, head));
 
-	h_inc();
+	if (peek == head)
+	{
+	    h_inc();
+	    peek = head;
+	}
+	else
+	    h_inc();
+	    
 #ifdef TRACE
-	if (_nc_tracing & TRACE_IEVENT) fifo_dump();
+	if (_nc_tracing & TRACE_IEVENT) _nc_fifo_dump();
 #endif
 	return ch;
-}
-
-int ungetch(int ch)
-{
-	if (tail == -1)
-		return ERR;
-	if (head == -1) {
-		head = 0;
-		t_inc()
-	} else
-		h_dec();
-
-	SP->_fifo[head] = ch;
-	T(("ungetch ok"));
-#ifdef TRACE
-	if (_nc_tracing & TRACE_IEVENT) fifo_dump();
-#endif
-	return OK;
 }
 
 static inline int fifo_push(void)
@@ -94,24 +82,28 @@ int n;
 unsigned int ch;
 
 	if (tail == -1) return ERR;
-	/* FALLTHRU */
+
+#ifdef HIDE_EINTR
 again:
 	errno = 0;
+#endif
+
 #if USE_GPM_SUPPORT	
-	if ((_nc_mouse_fd() >= 0) 
+	if ((SP->_mouse_fd >= 0) 
 	 && (_nc_timed_wait(3, -1, (int *)0) & 2))
 	{
-		_nc_mouse_event(SP);
+		SP->_mouse_event(SP);
 		ch = KEY_MOUSE;
 		n = 1;
 	} else
 #endif
 	{
-		unsigned char c2;
+		unsigned char c2=0;
 		n = read(SP->_ifd, &c2, 1);
 		ch = c2;
 	}
 
+#ifdef HIDE_EINTR
 	/*
 	 * Under System V curses with non-restarting signals, getch() returns
 	 * with value ERR when a handled signal keeps it from completing.  
@@ -123,20 +115,23 @@ again:
 	 */
 	if (n <= 0 && errno == EINTR)
 		goto again;
+#endif
 
 	if ((n == -1) || (n == 0))
 	{
-	    T(("read(%d,&ch,1)=%d", SP->_ifd, n));
+	    T(("read(%d,&ch,1)=%d, errno=%d", SP->_ifd, n, errno));
 	    return ERR;
 	}
 	T(("read %d characters", n));
 
 	SP->_fifo[tail] = ch;
-	if (head == -1) head = tail;
+	SP->_fifohold = 0;
+	if (head == -1)
+	    head = peek = tail;
 	t_inc();
 	T(("pushed %#x at %d", ch, tail));
 #ifdef TRACE
-	if (_nc_tracing & TRACE_IEVENT) fifo_dump();
+	if (_nc_tracing & TRACE_IEVENT) _nc_fifo_dump();
 #endif
 	return ch;
 }
@@ -151,34 +146,9 @@ int i;
 
 static int kgetch(WINDOW *);
 
-void _nc_backspace(WINDOW *win)
-{
-	if (win->_curx == 0)
-	{
-	    beep();
-	    return;
-	}
-
-	mvwaddstr(curscr, win->_begy + win->_cury + win->_yoffset,
-		  win->_begx + win->_curx, "\b \b");
-	waddstr(win, "\b \b");
-
-	/*
-	 * This used to do the equivalent of _nc_outstr("\b \b"), which
-	 * would fail on terminals with a non-backspace cursor_left
-	 * character.
-	 */
-	mvcur(win->_begy + win->_cury + win->_yoffset,
-	      win->_begx + win->_curx,
-	      win->_begy + win->_cury + win->_yoffset,
-	      win->_begx + win->_curx - 1);
-	_nc_outstr(" ");
-	mvcur(win->_begy + win->_cury + win->_yoffset,
-	      win->_begx + win->_curx,
-	      win->_begy + win->_cury + win->_yoffset,
-	      win->_begx + win->_curx - 1);
-	SP->_curscol--;
-}
+#define wgetch_should_refresh(win) (\
+	(is_wintouched(win) || (win->_flags & _HASMOVED)) \
+	&& !(win->_flags & _ISPAD))
 
 int
 wgetch(WINDOW *win)
@@ -186,6 +156,19 @@ wgetch(WINDOW *win)
 int	ch;
 
 	T((T_CALLED("wgetch(%p)"), win));
+
+	if (!win)
+	  returnCode(ERR);
+
+	if (cooked_key_in_fifo())
+	{
+		if (wgetch_should_refresh(win))
+			wrefresh(win);
+
+		ch = fifo_pull();
+		T(("wgetch returning (pre-cooked): %#x = %s", ch, _trace_key(ch));)
+		returnCode(ch);
+	}
 
 	/*
 	 * Handle cooked mode.  Grab a string from the screen,
@@ -200,23 +183,15 @@ int	ch;
 
 		wgetnstr(win, buf, MAXCOLUMNS);
 
-		for (sp = buf; *sp; sp++)
-			ungetch(*sp);
+		/* ungetch in reverse order */
 		ungetch('\n');
+		for (sp = buf+strlen(buf); sp>buf; sp--)
+			ungetch(sp[-1]);
 
-		return(fifo_pull());
+		returnCode(fifo_pull());
 	}
 
-	/* this should be eliminated */
-	if (!has_ic()
-	 && !win->_scroll
-	 &&  (SP->_echo)
-	 &&  (win->_flags & _FULLWIN)
-	 &&  win->_curx == win->_maxx
-	 &&  win->_cury == win->_maxy)
-		returnCode(ERR);
-
-	if ((is_wintouched(win) || (win->_flags & _HASMOVED)) && !(win->_flags & _ISPAD))
+	if (wgetch_should_refresh(win))
 		wrefresh(win);
 
 	if (!win->_notimeout && (win->_delay >= 0 || SP->_cbreak > 1)) {
@@ -224,11 +199,11 @@ int	ch;
 
 		T(("timed delay in wgetch()"));
 		if (SP->_cbreak > 1)
-		    delay = (SP->_cbreak-1) * 100;
+		    delay = (SP->_cbreak - 1) * 100;
 		else
 		    delay = win->_delay;
 
-		T(("delay is %d microseconds", delay));
+		T(("delay is %d milliseconds", delay));
 
 		if (head == -1)	/* fifo is empty */
 			if (!_nc_timed_wait(3, delay, (int *)0))
@@ -246,7 +221,7 @@ int	ch;
 		 *
 		 * Note: if the mouse code starts failing to compose
 		 * press/release events into clicks, you should probably
-		 * increase _nc_max_click_interval.
+		 * increase the wait with mouseinterval().
 		 */
 		int runcount = 0;
 
@@ -255,13 +230,13 @@ int	ch;
 			if (ch == KEY_MOUSE)
 			{
 				++runcount;
-				if (_nc_mouse_inline(SP))
+				if (SP->_mouse_inline(SP))
 				    break;
 			}
 		} while
 		    (ch == KEY_MOUSE
-		     && (_nc_timed_wait(3, _nc_max_click_interval, (int *)0)
-			 || !_nc_mouse_parse(runcount)));
+		     && (_nc_timed_wait(3, SP->_maxclick, (int *)0)
+			 || !SP->_mouse_parse(runcount)));
 		if (runcount > 0 && ch != KEY_MOUSE)
 		{
 		    /* mouse event sequence ended by keystroke, push it */
@@ -276,6 +251,19 @@ int	ch;
 
 	if (ch == ERR)
 	{
+#if USE_SIZECHANGE
+	    if(SP->_sig_winch)
+	    {
+		_nc_update_screensize();
+		/* resizeterm can push KEY_RESIZE */
+		if(cooked_key_in_fifo())
+		{
+		    ch = fifo_pull();
+		    T(("wgetch returning (pre-cooked): %#x = %s", ch, _trace_key(ch));)
+		    returnCode(ch);
+		}
+	    }
+#endif
 	    T(("wgetch returning ERR"));
 	    returnCode(ERR);
 	}
@@ -295,22 +283,10 @@ int	ch;
 		if (!SP->_use_meta)
 			ch &= 0x7f;
 
-	if (!(win->_flags & _ISPAD) && SP->_echo) {
-	    /* there must be a simpler way of doing this */
-	    if (ch == erasechar() || ch == KEY_BACKSPACE || ch == KEY_LEFT)
-		_nc_backspace(win);
-	    else if (ch < KEY_MIN) {
-		mvwaddch(curscr,
-			 win->_begy + win->_cury + win->_yoffset,
-			 win->_begx + win->_curx,
-			 ch);
-		waddch(win, (chtype)ch);
-	    }
-	    else
-		beep();
-	}
+	if (SP->_echo && ch < KEY_MIN && !(win->_flags & _ISPAD))
+		wechochar(win, (chtype)ch);
 
-	T(("wgetch returning : %#x = %s", ch, _trace_key(ch));)
+	T(("wgetch returning : %#x = %s", ch, _trace_key(ch)));
 
 	returnCode(ch);
 }
@@ -326,6 +302,9 @@ int	ch;
 **      sequence is received by the time the alarm goes off, pass through
 **      the sequence gotten so far.
 **
+**	This function must be called when there is no cooked keys in queue.
+**	(that is head==-1 || peek==head)
+**
 */
 
 static int
@@ -339,43 +318,60 @@ int timeleft = ESCDELAY;
 
 	ptr = SP->_keytry;
 
-	if (head == -1)  {
-		if ((ch = fifo_push()) == ERR)
-		    return ERR;
-		peek = 0;
-		while (ptr != NULL) {
-			TR(TRACE_IEVENT, ("ch: %s", _trace_key((unsigned char)ch)));
-			while ((ptr != NULL) && (ptr->ch != (unsigned char)ch))
-				ptr = ptr->sibling;
+	for(;;)
+	{
+		if (!raw_key_in_fifo())
+		{
+		    if(fifo_push() == ERR)
+		    {
+			peek = head;	/* the keys stay uninterpreted */
+			return ERR;
+		    }
+		}
+		ch = fifo_peek();
+		if (ch >= KEY_MIN)
+		{
+		    peek = head;
+		    /* assume the key is the last in fifo */
+		    t_dec(); /* remove the key */
+		    return ch;
+		}
+
+		TR(TRACE_IEVENT, ("ch: %s", _trace_key((unsigned char)ch)));
+		while ((ptr != NULL) && (ptr->ch != (unsigned char)ch))
+			ptr = ptr->sibling;
 #ifdef TRACE
-			if (ptr == NULL)
-				{TR(TRACE_IEVENT, ("ptr is null"));}
-			else
-				TR(TRACE_IEVENT, ("ptr=%p, ch=%d, value=%d",
-						ptr, ptr->ch, ptr->value));
+		if (ptr == NULL)
+			{TR(TRACE_IEVENT, ("ptr is null"));}
+		else
+			TR(TRACE_IEVENT, ("ptr=%p, ch=%d, value=%d",
+					ptr, ptr->ch, ptr->value));
 #endif /* TRACE */
 
-			if (ptr != NULL)
-				if (ptr->value != 0) {	/* sequence terminated */
-					TR(TRACE_IEVENT, ("end of sequence"));
-					fifo_clear();
-					return(ptr->value);
-				} else {		/* go back for another character */
-					ptr = ptr->child;
-					TR(TRACE_IEVENT, ("going back for more"));
-				} else
-					break;
+		if (ptr == NULL)
+			break;
 
-				TR(TRACE_IEVENT, ("waiting for rest of sequence"));
-				if (!_nc_timed_wait(3, timeleft, &timeleft)) {
-					TR(TRACE_IEVENT, ("ran out of time"));
-					return(fifo_pull());
-				} else {
-					TR(TRACE_IEVENT, ("got more!"));
-					fifo_push();
-					ch = fifo_peek();
-				}
+		if (ptr->value != 0) {	/* sequence terminated */
+			TR(TRACE_IEVENT, ("end of sequence"));
+			if (peek == tail)
+			    fifo_clear();
+			else
+			    head = peek;
+			return(ptr->value);
+		}
+
+		ptr = ptr->child;
+
+		if (!raw_key_in_fifo())
+		{
+			TR(TRACE_IEVENT, ("waiting for rest of sequence"));
+			if (!_nc_timed_wait(3, timeleft, &timeleft)) {
+				TR(TRACE_IEVENT, ("ran out of time"));
+				break;
+			}
 		}
 	}
-	return(fifo_pull());
+	ch = fifo_pull();
+	peek = head;
+	return ch;
 }

@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -27,17 +39,13 @@
 
 #include <progs.priv.h>
 
-#include <ctype.h>
-
 #include <term_entry.h>
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.27 1997/02/15 18:54:44 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.34 1998/02/11 12:14:03 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
-
-#define VALID_STRING(s) ((s) != CANCELLED_STRING && (s) != ABSENT_STRING)
 
 #define MAXTERMS	32	/* max # terminal arguments we can handle */
 
@@ -182,7 +190,7 @@ static int use_predicate(int type, int idx)
 
 		if (usestr == ABSENT_STRING && termstr == ABSENT_STRING)
 			return(FAIL);
-		else if (!usestr || !termstr || capcmp(usestr,termstr))
+		else if (!usestr || !termstr || capcmp(usestr, termstr))
 			return(TRUE);
 		else
 			return(FAIL);
@@ -281,7 +289,7 @@ static void compare_predicate(int type, int idx, const char *name)
 				else
 				{
 					(void) strcpy(buf1, "'");
-					(void) strcat(buf1, expand(s1));
+					(void) strcat(buf1, _nc_tic_expand(s1, outform==F_TERMINFO));
 					(void) strcat(buf1, "'");
 				}
 
@@ -290,7 +298,7 @@ static void compare_predicate(int type, int idx, const char *name)
 				else
 				{
 					(void) strcpy(buf2, "'");
-					(void) strcat(buf2, expand(s2));
+					(void) strcat(buf2, _nc_tic_expand(s2, outform==F_TERMINFO));
 					(void) strcat(buf2, "'");
 				}
 
@@ -301,7 +309,7 @@ static void compare_predicate(int type, int idx, const char *name)
 
 		case C_COMMON:
 			if (s1 && s2 && !capcmp(s1, s2))
-				(void) printf("\t%s= '%s'.\n",name,expand(s1));
+				(void) printf("\t%s= '%s'.\n", name, _nc_tic_expand(s1, outform==F_TERMINFO));
 			break;
 
 		case C_NAND:
@@ -572,7 +580,7 @@ static void analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	    /* couldn't match anything */
 	    buf2[0] = *sp;
 	    buf2[1] = '\0';
-	    (void) strcat(buf, expand(buf2));
+	    (void) strcat(buf, _nc_tic_expand(buf2, outform==F_TERMINFO));
 	}
     }
     (void) printf("%s\n", buf);
@@ -608,7 +616,7 @@ static void file_comparison(int argc, char *argv[])
 	_nc_read_entry_source(stdin, NULL, TRUE, FALSE, NULLHOOK);
 
 	if (itrace)
-	    (void) fprintf(stderr, "Resolving file %d...\n",n-0);
+	    (void) fprintf(stderr, "Resolving file %d...\n", n-0);
 
 	/* do use resolution */
 	if (!_nc_resolve_uses())
@@ -643,7 +651,7 @@ static void file_comparison(int argc, char *argv[])
     for (qp = heads[0]; qp; qp = qp->next)
     {
 	for (rp = heads[1]; rp; rp = rp->next)
-	    if (_nc_entry_match(qp->tterm.term_names,rp->tterm.term_names))
+	    if (_nc_entry_match(qp->tterm.term_names, rp->tterm.term_names))
 	    {
 		/*
 		 * This is why the uses structure parent element is
@@ -742,7 +750,7 @@ static void file_comparison(int argc, char *argv[])
 	    {
 	    case C_DIFFERENCE:
 		if (itrace)
-		    (void)fprintf(stderr,"infocmp: dumping differences\n");
+		    (void)fprintf(stderr, "infocmp: dumping differences\n");
 		(void) printf("comparing %s to %s.\n", name1, name2);
 		compare_entry(compare_predicate);
 		break;
@@ -784,7 +792,9 @@ static void usage(void)
 int main(int argc, char *argv[])
 {
 	char *terminal, *firstdir, *restdir;
-	path tfile[MAXTERMS];
+	/* Avoid "local data >32k" error with mwcc */
+	/* Also avoid overflowing smaller stacks on systems like AmigaOS */
+	path *tfile = malloc(sizeof(path)*MAXTERMS);
 	int c, i, len;
 	bool filecompare = FALSE;
 	bool initdump = FALSE;
@@ -827,6 +837,13 @@ int main(int argc, char *argv[])
 			filecompare = TRUE;
 			break;
 
+		case 'I':
+			outform = F_TERMINFO;
+			if (sortmode == S_DEFAULT)
+			    sortmode = S_VARIABLE;
+			tversion = 0;
+			break;
+
 		case 'i':
 			init_analyze = TRUE;
 			break;
@@ -850,7 +867,7 @@ int main(int argc, char *argv[])
 			break;
 
 		case 'r':
-			tversion = (char *)NULL;
+			tversion = 0;
 			break;
 
 		case 'R':
@@ -1062,13 +1079,15 @@ int main(int argc, char *argv[])
 			tp = buf;
 			*tp++ = '"';
 			for (sp = term->Strings[n]; *sp; sp++)
+			{
 			    if (isascii(*sp) && isprint(*sp) && *sp !='\\' && *sp != '"')
 				*tp++ = *sp;
 			    else
 			    {
-				(void) sprintf(tp, "\\%03o", *sp);
+				(void) sprintf(tp, "\\%03o", *sp & 0xff);
 				tp += 4;
 			    }
+			}
 			*tp++ = '"';
 			*tp = '\0';
 			size += (strlen(term->Strings[n]) + 1);
@@ -1115,12 +1134,12 @@ int main(int argc, char *argv[])
 		len = dump_entry(&term[0], limited, NULL);
 		putchar('\n');
 		if (itrace)
-		    (void)fprintf(stderr,"infocmp: length %d\n", len);
+		    (void)fprintf(stderr, "infocmp: length %d\n", len);
 		break;
 
 	    case C_DIFFERENCE:
 		if (itrace)
-		    (void)fprintf(stderr,"infocmp: dumping differences\n");
+		    (void)fprintf(stderr, "infocmp: dumping differences\n");
 		(void) printf("comparing %s to %s.\n", tname[0], tname[1]);
 		compare_entry(compare_predicate);
 		break;
@@ -1149,7 +1168,7 @@ int main(int argc, char *argv[])
 		    len += dump_uses(tname[i], !(outform==F_TERMCAP || outform==F_TCONVERR));
 		putchar('\n');
 		if (itrace)
-		    (void)fprintf(stderr,"infocmp: length %d\n", len);
+		    (void)fprintf(stderr, "infocmp: length %d\n", len);
 		break;
 	    }
 	}

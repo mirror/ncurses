@@ -13,33 +13,44 @@
 <I>--                                                                          --</I>
 <I>--                                 S P E C                                  --</I>
 <I>--                                                                          --</I>
-<I>--  Version 00.92                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</I>
 <I>--                                                                          --</I>
-<I>--  The ncurses Ada95 binding is copyrighted 1996 by                        --</I>
+<I>-- Permission is hereby granted, free of charge, to any person obtaining a  --</I>
+<I>-- copy of this software and associated documentation files (the            --</I>
+<I>-- "Software"), to deal in the Software without restriction, including      --</I>
+<I>-- without limitation the rights to use, copy, modify, merge, publish,      --</I>
+<I>-- distribute, distribute with modifications, sublicense, and/or sell       --</I>
+<I>-- copies of the Software, and to permit persons to whom the Software is    --</I>
+<I>-- furnished to do so, subject to the following conditions:                 --</I>
+<I>--                                                                          --</I>
+<I>-- The above copyright notice and this permission notice shall be included  --</I>
+<I>-- in all copies or substantial portions of the Software.                   --</I>
+<I>--                                                                          --</I>
+<I>-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --</I>
+<I>-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --</I>
+<I>-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --</I>
+<I>-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --</I>
+<I>-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --</I>
+<I>-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --</I>
+<I>-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --</I>
+<I>--                                                                          --</I>
+<I>-- Except as contained in this notice, the name(s) of the above copyright   --</I>
+<I>-- holders shall not be used in advertising or otherwise to promote the     --</I>
+<I>-- sale, use or other dealings in this Software without prior written       --</I>
+<I>-- authorization.                                                           --</I>
+<I>------------------------------------------------------------------------------</I>
 <I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
-<I>--                                                                          --</I>
-<I>--  Permission is hereby granted to reproduce and distribute this           --</I>
-<I>--  binding by any means and for any fee, whether alone or as part          --</I>
-<I>--  of a larger distribution, in source or in binary form, PROVIDED         --</I>
-<I>--  this notice is included with any such distribution, and is not          --</I>
-<I>--  removed from any of its header files. Mention of ncurses and the        --</I>
-<I>--  author of this binding in any applications linked with it is            --</I>
-<I>--  highly appreciated.                                                     --</I>
-<I>--                                                                          --</I>
-<I>--  This binding comes AS IS with no warranty, implied or expressed.        --</I>
-<I>------------------------------------------------------------------------------</I>
 <I>--  Version Control:</I>
-<I>--  @Revision: 1.9 @</I>
+<I>--  @Revision: 1.10 @</I>
 <I>------------------------------------------------------------------------------</I>
-<I>--  form binding, generated at Sun Feb  2 17:21:44 1997</I>
+<I>--  form binding.</I>
 <I>--  This module is generated. Please don't change it manually!</I>
 <I>--  Run the generator instead.</I>
 <I>--  |</I>
 <B>with</B> System;
-<B>with</B> Ada.Tags; <B>use</B> Ada.Tags;
 <B>with</B> Ada.Characters.Latin_1;
 <B>with</B> Interfaces.C;
-<B>with</B> Interfaces.C.Strings;
 
 <B>package</B> Terminal_Interface.Curses.Forms <B>is</B>
 
@@ -50,12 +61,9 @@
 
    type Field        <B>is</B> <B>private</B>;
    type Form         <B>is</B> <B>private</B>;
-   type C_Field_Type <B>is</B> <B>private</B>;
 
    Null_Field        : <B>constant</B> Field;
    Null_Form         : <B>constant</B> Form;
-   Null_Field_Type   : <B>constant</B> C_Field_Type;
-
 
    type Field_Justification <B>is</B> (None,
                                 Left,
@@ -127,7 +135,13 @@
    type Field_Array <B>is</B> <B>array</B> (Positive <B>range</B> &lt;&gt;) <B>of</B> <B>aliased</B> Field;
    <B>pragma</B> Convention (C, Field_Array);
 
-   type Field_Array_Access <B>is</B> <B>access</B> <B>all</B> Field_Array;
+   type Field_Array_Access <B>is</B> <B>access</B> Field_Array;
+
+   <B>procedure</B> Free (FA          : <B>in</B> <B>out</B> Field_Array_Access;
+                   Free_Fields : <B>in</B> Boolean := False);
+   <I>--  Release the memory for an allocated field array</I>
+   <I>--  If Free_Fields is True, call Delete() for all the fields in</I>
+   <I>--  the array.</I>
 
    <B>subtype</B> Form_Request_Code <B>is</B> Key_Code <B>range</B> (Key_Max + 1) .. (Key_Max + 57);
 
@@ -267,6 +281,10 @@
    <B>procedure</B> Request_Name (Key  : <B>in</B> Form_Request_Code;
                            Name : <B>out</B> String);
 
+   <B>function</B>  Request_Name (Key : Form_Request_Code) <B>return</B> String;
+   <I>--  Same as function</I>
+   <B>pragma</B> Inline (Request_Name);
+
    <I>------------------</I>
    <I>--  Exceptions  --</I>
    <I>------------------</I>
@@ -343,6 +361,12 @@
       Buffer : <B>in</B> Buffer_Number := Buffer_Number'First;
       Str    : <B>out</B> String);
    <I>--  AKA: <A HREF="form_field_buffer.3x.html">field_buffer()</A></I>
+
+   <B>function</B> Get_Buffer
+     (Fld    : <B>in</B> Field;
+      Buffer : <B>in</B> Buffer_Number := Buffer_Number'First) <B>return</B> String;
+   <I>--  AKA: <A HREF="form_field_buffer.3x.html">field_buffer()</A></I>
+   <I>--  Same but as function</I>
 
    <I>--  <A NAME="AFU_10">|</I>
    <B>procedure</B> Set_Status (Fld    : <B>in</B> Field;
@@ -536,18 +560,17 @@
 
    <I>--  <A NAME="AFU_40">|</I>
    <B>procedure</B> Redefine (Frm  : <B>in</B> Form;
-                       Flds : <B>in</B> Field_Array);
+                       Flds : <B>in</B> Field_Array_Access);
    <I>--  AKA: <A HREF="form_field.3x.html">set_form_fields()</A></I>
-   <I>--  With a bit more comfort. You don´t need to terminate the Field_Array</I>
-   <I>--  with a null entry. This is handled internally in the binding.</I>
 
    <I>--  <A NAME="AFU_41">|</I>
    <B>procedure</B> Set_Fields (Frm  : <B>in</B> Form;
-                         Flds : <B>in</B> Field_Array) <B>renames</B> Redefine;
+                         Flds : <B>in</B> Field_Array_Access) <B>renames</B> Redefine;
    <I>--  AKA: <A HREF="form_field.3x.html">set_form_fields()</A></I>
 
    <I>--  <A NAME="AFU_42">|</I>
-   <B>function</B> Fields (Frm : Form) <B>return</B> Field_Array_Access;
+   <B>function</B> Fields (Frm   : Form;
+                    Index : Positive) <B>return</B> Field;
    <I>--  AKA: <A HREF="form_field.3x.html">form_fields()</A></I>
 
    <I>--  <A NAME="AFU_43">|</I>
@@ -565,11 +588,12 @@
    <I>--  |=====================================================================</I>
 
    <I>--  <A NAME="AFU_45">|</I>
-   <B>function</B> Create (Fields : Field_Array) <B>return</B> Form;
+   <B>function</B> Create (Fields : Field_Array_Access) <B>return</B> Form;
    <I>--  AKA: <A HREF="form_new.3x.html">new_form()</A></I>
 
    <I>--  <A NAME="AFU_46">|</I>
-   <B>function</B> New_Form (Fields : Field_Array) <B>return</B> Form <B>renames</B> Create;
+   <B>function</B> New_Form (Fields : Field_Array_Access) <B>return</B> Form
+     <B>renames</B> Create;
    <I>--  AKA: <A HREF="form_new.3x.html">new_form()</A></I>
 
    <I>--  <A NAME="AFU_47">|</I>
@@ -690,217 +714,15 @@
    <B>function</B> Is_New_Page (Fld : Field) <B>return</B> Boolean;
    <I>--  AKA: <A HREF="form_new_page.3x.html">new_page()</A></I>
 
-   <I>--  |=====================================================================</I>
-   <I>--  | Man page <A HREF="form_fieldtype.3x.html">form_fieldtype.3x</A></I>
-   <I>--  |=====================================================================</I>
-
-   type Field_Type <B>is</B> <B>abstract</B> <B>tagged</B> <B>null</B> <B>record</B>;
-   type Field_Type_Access <B>is</B> <B>access</B> <B>all</B> Field_Type'Class;
-
-   <B>function</B> Native_Type (Ftype : Field_Type)
-                         <B>return</B> C_Field_Type <B>is</B> <B>abstract</B>;
-   <I>--  This function returns the C libraries handle to the field type.</I>
-   <I>--  May be you need this if you want to interface to lower level</I>
-   <I>--  routines in the form library.</I>
-
-   <I>--  <A NAME="AFU_64">|</I>
-   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
-                       Fld_Type : <B>in</B> Field_Type) <B>is</B> <B>abstract</B>;
-   <I>--  AKA: <A HREF="form_fieldtype.3x.html">set_field_type()</A></I>
-   <I>--  But: we hide the vararg mechanism of the C interface. You always</I>
-   <I>--       have to pass a single Field_Type parameter.</I>
-
-   type C_Defined_Field_Type <B>is</B> <B>abstract</B> <B>new</B> Field_Type <B>with</B> <B>null</B> <B>record</B>;
-   <I>--  This is the root of all field typed defined in C, i.e. this are</I>
-   <I>--  the predefined field types in the form library.</I>
-
-   type Alpha_Field <B>is</B> <B>new</B> C_Defined_Field_Type
-      <B>with</B> <B>record</B>
-         Minimum_Field_Width : Natural := 0;
-      <B>end</B> <B>record</B>;
-   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
-                       Fld_Type : <B>in</B> Alpha_Field);
-   <B>function</B> Native_Type (Ftype : Alpha_Field)
-                         <B>return</B> C_Field_Type;
-
-   type Alpha_Numeric_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
-      <B>record</B>
-         Minimum_Field_Width : Natural := 0;
-      <B>end</B> <B>record</B>;
-   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
-                       Fld_Type : <B>in</B> Alpha_Numeric_Field);
-   <B>function</B> Native_Type (Ftype : Alpha_Numeric_Field)
-                         <B>return</B> C_Field_Type;
-
-   type Integer_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
-      <B>record</B>
-         Precision   : Natural;
-         Lower_Limit : Integer;
-         Upper_Limit : Integer;
-      <B>end</B> <B>record</B>;
-   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
-                       Fld_Type : <B>in</B> Integer_Field);
-   <B>function</B> Native_Type (Ftype : Integer_Field)
-                         <B>return</B> C_Field_Type;
-
-   type Numeric_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
-      <B>record</B>
-         Precision   : Natural;
-         Lower_Limit : Float;
-         Upper_Limit : Float;
-      <B>end</B> <B>record</B>;
-   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
-                       Fld_Type : <B>in</B> Numeric_Field);
-   <B>function</B> Native_Type (Ftype : Numeric_Field)
-                         <B>return</B> C_Field_Type;
-
-   type String_Access <B>is</B> <B>access</B> String;
-
-   type Regular_Expression_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
-      <B>record</B>
-         Regular_Expression : String_Access;
-      <B>end</B> <B>record</B>;
-   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
-                       Fld_Type : <B>in</B> Regular_Expression_Field);
-   <B>function</B> Native_Type (Ftype : Regular_Expression_Field)
-                         <B>return</B> C_Field_Type;
-
-   type Enum_Array <B>is</B> <B>array</B> (Positive <B>range</B> &lt;&gt;)
-      <B>of</B> String_Access;
-
-   type Enumeration_Info (C : Positive) <B>is</B>
-      <B>record</B>
-         Names                : Enum_Array (1 .. C);
-         Case_Sensitive       : Boolean := False;
-         Match_Must_Be_Unique : Boolean := False;
-      <B>end</B> <B>record</B>;
-
-   type Enumeration_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B> <B>private</B>;
-
-   <B>function</B> Create (Info : Enumeration_Info;
-                    Auto_Release_Names : Boolean := False)
-                    <B>return</B> Enumeration_Field;
-   <I>--  Make an fieldtype from the info. Enumerations are special, because</I>
-   <I>--  they normally don't copy the enum values into a private store, so</I>
-   <I>--  we have to care for the lifetime of the info we provide.</I>
-   <I>--  The Auto_Release_Names flag may be used to automatically releases</I>
-   <I>--  the strings in the Names array of the Enumeration_Info.</I>
-
-   <B>function</B> Make_Enumeration_Type (Info : Enumeration_Info;
-                                   Auto_Release_Names : Boolean := False)
-                                   <B>return</B> Enumeration_Field <B>renames</B> Create;
-
-   <B>procedure</B> Release (Enum : <B>in</B> <B>out</B> Enumeration_Field);
-   <I>--  But we may want to release the field to release the memory allocated</I>
-   <I>--  by it internally. After that the Enumeration field is no longer usable.</I>
-
-   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
-                       Fld_Type : <B>in</B> Enumeration_Field);
-   <B>function</B> Native_Type (Ftype : Enumeration_Field)
-                         <B>return</B> C_Field_Type;
-
-   <I>--  The next type defintions are all ncurses extensions. They are typically</I>
-   <I>--  not available in other curses implementations.</I>
-
-   type Internet_V4_Address_Field <B>is</B> <B>new</B> C_Defined_Field_Type
-     <B>with</B> <B>null</B> <B>record</B>;
-   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
-                       Fld_Type : <B>in</B> Internet_V4_Address_Field);
-   <B>function</B> Native_Type (Ftype : Internet_V4_Address_Field)
-                         <B>return</B> C_Field_Type;
-
-
-   type Ada_Defined_Field_Type <B>is</B> <B>abstract</B> <B>new</B> Field_Type <B>with</B> <B>null</B> <B>record</B>;
-   <I>--  This is the root of the mechanism we use to create field types in</I>
-   <I>--  Ada95. You don't have to redefine the Set_Field_Type and</I>
-   <I>--  Native_Field_Type methods, because they work generically on this</I>
-   <I>--  class.</I>
-
-   <B>procedure</B> Set_Type (Fld      : Field;
-                       Fld_Type : Ada_Defined_Field_Type);
-
-   <B>function</B> Native_Type (Ftype : Ada_Defined_Field_Type)
-                         <B>return</B> C_Field_Type;
-
-   <I>--  |=====================================================================</I>
-   <I>--  | Man page <A HREF="form_field_validation.3x.html">form_field_validation.3x</A></I>
-   <I>--  |=====================================================================</I>
-
-   <I>--  <A NAME="AFU_65">|</I>
-   <B>function</B> Get_Type (Fld : <B>in</B> Field) <B>return</B> Field_Type_Access;
-   <I>--  AKA: <A HREF="form_field_validation.3x.html">field_type()</A></I>
-   <I>--  AKA: field_arg()</I>
-   <I>--  In Ada95 we can combine these</I>
 
 <I>------------------------------------------------------------------------------</I>
 <B>private</B>
 
    type Field        <B>is</B> <B>new</B> System.Address;
    type Form         <B>is</B> <B>new</B> System.Address;
-   type C_Field_Type <B>is</B> <B>new</B> System.Address;
 
    Null_Field        : <B>constant</B> Field        := Field (System.Null_Address);
    Null_Form         : <B>constant</B> Form         := Form  (System.Null_Address);
-   Null_Field_Type   : <B>constant</B> C_Field_Type :=
-     C_Field_Type (System.Null_Address);
-
-   type CPA_Access <B>is</B> <B>access</B> Interfaces.C.Strings.chars_ptr_array;
-
-   type Enumeration_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
-      <B>record</B>
-         Case_Sensitive       : Boolean := False;
-         Match_Must_Be_Unique : Boolean := False;
-         Arr                  : CPA_Access := <B>null</B>;
-      <B>end</B> <B>record</B>;
-
-   <I>--  In our binding we use the fields user pointer as hook to maintain</I>
-   <I>--  our own info structure about the field type. To be able to still</I>
-   <I>--  provide a user pointer, we use this wrapper.</I>
-   <I>--</I>
-   type Field_User_Wrapper <B>is</B>
-      <B>record</B>
-         U : System.Address;    <I>--  the hook we provide for the user</I>
-         T : Field_Type_Access; <I>--  may be null</I>
-         N : Natural;           <I>--  use counter</I>
-      <B>end</B> <B>record</B>;
-   <B>pragma</B> Convention (C, Field_User_Wrapper);
-   type Field_User_Wrapper_Access <B>is</B> <B>access</B> <B>all</B> Field_User_Wrapper;
-   <B>pragma</B> Controlled (Field_User_Wrapper_Access);
-
-   <B>function</B> Set_Field_Userptr (Fld : Field;
-                               Wrp : Field_User_Wrapper_Access)
-                               <B>return</B> Interfaces.C.int;
-   <B>pragma</B> Import (C, Set_Field_Userptr, "set_field_userptr");
-
-   <B>function</B> Field_Userptr (Fld : Field) <B>return</B> Field_User_Wrapper_Access;
-   <B>pragma</B> Import (C, Field_Userptr, "field_userptr");
-
-   <I>--  In our binding we use the forms user pointer as hook to maintain</I>
-   <I>--  our own info structure about the field association. To be able to still</I>
-   <I>--  provide a user pointer, we use this wrapper.</I>
-   <I>--</I>
-   type Form_User_Wrapper <B>is</B>
-      <B>record</B>
-         U : System.Address;      <I>--  the hook we provide for the user</I>
-         I : Field_Array_Access;
-      <B>end</B> <B>record</B>;
-   <B>pragma</B> Convention (C, Form_User_Wrapper);
-   type Form_User_Wrapper_Access <B>is</B> <B>access</B> <B>all</B> Form_User_Wrapper;
-   <B>pragma</B> Controlled (Form_User_Wrapper_Access);
-
-   <B>function</B> Set_Form_Userptr (Frm : Form;
-                              Wrp : Form_User_Wrapper_Access)
-                              <B>return</B> Interfaces.C.int;
-   <B>pragma</B> Import (C, Set_Form_Userptr, "set_form_userptr");
-
-   <B>function</B> Form_Userptr (Frm : Form) <B>return</B> Form_User_Wrapper_Access;
-   <B>pragma</B> Import (C, Form_Userptr, "form_userptr");
-
-   <B>procedure</B> Register_Type   (T   : <B>in</B> Ada_Defined_Field_Type'Class;
-                              Cft : <B>in</B> C_Field_Type);
-   <B>procedure</B> Unregister_Type (T   : <B>in</B> Ada_Defined_Field_Type'Class);
-   <B>function</B>  Search_Type (T : Ada_Defined_Field_Type'Class)
-                          <B>return</B> C_Field_Type;
 
    Generation_Bit_Order : <B>constant</B> System.Bit_Order := System.Low_Order_First;
    <I>--  This constant may be different on your system.</I>

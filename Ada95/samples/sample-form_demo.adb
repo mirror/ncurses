@@ -6,23 +6,37 @@
 --                                                                          --
 --                                 B O D Y                                  --
 --                                                                          --
---  Version 00.92                                                           --
---                                                                          --
---  The ncurses Ada95 binding is copyrighted 1996 by                        --
---  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
---                                                                          --
---  Permission is hereby granted to reproduce and distribute this           --
---  binding by any means and for any fee, whether alone or as part          --
---  of a larger distribution, in source or in binary form, PROVIDED         --
---  this notice is included with any such distribution, and is not          --
---  removed from any of its header files. Mention of ncurses and the        --
---  author of this binding in any applications linked with it is            --
---  highly appreciated.                                                     --
---                                                                          --
---  This binding comes AS IS with no warranty, implied or expressed.        --
 ------------------------------------------------------------------------------
+-- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+--                                                                          --
+-- Permission is hereby granted, free of charge, to any person obtaining a  --
+-- copy of this software and associated documentation files (the            --
+-- "Software"), to deal in the Software without restriction, including      --
+-- without limitation the rights to use, copy, modify, merge, publish,      --
+-- distribute, distribute with modifications, sublicense, and/or sell       --
+-- copies of the Software, and to permit persons to whom the Software is    --
+-- furnished to do so, subject to the following conditions:                 --
+--                                                                          --
+-- The above copyright notice and this permission notice shall be included  --
+-- in all copies or substantial portions of the Software.                   --
+--                                                                          --
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  --
+-- OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               --
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   --
+-- IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   --
+-- DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    --
+-- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    --
+-- THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               --
+--                                                                          --
+-- Except as contained in this notice, the name(s) of the above copyright   --
+-- holders shall not be used in advertising or otherwise to promote the     --
+-- sale, use or other dealings in this Software without prior written       --
+-- authorization.                                                           --
+------------------------------------------------------------------------------
+--  Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996
 --  Version Control
---  $Revision: 1.2 $
+--  $Revision: 1.5 $
+--  Binding Version 00.93
 ------------------------------------------------------------------------------
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -32,7 +46,6 @@ with Terminal_Interface.Curses.Panels; use Terminal_Interface.Curses.Panels;
 with Terminal_Interface.Curses.Forms; use Terminal_Interface.Curses.Forms;
 with Terminal_Interface.Curses.Forms.Field_User_Data;
 with Terminal_Interface.Curses.Forms.Form_User_Data;
-
 with Sample.Keyboard_Handler; use Sample.Keyboard_Handler;
 with Sample.My_Field_Type; use Sample.My_Field_Type;
 with Sample.Manifest; use Sample.Manifest;
@@ -40,6 +53,12 @@ with Sample.Explanation; use Sample.Explanation;
 with Sample.Form_Demo.Aux; use Sample.Form_Demo.Aux;
 with Sample.Function_Key_Setting; use Sample.Function_Key_Setting;
 with Sample.Form_Demo.Handler;
+
+with Terminal_Interface.Curses.Forms.Field_Types.Enumeration.Ada;
+with Terminal_Interface.Curses.Forms.Field_Types.Enumeration;
+use  Terminal_Interface.Curses.Forms.Field_Types.Enumeration;
+with Terminal_Interface.Curses.Forms.Field_Types.IntField;
+use  Terminal_Interface.Curses.Forms.Field_Types.IntField;
 
 package body Sample.Form_Demo is
 
@@ -57,33 +76,32 @@ package body Sample.Form_Demo is
      Terminal_Interface.Curses.Forms.Form_User_Data (User_Data,
                                                      User_Access);
 
-   Enums : constant Enum_Array := (new String'("alpha"),
-                                   new String'("beta"),
-                                   new String'("gamma"));
+   type Weekday is (Sunday, Monday, Tuesday, Wednesday, Thursday,
+                    Friday, Saturday);
 
-   Enum_Info : constant Enumeration_Info := (Enums'Length, Enums,
-                                             False, False);
+   package Weekday_Enum is new
+     Terminal_Interface.Curses.Forms.Field_Types.Enumeration.Ada (Weekday);
 
-   Enum_Field : constant Enumeration_Field := Create (Enum_Info, True);
+   Enum_Field : constant Enumeration_Field :=
+     Weekday_Enum.Create;
 
    procedure Demo
    is
 
       Mft : My_Data := (Ch => 'X');
 
-      FA : Field_Array (1 .. 9) := (Make (0, 14, "Sample Entry Form"),
-                                    Make (2, 0,  "An Enumeration"),
-                                    Make (2, 20, "Numeric 1-10"),
-                                    Make (2, 34, "Only 'X'"),
-                                    Make (5, 0,
-                                          "Multiple Lines offscreen (Scroll)"),
-
-                                    Make (Width => 18, Top => 3, Left =>  0),
-                                    Make (Width => 12, Top => 3, Left => 20),
-                                    Make (Width => 12, Top => 3, Left => 34),
-                                    Make (Width => 46, Top => 6, Left =>  0,
-                                          Height => 4, Off_Screen => 2)
-                                    );
+      FA : Field_Array_Access := new Field_Array'
+        (Make (0, 14, "Sample Entry Form"),
+         Make (2, 0,  "WeekdayEnumeration"),
+         Make (2, 20, "Numeric 1-10"),
+         Make (2, 34, "Only 'X'"),
+         Make (5, 0, "Multiple Lines offscreen(Scroll)"),
+         Make (Width => 18, Top => 3, Left =>  0),
+         Make (Width => 12, Top => 3, Left => 20),
+         Make (Width => 12, Top => 3, Left => 34),
+         Make (Width => 46, Top => 6, Left => 0, Height => 4, Off_Screen => 2),
+         Null_Field
+         );
 
       Frm : Terminal_Interface.Curses.Forms.Form := Create (FA);
 
@@ -100,9 +118,9 @@ package body Sample.Form_Demo is
       Notepad ("FORM-PAD00");
       Default_Labels;
 
-      Set_Type (FA (6), Enum_Field);
-      Set_Type (FA (7), I_F);
-      Set_Type (FA (8), Mft);
+      Set_Field_Type (FA (6), Enum_Field);
+      Set_Field_Type (FA (7), I_F);
+      Set_Field_Type (FA (8), Mft);
 
       F1 := new User_Data'(Data => 4711);
       Fld_U.Set_User_Data (FA (1), F1);
@@ -116,9 +134,7 @@ package body Sample.Form_Demo is
       Pop_Environment;
       Delete (Frm);
 
-      for I in FA'Range loop
-         Delete (FA (I));
-      end loop;
+      Free (FA, True);
    end Demo;
 
 end Sample.Form_Demo;

@@ -1,44 +1,35 @@
+-- $Id: TO-DO,v 1.38 1997/10/11 14:47:42 tom Exp $
+
 SHORT-TERM TO-DO ITEMS:
 
 Known Problems:
+
+* XPG4 specifies that the enhanced features are not available unless the
+  _XOPEN_SOURCE_EXTENDED test macro is defined by the application.  Ncurses uses
+  this macro (incorrectly) to address a dependency upon wchar_t.  The functions
+  which use wchar_t are not implemented, so the effect of the test macro is
+  pointless.
 
 * The screen optimization has been tested only in an ad hoc manner.  We should
   develop a good set of regression tests to cover lib_doupdate.c and
   lib_mvcur.c.
 
-* Ncurses cursor movement does not make effective use of hard tabs, as SVr4
-  does.
+* Magic cookie support does not work, since the logic does not take into account
+  refresh.  Also, the initial optimize does not adjust the current location
+  when a cookie is emitted.
 
-* Scrolling optimization has holes: for example, the ncurses 'p' test, which
-  exercises scrolling in a pad does not (1996/12/24) use scrolling regions.
-  Also, running other tests shows that scrolling optimization forces repaints
-  of the screen between calls to refresh().
-
-* The stacking order of windows on the screen does not match that implemented
-  in SVr4 (e.g., Solaris curses).  XSI doesn't specify a stacking order, so
-  full compatibility for this behavior must be achieved by testing/analysis.
-
-* The ncurses 'o' test does not behave the same on SVr4 (Solaris) as with
-  ncurses (the latter pops windows up more).  The former also produces 20%
-  fewer characters in a 'script' output.  Further analysis is needed.
+* Scrolling optimization has holes: for example, it forces repaints of the
+  screen between calls to refresh().
 
 * SVr4 uses slightly different rules for determining when softkeys are shown.
   For example, they are initially displayed (before the ncurses 'e' test
   activates them), and a touchwin can apparently also force them to be
   displayed.
 
-* The code departs from perfect 8-bit cleanness in one respect; you cannot
++ The code departs from perfect 8-bit cleanness in one respect; you cannot
   specify a character \200 as part of a capability string, because the terminfo
-  library interprets \200 as a request to embed NUL (\000) at that point (the
-  actual code that does this is in ncurses/lib_options.c:add_keytry().
-  This is a legacy terminfo property we can't mess with.
-
-* Recognition of xterm mouse reports is implemented by setting the kmous 
-  capability to the mouse-report prefix.  As a result, the kmous sequence is
-  eaten even when mouse recognition is disabled.  This could be fixed if 
-  necessary with special code that pokes the kmous value back into the
-  input FIFO when KEY_MOUSE is seen and the mousemask is zero, but that would
-  be kind of ugly.
+  library interprets \200 as a request to embed NUL (\000) at that point.  This
+  is a legacy terminfo property we can't mess with.
 
 * The window classes defined in the c++ subdirectory need documentation.
   Some C++ programmer could earn a lot of good karma by doing this...
@@ -58,7 +49,7 @@ Portability (or lack thereof):
   varargs.h, it has the newer X/Open-standard stdargs.h equivalent. So
   these functions use stdargs instead.  This is unlikely to be a problem 
   unless you're building ncurses on a System V old enough to only have
-  varargs.h.
+  varargs.h.  (Solaris 2.5.1 uses the stdarg.h binding as well).
 
 * If you're using a BSD earlier than 4.4BSD, or a Linux old enough not to
   have a native vsscanf(3) in its library, vwscanw() will not work.  You lose.
@@ -67,7 +58,8 @@ Portability (or lack thereof):
 
 * The demo build for the c++ library craps out with many link errors under gcc
   2.6.3.  We're told the C++ support in 2.6.3 is broken and that the right
-  fix is to upgrade to 2.7.0.
+  fix is to upgrade to 2.7.0.  This demo is also known to not build with
+  the Sun SPARCworks 4.1 C++ compiler, due to a problem resolving templates.
 
 * Under Ultrix, configure craps out (Ultrix sh is lame).  Run it under ksh.
 
@@ -78,9 +70,11 @@ Portability (or lack thereof):
   Then, run "make mostlyclean", remove config.* from the top-level directory
   and configure for the cross-compiler.
 
-Untested features:
++ terminfo.5 does not format with the SunOS (and most other platform's) tbl
+  utility because it relies on a diversion for each table entry.  Get the groff
+  package.
 
-* The rep optimization in lib_doupdate.c is not yet thoroughly tested.
+Untested features:
 
 * The code for the HP color model using set_color_pair is untested.
 

@@ -1,4 +1,4 @@
--- $Id: INSTALL,v 1.27 1997/04/26 23:48:19 tom Exp $
+-- $Id: INSTALL,v 1.28 1998/02/12 23:43:24 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -49,6 +49,8 @@ You will need the following in order to build and install ncurses under UNIX:
 	* awk              (mawk or gawk will do)
 	* sed
 	* BSD or System V style install (a script is enclosed)
+
+Ncurses has been also built in the OS/2 EMX environment.
 
 INSTALLATION PROCEDURE:
 
@@ -196,6 +198,9 @@ INSTALLATION PROCEDURE:
     panels.  You need to have c++ (and its libraries) installed before you can
     compile and run the demo.
 
+    If you do not have C++, you must use the --without-cxx option to tell
+    the configure script to not attempt to build the C++ bindings.
+
 7.  If you're running an older Linux, you must either (a) tell Linux that the
     console terminal type is `linux' or (b) make a link to or copy of the
     linux entry in the appropriate place under your terminfo directory, named
@@ -310,8 +315,10 @@ CONFIGURING FALLBACK ENTRIES
 
 	By default, there are no entries on the fallback list.  After you
 	have built the ncurses suite for the first time, you can change
-	the list (the process needs infocmp(1)).  To do so, use the
-	script MKfallback.sh.
+	the list (the process needs infocmp(1)).  To do so, use the script
+	MKfallback.sh.  A configure script option --with-fallbacks does this
+	(it accepts a comma-separated list of the names you wish, and does
+	not require a rebuild).
 
 	If you wanted (say) to have linux, vt100, and xterm fallbacks, you
 	would use the commands
@@ -411,13 +418,13 @@ USING NCURSES WITH EMACS:
 	already be applied in your sources -- check for the #define TERMINFO.
 
 USING NCURSES WITH GPM:
-	Ncurses 4.1 can be configured to use GPM (General Purpose Mouse) which
-	is used on Linux console.  Be aware that GPM is commonly installed as a
-	shared library which contains a wrapper for the curses wgetch()
-	function (libcurses.o).  Some integrators have simplified linking
-	applications by combining all of libcurses.so (the BSD curses) into
-	the libgpm.so file, producing symbol conflicts with ncurses.  You may
-	be able to work around this problem by linking as follows:
+	Ncurses 4.1 and up can be configured to use GPM (General Purpose Mouse)
+	which is used on Linux console.  Be aware that GPM is commonly
+	installed as a shared library which contains a wrapper for the curses
+	wgetch() function (libcurses.o).  Some integrators have simplified
+	linking applications by combining all of libcurses.so (the BSD curses)
+	into the libgpm.so file, producing symbol conflicts with ncurses.  You
+	may be able to work around this problem by linking as follows:
 
 		cc -o foo foo.o -lncurses -lgpm -lncurses
 
@@ -425,6 +432,9 @@ USING NCURSES WITH GPM:
 	A patched version of gpm is available:
 
 		ftp.clark.net:/pub/dickey/ncurses/gpm-1.10-970125.tgz
+
+	This patch is incorporated in gpm 1.12; however some integrators
+	are slow to update this library.
 
 USING NCURSES WITH ELVIS:
 	To use ncurses as the screen-painting library for Elvis, apply the
@@ -464,4 +474,3 @@ BUGS:
 
 	The Hacker's Guide in the misc directory includes some guidelines
 	on how to report bugs in ways that will get them fixed most quickly.
-

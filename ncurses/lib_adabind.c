@@ -1,34 +1,47 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *   Author: Juergen Pfeifer <Juergen.Pfeifer@T-Online.de> 1996,1997        *
+ ****************************************************************************/
 
 /*
-**	lib_adabind.c
-**
-**	Some small wrappers to ease the implementation of an Ada95
-**      binding. Especially functionalities only available as macros
-**      in (n)curses are wrapped here by functions. 
-**      See the documentation and copyright notices in the ../Ada95
-**      subdirectory.
+//	lib_adabind.c
+//
+//	Some small wrappers to ease the implementation of an Ada95
+//      binding. Especially functionalities only available as macros
+//      in (n)curses are wrapped here by functions. 
+//      See the documentation and copyright notices in the ../Ada95
+//      subdirectory.
 */
 #include "curses.priv.h"
+
+MODULE_ID("$Id: lib_adabind.c,v 1.7 1998/02/11 12:13:59 tom Exp $")
 
 /*  In (n)curses are a few functionalities that can't be expressed as 
 //  functions, because for historic reasons they use as macro argument
@@ -37,18 +50,18 @@
 */
 
 /* Prototypes for the functions in this module */
-int  _nc_ada_getmaxyx (WINDOW *win, int *y, int *x);
-int  _nc_ada_getbegyx (WINDOW *win, int *y, int *x);
-int  _nc_ada_getyx (WINDOW *win, int *y, int *x);
-int  _nc_ada_getparyx (WINDOW *win, int *y, int *x);
-int  _nc_ada_isscroll (WINDOW *win);
-int  _nc_ada_coord_transform (WINDOW *win, int *Y, int *X, int dir);
+int  _nc_ada_getmaxyx (const WINDOW *win, int *y, int *x);
+int  _nc_ada_getbegyx (const WINDOW *win, int *y, int *x);
+int  _nc_ada_getyx    (const WINDOW *win, int *y, int *x);
+int  _nc_ada_getparyx (const WINDOW *win, int *y, int *x);
+int  _nc_ada_isscroll (const WINDOW *win);
+int  _nc_ada_coord_transform (const WINDOW *win, int *Y, int *X, int dir);
 void _nc_ada_mouse_event (mmask_t m, int *b, int *s);
 int  _nc_ada_mouse_mask (int button, int state, mmask_t *mask);
 void _nc_ada_unregister_mouse (void);
+int  _nc_ada_vcheck (int major, int  minor);
 
-
-int _nc_ada_getmaxyx (WINDOW *win, int *y, int *x)
+int _nc_ada_getmaxyx (const WINDOW *win, int *y, int *x)
 {
   if (win && y && x)
     {
@@ -59,7 +72,7 @@ int _nc_ada_getmaxyx (WINDOW *win, int *y, int *x)
     return ERR;
 }
 
-int _nc_ada_getbegyx (WINDOW *win, int *y, int *x)
+int _nc_ada_getbegyx (const WINDOW *win, int *y, int *x)
 {
   if (win && y && x)
     {
@@ -70,7 +83,7 @@ int _nc_ada_getbegyx (WINDOW *win, int *y, int *x)
     return ERR;
 }
 
-int _nc_ada_getyx (WINDOW *win, int *y, int *x)
+int _nc_ada_getyx (const WINDOW *win, int *y, int *x)
 {
   if (win && y && x)
     {
@@ -81,7 +94,7 @@ int _nc_ada_getyx (WINDOW *win, int *y, int *x)
     return ERR;
 }
 
-int _nc_ada_getparyx (WINDOW *win, int *y, int *x)
+int _nc_ada_getparyx (const WINDOW *win, int *y, int *x)
 {
   if (win && y && x)
     {
@@ -92,12 +105,12 @@ int _nc_ada_getparyx (WINDOW *win, int *y, int *x)
     return ERR;
 }
 
-int _nc_ada_isscroll (WINDOW *win)
+int _nc_ada_isscroll (const WINDOW *win)
 {
   return win ? (win->_scroll ? TRUE : FALSE) : ERR;
 }
 
-int _nc_ada_coord_transform( WINDOW *win, int *Y, int *X, int dir)
+int _nc_ada_coord_transform (const WINDOW *win, int *Y, int *X, int dir)
 {
   if (win && Y && X)
     {
@@ -213,8 +226,21 @@ int _nc_ada_mouse_mask ( int button, int state, mmask_t *mask )
   return OK;
 }
 
-void _nc_ada_unregister_mouse (void)
+/*
+ * Allow Ada to check whether or not we are the correct library version
+ * for the binding. It calls this routine with the version it requests
+ * and this routine returns a 1 if it is a correct version, a 2 if the
+ * major version is correct but the minor version of the library differs
+ * and a 0 if the versions don't match.
+ */
+int  _nc_ada_vcheck (int major, int  minor)
 {
-  _nc_mouse_wrap(SP);
+  if (major==NCURSES_VERSION_MAJOR) {
+    if (minor==NCURSES_VERSION_MINOR)
+      return 1;
+    else
+      return 2;
+  }
+  else
+    return 0;
 }
-

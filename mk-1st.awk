@@ -1,29 +1,44 @@
-# $Id: mk-1st.awk,v 1.20 1997/05/05 21:28:17 tom Exp $
-################################################################################
-# Copyright 1996,1997 by Thomas E. Dickey <dickey@clark.net>                   #
-# All Rights Reserved.                                                         #
-#                                                                              #
-# Permission to use, copy, modify, and distribute this software and its        #
-# documentation for any purpose and without fee is hereby granted, provided    #
-# that the above copyright notice appear in all copies and that both that      #
-# copyright notice and this permission notice appear in supporting             #
-# documentation, and that the name of the above listed copyright holder(s) not #
-# be used in advertising or publicity pertaining to distribution of the        #
-# software without specific, written prior permission. THE ABOVE LISTED        #
-# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
-# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
-# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
-# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
-# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
-# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
-# PERFORMANCE OF THIS SOFTWARE.                                                #
-################################################################################
+# $Id: mk-1st.awk,v 1.35 1998/02/11 12:13:53 tom Exp $
+##############################################################################
+# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997
+#
 # Generate list of objects for a given model library
 # Variables:
 #	name (library name, e.g., "ncurses", "panel", "forms", "menus")
 #	model (directory into which we compile, e.g., "obj")
+#	prefix (e.g., "lib", for Unix-style libraries)
 #	suffix (e.g., "_g.a", for debug libraries)
 #	MODEL (e.g., "DEBUG", uppercase; toupper is not portable)
+#	depend (optional dependencies for all objects, e.g, ncurses_cfg.h)
+#	subset ("none", "base", "base+ext_funcs" or "termlib")
+#	target (cross-compile target, if any)
 #	DoLinks ("yes" or "no", flag to add symbolic links)
 #	rmSoLocs ("yes" or "no", flag to add extra clean target)
 #	overwrite ("yes" or "no", flag to add link to libcurses.a
@@ -39,13 +54,18 @@ function symlink(src,dst) {
 			printf "$(LN_S) %s %s; ", src, dst
 		}
 	}
-function sharedlinks(directory) {
+function sharedlinks(directory, add) {
 		if ( end_name != lib_name ) {
-			printf "\tcd %s && (", directory
 			abi_name = sprintf("%s.$(ABI_VERSION)", lib_name);
-			symlink(end_name, abi_name);
-			symlink(abi_name, lib_name);
-			printf ")\n"
+			if (add) {
+				printf "\tcd %s && (", directory
+				symlink(end_name, abi_name);
+				symlink(abi_name, lib_name);
+				printf ")\n"
+			} else {
+				printf "\t-@rm -f %s/%s\n", directory, abi_name
+				printf "\t-@rm -f %s/%s\n", directory, lib_name
+			}
 		}
 	}
 function removelinks() {
@@ -61,17 +81,40 @@ function installed_name() {
 		}
 	}
 BEGIN	{
-		print  ""
-		print  "# generated by mk-1st.awk"
-		print  ""
-		found = 0;
+		found = 0
+		using = 0
 	}
-	!/^#/ {
-		if ( $2 == "lib" || $2 == "progs" )
+	/^@/ {
+		using = 0
+		if (subset == "none") {
+			using = 1
+		} else if (index(subset,$2) > 0) {
+			if (using == 0) {
+				if (found == 0) {
+					print  ""
+					print  "# generated by mk-1st.awk"
+					print  ""
+				}
+				using = 1
+			}
+			if ( subset == "termlib") {
+				name  = "tinfo"
+				OBJS  = MODEL "_T"
+			} else {
+				OBJS  = MODEL
+			}
+		}
+	}
+	!/^[@#]/ {
+		if (using \
+		 && ( $2 == "lib" \
+		   || $2 == "progs" \
+		   || $2 == "c++" \
+		   || $2 == "tack" ))
 		{
 			if ( found == 0 )
 			{
-				printf "%s_OBJS =", MODEL
+				printf "%s_OBJS =", OBJS
 				if ( $2 == "lib" )
 					found = 1
 				else
@@ -84,12 +127,12 @@ END	{
 		print  ""
 		if ( found != 0 )
 		{
-			printf "\n$(%s_OBJS) : %s\n", MODEL, depend
+			printf "\n$(%s_OBJS) : %s\n", OBJS, depend
 		}
 		if ( found == 1 )
 		{
 			print  ""
-			lib_name = sprintf("lib%s%s", name, suffix)
+			lib_name = sprintf("%s%s%s", prefix, name, suffix)
 			if ( MODEL == "SHARED" )
 			{
 				if ( DoLinks == "yes" ) {
@@ -97,10 +140,10 @@ END	{
 				} else {
 					end_name = lib_name;
 				}
-				printf "../lib/%s : $(%s_OBJS)\n", lib_name, MODEL
-				print  "\t@-rm -f $@"
-				printf "\t$(MK_SHARED_LIB) $(%s_OBJS)\n", MODEL
-				sharedlinks("../lib")
+				printf "../lib/%s : $(%s_OBJS)\n", lib_name, OBJS
+				print  "\t-@rm -f $@"
+				printf "\t$(MK_SHARED_LIB) $(%s_OBJS)\n", OBJS
+				sharedlinks("../lib", 1)
 				print  ""
 				if ( end_name != lib_name ) {
 					printf "../lib/%s : ../lib/%s\n", end_name, lib_name
@@ -110,30 +153,48 @@ END	{
 				print  "install.libs \\"
 				printf "install.%s :: $(INSTALL_PREFIX)$(libdir) ../lib/%s\n", name, end_name
 				printf "\t@echo installing ../lib/%s as $(INSTALL_PREFIX)$(libdir)/%s \n", lib_name, end_name
-				printf "\t-rm -f $(INSTALL_PREFIX)$(libdir)/%s \n", end_name
-				printf "\t$(INSTALL) ../lib/%s $(INSTALL_PREFIX)$(libdir)/%s \n", lib_name, end_name
-				sharedlinks("$(INSTALL_PREFIX)$(libdir)")
+				printf "\t-@rm -f $(INSTALL_PREFIX)$(libdir)/%s \n", end_name
+				printf "\t$(INSTALL_LIB) ../lib/%s $(INSTALL_PREFIX)$(libdir)/%s \n", lib_name, end_name
+				sharedlinks("$(INSTALL_PREFIX)$(libdir)", 1)
 				if ( overwrite == "yes" && name == "ncurses" )
 				{
 					ovr_name = sprintf("libcurses%s", suffix)
 					printf "\t@echo linking %s to %s\n", ovr_name, lib_name
-					printf "\t-rm -f $(INSTALL_PREFIX)$(libdir)/%s \n", ovr_name
+					printf "\t-@rm -f $(INSTALL_PREFIX)$(libdir)/%s \n", ovr_name
 					printf "\t(cd $(INSTALL_PREFIX)$(libdir) && $(LN_S) %s %s)\n", lib_name, ovr_name
 				}
-				printf "\t- ldconfig\n"
+				if ( ldconfig != "" ) {
+					printf "\t- test -z \"$(INSTALL_PREFIX)\" && %s\n", ldconfig
+				}
+				print  ""
+				print  "uninstall \\"
+				print  "uninstall.libs \\"
+				printf "uninstall.%s ::\n", name
+				printf "\t@echo uninstalling $(INSTALL_PREFIX)$(libdir)/%s \n", end_name
+				printf "\t-@rm -f $(INSTALL_PREFIX)$(libdir)/%s\n", end_name
+				sharedlinks("$(INSTALL_PREFIX)$(libdir)", 0)
+				if ( overwrite == "yes" && name == "ncurses" )
+				{
+					ovr_name = sprintf("libcurses%s", suffix)
+					printf "\t-@rm -f $(INSTALL_PREFIX)$(libdir)/%s \n", ovr_name
+				}
 				if ( rmSoLocs == "yes" ) {
 					print  ""
 					print  "mostlyclean \\"
 					print  "clean ::"
-					printf "\t@-rm -f so_locations\n"
+					printf "\t-@rm -f so_locations\n"
 				}
 			}
 			else
 			{
 				end_name = lib_name;
-				printf "../lib/%s : $(%s_OBJS)\n", lib_name, MODEL
+				printf "../lib/%s : $(%s_OBJS)\n", lib_name, OBJS
 				printf "\t$(AR) $(AR_OPTS) $@ $?\n"
 				printf "\t$(RANLIB) $@\n"
+				if ( target == "vxworks" )
+				{
+					printf "\t$(LD) $(LD_OPTS) $? -o $(@:.a=.o)\n"
+				}
 				print  ""
 				print  "install \\"
 				print  "install.libs \\"
@@ -143,23 +204,50 @@ END	{
 				if ( overwrite == "yes" && lib_name == "libncurses.a" )
 				{
 					printf "\t@echo linking libcurses.a to libncurses.a \n"
-					printf "\t-rm -f $(INSTALL_PREFIX)$(libdir)/libcurses.a \n"
+					printf "\t-@rm -f $(INSTALL_PREFIX)$(libdir)/libcurses.a \n"
 					printf "\t(cd $(INSTALL_PREFIX)$(libdir) && $(LN_S) libncurses.a libcurses.a)\n"
 				}
 				printf "\t$(RANLIB) $(INSTALL_PREFIX)$(libdir)/%s\n", lib_name
+				if ( target == "vxworks" )
+				{
+					printf "\t@echo installing ../lib/lib%s.o as $(INSTALL_PREFIX)$(libdir)/lib%s.o\n", name, name
+					printf "\t$(INSTALL_DATA) ../lib/lib%s.o $(INSTALL_PREFIX)$(libdir)/lib%s.o\n", name, name
+				}
+				print  ""
+				print  "uninstall \\"
+				print  "uninstall.libs \\"
+				printf "uninstall.%s ::\n", name
+				printf "\t@echo uninstalling $(INSTALL_PREFIX)$(libdir)/%s \n", lib_name
+				printf "\t-@rm -f $(INSTALL_PREFIX)$(libdir)/%s\n", lib_name
+				if ( overwrite == "yes" && lib_name == "libncurses.a" )
+				{
+					printf "\t@echo linking libcurses.a to libncurses.a \n"
+					printf "\t-@rm -f $(INSTALL_PREFIX)$(libdir)/libcurses.a \n"
+				}
+				if ( target == "vxworks" )
+				{
+					printf "\t@echo uninstalling $(INSTALL_PREFIX)$(libdir)/lib%s.o\n", name
+					printf "\t-@rm -f $(INSTALL_PREFIX)$(libdir)/lib%s.o\n", name
+				}
 			}
 			print ""
-			print "mostlyclean \\"
 			print "clean ::"
 			printf "\trm -f ../lib/%s\n", lib_name
-			printf "\trm -f $(%s_OBJS)\n", MODEL
+			print ""
+			print "mostlyclean::"
+			printf "\trm -f $(%s_OBJS)\n", OBJS
+			print ""
+			print "clean ::"
+			printf "\trm -f $(%s_OBJS)\n", OBJS
 			removelinks();
 		}
 		else if ( found == 2 )
 		{
 			print ""
-			print "mostlyclean \\"
+			print "mostlyclean::"
+			printf "\trm -f $(%s_OBJS)\n", OBJS
+			print ""
 			print "clean ::"
-			printf "\trm -f $(%s_OBJS)\n", MODEL
+			printf "\trm -f $(%s_OBJS)\n", OBJS
 		}
 	}

@@ -1,23 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 
-/***************************************************************************
-*                            COPYRIGHT NOTICE                              *
-****************************************************************************
-*                ncurses is copyright (C) 1992-1995                        *
-*                          Zeyd M. Ben-Halim                               *
-*                          zmbenhal@netcom.com                             *
-*                          Eric S. Raymond                                 *
-*                          esr@snark.thyrsus.com                           *
-*                                                                          *
-*        Permission is hereby granted to reproduce and distribute ncurses  *
-*        by any means and for any fee, whether alone or as part of a       *
-*        larger distribution, in source or in binary form, PROVIDED        *
-*        this notice is included with any such distribution, and is not    *
-*        removed from any of its header files. Mention of ncurses in any   *
-*        applications linked with it is highly appreciated.                *
-*                                                                          *
-*        ncurses comes AS IS with no warranty, implied or expressed.       *
-*                                                                          *
-***************************************************************************/
+/****************************************************************************
+ *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
+ *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ ****************************************************************************/
 
 
 /*
@@ -25,12 +37,8 @@
  *
  *	Routines:
  *		raw()
- *		echo()
- *		nl()
  *		cbreak()
  *		noraw()
- *		noecho()
- *		nonl()
  *		nocbreak()
  *		qiflush()
  *		noqiflush()
@@ -41,14 +49,19 @@
 #include <curses.priv.h>
 #include <term.h>	/* cur_term */
 
-MODULE_ID("$Id: lib_raw.c,v 1.16 1997/02/02 00:02:32 tom Exp $")
+MODULE_ID("$Id: lib_raw.c,v 1.25 1998/02/11 12:13:59 tom Exp $")
 
-#ifdef SVR4_TERMIO
+#if defined(SVR4_TERMIO) && !defined(_POSIX_SOURCE)
 #define _POSIX_SOURCE
 #endif
 
 #if HAVE_SYS_TERMIO_H
 #include <sys/termio.h>	/* needed for ISC */
+#endif
+
+#ifdef __EMX__
+#include <io.h>
+#include <fcntl.h>
 #endif
 
 /* may be undefined if we're using termio.h */
@@ -62,11 +75,32 @@ MODULE_ID("$Id: lib_raw.c,v 1.16 1997/02/02 00:02:32 tom Exp $")
 #define COOKED_INPUT	(IXON|BRKINT|PARMRK)
 
 #ifdef TRACE
+
+typedef struct {unsigned int val; const char *name;} BITNAMES;
+
+static void lookup_bits(char *buf, const BITNAMES *table, const char *label, unsigned int val)
+{
+	const BITNAMES *sp;
+
+	(void) strcat(buf, label);
+	(void) strcat(buf, ": {");
+	for (sp = table; sp->name; sp++)
+		if (sp->val != 0
+		&& (val & sp->val) == sp->val)
+		{
+			(void) strcat(buf, sp->name);
+			(void) strcat(buf, ", ");
+		}
+	if (buf[strlen(buf) - 2] == ',')
+		buf[strlen(buf) - 2] = '\0';
+	(void) strcat(buf,"} ");
+}
+
 char *_tracebits(void)
 /* describe the state of the terminal control bits exactly */
 {
-static char	buf[BUFSIZ];
-static const	struct {unsigned int val; const char *name;}
+char	*buf;
+static const	BITNAMES
 
 #ifdef TERMIOS
 iflags[] =
@@ -95,8 +129,10 @@ cflags[] =
     {
 	{CLOCAL,	"CLOCAL"},
 	{CREAD, 	"CREAD"},
-	{CSIZE, 	"CSIZE"},
 	{CSTOPB,	"CSTOPB"},
+#if !defined(CS5) || !defined(CS8)
+	{CSIZE, 	"CSIZE"},
+#endif
 	{HUPCL, 	"HUPCL"},
 	{PARENB,	"PARENB"},
 	{PARODD|PARENB,	"PARODD"},	/* concession to readability */
@@ -112,72 +148,41 @@ lflags[] =
 	{ICANON,	"ICANON"},
 	{ISIG,  	"ISIG"},
 	{NOFLSH,	"NOFLSH"},
-#if TOSTOP != 0
 	{TOSTOP,	"TOSTOP"},
-#endif
-#if IEXTEN != 0
 	{IEXTEN,	"IEXTEN"},
-#endif
 	{0,		NULL}
 #define ALLLOCAL	(ECHO|ECHONL|ICANON|ISIG|NOFLSH|TOSTOP|IEXTEN)
-    },
-    *sp;
+    };
+
+
+    buf = _nc_trace_buf(0,
+    	8 + sizeof(iflags) +
+    	8 + sizeof(oflags) +
+    	8 + sizeof(cflags) +
+    	8 + sizeof(lflags) +
+	8);
 
     if (cur_term->Nttyb.c_iflag & ALLIN)
-    {
-	(void) strcpy(buf, "iflags: {");
-	for (sp = iflags; sp->val; sp++)
-	    if ((cur_term->Nttyb.c_iflag & sp->val) == sp->val)
-	    {
-		(void) strcat(buf, sp->name);
-		(void) strcat(buf, ", ");
-	    }
-	if (buf[strlen(buf) - 2] == ',')
-	    buf[strlen(buf) - 2] = '\0';
-	(void) strcat(buf,"} ");
-    }
+	lookup_bits(buf, iflags, "iflags", cur_term->Nttyb.c_iflag);
 
     if (cur_term->Nttyb.c_oflag & ALLOUT)
-    {
-	(void) strcat(buf, "oflags: {");
-	for (sp = oflags; sp->val; sp++)
-	    if ((cur_term->Nttyb.c_oflag & sp->val) == sp->val)
-	    {
-		(void) strcat(buf, sp->name);
-		(void) strcat(buf, ", ");
-	    }
-	if (buf[strlen(buf) - 2] == ',')
-	    buf[strlen(buf) - 2] = '\0';
-	(void) strcat(buf,"} ");
-    }
+	lookup_bits(buf, oflags, "oflags", cur_term->Nttyb.c_oflag);
 
     if (cur_term->Nttyb.c_cflag & ALLCTRL)
-    {
-	(void) strcat(buf, "cflags: {");
-	for (sp = cflags; sp->val; sp++)
-	    if ((cur_term->Nttyb.c_cflag & sp->val) == sp->val)
-	    {
-		(void) strcat(buf, sp->name);
-		(void) strcat(buf, ", ");
-	    }
-	if (buf[strlen(buf) - 2] == ',')
-	    buf[strlen(buf) - 2] = '\0';
-	(void) strcat(buf,"} ");
+	lookup_bits(buf, cflags, "cflags", cur_term->Nttyb.c_cflag);
+
+#if defined(CS5) && defined(CS8)
+    switch (cur_term->Nttyb.c_cflag & CSIZE) {
+    case CS5:	strcat(buf, "CS5 ");	break;
+    case CS6:	strcat(buf, "CS6 ");	break;
+    case CS7:	strcat(buf, "CS7 ");	break;
+    case CS8:	strcat(buf, "CS8 ");	break;
+    default:	strcat(buf, "CSIZE? ");	break;
     }
+#endif
 
     if (cur_term->Nttyb.c_lflag & ALLLOCAL)
-    {
-	(void) strcat(buf, "lflags: {");
-	for (sp = lflags; sp->val; sp++)
-	    if ((cur_term->Nttyb.c_lflag & sp->val) == sp->val)
-	    {
-		(void) strcat(buf, sp->name);
-		(void) strcat(buf, ", ");
-	    }
-	if (buf[strlen(buf) - 2] == ',')
-	    buf[strlen(buf) - 2] = '\0';
-	(void) strcat(buf,"} ");
-    }
+	lookup_bits(buf, lflags, "lflags", cur_term->Nttyb.c_lflag);
 
 #else
     /* reference: ttcompat(4M) on SunOS 4.1 */
@@ -211,21 +216,14 @@ cflags[] =
 	{XTABS,		"XTABS"},
 	{0,		NULL}
 #define ALLCTRL	(CBREAK|CRMOD|ECHO|EVENP|LCASE|LLITOUT|ODDP|RAW|TANDEM|XTABS)
-    },
-    *sp;
+    };
+
+    buf = _nc_trace_buf(0,
+    	8 + sizeof(cflags));
 
     if (cur_term->Nttyb.sg_flags & ALLCTRL)
     {
-	(void) strcat(buf, "cflags: {");
-	for (sp = cflags; sp->val; sp++)
-	    if ((cur_term->Nttyb.sg_flags & sp->val) == sp->val)
-	    {
-		(void) strcat(buf, sp->name);
-		(void) strcat(buf, ", ");
-	    }
-	if (buf[strlen(buf) - 2] == ',')
-	    buf[strlen(buf) - 2] = '\0';
-	(void) strcat(buf,"} ");
+	lookup_bits(buf, cflags, "cflags", cur_term->Nttyb.sg_flags);
     }
 
 #endif
@@ -242,23 +240,28 @@ cflags[] =
 int raw(void)
 {
 	T((T_CALLED("raw()")));
+	if (SP != 0 && cur_term != 0) {
 
-	SP->_raw = TRUE;
-	SP->_cbreak = TRUE;
+		SP->_raw = TRUE;
+		SP->_cbreak = TRUE;
+
+#ifdef __EMX__
+		setmode(SP->_ifd, O_BINARY);
+#endif
 
 #ifdef TERMIOS
-	BEFORE("raw");
-	cur_term->Nttyb.c_lflag &= ~(ICANON|ISIG);
-	cur_term->Nttyb.c_iflag &= ~(COOKED_INPUT);
-	cur_term->Nttyb.c_cc[VMIN] = 1;
-	cur_term->Nttyb.c_cc[VTIME] = 0;
-	AFTER("raw");
+		BEFORE("raw");
+		cur_term->Nttyb.c_lflag &= ~(ICANON|ISIG);
+		cur_term->Nttyb.c_iflag &= ~(COOKED_INPUT);
+		cur_term->Nttyb.c_cc[VMIN] = 1;
+		cur_term->Nttyb.c_cc[VTIME] = 0;
+		AFTER("raw");
 #else
-	cur_term->Nttyb.sg_flags |= RAW;
+		cur_term->Nttyb.sg_flags |= RAW;
 #endif
-	if ((SET_TTY(cur_term->Filedes, &cur_term->Nttyb)) == -1)
-		returnCode(ERR);
-	returnCode(OK);
+		returnCode(_nc_set_curterm(&cur_term->Nttyb));
+	}
+	returnCode(ERR);
 }
 
 int cbreak(void)
@@ -266,6 +269,10 @@ int cbreak(void)
 	T((T_CALLED("cbreak()")));
 
 	SP->_cbreak = TRUE;
+
+#ifdef __EMX__
+	setmode(SP->_ifd, O_BINARY);
+#endif
 
 #ifdef TERMIOS
 	BEFORE("cbreak");
@@ -278,30 +285,8 @@ int cbreak(void)
 #else
 	cur_term->Nttyb.sg_flags |= CBREAK;
 #endif
-	if ((SET_TTY(cur_term->Filedes, &cur_term->Nttyb)) == -1)
-		returnCode(ERR);
-	returnCode(OK);
+	returnCode(_nc_set_curterm( &cur_term->Nttyb));
 }
-
-int echo(void)
-{
-	T((T_CALLED("echo()")));
-
-	SP->_echo = TRUE;
-
-	returnCode(OK);
-}
-
-
-int nl(void)
-{
-	T((T_CALLED("nl()")));
-
-	SP->_nl = TRUE;
-
-	returnCode(OK);
-}
-
 
 int qiflush(void)
 {
@@ -316,10 +301,7 @@ int qiflush(void)
 	BEFORE("qiflush");
 	cur_term->Nttyb.c_lflag &= ~(NOFLSH);
 	AFTER("qiflush");
-	if ((SET_TTY(cur_term->Filedes, &cur_term->Nttyb)) == -1)
-		returnCode(ERR);
-	else
-		returnCode(OK);
+	returnCode(_nc_set_curterm( &cur_term->Nttyb));
 #else
 	returnCode(ERR);
 #endif
@@ -333,6 +315,10 @@ int noraw(void)
 	SP->_raw = FALSE;
 	SP->_cbreak = FALSE;
 
+#ifdef __EMX__
+	setmode(SP->_ifd, O_TEXT);
+#endif
+
 #ifdef TERMIOS
 	BEFORE("noraw");
 	cur_term->Nttyb.c_lflag |= ISIG|ICANON;
@@ -341,9 +327,7 @@ int noraw(void)
 #else
 	cur_term->Nttyb.sg_flags &= ~(RAW|CBREAK);
 #endif
-	if ((SET_TTY(cur_term->Filedes, &cur_term->Nttyb)) == -1)
-		returnCode(ERR);
-	returnCode(OK);
+	returnCode(_nc_set_curterm( &cur_term->Nttyb));
 }
 
 
@@ -351,7 +335,11 @@ int nocbreak(void)
 {
 	T((T_CALLED("nocbreak()")));
 
-	SP->_cbreak = 0;
+	SP->_cbreak = FALSE;
+
+#ifdef __EMX__
+	setmode(SP->_ifd, O_TEXT);
+#endif
 
 #ifdef TERMIOS
 	BEFORE("nocbreak");
@@ -361,26 +349,7 @@ int nocbreak(void)
 #else
 	cur_term->Nttyb.sg_flags &= ~CBREAK;
 #endif
-	if ((SET_TTY(cur_term->Filedes, &cur_term->Nttyb)) == -1)
-		returnCode(ERR);
-	returnCode(OK);
-}
-
-int noecho(void)
-{
-	T((T_CALLED("noecho()")));
-	SP->_echo = FALSE;
-	returnCode(OK);
-}
-
-
-int nonl(void)
-{
-	T((T_CALLED("nonl()")));
-
-	SP->_nl = FALSE;
-
-	returnCode(OK);
+	returnCode(_nc_set_curterm( &cur_term->Nttyb));
 }
 
 int noqiflush(void)
@@ -396,10 +365,7 @@ int noqiflush(void)
 	BEFORE("noqiflush");
 	cur_term->Nttyb.c_lflag |= NOFLSH;
 	AFTER("noqiflush");
-	if ((SET_TTY(cur_term->Filedes, &cur_term->Nttyb)) == -1)
-		returnCode(ERR);
-	else
-		returnCode(OK);
+	returnCode(_nc_set_curterm( &cur_term->Nttyb));
 #else
 	returnCode(ERR);
 #endif
@@ -425,10 +391,7 @@ int intrflush(WINDOW *win GCC_UNUSED, bool flag)
 	else
 		cur_term->Nttyb.c_lflag |= (NOFLSH);
 	AFTER("intrflush");
-	if ((SET_TTY(cur_term->Filedes, &cur_term->Nttyb)) == -1)
-		returnCode(ERR);
-	else
-		returnCode(OK);
+	returnCode(_nc_set_curterm( &cur_term->Nttyb));
 #else
 	returnCode(ERR);
 #endif

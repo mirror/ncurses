@@ -1,3 +1,4 @@
+.\" $Id: curs_outopts.3x,v 1.10 1998/02/07 21:56:39 tom Exp $
 .TH curs_outopts 3X ""
 .SH NAME
 \fBclearok\fR, \fBidlok\fR, \fBidcok immedok\fR,
@@ -118,6 +119,10 @@ enabled, any window modification triggering a scroll also forced a physical
 refresh.  XSI Curses does not require this, and \fBncurses\fR avoids doing
 it in order to perform better vertical-motion optimization at \fBwrefresh\fR
 time.
+
+The XSI Curses standard does not mention that the cursor should be
+made invisible as a side-effect of \fBleaveok\fR.
+SVr4 curses does this.
 .SH NOTES
 Note that \fBclearok\fR, \fBleaveok\fR, \fBscrollok\fR, \fBidcok\fR, \fBnl\fR,
 \fBnonl\fR and \fBsetscrreg\fR may be macros.

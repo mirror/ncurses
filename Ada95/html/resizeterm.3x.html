@@ -46,23 +46,23 @@
        to  avoid invoking it in a context where <STRONG>malloc</STRONG> or <STRONG>realloc</STRONG>
        may have been interrupted, since it uses those  functions.
 
+       If  ncurses  is configured to supply its own SIGWINCH han-
+       dler, the <STRONG>resizeterm</STRONG> function ungetch's a <STRONG>KEY_RESIZE</STRONG> which
+       will  be  read on the next call to <STRONG>getch</STRONG>.  This is used to
+       alert an application that the screen size has changed, and
+       that  it should repaint special features such as pads that
+       cannot be done automatically.
+
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>.
+       <STRONG><A HREF="wresize.3x.html">wresize(3X)</A></STRONG>.
 
 
 </PRE>
 <H2>AUTHOR</H2><PRE>
        Thomas Dickey (from an equivalent function written in 1988
        for BSD curses).
-
-
-
-
-
-
-
 
 
 </PRE>

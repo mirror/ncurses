@@ -28,7 +28,7 @@
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        These functions provide an interface to mouse events  from
-       <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>.   Mouse  events  are represented by <STRONG>KEY_MOUSE</STRONG>
+       <STRONG><A HREF="ncurses.3x.html">ncurses(3X)</A></STRONG>.   Mouse  events  are represented by <STRONG>KEY_MOUSE</STRONG>
        pseudo-key values in the <STRONG>wgetch</STRONG> input stream.
 
        To make mouse events visible, use the <STRONG>mousemask</STRONG>  function.
@@ -47,26 +47,28 @@
        Here are the mouse event type masks:
 
        l  l  _ _ l l.  <EM>Name</EM> <EM>Description</EM> BUTTON1_PRESSED     mouse
-       button 1 down BUTTON1_RELEASED    mouse button 1  up  BUT-
-       TON1_CLICKED        mouse       button      1      clicked
+       button  1  down  BUTTON1_RELEASED    mouse  button  1   up
+       BUTTON1_CLICKED     mouse       button      1      clicked
        BUTTON1_DOUBLE_CLICKED   mouse  button  1  double  clicked
        BUTTON1_TRIPLE_CLICKED   mouse  button  1  triple  clicked
-       BUTTON2_PRESSED       mouse      button       2       down
-       BUTTON2_RELEASED    mouse   button  2  up  BUTTON2_CLICKED
-           mouse button 2 clicked  BUTTON2_DOUBLE_CLICKED   mouse
-       button  2  double  clicked  BUTTON2_TRIPLE_CLICKED   mouse
-       button 2 triple clicked BUTTON3_PRESSED     mouse button 3
-       down BUTTON3_RELEASED    mouse button 3 up BUTTON3_CLICKED
-       button 3 triple clicked BUTTON4_PRESSED     mouse button 4
-       down BUTTON4_RELEASED    mouse button 4 up BUTTON4_CLICKED
-           mouse button 4 clicked  BUTTON4_DOUBLE_CLICKED   mouse
-       button  4  double  clicked  BUTTON4_TRIPLE_CLICKED   mouse
-       button 4 triple clicked BUTTON_SHIFT   shift was down dur-
-       ing  button  state  change BUTTON_CTRL    control was down
-       during button state  change  BUTTON_ALT     alt  was  down
-       during  button state change ALL_MOUSE_EVENTS    report all
-       button state changes REPORT_MOUSE_POSITION    report mouse
-       movement
+       BUTTON2_PRESSED     mouse       button       2        down
+       BUTTON2_RELEASED    mouse        button        2        up
+       BUTTON2_CLICKED     mouse      button      2       clicked
+       BUTTON2_DOUBLE_CLICKED   mouse  button  2  double  clicked
+       BUTTON2_TRIPLE_CLICKED   mouse  button  2  triple  clicked
+       BUTTON3_PRESSED     mouse        button       3       down
+       BUTTON3_DOUBLE_CLICKED   mouse  button  3  double  clicked
+       BUTTON3_TRIPLE_CLICKED   mouse  button  3  triple  clicked
+       BUTTON4_PRESSED     mouse       button       4        down
+       BUTTON4_RELEASED    mouse        button        4        up
+       BUTTON4_CLICKED     mouse      button      4       clicked
+       BUTTON4_DOUBLE_CLICKED   mouse  button  4  double  clicked
+       BUTTON4_TRIPLE_CLICKED   mouse  button  4  triple  clicked
+       BUTTON_SHIFT   shift  was  down during button state change
+       BUTTON_CTRL    control was down during button state change
+       BUTTON_ALT     alt  was  down  during  button state change
+       ALL_MOUSE_EVENTS    report  all   button   state   changes
+       REPORT_MOUSE_POSITION    report mouse movement
 
        Once  a  class of mouse events have been made visible in a
        window, calling the <STRONG>wgetch</STRONG> function  on  that  window  may
@@ -109,10 +111,9 @@
        All  routines  return  the  integer <STRONG>ERR</STRONG> upon failure or <STRONG>OK</STRONG>
        upon successful completion.
 
-
-</PRE>
-<H2>PORTABILITY</H2><PRE>
-       These calls were designed for  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>,  and  are  not
+       These calls were designed for  <STRONG><A HREF="ncurses.3x.html">ncurses(3X)</A></STRONG>,  and  are  not
+       found in SVr4 curses, 4.4BSD curses, or any other previous
+       version of curses.
 
        The feature macro <STRONG>NCURSES_MOUSE_VERSION</STRONG> is provided so the
        preprocessor  can  be  used to test whether these features
@@ -125,11 +126,11 @@
        teed.  Additional fields may be added to the structure  in
        the future.
 
-       Under  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>,  these  calls  are  implemented  using
+       Under  <STRONG><A HREF="ncurses.3x.html">ncurses(3X)</A></STRONG>,  these  calls  are  implemented  using
        either xterm's built-in mouse-tracking API  or  Alessandro
        Rubini's  gpm  server.   If  you are using something other
        than xterm there is no gpm daemon running on your machine,
-       mouse  events  will not be visible to <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG> (and the
+       mouse  events  will not be visible to <STRONG><A HREF="ncurses.3x.html">ncurses(3X)</A></STRONG> (and the
        <STRONG>wmousemask</STRONG> function will always return <STRONG>0</STRONG>).
 
        The z member in the event structure is not presently used.
@@ -152,9 +153,6 @@
 </PRE>
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>.
-
-
-
 
 
 

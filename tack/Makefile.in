@@ -1,0 +1,167 @@
+# $Id: Makefile.in,v 1.6 1998/02/11 12:14:03 tom Exp $
+##############################################################################
+# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+# Author: Thomas E. Dickey <dickey@clark.net> 1997
+#
+# Makefile for terminfo/termcap test program
+#
+# The following pre-processor variables may be set.
+# 
+# SELECT	Use this define if your operating system has the select
+#		system call.
+#
+# WAIT_MODE	Use this define if your operating system cannot tell if
+#		a chracter is ready in the input queue.  Funtion keys
+#		must be padded with blanks.
+#
+# 	If generated without pre-processor variables, a terminfo test
+#	program will be generated for System V Release 3.
+
+# turn off _all_ suffix rules; we'll generate our own
+.SUFFIXES:
+
+SHELL		= /bin/sh
+THIS		= Makefile
+
+MODEL		= ../@DFT_OBJ_SUBDIR@
+INSTALL_PREFIX	= @INSTALL_PREFIX@
+srcdir		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+libdir		= @libdir@
+
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+
+INCDIR		= $(srcdir)/../include
+CPPFLAGS	= -I../tack -I$(srcdir) @CPPFLAGS@ \
+		  -DHAVE_CONFIG_H -DSELECT 
+
+CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
+
+CFLAGS_NORMAL	= $(CCFLAGS)
+CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
+CFLAGS_PROFILE	= $(CCFLAGS) -pg
+CFLAGS_SHARED	= $(CCFLAGS) # @CC_SHARED_OPTS@
+
+CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
+
+LD		= @LD@
+LINK		= $(CC)
+LDFLAGS		= @EXTRA_LDFLAGS@ \
+		-L../lib \
+		-L$(libdir) \
+		-lncurses@DFT_ARG_SUFFIX@ @LDFLAGS@ @LD_MODEL@ @LIBS@ @EXTRA_LIBS@
+
+LDFLAGS_NORMAL	= $(LDFLAGS)
+LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
+LDFLAGS_PROFILE	= $(LDFLAGS) -pg
+LDFLAGS_SHARED	= $(LDFLAGS) @CC_SHARED_OPTS@ @LD_SHARED_OPTS@
+
+LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@)
+
+LINT		= @LINT@
+LINT_OPTS	= @LINT_OPTS@
+LINT_LIBS	= -lncurses @LIBS@
+
+# This would be $(SHARED_OBJS), but make cannot handle this much forward ref.
+TACK_DEPS	= \
+	$(MODEL)/ansi.o \
+	$(MODEL)/charset.o \
+	$(MODEL)/color.o \
+	$(MODEL)/control.o \
+	$(MODEL)/crum.o \
+	$(MODEL)/edit.o \
+	$(MODEL)/fun.o \
+	$(MODEL)/init.o \
+	$(MODEL)/menu.o \
+	$(MODEL)/modes.o \
+	$(MODEL)/output.o \
+	$(MODEL)/pad.o \
+	$(MODEL)/scan.o \
+	$(MODEL)/sync.o \
+	$(MODEL)/sysdep.o \
+	$(MODEL)/tack.o
+
+TARGET		= tack
+
+all:	$(TACK_DEPS) $(TARGET) 
+
+sources:
+
+$(TARGET): $(TACK_DEPS)
+	@ echo linking $@ ... ; $(LINK) $(TACK_DEPS) $(LDFLAGS_DEFAULT) -o $@
+
+$(TACK_DEPS): $(srcdir)/tack.h
+
+lint:
+	lint $(C_SRC)
+
+mostlyclean :
+	-rm -f core tags TAGS *~ *.ln *.atac trace
+
+clean :: mostlyclean 
+	rm -f $(TACK_DEPS) $(TARGET) tack.tar tack.tar.gz
+
+distclean :: clean
+	-rm -f Makefile
+
+realclean : distclean
+
+# vi tags
+tags: $(C_SRC) $(DIR)/tack.h
+	ctags $(>)
+
+# emacs tags
+TAGS: $(C_SRC)
+	etags $(C_SRC)
+
+install: $(TARGET)
+	$(INSTALL_PROGRAM) $(TARGET) $(INSTALL_PREFIX)$(bindir)/$(TARGET)
+
+list: $(srcdir)/tack.h $(C_SRC)
+	for name in $(>) ; \
+	do \
+		ucb cat -n $$name | ucb pr -h "$$name" | ucb lpr ; \
+	done
+
+#	archive a backup copy
+arch: $(srcdir)/Makefile $(srcdir)/tack.h $(C_SRC)
+	rm -f tack.a
+	ar q tack.a $(>)
+
+tack.tar.gz: tack.tar
+	gzip tack.tar
+
+tack.tar: makefile *.[ch] tack.1 HISTORY
+	tar -cvf tack.tar makefile *.[ch] tack.1 HISTORY
