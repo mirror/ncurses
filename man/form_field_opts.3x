@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\" Copyright (c) 1998,2003 Free Software Foundation, Inc.                   *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_opts.3x,v 1.7 1998/11/29 01:06:54 Rick.Ohnemus Exp $
+.\" $Id: form_field_opts.3x,v 1.8 2003/05/10 20:33:49 jmc Exp $
 .TH form_field_opts 3X ""
 .SH NAME
 \fBform_field_opts\fR - set and get field options
@@ -58,7 +58,7 @@ The following options are defined (all are on by default):
 .TP 5
 O_VISIBLE
 The field is displayed.  If this option is off, display of the field is
-suppressed,
+suppressed.
 .TP 5
 O_ACTIVE
 The field is visited during processing.  If this option is off, the field will
@@ -79,7 +79,7 @@ O_BLANK
 The field is cleared whenever a character is entered at the first position.
 .TP 5
 O_AUTOSKIP
-Skip to the next field when this one fills
+Skip to the next field when this one fills.
 .TP 5
 O_NULLOK
 Allow a blank field.

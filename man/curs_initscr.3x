@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_initscr.3x,v 1.11 2002/07/20 14:51:04 tom Exp $
+.\" $Id: curs_initscr.3x,v 1.12 2003/05/10 20:33:49 jmc Exp $
 .TH curs_initscr 3X ""
 .SH NAME
 \fBinitscr\fR,
@@ -111,7 +111,7 @@ once.
 
 Old versions of curses, e.g., BSD 4.4, may have returned a null pointer
 from \fBinitscr\fR when an error is detected, rather than exiting.
-It is safe but redundant to check the return value of \fBinitscr\fR 
+It is safe but redundant to check the return value of \fBinitscr\fR
 in XSI Curses.
 .SH SEE ALSO
 \fBcurses\fR(3X), \fBcurs_kernel\fR(3X), \fBcurs_refresh\fR(3X),

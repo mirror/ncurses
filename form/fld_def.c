@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,12 +28,11 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_def.c,v 1.14 2002/07/06 15:33:27 juergen Exp $")
+MODULE_ID("$Id: fld_def.c,v 1.17 2003/11/08 21:15:02 Jonathon.Gray Exp $")
 
 /* this can't be readonly */
 static FIELD default_field = {
@@ -74,11 +73,11 @@ NCURSES_EXPORT_VAR(FIELD *) _nc_Default_Field = &default_field;
 |                              int *err )
 |   
 |   Description   :  Create an argument structure for the specified type.
-|                    Use the type-dependant argument list to construct
+|                    Use the type-dependent argument list to construct
 |                    it.
 |
 |   Return Values :  Pointer to argument structure. Maybe NULL.
-|                    In case of an error in *err an errorcounter is increased. 
+|                    In case of an error in *err an error counter is increased. 
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(TypeArgument*)
 _nc_Make_Argument
@@ -121,7 +120,7 @@ _nc_Make_Argument
 |                    type.
 |
 |   Return Values :  Pointer to argument structure. Maybe NULL.
-|                    In case of an error in *err an errorcounter is increased. 
+|                    In case of an error in *err an error counter is increased. 
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(TypeArgument*)
 _nc_Copy_Argument
@@ -197,7 +196,7 @@ _nc_Free_Argument
 |   Description   :  Copy argument structure of field src to field dst
 |
 |   Return Values :  TRUE       - copy worked
-|                    FALSE      - error occured
+|                    FALSE      - error occurred
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(bool)
 _nc_Copy_Type

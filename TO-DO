@@ -1,11 +1,15 @@
--- $Id: TO-DO,v 1.41 2002/08/31 21:32:43 tom Exp $
+-- $Id: TO-DO,v 1.43 2004/02/08 21:09:00 tom Exp $
 
 SHORT-TERM TO-DO ITEMS:
 
 Known Problems:
 
-* GNAT does not put libraries in the correct order, so a build only links
-  properly if you use shared libraries since -lncurses is first.
+* The form/menu libraries do not use wide-character features.
+
+* Some users would like to build a single version of libtinfo which can be
+  used from either libncursesw or libncurses.
+
+* libtool does not work with GNAT.
 
 * The screen optimization has been tested only in an ad hoc manner.  We should
   develop a good set of regression tests to cover lib_doupdate.c and
@@ -23,7 +27,7 @@ Known Problems:
   activates them), and a touchwin can apparently also force them to be
   displayed.
 
-+ The code departs from perfect 8-bit cleanness in one respect; you cannot
+* The code departs from perfect 8-bit cleanness in one respect; you cannot
   specify a character \200 as part of a capability string, because the terminfo
   library interprets \200 as a request to embed NUL (\000) at that point.  This
   is a legacy terminfo property we can't mess with.
@@ -42,7 +46,7 @@ Portability (or lack thereof):
   suspend (this problem was first seen running lynx).  You will not see 
   this problem if you are running Linux or one of the 4.4BSD derivatives
   like FreeBSD, NetBSD, or BSDI.  For details, see the analysis in the
-  header comment of ncurses/lib_tstp.c.
+  header comment of ncurses/tty/lib_tstp.c .
 
 * In theory, vwprintw and vwscanf are supposed to use the older varargs.h
   interface for handling variadic argument lists.  Linux doesn't have
@@ -56,21 +60,10 @@ Portability (or lack thereof):
   (It should work on any System V, however).  If you want to fix this, add
   an implementation to ncurses/vsscanf.c.
 
-* The demo build for the c++ library craps out with many link errors under gcc
-  2.6.3.  We're told the C++ support in 2.6.3 is broken and that the right
-  fix is to upgrade to 2.7.0.  This demo is also known to not build with
-  the Sun SPARCworks 4.1 C++ compiler, due to a problem resolving templates.
+* The C++ binding fails to build with a few C++ compilers, mainly with
+  configure script problems with vsscanf().
 
-* Under Ultrix, configure craps out (Ultrix sh is lame).  Run it under ksh.
-
-* We've not tested the configure script with cross-compilers.  The autoconf
-  tests are supposed to be able to support this (please report bugs).  You will
-  have to configure and build in two steps.  The first step must create the
-  automatically-generated sources (e.g., comp_captab.c) on your host machine. 
-  Then, run "make mostlyclean", remove config.* from the top-level directory
-  and configure for the cross-compiler.
-
-+ terminfo.5 does not format with the SunOS (and most other platform's) tbl
+* terminfo.5 does not format with the SunOS (and most other platform's) tbl
   utility because it relies on a diversion for each table entry.  Get the groff
   package.
 
@@ -83,8 +76,6 @@ Untested features:
   label_on, plab_norm, lab_f*) has not been tested.  The label_format and
   lab_f* capabilities aren't presently used.
 
-* The wide-character input functions need testing.
-
 LONGER-TERM TO-DO ITEMS:
 
 1. Extended COSE conformance
@@ -93,10 +84,6 @@ There is an XPG4 standard recently released which describes a superset
 of the SVr4 API.  The library is BASE conformant with this standard.
 We would like to make ncurses fully conformant at the EXTENDED level
 supporting internationalization.
-
-Current status:
-	pecho_wchar() not implemented.
-	slk_wset not implemented.
 
 2. DOS port
 
@@ -187,5 +174,3 @@ These are the potentially important ones for ncurses.  Notes:
 
 	ii) We probably don't care about dest_tabs_magic_smso; only
 		Telerays used it and they're all long obsolete.
-
-

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1998,2000                   *
+ *  Author: Thomas E. Dickey 1998,2000,2004                                 *
  ****************************************************************************/
 
 /*
@@ -37,7 +37,7 @@
 #include <curses.priv.h>
 #include <tic.h>
 
-MODULE_ID("$Id: home_terminfo.c,v 1.7 2002/09/07 20:04:51 tom Exp $")
+MODULE_ID("$Id: home_terminfo.c,v 1.8 2004/01/14 02:18:16 tom Exp $")
 
 #define my_length (strlen(home) + sizeof(PRIVATE_INFO))
 
@@ -46,6 +46,7 @@ MODULE_ID("$Id: home_terminfo.c,v 1.7 2002/09/07 20:04:51 tom Exp $")
 NCURSES_EXPORT(char *)
 _nc_home_terminfo(void)
 {
+#ifdef USE_HOME_TERMINFO
     char *home;
     static char *temp = 0;
 
@@ -61,5 +62,6 @@ _nc_home_terminfo(void)
 	}
 	return temp;
     }
+#endif
     return 0;
 }

@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey <dickey@clark.net> 1996
 #
-# $Id: shlib,v 1.6 2000/05/20 23:01:17 tom Exp $
+# $Id: shlib,v 1.7 2003/07/19 22:58:14 tom Exp $
 # Use this script as a wrapper when running executables linked to shared
 # libraries on systems that use the $LD_LIBRARY_PATH variable and don't embed
 # the soname's path within the linked executable (such as IRIX), e.g,
@@ -84,4 +84,11 @@ if test -n "$q" ; then
 	fi
 	export LD_LIBRARY_PATH
 fi
+
+# cygwin doesn't use LD_LIBRARY_PATH, but does use PATH
+if test -n "$PATHEXT" ; then
+	PATH=$LD_LIBRARY_PATH:$PATH;
+	export PATH
+fi
+
 eval "$*"

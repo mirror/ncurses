@@ -28,7 +28,6 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -38,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_opts.c,v 1.14 2002/07/06 15:22:16 juergen Exp $")
+MODULE_ID("$Id: m_opts.c,v 1.16 2003/11/08 20:50:19 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -115,7 +114,7 @@ NCURSES_EXPORT(int)
 menu_opts_off (MENU *menu, Menu_Options  opts)
 {
   MENU *cmenu = menu; /* use a copy because set_menu_opts must detect
-                         NULL menu itself to adjust its behaviour */
+                         NULL menu itself to adjust its behavior */
 
   opts &= ALL_MENU_OPTS;
   if (opts & ~ALL_MENU_OPTS)
@@ -145,7 +144,7 @@ NCURSES_EXPORT(int)
 menu_opts_on (MENU * menu, Menu_Options opts)
 {
   MENU *cmenu = menu; /* use a copy because set_menu_opts must detect
-                         NULL menu itself to adjust its behaviour */
+                         NULL menu itself to adjust its behavior */
 
   opts &= ALL_MENU_OPTS;
   if (opts & ~ALL_MENU_OPTS)

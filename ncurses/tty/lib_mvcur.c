@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -108,7 +108,9 @@
  * LONG_DIST and (b) further inward from the right or left edge than LONG_DIST,
  * we'll consider nonlocal.
  */
-#define NOT_LOCAL(fy, fx, ty, tx)	((tx > LONG_DIST) && (tx < screen_lines - 1 - LONG_DIST) && (abs(ty-fy) + abs(tx-fx) > LONG_DIST))
+#define NOT_LOCAL(fy, fx, ty, tx)	((tx > LONG_DIST) \
+ 		 && (tx < screen_columns - 1 - LONG_DIST) \
+		 && (abs(ty-fy) + abs(tx-fx) > LONG_DIST))
 
 /****************************************************************************
  *
@@ -152,12 +154,8 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.86 2002/09/14 23:02:06 Philippe.Blain Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.97 2003/12/27 16:43:59 tom Exp $")
 
-#define CURRENT_ROW	SP->_cursrow	/* phys cursor row */
-#define CURRENT_COLUMN	SP->_curscol	/* phys cursor column */
-#define CURRENT_ATTR	SP->_current_attr	/* current phys attribute */
-#define REAL_ATTR	SP->_current_attr	/* phys current attribute */
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
 
@@ -296,10 +294,11 @@ NCURSES_EXPORT(void)
 _nc_mvcur_init(void)
 /* initialize the cost structure */
 {
-    /*
-     * 9 = 7 bits + 1 parity + 1 stop.
-     */
-    SP->_char_padding = (9 * 1000 * 10) / (BAUDRATE > 0 ? BAUDRATE : 9600);
+    if (isatty(fileno(SP->_ofp)))
+	SP->_char_padding = ((BAUDBYTE * 1000 * 10)
+			     / (BAUDRATE > 0 ? BAUDRATE : 9600));
+    else
+	SP->_char_padding = 1;	/* must be nonzero */
     if (SP->_char_padding <= 0)
 	SP->_char_padding = 1;	/* must be nonzero */
     TR(TRACE_CHARPUT | TRACE_MOVE, ("char_padding %d msecs", SP->_char_padding));
@@ -370,6 +369,13 @@ _nc_mvcur_init(void)
     SP->_el1_cost = NormalizedCost(clr_bol, 1);
     SP->_dch1_cost = NormalizedCost(delete_character, 1);
     SP->_ich1_cost = NormalizedCost(insert_character, 1);
+
+    /*
+     * If this is a bce-terminal, we want to bias the choice so we use clr_eol
+     * rather than spaces at the end of a line.
+     */
+    if (back_color_erase)
+	SP->_el_cost = 0;
 
     /* parameterized screen-update strings */
     SP->_dch_cost = NormalizedCost(tparm(parm_dch, 23), 1);
@@ -508,10 +514,10 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 	    n = (from_y - to_y);
 
 	    if (parm_up_cursor
-		&& SP->_cup_cost < vcost
+		&& SP->_cuu_cost < vcost
 		&& _nc_safe_strcat(_nc_str_copy(target, &save),
 				   tparm(parm_up_cursor, n))) {
-		vcost = SP->_cup_cost;
+		vcost = SP->_cuu_cost;
 	    }
 
 	    if (cursor_up && (n * SP->_cuu1_cost < vcost)) {
@@ -570,7 +576,6 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 		}
 #endif /* USE_HARD_TABS */
 
-#if defined(REAL_ATTR) && defined(WANT_CHAR)
 		if (n <= 0 || n >= (int) check.s_size)
 		    ovw = FALSE;
 #if BSD_TPUTS
@@ -601,7 +606,7 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 
 		    for (i = 0; i < n; i++) {
 			NCURSES_CH_T ch = WANT_CHAR(to_y, from_x + i);
-			if (AttrOf(ch) != CURRENT_ATTR
+			if (AttrOf(ch) != SP->_current_attr
 #if USE_WIDEC_SUPPORT
 			    || !Charable(ch)
 #endif
@@ -619,9 +624,7 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 		    *check.s_tail = '\0';
 		    check.s_size -= n;
 		    lhcost += n * SP->_char_padding;
-		} else
-#endif /* defined(REAL_ATTR) && defined(WANT_CHAR) */
-		{
+		} else {
 		    lhcost = repeated_append(&check, lhcost, SP->_cuf1_cost,
 					     n, cursor_right);
 		}
@@ -817,20 +820,22 @@ onscreen_mvcur(int yold, int xold, int ynew, int xnew, bool ovw)
     }
 #endif /* !NO_OPTIMIZE */
 
+  nonlocal:
 #if defined(MAIN) || defined(NCURSES_TEST)
     gettimeofday(&after, NULL);
     diff = after.tv_usec - before.tv_usec
 	+ (after.tv_sec - before.tv_sec) * 1000000;
     if (!profiling)
 	(void) fprintf(stderr,
-		       "onscreen: %d msec, %f 28.8Kbps char-equivalents\n",
+		       "onscreen: %d microsec, %f 28.8Kbps char-equivalents\n",
 		       (int) diff, diff / 288);
 #endif /* MAIN */
 
-  nonlocal:
     if (usecost != INFINITY) {
 	TPUTS_TRACE("mvcur");
 	tputs(buffer, 1, _nc_outch);
+	SP->_cursrow = ynew;
+	SP->_curscol = xnew;
 	return (OK);
     } else
 	return (ERR);
@@ -840,67 +845,95 @@ NCURSES_EXPORT(int)
 mvcur(int yold, int xold, int ynew, int xnew)
 /* optimized cursor move from (yold, xold) to (ynew, xnew) */
 {
+    attr_t oldattr;
+    int code;
+
     TR(TRACE_CALLS | TRACE_MOVE, (T_CALLED("mvcur(%d,%d,%d,%d)"),
 				  yold, xold, ynew, xnew));
 
-    if (SP == 0)
-	returnCode(ERR);
+    if (SP == 0) {
+	code = ERR;
+    } else if (yold == ynew && xold == xnew) {
+	code = OK;
+    } else {
 
-    if (yold == ynew && xold == xnew)
-	returnCode(OK);
+	/*
+	 * Most work here is rounding for terminal boundaries getting the
+	 * column position implied by wraparound or the lack thereof and
+	 * rolling up the screen to get ynew on the screen.
+	 */
+	if (xnew >= screen_columns) {
+	    ynew += xnew / screen_columns;
+	    xnew %= screen_columns;
+	}
 
-    /*
-     * Most work here is rounding for terminal boundaries getting the
-     * column position implied by wraparound or the lack thereof and
-     * rolling up the screen to get ynew on the screen.
-     */
+	/*
+	 * Force restore even if msgr is on when we're in an alternate
+	 * character set -- these have a strong tendency to screw up the CR &
+	 * LF used for local character motions!
+	 */
+	oldattr = SP->_current_attr;
+	if ((oldattr & A_ALTCHARSET)
+	    || (oldattr && !move_standout_mode)) {
+	    TR(TRACE_CHARPUT, ("turning off (%#lx) %s before move",
+			       oldattr, _traceattr(oldattr)));
+	    (void) vidattr(A_NORMAL);
+	}
 
-    if (xnew >= screen_columns) {
-	ynew += xnew / screen_columns;
-	xnew %= screen_columns;
-    }
-    if (xold >= screen_columns) {
-	int l;
+	if (xold >= screen_columns) {
+	    int l;
 
-	if (SP->_nl) {
-	    l = (xold + 1) / screen_columns;
-	    yold += l;
-	    if (yold >= screen_lines)
-		l -= (yold - screen_lines - 1);
+	    if (SP->_nl) {
+		l = (xold + 1) / screen_columns;
+		yold += l;
+		if (yold >= screen_lines)
+		    l -= (yold - screen_lines - 1);
 
-	    while (l > 0) {
-		if (newline) {
-		    TPUTS_TRACE("newline");
-		    tputs(newline, 0, _nc_outch);
-		} else
-		    putchar('\n');
-		l--;
-		if (xold > 0) {
+		if (l > 0) {
 		    if (carriage_return) {
 			TPUTS_TRACE("carriage_return");
-			tputs(carriage_return, 0, _nc_outch);
+			putp(carriage_return);
 		    } else
-			putchar('\r');
+			_nc_outch('\r');
 		    xold = 0;
+
+		    while (l > 0) {
+			if (newline) {
+			    TPUTS_TRACE("newline");
+			    putp(newline);
+			} else
+			    _nc_outch('\n');
+			l--;
+		    }
 		}
+	    } else {
+		/*
+		 * If caller set nonl(), we cannot really use newlines to
+		 * position to the next row.
+		 */
+		xold = -1;
+		yold = -1;
 	    }
-	} else {
-	    /*
-	     * If caller set nonl(), we cannot really use newlines to position
-	     * to the next row.
-	     */
-	    xold = -1;
-	    yold = -1;
+	}
+
+	if (yold > screen_lines - 1)
+	    yold = screen_lines - 1;
+	if (ynew > screen_lines - 1)
+	    ynew = screen_lines - 1;
+
+	/* destination location is on screen now */
+	code = onscreen_mvcur(yold, xold, ynew, xnew, TRUE);
+
+	/*
+	 * Restore attributes if we disabled them before moving.
+	 */
+	if (oldattr != SP->_current_attr) {
+	    TR(TRACE_CHARPUT, ("turning on (%#lx) %s after move",
+			       oldattr, _traceattr(oldattr)));
+	    (void) vidattr(oldattr);
 	}
     }
-
-    if (yold > screen_lines - 1)
-	yold = screen_lines - 1;
-    if (ynew > screen_lines - 1)
-	ynew = screen_lines - 1;
-
-    /* destination location is on screen now */
-    returnCode(onscreen_mvcur(yold, xold, ynew, xnew, TRUE));
+    returnCode(code);
 }
 
 #if defined(TRACE) || defined(NCURSES_TEST)
@@ -952,7 +985,7 @@ delay_output(int ms GCC_UNUSED)
     return OK;
 }
 
-static char tname[MAX_ALIAS];
+static char tname[PATH_MAX];
 
 static void
 load_term(void)

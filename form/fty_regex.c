@@ -8,13 +8,12 @@
 /***************************************************************************
 *                                                                          *
 *  Author : Juergen Pfeifer                                                *
-*  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en              *
 *                                                                          *
 ***************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_regex.c,v 1.16 2002/07/06 15:33:27 juergen Exp $")
+MODULE_ID("$Id: fty_regex.c,v 1.17 2003/10/25 14:54:48 tom Exp $")
 
 #if HAVE_REGEX_H_FUNCS	/* We prefer POSIX regex */
 #include <regex.h>

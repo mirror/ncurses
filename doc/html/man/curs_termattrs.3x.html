@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_termattrs.3x,v 1.8 2002/05/11 21:32:26 tom Exp @
+  * @Id: curs_termattrs.3x,v 1.9 2003/12/27 18:37:47 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,6 +40,10 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
+<STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>                             <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
+
+
+
 
 </PRE>
 <H2>NAME</H2><PRE>
@@ -114,8 +118,8 @@
        <STRONG>curses</STRONG>  program needs complete control over the appearance
        of the screen.
 
-       The <STRONG>termname</STRONG> routine returns the value of the  environmen-
-       tal variable <STRONG>TERM</STRONG> (truncated to 14 characters).
+       The <STRONG>termname</STRONG> routine returns the  terminal  name  used  by
+       <STRONG>setupterm</STRONG>.
 
 
 </PRE>
@@ -136,7 +140,8 @@
 <H2>PORTABILITY</H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.  It changes the return type of <STRONG>termattrs</STRONG> to the new
-       type <STRONG>attr_t</STRONG>.
+       type  <STRONG>attr_t</STRONG>.  Most versions of curses truncate the result
+       returned by <STRONG>termname</STRONG> to 14 characters.
 
 
 </PRE>
@@ -145,23 +150,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                               <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *
+ * Copyright (c) 2003 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,58 +26,52 @@
  * authorization.                                                           *
  ****************************************************************************/
 
-/****************************************************************************
- *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
- *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- ****************************************************************************/
-
 /*
-**	lib_insstr.c
-**
-**	The routine winsnstr().
-**
+**	Support functions for wide/narrow conversion.
 */
 
 #include <curses.priv.h>
-#include <ctype.h>
 
-MODULE_ID("$Id: lib_insstr.c,v 1.20 2002/09/28 16:22:34 tom Exp $")
+MODULE_ID("$Id: charable.c,v 1.2 2003/07/05 18:04:08 tom Exp $")
 
-NCURSES_EXPORT(int)
-winsnstr(WINDOW *win, const char *s, int n)
+NCURSES_EXPORT(bool) _nc_is_charable(wchar_t ch)
 {
-    int code = ERR;
-    NCURSES_SIZE_T oy;
-    NCURSES_SIZE_T ox;
-    const unsigned char *str = (const unsigned char *) s;
-    const unsigned char *cp;
+    bool result;
+#if HAVE_WCTOB
+    result = (wctob(ch) == ch);
+#else
+    result = (_nc_to_char(ch) >= 0);
+#endif
+    return result;
+}
 
-    T((T_CALLED("winsnstr(%p,%s,%d)"), win, _nc_visbufn(s,n), n));
+NCURSES_EXPORT(int) _nc_to_char(wint_t ch)
+{
+    int result;
+#if HAVE_WCTOB
+    result = wctob(ch);
+#elif HAVE_WCTOMB
+    char temp[MB_LEN_MAX];
+    result = wctomb(temp, ch);
+    if (strlen(temp) == 1)
+	result = UChar(temp[0]);
+    else
+	result = -1;
+#endif
+    return result;
+}
 
-    if (win && str) {
-	oy = win->_cury;
-	ox = win->_curx;
-	for (cp = str; *cp && (n <= 0 || (cp - str) < n); cp++) {
-	    if (*cp == '\n' || *cp == '\r' || *cp == '\t' || *cp == '\b') {
-		NCURSES_CH_T wch;
-		SetChar2(wch, *cp);
-		_nc_waddch_nosync(win, wch);
-	    } else if (is7bits(*cp) && iscntrl(*cp)) {
-		winsch(win, ' ' + (chtype) (*cp));
-		winsch(win, (chtype) '^');
-		win->_curx += 2;
-	    } else {
-		winsch(win, (chtype) (*cp));
-		win->_curx++;
-	    }
-	    if (win->_curx > win->_maxx)
-		win->_curx = win->_maxx;
-	}
-
-	win->_curx = ox;
-	win->_cury = oy;
-	_nc_synchook(win);
-	code = OK;
-    }
-    returnCode(code);
+NCURSES_EXPORT(wint_t) _nc_to_widechar(int ch)
+{
+    wint_t result;
+#if HAVE_BTOWC
+    result = btowc(ch);
+#elif HAVE_MBTOWC
+    char temp[2];
+    temp[0] = ch;
+    temp[1] = '\0';
+    if (mbtowc((wchar_t *) (&result), temp, 1) != 1)
+	result = WEOF;
+#endif
+    return result;
 }

@@ -2,10 +2,9 @@
  * Date:  1997/03/17
  * From:  bayern@morpheus.cis.yale.edu
  *
- * $Id: testscanw.c,v 1.9 2002/06/29 23:32:18 tom Exp $
+ * $Id: testscanw.c,v 1.10 2002/10/19 22:11:24 tom Exp $
  */
 #include <test.priv.h>
-#include <ctype.h>
 
 int
 main(int argc, char *argv[])

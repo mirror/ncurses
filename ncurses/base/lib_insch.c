@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Sven Verdoolaege                                                *
+ *     and: Thomas E. Dickey                                                *
  ****************************************************************************/
 
 /*
@@ -39,29 +41,98 @@
 */
 
 #include <curses.priv.h>
+#include <ctype.h>
 
-MODULE_ID("$Id: lib_insch.c,v 1.15 2001/06/09 23:47:38 skimo Exp $")
+MODULE_ID("$Id: lib_insch.c,v 1.18 2002/11/23 21:41:05 tom Exp $")
+
+/*
+ * Insert the given character, updating the current location to simplify
+ * inserting a string.
+ */
+void
+_nc_insert_ch(WINDOW *win, chtype ch)
+{
+    NCURSES_CH_T wch;
+    int count;
+
+    switch (ch) {
+    case '\t':
+	for (count = (TABSIZE - (win->_curx % TABSIZE)); count > 0; count--)
+	    _nc_insert_ch(win, ' ');
+	break;
+    case '\n':
+    case '\r':
+    case '\b':
+	SetChar2(wch, ch);
+	_nc_waddch_nosync(win, wch);
+	break;
+    default:
+	if (is7bits(ch) && iscntrl(ch)) {
+	    _nc_insert_ch(win, '^');
+	    _nc_insert_ch(win, '@' + (ch));
+	} else if (win->_curx <= win->_maxx) {
+	    struct ldat *line = &(win->_line[win->_cury]);
+	    NCURSES_CH_T *end = &(line->text[win->_curx]);
+	    NCURSES_CH_T *temp1 = &(line->text[win->_maxx]);
+	    NCURSES_CH_T *temp2 = temp1 - 1;
+
+	    SetChar2(wch, ch);
+
+	    CHANGED_TO_EOL(line, win->_curx, win->_maxx);
+	    while (temp1 > end)
+		*temp1-- = *temp2--;
+
+	    *temp1 = _nc_render(win, wch);
+
+	    win->_curx++;
+	}
+	break;
+    }
+}
 
 NCURSES_EXPORT(int)
 winsch(WINDOW *win, chtype c)
 {
+    NCURSES_SIZE_T oy;
+    NCURSES_SIZE_T ox;
     int code = ERR;
 
     T((T_CALLED("winsch(%p, %s)"), win, _tracechtype(c)));
 
-    if (win) {
-	struct ldat *line = &(win->_line[win->_cury]);
-	NCURSES_CH_T *end = &(line->text[win->_curx]);
-	NCURSES_CH_T *temp1 = &(line->text[win->_maxx]);
-	NCURSES_CH_T *temp2 = temp1 - 1;
-	NCURSES_CH_T wch;
-	SetChar2(wch, c);
+    if (win != 0) {
+	oy = win->_cury;
+	ox = win->_curx;
 
-	CHANGED_TO_EOL(line, win->_curx, win->_maxx);
-	while (temp1 > end)
-	    *temp1-- = *temp2--;
+	_nc_insert_ch(win, c);
 
-	*temp1 = _nc_render(win, wch);
+	win->_curx = ox;
+	win->_cury = oy;
+	_nc_synchook(win);
+	code = OK;
+    }
+    returnCode(code);
+}
+
+NCURSES_EXPORT(int)
+winsnstr(WINDOW *win, const char *s, int n)
+{
+    int code = ERR;
+    NCURSES_SIZE_T oy;
+    NCURSES_SIZE_T ox;
+    const unsigned char *str = (const unsigned char *) s;
+    const unsigned char *cp;
+
+    T((T_CALLED("winsnstr(%p,%s,%d)"), win, _nc_visbufn(s, n), n));
+
+    if (win != 0 && str != 0) {
+	oy = win->_cury;
+	ox = win->_curx;
+	for (cp = str; *cp && (n <= 0 || (cp - str) < n); cp++) {
+	    _nc_insert_ch(win, (chtype) UChar(*cp));
+	}
+	win->_curx = ox;
+	win->_cury = oy;
+	_nc_synchook(win);
 	code = OK;
     }
     returnCode(code);

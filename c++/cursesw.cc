@@ -20,13 +20,13 @@
           and Anatoly Ivasyuk (anatoly@nick.csh.rit.edu)
 
   modified by Juergen Pfeifer
-  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
+  and Thomas Dickey (noting that more than 70% of this file has been changed)
 */
 
 #include "internal.h"
 #include "cursesw.h"
 
-MODULE_ID("$Id: cursesw.cc,v 1.25 2002/07/06 15:47:52 juergen Exp $")
+MODULE_ID("$Id: cursesw.cc,v 1.26 2003/10/25 15:02:46 tom Exp $")
 
 #define COLORS_NEED_INITIALIZATION  -1
 #define COLORS_NOT_INITIALIZED       0

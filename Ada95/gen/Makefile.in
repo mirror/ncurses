@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -27,10 +27,9 @@
 ##############################################################################
 #
 #  Author:  Juergen Pfeifer, 1996
-#  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 #
 #  Version Control
-#  $Revision: 1.41 $
+#  $Revision: 1.44 $
 #
 .SUFFIXES:
 
@@ -53,6 +52,7 @@ INSTALL_DATA	= @INSTALL_DATA@
 AWK		= @AWK@
 LN_S		= @LN_S@
 
+CC		= @CC@
 HOST_CC		= @BUILD_CC@
 CFLAGS		= @CFLAGS@
 
@@ -82,8 +82,6 @@ DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
 
 GNATHTML	= `type -p gnathtml || type -p gnathtml.pl`
 GNATHP          = www.gnat.com
-MAIL            = www.familiepfeifer.de/Contact.aspx?Lang=en
-HOMEP           = www.familiepfeifer.de/juergen
 
 ################################################################################
 ALIB            = @cf_ada_package@
@@ -171,9 +169,9 @@ install.libs :: $(ADA_INCLUDE)
 install \
 install.libs :: $(ADA_OBJECTS)
 	@echo installing package $(ALIB) in $(ADA_OBJECTS)
-	@chmod a-wx $(ADA_SRCDIR)/*.ali
+	@-chmod a-wx $(ADA_SRCDIR)/*.ali
 	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ali' $(ADA_SRCDIR) $(ADA_OBJECTS)
-	@chmod u+x $(ADA_SRCDIR)/*.ali
+	@-chmod u+x $(ADA_SRCDIR)/*.ali
 
 uninstall \
 uninstall.libs ::
@@ -420,11 +418,9 @@ adahtml:
 	   sed -e 's%"&gt;%">%g' |\
 	   sed -e 's/3X/3x/g' |\
 	   sed -e 's/$$\([ABCDEFGHIJKLMNOPQRSTUVWXZabcdefghijklmnopqrstuvwxz0123456789_]*:.*\)\$$/@\1@/' |\
-	   sed -e 's%Juergen Pfeifer%<A HREF="http://$(HOMEP)">J\&uuml;rgen Pfeifer</A>%g' |\
-	   sed -e 's%http://$(MAIL)%<A HREF="http://$(MAIL)">$(MAIL)</A>%g' |\
 	   sed -e 's%&lt;/A&gt;%</A>%g' > $$a.tmp ;\
            mv $$a.tmp $$f ;\
-        done
+	done
 	@rm -f *.ad[sb] *.ali *.tmp
 	@for f in funcs.htm main.htm ; do \
 	  sed -e "\%<A HREF=funcs/ .htm>\[ \]</A>%d" < html/$$f > $$f ;\

@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,14 +29,13 @@
 
 /****************************************************************************
  *   Author: Juergen Pfeifer, 1993, 1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "internal.h"
 #include "cursesp.h"
 #include <string.h>
 
-MODULE_ID("$Id: cursesp.cc,v 1.20 2002/07/13 11:35:08 juergen Exp $")
+MODULE_ID("$Id: cursesp.cc,v 1.21 2003/10/25 15:04:46 tom Exp $")
 
 NCursesPanel* NCursesPanel::dummy = (NCursesPanel*)0;
 

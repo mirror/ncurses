@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.64 2002/01/19 20:25:31 NIIBE.Yutaka Exp $
+# $Id: Makefile.in,v 1.72 2004/01/16 22:44:56 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,1999,2000,2001,2002 Free Software Foundation, Inc.      #
+# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -27,7 +27,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997
+# Author: Thomas E. Dickey
 #
 #  Simple makefile for c++ window class demo
 
@@ -38,7 +38,8 @@ SHELL		= /bin/sh
 
 CF_MFLAGS 	= @cf_cv_makeflags@
 @SET_MAKE@
-x		= @PROG_EXT@
+x		= @EXEEXT@
+o		= .@OBJEXT@
 
 MODEL		= ../@DFT_OBJ_SUBDIR@
 DESTDIR		= @DESTDIR@
@@ -48,7 +49,12 @@ exec_prefix	= @exec_prefix@
 libdir		= @libdir@
 includedir	= @includedir@
 
-LIBTOOL		= @LIBTOOL@
+LIBTOOL		= @LIBTOOL_CXX@
+LIBTOOL_CLEAN	= @LIB_CLEAN@
+LIBTOOL_COMPILE	= @LIB_COMPILE@
+LIBTOOL_LINK	= @LIB_LINK@
+LIBTOOL_INSTALL	= @LIB_INSTALL@
+LIBTOOL_UNINSTALL = @LIB_UNINSTALL@
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -58,7 +64,7 @@ AR_OPTS		= @AR_OPTS@
 
 CXX_AR		= @CXX_AR@
 CXX_AR_OPTS	= @CXX_AR_OPTS@
-RANLIB		= @RANLIB@
+RANLIB		= @LIB_PREP@
 
 CXX		= @CXX@
 CPP		= @CPP@
@@ -83,7 +89,9 @@ NCURSES_MINOR	= @NCURSES_MINOR@
 REL_VERSION     = @cf_cv_rel_version@
 ABI_VERSION	= @cf_cv_abi_version@
 
-LINK		= @LINK_PROGS@ $(LIBTOOL) $(CXX) @CXXLDFLAGS@
+LINK		= @LINK_PROGS@ $(LIBTOOL_LINK) $(CXX) @CXXLDFLAGS@
+SHLIB_DIRS	= -L../lib
+SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@LIB_SUFFIX@ @SHLIB_LIST@
 
 LIBROOT		= ncurses++
 
@@ -102,11 +110,11 @@ LINK_SHARED	= $(LINK_FLAGS)
 LDFLAGS		= @TEST_ARGS@ @LDFLAGS@ \
 	@LD_MODEL@ @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ $(CXXLIBS)
 
-LDFLAGS_LIBTOOL	= $(LDFLAGS)
-LDFLAGS_NORMAL	= $(LDFLAGS)
-LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
-LDFLAGS_PROFILE	= $(LDFLAGS) -pg
-LDFLAGS_SHARED	= $(LDFLAGS) @LD_SHARED_OPTS@
+LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
+LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
+LDFLAGS_DEBUG	= $(LDFLAGS) $(CFLAGS_DEBUG)
+LDFLAGS_PROFILE	= $(LDFLAGS) $(CFLAGS_PROFILE)
+LDFLAGS_SHARED	= $(LDFLAGS) $(CFLAGS_SHARED) @LD_SHARED_OPTS@
 
 LDFLAGS_DEFAULT	= $(LINK_@DFT_UPR_MODEL@) $(LDFLAGS_@DFT_UPR_MODEL@)
 
@@ -126,27 +134,28 @@ depend :
 # pull in all of the ncurses libraries (panel, menu, form, ncurses) as direct
 # dependencies.
 LIB_OBJS = \
-	$(MODEL)/cursesf.o \
-	$(MODEL)/cursesm.o \
-	$(MODEL)/cursesw.o \
-	$(MODEL)/cursespad.o \
-	$(MODEL)/cursesp.o \
-	$(MODEL)/cursslk.o \
-	$(MODEL)/cursesapp.o \
-	$(MODEL)/cursesmain.o
+	$(MODEL)/cursesf$o \
+	$(MODEL)/cursesm$o \
+	$(MODEL)/cursesw$o \
+	$(MODEL)/cursespad$o \
+	$(MODEL)/cursesp$o \
+	$(MODEL)/cursslk$o \
+	$(MODEL)/cursesapp$o \
+	$(MODEL)/cursesmain$o
 
 ../lib/$(LIBNAME_NORMAL) : $(LIB_OBJS)
 	$(CXX_AR) $(CXX_AR_OPTS) $@ $?
 	$(RANLIB) $@
 
 ../lib/$(LIBNAME_LIBTOOL) : $(LIB_OBJS)
-	cd ../lib && $(LIBTOOL) $(CXX) -o $(LIBNAME) $(LIB_OBJS:.o=.lo) \
+	cd ../lib && $(LIBTOOL_LINK) $(CXX) $(CXXFLAGS) \
+		-o $(LIBNAME) $(LIB_OBJS:$o=.lo) \
 		-rpath $(INSTALL_PREFIX)$(libdir) \
-		-version-info $(NCURSES_MAJOR):$(NCURSES_MINOR)
+		-version-info $(NCURSES_MAJOR):$(NCURSES_MINOR) $(SHLIB_LIST)
 
-OBJS_DEMO = $(MODEL)/demo.o
+OBJS_DEMO = $(MODEL)/demo$o
 
-$(MODEL)/demo.o : $(srcdir)/demo.cc \
+$(MODEL)/demo$o : $(srcdir)/demo.cc \
 	$(cursesf_h) $(cursesm_h) $(cursesapp_h)
 
 demo$x:	$(OBJS_DEMO) \
@@ -163,18 +172,19 @@ $(DESTDIR)$(libdir) :
 
 install \
 install.libs:: ../lib/$(LIBNAME) $(DESTDIR)$(libdir)
-	$(LIBTOOL) $(INSTALL) ../lib/$(LIBNAME) $(DESTDIR)$(libdir)/$(LIBNAME)
+	$(LIBTOOL_INSTALL) $(INSTALL) ../lib/$(LIBNAME) $(DESTDIR)$(libdir)/$(LIBNAME)
 
 uninstall \
 uninstall.libs::
-	-$(LIBTOOL) rm -f $(DESTDIR)$(libdir)/$(LIBNAME)
+	-$(LIBTOOL_UNINSTALL) rm -f $(DESTDIR)$(libdir)/$(LIBNAME)
 
 mostlyclean ::
 	-rm -f core tags TAGS *~ *.bak *.i *.ii *.ln *.atac trace
 
 clean :: mostlyclean
+	-sh -c "if test -n '$x' ; then $(MAKE) clean x=''; fi"
 	-rm -rf $(MODEL)/SunWS_cache
-	-$(LIBTOOL) rm -f demo$x $(AUTO_SRC) ../lib/$(LIBNAME) $(LIB_OBJS) $(LIB_OBJS:.o=.lo) $(OBJS_DEMO)
+	-$(LIBTOOL_CLEAN) rm -f demo$x $(AUTO_SRC) ../lib/$(LIBNAME) $(LIB_OBJS) $(LIB_OBJS:$o=.lo) $(OBJS_DEMO)
 	-rm -rf .libs
 
 distclean :: clean

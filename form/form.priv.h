@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,8 +28,9 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
+
+/* $Id: form.priv.h,v 0.11 2003/11/08 20:38:51 tom Exp $ */
 
 #include "mf_common.h"
 #include "form.h"
@@ -41,7 +42,7 @@
 
 /* field status values */
 #define _CHANGED         (0x01) /* Field has been changed                 */
-#define _NEWTOP          (0x02) /* Vertical scrolling occured             */
+#define _NEWTOP          (0x02) /* Vertical scrolling occurred            */
 #define _NEWPAGE	 (0x04) /* field begins new page of form          */
 #define _MAY_GROW        (0x08) /* dynamic field may still grow           */
 
@@ -49,7 +50,7 @@
 #define _LINKED_TYPE     (0x01) /* Type is a linked type                  */
 #define _HAS_ARGS        (0x02) /* Type has arguments                     */
 #define _HAS_CHOICE      (0x04) /* Type has choice methods                */
-#define _RESIDENT        (0x08) /* Type is builtin                        */
+#define _RESIDENT        (0x08) /* Type is built-in                       */
 
 /* This are the field options required to be a selectable field in field
    navigation requests */

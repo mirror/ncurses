@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2002 Free Software Foundation, Inc.                        *
+.\" Copyright (c) 2002,2003 Free Software Foundation, Inc.                   *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wstr.3x,v 1.2 2002/05/18 21:48:15 tom Exp $
+.\" $Id: curs_get_wstr.3x,v 1.3 2003/07/05 11:15:28 tom Exp $
 .TH curs_get_wstr 3X ""
 .SH NAME
 \fBget_wstr\fR,
@@ -151,6 +151,9 @@ or if the lower-level \fBwget_wch\fR call returns an ERR.
 In the latter case,
 an ERR return without other data is treated as an end-of-file condition,
 and the returned array contains a \fBWEOF\fR followed by a null \fBwchar_t\fR.
+.PP
+X/Open curses documents these functions to pass an array of \fBwchar_t\fR,
+but all of the vendors implement this using \fBwint_t\fR.
 .SH SEE ALSO
 Functions:
 \fBcurses\fR(3X),

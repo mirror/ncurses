@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.67 2002/09/07 17:17:59 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.71 2003/05/17 23:49:28 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -52,6 +52,32 @@ ESCDELAY = 1000;		/* max interval betw. chars in funkeys, in millisecs */
 #else
 #define TWAIT_MASK 3
 #endif
+
+/*
+ * Check for mouse activity, returning nonzero if we find any.
+ */
+static int
+check_mouse_activity(int delay EVENTLIST_2nd(_nc_eventlist * evl))
+{
+    int rc;
+
+#if USE_SYSMOUSE
+    if ((SP->_mouse_type == M_SYSMOUSE)
+	&& (SP->_sysmouse_head < SP->_sysmouse_tail)) {
+	return 2;
+    }
+#endif
+    rc = _nc_timed_wait(TWAIT_MASK, delay, (int *) 0 EVENTLIST_2nd(evl));
+#if USE_SYSMOUSE
+    if ((SP->_mouse_type == M_SYSMOUSE)
+	&& (SP->_sysmouse_head < SP->_sysmouse_tail)
+	&& (rc == 0)
+	&& (errno == EINTR)) {
+	rc |= 2;
+    }
+#endif
+    return rc;
+}
 
 static inline int
 fifo_peek(void)
@@ -88,7 +114,7 @@ fifo_push(EVENTLIST_0th(_nc_eventlist * evl))
 {
     int n;
     int ch = 0;
-    int mask;
+    int mask = 0;
 
     (void) mask;
     if (tail == -1)
@@ -101,11 +127,11 @@ fifo_push(EVENTLIST_0th(_nc_eventlist * evl))
 
 #ifdef NCURSES_WGETCH_EVENTS
     if (evl
-#if USE_GPM_SUPPORT || defined(USE_EMX_MOUSE)
+#if USE_GPM_SUPPORT || USE_EMX_MOUSE || USE_SYSMOUSE
 	|| (SP->_mouse_fd >= 0)
 #endif
 	) {
-	mask = _nc_timed_wait(TWAIT_MASK, -1, (int *) 0, evl);
+	mask = check_mouse_activity(-1 EVENTLIST_2nd(evl));
     } else
 	mask = 0;
 
@@ -114,13 +140,27 @@ fifo_push(EVENTLIST_0th(_nc_eventlist * evl))
 	ungetch(KEY_EVENT);
 	return KEY_EVENT;
     }
-#elif USE_GPM_SUPPORT || defined(USE_EMX_MOUSE)
-    if (SP->_mouse_fd >= 0)
-	mask = _nc_timed_wait(TWAIT_MASK, -1, (int *) 0 EVENTLIST_2nd(evl));
+#elif USE_GPM_SUPPORT || USE_EMX_MOUSE || USE_SYSMOUSE
+    if (SP->_mouse_fd >= 0) {
+	mask = check_mouse_activity(-1 EVENTLIST_2nd(evl));
+    }
 #endif
 
-#if USE_GPM_SUPPORT || defined(USE_EMX_MOUSE)
+#if USE_GPM_SUPPORT || USE_EMX_MOUSE
     if ((SP->_mouse_fd >= 0) && (mask & 2)) {
+	SP->_mouse_event(SP);
+	ch = KEY_MOUSE;
+	n = 1;
+    } else
+#endif
+#if USE_SYSMOUSE
+	if ((SP->_mouse_type == M_SYSMOUSE)
+	    && (SP->_sysmouse_head < SP->_sysmouse_tail)) {
+	SP->_mouse_event(SP);
+	ch = KEY_MOUSE;
+	n = 1;
+    } else if ((SP->_mouse_type == M_SYSMOUSE)
+	       && (mask <= 0) && errno == EINTR) {
 	SP->_mouse_event(SP);
 	ch = KEY_MOUSE;
 	n = 1;
@@ -214,13 +254,19 @@ _nc_wgetch(WINDOW *win,
      * stuff its contents in the FIFO queue, and pop off
      * the first character to return it.
      */
-    if (head == -1 && !SP->_raw && !SP->_cbreak) {
+    if (head == -1 &&
+	!SP->_notty &&
+	!SP->_raw &&
+	!SP->_cbreak &&
+	!SP->_called_wgetch) {
 	char buf[MAXCOLUMNS], *sp;
 	int rc;
 
 	TR(TRACE_IEVENT, ("filling queue in cooked mode"));
 
+	SP->_called_wgetch = TRUE;
 	rc = wgetnstr(win, buf, MAXCOLUMNS);
+	SP->_called_wgetch = FALSE;
 
 	/* ungetch in reverse order */
 #ifdef NCURSES_WGETCH_EVENTS
@@ -265,10 +311,7 @@ _nc_wgetch(WINDOW *win,
 	TR(TRACE_IEVENT, ("delay is %d milliseconds", delay));
 
 	if (head == -1) {	/* fifo is empty */
-	    int rc = _nc_timed_wait(TWAIT_MASK,
-				    delay,
-				    (int *) 0
-				    EVENTLIST_2nd(evl));
+	    int rc = check_mouse_activity(delay EVENTLIST_2nd(evl));
 
 #ifdef NCURSES_WGETCH_EVENTS
 	    if (rc & 4) {
@@ -308,10 +351,8 @@ _nc_wgetch(WINDOW *win,
 		break;
 	} while
 	    (ch == KEY_MOUSE
-	     && (((rc = _nc_timed_wait(TWAIT_MASK,
-				       SP->_maxclick,
-				       (int *) 0
-				       EVENTLIST_2nd(evl))) != 0
+	     && (((rc = check_mouse_activity(SP->_maxclick
+					     EVENTLIST_2nd(evl))) != 0
 		  && !(rc & 4))
 		 || !SP->_mouse_parse(runcount)));
 #ifdef NCURSES_WGETCH_EVENTS
@@ -513,14 +554,11 @@ kgetch(EVENTLIST_0th(_nc_eventlist * evl))
 	    int rc;
 
 	    TR(TRACE_IEVENT, ("waiting for rest of sequence"));
-	    rc = _nc_timed_wait(TWAIT_MASK,
-				timeleft,
-				&timeleft
-				EVENTLIST_2nd(evl));
+	    rc = check_mouse_activity(timeleft EVENTLIST_2nd(evl));
 #ifdef NCURSES_WGETCH_EVENTS
 	    if (rc & 4) {
 		TR(TRACE_IEVENT, ("interrupted by a user event"));
-		/* FIXME Should have preserved timeleft for reusal... */
+		/* FIXME Should have preserved remainder timeleft for reusal... */
 		peek = head;	/* Restart interpreting later */
 		return KEY_EVENT;
 	    }

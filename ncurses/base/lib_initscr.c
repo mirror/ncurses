@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-2003               *
  ****************************************************************************/
 
 /*
@@ -39,13 +40,12 @@
 */
 
 #include <curses.priv.h>
-#include <tic.h>		/* for MAX_ALIAS */
 
 #if HAVE_SYS_TERMIO_H
 #include <sys/termio.h>		/* needed for ISC */
 #endif
 
-MODULE_ID("$Id: lib_initscr.c,v 1.32 2002/10/12 15:24:34 tom Exp $")
+MODULE_ID("$Id: lib_initscr.c,v 1.33 2003/12/27 19:13:51 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
 initscr(void)

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_printw.3x,v 1.12 2002/07/20 15:01:43 tom Exp $
+.\" $Id: curs_printw.3x,v 1.13 2002/11/16 22:28:57 tom Exp $
 .TH curs_printw 3X ""
 .SH NAME
 \fBprintw\fR,
@@ -37,17 +37,17 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 
-\fBint printw(char *fmt, ...);\fR
+\fBint printw(const char *fmt, ...);\fR
 .br
-\fBint wprintw(WINDOW *win, char *fmt, ...);\fR
+\fBint wprintw(WINDOW *win, const char *fmt, ...);\fR
 .br
-\fBint mvprintw(int y, int x, char *fmt, ...);\fR
+\fBint mvprintw(int y, int x, const char *fmt, ...);\fR
 .br
-\fBint mvwprintw(WINDOW *win, int y, int x, char *fmt, ...);\fR
+\fBint mvwprintw(WINDOW *win, int y, int x, const char *fmt, ...);\fR
 .br
-\fBint vwprintw(WINDOW *win, char *fmt, va_list varglist);\fR
+\fBint vwprintw(WINDOW *win, const char *fmt, va_list varglist);\fR
 .br
-\fBint vw_printw(WINDOW *win, char *fmt, va_list varglist);\fR
+\fBint vw_printw(WINDOW *win, const char *fmt, va_list varglist);\fR
 .br
 .SH DESCRIPTION
 The \fBprintw\fR, \fBwprintw\fR, \fBmvprintw\fR and \fBmvwprintw\fR

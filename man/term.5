@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998,2002 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term.5,v 1.14 2002/08/10 21:59:37 tom Exp $
+.\" $Id: term.5,v 1.15 2003/05/10 20:33:49 jmc Exp $
 .TH TERM 5
 .ds n 5
 .ds d @TERMINFO@
@@ -56,7 +56,7 @@ An 8 or more bit byte is assumed, but no assumptions about byte ordering
 or sign extension are made.
 .PP
 The compiled file is created with the
-.I tic 
+.I tic
 program, and read by the routine
 .IR setupterm .
 The file is divided into six parts:
@@ -84,7 +84,7 @@ The first byte contains the least significant 8 bits of the value,
 and the second byte contains the most significant 8 bits.
 (Thus, the value represented is 256*second+first.)
 The value \-1 is represented by the two bytes 0377, 0377; other negative
-values are illegal. This value generally 
+values are illegal. This value generally
 means that the corresponding capability is missing from this terminal.
 Note that this format corresponds to the hardware of the \s-1VAX\s+1
 and \s-1PDP\s+1-11 (that is, little-endian machines).
@@ -160,12 +160,12 @@ As an example, here is a hex dump of the description for the Lear-Siegler
 ADM-3, a popular though rather stupid early terminal:
 .nf
 .sp
-adm3a|lsi adm3a, 
-        am, 
-        cols#80, lines#24, 
-        bel=^G, clear=\032$<1>, cr=^M, cub1=^H, cud1=^J, 
-        cuf1=^L, cup=\\E=%p1%{32}%+%c%p2%{32}%+%c, cuu1=^K, 
-        home=^^, ind=^J, 
+adm3a|lsi adm3a,
+        am,
+        cols#80, lines#24,
+        bel=^G, clear=\032$<1>, cr=^M, cub1=^H, cud1=^J,
+        cuf1=^L, cup=\\E=%p1%{32}%+%c%p2%{32}%+%c, cuu1=^K,
+        home=^^, ind=^J,
 .sp
 .ft CW
 \s-20000  1a 01 10 00 02 00 03 00  82 00 31 00 61 64 6d 33  ........ ..1.adm3

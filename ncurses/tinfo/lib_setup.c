@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey 1996-2003                                      *
  ****************************************************************************/
 
 /*
@@ -48,7 +49,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.70 2002/10/12 21:50:18 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.79 2003/12/27 18:24:26 tom Exp $")
 
 /****************************************************************************
  *
@@ -90,9 +91,12 @@ MODULE_ID("$Id: lib_setup.c,v 1.70 2002/10/12 21:50:18 tom Exp $")
 # endif
 #endif
 
-static int _use_env = TRUE;
+NCURSES_EXPORT_VAR(char) ttytype[NAMESIZE] = "";
+NCURSES_EXPORT_VAR(int) LINES = 0;
+NCURSES_EXPORT_VAR(int) COLS = 0;
+NCURSES_EXPORT_VAR(int) TABSIZE = 0;
 
-static void do_prototype(void);
+static int _use_env = TRUE;
 
 NCURSES_EXPORT(void)
 use_env(bool f)
@@ -101,10 +105,6 @@ use_env(bool f)
     _use_env = f;
     returnVoid;
 }
-
-NCURSES_EXPORT_VAR(int) LINES = 0;
-NCURSES_EXPORT_VAR(int) COLS = 0;
-NCURSES_EXPORT_VAR(int) TABSIZE = 0;
 
 static void
 _nc_get_screensize(int *linep, int *colp)
@@ -199,7 +199,6 @@ _nc_get_screensize(int *linep, int *colp)
     else
 	TABSIZE = 8;
     T(("TABSIZE = %d", TABSIZE));
-
 }
 
 #if USE_SIZECHANGE
@@ -241,7 +240,9 @@ static int
 grab_entry(const char *const tn, TERMTYPE * const tp)
 /* return 1 if entry found, 0 if not found, -1 if database not accessible */
 {
+#if USE_DATABASE
     char filename[PATH_MAX];
+#endif
     int status;
 
     /*
@@ -275,7 +276,7 @@ grab_entry(const char *const tn, TERMTYPE * const tp)
      * a string is cancelled, for merging entries).
      */
     if (status == 1) {
-	int n;
+	unsigned n;
 	for_each_boolean(n, tp) {
 	    if (!VALID_BOOLEAN(tp->Booleans[n]))
 		tp->Booleans[n] = FALSE;
@@ -289,125 +290,6 @@ grab_entry(const char *const tn, TERMTYPE * const tp)
 }
 #endif
 
-NCURSES_EXPORT_VAR(char) ttytype[NAMESIZE] = "";
-
-/*
- *	setupterm(termname, Filedes, errret)
- *
- *	Find and read the appropriate object file for the terminal
- *	Make cur_term point to the structure.
- *
- */
-
-NCURSES_EXPORT(int)
-setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
-{
-    struct term *term_ptr;
-    int status;
-
-    START_TRACE();
-    T((T_CALLED("setupterm(%s,%d,%p)"), _nc_visbuf(tname), Filedes, errret));
-
-    if (tname == 0) {
-	tname = getenv("TERM");
-	if (tname == 0 || *tname == '\0') {
-	    ret_error0(-1, "TERM environment variable not set.\n");
-	}
-    }
-    if (strlen(tname) > MAX_NAME_SIZE) {
-	ret_error(-1, "TERM environment must be <= %d characters.\n",
-		  MAX_NAME_SIZE);
-    }
-
-    T(("your terminal name is %s", tname));
-
-    term_ptr = typeCalloc(TERMINAL, 1);
-
-    if (term_ptr == 0) {
-	ret_error0(-1, "Not enough memory to create terminal structure.\n");
-    }
-#if USE_DATABASE || USE_TERMCAP
-    status = grab_entry(tname, &term_ptr->type);
-#else
-    status = 0;
-#endif
-
-    /* try fallback list if entry on disk */
-    if (status != 1) {
-	const TERMTYPE *fallback = _nc_fallback(tname);
-
-	if (fallback) {
-	    term_ptr->type = *fallback;
-	    status = 1;
-	}
-    }
-
-    if (status == -1) {
-	ret_error0(-1, "terminals database is inaccessible\n");
-    } else if (status == 0) {
-	ret_error(0, "'%s': unknown terminal type.\n", tname);
-    }
-
-    /*
-     * Improve on SVr4 curses.  If an application mixes curses and termcap
-     * calls, it may call both initscr and tgetent.  This is not really a
-     * good thing to do, but can happen if someone tries using ncurses with
-     * the readline library.  The problem we are fixing is that when
-     * tgetent calls setupterm, the resulting Ottyb struct in cur_term is
-     * zeroed.  A subsequent call to endwin uses the zeroed terminal
-     * settings rather than the ones saved in initscr.  So we check if
-     * cur_term appears to contain terminal settings for the same output
-     * file as our current call - and copy those terminal settings.  (SVr4
-     * curses does not do this, however applications that are working
-     * around the problem will still work properly with this feature).
-     */
-    if (cur_term != 0) {
-	if (cur_term->Filedes == Filedes)
-	    term_ptr->Ottyb = cur_term->Ottyb;
-    }
-
-    set_curterm(term_ptr);
-
-    if (command_character && getenv("CC"))
-	do_prototype();
-
-    strncpy(ttytype, cur_term->type.term_names, NAMESIZE - 1);
-    ttytype[NAMESIZE - 1] = '\0';
-
-    /*
-     * Allow output redirection.  This is what SVr3 does.  If stdout is
-     * directed to a file, screen updates go to standard error.
-     */
-    if (Filedes == STDOUT_FILENO && !isatty(Filedes))
-	Filedes = STDERR_FILENO;
-    cur_term->Filedes = Filedes;
-
-    /*
-     * If an application calls setupterm() rather than initscr() or newterm(),
-     * we will not have the def_prog_mode() call in _nc_setupscreen().  Do it
-     * now anyway, so we can initialize the baudrate.
-     */
-    if (isatty(Filedes)) {
-	def_prog_mode();
-	baudrate();
-    }
-
-    _nc_get_screensize(&LINES, &COLS);
-
-    if (errret)
-	*errret = 1;
-
-    T((T_CREATE("screen %s %dx%d"), tname, LINES, COLS));
-
-    if (generic_type) {
-	ret_error(0, "'%s': I need something more specific.\n", tname);
-    }
-    if (hard_copy) {
-	ret_error(1, "'%s': I can't handle hardcopy terminals.\n", tname);
-    }
-    returnCode(OK);
-}
-
 /*
 **	do_prototype()
 **
@@ -415,7 +297,6 @@ setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
 **	and substitute it in for the prototype given in 'command_character'.
 **
 */
-
 static void
 do_prototype(void)
 {
@@ -434,4 +315,188 @@ do_prototype(void)
 		*tmp = CC;
 	}
     }
+}
+
+/*
+ * Check if we are running in a UTF-8 locale.
+ */
+NCURSES_EXPORT(char *)
+_nc_get_locale(void)
+{
+    char *env;
+    if (((env = getenv("LC_ALL")) != 0 && *env != '\0')
+	|| ((env = getenv("LC_CTYPE")) != 0 && *env != '\0')
+	|| ((env = getenv("LANG")) != 0 && *env != '\0')) {
+	return env;
+    }
+    return 0;
+}
+
+/*
+ * Check if we are running in a UTF-8 locale.
+ */
+NCURSES_EXPORT(int)
+_nc_unicode_locale(void)
+{
+    char *env = _nc_get_locale();
+    if (env != 0) {
+	if (strstr(env, ".UTF-8") != 0)
+	    return 1;
+    }
+    return 0;
+}
+
+/*
+ * Check for known broken cases where a UTF-8 locale breaks the alternate
+ * character set.
+ */
+NCURSES_EXPORT(int)
+_nc_locale_breaks_acs(void)
+{
+    char *env = getenv("TERM");
+    if (env != 0) {
+	if (strstr(env, "linux"))
+	    return 1;		/* always broken */
+	if (strstr(env, "screen") != 0
+	    && ((env = getenv("TERMCAP")) != 0
+		&& strstr(env, "screen") != 0)
+	    && strstr(env, "hhII00") != 0) {
+	    return 1;
+	}
+    }
+    return 0;
+}
+
+/*
+ *	setupterm(termname, Filedes, errret)
+ *
+ *	Find and read the appropriate object file for the terminal
+ *	Make cur_term point to the structure.
+ *
+ */
+
+NCURSES_EXPORT(int)
+setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
+{
+    int status;
+
+    START_TRACE();
+    T((T_CALLED("setupterm(%s,%d,%p)"), _nc_visbuf(tname), Filedes, errret));
+
+    if (tname == 0) {
+	tname = getenv("TERM");
+	if (tname == 0 || *tname == '\0') {
+	    ret_error0(-1, "TERM environment variable not set.\n");
+	}
+    }
+    if (strlen(tname) > MAX_NAME_SIZE) {
+	ret_error(-1, "TERM environment must be <= %d characters.\n",
+		  MAX_NAME_SIZE);
+    }
+
+    T(("your terminal name is %s", tname));
+
+    /*
+     * Allow output redirection.  This is what SVr3 does.  If stdout is
+     * directed to a file, screen updates go to standard error.
+     */
+    if (Filedes == STDOUT_FILENO && !isatty(Filedes))
+	Filedes = STDERR_FILENO;
+
+    /*
+     * Check if we have already initialized to use this terminal.  If so, we
+     * do not need to re-read the terminfo entry, or obtain TTY settings.
+     *
+     * This is an improvement on SVr4 curses.  If an application mixes curses
+     * and termcap calls, it may call both initscr and tgetent.  This is not
+     * really a good thing to do, but can happen if someone tries using ncurses
+     * with the readline library.  The problem we are fixing is that when
+     * tgetent calls setupterm, the resulting Ottyb struct in cur_term is
+     * zeroed.  A subsequent call to endwin uses the zeroed terminal settings
+     * rather than the ones saved in initscr.  So we check if cur_term appears
+     * to contain terminal settings for the same output file as our current
+     * call - and copy those terminal settings.  (SVr4 curses does not do this,
+     * however applications that are working around the problem will still work
+     * properly with this feature).
+     */
+    if (cur_term != 0
+	&& cur_term->Filedes == Filedes
+	&& cur_term->_termname != 0
+	&& !strcmp(cur_term->_termname, tname)
+	&& _nc_name_match(cur_term->type.term_names, tname, "|")) {
+	T(("reusing existing terminal information and mode-settings"));
+    } else {
+	TERMINAL *term_ptr;
+
+	term_ptr = typeCalloc(TERMINAL, 1);
+
+	if (term_ptr == 0) {
+	    ret_error0(-1,
+		       "Not enough memory to create terminal structure.\n");
+	}
+#if USE_DATABASE || USE_TERMCAP
+	status = grab_entry(tname, &term_ptr->type);
+#else
+	status = 0;
+#endif
+
+	/* try fallback list if entry on disk */
+	if (status != 1) {
+	    const TERMTYPE *fallback = _nc_fallback(tname);
+
+	    if (fallback) {
+		term_ptr->type = *fallback;
+		status = 1;
+	    }
+	}
+
+	if (status <= 0) {
+	    del_curterm(term_ptr);
+	    if (status == -1) {
+		ret_error0(-1, "terminals database is inaccessible\n");
+	    } else if (status == 0) {
+		ret_error(0, "'%s': unknown terminal type.\n", tname);
+	    }
+	}
+
+	set_curterm(term_ptr);
+
+	if (command_character && getenv("CC"))
+	    do_prototype();
+
+	strncpy(ttytype, cur_term->type.term_names, NAMESIZE - 1);
+	ttytype[NAMESIZE - 1] = '\0';
+
+	cur_term->Filedes = Filedes;
+	cur_term->_termname = strdup(tname);
+
+	/*
+	 * If an application calls setupterm() rather than initscr() or
+	 * newterm(), we will not have the def_prog_mode() call in
+	 * _nc_setupscreen().  Do it now anyway, so we can initialize the
+	 * baudrate.
+	 */
+	if (isatty(Filedes)) {
+	    def_prog_mode();
+	    baudrate();
+	}
+    }
+
+    /*
+     * We should always check the screensize, just in case.
+     */
+    _nc_get_screensize(&LINES, &COLS);
+
+    if (errret)
+	*errret = 1;
+
+    T((T_CREATE("screen %s %dx%d"), tname, LINES, COLS));
+
+    if (generic_type) {
+	ret_error(0, "'%s': I need something more specific.\n", tname);
+    }
+    if (hard_copy) {
+	ret_error(1, "'%s': I can't handle hardcopy terminals.\n", tname);
+    }
+    returnCode(OK);
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-2003               *
  ****************************************************************************/
 
 /*
@@ -43,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.71 2002/09/14 22:48:00 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.81 2003/11/15 23:57:01 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN * screenp)
@@ -61,7 +62,6 @@ set_term(SCREEN * screenp)
     stdscr = SP->_stdscr;
     COLORS = SP->_color_count;
     COLOR_PAIRS = SP->_pair_count;
-    memcpy(acs_map, SP->_acs_map, sizeof(SP->_acs_map[0]) * ACS_LEN);
 
     T((T_RETURN("%p"), oldSP));
     return (oldSP);
@@ -84,6 +84,7 @@ NCURSES_EXPORT(void)
 delscreen(SCREEN * sp)
 {
     SCREEN **scan = &_nc_screen_chain;
+    int i;
 
     T((T_CALLED("delscreen(%p)"), sp));
 
@@ -100,8 +101,13 @@ delscreen(SCREEN * sp)
     (void) _nc_freewin(sp->_stdscr);
 
     if (sp->_slk != 0) {
-	FreeIfNeeded(sp->_slk->ent);
-	FreeIfNeeded(sp->_slk->buffer);
+	if (sp->_slk->ent != 0) {
+	    for (i = 0; i < sp->_slk->labcnt; ++i) {
+		FreeIfNeeded(sp->_slk->ent[i].ent_text);
+		FreeIfNeeded(sp->_slk->ent[i].form_text);
+	    }
+	    free(sp->_slk->ent);
+	}
 	free(sp->_slk);
 	sp->_slk = 0;
     }
@@ -204,11 +210,11 @@ extract_fgbg(char *src, int *result)
 #endif
 
 NCURSES_EXPORT(int)
-_nc_setupscreen(short slines, short const scolumns, FILE * output)
+_nc_setupscreen(short slines, short const scolumns, FILE *output)
 /* OS-independent screen initializations */
 {
     int bottom_stolen = 0;
-    size_t i;
+    int i;
 
     T((T_CALLED("_nc_setupscreen(%d, %d, %p)"), slines, scolumns, output));
     assert(SP == 0);		/* has been reset in newterm() ! */
@@ -218,6 +224,11 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
     SP->_next_screen = _nc_screen_chain;
     _nc_screen_chain = SP;
 
+#ifdef __DJGPP__
+    T(("setting output mode to binary"));
+    fflush(output);
+    setmode(output, O_BINARY);
+#endif
     _nc_set_buffer(output, TRUE);
     SP->_term = cur_term;
     SP->_lines = slines;
@@ -377,8 +388,15 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
     _nc_init_acs();
 #if USE_WIDEC_SUPPORT
     _nc_init_wacs();
+
+    SP->_screen_acs_fix = (_nc_unicode_locale() && _nc_locale_breaks_acs());
+    {
+	char *env = _nc_get_locale();
+	SP->_posix_locale = ((env == 0)
+			     || !strcmp(env, "C")
+			     || !strcmp(env, "POSIX"));
+    }
 #endif
-    memcpy(SP->_acs_map, acs_map, sizeof(chtype) * ACS_LEN);
 
     _nc_idcok = TRUE;
     _nc_idlok = FALSE;
@@ -408,7 +426,7 @@ _nc_setupscreen(short slines, short const scolumns, FILE * output)
     def_shell_mode();
     def_prog_mode();
 
-    for (i = 0, rsp = rippedoff; rsp->line && (i < N_RIPS); rsp++, i++) {
+    for (i = 0, rsp = rippedoff; rsp->line && (i < (int) N_RIPS); rsp++, i++) {
 	T(("ripping off line %d at %s", i, rsp->line < 0 ? "bottom" : "top"));
 	SP->_rippedoff[i] = rippedoff[i];
 	if (rsp->hook) {

@@ -1,4 +1,4 @@
-# $Id: man_db.renames,v 0.31 2002/04/13 21:49:08 tom Exp $
+# $Id: man_db.renames,v 0.32 2003/05/31 17:27:11 tom Exp $
 # Manual-page renamings for the man_db program
 #
 # Files:
@@ -89,6 +89,7 @@ infocmp.1m			infocmp.1
 infotocap.1m			infotocap.1
 keybound.3x			keybound.3ncurses
 keyok.3x			keyok.3ncurses
+key_defined.3x			key_defined.3ncurses
 menu.3x				menu.3menu
 menu_attributes.3x		attributes.3menu
 menu_cursor.3x			cursor.3menu

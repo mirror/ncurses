@@ -34,9 +34,8 @@
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
---  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control
---  $Revision: 1.9 $
+--  $Revision: 1.10 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and

@@ -48,12 +48,12 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_kernel.c,v 1.22 2002/05/11 20:32:18 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.23 2003/01/26 00:24:53 tom Exp $")
 
 static int
 _nc_vdisable(void)
 {
-    int value;
+    int value = -1;
 #if defined(_POSIX_VDISABLE) && defined(HAVE_UNISTD_H)
     value = _POSIX_VDISABLE;
 #endif

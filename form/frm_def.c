@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,12 +28,11 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_def.c,v 1.11 2002/07/06 15:33:27 juergen Exp $")
+MODULE_ID("$Id: frm_def.c,v 1.13 2003/11/08 20:37:53 tom Exp $")
 
 /* this can't be readonly */
 static FORM default_form = {
@@ -241,7 +240,7 @@ static int Connect_Fields(FORM  * form, FIELD ** fields)
 |                    If there are fields, position to first active field.
 |
 |   Return Values :  E_OK            - success
-|                    any other       - error occured
+|                    any other       - error occurred
 +--------------------------------------------------------------------------*/
 INLINE static int Associate_Fields(FORM  *form, FIELD **fields)
 {
@@ -268,7 +267,7 @@ INLINE static int Associate_Fields(FORM  *form, FIELD **fields)
 |   
 |   Description   :  Create new form with given array of fields.
 |
-|   Return Values :  Pointer to form. NULL if error occured.
+|   Return Values :  Pointer to form. NULL if error occurred.
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(FORM *)
 new_form (FIELD ** fields)

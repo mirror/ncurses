@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.21 2002/03/17 14:36:21 tom Exp @
+  * @Id: curs_getch.3x,v 1.24 2003/12/27 18:46:06 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,6 +41,10 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
+<STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>                                     <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
+
+
+
 
 </PRE>
 <H2>NAME</H2><PRE>
@@ -89,7 +93,7 @@
        token for that function key is returned instead of the raw
        characters.    Possible   function  keys  are  defined  in
        <STRONG>&lt;curses.h&gt;</STRONG> as macros with  values  outside  the  range  of
-       8-bit  characters  whose  names  begin  with <STRONG>KEY_.</STRONG> Thus, a
+       8-bit  characters  whose  names  begin  with <STRONG>KEY_</STRONG>. Thus, a
        variable intended to hold the return value of  a  function
        key must be of short size or larger.
 
@@ -114,103 +118,102 @@
        that  not  all  of  these are necessarily supported on any
        particular terminal.
 
-           <EM>Name</EM>            <EM>Key</EM> <EM>name</EM>
+            <EM>Name</EM>            <EM>Key</EM> <EM>name</EM>
 
-           KEY_BREAK       Break key
-           KEY_DOWN        The four arrow keys ...
-           KEY_UP
-           KEY_LEFT
-           KEY_RIGHT
-           KEY_HOME        Home key (upward+left arrow)
-           KEY_BACKSPACE   Backspace
-           KEY_F0          Function keys; space for 64  keys
-                           is reserved.
-           KEY_F(<EM>n</EM>)        For 0 &lt;= <EM>n</EM> &lt;= 63
-           KEY_DL          Delete line
-           KEY_IL          Insert line
-           KEY_DC          Delete character
-           KEY_IC          Insert char or enter insert mode
-           KEY_EIC         Exit insert char mode
-           KEY_CLEAR       Clear screen
-           KEY_EOS         Clear to end of screen
-           KEY_EOL         Clear to end of line
-           KEY_SF          Scroll 1 line forward
-           KEY_SR          Scroll 1 line backward (reverse)
-           KEY_NPAGE       Next page
-           KEY_PPAGE       Previous page
-           KEY_STAB        Set tab
-           KEY_CTAB        Clear tab
-           KEY_CATAB       Clear all tabs
-           KEY_ENTER       Enter or send
-           KEY_SRESET      Soft (partial) reset
-           KEY_RESET       Reset or hard reset
-           KEY_PRINT       Print or copy
-           KEY_LL          Home down or bottom (lower left).
-           KEY_A1          Upper left of keypad
-           KEY_A3          Upper right of keypad
-           KEY_B2          Center of keypad
-           KEY_C1          Lower left of keypad
-           KEY_C3          Lower right of keypad
-           KEY_BTAB        Back tab key
-           KEY_BEG         Beg(inning) key
-           KEY_CANCEL      Cancel key
+                   KEY_BREAK       Break key
+            KEY_DOWN        The four arrow keys ...
+            KEY_UP
+            KEY_LEFT
+            KEY_RIGHT
+            KEY_HOME        Home key (upward+left arrow)
+            KEY_BACKSPACE   Backspace
+            KEY_F0          Function keys; space for 64 keys
+                            is reserved.
+            KEY_F(<EM>n</EM>)        For 0 &lt;= <EM>n</EM> &lt;= 63
+            KEY_DL          Delete line
+            KEY_IL          Insert line
+            KEY_DC          Delete character
+            KEY_IC          Insert char or enter insert mode
+            KEY_EIC         Exit insert char mode
+            KEY_CLEAR       Clear screen
+            KEY_EOS         Clear to end of screen
+            KEY_EOL         Clear to end of line
+            KEY_SF          Scroll 1 line forward
+            KEY_SR          Scroll 1 line backward (reverse)
+            KEY_NPAGE       Next page
+            KEY_PPAGE       Previous page
+            KEY_STAB        Set tab
+            KEY_CTAB        Clear tab
+            KEY_CATAB       Clear all tabs
+            KEY_ENTER       Enter or send
+            KEY_SRESET      Soft (partial) reset
+            KEY_RESET       Reset or hard reset
+            KEY_PRINT       Print or copy
+            KEY_LL          Home down or bottom (lower left)
+            KEY_A1          Upper left of keypad
+            KEY_A3          Upper right of keypad
+            KEY_B2          Center of keypad
+            KEY_C1          Lower left of keypad
+            KEY_C3          Lower right of keypad
+            KEY_BTAB        Back tab key
+            KEY_BEG         Beg(inning) key
+            KEY_CANCEL      Cancel key
+            KEY_CLOSE       Close key
+            KEY_COMMAND     Cmd (command) key
+            KEY_COPY        Copy key
+            KEY_CREATE      Create key
+            KEY_END         End key
+            KEY_EXIT        Exit key
+            KEY_FIND        Find key
+            KEY_HELP        Help key
+            KEY_MARK        Mark key
+            KEY_MESSAGE     Message key
+            KEY_MOUSE       Mouse event read
+            KEY_MOVE        Move key
+            KEY_NEXT        Next object key
+            KEY_OPEN        Open key
+            KEY_OPTIONS     Options key
+            KEY_PREVIOUS    Previous object key
+            KEY_REDO        Redo key
+            KEY_REFERENCE   Ref(erence) key
+            KEY_REFRESH     Refresh key
+            KEY_REPLACE     Replace key
 
-           KEY_CLOSE       Close key
-           KEY_COMMAND     Cmd (command) key
-           KEY_COPY        Copy key
-           KEY_CREATE      Create key
-           KEY_END         End key
-           KEY_EXIT        Exit key
-           KEY_FIND        Find key
-           KEY_HELP        Help key
-           KEY_MARK        Mark key
-           KEY_MESSAGE     Message key
-           KEY_MOUSE       Mouse event read
-           KEY_MOVE        Move key
-           KEY_NEXT        Next object key
-           KEY_OPEN        Open key
-           KEY_OPTIONS     Options key
-           KEY_PREVIOUS    Previous object key
-           KEY_REDO        Redo key
-           KEY_REFERENCE   Ref(erence) key
-           KEY_REFRESH     Refresh key
-           KEY_REPLACE     Replace key
-           KEY_RESIZE      Screen resized
-           KEY_RESTART     Restart key
-           KEY_RESUME      Resume key
-           KEY_SAVE        Save key
-           KEY_SBEG        Shifted beginning key
-           KEY_SCANCEL     Shifted cancel key
-           KEY_SCOMMAND    Shifted command key
-           KEY_SCOPY       Shifted copy key
-           KEY_SCREATE     Shifted create key
-           KEY_SDC         Shifted delete char key
-           KEY_SDL         Shifted delete line key
-           KEY_SELECT      Select key
-           KEY_SEND        Shifted end key
-           KEY_SEOL        Shifted clear line key
-           KEY_SEXIT       Shifted exit key
-           KEY_SFIND       Shifted find key
-           KEY_SHELP       Shifted help key
-           KEY_SHOME       Shifted home key
-           KEY_SIC         Shifted input key
-           KEY_SLEFT       Shifted left arrow key
-           KEY_SMESSAGE    Shifted message key
-           KEY_SMOVE       Shifted move key
-           KEY_SNEXT       Shifted next key
-           KEY_SOPTIONS    Shifted options key
-           KEY_SPREVIOUS   Shifted prev key
-           KEY_SPRINT      Shifted print key
-           KEY_SREDO       Shifted redo key
-           KEY_SREPLACE    Shifted replace key
-           KEY_SRIGHT      Shifted right arrow
-           KEY_SRSUME      Shifted resume key
-           KEY_SSAVE       Shifted save key
-           KEY_SSUSPEND    Shifted suspend key
-           KEY_SUNDO       Shifted undo key
-
-           KEY_SUSPEND     Suspend key
-           KEY_UNDO        Undo key
+            KEY_RESIZE      Screen resized
+            KEY_RESTART     Restart key
+            KEY_RESUME      Resume key
+            KEY_SAVE        Save key
+            KEY_SBEG        Shifted beginning key
+            KEY_SCANCEL     Shifted cancel key
+            KEY_SCOMMAND    Shifted command key
+            KEY_SCOPY       Shifted copy key
+            KEY_SCREATE     Shifted create key
+            KEY_SDC         Shifted delete char key
+            KEY_SDL         Shifted delete line key
+            KEY_SELECT      Select key
+            KEY_SEND        Shifted end key
+            KEY_SEOL        Shifted clear line key
+            KEY_SEXIT       Shifted exit key
+            KEY_SFIND       Shifted find key
+            KEY_SHELP       Shifted help key
+            KEY_SHOME       Shifted home key
+            KEY_SIC         Shifted input key
+            KEY_SLEFT       Shifted left arrow key
+            KEY_SMESSAGE    Shifted message key
+            KEY_SMOVE       Shifted move key
+            KEY_SNEXT       Shifted next key
+            KEY_SOPTIONS    Shifted options key
+            KEY_SPREVIOUS   Shifted prev key
+            KEY_SPRINT      Shifted print key
+            KEY_SREDO       Shifted redo key
+            KEY_SREPLACE    Shifted replace key
+            KEY_SRIGHT      Shifted right arrow
+            KEY_SRSUME      Shifted resume key
+            KEY_SSAVE       Shifted save key
+            KEY_SSUSPEND    Shifted suspend key
+            KEY_SUNDO       Shifted undo key
+            KEY_SUSPEND     Suspend key
+            KEY_UNDO        Undo key
 
        Keypad is arranged like this:
 
@@ -223,7 +226,9 @@
                          +-----+------+-------+
        The <STRONG>has_key</STRONG> routine takes a key value from the above list,
        and returns TRUE or FALSE according to whether the current
-       terminal type recognizes a key with that value.
+       terminal type recognizes a key with that value.  Note that
+       a few values do  not  correspond  to  a  real  key,  e.g.,
+       KEY_RESIZE and KEY_MOUSE.
 
 
 
@@ -247,7 +252,7 @@
        according  to  whether  they treat these control keys spe-
        cially (and ignore the terminfo), or use the terminfo def-
        initions.   <STRONG>Ncurses</STRONG>  uses  the terminfo definition.  If it
-       says that  KEY_ENTER  is  control/M,  <STRONG>getch</STRONG>,  will  return
+       says  that  KEY_ENTER  is  control/M,  <STRONG>getch</STRONG>  will  return
        KEY_ENTER when you press control/M.
 
        When  using  <STRONG>getch</STRONG>, <STRONG>wgetch</STRONG>, <STRONG>mvgetch</STRONG>, or <STRONG>mvwgetch</STRONG>, nocbreak
@@ -287,7 +292,7 @@
        implementation of  handled  signal  receipt  interrupts  a
        <STRONG><A HREF="read.2.html">read(2)</A></STRONG>  call in progress or not, and also (in some imple-
        mentations) depending on whether an input timeout or  non-
-       blocking mode hsd been set.
+       blocking mode has been set.
 
        Programmers concerned about portability should be prepared
        for either of two  cases:  (a)  signal  receipt  does  not
@@ -308,23 +313,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                   <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

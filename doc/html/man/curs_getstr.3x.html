@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getstr.3x,v 1.11 2002/04/13 22:14:30 tom Exp @
+  * @Id: curs_getstr.3x,v 1.12 2003/05/10 20:33:49 jmc Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,6 +40,10 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
+<STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>                                   <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
+
+
+
 
 </PRE>
 <H2>NAME</H2><PRE>
@@ -106,10 +110,11 @@
        standard  does  not  define  any  error  conditions.  This
        implementation returns ERR if the window pointer is  null,
        or if the lower-level <STRONG>wgetch</STRONG> call returns an ERR.
+
        SVr3  and early SVr4 curses implementations did not reject
        function keys; the SVr4.0 documentation claimed that "spe-
        cial  keys"  (such  as  function keys, "home" key, "clear"
-       key, <EM>etc</EM>.) are interpreted" without  giving  details.   It
+       key, <EM>etc</EM>.) are "interpreted", without giving details.   It
        lied.   In  fact,  the  `character'  value appended to the
        string by those implementations was  predictable  but  not
        useful  (being,  in  fact, the low-order eight bits of the
@@ -125,43 +130,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                  <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -35,9 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Laurent Pautet <pautet@gnat.com>
 --  Modified by:  Juergen Pfeifer, 1997
---  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control
---  $Revision: 1.8 $
+--  $Revision: 1.9 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  This package has been contributed by Laurent Pautet <pautet@gnat.com>   --

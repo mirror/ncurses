@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,7 +28,6 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -38,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_attribs.c,v 1.10 2002/07/06 15:22:16 juergen Exp $")
+MODULE_ID("$Id: m_attribs.c,v 1.12 2003/11/08 20:54:20 tom Exp $")
 
 /* Macro to redraw menu if it is posted and changed */
 #define Refresh_Menu(menu) \
@@ -63,7 +62,7 @@ NCURSES_IMPEXP int NCURSES_API set_menu_ ## name (MENU * menu, chtype attr)\
    RETURN(E_OK);\
 }
 
-/* "Template" macro to generate a function to get a menus attribute */
+/* "Template" macro to generate a function to get a menu's attribute */
 #define GEN_MENU_ATTR_GET_FCT( name ) \
 NCURSES_IMPEXP chtype NCURSES_API menu_ ## name (const MENU * menu)\
 {\
@@ -75,7 +74,7 @@ NCURSES_IMPEXP chtype NCURSES_API menu_ ## name (const MENU * menu)\
 |   Function      :  int set_menu_fore(MENU *menu, chtype attr)
 |   
 |   Description   :  Set the attribute for selectable items. In single-
-|                    valued menus thiis is used to highlight the current
+|                    valued menus this is used to highlight the current
 |                    item ((i.e. where the cursor is), in multi-valued
 |                    menus this is used to highlight the selected items.
 |

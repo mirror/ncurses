@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998,2001 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,20 +29,27 @@
 
 /****************************************************************************
  *   Author: Juergen Pfeifer, 1997                                          *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "internal.h"
 #include "cursesapp.h"
 
-MODULE_ID("$Id: cursesmain.cc,v 1.9 2002/07/06 15:47:52 juergen Exp $")
+MODULE_ID("$Id: cursesmain.cc,v 1.11 2003/10/25 14:53:13 tom Exp $")
+
+#if HAVE_LOCALE_H
+#include <locale.h>
+#else
+#define setlocale(name,string) /* nothing */
+#endif
 
 /* This is the default implementation of main() for a NCursesApplication.
  * You only have to instantiate a static NCursesApplication object in your
  * main application source file and link this module with your application.
- */ 
+ */
 int main(int argc, char* argv[])
 {
+  setlocale(LC_ALL, "");
+
   NCursesApplication* A = NCursesApplication::getApplication();
   if (!A)
     return(1);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2000-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 2000-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include <termcap.h>
 
-MODULE_ID("$Id: lib_tgoto.c,v 1.10 2002/08/31 22:14:47 Philippe.Blain Exp $")
+MODULE_ID("$Id: lib_tgoto.c,v 1.11 2003/11/30 00:22:18 Juha.Jarvi Exp $")
 
 #if !PURE_TERMINFO
 static bool
@@ -155,7 +155,7 @@ tgoto_internal(const char *string, int x, int y)
 		*value = 16 * (*value / 10) + (*value % 10);
 		break;
 	    case 'D':		/* Reverse coding (Delta Data) */
-		*value -= 2 * (*value / 16);
+		*value -= 2 * (*value % 16);
 		break;
 	    }
 	    if (fmt != 0) {

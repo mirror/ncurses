@@ -37,40 +37,39 @@
 <FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
 <FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>--  Author:  <A HREF="http://www.familiepfeifer.de/juergen">J&uuml;rgen Pfeifer</A>, 1996</EM></FONT>
-<FONT COLOR=green><EM>--  Contact: <A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">www.familiepfeifer.de/Contact.aspx?Lang=en</A></EM></FONT>
+<FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.9 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.10 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> Ada.Numerics.Generic_Complex_Types;
 
 <b>generic</b>
-   <b>with</b> <b>package</b> <FONT COLOR=red><A NAME="45_17">Complex_Types</A></FONT> <b>is</b> <b>new</b> Ada.Numerics.Generic_Complex_Types (&lt;&gt;);
+   <b>with</b> <b>package</b> <FONT COLOR=red><A NAME="44_17">Complex_Types</A></FONT> <b>is</b> <b>new</b> Ada.Numerics.Generic_Complex_Types (&lt;&gt;);
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#45_35">Text_IO</A>.<FONT COLOR=red><A NAME="47_43">Complex_IO</A></FONT> <b>is</b>
+<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#44_35">Text_IO</A>.<FONT COLOR=red><A NAME="46_43">Complex_IO</A></FONT> <b>is</b>
 
-   <b>use</b> <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#45_17">Complex_Types</A>;
+   <b>use</b> <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#44_17">Complex_Types</A>;
 
-   <FONT COLOR=red><A NAME="51_4">Default_Fore</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := 2;
-   <FONT COLOR=red><A NAME="52_4">Default_Aft</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := Real'<b>Digits</b> - 1;
-   <FONT COLOR=red><A NAME="53_4">Default_Exp</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := 3;
+   <FONT COLOR=red><A NAME="50_4">Default_Fore</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := 2;
+   <FONT COLOR=red><A NAME="51_4">Default_Aft</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := Real'<b>Digits</b> - 1;
+   <FONT COLOR=red><A NAME="52_4">Default_Exp</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := 3;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-complex_io__adb.htm#49_14">Put</A><FONT COLOR=red><A NAME="55_14"></A></FONT>
-     (<FONT COLOR=red><A NAME="56_7">Win</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#57_9">Window</A>;
-      <FONT COLOR=red><A NAME="57_7">Item</A></FONT> : <b>in</b> Complex;
-      <FONT COLOR=red><A NAME="58_7">Fore</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#51_4">Default_Fore</A>;
-      <FONT COLOR=red><A NAME="59_7">Aft</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#52_4">Default_Aft</A>;
-      <FONT COLOR=red><A NAME="60_7">Exp</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#53_4">Default_Exp</A>);
+   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-complex_io__adb.htm#48_14">Put</A><FONT COLOR=red><A NAME="54_14"></A></FONT>
+     (<FONT COLOR=red><A NAME="55_7">Win</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#56_9">Window</A>;
+      <FONT COLOR=red><A NAME="56_7">Item</A></FONT> : <b>in</b> Complex;
+      <FONT COLOR=red><A NAME="57_7">Fore</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#50_4">Default_Fore</A>;
+      <FONT COLOR=red><A NAME="58_7">Aft</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#51_4">Default_Aft</A>;
+      <FONT COLOR=red><A NAME="59_7">Exp</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#52_4">Default_Exp</A>);
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-complex_io__adb.htm#64_14">Put</A><FONT COLOR=red><A NAME="62_14"></A></FONT>
-     (<FONT COLOR=red><A NAME="63_7">Item</A></FONT> : <b>in</b> Complex;
-      <FONT COLOR=red><A NAME="64_7">Fore</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#51_4">Default_Fore</A>;
-      <FONT COLOR=red><A NAME="65_7">Aft</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#52_4">Default_Aft</A>;
-      <FONT COLOR=red><A NAME="66_7">Exp</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#51_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#53_4">Default_Exp</A>);
+   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-complex_io__adb.htm#63_14">Put</A><FONT COLOR=red><A NAME="61_14"></A></FONT>
+     (<FONT COLOR=red><A NAME="62_7">Item</A></FONT> : <b>in</b> Complex;
+      <FONT COLOR=red><A NAME="63_7">Fore</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#50_4">Default_Fore</A>;
+      <FONT COLOR=red><A NAME="64_7">Aft</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#51_4">Default_Aft</A>;
+      <FONT COLOR=red><A NAME="65_7">Exp</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#52_4">Default_Exp</A>);
 
 <b>private</b>
    <b>pragma</b> Inline (Put);
 
-<b>end</b> Terminal_Interface.Curses.Text_IO.Complex_IO;
+<b>end</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#44_35">Text_IO</A>.<A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#46_43">Complex_IO</A><A HREF="terminal_interface-curses-text_io-complex_io__ads.htm#46_43">;</A>
 </PRE></BODY></HTML>

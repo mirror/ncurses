@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey 1996-on                                        *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.134 2002/09/28 15:08:06 tom Exp $ */
+/* $Id: curses.h.in,v 1.148 2004/01/14 23:50:12 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -125,18 +125,21 @@ typedef unsigned @cf_cv_typeof_chtype@ chtype;
 
 typedef @cf_cv_type_of_bool@ NCURSES_BOOL;
 
-#if (!defined(__cplusplus) || !@cf_cv_builtin_bool@) && (!@cf_cv_cc_bool_type@)
+#if @USE_CXX_BOOL@	/* __cplusplus, etc. */
+
+/* use the C++ compiler's bool type */
+#define NCURSES_BOOL bool
+
+#else			/* c89, c99, etc. */
 
 #if @cf_cv_header_stdbool_h@
 #include <stdbool.h>
-#endif
-
-#undef bool
-
-#if @cf_cv_header_stdbool_h@
-#define bool NCURSES_BOOL
+/* use whatever the C compiler decides bool really is */
+#define NCURSES_BOOL bool
 #else
-typedef @cf_cv_type_of_bool@ bool;
+/* there is no predefined bool - use our own */
+#undef bool
+#define bool NCURSES_BOOL
 #endif
 
 #endif /* !__cplusplus, etc. */
@@ -189,45 +192,47 @@ extern NCURSES_EXPORT_VAR(chtype*) _nc_acs_map(void);
 extern NCURSES_EXPORT_VAR(chtype) acs_map[];
 #endif
 
+#define NCURSES_ACS(c)	(acs_map[(unsigned char)c])
+
 /* VT100 symbols begin here */
-#define ACS_ULCORNER	(acs_map['l'])	/* upper left corner */
-#define ACS_LLCORNER	(acs_map['m'])	/* lower left corner */
-#define ACS_URCORNER	(acs_map['k'])	/* upper right corner */
-#define ACS_LRCORNER	(acs_map['j'])	/* lower right corner */
-#define ACS_LTEE	(acs_map['t'])	/* tee pointing right */
-#define ACS_RTEE	(acs_map['u'])	/* tee pointing left */
-#define ACS_BTEE	(acs_map['v'])	/* tee pointing up */
-#define ACS_TTEE	(acs_map['w'])	/* tee pointing down */
-#define ACS_HLINE	(acs_map['q'])	/* horizontal line */
-#define ACS_VLINE	(acs_map['x'])	/* vertical line */
-#define ACS_PLUS	(acs_map['n'])	/* large plus or crossover */
-#define ACS_S1		(acs_map['o'])	/* scan line 1 */
-#define ACS_S9		(acs_map['s'])	/* scan line 9 */
-#define ACS_DIAMOND	(acs_map['`'])	/* diamond */
-#define ACS_CKBOARD	(acs_map['a'])	/* checker board (stipple) */
-#define ACS_DEGREE	(acs_map['f'])	/* degree symbol */
-#define ACS_PLMINUS	(acs_map['g'])	/* plus/minus */
-#define ACS_BULLET	(acs_map['~'])	/* bullet */
+#define ACS_ULCORNER	NCURSES_ACS('l') /* upper left corner */
+#define ACS_LLCORNER	NCURSES_ACS('m') /* lower left corner */
+#define ACS_URCORNER	NCURSES_ACS('k') /* upper right corner */
+#define ACS_LRCORNER	NCURSES_ACS('j') /* lower right corner */
+#define ACS_LTEE	NCURSES_ACS('t') /* tee pointing right */
+#define ACS_RTEE	NCURSES_ACS('u') /* tee pointing left */
+#define ACS_BTEE	NCURSES_ACS('v') /* tee pointing up */
+#define ACS_TTEE	NCURSES_ACS('w') /* tee pointing down */
+#define ACS_HLINE	NCURSES_ACS('q') /* horizontal line */
+#define ACS_VLINE	NCURSES_ACS('x') /* vertical line */
+#define ACS_PLUS	NCURSES_ACS('n') /* large plus or crossover */
+#define ACS_S1		NCURSES_ACS('o') /* scan line 1 */
+#define ACS_S9		NCURSES_ACS('s') /* scan line 9 */
+#define ACS_DIAMOND	NCURSES_ACS('`') /* diamond */
+#define ACS_CKBOARD	NCURSES_ACS('a') /* checker board (stipple) */
+#define ACS_DEGREE	NCURSES_ACS('f') /* degree symbol */
+#define ACS_PLMINUS	NCURSES_ACS('g') /* plus/minus */
+#define ACS_BULLET	NCURSES_ACS('~') /* bullet */
 /* Teletype 5410v1 symbols begin here */
-#define ACS_LARROW	(acs_map[','])	/* arrow pointing left */
-#define ACS_RARROW	(acs_map['+'])	/* arrow pointing right */
-#define ACS_DARROW	(acs_map['.'])	/* arrow pointing down */
-#define ACS_UARROW	(acs_map['-'])	/* arrow pointing up */
-#define ACS_BOARD	(acs_map['h'])	/* board of squares */
-#define ACS_LANTERN	(acs_map['i'])	/* lantern symbol */
-#define ACS_BLOCK	(acs_map['0'])	/* solid square block */
+#define ACS_LARROW	NCURSES_ACS(',') /* arrow pointing left */
+#define ACS_RARROW	NCURSES_ACS('+') /* arrow pointing right */
+#define ACS_DARROW	NCURSES_ACS('.') /* arrow pointing down */
+#define ACS_UARROW	NCURSES_ACS('-') /* arrow pointing up */
+#define ACS_BOARD	NCURSES_ACS('h') /* board of squares */
+#define ACS_LANTERN	NCURSES_ACS('i') /* lantern symbol */
+#define ACS_BLOCK	NCURSES_ACS('0') /* solid square block */
 /*
  * These aren't documented, but a lot of System Vs have them anyway
  * (you can spot pprryyzz{{||}} in a lot of AT&T terminfo strings).
  * The ACS_names may not match AT&T's, our source didn't know them.
  */
-#define ACS_S3		(acs_map['p'])	/* scan line 3 */
-#define ACS_S7		(acs_map['r'])	/* scan line 7 */
-#define ACS_LEQUAL	(acs_map['y'])	/* less/equal */
-#define ACS_GEQUAL	(acs_map['z'])	/* greater/equal */
-#define ACS_PI		(acs_map['{'])	/* Pi */
-#define ACS_NEQUAL	(acs_map['|'])	/* not equal */
-#define ACS_STERLING	(acs_map['}'])	/* UK pound sign */
+#define ACS_S3		NCURSES_ACS('p') /* scan line 3 */
+#define ACS_S7		NCURSES_ACS('r') /* scan line 7 */
+#define ACS_LEQUAL	NCURSES_ACS('y') /* less/equal */
+#define ACS_GEQUAL	NCURSES_ACS('z') /* greater/equal */
+#define ACS_PI		NCURSES_ACS('{') /* Pi */
+#define ACS_NEQUAL	NCURSES_ACS('|') /* not equal */
+#define ACS_STERLING	NCURSES_ACS('}') /* UK pound sign */
 
 /*
  * Line drawing ACS names are of the form ACS_trbl, where t is the top, r
@@ -286,20 +291,19 @@ typedef	chtype	attr_t;		/* ...must be at least as wide as chtype */
 #undef mblen
 #endif
 #include <libutf8.h>
-#define _WCHAR_T
-#define _WINT_T
 #endif
 
-#if @NCURSES_MBSTATE_T@
+#if @NEED_WCHAR_H@
 #include <wchar.h>		/* ...to get mbstate_t, etc. */
 #endif
 
-#ifndef _WCHAR_T
-typedef unsigned long wchar_t;
-#endif /* _WCHAR_T */
-#ifndef _WINT_T
-typedef long int wint_t;
-#endif /* _WINT_T */
+#if @NCURSES_WCHAR_T@
+typedef unsigned short wchar_t@NCURSES_OK_WCHAR_T@;
+#endif
+
+#if @NCURSES_WINT_T@
+typedef unsigned int wint_t@NCURSES_OK_WCHAR_T@;
+#endif
 
 #define CCHARW_MAX	5
 typedef struct
@@ -388,7 +392,8 @@ extern NCURSES_EXPORT(bool) is_term_resized (int, int);
 extern NCURSES_EXPORT(char *) keybound (int, int);
 extern NCURSES_EXPORT(const char *) curses_version (void);
 extern NCURSES_EXPORT(int) assume_default_colors (int, int);
-extern NCURSES_EXPORT(int) define_key (char *, int);
+extern NCURSES_EXPORT(int) define_key (const char *, int);
+extern NCURSES_EXPORT(int) key_defined (const char *);
 extern NCURSES_EXPORT(int) keyok (int, bool);
 extern NCURSES_EXPORT(int) resize_term (int, int);
 extern NCURSES_EXPORT(int) resizeterm (int, int);
@@ -451,21 +456,11 @@ extern NCURSES_EXPORT(int) wgetnstr_events(WINDOW *,char *,int,_nc_eventlist *);
  * GCC (and some other compilers) define '__attribute__'; we're using this
  * macro to alert the compiler to flag inconsistencies in printf/scanf-like
  * function calls.  Just in case '__attribute__' isn't defined, make a dummy.
- * G++ doesn't accept it anyway.
+ * Old versions of G++ do not accept it anyway, at least not consistently with
+ * GCC.
  */
-#if !defined(__GNUC__) && !defined(__attribute__)
+#if !(defined(__GNUC__) || defined(__GNUG__) || defined(__attribute__))
 #define __attribute__(p) /* nothing */
-#endif
-
-/*
- * For g++, turn off our macros that use __attribute__ (g++ recognizes some
- * of them, but not at the same version levels as gcc).
- */
-#ifdef __cplusplus
-#undef GCC_NORETURN
-#undef GCC_PRINTF
-#undef GCC_SCANF
-#undef GCC_UNUSED
 #endif
 
 /*
@@ -609,7 +604,7 @@ extern NCURSES_EXPORT(int) mvinsch (int, int, chtype);			/* generated */
 extern NCURSES_EXPORT(int) mvinsnstr (int, int, const char *, int);	/* generated */
 extern NCURSES_EXPORT(int) mvinsstr (int, int, const char *);		/* generated */
 extern NCURSES_EXPORT(int) mvinstr (int, int, char *);			/* generated */
-extern NCURSES_EXPORT(int) mvprintw (int,int, NCURSES_CONST char *,...)	/* implemented */
+extern NCURSES_EXPORT(int) mvprintw (int,int, const char *,...)		/* implemented */
 		GCC_PRINTFLIKE(3,4);
 extern NCURSES_EXPORT(int) mvscanw (int,int, NCURSES_CONST char *,...)	/* implemented */
 		GCC_SCANFLIKE(3,4);
@@ -634,7 +629,7 @@ extern NCURSES_EXPORT(int) mvwinsch (WINDOW *, int, int, chtype);		/* generated 
 extern NCURSES_EXPORT(int) mvwinsnstr (WINDOW *, int, int, const char *, int);	/* generated */
 extern NCURSES_EXPORT(int) mvwinsstr (WINDOW *, int, int, const char *);		/* generated */
 extern NCURSES_EXPORT(int) mvwinstr (WINDOW *, int, int, char *);		/* generated */
-extern NCURSES_EXPORT(int) mvwprintw (WINDOW*,int,int, NCURSES_CONST char *,...)	/* implemented */
+extern NCURSES_EXPORT(int) mvwprintw (WINDOW*,int,int, const char *,...)	/* implemented */
 		GCC_PRINTFLIKE(4,5);
 extern NCURSES_EXPORT(int) mvwscanw (WINDOW *,int,int, NCURSES_CONST char *,...)	/* implemented */
 		GCC_SCANFLIKE(4,5);
@@ -658,7 +653,7 @@ extern NCURSES_EXPORT(int) PAIR_NUMBER (int);				/* generated */
 extern NCURSES_EXPORT(int) pechochar (WINDOW *, const chtype);		/* implemented */
 extern NCURSES_EXPORT(int) pnoutrefresh (WINDOW*,int,int,int,int,int,int);/* implemented */
 extern NCURSES_EXPORT(int) prefresh (WINDOW *,int,int,int,int,int,int);	/* implemented */
-extern NCURSES_EXPORT(int) printw (NCURSES_CONST char *,...)		/* implemented */
+extern NCURSES_EXPORT(int) printw (const char *,...)			/* implemented */
 		GCC_PRINTFLIKE(1,2);
 extern NCURSES_EXPORT(int) putp (const char *);				/* implemented */
 extern NCURSES_EXPORT(int) putwin (WINDOW *, FILE *);			/* implemented */
@@ -720,8 +715,8 @@ extern NCURSES_EXPORT(void) use_env (bool);				/* implemented */
 extern NCURSES_EXPORT(int) vidattr (chtype);				/* implemented */
 extern NCURSES_EXPORT(int) vidputs (chtype, int (*)(int));		/* implemented */
 extern NCURSES_EXPORT(int) vline (chtype, int);				/* generated */
-extern NCURSES_EXPORT(int) vwprintw (WINDOW *, NCURSES_CONST char *,va_list);	/* implemented */
-extern NCURSES_EXPORT(int) vw_printw (WINDOW *, NCURSES_CONST char *,va_list);	/* generated */
+extern NCURSES_EXPORT(int) vwprintw (WINDOW *, const char *,va_list);	/* implemented */
+extern NCURSES_EXPORT(int) vw_printw (WINDOW *, const char *,va_list);	/* generated */
 extern NCURSES_EXPORT(int) vwscanw (WINDOW *, NCURSES_CONST char *,va_list);	/* implemented */
 extern NCURSES_EXPORT(int) vw_scanw (WINDOW *, NCURSES_CONST char *,va_list);	/* generated */
 extern NCURSES_EXPORT(int) waddch (WINDOW *, const chtype);		/* implemented */
@@ -765,7 +760,7 @@ extern NCURSES_EXPORT(int) winsstr (WINDOW *, const char *);		/* generated */
 extern NCURSES_EXPORT(int) winstr (WINDOW *, char *);			/* generated */
 extern NCURSES_EXPORT(int) wmove (WINDOW *,int,int);			/* implemented */
 extern NCURSES_EXPORT(int) wnoutrefresh (WINDOW *);			/* implemented */
-extern NCURSES_EXPORT(int) wprintw (WINDOW *, NCURSES_CONST char *,...)	/* implemented */
+extern NCURSES_EXPORT(int) wprintw (WINDOW *, const char *,...)		/* implemented */
 		GCC_PRINTFLIKE(2,3);
 extern NCURSES_EXPORT(int) wredrawln (WINDOW *,int,int);		/* implemented */
 extern NCURSES_EXPORT(int) wrefresh (WINDOW *);				/* implemented */
@@ -831,10 +826,11 @@ extern NCURSES_EXPORT(int) wvline (WINDOW *,chtype,int);		/* implemented */
 #define nocrmode()		nocbreak()
 #define gettmode()
 
-#define getyx(win,y,x)   	(y = (win)?(win)->_cury:ERR, x = (win)?(win)->_curx:ERR)
-#define getbegyx(win,y,x)	(y = (win)?(win)->_begy:ERR, x = (win)?(win)->_begx:ERR)
-#define getmaxyx(win,y,x)	(y = (win)?((win)->_maxy + 1):ERR, x = (win)?((win)->_maxx + 1):ERR)
-#define getparyx(win,y,x)	(y = (win)?(win)->_pary:ERR, x = (win)?(win)->_parx:ERR)
+#define getyx(win,y,x)   	(y = getcury(win), x = getcurx(win))
+#define getbegyx(win,y,x)	(y = getbegy(win), x = getbegx(win))
+#define getmaxyx(win,y,x)	(y = getmaxy(win), x = getmaxx(win))
+#define getparyx(win,y,x)	(y = getpary(win), x = getparx(win))
+
 #define getsyx(y,x) do { if(newscr->_leaveok) (y)=(x)=-1; \
 			 else getyx(newscr,(y),(x)); \
 		    } while(0)

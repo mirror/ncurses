@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #include <term_entry.h>
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.68 2002/10/06 01:13:04 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.71 2003/10/18 18:01:54 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -120,7 +120,7 @@ canonical_name(char *ptr, char *buf)
  ***************************************************************************/
 
 static int
-capcmp(int idx, const char *s, const char *t)
+capcmp(unsigned idx, const char *s, const char *t)
 /* capability comparison function */
 {
     if (!VALID_STRING(s) && !VALID_STRING(t))
@@ -248,7 +248,7 @@ static bool
 entryeq(TERMTYPE * t1, TERMTYPE * t2)
 /* are two entries equivalent? */
 {
-    int i;
+    unsigned i;
 
     for (i = 0; i < NUM_BOOLEANS(t1); i++)
 	if (t1->Booleans[i] != t2->Booleans[i])
@@ -268,7 +268,7 @@ entryeq(TERMTYPE * t1, TERMTYPE * t2)
 #define TIC_EXPAND(result) _nc_tic_expand(result, outform==F_TERMINFO, numbers)
 
 static void
-print_uses(ENTRY * ep, FILE * fp)
+print_uses(ENTRY * ep, FILE *fp)
 /* print an entry's use references */
 {
     int i;
@@ -739,7 +739,7 @@ file_comparison(int argc, char *argv[])
 		    (void) fputc('\n', stderr);
 		}
 	    }
-	    exit(EXIT_FAILURE);
+	    ExitProgram(EXIT_FAILURE);
 	}
 
 	heads[filecount] = _nc_head;
@@ -936,7 +936,7 @@ usage(void)
 	else
 	    fprintf(stderr, "%s\n", tbl[n]);
     }
-    exit(EXIT_FAILURE);
+    ExitProgram(EXIT_FAILURE);
 }
 
 static char *
@@ -975,7 +975,7 @@ string_variable(const char *type)
 static void
 dump_initializers(TERMTYPE * term)
 {
-    int n;
+    unsigned n;
     int size;
     const char *str = 0;
 
@@ -1145,9 +1145,22 @@ optarg_to_number(void)
 
     if (temp == 0 || temp == optarg || *temp != 0) {
 	fprintf(stderr, "Expected a number, not \"%s\"\n", optarg);
-	exit(EXIT_FAILURE);
+	ExitProgram(EXIT_FAILURE);
     }
     return (int) value;
+}
+
+static char *
+terminal_env(void)
+{
+    char *terminal;
+
+    if ((terminal = getenv("TERM")) == 0) {
+	(void) fprintf(stderr,
+		       "infocmp: environment variable TERM not set\n");
+	exit(EXIT_FAILURE);
+    }
+    return terminal;
 }
 
 /***************************************************************************
@@ -1159,7 +1172,7 @@ optarg_to_number(void)
 int
 main(int argc, char *argv[])
 {
-    char *terminal, *firstdir, *restdir;
+    char *firstdir, *restdir;
     /* Avoid "local data >32k" error with mwcc */
     /* Also avoid overflowing smaller stacks on systems like AmigaOS */
     path *tfile = (path *) malloc(sizeof(path) * MAXTERMS);
@@ -1169,12 +1182,6 @@ main(int argc, char *argv[])
     int initdump = 0;
     bool init_analyze = FALSE;
     bool suppress_untranslatable = FALSE;
-
-    if ((terminal = getenv("TERM")) == 0) {
-	(void) fprintf(stderr,
-		       "infocmp: environment variable TERM not set\n");
-	return EXIT_FAILURE;
-    }
 
     /* where is the terminfo database location going to default to? */
     restdir = firstdir = 0;
@@ -1342,11 +1349,11 @@ main(int argc, char *argv[])
 
     /* make sure we have at least one terminal name to work with */
     if (optind >= argc)
-	argv[argc++] = terminal;
+	argv[argc++] = terminal_env();
 
     /* if user is after a comparison, make sure we have two entries */
     if (compare != C_DEFAULT && optind >= argc - 1)
-	argv[argc++] = terminal;
+	argv[argc++] = terminal_env();
 
     /* exactly two terminal names with no options means do -d */
     if (argc - optind == 2 && compare == C_DEFAULT)

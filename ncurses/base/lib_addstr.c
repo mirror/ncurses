@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,10 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *                                                                          *
+ *  Rewritten 2001-2002 to support wide-characters by                       *
+ *	Sven Verdoolaege                                                    *
+ *	Thomas Dickey                                                       *
  ****************************************************************************/
 
 /*
@@ -40,53 +44,13 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_addstr.c,v 1.34 2002/10/06 00:25:25 tom Exp $")
-
-#if USE_WIDEC_SUPPORT
-#define CONV_DATA   mbstate_t state; wchar_t cached; int clen = 0
-#define CONV_INIT   memset (&state, '\0', sizeof (state)); cached = (wchar_t)WEOF
-#define NEXT_CHAR(s,ch, n)						\
-    {									\
-	int len, i = 0;							\
-	memset(&ch, 0, sizeof(cchar_t));				\
-	if (cached != (wchar_t) WEOF) {					\
-	    ch.chars[i++] = cached;					\
-	    cached = (wchar_t) WEOF;					\
-	    n -= clen;							\
-	    s += clen;							\
-	}								\
-	for (; i < CCHARW_MAX && n > 0; ++i) {				\
-	    if ((len = mbrtowc(&ch.chars[i], s, n, &state)) < 0) {	\
-		code = ERR;						\
-		break;							\
-	    }								\
-	    if (i == 0 || wcwidth(ch.chars[i]) == 0) {			\
-		n -= len;						\
-		s += len;						\
-	    } else {							\
-		cached = ch.chars[i];					\
-		clen = len;						\
-		ch.chars[i] = L'\0';					\
-		break;							\
-	    }								\
-	}								\
-	if (code == ERR)						\
-	    break;							\
-    }
-#else
-#define CONV_DATA
-#define CONV_INIT
-#define NEXT_CHAR(s,ch, n)						\
-    ch = *s++;								\
-    --n
-#endif
+MODULE_ID("$Id: lib_addstr.c,v 1.39 2003/12/06 18:04:33 tom Exp $")
 
 NCURSES_EXPORT(int)
 waddnstr(WINDOW *win, const char *astr, int n)
 {
-    unsigned const char *str = (unsigned const char *) astr;
+    const char *str = astr;
     int code = ERR;
-    CONV_DATA;
 
     T((T_CALLED("waddnstr(%p,%s,%d)"), win, _nc_visbufn(astr, n), n));
 
@@ -97,11 +61,10 @@ waddnstr(WINDOW *win, const char *astr, int n)
 	    n = (int) strlen(astr);
 
 	TR(TRACE_VIRTPUT, ("str is not null, length = %d", n));
-	CONV_INIT;
-	while ((n > 0) && (*str != '\0')) {
+	while ((n-- > 0) && (*str != '\0')) {
 	    NCURSES_CH_T ch;
-	    TR(TRACE_VIRTPUT, ("*str = %#x", *str));
-	    NEXT_CHAR(str, ch, n);
+	    TR(TRACE_VIRTPUT, ("*str = %#o", UChar(*str)));
+	    SetChar(ch, UChar(*str++), A_NORMAL);
 	    if (_nc_waddch_nosync(win, ch) == ERR) {
 		code = ERR;
 		break;
@@ -114,7 +77,7 @@ waddnstr(WINDOW *win, const char *astr, int n)
 }
 
 NCURSES_EXPORT(int)
-waddchnstr(WINDOW *win, const chtype * astr, int n)
+waddchnstr(WINDOW *win, const chtype *astr, int n)
 {
     NCURSES_SIZE_T y = win->_cury;
     NCURSES_SIZE_T x = win->_curx;
@@ -155,7 +118,7 @@ waddchnstr(WINDOW *win, const chtype * astr, int n)
 
 #if USE_WIDEC_SUPPORT
 
-int
+NCURSES_EXPORT(int)
 _nc_wchstrlen(const cchar_t * s)
 {
     int result = 0;
@@ -166,7 +129,7 @@ _nc_wchstrlen(const cchar_t * s)
 }
 
 NCURSES_EXPORT(int)
-wadd_wchnstr(WINDOW *win, const cchar_t * const astr, int n)
+wadd_wchnstr(WINDOW *win, const cchar_t * astr, int n)
 {
     NCURSES_SIZE_T y = win->_cury;
     NCURSES_SIZE_T x = win->_curx;
@@ -217,9 +180,8 @@ NCURSES_EXPORT(int)
 waddnwstr(WINDOW *win, const wchar_t * str, int n)
 {
     int code = ERR;
-    int i;
 
-    T((T_CALLED("waddnwstr(%p,%s,%d)"), win, _nc_viswbufn(str,n), n));
+    T((T_CALLED("waddnwstr(%p,%s,%d)"), win, _nc_viswbufn(str, n), n));
 
     if (win && (str != 0)) {
 	TR(TRACE_VIRTPUT | TRACE_ATTRS, ("... current %s", _traceattr(win->_attrs)));
@@ -230,16 +192,9 @@ waddnwstr(WINDOW *win, const wchar_t * str, int n)
 	TR(TRACE_VIRTPUT, ("str is not null, length = %d", n));
 	while ((n-- > 0) && (*str != L('\0'))) {
 	    NCURSES_CH_T ch;
-	    TR(TRACE_VIRTPUT, ("*str[0] = %#lx", *str));
+	    TR(TRACE_VIRTPUT, ("*str[0] = %#lx", (unsigned long) *str));
 	    SetChar(ch, *str++, A_NORMAL);
-	    i = 1;
-	    while (i < CCHARW_MAX && n > 0 && (*str != L('\0'))
-		   && wcwidth(*str) == 0) {
-		TR(TRACE_VIRTPUT, ("*str[%d] = %#lx", i, *str));
-		ch.chars[i++] = *str++;
-		--n;
-	    }
-	    if (_nc_waddch_nosync(win, ch) == ERR) {
+	    if (wadd_wch(win, &ch) == ERR) {
 		code = ERR;
 		break;
 	    }

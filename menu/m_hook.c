@@ -28,7 +28,6 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -38,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_hook.c,v 1.10 2002/07/06 15:22:16 juergen Exp $")
+MODULE_ID("$Id: m_hook.c,v 1.11 2003/10/25 14:54:48 tom Exp $")
 
 /* "Template" macro to generate function to set application specific hook */
 #define GEN_HOOK_SET_FUNCTION( typ, name ) \

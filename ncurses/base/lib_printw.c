@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,10 +39,10 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_printw.c,v 1.13 2002/10/05 22:52:21 tom Exp $")
+MODULE_ID("$Id: lib_printw.c,v 1.15 2003/02/08 20:50:13 tom Exp $")
 
 NCURSES_EXPORT(int)
-printw(NCURSES_CONST char *fmt,...)
+printw(const char *fmt,...)
 {
     va_list argp;
     int code;
@@ -62,7 +62,7 @@ printw(NCURSES_CONST char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-wprintw(WINDOW *win, NCURSES_CONST char *fmt,...)
+wprintw(WINDOW *win, const char *fmt,...)
 {
     va_list argp;
     int code;
@@ -82,7 +82,7 @@ wprintw(WINDOW *win, NCURSES_CONST char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-mvprintw(int y, int x, NCURSES_CONST char *fmt,...)
+mvprintw(int y, int x, const char *fmt,...)
 {
     va_list argp;
     int code;
@@ -103,7 +103,7 @@ mvprintw(int y, int x, NCURSES_CONST char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-mvwprintw(WINDOW *win, int y, int x, NCURSES_CONST char *fmt,...)
+mvwprintw(WINDOW *win, int y, int x, const char *fmt,...)
 {
     va_list argp;
     int code;
@@ -124,7 +124,7 @@ mvwprintw(WINDOW *win, int y, int x, NCURSES_CONST char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-vwprintw(WINDOW *win, NCURSES_CONST char *fmt, va_list argp)
+vwprintw(WINDOW *win, const char *fmt, va_list argp)
 {
     char *buf;
     int code = ERR;
@@ -134,9 +134,6 @@ vwprintw(WINDOW *win, NCURSES_CONST char *fmt, va_list argp)
 
     if ((buf = _nc_printf_string(fmt, argp)) != 0) {
 	code = waddstr(win, buf);
-#if USE_SAFE_SPRINTF
-	free(buf);
-#endif
     }
     returnCode(code);
 }

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1999,2000 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1999-2000,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,40 +27,40 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infotocap.1m,v 1.3 2000/08/13 01:56:03 tom Exp $
+.\" $Id: infotocap.1m,v 1.4 2003/05/11 00:32:53 tom Exp $
 .TH infotocap 1M ""
 .ds n 5
 .ds d @TERMINFO@
 .SH NAME
 \fBinfotocap\fR - convert a \fIterminfo\fR description into a \fItermcap\fR description
 .SH SYNOPSIS
-\fBinfotocap\fR [\fB-v\fR\fIn\fR \fIwidth\fR]  [\fB-V\fR] [\fB-1\fR] [\fB-w\fR \fIwidth\fR] \fIfile\fR . . .
+\fBinfotocap\fR [\fB\-v\fR\fIn\fR \fIwidth\fR]  [\fB\-V\fR] [\fB\-1\fR] [\fB\-w\fR \fIwidth\fR] \fIfile\fR . . .
 .SH DESCRIPTION
 \fBinfotocap\fR looks in \fIfile\fR for \fBterminfo\fR descriptions.  For each
 one found, an equivalent \fBtermcap\fR description is written to standard
 output.  Terminfo \fBuse\fR capabilities are translated directly to termcap
 \fBtc\fR capabilities.
 .TP 5
-\fB-v\fR
+\fB\-v\fR
 print out tracing information on standard error as the program runs.
 .TP 5
-\fB-V\fR
+\fB\-V\fR
 print out the version of the program in use on standard error and exit.
 .TP 5
-\fB-1\fR
+\fB\-1\fR
 cause the fields to print out one to a line.  Otherwise, the fields
 will be printed several to a line to a maximum width of 60
 characters.
 .TP 5
-\fB-w\fR
+\fB\-w\fR
 change the output to \fIwidth\fR characters.
 .SH FILES
 .TP 20
 \*d
 Compiled terminal description database.
 .SH NOTES
-This utility is actually a link to \fItic\fR(1M), running in \fI-C\fR mode.
-You can use other \fItic\fR options such as \fB-f\fR and  \fB-x\fR.
+This utility is actually a link to \fItic\fR(1M), running in \fI\-C\fR mode.
+You can use other \fItic\fR options such as \fB\-f\fR and  \fB\-x\fR.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBtic\fR(1M),

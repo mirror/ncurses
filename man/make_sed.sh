@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: make_sed.sh,v 1.5 1998/02/11 12:13:48 tom Exp $
+# $Id: make_sed.sh,v 1.7 2003/10/25 20:33:16 tom Exp $
 ##############################################################################
-# Copyright (c) 1998 Free Software Foundation, Inc.                          #
+# Copyright (c) 1998,2003 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1997
+# Author: Thomas E. Dickey 1997
 #
 # Construct a sed-script to perform renaming within man-pages.  Originally
 # written in much simpler form, this one accounts for the common cases of
@@ -47,7 +47,7 @@ RESULT=result$$
 rm -f $UPPER $SCRIPT $RESULT
 trap "rm -f $COL.* $INPUT $UPPER $SCRIPT $RESULT" 0 1 2 5 15
 fgrep -v \# $1 | \
-sed	-e 's/[	]\+/	/g' >$INPUT
+sed	-e 's/[	][	]*/	/g' >$INPUT
 
 for F in 1 2 3 4
 do

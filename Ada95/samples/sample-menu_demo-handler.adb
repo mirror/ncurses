@@ -34,9 +34,8 @@
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
---  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Sample.Menu_Demo.Aux;

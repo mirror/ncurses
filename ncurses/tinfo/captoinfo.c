@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
  *
  *	There is just one entry point:
  *
- *	char *_nc_captoinfo(n, s, parametrized)
+ *	char *_nc_captoinfo(n, s, parameterized)
  *
  *	Convert value s for termcap string capability named n into terminfo
  *	format.
@@ -92,7 +92,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.43 2002/09/28 16:38:59 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.45 2003/11/08 21:28:04 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -272,12 +272,12 @@ getparm(int parm, int n)
  * Convert a termcap string to terminfo format.
  * 'cap' is the relevant terminfo capability index.
  * 's' is the string value of the capability.
- * 'parametrized' tells what type of translations to do:
+ * 'parameterized' tells what type of translations to do:
  *	% translations if 1
  *	pad translations if >=0
  */
 char *
-_nc_captoinfo(const char *cap, const char *s, int const parametrized)
+_nc_captoinfo(const char *cap, const char *s, int const parameterized)
 {
     const char *capstart;
 
@@ -294,7 +294,7 @@ _nc_captoinfo(const char *cap, const char *s, int const parametrized)
     capstart = 0;
     if (s == 0)
 	s = "";
-    if (parametrized >= 0 && isdigit(UChar(*s)))
+    if (parameterized >= 0 && isdigit(UChar(*s)))
 	for (capstart = s;; s++)
 	    if (!(isdigit(UChar(*s)) || *s == '*' || *s == '.'))
 		break;
@@ -303,7 +303,7 @@ _nc_captoinfo(const char *cap, const char *s, int const parametrized)
 	switch (*s) {
 	case '%':
 	    s++;
-	    if (parametrized < 1) {
+	    if (parameterized < 1) {
 		dp = save_char(dp, '%');
 		break;
 	    }
@@ -637,7 +637,7 @@ save_tc_inequality(char *bufptr, int c1, int c2)
  * _nc_captoinfo().
  */
 char *
-_nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parametrized)
+_nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameterized)
 {
     int seenone = 0, seentwo = 0, saw_m = 0, saw_n = 0;
     const char *padding;
@@ -649,11 +649,11 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parametrize
 
     /* we may have to move some trailing mandatory padding up front */
     padding = str + strlen(str) - 1;
-    if (*padding == '>' && *--padding == '/') {
+    if (padding > str && *padding == '>' && *--padding == '/') {
 	--padding;
 	while (isdigit(UChar(*padding)) || *padding == '.' || *padding == '*')
 	    padding--;
-	if (*padding == '<' && *--padding == '$')
+	if (padding > str && *padding == '<' && *--padding == '$')
 	    trimmed = padding;
 	padding += 2;
 
@@ -678,7 +678,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parametrize
 	    --str;
 	} else if (str[0] == '%' && str[1] == '%') {	/* escaped '%' */
 	    bufptr = save_string(bufptr, "%%");
-	} else if (*str != '%' || (parametrized < 1)) {
+	} else if (*str != '%' || (parameterized < 1)) {
 	    bufptr = save_char(bufptr, *str);
 	} else if (sscanf(str, "%%?%%{%d}%%>%%t%%{%d}%%+%%;", &c1, &c2) == 2) {
 	    str = strchr(str, ';');

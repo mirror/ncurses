@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.33 2002/01/19 22:49:44 tom Exp $
+# $Id: Makefile.in,v 1.35 2003/12/20 18:41:10 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,2000,2001,2002 Free Software Foundation, Inc.           #
+# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -27,7 +27,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997
+# Author: Thomas E. Dickey 1996,1997
 #
 # Makefile for ncurses manual pages.
 #
@@ -56,10 +56,10 @@ $(DESTDIR)$(mandir) :
 EDITARGS = $(DESTDIR)$(mandir) $(srcdir) terminfo.5 $(srcdir)/*.[0-9]*
 
 install install.man : terminfo.5 $(DESTDIR)$(mandir)
-	sh ./edit_man.sh installing $(EDITARGS)
+	sh ./edit_man.sh normal installing $(EDITARGS)
 
 uninstall uninstall.man :
-	-sh ./edit_man.sh removing $(EDITARGS)
+	-sh ./edit_man.sh normal removing $(EDITARGS)
 
 # We compose terminfo.5 from the real sources...
 CAPLIST=$(srcdir)/../include/@TERMINFO_CAPS@

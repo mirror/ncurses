@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,49 +28,27 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.274 2002/09/15 00:11:28 tom Exp $
+dnl $Id: configure.in,v 1.312 2004/01/24 19:29:13 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.274 $)
+AC_REVISION($Revision: 1.312 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
 CF_SUBST_NCURSES_VERSION
+
+CF_WITH_REL_VERSION(NCURSES)
+CF_WITH_ABI_VERSION
+
 CF_CHECK_CACHE([AC_CANONICAL_SYSTEM])
 AC_ARG_WITH(system-type,
 [  --with-system-type=XXX  test: override derived host system-type],
 [AC_MSG_WARN(overriding system type to $withval)
  cf_cv_system_name=$withval])
-
-# We need a configure script only when compiling as part of GNU C library.
-# Here we have to generate one of the files we need while compiling.
-#
-# The only problem is that users of the package might think they have to
-# run configure themself and find it irritating when nothing happens.
-#
-# So we try here to find out whether we are called from the glibc configure
-# or by a user.
-#
-dnl Check if we are a drop-in addition to glibc.
-AC_ARG_ENABLE(add-ons, dnl
-[  --enable-add-ons=DIR... used to check if we are a glibc add-on.],
-		[glibc_add_on=yes],
-		[glibc_add_on=])
-
-if test x"$glibc_add_on" = "xyes" ; then
-  rm -f $srcdir/Banner
-  # We are in glibc.
-  rm -f $srcdir/Makefile
-  cp $srcdir/Makefile.glibc $srcdir/Makefile
-  echo "ncurses `grep \"^[[ 	]]*ncurses-version[[ 	]]*=.*$\" \
-		$srcdir/Makefile | sed -e \
-		's/^[[ 	]]*ncurses-version[[ 	]]*=[[ 	]]*\([[^	^ ]]*\)[[ 	]]*$/\1/'`" > $srcdir/Banner
-  exit 0
-fi
 
 ###	Save the given $CFLAGS to allow user-override.
 cf_user_CFLAGS="$CFLAGS"
@@ -80,60 +58,14 @@ CF_CFG_DEFAULTS
 
 ###	Checks for programs.
 AC_PROG_CC
-GCC_VERSION=none
-if test "$GCC" = yes ; then
-	AC_MSG_CHECKING(version of gcc)
-	GCC_VERSION="`${CC} --version|head -1`"
-	AC_MSG_RESULT($GCC_VERSION)
-fi
-
-# If we're cross-compiling, allow the user to override the tools and their
-# options.  The configure script is oriented toward identifying the target
-# compiler, etc., but we need a host compiler to generate parts of the source.
-BUILD_CC='$(CC)'
-BUILD_CFLAGS='$(CFLAGS)'
-BUILD_CPPFLAGS='$(CPPFLAGS)'
-BUILD_LDFLAGS='$(LDFLAGS)'
-BUILD_LIBS='$(LIBS)'
-if test "$host_alias" != "$target_alias" ; then
-	AC_ARG_WITH(build-cc,
-		[  --with-build-cc=XXX     if cross-compiling, the host C compiler (\$BUILD_CC)],
-		[BUILD_CC="$withval"],
-		[AC_CHECK_PROGS(BUILD_CC, $CC gcc cc)])
-	AC_ARG_WITH(build-cflags,
-		[  --with-build-cflags=XXX if cross-compiling, the host C compiler-flags],
-		[BUILD_CFLAGS="$withval"])
-	AC_ARG_WITH(build-cppflags,
-		[  --with-build-cppflags=XXX if cross-compiling, the host C preprocessor-flags],
-		[BUILD_CPPFLAGS="$withval"])
-	AC_ARG_WITH(build-ldflags,
-		[  --with-build-ldflags=XXX if cross-compiling, the host linker-flags],
-		[BUILD_LDFLAGS="$withval"])
-	AC_ARG_WITH(build-libs,
-		[  --with-build-libs=XXX   if cross-compiling, the host libraries],
-		[BUILD_LIBS="$withval"])
-fi
-AC_SUBST(BUILD_CC)
-AC_SUBST(BUILD_CFLAGS)
-AC_SUBST(BUILD_CPPFLAGS)
-AC_SUBST(BUILD_LDFLAGS)
-AC_SUBST(BUILD_LIBS)
+CF_GCC_VERSION
 
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
 AC_ISC_POSIX
 CF_ANSI_CC_REQD
 CF_PROG_EXT
-
-case "$cf_cv_system_name" in
-freebsd*) #(vi
-  test -z "$LDCONFIG" && LDCONFIG="/sbin/ldconfig -R"
-  ;;
-*) LDPATH=$PATH:/sbin:/usr/sbin
-  AC_PATH_PROG(LDCONFIG,ldconfig,,$LDPATH)
-  ;;
-esac
-AC_SUBST(LDCONFIG)
+CF_PROG_LDCONFIG
 
 dnl DEFECT in autoconf 2.12:	an attempt to set policy, this breaks the
 dnl				configure script by not letting us test if C++
@@ -148,26 +80,31 @@ if test "X$cf_with_cxx" = Xno ; then
 	CXX=""
 	GXX=""
 else
+	# with autoconf 2.13, we can change the error to a warning:
 	pushdef([AC_MSG_ERROR],
-		[AC_MSG_RESULT([You don't have any C++ compiler, too bad]); dnl
+		[AC_MSG_RESULT(no)
+		 AC_MSG_WARN([You don't have any C++ compiler, too bad])
 		cf_with_cxx=no; CXX=""; GXX="";])dnl
 	AC_PROG_CXX
 	popdef([AC_MSG_ERROR])dnl
+	# autoconf 2.5x removed the error - by hardcoding it to g++.
+	if test "$CXX" = "g++" ; then
+		AC_PATH_PROG(CXX,g++)
+	fi
+	if test "$CXX" = "g++" ; then
+		AC_MSG_WARN(ignoring hardcoded g++)
+		cf_with_cxx=no; CXX=""; GXX="";
+	fi
 fi
 
-GXX_VERSION=none
-if test "$GXX" = yes; then
-	AC_MSG_CHECKING(version of g++)
-	GXX_VERSION="`${CXX-g++} --version|head -1`"
-	AC_MSG_RESULT($GXX_VERSION)
-	case $GXX_VERSION in
-	1*|2.[[0-6]]*)
-		GXX=""; CXX=""; ac_cv_prog_gxx=no
-		cf_cxx_library=no
-		AC_MSG_WARN(templates do not work)
-		;;
-	esac
-fi
+CF_GXX_VERSION
+case $GXX_VERSION in
+1*|2.[[0-6]]*)
+	GXX=""; CXX=""; ac_cv_prog_gxx=no
+	cf_cxx_library=no
+	AC_MSG_WARN(templates do not work)
+	;;
+esac
 
 AC_MSG_CHECKING(if you want to build C++ binding and demo)
 AC_ARG_WITH(cxx-binding,
@@ -210,15 +147,15 @@ CF_PROG_INSTALL
 AC_SYS_LONG_FILE_NAMES
 CF_MIXEDCASE_FILENAMES
 AC_PROG_LN_S
-AC_PROG_RANLIB
 CF_MAKE_TAGS
 AC_CHECK_PROGS(LINT, tdlint lint alint)
 AC_CHECK_PROGS(MAN, man man_db)
 AC_SUBST(LINT_OPTS)
 
 dnl These are standard among *NIX systems, but not when cross-compiling
-CF_SUBST(loader,LD,ld)
-CF_SUBST(archiver,AR,ar)
+AC_CHECK_TOOL(RANLIB, ranlib, ':')
+AC_CHECK_TOOL(LD, ld, ld)
+AC_CHECK_TOOL(AR, ar, ar)
 CF_SUBST(archiver options,AR_OPTS,rv)
 
 CF_MAKEFLAGS
@@ -228,7 +165,7 @@ dnl adjust the location into which the actual install is done, so that an
 dnl archive can be built without modifying the host system's configuration.
 AC_MSG_CHECKING(if you have specified an install-prefix)
 AC_ARG_WITH(install-prefix,
-	[  --with-install-prefix   prefixes actual install-location (\$DESTDIR)],
+	[  --with-install-prefix   prefixes actual install-location ($DESTDIR)],
 	[case "$withval" in #(vi
 	yes|no) #(vi
 		;;
@@ -239,6 +176,43 @@ AC_MSG_RESULT($DESTDIR)
 AC_SUBST(DESTDIR)
 
 ###############################################################################
+CF_HELP_MESSAGE(Build-Tools Needed to Compile Temporary Applications for Cross-compiling:)
+# If we're cross-compiling, allow the user to override the tools and their
+# options.  The configure script is oriented toward identifying the host
+# compiler, etc., but we need a build compiler to generate parts of the source.
+: ${BUILD_CC:='$(CC)'}
+: ${BUILD_CFLAGS:='$(CFLAGS)'}
+: ${BUILD_CPPFLAGS:='$(CPPFLAGS)'}
+: ${BUILD_LDFLAGS:='$(LDFLAGS)'}
+: ${BUILD_LIBS:='$(LIBS)'}
+: ${BUILD_EXEEXT:='$x'}
+if test "$cross_compiling" = yes ; then
+	AC_ARG_WITH(build-cc,
+		[  --with-build-cc=XXX     the build C compiler ($BUILD_CC)],
+		[BUILD_CC="$withval"],
+		[AC_CHECK_PROGS(BUILD_CC, $CC gcc cc)])
+	AC_ARG_WITH(build-cflags,
+		[  --with-build-cflags=XXX the build C compiler-flags],
+		[BUILD_CFLAGS="$withval"])
+	AC_ARG_WITH(build-cppflags,
+		[  --with-build-cppflags=XXX the build C preprocessor-flags],
+		[BUILD_CPPFLAGS="$withval"])
+	AC_ARG_WITH(build-ldflags,
+		[  --with-build-ldflags=XXX the build linker-flags],
+		[BUILD_LDFLAGS="$withval"])
+	AC_ARG_WITH(build-libs,
+		[  --with-build-libs=XXX   the build libraries],
+		[BUILD_LIBS="$withval"])
+	BUILD_EXEEXT=
+fi
+AC_SUBST(BUILD_CC)
+AC_SUBST(BUILD_CFLAGS)
+AC_SUBST(BUILD_CPPFLAGS)
+AC_SUBST(BUILD_LDFLAGS)
+AC_SUBST(BUILD_LIBS)
+AC_SUBST(BUILD_EXEEXT)
+
+###############################################################################
 CF_HELP_MESSAGE(Options to Specify the Libraries Built/Used:)
 
 ### Options to allow the user to specify the set of libraries which are used.
@@ -247,19 +221,12 @@ CF_HELP_MESSAGE(Options to Specify the Libraries Built/Used:)
 cf_list_models=""
 AC_SUBST(cf_list_models)dnl	the complete list of models ("normal debug")
 
-AC_MSG_CHECKING(if you want to build libraries with libtool)
-AC_ARG_WITH(libtool,
-	[  --with-libtool          generate libraries with libtool],
-	[with_libtool=$withval],
-	[with_libtool=no])
-AC_MSG_RESULT($with_libtool)
-if test "$with_libtool" = "yes"; then
-	cf_list_models="$cf_list_models libtool"
-	test -z "$LIBTOOL" && LIBTOOL=libtool
+CF_WITH_LIBTOOL
+if test "$with_libtool" != "no" ; then
+
+cf_list_models="$cf_list_models libtool"
+
 else
-	LIBTOOL=""
-fi
-AC_SUBST(LIBTOOL)
 
 AC_MSG_CHECKING(if you want to build shared libraries)
 AC_ARG_WITH(shared,
@@ -293,19 +260,21 @@ AC_ARG_WITH(profile,
 AC_MSG_RESULT($with_profile)
 test "$with_profile" = "yes" && cf_list_models="$cf_list_models profile"
 
+fi
+
 ###############################################################################
 
 AC_MSG_CHECKING(for specified models)
 test -z "$cf_list_models" && cf_list_models=normal
 dnl If we use libtool to generate libraries, then it must be the only
 dnl specified model.
-test "$with_libtool" = "yes" && cf_list_models=libtool
+test "$with_libtool" != "no" && cf_list_models=libtool
 AC_MSG_RESULT($cf_list_models)
 
 ### Use the first model as the default, and save its suffix for use in building
 ### up test-applications.
 AC_MSG_CHECKING(for default model)
-DFT_LWR_MODEL=`echo $cf_list_models | $AWK '{print $1}'`
+DFT_LWR_MODEL=`echo "$cf_list_models" | $AWK '{print $1}'`
 AC_MSG_RESULT($DFT_LWR_MODEL)
 
 CF_UPPER(DFT_UPR_MODEL,$DFT_LWR_MODEL)dnl
@@ -337,25 +306,8 @@ AC_ARG_WITH(termlib,
 AC_MSG_RESULT($with_termlib)
 
 ### Checks for special libraries, must be done up-front.
-AC_MSG_CHECKING(if you want to link with dbmalloc for testing)
-AC_ARG_WITH(dbmalloc,
-	[  --with-dbmalloc         test: use Conor Cahill's dbmalloc library],
-	[with_dbmalloc=$withval],
-	[with_dbmalloc=no])
-AC_MSG_RESULT($with_dbmalloc)
-if test "$with_dbmalloc" = yes ; then
-	AC_CHECK_LIB(dbmalloc,debug_malloc)
-fi
-
-AC_MSG_CHECKING(if you want to link with dmalloc for testing)
-AC_ARG_WITH(dmalloc,
-	[  --with-dmalloc          test: use Gray Watson's dmalloc library],
-	[with_dmalloc=$withval],
-	[with_dmalloc=no])
-AC_MSG_RESULT($with_dmalloc)
-if test "$with_dmalloc" = yes ; then
-	AC_CHECK_LIB(dmalloc,dmalloc_debug)
-fi
+CF_WITH_DBMALLOC
+CF_WITH_DMALLOC
 
 SHLIB_LIST=""
 AC_MSG_CHECKING(if you want to link with the gpm mouse library)
@@ -372,6 +324,8 @@ if test "$with_gpm" = yes ; then
 		AC_CHECK_HEADERS(gpm.h)
 	],AC_MSG_WARN(Cannot link with gpm library - read the FAQ))
 fi
+
+CF_WITH_SYSMOUSE
 
 dnl Not all ports of gcc support the -g option
 
@@ -458,7 +412,7 @@ AC_ARG_WITH(fallbacks,
 	[with_fallback=$withval],
 	[with_fallback=])
 AC_MSG_RESULT($with_fallback)
-FALLBACK_LIST=`echo $with_fallback|sed -e 's/,/ /g'`
+FALLBACK_LIST=`echo "$with_fallback" | sed -e 's/,/ /g'`
 AC_SUBST(FALLBACK_LIST)
 
 MAKE_TERMINFO=
@@ -522,7 +476,7 @@ AC_MSG_RESULT($with_termcap)
 
 if test "$with_termcap" != "yes" ; then
 	if test "$use_database" = no ; then
-		if test -z $with_fallback ; then
+		if test -z "$with_fallback" ; then
 			AC_ERROR(You have disabled the database w/o specifying fallbacks)
 		fi
 	fi
@@ -556,6 +510,14 @@ AC_MSG_RESULT($with_getcap_cache)
 test "$with_getcap_cache" = "yes" && AC_DEFINE(USE_GETCAP_CACHE)
 
 fi
+
+###   Use option --disable-home-terminfo to completely remove ~/.terminfo
+AC_MSG_CHECKING(if ~/.terminfo is wanted)
+AC_ARG_ENABLE(home-terminfo,
+	[  --disable-home-terminfo drop ~/.terminfo from terminfo search-path],
+	[with_home_terminfo=$enableval],
+	[with_home_terminfo=yes])
+test "$with_home_terminfo" = "yes" && AC_DEFINE(USE_HOME_TERMINFO)
 
 ###   Use option --enable-symlinks to make tic use symlinks, not hard links
 ###   to reduce storage requirements for the terminfo database.
@@ -597,14 +559,14 @@ AC_MSG_CHECKING(if you want broken-linker support code)
 AC_ARG_ENABLE(broken_linker,
 	[  --enable-broken_linker  compile with broken-linker support code],
 	[with_broken_linker=$enableval],
-	[with_broken_linker=$BROKEN_LINKER])
+	[with_broken_linker=${BROKEN_LINKER-no}])
 AC_MSG_RESULT($with_broken_linker)
 
 BROKEN_LINKER=0
 if test "$with_broken_linker" = yes ; then
 	AC_DEFINE(BROKEN_LINKER)
 	BROKEN_LINKER=1
-elif test $DFT_LWR_MODEL = shared ; then
+elif test "$DFT_LWR_MODEL" = shared ; then
 	case $cf_cv_system_name in #(vi
 	cygwin*)
 		AC_DEFINE(BROKEN_LINKER)
@@ -669,6 +631,7 @@ if test "$with_ext_funcs" = yes ; then
 	AC_DEFINE(HAVE_CURSES_VERSION)
 	AC_DEFINE(HAVE_HAS_KEY)
 	AC_DEFINE(HAVE_RESIZETERM)
+	AC_DEFINE(HAVE_RESIZE_TERM)
 	AC_DEFINE(HAVE_USE_DEFAULT_COLORS)
 	AC_DEFINE(HAVE_WRESIZE)
 	AC_DEFINE(NCURSES_EXT_FUNCS)
@@ -692,7 +655,7 @@ AC_SUBST(NCURSES_CONST)
 
 AC_MSG_CHECKING(if you want \$NCURSES_NO_PADDING code)
 AC_ARG_ENABLE(no-padding,
-	[  --enable-no-padding     compile with \$NCURSES_NO_PADDING code],
+	[  --enable-no-padding     compile with $NCURSES_NO_PADDING code],
 	[with_no_padding=$enableval],
 	[with_no_padding=$with_ext_funcs])
 AC_MSG_RESULT($with_no_padding)
@@ -778,7 +741,7 @@ test "$with_hashmap" = yes && AC_DEFINE(USE_HASHMAP)
 ###   use option --enable-colorfgbg to turn on use of $COLORFGBG environment
 AC_MSG_CHECKING(if you want colorfgbg code)
 AC_ARG_ENABLE(colorfgbg,
-	[  --enable-colorfgbg      compile with \$COLORFGBG code],
+	[  --enable-colorfgbg      compile with $COLORFGBG code],
 	[with_colorfgbg=$enableval],
 	[with_colorfgbg=no])
 AC_MSG_RESULT($with_colorfgbg)
@@ -807,7 +770,19 @@ fi
 ###   use option --enable-widec to turn on use of wide-character support
 NCURSES_CH_T=chtype
 NCURSES_LIBUTF8=0
+
+NEED_WCHAR_H=0
 NCURSES_MBSTATE_T=0
+NCURSES_WCHAR_T=0
+NCURSES_WINT_T=0
+
+# Check to define _XOPEN_SOURCE "automatically"
+CF_XOPEN_SOURCE
+
+# use these variables to work around a defect in gcc's fixincludes.
+NCURSES_OK_WCHAR_T=
+NCURSES_OK_WINT_T=
+
 AC_MSG_CHECKING(if you want experimental wide-character code)
 AC_ARG_ENABLE(widec,
 	[  --enable-widec          compile with experimental wide-char/UTF-8 code],
@@ -817,24 +792,31 @@ AC_MSG_RESULT($with_widec)
 if test "$with_widec" = yes ; then
 	LIB_SUFFIX="w${LIB_SUFFIX}"
 	AC_DEFINE(USE_WIDEC_SUPPORT)
-	CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE_EXTENDED"
+	CF_PREDEFINE(_XOPEN_SOURCE,500)
+	CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
 	# with_overwrite=no
 	NCURSES_CH_T=cchar_t
-	AC_CHECK_FUNC(putwc)
-if test "$ac_cv_func_putwc" != yes ; then
-	CF_LIBUTF8
-	if test "$cf_cv_libutf8" = yes ; then
-		NCURSES_LIBUTF8=1
+	AC_CHECK_FUNCS(putwc btowc wctob mbtowc wctomb mblen mbrlen mbrtowc)
+	if test "$ac_cv_func_putwc" != yes ; then
+		CF_LIBUTF8
+		if test "$cf_cv_libutf8" = yes ; then
+			NCURSES_LIBUTF8=1
+		fi
 	fi
-fi
-	CF_MBSTATE_T
-	if test $cf_cv_mbstate_t = yes ; then
-		NCURSES_MBSTATE_T=1
-	fi
+	CF_WCHAR_TYPE(mbstate_t, NCURSES_MBSTATE_T)
+	CF_WCHAR_TYPE(wchar_t,   NCURSES_WCHAR_T,   NCURSES_OK_WCHAR_T)
+	CF_WCHAR_TYPE(wint_t,    NCURSES_WINT_T,    NCURSES_OK_WINT_T)
 fi
 AC_SUBST(NCURSES_CH_T)
 AC_SUBST(NCURSES_LIBUTF8)
+
+AC_SUBST(NEED_WCHAR_H)
 AC_SUBST(NCURSES_MBSTATE_T)
+AC_SUBST(NCURSES_WCHAR_T)
+AC_SUBST(NCURSES_WINT_T)
+
+AC_SUBST(NCURSES_OK_WCHAR_T)
+AC_SUBST(NCURSES_OK_WINT_T)
 
 AC_MSG_CHECKING(for terminal capabilities file)
 AC_ARG_WITH(caps,
@@ -910,6 +892,33 @@ AC_ARG_ENABLE(macros,
 	[  --disable-macros        test: use functions rather than macros],
 	[test "$enableval" = no && AC_DEFINE(NCURSES_NOMACROS)])
 
+# Normally we only add trace() to the debug-library.  Allow this to be
+# extended to all models of the ncurses library:
+cf_all_traces=no
+case "$CFLAGS $CPPFLAGS" in
+*-DTRACE*)
+	cf_all_traces=yes
+	;;
+esac
+
+AC_MSG_CHECKING(whether to add trace feature to all models)
+AC_ARG_WITH(trace,
+[  --with-trace            test: add trace() function to all models of ncurses],
+[cf_with_trace=$withval],
+[cf_with_trace=$cf_all_traces])
+AC_MSG_RESULT($with_trace)
+
+if test "$cf_with_trace" = yes ; then
+	LIB_TRACING=all
+	ADA_TRACE=TRUE
+	CF_ADD_CFLAGS(-DTRACE)
+else
+	LIB_TRACING=DEBUG
+	ADA_TRACE=FALSE
+fi
+
+AC_SUBST(ADA_TRACE)
+
 ###	Checks for libraries.
 AC_CHECK_FUNC(gettimeofday,
 	AC_DEFINE(HAVE_GETTIMEOFDAY),[
@@ -922,7 +931,6 @@ CF_MATH_LIB(MATH_LIB,sin(x))
 AC_SUBST(MATH_LIB)
 
 ###	Checks for header files.
-CF_GNU_SOURCE
 AC_STDC_HEADERS
 AC_HEADER_DIRENT
 AC_HEADER_TIME
@@ -945,7 +953,7 @@ sys/time.h \
 sys/times.h \
 ttyent.h \
 unistd.h \
-)
+wctype.h )
 
 # check for ISC (this may also define _POSIX_SOURCE)
 # Note: even non-Posix ISC needs <sys/bsdtypes.h> to declare fd_set
@@ -1027,8 +1035,10 @@ if test -z "$cf_user_CFLAGS" ; then
 	CF_STRIP_G_OPT(CXXFLAGS)
 fi
 
-dnl Check for C++ compiler characteristics (and ensure that it's there!)
+# Just in case, check if the C compiler has a bool type.
 CF_BOOL_DECL(cf_cv_cc_bool_type)
+
+# Check for C++ compiler characteristics (and ensure that it's there!)
 if test -n "$CXX" ; then
 	AC_LANG_CPLUSPLUS
 	CF_STDCPP_LIBRARY
@@ -1105,6 +1115,26 @@ else
 fi
 AC_SUBST(CXXLIBS)
 
+# If the C compiler did not declare bool, and we did not determine that the C++
+# compiler does not declare bool, turn on an ifdef in curses.h that makes the
+# ncurses library use the same type as C++ bool.  Note that this allows one to
+# specify the type of bool in a configure-script option and postpone
+# integration with the C++ compiler provided that the types are compatible.
+USE_CXX_BOOL=1
+if test $cf_cv_cc_bool_type = 1
+then
+	# oops: C has a bool.  Unlikely, but C++ could differ.
+	USE_CXX_BOOL=0
+elif test $cf_cv_builtin_bool = 0
+then
+	# C++ has no bool
+	USE_CXX_BOOL=0
+else
+	# this is the normal case
+	USE_CXX_BOOL='defined(__cplusplus)'
+fi
+AC_SUBST(USE_CXX_BOOL)
+
 CF_HELP_MESSAGE(Ada95 Binding Options:)
 
 dnl Check for availability of GNU Ada Translator (GNAT).
@@ -1169,44 +1199,21 @@ if test	"$cf_cv_prog_gnat_correct" = yes; then
 fi
 fi
 
-### It's not possible to appease gcc 2.6.3's conversion-warnings if we're
-### using a 'char' for bools.  gcc 2.7.0's conversion-warnings are broken too
-### badly to consider using for development purposes, but 2.5.8 is okay.
-if test -n "$with_warnings"; then
-	case $GCC_VERSION in
-	2.6.3)
-		if test "$cf_cv_type_of_bool" != "char"; then
-			EXTRA_CFLAGS="$EXTRA_CFLAGS -Wconversion"
-		fi
-		;;
-	2.5*)
-		EXTRA_CFLAGS="$EXTRA_CFLAGS -Wconversion"
-		;;
-	esac
-fi
-
 ### Construct the library-subsets, if any, from this set of keywords:
-### none, base, ext_funcs, termlib.
+### none, base, ext_funcs, ext_tinfo, termlib, widechar (see CF_LIB_RULES).
 AC_MSG_CHECKING(for library subsets)
 if test "$with_termlib" = yes ; then
-	LIB_SUBSETS="termlib "
+	LIB_SUBSETS="termlib"
+	test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_tinfo"
+	LIB_SUBSETS="${LIB_SUBSETS} "
 else
 	LIB_SUBSETS="termlib+"
+	test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}ext_tinfo+"
 fi
 LIB_SUBSETS="${LIB_SUBSETS}base"
-test "$with_widec" = yes && LIB_SUBSETS="${LIB_SUBSETS}+widechar"
+test "$with_widec"     = yes && LIB_SUBSETS="${LIB_SUBSETS}+widechar"
 test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_funcs"
 AC_MSG_RESULT($LIB_SUBSETS)
-
-LIB_TRACING=DEBUG
-ADA_TRACE=FALSE
-case "$CFLAGS $CPPFLAGS" in
-*-DTRACE*)
-	LIB_TRACING=all
-	ADA_TRACE=TRUE
-	;;
-esac
-AC_SUBST(ADA_TRACE)
 
 ### Construct the list of include-directories to be generated
 CF_INCLUDE_DIRS
@@ -1236,17 +1243,21 @@ AC_SUBST(DFT_OBJ_SUBDIR)dnl the default object-directory ("obj")
 AC_MSG_RESULT($DFT_OBJ_SUBDIR)
 
 # libtool thinks it can make c++ shared libraries (perhaps only g++)
+if test "$cf_with_cxx" = yes ; then
 AC_MSG_CHECKING(c++ library-dependency suffix)
-if test "$with_libtool" = "yes"; then
+if test "$with_libtool" != "no"; then
 	CXX_LIB_SUFFIX=$DFT_DEP_SUFFIX
 else
 	CF_LIB_SUFFIX(normal,CXX_LIB_SUFFIX)dnl we normally make a static library
 fi
 AC_MSG_RESULT($CXX_LIB_SUFFIX)
 AC_SUBST(CXX_LIB_SUFFIX)
+fi
 
 TINFO_LIST="$SHLIB_LIST"
-test "$with_termlib" = yes && SHLIB_LIST="$SHLIB_LIST -ltinfo${LIB_SUFFIX}"
+if test "$with_libtool" = no ; then
+	test "$with_termlib" = yes && SHLIB_LIST="$SHLIB_LIST -ltinfo${LIB_SUFFIX}"
+fi
 
 AC_MSG_CHECKING(where we will install curses.h)
 test "$with_overwrite" = no && \
@@ -1280,6 +1291,9 @@ fi
 PROG_DEPS="$TEST_DEPS"
 PROG_ARGS="$TEST_ARGS"
 
+### predefined stuff for the test programs
+AC_DEFINE(HAVE_SLK_COLOR)
+
 ### Construct the list of subdirectories for which we'll customize makefiles
 ### with the appropriate compile-rules.
 
@@ -1288,16 +1302,18 @@ CF_DIRS_TO_MAKE
 
 AC_DEFINE_UNQUOTED(NCURSES_PATHSEP,'$PATHSEP')
 
+AC_DEFINE_UNQUOTED(NCURSES_VERSION_STRING, "${NCURSES_MAJOR}.${NCURSES_MINOR}.${NCURSES_PATCH}")
+
 ### Now that we're done running tests, add the compiler-warnings, if any
-CFLAGS="$CFLAGS $EXTRA_CFLAGS"
+CF_ADD_CFLAGS($EXTRA_CFLAGS)
 
 ################################################################################
+test "$use_database" = yes && SUB_MAKEFILES="$SUB_MAKEFILES misc/run_tic.sh:misc/run_tic.in"
 AC_OUTPUT( \
 	include/MKterm.h.awk \
 	include/curses.head:include/curses.h.in \
 	include/termcap.h \
 	include/unctrl.h \
-	misc/run_tic.sh:misc/run_tic.in \
 	$SUB_MAKEFILES \
 	Makefile,[
 CF_LIB_RULES
@@ -1329,6 +1345,7 @@ cf_cv_shlib_version="$cf_cv_shlib_version"
 cf_cv_shlib_version_infix="$cf_cv_shlib_version_infix"
 cf_cv_system_name="$cf_cv_system_name"
 cf_with_cxx_binding="$cf_with_cxx_binding"
+host="$host"
 target="$target"
 
 ],cat)dnl

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2002 Free Software Foundation, Inc.                        *
+.\" Copyright (c) 2002,2003 Free Software Foundation, Inc.                   *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wch.3x,v 1.3 2002/05/18 21:48:53 tom Exp $
+.\" $Id: curs_get_wch.3x,v 1.5 2003/05/10 20:33:49 jmc Exp $
 .TH curs_get_wch 3X ""
 .SH NAME
 \fBget_wch\fR,
@@ -37,13 +37,13 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBint get_wch(win_t *\fR\fIwch\fR\fB);\fR
+\fBint get_wch(wint_t *\fR\fIwch\fR\fB);\fR
 .br
-\fBint wget_wch(WINDOW *\fR\fIwin\fR\fB, win_t *\fR\fIwch\fR\fB);\fR
+\fBint wget_wch(WINDOW *\fR\fIwin\fR\fB, wint_t *\fR\fIwch\fR\fB);\fR
 .br
-\fBint mvget_wch(int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, win_t *\fR\fIwch\fR\fB);\fR
+\fBint mvget_wch(int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, wint_t *\fR\fIwch\fR\fB);\fR
 .br
-\fBint mvwget_wch(WINDOW *\fR\fIwin\fR\fB, int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, win_t *\fR\fIwch\fR\fB);\fR
+\fBint mvwget_wch(WINDOW *\fR\fIwin\fR\fB, int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, wint_t *\fR\fIwch\fR\fB);\fR
 .br
 \fBint unget_wch(const wchar_t \fR\fIwch\fR\fB);\fR
 .SH DESCRIPTION
@@ -130,7 +130,7 @@ at the same time.
 Depending on the state of the tty driver when each character
 is typed, the program may produce undesirable results.
 .PP
-All functions except \fBwget_wch\fR and \fBunget_wch\fR 
+All functions except \fBwget_wch\fR and \fBunget_wch\fR
 may be macros.
 .SH RETURN VALUES
 When

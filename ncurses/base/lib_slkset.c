@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,13 +38,14 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_slkset.c,v 1.7 2001/06/02 22:50:29 skimo Exp $")
+MODULE_ID("$Id: lib_slkset.c,v 1.10 2003/04/12 21:32:16 tom Exp $")
 
 NCURSES_EXPORT(int)
 slk_set(int i, const char *astr, int format)
 {
     SLK *slk = SP->_slk;
     size_t len;
+    int offset;
     const char *str = astr;
     const char *p;
 
@@ -64,33 +65,30 @@ slk_set(int i, const char *astr, int format)
     --i;			/* Adjust numbering of labels */
 
     len = (size_t) (p - str);
-    if (len > (unsigned) slk->maxlen)
+    if (len > (size_t) slk->maxlen)
 	len = slk->maxlen;
     if (len == 0)
-	slk->ent[i].text[0] = 0;
+	slk->ent[i].ent_text[0] = 0;
     else
-	(void) strncpy(slk->ent[i].text, str, len);
+	strncpy(slk->ent[i].ent_text, str, len)[len] = 0;
     memset(slk->ent[i].form_text, ' ', (unsigned) slk->maxlen);
-    slk->ent[i].text[slk->maxlen] = 0;
-    /* len = strlen(slk->ent[i].text); */
+    slk->ent[i].ent_text[slk->maxlen] = 0;
 
     switch (format) {
+    default:
     case 0:			/* left-justified */
-	memcpy(slk->ent[i].form_text,
-	       slk->ent[i].text,
-	       len);
+	offset = 0;
 	break;
     case 1:			/* centered */
-	memcpy(slk->ent[i].form_text + (slk->maxlen - len) / 2,
-	       slk->ent[i].text,
-	       len);
+	offset = (slk->maxlen - len) / 2;
 	break;
     case 2:			/* right-justified */
-	memcpy(slk->ent[i].form_text + slk->maxlen - len,
-	       slk->ent[i].text,
-	       len);
+	offset = slk->maxlen - len;
 	break;
     }
+    memcpy(slk->ent[i].form_text + offset,
+	   slk->ent[i].ent_text,
+	   len);
     slk->ent[i].form_text[slk->maxlen] = 0;
     slk->ent[i].dirty = TRUE;
     returnCode(OK);

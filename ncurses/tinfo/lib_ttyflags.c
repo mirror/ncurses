@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.9 2002/10/12 21:28:16 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.11 2003/05/17 23:50:37 tom Exp $")
 
 #undef tabs
 
@@ -60,8 +60,10 @@ NCURSES_EXPORT(int)
 _nc_get_tty_mode(TTY * buf)
 {
     if (cur_term == 0
-	|| GET_TTY(cur_term->Filedes, buf) != 0)
+	|| GET_TTY(cur_term->Filedes, buf) != 0) {
+	memset(buf, 0, sizeof(*buf));
 	return (ERR);
+    }
     TR(TRACE_BITS, ("_nc_get_tty_mode(%d): %s",
 		    cur_term->Filedes, _nc_trace_ttymode(buf)));
     return (OK);
@@ -71,8 +73,11 @@ NCURSES_EXPORT(int)
 _nc_set_tty_mode(TTY * buf)
 {
     if (cur_term == 0
-	|| SET_TTY(cur_term->Filedes, buf) != 0)
+	|| SET_TTY(cur_term->Filedes, buf) != 0) {
+	if ((errno == ENOTTY) && (SP != 0))
+	    SP->_notty = TRUE;
 	return (ERR);
+    }
     TR(TRACE_BITS, ("_nc_set_tty_mode(%d): %s",
 		    cur_term->Filedes, _nc_trace_ttymode(buf)));
     return (OK);

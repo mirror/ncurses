@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2001 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.42 2002/10/12 15:46:15 tom Exp $
+ * $Id: tic.h,v 1.46 2003/12/27 19:05:32 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -83,13 +83,14 @@ extern "C" {
 #define MAX_NAME_SIZE	512	/* maximum legal name field size (XSI:127) */
 #define MAX_ENTRY_SIZE	4096	/* maximum legal entry size */
 
-/* The maximum size of individual name or alias is guaranteed in XSI to
- * be 14, since that corresponds to the older filename lengths.  Newer
- * systems allow longer aliases, though not many terminal descriptions
- * are written to use them.
+/*
+ * The maximum size of individual name or alias is guaranteed in XSI to be at
+ * least 14, since that corresponds to the older filename lengths.  Newer
+ * systems allow longer aliases, though not many terminal descriptions are
+ * written to use them.  The MAX_ALIAS symbol is used for warnings.
  */
 #if HAVE_LONG_FILE_NAMES
-#define MAX_ALIAS	32	/* POSIX minimum for PATH_MAX */
+#define MAX_ALIAS	32	/* smaller than POSIX minimum for PATH_MAX */
 #else
 #define MAX_ALIAS	14	/* SVr3 filename length */
 #endif
@@ -203,8 +204,6 @@ struct alias
 	const char	*source;
 };
 
-extern NCURSES_EXPORT_VAR(int) _nc_tparm_err;
-
 extern NCURSES_EXPORT_VAR(const struct name_table_entry * const) _nc_info_hash_table[];
 extern NCURSES_EXPORT_VAR(const struct name_table_entry * const) _nc_cap_hash_table[];
 
@@ -217,7 +216,7 @@ extern NCURSES_EXPORT(const struct name_table_entry * const *) _nc_get_hash_tabl
 #define NOTFOUND	((struct name_table_entry *) 0)
 
 /* out-of-band values for representing absent capabilities */
-#define ABSENT_BOOLEAN		(-1)		/* 255 */
+#define ABSENT_BOOLEAN		(char)(-1)	/* 255 */
 #define ABSENT_NUMERIC		(-1)
 #define ABSENT_STRING		(char *)0
 
@@ -241,6 +240,7 @@ extern NCURSES_EXPORT(const struct name_table_entry * const *) _nc_get_hash_tabl
 #endif
 
 /* access.c */
+extern NCURSES_EXPORT(unsigned) _nc_pathlast (const char *);
 extern NCURSES_EXPORT(char *) _nc_basename (char *);
 extern NCURSES_EXPORT(char *) _nc_rootname (char *);
 
@@ -283,6 +283,13 @@ extern NCURSES_EXPORT(char) _nc_trans_string (char *, char *);
 /* captoinfo.c: capability conversion */
 extern NCURSES_EXPORT(char *) _nc_captoinfo (const char *, const char *, int const);
 extern NCURSES_EXPORT(char *) _nc_infotocap (const char *, const char *, int const);
+
+/* lib_tparm.c */
+#define NUM_PARM 9
+
+extern NCURSES_EXPORT_VAR(int) _nc_tparm_err;
+
+extern NCURSES_EXPORT(int) _nc_tparm_analyze(const char *string, char *p_is_s[NUM_PARM], int *popcount);
 
 /* lib_tputs.c */
 extern NCURSES_EXPORT_VAR(int) _nc_nulls_sent;		/* Add one for every null sent */

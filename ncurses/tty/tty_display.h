@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,9 @@
 #ifndef TTY_DISPLAY_H
 #define TTY_DISPLAY_H 1
 
+/*
+ * $Id: tty_display.h,v 1.5 2003/08/02 22:59:07 Philippe.Blain Exp $
+ */
 extern NCURSES_EXPORT(bool) _nc_tty_beep (void);
 extern NCURSES_EXPORT(bool) _nc_tty_check_resize (void);
 extern NCURSES_EXPORT(bool) _nc_tty_cursor (int);
@@ -111,7 +114,7 @@ struct tty_display_data {
 		: ((enter_insert_mode && exit_insert_mode) \
 		  ? D->_smir_cost + D->_rmir_cost + (D->_ip_cost * count) \
 		  : ((insert_character != 0) \
-		    ? (D->_ich1_cost * count) \
+		    ? ((D->_ich1_cost + D->_ip_cost) * count) \
 		    : INFINITY)))
 
 #if USE_XMC_SUPPORT

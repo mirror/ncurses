@@ -7,11 +7,10 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.31 2002/09/14 22:45:15 tom Exp $
+ * $Id: testcurs.c,v 1.32 2002/10/19 22:11:24 tom Exp $
  */
 
 #include <test.priv.h>
-#include <ctype.h>
 
 #if defined(XCURSES)
 char *XCursesProgramName = "testcurs";

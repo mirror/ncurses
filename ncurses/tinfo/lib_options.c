@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000,2001,2002 Free Software Foundation, Inc.    *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-2003               *
  ****************************************************************************/
 
 /*
@@ -42,7 +43,7 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.46 2002/02/02 19:40:54 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.47 2003/10/25 19:51:38 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
@@ -72,7 +73,7 @@ halfdelay(int t)
 {
     T((T_CALLED("halfdelay(%d)"), t));
 
-    if (t < 1 || t > 255)
+    if (t < 1 || t > 255 || SP == 0)
 	returnCode(ERR);
 
     cbreak();
@@ -133,19 +134,24 @@ keypad(WINDOW *win, bool flag)
 NCURSES_EXPORT(int)
 meta(WINDOW *win GCC_UNUSED, bool flag)
 {
+    int result = ERR;
+
     /* Ok, we stay relaxed and don't signal an error if win is NULL */
     T((T_CALLED("meta(%p,%d)"), win, flag));
 
-    SP->_use_meta = flag;
+    if (SP != 0) {
+	SP->_use_meta = flag;
 
-    if (flag && meta_on) {
-	TPUTS_TRACE("meta_on");
-	putp(meta_on);
-    } else if (!flag && meta_off) {
-	TPUTS_TRACE("meta_off");
-	putp(meta_off);
+	if (flag && meta_on) {
+	    TPUTS_TRACE("meta_on");
+	    putp(meta_on);
+	} else if (!flag && meta_off) {
+	    TPUTS_TRACE("meta_off");
+	    putp(meta_off);
+	}
+	result = OK;
     }
-    returnCode(OK);
+    returnCode(result);
 }
 
 /* curs_set() moved here to narrow the kernel interface */
@@ -196,8 +202,12 @@ NCURSES_EXPORT(int)
 typeahead(int fd)
 {
     T((T_CALLED("typeahead(%d)"), fd));
-    SP->_checkfd = fd;
-    returnCode(OK);
+    if (SP != 0) {
+	SP->_checkfd = fd;
+	returnCode(OK);
+    } else {
+	returnCode(ERR);
+    }
 }
 
 /*
@@ -224,7 +234,7 @@ NCURSES_EXPORT(int)
 has_key(int keycode)
 {
     T((T_CALLED("has_key(%d)"), keycode));
-    returnCode(has_key_internal(keycode, SP->_keytry));
+    returnCode(SP != 0 ? has_key_internal(keycode, SP->_keytry) : FALSE);
 }
 #endif /* NCURSES_EXT_FUNCS */
 
@@ -248,7 +258,7 @@ _nc_keypad(bool flag)
 	_nc_flush();
     }
 
-    if (flag && !SP->_tried) {
+    if (flag && SP != 0 && !SP->_tried) {
 	_nc_init_keytry();
 	SP->_tried = TRUE;
     }

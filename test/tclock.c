@@ -1,6 +1,6 @@
-/* $Id: tclock.c,v 1.22 2002/06/29 23:34:13 tom Exp $ */
+/* $Id: tclock.c,v 1.24 2002/12/29 01:40:30 tom Exp $ */
 
-#include "test.priv.h"
+#include <test.priv.h>
 
 #include <math.h>
 
@@ -125,9 +125,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     int sdx, sdy;
     int ch;
     int lastbeep = -1;
+    bool odd = FALSE;
     time_t tim;
     struct tm *t;
     char szChar[10];
+    char *text;
     int my_bg = COLOR_BLACK;
 #if HAVE_GETTIMEOFDAY
     struct timeval current;
@@ -151,6 +153,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	init_pair(1, COLOR_RED, my_bg);
 	init_pair(2, COLOR_MAGENTA, my_bg);
 	init_pair(3, COLOR_GREEN, my_bg);
+	init_pair(4, COLOR_WHITE, COLOR_BLUE);
     }
 #ifdef KEY_RESIZE
     keypad(stdscr, TRUE);
@@ -218,11 +221,16 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	if (has_colors())
 	    attrset(COLOR_PAIR(0));
 
-	mvaddstr(LINES - 2, 0, ctime(&tim));
+	text = ctime(&tim);
+	mvprintw(2, 0, "%.*s", (int) (strlen(text) - 1), text);
 	refresh();
 	if ((t->tm_sec % 5) == 0
 	    && t->tm_sec != lastbeep) {
 	    lastbeep = t->tm_sec;
+	    if (has_colors()) {
+		odd = !odd;
+		bkgd(odd ? COLOR_PAIR(4) : COLOR_PAIR(0));
+	    }
 	    beep();
 	}
 

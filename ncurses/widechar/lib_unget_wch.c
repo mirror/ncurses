@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2002,2003 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_unget_wch.c,v 1.3 2002/06/29 21:11:02 tom Exp $")
+MODULE_ID("$Id: lib_unget_wch.c,v 1.5 2003/07/05 19:46:51 tom Exp $")
 
 NCURSES_EXPORT(int)
 unget_wch(const wchar_t wch)
@@ -49,25 +49,29 @@ unget_wch(const wchar_t wch)
     size_t length;
     int n;
 
-    T((T_CALLED("unget_wch(%#lx)"), wch));
+    T((T_CALLED("unget_wch(%#lx)"), (unsigned long) wch));
 
     memset(&state, 0, sizeof(state));
     length = wcrtomb(0, wch, &state);
 
     if (length != (size_t) (-1)
 	&& length != 0) {
-	char *string = malloc(length);
+	char *string;
 
-	memset(&state, 0, sizeof(state));
-	wcrtomb(string, wch, &state);
+	if ((string = (char *) malloc(length)) != 0) {
+	    memset(&state, 0, sizeof(state));
+	    wcrtomb(string, wch, &state);
 
-	for (n = (int) (length - 1); n >= 0; --n) {
-	    if (ungetch(string[n]) != OK) {
-		result = ERR;
-		break;
+	    for (n = (int) (length - 1); n >= 0; --n) {
+		if (ungetch(string[n]) != OK) {
+		    result = ERR;
+		    break;
+		}
 	    }
+	    free(string);
+	} else {
+	    result = ERR;
 	}
-	free(string);
     } else {
 	result = ERR;
     }

@@ -41,9 +41,12 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.14 2002/07/13 21:32:57 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.15 2002/12/28 01:21:34 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
+
+static int current_lines;
+static int current_cols;
 
 NCURSES_EXPORT(bool)
 is_term_resized(int ToLines, int ToCols)
@@ -99,7 +102,7 @@ static int
 adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
 {
     int result;
-    int bottom = screen_lines + SP->_topstolen - stolen;
+    int bottom = current_lines + SP->_topstolen - stolen;
     int myLines = win->_maxy + 1;
     int myCols = win->_maxx + 1;
 
@@ -109,13 +112,13 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
        getbegy(win), getbegx(win)));
 
     if (win->_begy >= bottom) {
-	win->_begy += (ToLines - screen_lines);
+	win->_begy += (ToLines - current_lines);
     } else {
-	if (myLines == screen_lines - stolen
-	    && ToLines != screen_lines)
+	if (myLines == current_lines - stolen
+	    && ToLines != current_lines)
 	    myLines = ToLines - stolen;
-	else if (myLines == screen_lines
-		 && ToLines != screen_lines)
+	else if (myLines == current_lines
+		 && ToLines != current_lines)
 	    myLines = ToLines;
     }
 
@@ -125,12 +128,12 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
     if (myCols > ToCols)
 	myCols = ToCols;
 
-    if (myLines == screen_lines
-	&& ToLines != screen_lines)
-	myCols = ToLines;
+    if (myLines == current_lines
+	&& ToLines != current_lines)
+	myLines = ToLines;
 
-    if (myCols == screen_columns
-	&& ToCols != screen_columns)
+    if (myCols == current_cols
+	&& ToCols != current_cols)
 	myCols = ToCols;
 
     result = wresize(win, myLines, myCols);
@@ -216,15 +219,19 @@ resize_term(int ToLines, int ToCols)
        screen_lines, screen_columns));
 
     if (is_term_resized(ToLines, ToCols)) {
-	int myLines = screen_lines;
-	int myCols = screen_columns;
+	int myLines = current_lines = screen_lines;
+	int myCols = current_cols = screen_columns;
 
 	if (ToLines > screen_lines) {
 	    increase_size(myLines = ToLines, myCols, was_stolen);
+	    current_lines = myLines;
+	    current_cols = myCols;
 	}
 
 	if (ToCols > screen_columns) {
 	    increase_size(myLines, myCols = ToCols, was_stolen);
+	    current_lines = myLines;
+	    current_cols = myCols;
 	}
 
 	if (ToLines < myLines ||

@@ -33,22 +33,9 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_wacs.c,v 1.5 2002/08/31 19:44:17 tom Exp $")
+MODULE_ID("$Id: lib_wacs.c,v 1.6 2002/12/21 12:30:19 tom Exp $")
 
 NCURSES_EXPORT_VAR(cchar_t) * _nc_wacs = 0;
-
-static int
-_nc_unicode_locale(void)
-{
-    char *s;
-    if (((s = getenv("LC_ALL")) != 0 && *s != '\0')
-	|| ((s = getenv("LC_ALL")) != 0 && *s != '\0')
-	|| ((s = getenv("LC_ALL")) != 0 && *s != '\0')) {
-	if (strstr(s, ".UTF-8") != 0)
-	    return 1;
-    }
-    return 0;
-}
 
 NCURSES_EXPORT(void)
 _nc_init_wacs(void)

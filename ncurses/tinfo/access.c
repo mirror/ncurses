@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998,2001,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 #include <tic.h>
 #include <nc_alloc.h>
 
-MODULE_ID("$Id: access.c,v 1.9 2001/06/23 22:11:49 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.10 2003/07/05 19:31:28 tom Exp $")
 
 #define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
 
@@ -64,19 +64,28 @@ _nc_rootname(char *path)
     return result;
 }
 
+/*
+ * Return index of the basename
+ */
+NCURSES_EXPORT(unsigned)
+_nc_pathlast(const char *path)
+{
+    const char *test = strrchr(path, '/');
+#ifdef __EMX__
+    if (test == 0)
+	test = strrchr(path, '\\');
+#endif
+    if (test == 0)
+	test = path;
+    else
+	test++;
+    return (test - path);
+}
+
 NCURSES_EXPORT(char *)
 _nc_basename(char *path)
 {
-    char *result = strrchr(path, '/');
-#ifdef __EMX__
-    if (result == 0)
-	result = strrchr(path, '\\');
-#endif
-    if (result == 0)
-	result = path;
-    else
-	result++;
-    return result;
+    return path + _nc_pathlast(path);
 }
 
 NCURSES_EXPORT(int)

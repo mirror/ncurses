@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2004 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,59 +26,84 @@
  * authorization.                                                           *
  ****************************************************************************/
 
-/****************************************************************************
- * Author: Thomas Dickey 2002                                               *
- ****************************************************************************/
-
 /*
-**	lib_ins_nwstr.c
+**	lib_add_wch.c
 **
-**	The routine wins_nwstr().
+**	The routine wadd_wch().
 **
 */
 
 #include <curses.priv.h>
-#include <ctype.h>
 
-MODULE_ID("$Id: lib_ins_nwstr.c,v 1.3 2002/09/28 16:31:33 tom Exp $")
+MODULE_ID("$Id: lib_add_wch.c,v 1.2 2004/02/07 17:53:33 tom Exp $")
 
 NCURSES_EXPORT(int)
-wins_nwstr(WINDOW *win, const wchar_t * wstr, int n)
+wadd_wch(WINDOW *win, const cchar_t * wch)
 {
+    PUTC_DATA;
+    int n;
     int code = ERR;
-    NCURSES_SIZE_T oy;
-    NCURSES_SIZE_T ox;
-    const wchar_t *cp;
 
-    T((T_CALLED("wins_nwstr(%p,%s,%d)"), win, _nc_viswbufn(wstr,n), n));
+    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wadd_wch(%p, %s)"), win,
+				      _tracech_t(wch)));
 
-    if (win != 0
-	&& wstr != 0
-	&& wcwidth(*wstr) > 0) {
-	code = OK;
-	if (n < 1)
-	    n = wcslen(wstr);
-	oy = win->_cury;
-	ox = win->_curx;
-	for (cp = wstr; *cp && ((cp - wstr) < n); cp++) {
-	    NCURSES_CH_T wch;
-	    SetChar2(wch, *cp);
-	    if (*cp == '\n' || *cp == '\r' || *cp == '\t' || *cp == '\b') {
-		_nc_waddch_nosync(win, wch);
-	    } else if (is7bits(*cp) && iscntrl(*cp)) {
-		winsch(win, ' ' + (chtype) (*cp));
-		winsch(win, (chtype) '^');
-		win->_curx += 2;
-	    } else if (wins_wch(win, &wch) == ERR
-		       || win->_curx > win->_maxx) {
+    if (win != 0) {
+	PUTC_INIT;
+	while (PUTC_i < CCHARW_MAX) {
+	    if ((PUTC_ch = wch->chars[PUTC_i++]) == L'\0')
+		break;
+	    if ((PUTC_n = wcrtomb(PUTC_buf, PUTC_ch, &PUT_st)) <= 0) {
+		code = ERR;
+		if (PUTC_ch < 256)
+		    code = waddch(win, UChar(PUTC_ch));
 		break;
 	    }
+	    for (n = 0; n < PUTC_n; n++) {
+		if ((code = waddch(win, UChar(PUTC_buf[n]))) == ERR) {
+		    break;
+		}
+	    }
+	    if (code == ERR)
+		break;
 	}
-
-	win->_curx = ox;
-	win->_cury = oy;
-	_nc_synchook(win);
-	code = OK;
     }
-    returnCode(code);
+
+    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_RETURN("%d"), code));
+    return (code);
+}
+
+NCURSES_EXPORT(int)
+wecho_wchar(WINDOW *win, const cchar_t * wch)
+{
+    PUTC_DATA;
+    int n;
+    int code = ERR;
+
+    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wecho_wchar(%p, %s)"), win,
+				      _tracech_t(wch)));
+
+    if (win != 0) {
+	PUTC_INIT;
+	while (PUTC_i < CCHARW_MAX) {
+	    if ((PUTC_ch = wch->chars[PUTC_i++]) == L'\0')
+		break;
+	    if ((PUTC_n = wcrtomb(PUTC_buf, PUTC_ch, &PUT_st)) <= 0) {
+		code = ERR;
+		if (PUTC_ch < 256)
+		    code = waddch(win, UChar(PUTC_ch));
+		break;
+	    }
+	    for (n = 0; n < PUTC_n; n++) {
+		if ((code = waddch(win, UChar(PUTC_buf[n]))) == ERR) {
+		    break;
+		}
+	    }
+	    if (code == ERR)
+		break;
+	}
+	wrefresh(win);
+    }
+
+    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_RETURN("%d"), code));
+    return (code);
 }

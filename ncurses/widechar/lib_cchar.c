@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001,2002 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2001-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.6 2002/08/10 22:27:37 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.8 2003/05/25 00:07:41 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch
@@ -55,26 +55,28 @@ setcchar(cchar_t * wcval, const wchar_t * wch, const attr_t attrs,
 		      wcval, _nc_viswbuf(wch), attrs, color_pair, opts));
 
     if (opts != NULL || (len = wcslen(wch)) > CCHARW_MAX
-	|| (len > 0 && wcwidth(wch[0]) < 0)) {
+	|| (len > 1 && wcwidth(wch[0]) < 0)) {
 	code = ERR;
     } else {
 
+	/*
+	 * If we have a following spacing-character, stop at that point.  We
+	 * are only interested in adding non-spacing characters.
+	 */
 	for (i = 1; i < len; ++i) {
 	    if (wcwidth(wch[i]) != 0) {
-		code = ERR;
+		len = i;
 		break;
 	    }
 	}
 
-	if (code != ERR) {
-	    memset(wcval, 0, sizeof(*wcval));
+	memset(wcval, 0, sizeof(*wcval));
 
-	    if (len != 0) {
-		SetAttr(*wcval, attrs | color_pair);
-		memcpy(&wcval->chars, wch, len * sizeof(wchar_t));
-		TR(TRACE_CCALLS, ("copy %d wchars, first is %s", len,
-				  _tracecchar_t(wcval)));
-	    }
+	if (len != 0) {
+	    SetAttr(*wcval, attrs | color_pair);
+	    memcpy(&wcval->chars, wch, len * sizeof(wchar_t));
+	    TR(TRACE_CCALLS, ("copy %d wchars, first is %s", len,
+			      _tracecchar_t(wcval)));
 	}
     }
 
@@ -100,6 +102,8 @@ getcchar(const cchar_t * wcval, wchar_t * wch, attr_t * attrs,
 
 	if (wch == NULL) {
 	    code = len;
+	} else if (attrs == 0 || color_pair == 0) {
+	    code = ERR;
 	} else if (len >= 0) {
 	    *attrs = AttrOf(*wcval);
 	    *color_pair = AttrOf(*wcval) & A_COLOR;

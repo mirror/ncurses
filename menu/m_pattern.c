@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,7 +28,6 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -38,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_pattern.c,v 1.7 2002/07/06 15:22:16 juergen Exp $")
+MODULE_ID("$Id: m_pattern.c,v 1.9 2003/12/06 17:22:10 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -54,7 +53,7 @@ MODULE_ID("$Id: m_pattern.c,v 1.7 2002/07/06 15:22:16 juergen Exp $")
 NCURSES_EXPORT(char *)
 menu_pattern (const MENU * menu)
 {
-  return (menu ? (menu->pattern ? menu->pattern : "") : (char *)0);
+  return (char *)(menu ? (menu->pattern ? menu->pattern : "") : 0);
 }
 
 /*---------------------------------------------------------------------------

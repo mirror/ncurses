@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.63 2002/02/03 00:54:10 china Exp $
+# $Id: Makefile.in,v 1.77 2003/12/07 01:36:16 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.           #
+# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -27,7 +27,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1996,1997,1998
+# Author: Thomas E. Dickey 1996-2002
 #
 # Makefile for ncurses tests.
 
@@ -36,7 +36,10 @@
 
 SHELL		= /bin/sh
 
-x		= @PROG_EXT@
+@SET_MAKE@
+
+x		= @EXEEXT@
+o		= .@OBJEXT@
 
 MODEL		= ../@DFT_OBJ_SUBDIR@
 srcdir		= @srcdir@
@@ -46,12 +49,15 @@ libdir		= @libdir@
 includedir	= @includedir@
 
 LIBTOOL		= @LIBTOOL@
+LIBTOOL_CLEAN	= @LIB_CLEAN@
+LIBTOOL_COMPILE	= @LIB_COMPILE@
+LIBTOOL_LINK	= @LIB_LINK@
 
 CC		= @CC@
 CPP		= @CPP@
 
 CFLAGS		= @CFLAGS@
-CPPFLAGS	=  -I../test -I$(srcdir) @CPPFLAGS@ -DHAVE_CONFIG_H
+CPPFLAGS	=  -I../test -I$(srcdir) -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
@@ -69,15 +75,15 @@ LOCAL_LIBS	= @TEST_DEPS@
 MATH_LIB	= @MATH_LIB@
 
 LD		= @LD@
-LINK		= @LINK_TESTS@ $(LIBTOOL) $(CC) $(CFLAGS)
+LINK		= @LINK_TESTS@ $(LIBTOOL_LINK) $(CC) $(CFLAGS)
 
 LDFLAGS		= @LD_MODEL@ @TEST_ARGS@ @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ @LDFLAGS@
 
-LDFLAGS_LIBTOOL	= $(LDFLAGS)
-LDFLAGS_NORMAL	= $(LDFLAGS)
-LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
-LDFLAGS_PROFILE	= $(LDFLAGS) -pg
-LDFLAGS_SHARED	= $(LDFLAGS) @LD_SHARED_OPTS@
+LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
+LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
+LDFLAGS_DEBUG	= $(LDFLAGS) $(CFLAGS_DEBUG)
+LDFLAGS_PROFILE	= $(LDFLAGS) $(CFLAGS_PROFILE)
+LDFLAGS_SHARED	= $(LDFLAGS) $(CFLAGS_SHARED) @LD_SHARED_OPTS@
 
 LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@)
 
@@ -86,9 +92,16 @@ LINT_OPTS	= @LINT_OPTS@
 LINT_LIBS	= -lform -lmenu -lpanel -lncurses @LIBS@
 
 TESTS = \
+	background$x \
 	blue$x \
 	bs$x \
 	cardfile$x \
+	color_set$x \
+	demo_defkey$x \
+	demo_forms$x \
+	demo_keyok$x \
+	demo_menus$x \
+	demo_panels$x \
 	ditto$x \
 	dots$x \
 	filter$x \
@@ -97,13 +110,15 @@ TESTS = \
 	gdc$x \
 	hanoi$x \
 	hashtest$x \
+	ins_wide$x \
+	inserts$x \
 	keynames$x \
 	knight$x \
 	lrtest$x \
 	ncurses$x \
 	newdemo$x \
-	rain$x \
 	railroad$x \
+	rain$x \
 	tclock$x \
 	testaddch$x \
 	testcurs$x \
@@ -116,80 +131,107 @@ all: $(TESTS)
 
 sources:
 
-blue$x: $(MODEL)/blue.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/blue.o $(LDFLAGS_DEFAULT)
+background$x: $(MODEL)/background$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/background$o $(LDFLAGS_DEFAULT)
 
-bs$x: $(MODEL)/bs.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/bs.o $(LDFLAGS_DEFAULT)
+blue$x: $(MODEL)/blue$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/blue$o $(LDFLAGS_DEFAULT)
 
-cardfile$x: $(MODEL)/cardfile.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/cardfile.o $(LDFLAGS_DEFAULT)
+bs$x: $(MODEL)/bs$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/bs$o $(LDFLAGS_DEFAULT)
 
-ditto$x: $(MODEL)/ditto.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/ditto.o $(LDFLAGS_DEFAULT)
+cardfile$x: $(MODEL)/cardfile$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/cardfile$o $(LDFLAGS_DEFAULT)
 
-dots$x: $(MODEL)/dots.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/dots.o $(LDFLAGS_DEFAULT)
+color_set$x: $(MODEL)/color_set$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/color_set$o $(LDFLAGS_DEFAULT)
 
-filter$x: $(MODEL)/filter.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/filter.o $(LDFLAGS_DEFAULT)
+demo_defkey$x: $(MODEL)/demo_defkey$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/demo_defkey$o $(LDFLAGS_DEFAULT)
 
-firework$x: $(MODEL)/firework.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/firework.o $(LDFLAGS_DEFAULT)
+demo_forms$x: $(MODEL)/demo_forms$o $(MODEL)/edit_field$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/demo_forms$o $(MODEL)/edit_field$o $(LDFLAGS_DEFAULT)
 
-firstlast$x: $(MODEL)/firstlast.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/firstlast.o $(LDFLAGS_DEFAULT)
+demo_keyok$x: $(MODEL)/demo_keyok$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/demo_keyok$o $(LDFLAGS_DEFAULT)
 
-gdc$x: $(MODEL)/gdc.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/gdc.o $(LDFLAGS_DEFAULT)
+demo_menus$x: $(MODEL)/demo_menus$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/demo_menus$o $(LDFLAGS_DEFAULT)
 
-hanoi$x: $(MODEL)/hanoi.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/hanoi.o $(LDFLAGS_DEFAULT)
+demo_panels$x: $(MODEL)/demo_panels$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/demo_panels$o $(LDFLAGS_DEFAULT)
 
-hashtest$x: $(MODEL)/hashtest.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/hashtest.o $(LDFLAGS_DEFAULT)
+ditto$x: $(MODEL)/ditto$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/ditto$o $(LDFLAGS_DEFAULT)
 
-keynames$x: $(MODEL)/keynames.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/keynames.o $(LDFLAGS_DEFAULT)
+dots$x: $(MODEL)/dots$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/dots$o $(LDFLAGS_DEFAULT)
 
-knight$x: $(MODEL)/knight.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/knight.o $(LDFLAGS_DEFAULT)
+filter$x: $(MODEL)/filter$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/filter$o $(LDFLAGS_DEFAULT)
 
-lrtest$x: $(MODEL)/lrtest.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/lrtest.o $(LDFLAGS_DEFAULT)
+firework$x: $(MODEL)/firework$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/firework$o $(LDFLAGS_DEFAULT)
 
-ncurses$x: $(MODEL)/ncurses.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/ncurses.o $(LDFLAGS_DEFAULT)
+firstlast$x: $(MODEL)/firstlast$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/firstlast$o $(LDFLAGS_DEFAULT)
 
-newdemo$x: $(MODEL)/newdemo.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/newdemo.o $(LDFLAGS_DEFAULT)
+gdc$x: $(MODEL)/gdc$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/gdc$o $(LDFLAGS_DEFAULT)
 
-rain$x: $(MODEL)/rain.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/rain.o $(LDFLAGS_DEFAULT)
+hanoi$x: $(MODEL)/hanoi$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/hanoi$o $(LDFLAGS_DEFAULT)
 
-railroad$x: $(MODEL)/railroad.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/railroad.o $(LDFLAGS_DEFAULT)
+hashtest$x: $(MODEL)/hashtest$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/hashtest$o $(LDFLAGS_DEFAULT)
 
-tclock$x: $(MODEL)/tclock.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/tclock.o $(LDFLAGS_DEFAULT) $(MATH_LIB)
+inserts$x: $(MODEL)/inserts$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/inserts$o $(LDFLAGS_DEFAULT)
 
-testaddch$x: $(MODEL)/testaddch.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testaddch.o $(LDFLAGS_DEFAULT)
+ins_wide$x: $(MODEL)/ins_wide$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/ins_wide$o $(LDFLAGS_DEFAULT)
 
-testcurs$x: $(MODEL)/testcurs.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testcurs.o $(LDFLAGS_DEFAULT)
+keynames$x: $(MODEL)/keynames$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/keynames$o $(LDFLAGS_DEFAULT)
 
-testscanw$x: $(MODEL)/testscanw.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testscanw.o $(LDFLAGS_DEFAULT)
+knight$x: $(MODEL)/knight$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/knight$o $(LDFLAGS_DEFAULT)
 
-view$x: $(MODEL)/view.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/view.o $(LDFLAGS_DEFAULT)
+lrtest$x: $(MODEL)/lrtest$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/lrtest$o $(LDFLAGS_DEFAULT)
 
-worm$x: $(MODEL)/worm.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/worm.o $(LDFLAGS_DEFAULT)
+ncurses$x: $(MODEL)/ncurses$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/ncurses$o $(LDFLAGS_DEFAULT)
 
-xmas$x: $(MODEL)/xmas.o $(LOCAL_LIBS)
-	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/xmas.o $(LDFLAGS_DEFAULT)
+newdemo$x: $(MODEL)/newdemo$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/newdemo$o $(LDFLAGS_DEFAULT)
+
+rain$x: $(MODEL)/rain$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/rain$o $(LDFLAGS_DEFAULT)
+
+railroad$x: $(MODEL)/railroad$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/railroad$o $(LDFLAGS_DEFAULT)
+
+tclock$x: $(MODEL)/tclock$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/tclock$o $(LDFLAGS_DEFAULT) $(MATH_LIB)
+
+testaddch$x: $(MODEL)/testaddch$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testaddch$o $(LDFLAGS_DEFAULT)
+
+testcurs$x: $(MODEL)/testcurs$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testcurs$o $(LDFLAGS_DEFAULT)
+
+testscanw$x: $(MODEL)/testscanw$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/testscanw$o $(LDFLAGS_DEFAULT)
+
+view$x: $(MODEL)/view$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/view$o $(LDFLAGS_DEFAULT)
+
+worm$x: $(MODEL)/worm$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/worm$o $(LDFLAGS_DEFAULT)
+
+xmas$x: $(MODEL)/xmas$o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/xmas$o $(LDFLAGS_DEFAULT)
 
 libs \
 install \
@@ -204,7 +246,8 @@ mostlyclean ::
 	-rm -f core tags TAGS *~ *.bak *.i *.ln *.atac trace
 
 clean :: mostlyclean
-	-rm -rf *.o screendump *.lis $(TESTS) .libs
+	-sh -c "if test -n '$x' ; then $(MAKE) clean x=''; fi"
+	-rm -rf *$o screendump *.lis $(TESTS) .libs
 
 distclean :: clean
 	-rm -f Makefile ncurses_cfg.h config.*
@@ -213,9 +256,3 @@ realclean :: distclean
 
 lint:
 	sh -c 'for N in $(TESTS); do echo LINT:$$N; $(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/$$N.c $(LINT_LIBS); done'
-
-# Use this to get a list of test-programs for the standalone configure script.
-echo_tests :
-	@echo "$(TESTS)"
-echo_suffix :
-	@echo "$x"

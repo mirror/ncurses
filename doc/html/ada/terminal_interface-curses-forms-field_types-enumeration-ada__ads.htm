@@ -37,29 +37,28 @@
 <FONT COLOR=green><EM>-- sale, use or other dealings in this Software without prior written       --</EM></FONT>
 <FONT COLOR=green><EM>-- authorization.                                                           --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>--  Author:  <A HREF="http://www.familiepfeifer.de/juergen">J&uuml;rgen Pfeifer</A>, 1996</EM></FONT>
-<FONT COLOR=green><EM>--  Contact: <A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">www.familiepfeifer.de/Contact.aspx?Lang=en</A></EM></FONT>
+<FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.9 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.10 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>generic</b>
-   <b>type</b> <FONT COLOR=red><A NAME="43_9">T</A></FONT> <b>is</b> (&lt;&gt;);
+   <b>type</b> <FONT COLOR=red><A NAME="42_9">T</A></FONT> <b>is</b> (&lt;&gt;);
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#44_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#44_53">Enumeration</A>.<FONT COLOR=red><A NAME="45_65">Ada</A></FONT> <b>is</b>
+<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#43_53">Enumeration</A>.<FONT COLOR=red><A NAME="44_65">Ada</A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate
-     (<A HREF="terminal_interface__ads.htm#42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#44_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#44_53">Enumeration</A>.<A HREF="terminal_interface-curses-forms-field_types-enumeration-ada__ads.htm#45_65">Ada</A>);
+     (<A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#43_53">Enumeration</A>.<A HREF="terminal_interface-curses-forms-field_types-enumeration-ada__ads.htm#44_65">Ada</A>);
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration-ada__adb.htm#46_13">Create</A><FONT COLOR=red><A NAME="49_13"></A></FONT> (<FONT COLOR=red><A NAME="49_21">Set</A></FONT>            : <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#51_9">Type_Set</A> := <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#51_46">Mixed_Case</A>;
-                    <FONT COLOR=red><A NAME="50_21">Case_Sensitive</A></FONT> : Boolean  := False;
-                    <FONT COLOR=red><A NAME="51_21">Must_Be_Unique</A></FONT> : Boolean  := False)
-                    <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#63_9">Enumeration_Field</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="48_13">Create</A></FONT> (<FONT COLOR=red><A NAME="48_21">Set</A></FONT>            : <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#50_9">Type_Set</A> := <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#50_46">Mixed_Case</A>;
+                    <FONT COLOR=red><A NAME="49_21">Case_Sensitive</A></FONT> : Boolean  := False;
+                    <FONT COLOR=red><A NAME="50_21">Must_Be_Unique</A></FONT> : Boolean  := False)
+                    <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#62_9">Enumeration_Field</A>;
 
-   <b>function</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration-ada__adb.htm#74_13">Value</A><FONT COLOR=red><A NAME="54_13"></A></FONT> (<FONT COLOR=red><A NAME="54_20">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#56_9">Field</A>;
-                   <FONT COLOR=red><A NAME="55_20">Buf</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#131_9">Buffer_Number</A> := <A HREF="terminal_interface-curses-forms__ads.htm#131_9">Buffer_Number</A>'First) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration-ada__ads.htm#43_9">T</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="53_13">Value</A></FONT> (<FONT COLOR=red><A NAME="53_20">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#55_9">Field</A>;
+                   <FONT COLOR=red><A NAME="54_20">Buf</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#130_9">Buffer_Number</A> := <A HREF="terminal_interface-curses-forms__ads.htm#130_9">Buffer_Number</A>'First) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration-ada__ads.htm#42_9">T</A>;
    <FONT COLOR=green><EM>--  Translate the content of the fields buffer - indicated by the</EM></FONT>
    <FONT COLOR=green><EM>--  buffer number - into an enumeration value. If the buffer is empty</EM></FONT>
    <FONT COLOR=green><EM>--  or the content is invalid, a Constraint_Error is raises.</EM></FONT>
 
-<b>end</b> Terminal_Interface.Curses.Forms.Field_Types.Enumeration.Ada;
+<b>end</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#48_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#43_41">Field_Types</A>.<A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#43_53">Enumeration</A>.<A HREF="terminal_interface-curses-forms-field_types-enumeration-ada__ads.htm#44_65">Ada</A><A HREF="terminal_interface-curses-forms-field_types-enumeration-ada__ads.htm#44_65">;</A>
 </PRE></BODY></HTML>

@@ -1,4 +1,4 @@
-/* $Id: curses.tail,v 1.7 2002/10/12 15:46:02 tom Exp $ */
+/* $Id: curses.tail,v 1.8 2002/11/02 20:26:26 tom Exp $ */
 
 /* mouse interface */
 #define NCURSES_MOUSE_VERSION	1
@@ -119,10 +119,6 @@ extern NCURSES_EXPORT(const char *) _nc_visbuf (const char *);
 #define OPTIMIZE_HASHMAP	0x02	/* diff hashing to detect scrolls */
 #define OPTIMIZE_SCROLL		0x04	/* scroll optimization */
 #define OPTIMIZE_ALL		0xff	/* enable all optimizations (dflt) */
-#endif
-
-#ifndef NCURSES_WGETCH_EVENTS
-#undef KEY_EVENT
 #endif
 
 #ifdef __cplusplus

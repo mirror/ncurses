@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.9 2002/09/01 19:44:37 tom Exp @
+  * @Id: curs_util.3x,v 1.11 2003/07/19 19:59:56 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,6 +40,10 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
+<STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>                                       <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
+
+
+
 
 </PRE>
 <H2>NAME</H2><PRE>
@@ -53,7 +57,7 @@
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>char</STRONG> <STRONG>*unctrl(chtype</STRONG> <STRONG>c);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*wunctrl(wchar_t</STRONG> <STRONG>w);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*wunctrl(cchar_t</STRONG> <STRONG>*c);</STRONG>
        <STRONG>char</STRONG> <STRONG>*keyname(int</STRONG> <STRONG>c);</STRONG>
        <STRONG>char</STRONG> <STRONG>*key_name(wchar_t</STRONG> <STRONG>w);</STRONG>
        <STRONG>void</STRONG> <STRONG>filter(void);</STRONG>
@@ -110,17 +114,18 @@
        The <STRONG>delay_output</STRONG> routine inserts an <EM>ms</EM>  millisecond  pause
        in  output.   This  routine should not be used extensively
        because padding characters are  used  rather  than  a  CPU
-       pause.
+       pause.   If  no  padding character is specified, this uses
+       <STRONG>napms</STRONG> to perform the delay.
 
-       The  <STRONG>flushinp</STRONG>  routine  throws away any typeahead that has
-       been typed by the user and has not yet been  read  by  the
+       The <STRONG>flushinp</STRONG> routine throws away any  typeahead  that  has
+       been  typed  by  the user and has not yet been read by the
        program.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Except  for  <STRONG>flushinp</STRONG>,  routines  that  return  an integer
-       return <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4  specifies  only  "an
+       Except for  <STRONG>flushinp</STRONG>,  routines  that  return  an  integer
+       return  <STRONG>ERR</STRONG>  upon  failure and <STRONG>OK</STRONG> (SVr4 specifies only "an
        integer value other than <STRONG>ERR</STRONG>") upon successful completion.
 
        <STRONG>flushinp</STRONG> always returns <STRONG>OK</STRONG>.
@@ -130,36 +135,25 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The XSI Curses standard, Issue  4  describes  these  func-
-       tions.   It  states  that <STRONG>unctrl</STRONG> and <STRONG>wunctrl</STRONG> will return a
-       null pointer if unsuccessful,  but  does  not  define  any
+       The  XSI  Curses  standard,  Issue 4 describes these func-
+       tions.  It states that <STRONG>unctrl</STRONG> and <STRONG>wunctrl</STRONG>  will  return  a
+       null  pointer  if  unsuccessful,  but  does not define any
        error conditions.
 
        The SVr4 documentation describes the action of <STRONG>filter</STRONG> only
-       in the vaguest terms.  The  description  here  is  adapted
-       from  the  XSI Curses standard (which erroneously fails to
+       in  the  vaguest  terms.   The description here is adapted
+       from the XSI Curses standard (which erroneously  fails  to
        describe the disabling of <STRONG>cuu</STRONG>).
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,       <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,
+       <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                    <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *
+ * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,10 +29,9 @@
 
 /****************************************************************************
  *   Author: Juergen Pfeifer, 1997                                          *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
-// $Id: cursesf.h,v 1.17 2002/07/06 15:47:52 juergen Exp $
+// $Id: cursesf.h,v 1.19 2004/01/15 00:43:46 tom Exp $
 
 #ifndef NCURSES_CURSESF_H_incl
 #define NCURSES_CURSESF_H_incl 1
@@ -592,12 +591,6 @@ protected:
 
 public:
   NCursesUserForm (NCursesFormField Fields[],
-		   bool with_frame=FALSE,
-		   bool autoDelete_Fields=FALSE)
-    : NCursesForm (Fields, with_frame, autoDelete_Fields) {
-  };
-
-  NCursesUserForm (NCursesFormField Fields[],
 		   const T* p_UserData = (T*)0,
 		   bool with_frame=FALSE,
 		   bool autoDelete_Fields=FALSE)
@@ -724,7 +717,7 @@ public:
 
 class NCURSES_IMPEXP Enumeration_Field : public NCursesFieldType {
 private:
-  char** list;
+  const char** list;
   int case_sensitive;
   int non_unique_matches;
 
@@ -733,7 +726,7 @@ private:
 			     list,case_sensitive,non_unique_matches));
   }
 public:
-  Enumeration_Field(char* enums[],
+  Enumeration_Field(const char* enums[],
 		    bool case_sens=FALSE,
 		    bool non_unique=FALSE)
     : NCursesFieldType(TYPE_ENUM),

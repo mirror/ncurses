@@ -21,7 +21,7 @@
 
 #include <tack.h>
 
-MODULE_ID("$Id: pad.c,v 1.2 2000/03/04 21:04:58 tom Exp $")
+MODULE_ID("$Id: pad.c,v 1.3 2003/10/18 22:11:29 tom Exp $")
 
 /* test the pad counts on the terminal */
 
@@ -1274,7 +1274,7 @@ pad_rin(
 	do {
 		sprintf(temp, "%d\r", test_complete);
 		put_str(temp);
-		if (scroll_reverse && augment == 1) {
+		if (scroll_reverse && repeats == 1) {
 			tt_putp(scroll_reverse);
 		} else {
 			tt_putparm(parm_rindex, repeats, repeats, 0);
@@ -1345,7 +1345,7 @@ pad_il(
 		}
 	} while(still_testing());
 	put_str("This line should be on the bottom.\r");
-	if (scroll_reverse && augment == 1) {
+	if (insert_line && augment == 1) {
 		for (i = 1; i < lines; i++) {
 			tt_putp(insert_line);
 		}
@@ -1386,8 +1386,13 @@ pad_indn(
 		start_message = "(indn) Scroll-forward-n-lines start testing";
 	} else {
 		/* ind */
-		if (!scroll_forward && over_strike) {
+		if (!scroll_forward) {
 			CAP_NOT_FOUND;
+			ptext("(ind) Scroll-forward not present.  ");
+			pad_done_message(t, state, ch);
+			return;
+		}
+		if (over_strike) {
 			ptext("(ind) Scroll-forward not tested on overstrike terminals.  ");
 			pad_done_message(t, state, ch);
 			return;
@@ -1404,14 +1409,14 @@ pad_indn(
 	do {
 		sprintf(temp, "%d\r", test_complete);
 		put_str(temp);
-		if (augment > 1) {
-			tt_putparm(parm_index, repeats, repeats, 0);
-		} else {
+		if (scroll_forward && repeats == 1) {
 			put_ind();
+		} else {
+			tt_putparm(parm_index, repeats, repeats, 0);
 		}
 	} while(still_testing());
 	put_str("This line should be on the top.\r");
-	if (augment == 1) {
+	if (scroll_forward && augment == 1) {
 		for (i = 1; i < lines; i++) {
 			put_ind();
 		}
@@ -1466,26 +1471,26 @@ pad_dl(
 	pad_test_startup(1);
 	do {
 		sprintf(temp, "%d\r", test_complete);
-		if ((i & 0x7f) == 0 && augment < lines - 1) {
+		if (augment < lines - 1) {
 			go_home();
 			putln(temp);
 		}
 		put_str(temp);
-		if (repeats || !delete_line) {
-			tt_putparm(parm_delete_line, repeats, repeats, 0);
-		} else {
+		if (delete_line && repeats == 1) {
 			tt_putp(delete_line);
+		} else {
+			tt_putparm(parm_delete_line, repeats, repeats, 0);
 		}
 	} while(still_testing());
 	home_down();
 	put_str("This line should be on the top.");
 	go_home();
-	if (repeats || !delete_line) {
-		tt_putparm(parm_delete_line, lines - 1, lines - 1, 0);
-	} else {
+	if (delete_line && augment == 1) {
 		for (i = 1; i < lines; i++) {
 			tt_putp(delete_line);
 		}
+	} else {
+		tt_putparm(parm_delete_line, lines - 1, lines - 1, 0);
 	}
 	sprintf(temp, "\nDelete %d line%s.  ", augment,
 		augment == 1 ? "" : "s");

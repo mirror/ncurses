@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.68 2002/09/28 17:48:13 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.80 2004/02/07 18:20:46 tom Exp $")
 
 /*
  * Ugly microtweaking alert.  Everything from here to end of module is
@@ -68,7 +68,7 @@ render_char(WINDOW *win, NCURSES_CH_T ch)
 	AddAttr(ch, (a & COLOR_MASK(AttrOf(ch))));
     }
 
-    TR(TRACE_VIRTPUT, ("bkg = %s, attrs = %s -> ch = %s",
+    TR(TRACE_VIRTPUT, ("render_char bkg %s, attrs %s -> ch %s",
 		       _tracech_t2(1, CHREF(win->_nc_bkgd)),
 		       _traceattr(win->_attrs),
 		       _tracech_t2(3, CHREF(ch))));
@@ -99,15 +99,21 @@ _nc_render(WINDOW *win, NCURSES_CH_T ch)
 #define CHECK_POSITION(win, x, y)	/* nothing */
 #endif
 
-static inline int
+static
+#if !USE_WIDEC_SUPPORT		/* cannot be inline if it is recursive */
+  inline
+#endif
+int
 waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 {
     int x;
+    int y;
     struct ldat *line;
 
     x = win->_curx;
+    y = win->_cury;
 
-    CHECK_POSITION(win, x, win->_cury);
+    CHECK_POSITION(win, x, y);
 
     /*
      * If we're trying to add a character at the lower-right corner more
@@ -122,11 +128,63 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 #endif
 
     ch = render_char(win, ch);
-    TR(TRACE_VIRTPUT, ("win attr = %s", _traceattr(win->_attrs)));
 
-    line = win->_line + win->_cury;
+    line = win->_line + y;
 
     CHANGED_CELL(line, x);
+
+    /*
+     * Build up multibyte characters until we have a wide-character.
+     */
+    if_WIDEC({
+	if (WINDOW_EXT(win, addch_used) == 0 && Charable(ch)) {
+	    WINDOW_EXT(win, addch_used) = 0;
+	} else {
+	    char *buffer = WINDOW_EXT(win, addch_work);
+	    int len;
+	    mbstate_t state;
+	    wchar_t result;
+
+	    if ((WINDOW_EXT(win, addch_used) != 0) &&
+		(WINDOW_EXT(win, addch_x) != x ||
+		 WINDOW_EXT(win, addch_y) != y)) {
+		/* discard the incomplete multibyte character */
+		WINDOW_EXT(win, addch_used) = 0;
+	    }
+	    WINDOW_EXT(win, addch_x) = x;
+	    WINDOW_EXT(win, addch_y) = y;
+
+	    memset(&state, 0, sizeof(state));
+	    buffer[WINDOW_EXT(win, addch_used)] = CharOf(ch);
+	    WINDOW_EXT(win, addch_used) += 1;
+	    buffer[WINDOW_EXT(win, addch_used)] = '\0';
+	    if ((len = mbrtowc(&result,
+			       buffer,
+			       WINDOW_EXT(win, addch_used), &state)) > 0) {
+		attr_t attrs = AttrOf(ch);
+		SetChar(ch, result, attrs);
+		WINDOW_EXT(win, addch_used) = 0;
+		if (CharOf(ch) < 256) {
+		    const char *s = unctrl(CharOf(ch));
+		    if (s[1] != 0) {
+			return waddstr(win, s);
+		    }
+		}
+	    } else {
+		if (len == -1) {
+		    /*
+		     * An error occurred.  We could either discard everything,
+		     * or assume that the error was in the previous input.
+		     * Try the latter.
+		     */
+		    TR(TRACE_VIRTPUT, ("Alert! mbrtowc returns error"));
+		    buffer[0] = CharOf(ch);
+		    WINDOW_EXT(win, addch_used) = 1;
+		}
+		return OK;
+	    }
+	}
+    });
 
     /*
      * Handle non-spacing characters
@@ -134,8 +192,7 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
     if_WIDEC({
 	if (wcwidth(CharOf(ch)) == 0) {
 	    int i;
-	    int y;
-	    if ((x > 0 && ((y = win->_cury) >= 0))
+	    if ((x > 0 && y >= 0)
 		|| ((y = win->_cury - 1) >= 0 &&
 		    (x = win->_maxx) > 0)) {
 		wchar_t *chars = (win->_line[y].text[x - 1].chars);
@@ -154,8 +211,18 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
      * Provide for multi-column characters
      */
     if_WIDEC({
-	if (wcwidth(CharOf(ch)) > 1)
+	int len = wcwidth(CharOf(ch));
+	while (len-- > 1) {
+	    if (x + (len - 1) > win->_maxx) {
+		NCURSES_CH_T blank = NewChar2(BLANK_TEXT, BLANK_ATTR);
+		AddAttr(blank, AttrOf(ch));
+		if (waddch_literal(win, blank) != ERR)
+		    return waddch_literal(win, ch);
+		return ERR;
+	    }
 	    AddAttr(line->text[x++], WA_NAC);
+	    TR(TRACE_VIRTPUT, ("added NAC %d", x - 1));
+	}
     }
   testwrapping:
     );
@@ -192,14 +259,28 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 /* the workhorse function -- add a character to the given window */
 {
     int x, y;
-    chtype t = 0;
+    chtype t = CharOf(ch);
     const char *s = 0;
 
+    /*
+     * If we are using the alternate character set, forget about locale.
+     * Otherwise, if unctrl() returns a single-character or the locale
+     * claims the code is printable, treat it that way.
+     */
     if ((AttrOf(ch) & A_ALTCHARSET)
-	|| ((t = CharOf(ch)) > 127)
-	|| ((s = unctrl(t))[1] == 0))
+	|| ((s = unctrl(t))[1] == 0 ||
+		(
+		isprint(t)
+#if USE_WIDEC_SUPPORT
+		|| WINDOW_EXT(win, addch_used)
+#endif
+		)))
 	return waddch_literal(win, ch);
 
+    /*
+     * Handle carriage control and other codes that are not printable, or are
+     * known to expand to more than one character according to unctrl().
+     */
     x = win->_curx;
     y = win->_cury;
 
@@ -325,41 +406,3 @@ wechochar(WINDOW *win, const chtype ch)
     TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_RETURN("%d"), code));
     return (code);
 }
-
-#if USE_WIDEC_SUPPORT
-NCURSES_EXPORT(int)
-wadd_wch(WINDOW *win, const cchar_t * wch)
-{
-    int code = ERR;
-
-    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wadd_wch(%p, %s)"), win,
-				      _tracech_t(wch)));
-
-    if (win && (waddch_nosync(win, *wch) != ERR)) {
-	_nc_synchook(win);
-	code = OK;
-    }
-
-    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_RETURN("%d"), code));
-    return (code);
-}
-
-NCURSES_EXPORT(int)
-wecho_wchar(WINDOW *win, const cchar_t * wch)
-{
-    int code = ERR;
-
-    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wecho_wchar(%p, %s)"), win,
-				      _tracech_t(wch)));
-
-    if (win && (waddch_nosync(win, *wch) != ERR)) {
-	bool save_immed = win->_immed;
-	win->_immed = TRUE;
-	_nc_synchook(win);
-	win->_immed = save_immed;
-	code = OK;
-    }
-    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_RETURN("%d"), code));
-    return (code);
-}
-#endif /* USE_WIDEC_SUPPORT */

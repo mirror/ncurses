@@ -28,12 +28,11 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1996                                         *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /*
     Version Control
-    $Revision: 1.35 $
+    $Revision: 1.36 $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the

@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.20 2002/09/28 15:02:11 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.23 2004/02/07 13:31:35 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -82,19 +82,19 @@ if test "$USE" = implemented ; then
 	cat >$ED1 <<EOF1
 /^extern.*implemented/{
 	h
-	s/^.*implemented:\([^ 	*]*\).*/P_#if_USE_\1_SUPPORT/p
+	s/^.*implemented:\([^ 	*]*\).*/P_POUNDCif_USE_\1_SUPPORT/p
 	g
 	s/^extern \([^;]*\);.*/\1/p
 	g
-	s/^.*implemented:\([^ 	*]*\).*/P_#endif/p
+	s/^.*implemented:\([^ 	*]*\).*/P_POUNDCendif/p
 }
 /^extern.*generated/{
 	h
-	s/^.*generated:\([^ 	*]*\).*/P_#if_USE_\1_SUPPORT/p
+	s/^.*generated:\([^ 	*]*\).*/P_POUNDCif_USE_\1_SUPPORT/p
 	g
 	s/^extern \([^;]*\);.*/\1/p
 	g
-	s/^.*generated:\([^ 	*]*\).*/P_#endif/p
+	s/^.*generated:\([^ 	*]*\).*/P_POUNDCendif/p
 }
 EOF1
 else
@@ -102,11 +102,11 @@ else
 	cat >$ED1 <<EOF1
 /^extern.*${ALL}/{
 	h
-	s/^.*${ALL}:\([^ 	*]*\).*/P_#if_USE_\1_SUPPORT/p
+	s/^.*${ALL}:\([^ 	*]*\).*/P_POUNDCif_USE_\1_SUPPORT/p
 	g
 	s/^extern \([^;]*\);.*/\1/p
 	g
-	s/^.*${ALL}:\([^ 	*]*\).*/P_#endif/p
+	s/^.*${ALL}:\([^ 	*]*\).*/P_POUNDCendif/p
 }
 EOF1
 fi
@@ -134,13 +134,14 @@ cat >$ED2 <<EOF2
 	s/)/ z)/
 	s/\.\.\. z)/...)/
 :nc
-	/(/s// ( /
+	s/(/ ( /
 	s/)/ )/
 EOF2
 
 cat >$ED3 <<EOF3
 /^P_/{
-	s/^P_#if_/#if /
+	s/^P_POUNDCif_/#if /
+	s/^P_POUNDCendif/#endif/
 	s/^P_//
 	b done
 }
@@ -151,7 +152,7 @@ cat >$ED3 <<EOF3
 	s/ )/)/g
 	s/ gen_/ /
 	s/^M_/#undef /
-	/^%%/s//	/
+	s/^[ 	]*%[ 	]*%[ 	]*/	/
 :done
 EOF3
 
@@ -175,12 +176,12 @@ cat >$AW1 <<\EOF1
 BEGIN	{
 		skip=0;
 	}
-/^P_#if/ {
+/^P_POUNDCif/ {
 		print "\n"
 		print $0
 		skip=0;
 }
-/^P_#endif/ {
+/^P_POUNDCendif/ {
 		print $0
 		skip=1;
 }

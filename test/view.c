@@ -23,10 +23,9 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.53 2002/06/29 23:28:27 tom Exp $
+ * $Id: view.c,v 1.57 2003/05/17 21:58:43 tom Exp $
  */
 
-#include <ctype.h>
 #include <time.h>
 
 #include <test.priv.h>
@@ -54,7 +53,7 @@
 static RETSIGTYPE finish(int sig) GCC_NORETURN;
 static void show_all(const char *tag);
 
-#if defined(SIGWINCH) && defined(TIOCGWINSZ) && HAVE_RESIZETERM
+#if defined(SIGWINCH) && defined(TIOCGWINSZ) && HAVE_RESIZE_TERM
 #define CAN_RESIZE 1
 #else
 #define CAN_RESIZE 0
@@ -496,14 +495,17 @@ show_all(const char *tag)
 	clrtoeol();
 	if ((s = lptr[i - 1]) != 0) {
 	    int len = ch_len(s);
-	    if (len > shift)
+	    if (len > shift) {
 #if USE_WIDEC_SUPPORT
 		add_wchstr(s + shift);
 #else
 		addchstr(s + shift);
 #endif
+	    }
+#if defined(NCURSES_VERSION) || defined(HAVE_WCHGAT)
 	    if (try_color)
 		wchgat(stdscr, -1, A_NORMAL, my_pair, NULL);
+#endif
 	}
     }
     setscrreg(1, LINES - 1);

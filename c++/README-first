@@ -1,3 +1,5 @@
+-- $Id: README-first,v 1.7 2003/10/25 15:13:23 tom Exp $
+-------------------------------------------------------------------------------
                   C++ interface to ncurses routines
 -----------------------------------------------------------------------
 
@@ -55,4 +57,4 @@ Authors of first ncurses based release (NCursesWindow, NCursesPanel):
  and Anatoly Ivasyuk     <anatoly@nick.csh.rit.edu>
 
 Author of this release:
-     Juergen Pfeifer     http://www.familiepfeifer.de/Contact.aspx?Lang=en
+     Juergen Pfeifer

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001,2002 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2001-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: varargs.c,v 1.3 2002/10/05 23:04:17 tom Exp $")
+MODULE_ID("$Id: varargs.c,v 1.4 2003/05/24 21:10:28 tom Exp $")
 
 #ifdef TRACE
 
@@ -46,7 +46,7 @@ typedef enum {
 
 #define VA_INT(type) ival = va_arg(ap, type)
 #define VA_FLT(type) fval = va_arg(ap, type)
-#define VA_PTR(type) pval = (void *)va_arg(ap, type)
+#define VA_PTR(type) pval = (char *)va_arg(ap, type)
 #define VA_STR(type) sval = va_arg(ap, type)
 
 /*

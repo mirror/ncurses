@@ -177,10 +177,8 @@ Scope of This Document
    Eric S. Raymond <esr@snark.thyrsus.com> wrote many of the new features
    in  versions  after  1.8.1 and wrote most of this introduction. Jürgen
    Pfeifer  wrote  all  of  the  menu and forms code as well as the Ada95
-   binding.  Ongoing  work  is  being  done  by  Thomas Dickey and Jürgen
-   Pfeifer. Florian La Roche acts as the maintainer for the Free Software
-   Foundation,  which holds the copyright on ncurses. Contact the current
-   maintainers at bug-ncurses@gnu.org.
+   binding.  Ongoing  work  is  being done by Thomas Dickey (maintainer).
+   Contact the current maintainers at bug-ncurses@gnu.org.
 
    This  document  also describes the panels extension library, similarly
    modeled  on  the  SVr4  panels  facility.  This  library allows you to
@@ -535,6 +533,7 @@ static void finish(int sig)
      * xterm and similar programs such as rxvt.
      * Linux  console,  when  configured with gpm(1), Alessandro Rubini's
        mouse server.
+     * FreeBSD sysmouse (console)
      * OS/2 EMX
 
    The  mouse  interface  is  very  simple.  To  activate it, you use the
@@ -2346,9 +2345,9 @@ int form_opts(FORM *form);                /* form to query */
 
    O_NL_OVERLOAD
           Enable  overloading  of  REQ_NEW_LINE  as  described in Editing
-          Requests. The value of this option is ignored on dynamic fields
-          that  have  not  reached  their  size limit; these have no last
-          line,  so  the  circumstances  for  triggering a REQ_NEXT_FIELD
+          Requests.  The  value  of  this  option  is  ignored on dynamic
+          fields  that  have  not reached their size limit; these have no
+          last line, so the circumstances for triggering a REQ_NEXT_FIELD
           never arise.
 
    O_BS_OVERLOAD

@@ -34,7 +34,7 @@
   ****************************************************************************
   * @Id: terminfo.head,v 1.10 2002/08/17 23:37:10 tom Exp @
   * Head of terminfo man page ends here
-  * @Id: terminfo.tail,v 1.35 2002/04/20 16:49:33 tom Exp @
+  * @Id: terminfo.tail,v 1.38 2003/01/05 22:47:05 tom Exp @
   * Beginning of terminfo.tail file
   *.TH
 -->
@@ -49,6 +49,10 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
+<STRONG><A HREF="TERMINFO.5.html">TERMINFO(5)</A></STRONG>                File Formats               <STRONG><A HREF="TERMINFO.5.html">TERMINFO(5)</A></STRONG>
+
+
+
 
 </PRE>
 <H2>NAME</H2><PRE>
@@ -163,7 +167,6 @@
        can_change                ccc   cc    terminal can re-
                                              define existing col-
                                              ors
-
        ceol_standout_glitch      xhp   xs    standout not erased
                                              by overwriting (hp)
        col_addr_glitch           xhpa  YA    only positive motion
@@ -183,6 +186,7 @@
                                              strikes with a blank
        generic_type              gn    gn    generic line type
        hard_copy                 hc    hc    hardcopy terminal
+
        hard_cursor               chts  HC    cursor is hard to
                                              see
        has_meta_key              km    km    Has a meta key
@@ -216,8 +220,6 @@
                                              f2=ctrl C)
        no_pad_char               npc   NP    pad character does
                                              not exist
-
-
        non_dest_scroll_region    ndscr ND    scrolling region is
                                              non-destructive
        non_rev_rmcup             nrrmc NR    smcup does not
@@ -250,6 +252,7 @@
        label_height          lh       lh     rows in each label
        label_width           lw       lw     columns in each
                                              label
+
        lines                 lines    li     number of lines on
                                              screen or page
        lines_of_memory       lm       lm     lines of memory if &gt;
@@ -270,8 +273,6 @@
        no_color_video        ncv      NC     video attributes
                                              that cannot be used
                                              with colors
-
-
        num_labels            nlab     Nl     number of labels on
                                              screen
        padding_baud_rate     pb       pb     lowest baud rate
@@ -315,6 +316,9 @@
        output_res_char        orc     Yi     horizontal resolu-
                                              tion in units per
                                              line
+
+
+
        output_res_horz_inch   orhi    Yk     horizontal resolu-
                                              tion in units per
                                              inch
@@ -324,8 +328,6 @@
                                              in units per inch
        print_rate             cps     Ym     print rate in char-
                                              acters per second
-
-
        wide_char_size         widcs   Yn     character step size
                                              when in double wide
                                              mode
@@ -378,12 +380,11 @@
        cursor_address            cup    cm   move to row #1
                                              columns #2
        cursor_down               cud1   do   down one line
-
-
        cursor_home               home   ho   home cursor (if no
                                              cup)
        cursor_invisible          civis  vi   make cursor invisi-
                                              ble
+
        cursor_left               cub1   le   move left one space
        cursor_mem_address        mrcup  CM   memory relative cur-
                                              sor addressing, move
@@ -433,7 +434,6 @@
                                              riage motion
        enter_micro_mode          smicm  ZJ   Start micro-motion
                                              mode
-
        enter_near_letter_quality snlq   ZK   Enter NLQ mode
        enter_normal_quality      snrmq  ZL   Enter normal-quality
                                              mode
@@ -450,6 +450,7 @@
        enter_subscript_mode      ssubm  ZN   Enter subscript mode
        enter_superscript_mode    ssupm  ZO   Enter superscript
                                              mode
+
        enter_underline_mode      smul   us   begin underline mode
        enter_upward_mode         sum    ZP   Start upward car-
                                              riage motion
@@ -487,7 +488,6 @@
        flash_hook                hook   fh   flash switch hook
        flash_screen              flash  vb   visible bell (may
                                              not move cursor)
-
        form_feed                 ff     ff   hardcopy terminal
                                              page eject (P*)
        from_status_line          fsl    fs   return from status
@@ -515,6 +515,8 @@
        insert_padding            ip     ip   insert padding after
                                              inserted character
        key_a1                    ka1    K1   upper left of keypad
+
+
        key_a3                    ka3    K3   upper right of key-
                                              pad
        key_b2                    kb2    K2   center of keypad
@@ -540,8 +542,6 @@
                                              in insert mode
        key_end                   kend   @7   end key
        key_enter                 kent   @8   enter/send key
-
-
        key_eol                   kel    kE   clear-to-end-of-line
                                              key
        key_eos                   ked    kS   clear-to-end-of-
@@ -582,6 +582,7 @@
        key_f38                   kf38   FS   F38 function key
        key_f39                   kf39   FT   F39 function key
        key_f4                    kf4    k4   F4 function key
+
        key_f40                   kf40   FU   F40 function key
        key_f41                   kf41   FV   F41 function key
        key_f42                   kf42   FW   F42 function key
@@ -595,7 +596,6 @@
        key_f5                    kf5    k5   F5 function key
        key_f50                   kf50   Fe   F50 function key
        key_f51                   kf51   Ff   F51 function key
-
        key_f52                   kf52   Fg   F52 function key
        key_f53                   kf53   Fh   F53 function key
        key_f54                   kf54   Fi   F54 function key
@@ -648,8 +648,8 @@
        key_sdl                   kDL    *5   shifted delete-line
                                              key
        key_select                kslt   *6   select key
-       key_send                  kEND   *7   shifted end key
 
+       key_send                  kEND   *7   shifted end key
        key_seol                  kEOL   *8   shifted clear-to-
                                              end-of-line key
        key_sexit                 kEXT   *9   shifted exit key
@@ -702,8 +702,6 @@
                                              key f6 if not f6
        lab_f7                    lf7    l7   label on function
                                              key f7 if not f7
-
-
        lab_f8                    lf8    l8   label on function
                                              key f8 if not f8
        lab_f9                    lf9    l9   label on function
@@ -716,6 +714,7 @@
                                              (8th-bit on)
        micro_column_address      mhpa   ZY   Like column_address
                                              in micro mode
+
        micro_down                mcud1  ZZ   Like cursor_down in
                                              micro mode
        micro_left                mcub1  Za   Like cursor_left in
@@ -757,7 +756,6 @@
                                              sor in micro mode
        parm_rindex               rin    SR   scroll back #1 lines
                                              (P)
-
        parm_up_cursor            cuu    UP   up #1 lines (P*)
        parm_up_micro             mcuu   Zi   Like parm_up_cursor
                                              in micro mode
@@ -781,6 +779,8 @@
        quick_dial                qdial  QD   dial number #1 with-
                                              out checking
        remove_clock              rmclk  RC   remove clock
+
+
        repeat_char               rep    rp   repeat char #1 #2
                                              times (P*)
        req_for_input             rfi    RF   send next input char
@@ -811,7 +811,6 @@
                                              line #1 or (if smgtp
                                              is not given) #2
                                              lines from bottom
-
        set_clock                 sclk   SC   set clock, #1 hrs #2
                                              mins #3 secs
        set_color_pair            scp    sp   Set current color
@@ -846,6 +845,8 @@
                                              set
        stop_bit_image            rbim   Zs   Stop printing bit
                                              image graphics
+
+
        stop_char_set_def         rcsd   Zt   End definition of
                                              character set #1
        subscript_characters      subcs  Zu   List of subscript-
@@ -865,7 +866,6 @@
                                              move past it
        up_half_line              hu     hu   half a line up
        user0                     u0     u0   User string #0
-
        user1                     u1     u1   User string #1
        user2                     u2     u2   User string #2
        user3                     u3     u3   User string #3
@@ -911,6 +911,8 @@
                                                port
        display_pc_char           dispc    S1   Display PC charac-
                                                ter #1
+
+
        end_bit_image_region      endbi    Yy   End a bit-image
                                                region
        enter_pc_charset_mode     smpch    S2   Enter PC character
@@ -919,7 +921,6 @@
                                                mode
        exit_pc_charset_mode      rmpch    S3   Exit PC character
                                                display mode
-
        exit_scancode_mode        rmsc     S5   Exit PC scancode
                                                mode
        get_mouse                 getm     Gm   Curses should get
@@ -973,10 +974,11 @@
         terminfo entries after SVr4.1; beware!
 
                 <STRONG>Variable</STRONG>         <STRONG>Cap-</STRONG>   <STRONG>TCap</STRONG>     <STRONG>Description</STRONG>
-
                  <STRONG>String</STRONG>          <STRONG>name</STRONG>   <STRONG>Code</STRONG>
         enter_horizontal_hl_mode ehhlm  Xh   Enter horizontal
                                              highlight mode
+
+
         enter_left_hl_mode       elhlm  Xl   Enter left highlight
                                              mode
         enter_low_hl_mode        elohlm Xo   Enter low highlight
@@ -1083,6 +1085,7 @@
        To do this, put a period before the capability name.   For
        example, see the second <STRONG>ind</STRONG> in the example above.
 
+
    <STRONG>Fetching</STRONG> <STRONG>Compiled</STRONG> <STRONG>Descriptions</STRONG>
        If  the environment variable TERMINFO is set, it is inter-
        preted as the pathname of a directory containing the  com-
@@ -1136,65 +1139,64 @@
        beginning  of the next line when it reaches the right mar-
        gin, then it should have the <STRONG>am</STRONG> capability.  If the termi-
        nal  can  clear its screen, leaving the cursor in the home
-       position,  then  this  is  given  by  the   <STRONG>clear</STRONG>   string
-       capability.   If  the  terminal  overstrikes  (rather than
-       clearing a position when a character is struck over)  then
-       it  should  have  the <STRONG>os</STRONG> capability.  If the terminal is a
-       printing terminal, with no soft copy unit, give it both <STRONG>hc</STRONG>
-       and  <STRONG>os</STRONG>.   (<STRONG>os</STRONG> applies to storage scope terminals, such as
-       TEKTRONIX 4010 series, as well as hard copy and APL termi-
-       nals.)   If there is a code to move the cursor to the left
-       edge of the current row, give this as <STRONG>cr</STRONG>.  (Normally  this
-       will  be  carriage return, control M.)  If there is a code
-       to produce an audible signal (bell, beep, etc)  give  this
-       as <STRONG>bel</STRONG>.
+       position, then this is given by the <STRONG>clear</STRONG> string  capabil-
+       ity.   If the terminal overstrikes (rather than clearing a
+       position when a character is struck over) then  it  should
+       have  the  <STRONG>os</STRONG>  capability.   If the terminal is a printing
+       terminal, with no soft copy unit, give it both <STRONG>hc</STRONG> and  <STRONG>os</STRONG>.
+       (<STRONG>os</STRONG>  applies to storage scope terminals, such as TEKTRONIX
+       4010 series, as well as hard copy and APL terminals.)   If
+       there is a code to move the cursor to the left edge of the
+       current row, give this as <STRONG>cr</STRONG>.  (Normally this will be car-
+       riage  return,  control M.)  If there is a code to produce
+       an audible signal (bell, beep, etc) give this as <STRONG>bel</STRONG>.
 
-       If  there is a code to move the cursor one position to the
-       left (such as backspace) that capability should  be  given
-       as  <STRONG>cub1</STRONG>.   Similarly, codes to move to the right, up, and
+       If there is a code to move the cursor one position to  the
+       left  (such  as backspace) that capability should be given
+       as <STRONG>cub1</STRONG>.  Similarly, codes to move to the right,  up,  and
        down should be given as <STRONG>cuf1</STRONG>, <STRONG>cuu1</STRONG>, and <STRONG>cud1</STRONG>.  These local
-       cursor  motions  should not alter the text they pass over,
-       for example, you would not normally use  `<STRONG>cuf1</STRONG>= '  because
+       cursor motions should not alter the text they  pass  over,
+       for  example,  you would not normally use `<STRONG>cuf1</STRONG>= ' because
        the space would erase the character moved over.
 
-       A  very  important  point  here  is  that the local cursor
-       motions encoded in <EM>terminfo</EM> are undefined at the left  and
-       top  edges  of  a  CRT  terminal.   Programs  should never
-       attempt to backspace around the left edge,  unless  <STRONG>bw</STRONG>  is
+       A very important point  here  is  that  the  local  cursor
+       motions  encoded in <EM>terminfo</EM> are undefined at the left and
+       top edges  of  a  CRT  terminal.   Programs  should  never
+       attempt  to  backspace  around the left edge, unless <STRONG>bw</STRONG> is
        given, and never attempt to go up locally off the top.  In
-       order to scroll text up, a program will go to  the  bottom
+       order  to  scroll text up, a program will go to the bottom
        left corner of the screen and send the <STRONG>ind</STRONG> (index) string.
 
        To scroll text down, a program goes to the top left corner
-       of  the  screen  and  sends the <STRONG>ri</STRONG> (reverse index) string.
-       The strings <STRONG>ind</STRONG> and <STRONG>ri</STRONG> are undefined  when  not  on  their
+       of the screen and sends the  <STRONG>ri</STRONG>  (reverse  index)  string.
+       The  strings  <STRONG>ind</STRONG>  and  <STRONG>ri</STRONG> are undefined when not on their
        respective corners of the screen.
 
        Parameterized versions of the scrolling sequences are <STRONG>indn</STRONG>
        and <STRONG>rin</STRONG> which have the same semantics as <STRONG>ind</STRONG> and <STRONG>ri</STRONG> except
-       that  they take one parameter, and scroll that many lines.
-       They are also undefined except at the appropriate edge  of
+       that they take one parameter, and scroll that many  lines.
+       They  are also undefined except at the appropriate edge of
        the screen.
 
-       The  <STRONG>am</STRONG>  capability tells whether the cursor sticks at the
-       right edge of the screen when text  is  output,  but  this
+       The <STRONG>am</STRONG> capability tells whether the cursor sticks  at  the
+       right  edge  of  the  screen when text is output, but this
        does not necessarily apply to a <STRONG>cuf1</STRONG> from the last column.
-       The only local motion which is defined from the left  edge
-       is  if  <STRONG>bw</STRONG>  is  given, then a <STRONG>cub1</STRONG> from the left edge will
-       move to the right edge of the previous row.  If <STRONG>bw</STRONG> is  not
-       given,  the effect is undefined.  This is useful for draw-
-       ing a box around the edge of the screen, for example.   If
-       the  terminal has switch selectable automatic margins, the
-       <EM>terminfo</EM> file usually assumes that this is on;  i.e.,  <STRONG>am</STRONG>.
-       If  the  terminal  has  a command which moves to the first
-       column of the next line, that command can be given as  <STRONG>nel</STRONG>
-       (newline).   It  does not matter if the command clears the
-       remainder of the current line, so if the terminal  has  no
-       <STRONG>cr</STRONG>  and <STRONG>lf</STRONG> it may still be possible to craft a working <STRONG>nel</STRONG>
+       The  only local motion which is defined from the left edge
+       is if <STRONG>bw</STRONG> is given, then a <STRONG>cub1</STRONG> from  the  left  edge  will
+       move  to the right edge of the previous row.  If <STRONG>bw</STRONG> is not
+       given, the effect is undefined.  This is useful for  draw-
+       ing  a box around the edge of the screen, for example.  If
+       the terminal has switch selectable automatic margins,  the
+       <EM>terminfo</EM>  file  usually assumes that this is on; i.e., <STRONG>am</STRONG>.
+       If the terminal has a command which  moves  to  the  first
+       column  of the next line, that command can be given as <STRONG>nel</STRONG>
+       (newline).  It does not matter if the command  clears  the
+       remainder  of  the current line, so if the terminal has no
+       <STRONG>cr</STRONG> and <STRONG>lf</STRONG> it may still be possible to craft a working  <STRONG>nel</STRONG>
        out of one or both of them.
 
        These  capabilities  suffice  to  describe  hard-copy  and
-       "glass-tty"  terminals.   Thus  the  model  33 teletype is
+       "glass-tty" terminals.  Thus  the  model  33  teletype  is
        described as
 
      33|tty33|tty|model 33 teletype,
@@ -1208,323 +1210,359 @@
 
 
    <STRONG>Parameterized</STRONG> <STRONG>Strings</STRONG>
-       Cursor addressing and other strings  requiring  parameters
-       in  the  terminal  are described by a parameterized string
-       capability, with <STRONG><A HREF="printf.3S.html">printf(3S)</A></STRONG> like escapes <STRONG>%x</STRONG>  in  it.   For
-       example,  to  address  the  cursor,  the <STRONG>cup</STRONG> capability is
+       Cursor  addressing  and other strings requiring parameters
+       in the terminal are described by  a  parameterized  string
+       capability,  with  <STRONG><A HREF="printf.3S.html">printf(3S)</A></STRONG>  like escapes <STRONG>%x</STRONG> in it.  For
+       example, to address the  cursor,  the  <STRONG>cup</STRONG>  capability  is
        given, using two parameters: the row and column to address
        to.  (Rows and columns are numbered from zero and refer to
        the physical screen visible to the user, not to any unseen
-       memory.)   If  the  terminal  has  memory  relative cursor
+       memory.)  If  the  terminal  has  memory  relative  cursor
        addressing, that can be indicated by <STRONG>mrcup</STRONG>.
 
-       The parameter mechanism uses a stack and special  <STRONG>%</STRONG>  codes
-       to  manipulate  it.  Typically a sequence will push one of
-       the parameters onto the stack and then print  it  in  some
-       format.  Often more complex operations are necessary.
+       The  parameter  mechanism uses a stack and special <STRONG>%</STRONG> codes
+       to manipulate it.  Typically a sequence will push  one  of
+       the  parameters  onto  the stack and then print it in some
+       format.  Print (e.g., "%d")  is  a  special  case.   Other
+       operations,  including  "%t"  pop  their  operand from the
+       stack.  It is noted that more complex operations are often
+       necessary, e.g., in the <STRONG>sgr</STRONG> string.
 
        The <STRONG>%</STRONG> encodings have the following meanings:
 
-            %%        outputs `%'
-            %<EM>[[</EM>:<EM>]flags][width[.precision]][</EM>doxXs<EM>]</EM>
-                      as in <STRONG>printf</STRONG>, flags are [-+#] and space
-            %c        print pop() like %c in printf()
-            %s        print pop() like %s in printf()
 
-            %p[1-9]   push <EM>i</EM>'th parm
-            %P[a-z]   set dynamic variable [a-z] to pop()
-            %g[a-z]   get dynamic variable [a-z] and push it
-            %P[A-Z]   set static variable [a-z] to pop()
-            %g[A-Z]   get static variable [a-z] and push it
-            %'<EM>c</EM>'      char constant <EM>c</EM>
-            %{<EM>nn</EM>}     integer constant <EM>nn</EM>
-            %l        push strlen(pop)
+       %%   outputs `%'
 
-            %+ %- %* %/ %m
-                      arithmetic (%m is mod): push(pop() op pop())
-            %&amp; %| %^  bit operations: push(pop() op pop())
-            %= %&gt; %&lt;  logical operations: push(pop() op pop())
-            %A, %O    logical and &amp; or operations (for conditionals)
-            %! %~     unary operations push(op pop())
-            %i        add 1 to first two parameters (for ANSI terminals)
+       %<EM>[[</EM>:<EM>]flags][width[.precision]][</EM>doxXs<EM>]</EM>
+            as in <STRONG>printf</STRONG>, flags are [-+#] and space
 
-            %? expr %t thenpart %e elsepart %;
-                      if-then-else, %e elsepart is optional.
-                      else-if's are possible a la Algol 68:
-                      %? c1 %t b1 %e c2 %t b2 %e c3 %t b3 %e c4 %t b4 %e %;
-                      ci are conditions, bi are bodies.
+       %c   print pop() like %c in <STRONG>printf</STRONG>
+
+       %s   print pop() like %s in <STRONG>printf</STRONG>
+
+       %p[1-9]
+            push <EM>i</EM>'th parameter
+
+       %P[a-z]
+            set dynamic variable [a-z] to pop()
+
+       %g[a-z]
+            get dynamic variable [a-z] and push it
+
+       %P[A-Z]
+            set static variable [a-z] to pop()
+
+       %g[A-Z]
+            get static variable [a-z] and push it
+
+            The  terms  "static"  and  "dynamic"  are misleading.
+            Historically, these are simply two different sets  of
+            variables,  whose  values are not reset between calls
+            to <STRONG>tparm</STRONG>.  However, that fact is  not  documented  in
+            other  implementations.  Relying on it will adversely
+            impact portability to other implementations.
+
+       %'<EM>c</EM>' char constant <EM>c</EM>
+
+       %{<EM>nn</EM>}
+            integer constant <EM>nn</EM>
+
+       %l   push strlen(pop)
+
+       %+ %- %* %/ %m
+            arithmetic (%m is mod): push(pop() op pop())
+
+       %&amp; %| %^
+            bit operations: push(pop() op pop())
+
+       %= %&gt; %&lt;
+            logical operations: push(pop() op pop())
+
+       %A, %O
+            logical and &amp; or operations (for conditionals)
+
+       %! %~
+            unary operations push(op pop())
+
+       %i   add 1 to first two parameters (for ANSI terminals)
+
+       %? <EM>expr</EM> %t <EM>thenpart</EM> %e <EM>elsepart</EM> %;
+            if-then-else, %e <EM>elsepart</EM> is optional.  else-if's are
+            possible a la Algol 68:
+            %? c1 %t b1 %e c2 %t b2 %e c3 %t b3 %e c4 %t b4 %e %;
+            ci are conditions, bi are bodies.
 
        Binary operations are in postfix form with the operands in
-       the usual order.  That  is,  to  get  x-5  one  would  use
-       "%gx%{5}%-".   %P  and  %g variables are persistent across
+       the  usual  order.   That  is,  to  get  x-5 one would use
+       "%gx%{5}%-".  %P and %g variables  are  persistent  across
        escape-string evaluations.
 
        Consider the HP2645, which, to get to row 3 and column 12,
-       needs  to  be  sent  \E&amp;a12c03Y padded for 6 milliseconds.
-       Note that the order of the rows and  columns  is  inverted
-       here,  and that the row and column are printed as two dig-
+       needs to be sent \E&amp;a12c03Y  padded  for  6  milliseconds.
+       Note  that  the  order of the rows and columns is inverted
+       here, and that the row and column are printed as two  dig-
        its.  Thus its <STRONG>cup</STRONG> capability is "cup=6\E&amp;%p2%2dc%p1%2dY".
 
        The Microterm ACT-IV needs the current row and column sent
-       preceded by a <STRONG>^T</STRONG>, with the row and column  simply  encoded
-       in  binary,  "cup=^T%p1%c%p2%c".  Terminals which use "%c"
-       need to be able to backspace the  cursor  (<STRONG>cub1</STRONG>),  and  to
+       preceded  by  a <STRONG>^T</STRONG>, with the row and column simply encoded
+       in binary, "cup=^T%p1%c%p2%c".  Terminals which  use  "%c"
+       need  to  be  able  to backspace the cursor (<STRONG>cub1</STRONG>), and to
        move the cursor up one line on the screen (<STRONG>cuu1</STRONG>).  This is
-       necessary because it is not always safe to transmit <STRONG>\n</STRONG>  <STRONG>^D</STRONG>
-       and  <STRONG>\r</STRONG>,  as  the system may change or discard them.  (The
-       library routines dealing with terminfo set  tty  modes  so
+       necessary  because it is not always safe to transmit <STRONG>\n</STRONG> <STRONG>^D</STRONG>
+       and <STRONG>\r</STRONG>, as the system may change or  discard  them.   (The
+       library  routines  dealing  with terminfo set tty modes so
        that tabs are never expanded, so \t is safe to send.  This
        turns out to be essential for the Ann Arbor 4080.)
 
        A final example is the LSI ADM-3a, which uses row and col-
        umn  offset  by  a  blank  character,  thus  "cup=\E=%p1%'
-       '%+%c%p2%' '%+%c".  After sending `\E=', this  pushes  the
-       first  parameter, pushes the ASCII value for a space (32),
-       adds them (pushing the sum on the stack in  place  of  the
-       two  previous  values) and outputs that value as a charac-
-       ter.  Then the same is  done  for  the  second  parameter.
+       '%+%c%p2%'  '%+%c".   After sending `\E=', this pushes the
+       first parameter, pushes the ASCII value for a space  (32),
+       adds  them  (pushing  the sum on the stack in place of the
+       two previous values) and outputs that value as  a  charac-
+       ter.   Then  the  same  is  done for the second parameter.
        More complex arithmetic is possible using the stack.
 
 
    <STRONG>Cursor</STRONG> <STRONG>Motions</STRONG>
        If the terminal has a fast way to home the cursor (to very
-       upper left corner of screen) then this  can  be  given  as
-       <STRONG>home</STRONG>;  similarly  a fast way of getting to the lower left-
-       hand corner can be given as <STRONG>ll</STRONG>; this may involve going  up
-       with  <STRONG>cuu1</STRONG>  from  the  home position, but a program should
-       never do this itself (unless <STRONG>ll</STRONG> does) because it can  make
-       no  assumption about the effect of moving up from the home
-       position.  Note that the home  position  is  the  same  as
+       upper  left  corner  of  screen) then this can be given as
+       <STRONG>home</STRONG>; similarly a fast way of getting to the  lower  left-
+       hand  corner can be given as <STRONG>ll</STRONG>; this may involve going up
+       with <STRONG>cuu1</STRONG> from the home position,  but  a  program  should
+       never  do this itself (unless <STRONG>ll</STRONG> does) because it can make
+       no assumption about the effect of moving up from the  home
+       position.   Note  that  the  home  position is the same as
        addressing to (0,0): to the top left corner of the screen,
-       not of memory.  (Thus, the \EH sequence  on  HP  terminals
+       not  of  memory.   (Thus, the \EH sequence on HP terminals
        cannot be used for <STRONG>home</STRONG>.)
 
        If the terminal has row or column absolute cursor address-
-       ing, these can be given as single  parameter  capabilities
+       ing,  these  can be given as single parameter capabilities
        <STRONG>hpa</STRONG> (horizontal position absolute) and <STRONG>vpa</STRONG> (vertical posi-
        tion absolute).  Sometimes these are shorter than the more
-       general  two  parameter  sequence (as with the hp2645) and
+       general two parameter sequence (as with  the  hp2645)  and
        can be used in preference to <STRONG>cup</STRONG>.  If there are parameter-
-       ized  local  motions  (e.g.,  move  <EM>n</EM> spaces to the right)
+       ized local motions (e.g., move  <EM>n</EM>  spaces  to  the  right)
        these can be given as <STRONG>cud</STRONG>, <STRONG>cub</STRONG>, <STRONG>cuf</STRONG>, and <STRONG>cuu</STRONG> with a single
-       parameter  indicating  how many spaces to move.  These are
-       primarily useful if the terminal does not have  <STRONG>cup</STRONG>,  such
+       parameter indicating how many spaces to move.   These  are
+       primarily  useful  if the terminal does not have <STRONG>cup</STRONG>, such
        as the TEKTRONIX 4025.
 
        If the terminal needs to be in a special mode when running
        a program that uses these capabilities, the codes to enter
-       and  exit this mode can be given as <STRONG>smcup</STRONG> and <STRONG>rmcup</STRONG>.  This
-       arises, for example, from terminals like the Concept  with
-       more  than  one  page of memory.  If the terminal has only
-       memory relative cursor addressing and not screen  relative
+       and exit this mode can be given as <STRONG>smcup</STRONG> and <STRONG>rmcup</STRONG>.   This
+       arises,  for example, from terminals like the Concept with
+       more than one page of memory.  If the  terminal  has  only
+       memory  relative cursor addressing and not screen relative
        cursor addressing, a one screen-sized window must be fixed
-       into the terminal for cursor addressing to work  properly.
+       into  the terminal for cursor addressing to work properly.
        This is also used for the TEKTRONIX 4025, where <STRONG>smcup</STRONG> sets
-       the command character to be the one used by terminfo.   If
-       the  <STRONG>smcup</STRONG>  sequence  will not restore the screen after an
+       the  command character to be the one used by terminfo.  If
+       the <STRONG>smcup</STRONG> sequence will not restore the  screen  after  an
        <STRONG>rmcup</STRONG> sequence is output (to the state prior to outputting
        <STRONG>rmcup</STRONG>), specify <STRONG>nrrmc</STRONG>.
 
 
    <STRONG>Area</STRONG> <STRONG>Clears</STRONG>
        If the terminal can clear from the current position to the
-       end of the line, leaving the  cursor  where  it  is,  this
+       end  of  the  line,  leaving  the cursor where it is, this
        should be given as <STRONG>el</STRONG>.  If the terminal can clear from the
-       beginning of the line to the current  position  inclusive,
-       leaving  the  cursor  where it is, this should be given as
-       <STRONG>el1</STRONG>.  If the terminal can clear from the current  position
-       to  the  end  of the display, then this should be given as
-       <STRONG>ed</STRONG>.  <STRONG>Ed</STRONG> is only defined from the first column of  a  line.
-       (Thus,  it can be simulated by a request to delete a large
+       beginning  of  the line to the current position inclusive,
+       leaving the cursor where it is, this should  be  given  as
+       <STRONG>el1</STRONG>.   If the terminal can clear from the current position
+       to the end of the display, then this should  be  given  as
+       <STRONG>ed</STRONG>.   <STRONG>Ed</STRONG>  is only defined from the first column of a line.
+       (Thus, it can be simulated by a request to delete a  large
        number of lines, if a true <STRONG>ed</STRONG> is not available.)
 
 
    <STRONG>Insert/delete</STRONG> <STRONG>line</STRONG> <STRONG>and</STRONG> <STRONG>vertical</STRONG> <STRONG>motions</STRONG>
-       If the terminal can open a new blank line before the  line
-       where  the cursor is, this should be given as <STRONG>il1</STRONG>; this is
-       done only from the first position of a line.   The  cursor
+       If  the terminal can open a new blank line before the line
+       where the cursor is, this should be given as <STRONG>il1</STRONG>; this  is
+       done  only  from the first position of a line.  The cursor
        must then appear on the newly blank line.  If the terminal
-       can delete the line which the  cursor  is  on,  then  this
-       should  be  given as <STRONG>dl1</STRONG>; this is done only from the first
-       position on the line to be deleted.  Versions of  <STRONG>il1</STRONG>  and
-       <STRONG>dl1</STRONG>  which  take  a  single parameter and insert or delete
+       can  delete  the  line  which  the cursor is on, then this
+       should be given as <STRONG>dl1</STRONG>; this is done only from  the  first
+       position  on  the line to be deleted.  Versions of <STRONG>il1</STRONG> and
+       <STRONG>dl1</STRONG> which take a single parameter  and  insert  or  delete
        that many lines can be given as <STRONG>il</STRONG> and <STRONG>dl</STRONG>.
 
-       If the terminal has a settable scrolling region (like  the
-       vt100)  the  command to set this can be described with the
-       <STRONG>csr</STRONG> capability, which takes two parameters:  the  top  and
+       If  the terminal has a settable scrolling region (like the
+       vt100) the command to set this can be described  with  the
+       <STRONG>csr</STRONG>  capability,  which  takes two parameters: the top and
        bottom lines of the scrolling region.  The cursor position
        is, alas, undefined after using this command.
 
-       It is possible to get the effect of insert or delete  line
+       It  is possible to get the effect of insert or delete line
        using <STRONG>csr</STRONG> on a properly chosen region; the <STRONG>sc</STRONG> and <STRONG>rc</STRONG> (save
-       and restore cursor) commands may be  useful  for  ensuring
-       that  your  synthesized insert/delete string does not move
-       the cursor.  (Note that the <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG> library does  this
-       synthesis   automatically,   so   you   need  not  compose
+       and  restore  cursor)  commands may be useful for ensuring
+       that your synthesized insert/delete string does  not  move
+       the  cursor.  (Note that the <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG> library does this
+       synthesis  automatically,  so   you   need   not   compose
        insert/delete strings for an entry with <STRONG>csr</STRONG>).
 
        Yet another way to construct insert and delete might be to
-       use  a  combination  of index with the memory-lock feature
-       found on some terminals (like the HP-700/90 series,  which
+       use a combination of index with  the  memory-lock  feature
+       found  on some terminals (like the HP-700/90 series, which
        however also has insert/delete).
 
-       Inserting  lines  at  the  top or bottom of the screen can
-       also be done using <STRONG>ri</STRONG> or <STRONG>ind</STRONG> on many terminals  without  a
-       true  insert/delete line, and is often faster even on ter-
+       Inserting lines at the top or bottom  of  the  screen  can
+       also  be  done using <STRONG>ri</STRONG> or <STRONG>ind</STRONG> on many terminals without a
+       true insert/delete line, and is often faster even on  ter-
        minals with those features.
 
-       The boolean <STRONG>non_dest_scroll_region</STRONG> should be set  if  each
-       scrolling  window  is effectively a view port on a screen-
-       sized canvas.  To  test  for  this  capability,  create  a
-       scrolling  region in the middle of the screen, write some-
-       thing to the bottom line, move the cursor to  the  top  of
+       The  boolean  <STRONG>non_dest_scroll_region</STRONG> should be set if each
+       scrolling window is effectively a view port on  a  screen-
+       sized  canvas.   To  test  for  this  capability, create a
+       scrolling region in the middle of the screen, write  some-
+       thing  to  the  bottom line, move the cursor to the top of
        the region, and do <STRONG>ri</STRONG> followed by <STRONG>dl1</STRONG> or <STRONG>ind</STRONG>.  If the data
-       scrolled off the bottom  of  the  region  by  the  <STRONG>ri</STRONG>  re-
-       appears,  then scrolling is non-destructive.  System V and
-       XSI Curses expect that <STRONG>ind</STRONG>, <STRONG>ri</STRONG>, <STRONG>indn</STRONG>, and <STRONG>rin</STRONG>  will  simu-
-       late  destructive  scrolling; their documentation cautions
-       you not to define <STRONG>csr</STRONG> unless this is  true.   This  <STRONG>curses</STRONG>
+       scrolled  off  the  bottom  of  the  region  by the <STRONG>ri</STRONG> re-
+       appears, then scrolling is non-destructive.  System V  and
+       XSI  Curses  expect that <STRONG>ind</STRONG>, <STRONG>ri</STRONG>, <STRONG>indn</STRONG>, and <STRONG>rin</STRONG> will simu-
+       late destructive scrolling; their  documentation  cautions
+       you  not  to  define <STRONG>csr</STRONG> unless this is true.  This <STRONG>curses</STRONG>
        implementation is more liberal and will do explicit erases
        after scrolling if <STRONG>ndstr</STRONG> is defined.
 
        If the terminal has the ability to define a window as part
-       of  memory,  which all commands affect, it should be given
+       of memory, which all commands affect, it should  be  given
        as the parameterized string <STRONG>wind</STRONG>.  The four parameters are
-       the  starting  and ending lines in memory and the starting
+       the starting and ending lines in memory and  the  starting
        and ending columns in memory, in that order.
 
-       If the terminal can retain display memory above, then  the
-       <STRONG>da</STRONG>  capability  should  be given; if display memory can be
-       retained below, then <STRONG>db</STRONG> should be given.   These  indicate
-       that  deleting  a  line  or  scrolling may bring non-blank
-       lines up from below or that scrolling  back  with  <STRONG>ri</STRONG>  may
+       If  the terminal can retain display memory above, then the
+       <STRONG>da</STRONG> capability should be given; if display  memory  can  be
+       retained  below,  then <STRONG>db</STRONG> should be given.  These indicate
+       that deleting a line  or  scrolling  may  bring  non-blank
+       lines  up  from  below  or that scrolling back with <STRONG>ri</STRONG> may
        bring down non-blank lines.
 
 
    <STRONG>Insert/Delete</STRONG> <STRONG>Character</STRONG>
-       There  are  two  basic kinds of intelligent terminals with
-       respect to insert/delete character which can be  described
-       using  <EM>terminfo.</EM>   The most common insert/delete character
-       operations affect only the characters on the current  line
-       and  shift  characters  off  the  end of the line rigidly.
-       Other terminals, such as the Concept 100  and  the  Perkin
-       Elmer  Owl,  make  a distinction between typed and untyped
-       blanks on the screen, shifting upon an  insert  or  delete
-       only  to  an  untyped  blank on the screen which is either
-       eliminated, or expanded to two untyped  blanks.   You  can
-       determine  the  kind  of terminal you have by clearing the
-       screen and then typing text separated by  cursor  motions.
-       Type  "abc    def" using local cursor motions (not spaces)
+       There are two basic kinds of  intelligent  terminals  with
+       respect  to insert/delete character which can be described
+       using <EM>terminfo.</EM>  The most common  insert/delete  character
+       operations  affect only the characters on the current line
+       and shift characters off the  end  of  the  line  rigidly.
+       Other  terminals,  such  as the Concept 100 and the Perkin
+       Elmer Owl, make a distinction between  typed  and  untyped
+       blanks  on  the  screen, shifting upon an insert or delete
+       only to an untyped blank on the  screen  which  is  either
+       eliminated,  or  expanded  to two untyped blanks.  You can
+       determine the kind of terminal you have  by  clearing  the
+       screen  and  then typing text separated by cursor motions.
+       Type "abc    def" using local cursor motions (not  spaces)
        between the "abc" and the "def".  Then position the cursor
-       before  the "abc" and put the terminal in insert mode.  If
-       typing characters causes the rest of  the  line  to  shift
+       before the "abc" and put the terminal in insert mode.   If
+       typing  characters  causes  the  rest of the line to shift
        rigidly and characters to fall off the end, then your ter-
-       minal does not  distinguish  between  blanks  and  untyped
-       positions.   If  the  "abc" shifts over to the "def" which
-       then move together around the end of the current line  and
-       onto  the  next as you insert, you have the second type of
-       terminal, and should give the capability <STRONG>in</STRONG>, which  stands
+       minal  does  not  distinguish  between  blanks and untyped
+       positions.  If the "abc" shifts over to  the  "def"  which
+       then  move together around the end of the current line and
+       onto the next as you insert, you have the second  type  of
+       terminal,  and should give the capability <STRONG>in</STRONG>, which stands
        for "insert null".  While these are two logically separate
-       attributes (one line versus multi-line  insert  mode,  and
-       special  treatment of untyped spaces) we have seen no ter-
+       attributes  (one  line  versus multi-line insert mode, and
+       special treatment of untyped spaces) we have seen no  ter-
        minals whose insert mode cannot be described with the sin-
        gle attribute.
 
-       Terminfo  can describe both terminals which have an insert
+       Terminfo can describe both terminals which have an  insert
        mode, and terminals which send a simple sequence to open a
-       blank  position  on  the  current  line.  Give as <STRONG>smir</STRONG> the
-       sequence to get  into  insert  mode.   Give  as  <STRONG>rmir</STRONG>  the
-       sequence  to  leave  insert  mode.   Now  give as <STRONG>ich1</STRONG> any
+       blank position on the current  line.   Give  as  <STRONG>smir</STRONG>  the
+       sequence  to  get  into  insert  mode.   Give  as <STRONG>rmir</STRONG> the
+       sequence to leave insert  mode.   Now  give  as  <STRONG>ich1</STRONG>  any
        sequence needed to be sent just before sending the charac-
-       ter  to  be  inserted.   Most terminals with a true insert
-       mode will not give <STRONG>ich1</STRONG>; terminals which send  a  sequence
+       ter to be inserted.  Most terminals  with  a  true  insert
+       mode  will  not give <STRONG>ich1</STRONG>; terminals which send a sequence
        to open a screen position should give it here.
 
-       If  your terminal has both, insert mode is usually prefer-
-       able to <STRONG>ich1</STRONG>.   Technically,  you  should  not  give  both
-       unless  the  terminal actually requires both to be used in
-       combination.  Accordingly,  some  non-curses  applications
-       get  confused  if both are present; the symptom is doubled
+       If your terminal has both, insert mode is usually  prefer-
+       able  to  <STRONG>ich1</STRONG>.   Technically,  you  should  not give both
+       unless the terminal actually requires both to be  used  in
+       combination.   Accordingly,  some  non-curses applications
+       get confused if both are present; the symptom  is  doubled
        characters in an update using insert.  This requirement is
        now rare; most <STRONG>ich</STRONG> sequences do not require previous smir,
        and most smir insert modes do not require <STRONG>ich1</STRONG> before each
-       character.   Therefore,  the  new  <STRONG>curses</STRONG> actually assumes
-       this is the case and uses either <STRONG>rmir</STRONG>/<STRONG>smir</STRONG> or <STRONG>ich</STRONG>/<STRONG>ich1</STRONG>  as
+       character.  Therefore, the  new  <STRONG>curses</STRONG>  actually  assumes
+       this  is the case and uses either <STRONG>rmir</STRONG>/<STRONG>smir</STRONG> or <STRONG>ich</STRONG>/<STRONG>ich1</STRONG> as
        appropriate (but not both).  If you have to write an entry
-       to be used under new curses for a terminal old  enough  to
+       to  be  used under new curses for a terminal old enough to
        need both, include the <STRONG>rmir</STRONG>/<STRONG>smir</STRONG> sequences in <STRONG>ich1</STRONG>.
 
        If post insert padding is needed, give this as a number of
-       milliseconds in <STRONG>ip</STRONG> (a string option).  Any other  sequence
-       which  may  need  to  be  sent after an insert of a single
+       milliseconds  in <STRONG>ip</STRONG> (a string option).  Any other sequence
+       which may need to be sent after  an  insert  of  a  single
        character may also be given in <STRONG>ip</STRONG>.  If your terminal needs
        both to be placed into an `insert mode' and a special code
-       to precede each inserted character,  then  both  <STRONG>smir</STRONG>/<STRONG>rmir</STRONG>
-       and  <STRONG>ich1</STRONG>  can  be  given, and both will be used.  The <STRONG>ich</STRONG>
+       to  precede  each  inserted character, then both <STRONG>smir</STRONG>/<STRONG>rmir</STRONG>
+       and <STRONG>ich1</STRONG> can be given, and both will  be  used.   The  <STRONG>ich</STRONG>
        capability, with one parameter, <EM>n</EM>, will repeat the effects
        of <STRONG>ich1</STRONG> <EM>n</EM> times.
 
        If padding is necessary between characters typed while not
-       in insert mode, give this  as  a  number  of  milliseconds
+       in  insert  mode,  give  this  as a number of milliseconds
        padding in <STRONG>rmp</STRONG>.
 
-       It  is  occasionally  necessary  to  move  around while in
-       insert mode to delete characters on the same  line  (e.g.,
-       if  there is a tab after the insertion position).  If your
-       terminal allows motion while in insert mode you  can  give
-       the  capability  <STRONG>mir</STRONG>  to  speed up inserting in this case.
-       Omitting <STRONG>mir</STRONG>  will  affect  only  speed.   Some  terminals
+       It is occasionally  necessary  to  move  around  while  in
+       insert  mode  to delete characters on the same line (e.g.,
+       if there is a tab after the insertion position).  If  your
+       terminal  allows  motion while in insert mode you can give
+       the capability <STRONG>mir</STRONG> to speed up  inserting  in  this  case.
+       Omitting  <STRONG>mir</STRONG>  will  affect  only  speed.   Some terminals
        (notably Datamedia's) must not have <STRONG>mir</STRONG> because of the way
        their insert mode works.
 
-       Finally, you can specify <STRONG>dch1</STRONG> to delete a  single  charac-
-       ter,  <STRONG>dch</STRONG>  with  one parameter, <EM>n</EM>, to delete <EM>n</EM> <EM>characters,</EM>
-       and delete mode by giving <STRONG>smdc</STRONG> and <STRONG>rmdc</STRONG> to enter and  exit
-       delete  mode  (any mode the terminal needs to be placed in
+       Finally,  you  can specify <STRONG>dch1</STRONG> to delete a single charac-
+       ter, <STRONG>dch</STRONG> with one parameter, <EM>n</EM>, to  delete  <EM>n</EM>  <EM>characters,</EM>
+       and  delete mode by giving <STRONG>smdc</STRONG> and <STRONG>rmdc</STRONG> to enter and exit
+       delete mode (any mode the terminal needs to be  placed  in
        for <STRONG>dch1</STRONG> to work).
 
-       A command to erase <EM>n</EM> characters (equivalent to  outputting
-       <EM>n</EM>  blanks  without  moving the cursor) can be given as <STRONG>ech</STRONG>
+       A  command to erase <EM>n</EM> characters (equivalent to outputting
+       <EM>n</EM> blanks without moving the cursor) can be  given  as  <STRONG>ech</STRONG>
        with one parameter.
 
 
    <STRONG>Highlighting,</STRONG> <STRONG>Underlining,</STRONG> <STRONG>and</STRONG> <STRONG>Visible</STRONG> <STRONG>Bells</STRONG>
        If  your  terminal  has  one  or  more  kinds  of  display
-       attributes,  these  can be represented in a number of dif-
+       attributes, these can be represented in a number  of  dif-
        ferent ways.  You should choose one display form as <EM>stand-</EM>
        <EM>out</EM> <EM>mode</EM>, representing a good, high contrast, easy-on-the-
-       eyes, format for highlighting  error  messages  and  other
-       attention  getters.   (If you have a choice, reverse video
-       plus half-bright is good, or reverse  video  alone.)   The
-       sequences  to  enter  and  exit standout mode are given as
-       <STRONG>smso</STRONG> and <STRONG>rmso</STRONG>, respectively.  If the code to  change  into
-       or  out  of  standout  mode  leaves  one or even two blank
-       spaces on the screen, as the TVI 912 and Teleray 1061  do,
+       eyes,  format  for  highlighting  error messages and other
+       attention getters.  (If you have a choice,  reverse  video
+       plus  half-bright  is  good, or reverse video alone.)  The
+       sequences to enter and exit standout  mode  are  given  as
+       <STRONG>smso</STRONG>  and  <STRONG>rmso</STRONG>, respectively.  If the code to change into
+       or out of standout mode  leaves  one  or  even  two  blank
+       spaces  on the screen, as the TVI 912 and Teleray 1061 do,
        then <STRONG>xmc</STRONG> should be given to tell how many spaces are left.
 
-       Codes to begin underlining  and  end  underlining  can  be
-       given  as <STRONG>smul</STRONG> and <STRONG>rmul</STRONG> respectively.  If the terminal has
-       a code to underline the current  character  and  move  the
+       Codes  to  begin  underlining  and  end underlining can be
+       given as <STRONG>smul</STRONG> and <STRONG>rmul</STRONG> respectively.  If the terminal  has
+       a  code  to  underline  the current character and move the
        cursor one space to the right, such as the Microterm Mime,
        this can be given as <STRONG>uc</STRONG>.
 
-       Other capabilities to  enter  various  highlighting  modes
-       include  <STRONG>blink</STRONG>  (blinking) <STRONG>bold</STRONG> (bold or extra bright) <STRONG>dim</STRONG>
-       (dim or half-bright) <STRONG>invis</STRONG> (blanking  or  invisible  text)
-       <STRONG>prot</STRONG>  (protected)  <STRONG>rev</STRONG>  (reverse video) <STRONG>sgr0</STRONG> (turn off <EM>all</EM>
-       attribute modes)  <STRONG>smacs</STRONG>  (enter  alternate  character  set
-       mode)  and  <STRONG>rmacs</STRONG>  (exit  alternate  character  set mode).
-       Turning on any of these modes singly may or may  not  turn
+       Other  capabilities  to  enter  various highlighting modes
+       include <STRONG>blink</STRONG> (blinking) <STRONG>bold</STRONG> (bold or extra  bright)  <STRONG>dim</STRONG>
+       (dim  or  half-bright)  <STRONG>invis</STRONG> (blanking or invisible text)
+       <STRONG>prot</STRONG> (protected) <STRONG>rev</STRONG> (reverse video) <STRONG>sgr0</STRONG>  (turn  off  <EM>all</EM>
+       attribute  modes)  <STRONG>smacs</STRONG>  (enter  alternate  character set
+       mode) and  <STRONG>rmacs</STRONG>  (exit  alternate  character  set  mode).
+       Turning  on  any of these modes singly may or may not turn
        off other modes.
 
-       If  there  is  a sequence to set arbitrary combinations of
-       modes, this should be given as <STRONG>sgr</STRONG> (set attributes),  tak-
-       ing  9 parameters.  Each parameter is either 0 or nonzero,
+       If there is a sequence to set  arbitrary  combinations  of
+       modes,  this should be given as <STRONG>sgr</STRONG> (set attributes), tak-
+       ing 9 parameters.  Each parameter is either 0 or  nonzero,
        as the corresponding attribute is on or off.  The 9 param-
-       eters  are, in order: standout, underline, reverse, blink,
-       dim, bold, blank, protect, alternate character  set.   Not
-       all  modes  need be supported by <STRONG>sgr</STRONG>, only those for which
+       eters are, in order: standout, underline, reverse,  blink,
+       dim,  bold,  blank, protect, alternate character set.  Not
+       all modes need be supported by <STRONG>sgr</STRONG>, only those  for  which
        corresponding separate attribute commands exist.
 
        For example, the DEC vt220 supports most of the modes:
@@ -1534,6 +1572,7 @@
            none              none         \E[0m
            p1                standout     \E[0;1;7m
            p2                underline    \E[0;4m
+
            p3                reverse      \E[0;7m
            p4                blink        \E[0;5m
            p5                dim          not available
@@ -1542,22 +1581,22 @@
            p8                protect      not used
            p9                altcharset   ^O (off) ^N (on)
 
-       We begin each escape sequence by turning off any  existing
-       modes,  since  there  is no quick way to determine whether
+       We  begin each escape sequence by turning off any existing
+       modes, since there is no quick way  to  determine  whether
        they are active.  Standout is set up to be the combination
-       of  reverse  and  bold.   The vt220 terminal has a protect
-       mode, though it is not commonly used  in  sgr  because  it
-       protects  characters  on  the  screen from the host's era-
-       sures.  The altcharset mode also is different in  that  it
-       is  either ^O or ^N, depending on whether it is off or on.
-       If all modes are turned  on,  the  resulting  sequence  is
+       of reverse and bold.  The vt220  terminal  has  a  protect
+       mode,  though  it  is  not commonly used in sgr because it
+       protects characters on the screen  from  the  host's  era-
+       sures.   The  altcharset mode also is different in that it
+       is either ^O or ^N, depending on whether it is off or  on.
+       If  all  modes  are  turned  on, the resulting sequence is
        \E[0;1;4;5;7;8m^N.
 
-       Some  sequences  are common to different modes.  For exam-
-       ple, ;7 is output when either p1 or p3 is true,  that  is,
+       Some sequences are common to different modes.   For  exam-
+       ple,  ;7  is output when either p1 or p3 is true, that is,
        if either standout or reverse modes are turned on.
 
-       Writing  out  the above sequences, along with their depen-
+       Writing out the above sequences, along with  their  depen-
        dencies yields
 
          <STRONG>sequence</STRONG>    <STRONG>when</STRONG> <STRONG>to</STRONG> <STRONG>output</STRONG>     <STRONG>terminfo</STRONG> <STRONG>translation</STRONG>
@@ -1568,7 +1607,6 @@
          ;5         if p4               %?%p4%|%t;5%;
          ;7         if p1 or p3         %?%p1%p3%|%t;7%;
          ;8         if p7               %?%p7%|%t;8%;
-
          m          always              m
          ^N or ^O   if p9 ^N, else ^O   %?%p9%t^N%e^O%;
 
@@ -1577,70 +1615,69 @@
            sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;
                %?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 
-       Remember that if you specify sgr, you  must  also  specify
+       Remember  that  if  you specify sgr, you must also specify
        sgr0.
 
-       Terminals  with  the ``magic cookie'' glitch (<STRONG>xmc</STRONG>) deposit
-       special  ``cookies''  when   they   receive   mode-setting
-       sequences,  which affect the display algorithm rather than
-       having extra bits for  each  character.   Some  terminals,
-       such  as  the  HP  2621, automatically leave standout mode
-       when they move to a new line or the cursor  is  addressed.
-       Programs  using  standout  mode  should exit standout mode
-       before moving the cursor or sending a newline, unless  the
-       <STRONG>msgr</STRONG>  capability,  asserting  that  it  is safe to move in
+       Terminals with the ``magic cookie'' glitch  (<STRONG>xmc</STRONG>)  deposit
+       special   ``cookies''   when   they  receive  mode-setting
+       sequences, which affect the display algorithm rather  than
+       having  extra  bits  for  each character.  Some terminals,
+       such as the HP 2621,  automatically  leave  standout  mode
+       when  they  move to a new line or the cursor is addressed.
+       Programs using standout mode  should  exit  standout  mode
+       before  moving the cursor or sending a newline, unless the
+       <STRONG>msgr</STRONG> capability, asserting that it  is  safe  to  move  in
        standout mode, is present.
 
-       If the terminal has a way of flashing the screen to  indi-
-       cate  an  error quietly (a bell replacement) then this can
+       If  the terminal has a way of flashing the screen to indi-
+       cate an error quietly (a bell replacement) then  this  can
        be given as <STRONG>flash</STRONG>; it must not move the cursor.
 
-       If the cursor needs to be made more  visible  than  normal
+       If  the  cursor  needs to be made more visible than normal
        when it is not on the bottom line (to make, for example, a
-       non-blinking underline into an easier  to  find  block  or
+       non-blinking  underline  into  an  easier to find block or
        blinking underline) give this sequence as <STRONG>cvvis</STRONG>.  If there
-       is a way to make the  cursor  completely  invisible,  give
+       is  a  way  to  make the cursor completely invisible, give
        that as <STRONG>civis</STRONG>.  The capability <STRONG>cnorm</STRONG> should be given which
        undoes the effects of both of these modes.
 
        If your terminal correctly generates underlined characters
-       (with  no  special  codes  needed) even though it does not
-       overstrike, then you should give the capability <STRONG>ul</STRONG>.  If  a
-       character  overstriking  another leaves both characters on
+       (with no special codes needed) even  though  it  does  not
+       overstrike,  then you should give the capability <STRONG>ul</STRONG>.  If a
+       character overstriking another leaves both  characters  on
        the screen, specify the capability <STRONG>os</STRONG>.  If overstrikes are
-       erasable  with  a  blank, then this should be indicated by
+       erasable with a blank, then this should  be  indicated  by
        giving <STRONG>eo</STRONG>.
 
 
    <STRONG>Keypad</STRONG> <STRONG>and</STRONG> <STRONG>Function</STRONG> <STRONG>Keys</STRONG>
        If the terminal has a keypad that transmits codes when the
-       keys  are  pressed,  this  information can be given.  Note
+       keys are pressed, this information  can  be  given.   Note
        that it is not possible to handle terminals where the key-
        pad only works in local (this applies, for example, to the
-       unshifted HP 2621 keys).  If the  keypad  can  be  set  to
-       transmit  or  not  transmit,  give these codes as <STRONG>smkx</STRONG> and
+       unshifted  HP  2621  keys).   If  the keypad can be set to
+       transmit or not transmit, give these  codes  as  <STRONG>smkx</STRONG>  and
        <STRONG>rmkx</STRONG>.  Otherwise the keypad is assumed to always transmit.
-       The  codes  sent by the left arrow, right arrow, up arrow,
-       down arrow, and home keys can be given  as  <STRONG>kcub1,</STRONG>  <STRONG>kcuf1,</STRONG>
-       <STRONG>kcuu1,</STRONG>  <STRONG>kcud1,</STRONG>  and  <STRONG>khome</STRONG>  respectively.   If  there  are
-       function keys such as f0, f1, ...,  f10,  the  codes  they
-       send  can  be given as <STRONG>kf0,</STRONG> <STRONG>kf1,</STRONG> <STRONG>...,</STRONG> <STRONG>kf10</STRONG>.  If these keys
-       have labels other than the default  f0  through  f10,  the
-       labels  can  be  given  as <STRONG>lf0,</STRONG> <STRONG>lf1,</STRONG> <STRONG>...,</STRONG> <STRONG>lf10</STRONG>.  The codes
-       transmitted by certain other special keys  can  be  given:
-       <STRONG>kll</STRONG>  (home  down), <STRONG>kbs</STRONG> (backspace), <STRONG>ktbc</STRONG> (clear all tabs),
-       <STRONG>kctab</STRONG> (clear the tab stop in  this  column),  <STRONG>kclr</STRONG>  (clear
-       screen  or  erase  key),  <STRONG>kdch1</STRONG>  (delete  character), <STRONG>kdl1</STRONG>
-       (delete line), <STRONG>krmir</STRONG> (exit insert mode), <STRONG>kel</STRONG> (clear to end
-       of  line),  <STRONG>ked</STRONG>  (clear  to  end of screen), <STRONG>kich1</STRONG> (insert
-       character or enter insert mode), <STRONG>kil1</STRONG> (insert  line),  <STRONG>knp</STRONG>
-       (next  page),  <STRONG>kpp</STRONG>  (previous  page),  <STRONG>kind</STRONG>  (scroll  for-
-       ward/down), <STRONG>kri</STRONG> (scroll backward/up), <STRONG>khts</STRONG> (set a tab stop
-       in  this column).  In addition, if the keypad has a 3 by 3
-       array of keys including the four  arrow  keys,  the  other
-       five  keys  can  be  given as <STRONG>ka1</STRONG>, <STRONG>ka3</STRONG>, <STRONG>kb2</STRONG>, <STRONG>kc1</STRONG>, and <STRONG>kc3</STRONG>.
-       These keys are useful when the effects of a 3 by 3  direc-
-       tional pad are needed.
+       The codes sent by the left arrow, right arrow,  up  arrow,
+       down  arrow,  and  home keys can be given as <STRONG>kcub1,</STRONG> <STRONG>kcuf1,</STRONG>
+       <STRONG>kcuu1,</STRONG> <STRONG>kcud1,</STRONG> and <STRONG>khome</STRONG> respectively.  If there are  func-
+       tion  keys  such  as f0, f1, ..., f10, the codes they send
+       can be given as <STRONG>kf0,</STRONG> <STRONG>kf1,</STRONG> <STRONG>...,</STRONG> <STRONG>kf10</STRONG>.  If these  keys  have
+       labels  other  than the default f0 through f10, the labels
+       can be given as <STRONG>lf0,</STRONG> <STRONG>lf1,</STRONG> <STRONG>...,</STRONG> <STRONG>lf10</STRONG>.  The codes  transmit-
+       ted  by certain other special keys can be given: <STRONG>kll</STRONG> (home
+       down), <STRONG>kbs</STRONG>  (backspace),  <STRONG>ktbc</STRONG>  (clear  all  tabs),  <STRONG>kctab</STRONG>
+       (clear the tab stop in this column), <STRONG>kclr</STRONG> (clear screen or
+       erase key), <STRONG>kdch1</STRONG> (delete character), <STRONG>kdl1</STRONG> (delete  line),
+       <STRONG>krmir</STRONG>  (exit insert mode), <STRONG>kel</STRONG> (clear to end of line), <STRONG>ked</STRONG>
+       (clear to end of screen), <STRONG>kich1</STRONG> (insert character or enter
+       insert  mode),  <STRONG>kil1</STRONG>  (insert  line), <STRONG>knp</STRONG> (next page), <STRONG>kpp</STRONG>
+       (previous page), <STRONG>kind</STRONG> (scroll forward/down),  <STRONG>kri</STRONG>  (scroll
+       backward/up),  <STRONG>khts</STRONG>  (set  a tab stop in this column).  In
+       addition, if the keypad has a 3 by 3 array of keys includ-
+       ing  the four arrow keys, the other five keys can be given
+       as <STRONG>ka1</STRONG>, <STRONG>ka3</STRONG>, <STRONG>kb2</STRONG>, <STRONG>kc1</STRONG>, and <STRONG>kc3</STRONG>.   These  keys  are  useful
+       when the effects of a 3 by 3 directional pad are needed.
 
        Strings  to  program  function keys can be given as <STRONG>pfkey</STRONG>,
        <STRONG>pfloc</STRONG>, and <STRONG>pfx</STRONG>.  A string to program screen labels  should
@@ -1799,6 +1836,7 @@
        bullet                     ACS_BULLET     o          ~
        checker board (stipple)    ACS_CKBOARD    :          a
        degree symbol              ACS_DEGREE     \          f
+
        diamond                    ACS_DIAMOND    +          `
        greater-than-or-equal-to   ACS_GEQUAL     &gt;          z
        greek pi                   ACS_PI         *          {
@@ -1870,12 +1908,12 @@
        defined."
 
        The  <STRONG>setaf</STRONG>/<STRONG>setab</STRONG>  and <STRONG>setf</STRONG>/<STRONG>setb</STRONG> capabilities take a single
-       numeric argument each.  Argument values 0-7  are  portably
-       defined  as  follows  (the  middle  column is the symbolic
-       #define available in the header for the <STRONG>curses</STRONG> or  <STRONG>ncurses</STRONG>
-       libraries).  The terminal hardware is free to map these as
-       it likes, but the RGB values indicate normal locations  in
-       color space.
+       numeric argument each.  Argument values 0-7 of <STRONG>setaf</STRONG>/<STRONG>setab</STRONG>
+       are  portably defined as follows (the middle column is the
+       symbolic #define available in the header for the <STRONG>curses</STRONG> or
+       <STRONG>ncurses</STRONG>  libraries).  The terminal hardware is free to map
+       these as it likes, but  the  RGB  values  indicate  normal
+       locations in color space.
 
              <STRONG>Color</STRONG>       <STRONG>#define</STRONG>       <STRONG>Value</STRONG>       <STRONG>RGB</STRONG>
              black     <STRONG>COLOR_BLACK</STRONG>       0     0, 0, 0
@@ -1887,34 +1925,50 @@
              cyan      <STRONG>COLOR_CYAN</STRONG>        6     0,max,max
              white     <STRONG>COLOR_WHITE</STRONG>       7     max,max,max
 
-       On  an  HP-like terminal, use <STRONG>scp</STRONG> with a color-pair number
+       The  argument  values of <STRONG>setf</STRONG>/<STRONG>setb</STRONG> historically correspond
+       to a different mapping, i.e.,
+             <STRONG>Color</STRONG>       <STRONG>#define</STRONG>       <STRONG>Value</STRONG>       <STRONG>RGB</STRONG>
+             black     <STRONG>COLOR_BLACK</STRONG>       0     0, 0, 0
+             blue      <STRONG>COLOR_BLUE</STRONG>        1     0,0,max
+             green     <STRONG>COLOR_GREEN</STRONG>       2     0,max,0
+             cyan      <STRONG>COLOR_CYAN</STRONG>        3     0,max,max
+             red       <STRONG>COLOR_RED</STRONG>         4     max,0,0
+             magenta   <STRONG>COLOR_MAGENTA</STRONG>     5     max,0,max
+             yellow    <STRONG>COLOR_YELLOW</STRONG>      6     max,max,0
+             white     <STRONG>COLOR_WHITE</STRONG>       7     max,max,max
+       It is important to not confuse the two sets of color capa-
+       bilities;  otherwise  red/blue will be interchanged on the
+       display.
+
+       On an HP-like terminal, use <STRONG>scp</STRONG> with a  color-pair  number
        parameter to set which color pair is current.
 
-       On a Tektronix-like terminal, the capability  <STRONG>ccc</STRONG>  may  be
-       present  to  indicate that colors can be modified.  If so,
+       On  a  Tektronix-like  terminal, the capability <STRONG>ccc</STRONG> may be
+       present to indicate that colors can be modified.   If  so,
        the <STRONG>initc</STRONG> capability will take a color number (0 to <STRONG>colors</STRONG>
-       -  1)and  three  more parameters which describe the color.
+       - 1)and three more parameters which  describe  the  color.
        These three parameters default to being interpreted as RGB
-       (Red,  Green, Blue) values.  If the boolean capability <STRONG>hls</STRONG>
+       (Red, Green, Blue) values.  If the boolean capability  <STRONG>hls</STRONG>
        is present, they are instead as HLS (Hue, Lightness, Satu-
        ration) indices.  The ranges are terminal-dependent.
 
-       On  an  HP-like  terminal, <STRONG>initp</STRONG> may give a capability for
-       changing a color-pair value.  It will take  seven  parame-
-       ters;  a  color-pair  number (0 to <STRONG>max_pairs</STRONG> - 1), and two
-       triples describing first background  and  then  foreground
-       colors.   These  parameters  must be (Red, Green, Blue) or
+       On an HP-like terminal, <STRONG>initp</STRONG> may give  a  capability  for
+       changing  a  color-pair value.  It will take seven parame-
+       ters; a color-pair number (0 to <STRONG>max_pairs</STRONG> -  1),  and  two
+       triples  describing  first  background and then foreground
+       colors.  These parameters must be (Red,  Green,  Blue)  or
        (Hue, Lightness, Saturation) depending on <STRONG>hls</STRONG>.
 
-       On some color terminals, colors collide  with  highlights.
+       On  some  color terminals, colors collide with highlights.
        You can register these collisions with the <STRONG>ncv</STRONG> capability.
-       This is a bit-mask of attributes not to be used when  col-
-       ors  are  enabled.  The correspondence with the attributes
+       This  is a bit-mask of attributes not to be used when col-
+       ors are enabled.  The correspondence with  the  attributes
        understood by <STRONG>curses</STRONG> is as follows:
 
                       <STRONG>Attribute</STRONG>      <STRONG>Bit</STRONG>   <STRONG>Decimal</STRONG>
                       A_STANDOUT     0     1
                       A_UNDERLINE    1     2
+
                       A_REVERSE      2     4
                       A_BLINK        3     8
                       A_DIM          4     16
@@ -1923,304 +1977,304 @@
                       A_PROTECT      7     128
                       A_ALTCHARSET   8     256
 
-       For example,  on  many  IBM  PC  consoles,  the  underline
-       attribute  collides  with the foreground color blue and is
-       not available in color mode.  These  should  have  an  <STRONG>ncv</STRONG>
+       For  example,  on  many  IBM  PC  consoles,  the underline
+       attribute collides with the foreground color blue  and  is
+       not  available  in  color  mode.  These should have an <STRONG>ncv</STRONG>
        capability of 2.
 
-       SVr4  curses  does nothing with <STRONG>ncv</STRONG>, ncurses recognizes it
+       SVr4 curses does nothing with <STRONG>ncv</STRONG>, ncurses  recognizes  it
        and optimizes the output in favor of colors.
 
 
    <STRONG>Miscellaneous</STRONG>
-       If the terminal requires other than a null (zero)  charac-
-       ter  as  a  pad,  then this can be given as pad.  Only the
-       first character of the pad string is used.  If the  termi-
+       If  the terminal requires other than a null (zero) charac-
+       ter as a pad, then this can be given  as  pad.   Only  the
+       first  character of the pad string is used.  If the termi-
        nal does not have a pad character, specify npc.  Note that
-       ncurses implements  the  termcap-compatible  <STRONG>PC</STRONG>  variable;
-       though  the  application  may  set this value to something
-       other than a null, ncurses will test  <STRONG>npc</STRONG>  first  and  use
+       ncurses  implements  the  termcap-compatible  <STRONG>PC</STRONG> variable;
+       though the application may set  this  value  to  something
+       other  than  a  null,  ncurses will test <STRONG>npc</STRONG> first and use
        napms if the terminal has no pad character.
 
-       If  the terminal can move up or down half a line, this can
-       be indicated with <STRONG>hu</STRONG>  (half-line  up)  and  <STRONG>hd</STRONG>  (half-line
+       If the terminal can move up or down half a line, this  can
+       be  indicated  with  <STRONG>hu</STRONG>  (half-line  up) and <STRONG>hd</STRONG> (half-line
        down).  This is primarily useful for superscripts and sub-
-       scripts on hard-copy terminals.  If a  hard-copy  terminal
-       can  eject  to  the next page (form feed), give this as <STRONG>ff</STRONG>
+       scripts  on  hard-copy terminals.  If a hard-copy terminal
+       can eject to the next page (form feed), give  this  as  <STRONG>ff</STRONG>
        (usually control L).
 
-       If there is a command to repeat a given character a  given
-       number  of times (to save time transmitting a large number
-       of identical characters) this can be  indicated  with  the
-       parameterized  string  <STRONG>rep</STRONG>.   The  first  parameter is the
-       character to be repeated and the second is the  number  of
-       times  to repeat it.  Thus, tparm(repeat_char, 'x', 10) is
+       If  there is a command to repeat a given character a given
+       number of times (to save time transmitting a large  number
+       of  identical  characters)  this can be indicated with the
+       parameterized string <STRONG>rep</STRONG>.   The  first  parameter  is  the
+       character  to  be repeated and the second is the number of
+       times to repeat it.  Thus, tparm(repeat_char, 'x', 10)  is
        the same as `xxxxxxxxxx'.
 
-       If the terminal has a settable command character, such  as
-       the  TEKTRONIX  4025, this can be indicated with <STRONG>cmdch</STRONG>.  A
+       If  the terminal has a settable command character, such as
+       the TEKTRONIX 4025, this can be indicated with  <STRONG>cmdch</STRONG>.   A
        prototype command character is chosen which is used in all
-       capabilities.   This character is given in the <STRONG>cmdch</STRONG> capa-
-       bility to identify it.  The following convention  is  sup-
-       ported  on  some  UNIX  systems:  The environment is to be
-       searched for a <STRONG>CC</STRONG> variable, and if found, all  occurrences
+       capabilities.  This character is given in the <STRONG>cmdch</STRONG>  capa-
+       bility  to  identify it.  The following convention is sup-
+       ported on some UNIX systems:  The  environment  is  to  be
+       searched  for a <STRONG>CC</STRONG> variable, and if found, all occurrences
        of the prototype character are replaced with the character
        in the environment variable.
 
-       Terminal descriptions that do  not  represent  a  specific
+       Terminal  descriptions  that  do  not represent a specific
        kind of known terminal, such as <EM>switch</EM>, <EM>dialup</EM>, <EM>patch</EM>, and
-       <EM>network</EM>, should include the  <STRONG>gn</STRONG>  (generic)  capability  so
-       that  programs  can  complain that they do not know how to
-       talk to the terminal.  (This capability does not apply  to
-       <EM>virtual</EM>   terminal   descriptions  for  which  the  escape
+       <EM>network</EM>,  should  include  the  <STRONG>gn</STRONG> (generic) capability so
+       that programs can complain that they do not  know  how  to
+       talk  to the terminal.  (This capability does not apply to
+       <EM>virtual</EM>  terminal  descriptions  for  which   the   escape
        sequences are known.)
 
-       If the terminal has a ``meta key'' which acts as  a  shift
-       key,  setting  the  8th  bit of any character transmitted,
-       this fact can be indicated with <STRONG>km</STRONG>.   Otherwise,  software
+       If  the  terminal has a ``meta key'' which acts as a shift
+       key, setting the 8th bit  of  any  character  transmitted,
+       this  fact  can be indicated with <STRONG>km</STRONG>.  Otherwise, software
        will assume that the 8th bit is parity and it will usually
-       be cleared.  If strings exist to turn this  ``meta  mode''
+       be  cleared.   If strings exist to turn this ``meta mode''
        on and off, they can be given as <STRONG>smm</STRONG> and <STRONG>rmm</STRONG>.
 
-       If  the terminal has more lines of memory than will fit on
-       the screen at once, the number of lines of memory  can  be
-       indicated  with  <STRONG>lm</STRONG>.   A  value of <STRONG>lm</STRONG>#0 indicates that the
+       If the terminal has more lines of memory than will fit  on
+       the  screen  at once, the number of lines of memory can be
+       indicated with <STRONG>lm</STRONG>.  A value of  <STRONG>lm</STRONG>#0  indicates  that  the
        number of lines is not fixed, but that there is still more
        memory than fits on the screen.
 
        If the terminal is one of those supported by the UNIX vir-
-       tual terminal protocol, the terminal number can  be  given
+       tual  terminal  protocol, the terminal number can be given
        as <STRONG>vt</STRONG>.
 
        Media copy strings which control an auxiliary printer con-
        nected to the terminal can be given as <STRONG>mc0</STRONG>: print the con-
-       tents  of  the screen, <STRONG>mc4</STRONG>: turn off the printer, and <STRONG>mc5</STRONG>:
-       turn on the printer.  When the printer  is  on,  all  text
-       sent  to  the terminal will be sent to the printer.  It is
+       tents of the screen, <STRONG>mc4</STRONG>: turn off the printer,  and  <STRONG>mc5</STRONG>:
+       turn  on  the  printer.   When the printer is on, all text
+       sent to the terminal will be sent to the printer.   It  is
        undefined whether the text is also displayed on the termi-
        nal screen when the printer is on.  A variation <STRONG>mc5p</STRONG> takes
        one parameter, and leaves the printer on for as many char-
-       acters  as  the  value  of  the  parameter, then turns the
-       printer off.  The parameter should not  exceed  255.   All
+       acters as the value  of  the  parameter,  then  turns  the
+       printer  off.   The  parameter should not exceed 255.  All
        text,  including  <STRONG>mc4</STRONG>,  is  transparently  passed  to  the
        printer while an <STRONG>mc5p</STRONG> is in effect.
 
 
    <STRONG>Glitches</STRONG> <STRONG>and</STRONG> <STRONG>Braindamage</STRONG>
-       Hazeltine terminals, which do not allow `~' characters  to
+       Hazeltine  terminals, which do not allow `~' characters to
        be displayed should indicate <STRONG>hz</STRONG>.
 
        Terminals which ignore a line-feed immediately after an <STRONG>am</STRONG>
        wrap, such as the Concept and vt100, should indicate <STRONG>xenl</STRONG>.
 
-       If  <STRONG>el</STRONG>  is  required  to  get  rid of standout (instead of
-       merely writing normal text on top of it),  <STRONG>xhp</STRONG>  should  be
+       If <STRONG>el</STRONG> is required to  get  rid  of  standout  (instead  of
+       merely  writing  normal  text on top of it), <STRONG>xhp</STRONG> should be
        given.
 
-       Teleray  terminals,  where  tabs turn all characters moved
-       over to blanks, should  indicate  <STRONG>xt</STRONG>  (destructive  tabs).
-       Note:    the    variable    indicating    this    is   now
-       `dest_tabs_magic_smso'; in older  versions,  it  was  tel-
+       Teleray terminals, where tabs turn  all  characters  moved
+       over  to  blanks,  should  indicate <STRONG>xt</STRONG> (destructive tabs).
+       Note:   the    variable    indicating    this    is    now
+       `dest_tabs_magic_smso';  in  older  versions,  it was tel-
        eray_glitch.  This glitch is also taken to mean that it is
-       not possible to position the cursor on top  of  a  ``magic
+       not  possible  to  position the cursor on top of a ``magic
        cookie'', that to erase standout mode it is instead neces-
        sary to use delete and insert line.  The ncurses implemen-
        tation ignores this glitch.
 
-       The  Beehive Superbee, which is unable to correctly trans-
-       mit the escape or control C characters, has <STRONG>xsb</STRONG>,  indicat-
-       ing  that the f1 key is used for escape and f2 for control
-       C.  (Only certain Superbees have this  problem,  depending
-       on  the  ROM.)  Note that in older terminfo versions, this
-       capability  was  called  `beehive_glitch';   it   is   now
+       The Beehive Superbee, which is unable to correctly  trans-
+       mit  the escape or control C characters, has <STRONG>xsb</STRONG>, indicat-
+       ing that the f1 key is used for escape and f2 for  control
+       C.   (Only  certain Superbees have this problem, depending
+       on the ROM.)  Note that in older terminfo  versions,  this
+       capability   was   called   `beehive_glitch';  it  is  now
        `no_esc_ctl_c'.
 
-       Other  specific  terminal  problems  may  be  corrected by
+       Other specific  terminal  problems  may  be  corrected  by
        adding more capabilities of the form <STRONG>x</STRONG><EM>x</EM>.
 
 
    <STRONG>Similar</STRONG> <STRONG>Terminals</STRONG>
        If there are two very similar terminals, one (the variant)
-       can  be  defined  as  being just like the other (the base)
-       with certain exceptions.  In the definition of  the  vari-
-       ant,  the string capability <STRONG>use</STRONG> can be given with the name
-       of the base terminal.  The capabilities given  before  <STRONG>use</STRONG>
-       override  those  in  the base type named by <STRONG>use</STRONG>.  If there
-       are multiple <STRONG>use</STRONG> capabilities, they are merged in  reverse
-       order.   That is, the rightmost <STRONG>use</STRONG> reference is processed
-       first, then the one to its left, and so forth.   Capabili-
-       ties  given explicitly in the entry override those brought
+       can be defined as being just like  the  other  (the  base)
+       with  certain  exceptions.  In the definition of the vari-
+       ant, the string capability <STRONG>use</STRONG> can be given with the  name
+       of  the  base terminal.  The capabilities given before <STRONG>use</STRONG>
+       override those in the base type named by  <STRONG>use</STRONG>.   If  there
+       are  multiple <STRONG>use</STRONG> capabilities, they are merged in reverse
+       order.  That is, the rightmost <STRONG>use</STRONG> reference is  processed
+       first,  then the one to its left, and so forth.  Capabili-
+       ties given explicitly in the entry override those  brought
        in by <STRONG>use</STRONG> references.
 
        A capability can be canceled by placing <STRONG>xx@</STRONG> to the left of
-       the  use  reference that imports it, where <EM>xx</EM> is the capa-
+       the use reference that imports it, where <EM>xx</EM> is  the  capa-
        bility.  For example, the entry
+
                    2621-nl, smkx@, rmkx@, use=2621,
 
-       defines a 2621-nl that does not  have  the  <STRONG>smkx</STRONG>  or  <STRONG>rmkx</STRONG>
-       capabilities,  and hence does not turn on the function key
-       labels when in visual mode.  This is useful for  different
+       defines  a  2621-nl  that  does  not have the <STRONG>smkx</STRONG> or <STRONG>rmkx</STRONG>
+       capabilities, and hence does not turn on the function  key
+       labels  when in visual mode.  This is useful for different
        modes for a terminal, or for different user preferences.
 
 
    <STRONG>Pitfalls</STRONG> <STRONG>of</STRONG> <STRONG>Long</STRONG> <STRONG>Entries</STRONG>
-       Long  terminfo  entries  are  unlikely to be a problem; to
-       date, no entry has even approached terminfo's  4K  string-
-       table  maximum.   Unfortunately,  the termcap translations
-       are much more  strictly  limited  (to  1K),  thus  termcap
-       translations  of long terminfo entries can cause problems.
+       Long terminfo entries are unlikely to  be  a  problem;  to
+       date,  no  entry has even approached terminfo's 4K string-
+       table maximum.  Unfortunately,  the  termcap  translations
+       are  much  more  strictly  limited  (to  1K), thus termcap
+       translations of long terminfo entries can cause  problems.
 
-       The man pages for 4.3BSD and older versions  of  tgetent()
-       instruct  the user to allocate a 1K buffer for the termcap
-       entry.  The entry  gets  null-terminated  by  the  termcap
+       The  man  pages for 4.3BSD and older versions of tgetent()
+       instruct the user to allocate a 1K buffer for the  termcap
+       entry.   The  entry  gets  null-terminated  by the termcap
        library, so that makes the maximum safe length for a term-
        cap entry 1k-1 (1023) bytes.  Depending on what the appli-
-       cation  and the termcap library being used does, and where
-       in the termcap file the terminal type  that  tgetent()  is
+       cation and the termcap library being used does, and  where
+       in  the  termcap  file the terminal type that tgetent() is
        searching for is, several bad things can happen.
 
-       Some  termcap libraries print a warning message or exit if
-       they find an entry that's longer than 1023  bytes;  others
-       don't;  others  truncate  the entries to 1023 bytes.  Some
+       Some termcap libraries print a warning message or exit  if
+       they  find  an entry that's longer than 1023 bytes; others
+       don't; others truncate the entries to  1023  bytes.   Some
        application programs allocate more than the recommended 1K
        for the termcap entry; others don't.
 
        Each termcap entry has two important sizes associated with
        it: before "tc" expansion, and after "tc" expansion.  "tc"
-       is  the  capability that tacks on another termcap entry to
-       the end of the current one, to add  on  its  capabilities.
-       If  a  termcap entry doesn't use the "tc" capability, then
+       is the capability that tacks on another termcap  entry  to
+       the  end  of  the current one, to add on its capabilities.
+       If a termcap entry doesn't use the "tc"  capability,  then
        of course the two lengths are the same.
 
-       The "before tc expansion" length  is  the  most  important
-       one,  because it affects more than just users of that par-
-       ticular terminal.  This is the length of the entry  as  it
+       The  "before  tc  expansion"  length is the most important
+       one, because it affects more than just users of that  par-
+       ticular  terminal.   This is the length of the entry as it
        exists in /etc/termcap, minus the backslash-newline pairs,
        which tgetent() strips out while reading it.  Some termcap
-       libraries  strip  off  the final newline, too (GNU termcap
+       libraries strip off the final newline,  too  (GNU  termcap
        does not).  Now suppose:
 
-       *    a termcap entry before expansion is  more  than  1023
+       *    a  termcap  entry  before expansion is more than 1023
             bytes long,
 
        *    and the application has only allocated a 1k buffer,
 
-       *    and  the  termcap library (like the one in BSD/OS 1.1
-            and GNU) reads the whole entry into  the  buffer,  no
-            matter  what  its length, to see if it's the entry it
+       *    and the termcap library (like the one in  BSD/OS  1.1
+            and  GNU)  reads  the whole entry into the buffer, no
+            matter what its length, to see if it's the  entry  it
             wants,
 
-       *    and tgetent() is searching for a terminal  type  that
+       *    and  tgetent()  is searching for a terminal type that
             either is the long entry, appears in the termcap file
-            after the long entry, or doesn't appear in  the  file
-            at  all  (so  that  tgetent() has to search the whole
+            after  the  long entry, or doesn't appear in the file
+            at all (so that tgetent() has  to  search  the  whole
             termcap file).
 
-       Then tgetent() will overwrite memory, perhaps  its  stack,
-       and  probably core dump the program.  Programs like telnet
-       are particularly vulnerable;  modern  telnets  pass  along
-       values  like the terminal type automatically.  The results
-       are almost as undesirable with  a  termcap  library,  like
-       SunOS  4.1.3  and Ultrix 4.4, that prints warning messages
-       when it reads an overly long termcap entry.  If a  termcap
-       library  truncates  long  entries,  like  OSF/1 3.0, it is
-       immune to dying here but will return  incorrect  data  for
+       Then  tgetent()  will overwrite memory, perhaps its stack,
+       and probably core dump the program.  Programs like  telnet
+       are  particularly  vulnerable;  modern  telnets pass along
+       values like the terminal type automatically.  The  results
+       are  almost  as  undesirable  with a termcap library, like
+       SunOS 4.1.3 and Ultrix 4.4, that prints  warning  messages
+       when  it reads an overly long termcap entry.  If a termcap
+       library truncates long entries,  like  OSF/1  3.0,  it  is
+       immune  to  dying  here but will return incorrect data for
        the terminal.
 
        The "after tc expansion" length will have a similar effect
        to the above, but only for people who actually set TERM to
-       that  terminal type, since tgetent() only does "tc" expan-
+       that terminal type, since tgetent() only does "tc"  expan-
        sion once it's found the terminal type it was looking for,
        not while searching.
 
        In summary, a termcap entry that is longer than 1023 bytes
-       can cause, on various combinations  of  termcap  libraries
-       and  applications,  a  core  dump,  warnings, or incorrect
-       operation.  If it's too long even before  "tc"  expansion,
+       can  cause,  on  various combinations of termcap libraries
+       and applications, a  core  dump,  warnings,  or  incorrect
+       operation.   If  it's too long even before "tc" expansion,
        it will have this effect even for users of some other ter-
-       minal types and users whose TERM variable does not have  a
+       minal  types and users whose TERM variable does not have a
        termcap entry.
 
        When in -C (translate to termcap) mode, the <STRONG>ncurses</STRONG> imple-
-       mentation of <STRONG><A HREF="tic.1.html">tic(1)</A></STRONG> issues warning messages when the  pre-
-       tc  length  of  a termcap translation is too long.  The -c
-       (check) option also checks resolved (after  tc  expansion)
+       mentation  of <STRONG><A HREF="tic.1.html">tic(1)</A></STRONG> issues warning messages when the pre-
+       tc length of a termcap translation is too  long.   The  -c
+       (check)  option  also checks resolved (after tc expansion)
        lengths.
 
    <STRONG>Binary</STRONG> <STRONG>Compatibility</STRONG>
-       It  is not wise to count on portability of binary terminfo
-       entries between commercial UNIX versions.  The problem  is
-       that  there  are  at least two versions of terminfo (under
+       It is not wise to count on portability of binary  terminfo
+       entries  between commercial UNIX versions.  The problem is
+       that there are at least two versions  of  terminfo  (under
        HP-UX and AIX) which diverged from System V terminfo after
-       SVr1,  and have added extension capabilities to the string
-       table that (in the binary format) collide  with  System  V
+       SVr1, and have added extension capabilities to the  string
+       table  that  (in  the binary format) collide with System V
        and XSI Curses extensions.
 
 
 </PRE>
 <H2>EXTENSIONS</H2><PRE>
-       Some  SVr4  <STRONG>curses</STRONG>  implementations,  and  all previous to
+       Some SVr4 <STRONG>curses</STRONG>  implementations,  and  all  previous  to
        SVr4, don't interpret the %A and %O operators in parameter
        strings.
 
-       SVr4/XPG4  do  not  specify whether <STRONG>msgr</STRONG> licenses movement
-       while in an alternate-character-set mode (such modes  may,
+       SVr4/XPG4 do not specify whether  <STRONG>msgr</STRONG>  licenses  movement
+       while  in an alternate-character-set mode (such modes may,
        among other things, map CR and NL to characters that don't
-       trigger  local  motions).   The   <STRONG>ncurses</STRONG>   implementation
-       ignores  <STRONG>msgr</STRONG>  in <STRONG>ALTCHARSET</STRONG> mode.  This raises the possi-
-       bility that an XPG4  implementation  making  the  opposite
-       interpretation  may need terminfo entries made for <STRONG>ncurses</STRONG>
+       trigger   local   motions).   The  <STRONG>ncurses</STRONG>  implementation
+       ignores <STRONG>msgr</STRONG> in <STRONG>ALTCHARSET</STRONG> mode.  This raises  the  possi-
+       bility  that  an  XPG4  implementation making the opposite
+       interpretation may need terminfo entries made for  <STRONG>ncurses</STRONG>
        to have <STRONG>msgr</STRONG> turned off.
 
-       The <STRONG>ncurses</STRONG> library handles insert-character  and  insert-
+       The  <STRONG>ncurses</STRONG>  library handles insert-character and insert-
        character modes in a slightly non-standard way to get bet-
-       ter update efficiency.  See  the  <STRONG>Insert/Delete</STRONG>  <STRONG>Character</STRONG>
+       ter  update  efficiency.   See the <STRONG>Insert/Delete</STRONG> <STRONG>Character</STRONG>
        subsection above.
 
-       The   parameter   substitutions  for  <STRONG>set_clock</STRONG>  and  <STRONG>dis-</STRONG>
-       <STRONG>play_clock</STRONG> are not documented in SVr4 or  the  XSI  Curses
+       The  parameter  substitutions  for  <STRONG>set_clock</STRONG>   and   <STRONG>dis-</STRONG>
+       <STRONG>play_clock</STRONG>  are  not  documented in SVr4 or the XSI Curses
        standard.  They are deduced from the documentation for the
        AT&amp;T 505 terminal.
 
-       Be careful assigning the <STRONG>kmous</STRONG>  capability.   The  <STRONG>ncurses</STRONG>
-       wants  to  interpret it as <STRONG>KEY_MOUSE</STRONG>, for use by terminals
-       and emulators like xterm that  can  return  mouse-tracking
+       Be  careful  assigning  the <STRONG>kmous</STRONG> capability.  The <STRONG>ncurses</STRONG>
+       wants to interpret it as <STRONG>KEY_MOUSE</STRONG>, for use  by  terminals
+       and  emulators  like  xterm that can return mouse-tracking
        information in the keyboard-input stream.
 
-       Different  commercial ports of terminfo and curses support
-       different subsets of the XSI Curses standard and (in  some
+       Different commercial ports of terminfo and curses  support
+       different  subsets of the XSI Curses standard and (in some
        cases) different extension sets.  Here is a summary, accu-
        rate as of October 1995:
 
        <STRONG>SVR4,</STRONG> <STRONG>Solaris,</STRONG> <STRONG>ncurses</STRONG> -- These support all SVr4 capabili-
        ties.
 
-       <STRONG>SGI</STRONG>  --  Supports  the  SVr4  set,  adds  one undocumented
+       <STRONG>SGI</STRONG> --  Supports  the  SVr4  set,  adds  one  undocumented
        extended string capability (<STRONG>set_pglen</STRONG>).
 
-       <STRONG>SVr1,</STRONG> <STRONG>Ultrix</STRONG> -- These support a restricted subset of  ter-
-       minfo  capabilities.   The booleans end with <STRONG>xon_xoff</STRONG>; the
-       numerics with  <STRONG>width_status_line</STRONG>;  and  the  strings  with
+       <STRONG>SVr1,</STRONG>  <STRONG>Ultrix</STRONG> -- These support a restricted subset of ter-
+       minfo capabilities.  The booleans end with  <STRONG>xon_xoff</STRONG>;  the
+       numerics  with  <STRONG>width_status_line</STRONG>;  and  the  strings with
        <STRONG>prtr_non</STRONG>.
 
-       <STRONG>HP/UX</STRONG>  --  Supports  the  SVr1  subset,  plus the SVr[234]
+       <STRONG>HP/UX</STRONG> -- Supports  the  SVr1  subset,  plus  the  SVr[234]
        numerics <STRONG>num_labels</STRONG>, <STRONG>label_height</STRONG>, <STRONG>label_width</STRONG>, plus func-
-       tion  keys  11  through  63, plus <STRONG>plab_norm</STRONG>, <STRONG>label_on</STRONG>, and
+       tion keys 11 through 63,  plus  <STRONG>plab_norm</STRONG>,  <STRONG>label_on</STRONG>,  and
        <STRONG>label_off</STRONG>, plus some incompatible extensions in the string
        table.
 
-       <STRONG>AIX</STRONG>  --  Supports  the  SVr1 subset, plus function keys 11
-       through 63, plus a number  of  incompatible  string  table
+       <STRONG>AIX</STRONG> -- Supports the SVr1 subset,  plus  function  keys  11
+       through  63,  plus  a  number of incompatible string table
        extensions.
 
-       <STRONG>OSF</STRONG>  -- Supports both the SVr4 set and the AIX extensions.
+       <STRONG>OSF</STRONG> -- Supports both the SVr4 set and the AIX  extensions.
 
 
 </PRE>
 <H2>FILES</H2><PRE>
        /usr/share/terminfo/?/*  files     containing     terminal
                                 descriptions
-
 
 
 </PRE>
@@ -2230,56 +2284,12 @@
 
 </PRE>
 <H2>AUTHORS</H2><PRE>
-       Zeyd  M.  Ben-Halim,  Eric  S.  Raymond, Thomas E. Dickey.
+       Zeyd M. Ben-Halim, Eric  S.  Raymond,  Thomas  E.  Dickey.
        Based on pcurses by Pavel Curtis.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                      <STRONG><A HREF="TERMINFO.5.html">TERMINFO(5)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

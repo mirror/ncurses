@@ -1,4 +1,4 @@
--- $Id: INSTALL,v 1.56 2002/09/01 22:42:11 tom Exp $
+-- $Id: INSTALL,v 1.71 2004/02/07 21:06:05 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -168,6 +168,11 @@ INSTALLATION PROCEDURE:
     databases are SVr4-compatible, but most seem to be.  Exceptions include
     DEC's Digital Unix (formerly known as OSF/1).
 
+    If you run the test programs WITHOUT installing terminfo, ncurses may
+    read the termcap file and cache that in $HOME/.terminfo, which will
+    thereafter be used instead of the terminfo database.  See the comments
+    on "--enable-getcap-cache", to see why this is a Bad Thing.
+
     It is possible to configure ncurses to use other terminfo database formats.
     A few are provided as examples in the include-directory (see --with-caps).
 
@@ -283,6 +288,12 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Compile without hashmap scrolling-optimization code.  This algorithm is
 	the default.
 
+    --disable-home-terminfo
+	The $HOME/.terminfo directory is normally added to ncurses' search
+	list for reading/writing terminfo entries, since that directory is
+	more likely writable than the system terminfo database.  Use this
+	option to disable the feature altogether.
+
     --disable-leaks
 	For testing, compile-in code that frees memory that normally would not
 	be freed, to simplify analysis of memory-leaks.
@@ -311,10 +322,6 @@ SUMMARY OF CONFIGURE OPTIONS:
     --disable-scroll-hints
 	Compile without scroll-hints code.  This option is ignored when
 	hashmap scrolling is configured, which is the default.
-
-    --enable-add-ons=DIR...
-	This is used to check if this package is a glibc add-on.  This is used
-	only by the glibc makefiles.
 
     --enable-assertions
 	For testing, compile-in assertion code.  This is used only for a few
@@ -454,6 +461,11 @@ SUMMARY OF CONFIGURE OPTIONS:
     --enable-xmc-glitch
 	Compile-in support experimental xmc (magic cookie) code.
 
+    --with-abi-version=NUM
+	Override the ABI version, which is used in shared library filenames.
+	Normally this is the same as the release version; some ports have
+	special requirements for compatibility.
+
     --with-ada-compiler=CMD
 	Specify the Ada95 compiler command (default "gnatmake")
 
@@ -472,7 +484,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 
     --with-build-cc=XXX
 	If cross-compiling, specify a host C compiler, which is needed to
-	compile a few utilties which generate source modules for ncurses.
+	compile a few utilities which generate source modules for ncurses.
 	If you do not give this option, the configure script checks if the
 	$BUILD_CC variable is set, and otherwise defaults to gcc or cc.
 
@@ -482,7 +494,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 	host compiler.
 
     --with-build-cppflags=XXX
-	If cross-compiling, specify the host C preprocesor-flags.  You might
+	If cross-compiling, specify the host C preprocessor-flags.  You might
 	need to do this if the target compiler has unusual flags which confuse
 	the host compiler.
 
@@ -544,9 +556,25 @@ SUMMARY OF CONFIGURE OPTIONS:
 	NOTE:  a few systems build shared libraries with fixed pathnames; this
 	option probably will not work for those configurations.
 
-     --with-libtool
-	Generate libraries with libtool.  If this option is selected, then
-	it overrides all other library model specifications.
+     --with-libtool[=XXX]
+	Generate libraries with libtool.  If this option is selected, then it
+	overrides all other library model specifications.  Note that libtool
+	must already be installed, uses makefile rules dependent on GNU make,
+	and does not promise to follow the version numbering convention of
+	other shared libraries on your system.  However, if the --with-shared
+	option does not succeed, you may get better results with this option.
+
+	If a parameter value is given, it must be the full pathname of the
+	particular version of libtool, e.g.,
+		/usr/bin/libtool-1.2.3
+
+    --with-manpage-aliases
+	Tell the configure script you wish to create entries in the
+	man-directory for aliases to manpages which list them, e.g., the
+	functions in the panel manpage.  This is the default.  You can disable
+	it if your man program does this.  You can also disable
+	--with-manpage-symlinks to install files containing a ".so" command
+	rather than symbolic links.
 
     --with-manpage-format=XXX
 	Tell the configure script how you would like to install man-pages.  The
@@ -595,6 +623,12 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-rcs-ids
 	Compile-in RCS identifiers.  Most of the C files have an identifier.
 
+    --with-rel-version=NUM
+	Override the release version, which may be used in shared library
+	filenames.  This consists of a major and minor version number separated
+	by ".".  Normally the major version number is the same as the ABI
+	version; some ports have special requirements for compatibility.
+
     --with-shared
 	Generate shared-libraries.  The names given depend on the system for
 	which you are building, typically using a ".so" suffix, along with
@@ -608,6 +642,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Specify whether to use the release or ABI version for shared libraries.
 	This is normally chosen automatically based on the type of system
 	which you are building on.  We use it for testing the configure script.
+
+    --with-sysmouse
+	use FreeBSD sysmouse interface provide mouse support on the console.
 
     --with-system-type=XXX
 	For testing, override the derived host system-type which is used to
@@ -629,6 +666,10 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-termpath=XXX
 	Specify a search-list of termcap files which will be compiled into the
 	ncurses library (default:  /etc/termcap:/usr/share/misc/termcap)
+
+    --with-trace
+	Configure the trace() function as part of the all models of the ncurses
+	library.  Normally it is part of the debug (libncurses_g) library only.
 
     --without-ada
 	Suppress the configure script's check for Ada95, do not build the
@@ -673,7 +714,53 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
     you may encounter when building a system with different versions of
     ncurses:
 
-    5.3 (pre-release)
+    5.4 (February 8, 2004)
+	Interface changes:
+
+	+ add the remaining functions for X/Open curses wide-character support. 
+	  These are only available if the library is configured using the
+	  --enable-widec option.
+		pecho_wchar()
+		slk_wset()
+
+	+ write getyx() and related 2-return macros in terms of getcury(),
+	  getcurx(), etc.
+
+	+ simplify ifdef for bool declaration in curses.h
+
+	+ modify ifdef's in curses.h that disabled use of __attribute__() for
+	  g++, since recent versions implement the cases which ncurses uses.
+
+	+ change some interfaces to use const:
+		define_key()
+		mvprintw()
+		mvwprintw()
+		printw()
+		vw_printw()
+		winsnstr()
+		wprintw()
+
+	Added extensions:
+		key_defined()
+	Added internal functions:
+		_nc_get_locale()
+		_nc_insert_ch()
+		_nc_is_charable()	wide
+		_nc_locale_breaks_acs()
+		_nc_pathlast()
+		_nc_to_char()		wide
+		_nc_to_widechar()	wide
+		_nc_tparm_analyze()
+		_nc_trace_bufcat()	debug
+		_nc_unicode_locale()
+	Removed internal functions:
+		_nc_outstr()
+		_nc_sigaction()
+	Modified internal functions:
+		_nc_remove_string()
+		_nc_retrace_chtype()
+
+    5.3 (October 12, 2002)
 	Interface changes:
 
 	+ change type for bool used in headers to NCURSES_BOOL, which usually
@@ -693,9 +780,13 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
 		resize_term()
 	Added internal functions:
 		_nc_altcharset_name()	debug
+		_nc_reset_colors()
+		_nc_retrace_bool()	debug
+		_nc_retrace_unsigned()	debug
 		_nc_rootname()
 		_nc_trace_ttymode()	debug
 		_nc_varargs()		debug
+		_nc_visbufn()		debug
 		_nc_wgetch()
 	Removed internal functions:
 		_nc_background()
@@ -895,31 +986,34 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
 IF YOU ARE A SYSTEM INTEGRATOR:
 ------------------------------
 
-    Beginning with 1.9.9, the ncurses distribution includes both a tset
-    utility and /usr/share/tabset directory.  If you are installing ncurses,
-    it is no longer either necessary or desirable to install tset-jv.
-
     Configuration and Installation:
 
-	Configure with --prefix=/usr to make the install productions put
-	libraries and headers in the correct locations (overwriting any
-	previous curses libraries and headers).  This will put the terminfo
-	hierarchy under /usr/share/terminfo; you may want to override this with
-	--datadir=/usr/share/misc; terminfo and tabset are installed under the
-	data directory.
+    	On platforms where ncurses is assumed to be installed in /usr/lib,
+	the configure script uses "/usr" as a default:
 
-	Please configure the ncurses library in a pure-terminfo mode; that
-	is, with the --disable-termcap option.   This will make the ncurses
-	library smaller and faster. The ncurses library includes a termcap
-	emulation that queries the terminfo database, so even applications
-	that use raw termcap to query terminal characteristics will win
-	(providing you recompile and relink them!).
+		Linux, FreeBSD, NetBSD, OpenBSD, Cygwin
 
-	If you must configure with termcap fallback enabled, you may also
-	wish to use the --enable-getcap option.  This option speeds up
-	termcap-based startups, at the expense of not allowing personal
-	termcap entries to reference the terminfo tree.  See the code in
-	ncurses/tinfo/read_termcap.c for details.
+	For other platforms, the default is "/usr/local".  See the discussion
+	of the "--disable-overwrite" option.
+
+	The location of the terminfo is set indirectly by the "--datadir"
+	configure option, e.g., /usr/share/terminfo, given a datadir of
+	/usr/share.  You may want to override this if you are installing
+	ncurses libraries in nonstandard locations, but wish to share the
+	terminfo database.
+
+	Normally the ncurses library is configured in a pure-terminfo mode;
+	that is, with the --disable-termcap option.  This makes the ncurses
+	library smaller and faster.  The ncurses library includes a termcap
+	emulation that queries the terminfo database, so even applications that
+	use raw termcap to query terminal characteristics will win (providing
+	you recompile and relink them!).
+
+	If you must configure with termcap fallback enabled, you may also wish
+	to use the --enable-getcap option.  This speeds up termcap-based
+	startups, at the expense of not allowing personal termcap entries to
+	reference the terminfo tree.  See comments in
+	ncurses/tinfo/read_termcap.c for further details.
 
 	Note that if you have $TERMCAP set, ncurses will use that value
 	to locate termcap data.  In particular, running from xterm will
@@ -939,11 +1033,11 @@ IF YOU ARE A SYSTEM INTEGRATOR:
 
     Naming the Console Terminal
 
-	In various Linuxes (and possibly elsewhere) there has been a practice
-	of designating the system console driver type as `console'.  Please
-	do not do this any more!  It complicates peoples' lives, because it
-	can mean that several different terminfo entries from different
-	operating systems all logically want to be called `console'.
+	In various systems there has been a practice of designating the system
+	console driver type as `console'.  Please do not do this!  It
+	complicates peoples' lives, because it can mean that several different
+	terminfo entries from different operating systems all logically want to
+	be called `console'.
 
 	Please pick a name unique to your console driver and set that up
 	in the /etc/inittab table or local equivalent.  Send the entry to the

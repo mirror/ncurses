@@ -34,9 +34,8 @@
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
---  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control:
---  $Revision: 1.10 $
+--  $Revision: 1.11 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package Terminal_Interface.Curses.Forms.Field_Types.IntField is

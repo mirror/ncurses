@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #include <ctype.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slk.c,v 1.24 2002/09/28 17:46:40 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.28 2003/05/24 21:10:28 tom Exp $")
 
 /*
  * We'd like to move these into the screen context structure, but cannot,
@@ -64,9 +64,23 @@ slk_paint_info(WINDOW *win)
 	wmove(win, 0, 0);
 
 	for (i = 0; i < SP->_slk->maxlab; i++) {
-	    mvwprintw(win, 0, SP->_slk->ent[i].x, "F%d", i + 1);
+	    mvwprintw(win, 0, SP->_slk->ent[i].ent_x, "F%d", i + 1);
 	}
     }
+}
+
+/*
+ * Free any memory related to soft labels, return an error.
+ */
+static int
+slk_failed(void)
+{
+    if (SP->_slk) {
+	FreeIfNeeded(SP->_slk->ent);
+	free(SP->_slk);
+	SP->_slk = (SLK *) 0;
+    }
+    return ERR;
 }
 
 /*
@@ -78,19 +92,26 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 {
     int i, x;
     int res = OK;
-    char *p;
     unsigned max_length;
 
-    T(("slk_initialize()"));
+    T((T_CALLED("_nc_slk_initialize()")));
 
     if (SP->_slk) {		/* we did this already, so simply return */
-	return (OK);
+	returnCode(OK);
     } else if ((SP->_slk = typeCalloc(SLK, 1)) == 0)
-	return (ERR);
+	returnCode(ERR);
 
     SP->_slk->ent = NULL;
-    SP->_slk->buffer = NULL;
-    SP->_slk->attr = A_STANDOUT;
+
+    /*
+     * If we use colors, vidputs() will suppress video attributes that conflict
+     * with colors.  In that case, we're still guaranteed that "reverse" would
+     * work.
+     */
+    if ((no_color_video & 1) == 0)
+	SP->_slk->attr = A_STANDOUT;
+    else
+	SP->_slk->attr = A_REVERSE;
 
     SP->_slk->maxlab = ((num_labels > 0)
 			? num_labels
@@ -106,19 +127,19 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 	|| SP->_slk->labcnt <= 0
 	|| (SP->_slk->ent = typeCalloc(slk_ent,
 				       (unsigned) SP->_slk->labcnt)) == NULL)
-	goto exception;
+	returnCode(slk_failed());
 
     max_length = SP->_slk->maxlen;
-    p = SP->_slk->buffer = (char *) calloc((unsigned) (2 * SP->_slk->labcnt),
-					   (1 + max_length));
-    if (SP->_slk->buffer == NULL)
-	goto exception;
-
     for (i = 0; i < SP->_slk->labcnt; i++) {
-	SP->_slk->ent[i].text = p;
-	p += (1 + max_length);
-	SP->_slk->ent[i].form_text = p;
-	p += (1 + max_length);
+
+	if ((SP->_slk->ent[i].ent_text = (char *)_nc_doalloc(0, max_length + 1)) == 0)
+	    returnCode(slk_failed());
+	memset(SP->_slk->ent[i].ent_text, 0, max_length + 1);
+
+	if ((SP->_slk->ent[i].form_text = (char *)_nc_doalloc(0, max_length + 1)) == 0)
+	    returnCode(slk_failed());
+	memset(SP->_slk->ent[i].form_text, 0, max_length + 1);
+
 	memset(SP->_slk->ent[i].form_text, ' ', max_length);
 	SP->_slk->ent[i].visible = (i < SP->_slk->maxlab);
     }
@@ -129,7 +150,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 	    gap = 1;
 
 	for (i = x = 0; i < SP->_slk->maxlab; i++) {
-	    SP->_slk->ent[i].x = x;
+	    SP->_slk->ent[i].ent_x = x;
 	    x += max_length;
 	    x += (i == 3 || i == 7) ? gap : 1;
 	}
@@ -141,7 +162,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 	    if (gap < 1)
 		gap = 1;
 	    for (i = x = 0; i < SP->_slk->maxlab; i++) {
-		SP->_slk->ent[i].x = x;
+		SP->_slk->ent[i].ent_x = x;
 		x += max_length;
 		x += (i == 3) ? gap : 1;
 	    }
@@ -153,24 +174,17 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 		if (gap < 1)
 		    gap = 1;
 		for (i = x = 0; i < SP->_slk->maxlab; i++) {
-		    SP->_slk->ent[i].x = x;
+		    SP->_slk->ent[i].ent_x = x;
 		    x += max_length;
 		    x += (i == 2 || i == 4) ? gap : 1;
 		}
 	    } else
-		goto exception;
+		returnCode(slk_failed());
 	}
     }
     SP->_slk->dirty = TRUE;
     if ((SP->_slk->win = stwin) == NULL) {
-      exception:
-	if (SP->_slk) {
-	    FreeIfNeeded(SP->_slk->buffer);
-	    FreeIfNeeded(SP->_slk->ent);
-	    free(SP->_slk);
-	    SP->_slk = (SLK *) 0;
-	    res = (ERR);
-	}
+	returnCode(slk_failed());
     }
 
     /* We now reset the format so that the next newterm has again
@@ -179,7 +193,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
      */
     SP->slk_format = _nc_slk_format;
     _nc_slk_format = 0;
-    return (res);
+    returnCode(res);
 }
 
 /*

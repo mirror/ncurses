@@ -1,4 +1,4 @@
--- $Id: README,v 1.20 2000/08/12 23:31:21 tom Exp $
+-- $Id: README,v 1.21 2003/02/08 19:36:39 tom Exp $
 -------------------------------------------------------------------------------
 		README file for the ncurses package
 
@@ -42,6 +42,14 @@ The libraries are:
 	libform.a          (normal)
 	libform.so         (shared)
 	libform_g.a        (debug enabled)
+
+If you configure using the --enable-widec option, a "w" is appended to the
+library names (e.g., libncursesw.a), and the resulting libraries support
+wide-characters, e.g., via a UTF-8 locale.  The corresponding header files
+are compatible with the non-wide-character configuration; wide-character
+features are provided by ifdef's in the header files.  The wide-character
+library interfaces are not binary-compatible with the non-wide-character
+version.
 
 The ncurses libraries implement the curses API.  The panel, menu and forms
 libraries implement clones of the SVr4 panel, menu and forms APIs.  The source

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #include <term_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.102 2002/10/05 19:59:41 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.109 2003/12/06 17:36:57 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -58,7 +58,7 @@ static int tparm_errs;
 static void (*save_check_termtype) (TERMTYPE *);
 static void check_termtype(TERMTYPE * tt);
 
-static const char usage_string[] = "[-V] [-v[n]] [-e names] [-CILNRTcfrswx1] source-file\n";
+static const char usage_string[] = "[-V] [-v[n]] [-e names] [-o dir] [-R name] [-CILNTcfrswx1] source-file\n";
 
 static void
 cleanup(void)
@@ -79,7 +79,7 @@ failed(const char *msg)
 {
     perror(msg);
     cleanup();
-    exit(EXIT_FAILURE);
+    ExitProgram(EXIT_FAILURE);
 }
 
 static void
@@ -126,7 +126,7 @@ usage(void)
 	fputs(tbl[j], stderr);
 	putc('\n', stderr);
     }
-    exit(EXIT_FAILURE);
+    ExitProgram(EXIT_FAILURE);
 }
 
 #define L_BRACE '{'
@@ -300,7 +300,7 @@ stripped(char *src)
     while (isspace(UChar(*src)))
 	src++;
     if (*src != '\0') {
-	char *dst = strcpy(malloc(strlen(src) + 1), src);
+	char *dst = strcpy((char *) malloc(strlen(src) + 1), src);
 	size_t len = strlen(dst);
 	while (--len != 0 && isspace(UChar(dst[len])))
 	    dst[len] = '\0';
@@ -317,12 +317,12 @@ open_input(const char *filename)
 
     if (fp == 0) {
 	fprintf(stderr, "%s: Can't open %s\n", _nc_progname, filename);
-	exit(EXIT_FAILURE);
+	ExitProgram(EXIT_FAILURE);
     }
     if (fstat(fileno(fp), &sb) < 0
 	|| (sb.st_mode & S_IFMT) != S_IFREG) {
 	fprintf(stderr, "%s: %s is not a file\n", _nc_progname, filename);
-	exit(EXIT_FAILURE);
+	ExitProgram(EXIT_FAILURE);
     }
     return fp;
 }
@@ -769,6 +769,216 @@ TERMINAL *cur_term;		/* tweak to avoid linking lib_cur_term.c */
 #define CUR tp->
 
 /*
+ * Check if the alternate character-set capabilities are consistent.
+ */
+static void
+check_acs(TERMTYPE * tp)
+{
+    if (VALID_STRING(acs_chars)) {
+	const char *boxes = "lmkjtuvwqxn";
+	char mapped[256];
+	char missing[256];
+	const char *p;
+	char *q;
+
+	memset(mapped, 0, sizeof(mapped));
+	for (p = acs_chars; *p != '\0'; p += 2) {
+	    if (p[1] == '\0') {
+		_nc_warning("acsc has odd number of characters");
+		break;
+	    }
+	    mapped[UChar(p[0])] = p[1];
+	}
+	if (mapped[UChar('I')] && !mapped[UChar('i')]) {
+	    _nc_warning("acsc refers to 'I', which is probably an error");
+	}
+	for (p = boxes, q = missing; *p != '\0'; ++p) {
+	    if (!mapped[UChar(p[0])]) {
+		*q++ = p[0];
+	    }
+	    *q = '\0';
+	}
+	if (*missing != '\0' && strcmp(missing, boxes)) {
+	    _nc_warning("acsc is missing some line-drawing mapping: %s", missing);
+	}
+    }
+}
+
+/*
+ * Check if the color capabilities are consistent
+ */
+static void
+check_colors(TERMTYPE * tp)
+{
+    if ((max_colors > 0) != (max_pairs > 0)
+	|| ((max_colors > max_pairs) && (initialize_pair == 0)))
+	_nc_warning("inconsistent values for max_colors (%d) and max_pairs (%d)",
+		    max_colors, max_pairs);
+
+    PAIRED(set_foreground, set_background);
+    PAIRED(set_a_foreground, set_a_background);
+    PAIRED(set_color_pair, initialize_pair);
+
+    if (VALID_STRING(set_foreground)
+	&& VALID_STRING(set_a_foreground)
+	&& !strcmp(set_foreground, set_a_foreground))
+	_nc_warning("expected setf/setaf to be different");
+
+    if (VALID_STRING(set_background)
+	&& VALID_STRING(set_a_background)
+	&& !strcmp(set_background, set_a_background))
+	_nc_warning("expected setb/setab to be different");
+
+    /* see: has_colors() */
+    if (VALID_NUMERIC(max_colors) && VALID_NUMERIC(max_pairs)
+	&& (((set_foreground != NULL)
+	     && (set_background != NULL))
+	    || ((set_a_foreground != NULL)
+		&& (set_a_background != NULL))
+	    || set_color_pair)) {
+	if (!VALID_STRING(orig_pair) && !VALID_STRING(orig_colors))
+	    _nc_warning("expected either op/oc string for resetting colors");
+    }
+}
+
+static int
+keypad_final(const char *string)
+{
+    int result = '\0';
+
+    if (VALID_STRING(string)
+	&& *string++ == '\033'
+	&& *string++ == 'O'
+	&& strlen(string) == 1) {
+	result = *string;
+    }
+
+    return result;
+}
+
+static int
+keypad_index(const char *string)
+{
+    char *test;
+    const char *list = "PQRSwxymtuvlqrsPpn";	/* app-keypad except "Enter" */
+    int ch;
+    int result = -1;
+
+    if ((ch = keypad_final(string)) != '\0') {
+	test = strchr(list, ch);
+	if (test != 0)
+	    result = (test - list);
+    }
+    return result;
+}
+
+/*
+ * Do a quick sanity-check for vt100-style keypads to see if the 5-key keypad
+ * is mapped inconsistently.
+ */
+static void
+check_keypad(TERMTYPE * tp)
+{
+    char show[80];
+
+    if (VALID_STRING(key_a1) &&
+	VALID_STRING(key_a3) &&
+	VALID_STRING(key_b2) &&
+	VALID_STRING(key_c1) &&
+	VALID_STRING(key_c3)) {
+	char final[6];
+	int list[5];
+	int increase = 0;
+	int j, k, kk;
+	int last;
+	int test;
+
+	final[0] = keypad_final(key_a1);
+	final[1] = keypad_final(key_a3);
+	final[2] = keypad_final(key_b2);
+	final[3] = keypad_final(key_c1);
+	final[4] = keypad_final(key_c3);
+	final[5] = '\0';
+
+	/* special case: legacy coding using 1,2,3,0,. on the bottom */
+	if (!strcmp(final, "qsrpn"))
+	    return;
+
+	list[0] = keypad_index(key_a1);
+	list[1] = keypad_index(key_a3);
+	list[2] = keypad_index(key_b2);
+	list[3] = keypad_index(key_c1);
+	list[4] = keypad_index(key_c3);
+
+	/* check that they're all vt100 keys */
+	for (j = 0; j < 5; ++j) {
+	    if (list[j] < 0) {
+		return;
+	    }
+	}
+
+	/* check if they're all in increasing order */
+	for (j = 1; j < 5; ++j) {
+	    if (list[j] > list[j - 1]) {
+		++increase;
+	    }
+	}
+	if (increase != 4) {
+	    show[0] = '\0';
+
+	    for (j = 0, last = -1; j < 5; ++j) {
+		for (k = 0, kk = -1, test = 100; k < 5; ++k) {
+		    if (list[k] > last &&
+			list[k] < test) {
+			test = list[k];
+			kk = k;
+		    }
+		}
+		last = test;
+		switch (kk) {
+		case 0:
+		    strcat(show, " ka1");
+		    break;
+		case 1:
+		    strcat(show, " ka3");
+		    break;
+		case 2:
+		    strcat(show, " kb2");
+		    break;
+		case 3:
+		    strcat(show, " kc1");
+		    break;
+		case 4:
+		    strcat(show, " kc3");
+		    break;
+		}
+	    }
+
+	    _nc_warning("vt100 keypad order inconsistent: %s", show);
+	}
+
+    } else if (VALID_STRING(key_a1) ||
+	       VALID_STRING(key_a3) ||
+	       VALID_STRING(key_b2) ||
+	       VALID_STRING(key_c1) ||
+	       VALID_STRING(key_c3)) {
+	show[0] = '\0';
+	if (keypad_index(key_a1) >= 0)
+	    strcat(show, " ka1");
+	if (keypad_index(key_a3) >= 0)
+	    strcat(show, " ka3");
+	if (keypad_index(key_b2) >= 0)
+	    strcat(show, " kb2");
+	if (keypad_index(key_c1) >= 0)
+	    strcat(show, " kc1");
+	if (keypad_index(key_c3) >= 0)
+	    strcat(show, " kc3");
+	if (*show != '\0')
+	    _nc_warning("vt100 keypad map incomplete:%s", show);
+    }
+}
+
+/*
  * Returns the expected number of parameters for the given capability.
  */
 static int
@@ -1076,17 +1286,9 @@ check_termtype(TERMTYPE * tp)
 	    check_params(tp, ExtStrname(tp, j, strnames), a);
     }
 
-    /*
-     * Quick check for color.  We could also check if the ANSI versus
-     * non-ANSI strings are misused.
-     */
-    if ((max_colors > 0) != (max_pairs > 0)
-	|| ((max_colors > max_pairs) && (initialize_pair == 0)))
-	_nc_warning("inconsistent values for max_colors (%d) and max_pairs (%d)",
-		    max_colors, max_pairs);
-
-    PAIRED(set_foreground, set_background);
-    PAIRED(set_a_foreground, set_a_background);
+    check_acs(tp);
+    check_colors(tp);
+    check_keypad(tp);
 
     /*
      * These may be mismatched because the terminal description relies on

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,19 +36,36 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_tracechr.c,v 1.9 2002/05/25 23:34:19 tom Exp $")
+#include <ctype.h>
+
+MODULE_ID("$Id: lib_tracechr.c,v 1.10 2003/06/14 11:05:42 tom Exp $")
 
 #ifdef TRACE
 NCURSES_EXPORT(char *)
 _tracechar(int ch)
 {
-    static char crep[40];
-    (void) sprintf(crep, "'%.30s' = %#03o",
-		   ((ch > KEY_MIN || ch < 0)
-		    ? keyname(ch)
-		    : unctrl(ch)),
-		   ch);
-    return (crep);
+    static char result[40];
+    char *name;
+
+    if (ch > KEY_MIN || ch < 0) {
+	name = keyname(ch);
+	if (name == 0 || *name == '\0')
+	    name = "NULL";
+	(void) sprintf(result, "'%.30s' = %#03o", name, ch);
+    } else if (!isprint(ch) || ch > 255) {
+	/*
+	 * workaround for glibc bug:
+	 * sprintf changes the result from unctrl() to an empty string if it
+	 * does not correspond to a valid multibyte sequence.
+	 */
+	(void) sprintf(result, "%#03o", ch);
+    } else {
+	name = unctrl(ch);
+	if (name == 0 || *name == 0)
+	    name = "null";	/* shouldn't happen */
+	(void) sprintf(result, "'%.30s' = %#03o", name, ch);
+    }
+    return (result);
 }
 #else
 empty_module(_nc_lib_tracechr)

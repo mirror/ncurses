@@ -28,7 +28,6 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 /***************************************************************************
@@ -38,13 +37,13 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_item_top.c,v 1.6 2002/07/06 15:22:16 juergen Exp $")
+MODULE_ID("$Id: m_item_top.c,v 1.8 2003/11/08 20:51:53 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
 |   Function      :  int set_top_row(MENU *menu, int row)
 |   
-|   Description   :  Makes the speified row the top row in the menu
+|   Description   :  Makes the specified row the top row in the menu
 |
 |   Return Values :  E_OK             - success
 |                    E_BAD_ARGUMENT   - not a menu pointer or invalid row

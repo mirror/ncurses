@@ -29,10 +29,9 @@
 
 /****************************************************************************
  *   Author: Juergen Pfeifer, 1997                                          *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
-// $Id: etip.h.in,v 1.24 2002/10/12 22:33:07 Dimitar.Zhekov Exp $
+// $Id: etip.h.in,v 1.25 2003/10/25 15:05:58 tom Exp $
 
 #ifndef NCURSES_ETIP_H_incl
 #define NCURSES_ETIP_H_incl 1

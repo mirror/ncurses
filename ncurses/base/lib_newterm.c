@@ -47,7 +47,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.56 2002/10/12 15:24:08 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.57 2002/10/20 00:10:56 Philippe.Blain Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -118,13 +118,6 @@ newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
     /* implement filter mode */
     if (filter_mode) {
 	LINES = 1;
-
-	if (VALID_NUMERIC(init_tabs))
-	    TABSIZE = init_tabs;
-	else
-	    TABSIZE = 8;
-
-	T(("TABSIZE = %d", TABSIZE));
 
 	clear_screen = 0;
 	cursor_down = parm_down_cursor = 0;

@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.30 2002/10/05 21:22:21 tom Exp @
+  * @Id: infocmp.1m,v 1.34 2003/10/25 16:19:01 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,6 +41,10 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
+<STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>                                           <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
+
+
+
 
 </PRE>
 <H2>NAME</H2><PRE>
@@ -100,7 +104,6 @@
        for each terminal named.
 
       <STRONG>-I</STRONG>   use the <STRONG>terminfo</STRONG> names
-
       <STRONG>-L</STRONG>   use the long C variable name listed in &lt;<STRONG>term.h</STRONG>&gt;
       <STRONG>-C</STRONG>   use the <STRONG>termcap</STRONG> names
       <STRONG>-r</STRONG>   when using <STRONG>-C</STRONG>, put out all capabilities in <STRONG>termcap</STRONG> form
@@ -154,8 +157,8 @@
        The  <STRONG>-u</STRONG>  option  produces a <STRONG>terminfo</STRONG> source description of
        the first terminal <EM>termname</EM> which is relative to  the  sum
        of  the  descriptions  given  by the entries for the other
-       terminals  <EM>termnames</EM>.   It  does  this  by  analyzing  the
-       differences  between  the  first  <EM>termname</EM>  and  the other
+       terminals <EM>termnames</EM>.  It does this by analyzing  the  dif-
+       ferences   between   the  first  <EM>termname</EM>  and  the  other
        <EM>termnames</EM> and producing a description with <STRONG>use=</STRONG> fields for
        the  other  terminals.   In this manner, it is possible to
        retrofit  generic  terminfo  entries  into  a   terminal's
@@ -313,8 +316,8 @@
 
             An   SGR0  designates  an  empty  highlight  sequence
             (equivalent to {SGR:NORMAL}).
-       -
-       l    Set output format to terminfo.
+
+       <STRONG>-l</STRONG>   Set output format to terminfo.
 
        <STRONG>-p</STRONG>   Ignore padding specifications when comparing strings.
 
@@ -387,13 +390,13 @@
 
        The <STRONG>-r</STRONG> option's notion of `termcap' capabilities is System
        V Release 4's.  Actual BSD curses  versions  will  have  a
-       more  restricted  set.  To see only the 4.4BSD set, use -r
-       -RBSD.
+       more  restricted  set.  To see only the 4.4BSD set, use <STRONG>-r</STRONG>
+       <STRONG>-RBSD</STRONG>.
 
 
 </PRE>
 <H2>BUGS</H2><PRE>
-       The -F option of <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG> should be a <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG> mode.
+       The <STRONG>-F</STRONG> option of <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG> should be a <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG> mode.
 
 
 </PRE>
@@ -405,38 +408,11 @@
 </PRE>
 <H2>AUTHOR</H2><PRE>
        Eric S. Raymond &lt;esr@snark.thyrsus.com&gt; and
-       Thomas E. Dickey &lt;dickey@herndon4.his.com&gt;
+       Thomas E. Dickey &lt;dickey@invisible-island.net&gt;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                      <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.16 2002/02/16 19:26:41 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.18 2003/02/08 22:25:47 tom Exp $
 .TH curs_termcap 3X ""
 .ds n 5
 .SH NAME
@@ -130,6 +130,12 @@ appear to be terminfo).
 Because terminfo conventions for representing padding in string capabilities
 differ from termcap's, \fBtputs("50");\fR will put out a literal "50" rather
 than busy-waiting for 50 milliseconds.  Cope with it.
+
+Note that termcap has nothing analogous to terminfo's \fBsgr\fR string.
+One consequence of this is that termcap applications assume \fRme\fR
+(terminfo \fBsgr0\fR) does not reset the alternate character set.
+This implementation checks for, and modifies the data shown to the
+termcap interface to accommodate termcap's limitation in this respect.
 .SH PORTABILITY
 The XSI Curses standard, Issue 4 describes these functions.  However, they
 are marked TO BE WITHDRAWN and may be removed in future versions.

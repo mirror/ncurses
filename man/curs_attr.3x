@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.26 2002/09/21 19:50:06 tom Exp $
+.\" $Id: curs_attr.3x,v 1.27 2003/12/27 18:50:51 tom Exp $
 .TH curs_attr 3X ""
 .SH NAME
 \fBattroff\fR, \fBwattroff\fR, \fBattron\fR, \fBwattron\fR,
@@ -148,7 +148,7 @@ Use \fBtouchwin\fR to force the screen to match the updated attributes.
 The following video attributes, defined in \fB<curses.h>\fR, can be passed to
 the routines \fBattron\fR, \fBattroff\fR, and \fBattrset\fR, or OR'ed with the
 characters passed to \fBaddch\fR.
-
+.PP
 .TS
 center ;
 l l .
@@ -165,14 +165,14 @@ l l .
 \fBA_CHARTEXT\fR	Bit-mask to extract a character
 \fBCOLOR_PAIR(\fR\fIn\fR\fB)\fR	Color-pair number \fIn\fR
 .TE
-
+.PP
 The following macro is the reverse of \fBCOLOR_PAIR(\fR\fIn\fR\fB)\fR:
-
+.PP
 .br
 \fBPAIR_NUMBER(\fR\fIattrs\fR) Returns the pair number associated
                    with the \fBCOLOR_PAIR(\fR\fIn\fR\fB)\fR attribute.
 .br
-
+.PP
 The return values of many of these routines are not meaningful (they are
 implemented as macro-expanded assignments and simply return their argument).
 The SVr4 manual page claims (falsely) that these routines always return \fB1\fR.
@@ -196,7 +196,7 @@ XSI Curses added the new entry points, \fBattr_get\fR, \fBattr_on\fR,
 \fBattr_off\fR, \fBattr_set\fR, \fBwattr_on\fR, \fBwattr_off\fR,
 \fBwattr_get\fR, \fBwattr_set\fR.  These are intended to work with
 a new series of highlight macros prefixed with \fBWA_\fR.
-
+.PP
 .TS
 center ;
 l l .
@@ -209,7 +209,7 @@ l l .
 \fBWA_BOLD\fR	Extra bright or bold
 \fBWA_ALTCHARSET\fR	Alternate character set
 .TE
-
+.PP
 The XSI curses standard specifies that each pair of corresponding \fBA_\fR
 and \fBWA_\fR-using functions operates on the same current-highlight
 information.

@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.35 2002/04/20 16:49:33 tom Exp $
+.\" $Id: terminfo.tail,v 1.38 2003/01/05 22:47:05 tom Exp $
 .\" Beginning of terminfo.tail file
 .ps +1
 .PP
@@ -311,42 +311,81 @@ The parameter mechanism uses a stack and special \fB%\fP codes
 to manipulate it.
 Typically a sequence will push one of the
 parameters onto the stack and then print it in some format.
-Often more complex operations are necessary.
+Print (e.g., "%d") is a special case.
+Other operations, including "%t" pop their operand from the stack.
+It is noted that more complex operations are often necessary,
+e.g., in the \fBsgr\fP string.
 .PP
 The \fB%\fR encodings have the following meanings:
 .PP
-.DT
-.nf
-.ta .5i 1.5i
-	\s-1%%	outputs `%'
-	%\fI[[\fP:\fI]flags][width[.precision]][\fPdoxXs\fI]\fP
-		as in \fBprintf\fP, flags are [-+#] and space
-	%c	print pop() like %c in printf()
-	%s	print pop() like %s in printf()
-
-	%p[1-9]	push \fIi\fP'th parm
-	%P[a-z]	set dynamic variable [a-z] to pop()
-	%g[a-z]	get dynamic variable [a-z] and push it
-	%P[A-Z]	set static variable [a-z] to pop()
-	%g[A-Z]	get static variable [a-z] and push it
-	%'\fIc\fP'	char constant \fIc\fP
-	%{\fInn\fP}	integer constant \fInn\fP
-	%l	push strlen(pop)
-
-	%+ %- %* %/ %m
-		arithmetic (%m is mod): push(pop() op pop())
-	%& %| %^	bit operations: push(pop() op pop())
-	%= %> %<	logical operations: push(pop() op pop())
-	%A, %O	logical and & or operations (for conditionals)
-	%! %~	unary operations push(op pop())
-	%i	add 1 to first two parameters (for ANSI terminals)
-
-	%? expr %t thenpart %e elsepart %;
-		if-then-else, %e elsepart is optional.
-		else-if's are possible a la Algol 68:
-		%? c\d1\u %t b\d1\u %e c\d2\u %t b\d2\u %e c\d3\u %t b\d3\u %e c\d4\u %t b\d4\u %e %;
-\s+1		c\di\u are conditions, b\di\u are bodies.
-.fi
+.TP 5
+\s-1%%
+outputs `%'
+.TP
+%\fI[[\fP:\fI]flags][width[.precision]][\fPdoxXs\fI]\fP
+as in \fBprintf\fP, flags are [-+#] and space
+.TP
+%c
+print pop() like %c in \fBprintf\fP
+.TP
+%s
+print pop() like %s in \fBprintf\fP
+.TP
+%p[1-9]
+push \fIi\fP'th parameter
+.TP
+%P[a-z]
+set dynamic variable [a-z] to pop()
+.TP
+%g[a-z]
+get dynamic variable [a-z] and push it
+.TP
+%P[A-Z]
+set static variable [a-z] to pop()
+.TP
+%g[A-Z]
+get static variable [a-z] and push it
+.IP
+The terms "static" and "dynamic" are misleading.
+Historically, these are simply two different sets of variables,
+whose values are not reset between calls to \fBtparm\fP.
+However, that fact is not documented in other implementations.
+Relying on it will adversely impact portability to other implementations.
+.TP
+%'\fIc\fP'
+char constant \fIc\fP
+.TP
+%{\fInn\fP}
+integer constant \fInn\fP
+.TP
+%l
+push strlen(pop)
+.TP
+%+ %- %* %/ %m
+arithmetic (%m is mod): push(pop() op pop())
+.TP
+%& %| %^
+bit operations: push(pop() op pop())
+.TP
+%= %> %<
+logical operations: push(pop() op pop())
+.TP
+%A, %O
+logical and & or operations (for conditionals)
+.TP
+%! %~
+unary operations push(op pop())
+.TP
+%i
+add 1 to first two parameters (for ANSI terminals)
+.TP
+%? \fIexpr\fP %t \fIthenpart\fP %e \fIelsepart\fP %;
+if-then-else, %e \fIelsepart\fP is optional.
+else-if's are possible a la Algol 68:
+.br
+%? c\d1\u %t b\d1\u %e c\d2\u %t b\d2\u %e c\d3\u %t b\d3\u %e c\d4\u %t b\d4\u %e %;
+.br
+c\di\u are conditions, b\di\u are bodies.
 .PP
 Binary operations are in postfix form with the operands in the usual order.
 That is, to get x-5 one would use "%gx%{5}%-".
@@ -1170,7 +1209,7 @@ defined."
 .PP
 The \fBsetaf\fR/\fBsetab\fR and \fBsetf\fR/\fBsetb\fR capabilities take a
 single numeric argument each.
-Argument values 0-7 are portably defined as
+Argument values 0-7 of \fBsetaf\fR/\fBsetab\fR are portably defined as
 follows (the middle column is the symbolic #define available in the header for
 the \fBcurses\fR or \fBncurses\fR libraries).
 The terminal hardware is free to
@@ -1191,6 +1230,25 @@ magenta	\fBCOLOR_MAGENTA\fR	5	max,0,max
 cyan	\fBCOLOR_CYAN\fR	6	0,max,max
 white	\fBCOLOR_WHITE\fR	7	max,max,max
 .TE
+.PP
+The argument values of \fBsetf\fR/\fBsetb\fR historically correspond to
+a different mapping, i.e.,
+.TS H
+center;
+l c c c
+l l n l.
+\fBColor	#define 	Value	RGB\fR
+black	\fBCOLOR_BLACK\fR	0	0, 0, 0
+blue	\fBCOLOR_BLUE\fR	1	0,0,max
+green	\fBCOLOR_GREEN\fR	2	0,max,0
+cyan	\fBCOLOR_CYAN\fR	3	0,max,max
+red	\fBCOLOR_RED\ \fR	4	max,0,0
+magenta	\fBCOLOR_MAGENTA\fR	5	max,0,max
+yellow	\fBCOLOR_YELLOW\fR	6	max,max,0
+white	\fBCOLOR_WHITE\fR	7	max,max,max
+.TE
+It is important to not confuse the two sets of color capabilities;
+otherwise red/blue will be interchanged on the display.
 .PP
 On an HP-like terminal, use \fBscp\fR with a color-pair number parameter to set
 which color pair is current.

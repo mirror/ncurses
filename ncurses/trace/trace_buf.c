@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,15 +35,15 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_buf.c,v 1.11 2002/07/14 00:08:08 tom Exp $")
+MODULE_ID("$Id: trace_buf.c,v 1.12 2003/03/15 21:21:36 tom Exp $")
 
 typedef struct {
     char *text;
     size_t size;
 } LIST;
 
-NCURSES_EXPORT(char *)
-_nc_trace_buf(int bufnum, size_t want)
+static char *
+_nc_trace_alloc(int bufnum, size_t want)
 {
     char *result = 0;
     static LIST *list;
@@ -65,8 +65,6 @@ _nc_trace_buf(int bufnum, size_t want)
 		  list[bufnum].size = want;
 	}
 
-	if (list[bufnum].text != 0)
-	    *(list[bufnum].text) = '\0';
 	result = list[bufnum].text;
     }
 #if NO_LEAKS
@@ -81,4 +79,31 @@ _nc_trace_buf(int bufnum, size_t want)
     }
 #endif
     return result;
+}
+
+/*
+ * (re)Allocate a buffer big enough for the caller's wants.
+ */
+NCURSES_EXPORT(char *)
+_nc_trace_buf(int bufnum, size_t want)
+{
+    char *result = _nc_trace_alloc(bufnum, want);
+    if (result != 0)
+	*result = '\0';
+    return result;
+}
+
+/*
+ * Append a new string to an existing buffer.
+ */
+NCURSES_EXPORT(char *)
+_nc_trace_bufcat(int bufnum, const char *value)
+{
+    char *buffer = _nc_trace_alloc(bufnum, 0);
+    size_t have = strlen(buffer);
+
+    buffer = _nc_trace_alloc(bufnum, 1 + have + strlen(value));
+    (void) strcpy(buffer + have, value);
+
+    return buffer;
 }

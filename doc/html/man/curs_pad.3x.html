@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_pad.3x,v 1.9 2000/07/04 22:38:13 tom Exp @
+  * @Id: curs_pad.3x,v 1.12 2004/01/04 01:36:49 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,11 +40,15 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
+<STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>                                         <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>
+
+
+
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>newpad</STRONG>, <STRONG>subpad</STRONG>, <STRONG>prefresh</STRONG>, <STRONG>pnoutrefresh</STRONG>, <STRONG>pechochar</STRONG> - create
-       and display <STRONG>curses</STRONG> pads
+       <STRONG>newpad</STRONG>,   <STRONG>subpad</STRONG>,   <STRONG>prefresh</STRONG>,   <STRONG>pnoutrefresh</STRONG>,   <STRONG>pechochar</STRONG>,
+       <STRONG>pecho_wchar</STRONG> - create and display <STRONG>curses</STRONG> pads
 
 
 </PRE>
@@ -59,6 +63,7 @@
        <STRONG>int</STRONG> <STRONG>pnoutrefresh(WINDOW</STRONG> <STRONG>*pad,</STRONG> <STRONG>int</STRONG> <STRONG>pminrow,</STRONG> <STRONG>int</STRONG> <STRONG>pmincol,</STRONG>
              <STRONG>int</STRONG> <STRONG>sminrow,</STRONG> <STRONG>int</STRONG> <STRONG>smincol,</STRONG> <STRONG>int</STRONG> <STRONG>smaxrow,</STRONG> <STRONG>int</STRONG> <STRONG>smaxcol);</STRONG>
        <STRONG>int</STRONG> <STRONG>pechochar(WINDOW</STRONG> <STRONG>*pad,</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
+       <STRONG>int</STRONG> <STRONG>pecho_wchar(WINDOW</STRONG> <STRONG>*pad,</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*wch);</STRONG>
 
 
 </PRE>
@@ -70,7 +75,7 @@
        sarily associated with a particular part  of  the  screen.
        Pads can be used when a large window is needed, and only a
        part of the window will be on  the  screen  at  one  time.
-       Automatic refreshes of pads (<EM>e</EM>.<EM>g</EM>., from scrolling or echo-
+       Automatic refreshes of pads (e.g., from scrolling or echo-
        ing of input) do not occur.  It is not legal to call  <STRONG>wre-</STRONG>
        <STRONG>fresh</STRONG>  with a <EM>pad</EM> as an argument; the routines <STRONG>prefresh</STRONG> or
        <STRONG>pnoutrefresh</STRONG> should be called instead.   Note  that  these
@@ -106,7 +111,7 @@
        The <STRONG>pechochar</STRONG> routine is functionally equivalent to a call
        to  <STRONG>addch</STRONG>  followed by a call to <STRONG>refresh</STRONG>, a call to <STRONG>waddch</STRONG>
        followed by a call to <STRONG>wrefresh</STRONG>, or a call to  <STRONG>waddch</STRONG>  fol-
-       lowed  by  a  call  to <STRONG>prefresh.</STRONG> The knowledge that only a
+       lowed  by  a  call to <STRONG>prefresh</STRONG>.  The knowledge that only a
        single character is being output is taken into  considera-
        tion  and, for non-control characters, a considerable per-
        formance gain  might  be  seen  by  using  these  routines
@@ -114,14 +119,19 @@
        the last location of the pad on the screen is  reused  for
        the arguments to <STRONG>prefresh</STRONG>.
 
+       The  <STRONG>pecho_wchar</STRONG>  function is the analogous wide-character
+       form of <STRONG>pechochar</STRONG>.  It outputs one character to a pad  and
+       immediately  refreshes the pad.  It does this by a call to
+       <STRONG>wadd_wch</STRONG> followed by a call to <STRONG>prefresh</STRONG>.
+
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Routines  that  return  an integer return <STRONG>ERR</STRONG> upon failure
-       and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value  other  than
+       Routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure
+       and  <STRONG>OK</STRONG>  (SVr4 only specifies "an integer value other than
        <STRONG>ERR</STRONG>") upon successful completion.
 
-       Routines  that  return  pointers return <STRONG>NULL</STRONG> on error, and
+       Routines that return pointers return <STRONG>NULL</STRONG>  on  error,  and
        set <STRONG>errno</STRONG> to <STRONG>ENOMEM</STRONG>.
 
 
@@ -132,36 +142,18 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The XSI Curses standard, Issue  4  describes  these  func-
+       The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,        <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,       <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>,
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,        <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>,
        <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                     <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

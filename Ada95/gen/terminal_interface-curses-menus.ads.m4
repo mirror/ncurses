@@ -37,9 +37,8 @@ include(M4MACRO)dnl
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
---  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control:
---  $Revision: 1.23 $
+--  $Revision: 1.24 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Menu_Base_Defs')

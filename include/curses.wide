@@ -1,21 +1,23 @@
 
 #ifdef _XOPEN_SOURCE_EXTENDED
 
-/* $Id: curses.wide,v 1.25 2002/08/31 17:48:53 tom Exp $ */
+/* $Id: curses.wide,v 1.28 2004/01/03 20:35:14 tom Exp $ */
 
 extern NCURSES_EXPORT_VAR(cchar_t *) _nc_wacs;
 
-#define WACS_BSSB	(&_nc_wacs['l'])
-#define WACS_SSBB	(&_nc_wacs['m'])
-#define WACS_BBSS	(&_nc_wacs['k'])
-#define WACS_SBBS	(&_nc_wacs['j'])
-#define WACS_SBSS	(&_nc_wacs['u'])
-#define WACS_SSSB	(&_nc_wacs['t'])
-#define WACS_SSBS	(&_nc_wacs['v'])
-#define WACS_BSSS	(&_nc_wacs['w'])
-#define WACS_BSBS	(&_nc_wacs['q'])
-#define WACS_SBSB	(&_nc_wacs['x'])
-#define WACS_SSSS	(&_nc_wacs['n'])
+#define NCURSES_WACS(c)	(&_nc_wacs[(unsigned char)c])
+
+#define WACS_BSSB	NCURSES_WACS('l')
+#define WACS_SSBB	NCURSES_WACS('m')
+#define WACS_BBSS	NCURSES_WACS('k')
+#define WACS_SBBS	NCURSES_WACS('j')
+#define WACS_SBSS	NCURSES_WACS('u')
+#define WACS_SSSB	NCURSES_WACS('t')
+#define WACS_SSBS	NCURSES_WACS('v')
+#define WACS_BSSS	NCURSES_WACS('w')
+#define WACS_BSBS	NCURSES_WACS('q')
+#define WACS_SBSB	NCURSES_WACS('x')
+#define WACS_SSSS	NCURSES_WACS('n')
 
 #define WACS_ULCORNER	WACS_BSSB
 #define WACS_LLCORNER	WACS_SSBB
@@ -29,31 +31,31 @@ extern NCURSES_EXPORT_VAR(cchar_t *) _nc_wacs;
 #define WACS_VLINE	WACS_SBSB
 #define WACS_PLUS	WACS_SSSS
 
-#define WACS_S1		(&_nc_wacs['o']) /* scan line 1 */
-#define WACS_S9 	(&_nc_wacs['s']) /* scan line 9 */
-#define WACS_DIAMOND	(&_nc_wacs['`']) /* diamond */
-#define WACS_CKBOARD	(&_nc_wacs['a']) /* checker board */
-#define WACS_DEGREE	(&_nc_wacs['f']) /* degree symbol */
-#define WACS_PLMINUS	(&_nc_wacs['g']) /* plus/minus */
-#define WACS_BULLET	(&_nc_wacs['~']) /* bullet */
+#define WACS_S1		NCURSES_WACS('o') /* scan line 1 */
+#define WACS_S9 	NCURSES_WACS('s') /* scan line 9 */
+#define WACS_DIAMOND	NCURSES_WACS('`') /* diamond */
+#define WACS_CKBOARD	NCURSES_WACS('a') /* checker board */
+#define WACS_DEGREE	NCURSES_WACS('f') /* degree symbol */
+#define WACS_PLMINUS	NCURSES_WACS('g') /* plus/minus */
+#define WACS_BULLET	NCURSES_WACS('~') /* bullet */
 
 	/* Teletype 5410v1 symbols */
-#define WACS_LARROW	(&_nc_wacs[',']) /* arrow left */
-#define WACS_RARROW	(&_nc_wacs['+']) /* arrow right */
-#define WACS_DARROW	(&_nc_wacs['.']) /* arrow down */
-#define WACS_UARROW	(&_nc_wacs['-']) /* arrow up */
-#define WACS_BOARD	(&_nc_wacs['h']) /* board of squares */
-#define WACS_LANTERN	(&_nc_wacs['i']) /* lantern symbol */
-#define WACS_BLOCK	(&_nc_wacs['0']) /* solid square block */
+#define WACS_LARROW	NCURSES_WACS(',') /* arrow left */
+#define WACS_RARROW	NCURSES_WACS('+') /* arrow right */
+#define WACS_DARROW	NCURSES_WACS('.') /* arrow down */
+#define WACS_UARROW	NCURSES_WACS('-') /* arrow up */
+#define WACS_BOARD	NCURSES_WACS('h') /* board of squares */
+#define WACS_LANTERN	NCURSES_WACS('i') /* lantern symbol */
+#define WACS_BLOCK	NCURSES_WACS('0') /* solid square block */
 
 	/* ncurses extensions */
-#define WACS_S3		(&_nc_wacs['p']) /* scan line 3 */
-#define WACS_S7		(&_nc_wacs['r']) /* scan line 7 */
-#define WACS_LEQUAL	(&_nc_wacs['y']) /* less/equal */
-#define WACS_GEQUAL	(&_nc_wacs['z']) /* greater/equal */
-#define WACS_PI		(&_nc_wacs['{']) /* Pi */
-#define WACS_NEQUAL	(&_nc_wacs['|']) /* not equal */
-#define WACS_STERLING	(&_nc_wacs['}']) /* UK pound sign */
+#define WACS_S3		NCURSES_WACS('p') /* scan line 3 */
+#define WACS_S7		NCURSES_WACS('r') /* scan line 7 */
+#define WACS_LEQUAL	NCURSES_WACS('y') /* less/equal */
+#define WACS_GEQUAL	NCURSES_WACS('z') /* greater/equal */
+#define WACS_PI		NCURSES_WACS('{') /* Pi */
+#define WACS_NEQUAL	NCURSES_WACS('|') /* not equal */
+#define WACS_STERLING	NCURSES_WACS('}') /* UK pound sign */
 
 /*
  * Function prototypes for wide-character operations.
@@ -127,9 +129,9 @@ extern NCURSES_EXPORT(int) mvwins_wch (WINDOW *, int, int, const cchar_t *);	/* 
 extern NCURSES_EXPORT(int) mvwins_wstr (WINDOW *, int, int, const wchar_t *);	/* generated:WIDEC */
 extern NCURSES_EXPORT(int) mvwinwstr (WINDOW *, int, int, wchar_t *);		/* generated:WIDEC */
 extern NCURSES_EXPORT(int) mvwvline_set (WINDOW *, int,int, const cchar_t *,int); /* generated:WIDEC */
-extern NCURSES_EXPORT(int) pecho_wchar (WINDOW *, const cchar_t *);	/* missing */
+extern NCURSES_EXPORT(int) pecho_wchar (WINDOW *, const cchar_t *);	/* implemented */
 extern NCURSES_EXPORT(int) setcchar (cchar_t *, const wchar_t *, const attr_t, short, const void *);	/* implemented */
-extern NCURSES_EXPORT(int) slk_wset (int, const wchar_t *, int);	/* missing */
+extern NCURSES_EXPORT(int) slk_wset (int, const wchar_t *, int);	/* implemented */
 extern NCURSES_EXPORT(attr_t) term_attrs (void);			/* implemented */
 extern NCURSES_EXPORT(int) unget_wch (const wchar_t);			/* implemented */
 extern NCURSES_EXPORT(int) vid_attr (attr_t, short, void *);		/* implemented */

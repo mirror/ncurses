@@ -34,9 +34,8 @@
 -- authorization.                                                           --
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
---  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 --  Version Control:
---  $Revision: 1.6 $
+--  $Revision: 1.7 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Characters.Handling; use Ada.Characters.Handling;

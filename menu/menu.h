@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,8 +28,9 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
+
+/* $Id: menu.h,v 1.18 2003/11/08 20:48:24 tom Exp $ */
 
 #ifndef ETI_MENU
 #define ETI_MENU
@@ -77,7 +78,7 @@ typedef struct tagITEM
   short          x;
   bool           value;       /* Selection value                           */
                              
-  struct tagITEM *left;       /* neighbour items                           */
+  struct tagITEM *left;       /* neighbor items                            */
   struct tagITEM *right;
   struct tagITEM *up;
   struct tagITEM *down;

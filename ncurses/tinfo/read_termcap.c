@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -57,11 +57,11 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.58 2001/10/28 01:11:34 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.61 2003/11/08 20:22:45 tom Exp $")
 
 #if !PURE_TERMINFO
 
-#ifdef __EMX__
+#if defined(__EMX__) || defined(__DJGPP__)
 #define is_pathname(s) ((((s) != 0) && ((s)[0] == '/')) \
 		  || (((s)[0] != 0) && ((s)[1] == ':')))
 #else
@@ -945,6 +945,15 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE * const tp)
     static int lineno;
 
     T(("read termcap entry for %s", tn));
+
+    if (strlen(tn) == 0
+	|| strcmp(tn, ".") == 0
+	|| strcmp(tn, "..") == 0
+	|| _nc_pathlast(tn) != 0) {
+	T(("illegal or missing entry name '%s'", tn));
+	return 0;
+    }
+
     if (use_terminfo_vars() && (p = getenv("TERMCAP")) != 0
 	&& !is_pathname(p) && _nc_name_match(p, tn, "|:")) {
 	/* TERMCAP holds a termcap entry */

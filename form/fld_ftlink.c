@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,12 +28,11 @@
 
 /****************************************************************************
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
- *   Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en             *
  ****************************************************************************/
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_ftlink.c,v 1.6 2002/07/06 15:33:27 juergen Exp $")
+MODULE_ID("$Id: fld_ftlink.c,v 1.8 2003/11/08 20:45:36 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -47,7 +46,7 @@ MODULE_ID("$Id: fld_ftlink.c,v 1.6 2002/07/06 15:33:27 juergen Exp $")
 |                       E_BAD_ARGUMENT  - invalid arguments
 |                       E_SYSTEM_ERROR  - system error (no memory)
 |
-|   Return Values :  Fieldtype pointer or NULL if error occured.
+|   Return Values :  Fieldtype pointer or NULL if error occurred.
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(FIELDTYPE *)
 link_fieldtype 

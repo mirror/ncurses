@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998,2002 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,17 +26,9 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getyx.3x,v 1.8 2002/09/21 19:00:38 tom Exp $
+.\" $Id: curs_getyx.3x,v 1.10 2003/05/10 20:33:49 jmc Exp $
 .TH curs_getyx 3X ""
 .SH NAME
-.IX getbegx
-.IX getbegy
-.IX getcurx
-.IX getcury
-.IX getmaxx
-.IX getmaxy
-.IX getparx
-.IX getpary
 \fBgetyx\fR,
 \fBgetparyx\fR,
 \fBgetbegyx\fR,
@@ -64,7 +56,7 @@ Otherwise, \fB-1\fR is placed into \fIy\fR and \fIx\fR.
 Like \fBgetyx\fR, the \fBgetbegyx\fR and \fBgetmaxyx\fR macros store
 the current beginning coordinates and size of the specified window.
 .SH RETURN VALUE
-The return values of these macros are undefined (\fIi\fR.\fIe\fR.,
+The return values of these macros are undefined (i.e.,
 they should not be used as the right-hand side of assignment statements).
 .SH NOTES
 All of these interfaces are macros.

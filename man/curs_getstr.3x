@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getstr.3x,v 1.11 2002/04/13 22:14:30 tom Exp $
+.\" $Id: curs_getstr.3x,v 1.12 2003/05/10 20:33:49 jmc Exp $
 .TH curs_getstr 3X ""
 .SH NAME
 \fBgetstr\fR,
@@ -90,7 +90,7 @@ or if the lower-level \fBwgetch\fR call returns an ERR.
 
 SVr3 and early SVr4 curses implementations did not reject function keys;
 the SVr4.0 documentation claimed that "special keys" (such as function
-keys, "home" key, "clear" key, \fIetc\fR.) are interpreted" without
+keys, "home" key, "clear" key, \fIetc\fR.) are "interpreted", without
 giving details.  It lied.  In fact, the `character' value appended to the
 string by those implementations was predictable but not useful
 (being, in fact, the low-order eight bits of the key's KEY_ value).

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.50 2002/10/12 15:20:15 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.53 2003/11/23 00:39:30 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0;	/* always define this */
 
@@ -48,21 +48,30 @@ NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0;	/* always define this */
 NCURSES_EXPORT_VAR(const char *) _nc_tputs_trace = "";
 NCURSES_EXPORT_VAR(long) _nc_outchars = 0;
 
-static FILE *tracefp;		/* default to writing to stderr */
+static FILE *tracefp = 0;	/* default to writing to stderr */
 
 NCURSES_EXPORT(void)
-trace(const unsigned int tracelevel GCC_UNUSED)
+trace(const unsigned int tracelevel)
 {
     static bool been_here = FALSE;
-    static char my_name[] = "trace";
+    static char my_name[PATH_MAX];
 
-    if (!been_here && tracelevel) {
+    if ((tracefp == 0) && tracelevel) {
+	const char *mode = been_here ? "ab" : "wb";
+
+	if (*my_name == '\0') {
+	    if (getcwd(my_name, sizeof(my_name) - 10) == 0) {
+		perror("curses: Can't get working directory");
+		exit(EXIT_FAILURE);
+	    }
+	    strcat(my_name, "/trace");
+	}
+
 	been_here = TRUE;
-
 	_nc_tracing = tracelevel;
 	if (_nc_access(my_name, W_OK) < 0
-	    || (tracefp = fopen(my_name, "wb")) == 0) {
-	    perror("curses: Can't open 'trace' file: ");
+	    || (tracefp = fopen(my_name, mode)) == 0) {
+	    perror("curses: Can't open 'trace' file");
 	    exit(EXIT_FAILURE);
 	}
 	/* Try to set line-buffered mode, or (failing that) unbuffered,
@@ -74,8 +83,16 @@ trace(const unsigned int tracelevel GCC_UNUSED)
 #elif HAVE_SETBUF		/* POSIX */
 	(void) setbuffer(tracefp, (char *) 0);
 #endif
-	_tracef("TRACING NCURSES version %s (tracelevel=%#x)",
-		curses_version(), tracelevel);
+	_tracef("TRACING NCURSES version %s.%d (tracelevel=%#x)",
+		NCURSES_VERSION,
+		NCURSES_VERSION_PATCH,
+		tracelevel);
+    } else if (tracelevel == 0) {
+	if (tracefp != 0) {
+	    fclose(tracefp);
+	    tracefp = 0;
+	}
+	_nc_tracing = tracelevel;
     } else if (_nc_tracing != tracelevel) {
 	_nc_tracing = tracelevel;
 	_tracef("tracelevel=%#x", tracelevel);

@@ -1,11 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.0//EN">
 <!--
-  $Id: ncurses-intro.html,v 1.36 2002/07/06 15:50:36 juergen Exp $
+  $Id: ncurses-intro.html,v 1.39 2003/10/25 16:19:24 tom Exp $
 -->
 <HTML>
 <HEAD>
 <TITLE>Writing Programs with NCURSES</TITLE>
 <link rev="made" href="mailto:bugs-ncurses@gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
 
@@ -221,16 +222,11 @@ maintainer of this package is
 &lt;esr@snark.thyrsus.com&gt;
 wrote many of the new features in versions after 1.8.1
 and wrote most of this introduction.
-<A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">J&uuml;rgen Pfeifer</A>
+J&uuml;rgen Pfeifer
 wrote all of the menu and forms code as well as the
 <A HREF="http://www.adahome.com">Ada95</A> binding.
 Ongoing work is being done by
-<A HREF="mailto:dickey@herndon4.his.com">Thomas Dickey</A>
-and
-<A HREF="http://www.familiepfeifer.de/Contact.aspx?Lang=en">J&uuml;rgen Pfeifer</A>.
-<A HREF="mailto:florian@gnu.org">Florian La Roche</A>
-acts as the maintainer for the Free Software Foundation, which holds the
-copyright on ncurses.
+<A HREF="mailto:dickey@invisible-island.net">Thomas Dickey</A> (maintainer).
 Contact the current maintainers at
 <A HREF="mailto:bug-ncurses@gnu.org">bug-ncurses@gnu.org</A>.
 <P>
@@ -613,6 +609,7 @@ Presently, mouse event reporting works in the following environments:
 <li>xterm and similar programs such as rxvt.
 <li>Linux console, when configured with <CODE>gpm</CODE>(1), Alessandro
 Rubini's mouse server.
+<li>FreeBSD sysmouse (console)
 <li>OS/2 EMX
 </ul>
 <P>
@@ -2519,13 +2516,13 @@ By default, all options are on.  Here are the available option bits:
 <DL>
 <DT> O_NL_OVERLOAD
 <DD> Enable overloading of <CODE>REQ_NEW_LINE</CODE> as described in <A
-NAME="fedit">Editing Requests</A>.  The value of this option is
+href="#fedit">Editing Requests</A>.  The value of this option is
 ignored on dynamic fields that have not reached their size limit;
 these have no last line, so the circumstances for triggering a
 <CODE>REQ_NEXT_FIELD</CODE> never arise.
 <DT> O_BS_OVERLOAD
 <DD> Enable overloading of <CODE>REQ_DEL_PREV</CODE> as described in
-<A NAME="fedit">Editing Requests</A>.
+<A href="#fedit">Editing Requests</A>.
 </DL>
 
 The option values are bit-masks and can be composed with logical-or in

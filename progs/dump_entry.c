@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.64 2002/09/01 17:54:43 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.66 2003/05/24 22:43:59 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -913,15 +913,23 @@ dump_entry(TERMTYPE * tterm,
 	     */
 	    char *oldsgr = set_attributes;
 	    char *oldacsc = acs_chars;
-	    set_attributes = ABSENT_STRING;
-	    SHOW_WHY("# (sgr removed to fit entry within %d bytes)\n",
-		     critlen);
-	    if ((len = FMT_ENTRY()) > critlen) {
-		acs_chars = ABSENT_STRING;
-		SHOW_WHY("# (acsc removed to fit entry within %d bytes)\n",
+	    bool changed = FALSE;
+
+	    if (VALID_STRING(set_attributes)) {
+		set_attributes = ABSENT_STRING;
+		SHOW_WHY("# (sgr removed to fit entry within %d bytes)\n",
 			 critlen);
+		changed = TRUE;
 	    }
-	    if ((len = FMT_ENTRY()) > critlen) {
+	    if (!changed || ((len = FMT_ENTRY()) > critlen)) {
+		if (VALID_STRING(acs_chars)) {
+		    acs_chars = ABSENT_STRING;
+		    SHOW_WHY("# (acsc removed to fit entry within %d bytes)\n",
+			     critlen);
+		    changed = TRUE;
+		}
+	    }
+	    if (!changed || ((len = FMT_ENTRY()) > critlen)) {
 		int oldversion = tversion;
 
 		tversion = V_BSD;

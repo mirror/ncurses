@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998 Free Software Foundation, Inc.                        *
+.\" Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: panel.3x,v 1.10 2000/08/13 01:56:47 tom Exp $
+.\" $Id: panel.3x,v 1.11 2003/05/17 22:44:09 jmc Exp $
 .TH panel 3X ""
 .ds n 5
 .ds d @TERMINFO@
@@ -77,7 +77,7 @@ The set of currently visible panels is the stack of panels.  The
 of the stack.
 .P
 A window is associated with every panel. The panel routines enable
-you to create, move, hides, and show panels, as well as position a
+you to create, move, hide, and show panels, as well as position a
 panel at any desired location in the stack.
 .P
 Panel routines are a functional layer added to \fBcurses\fR(3X), make only

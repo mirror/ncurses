@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: term.7,v 1.13 2002/04/20 16:50:47 tom Exp @
+  * @Id: term.7,v 1.14 2003/05/10 20:33:49 jmc Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,6 +40,10 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
+<STRONG><A HREF="TERM.7.html">TERM(7)</A></STRONG>                                                   <STRONG><A HREF="TERM.7.html">TERM(7)</A></STRONG>
+
+
+
 
 </PRE>
 <H2>NAME</H2><PRE>
@@ -126,10 +130,10 @@
        ters or digits.  You need to avoid using punctuation char-
        acters  in  root  names,  because they are used and inter-
        preted as filenames and shell meta-characters (such as  !,
-       $, *, ? etc.) embedded in them may cause odd and unhelpful
-       behavior.  The slash (/), or any other character that  may
-       be  interpreted  by  anyone's file system (\, $, [, ]), is
-       especially dangerous  (terminfo  is  platform-independent,
+       $,  *, ?, etc.) embedded in them may cause odd and unhelp-
+       ful behavior.  The slash (/), or any other character  that
+       may  be  interpreted by anyone's file system (\, $, [, ]),
+       is especially dangerous (terminfo is platform-independent,
        and  choosing  names with special characters could someday
        make life difficult for users of a future port).  The  dot
        (.)  character  is  relatively safe as long as there is at
@@ -153,6 +157,7 @@
        in  a  multi-platform environment!  If a model number fol-
        lows, it should indicate either the OS  release  level  or
        the console driver release level.
+
        The root name for a terminal emulator (assuming it doesn't
        fit one of the standard ANSI or vt100 types) should be the
        program  name or a readily recognizable abbreviation of it
@@ -169,23 +174,23 @@
             another that has this suffix and uses  magic  cookies
             to support multiple attributes.
 
-       -am  Enable auto-margin (right-margin wraparound)
+       -am  Enable auto-margin (right-margin wraparound).
 
-       -m   Mono mode - suppress color support
+       -m   Mono mode - suppress color support.
 
        -na  No  arrow keys - termcap ignores arrow keys which are
             actually there on the terminal, so the user  can  use
             the arrow keys locally.
 
-       -nam No auto-margin - suppress am capability
+       -nam No auto-margin - suppress am capability.
 
-       -nl  No labels - suppress soft labels
+       -nl  No labels - suppress soft labels.
 
-       -nsl No status line - suppress status line
+       -nsl No status line - suppress status line.
 
        -pp  Has a printer port which is used.
 
-       -rv  Terminal in reverse video mode (black on white)
+       -rv  Terminal in reverse video mode (black on white).
 
        -s   Enable status line.
 
@@ -223,10 +228,10 @@
             compiled terminal capability data base
 
        /etc/inittab
-            tty line initialization (AT&amp;T-like UNIXes).
+            tty line initialization (AT&amp;T-like UNIXes)
 
        /etc/ttys
-            tty line initialization (BSD-like UNIXes).
+            tty line initialization (BSD-like UNIXes)
 
 
 </PRE>
@@ -235,38 +240,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                          <STRONG><A HREF="TERM.7.html">TERM(7)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -22,7 +22,7 @@
 
 #include <tack.h>
 
-MODULE_ID("$Id: init.c,v 1.3 2001/06/16 17:54:19 tom Exp $")
+MODULE_ID("$Id: init.c,v 1.4 2003/09/20 19:40:57 tom Exp $")
 
 #if NCURSES_VERSION_MAJOR >= 5 || NCURSES_VERSION_PATCH >= 981219
 #define _nc_get_curterm(p) _nc_get_tty_mode(p)
@@ -196,9 +196,17 @@ curses_setup(
 	ncurses starts scanning the termcap file.
 	**/
 	if ((status = _nc_read_entry(tty_basename, tty_filename, &term)) == 0) {
-		fprintf(stderr, "Terminal not found: TERM=%s\n", tty_basename);
-		show_usage(exec_name);
-		exit(1);
+		const TERMTYPE *fallback = _nc_fallback(tty_basename);
+
+		if (fallback) {
+		    term = *fallback;
+		    sprintf(tty_filename, "(fallback)%s", tty_basename);
+		    status = 1;
+		} else {
+		    fprintf(stderr, "Terminal not found: TERM=%s\n", tty_basename);
+		    show_usage(exec_name);
+		    exit(1);
+		}
 	}
 	if (status == -1) {
 		fprintf(stderr, "Terminfo database is inaccessible\n");

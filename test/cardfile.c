@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,26 +29,28 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: cardfile.c,v 1.19 2002/09/01 17:59:48 tom Exp $
+ * $Id: cardfile.c,v 1.23 2003/04/26 16:43:56 tom Exp $
  *
- * File format: text beginning in column 1 is a title; other text forms the content.
+ * File format: text beginning in column 1 is a title; other text is content.
  */
 
 #include <test.priv.h>
 
-#if HAVE_FORM_H && HAVE_PANEL_H && HAVE_LIBFORM && HAVE_LIBPANEL
+#if USE_LIBFORM && USE_LIBPANEL
 
 #include <form.h>
 #include <panel.h>
 
-#include <ctype.h>
-
 #define VISIBLE_CARDS 10
 #define OFFSET_CARD 2
 
-#ifndef CTRL
-#define CTRL(x)		((x) & 0x1f)
-#endif
+enum {
+    MY_CTRL_x = MAX_FORM_COMMAND
+    ,MY_CTRL_N
+    ,MY_CTRL_P
+    ,MY_CTRL_Q
+    ,MY_CTRL_W
+};
 
 typedef struct _card {
     struct _card *link;
@@ -273,14 +275,14 @@ form_virtualize(WINDOW *w)
 
     switch (c) {
     case CTRL('W'):
-	return (MAX_FORM_COMMAND + 4);
+	return (MY_CTRL_W);
     case CTRL('N'):
-	return (MAX_FORM_COMMAND + 3);
+	return (MY_CTRL_N);
     case CTRL('P'):
-	return (MAX_FORM_COMMAND + 2);
+	return (MY_CTRL_P);
     case CTRL('Q'):
     case 033:
-	return (MAX_FORM_COMMAND + 1);
+	return (MY_CTRL_Q);
 
     case KEY_BACKSPACE:
 	return (REQ_DEL_PREV);
@@ -311,10 +313,12 @@ make_fields(CARD * p, int form_high, int form_wide)
     f[0] = new_field(1, form_wide, 0, 0, 0, 0);
     set_field_back(f[0], A_REVERSE);
     set_field_buffer(f[0], 0, p->title);
+    field_opts_off(f[0], O_BLANK);
 
     f[1] = new_field(form_high - 1, form_wide, 1, 0, 0, 0);
     set_field_buffer(f[1], 0, p->content);
     set_field_just(f[1], JUSTIFY_LEFT);
+    field_opts_off(f[1], O_BLANK);
 
     f[2] = 0;
     return f;
@@ -394,18 +398,19 @@ cardfile(char *fname)
 	    break;
 	case E_UNKNOWN_COMMAND:
 	    switch (ch) {
-	    case MAX_FORM_COMMAND + 1:
+	    case MY_CTRL_Q:
 		finished = TRUE;
 		break;
-	    case MAX_FORM_COMMAND + 2:
+	    case MY_CTRL_P:
 		top_card = prev_card(top_card);
 		order_cards(top_card, visible_cards);
 		break;
-	    case MAX_FORM_COMMAND + 3:
+	    case MY_CTRL_N:
 		top_card = next_card(top_card);
 		order_cards(top_card, visible_cards);
 		break;
-	    case MAX_FORM_COMMAND + 4:
+	    case MY_CTRL_W:
+		form_driver(top_card->form, REQ_VALIDATION);
 		write_data(fname);
 		break;
 #if defined(KEY_RESIZE) && HAVE_WRESIZE

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.20 2002/07/20 14:52:14 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.24 2003/12/27 18:47:54 tom Exp $
 .TH curs_mouse 3X ""
 .SH NAME
 \fBgetmouse\fR, \fBungetmouse\fR,
@@ -36,10 +36,10 @@
 \fBmouseinterval\fR - mouse interface through curses
 .SH SYNOPSIS
 .nf
-\fB#include <curses.h>\fR
-
+\fB#include <curses.h>
+.PP
 \fBtypedef unsigned long mmask_t;
-
+.PP
 typedef struct
 {
     short id;         \fI/* ID to distinguish multiple devices */\fB
@@ -70,7 +70,7 @@ These functions provide an interface to mouse events from
 \fBncurses\fR(3X).
 Mouse events are represented by \fBKEY_MOUSE\fR
 pseudo-key values in the \fBwgetch\fR input stream.
-
+.PP
 To make mouse events visible, use the \fBmousemask\fR function.
 This will set
 the mouse events to be reported.
@@ -80,13 +80,13 @@ can be reported; on complete failure it returns 0.
 If oldmask is non-NULL,
 this function fills the indicated location with the previous value of the given
 window's mouse event mask.
-
+.PP
 As a side effect, setting a zero mousemask may turn off the mouse pointer;
 setting a nonzero mask may turn it on.
 Whether this happens is device-dependent.
-
+.PP
 Here are the mouse event type masks:
-
+.PP
 .TS
 l l
 _ _
@@ -118,7 +118,7 @@ BUTTON_ALT	alt was down during button state change
 ALL_MOUSE_EVENTS	report all button state changes
 REPORT_MOUSE_POSITION	report mouse movement
 .TE
-
+.PP
 Once a class of mouse events have been made visible in a window,
 calling the \fBwgetch\fR function on that window may return
 \fBKEY_MOUSE\fR as an indicator that a mouse event has been queued.
@@ -131,26 +131,26 @@ x in the event structure coordinates will be screen-relative character-cell
 coordinates.
 The returned state mask will have exactly one bit set to
 indicate the event type.
-
+.PP
 The \fBungetmouse\fR function behaves analogously to \fBungetch\fR.
 It pushes
 a \fBKEY_MOUSE\fR event onto the input queue, and associates with that event
 the given state data and screen-relative character-cell coordinates.
-
+.PP
 The \fBwenclose\fR function tests whether a given pair of screen-relative
 character-cell coordinates is enclosed by a given window, returning TRUE
 if it is and FALSE otherwise.
 It is useful for determining what subset of
 the screen windows enclose the location of a mouse event.
-
+.PP
 The \fBwmouse_trafo\fR function transforms a given pair of coordinates from
 stdscr-relative coordinates to screen-relative coordinates or vice versa.
 Please remember, that stdscr-relative coordinates are not always identical
 to screen-relative coordinates due to the mechanism to reserve lines on top
 or bottom of the screen for other purposes (ripoff() call, see also slk_...
 functions).
-If the parameter \fBto_screen\fR is \fBTRUE\fR, the pointers 
-\fBpY, pX\fR must reference the coordinates of a location inside the window 
+If the parameter \fBto_screen\fR is \fBTRUE\fR, the pointers
+\fBpY, pX\fR must reference the coordinates of a location inside the window
 \fBwin\fR.
 They are converted to screen-relative coordinates and returned
 through the pointers.
@@ -168,19 +168,18 @@ window, \fBFALSE\fR is returned.
 Please notice, that the referenced coordinates
 are only replaced by the converted coordinates if the transformation was
 successful.
- 
+.PP
 The \fBmouseinterval\fR function sets the maximum time (in thousands of a
 second) that can elapse between press and release events for them to
 be recognized as a click.
 Use \fBmouseinterval(-1)\fR to disable click resolution.
 This function returns the previous interval value.
 The default is one sixth of a second.
-
+.PP
 Note that mouse events will be ignored when input is in cooked mode, and will
 cause an error beep when cooked mode is being simulated in a window by a
 function such as \fBgetstr\fR that expects a linefeed for input-loop
 termination.
-
 .SH RETURN VALUE
 \fBgetmouse\fR, \fBungetmouse\fR and \fBmouseinterval\fR
 return the integer \fBERR\fR upon failure or \fBOK\fR
@@ -193,22 +192,38 @@ on their test result.
 .SH PORTABILITY
 These calls were designed for \fBncurses\fR(3X), and are not found in SVr4
 curses, 4.4BSD curses, or any other previous version of curses.
-
+.PP
 The feature macro \fBNCURSES_MOUSE_VERSION\fR is provided so the preprocessor
 can be used to test whether these features are present (its value is 1).
 If the interface is changed, the value of \fBNCURSES_MOUSE_VERSION\fR will be
 incremented.
-
+.PP
 The order of the \fBMEVENT\fR structure members is not guaranteed.
 Additional fields may be added to the structure in the future.
-
+.PP
 Under \fBncurses\fR(3X), these calls are implemented using either
-xterm's built-in mouse-tracking API or Alessandro Rubini's gpm server.
-If you are using something other than xterm and there is no gpm daemon
-running on your machine, mouse events will not be visible to
+xterm's built-in mouse-tracking API or
+platform-specific drivers including
+.RS
+Alessandro Rubini's gpm server.
+.br
+FreeBSD sysmouse
+.br
+OS/2 EMX
+.RE
+If you are using an unsupported configuration,
+mouse events will not be visible to
 \fBncurses\fR(3X) (and the \fBwmousemask\fR function will always
 return \fB0\fR).
-
+.PP
+If the terminfo entry contains a \fBXM\fR string,
+this is used in the xterm mouse driver to control the
+way the terminal is initialized for mouse operation.
+The default, if \fBXM\fR is not found,
+corresponds to private mode 1000 of xterm:
+.RS
+\\E[?1000%?%p1%{1}%=%th%el%;
+.RE
 The z member in the event structure is not presently used.
 It is intended
 for use with touch screens (which may be pressure-sensitive) or with
@@ -218,12 +233,12 @@ Mouse events under xterm will not in fact be ignored during cooked mode,
 if they have been enabled by \fBwmousemask\fR.
 Instead, the xterm mouse
 report sequence will appear in the string read.
-
+.PP
 Mouse events under xterm will not be detected correctly in a window with
 its keypad bit off, since they are interpreted as a variety of function key.
 Your terminfo description must have \fBkmous\fR set to "\\E[M" (the beginning
 of the response from xterm for mouse clicks).
-
+.PP
 Because there are no standard terminal responses that would serve to identify
 terminals which support the xterm mouse protocol, \fBncurses\fR assumes that
 if your $TERM environment variable contains "xterm",

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998,2002 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_buffer.3x,v 1.9 2002/01/19 22:48:23 tom Exp $
+.\" $Id: form_field_buffer.3x,v 1.10 2003/05/10 20:22:01 tom Exp $
 .TH form_field_buffer 3X ""
 .SH NAME
 \fBform_field_buffer\fR - field buffer control
@@ -50,7 +50,7 @@ to contain a given string.  Buffer 0 is the displayed value of the field; other
 numbered buffers may be allocated by applications through the \fBnbuf\fR
 argument of (see \fBform_field_new\fR(3X)) but are not manipulated by the forms
 library.  The function \fBfield_buffer\fR returns the address of the buffer.
-Please note that this buffer has always the length of the buffer, that means 
+Please note that this buffer has always the length of the buffer, that means
 that it may typically contain trailing spaces. If you entered leading spaces
 the buffer may also contain them. If you want the raw data, you must write your
 own routine that copies the value out of the buffer and removes the leading

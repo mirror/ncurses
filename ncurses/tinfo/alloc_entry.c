@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-2003               *
  ****************************************************************************/
 
 /*
@@ -47,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.37 2002/09/07 20:04:15 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.40 2003/11/08 21:29:54 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -61,10 +62,10 @@ NCURSES_EXPORT(void)
 _nc_init_entry(TERMTYPE * const tp)
 /* initialize a terminal type data block */
 {
-    int i;
+    unsigned i;
 
     if (stringbuf == 0)
-	stringbuf = malloc(MAX_STRTAB);
+	stringbuf = (char *) malloc(MAX_STRTAB);
 
 #if NCURSES_XNAMES
     tp->num_Booleans = BOOLCOUNT;
@@ -126,7 +127,8 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 /* copy the string parts to allocated storage, preserving pointers to it */
 {
     int offsets[MAX_ENTRY_SIZE / 2], useoffsets[MAX_USES];
-    int i, n;
+    unsigned i, n;
+    unsigned nuses = ep->nuses;
     TERMTYPE *tp = &(ep->tterm);
 
     if (copy_strings) {
@@ -141,7 +143,7 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 	    }
 	}
 
-	for (i = 0; i < ep->nuses; i++) {
+	for (i = 0; i < nuses; i++) {
 	    if (ep->uses[i].name == 0) {
 		ep->uses[i].name = _nc_save_str(ep->uses[i].name);
 	    }
@@ -160,7 +162,7 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 	    offsets[i] = tp->Strings[i] - stringbuf;
     }
 
-    for (i = 0; i < ep->nuses; i++) {
+    for (i = 0; i < nuses; i++) {
 	if (ep->uses[i].name == 0)
 	    useoffsets[i] = ABSENT_OFFSET;
 	else
@@ -200,7 +202,7 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
     }
 #endif
 
-    for (i = 0; i < ep->nuses; i++) {
+    for (i = 0; i < nuses; i++) {
 	if (useoffsets[i] == ABSENT_OFFSET)
 	    ep->uses[i].name = 0;
 	else
@@ -209,31 +211,34 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 }
 
 NCURSES_EXPORT(void)
-_nc_merge_entry
-(TERMTYPE * const to, TERMTYPE * const from)
+_nc_merge_entry(TERMTYPE * const to, TERMTYPE * const from)
 /* merge capabilities from `from' entry into `to' entry */
 {
-    int i;
+    unsigned i;
 
 #if NCURSES_XNAMES
     _nc_align_termtype(to, from);
 #endif
     for_each_boolean(i, from) {
-	int mergebool = from->Booleans[i];
+	if (to->Booleans[i] != CANCELLED_BOOLEAN) {
+	    int mergebool = from->Booleans[i];
 
-	if (mergebool == CANCELLED_BOOLEAN)
-	    to->Booleans[i] = FALSE;
-	else if (mergebool == TRUE)
-	    to->Booleans[i] = mergebool;
+	    if (mergebool == CANCELLED_BOOLEAN)
+		to->Booleans[i] = FALSE;
+	    else if (mergebool == TRUE)
+		to->Booleans[i] = mergebool;
+	}
     }
 
     for_each_number(i, from) {
-	int mergenum = from->Numbers[i];
+	if (to->Numbers[i] != CANCELLED_NUMERIC) {
+	    int mergenum = from->Numbers[i];
 
-	if (mergenum == CANCELLED_NUMERIC)
-	    to->Numbers[i] = ABSENT_NUMERIC;
-	else if (mergenum != ABSENT_NUMERIC)
-	    to->Numbers[i] = mergenum;
+	    if (mergenum == CANCELLED_NUMERIC)
+		to->Numbers[i] = ABSENT_NUMERIC;
+	    else if (mergenum != ABSENT_NUMERIC)
+		to->Numbers[i] = mergenum;
+	}
     }
 
     /*
@@ -242,11 +247,13 @@ _nc_merge_entry
      * we ever want to deallocate entries.
      */
     for_each_string(i, from) {
-	char *mergestring = from->Strings[i];
+	if (to->Strings[i] != CANCELLED_STRING) {
+	    char *mergestring = from->Strings[i];
 
-	if (mergestring == CANCELLED_STRING)
-	    to->Strings[i] = ABSENT_STRING;
-	else if (mergestring != ABSENT_STRING)
-	    to->Strings[i] = mergestring;
+	    if (mergestring == CANCELLED_STRING)
+		to->Strings[i] = ABSENT_STRING;
+	    else if (mergestring != ABSENT_STRING)
+		to->Strings[i] = mergestring;
+	}
     }
 }

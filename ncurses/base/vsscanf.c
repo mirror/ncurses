@@ -38,7 +38,7 @@
 
 #if !HAVE_VSSCANF
 
-MODULE_ID("$Id: vsscanf.c,v 1.16 2002/09/07 17:27:56 tom Exp $")
+MODULE_ID("$Id: vsscanf.c,v 1.17 2003/05/24 21:10:28 tom Exp $")
 
 #if !(HAVE_VFSCANF || HAVE__DOSCAN)
 
@@ -230,7 +230,7 @@ vsscanf(const char *str, const char *format, va_list ap)
 		/* find a chunk */
 		state = sUnknown;
 		chunk = cUnknown;
-		other = cUnknown;
+		other = oUnknown;
 		pointer = 0;
 		for (n = 0; format[n] != 0 && state != sFinal; ++n) {
 		    my_fmt[n] = format[n];

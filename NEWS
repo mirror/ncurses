@@ -1,10 +1,792 @@
--- $Id: NEWS,v 1.714 2002/10/12 22:35:42 tom Exp $
+-- $Id: NEWS,v 1.797 2004/02/08 21:15:26 tom Exp $
 
 This is a log of changes that ncurses has gone through since Zeyd started
 working with Pavel Curtis' original work, pcurses, in 1992.
 
 Changes through 1.9.9e are recorded by Zeyd M. Ben-Halim.
 Changes since 1.9.9e are recorded by Thomas Dickey.
+
+20040208 5.4 release for upload to ftp.gnu.org
+	+ update TO-DO.
+
+20040207 pre-release
+	+ minor fixes to _nc_tparm_analyze(), i.e., do not count %i as a param,
+	  and do not count %d if it follows a %p.
+	+ correct an inconsistency between handling of codes in the 128-255
+	  range, e.g., as illustrated by test/ncurses.c f/F tests.  In POSIX
+	  locale, the latter did not show printable results, while the former
+	  did.
+	+ modify MKlib_gen.sh to compensate for broken C preprocessor on Mac
+	  OS X, which alters "%%" to "% % " (report by Robert Simms, fix
+	  verified by Scott Corscadden).
+
+20040131 pre-release
+	+ modify SCREEN struct to align it between normal/wide curses flavors
+	  to simplify future changes to build a single version of libtinfo
+	  (patch by Stanislav Ievlev).
+	+ document handling of carriage return by addch() in manpage.
+	+ document special features of unctrl() in manpage.
+	+ documented interface changes in INSTALL.
+	+ corrected control-char test in lib_addch.c to account for locale
+	  (Debian #230335, cf: 971206).
+	+ updated test/configure.in to use AC_EXEEXT and AC_OBJEXT.
+	+ fixes to compile Ada95 binding with Debian gnat 3.15p-4 package.
+	+ minor configure-script fixes for older ports, e.g., BeOS R4.5.
+
+20040125 pre-release
+	+ amend change to PutAttrChar() from 20030614 which computed the number
+	  of cells for a possibly multi-cell character.  The 20030614 change
+	  forced the cell to a blank if the result from wcwidth() was not
+	  greater than zero.  However, wcwidth() called for parameters in the
+	  range 128-255 can give this return value.  The logic now simply
+	  ensures that the number of cells is greater than zero without
+	  modifying the displayed value.
+
+20040124 pre-release
+	+ looked good for 5.4 release for upload to ftp.gnu.org (but see above)
+	+ modify configure script check for ranlib to use AC_CHECK_TOOL, since
+	  that works better for cross-compiling.
+
+20040117 pre-release
+	+ modify lib_get_wch.c to prefer mblen/mbtowc over mbrlen/mbrtowc to
+	  work around core dump in Solaris 8's locale support, e.g., for
+	  zh_CN.GB18030 (report by Saravanan Bellan).
+	+ add includes for <stdarg.h> and <stdio.h> in configure script macro
+	  to make <wchar.h> check work with Tru64 4.0d.
+	+ add terminfo entry for U/Win -TD
+	+ add terminfo entries for SFU aka Interix aka OpenNT (Federico
+	  Bianchi).
+	+ modify tput's error messages to prefix them with the program name
+	  (report by Vincent Lefevre, patch by Daniel Jacobowitz, Debian
+	  #227586).
+	+ correct a place in tack where exit_standout_mode was used instead of
+	  exit_attribute_mode (patch by Jochen Voss, Debian #224443).
+	+ modify c++/cursesf.h to use const in the Enumeration_Field method.
+	+ remove an ambiguous (actually redundant) method from c++/cursesf.h
+	+ make $HOME/.terminfo update optional (suggested by Stanislav Ievlev).
+	+ improve sed script which extracts libtool's version in the
+	  CF_WITH_LIBTOOL macro.
+	+ add ifdef'd call to AC_PROG_LIBTOOL to CF_WITH_LIBTOOL macro (to
+	  simplify local patch for Albert Chin-A-Young)..
+	+ add $(CXXFLAGS) to link command in c++/Makefile.in (adapted from
+	  patch by Albert Chin-A-Young)..
+	+ fix a missing substitution in configure.in for "$target" needed for
+	  HPUX .so/.sl case.
+	+ resync CF_XOPEN_SOURCE configure macro with lynx; fixes IRIX64 and
+	  NetBSD 1.6 conflicts with _XOPEN_SOURCE.
+	+ make check for stdbool.h more specific, to ensure that including it
+	  will actually define/declare bool for the configured compiler.
+	+ rewrite ifdef's in curses.h relating NCURSES_BOOL and bool.  The
+	  intention of that is to #define NCURSES_BOOL as bool when the
+	  compiler declares bool, and to #define bool as NCURSES_BOOL when it
+	  does not (reported by Jim Gifford, Sam Varshavchik, cf: 20031213).
+
+20040110 pre-release
+	+ change minor version to 4, i.e., ncurses 5.4
+	+ revised/improved terminfo entries for tvi912b, tvi920b (Benjamin C W
+	  Sittler).
+	+ simplified ncurses/base/version.c by defining the result from the
+	  configure script rather than using sprintf (suggested by Stanislav
+	  Ievlev).
+	+ remove obsolete casts from c++/cursesw.h (reported by Stanislav
+	  Ievlev).
+	+ modify configure script so that when configuring for termlib, programs
+	  such as tic are not linked with the upper-level ncurses library
+	  (suggested by Stanislav Ievlev).
+	+ move version.c from ncurses/base to ncurses/tinfo to allow linking
+	  of tic, etc., using libtinfo (suggested by Stanislav Ievlev).
+
+20040103
+	+ adjust -D's to build ncursesw on OpenBSD.
+	+ modify CF_PROG_EXT to make OS/2 build with EXEEXT.
+	+ add pecho_wchar().
+	+ remove <wctype.h> include from lib_slk_wset.c which is not needed (or
+	  available) on older platforms.
+
+20031227
+	+ add -D's to build ncursew on FreeBSD 5.1.
+	+ modify shared library configuration for FreeBSD 4.x/5.x to add the
+	  soname information (request by Marc Glisse).
+	+ modify _nc_read_tic_entry() to not use MAX_ALIAS, but PATH_MAX only
+	  for limiting the length of a filename in the terminfo database.
+	+ modify termname() to return the terminal name used by setupterm()
+	  rather than $TERM, without truncating to 14 characters as documented
+	  by X/Open (report by Stanislav Ievlev, cf:  970719).
+	+ re-add definition for _BSD_TYPES, lost in merge (cf: 20031206).
+
+20031220
+	+ add configure option --with-manpage-format=catonly to address
+	  behavior of BSDI, allow install of man+cat files on NetBSD, whose
+	  behavior has diverged by requiring both to be present.
+	+ remove leading blanks from comment-lines in manlinks.sed script to
+	  work with Tru64 4.0d.
+	+ add screen.linux terminfo entry (discussion on mutt-users mailing
+	  list).
+
+20031213
+	+ add a check for tic to flag missing backslashes for termcap
+	  continuation lines.  ncurses reads the whole entry, but termcap
+	  applications do not.
+	+ add configure option "--with-manpage-aliases" extending
+	  "--with-manpage-aliases" to provide the option of generating ".so"
+	  files rather than symbolic links for manpage aliases.
+	+ add bool definition in include/curses.h.in for configurations with no
+	  usable C++ compiler (cf: 20030607).
+	+ fix pathname of SigAction.h for building with --srcdir (reported by
+	  Mike Castle).
+
+20031206
+	+ folded ncurses/base/sigaction.c into includes of ncurses/SigAction.h,
+	  since that header is used only within ncurses/tty/lib_tstp.c, for
+	  non-POSIX systems (discussion with Stanislav Ievlev).
+	+ remove obsolete _nc_outstr() function (report by Stanislav Ievlev
+	  <inger@altlinux.org>).
+	+ add test/background.c and test/color_set.c
+	+ modify color_set() function to work with color pair 0 (report by
+	  George Andreou <gbandreo@tem.uoc.gr>).
+	+ add configure option --with-trace, since defining TRACE seems too
+	  awkward for some cases.
+	+ remove a call to _nc_free_termtype() from read_termtype(), since the
+	  corresponding buffer contents were already zeroed by a memset (cf:
+	  20000101).
+	+ improve configure check for _XOPEN_SOURCE and related definitions,
+	  adding special cases for Solaris' __EXTENSIONS__ and FreeBSD's
+	  __BSD_TYPES (reports by Marc Glisse <marc.glisse@normalesup.org>).
+	+ small fixes to compile on Solaris and IRIX64 using cc.
+	+ correct typo in check for pre-POSIX sort options in MKkey_defs.sh
+	  (cf: 20031101).
+
+20031129
+	+ modify _nc_gettime() to avoid a problem with arithmetic on unsigned
+	  values (Philippe Blain).
+	+ improve the nanosleep() logic in napms() by checking for EINTR and
+	  restarting (Philippe Blain).
+	+ correct expression for "%D" in lib_tgoto.c (Juha Jarvi
+	  <mooz@welho.com>).
+
+20031122
+	+ add linux-vt terminfo entry (Andrey V Lukyanov <land@long.yar.ru>).
+	+ allow "\|" escape in terminfo; tic should not warn about this.
+	+ save the full pathname of the trace-file the first time it is opened,
+	  to avoid creating it in different directories if the application
+	  opens and closes it while changing its working directory.
+	+ modify configure script to provide a non-empty default for
+	  $BROKEN_LINKER
+
+20031108
+	+ add DJGPP to special case of DOS-style drive letters potentially
+	  appearing in TERMCAP environment variable.
+	+ fix some spelling in comments (reports by jmc, Jonathon Gray).
+	+ update config.guess, config.sub
+
+20031101
+	+ fix a memory leak in error-return from setupterm() (report by
+	  Stanislav Ievlev <inger@altlinux.org>).
+	+ use EXEEXT and OBJEXT consistently in makefiles.
+	+ amend fixes for cross-compiling to use separate executable-suffix
+	  BUILD_EXEEXT (cf: 20031018).
+	+ modify MKkey_defs.sh to check for sort utility that does not
+	  recognize key options, e.g., busybox (report by Peter S Mazinger
+	  <ps.m@gmx.net>).
+	+ fix potential out-of-bounds indexing in _nc_infotocap() (found by
+	  David Krause using some of the new malloc debugging features
+	  under OpenBSD, patch by Ted Unangst).
+	+ modify CF_LIB_SUFFIX for Itanium releases of HP-UX, which use a
+	  ".so" suffix (patch by Jonathan Ward <Jonathan.Ward@hp.com>).
+
+20031025
+	+ update terminfo for xterm-xfree86 -TD
+	+ add check for multiple "tc=" clauses in a termcap to tic.
+	+ check for missing op/oc in tic.
+	+ correct _nc_resolve_uses() and _nc_merge_entry() to allow infocmp and
+	  tic to show cancelled capabilities.  These functions were ignoring
+	  the state of the target entry, which should be untouched if cancelled.
+	+ correct comment in tack/output.c (Debian #215806).
+	+ add some null-pointer checks to lib_options.c (report by Michael
+	  Bienia).
+	+ regenerated html documentation.
+	+ correction to tar-copy.sh, remove a trap command that resulted in
+	  leaving temporary files (cf: 20030510).
+	+ remove contact/maintainer addresses for Juergen Pfeifer (his request).
+
+20031018
+	+ updated test/configure to reflect changes for libtool (cf: 20030830).
+	+ fix several places in tack/pad.c which tested and used the parameter-
+	  and parameterless strings inconsistently, i.e., in pad_rin(),
+	  pad_il(), pad_indn() and pad_dl() (Debian #215805).
+	+ minor fixes for configure script and makefiles to cleanup executables
+	  generated when cross-compiling for DJGPP.
+	+ modify infocmp to omit check for $TERM for operations that do not
+	  require it, e.g., "infocmp -e" used to build fallback list (report by
+	  Koblinger Egmont).
+
+20031004
+	+ add terminfo entries for DJGPP.
+	+ updated note about maintainer in ncurses-intro.html
+
+20030927
+	+ update terminfo entries for gnome terminal.
+	+ modify tack to reset colors after each color test, correct a place
+	  where exit_standout_mode was used instead of exit_attribute_mode.
+	+ improve tack's bce test by making it set colors other than black
+	  on white.
+	+ plug a potential recursion between napms() and _nc_timed_wait()
+	  (report by Philippe Blain).
+
+20030920
+	+ add --with-rel-version option to allow workaround to allow making
+	  libtool on Darwin generate the "same" library names as with the
+	  --with-shared option.  The Darwin ld program does not work well
+	  with a zero as the minor-version value (request by Chris Zubrzycki).
+	+ modify CF_MIXEDCASE_FILENAMES macro to work with cross-compiling.
+	+ modify tack to allow it to run from fallback terminfo data.
+	> Philippe Blain:
+	+ improve PutRange() by adjusting call to EmitRange() and corresponding
+	  return-value to not emit unchanged characters on the end of the
+	  range.
+	+ improve a check for changed-attribute by exiting a loop when the
+	  change is found.
+	+ improve logic in TransformLine(), eliminating a duplicated comparison
+	  in the clr_bol logic.
+
+20030913
+	> Philippe Blain:
+	+ in ncurses/tty/lib_mvcur.c,
+	  move the label 'nonlocal' just before the second gettimeofday() to
+	  be able to compute the diff time when 'goto nonlocal' used.
+	  Rename 'msec' to 'microsec' in the debug-message.
+	+ in ncurses/tty/lib_mvcur.c,
+	  Use _nc_outch() in carriage return/newline movement instead of
+	  putchar() which goes to stdout.  Move test for xold>0 out of loop.
+	+ in ncurses/tinfo/setbuf.c,
+	  Set the flag SP->_buffered at the end of operations when all has been
+	  successful (typeMalloc can fail).
+	+ simplify NC_BUFFERED macro by moving check inside _nc_setbuf().
+
+20030906
+	+ modify configure script to avoid using "head -1", which does not
+	  work if POSIXLY_CORRECT (sic) is set.
+	+ modify run_tic.in to avoid using wrong shared libraries when
+	  cross-compiling (Dan Kegel).
+
+20030830
+	+ alter configure script help message to make it clearer that
+	  --with-build-cc does not specify a cross-compiler (suggested by Dan
+	  Kegel <dank@kegel.com>).
+	+ modify configure script to accommodate libtool 1.5, as well as add an
+	  parameter to the "--with-libtool" option which can specify the
+	  pathname of libtool (report by Chris Zubrzycki).  We note that
+	  libtool 1.5 has more than one bug in its C++ support, so it is not
+	  able to install libncurses++, for instance, if $DESTDIR or the option
+	  --with-install-prefix is used.
+
+20030823
+	> Philippe Blain:
+	+ move assignments to SP->_cursrow, SP->_curscol into online_mvcur().
+	+ make baudrate computation in delay_output() consistent with the
+	  assumption in _nc_mvcur_init(), i.e., a byte is 9 bits.
+
+20030816
+	+ modify logic in waddch_literal() to take into account zh_TW.Big5
+	  whose multibyte sequences may contain "printable" characters, e.g.,
+	  a "g" in the sequence "\247g" (Debian #204889, cf: 20030621).
+	+ improve storage used by _nc_safe_strcpy() by ensuring that the size
+	  is reset based on the initialization call, in case it were called
+	  after other strcpy/strcat calls (report by Philippe Blain).
+	> Philippe Blain:
+	+ remove an unused ifdef for REAL_ATTR & WANT_CHAR
+	+ correct a place where _cup_cost was used rather than _cuu_cost
+
+20030809
+	+ fix a small memory leak in _nc_free_termtype().
+	+ close trace-file if trace() is called with a zero parameter.
+	+ free memory allocated for soft-key strings, in delscreen().
+	+ fix an allocation size in safe_sprintf.c for the "*" format code.
+	+ correct safe_sprintf.c to not return a null pointer if the format
+	  happens to be an empty string.  This applies to the "configure
+	  --enable-safe-sprintf" option (Redhat #101486).
+
+20030802
+	+ modify casts used for ABSENT_BOOLEAN and CANCELLED_BOOLEAN (report by
+	  Daniel Jacobowitz).
+	> Philippe Blain:
+	+ change padding for change_scroll_region to not be proportional to
+	  the size of the scroll-region.
+	+ correct error-return in _nc_safe_strcat().
+
+20030726
+	+ correct limit-checks in _nc_scroll_window() (report and test-case by
+	  Thomas Graf <graf@dms.at> cf: 20011020).
+	+ re-order configure checks for _XOPEN_SOURCE to avoid conflict with
+	  _GNU_SOURCE check.
+
+20030719
+	+ use clr_eol in preference to blanks for bce terminals, so select and
+	  paste will have fewer trailing blanks, e.g., when using xterm
+	  (request by Vincent Lefevre).
+	+ correct prototype for wunctrl() in manpage.
+	+ add configure --with-abi-version option (discussion with Charles
+	  Wilson).
+	> cygwin changes from Charles Wilson:
+	  + aclocal.m4: on cygwin, use autodetected prefix for import
+	    and static lib, but use "cyg" for DLL.
+	  + include/ncurses_dll.h: correct the comments to reflect current
+	    status of cygwin/mingw port.  Fix compiler warning.
+	  + misc/run_tic.in: ensure that tic.exe can find the uninstalled
+	    DLL, by adding the lib-directory to the PATH variable.
+	  + misc/terminfo.src (nxterm|xterm-color): make xterm-color
+	    primary instead of nxterm, to match XFree86's xterm.terminfo
+	    usage and to prevent circular links.
+	    (rxvt): add additional codes from rxvt.org.
+	    (rxvt-color): new alias
+	    (rxvt-xpm): new alias
+	    (rxvt-cygwin): like rxvt, but with special acsc codes.
+	    (rxvt-cygwin-native): ditto.  rxvt may be run under XWindows, or
+	    with a "native" MSWin GUI.	Each takes different acsc codes,
+	    which are both different from the "normal" rxvt's acsc.
+	    (cygwin): cygwin-in-cmd.exe window.	 Lots of fixes.
+	    (cygwinDBG): ditto.
+	  + mk-1st.awk: use "cyg" for the DLL prefix, but "lib" for import
+	    and static libs.
+
+20030712
+	+ update config.guess, config.sub
+	+ add triples for configuring shared libraries with the Debian
+	  GNU/FreeBSD packages (patch by Robert Millan <zeratul2@wanadoo.es>).
+
+20030705
+	+ modify CF_GCC_WARNINGS so it only applies to gcc, not g++.  Some
+	  platforms have installed g++ along with the native C compiler, which
+	  would not accept gcc warning options.
+	+ add -D_XOPEN_SOURCE=500 when configuring with --enable-widec, to
+	  get mbstate_t declaration on HPUX 11.11 (report by David Ellement).
+	+ add _nc_pathlast() to get rid of casts in _nc_basename() calls.
+	+ correct a sign-extension in wadd_wch() and wecho_wchar() from
+	  20030628 (report by Tomohiro KUBOTA).
+	+ work around omission of btowc() and wctob() from wide-character
+	  support (sic) in NetBSD 1.6 using mbtowc() and wctomb() (report by
+	  Gabor Z Papp).
+	+ add portability note to curs_get_wstr.3x (Debian #199957).
+
+20030628
+	+ rewrite wadd_wch() and wecho_wchar() to call waddch() and wechochar()
+	  respectively, to avoid calling waddch_noecho() with wide-character
+	  data, since that function assumes its input is 8-bit data.
+	  Similarly, modify waddnwstr() to call wadd_wch().
+	+ remove logic from waddnstr() which transformed multibyte character
+	  strings into wide-characters.  Rewrite of waddch_literal() from
+	  20030621 assumes its input is raw multibyte data rather than wide
+	  characters (report by Tomohiro KUBOTA).
+
+20030621
+	+ write getyx() and related 2-return macros in terms of getcury(),
+	  getcurx(), etc.
+	+ modify waddch_literal() in case an application passes bytes of a
+	  multibyte character directly to waddch().  In this case, waddch()
+	  must reassemble the bytes into a wide-character (report by Tomohiro
+	  KUBOTA <kubota@debian.org>).
+
+20030614
+	+ modify waddch_literal() in case a multibyte value occupies more than
+	  two cells.
+	+ modify PutAttrChar() to compute the number of character cells that
+	  are used in multibyte values.  This fixes a problem displaying
+	  double-width characters (report/test by Mitsuru Chinen
+	  <mchinen@yamato.ibm.com>).
+	+ add a null-pointer check for result of keyname() in _tracechar()
+	+ modify _tracechar() to work around glibc sprintf bug.
+
+20030607
+	+ add a call to setlocale() in cursesmain.cc, making demo display
+	  properly in a UTF-8 locale.
+	+ add a fallback definition in curses.priv.h for MB_LEN_MAX (prompted
+	  by discussion with Gabor Z Papp).
+	+ use macros NCURSES_ACS() and NCURSES_WACS() to hide cast needed to
+	  appease -Wchar-subscript with g++ 3.3 (Debian #195732).
+	+ fix a redefinition of $RANLIB in the configure script when libtool
+	  is used, which broke configure on Mac OS X (report by Chris Zubrzycki
+	  <beren@mac.com>).
+	+ simplify ifdef for bool declaration in curses.h.in (suggested by
+	  Albert Chin-A-Young).
+	+ remove configure script check to allow -Wconversion for older
+	  versions of gcc (suggested by Albert Chin-A-Young).
+
+20030531
+	+ regenerated html manpages.
+	+ modify ifdef's in curses.h.in that disabled use of __attribute__()
+	  for g++, since recent versions implement the cases which ncurses uses
+	  (Debian #195230).
+	+ modify _nc_get_token() to handle a case where an entry has no
+	  description, and capabilities begin on the same line as the entry
+	  name.
+	+ fix a typo in ncurses_dll.h reported by gcc 3.3.
+	+ add an entry for key_defined.3x to man_db.renames.
+
+20030524
+	+ modify setcchar() to allow converting control characters to complex
+	  characters (report/test by Mitsuru Chinen <mchinen@yamato.ibm.com>).
+	+ add tkterm entry -TD
+	+ modify parse_entry.c to allow a terminfo entry with a leading
+	  2-character name (report by Don Libes).
+	+ corrected acsc in screen.teraterm, which requires a PC-style mapping.
+	+ fix trace statements in read_entry.c to use lseek() rather than
+	  tell().
+	+ fix signed/unsigned warnings from Sun's compiler (gcc should give
+	  these warnings, but it is unpredictable).
+	+ modify configure script to omit -Winline for gcc 3.3, since that
+	  feature is broken.
+	+ modify manlinks.sed to add a few functions that were overlooked since
+	  they return function pointers:  field_init, field_term, form_init,
+	  form_term, item_init, item_term, menu_init and menu_term.
+
+20030517
+	+ prevent recursion in wgetch() via wgetnstr() if the connection cannot
+	  be switched between cooked/raw modes because it is not a TTY (report
+	  by Wolfgang Gutjahr <gutw@knapp.com>).
+	+ change parameter of define_key() and key_defined() to const (prompted
+	  by Debian #192860).
+	+ add a check in test/configure for ncurses extensions, since there
+	  are some older versions, etc., which would not compile with the
+	  current test programs.
+	+ corrected demo in test/ncurses.c of wgetn_wstr(), which did not
+	  convert wchar_t string to multibyte form before printing it.
+	+ corrections to lib_get_wstr.c:
+	  + null-terminate buffer passed to setcchar(), which occasionally
+	    failed.
+	  + map special characters such as erase- and kill-characters into
+	    key-codes so those will work as expected even if they are not
+	    mentioned in the terminfo.
+	+ modify PUTC() and Charable() macros to make wide-character line
+	  drawing work for POSIX locale on Linux console (cf: 20021221).
+
+20030510
+	+ make typography for program options in manpages consistent (report
+	  by Miloslav Trmac <mitr@volny.cz>).
+	+ correct dependencies in Ada95/src/Makefile.in, so the builds with
+	  "--srcdir" work (report by Warren L Dodge).
+	+ correct missing definition of $(CC) in Ada95/gen/Makefile.in
+	  (reported by Warren L Dodge <warrend@mdhost.cse.tek.com>).
+	+ fix typos and whitespace in manpages (patch by jmc
+	  <jmc@prioris.mini.pw.edu.pl>).
+
+20030503
+	+ fix form_driver() cases for REQ_CLR_EOF, REQ_CLR_EOL, REQ_DEL_CHAR,
+	  REQ_DEL_PREV and REQ_NEW_LINE, which did not ensure the cursor was at
+	  the editing position before making modifications.
+	+ add test/demo_forms and associated test/edit_field.c demos.
+	+ modify test/configure.in to use test/modules for the list of objects
+	  to compile rather than using the list of programs.
+
+20030419
+	+ modify logic of acsc to use the original character if no mapping is
+	  defined, noting that Solaris does this.
+	+ modify ncurses 'b' test to avoid using the acs_map[] array since
+	  20021231 changes it to no longer contain information from the acsc
+	  string.
+	+ modify makefile rules in c++, progs, tack and test to ensure that
+	  the compiler flags (e.g., $CFLAGS or $CCFLAGS) are used in the link
+	  command (report by Jose Luis Rico Botella <informatica@serpis.com>).
+	+ modify soft-key initialization to use A_REVERSE if A_STANDOUT would
+	  not be shown when colors are used, i.e., if ncv#1 is set in the
+	  terminfo as is done in "screen".
+
+20030412
+	+ add a test for slk_color(), in ncurses.c
+	+ fix some issues reported by valgrind in the slk_set() and slk_wset()
+	  code, from recent rewrite.
+	+ modify ncurses 'E' test to use show previous label via slk_label(),
+	  as in 'e' test.
+	+ modify wide-character versions of NewChar(), NewChar2() macros to
+	  ensure that the whole struct is initialized.
+
+20030405
+	+ modify setupterm() to check if the terminfo and terminal-modes have
+	  already been read.  This ensures that it does not reinvoke
+	  def_prog_mode() when an application calls more than one function,
+	  such as tgetent() and initscr() (report by Olaf Buddenhagen).
+
+20030329
+	+ add 'E' test to ncurses.c, to exercise slk_wset().
+	+ correct handling of carriage-return in wgetn_wstr(), used in demo of
+	  slk_wset().
+	+ first draft of slk_wset() function.
+
+20030322
+	+ improved warnings in tic when suppressing items to fit in termcap's
+	  1023-byte limit.
+	+ built a list in test/README showing which externals are being used
+	  by either programs in the test-directory or via internal library
+	  calls.
+	+ adjust include-options in CF_ETIP_DEFINES to avoid missing
+	  ncurses_dll.h, fixing special definitions that may be needed for
+	  etip.h (reported by Greg Schafer <gschafer@zip.com.au>).
+
+20030315
+	+ minor fixes for cardfile.c, to make it write the updated fields to
+	  a file when ^W is given.
+	+ add/use _nc_trace_bufcat() to eliminate some fixed buffer limits in
+	  trace code.
+
+20030308
+	+ correct a case in _nc_remove_string(), used by define_key(), to avoid
+	  infinite loop if the given string happens to be a substring of other
+	  strings which are assigned to keys (report by John McCutchan).
+	+ add key_defined() function, to tell which keycode a string is bound
+	  to (discussion with John McCutchan <ttb@tentacle.dhs.org>).
+	+ correct keybound(), which reported definitions in the wrong table,
+	  i.e., the list of definitions which are disabled by keyok().
+	+ modify demo_keydef.c to show the details it changes, and to check
+	  for errors.
+
+20030301
+	+ restructured test/configure script, make it work for libncursesw.
+	+ add description of link_fieldtype() to manpage (report by
+	  L Dee Holtsclaw <dee@sunbeltsoft.com>).
+
+20030222
+	+ corrected ifdef's relating to configure check for wchar_t, etc.
+	+ if the output is a socket or other non-tty device, use 1 millisecond
+	  for the cost in mvcur; previously it was 9 milliseconds because the
+	  baudrate was not known.
+	+ in _nc_get_tty_mode(), initialize the TTY buffer on error, since
+	  glibc copies uninitialized data in that case, as noted by valgrind.
+	+ modify tput to use the same parameter analysis as tparm() does, to
+	  provide for user-defined strings, e.g., for xterm title, a
+	  corresponding capability might be
+		title=\E]2;%p1%s^G,
+	+ modify MKlib_gen.sh to avoid passing "#" tokens through the C
+	  preprocessor.  This works around Mac OS X's preprocessor, which
+	  insists on adding a blank on each side of the token (report/analysis
+	  by Kevin Murphy <murphy@genome.chop.edu>).
+
+20030215
+	+ add configure check for wchar_t and wint_t types, rather than rely
+	  on preprocessor definitions.  Also work around for gcc fixinclude
+	  bug which creates a shadow copy of curses.h if it sees these symbols
+	  apparently typedef'd.
+	+ if database is disabled, do not generate run_tic.sh
+	+ minor fixes for memory-leak checking when termcap is read.
+
+20030208
+	+ add checking in tic for incomplete line-drawing character mapping.
+	+ update configure script to reflect fix for AC_PROG_GCC_TRADITIONAL,
+	  which is broken in autoconf 2.5x for Mac OS X 10.2.3 (report by
+	  Gerben Wierda <Sherlock@rna.nl>).
+	+ make return value from _nc_printf_string() consistent.  Before,
+	  depending on whether --enable-safe-sprintf was used, it might not be
+	  cached for reallocating.
+
+20030201
+	+ minor fixes for memory-leak checking in lib_tparm.c, hardscroll.c
+	+ correct a potentially-uninitialized value if _read_termtype() does
+	  not read as much data as expected (report by Wolfgang Rohdewald
+	  <wr6@uni.de>).
+	+ correct several places where the aclocal.m4 macros relied on cache
+	  variable names which were incompatible (as usual) between autoconf
+	  2.13 and 2.5x, causing the test for broken-linker to give incorrect
+	  results (reports by Gerben Wierda <Sherlock@rna.nl> and Thomas Esser
+	  <te@dbs.uni-hannover.de>).
+	+ do not try to open gpm mouse driver if standard output is not a tty;
+	  the gpm library does not make this check (from bug report for dialog
+	  by David Oliveira <davidoliveira@develop.prozone.ws>).
+
+20030125
+	+ modified emx.src to correspond more closely to terminfo.src, added
+	  emx-base to the latter -TD
+	+ add configure option for FreeBSD sysmouse, --with-sysmouse, and
+	  implement support for that in lib_mouse.c, lib_getch.c
+
+20030118
+	+ revert 20030105 change to can_clear_with(), does not work for the
+	  case where the update is made on cells which are blanks with
+	  attributes, e.g., reverse.
+	+ improve ifdef's to guard against redefinition of wchar_t and wint_t
+	  in curses.h (report by Urs Jansen).
+
+20030111
+	+ improve mvcur() by checking if it is safe to move when video
+	  attributes are set (msgr), and if not, reset/restore attributes
+	  within that function rather than doing it separately in the GoTo()
+	  function in tty_update.c (suggested by Philippe Blain).
+	+ add a message in run_tic.in to explain more clearly what does not
+	  work when attempting to create a symbolic link for /usr/lib/terminfo
+	  on OS/2 and other platforms with no symbolic links (report by John
+	  Polterak).
+	+ change several sed scripts to avoid using "\+" since it is not a BRE
+	  (basic regular expression).  One instance caused terminfo.5 to be
+	  misformatted on FreeBSD (from a FreeBSD bug report by Kazuo Horikawa
+	  <horikawa@FreeBSD.org>).
+	+ correct misspelled 'wint_t' in curs_get_wch.3x (Michael Elkins).
+
+20030105
+	+ improve description of terminfo operators, especially static/dynamic
+	  variables (comments by Mark I Manning IV <mark4th@earthlink.net>).
+	+ demonstrate use of FIELDTYPE by modifying test/ncurses 'r' test to
+	  use the predefined TYPE_ALPHA field-type, and by defining a
+	  specialized type for the middle initial/name.
+	+ fix MKterminfo.sh, another workaround for POSIXLY_CORRECT misfeature
+	  of sed 4.0
+	> Philippe Blain:
+	+ optimize can_clear_with() a little by testing first if the parameter
+	  is indeed a "blank".
+	+ simplify ClrBottom() a little by allowing it to use clr_eos to clear
+	  sections as small as one line.
+	+ improve ClrToEOL() by checking if clr_eos is available before trying
+	  to use it.
+	+ use tputs() rather than putp() in a few cases in tty_update.c since
+	  the corresponding delays are proportional to the number of lines
+	  affected: repeat_char, clr_eos, change_scroll_region.
+
+20021231
+	+ rewrite of lib_acs.c conflicts with copying of SCREEN acs_map to/from
+	  global acs_map[] array; removed the lines that did the copying.
+
+20021228
+	+ change some overlooked tputs() calls in scrolling code to use putp()
+	  (report by Philippe Blain).
+	+ modify lib_getch.c to avoid recursion via wgetnstr() when the input
+	  is not a tty and consequently mode-changes do not work (report by
+	  <R.Chamberlin@querix.com>).
+	+ rewrote lib_acs.c to allow PutAttrChar() to decide how to render
+	  alternate-characters, i.e., to work with Linux console and UTF-8
+	  locale.
+	+ correct line/column reference in adjust_window(), needed to make
+	  special windows such as curscr track properly when resizing (report
+	  by Lucas Gonze <lgonze@panix.com>).
+	> Philippe Blain:
+	+ correct the value used for blank in ClrBottom() (broken in 20000708).
+	+ correct an off-by-one in GoTo() parameter in _nc_scrolln().
+
+20021221
+	+ change several tputs() calls in scrolling code to use putp(), to
+	  enable padding which may be needed for some terminals (patch by
+	  by Philippe Blain).
+	+ use '%' as sed substitute delimiter in run_tic script to avoid
+	  problems with pathname delimiters such as ':' and '@' (report by John
+	  Polterak).
+	+ implement a workaround so that line-drawing works with screen's
+	  crippled UTF-8 support (tested with 3.9.13).  This only works with
+	  the wide-character support (--enable-widec); the normal library will
+	  simply suppress line-drawing when running in a UTF-8 locale in screen.
+
+20021214
+	+ allow BUILD_CC and related configure script variables to be
+	  overridden from the environment.
+	+ make build-tools variables in ncurses/Makefile.in consistent with
+	  the configure script variables (report by Maciej W Rozycki).
+	+ modify ncurses/modules to allow
+		configure --disable-leaks --disable-ext-funcs
+	  to build (report by Gary Samuelson).
+	+ fix a few places in configure.in which lacked quotes (report by
+	  Gary Samuelson <gary.samuelson@verizon.com>).
+	+ correct handling of multibyte characters in waddch_literal() which
+	  force wrapping because they are started too late on the line (report
+	  by Sam Varshavchik).
+	+ small fix for CF_GNAT_VERSION to ignore the help-message which
+	  gnatmake adds to its version-message.
+	> Maciej W Rozycki <macro@ds2.pg.gda.pl>:
+	+ use AC_CHECK_TOOL to get proper values for AR and LD for cross
+	  compiling.
+	+ use $cross_compiling variable in configure script rather than
+	  comparing $host_alias and $target alias, since "host" is
+	  traditionally misused in autoconf to refer to the target platform.
+	+ change configure --help message to use "build" rather than "host"
+	  when referring to the --with-build-XXX options.
+
+20021206
+	+ modify CF_GNAT_VERSION to print gnatmake's version, and to allow for
+	  possible gnat versions such as 3.2 (report by Chris Lingard
+	  <chris@stockwith.co.uk>).
+	+ modify #define's for CKILL and other default control characters in
+	  tset to use the system's default values if they are defined.
+	+ correct interchanged defaults for kill and interrupt characters
+	  in tset, which caused it to report unnecessarily (Debian #171583).
+	+ repair check for missing C++ compiler, which is broken in autoconf
+	  2.5x by hardcoding it to g++ (report by Martin Mokrejs).
+	+ update config.guess, config.sub (2002-11-30)
+	+ modify configure script to skip --with-shared, etc., when the
+	  --with-libtool option is given, since they would be ignored anyway.
+	+ fix to allow "configure --with-libtool --with-termlib" to build.
+	+ modify configure script to show version number of libtool, to help
+	  with bug reports.  libtool still gets confused if the installed
+	  ncurses libraries are old, since it ignores the -L options at some
+	  point (tested with libtool 1.3.3 and 1.4.3).
+	+ reorder configure script's updating of $CPPFLAGS and $CFLAGS to
+	  prevent -I options in the user's environment from introducing
+	  conflicts with the build -I options (may be related to reports by
+	  Patrick Ash and George Goffe).
+	+ rename test/define_key.c to test/demo_defkey.c, test/keyok.c to
+	  test/demo_keyok.c to allow building these with libtool.
+
+20021123
+	+ add example program test/define_key.c for define_key().
+	+ add example program test/keyok.c for keyok().
+	+ add example program test/ins_wide.c for wins_wch() and wins_wstr().
+	+ modify wins_wch() and wins_wstr() to interpret tabs by using the
+	  winsch() internal function.
+	+ modify setcchar() to allow for wchar_t input strings that have
+	  more than one spacing character.
+
+20021116
+	+ fix a boundary check in lib_insch.c (patch by Philippe Blain).
+	+ change type for *printw functions from NCURSES_CONST to const
+	  (prompted by comment by Pedro Palhoto Matos <plpm@mega.ist.utl.pt>,
+	  but really from a note on X/Open's website stating that either is
+	  acceptable, and the latter will be used in a future revision).
+	+ add xterm-1002, xterm-1003 terminfo entries to demonstrate changes in
+	  lib_mouse.c (20021026) -TD
+	+ add screen-bce, screen-s entries from screen 3.9.13 (report by
+	  Adam Lazur <zal@debian.org>) -TD
+	+ add mterm terminfo entries -TD
+
+20021109
+	+ split-out useful fragments in terminfo for vt100 and vt220 numeric
+	  keypad, i.e., vt100+keypad, vt100+pfkeys, vt100+fnkeys and
+	  vt220+keypad.  The last as embedded in various entries had ka3 and
+	  kb2 interchanged (report/discussion with Leonard den Ottolander
+	  <leonardjo@hetnet.nl>).
+	+ add check in tic for keypads consistent with vt100 layout.
+	+ improve checks in tic for color capabilities
+
+20021102
+	+ check for missing/empty/illegal terminfo name in _nc_read_entry()
+	  (report by Martin Mokrejs, where $TERM was set to an empty string).
+	+ rewrote lib_insch.c, combining it with lib_insstr.c so both handle
+	  tab and other control characters consistently (report by Philippe
+	  Blain).
+	+ remove an #undef for KEY_EVENT from curses.tail used in the
+	  experimental NCURSES_WGETCH_EVENTS feature.  The #undef confuses
+	  dpkg's build script (Debian #165897).
+	+ fix MKlib_gen.sh, working around the ironically named POSIXLY_CORRECT
+	  feature of GNU sed 4.0 (reported by Ervin Nemeth <airwin@inf.bme.hu>).
+
+20021026
+	+ implement logic in lib_mouse.c to handle position reports which are
+	  generated when XFree86 xterm is initialized with private modes 1002
+	  or 1003.  These are returned to the application as the
+	  REPORT_MOUSE_POSITION mask, which was not implemented.  Tested both
+	  with ncurses 'a' menu (prompted by discussion with Larry Riedel
+	  <Larry@Riedel.org>).
+	+ modify lib_mouse.c to look for "XM" terminfo string, which allows
+	  one to override the escape sequence used to enable/disable mouse
+	  mode.  In particular this works for XFree86 xterm private modes
+	  1002 and 1003.  If "XM" is missing (note that this is an extended
+	  name), lib_mouse uses the conventional private mode 1000.
+	+ correct NOT_LOCAL() macro in lib_mvcur.c to refer to screen_columns
+	  where it used screen_lines (report by Philippe Blain).
+	+ correct makefile rules for the case when both --with-libtool and
+	  --with-gpm are given (report by Mr E_T <troll@logi.net.au>).
+	+ add note to terminfo manpage regarding the differences between
+	  setaf/setab and setf/setb capabilities (report by Pavel Roskin).
+
+20021019
+	+ remove redundant initialization of TABSIZE in newterm(), since it is
+	  already done in setupterm() (report by Philippe Blain).
+	+ add test/inserts.c, to test winnstr() and winsch().
+	+ replace 'sort' in dist.mk with script that sets locale to POSIX.
+	+ update URLs in announce.html.in (patch by Frederic L W Meunier).
+	+ remove glibc add-on files, which are no longer needed (report by
+	  Frederic L W Meunier).
 
 20021012 5.3 release for upload to ftp.gnu.org
 	+ modify ifdef's in etip.h.in to allow the etip.h header to compile
@@ -192,7 +974,7 @@ Changes since 1.9.9e are recorded by Thomas Dickey.
 
 20020727
 	+ finish no-leak checking in cardfile.c, using this for testing changes
-	  to resizeterm(). 
+	  to resizeterm().
 	+ simplify _nc_freeall() using delscreen().
 
 20020720
@@ -355,7 +1137,7 @@ Changes since 1.9.9e are recorded by Thomas Dickey.
 	  can be linked.
 
 20020413
-	+ add manpages: curs_get_wstr.3x, curs_in_wchstr.3x    
+	+ add manpages: curs_get_wstr.3x, curs_in_wchstr.3x
 	+ implement wgetn_wstr().
 	+ implement win_wchnstr().
 	+ remove redefinition of unget_wch() in lib_gen.c (reported by
@@ -395,7 +1177,8 @@ Changes since 1.9.9e are recorded by Thomas Dickey.
 	+ implement key_name().
 	+ remove const's in lib_box.c incorrectly leftover after splitting off
 	  lib_box_set.c
-	+ update llib-lncurses, llib-ncursesw, fix configure script related to these.
+	+ update llib-lncurses, llib-ncursesw, fix configure script related to
+	  these.
 
 20020218
 	+ remove quotes on "SYNOPSIS" in man/curs_box_set.3x, which resulted
@@ -417,7 +1200,7 @@ Changes since 1.9.9e are recorded by Thomas Dickey.
 	  options.
 	> patch by Sven Verdoolaege (report by Gerhard Haering
 	  <haering_linux@gmx.de>):
-	+ correct typos in definitions of several wide-character macros: 
+	+ correct typos in definitions of several wide-character macros:
 	  waddwstr, wgetbkgrnd, mvaddwstr, mvwadd_wchnstr, mvwadd_wchnstr,
 	  mvwaddwstr.
 	+ pass $(CPPFLAGS) to MKlib_gen.sh, thereby fixing a missing definition
@@ -579,7 +1362,7 @@ Changes since 1.9.9e are recorded by Thomas Dickey.
 	  in the C++ runtime.
 	+ modify the build to name dynamic libraries according to the
 	  convention used on OS X and Darwin.  Rather than something like
-	  libncurses.dylib.5.2, Darwin would name it libncurses.  5.dylib. 
+	  libncurses.dylib.5.2, Darwin would name it libncurses.  5.dylib.
 	  There are a few additional minor fixes, such as setting the library
 	  version and compatibility version numbers (patch by Jason Evans
 	  <jevans@apple.com>).
@@ -664,7 +1447,7 @@ Changes since 1.9.9e are recorded by Thomas Dickey.
 20011001
 	+ simpler fix for signal_name(), to replace the one overlooked in
 	  20010929 (reported by Larry Virden).
-	  
+
 20010929
 	+ add -i option to view.c, to test ncurses' check for non-default
 	  signal handler for SIGINT, etc.

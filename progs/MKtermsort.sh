@@ -1,10 +1,10 @@
 #!/bin/sh
-# $Id: MKtermsort.sh,v 1.8 2002/06/29 20:02:48 tom Exp $
+# $Id: MKtermsort.sh,v 1.9 2003/01/11 22:23:50 tom Exp $
 #
 # MKtermsort.sh -- generate indirection vectors for the various sort methods
 #
 ##############################################################################
-# Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -47,7 +47,7 @@ DATA=${2-../include/Caps}
 
 data=data$$
 trap 'rm -f $data' 1 2 5 15
-sed -e 's/[	]\+/	/g' < $DATA >$data
+sed -e 's/[	][	]*/	/g' < $DATA >$data
 DATA=$data
 
 echo "/*";

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <term_entry.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.61 2002/09/07 20:04:09 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.66 2003/12/14 00:32:40 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -84,6 +84,7 @@ _nc_curr_token =
  *****************************************************************************/
 
 static bool first_column;	/* See 'next_char()' below */
+static bool had_newline;
 static char separator;		/* capability separator */
 static int pushtype;		/* type of pushback token */
 static char *pushname;
@@ -93,10 +94,10 @@ NCURSES_EXPORT_VAR(bool)
 _nc_disable_period = FALSE;	/* used by tic -a option */
 #endif
 
+static bool end_of_stream(void);
 static int last_char(void);
 static int next_char(void);
 static long stream_pos(void);
-static bool end_of_stream(void);
 static void push_back(char c);
 
 /* Assume we may be looking at a termcap-style continuation */
@@ -148,8 +149,11 @@ _nc_get_token(bool silent)
     static const char terminfo_punct[] = "@%&*!#";
     static char *buffer;
 
+    char *after_list;
+    char *after_name;
     char *numchk;
     char *ptr;
+    char *s;
     char numbuf[80];
     int ch;
     int dot_flag = FALSE;
@@ -173,13 +177,20 @@ _nc_get_token(bool silent)
 	return (retval);
     }
 
-    if (end_of_stream())
+    if (end_of_stream()) {
+	if (buffer != 0) {
+	    FreeAndNull(buffer);
+	}
 	return (EOF);
+    }
 
   start_token:
     token_start = stream_pos();
-    while ((ch = next_char()) == '\n' || iswhite(ch))
+    while ((ch = next_char()) == '\n' || iswhite(ch)) {
+	if (ch == '\n')
+	    had_newline = TRUE;
 	continue;
+    }
 
     ch = eat_escaped_newline(ch);
 
@@ -227,17 +238,21 @@ _nc_get_token(bool silent)
 	*(ptr++) = ch;
 
 	if (first_column) {
-	    char *desc;
-
 	    _nc_comment_start = token_start;
 	    _nc_comment_end = _nc_curr_file_pos;
 	    _nc_start_line = _nc_curr_line;
 
 	    _nc_syntax = ERR;
+	    after_name = 0;
+	    after_list = 0;
 	    while ((ch = next_char()) != '\n') {
-		if (ch == EOF)
+		if (ch == EOF) {
 		    _nc_err_abort(MSG_NO_MEMORY);
-		else if (ch == ':' && last_char() != ',') {
+		} else if (ch == '|') {
+		    after_list = ptr;
+		    if (after_name == 0)
+			after_name = ptr;
+		} else if (ch == ':' && last_char() != ',') {
 		    _nc_syntax = SYN_TERMCAP;
 		    separator = ':';
 		    break;
@@ -245,14 +260,18 @@ _nc_get_token(bool silent)
 		    _nc_syntax = SYN_TERMINFO;
 		    separator = ',';
 		    /*
-		     * Fall-through here is not an accident.  The idea is that
-		     * if we see a comma, we figure this is terminfo unless we
-		     * subsequently run into a colon -- but we don't stop
-		     * looking for that colon until hitting a newline.  This
+		     * If we did not see a '|', then we found a name with no
+		     * aliases or description.
+		     */
+		    if (after_name == 0)
+			break;
+		    /*
+		     * If we see a comma, we assume this is terminfo unless we
+		     * subsequently run into a colon.  But we don't stop
+		     * looking for a colon until hitting a newline.  This
 		     * allows commas to be embedded in description fields of
 		     * either syntax.
 		     */
-		    /* FALLTHRU */
 		} else
 		    ch = eat_escaped_newline(ch);
 
@@ -277,56 +296,60 @@ _nc_get_token(bool silent)
 
 	    /*
 	     * This is the soonest we have the terminal name fetched.  Set up
-	     * for following warning messages.
+	     * for following warning messages.  If there's no '|', then there
+	     * is no description.
 	     */
-	    ptr = strchr(buffer, '|');
-	    if (ptr == (char *) NULL)
-		ptr = buffer + strlen(buffer);
-	    ch = *ptr;
-	    *ptr = '\0';
-	    _nc_set_type(buffer);
-	    *ptr = ch;
+	    if (after_name != 0) {
+		ch = *after_name;
+		*after_name = '\0';
+		_nc_set_type(buffer);
+		*after_name = ch;
+	    }
 
 	    /*
 	     * Compute the boundary between the aliases and the description
 	     * field for syntax-checking purposes.
 	     */
-	    desc = strrchr(buffer, '|');
-	    if (!silent && desc) {
-		if (*desc == '\0')
-		    _nc_warning("empty longname field");
-		else if (strchr(desc, ' ') == (char *) NULL)
-		    _nc_warning("older tic versions may treat the description field as an alias");
+	    if (after_list != 0) {
+		if (!silent) {
+		    if (*after_list == '\0')
+			_nc_warning("empty longname field");
+		    else if (strchr(after_list, ' ') == 0)
+			_nc_warning("older tic versions may treat the description field as an alias");
+		}
+	    } else {
+		after_list = buffer + strlen(buffer);
+		DEBUG(1, ("missing description"));
 	    }
-	    if (!desc)
-		desc = buffer + strlen(buffer);
 
 	    /*
 	     * Whitespace in a name field other than the long name can confuse
 	     * rdist and some termcap tools.  Slashes are a no-no.  Other
 	     * special characters can be dangerous due to shell expansion.
 	     */
-	    for (ptr = buffer; ptr < desc; ptr++) {
-		if (isspace(UChar(*ptr))) {
+	    for (s = buffer; s < after_list; ++s) {
+		if (isspace(UChar(*s))) {
 		    if (!silent)
 			_nc_warning("whitespace in name or alias field");
 		    break;
-		} else if (*ptr == '/') {
+		} else if (*s == '/') {
 		    if (!silent)
 			_nc_warning("slashes aren't allowed in names or aliases");
 		    break;
-		} else if (strchr("$[]!*?", *ptr)) {
+		} else if (strchr("$[]!*?", *s)) {
 		    if (!silent)
-			_nc_warning("dubious character `%c' in name or alias field", *ptr);
+			_nc_warning("dubious character `%c' in name or alias field", *s);
 		    break;
 		}
 	    }
 
-	    ptr = buffer;
-
 	    _nc_curr_token.tk_name = buffer;
 	    type = NAMES;
 	} else {
+	    if (had_newline && _nc_syntax == SYN_TERMCAP) {
+		_nc_warning("Missing backslash before newline");
+		had_newline = FALSE;
+	    }
 	    while ((ch = next_char()) != EOF) {
 		if (!isalnum(ch)) {
 		    if (_nc_syntax == SYN_TERMINFO) {
@@ -592,6 +615,8 @@ _nc_trans_string(char *ptr, char *last)
 		default:
 		    _nc_warning("Illegal character %s in \\ sequence",
 				unctrl(ch));
+		    /* FALLTHRU */
+		case '|':
 		    *(ptr++) = (char) ch;
 		}		/* endswitch (ch) */
 	    }			/* endelse (ch < '0' ||  ch > '7') */
@@ -684,7 +709,7 @@ static FILE *yyin;		/* scanner's input file descriptor */
  */
 
 NCURSES_EXPORT(void)
-_nc_reset_input(FILE * fp, char *buf)
+_nc_reset_input(FILE *fp, char *buf)
 {
     pushtype = NO_PUSHBACK;
     if (pushname != 0)
@@ -766,7 +791,7 @@ next_char(void)
 		if (used == 0)
 		    _nc_curr_file_pos = ftell(yyin);
 
-		if (fgets(result + used, allocated - used, yyin) != NULL) {
+		if (fgets(result + used, allocated - used, yyin) != 0) {
 		    bufstart = result;
 		    if (used == 0) {
 			_nc_curr_line++;
@@ -801,6 +826,8 @@ next_char(void)
     }
 
     first_column = (bufptr == bufstart);
+    if (first_column)
+	had_newline = FALSE;
 
     _nc_curr_col++;
     return (*bufptr++);

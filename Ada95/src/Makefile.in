@@ -27,10 +27,9 @@
 ##############################################################################
 #
 #  Author:  Juergen Pfeifer, 1996
-#  Contact: http://www.familiepfeifer.de/Contact.aspx?Lang=en
 #
 #  Version Control
-#  $Revision: 1.26 $
+#  $Revision: 1.28 $
 #
 .SUFFIXES:
 
@@ -214,19 +213,19 @@ $(ABASE).o: $(srcdir)/$(ABASE).adb $(BASEDEPS)
 
 
 $(ABASE)-terminfo.o: \
-		$(ABASE)-terminfo.ads \
+		$(srcdir)/$(ABASE)-terminfo.ads \
 		$(srcdir)/$(ABASE)-terminfo.adb $(BASEDEPS)
 	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-terminfo.adb
 
 
 $(ABASE)-termcap.o: \
-		$(ABASE)-termcap.ads \
+		$(srcdir)/$(ABASE)-termcap.ads \
 		$(srcdir)/$(ABASE)-termcap.adb $(BASEDEPS)
 	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-termcap.adb
 
 
 $(ABASE)-putwin.o: \
-		$(ABASE)-putwin.ads \
+		$(srcdir)/$(ABASE)-putwin.ads \
 		$(srcdir)/$(ABASE)-putwin.adb $(BASEDEPS)
 	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-putwin.adb
 

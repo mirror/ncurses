@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998,2002 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_driver.3x,v 1.10 2002/02/16 22:40:59 tom Exp $
+.\" $Id: menu_driver.3x,v 1.11 2003/05/10 20:22:01 tom Exp $
 .TH menu_driver 3X ""
 .SH NAME
 \fBmenu_driver\fR - command-processing loop of the menu system
@@ -115,10 +115,10 @@ is positioned to that item. If you double-click at an item a REQ_TOGGLE_ITEM
 is generated and \fBE_UNKNOWN_COMMAND\fR is returned. This return value makes
 sense, because a double click usually means that an item-specific action should
 be returned. It's exactly the purpose of this return value to signal that an
-application specific command should be executed. If a translation 
+application specific command should be executed. If a translation
 into a request was done, \fBmenu_driver\fR returns the result of this request.
 If you clicked outside the user window or the mouse event couldn't be translated
-into a menu request an \fBE_REQUEST_DENIED\fR is returned. 
+into a menu request an \fBE_REQUEST_DENIED\fR is returned.
 .PP
 If the second argument is neither printable ASCII nor one of the above
 pre-defined menu requests or KEY_MOUSE, the drive assumes it is an application-specific

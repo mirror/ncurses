@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: edit_cfg.sh,v 1.12 2001/12/08 20:44:59 tom Exp $
+# $Id: edit_cfg.sh,v 1.13 2003/12/20 13:14:25 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2001,2003 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1997
+# Author: Thomas E. Dickey 1997
 #
 # Edit the default value of the etip.h file based on the autoconf-generated
 # values:
@@ -50,6 +50,7 @@ for name in \
 	USE_STRSTREAM_VSCAN \
 	USE_STRSTREAM_VSCAN_CAST
 do
+	rm -f $2.bak
 	mv $2 $2.bak
 	if ( grep "[ 	]$name[ 	]1" $1 2>&1 >/dev/null)
 	then

@@ -1,6 +1,6 @@
 #!@SHELL@
 ##############################################################################
-# Copyright (c) 1998,2000 Free Software Foundation, Inc.                     #
+# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey 1996,2000
 #
-# $Id: run_tic.in,v 1.11 2001/10/14 00:44:33 tom Exp $
+# $Id: run_tic.in,v 1.15 2003/09/06 22:31:44 Dan.Kegel Exp $
 # This script is used to install terminfo.src using tic.  We use a script
 # because the path checking is too awkward to do in a makefile.
 #
@@ -62,10 +62,14 @@ test -z "${DESTDIR}" && DESTDIR=
 # on the host's copy of tic to compile the terminfo database.
 if test "$THAT_CC" = "$THIS_CC" ; then
 case "$PATH" in
-:*) PATH=../progs:${DESTDIR}$bindir$PATH ;;
-*) PATH=../progs:${DESTDIR}$bindir:$PATH ;;
+:*) PATH=../progs:../lib:${DESTDIR}$bindir$PATH ;;
+*) PATH=../progs:../lib:${DESTDIR}$bindir:$PATH ;;
 esac
 export PATH
+SHLIB="sh $srcdir/shlib"
+else
+# Cross-compiling, so don't set PATH or run shlib.
+SHLIB=
 fi
 
 #
@@ -81,7 +85,7 @@ TERMINFO=${DESTDIR}$ticdir ; export TERMINFO
 umask 022
 
 # Construct the name of the old (obsolete) pathname, e.g., /usr/lib/terminfo.
-TICDIR=`echo $TERMINFO | sed -e 's@/share/@/lib/@'`
+TICDIR=`echo $TERMINFO | sed -e 's%/share/%/lib/%'`
 
 # Remove the old terminfo stuff; we don't care if it existed before, and it
 # would generate a lot of confusing error messages if we tried to overwrite it.
@@ -91,11 +95,11 @@ TICDIR=`echo $TERMINFO | sed -e 's@/share/@/lib/@'`
 
 # If we're not installing into /usr/share/, we'll have to adjust the location
 # of the tabset files in terminfo.src (which are in a parallel directory).
-TABSET=`echo $ticdir | sed -e 's@/terminfo$@/tabset@'`
+TABSET=`echo $ticdir | sed -e 's%/terminfo$%/tabset%'`
 if test "x$TABSET" != "x/usr/share/tabset" ; then
 	echo '** adjusting tabset paths'
 	TMP=${TMPDIR-/tmp}/$$
-	sed -e s:/usr/share/tabset:$TABSET:g $source >$TMP
+	sed -e s%/usr/share/tabset%$TABSET%g $source >$TMP
 	trap "rm -f $TMP" 0 1 2 5 15
 	source=$TMP
 fi
@@ -111,7 +115,7 @@ Running tic to install $TERMINFO ...
 	problems for older ncurses applications.
 
 EOF
-if ( $srcdir/shlib tic$suffix -s -o $TERMINFO $source )
+if ( $SHLIB tic$suffix -s -o $TERMINFO $source )
 then
 	echo '** built new '$TERMINFO
 else
@@ -140,13 +144,15 @@ if test "$TICDIR" != "$TERMINFO" ; then
 		cd ${DESTDIR}$prefix
 		# Construct a symbolic link that only assumes $ticdir has the
 		# same $prefix as the other installed directories.
-		RELATIVE=`echo $ticdir|sed -e 's:^'$prefix'/::'`
+		RELATIVE=`echo $ticdir|sed -e 's%^'$prefix'/%%'`
 		if test "$RELATIVE" != "$ticdir" ; then
-			RELATIVE=../`echo $ticdir|sed -e 's:^'$prefix'/::' -e 's:^/::'`
+			RELATIVE=../`echo $ticdir|sed -e 's%^'$prefix'/%%' -e 's%^/%%'`
 		fi
 		if ( @LN_S@ $RELATIVE $TICDIR )
 		then
-			echo '** linked '$TICDIR' for compatibility'
+			echo '** sym-linked '$TICDIR' for compatibility'
+		else
+			echo '** could not sym-link '$TICDIR' for compatibility'
 		fi
 	fi
 fi
