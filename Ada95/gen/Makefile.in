@@ -1,0 +1,285 @@
+#----------------------------------------------------------------------------
+#                                                                          --
+#                            GNAT ncurses Binding                          --
+#                                gen/Makefile                              --
+#                                                                          --
+#  Version 00.92                                                           --
+#                                                                          --
+#  The ncurses Ada95 binding is copyrighted 1996 by                        --
+#  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
+#                                                                          --
+#  Permission is hereby granted to reproduce and distribute this           --
+#  binding by any means and for any fee, whether alone or as part          --
+#  of a larger distribution, in source or in binary form, PROVIDED         --
+#  this notice is included with any such distribution, and is not          --
+#  removed from any of its header files. Mention of ncurses and the        --
+#  author of this binding in any applications linked with it is            --
+#  highly appreciated.                                                     --
+#                                                                          --
+#  This binding comes AS IS with no warranty, implied or expressed.        --
+#----------------------------------------------------------------------------
+#  Version Control
+#  $Revision: 1.8 $
+#
+.SUFFIXES:
+
+SHELL		= /bin/sh
+THIS		= Makefile
+
+srcdir		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+includedir	= @includedir@
+datadir		= @datadir@
+ticdir		= $(datadir)/terminfo
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+AWK		= @AWK@
+LN_S		= @LN_S@
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+
+CPPFLAGS	= @ACPPFLAGS@ \
+		  -DHAVE_CONFIG_H -I$(srcdir)
+
+CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
+
+CFLAGS_NORMAL	= $(CCFLAGS)
+CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
+CFLAGS_PROFILE	= $(CCFLAGS) -pg
+CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
+
+CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
+
+LINK		= $(CC)
+LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS)
+
+RANLIB		= @RANLIB@
+
+LIB_CURSES      = -L ../../lib -lncurses
+
+M4		= m4
+M4FLAGS		=
+
+DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
+
+################################################################################
+ALIB            = @nc_ada_package@
+ABASE		= $(ALIB)-curses
+
+ADA_SRCDIR	= ../ada_include
+ADA_OBJDIR      = ../ada_objects
+OBJDIR          = ../objects
+
+GEN_FILES0      = Base_Defs
+
+GEN_FILES1      = Key_Definitions              		\
+		  Old_Keys                     		\
+		  Character_Attribute_Set_Rep  		\
+		  AC_Rep                       		\
+		  Color_Defs                   		\
+		  ACS_Map                      		\
+		  Linker_Options               		\
+		  Base_Defs
+
+GEN_FILES2      = Menu_Opt_Rep        		    	\
+		  Menu_Base_Defs               		\
+		  Menu_Linker_Options          		\
+		  Item_Rep
+
+GEN_FILES3      = Form_Opt_Rep                 		\
+		  Form_Base_Defs               		\
+		  Form_Linker_Options          		\
+		  Field_Rep
+
+GEN_FILES4      = Mouse_Base_Defs              		\
+		  Mouse_Event_Rep			\
+		  Panel_Linker_Options
+
+GEN_TARGETS     = $(ADA_SRCDIR)/$(ABASE).ads         			\
+	          $(ADA_SRCDIR)/$(ABASE)-menus.ads   			\
+	          $(ADA_SRCDIR)/$(ABASE)-forms.ads   			\
+	          $(ADA_SRCDIR)/$(ABASE)-mouse.ads 			\
+	          $(ADA_SRCDIR)/$(ABASE)-panels.ads			\
+	          $(ADA_SRCDIR)/$(ABASE)-menus-menu_user_data.ads	\
+	          $(ADA_SRCDIR)/$(ABASE)-menus-item_user_data.ads	\
+	          $(ADA_SRCDIR)/$(ABASE)-forms-form_user_data.ads	\
+	          $(ADA_SRCDIR)/$(ABASE)-forms-field_user_data.ads	\
+	          $(ADA_SRCDIR)/$(ABASE)-panels-user_data.ads
+
+GEN_SRC		= $(srcdir)/$(ABASE).ads.m4				\
+	          $(srcdir)/$(ABASE)-menus.ads.m4 	  		\
+	          $(srcdir)/$(ABASE)-forms.ads.m4   			\
+	          $(srcdir)/$(ABASE)-mouse.ads.m4			\
+	          $(srcdir)/$(ABASE)-panels.ads.m4			\
+	          $(srcdir)/$(ABASE)-menus-menu_user_data.ads.m4	\
+	          $(srcdir)/$(ABASE)-menus-item_user_data.ads.m4	\
+	          $(srcdir)/$(ABASE)-forms-form_user_data.ads.m4	\
+	          $(srcdir)/$(ABASE)-forms-field_user_data.ads.m4	\
+	          $(srcdir)/$(ABASE)-panels-user_data.ads.m4
+
+
+all:	$(GEN_TARGETS) dirs
+	@
+
+dirs:
+	@-mkdir $(OBJDIR) $(ADA_OBJDIR)
+
+gen:	gen.o
+	@ECHO_LINK@ $(LINK) $(CFLAGS_NORMAL) gen.o $(LD_FLAGS) -o $@ $(LIB_CURSES)
+
+gen.o:	$(srcdir)/gen.c
+	$(CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/gen.c
+
+Character_Attribute_Set_Rep: gen
+	./gen B A >$@
+
+Base_Defs: gen
+	./gen B B >$@
+
+Color_Defs: gen
+	./gen B C >$@
+
+Key_Definitions: gen
+	./gen B K >$@
+
+Old_Keys: gen
+	./gen B O >$@
+
+ACS_Map: gen
+	./gen B M >$@
+
+AC_Rep: gen
+	./gen B R >$@
+
+Linker_Options: gen
+	./gen B L >$@
+
+Menu_Opt_Rep: gen
+	./gen M R >$@
+
+Menu_Base_Defs: gen
+	./gen M B >$@
+
+Menu_Linker_Options: gen
+	./gen M L >$@
+
+Item_Rep: gen
+	./gen M I >$@
+
+Form_Opt_Rep: gen
+	./gen F R >$@
+
+Form_Base_Defs: gen
+	./gen F B >$@
+
+Form_Linker_Options: gen
+	./gen F L >$@
+
+Field_Rep: gen
+	./gen F I >$@
+
+Mouse_Base_Defs: gen
+	./gen P B >$@
+
+Mouse_Event_Rep: gen
+	./gen P M >$@
+
+Panel_Linker_Options: gen
+	./gen P L >$@
+
+$(ADA_SRCDIR)/$(ABASE).ads: 	$(srcdir)/$(ABASE).ads.m4 \
+				$(GEN_FILES1) $(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE).ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-menus.ads: $(srcdir)/$(ABASE)-menus.ads.m4 \
+				  $(GEN_FILES2) $(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-menus.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-forms.ads: $(srcdir)/$(ABASE)-forms.ads.m4 \
+				  $(GEN_FILES3) $(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-forms.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-mouse.ads: $(srcdir)/$(ABASE)-mouse.ads.m4 \
+				  $(GEN_FILES4) $(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-mouse.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-panels.ads: $(srcdir)/$(ABASE)-panels.ads.m4 \
+				   $(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-panels.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-menus-menu_user_data.ads: \
+		$(srcdir)/$(ABASE)-menus-menu_user_data.ads.m4 \
+		$(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-menus-menu_user_data.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-menus-item_user_data.ads: \
+		$(srcdir)/$(ABASE)-menus-item_user_data.ads.m4 \
+		$(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-menus-item_user_data.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-forms-form_user_data.ads: \
+		$(srcdir)/$(ABASE)-forms-form_user_data.ads.m4 \
+		$(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-forms-form_user_data.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-forms-field_user_data.ads: \
+		$(srcdir)/$(ABASE)-forms-field_user_data.ads.m4 \
+		$(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-forms-field_user_data.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE)-panels-user_data.ads: \
+		$(srcdir)/$(ABASE)-panels-user_data.ads.m4 \
+		$(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE)-panels-user_data.ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+install :: 
+
+install.libs ::
+
+install.progs ::
+
+tags:
+	ctags *.[ch]
+
+TAGS:
+	etags *.[ch]
+
+clean ::
+	rm -f a.out core gen *.o $(GEN_FILES1) $(GEN_FILES2) $(GEN_FILES3) \
+	$(GEN_FILES4) $(GEN_TARGETS)
+
+mostlyclean :: clean
+
+distclean :: mostlyclean
+	rm -f Makefile
+
+realclean :: distclean
+
+###############################################################################
+# The remainder of this file is automatically generated during configuration
+###############################################################################

@@ -1,0 +1,102 @@
+/******************************************************************************
+ * Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                      *
+ * All Rights Reserved.                                                       *
+ *                                                                            *
+ * Permission to use, copy, modify, and distribute this software and its      *
+ * documentation for any purpose and without fee is hereby granted, provided  *
+ * that the above copyright notice appear in all copies and that both that    *
+ * copyright notice and this permission notice appear in supporting           *
+ * documentation, and that the name of the above listed copyright holder(s)   *
+ * not be used in advertising or publicity pertaining to distribution of the  *
+ * software without specific, written prior permission. THE ABOVE LISTED      *
+ * COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,  *
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO     *
+ * EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY         *
+ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER       *
+ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF       *
+ * CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN        *
+ * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                   *
+ ******************************************************************************/
+/* LINTLIBRARY */
+
+/* ./panel.c */
+
+#include "panel.priv.h"
+
+#undef panel_window
+WINDOW	*panel_window(
+		const PANEL *pan)
+		{ return(*(WINDOW **)0); }
+
+#undef update_panels
+void	update_panels(void)
+		{ /* void */ }
+
+#undef hide_panel
+int	hide_panel(
+		 PANEL	*pan)
+		{ return(*(int *)0); }
+
+#undef show_panel
+int	show_panel(
+		 PANEL	*pan)
+		{ return(*(int *)0); }
+
+#undef top_panel
+int	top_panel(
+		 PANEL	*pan)
+		{ return(*(int *)0); }
+
+#undef del_panel
+int	del_panel(
+		 PANEL	*pan)
+		{ return(*(int *)0); }
+
+#undef bottom_panel
+int	bottom_panel(
+		 PANEL	*pan)
+		{ return(*(int *)0); }
+
+#undef new_panel
+PANEL	*new_panel(
+		WINDOW	*win)
+		{ return(*(PANEL **)0); }
+
+#undef panel_above
+PANEL	*panel_above(
+		const PANEL *pan)
+		{ return(*(PANEL **)0); }
+
+#undef panel_below
+PANEL	*panel_below(
+		const PANEL *pan)
+		{ return(*(PANEL **)0); }
+
+#undef set_panel_userptr
+int	set_panel_userptr(
+		PANEL	*pan, 
+		const void *uptr)
+		{ return(*(int *)0); }
+
+#undef panel_userptr
+const void *panel_userptr(
+		const PANEL *pan)
+		{ return(*(const void **)0); }
+
+#undef move_panel
+int	move_panel(
+		PANEL	*pan, 
+		int	starty, 
+		int	startx)
+		{ return(*(int *)0); }
+
+#undef replace_panel
+int	replace_panel(
+		PANEL	*pan, 
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+#undef panel_hidden
+int	panel_hidden(
+		const PANEL *pan)
+		{ return(*(int *)0); }

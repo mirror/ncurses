@@ -1,0 +1,2560 @@
+/******************************************************************************
+ * Copyright 1996,1997 by Thomas E. Dickey <dickey@clark.net>                 *
+ * All Rights Reserved.                                                       *
+ *                                                                            *
+ * Permission to use, copy, modify, and distribute this software and its      *
+ * documentation for any purpose and without fee is hereby granted, provided  *
+ * that the above copyright notice appear in all copies and that both that    *
+ * copyright notice and this permission notice appear in supporting           *
+ * documentation, and that the name of the above listed copyright holder(s)   *
+ * not be used in advertising or publicity pertaining to distribution of the  *
+ * software without specific, written prior permission. THE ABOVE LISTED      *
+ * COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,  *
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO     *
+ * EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY         *
+ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER       *
+ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF       *
+ * CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN        *
+ * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                   *
+ ******************************************************************************/
+/* LINTLIBRARY */
+
+/* ./fallback.c */
+
+#include <curses.priv.h>
+#include <term.h>
+
+#undef _nc_fallback
+const TERMTYPE *_nc_fallback(
+		const char *name)
+		{ return(*(const TERMTYPE **)0); }
+
+/* ./hashmap.c */
+
+#undef _nc_hash_map
+void	_nc_hash_map(void)
+		{ /* void */ }
+
+/* ./hardscroll.c */
+
+#undef _nc_scroll_optimize
+void	_nc_scroll_optimize(void)
+		{ /* void */ }
+
+/* ./lib_acs.c */
+
+#undef acs_map
+chtype	acs_map[128];
+
+#undef init_acs
+void	init_acs(void)
+		{ /* void */ }
+
+/* ./lib_addch.c */
+
+#include <ctype.h>
+
+#undef wattr_on
+int	wattr_on(
+		WINDOW	*win, 
+		const attr_t at)
+		{ return(*(int *)0); }
+
+#undef wattr_off
+int	wattr_off(
+		WINDOW	*win, 
+		const attr_t at)
+		{ return(*(int *)0); }
+
+#undef wchgat
+int	wchgat(
+		WINDOW	*win, 
+		int	n, 
+		attr_t	attr, 
+		short	color, 
+		const void *opts)
+		{ return(*(int *)0); }
+
+#undef _nc_background
+chtype	_nc_background(
+		WINDOW	*win)
+		{ return(*(chtype *)0); }
+
+#undef _nc_render
+chtype	_nc_render(
+		WINDOW	*win, 
+		chtype	ch)
+		{ return(*(chtype *)0); }
+
+#undef _nc_waddch_nosync
+int	_nc_waddch_nosync(
+		WINDOW	*win, 
+		const chtype c)
+		{ return(*(int *)0); }
+
+#undef waddch
+int	waddch(
+		WINDOW	*win, 
+		const chtype ch)
+		{ return(*(int *)0); }
+
+#undef wechochar
+int	wechochar(
+		WINDOW	*win, 
+		const chtype ch)
+		{ return(*(int *)0); }
+
+/* ./lib_addstr.c */
+
+#undef waddnstr
+int	waddnstr(
+		WINDOW	*win, 
+		const char *const astr, 
+		int	n)
+		{ return(*(int *)0); }
+
+#undef waddchnstr
+int	waddchnstr(
+		WINDOW	*win, 
+		const chtype *const astr, 
+		int	n)
+		{ return(*(int *)0); }
+
+/* ./lib_beep.c */
+
+#undef beep
+int	beep(void)
+		{ return(*(int *)0); }
+
+#undef flash
+int	flash(void)
+		{ return(*(int *)0); }
+
+/* ./lib_bkgd.c */
+
+#undef wbkgd
+int	wbkgd(
+		WINDOW	*win, 
+		const chtype ch)
+		{ return(*(int *)0); }
+
+/* ./lib_baudrate.c */
+
+struct speed {
+	speed_t s;
+	int sp;
+};
+
+#undef baudrate
+int	baudrate(void)
+		{ return(*(int *)0); }
+
+/* ./lib_box.c */
+
+#undef wborder
+int	wborder(
+		WINDOW	*win, 
+		chtype	ls, 
+		chtype	rs, 
+		chtype	ts, 
+		chtype	bs, 
+		chtype	tl, 
+		chtype	tr, 
+		chtype	bl, 
+		chtype	br)
+		{ return(*(int *)0); }
+
+#undef whline
+int	whline(
+		WINDOW	*win, 
+		chtype	ch, 
+		int	n)
+		{ return(*(int *)0); }
+
+#undef wvline
+int	wvline(
+		WINDOW	*win, 
+		chtype	ch, 
+		int	n)
+		{ return(*(int *)0); }
+
+/* ./lib_clear.c */
+
+#undef wclear
+int	wclear(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+/* ./lib_clrbot.c */
+
+#undef wclrtobot
+int	wclrtobot(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+/* ./lib_clreol.c */
+
+#undef wclrtoeol
+int	wclrtoeol(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+/* ./lib_color.c */
+
+#undef COLOR_PAIRS
+int	COLOR_PAIRS;
+#undef COLORS
+int	COLORS;
+
+#undef start_color
+int	start_color(void)
+		{ return(*(int *)0); }
+
+#undef init_pair
+int	init_pair(
+		short	pair, 
+		short	f, 
+		short	b)
+		{ return(*(int *)0); }
+
+#undef init_color
+int	init_color(
+		short	color, 
+		short	r, 
+		short	g, 
+		short	b)
+		{ return(*(int *)0); }
+
+#undef can_change_color
+bool	can_change_color(void)
+		{ return(*(bool *)0); }
+
+#undef has_colors
+bool	has_colors(void)
+		{ return(*(bool *)0); }
+
+#undef color_content
+int	color_content(
+		short	color, 
+		short	*r, 
+		short	*g, 
+		short	*b)
+		{ return(*(int *)0); }
+
+#undef pair_content
+int	pair_content(
+		short	pair, 
+		short	*f, 
+		short	*b)
+		{ return(*(int *)0); }
+
+#undef _nc_do_color
+void	_nc_do_color(
+		int	pair, 
+		int	(*outc)(
+		int	p1))
+		{ /* void */ }
+
+/* ./lib_data.c */
+
+#undef stdscr
+WINDOW	*stdscr;
+#undef curscr
+WINDOW	*curscr;
+#undef newscr
+WINDOW	*newscr;
+#undef _nc_windows
+struct _win_list *_nc_windows;
+#undef _nc_idcok
+bool	_nc_idcok;
+#undef _nc_idlok
+bool	_nc_idlok;
+#undef SP
+SCREEN	*SP;
+
+/* ./lib_delch.c */
+
+#undef wdelch
+int	wdelch(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+/* ./lib_delwin.c */
+
+#undef delwin
+int	delwin(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+/* ./lib_doupdate.c */
+
+#include <sys/time.h>
+
+#undef doupdate
+int	doupdate(void)
+		{ return(*(int *)0); }
+
+#undef _nc_outstr
+void	_nc_outstr(
+		const char *str)
+		{ /* void */ }
+
+/* ./lib_endwin.c */
+
+#undef endwin
+int	endwin(void)
+		{ return(*(int *)0); }
+
+/* ./lib_erase.c */
+
+#undef werase
+int	werase(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+/* ./lib_gen.c */
+
+#include <curses.h>
+
+#undef addch
+int	addch(
+		const chtype z)
+		{ return(*(int *)0); }
+
+#undef addchnstr
+int	addchnstr(
+		const chtype *a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef addchstr
+int	addchstr(
+		const chtype *z)
+		{ return(*(int *)0); }
+
+#undef addnstr
+int	addnstr(
+		const char *a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef addstr
+int	addstr(
+		const char *z)
+		{ return(*(int *)0); }
+
+#undef attroff
+int	attroff(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef attron
+int	attron(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef attrset
+int	attrset(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef attr_get
+int	attr_get(void)
+		{ return(*(int *)0); }
+
+#undef attr_off
+int	attr_off(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef attr_on
+int	attr_on(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef attr_set
+int	attr_set(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef bkgd
+int	bkgd(
+		chtype	z)
+		{ return(*(int *)0); }
+
+#undef bkgdset
+void	bkgdset(
+		chtype	z)
+		{ /* void */ }
+
+#undef border
+int	border(
+		chtype	a1, 
+		chtype	a2, 
+		chtype	a3, 
+		chtype	a4, 
+		chtype	a5, 
+		chtype	a6, 
+		chtype	a7, 
+		chtype	z)
+		{ return(*(int *)0); }
+
+#undef box
+int	box(
+		WINDOW	*a1, 
+		chtype	a2, 
+		chtype	z)
+		{ return(*(int *)0); }
+
+#undef chgat
+int	chgat(
+		int	a1, 
+		attr_t	a2, 
+		short	a3, 
+		const void *z)
+		{ return(*(int *)0); }
+
+#undef clear
+int	clear(void)
+		{ return(*(int *)0); }
+
+#undef clrtobot
+int	clrtobot(void)
+		{ return(*(int *)0); }
+
+#undef clrtoeol
+int	clrtoeol(void)
+		{ return(*(int *)0); }
+
+#undef COLOR_PAIR
+int	COLOR_PAIR(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef delch
+int	delch(void)
+		{ return(*(int *)0); }
+
+#undef deleteln
+int	deleteln(void)
+		{ return(*(int *)0); }
+
+#undef echochar
+int	echochar(
+		const chtype z)
+		{ return(*(int *)0); }
+
+#undef getbkgd
+chtype	getbkgd(
+		WINDOW	*z)
+		{ return(*(chtype *)0); }
+
+#undef getch
+int	getch(void)
+		{ return(*(int *)0); }
+
+#undef getnstr
+int	getnstr(
+		char	*a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef getstr
+int	getstr(
+		char	*z)
+		{ return(*(int *)0); }
+
+#undef hline
+int	hline(
+		chtype	a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef inch
+chtype	inch(void)
+		{ return(*(chtype *)0); }
+
+#undef inchnstr
+int	inchnstr(
+		chtype	*a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef inchstr
+int	inchstr(
+		chtype	*z)
+		{ return(*(int *)0); }
+
+#undef innstr
+int	innstr(
+		char	*a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef insch
+int	insch(
+		chtype	z)
+		{ return(*(int *)0); }
+
+#undef insdelln
+int	insdelln(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef insertln
+int	insertln(void)
+		{ return(*(int *)0); }
+
+#undef insnstr
+int	insnstr(
+		const char *a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef insstr
+int	insstr(
+		const char *z)
+		{ return(*(int *)0); }
+
+#undef instr
+int	instr(
+		char	*z)
+		{ return(*(int *)0); }
+
+#undef move
+int	move(
+		int	a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvaddch
+int	mvaddch(
+		int	a1, 
+		int	a2, 
+		const chtype z)
+		{ return(*(int *)0); }
+
+#undef mvaddchnstr
+int	mvaddchnstr(
+		int	a1, 
+		int	a2, 
+		const chtype *a3, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvaddchstr
+int	mvaddchstr(
+		int	a1, 
+		int	a2, 
+		const chtype *z)
+		{ return(*(int *)0); }
+
+#undef mvaddnstr
+int	mvaddnstr(
+		int	a1, 
+		int	a2, 
+		const char *a3, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvaddstr
+int	mvaddstr(
+		int	a1, 
+		int	a2, 
+		const char *z)
+		{ return(*(int *)0); }
+
+#undef mvchgat
+int	mvchgat(
+		int	a1, 
+		int	a2, 
+		int	a3, 
+		attr_t	a4, 
+		short	a5, 
+		const void *z)
+		{ return(*(int *)0); }
+
+#undef mvdelch
+int	mvdelch(
+		int	a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvgetch
+int	mvgetch(
+		int	a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvgetnstr
+int	mvgetnstr(
+		int	a1, 
+		int	a2, 
+		char	*a3, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvgetstr
+int	mvgetstr(
+		int	a1, 
+		int	a2, 
+		char	*z)
+		{ return(*(int *)0); }
+
+#undef mvhline
+int	mvhline(
+		int	a1, 
+		int	a2, 
+		chtype	a3, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvinch
+chtype	mvinch(
+		int	a1, 
+		int	z)
+		{ return(*(chtype *)0); }
+
+#undef mvinchnstr
+int	mvinchnstr(
+		int	a1, 
+		int	a2, 
+		chtype	*a3, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvinchstr
+int	mvinchstr(
+		int	a1, 
+		int	a2, 
+		chtype	*z)
+		{ return(*(int *)0); }
+
+#undef mvinnstr
+int	mvinnstr(
+		int	a1, 
+		int	a2, 
+		char	*a3, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvinsch
+int	mvinsch(
+		int	a1, 
+		int	a2, 
+		chtype	z)
+		{ return(*(int *)0); }
+
+#undef mvinsnstr
+int	mvinsnstr(
+		int	a1, 
+		int	a2, 
+		const char *a3, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvinsstr
+int	mvinsstr(
+		int	a1, 
+		int	a2, 
+		const char *z)
+		{ return(*(int *)0); }
+
+#undef mvinstr
+int	mvinstr(
+		int	a1, 
+		int	a2, 
+		char	*z)
+		{ return(*(int *)0); }
+
+#undef mvvline
+int	mvvline(
+		int	a1, 
+		int	a2, 
+		chtype	a3, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwaddch
+int	mvwaddch(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		const chtype z)
+		{ return(*(int *)0); }
+
+#undef mvwaddchnstr
+int	mvwaddchnstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		const chtype *a4, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwaddchstr
+int	mvwaddchstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		const chtype *z)
+		{ return(*(int *)0); }
+
+#undef mvwaddnstr
+int	mvwaddnstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		const char *a4, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwaddstr
+int	mvwaddstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		const char *z)
+		{ return(*(int *)0); }
+
+#undef mvwchgat
+int	mvwchgat(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		int	a4, 
+		attr_t	a5, 
+		short	a6, 
+		const void *z)
+		{ return(*(int *)0); }
+
+#undef mvwdelch
+int	mvwdelch(
+		WINDOW	*a1, 
+		int	a2, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwgetch
+int	mvwgetch(
+		WINDOW	*a1, 
+		int	a2, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwgetnstr
+int	mvwgetnstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		char	*a4, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwgetstr
+int	mvwgetstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		char	*z)
+		{ return(*(int *)0); }
+
+#undef mvwhline
+int	mvwhline(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		chtype	a4, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwinch
+chtype	mvwinch(
+		WINDOW	*a1, 
+		int	a2, 
+		int	z)
+		{ return(*(chtype *)0); }
+
+#undef mvwinchnstr
+int	mvwinchnstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		chtype	*a4, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwinchstr
+int	mvwinchstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		chtype	*z)
+		{ return(*(int *)0); }
+
+#undef mvwinnstr
+int	mvwinnstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		char	*a4, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwinsch
+int	mvwinsch(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		chtype	z)
+		{ return(*(int *)0); }
+
+#undef mvwinsnstr
+int	mvwinsnstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		const char *a4, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef mvwinsstr
+int	mvwinsstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		const char *z)
+		{ return(*(int *)0); }
+
+#undef mvwinstr
+int	mvwinstr(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		char	*z)
+		{ return(*(int *)0); }
+
+#undef mvwvline
+int	mvwvline(
+		WINDOW	*a1, 
+		int	a2, 
+		int	a3, 
+		chtype	a4, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef PAIR_NUMBER
+int	PAIR_NUMBER(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef redrawwin
+int	redrawwin(
+		WINDOW	*z)
+		{ return(*(int *)0); }
+
+#undef refresh
+int	refresh(void)
+		{ return(*(int *)0); }
+
+#undef scrl
+int	scrl(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef scroll
+int	scroll(
+		WINDOW	*z)
+		{ return(*(int *)0); }
+
+#undef setscrreg
+int	setscrreg(
+		int	a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef standout
+int	standout(void)
+		{ return(*(int *)0); }
+
+#undef standend
+int	standend(void)
+		{ return(*(int *)0); }
+
+#undef timeout
+int	timeout(
+		int	z)
+		{ return(*(int *)0); }
+
+#undef untouchwin
+int	untouchwin(
+		WINDOW	*z)
+		{ return(*(int *)0); }
+
+#undef vline
+int	vline(
+		chtype	a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef vw_printw
+int	vw_printw(
+		WINDOW	*a1, 
+		const char *a2, 
+		va_list	z)
+		{ return(*(int *)0); }
+
+#undef vw_scanw
+int	vw_scanw(
+		WINDOW	*a1, 
+		const char *a2, 
+		va_list	z)
+		{ return(*(int *)0); }
+
+#undef waddchstr
+int	waddchstr(
+		WINDOW	*a1, 
+		const chtype *z)
+		{ return(*(int *)0); }
+
+#undef waddstr
+int	waddstr(
+		WINDOW	*a1, 
+		const char *z)
+		{ return(*(int *)0); }
+
+#undef wattron
+int	wattron(
+		WINDOW	*a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef wattroff
+int	wattroff(
+		WINDOW	*a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef wattrset
+int	wattrset(
+		WINDOW	*a1, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef wattr_get
+attr_t	wattr_get(
+		WINDOW	*z)
+		{ return(*(attr_t *)0); }
+
+#undef wattr_set
+int	wattr_set(
+		WINDOW	*a1, 
+		attr_t	z)
+		{ return(*(int *)0); }
+
+#undef wbkgdset
+void	wbkgdset(
+		WINDOW	*a1, 
+		chtype	z)
+		{ /* void */ }
+
+#undef wdeleteln
+int	wdeleteln(
+		WINDOW	*z)
+		{ return(*(int *)0); }
+
+#undef wgetstr
+int	wgetstr(
+		WINDOW	*a1, 
+		char	*z)
+		{ return(*(int *)0); }
+
+#undef winch
+chtype	winch(
+		WINDOW	*z)
+		{ return(*(chtype *)0); }
+
+#undef winchstr
+int	winchstr(
+		WINDOW	*a1, 
+		chtype	*z)
+		{ return(*(int *)0); }
+
+#undef winsertln
+int	winsertln(
+		WINDOW	*z)
+		{ return(*(int *)0); }
+
+#undef winsstr
+int	winsstr(
+		WINDOW	*a1, 
+		const char *z)
+		{ return(*(int *)0); }
+
+#undef winstr
+int	winstr(
+		WINDOW	*a1, 
+		char	*z)
+		{ return(*(int *)0); }
+
+#undef wstandout
+int	wstandout(
+		WINDOW	*z)
+		{ return(*(int *)0); }
+
+#undef wstandend
+int	wstandend(
+		WINDOW	*z)
+		{ return(*(int *)0); }
+
+/* ./lib_getch.c */
+
+#undef ESCDELAY
+int	ESCDELAY;
+
+#undef ungetch
+int	ungetch(
+		int	ch)
+		{ return(*(int *)0); }
+
+#undef _nc_backspace
+void	_nc_backspace(
+		WINDOW	*win)
+		{ /* void */ }
+
+#undef wgetch
+int	wgetch(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+/* ./lib_getstr.c */
+
+#undef wgetnstr
+int	wgetnstr(
+		WINDOW	*win, 
+		char	*str, 
+		int	maxlen)
+		{ return(*(int *)0); }
+
+/* ./lib_inchstr.c */
+
+#undef winchnstr
+int	winchnstr(
+		WINDOW	*win, 
+		chtype	*str, 
+		int	n)
+		{ return(*(int *)0); }
+
+/* ./lib_initscr.c */
+
+#undef _nc_initscr
+int	_nc_initscr(void)
+		{ return(*(int *)0); }
+
+#undef initscr
+WINDOW	*initscr(void)
+		{ return(*(WINDOW **)0); }
+
+#undef termname
+char	*termname(void)
+		{ return(*(char **)0); }
+
+/* ./lib_insch.c */
+
+#undef winsch
+int	winsch(
+		WINDOW	*win, 
+		chtype	c)
+		{ return(*(int *)0); }
+
+/* ./lib_insdel.c */
+
+#undef winsdelln
+int	winsdelln(
+		WINDOW	*win, 
+		int	n)
+		{ return(*(int *)0); }
+
+/* ./lib_insstr.c */
+
+#undef winsnstr
+int	winsnstr(
+		WINDOW	*win, 
+		const char *str, 
+		int	n)
+		{ return(*(int *)0); }
+
+/* ./lib_instr.c */
+
+#undef winnstr
+int	winnstr(
+		WINDOW	*win, 
+		char	*str, 
+		int	n)
+		{ return(*(int *)0); }
+
+/* ./lib_isendwin.c */
+
+#undef isendwin
+int	isendwin(void)
+		{ return(*(int *)0); }
+
+/* ./lib_kernel.c */
+
+#undef napms
+int	napms(
+		int	ms)
+		{ return(*(int *)0); }
+
+#undef reset_prog_mode
+int	reset_prog_mode(void)
+		{ return(*(int *)0); }
+
+#undef reset_shell_mode
+int	reset_shell_mode(void)
+		{ return(*(int *)0); }
+
+#undef erasechar
+char	erasechar(void)
+		{ return(*(char *)0); }
+
+#undef killchar
+char	killchar(void)
+		{ return(*(char *)0); }
+
+#undef flushinp
+int	flushinp(void)
+		{ return(*(int *)0); }
+
+#undef savetty
+int	savetty(void)
+		{ return(*(int *)0); }
+
+#undef resetty
+int	resetty(void)
+		{ return(*(int *)0); }
+
+/* ./lib_keyname.c */
+
+#include <ncurses_cfg.h>
+#include <stdlib.h>
+
+struct kn {
+	const char *name;
+	int code;
+};
+
+#undef key_names
+const struct kn key_names[] = {0};
+
+#undef keyname
+const char *keyname(
+		int	c)
+		{ return(*(const char **)0); }
+
+/* ./lib_longname.c */
+
+#undef longname
+char	*longname(void)
+		{ return(*(char **)0); }
+
+/* ./lib_mouse.c */
+
+#undef _nc_max_click_interval
+int	_nc_max_click_interval;
+
+#undef _nc_mouse_init
+void	_nc_mouse_init(
+		SCREEN	*sp)
+		{ /* void */ }
+
+#undef _nc_mouse_fd
+int	_nc_mouse_fd(void)
+		{ return(*(int *)0); }
+
+#undef _nc_mouse_event
+bool	_nc_mouse_event(
+		SCREEN	*sp)
+		{ return(*(bool *)0); }
+
+#undef _nc_mouse_inline
+bool	_nc_mouse_inline(
+		SCREEN	*sp)
+		{ return(*(bool *)0); }
+
+#undef _nc_mouse_parse
+bool	_nc_mouse_parse(
+		int	runcount)
+		{ return(*(bool *)0); }
+
+#undef _nc_mouse_wrap
+void	_nc_mouse_wrap(
+		SCREEN	*sp)
+		{ /* void */ }
+
+#undef _nc_mouse_resume
+void	_nc_mouse_resume(
+		SCREEN	*sp)
+		{ /* void */ }
+
+#undef getmouse
+int	getmouse(
+		MEVENT	*aevent)
+		{ return(*(int *)0); }
+
+#undef ungetmouse
+int	ungetmouse(
+		MEVENT	*aevent)
+		{ return(*(int *)0); }
+
+#undef mousemask
+mmask_t	mousemask(
+		mmask_t	newmask, 
+		mmask_t	*oldmask)
+		{ return(*(mmask_t *)0); }
+
+#undef wenclose
+bool	wenclose(
+		WINDOW	*win, 
+		int	y, 
+		int	x)
+		{ return(*(bool *)0); }
+
+#undef mouseinterval
+int	mouseinterval(
+		int	maxclick)
+		{ return(*(int *)0); }
+
+/* ./lib_move.c */
+
+#undef wmove
+int	wmove(
+		WINDOW	*win, 
+		int	y, 
+		int	x)
+		{ return(*(int *)0); }
+
+/* ./lib_mvcur.c */
+
+#undef _nc_mvcur_resume
+void	_nc_mvcur_resume(void)
+		{ /* void */ }
+
+#undef _nc_mvcur_init
+void	_nc_mvcur_init(void)
+		{ /* void */ }
+
+#undef _nc_mvcur_wrap
+void	_nc_mvcur_wrap(void)
+		{ /* void */ }
+
+#undef mvcur
+int	mvcur(
+		int	yold, 
+		int	xold, 
+		int	ynew, 
+		int	xnew)
+		{ return(*(int *)0); }
+
+#undef _nc_mvcur_scrolln
+int	_nc_mvcur_scrolln(
+		int	n, 
+		int	top, 
+		int	bot, 
+		int	maxy)
+		{ return(*(int *)0); }
+
+/* ./lib_mvwin.c */
+
+#undef mvwin
+int	mvwin(
+		WINDOW	*win, 
+		int	by, 
+		int	bx)
+		{ return(*(int *)0); }
+
+/* ./lib_newterm.c */
+
+#undef filter
+void	filter(void)
+		{ /* void */ }
+
+#undef newterm
+SCREEN	*newterm(
+		const char *term, 
+		FILE	*ofp, 
+		FILE	*ifp)
+		{ return(*(SCREEN **)0); }
+
+/* ./lib_newwin.c */
+
+#undef _nc_freewin
+void	_nc_freewin(
+		WINDOW	*win)
+		{ /* void */ }
+
+#undef newwin
+WINDOW	*newwin(
+		int	num_lines, 
+		int	num_columns, 
+		int	begy, 
+		int	begx)
+		{ return(*(WINDOW **)0); }
+
+#undef derwin
+WINDOW	*derwin(
+		WINDOW	*orig, 
+		int	num_lines, 
+		int	num_columns, 
+		int	begy, 
+		int	begx)
+		{ return(*(WINDOW **)0); }
+
+#undef subwin
+WINDOW	*subwin(
+		WINDOW	*w, 
+		int	l, 
+		int	c, 
+		int	y, 
+		int	x)
+		{ return(*(WINDOW **)0); }
+
+#undef _nc_makenew
+WINDOW	*_nc_makenew(
+		int	num_lines, 
+		int	num_columns, 
+		int	begy, 
+		int	begx, 
+		int	flags)
+		{ return(*(WINDOW **)0); }
+
+/* ./lib_options.c */
+
+#undef has_ic
+int	has_ic(void)
+		{ return(*(int *)0); }
+
+#undef has_il
+int	has_il(void)
+		{ return(*(int *)0); }
+
+#undef idlok
+int	idlok(
+		WINDOW	*win, 
+		bool	flag)
+		{ return(*(int *)0); }
+
+#undef idcok
+void	idcok(
+		WINDOW	*win, 
+		bool	flag)
+		{ /* void */ }
+
+#undef clearok
+int	clearok(
+		WINDOW	*win, 
+		bool	flag)
+		{ return(*(int *)0); }
+
+#undef immedok
+void	immedok(
+		WINDOW	*win, 
+		bool	flag)
+		{ /* void */ }
+
+#undef leaveok
+int	leaveok(
+		WINDOW	*win, 
+		bool	flag)
+		{ return(*(int *)0); }
+
+#undef scrollok
+int	scrollok(
+		WINDOW	*win, 
+		bool	flag)
+		{ return(*(int *)0); }
+
+#undef halfdelay
+int	halfdelay(
+		int	t)
+		{ return(*(int *)0); }
+
+#undef nodelay
+int	nodelay(
+		WINDOW	*win, 
+		bool	flag)
+		{ return(*(int *)0); }
+
+#undef notimeout
+int	notimeout(
+		WINDOW	*win, 
+		bool	f)
+		{ return(*(int *)0); }
+
+#undef wtimeout
+int	wtimeout(
+		WINDOW	*win, 
+		int	delay)
+		{ return(*(int *)0); }
+
+#undef _nc_keypad
+int	_nc_keypad(
+		bool	flag)
+		{ return(*(int *)0); }
+
+#undef keypad
+int	keypad(
+		WINDOW	*win, 
+		bool	flag)
+		{ return(*(int *)0); }
+
+#undef meta
+int	meta(
+		WINDOW	*win, 
+		bool	flag)
+		{ return(*(int *)0); }
+
+#undef curs_set
+int	curs_set(
+		int	vis)
+		{ return(*(int *)0); }
+
+#if 0
+
+#include <keys.tries>
+
+#endif
+
+#undef typeahead
+int	typeahead(
+		int	fd)
+		{ return(*(int *)0); }
+
+#undef has_key
+int	has_key(
+		int	keycode)
+		{ return(*(int *)0); }
+
+/* ./lib_overlay.c */
+
+#undef overlay
+int	overlay(
+		const WINDOW *win1, 
+		WINDOW	*win2)
+		{ return(*(int *)0); }
+
+#undef overwrite
+int	overwrite(
+		const WINDOW *win1, 
+		WINDOW	*win2)
+		{ return(*(int *)0); }
+
+#undef copywin
+int	copywin(
+		const WINDOW *src, 
+		WINDOW	*dst, 
+		int	sminrow, 
+		int	smincol, 
+		int	dminrow, 
+		int	dmincol, 
+		int	dmaxrow, 
+		int	dmaxcol, 
+		int	over)
+		{ return(*(int *)0); }
+
+/* ./lib_pad.c */
+
+#undef newpad
+WINDOW	*newpad(
+		int	l, 
+		int	c)
+		{ return(*(WINDOW **)0); }
+
+#undef subpad
+WINDOW	*subpad(
+		WINDOW	*orig, 
+		int	l, 
+		int	c, 
+		int	begy, 
+		int	begx)
+		{ return(*(WINDOW **)0); }
+
+#undef prefresh
+int	prefresh(
+		WINDOW	*win, 
+		int	pminrow, 
+		int	pmincol, 
+		int	sminrow, 
+		int	smincol, 
+		int	smaxrow, 
+		int	smaxcol)
+		{ return(*(int *)0); }
+
+#undef pnoutrefresh
+int	pnoutrefresh(
+		WINDOW	*win, 
+		int	pminrow, 
+		int	pmincol, 
+		int	sminrow, 
+		int	smincol, 
+		int	smaxrow, 
+		int	smaxcol)
+		{ return(*(int *)0); }
+
+#undef pechochar
+int	pechochar(
+		WINDOW	*pad, 
+		chtype	ch)
+		{ return(*(int *)0); }
+
+/* ./lib_print.c */
+
+#undef mcprint
+int	mcprint(
+		char	*data, 
+		int	len)
+		{ return(*(int *)0); }
+
+/* ./lib_printw.c */
+
+#undef printw
+int	printw(
+		const char *fmt, 
+		...)
+		{ return(*(int *)0); }
+
+#undef wprintw
+int	wprintw(
+		WINDOW	*win, 
+		const char *fmt, 
+		...)
+		{ return(*(int *)0); }
+
+#undef mvprintw
+int	mvprintw(
+		int	y, 
+		int	x, 
+		const char *fmt, 
+		...)
+		{ return(*(int *)0); }
+
+#undef mvwprintw
+int	mvwprintw(
+		WINDOW	*win, 
+		int	y, 
+		int	x, 
+		const char *fmt, 
+		...)
+		{ return(*(int *)0); }
+
+#undef vwprintw
+int	vwprintw(
+		WINDOW	*win, 
+		const char *fmt, 
+		va_list	argp)
+		{ return(*(int *)0); }
+
+/* ./lib_raw.c */
+
+#undef raw
+int	raw(void)
+		{ return(*(int *)0); }
+
+#undef cbreak
+int	cbreak(void)
+		{ return(*(int *)0); }
+
+#undef echo
+int	echo(void)
+		{ return(*(int *)0); }
+
+#undef nl
+int	nl(void)
+		{ return(*(int *)0); }
+
+#undef qiflush
+int	qiflush(void)
+		{ return(*(int *)0); }
+
+#undef noraw
+int	noraw(void)
+		{ return(*(int *)0); }
+
+#undef nocbreak
+int	nocbreak(void)
+		{ return(*(int *)0); }
+
+#undef noecho
+int	noecho(void)
+		{ return(*(int *)0); }
+
+#undef nonl
+int	nonl(void)
+		{ return(*(int *)0); }
+
+#undef noqiflush
+int	noqiflush(void)
+		{ return(*(int *)0); }
+
+#undef intrflush
+int	intrflush(
+		WINDOW	*win, 
+		bool	flag)
+		{ return(*(int *)0); }
+
+/* ./lib_refresh.c */
+
+#undef wredrawln
+int	wredrawln(
+		WINDOW	*win, 
+		int	beg, 
+		int	num)
+		{ return(*(int *)0); }
+
+#undef wrefresh
+int	wrefresh(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+#undef wnoutrefresh
+int	wnoutrefresh(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+/* ./lib_restart.c */
+
+#undef def_shell_mode
+int	def_shell_mode(void)
+		{ return(*(int *)0); }
+
+#undef def_prog_mode
+int	def_prog_mode(void)
+		{ return(*(int *)0); }
+
+#undef restartterm
+int	restartterm(
+		const char *term, 
+		int	filenum, 
+		int	*errret)
+		{ return(*(int *)0); }
+
+#undef set_curterm
+TERMINAL *set_curterm(
+		TERMINAL *term)
+		{ return(*(TERMINAL **)0); }
+
+#undef del_curterm
+int	del_curterm(
+		TERMINAL *term)
+		{ return(*(int *)0); }
+
+/* ./lib_scanw.c */
+
+#undef vwscanw
+int	vwscanw(
+		WINDOW	*win, 
+		const char *fmt, 
+		va_list	argp)
+		{ return(*(int *)0); }
+
+#undef scanw
+int	scanw(
+		const char *fmt, 
+		...)
+		{ return(*(int *)0); }
+
+#undef wscanw
+int	wscanw(
+		WINDOW	*win, 
+		const char *fmt, 
+		...)
+		{ return(*(int *)0); }
+
+#undef mvscanw
+int	mvscanw(
+		int	y, 
+		int	x, 
+		const char *fmt, 
+		...)
+		{ return(*(int *)0); }
+
+#undef mvwscanw
+int	mvwscanw(
+		WINDOW	*win, 
+		int	y, 
+		int	x, 
+		const char *fmt, 
+		...)
+		{ return(*(int *)0); }
+
+/* ./lib_screen.c */
+
+#include <sys/stat.h>
+#include <time.h>
+
+#undef getwin
+WINDOW	*getwin(
+		FILE	*filep)
+		{ return(*(WINDOW **)0); }
+
+#undef putwin
+int	putwin(
+		WINDOW	*win, 
+		FILE	*filep)
+		{ return(*(int *)0); }
+
+#undef scr_restore
+int	scr_restore(
+		const char *file)
+		{ return(*(int *)0); }
+
+#undef scr_dump
+int	scr_dump(
+		const char *file)
+		{ return(*(int *)0); }
+
+#undef scr_init
+int	scr_init(
+		const char *file)
+		{ return(*(int *)0); }
+
+#undef scr_set
+int	scr_set(
+		const char *file)
+		{ return(*(int *)0); }
+
+/* ./lib_scroll.c */
+
+#undef _nc_scroll_window
+void	_nc_scroll_window(
+		WINDOW	*win, 
+		int const n, 
+		short const top, 
+		short const bottom)
+		{ /* void */ }
+
+#undef wscrl
+int	wscrl(
+		WINDOW	*win, 
+		int	n)
+		{ return(*(int *)0); }
+
+/* ./lib_scrreg.c */
+
+#undef wsetscrreg
+int	wsetscrreg(
+		WINDOW	*win, 
+		int	top, 
+		int	bottom)
+		{ return(*(int *)0); }
+
+/* ./lib_set_term.c */
+
+#undef _nc_set_buffer
+void	_nc_set_buffer(
+		FILE	*ofp, 
+		bool	buffered)
+		{ /* void */ }
+
+#undef set_term
+SCREEN	*set_term(
+		SCREEN	*screen)
+		{ return(*(SCREEN **)0); }
+
+#undef delscreen
+void	delscreen(
+		SCREEN	*sp)
+		{ /* void */ }
+
+#undef rippedoff
+ripoff_t rippedoff[5];
+#undef rsp
+ripoff_t *rsp;
+
+#undef _nc_setupscreen
+int	_nc_setupscreen(
+		short	slines, 
+		short const scolumns, 
+		FILE	*output)
+		{ return(*(int *)0); }
+
+#undef _nc_ripoffline
+int	_nc_ripoffline(
+		int	line, 
+		int	(*init)(
+		WINDOW	*p1, 
+		int	p2))
+		{ return(*(int *)0); }
+
+#undef ripoffline
+int	ripoffline(
+		int	line, 
+		int	(*init)(
+		WINDOW	*p1, 
+		int	p2))
+		{ return(*(int *)0); }
+
+/* ./lib_setup.c */
+
+#include <sys/ioctl.h>
+
+#undef use_env
+void	use_env(
+		bool	f)
+		{ /* void */ }
+
+#undef LINES
+int	LINES;
+#undef COLS
+int	COLS;
+#undef TABSIZE
+int	TABSIZE;
+
+#undef _nc_get_screensize
+void	_nc_get_screensize(void)
+		{ /* void */ }
+
+#undef ttytype
+char	ttytype[256 ];
+
+#undef setupterm
+int	setupterm(
+		const char *tname, 
+		int	Filedes, 
+		int	*errret)
+		{ return(*(int *)0); }
+
+/* ./lib_slk.c */
+
+#undef _nc_slk_format
+int	_nc_slk_format;
+
+#undef slk_label
+char	*slk_label(
+		int	n)
+		{ return(*(char **)0); }
+
+#undef slk_noutrefresh
+int	slk_noutrefresh(void)
+		{ return(*(int *)0); }
+
+#undef slk_refresh
+int	slk_refresh(void)
+		{ return(*(int *)0); }
+
+#undef slk_restore
+int	slk_restore(void)
+		{ return(*(int *)0); }
+
+#undef slk_set
+int	slk_set(
+		int	i, 
+		const char *astr, 
+		int	format)
+		{ return(*(int *)0); }
+
+#undef slk_touch
+int	slk_touch(void)
+		{ return(*(int *)0); }
+
+#undef slk_clear
+int	slk_clear(void)
+		{ return(*(int *)0); }
+
+#undef _nc_slk_initialize
+int	_nc_slk_initialize(
+		WINDOW	*stwin, 
+		int	cols)
+		{ return(*(int *)0); }
+
+#undef slk_init
+int	slk_init(
+		int	format)
+		{ return(*(int *)0); }
+
+#undef slk_attrset
+int	slk_attrset(
+		const attr_t attr)
+		{ return(*(int *)0); }
+
+#undef slk_attron
+int	slk_attron(
+		const attr_t attr)
+		{ return(*(int *)0); }
+
+#undef slk_attroff
+int	slk_attroff(
+		const attr_t attr)
+		{ return(*(int *)0); }
+
+#undef slk_attr
+attr_t	slk_attr(void)
+		{ return(*(attr_t *)0); }
+
+/* ./lib_termcap.c */
+
+#include <termcap.h>
+#include <tic.h>
+
+#undef PC
+char	PC;
+#undef UP
+char	*UP;
+#undef BC
+char	*BC;
+#undef ospeed
+short	ospeed;
+
+#undef tgetent
+int	tgetent(
+		char	*bufp, 
+		const char *name)
+		{ return(*(int *)0); }
+
+#if 0
+
+#include <capdefaults.c>
+
+#endif
+
+#undef tgetflag
+int	tgetflag(
+		const char *id)
+		{ return(*(int *)0); }
+
+#undef tgetnum
+int	tgetnum(
+		const char *id)
+		{ return(*(int *)0); }
+
+#undef tgetstr
+char	*tgetstr(
+		const char *id, 
+		char	**area)
+		{ return(*(char **)0); }
+
+#undef tgoto
+char	*tgoto(
+		const char *string, 
+		int	x, 
+		int	y)
+		{ return(*(char **)0); }
+
+/* ./lib_ti.c */
+
+#undef tigetflag
+int	tigetflag(
+		const char *str)
+		{ return(*(int *)0); }
+
+#undef tigetnum
+int	tigetnum(
+		const char *str)
+		{ return(*(int *)0); }
+
+#undef tigetstr
+char	*tigetstr(
+		const char *str)
+		{ return(*(char **)0); }
+
+/* ./lib_touch.c */
+
+#undef is_linetouched
+int	is_linetouched(
+		WINDOW	*win, 
+		int	line)
+		{ return(*(int *)0); }
+
+#undef is_wintouched
+int	is_wintouched(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+#undef wtouchln
+int	wtouchln(
+		WINDOW	*win, 
+		int	y, 
+		int	n, 
+		int	changed)
+		{ return(*(int *)0); }
+
+/* ./lib_tparm.c */
+
+typedef union {
+	unsigned int	num;
+	char	       *str;
+} stack_frame;
+
+#undef tparm
+char	*tparm(
+		const char *string, 
+		...)
+		{ return(*(char **)0); }
+
+/* ./lib_tputs.c */
+
+#undef delay_output
+int	delay_output(
+		int	ms)
+		{ return(*(int *)0); }
+
+#undef _nc_outch
+int	_nc_outch(
+		int	ch)
+		{ return(*(int *)0); }
+
+#undef putp
+int	putp(
+		const char *string)
+		{ return(*(int *)0); }
+
+#undef tputs
+int	tputs(
+		const char *string, 
+		int	affcnt, 
+		int	(*outc)(
+		int	p1))
+		{ return(*(int *)0); }
+
+/* ./lib_trace.c */
+
+#include <fcntl.h>
+
+#undef _nc_tracing
+unsigned _nc_tracing;
+#undef _nc_tputs_trace
+const char *_nc_tputs_trace = {0};
+#undef _nc_outchars
+long	_nc_outchars;
+#undef _nc_optimize_enable
+int	_nc_optimize_enable;
+
+#undef trace
+void	trace(
+		const unsigned int tracelevel)
+		{ /* void */ }
+
+#undef _nc_visbuf
+const char *_nc_visbuf(
+		const char *buf)
+		{ return(*(const char **)0); }
+
+#undef _tracef
+void	_tracef(
+		const char *fmt, 
+		...)
+		{ /* void */ }
+
+/* ./lib_traceatr.c */
+
+#undef _traceattr
+char	*_traceattr(
+		attr_t	newmode)
+		{ return(*(char **)0); }
+
+#undef _tracechtype
+char	*_tracechtype(
+		chtype	ch)
+		{ return(*(char **)0); }
+
+/* ./lib_tracechr.c */
+
+#undef _tracechar
+char	*_tracechar(
+		const unsigned char ch)
+		{ return(*(char **)0); }
+
+/* ./lib_tracedmp.c */
+
+#undef _tracedump
+void	_tracedump(
+		const char *name, 
+		WINDOW	*win)
+		{ /* void */ }
+
+/* ./lib_tracemse.c */
+
+#undef _tracemouse
+char	*_tracemouse(
+		MEVENT const *ep)
+		{ return(*(char **)0); }
+
+/* ./lib_tstp.c */
+
+#include <signal.h>
+
+typedef struct sigaction sigaction_t;
+
+#undef _nc_signal_handler
+void	_nc_signal_handler(
+		bool	enable)
+		{ /* void */ }
+
+/* ./lib_twait.c */
+
+#undef _nc_timed_wait
+int	_nc_timed_wait(
+		int	mode, 
+		int	milliseconds, 
+		int	*timeleft)
+		{ return(*(int *)0); }
+
+/* ./lib_unctrl.c */
+
+#undef unctrl
+char	*unctrl(
+		 chtype	uch)
+		{ return(*(char **)0); }
+
+/* ./lib_vidattr.c */
+
+#undef vidputs
+int	vidputs(
+		attr_t	newmode, 
+		int	(*outc)(
+		int	p1))
+		{ return(*(int *)0); }
+
+#undef vidattr
+int	vidattr(
+		attr_t	newmode)
+		{ return(*(int *)0); }
+
+#undef termattrs
+attr_t	termattrs(void)
+		{ return(*(attr_t *)0); }
+
+/* ./lib_window.c */
+
+#undef _nc_synchook
+void	_nc_synchook(
+		WINDOW	*win)
+		{ /* void */ }
+
+#undef mvderwin
+int	mvderwin(
+		WINDOW	*win, 
+		int	y, 
+		int	x)
+		{ return(*(int *)0); }
+
+#undef syncok
+int	syncok(
+		WINDOW	*win, 
+		bool	bf)
+		{ return(*(int *)0); }
+
+#undef wsyncup
+void	wsyncup(
+		WINDOW	*win)
+		{ /* void */ }
+
+#undef wsyncdown
+void	wsyncdown(
+		WINDOW	*win)
+		{ /* void */ }
+
+#undef wcursyncup
+void	wcursyncup(
+		WINDOW	*win)
+		{ /* void */ }
+
+#undef dupwin
+WINDOW	*dupwin(
+		WINDOW	*win)
+		{ return(*(WINDOW **)0); }
+
+/* ./names.c */
+
+#undef boolnames
+char	*const boolnames[] = {0};
+#undef boolfnames
+char	*const boolfnames[] = {0};
+#undef numnames
+char	*const numnames[] = {0};
+#undef numfnames
+char	*const numfnames[] = {0};
+#undef strnames
+char	*const strnames[] = {0};
+#undef strfnames
+char	*const strfnames[] = {0};
+
+/* ./codes.c */
+#undef boolcodes
+char	*const boolcodes[] = {0};
+#undef numcodes
+char	*const numcodes[] = {0};
+#undef strcodes
+char	*const strcodes[] = {0};
+
+/* ./read_entry.c */
+#undef cur_term
+TERMINAL *cur_term;
+
+#undef _nc_tic_dir
+char	*_nc_tic_dir(
+		char	*path)
+		{ return(*(char **)0); }
+
+#undef _nc_read_file_entry
+int	_nc_read_file_entry(
+		const char *const filename, 
+		TERMTYPE *ptr)
+		{ return(*(int *)0); }
+
+#undef _nc_read_entry
+int	_nc_read_entry(
+		const char *const tn, 
+		char	*const filename, 
+		TERMTYPE *const tp)
+		{ return(*(int *)0); }
+
+#undef _nc_first_name
+char	*_nc_first_name(
+		const char *const sp)
+		{ return(*(char **)0); }
+
+#undef _nc_name_match
+int	_nc_name_match(
+		const char *const namelst, 
+		const char *const name, 
+		const char *const delim)
+		{ return(*(int *)0); }
+
+/* ./read_termcap.c */
+
+#include <term_entry.h>
+
+#undef _nc_read_termcap_entry
+int	_nc_read_termcap_entry(
+		const char *const tn, 
+		TERMTYPE *const tp)
+		{ return(*(int *)0); }
+
+/* ./write_entry.c */
+
+#undef _nc_set_writedir
+void	_nc_set_writedir(
+		char	*dir)
+		{ /* void */ }
+
+#undef _nc_write_entry
+void	_nc_write_entry(
+		TERMTYPE *const tp)
+		{ /* void */ }
+
+#undef _nc_tic_written
+int	_nc_tic_written(void)
+		{ return(*(int *)0); }
+
+/* ./sigaction.c */
+
+#undef _nc_sigaction
+void	_nc_sigaction(void)
+		{ /* void */ }
+
+/* ./vsscanf.c */
+
+#undef _nc_vsscanf
+void	_nc_vsscanf(void)
+		{ /* void */ }
+
+/* ./alloc_entry.c */
+
+#undef _nc_init_entry
+void	_nc_init_entry(
+		TERMTYPE *const tp)
+		{ /* void */ }
+
+#undef _nc_save_str
+char	*_nc_save_str(
+		const char *const string)
+		{ return(*(char **)0); }
+
+#undef _nc_wrap_entry
+void	_nc_wrap_entry(
+		ENTRY	*const ep)
+		{ /* void */ }
+
+#undef _nc_merge_entry
+void	_nc_merge_entry(
+		TERMTYPE *const to, 
+		TERMTYPE *const from)
+		{ /* void */ }
+
+/* ./captoinfo.c */
+
+#undef _nc_captoinfo
+char	*_nc_captoinfo(
+		 char	*const cap, 
+		 char	*s, 
+		int const parametrized)
+		{ return(*(char **)0); }
+
+#undef _nc_infotocap
+char	*_nc_infotocap(
+		 char	*const cap, 
+		 char	*str, 
+		int const parametrized)
+		{ return(*(char **)0); }
+
+/* ./comp_captab.c */
+
+#include <hashsize.h>
+
+#undef _nc_info_hash_table
+const struct name_table_entry *const _nc_info_hash_table[991] = {0};
+#undef _nc_cap_hash_table
+const struct name_table_entry *const _nc_cap_hash_table[991] = {0};
+#undef _nc_capalias_table
+const struct alias _nc_capalias_table[] = {0};
+#undef _nc_infoalias_table
+const struct alias _nc_infoalias_table[] = {0};
+
+#undef _nc_get_table
+const struct name_table_entry *_nc_get_table(
+		bool	termcap)
+		{ return(*(const struct name_table_entry **)0); }
+
+/* ./comp_error.c */
+
+#undef _nc_suppress_warnings
+bool	_nc_suppress_warnings;
+
+#undef _nc_set_source
+void	_nc_set_source(
+		const char *const name)
+		{ /* void */ }
+
+#undef _nc_set_type
+void	_nc_set_type(
+		const char *const name)
+		{ /* void */ }
+
+#undef _nc_get_type
+void	_nc_get_type(
+		char	*name)
+		{ /* void */ }
+
+#undef _nc_warning
+void	_nc_warning(
+		const char *const fmt, 
+		...)
+		{ /* void */ }
+
+#undef _nc_err_abort
+void	_nc_err_abort(
+		const char *const fmt, 
+		...)
+		{ /* void */ }
+
+#undef _nc_syserr_abort
+void	_nc_syserr_abort(
+		const char *const fmt, 
+		...)
+		{ /* void */ }
+
+/* ./comp_hash.c */
+
+#undef _nc_find_entry
+struct name_table_entry const *_nc_find_entry(
+		const char *string, 
+		const struct name_table_entry *const *hash_table)
+		{ return(*(struct name_table_entry const **)0); }
+
+#undef _nc_find_type_entry
+struct name_table_entry const *_nc_find_type_entry(
+		const char *string, 
+		int	type, 
+		const struct name_table_entry *table)
+		{ return(*(struct name_table_entry const **)0); }
+
+/* ./comp_parse.c */
+
+#undef _nc_head
+ENTRY	*_nc_head;
+#undef _nc_tail
+ENTRY	*_nc_tail;
+
+#undef _nc_free_entries
+void	_nc_free_entries(
+		ENTRY	*head)
+		{ /* void */ }
+
+#undef _nc_entry_match
+bool	_nc_entry_match(
+		char	*n1, 
+		char	*n2)
+		{ return(*(bool *)0); }
+
+#undef _nc_read_entry_source
+void	_nc_read_entry_source(
+		FILE	*fp, 
+		char	*buf, 
+		int	literal, 
+		bool	silent, 
+		bool	(*hook)(
+		ENTRY	*p1))
+		{ /* void */ }
+
+#undef _nc_resolve_uses
+int	_nc_resolve_uses(void)
+		{ return(*(int *)0); }
+
+/* ./comp_scan.c */
+
+#undef _nc_syntax
+int	_nc_syntax;
+#undef _nc_curr_line
+int	_nc_curr_line;
+#undef _nc_curr_col
+int	_nc_curr_col;
+#undef _nc_curr_file_pos
+long	_nc_curr_file_pos;
+#undef _nc_comment_start
+long	_nc_comment_start;
+#undef _nc_comment_end
+long	_nc_comment_end;
+#undef _nc_start_line
+long	_nc_start_line;
+
+#undef _nc_get_token
+int	_nc_get_token(void)
+		{ return(*(int *)0); }
+
+#undef _nc_push_token
+void	_nc_push_token(
+		int	class)
+		{ /* void */ }
+
+#undef _nc_panic_mode
+void	_nc_panic_mode(
+		char	ch)
+		{ /* void */ }
+
+#undef _nc_reset_input
+void	_nc_reset_input(
+		FILE	*fp, 
+		char	*buf)
+		{ /* void */ }
+
+/* ./parse_entry.c */
+
+#undef _nc_curr_token
+struct token _nc_curr_token;
+
+#undef _nc_parse_entry
+int	_nc_parse_entry(
+		struct entry *entryp, 
+		int	literal, 
+		bool	silent)
+		{ return(*(int *)0); }
+
+#undef _nc_capcmp
+int	_nc_capcmp(
+		const char *s, 
+		const char *t)
+		{ return(*(int *)0); }
+
+typedef struct {const char *from; const char *to;} assoc;
+
+/* ./lib_dft_fgbg.c */
+
+#undef use_default_colors
+int	use_default_colors(void)
+		{ return(*(int *)0); }
+
+/* ./lib_freeall.c */
+
+#undef _nc_free_termtype
+void	_nc_free_termtype(
+		struct termtype *p, 
+		int	base)
+		{ /* void */ }
+
+#undef _nc_freeall
+void	_nc_freeall(void)
+		{ /* void */ }
+
+#undef _nc_free_and_exit
+void	_nc_free_and_exit(
+		int	code)
+		{ /* void */ }
+
+/* ./resizeterm.c */
+
+#undef resizeterm
+int	resizeterm(
+		int	ToLines, 
+		int	ToCols)
+		{ return(*(int *)0); }
+
+/* ./wresize.c */
+
+#undef wresize
+int	wresize(
+		WINDOW	*win, 
+		int	ToLines, 
+		int	ToCols)
+		{ return(*(int *)0); }
+
+/* ./lib_adabind.c */
+
+#undef _nc_ada_getmaxyx
+int	_nc_ada_getmaxyx(
+		WINDOW	*win, 
+		int	*y, 
+		int	*x)
+		{ return(*(int *)0); }
+
+#undef _nc_ada_getbegyx
+int	_nc_ada_getbegyx(
+		WINDOW	*win, 
+		int	*y, 
+		int	*x)
+		{ return(*(int *)0); }
+
+#undef _nc_ada_getyx
+int	_nc_ada_getyx(
+		WINDOW	*win, 
+		int	*y, 
+		int	*x)
+		{ return(*(int *)0); }
+
+#undef _nc_ada_getparyx
+int	_nc_ada_getparyx(
+		WINDOW	*win, 
+		int	*y, 
+		int	*x)
+		{ return(*(int *)0); }
+
+#undef _nc_ada_isscroll
+int	_nc_ada_isscroll(
+		WINDOW	*win)
+		{ return(*(int *)0); }
+
+#undef _nc_ada_coord_transform
+int	_nc_ada_coord_transform(
+		WINDOW	*win, 
+		int	*Y, 
+		int	*X, 
+		int	dir)
+		{ return(*(int *)0); }
+
+#undef _nc_ada_mouse_event
+void	_nc_ada_mouse_event(
+		mmask_t	m, 
+		int	*b, 
+		int	*s)
+		{ /* void */ }
+
+#undef _nc_ada_mouse_mask
+int	_nc_ada_mouse_mask(
+		int	button, 
+		int	state, 
+		mmask_t	*mask)
+		{ return(*(int *)0); }
+
+#undef _nc_ada_unregister_mouse
+void	_nc_ada_unregister_mouse(void)
+		{ /* void */ }

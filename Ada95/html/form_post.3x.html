@@ -1,0 +1,122 @@
+<HTML>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+       <STRONG>form_post</STRONG>  -  write or erase forms from associated subwin-
+       dows
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+       int post_form(FORM *form);
+       int unpost_form(FORM *form);
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The function <STRONG>post_form</STRONG> displays a form to  its  associated
+       subwindow.   To trigger physical display of the subwindow,
+       use  <STRONG>refresh</STRONG>  or  some  equivalent  <STRONG>curses</STRONG>  routine   (the
+       implicit  <STRONG>doupdate</STRONG>  triggered  by  an <STRONG>curses</STRONG> input request
+       will do).
+
+       The function <STRONG>unpost_form</STRONG> erases form from  its  associated
+       subwindow.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       These routines return one of the following:
+
+       <STRONG>E_OK</STRONG> The routine succeeded.
+
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
+
+       <STRONG>E_BAD_ARGUMENT</STRONG>
+            Routine  detected  an incorrect or out-of-range argu-
+            ment.
+
+       <STRONG>E_POSTED</STRONG>
+            The form has already been posted.
+
+       <STRONG>E_BAD_STATE</STRONG>
+            Routine was called from an initialization or termina-
+            tion function.
+
+       <STRONG>E_NO_ROOM</STRONG>
+            Form is too large for its window.
+
+       <STRONG>E_NOT_POSTED</STRONG>
+            The form has not been posted.
+
+       <STRONG>E_NOT_CONNECTED</STRONG>
+            No items are connected to the form.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3X)</A></STRONG>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The header file <STRONG>&lt;form.h&gt;</STRONG> automatically includes the header
+       file <STRONG>&lt;curses.h&gt;</STRONG>.
+       These routines emulate the System V forms  library.   They
+       were not supported on Version 7 or BSD versions.
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
+       curses by Eric S. Raymond.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

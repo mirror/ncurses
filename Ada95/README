@@ -1,0 +1,29 @@
+The ncurses Ada95 binding is copyrighted 1996 by Juergen Pfeifer
+Email: Juergen.Pfeifer@T-Online.de
+                                                                         
+Permission is hereby granted to reproduce and distribute this
+binding by any means and for any fee, whether alone or as part 
+of a larger distribution, in source or in binary form, PROVIDED        
+this notice is included with any such distribution, and is not    
+removed from any of its header files. Mention of ncurses and the
+author of this binding in any applications linked with it is 
+highly appreciated.                
+                                                                         
+This binding comes AS IS with no warranty, implied or expressed.       
+----------------------------------------------------------------------
+Caveats:
+
+   This is the first delivery of this binding. It has not been
+   extensively tested. So I declare this as BETA level software,
+   although it is delivered with an official release of ncurses.
+
+   You should install the ncurses distribution around this binding
+   first before you try to run the sample.
+
+   This Binding is currently strictly for the GNAT compiler, because
+   in one place I use a GNAT specfic runtime module (see doc.)
+
+
+The documentation is provided in HTML format in the ./html 
+subdirectory. The main document is named index.html
+

@@ -1,0 +1,40 @@
+################################################################################
+# Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                        #
+# All Rights Reserved.                                                         #
+#                                                                              #
+# Permission to use, copy, modify, and distribute this software and its        #
+# documentation for any purpose and without fee is hereby granted, provided    #
+# that the above copyright notice appear in all copies and that both that      #
+# copyright notice and this permission notice appear in supporting             #
+# documentation, and that the name of the above listed copyright holder(s) not #
+# be used in advertising or publicity pertaining to distribution of the        #
+# software without specific, written prior permission. THE ABOVE LISTED        #
+# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
+# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
+# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
+# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
+# PERFORMANCE OF THIS SOFTWARE.                                                #
+################################################################################
+# Library objects
+fty_regex	lib		$(srcdir)	$(FORM_PRIV_H)
+fty_num		lib		$(srcdir)	$(FORM_PRIV_H)
+fty_int		lib		$(srcdir)	$(FORM_PRIV_H)
+fty_enum	lib		$(srcdir)	$(FORM_PRIV_H)
+fty_alpha	lib		$(srcdir)	$(FORM_PRIV_H)
+fty_alnum	lib		$(srcdir)	$(FORM_PRIV_H)
+fty_ipv4	lib		$(srcdir)	$(FORM_PRIV_H)
+frm_data	lib		$(srcdir)	$(FORM_PRIV_H)
+frm_win		lib		$(srcdir)	$(FORM_PRIV_H)
+frm_user	lib		$(srcdir)	$(FORM_PRIV_H)
+frm_opts	lib		$(srcdir)	$(FORM_PRIV_H)
+frm_hook	lib		$(srcdir)	$(FORM_PRIV_H)
+frm_req_name	lib		$(srcdir)	$(FORM_PRIV_H)
+fld_user	lib		$(srcdir)	$(FORM_PRIV_H)
+fld_type	lib		$(srcdir)	$(FORM_PRIV_H)
+fld_stat	lib		$(srcdir)	$(FORM_PRIV_H)
+fld_def		lib		$(srcdir)	$(FORM_PRIV_H)
+frm_def		lib		$(srcdir)	$(FORM_PRIV_H)
+frm_driver	lib		$(srcdir)	$(FORM_PRIV_H)
+frm_adabind	lib		$(srcdir)	$(FORM_PRIV_H)

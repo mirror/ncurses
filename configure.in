@@ -1,0 +1,658 @@
+dnl*****************************************************************************
+dnl Copyright 1996,1997 by Thomas E. Dickey <dickey@clark.net>                 *
+dnl All Rights Reserved.                                                       *
+dnl                                                                            *
+dnl Permission to use, copy, modify, and distribute this software and its      *
+dnl documentation for any purpose and without fee is hereby granted, provided  *
+dnl that the above copyright notice appear in all copies and that both that    *
+dnl copyright notice and this permission notice appear in supporting           *
+dnl documentation, and that the name of the above listed copyright holder(s)   *
+dnl not be used in advertising or publicity pertaining to distribution of the  *
+dnl software without specific, written prior permission. THE ABOVE LISTED      *
+dnl COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,  *
+dnl INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO     *
+dnl EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY         *
+dnl SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER       *
+dnl RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF       *
+dnl CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN        *
+dnl CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                   *
+dnl*****************************************************************************
+dnl $Id: configure.in,v 1.64 1997/05/10 15:26:07 tom Exp $
+dnl Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.12)
+AC_REVISION($Revision: 1.64 $)
+AC_INIT(ncurses/lib_initscr.c)
+
+NC_VERSION
+NC_SYSTYPE
+
+# We need a configure script only when compiling as part of GNU C library.
+# Here we have to generate one of the files we need while compiling.
+#
+# The only problem is that users of the package might think they have to
+# run configure themself and find it irritating when nothing happens.
+#
+# So we try here to find out whether we are called from the glibc configure
+# or by a user.
+#
+dnl Check if we are a drop-in addition to glibc.
+AC_ARG_ENABLE(add-ons, dnl
+[  --enable-add-ons=DIR... used to check if we are a glibc add-on.],
+		[glibc_add_on=yes],
+		[glibc_add_on=])
+
+dnl We need to use [ and ] for other purposes for a while now.
+changequote(,)dnl
+if test x"$glibc_add_on" = "xyes" ; then
+if test -f $srcdir/../glibcbug.in; then
+  rm -f $srcdir/Banner
+  # We are in glibc.
+  rm -f $srcdir/Makefile
+  cp $srcdir/Makefile.glibc $srcdir/Makefile
+  echo "ncurses `grep \"^[ 	]*ncurses-version[ 	]*=.*$\" \
+		$srcdir/Makefile | sed -e \
+		's/^[ 	]*ncurses-version[ 	]*=[ 	]*\([^	^ ]*\)[ 	]*$/\1/'`" > $srcdir/Banner
+  exit 0
+fi
+fi
+changequote([,])dnl
+
+###	Save the given $CFLAGS to allow user-override.
+nc_user_CFLAGS="$CFLAGS"
+
+###	Derive the system name, as a check for reusing the autoconf cache
+system_name="`(uname -s -r || hostname || echo unknown) 2>/dev/null`"
+if test -n "$system_name" ; then
+	AC_DEFINE_UNQUOTED(SYSTEM_NAME,"$system_name")
+else
+	system_name="`(hostname) 2>/dev/null`"
+fi
+AC_CACHE_VAL(nc_cv_system_name,[nc_cv_system_name="$system_name"])
+test -z "$system_name" && system_name="$nc_cv_system_name"
+test -n "$nc_cv_system_name" && AC_MSG_RESULT("Configuring for $nc_cv_system_name")
+
+if test ".$system_name" != ".$nc_cv_system_name" ; then
+	AC_MSG_RESULT("Cached system name does not agree with actual")
+	AC_ERROR("Please remove config.cache and try again.")
+fi
+
+###	Default install-location
+NC_CFG_DEFAULTS
+
+###	Checks for programs.
+AC_PROG_CC
+if test -n "$GCC" ; then
+AC_MSG_CHECKING(version of gcc)
+eval "$CC --version"
+fi
+AC_PROG_CPP
+AC_PROG_GCC_TRADITIONAL
+AC_ISC_POSIX
+
+dnl DEFECT in autoconf 2.12:	an attempt to set policy, this breaks the
+dnl				configure script by not letting us test if C++
+dnl				is present, making this option necessary.
+AC_ARG_WITH(cxx,
+	[  --without-cxx           suppress check for C++])
+if test "X$withval" != Xno ; then
+AC_PROG_CXX
+fi
+changequote(,)dnl
+if test -n "$GXX" ; then case "`${CXX-g++} --version`" in 1*|2.[0-6]*) GXX=""; CXX=""; ac_cv_prog_gxx=no; nc_cxx_library=no ; echo No: templates do not work;; esac; fi
+changequote([,])dnl
+AC_PROG_AWK
+AC_PROG_MAKE_SET
+NC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_RANLIB
+AC_CHECK_PROGS(LINT, tdlint lint alint)
+AC_CHECK_PROGS(MAN, man man_db)
+AC_SUBST(LINT_OPTS)
+
+dnl These are standard among *NIX systems, but not when cross-compiling
+NC_SUBST(loader,LD,ld)
+NC_SUBST(archiver,AR,ar)
+NC_SUBST(archiver options,AR_OPTS,rv)
+
+NC_MAKEFLAGS
+NC_MAN_PAGES
+
+dnl Special option for use by system-builders: the install-prefix is used to
+dnl adjust the location into which the actual install is done, so that an
+dnl archive can be built without modifying the host system's configuration.
+AC_ARG_WITH(install-prefix,
+	[  --with-install-prefix   prefixes actual install-location],
+	[case "$withval" in #(vi
+	yes|no) #(vi
+		;;
+	*)	INSTALL_PREFIX="$withval"
+		;;
+	esac])
+AC_SUBST(INSTALL_PREFIX)
+
+### Options to allow the user to specify the set of libraries which are used.
+### Use "--without-normal --with-shared" to allow the default model to be
+### shared, for example.
+nc_list_models=""
+AC_ARG_WITH(shared,
+	[  --with-shared           generate shared-libraries],
+	[test "$withval" = "yes" && nc_list_models="$nc_list_models shared"])
+AC_ARG_WITH(normal,
+	[  --with-normal           generate normal-libraries (default)],
+	[test "$withval" = "yes" && nc_list_models="$nc_list_models normal"],
+	[nc_list_models="$nc_list_models normal"])
+AC_ARG_WITH(debug,
+	[  --with-debug            generate debug-libraries (default)],
+	[test "$withval" = "yes" && nc_list_models="$nc_list_models debug"],
+	[nc_list_models="$nc_list_models debug"])
+AC_ARG_WITH(profile,
+	[  --with-profile          generate profile-libraries],
+	[test "$withval" = "yes" && nc_list_models="$nc_list_models profile"])
+
+### Checks for special libraries, must be done up-front.
+AC_ARG_WITH(dbmalloc,
+	[  --with-dbmalloc         test: use Conor Cahill's dbmalloc library],
+	[AC_CHECK_LIB(dbmalloc,debug_malloc)])
+AC_ARG_WITH(dmalloc,
+	[  --with-dmalloc          test: use Gray Watson's dmalloc library],
+	[AC_CHECK_LIB(dmalloc,dmalloc_debug)])
+AC_ARG_WITH(gpm,
+	[  --with-gpm              use Alessandro Rubini's GPM library],
+	[AC_CHECK_LIB(gpm,Gpm_Open,[
+		EXTRA_LIBS="$EXTRA_LIBS -lgpm -lncurses"
+		AC_DEFINE(HAVE_LIBGPM)
+		AC_CHECK_HEADERS(gpm.h)
+	],,-lcurses -ltermcap)])
+
+AC_SUBST(EXTRA_LIBS)
+
+AC_MSG_CHECKING(for specified models)
+test -z "$nc_list_models" && nc_list_models=normal
+AC_MSG_RESULT($nc_list_models)
+
+### Use the first model as the default, and save its suffix for use in building
+### up test-applications.
+DFT_LWR_MODEL=`echo $nc_list_models | $AWK '{print $1}'`
+NC_UPPERCASE($DFT_LWR_MODEL,DFT_UPR_MODEL)dnl
+NC_LIB_SUFFIX($DFT_LWR_MODEL,DFT_DEP_SUFFIX)dnl
+NC_LIB_TYPE($DFT_LWR_MODEL,DFT_ARG_SUFFIX)dnl
+NC_OBJ_SUBDIR($DFT_LWR_MODEL,DFT_OBJ_SUBDIR)dnl
+AC_SUBST(DFT_OBJ_SUBDIR)dnl	the default object-directory ("obj")
+AC_SUBST(DFT_LWR_MODEL)dnl	the default model ("normal")
+AC_SUBST(DFT_UPR_MODEL)dnl	the default model ("NORMAL")
+AC_SUBST(DFT_DEP_SUFFIX)dnl	the corresponding library-suffix (".a")
+AC_SUBST(DFT_ARG_SUFFIX)dnl	the string to append to "-lncurses" ("")
+AC_SUBST(nc_list_models)dnl	the complete list of models ("normal debug")
+
+LIB_NAME=ncurses
+AC_SUBST(LIB_NAME)
+
+LIB_DIR=../lib
+LIB_PREFIX=$LIB_DIR/lib
+AC_SUBST(LIB_PREFIX)
+
+dnl Not all ports of gcc support the -g option
+dnl autoconf 2.12 uses different symbol for -g option than autoconf 2.10, etc.
+
+if test X"$CC_G_OPT" = X"" ; then
+	CC_G_OPT='-g'
+	test -n "$GCC" && test "${ac_cv_prog_cc_g}${ac_cv_prog_gcc_g}" != yes && CC_G_OPT=''
+fi
+AC_SUBST(CC_G_OPT)
+
+if test X"$CXX_G_OPT" = X"" ; then
+	CXX_G_OPT='-g'
+	test -n "$GXX" && test "${ac_cv_prog_cxx_g}${ac_cv_prog_gxx_g}" != yes && CXX_G_OPT=''
+fi
+AC_SUBST(CXX_G_OPT)
+
+case $DFT_LWR_MODEL in
+normal)  LD_MODEL=''   ;;
+debug)   LD_MODEL=$CC_G_OPT ;;
+profile) LD_MODEL='-pg';;
+shared)  LD_MODEL=''   ;;
+esac
+AC_SUBST(LD_MODEL)dnl		the type of link (e.g., -g or -pg)
+NC_SHARED_OPTS
+
+if test "$CC_SHARED_OPTS" = "unknown"; then
+	for model in $nc_list_models; do
+		if test "$model" = "shared"; then
+			echo '** Shared libraries are not supported in this version'
+			exit 1
+		fi
+	done
+fi
+
+###	use option --disable-overwrite to leave out the link to -lcurses
+AC_MSG_CHECKING(include directory)
+AC_ARG_ENABLE(overwrite,
+	[  --disable-overwrite     leave out the link to -lcurses],
+	[with_overwrite=$enableval
+	 test "$with_overwrite" = no && \
+	 test "x$includedir" = 'x${prefix}/include' && \
+	 	includedir='$(prefix)/include/ncurses'
+	],
+	[with_overwrite=yes])
+AC_MSG_RESULT($includedir)
+
+###	use option --enable-big-core to make tic run faster on big machines
+AC_MSG_CHECKING(if big-core option selected)
+AC_ARG_ENABLE(big-core,
+	[  --enable-big-core       assume machine has lots of memory],
+	[with_big_core=$enableval],
+	[with_big_core=no])
+AC_MSG_RESULT($with_big_core)
+test "$with_big_core" = "yes" && AC_DEFINE(HAVE_BIG_CORE)
+
+###	use option --enable-termcap to compile in the termcap fallback support
+AC_MSG_CHECKING(if termcap-fallback support is needed)
+AC_ARG_ENABLE(termcap,
+	[  --enable-termcap        compile in termcap fallback support],
+	[with_termcap=$enableval],
+	[with_termcap=no])
+AC_MSG_RESULT($with_termcap)
+
+if test "$with_termcap" != "yes" ; then
+	AC_DEFINE(PURE_TERMINFO)
+else
+
+###	use option --enable-getcap to use a hacked getcap for reading termcaps
+AC_MSG_CHECKING(if fast termcap-loader is needed)
+AC_ARG_ENABLE(getcap,
+	[  --enable-getcap         fast termcap load, no xrefs to terminfo],
+	[with_getcap=$enableval],
+	[with_getcap=no])
+AC_MSG_RESULT($with_getcap)
+test "$with_getcap" = "yes" && AC_DEFINE(USE_GETCAP)
+
+AC_MSG_CHECKING(if translated termcaps will be cached in ~/.terminfo)
+AC_ARG_ENABLE(getcap-cache,
+	[  --enable-getcap-cache   cache translated termcaps in ~/.terminfo],
+	[with_getcap_cache=$enableval],
+	[with_getcap_cache=no])
+AC_MSG_RESULT($with_getcap_cache)
+test "$with_getcap_cache" = "yes" && AC_DEFINE(USE_GETCAP_CACHE)
+
+fi
+
+###   use option --enable-symlinks to make tic use symlinks, not hard links
+AC_MSG_CHECKING(if tic should use symbolic links)
+AC_ARG_ENABLE(symlinks,
+	[  --enable-symlinks       make tic use symbolic links not hard links],
+	[with_symlinks=$enableval],
+	[with_symlinks=no])
+AC_MSG_RESULT($with_symlinks)
+test "$with_symlinks" = yes && AC_DEFINE(USE_SYMLINKS)
+
+###   use option --enable-bsdpad to have tputs process BSD-style prefix padding
+AC_MSG_CHECKING(if tputs should process BSD-style prefix padding)
+AC_ARG_ENABLE(bsdpad,
+	[  --enable-bsdpad         recognize BSD-style prefix padding],
+	[with_bsdpad=$enableval],
+	[with_bsdpad=no])
+AC_MSG_RESULT($with_bsdpad)
+test "$with_bsdpad" = yes && AC_DEFINE(BSD_TPUTS)
+
+###   use option --enable-const to turn on use of const beyond that in XSI.
+AC_MSG_CHECKING(for extended use of const keyword)
+AC_ARG_ENABLE(const,
+	[  --enable-const          compile with extra/non-standard const],
+	[with_ext_const=$enableval],
+	[with_ext_const=no])
+AC_MSG_RESULT($with_ext_const)
+test "$with_ext_const" = yes && AC_DEFINE(NCURSES_CONST,const)
+
+### Enable compiling-in rcs id's
+AC_MSG_CHECKING(if RCS identifiers should be compiled-in)
+AC_ARG_WITH(rcs-ids,
+	[  --with-rcs-ids          build: compile-in RCS identifiers],
+	[with_rcs_ids=$enableval],
+	[with_rcs_ids=no])
+AC_MSG_RESULT($with_rcs_ids)
+test "$with_rcs_ids" = yes && AC_DEFINE(USE_RCS_IDS)
+
+###	use option --disable-echo to suppress full display compiling commands
+AC_ARG_ENABLE(echo,
+	[  --enable-echo           build: display \"compiling\" commands (default)],
+	[with_echo=$enableval],
+	[with_echo=yes])
+if test "$with_echo" = yes; then
+	ECHO_LINK=
+else
+	ECHO_LINK='@ echo linking $@ ... ;'
+fi
+AC_SUBST(ECHO_LINK)
+
+###	use option --enable-warnings to turn on all gcc warnings
+AC_ARG_ENABLE(warnings,
+	[  --enable-warnings       build: turn on GCC compiler warnings],
+	[with_warnings=$enableval])
+if test -n "$with_warnings"; then
+ 	ADAFLAGS="$ADAFLAGS -gnatg"
+	NC_GCC_WARNINGS
+fi
+NC_GCC_ATTRIBUTES
+
+###	use option --enable-assertions to turn on generation of assertion code
+AC_ARG_ENABLE(assertions,
+	[  --enable-assertions     test: turn on generation of assertion code],
+	[with_assertions=$enableval])
+if test -n "$GCC"
+then
+	if test -z "$with_assertions"
+	then
+		CPPFLAGS="$CPPFLAGS -DNDEBUG"
+	else
+		ADAFLAGS="$ADAFLAGS -gnata"
+	fi
+fi
+
+###	use option --disable-leaks to suppress "permanent" leaks, for testing
+AC_ARG_ENABLE(leaks,
+	[  --disable-leaks         test: suppress permanent memory-leaks],
+	[test $enableval = no && AC_DEFINE(NO_LEAKS)])
+AC_DEFINE(HAVE_NC_ALLOC_H)
+
+###	use option --enable-expanded to generate certain macros as functions
+AC_ARG_ENABLE(expanded,
+	[  --enable-expanded       test: generate functions for certain macros],
+	[test $enableval = yes && AC_DEFINE(NCURSES_EXPANDED)])
+
+###	use option --disable-macros to suppress macros in favor of functions
+AC_ARG_ENABLE(macros,
+	[  --disable-macros        test: use functions rather than macros],
+	[test $enableval = no && AC_DEFINE(NCURSES_NOMACROS)])
+
+###	Checks for libraries.
+AC_CHECK_FUNC(gettimeofday,
+	AC_DEFINE(HAVE_GETTIMEOFDAY),[
+AC_CHECK_LIB(bsd, gettimeofday,
+	AC_DEFINE(HAVE_GETTIMEOFDAY)
+	LIBS="$LIBS -lbsd")])dnl CLIX: bzero, select, gettimeofday
+
+###	Checks for header files.
+AC_STDC_HEADERS
+AC_HEADER_DIRENT
+NC_REGEX
+
+dnl These are some other potentially nonportable headers.
+AC_CHECK_HEADERS( \
+fcntl.h \
+getopt.h \
+libc.h \
+limits.h \
+locale.h \
+sys/bsdtypes.h \
+sys/ioctl.h \
+sys/param.h \
+poll.h \
+sys/select.h \
+sys/stropts.h \
+sys/time.h \
+sys/times.h \
+termio.h \
+termios.h \
+ttyent.h \
+unistd.h \
+values.h \
+)
+
+# check for HPUX's ANSI compiler
+if test $nc_cv_systype = HP_UX; then
+if test -z "$GCC"; then
+	AC_MSG_CHECKING([for HP/UX ANSI compiler])
+	nc_save_CFLAGS="$CFLAGS"
+	CFLAGS="$CFLAGS -Aa"
+	AC_TRY_COMPILE([],[void (*f)(void)=0],[nc_hpux_cc=yes],[nc_hpux_cc=no])
+	AC_MSG_RESULT($nc_hpux_cc)
+	if test $nc_hpux_cc = yes; then
+		AC_DEFINE(_HPUX_SOURCE)
+	else
+		CFLAGS="$nc_save_CFLAGS"
+	fi
+fi;fi
+
+# check for ISC (this may also define _POSIX_SOURCE)
+# Note: even non-Posix ISC needs <sys/bsdtypes.h> to declare fd_set
+if test "$ISC" = yes ; then
+	AC_CHECK_LIB(cposix,main)
+	AC_CHECK_LIB(inet,bzero,LIBS="$LIBS -linet")dnl also 'select()'
+	AC_CHECK_HEADERS( sys/termio.h )
+fi
+
+# check for SCO.  this is a hack, and should be split into individual
+# features -- the sys/time.h and select.h conflict, and the need for
+# ptem.h due to winsize struct.
+AC_CHECKING([for SCO by checking on /usr/bin/scosh])
+AC_PROGRAM_CHECK(COULD_BE_SCO, [scosh], maybe, maybenot)
+if test "$COULD_BE_SCO" = "maybe"
+then
+	AC_DEFINE(SYSTEM_LOOKS_LIKE_SCO)
+fi
+
+###	checks for compiler characteristics
+AC_LANG_C
+AC_C_CONST
+AC_C_INLINE
+test $ac_cv_c_inline != no && AC_DEFINE(CC_HAS_INLINE_FUNCS)
+
+###	Checks for external-data
+NC_ERRNO
+NC_SYS_ERRLIST
+NC_LINK_DATAONLY
+NC_SPEED_TYPE
+
+###	Checks for library functions.
+AC_CHECK_FUNCS( \
+getttynam \
+memccpy \
+poll \
+select \
+setbuf \
+setbuffer \
+setvbuf \
+sigaction \
+sigvec \
+strdup \
+tcgetattr \
+times \
+usleep \
+vfscanf \
+vsscanf \
+)
+
+if test $ac_cv_func_sigaction = yes; then
+AC_MSG_CHECKING(whether sigaction needs _POSIX_SOURCE)
+AC_TRY_COMPILE([#include <sys/types.h>
+#include <signal.h>], [struct sigaction act;],
+  sigact_bad=no, sigact_bad=yes AC_DEFINE(SVR4_ACTION))
+AC_MSG_RESULT($sigact_bad)
+fi
+
+# some machines require _POSIX_SOURCE to completely define struct termios
+if test $ac_cv_header_termios_h = yes ; then
+	case "$CFLAGS" in
+	*-D_POSIX_SOURCE*)
+		termios_bad=dunno ;;
+	*)	termios_bad=maybe ;;
+	esac
+	if test $termios_bad = maybe ; then
+	AC_MSG_CHECKING(whether termios.h needs _POSIX_SOURCE)
+	AC_TRY_COMPILE([#include <termios.h>],
+		[struct termios foo; int x = foo.c_iflag],
+		termios_bad=no, [
+		AC_TRY_COMPILE([
+#define _POSIX_SOURCE
+#include <termios.h>],
+			[struct termios foo; int x = foo.c_iflag],
+			termios_bad=unknown,
+			termios_bad=yes AC_DEFINE(SVR4_TERMIO))
+			])
+	AC_MSG_RESULT($termios_bad)
+	fi
+fi
+
+dnl FIXME (may need this) AC_SYS_RESTARTABLE_SYSCALLS
+if test "$cross_compiling" = yes ; then
+	AC_MSG_WARN(cross compiling: assume setvbuf params not reversed)
+else
+	AC_FUNC_SETVBUF_REVERSED
+fi
+AC_TYPE_SIGNAL
+NC_TYPE_SIGACTION
+NC_TIOCGWINSZ
+
+dnl FIXME checks we don't do (but neither does the old Configure script):
+case "$nc_cv_systype" in
+Linux)
+	AC_DEFINE(GOOD_SELECT)
+	;;
+esac
+
+dnl We'll do our own -g libraries, unless the user's overridden via $CFLAGS
+if test -z "$nc_user_CFLAGS" ; then
+	NC_STRIP_G_OPT(CFLAGS)
+	NC_STRIP_G_OPT(CXXFLAGS)
+fi
+
+dnl Check for C++ compiler characteristics (and ensure that it's there!)
+if test -n "$CXX" ; then
+	AC_CHECK_PROG(CXX_EXISTS, $CXX, yes, no)
+else
+	ac_cv_prog_CXX_EXISTS=no
+fi
+if test "$ac_cv_prog_CXX_EXISTS" = yes; then
+	AC_LANG_CPLUSPLUS
+	NC_CXX_LIBRARY
+	AC_CHECK_HEADERS(builtin.h typeinfo)
+	NC_BOOL_DECL
+	NC_BOOL_SIZE
+else
+	nc_cxx_library=no
+	AC_CACHE_VAL(nc_cv_builtin_bool,[nc_cv_builtin_bool=0])
+	AC_CACHE_VAL(nc_cv_sizeof_bool,[nc_cv_sizeof_bool=int])
+fi
+AC_SUBST(CXXLIBS)
+
+dnl Check for availability of GNU Ada Translator (GNAT).
+dnl At the moment we support no other Ada95 compiler.
+nc_ada_make=gnatmake
+AC_CHECK_PROG(gnat_exists, $nc_ada_make, yes, no)
+if test "$ac_cv_prog_gnat_exists" = no; then
+   nc_ada_make=
+else
+   NC_GNAT_VERSION
+   AC_CHECK_PROG(m4_exists, m4, yes, no)
+   if test "$ac_cv_prog_m4_exists" = no; then
+      ac_cv_prog_gnat_correct=no
+      echo Ada95 binding required program m4 not found. Ada95 binding disabled.
+   fi
+fi
+if test	"$ac_cv_prog_gnat_correct" = yes; then
+   nc_ada_compiler=gcc
+   nc_ada_package=terminal_interface
+   AC_SUBST(nc_ada_make)
+   AC_SUBST(nc_ada_compiler)
+   AC_SUBST(nc_ada_package)
+   AC_SUBST(ADAFLAGS)
+fi
+
+### It's not possible to appease gcc 2.6.3's conversion-warnings if we're
+### using a 'char' for bools.  gcc 2.7.0's conversion-warnings are broken too
+### badly to consider using for development purposes, but 2.5.8 is okay.
+if test -n "$with_warnings"; then
+	if test -n "$GCC"; then
+		case "`$CC --version`" in
+		2.6.3)
+			if test "$nc_cv_sizeof_bool" != "char"; then
+				nc_warn_CFLAGS="$nc_warn_CFLAGS -Wconversion"
+			fi
+			;;
+		2.5*)
+			nc_warn_CFLAGS="$nc_warn_CFLAGS -Wconversion"
+			;;
+		esac
+	fi
+fi
+
+### Construct the list of include-directories to be generated
+NC_INCLUDE_DIRS
+NC_ADA_INCLUDE_DIRS
+
+### Construct the list of subdirectories for which we'll customize makefiles
+### with the appropriate compile-rules.
+NC_SRC_MODULES(ncurses progs panel menu form)
+NC_DIRS_TO_MAKE
+
+### Now that we're done running tests, add the compiler-warnings, if any
+CFLAGS="$CFLAGS $nc_warn_CFLAGS"
+
+################################################################################
+changequote({,})dnl
+AC_OUTPUT(include/config_h \
+	include/MKterm.h.awk \
+	include/curses.h \
+	include/termcap.h \
+	include/unctrl.h \
+	$SUB_MAKEFILES \
+	Makefile,{
+
+NC_LIB_RULES
+
+### Special editing.  We generate ncurses_cfg.h directly to allow all filenames
+### to be MSDOS-compatible, as well as to make the list of definitions be
+### dynamically determined by the configuration script -- a consideration when
+### doing type-clean development testing.
+
+echo creating include/ncurses_cfg.h
+rm -f include/ncurses_cfg.h
+echo "/* generated by configure-script
+ * On host: $SYS_NAME
+ */
+#ifndef NC_CONFIG_H
+#define NC_CONFIG_H" >include/ncurses_cfg.h
+sed	-e '/^ -D/!d' \
+	-e 's/ -D/\
+#define /g' \
+	-e 's/\(#define [A-Za-z_][A-Za-z0-9_]*\)=/\1	/g' \
+	-e 's/\\//g' \
+	include/config_h | sort >>include/ncurses_cfg.h
+echo "
+	/* The C compiler may not treat these properly, but C++ has to */
+#ifdef __cplusplus
+#undef const
+#undef inline
+#else
+#if defined(lint) || defined(TRACE)
+#undef inline
+#define inline /* nothing */
+#endif
+#endif
+
+#endif /* NC_CONFIG_H */" >> include/ncurses_cfg.h
+echo removing include/config_h
+rm include/config_h
+},{
+### Special initialization commands, used to pass information from the
+### configuration-run into config.status
+
+SYS_NAME="`(uname -a || hostname) 2>/dev/null | sed 1q`"
+if test -z "\$SYS_NAME"; then SYS_NAME=unknown;fi
+
+AWK=$AWK
+DFT_LWR_MODEL="$DFT_LWR_MODEL"
+NC_LIST_MODELS="$nc_list_models"
+WITH_ECHO="$with_echo"
+WITH_OVERWRITE="$with_overwrite"
+SRC_SUBDIRS="$SRC_SUBDIRS"
+nc_cxx_library="$nc_cxx_library"
+nc_cv_systype="$nc_cv_systype"
+nc_cv_rel_version="$nc_cv_rel_version"
+nc_cv_abi_version="$nc_cv_abi_version"
+nc_cv_do_symlinks="$nc_cv_do_symlinks"
+nc_cv_rm_so_locs="$nc_cv_rm_so_locs"
+
+})dnl
+changequote([,])dnl
+make preinstall

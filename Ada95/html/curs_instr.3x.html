@@ -1,0 +1,70 @@
+<HTML>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+       <STRONG>instr</STRONG>,  <STRONG>innstr</STRONG>, <STRONG>winstr</STRONG>, <STRONG>winnstr</STRONG>, <STRONG>mvinstr</STRONG>, <STRONG>mvinnstr</STRONG>, <STRONG>mvwin-</STRONG>
+       <STRONG>str</STRONG>, <STRONG>mvwinnstr</STRONG> - get a string of characters from a  <STRONG>curses</STRONG>
+       window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+
+       <STRONG>int</STRONG> <STRONG>instr(char</STRONG> <STRONG>*str);</STRONG>
+       <STRONG>int</STRONG> <STRONG>innstr(char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>winstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
+       <STRONG>int</STRONG> <STRONG>winnstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvinstr(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvinnstr(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwinstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
+       <STRONG>int</STRONG>  <STRONG>mvwinnstr(WINDOW</STRONG>  <STRONG>*win,</STRONG>  <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG>
+       <STRONG>n);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These routines return  a  string  of  characters  in  <EM>str</EM>,
+       extracted  starting  at the current cursor position in the
+       named window.  Attributes are stripped  from  the  charac-
+       ters.   The  four  functions  with  <EM>n</EM> as the last argument
+       return a leading  substring  at  most  <EM>n</EM>  characters  long
+       (exclusive of the trailing NUL).
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All  of the functions return <STRONG>ERR</STRONG> upon failure, or the num-
+       ber of characters actually read into the string.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that all routines except <STRONG>winnstr</STRONG> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses error  conditions  <STRONG>EILSEQ</STRONG>  and  <STRONG>EILOVERFLOW</STRONG>
+       associated  with  extended-level  conformance  are not yet
+       detected (this implementation does not  yet  support  XPG4
+       multi-byte  characters).  SVr4 does not document whether a
+       length limit includes or excludes the trailing NUL.
+
+       The ncurses library extends the XSI description by  allow-
+       ing  a  negative value for <EM>n</EM>.  In this case, the functions
+       return the string ending at the right margin.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>.
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

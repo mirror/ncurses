@@ -1,0 +1,224 @@
+# Copyright (C) 1997 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+
+# You should have received a copy of the GNU Library General Public
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+#
+#	Makefile for ncurses part.
+#
+subdir	:= ncurses
+
+ncurses-version	= 4.1
+form-version	= $(ncurses-version)
+menu-version	= $(ncurses-version)
+panel-version	= $(ncurses-version)
+
+extras			:= form menu ncurses panel
+
+extra-libs		= $(extras:%=lib%)
+# These libraries will be built in the `others' pass rather than
+# the `lib' pass, because they depend on libc.so being built already.
+extra-libs-others	= $(extra-libs)
+
+# The sources are found in the appropriate subdir.
+subdir-dirs = $(extras) progs test
+vpath %.c $(subdir-dirs)
+vpath %.h $(subdir-dirs)
+
+libform-routines	= fld_def fld_stat fld_type fld_user \
+				frm_adabind frm_data frm_def \
+				frm_driver frm_hook frm_opts \
+				frm_req_name frm_user frm_win \
+				fty_alnum fty_alpha fty_enum fty_int \
+				fty_ipv4 fty_num fty_regex
+
+libncurses-routines	= alloc_entry captoinfo comp_error comp_hash \
+				comp_parse comp_scan hardscroll \
+				hashmap lib_acs lib_adabind lib_addch \
+				lib_addstr lib_baudrate \
+				lib_beep lib_bkgd lib_box lib_clear \
+				lib_clrbot lib_clreol lib_color \
+				lib_data lib_delch lib_delwin \
+				lib_dft_fgbg lib_doupdate lib_endwin \
+				lib_erase lib_freeall lib_getch \
+				lib_getstr lib_inchstr lib_initscr \
+				lib_insch lib_insdel lib_insstr \
+				lib_instr lib_isendwin lib_kernel \
+				lib_longname lib_mouse lib_move \
+				lib_mvcur lib_mvwin lib_newterm \
+				lib_newwin lib_options lib_overlay \
+				lib_pad lib_print lib_printw lib_raw \
+				lib_refresh lib_restart lib_scanw \
+				lib_screen lib_scroll lib_scrreg \
+				lib_set_term lib_setup lib_slk \
+				lib_termcap lib_ti lib_touch \
+				lib_tparm lib_tputs lib_trace \
+				lib_traceatr lib_tracechr \
+				lib_tracedmp lib_tracemse lib_tstp \
+				lib_twait lib_vidattr \
+				lib_window names parse_entry \
+				read_entry read_termcap resizeterm \
+				wresize write_entry \
+				codes comp_captab expanded fallback \
+				lib_gen names lib_keyname unctrl
+
+libmenu-routines	= m_adabind m_attribs m_cursor m_driver \
+				m_format m_global m_hook m_item_cur \
+				m_item_nam m_item_new m_item_opt \
+				m_item_use m_item_val m_item_vis \
+				m_items m_new m_opts m_post \
+				m_req_name m_spacing m_userptr m_win
+
+libpanel-routines	= panel
+
+headers = curses.h eti.h form.h menu.h panel.h term.h termcap.h \
+	  unctrl.h
+others = clear infocmp tic toe tput tset
+install-bin = $(others)
+
+clear-objs = clear.o
+infocmp-objs = infocmp.o dump_entry.o
+tic-objs = tic.o dump_entry.o
+toe-objs = toe.o dump_entry.o
+tput-objs = tput.o
+tset-objs = tset.o dump_entry.o
+extra-objs = $(tic-objs) $(toe-objs) $(infocmp-objs) $(clear-objs) \
+		$(tput-objs) $(tset-objs)
+
+# mvcur won't compile
+test-srcs = tctest thardscroll thashmap \
+		blue bs firework gdc hanoi hashtest knight lrtest \
+		ncurses newdemo rain tclock testcurs view worm xmas
+mvcur-objs = mvcur.o dump_entry.o
+tctest-objs = tctest.o
+thardscroll-objs = thardscroll.o
+thashmap-objs = thashmap.o hhardscroll.o
+
+include ../Rules
+
+ifndef tabsetdir
+tabsetdir		= $(datadir)/tabset
+endif
+ifndef inst_tabsetdir
+inst_tabsetdir	= $(install_root)/$(tabsetdir)
+endif
+
+ifndef terminfodir
+terminfodir		= $(datadir)/terminfo
+endif
+ifndef inst_terminfodir
+inst_terminfodir	= $(install_root)/$(terminfodir)
+endif
+
+ifndef mandir
+mandir			= $(prefix)/man
+endif
+
+ifndef inst_mandir
+inst_mandir		= $(install_root)/$(mandir)
+endif
+
+CPPFLAGS += -DTERMINFO='"$(terminfodir)"' -Iinclude -Incurses \
+	-Imenu -Iprogs -Itest -I$(objpfx)
+
+$(objpfx)mvcur.o: ncurses/lib_mvcur.c
+	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $?
+
+$(objpfx)tctest.o: ncurses/captoinfo.c
+	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DMAIN $?
+
+$(objpfx)thardscroll.o: ncurses/hardscroll.c
+	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DSCROLLDEBUG $?
+
+$(objpfx)thashmap.o: ncurses/hashmap.c
+	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DHASHDEBUG $?
+
+$(objpfx)hhardscroll.o: ncurses/hardscroll.c
+	$(CC) -c -o $@ $(CFLAGS) $(CPPFLAGS) -DTRACE -DHASHDEBUG $?
+
+$(objpfx)mvcur: $(addprefix $(objpfx),$(mvcur-objs))
+$(objpfx)tctest: $(addprefix $(objpfx),$(tctest-objs))
+$(objpfx)thardscroll: $(addprefix $(objpfx),$(thardscroll-objs))
+$(objpfx)thashmap: $(addprefix $(objpfx),$(thashmap-objs))
+
+$(objpfx)clear: $(addprefix $(objpfx),$(clear-objs))
+$(objpfx)infocmp: $(addprefix $(objpfx),$(infocmp-objs))
+$(objpfx)tic: $(addprefix $(objpfx),$(tic-objs))
+$(objpfx)toe: $(addprefix $(objpfx),$(toe-objs))
+$(objpfx)tput: $(addprefix $(objpfx),$(tput-objs))
+$(objpfx)tset: $(addprefix $(objpfx),$(tset-objs))
+
+ifeq ($(build-shared),yes)
+$(others:%=$(objpfx)%): $(objpfx)libncurses.so
+else
+$(others:%=$(objpfx)%): $(objpfx)libncurses.a
+endif
+
+$(test-srcs:%=$(objpfx)%): $(objpfx)libform.a $(objpfx)libmenu.a \
+	$(objpfx)libpanel.a $(objpfx)libncurses.a
+
+# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
+# This ensures they will load libc.so for needed symbols if loaded by
+# a statically-linked program that hasn't already loaded it.
+$(extras:%=$(objpfx)lib%.so): $(common-objpfx)libc.so
+
+subdir_install: $(inst_libdir)/libtermcap.a $(inst_libdir)/libcurses.a
+
+$(inst_libdir)/libtermcap.a $(inst_libdir)/libcurses.a: \
+		$(inst_libdir)/libncurses.a
+	$(make-link)
+
+ifeq (yes,$(build-shared))
+subdir_install: $(inst_libdir)/libtermcap.so  $(inst_libdir)/libcurses.so
+
+$(inst_libdir)/libtermcap.so $(inst_libdir)/libcurses.so: \
+		$(inst_libdir)/libncurses.so
+	$(make-link)
+endif
+
+subdir_install: $(inst_mandir)/man5/terminfo.5
+
+$(inst_mandir)/man5/terminfo.5: $(objpfx)terminfo.5 $(wildcard man/*.[0-9]*)
+	$(make-target-directory)
+	sh $(edit_man-sh) $(prefix) $(inst_mandir) $(edit_man-sed) $^
+
+subdir_install: $(inst_tabsetdir)/std
+
+$(inst_tabsetdir)/std: \
+	$(filter-out misc/tabset/CVS, $(wildcard misc/tabset/*))
+	$(make-target-directory)
+	for f in $^; do \
+	  echo installing $$f; \
+	  $(INSTALL_DATA) $$f $(inst_tabsetdir); \
+	done
+	
+
+ifeq (no,$(cross-compiling))
+subdir_install: $(inst_terminfodir)/v/vt100
+
+$(inst_terminfodir)/v/vt100: misc/terminfo.src $(objpfx)tic
+	$(make-target-directory)
+	sh $(run_tic-sh) $(common-objpfx) misc $(terminfodir) \
+		$(install_root)
+endif
+
+subdir_distclean subdir_realclean:
+	-rm -f $(addprefix $(objpfx), MKterm.h.awk codes.c \
+		comp_captab.c confdefs.h config.log curses.h \
+		expanded.c fallback.c hashsize.h keys.tries \
+		lib_gen.c lib_keyname.c names.c ncurses_cfg.h \
+		nomacros.h parametrized.h term.h termcap.h \
+		terminfo.5 termsort.c unctrl.c unctrl.h)

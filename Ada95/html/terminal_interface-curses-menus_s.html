@@ -1,0 +1,617 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE>
+</HEAD>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+
+<I>------------------------------------------------------------------------------</I>
+<I>--                                                                          --</I>
+<I>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</I>
+<I>--                                                                          --</I>
+<I>--                      Terminal_Interface.Curses.Menu                      --</I>
+<I>--                                                                          --</I>
+<I>--                                 S P E C                                  --</I>
+<I>--                                                                          --</I>
+<I>--  Version 00.92                                                           --</I>
+<I>--                                                                          --</I>
+<I>--  The ncurses Ada95 binding is copyrighted 1996 by                        --</I>
+<I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
+<I>--                                                                          --</I>
+<I>--  Permission is hereby granted to reproduce and distribute this           --</I>
+<I>--  binding by any means and for any fee, whether alone or as part          --</I>
+<I>--  of a larger distribution, in source or in binary form, PROVIDED         --</I>
+<I>--  this notice is included with any such distribution, and is not          --</I>
+<I>--  removed from any of its header files. Mention of ncurses and the        --</I>
+<I>--  author of this binding in any applications linked with it is            --</I>
+<I>--  highly appreciated.                                                     --</I>
+<I>--                                                                          --</I>
+<I>--  This binding comes AS IS with no warranty, implied or expressed.        --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  Version Control:</I>
+<I>--  @Revision: 1.7 @</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  menu binding, generated at Sun Feb  2 17:21:44 1997</I>
+<I>--  This module is generated. Please don't change it manually!</I>
+<I>--  Run the generator instead.</I>
+<I>--  |</I>
+<B>with</B> System;
+<B>with</B> Interfaces.C;
+<B>with</B> Ada.Characters.Latin_1;
+
+<B>package</B> Terminal_Interface.Curses.Menus <B>is</B>
+
+   <B>pragma</B> Linker_Options ("-lmenu");
+
+
+
+   Space : Character <B>renames</B> Ada.Characters.Latin_1.Space;
+
+   type Item <B>is</B> <B>private</B>;
+   type Menu <B>is</B> <B>private</B>;
+
+   <I>---------------------------</I>
+   <I>--  Interface constants  --</I>
+   <I>---------------------------</I>
+   Null_Item : <B>constant</B> Item;
+   Null_Menu : <B>constant</B> Menu;
+
+   <B>subtype</B> Menu_Request_Code <B>is</B> Key_Code
+     <B>range</B> (Key_Max + 1) .. (Key_Max + 17);
+
+   <I>--  The prefix M_ stands for "Menu Request"</I>
+   M_Left_Item       : <B>constant</B> Menu_Request_Code := Key_Max + 1;
+   M_Right_Item      : <B>constant</B> Menu_Request_Code := Key_Max + 2;
+   M_Up_Item         : <B>constant</B> Menu_Request_Code := Key_Max + 3;
+   M_Down_Item       : <B>constant</B> Menu_Request_Code := Key_Max + 4;
+   M_ScrollUp_Line   : <B>constant</B> Menu_Request_Code := Key_Max + 5;
+   M_ScrollDown_Line : <B>constant</B> Menu_Request_Code := Key_Max + 6;
+   M_ScrollDown_Page : <B>constant</B> Menu_Request_Code := Key_Max + 7;
+   M_ScrollUp_Page   : <B>constant</B> Menu_Request_Code := Key_Max + 8;
+   M_First_Item      : <B>constant</B> Menu_Request_Code := Key_Max + 9;
+   M_Last_Item       : <B>constant</B> Menu_Request_Code := Key_Max + 10;
+   M_Next_Item       : <B>constant</B> Menu_Request_Code := Key_Max + 11;
+   M_Previous_Item   : <B>constant</B> Menu_Request_Code := Key_Max + 12;
+   M_Toggle_Item     : <B>constant</B> Menu_Request_Code := Key_Max + 13;
+   M_Clear_Pattern   : <B>constant</B> Menu_Request_Code := Key_Max + 14;
+   M_Back_Pattern    : <B>constant</B> Menu_Request_Code := Key_Max + 15;
+   M_Next_Match      : <B>constant</B> Menu_Request_Code := Key_Max + 16;
+   M_Previous_Match  : <B>constant</B> Menu_Request_Code := Key_Max + 17;
+
+   <I>--  For those who like the old 'C' names for the request codes</I>
+   REQ_LEFT_ITEM     : Menu_Request_Code <B>renames</B> M_Left_Item;
+   REQ_RIGHT_ITEM    : Menu_Request_Code <B>renames</B> M_Right_Item;
+   REQ_UP_ITEM       : Menu_Request_Code <B>renames</B> M_Up_Item;
+   REQ_DOWN_ITEM     : Menu_Request_Code <B>renames</B> M_Down_Item;
+   REQ_SCR_ULINE     : Menu_Request_Code <B>renames</B> M_ScrollUp_Line;
+   REQ_SCR_DLINE     : Menu_Request_Code <B>renames</B> M_ScrollDown_Line;
+   REQ_SCR_DPAGE     : Menu_Request_Code <B>renames</B> M_ScrollDown_Page;
+   REQ_SCR_UPAGE     : Menu_Request_Code <B>renames</B> M_ScrollUp_Page;
+   REQ_FIRST_ITEM    : Menu_Request_Code <B>renames</B> M_First_Item;
+   REQ_LAST_ITEM     : Menu_Request_Code <B>renames</B> M_Last_Item;
+   REQ_NEXT_ITEM     : Menu_Request_Code <B>renames</B> M_Next_Item;
+   REQ_PREV_ITEM     : Menu_Request_Code <B>renames</B> M_Previous_Item;
+   REQ_TOGGLE_ITEM   : Menu_Request_Code <B>renames</B> M_Toggle_Item;
+   REQ_CLEAR_PATTERN : Menu_Request_Code <B>renames</B> M_Clear_Pattern;
+   REQ_BACK_PATTERN  : Menu_Request_Code <B>renames</B> M_Back_Pattern;
+   REQ_NEXT_MATCH    : Menu_Request_Code <B>renames</B> M_Next_Match;
+   REQ_PREV_MATCH    : Menu_Request_Code <B>renames</B> M_Previous_Match;
+
+   <B>procedure</B> Request_Name (Key  : <B>in</B> Menu_Request_Code;
+                           Name : <B>out</B> String);
+
+   <I>------------------</I>
+   <I>--  Exceptions  --</I>
+   <I>------------------</I>
+
+   Menu_Exception : <B>exception</B>;
+   <I>--</I>
+   <I>--  Menu options</I>
+   <I>--</I>
+
+   type Menu_Option_Set <B>is</B>
+      <B>record</B>
+         One_Valued        : Boolean;
+         Show_Descriptions : Boolean;
+         Row_Major_Order   : Boolean;
+         Ignore_Case       : Boolean;
+         Show_Matches      : Boolean;
+         Non_Cyclic        : Boolean;
+         Reserved          : Boolean;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Pack (Menu_Option_Set);
+   <B>pragma</B> Convention (C, Menu_Option_Set);
+
+   <B>for</B> Menu_Option_Set <B>use</B>
+      <B>record</B>
+         One_Valued        <B>at</B> 0 <B>range</B>  0 ..  0;
+         Show_Descriptions <B>at</B> 0 <B>range</B>  1 ..  1;
+         Row_Major_Order   <B>at</B> 0 <B>range</B>  2 ..  2;
+         Ignore_Case       <B>at</B> 0 <B>range</B>  3 ..  3;
+         Show_Matches      <B>at</B> 0 <B>range</B>  4 ..  4;
+         Non_Cyclic        <B>at</B> 0 <B>range</B>  5 ..  5;
+         Reserved          <B>at</B> 0 <B>range</B> 31 .. 31;
+      <B>end</B> <B>record</B>;
+   <B>for</B> Menu_Option_Set'Size <B>use</B> Interfaces.C.int'Size;
+   <I>--  Please note: this rep. clause is generated and may be</I>
+   <I>--               different on your system.</I>
+
+   Default_Menu_Options : Menu_Option_Set;
+   <I>--  Initial default options for a menu.</I>
+
+   <I>--</I>
+   <I>--  Item options</I>
+   <I>--</I>
+   type Item_Option_Set <B>is</B>
+      <B>record</B>
+         Selectable : Boolean;
+         Reserved   : Boolean;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Pack (Item_Option_Set);
+   <B>pragma</B> Convention (C, Item_Option_Set);
+
+   <B>for</B> Item_Option_Set <B>use</B>
+      <B>record</B>
+         Selectable <B>at</B> 0 <B>range</B>  0 ..  0;
+         Reserved   <B>at</B> 0 <B>range</B> 31 .. 31;
+      <B>end</B> <B>record</B>;
+   <B>for</B> Item_Option_Set'Size <B>use</B> Interfaces.C.int'Size;
+   <I>--  Please note: this rep. clause is generated and may be</I>
+   <I>--               different on your system.</I>
+
+   Default_Item_Options : Item_Option_Set;
+   <I>--  Initial default options for an item.</I>
+
+   <I>--</I>
+   <I>--  Item Array</I>
+   <I>--</I>
+   type Item_Array <B>is</B> <B>array</B> (Positive <B>range</B> &lt;&gt;) <B>of</B> <B>aliased</B> Item;
+   <B>pragma</B> Convention (C, Item_Array);
+
+   type Item_Array_Access <B>is</B> <B>access</B> <B>all</B> Item_Array;
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="mitem_new.3x.html">mitem_new.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_1">|</I>
+   <B>function</B> Create (Name        : String;
+                    Description : String := "") return Item;
+   <I>--  AKA: <A HREF="mitem_new.3x.html">new_item()</A></I>
+
+   <I>--  <A NAME="AFU_2">|</I>
+   <B>function</B> New_Item (Name        : String;
+                      Description : String := "") return Item
+     <B>renames</B> Create;
+   <I>--  AKA: <A HREF="mitem_new.3x.html">new_item()</A></I>
+
+   <I>--  <A NAME="AFU_3">|</I>
+   <B>procedure</B> Delete (Itm : <B>in</B> <B>out</B> Item);
+   <I>--  AKA: <A HREF="mitem_new.3x.html">free_item()</A></I>
+   <I>--  Resets Itm to Null_Item</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="mitem_value.3x.html">mitem_value.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_4">|</I>
+   <B>procedure</B> Set_Value (Itm   : <B>in</B> Item;
+                        Value : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="mitem_value.3x.html">set_item_value()</A></I>
+
+   <I>--  <A NAME="AFU_5">|</I>
+   <B>function</B> Value (Itm : Item) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="mitem_value.3x.html">item_value()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="mitem_visible.3x.html">mitem_visible.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_6">|</I>
+   <B>function</B> Visible (Itm : Item) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="mitem_visible.3x.html">item_visible()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="mitem_opts.3x.html">mitem_opts.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_7">|</I>
+   <B>procedure</B> Set_Options (Itm     : <B>in</B> Item;
+                          Options : <B>in</B> Item_Option_Set);
+   <I>--  AKA: <A HREF="mitem_opts.3x.html">set_item_opts()</A></I>
+
+   <I>--  <A NAME="AFU_8">|</I>
+   <B>procedure</B> Switch_Options (Itm     : <B>in</B> Item;
+                             Options : <B>in</B> Item_Option_Set;
+                             On      : Boolean := True);
+   <I>--  AKA: <A HREF="mitem_opts.3x.html">item_opts_on()</A></I>
+   <I>--  AKA: item_opts_off()</I>
+
+   <I>--  <A NAME="AFU_9">|</I>
+   <B>procedure</B> Get_Options (Itm     : <B>in</B>  Item;
+                          Options : <B>out</B> Item_Option_Set);
+   <I>--  AKA: <A HREF="mitem_opts.3x.html">item_opts()</A></I>
+
+   <I>--  <A NAME="AFU_10">|</I>
+   <B>function</B> Get_Options (Itm : Item := Null_Item) <B>return</B> Item_Option_Set;
+   <I>--  AKA: <A HREF="mitem_opts.3x.html">item_opts()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="mitem_name.3x.html">mitem_name.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_11">|</I>
+   <B>procedure</B> Name (Itm  : <B>in</B> Item;
+                   Name : <B>out</B> String);
+   <I>--  AKA: <A HREF="mitem_name.3x.html">item_name()</A></I>
+
+   <I>--  <A NAME="AFU_12">|</I>
+   <B>procedure</B> Description (Itm         : <B>in</B> Item;
+                          Description : <B>out</B> String);
+   <I>--  AKA: <A HREF="mitem_name.3x.html">item_description();</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="mitem_current.3x.html">mitem_current.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_13">|</I>
+   <B>procedure</B> Set_Current (Men : <B>in</B> Menu;
+                          Itm : <B>in</B> Item);
+   <I>--  AKA: <A HREF="mitem_current.3x.html">set_current_item()</A></I>
+
+   <I>--  <A NAME="AFU_14">|</I>
+   <B>function</B> Current (Men : Menu) <B>return</B> Item;
+   <I>--  AKA: <A HREF="mitem_current.3x.html">current_item()</A></I>
+
+   <I>--  <A NAME="AFU_15">|</I>
+   <B>procedure</B> Set_Top_Row (Men  : <B>in</B> Menu;
+                          Line : <B>in</B> Line_Position);
+   <I>--  AKA: <A HREF="mitem_current.3x.html">set_top_row()</A></I>
+
+   <I>--  <A NAME="AFU_16">|</I>
+   <B>function</B> Top_Row (Men : Menu) <B>return</B> Line_Position;
+   <I>--  AKA: <A HREF="mitem_current.3x.html">top_row()</A></I>
+
+   <I>--  <A NAME="AFU_17">|</I>
+   <B>function</B> Get_Index (Itm : Item) <B>return</B> Positive;
+   <I>--  AKA: <A HREF="mitem_current.3x.html">item_index()</A></I>
+   <I>--  Please note that in this binding we start the numbering of items</I>
+   <I>--  with 1. So this is number is one more than you get from the low</I>
+   <I>--  level call.</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_post.3x.html">menu_post.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_18">|</I>
+   <B>procedure</B> Post (Men  : <B>in</B> Menu;
+                   Post : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="menu_post.3x.html">post_menu()</A></I>
+   <I>--  AKA: unpost_menu()</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_opts.3x.html">menu_opts.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_19">|</I>
+   <B>procedure</B> Set_Options (Men     : <B>in</B> Menu;
+                          Options : <B>in</B> Menu_Option_Set);
+   <I>--  AKA: <A HREF="menu_opts.3x.html">set_menu_opts()</A></I>
+
+   <I>--  <A NAME="AFU_20">|</I>
+   <B>procedure</B> Switch_Options (Men     : <B>in</B> Menu;
+                             Options : <B>in</B> Menu_Option_Set;
+                             On      : Boolean := True);
+   <I>--  AKA: <A HREF="menu_opts.3x.html">menu_opts_on()</A></I>
+   <I>--  AKA: menu_opts_off()</I>
+
+   <I>--  <A NAME="AFU_21">|</I>
+   <B>procedure</B> Get_Options (Men     : <B>in</B>  Menu;
+                          Options : <B>out</B> Menu_Option_Set);
+   <I>--  AKA: <A HREF="menu_opts.3x.html">menu_opts()</A></I>
+
+   <I>--  <A NAME="AFU_22">|</I>
+   <B>function</B> Get_Options (Men : Menu := Null_Menu) <B>return</B> Menu_Option_Set;
+   <I>--  AKA: <A HREF="menu_opts.3x.html">menu_opts()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_win.3x.html">menu_win.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_23">|</I>
+   <B>procedure</B> Set_Window (Men : <B>in</B> Menu;
+                         Win : <B>in</B> Window);
+   <I>--  AKA: <A HREF="menu_win.3x.html">set_menu_win()</A></I>
+
+   <I>--  <A NAME="AFU_24">|</I>
+   <B>function</B> Get_Window (Men : Menu) <B>return</B> Window;
+   <I>--  AKA: <A HREF="menu_win.3x.html">menu_win()</A></I>
+
+   <I>--  <A NAME="AFU_25">|</I>
+   <B>procedure</B> Set_Sub_Window (Men : <B>in</B> Menu;
+                             Win : <B>in</B> Window);
+   <I>--  AKA: <A HREF="menu_win.3x.html">set_menu_sub()</A></I>
+
+   <I>--  <A NAME="AFU_26">|</I>
+   <B>function</B> Get_Sub_Window (Men : Menu) <B>return</B> Window;
+   <I>--  AKA: <A HREF="menu_win.3x.html">menu_sub()</A></I>
+
+   <I>--  <A NAME="AFU_27">|</I>
+   <B>procedure</B> Scale (Men     : <B>in</B> Menu;
+                    Lines   : <B>out</B> Line_Count;
+                    Columns : <B>out</B> Column_Count);
+   <I>--  AKA: <A HREF="menu_win.3x.html">scale_menu()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_cursor.3x.html">menu_cursor.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_28">|</I>
+   <B>procedure</B> Position_Cursor (Men : Menu);
+   <I>--  AKA: <A HREF="menu_cursor.3x.html">pos_menu_cursor()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_mark.3x.html">menu_mark.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_29">|</I>
+   <B>procedure</B> Set_Mark (Men  : <B>in</B> Menu;
+                       Mark : <B>in</B> String);
+   <I>--  AKA: <A HREF="menu_mark.3x.html">set_menu_mark()</A></I>
+
+   <I>--  <A NAME="AFU_30">|</I>
+   <B>procedure</B> Mark (Men  : <B>in</B>  Menu;
+                   Mark : <B>out</B> String);
+   <I>--  AKA: <A HREF="menu_mark.3x.html">menu_mark()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_attribs.3x.html">menu_attribs.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_31">|</I>
+   <B>procedure</B> Set_Foreground
+     (Men   : <B>in</B> Menu;
+      Fore  : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">set_menu_fore()</A></I>
+
+   <I>--  <A NAME="AFU_32">|</I>
+   <B>procedure</B> Foreground (Men   : <B>in</B>  Menu;
+                         Fore  : <B>out</B> Character_Attribute_Set);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">menu_fore()</A></I>
+
+   <I>--  <A NAME="AFU_33">|</I>
+   <B>procedure</B> Foreground (Men   : <B>in</B>  Menu;
+                         Fore  : <B>out</B> Character_Attribute_Set;
+                         Color : <B>out</B> Color_Pair);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">menu_fore()</A></I>
+
+   <I>--  <A NAME="AFU_34">|</I>
+   <B>procedure</B> Set_Background
+     (Men   : <B>in</B> Menu;
+      Back  : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">set_menu_back()</A></I>
+
+   <I>--  <A NAME="AFU_35">|</I>
+   <B>procedure</B> Background (Men  : <B>in</B>  Menu;
+                         Back : <B>out</B> Character_Attribute_Set);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">menu_back()</A></I>
+   <I>--  <A NAME="AFU_36">|</I>
+
+   <B>procedure</B> Background (Men   : <B>in</B>  Menu;
+                         Back  : <B>out</B> Character_Attribute_Set;
+                         Color : <B>out</B> Color_Pair);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">menu_back()</A></I>
+
+   <I>--  <A NAME="AFU_37">|</I>
+   <B>procedure</B> Set_Grey
+     (Men   : <B>in</B> Menu;
+      Grey  : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">set_menu_grey()</A></I>
+
+   <I>--  <A NAME="AFU_38">|</I>
+   <B>procedure</B> Grey (Men  : <B>in</B>  Menu;
+                   Grey : <B>out</B> Character_Attribute_Set);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">menu_grey()</A></I>
+
+   <I>--  <A NAME="AFU_39">|</I>
+   <B>procedure</B> Grey
+     (Men   : <B>in</B>  Menu;
+      Grey  : <B>out</B> Character_Attribute_Set;
+      Color : <B>out</B> Color_Pair);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">menu_grey()</A></I>
+
+   <I>--  <A NAME="AFU_40">|</I>
+   <B>procedure</B> Set_Pad_Character (Men : <B>in</B> Menu;
+                                Pad : <B>in</B> Character := Space);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">set_menu_pad()</A></I>
+
+   <I>--  <A NAME="AFU_41">|</I>
+   <B>procedure</B> Pad_Character (Men : <B>in</B>  Menu;
+                            Pad : <B>out</B> Character);
+   <I>--  AKA: <A HREF="menu_attribs.3x.html">menu_pad()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_spacing.3x.html">menu_spacing.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_42">|</I>
+   <B>procedure</B> Set_Spacing (Men   : <B>in</B> Menu;
+                          Descr : <B>in</B> Column_Position := 0;
+                          Row   : <B>in</B> Line_Position   := 0;
+                          Col   : <B>in</B> Column_Position := 0);
+   <I>--  AKA: <A HREF="menu_spacing.3x.html">set_menu_spacing()</A></I>
+
+   <I>--  <A NAME="AFU_43">|</I>
+   <B>procedure</B> Spacing (Men   : <B>in</B> Menu;
+                      Descr : <B>out</B> Column_Position;
+                      Row   : <B>out</B> Line_Position;
+                      Col   : <B>out</B> Column_Position);
+   <I>--  AKA: <A HREF="menu_spacing.3x.html">menu_spacing()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_pattern.3x.html">menu_pattern.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_44">|</I>
+   <B>function</B> Set_Pattern (Men  : Menu;
+                         Text : String) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="menu_pattern.3x.html">set_menu_pattern()</A></I>
+   <I>--  Return TRUE if the pattern matches, FALSE otherwise</I>
+
+   <I>--  <A NAME="AFU_45">|</I>
+   <B>procedure</B> Pattern (Men  : <B>in</B>  Menu;
+                      Text : <B>out</B> String);
+   <I>--  AKA: <A HREF="menu_pattern.3x.html">menu_pattern()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_format.3x.html">menu_format.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_46">|</I>
+   <B>procedure</B> Set_Format (Men     : <B>in</B> Menu;
+                         Lines   : <B>in</B> Line_Count;
+                         Columns : <B>in</B> Column_Count);
+   <I>--  AKA: <A HREF="menu_format.3x.html">set_menu_format()</A></I>
+
+   <I>--  <A NAME="AFU_47">|</I>
+   <B>procedure</B> Format (Men     : <B>in</B>  Menu;
+                     Lines   : <B>out</B> Line_Count;
+                     Columns : <B>out</B> Column_Count);
+   <I>--  AKA: <A HREF="menu_format.3x.html">menu_format()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_hook.3x.html">menu_hook.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   type Menu_Hook_Function <B>is</B> <B>access</B> <B>procedure</B> (Men : <B>in</B> Menu);
+   <B>pragma</B> Convention (C, Menu_Hook_Function);
+
+   <I>--  <A NAME="AFU_48">|</I>
+   <B>procedure</B> Set_Item_Init_Hook (Men  : <B>in</B> Menu;
+                                 Proc : <B>in</B> Menu_Hook_Function);
+   <I>--  AKA: <A HREF="menu_hook.3x.html">set_item_init()</A></I>
+
+   <I>--  <A NAME="AFU_49">|</I>
+   <B>procedure</B> Set_Item_Term_Hook (Men  : <B>in</B> Menu;
+                                 Proc : <B>in</B> Menu_Hook_Function);
+   <I>--  AKA: <A HREF="menu_hook.3x.html">set_item_term()</A></I>
+
+   <I>--  <A NAME="AFU_50">|</I>
+   <B>procedure</B> Set_Menu_Init_Hook (Men  : <B>in</B> Menu;
+                                 Proc : <B>in</B> Menu_Hook_Function);
+   <I>--  AKA: <A HREF="menu_hook.3x.html">set_menu_init()</A></I>
+
+   <I>--  <A NAME="AFU_51">|</I>
+   <B>procedure</B> Set_Menu_Term_Hook (Men  : <B>in</B> Menu;
+                                 Proc : <B>in</B> Menu_Hook_Function);
+   <I>--  AKA: <A HREF="menu_hook.3x.html">set_menu_term()</A></I>
+
+   <I>--  <A NAME="AFU_52">|</I>
+   <B>function</B> Get_Item_Init_Hook (Men : Menu) <B>return</B> Menu_Hook_Function;
+   <I>--  AKA: <A HREF="menu_hook.3x.html">item_init()</A></I>
+
+   <I>--  <A NAME="AFU_53">|</I>
+   <B>function</B> Get_Item_Term_Hook (Men : Menu) <B>return</B> Menu_Hook_Function;
+   <I>--  AKA: <A HREF="menu_hook.3x.html">item_term()</A></I>
+
+   <I>--  <A NAME="AFU_54">|</I>
+   <B>function</B> Get_Menu_Init_Hook (Men : Menu) <B>return</B> Menu_Hook_Function;
+   <I>--  AKA: <A HREF="menu_hook.3x.html">menu_init()</A></I>
+
+   <I>--  <A NAME="AFU_55">|</I>
+   <B>function</B> Get_Menu_Term_Hook (Men : Menu) <B>return</B> Menu_Hook_Function;
+   <I>--  AKA: <A HREF="menu_hook.3x.html">menu_term()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_items.3x.html">menu_items.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_56">|</I>
+   <B>procedure</B> Redefine (Men   : <B>in</B> Menu;
+                       Items : <B>in</B> Item_Array);
+   <I>--  AKA: <A HREF="menu_items.3x.html">set_menu_items()</A></I>
+   <I>--  With a bit more comfort. You don´t need to terminate the Item_Array</I>
+   <I>--  with a null entry. This is handled internally in the binding.</I>
+
+   <B>procedure</B> Set_Items (Men   : <B>in</B> Menu;
+                        Items : <B>in</B> Item_Array) <B>renames</B> Redefine;
+
+   <I>--  <A NAME="AFU_57">|</I>
+   <B>function</B> Items (Men : Menu) <B>return</B> Item_Array_Access;
+   <I>--  AKA: <A HREF="menu_items.3x.html">menu_items()</A></I>
+
+   <I>--  <A NAME="AFU_58">|</I>
+   <B>function</B> Item_Count (Men : Menu) <B>return</B> Natural;
+   <I>--  AKA: <A HREF="menu_items.3x.html">item_count()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_new.3x.html">menu_new.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_59">|</I>
+   <B>function</B> Create (Items : Item_Array) <B>return</B> Menu;
+   <I>--  AKA: <A HREF="menu_new.3x.html">new_menu()</A></I>
+
+   <B>function</B> New_Menu (Items : Item_Array) <B>return</B> Menu <B>renames</B> Create;
+
+   <I>--  <A NAME="AFU_60">|</I>
+   <B>procedure</B> Delete (Men : <B>in</B> <B>out</B> Menu);
+   <I>--  AKA: <A HREF="menu_new.3x.html">free_menu()</A></I>
+   <I>--  Reset Men to Null_Menu</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="menu_new.3x.html">menu_new.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   type Driver_Result <B>is</B> (Menu_Ok,
+                          Request_Denied,
+                          Unknown_Request,
+                          No_Match);
+
+   <I>--  <A NAME="AFU_61">|</I>
+   <B>function</B> Driver (Men : Menu;
+                    Key : Key_Code) <B>return</B> Driver_Result;
+   <I>--  AKA: <A HREF="menu_new.3x.html">menu_driver()</A></I>
+
+<I>-------------------------------------------------------------------------------</I>
+<B>private</B>
+   type Item   <B>is</B> <B>new</B> System.Address;
+   type Menu   <B>is</B> <B>new</B> System.Address;
+
+   Null_Item : <B>constant</B> Item := Item (System.Null_Address);
+   Null_Menu : <B>constant</B> Menu := Menu (System.Null_Address);
+
+   <I>--  This binding uses the original user pointer mechanism of a menu to store</I>
+   <I>--  specific informations about a menu. This wrapper record carries this</I>
+   <I>--  specifics and contains a field to maintain a new user pointer. Please</I>
+   <I>--  note that you must take this into account if you wan't to use the user</I>
+   <I>--  pointer mechanism of a menu created with this binding in low-level C</I>
+   <I>--  routines.</I>
+   type Ada_User_Wrapper <B>is</B>
+      <B>record</B>
+         U : System.Address;
+         I : Item_Array_Access;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Convention (C, Ada_User_Wrapper);
+   type Ada_User_Wrapper_Access <B>is</B> <B>access</B> <B>all</B> Ada_User_Wrapper;
+   <B>pragma</B> Controlled (Ada_User_Wrapper_Access);
+
+   Generation_Bit_Order : <B>constant</B> System.Bit_Order := System.Low_Order_First;
+   <I>--  This constant may be different on your system.</I>
+
+<B>end</B> Terminal_Interface.Curses.Menus;
+
+</PRE>
+
+<P><HR><P>
+<P>
+This is BETA software. The interface is subject to change without notice.<P>
+<!-- Do NOT delete my name or the tool name from below; -->
+<!-- giving me credit is a condition of use of ada2html -->
+<P><I>This hypertext format was generated by <A HREF="http://www.adahome.com/Tutorials/Lovelace/dwheeler.htm">David A. Wheeler</A>'s <A HREF="http://www.adahome.com/Resources/Tools/ada2html/ada2html.htm">ada2html</A></I>
+</BODY>
+</HTML>
+

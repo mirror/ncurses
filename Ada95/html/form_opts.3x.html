@@ -1,0 +1,124 @@
+<HTML>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+       <STRONG>form_opts</STRONG> - set and get form options
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+       int set_form_opts(FORM *form, OPTIONS opts);
+       int form_opts_on(FORM *form, OPTIONS opts);
+       int form_opts_off(FORM *form, OPTIONS opts);
+       OPTIONS form_opts(const FORM *form);
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  function  <STRONG>set_form_opts</STRONG>  sets  all  the  given form's
+       option bits  (form  option  bits  may  be  logically-OR'ed
+       together).
+
+       The  function <STRONG>form_opts_on</STRONG> turns on the given option bits,
+       and leaves others alone.
+
+       The function <STRONG>form_opts_off</STRONG>  turns  off  the  given  option
+       bits, and leaves others alone.
+
+       The  function  <STRONG>form_opts</STRONG> returns the form's current option
+       bits.
+
+       The following options are defined (all are on by default):
+
+       O_NL_OVERLOAD
+            Overload  the  <STRONG>REQ_NEW_LINE</STRONG>  forms  driver request so
+            that calling it at the end of a  field  goes  to  the
+            next field.
+
+       O_BS_OVERLOAD
+            Overload  the  <STRONG>REQ_DEL_PREV</STRONG>  forms  driver request so
+            that calling it at the beginning of a field  goes  to
+            the previous field.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       Except for <STRONG>form_opts</STRONG>, each routine returns one of the fol-
+       lowing:
+
+       <STRONG>E_OK</STRONG> The routine succeeded.
+
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3X)</A></STRONG>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The header file <STRONG>&lt;form.h&gt;</STRONG> automatically includes the header
+       file <STRONG>&lt;curses.h&gt;</STRONG>.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
+       curses by Eric S. Raymond.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

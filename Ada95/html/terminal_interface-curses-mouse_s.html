@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE>
+</HEAD>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+
+<I>------------------------------------------------------------------------------</I>
+<I>--                                                                          --</I>
+<I>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</I>
+<I>--                                                                          --</I>
+<I>--                      Terminal_Interface.Curses.Mouse                     --</I>
+<I>--                                                                          --</I>
+<I>--                                 S P E C                                  --</I>
+<I>--                                                                          --</I>
+<I>--  Version 00.92                                                           --</I>
+<I>--                                                                          --</I>
+<I>--  The ncurses Ada95 binding is copyrighted 1996 by                        --</I>
+<I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
+<I>--                                                                          --</I>
+<I>--  Permission is hereby granted to reproduce and distribute this           --</I>
+<I>--  binding by any means and for any fee, whether alone or as part          --</I>
+<I>--  of a larger distribution, in source or in binary form, PROVIDED         --</I>
+<I>--  this notice is included with any such distribution, and is not          --</I>
+<I>--  removed from any of its header files. Mention of ncurses and the        --</I>
+<I>--  author of this binding in any applications linked with it is            --</I>
+<I>--  highly appreciated.                                                     --</I>
+<I>--                                                                          --</I>
+<I>--  This binding comes AS IS with no warranty, implied or expressed.        --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  Version Control:</I>
+<I>--  @Revision: 1.6 @</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  mouse binding, generated at Sun Feb  2 17:21:45 1997</I>
+<I>--  This module is generated. Please don't change it manually!</I>
+<I>--  Run the generator instead.</I>
+<I>--  |</I>
+<B>with</B> System;
+
+<B>package</B> Terminal_Interface.Curses.Mouse <B>is</B>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_mouse.3x.html">curs_mouse.3x</A></I>
+   <I>--  |=====================================================================</I>
+   <I>--  Please note, that in ncurses-1.9.9e documentation mouse support</I>
+   <I>--  is still marked as experimental. So also this binding will change</I>
+   <I>--  if the ncurses methods change.</I>
+   <I>--</I>
+   type Event_Mask <B>is</B> <B>private</B>;
+   No_Events  : <B>constant</B> Event_Mask;
+   All_Events : <B>constant</B> Event_Mask;
+
+   type Mouse_Button <B>is</B> (Left,     <I>-- aka: Button 1</I>
+                         Middle,   <I>-- aka: Button 2</I>
+                         Right,    <I>-- aka: Button 3</I>
+                         Button4,  <I>-- aka: Button 4</I>
+                         Control,  <I>-- Control Key</I>
+                         Shift,    <I>-- Shift Key</I>
+                         Alt);     <I>-- ALT Key</I>
+
+   type Button_State <B>is</B> (Released,
+                         Pressed,
+                         Clicked,
+                         Double_Clicked,
+                         Triple_Clicked);
+
+   type Mouse_Event <B>is</B> <B>private</B>;
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_mouse.3x.html">curs_mouse.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <B>procedure</B> Register_Reportable_Event
+     (B    : <B>in</B> Mouse_Button;
+      S    : <B>in</B> Button_State;
+      Mask : <B>in</B> <B>out</B> Event_Mask);
+   <I>--  Stores the event described by the button and the state in the mask.</I>
+   <I>--  Before you call this the first time, you should init the mask</I>
+   <I>--  with the Empty_Mask constant</I>
+
+   <I>--  <A NAME="AFU_1">|</I>
+   <B>function</B> Start_Mouse (Mask : Event_Mask := All_Events)
+                         <B>return</B> Event_Mask;
+   <I>--  AKA: <A HREF="curs_mouse.3x.html">mousemask()</A></I>
+
+   <B>procedure</B> End_Mouse;
+   <B>pragma</B> Import (C, End_Mouse, "_nc_ada_unregister_mouse");
+   <I>--  Terminates the mouse</I>
+
+   <I>--  <A NAME="AFU_2">|</I>
+   <B>function</B> Get_Mouse <B>return</B> Mouse_Event;
+   <I>--  AKA: <A HREF="curs_mouse.3x.html">getmouse()</A></I>
+
+   <B>procedure</B> Get_Event (Event  : <B>in</B>  Mouse_Event;
+                        Y      : <B>out</B> Line_Position;
+                        X      : <B>out</B> Column_Position;
+                        Button : <B>out</B> Mouse_Button;
+                        State  : <B>out</B> Button_State);
+   <I>--  !!! Warning: X and Y are screen coordinates. Due to ripped of lines they</I>
+   <I>--  may not be identical to window coordinates.</I>
+
+   <I>--  <A NAME="AFU_3">|</I>
+   <B>procedure</B> Unget_Mouse (Event : <B>in</B> Mouse_Event);
+   <I>--  AKA: <A HREF="curs_mouse.3x.html">ungetmouse()</A></I>
+
+   <I>--  <A NAME="AFU_4">|</I>
+   <B>function</B> Enclosed_In_Window (Win    : Window := Standard_Window;
+                                Event  : Mouse_Event) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_mouse.3x.html">wenclose()</A></I>
+   <I>--  But : use event instead of screen coordinates.</I>
+
+   <I>--  <A NAME="AFU_5">|</I>
+   <B>function</B> Mouse_Interval (Msec : Natural := 200) <B>return</B> Natural;
+   <I>--  AKA: <A HREF="curs_mouse.3x.html">mouseinterval()</A></I>
+
+<B>private</B>
+   type Event_Mask <B>is</B> <B>new</B> Interfaces.C.int;
+   No_Events  : <B>constant</B> Event_Mask := 0;
+   All_Events : <B>constant</B> Event_Mask := -1;
+
+   type Mouse_Event <B>is</B>
+      <B>record</B>
+         Id      : Integer <B>range</B> Integer (Interfaces.C.short'First) ..
+                                 Integer (Interfaces.C.Short'Last);
+         X, Y, Z : Integer <B>range</B> Integer (Interfaces.C.int'First) ..
+                                 Integer (Interfaces.C.int'Last);
+         Bstate  : Event_Mask;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Convention (C, Mouse_Event);
+   <B>pragma</B> Pack (Mouse_Event);
+
+   <B>for</B> Mouse_Event <B>use</B>
+      <B>record</B>
+         Id      <B>at</B> 0 <B>range</B>   0 ..  15;
+         X       <B>at</B> 0 <B>range</B>  32 ..  63;
+         Y       <B>at</B> 0 <B>range</B>  64 ..  95;
+         Z       <B>at</B> 0 <B>range</B>  96 .. 127;
+         Bstate  <B>at</B> 0 <B>range</B> 128 .. 159;
+      <B>end</B> <B>record</B>;
+      <I>--  Please note: this rep. clause is generated and may be</I>
+      <I>--               different on your system.</I>
+
+   Generation_Bit_Order : <B>constant</B> System.Bit_Order := System.Low_Order_First;
+   <I>--  This constant may be different on your system.</I>
+
+<B>end</B> Terminal_Interface.Curses.Mouse;
+
+</PRE>
+
+<P><HR><P>
+<P>
+This is BETA software. The interface is subject to change without notice.<P>
+<!-- Do NOT delete my name or the tool name from below; -->
+<!-- giving me credit is a condition of use of ada2html -->
+<P><I>This hypertext format was generated by <A HREF="http://www.adahome.com/Tutorials/Lovelace/dwheeler.htm">David A. Wheeler</A>'s <A HREF="http://www.adahome.com/Resources/Tools/ada2html/ada2html.htm">ada2html</A></I>
+</BODY>
+</HTML>
+

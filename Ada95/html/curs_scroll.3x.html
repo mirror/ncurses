@@ -1,0 +1,70 @@
+<HTML>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+       <STRONG>scroll</STRONG>, <STRONG>srcl</STRONG>, <STRONG>wscrl</STRONG> - scroll a <STRONG>curses</STRONG> window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+
+       <STRONG>int</STRONG> <STRONG>scroll(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>int</STRONG> <STRONG>scrl(int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wscrl(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  <STRONG>scroll</STRONG>  routine scrolls the window up one line.  This
+       involves moving the lines in the  window  data  structure.
+       As  an optimization, if the scrolling region of the window
+       is the entire screen, the physical screen may be  scrolled
+       at the same time.
+
+       For  positive  <EM>n</EM>,  the  <STRONG>scrl</STRONG> and <STRONG>wscrl</STRONG> routines scroll the
+       window up <EM>n</EM> lines (line <EM>i</EM>+<EM>n</EM> becomes <EM>i</EM>);  otherwise  scroll
+       the  window  down <EM>n</EM> lines.  This involves moving the lines
+       in the window character image structure.  The current cur-
+       sor position is not changed.
+
+       For these functions to work, scrolling must be enabled via
+       <STRONG>scrollok</STRONG>.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       These routines return <STRONG>ERR</STRONG> upon failure, and <STRONG>OK</STRONG> (SVr4  only
+       specifies "an integer value other than <STRONG>ERR</STRONG>") upon success-
+       ful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <STRONG>scrl</STRONG> and <STRONG>scroll</STRONG> may be macros.
+
+       The SVr4 documentation says that the optimization of phys-
+       ically  scrolling  immediately if the scroll region is the
+       entire screen "is"  performed,  not  "may  be"  performed.
+       This  implementation  deliberately does not guarantee that
+       this will occur, in order to leave open the possibility of
+       smarter  optimization  of  multiple  scroll actions on the
+       next update.
+
+       Neither the SVr4 documentation specifies whether the  cur-
+       rent  attribute  or current color-pair of blanks generated
+       by the scroll function is zeroed.  Under this  implementa-
+       tion it is.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The  XSI  Curses  standard,  Issue 4 describes these func-
+       tions.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3X)</A></STRONG>
+</PRE>
+</BODY>
+</HTML>

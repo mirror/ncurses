@@ -1,0 +1,180 @@
+# $Id: Makefile.in,v 1.28 1997/05/10 20:21:06 tom Exp $
+################################################################################
+# Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                        #
+# All Rights Reserved.                                                         #
+#                                                                              #
+# Permission to use, copy, modify, and distribute this software and its        #
+# documentation for any purpose and without fee is hereby granted, provided    #
+# that the above copyright notice appear in all copies and that both that      #
+# copyright notice and this permission notice appear in supporting             #
+# documentation, and that the name of the above listed copyright holder(s) not #
+# be used in advertising or publicity pertaining to distribution of the        #
+# software without specific, written prior permission. THE ABOVE LISTED        #
+# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
+# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
+# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
+# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
+# PERFORMANCE OF THIS SOFTWARE.                                                #
+################################################################################
+# Makefile for ncurses source code.
+#
+# This makes the following:
+#	programs
+#	includes
+#	libraries (normal/debug/profile/shared)
+#
+# The variable 'srcdir' refers to the source-distribution, and can be set with
+# the configure script by "--srcdir=DIR".
+#
+# The rules are organized to produce the libraries for the configured models,
+# and the programs with the configured default model.
+
+# turn off _all_ suffix rules; we'll generate our own
+.SUFFIXES:
+
+SHELL		= /bin/sh
+THIS		= Makefile
+
+NC_MFLAGS 	= @nc_cv_makeflags@
+@SET_MAKE@
+
+MODEL		= @DFT_LWR_MODEL@
+INSTALL_PREFIX	= @INSTALL_PREFIX@
+srcdir		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+includedir	= @includedir@
+datadir		= @datadir@
+
+ticdir		= $(datadir)/terminfo
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+AR		= @AR@
+AR_OPTS		= @AR_OPTS@
+AWK		= @AWK@
+LD		= @LD@
+LN_S		= @LN_S@
+
+CC		= @CC@
+CPP		= @CPP@
+CFLAGS		= @CFLAGS@
+
+INCDIR		= $(srcdir)/../include
+CPPFLAGS	= -I../ncurses -I$(srcdir) @CPPFLAGS@ \
+		  -DHAVE_CONFIG_H -DTERMINFO=\"$(ticdir)\"
+
+CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
+
+CFLAGS_NORMAL	= $(CCFLAGS)
+CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
+CFLAGS_PROFILE	= $(CCFLAGS) -pg
+CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
+
+CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
+
+LINK		= $(CC)
+LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
+
+MK_SHARED_LIB	= @MK_SHARED_LIB@
+REL_VERSION	= @nc_cv_rel_version@
+ABI_VERSION	= @nc_cv_abi_version@
+
+RANLIB		= @RANLIB@
+
+LIBRARIES	= @LIBS_TO_MAKE@
+
+LINT		= @LINT@
+LINT_OPTS	= @LINT_OPTS@
+LINT_LIBS	= -lncurses @LIBS@
+
+AUTO_SRC = \
+	../include/nomacros.h \
+	./comp_captab.c \
+	./expanded.c \
+	./fallback.c \
+	keys.tries \
+	./lib_keyname.c \
+	./lib_gen.c \
+	./codes.c \
+	./names.c \
+	./unctrl.c
+
+################################################################################
+all ::	../lib $(AUTO_SRC) $(LIBRARIES)
+
+$(INSTALL_PREFIX)$(libdir) :
+	$(srcdir)/../mkinstalldirs $@
+
+../lib : ; mkdir $@
+
+./fallback.c : $(srcdir)/MKfallback.sh
+	sh $(srcdir)/MKfallback.sh >$@
+
+./lib_gen.c : $(srcdir)/MKlib_gen.sh ../include/curses.h
+	sh $(srcdir)/MKlib_gen.sh "$(CPP)" "$(AWK)" <../include/curses.h >$@
+
+../include/nomacros.h : $(srcdir)/MKlib_gen.sh ../include/curses.h
+	sh $(srcdir)/MKlib_gen.sh "$(CPP)" "$(AWK)" <../include/curses.h | \
+		fgrep undef >$@
+
+keys.tries: $(srcdir)/keys.list
+	$(AWK) -f $(srcdir)/MKkeys.awk $(srcdir)/keys.list > keys.tries
+
+make_hash : \
+		$(srcdir)/comp_hash.c \
+		../include/hashsize.h
+	$(CC) -o $@ $(CCFLAGS) -DMAIN_PROGRAM $(srcdir)/comp_hash.c $(LDFLAGS)
+
+./expanded.c : $(srcdir)/MKexpanded.sh
+	sh $(srcdir)/MKexpanded.sh "$(CPP)" $(CPPFLAGS)
+
+./comp_captab.c: \
+		make_hash \
+		../include/hashsize.h \
+		$(srcdir)/MKcaptab.awk
+	sh $(srcdir)/MKcaptab.awk $(AWK) $(srcdir)/../include/Caps > $@
+
+./lib_keyname.c: $(srcdir)/keys.list $(srcdir)/MKkeyname.awk
+	$(AWK) -f $(srcdir)/MKkeyname.awk $(srcdir)/keys.list > $@
+
+./names.c ./codes.c: $(srcdir)/MKnames.awk
+	$(AWK) -f $(srcdir)/MKnames.awk $(srcdir)/../include/Caps
+	cat namehdr boolnames boolfnames numnames numfnames strnames strfnames nameftr >./names.c
+	cat namehdr boolcodes numcodes strcodes codeftr >./codes.c
+	-rm -f namehdr nameftr codeftr boolnames boolfnames boolcodes numnames numfnames numcodes strnames strfnames strcodes
+
+./unctrl.c: $(srcdir)/MKunctrl.awk
+	echo | $(AWK) -f $(srcdir)/MKunctrl.awk >$@
+
+tags:
+	ctags *.[ch]
+
+TAGS:
+	etags *.[ch]
+
+mostlyclean ::
+	-rm -f tags TAGS *~
+
+clean :: mostlyclean
+	-rm -f $(AUTO_SRC)
+	-rm -f make_hash
+
+distclean :: clean
+	-rm -f Makefile
+
+realclean :: distclean
+
+# These rules are used to allow "make -n" to work on a clean directory-tree
+../include/hashsize.h \
+../include/parametrized.h \
+../include/term.h :
+	cd ../include; $(MAKE) $(NC_MFLAGS)
+
+###############################################################################
+# The remainder of this file is automatically generated during configuration
+###############################################################################

@@ -1,0 +1,920 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE>
+</HEAD>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+
+<I>------------------------------------------------------------------------------</I>
+<I>--                                                                          --</I>
+<I>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</I>
+<I>--                                                                          --</I>
+<I>--                      Terminal_Interface.Curses.Form                      --</I>
+<I>--                                                                          --</I>
+<I>--                                 S P E C                                  --</I>
+<I>--                                                                          --</I>
+<I>--  Version 00.92                                                           --</I>
+<I>--                                                                          --</I>
+<I>--  The ncurses Ada95 binding is copyrighted 1996 by                        --</I>
+<I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
+<I>--                                                                          --</I>
+<I>--  Permission is hereby granted to reproduce and distribute this           --</I>
+<I>--  binding by any means and for any fee, whether alone or as part          --</I>
+<I>--  of a larger distribution, in source or in binary form, PROVIDED         --</I>
+<I>--  this notice is included with any such distribution, and is not          --</I>
+<I>--  removed from any of its header files. Mention of ncurses and the        --</I>
+<I>--  author of this binding in any applications linked with it is            --</I>
+<I>--  highly appreciated.                                                     --</I>
+<I>--                                                                          --</I>
+<I>--  This binding comes AS IS with no warranty, implied or expressed.        --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  Version Control:</I>
+<I>--  @Revision: 1.9 @</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  form binding, generated at Sun Feb  2 17:21:44 1997</I>
+<I>--  This module is generated. Please don't change it manually!</I>
+<I>--  Run the generator instead.</I>
+<I>--  |</I>
+<B>with</B> System;
+<B>with</B> Ada.Tags; <B>use</B> Ada.Tags;
+<B>with</B> Ada.Characters.Latin_1;
+<B>with</B> Interfaces.C;
+<B>with</B> Interfaces.C.Strings;
+
+<B>package</B> Terminal_Interface.Curses.Forms <B>is</B>
+
+   <B>pragma</B> Linker_Options ("-lform");
+
+
+   Space : Character <B>renames</B> Ada.Characters.Latin_1.Space;
+
+   type Field        <B>is</B> <B>private</B>;
+   type Form         <B>is</B> <B>private</B>;
+   type C_Field_Type <B>is</B> <B>private</B>;
+
+   Null_Field        : <B>constant</B> Field;
+   Null_Form         : <B>constant</B> Form;
+   Null_Field_Type   : <B>constant</B> C_Field_Type;
+
+
+   type Field_Justification <B>is</B> (None,
+                                Left,
+                                Center,
+                                Right);
+
+   type Field_Option_Set <B>is</B>
+      <B>record</B>
+         Visible   : Boolean;
+         Active    : Boolean;
+         Public    : Boolean;
+         Edit      : Boolean;
+         Wrap      : Boolean;
+         Blank     : Boolean;
+         Auto_Skip : Boolean;
+         Null_Ok   : Boolean;
+         Pass_Ok   : Boolean;
+         Static    : Boolean;
+         Reserved  : Boolean;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Pack (Field_Option_Set);
+   <B>pragma</B> Convention (C, Field_Option_Set);
+
+   <B>for</B> Field_Option_Set <B>use</B>
+      <B>record</B>
+         Visible   <B>at</B> 0 <B>range</B>  0 ..  0;
+         Active    <B>at</B> 0 <B>range</B>  1 ..  1;
+         Public    <B>at</B> 0 <B>range</B>  2 ..  2;
+         Edit      <B>at</B> 0 <B>range</B>  3 ..  3;
+         Wrap      <B>at</B> 0 <B>range</B>  4 ..  4;
+         Blank     <B>at</B> 0 <B>range</B>  5 ..  5;
+         Auto_Skip <B>at</B> 0 <B>range</B>  6 ..  6;
+         Null_Ok   <B>at</B> 0 <B>range</B>  7 ..  7;
+         Pass_Ok   <B>at</B> 0 <B>range</B>  8 ..  8;
+         Static    <B>at</B> 0 <B>range</B>  9 ..  9;
+         Reserved  <B>at</B> 0 <B>range</B> 31 .. 31;
+      <B>end</B> <B>record</B>;
+   <B>for</B> Field_Option_Set'Size <B>use</B> Interfaces.C.int'Size;
+   <I>--  Please note: this rep. clause is generated and may be</I>
+   <I>--               different on your system.</I>
+
+   Default_Field_Options : Field_Option_Set;
+   <I>--  The initial defaults for the field options.</I>
+
+   type Form_Option_Set <B>is</B>
+      <B>record</B>
+         NL_Overload : Boolean;
+         BS_Overload : Boolean;
+         Reserved    : Boolean;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Pack (Form_Option_Set);
+   <B>pragma</B> Convention (C, Form_Option_Set);
+
+   <B>for</B> Form_Option_Set <B>use</B>
+      <B>record</B>
+         NL_Overload <B>at</B> 0 <B>range</B>  0 ..  0;
+         BS_Overload <B>at</B> 0 <B>range</B>  1 ..  1;
+         Reserved    <B>at</B> 0 <B>range</B> 31 .. 31;
+      <B>end</B> <B>record</B>;
+   <B>for</B> Form_Option_Set'Size <B>use</B> Interfaces.C.int'Size;
+   <I>--  Please note: this rep. clause is generated and may be</I>
+   <I>--               different on your system.</I>
+
+   Default_Form_Options : Form_Option_Set;
+   <I>--  The initial defaults for the form options.</I>
+
+   type Buffer_Number <B>is</B> <B>new</B> Natural;
+
+   type Field_Array <B>is</B> <B>array</B> (Positive <B>range</B> &lt;&gt;) <B>of</B> <B>aliased</B> Field;
+   <B>pragma</B> Convention (C, Field_Array);
+
+   type Field_Array_Access <B>is</B> <B>access</B> <B>all</B> Field_Array;
+
+   <B>subtype</B> Form_Request_Code <B>is</B> Key_Code <B>range</B> (Key_Max + 1) .. (Key_Max + 57);
+
+   <I>--  The prefix F_ stands for "Form Request"</I>
+   F_Next_Page                : <B>constant</B> Form_Request_Code := Key_Max + 1;
+   F_Previous_Page            : <B>constant</B> Form_Request_Code := Key_Max + 2;
+   F_First_Page               : <B>constant</B> Form_Request_Code := Key_Max + 3;
+   F_Last_Page                : <B>constant</B> Form_Request_Code := Key_Max + 4;
+
+   F_Next_Field               : <B>constant</B> Form_Request_Code := Key_Max + 5;
+   F_Previous_Field           : <B>constant</B> Form_Request_Code := Key_Max + 6;
+   F_First_Field              : <B>constant</B> Form_Request_Code := Key_Max + 7;
+   F_Last_Field               : <B>constant</B> Form_Request_Code := Key_Max + 8;
+   F_Sorted_Next_Field        : <B>constant</B> Form_Request_Code := Key_Max + 9;
+   F_Sorted_Previous_Field    : <B>constant</B> Form_Request_Code := Key_Max + 10;
+   F_Sorted_First_Field       : <B>constant</B> Form_Request_Code := Key_Max + 11;
+   F_Sorted_Last_Field        : <B>constant</B> Form_Request_Code := Key_Max + 12;
+   F_Left_Field               : <B>constant</B> Form_Request_Code := Key_Max + 13;
+   F_Right_Field              : <B>constant</B> Form_Request_Code := Key_Max + 14;
+   F_Up_Field                 : <B>constant</B> Form_Request_Code := Key_Max + 15;
+   F_Down_Field               : <B>constant</B> Form_Request_Code := Key_Max + 16;
+
+   F_Next_Char                : <B>constant</B> Form_Request_Code := Key_Max + 17;
+   F_Previous_Char            : <B>constant</B> Form_Request_Code := Key_Max + 18;
+   F_Next_Line                : <B>constant</B> Form_Request_Code := Key_Max + 19;
+   F_Previous_Line            : <B>constant</B> Form_Request_Code := Key_Max + 20;
+   F_Next_Word                : <B>constant</B> Form_Request_Code := Key_Max + 21;
+   F_Previous_Word            : <B>constant</B> Form_Request_Code := Key_Max + 22;
+   F_Begin_Field              : <B>constant</B> Form_Request_Code := Key_Max + 23;
+   F_End_Field                : <B>constant</B> Form_Request_Code := Key_Max + 24;
+   F_Begin_Line               : <B>constant</B> Form_Request_Code := Key_Max + 25;
+   F_End_Line                 : <B>constant</B> Form_Request_Code := Key_Max + 26;
+   F_Left_Char                : <B>constant</B> Form_Request_Code := Key_Max + 27;
+   F_Right_Char               : <B>constant</B> Form_Request_Code := Key_Max + 28;
+   F_Up_Char                  : <B>constant</B> Form_Request_Code := Key_Max + 29;
+   F_Down_Char                : <B>constant</B> Form_Request_Code := Key_Max + 30;
+
+   F_New_Line                 : <B>constant</B> Form_Request_Code := Key_Max + 31;
+   F_Insert_Char              : <B>constant</B> Form_Request_Code := Key_Max + 32;
+   F_Insert_Line              : <B>constant</B> Form_Request_Code := Key_Max + 33;
+   F_Delete_Char              : <B>constant</B> Form_Request_Code := Key_Max + 34;
+   F_Delete_Previous          : <B>constant</B> Form_Request_Code := Key_Max + 35;
+   F_Delete_Line              : <B>constant</B> Form_Request_Code := Key_Max + 36;
+   F_Delete_Word              : <B>constant</B> Form_Request_Code := Key_Max + 37;
+   F_Clear_EOL                : <B>constant</B> Form_Request_Code := Key_Max + 38;
+   F_Clear_EOF                : <B>constant</B> Form_Request_Code := Key_Max + 39;
+   F_Clear_Field              : <B>constant</B> Form_Request_Code := Key_Max + 40;
+   F_Overlay_Mode             : <B>constant</B> Form_Request_Code := Key_Max + 41;
+   F_Insert_Mode              : <B>constant</B> Form_Request_Code := Key_Max + 42;
+
+   <I>--  Vertical Scrolling</I>
+   F_ScrollForward_Line       : <B>constant</B> Form_Request_Code := Key_Max + 43;
+   F_ScrollBackward_Line      : <B>constant</B> Form_Request_Code := Key_Max + 44;
+   F_ScrollForward_Page       : <B>constant</B> Form_Request_Code := Key_Max + 45;
+   F_ScrollBackward_Page      : <B>constant</B> Form_Request_Code := Key_Max + 46;
+   F_ScrollForward_HalfPage   : <B>constant</B> Form_Request_Code := Key_Max + 47;
+   F_ScrollBackward_HalfPage  : <B>constant</B> Form_Request_Code := Key_Max + 48;
+
+   <I>--  Horizontal Scrolling</I>
+   F_HScrollForward_Char      : <B>constant</B> Form_Request_Code := Key_Max + 49;
+   F_HScrollBackward_Char     : <B>constant</B> Form_Request_Code := Key_Max + 50;
+   F_HScrollForward_Line      : <B>constant</B> Form_Request_Code := Key_Max + 51;
+   F_HScrollBackward_Line     : <B>constant</B> Form_Request_Code := Key_Max + 52;
+   F_HScrollForward_HalfLine  : <B>constant</B> Form_Request_Code := Key_Max + 53;
+   F_HScrollBackward_HalfLine : <B>constant</B> Form_Request_Code := Key_Max + 54;
+
+   F_Validate_Field           : <B>constant</B> Form_Request_Code := Key_Max + 55;
+   F_Next_Choice              : <B>constant</B> Form_Request_Code := Key_Max + 56;
+   F_Previous_Choice          : <B>constant</B> Form_Request_Code := Key_Max + 57;
+
+   <I>--  For those who like the old 'C' style request names</I>
+   REQ_NEXT_PAGE    : Form_Request_Code <B>renames</B> F_Next_Page;
+   REQ_PREV_PAGE    : Form_Request_Code <B>renames</B> F_Previous_Page;
+   REQ_FIRST_PAGE   : Form_Request_Code <B>renames</B> F_First_Page;
+   REQ_LAST_PAGE    : Form_Request_Code <B>renames</B> F_Last_Page;
+
+   REQ_NEXT_FIELD   : Form_Request_Code <B>renames</B> F_Next_Field;
+   REQ_PREV_FIELD   : Form_Request_Code <B>renames</B> F_Previous_Field;
+   REQ_FIRST_FIELD  : Form_Request_Code <B>renames</B> F_First_Field;
+   REQ_LAST_FIELD   : Form_Request_Code <B>renames</B> F_Last_Field;
+   REQ_SNEXT_FIELD  : Form_Request_Code <B>renames</B> F_Sorted_Next_Field;
+   REQ_SPREV_FIELD  : Form_Request_Code <B>renames</B> F_Sorted_Previous_Field;
+   REQ_SFIRST_FIELD : Form_Request_Code <B>renames</B> F_Sorted_First_Field;
+   REQ_SLAST_FIELD  : Form_Request_Code <B>renames</B> F_Sorted_Last_Field;
+   REQ_LEFT_FIELD   : Form_Request_Code <B>renames</B> F_Left_Field;
+   REQ_RIGHT_FIELD  : Form_Request_Code <B>renames</B> F_Right_Field;
+   REQ_UP_FIELD     : Form_Request_Code <B>renames</B> F_Up_Field;
+   REQ_DOWN_FIELD   : Form_Request_Code <B>renames</B> F_Down_Field;
+
+   REQ_NEXT_CHAR    : Form_Request_Code <B>renames</B> F_Next_Char;
+   REQ_PREV_CHAR    : Form_Request_Code <B>renames</B> F_Previous_Char;
+   REQ_NEXT_LINE    : Form_Request_Code <B>renames</B> F_Next_Line;
+   REQ_PREV_LINE    : Form_Request_Code <B>renames</B> F_Previous_Line;
+   REQ_NEXT_WORD    : Form_Request_Code <B>renames</B> F_Next_Word;
+   REQ_PREV_WORD    : Form_Request_Code <B>renames</B> F_Previous_Word;
+   REQ_BEG_FIELD    : Form_Request_Code <B>renames</B> F_Begin_Field;
+   REQ_END_FIELD    : Form_Request_Code <B>renames</B> F_End_Field;
+   REQ_BEG_LINE     : Form_Request_Code <B>renames</B> F_Begin_Line;
+   REQ_END_LINE     : Form_Request_Code <B>renames</B> F_End_Line;
+   REQ_LEFT_CHAR    : Form_Request_Code <B>renames</B> F_Left_Char;
+   REQ_RIGHT_CHAR   : Form_Request_Code <B>renames</B> F_Right_Char;
+   REQ_UP_CHAR      : Form_Request_Code <B>renames</B> F_Up_Char;
+   REQ_DOWN_CHAR    : Form_Request_Code <B>renames</B> F_Down_Char;
+
+   REQ_NEW_LINE     : Form_Request_Code <B>renames</B> F_New_Line;
+   REQ_INS_CHAR     : Form_Request_Code <B>renames</B> F_Insert_Char;
+   REQ_INS_LINE     : Form_Request_Code <B>renames</B> F_Insert_Line;
+   REQ_DEL_CHAR     : Form_Request_Code <B>renames</B> F_Delete_Char;
+   REQ_DEL_PREV     : Form_Request_Code <B>renames</B> F_Delete_Previous;
+   REQ_DEL_LINE     : Form_Request_Code <B>renames</B> F_Delete_Line;
+   REQ_DEL_WORD     : Form_Request_Code <B>renames</B> F_Delete_Word;
+   REQ_CLR_EOL      : Form_Request_Code <B>renames</B> F_Clear_EOL;
+   REQ_CLR_EOF      : Form_Request_Code <B>renames</B> F_Clear_EOF;
+   REQ_CLR_FIELD    : Form_Request_Code <B>renames</B> F_Clear_Field;
+   REQ_OVL_MODE     : Form_Request_Code <B>renames</B> F_Overlay_Mode;
+   REQ_INS_MODE     : Form_Request_Code <B>renames</B> F_Insert_Mode;
+
+   REQ_SCR_FLINE    : Form_Request_Code <B>renames</B> F_ScrollForward_Line;
+   REQ_SCR_BLINE    : Form_Request_Code <B>renames</B> F_ScrollBackward_Line;
+   REQ_SCR_FPAGE    : Form_Request_Code <B>renames</B> F_ScrollForward_Page;
+   REQ_SCR_BPAGE    : Form_Request_Code <B>renames</B> F_ScrollBackward_Page;
+   REQ_SCR_FHPAGE   : Form_Request_Code <B>renames</B> F_ScrollForward_HalfPage;
+   REQ_SCR_BHPAGE   : Form_Request_Code <B>renames</B> F_ScrollBackward_HalfPage;
+
+   REQ_SCR_FCHAR    : Form_Request_Code <B>renames</B> F_HScrollForward_Char;
+   REQ_SCR_BCHAR    : Form_Request_Code <B>renames</B> F_HScrollBackward_Char;
+   REQ_SCR_HFLINE   : Form_Request_Code <B>renames</B> F_HScrollForward_Line;
+   REQ_SCR_HBLINE   : Form_Request_Code <B>renames</B> F_HScrollBackward_Line;
+   REQ_SCR_HFHALF   : Form_Request_Code <B>renames</B> F_HScrollForward_HalfLine;
+   REQ_SCR_HBHALF   : Form_Request_Code <B>renames</B> F_HScrollBackward_HalfLine;
+
+   REQ_VALIDATION   : Form_Request_Code <B>renames</B> F_Validate_Field;
+   REQ_NEXT_CHOICE  : Form_Request_Code <B>renames</B> F_Next_Choice;
+   REQ_PREV_CHOICE  : Form_Request_Code <B>renames</B> F_Previous_Choice;
+
+
+   <B>procedure</B> Request_Name (Key  : <B>in</B> Form_Request_Code;
+                           Name : <B>out</B> String);
+
+   <I>------------------</I>
+   <I>--  Exceptions  --</I>
+   <I>------------------</I>
+   Form_Exception : <B>exception</B>;
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field_new.3x.html">form_field_new.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_1">|</I>
+   <B>function</B> Create (Height       : Line_Count;
+                    Width        : Column_Count;
+                    Top          : Line_Position;
+                    Left         : Column_Position;
+                    Off_Screen   : Natural := 0;
+                    More_Buffers : Buffer_Number := Buffer_Number'First)
+                    <B>return</B> Field;
+   <I>--  AKA: <A HREF="form_field_new.3x.html">new_field()</A></I>
+
+   <I>--  <A NAME="AFU_2">|</I>
+   <B>function</B> New_Field (Height       : Line_Count;
+                       Width        : Column_Count;
+                       Top          : Line_Position;
+                       Left         : Column_Position;
+                       Off_Screen   : Natural := 0;
+                       More_Buffers : Buffer_Number := Buffer_Number'First)
+                       <B>return</B> Field <B>renames</B> Create;
+   <I>--  AKA: <A HREF="form_field_new.3x.html">new_field()</A></I>
+
+   <I>--  <A NAME="AFU_3">|</I>
+   <B>procedure</B> Delete (Fld : <B>in</B> <B>out</B> Field);
+   <I>--  AKA: <A HREF="form_field_new.3x.html">free_field()</A></I>
+   <I>--  Reset Fld to Null_Field</I>
+
+   <I>--  <A NAME="AFU_4">|</I>
+   <B>function</B> Duplicate (Fld  : Field;
+                       Top  : Line_Position;
+                       Left : Column_Position) <B>return</B> Field;
+   <I>--  AKA: <A HREF="form_field_new.3x.html">dup_field()</A></I>
+
+   <I>--  <A NAME="AFU_5">|</I>
+   <B>function</B> Link (Fld  : Field;
+                  Top  : Line_Position;
+                  Left : Column_Position) <B>return</B> Field;
+   <I>--  AKA: <A HREF="form_field_new.3x.html">link_field()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field_just.3x.html">form_field_just.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_6">|</I>
+   <B>procedure</B> Set_Justification (Fld  : <B>in</B> Field;
+                                Just : <B>in</B> Field_Justification := None);
+   <I>--  AKA: <A HREF="form_field_just.3x.html">set_field_just()</A></I>
+
+   <I>--  <A NAME="AFU_7">|</I>
+   <B>function</B> Get_Justification (Fld : Field) <B>return</B> Field_Justification;
+   <I>--  AKA: <A HREF="form_field_just.3x.html">field_just()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field_buffer.3x.html">form_field_buffer.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_8">|</I>
+   <B>procedure</B> Set_Buffer
+     (Fld    : <B>in</B> Field;
+      Buffer : <B>in</B> Buffer_Number := Buffer_Number'First;
+      Str    : <B>in</B> String);
+   <I>--  AKA: <A HREF="form_field_buffer.3x.html">set_field_buffer()</A></I>
+
+   <I>--  <A NAME="AFU_9">|</I>
+   <B>procedure</B> Get_Buffer
+     (Fld    : <B>in</B> Field;
+      Buffer : <B>in</B> Buffer_Number := Buffer_Number'First;
+      Str    : <B>out</B> String);
+   <I>--  AKA: <A HREF="form_field_buffer.3x.html">field_buffer()</A></I>
+
+   <I>--  <A NAME="AFU_10">|</I>
+   <B>procedure</B> Set_Status (Fld    : <B>in</B> Field;
+                         Status : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="form_field_buffer.3x.html">set_field_status()</A></I>
+
+   <I>--  <A NAME="AFU_11">|</I>
+   <B>function</B> Changed (Fld : Field) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="form_field_buffer.3x.html">field_status()</A></I>
+
+   <I>--  <A NAME="AFU_12">|</I>
+   <B>procedure</B> Set_Maximum_Size (Fld : <B>in</B> Field;
+                               Max : <B>in</B> Natural := 0);
+   <I>--  AKA: <A HREF="form_field_buffer.3x.html">set_field_max()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field_opts.3x.html">form_field_opts.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_13">|</I>
+   <B>procedure</B> Set_Options (Fld     : <B>in</B> Field;
+                          Options : <B>in</B> Field_Option_Set);
+   <I>--  AKA: <A HREF="form_field_opts.3x.html">set_field_opts()</A></I>
+
+   <I>--  <A NAME="AFU_14">|</I>
+   <B>procedure</B> Switch_Options (Fld     : <B>in</B> Field;
+                             Options : <B>in</B> Field_Option_Set;
+                             On      : Boolean := True);
+   <I>--  AKA: <A HREF="form_field_opts.3x.html">field_opts_on()</A></I>
+   <I>--  AKA: field_opts_off()</I>
+
+   <I>--  <A NAME="AFU_15">|</I>
+   <B>procedure</B> Get_Options (Fld     : <B>in</B>  Field;
+                          Options : <B>out</B> Field_Option_Set);
+   <I>--  AKA: <A HREF="form_field_opts.3x.html">field_opts()</A></I>
+
+   <I>--  <A NAME="AFU_16">|</I>
+   <B>function</B> Get_Options (Fld : Field := Null_Field)
+                         <B>return</B> Field_Option_Set;
+   <I>--  AKA: <A HREF="form_field_opts.3x.html">field_opts()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field_attributes.3x.html">form_field_attributes.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_17">|</I>
+   <B>procedure</B> Set_Foreground
+     (Fld   : <B>in</B> Field;
+      Fore  : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="form_field_attributes.3x.html">set_field_fore()</A></I>
+
+   <I>--  <A NAME="AFU_18">|</I>
+   <B>procedure</B> Foreground (Fld  : <B>in</B>  Field;
+                         Fore : <B>out</B> Character_Attribute_Set);
+   <I>--  AKA: <A HREF="form_field_attributes.3x.html">field_fore()</A></I>
+
+   <I>--  <A NAME="AFU_19">|</I>
+   <B>procedure</B> Foreground (Fld   : <B>in</B>  Field;
+                         Fore  : <B>out</B> Character_Attribute_Set;
+                         Color : <B>out</B> Color_Pair);
+   <I>--  AKA: <A HREF="form_field_attributes.3x.html">field_fore()</A></I>
+
+   <I>--  <A NAME="AFU_20">|</I>
+   <B>procedure</B> Set_Background
+     (Fld   : <B>in</B> Field;
+      Back  : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="form_field_attributes.3x.html">set_field_back()</A></I>
+
+   <I>--  <A NAME="AFU_21">|</I>
+   <B>procedure</B> Background (Fld  : <B>in</B>  Field;
+                         Back : <B>out</B> Character_Attribute_Set);
+   <I>--  AKA: <A HREF="form_field_attributes.3x.html">field_back()</A></I>
+
+   <I>--  <A NAME="AFU_22">|</I>
+   <B>procedure</B> Background (Fld   : <B>in</B>  Field;
+                         Back  : <B>out</B> Character_Attribute_Set;
+                         Color : <B>out</B> Color_Pair);
+   <I>--  AKA: <A HREF="form_field_attributes.3x.html">field_back()</A></I>
+
+   <I>--  <A NAME="AFU_23">|</I>
+   <B>procedure</B> Set_Pad_Character (Fld : <B>in</B> Field;
+                                Pad : <B>in</B> Character := Space);
+   <I>--  AKA: <A HREF="form_field_attributes.3x.html">set_field_pad()</A></I>
+
+   <I>--  <A NAME="AFU_24">|</I>
+   <B>procedure</B> Pad_Character (Fld : <B>in</B>  Field;
+                            Pad : <B>out</B> Character);
+   <I>--  AKA: <A HREF="form_field_attributes.3x.html">field_pad()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field_info.3x.html">form_field_info.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_25">|</I>
+   <B>procedure</B> Info (Fld                : <B>in</B>  Field;
+                   Lines              : <B>out</B> Line_Count;
+                   Columns            : <B>out</B> Column_Count;
+                   First_Row          : <B>out</B> Line_Position;
+                   First_Column       : <B>out</B> Column_Position;
+                   Off_Screen         : <B>out</B> Natural;
+                   Additional_Buffers : <B>out</B> Buffer_Number);
+   <I>--  AKA: <A HREF="form_field_info.3x.html">field_info()</A></I>
+
+   <I>--  <A NAME="AFU_26">|</I>
+   <B>procedure</B> Dynamic_Info (Fld     : <B>in</B> Field;
+                           Lines   : <B>out</B> Line_Count;
+                           Columns : <B>out</B> Column_Count;
+                           Max     : <B>out</B> Natural);
+   <I>--  AKA: <A HREF="form_field_info.3x.html">dynamic_field_info()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_win.3x.html">form_win.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_27">|</I>
+   <B>procedure</B> Set_Window (Frm : <B>in</B> Form;
+                         Win : <B>in</B> Window);
+   <I>--  AKA: <A HREF="form_win.3x.html">set_form_win()</A></I>
+
+   <I>--  <A NAME="AFU_28">|</I>
+   <B>function</B> Get_Window (Frm : Form) <B>return</B> Window;
+   <I>--  AKA: <A HREF="form_win.3x.html">form_win()</A></I>
+
+   <I>--  <A NAME="AFU_29">|</I>
+   <B>procedure</B> Set_Sub_Window (Frm : <B>in</B> Form;
+                             Win : <B>in</B> Window);
+   <I>--  AKA: <A HREF="form_win.3x.html">set_form_sub()</A></I>
+
+   <I>--  <A NAME="AFU_30">|</I>
+   <B>function</B> Get_Sub_Window (Frm : Form) <B>return</B> Window;
+   <I>--  AKA: <A HREF="form_win.3x.html">form_sub()</A></I>
+
+   <I>--  <A NAME="AFU_31">|</I>
+   <B>procedure</B> Scale (Frm     : <B>in</B> Form;
+                    Lines   : <B>out</B> Line_Count;
+                    Columns : <B>out</B> Column_Count);
+   <I>--  AKA: <A HREF="form_win.3x.html">scale_form()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_hook.3x.html">form_hook.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   type Form_Hook_Function <B>is</B> <B>access</B> <B>procedure</B> (Frm : <B>in</B> Form);
+   <B>pragma</B> Convention (C, Form_Hook_Function);
+
+   <I>--  <A NAME="AFU_32">|</I>
+   <B>procedure</B> Set_Field_Init_Hook (Frm  : <B>in</B> Form;
+                                  Proc : <B>in</B> Form_Hook_Function);
+   <I>--  AKA: <A HREF="form_hook.3x.html">set_field_init()</A></I>
+
+   <I>--  <A NAME="AFU_33">|</I>
+   <B>procedure</B> Set_Field_Term_Hook (Frm  : <B>in</B> Form;
+                                  Proc : <B>in</B> Form_Hook_Function);
+   <I>--  AKA: <A HREF="form_hook.3x.html">set_field_term()</A></I>
+
+   <I>--  <A NAME="AFU_34">|</I>
+   <B>procedure</B> Set_Form_Init_Hook (Frm  : <B>in</B> Form;
+                                 Proc : <B>in</B> Form_Hook_Function);
+   <I>--  AKA: <A HREF="form_hook.3x.html">set_form_init()</A></I>
+
+   <I>--  <A NAME="AFU_35">|</I>
+   <B>procedure</B> Set_Form_Term_Hook (Frm  : <B>in</B> Form;
+                                 Proc : <B>in</B> Form_Hook_Function);
+   <I>--  AKA: <A HREF="form_hook.3x.html">set_form_term()</A></I>
+
+   <I>--  <A NAME="AFU_36">|</I>
+   <B>function</B> Get_Field_Init_Hook (Frm : Form) <B>return</B> Form_Hook_Function;
+   <I>--  AKA: <A HREF="form_hook.3x.html">field_init()</A></I>
+   <B>pragma</B> Import (C, Get_Field_Init_Hook, "field_init");
+
+   <I>--  <A NAME="AFU_37">|</I>
+   <B>function</B> Get_Field_Term_Hook (Frm : Form) <B>return</B> Form_Hook_Function;
+   <I>--  AKA: <A HREF="form_hook.3x.html">field_term()</A></I>
+   <B>pragma</B> Import (C, Get_Field_Term_Hook, "field_term");
+
+   <I>--  <A NAME="AFU_38">|</I>
+   <B>function</B> Get_Form_Init_Hook (Frm : Form) <B>return</B> Form_Hook_Function;
+   <I>--  AKA: <A HREF="form_hook.3x.html">form_init()</A></I>
+   <B>pragma</B> Import (C, Get_Form_Init_Hook, "form_init");
+
+   <I>--  <A NAME="AFU_39">|</I>
+   <B>function</B> Get_Form_Term_Hook (Frm : Form) <B>return</B> Form_Hook_Function;
+   <I>--  AKA: <A HREF="form_hook.3x.html">form_term()</A></I>
+   <B>pragma</B> Import (C, Get_Form_Term_Hook, "form_term");
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field.3x.html">form_field.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_40">|</I>
+   <B>procedure</B> Redefine (Frm  : <B>in</B> Form;
+                       Flds : <B>in</B> Field_Array);
+   <I>--  AKA: <A HREF="form_field.3x.html">set_form_fields()</A></I>
+   <I>--  With a bit more comfort. You don´t need to terminate the Field_Array</I>
+   <I>--  with a null entry. This is handled internally in the binding.</I>
+
+   <I>--  <A NAME="AFU_41">|</I>
+   <B>procedure</B> Set_Fields (Frm  : <B>in</B> Form;
+                         Flds : <B>in</B> Field_Array) <B>renames</B> Redefine;
+   <I>--  AKA: <A HREF="form_field.3x.html">set_form_fields()</A></I>
+
+   <I>--  <A NAME="AFU_42">|</I>
+   <B>function</B> Fields (Frm : Form) <B>return</B> Field_Array_Access;
+   <I>--  AKA: <A HREF="form_field.3x.html">form_fields()</A></I>
+
+   <I>--  <A NAME="AFU_43">|</I>
+   <B>function</B> Field_Count (Frm : Form) <B>return</B> Natural;
+   <I>--  AKA: <A HREF="form_field.3x.html">field_count()</A></I>
+
+   <I>--  <A NAME="AFU_44">|</I>
+   <B>procedure</B> Move (Fld    : <B>in</B> Field;
+                   Line   : <B>in</B> Line_Position;
+                   Column : <B>in</B> Column_Position);
+   <I>--  AKA: <A HREF="form_field.3x.html">move_field()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_new.3x.html">form_new.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_45">|</I>
+   <B>function</B> Create (Fields : Field_Array) <B>return</B> Form;
+   <I>--  AKA: <A HREF="form_new.3x.html">new_form()</A></I>
+
+   <I>--  <A NAME="AFU_46">|</I>
+   <B>function</B> New_Form (Fields : Field_Array) <B>return</B> Form <B>renames</B> Create;
+   <I>--  AKA: <A HREF="form_new.3x.html">new_form()</A></I>
+
+   <I>--  <A NAME="AFU_47">|</I>
+   <B>procedure</B> Delete (Frm : <B>in</B> <B>out</B> Form);
+   <I>--  AKA: <A HREF="form_new.3x.html">free_form()</A></I>
+   <I>--  Reset Frm to Null_Form</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_opts.3x.html">form_opts.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_48">|</I>
+   <B>procedure</B> Set_Options (Frm     : <B>in</B> Form;
+                          Options : <B>in</B> Form_Option_Set);
+   <I>--  AKA: <A HREF="form_opts.3x.html">set_form_opts()</A></I>
+
+   <I>--  <A NAME="AFU_49">|</I>
+   <B>procedure</B> Switch_Options (Frm     : <B>in</B> Form;
+                             Options : <B>in</B> Form_Option_Set;
+                             On      : Boolean := True);
+   <I>--  AKA: <A HREF="form_opts.3x.html">form_opts_on()</A></I>
+   <I>--  AKA: form_opts_off()</I>
+
+   <I>--  <A NAME="AFU_50">|</I>
+   <B>procedure</B> Get_Options (Frm     : <B>in</B>  Form;
+                          Options : <B>out</B> Form_Option_Set);
+   <I>--  AKA: <A HREF="form_opts.3x.html">form_opts()</A></I>
+
+   <I>--  <A NAME="AFU_51">|</I>
+   <B>function</B> Get_Options (Frm : Form := Null_Form) <B>return</B> Form_Option_Set;
+   <I>--  AKA: <A HREF="form_opts.3x.html">form_opts()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_post.3x.html">form_post.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_52">|</I>
+   <B>procedure</B> Post (Frm  : <B>in</B> Form;
+                   Post : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="form_post.3x.html">post_form()</A></I>
+   <I>--  AKA: unpost_form()</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_cursor.3x.html">form_cursor.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_53">|</I>
+   <B>procedure</B> Position_Cursor (Frm : Form);
+   <I>--  AKA: <A HREF="form_cursor.3x.html">pos_form_cursor()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_data.3x.html">form_data.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_54">|</I>
+   <B>function</B> Data_Ahead (Frm : Form) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="form_data.3x.html">data_ahead()</A></I>
+
+   <I>--  <A NAME="AFU_55">|</I>
+   <B>function</B> Data_Behind (Frm : Form) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="form_data.3x.html">data_behind()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_driver.3x.html">form_driver.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   type Driver_Result <B>is</B> (Form_Ok,
+                          Request_Denied,
+                          Unknown_Request,
+                          Invalid_Field);
+
+   <I>--  <A NAME="AFU_56">|</I>
+   <B>function</B> Driver (Frm : Form;
+                    Key : Key_Code) <B>return</B> Driver_Result;
+   <I>--  AKA: <A HREF="form_driver.3x.html">form_driver()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_page.3x.html">form_page.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   type Page_Number <B>is</B> <B>new</B> Natural;
+
+   <I>--  <A NAME="AFU_57">|</I>
+   <B>procedure</B> Set_Current (Frm : <B>in</B> Form;
+                          Fld : <B>in</B> Field);
+   <I>--  AKA: <A HREF="form_page.3x.html">set_current_field()</A></I>
+
+   <I>--  <A NAME="AFU_58">|</I>
+   <B>function</B> Current (Frm : <B>in</B> Form) <B>return</B> Field;
+   <I>--  AKA: <A HREF="form_page.3x.html">current_field()</A></I>
+
+   <I>--  <A NAME="AFU_59">|</I>
+   <B>procedure</B> Set_Page (Frm  : <B>in</B> Form;
+                       Page : <B>in</B> Page_Number := Page_Number'First);
+   <I>--  AKA: <A HREF="form_page.3x.html">set_form_page()</A></I>
+
+   <I>--  <A NAME="AFU_60">|</I>
+   <B>function</B> Page (Frm : Form) <B>return</B> Page_Number;
+   <I>--  AKA: <A HREF="form_page.3x.html">form_page()</A></I>
+
+   <I>--  <A NAME="AFU_61">|</I>
+   <B>function</B> Get_Index (Fld : Field) <B>return</B> Positive;
+   <I>--  AKA: <A HREF="form_page.3x.html">field_index()</A></I>
+   <I>--  Please note that in this binding we start the numbering of fields</I>
+   <I>--  with 1. So this is number is one more than you get from the low</I>
+   <I>--  level call.</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_new_page.3x.html">form_new_page.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_62">|</I>
+   <B>procedure</B> Set_New_Page (Fld      : <B>in</B> Field;
+                           New_Page : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="form_new_page.3x.html">set_new_page()</A></I>
+
+   <I>--  <A NAME="AFU_63">|</I>
+   <B>function</B> Is_New_Page (Fld : Field) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="form_new_page.3x.html">new_page()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_fieldtype.3x.html">form_fieldtype.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   type Field_Type <B>is</B> <B>abstract</B> <B>tagged</B> <B>null</B> <B>record</B>;
+   type Field_Type_Access <B>is</B> <B>access</B> <B>all</B> Field_Type'Class;
+
+   <B>function</B> Native_Type (Ftype : Field_Type)
+                         <B>return</B> C_Field_Type <B>is</B> <B>abstract</B>;
+   <I>--  This function returns the C libraries handle to the field type.</I>
+   <I>--  May be you need this if you want to interface to lower level</I>
+   <I>--  routines in the form library.</I>
+
+   <I>--  <A NAME="AFU_64">|</I>
+   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
+                       Fld_Type : <B>in</B> Field_Type) <B>is</B> <B>abstract</B>;
+   <I>--  AKA: <A HREF="form_fieldtype.3x.html">set_field_type()</A></I>
+   <I>--  But: we hide the vararg mechanism of the C interface. You always</I>
+   <I>--       have to pass a single Field_Type parameter.</I>
+
+   type C_Defined_Field_Type <B>is</B> <B>abstract</B> <B>new</B> Field_Type <B>with</B> <B>null</B> <B>record</B>;
+   <I>--  This is the root of all field typed defined in C, i.e. this are</I>
+   <I>--  the predefined field types in the form library.</I>
+
+   type Alpha_Field <B>is</B> <B>new</B> C_Defined_Field_Type
+      <B>with</B> <B>record</B>
+         Minimum_Field_Width : Natural := 0;
+      <B>end</B> <B>record</B>;
+   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
+                       Fld_Type : <B>in</B> Alpha_Field);
+   <B>function</B> Native_Type (Ftype : Alpha_Field)
+                         <B>return</B> C_Field_Type;
+
+   type Alpha_Numeric_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
+      <B>record</B>
+         Minimum_Field_Width : Natural := 0;
+      <B>end</B> <B>record</B>;
+   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
+                       Fld_Type : <B>in</B> Alpha_Numeric_Field);
+   <B>function</B> Native_Type (Ftype : Alpha_Numeric_Field)
+                         <B>return</B> C_Field_Type;
+
+   type Integer_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
+      <B>record</B>
+         Precision   : Natural;
+         Lower_Limit : Integer;
+         Upper_Limit : Integer;
+      <B>end</B> <B>record</B>;
+   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
+                       Fld_Type : <B>in</B> Integer_Field);
+   <B>function</B> Native_Type (Ftype : Integer_Field)
+                         <B>return</B> C_Field_Type;
+
+   type Numeric_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
+      <B>record</B>
+         Precision   : Natural;
+         Lower_Limit : Float;
+         Upper_Limit : Float;
+      <B>end</B> <B>record</B>;
+   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
+                       Fld_Type : <B>in</B> Numeric_Field);
+   <B>function</B> Native_Type (Ftype : Numeric_Field)
+                         <B>return</B> C_Field_Type;
+
+   type String_Access <B>is</B> <B>access</B> String;
+
+   type Regular_Expression_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
+      <B>record</B>
+         Regular_Expression : String_Access;
+      <B>end</B> <B>record</B>;
+   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
+                       Fld_Type : <B>in</B> Regular_Expression_Field);
+   <B>function</B> Native_Type (Ftype : Regular_Expression_Field)
+                         <B>return</B> C_Field_Type;
+
+   type Enum_Array <B>is</B> <B>array</B> (Positive <B>range</B> &lt;&gt;)
+      <B>of</B> String_Access;
+
+   type Enumeration_Info (C : Positive) <B>is</B>
+      <B>record</B>
+         Names                : Enum_Array (1 .. C);
+         Case_Sensitive       : Boolean := False;
+         Match_Must_Be_Unique : Boolean := False;
+      <B>end</B> <B>record</B>;
+
+   type Enumeration_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B> <B>private</B>;
+
+   <B>function</B> Create (Info : Enumeration_Info;
+                    Auto_Release_Names : Boolean := False)
+                    <B>return</B> Enumeration_Field;
+   <I>--  Make an fieldtype from the info. Enumerations are special, because</I>
+   <I>--  they normally don't copy the enum values into a private store, so</I>
+   <I>--  we have to care for the lifetime of the info we provide.</I>
+   <I>--  The Auto_Release_Names flag may be used to automatically releases</I>
+   <I>--  the strings in the Names array of the Enumeration_Info.</I>
+
+   <B>function</B> Make_Enumeration_Type (Info : Enumeration_Info;
+                                   Auto_Release_Names : Boolean := False)
+                                   <B>return</B> Enumeration_Field <B>renames</B> Create;
+
+   <B>procedure</B> Release (Enum : <B>in</B> <B>out</B> Enumeration_Field);
+   <I>--  But we may want to release the field to release the memory allocated</I>
+   <I>--  by it internally. After that the Enumeration field is no longer usable.</I>
+
+   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
+                       Fld_Type : <B>in</B> Enumeration_Field);
+   <B>function</B> Native_Type (Ftype : Enumeration_Field)
+                         <B>return</B> C_Field_Type;
+
+   <I>--  The next type defintions are all ncurses extensions. They are typically</I>
+   <I>--  not available in other curses implementations.</I>
+
+   type Internet_V4_Address_Field <B>is</B> <B>new</B> C_Defined_Field_Type
+     <B>with</B> <B>null</B> <B>record</B>;
+   <B>procedure</B> Set_Type (Fld      : <B>in</B> Field;
+                       Fld_Type : <B>in</B> Internet_V4_Address_Field);
+   <B>function</B> Native_Type (Ftype : Internet_V4_Address_Field)
+                         <B>return</B> C_Field_Type;
+
+
+   type Ada_Defined_Field_Type <B>is</B> <B>abstract</B> <B>new</B> Field_Type <B>with</B> <B>null</B> <B>record</B>;
+   <I>--  This is the root of the mechanism we use to create field types in</I>
+   <I>--  Ada95. You don't have to redefine the Set_Field_Type and</I>
+   <I>--  Native_Field_Type methods, because they work generically on this</I>
+   <I>--  class.</I>
+
+   <B>procedure</B> Set_Type (Fld      : Field;
+                       Fld_Type : Ada_Defined_Field_Type);
+
+   <B>function</B> Native_Type (Ftype : Ada_Defined_Field_Type)
+                         <B>return</B> C_Field_Type;
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="form_field_validation.3x.html">form_field_validation.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_65">|</I>
+   <B>function</B> Get_Type (Fld : <B>in</B> Field) <B>return</B> Field_Type_Access;
+   <I>--  AKA: <A HREF="form_field_validation.3x.html">field_type()</A></I>
+   <I>--  AKA: field_arg()</I>
+   <I>--  In Ada95 we can combine these</I>
+
+<I>------------------------------------------------------------------------------</I>
+<B>private</B>
+
+   type Field        <B>is</B> <B>new</B> System.Address;
+   type Form         <B>is</B> <B>new</B> System.Address;
+   type C_Field_Type <B>is</B> <B>new</B> System.Address;
+
+   Null_Field        : <B>constant</B> Field        := Field (System.Null_Address);
+   Null_Form         : <B>constant</B> Form         := Form  (System.Null_Address);
+   Null_Field_Type   : <B>constant</B> C_Field_Type :=
+     C_Field_Type (System.Null_Address);
+
+   type CPA_Access <B>is</B> <B>access</B> Interfaces.C.Strings.chars_ptr_array;
+
+   type Enumeration_Field <B>is</B> <B>new</B> C_Defined_Field_Type <B>with</B>
+      <B>record</B>
+         Case_Sensitive       : Boolean := False;
+         Match_Must_Be_Unique : Boolean := False;
+         Arr                  : CPA_Access := <B>null</B>;
+      <B>end</B> <B>record</B>;
+
+   <I>--  In our binding we use the fields user pointer as hook to maintain</I>
+   <I>--  our own info structure about the field type. To be able to still</I>
+   <I>--  provide a user pointer, we use this wrapper.</I>
+   <I>--</I>
+   type Field_User_Wrapper <B>is</B>
+      <B>record</B>
+         U : System.Address;    <I>--  the hook we provide for the user</I>
+         T : Field_Type_Access; <I>--  may be null</I>
+         N : Natural;           <I>--  use counter</I>
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Convention (C, Field_User_Wrapper);
+   type Field_User_Wrapper_Access <B>is</B> <B>access</B> <B>all</B> Field_User_Wrapper;
+   <B>pragma</B> Controlled (Field_User_Wrapper_Access);
+
+   <B>function</B> Set_Field_Userptr (Fld : Field;
+                               Wrp : Field_User_Wrapper_Access)
+                               <B>return</B> Interfaces.C.int;
+   <B>pragma</B> Import (C, Set_Field_Userptr, "set_field_userptr");
+
+   <B>function</B> Field_Userptr (Fld : Field) <B>return</B> Field_User_Wrapper_Access;
+   <B>pragma</B> Import (C, Field_Userptr, "field_userptr");
+
+   <I>--  In our binding we use the forms user pointer as hook to maintain</I>
+   <I>--  our own info structure about the field association. To be able to still</I>
+   <I>--  provide a user pointer, we use this wrapper.</I>
+   <I>--</I>
+   type Form_User_Wrapper <B>is</B>
+      <B>record</B>
+         U : System.Address;      <I>--  the hook we provide for the user</I>
+         I : Field_Array_Access;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Convention (C, Form_User_Wrapper);
+   type Form_User_Wrapper_Access <B>is</B> <B>access</B> <B>all</B> Form_User_Wrapper;
+   <B>pragma</B> Controlled (Form_User_Wrapper_Access);
+
+   <B>function</B> Set_Form_Userptr (Frm : Form;
+                              Wrp : Form_User_Wrapper_Access)
+                              <B>return</B> Interfaces.C.int;
+   <B>pragma</B> Import (C, Set_Form_Userptr, "set_form_userptr");
+
+   <B>function</B> Form_Userptr (Frm : Form) <B>return</B> Form_User_Wrapper_Access;
+   <B>pragma</B> Import (C, Form_Userptr, "form_userptr");
+
+   <B>procedure</B> Register_Type   (T   : <B>in</B> Ada_Defined_Field_Type'Class;
+                              Cft : <B>in</B> C_Field_Type);
+   <B>procedure</B> Unregister_Type (T   : <B>in</B> Ada_Defined_Field_Type'Class);
+   <B>function</B>  Search_Type (T : Ada_Defined_Field_Type'Class)
+                          <B>return</B> C_Field_Type;
+
+   Generation_Bit_Order : <B>constant</B> System.Bit_Order := System.Low_Order_First;
+   <I>--  This constant may be different on your system.</I>
+
+<B>end</B> Terminal_Interface.Curses.Forms;
+
+</PRE>
+
+<P><HR><P>
+<P>
+This is BETA software. The interface is subject to change without notice.<P>
+<!-- Do NOT delete my name or the tool name from below; -->
+<!-- giving me credit is a condition of use of ada2html -->
+<P><I>This hypertext format was generated by <A HREF="http://www.adahome.com/Tutorials/Lovelace/dwheeler.htm">David A. Wheeler</A>'s <A HREF="http://www.adahome.com/Resources/Tools/ada2html/ada2html.htm">ada2html</A></I>
+</BODY>
+</HTML>
+

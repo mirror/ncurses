@@ -1,0 +1,57 @@
+# $Id: Makefile.in,v 1.20 1996/08/04 01:16:40 tom Exp $
+################################################################################
+# Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                        #
+# All Rights Reserved.                                                         #
+#                                                                              #
+# Permission to use, copy, modify, and distribute this software and its        #
+# documentation for any purpose and without fee is hereby granted, provided    #
+# that the above copyright notice appear in all copies and that both that      #
+# copyright notice and this permission notice appear in supporting             #
+# documentation, and that the name of the above listed copyright holder(s) not #
+# be used in advertising or publicity pertaining to distribution of the        #
+# software without specific, written prior permission. THE ABOVE LISTED        #
+# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
+# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
+# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
+# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
+# PERFORMANCE OF THIS SOFTWARE.                                                #
+################################################################################
+# Makefile for ncurses manual pages.
+#
+# NOTE: When you add or rename a man page, make sure you update both
+# the top-level MANIFEST and any man/*.renames files!
+
+SHELL		= /bin/sh
+
+INSTALL_PREFIX	= @INSTALL_PREFIX@
+srcdir		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+datadir		= @datadir@
+mandir		= @mandir@
+
+ticdir		= $(datadir)/terminfo
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+all:	terminfo.5
+
+$(INSTALL_PREFIX)$(mandir) :
+	$(srcdir)/../mkinstalldirs $@
+
+install install.man : terminfo.5 $(INSTALL_PREFIX)$(mandir)
+	sh ./edit_man.sh $(INSTALL_PREFIX)$(mandir) terminfo.5 $(srcdir)/*.[0-9]*
+
+# We compose terminfo.5 from the real sources...
+CAPLIST=$(srcdir)/../include/Caps
+terminfo.5: $(srcdir)/terminfo.head $(CAPLIST) $(srcdir)/terminfo.tail Makefile $(srcdir)/MKterminfo.sh
+	sh $(srcdir)/MKterminfo.sh $(srcdir)/terminfo.head $(CAPLIST) $(srcdir)/terminfo.tail >terminfo.5
+
+clean mostlyclean:
+	rm -f terminfo.5
+
+distclean realclean: clean
+	rm -f Makefile edit_man.*

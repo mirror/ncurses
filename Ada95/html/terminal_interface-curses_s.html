@@ -1,0 +1,1541 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE>
+</HEAD>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<B></B><P><HR><P>
+<PRE>
+
+<I>------------------------------------------------------------------------------</I>
+<I>--                                                                          --</I>
+<I>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</I>
+<I>--                                                                          --</I>
+<I>--                         Terminal_Interface.Curses                        --</I>
+<I>--                                                                          --</I>
+<I>--                                 S P E C                                  --</I>
+<I>--                                                                          --</I>
+<I>--  Version 00.92                                                           --</I>
+<I>--                                                                          --</I>
+<I>--  The ncurses Ada95 binding is copyrighted 1996 by                        --</I>
+<I>--  <A HREF="http://home.t-online.de/home/Juergen.Pfeifer">J&uuml;rgen Pfeifer</A>, Email: <A HREF="mailto:Juergen.Pfeifer@T-Online.de">Juergen.Pfeifer@T-Online.de</A>                      --</I>
+<I>--                                                                          --</I>
+<I>--  Permission is hereby granted to reproduce and distribute this           --</I>
+<I>--  binding by any means and for any fee, whether alone or as part          --</I>
+<I>--  of a larger distribution, in source or in binary form, PROVIDED         --</I>
+<I>--  this notice is included with any such distribution, and is not          --</I>
+<I>--  removed from any of its header files. Mention of ncurses and the        --</I>
+<I>--  author of this binding in any applications linked with it is            --</I>
+<I>--  highly appreciated.                                                     --</I>
+<I>--                                                                          --</I>
+<I>--  This binding comes AS IS with no warranty, implied or expressed.        --</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  Version Control:</I>
+<I>--  @Revision: 1.7 @</I>
+<I>------------------------------------------------------------------------------</I>
+<I>--  curses binding, generated at Sun Feb  2 17:21:42 1997</I>
+<I>--  This module is generated. Please don't change it manually!</I>
+<I>--  Run the generator instead.</I>
+<I>--  |</I>
+<B>with</B> System;
+<B>with</B> Interfaces.C;   <I>--  We need this for some assertions.</I>
+
+<B>package</B> Terminal_Interface.Curses <B>is</B>
+
+   <B>pragma</B> Linker_Options ("-lncurses");
+
+   type Window <B>is</B> <B>private</B>;
+   Null_Window : <B>constant</B> Window;
+
+   type Line_Position   <B>is</B> <B>new</B> Natural; <I>--  line coordinate</I>
+   type Column_Position <B>is</B> <B>new</B> Natural; <I>--  column coordinate</I>
+
+   <B>subtype</B> Line_Count   <B>is</B> Line_Position   <B>range</B> 1 .. Line_Position'Last;
+   <I>--  Type to count lines. We do not allow null windows, so must be positive</I>
+   <B>subtype</B> Column_Count <B>is</B> Column_Position <B>range</B> 1 .. Column_Position'Last;
+   <I>--  Type to count columns. We do not allow null windows, so must be positive</I>
+
+   type Key_Code <B>is</B> <B>new</B> Natural;
+   <I>--  That is anything including real characters, special keys and logical</I>
+   <I>--  request codes.</I>
+
+   <B>subtype</B> Real_Key_Code <B>is</B> Key_Code <B>range</B> 0 .. 8#777#;
+   <I>--  This are the codes that potentially represent a real keystroke.</I>
+   <I>--  Not all codes may be possible on a specific terminal. To check the</I>
+   <I>--  availability of a special key, the Has_Key function is provided.</I>
+
+   <B>subtype</B> Special_Key_Code <B>is</B> Real_Key_Code
+     <B>range</B> 8#400# .. Real_Key_Code'Last;
+   <I>--  Type for a function- or special key number</I>
+
+   <B>subtype</B> Normal_Key_Code <B>is</B> Real_Key_Code <B>range</B>
+     Character'Pos (Character'First) .. Character'Pos (Character'Last);
+   <I>--  This are the codes for regular (incl. non-graphical) characters.</I>
+
+   <I>--  Constants for function- and special keys</I>
+   <I>--</I>
+   Key_None                       : <B>constant</B> Special_Key_Code := 8#400#;
+   Key_Code_Yes                   : <B>constant</B> Special_Key_Code := 8#400#;
+   Key_Min                        : <B>constant</B> Special_Key_Code := 8#401#;
+   Key_Break                      : <B>constant</B> Special_Key_Code := 8#401#;
+   Key_Cursor_Down                : <B>constant</B> Special_Key_Code := 8#402#;
+   Key_Cursor_Up                  : <B>constant</B> Special_Key_Code := 8#403#;
+   Key_Cursor_Left                : <B>constant</B> Special_Key_Code := 8#404#;
+   Key_Cursor_Right               : <B>constant</B> Special_Key_Code := 8#405#;
+   Key_Home                       : <B>constant</B> Special_Key_Code := 8#406#;
+   Key_Backspace                  : <B>constant</B> Special_Key_Code := 8#407#;
+   Key_F0                         : <B>constant</B> Special_Key_Code := 8#410#;
+   Key_F1                         : <B>constant</B> Special_Key_Code := 8#411#;
+   Key_F2                         : <B>constant</B> Special_Key_Code := 8#412#;
+   Key_F3                         : <B>constant</B> Special_Key_Code := 8#413#;
+   Key_F4                         : <B>constant</B> Special_Key_Code := 8#414#;
+   Key_F5                         : <B>constant</B> Special_Key_Code := 8#415#;
+   Key_F6                         : <B>constant</B> Special_Key_Code := 8#416#;
+   Key_F7                         : <B>constant</B> Special_Key_Code := 8#417#;
+   Key_F8                         : <B>constant</B> Special_Key_Code := 8#420#;
+   Key_F9                         : <B>constant</B> Special_Key_Code := 8#421#;
+   Key_F10                        : <B>constant</B> Special_Key_Code := 8#422#;
+   Key_F11                        : <B>constant</B> Special_Key_Code := 8#423#;
+   Key_F12                        : <B>constant</B> Special_Key_Code := 8#424#;
+   Key_F13                        : <B>constant</B> Special_Key_Code := 8#425#;
+   Key_F14                        : <B>constant</B> Special_Key_Code := 8#426#;
+   Key_F15                        : <B>constant</B> Special_Key_Code := 8#427#;
+   Key_F16                        : <B>constant</B> Special_Key_Code := 8#430#;
+   Key_F17                        : <B>constant</B> Special_Key_Code := 8#431#;
+   Key_F18                        : <B>constant</B> Special_Key_Code := 8#432#;
+   Key_F19                        : <B>constant</B> Special_Key_Code := 8#433#;
+   Key_F20                        : <B>constant</B> Special_Key_Code := 8#434#;
+   Key_F21                        : <B>constant</B> Special_Key_Code := 8#435#;
+   Key_F22                        : <B>constant</B> Special_Key_Code := 8#436#;
+   Key_F23                        : <B>constant</B> Special_Key_Code := 8#437#;
+   Key_F24                        : <B>constant</B> Special_Key_Code := 8#440#;
+   Key_Delete_Line                : <B>constant</B> Special_Key_Code := 8#510#;
+   Key_Insert_Line                : <B>constant</B> Special_Key_Code := 8#511#;
+   Key_Delete_Char                : <B>constant</B> Special_Key_Code := 8#512#;
+   Key_Insert_Char                : <B>constant</B> Special_Key_Code := 8#513#;
+   Key_Exit_Insert_Mode           : <B>constant</B> Special_Key_Code := 8#514#;
+   Key_Clear_Screen               : <B>constant</B> Special_Key_Code := 8#515#;
+   Key_Clear_End_Of_Screen        : <B>constant</B> Special_Key_Code := 8#516#;
+   Key_Clear_End_Of_Line          : <B>constant</B> Special_Key_Code := 8#517#;
+   Key_Scroll_1_Forward           : <B>constant</B> Special_Key_Code := 8#520#;
+   Key_Scroll_1_Backward          : <B>constant</B> Special_Key_Code := 8#521#;
+   Key_Next_Page                  : <B>constant</B> Special_Key_Code := 8#522#;
+   Key_Previous_Page              : <B>constant</B> Special_Key_Code := 8#523#;
+   Key_Set_Tab                    : <B>constant</B> Special_Key_Code := 8#524#;
+   Key_Clear_Tab                  : <B>constant</B> Special_Key_Code := 8#525#;
+   Key_Clear_All_Tabs             : <B>constant</B> Special_Key_Code := 8#526#;
+   Key_Enter_Or_Send              : <B>constant</B> Special_Key_Code := 8#527#;
+   Key_Soft_Reset                 : <B>constant</B> Special_Key_Code := 8#530#;
+   Key_Reset                      : <B>constant</B> Special_Key_Code := 8#531#;
+   Key_Print                      : <B>constant</B> Special_Key_Code := 8#532#;
+   Key_Bottom                     : <B>constant</B> Special_Key_Code := 8#533#;
+   Key_Upper_Left_Of_Keypad       : <B>constant</B> Special_Key_Code := 8#534#;
+   Key_Upper_Right_Of_Keypad      : <B>constant</B> Special_Key_Code := 8#535#;
+   Key_Center_Of_Keypad           : <B>constant</B> Special_Key_Code := 8#536#;
+   Key_Lower_Left_Of_Keypad       : <B>constant</B> Special_Key_Code := 8#537#;
+   Key_Lower_Right_Of_Keypad      : <B>constant</B> Special_Key_Code := 8#540#;
+   Key_Back_Tab                   : <B>constant</B> Special_Key_Code := 8#541#;
+   Key_Beginning                  : <B>constant</B> Special_Key_Code := 8#542#;
+   Key_Cancel                     : <B>constant</B> Special_Key_Code := 8#543#;
+   Key_Close                      : <B>constant</B> Special_Key_Code := 8#544#;
+   Key_Command                    : <B>constant</B> Special_Key_Code := 8#545#;
+   Key_Copy                       : <B>constant</B> Special_Key_Code := 8#546#;
+   Key_Create                     : <B>constant</B> Special_Key_Code := 8#547#;
+   Key_End                        : <B>constant</B> Special_Key_Code := 8#550#;
+   Key_Exit                       : <B>constant</B> Special_Key_Code := 8#551#;
+   Key_Find                       : <B>constant</B> Special_Key_Code := 8#552#;
+   Key_Help                       : <B>constant</B> Special_Key_Code := 8#553#;
+   Key_Mark                       : <B>constant</B> Special_Key_Code := 8#554#;
+   Key_Message                    : <B>constant</B> Special_Key_Code := 8#555#;
+   Key_Move                       : <B>constant</B> Special_Key_Code := 8#556#;
+   Key_Next                       : <B>constant</B> Special_Key_Code := 8#557#;
+   Key_Open                       : <B>constant</B> Special_Key_Code := 8#560#;
+   Key_Options                    : <B>constant</B> Special_Key_Code := 8#561#;
+   Key_Previous                   : <B>constant</B> Special_Key_Code := 8#562#;
+   Key_Redo                       : <B>constant</B> Special_Key_Code := 8#563#;
+   Key_Reference                  : <B>constant</B> Special_Key_Code := 8#564#;
+   Key_Refresh                    : <B>constant</B> Special_Key_Code := 8#565#;
+   Key_Replace                    : <B>constant</B> Special_Key_Code := 8#566#;
+   Key_Restart                    : <B>constant</B> Special_Key_Code := 8#567#;
+   Key_Resume                     : <B>constant</B> Special_Key_Code := 8#570#;
+   Key_Save                       : <B>constant</B> Special_Key_Code := 8#571#;
+   Key_Shift_Begin                : <B>constant</B> Special_Key_Code := 8#572#;
+   Key_Shift_Cancel               : <B>constant</B> Special_Key_Code := 8#573#;
+   Key_Shift_Command              : <B>constant</B> Special_Key_Code := 8#574#;
+   Key_Shift_Copy                 : <B>constant</B> Special_Key_Code := 8#575#;
+   Key_Shift_Create               : <B>constant</B> Special_Key_Code := 8#576#;
+   Key_Shift_Delete_Char          : <B>constant</B> Special_Key_Code := 8#577#;
+   Key_Shift_Delete_Line          : <B>constant</B> Special_Key_Code := 8#600#;
+   Key_Select                     : <B>constant</B> Special_Key_Code := 8#601#;
+   Key_Shift_End                  : <B>constant</B> Special_Key_Code := 8#602#;
+   Key_Shift_Clear_End_Of_Line    : <B>constant</B> Special_Key_Code := 8#603#;
+   Key_Shift_Exit                 : <B>constant</B> Special_Key_Code := 8#604#;
+   Key_Shift_Find                 : <B>constant</B> Special_Key_Code := 8#605#;
+   Key_Shift_Help                 : <B>constant</B> Special_Key_Code := 8#606#;
+   Key_Shift_Home                 : <B>constant</B> Special_Key_Code := 8#607#;
+   Key_Shift_Insert_Char          : <B>constant</B> Special_Key_Code := 8#610#;
+   Key_Shift_Cursor_Left          : <B>constant</B> Special_Key_Code := 8#611#;
+   Key_Shift_Message              : <B>constant</B> Special_Key_Code := 8#612#;
+   Key_Shift_Move                 : <B>constant</B> Special_Key_Code := 8#613#;
+   Key_Shift_Next_Page            : <B>constant</B> Special_Key_Code := 8#614#;
+   Key_Shift_Options              : <B>constant</B> Special_Key_Code := 8#615#;
+   Key_Shift_Previous_Page        : <B>constant</B> Special_Key_Code := 8#616#;
+   Key_Shift_Print                : <B>constant</B> Special_Key_Code := 8#617#;
+   Key_Shift_Redo                 : <B>constant</B> Special_Key_Code := 8#620#;
+   Key_Shift_Replace              : <B>constant</B> Special_Key_Code := 8#621#;
+   Key_Shift_Cursor_Right         : <B>constant</B> Special_Key_Code := 8#622#;
+   Key_Shift_Resume               : <B>constant</B> Special_Key_Code := 8#623#;
+   Key_Shift_Save                 : <B>constant</B> Special_Key_Code := 8#624#;
+   Key_Shift_Suspend              : <B>constant</B> Special_Key_Code := 8#625#;
+   Key_Shift_Undo                 : <B>constant</B> Special_Key_Code := 8#626#;
+   Key_Suspend                    : <B>constant</B> Special_Key_Code := 8#627#;
+   Key_Undo                       : <B>constant</B> Special_Key_Code := 8#630#;
+   Key_Mouse                      : <B>constant</B> Special_Key_Code := 8#631#;
+
+   Key_Max                        : <B>constant</B> Special_Key_Code
+     := Special_Key_Code'Last;
+
+   <B>subtype</B> User_Key_Code <B>is</B> Key_Code
+     <B>range</B> (Key_Max + 129) .. Key_Code'Last;
+   <I>--  This is reserved for user defined key codes. The range between Key_Max</I>
+   <I>--  and the first user code is reserved for subsystems like menu and forms.</I>
+
+   <I>--  For those who like to use the original key names we produce them were</I>
+   <I>--  they differ from the original. Please note that they may differ in</I>
+   <I>--  lower/upper case.</I>
+   KEY_DOWN         : Special_Key_Code <B>renames</B> Key_Cursor_Down;
+   KEY_UP           : Special_Key_Code <B>renames</B> Key_Cursor_Up;
+   KEY_LEFT         : Special_Key_Code <B>renames</B> Key_Cursor_Left;
+   KEY_RIGHT        : Special_Key_Code <B>renames</B> Key_Cursor_Right;
+   KEY_DL           : Special_Key_Code <B>renames</B> Key_Delete_Line;
+   KEY_IL           : Special_Key_Code <B>renames</B> Key_Insert_Line;
+   KEY_DC           : Special_Key_Code <B>renames</B> Key_Delete_Char;
+   KEY_IC           : Special_Key_Code <B>renames</B> Key_Insert_Char;
+   KEY_EIC          : Special_Key_Code <B>renames</B> Key_Exit_Insert_Mode;
+   KEY_CLEAR        : Special_Key_Code <B>renames</B> Key_Clear_Screen;
+   KEY_EOS          : Special_Key_Code <B>renames</B> Key_Clear_End_Of_Screen;
+   KEY_EOL          : Special_Key_Code <B>renames</B> Key_Clear_End_Of_Line;
+   KEY_SF           : Special_Key_Code <B>renames</B> Key_Scroll_1_Forward;
+   KEY_SR           : Special_Key_Code <B>renames</B> Key_Scroll_1_Backward;
+   KEY_NPAGE        : Special_Key_Code <B>renames</B> Key_Next_Page;
+   KEY_PPAGE        : Special_Key_Code <B>renames</B> Key_Previous_Page;
+   KEY_STAB         : Special_Key_Code <B>renames</B> Key_Set_Tab;
+   KEY_CTAB         : Special_Key_Code <B>renames</B> Key_Clear_Tab;
+   KEY_CATAB        : Special_Key_Code <B>renames</B> Key_Clear_All_Tabs;
+   KEY_ENTER        : Special_Key_Code <B>renames</B> Key_Enter_Or_Send;
+   KEY_SRESET       : Special_Key_Code <B>renames</B> Key_Soft_Reset;
+   KEY_LL           : Special_Key_Code <B>renames</B> Key_Bottom;
+   KEY_A1           : Special_Key_Code <B>renames</B> Key_Upper_Left_Of_Keypad;
+   KEY_A3           : Special_Key_Code <B>renames</B> Key_Upper_Right_Of_Keypad;
+   KEY_B2           : Special_Key_Code <B>renames</B> Key_Center_Of_Keypad;
+   KEY_C1           : Special_Key_Code <B>renames</B> Key_Lower_Left_Of_Keypad;
+   KEY_C3           : Special_Key_Code <B>renames</B> Key_Lower_Right_Of_Keypad;
+   KEY_BTAB         : Special_Key_Code <B>renames</B> Key_Back_Tab;
+   KEY_BEG          : Special_Key_Code <B>renames</B> Key_Beginning;
+   KEY_SBEG         : Special_Key_Code <B>renames</B> Key_Shift_Begin;
+   KEY_SCANCEL      : Special_Key_Code <B>renames</B> Key_Shift_Cancel;
+   KEY_SCOMMAND     : Special_Key_Code <B>renames</B> Key_Shift_Command;
+   KEY_SCOPY        : Special_Key_Code <B>renames</B> Key_Shift_Copy;
+   KEY_SCREATE      : Special_Key_Code <B>renames</B> Key_Shift_Create;
+   KEY_SDC          : Special_Key_Code <B>renames</B> Key_Shift_Delete_Char;
+   KEY_SDL          : Special_Key_Code <B>renames</B> Key_Shift_Delete_Line;
+   KEY_SEND         : Special_Key_Code <B>renames</B> Key_Shift_End;
+   KEY_SEOL         : Special_Key_Code <B>renames</B> Key_Shift_Clear_End_Of_Line;
+   KEY_SEXIT        : Special_Key_Code <B>renames</B> Key_Shift_Exit;
+   KEY_SFIND        : Special_Key_Code <B>renames</B> Key_Shift_Find;
+   KEY_SHELP        : Special_Key_Code <B>renames</B> Key_Shift_Help;
+   KEY_SHOME        : Special_Key_Code <B>renames</B> Key_Shift_Home;
+   KEY_SIC          : Special_Key_Code <B>renames</B> Key_Shift_Insert_Char;
+   KEY_SLEFT        : Special_Key_Code <B>renames</B> Key_Shift_Cursor_Left;
+   KEY_SMESSAGE     : Special_Key_Code <B>renames</B> Key_Shift_Message;
+   KEY_SMOVE        : Special_Key_Code <B>renames</B> Key_Shift_Move;
+   KEY_SNEXT        : Special_Key_Code <B>renames</B> Key_Shift_Next_Page;
+   KEY_SOPTIONS     : Special_Key_Code <B>renames</B> Key_Shift_Options;
+   KEY_SPREVIOUS    : Special_Key_Code <B>renames</B> Key_Shift_Previous_Page;
+   KEY_SPRINT       : Special_Key_Code <B>renames</B> Key_Shift_Print;
+   KEY_SREDO        : Special_Key_Code <B>renames</B> Key_Shift_Redo;
+   KEY_SREPLACE     : Special_Key_Code <B>renames</B> Key_Shift_Replace;
+   KEY_SRIGHT       : Special_Key_Code <B>renames</B> Key_Shift_Cursor_Right;
+   KEY_SRSUME       : Special_Key_Code <B>renames</B> Key_Shift_Resume;
+   KEY_SSAVE        : Special_Key_Code <B>renames</B> Key_Shift_Save;
+   KEY_SSUSPEND     : Special_Key_Code <B>renames</B> Key_Shift_Suspend;
+   KEY_SUNDO        : Special_Key_Code <B>renames</B> Key_Shift_Undo;
+
+
+<I>------------------------------------------------------------------------------</I>
+
+   type Color_Number <B>is</B> <B>range</B> 0 .. Integer (Interfaces.C.short'Last);
+   <B>for</B> Color_Number'Size <B>use</B> Interfaces.C.short'Size;
+   <I>--  (n)curses uses a short for the color index</I>
+   <I>--  The model is, that a Color_Number is an index into an array of</I>
+   <I>--  (potentially) definable colors. Some of those indices are</I>
+   <I>--  predefined (see below), although they may not really exist.</I>
+
+   Black    : <B>constant</B> Color_Number := 0;
+   Red      : <B>constant</B> Color_Number := 1;
+   Green    : <B>constant</B> Color_Number := 2;
+   Yellow   : <B>constant</B> Color_Number := 3;
+   Blue     : <B>constant</B> Color_Number := 4;
+   Magenta  : <B>constant</B> Color_Number := 5;
+   Cyan     : <B>constant</B> Color_Number := 6;
+   White    : <B>constant</B> Color_Number := 7;
+
+   type RGB_Value <B>is</B> <B>range</B> 0 .. Integer (Interfaces.C.Short'Last);
+   <B>for</B> RGB_Value'Size <B>use</B> Interfaces.C.short'Size;
+   <I>--  Some system may allow to redefine a color by setting RGB values.</I>
+
+   type Color_Pair <B>is</B> <B>range</B> 0 .. 255;
+   <B>for</B> Color_Pair'Size <B>use</B> 8;
+   <B>subtype</B> Redefinable_Color_Pair <B>is</B> Color_Pair <B>range</B> 1 .. 255;
+   <I>--  (n)curses reserves 1 Byte for the color-pair number. Color Pair 0</I>
+   <I>--  is fixed (Black &amp; White). A color pair is simply a combination of</I>
+   <I>--  two colors described by Color_Numbers, one for the foreground and</I>
+   <I>--  the other for the background</I>
+
+   type Character_Attribute_Set <B>is</B>
+      <B>record</B>
+         Stand_Out               : Boolean;
+         Under_Line              : Boolean;
+         Reverse_Video           : Boolean;
+         Blink                   : Boolean;
+         Dim_Character           : Boolean;
+         Bold_Character          : Boolean;
+         Alternate_Character_Set : Boolean;
+         Invisible_Character     : Boolean;
+         Protected_Character     : Boolean;
+         Horizontal              : Boolean;
+         Left                    : Boolean;
+         Low                     : Boolean;
+         Right                   : Boolean;
+         Top                     : Boolean;
+         Vertical                : Boolean;
+         Reserved                : Boolean;
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Pack (Character_Attribute_Set);
+   <B>pragma</B> Convention (C, Character_Attribute_Set);
+
+   <B>for</B> Character_Attribute_Set <B>use</B>
+      <B>record</B>
+         Stand_Out               <B>at</B> 0 <B>range</B>  0 ..  0;
+         Under_Line              <B>at</B> 0 <B>range</B>  1 ..  1;
+         Reverse_Video           <B>at</B> 0 <B>range</B>  2 ..  2;
+         Blink                   <B>at</B> 0 <B>range</B>  3 ..  3;
+         Dim_Character           <B>at</B> 0 <B>range</B>  4 ..  4;
+         Bold_Character          <B>at</B> 0 <B>range</B>  5 ..  5;
+         Alternate_Character_Set <B>at</B> 0 <B>range</B>  6 ..  6;
+         Invisible_Character     <B>at</B> 0 <B>range</B>  7 ..  7;
+         Protected_Character     <B>at</B> 0 <B>range</B>  8 ..  8;
+         Horizontal              <B>at</B> 0 <B>range</B>  9 ..  9;
+         Left                    <B>at</B> 0 <B>range</B> 10 .. 10;
+         Low                     <B>at</B> 0 <B>range</B> 11 .. 11;
+         Right                   <B>at</B> 0 <B>range</B> 12 .. 12;
+         Top                     <B>at</B> 0 <B>range</B> 13 .. 13;
+         Vertical                <B>at</B> 0 <B>range</B> 14 .. 14;
+         Reserved                <B>at</B> 0 <B>range</B> 15 .. 15;
+      <B>end</B> <B>record</B>;
+   <B>for</B> Character_Attribute_Set'Size <B>use</B> Interfaces.C.int'Size / 2;
+   <I>--  Please note: this rep. clause is generated and may be</I>
+   <I>--               different on your system.</I>
+   <I>--  (n)curses uses half of an integer for attributes.</I>
+
+   Normal_Video : <B>constant</B> Character_Attribute_Set := (<B>others</B> =&gt; False);
+
+   type Attributed_Character <B>is</B>
+      <B>record</B>
+         Attr  : Character_Attribute_Set := Normal_Video;
+         Color : Color_Pair := 0;
+         Ch    : Character  := ' ';
+      <B>end</B> <B>record</B>;
+   <B>pragma</B> Convention (C, Attributed_Character);
+   <I>--  This is the counterpart for the chtype in C.</I>
+
+   <B>for</B> Attributed_Character <B>use</B>
+      <B>record</B>
+         Ch    <B>at</B> 0 <B>range</B>  0 ..  7;
+         Color <B>at</B> 0 <B>range</B>  8 .. 15;
+         Attr  <B>at</B> 0 <B>range</B> 16 .. 31;
+      <B>end</B> <B>record</B>;
+   <B>for</B> Attributed_Character'Size <B>use</B> Interfaces.C.int'Size;
+      <I>--  Please note: this rep. clause is generated and may be</I>
+      <I>--               different on your system.</I>
+
+   Default_Character : <B>constant</B> Attributed_Character
+     := (Ch    => Character'First,
+         Color => Color_Pair'First,
+         Attr  => Normal_Video);
+
+   type Attributed_String <B>is</B> <B>array</B> (Positive <B>range</B> &lt;&gt;) <B>of</B> Attributed_Character;
+   <B>pragma</B> Pack (Attributed_String);
+   <I>--  In this binding we allow strings of attributed characters.</I>
+
+   <I>------------------</I>
+   <I>--  Exceptions  --</I>
+   <I>------------------</I>
+   Curses_Exception : <B>exception</B>;
+
+   <I>--  Those exceptions are raised by the ETI (Extended Terminal Interface)</I>
+   <I>--  subpackets for Menu and Forms handling.</I>
+   <I>--</I>
+   Eti_System_Error    : <B>exception</B>;
+   Eti_Bad_Argument    : <B>exception</B>;
+   Eti_Posted          : <B>exception</B>;
+   Eti_Connected       : <B>exception</B>;
+   Eti_Bad_State       : <B>exception</B>;
+   Eti_No_Room         : <B>exception</B>;
+   Eti_Not_Posted      : <B>exception</B>;
+   Eti_Unknown_Command : <B>exception</B>;
+   Eti_No_Match        : <B>exception</B>;
+   Eti_Not_Selectable  : <B>exception</B>;
+   Eti_Not_Connected   : <B>exception</B>;
+   Eti_Request_Denied  : <B>exception</B>;
+   Eti_Invalid_Field   : <B>exception</B>;
+   Eti_Current         : <B>exception</B>;
+
+   <I>--------------------------------------------------------------------------</I>
+   <I>--  External C variables</I>
+   <I>--  Conceptually even in C this are kind of constants, but they are</I>
+   <I>--  initialized and sometimes changed by the library routines at runtime</I>
+   <I>--  depending on the type of terminal. I believe the best way to model</I>
+   <I>--  this is to use functions.</I>
+   <I>--------------------------------------------------------------------------</I>
+
+   <B>function</B> Lines            <B>return</B> Line_Count;
+   <B>pragma</B> Inline (Lines);
+
+   <B>function</B> Columns          <B>return</B> Column_Count;
+   <B>pragma</B> Inline (Columns);
+
+   <B>function</B> Tab_Size         <B>return</B> Natural;
+   <B>pragma</B> Inline (Tab_Size);
+
+   <B>function</B> Number_Of_Colors <B>return</B> Natural;
+   <B>pragma</B> Inline (Number_Of_Colors);
+
+   <B>function</B> Number_Of_Color_Pairs <B>return</B> Natural;
+   <B>pragma</B> Inline (Number_Of_Color_Pairs);
+
+   ACS_Map : <B>array</B> (Character'Val (0) .. Character'Val (127)) <B>of</B>
+     Attributed_Character;
+   <B>pragma</B> Import (C, ACS_Map, "acs_map");
+   <I>--</I>
+   <I>--</I>
+   <I>--  Constants for several symbols from the Alternate Character Set</I>
+   <I>--  You must use this constants as indices into the ACS_Map array</I>
+   <I>--  to get the corresponding attributed character at runtime.</I>
+   <I>--</I>
+   ACS_Upper_Left_Corner    : <B>constant</B> Character := 'l';
+   ACS_Lower_Left_Corner    : <B>constant</B> Character := 'm';
+   ACS_Upper_Right_Corner   : <B>constant</B> Character := 'k';
+   ACS_Lower_Right_Corner   : <B>constant</B> Character := 'j';
+   ACS_Left_Tee             : <B>constant</B> Character := 't';
+   ACS_Right_Tee            : <B>constant</B> Character := 'u';
+   ACS_Bottom_Tee           : <B>constant</B> Character := 'v';
+   ACS_Top_Tee              : <B>constant</B> Character := 'w';
+   ACS_Horizontal_Line      : <B>constant</B> Character := 'q';
+   ACS_Vertical_Line        : <B>constant</B> Character := 'x';
+   ACS_Plus_Symbol          : <B>constant</B> Character := 'n';
+   ACS_Scan_Line_1          : <B>constant</B> Character := 'o';
+   ACS_Scan_Line_9          : <B>constant</B> Character := 's';
+   ACS_Diamond              : <B>constant</B> Character := Character'Val (96);
+   ACS_Checker_Board        : <B>constant</B> Character := 'a';
+   ACS_Degree               : <B>constant</B> Character := 'f';
+   ACS_Plus_Minus           : <B>constant</B> Character := 'g';
+   ACS_Bullet               : <B>constant</B> Character := '~';
+   ACS_Left_Arrow           : <B>constant</B> Character := ',';
+   ACS_Right_Arrow          : <B>constant</B> Character := '+';
+   ACS_Down_Arrow           : <B>constant</B> Character := '.';
+   ACS_Up_Arrow             : <B>constant</B> Character := '-';
+   ACS_Board_Of_Squares     : <B>constant</B> Character := 'h';
+   ACS_Lantern              : <B>constant</B> Character := 'I';
+   ACS_Solid_Block          : <B>constant</B> Character := '0';
+   ACS_Scan_Line_3          : <B>constant</B> Character := 'p';
+   ACS_Scan_Line_7          : <B>constant</B> Character := 'r';
+   ACS_Less_Or_Equal        : <B>constant</B> Character := 'y';
+   ACS_Greater_Or_Equal     : <B>constant</B> Character := 'z';
+   ACS_PI                   : <B>constant</B> Character := '{';
+   ACS_Not_Equal            : <B>constant</B> Character := '|';
+   ACS_Sterling             : <B>constant</B> Character := '}';
+
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_initscr.3x.html">curs_initscr.3x</A></I>
+   <I>--  |=====================================================================</I>
+   <I>--  | Not implemented: newterm, set_term, delscreen</I>
+
+   <I>--  <A NAME="AFU_1">|</I>
+   <B>function</B> Standard_Window <B>return</B> Window;
+   <I>--  AKA: <A HREF="curs_initscr.3x.html">stdscr</A></I>
+   <B>pragma</B> Inline (Standard_Window);
+
+   <I>--  <A NAME="AFU_2">|</I>
+   <B>procedure</B> Init_Screen;
+
+   <I>--  <A NAME="AFU_3">|</I>
+   <B>procedure</B> Init_Windows <B>renames</B> Init_Screen;
+   <I>--  AKA: <A HREF="curs_initscr.3x.html">initscr()</A></I>
+
+   <I>--  <A NAME="AFU_4">|</I>
+   <B>procedure</B> End_Windows;
+   <I>--  AKA: <A HREF="curs_initscr.3x.html">endwin()</A></I>
+   <B>procedure</B> End_Screen <B>renames</B> End_Windows;
+
+   <I>--  <A NAME="AFU_5">|</I>
+   <B>function</B> Is_End_Window <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_initscr.3x.html">isendwin()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_move.3x.html">curs_move.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_6">|</I>
+   <B>procedure</B> Move_Cursor (Win    : <B>in</B> Window := Standard_Window;
+                          Line   : <B>in</B> Line_Position;
+                          Column : <B>in</B> Column_Position);
+   <I>--  AKA: <A HREF="curs_move.3x.html">wmove()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_addch.3x.html">curs_addch.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_7">|</I>
+   <B>procedure</B> Add (Win :  <B>in</B> Window := Standard_Window;
+                  Ch  :  <B>in</B> Attributed_Character);
+   <I>--  AKA: <A HREF="curs_addch.3x.html">waddch()</A></I>
+
+   <B>procedure</B> Add (Win :  <B>in</B> Window := Standard_Window;
+                  Ch  :  <B>in</B> Character);
+   <I>--  Add a single character at the current logical cursor position to</I>
+   <I>--  the window. Use the current windows attributes.</I>
+
+   <I>--  <A NAME="AFU_8">|</I>
+   <B>procedure</B> Add
+     (Win    : <B>in</B> Window := Standard_Window;
+      Line   : <B>in</B> Line_Position;
+      Column : <B>in</B> Column_Position;
+      Ch     : <B>in</B> Attributed_Character);
+   <I>--  AKA: <A HREF="curs_addch.3x.html">mvwaddch()</A></I>
+
+   <B>procedure</B> Add
+     (Win    : <B>in</B> Window := Standard_Window;
+      Line   : <B>in</B> Line_Position;
+      Column : <B>in</B> Column_Position;
+      Ch     : <B>in</B> Character);
+   <I>--  Move to the position and add a single character into the window</I>
+
+   <I>--  <A NAME="AFU_9">|</I>
+   <B>procedure</B> Add_With_Immediate_Echo
+     (Win : <B>in</B> Window := Standard_Window;
+      Ch  : <B>in</B> Attributed_Character);
+   <I>--  AKA: <A HREF="curs_addch.3x.html">wechochar()</A></I>
+
+   <B>procedure</B> Add_With_Immediate_Echo
+     (Win : <B>in</B> Window := Standard_Window;
+      Ch  : <B>in</B> Character);
+   <I>--  Add a character and do an immediate resfresh of the screen.</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_window.3x.html">curs_window.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_10">|</I>
+   <B>function</B> Create
+     (Number_Of_Lines       : Line_Count;
+      Number_Of_Columns     : Column_Count;
+      First_Line_Position   : Line_Position;
+      First_Column_Position : Column_Position) <B>return</B> Window;
+   <I>--  AKA: <A HREF="curs_window.3x.html">newwin()</A></I>
+
+   <B>function</B> New_Window
+     (Number_Of_Lines       : Line_Count;
+      Number_Of_Columns     : Column_Count;
+      First_Line_Position   : Line_Position;
+      First_Column_Position : Column_Position) <B>return</B> Window
+     <B>renames</B> Create;
+
+   <I>--  <A NAME="AFU_11">|</I>
+   <B>procedure</B> Delete (Win : <B>in</B> <B>out</B> Window);
+   <I>--  AKA: <A HREF="curs_window.3x.html">delwin()</A></I>
+   <I>--  Reset Win to Null_Window</I>
+
+   <I>--  <A NAME="AFU_12">|</I>
+   <B>function</B> Sub_Window
+     (Win                   : Window := Standard_Window;
+      Number_Of_Lines       : Line_Count;
+      Number_Of_Columns     : Column_Count;
+      First_Line_Position   : Line_Position;
+      First_Column_Position : Column_Position) <B>return</B> Window;
+   <I>--  AKA: <A HREF="curs_window.3x.html">subwin()</A></I>
+
+   <I>--  <A NAME="AFU_13">|</I>
+   <B>function</B> Derived_Window
+     (Win                   : Window := Standard_Window;
+      Number_Of_Lines       : Line_Count;
+      Number_Of_Columns     : Column_Count;
+      First_Line_Position   : Line_Position;
+      First_Column_Position : Column_Position) <B>return</B> Window;
+   <I>--  AKA: <A HREF="curs_window.3x.html">derwin()</A></I>
+
+   <I>--  <A NAME="AFU_14">|</I>
+   <B>function</B> Duplicate (Win : Window) <B>return</B> Window;
+   <I>--  AKA: <A HREF="curs_window.3x.html">dupwin()</A></I>
+
+   <I>--  <A NAME="AFU_15">|</I>
+   <B>procedure</B> Move_Window (Win    : <B>in</B> Window;
+                          Line   : <B>in</B> Line_Position;
+                          Column : <B>in</B> Column_Position);
+   <I>--  AKA: <A HREF="curs_window.3x.html">mvwin()</A></I>
+
+   <I>--  <A NAME="AFU_16">|</I>
+   <B>procedure</B> Move_Derived_Window (Win    : <B>in</B> Window;
+                                  Line   : <B>in</B> Line_Position;
+                                  Column : <B>in</B> Column_Position);
+   <I>--  AKA: <A HREF="curs_window.3x.html">mvderwin()</A></I>
+
+   <I>--  <A NAME="AFU_17">|</I>
+   <B>procedure</B> Synchronize_Upwards (Win : <B>in</B> Window);
+   <I>--  AKA: <A HREF="curs_window.3x.html">wsyncup()</A></I>
+   <B>pragma</B> Import (C, Synchronize_Upwards, "wsyncup");
+
+   <I>--  <A NAME="AFU_18">|</I>
+   <B>procedure</B> Synchronize_Downwards (Win : <B>in</B> Window);
+   <I>--  AKA: <A HREF="curs_window.3x.html">wsyncdown()</A></I>
+   <B>pragma</B> Import (C, Synchronize_Downwards, "wsyncdown");
+
+   <I>--  <A NAME="AFU_19">|</I>
+   <B>procedure</B> Set_Synch_Mode (Win  : <B>in</B> Window := Standard_Window;
+                             Mode : <B>in</B> Boolean := False);
+   <I>--  AKA: <A HREF="curs_window.3x.html">syncok()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_addstr.3x.html">curs_addstr.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_20">|</I>
+   <B>procedure</B> Add (Win : <B>in</B> Window := Standard_Window;
+                  Str : <B>in</B> String;
+                  Len : <B>in</B> Integer := -1);
+   <I>--  AKA: <A HREF="curs_addstr.3x.html">waddnstr()</A></I>
+   <I>--  AKA: waddstr()</I>
+
+   <I>--  <A NAME="AFU_21">|</I>
+   <B>procedure</B> Add (Win    : <B>in</B> Window := Standard_Window;
+                  Line   : <B>in</B> Line_Position;
+                  Column : <B>in</B> Column_Position;
+                  Str    : <B>in</B> String;
+                  Len    : <B>in</B> Integer := -1);
+   <I>--  AKA: <A HREF="curs_addstr.3x.html">mvwaddnstr()</A></I>
+   <I>--  AKA: mvwaddstr()</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_addchstr.3x.html">curs_addchstr.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_22">|</I>
+   <B>procedure</B> Add (Win : <B>in</B> Window := Standard_Window;
+                  Str : <B>in</B> Attributed_String;
+                  Len : <B>in</B> Integer := -1);
+   <I>--  AKA: <A HREF="curs_addchstr.3x.html">waddchnstr()</A></I>
+   <I>--  AKA: waddchstr()</I>
+
+   <I>--  <A NAME="AFU_23">|</I>
+   <B>procedure</B> Add (Win    : <B>in</B> Window := Standard_Window;
+                  Line   : <B>in</B> Line_Position;
+                  Column : <B>in</B> Column_Position;
+                  Str    : <B>in</B> Attributed_String;
+                  Len    : <B>in</B> Integer := -1);
+   <I>--  AKA: <A HREF="curs_addchstr.3x.html">mvwaddchnstr()</A></I>
+   <I>--  AKA: mvwaddchstr()</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_border.3x.html">curs_border.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_24">|</I>
+   <B>procedure</B> Border
+     (Win                       : <B>in</B> Window := Standard_Window;
+      Left_Side_Symbol          : <B>in</B> Attributed_Character := Default_Character;
+      Right_Side_Symbol         : <B>in</B> Attributed_Character := Default_Character;
+      Top_Side_Symbol           : <B>in</B> Attributed_Character := Default_Character;
+      Bottom_Side_Symbol        : <B>in</B> Attributed_Character := Default_Character;
+      Upper_Left_Corner_Symbol  : <B>in</B> Attributed_Character := Default_Character;
+      Upper_Right_Corner_Symbol : <B>in</B> Attributed_Character := Default_Character;
+      Lower_Left_Corner_Symbol  : <B>in</B> Attributed_Character := Default_Character;
+      Lower_Right_Corner_Symbol : <B>in</B> Attributed_Character := Default_Character
+     );
+   <I>--  AKA: <A HREF="curs_border.3x.html">wborder()</A></I>
+
+   <I>--  <A NAME="AFU_25">|</I>
+   <B>procedure</B> Box
+     (Win               : <B>in</B> Window := Standard_Window;
+      Vertical_Symbol   : <B>in</B> Attributed_Character := Default_Character;
+      Horizontal_Symbol : <B>in</B> Attributed_Character := Default_Character);
+   <I>--  AKA: <A HREF="curs_border.3x.html">box()</A></I>
+
+   <I>--  <A NAME="AFU_26">|</I>
+   <B>procedure</B> Horizontal_Line
+     (Win         : <B>in</B> Window := Standard_Window;
+      Line_Size   : <B>in</B> Natural;
+      Line_Symbol : <B>in</B> Attributed_Character := Default_Character);
+   <I>--  AKA: <A HREF="curs_border.3x.html">whline()</A></I>
+
+   <I>--  <A NAME="AFU_27">|</I>
+   <B>procedure</B> Vertical_Line
+     (Win         : <B>in</B> Window := Standard_Window;
+      Line_Size   : <B>in</B> Natural;
+      Line_Symbol : <B>in</B> Attributed_Character := Default_Character);
+   <I>--  AKA: <A HREF="curs_border.3x.html">wvline()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_getch.3x.html">curs_getch.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_28">|</I>
+   <B>function</B> Get_Keystroke (Win : Window := Standard_Window)
+                           <B>return</B> Real_Key_Code;
+   <I>--  AKA: <A HREF="curs_getch.3x.html">wgetch()</A></I>
+   <I>--  Get a character from the keyboard and echo it - if enabled - to the</I>
+   <I>--  window.</I>
+   <I>--  If for any reason (i.e. a timeout) we couldn't get a character the</I>
+   <I>--  returned keycode is Key_None.</I>
+
+   <I>--  <A NAME="AFU_29">|</I>
+   <B>procedure</B> Undo_Keystroke (Key : <B>in</B> Real_Key_Code);
+   <I>--  AKA: <A HREF="curs_getch.3x.html">ungetch()</A></I>
+
+   <I>--  <A NAME="AFU_30">|</I>
+   <B>function</B> Has_Key (Key : Special_Key_Code) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_getch.3x.html">has_key()</A></I>
+   <I>--  |</I>
+   <I>--  | Some helper functions</I>
+   <I>--  |</I>
+   <B>function</B> Is_Function_Key (Key : Special_Key_Code) <B>return</B> Boolean;
+   <I>--  Return True if the Key is a function key (i.e. one of F0 .. F63)</I>
+
+   <B>subtype</B> Function_Key_Number <B>is</B> Integer <B>range</B> 0 .. 63;
+   <I>--  (n)curses allows for 64 function keys.</I>
+
+   <B>function</B> Function_Key (Key : Real_Key_Code) <B>return</B> Function_Key_Number;
+   <I>--  Return the number of the function key. If the code is not a</I>
+   <I>--  function key, a CONSTRAINT_ERROR will be raised.</I>
+
+   <B>function</B> Function_Key_Code (Key : Function_Key_Number) <B>return</B> Real_Key_Code;
+   <I>--  Return the key code for a given functionkey number.</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_attr.3x.html">curs_attr.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_31">|</I>
+   <B>procedure</B> Switch_Character_Attribute
+     (Win  : <B>in</B> Window := Standard_Window;
+      Attr : <B>in</B> Character_Attribute_Set := Normal_Video;
+      On   : <B>in</B> Boolean := True); <I>--  if False we switch Off.</I>
+   <I>--  AKA: <A HREF="curs_attr.3x.html">wattron()</A></I>
+   <I>--  AKA: wattroff()</I>
+
+   <I>--  <A NAME="AFU_32">|</I>
+   <B>procedure</B> Set_Character_Attributes
+     (Win   : <B>in</B> Window := Standard_Window;
+      Attr  : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="curs_attr.3x.html">wattrset()</A></I>
+
+   <I>--  <A NAME="AFU_33">|</I>
+   <B>function</B> Get_Character_Attribute
+     (Win : <B>in</B> Window := Standard_Window) <B>return</B> Character_Attribute_Set;
+   <I>--  AKA: <A HREF="curs_attr.3x.html">wattr_get()</A></I>
+
+   <I>--  <A NAME="AFU_34">|</I>
+   <B>function</B> Get_Character_Attribute
+     (Win : <B>in</B> Window := Standard_Window) <B>return</B> Color_Pair;
+   <I>--  AKA: <A HREF="curs_attr.3x.html">wattr_get()</A></I>
+
+   <I>--  <A NAME="AFU_35">|</I>
+   <B>procedure</B> Change_Attributes
+     (Win   : <B>in</B> Window := Standard_Window;
+      Count : <B>in</B> Integer := -1;
+      Attr  : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="curs_attr.3x.html">wchgat()</A></I>
+
+   <I>--  <A NAME="AFU_36">|</I>
+   <B>procedure</B> Change_Attributes
+     (Win    : <B>in</B> Window := Standard_Window;
+      Line   : <B>in</B> Line_Position := Line_Position'First;
+      Column : <B>in</B> Column_Position := Column_Position'First;
+      Count  : <B>in</B> Integer := -1;
+      Attr   : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color  : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="curs_attr.3x.html">mvwchgat()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_beep.3x.html">curs_beep.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_37">|</I>
+   <B>procedure</B> Beep;
+   <I>--  AKA: <A HREF="curs_beep.3x.html">beep()</A></I>
+
+   <I>--  <A NAME="AFU_38">|</I>
+   <B>procedure</B> Flash_Screen;
+   <I>--  AKA: <A HREF="curs_beep.3x.html">flash()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_inopts.3x.html">curs_inopts.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  | Not implemented : typeahead</I>
+   <I>--</I>
+   <I>--  <A NAME="AFU_39">|</I>
+   <B>procedure</B> Set_Cbreak_Mode (SwitchOn : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">cbreak()</A></I>
+   <I>--  AKA: nocbreak()</I>
+
+   <I>--  <A NAME="AFU_40">|</I>
+   <B>procedure</B> Set_Raw_Mode (SwitchOn : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">raw()</A></I>
+   <I>--  AKA: noraw()</I>
+
+   <I>--  <A NAME="AFU_41">|</I>
+   <B>procedure</B> Set_Echo_Mode (SwitchOn : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">echo()</A></I>
+   <I>--  AKA: noecho()</I>
+
+   <I>--  <A NAME="AFU_42">|</I>
+   <B>procedure</B> Set_Meta_Mode (Win      : <B>in</B> Window := Standard_Window;
+                            SwitchOn : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">meta()</A></I>
+
+   <I>--  <A NAME="AFU_43">|</I>
+   <B>procedure</B> Set_KeyPad_Mode (Win      : <B>in</B> Window := Standard_Window;
+                              SwitchOn : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">keypad()</A></I>
+
+   type Half_Delay_Amount <B>is</B> <B>range</B> 1 .. 255;
+
+   <I>--  <A NAME="AFU_44">|</I>
+   <B>procedure</B> Half_Delay (Amount : <B>in</B> Half_Delay_Amount);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">halfdelay()</A></I>
+
+   <I>--  <A NAME="AFU_45">|</I>
+   <B>procedure</B> Set_Flush_On_Interrupt_Mode
+     (Win  : <B>in</B> Window := Standard_Window;
+      Mode : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">intrflush()</A></I>
+
+   <I>--  <A NAME="AFU_46">|</I>
+   <B>procedure</B> Set_Queue_Interrupt_Mode
+     (Win   : <B>in</B> Window := Standard_Window;
+      Flush : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">qiflush()</A></I>
+   <I>--  AKA: noqiflush()</I>
+
+   <I>--  <A NAME="AFU_47">|</I>
+   <B>procedure</B> Set_NoDelay_Mode
+     (Win  : <B>in</B> Window := Standard_Window;
+      Mode : <B>in</B> Boolean := False);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">nodelay()</A></I>
+
+   type Timeout_Mode <B>is</B> (Blocking, Non_Blocking, Delayed);
+
+   <I>--  <A NAME="AFU_48">|</I>
+   <B>procedure</B> Set_Timeout_Mode (Win    : <B>in</B> Window := Standard_Window;
+                               Mode   : <B>in</B> Timeout_Mode;
+                               Amount : <B>in</B> Natural); <I>--  in Miliseconds</I>
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">wtimeout()</A></I>
+   <I>--  Instead of overloading the semantic of the sign of amount, we</I>
+   <I>--  introduce the Timeout_Mode parameter. This should improve</I>
+   <I>--  readability. For Blocking and Non_Blocking, the Amount is not</I>
+   <I>--  evaluated.</I>
+
+   <I>--  <A NAME="AFU_49">|</I>
+   <B>procedure</B> Set_Escape_Timer_Mode
+     (Win       : <B>in</B> Window := Standard_Window;
+      Timer_Off : <B>in</B> Boolean := False);
+   <I>--  AKA: <A HREF="curs_inopts.3x.html">notimeout()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_outopts.3x.html">curs_outopts.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_50">|</I>
+   <B>procedure</B> Set_NL_Mode (SwitchOn : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_outopts.3x.html">nl()</A></I>
+   <I>--  AKA: nonl()</I>
+
+   <I>--  <A NAME="AFU_51">|</I>
+   <B>procedure</B> Clear_On_Next_Update
+     (Win      : <B>in</B> Window := Standard_Window;
+      Do_Clear : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_outopts.3x.html">clearok()</A></I>
+
+   <I>--  <A NAME="AFU_52">|</I>
+   <B>procedure</B> Use_Insert_Delete_Line
+     (Win    : <B>in</B> Window := Standard_Window;
+      Do_Idl : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_outopts.3x.html">idlok()</A></I>
+
+   <I>--  <A NAME="AFU_53">|</I>
+   <B>procedure</B> Use_Insert_Delete_Character
+     (Win    : <B>in</B> Window := Standard_Window;
+      Do_Idc : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_outopts.3x.html">idcok()</A></I>
+
+   <I>--  <A NAME="AFU_54">|</I>
+   <B>procedure</B> Leave_Cursor_After_Update
+     (Win      : <B>in</B> Window := Standard_Window;
+      Do_Leave : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_outopts.3x.html">leaveok()</A></I>
+
+   <I>--  <A NAME="AFU_55">|</I>
+   <B>procedure</B> Immediate_Update_Mode
+     (Win  : <B>in</B> Window := Standard_Window;
+      Mode : <B>in</B> Boolean := False);
+   <I>--  AKA: <A HREF="curs_outopts.3x.html">immedok()</A></I>
+
+   <I>--  <A NAME="AFU_56">|</I>
+   <B>procedure</B> Allow_Scrolling
+     (Win  : <B>in</B> Window := Standard_Window;
+      Mode : <B>in</B> Boolean := False);
+   <I>--  AKA: <A HREF="curs_outopts.3x.html">scrollok()</A></I>
+
+   <B>function</B> Scrolling_Allowed (Win : Window := Standard_Window) <B>return</B> Boolean;
+   <I>--  There is no such function in the C interface.</I>
+
+   <I>--  <A NAME="AFU_57">|</I>
+   <B>procedure</B> Set_Scroll_Region
+     (Win         : <B>in</B> Window := Standard_Window;
+      Top_Line    : <B>in</B> Line_Position;
+      Bottom_Line : <B>in</B> Line_Position);
+   <I>--  AKA: <A HREF="curs_outopts.3x.html">wsetscrreg()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_refresh.3x.html">curs_refresh.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_58">|</I>
+   <B>procedure</B> Update_Screen;
+   <I>--  AKA: <A HREF="curs_refresh.3x.html">doupdate()</A></I>
+
+   <I>--  <A NAME="AFU_59">|</I>
+   <B>procedure</B> Refresh (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_refresh.3x.html">wrefresh()</A></I>
+
+   <I>--  <A NAME="AFU_60">|</I>
+   <B>procedure</B> Refresh_Without_Update
+     (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_refresh.3x.html">wnoutrefresh()</A></I>
+
+   <I>--  <A NAME="AFU_61">|</I>
+   <B>procedure</B> Redraw (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_refresh.3x.html">redrawwin()</A></I>
+
+   <I>--  <A NAME="AFU_62">|</I>
+   <B>procedure</B> Redraw (Win        : <B>in</B> Window := Standard_Window;
+                     Begin_Line : <B>in</B> Line_Position;
+                     Line_Count : <B>in</B> Positive);
+   <I>--  AKA: <A HREF="curs_refresh.3x.html">wredrawln()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_clear.3x.html">curs_clear.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_63">|</I>
+   <B>procedure</B> Erase (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_clear.3x.html">werase()</A></I>
+
+   <I>--  <A NAME="AFU_64">|</I>
+   <B>procedure</B> Clear
+     (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_clear.3x.html">wclear()</A></I>
+
+   <I>--  <A NAME="AFU_65">|</I>
+   <B>procedure</B> Clear_To_End_Of_Screen
+     (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_clear.3x.html">wclrtobot()</A></I>
+
+   <I>--  <A NAME="AFU_66">|</I>
+   <B>procedure</B> Clear_To_End_Of_Line
+     (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_clear.3x.html">wclrtoeol()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_bkgd.3x.html">curs_bkgd.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_67">|</I>
+   <B>procedure</B> Set_Background
+     (Win : <B>in</B> Window := Standard_Window;
+      Ch  : <B>in</B> Attributed_Character);
+   <I>--  AKA: <A HREF="curs_bkgd.3x.html">wbkgdset()</A></I>
+
+   <I>--  <A NAME="AFU_68">|</I>
+   <B>procedure</B> Change_Background
+     (Win : <B>in</B> Window := Standard_Window;
+      Ch  : <B>in</B> Attributed_Character);
+   <I>--  AKA: <A HREF="curs_bkgd.3x.html">wbkgd()</A></I>
+
+   <I>--  <A NAME="AFU_69">|</I>
+   <B>function</B> Get_Background (Win : Window := Standard_Window)
+     <B>return</B> Attributed_Character;
+   <I>--  AKA: <A HREF="curs_bkgd.3x.html">wbkgdget()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_touch.3x.html">curs_touch.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_70">|</I>
+   <B>procedure</B> Touch (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_touch.3x.html">touchwin()</A></I>
+
+   <I>--  <A NAME="AFU_71">|</I>
+   <B>procedure</B> Untouch (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_touch.3x.html">untouchwin()</A></I>
+
+   <I>--  <A NAME="AFU_72">|</I>
+   <B>procedure</B> Touch (Win   : <B>in</B> Window := Standard_Window;
+                    Start : <B>in</B> Line_Position;
+                    Count : <B>in</B> Positive);
+   <I>--  AKA: <A HREF="curs_touch.3x.html">touchline()</A></I>
+
+   <I>--  <A NAME="AFU_73">|</I>
+   <B>procedure</B> Change_Lines_Status (Win   : <B>in</B> Window := Standard_Window;
+                                  Start : <B>in</B> Line_Position;
+                                  Count : <B>in</B> Positive;
+                                  State : <B>in</B> Boolean);
+   <I>--  AKA: <A HREF="curs_touch.3x.html">wtouchln()</A></I>
+
+   <I>--  <A NAME="AFU_74">|</I>
+   <B>function</B> Is_Touched (Win  : Window := Standard_Window;
+                        Line : Line_Position) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_touch.3x.html">is_linetouched()</A></I>
+
+   <I>--  <A NAME="AFU_75">|</I>
+   <B>function</B> Is_Touched (Win : Window := Standard_Window) <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_touch.3x.html">is_wintouched()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_overlay.3x.html">curs_overlay.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_76">|</I>
+   <B>procedure</B> Copy
+     (Source_Window            : <B>in</B> Window;
+      Destination_Window       : <B>in</B> Window;
+      Source_Top_Row           : <B>in</B> Line_Position;
+      Source_Left_Column       : <B>in</B> Column_Position;
+      Destination_Top_Row      : <B>in</B> Line_Position;
+      Destination_Left_Column  : <B>in</B> Column_Position;
+      Destination_Bottom_Row   : <B>in</B> Line_Position;
+      Destination_Right_Column : <B>in</B> Column_Position;
+      Non_Destructive_Mode     : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_overlay.3x.html">copywin()</A></I>
+
+   <I>--  <A NAME="AFU_77">|</I>
+   <B>procedure</B> Overwrite (Source_Window      : <B>in</B> Window;
+                        Destination_Window : <B>in</B> Window);
+   <I>--  AKA: <A HREF="curs_overlay.3x.html">overwrite()</A></I>
+
+   <I>--  <A NAME="AFU_78">|</I>
+   <B>procedure</B> Overlay (Source_Window      : <B>in</B> Window;
+                      Destination_Window : <B>in</B> Window);
+   <I>--  AKA: <A HREF="curs_overlay.3x.html">overlay()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_deleteln.3x.html">curs_deleteln.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_79">|</I>
+   <B>procedure</B> Insert_Delete_Lines
+     (Win   : <B>in</B> Window  := Standard_Window;
+      Lines : <B>in</B> Integer := 1); <I>--  default is to insert one line above</I>
+   <I>--  AKA: <A HREF="curs_deleteln.3x.html">winsdelln()</A></I>
+
+   <I>--  <A NAME="AFU_80">|</I>
+   <B>procedure</B> Delete_Line (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_deleteln.3x.html">wdeleteln()</A></I>
+
+   <I>--  <A NAME="AFU_81">|</I>
+   <B>procedure</B> Insert_Line (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_deleteln.3x.html">winsertln()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_getyx.3x.html">curs_getyx.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_82">|</I>
+   <B>procedure</B> Get_Size
+     (Win               : <B>in</B> Window := Standard_Window;
+      Number_Of_Lines   : <B>out</B> Line_Count;
+      Number_Of_Columns : <B>out</B> Column_Count);
+   <I>--  AKA: <A HREF="curs_getyx.3x.html">getmaxyx()</A></I>
+
+   <I>--  <A NAME="AFU_83">|</I>
+   <B>procedure</B> Get_Window_Position
+     (Win             : <B>in</B> Window := Standard_Window;
+      Top_Left_Line   : <B>out</B> Line_Position;
+      Top_Left_Column : <B>out</B> Column_Position);
+   <I>--  AKA: <A HREF="curs_getyx.3x.html">getbegyx()</A></I>
+
+   <I>--  <A NAME="AFU_84">|</I>
+   <B>procedure</B> Get_Cursor_Position
+     (Win    : <B>in</B>  Window := Standard_Window;
+      Line   : <B>out</B> Line_Position;
+      Column : <B>out</B> Column_Position);
+   <I>--  AKA: <A HREF="curs_getyx.3x.html">getyx()</A></I>
+
+   <I>--  <A NAME="AFU_85">|</I>
+   <B>procedure</B> Get_Origin_Relative_To_Parent
+     (Win                : <B>in</B>  Window;
+      Top_Left_Line      : <B>out</B> Line_Position;
+      Top_Left_Column    : <B>out</B> Column_Position;
+      Is_Not_A_Subwindow : <B>out</B> Boolean);
+   <I>--  AKA: <A HREF="curs_getyx.3x.html">getparyx()</A></I>
+   <I>--  Instead of placing -1 in the coordinates as return, we use a boolean</I>
+   <I>--  to return the info that the window has no parent.</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_pad.3x.html">curs_pad.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_86">|</I>
+   <B>function</B> New_Pad (Lines   : Line_Count;
+                     Columns : Column_Count) <B>return</B> Window;
+   <I>--  AKA: <A HREF="curs_pad.3x.html">newpad()</A></I>
+
+   <I>--  <A NAME="AFU_87">|</I>
+   <B>function</B> Sub_Pad
+     (Pad                   : Window;
+      Number_Of_Lines       : Line_Count;
+      Number_Of_Columns     : Column_Count;
+      First_Line_Position   : Line_Position;
+      First_Column_Position : Column_Position) <B>return</B> Window;
+   <I>--  AKA: <A HREF="curs_pad.3x.html">subpad()</A></I>
+
+   <I>--  <A NAME="AFU_88">|</I>
+   <B>procedure</B> Refresh
+     (Pad                      : <B>in</B> Window;
+      Source_Top_Row           : <B>in</B> Line_Position;
+      Source_Left_Column       : <B>in</B> Column_Position;
+      Destination_Top_Row      : <B>in</B> Line_Position;
+      Destination_Left_Column  : <B>in</B> Column_Position;
+      Destination_Bottom_Row   : <B>in</B> Line_Position;
+      Destination_Right_Column : <B>in</B> Column_Position);
+   <I>--  AKA: <A HREF="curs_pad.3x.html">prefresh()</A></I>
+
+   <I>--  <A NAME="AFU_89">|</I>
+   <B>procedure</B> Refresh_Without_Update
+     (Pad                      : <B>in</B> Window;
+      Source_Top_Row           : <B>in</B> Line_Position;
+      Source_Left_Column       : <B>in</B> Column_Position;
+      Destination_Top_Row      : <B>in</B> Line_Position;
+      Destination_Left_Column  : <B>in</B> Column_Position;
+      Destination_Bottom_Row   : <B>in</B> Line_Position;
+      Destination_Right_Column : <B>in</B> Column_Position);
+   <I>--  AKA: <A HREF="curs_pad.3x.html">pnoutrefresh()</A></I>
+
+   <I>--  <A NAME="AFU_90">|</I>
+   <B>procedure</B> Add_Character_To_Pad_And_Echo_It
+     (Pad : <B>in</B> Window;
+      Ch  : <B>in</B> Attributed_Character);
+   <I>--  AKA: <A HREF="curs_pad.3x.html">pechochar()</A></I>
+
+   <B>procedure</B> Add_Character_To_Pad_And_Echo_It
+     (Pad : <B>in</B> Window;
+      Ch  : <B>in</B> Character);
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_scroll.3x.html">curs_scroll.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_91">|</I>
+   <B>procedure</B> Scroll (Win    : <B>in</B> Window  := Standard_Window;
+                     Amount : <B>in</B> Integer := 1);
+   <I>--  AKA: <A HREF="curs_scroll.3x.html">wscrl()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_delch.3x.html">curs_delch.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_92">|</I>
+   <B>procedure</B> Delete_Character (Win : <B>in</B> Window := Standard_Window);
+   <I>--  AKA: <A HREF="curs_delch.3x.html">wdelch()</A></I>
+
+   <I>--  <A NAME="AFU_93">|</I>
+   <B>procedure</B> Delete_Character
+     (Win    : <B>in</B> Window := Standard_Window;
+      Line   : <B>in</B> Line_Position;
+      Column : <B>in</B> Column_Position);
+   <I>--  AKA: <A HREF="curs_delch.3x.html">mvwdelch()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_inch.3x.html">curs_inch.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_94">|</I>
+   <B>function</B> Peek (Win : Window := Standard_Window)
+     <B>return</B> Attributed_Character;
+   <I>--  AKA: <A HREF="curs_inch.3x.html">winch()</A></I>
+
+   <I>--  <A NAME="AFU_95">|</I>
+   <B>function</B> Peek
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position) <B>return</B> Attributed_Character;
+   <I>--  AKA: <A HREF="curs_inch.3x.html">mvwinch()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_winch.3x.html">curs_winch.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_96">|</I>
+   <B>procedure</B> Insert (Win : <B>in</B> Window := Standard_Window;
+                     Ch  : <B>in</B> Attributed_Character);
+   <I>--  AKA: <A HREF="curs_winch.3x.html">winsch()</A></I>
+
+   <I>--  <A NAME="AFU_97">|</I>
+   <B>procedure</B> Insert (Win    : <B>in</B> Window := Standard_Window;
+                     Line   : <B>in</B> Line_Position;
+                     Column : <B>in</B> Column_Position;
+                     Ch     : <B>in</B> Attributed_Character);
+   <I>--  AKA: <A HREF="curs_winch.3x.html">mvwinsch()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_winch.3x.html">curs_winch.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_98">|</I>
+   <B>procedure</B> Insert (Win : <B>in</B> Window := Standard_Window;
+                     Str : <B>in</B> String;
+                     Len : <B>in</B> Integer := -1);
+   <I>--  AKA: <A HREF="curs_winch.3x.html">winsnstr()</A></I>
+   <I>--  AKA: winsstr()</I>
+
+   <I>--  <A NAME="AFU_99">|</I>
+   <B>procedure</B> Insert (Win    : <B>in</B> Window := Standard_Window;
+                     Line   : <B>in</B> Line_Position;
+                     Column : <B>in</B> Column_Position;
+                     Str    : <B>in</B> String;
+                     Len    : <B>in</B> Integer := -1);
+   <I>--  AKA: <A HREF="curs_winch.3x.html">mvwinsnstr()</A></I>
+   <I>--  AKA: mvwinsstr()</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_instr.3x.html">curs_instr.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_100">|</I>
+   <B>procedure</B> Peek (Win : <B>in</B>  Window := Standard_Window;
+                   Str : <B>out</B> String;
+                   Len : <B>in</B>  Integer := -1);
+   <I>--  AKA: <A HREF="curs_instr.3x.html">winnstr()</A></I>
+   <I>--  AKA: winstr()</I>
+
+   <I>--  <A NAME="AFU_101">|</I>
+   <B>procedure</B> Peek (Win    : <B>in</B>  Window := Standard_Window;
+                   Line   : <B>in</B>  Line_Position;
+                   Column : <B>in</B>  Column_Position;
+                   Str    : <B>out</B> String;
+                   Len    : <B>in</B>  Integer := -1);
+   <I>--  AKA: <A HREF="curs_instr.3x.html">mvwinnstr()</A></I>
+   <I>--  AKA: mvwinstr()</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_inchstr.3x.html">curs_inchstr.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_102">|</I>
+   <B>procedure</B> Peek (Win : <B>in</B>  Window := Standard_Window;
+                   Str : <B>out</B> Attributed_String;
+                   Len : <B>in</B>  Integer := -1);
+   <I>--  AKA: <A HREF="curs_inchstr.3x.html">winchnstr()</A></I>
+   <I>--  AKA: winchstr()</I>
+
+   <I>--  <A NAME="AFU_103">|</I>
+   <B>procedure</B> Peek (Win    : <B>in</B>  Window := Standard_Window;
+                   Line   : <B>in</B>  Line_Position;
+                   Column : <B>in</B>  Column_Position;
+                   Str    : <B>out</B> Attributed_String;
+                   Len    : <B>in</B>  Integer := -1);
+   <I>--  AKA: <A HREF="curs_inchstr.3x.html">mvwinchnstr()</A></I>
+   <I>--  AKA: mvwinchstr()</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_getstr.3x.html">curs_getstr.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_104">|</I>
+   <B>procedure</B> Get (Win : <B>in</B>  Window := Standard_Window;
+                  Str : <B>out</B> String;
+                  Len : <B>in</B>  Integer := -1);
+   <I>--  AKA: <A HREF="curs_getstr.3x.html">wgetnstr()</A></I>
+   <I>--  AKA: wgetstr()</I>
+
+   <B>procedure</B> Get (Win    : <B>in</B>  Window := Standard_Window;
+                  Line   : <B>in</B>  Line_Position;
+                  Column : <B>in</B>  Column_Position;
+                  Str    : <B>out</B> String;
+                  Len    : <B>in</B>  Integer := -1);
+   <I>--  AKA: <A HREF="curs_getstr.3x.html">wgetnstr()</A>: not specified in ncurses, should be: mvwgetnstr()</I>
+   <I>--       and mvwgetstr() (which exists)</I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_slk.3x.html">curs_slk.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   type Soft_Label_Key_Format <B>is</B> (Three_Two_Three,
+                                  Four_Four,
+                                  PC_Style,              <I>--  ncurses specific</I>
+                                  PC_Style_With_Index);  <I>--  "</I>
+   type Label_Number <B>is</B> <B>new</B> Positive <B>range</B> 1 .. 12;
+   type Label_Justification <B>is</B> (Left, Centered, Right);
+
+   <I>--  <A NAME="AFU_105">|</I>
+   <B>procedure</B> Init_Soft_Label_Keys
+     (Format : <B>in</B> Soft_Label_Key_Format := Three_Two_Three);
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_init()</A></I>
+
+   <I>--  <A NAME="AFU_106">|</I>
+   <B>procedure</B> Set_Soft_Label_Key (Label : <B>in</B> Label_Number;
+                                 Text  : <B>in</B> String;
+                                 Fmt   : <B>in</B> Label_Justification := Left);
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_set()</A></I>
+
+   <I>--  <A NAME="AFU_107">|</I>
+   <B>procedure</B> Refresh_Soft_Label_Keys;
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_refresh()</A></I>
+
+   <I>--  <A NAME="AFU_108">|</I>
+   <B>procedure</B> Refresh_Soft_Label_Keys_Without_Update;
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_noutrefresh()</A></I>
+
+   <I>--  <A NAME="AFU_109">|</I>
+   <B>procedure</B> Get_Soft_Label_Key (Label : <B>in</B> Label_Number;
+                                 Text  : <B>out</B> String);
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_label()</A></I>
+
+   <I>--  <A NAME="AFU_110">|</I>
+   <B>procedure</B> Clear_Soft_Label_Keys;
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_clear()</A></I>
+
+   <I>--  <A NAME="AFU_111">|</I>
+   <B>procedure</B> Restore_Soft_Label_Keys;
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_restore()</A></I>
+
+   <I>--  <A NAME="AFU_112">|</I>
+   <B>procedure</B> Touch_Soft_Label_Keys;
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_touch()</A></I>
+
+   <I>--  <A NAME="AFU_113">|</I>
+   <B>procedure</B> Switch_Soft_Label_Key_Attributes
+     (Attr : <B>in</B> Character_Attribute_Set;
+      On   : <B>in</B> Boolean := True);
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_attron()</A></I>
+   <I>--  AKA: slk_attroff()</I>
+
+   <I>--  <A NAME="AFU_114">|</I>
+   <B>procedure</B> Set_Soft_Label_Key_Attributes
+     (Attr  : <B>in</B> Character_Attribute_Set := Normal_Video;
+      Color : <B>in</B> Color_Pair := Color_Pair'First);
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_attrset()</A></I>
+
+   <I>--  <A NAME="AFU_115">|</I>
+   <B>function</B> Get_Soft_Label_Key_Attributes <B>return</B> Character_Attribute_Set;
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_attr()</A></I>
+
+   <I>--  <A NAME="AFU_116">|</I>
+   <B>function</B> Get_Soft_Label_Key_Attributes <B>return</B> Color_Pair;
+   <I>--  AKA: <A HREF="curs_slk.3x.html">slk_attr()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_util.3x.html">curs_util.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  | Not implemented : filter, use_env, putwin, getwin</I>
+   <I>--</I>
+   <I>--  <A NAME="AFU_117">|</I>
+   <B>procedure</B> Key_Name (Key  : <B>in</B>  Real_Key_Code;
+                       Name : <B>out</B> String);
+   <I>--  AKA: <A HREF="curs_util.3x.html">keyname()</A></I>
+   <I>--  The external name for a real keystroke.</I>
+
+   <I>--  <A NAME="AFU_118">|</I>
+   <B>procedure</B> Un_Control (Ch  : <B>in</B> Attributed_Character;
+                         Str : <B>out</B> String);
+   <I>--  AKA: <A HREF="curs_util.3x.html">unctrl()</A></I>
+
+   <I>--  <A NAME="AFU_119">|</I>
+   <B>procedure</B> Delay_Output (Msecs : <B>in</B> Natural);
+   <I>--  AKA: <A HREF="curs_util.3x.html">delay_output()</A></I>
+
+   <I>--  <A NAME="AFU_120">|</I>
+   <B>procedure</B> Flush_Input;
+   <I>--  AKA: <A HREF="curs_util.3x.html">flushinp()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_termattrs.3x.html">curs_termattrs.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_121">|</I>
+   <B>function</B> Baudrate <B>return</B> Natural;
+   <I>--  AKA: <A HREF="curs_termattrs.3x.html">baudrate()</A></I>
+
+   <I>--  <A NAME="AFU_122">|</I>
+   <B>function</B> Erase_Character <B>return</B> Character;
+   <I>--  AKA: <A HREF="curs_termattrs.3x.html">erasechar()</A></I>
+
+   <I>--  <A NAME="AFU_123">|</I>
+   <B>function</B> Kill_Character <B>return</B> Character;
+   <I>--  AKA: <A HREF="curs_termattrs.3x.html">killchar()</A></I>
+
+   <I>--  <A NAME="AFU_124">|</I>
+   <B>function</B> Has_Insert_Character <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_termattrs.3x.html">has_ic()</A></I>
+
+   <I>--  <A NAME="AFU_125">|</I>
+   <B>function</B> Has_Insert_Line <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_termattrs.3x.html">has_il()</A></I>
+
+   <I>--  <A NAME="AFU_126">|</I>
+   <B>function</B> Supported_Attributes <B>return</B> Character_Attribute_Set;
+   <I>--  AKA: <A HREF="curs_termattrs.3x.html">termattrs()</A></I>
+
+   <I>--  <A NAME="AFU_127">|</I>
+   <B>procedure</B> Long_Name (Name : <B>out</B> String);
+   <I>--  AKA: <A HREF="curs_termattrs.3x.html">longname()</A></I>
+
+   <I>--  <A NAME="AFU_128">|</I>
+   <B>procedure</B> Terminal_Name (Name : <B>out</B> String);
+   <I>--  AKA: <A HREF="curs_termattrs.3x.html">termname()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_color.3x.html">curs_color.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  <A NAME="AFU_129">|</I>
+   <B>procedure</B> Start_Color;
+   <I>--  AKA: <A HREF="curs_color.3x.html">start_clolor()</A></I>
+   <B>pragma</B> Import (C, Start_Color, "start_color");
+
+   <I>--  <A NAME="AFU_130">|</I>
+   <B>procedure</B> Init_Pair (Pair : <B>in</B> Redefinable_Color_Pair;
+                        Fore : <B>in</B> Color_Number;
+                        Back : <B>in</B> Color_Number);
+   <I>--  AKA: <A HREF="curs_color.3x.html">init_pair()</A></I>
+
+   <I>--  <A NAME="AFU_131">|</I>
+   <B>procedure</B> Pair_Content (Pair : <B>in</B> Color_Pair;
+                           Fore : <B>out</B> Color_Number;
+                           Back : <B>out</B> Color_Number);
+   <I>--  AKA: <A HREF="curs_color.3x.html">pair_content()</A></I>
+
+   <I>--  <A NAME="AFU_132">|</I>
+   <B>function</B> Has_Colors <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_color.3x.html">has_colors()</A></I>
+
+   <I>--  <A NAME="AFU_133">|</I>
+   <B>procedure</B> Init_Color (Color : <B>in</B> Color_Number;
+                         Red   : <B>in</B> RGB_Value;
+                         Green : <B>in</B> RGB_Value;
+                         Blue  : <B>in</B> RGB_Value);
+   <I>--  AKA: <A HREF="curs_color.3x.html">init_color()</A></I>
+
+   <I>--  <A NAME="AFU_134">|</I>
+   <B>function</B> Can_Change_Color <B>return</B> Boolean;
+   <I>--  AKA: <A HREF="curs_color.3x.html">can_change_color()</A></I>
+
+   <I>--  <A NAME="AFU_135">|</I>
+   <B>procedure</B> Color_Content (Color : <B>in</B>  Color_Number;
+                            Red   : <B>out</B> RGB_Value;
+                            Green : <B>out</B> RGB_Value;
+                            Blue  : <B>out</B> RGB_Value);
+   <I>--  AKA: <A HREF="curs_color.3x.html">color_content()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Man page <A HREF="curs_kernel.3x.html">curs_kernel.3x</A></I>
+   <I>--  |=====================================================================</I>
+
+   <I>--  | Not implemented: getsyx, setsyx</I>
+   <I>--</I>
+   type Curses_Mode <B>is</B> (Curses, Shell);
+
+   <I>--  <A NAME="AFU_136">|</I>
+   <B>procedure</B> Save_Curses_Mode (Mode : <B>in</B> Curses_Mode);
+   <I>--  AKA: <A HREF="curs_kernel.3x.html">def_prog_mode()</A></I>
+   <I>--  AKA: def_shell_mode()</I>
+
+   <I>--  <A NAME="AFU_137">|</I>
+   <B>procedure</B> Reset_Curses_Mode (Mode : <B>in</B> Curses_Mode);
+   <I>--  AKA: <A HREF="curs_kernel.3x.html">reset_prog_mode()</A></I>
+   <I>--  AKA: reset_shell_mode()</I>
+
+   <I>--  <A NAME="AFU_138">|</I>
+   <B>procedure</B> Save_Terminal_State;
+   <I>--  AKA: <A HREF="curs_kernel.3x.html">savetty()</A></I>
+
+   <I>--  <A NAME="AFU_139">|</I>
+   <B>procedure</B> Reset_Terminal_State;
+   <I>--  AKA: <A HREF="curs_kernel.3x.html">resetty();</A></I>
+
+   type Stdscr_Init_Proc <B>is</B> <B>access</B>
+      <B>function</B> (Win     : Window;
+                Columns : Column_Count) <B>return</B> Integer;
+   <B>pragma</B> Convention (C, Stdscr_Init_Proc);
+   <I>--  N.B.: the return value is actually ignored, but it seems to be</I>
+   <I>--        a good practice to return 0 if you think all went fine</I>
+   <I>--        and -1 otherwise.</I>
+
+   <I>--  <A NAME="AFU_140">|</I>
+   <B>procedure</B> Rip_Off_Lines (Lines : <B>in</B> Integer;
+                            Proc  : <B>in</B> Stdscr_Init_Proc);
+   <I>--  AKA: <A HREF="curs_kernel.3x.html">ripoffline()</A></I>
+   <I>--  N.B.: to be more precise, this uses a ncurses specific enhancement of</I>
+   <I>--        ripoffline(), in which the Lines argument absolute value is the</I>
+   <I>--        number of lines to be ripped of. The official ripoffline() only</I>
+   <I>--        uses the sign of Lines to rip of a single line from bottom or top.</I>
+
+   type Cursor_Visibility <B>is</B> (Invisible, Normal, Very_Visible);
+
+   <I>--  <A NAME="AFU_141">|</I>
+   <B>procedure</B> Set_Cursor_Visibility (Visibility : <B>in</B> <B>out</B> Cursor_Visibility);
+   <I>--  AKA: <A HREF="curs_kernel.3x.html">curs_set()</A></I>
+
+   <I>--  <A NAME="AFU_142">|</I>
+   <B>procedure</B> Nap_Milli_Seconds (Ms : <B>in</B> Natural);
+   <I>--  AKA: <A HREF="curs_kernel.3x.html">napms()</A></I>
+
+   <I>--  |=====================================================================</I>
+   <I>--  | Some usefull helpers.</I>
+   <I>--  |=====================================================================</I>
+   type Transform_Direction <B>is</B> (From_Screen, To_Screen);
+   <B>procedure</B> Transform_Coordinates
+     (W      : <B>in</B> Window := Standard_Window;
+      Line   : <B>in</B> <B>out</B> Line_Position;
+      Column : <B>in</B> <B>out</B> Column_Position;
+      Dir    : <B>in</B> Transform_Direction := From_Screen);
+   <I>--  This procedure transforms screen coordinates into coordinates relative</I>
+   <I>--  to the window and vice versa, depending on the Dir parmeter.</I>
+   <I>--  Screen coordinates are the position informations on the physical device.</I>
+   <I>--  An Curses_Exception will be raised if Line and Column are not in the</I>
+   <I>--  Window or if you pass the Null_Window as argument.</I>
+
+<B>private</B>
+   type Window <B>is</B> <B>new</B> System.Address;
+   Null_Window : <B>constant</B> Window := Window (System.Null_Address);
+
+   Generation_Bit_Order : <B>constant</B> System.Bit_Order := System.Low_Order_First;
+   <I>--  This constant may be different on your system.</I>
+
+<B>end</B> Terminal_Interface.Curses;
+
+</PRE>
+
+<P><HR><P>
+This is BETA software. The interface is subject to change without notice.
+<P>
+This is BETA software. The interface is subject to change without notice.<P>
+<!-- Do NOT delete my name or the tool name from below; -->
+<!-- giving me credit is a condition of use of ada2html -->
+<P><I>This hypertext format was generated by <A HREF="http://www.adahome.com/Tutorials/Lovelace/dwheeler.htm">David A. Wheeler</A>'s <A HREF="http://www.adahome.com/Resources/Tools/ada2html/ada2html.htm">ada2html</A></I>
+</BODY>
+</HTML>
+

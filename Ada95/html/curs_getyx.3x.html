@@ -1,0 +1,70 @@
+<HTML>
+<BODY BGCOLOR="#99ccbb" TEXT="#000000" LINK="#4060b0" VLINK="#000080" ALINK="#ff4040">
+<PRE>
+       <STRONG>getyx</STRONG>,  <STRONG>getparyx</STRONG>,  <STRONG>getbegyx</STRONG>,  <STRONG>getmaxyx</STRONG> - get <STRONG>curses</STRONG> cursor
+       and window coordinates
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+
+       <STRONG>void</STRONG> <STRONG>getyx(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+       <STRONG>void</STRONG> <STRONG>getparyx(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+       <STRONG>void</STRONG> <STRONG>getbegyx(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+       <STRONG>void</STRONG> <STRONG>getmaxyx(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <STRONG>getyx</STRONG> macro places the current cursor position of  the
+       given window in the two integer variables <EM>y</EM> and <EM>x</EM>.
+
+       If  <EM>win</EM>  is  a  subwindow,  the  <STRONG>getparyx</STRONG> macro places the
+       beginning coordinates of the  subwindow  relative  to  the
+       parent  window into two integer variables <EM>y</EM> and <EM>x</EM>.  Other-
+       wise, <STRONG>-1</STRONG> is placed into <EM>y</EM> and <EM>x</EM>.
+
+       Like <STRONG>getyx</STRONG>, the <STRONG>getbegyx</STRONG> and  <STRONG>getmaxyx</STRONG>  macros  store  the
+       current  beginning  coordinates  and size of the specified
+       window.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The return values of these  macros  are  undefined  (<EM>i</EM>.<EM>e</EM>.,
+       they  should not be used as the right-hand side of assign-
+       ment statements).
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       All of these interfaces are macros and  that  "<STRONG>&amp;</STRONG>"  is  not
+       necessary before the variables <EM>y</EM> and <EM>x</EM>.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  functions are described in the XSI Curses standard,
+       Issue 4.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <STRONG><A HREF="ncurses.3x.html">curses(3X)</A></STRONG>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

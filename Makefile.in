@@ -1,0 +1,70 @@
+# $Id: Makefile.in,v 1.10 1997/03/22 00:57:42 tom Exp $
+################################################################################
+# Copyright 1996,1997 by Thomas E. Dickey <dickey@clark.net>                   #
+# All Rights Reserved.                                                         #
+#                                                                              #
+# Permission to use, copy, modify, and distribute this software and its        #
+# documentation for any purpose and without fee is hereby granted, provided    #
+# that the above copyright notice appear in all copies and that both that      #
+# copyright notice and this permission notice appear in supporting             #
+# documentation, and that the name of the above listed copyright holder(s) not #
+# be used in advertising or publicity pertaining to distribution of the        #
+# software without specific, written prior permission. THE ABOVE LISTED        #
+# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
+# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
+# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
+# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
+# PERFORMANCE OF THIS SOFTWARE.                                                #
+################################################################################
+# Master Makefile for ncurses library.
+
+SHELL = /bin/sh
+
+INSTALL_PREFIX=@INSTALL_PREFIX@
+NC_MFLAGS = @nc_cv_makeflags@ INSTALL_PREFIX="$(INSTALL_PREFIX)"
+
+@SET_MAKE@
+
+NCURSES_MAJOR	= @NCURSES_MAJOR@
+NCURSES_MINOR	= @NCURSES_MINOR@
+NCURSES_PATCH	= @NCURSES_PATCH@
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+bindir		= @bindir@
+datadir		= @datadir@
+includedir	= @includedir@
+libdir		= @libdir@
+mandir		= @mandir@
+
+DIRS_TO_MAKE = @DIRS_TO_MAKE@
+
+all ::	$(DIRS_TO_MAKE)
+
+$(DIRS_TO_MAKE) :
+	mkdir $@
+
+preinstall :
+	@ echo ''
+	@ echo '** Configuration summary for NCURSES $(NCURSES_MAJOR).$(NCURSES_MINOR) $(NCURSES_PATCH):'
+	@ echo ''
+	@ echo '      bin directory: '$(bindir)
+	@ echo '      lib directory: '$(libdir)
+	@ echo '  include directory: '$(includedir)
+	@ echo '      man directory: '$(mandir)
+	@ echo ' terminfo directory: '$(datadir)/terminfo
+	@ echo ''
+	@ if test "$(includedir)" != "$(prefix)/include" ; then \
+		echo '** Include-directory is not in a standard location'; fi
+
+# Put the common rules here so that we can easily construct the list of
+# directories to visit.
+all \
+clean \
+distclean \
+mostlyclean \
+realclean \
+install ::

@@ -1,0 +1,117 @@
+# $Id: modules,v 1.25 1997/04/26 21:59:59 tom Exp $
+################################################################################
+# Copyright 1996,1997 by Thomas E. Dickey <dickey@clark.net>                   #
+# All Rights Reserved.                                                         #
+#                                                                              #
+# Permission to use, copy, modify, and distribute this software and its        #
+# documentation for any purpose and without fee is hereby granted, provided    #
+# that the above copyright notice appear in all copies and that both that      #
+# copyright notice and this permission notice appear in supporting             #
+# documentation, and that the name of the above listed copyright holder(s) not #
+# be used in advertising or publicity pertaining to distribution of the        #
+# software without specific, written prior permission. THE ABOVE LISTED        #
+# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
+# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
+# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
+# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
+# PERFORMANCE OF THIS SOFTWARE.                                                #
+################################################################################
+# Library objects
+fallback	lib		.		../include/term.h $(INCDIR)/tic.h
+hashmap		lib		$(srcdir)
+hardscroll	lib		$(srcdir)
+lib_acs 	lib		$(srcdir)	../include/term.h
+lib_addch	lib		$(srcdir)
+lib_addstr	lib		$(srcdir)
+lib_beep	lib		$(srcdir)	../include/term.h
+lib_bkgd	lib		$(srcdir)
+lib_baudrate	lib		$(srcdir)	../include/term.h
+lib_box 	lib		$(srcdir)
+lib_clear	lib		$(srcdir)
+lib_clrbot	lib		$(srcdir)
+lib_clreol	lib		$(srcdir)
+lib_color	lib		$(srcdir)	../include/term.h
+lib_data	lib		$(srcdir)
+lib_delch	lib		$(srcdir)
+lib_delwin	lib		$(srcdir)
+lib_doupdate	lib		$(srcdir)	../include/term.h
+lib_endwin	lib		$(srcdir)
+lib_erase	lib		$(srcdir)
+lib_gen 	lib		.		../include/curses.h
+lib_getch	lib		$(srcdir)
+lib_getstr	lib		$(srcdir)	../include/term.h
+lib_inchstr	lib		$(srcdir)
+lib_initscr	lib		$(srcdir)
+lib_insch	lib		$(srcdir)
+lib_insdel	lib		$(srcdir)
+lib_insstr	lib		$(srcdir)
+lib_instr	lib		$(srcdir)
+lib_isendwin	lib		$(srcdir)
+lib_kernel	lib		$(srcdir)	../include/term.h
+lib_keyname	lib		.		../include/term.h
+lib_longname	lib		$(srcdir)
+lib_mouse	lib		$(srcdir)	../include/term.h
+lib_move	lib		$(srcdir)
+lib_mvcur	lib		$(srcdir)	../include/term.h
+lib_mvwin	lib		$(srcdir)
+lib_newterm	lib		$(srcdir)	../include/term.h
+lib_newwin	lib		$(srcdir)
+lib_options	lib		$(srcdir)	../include/term.h keys.tries
+lib_overlay	lib		$(srcdir)
+lib_pad 	lib		$(srcdir)
+lib_print	lib		$(srcdir)	../include/term.h
+lib_printw	lib		$(srcdir)
+lib_raw 	lib		$(srcdir)	../include/term.h
+lib_refresh	lib		$(srcdir)
+lib_restart	lib		$(srcdir)
+lib_scanw	lib		$(srcdir)
+lib_screen	lib		$(srcdir)	../include/term.h
+lib_scroll	lib		$(srcdir)
+lib_scrreg	lib		$(srcdir)
+lib_set_term	lib		$(srcdir)	../include/term.h
+lib_setup	lib		$(srcdir)	../include/term.h
+lib_slk 	lib		$(srcdir)	../include/term.h
+lib_termcap	lib		$(srcdir)	../include/term.h
+lib_ti		lib		$(srcdir)	../include/term.h
+lib_touch	lib		$(srcdir)
+lib_tparm	lib		$(srcdir)	../include/term.h
+lib_tputs	lib		$(srcdir)	../include/term.h
+lib_trace	lib		$(srcdir)
+lib_traceatr	lib		$(srcdir)
+lib_tracechr	lib		$(srcdir)
+lib_tracedmp	lib		$(srcdir)
+lib_tracemse	lib		$(srcdir)
+lib_tstp	lib		$(srcdir)
+lib_twait	lib		$(srcdir)
+lib_vidattr	lib		$(srcdir)	../include/term.h
+lib_window	lib		$(srcdir)
+names		lib		.
+codes		lib		.
+unctrl		lib		.
+read_entry	lib		$(srcdir)	../include/term.h $(INCDIR)/tic.h
+read_termcap	lib		$(srcdir)	../include/term.h
+write_entry	lib		$(srcdir)	../include/term.h $(INCDIR)/tic.h
+
+# Modules for porting
+sigaction	lib		$(srcdir)
+vsscanf 	lib		$(srcdir)
+
+# Support for termcap (and tic, etc.)
+alloc_entry	lib		$(srcdir)	../include/term.h
+captoinfo	lib		$(srcdir)
+comp_captab	lib		.		../include/term.h ../include/hashsize.h
+comp_error	lib		$(srcdir)
+comp_hash	lib		$(srcdir)	../include/term.h ../include/hashsize.h
+comp_parse	lib		$(srcdir)	../include/term.h $(INCDIR)/tic.h
+comp_scan	lib		$(srcdir)
+parse_entry	lib		$(srcdir)	../include/term.h ../include/parametrized.h
+
+# Extensions
+lib_dft_fgbg	lib		$(srcdir)
+lib_freeall	lib		$(srcdir)
+resizeterm	lib		$(srcdir)	../include/term.h
+wresize		lib		$(srcdir)	../include/term.h
+lib_adabind	lib		$(srcdir)
+expanded	lib		.

@@ -1,0 +1,69 @@
+.\"*****************************************************************************
+.\" Copyright 1996 by Thomas E. Dickey <dickey@clark.net>                      *
+.\" All Rights Reserved.                                                       *
+.\"                                                                            *
+.\" Permission to use, copy, modify, and distribute this software and its      *
+.\" documentation for any purpose and without fee is hereby granted, provided  *
+.\" that the above copyright notice appear in all copies and that both that    *
+.\" copyright notice and this permission notice appear in supporting           *
+.\" documentation, and that the name of the above listed copyright holder(s)   *
+.\" not be used in advertising or publicity pertaining to distribution of the  *
+.\" software without specific, written prior permission. THE ABOVE LISTED      *
+.\" COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,  *
+.\" INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO     *
+.\" EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY         *
+.\" SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER       *
+.\" RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF       *
+.\" CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN        *
+.\" CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                   *
+.\"*****************************************************************************
+.\" $Id: resizeterm.3x,v 1.3 1996/12/28 20:00:50 tom Exp $
+.TH resizeterm 3X ""
+.
+.SH NAME
+\fBresizeterm\fR - change the curses terminal size
+.
+.SH SYNOPSIS
+\fB#include <curses.h>\fR
+
+\fBint resizeterm(int lines, int columns);\fR
+.
+.SH DESCRIPTION
+This is an extension to the curses library.
+It provides callers with a hook into the \fBncurses\fR data to resize windows,
+primarily for use by programs running in an X Window terminal (e.g., xterm).
+The function \fBresizeterm\fR resizes the standard and current windows
+to the specified dimensions, and adjusts other bookkeeping data used by
+the \fBncurses\fR library that record the window dimensions.
+
+When resizing the windows, the function blank-fills the areas that are
+extended. The calling application should fill in these areas with
+appropriate data.
+
+The function attempts to resize all windows.
+However, due to the calling convention of pads,
+it is not possible to resize these
+without additional interaction with the application.
+.
+.SH RETURN VALUE
+The function returns the integer \fBERR\fR upon failure and \fBOK\fR on success.
+It will fail if either of the dimensions less than or equal to zero,
+or if an error occurs while (re)allocating memory for the windows. 
+.
+.SH NOTES
+While this function is intended to be used to support a signal handler
+(i.e., for SIGWINCH), care should be taken to avoid invoking it in a
+context where \fBmalloc\fR or \fBrealloc\fR may have been interrupted,
+since it uses those functions.
+.
+.SH SEE ALSO
+\fBwresize\fR(3x).
+.
+.SH AUTHOR
+Thomas Dickey (from an equivalent function written in 1988 for BSD curses).
+.\"#
+.\"# The following sets edit modes for GNU EMACS
+.\"# Local Variables:
+.\"# mode:nroff
+.\"# fill-column:79
+.\"# End:

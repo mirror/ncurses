@@ -1,0 +1,133 @@
+# $Id: Makefile.in,v 1.29 1997/05/10 16:23:07 tom Exp $
+################################################################################
+# Copyright 1996,1997 by Thomas E. Dickey <dickey@clark.net>                   #
+# All Rights Reserved.                                                         #
+#                                                                              #
+# Permission to use, copy, modify, and distribute this software and its        #
+# documentation for any purpose and without fee is hereby granted, provided    #
+# that the above copyright notice appear in all copies and that both that      #
+# copyright notice and this permission notice appear in supporting             #
+# documentation, and that the name of the above listed copyright holder(s) not #
+# be used in advertising or publicity pertaining to distribution of the        #
+# software without specific, written prior permission. THE ABOVE LISTED        #
+# COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,    #
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT #
+# SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE FOR ANY SPECIAL,        #
+# INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM   #
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE   #
+# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR    #
+# PERFORMANCE OF THIS SOFTWARE.                                                #
+################################################################################
+# Makefile for ncurses tests.
+
+SHELL		= /bin/sh
+
+MODEL		= ../@DFT_OBJ_SUBDIR@
+srcdir		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+includedir	= @includedir@
+
+CC		= @CC@
+
+CFLAGS		= @CFLAGS@
+CPPFLAGS	=  -I../test -I$(srcdir) @CPPFLAGS@ -DHAVE_CONFIG_H
+
+CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
+
+CFLAGS_NORMAL	= $(CCFLAGS)
+CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
+CFLAGS_PROFILE	= $(CCFLAGS) -pg
+CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
+
+CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
+
+ABI_VERSION	= @nc_cv_abi_version@
+LOCAL_LIBS	= @TEST_DEPS@
+
+LD		= @LD@
+LINK		= $(CC)
+
+LDFLAGS		= @LD_MODEL@ @TEST_ARGS@ @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ @LDFLAGS@
+
+LDFLAGS_NORMAL	= $(LDFLAGS)
+LDFLAGS_DEBUG	= $(LDFLAGS) @CC_G_OPT@
+LDFLAGS_PROFILE	= $(LDFLAGS) -pg
+LDFLAGS_SHARED	= $(LDFLAGS) @CC_SHARED_OPTS@
+
+LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@)
+
+LINT		= @LINT@
+LINT_OPTS	= @LINT_OPTS@
+LINT_LIBS	= -lform -lmenu -lpanel -lncurses @LIBS@
+
+TESTS = \
+	blue \
+	bs \
+	firework \
+	gdc \
+	hanoi \
+	hashtest \
+	knight \
+	lrtest \
+	ncurses \
+	newdemo \
+	rain \
+	tclock \
+	testcurs \
+	view \
+	worm \
+	xmas
+
+all: $(TESTS)
+
+blue: $(MODEL)/blue.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+bs: $(MODEL)/bs.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+firework: $(MODEL)/firework.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+gdc: $(MODEL)/gdc.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+hanoi: $(MODEL)/hanoi.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+hashtest: $(MODEL)/hashtest.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+knight: $(MODEL)/knight.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+lrtest: $(MODEL)/lrtest.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+ncurses: $(MODEL)/ncurses.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+newdemo: $(MODEL)/newdemo.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+rain: $(MODEL)/rain.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+tclock: $(MODEL)/tclock.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT) -lm
+testcurs: $(MODEL)/testcurs.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+view: $(MODEL)/view.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+worm: $(MODEL)/worm.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+xmas: $(MODEL)/xmas.o $(LOCAL_LIBS)
+	@ECHO_LINK@ $(LINK) -o $@ $(MODEL)/$@.o $(LDFLAGS_DEFAULT)
+
+install:
+install.libs:
+install.test:
+
+clean ::
+	-rm -rf *.o trace screendump *.atac *.lis core $(TESTS)
+
+distclean :: clean
+	-rm -f Makefile ncurses_cfg.h config.*
+
+mostlyclean :: clean
+
+realclean :: distclean
+
+lint:
+	sh -c 'for N in $(TESTS); do echo LINT:$$N; $(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/$$N.c $(LINT_LIBS); done'

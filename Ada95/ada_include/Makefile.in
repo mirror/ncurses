@@ -1,0 +1,207 @@
+#----------------------------------------------------------------------------
+#                                                                          --
+#                            GNAT ncurses Binding                          --
+#                                src/Makefile                              --
+#                                                                          --
+#  Version 00.92                                                           --
+#                                                                          --
+#  The ncurses Ada95 binding is copyrighted 1996 by                        --
+#  Juergen Pfeifer, Email: Juergen.Pfeifer@T-Online.de                     --
+#                                                                          --
+#  Permission is hereby granted to reproduce and distribute this           --
+#  binding by any means and for any fee, whether alone or as part          --
+#  of a larger distribution, in source or in binary form, PROVIDED         --
+#  this notice is included with any such distribution, and is not          --
+#  removed from any of its header files. Mention of ncurses and the        --
+#  author of this binding in any applications linked with it is            --
+#  highly appreciated.                                                     --
+#                                                                          --
+#  This binding comes AS IS with no warranty, implied or expressed.        --
+#----------------------------------------------------------------------------
+#  Version Control
+#  $Revision: 1.6 $
+#
+.SUFFIXES:
+
+SHELL		= /bin/sh
+THIS		= Makefile
+
+MODEL		= ../../@DFT_OBJ_SUBDIR@
+srcdir		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+includedir	= @includedir@
+datadir		= @datadir@
+ticdir		= $(datadir)/terminfo
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+AWK		= @AWK@
+LN_S		= @LN_S@
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+
+CPPFLAGS	= @ACPPFLAGS@ \
+		  -DHAVE_CONFIG_H -I$(srcdir)
+
+CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
+
+CFLAGS_NORMAL	= $(CCFLAGS)
+CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
+CFLAGS_PROFILE	= $(CCFLAGS) -pg
+CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
+
+CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
+
+LINK		= $(CC)
+LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
+
+RANLIB		= @RANLIB@
+################################################################################
+ADA             = @nc_ada_compiler@
+ADAFLAGS        = @ADAFLAGS@ -I. -I$(srcdir)
+
+ADAMAKE         = @nc_ada_make@
+ADAMAKEFLAGS    = 
+
+CARGS           = -cargs $(ADAFLAGS)
+LARGS           =
+
+ALIB            = @nc_ada_package@
+ABASE           = $(ALIB)-curses
+
+ADA_OBJDIR      = ../ada_objects
+OBJDIR          = ../objects
+
+LIBALIS=$(ADA_OBJDIR)/$(ALIB).ali              \
+	$(ADA_OBJDIR)/$(ABASE)-aux.ali         \
+	$(ADA_OBJDIR)/$(ABASE).ali             \
+	$(ADA_OBJDIR)/$(ABASE)-mouse.ali       \
+	$(ADA_OBJDIR)/$(ABASE)-panels.ali      \
+	$(ADA_OBJDIR)/$(ABASE)-menus.ali       \
+	$(ADA_OBJDIR)/$(ABASE)-forms.ali       \
+	$(ADA_OBJDIR)/$(ABASE)-text_io.ali     \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-aux.ali
+
+LIBOBJS=$(ADA_OBJDIR)/$(ALIB).o                \
+	$(ADA_OBJDIR)/$(ABASE)-aux.o           \
+	$(ADA_OBJDIR)/$(ABASE).o               \
+	$(ADA_OBJDIR)/$(ABASE)-mouse.o         \
+	$(ADA_OBJDIR)/$(ABASE)-panels.o        \
+	$(ADA_OBJDIR)/$(ABASE)-menus.o         \
+	$(ADA_OBJDIR)/$(ABASE)-forms.o         \
+	$(ADA_OBJDIR)/$(ABASE)-text_io.o       \
+	$(ADA_OBJDIR)/$(ABASE)-text_io-aux.o
+
+
+all :: $(LIBALIS)
+	@echo done
+
+clean ::
+	rm -f *.o *.ali b_t*.* *.s $(PROGS) a.out core b_*_test.c *.xr[bs] *.a
+
+mostlyclean :: clean
+	rm -f $(LIBALIS) $(LIBOBJS)
+
+distclean :: mostlyclean
+	rm -f Makefile
+
+realclean :: distclean
+
+BASEDEPS=$(ABASE).ads $(srcdir)/$(ABASE)-aux.ads
+
+$(ADA_OBJDIR)/$(ALIB).o: $(srcdir)/$(ALIB).ads
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ALIB).ads
+
+$(ADA_OBJDIR)/$(ALIB).ali: $(ADA_OBJDIR)/$(ALIB).o
+	if [ -f $(ALIB).ali ]; then \
+	   ln -f $(ALIB).ali $@ ;\
+	   rm -f $(ALIB).ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-aux.o: $(srcdir)/$(ABASE)-aux.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-aux.adb
+
+$(ADA_OBJDIR)/$(ABASE)-aux.ali: $(ADA_OBJDIR)/$(ABASE)-aux.o
+	if [ -f $(ABASE)-aux.ali ]; then \
+	   ln -f $(ABASE)-aux.ali $@ ;\
+	   rm -f $(ABASE)-aux.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE).o: $(srcdir)/$(ABASE).adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE).adb
+
+$(ADA_OBJDIR)/$(ABASE).ali: $(ADA_OBJDIR)/$(ABASE).o
+	if [ -f $(ABASE).ali ]; then \
+	   ln -f $(ABASE).ali $@ ;\
+	   rm -f $(ABASE).ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-mouse.o: \
+		$(ABASE)-mouse.ads \
+		$(srcdir)/$(ABASE)-mouse.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-mouse.adb
+
+$(ADA_OBJDIR)/$(ABASE)-mouse.ali: $(ADA_OBJDIR)/$(ABASE)-mouse.o
+	if [ -f $(ABASE)-mouse.ali ]; then \
+	   ln -f $(ABASE)-mouse.ali $@ ;\
+	   rm -f $(ABASE)-mouse.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-panels.o: \
+		$(ABASE)-panels.ads \
+		$(srcdir)/$(ABASE)-panels.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-panels.adb
+
+$(ADA_OBJDIR)/$(ABASE)-panels.ali: $(ADA_OBJDIR)/$(ABASE)-panels.o
+	if [ -f $(ABASE)-panels.ali ]; then \
+	   ln -f $(ABASE)-panels.ali $@ ;\
+	   rm -f $(ABASE)-panels.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-menus.o: \
+		$(ABASE)-menus.ads \
+		$(srcdir)/$(ABASE)-menus.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-menus.adb
+
+$(ADA_OBJDIR)/$(ABASE)-menus.ali: $(ADA_OBJDIR)/$(ABASE)-menus.o
+	if [ -f $(ABASE)-menus.ali ]; then \
+	   ln -f $(ABASE)-menus.ali $@ ;\
+	   rm -f $(ABASE)-menus.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-forms.o: \
+		$(ABASE)-forms.ads \
+		$(srcdir)/$(ABASE)-forms.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms.adb
+
+$(ADA_OBJDIR)/$(ABASE)-forms.ali: $(ADA_OBJDIR)/$(ABASE)-forms.o
+	if [ -f $(ABASE)-forms.ali ]; then \
+	   ln -f $(ABASE)-forms.ali $@ ;\
+	   rm -f $(ABASE)-forms.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io.o: \
+		$(srcdir)/$(ABASE)-text_io.ads \
+		$(srcdir)/$(ABASE)-text_io.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io.ali: $(ADA_OBJDIR)/$(ABASE)-text_io.o
+	if [ -f $(ABASE)-text_io.ali ]; then \
+	   ln -f $(ABASE)-text_io.ali $@ ;\
+	   rm -f $(ABASE)-text_io.ali ;\
+	fi
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-aux.o: \
+		$(srcdir)/$(ABASE)-text_io-aux.ads \
+		$(srcdir)/$(ABASE)-text_io-aux.adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-aux.adb
+
+$(ADA_OBJDIR)/$(ABASE)-text_io-aux.ali: $(ADA_OBJDIR)/$(ABASE)-text_io-aux.o
+	if [ -f $(ABASE)-text_io-aux.ali ]; then \
+	   ln -f $(ABASE)-text_io-aux.ali $@ ;\
+	   rm -f $(ABASE)-text_io-aux.ali ;\
+	fi

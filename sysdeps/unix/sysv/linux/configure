@@ -1,0 +1,273 @@
+# Local configure fragment for ncurses/sysdeps/unix/sysv/linux.
+
+glibc_nc_srcdir=${srcdir}/ncurses
+
+NCURSES_MAJOR="`egrep '^NCURSES_MAJOR[ 	]*=' $glibc_nc_srcdir/dist.mk | sed -e 's/^[^0-9]*//'`"
+NCURSES_MINOR="`egrep '^NCURSES_MINOR[ 	]*=' $glibc_nc_srcdir/dist.mk | sed -e 's/^[^0-9]*//'`"
+NCURSES_PATCH="`egrep '^NCURSES_PATCH[ 	]*=' $glibc_nc_srcdir/dist.mk | sed -e 's/^[^0-9]*//'`"
+nc_cv_abi_version=${NCURSES_MAJOR}
+nc_cv_rel_version=${NCURSES_MAJOR}.${NCURSES_MINOR}
+
+rm -f ncurses/codes.c \
+	ncurses/comp_captab.c \
+	ncurses/curses.h \
+	ncurses/edit_man.sed \
+	ncurses/edit_man.sh \
+	ncurses/eti.h \
+	ncurses/expanded.c \
+	ncurses/fallback.c \
+	ncurses/form.h \
+	ncurses/hashsize.h \
+	ncurses/keys.tries \
+	ncurses/lib_gen.c \
+	ncurses/lib_keyname.c \
+	ncurses/menu.h \
+	ncurses/mf_common.h \
+	ncurses/names.c \
+	ncurses/ncurses_cfg.h \
+	ncurses/nomacros.h \
+	ncurses/panel.h \
+	ncurses/parametrized.h \
+	ncurses/run_tic.sh \
+	ncurses/term.h \
+	ncurses/termcap.h \
+	ncurses/terminfo.5 \
+	ncurses/termsort.c \
+	ncurses/unctrl.c \
+	ncurses/unctrl.h \
+	ncurses/config_h
+
+# Protect against being on the right side of a sed subst in config.status.
+sed 's/%@/@@/; s/@%/@@/; s/%g$/@g/; /@g$/s/[\\&%]/\\&/g;
+ s/@@/%@/; s/@@/@%/; s/@g$/%g/' > conftest.subs <<EOF
+
+
+s%@DEFS@% -DSYSTEM_NAME=\"Linux\ (glibc\ 2)\" -DPURE_TERMINFO=1 -DGCC_SCANF=1 -DGCC_PRINTF=1 -DGCC_UNUSED=__attribute__\(\(unused\)\) -DGCC_NORETURN=__attribute__\(\(noreturn\)\) -DHAVE_NC_ALLOC_H=1 -DHAVE_GETTIMEOFDAY=1 -DSTDC_HEADERS=1 -DHAVE_DIRENT_H=1 -DHAVE_REGEX_H=1 -DHAVE_FCNTL_H=1 -DHAVE_GETOPT_H=1 -DHAVE_LIMITS_H=1 -DHAVE_LOCALE_H=1 -DHAVE_SYS_IOCTL_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_POLL_H=1 -DHAVE_SYS_SELECT_H=1 -DHAVE_SYS_TIME_H=1 -DHAVE_SYS_TIMES_H=1 -DHAVE_TERMIO_H=1 -DHAVE_TERMIOS_H=1 -DHAVE_TTYENT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_VALUES_H=1 -DCC_HAS_INLINE_FUNCS=1 -DHAVE_EXTERN_ERRNO=1 -DHAVE_EXTERN_SYS_ERRLIST=1 -DHAVE_GETTTYNAM=1 -DHAVE_MEMCCPY=1 -DHAVE_POLL=1 -DHAVE_SELECT=1 -DHAVE_SETBUF=1 -DHAVE_SETBUFFER=1 -DHAVE_SETVBUF=1 -DHAVE_SIGACTION=1 -DHAVE_SIGVEC=1 -DHAVE_STRDUP=1 -DHAVE_TCGETATTR=1 -DHAVE_TIMES=1 -DHAVE_USLEEP=1 -DHAVE_VFSCANF=1 -DHAVE_VSSCANF=1 -DRETSIGTYPE=void -DGOOD_SELECT=1 -DHAVE_BUILTIN_H=1 -DHAVE_TYPEINFO=1 -DHAVE_PANEL_H=1 -DHAVE_LIBPANEL=1 -DHAVE_MENU_H=1 -DHAVE_LIBMENU=1 -DHAVE_FORM_H=1 -DHAVE_LIBFORM=1 %g
+s%@NCURSES_MAJOR@%$NCURSES_MAJOR%g
+s%@NCURSES_MINOR@%$NCURSES_MINOR%g
+s%@NCURSES_PATCH@%$NCURSES_PATCH%g
+s%@nc_cv_rel_version@%$nc_cv_rel_version%g
+s%@nc_cv_abi_version@%$nc_cv_abi_version%g
+s%@nc_cv_builtin_bool@%1%g
+s%@nc_cv_type_of_bool@%char%g
+
+EOF
+
+# Split the substitutions into bite-sized pieces for seds with
+# small command number limits, like on Digital OSF/1 and HP-UX.
+nc_max_sed_cmds=90 # Maximum number of lines to put in a sed script.
+nc_file=1 # Number of current file.
+nc_beg=1 # First line for current file.
+nc_end=$nc_max_sed_cmds # Line after last line for current file.
+nc_more_lines=:
+nc_sed_cmds=""
+while $nc_more_lines; do
+  if test $nc_beg -gt 1; then
+    sed "1,${nc_beg}d; ${nc_end}q" conftest.subs > conftest.s$nc_file
+  else
+    sed "${nc_end}q" conftest.subs > conftest.s$nc_file
+  fi
+  if test ! -s conftest.s$nc_file; then
+    nc_more_lines=false
+    rm -f conftest.s$nc_file
+  else
+    if test -z "$nc_sed_cmds"; then
+      nc_sed_cmds="sed -f conftest.s$nc_file"
+    else
+      nc_sed_cmds="$nc_sed_cmds | sed -f conftest.s$nc_file"
+    fi
+    nc_file=`expr $nc_file + 1`
+    nc_beg=$nc_end
+    nc_end=`expr $nc_end + $nc_max_sed_cmds`
+  fi
+done
+if test -z "$nc_sed_cmds"; then
+  nc_sed_cmds=cat
+fi
+
+NC_CONFIG_FILES=${NC_CONFIG_FILES-"ncurses/config_h 	ncurses/MKterm.h.awk 	ncurses/curses.h 	ncurses/termcap.h 	ncurses/unctrl.h"}
+for nc_file in .. $NC_CONFIG_FILES; do if test "x$nc_file" != x..; then
+  # Support "outfile[:infile[:infile...]]", defaulting infile="outfile.in".
+  case "$nc_file" in
+  *:*) nc_file_in=`echo "$nc_file"|sed 's%[^:]*:%%'`
+       nc_file=`echo "$nc_file"|sed 's%:.*%%'` ;;
+  *) nc_file_in=`echo "${nc_file}"| sed 's%ncurses%include%'`.in ;;
+  esac
+
+  # Adjust a relative srcdir, top_srcdir, and INSTALL for subdirectories.
+
+  # Remove last slash and all that follows it.  Not all systems have dirname.
+  nc_dir=`echo $nc_file|sed 's%/[^/][^/]*$%%'`
+  if test "$nc_dir" != "$nc_file" && test "$nc_dir" != .; then
+    # The file is in a subdirectory.
+    test ! -d "$nc_dir" && mkdir "$nc_dir"
+    nc_dir_suffix="/`echo $nc_dir|sed 's%^\./%%'`"
+    # A "../" for each directory in $nc_dir_suffix.
+    nc_dots=`echo $nc_dir_suffix|sed 's%/[^/]*%../%g'`
+  else
+    nc_dir_suffix= nc_dots=
+  fi
+
+  echo creating "$nc_file"
+  rm -f "$nc_file"
+  configure_input="Generated automatically from `echo $nc_file_in|sed 's%.*/%%'` by configure."
+  case "$nc_file" in
+  *Makefile*) nc_comsub="1i\\
+# $configure_input" ;;
+  *) nc_comsub= ;;
+  esac
+
+  nc_file_inputs=`echo $nc_file_in|sed -e "s%^%$glibc_nc_srcdir/%" -e "s%:% $glibc_nc_srcdir/%g"`
+  sed -e "$nc_comsub
+s%@configure_input@%$configure_input%g
+" $nc_file_inputs | (eval "$nc_sed_cmds") > $nc_file
+fi; done
+rm -f conftest.s*
+
+
+SYS_NAME=`uname -a`
+if test -z "$SYS_NAME"; then SYS_NAME=unknown;fi
+
+AWK=awk
+CC="gcc -I${glibc_nc_srcdir}/ncurses -Incurses -I${glibc_nc_srcdir}/include"
+CPP="${CC} -E"
+NC_LIST_MODELS="normal"
+WITH_ECHO="yes"
+WITH_OVERWRITE="yes"
+nc_cxx_library="yes"
+nc_cv_systype="Linux"
+nc_cv_rel_version="4.1"
+nc_cv_abi_version="4"
+nc_cv_do_symlinks="yes"
+nc_cv_rm_so_locs="no"
+
+
+
+
+
+
+
+
+rm -f headers.sed headers.sh
+
+echo creating headers.sh
+cat >headers.sh <<NC_EOF
+#!/bin/sh
+# This shell script is generated by the 'configure' script.  It is invoked in a
+# subdirectory of the build tree.  It generates a sed-script in the parent
+# directory that is used to adjust includes for header files that reside in a
+# subdirectory of /usr/include, etc.
+PRG=""
+while test \$# != 3
+do
+PRG="\$PRG \$1"; shift
+done
+DST=\$1
+REF=\$2
+SRC=\$3
+echo installing \$SRC in \$DST
+case \$DST in
+/*/include/*)
+	TMP=\${TMPDIR-/tmp}/\`basename \$SRC\`
+	if test ! -f ../headers.sed ; then
+		END=\`basename \$DST\`
+		for i in \`cat \$REF/../*/headers |fgrep -v "#"\`
+		do
+			NAME=\`basename \$i\`
+			echo "s/<\$NAME>/<\$END\/\$NAME>/" >> ../headers.sed
+		done
+	fi
+	rm -f \$TMP
+	sed -f ../headers.sed \$SRC > \$TMP
+	eval \$PRG \$TMP \$DST
+	rm -f \$TMP
+	;;
+*)
+	eval \$PRG \$SRC \$DST
+	;;
+esac
+NC_EOF
+
+chmod 0755 headers.sh
+
+### Special editing.  We generate ncurses_cfg.h directly to allow all filenames
+### to be MSDOS-compatible, as well as to make the list of definitions be
+### dynamically determined by the configuration script -- a consideration when
+### doing type-clean development testing.
+
+echo creating ncurses/ncurses_cfg.h
+rm -f ncurses/ncurses_cfg.h
+echo "/* generated by configure-script
+ * On host: $SYS_NAME
+ */
+#ifndef NC_CONFIG_H
+#define NC_CONFIG_H" >ncurses/ncurses_cfg.h
+sed	-e '/^ -D/!d' \
+	-e 's/ -D/\
+#define /g' \
+	-e 's/\(#define [A-Za-z_][A-Za-z0-9_]*\)=/\1	/g' \
+	-e 's/\\//g' \
+	ncurses/config_h | sort >>ncurses/ncurses_cfg.h
+echo "
+	/* The C compiler may not treat these properly, but C++ has to */
+#ifdef __cplusplus
+#undef const
+#undef inline
+#else
+#if defined(lint) || defined(TRACE)
+#undef inline
+#define inline /* nothing */
+#endif
+#endif
+
+#endif /* NC_CONFIG_H */" >> ncurses/ncurses_cfg.h
+echo removing ncurses/config_h
+rm ncurses/config_h
+
+echo creating ncurses/term.h
+${AWK} -f ncurses/MKterm.h.awk ${glibc_nc_srcdir}/include/Caps > ncurses/term.h
+sh ${glibc_nc_srcdir}/include/edit_cfg.sh ncurses/ncurses_cfg.h ncurses/term.h
+
+echo creating ncurses/hashsize.h
+sh ${glibc_nc_srcdir}/include/MKhashsize.sh ${glibc_nc_srcdir}/include/Caps > ncurses/hashsize.h
+
+echo creating ncurses/parametrized.h
+sh ${glibc_nc_srcdir}/include/MKparametrized.sh ${glibc_nc_srcdir}/include/Caps > ncurses/parametrized.h
+
+echo creating ncurses/termsort.c
+sh ${glibc_nc_srcdir}/progs/MKtermsort.sh "${AWK}" ${glibc_nc_srcdir}/include/Caps > ncurses/termsort.c
+
+echo creating ncurses/fallback.c
+sh ${glibc_nc_srcdir}/ncurses/MKfallback.sh > ncurses/fallback.c
+
+echo creating ncurses/lib_gen.c
+sh ${glibc_nc_srcdir}/ncurses/MKlib_gen.sh "${CPP}" "${AWK}" < ncurses/curses.h > ncurses/lib_gen.c
+
+echo creating ncurses/nomacros.h
+sh ${glibc_nc_srcdir}/ncurses/MKlib_gen.sh "${CPP}" "${AWK}" < ncurses/curses.h | fgrep undef > ncurses/nomacros.h
+
+echo creating ncurses/keys.tries
+${AWK} -f ${glibc_nc_srcdir}/ncurses/MKkeys.awk ${glibc_nc_srcdir}/ncurses/keys.list > ncurses/keys.tries
+
+echo creating ncurses/expanded.c
+sh ${glibc_nc_srcdir}/ncurses/MKexpanded.sh "${CPP}"
+mv expanded.c ncurses/expanded.c
+
+echo creating ncurses/comp_captab.c
+${CC} -o make_hash -DMAIN_PROGRAM ${glibc_nc_srcdir}/ncurses/comp_hash.c
+sh ${glibc_nc_srcdir}/ncurses/MKcaptab.awk "${AWK}" ${glibc_nc_srcdir}/include/Caps > ncurses/comp_captab.c
+rm -f make_hash
+
+echo creating ncurses/lib_keyname.c
+${AWK} -f ${glibc_nc_srcdir}/ncurses/MKkeyname.awk ${glibc_nc_srcdir}/ncurses/keys.list > ncurses/lib_keyname.c
+
+echo creating ncurses/names.c and ncurses/codes.c
+${AWK} -f ${glibc_nc_srcdir}/ncurses/MKnames.awk ${glibc_nc_srcdir}/include/Caps
+cat namehdr boolnames boolfnames numnames numfnames strnames strfnames nameftr >ncurses/names.c
+cat namehdr boolcodes numcodes strcodes codeftr > ncurses/codes.c
+rm -f namehdr nameftr codeftr boolnames boolfnames boolcodes numnames numfnames numcodes strnames strfnames strcodes
+
+echo creating ncurses/unctrl.c
+echo | ${AWK} -f ${glibc_nc_srcdir}/ncurses/MKunctrl.awk > ncurses/unctrl.c
+echo creating ncurses/terminfo.5
+sh ${glibc_nc_srcdir}/man/MKterminfo.sh ${glibc_nc_srcdir}/man/terminfo.head ${glibc_nc_srcdir}/include/Caps ${glibc_nc_srcdir}/man/terminfo.tail > ncurses/terminfo.5

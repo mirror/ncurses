@@ -1,0 +1,190 @@
+#! /bin/sh
+#
+# capconvert -- automated conversion from termcap to terminfo
+#
+
+echo "This script tries to automatically set you up so that your applications"
+echo "that now use termcap can use terminfo and the ncurses library."
+echo ""
+
+# Note, except for telling if we're running under xterm we don't use TERM at
+# all.  This is because BSD users not infrequently have multiple termtypes
+# selected by conditionals in tset -- unless they're xterm users, in which
+# case they're on a workstation and probably don't.
+
+# Check to make sure TERMINFO is not already defined
+if [ "$TERMINFO" ]
+then
+	echo "TERMINFO is already defined in your environment.  This means"
+	echo "you already have a local terminfo tree, so you do not need any"
+	echo "conversion."
+	exit;
+fi
+
+# Check to see if terminfo is present.
+if [ -d /usr/lib/terminfo -o -d /usr/local/lib/terminfo ]
+then
+	echo "Your system already has a system-wide terminfo tree."
+	terminfo=yes
+	echo ""
+	if [ "$TERMCAP" = "" ]
+	then
+		echo "You have no TERMCAP variable set, so we're done."
+		# Assumes the terminfo master covers all canned terminal types
+		exit;
+	fi
+	if [ "$TERM" = "xterm" ]
+	then
+		echo "You're running xterm, which rudely sets TERMCAP itself."
+		echo "We can ignore this, because terminfo knows about xterm."
+		echo "So you'll just use the system-wide terminfo tree."
+		exit;
+	else
+		echo "We'll have to make a local one for you anyway, in order"
+		echo "to capture the effect of your TERMCAP variable."
+	fi
+else
+	echo "No system-wide terminfo tree.  We'll make you a local one."
+	terminfo=no
+fi
+echo "";
+
+
+# First step -- go find tic
+set -- `echo $PATH | tr ':' '\n' | sort | uniq`
+for x in $*
+do
+	if [ -x $x/tic ]
+	then 
+		tic=$x/tic
+	fi;
+done
+if [ "$tic" ]
+then
+	echo "I see tic at $tic."
+else
+	echo "You don't have tic installed anywhere I can see, please fix that."
+	exit;
+fi
+echo "";
+
+# We have tic.  Either there's no system terminfo tree or there is one but
+# the user has a TERMCAP variable that may modify a stock description.
+#
+
+# Make the user a terminfo directory
+if [ -d $HOME/.terminfo ]
+then
+	echo "It appears you already have a private terminfo directory"
+	echo "at $HOME/.terminfo; this seems odd, because TERMINFO"
+	echo "is not defined.  I'm not going to second-guess this -- if you" 
+	echo "really want me to try auto-configuring for you, remove or"
+	echo "rename $HOME/terminfo and run me again."
+	exit;
+else
+	echo "I'm creating your private terminfo directory at $HOME/.terminfo"
+	mkdir $HOME/.terminfo
+	# Ensure that that's where tic's compilation results.
+	# This isn't strictly necessary with a 1.9.7 or later tic.
+	TERMINFO="$HOME/.terminfo"; export TERMINFO
+fi
+echo "";
+
+# Find a terminfo source to work from
+if [ -f ../misc/terminfo.src ]
+then
+	echo "I see the terminfo master source is handy; I'll use that."
+	master=../misc/terminfo.src
+else
+	# Ooops...looks like we're running from somewhere other than the
+	# progs directory of an ncurses source tree.
+	master=`find $HOME -name "*terminfo.src" -print`
+	mcount=`echo $master | wc -l`
+	case $mcount in
+	0)
+		echo "I can't find a terminfo source file anywhere under your home directory."
+		echo "There should be a file called terminfo.src somewhere in your"
+		echo "ncurses distribution; please put it in your home directotry"
+		echo "and run me again (it doesn't have to live there permanently)."
+		exit;
+	;;
+	1)
+		echo "I see a file called $master."
+		echo "I'm going to assume this is the terminfo source included with"
+		echo "the ncurses distribution.  If this assumption is wrong, please"
+		echo "interrupt me now!  OK to continue?"
+		read ans;
+	;;
+	2)
+		echo "I see more than one possible terminfo source.  Here they are:"
+		echo $master | sed "/^/s//	/";
+		while :
+		do
+			echo "Please tell me which one to use:"
+			read master;
+			if [ -f $master ]
+			then
+				break
+			else
+				echo "That file doesn't exist. Try again?";
+			fi
+		done
+	;;
+	esac
+fi
+echo "";
+
+# Now that we have a master, compile it into the local tree
+echo "OK, now I'll make your private terminfo tree.  This may take a bit..."
+#
+# Kluge alert: we compile terminfo.src in two pieces because a lot of machines
+# with < 16MB RAM choke on tic's core-hog habits.
+sed -n $master \
+	-e '1,/SPLIT HERE/w tsplit$$.01' \
+	-e '/SPLIT HERE/,$w tsplit$$.02' \
+	2>/dev/null
+for x in tsplit$$.*; do $tic -v $x; done
+rm tsplit$$.*
+#
+echo "You now have a private tree under $HOME/.terminfo;"
+echo "the ncurses library will automatically read from it,"
+echo "and ncurses tic will automatically compile entries to it." 
+
+# We're done unless user has a .termcap file or equivalent named by TERMCAP
+if [ "$TERMCAP" = "" ]
+then
+	echo "You have no TERMCAP set, so we're done."
+fi
+
+# OK, here comes the nasty case...user has a TERMCAP.  Instead of
+# trying to follow all the convolutions of the relationship between
+# TERM and TERMCAP (partly because it's too painful, and partly because
+# we don't actually know what TERM will be nor even if it always has
+# the same value for this user) we do the following three steps...
+
+if [ -f $HOME/.termcap ]
+then
+	echo 'I see you have a $HOME/.termcap file.  I'll compile that.'
+	$tic $HOME/.termcap
+	echo "Done."
+	echo "Note that editing $HOME/.termcap will no longer change the data curses sees."
+else if `expr $TERMCAP : "/"` = '1'
+then 
+	echo "Your TERMCAP names the file $TERMCAP.  I'll compile that."
+	$tic $TERMCAP
+	echo "Done."
+	echo "Note that editing $TERMCAP will no longer change the data curses sees."
+else
+	echo "Your TERMCAP value appears to be an entry in termcap format."
+	echo "I'll compile it."
+	echo $TERMCAP >myterm$$
+	$tic myterm$$
+	rm myterm$$
+	echo "Done."
+	echo "Note that editing TERMCAP will no longer change the data curses sees."
+fi fi
+echo "To do that, decompile the terminal decription you want with infocmp(1),"
+echo "edit to taste, and recompile using tic(1)."
+
+# capconvert ends here
+
