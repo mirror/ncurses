@@ -1,0 +1,78 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>curs_extend</B>:  <B>curses_version</B>, <B>use_extended_names</B> - miscel-
+       laneous curses extensions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>const</B> <B>char</B> <B>*</B> <B>curses_version(void);</B>
+       <B>int</B> <B>use_extended_names(bool</B> <B>enable);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These functions are extensions to the curses library which
+       do not fit easily into other categories.
+
+       Use  <I>curses</I><B>_</B><I>version()</I> to get the version number, including
+       patch level of the library, e.g., <B>5.0.19991023</B>
+
+       The <I>use</I><B>_</B><I>extended</I><B>_</B><I>names()</I>  function  controls  whether  the
+       calling  application  is  able to use user-defined or non-
+       standard names which may be  compiled  into  the  terminfo
+       description, i.e., via the terminfo or termcap interfaces.
+       Normally these names are  available  for  use,  since  the
+       essential  descision is made by using the <B>-x</B> option of <I>tic</I>
+       to compile extended terminal definitions.  However you can
+       disable  this  feature  to  ensure compatiblity with other
+       implementations of curses
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These routines are specific to  ncurses.   They  were  not
+       supported  on  Version 7, BSD or System V implementations.
+       It is recommended that any code depending on them be  con-
+       ditioned using NCURSES_VERSION.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="curs_getch.3x.html">curs_getch(3x)</A></B>,       <B><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></B>,      <B><A HREF="curs_print.3x.html">curs_print(3x)</A></B>,
+       <B><A HREF="define_key.3x.html">define_key(3x)</A></B>,  <B><A HREF="dft_fgbg.3x.html">dft_fgbg(3x)</A></B>,  <B><A HREF="keybound.3x.html">keybound(3x)</A></B>,   <B><A HREF="keyok.3x.html">keyok(3x)</A></B>,
+       <B><A HREF="resizeterm.3x.html">resizeterm(3x)</A></B>, <B><A HREF="wresize.3x.html">wresize(3x)</A></B>.
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       Thomas Dickey.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

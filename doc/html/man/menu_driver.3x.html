@@ -1,0 +1,190 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>menu_driver</B> - command-processing loop of the menu system
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       int menu_driver(MENU *menu, int c);
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       Once a menu has been posted (displayed), you should funnel
+       input events to it through <B>menu_driver</B>.  This routine  has
+       three  major input cases; either the input is a menu navi-
+       gation request, it's a printable ASCII character or it  is
+       the  KEY_MOUSE special key associated with an mouse event.
+       The menu driver requests are as follows:
+
+       REQ_LEFT_ITEM
+            Move left to an item.
+
+       REQ_RIGHT_ITEM
+            Move right to an item.
+
+       REQ_UP_ITEM
+            Move up to an item.
+
+       REQ_DOWN_ITEM
+            Move down to an item.
+
+       REQ_SCR_ULINE
+            Scroll up a line.
+
+       REQ_SCR_DLINE
+            Scroll down a line.
+
+       REQ_SCR_DPAGE
+            Scroll down a page.
+
+       REQ_SCR_UPAGE
+            Scroll up a page.
+
+       REQ_FIRST_ITEM
+            Move to the first item.
+
+       REQ_LAST_ITEM
+            Move to the last item.
+
+       REQ_NEXT_ITEM
+            Move to the next item.
+
+       REQ_PREV_ITEM
+            Move to the previous item.
+
+       REQ_TOGGLE_ITEM
+            Select/deselect an item.
+
+       REQ_CLEAR_PATTERN
+            Clear the menu pattern buffer.
+
+       REQ_BACK_PATTERN
+            Delete  the  previous  character  from  the   pattern
+            buffer.
+
+       REQ_NEXT_MATCH
+            Move to the next item matching the pattern match.
+
+       REQ_PREV_MATCH
+            Move to the previous item matching the pattern match.
+
+       If the second argument is a printable ASCII character, the
+       code appends it to the pattern buffer and attempts to move
+       to the next item matching the new pattern.  If there is no
+       such match, <B>menu_driver</B> returns <B>E_NO_MATCH</B> and deletes the
+       appended character from the buffer.
+
+       If the second argument is one  of  the  above  pre-defined
+       requests, the corresponding action is performed.
+
+       If  the  second argument is the KEY_MOUSE special key, the
+       associated mouse event is translated into one of the above
+       pre-defined  requests.   Currently only clicks in the user
+       window (e.g. inside the menu display area or  the  decora-
+       tion  window)  are handled. If you click above the display
+       region of the menu, a REQ_SCR_ULINE is generated,  if  you
+       doubleclick  a  REQ_SCR_UPAGE  is  generated  and  if  you
+       tripleclick a REQ_FIRST_ITEM is generated.  If  you  click
+       below  the  display region of the menu, a REQ_SCR_DLINE is
+       generated, if you doubleclick a REQ_SCR_DPAGE is generated
+       and  if  you  tripleclick a REQ_LAST_ITEM is generated. If
+       you click at an item inside the display area of the  menu,
+       the menu cursor is positioned to that item. If you double-
+       click at  an  item  a  REQ_TOGGLE_ITEM  is  generated  and
+       <B>E_UNKNOWN_COMMAND</B>  is  returned.  This  return value makes
+       sense, because a double click usually means that an  item-
+       specific  action should be returned. It's exactly the pur-
+       pose of this return value to signal  that  an  application
+       specific command should be executed. If a translation into
+       a request was done, <B>menu_driver</B> returns the result of this
+       request.   If  you  clicked outside the user window or the
+       mouse event couldn't be translated into a menu request  an
+       <B>E_REQUEST_DENIED</B> is returned.
+
+       If  the second argument is neither printable ASCII nor one
+       of the above pre-defined menu requests or  KEY_MOUSE,  the
+       drive  assumes  it  is an application-specific command and
+       returns <B>E_UNKNOWN_COMMAND</B>.   Application-defined  commands
+       should  be  defined  relative  to <B>MAX_COMMAND</B>, the maximum
+       value of these pre-defined requests.
+
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       <B>menu_driver</B> return one of the following error codes:
+
+       <B>E_OK</B> The routine succeeded.
+
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno</B>).
+
+       <B>E_BAD_ARGUMENT</B>
+            Routine detected an incorrect or  out-of-range  argu-
+            ment.
+
+       <B>E_BAD_STATE</B>
+            Routine was called from an initialization or termina-
+            tion function.
+
+       <B>E_NOT_POSTED</B>
+            The menu has not been posted.
+
+       <B>E_UNKNOWN_COMMAND</B>
+            The menu driver code saw an unknown request code.
+
+       <B>E_NO_MATCH</B>
+            Character failed to match.
+
+       <B>E_REQUEST_DENIED</B>
+            The menu driver could not process the request.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="menu.3x.html">menu(3x)</A></B>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The header file <B>&lt;menu.h&gt;</B> automatically includes the header
+       files <B>&lt;curses.h&gt;</B>.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  routines  emulate  the System V menu library.  They
+       were not supported on Version 7 or BSD versions. The  sup-
+       port for mouse events is ncurses specific.
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
+       curses by Eric S. Raymond.
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

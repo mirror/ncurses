@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997,1998,1999         *
+ *  Author: Thomas E. Dickey <dickey@clark.net> 1996-2000                   *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -40,6 +40,10 @@ int	*_nc_oldnums;
 
 #undef _nc_scroll_optimize
 void	_nc_scroll_optimize(void)
+		{ /* void */ }
+
+#undef _nc_linedump
+void	_nc_linedump(void)
 		{ /* void */ }
 
 /* ./tty/hashmap.c */
@@ -196,6 +200,8 @@ int	wclrtoeol(
 
 /* ./base/lib_color.c */
 
+#include <tic.h>
+
 #undef COLOR_PAIRS
 int	COLOR_PAIRS;
 #undef COLORS
@@ -245,6 +251,7 @@ int	pair_content(
 
 #undef _nc_do_color
 void	_nc_do_color(
+		int	old_pair, 
 		int	pair, 
 		bool	reverse, 
 		int	(*outc)(
@@ -444,6 +451,10 @@ int	deleteln(void)
 #undef echochar
 int	echochar(
 		const chtype z)
+		{ return(*(int *)0); }
+
+#undef erase
+int	erase(void)
 		{ return(*(int *)0); }
 
 #undef getbkgd
@@ -888,6 +899,18 @@ void	timeout(
 		int	z)
 		{ /* void */ }
 
+#undef touchline
+int	touchline(
+		WINDOW	*a1, 
+		int	a2, 
+		int	z)
+		{ return(*(int *)0); }
+
+#undef touchwin
+int	touchwin(
+		WINDOW	*z)
+		{ return(*(int *)0); }
+
 #undef untouchwin
 int	untouchwin(
 		WINDOW	*z)
@@ -1059,8 +1082,6 @@ int	winchnstr(
 
 /* ./base/lib_initscr.c */
 
-#include <tic.h>
-
 #undef initscr
 WINDOW	*initscr(void)
 		{ return(*(WINDOW **)0); }
@@ -1191,6 +1212,9 @@ int	mvcur(
 		int	ynew, 
 		int	xnew)
 		{ return(*(int *)0); }
+
+#undef _nc_optimize_enable
+int	_nc_optimize_enable;
 
 /* ./base/lib_mvwin.c */
 
@@ -1677,21 +1701,47 @@ int	wtouchln(
 
 /* ./trace/lib_traceatr.c */
 
-#undef _nc_lib_traceatr
-void	_nc_lib_traceatr(void)
-		{ /* void */ }
+#undef _traceattr2
+char	*_traceattr2(
+		int	bufnum, 
+		attr_t	newmode)
+		{ return(*(char **)0); }
+
+#undef _traceattr
+char	*_traceattr(
+		attr_t	newmode)
+		{ return(*(char **)0); }
+
+#undef _nc_retrace_attr_t
+attr_t	_nc_retrace_attr_t(
+		attr_t	code)
+		{ return(*(attr_t *)0); }
+
+#undef _tracechtype2
+char	*_tracechtype2(
+		int	bufnum, 
+		chtype	ch)
+		{ return(*(char **)0); }
+
+#undef _tracechtype
+char	*_tracechtype(
+		chtype	ch)
+		{ return(*(char **)0); }
 
 /* ./trace/lib_tracedmp.c */
 
-#undef _nc_lib_tracedmp
-void	_nc_lib_tracedmp(void)
+#undef _tracedump
+void	_tracedump(
+		const char *name, 
+		WINDOW	*win)
 		{ /* void */ }
 
 /* ./trace/lib_tracemse.c */
 
-#undef _nc_lib_tracemouse
-void	_nc_lib_tracemouse(void)
-		{ /* void */ }
+#undef _tracemouse
+char	*_tracemouse(
+		MEVENT const *ep)
+		{ return(*(char **)0); }
 
 /* ./tty/lib_tstp.c */
 
@@ -1704,6 +1754,10 @@ void	_nc_signal_handler(
 		{ /* void */ }
 
 /* ./base/lib_ungetch.c */
+
+#undef _nc_fifo_dump
+void	_nc_fifo_dump(void)
+		{ /* void */ }
 
 #undef ungetch
 int	ungetch(
@@ -1819,6 +1873,7 @@ char	*_nc_printf_string(
 /* ./tty/tty_update.c */
 
 #include <sys/time.h>
+#include <sys/times.h>
 
 #undef doupdate
 int	doupdate(void)
@@ -1936,6 +1991,12 @@ int	keyok(
 int	use_default_colors(void)
 		{ return(*(int *)0); }
 
+#undef assume_default_colors
+int	assume_default_colors(
+		int	fg, 
+		int	bg)
+		{ return(*(int *)0); }
+
 /* ./base/lib_freeall.c */
 
 #include <term_entry.h>
@@ -2017,7 +2078,7 @@ int	_nc_access(
 #undef _nc_add_to_try
 void	_nc_add_to_try(
 		struct tries **tree, 
-		char	*str, 
+		const char *str, 
 		unsigned short code)
 		{ /* void */ }
 
@@ -2191,7 +2252,7 @@ ENTRY	*_nc_tail;
 
 #undef _nc_free_entries
 void	_nc_free_entries(
-		ENTRY	*head)
+		ENTRY	*headp)
 		{ /* void */ }
 
 #undef _nc_entry_match
@@ -2211,7 +2272,8 @@ void	_nc_read_entry_source(
 		{ /* void */ }
 
 #undef _nc_resolve_uses
-int	_nc_resolve_uses(void)
+int	_nc_resolve_uses(
+		bool	fullresolve)
 		{ return(*(int *)0); }
 
 /* ./tinfo/comp_scan.c */
@@ -2226,6 +2288,10 @@ long	_nc_comment_start;
 long	_nc_comment_end;
 #undef _nc_start_line
 long	_nc_start_line;
+#undef _nc_curr_token
+struct token _nc_curr_token;
+#undef _nc_disable_period
+bool	_nc_disable_period;
 
 #undef _nc_get_token
 int	_nc_get_token(void)
@@ -2233,7 +2299,8 @@ int	_nc_get_token(void)
 
 #undef _nc_trans_string
 char	_nc_trans_string(
-		char	*ptr)
+		char	*ptr, 
+		char	*last)
 		{ return(*(char *)0); }
 
 #undef _nc_push_token
@@ -2301,11 +2368,10 @@ char	*_nc_home_terminfo(void)
 
 #include <init_keytry.h>
 
-#endif
+#undef _nc_tinfo_fkeys
+struct tinfo_fkeys _nc_tinfo_fkeys[];
 
-#undef _nc_tinfo_fkeysf
-struct tinfo_fkeys *_nc_tinfo_fkeysf(void)
-		{ return(*(struct tinfo_fkeys **)0); }
+#endif
 
 #undef _nc_init_keytry
 void	_nc_init_keytry(void)
@@ -2645,6 +2711,10 @@ int	delay_output(
 		int	ms)
 		{ return(*(int *)0); }
 
+#undef _nc_flush
+void	_nc_flush(void)
+		{ /* void */ }
+
 #undef _nc_outch
 int	_nc_outch(
 		int	ch)
@@ -2665,10 +2735,12 @@ int	tputs(
 
 /* ./trace/lib_trace.c */
 
-#include <fcntl.h>
-
 #undef _nc_tracing
 unsigned _nc_tracing;
+#undef _nc_tputs_trace
+const char *_nc_tputs_trace = {0};
+#undef _nc_outchars
+long	_nc_outchars;
 
 #undef trace
 void	trace(
@@ -2686,7 +2758,33 @@ const char *_nc_visbuf(
 		const char *buf)
 		{ return(*(const char **)0); }
 
+#undef _tracef
+void	_tracef(
+		const char *fmt, 
+		...)
+		{ /* void */ }
+
+#undef _nc_retrace_int
+int	_nc_retrace_int(
+		int	code)
+		{ return(*(int *)0); }
+
+#undef _nc_retrace_ptr
+char	*_nc_retrace_ptr(
+		char	*code)
+		{ return(*(char **)0); }
+
+#undef _nc_retrace_win
+WINDOW	*_nc_retrace_win(
+		WINDOW	*code)
+		{ return(*(WINDOW **)0); }
+
 /* ./trace/lib_tracebits.c */
+
+typedef struct {
+    unsigned int val;
+    const char *name;
+} BITNAMES;
 
 #undef _nc_tracebits
 char	*_nc_tracebits(void)
@@ -2774,8 +2872,6 @@ char	*const strnames[] = {0};
 char	*const strfnames[] = {0};
 
 /* ./tinfo/parse_entry.c */
-#undef _nc_curr_token
-struct token _nc_curr_token;
 
 #undef _nc_parse_entry
 int	_nc_parse_entry(
@@ -2790,7 +2886,10 @@ int	_nc_capcmp(
 		const char *t)
 		{ return(*(int *)0); }
 
-typedef struct {const char *from; const char *to;} assoc;
+typedef struct {
+    const char *from;
+    const char *to;
+} assoc;
 
 /* ./tinfo/read_entry.c */
 

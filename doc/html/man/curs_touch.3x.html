@@ -1,0 +1,135 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>touchwin</B>, <B>touchline</B>, <B>untouchwin</B>, <B>wtouchln</B>, <B>is_linetouched</B>,
+       <B>is_wintouched</B> - <B>curses</B> refresh control routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <B>int</B> <B>touchwin(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>touchline(WINDOW</B> <B>*win,</B> <B>int</B> <B>start,</B> <B>int</B> <B>count);</B>
+       <B>int</B> <B>untouchwin(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>wtouchln(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>n,</B> <B>int</B> <B>changed);</B>
+       <B>bool</B> <B>is_linetouched(WINDOW</B> <B>*win,</B> <B>int</B> <B>line);</B>
+       <B>bool</B> <B>is_wintouched(WINDOW</B> <B>*win);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>touchwin</B> and <B>touchline</B> routines throw away  all  opti-
+       mization  information about which parts of the window have
+       been touched, by pretending that  the  entire  window  has
+       been  drawn  on.   This  is sometimes necessary when using
+       overlapping windows, since a change to one window  affects
+       the other window, but the records of which lines have been
+       changed in the other window do  not  reflect  the  change.
+       The  routine <B>touchline</B> only pretends that <I>count</I> lines have
+       been changed, beginning with line <I>start</I>.
+
+       The <B>untouchwin</B> routine marks all lines in  the  window  as
+       unchanged since the last call to <B>wrefresh</B>.
+
+       The <B>wtouchln</B> routine makes <I>n</I> lines in the window, starting
+       at line <I>y</I>, look as if they have (<I>changed</I><B>=1</B>)  or  have  not
+       (<I>changed</I><B>=0</B>)  been changed since the last call to <B>wrefresh</B>.
+
+       The <B>is_linetouched</B> and <B>is_wintouched</B> routines return  <B>TRUE</B>
+       if  the  specified line/window was modified since the last
+       call to <B>wrefresh</B>; otherwise they return <B>FALSE</B>.   In  addi-
+       tion,  <B>is_linetouched</B> returns <B>ERR</B> if <I>line</I> is not valid for
+       the given window.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All routines return the integer <B>ERR</B> upon  failure  and  an
+       integer  value  other than <B>ERR</B> upon successful completion,
+       unless otherwise noted in the preceding  routine  descrip-
+       tions.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The  XSI  Curses  standard,  Issue 4 describes these func-
+       tions.
+
+       Some historic curses implementations had,  as  an  undocu-
+       mented  feature,  the  ability  to  do  the  equivalent of
+       <B>clearok(...,</B> <B>1)</B> by saying <B>touchwin(stdscr)</B>  or  <B>clear(std-</B>
+       <B>scr)</B>.  This will not work under ncurses.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that all routines except <B>wtouchln</B> may be macros.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></B>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

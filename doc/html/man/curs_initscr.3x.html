@@ -1,0 +1,134 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>initscr</B>,  <B>newterm</B>, <B>endwin</B>, <B>isendwin</B>, <B>set_term</B>, <B>delscreen</B> -
+       <B>curses</B> screen initialization and manipulation routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>WINDOW</B> <B>*initscr(void);</B>
+       <B>int</B> <B>endwin(void);</B>
+       <B>bool</B> <B>isendwin(void);</B>
+       <B>SCREEN</B>  <B>*newterm(const</B>  <B>char</B>  <B>*type,</B>  <B>FILE</B>  <B>*outfd,</B>   <B>FILE</B>
+       <B>*infd);</B>
+       <B>SCREEN</B> <B>*set_term(SCREEN</B> <B>*new);</B>
+       <B>void</B> <B>delscreen(SCREEN*</B> <B>sp);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       <B>initscr</B>  is normally the first <B>curses</B> routine to call when
+       initializing a program.  A few special routines  sometimes
+       need  to  be called before it; these are <B>slk_init</B>, <B>filter</B>,
+       <B>ripoffline</B>, <B>use_env</B>.  For multiple-terminal  applications,
+       <B>newterm</B> may be called before <B>initscr</B>.
+
+       The initscr code determines the terminal type and initial-
+       izes all <B>curses</B> data structures.  <B>initscr</B> also causes  the
+       first  call  to  <B>refresh</B>  to  clear the screen.  If errors
+       occur, <B>initscr</B> writes  an  appropriate  error  message  to
+       standard error and exits; otherwise, a pointer is returned
+       to <B>stdscr</B>.
+
+       A program that outputs to more than  one  terminal  should
+       use  the  <B>newterm</B>  routine  for  each  terminal instead of
+       <B>initscr</B>.  A program that needs to inspect capabilities, so
+       it can continue to run in a line-oriented mode if the ter-
+       minal cannot support a screen-oriented program, would also
+       use  <B>newterm</B>.   The  routine <B>newterm</B> should be called once
+       for each terminal.  It returns a variable of type <B>SCREEN</B> <B>*</B>
+       which  should  be  saved  as a reference to that terminal.
+       The arguments are the <I>type</I> of the terminal to be  used  in
+       place of <B>$TERM</B>, a file pointer for output to the terminal,
+       and another file pointer for input from the  terminal  (if
+       <I>type</I>  is <B>NULL</B>, <B>$TERM</B> will be used).  The program must also
+       call <B>endwin</B> for each terminal being  used  before  exiting
+       from  <B>curses</B>.  If <B>newterm</B> is called more than once for the
+       same terminal, the first terminal referred to must be  the
+       last one for which <B>endwin</B> is called.
+
+       A  program  should  always  call  <B>endwin</B> before exiting or
+       escaping  from  <B>curses</B>  mode  temporarily.   This  routine
+       restores  tty  modes,  moves the cursor to the lower left-
+       hand corner of the screen and resets the terminal into the
+       proper non-visual mode.  Calling <B>refresh</B> or <B>doupdate</B> after
+       a temporary escape causes the  program  to  resume  visual
+       mode.
+
+       The  <B>isendwin</B>  routine  returns  <B>TRUE</B>  if  <B>endwin</B> has been
+       called without any subsequent calls to <B>wrefresh</B>, and <B>FALSE</B>
+       otherwise.
+
+       The  <B>set_term</B>  routine is used to switch between different
+       terminals.  The screen reference <B>new</B> becomes the new  cur-
+       rent  terminal.   The previous terminal is returned by the
+       routine.  This  is  the  only  routine  which  manipulates
+       <B>SCREEN</B>  pointers;  all other routines affect only the cur-
+       rent terminal.
+
+       The <B>delscreen</B> routine frees storage  associated  with  the
+       <B>SCREEN</B>  data  structure.   The  <B>endwin</B> routine does not do
+       this, so <B>delscreen</B> should be called after <B>endwin</B> if a par-
+       ticular <B>SCREEN</B> is no longer needed.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       <B>endwin</B>  returns  the  integer <B>ERR</B> upon failure and <B>OK</B> upon
+       successful completion.
+
+       Routines that return pointers always return <B>NULL</B> on error.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>initscr</B> and <B>newterm</B> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  functions are described in the XSI Curses standard,
+       Issue 4.  It specifies that portable applications must not
+       call <B>initscr</B> more than once.
+
+       Old versions of curses, e.g., BSD 4.4, may have returned a
+       null pointer from  <B>initscr</B>  when  an  error  is  detected,
+       rather  than  exiting.   It is safe but redundant to check
+       the return value of <B>initscr</B> in XSI Curses.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>,       <B><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></B>,       <B><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></B>,
+       <B><A HREF="curs_slk.3x.html">curs_slk(3x)</A></B>, <B><A HREF="curs_util.3x.html">curs_util(3x)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

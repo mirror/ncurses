@@ -1,0 +1,76 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>toe</B> - table of (terminfo) entries
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>toe</B> [<B>-v</B>[<I>n</I>]] [<B>-huUV</B>] <I>file...</I>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       With no options, <B>toe</B> lists all available terminal types by
+       primary name with descriptions.   File  arguments  specify
+       the  directories  to  be scanned; if no such arguments are
+       given, your default terminfo directory is scanned.  If you
+       also  specify  the  -h  option, a directory header will be
+       issued as each directory is entered.
+
+       There are other options intended for use by terminfo  file
+       maintainers:
+
+       <B>-u</B> <I>file</I>
+              says to issue a report on dependencies in the given
+              file. This report  condenses  the  `use'  relation:
+              each  line consists of the primary name of a termi-
+              nal that has use capabilities, followed by a colon,
+              followed  by the whitespace-separated primary names
+              of all terminals which occur in those use capabili-
+              ties, followed by a newline
+
+       <B>-U</B> <I>file</I>
+              says  to  issue a report on reverse dependencies in
+              the given file.  This  report  reverses  the  `use'
+              relation: each line consists of the primary name of
+              a terminal that occurs in  use  capabilities,  fol-
+              lowed  by a colon, followed by the whitespace-sepa-
+              rated primary names of all terminals  which  depend
+              on it, followed by a newline.
+
+       <B>-v</B><I>n</I>    specifies that (verbose) output be written to stan-
+              dard  error   trace   information   showing   <B>toe</B>'s
+              progress.   The optional integer <I>n</I> is a number from
+              1 to 10, interpreted as for <B><A HREF="tic.1.html">tic(1)</A></B>.
+
+       <B>-V</B>   prints out the version of the program in use on stan-
+            dard error and exits.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+       <B>@DATADIR@/terminfo/?/*</B>
+            Compiled terminal description database.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="tic.1m.html">tic(1m)</A></B>,    <B><A HREF="infocmp.1m.html">infocmp(1m)</A></B>,   <B><A HREF="captoinfo.1m.html">captoinfo(1m)</A></B>,   <B><A HREF="infotocap.1m.html">infotocap(1m)</A></B>,
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="terminfo.5.html">terminfo(5)</A></B>.
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

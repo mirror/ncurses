@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>keybound</B> - return definition of keycode
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>keybound(int</B> <B>keycode,</B> <B>int</B> <B>count);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This is an extension to the curses library.  It permits an
+       application to determine the string which  is  defined  in
+       the terminfo for specific keycodes.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The  keycode  must  be  greater  than  zero,  else NULL is
+       returned.  If it does not correspond  to  a  defined  key,
+       then  NULL is returned.  Otherwise, the function returns a
+       string, which must be freed by the caller.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These routines are specific to  ncurses.   They  were  not
+       supported  on  Version 7, BSD or System V implementations.
+       It is recommended that any code depending on them be  con-
+       ditioned using NCURSES_VERSION.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="define_key.3x.html">define_key(3x)</A></B>, <B><A HREF="keyok.3x.html">keyok(3x)</A></B>.
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       Thomas Dickey.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

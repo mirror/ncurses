@@ -38,7 +38,7 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.14 $
+--  $Revision: 1.15 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -139,7 +139,7 @@ include(`Linker_Options')
    --  AKA
    pragma Inline (Delete);
 
-   private
+private
       type Panel is new System.Storage_Elements.Integer_Address;
       Null_Panel : constant Panel := 0;
 

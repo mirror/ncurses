@@ -1,0 +1,134 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>bkgdset</B>,  <B>wbkgdset</B>,  <B>bkgd</B>,  <B>wbkgd</B>, <B>getbkgd</B> - <B>curses</B> window
+       background manipulation routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>void</B> <B>bkgdset(const</B> <B>chtype</B> <B>ch);</B>
+       <B>void</B> <B>wbkgdset(WINDOW</B> <B>*win,</B> <B>const</B> <B>chtype</B> <B>ch);</B>
+       <B>int</B> <B>bkgd(const</B> <B>chtype</B> <B>ch);</B>
+       <B>int</B> <B>wbkgd(WINDOW</B> <B>*win,</B> <B>const</B> <B>chtype</B> <B>ch);</B>
+       <B>chtype</B> <B>getbkgd(WINDOW</B> <B>*win);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>bkgdset</B> and <B>wbkgdset</B>  routines  manipulate  the  back-
+       ground  of  the  named window.  The window background is a
+       <B>chtype</B> consisting of any combination of attributes  (i.e.,
+       rendition)  and  a  character.   The attribute part of the
+       background is combined (OR'ed) with all non-blank  charac-
+       ters  that  are written into the window with <B>waddch</B>.  Both
+       the character and attribute parts of  the  background  are
+       combined   with  the  blank  characters.   The  background
+       becomes a property of the character  and  moves  with  the
+       character   through   any   scrolling   and  insert/delete
+       line/character operations.
+
+       To the extent  possible  on  a  particular  terminal,  the
+       attribute  part  of  the  background  is  displayed as the
+       graphic rendition of the character put on the screen.
+
+       The <B>bkgd</B> and <B>wbkgd</B> functions set the  background  property
+       of  the  current  or  specified window and then apply this
+       setting to every character position in that window:
+
+              The rendition of every character on the  screen  is
+              changed to the new background rendition.
+
+              Wherever  the  former background character appears,
+              it is changed to the new background character.
+
+       The <B>getbkgd</B> function returns the  given  window's  current
+       background character/attribute pair.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The  routines  <B>bkgd</B>  and <B>wbkgd</B> return the integer <B>OK</B>.  The
+       SVr4.0 manual says "or a non-negative integer  if  <B>immedok</B>
+       is set", but this appears to be an error.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>bkgdset</B> and <B>bkgd</B> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  functions are described in the XSI Curses standard,
+       Issue 4.  The draft does not include <B>const</B>  qualifiers  on
+       the arguments.  The standard specifies that <B>bkgd</B> and <B>wbkgd</B>
+       return <B>ERR</B>, on failure. but gives no failure conditions.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_addch.3x.html">curs_addch(3x)</A></B>, <B><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

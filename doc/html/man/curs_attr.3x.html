@@ -1,0 +1,186 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>attroff</B>,  <B>wattroff</B>,  <B>attron</B>,  <B>wattron</B>,  <B>attrset</B>, <B>wattrset</B>,
+       <B>color_set</B>,  <B>wcolor_set</B>,  <B>standend</B>,  <B>wstandend</B>,   <B>standout</B>,
+       <B>wstandout</B>,   <B>attr_get</B>,   <B>wattr_get</B>,  <B>attr_off</B>,  <B>wattr_off</B>,
+       <B>attr_on</B>, <B>wattr_on</B>,  <B>attr_set</B>,  <B>wattr_set</B>,  <B>chgat</B>,  <B>wchgat</B>,
+       <B>mvchgat</B>, <B>mvwchgat</B>, <B>PAIR_NUMBER</B> - <B>curses</B> character and win-
+       dow attribute control routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <B>int</B> <B>attroff(int</B> <B>attrs);</B>
+       <B>int</B> <B>wattroff(WINDOW</B> <B>*win,</B> <B>int</B> <B>attrs);</B>
+       <B>int</B> <B>attron(int</B> <B>attrs);</B>
+       <B>int</B> <B>wattron(WINDOW</B> <B>*win,</B> <B>int</B> <B>attrs);</B>
+       <B>int</B> <B>attrset(int</B> <B>attrs);</B>
+       <B>int</B> <B>wattrset(WINDOW</B> <B>*win,</B> <B>int</B> <B>attrs);</B>
+       <B>int</B> <B>color_set(short</B> <B>color_pair_number,</B> <B>void*</B> <B>opts);</B>
+       <B>int</B> <B>wcolor_set(WINDOW</B> <B>*win,</B> <B>short</B> <B>color_pair_number,</B>
+             <B>void*</B> <B>opts);</B>
+       <B>int</B> <B>standend(void);</B>
+       <B>int</B> <B>wstandend(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>standout(void);</B>
+       <B>int</B> <B>wstandout(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>attr_get(attr_t</B> <B>*attrs,</B> <B>short</B> <B>*pair,</B> <B>void</B> <B>*opts);</B>
+       <B>int</B> <B>wattr_get(WINDOW</B> <B>*win,</B> <B>attr_t</B> <B>*attrs,</B> <B>short</B> <B>*pair,</B>
+              <B>void</B> <B>*opts);</B>
+       <B>int</B> <B>attr_off(attr_t</B> <B>attrs,</B> <B>void</B> <B>*opts);</B>
+       <B>int</B> <B>wattr_off(WINDOW</B> <B>*win,</B> <B>attr_t</B> <B>attrs,</B> <B>void</B> <B>*opts);</B>
+       <B>int</B> <B>attr_on(attr_t</B> <B>attrs,</B> <B>void</B> <B>*opts);</B>
+       <B>int</B> <B>wattr_on(WINDOW</B> <B>*win,</B> <B>attr_t</B> <B>attrs,</B> <B>void</B> <B>*opts);</B>
+       <B>int</B> <B>attr_set(attr_t</B> <B>attrs,</B> <B>short</B> <B>pair,</B> <B>void</B> <B>*opts);</B>
+       <B>int</B> <B>wattr_set(WINDOW</B> <B>*win,</B> <B>attr_t</B> <B>attrs,</B> <B>short</B> <B>pair,</B>  <B>void</B>
+       <B>*opts);</B>
+       <B>int</B> <B>chgat(int</B> <B>n,</B> <B>attr_t</B> <B>attr,</B> <B>short</B> <B>color,</B>
+             <B>const</B> <B>void</B> <B>*opts)</B>
+       <B>int</B> <B>wchgat(WINDOW</B> <B>*win,</B> <B>int</B> <B>n,</B> <B>attr_t</B> <B>attr,</B>
+             <B>short</B> <B>color,</B> <B>const</B> <B>void</B> <B>*opts)</B>
+       <B>int</B> <B>mvchgat(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>int</B> <B>n,</B> <B>attr_t</B> <B>attr,</B>
+             <B>short</B> <B>color,</B> <B>const</B> <B>void</B> <B>*opts)</B>
+       <B>int</B> <B>mvwchgat(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>int</B> <B>n,</B>
+             <B>attr_t</B> <B>attr,</B> <B>short</B> <B>color,</B> <B>const</B> <B>void</B> <B>*opts)</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These  routines  manipulate  the current attributes of the
+       named window.  The current attributes of a window apply to
+       all  characters that are written into the window with <B>wad-</B>
+       <B>dch</B>, <B>waddstr</B> and <B>wprintw</B>.  Attributes are  a  property  of
+       the  character,  and  move  with the character through any
+       scrolling and insert/delete line/character operations.  To
+       the  extent  possible,  they  are displayed as appropriate
+       modifications to the graphic rendition of  characters  put
+       on the screen.
+
+       The  routine  <B>attrset</B>  sets  the current attributes of the
+       given window to <I>attrs</I>.  The routine <B>attroff</B> turns off  the
+       named  attributes  without turning any other attributes on
+       or off.  The routine <B>attron</B> turns on the named  attributes
+       without affecting any others.  The routine <B>standout</B> is the
+       same as <B>attron(A_STANDOUT)</B>.  The routine <B>standend</B>  is  the
+       same as <B>attrset(A_NORMAL)</B> or <B>attrset(0)</B>, that is, it turns
+       off all attributes.
+
+       The routine <B>color_set</B> sets the current color of the  given
+       window  to the foreground/background combination described
+       by the color_pair_number. The parameter opts  is  reserved
+       for future use, applications must supply a null pointer.
+
+       The  routine  <B>wattr_get</B>  returns the current attribute and
+       color pair for the given window; <B>attr_get</B> returns the cur-
+       rent  attribute  and color pair for <B>stdscr</B>.  The remaining
+       <B>attr_</B>* functions operate exactly  like  the  corresponding
+       <B>attr</B>*  functions,  except that they take arguments of type
+       <B>attr_t</B> rather than <B>int</B>.
+
+       The routine <B>chgat</B> changes the attributes of a given number
+       of  characters  starting at the current cursor location of
+       <B>stdscr</B>.  It does not update the cursor and does  not  per-
+       form  wrapping.   A  character count of -1 or greater than
+       the remaining window width means to change attributes  all
+       the  way to the end of the current line.  The <B>wchgat</B> func-
+       tion generalizes this to any window; the <B>mvwchgat</B> function
+       does a cursor move before acting.  In these functions, the
+       color argument is a color-pair  index  (as  in  the  first
+       argument  of  <I>init</I><B>_</B><I>pair</I>,  see  <B><A HREF="curs_color.3x.html">curs_color(3x)</A></B>).   The <B>opts</B>
+       argument is not presently used, but is  reserved  for  the
+       future (leave it <B>NULL</B>).
+
+   <B>Attributes</B>
+       The following video attributes, defined in <B>&lt;curses.h&gt;</B>, can
+       be passed to the routines <B>attron</B>, <B>attroff</B>, and <B>attrset</B>, or
+       OR'ed with the characters passed to <B>addch</B>.
+
+        <B>A_NORMAL</B>        Normal display (no highlight)
+        <B>A_STANDOUT</B>      Best highlighting mode of the terminal.
+        <B>A_UNDERLINE</B>     Underlining
+        <B>A_REVERSE</B>       Reverse video
+        <B>A_BLINK</B>         Blinking
+        <B>A_DIM</B>           Half bright
+        <B>A_BOLD</B>          Extra bright or bold
+        <B>A_PROTECT</B>       Protected mode
+        <B>A_INVIS</B>         Invisible or blank mode
+        <B>A_ALTCHARSET</B>    Alternate character set
+        <B>A_CHARTEXT</B>      Bit-mask to extract a character
+        <B>COLOR_PAIR(</B><I>n</I><B>)</B>   Color-pair number <I>n</I>
+
+       The following macro is the reverse of <B>COLOR_PAIR(</B><I>n</I><B>)</B>:
+
+       <B>PAIR_NUMBER(</B><I>attrs</I>) Returns the pair number associated
+                          with the <B>COLOR_PAIR(</B><I>n</I><B>)</B> attribute.
+
+       The  return values of many of these routines are not mean-
+       ingful (they are implemented as macro-expanded assignments
+       and  simply  return their argument).  The SVr4 manual page
+       claims (falsely) that these routines always return <B>1</B>.
+
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>attroff</B>,  <B>wattroff</B>,  <B>attron</B>,  <B>wattron</B>,  <B>attrset</B>,
+       <B>wattrset</B>, <B>standend</B> and <B>standout</B> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       All  these functions are supported in the XSI Curses stan-
+       dard, Issue 4.  The standard defined  the  dedicated  type
+       for  highlights,  <B>attr_t</B>,  which  is  not  defined in SVr4
+       curses. The functions taking <B>attr_t</B> arguments are not sup-
+       ported under SVr4.
+
+       The  XSI  Curses  standard  states that whether the tradi-
+       tional  functions  <B>attron</B>/<B>attroff</B>/<B>attrset</B>  can  manipulate
+       attributes  other  than <B>A_BLINK</B>, <B>A_BOLD</B>, <B>A_DIM</B>, <B>A_REVERSE</B>,
+       <B>A_STANDOUT</B>, or <B>A_UNDERLINE</B> is "unspecified".   Under  this
+       implementation  as  well  as  SVr4 curses, these functions
+       correctly manipulate all other  highlights  (specifically,
+       <B>A_ALTCHARSET</B>, <B>A_PROTECT</B>, and <B>A_INVIS</B>).
+
+       XSI  Curses added the new entry points, <B>attr_get</B>, <B>attr_on</B>,
+       <B>attr_off</B>,  <B>attr_set</B>,   <B>wattr_on</B>,   <B>wattr_off</B>,   <B>wattr_get</B>,
+       <B>wattr_set</B>.   These  are intended to work with a new series
+       of highlight macros prefixed with <B>WA_</B>.
+
+        <B>WA_NORMAL</B>       Normal display (no highlight)
+        <B>WA_STANDOUT</B>     Best highlighting mode of the terminal.
+        <B>WA_UNDERLINE</B>    Underlining
+        <B>WA_REVERSE</B>      Reverse video
+        <B>WA_BLINK</B>        Blinking
+        <B>WA_DIM</B>          Half bright
+        <B>WA_BOLD</B>         Extra bright or bold
+        <B>WA_ALTCHARSET</B>   Alternate character set
+
+       The XSI curses standard specifies that each pair of corre-
+       sponding  <B>A_</B>  and <B>WA_</B>-using functions operates on the same
+       current-highlight information.
+
+       The XSI standard extended conformance level adds new high-
+       lights <B>A_HORIZONTAL</B>, <B>A_LEFT</B>, <B>A_LOW</B>, <B>A_RIGHT</B>, <B>A_TOP</B>, <B>A_VER-</B>
+       <B>TICAL</B> (and corresponding <B>WA_</B> macros for each)  which  this
+       curses does not yet support.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>,        <B><A HREF="curs_addch.3x.html">curs_addch(3x)</A></B>,        <B><A HREF="curs_addstr.3x.html">curs_addstr(3x)</A></B>,
+       <B><A HREF="curs_printw.3x.html">curs_printw(3x)</A></B>
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -29,7 +29,7 @@
 #  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 #
 #  Version Control
-#  $Revision: 1.12 $
+#  $Revision: 1.13 $
 #
 SHELL		= /bin/sh
 THIS		= Makefile
@@ -40,6 +40,7 @@ CF_MFLAGS 	= @cf_cv_makeflags@
 @SET_MAKE@
 
 all \
+libs \
 sources \
 install \
 install.libs \

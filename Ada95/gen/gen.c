@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Revision: 1.29 $
+    $Revision: 1.31 $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -218,50 +218,53 @@ static void gen_mrep_rep(const char *name)
 
 static void gen_attr_set( const char *name )
 {
+  /* All of the A_xxx symbols are defined in ncurses, but not all are nonzero
+   * if "configure --enable-widec" is specified.
+   */
   static const name_attribute_pair nap[] = {
-#ifdef A_STANDOUT
+#if A_STANDOUT
     {"Stand_Out",               A_STANDOUT},
 #endif
-#ifdef A_UNDERLINE
+#if A_UNDERLINE
     {"Under_Line",              A_UNDERLINE},
 #endif
-#ifdef A_REVERSE
+#if A_REVERSE
     {"Reverse_Video",           A_REVERSE},
 #endif
-#ifdef A_BLINK
+#if A_BLINK
     {"Blink",                   A_BLINK},
 #endif
-#ifdef A_DIM
+#if A_DIM
     {"Dim_Character",           A_DIM},
 #endif
-#ifdef A_BOLD
+#if A_BOLD
     {"Bold_Character",          A_BOLD},
 #endif
-#ifdef A_ALTCHARSET
+#if A_ALTCHARSET
     {"Alternate_Character_Set", A_ALTCHARSET},
 #endif
-#ifdef A_INVIS
+#if A_INVIS
     {"Invisible_Character",     A_INVIS},
 #endif
-#ifdef A_PROTECT
+#if A_PROTECT
     {"Protected_Character",     A_PROTECT},
 #endif
-#ifdef A_HORIZONTAL
+#if A_HORIZONTAL
     {"Horizontal",              A_HORIZONTAL},
 #endif
-#ifdef A_LEFT
+#if A_LEFT
     {"Left",                    A_LEFT},
 #endif
-#ifdef A_LOW
+#if A_LOW
     {"Low",                     A_LOW},
 #endif
-#ifdef A_RIGHT
+#if A_RIGHT
     {"Right",                   A_RIGHT},
 #endif
-#ifdef A_TOP
+#if A_TOP
     {"Top",                     A_TOP},
 #endif
-#ifdef A_VERTICAL
+#if A_VERTICAL
     {"Vertical",                A_VERTICAL},
 #endif
     {(char *)0,                 0}
@@ -1048,7 +1051,6 @@ static void gen_color (void)
  */
 static void gen_linkopts (void)
 {
-   printf("   pragma Linker_Options (\"-lAdaCurses%s\");\n", model);
    printf("   pragma Linker_Options (\"-lncurses%s\");\n", model);
 }
 

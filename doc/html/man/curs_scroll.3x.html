@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>scroll</B>, <B>scrl</B>, <B>wscrl</B> - scroll a <B>curses</B> window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>scroll(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>scrl(int</B> <B>n);</B>
+       <B>int</B> <B>wscrl(WINDOW</B> <B>*win,</B> <B>int</B> <B>n);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  <B>scroll</B>  routine scrolls the window up one line.  This
+       involves moving the lines in the  window  data  structure.
+       As  an optimization, if the scrolling region of the window
+       is the entire screen, the physical screen may be  scrolled
+       at the same time.
+
+       For  positive  <I>n</I>,  the  <B>scrl</B> and <B>wscrl</B> routines scroll the
+       window up <I>n</I> lines (line <I>i</I>+<I>n</I> becomes <I>i</I>);  otherwise  scroll
+       the  window  down <I>n</I> lines.  This involves moving the lines
+       in the window character image structure.  The current cur-
+       sor position is not changed.
+
+       For these functions to work, scrolling must be enabled via
+       <B>scrollok</B>.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       These routines return <B>ERR</B> upon failure, and <B>OK</B> (SVr4  only
+       specifies "an integer value other than <B>ERR</B>") upon success-
+       ful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>scrl</B> and <B>scroll</B> may be macros.
+
+       The SVr4 documentation says that the optimization of phys-
+       ically  scrolling  immediately if the scroll region is the
+       entire screen "is"  performed,  not  "may  be"  performed.
+       This  implementation  deliberately does not guarantee that
+       this will occur, in order to leave open the possibility of
+       smarter  optimization  of  multiple  scroll actions on the
+       next update.
+
+       Neither the SVr4 nor the XSI documentation specify whether
+       the current attribute or current color-pair of blanks gen-
+       erated by the  scroll  function  is  zeroed.   Under  this
+       implementation it is.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The  XSI  Curses  standard,  Issue 4 describes these func-
+       tions.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></B>
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

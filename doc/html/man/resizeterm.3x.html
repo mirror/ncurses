@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>resizeterm</B> - change the curses terminal size
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>resizeterm(int</B> <B>lines,</B> <B>int</B> <B>columns);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This  is  an extension to the curses library.  It provides
+       callers with a hook into the <B>ncurses</B> data to  resize  win-
+       dows, primarily for use by programs running in an X Window
+       terminal (e.g., xterm).  The function  <B>resizeterm</B>  resizes
+       the  standard  and current windows to the specified dimen-
+       sions, and adjusts other  bookkeeping  data  used  by  the
+       <B>ncurses</B> library that record the window dimensions.
+
+       When  resizing  the  windows, the function blank-fills the
+       areas that are extended. The  calling  application  should
+       fill in these areas with appropriate data.
+
+       The function attempts to resize all windows.  However, due
+       to the calling convention of pads, it is not  possible  to
+       resize  these  without  additional  interaction  with  the
+       application.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The function returns the integer <B>ERR</B> upon failure  and  <B>OK</B>
+       on success.  It will fail if either of the dimensions less
+       than or equal  to  zero,  or  if  an  error  occurs  while
+       (re)allocating memory for the windows.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       While  this  function  is intended to be used to support a
+       signal handler (i.e., for SIGWINCH), care should be  taken
+       to  avoid invoking it in a context where <B>malloc</B> or <B>realloc</B>
+       may have been interrupted, since it uses those  functions.
+
+       If  ncurses  is configured to supply its own SIGWINCH han-
+       dler, the <B>resizeterm</B> function ungetch's a <B>KEY_RESIZE</B> which
+       will  be  read on the next call to <B>getch</B>.  This is used to
+       alert an application that the screen size has changed, and
+       that  it should repaint special features such as pads that
+       cannot be done automatically.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="wresize.3x.html">wresize(3x)</A></B>.
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       Thomas Dickey (from an equivalent function written in 1988
+       for BSD curses).
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>_tracef</B>,      <B>_tracedump</B>,     <B>_traceattr</B>,     <B>_traceattr2</B>,
+       <B>_nc_tracebits</B>,  <B>_tracechar</B>,  <B>_tracechtype</B>,  <B>_tracechtype2</B>,
+       <B>_tracemouse</B>, <B>trace</B> - <B>curses</B> debugging routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <B>void</B> <B>_tracef(const</B> <B>char</B> <B>*format,</B> <B>...);</B>
+       <B>void</B> <B>_tracedump(const</B> <B>char</B> <B>*label,</B> <B>WINDOW</B> <B>*win);</B>
+       <B>char</B> <B>*_traceattr(attr_t</B> <B>attr);</B>
+       <B>char</B> <B>*_traceattr2(int</B> <B>buffer,</B> <B>chtype</B> <B>ch);</B>
+       <B>char</B> <B>*_nc_tracebits(void);</B>
+       <B>char</B> <B>*_tracechar(const</B> <B>unsigned</B> <B>char</B> <B>ch);</B>
+       <B>char</B> <B>*_tracechtype(chtype</B> <B>ch);</B>
+       <B>char</B> <B>*_tracechtype2(int</B> <B>buffer,</B> <B>chtype</B> <B>ch);</B>
+       <B>char</B> <B>*_tracemouse(const</B> <B>MEVENT</B> <B>*event);</B>
+       <B>void</B> <B>trace(const</B> <B>unsigned</B> <B>int</B> <B>param);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  <B>trace</B>  routines  are  used  for debugging the ncurses
+       libraries, as well as applications which use  the  ncurses
+       libraries.   These  functions  are normally available only
+       with the debugging library <I>libncurses</I><B>_</B><I>g.a</I>, but may be com-
+       piled into any model (shared, static, profile) by defining
+       the symbol <B>TRACE</B>.
+
+       The principal parts of this interface are the  <B>trace</B>  rou-
+       tine which selectively enables different tracing features,
+       and the <B>_tracef</B> routine which writes formatted data to the
+       <I>trace</I> file.
+
+       Calling  <B>trace</B>  with  a  nonzero  parameter opens the file
+       <B>trace</B> in the current directory for output.  The  parameter
+       is formed by OR'ing values from the list of <B>TRACE_</B><I>xxx</I> def-
+       initions in <B>&lt;curses.h&gt;</B>.  These include:
+
+       TRACE_DISABLE
+            turn off tracing.
+
+       TRACE_TIMES
+            trace user and system times of updates.
+
+       TRACE_TPUTS
+            trace tputs calls.
+
+       TRACE_UPDATE
+            trace update actions, old &amp; new screens.
+
+       TRACE_MOVE
+            trace cursor movement and scrolling.
+
+       TRACE_CHARPUT
+            trace all character outputs.
+
+       TRACE_ORDINARY
+            trace all update actions.  The  old  and  new  screen
+            contents  are  written  to  the  trace  file for each
+            refresh.
+
+       TRACE_CALLS
+            trace all curses calls.  The parameters for each call
+            are traced, as well as return values.
+
+       TRACE_VIRTPUT
+            trace virtual character puts, i.e., calls to <B>addch</B>.
+
+       TRACE_IEVENT
+            trace low-level input processing, including timeouts.
+
+       TRACE_BITS
+            trace state of TTY control bits.
+
+       TRACE_ICALLS
+            trace internal/nested calls.
+
+       TRACE_CCALLS
+            trace per-character calls.
+
+       TRACE_DATABASE
+            trace read/write of terminfo/termcap data.
+
+       TRACE_MAXIMUM
+            maximum trace level,  enables  all  of  the  separate
+            trace features.
+
+            Some  tracing features are enabled whenever the <B>trace</B>
+            parameter is nonzero.  Some  features  overlap.   The
+            specific names are used as a guideline.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       Routines  which  return a value are designed to be used as
+       parameters to the <B>_tracef</B> routine.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These functions are not part of the XSI  interface.   Some
+       other  curses  implementations  are known to have similar,
+       undocumented features, but they are  not  compatible  with
+       ncurses.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>.
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

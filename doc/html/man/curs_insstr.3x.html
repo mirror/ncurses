@@ -1,0 +1,135 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>insstr</B>,  <B>insnstr</B>,  <B>winsstr</B>, <B>winsnstr</B>, <B>mvinsstr</B>, <B>mvinsnstr</B>,
+       <B>mvwinsstr</B>, <B>mvwinsnstr</B> - insert string before cursor  in  a
+       <B>curses</B> window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <B>int</B> <B>insstr(const</B> <B>char</B> <B>*str);</B>
+       <B>int</B> <B>insnstr(const</B> <B>char</B> <B>*str,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>winsstr(WINDOW</B> <B>*win,</B> <B>const</B> <B>char</B> <B>*str);</B>
+       <B>int</B> <B>winsnstr(WINDOW</B> <B>*win,</B> <B>const</B> <B>char</B> <B>*str,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>mvinsstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>char</B> <B>*str);</B>
+       <B>int</B> <B>mvinsnstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>char</B> <B>*str,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>mvwinsstr(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>char</B> <B>*str);</B>
+       <B>int</B> <B>mvwinsnstr(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>char</B> <B>*str,</B>
+       <B>int</B> <B>n);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These  routines insert a character string (as many charac-
+       ters as will fit on the line) before the  character  under
+       the cursor.  All characters to the right of the cursor are
+       shifted right, with the possibility of the rightmost char-
+       acters  on  the line being lost.  The cursor position does
+       not change (after moving to <I>y</I>, <I>x</I>, if specified). The  four
+       routines with <I>n</I> as the last argument insert a leading sub-
+       string of at most <I>n</I> characters.  If <I>n</I>&lt;=0, then the  entire
+       string is inserted.
+
+       If  a  character in <I>str</I> is a tab, newline, carriage return
+       or backspace, the cursor is moved appropriately within the
+       window.   A  newline  also  does a <B>clrtoeol</B> before moving.
+       Tabs are considered to be at every eighth  column.   If  a
+       character in <I>str</I> is another control character, it is drawn
+       in the <B>^</B><I>X</I> notation.  Calling <B>winch</B> after adding a  control
+       character (and moving to it, if necessary) does not return
+       the control character, but instead returns a character  in
+       the ^-representation of the control character.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All  routines that return an integer return <B>ERR</B> upon fail-
+       ure and OK (SVr4 specifies only "an  integer  value  other
+       than  <B>ERR</B>")  upon  successful completion, unless otherwise
+       noted in the preceding routine descriptions.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that all but <B>winsnstr</B> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These functions are described in the XSI Curses  standard,
+       Issue  4,  which  adds  const qualifiers to the arguments.
+       The XSI Curses error  conditions  <B>EILSEQ</B>  and  <B>EILOVERFLOW</B>
+       associated  with  extended-level  conformance  are not yet
+       detected (this implementation does not  yet  support  XPG4
+       multi-byte characters).
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_clear.3x.html">curs_clear(3x)</A></B>, <B><A HREF="curs_inch.3x.html">curs_inch(3x)</A></B>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,242 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>cbreak</B>, <B>nocbreak</B>, <B>echo</B>, <B>noecho</B>, <B>halfdelay</B>, <B>intrflush</B>, <B>key-</B>
+       <B>pad</B>, <B>meta</B>,  <B>nodelay</B>,  <B>notimeout</B>,  <B>raw</B>,  <B>noraw</B>,  <B>noqiflush</B>,
+       <B>qiflush</B>,  <B>timeout</B>,  <B>wtimeout</B>,  <B>typeahead</B>  -  <B>curses</B>  input
+       options
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>cbreak(void);</B>
+       <B>int</B> <B>nocbreak(void);</B>
+       <B>int</B> <B>echo(void);</B>
+       <B>int</B> <B>noecho(void);</B>
+       <B>int</B> <B>halfdelay(int</B> <B>tenths);</B>
+       <B>int</B> <B>intrflush(WINDOW</B> <B>*win,</B> <B>bool</B> <B>bf);</B>
+       <B>int</B> <B>keypad(WINDOW</B> <B>*win,</B> <B>bool</B> <B>bf);</B>
+       <B>int</B> <B>meta(WINDOW</B> <B>*win,</B> <B>bool</B> <B>bf);</B>
+       <B>int</B> <B>nodelay(WINDOW</B> <B>*win,</B> <B>bool</B> <B>bf);</B>
+       <B>int</B> <B>raw(void);</B>
+       <B>int</B> <B>noraw(void);</B>
+       <B>void</B> <B>noqiflush(void);</B>
+       <B>void</B> <B>qiflush(void);</B>
+       <B>int</B> <B>notimeout(WINDOW</B> <B>*win,</B> <B>bool</B> <B>bf);</B>
+       <B>void</B> <B>timeout(int</B> <B>delay);</B>
+       <B>void</B> <B>wtimeout(WINDOW</B> <B>*win,</B> <B>int</B> <B>delay);</B>
+       <B>int</B> <B>typeahead(int</B> <B>fd);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       Normally, the tty driver buffers typed characters until  a
+       newline  or  carriage return is typed.  The <B>cbreak</B> routine
+       disables line buffering and erase/kill  character-process-
+       ing  (interrupt  and  flow  control  characters  are unaf-
+       fected), making characters typed by the  user  immediately
+       available  to  the  program.  The <B>nocbreak</B> routine returns
+       the terminal to normal (cooked) mode.
+
+       Initially the terminal may or may not be in  <B>cbreak</B>  mode,
+       as the mode is inherited; therefore, a program should call
+       <B>cbreak</B> or <B>nocbreak</B> explicitly.  Most interactive  programs
+       using  <B>curses</B> set the <B>cbreak</B> mode.  Note that <B>cbreak</B> over-
+       rides <B>raw</B>.  [See <B><A HREF="curs_getch.3x.html">curs_getch(3x)</A></B> for a  discussion  of  how
+       these routines interact with <B>echo</B> and <B>noecho</B>.]
+
+       The  <B>echo</B>  and  <B>noecho</B> routines control whether characters
+       typed by the user are echoed by <B>getch</B> as they  are  typed.
+       Echoing  by  the  tty  driver is always disabled, but ini-
+       tially <B>getch</B> is in echo  mode,  so  characters  typed  are
+       echoed.  Authors of most interactive programs prefer to do
+       their own echoing in a controlled area of the  screen,  or
+       not  to  echo  at  all, so they disable echoing by calling
+       <B>noecho</B>.  [See <B><A HREF="curs_getch.3x.html">curs_getch(3x)</A></B> for a discussion of how these
+       routines interact with <B>cbreak</B> and <B>nocbreak</B>.]
+
+       The  <B>halfdelay</B>  routine is used for half-delay mode, which
+       is similar to <B>cbreak</B> mode in that characters typed by  the
+       user  are  immediately available to the program.  However,
+       after blocking  for  <I>tenths</I>  tenths  of  seconds,  ERR  is
+       returned  if  nothing has been typed.  The value of <B>tenths</B>
+       must be a number between 1 and 255.  Use <B>nocbreak</B> to leave
+       half-delay mode.
+
+       If  the <B>intrflush</B> option is enabled, (<I>bf</I> is <B>TRUE</B>), when an
+       interrupt key  is  pressed  on  the  keyboard  (interrupt,
+       break,  quit)  all  output in the tty driver queue will be
+       flushed, giving the  effect  of  faster  response  to  the
+       interrupt,  but  causing  <B>curses</B> to have the wrong idea of
+       what is on the  screen.   Disabling  (<I>bf</I>  is  <B>FALSE</B>),  the
+       option  prevents the flush.  The default for the option is
+       inherited from the tty driver settings.  The window  argu-
+       ment is ignored.
+
+       The  <B>keypad</B> option enables the keypad of the user's termi-
+       nal.  If enabled (<I>bf</I> is <B>TRUE</B>), the user can press a  func-
+       tion  key (such as an arrow key) and <B>wgetch</B> returns a sin-
+       gle value representing the function key, as  in  <B>KEY_LEFT</B>.
+       If  disabled (<I>bf</I> is <B>FALSE</B>), <B>curses</B> does not treat function
+       keys specially and the program has to interpret the escape
+       sequences  itself.   If  the keypad in the terminal can be
+       turned on  (made  to  transmit)  and  off  (made  to  work
+       locally),  turning on this option causes the terminal key-
+       pad to be turned on when <B>wgetch</B> is  called.   The  default
+       value for keypad is false.
+
+       Initially, whether the terminal returns 7 or 8 significant
+       bits on input depends on  the  control  mode  of  the  tty
+       driver  [see  <B><A HREF="termio.7.html">termio(7)</A></B>].  To force 8 bits to be returned,
+       invoke <B>meta</B>(<I>win</I>, <B>TRUE</B>); this is equivalent,  under  POSIX,
+       to  setting the CS8 flag on the terminal.  To force 7 bits
+       to be returned, invoke <B>meta</B>(<I>win</I>, <B>FALSE</B>); this  is  equiva-
+       lent,  under  POSIX, to setting the CS8 flag on the termi-
+       nal.  The window argument, <I>win</I>, is always ignored.  If the
+       terminfo capabilities <B>smm</B> (meta_on) and <B>rmm</B> (meta_off) are
+       defined for the terminal, <B>smm</B> is sent to the terminal when
+       <B>meta</B>(<I>win</I>,  <B>TRUE</B>)  is called and <B>rmm</B> is sent when <B>meta</B>(<I>win</I>,
+       <B>FALSE</B>) is called.
+
+       The <B>nodelay</B> option causes <B>getch</B> to be a non-blocking call.
+       If  no input is ready, <B>getch</B> returns <B>ERR</B>.  If disabled (<I>bf</I>
+       is <B>FALSE</B>), <B>getch</B> waits until a key is pressed.
+
+       While interpreting an input escape sequence, <B>wgetch</B> sets a
+       timer  while  waiting  for the next character.  If <B>notime-</B>
+       <B>out(</B><I>win</I>, <B>TRUE</B>) is called,  then  <B>wgetch</B>  does  not  set  a
+       timer.   The  purpose  of  the timeout is to differentiate
+       between sequences received from a function key  and  those
+       typed by a user.
+
+       The  <B>raw</B> and <B>noraw</B> routines place the terminal into or out
+       of raw mode.  Raw mode is similar to <B>cbreak</B> mode, in  that
+       characters  typed  are  immediately  passed through to the
+       user program.  The differences are that in raw  mode,  the
+       interrupt,  quit, suspend, and flow control characters are
+       all passed through uninterpreted, instead of generating  a
+       signal.   The  behavior  of the BREAK key depends on other
+       bits in the tty driver that are not set by <B>curses</B>.
+
+       When the <B>noqiflush</B> routine is used, normal flush of  input
+       and  output queues associated with the <B>INTR</B>, <B>QUIT</B> and <B>SUSP</B>
+       characters will not be done [see <B><A HREF="termio.7.html">termio(7)</A></B>].  When <B>qiflush</B>
+       is  called,  the queues will be flushed when these control
+       characters are read.  You may want to call <B>noqiflush()</B>  in
+       a  signal handler if you want output to continue as though
+       the interrupt had not occurred, after the handler exits.
+
+       The <B>timeout</B> and <B>wtimeout</B> routines  set  blocking  or  non-
+       blocking  read  for a given window.  If <I>delay</I> is negative,
+       blocking  read  is  used  (<I>i</I>.<I>e</I>.,  waits  indefinitely  for
+       input).   If <I>delay</I> is zero, then non-blocking read is used
+       (<I>i</I>.<I>e</I>., read returns <B>ERR</B> if no input is waiting).  If <I>delay</I>
+       is  positive, then read blocks for <I>delay</I> milliseconds, and
+       returns <B>ERR</B> if there is still no input.  Hence, these rou-
+       tines  provide the same functionality as <B>nodelay</B>, plus the
+       additional capability of being  able  to  block  for  only
+       <I>delay</I> milliseconds (where <I>delay</I> is positive).
+
+       The  <B>curses</B> library does ``line-breakout optimization'' by
+       looking for  typeahead  periodically  while  updating  the
+       screen.   If  input is found, and it is coming from a tty,
+       the current update is postponed until <B>refresh</B> or  <B>doupdate</B>
+       is  called again.  This allows faster response to commands
+       typed in advance.  Normally, the input FILE pointer passed
+       to  <B>newterm</B>,  or  <B>stdin</B> in the case that <B>initscr</B> was used,
+       will be used to do this typeahead checking.  The <B>typeahead</B>
+       routine  specifies  that  the  file descriptor <I>fd</I> is to be
+       used to check for typeahead instead.  If <I>fd</I> is -1, then no
+       typeahead checking is done.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All  routines that return an integer return <B>ERR</B> upon fail-
+       ure and OK (SVr4 specifies only "an  integer  value  other
+       than  <B>ERR</B>")  upon  successful completion, unless otherwise
+       noted in the preceding routine descriptions.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These functions are described in the XSI Curses  standard,
+       Issue 4.
+
+       The  ncurses  library obeys the XPG4 standard and the his-
+       torical practice of the AT&amp;T  curses  implementations,  in
+       that  the  echo bit is cleared when curses initializes the
+       terminal state.  BSD curses differed from  this  slightly;
+       it left the echo bit on at initialization, but the BSD <B>raw</B>
+       call turned it off as a side-effect.  For  best  portabil-
+       ity,  set echo or noecho explicitly just after initializa-
+       tion, even if your program remains in cooked mode.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>echo</B>, <B>noecho</B>, <B>halfdelay</B>, <B>intrflush</B>, <B>meta</B>,  <B>node-</B>
+       <B>lay</B>,  <B>notimeout</B>, <B>noqiflush</B>, <B>qiflush</B>, <B>timeout</B>, and <B>wtimeout</B>
+       may be macros.
+
+       The <B>noraw</B> and <B>nocbreak</B> calls follow historical practice in
+       that  they  attempt  to  restore to normal (`cooked') mode
+       from raw and cbreak modes respectively.  Mixing  raw/noraw
+       and  cbreak/nocbreak  calls  leads  to  tty driver control
+       states that are hard to predict or understand; it  is  not
+       recommended.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_getch.3x.html">curs_getch(3x)</A></B>, <B><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></B>, <B><A HREF="termio.7.html">termio(7)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

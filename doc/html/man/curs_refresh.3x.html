@@ -1,0 +1,134 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>refresh</B>, <B>wrefresh</B>, <B>wnoutrefresh</B>, <B>doupdate</B>, <B>redrawwin</B>, <B>wre-</B>
+       <B>drawln</B> - refresh <B>curses</B> windows and lines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>refresh(void);</B>
+       <B>int</B> <B>wrefresh(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>wnoutrefresh(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>doupdate(void);</B>
+       <B>int</B> <B>redrawwin(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>wredrawln(WINDOW</B> <B>*win,</B> <B>int</B> <B>beg_line,</B> <B>int</B> <B>num_lines);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>refresh</B> and <B>wrefresh</B>  routines  (or  <B>wnoutrefresh</B>  and
+       <B>doupdate</B>)  must be called to get actual output to the ter-
+       minal, as other routines  merely  manipulate  data  struc-
+       tures.   The  routine  <B>wrefresh</B> copies the named window to
+       the physical terminal screen, taking into account what  is
+       already  there  in order to do optimizations.  The <B>refresh</B>
+       routine is the same, using <B>stdscr</B> as the  default  window.
+       Unless  <B>leaveok</B>  has  been enabled, the physical cursor of
+       the terminal is left at the location  of  the  cursor  for
+       that window.
+
+       The  <B>wnoutrefresh</B>  and  <B>doupdate</B>  routines  allow multiple
+       updates with more  efficiency  than  <B>wrefresh</B>  alone.   In
+       addition  to  all  the window structures, <B>curses</B> keeps two
+       data structures representing the terminal screen: a physi-
+       cal screen, describing what is actually on the screen, and
+       a virtual screen, describing what the programmer wants  to
+       have on the screen.
+
+       The  routine <B>wrefresh</B> works by first calling <B>wnoutrefresh</B>,
+       which copies the named window to the virtual  screen,  and
+       then  calling  <B>doupdate</B>, which compares the virtual screen
+       to the physical screen and does the actual update.  If the
+       programmer  wishes  to  output  several windows at once, a
+       series of calls to <B>wrefresh</B> results in  alternating  calls
+       to  <B>wnoutrefresh</B>  and  <B>doupdate</B>, causing several bursts of
+       output to the screen.  By first calling  <B>wnoutrefresh</B>  for
+       each  window,  it  is then possible to call <B>doupdate</B> once,
+       resulting in only one burst of output,  with  fewer  total
+       characters transmitted and less CPU time used.  If the <I>win</I>
+       argument to <B>wrefresh</B> is the global  variable  <B>curscr</B>,  the
+       screen  is immediately cleared and repainted from scratch.
+
+       The phrase "copies the named window to the virtual screen"
+       above  is  ambiguous.   What  actually happens is that all
+       <I>touched</I> (changed) lines in the window are  copied  to  the
+       virtual  screen.   This affects programs that use overlap-
+       ping windows; it means that if two  windows  overlap,  you
+       can  refresh  them  in either order and the overlap region
+       will be modified only when it is explicitly changed.  (But
+       see  the  section on <B>PORTABILITY</B> below for a warning about
+       exploiting this behavior.)
+
+       The <B>wredrawln</B> routine indicates to <B>curses</B> that some screen
+       lines  are corrupted and should be thrown away before any-
+       thing is written over  them.   It  touches  the  indicated
+       lines  (marking  them  changed).   The routine <B>redrawwin</B>()
+       touches the entire window.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       Routines that return an integer return <B>ERR</B>  upon  failure,
+       and  <B>OK</B>  (SVr4 only specifies "an integer value other than
+       <B>ERR</B>") upon successful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>refresh</B> and <B>redrawwin</B> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses standard, Issue  4  describes  these  func-
+       tions.
+
+       Whether  <B>wnoutrefresh()</B>  copies  to the virtual screen the
+       entire contents of a window or just its  changed  portions
+       has never been well-documented in historic curses versions
+       (including SVr4).  It might be unwise to  rely  on  either
+       behavior  in  programs  that  might have to be linked with
+       other curses implementations.   Instead,  you  can  do  an
+       explicit  <B>touchwin()</B>  before  the  <B>wnoutrefresh()</B>  call to
+       guarantee an entire-contents copy anywhere.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>newpad</B>, <B>subpad</B>, <B>prefresh</B>, <B>pnoutrefresh</B>, <B>pechochar</B> - create
+       and display <B>curses</B> pads
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>WINDOW</B> <B>*newpad(int</B> <B>nlines,</B> <B>int</B> <B>ncols);</B>
+       <B>WINDOW</B> <B>*subpad(WINDOW</B> <B>*orig,</B> <B>int</B> <B>nlines,</B> <B>int</B> <B>ncols,</B>
+             <B>int</B> <B>begin_y,</B> <B>int</B> <B>begin_x);</B>
+       <B>int</B> <B>prefresh(WINDOW</B> <B>*pad,</B> <B>int</B> <B>pminrow,</B> <B>int</B> <B>pmincol,</B>
+             <B>int</B> <B>sminrow,</B> <B>int</B> <B>smincol,</B> <B>int</B> <B>smaxrow,</B> <B>int</B> <B>smaxcol);</B>
+       <B>int</B> <B>pnoutrefresh(WINDOW</B> <B>*pad,</B> <B>int</B> <B>pminrow,</B> <B>int</B> <B>pmincol,</B>
+             <B>int</B> <B>sminrow,</B> <B>int</B> <B>smincol,</B> <B>int</B> <B>smaxrow,</B> <B>int</B> <B>smaxcol);</B>
+       <B>int</B> <B>pechochar(WINDOW</B> <B>*pad,</B> <B>chtype</B> <B>ch);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>newpad</B> routine creates and returns a pointer to a  new
+       pad data structure with the given number of lines, <I>nlines</I>,
+       and columns, <I>ncols</I>.  A pad is like a window,  except  that
+       it is not restricted by the screen size, and is not neces-
+       sarily associated with a particular part  of  the  screen.
+       Pads can be used when a large window is needed, and only a
+       part of the window will be on  the  screen  at  one  time.
+       Automatic refreshes of pads (<I>e</I>.<I>g</I>., from scrolling or echo-
+       ing of input) do not occur.  It is not legal to call  <B>wre-</B>
+       <B>fresh</B>  with a <I>pad</I> as an argument; the routines <B>prefresh</B> or
+       <B>pnoutrefresh</B> should be called instead.   Note  that  these
+       routines require additional parameters to specify the part
+       of the pad to be displayed and the location on the  screen
+       to be used for the display.
+
+       The <B>subpad</B> routine creates and returns a pointer to a sub-
+       window within a  pad  with  the  given  number  of  lines,
+       <I>nlines</I>,  and  columns,  <I>ncols</I>.   Unlike <B>subwin</B>, which uses
+       screen coordinates, the window is  at  position  (<I>begin</I>_<I>x</I><B>,</B>
+       <I>begin</I>_<I>y</I>)  on the pad.  The window is made in the middle of
+       the window <I>orig</I>, so that changes made to one window affect
+       both  windows.   During  the  use of this routine, it will
+       often be necessary to call <B>touchwin</B> or <B>touchline</B>  on  <I>orig</I>
+       before calling <B>prefresh</B>.
+
+       The  <B>prefresh</B>  and  <B>pnoutrefresh</B> routines are analogous to
+       <B>wrefresh</B> and <B>wnoutrefresh</B> except that they relate to  pads
+       instead  of windows.  The additional parameters are needed
+       to indicate what part of the pad and screen are  involved.
+       <I>pminrow</I>  and <I>pmincol</I> specify the upper left-hand corner of
+       the rectangle to be displayed in the pad.  <I>sminrow</I>,  <I>smin-</I>
+       <I>col</I>, <I>smaxrow</I>, and <I>smaxcol</I> specify the edges of the rectan-
+       gle to be displayed on the screen.  The  lower  right-hand
+       corner of the rectangle to be displayed in the pad is cal-
+       culated from the screen coordinates, since the  rectangles
+       must  be  the same size.  Both rectangles must be entirely
+       contained within their  respective  structures.   Negative
+       values  of  <I>pminrow</I>,  <I>pmincol</I>,  <I>sminrow</I>,  or  <I>smincol</I>  are
+       treated as if they were zero.
+
+       The <B>pechochar</B> routine is functionally equivalent to a call
+       to  <B>addch</B>  followed by a call to <B>refresh</B>, a call to <B>waddch</B>
+       followed by a call to <B>wrefresh</B>, or a call to  <B>waddch</B>  fol-
+       lowed  by  a  call  to <B>prefresh.</B> The knowledge that only a
+       single character is being output is taken into  considera-
+       tion  and, for non-control characters, a considerable per-
+       formance gain  might  be  seen  by  using  these  routines
+       instead  of  their equivalents.  In the case of <B>pechochar</B>,
+       the last location of the pad on the screen is  reused  for
+       the arguments to <B>prefresh</B>.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       Routines  that  return  an integer return <B>ERR</B> upon failure
+       and <B>OK</B> (SVr4 only specifies "an integer value  other  than
+       <B>ERR</B>") upon successful completion.
+
+       Routines  that  return  pointers return <B>NULL</B> on error, and
+       set <B>errno</B> to <B>ENOMEM</B>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>pechochar</B> may be a macro.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses standard, Issue  4  describes  these  func-
+       tions.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>,        <B><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></B>,       <B><A HREF="curs_touch.3x.html">curs_touch(3x)</A></B>,
+       <B><A HREF="curs_addch.3x.html">curs_addch(3x)</A></B>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -37,7 +37,7 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer <juergen.pfeifer@gmx.net> 1996
 --  Version Control:
---  $Revision: 1.26 $
+--  $Revision: 1.28 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Base_Defs')
@@ -116,7 +116,7 @@ include(`Color_Defs')
    --  the other for the background
 
 include(`Character_Attribute_Set_Rep')
-   --  (n)curses uses all but the lowes 16 Bits for Attributes.
+   --  (n)curses uses all but the lowest 16 Bits for Attributes.
 
    Normal_Video : constant Character_Attribute_Set := (others => False);
 
@@ -191,7 +191,7 @@ include(`AC_Rep')
    pragma Import (C, ACS_Map, "acs_map");
    --
    --
-   --  Constants for several symbols from the Alternate Character Set
+   --  Constants for several characters from the Alternate Character Set
    --  You must use this constants as indices into the ACS_Map array
    --  to get the corresponding attributed character at runtime.
    --
@@ -272,7 +272,7 @@ include(`ACS_Map')dnl
    procedure Add_With_Immediate_Echo
      (Win : in Window := Standard_Window;
       Ch  : in Character);
-   --  Add a character and do an immediate resfresh of the screen.
+   --  Add a character and do an immediate refresh of the screen.
    pragma Inline (Add_With_Immediate_Echo);
 
    --  MANPAGE(`curs_window.3x')
@@ -471,7 +471,7 @@ include(`ACS_Map')dnl
    pragma Inline (Function_Key);
 
    function Function_Key_Code (Key : Function_Key_Number) return Real_Key_Code;
-   --  Return the key code for a given functionkey number.
+   --  Return the key code for a given function-key number.
    pragma Inline (Function_Key_Code);
 
    --  MANPAGE(`curs_attr.3x')
@@ -608,7 +608,7 @@ include(`ACS_Map')dnl
    --  ANCHOR(`wtimeout()',`Set_Timeout_Mode')
    procedure Set_Timeout_Mode (Win    : in Window := Standard_Window;
                                Mode   : in Timeout_Mode;
-                               Amount : in Natural); --  in Miliseconds
+                               Amount : in Natural); --  in Milliseconds
    --  AKA
    --  Instead of overloading the semantic of the sign of amount, we
    --  introduce the Timeout_Mode parameter. This should improve
@@ -1256,7 +1256,7 @@ include(`ACS_Map')dnl
 
    --  MANPAGE(`curs_color.3x')
 
-   --  ANCHOR(`start_clolor()',`Start_Color')
+   --  ANCHOR(`start_color()',`Start_Color')
    procedure Start_Color;
    --  AKA
    pragma Import (C, Start_Color, "start_color");
@@ -1360,7 +1360,7 @@ include(`ACS_Map')dnl
    pragma Inline (Nap_Milli_Seconds);
 
    --  |=====================================================================
-   --  | Some usefull helpers.
+   --  | Some useful helpers.
    --  |=====================================================================
    type Transform_Direction is (From_Screen, To_Screen);
    procedure Transform_Coordinates
@@ -1369,7 +1369,7 @@ include(`ACS_Map')dnl
       Column : in out Column_Position;
       Dir    : in Transform_Direction := From_Screen);
    --  This procedure transforms screen coordinates into coordinates relative
-   --  to the window and vice versa, depending on the Dir parmeter.
+   --  to the window and vice versa, depending on the Dir parameter.
    --  Screen coordinates are the position informations on the physical device.
    --  An Curses_Exception will be raised if Line and Column are not in the
    --  Window or if you pass the Null_Window as argument.

@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>getyx</B>,  <B>getparyx</B>,  <B>getbegyx</B>,  <B>getmaxyx</B> - get <B>curses</B> cursor
+       and window coordinates
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>void</B> <B>getyx(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x);</B>
+       <B>void</B> <B>getparyx(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x);</B>
+       <B>void</B> <B>getbegyx(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x);</B>
+       <B>void</B> <B>getmaxyx(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>getyx</B> macro places the current cursor position of  the
+       given window in the two integer variables <I>y</I> and <I>x</I>.
+
+       If  <I>win</I>  is  a  subwindow,  the  <B>getparyx</B> macro places the
+       beginning coordinates of the  subwindow  relative  to  the
+       parent  window into two integer variables <I>y</I> and <I>x</I>.  Other-
+       wise, <B>-1</B> is placed into <I>y</I> and <I>x</I>.
+
+       Like <B>getyx</B>, the <B>getbegyx</B> and  <B>getmaxyx</B>  macros  store  the
+       current  beginning  coordinates  and size of the specified
+       window.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The return values of these  macros  are  undefined  (<I>i</I>.<I>e</I>.,
+       they  should not be used as the right-hand side of assign-
+       ment statements).
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       All of these interfaces are macros and  that  "<B>&amp;</B>"  is  not
+       necessary before the variables <I>y</I> and <I>x</I>.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  functions are described in the XSI Curses standard,
+       Issue 4.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

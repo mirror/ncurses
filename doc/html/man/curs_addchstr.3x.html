@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>addchstr</B>,  <B>addchnstr</B>,  <B>waddchstr</B>,  <B>waddchnstr</B>, <B>mvaddchstr</B>,
+       <B>mvaddchnstr</B>, <B>mvwaddchstr</B>, <B>mvwaddchnstr</B> - add a  string  of
+       characters (and attributes) to a <B>curses</B> window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>addchstr(const</B> <B>chtype</B> <B>*chstr);</B>
+       <B>int</B> <B>addchnstr(const</B> <B>chtype</B> <B>*chstr,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>waddchstr(WINDOW</B> <B>*win,</B> <B>const</B> <B>chtype</B> <B>*chstr);</B>
+       <B>int</B> <B>waddchnstr(WINDOW</B> <B>*win,</B> <B>const</B> <B>chtype</B> <B>*chstr,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>mvaddchstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>chtype</B> <B>*chstr);</B>
+       <B>int</B> <B>mvaddchnstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>chtype</B> <B>*chstr,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>mvwaddchstr(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B>  <B>x,</B>  <B>const</B>  <B>chtype</B>
+       <B>*chstr);</B>
+       <B>int</B>  <B>mvwaddchnstr(WINDOW</B>  <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>const</B> <B>chtype</B>
+       <B>*chstr,</B> <B>int</B> <B>n);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These routines copy <I>chstr</I> into the window image  structure
+       at  and  after the current cursor position.  The four rou-
+       tines with <I>n</I> as the last argument copy at most <I>n</I> elements,
+       but  no  more than will fit on the line.  If <B>n</B>=<B>-1</B> then the
+       whole string is copied, to the maximum number  of  charac-
+       ters that will fit on the line.
+
+       The window cursor is <I>not</I> advanced, and these routines work
+       faster than <B>waddnstr</B>.  On the other hand, they don't  per-
+       form  any  kind  of  checking  (such  as  for the newline,
+       backspace, or  carriage  return  characters),  they  don't
+       advance  the  current  cursor  position, they don't expand
+       other control characters to ^-escapes, and  they  truncate
+       the  string  if  it  crosses the right margin, rather then
+       wrapping it around to the new line.
+
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+       All routines return the integer <B>ERR</B> upon failure and <B>OK</B> on
+       success  (the  SVr4 manuals specify only "an integer value
+       other than <B>ERR</B>") upon successful completion, unless other-
+       wise noted in the preceding routine descriptions.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that all routines except <B>waddchnstr</B> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       All  these  entry  points  are described in the XSI Curses
+       standard, Issue 4.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>.
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

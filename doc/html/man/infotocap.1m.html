@@ -1,0 +1,78 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>infotocap</B>  - convert a <I>terminfo</I> description into a <I>termcap</I>
+       description
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>infotocap</B> [<B>-v</B><I>n</I> <I>width</I>]  [<B>-V</B>] [<B>-1</B>] [<B>-w</B> <I>width</I>] <I>file</I> . . .
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       <B>infotocap</B> looks in <I>file</I> for  <B>terminfo</B>  descriptions.   For
+       each one found, an equivalent <B>termcap</B> description is writ-
+       ten to standard output.   Terminfo  <B>use</B>  capabilities  are
+       translated directly to termcap <B>tc</B> capabilities.
+
+       <B>-v</B>   print  out  tracing  information on standard error as
+            the program runs.
+
+       <B>-V</B>   print out the version of the program in use on  stan-
+            dard error and exit.
+
+       <B>-1</B>   cause  the fields to print out one to a line.  Other-
+            wise, the fields will be printed several to a line to
+            a maximum width of 60 characters.
+
+       <B>-w</B>   change the output to <I>width</I> characters.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+       @DATADIR@/terminfo  Compiled      terminal     description
+                           database.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       This utility is actually a link to <B><A HREF="tic.1m.html">tic(1m)</A></B>, running in  <I>-C</I>
+       mode.  You can use other <I>tic</I> options such as <B>-f</B> and  <B>-x</B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="tic.1m.html">tic(1m)</A></B>, <B><A HREF="infocmp.1m.html">infocmp(1m)</A></B>, <B><A HREF="terminfo.5.html">terminfo(5)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

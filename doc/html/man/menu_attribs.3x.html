@@ -1,0 +1,136 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>menu_attributes</B> - color and attribute control for menus
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       int set_menu_fore(MENU *menu, chtype attr);
+       chtype menu_fore(const MENU *menu);
+       int set_menu_back(MENU *menu, chtype attr);
+       chtype menu_back(const MENU *menu);
+       int set_menu_grey(MENU *menu, chtype attr);
+       chtype menu_grey(const MENU *menu);
+       int set_menu_pad(MENU *menu, int pad);
+       int menu_pad(const MENU *menu);
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  function  <B>set_menu_fore</B> sets the foreground attribute
+       of <I>menu</I>. This is the  highlight  used  for  selected  menu
+       items.   <B>menu_fore</B>  returns the foreground attribute.  The
+       default is <B>A_STANDOUT</B>.
+
+       The function <B>set_menu_back</B> sets the  background  attribute
+       of  <I>menu</I>.  This  is the highlight used for selectable (but
+       not  currently  selected)  menu   items.    The   function
+       <B>menu_back</B>  returns  the background attribute.  The default
+       is <B>A_NORMAL</B>.
+
+       The function <B>set_menu_grey</B>  sets  the  grey  attribute  of
+       <I>menu</I>.  This  is  the highlight used for un-selectable menu
+       items in menus that permit more than one  selection.   The
+       function   <B>menu_grey</B>  returns  the  grey  attribute.   The
+       default is <B>A_UNDERLINE</B>.
+
+       The function <B>set_menu_pad</B> sets the character used to  fill
+       the space between the name and description parts of a menu
+       item.  <B>menu_pad</B> returns the given  menu's  pad  character.
+       The default is a blank.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       These routines return one of the following:
+
+       <B>E_OK</B> The routine succeeded.
+
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno</B>).
+
+       <B>E_BAD_ARGUMENT</B>
+            Routine  detected  an incorrect or out-of-range argu-
+            ment.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B> and 3x pages  whose  names  begin  "menu_"  for
+       detailed descriptions of the entry points.
+
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The header file <B>&lt;menu.h&gt;</B> automatically includes the header
+       file <B>&lt;curses.h&gt;</B>.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These routines emulate the System V  menu  library.   They
+       were not supported on Version 7 or BSD versions.
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
+       curses by Eric S. Raymond.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

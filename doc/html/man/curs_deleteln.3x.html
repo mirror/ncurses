@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>deleteln</B>,  <B>wdeleteln</B>,  <B>insdelln</B>, <B>winsdelln</B>, <B>insertln</B>, <B>win-</B>
+       <B>sertln</B> - delete and insert lines in a <B>curses</B> window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>deleteln(void);</B>
+       <B>int</B> <B>wdeleteln(WINDOW</B> <B>*win);</B>
+       <B>int</B> <B>insdelln(int</B> <B>n);</B>
+       <B>int</B> <B>winsdelln(WINDOW</B> <B>*win,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>insertln(void);</B>
+       <B>int</B> <B>winsertln(WINDOW</B> <B>*win);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>deleteln</B> and <B>wdeleteln</B> routines delete the line  under
+       the cursor in the window; all lines below the current line
+       are moved up one line.  The bottom line of the  window  is
+       cleared.  The cursor position does not change.
+
+       The  <B>insdelln</B>  and  <B>winsdelln</B>  routines,  for  positive <I>n</I>,
+       insert <I>n</I> lines into the specified window above the current
+       line.   The  <I>n</I>  bottom  lines  are  lost.  For negative <I>n</I>,
+       delete <I>n</I> lines (starting with the one under  the  cursor),
+       and  move  the remaining lines up.  The bottom <I>n</I> lines are
+       cleared.  The current cursor position remains the same.
+
+       The <B>insertln</B> and <B>insertln</B> routines, insert  a  blank  line
+       above the current line and the bottom line is lost.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All routines return the integer <B>ERR</B> upon failure and an <B>OK</B>
+       (SVr4 specifies only "an integer value  other  than  <B>ERR</B>")
+       upon successful completion.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  functions are described in the XSI Curses standard,
+       Issue 4.  The standard specifies that they return  <B>ERR</B>  on
+       failure, but specifies no error conditions.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that all but <B>winsdelln</B> may be macros.
+
+       These  routines  do  not require a hardware line delete or
+       insert feature in the terminal.  In fact, they  won't  use
+       hardware  line  delete/insert  unless <B>idlok(...,</B> <B>TRUE)</B> has
+       been set on the current window.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

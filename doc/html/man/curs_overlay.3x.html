@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>overlay</B>, <B>overwrite</B>, <B>copywin</B> - overlay and manipulate over-
+       lapped <B>curses</B> windows
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>overlay(const</B> <B>WINDOW</B> <B>*srcwin,</B> <B>WINDOW</B> <B>*dstwin);</B>
+       <B>int</B> <B>overwrite(const</B> <B>WINDOW</B> <B>*srcwin,</B> <B>WINDOW</B> <B>*dstwin);</B>
+       <B>int</B> <B>copywin(WINDOW</B> <B>*srcwin,</B> <B>WINDOW</B> <B>*dstwin,</B> <B>int</B> <B>sminrow,</B>
+             <B>int</B> <B>smincol,</B> <B>int</B> <B>dminrow,</B> <B>int</B> <B>dmincol,</B> <B>int</B> <B>dmaxrow,</B>
+             <B>int</B> <B>dmaxcol,</B> <B>int</B> <B>overlay);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>overlay</B> and <B>overwrite</B> routines overlay <I>srcwin</I>  on  top
+       of  <I>dstwin</I>.   <I>scrwin</I> and <I>dstwin</I> are not required to be the
+       same size; only text where  the  two  windows  overlap  is
+       copied.  The difference is that <B>overlay</B> is non-destructive
+       (blanks are not copied) whereas <B>overwrite</B> is  destructive.
+
+       The  <B>copywin</B>  routine provides a finer granularity of con-
+       trol over the <B>overlay</B> and <B>overwrite</B> routines.  Like in the
+       <B>prefresh</B> routine, a rectangle is specified in the destina-
+       tion window, (<I>dminrow</I>, <I>dmincol</I>)  and  (<I>dmaxrow</I>,  <I>dmaxcol</I>),
+       and  the  upper-left-corner coordinates of the source win-
+       dow, (<I>sminrow</I>, <I>smincol</I>).  If the argument <I>overlay</I> is <B>true</B>,
+       then copying is non-destructive, as in <B>overlay</B>.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       Routines  that  return an integer return <B>ERR</B> upon failure,
+       and <B>OK</B> (SVr4 only specifies "an integer value  other  than
+       <B>ERR</B>") upon successful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>overlay</B> and <B>overwrite</B> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses standard, Issue 4 describes these functions
+       (adding the const qualifiers).  It further specifies their
+       behavior  in  the  presence  of characters with multi-byte
+       renditions (not yet supported in this implementation).
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_pad.3x.html">curs_pad(3x)</A></B>, <B><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></B>
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

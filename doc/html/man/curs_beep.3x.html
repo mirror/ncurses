@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>beep</B>, <B>flash</B> - <B>curses</B> bell and screen flash routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>beep(void);</B>
+       <B>int</B> <B>flash(void);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>beep</B> and <B>flash</B> routines are used to alert the terminal
+       user.  The routine <B>beep</B> sounds an  audible  alarm  on  the
+       terminal,  if  possible;  otherwise  it flashes the screen
+       (visible bell).  The routine <B>flash</B> flashes the screen, and
+       if  that  is  not  possible, sounds the alert.  If neither
+       alert is possible, nothing happens.  Nearly all  terminals
+       have  an  audible  alert (bell or beep), but only some can
+       flash the screen.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       These routines return <B>OK</B> if they  succeed  in  beeping  or
+       flashing, <B>ERR</B> otherwise.
+
+
+</PRE>
+<H2>EXTENSIONS</H2><PRE>
+       SVr4's  beep  and flash routines always returned <B>OK</B>, so it
+       was not possible to tell when the beep or flash failed.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These functions are defined in the  XSI  Curses  standard,
+       Issue  4.  Like SVr4, it specifies that they always return
+       <B>OK</B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

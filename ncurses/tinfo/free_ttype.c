@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1999,2000 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,20 +44,20 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: free_ttype.c,v 1.2 1999/03/01 00:30:35 tom Exp $")
+MODULE_ID("$Id: free_ttype.c,v 1.5 2000/07/08 00:43:58 tom Exp $")
 
 void _nc_free_termtype(TERMTYPE *ptr)
 {
-	FreeIfNeeded(ptr->str_table);
-	FreeIfNeeded(ptr->term_names);
+    FreeIfNeeded(ptr->str_table);
+    FreeIfNeeded(ptr->term_names);
+    FreeIfNeeded(ptr->Booleans);
+    FreeIfNeeded(ptr->Numbers);
+    FreeIfNeeded(ptr->Strings);
 #if NCURSES_XNAMES
-	FreeIfNeeded(ptr->ext_str_table);
-	FreeIfNeeded(ptr->Booleans);
-	FreeIfNeeded(ptr->Numbers);
-	FreeIfNeeded(ptr->Strings);
-	FreeIfNeeded(ptr->ext_Names);
+    FreeIfNeeded(ptr->ext_str_table);
+    FreeIfNeeded(ptr->ext_Names);
 #endif
-	memset(ptr, 0, sizeof(TERMTYPE));
+    memset(ptr, 0, sizeof(TERMTYPE));
 }
 
 #if NCURSES_XNAMES
@@ -65,8 +65,8 @@ bool _nc_user_definable = TRUE;
 
 int use_extended_names(bool flag)
 {
-	int oldflag = _nc_user_definable;
-	_nc_user_definable = flag;
-	return oldflag;
+    int oldflag = _nc_user_definable;
+    _nc_user_definable = flag;
+    return oldflag;
 }
 #endif

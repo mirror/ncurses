@@ -1,0 +1,134 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>baudrate</B>,  <B>erasechar</B>,  <B>has_ic</B>, <B>has_il</B>, <B>killchar</B>, <B>longname</B>,
+       <B>termattrs</B>, <B>termname</B> - <B>curses</B> environment query routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>baudrate(void);</B>
+       <B>char</B> <B>erasechar(void);</B>
+       <B>bool</B> <B>has_ic(void);</B>
+       <B>bool</B> <B>has_il(void);</B>
+       <B>char</B> <B>killchar(void);</B>
+       <B>char</B> <B>*longname(void);</B>
+       <B>attr_t</B> <B>termattrs(void);</B>
+       <B>char</B> <B>*termname(void);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <B>baudrate</B> routine returns the output speed of the  ter-
+       minal.   The  number  returned  is in bits per second, for
+       example <B>9600</B>, and is an integer.
+
+       The <B>erasechar</B> routine returns  the  user's  current  erase
+       character.
+
+       The <B>has_ic</B> routine is true if the terminal has insert- and
+       delete- character capabilities.
+
+       The <B>has_il</B> routine is true if the terminal has insert- and
+       delete-line  capabilities,  or  can  simulate  them  using
+       scrolling regions.  This might be used to determine if  it
+       would  be  appropriate to turn on physical scrolling using
+       <B>scrollok</B>.
+
+       The <B>killchar</B> routine returns the user's current line  kill
+       character.
+
+       The  <B>longname</B>  routine  returns a pointer to a static area
+       containing a verbose description of the current  terminal.
+       The maximum length of a verbose description is 128 charac-
+       ters.  It is defined only after the  call  to  <B>initscr</B>  or
+       <B>newterm</B>.   The area is overwritten by each call to <B>newterm</B>
+       and is not restored by <B>set_term</B>, so the  value  should  be
+       saved  between calls to <B>newterm</B> if <B>longname</B> is going to be
+       used with multiple terminals.
+
+       If a given terminal doesn't support a video attribute that
+       an  application  program is trying to use, <B>curses</B> may sub-
+       stitute a different video attribute for it.  The <B>termattrs</B>
+       function returns a logical <B>OR</B> of all video attributes sup-
+       ported by the terminal.  This information is useful when a
+       <B>curses</B>  program needs complete control over the appearance
+       of the screen.
+
+       The  <B>termname</B>   routine   returns   the   value   of   the
+       environmental  variable <B>TERM</B> (truncated to 14 characters).
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       <B>longname</B> and <B>termname</B> return <B>NULL</B> on error.
+
+       Routines that return an integer return  <B>ERR</B>  upon  failure
+       and  <B>OK</B>  (SVr4 only specifies "an integer value other than
+       <B>ERR</B>") upon successful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that <B>termattrs</B> may be a macro.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses standard, Issue  4  describes  these  func-
+       tions.  It changes the return type of <B>termattrs</B> to the new
+       type <B>attr_t</B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></B>, <B><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

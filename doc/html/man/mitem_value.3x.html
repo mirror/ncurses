@@ -1,0 +1,82 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>mitem_value</B> - set and get menu item values
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       int set_item_value(ITEM *item, bool value);
+       bool item_value(const ITEM *item);
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       If  you  turn  off  the menu option <B>O_ONEVALUE</B> (e.g., with
+       <B>set_menu_opts</B> or <B>menu_opts_off</B>;  see  <B><A HREF="menu_opts.3x.html">menu_opts(3x)</A></B>),  the
+       menu becomes multi-valued; that is, more than one item may
+       simultaneously be selected.
+
+       In a multi_valued menu, you  can  used  <B>set_item_value</B>  to
+       select the given menu item (second argument <B>TRUE</B>) or dese-
+       lect it (second argument <B>FALSE</B>).
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The function <B>set_item_value</B> returns one of the following:
+
+       <B>E_OK</B> The routine succeeded.
+
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno</B>).
+
+       <B>E_REQUEST_DENIED</B>
+            The menu driver could not process the request.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="menu.3x.html">menu(3x)</A></B>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The header file <B>&lt;menu.h&gt;</B> automatically includes the header
+       file <B>&lt;curses.h&gt;</B>.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  routines  emulate  the System V menu library.  They
+       were not supported on Version 7 or BSD versions.
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
+       curses by Eric S. Raymond.
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

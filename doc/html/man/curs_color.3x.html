@@ -1,0 +1,242 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>start_color</B>,     <B>init_pair</B>,     <B>init_color</B>,    <B>has_colors</B>,
+       <B>can_change_color</B>, <B>color_content</B>, <B>pair_content</B>,  <B>COLOR_PAIR</B>
+       - <B>curses</B> color manipulation routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#</B> <B>include</B> <B>&lt;curses.h&gt;</B>
+       <B>int</B> <B>start_color(void);</B>
+       <B>int</B> <B>init_pair(short</B> <B>pair,</B> <B>short</B> <B>f,</B> <B>short</B> <B>b);</B>
+       <B>int</B> <B>init_color(short</B> <B>color,</B> <B>short</B> <B>r,</B> <B>short</B> <B>g,</B> <B>short</B> <B>b);</B>
+       <B>bool</B> <B>has_colors(void);</B>
+       <B>bool</B> <B>can_change_color(void);</B>
+       <B>int</B>  <B>color_content(short</B>  <B>color,</B> <B>short</B> <B>*r,</B> <B>short</B> <B>*g,</B> <B>short</B>
+       <B>*b);</B>
+       <B>int</B> <B>pair_content(short</B> <B>pair,</B> <B>short</B> <B>*f,</B> <B>short</B> <B>*b);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+   <B>Overview</B>
+       <B>curses</B> support color attributes  on  terminals  with  that
+       capability.   To  use  these  routines <B>start_color</B> must be
+       called, usually right after <B>initscr</B>.   Colors  are  always
+       used  in pairs (referred to as color-pairs).  A color-pair
+       consists of a foreground  color  (for  characters)  and  a
+       background color (for the blank field on which the charac-
+       ters are displayed).  A programmer  initializes  a  color-
+       pair  with  the routine <B>init_pair</B>.  After it has been ini-
+       tialized, <B>COLOR_PAIR</B>(<I>n</I>), a macro  defined  in  <B>&lt;curses.h&gt;</B>,
+       can be used as a new video attribute.
+
+       If  a  terminal  is capable of redefining colors, the pro-
+       grammer can use the routine <B>init_color</B> to change the defi-
+       nition   of   a   color.    The  routines  <B>has_colors</B>  and
+       <B>can_change_color</B>  return  <B>TRUE</B>  or  <B>FALSE</B>,  depending   on
+       whether  the  terminal  has color capabilities and whether
+       the  programmer  can  change  the  colors.   The   routine
+       <B>color_content</B>  allows  a programmer to extract the amounts
+       of red, green,  and  blue  components  in  an  initialized
+       color.   The  routine  <B>pair_content</B> allows a programmer to
+       find out how a given color-pair is currently defined.
+
+   <B>Routine</B> <B>Descriptions</B>
+       The <B>start_color</B> routine requires no arguments.  It must be
+       called  if  the programmer wants to use colors, and before
+       any other color manipulation routine  is  called.   It  is
+       good  practice  to  call this routine right after <B>initscr</B>.
+       <B>start_color</B> initializes eight basic  colors  (black,  red,
+       green,  yellow,  blue,  magenta, cyan, and white), and two
+       global variables,  <B>COLORS</B>  and  <B>COLOR_PAIRS</B>  (respectively
+       defining  the maximum number of colors and color-pairs the
+       terminal can support).  It also restores the colors on the
+       terminal to the values they had when the terminal was just
+       turned on.
+
+       The <B>init_pair</B> routine changes the definition of  a  color-
+       pair.   It takes three arguments: the number of the color-
+       pair to be changed, the foreground color number,  and  the
+       background color number.  For portable applications:
+
+       -    The value of the first argument must be between <B>1</B> and
+            <B>COLOR_PAIRS-1</B>.
+
+       -    The value of the second and third arguments  must  be
+            between  0  and  <B>COLORS</B> (the 0 color pair is wired to
+            white on black and cannot be changed).
+
+       If the color-pair was previously initialized,  the  screen
+       is  refreshed  and  all  occurrences of that color-pair is
+       changed to the new definition.
+
+       As an extension, ncurses allows you to set  color  pair  0
+       via  the  <B>assume_default_colors</B> routine, or to specify the
+       use of default colors  (color  number  <B>-1</B>)  if  you  first
+       invoke the <B>use_default_colors</B> routine.
+
+       The  <B>init_color</B> routine changes the definition of a color.
+       It takes four arguments: the number of  the  color  to  be
+       changed  followed  by three RGB values (for the amounts of
+       red, green, and blue components).  The value of the  first
+       argument  must  be between <B>0</B> and <B>COLORS</B>.  (See the section
+       <B>Colors</B> for the default color index.)   Each  of  the  last
+       three  arguments must be a value between 0 and 1000.  When
+       <B>init_color</B> is used, all occurrences of that color  on  the
+       screen immediately change to the new definition.
+
+       The  <B>has_colors</B> routine requires no arguments.  It returns
+       <B>TRUE</B> if the terminal can manipulate colors; otherwise,  it
+       returns <B>FALSE</B>.  This routine facilitates writing terminal-
+       independent programs.  For example, a programmer  can  use
+       it  to  decide  whether  to  use color or some other video
+       attribute.
+
+       The <B>can_change_color</B> routine requires  no  arguments.   It
+       returns  <B>TRUE</B>  if  the  terminal  supports  colors and can
+       change their definitions; other, it returns  <B>FALSE</B>.   This
+       routine facilitates writing terminal-independent programs.
+
+       The <B>color_content</B> routine gives programmers a way to  find
+       the intensity of the red, green, and blue (RGB) components
+       in a color.  It requires four arguments: the color number,
+       and  three addresses of <B>short</B>s for storing the information
+       about the amounts of red, green, and  blue  components  in
+       the  given color.  The value of the first argument must be
+       between 0 and <B>COLORS</B>.  The values that are stored  at  the
+       addresses  pointed  to  by  the  last  three arguments are
+       between 0 (no component) and 1000 (maximum amount of  com-
+       ponent).
+
+       The  <B>pair_content</B>  routine  allows programmers to find out
+       what colors a given color-pair consists of.   It  requires
+       three  arguments: the color-pair number, and two addresses
+       of <B>short</B>s for storing the foreground  and  the  background
+       color  numbers.   The  value of the first argument must be
+       between 1 and <B>COLOR_PAIRS-1</B>.  The values that  are  stored
+       at  the addresses pointed to by the second and third argu-
+       ments are between 0 and <B>COLORS</B>.
+
+   <B>Colors</B>
+       In <B>&lt;curses.h&gt;</B> the following macros are defined.  These are
+       the  default colors.  <B>curses</B> also assumes that <B>COLOR_BLACK</B>
+       is the default background color for all terminals.
+
+             <B>COLOR_BLACK</B>
+             <B>COLOR_RED</B>
+             <B>COLOR_GREEN</B>
+             <B>COLOR_YELLOW</B>
+             <B>COLOR_BLUE</B>
+             <B>COLOR_MAGENTA</B>
+             <B>COLOR_CYAN</B>
+             <B>COLOR_WHITE</B>
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The routines <B>can_change_color()</B>  and  <B>has_colors()</B>  return
+       <B>TRUE</B> or <B>FALSE</B>.
+
+       All other routines return the integer <B>ERR</B> upon failure and
+       an <B>OK</B> (SVr4 specifies only "an integer  value  other  than
+       <B>ERR</B>") upon successful completion.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       In  the  <I>ncurses</I> implementation, there is a separate color
+       activation flag, color palette,  color  pairs  table,  and
+       associated  COLORS and COLOR_PAIRS counts for each screen;
+       the <B>start_color</B> function only affects the current  screen.
+       The SVr4/XSI interface is not really designed with this in
+       mind, and historical  implementations  may  use  a  single
+       shared color palette.
+
+       Note that setting an implicit background color via a color
+       pair affects only character cells that a  character  write
+       operation  explicitly  touches.   To change the background
+       color used when parts of a window are blanked  by  erasing
+       or scrolling operations, see <B><A HREF="curs_bkgd.3x.html">curs_bkgd(3x)</A></B>.
+
+       Several  caveats  apply  on 386 and 486 machines with VGA-
+       compatible graphics:
+
+       -    COLOR_YELLOW is actually brown.  To get  yellow,  use
+            COLOR_YELLOW combined with the <B>A_BOLD</B> attribute.
+
+       -    The  A_BLINK  attribute  should  in  theory cause the
+            background to go bright.  This often fails  to  work,
+            and  even  some cards for which it mostly works (such
+            as the Paradise and compatibles) do the  wrong  thing
+            when you try to set a bright "yellow" background (you
+            get a blinking yellow foreground instead).
+
+       -    Color RGB values are not settable.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       This implementation satisfies XSI Curses's  minimum  maxi-
+       mums for <B>COLORS</B> and <B>COLOR_PAIRS</B>.
+
+       The  <B>init_pair</B>  routine  accepts  negative values of fore-
+       ground   and   background    color    to    support    the
+       <B>use_default_colors</B> extension, but only if that routine has
+       been first invoked.
+
+       The assumption that <B>COLOR_BLACK</B> is the default  background
+       color   for  all  terminals  can  be  modified  using  the
+       <B>assume_default_colors</B> extension,
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></B>, <B><A HREF="curs_attr.3x.html">curs_attr(3x)</A></B>, <B><A HREF="dft_fgbg.3x.html">dft_fgbg(3x)</A></B>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

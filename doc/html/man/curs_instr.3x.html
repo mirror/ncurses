@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>instr</B>,  <B>innstr</B>, <B>winstr</B>, <B>winnstr</B>, <B>mvinstr</B>, <B>mvinnstr</B>, <B>mvwin-</B>
+       <B>str</B>, <B>mvwinnstr</B> - get a string of characters from a  <B>curses</B>
+       window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>instr(char</B> <B>*str);</B>
+       <B>int</B> <B>innstr(char</B> <B>*str,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>winstr(WINDOW</B> <B>*win,</B> <B>char</B> <B>*str);</B>
+       <B>int</B> <B>winnstr(WINDOW</B> <B>*win,</B> <B>char</B> <B>*str,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>mvinstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>char</B> <B>*str);</B>
+       <B>int</B> <B>mvinnstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>char</B> <B>*str,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>mvwinstr(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>char</B> <B>*str);</B>
+       <B>int</B>  <B>mvwinnstr(WINDOW</B>  <B>*win,</B>  <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>char</B> <B>*str,</B> <B>int</B>
+       <B>n);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These routines return  a  string  of  characters  in  <I>str</I>,
+       extracted  starting  at the current cursor position in the
+       named window.  Attributes are stripped  from  the  charac-
+       ters.   The  four  functions  with  <I>n</I> as the last argument
+       return a leading  substring  at  most  <I>n</I>  characters  long
+       (exclusive of the trailing NUL).
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All  of the functions return <B>ERR</B> upon failure, or the num-
+       ber of characters actually read into the string.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note that all routines except <B>winnstr</B> may be macros.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The XSI Curses error  conditions  <B>EILSEQ</B>  and  <B>EILOVERFLOW</B>
+       associated  with  extended-level  conformance  are not yet
+       detected (this implementation does not  yet  support  XPG4
+       multi-byte  characters).  SVr4 does not document whether a
+       length limit includes or excludes the trailing NUL.
+
+       The ncurses library extends the XSI description by  allow-
+       ing  a  negative value for <I>n</I>.  In this case, the functions
+       return the string ending at the right margin.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>.
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

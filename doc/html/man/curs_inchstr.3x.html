@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>inchstr</B>,   <B>inchnstr</B>,   <B>winchstr</B>,   <B>winchnstr</B>,   <B>mvinchstr</B>,
+       <B>mvinchnstr</B>, <B>mvwinchstr</B>, <B>mvwinchnstr</B>  -  get  a  string  of
+       characters (and attributes) from a <B>curses</B> window
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>inchstr(chtype</B> <B>*chstr);</B>
+       <B>int</B> <B>inchnstr(chtype</B> <B>*chstr,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>winchstr(WINDOW</B> <B>*win,</B> <B>chtype</B> <B>*chstr);</B>
+       <B>int</B> <B>winchnstr(WINDOW</B> <B>*win,</B> <B>chtype</B> <B>*chstr,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>mvinchstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>chtype</B> <B>*chstr);</B>
+       <B>int</B> <B>mvinchnstr(int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>chtype</B> <B>*chstr,</B> <B>int</B> <B>n);</B>
+       <B>int</B> <B>mvwinchstr(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>chtype</B> <B>*chstr);</B>
+       <B>int</B>  <B>mvwinchnstr(WINDOW</B> <B>*win,</B> <B>int</B> <B>y,</B> <B>int</B> <B>x,</B> <B>chtype</B> <B>*chstr,</B>
+       <B>int</B> <B>n);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These routines return a NULL-terminated  array  of  <B>chtype</B>
+       quantities, starting at the current cursor position in the
+       named window and ending at the right margin of the window.
+       The  four  functions with <I>n</I> as the last argument, return a
+       leading substring at most <I>n</I> characters long (exclusive  of
+       the  trailing (chtype)0).  Constants defined in <B>&lt;curses.h&gt;</B>
+       can be used with the <B>&amp;</B> (logical AND) operator  to  extract
+       the  character or the attribute alone from any position in
+       the <I>chstr</I> [see <B><A HREF="curs_inch.3x.html">curs_inch(3x)</A></B>].
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       All routines return the integer <B>ERR</B> upon  failure  and  an
+       integer  value  other  than <B>ERR</B> upon successful completion
+       (the number of  characters  retrieved,  exclusive  of  the
+       trailing 0).
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Note  that  all  routines  except <B>winchnstr</B> may be macros.
+       SVr4 does not document whether the result string is 0-ter-
+       minated; it does not document whether a length limit argu-
+       ment includes any trailing 0; and it does not document the
+       meaning of the return value.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       These  functions are described in the XSI Curses standard,
+       Issue 4.  It is no more specific than the SVr4  documenta-
+       tion on the trailing 0.  It does specify that the success-
+       ful return of the functions is <B>OK</B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="curs_inch.3x.html">curs_inch(3x)</A></B>.
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,406 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>infocmp</B> - compare or print out <I>terminfo</I> descriptions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>infocmp</B> [<B>-dceEGgnpqrILCuV1</B>] [<B>-v</B> <I>n</I>] [<B>-s</B> <B>d</B>| <B>i</B>| <B>l</B>| <B>c</B>]
+             [<B>-w</B> <I>width</I>] [<B>-A</B> <I>directory</I>] [<B>-B</B> <I>directory</I>]
+             [<I>termname</I>...]
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       <B>infocmp</B>  can  be  used  to compare a binary <B>terminfo</B> entry
+       with other terminfo entries, rewrite a  <B>terminfo</B>  descrip-
+       tion  to  take  advantage  of  the <B>use=</B> terminfo field, or
+       print out a <B>terminfo</B>  description  from  the  binary  file
+       (<B>term</B>) in a variety of formats.  In all cases, the boolean
+       fields will be printed  first,  followed  by  the  numeric
+       fields, followed by the string fields.
+
+   <B>Default</B> <B>Options</B>
+       If  no options are specified and zero or one <I>termnames</I> are
+       specified, the <B>-I</B> option will be assumed.   If  more  than
+       one  <I>termname</I> is specified, the <B>-d</B> option will be assumed.
+
+   <B>Comparison</B> <B>Options</B> <B>[-d]</B> <B>[-c]</B> <B>[-n]</B>
+       <B>infocmp</B> compares the <B>terminfo</B>  description  of  the  first
+       terminal  <I>termname</I>  with each of the descriptions given by
+       the entries for the  other  terminal's  <I>termnames</I>.   If  a
+       capability  is  defined for only one of the terminals, the
+       value returned will depend on the type of the  capability:
+       <B>F</B>  for  boolean  variables,  <B>-1</B> for integer variables, and
+       <B>NULL</B> for string variables.
+
+       The <B>-d</B> option produces a list of each capability  that  is
+       different  between  two entries.  This option is useful to
+       show the difference between two entries, created  by  dif-
+       ferent people, for the same or similar terminals.
+
+       The  <B>-c</B>  option produces a list of each capability that is
+       common between two entries.  Capabilities that are not set
+       are  ignored.  This option can be used as a quick check to
+       see if the <B>-u</B> option is worth using.
+
+       The <B>-n</B> option produces a list of each capability  that  is
+       in neither entry.  If no <I>termnames</I> are given, the environ-
+       ment variable <B>TERM</B> will be used for both of the <I>termnames</I>.
+       This  can  be used as a quick check to see if anything was
+       left out of a description.
+
+   <B>Source</B> <B>Listing</B> <B>Options</B> <B>[-I]</B> <B>[-L]</B> <B>[-C]</B> <B>[-r]</B>
+       The <B>-I</B>, <B>-L</B>, and <B>-C</B> options will produce a  source  listing
+       for each terminal named.
+
+      <B>-I</B>   use the <B>terminfo</B> names
+      <B>-L</B>   use the long C variable name listed in &lt;<B>term.h</B>&gt;
+
+      <B>-C</B>   use the <B>termcap</B> names
+      <B>-r</B>   when using <B>-C</B>, put out all capabilities in <B>termcap</B> form
+
+       If  no  <I>termnames</I> are given, the environment variable <B>TERM</B>
+       will be used for the terminal name.
+
+       The source produced by the <B>-C</B> option may be used  directly
+       as  a <B>termcap</B> entry, but not all parameterized strings can
+       be changed to the <B>termcap</B> format.  <B>infocmp</B> will attempt to
+       convert  most  of  the parameterized information, and any-
+       thing not converted will be plainly marked in  the  output
+       and commented out.  These should be edited by hand.
+
+       All  padding  information  for  strings  will be collected
+       together and placed at the beginning of the  string  where
+       <B>termcap</B>  expects  it.  Mandatory padding (padding informa-
+       tion with a trailing '/') will become optional.
+
+       All <B>termcap</B> variables no longer supported by <B>terminfo</B>, but
+       which are derivable from other <B>terminfo</B> variables, will be
+       output.  Not all <B>terminfo</B> capabilities will be translated;
+       only  those variables which were part of <B>termcap</B> will nor-
+       mally be output.  Specifying the <B>-r</B> option will  take  off
+       this  restriction,  allowing all capabilities to be output
+       in <I>termcap</I> form.
+
+       Note that because padding is collected to the beginning of
+       the  capability,  not all capabilities are output.  Manda-
+       tory padding is not supported.   Because  <B>termcap</B>  strings
+       are  not as flexible, it is not always possible to convert
+       a <B>terminfo</B> string capability into  an  equivalent  <B>termcap</B>
+       format.   A subsequent conversion of the <B>termcap</B> file back
+       into <B>terminfo</B> format will not  necessarily  reproduce  the
+       original <B>terminfo</B> source.
+
+       Some  common  <B>terminfo</B>  parameter sequences, their <B>termcap</B>
+       equivalents, and some terminal types which  commonly  have
+       such sequences, are:
+
+     <B>terminfo</B>                    <B>termcap</B>   Representative Terminals
+     ---------------------------------------------------------------
+     <B>%p1%c</B>                       <B>%.</B>        adm
+     <B>%p1%d</B>                       <B>%d</B>        hp, ANSI standard, vt100
+     <B>%p1%'x'%+%c</B>                 <B>%+x</B>       concept
+     <B>%i</B>                          <B>%i</B>q       ANSI standard, vt100
+     <B>%p1%?%'x'%&gt;%t%p1%'y'%+%;</B>    <B>%&gt;xy</B>      concept
+     <B>%p2</B> is printed before <B>%p1</B>   <B>%r</B>        hp
+
+   <B>Use=</B> <B>Option</B> <B>[-u]</B>
+       The  <B>-u</B>  option  produces a <B>terminfo</B> source description of
+       the first terminal <I>termname</I> which is relative to  the  sum
+       of  the  descriptions  given  by the entries for the other
+       terminals <I>termnames</I>.  It does this by analyzing  the  dif-
+       ferences   between   the  first  <I>termname</I>  and  the  other
+       <I>termnames</I> and producing a description with <B>use=</B> fields for
+       the  other  terminals.   In this manner, it is possible to
+       retrofit  generic  terminfo  entries  into  a   terminal's
+       description.  Or, if two similar terminals exist, but were
+       coded at different times or by different  people  so  that
+       each description is a full description, using <B>infocmp</B> will
+       show what can be done to change one description to be rel-
+       ative to the other.
+
+       A capability will get printed with an at-sign (@) if it no
+       longer exists in the first <I>termname</I>, but one of the  other
+       <I>termname</I>  entries contains a value for it.  A capability's
+       value gets printed if the value in the first  <I>termname</I>  is
+       not  found in any of the other <I>termname</I> entries, or if the
+       first of the other <I>termname</I> entries that has this capabil-
+       ity  gives  a different value for the capability than that
+       in the first <I>termname</I>.
+
+       The order of the other <I>termname</I>  entries  is  significant.
+       Since  the terminfo compiler <B>tic</B> does a left-to-right scan
+       of the capabilities, specifying two <B>use=</B> entries that con-
+       tain differing entries for the same capabilities will pro-
+       duce different results depending on  the  order  that  the
+       entries  are  given in.  <B>infocmp</B> will flag any such incon-
+       sistencies between the other <I>termname</I> entries as they  are
+       found.
+
+       Alternatively,  specifying a capability <I>after</I> a <B>use=</B> entry
+       that contains that capability will cause the second speci-
+       fication  to  be  ignored.   Using  <B>infocmp</B>  to recreate a
+       description can be a useful check to make sure that every-
+       thing  was  specified  correctly  in  the  original source
+       description.
+
+       Another error  that  does  not  cause  incorrect  compiled
+       files,  but will slow down the compilation time, is speci-
+       fying extra <B>use=</B> fields  that  are  superfluous.   <B>infocmp</B>
+       will  flag  any  other  <I>termname</I> <I>use=</I> fields that were not
+       needed.
+
+   <B>Changing</B> <B>Databases</B> <B>[-A</B> <I>directory</I>] [-B <I>directory</I>]
+       The location of the compiled <B>terminfo</B>  database  is  taken
+       from  the environment variable <B>TERMINFO</B> .  If the variable
+       is not defined, or the terminal is not found in that loca-
+       tion, the system <B>terminfo</B> database, in <B>@DATADIR@/terminfo</B>,
+       will be used.  The options <B>-A</B> and <B>-B</B> may be used to  over-
+       ride  this  location.  The <B>-A</B> option will set <B>TERMINFO</B> for
+       the first <I>termname</I> and the <B>-B</B> option will set <B>TERMINFO</B> for
+       the other <I>termnames</I>.  With this, it is possible to compare
+       descriptions for a terminal with the same name located  in
+       two  different  databases.   This  is useful for comparing
+       descriptions for the same terminal  created  by  different
+       people.
+
+   <B>Other</B>  <B>Options</B>  <B>[-s</B> <B>d|i|l|c]</B> <B>[-1FTVefip]</B> <B>[-Rsubset]</B> <B>[-v</B> <I>n</I>] [-w
+       <I>width</I>]
+       The <B>-s</B> option sorts the fields within each type  according
+       to the argument below:
+
+       <B>d</B>    leave fields in the order that they are stored in the
+            <I>terminfo</I> database.
+
+       <B>i</B>    sort by <I>terminfo</I> name.
+
+       <B>l</B>    sort by the long C variable name.
+
+       <B>c</B>    sort by the <I>termcap</I> name.
+
+            If the <B>-s</B> option is not given, the fields printed out
+            will  be  sorted  alphabetically by the <B>terminfo</B> name
+            within each type, except in the case of the <B>-C</B> or the
+            <B>-L</B> options, which cause the sorting to be done by the
+            <B>termcap</B> name or the long  C  variable  name,  respec-
+            tively.
+
+       <B>-1</B>   causes  the  fields  to be printed out one to a line.
+            Otherwise, the fields will be printed  several  to  a
+            line to a maximum width of 60 characters.
+
+       <B>-F</B>   compare  terminfo  files.  This assumes that two fol-
+            lowing  arguments  are  filenames.   The  files   are
+            searched  for  pairwise matches between entries, with
+            two entries considered to match if any of their names
+            do.   The  report  printed  to  standard output lists
+            entries with  no  matches  in  the  other  file,  and
+            entries  with  more than one match.  For entries with
+            exactly one match it includes  a  difference  report.
+            Normally,  to  reduce  the  volume of the report, use
+            references are not resolved before looking  for  dif-
+            ferences, but resolution can be forced by also speci-
+            fying <B>-r</B>.
+
+       <B>-G</B>   Display constant literals in decimal form rather than
+            their character equivalents.
+
+       <B>-a</B>   tells  <B>infocmp</B>  to  retain commented-out capabilities
+            rather than discarding them.  Capabilities  are  com-
+            mented by prefixing them with a period.
+
+       <B>-q</B>   Make  the comparison listing shorter by omitting sub-
+            headings, and using "-" for absent capabilities,  "@"
+            for canceled rather than "NULL".
+
+       <B>-R</B><I>subset</I>
+            Restrict  output  to  a given subset.  This option is
+            for use with archaic versions of terminfo like  those
+            on  SVr1,  Ultrix,  or  HP/UX that do not support the
+            full set of SVR4/XSI Curses  terminfo;  and  variants
+            such as AIX that have their own extensions incompati-
+            ble with SVr4/XSI.  Available  terminfo  subsets  are
+            "SVr1",  "Ultrix",  "HP",  and "AIX"; see <B><A HREF="terminfo.5.html">terminfo(5)</A></B>
+            for details.  You can also choose  the  subset  "BSD"
+            which  selects only capabilities with termcap equiva-
+            lents recognized by 4.4BSD.
+
+       <B>-T</B>   eliminates size-restrictions on the  generated  text.
+            This is mainly useful for testing and analysis, since
+            the compiled descriptions are limited (e.g., 1023 for
+            termcap, 4096 for terminfo).
+
+       <B>-V</B>   prints out the version of the program in use on stan-
+            dard error and exits.
+
+       <B>-e</B>   Dump the capabilities of the given terminal  as  a  C
+            initializer  for  a  TERMTYPE structure (the terminal
+            capability structure in the <B>&lt;term.h&gt;</B>).   This  option
+            is  useful  for  preparing  versions  of  the  curses
+            library hardwired for a given terminal type.
+
+       <B>-E</B>   Dump  the  capabilities  of  the  given  terminal  as
+            tables,  needed  in  the C initializer for a TERMTYPE
+            structure (the terminal capability structure  in  the
+            <B>&lt;term.h&gt;</B>).   This option is useful for preparing ver-
+            sions of the curses library  hardwired  for  a  given
+            terminal  type.   The tables are all declared static,
+            and are named according to the type and the  name  of
+            the corresponding terminal entry.
+
+            Before  ncurses  5.0, the split between the <B>-e</B> and <B>-E</B>
+            options was not  needed;  but  support  for  extended
+            names required making the arrays of terminal capabil-
+            ities separate from the TERMTYPE structure.
+
+       <B>-f</B>   Display  complex  terminfo  strings   which   contain
+            if/then/else/endif expressions indented for readabil-
+            ity.
+
+       <B>-g</B>   Display constant character literals  in  quoted  form
+            rather than their decimal equivalents.
+
+       <B>-i</B>   Analyze the initialization (<B>is1</B>, <B>is2</B>, <B>is3</B>), and reset
+            (<B>rs1</B>, <B>rs2</B>, <B>rs3</B>), strings  in  the  entry.   For  each
+            string,  the code tries to analyze it into actions in
+            terms of the other capabilities in the entry, certain
+            X3.64/ISO  6429/ECMA-48 capabilities, and certain DEC
+            VT-series private modes (the set of  recognized  spe-
+            cial  sequences  has  been  selected for completeness
+            over the existing terminfo  database).   Each  report
+            line  consists  of the capability name, followed by a
+            colon and space, followed by a printable expansion of
+            the  capability  string with sections matching recog-
+            nized   actions    translated    into    {}-bracketed
+            descriptions.  Here is a list of the DEC/ANSI special
+            sequences recognized:
+
+                  Action        Meaning
+                  -----------------------------------------
+                  RIS           full reset
+                  SC            save cursor
+                  RC            restore cursor
+                  LL            home-down
+                  RSR           reset scroll region
+
+                  ISO DEC G0    enable DEC graphics for G0
+                  ISO UK G0     enable UK chars for G0
+                  ISO US G0     enable US chars for G0
+                  ISO DEC G1    enable DEC graphics for G1
+                  ISO UK G1     enable UK chars for G1
+                  ISO US G1     enable US chars for G1
+
+                  DECPAM        application keypad mode
+                  DECPNM        normal keypad mode
+                  DECANSI       enter ANSI mode
+
+                  DEC[+-]CKM    application cursor keys
+                  DEC[+-]ANM    set VT52 mode
+                  DEC[+-]COLM   132-column mode
+                  DEC[+-]SCLM   smooth scroll
+                  DEC[+-]SCNM   reverse video mode
+                  DEC[+-]OM     origin mode
+                  DEC[+-]AWM    wraparound mode
+                  DEC[+-]ARM    auto-repeat mode
+
+            It also recognizes  a  SGR  action  corresponding  to
+            ANSI/ISO  6429/ECMA  Set Graphics Rendition, with the
+            values NORMAL, BOLD, UNDERLINE, BLINK,  and  REVERSE.
+            All  but NORMAL may be prefixed with `+' (turn on) or
+            `-' (turn off).
+
+            An  SGR0  designates  an  empty  highlight   sequence
+            (equivalent to {SGR:NORMAL}).
+
+       <B>-p</B>   Ignore padding specifications when comparing strings.
+
+       <B>-v</B> <I>n</I> prints out tracing information on standard  error  as
+            the  program runs.  Higher values of n induce greater
+            verbosity.
+
+       <B>-w</B> <I>width</I>
+            changes the output to <I>width</I> characters.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+       @DATADIR@/terminfo  Compiled     terminal      description
+                           database.
+
+
+
+</PRE>
+<H2>EXTENSIONS</H2><PRE>
+       The  <B>-E</B>,  <B>-F</B>,  <B>-G</B>,  <B>-R</B>, <B>-T</B>, <B>-a</B>, <B>-e</B>, <B>-f</B>, <B>-g</B>, <B>-i</B>, <B>-p</B>, and <B>-q</B>
+       options are not supported in SVr4 curses.
+
+       The <B>-r</B> option's notion of `termcap' capabilities is System
+       V  Release  4's.   Actual  BSD curses versions will have a
+       more restricted set.  To see only the 4.4BSD set,  use  -r
+       -RBSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+       The -F option of <B><A HREF="infocmp.1m.html">infocmp(1m)</A></B> should be a <B><A HREF="toe.1m.html">toe(1m)</A></B> mode.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="infocmp.1m.html">infocmp(1m)</A></B>,    <B><A HREF="captoinfo.1m.html">captoinfo(1m)</A></B>,   <B><A HREF="infotocap.1m.html">infotocap(1m)</A></B>,   <B><A HREF="tic.1m.html">tic(1m)</A></B>,
+       <B><A HREF="toe.1m.html">toe(1m)</A></B>, <B><A HREF="ncurses.3x.html">curses(3x)</A></B>, <B><A HREF="terminfo.5.html">terminfo(5)</A></B>.
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       Eric S.  Raymond  &lt;esr@snark.thyrsus.com&gt;  and  Thomas  E.
+       Dickey &lt;dickey@herndon4.his.com&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

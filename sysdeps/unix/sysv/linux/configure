@@ -264,7 +264,6 @@ CEOF
 #define TYPEOF_CHTYPE long
 #define USE_DATABASE 1
 #define USE_HASHMAP 1
-#define USE_SCROLL_HINTS 1
 #define USE_LINKS 1
 #define NCURSES_NO_PADDING 1
 #define USE_SIGWINCH 1

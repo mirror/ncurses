@@ -1,0 +1,80 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+</PRE>
+<H2>NAME</H2><PRE>
+       <B>mcprint</B> - ship binary data to printer
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
+
+       <B>int</B> <B>mcprint(char</B> <B>*data,</B> <B>int</B> <B>len);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This  function  uses the <B>mc5p</B> or <B>mc4</B> and <B>mc5</B> capabilities,
+       if they are present, to  ship  given  data  to  a  printer
+       attached to the terminal.
+
+       Note  that  the <B>mcprint</B> code has no way to do flow control
+       with the printer or to know how  much  buffering  it  has.
+       Your  application  is  responsible for keeping the rate of
+       writes to the printer below its continuous throughput rate
+       (typically  about  half  of its nominal cps rating).  Dot-
+       matrix printers and 6-page-per-minute lasers can typically
+       handle  80cps,  so a good conservative rule of thumb is to
+       sleep for a second after shipping each 80-character  line.
+
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+       The  <B>mcprint</B>  function  returns <B>ERR</B> if the write operation
+       aborted for some reason.  In this case, errno will contain
+       either  an  error  associated  with <B>write(2)</B> or one of the
+       following:
+
+       ENODEV
+            Capabilities for printer redirection don't exist.
+
+       ENOMEM
+            Couldn't allocate sufficient  memory  to  buffer  the
+            printer write.
+
+            When <B>mcprint</B> succeeds, it returns the number of char-
+            acters actually sent to the printer.
+
+
+</PRE>
+<H2>PORTABILITY</H2><PRE>
+       The <B>mcprint</B> call was designed for <B><A HREF="ncurses.3x.html">ncurses(3x)</A></B>, and is  not
+       found in SVr4 curses, 4.4BSD curses, or any other previous
+       version of curses.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+       Padding in the <B>mc5p</B>, <B>mc4</B> and <B>mc5</B> capabilities will not  be
+       interpreted.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="ncurses.3x.html">curses(3x)</A></B>
+
+
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>
