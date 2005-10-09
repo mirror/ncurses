@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.10 $
+--  $Revision: 1.13 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Sample.Form_Demo.Aux;
@@ -72,7 +73,7 @@ package body Sample.Form_Demo.Handler is
       end if;
       loop
          declare
-            K : Key_Code := Aux.Get_Request (F, Pan, Handle_CRLF);
+            K : constant Key_Code := Aux.Get_Request (F, Pan, Handle_CRLF);
             R : Driver_Result;
          begin
             if (K = 13 or else K = 10) and then not Handle_CRLF then

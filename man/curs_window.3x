@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,8 +26,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_window.3x,v 1.10 2003/05/10 20:33:49 jmc Exp $
+.\" $Id: curs_window.3x,v 1.13 2005/05/15 16:32:02 tom Exp $
 .TH curs_window 3X ""
+.na
+.hy 0
 .SH NAME
 \fBnewwin\fR,
 \fBdelwin\fR,
@@ -40,6 +42,8 @@
 \fBsyncok\fR,
 \fBwcursyncup\fR,
 \fBwsyncdown\fR - create \fBcurses\fR windows
+.ad
+.hy
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 
@@ -126,11 +130,36 @@ window.
 Routines that return an integer return the integer \fBERR\fR upon failure and
 \fBOK\fR (SVr4 only specifies "an integer value other than \fBERR\fR") upon
 successful completion.
-
-\fBdelwin\fR returns the integer \fBERR\fR upon failure and \fBOK\fR
-upon successful completion.
-
+.PP
 Routines that return pointers return \fBNULL\fR on error.
+.PP
+X/Open defines no error conditions.
+In this implementation
+.RS
+.TP 5
+\fBdelwin\fR
+returns an error if the window pointer is null, or
+if the window is the parent of another window.
+.IP
+This implementation also maintains a list of windows,
+and checks that the pointer passed to \fBdelwin\fP is one that
+it created, returning an error if it was not..
+.TP 5
+\fBmvderwin\fP
+returns an error
+if the window pointer is null, or
+if some part of the window would be placed off-screen.
+.TP 5
+\fBmvwin\fP
+returns an error
+if the window pointer is null, or
+if the window is really a pad, or
+if some part of the window would be placed off-screen.
+.TP 5
+\fBsyncok\fP
+returns an error
+if the window pointer is null.
+.RE
 .SH NOTES
 If many small changes are made to the window, the \fBwsyncup\fR option could
 degrade performance.

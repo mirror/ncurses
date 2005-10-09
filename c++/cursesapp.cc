@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,14 +34,15 @@
 #include "internal.h"
 #include "cursesapp.h"
 
-MODULE_ID("$Id: cursesapp.cc,v 1.10 2003/10/25 15:04:46 tom Exp $")
+MODULE_ID("$Id: cursesapp.cc,v 1.13 2005/04/03 12:25:23 tom Exp $")
 
 void
-NCursesApplication::init(bool bColors) {
+NCursesApplication::init(bool bColors)
+{
   if (bColors)
     NCursesWindow::useColors();
-  
-  if (Root_Window->colors() > 1) {    
+
+  if (Root_Window->colors() > 1) {
     b_Colors = TRUE;
     Root_Window->setcolor(1);
     Root_Window->setpalette(COLOR_YELLOW,COLOR_BLUE);
@@ -66,7 +67,8 @@ NCursesApplication* NCursesApplication::theApp = 0;
 NCursesWindow* NCursesApplication::titleWindow = 0;
 NCursesApplication::SLK_Link* NCursesApplication::slk_stack = 0;
 
-NCursesApplication::~NCursesApplication() {
+NCursesApplication::~NCursesApplication()
+{
   Soft_Label_Key_Set* S;
 
   delete titleWindow;
@@ -78,12 +80,14 @@ NCursesApplication::~NCursesApplication() {
   ::endwin();
 }
 
-int NCursesApplication::rinit(NCursesWindow& w) {
+int NCursesApplication::rinit(NCursesWindow& w)
+{
   titleWindow = &w;
   return OK;
 }
 
-void NCursesApplication::push(Soft_Label_Key_Set& S) {
+void NCursesApplication::push(Soft_Label_Key_Set& S)
+{
   SLK_Link* L = new SLK_Link;
   assert(L != 0);
   L->prev = slk_stack;
@@ -93,7 +97,8 @@ void NCursesApplication::push(Soft_Label_Key_Set& S) {
     S.show();
 }
 
-bool NCursesApplication::pop() {
+bool NCursesApplication::pop()
+{
   if (slk_stack) {
     SLK_Link* L = slk_stack;
     slk_stack = slk_stack->prev;
@@ -104,22 +109,24 @@ bool NCursesApplication::pop() {
   return (slk_stack ? FALSE : TRUE);
 }
 
-Soft_Label_Key_Set* NCursesApplication::top() const {
+Soft_Label_Key_Set* NCursesApplication::top() const
+{
   if (slk_stack)
     return slk_stack->SLKs;
   else
-    return (Soft_Label_Key_Set*)0;
+    return static_cast<Soft_Label_Key_Set*>(0);
 }
 
-int NCursesApplication::operator()(void) {
+int NCursesApplication::operator()(void)
+{
   bool bColors = b_Colors;
-  Soft_Label_Key_Set* S;
+  Soft_Label_Key_Set* S = 0;
 
   int ts = titlesize();
   if (ts>0)
     NCursesWindow::ripoffline(ts,rinit);
   Soft_Label_Key_Set::Label_Layout fmt = useSLKs();
-  if (fmt!=Soft_Label_Key_Set::None) {    
+  if (fmt!=Soft_Label_Key_Set::None) {
     S = new Soft_Label_Key_Set(fmt);
     assert(S != 0);
     init_labels(*S);
@@ -137,8 +144,10 @@ int NCursesApplication::operator()(void) {
   return run();
 }
 
-NCursesApplication::NCursesApplication(bool bColors) {
-  b_Colors = bColors;
+NCursesApplication::NCursesApplication(bool bColors)
+  : b_Colors(bColors),
+    Root_Window(NULL)
+{
   if (theApp)
     THROW(new NCursesException("Application object already created."));
   else

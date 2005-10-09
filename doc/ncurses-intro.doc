@@ -1,4 +1,3 @@
-
                          Writing Programs with NCURSES
 
      by Eric S. Raymond and Zeyd M. Ben-Halim
@@ -609,7 +608,7 @@ Function Descriptions
           refresh()  will  clear the screen. If an error occurs a message
           is  written  to standard error and the program exits. Otherwise
           it  returns  a pointer to stdscr. A few functions may be called
-          before initscr (slk_init(), filter(), ripofflines(), use_env(),
+          before  initscr (slk_init(), filter(), ripoffline(), use_env(),
           and, if you are using multiple terminals, newterm().)
 
    endwin()
@@ -651,10 +650,9 @@ Function Descriptions
           the   terminal,   as  other  routines  merely  manipulate  data
           structures.  wrefresh() copies the named window to the physical
           terminal  screen,  taking into account what is already there in
-          order   to  do  optimizations.  refresh()  does  a  refresh  of
-          stdscr().  Unless  leaveok()  has  been  enabled,  the physical
-          cursor  of the terminal is left at the location of the window's
-          cursor.
+          order  to do optimizations. refresh() does a refresh of stdscr.
+          Unless  leaveok()  has been enabled, the physical cursor of the
+          terminal is left at the location of the window's cursor.
 
    doupdate() and wnoutrefresh(win)
           These two functions allow multiple updates with more efficiency
@@ -929,7 +927,7 @@ Compatibility with Older Versions
 
    The  really clean way to handle this is to use the panels library. If,
    when  you want a screen update, you do update_panels(), it will do all
-   the  necessary  wnoutrfresh()  calls for whatever panel stacking order
+   the  necessary  wnoutrefresh() calls for whatever panel stacking order
    you  have  defined. Then you can do one doupdate() and there will be a
    single burst of physical I/O that will do all your updates.
 
@@ -1115,10 +1113,10 @@ Overview of Menus
     1. Initialize curses.
     2. Create the menu items, using new_item().
     3. Create the menu using new_menu().
-    4. Post the menu using menu_post().
+    4. Post the menu using post_menu().
     5. Refresh the screen.
     6. Process user requests via an input loop.
-    7. Unpost the menu using menu_unpost().
+    7. Unpost the menu using unpost_menu().
     8. Free the menu, using free_menu().
     9. Free the items using free_item().
    10. Terminate curses.
@@ -1198,8 +1196,8 @@ Menu Windows
    By  default,  both  windows  are  stdscr.  You  can  set them with the
    functions in menu_win(3x).
 
-   When  you  call menu_post(), you write the menu to its subwindow. When
-   you  call  menu_unpost(), you erase the subwindow, However, neither of
+   When  you  call post_menu(), you write the menu to its subwindow. When
+   you  call  unpost_menu(), you erase the subwindow, However, neither of
    these  actually  modifies  the  screen. To do that, call wrefresh() or
    some equivalent.
 
@@ -1315,10 +1313,10 @@ Overview of Forms
     1. Initialize curses.
     2. Create the form fields, using new_field().
     3. Create the form using new_form().
-    4. Post the form using form_post().
+    4. Post the form using post_form().
     5. Refresh the screen.
     6. Process user requests via an input loop.
-    7. Unpost the form using form_unpost().
+    7. Unpost the form using unpost_form().
     8. Free the form, using free_form().
     9. Free the fields using free_field().
    10. Terminate curses.
@@ -1350,7 +1348,7 @@ FIELD *new_field(int height, int width,   /* new field size */
    the  screen  (the  third  and  fourth arguments, which must be zero or
    greater).  Note  that  these  coordinates  are  relative  to  the form
    subwindow,  which will coincide with stdscr by default but need not be
-   stdscr if you've done an explicit set_form_window() call.
+   stdscr if you've done an explicit set_form_win() call.
 
    The  fifth argument allows you to specify a number of off-screen rows.
    If  this  is zero, the entire field will always be displayed. If it is
@@ -2345,9 +2343,9 @@ int form_opts(FORM *form);                /* form to query */
 
    O_NL_OVERLOAD
           Enable  overloading  of  REQ_NEW_LINE  as  described in Editing
-          Requests.  The  value  of  this  option  is  ignored on dynamic
-          fields  that  have  not reached their size limit; these have no
-          last line, so the circumstances for triggering a REQ_NEXT_FIELD
+          Requests. The value of this option is ignored on dynamic fields
+          that  have  not  reached  their  size limit; these have no last
+          line,  so  the  circumstances  for  triggering a REQ_NEXT_FIELD
           never arise.
 
    O_BS_OVERLOAD

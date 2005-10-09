@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,9 +35,10 @@
 #include "cursesf.h"
 #include "cursesapp.h"
 
-MODULE_ID("$Id: cursesf.cc,v 1.16 2003/10/25 15:04:46 tom Exp $")
+MODULE_ID("$Id: cursesf.cc,v 1.21 2005/08/13 18:09:06 tom Exp $")
 
-NCursesFormField::~NCursesFormField () {
+NCursesFormField::~NCursesFormField ()
+{
   if (field)
     OnError(::free_field (field));
 }
@@ -46,7 +47,8 @@ NCursesFormField::~NCursesFormField () {
  * objects.
  */
 FIELD**
-NCursesForm::mapFields(NCursesFormField* nfields[]) {
+NCursesForm::mapFields(NCursesFormField* nfields[])
+{
   int fieldCount = 0,lcv;
   FIELD** old_fields;
 
@@ -65,13 +67,14 @@ NCursesForm::mapFields(NCursesFormField* nfields[]) {
   my_fields = nfields;
 
   if (form && (old_fields = ::form_fields(form))) {
-    ::set_form_fields(form,(FIELD**)0);
+    ::set_form_fields(form, static_cast<FIELD**>(0));
     delete[] old_fields;
   }
   return fields;
 }
 
-void NCursesForm::setDefaultAttributes() {
+void NCursesForm::setDefaultAttributes()
+{
   NCursesApplication* S = NCursesApplication::getApplication();
 
   int n = count();
@@ -102,7 +105,8 @@ void NCursesForm::setDefaultAttributes() {
 void
 NCursesForm::InitForm(NCursesFormField* nfields[],
 		      bool with_frame,
-		      bool autoDelete_Fields) {
+		      bool autoDelete_Fields)
+{
   int mrows, mcols;
 
   keypad(TRUE);
@@ -111,7 +115,7 @@ NCursesForm::InitForm(NCursesFormField* nfields[],
   b_framed = with_frame;
   b_autoDelete = autoDelete_Fields;
 
-  form = (FORM*)0;
+  form = static_cast<FORM*>(0);
   form = ::new_form(mapFields(nfields));
   if (!form)
     OnError (E_SYSTEM_ERROR);
@@ -120,12 +124,12 @@ NCursesForm::InitForm(NCursesFormField* nfields[],
   hook->m_user   = NULL;
   hook->m_back   = this;
   hook->m_owner  = form;
-  ::set_form_userptr(form,(void*)hook);
+  ::set_form_userptr(form, reinterpret_cast<void*>(hook));
 
-  ::set_form_init  (form, NCursesForm::frm_init);
-  ::set_form_term  (form, NCursesForm::frm_term);
-  ::set_field_init (form, NCursesForm::fld_init);
-  ::set_field_term (form, NCursesForm::fld_term);
+  ::set_form_init  (form, _nc_xx_frm_init);
+  ::set_form_term  (form, _nc_xx_frm_term);
+  ::set_field_init (form, _nc_xx_fld_init);
+  ::set_field_term (form, _nc_xx_fld_term);
 
   scale(mrows, mcols);
   ::set_form_win(form, w);
@@ -138,25 +142,26 @@ NCursesForm::InitForm(NCursesFormField* nfields[],
     b_sub_owner = TRUE;
   }
   else {
-    sub = (NCursesWindow*)0;
+    sub = static_cast<NCursesWindow*>(0);
     b_sub_owner = FALSE;
   }
   options_on(O_NL_OVERLOAD);
   setDefaultAttributes();
 }
 
-NCursesForm::~NCursesForm() {
-  UserHook* hook = (UserHook*)::form_userptr(form);
+NCursesForm::~NCursesForm()
+{
+  UserHook* hook = reinterpret_cast<UserHook*>(::form_userptr(form));
   delete hook;
   if (b_sub_owner) {
     delete sub;
-    ::set_form_sub(form,(WINDOW *)0);
+    ::set_form_sub(form, static_cast<WINDOW *>(0));
   }
   if (form) {
     FIELD** fields = ::form_fields(form);
     int cnt = count();
 
-    OnError(::set_form_fields(form,(FIELD**)0));
+    OnError(::set_form_fields(form, static_cast<FIELD**>(0)));
 
     if (b_autoDelete) {
       if (cnt>0) {
@@ -173,7 +178,8 @@ NCursesForm::~NCursesForm() {
 }
 
 void
-NCursesForm::setSubWindow(NCursesWindow& nsub) {
+NCursesForm::setSubWindow(NCursesWindow& nsub)
+{
   if (!isDescendant(nsub))
     OnError(E_SYSTEM_ERROR);
   else {
@@ -190,46 +196,55 @@ NCursesForm::setSubWindow(NCursesWindow& nsub) {
  * implementing a virtual method in a derived class
  */
 void
-NCursesForm::frm_init(FORM *f) {
-  getHook(f)->On_Form_Init();
+_nc_xx_frm_init(FORM *f)
+{
+  NCursesForm::getHook(f)->On_Form_Init();
 }
 
 void
-NCursesForm::frm_term(FORM *f) {
-  getHook(f)->On_Form_Termination();
+_nc_xx_frm_term(FORM *f)
+{
+  NCursesForm::getHook(f)->On_Form_Termination();
 }
 
 void
-NCursesForm::fld_init(FORM *f) {
-  NCursesForm* F = getHook(f);
+_nc_xx_fld_init(FORM *f)
+{
+  NCursesForm* F = NCursesForm::getHook(f);
   F->On_Field_Init (*(F->current_field ()));
 }
 
 void
-NCursesForm::fld_term(FORM *f) {
-  NCursesForm* F = getHook(f);
+_nc_xx_fld_term(FORM *f)
+{
+  NCursesForm* F = NCursesForm::getHook(f);
   F->On_Field_Termination (*(F->current_field ()));
 }
 
 void
-NCursesForm::On_Form_Init() {
+NCursesForm::On_Form_Init()
+{
 }
 
 void
-NCursesForm::On_Form_Termination() {
+NCursesForm::On_Form_Termination()
+{
 }
 
 void
-NCursesForm::On_Field_Init(NCursesFormField& field) {
+NCursesForm::On_Field_Init(NCursesFormField& field)
+{
 }
 
 void
-NCursesForm::On_Field_Termination(NCursesFormField& field) {
+NCursesForm::On_Field_Termination(NCursesFormField& field)
+{
 }
 
 // call the form driver and do basic error checking.
 int
-NCursesForm::driver (int c) {
+NCursesForm::driver (int c)
+{
   int res = ::form_driver (form, c);
   switch (res) {
   case E_OK:
@@ -243,22 +258,26 @@ NCursesForm::driver (int c) {
   return (res);
 }
 
-void NCursesForm::On_Request_Denied(int c) const {
+void NCursesForm::On_Request_Denied(int c) const
+{
   ::beep();
 }
 
-void NCursesForm::On_Invalid_Field(int c) const {
+void NCursesForm::On_Invalid_Field(int c) const
+{
   ::beep();
 }
 
-void NCursesForm::On_Unknown_Command(int c) const {
+void NCursesForm::On_Unknown_Command(int c) const
+{
   ::beep();
 }
 
 static const int CMD_QUIT = MAX_COMMAND + 1;
 
 NCursesFormField*
-NCursesForm::operator()(void) {
+NCursesForm::operator()(void)
+{
   int drvCmnd;
   int err;
   int c;
@@ -296,7 +315,8 @@ NCursesForm::operator()(void) {
 // The default implementation provides a hopefully straightforward
 // mapping for the most common keystrokes and form requests.
 int
-NCursesForm::virtualize(int c) {
+NCursesForm::virtualize(int c)
+{
   switch(c) {
 
   case KEY_HOME      : return(REQ_FIRST_FIELD);
@@ -351,76 +371,84 @@ NCursesForm::virtualize(int c) {
 // User Defined Fieldtypes
 // -------------------------------------------------------------------------
 //
-bool UserDefinedFieldType::fcheck(FIELD *f, const void *u) {
-  NCursesFormField* F = (NCursesFormField*)u;
+bool _nc_xx_fld_fcheck(FIELD *f, const void *u)
+{
+  NCursesFormField* F = reinterpret_cast<NCursesFormField*>(const_cast<void *>(u));
   assert(F != 0);
-  UserDefinedFieldType* udf = (UserDefinedFieldType*)(F->fieldtype());
+  UserDefinedFieldType* udf = reinterpret_cast<UserDefinedFieldType*>(F->fieldtype());
   assert(udf != 0);
   return udf->field_check(*F);
 }
 
-bool UserDefinedFieldType::ccheck(int c, const void *u) {
-  NCursesFormField* F = (NCursesFormField*)u;
+bool _nc_xx_fld_ccheck(int c, const void *u)
+{
+  NCursesFormField* F = reinterpret_cast<NCursesFormField*>(const_cast<void *>(u));
   assert(F != 0);
   UserDefinedFieldType* udf =
-    (UserDefinedFieldType*)(F->fieldtype());
+    reinterpret_cast<UserDefinedFieldType*>(F->fieldtype());
   assert(udf != 0);
   return udf->char_check(c);
 }
 
-void* UserDefinedFieldType::makearg(va_list* va) {
+void* _nc_xx_fld_makearg(va_list* va)
+{
   return va_arg(*va,NCursesFormField*);
 }
 
 FIELDTYPE* UserDefinedFieldType::generic_fieldtype =
-  ::new_fieldtype(UserDefinedFieldType::fcheck,
-		  UserDefinedFieldType::ccheck);
+  ::new_fieldtype(_nc_xx_fld_fcheck,
+		  _nc_xx_fld_ccheck);
 
 FIELDTYPE* UserDefinedFieldType_With_Choice::generic_fieldtype_with_choice =
-  ::new_fieldtype(UserDefinedFieldType::fcheck,
-		  UserDefinedFieldType::ccheck);
+  ::new_fieldtype(_nc_xx_fld_fcheck,
+		  _nc_xx_fld_ccheck);
 
-bool UserDefinedFieldType_With_Choice::next_choice(FIELD *f, const void *u) {
-  NCursesFormField* F = (NCursesFormField*)u;
+bool _nc_xx_next_choice(FIELD *f, const void *u)
+{
+  NCursesFormField* F = reinterpret_cast<NCursesFormField*>(const_cast<void *>(u));
   assert(F != 0);
   UserDefinedFieldType_With_Choice* udf =
-    (UserDefinedFieldType_With_Choice*)(F->fieldtype());
+    reinterpret_cast<UserDefinedFieldType_With_Choice*>(F->fieldtype());
   assert(udf != 0);
   return udf->next(*F);
 }
 
-bool UserDefinedFieldType_With_Choice::prev_choice(FIELD *f, const void *u) {
-  NCursesFormField* F = (NCursesFormField*)u;
+bool _nc_xx_prev_choice(FIELD *f, const void *u)
+{
+  NCursesFormField* F = reinterpret_cast<NCursesFormField*>(const_cast<void *>(u));
   assert(F != 0);
   UserDefinedFieldType_With_Choice* udf =
-    (UserDefinedFieldType_With_Choice*)(F->fieldtype());
+    reinterpret_cast<UserDefinedFieldType_With_Choice*>(F->fieldtype());
   assert(udf != 0);
   return udf->previous(*F);
 }
 
-class UDF_Init {
+class UDF_Init
+{
 private:
   int code;
   static UDF_Init* I;
+
 public:
-  UDF_Init() {
+  UDF_Init()
+    : code(0)
+  {
     code = ::set_fieldtype_arg(UserDefinedFieldType::generic_fieldtype,
-			       UserDefinedFieldType::makearg,
+			       _nc_xx_fld_makearg,
 			       NULL,
 			       NULL);
     if (code==E_OK)
       code = ::set_fieldtype_arg
 	(UserDefinedFieldType_With_Choice::generic_fieldtype_with_choice,
-	 UserDefinedFieldType::makearg,
+	 _nc_xx_fld_makearg,
 	 NULL,
 	 NULL);
     if (code==E_OK)
       code = ::set_fieldtype_choice
 	(UserDefinedFieldType_With_Choice::generic_fieldtype_with_choice,
-	 UserDefinedFieldType_With_Choice::next_choice,
-	 UserDefinedFieldType_With_Choice::prev_choice);
+	 _nc_xx_next_choice,
+	 _nc_xx_prev_choice);
   }
 };
 
 UDF_Init* UDF_Init::I = new UDF_Init();
-

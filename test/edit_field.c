@@ -1,5 +1,5 @@
 /*
- * $Id: edit_field.c,v 1.7 2003/05/17 23:16:13 tom Exp $
+ * $Id: edit_field.c,v 1.11 2005/10/01 16:21:55 tom Exp $
  *
  * A wrapper for form_driver() which keeps track of the user's editing changes
  * for each field, and makes the result available as a null-terminated string
@@ -13,9 +13,6 @@
 #if USE_LIBFORM
 
 #include <edit_field.h>
-
-#define MY_QUIT		EDIT_FIELD('q')
-#define MY_INS_MODE	EDIT_FIELD('t')
 
 static struct {
     int code;
@@ -78,6 +75,9 @@ static struct {
 	CTRL('S'), REQ_BEG_FIELD, "go to beginning of field"
     },
     {
+	CTRL('T'), MY_EDT_MODE, "toggle O_EDIT mode, clear field status",
+    },
+    {
 	CTRL('U'), REQ_UP_FIELD, "move upward to field"
     },
     {
@@ -102,7 +102,7 @@ static struct {
 	CTRL(']'), MY_INS_MODE, "toggle REQ_INS_MODE/REQ_OVL_MODE",
     },
     {
-	KEY_F(1), EDIT_FIELD('h'), "show this screen",
+	KEY_F(1), MY_HELP, "show this screen",
     },
     {
 	KEY_BACKSPACE, REQ_DEL_PREV, "delete previous character"
@@ -181,7 +181,7 @@ help_edit_field(void)
 
     keypad(help, TRUE);
     keypad(data, TRUE);
-    waddstr(data, "Defined form-traversal keys:\n");
+    waddstr(data, "Defined form edit/traversal keys:\n");
     for (n = 0; n < SIZEOF(commands); ++n) {
 	const char *name;
 #ifdef NCURSES_VERSION
@@ -197,6 +197,32 @@ help_edit_field(void)
 
     do {
 	switch (ch) {
+	case KEY_HOME:
+	    y1 = 0;
+	    break;
+	case KEY_END:
+	    y1 = y2;
+	    break;
+	case KEY_PREVIOUS:
+	case KEY_PPAGE:
+	    if (y1 > 0) {
+		y1 -= high / 2;
+		if (y1 < 0)
+		    y1 = 0;
+	    } else {
+		beep();
+	    }
+	    break;
+	case KEY_NEXT:
+	case KEY_NPAGE:
+	    if (y1 < y2) {
+		y1 += high / 2;
+		if (y1 >= y2)
+		    y1 = y2;
+	    } else {
+		beep();
+	    }
+	    break;
 	case CTRL('P'):
 	case KEY_UP:
 	    if (y1 > 0)

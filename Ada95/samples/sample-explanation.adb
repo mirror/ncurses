@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.15 $
+--  $Revision: 1.18 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and
@@ -57,7 +58,7 @@ package body Sample.Explanation is
    Help_Keys : constant String := "HELPKEYS";
    In_Help   : constant String := "INHELP";
 
-   File_Name : String := "explain.msg";
+   File_Name : constant String := "explain.msg";
    F : File_Type;
 
    type Help_Line;
@@ -116,7 +117,7 @@ package body Sample.Explanation is
       Current  : Help_Line_Access;
       Top_Line : Help_Line_Access;
 
-      Has_More : Boolean;
+      Has_More : Boolean := True;
 
       procedure Unknown_Key
       is

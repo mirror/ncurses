@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.24 2002/12/29 01:40:30 tom Exp $ */
+/* $Id: tclock.c,v 1.25 2005/04/16 16:39:27 tom Exp $ */
 
 #include <test.priv.h>
 
@@ -229,7 +229,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    lastbeep = t->tm_sec;
 	    if (has_colors()) {
 		odd = !odd;
-		bkgd(odd ? COLOR_PAIR(4) : COLOR_PAIR(0));
+		bkgd((chtype) (odd ? COLOR_PAIR(4) : COLOR_PAIR(0)));
 	    }
 	    beep();
 	}

@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.6 $
+--  $Revision: 1.9 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 
@@ -52,7 +53,7 @@ package body Terminal_Interface.Curses.Termcap is
       pragma Import (C, tgetent, "tgetent");
       NameTxt : char_array (0 .. Name'Length);
       Length  : size_t;
-      ignored : char_array (0 .. 0) := (0 => nul);
+      ignored : constant char_array (0 .. 0) := (0 => nul);
       result  : C_Int;
    begin
       To_C (Name, NameTxt, Length);
@@ -111,7 +112,7 @@ package body Terminal_Interface.Curses.Termcap is
       Length : size_t;
       Txt2   : chars_ptr;
       type t is new char_array (0 .. 1024); --  does it need to be 1024?
-      Return_Buffer : t := (others => nul);
+      Return_Buffer : constant t := (others => nul);
    begin
       To_C (Name, Txt, Length);
       Txt2 := tgetstr (Txt, char_array (Return_Buffer));
@@ -132,7 +133,7 @@ package body Terminal_Interface.Curses.Termcap is
       Length : size_t;
       Txt2   : chars_ptr;
       type t is new char_array (0 .. 1024); --  does it need to be 1024?
-      Phony_Txt : t := (others => nul);
+      Phony_Txt : constant t := (others => nul);
    begin
       To_C (Name, Txt, Length);
       Txt2 := tgetstr (Txt, char_array (Phony_Txt));

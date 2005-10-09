@@ -15,15 +15,15 @@
 ** 
 ** You should have received a copy of the GNU General Public License
 ** along with TACK; see the file COPYING.  If not, write to
-** the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-** Boston, MA 02111-1307, USA.
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+** Boston, MA 02110-1301, USA
 */
 
 #include <tack.h>
 #include <time.h>
 #include <tic.h>
 
-MODULE_ID("$Id: edit.c,v 1.8 2001/06/18 18:44:32 tom Exp $")
+MODULE_ID("$Id: edit.c,v 1.10 2005/09/17 19:49:16 tom Exp $")
 
 /*
  * Terminfo edit features
@@ -52,7 +52,7 @@ struct test_list edit_test_list[] = {
 };
 
 static char change_pad_text[MAX_CHANGES][80];
-struct test_list change_pad_list[MAX_CHANGES] = {
+static struct test_list change_pad_list[MAX_CHANGES] = {
 	{MENU_LAST, 0, 0, 0, 0, 0, 0}
 };
 
@@ -65,15 +65,13 @@ struct test_menu change_pad_menu = {
 	build_change_menu, change_pad_list, 0, 0, 0
 };
 
-extern struct test_results *pads[STRCOUNT];	/* save pad results here */
-
 static TERMTYPE	original_term;		/* terminal type description */
 
 static char flag_boolean[BOOLCOUNT];	/* flags for booleans */
 static char flag_numerics[NUMCOUNT];	/* flags for numerics */
 static char flag_strings[STRCOUNT];	/* flags for strings */
 static int xon_index;			/* Subscript for (xon) */
-int xon_shadow;
+static int xon_shadow;
 
 static int start_display;		/* the display has just started */
 static int display_lines;		/* number of lines displayed */

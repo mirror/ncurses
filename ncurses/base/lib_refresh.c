@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -40,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_refresh.c,v 1.32 2002/05/26 00:17:04 tom Exp $")
+MODULE_ID("$Id: lib_refresh.c,v 1.33 2005/04/09 15:20:58 tom Exp $")
 
 NCURSES_EXPORT(int)
 wrefresh(WINDOW *win)
@@ -49,7 +50,9 @@ wrefresh(WINDOW *win)
 
     T((T_CALLED("wrefresh(%p)"), win));
 
-    if (win == curscr) {
+    if (win == 0) {
+	code = ERR;
+    } else if (win == curscr) {
 	curscr->_clear = TRUE;
 	code = doupdate();
     } else if ((code = wnoutrefresh(win)) == OK) {

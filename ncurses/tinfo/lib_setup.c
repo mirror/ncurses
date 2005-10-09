@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,9 +47,13 @@
 #define _POSIX_SOURCE
 #endif
 
+#if HAVE_LOCALE_H
+#include <locale.h>
+#endif
+
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.79 2003/12/27 18:24:26 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.88 2005/03/12 19:41:45 tom Exp $")
 
 /****************************************************************************
  *
@@ -71,6 +75,10 @@ MODULE_ID("$Id: lib_setup.c,v 1.79 2003/12/27 18:24:26 tom Exp $")
   */
 # include <sys/stream.h>
 # include <sys/ptem.h>
+#endif
+
+#if HAVE_LANGINFO_CODESET
+#include <langinfo.h>
 #endif
 
 /*
@@ -205,11 +213,24 @@ _nc_get_screensize(int *linep, int *colp)
 NCURSES_EXPORT(void)
 _nc_update_screensize(void)
 {
-    int my_lines, my_cols;
+    int old_lines = lines;
+    int new_lines;
+    int old_cols = columns;
+    int new_cols;
 
-    _nc_get_screensize(&my_lines, &my_cols);
-    if (SP != 0 && SP->_resize != 0)
-	SP->_resize(my_lines, my_cols);
+    _nc_get_screensize(&new_lines, &new_cols);
+
+    /*
+     * See is_term_resized() and resizeterm().
+     * We're doing it this way because those functions belong to the upper
+     * ncurses library, while this resides in the lower terminfo library.
+     */
+    if (SP != 0
+	&& SP->_resize != 0) {
+	if ((new_lines != old_lines) || (new_cols != old_cols))
+	    SP->_resize(new_lines, new_cols);
+	SP->_sig_winch = FALSE;
+    }
 }
 #endif
 
@@ -237,7 +258,7 @@ _nc_update_screensize(void)
 
 #if USE_DATABASE || USE_TERMCAP
 static int
-grab_entry(const char *const tn, TERMTYPE * const tp)
+grab_entry(const char *const tn, TERMTYPE *const tp)
 /* return 1 if entry found, 0 if not found, -1 if database not accessible */
 {
 #if USE_DATABASE
@@ -318,18 +339,27 @@ do_prototype(void)
 }
 
 /*
- * Check if we are running in a UTF-8 locale.
+ * Find the locale which is in effect.
  */
 NCURSES_EXPORT(char *)
 _nc_get_locale(void)
 {
     char *env;
+#if HAVE_LOCALE_H
+    /*
+     * This is preferable to using getenv() since it ensures that we are using
+     * the locale which was actually initialized by the application.
+     */
+    env = setlocale(LC_CTYPE, 0);
+#else
     if (((env = getenv("LC_ALL")) != 0 && *env != '\0')
 	|| ((env = getenv("LC_CTYPE")) != 0 && *env != '\0')
 	|| ((env = getenv("LANG")) != 0 && *env != '\0')) {
-	return env;
+	;
     }
-    return 0;
+#endif
+    T(("_nc_get_locale %s", _nc_visbuf(env)));
+    return env;
 }
 
 /*
@@ -338,13 +368,25 @@ _nc_get_locale(void)
 NCURSES_EXPORT(int)
 _nc_unicode_locale(void)
 {
+    int result = 0;
+#if HAVE_LANGINFO_CODESET
+    char *env = nl_langinfo(CODESET);
+    result = !strcmp(env, "UTF-8");
+    T(("_nc_unicode_locale(%s) ->%d", env, result));
+#else
     char *env = _nc_get_locale();
     if (env != 0) {
-	if (strstr(env, ".UTF-8") != 0)
-	    return 1;
+	if (strstr(env, ".UTF-8") != 0) {
+	    result = 1;
+	    T(("_nc_unicode_locale(%s) ->%d", env, result));
+	}
     }
-    return 0;
+#endif
+    return result;
 }
+
+#define CONTROL_N(s) ((s) != 0 && strstr(s, "\016") != 0)
+#define CONTROL_O(s) ((s) != 0 && strstr(s, "\017") != 0)
 
 /*
  * Check for known broken cases where a UTF-8 locale breaks the alternate
@@ -353,30 +395,33 @@ _nc_unicode_locale(void)
 NCURSES_EXPORT(int)
 _nc_locale_breaks_acs(void)
 {
-    char *env = getenv("TERM");
-    if (env != 0) {
+    char *env;
+
+    if ((env = getenv("NCURSES_NO_UTF8_ACS")) != 0) {
+	return atoi(env);
+    } else if ((env = getenv("TERM")) != 0) {
 	if (strstr(env, "linux"))
 	    return 1;		/* always broken */
 	if (strstr(env, "screen") != 0
 	    && ((env = getenv("TERMCAP")) != 0
 		&& strstr(env, "screen") != 0)
 	    && strstr(env, "hhII00") != 0) {
-	    return 1;
+	    if (CONTROL_N(enter_alt_charset_mode) ||
+		CONTROL_O(enter_alt_charset_mode) ||
+		CONTROL_N(set_attributes) ||
+		CONTROL_O(set_attributes))
+		return 1;
 	}
     }
     return 0;
 }
 
 /*
- *	setupterm(termname, Filedes, errret)
- *
- *	Find and read the appropriate object file for the terminal
- *	Make cur_term point to the structure.
- *
+ * This entrypoint is called from tgetent() to allow special a case of reusing
+ * the same TERMINAL data (see comment).
  */
-
 NCURSES_EXPORT(int)
-setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
+_nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 {
     int status;
 
@@ -419,7 +464,8 @@ setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
      * however applications that are working around the problem will still work
      * properly with this feature).
      */
-    if (cur_term != 0
+    if (reuse
+	&& cur_term != 0
 	&& cur_term->Filedes == Filedes
 	&& cur_term->_termname != 0
 	&& !strcmp(cur_term->_termname, tname)
@@ -499,4 +545,18 @@ setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
 	ret_error(1, "'%s': I can't handle hardcopy terminals.\n", tname);
     }
     returnCode(OK);
+}
+
+/*
+ *	setupterm(termname, Filedes, errret)
+ *
+ *	Find and read the appropriate object file for the terminal
+ *	Make cur_term point to the structure.
+ *
+ */
+
+NCURSES_EXPORT(int)
+setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
+{
+    return _nc_setupterm(tname, Filedes, errret, FALSE);
 }

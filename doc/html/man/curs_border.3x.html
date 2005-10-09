@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_border.3x,v 1.15 2002/02/16 22:21:47 tom Exp @
+  * @Id: curs_border.3x,v 1.17 2005/05/15 16:17:31 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,16 +40,16 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>                                   <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
+<STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>                                         <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>border</STRONG>,  <STRONG>wborder</STRONG>,  <STRONG>box</STRONG>, <STRONG>hline</STRONG>, <STRONG>whline</STRONG>, <STRONG>vline</STRONG>, <STRONG>wvline</STRONG>, <STRONG>mvh-</STRONG>
-       <STRONG>line</STRONG>, <STRONG>mvwhline</STRONG>, <STRONG>mvvline</STRONG>, <STRONG>mvwvline</STRONG> - create <STRONG>curses</STRONG> borders,
-       horizontal and vertical lines
+       <STRONG>border</STRONG>, <STRONG>wborder</STRONG>, <STRONG>box</STRONG>, <STRONG>hline</STRONG>, <STRONG>whline</STRONG>, <STRONG>vline</STRONG>, <STRONG>wvline</STRONG>,
+       <STRONG>mvhline</STRONG>, <STRONG>mvwhline</STRONG>, <STRONG>mvvline</STRONG>, <STRONG>mvwvline</STRONG> - create <STRONG>curses</STRONG>
+       borders, horizontal and vertical lines
 
 
 </PRE>
@@ -118,6 +118,9 @@
        says  "or  a  non-negative integer if <STRONG>immedok</STRONG> is set", but
        this appears to be an error.
 
+       X/Open does not define any error conditions.  This  imple-
+       mentation  returns an error if the window pointer is null.
+
 
 </PRE>
 <H2>NOTES</H2><PRE>
@@ -141,7 +144,7 @@
 
 
 
-                                                  <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
+                                                        <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

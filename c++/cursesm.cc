@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,23 +35,27 @@
 #include "cursesm.h"
 #include "cursesapp.h"
 
-MODULE_ID("$Id: cursesm.cc,v 1.18 2003/10/25 15:04:46 tom Exp $")
+MODULE_ID("$Id: cursesm.cc,v 1.22 2005/04/02 20:39:05 tom Exp $")
 
-NCursesMenuItem::~NCursesMenuItem() {
+NCursesMenuItem::~NCursesMenuItem()
+{
   if (item)
     OnError(::free_item(item));
 }
 
 bool
-NCursesMenuItem::action() {
+NCursesMenuItem::action()
+{
   return FALSE;
-};
+}
 
-NCursesMenuCallbackItem::~NCursesMenuCallbackItem() {
+NCursesMenuCallbackItem::~NCursesMenuCallbackItem()
+{
 }
 
 bool
-NCursesMenuCallbackItem::action() {
+NCursesMenuCallbackItem::action()
+{
   if (p_fct)
     return p_fct (*this);
   else
@@ -64,24 +68,28 @@ NCursesMenuCallbackItem::action() {
  * implementing a virtual method in a derived class
  */
 void
-NCursesMenu::mnu_init(MENU *m) {
-  getHook(m)->On_Menu_Init();
+_nc_xx_mnu_init(MENU *m)
+{
+  NCursesMenu::getHook(m)->On_Menu_Init();
 }
 
 void
-NCursesMenu::mnu_term(MENU *m) {
-  getHook(m)->On_Menu_Termination();
+_nc_xx_mnu_term(MENU *m)
+{
+  NCursesMenu::getHook(m)->On_Menu_Termination();
 }
 
 void
-NCursesMenu::itm_init(MENU *m) {
-  NCursesMenu* M = getHook(m);
+_nc_xx_itm_init(MENU *m)
+{
+  NCursesMenu* M = NCursesMenu::getHook(m);
   M->On_Item_Init (*(M->current_item ()));
 }
 
 void
-NCursesMenu::itm_term(MENU *m) {
-  NCursesMenu* M = getHook(m);
+_nc_xx_itm_term(MENU *m)
+{
+  NCursesMenu* M = NCursesMenu::getHook(m);
   M->On_Item_Termination (*(M->current_item ()));
 }
 
@@ -89,30 +97,32 @@ NCursesMenu::itm_term(MENU *m) {
  * objects.
  */
 ITEM**
-NCursesMenu::mapItems(NCursesMenuItem* nitems[]) {
+NCursesMenu::mapItems(NCursesMenuItem* nitems[])
+{
   int itemCount = 0,lcv;
 
   for (lcv=0; nitems[lcv]->item; ++lcv)
     ++itemCount;
 
-  ITEM** items = new ITEM*[itemCount + 1];
+  ITEM** itemArray = new ITEM*[itemCount + 1];
 
   for (lcv=0;nitems[lcv]->item;++lcv) {
-    items[lcv] = nitems[lcv]->item;
+    itemArray[lcv] = nitems[lcv]->item;
   }
-  items[lcv] = NULL;
+  itemArray[lcv] = NULL;
 
   my_items = nitems;
 
   if (menu)
     delete[] ::menu_items(menu);
-  return items;
+  return itemArray;
 }
 
 void
 NCursesMenu::InitMenu(NCursesMenuItem* nitems[],
 		      bool with_frame,
-		      bool autoDelete_Items) {
+		      bool autoDelete_Items)
+{
   int mrows, mcols;
 
   keypad(TRUE);
@@ -121,7 +131,7 @@ NCursesMenu::InitMenu(NCursesMenuItem* nitems[],
   b_framed = with_frame;
   b_autoDelete = autoDelete_Items;
 
-  menu = (MENU*)0;
+  menu = static_cast<MENU*>(0);
   menu = ::new_menu(mapItems(nitems));
   if (!menu)
     OnError (E_SYSTEM_ERROR);
@@ -130,12 +140,12 @@ NCursesMenu::InitMenu(NCursesMenuItem* nitems[],
   hook->m_user   = NULL;
   hook->m_back   = this;
   hook->m_owner  = menu;
-  ::set_menu_userptr(menu,(void*)hook);
+  ::set_menu_userptr(menu, static_cast<void*>(hook));
 
-  ::set_menu_init (menu, NCursesMenu::mnu_init);
-  ::set_menu_term (menu, NCursesMenu::mnu_term);
-  ::set_item_init (menu, NCursesMenu::itm_init);
-  ::set_item_term (menu, NCursesMenu::itm_term);
+  ::set_menu_init (menu, _nc_xx_mnu_init);
+  ::set_menu_term (menu, _nc_xx_mnu_term);
+  ::set_item_init (menu, _nc_xx_itm_init);
+  ::set_item_term (menu, _nc_xx_itm_term);
 
   scale(mrows, mcols);
   ::set_menu_win(menu, w);
@@ -148,14 +158,15 @@ NCursesMenu::InitMenu(NCursesMenuItem* nitems[],
     b_sub_owner = TRUE;
   }
   else {
-    sub = (NCursesWindow*)0;
+    sub = static_cast<NCursesWindow*>(0);
     b_sub_owner = FALSE;
   }
   setDefaultAttributes();
 }
 
 void
-NCursesMenu::setDefaultAttributes() {
+NCursesMenu::setDefaultAttributes()
+{
   NCursesApplication* S = NCursesApplication::getApplication();
   if (S) {
     ::set_menu_fore(menu, S->foregrounds());
@@ -164,18 +175,19 @@ NCursesMenu::setDefaultAttributes() {
   }
 }
 
-NCursesMenu::~NCursesMenu() {
-  UserHook* hook = (UserHook*)::menu_userptr(menu);
+NCursesMenu::~NCursesMenu()
+{
+  UserHook* hook = reinterpret_cast<UserHook*>(::menu_userptr(menu));
   delete hook;
   if (b_sub_owner) {
     delete sub;
-    ::set_menu_sub(menu,(WINDOW *)0);
+    ::set_menu_sub(menu, static_cast<WINDOW *>(0));
   }
   if (menu) {
     ITEM** itms = ::menu_items(menu);
     int cnt = count();
 
-    OnError(::set_menu_items(menu,(ITEM**)0));
+    OnError(::set_menu_items(menu, static_cast<ITEM**>(0)));
 
     if (b_autoDelete) {
       if (cnt>0) {
@@ -192,7 +204,8 @@ NCursesMenu::~NCursesMenu() {
 }
 
 void
-NCursesMenu::setSubWindow(NCursesWindow& nsub) {
+NCursesMenu::setSubWindow(NCursesWindow& nsub)
+{
   if (!isDescendant(nsub))
     OnError(E_SYSTEM_ERROR);
   else {
@@ -204,7 +217,8 @@ NCursesMenu::setSubWindow(NCursesWindow& nsub) {
 }
 
 bool
-NCursesMenu::set_pattern (const char *pat) {
+NCursesMenu::set_pattern (const char *pat)
+{
   int res = ::set_menu_pattern (menu, pat);
   switch(res) {
   case E_OK:
@@ -219,7 +233,8 @@ NCursesMenu::set_pattern (const char *pat) {
 
 // call the menu driver and do basic error checking.
 int
-NCursesMenu::driver (int c) {
+NCursesMenu::driver (int c)
+{
   int res = ::menu_driver (menu, c);
   switch (res) {
   case E_OK:
@@ -244,7 +259,8 @@ static const int CMD_ACTION = MAX_COMMAND + 2;
 // mapping for the most common keystrokes and menu requests.
 // -------------------------------------------------------------------------
 int
-NCursesMenu::virtualize(int c) {
+NCursesMenu::virtualize(int c)
+{
   switch(c) {
   case CTRL('X')     : return(CMD_QUIT);              // eXit
 
@@ -281,7 +297,8 @@ NCursesMenu::virtualize(int c) {
 }
 
 NCursesMenuItem*
-NCursesMenu::operator()(void) {
+NCursesMenu::operator()(void)
+{
   int drvCmnd;
   int err;
   int c;
@@ -290,9 +307,9 @@ NCursesMenu::operator()(void) {
   post();
   show();
   refresh();
-  
+
   while (!b_action && ((drvCmnd = virtualize((c=getKey()))) != CMD_QUIT)) {
-    
+
     switch((err=driver(drvCmnd))) {
     case E_REQUEST_DENIED:
       On_Request_Denied(c);
@@ -346,37 +363,45 @@ NCursesMenu::operator()(void) {
 }
 
 void
-NCursesMenu::On_Menu_Init() {
+NCursesMenu::On_Menu_Init()
+{
 }
 
 void
-NCursesMenu::On_Menu_Termination() {
+NCursesMenu::On_Menu_Termination()
+{
 }
 
 void
-NCursesMenu::On_Item_Init(NCursesMenuItem& item) {
+NCursesMenu::On_Item_Init(NCursesMenuItem& item)
+{
 }
 
 void
-NCursesMenu::On_Item_Termination(NCursesMenuItem& item) {
+NCursesMenu::On_Item_Termination(NCursesMenuItem& item)
+{
 }
 
 void
-NCursesMenu::On_Request_Denied(int c) const {
+NCursesMenu::On_Request_Denied(int c) const
+{
   ::beep();
 }
 
 void
-NCursesMenu::On_Not_Selectable(int c) const {
+NCursesMenu::On_Not_Selectable(int c) const
+{
   ::beep();
 }
 
 void
-NCursesMenu::On_No_Match(int c) const {
+NCursesMenu::On_No_Match(int c) const
+{
   ::beep();
 }
 
 void
-NCursesMenu::On_Unknown_Command(int c) const {
+NCursesMenu::On_Unknown_Command(int c) const
+{
   ::beep();
 }

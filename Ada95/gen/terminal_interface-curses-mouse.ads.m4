@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,7 +38,8 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.22 $
+--  $Revision: 1.25 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Mouse_Base_Defs')
@@ -169,7 +170,6 @@ private
          Bstate  : Event_Mask;
       end record;
    pragma Convention (C, Mouse_Event);
-   pragma Pack (Mouse_Event);
 
 include(`Mouse_Event_Rep')
    Generation_Bit_Order : constant System.Bit_Order := System.M4_BIT_ORDER;

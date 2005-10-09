@@ -1,8 +1,10 @@
 /*
- * $Id: color_set.c,v 1.2 2003/12/07 00:08:47 tom Exp $
+ * $Id: color_set.c,v 1.3 2004/04/10 20:10:28 tom Exp $
  */
 
 #include <test.priv.h>
+
+#ifdef HAVE_COLOR_SET
 
 #define SHOW(n) ((n) == ERR ? "ERR" : "OK")
 
@@ -53,3 +55,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(void)
+{
+    printf("This program requires the curses color_set function\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif

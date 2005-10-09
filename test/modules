@@ -1,7 +1,7 @@
 # Test-Program modules
-# $Id: modules,v 1.20 2003/12/07 00:01:23 tom Exp $
+# $Id: modules,v 1.23 2005/09/25 00:56:17 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,42 +28,43 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey 1997-2003
+# Author: Thomas E. Dickey 1997-2005
 #
 
 @ base
-background	progs		$(srcdir)
-blue		progs		$(srcdir)	../include/term.h
-bs		progs		$(srcdir)
-cardfile	progs		$(srcdir)	../include/panel.h ../include/form.h
-color_set	progs		$(srcdir)
-demo_defkey	progs		$(srcdir)
-demo_keyok	progs		$(srcdir)
-demo_forms	progs		$(srcdir)	../include/form.h
-demo_menus	progs		$(srcdir)	../include/menu.h
-demo_panels	progs		$(srcdir)	../include/panel.h
-ditto		progs		$(srcdir)
-dots		progs		$(srcdir)	../include/term.h
-edit_field	progs		$(srcdir)
-filter		progs		$(srcdir)	../include/form.h
-firework	progs		$(srcdir)	../include/term.h
-firstlast	progs		$(srcdir)
-gdc		progs		$(srcdir)
-hanoi		progs		$(srcdir)
-hashtest	progs		$(srcdir)
-ins_wide	progs		$(srcdir)
-inserts		progs		$(srcdir)
-keynames	progs		$(srcdir)
-knight		progs		$(srcdir)
-lrtest		progs		$(srcdir)
-ncurses		progs		$(srcdir)	../include/panel.h ../include/menu.h ../include/form.h
-newdemo		progs		$(srcdir)
-railroad	progs		$(srcdir)	../include/termcap.h
-rain		progs		$(srcdir)	../include/term.h
-tclock		progs		$(srcdir)
-testaddch	progs		$(srcdir)
-testcurs	progs		$(srcdir)
-testscanw	progs		$(srcdir)
-view		progs		$(srcdir)
-worm		progs		$(srcdir)
-xmas		progs		$(srcdir)
+background	progs		$(srcdir)	$(HEADER_DEPS)
+blue		progs		$(srcdir)	$(HEADER_DEPS)
+bs		progs		$(srcdir)	$(HEADER_DEPS)
+cardfile	progs		$(srcdir)	$(HEADER_DEPS)	../include/panel.h ../include/form.h
+color_set	progs		$(srcdir)	$(HEADER_DEPS)
+demo_defkey	progs		$(srcdir)	$(HEADER_DEPS)
+demo_keyok	progs		$(srcdir)	$(HEADER_DEPS)
+demo_forms	progs		$(srcdir)	$(HEADER_DEPS)	../include/form.h $(srcdir)/edit_field.h
+demo_menus	progs		$(srcdir)	$(HEADER_DEPS)	../include/menu.h
+demo_panels	progs		$(srcdir)	$(HEADER_DEPS)	../include/panel.h
+demo_termcap	progs		$(srcdir)	$(HEADER_DEPS)
+ditto		progs		$(srcdir)	$(HEADER_DEPS)
+dots		progs		$(srcdir)	$(HEADER_DEPS)
+edit_field	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/edit_field.h
+filter		progs		$(srcdir)	$(HEADER_DEPS)	../include/form.h
+firework	progs		$(srcdir)	$(HEADER_DEPS)
+firstlast	progs		$(srcdir)	$(HEADER_DEPS)
+gdc		progs		$(srcdir)	$(HEADER_DEPS)
+hanoi		progs		$(srcdir)	$(HEADER_DEPS)
+hashtest	progs		$(srcdir)	$(HEADER_DEPS)
+ins_wide	progs		$(srcdir)	$(HEADER_DEPS)
+inserts		progs		$(srcdir)	$(HEADER_DEPS)
+keynames	progs		$(srcdir)	$(HEADER_DEPS)
+knight		progs		$(srcdir)	$(HEADER_DEPS)
+lrtest		progs		$(srcdir)	$(HEADER_DEPS)
+ncurses		progs		$(srcdir)	$(HEADER_DEPS)	../include/panel.h ../include/menu.h ../include/form.h
+newdemo		progs		$(srcdir)	$(HEADER_DEPS)
+railroad	progs		$(srcdir)	$(HEADER_DEPS)
+rain		progs		$(srcdir)	$(HEADER_DEPS)
+tclock		progs		$(srcdir)	$(HEADER_DEPS)
+testaddch	progs		$(srcdir)	$(HEADER_DEPS)
+testcurs	progs		$(srcdir)	$(HEADER_DEPS)
+testscanw	progs		$(srcdir)	$(HEADER_DEPS)
+view		progs		$(srcdir)	$(HEADER_DEPS)
+worm		progs		$(srcdir)	$(HEADER_DEPS)
+xmas		progs		$(srcdir)	$(HEADER_DEPS)

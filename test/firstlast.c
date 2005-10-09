@@ -2,7 +2,7 @@
  * This test was written by Alexander V. Lukyanov to demonstrate difference
  * between ncurses 4.1 and SVR4 curses
  *
- * $Id: firstlast.c,v 1.3 2001/09/15 21:46:34 tom Exp $
+ * $Id: firstlast.c,v 1.4 2005/04/16 16:34:05 tom Exp $
  */
 
 #include <test.priv.h>
@@ -13,7 +13,7 @@ fill(WINDOW *w, const char *str)
     const char *s;
     for (;;) {
 	for (s = str; *s; s++) {
-	    if (waddch(w, *s) == ERR) {
+	    if (waddch(w, UChar(*s)) == ERR) {
 		wmove(w, 0, 0);
 		return;
 	    }
@@ -22,9 +22,8 @@ fill(WINDOW *w, const char *str)
 }
 
 int
-main(
-	int argc GCC_UNUSED,
-	char *argv[]GCC_UNUSED)
+main(int argc GCC_UNUSED,
+     char *argv[]GCC_UNUSED)
 {
     WINDOW *large, *small;
     initscr();

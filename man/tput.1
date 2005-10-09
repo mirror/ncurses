@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,70 +27,84 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.20 2003/05/11 00:32:53 tom Exp $
+.\" $Id: tput.1,v 1.22 2005/01/08 17:44:26 tom Exp $
 .TH tput 1 ""
 .ds d @TERMINFO@
 .ds n 1
 .SH NAME
 \fBtput\fR, \fBreset\fR - initialize a terminal or query terminfo database
 .SH SYNOPSIS
-\fBtput\fR [\fB\-T\fR\fItype\fR] \fIcapname\fR [\fIparms\fR ... ]
+\fBtput\fR [\fB-T\fR\fItype\fR] \fIcapname\fR [\fIparms\fR ... ]
 .br
-\fBtput\fR [\fB\-T\fR\fItype\fR] \fBinit\fR
+\fBtput\fR [\fB-T\fR\fItype\fR] \fBinit\fR
 .br
-\fBtput\fR [\fB\-T\fR\fItype\fR] \fBreset\fR
+\fBtput\fR [\fB-T\fR\fItype\fR] \fBreset\fR
 .br
-\fBtput\fR [\fB\-T\fR\fItype\fR] \fBlongname\fR
+\fBtput\fR [\fB-T\fR\fItype\fR] \fBlongname\fR
 .br
-\fBtput \-S\fR  \fB<<\fR
+\fBtput -S\fR  \fB<<\fR
 .br
-\fBtput \-V\fR
+\fBtput -V\fR
 .br
 .SH DESCRIPTION
 The \fBtput\fR utility uses the \fBterminfo\fR database to make the
 values of terminal-dependent capabilities and information available to
 the shell (see \fBsh\fR(1)), to initialize or reset the terminal, or
-return the long name of the requested terminal type.  \fBtput\fR
-outputs a string if the attribute (\fIcap\fRability \fIname\fR) is of
-type string, or an integer if the attribute is of type integer.  If
-the attribute is of type boolean, \fBtput\fR simply sets the exit code
-(\fB0\fR for TRUE if the terminal has the capability, \fB1\fR for
-FALSE if it does not), and produces no output.  Before using a value
-returned on standard output, the user should test the exit code
-[\fB$?\fR, see \fBsh\fR(1)] to be sure it is \fB0\fR.
+return the long name of the requested terminal type.
+The result depends upon the capability's type:
+.RS
+.TP 5
+string
+\fBtput\fR writes the string to the standard output.
+No trailing newline is supplied.
+.TP
+integer
+\fBtput\fR writes the decimal value to the standard output,
+with a trailing newline.
+.TP
+boolean
+\fBtput\fR simply sets the exit code
+(\fB0\fR for TRUE if the terminal has the capability,
+\fB1\fR for FALSE if it does not),
+and writes nothing to the standard output.
+.RE
+.PP
+Before using a value returned on the standard output,
+the application should test the exit code
+(e.g., \fB$?\fR, see \fBsh\fR(1)) to be sure it is \fB0\fR.
 (See the \fBEXIT CODES\fR and \fBDIAGNOSTICS\fR sections.)
 For a complete list of capabilities
 and the \fIcapname\fR associated with each, see \fBterminfo\fR(\*n).
 .TP
-\fB\-T\fR\fItype\fR
+\fB-T\fR\fItype\fR
 indicates the \fItype\fR of terminal.  Normally this option is
 unnecessary, because the default is taken from the environment
-variable \fBTERM\fR.  If \fB\-T\fR is specified, then the shell
+variable \fBTERM\fR.  If \fB-T\fR is specified, then the shell
 variables \fBLINES\fR and \fBCOLUMNS\fR will be ignored,and the
 operating system will not be queried for the actual screen size.
 .TP
 \fIcapname\fR
-indicates the attribute from the \fBterminfo\fR database.  When
+indicates the capability from the \fBterminfo\fR database.  When
 \fBtermcap\fR support is compiled in, the \fBtermcap\fR name for
-the attribute is also accepted.
+the capability is also accepted.
 .TP
 \fIparms\fR
-If the attribute is a string that takes parameters, the arguments
+If the capability is a string that takes parameters, the arguments
 \fIparms\fR will be instantiated into the string.
-An all-numeric argument will be passed to the attribute as a number.
 .IP
+Most parameters are numbers.
 Only a few terminfo capabilities require string parameters;
 \fBtput\fR uses a table to decide which to pass as strings.
 Normally \fBtput\fR uses \fBtparm\fR (3X) to perform the substitution.
-If no parameters are given for the attribute,
+If no parameters are given for the capability,
 \fBtput\fR writes the string without performing the substitution.
 .TP
-\fB\-S\fR
+\fB-S\fR
 allows more than one capability per invocation of \fBtput\fR.  The
 capabilities must be passed to \fBtput\fR from the standard input
 instead of from the command line (see example).
 Only one \fIcapname\fR is allowed per line.
-The \fB\-S\fR option changes the
+The \fB-S\fR option changes the
 meaning of the \fB0\fR and \fB1\fR boolean and string exit codes (see the
 EXIT CODES section).
 .IP
@@ -98,12 +112,12 @@ Again, \fBtput\fR uses a table and the presence of parameters in its input
 to decide whether to use \fBtparm\fR (3X),
 and how to interpret the parameters.
 .TP
-\fB\-V\fR
+\fB-V\fR
 reports the version of ncurses which was used in this program, and exits.
 .TP
 \fBinit\fR
 If the \fBterminfo\fR database is present and an entry for the user's
-terminal exists (see \fB\-T\fR\fItype\fR, above), the following will
+terminal exists (see \fB-T\fR\fItype\fR, above), the following will
 occur: (1) if present, the terminal's initialization strings will be
 output (\fBis1\fR, \fBis2\fR, \fBis3\fR, \fBif\fR, \fBiprog\fR), (2)
 any delays (e.g., newline) specified in the entry will be set in the
@@ -122,7 +136,7 @@ Otherwise, \fBreset\fR acts identically to \fBinit\fR.
 .TP
 \fBlongname\fR
 If the \fBterminfo\fR database is present and an entry for the
-user's terminal exists (see \fB\-T\fR\fItype\fR above), then the long name
+user's terminal exists (see \fB-T\fR\fItype\fR above), then the long name
 of the terminal will be put out.  The long name is the last
 name in the first line of the terminal's description in the
 \fBterminfo\fR database [see \fBterm\fR(5)].
@@ -139,7 +153,7 @@ command should be included in everyone's .profile after
 the environmental variable \fBTERM\fR has been exported, as
 illustrated on the \fBprofile\fR(5) manual page.
 .TP 5
-\fBtput \-T5620 reset\fR
+\fBtput -T5620 reset\fR
 Reset an AT&T 5620 terminal, overriding the type of
 terminal in the environmental variable \fBTERM\fR.
 .TP 5
@@ -154,7 +168,7 @@ Echo the clear-screen sequence for the current terminal.
 \fBtput cols\fR
 Print the number of columns for the current terminal.
 .TP 5
-\fBtput \-T450 cols\fR
+\fBtput -T450 cols\fR
 Print the number of columns for the 450 terminal.
 .TP 5
 \fBbold=`tput smso` offbold=`tput rmso`\fR
@@ -178,7 +192,7 @@ type of terminal specified in the environmental
 variable \fBTERM\fR.
 .PP
 .RS 5
-\fBtput \-S <<!\fR
+\fBtput -S <<!\fR
 .br
 \fB> clear\fR
 .br
@@ -200,12 +214,6 @@ The list is terminated by an exclamation mark (\fB!\fR) on a line by itself.
 \fB\*d\fR
 compiled terminal description database
 .TP
-\fB/usr/include/curses.h\fR
-\fBcurses\fR(3X) header file
-.TP
-\fB/usr/include/term.h\fR
-\fBterminfo\fR header file
-.TP
 \fB@DATADIR@/tabset/*\fR
 tab settings for some terminals, in a format
 appropriate to be output to the terminal (escape
@@ -213,7 +221,7 @@ sequences that set margins and tabs); for more
 information, see the "Tabs and Initialization"
 section of \fBterminfo\fR(5)
 .SH EXIT CODES
-If the \fB\-S\fR option is used,
+If the \fB-S\fR option is used,
 \fBtput\fR checks for errors from each line,
 and if any errors are found, will set the exit code to 4 plus the
 number of lines with errors.
@@ -221,7 +229,7 @@ If no errors are found, the exit code is \fB0\fR.
 No indication of which line failed can be given so
 exit code \fB1\fR will never appear.  Exit codes \fB2\fR, \fB3\fR, and
 \fB4\fR retain their usual interpretation.
-If the \fB\-S\fR option is not used,
+If the \fB-S\fR option is not used,
 the exit code depends on the type of \fIcapname\fR:
 .RS 5
 .TP
@@ -241,7 +249,7 @@ a value of \fB0\fR is always set,
 whether or not \fIcapname\fR is defined for this terminal \fItype\fR.
 To determine if \fIcapname\fR is defined for this terminal \fItype\fR,
 the user must test the value written to standard output.
-A value of \fB\-1\fR
+A value of \fB-1\fR
 means that \fIcapname\fR is not defined for this terminal \fItype\fR.
 .TP
 .I other
@@ -262,17 +270,17 @@ exit code	error message
 \fB0\fR	T{
 (\fIcapname\fR is a numeric variable that is not specified in the
 \fBterminfo\fR(\*n) database for this terminal type, e.g.
-\fBtput \-T450 lines\fR and \fBtput \-T2621 xmc\fR)
+\fBtput -T450 lines\fR and \fBtput -T2621 xmc\fR)
 T}
 \fB1\fR	no error message is printed, see the \fBEXIT CODES\fR section.
 \fB2\fR	usage error
 \fB3\fR	unknown terminal \fItype\fR or no \fBterminfo\fR database
 \fB4\fR	unknown \fBterminfo\fR capability \fIcapname\fR
-\fB>4\fR	error occurred in \-S
+\fB>4\fR	error occurred in -S
 =
 .TE
 .SH PORTABILITY
-The \fBlongname\fR and \fB\-S\fR options, and the parameter-substitution
+The \fBlongname\fR and \fB-S\fR options, and the parameter-substitution
 features used in the \fBcup\fR example, are not supported in BSD curses or in
 AT&T/USL curses before SVr4.
 .SH SEE ALSO

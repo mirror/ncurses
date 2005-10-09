@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.22 $
+--  $Revision: 1.25 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -330,7 +331,7 @@ package body Terminal_Interface.Curses.Forms is
                                Opt : C_Int) return C_Int;
       pragma Import (C, Set_Field_Opts, "set_field_opts");
 
-      Opt : C_Int := FOS_2_CInt (Options);
+      Opt : constant C_Int := FOS_2_CInt (Options);
       Res : Eti_Error;
    begin
       Res := Set_Field_Opts (Fld, Opt);
@@ -353,7 +354,7 @@ package body Terminal_Interface.Curses.Forms is
       pragma Import (C, Field_Opts_Off, "field_opts_off");
 
       Err : Eti_Error;
-      Opt : C_Int := FOS_2_CInt (Options);
+      Opt : constant C_Int := FOS_2_CInt (Options);
    begin
       if On then
          Err := Field_Opts_On (Fld, Opt);
@@ -373,7 +374,7 @@ package body Terminal_Interface.Curses.Forms is
       function Field_Opts (Fld : Field) return C_Int;
       pragma Import (C, Field_Opts, "field_opts");
 
-      Res : C_Int := Field_Opts (Fld);
+      Res : constant C_Int := Field_Opts (Fld);
    begin
       Options := CInt_2_FOS (Res);
    end Get_Options;
@@ -845,7 +846,7 @@ package body Terminal_Interface.Curses.Forms is
                               Opt : C_Int) return C_Int;
       pragma Import (C, Set_Form_Opts, "set_form_opts");
 
-      Opt : C_Int := FrmOS_2_CInt (Options);
+      Opt : constant C_Int := FrmOS_2_CInt (Options);
       Res : Eti_Error;
    begin
       Res := Set_Form_Opts (Frm, Opt);
@@ -868,7 +869,7 @@ package body Terminal_Interface.Curses.Forms is
       pragma Import (C, Form_Opts_Off, "form_opts_off");
 
       Err : Eti_Error;
-      Opt : C_Int := FrmOS_2_CInt (Options);
+      Opt : constant C_Int := FrmOS_2_CInt (Options);
    begin
       if On then
          Err := Form_Opts_On (Frm, Opt);
@@ -888,7 +889,7 @@ package body Terminal_Interface.Curses.Forms is
       function Form_Opts (Frm : Form) return C_Int;
       pragma Import (C, Form_Opts, "form_opts");
 
-      Res : C_Int := Form_Opts (Frm);
+      Res : constant C_Int := Form_Opts (Frm);
    begin
       Options := CInt_2_FrmOS (Res);
    end Get_Options;
@@ -995,7 +996,7 @@ package body Terminal_Interface.Curses.Forms is
       function Frm_Driver (Frm : Form; Key : C_Int) return C_Int;
       pragma Import (C, Frm_Driver, "form_driver");
 
-      R : Eti_Error := Frm_Driver (Frm, C_Int (Key));
+      R : constant Eti_Error := Frm_Driver (Frm, C_Int (Key));
    begin
       if R /= E_Ok then
          if R = E_Unknown_Command then
@@ -1135,7 +1136,7 @@ package body Terminal_Interface.Curses.Forms is
    begin
       if FA /= null and then Free_Fields then
          for I in FA'First .. (FA'Last - 1) loop
-            if (FA (I) /= Null_Field) then
+            if FA (I) /= Null_Field then
                Delete (FA (I));
             end if;
          end loop;

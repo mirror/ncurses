@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.22 2003/12/27 18:38:28 tom Exp @
+  * @Id: curs_addch.3x,v 1.23 2004/01/31 13:16:21 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,7 +41,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>                                     <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>
+<STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>                                           <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>
 
 
 
@@ -115,6 +115,7 @@
        replacement for it (but see the EXTENSIONS section below).
        The names are taken from VT100 nomenclature.
 
+
        <EM>Name</EM>           <EM>Default</EM>   <EM>Description</EM>
        --------------------------------------------------
        ACS_BLOCK      #         solid square block
@@ -183,6 +184,10 @@
        The  <STRONG>TABSIZE</STRONG>  variable  is implemented in some versions of
        curses, but is not part of X/Open curses.
 
+       If <EM>ch</EM> is a carriage return, the cursor  is  moved  to  the
+       beginning  of the current row of the window.  This is true
+       of other implementations, but is not documented.
+
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
@@ -191,7 +196,7 @@
 
 
 
-                                                   <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>
+                                                         <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

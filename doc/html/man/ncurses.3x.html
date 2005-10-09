@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.70 2004/01/11 01:45:54 tom Exp @
+  * @Id: ncurses.3x,v 1.76 2005/09/03 17:42:29 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,7 +41,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>                                           <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>
+<STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>                                                 <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>
 
 
 
@@ -68,31 +68,32 @@
        System V Release 4 UNIX, and the XPG4 curses standard (XSI
        curses)  but the <STRONG>ncurses</STRONG> library is freely redistributable
        in source form.  Differences from the SVr4 curses are sum-
-       marized  under  the EXTENSIONS and BUGS sections below and
-       described in detail in the EXTENSIONS and BUGS sections of
-       individual man pages.
+       marized  under  the  EXTENSIONS  and  PORTABILITY sections
+       below and described in detail  in  the  respective  EXTEN-
+       SIONS,  PORTABILITY  and  BUGS  sections of individual man
+       pages.
 
-       A  program  using  these  routines must be linked with the
-       <STRONG>-lncurses</STRONG> option, or (if it has been generated)  with  the
-       debugging  library  <STRONG>-lncurses_g</STRONG>.   (Your system integrator
-       may also have installed these libraries  under  the  names
+       A program using these routines must  be  linked  with  the
+       <STRONG>-lncurses</STRONG>  option,  or (if it has been generated) with the
+       debugging library <STRONG>-lncurses_g</STRONG>.   (Your  system  integrator
+       may  also  have  installed these libraries under the names
        <STRONG>-lcurses</STRONG> and <STRONG>-lcurses_g</STRONG>.)  The ncurses_g library generates
        trace logs (in a file called 'trace' in the current direc-
        tory) that describe curses actions.
 
-       The  <STRONG>ncurses</STRONG>  package supports: overall screen, window and
+       The <STRONG>ncurses</STRONG> package supports: overall screen,  window  and
        pad manipulation; output to windows and pads; reading ter-
-       minal  input;  control  over terminal and <STRONG>curses</STRONG> input and
-       output options; environment query routines; color  manipu-
+       minal input; control over terminal and  <STRONG>curses</STRONG>  input  and
+       output  options; environment query routines; color manipu-
        lation; use of soft label keys; terminfo capabilities; and
        access to low-level terminal-manipulation routines.
 
        To initialize the routines, the routine <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>
-       must  be called before any of the other routines that deal
-       with windows and screens are  used.   The  routine  <STRONG>endwin</STRONG>
+       must be called before any of the other routines that  deal
+       with  windows  and  screens  are used.  The routine <STRONG>endwin</STRONG>
        must be called before exiting.  To get character-at-a-time
-       input without echoing (most interactive,  screen  oriented
-       programs  want  this),  the  following  sequence should be
+       input  without  echoing (most interactive, screen oriented
+       programs want this),  the  following  sequence  should  be
        used:
 
              <STRONG>initscr();</STRONG> <STRONG>cbreak();</STRONG> <STRONG>noecho();</STRONG>
@@ -103,74 +104,74 @@
              <STRONG>intrflush(stdscr,</STRONG> <STRONG>FALSE);</STRONG>
              <STRONG>keypad(stdscr,</STRONG> <STRONG>TRUE);</STRONG>
 
-       Before a <STRONG>curses</STRONG> program is run, the tab stops of the  ter-
-       minal  should  be  set  and its initialization strings, if
-       defined, must be output.  This can be  done  by  executing
+       Before  a <STRONG>curses</STRONG> program is run, the tab stops of the ter-
+       minal should be set and  its  initialization  strings,  if
+       defined,  must  be  output.  This can be done by executing
        the <STRONG>tput</STRONG> <STRONG>init</STRONG> command after the shell environment variable
-       <STRONG>TERM</STRONG> has been exported.  <STRONG>tset(1)</STRONG>  is  usually  responsible
+       <STRONG>TERM</STRONG>  has  been  exported.  <STRONG>tset(1)</STRONG> is usually responsible
        for doing this.  [See <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for further details.]
 
-       The  <STRONG>ncurses</STRONG>  library  permits manipulation of data struc-
-       tures, called <EM>windows</EM>, which can be  thought  of  as  two-
-       dimensional  arrays of characters representing all or part
+       The <STRONG>ncurses</STRONG> library permits manipulation  of  data  struc-
+       tures,  called  <EM>windows</EM>,  which  can be thought of as two-
+       dimensional arrays of characters representing all or  part
        of a CRT screen.  A default window called <STRONG>stdscr</STRONG>, which is
-       the  size of the terminal screen, is supplied.  Others may
+       the size of the terminal screen, is supplied.  Others  may
        be created with <STRONG>newwin</STRONG>.
 
-       Note that <STRONG>curses</STRONG>  does  not  handle  overlapping  windows,
-       that's  done by the <STRONG><A HREF="panel.3x.html">panel(3x)</A></STRONG> library. This means that you
+       Note  that  <STRONG>curses</STRONG>  does  not  handle overlapping windows,
+       that's done by the <STRONG><A HREF="panel.3x.html">panel(3x)</A></STRONG> library. This means that  you
        can either use <STRONG>stdscr</STRONG> or divide the screen into tiled win-
-       dows  and  not  using  <STRONG>stdscr</STRONG>  at all. Mixing the two will
+       dows and not using <STRONG>stdscr</STRONG> at  all.  Mixing  the  two  will
        result in unpredictable, and undesired, effects.
 
        Windows are referred to by variables declared as <STRONG>WINDOW</STRONG> <STRONG>*</STRONG>.
-       These   data  structures  are  manipulated  with  routines
-       described here and elsewhere in the <STRONG>ncurses</STRONG> manual  pages.
-       Among  which  the  most basic routines are <STRONG>move</STRONG> and <STRONG>addch</STRONG>.
-       More general versions of these routines are included  with
-       names  beginning  with  <STRONG>w</STRONG>,  allowing the user to specify a
+       These  data  structures  are  manipulated  with   routines
+       described  here and elsewhere in the <STRONG>ncurses</STRONG> manual pages.
+       Among which the most basic routines are  <STRONG>move</STRONG>  and  <STRONG>addch</STRONG>.
+       More  general versions of these routines are included with
+       names beginning with <STRONG>w</STRONG>, allowing the  user  to  specify  a
        window.  The routines not beginning with <STRONG>w</STRONG> affect <STRONG>stdscr</STRONG>.)
 
-       After  using  routines  to manipulate a window, <STRONG>refresh</STRONG> is
-       called, telling <STRONG>curses</STRONG> to make the user's CRT screen  look
-       like  <STRONG>stdscr</STRONG>.   The characters in a window are actually of
-       type <STRONG>chtype</STRONG>, (character and attribute data) so that  other
-       information  about  the  character may also be stored with
+       After using routines to manipulate a  window,  <STRONG>refresh</STRONG>  is
+       called,  telling <STRONG>curses</STRONG> to make the user's CRT screen look
+       like <STRONG>stdscr</STRONG>.  The characters in a window are  actually  of
+       type  <STRONG>chtype</STRONG>, (character and attribute data) so that other
+       information about the character may also  be  stored  with
        each character.
 
-       Special windows  called  <EM>pads</EM>  may  also  be  manipulated.
+       Special  windows  called  <EM>pads</EM>  may  also  be manipulated.
        These are windows which are not constrained to the size of
-       the screen and whose contents need not be completely  dis-
+       the  screen and whose contents need not be completely dis-
        played.  See <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG> for more information.
 
-       In  addition  to  drawing  characters on the screen, video
-       attributes and colors may be supported, causing the  char-
-       acters  to show up in such modes as underlined, in reverse
-       video, or in color on terminals that support such  display
+       In addition to drawing characters  on  the  screen,  video
+       attributes  and colors may be supported, causing the char-
+       acters to show up in such modes as underlined, in  reverse
+       video,  or in color on terminals that support such display
        enhancements.  Line drawing characters may be specified to
-       be output.  On input, <STRONG>curses</STRONG> is  also  able  to  translate
-       arrow  and  function  keys  that transmit escape sequences
-       into single values.  The video  attributes,  line  drawing
-       characters,   and  input  values  use  names,  defined  in
+       be  output.   On  input,  <STRONG>curses</STRONG> is also able to translate
+       arrow and function keys  that  transmit  escape  sequences
+       into  single  values.   The video attributes, line drawing
+       characters,  and  input  values  use  names,  defined   in
        <STRONG>&lt;curses.h&gt;</STRONG>, such as <STRONG>A_REVERSE</STRONG>, <STRONG>ACS_HLINE</STRONG>, and <STRONG>KEY_LEFT</STRONG>.
 
        If the environment variables <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG> are set, or
-       if  the program is executing in a window environment, line
-       and column information in the  environment  will  override
+       if the program is executing in a window environment,  line
+       and  column  information  in the environment will override
        information read by <EM>terminfo</EM>.  This would effect a program
-       running in an AT&amp;T 630 layer, for example, where the  size
+       running  in an AT&amp;T 630 layer, for example, where the size
        of a screen is changeable (see <STRONG>ENVIRONMENT</STRONG>).
 
-       If  the environment variable <STRONG>TERMINFO</STRONG> is defined, any pro-
-       gram using <STRONG>curses</STRONG> checks for a local  terminal  definition
-       before  checking  in  the standard place.  For example, if
+       If the environment variable <STRONG>TERMINFO</STRONG> is defined, any  pro-
+       gram  using  <STRONG>curses</STRONG> checks for a local terminal definition
+       before checking in the standard place.   For  example,  if
        <STRONG>TERM</STRONG> is set to <STRONG>att4424</STRONG>, then the compiled terminal defini-
        tion is found in
 
              <STRONG>/usr/share/terminfo/a/att4424</STRONG>.
 
        (The <STRONG>a</STRONG> is copied from the first letter of <STRONG>att4424</STRONG> to avoid
-       creation of huge directories.)  However,  if  <STRONG>TERMINFO</STRONG>  is
+       creation  of  huge  directories.)  However, if <STRONG>TERMINFO</STRONG> is
        set to <STRONG>$HOME/myterms</STRONG>, <STRONG>curses</STRONG> first checks
 
              <STRONG>$HOME/myterms/a/att4424</STRONG>,
@@ -179,53 +180,54 @@
 
              <STRONG>/usr/share/terminfo/a/att4424</STRONG>.
 
-       This  is useful for developing experimental definitions or
+       This is useful for developing experimental definitions  or
        when write permission in <STRONG>/usr/share/terminfo</STRONG> is not avail-
        able.
 
-       The  integer  variables  <STRONG>LINES</STRONG>  and  <STRONG>COLS</STRONG>  are  defined in
-       <STRONG>&lt;curses.h&gt;</STRONG> and will be filled in by <STRONG>initscr</STRONG> with the  size
+       The integer  variables  <STRONG>LINES</STRONG>  and  <STRONG>COLS</STRONG>  are  defined  in
+       <STRONG>&lt;curses.h&gt;</STRONG>  and will be filled in by <STRONG>initscr</STRONG> with the size
        of the screen.  The constants <STRONG>TRUE</STRONG> and <STRONG>FALSE</STRONG> have the val-
        ues <STRONG>1</STRONG> and <STRONG>0</STRONG>, respectively.
 
-       The <STRONG>curses</STRONG> routines also  define  the  <STRONG>WINDOW</STRONG>  <STRONG>*</STRONG>  variable
+       The  <STRONG>curses</STRONG>  routines  also  define  the <STRONG>WINDOW</STRONG> <STRONG>*</STRONG> variable
        <STRONG>curscr</STRONG> which is used for certain low-level operations like
-       clearing and redrawing a screen containing  garbage.   The
+       clearing  and  redrawing a screen containing garbage.  The
        <STRONG>curscr</STRONG> can be used in only a few routines.
 
    <STRONG>Routine</STRONG> <STRONG>and</STRONG> <STRONG>Argument</STRONG> <STRONG>Names</STRONG>
-       Many  <STRONG>curses</STRONG> routines have two or more versions.  The rou-
+       Many <STRONG>curses</STRONG> routines have two or more versions.  The  rou-
        tines prefixed with <STRONG>w</STRONG> require a window argument.  The rou-
        tines prefixed with <STRONG>p</STRONG> require a pad argument.  Those with-
        out a prefix generally use <STRONG>stdscr</STRONG>.
 
        The routines prefixed with <STRONG>mv</STRONG> require a <EM>y</EM> and <EM>x</EM> coordinate
-       to  move to before performing the appropriate action.  The
-       <STRONG>mv</STRONG> routines imply a call to <STRONG>move</STRONG> before the  call  to  the
-       other  routine.  The coordinate <EM>y</EM> always refers to the row
-       (of the window), and <EM>x</EM> always refers to the  column.   The
+       to move to before performing the appropriate action.   The
+       <STRONG>mv</STRONG>  routines  imply  a call to <STRONG>move</STRONG> before the call to the
+       other routine.  The coordinate <EM>y</EM> always refers to the  row
+       (of  the  window), and <EM>x</EM> always refers to the column.  The
        upper left-hand corner is always (0,0), not (1,1).
 
        The routines prefixed with <STRONG>mvw</STRONG> take both a window argument
-       and <EM>x</EM> and <EM>y</EM> coordinates.  The window  argument  is  always
+       and  <EM>x</EM>  and  <EM>y</EM> coordinates.  The window argument is always
        specified before the coordinates.
 
-       In  each  case, <EM>win</EM> is the window affected, and <EM>pad</EM> is the
+       In each case, <EM>win</EM> is the window affected, and <EM>pad</EM>  is  the
        pad affected; <EM>win</EM> and <EM>pad</EM> are always pointers to type <STRONG>WIN-</STRONG>
        <STRONG>DOW</STRONG>.
 
        Option setting routines require a Boolean flag <EM>bf</EM> with the
        value <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>; <EM>bf</EM> is always of type <STRONG>bool</STRONG>.  The vari-
-       ables  <EM>ch</EM>  and <EM>attrs</EM> below are always of type <STRONG>chtype</STRONG>.  The
-       types <STRONG>WINDOW</STRONG>, <STRONG>SCREEN</STRONG>, <STRONG>bool</STRONG>,  and  <STRONG>chtype</STRONG>  are  defined  in
-       <STRONG>&lt;curses.h&gt;</STRONG>.   The  type  <STRONG>TERMINAL</STRONG>  is defined in <STRONG>&lt;term.h&gt;</STRONG>.
+       ables <EM>ch</EM> and <EM>attrs</EM> below are always of type  <STRONG>chtype</STRONG>.   The
+       types  <STRONG>WINDOW</STRONG>,  <STRONG>SCREEN</STRONG>,  <STRONG>bool</STRONG>,  and  <STRONG>chtype</STRONG> are defined in
+       <STRONG>&lt;curses.h&gt;</STRONG>.  The type <STRONG>TERMINAL</STRONG>  is  defined  in  <STRONG>&lt;term.h&gt;</STRONG>.
        All other arguments are integers.
 
    <STRONG>Routine</STRONG> <STRONG>Name</STRONG> <STRONG>Index</STRONG>
        The following table lists each <STRONG>curses</STRONG> routine and the name
-       of  the  manual  page  on which it is described.  Routines
-       flagged with `*' are ncurses-specific,  not  described  by
+       of the manual page on which  it  is  described.   Routines
+       flagged  with  `*'  are ncurses-specific, not described by
        XPG4 or present in SVr4.
+
 
               <STRONG>curses</STRONG> Routine Name     Manual Page Name
               --------------------------------------------
@@ -242,9 +244,9 @@
               _tracemouse             <STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>*
               add_wch                 <STRONG><A HREF="curs_add_wch.3x.html">curs_add_wch(3x)</A></STRONG>
               add_wchnstr             <STRONG><A HREF="curs_add_wchstr.3x.html">curs_add_wchstr(3x)</A></STRONG>
+
               add_wchstr              <STRONG><A HREF="curs_add_wchstr.3x.html">curs_add_wchstr(3x)</A></STRONG>
               addch                   <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>
-
               addchnstr               <STRONG><A HREF="curs_addchstr.3x.html">curs_addchstr(3x)</A></STRONG>
               addchstr                <STRONG><A HREF="curs_addchstr.3x.html">curs_addchstr(3x)</A></STRONG>
               addnstr                 <STRONG><A HREF="curs_addstr.3x.html">curs_addstr(3x)</A></STRONG>
@@ -308,9 +310,9 @@
               getbegyx                <STRONG><A HREF="curs_getyx.3x.html">curs_getyx(3x)</A></STRONG>
               getbkgd                 <STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3x)</A></STRONG>
               getbkgrnd               <STRONG><A HREF="curs_bkgrnd.3x.html">curs_bkgrnd(3x)</A></STRONG>
+
               getcchar                <STRONG><A HREF="curs_getcchar.3x.html">curs_getcchar(3x)</A></STRONG>
               getch                   <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
-
               getmaxyx                <STRONG><A HREF="curs_getyx.3x.html">curs_getyx(3x)</A></STRONG>
               getmouse                <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>*
               getn_wstr               <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
@@ -374,9 +376,9 @@
               mvadd_wch               <STRONG><A HREF="curs_add_wch.3x.html">curs_add_wch(3x)</A></STRONG>
               mvadd_wchnstr           <STRONG><A HREF="curs_add_wchstr.3x.html">curs_add_wchstr(3x)</A></STRONG>
               mvadd_wchstr            <STRONG><A HREF="curs_add_wchstr.3x.html">curs_add_wchstr(3x)</A></STRONG>
+
               mvaddch                 <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>
               mvaddchnstr             <STRONG><A HREF="curs_addchstr.3x.html">curs_addchstr(3x)</A></STRONG>
-
               mvaddchstr              <STRONG><A HREF="curs_addchstr.3x.html">curs_addchstr(3x)</A></STRONG>
               mvaddnstr               <STRONG><A HREF="curs_addstr.3x.html">curs_addstr(3x)</A></STRONG>
               mvaddnwstr              <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
@@ -440,9 +442,9 @@
               mvwin_wchstr            <STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>
               mvwinch                 <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>
               mvwinchnstr             <STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>
+
               mvwinchstr              <STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>
               mvwinnstr               <STRONG><A HREF="curs_instr.3x.html">curs_instr(3x)</A></STRONG>
-
               mvwinnwstr              <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
               mvwins_nwstr            <STRONG><A HREF="curs_ins_wstr.3x.html">curs_ins_wstr(3x)</A></STRONG>
               mvwins_wch              <STRONG><A HREF="curs_ins_wch.3x.html">curs_ins_wch(3x)</A></STRONG>
@@ -506,9 +508,9 @@
               slk_attr                <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>*
               slk_attr_off            <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
               slk_attr_on             <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
+
               slk_attr_set            <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
               slk_attroff             <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
-
               slk_attron              <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
               slk_attrset             <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
               slk_clear               <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
@@ -572,9 +574,9 @@
               waddnstr                <STRONG><A HREF="curs_addstr.3x.html">curs_addstr(3x)</A></STRONG>
               waddnwstr               <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
               waddstr                 <STRONG><A HREF="curs_addstr.3x.html">curs_addstr(3x)</A></STRONG>
+
               waddwstr                <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
               wattr_get               <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
-
               wattr_off               <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
               wattr_on                <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
               wattr_set               <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
@@ -638,9 +640,9 @@
               wsetscrreg              <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
               wstandend               <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
               wstandout               <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
+
               wsyncdown               <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
               wsyncup                 <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
-
               wtimeout                <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
               wtouchln                <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
               wunctrl                 <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
@@ -650,14 +652,14 @@
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Routines  that  return  an integer return <STRONG>ERR</STRONG> upon failure
-       and an integer value other than <STRONG>ERR</STRONG> upon  successful  com-
-       pletion,  unless  otherwise  noted in the routine descrip-
+       Routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure
+       and  an  integer value other than <STRONG>ERR</STRONG> upon successful com-
+       pletion, unless otherwise noted in  the  routine  descrip-
        tions.
 
-       All macros return the  value  of  the  <STRONG>w</STRONG>  version,  except
+       All  macros  return  the  value  of  the <STRONG>w</STRONG> version, except
        <STRONG>setscrreg</STRONG>, <STRONG>wsetscrreg</STRONG>, <STRONG>getyx</STRONG>, <STRONG>getbegyx</STRONG>, and <STRONG>getmaxyx</STRONG>.  The
-       return values of <STRONG>setscrreg</STRONG>, <STRONG>wsetscrreg</STRONG>,  <STRONG>getyx</STRONG>,  <STRONG>getbegyx</STRONG>,
+       return  values  of <STRONG>setscrreg</STRONG>, <STRONG>wsetscrreg</STRONG>, <STRONG>getyx</STRONG>, <STRONG>getbegyx</STRONG>,
        and <STRONG>getmaxyx</STRONG> are undefined (i.e., these should not be used
        as the right-hand side of assignment statements).
 
@@ -671,66 +673,78 @@
        important ones have been already discussed in detail.
 
        BAUDRATE
-            The debugging library checks this environment  symbol
+            The  debugging library checks this environment symbol
             when the application has redirected output to a file.
-            The symbol's numeric value is used for the  baudrate.
+            The  symbol's numeric value is used for the baudrate.
             If no value is found, <STRONG>ncurses</STRONG> uses 9600.  This allows
-            testers to construct repeatable test-cases that  take
+            testers  to construct repeatable test-cases that take
             into account costs that depend on baudrate.
 
        CC   When set, change occurrences of the command_character
-            (i.e., the <STRONG>cmdch</STRONG> capability) of the  loaded  terminfo
-            entries  to  the value of this symbol.  Very few ter-
+            (i.e.,  the  <STRONG>cmdch</STRONG> capability) of the loaded terminfo
+            entries to the value of this symbol.  Very  few  ter-
             minfo entries provide this feature.
 
        COLUMNS
             Specify  the  width  of  the  screen  in  characters.
-            Applications  running in a windowing environment usu-
-            ally are able to obtain the width of  the  window  in
-            which  they  are  executing.  If neither the $COLUMNS
-            value nor the terminal's screen  size  is  available,
-            <STRONG>ncurses</STRONG>  uses  the size which may be specified in the
+            Applications running in a windowing environment  usu-
+            ally  are  able  to obtain the width of the window in
+            which they are executing.   If  neither  the  <STRONG>COLUMNS</STRONG>
+            value  nor  the  terminal's screen size is available,
+            <STRONG>ncurses</STRONG> uses the size which may be specified  in  the
             terminfo database (i.e., the <STRONG>cols</STRONG> capability).
 
-            It is important that your application use  a  correct
-            size  for  the  screen.   However, this is not always
-            possible because your application may be running on a
-            host  which  does  not honor NAWS (Negotiations About
-            Window Size), or because you are temporarily  running
-            as another user.
+            It  is  important that your application use a correct
+            size for the screen.  This  is  not  always  possible
+            because  your  application  may  be running on a host
+            which does not honor NAWS (Negotiations About  Window
+            Size),  or  because  you  are  temporarily running as
+            another user.  However, setting <STRONG>COLUMNS</STRONG> and/or  <STRONG>LINES</STRONG>
+            overrides  the  library's  use  of  the  screen  size
+            obtained from the operating system.
 
-            Either  COLUMNS  or  LINES  symbols  may be specified
-            independently.  This is mainly useful  to  circumvent
-            legacy  misfeatures  of  terminal descriptions, e.g.,
+            Either <STRONG>COLUMNS</STRONG> or  <STRONG>LINES</STRONG>  symbols  may  be  specified
+            independently.   This  is mainly useful to circumvent
+            legacy misfeatures of  terminal  descriptions,  e.g.,
             xterm which commonly specifies a 65 line screen.  For
-            best  results, <STRONG>lines</STRONG> and <STRONG>cols</STRONG> should not be specified
+            best results, <STRONG>lines</STRONG> and <STRONG>cols</STRONG> should not be  specified
             in a terminal description for terminals which are run
             as emulations.
 
-            Use the <STRONG>use_env</STRONG> function to disable this feature.
+            Use the <STRONG>use_env</STRONG> function to disable all use of exter-
+            nal environment (including system calls) to determine
+            the screen size.
 
        ESCDELAY
-            Specifies  the total time, in milliseconds, for which
-            ncurses will await  a  character  sequence,  e.g.,  a
-            function  key.  The default value, 1000 milliseconds,
+            Specifies the total time, in milliseconds, for  which
+            ncurses  will  await  a  character  sequence, e.g., a
+            function key.  The default value, 1000  milliseconds,
             is enough for most uses.  However, it is made a vari-
             able to accommodate unusual applications.
 
             The most common instance where you may wish to change
-            this value is to work with slow hosts, e.g.,  running
-            on  a  network.   If  the host cannot read characters
-            rapidly enough, it will have the same  effect  as  if
-            the  terminal did not send characters rapidly enough.
+            this  value is to work with slow hosts, e.g., running
+            on a network.  If the  host  cannot  read  characters
+            rapidly  enough,  it  will have the same effect as if
+            the terminal did not send characters rapidly  enough.
             The library will still see a timeout.
 
-            Note that xterm mouse events are built up from  char-
-            acter  sequences  received  from  the xterm.  If your
+            Note  that xterm mouse events are built up from char-
+            acter sequences received from  the  xterm.   If  your
             application makes heavy use of multiple-clicking, you
-            may  wish  to lengthen this default value because the
-            timeout applies to the composed multi-click event  as
+            may wish to lengthen this default value  because  the
+            timeout  applies to the composed multi-click event as
             well as the individual clicks.
 
-       HOME Tells  <STRONG>ncurses</STRONG> where your home directory is.  That is
+            In addition to the environment variable, this  imple-
+            mentation  provides  a  global variable with the same
+            name.  Portable applications should not rely upon the
+            presence  of ESCDELAY in either form, but setting the
+            environment variable rather than the global  variable
+            does  not  create problems when compiling an applica-
+            tion.
+
+       HOME Tells <STRONG>ncurses</STRONG> where your home directory is.  That  is
             where  it  may  read  and  write  auxiliary  terminal
             descriptions:
 
@@ -738,12 +752,12 @@
             $HOME/.terminfo
 
        LINES
-            Like  COLUMNS,  specify  the  height of the screen in
-            characters.  See COLUMNS for a detailed  description.
+            Like COLUMNS, specify the height  of  the  screen  in
+            characters.   See COLUMNS for a detailed description.
 
        MOUSE_BUTTONS_123
             This applies only to the OS/2 EMX port.  It specifies
-            the order of buttons on the mouse.   OS/2  numbers  a
+            the  order  of  buttons on the mouse.  OS/2 numbers a
             3-button mouse inconsistently from other platforms:
 
             1 = left
@@ -751,58 +765,77 @@
             3 = middle.
 
             This symbol lets you customize the mouse.  The symbol
-            must be three numeric digits 1-3 in any order,  e.g.,
-            123  or  321.   If  it is not specified, <STRONG>ncurses</STRONG> uses
+            must  be three numeric digits 1-3 in any order, e.g.,
+            123 or 321.  If it is  not  specified,  <STRONG>ncurses</STRONG>  uses
             132.
 
        NCURSES_ASSUMED_COLORS
-            Override the compiled-in assumption that  the  termi-
-            nal's   default   colors   are   white-on-black  (see
-            <STRONG><A HREF="assume_default_colors.3x.html">assume_default_colors(3x)</A></STRONG>).  You may  set  the  fore-
+            Override  the  compiled-in assumption that the termi-
+            nal's  default   colors   are   white-on-black   (see
+            <STRONG><A HREF="assume_default_colors.3x.html">assume_default_colors(3x)</A></STRONG>).   You  may  set the fore-
             ground and background color values with this environ-
-            ment variable by  proving  a  2-element  list:  fore-
-            ground,background.   For  example, to tell ncurses to
-            not assume anything about the  colors,  set  this  to
+            ment  variable  by  proving  a  2-element list: fore-
+            ground,background.  For example, to tell  ncurses  to
+            not  assume  anything  about  the colors, set this to
             "-1,-1".  To make it green-on-black, set it to "2,0".
             Any positive value from zero to the terminfo <STRONG>max_col-</STRONG>
             <STRONG>ors</STRONG> value is allowed.
 
        NCURSES_NO_PADDING
-            Most  of  the  terminal  descriptions in the terminfo
-            database are written for real  "hardware"  terminals.
-            Many  people  use  terminal  emulators which run in a
-            windowing environment and use  curses-based  applica-
-            tions.   Terminal  emulators can duplicate all of the
+            Most of the terminal  descriptions  in  the  terminfo
+            database  are  written for real "hardware" terminals.
+            Many people use terminal emulators  which  run  in  a
+            windowing  environment  and use curses-based applica-
+            tions.  Terminal emulators can duplicate all  of  the
             important aspects of a hardware terminal, but they do
-            not  have the same limitations.  The chief limitation
-            of a hardware terminal from the  standpoint  of  your
-            application  is  the  management  of  dataflow, i.e.,
-            timing.  Unless a  hardware  terminal  is  interfaced
-            into  a  terminal  concentrator (which does flow con-
-            trol), it (or your application) must manage dataflow,
-            preventing overruns.  The cheapest solution (no hard-
-            ware cost) is for your program to do this by  pausing
-            after  operations that the terminal does slowly, such
-            as clearing the display.
+            not have the same limitations.  The chief  limitation
+            of  a  hardware  terminal from the standpoint of your
+            application is the management of dataflow, i.e., tim-
+            ing.  Unless a hardware terminal is interfaced into a
+            terminal concentrator (which does flow  control),  it
+            (or  your application) must manage dataflow, prevent-
+            ing overruns.  The  cheapest  solution  (no  hardware
+            cost) is for your program to do this by pausing after
+            operations that the terminal  does  slowly,  such  as
+            clearing the display.
 
-            As a result, many  terminal  descriptions  (including
-            the  vt100)  have delay times embedded.  You may wish
-            to use these descriptions, but not want  to  pay  the
+            As  a  result,  many terminal descriptions (including
+            the vt100) have delay times embedded.  You  may  wish
+            to  use  these  descriptions, but not want to pay the
             performance penalty.
 
-            Set  the NCURSES_NO_PADDING symbol to disable all but
-            mandatory padding.  Mandatory padding is  used  as  a
+            Set the NCURSES_NO_PADDING symbol to disable all  but
+            mandatory  padding.   Mandatory  padding is used as a
             part of special control sequences such as <EM>flash</EM>.
 
        NCURSES_NO_SETBUF
-            Normally  <STRONG>ncurses</STRONG> enables buffered output during ter-
-            minal initialization.   This  is  done  (as  in  SVr4
-            curses)  for  performance  reasons.  For testing pur-
+            Normally <STRONG>ncurses</STRONG> enables buffered output during  ter-
+            minal  initialization.   This  is  done  (as  in SVr4
+            curses) for performance reasons.   For  testing  pur-
             poses, both of <STRONG>ncurses</STRONG> and certain applications, this
             feature    is    made    optional.     Setting    the
             NCURSES_NO_SETBUF variable disables output buffering,
-            leaving  the  output  in  the  original (usually line
+            leaving the output  in  the  original  (usually  line
             buffered) mode.
+
+       NCURSES_NO_UTF8_ACS
+            During initialization, the <STRONG>ncurses</STRONG> library checks for
+            special cases where VT100 line-drawing (and the  cor-
+            responding   alternate  character  set  capabilities)
+            described in the terminfo are known  to  be  missing.
+            Specifically,  when  running  in  a UTF-8 locale, the
+            Linux console emulator and  the  GNU  screen  program
+            ignore  these.   Ncurses  checks the TERM environment
+            variable for these.  For  other  special  cases,  you
+            should  set  this  environment  variable.  Doing this
+            tells ncurses to use Unicode values which  correspond
+            to the VT100 line-drawing glyphs.  That works for the
+            special cases cited, and is likely to work for termi-
+            nal emulators.
+
+            When  setting  this  variable, you should set it to a
+            nonzero value.  Setting it to zero (or to  a  nonnum-
+            ber) disables the special check for Linux and screen.
 
        NCURSES_TRACE
             During initialization, the <STRONG>ncurses</STRONG> debugging  library
@@ -877,8 +910,8 @@
 <H2>FILES</H2><PRE>
        /usr/share/tabset
             directory  containing  initialization  files  for the
-            terminal capability database /usr/share/terminfo ter-
-            minal capability database
+            terminal  capability   database   /usr/share/terminfo
+            terminal capability database
 
 
 </PRE>
@@ -914,11 +947,11 @@
        ual pages for details.
 
        The <STRONG>ncurses</STRONG> library can exploit the capabilities of termi-
-       nals  which  implement  the  ISO-6429  SGR  39  and SGR 49
-       controls, which allow an application to reset the terminal
-       to  its  original  foreground and background colors.  From
-       the users' perspective, the application is  able  to  draw
-       colored  text  on a background whose color is set indepen-
+       nals  which  implement the ISO-6429 SGR 39 and SGR 49 con-
+       trols, which allow an application to reset the terminal to
+       its  original  foreground and background colors.  From the
+       users' perspective, the application is able to  draw  col-
+       ored  text  on  a  background  whose color is set indepen-
        dently, providing better  control  over  color  contrasts.
        See the <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG> manual page for details.
 
@@ -942,8 +975,8 @@
        The routine <STRONG>has_key</STRONG> is not part of XPG4, nor is it present
        in SVr4.  See the <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG> manual page for  details.
 
-       The  routine  <STRONG>slk_attr</STRONG> is not part of XPG4, nor is it pre-
-       sent in  SVr4.   See  the  <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>  manual  page  for
+       The  routine  <STRONG>slk_attr</STRONG>  is  not  part  of  XPG4, nor is it
+       present in SVr4.  See the  <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>  manual  page  for
        details.
 
        The  routines <STRONG>getmouse</STRONG>, <STRONG>mousemask</STRONG>, <STRONG>ungetmouse</STRONG>, <STRONG>mouseinter-</STRONG>
@@ -985,7 +1018,7 @@
 
 
 
-                                                      <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>
+                                                            <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

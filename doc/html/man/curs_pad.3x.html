@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_pad.3x,v 1.12 2004/01/04 01:36:49 tom Exp @
+  * @Id: curs_pad.3x,v 1.14 2005/05/15 16:18:43 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,14 +40,14 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>                                         <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>
+<STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>                                               <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>newpad</STRONG>,   <STRONG>subpad</STRONG>,   <STRONG>prefresh</STRONG>,   <STRONG>pnoutrefresh</STRONG>,   <STRONG>pechochar</STRONG>,
+       <STRONG>newpad</STRONG>, <STRONG>subpad</STRONG>, <STRONG>prefresh</STRONG>, <STRONG>pnoutrefresh</STRONG>, <STRONG>pechochar</STRONG>,
        <STRONG>pecho_wchar</STRONG> - create and display <STRONG>curses</STRONG> pads
 
 
@@ -74,10 +74,10 @@
        it is not restricted by the screen size, and is not neces-
        sarily associated with a particular part  of  the  screen.
        Pads can be used when a large window is needed, and only a
-       part of the window will be on  the  screen  at  one  time.
-       Automatic refreshes of pads (e.g., from scrolling or echo-
-       ing of input) do not occur.  It is not legal to call  <STRONG>wre-</STRONG>
-       <STRONG>fresh</STRONG>  with a <EM>pad</EM> as an argument; the routines <STRONG>prefresh</STRONG> or
+       part of the window will be on the screen at one time.  Au-
+       tomatic refreshes of pads (e.g., from scrolling or echoing
+       of input) do not occur.  It is not legal to call  <STRONG>wrefresh</STRONG>
+       with  a  <EM>pad</EM>  as  an  argument;  the  routines <STRONG>prefresh</STRONG> or
        <STRONG>pnoutrefresh</STRONG> should be called instead.   Note  that  these
        routines require additional parameters to specify the part
        of the pad to be displayed and the location on the  screen
@@ -89,9 +89,9 @@
        screen coordinates, the window is  at  position  (<EM>begin</EM>_<EM>x</EM><STRONG>,</STRONG>
        <EM>begin</EM>_<EM>y</EM>)  on the pad.  The window is made in the middle of
        the window <EM>orig</EM>, so that changes made to one window affect
-       both  windows.   During  the  use of this routine, it will
-       often be necessary to call <STRONG>touchwin</STRONG> or <STRONG>touchline</STRONG>  on  <EM>orig</EM>
-       before calling <STRONG>prefresh</STRONG>.
+       both windows.  During the use of this routine, it will of-
+       ten be necessary to call <STRONG>touchwin</STRONG> or <STRONG>touchline</STRONG> on <EM>orig</EM> be-
+       fore calling <STRONG>prefresh</STRONG>.
 
        The  <STRONG>prefresh</STRONG>  and  <STRONG>pnoutrefresh</STRONG> routines are analogous to
        <STRONG>wrefresh</STRONG> and <STRONG>wnoutrefresh</STRONG> except that they relate to  pads
@@ -105,8 +105,8 @@
        culated from the screen coordinates, since the  rectangles
        must  be  the same size.  Both rectangles must be entirely
        contained within their  respective  structures.   Negative
-       values  of  <EM>pminrow</EM>,  <EM>pmincol</EM>,  <EM>sminrow</EM>,  or  <EM>smincol</EM>  are
-       treated as if they were zero.
+       values of <EM>pminrow</EM>, <EM>pmincol</EM>, <EM>sminrow</EM>, or <EM>smincol</EM> are treat-
+       ed as if they were zero.
 
        The <STRONG>pechochar</STRONG> routine is functionally equivalent to a call
        to  <STRONG>addch</STRONG>  followed by a call to <STRONG>refresh</STRONG>, a call to <STRONG>waddch</STRONG>
@@ -114,10 +114,10 @@
        lowed  by  a  call to <STRONG>prefresh</STRONG>.  The knowledge that only a
        single character is being output is taken into  considera-
        tion  and, for non-control characters, a considerable per-
-       formance gain  might  be  seen  by  using  these  routines
-       instead  of  their equivalents.  In the case of <STRONG>pechochar</STRONG>,
-       the last location of the pad on the screen is  reused  for
-       the arguments to <STRONG>prefresh</STRONG>.
+       formance gain might be seen by using  these  routines  in-
+       stead of their equivalents.  In the case of <STRONG>pechochar</STRONG>, the
+       last location of the pad on the screen is reused  for  the
+       arguments to <STRONG>prefresh</STRONG>.
 
        The  <STRONG>pecho_wchar</STRONG>  function is the analogous wide-character
        form of <STRONG>pechochar</STRONG>.  It outputs one character to a pad  and
@@ -134,6 +134,26 @@
        Routines that return pointers return <STRONG>NULL</STRONG>  on  error,  and
        set <STRONG>errno</STRONG> to <STRONG>ENOMEM</STRONG>.
 
+       X/Open  does not define any error conditions.  In this im-
+       plementation
+
+              <STRONG>prefresh</STRONG> and <STRONG>pnoutrefresh</STRONG>
+                   return an error if the window pointer is null,
+                   or if the window is not really a pad or if the
+                   area to refresh extends off-screen or  if  the
+                   minimum coordinates are greater than the maxi-
+                   mum.
+
+              <STRONG>pechochar</STRONG>
+                   returns an error if the window is not really a
+                   pad,  and the associated call to <STRONG>wechochar</STRONG> re-
+                   turns an error.
+
+              <STRONG>pecho_wchar</STRONG>
+                   returns an error if the window is not really a
+                   pad,  and  the  associated call to <STRONG>wecho_wchar</STRONG>
+                   returns an error.
+
 
 </PRE>
 <H2>NOTES</H2><PRE>
@@ -142,18 +162,18 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The  XSI  Curses  standard,  Issue 4 describes these func-
+       The XSI Curses standard, Issue  4  describes  these  func-
        tions.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,        <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,  <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>,  <STRONG>curs_add-</STRONG>
+       <STRONG><A HREF="curs_addch.3x.html">ch(3x)</A></STRONG>.
 
 
 
-                                                     <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>
+                                                           <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

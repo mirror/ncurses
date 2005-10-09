@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.13 $
+--  $Revision: 1.16 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
@@ -198,7 +199,7 @@ package body Sample.Form_Demo.Aux is
                   Text        : String) return Field
    is
       Fld : Field;
-      C : Column_Count := Column_Count (Text'Length);
+      C : constant Column_Count := Column_Count (Text'Length);
    begin
       Fld := New_Field (1, C, Top, Left);
       Set_Buffer (Fld, 0, Text);
@@ -215,7 +216,7 @@ package body Sample.Form_Demo.Aux is
                    Left        : Column_Position;
                    Off_Screen  : Natural := 0) return Field
    is
-      Fld : Field := New_Field (Height, Width, Top, Left, Off_Screen);
+      Fld : constant Field := New_Field (Height, Width, Top, Left, Off_Screen);
    begin
       if Has_Colors then
          Set_Foreground (Fld => Fld, Color => Form_Fore_Color);
@@ -231,6 +232,9 @@ package body Sample.Form_Demo.Aux is
                             P : Panel) return Boolean
    is
    begin
+      if P = Null_Panel then
+         raise Panel_Exception;
+      end if;
       if K in User_Key_Code'Range and then K = QUIT then
          if Driver (F, F_Validate_Field) = Form_Ok  then
             return True;

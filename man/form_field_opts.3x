@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998,2003 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_opts.3x,v 1.8 2003/05/10 20:33:49 jmc Exp $
+.\" $Id: form_field_opts.3x,v 1.10 2005/10/08 22:16:18 tom Exp $
 .TH form_field_opts 3X ""
 .SH NAME
 \fBform_field_opts\fR - set and get field options
@@ -72,7 +72,7 @@ O_EDIT
 The field can be edited.
 .TP 5
 O_WRAP
-Words that don't fit on a line are wrapped to the next line.  Words are
+Words that do not fit on a line are wrapped to the next line.  Words are
 blank-separated.
 .TP 5
 O_BLANK
@@ -86,6 +86,7 @@ Allow a blank field.
 .TP 5
 O_STATIC
 Field buffers are fixed to field's original size.
+Turn this option off to create a dynamic field.
 .TP 5
 O_PASSOK
 Validate field only if modified by user.

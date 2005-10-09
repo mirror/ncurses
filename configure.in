@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.312 2004/01/24 19:29:13 tom Exp $
+dnl $Id: configure.in,v 1.351 2005/09/17 22:41:48 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.312 $)
+AC_REVISION($Revision: 1.351 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -62,6 +62,7 @@ CF_GCC_VERSION
 
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
+CF_PROG_CC_C_O(CC)
 AC_ISC_POSIX
 CF_ANSI_CC_REQD
 CF_PROG_EXT
@@ -180,37 +181,7 @@ CF_HELP_MESSAGE(Build-Tools Needed to Compile Temporary Applications for Cross-c
 # If we're cross-compiling, allow the user to override the tools and their
 # options.  The configure script is oriented toward identifying the host
 # compiler, etc., but we need a build compiler to generate parts of the source.
-: ${BUILD_CC:='$(CC)'}
-: ${BUILD_CFLAGS:='$(CFLAGS)'}
-: ${BUILD_CPPFLAGS:='$(CPPFLAGS)'}
-: ${BUILD_LDFLAGS:='$(LDFLAGS)'}
-: ${BUILD_LIBS:='$(LIBS)'}
-: ${BUILD_EXEEXT:='$x'}
-if test "$cross_compiling" = yes ; then
-	AC_ARG_WITH(build-cc,
-		[  --with-build-cc=XXX     the build C compiler ($BUILD_CC)],
-		[BUILD_CC="$withval"],
-		[AC_CHECK_PROGS(BUILD_CC, $CC gcc cc)])
-	AC_ARG_WITH(build-cflags,
-		[  --with-build-cflags=XXX the build C compiler-flags],
-		[BUILD_CFLAGS="$withval"])
-	AC_ARG_WITH(build-cppflags,
-		[  --with-build-cppflags=XXX the build C preprocessor-flags],
-		[BUILD_CPPFLAGS="$withval"])
-	AC_ARG_WITH(build-ldflags,
-		[  --with-build-ldflags=XXX the build linker-flags],
-		[BUILD_LDFLAGS="$withval"])
-	AC_ARG_WITH(build-libs,
-		[  --with-build-libs=XXX   the build libraries],
-		[BUILD_LIBS="$withval"])
-	BUILD_EXEEXT=
-fi
-AC_SUBST(BUILD_CC)
-AC_SUBST(BUILD_CFLAGS)
-AC_SUBST(BUILD_CPPFLAGS)
-AC_SUBST(BUILD_LDFLAGS)
-AC_SUBST(BUILD_LIBS)
-AC_SUBST(BUILD_EXEEXT)
+CF_BUILD_CC
 
 ###############################################################################
 CF_HELP_MESSAGE(Options to Specify the Libraries Built/Used:)
@@ -289,6 +260,8 @@ LIB_NAME=ncurses
 AC_SUBST(LIB_NAME)
 
 LIB_DIR=../lib
+LIB_2ND=../../lib
+
 CF_LIB_PREFIX(cf_prefix)
 LIB_PREFIX=$cf_prefix
 AC_SUBST(LIB_PREFIX)
@@ -310,19 +283,16 @@ CF_WITH_DBMALLOC
 CF_WITH_DMALLOC
 
 SHLIB_LIST=""
-AC_MSG_CHECKING(if you want to link with the gpm mouse library)
-AC_ARG_WITH(gpm,
-	[  --with-gpm              use Alessandro Rubini's GPM library],
-	[with_gpm=$withval],
-	[with_gpm=no])
-AC_MSG_RESULT($with_gpm)
+CF_WITH_GPM
 if test "$with_gpm" = yes ; then
-	AC_CHECK_LIB(gpm,Gpm_Open,[
-		EXTRA_LIBS="-lgpm -lncurses $EXTRA_LIBS"
-		SHLIB_LIST="-lgpm $SHLIB_LIST"
-		AC_DEFINE(HAVE_LIBGPM)
-		AC_CHECK_HEADERS(gpm.h)
-	],AC_MSG_WARN(Cannot link with gpm library - read the FAQ))
+	CF_FUNC_DLSYM
+	CF_LIB_SONAME([#include <gpm.h>],[if (Gpm_Open(0,0)) Gpm_Close();],gpm)
+	test "$cf_cv_gpm_soname" != "unknown" && AC_DEFINE_UNQUOTED(LIBGPM_SONAME,"$cf_cv_gpm_soname")
+	SHLIB_LIST="-ldl $SHLIB_LIST"
+	AC_DEFINE(HAVE_LIBGPM)
+	AC_CHECK_LIB(gpm,Gpm_Wgetch,[
+		AC_MSG_WARN(GPM library is already linked with curses - read the FAQ)
+	])
 fi
 
 CF_WITH_SYSMOUSE
@@ -414,6 +384,19 @@ AC_ARG_WITH(fallbacks,
 AC_MSG_RESULT($with_fallback)
 FALLBACK_LIST=`echo "$with_fallback" | sed -e 's/,/ /g'`
 AC_SUBST(FALLBACK_LIST)
+
+AC_MSG_CHECKING(if you want modern xterm or antique)
+AC_ARG_WITH(xterm-new,
+	[  --without-xterm-new     specify if xterm terminfo should be old version],
+	[with_xterm_new=$withval],
+	[with_xterm_new=yes])
+case $with_xterm_new in
+no)	with_xterm_new=xterm-old;;
+*)	with_xterm_new=xterm-new;;
+esac
+AC_MSG_RESULT($with_xterm_new)
+WHICH_XTERM=$with_xterm_new
+AC_SUBST(WHICH_XTERM)
 
 MAKE_TERMINFO=
 if test "$use_database" = no ; then
@@ -517,7 +500,16 @@ AC_ARG_ENABLE(home-terminfo,
 	[  --disable-home-terminfo drop ~/.terminfo from terminfo search-path],
 	[with_home_terminfo=$enableval],
 	[with_home_terminfo=yes])
+AC_MSG_RESULT($with_home_terminfo)
 test "$with_home_terminfo" = "yes" && AC_DEFINE(USE_HOME_TERMINFO)
+
+AC_MSG_CHECKING(if you want to use restrict environment when running as root)
+AC_ARG_ENABLE(root-environ,
+	[  --disable-root-environ  limit environment when running as root],
+	[with_root_environ=$enableval],
+	[with_root_environ=yes])
+AC_MSG_RESULT($with_root_environ)
+test "$with_root_environ" = yes && AC_DEFINE(USE_ROOT_ENVIRON)
 
 ###   Use option --enable-symlinks to make tic use symlinks, not hard links
 ###   to reduce storage requirements for the terminfo database.
@@ -577,6 +569,89 @@ elif test "$DFT_LWR_MODEL" = shared ; then
 fi
 AC_SUBST(BROKEN_LINKER)
 
+###   use option --enable-widec to turn on use of wide-character support
+NCURSES_CH_T=chtype
+NCURSES_LIBUTF8=0
+
+NEED_WCHAR_H=0
+NCURSES_MBSTATE_T=0
+NCURSES_WCHAR_T=0
+NCURSES_WINT_T=0
+
+# Check to define _XOPEN_SOURCE "automatically"
+CF_XOPEN_SOURCE
+
+# Checks for CODESET support.
+AM_LANGINFO_CODESET
+
+# use these variables to work around a defect in gcc's fixincludes.
+NCURSES_OK_WCHAR_T=
+NCURSES_OK_WINT_T=
+
+AC_MSG_CHECKING(if you want wide-character code)
+AC_ARG_ENABLE(widec,
+	[  --enable-widec          compile with wide-char/UTF-8 code],
+	[with_widec=$enableval],
+	[with_widec=no])
+AC_MSG_RESULT($with_widec)
+if test "$with_widec" = yes ; then
+	LIB_SUFFIX="w${LIB_SUFFIX}"
+	AC_DEFINE(USE_WIDEC_SUPPORT)
+	CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
+	# with_overwrite=no
+	NCURSES_CH_T=cchar_t
+	AC_CHECK_FUNCS(putwc btowc wctob mbtowc wctomb mblen mbrlen mbrtowc)
+	if test "$ac_cv_func_putwc" != yes ; then
+		CF_LIBUTF8
+		if test "$cf_cv_libutf8" = yes ; then
+			NCURSES_LIBUTF8=1
+		fi
+	fi
+	CF_WCHAR_TYPE(mbstate_t, NCURSES_MBSTATE_T)
+	CF_WCHAR_TYPE(wchar_t,   NCURSES_WCHAR_T,   NCURSES_OK_WCHAR_T)
+	CF_WCHAR_TYPE(wint_t,    NCURSES_WINT_T,    NCURSES_OK_WINT_T)
+
+	if test "$NCURSES_MBSTATE_T" != 0; then
+		AC_DEFINE(NEED_MBSTATE_T_DEF)
+	fi
+fi
+AC_SUBST(NCURSES_CH_T)
+AC_SUBST(NCURSES_LIBUTF8)
+
+AC_SUBST(NEED_WCHAR_H)
+AC_SUBST(NCURSES_MBSTATE_T)
+AC_SUBST(NCURSES_WCHAR_T)
+AC_SUBST(NCURSES_WINT_T)
+
+AC_SUBST(NCURSES_OK_WCHAR_T)
+AC_SUBST(NCURSES_OK_WINT_T)
+
+###   use option --disable-lp64 to allow long chtype
+case $cf_cv_abi_version in
+[[345]]*)
+	default_with_lp64=no
+	;;
+*)
+	default_with_lp64=yes
+	;;
+esac
+
+AC_MSG_CHECKING(whether to enable _LP64 definition in curses.h)
+AC_ARG_ENABLE(lp64,
+	[  --disable-lp64          allow chtype to be long (ignore _LP64)],
+	[with_lp64=$enableval],
+	[with_lp64=$default_with_lp64])
+AC_MSG_RESULT($with_lp64)
+
+if test "$with_lp64" = yes ; then
+	cf_cv_enable_lp64=1
+else
+	cf_cv_enable_lp64=0
+fi
+AC_SUBST(cf_cv_enable_lp64)
+
+CF_LARGEFILE
+
 ###   use option --with-bool to override bool's type
 AC_MSG_CHECKING(for type of bool)
 AC_ARG_WITH(bool,
@@ -586,6 +661,23 @@ AC_ARG_WITH(bool,
 AC_MSG_RESULT($NCURSES_BOOL)
 AC_SUBST(NCURSES_BOOL)
 
+AC_MSG_CHECKING(for alternate terminal capabilities file)
+AC_ARG_WITH(caps,
+	[  --with-caps=alt         compile with alternate Caps file],
+	[TERMINFO_CAPS=Caps.$withval],
+	[TERMINFO_CAPS=Caps])
+test -f ${srcdir}/include/${TERMINFO_CAPS} || TERMINFO_CAPS=Caps
+AC_MSG_RESULT($TERMINFO_CAPS)
+AC_SUBST(TERMINFO_CAPS)
+
+###   use option --with-chtype to override chtype's type
+AC_MSG_CHECKING(for type of chtype)
+AC_ARG_WITH(chtype,
+	[  --with-chtype=TYPE      override type of chtype],
+	[NCURSES_CHTYPE="$withval"],
+	[NCURSES_CHTYPE=auto])
+AC_MSG_RESULT($NCURSES_CHTYPE)
+
 ###   use option --with-ospeed to override ospeed's type
 AC_MSG_CHECKING(for type of ospeed)
 AC_ARG_WITH(ospeed,
@@ -594,6 +686,14 @@ AC_ARG_WITH(ospeed,
 	[NCURSES_OSPEED=short])
 AC_MSG_RESULT($NCURSES_OSPEED)
 AC_SUBST(NCURSES_OSPEED)
+
+###   use option --with-mmask-t to override mmask_t's type
+AC_MSG_CHECKING(for type of mmask_t)
+AC_ARG_WITH(mmask-t,
+	[  --with-mmask-t=TYPE     override type of mmask_t],
+	[NCURSES_MMASK_T="$withval"],
+	[NCURSES_MMASK_T=auto])
+AC_MSG_RESULT($NCURSES_MMASK_T)
 
 ###   use option --enable-bsdpad to have tputs process BSD-style prefix padding
 AC_MSG_CHECKING(if tputs should process BSD-style prefix padding)
@@ -700,14 +800,6 @@ AC_ARG_ENABLE(hard-tabs,
 AC_MSG_RESULT($with_hardtabs)
 test "$with_hardtabs" = yes && AC_DEFINE(USE_HARD_TABS)
 
-AC_MSG_CHECKING(if you want to use restrict environment when running as root)
-AC_ARG_ENABLE(root-environ,
-	[  --disable-root-environ  limit environment when running as root],
-	[with_root_environ=$enableval],
-	[with_root_environ=yes])
-AC_MSG_RESULT($with_root_environ)
-test "$with_root_environ" = yes && AC_DEFINE(USE_ROOT_ENVIRON)
-
 ###   use option --enable-xmc-glitch to turn on use of magic-cookie optimize
 AC_MSG_CHECKING(if you want limited support for xmc)
 AC_ARG_ENABLE(xmc-glitch,
@@ -747,6 +839,40 @@ AC_ARG_ENABLE(colorfgbg,
 AC_MSG_RESULT($with_colorfgbg)
 test "$with_colorfgbg" = yes && AC_DEFINE(USE_COLORFGBG)
 
+###   use option --enable-ext-colors to turn on use of colors beyond 16.
+AC_MSG_CHECKING(if you want to use experimental extended colors)
+AC_ARG_ENABLE(ext-colors,
+	[  --enable-ext-colors     compile for experimental 256-color support],
+	[with_ext_colors=$enableval],
+	[with_ext_colors=no])
+AC_MSG_RESULT($with_ext_colors)
+NCURSES_EXT_COLORS=0
+if test "$with_ext_colors" = yes ; then
+	if test "$with_widec" != yes ; then
+		AC_MSG_WARN(This option applies only to wide-character library)
+	else
+		# cannot be ABI 5 since it changes sizeof(cchar_t)
+		CF_NCURSES_ABI_6
+	fi
+	NCURSES_EXT_COLORS=1
+	AC_DEFINE(NCURSES_EXT_COLORS)
+fi
+AC_SUBST(NCURSES_EXT_COLORS)
+
+###   use option --enable-ext-mouse to modify coding to support 5-button mice
+AC_MSG_CHECKING(if you want to use experimental extended mouse encoding)
+AC_ARG_ENABLE(ext-mouse,
+	[  --enable-ext-mouse      compile for experimental mouse-encoding],
+	[with_ext_mouse=$enableval],
+	[with_ext_mouse=no])
+AC_MSG_RESULT($with_ext_mouse)
+NCURSES_MOUSE_VERSION=1
+if test "$with_ext_mouse" = yes ; then
+	NCURSES_MOUSE_VERSION=2
+	CF_NCURSES_ABI_6
+fi
+AC_SUBST(NCURSES_MOUSE_VERSION)
+
 AC_MSG_CHECKING(if you want experimental safe-sprintf code)
 AC_ARG_ENABLE(safe-sprintf,
 	[  --enable-safe-sprintf   compile with experimental safe-sprintf code],
@@ -766,66 +892,6 @@ AC_ARG_ENABLE(scroll-hints,
 AC_MSG_RESULT($with_scroll_hints)
 test "$with_scroll_hints" = yes && AC_DEFINE(USE_SCROLL_HINTS)
 fi
-
-###   use option --enable-widec to turn on use of wide-character support
-NCURSES_CH_T=chtype
-NCURSES_LIBUTF8=0
-
-NEED_WCHAR_H=0
-NCURSES_MBSTATE_T=0
-NCURSES_WCHAR_T=0
-NCURSES_WINT_T=0
-
-# Check to define _XOPEN_SOURCE "automatically"
-CF_XOPEN_SOURCE
-
-# use these variables to work around a defect in gcc's fixincludes.
-NCURSES_OK_WCHAR_T=
-NCURSES_OK_WINT_T=
-
-AC_MSG_CHECKING(if you want experimental wide-character code)
-AC_ARG_ENABLE(widec,
-	[  --enable-widec          compile with experimental wide-char/UTF-8 code],
-	[with_widec=$enableval],
-	[with_widec=no])
-AC_MSG_RESULT($with_widec)
-if test "$with_widec" = yes ; then
-	LIB_SUFFIX="w${LIB_SUFFIX}"
-	AC_DEFINE(USE_WIDEC_SUPPORT)
-	CF_PREDEFINE(_XOPEN_SOURCE,500)
-	CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
-	# with_overwrite=no
-	NCURSES_CH_T=cchar_t
-	AC_CHECK_FUNCS(putwc btowc wctob mbtowc wctomb mblen mbrlen mbrtowc)
-	if test "$ac_cv_func_putwc" != yes ; then
-		CF_LIBUTF8
-		if test "$cf_cv_libutf8" = yes ; then
-			NCURSES_LIBUTF8=1
-		fi
-	fi
-	CF_WCHAR_TYPE(mbstate_t, NCURSES_MBSTATE_T)
-	CF_WCHAR_TYPE(wchar_t,   NCURSES_WCHAR_T,   NCURSES_OK_WCHAR_T)
-	CF_WCHAR_TYPE(wint_t,    NCURSES_WINT_T,    NCURSES_OK_WINT_T)
-fi
-AC_SUBST(NCURSES_CH_T)
-AC_SUBST(NCURSES_LIBUTF8)
-
-AC_SUBST(NEED_WCHAR_H)
-AC_SUBST(NCURSES_MBSTATE_T)
-AC_SUBST(NCURSES_WCHAR_T)
-AC_SUBST(NCURSES_WINT_T)
-
-AC_SUBST(NCURSES_OK_WCHAR_T)
-AC_SUBST(NCURSES_OK_WINT_T)
-
-AC_MSG_CHECKING(for terminal capabilities file)
-AC_ARG_WITH(caps,
-	[  --with-caps=alt         compile with experimental alternate Caps file],
-	[TERMINFO_CAPS=Caps.$withval],
-	[TERMINFO_CAPS=Caps])
-test -f ${srcdir}/include/${TERMINFO_CAPS} || TERMINFO_CAPS=Caps
-AC_MSG_RESULT($TERMINFO_CAPS)
-AC_SUBST(TERMINFO_CAPS)
 
 ###############################################################################
 CF_HELP_MESSAGE(Testing/development Options:)
@@ -855,6 +921,9 @@ AC_MSG_RESULT($with_warnings)
 if test -n "$with_warnings"; then
  	ADAFLAGS="$ADAFLAGS -gnatg"
 	CF_GCC_WARNINGS
+	if test "$cf_with_cxx" = yes ; then
+		CF_GXX_WARNINGS(Wno-unused)
+	fi
 fi
 CF_GCC_ATTRIBUTES
 
@@ -906,7 +975,7 @@ AC_ARG_WITH(trace,
 [  --with-trace            test: add trace() function to all models of ncurses],
 [cf_with_trace=$withval],
 [cf_with_trace=$cf_all_traces])
-AC_MSG_RESULT($with_trace)
+AC_MSG_RESULT($cf_with_trace)
 
 if test "$cf_with_trace" = yes ; then
 	LIB_TRACING=all
@@ -940,7 +1009,6 @@ dnl These are some other potentially nonportable headers.
 AC_CHECK_HEADERS( \
 fcntl.h \
 getopt.h \
-libc.h \
 limits.h \
 locale.h \
 poll.h \
@@ -953,7 +1021,8 @@ sys/time.h \
 sys/times.h \
 ttyent.h \
 unistd.h \
-wctype.h )
+wctype.h \
+)
 
 # check for ISC (this may also define _POSIX_SOURCE)
 # Note: even non-Posix ISC needs <sys/bsdtypes.h> to declare fd_set
@@ -970,7 +1039,25 @@ AC_C_CONST
 AC_C_INLINE
 test "$ac_cv_c_inline" != no && AC_DEFINE(CC_HAS_INLINE_FUNCS)
 
-CF_TYPEOF_CHTYPE
+if test $NCURSES_CHTYPE = auto ; then
+	CF_TYPEOF_CHTYPE
+else
+	cf_cv_typeof_chtype=$NCURSES_CHTYPE
+fi
+AC_SUBST(cf_cv_typeof_chtype)
+
+CF_UNSIGNED_LITERALS
+cf_cv_1UL="1"
+test "$cf_cv_unsigned_literals" = yes && cf_cv_1UL="${cf_cv_1UL}U"
+test "$cf_cv_typeof_chtype"    = long && cf_cv_1UL="${cf_cv_1UL}L"
+AC_SUBST(cf_cv_1UL)
+
+if test $NCURSES_MMASK_T = auto ; then
+	cf_cv_typeof_mmask_t=long
+else
+	cf_cv_typeof_mmask_t=$NCURSES_MMASK_T
+fi
+AC_SUBST(cf_cv_typeof_mmask_t)
 
 ###	Checks for external-data
 CF_ERRNO
@@ -983,8 +1070,6 @@ getegid \
 geteuid \
 getttynam \
 issetugid \
-memccpy \
-nanosleep \
 poll \
 remove \
 select \
@@ -1005,6 +1090,7 @@ fi
 
 CF_ISASCII
 CF_STRUCT_SIGACTION
+CF_FUNC_NANOSLEEP
 CF_FUNC_TERMIOS
 CF_FUNC_VSSCANF
 CF_MKSTEMP
@@ -1042,6 +1128,7 @@ CF_BOOL_DECL(cf_cv_cc_bool_type)
 if test -n "$CXX" ; then
 	AC_LANG_CPLUSPLUS
 	CF_STDCPP_LIBRARY
+	CF_PROG_CC_C_O(CXX)
 
 	case $GXX_VERSION in
 	1*|2.[0-6]*)
@@ -1061,6 +1148,7 @@ if test -n "$CXX" ; then
 	CF_BOOL_SIZE
 	CF_ETIP_DEFINES
 	CF_CPP_PARAM_INIT
+	CF_CPP_STATIC_CAST
 	CF_CPP_VSCAN_FUNC
 
 	CXX_AR='$(AR)'
@@ -1168,6 +1256,28 @@ fi
 if test	"$cf_cv_prog_gnat_correct" = yes; then
    ADAFLAGS="-O3 -gnatpn $ADAFLAGS"
 
+   AC_MSG_CHECKING(if GNAT pragma Unreferenced works)
+   CF_GNAT_TRY_LINK([procedure conftest;],
+[with Text_IO;
+with GNAT.OS_Lib;
+procedure conftest is
+   test : Integer;
+   pragma Unreferenced (test);
+begin
+   test := 1;
+   Text_IO.Put ("Hello World");
+   Text_IO.New_Line;
+   GNAT.OS_Lib.OS_Exit (0);
+end conftest;],[cf_cv_pragma_unreferenced=yes],[cf_cv_pragma_unreferenced=no])
+   AC_MSG_RESULT($cf_cv_pragma_unreferenced)
+
+   # if the pragma is supported, use it (needed in the Trace code).
+   if test $cf_cv_pragma_unreferenced = yes ; then
+      PRAGMA_UNREF=TRUE
+   else
+      PRAGMA_UNREF=FALSE
+   fi
+
    AC_ARG_WITH(ada-compiler,
 	[  --with-ada-compiler=CMD specify Ada95 compiler command (default gnatmake)],
 	[cf_ada_compiler=$withval],
@@ -1181,6 +1291,7 @@ if test	"$cf_cv_prog_gnat_correct" = yes; then
    AC_SUBST(ADAFLAGS)
    AC_SUBST(cf_compile_generics)
    AC_SUBST(cf_generic_objects)
+   AC_SUBST(PRAGMA_UNREF)
 
    CF_WITH_PATH(ada-include,
        [  --with-ada-include=DIR  Ada includes are in DIR],
@@ -1202,7 +1313,7 @@ fi
 ### Construct the library-subsets, if any, from this set of keywords:
 ### none, base, ext_funcs, ext_tinfo, termlib, widechar (see CF_LIB_RULES).
 AC_MSG_CHECKING(for library subsets)
-if test "$with_termlib" = yes ; then
+if test "$with_termlib" != no ; then
 	LIB_SUBSETS="termlib"
 	test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_tinfo"
 	LIB_SUBSETS="${LIB_SUBSETS} "
@@ -1254,10 +1365,44 @@ AC_MSG_RESULT($CXX_LIB_SUFFIX)
 AC_SUBST(CXX_LIB_SUFFIX)
 fi
 
+### Set up low-level terminfo dependencies for makefiles.
 TINFO_LIST="$SHLIB_LIST"
-if test "$with_libtool" = no ; then
-	test "$with_termlib" = yes && SHLIB_LIST="$SHLIB_LIST -ltinfo${LIB_SUFFIX}"
+if test "$with_termlib" != no ; then
+
+	if test "$with_termlib" != yes ; then
+		TINFO_NAME=$with_termlib
+		TINFO_ARG_SUFFIX="${with_termlib}`echo ${DFT_ARG_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
+		TINFO_DEP_SUFFIX="${with_termlib}`echo ${DFT_DEP_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
+		TINFO_LIB_SUFFIX="${with_termlib}"
+	else
+		TINFO_ARG_SUFFIX="${TINFO_NAME}${DFT_ARG_SUFFIX}"
+		TINFO_DEP_SUFFIX="${TINFO_NAME}${DFT_DEP_SUFFIX}"
+		TINFO_LIB_SUFFIX="${TINFO_NAME}${LIB_SUFFIX}"
+	fi
+
+	TEST_DEPS="${LIB_DIR}/${LIB_PREFIX}${TINFO_DEP_SUFFIX}"
+	TEST_DEP2="${LIB_2ND}/${LIB_PREFIX}${TINFO_DEP_SUFFIX}"
+	if test "$DFT_LWR_MODEL" = "libtool"; then
+		TEST_ARGS="${TEST_DEPS}"
+		TEST_ARG2="${TEST_DEP2}"
+		TINFO_ARGS="-L${LIB_DIR} $TEST_ARGS"
+	else
+		TEST_ARGS="-l${TINFO_ARG_SUFFIX}"
+		TEST_ARG2="-l${TINFO_ARG_SUFFIX}"
+		TINFO_ARGS="-L${LIB_DIR} $TEST_ARGS"
+		SHLIB_LIST="$SHLIB_LIST -l${TINFO_LIB_SUFFIX}"
+	fi
+else
+	TINFO_ARGS="-L${LIB_DIR} -l${LIB_NAME}${DFT_ARG_SUFFIX}"
 fi
+AC_SUBST(TINFO_ARG_SUFFIX)
+AC_SUBST(TINFO_DEP_SUFFIX)
+AC_SUBST(TINFO_LIB_SUFFIX)
+AC_SUBST(TINFO_ARGS)
+
+# needed for Ada95
+TINFO_ARGS2=`echo "$TINFO_ARGS" | sed -e 's,-L\.\./,-L../../,'`
+AC_SUBST(TINFO_ARGS2)
 
 AC_MSG_CHECKING(where we will install curses.h)
 test "$with_overwrite" = no && \
@@ -1274,22 +1419,8 @@ if test "$NCURSES_LIBUTF8" = 1 ; then
 fi
 fi
 
-AC_SUBST(EXTRA_LIBS)
 AC_SUBST(TINFO_LIST)
 AC_SUBST(SHLIB_LIST)
-
-### Set up low-level terminfo dependencies for makefiles.  Note that we
-### could override this.
-if test "$with_termlib" = yes ; then
-	TEST_DEPS="${LIB_DIR}/${LIB_PREFIX}${TINFO_NAME}${DFT_DEP_SUFFIX}"
-	if test "$DFT_LWR_MODEL" = "libtool"; then
-		TEST_ARGS="${TEST_DEPS}"
-	else
-		TEST_ARGS="-l${TINFO_NAME}${DFT_ARG_SUFFIX}"
-	fi
-fi
-PROG_DEPS="$TEST_DEPS"
-PROG_ARGS="$TEST_ARGS"
 
 ### predefined stuff for the test programs
 AC_DEFINE(HAVE_SLK_COLOR)
@@ -1323,6 +1454,7 @@ CF_LIB_RULES
 
 AWK="$AWK"
 CF_LIST_MODELS="$cf_list_models"
+DFT_ARG_SUFFIX="$DFT_ARG_SUFFIX"
 DFT_LWR_MODEL="$DFT_LWR_MODEL"
 LDCONFIG="$LDCONFIG"
 LIB_NAME="$LIB_NAME"
@@ -1333,12 +1465,17 @@ MAKE_TERMINFO="$MAKE_TERMINFO"
 NCURSES_OSPEED="$NCURSES_OSPEED"
 SRC_SUBDIRS="$SRC_SUBDIRS"
 TERMINFO="$TERMINFO"
+TINFO_ARG_SUFFIX="$TINFO_ARG_SUFFIX"
+TINFO_LIB_SUFFIX="$TINFO_LIB_SUFFIX"
 TINFO_NAME="$TINFO_NAME"
 WITH_CURSES_H="$with_curses_h"
 WITH_ECHO="$with_echo"
 WITH_OVERWRITE="$with_overwrite"
 cf_cv_abi_version="$cf_cv_abi_version"
 cf_cv_do_symlinks="$cf_cv_do_symlinks"
+cf_cv_enable_lp64="$cf_cv_enable_lp64"
+cf_cv_prog_CC_c_o=$cf_cv_prog_CC_c_o
+cf_cv_prog_CXX_c_o=$cf_cv_prog_CXX_c_o
 cf_cv_rel_version="$cf_cv_rel_version"
 cf_cv_rm_so_locs="$cf_cv_rm_so_locs"
 cf_cv_shlib_version="$cf_cv_shlib_version"

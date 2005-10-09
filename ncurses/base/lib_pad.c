@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_pad.c,v 1.38 2002/08/03 23:29:26 Philippe.Blain Exp $")
+MODULE_ID("$Id: lib_pad.c,v 1.39 2004/10/23 18:48:09 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
 newpad(int l, int c)
@@ -202,7 +202,7 @@ pnoutrefresh
 	     */
 	    if (j == pmincol
 		&& j > 0
-		&& isnac(ch)) {
+		&& isWidecExt(ch)) {
 		SetChar(ch, L(' '), AttrOf(oline->text[j - 1]));
 	    }
 #endif

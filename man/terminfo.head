@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2000,2002 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2002,2004 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.10 2002/08/17 23:37:10 tom Exp $
+.\" $Id: terminfo.head,v 1.12 2004/09/25 19:07:11 tom Exp $
 .TH TERMINFO 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@
@@ -58,6 +58,16 @@ the last name given should be a long name fully identifying the terminal,
 and all others are understood as synonyms for the terminal name.
 All names but the last should be in lower case and contain no blanks;
 the last name may well contain upper case and blanks for readability.
+.PP
+Lines beginning with a `#' in the first column are treated as comments.
+While comment lines are legal at any point, the output of \fIcaptoinfo\fP
+and \fIinfotocap\fP (aliases for \fItic\fP)
+will move comments so they occur only between entries.
+.PP
+Newlines and leading tabs may be used for formatting entries for readability.
+These are removed from parsed entries.
+The \fIinfocmp\ -f\fP option relies on this to format if-then-else expressions:
+the result can be read by \fItic\fP.
 .PP
 Terminal names (except for the last, verbose entry) should
 be chosen using the following conventions.

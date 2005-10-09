@@ -6,17 +6,21 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.23 2002/08/10 19:20:14 tom Exp $
+ * $Id: gdc.c,v 1.26 2005/05/28 21:39:39 tom Exp $
  */
 
-#include <time.h>
-
 #include <test.priv.h>
+
+#include <time.h>
 
 #define YBASE	10
 #define XBASE	10
 #define XLENGTH	54
 #define YDEPTH	5
+
+#define PAIR_DIGITS 1
+#define PAIR_OTHERS 2
+#define PAIR_FRAMES 3
 
 static short disp[11] =
 {
@@ -41,13 +45,13 @@ sighndl(int signo)
 }
 
 static void
-drawbox(void)
+drawbox(bool scrolling)
 {
     chtype bottom[XLENGTH + 1];
     int n;
 
     if (hascolor)
-	attrset(COLOR_PAIR(3));
+	attrset(COLOR_PAIR(PAIR_FRAMES));
 
     mvaddch(YBASE - 1, XBASE - 1, ACS_ULCORNER);
     hline(ACS_HLINE, XLENGTH);
@@ -55,8 +59,11 @@ drawbox(void)
 
     mvaddch(YBASE + YDEPTH, XBASE - 1, ACS_LLCORNER);
     mvinchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
-    for (n = 0; n < XLENGTH; n++)
+    for (n = 0; n < XLENGTH; n++) {
+	if (!scrolling)
+	    bottom[n] &= ~A_COLOR;
 	bottom[n] = ACS_HLINE | (bottom[n] & (A_ATTRIBUTES | A_COLOR));
+    }
     mvaddchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
     mvaddch(YBASE + YDEPTH, XBASE + XLENGTH, ACS_LRCORNER);
 
@@ -67,7 +74,7 @@ drawbox(void)
     vline(ACS_VLINE, YDEPTH);
 
     if (hascolor)
-	attrset(COLOR_PAIR(2));
+	attrset(COLOR_PAIR(PAIR_OTHERS));
 }
 
 static void
@@ -75,13 +82,13 @@ standt(int on)
 {
     if (on) {
 	if (hascolor) {
-	    attron(COLOR_PAIR(1));
+	    attron(COLOR_PAIR(PAIR_DIGITS));
 	} else {
 	    attron(A_STANDOUT);
 	}
     } else {
 	if (hascolor) {
-	    attron(COLOR_PAIR(2));
+	    attron(COLOR_PAIR(PAIR_OTHERS));
 	} else {
 	    attroff(A_STANDOUT);
 	}
@@ -182,10 +189,10 @@ main(int argc, char *argv[])
 	if (use_default_colors() == OK)
 	    bg = -1;
 #endif
-	init_pair(1, COLOR_BLACK, COLOR_RED);
-	init_pair(2, COLOR_RED, bg);
-	init_pair(3, COLOR_WHITE, bg);
-	attrset(COLOR_PAIR(2));
+	init_pair(PAIR_DIGITS, COLOR_BLACK, COLOR_RED);
+	init_pair(PAIR_OTHERS, COLOR_RED, bg);
+	init_pair(PAIR_FRAMES, COLOR_WHITE, bg);
+	attrset(COLOR_PAIR(PAIR_OTHERS));
     }
 
   restart:
@@ -193,7 +200,7 @@ main(int argc, char *argv[])
 	older[j] = newer[j] = next[j] = 0;
 
     clear();
-    drawbox();
+    drawbox(FALSE);
 
     do {
 	char buf[30];
@@ -239,17 +246,17 @@ main(int argc, char *argv[])
 		}
 		if (!s) {
 		    if (scrol)
-			drawbox();
+			drawbox(TRUE);
 		    refresh();
 		    /*
 		     * If we're scrolling, space out the refreshes to fake
 		     * movement.  That's 7 frames, or 6 intervals, which would
 		     * be 166 msec if we spread it out over a second.  It looks
-		     * better (but will well on a slow terminal, e.g., less
+		     * better (but will work on a slow terminal, e.g., less
 		     * than 9600bd) to squeeze that into a half-second, and use
 		     * half of 170 msec to ensure that the program doesn't eat
 		     * a lot of time when asking what time it is, at the top of
-		     * this loop -TD
+		     * this loop -T.Dickey
 		     */
 		    if (scrol)
 			napms(85);
@@ -263,7 +270,7 @@ main(int argc, char *argv[])
 	mvaddstr(16, 30, buf);
 
 	move(6, 0);
-	drawbox();
+	drawbox(FALSE);
 	refresh();
 
 	/*

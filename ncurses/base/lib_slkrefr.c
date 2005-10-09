@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Juergen Pfeifer                         1996-on                 *
+ *     and: Thomas E. Dickey                                                *
  ****************************************************************************/
 
 /*
@@ -38,7 +40,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.11 2003/03/29 22:53:48 tom Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.13 2005/01/08 21:46:31 tom Exp $")
 
 /*
  * Write the soft labels to the soft-key window.
@@ -59,10 +61,10 @@ slk_intern_refresh(SLK * slk)
 		    }
 		} else {
 		    wmove(slk->win, SLK_LINES(fmt) - 1, slk->ent[i].ent_x);
-		    if (SP && SP->_slk)
-			wattrset(slk->win, SP->_slk->attr);
-		    waddnstr(slk->win, slk->ent[i].form_text,
-			     MAX_SKEY_LEN(fmt));
+		    if (SP && SP->_slk) {
+			wattrset(slk->win, AttrOf(SP->_slk->attr));
+		    }
+		    waddstr(slk->win, slk->ent[i].form_text);
 		    /* if we simulate SLK's, it's looking much more
 		       natural to use the current ATTRIBUTE also
 		       for the label window */

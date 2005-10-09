@@ -23,12 +23,14 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.57 2003/05/17 21:58:43 tom Exp $
+ * $Id: view.c,v 1.62 2005/05/28 21:40:25 tom Exp $
  */
+
+#include <test.priv.h>
 
 #include <time.h>
 
-#include <test.priv.h>
+#undef CTRL			/* conflict on AIX 5.2 with <sys/ioctl.h> */
 
 #if HAVE_TERMIOS_H
 # include <termios.h>
@@ -69,8 +71,9 @@ static int shift = 0;
 static bool try_color = FALSE;
 
 static char *fname;
-static NCURSES_CH_T **my_lines;
+static NCURSES_CH_T **vec_lines;
 static NCURSES_CH_T **lptr;
+static int num_lines;
 
 static void
 usage(void)
@@ -164,7 +167,8 @@ ch_dup(char *src)
 	if (setcchar(dst + k, wstr, 0, 0, NULL) == OK)
 	    ++k;
     }
-    setcchar(dst + k, L"", 0, 0, NULL);
+    wstr[0] = L'\0';
+    setcchar(dst + k, wstr, 0, 0, NULL);
 #else
     dst[k] = 0;
 #endif
@@ -180,7 +184,6 @@ main(int argc, char *argv[])
     int i;
     int my_delay = 0;
     NCURSES_CH_T **olptr;
-    int length = 0;
     int value = 0;
     bool done = FALSE;
     bool got_number = FALSE;
@@ -220,7 +223,7 @@ main(int argc, char *argv[])
 #endif
 #ifdef TRACE
 	case 'T':
-	    trace(atoi(optarg));
+	    trace((unsigned) atoi(optarg));
 	    break;
 	case 't':
 	    trace(TRACE_CALLS);
@@ -233,7 +236,7 @@ main(int argc, char *argv[])
     if (optind + 1 != argc)
 	usage();
 
-    if ((my_lines = typeMalloc(NCURSES_CH_T *, MAXLINES + 2)) == 0)
+    if ((vec_lines = typeMalloc(NCURSES_CH_T *, MAXLINES + 2)) == 0)
 	usage();
 
     fname = argv[optind];
@@ -247,7 +250,7 @@ main(int argc, char *argv[])
 #endif
 
     /* slurp the file */
-    for (lptr = &my_lines[0]; (lptr - my_lines) < MAXLINES; lptr++) {
+    for (lptr = &vec_lines[0]; (lptr - vec_lines) < MAXLINES; lptr++) {
 	char temp[BUFSIZ], *s, *d;
 	int col;
 
@@ -280,7 +283,7 @@ main(int argc, char *argv[])
 	*lptr = ch_dup(temp);
     }
     (void) fclose(fp);
-    length = lptr - my_lines;
+    num_lines = lptr - vec_lines;
 
     (void) initscr();		/* initialize the curses library */
     keypad(stdscr, TRUE);	/* enable keyboard mapping */
@@ -300,7 +303,7 @@ main(int argc, char *argv[])
 	}
     }
 
-    lptr = my_lines;
+    lptr = vec_lines;
     while (!done) {
 	int n, c;
 
@@ -323,7 +326,7 @@ main(int argc, char *argv[])
 		    mvprintw(0, 0, "Count: ");
 		    clrtoeol();
 		}
-		addch(c);
+		addch(UChar(c));
 		value = 10 * value + (c - '0');
 		got_number = TRUE;
 	    } else
@@ -342,7 +345,7 @@ main(int argc, char *argv[])
 	case 'n':
 	    olptr = lptr;
 	    for (i = 0; i < n; i++)
-		if ((lptr - my_lines) < (length - LINES + 1))
+		if ((lptr - vec_lines) < (num_lines - LINES + 1))
 		    lptr++;
 		else
 		    break;
@@ -353,7 +356,7 @@ main(int argc, char *argv[])
 	case 'p':
 	    olptr = lptr;
 	    for (i = 0; i < n; i++)
-		if (lptr > my_lines)
+		if (lptr > vec_lines)
 		    lptr--;
 		else
 		    break;
@@ -362,15 +365,15 @@ main(int argc, char *argv[])
 
 	case 'h':
 	case KEY_HOME:
-	    lptr = my_lines;
+	    lptr = vec_lines;
 	    break;
 
 	case 'e':
 	case KEY_END:
-	    if (length > LINES)
-		lptr = my_lines + length - LINES + 1;
+	    if (num_lines > LINES)
+		lptr = vec_lines + num_lines - LINES + 1;
 	    else
-		lptr = my_lines;
+		lptr = vec_lines;
 	    break;
 
 	case 'r':
@@ -428,6 +431,15 @@ static RETSIGTYPE
 finish(int sig)
 {
     endwin();
+#if NO_LEAKS
+    if (vec_lines != 0) {
+	int n;
+	for (n = 0; n < num_lines; ++n) {
+	    free(vec_lines[n]);
+	}
+	free(vec_lines);
+    }
+#endif
     ExitProgram(sig != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
@@ -491,7 +503,7 @@ show_all(const char *tag)
     scrollok(stdscr, FALSE);	/* prevent screen from moving */
     for (i = 1; i < LINES; i++) {
 	move(i, 0);
-	printw("%3ld:", (long) (lptr + i - my_lines));
+	printw("%3ld:", (long) (lptr + i - vec_lines));
 	clrtoeol();
 	if ((s = lptr[i - 1]) != 0) {
 	    int len = ch_len(s);

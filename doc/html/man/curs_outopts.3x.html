@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2001,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_outopts.3x,v 1.18 2003/05/10 20:33:49 jmc Exp @
+  * @Id: curs_outopts.3x,v 1.20 2005/05/15 16:18:32 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,14 +40,14 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>                                 <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
+<STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>                                       <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>clearok</STRONG>,   <STRONG>idlok</STRONG>,   <STRONG>idcok</STRONG>,  <STRONG>immedok</STRONG>,  <STRONG>leaveok</STRONG>,  <STRONG>setscrreg</STRONG>,
+       <STRONG>clearok</STRONG>, <STRONG>idlok</STRONG>, <STRONG>idcok</STRONG>, <STRONG>immedok</STRONG>, <STRONG>leaveok</STRONG>, <STRONG>setscrreg</STRONG>,
        <STRONG>wsetscrreg</STRONG>, <STRONG>scrollok</STRONG>, <STRONG>nl</STRONG>, <STRONG>nonl</STRONG> - <STRONG>curses</STRONG> output options
 
 
@@ -71,8 +71,8 @@
 <H2>DESCRIPTION</H2><PRE>
        These routines set options that change the style of output
        within  <STRONG>curses</STRONG>.   All  options are initially <STRONG>FALSE</STRONG>, unless
-       otherwise stated.  It  is  not  necessary  to  turn  these
-       options off before calling <STRONG>endwin</STRONG>.
+       otherwise stated.  It is not necessary to turn  these  op-
+       tions off before calling <STRONG>endwin</STRONG>.
 
        If  <STRONG>clearok</STRONG> is called with <STRONG>TRUE</STRONG> as argument, the next call
        to <STRONG>wrefresh</STRONG> with this window will clear  the  screen  com-
@@ -106,30 +106,29 @@
        the window image, such as the ones caused by <STRONG>waddch,</STRONG> <STRONG>wclr-</STRONG>
        <STRONG>tobot,</STRONG>  <STRONG>wscrl</STRONG>,  etc.,  automatically  cause a call to <STRONG>wre-</STRONG>
        <STRONG>fresh</STRONG>.  However, it may degrade performance  considerably,
-       due  to  repeated  calls  to  <STRONG>wrefresh</STRONG>.  It is disabled by
-       default.
+       due  to repeated calls to <STRONG>wrefresh</STRONG>.  It is disabled by de-
+       fault.
 
        Normally, the hardware cursor is left at the  location  of
-       the  window  cursor  being  refreshed.  The <STRONG>leaveok</STRONG> option
-       allows the cursor to be left wherever the  update  happens
-       to leave it.  It is useful for applications where the cur-
-       sor is not used, since it  reduces  the  need  for  cursor
-       motions.
+       the window cursor being refreshed.  The <STRONG>leaveok</STRONG> option al-
+       lows the cursor to be left wherever the update happens  to
+       leave  it.  It is useful for applications where the cursor
+       is not used, since it reduces the need for cursor motions.
 
        The  <STRONG>setscrreg</STRONG>  and <STRONG>wsetscrreg</STRONG> routines allow the applica-
        tion programmer to set a software scrolling  region  in  a
        window.   <EM>top</EM>  and <EM>bot</EM> are the line numbers of the top and
        bottom margin of the scrolling region.  (Line 0 is the top
-       line  of  the  window.)   If  this option and <STRONG>scrollok</STRONG> are
-       enabled, an attempt to move off  the  bottom  margin  line
-       causes  all  lines  in  the scrolling region to scroll one
-       line in the direction of the first line.  Only the text of
-       the window is scrolled.  (Note that this has nothing to do
+       line  of the window.)  If this option and <STRONG>scrollok</STRONG> are en-
+       abled, an attempt to move off the bottom margin line caus-
+       es all lines in the scrolling region to scroll one line in
+       the direction of the first line.  Only  the  text  of  the
+       window  is  scrolled.   (Note  that this has nothing to do
        with the use of a physical scrolling region capability  in
        the terminal, like that in the VT100.  If <STRONG>idlok</STRONG> is enabled
-       and  the  terminal  has  either  a  scrolling  region   or
-       insert/delete  line capability, they will probably be used
-       by the output routines.)
+       and the terminal has either  a  scrolling  region  or  in-
+       sert/delete line capability, they will probably be used by
+       the output routines.)
 
        The <STRONG>scrollok</STRONG> option controls what happens when the  cursor
        of  a  window  is  moved  off  the  edge  of the window or
@@ -159,6 +158,23 @@
        cess and <STRONG>ERR</STRONG> upon failure.  All other routines that return
        an integer always return <STRONG>OK</STRONG>.
 
+       X/Open does not define any error conditions.
+
+       In this implementation, those functions that have a window
+       pointer will return an error  if  the  window  pointer  is
+       null.
+
+              <STRONG>wclrtoeol</STRONG>
+                   returns  an  error  if  the cursor position is
+                   about to wrap.
+
+              <STRONG>wsetscrreg</STRONG>
+                   returns an error if the scrolling region  lim-
+                   its extend outside the window.
+
+       X/Open  does not define any error conditions.  This imple-
+       mentation returns an error if the window pointer is  null.
+
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
@@ -171,7 +187,7 @@
        translations;  AT&amp;T  curses (at least as late as SVr1) did
        not.  We choose to do so, on the theory that a  programmer
        requesting  raw  input wants a clean (ideally 8-bit clean)
-       connection that the operating system does not mess with.
+       connection that the operating system will not alter.
 
        Some historic curses implementations had,  as  an  undocu-
        mented  feature,  the  ability  to  do  the  equivalent of
@@ -206,7 +222,7 @@
 
 
 
-                                                 <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
+                                                       <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

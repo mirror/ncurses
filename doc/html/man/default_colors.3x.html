@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,8 +27,8 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * Author: Thomas E. Dickey 1997,1999,2000
-  * @Id: default_colors.3x,v 1.17 2003/10/25 20:41:08 tom Exp @
+  * Author: Thomas E. Dickey 1997,1999,2000,2005
+  * @Id: default_colors.3x,v 1.18 2005/02/19 20:25:44 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,7 +41,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>                             <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>
+<STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>                                   <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>
 
 
 
@@ -125,12 +125,35 @@
        accepts negative arguments to specify  default  foreground
        or background colors.
 
+       The  <EM>use</EM><STRONG>_</STRONG><EM>default</EM><STRONG>_</STRONG><EM>colors()</EM>  function  was  added to support
+       <EM>ded</EM>.  This is a full-screen application which uses  curses
+       to  manage only part of the screen.  The bottom portion of
+       the screen, which is of adjustable size, is left uncolored
+       to  display the results from shell commands.  The top por-
+       tion of the screen colors filenames using  a  scheme  like
+       the  "color  ls" programs.  Attempting to manage the back-
+       ground color of the screen for this application would give
+       unsatisfactory  results  for  a  variety of reasons.  This
+       extension was devised after noting that color  xterm  (and
+       similar  programs)  provides a background color which does
+       not necessarily correspond to  any  of  the  ANSI  colors.
+       While  a special terminfo entry could be constructed using
+       nine colors, there was no mechanism provided within curses
+       to  account for the related <EM>orig</EM><STRONG>_</STRONG><EM>pair</EM> and <EM>back</EM><STRONG>_</STRONG><EM>color</EM><STRONG>_</STRONG><EM>erase</EM>
+       capabilities.
+
+       The <EM>assume</EM><STRONG>_</STRONG><EM>default</EM><STRONG>_</STRONG><EM>colors()</EM> function was added to solve  a
+       different  problem:  support  for applications which would
+       use  environment  variables  and  other  configuration  to
+       bypass  curses'  notion  of the terminal's default colors,
+       setting specific values.
+
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These  routines  are  specific  to ncurses.  They were not
-       supported on Version 7, BSD or System  V  implementations.
-       It  is recommended that any code depending on them be con-
+       These routines are specific to  ncurses.   They  were  not
+       supported  on  Version 7, BSD or System V implementations.
+       It is recommended that any code depending on them be  con-
        ditioned using NCURSES_VERSION.
 
 
@@ -141,12 +164,12 @@
 
 </PRE>
 <H2>AUTHOR</H2><PRE>
-       Thomas Dickey (from an analysis of  the  requirements  for
+       Thomas  Dickey  (from  an analysis of the requirements for
        color xterm for XFree86 3.1.2C, February 1996).
 
 
 
-                                               <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>
+                                                     <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

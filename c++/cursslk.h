@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursslk.h,v 1.9 2003/10/25 15:04:46 tom Exp $
+// $Id: cursslk.h,v 1.13 2005/05/28 21:58:18 tom Exp $
 
 #ifndef NCURSES_CURSSLK_H_incl
 #define NCURSES_CURSSLK_H_incl
@@ -51,28 +51,45 @@ public:
     Justification format;  // The Justification
     int num;               // The number of the Label
 
-    Soft_Label_Key() : label((char*)0),format(Left),num(-1) {
+    Soft_Label_Key() : label(NULL), format(Left), num(-1) {
     }
-    
+
     virtual ~Soft_Label_Key() {
       delete[] label;
     };
 
   public:
     // Set the text of the Label
-    void operator=(char *text);
-    
+    Soft_Label_Key& operator=(char *text);
+
     // Set the Justification of the Label
-    inline void operator=(Justification just) {
+    Soft_Label_Key& operator=(Justification just) {
       format = just;
+      return *this;
     }
-	 
+
     // Retrieve the text of the label
     inline char* operator()(void) const {
-      return label; 
+      return label;
+    }
+
+    Soft_Label_Key& operator=(const Soft_Label_Key& rhs)
+    {
+      if (this != &rhs) {
+        *this = rhs;
+      }
+      return *this;
+    }
+
+    Soft_Label_Key(const Soft_Label_Key& rhs)
+      : label(NULL),
+        format(rhs.format),
+        num(rhs.num)
+    {
+      *this = rhs.label;
     }
   };
-  
+
 public:
   typedef enum {
     None                = -1,
@@ -87,7 +104,7 @@ private:
   static Label_Layout NCURSES_IMPEXP  format;     // Layout of the Key Sets
   static int  NCURSES_IMPEXP num_labels;          // Number Of Labels in Key Sets
   bool NCURSES_IMPEXP b_attrInit;                 // Are attributes initialized
-  
+
   Soft_Label_Key *slk_array;       // The array of SLK's
 
   // Init the Key Set
@@ -105,13 +122,13 @@ protected:
   }
 
   // Remove SLK's from screen
-  void clear() { 
+  void clear() {
     if (ERR==::slk_clear())
       Error("slk_clear");
-  }    
+  }
 
   // Restore them
-  void restore() { 
+  void restore() {
     if (ERR==::slk_restore())
       Error("slk_restore");
   }
@@ -128,29 +145,45 @@ public:
   // with a layout by the constructor above. This layout will be reused.
   NCURSES_IMPEXP Soft_Label_Key_Set();
 
+  Soft_Label_Key_Set& operator=(const Soft_Label_Key_Set& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+      init();		// allocate a new slk_array[]
+    }
+    return *this;
+  }
+
+  Soft_Label_Key_Set(const Soft_Label_Key_Set& rhs)
+    : b_attrInit(rhs.b_attrInit),
+      slk_array(NULL)
+  {
+    init();		// allocate a new slk_array[]
+  }
+
   virtual ~Soft_Label_Key_Set();
 
   // Get Label# i. Label counting starts with 1!
   NCURSES_IMPEXP Soft_Label_Key& operator[](int i);
 
   // Retrieve number of Labels
-  inline int labels() const { return num_labels; }          
+  inline int labels() const { return num_labels; }
 
   // Refresh the SLK portion of the screen
-  inline void refresh() { 
+  inline void refresh() {
     if (ERR==::slk_refresh())
       Error("slk_refresh");
   }
 
   // Mark the SLK portion of the screen for refresh, defer actual refresh
   // until next update call.
-  inline void noutrefresh() { 
+  inline void noutrefresh() {
     if (ERR==::slk_noutrefresh())
       Error("slk_noutrefresh");
   }
 
   // Mark the whole SLK portion of the screen as modified
-  inline void touch() { 
+  inline void touch() {
     if (ERR==::slk_touch())
       Error("slk_touch");
   }
@@ -202,4 +235,4 @@ public:
   }
 };
 
-#endif // NCURSES_CURSSLK_H_incl
+#endif /* NCURSES_CURSSLK_H_incl */

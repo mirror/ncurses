@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML><HEAD><TITLE>terminal_interface-curses-text_io-decimal_io.adb</TITLE></HEAD>
 <BODY>
 <HR><DIV ALIGN="center"><H1> File : terminal_interface-curses-text_io-decimal_io.adb </H1></DIV><HR>
@@ -43,38 +44,38 @@
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> Ada.Text_IO;
-<b>with</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#44_35">Text_IO</A>.<A HREF="terminal_interface-curses-text_io-aux__ads.htm#41_51">Aux</A>;
+<b>with</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A>.<A HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_41_51">Aux</A>;
 
-<b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#44_35">Text_IO</A>.<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#44_43">Decimal_IO</A> <b>is</b>
+<b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A>.<FONT COLOR=red><A NAME="ref_44_48" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_44_43">Decimal_IO</A></FONT> <b>is</b>
 
-   <b>package</b> <FONT COLOR=red><A NAME="46_12">Aux</A></FONT> <b>renames</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#44_35">Text_IO</A>.<A HREF="terminal_interface-curses-text_io-aux__ads.htm#41_51">Aux</A>;
-   <b>package</b> <FONT COLOR=red><A NAME="47_12">DIO</A></FONT> <b>is</b> <b>new</b> Ada.Text_IO.Decimal_IO (<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#42_9">Num</A>);
+   <b>package</b> <FONT COLOR=red><A NAME="ref_46_12">Aux</A></FONT> <b>renames</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A>.<A HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_41_51">Aux</A>;
+   <b>package</b> <FONT COLOR=red><A NAME="ref_47_12">DIO</A></FONT> <b>is</b> <b>new</b> Ada.Text_IO.Decimal_IO (<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_42_9">Num</A>);
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#50_14">Put</A><FONT COLOR=red><A NAME="49_14"></A></FONT>
-     (<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#51_7">Win</A>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#56_9">Window</A>;
-      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#52_7">Item</A> : <b>in</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#42_9">Num</A>;
-      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#53_7">Fore</A> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#46_4">Default_Fore</A>;
-      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#54_7">Aft</A>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#47_4">Default_Aft</A>;
-      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#55_7">Exp</A>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#48_4">Default_Exp</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_49_14" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_50_14">Put</A></FONT>
+     (<FONT COLOR=red><A NAME="ref_50_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_51_7">Win</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+      <FONT COLOR=red><A NAME="ref_51_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_52_7">Item</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_42_9">Num</A>;
+      <FONT COLOR=red><A NAME="ref_52_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_53_7">Fore</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_46_4">Default_Fore</A>;
+      <FONT COLOR=red><A NAME="ref_53_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_54_7">Aft</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_47_4">Default_Aft</A>;
+      <FONT COLOR=red><A NAME="ref_54_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_55_7">Exp</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_48_4">Default_Exp</A>)
    <b>is</b>
-      <FONT COLOR=red><A NAME="56_7">Buf</A></FONT> : String (1 .. <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A>'Last);
-      <FONT COLOR=red><A NAME="57_7">Len</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#53_7">Fore</A> + 1 + <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#54_7">Aft</A>;
+      <FONT COLOR=red><A NAME="ref_56_7">Buf</A></FONT> : String (1 .. <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A>'Last);
+      <FONT COLOR=red><A NAME="ref_57_7">Len</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_53_7">Fore</A> + 1 + <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_54_7">Aft</A>;
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#55_7">Exp</A> &gt; 0 <b>then</b>
-         <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#57_7">Len</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#57_7">Len</A> + 1 + <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#55_7">Exp</A>;
+      <b>if</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_55_7">Exp</A> &gt; 0 <b>then</b>
+         <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#ref_57_7">Len</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#ref_57_7">Len</A> + 1 + <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_55_7">Exp</A>;
       <b>end</b> <b>if</b>;
-      <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#47_12">DIO</A>.Put (<A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#56_7">Buf</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#52_7">Item</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#54_7">Aft</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#55_7">Exp</A>);
-      <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#46_12">Aux</A>.<A HREF="terminal_interface-curses-text_io-aux__ads.htm#47_14">Put_Buf</A> (<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#51_7">Win</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#56_7">Buf</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#57_7">Len</A>, False);
-   <b>end</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#50_14">Put</A><A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#50_14">;</A>
+      <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#ref_47_12">DIO</A>.Put (<A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#ref_56_7">Buf</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_52_7">Item</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_54_7">Aft</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_55_7">Exp</A>);
+      <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#ref_46_12">Aux</A>.<A HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_47_14">Put_Buf</A> (<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_51_7">Win</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#ref_56_7">Buf</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__adb.htm#ref_57_7">Len</A>, False);
+   <b>end</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_50_14">Put</A>;
 
-   <b>procedure</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#57_14">Put</A><FONT COLOR=red><A NAME="66_14"></A></FONT>
-     (<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#58_7">Item</A>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#42_9">Num</A>;
-      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#59_7">Fore</A> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#46_4">Default_Fore</A>;
-      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#60_7">Aft</A>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#47_4">Default_Aft</A>;
-      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#61_7">Exp</A>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#48_4">Default_Exp</A>) <b>is</b>
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_66_14" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_57_14">Put</A></FONT>
+     (<FONT COLOR=red><A NAME="ref_67_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_58_7">Item</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_42_9">Num</A>;
+      <FONT COLOR=red><A NAME="ref_68_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_59_7">Fore</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_46_4">Default_Fore</A>;
+      <FONT COLOR=red><A NAME="ref_69_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_60_7">Aft</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_47_4">Default_Aft</A>;
+      <FONT COLOR=red><A NAME="ref_70_7" HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_61_7">Exp</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_48_4">Default_Exp</A>) <b>is</b>
    <b>begin</b>
-      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#50_14">Put</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#62_13">Get_Window</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#58_7">Item</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#59_7">Fore</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#60_7">Aft</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#61_7">Exp</A>);
-   <b>end</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#57_14">Put</A><A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#57_14">;</A>
+      <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_50_14">Put</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#ref_62_13">Get_Window</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_58_7">Item</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_59_7">Fore</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_60_7">Aft</A>, <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_61_7">Exp</A>);
+   <b>end</b> <A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_57_14">Put</A>;
 
-<b>end</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#44_35">Text_IO</A>.<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#44_43">Decimal_IO</A><A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#44_43">;</A>
+<b>end</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A>.<A HREF="terminal_interface-curses-text_io-decimal_io__ads.htm#ref_44_43">Decimal_IO</A>;
 </PRE></BODY></HTML>

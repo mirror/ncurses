@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.70 2004/01/11 01:45:54 tom Exp $
+.\" $Id: ncurses.3x,v 1.76 2005/09/03 17:42:29 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ds n 5
@@ -46,9 +46,9 @@ implementation is ``new curses'' (ncurses) and is the approved replacement for
 The \fBncurses\fR routines emulate the \fBcurses\fR(3X) library of System V
 Release 4 UNIX, and the XPG4 curses standard (XSI curses) but the \fBncurses\fR
 library is freely redistributable in source form.  Differences from the SVr4
-curses are summarized under the EXTENSIONS and BUGS sections below and
-described in detail in the EXTENSIONS and BUGS sections of individual man
-pages.
+curses are summarized under the EXTENSIONS and PORTABILITY sections below and
+described in detail in the respective EXTENSIONS, PORTABILITY and BUGS sections
+of individual man pages.
 .PP
 A program using these routines must be linked with the \fB-lncurses\fR option,
 or (if it has been generated) with the debugging library \fB-lncurses_g\fR.
@@ -643,22 +643,25 @@ COLUMNS
 Specify the width of the screen in characters.
 Applications running in a windowing environment usually are able to
 obtain the width of the window in which they are executing.
-If neither the $COLUMNS value nor the terminal's screen size is available,
+If neither the \fBCOLUMNS\fP value nor the terminal's screen size is available,
 \fBncurses\fR uses the size which may be specified in the terminfo database
 (i.e., the \fBcols\fR capability).
 .IP
 It is important that your application use a correct size for the screen.
-However, this is not always possible because your application may be
+This is not always possible because your application may be
 running on a host which does not honor NAWS (Negotiations About Window
 Size), or because you are temporarily running as another user.
+However, setting \fBCOLUMNS\fP and/or \fBLINES\fP overrides the library's
+use of the screen size obtained from the operating system.
 .IP
-Either COLUMNS or LINES symbols may be specified independently.
+Either \fBCOLUMNS\fP or \fBLINES\fP symbols may be specified independently.
 This is mainly useful to circumvent legacy misfeatures of terminal descriptions,
 e.g., xterm which commonly specifies a 65 line screen.
 For best results, \fBlines\fR and \fBcols\fR should not be specified in
 a terminal description for terminals which are run as emulations.
 .IP
-Use the \fBuse_env\fR function to disable this feature.
+Use the \fBuse_env\fR function to disable all use of external environment
+(including system calls) to determine the screen size.
 .TP 5
 ESCDELAY
 Specifies the total time, in milliseconds, for which ncurses will
@@ -677,6 +680,13 @@ received from the xterm.
 If your application makes heavy use of multiple-clicking, you may
 wish to lengthen this default value because the timeout applies
 to the composed multi-click event as well as the individual clicks.
+.IP
+In addition to the environment variable,
+this implementation provides a global variable with the same name.
+Portable applications should not rely upon the presence of ESCDELAY
+in either form,
+but setting the environment variable rather than the global variable
+does not create problems when compiling an application.
 .TP 5
 HOME
 Tells \fBncurses\fR where your home directory is.
@@ -749,6 +759,24 @@ For testing purposes, both of \fBncurses\fR and certain applications,
 this feature is made optional.  Setting the NCURSES_NO_SETBUF variable
 disables output buffering, leaving the output in the original (usually
 line buffered) mode.
+.TP 5
+NCURSES_NO_UTF8_ACS
+During initialization, the \fBncurses\fR library
+checks for special cases where VT100 line-drawing (and the corresponding
+alternate character set capabilities) described in the terminfo are known
+to be missing.
+Specifically, when running in a UTF-8 locale,
+the Linux console emulator and the GNU screen program ignore these.
+Ncurses checks the TERM environment variable for these.
+For other special cases, you should set this environment variable.
+Doing this tells ncurses to use Unicode values which correspond to
+the VT100 line-drawing glyphs.
+That works for the special cases cited,
+and is likely to work for terminal emulators.
+.IP
+When setting this variable, you should set it to a nonzero value.
+Setting it to zero (or to a nonnumber)
+disables the special check for Linux and screen.
 .TP 5
 NCURSES_TRACE
 During initialization, the \fBncurses\fR debugging library
@@ -828,7 +856,7 @@ terminal capability database
 \fBterminfo\fR(\*n) and related pages whose names begin "curs_" for detailed routine
 descriptions.
 .SH EXTENSIONS
-The \fBncurses\fR library can be compiled with an option (\fB\-DUSE_GETCAP\fR)
+The \fBncurses\fR library can be compiled with an option (\fB-DUSE_GETCAP\fR)
 that falls back to the old-style /etc/termcap file if the terminal setup code
 cannot find a terminfo entry corresponding to \fBTERM\fR.  Use of this feature
 is not recommended, as it essentially includes an entire termcap compiler in

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,15 +29,18 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey 1996-2003                                      *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
  * This module is intended to encapsulate ncurses's interface to pointing
  * devices.
  *
- * The first method used is xterm's internal mouse-tracking facility.
- * The second is Alessandro Rubini's GPM server.
+ * The primary method used is xterm's internal mouse-tracking facility.
+ * Additional methods depend on the platform:
+ *	Alessandro Rubini's GPM server (Linux)
+ *	sysmouse (FreeBSD)
+ *	special-purpose mouse interface for OS/2 EMX.
  *
  * Notes for implementors of new mouse-interface methods:
  *
@@ -76,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.68 2003/11/08 21:50:50 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.77 2005/09/10 22:58:57 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -86,8 +89,19 @@ MODULE_ID("$Id: lib_mouse.c,v 1.68 2003/11/08 21:50:50 tom Exp $")
 #undef buttons			/* term.h defines this, and gpm uses it! */
 #include <gpm.h>
 #include <linux/keyboard.h>	/* defines KG_* macros */
+/* use dynamic loader to avoid linkage dependency */
+#include <dlfcn.h>
+#ifdef RTLD_NOW
+#define my_RTLD RTLD_NOW
+#else
+#ifdef RTLD_LAZY
+#define my_RTLD RTLD_LAZY
+#else
+make an error
 #endif
 #endif
+#endif
+#endif				/* USE_GPM_SUPPORT */
 
 #if USE_SYSMOUSE
 #undef buttons			/* symbol conflict in consio.h */
@@ -99,29 +113,59 @@ MODULE_ID("$Id: lib_mouse.c,v 1.68 2003/11/08 21:50:50 tom Exp $")
 #else
 #include <machine/console.h>
 #endif
-#endif /* use_SYSMOUSE */
+#endif				/* use_SYSMOUSE */
 
 #define MY_TRACE TRACE_ICALLS|TRACE_IEVENT
 
-#define	MASK_RELEASE(x)		((001 << (6 * ((x) - 1))))
-#define	MASK_PRESS(x)		((002 << (6 * ((x) - 1))))
-#define	MASK_CLICK(x)		((004 << (6 * ((x) - 1))))
-#define	MASK_DOUBLE_CLICK(x)	((010 << (6 * ((x) - 1))))
-#define	MASK_TRIPLE_CLICK(x)	((020 << (6 * ((x) - 1))))
-#define	MASK_RESERVED_EVENT(x)	((040 << (6 * ((x) - 1))))
+#define	MASK_RELEASE(x)		NCURSES_MOUSE_MASK(x, 001)
+#define	MASK_PRESS(x)		NCURSES_MOUSE_MASK(x, 002)
+#define	MASK_CLICK(x)		NCURSES_MOUSE_MASK(x, 004)
+#define	MASK_DOUBLE_CLICK(x)	NCURSES_MOUSE_MASK(x, 010)
+#define	MASK_TRIPLE_CLICK(x)	NCURSES_MOUSE_MASK(x, 020)
+#define	MASK_RESERVED_EVENT(x)	NCURSES_MOUSE_MASK(x, 040)
 
-#define BUTTON_CLICKED  (BUTTON1_CLICKED  | BUTTON2_CLICKED  | BUTTON3_CLICKED)
-#define BUTTON_PRESSED  (BUTTON1_PRESSED  | BUTTON2_PRESSED  | BUTTON3_PRESSED)
-#define BUTTON_RELEASED (BUTTON1_RELEASED | BUTTON2_RELEASED | BUTTON3_RELEASED)
+#if NCURSES_MOUSE_VERSION == 1
+#define BUTTON_CLICKED        (BUTTON1_CLICKED        | BUTTON2_CLICKED        | BUTTON3_CLICKED        | BUTTON4_CLICKED)
+#define BUTTON_PRESSED        (BUTTON1_PRESSED        | BUTTON2_PRESSED        | BUTTON3_PRESSED        | BUTTON4_PRESSED)
+#define BUTTON_RELEASED       (BUTTON1_RELEASED       | BUTTON2_RELEASED       | BUTTON3_RELEASED       | BUTTON4_RELEASED)
+#define BUTTON_DOUBLE_CLICKED (BUTTON1_DOUBLE_CLICKED | BUTTON2_DOUBLE_CLICKED | BUTTON3_DOUBLE_CLICKED | BUTTON4_DOUBLE_CLICKED)
+#define BUTTON_TRIPLE_CLICKED (BUTTON1_TRIPLE_CLICKED | BUTTON2_TRIPLE_CLICKED | BUTTON3_TRIPLE_CLICKED | BUTTON4_TRIPLE_CLICKED)
+#define MAX_BUTTONS  4
+#else
+#define BUTTON_CLICKED        (BUTTON1_CLICKED        | BUTTON2_CLICKED        | BUTTON3_CLICKED        | BUTTON4_CLICKED        | BUTTON5_CLICKED)
+#define BUTTON_PRESSED        (BUTTON1_PRESSED        | BUTTON2_PRESSED        | BUTTON3_PRESSED        | BUTTON4_PRESSED        | BUTTON5_PRESSED)
+#define BUTTON_RELEASED       (BUTTON1_RELEASED       | BUTTON2_RELEASED       | BUTTON3_RELEASED       | BUTTON4_RELEASED       | BUTTON5_RELEASED)
+#define BUTTON_DOUBLE_CLICKED (BUTTON1_DOUBLE_CLICKED | BUTTON2_DOUBLE_CLICKED | BUTTON3_DOUBLE_CLICKED | BUTTON4_DOUBLE_CLICKED | BUTTON5_DOUBLE_CLICKED)
+#define BUTTON_TRIPLE_CLICKED (BUTTON1_TRIPLE_CLICKED | BUTTON2_TRIPLE_CLICKED | BUTTON3_TRIPLE_CLICKED | BUTTON4_TRIPLE_CLICKED | BUTTON5_TRIPLE_CLICKED)
+#define MAX_BUTTONS  5
+#endif
 
 #define INVALID_EVENT	-1
 #define NORMAL_EVENT	0
 
 #if USE_GPM_SUPPORT
 #ifndef LINT
+
+#ifndef LIBGPM_SONAME
+#define LIBGPM_SONAME "libgpm.so"
+#endif
+
+#define GET_DLSYM(name) (my_##name = (TYPE_##name) dlsym(obj, #name))
+
 static Gpm_Connect gpm_connect;
-#endif
-#endif
+
+typedef int *TYPE_gpm_fd;
+typedef int (*TYPE_Gpm_Open) (Gpm_Connect *, int);
+typedef int (*TYPE_Gpm_Close) (void);
+typedef int (*TYPE_Gpm_GetEvent) (Gpm_Event *);
+
+static TYPE_gpm_fd my_gpm_fd;
+static TYPE_Gpm_Open my_Gpm_Open;
+static TYPE_Gpm_Close my_Gpm_Close;
+static TYPE_Gpm_GetEvent my_Gpm_GetEvent;
+
+#endif /* LINT */
+#endif /* USE_GPM_SUPPORT */
 
 static mmask_t eventmask;	/* current event mask */
 
@@ -247,12 +291,6 @@ mouse_server(unsigned long ignored GCC_UNUSED)
     DosExit(EXIT_THREAD, 0L);
 }
 
-static void
-server_state(const int state)
-{				/* It would be nice to implement pointer-off and stop looping... */
-    mouse_activated = state;
-}
-
 #endif /* USE_EMX_MOUSE */
 
 #if USE_SYSMOUSE
@@ -312,7 +350,7 @@ handle_sysmouse(int sig GCC_UNUSED)
 	work->y = the_mouse.u.data.y / SP->_sysmouse_char_height;
     }
 }
-#endif
+#endif /* USE_SYSMOUSE */
 
 static int initialized;
 
@@ -325,35 +363,113 @@ init_xterm_mouse(void)
 	SP->_mouse_xtermcap = "\033[?1000%?%p1%{1}%=%th%el%;";
 }
 
-#if !USE_EMX_MOUSE
 static void
 enable_xterm_mouse(int enable)
 {
+#if USE_EMX_MOUSE
+    mouse_activated = enable;
+#else
     putp(tparm(SP->_mouse_xtermcap, enable));
+#endif
+    SP->_mouse_active = enable;
 }
-#endif /* !USE_EMX_MOUSE */
+
+#if USE_GPM_SUPPORT
+static int
+allow_gpm_mouse(void)
+{
+    /* GPM does printf's without checking if stdout is a terminal */
+    if (isatty(fileno(stdout))) {
+	char *env = getenv("TERM");
+	/* GPM checks the beginning of the $TERM variable to decide if
+	 * it should pass xterm events through.  There is no real advantage
+	 * in allowing GPM to do this.
+	 */
+	if (env == 0 || strncmp(env, "xterm", 5))
+	    return TRUE;
+    }
+    return FALSE;
+}
+
+static bool
+enable_gpm_mouse(int enable)
+{
+    bool result;
+
+    T((T_CALLED("enable_gpm_mouse(%d)"), enable));
+
+    if (enable && !SP->_mouse_active) {
+	/* GPM: initialize connection to gpm server */
+	gpm_connect.eventMask = GPM_DOWN | GPM_UP;
+	gpm_connect.defaultMask = ~(gpm_connect.eventMask | GPM_HARD);
+	gpm_connect.minMod = 0;
+	gpm_connect.maxMod = (unsigned short) (~((1 << KG_SHIFT) |
+						 (1 << KG_SHIFTL) |
+						 (1 << KG_SHIFTR)));
+	/*
+	 * Note: GPM hardcodes \E[?1001s and \E[?1000h during its open.
+	 * The former is recognized by wscons (SunOS), and the latter by
+	 * xterm.  Those will not show up in ncurses' traces.
+	 */
+	result = (my_Gpm_Open(&gpm_connect, 0) >= 0);
+	SP->_mouse_active = result;
+	T(("GPM open %s", result ? "succeeded" : "failed"));
+    } else {
+	if (!enable && SP->_mouse_active) {
+	    /* GPM: close connection to gpm server */
+	    my_Gpm_Close();
+	    SP->_mouse_active = FALSE;
+	    T(("GPM closed"));
+	}
+	result = FALSE;
+    }
+    returnBool(result);
+}
+#endif /* USE_GPM_SUPPORT */
 
 static void
 initialize_mousetype(void)
 {
     static const char *xterm_kmous = "\033[M";
 
+    T((T_CALLED("initialize_mousetype()")));
+
     /* Try gpm first, because gpm may be configured to run in xterm */
 #if USE_GPM_SUPPORT
-    /* GPM does printf's without checking if stdout is a terminal */
-    if (isatty(fileno(stdout))) {
-	/* GPM: initialize connection to gpm server */
-	gpm_connect.eventMask = GPM_DOWN | GPM_UP;
-	gpm_connect.defaultMask = ~(gpm_connect.eventMask | GPM_HARD);
-	gpm_connect.minMod = 0;
-	gpm_connect.maxMod = ~((1 << KG_SHIFT) | (1 << KG_SHIFTL) | (1 << KG_SHIFTR));
-	if (Gpm_Open(&gpm_connect, 0) >= 0) {	/* returns the file-descriptor */
+    if (allow_gpm_mouse()) {
+	static bool first = TRUE;
+	static bool found = FALSE;
+
+	if (first) {
+	    void *obj;
+	    first = FALSE;
+
+	    if ((obj = dlopen(LIBGPM_SONAME, my_RTLD)) != 0) {
+		if (GET_DLSYM(gpm_fd) == 0 ||
+		    GET_DLSYM(Gpm_Open) == 0 ||
+		    GET_DLSYM(Gpm_Close) == 0 ||
+		    GET_DLSYM(Gpm_GetEvent) == 0) {
+		    T(("GPM initialization failed: %s", dlerror()));
+		    dlclose(obj);
+		} else {
+		    found = TRUE;
+		}
+	    }
+	}
+
+	/*
+	 * The gpm_fd file-descriptor may be negative (xterm).  So we have to
+	 * maintain our notion of whether the mouse connection is active
+	 * without testing the file-descriptor.
+	 */
+	if (found && enable_gpm_mouse(TRUE)) {
 	    SP->_mouse_type = M_GPM;
-	    SP->_mouse_fd = gpm_fd;
-	    return;
+	    SP->_mouse_fd = *my_gpm_fd;
+	    T(("GPM mouse_fd %d", SP->_mouse_fd));
+	    returnVoid;
 	}
     }
-#endif
+#endif /* USE_GPM_SUPPORT */
 
     /* OS/2 VIO */
 #if USE_EMX_MOUSE
@@ -364,7 +480,7 @@ initialize_mousetype(void)
 
 	if (pipe(handles) < 0) {
 	    perror("mouse pipe error");
-	    return;
+	    returnVoid;
 	} else {
 	    int rc;
 
@@ -388,14 +504,13 @@ initialize_mousetype(void)
 				 mouse_server, 0, 0, 8192);
 	    if (rc) {
 		printf("mouse thread error %d=%#x", rc, rc);
-		return;
 	    } else {
 		SP->_mouse_type = M_XTERM;
-		return;
 	    }
+	    returnVoid;
 	}
     }
-#endif
+#endif /* USE_EMX_MOUSE */
 
 #if USE_SYSMOUSE
     {
@@ -456,7 +571,7 @@ initialize_mousetype(void)
 		if (SP->_sysmouse_char_height <= 0)
 		    SP->_sysmouse_char_height = 16;
 		SP->_mouse_type = M_SYSMOUSE;
-		return;
+		returnVoid;
 	    }
 	}
     }
@@ -466,22 +581,21 @@ initialize_mousetype(void)
     if (key_mouse != 0) {
 	if (!strcmp(key_mouse, xterm_kmous)) {
 	    init_xterm_mouse();
-	    return;
 	}
     } else if (strstr(cur_term->type.term_names, "xterm") != 0) {
 	(void) _nc_add_to_try(&(SP->_keytry), xterm_kmous, KEY_MOUSE);
 	init_xterm_mouse();
-	return;
     }
+    returnVoid;
 }
 
-static void
+static bool
 _nc_mouse_init(void)
 /* initialize the mouse */
 {
     int i;
 
-    if (!initialized) {
+    if (!initialized && (SP != 0)) {
 	initialized = TRUE;
 
 	TR(MY_TRACE, ("_nc_mouse_init() called"));
@@ -493,6 +607,7 @@ _nc_mouse_init(void)
 
 	T(("_nc_mouse_init() set mousetype to %d", SP->_mouse_type));
     }
+    return initialized;
 }
 
 /*
@@ -500,7 +615,7 @@ _nc_mouse_init(void)
  * fifo_push() in lib_getch.c
  */
 static bool
-_nc_mouse_event(SCREEN * sp GCC_UNUSED)
+_nc_mouse_event(SCREEN *sp GCC_UNUSED)
 {
     bool result = FALSE;
 
@@ -530,7 +645,7 @@ _nc_mouse_event(SCREEN * sp GCC_UNUSED)
 	    /* query server for event, return TRUE if we find one */
 	    Gpm_Event ev;
 
-	    if (Gpm_GetEvent(&ev) == 1) {
+	    if (my_Gpm_GetEvent(&ev) == 1) {
 		/* there's only one mouse... */
 		eventp->id = NORMAL_EVENT;
 
@@ -599,9 +714,10 @@ _nc_mouse_event(SCREEN * sp GCC_UNUSED)
 }
 
 static bool
-_nc_mouse_inline(SCREEN * sp)
+_nc_mouse_inline(SCREEN *sp)
 /* mouse report received in the keyboard stream -- parse its info */
 {
+    int b;
     bool result = FALSE;
 
     TR(MY_TRACE, ("_nc_mouse_inline() called"));
@@ -639,8 +755,10 @@ _nc_mouse_inline(SCREEN * sp)
 	 * (End quote)  By the time we get here, we've eaten the
 	 * key prefix.  FYI, the loop below is necessary because
 	 * mouse click info isn't guaranteed to present as a
-	 * single clist item.  It always does under Linux but often
-	 * fails to under Solaris.
+	 * single clist item.
+	 *
+	 * Wheel mice may return buttons 4 and 5 when the wheel is turned.
+	 * We encode those as button presses.
 	 */
 	for (grabbed = 0; grabbed < 3; grabbed += res) {
 
@@ -679,11 +797,19 @@ _nc_mouse_inline(SCREEN * sp)
 
 	switch (kbuf[0] & 0x3) {
 	case 0x0:
-	    PRESS_POSITION(1);
+	    if (kbuf[0] & 64)
+		eventp->bstate = MASK_PRESS(4);
+	    else
+		PRESS_POSITION(1);
 	    break;
 
 	case 0x1:
-	    PRESS_POSITION(2);
+#if NCURSES_MOUSE_VERSION == 2
+	    if (kbuf[0] & 64)
+		eventp->bstate = MASK_PRESS(5);
+	    else
+#endif
+		PRESS_POSITION(2);
 	    break;
 
 	case 0x2:
@@ -700,12 +826,10 @@ _nc_mouse_inline(SCREEN * sp)
 	     */
 	    if (prev & (BUTTON_PRESSED | BUTTON_RELEASED)) {
 		eventp->bstate = BUTTON_RELEASED;
-		if (!(prev & BUTTON1_PRESSED))
-		    eventp->bstate &= ~BUTTON1_RELEASED;
-		if (!(prev & BUTTON2_PRESSED))
-		    eventp->bstate &= ~BUTTON2_RELEASED;
-		if (!(prev & BUTTON3_PRESSED))
-		    eventp->bstate &= ~BUTTON3_RELEASED;
+		for (b = 1; b <= MAX_BUTTONS; ++b) {
+		    if (!(prev & MASK_PRESS(b)))
+			eventp->bstate &= ~MASK_RELEASE(b);
+		}
 	    } else {
 		/*
 		 * XFree86 xterm will return a stream of release-events to
@@ -751,7 +875,8 @@ mouse_activate(bool on)
     if (!on && !initialized)
 	return;
 
-    _nc_mouse_init();
+    if (!_nc_mouse_init())
+	return;
 
     if (on) {
 
@@ -761,20 +886,20 @@ mouse_activate(bool on)
 	    keyok(KEY_MOUSE, on);
 #endif
 	    TPUTS_TRACE("xterm mouse initialization");
-#if USE_EMX_MOUSE
-	    server_state(1);
-#else
 	    enable_xterm_mouse(1);
-#endif
 	    break;
 #if USE_GPM_SUPPORT
 	case M_GPM:
-	    SP->_mouse_fd = gpm_fd;
+	    if (enable_gpm_mouse(1)) {
+		SP->_mouse_fd = *my_gpm_fd;
+		T(("GPM mouse_fd %d", SP->_mouse_fd));
+	    }
 	    break;
 #endif
 #if USE_SYSMOUSE
 	case M_SYSMOUSE:
 	    signal(SIGUSR2, handle_sysmouse);
+	    SP->_mouse_active = TRUE;
 	    break;
 #endif
 	case M_NONE:
@@ -788,25 +913,22 @@ mouse_activate(bool on)
 	SP->_mouse_parse = _nc_mouse_parse;
 	SP->_mouse_resume = _nc_mouse_resume;
 	SP->_mouse_wrap = _nc_mouse_wrap;
-
     } else {
 
 	switch (SP->_mouse_type) {
 	case M_XTERM:
 	    TPUTS_TRACE("xterm mouse deinitialization");
-#if USE_EMX_MOUSE
-	    server_state(0);
-#else
 	    enable_xterm_mouse(0);
-#endif
 	    break;
 #if USE_GPM_SUPPORT
 	case M_GPM:
+	    enable_gpm_mouse(0);
 	    break;
 #endif
 #if USE_SYSMOUSE
 	case M_SYSMOUSE:
 	    signal(SIGUSR2, SIG_IGN);
+	    SP->_mouse_active = FALSE;
 	    break;
 #endif
 	case M_NONE:
@@ -828,6 +950,7 @@ _nc_mouse_parse(int runcount)
 {
     MEVENT *ep, *runp, *next, *prev = PREV(eventp);
     int n;
+    int b;
     bool merge;
 
     TR(MY_TRACE, ("_nc_mouse_parse(%d) called", runcount));
@@ -883,32 +1006,27 @@ _nc_mouse_parse(int runcount)
     do {
 	merge = FALSE;
 	for (ep = runp; (next = NEXT(ep)) != eventp; ep = next) {
+
+#define MASK_CHANGED(x) (!(ep->bstate & MASK_PRESS(x)) \
+		      == !(next->bstate & MASK_RELEASE(x)))
+
 	    if (ep->x == next->x && ep->y == next->y
 		&& (ep->bstate & BUTTON_PRESSED)
-		&& (!(ep->bstate & BUTTON1_PRESSED)
-		    == !(next->bstate & BUTTON1_RELEASED))
-		&& (!(ep->bstate & BUTTON2_PRESSED)
-		    == !(next->bstate & BUTTON2_RELEASED))
-		&& (!(ep->bstate & BUTTON3_PRESSED)
-		    == !(next->bstate & BUTTON3_RELEASED))
+		&& MASK_CHANGED(1)
+		&& MASK_CHANGED(2)
+		&& MASK_CHANGED(3)
+		&& MASK_CHANGED(4)
+#if NCURSES_MOUSE_VERSION == 2
+		&& MASK_CHANGED(5)
+#endif
 		) {
-		if ((eventmask & BUTTON1_CLICKED)
-		    && (ep->bstate & BUTTON1_PRESSED)) {
-		    ep->bstate &= ~BUTTON1_PRESSED;
-		    ep->bstate |= BUTTON1_CLICKED;
-		    merge = TRUE;
-		}
-		if ((eventmask & BUTTON2_CLICKED)
-		    && (ep->bstate & BUTTON2_PRESSED)) {
-		    ep->bstate &= ~BUTTON2_PRESSED;
-		    ep->bstate |= BUTTON2_CLICKED;
-		    merge = TRUE;
-		}
-		if ((eventmask & BUTTON3_CLICKED)
-		    && (ep->bstate & BUTTON3_PRESSED)) {
-		    ep->bstate &= ~BUTTON3_PRESSED;
-		    ep->bstate |= BUTTON3_CLICKED;
-		    merge = TRUE;
+		for (b = 1; b <= MAX_BUTTONS; ++b) {
+		    if ((eventmask & MASK_CLICK(b))
+			&& (ep->bstate & MASK_PRESS(b))) {
+			ep->bstate &= ~MASK_PRESS(b);
+			ep->bstate |= MASK_CLICK(b);
+			merge = TRUE;
+		    }
 		}
 		if (merge)
 		    next->id = INVALID_EVENT;
@@ -958,51 +1076,28 @@ _nc_mouse_parse(int runcount)
 		/* merge click events forward */
 		if ((ep->bstate & BUTTON_CLICKED)
 		    && (follower->bstate & BUTTON_CLICKED)) {
-		    if ((eventmask & BUTTON1_DOUBLE_CLICKED)
-			&& (follower->bstate & BUTTON1_CLICKED)) {
-			follower->bstate &= ~BUTTON1_CLICKED;
-			follower->bstate |= BUTTON1_DOUBLE_CLICKED;
-			merge = TRUE;
-		    }
-		    if ((eventmask & BUTTON2_DOUBLE_CLICKED)
-			&& (follower->bstate & BUTTON2_CLICKED)) {
-			follower->bstate &= ~BUTTON2_CLICKED;
-			follower->bstate |= BUTTON2_DOUBLE_CLICKED;
-			merge = TRUE;
-		    }
-		    if ((eventmask & BUTTON3_DOUBLE_CLICKED)
-			&& (follower->bstate & BUTTON3_CLICKED)) {
-			follower->bstate &= ~BUTTON3_CLICKED;
-			follower->bstate |= BUTTON3_DOUBLE_CLICKED;
-			merge = TRUE;
+		    for (b = 1; b <= MAX_BUTTONS; ++b) {
+			if ((eventmask & MASK_DOUBLE_CLICK(b))
+			    && (follower->bstate & MASK_CLICK(b))) {
+			    follower->bstate &= ~MASK_CLICK(b);
+			    follower->bstate |= MASK_DOUBLE_CLICK(b);
+			    merge = TRUE;
+			}
 		    }
 		    if (merge)
 			ep->id = INVALID_EVENT;
 		}
 
 		/* merge double-click events forward */
-		if ((ep->bstate &
-		     (BUTTON1_DOUBLE_CLICKED
-		      | BUTTON2_DOUBLE_CLICKED
-		      | BUTTON3_DOUBLE_CLICKED))
+		if ((ep->bstate & BUTTON_DOUBLE_CLICKED)
 		    && (follower->bstate & BUTTON_CLICKED)) {
-		    if ((eventmask & BUTTON1_TRIPLE_CLICKED)
-			&& (follower->bstate & BUTTON1_CLICKED)) {
-			follower->bstate &= ~BUTTON1_CLICKED;
-			follower->bstate |= BUTTON1_TRIPLE_CLICKED;
-			merge = TRUE;
-		    }
-		    if ((eventmask & BUTTON2_TRIPLE_CLICKED)
-			&& (follower->bstate & BUTTON2_CLICKED)) {
-			follower->bstate &= ~BUTTON2_CLICKED;
-			follower->bstate |= BUTTON2_TRIPLE_CLICKED;
-			merge = TRUE;
-		    }
-		    if ((eventmask & BUTTON3_TRIPLE_CLICKED)
-			&& (follower->bstate & BUTTON3_CLICKED)) {
-			follower->bstate &= ~BUTTON3_CLICKED;
-			follower->bstate |= BUTTON3_TRIPLE_CLICKED;
-			merge = TRUE;
+		    for (b = 1; b <= MAX_BUTTONS; ++b) {
+			if ((eventmask & MASK_TRIPLE_CLICK(b))
+			    && (follower->bstate & MASK_CLICK(b))) {
+			    follower->bstate &= ~MASK_CLICK(b);
+			    follower->bstate |= MASK_TRIPLE_CLICK(b);
+			    merge = TRUE;
+			}
 		    }
 		    if (merge)
 			ep->id = INVALID_EVENT;
@@ -1050,7 +1145,7 @@ _nc_mouse_parse(int runcount)
 }
 
 static void
-_nc_mouse_wrap(SCREEN * sp GCC_UNUSED)
+_nc_mouse_wrap(SCREEN *sp GCC_UNUSED)
 /* release mouse -- called by endwin() before shellout/exit */
 {
     TR(MY_TRACE, ("_nc_mouse_wrap() called"));
@@ -1063,6 +1158,8 @@ _nc_mouse_wrap(SCREEN * sp GCC_UNUSED)
 #if USE_GPM_SUPPORT
 	/* GPM: pass all mouse events to next client */
     case M_GPM:
+	if (eventmask)
+	    mouse_activate(FALSE);
 	break;
 #endif
 #if USE_SYSMOUSE
@@ -1076,7 +1173,7 @@ _nc_mouse_wrap(SCREEN * sp GCC_UNUSED)
 }
 
 static void
-_nc_mouse_resume(SCREEN * sp GCC_UNUSED)
+_nc_mouse_resume(SCREEN *sp GCC_UNUSED)
 /* re-connect to mouse -- called by doupdate() after shellout */
 {
     TR(MY_TRACE, ("_nc_mouse_resume() called"));
@@ -1091,6 +1188,8 @@ _nc_mouse_resume(SCREEN * sp GCC_UNUSED)
 #if USE_GPM_SUPPORT
     case M_GPM:
 	/* GPM: reclaim our event set */
+	if (eventmask)
+	    mouse_activate(TRUE);
 	break;
 #endif
 
@@ -1155,7 +1254,7 @@ mousemask(mmask_t newmask, mmask_t * oldmask)
 {
     mmask_t result = 0;
 
-    T((T_CALLED("mousemask(%#lx,%p)"), newmask, oldmask));
+    T((T_CALLED("mousemask(%#lx,%p)"), (unsigned long) newmask, oldmask));
 
     if (oldmask)
 	*oldmask = eventmask;
@@ -1164,15 +1263,14 @@ mousemask(mmask_t newmask, mmask_t * oldmask)
 	returnBits(0);
 
     _nc_mouse_init();
-    if (SP->_mouse_type != M_NONE) {
+    if (SP != 0 && SP->_mouse_type != M_NONE) {
 	eventmask = newmask &
 	    (REPORT_MOUSE_POSITION | BUTTON_ALT | BUTTON_CTRL | BUTTON_SHIFT
 	     | BUTTON_PRESSED
 	     | BUTTON_RELEASED
 	     | BUTTON_CLICKED
-	     | BUTTON1_DOUBLE_CLICKED | BUTTON1_TRIPLE_CLICKED
-	     | BUTTON2_DOUBLE_CLICKED | BUTTON2_TRIPLE_CLICKED
-	     | BUTTON3_DOUBLE_CLICKED | BUTTON3_TRIPLE_CLICKED);
+	     | BUTTON_DOUBLE_CLICKED
+	     | BUTTON_TRIPLE_CLICKED);
 
 	mouse_activate(eventmask != 0);
 

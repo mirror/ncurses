@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.34 2003/10/25 16:19:01 tom Exp @
+  * @Id: infocmp.1m,v 1.39 2004/08/28 22:43:49 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,7 +41,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>                                           <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
+<STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>                                                 <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
 
 
 
@@ -53,7 +53,7 @@
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <STRONG>infocmp</STRONG> [<STRONG>-1CEFGILTVcdegilnpqrtu</STRONG>]
+       <STRONG>infocmp</STRONG> [<STRONG>-1CEFGILTVcdegilnpqrtux</STRONG>]
              [<STRONG>-v</STRONG> <EM>n</EM>] [<STRONG>-s</STRONG> <STRONG>d</STRONG>| <STRONG>i</STRONG>| <STRONG>l</STRONG>| <STRONG>c</STRONG>] [<STRONG>-R</STRONG> <STRONG>subset</STRONG>]
              [<STRONG>-w</STRONG> <EM>width</EM>] [<STRONG>-A</STRONG> <EM>directory</EM>] [<STRONG>-B</STRONG> <EM>directory</EM>]
              [<EM>termname</EM>...]
@@ -103,6 +103,7 @@
        The <STRONG>-I</STRONG>, <STRONG>-L</STRONG>, and <STRONG>-C</STRONG> options will produce a  source  listing
        for each terminal named.
 
+
       <STRONG>-I</STRONG>   use the <STRONG>terminfo</STRONG> names
       <STRONG>-L</STRONG>   use the long C variable name listed in &lt;<STRONG>term.h</STRONG>&gt;
       <STRONG>-C</STRONG>   use the <STRONG>termcap</STRONG> names
@@ -143,6 +144,7 @@
        Some  common  <STRONG>terminfo</STRONG>  parameter sequences, their <STRONG>termcap</STRONG>
        equivalents, and some terminal types which  commonly  have
        such sequences, are:
+
 
      <STRONG>terminfo</STRONG>                    <STRONG>termcap</STRONG>   Representative Terminals
      ---------------------------------------------------------------
@@ -280,6 +282,7 @@
             tions.  Here  is  a  list  of  the  DEC/ANSI  special
             sequences recognized:
 
+
                   Action        Meaning
                   -----------------------------------------
                   RIS           full reset
@@ -287,6 +290,9 @@
                   RC            restore cursor
                   LL            home-down
                   RSR           reset scroll region
+
+                  DECSTR        soft reset (VT320)
+                  S7C1T         7-bit controls (VT220)
 
                   ISO DEC G0    enable DEC graphics for G0
                   ISO UK G0     enable UK chars for G0
@@ -299,8 +305,14 @@
                   DECPNM        normal keypad mode
                   DECANSI       enter ANSI mode
 
+                  ECMA[+-]AM    keyboard action mode
+                  ECMA[+-]IRM   insert replace mode
+                  ECMA[+-]SRM   send receive mode
+                  ECMA[+-]LNM   linefeed mode
+
                   DEC[+-]CKM    application cursor keys
                   DEC[+-]ANM    set VT52 mode
+
                   DEC[+-]COLM   132-column mode
                   DEC[+-]SCLM   smooth scroll
                   DEC[+-]SCNM   reverse video mode
@@ -376,6 +388,10 @@
        <STRONG>-w</STRONG> <EM>width</EM>
             changes the output to <EM>width</EM> characters.
 
+       <STRONG>-x</STRONG>   print   information  for  user-defined  capabilities.
+            These are extensions to the terminfo repertoire which
+            can be loaded using the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG>.
+
 
 </PRE>
 <H2>FILES</H2><PRE>
@@ -412,7 +428,7 @@
 
 
 
-                                                      <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
+                                                            <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

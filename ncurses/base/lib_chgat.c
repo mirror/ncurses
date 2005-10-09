@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Sven Verdoolaege                        2001                    *
+ *     and: Thomas E. Dickey                        2005                    *
  ****************************************************************************/
 
 /*
@@ -40,11 +42,10 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_chgat.c,v 1.5 2001/06/03 00:05:02 skimo Exp $")
+MODULE_ID("$Id: lib_chgat.c,v 1.6 2005/01/29 21:46:12 tom Exp $")
 
 NCURSES_EXPORT(int)
-wchgat
-(WINDOW *win, int n, attr_t attr, short color, const void *opts GCC_UNUSED)
+wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts GCC_UNUSED)
 {
     int i;
 
@@ -53,8 +54,10 @@ wchgat
     if (win) {
 	toggle_attr_on(attr, COLOR_PAIR(color));
 
-	for (i = win->_curx; i <= win->_maxx && (n == -1 || (n-- > 0)); i++)
+	for (i = win->_curx; i <= win->_maxx && (n == -1 || (n-- > 0)); i++) {
 	    SetAttr(win->_line[win->_cury].text[i], attr);
+	    SetPair(win->_line[win->_cury].text[i], color);
+	}
 
 	returnCode(OK);
     } else

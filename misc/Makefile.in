@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.34 2002/01/12 23:54:39 Robert.Joop Exp $
+# $Id: Makefile.in,v 1.36 2004/07/11 16:00:13 tom Exp $
 ##############################################################################
 # Copyright (c) 1998,2000,2001,2002 Free Software Foundation, Inc.           #
 #                                                                            #
@@ -68,7 +68,7 @@ INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
 
 ################################################################################
-all :
+all :	terminfo.tmp
 
 depend :
 
@@ -76,7 +76,8 @@ sources :
 
 install : install.data
 
-install.data :	$(DESTDIR)$(libdir) \
+install.data :	terminfo.tmp \
+		$(DESTDIR)$(libdir) \
 		$(DESTDIR)$(ticdir) \
 		$(DESTDIR)$(tabsetdir)
 	DESTDIR=${DESTDIR} \
@@ -87,7 +88,7 @@ install.data :	$(DESTDIR)$(libdir) \
 	srcdir=${srcdir} \
 	datadir=${datadir} \
 	ticdir=${ticdir} \
-	source=${source} \
+	source=terminfo.tmp \
 	THIS_CC="$(CC)" \
 	THAT_CC="$(HOSTCC)" \
 	sh ./run_tic.sh
@@ -98,10 +99,19 @@ install.data :	$(DESTDIR)$(libdir) \
 			$(INSTALL_DATA) $$i $(DESTDIR)$(tabsetdir)/$$i; \
 			fi; done'
 
+terminfo.tmp : run_tic.sed $(source)
+	echo '** adjusting tabset paths'
+	sed -f run_tic.sed $(source) >terminfo.tmp
+
+run_tic.sed :
+	WHICH_XTERM=@WHICH_XTERM@ \
+	ticdir=${ticdir} \
+	sh $(srcdir)/gen_edit.sh >$@
+
 $(DESTDIR)$(libdir) \
 $(DESTDIR)$(tabsetdir) \
 $(DESTDIR)$(ticdir) :
-	sh $(srcdir)/../mkinstalldirs $@
+	sh $(top_srcdir)/mkinstalldirs $@
 
 uninstall : uninstall.data
 
@@ -114,6 +124,8 @@ tags :
 @MAKE_UPPER_TAGS@TAGS :
 
 mostlyclean :
+	-rm -f terminfo.tmp
+	-rm -f run_tic.sed
 	-rm -f core tags TAGS *~ *.bak *.ln *.atac trace
 
 clean :: mostlyclean

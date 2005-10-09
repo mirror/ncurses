@@ -1,6 +1,6 @@
-# $Id: MKunctrl.awk,v 1.9 2001/06/02 23:59:20 skimo Exp $
+# $Id: MKunctrl.awk,v 1.10 2004/04/03 22:50:37 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.                #
+# Copyright (c) 1998,2001,2004 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -63,7 +63,10 @@ END	{
 			printf "%s", gap
 		}
 		print "};"
+		print "int check = ChCharOf(ch);"
 		print ""
-		print "\treturn (NCURSES_CONST char *)table[ChCharOf(ch)];"
+		print "\tif (check < 0 || check >= (int)SIZEOF(table)) return 0;"
+		print ""
+		print "\treturn (NCURSES_CONST char *)table[check];"
 		print "}"
 	}

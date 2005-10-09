@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.4 $
+--  $Revision: 1.5 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 #if ADA_TRACE then
@@ -78,11 +78,17 @@ package body Terminal_Interface.Curses.Trace is
    end Trace_Put;
 #else
    procedure Trace_On (x : Trace_Attribute_Set) is
+#if PRAGMA_UNREF
+   pragma Unreferenced (x);
+#end if;
    begin
       null;
    end Trace_On;
 
    procedure Trace_Put (str : String) is
+#if PRAGMA_UNREF
+   pragma Unreferenced (str);
+#end if;
    begin
       null;
    end Trace_Put;

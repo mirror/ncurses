@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.10 $
+--  $Revision: 1.13 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -97,7 +98,7 @@ package body Sample.Function_Key_Setting is
       P.Help := Active_Context;
       P.Notepad := Active_Notepad;
       --  The notepad must now vanish and the new notepad is empty.
-      if (P.Notepad /= Null_Panel) then
+      if P.Notepad /= Null_Panel then
          Hide (P.Notepad);
          Update_Panels;
       end if;

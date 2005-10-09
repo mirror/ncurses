@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: tries.c,v 1.19 2003/05/17 23:11:24 tom Exp $")
+MODULE_ID("$Id: tries.c,v 1.20 2005/04/30 19:14:18 tom Exp $")
 
 /*
  * Expand a keycode into the string that it corresponds to, returning null if
@@ -71,7 +71,7 @@ _nc_expand_try(struct tries *tree, unsigned short code, int *count, size_t len)
 	if ((result[len] = ptr->ch) == 0)
 	    *((unsigned char *) (result + len)) = 128;
 #ifdef TRACE
-	if (len == 0)
+	if (len == 0 && _nc_tracing != 0)
 	    _tracef("expand_key %s %s", _tracechar(code), _nc_visbuf(result));
 #endif
     }

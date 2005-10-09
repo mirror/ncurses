@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2001,2004 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.2 $
+--  $Revision: 1.5 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -222,7 +223,7 @@ procedure ncurses2.attr_test is
             elsif ncv > 0 and has_A_COLOR (Get_Background) then
                declare
                   Color_Supported_Attributes :
-                    Character_Attribute_Set := make_record (ncv);
+                    constant Character_Attribute_Set := make_record (ncv);
                begin
                   if intersect (Color_Supported_Attributes, attr) then
                      Add (Str => " (NCV) ");
@@ -236,7 +237,7 @@ procedure ncurses2.attr_test is
 
    procedure attr_getc (skip : out Integer; fg, bg : in out Color_Number;
                                             result : out Boolean) is
-      ch : Key_Code := Getchar;
+      ch : constant Key_Code := Getchar;
       nc : constant Color_Number := Color_Number (Number_Of_Colors);
       curscr : Window;
       pragma Import (C, curscr, "curscr");
@@ -293,7 +294,7 @@ begin
          --  row := 2; -- weird, row is set to 0 without this.
          --  TODO delete the above line, it was a gdb quirk that confused me
          if Has_Colors then declare
-            pair : Color_Pair :=
+            pair : constant Color_Pair :=
               Color_Pair (fg * Color_Number (Number_Of_Colors) + bg);
          begin
             --  Go though each color pair. Assume that the number of

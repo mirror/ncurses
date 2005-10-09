@@ -1,9 +1,9 @@
 /*
- * $Id: firework.c,v 1.20 2002/03/23 21:41:42 tom Exp $
+ * $Id: firework.c,v 1.21 2005/05/28 21:39:04 tom Exp $
  */
-#include <time.h>
-
 #include <test.priv.h>
+
+#include <time.h>
 
 static int my_bg = COLOR_BLACK;
 

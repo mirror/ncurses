@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,45 +26,45 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: toe.1m,v 1.12 2003/05/11 00:32:53 tom Exp $
+.\" $Id: toe.1m,v 1.13 2004/07/05 13:16:08 tom Exp $
 .TH toe 1M ""
 .ds n 5
 .ds d @TERMINFO@
 .SH NAME
 \fBtoe\fR - table of (terminfo) entries
 .SH SYNOPSIS
-\fBtoe\fR [\fB\-v\fR[\fIn\fR]] [\fB\-huUV\fR] \fIfile...\fR
+\fBtoe\fR [\fB-v\fR[\fIn\fR]] [\fB-huUV\fR] \fIfile...\fR
 .br
 .SH DESCRIPTION
 .PP
 With no options, \fBtoe\fR lists all available terminal types by primary name
 with descriptions.  File arguments specify the directories to be scanned; if no
 such arguments are given, your default terminfo directory is scanned.  If you
-also specify the \fB\-h\fR option, a directory header will be issued as each
+also specify the \fB-h\fR option, a directory header will be issued as each
 directory is entered.
 .PP
 There are other options intended for use by terminfo file maintainers:
 .TP
-\fB\-u\fR \fIfile\fR
+\fB-u\fR \fIfile\fR
 says to issue a report on dependencies in the given file. This report condenses
 the `use' relation: each line consists of the primary name of a terminal that
 has use capabilities, followed by a colon, followed by the
 whitespace-separated primary names of all terminals which occur in those use
 capabilities, followed by a newline
 .TP
-\fB\-U\fR \fIfile\fR
+\fB-U\fR \fIfile\fR
 says to issue a report on reverse dependencies in the given file. This report
 reverses the `use' relation: each line consists of the primary name of a
 terminal that occurs in use capabilities, followed by a colon, followed by the
 whitespace-separated primary names of all terminals which depend on it,
 followed by a newline.
 .TP
-\fB\-v\fR\fIn\fR
+\fB-v\fR\fIn\fR
 specifies that (verbose) output be written to standard error trace
 information showing \fBtoe\fR's progress.  The optional integer
 \fIn\fR is a number from 1 to 10, interpreted as for \fBtic\fR(1).
 .TP 5
-\fB\-V\fR
+\fB-V\fR
 reports the version of ncurses which was used in this program, and exits.
 .SH FILES
 .TP 5

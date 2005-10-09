@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,13 +31,16 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesf.h,v 1.19 2004/01/15 00:43:46 tom Exp $
+// $Id: cursesf.h,v 1.28 2005/08/13 18:08:24 tom Exp $
 
 #ifndef NCURSES_CURSESF_H_incl
 #define NCURSES_CURSESF_H_incl 1
 
 #include <cursesp.h>
+
+#ifndef __EXT_QNX
 #include <string.h>
+#endif
 
 extern "C" {
 #  include <form.h>
@@ -51,7 +54,8 @@ class NCURSES_IMPEXP NCursesFormField; // forward declaration
 
 // Class to represent builtin field types as well as C++ written new
 // fieldtypes (see classes UserDefineFieldType...
-class NCURSES_IMPEXP NCursesFieldType {
+class NCURSES_IMPEXP NCursesFieldType
+{
   friend class NCursesFormField;
 
 protected:
@@ -71,8 +75,24 @@ protected:
   virtual void set(NCursesFormField& f) = 0;
 
 public:
-  NCursesFieldType() : fieldtype((FIELDTYPE*)0) {
+  NCursesFieldType()
+    : fieldtype(STATIC_CAST(FIELDTYPE*)(0))
+  {
   }
+
+  NCursesFieldType& operator=(const NCursesFieldType& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+    }
+    return *this;
+  }
+
+  NCursesFieldType(const NCursesFieldType& rhs)
+    : fieldtype(rhs.fieldtype)
+  {
+  }
+
 };
 
 //
@@ -80,11 +100,12 @@ public:
 // The class representing a forms field, wrapping the lowlevel FIELD struct
 // -------------------------------------------------------------------------
 //
-class NCURSES_IMPEXP NCursesFormField {
+class NCURSES_IMPEXP NCursesFormField
+{
   friend class NCursesForm;
 
 protected:
-  FIELD *field;              // lowlevel structure
+  FIELD *field;		     // lowlevel structure
   NCursesFieldType* ftype;   // Associated field type
 
   // Error handler
@@ -96,27 +117,45 @@ protected:
 public:
   // Create a 'Null' field. Can be used to delimit a field list
   NCursesFormField()
-    : field((FIELD*)0), ftype((NCursesFieldType*)0) {
+    : field(STATIC_CAST(FIELD*)(0)),
+      ftype(STATIC_CAST(NCursesFieldType*)(0))
+  {
   }
 
   // Create a new field
   NCursesFormField (int rows,
-		    int cols,
+		    int ncols,
 		    int first_row = 0,
 		    int first_col = 0,
 		    int offscreen_rows = 0,
 		    int additional_buffers = 0)
-    : ftype((NCursesFieldType*)0) {
-      field = ::new_field(rows,cols,first_row,first_col,
+    : field(0),
+      ftype(STATIC_CAST(NCursesFieldType*)(0))
+  {
+      field = ::new_field(rows, ncols, first_row, first_col,
 			  offscreen_rows, additional_buffers);
       if (!field)
 	OnError(errno);
   }
 
+  NCursesFormField& operator=(const NCursesFormField& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+    }
+    return *this;
+  }
+
+  NCursesFormField(const NCursesFormField& rhs)
+    : field(rhs.field), ftype(rhs.ftype)
+  {
+  }
+
   virtual ~NCursesFormField ();
 
   // Duplicate the field at a new position
-  inline NCursesFormField* dup(int first_row, int first_col) {
+  inline NCursesFormField* dup(int first_row, int first_col)
+  {
     NCursesFormField* f = new NCursesFormField();
     if (!f)
       OnError(E_SYSTEM_ERROR);
@@ -149,10 +188,10 @@ public:
   }
 
   // Retrieve info about the field
-  inline void info(int& rows, int& cols,
+  inline void info(int& rows, int& ncols,
 		   int& first_row, int& first_col,
 		   int& offscreen_rows, int& additional_buffers) const {
-    OnError(::field_info(field, &rows, &cols,
+    OnError(::field_info(field, &rows, &ncols,
 			 &first_row, &first_col,
 			 &offscreen_rows, &additional_buffers));
   }
@@ -195,8 +234,8 @@ public:
     return ::field_just(field);
   }
   // Set the foreground attribute for the field
-  inline void set_foreground(chtype fore) {
-    OnError(::set_field_fore(field,fore));
+  inline void set_foreground(chtype foreground) {
+    OnError(::set_field_fore(field,foreground));
   }
 
   // Retrieve the fields foreground attribute
@@ -205,8 +244,8 @@ public:
   }
 
   // Set the background attribute for the field
-  inline void set_background(chtype back) {
-    OnError(::set_field_back(field,back));
+  inline void set_background(chtype background) {
+    OnError(::set_field_back(field,background));
   }
 
   // Retrieve the fields background attribute
@@ -215,8 +254,8 @@ public:
   }
 
   // Set the padding character for the field
-  inline void set_pad_character(int pad) {
-    OnError(::set_field_pad(field,pad));
+  inline void set_pad_character(int padding) {
+    OnError(::set_field_pad(field, padding));
   }
 
   // Retrieve the fields padding character
@@ -225,13 +264,13 @@ public:
   }
 
   // Switch on the fields options
-  inline void options_on (Field_Options options) {
-    OnError (::field_opts_on (field, options));
+  inline void options_on (Field_Options opts) {
+    OnError (::field_opts_on (field, opts));
   }
 
   // Switch off the fields options
-  inline void options_off (Field_Options options) {
-    OnError (::field_opts_off (field, options));
+  inline void options_off (Field_Options opts) {
+    OnError (::field_opts_off (field, opts));
   }
 
   // Retrieve the fields options
@@ -240,8 +279,8 @@ public:
   }
 
   // Set the fields options
-  inline void set_options (Field_Options options) {
-    OnError (::set_field_opts (field, options));
+  inline void set_options (Field_Options opts) {
+    OnError (::set_field_opts (field, opts));
   }
 
   // Mark the field as changed
@@ -283,19 +322,30 @@ public:
 
 };
 
+  // This are the built-in hook functions in this C++ binding. In C++ we use
+  // virtual member functions (see below On_..._Init and On_..._Termination)
+  // to provide this functionality in an object oriented manner.
+extern "C" {
+  void _nc_xx_frm_init(FORM *);
+  void _nc_xx_frm_term(FORM *);
+  void _nc_xx_fld_init(FORM *);
+  void _nc_xx_fld_term(FORM *);
+}
+
 //
 // -------------------------------------------------------------------------
 // The class representing a form, wrapping the lowlevel FORM struct
 // -------------------------------------------------------------------------
 //
-class NCURSES_IMPEXP NCursesForm : public NCursesPanel {
+class NCURSES_IMPEXP NCursesForm : public NCursesPanel
+{
 protected:
   FORM* form;  // the lowlevel structure
 
 private:
   NCursesWindow* sub;   // the subwindow object
   bool b_sub_owner;     // is this our own subwindow?
-  bool b_framed;        // has the form a border?
+  bool b_framed;	// has the form a border?
   bool b_autoDelete;    // Delete fields when deleting form?
 
   NCursesFormField** my_fields; // The array of fields for this form
@@ -303,25 +353,22 @@ private:
   // This structure is used for the form's user data field to link the
   // FORM* to the C++ object and to provide extra space for a user pointer.
   typedef struct {
-    void*              m_user;      // the pointer for the user's data
+    void*	       m_user;	    // the pointer for the user's data
     const NCursesForm* m_back;      // backward pointer to C++ object
-    const FORM*        m_owner;
+    const FORM*	       m_owner;
   } UserHook;
 
   // Get the backward pointer to the C++ object from a FORM
   static inline NCursesForm* getHook(const FORM *f) {
-    UserHook* hook = (UserHook*)::form_userptr(f);
+    UserHook* hook = reinterpret_cast<UserHook*>(::form_userptr(f));
     assert(hook != 0 && hook->m_owner==f);
-    return (NCursesForm*)(hook->m_back);
+    return const_cast<NCursesForm*>(hook->m_back);
   }
 
-  // This are the built-in hook functions in this C++ binding. In C++ we use
-  // virtual member functions (see below On_..._Init and On_..._Termination)
-  // to provide this functionality in an object oriented manner.
-  static void frm_init(FORM *);
-  static void frm_term(FORM *);
-  static void fld_init(FORM *);
-  static void fld_term(FORM *);
+  friend void _nc_xx_frm_init(FORM *);
+  friend void _nc_xx_frm_term(FORM *);
+  friend void _nc_xx_fld_init(FORM *);
+  friend void _nc_xx_fld_term(FORM *);
 
   // Calculate FIELD* array for the menu
   FIELD** mapFields(NCursesFormField* nfields[]);
@@ -329,13 +376,13 @@ private:
 protected:
   // internal routines
   inline void set_user(void *user) {
-    UserHook* uptr = (UserHook*)::form_userptr (form);
+    UserHook* uptr = reinterpret_cast<UserHook*>(::form_userptr (form));
     assert (uptr != 0 && uptr->m_back==this && uptr->m_owner==form);
     uptr->m_user = user;
   }
 
   inline void *get_user() {
-    UserHook* uptr = (UserHook*)::form_userptr (form);
+    UserHook* uptr = reinterpret_cast<UserHook*>(::form_userptr (form));
     assert (uptr != 0 && uptr->m_back==this && uptr->m_owner==form);
     return uptr->m_user;
   }
@@ -354,33 +401,73 @@ protected:
 
   // 'Internal' constructor, builds an object without association to a
   // field array.
-  NCursesForm( int  lines,
-	       int  cols,
+  NCursesForm( int  nlines,
+	       int  ncols,
 	       int  begin_y = 0,
 	       int  begin_x = 0)
-    : NCursesPanel(lines,cols,begin_y,begin_x),
-      form ((FORM*)0) {
+    : NCursesPanel(nlines, ncols, begin_y, begin_x),
+      form (STATIC_CAST(FORM*)(0)),
+      sub(0),
+      b_sub_owner(0),
+      b_framed(0),
+      b_autoDelete(0),
+      my_fields(0)
+  {
   }
 
 public:
   // Create form for the default panel.
   NCursesForm (NCursesFormField* Fields[],
-	       bool with_frame=FALSE,         // reserve space for a frame?
+	       bool with_frame=FALSE,	      // reserve space for a frame?
 	       bool autoDelete_Fields=FALSE)  // do automatic cleanup?
-    : NCursesPanel() {
+    : NCursesPanel(),
+      form(0),
+      sub(0),
+      b_sub_owner(0),
+      b_framed(0),
+      b_autoDelete(0),
+      my_fields(0)
+  {
     InitForm(Fields, with_frame, autoDelete_Fields);
   }
 
   // Create a form in a panel with the given position and size.
   NCursesForm (NCursesFormField* Fields[],
-	       int  lines,
-	       int  cols,
+	       int  nlines,
+	       int  ncols,
 	       int  begin_y,
 	       int  begin_x,
-	       bool with_frame=FALSE,        // reserve space for a frame?
+	       bool with_frame=FALSE,	     // reserve space for a frame?
 	       bool autoDelete_Fields=FALSE) // do automatic cleanup?
-    : NCursesPanel(lines, cols, begin_y, begin_x) {
+    : NCursesPanel(nlines, ncols, begin_y, begin_x),
+      form(0),
+      sub(0),
+      b_sub_owner(0),
+      b_framed(0),
+      b_autoDelete(0),
+      my_fields(0)
+  {
       InitForm(Fields, with_frame, autoDelete_Fields);
+  }
+
+  NCursesForm& operator=(const NCursesForm& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+      NCursesPanel::operator=(rhs);
+    }
+    return *this;
+  }
+
+  NCursesForm(const NCursesForm& rhs)
+    : NCursesPanel(rhs),
+      form(rhs.form),
+      sub(rhs.sub),
+      b_sub_owner(rhs.b_sub_owner),
+      b_framed(rhs.b_framed),
+      b_autoDelete(rhs.b_autoDelete),
+      my_fields(rhs.my_fields)
+  {
   }
 
   virtual ~NCursesForm();
@@ -452,8 +539,8 @@ public:
   virtual void On_Field_Termination(NCursesFormField& field);
 
   // Calculate required window size for the form.
-  void scale(int& rows, int& cols) const {
-    OnError(::scale_form(form,&rows,&cols));
+  void scale(int& rows, int& ncols) const {
+    OnError(::scale_form(form,&rows,&ncols));
   }
 
   // Retrieve number of fields in the form.
@@ -462,8 +549,8 @@ public:
   }
 
   // Make the page the current page of the form.
-  void set_page(int page) {
-    OnError(::set_form_page(form,page));
+  void set_page(int pageNum) {
+    OnError(::set_form_page(form, pageNum));
   }
 
   // Retrieve current page number
@@ -472,13 +559,13 @@ public:
   }
 
   // Switch on the forms options
-  inline void options_on (Form_Options options) {
-    OnError (::form_opts_on (form, options));
+  inline void options_on (Form_Options opts) {
+    OnError (::form_opts_on (form, opts));
   }
 
   // Switch off the forms options
-  inline void options_off (Form_Options options) {
-    OnError (::form_opts_off (form, options));
+  inline void options_off (Form_Options opts) {
+    OnError (::form_opts_off (form, opts));
   }
 
   // Retrieve the forms options
@@ -487,8 +574,8 @@ public:
   }
 
   // Set the forms options
-  inline void set_options (Form_Options options) {
-    OnError (::set_form_opts (form, options));
+  inline void set_options (Form_Options opts) {
+    OnError (::set_form_opts (form, opts));
   }
 
   // Are there more data in the current field after the data shown
@@ -545,28 +632,28 @@ template<class T> class NCURSES_IMPEXP NCursesUserField : public NCursesFormFiel
 {
 public:
   NCursesUserField (int rows,
-		    int cols,
+		    int ncols,
 		    int first_row = 0,
 		    int first_col = 0,
-		    const T* p_UserData = (T*)0,
+		    const T* p_UserData = STATIC_CAST(T*)(0),
 		    int offscreen_rows = 0,
 		    int additional_buffers = 0)
-    : NCursesFormField (rows, cols,
+    : NCursesFormField (rows, ncols,
 			first_row, first_col,
 			offscreen_rows, additional_buffers) {
       if (field)
-	OnError(::set_field_userptr(field,(void *)p_UserData));
+	OnError(::set_field_userptr(field, STATIC_CAST(void *)(p_UserData)));
   }
 
   virtual ~NCursesUserField() {};
 
   inline const T* UserData (void) const {
-    return (const T*)::field_userptr (field);
+    return reinterpret_cast<const T*>(::field_userptr (field));
   }
 
   inline virtual void setUserData(const T* p_UserData) {
     if (field)
-      OnError (::set_field_userptr (field, (void *)p_UserData));
+      OnError (::set_field_userptr (field, STATIC_CAST(void *)(p_UserData)));
   }
 };
 //
@@ -579,50 +666,50 @@ template<class T> class NCURSES_IMPEXP NCursesUserForm : public NCursesForm
 protected:
   // 'Internal' constructor, builds an object without association to a
   // field array.
-  NCursesUserForm( int  lines,
-		   int  cols,
+  NCursesUserForm( int  nlines,
+		   int  ncols,
 		   int  begin_y = 0,
 		   int  begin_x = 0,
-		   const T* p_UserData = (T*)0)
-    : NCursesForm(lines,cols,begin_y,begin_x) {
+		   const T* p_UserData = STATIC_CAST(T*)(0))
+    : NCursesForm(nlines,ncols,begin_y,begin_x) {
       if (form)
-	set_user ((void *)p_UserData);
+	set_user (const_cast<void *>(p_UserData));
   }
 
 public:
   NCursesUserForm (NCursesFormField Fields[],
-		   const T* p_UserData = (T*)0,
+		   const T* p_UserData = STATIC_CAST(T*)(0),
 		   bool with_frame=FALSE,
 		   bool autoDelete_Fields=FALSE)
     : NCursesForm (Fields, with_frame, autoDelete_Fields) {
       if (form)
-	set_user ((void *)p_UserData);
+	set_user (const_cast<void *>(p_UserData));
   };
 
   NCursesUserForm (NCursesFormField Fields[],
-		   int lines,
-		   int cols,
+		   int nlines,
+		   int ncols,
 		   int begin_y = 0,
 		   int begin_x = 0,
-		   const T* p_UserData = (T*)0,
+		   const T* p_UserData = STATIC_CAST(T*)(0),
 		   bool with_frame=FALSE,
 		   bool autoDelete_Fields=FALSE)
-    : NCursesForm (Fields, lines, cols, begin_y, begin_x,
+    : NCursesForm (Fields, nlines, ncols, begin_y, begin_x,
 		   with_frame, autoDelete_Fields) {
       if (form)
-	set_user ((void *)p_UserData);
+	set_user (const_cast<void *>(p_UserData));
   };
 
   virtual ~NCursesUserForm() {
   };
 
   inline T* UserData (void) const {
-    return (T*)get_user ();
+    return reinterpret_cast<T*>(get_user ());
   };
 
   inline virtual void setUserData (const T* p_UserData) {
     if (form)
-      set_user ((void *)p_UserData);
+      set_user (const_cast<void *>(p_UserData));
   }
 
 };
@@ -631,7 +718,8 @@ public:
 // Builtin Fieldtypes
 // -------------------------------------------------------------------------
 //
-class NCURSES_IMPEXP Alpha_Field : public NCursesFieldType {
+class NCURSES_IMPEXP Alpha_Field : public NCursesFieldType
+{
 private:
   int min_field_width;
 
@@ -646,7 +734,8 @@ public:
   }
 };
 
-class NCURSES_IMPEXP Alphanumeric_Field : public NCursesFieldType {
+class NCURSES_IMPEXP Alphanumeric_Field : public NCursesFieldType
+{
 private:
   int min_field_width;
 
@@ -661,7 +750,8 @@ public:
   }
 };
 
-class NCURSES_IMPEXP Integer_Field : public NCursesFieldType {
+class NCURSES_IMPEXP Integer_Field : public NCursesFieldType
+{
 private:
   int precision;
   long lower_limit, upper_limit;
@@ -678,7 +768,8 @@ public:
   }
 };
 
-class NCURSES_IMPEXP Numeric_Field : public NCursesFieldType {
+class NCURSES_IMPEXP Numeric_Field : public NCursesFieldType
+{
 private:
   int precision;
   double lower_limit, upper_limit;
@@ -695,7 +786,8 @@ public:
   }
 };
 
-class NCURSES_IMPEXP Regular_Expression_Field : public NCursesFieldType {
+class NCURSES_IMPEXP Regular_Expression_Field : public NCursesFieldType
+{
 private:
   char* regex;
 
@@ -703,11 +795,35 @@ private:
     OnError(::set_field_type(f.get_field(),fieldtype,regex));
   }
 
+  void copy_regex(const char *source)
+  {
+    regex = new char[1 + ::strlen(source)];
+    (::strcpy)(regex, source);
+  }
+
 public:
   Regular_Expression_Field(const char *expr)
-    : NCursesFieldType(TYPE_REGEXP) {
-      regex = new char[1 + ::strlen(expr)];
-      (::strcpy)(regex,expr);
+    : NCursesFieldType(TYPE_REGEXP),
+      regex(NULL)
+  {
+    copy_regex(expr);
+  }
+
+  Regular_Expression_Field& operator=(const Regular_Expression_Field& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+      copy_regex(rhs.regex);
+      NCursesFieldType::operator=(rhs);
+    }
+    return *this;
+  }
+
+  Regular_Expression_Field(const Regular_Expression_Field& rhs)
+    : NCursesFieldType(rhs),
+      regex(NULL)
+  {
+    copy_regex(rhs.regex);
   }
 
   ~Regular_Expression_Field() {
@@ -715,7 +831,8 @@ public:
   }
 };
 
-class NCURSES_IMPEXP Enumeration_Field : public NCursesFieldType {
+class NCURSES_IMPEXP Enumeration_Field : public NCursesFieldType
+{
 private:
   const char** list;
   int case_sensitive;
@@ -731,12 +848,30 @@ public:
 		    bool non_unique=FALSE)
     : NCursesFieldType(TYPE_ENUM),
       list(enums),
-      case_sensitive(case_sens?-1:0),
-      non_unique_matches(non_unique?-1:0) {
+      case_sensitive(case_sens ? -1 : 0),
+      non_unique_matches(non_unique ? -1 : 0) {
+  }
+
+  Enumeration_Field& operator=(const Enumeration_Field& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+      NCursesFieldType::operator=(rhs);
+    }
+    return *this;
+  }
+
+  Enumeration_Field(const Enumeration_Field& rhs)
+    : NCursesFieldType(rhs),
+      list(rhs.list),
+      case_sensitive(rhs.case_sensitive),
+      non_unique_matches(rhs.non_unique_matches)
+  {
   }
 };
 
-class NCURSES_IMPEXP IPV4_Address_Field : public NCursesFieldType {
+class NCURSES_IMPEXP IPV4_Address_Field : public NCursesFieldType
+{
 private:
   void set(NCursesFormField& f) {
     OnError(::set_field_type(f.get_field(),fieldtype));
@@ -746,12 +881,20 @@ public:
   IPV4_Address_Field() : NCursesFieldType(TYPE_IPV4) {
   }
 };
+
+extern "C" {
+  bool _nc_xx_fld_fcheck(FIELD *, const void*);
+  bool _nc_xx_fld_ccheck(int c, const void *);
+  void* _nc_xx_fld_makearg(va_list*);
+}
+
 //
 // -------------------------------------------------------------------------
 // Abstract base class for User-Defined Fieldtypes
 // -------------------------------------------------------------------------
 //
-class NCURSES_IMPEXP UserDefinedFieldType : public NCursesFieldType {
+class NCURSES_IMPEXP UserDefinedFieldType : public NCursesFieldType
+{
   friend class UDF_Init; // Internal helper to set up statics
 private:
   // For all C++ defined fieldtypes we need only one generic lowlevel
@@ -761,9 +904,9 @@ private:
 protected:
   // This are the functions required by the low level libforms functions
   // to construct a fieldtype.
-  static bool fcheck(FIELD *, const void*);
-  static bool ccheck(int c, const void *);
-  static void* makearg(va_list*);
+  friend bool _nc_xx_fld_fcheck(FIELD *, const void*);
+  friend bool _nc_xx_fld_ccheck(int c, const void *);
+  friend void* _nc_xx_fld_makearg(va_list*);
 
   void set(NCursesFormField& f) {
     OnError(::set_field_type(f.get_field(),fieldtype,&f));
@@ -782,12 +925,19 @@ public:
   UserDefinedFieldType() : NCursesFieldType(generic_fieldtype) {
   }
 };
+
+extern "C" {
+  bool _nc_xx_next_choice(FIELD*, const void *);
+  bool _nc_xx_prev_choice(FIELD*, const void *);
+}
+
 //
 // -------------------------------------------------------------------------
 // Abstract base class for User-Defined Fieldtypes with Choice functions
 // -------------------------------------------------------------------------
 //
-class NCURSES_IMPEXP UserDefinedFieldType_With_Choice : public UserDefinedFieldType {
+class NCURSES_IMPEXP UserDefinedFieldType_With_Choice : public UserDefinedFieldType
+{
   friend class UDF_Init; // Internal helper to set up statics
 private:
   // For all C++ defined fieldtypes with choice functions we need only one
@@ -796,8 +946,8 @@ private:
 
   // This are the functions required by the low level libforms functions
   // to construct a fieldtype with choice functions.
-  static bool next_choice(FIELD*, const void *);
-  static bool prev_choice(FIELD*, const void *);
+  friend bool _nc_xx_next_choice(FIELD*, const void *);
+  friend bool _nc_xx_prev_choice(FIELD*, const void *);
 
 protected:
   // Redefine this function to do the retrieval of the next choice value.
@@ -814,5 +964,4 @@ public:
   }
 };
 
-#endif // NCURSES_CURSESF_H_incl
-
+#endif /* NCURSES_CURSESF_H_incl */

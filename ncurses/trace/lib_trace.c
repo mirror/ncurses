@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -40,9 +41,9 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.53 2003/11/23 00:39:30 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.58 2005/04/16 16:15:24 tom Exp $")
 
-NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0;	/* always define this */
+NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
 #ifdef TRACE
 NCURSES_EXPORT_VAR(const char *) _nc_tputs_trace = "";
@@ -108,7 +109,7 @@ _tracef(const char *fmt,...)
     va_list ap;
     bool before = FALSE;
     bool after = FALSE;
-    int doit = _nc_tracing;
+    unsigned doit = _nc_tracing;
     int save_err = errno;
 
     if (strlen(fmt) >= sizeof(Called) - 1) {
@@ -179,9 +180,33 @@ _nc_retrace_ptr(char *code)
     return code;
 }
 
+/* Trace 'const char*' return-values */
+NCURSES_EXPORT(const char *)
+_nc_retrace_cptr(const char *code)
+{
+    T((T_RETURN("%s"), _nc_visbuf(code)));
+    return code;
+}
+
+/* Trace 'NCURSES_CONST void*' return-values */
+NCURSES_EXPORT(NCURSES_CONST void *)
+_nc_retrace_cvoid_ptr(NCURSES_CONST void *code)
+{
+    T((T_RETURN("%p"), code));
+    return code;
+}
+
+/* Trace 'void*' return-values */
+NCURSES_EXPORT(void *)
+_nc_retrace_void_ptr(void *code)
+{
+    T((T_RETURN("%p"), code));
+    return code;
+}
+
 /* Trace 'SCREEN *' return-values */
 NCURSES_EXPORT(SCREEN *)
-_nc_retrace_sp(SCREEN * code)
+_nc_retrace_sp(SCREEN *code)
 {
     T((T_RETURN("%p"), code));
     return code;

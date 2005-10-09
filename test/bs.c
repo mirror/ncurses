@@ -7,12 +7,12 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.39 2003/12/06 18:10:13 tom Exp $
+ * $Id: bs.c,v 1.41 2005/05/28 21:38:24 tom Exp $
  */
 
-#include <time.h>
-
 #include <test.priv.h>
+
+#include <time.h>
 
 #ifndef SIGIOT
 #define SIGIOT SIGABRT
@@ -249,7 +249,7 @@ intro(void)
 
 /* VARARGS1 */
 static void
-prompt(int n, const char *f, const char *s)
+prompt(int n, NCURSES_CONST char *f, const char *s)
 /* print a message at the prompt line */
 {
     (void) move(PROMPTLINE + n, 0);

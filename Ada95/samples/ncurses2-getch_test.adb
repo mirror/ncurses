@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.5 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Character input test
@@ -96,6 +97,7 @@ procedure ncurses2.getch_test is
    y : Line_Position;
    tmpx : Integer;
    incount : Integer := 0;
+
 begin
    Refresh;
    tmp2 := Start_Mouse (All_Events);
@@ -135,7 +137,7 @@ begin
             Add (Ch => newl);
          elsif c > 16#80# then --  TODO fix, use constant if possible
             declare
-               c2 : Character := Character'Val (c mod 16#80#);
+               c2 : constant Character := Character'Val (c mod 16#80#);
             begin
                if Ada.Characters.Handling.Is_Graphic (c2) then
                   Add (Str => "M-");
@@ -150,7 +152,7 @@ begin
                Add (Ch => newl);
             end;
          else declare
-            c2 : Character := Character'Val (c mod 16#80#);
+            c2 : constant Character := Character'Val (c mod 16#80#);
          begin
             if Ada.Characters.Handling.Is_Graphic (c2) then
                Add (Ch => c2);
@@ -242,7 +244,7 @@ begin
       end loop;
    end loop;
 
-   tmp2 := Start_Mouse (No_Events);
+   End_Mouse (tmp2);
    Set_Timeout_Mode (Mode => Blocking, Amount => 0); --  amount is ignored
    Set_Raw_Mode (SwitchOn => False);
    Set_NL_Mode (SwitchOn => True);

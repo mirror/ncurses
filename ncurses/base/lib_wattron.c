@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2000,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -41,14 +42,18 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_wattron.c,v 1.7 2002/07/20 17:07:16 tom Exp $")
+MODULE_ID("$Id: lib_wattron.c,v 1.8 2005/01/29 21:23:08 tom Exp $")
 
 NCURSES_EXPORT(int)
 wattr_on(WINDOW *win, attr_t at, void *opts GCC_UNUSED)
 {
     T((T_CALLED("wattr_on(%p,%s)"), win, _traceattr(at)));
-    if (win) {
-	T(("... current %s", _traceattr(win->_attrs)));
+    if (win != 0) {
+	T(("... current %s (%d)", _traceattr(win->_attrs), GET_WINDOW_PAIR(win)));
+	if_EXT_COLORS({
+	    if (at & A_COLOR)
+		win->_color = PAIR_NUMBER(at);
+	});
 	toggle_attr_on(win->_attrs, at);
 	returnCode(OK);
     } else

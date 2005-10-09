@@ -1,6 +1,6 @@
 #!@SHELL@
 ##############################################################################
-# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey 1996,2000
 #
-# $Id: run_tic.in,v 1.15 2003/09/06 22:31:44 Dan.Kegel Exp $
+# $Id: run_tic.in,v 1.20 2005/09/17 23:13:49 tom Exp $
 # This script is used to install terminfo.src using tic.  We use a script
 # because the path checking is too awkward to do in a makefile.
 #
@@ -54,6 +54,7 @@ echo '** Building terminfo database, please wait...'
 : ${LN_S="@LN_S@"}
 : ${THAT_CC=cc}
 : ${THIS_CC=cc}
+: ${ext_funcs=@NCURSES_EXT_FUNCS@}
 
 test -z "${DESTDIR}" && DESTDIR=
 
@@ -70,22 +71,26 @@ SHLIB="sh $srcdir/shlib"
 else
 # Cross-compiling, so don't set PATH or run shlib.
 SHLIB=
+# reset $suffix, since it applies to the target, not the build platform.
+suffix=
 fi
 
-#
+
 # set another env var that doesn't get reset when `shlib' runs, so `shlib' uses
 # the PATH we just set.
-#
-NEWPATH=$PATH
-export NEWPATH
-PROG_BIN_DIR=${DESTDIR}$bindir
-export PROG_BIN_DIR
+SHLIB_PATH=$PATH
+export SHLIB_PATH
 
+# set a variable to simplify environment update in shlib
+SHLIB_HOST=@host_os@
+export SHLIB_HOST
+
+# don't use user's TERMINFO variable
 TERMINFO=${DESTDIR}$ticdir ; export TERMINFO
 umask 022
 
 # Construct the name of the old (obsolete) pathname, e.g., /usr/lib/terminfo.
-TICDIR=`echo $TERMINFO | sed -e 's%/share/%/lib/%'`
+TICDIR=`echo $TERMINFO | sed -e 's%/share/\([^/]*\)$%/lib/\1%'`
 
 # Remove the old terminfo stuff; we don't care if it existed before, and it
 # would generate a lot of confusing error messages if we tried to overwrite it.
@@ -93,26 +98,35 @@ TICDIR=`echo $TERMINFO | sed -e 's%/share/%/lib/%'`
 # the directory is actually a symbolic link.
 ( cd $TERMINFO && rm -fr ? 2>/dev/null )
 
-# If we're not installing into /usr/share/, we'll have to adjust the location
-# of the tabset files in terminfo.src (which are in a parallel directory).
-TABSET=`echo $ticdir | sed -e 's%/terminfo$%/tabset%'`
-if test "x$TABSET" != "x/usr/share/tabset" ; then
-	echo '** adjusting tabset paths'
-	TMP=${TMPDIR-/tmp}/$$
-	sed -e s%/usr/share/tabset%$TABSET%g $source >$TMP
-	trap "rm -f $TMP" 0 1 2 5 15
-	source=$TMP
-fi
+if test "$ext_funcs" = 1 ; then
+cat <<EOF
+Running tic to install $TERMINFO ...
 
+	You may see messages regarding extended capabilities, e.g., AX.
+	These are extended terminal capabilities which are compiled
+	using
+		tic -x
+	If you have ncurses 4.2 applications, you should read the INSTALL
+	document, and install the terminfo without the -x option.
+
+EOF
+if ( $SHLIB tic$suffix -x -s -o $TERMINFO $source )
+then
+	echo '** built new '$TERMINFO
+else
+	echo '? tic could not build '$TERMINFO
+	exit 1
+fi
+else
 cat <<EOF
 Running tic to install $TERMINFO ...
 
 	You may see messages regarding unknown capabilities, e.g., AX.
-	These are extended terminal capabilities which can be compiled
+	These are extended terminal capabilities which may be compiled
 	using
 		tic -x
-	Read the INSTALL document before doing this - it can cause
-	problems for older ncurses applications.
+	If you have ncurses 4.2 applications, you should read the INSTALL
+	document, and install the terminfo without the -x option.
 
 EOF
 if ( $SHLIB tic$suffix -s -o $TERMINFO $source )
@@ -121,6 +135,7 @@ then
 else
 	echo '? tic could not build '$TERMINFO
 	exit 1
+fi
 fi
 
 # Make a symbolic link to provide compatibility with applications that expect

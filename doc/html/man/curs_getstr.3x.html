@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getstr.3x,v 1.12 2003/05/10 20:33:49 jmc Exp @
+  * @Id: curs_getstr.3x,v 1.14 2005/05/15 16:17:55 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,15 +40,15 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>                                   <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
+<STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>                                         <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>getstr</STRONG>,  <STRONG>getnstr</STRONG>,  <STRONG>wgetstr</STRONG>, <STRONG>wgetnstr</STRONG>, <STRONG>mvgetstr</STRONG>, <STRONG>mvgetnstr</STRONG>,
-       <STRONG>mvwgetstr</STRONG>, <STRONG>mvwgetnstr</STRONG>  -  accept  character  strings  from
+       <STRONG>getstr</STRONG>, <STRONG>getnstr</STRONG>, <STRONG>wgetstr</STRONG>, <STRONG>wgetnstr</STRONG>, <STRONG>mvgetstr</STRONG>, <STRONG>mvgetnstr</STRONG>,
+       <STRONG>mvwgetstr</STRONG>, <STRONG>mvwgetnstr</STRONG> - accept character strings from
        <STRONG>curses</STRONG> terminal keyboard
 
 
@@ -71,15 +71,15 @@
        The  function <STRONG>getstr</STRONG> is equivalent to a series of calls to
        <STRONG>getch</STRONG>, until a newline or carriage return is received (the
        terminating  character  is  not  included  in the returned
-       string).  The  resulting  value  is  placed  in  the  area
-       pointed to by the character pointer <EM>str</EM>.
+       string).  The resulting value is placed in the area point-
+       ed to by the character pointer <EM>str</EM>.
 
        <STRONG>wgetnstr</STRONG>  reads  at  most  <EM>n</EM> characters, thus preventing a
-       possible overflow of the input  buffer.   Any  attempt  to
-       enter  more characters (other than the terminating newline
-       or carriage return) causes a  beep.   Function  keys  also
-       cause  a beep and are ignored.  The <STRONG>getnstr</STRONG> function reads
-       from the <EM>stdscr</EM> default window.
+       possible overflow of the input buffer.  Any attempt to en-
+       ter more characters (other than the terminating newline or
+       carriage return) causes a beep.  Function keys also  cause
+       a  beep  and are ignored.  The <STRONG>getnstr</STRONG> function reads from
+       the <EM>stdscr</EM> default window.
 
        The user's erase and kill characters are interpreted.   If
        keypad   mode   is   on   for  the  window,  <STRONG>KEY_LEFT</STRONG>  and
@@ -97,6 +97,12 @@
        (SVr4 specifies only "an integer value  other  than  <STRONG>ERR</STRONG>")
        upon successful completion.
 
+       X/Open defines no error conditions.
+
+       In this implementation, these functions return an error if
+       the window pointer is null,  or  if  its  timeout  expires
+       without having any data.
+
 
 </PRE>
 <H2>NOTES</H2><PRE>
@@ -107,9 +113,9 @@
 <H2>PORTABILITY</H2><PRE>
        These  functions are described in the XSI Curses standard,
        Issue 4.  They  read  single-byte  characters  only.   The
-       standard  does  not  define  any  error  conditions.  This
-       implementation returns ERR if the window pointer is  null,
-       or if the lower-level <STRONG>wgetch</STRONG> call returns an ERR.
+       standard  does  not define any error conditions.  This im-
+       plementation returns ERR if the window pointer is null, or
+       if the lower-level <STRONG>wgetch</STRONG> call returns an ERR.
 
        SVr3  and early SVr4 curses implementations did not reject
        function keys; the SVr4.0 documentation claimed that "spe-
@@ -120,8 +126,8 @@
        useful  (being,  in  fact, the low-order eight bits of the
        key's KEY_ value).
 
-       The functions <STRONG>getnstr</STRONG>, <STRONG>mvgetnstr</STRONG>, and <STRONG>mvwgetnstr</STRONG> were pre-
-       sent but not documented in SVr4.
+       The functions  <STRONG>getnstr</STRONG>,  <STRONG>mvgetnstr</STRONG>,  and  <STRONG>mvwgetnstr</STRONG>  were
+       present but not documented in SVr4.
 
 
 </PRE>
@@ -130,7 +136,7 @@
 
 
 
-                                                  <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
+                                                        <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

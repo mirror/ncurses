@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2003,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,9 +27,9 @@
  ****************************************************************************/
 
 /*
- * Author: Thomas E. Dickey <dickey@clark.net> 1999
+ * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.23 2003/04/26 16:43:56 tom Exp $
+ * $Id: cardfile.c,v 1.27 2004/11/06 19:33:39 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -43,6 +43,10 @@
 
 #define VISIBLE_CARDS 10
 #define OFFSET_CARD 2
+#define pair_1 1
+#define pair_2 2
+
+#define isVisible(cardp) ((cardp)->panel != 0)
 
 enum {
     MY_CTRL_x = MAX_FORM_COMMAND
@@ -61,6 +65,7 @@ typedef struct _card {
 } CARD;
 
 static CARD *all_cards;
+static bool try_color = FALSE;
 static char default_name[] = "cardfile.dat";
 
 #if !HAVE_STRDUP
@@ -238,7 +243,8 @@ order_cards(CARD * first, int depth)
     if (first) {
 	if (depth && first->link)
 	    order_cards(first->link, depth - 1);
-	top_panel(first->panel);
+	if (isVisible(first))
+	    top_panel(first->panel);
     }
 }
 
@@ -248,8 +254,13 @@ order_cards(CARD * first, int depth)
 static CARD *
 next_card(CARD * now)
 {
-    if (now->link)
-	now = now->link;
+    if (now->link != 0) {
+	CARD *tst = now->link;
+	if (isVisible(tst))
+	    now = tst;
+	else
+	    tst = next_card(tst);
+    }
     return now;
 }
 
@@ -260,9 +271,24 @@ static CARD *
 prev_card(CARD * now)
 {
     CARD *p;
-    for (p = all_cards; p != 0; p = p->link)
-	if (p->link == now)
+    for (p = all_cards; p != 0; p = p->link) {
+	if (p->link == now) {
+	    if (!isVisible(p))
+		p = prev_card(p);
 	    return p;
+	}
+    }
+    return now;
+}
+
+/*
+ * Returns the first card in the list that we will display.
+ */
+static CARD *
+first_card(CARD * now)
+{
+    if (!isVisible(now))
+	now = next_card(now);
     return now;
 }
 
@@ -355,23 +381,38 @@ cardfile(char *fname)
     WINDOW *win;
     CARD *p;
     CARD *top_card;
-    int visible_cards = count_cards();
-    int panel_wide = COLS - (visible_cards * OFFSET_CARD);
-    int panel_high = LINES - (visible_cards * OFFSET_CARD) - 5;
-    int form_wide = panel_wide - 2;
-    int form_high = panel_high - 2;
-    int y = (visible_cards - 1) * OFFSET_CARD;
-    int x = 0;
+    int visible_cards;
+    int panel_wide;
+    int panel_high;
+    int form_wide;
+    int form_high;
+    int y;
+    int x;
     int ch = ERR;
     int last_ch;
     int finished = FALSE;
 
     show_legend();
 
+    /* decide how many cards we can display */
+    visible_cards = count_cards();
+    while (
+	      (panel_wide = COLS - (visible_cards * OFFSET_CARD)) < 10 ||
+	      (panel_high = LINES - (visible_cards * OFFSET_CARD) - 5) < 5) {
+	--visible_cards;
+    }
+    form_wide = panel_wide - 2;
+    form_high = panel_high - 2;
+    y = (visible_cards - 1) * OFFSET_CARD;
+    x = 0;
+
     /* make a panel for each CARD */
     for (p = all_cards; p != 0; p = p->link) {
 
-	win = newwin(panel_high, panel_wide, y, x);
+	if ((win = newwin(panel_high, panel_wide, y, x)) == 0)
+	    break;
+
+	wbkgd(win, COLOR_PAIR(pair_2));
 	keypad(win, TRUE);
 	p->panel = new_panel(win);
 	box(win, 0, 0);
@@ -385,7 +426,8 @@ cardfile(char *fname)
 	x += OFFSET_CARD;
     }
 
-    order_cards(top_card = all_cards, visible_cards);
+    top_card = first_card(all_cards);
+    order_cards(top_card, visible_cards);
 
     while (!finished) {
 	update_panels();
@@ -432,6 +474,8 @@ cardfile(char *fname)
 		    FIELD **oldf = form_fields(p->form);
 		    WINDOW *olds = form_sub(p->form);
 
+		    if (!isVisible(p))
+			continue;
 		    win = form_win(p->form);
 
 		    /* move and resize the card as needed
@@ -483,20 +527,38 @@ cardfile(char *fname)
 	p = all_cards;
 	all_cards = all_cards->link;
 
-	f = form_fields(p->form);
-	count = field_count(p->form);
+	if (isVisible(p)) {
+	    f = form_fields(p->form);
+	    count = field_count(p->form);
 
-	unpost_form(p->form);	/* ...so we can free it */
-	free_form(p->form);	/* this also disconnects the fields */
+	    unpost_form(p->form);	/* ...so we can free it */
+	    free_form(p->form);	/* this also disconnects the fields */
 
-	free_form_fields(f);
+	    free_form_fields(f);
 
-	del_panel(p->panel);
+	    del_panel(p->panel);
+	}
 	free(p->title);
 	free(p->content);
 	free(p);
     }
 #endif
+}
+
+static void
+usage(void)
+{
+    static const char *msg[] =
+    {
+	"Usage: view [options] file"
+	,""
+	,"Options:"
+	," -c       use color if terminal supports it"
+    };
+    size_t n;
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+    ExitProgram(EXIT_FAILURE);
 }
 
 /*******************************************************************************/
@@ -508,11 +570,32 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
+    while ((n = getopt(argc, argv, "c")) != EOF) {
+	switch (n) {
+	case 'c':
+	    try_color = TRUE;
+	    break;
+	default:
+	    usage();
+	}
+    }
+
     initscr();
     cbreak();
     noecho();
 
-    if (argc > 1) {
+    if (try_color) {
+	if (has_colors()) {
+	    start_color();
+	    init_pair(pair_1, COLOR_WHITE, COLOR_BLUE);
+	    init_pair(pair_2, COLOR_WHITE, COLOR_CYAN);
+	    bkgd(COLOR_PAIR(pair_1));
+	} else {
+	    try_color = FALSE;
+	}
+    }
+
+    if (optind + 1 == argc) {
 	for (n = 1; n < argc; n++)
 	    read_data(argv[n]);
 	if (count_cards() == 0)

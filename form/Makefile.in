@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.40 2003/11/01 22:44:33 tom Exp $
+# $Id: Makefile.in,v 1.41 2004/05/08 19:14:14 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -79,8 +79,7 @@ CC		= @CC@
 CPP		= @CPP@
 CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= @CPPFLAGS@ \
-		  -DHAVE_CONFIG_H 
+CPPFLAGS	= -I@top_srcdir@/ncurses -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
@@ -116,7 +115,7 @@ LINT_OPTS	= @LINT_OPTS@
 LINT_LIBS	= -lform -lncurses @LIBS@
 
 AUTO_SRC	= \
-		../include/form.h  
+		../include/form.h
 
 ################################################################################
 all \

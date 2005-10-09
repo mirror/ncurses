@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.2 $
+--  $Revision: 1.5 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  TODO use Default_Character where appropriate
@@ -332,7 +333,7 @@ package body ncurses2.m is
                default_colors := True;
             when 'e' =>
                myio.Get (optarg.all, tmpi, length);
-               if Integer (tmpi) > 3 then
+               if tmpi > 3 then
                   usage;
                   return 1;
                end if;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -92,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.45 2003/11/08 21:28:04 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.47 2005/06/04 22:06:43 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -276,7 +277,7 @@ getparm(int parm, int n)
  *	% translations if 1
  *	pad translations if >=0
  */
-char *
+NCURSES_EXPORT(char *)
 _nc_captoinfo(const char *cap, const char *s, int const parameterized)
 {
     const char *capstart;
@@ -636,7 +637,7 @@ save_tc_inequality(char *bufptr, int c1, int c2)
  * Convert a terminfo string to termcap format.  Parameters are as in
  * _nc_captoinfo().
  */
-char *
+NCURSES_EXPORT(char *)
 _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameterized)
 {
     int seenone = 0, seentwo = 0, saw_m = 0, saw_n = 0;
@@ -678,6 +679,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	    --str;
 	} else if (str[0] == '%' && str[1] == '%') {	/* escaped '%' */
 	    bufptr = save_string(bufptr, "%%");
+	    ++str;
 	} else if (*str != '%' || (parameterized < 1)) {
 	    bufptr = save_char(bufptr, *str);
 	} else if (sscanf(str, "%%?%%{%d}%%>%%t%%{%d}%%+%%;", &c1, &c2) == 2) {
@@ -833,4 +835,11 @@ main(int argc, char *argv[])
 }
 #endif /* MAIN */
 
-/* captoinfo.c ends here */
+#if NO_LEAKS
+NCURSES_EXPORT(void)
+_nc_captoinfo_leaks(void)
+{
+    FreeAndNull(my_string);
+    my_length = 0;
+}
+#endif

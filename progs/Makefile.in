@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.62 2003/11/01 22:45:57 tom Exp $
+# $Id: Makefile.in,v 1.65 2005/09/25 00:42:08 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -53,6 +53,7 @@ o		= .@OBJEXT@
 
 MODEL		= ../@DFT_OBJ_SUBDIR@
 DESTDIR		= @DESTDIR@
+top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
@@ -79,7 +80,7 @@ CC		= @CC@
 CPP		= @CPP@
 CFLAGS		= @CFLAGS@
 
-INCDIR		= $(srcdir)/../include
+INCDIR		= $(top_srcdir)/include
 CPPFLAGS	= -I../progs -I$(srcdir) -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
@@ -95,7 +96,7 @@ CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 LD		= @LD@
 LINK		= @LINK_PROGS@ $(LIBTOOL_LINK) $(CC)
 LDFLAGS		= @EXTRA_LDFLAGS@ \
-		@PROG_ARGS@ @LDFLAGS@ @LD_MODEL@ @LIBS@ @EXTRA_LIBS@
+		@TINFO_ARGS@ @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
 LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
@@ -122,6 +123,12 @@ TESTPROGS = mvcur$x tctest$x hardscroll$x hashmap$x
 
 # Default library, for linking applications
 DEPS_CURSES = ../lib/@LIB_PREFIX@ncurses@DFT_DEP_SUFFIX@
+
+HEADER_DEPS	= \
+	../include/curses.h \
+	$(INCDIR)/term_entry.h \
+	$(INCDIR)/tic.h \
+	$(INCDIR)/nc_alloc.h
 
 ################################################################################
 all:		$(AUTO_SRC) $(PROGS)

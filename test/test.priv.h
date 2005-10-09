@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey <dickey@clark.net> 1996                        *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.46 2003/10/19 00:04:24 tom Exp $ */
+/* $Id: test.priv.h,v 1.48 2004/04/10 20:11:37 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -134,6 +134,10 @@
 #else
 #include <curses.h>
 #include <term.h>
+#endif
+
+#ifdef NCURSES_VERSION
+#define HAVE_COLOR_SET 1
 #endif
 
 #if NCURSES_NOMACROS
@@ -276,12 +280,12 @@ extern int optind;
 #endif
 
 /* out-of-band values for representing absent capabilities */
-#define ABSENT_BOOLEAN		(-1)		/* 255 */
+#define ABSENT_BOOLEAN		((signed char)-1)	/* 255 */
 #define ABSENT_NUMERIC		(-1)
 #define ABSENT_STRING		(char *)0
 
 /* out-of-band values for representing cancels */
-#define CANCELLED_BOOLEAN	(char)(-2)	/* 254 */
+#define CANCELLED_BOOLEAN	((signed char)-2)	/* 254 */
 #define CANCELLED_NUMERIC	(-2)
 #define CANCELLED_STRING	(char *)(-1)
 

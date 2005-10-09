@@ -206,6 +206,7 @@
 ./dist.mk
 ./doc/hackguide.doc
 ./doc/html/Ada95.html
+./doc/html/NCURSES-Programming-HOWTO.html
 ./doc/html/ada/files.htm
 ./doc/html/ada/files/T.htm
 ./doc/html/ada/funcs.htm
@@ -390,6 +391,7 @@
 ./doc/html/man/form_requestname.3x.html
 ./doc/html/man/form_userptr.3x.html
 ./doc/html/man/form_win.3x.html
+./doc/html/man/index.html
 ./doc/html/man/infocmp.1m.html
 ./doc/html/man/infotocap.1m.html
 ./doc/html/man/key_defined.3x.html
@@ -433,6 +435,7 @@
 ./doc/ncurses-intro.doc
 ./form/Makefile.in
 ./form/READ.ME
+./form/f_trace.c
 ./form/fld_arg.c
 ./form/fld_attr.c
 ./form/fld_current.c
@@ -663,6 +666,7 @@
 ./menu/m_scale.c
 ./menu/m_spacing.c
 ./menu/m_sub.c
+./menu/m_trace.c
 ./menu/m_userptr.c
 ./menu/m_win.c
 ./menu/menu.h
@@ -677,11 +681,13 @@
 ./misc/emx.src
 ./misc/form.def
 ./misc/form.ref
-./misc/indent.pro
+./misc/gen_edit.sh
+./misc/jpf-indent
 ./misc/makedef.cmd
 ./misc/makellib
 ./misc/menu.def
 ./misc/menu.ref
+./misc/ncu-indent
 ./misc/ncurses.def
 ./misc/ncurses.ref
 ./misc/panel.def
@@ -738,6 +744,7 @@
 ./ncurses/base/lib_initscr.c
 ./ncurses/base/lib_insch.c
 ./ncurses/base/lib_insdel.c
+./ncurses/base/lib_insnstr.c
 ./ncurses/base/lib_instr.c
 ./ncurses/base/lib_isendwin.c
 ./ncurses/base/lib_leaveok.c
@@ -839,6 +846,7 @@
 ./ncurses/tinfo/read_termcap.c
 ./ncurses/tinfo/setbuf.c
 ./ncurses/tinfo/strings.c
+./ncurses/tinfo/trim_sgr0.c
 ./ncurses/tinfo/write_entry.c
 ./ncurses/trace/README
 ./ncurses/trace/lib_trace.c
@@ -958,6 +966,7 @@
 ./test/demo_keyok.c
 ./test/demo_menus.c
 ./test/demo_panels.c
+./test/demo_termcap.c
 ./test/ditto.c
 ./test/dots.c
 ./test/edit_field.c
@@ -973,6 +982,7 @@
 ./test/inserts.c
 ./test/keynames.c
 ./test/knight.c
+./test/linux-color.dat
 ./test/listused.sh
 ./test/lrtest.c
 ./test/modules
@@ -990,3 +1000,5 @@
 ./test/view.c
 ./test/worm.c
 ./test/xmas.c
+./test/xterm-16color.dat
+./test/xterm-88color.dat

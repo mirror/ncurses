@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.14 $
+--  $Revision: 1.17 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C;
@@ -144,7 +145,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
                            Typ : Field_Type'Class;
                            Cft : C_Field_Type := C_Builtin_Router)
    is
-      Usr_Arg   : System.Address := Get_Arg (Fld);
+      Usr_Arg   : constant System.Address := Get_Arg (Fld);
       Low_Level : constant C_Field_Type := Get_Fieldtype (Fld);
       Arg : Argument_Access;
       Res : Eti_Error;

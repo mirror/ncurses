@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.72 2004/01/16 22:44:56 tom Exp $
+# $Id: Makefile.in,v 1.77 2005/06/12 22:52:56 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -67,8 +67,8 @@ CXX_AR_OPTS	= @CXX_AR_OPTS@
 RANLIB		= @LIB_PREP@
 
 CXX		= @CXX@
-CPP		= @CPP@
-CXXFLAGS	= @CXXFLAGS@
+CPP		= @CXXCPP@
+CXXFLAGS	= @CXXFLAGS@ @EXTRA_CXXFLAGS@
 CXXLIBS		= @CXXLIBS@
 
 INCDIR		= ../include
@@ -108,7 +108,7 @@ LINK_PROFILE	= $(LINK_FLAGS)
 LINK_SHARED	= $(LINK_FLAGS)
 
 LDFLAGS		= @TEST_ARGS@ @LDFLAGS@ \
-	@LD_MODEL@ @LIBS@ @EXTRA_LIBS@ @LOCAL_LDFLAGS@ $(CXXLIBS)
+	@LD_MODEL@ @LIBS@ @LOCAL_LDFLAGS@ $(CXXLIBS)
 
 LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
 LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
@@ -129,6 +129,9 @@ all ::		demo$x
 sources :	$(AUTO_SRC)
 
 depend :
+
+tags:
+	ctags *.[h] *.cc
 
 # Build a conventional library for installing, since a shared library would
 # pull in all of the ncurses libraries (panel, menu, form, ncurses) as direct
@@ -184,7 +187,7 @@ mostlyclean ::
 clean :: mostlyclean
 	-sh -c "if test -n '$x' ; then $(MAKE) clean x=''; fi"
 	-rm -rf $(MODEL)/SunWS_cache
-	-$(LIBTOOL_CLEAN) rm -f demo$x $(AUTO_SRC) ../lib/$(LIBNAME) $(LIB_OBJS) $(LIB_OBJS:$o=.lo) $(OBJS_DEMO)
+	-$(LIBTOOL_CLEAN) rm -f demo$x $(AUTO_SRC) ../lib/$(LIBNAME) $(LIB_OBJS) $(OBJS_DEMO)
 	-rm -rf .libs
 
 distclean :: clean

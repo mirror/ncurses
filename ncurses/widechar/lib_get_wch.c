@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002,2004 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2002-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 2002,2004                                      *
+ *  Author: Thomas E. Dickey 2002-on                                        *
  ****************************************************************************/
 
 /*
@@ -38,36 +38,39 @@
 */
 
 #include <curses.priv.h>
+#include <ctype.h>
 
-MODULE_ID("$Id: lib_get_wch.c,v 1.6 2004/01/18 01:18:17 tom Exp $")
+MODULE_ID("$Id: lib_get_wch.c,v 1.12 2005/08/13 18:51:43 tom Exp $")
 
 #if HAVE_MBTOWC && HAVE_MBLEN
 #define reset_mbytes(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
 #define count_mbytes(buffer,length,state) mblen(buffer,length)
 #define check_mbytes(wch,buffer,length,state) \
-	(int) mbtowc(&wch, buffer, count)
+	(int) mbtowc(&wch, buffer, length)
+#define state_unused
 #elif HAVE_MBRTOWC && HAVE_MBRLEN
-#define reset_mbytes(state) memset(&state, 0, sizeof(state))
+#define reset_mbytes(state) init_mb(state)
 #define count_mbytes(buffer,length,state) mbrlen(buffer,length,&state)
 #define check_mbytes(wch,buffer,length,state) \
-	(int) mbrtowc(&wch, buffer, count, &state)
+	(int) mbrtowc(&wch, buffer, length, &state)
 #else
 make an error
 #endif
 
 NCURSES_EXPORT(int)
-wget_wch(WINDOW *win, wint_t * result)
+wget_wch(WINDOW *win, wint_t *result)
 {
     int code;
     char buffer[(MB_LEN_MAX * 9) + 1];	/* allow some redundant shifts */
     int status;
-    mbstate_t state;
     size_t count = 0;
     unsigned long value;
     wchar_t wch;
+#ifndef state_unused
+    mbstate_t state;
+#endif
 
     T((T_CALLED("wget_wch(%p)"), win));
-    (void) state;
 
     /*
      * We can get a stream of single-byte characters and KEY_xxx codes from
@@ -87,12 +90,12 @@ wget_wch(WINDOW *win, wint_t * result)
 	     * would be worth the effort.
 	     */
 	    if (count != 0) {
-		ungetch(value);
+		ungetch((int) value);
 		code = ERR;
 	    }
 	    break;
 	} else if (count + 1 >= sizeof(buffer)) {
-	    ungetch(value);
+	    ungetch((int) value);
 	    code = ERR;
 	    break;
 	} else {
@@ -103,6 +106,7 @@ wget_wch(WINDOW *win, wint_t * result)
 		reset_mbytes(state);
 		if (check_mbytes(wch, buffer, count, state) != status) {
 		    code = ERR;	/* the two calls should match */
+		    ungetch((int) value);
 		}
 		value = wch;
 		break;

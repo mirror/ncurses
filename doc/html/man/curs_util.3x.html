@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.11 2003/07/19 19:59:56 tom Exp @
+  * @Id: curs_util.3x,v 1.17 2005/06/25 21:51:37 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,7 +40,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>                                       <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
+<STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>                                             <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
 
 
 
@@ -48,7 +48,7 @@
 </PRE>
 <H2>NAME</H2><PRE>
        <STRONG>delay_output</STRONG>, <STRONG>filter</STRONG>, <STRONG>flushinp</STRONG>, <STRONG>getwin</STRONG>, <STRONG>key_name</STRONG>, <STRONG>keyname</STRONG>,
-       <STRONG>putwin</STRONG>, <STRONG>unctrl</STRONG>, <STRONG>use_env</STRONG>, <STRONG>wunctrl</STRONG>  -  miscellaneous  <STRONG>curses</STRONG>
+       <STRONG>putwin</STRONG>, <STRONG>unctrl</STRONG>, <STRONG>use_env</STRONG>, <STRONG>wunctrl</STRONG> - miscellaneous <STRONG>curses</STRONG>
        utility routines
 
 
@@ -71,9 +71,9 @@
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        The  <STRONG>unctrl</STRONG>  routine returns a character string which is a
-       printable representation  of  the  character  <EM>c</EM>,  ignoring
-       attributes.   Control  characters  are displayed in the <STRONG>^</STRONG><EM>X</EM>
-       notation.  Printing characters are displayed as  is.   The
+       printable representation of the character <EM>c</EM>, ignoring  at-
+       tributes.   Control characters are displayed in the <STRONG>^</STRONG><EM>X</EM> no-
+       tation.  Printing characters are  displayed  as  is.   The
        corresponding  <STRONG>wunctrl</STRONG>  returns a printable representation
        of a wide-character.
 
@@ -98,9 +98,11 @@
        ment, the values of <STRONG>lines</STRONG> and  <STRONG>columns</STRONG>  specified  in  the
        <EM>terminfo</EM>  database will be used, even if environment vari-
        ables <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG> (used by default) are set,  or  if
-       <STRONG>curses</STRONG>  is  running  in  a  window  (in which case default
-       behavior would be to use the  window  size  if  <STRONG>LINES</STRONG>  and
-       <STRONG>COLUMNS</STRONG> are not set).
+       <STRONG>curses</STRONG>  is  running in a window (in which case default be-
+       havior would be to  use  the  window  size  if  <STRONG>LINES</STRONG>  and
+       <STRONG>COLUMNS</STRONG>  are not set).  Note that setting <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG>
+       overrides the corresponding size  which  may  be  obtained
+       from the operating system.
 
        The  <STRONG>putwin</STRONG> routine writes all data associated with window
        <EM>win</EM> into the file to which <EM>filep</EM> points.  This information
@@ -124,26 +126,47 @@
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Except for  <STRONG>flushinp</STRONG>,  routines  that  return  an  integer
-       return  <STRONG>ERR</STRONG>  upon  failure and <STRONG>OK</STRONG> (SVr4 specifies only "an
-       integer value other than <STRONG>ERR</STRONG>") upon successful completion.
-
-       <STRONG>flushinp</STRONG> always returns <STRONG>OK</STRONG>.
+       Except for <STRONG>flushinp</STRONG>, routines that return an  integer  re-
+       turn  <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4 specifies only "an in-
+       teger value other than <STRONG>ERR</STRONG>") upon successful completion.
 
        Routines that return pointers return <STRONG>NULL</STRONG> on error.
+
+       X/Open does not define any error conditions.  In this  im-
+       plementation
+
+              <STRONG>flushinp</STRONG>
+                   returns  an error if the terminal was not ini-
+                   tialized.
+
+              <STRONG>putwin</STRONG>
+                   returns an  error  if  the  associated  <STRONG>fwrite</STRONG>
+                   calls return an error.
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.  It states that <STRONG>unctrl</STRONG> and <STRONG>wunctrl</STRONG>  will  return  a
-       null  pointer  if  unsuccessful,  but  does not define any
-       error conditions.
+       null  pointer if unsuccessful, but does not define any er-
+       ror conditions.
 
        The SVr4 documentation describes the action of <STRONG>filter</STRONG> only
        in  the  vaguest  terms.   The description here is adapted
        from the XSI Curses standard (which erroneously  fails  to
        describe the disabling of <STRONG>cuu</STRONG>).
+
+       The  strings returned by <STRONG>unctrl</STRONG> in this implementation are
+       determined at compile time, showing C1 controls  from  the
+       upper-128  codes with a `~' prefix rather than `^'.  Other
+       implementations typically show both sets of control  char-
+       acters  with  `^',  and may strip the parameter to 7 bits.
+       This implementation uses 8 bits but does  not  modify  the
+       string to reflect locale.
+
+       The  <STRONG>keyname</STRONG> function may return the names of user-defined
+       string capabilities which are defined in the terminfo  en-
+       try via the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG>.
 
 
 </PRE>
@@ -153,7 +176,7 @@
 
 
 
-                                                    <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
+                                                          <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

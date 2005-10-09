@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.34 2004/01/16 23:23:11 Daniel.Jacobowitz Exp $")
+MODULE_ID("$Id: tput.c,v 1.35 2005/04/03 14:25:32 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -151,7 +151,6 @@ tput(int argc, char *argv[])
     int i, j, c;
     int status;
     FILE *f;
-    int token = UNDEF;
 
     if ((name = argv[0]) == 0)
 	name = "";
@@ -295,7 +294,6 @@ tput(int argc, char *argv[])
     } else if ((s = tigetstr(name)) == CANCELLED_STRING) {
 	quit(4, "unknown terminfo capability '%s'", name);
     } else if (s != ABSENT_STRING) {
-	token = STRING;
 	if (argc > 1) {
 	    int k;
 	    int popcount;
@@ -360,7 +358,6 @@ main(int argc, char **argv)
     int c;
     char buf[BUFSIZ];
     int result = 0;
-    int err;
 
     check_aliases(prg_name = _nc_rootname(argv[0]));
 
@@ -428,7 +425,7 @@ main(int argc, char **argv)
 	argvec[argnum] = 0;
 
 	if (argnum != 0
-	    && (err = tput(argnum, argvec)) != 0) {
+	    && tput(argnum, argvec) != 0) {
 	    if (result == 0)
 		result = 4;	/* will return value >4 */
 	    ++result;

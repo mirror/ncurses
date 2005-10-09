@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas Dickey 1996-2003                                         *
+ *  Author: Thomas Dickey                           1996-on                 *
  *     and: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  ****************************************************************************/
@@ -39,14 +39,34 @@
 #include <curses.priv.h>
 #include <term.h>		/* acs_chars */
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.48 2004/01/25 22:31:38 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.53 2005/08/20 20:21:20 tom Exp $")
 
-#define COLOR_OF(c) (c < 0 || c > 7 ? "default" : colors[c].name)
+#define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
 #ifdef TRACE
 
 static const char l_brace[] = {L_BRACE, 0};
 static const char r_brace[] = {R_BRACE, 0};
+
+#ifndef USE_TERMLIB
+static char *
+color_of(int c)
+{
+    static char buffer[2][80];
+    static int sel;
+    static int last = -1;
+
+    if (c != last) {
+	last = c;
+	sel = !sel;
+	if (c == COLOR_DEFAULT)
+	    strcpy(buffer[sel], "default");
+	else
+	    sprintf(buffer[sel], "color%d", c);
+    }
+    return buffer[sel];
+}
+#endif /* !USE_TERMLIB */
 
 NCURSES_EXPORT(char *)
 _traceattr2(int bufnum, attr_t newmode)
@@ -73,7 +93,9 @@ _traceattr2(int bufnum, attr_t newmode)
 	{ A_COLOR,		"A_COLOR" },
 	/* *INDENT-ON* */
 
-    },
+    }
+#ifndef USE_TERMLIB
+    ,
 	colors[] =
     {
 	/* *INDENT-OFF* */
@@ -87,7 +109,9 @@ _traceattr2(int bufnum, attr_t newmode)
 	{ COLOR_WHITE,		"COLOR_WHITE" },
 	/* *INDENT-ON* */
 
-    };
+    }
+#endif /* !USE_TERMLIB */
+    ;
     size_t n;
     unsigned save_nc_tracing = _nc_tracing;
     _nc_tracing = 0;
@@ -102,6 +126,10 @@ _traceattr2(int bufnum, attr_t newmode)
 
 	    if (names[n].val == A_COLOR) {
 		short pairnum = PAIR_NUMBER(newmode);
+#ifdef USE_TERMLIB
+		/* pair_content lives in libncurses */
+		(void) sprintf(temp, "{%d}", pairnum);
+#else
 		short fg, bg;
 
 		if (pair_content(pairnum, &fg, &bg) == OK) {
@@ -113,6 +141,7 @@ _traceattr2(int bufnum, attr_t newmode)
 		} else {
 		    (void) sprintf(temp, "{%d}", pairnum);
 		}
+#endif
 		buf = _nc_trace_bufcat(bufnum, temp);
 	    }
 	}
@@ -220,7 +249,7 @@ _tracechtype2(int bufnum, chtype ch)
     if ((found = _nc_altcharset_name(ChAttrOf(ch), ch)) != 0) {
 	(void) _nc_trace_bufcat(bufnum, found);
     } else
-	(void) _nc_trace_bufcat(bufnum, _tracechar(ChCharOf(ch)));
+	(void) _nc_trace_bufcat(bufnum, _tracechar((int)ChCharOf(ch)));
 
     if (ChAttrOf(ch) != A_NORMAL) {
 	(void) _nc_trace_bufcat(bufnum, " | ");
@@ -259,8 +288,9 @@ _tracecchar_t2 (int bufnum, const cchar_t *ch)
 	if ((found = _nc_altcharset_name(attr, CharOfD(ch))) != 0) {
 	    (void) _nc_trace_bufcat(bufnum, found);
 	    attr &= ~A_ALTCHARSET;
-	} else if (isnac(CHDEREF(ch))) {
+	} else if (isWidecExt(CHDEREF(ch))) {
 	    (void) _nc_trace_bufcat(bufnum, "{NAC}");
+	    attr &= ~A_CHARTEXT;
 	} else {
 	    PUTC_DATA;
 	    int n;

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.29 $
+--  $Revision: 1.32 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -373,7 +374,7 @@ package body Terminal_Interface.Curses is
       function Dupwin (Win : Window) return Window;
       pragma Import (C, Dupwin, "dupwin");
 
-      W : Window := Dupwin (Win);
+      W : constant Window := Dupwin (Win);
    begin
       if W = Null_Window then
          raise Curses_Exception;
@@ -935,6 +936,9 @@ package body Terminal_Interface.Curses is
       procedure No_Qiflush;
       pragma Import (C, No_Qiflush, "noqiflush");
    begin
+      if Win = Null_Window then
+         raise Curses_Exception;
+      end if;
       if Flush then
          Qiflush;
       else
@@ -1398,8 +1402,10 @@ package body Terminal_Interface.Curses is
    is
       --  Please note: in ncurses they are one off.
       --  This might be different in other implementations of curses
-      Y : C_Int := C_Int (W_Get_Short (Win, Offset_maxy)) + C_Int (Offset_XY);
-      X : C_Int := C_Int (W_Get_Short (Win, Offset_maxx)) + C_Int (Offset_XY);
+      Y : constant C_Int := C_Int (W_Get_Short (Win, Offset_maxy))
+                          + C_Int (Offset_XY);
+      X : constant C_Int := C_Int (W_Get_Short (Win, Offset_maxx))
+                          + C_Int (Offset_XY);
    begin
       Number_Of_Lines   := Line_Count (Y);
       Number_Of_Columns := Column_Count (X);
@@ -1410,8 +1416,8 @@ package body Terminal_Interface.Curses is
       Top_Left_Line   : out Line_Position;
       Top_Left_Column : out Column_Position)
    is
-      Y : C_Short := W_Get_Short (Win, Offset_begy);
-      X : C_Short := W_Get_Short (Win, Offset_begx);
+      Y : constant C_Short := W_Get_Short (Win, Offset_begy);
+      X : constant C_Short := W_Get_Short (Win, Offset_begx);
    begin
       Top_Left_Line   := Line_Position (Y);
       Top_Left_Column := Column_Position (X);
@@ -1422,8 +1428,8 @@ package body Terminal_Interface.Curses is
       Line   : out Line_Position;
       Column : out Column_Position)
    is
-      Y : C_Short := W_Get_Short (Win, Offset_cury);
-      X : C_Short := W_Get_Short (Win, Offset_curx);
+      Y : constant C_Short := W_Get_Short (Win, Offset_cury);
+      X : constant C_Short := W_Get_Short (Win, Offset_curx);
    begin
       Line   := Line_Position (Y);
       Column := Column_Position (X);
@@ -1435,8 +1441,8 @@ package body Terminal_Interface.Curses is
       Top_Left_Column    : out Column_Position;
       Is_Not_A_Subwindow : out Boolean)
    is
-      Y : C_Int := W_Get_Int (Win, Offset_pary);
-      X : C_Int := W_Get_Int (Win, Offset_parx);
+      Y : constant C_Int := W_Get_Int (Win, Offset_pary);
+      X : constant C_Int := W_Get_Int (Win, Offset_parx);
    begin
       if Y = -1 then
          Top_Left_Line   := Line_Position'Last;
@@ -1762,7 +1768,8 @@ package body Terminal_Interface.Curses is
       pragma Import (C, Winchnstr, "winchnstr");
 
       N   : Integer := Len;
-      Txt : chtype_array (0 .. Str'Length) := (0 => Default_Character);
+      Txt : constant chtype_array (0 .. Str'Length)
+          := (0 => Default_Character);
       Cnt : Natural := 0;
    begin
       if N < 0 then
@@ -2457,7 +2464,7 @@ package body Terminal_Interface.Curses is
       pragma Import (C, C_Assume_Default_Colors, "assume_default_colors");
 
       Err : constant C_Int := C_Assume_Default_Colors (C_Int (Fore),
-                                                       C_Int (Black));
+                                                       C_Int (Back));
    begin
       if Err = Curses_Err then
          raise Curses_Exception;

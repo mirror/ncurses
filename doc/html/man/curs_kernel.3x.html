@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+  * Copyright (c) 1998-2001,2005 Free Software Foundation, Inc.                        *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_kernel.3x,v 1.13 2001/12/08 18:01:25 tom Exp @
+  * @Id: curs_kernel.3x,v 1.15 2005/05/15 16:18:13 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,16 +40,16 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>                                   <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>
+<STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>                                         <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>def_prog_mode</STRONG>,       <STRONG>def_shell_mode</STRONG>,      <STRONG>reset_prog_mode</STRONG>,
-       <STRONG>reset_shell_mode</STRONG>, <STRONG>resetty</STRONG>, <STRONG>savetty</STRONG>, <STRONG>getsyx</STRONG>, <STRONG>setsyx</STRONG>, <STRONG>ripof-</STRONG>
-       <STRONG>fline</STRONG>, <STRONG>curs_set</STRONG>, <STRONG>napms</STRONG> - low-level <STRONG>curses</STRONG> routines
+       <STRONG>def_prog_mode</STRONG>, <STRONG>def_shell_mode</STRONG>, <STRONG>reset_prog_mode</STRONG>,
+       <STRONG>reset_shell_mode</STRONG>, <STRONG>resetty</STRONG>, <STRONG>savetty</STRONG>, <STRONG>getsyx</STRONG>, <STRONG>setsyx</STRONG>,
+       <STRONG>ripoffline</STRONG>, <STRONG>curs_set</STRONG>, <STRONG>napms</STRONG> - low-level <STRONG>curses</STRONG> routines
 
 
 </PRE>
@@ -77,10 +77,10 @@
 
        The  <STRONG>def_prog_mode</STRONG>  and  <STRONG>def_shell_mode</STRONG>  routines save the
        current terminal modes as the  "program"  (in  <STRONG>curses</STRONG>)  or
-       "shell"   (not   in   <STRONG>curses</STRONG>)   state   for   use  by  the
-       <STRONG>reset_prog_mode</STRONG> and <STRONG>reset_shell_mode</STRONG>  routines.   This  is
-       done  automatically  by  <STRONG>initscr</STRONG>.   There is one such save
-       area for each screen context allocated by <STRONG>newterm()</STRONG>.
+       "shell"   (not  in  <STRONG>curses</STRONG>)  state  for  use  by  the  <STRONG>re-</STRONG>
+       <STRONG>set_prog_mode</STRONG> and <STRONG>reset_shell_mode</STRONG> routines.  This is done
+       automatically by <STRONG>initscr</STRONG>.  There is one such save area for
+       each screen context allocated by <STRONG>newterm()</STRONG>.
 
        The <STRONG>reset_prog_mode</STRONG> and <STRONG>reset_shell_mode</STRONG> routines  restore
        the  terminal  to "program" (in <STRONG>curses</STRONG>) or "shell" (out of
@@ -96,22 +96,22 @@
        The  <STRONG>getsyx</STRONG> routine returns the current coordinates of the
        virtual screen cursor in <EM>y</EM> and <EM>x</EM>.  If <STRONG>leaveok</STRONG> is currently
        <STRONG>TRUE</STRONG>,  then <STRONG>-1</STRONG>,<STRONG>-1</STRONG> is returned.  If lines have been removed
-       from the top of the screen,  using  <STRONG>ripoffline</STRONG>,  <EM>y</EM>  and  <EM>x</EM>
-       include  these  lines;  therefore,  <EM>y</EM> and <EM>x</EM> should be used
-       only as arguments for <STRONG>setsyx</STRONG>.
+       from the top of the screen, using <STRONG>ripoffline</STRONG>, <EM>y</EM> and <EM>x</EM>  in-
+       clude  these lines; therefore, <EM>y</EM> and <EM>x</EM> should be used only
+       as arguments for <STRONG>setsyx</STRONG>.
 
        The <STRONG>setsyx</STRONG> routine sets the virtual screen cursor to <EM>y</EM>, <EM>x</EM>.
        If <EM>y</EM> and <EM>x</EM> are both <STRONG>-1</STRONG>, then <STRONG>leaveok</STRONG> is set.  The two rou-
-       tines <STRONG>getsyx</STRONG> and <STRONG>setsyx</STRONG> are  designed  to  be  used  by  a
-       library routine, which manipulates <STRONG>curses</STRONG> windows but does
+       tines <STRONG>getsyx</STRONG> and <STRONG>setsyx</STRONG> are designed to be used by  a  li-
+       brary  routine,  which manipulates <STRONG>curses</STRONG> windows but does
        not want to change the current position of  the  program's
-       cursor.   The  library  routine  would  call <STRONG>getsyx</STRONG> at the
-       beginning, do its manipulation of its own  windows,  do  a
+       cursor.   The library routine would call <STRONG>getsyx</STRONG> at the be-
+       ginning, do its manipulation of  its  own  windows,  do  a
        <STRONG>wnoutrefresh</STRONG>  on  its  windows, call <STRONG>setsyx</STRONG>, and then call
        <STRONG>doupdate</STRONG>.
 
-       The <STRONG>ripoffline</STRONG> routine provides access to the same  facil-
-       ity  that  <STRONG>slk_init</STRONG>  [see <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>] uses to reduce the
+       The <STRONG>ripoffline</STRONG> routine provides access to the same facili-
+       ty  that  <STRONG>slk_init</STRONG>  [see  <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>] uses to reduce the
        size of the screen.   <STRONG>ripoffline</STRONG>  must  be  called  before
        <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG> is called.  If <EM>line</EM> is positive, a line
        is removed from the top of <STRONG>stdscr</STRONG>; if <EM>line</EM> is negative,  a
@@ -128,20 +128,35 @@
        <STRONG>ripoffline</STRONG>  can  be called up to five times before calling
        <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.
 
-       The <STRONG>curs_set</STRONG> routine sets  the  cursor  state  is  set  to
-       invisible, normal, or very visible for <STRONG>visibility</STRONG> equal to
+       The <STRONG>curs_set</STRONG> routine sets the cursor state is set  to  in-
+       visible,  normal,  or very visible for <STRONG>visibility</STRONG> equal to
        <STRONG>0</STRONG>, <STRONG>1</STRONG>, or <STRONG>2</STRONG> respectively.  If  the  terminal  supports  the
-       <EM>visibility</EM>   requested,   the  previous  <EM>cursor</EM>  state  is
-       returned; otherwise, <STRONG>ERR</STRONG> is returned.
+       <EM>visibility</EM>  requested,  the  previous  <EM>cursor</EM> state is re-
+       turned; otherwise, <STRONG>ERR</STRONG> is returned.
 
        The <STRONG>napms</STRONG> routine is used to sleep for <EM>ms</EM> milliseconds.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Except for <STRONG>curs_set</STRONG>,  these  routines  always  return  <STRONG>OK</STRONG>.
-       <STRONG>curs_set</STRONG>  returns the previous cursor state, or <STRONG>ERR</STRONG> if the
+       Except for <STRONG>curs_set</STRONG>, these routines always return <STRONG>OK</STRONG>.
+
+       <STRONG>curs_set</STRONG> returns the previous cursor state, or <STRONG>ERR</STRONG> if  the
        requested <EM>visibility</EM> is not supported.
+
+       X/Open  defines  no error conditions.  In this implementa-
+       tion
+
+              <STRONG>def_prog_mode</STRONG>, <STRONG>def_shell_mode</STRONG>, <STRONG>reset_prog_mode</STRONG>, <STRONG>re-</STRONG>
+              <STRONG>set_shell_mode</STRONG>
+                   return an error if the terminal was  not  ini-
+                   tialized,  or  if  the  I/O call to obtain the
+                   terminal settings fails.
+
+              <STRONG>ripoffline</STRONG>
+                   returns an error  if  the  maximum  number  of
+                   ripped-off  lines exceeds the maximum (NRIPS =
+                   5).
 
 
 </PRE>
@@ -174,12 +189,12 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,      <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>, <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,  <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>, <STRONG>curs_re-</STRONG>
+       <STRONG><A HREF="curs_refresh.3x.html">fresh(3x)</A></STRONG>, <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>, <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
 
 
 
-                                                  <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>
+                                                        <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

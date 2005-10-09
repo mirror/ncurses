@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 1996-2004                                      *
+ *  Author: Thomas E. Dickey                        1996-on                 *
  *     and: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  ****************************************************************************/
@@ -41,7 +41,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.9 2004/02/03 01:16:37 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.14 2005/08/20 20:01:20 tom Exp $")
 
 static char *
 _nc_vischar(char *tp, unsigned c)
@@ -68,7 +68,7 @@ _nc_vischar(char *tp, unsigned c)
 	*tp++ = '^';
 	*tp++ = '@' + c;
     } else {
-	sprintf(tp, "\\%03lo", ChCharOf(c));
+	sprintf(tp, "\\%03lo", (unsigned long) ChCharOf(c));
 	tp += strlen(tp);
     }
     *tp = 0;
@@ -128,8 +128,22 @@ _nc_visbufn(const char *buf, int len)
 
 #if USE_WIDEC_SUPPORT
 #ifdef TRACE
+
+#if defined(USE_TERMLIB)
+#define _nc_wchstrlen _my_wchstrlen
+static int
+_nc_wchstrlen(const cchar_t *s)
+{
+    int result = 0;
+    while (CharOf(s[result]) != L'\0') {
+	result++;
+    }
+    return result;
+}
+#endif
+
 static const char *
-_nc_viswbuf2n(int bufnum, const wchar_t * buf, int len)
+_nc_viswbuf2n(int bufnum, const wchar_t *buf, int len)
 {
     char *vbuf;
     char *tp;
@@ -168,25 +182,47 @@ _nc_viswbuf2n(int bufnum, const wchar_t * buf, int len)
 }
 
 NCURSES_EXPORT(const char *)
-_nc_viswbuf2(int bufnum, const wchar_t * buf)
+_nc_viswbuf2(int bufnum, const wchar_t *buf)
 {
     return _nc_viswbuf2n(bufnum, buf, -1);
 }
 
 NCURSES_EXPORT(const char *)
-_nc_viswbuf(const wchar_t * buf)
+_nc_viswbuf(const wchar_t *buf)
 {
     return _nc_viswbuf2(0, buf);
 }
 
 NCURSES_EXPORT(const char *)
-_nc_viswbufn(const wchar_t * buf, int len)
+_nc_viswbufn(const wchar_t *buf, int len)
 {
     return _nc_viswbuf2n(0, buf, len);
 }
 
+/* this special case is used for wget_wstr() */
 NCURSES_EXPORT(const char *)
-_nc_viscbuf2(int bufnum, const cchar_t * buf, int len)
+_nc_viswibuf(const wint_t *buf)
+{
+    static wchar_t *mybuf;
+    static unsigned mylen;
+    unsigned n;
+
+    for (n = 0; buf[n] != 0; ++n) ;
+    if (mylen < ++n) {
+	mylen = n + 80;
+	if (mybuf != 0)
+	    mybuf = typeRealloc(wchar_t, mylen, mybuf);
+	else
+	    mybuf = typeMalloc(wchar_t, mylen);
+    }
+    for (n = 0; buf[n] != 0; ++n)
+	mybuf[n] = (wchar_t) buf[n];
+
+    return _nc_viswbuf2(0, mybuf);
+}
+
+NCURSES_EXPORT(const char *)
+_nc_viscbuf2(int bufnum, const cchar_t *buf, int len)
 {
     char *result = _nc_trace_buf(bufnum, BUFSIZ);
     int n;
@@ -198,7 +234,7 @@ _nc_viscbuf2(int bufnum, const cchar_t * buf, int len)
 	len = _nc_wchstrlen(buf);
 
     for (n = 1; n < len; n++) {
-	if (AttrOf(buf[n]) != AttrOf(buf[0])) {
+	if (!SameAttrOf(buf[n], buf[0])) {
 	    same = FALSE;
 	    break;
 	}
@@ -218,7 +254,7 @@ _nc_viscbuf2(int bufnum, const cchar_t * buf, int len)
 	    if ((found = _nc_altcharset_name(attr, CharOfD(buf))) != 0) {
 		result = _nc_trace_bufcat(bufnum, found);
 		attr &= ~A_ALTCHARSET;
-	    } else if (!isnac(CHDEREF(buf))) {
+	    } else if (!isWidecExt(CHDEREF(buf))) {
 		PUTC_DATA;
 
 		PUTC_INIT;
@@ -260,7 +296,7 @@ _nc_viscbuf2(int bufnum, const cchar_t * buf, int len)
 }
 
 NCURSES_EXPORT(const char *)
-_nc_viscbuf(const cchar_t * buf, int len)
+_nc_viscbuf(const cchar_t *buf, int len)
 {
     return _nc_viscbuf2(0, buf, len);
 }

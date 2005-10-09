@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2002,2003 Free Software Foundation, Inc.                   *
+  * Copyright (c) 2002-2003,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_get_wstr.3x,v 1.3 2003/07/05 11:15:28 tom Exp @
+  * @Id: curs_get_wstr.3x,v 1.5 2005/05/15 16:17:44 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,15 +40,15 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>                               <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
+<STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>                                     <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>get_wstr</STRONG>,  <STRONG>getn_wstr</STRONG>,  <STRONG>wget_wstr</STRONG>,  <STRONG>wgetn_wstr</STRONG>, <STRONG>mvget_wstr</STRONG>,
-       <STRONG>mvgetn_wstr</STRONG>, <STRONG>mvwget_wstr</STRONG>, <STRONG>mvwgetn_wstr</STRONG> - get an  array  of
+       <STRONG>get_wstr</STRONG>, <STRONG>getn_wstr</STRONG>, <STRONG>wget_wstr</STRONG>, <STRONG>wgetn_wstr</STRONG>, <STRONG>mvget_wstr</STRONG>,
+       <STRONG>mvgetn_wstr</STRONG>, <STRONG>mvwget_wstr</STRONG>, <STRONG>mvwgetn_wstr</STRONG> - get an array of
        wide characters from a curses terminal keyboard
 
 
@@ -74,8 +74,8 @@
        tion is represented by <STRONG>WEOF</STRONG>, as defined in <STRONG>&lt;wchar.h&gt;</STRONG>.  The
        newline  and end-of-line conditions are represented by the
        <STRONG>\n</STRONG> <STRONG>wchar_t</STRONG> value.  In all instances, the end of the string
-       is  terminated  by  a  null  <STRONG>wchar_t</STRONG>.   The routine places
-       resulting values in the area pointed to by <EM>wstr</EM>.
+       is  terminated  by a null <STRONG>wchar_t</STRONG>.  The routine places re-
+       sulting values in the area pointed to by <EM>wstr</EM>.
 
        The user's erase and kill characters are interpreted.   If
        keypad   mode   is   on   for  the  window,  <STRONG>KEY_LEFT</STRONG>  and
@@ -122,6 +122,13 @@
        All of these functions return <STRONG>OK</STRONG> upon  successful  comple-
        tion.  Otherwise, they return <STRONG>ERR</STRONG>.
 
+       Functions  using  a window parameter return an error if it
+       is null.
+
+              <STRONG>wgetn_wstr</STRONG>
+                   returns an error if  the  associated  call  to
+                   <STRONG>wget_wch</STRONG> failed.
+
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
@@ -130,8 +137,8 @@
        implementation  returns ERR if the window pointer is null,
        or if the lower-level <STRONG>wget_wch</STRONG> call returns  an  ERR.   In
        the  latter  case,  an  ERR  return  without other data is
-       treated as an  end-of-file  condition,  and  the  returned
-       array contains a <STRONG>WEOF</STRONG> followed by a null <STRONG>wchar_t</STRONG>.
+       treated as an end-of-file condition, and the returned  ar-
+       ray contains a <STRONG>WEOF</STRONG> followed by a null <STRONG>wchar_t</STRONG>.
 
        X/Open  curses  documents these functions to pass an array
        of <STRONG>wchar_t</STRONG>, but all of the vendors  implement  this  using
@@ -144,7 +151,7 @@
 
 
 
-                                                <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
+                                                      <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1999-2002,2003 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1999-2003,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,9 +26,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.18 2003/12/27 18:48:59 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.20 2005/05/15 16:19:13 tom Exp $
 .TH curs_terminfo 3X ""
 .ds n 5
+.na
+.hy 0
 .SH NAME
 \fBdel_curterm\fR,
 \fBmvcur\fR,
@@ -46,6 +48,8 @@
 \fBvid_puts\fR,
 \fBvidattr\fR,
 \fBvidputs\fR - \fBcurses\fR interfaces to terminfo database
+.ad
+.hy
 .SH SYNOPSIS
 .nf
 \fB#include <curses.h>\fR
@@ -252,6 +256,25 @@ Routines that return an integer return \fBERR\fR upon failure and \fBOK\fR
 completion, unless otherwise noted in the preceding routine descriptions.
 .PP
 Routines that return pointers always return \fBNULL\fR on error.
+.PP
+X/Open defines no error conditions.
+In this implementation
+.RS
+.TP 5
+\fBdel_curterm\fP
+returns an error
+if its terminal parameter is null.
+.TP 5
+\fBrestartterm\fP
+returns an error
+if the associated call to \fBsetupterm\fP returns an error.
+.TP 5
+\fBsetupterm\fP
+returns an error
+if it cannot allocate enough memory, or
+create the initial windows (stdscr, curscr, newscr).
+Other error conditions are documented above.
+.RE
 .SH NOTES
 The \fBsetupterm\fR routine should be used in place of \fBsetterm\fR.
 It may be useful when you want to test for terminal capabilities without

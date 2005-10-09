@@ -7,7 +7,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.32 2002/10/19 22:11:24 tom Exp $
+ * $Id: testcurs.c,v 1.34 2005/04/16 16:19:12 tom Exp $
  */
 
 #include <test.priv.h>
@@ -33,7 +33,7 @@ struct commands {
 };
 typedef struct commands COMMAND;
 
-const COMMAND command[] =
+static const COMMAND command[] =
 {
     {"General Test", introTest},
     {"Pad Test", padTest},
@@ -58,7 +58,7 @@ strdup(char *s)
 }
 #endif /* not HAVE_STRDUP */
 
-int width, height;
+static int width, height;
 
 int
 main(
@@ -158,7 +158,7 @@ Continue(WINDOW *win)
     int x1 = getmaxx(win);
     int y0 = y1 < 10 ? y1 : 10;
     int x0 = 1;
-    long save;
+    chtype save;
 
     save = mvwinch(win, y0, x1 - 1);
 
@@ -358,7 +358,7 @@ inputTest(WINDOW *win)
 	else if (isprint(c))
 	    wprintw(win, "Key Pressed: %c", c);
 	else
-	    wprintw(win, "Key Pressed: %s", unctrl(c));
+	    wprintw(win, "Key Pressed: %s", unctrl(UChar(c)));
 #if defined(PDCURSES)
 	if (c == KEY_MOUSE) {
 	    int button = 0;
@@ -400,7 +400,8 @@ inputTest(WINDOW *win)
 
     repeat = 0;
     do {
-	static const char *fmt[] = {
+	static const char *fmt[] =
+	{
 	    "%d %10s",
 	    "%d %[a-zA-Z]s",
 	    "%d %[][a-zA-Z]s",
@@ -689,12 +690,12 @@ padTest(WINDOW *dummy GCC_UNUSED)
 static void
 display_menu(int old_option, int new_option)
 {
-    register size_t i;
+    int i;
 
     attrset(A_NORMAL);
     mvaddstr(3, 20, "PDCurses Test Program");
 
-    for (i = 0; i < MAX_OPTIONS; i++)
+    for (i = 0; i < (int) MAX_OPTIONS; i++)
 	mvaddstr(5 + i, 25, command[i].text);
     if (old_option != (-1))
 	mvaddstr(5 + old_option, 25, command[old_option].text);

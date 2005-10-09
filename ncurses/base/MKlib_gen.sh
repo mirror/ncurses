@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.23 2004/02/07 13:31:35 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.24 2005/06/11 19:26:05 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -39,14 +39,14 @@
 #
 # This script accepts a file of prototypes on standard input.  It discards
 # any that don't have a `generated' comment attached. It then parses each
-# prototype (relying on the fact that none of the macros take function 
+# prototype (relying on the fact that none of the macros take function
 # pointer or array arguments) and generates C source from it.
 #
 # Here is what the pipeline stages are doing:
 #
 # 1. sed: extract prototypes of generated functions
 # 2. sed: decorate prototypes with generated arguments a1. a2,...z
-# 3. awk: generate the calls with args matching the formals 
+# 3. awk: generate the calls with args matching the formals
 # 4. sed: prefix function names in prototypes so the preprocessor won't expand
 #         them.
 # 5. cpp: macro-expand the file so the macro calls turn into C calls
@@ -257,13 +257,17 @@ $0 !~ /^P_/ {
 	comma = ""
 	num = 0;
 	pointer = 0;
+	va_list = 0;
+	varargs = 0;
 	argtype = ""
 	for (i = myfunc; i <= NF; i++) {
 		ch = $i;
 		if ( ch == "*" )
 			pointer = 1;
 		else if ( ch == "va_list" )
-			pointer = 1;
+			va_list = 1;
+		else if ( ch == "..." )
+			varargs = 1;
 		else if ( ch == "char" )
 			argtype = "char";
 		else if ( ch == "int" )
@@ -276,7 +280,11 @@ $0 !~ /^P_/ {
 			argtype = "attr";
 
 		if ( ch == "," || ch == ")" ) {
-			if (pointer) {
+			if (va_list) {
+				call = call "%s"
+			} else if (varargs) {
+				call = call "%s"
+			} else if (pointer) {
 				if ( argtype == "char" ) {
 					call = call "%s"
 					comma = comma "_nc_visbuf2(" num ","
@@ -295,10 +303,17 @@ $0 !~ /^P_/ {
 					comma = comma "(long)"
 				}
 			}
-			if (ch == ",")
+			if (ch == ",") {
 				args = args comma "a" ++num;
-			else if ( argcount != 0 && $check != "..." )
-				args = args comma "z"
+			} else if ( argcount != 0 ) {
+				if ( va_list ) {
+					args = args comma "\"va_list\""
+				} else if ( varargs ) {
+					args = args comma "\"...\""
+				} else {
+					args = args comma "z"
+				}
+			}
 			call = call ch
 			if (pointer == 0 && argcount != 0 && argtype != "" )
 				args = args ")"

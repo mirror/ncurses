@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.11 $
+--  $Revision: 1.14 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Calendar; use Ada.Calendar;
@@ -111,12 +112,12 @@ package body Sample.Header_Handler is
          "November ",
          "December ");
 
-      Now : Time := Clock;
-      Sec : Integer := Integer (Seconds (Now));
-      Hour   : Integer := Sec / 3600;
-      Minute : Integer := (Sec - Hour * 3600) / 60;
-      Mon    : Month_Number := Month (Now);
-      D      : Day_Number   := Day (Now);
+      Now    : constant Time         := Clock;
+      Sec    : constant Integer      := Integer (Seconds (Now));
+      Hour   : constant Integer      := Sec / 3600;
+      Minute : constant Integer      := (Sec - Hour * 3600) / 60;
+      Mon    : constant Month_Number := Month (Now);
+      D      : constant Day_Number   := Day (Now);
    begin
       if Header_Window /= Null_Window then
          if Minute /= Display_Min or else Hour /= Display_Hour

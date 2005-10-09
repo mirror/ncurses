@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tic.1m,v 1.35 2003/05/11 00:32:53 tom Exp @
+  * @Id: tic.1m,v 1.38 2005/04/30 19:39:28 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,7 +40,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>                                                   <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>
+<STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>                                                         <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>
 
 
 
@@ -86,7 +86,9 @@
               rather than discarding them.  Capabilities are com-
               mented by prefixing them with a period.  This  sets
               the  <STRONG>-x</STRONG> option, because it treats the commented-out
-              entries as user-defined names.
+              entries as user-defined names.  If  the  source  is
+              termcap,  accept  the 2-character names required by
+              version 6.  Otherwise these are ignored.
 
        <STRONG>-C</STRONG>     Force source translation to termcap format.   Note:
               this  differs  from the <STRONG>-C</STRONG> option of <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG> in
@@ -111,8 +113,8 @@
               alias of a terminal matches one of the names in the
               list, the entry will be written  or  translated  as
               normal.   Otherwise no output will be generated for
-              it.  The option value  is  interpreted  as  a  file
-              containing  the  list if it contains a '/'.  (Note:
+              it.  The option value is interpreted as a file con-
+              taining  the  list  if  it  contains a '/'.  (Note:
               depending on how tic was compiled, this option  may
               require <STRONG>-I</STRONG> or <STRONG>-C</STRONG>.)
 
@@ -194,7 +196,9 @@
               is,  if you supply a capability name which <STRONG>tic</STRONG> does
               not recognize, it will  infer  its  type  (boolean,
               number  or  string)  from  the  syntax  and make an
-              extended table entry for that.
+              extended table entry for that.  User-defined  capa-
+              bility  strings  whose  name  begins with ``k'' are
+              treated as function keys.
 
        <EM>file</EM>   contains one or more <STRONG>terminfo</STRONG> terminal descriptions
               in  source format [see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].  Each descrip-
@@ -215,8 +219,8 @@
 
        8      List of tokens encountered by scanner
 
-       9      All  values  computed  in  construction of the hash
-              table
+       9      All values computed in construction of the hash ta-
+              ble
 
        If the debug level <EM>n</EM> is not given, it is taken to be  one.
 
@@ -301,7 +305,7 @@
 
 
 
-                                                          <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>
+                                                                <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.7 $
+--  $Revision: 1.10 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Characters.Handling; use Ada.Characters.Handling;
@@ -54,7 +55,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types.Enumeration.Ada is
       I.Match_Must_Be_Unique := Must_Be_Unique;
 
       for E in T'Range loop
-         I.Names (J) := new String'(T'Image (T (E)));
+         I.Names (J) := new String'(T'Image (E));
          --  The Image attribute defaults to upper case, so we have to handle
          --  only the other ones...
          if Set /= Upper_Case then

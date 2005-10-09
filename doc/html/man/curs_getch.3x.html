@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.24 2003/12/27 18:46:06 tom Exp @
+  * @Id: curs_getch.3x,v 1.29 2005/06/25 22:03:09 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,14 +41,14 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>                                     <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
+<STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>                                           <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>getch</STRONG>,  <STRONG>wgetch</STRONG>,  <STRONG>mvgetch</STRONG>, <STRONG>mvwgetch</STRONG>, <STRONG>ungetch</STRONG>, <STRONG>has_key</STRONG> - get
+       <STRONG>getch</STRONG>, <STRONG>wgetch</STRONG>, <STRONG>mvgetch</STRONG>, <STRONG>mvwgetch</STRONG>, <STRONG>ungetch</STRONG>, <STRONG>has_key</STRONG> - get
        (or push back) characters from <STRONG>curses</STRONG> terminal keyboard
 
 
@@ -70,8 +70,8 @@
        character  from the window.  In no-delay mode, if no input
        is waiting, the value <STRONG>ERR</STRONG> is returned.  In delay mode, the
        program  waits until the system passes text through to the
-       program.  Depending on the  setting  of  <STRONG>cbreak</STRONG>,  this  is
-       after one character (cbreak mode), or after the first new-
+       program.  Depending on the setting of <STRONG>cbreak</STRONG>, this is  af-
+       ter  one  character (cbreak mode), or after the first new-
        line (nocbreak mode).  In  half-delay  mode,  the  program
        waits  until a character is typed or the specified timeout
        has been reached.
@@ -81,31 +81,30 @@
        lowing rules: If the character is the current erase  char-
        acter,  left  arrow, or backspace, the cursor is moved one
        space to the left and that screen position is erased as if
-       <STRONG>delch</STRONG>  had  been  called.   If  the character value is any
-       other <STRONG>KEY_</STRONG> define, the user is alerted with a  <STRONG>beep</STRONG>  call.
+       <STRONG>delch</STRONG> had been called.  If the character value is any oth-
+       er <STRONG>KEY_</STRONG> define, the user is  alerted  with  a  <STRONG>beep</STRONG>  call.
        Otherwise the character is simply output to the screen.
 
        If the window is not a pad, and it has been moved or modi-
        fied since the last call to  <STRONG>wrefresh</STRONG>,  <STRONG>wrefresh</STRONG>  will  be
        called before another character is read.
 
-       If  <STRONG>keypad</STRONG>  is  <STRONG>TRUE</STRONG>,  and  a function key is pressed, the
-       token for that function key is returned instead of the raw
-       characters.    Possible   function  keys  are  defined  in
-       <STRONG>&lt;curses.h&gt;</STRONG> as macros with  values  outside  the  range  of
-       8-bit  characters  whose  names  begin  with <STRONG>KEY_</STRONG>. Thus, a
-       variable intended to hold the return value of  a  function
-       key must be of short size or larger.
+       If  <STRONG>keypad</STRONG> is <STRONG>TRUE</STRONG>, and a function key is pressed, the to-
+       ken for that function key is returned instead of  the  raw
+       characters.   Possible function keys are defined in <STRONG>&lt;curs-</STRONG>
+       <STRONG>es.h&gt;</STRONG> as macros with values outside  the  range  of  8-bit
+       characters  whose  names begin with <STRONG>KEY_</STRONG>. Thus, a variable
+       intended to hold the return value of a function  key  must
+       be of short size or larger.
 
        When a character that could be the beginning of a function
-       key is received (which,  on  modern  terminals,  means  an
-       escape  character), <STRONG>curses</STRONG> sets a timer.  If the remainder
-       of the sequence does not come  in  within  the  designated
-       time,  the  character  is  passed  through; otherwise, the
-       function key value is returned.   For  this  reason,  many
-       terminals  experience  a  delay  between  the  time a user
-       presses the escape key and the escape is returned  to  the
-       program.
+       key is received (which, on modern terminals, means an  es-
+       cape character), <STRONG>curses</STRONG> sets a timer.  If the remainder of
+       the sequence does not come in within the designated  time,
+       the  character  is passed through; otherwise, the function
+       key value is returned.  For this  reason,  many  terminals
+       experience a delay between the time a user presses the es-
+       cape key and the escape is returned to the program.
 
        The <STRONG>ungetch</STRONG> routine places <EM>ch</EM> back onto the input queue to
        be returned by the next call to <STRONG>wgetch</STRONG>.  There is just one
@@ -113,14 +112,14 @@
 
 
    <STRONG>Function</STRONG> <STRONG>Keys</STRONG>
-       The  following function keys, defined in <STRONG>&lt;curses.h&gt;</STRONG>, might
-       be returned by <STRONG>getch</STRONG> if <STRONG>keypad</STRONG>  has  been  enabled.   Note
-       that  not  all  of  these are necessarily supported on any
+       The following function keys, defined in <STRONG>&lt;curses.h&gt;</STRONG>,  might
+       be  returned  by  <STRONG>getch</STRONG>  if <STRONG>keypad</STRONG> has been enabled.  Note
+       that not all of these are  necessarily  supported  on  any
        particular terminal.
 
-            <EM>Name</EM>            <EM>Key</EM> <EM>name</EM>
 
-                   KEY_BREAK       Break key
+            <EM>Name</EM>            <EM>Key</EM> <EM>name</EM>
+            KEY_BREAK       Break key
             KEY_DOWN        The four arrow keys ...
             KEY_UP
             KEY_LEFT
@@ -178,10 +177,10 @@
             KEY_REFERENCE   Ref(erence) key
             KEY_REFRESH     Refresh key
             KEY_REPLACE     Replace key
-
             KEY_RESIZE      Screen resized
             KEY_RESTART     Restart key
             KEY_RESUME      Resume key
+
             KEY_SAVE        Save key
             KEY_SBEG        Shifted beginning key
             KEY_SCANCEL     Shifted cancel key
@@ -217,6 +216,7 @@
 
        Keypad is arranged like this:
 
+
                          +-----+------+-------+
                          | <STRONG>A1</STRONG>  |  <STRONG>up</STRONG>  |  <STRONG>A3</STRONG>   |
                          +-----+------+-------+
@@ -227,16 +227,27 @@
        The <STRONG>has_key</STRONG> routine takes a key value from the above list,
        and returns TRUE or FALSE according to whether the current
        terminal type recognizes a key with that value.  Note that
-       a few values do  not  correspond  to  a  real  key,  e.g.,
-       KEY_RESIZE and KEY_MOUSE.
+       a  few  values  do  not  correspond  to  a real key, e.g.,
+       <STRONG>KEY_RESIZE</STRONG> and <STRONG>KEY_MOUSE</STRONG>.  See <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG> for more de-
+       tails  about  <STRONG>KEY_RESIZE</STRONG>, and <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> for a discus-
+       sion of <STRONG>KEY_MOUSE</STRONG>.
 
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       All  routines  return  the integer <STRONG>ERR</STRONG> upon failure and an
+       All routines return the integer <STRONG>ERR</STRONG> upon  failure  and  an
        integer value other than <STRONG>ERR</STRONG> (<STRONG>OK</STRONG> in the case of ungetch())
        upon successful completion.
+
+              <STRONG>ungetch</STRONG>
+                   returns an error if there is no more  room  in
+                   the FIFO.
+
+              <STRONG>wgetch</STRONG>
+                   returns  an  error  if  the  window pointer is
+                   null, or if its timeout expires without having
+                   any data.
 
 
 </PRE>
@@ -247,19 +258,19 @@
        ing function-key sequence.
 
        Note that some keys may be the same as commonly used  con-
-       trol keys, e.g., KEY_ENTER versus control/M, KEY_BACKSPACE
+       trol keys, e.g., <STRONG>KEY_ENTER</STRONG> versus control/M, <STRONG>KEY_BACKSPACE</STRONG>
        versus control/H.  Some curses implementations may  differ
        according  to  whether  they treat these control keys spe-
        cially (and ignore the terminfo), or use the terminfo def-
        initions.   <STRONG>Ncurses</STRONG>  uses  the terminfo definition.  If it
-       says  that  KEY_ENTER  is  control/M,  <STRONG>getch</STRONG>  will  return
-       KEY_ENTER when you press control/M.
+       says  that  <STRONG>KEY_ENTER</STRONG>  is  control/M,  <STRONG>getch</STRONG>  will  return
+       <STRONG>KEY_ENTER</STRONG> when you press control/M.
 
        When  using  <STRONG>getch</STRONG>, <STRONG>wgetch</STRONG>, <STRONG>mvgetch</STRONG>, or <STRONG>mvwgetch</STRONG>, nocbreak
        mode (<STRONG>nocbreak</STRONG>) and echo mode (<STRONG>echo</STRONG>) should not be used at
        the  same  time.  Depending on the state of the tty driver
-       when each character is  typed,  the  program  may  produce
-       undesirable results.
+       when each character is typed, the program may produce  un-
+       desirable results.
 
        Note that <STRONG>getch</STRONG>, <STRONG>mvgetch</STRONG>, and <STRONG>mvwgetch</STRONG> may be macros.
 
@@ -282,38 +293,38 @@
 
        The  echo  behavior of these functions on input of <STRONG>KEY_</STRONG> or
        backspace characters was not specified in the  SVr4  docu-
-       mentation.   This  description  is  adopted  from  the XSI
-       Curses standard.
+       mentation.  This description is adopted from the XSI Curs-
+       es standard.
 
        The behavior of <STRONG>getch</STRONG> and friends in the presence of  han-
        dled  signals  is  unspecified  in the SVr4 and XSI Curses
        documentation.  Under historical  curses  implementations,
-       it  varied  depending  on  whether  the operating system's
-       implementation of  handled  signal  receipt  interrupts  a
+       it  varied depending on whether the operating system's im-
+       plementation  of  handled  signal  receipt  interrupts   a
        <STRONG><A HREF="read.2.html">read(2)</A></STRONG>  call in progress or not, and also (in some imple-
        mentations) depending on whether an input timeout or  non-
        blocking mode has been set.
 
        Programmers concerned about portability should be prepared
-       for either of two  cases:  (a)  signal  receipt  does  not
-       interrupt  <STRONG>getch</STRONG>;  (b) signal receipt interrupts <STRONG>getch</STRONG> and
+       for either of two cases: (a) signal receipt does  not  in-
+       terrupt  <STRONG>getch</STRONG>;  (b)  signal  receipt interrupts <STRONG>getch</STRONG> and
        causes it to return ERR with <STRONG>errno</STRONG> set  to  <STRONG>EINTR</STRONG>.   Under
        the  <STRONG>ncurses</STRONG>  implementation, handled signals never inter-
        rupt <STRONG>getch</STRONG>.
 
        The <STRONG>has_key</STRONG> function is unique to <STRONG>ncurses</STRONG>.   We  recommend
-       that   any   code  using  it  be  conditionalized  on  the
-       <STRONG>NCURSES_VERSION</STRONG> feature macro.
+       that  any  code  using it be conditionalized on the <STRONG>NCURS-</STRONG>
+       <STRONG>ES_VERSION</STRONG> feature macro.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,        <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>,        <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>.  <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>.
+       <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>.
 
 
 
-                                                   <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
+                                                         <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

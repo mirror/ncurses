@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML><HEAD><TITLE>terminal_interface-curses-trace.ads</TITLE></HEAD>
 <BODY>
 <HR><DIV ALIGN="center"><H1> File : terminal_interface-curses-trace.ads </H1></DIV><HR>
@@ -50,20 +51,19 @@
    <b>pragma</b> Warnings (Off);
    <b>type</b> Trace_Attribute_Set <b>is</b>
       <b>record</b>
-         <FONT COLOR=red><A NAME="49_10">Times</A></FONT>            : Boolean;
-         <FONT COLOR=red><A NAME="50_10">Tputs</A></FONT>            : Boolean;
-         <FONT COLOR=red><A NAME="51_10">Update</A></FONT>           : Boolean;
-         <FONT COLOR=red><A NAME="52_10">Cursor_Move</A></FONT>      : Boolean;
-         <FONT COLOR=red><A NAME="53_10">Character_Output</A></FONT> : Boolean;
-         <FONT COLOR=red><A NAME="54_10">Calls</A></FONT>            : Boolean;
-         <FONT COLOR=red><A NAME="55_10">Virtual_Puts</A></FONT>     : Boolean;
-         <FONT COLOR=red><A NAME="56_10">Input_Events</A></FONT>     : Boolean;
-         <FONT COLOR=red><A NAME="57_10">TTY_State</A></FONT>        : Boolean;
-         <FONT COLOR=red><A NAME="58_10">Internal_Calls</A></FONT>   : Boolean;
-         <FONT COLOR=red><A NAME="59_10">Character_Calls</A></FONT>  : Boolean;
+         <FONT COLOR=red><A NAME="ref_49_10">Times</A></FONT>            : Boolean;
+         <FONT COLOR=red><A NAME="ref_50_10">Tputs</A></FONT>            : Boolean;
+         <FONT COLOR=red><A NAME="ref_51_10">Update</A></FONT>           : Boolean;
+         <FONT COLOR=red><A NAME="ref_52_10">Cursor_Move</A></FONT>      : Boolean;
+         <FONT COLOR=red><A NAME="ref_53_10">Character_Output</A></FONT> : Boolean;
+         <FONT COLOR=red><A NAME="ref_54_10">Calls</A></FONT>            : Boolean;
+         <FONT COLOR=red><A NAME="ref_55_10">Virtual_Puts</A></FONT>     : Boolean;
+         <FONT COLOR=red><A NAME="ref_56_10">Input_Events</A></FONT>     : Boolean;
+         <FONT COLOR=red><A NAME="ref_57_10">TTY_State</A></FONT>        : Boolean;
+         <FONT COLOR=red><A NAME="ref_58_10">Internal_Calls</A></FONT>   : Boolean;
+         <FONT COLOR=red><A NAME="ref_59_10">Character_Calls</A></FONT>  : Boolean;
          Termcap_TermInfo : Boolean;
-      <b>end</b> <b>record</b><A HREF="terminal_interface-curses-trace__ads.htm#46_9">;</A>
-   <b>pragma</b> Pack (Trace_Attribute_Set);
+      <b>end</b> <b>record</b>;
    <b>pragma</b> Convention (C, Trace_Attribute_Set);
 
    <b>for</b> Trace_Attribute_Set <b>use</b>
@@ -95,7 +95,7 @@
       Update           =&gt; True,
       Cursor_Move      =&gt; True,
       Character_Output =&gt; True,
-   <FONT COLOR=red><A NAME="94_4"> </A></FONT>  <b>others</b>           =&gt; False);
+   <FONT COLOR=red><A NAME="ref_93_4"> </A></FONT>  <b>others</b>           =&gt; False);
    Trace_Maximum : <b>constant</b> Trace_Attribute_Set := (<b>others</b> =&gt; True);
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>

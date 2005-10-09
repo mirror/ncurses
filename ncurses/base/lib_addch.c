@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.80 2004/02/07 18:20:46 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.95 2005/03/27 16:52:16 tom Exp $")
 
 /*
  * Ugly microtweaking alert.  Everything from here to end of module is
@@ -49,29 +49,50 @@ MODULE_ID("$Id: lib_addch.c,v 1.80 2004/02/07 18:20:46 tom Exp $")
  */
 
 /* Return bit mask for clearing color pair number if given ch has color */
-#define COLOR_MASK(ch) (~(attr_t)((ch)&A_COLOR?A_COLOR:0))
+#define COLOR_MASK(ch) (~(attr_t)((ch) & A_COLOR ? A_COLOR : 0))
 
 static inline NCURSES_CH_T
 render_char(WINDOW *win, NCURSES_CH_T ch)
 /* compute a rendition of the given char correct for the current context */
 {
     attr_t a = win->_attrs;
+    int pair = GetPair(ch);
 
-    if (ISBLANK(ch) && AttrOf(ch) == A_NORMAL) {
-	/* color in attrs has precedence over bkgrnd */
+    if (ISBLANK(ch)
+	&& AttrOf(ch) == A_NORMAL
+	&& pair == 0) {
+	/* color/pair in attrs has precedence over bkgrnd */
 	ch = win->_nc_bkgd;
-	SetAttr(ch, a | (AttrOf(win->_nc_bkgd) & COLOR_MASK(a)));
+	SetAttr(ch, a | AttrOf(win->_nc_bkgd));
+	if ((pair = GET_WINDOW_PAIR(win)) == 0)
+	    pair = GetPair(win->_nc_bkgd);
+	SetPair(ch, pair);
     } else {
 	/* color in attrs has precedence over bkgrnd */
 	a |= AttrOf(win->_nc_bkgd) & COLOR_MASK(a);
 	/* color in ch has precedence */
+	if (pair == 0) {
+	    if ((pair = GET_WINDOW_PAIR(win)) == 0)
+		pair = GetPair(win->_nc_bkgd);
+	}
+#if 0
+	if (pair > 255) {
+	    NCURSES_CH_T fixme = ch;
+	    SetPair(fixme, pair);
+	}
+#endif
 	AddAttr(ch, (a & COLOR_MASK(AttrOf(ch))));
+	SetPair(ch, pair);
     }
 
-    TR(TRACE_VIRTPUT, ("render_char bkg %s, attrs %s -> ch %s",
-		       _tracech_t2(1, CHREF(win->_nc_bkgd)),
-		       _traceattr(win->_attrs),
-		       _tracech_t2(3, CHREF(ch))));
+    TR(TRACE_VIRTPUT,
+       ("render_char bkg %s (%d), attrs %s (%d) -> ch %s (%d)",
+	_tracech_t2(1, CHREF(win->_nc_bkgd)),
+	GetPair(win->_nc_bkgd),
+	_traceattr(win->_attrs),
+	GET_WINDOW_PAIR(win),
+	_tracech_t2(3, CHREF(ch)),
+	GetPair(ch)));
 
     return (ch);
 }
@@ -99,9 +120,109 @@ _nc_render(WINDOW *win, NCURSES_CH_T ch)
 #define CHECK_POSITION(win, x, y)	/* nothing */
 #endif
 
+/*
+ * The _WRAPPED flag is useful only for telling an application that we've just
+ * wrapped the cursor.  We don't do anything with this flag except set it when
+ * wrapping, and clear it whenever we move the cursor.  If we try to wrap at
+ * the lower-right corner of a window, we cannot move the cursor (since that
+ * wouldn't be legal).  So we return an error (which is what SVr4 does). 
+ * Unlike SVr4, we can successfully add a character to the lower-right corner
+ * (Solaris 2.6 does this also, however).
+ */
+static int
+wrap_to_next_line(WINDOW *win)
+{
+    win->_flags |= _WRAPPED;
+    if (++win->_cury > win->_regbottom) {
+	win->_cury = win->_regbottom;
+	win->_curx = win->_maxx;
+	if (!win->_scroll)
+	    return (ERR);
+	scroll(win);
+    }
+    win->_curx = 0;
+    return (OK);
+}
+
+#if USE_WIDEC_SUPPORT
+static int waddch_literal(WINDOW *, NCURSES_CH_T);
+/*
+ * Fill the given number of cells with blanks using the current background
+ * rendition.  This saves/restores the current x-position.
+ */
+static void
+fill_cells(WINDOW *win, int count)
+{
+    NCURSES_CH_T blank = NewChar2(BLANK_TEXT, BLANK_ATTR);
+    int save_x = win->_curx;
+    int save_y = win->_cury;
+
+    while (count-- > 0) {
+	if (waddch_literal(win, blank) == ERR)
+	    break;
+    }
+    win->_curx = save_x;
+    win->_cury = save_y;
+}
+#endif
+
+/*
+ * Build up the bytes for a multibyte character, returning the length when
+ * complete (a positive number), -1 for error and -2 for incomplete.
+ */
+#if USE_WIDEC_SUPPORT
+NCURSES_EXPORT(int)
+_nc_build_wch(WINDOW *win, ARG_CH_T ch)
+{
+    char *buffer = WINDOW_EXT(win, addch_work);
+    int len;
+    int x = win->_curx;
+    int y = win->_cury;
+    mbstate_t state;
+    wchar_t result;
+
+    if ((WINDOW_EXT(win, addch_used) != 0) &&
+	(WINDOW_EXT(win, addch_x) != x ||
+	 WINDOW_EXT(win, addch_y) != y)) {
+	/* discard the incomplete multibyte character */
+	WINDOW_EXT(win, addch_used) = 0;
+	TR(TRACE_VIRTPUT,
+	   ("Alert discarded multibyte on move (%d,%d) -> (%d,%d)",
+	    WINDOW_EXT(win, addch_y), WINDOW_EXT(win, addch_x),
+	    y, x));
+    }
+    WINDOW_EXT(win, addch_x) = x;
+    WINDOW_EXT(win, addch_y) = y;
+
+    init_mb(state);
+    buffer[WINDOW_EXT(win, addch_used)] = CharOf(CHDEREF(ch));
+    WINDOW_EXT(win, addch_used) += 1;
+    buffer[WINDOW_EXT(win, addch_used)] = '\0';
+    if ((len = mbrtowc(&result,
+		       buffer,
+		       WINDOW_EXT(win, addch_used), &state)) > 0) {
+	attr_t attrs = AttrOf(CHDEREF(ch));
+	SetChar(CHDEREF(ch), result, attrs);
+	WINDOW_EXT(win, addch_used) = 0;
+    } else {
+	if (len == -1) {
+	    /*
+	     * An error occurred.  We could either discard everything,
+	     * or assume that the error was in the previous input.
+	     * Try the latter.
+	     */
+	    TR(TRACE_VIRTPUT, ("Alert! mbrtowc returns error"));
+	    buffer[0] = CharOf(CHDEREF(ch));
+	    WINDOW_EXT(win, addch_used) = 1;
+	}
+    }
+    return len;
+}
+#endif /* USE_WIDEC_SUPPORT */
+
 static
 #if !USE_WIDEC_SUPPORT		/* cannot be inline if it is recursive */
-  inline
+inline
 #endif
 int
 waddch_literal(WINDOW *win, NCURSES_CH_T ch)
@@ -115,18 +236,6 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 
     CHECK_POSITION(win, x, y);
 
-    /*
-     * If we're trying to add a character at the lower-right corner more
-     * than once, fail.  (Moving the cursor will clear the flag).
-     */
-#if 0				/* Solaris 2.6 allows updating the corner more than once */
-    if (win->_flags & _WRAPPED) {
-	if (x >= win->_maxx)
-	    return (ERR);
-	win->_flags &= ~_WRAPPED;
-    }
-#endif
-
     ch = render_char(win, ch);
 
     line = win->_line + y;
@@ -137,118 +246,120 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
      * Build up multibyte characters until we have a wide-character.
      */
     if_WIDEC({
-	if (WINDOW_EXT(win, addch_used) == 0 && Charable(ch)) {
-	    WINDOW_EXT(win, addch_used) = 0;
-	} else {
-	    char *buffer = WINDOW_EXT(win, addch_work);
-	    int len;
-	    mbstate_t state;
-	    wchar_t result;
+	if (WINDOW_EXT(win, addch_used) != 0 || !Charable(ch)) {
+	    int len = _nc_build_wch(win, CHREF(ch));
 
-	    if ((WINDOW_EXT(win, addch_used) != 0) &&
-		(WINDOW_EXT(win, addch_x) != x ||
-		 WINDOW_EXT(win, addch_y) != y)) {
-		/* discard the incomplete multibyte character */
-		WINDOW_EXT(win, addch_used) = 0;
-	    }
-	    WINDOW_EXT(win, addch_x) = x;
-	    WINDOW_EXT(win, addch_y) = y;
-
-	    memset(&state, 0, sizeof(state));
-	    buffer[WINDOW_EXT(win, addch_used)] = CharOf(ch);
-	    WINDOW_EXT(win, addch_used) += 1;
-	    buffer[WINDOW_EXT(win, addch_used)] = '\0';
-	    if ((len = mbrtowc(&result,
-			       buffer,
-			       WINDOW_EXT(win, addch_used), &state)) > 0) {
-		attr_t attrs = AttrOf(ch);
-		SetChar(ch, result, attrs);
-		WINDOW_EXT(win, addch_used) = 0;
-		if (CharOf(ch) < 256) {
+	    if (len > 0) {
+		if (is8bits(CharOf(ch))) {
 		    const char *s = unctrl(CharOf(ch));
 		    if (s[1] != 0) {
 			return waddstr(win, s);
 		    }
 		}
 	    } else {
-		if (len == -1) {
-		    /*
-		     * An error occurred.  We could either discard everything,
-		     * or assume that the error was in the previous input.
-		     * Try the latter.
-		     */
-		    TR(TRACE_VIRTPUT, ("Alert! mbrtowc returns error"));
-		    buffer[0] = CharOf(ch);
-		    WINDOW_EXT(win, addch_used) = 1;
-		}
 		return OK;
 	    }
 	}
     });
 
     /*
-     * Handle non-spacing characters
+     * Non-spacing characters are added to the current cell.
+     *
+     * Spacing characters that are wider than one column require some display
+     * adjustments.
      */
     if_WIDEC({
-	if (wcwidth(CharOf(ch)) == 0) {
-	    int i;
+	int len = wcwidth(CharOf(ch));
+	int i;
+	int j;
+
+	if (len == 0) {		/* non-spacing */
 	    if ((x > 0 && y >= 0)
 		|| ((y = win->_cury - 1) >= 0 &&
 		    (x = win->_maxx) > 0)) {
 		wchar_t *chars = (win->_line[y].text[x - 1].chars);
 		for (i = 0; i < CCHARW_MAX; ++i) {
 		    if (chars[i] == 0) {
+			TR(TRACE_VIRTPUT,
+			   ("added non-spacing %d: %x",
+			    x, (int) CharOf(ch)));
 			chars[i] = CharOf(ch);
 			break;
 		    }
 		}
 	    }
 	    goto testwrapping;
+	} else if (len > 1) {	/* multi-column characters */
+	    /*
+	     * Check if the character will fit on the current line.  If it does
+	     * not fit, fill in the remainder of the line with blanks.  and
+	     * move to the next line.
+	     */
+	    if (len > win->_maxx + 1) {
+		TR(TRACE_VIRTPUT, ("character will not fit"));
+		return ERR;
+	    } else if (x + len > win->_maxx + 1) {
+		int count = win->_maxx + 1 - x;
+		TR(TRACE_VIRTPUT, ("fill %d remaining cells", count));
+		fill_cells(win, count);
+		if (wrap_to_next_line(win) == ERR)
+		    return ERR;
+		x = win->_curx;
+		y = win->_cury;
+	    }
+	    /*
+	     * Check for cells which are orphaned by adding this character, set
+	     * those to blanks.
+	     *
+	     * FIXME: this actually could fill j-i cells, more complicated to
+	     * setup though.
+	     */
+	    for (i = 0; i < len; ++i) {
+		if (isWidecBase(win->_line[y].text[i])) {
+		    break;
+		} else if (isWidecExt(win->_line[y].text[x + i])) {
+		    for (j = i; x + j <= win->_maxx; ++j) {
+			if (!isWidecExt(win->_line[y].text[x + j])) {
+			    TR(TRACE_VIRTPUT, ("fill %d orphan cells", j));
+			    fill_cells(win, j);
+			    break;
+			}
+		    }
+		    break;
+		}
+	    }
+	    /*
+	     * Finally, add the cells for this character.
+	     */
+	    for (i = 0; i < len; ++i) {
+		NCURSES_CH_T value = ch;
+		SetWidecExt(value, i);
+		TR(TRACE_VIRTPUT, ("multicolumn %d:%d", i + 1, len));
+		line->text[x] = value;
+		CHANGED_CELL(line, x);
+		++x;
+	    }
+	    goto testwrapping;
 	}
     });
+
+    /*
+     * Single-column characters.
+     */
     line->text[x++] = ch;
     /*
-     * Provide for multi-column characters
+     * This label is used only for wide-characters.
      */
-    if_WIDEC({
-	int len = wcwidth(CharOf(ch));
-	while (len-- > 1) {
-	    if (x + (len - 1) > win->_maxx) {
-		NCURSES_CH_T blank = NewChar2(BLANK_TEXT, BLANK_ATTR);
-		AddAttr(blank, AttrOf(ch));
-		if (waddch_literal(win, blank) != ERR)
-		    return waddch_literal(win, ch);
-		return ERR;
-	    }
-	    AddAttr(line->text[x++], WA_NAC);
-	    TR(TRACE_VIRTPUT, ("added NAC %d", x - 1));
-	}
-    }
+    if_WIDEC(
   testwrapping:
     );
 
-    TR(TRACE_VIRTPUT, ("(%d, %d) = %s", win->_cury, x, _tracech_t(CHREF(ch))));
+    TR(TRACE_VIRTPUT, ("cell (%d, %d..%d) = %s",
+		       win->_cury, win->_curx, x - 1,
+		       _tracech_t(CHREF(ch))));
+
     if (x > win->_maxx) {
-	/*
-	 * The _WRAPPED flag is useful only for telling an application that
-	 * we've just wrapped the cursor.  We don't do anything with this flag
-	 * except set it when wrapping, and clear it whenever we move the
-	 * cursor.  If we try to wrap at the lower-right corner of a window, we
-	 * cannot move the cursor (since that wouldn't be legal).  So we return
-	 * an error (which is what SVr4 does).  Unlike SVr4, we can
-	 * successfully add a character to the lower-right corner (Solaris 2.6
-	 * does this also, however).
-	 */
-	win->_flags |= _WRAPPED;
-	if (++win->_cury > win->_regbottom) {
-	    win->_cury = win->_regbottom;
-	    win->_curx = win->_maxx;
-	    if (!win->_scroll)
-		return (ERR);
-	    scroll(win);
-	}
-	win->_curx = 0;
-	return (OK);
+	return wrap_to_next_line(win);
     }
     win->_curx = x;
     return OK;
@@ -260,7 +371,7 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 {
     int x, y;
     chtype t = CharOf(ch);
-    const char *s = 0;
+    const char *s = unctrl(t);
 
     /*
      * If we are using the alternate character set, forget about locale.
@@ -268,13 +379,20 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
      * claims the code is printable, treat it that way.
      */
     if ((AttrOf(ch) & A_ALTCHARSET)
-	|| ((s = unctrl(t))[1] == 0 ||
-		(
-		isprint(t)
+	|| (
 #if USE_WIDEC_SUPPORT
-		|| WINDOW_EXT(win, addch_used)
+	       (SP != 0 && SP->_legacy_coding) &&
 #endif
-		)))
+	       s[1] == 0
+	)
+	|| (
+	       isprint(t)
+#if USE_WIDEC_SUPPORT
+	       || ((SP == 0 || !SP->_legacy_coding) &&
+		   (WINDOW_EXT(win, addch_used)
+		    || !_nc_is_charable(CharOf(ch))))
+#endif
+	))
 	return waddch_literal(win, ch);
 
     /*
@@ -360,7 +478,7 @@ _nc_waddch_nosync(WINDOW *win, const NCURSES_CH_T c)
 }
 
 /*
- * The versions below call _nc_synhook().  We wanted to avoid this in the
+ * The versions below call _nc_synchook().  We wanted to avoid this in the
  * version exported for string puts; they'll call _nc_synchook once at end
  * of run.
  */

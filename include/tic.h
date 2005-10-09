@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,10 +29,11 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey 1996 on                                        *
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.46 2003/12/27 19:05:32 tom Exp $
+ * $Id: tic.h,v 1.50 2005/08/20 19:41:40 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -108,7 +109,7 @@ extern "C" {
 #define DEBUG_LEVEL(n)	((n) << TRACE_SHIFT)
 
 #define set_trace_level(n) \
- 	_nc_tracing &= DEBUG_LEVEL(MAX_DEBUG_LEVEL), \
+	_nc_tracing &= DEBUG_LEVEL(MAX_DEBUG_LEVEL), \
 	_nc_tracing |= DEBUG_LEVEL(n)
 
 #ifdef TRACE
@@ -216,18 +217,18 @@ extern NCURSES_EXPORT(const struct name_table_entry * const *) _nc_get_hash_tabl
 #define NOTFOUND	((struct name_table_entry *) 0)
 
 /* out-of-band values for representing absent capabilities */
-#define ABSENT_BOOLEAN		(char)(-1)	/* 255 */
+#define ABSENT_BOOLEAN		((signed char)-1)	/* 255 */
 #define ABSENT_NUMERIC		(-1)
 #define ABSENT_STRING		(char *)0
 
 /* out-of-band values for representing cancels */
-#define CANCELLED_BOOLEAN	(char)(-2)	/* 254 */
+#define CANCELLED_BOOLEAN	((signed char)-2)	/* 254 */
 #define CANCELLED_NUMERIC	(-2)
 #define CANCELLED_STRING	(char *)(-1)
 
 #define VALID_BOOLEAN(s) ((unsigned char)(s) <= 1) /* reject "-1" */
 #define VALID_NUMERIC(s) ((s) >= 0)
-#define VALID_STRING(s) ((s) != CANCELLED_STRING && (s) != ABSENT_STRING)
+#define VALID_STRING(s)  ((s) != CANCELLED_STRING && (s) != ABSENT_STRING)
 
 /* termcap entries longer than this may break old binaries */
 #define MAX_TERMCAP_LENGTH	1023
@@ -266,11 +267,12 @@ extern NCURSES_EXPORT_VAR(long) _nc_start_line;
 #define SYN_TERMCAP	1
 
 /* comp_error.c: warning & abort messages */
-extern NCURSES_EXPORT(void) _nc_set_source (const char *const name);
-extern NCURSES_EXPORT(void) _nc_get_type (char *name);
-extern NCURSES_EXPORT(void) _nc_set_type (const char *const name);
-extern NCURSES_EXPORT(void) _nc_syserr_abort (const char *const,...) GCC_PRINTFLIKE(1,2) GCC_NORETURN;
+extern NCURSES_EXPORT(const char *) _nc_get_source (void);
 extern NCURSES_EXPORT(void) _nc_err_abort (const char *const,...) GCC_PRINTFLIKE(1,2) GCC_NORETURN;
+extern NCURSES_EXPORT(void) _nc_get_type (char *name);
+extern NCURSES_EXPORT(void) _nc_set_source (const char *const);
+extern NCURSES_EXPORT(void) _nc_set_type (const char *const);
+extern NCURSES_EXPORT(void) _nc_syserr_abort (const char *const,...) GCC_PRINTFLIKE(1,2) GCC_NORETURN;
 extern NCURSES_EXPORT(void) _nc_warning (const char *const,...) GCC_PRINTFLIKE(1,2);
 extern NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings;
 
@@ -278,7 +280,7 @@ extern NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings;
 extern NCURSES_EXPORT(char *) _nc_tic_expand (const char *, bool, int);
 
 /* comp_scan.c: decode string from readable form */
-extern NCURSES_EXPORT(char) _nc_trans_string (char *, char *);
+extern NCURSES_EXPORT(int) _nc_trans_string (char *, char *);
 
 /* captoinfo.c: capability conversion */
 extern NCURSES_EXPORT(char *) _nc_captoinfo (const char *, const char *, int const);
@@ -289,7 +291,7 @@ extern NCURSES_EXPORT(char *) _nc_infotocap (const char *, const char *, int con
 
 extern NCURSES_EXPORT_VAR(int) _nc_tparm_err;
 
-extern NCURSES_EXPORT(int) _nc_tparm_analyze(const char *string, char *p_is_s[NUM_PARM], int *popcount);
+extern NCURSES_EXPORT(int) _nc_tparm_analyze(const char *, char **, int *);
 
 /* lib_tputs.c */
 extern NCURSES_EXPORT_VAR(int) _nc_nulls_sent;		/* Add one for every null sent */

@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,20 +32,23 @@
  ****************************************************************************/
 
 #include "internal.h"
+
+#include <stdio.h>
+
 #include "etip.h"
 #include "cursesw.h"
 
-MODULE_ID("$Id: cursespad.cc,v 1.7 2003/10/25 15:04:46 tom Exp $")
+MODULE_ID("$Id: cursespad.cc,v 1.11 2005/07/23 20:51:23 tom Exp $")
 
-NCursesPad::NCursesPad(int lines, int cols)
+NCursesPad::NCursesPad(int nlines, int ncols)
   : NCursesWindow(),
-    viewWin((NCursesWindow*)0),
-    viewSub((NCursesWindow*)0),
+    viewWin(static_cast<NCursesWindow*>(0)),
+    viewSub(static_cast<NCursesWindow*>(0)),
     h_gridsize(0), v_gridsize(0),
     min_row(0), min_col(0)
 {
-  w = ::newpad(lines,cols);
-  if ((WINDOW*)0==w) {
+  w = ::newpad(nlines, ncols);
+  if (static_cast<WINDOW*>(0) == w) {
     count--;
     err_handler("Cannot construct window");
   }
@@ -84,7 +87,7 @@ void NCursesPad::operator()(void)
 {
   NCursesWindow* W = Win();
 
-  if ((NCursesWindow*)0 != W) {
+  if (static_cast<NCursesWindow*>(0) != W) {
     int Width  = W->width();
     int Height = W->height();
 
@@ -169,7 +172,7 @@ void NCursesPad::operator()(void)
 int NCursesPad::refresh()
 {
   int res = noutrefresh();
-  if (res==OK && ((NCursesWindow*)0 != viewWin)) {
+  if (res==OK && (static_cast<NCursesWindow*>(0) != viewWin)) {
     res = (viewWin->refresh());
   }
   return(res);
@@ -179,9 +182,11 @@ int NCursesPad::noutrefresh()
 {
   int res = OK;
   NCursesWindow* W = Win();
-  if ((NCursesWindow*)0 != W) {
-    res = copywin(*W,min_row,min_col,
-		  0,0,W->maxy(),W->maxx(),
+  if (static_cast<NCursesWindow*>(0) != W) {
+    int high = W->maxy();
+    int wide = W->maxx();
+    res = copywin(*W, min_row, min_col,
+		  0, 0, high, wide,
 		  FALSE);
     if (res==OK) {
       W->syncup();
@@ -207,7 +212,7 @@ void NCursesPad::setWindow(NCursesWindow& view,
 
 void NCursesPad::setSubWindow(NCursesWindow& sub)
 {
-  if ((NCursesWindow*)0 == viewWin)
+  if (static_cast<NCursesWindow*>(0) == viewWin)
     err_handler("Pad has no viewport");
   if (!viewWin->isDescendant(sub))
     THROW(new NCursesException("NCursesFramePad", E_SYSTEM_ERROR));
@@ -217,9 +222,9 @@ void NCursesPad::setSubWindow(NCursesWindow& sub)
 void NCursesFramedPad::OnOperation(int pad_req)
 {
   NCursesWindow* W = Win();
-  NCursesWindow* Win = getWindow();
+  NCursesWindow* W2 = getWindow();
 
-  if (((NCursesWindow*)0 != W) && ((NCursesWindow*)0 != Win)) {
+  if ((static_cast<NCursesWindow*>(0) != W) && (static_cast<NCursesWindow*>(0) != W2)) {
     int Width  = W->width();
     int Height = W->height();
     int i, row, col, h_len, v_len;
@@ -244,32 +249,32 @@ void NCursesFramedPad::OnOperation(int pad_req)
     if (row + v_len > Height)
       row = Height - v_len;
 
-    Win->vline(1,Width+1,Height);
-    Win->attron(A_REVERSE);
+    W2->vline(1,Width+1,Height);
+    W2->attron(A_REVERSE);
     if (v_len>=2) {
-      Win->addch(row+1,Width+1,ACS_UARROW);
+      W2->addch(row+1,Width+1,ACS_UARROW);
       for(i=2;i<v_len;i++)
-	Win->addch(row+i,Width+1,' ');
-      Win->addch(row+v_len,Width+1,ACS_DARROW);
+	W2->addch(row+i,Width+1,' ');
+      W2->addch(row+v_len,Width+1,ACS_DARROW);
     }
     else {
       for(i=1;i<=v_len;i++)
-	Win->addch(row+i,Width+1,' ');
+	W2->addch(row+i,Width+1,' ');
     }
-    Win->attroff(A_REVERSE);
+    W2->attroff(A_REVERSE);
 
-    Win->hline(Height+1,1,Width);
-    Win->attron(A_REVERSE);
+    W2->hline(Height+1,1,Width);
+    W2->attron(A_REVERSE);
     if (h_len >= 2) {
-      Win->addch(Height+1,col+1,ACS_LARROW);
+      W2->addch(Height+1,col+1,ACS_LARROW);
       for(i=2;i<h_len;i++)
-	Win->addch(Height+1,col+i,' ');
-      Win->addch(Height+1,col+h_len,ACS_RARROW);
+	W2->addch(Height+1,col+i,' ');
+      W2->addch(Height+1,col+h_len,ACS_RARROW);
     }
     else {
       for(i=1;i<=h_len;i++)
-	Win->addch(Height+1,col+i,' ');
+	W2->addch(Height+1,col+i,' ');
     }
-    Win->attroff(A_REVERSE);
+    W2->attroff(A_REVERSE);
   }
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 1996-2001                                      *
+ *  Author: Thomas E. Dickey 1996-on                                        *
  *     and: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  ****************************************************************************/
@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracedmp.c,v 1.25 2002/09/22 22:21:38 tom Exp $")
+MODULE_ID("$Id: lib_tracedmp.c,v 1.26 2005/01/29 16:23:51 tom Exp $")
 
 #ifdef TRACE
 NCURSES_EXPORT(void)
@@ -53,10 +53,13 @@ _tracedump(const char *name, WINDOW *win)
     /* compute narrowest possible display width */
     for (width = i = 0; i <= win->_maxy; ++i) {
 	n = 0;
-	for (j = 0; j <= win->_maxx; ++j)
+	for (j = 0; j <= win->_maxx; ++j) {
 	    if (CharOf(win->_line[i].text[j]) != L(' ')
-		|| AttrOf(win->_line[i].text[j]) != A_NORMAL)
+		|| AttrOf(win->_line[i].text[j]) != A_NORMAL
+		|| GetPair(win->_line[i].text[j]) != 0) {
 		n = j;
+	    }
+	}
 
 	if (n > width)
 	    width = n;
@@ -99,15 +102,25 @@ _tracedump(const char *name, WINDOW *win)
 	/* dump A_COLOR part, will screw up if there are more than 96 */
 	havecolors = FALSE;
 	for (j = 0; j < width; ++j)
-	    if (AttrOf(win->_line[n].text[j]) & A_COLOR) {
+	    if (GetPair(win->_line[n].text[j]) != 0) {
 		havecolors = TRUE;
 		break;
 	    }
 	if (havecolors) {
 	    ep = buf;
-	    for (j = 0; j < width; ++j)
-		ep[j] = UChar(AttrOf(win->_line[n].text[j]) >>
-			      NCURSES_ATTR_SHIFT) + ' ';
+	    for (j = 0; j < width; ++j) {
+		int pair = GetPair(win->_line[n].text[j]);
+		if (pair >= 52)
+		    ep[j] = '?';
+		else if (pair >= 36)
+		    ep[j] = pair + 'A';
+		else if (pair >= 10)
+		    ep[j] = pair + 'a';
+		else if (pair >= 1)
+		    ep[j] = pair + '0';
+		else
+		    ep[j] = ' ';
+	    }
 	    ep[j] = '\0';
 	    _tracef("%*s[%2d]%*s='%s'", (int) strlen(name),
 		    "colors", n, 8, " ", buf);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                                                *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -42,11 +42,13 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.79 2004/01/11 01:57:05 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.81 2005/06/02 22:04:32 tom Exp $")
 
 #if !HAVE_TELL
 #define tell(fd) lseek(fd, 0, SEEK_CUR)		/* lseek() is POSIX, but not tell() */
 #endif
+
+#define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
 /*
  *	int
@@ -146,13 +148,14 @@ convert_strings(char *buf, char **Strings, int count, int size, char *table)
     }
 }
 
-#define read_shorts(fd, buf, count) (read(fd, buf, (count)*2) == (count)*2)
+#define read_shorts(fd, buf, count) \
+	(read(fd, buf, (unsigned) (count)*2) == (int) (count)*2)
 
 #define even_boundary(value) \
     if ((value) % 2 != 0) read(fd, buf, 1)
 
 static int
-read_termtype(int fd, TERMTYPE * ptr)
+read_termtype(int fd, TERMTYPE *ptr)
 /* return 1 if read, 0 if not found or garbled */
 {
     int name_size, bool_count, num_count, str_count, str_size;
@@ -204,7 +207,7 @@ read_termtype(int fd, TERMTYPE * ptr)
 	memset(buf + have, 0, want - have);
     }
     buf[want] = '\0';
-    ptr->term_names = typeCalloc(char, strlen(buf) + 1);
+    ptr->term_names = TYPE_CALLOC(char, strlen(buf) + 1);
     if (ptr->term_names == NULL) {
 	return (0);
     }
@@ -213,7 +216,7 @@ read_termtype(int fd, TERMTYPE * ptr)
 	lseek(fd, (off_t) (have - MAX_NAME_SIZE), 1);
 
     /* grab the booleans */
-    if ((ptr->Booleans = typeCalloc(char, max(BOOLCOUNT, bool_count))) == 0
+    if ((ptr->Booleans = TYPE_CALLOC(char, max(BOOLCOUNT, bool_count))) == 0
 	|| read(fd, ptr->Booleans, (unsigned) bool_count) < bool_count) {
 	return (0);
     }
@@ -227,13 +230,13 @@ read_termtype(int fd, TERMTYPE * ptr)
     even_boundary(name_size + bool_count);
 
     /* grab the numbers */
-    if ((ptr->Numbers = typeCalloc(short, max(NUMCOUNT, num_count))) == 0
+    if ((ptr->Numbers = TYPE_CALLOC(short, max(NUMCOUNT, num_count))) == 0
 	|| !read_shorts(fd, buf, num_count)) {
 	return (0);
     }
     convert_shorts(buf, ptr->Numbers, num_count);
 
-    if ((ptr->Strings = typeCalloc(char *, max(STRCOUNT, str_count))) == 0)
+    if ((ptr->Strings = TYPE_CALLOC(char *, max(STRCOUNT, str_count))) == 0)
 	  return (0);
 
     if (str_count) {
@@ -263,10 +266,10 @@ read_termtype(int fd, TERMTYPE * ptr)
 	int ext_str_count = LOW_MSB(buf + 4);
 	int ext_str_size = LOW_MSB(buf + 6);
 	int ext_str_limit = LOW_MSB(buf + 8);
-	int need = (ext_bool_count + ext_num_count + ext_str_count);
+	unsigned need = (ext_bool_count + ext_num_count + ext_str_count);
 	int base = 0;
 
-	if (need >= (int) sizeof(buf)
+	if (need >= sizeof(buf)
 	    || ext_str_size >= (int) sizeof(buf)
 	    || ext_str_limit >= (int) sizeof(buf)
 	    || ext_bool_count < 0
@@ -317,7 +320,7 @@ read_termtype(int fd, TERMTYPE * ptr)
 	if (ext_str_limit) {
 	    if ((ptr->ext_str_table = typeMalloc(char, ext_str_limit)) == 0)
 		  return (0);
-	    if (read(fd, ptr->ext_str_table, ext_str_limit) != ext_str_limit)
+	    if (read(fd, ptr->ext_str_table, (unsigned) ext_str_limit) != ext_str_limit)
 		return (0);
 	    TR(TRACE_DATABASE, ("first extended-string is %s", _nc_visbuf(ptr->ext_str_table)));
 	}
@@ -342,12 +345,14 @@ read_termtype(int fd, TERMTYPE * ptr)
 	}
 
 	if (need) {
-	    if ((ptr->ext_Names = typeCalloc(char *, need)) == 0)
+	    if ((ptr->ext_Names = TYPE_CALLOC(char *, need)) == 0)
 		  return (0);
 	    TR(TRACE_DATABASE,
 	       ("ext_NAMES starting @%d in extended_strings, first = %s",
 		base, _nc_visbuf(ptr->ext_str_table + base)));
-	    convert_strings(buf + (2 * ext_str_count), ptr->ext_Names, need,
+	    convert_strings(buf + (2 * ext_str_count),
+			    ptr->ext_Names,
+			    (int) need,
 			    ext_str_limit, ptr->ext_str_table + base);
 	}
 
@@ -378,7 +383,7 @@ read_termtype(int fd, TERMTYPE * ptr)
 }
 
 NCURSES_EXPORT(int)
-_nc_read_file_entry(const char *const filename, TERMTYPE * ptr)
+_nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
 /* return 1 if read, 0 if not found or garbled */
 {
     int code, fd = -1;
@@ -389,8 +394,9 @@ _nc_read_file_entry(const char *const filename, TERMTYPE * ptr)
 	code = 0;
     } else {
 	T(("read terminfo %s", filename));
-	if ((code = read_termtype(fd, ptr)) == 0)
+	if ((code = read_termtype(fd, ptr)) == 0) {
 	    _nc_free_termtype(ptr);
+	}
 	close(fd);
     }
 
@@ -403,7 +409,7 @@ _nc_read_file_entry(const char *const filename, TERMTYPE * ptr)
  */
 static int
 _nc_read_tic_entry(char *const filename,
-		   const char *const dir, const char *ttn, TERMTYPE * const tp)
+		   const char *const dir, const char *ttn, TERMTYPE *const tp)
 {
     int need = 2 + strlen(dir) + strlen(ttn);
 
@@ -419,7 +425,7 @@ _nc_read_tic_entry(char *const filename,
  */
 static int
 _nc_read_terminfo_dirs(const char *dirs, char *const filename, const char *const
-		       ttn, TERMTYPE * const tp)
+		       ttn, TERMTYPE *const tp)
 {
     char *list, *a;
     const char *b;
@@ -460,7 +466,7 @@ _nc_read_terminfo_dirs(const char *dirs, char *const filename, const char *const
  */
 
 NCURSES_EXPORT(int)
-_nc_read_entry(const char *const tn, char *const filename, TERMTYPE * const tp)
+_nc_read_entry(const char *const tn, char *const filename, TERMTYPE *const tp)
 {
     char *envp;
     char ttn[PATH_MAX];

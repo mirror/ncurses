@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2000,2002 Free Software Foundation, Inc.                   *
+  * Copyright (c) 2000-2002,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_trace.3x,v 1.5 2002/02/16 22:39:52 tom Exp @
+  * @Id: curs_trace.3x,v 1.7 2005/05/15 17:02:54 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,21 +40,22 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>                                     <STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>
+<STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>                                           <STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>_tracef</STRONG>,      <STRONG>_tracedump</STRONG>,     <STRONG>_traceattr</STRONG>,     <STRONG>_traceattr2</STRONG>,
-       <STRONG>_nc_tracebits</STRONG>,  <STRONG>_tracechar</STRONG>,  <STRONG>_tracechtype</STRONG>,  <STRONG>_tracechtype2</STRONG>,
+       <STRONG>_tracef</STRONG>, <STRONG>_tracedump</STRONG>, <STRONG>_traceattr</STRONG>, <STRONG>_traceattr2</STRONG>,
+       <STRONG>_nc_tracebits</STRONG>, <STRONG>_tracechar</STRONG>, <STRONG>_tracechtype</STRONG>, <STRONG>_tracechtype2</STRONG>,
        <STRONG>_tracemouse</STRONG>, <STRONG>trace</STRONG> - <STRONG>curses</STRONG> debugging routines
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+
        <STRONG>void</STRONG> <STRONG>_tracef(const</STRONG> <STRONG>char</STRONG> <STRONG>*format,</STRONG> <STRONG>...);</STRONG>
        <STRONG>void</STRONG> <STRONG>_tracedump(const</STRONG> <STRONG>char</STRONG> <STRONG>*label,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>char</STRONG> <STRONG>*_traceattr(attr_t</STRONG> <STRONG>attr);</STRONG>
@@ -69,12 +70,12 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The  <STRONG>trace</STRONG>  routines  are  used  for debugging the ncurses
-       libraries, as well as applications which use  the  ncurses
-       libraries.   These  functions  are normally available only
-       with the debugging library <EM>libncurses</EM><STRONG>_</STRONG><EM>g.a</EM>, but may be com-
-       piled into any model (shared, static, profile) by defining
-       the symbol <STRONG>TRACE</STRONG>.
+       The  <STRONG>trace</STRONG> routines are used for debugging the ncurses li-
+       braries, as well as applications which use the ncurses li-
+       braries.  These functions are normally available only with
+       the debugging library <EM>libncurses</EM><STRONG>_</STRONG><EM>g.a</EM>, but may be  compiled
+       into  any  model (shared, static, profile) by defining the
+       symbol <STRONG>TRACE</STRONG>.
 
        The principal parts of this interface are the  <STRONG>trace</STRONG>  rou-
        tine which selectively enables different tracing features,
@@ -106,8 +107,8 @@
 
        TRACE_ORDINARY
             trace all update actions.  The  old  and  new  screen
-            contents  are  written  to  the  trace  file for each
-            refresh.
+            contents  are  written to the trace file for each re-
+            fresh.
 
        TRACE_CALLS
             trace all curses calls.  The parameters for each call
@@ -138,9 +139,9 @@
             maximum trace level,  enables  all  of  the  separate
             trace features.
 
-            Some  tracing features are enabled whenever the <STRONG>trace</STRONG>
-            parameter is nonzero.  Some  features  overlap.   The
-            specific names are used as a guideline.
+       Some  tracing  features are enabled whenever the <STRONG>trace</STRONG> pa-
+       rameter is nonzero.  Some features overlap.  The  specific
+       names are used as a guideline.
 
 
 </PRE>
@@ -163,7 +164,7 @@
 
 
 
-                                                   <STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>
+                                                         <STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML><HEAD><TITLE>terminal_interface-curses-termcap.ads</TITLE></HEAD>
 <BODY>
 <HR><DIV ALIGN="center"><H1> File : terminal_interface-curses-termcap.ads </H1></DIV><HR>
@@ -43,43 +44,43 @@
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<FONT COLOR=red><A NAME="42_35">Termcap</A></FONT> <b>is</b>
-   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-termcap__ads.htm#42_35">Termcap</A>);
+<b>package</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_42_35" HREF="terminal_interface-curses-termcap__adb.htm#ref_47_40">Termcap</A></FONT> <b>is</b>
+   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-termcap__ads.htm#ref_42_35">Termcap</A>);
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
    <FONT COLOR=green><EM>--  | Man page curs_termcap.3x</EM></FONT>
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
    <FONT COLOR=green><EM>--  Not implemented:  tputs (see curs_terminfo)</EM></FONT>
 
-   <b>type</b> <FONT COLOR=red><A NAME="50_9">Termcap_String</A></FONT> <b>is</b> <b>new</b> String;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_50_9">Termcap_String</A></FONT> <b>is</b> <b>new</b> String;
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="53_13">TGoto</A></FONT> (<FONT COLOR=red><A NAME="53_20">Cap</A></FONT> : String;
-                   <FONT COLOR=red><A NAME="54_20">Col</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#60_9">Column_Position</A>;
-                   <FONT COLOR=red><A NAME="55_20">Row</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#59_9">Line_Position</A>) <b>return</b> <A HREF="terminal_interface-curses-termcap__ads.htm#50_9">Termcap_String</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_53_13" HREF="terminal_interface-curses-termcap__adb.htm#ref_148_13">TGoto</A></FONT> (<FONT COLOR=red><A NAME="ref_53_20" HREF="terminal_interface-curses-termcap__adb.htm#ref_148_20">Cap</A></FONT> : String;
+                   <FONT COLOR=red><A NAME="ref_54_20" HREF="terminal_interface-curses-termcap__adb.htm#ref_149_20">Col</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
+                   <FONT COLOR=red><A NAME="ref_55_20" HREF="terminal_interface-curses-termcap__adb.htm#ref_150_20">Row</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>) <b>return</b> <A HREF="terminal_interface-curses-termcap__ads.htm#ref_50_9">Termcap_String</A>;
    <FONT COLOR=green><EM>--  AKA: tgoto()</EM></FONT>
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="59_13">Get_Entry</A></FONT> (<FONT COLOR=red><A NAME="59_24">Name</A></FONT> : String) <b>return</b> Boolean;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_59_13" HREF="terminal_interface-curses-termcap__adb.htm#ref_49_13">Get_Entry</A></FONT> (<FONT COLOR=red><A NAME="ref_59_24" HREF="terminal_interface-curses-termcap__adb.htm#ref_49_24">Name</A></FONT> : String) <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: tgetent()</EM></FONT>
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="63_13">Get_Flag</A></FONT> (<FONT COLOR=red><A NAME="63_23">Name</A></FONT> : String) <b>return</b> Boolean;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_63_13" HREF="terminal_interface-curses-termcap__adb.htm#ref_69_13">Get_Flag</A></FONT> (<FONT COLOR=red><A NAME="ref_63_23" HREF="terminal_interface-curses-termcap__adb.htm#ref_69_23">Name</A></FONT> : String) <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: tgetflag()</EM></FONT>
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>procedure</b> <A HREF="terminal_interface-curses-termcap__adb.htm#84_14">Get_Number</A><FONT COLOR=red><A NAME="67_14"></A></FONT> (<FONT COLOR=red><A NAME="67_26">Name</A></FONT>   : String;
-                         <FONT COLOR=red><A NAME="68_26">Value</A></FONT>  : <b>out</b> Integer;
-                         <FONT COLOR=red><A NAME="69_26">Result</A></FONT> : <b>out</b> Boolean);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_67_14" HREF="terminal_interface-curses-termcap__adb.htm#ref_85_14">Get_Number</A></FONT> (<FONT COLOR=red><A NAME="ref_67_26" HREF="terminal_interface-curses-termcap__adb.htm#ref_85_26">Name</A></FONT>   : String;
+                         <FONT COLOR=red><A NAME="ref_68_26" HREF="terminal_interface-curses-termcap__adb.htm#ref_86_26">Value</A></FONT>  : <b>out</b> Integer;
+                         <FONT COLOR=red><A NAME="ref_69_26" HREF="terminal_interface-curses-termcap__adb.htm#ref_87_26">Result</A></FONT> : <b>out</b> Boolean);
    <FONT COLOR=green><EM>--  AKA: tgetnum()</EM></FONT>
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>procedure</b> <A HREF="terminal_interface-curses-termcap__adb.htm#103_14">Get_String</A><FONT COLOR=red><A NAME="73_14"></A></FONT> (<FONT COLOR=red><A NAME="73_26">Name</A></FONT>   : String;
-                         <FONT COLOR=red><A NAME="74_26">Value</A></FONT>  : <b>out</b> String;
-                         <FONT COLOR=red><A NAME="75_26">Result</A></FONT> : <b>out</b> Boolean);
-   <b>function</b> <FONT COLOR=red><A NAME="76_13">Get_String</A></FONT> (<FONT COLOR=red><A NAME="76_25">Name</A></FONT> : String) <b>return</b> Boolean;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_73_14" HREF="terminal_interface-curses-termcap__adb.htm#ref_104_14">Get_String</A></FONT> (<FONT COLOR=red><A NAME="ref_73_26" HREF="terminal_interface-curses-termcap__adb.htm#ref_104_26">Name</A></FONT>   : String;
+                         <FONT COLOR=red><A NAME="ref_74_26" HREF="terminal_interface-curses-termcap__adb.htm#ref_105_26">Value</A></FONT>  : <b>out</b> String;
+                         <FONT COLOR=red><A NAME="ref_75_26" HREF="terminal_interface-curses-termcap__adb.htm#ref_106_26">Result</A></FONT> : <b>out</b> Boolean);
+   <b>function</b> <FONT COLOR=red><A NAME="ref_76_13" HREF="terminal_interface-curses-termcap__adb.htm#ref_127_13">Get_String</A></FONT> (<FONT COLOR=red><A NAME="ref_76_25" HREF="terminal_interface-curses-termcap__adb.htm#ref_127_25">Name</A></FONT> : String) <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  Returns True if the string is found.</EM></FONT>
    <FONT COLOR=green><EM>--  AKA: tgetstr()</EM></FONT>
 
-<b>end</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-termcap__ads.htm#42_35">Termcap</A><A HREF="terminal_interface-curses-termcap__ads.htm#42_35">;</A>
+<b>end</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-termcap__ads.htm#ref_42_35">Termcap</A>;
 </PRE></BODY></HTML>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -47,7 +48,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.57 2002/10/20 00:10:56 Philippe.Blain Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.58 2004/08/14 20:36:39 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -102,7 +103,7 @@ filter(void)
 }
 
 NCURSES_EXPORT(SCREEN *)
-newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
+newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 {
     int errret;
     int slk_format = _nc_slk_format;
@@ -197,6 +198,14 @@ newterm(NCURSES_CONST char *name, FILE * ofp, FILE * ifp)
     _nc_initscr();
 
     _nc_signal_handler(TRUE);
+
+#if USE_SIZECHANGE
+    /*
+     * Pretend we received a SIGWINCH, just in case we're starting up in a
+     * terminal that cannot initialize its size properly (Debian #265631).
+     */
+    SP->_sig_winch = TRUE;
+#endif
 
     returnSP(SP);
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,8 +27,12 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
- *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *  Authors:                                                                *
+ *          Gerhard Fuernkranz                      1993 (original)         *
+ *          Zeyd M. Ben-Halim                       1992,1995 (sic)         *
+ *          Eric S. Raymond                                                 *
+ *          Juergen Pfeifer                         1996-on                 *
+ *          Thomas E. Dickey                                                *
  ****************************************************************************/
 
 /*
@@ -41,7 +45,7 @@
 #include <ctype.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slk.c,v 1.28 2003/05/24 21:10:28 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.30 2005/01/08 21:56:36 tom Exp $")
 
 /*
  * We'd like to move these into the screen context structure, but cannot,
@@ -109,9 +113,9 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
      * work.
      */
     if ((no_color_video & 1) == 0)
-	SP->_slk->attr = A_STANDOUT;
+	SetAttr(SP->_slk->attr, A_STANDOUT);
     else
-	SP->_slk->attr = A_REVERSE;
+	SetAttr(SP->_slk->attr, A_REVERSE);
 
     SP->_slk->maxlab = ((num_labels > 0)
 			? num_labels
@@ -131,14 +135,15 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 
     max_length = SP->_slk->maxlen;
     for (i = 0; i < SP->_slk->labcnt; i++) {
+	size_t used = max_length + 1;
 
-	if ((SP->_slk->ent[i].ent_text = (char *)_nc_doalloc(0, max_length + 1)) == 0)
+	if ((SP->_slk->ent[i].ent_text = (char *) _nc_doalloc(0, used)) == 0)
 	    returnCode(slk_failed());
-	memset(SP->_slk->ent[i].ent_text, 0, max_length + 1);
+	memset(SP->_slk->ent[i].ent_text, 0, used);
 
-	if ((SP->_slk->ent[i].form_text = (char *)_nc_doalloc(0, max_length + 1)) == 0)
+	if ((SP->_slk->ent[i].form_text = (char *) _nc_doalloc(0, used)) == 0)
 	    returnCode(slk_failed());
-	memset(SP->_slk->ent[i].form_text, 0, max_length + 1);
+	memset(SP->_slk->ent[i].form_text, 0, used);
 
 	memset(SP->_slk->ent[i].form_text, ' ', max_length);
 	SP->_slk->ent[i].visible = (i < SP->_slk->maxlab);

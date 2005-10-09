@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.4 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -101,7 +102,6 @@ procedure ncurses2.color_edit is
    current : Color_Number := 0;
    field : RGB_Enum := Redx;
    this_c : Key_Code := 0;
-   last_c : Key_Code;
 begin
    Refresh;
 
@@ -185,7 +185,6 @@ begin
 
       Move_Cursor (Line => 2 + Line_Position (current), Column => 0);
 
-      last_c := this_c;
       this_c := Getchar;
       if Is_Digit (this_c) then
          value := 0;

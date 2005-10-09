@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-2003               *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -43,7 +43,7 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.47 2003/10/25 19:51:38 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.48 2005/01/22 21:13:34 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
@@ -159,43 +159,44 @@ meta(WINDOW *win GCC_UNUSED, bool flag)
 NCURSES_EXPORT(int)
 curs_set(int vis)
 {
-    int cursor = SP->_cursor;
+    int result = ERR;
 
     T((T_CALLED("curs_set(%d)"), vis));
+    if (SP != 0 && vis >= 0 && vis <= 2) {
+	int cursor = SP->_cursor;
 
-    if (vis < 0 || vis > 2)
-	returnCode(ERR);
-
-    if (vis == cursor)
-	returnCode(cursor);
-
-    switch (vis) {
-    case 2:
-	if (cursor_visible) {
-	    TPUTS_TRACE("cursor_visible");
-	    putp(cursor_visible);
-	} else
-	    returnCode(ERR);
-	break;
-    case 1:
-	if (cursor_normal) {
-	    TPUTS_TRACE("cursor_normal");
-	    putp(cursor_normal);
-	} else
-	    returnCode(ERR);
-	break;
-    case 0:
-	if (cursor_invisible) {
-	    TPUTS_TRACE("cursor_invisible");
-	    putp(cursor_invisible);
-	} else
-	    returnCode(ERR);
-	break;
+	if (vis == cursor) {
+	    result = cursor;
+	} else {
+	    result = (cursor == -1 ? 1 : cursor);
+	    switch (vis) {
+	    case 2:
+		if (cursor_visible) {
+		    TPUTS_TRACE("cursor_visible");
+		    putp(cursor_visible);
+		} else
+		    result = ERR;
+		break;
+	    case 1:
+		if (cursor_normal) {
+		    TPUTS_TRACE("cursor_normal");
+		    putp(cursor_normal);
+		} else
+		    result = ERR;
+		break;
+	    case 0:
+		if (cursor_invisible) {
+		    TPUTS_TRACE("cursor_invisible");
+		    putp(cursor_invisible);
+		} else
+		    result = ERR;
+		break;
+	    }
+	    SP->_cursor = vis;
+	    _nc_flush();
+	}
     }
-    SP->_cursor = vis;
-    _nc_flush();
-
-    returnCode(cursor == -1 ? 1 : cursor);
+    returnCode(result);
 }
 
 NCURSES_EXPORT(int)
@@ -258,10 +259,12 @@ _nc_keypad(bool flag)
 	_nc_flush();
     }
 
-    if (flag && SP != 0 && !SP->_tried) {
-	_nc_init_keytry();
-	SP->_tried = TRUE;
+    if (SP != 0) {
+	if (flag && !SP->_tried) {
+	    _nc_init_keytry();
+	    SP->_tried = TRUE;
+	}
+	SP->_keypad_on = flag;
     }
-    SP->_keypad_on = flag;
     return (OK);
 }

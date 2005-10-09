@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -154,7 +155,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.97 2003/12/27 16:43:59 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.103 2005/06/11 19:30:15 tom Exp $")
 
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
@@ -589,9 +590,11 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 		    && n > 0
 		    && n < (int) check.s_size
 		    && vcost == 0
-		    && str[0] == '\0'
-		    && isdigit(CharOf(WANT_CHAR(to_y, from_x))))
-		    ovw = FALSE;
+		    && str[0] == '\0') {
+		    int wanted = CharOf(WANT_CHAR(to_y, from_x));
+		    if (is8bits(wanted) && isdigit(wanted))
+			ovw = FALSE;
+		}
 #endif
 		/*
 		 * If we have no attribute changes, overwrite is cheaper.
@@ -606,7 +609,7 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 
 		    for (i = 0; i < n; i++) {
 			NCURSES_CH_T ch = WANT_CHAR(to_y, from_x + i);
-			if (AttrOf(ch) != SP->_current_attr
+			if (!SameAttrOf(ch, SCREEN_ATTRS(SP))
 #if USE_WIDEC_SUPPORT
 			    || !Charable(ch)
 #endif
@@ -845,7 +848,7 @@ NCURSES_EXPORT(int)
 mvcur(int yold, int xold, int ynew, int xnew)
 /* optimized cursor move from (yold, xold) to (ynew, xnew) */
 {
-    attr_t oldattr;
+    NCURSES_CH_T oldattr;
     int code;
 
     TR(TRACE_CALLS | TRACE_MOVE, (T_CALLED("mvcur(%d,%d,%d,%d)"),
@@ -872,12 +875,13 @@ mvcur(int yold, int xold, int ynew, int xnew)
 	 * character set -- these have a strong tendency to screw up the CR &
 	 * LF used for local character motions!
 	 */
-	oldattr = SP->_current_attr;
-	if ((oldattr & A_ALTCHARSET)
-	    || (oldattr && !move_standout_mode)) {
+	oldattr = SCREEN_ATTRS(SP);
+	if ((AttrOf(oldattr) & A_ALTCHARSET)
+	    || (AttrOf(oldattr) && !move_standout_mode)) {
 	    TR(TRACE_CHARPUT, ("turning off (%#lx) %s before move",
-			       oldattr, _traceattr(oldattr)));
-	    (void) vidattr(A_NORMAL);
+			       (unsigned long) AttrOf(oldattr),
+			       _traceattr(AttrOf(oldattr))));
+	    (void) VIDATTR(A_NORMAL, 0);
 	}
 
 	if (xold >= screen_columns) {
@@ -927,10 +931,11 @@ mvcur(int yold, int xold, int ynew, int xnew)
 	/*
 	 * Restore attributes if we disabled them before moving.
 	 */
-	if (oldattr != SP->_current_attr) {
+	if (!SameAttrOf(oldattr, SCREEN_ATTRS(SP))) {
 	    TR(TRACE_CHARPUT, ("turning on (%#lx) %s after move",
-			       oldattr, _traceattr(oldattr)));
-	    (void) vidattr(oldattr);
+			       (unsigned long) AttrOf(oldattr),
+			       _traceattr(AttrOf(oldattr))));
+	    (void) VIDATTR(AttrOf(oldattr), GetPair(oldattr));
 	}
     }
     returnCode(code);

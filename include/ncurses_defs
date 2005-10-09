@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.21 2004/01/18 01:03:24 tom Exp $
+# $Id: ncurses_defs,v 1.27 2005/01/28 21:11:53 tom Exp $
 ##############################################################################
-# Copyright (c) 2000-2003,2004 Free Software Foundation, Inc.                #
+# Copyright (c) 2000-2004,2005 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -59,17 +59,20 @@ HAVE_GETNSTR
 HAVE_GETOPT_H
 HAVE_GETTIMEOFDAY
 HAVE_GETTTYNAM
+HAVE_GPM_H
 HAVE_GPP_BUILTIN_H
 HAVE_GXX_BUILTIN_H
 HAVE_HAS_KEY
 HAVE_ISASCII
 HAVE_ISSETUGID
+HAVE_LANGINFO_CODESET
 HAVE_LIBC_H
 HAVE_LIBDBMALLOC
 HAVE_LIBDMALLOC
 HAVE_LIBFORM
 HAVE_LIBGPM
 HAVE_LIBMENU
+HAVE_LIBMPATROL
 HAVE_LIBPANEL
 HAVE_LIMITS_H
 HAVE_LINK
@@ -79,7 +82,6 @@ HAVE_MBLEN
 HAVE_MBRLEN
 HAVE_MBRTOWC
 HAVE_MBTOWC
-HAVE_MEMCCPY
 HAVE_MENU_H
 HAVE_MKSTEMP
 HAVE_NANOSLEEP
@@ -132,11 +134,13 @@ HAVE_VSNPRINTF
 HAVE_VSSCANF
 HAVE_WCTOB 
 HAVE_WCTOMB
+HAVE_WCTYPE_H
 HAVE_WORKING_POLL
 HAVE_WRESIZE
 HAVE__DOSCAN
 MIXEDCASE_FILENAMES
 NCURSES_EXPANDED
+NCURSES_EXT_COLORS
 NCURSES_EXT_FUNCS
 NCURSES_NOMACROS
 NCURSES_NO_PADDING

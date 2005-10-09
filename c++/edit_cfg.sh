@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: edit_cfg.sh,v 1.13 2003/12/20 13:14:25 tom Exp $
+# $Id: edit_cfg.sh,v 1.14 2005/04/30 21:00:22 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2001,2003 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -39,6 +39,7 @@
 echo "substituting autoconf'd values from $1 into $2"
 for name in \
 	CPP_HAS_PARAM_INIT \
+	CPP_HAS_STATIC_CAST \
 	ETIP_NEEDS_MATH_EXCEPTION \
 	ETIP_NEEDS_MATH_H \
 	HAVE_BUILTIN_H \

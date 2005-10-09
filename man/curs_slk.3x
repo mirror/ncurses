@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,15 +26,29 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_slk.3x,v 1.12 2003/05/10 20:33:49 jmc Exp $
+.\" $Id: curs_slk.3x,v 1.14 2005/05/15 16:19:06 tom Exp $
 .TH curs_slk 3X ""
+.na
+.hy 0
 .SH NAME
-\fBslk_init\fR, \fBslk_set\fR, \fBslk_refresh\fR,
-\fBslk_noutrefresh\fR, \fBslk_label\fR,
-\fBslk_clear\fR, \fBslk_restore\fR, \fBslk_touch\fR,
-\fBslk_attron\fR, \fBslk_attrset\fR, \fBslk_attroff\fR,
-\fBslk_attr_on\fR, \fBslk_attr_set\fR, \fBslk_attr_off\fR,
-\fBslk_attr\fR, \fBslk_color\fR - \fBcurses\fR soft label routines
+\fBslk_init\fR,
+\fBslk_set\fR,
+\fBslk_refresh\fR,
+\fBslk_noutrefresh\fR,
+\fBslk_label\fR,
+\fBslk_clear\fR,
+\fBslk_restore\fR,
+\fBslk_touch\fR,
+\fBslk_attron\fR,
+\fBslk_attrset\fR,
+\fBslk_attroff\fR,
+\fBslk_attr_on\fR,
+\fBslk_attr_set\fR,
+\fBslk_attr_off\fR,
+\fBslk_attr\fR,
+\fBslk_color\fR - \fBcurses\fR soft label routines
+.ad
+.hy
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 
@@ -126,10 +140,52 @@ if soft labels are simulated on the bottom line of the screen.
 
 .SH RETURN VALUE
 These routines return \fBERR\fR upon failure and OK (SVr4 specifies only "an
-integer value other than \fBERR\fR") upon successful completion. \fBslk_attr\fR
+integer value other than \fBERR\fR") upon successful completion.
+.PP
+X/Open defines no error conditions.
+In this implementation
+.RS
+.TP 5
+\fBslk_attr\fR
 returns the attribute used for the soft keys.
-
-\fBslk_label\fR returns \fBNULL\fR on error.
+.TP 5
+.na
+.hy 0
+\fBslk_attroff\fP, \fBslk_attron\fP, \fBslk_clear\fP, \fBslk_noutrefresh\fP, \fBslk_refresh\fP, \fBslk_touch\fP
+.ad
+.hy
+return an error
+if the terminal or the softkeys were not initialized.
+.TP 5
+\fBslk_attrset\fP
+returns an error
+if the terminal or the softkeys were not initialized.
+.TP 5
+\fBslk_attr_set\fP
+returns an error
+if the terminal or the softkeys were not initialized, or
+the color pair is outside the range 0..COLOR_PAIRS-1,
+or opts is not null.
+.TP 5
+\fBslk_color\fP
+returns an error
+if the terminal or the softkeys were not initialized, or
+the color pair is outside the range 0..COLOR_PAIRS-1.
+.TP 5
+\fBslk_init\fR
+returns an error
+if the format parameter is outside the range 0..3.
+.TP 5
+\fBslk_label\fR
+returns \fBNULL\fR on error.
+.TP 5
+\fBslk_set\fP
+returns an error
+if the terminal or the softkeys were not initialized, or
+the \fIlabnum\fP parameter is outside the range of label counts, or
+if the format parameter is outside the range 0..2, or if
+memory for the labels cannot be allocated.
+.RE
 .SH NOTES
 Most applications would use \fBslk_noutrefresh\fR because a
 \fBwrefresh\fR is likely to follow soon.

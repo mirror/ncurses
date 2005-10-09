@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -57,7 +58,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.61 2003/11/08 20:22:45 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.67 2005/06/04 21:49:20 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -74,10 +75,10 @@ MODULE_ID("$Id: read_termcap.c,v 1.61 2003/11/08 20:22:45 tom Exp $")
 #define TC_SYS_ERR    -3
 #define TC_REF_LOOP   -4
 
-static char *
+static NCURSES_CONST char *
 get_termpath(void)
 {
-    char *result;
+    NCURSES_CONST char *result;
 
     if (!use_terminfo_vars() || (result = getenv("TERMPATH")) == 0)
 	result = TERMPATH;
@@ -720,7 +721,7 @@ get_tc_token(char **srcp, int *endp)
 	    if (*s == '\0') {
 		break;
 	    } else if (*s++ == '\n') {
-		while (isspace(*s))
+		while (isspace(UChar(*s)))
 		    s++;
 	    } else {
 		found = TRUE;
@@ -734,7 +735,7 @@ get_tc_token(char **srcp, int *endp)
 		break;
 	    }
 	    base = s;
-	} else if (isgraph(ch)) {
+	} else if (isgraph(UChar(ch))) {
 	    found = TRUE;
 	}
     }
@@ -754,7 +755,7 @@ copy_tc_token(char *dst, const char *src, size_t len)
 
     while ((ch = *src++) != '\0') {
 	if (ch == '\\' && *src == '\n') {
-	    while (isspace(*src))
+	    while (isspace(UChar(*src)))
 		src++;
 	    continue;
 	}
@@ -784,7 +785,7 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
     char pathbuf[PBUFSIZ];	/* holds raw path of filenames */
     char *pathvec[PVECSIZ];	/* to point to names in pathbuf */
     char **pvec;		/* holds usable tail of path vector */
-    char *termpath;
+    NCURSES_CONST char *termpath;
     string_desc desc;
 
     fname = pathvec;
@@ -932,7 +933,7 @@ add_tc(char *termpaths[], char *path, int count)
 #endif /* !USE_GETCAP */
 
 NCURSES_EXPORT(int)
-_nc_read_termcap_entry(const char *const tn, TERMTYPE * const tp)
+_nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
 {
     int found = FALSE;
     ENTRY *ep;
@@ -1047,7 +1048,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE * const tp)
      * Probably /etc/termcap is a symlink to /usr/share/misc/termcap.
      * Avoid reading the same file twice.
      */
-#ifdef HAVE_LINK
+#if HAVE_LINK
     for (j = 0; j < filecount; j++) {
 	bool omit = FALSE;
 	if (stat(termpaths[j], &test_stat[j]) != 0
@@ -1112,7 +1113,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE * const tp)
 	return (ERR);
 
     /* resolve all use references */
-    _nc_resolve_uses(TRUE);
+    _nc_resolve_uses2(TRUE, FALSE);
 
     /* find a terminal matching tn, if we can */
 #if USE_GETCAP_CACHE
@@ -1122,13 +1123,12 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE * const tp)
 	for_entry_list(ep) {
 	    if (_nc_name_match(ep->tterm.term_names, tn, "|:")) {
 		/*
-		 * Make a local copy of the terminal capabilities.  Free all
-		 * entry storage except the string table for the loaded type
-		 * (which we disconnected from the list by NULLing out
-		 * ep->tterm.str_table above).
+		 * Make a local copy of the terminal capabilities, delinked
+		 * from the list.
 		 */
 		*tp = ep->tterm;
-		ep->tterm.str_table = (char *) 0;
+		_nc_delink_entry(_nc_head, &(ep->tterm));
+		free(ep);
 
 		/*
 		 * OK, now try to write the type to user's terminfo directory. 
@@ -1154,7 +1154,6 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE * const tp)
     }
 #endif
 
-    _nc_free_entries(_nc_head);
     return (found);
 }
 #else

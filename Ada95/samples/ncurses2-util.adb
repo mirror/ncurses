@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.5 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
@@ -104,9 +105,10 @@ package body ncurses2.util is
    end Getchar;
 
    procedure Getchar (win : Window := Standard_Window) is
-      x : Key_Code;
    begin
-      x := Getchar (win);
+      if Getchar (win) < 0 then
+         Beep;
+      end if;
    end Getchar;
 
 

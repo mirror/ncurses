@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_mouse.3x,v 1.24 2003/12/27 18:47:54 tom Exp @
+  * @Id: curs_mouse.3x,v 1.28 2005/05/15 16:18:19 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,15 +41,15 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>                                     <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>
+<STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>                                           <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>getmouse</STRONG>,  <STRONG>ungetmouse</STRONG>,  <STRONG>mousemask</STRONG>,  <STRONG>wenclose</STRONG>, <STRONG>mouse_trafo</STRONG>,
-       <STRONG>wmouse_trafo</STRONG>,  <STRONG>mouseinterval</STRONG>  -  mouse  interface  through
+       <STRONG>getmouse</STRONG>, <STRONG>ungetmouse</STRONG>, <STRONG>mousemask</STRONG>, <STRONG>wenclose</STRONG>, <STRONG>mouse_trafo</STRONG>,
+       <STRONG>wmouse_trafo</STRONG>, <STRONG>mouseinterval</STRONG> - mouse interface through
        curses
 
 
@@ -83,8 +83,8 @@
        pseudo-key values in the <STRONG>wgetch</STRONG> input stream.
 
        To  make mouse events visible, use the <STRONG>mousemask</STRONG> function.
-       This will  set  the  mouse  events  to  be  reported.   By
-       default,  no mouse events are reported.  The function will
+       This will set the mouse events to  be  reported.   By  de-
+       fault,  no  mouse  events are reported.  The function will
        return a mask to indicate which  of  the  specified  mouse
        events  can be reported; on complete failure it returns 0.
        If oldmask is non-NULL, this function fills the  indicated
@@ -95,7 +95,8 @@
        the  mouse pointer; setting a nonzero mask may turn it on.
        Whether this happens is device-dependent.
 
-       Here are the mouse event type masks:
+       Here are the mouse event type masks which may be defined:
+
 
        <EM>Name</EM>                     <EM>Description</EM>
        ---------------------------------------------------------------------
@@ -104,34 +105,45 @@
        BUTTON1_CLICKED          mouse button 1 clicked
        BUTTON1_DOUBLE_CLICKED   mouse button 1 double clicked
        BUTTON1_TRIPLE_CLICKED   mouse button 1 triple clicked
+       ---------------------------------------------------------------------
        BUTTON2_PRESSED          mouse button 2 down
        BUTTON2_RELEASED         mouse button 2 up
        BUTTON2_CLICKED          mouse button 2 clicked
        BUTTON2_DOUBLE_CLICKED   mouse button 2 double clicked
        BUTTON2_TRIPLE_CLICKED   mouse button 2 triple clicked
+       ---------------------------------------------------------------------
+
        BUTTON3_PRESSED          mouse button 3 down
        BUTTON3_RELEASED         mouse button 3 up
        BUTTON3_CLICKED          mouse button 3 clicked
-
        BUTTON3_DOUBLE_CLICKED   mouse button 3 double clicked
        BUTTON3_TRIPLE_CLICKED   mouse button 3 triple clicked
+       ---------------------------------------------------------------------
        BUTTON4_PRESSED          mouse button 4 down
        BUTTON4_RELEASED         mouse button 4 up
        BUTTON4_CLICKED          mouse button 4 clicked
        BUTTON4_DOUBLE_CLICKED   mouse button 4 double clicked
        BUTTON4_TRIPLE_CLICKED   mouse button 4 triple clicked
+       ---------------------------------------------------------------------
+       BUTTON5_PRESSED          mouse button 5 down
+       BUTTON5_RELEASED         mouse button 5 up
+       BUTTON5_CLICKED          mouse button 5 clicked
+       BUTTON5_DOUBLE_CLICKED   mouse button 5 double clicked
+       BUTTON5_TRIPLE_CLICKED   mouse button 5 triple clicked
+       ---------------------------------------------------------------------
        BUTTON_SHIFT             shift was down during button state change
        BUTTON_CTRL              control was down during button state change
        BUTTON_ALT               alt was down during button state change
        ALL_MOUSE_EVENTS         report all button state changes
        REPORT_MOUSE_POSITION    report mouse movement
+       ---------------------------------------------------------------------
 
        Once a class of mouse events have been made visible  in  a
-       window,  calling  the  <STRONG>wgetch</STRONG>  function on that window may
-       return <STRONG>KEY_MOUSE</STRONG> as an indicator that a  mouse  event  has
-       been queued.  To read the event data and pop the event off
-       the queue, call <STRONG>getmouse</STRONG>.  This function will return <STRONG>OK</STRONG> if
-       a mouse event is actually visible in the given window, <STRONG>ERR</STRONG>
+       window, calling the <STRONG>wgetch</STRONG> function on that window may re-
+       turn <STRONG>KEY_MOUSE</STRONG> as an indicator that a mouse event has been
+       queued.   To read the event data and pop the event off the
+       queue, call <STRONG>getmouse</STRONG>.  This function will return <STRONG>OK</STRONG>  if  a
+       mouse  event  is actually visible in the given window, <STRONG>ERR</STRONG>
        otherwise.  When <STRONG>getmouse</STRONG> returns <STRONG>OK</STRONG>, the  data  deposited
        as  y  and  x  in  the event structure coordinates will be
        screen-relative character-cell coordinates.  The  returned
@@ -139,9 +151,9 @@
        event type.
 
        The <STRONG>ungetmouse</STRONG> function behaves  analogously  to  <STRONG>ungetch</STRONG>.
-       It  pushes  a  <STRONG>KEY_MOUSE</STRONG>  event  onto the input queue, and
-       associates with  that  event  the  given  state  data  and
-       screen-relative character-cell coordinates.
+       It  pushes a <STRONG>KEY_MOUSE</STRONG> event onto the input queue, and as-
+       sociates with that event the given state data and  screen-
+       relative character-cell coordinates.
 
        The  <STRONG>wenclose</STRONG>  function  tests  whether  a  given  pair of
        screen-relative character-cell coordinates is enclosed  by
@@ -153,15 +165,15 @@
        dinates from stdscr-relative coordinates  to  screen-rela-
        tive  coordinates  or  vice  versa.  Please remember, that
        stdscr-relative coordinates are not  always  identical  to
-       screen-relative   coordinates  due  to  the  mechanism  to
-       reserve lines on top or bottom of  the  screen  for  other
-       purposes (ripoff() call, see also slk_...  functions).  If
+       screen-relative  coordinates  due  to the mechanism to re-
+       serve lines on top or bottom of the screen for other  pur-
+       poses  (ripoff()  call,  see also slk_...  functions).  If
        the parameter <STRONG>to_screen</STRONG> is <STRONG>TRUE</STRONG>, the pointers <STRONG>pY,</STRONG> <STRONG>pX</STRONG>  must
        reference  the coordinates of a location inside the window
        <STRONG>win</STRONG>.  They are converted  to  screen-relative  coordinates
        and  returned through the pointers.  If the conversion was
-       successful, the function returns  <STRONG>TRUE</STRONG>.   If  one  of  the
-       parameters was NULL or the location is not inside the win-
+       successful, the function returns <STRONG>TRUE</STRONG>.  If one of the  pa-
+       rameters  was  NULL or the location is not inside the win-
        dow, <STRONG>FALSE</STRONG> is returned.  If <STRONG>to_screen</STRONG> is <STRONG>FALSE</STRONG>, the point-
        ers  <STRONG>pY,</STRONG>  <STRONG>pX</STRONG>  must  reference screen-relative coordinates.
        They are converted to stdscr-relative coordinates  if  the
@@ -173,25 +185,39 @@
        successful.
 
        The <STRONG>mouseinterval</STRONG> function sets the maximum time (in thou-
-       sands  of  a  second)  that  can  elapse between press and
-       release events for them to be recognized as a click.   Use
-       <STRONG>mouseinterval(-1)</STRONG> to disable click resolution.  This func-
-       tion returns the previous interval value.  The default  is
-       one sixth of a second.
+       sands  of  a second) that can elapse between press and re-
+       lease events for them to be recognized as  a  click.   Use
+       <STRONG>mouseinterval(0)</STRONG>  to disable click resolution.  This func-
+       tion returns the previous interval value.  Use <STRONG>mouseinter-</STRONG>
+       <STRONG>val(-1)</STRONG>  to  obtain the interval without altering it.  The
+       default is one sixth of a second.
 
-       Note  that  mouse  events will be ignored when input is in
+       Note that mouse events will be ignored when  input  is  in
        cooked mode, and will cause an error beep when cooked mode
-       is  being simulated in a window by a function such as <STRONG>get-</STRONG>
+       is being simulated in a window by a function such as  <STRONG>get-</STRONG>
        <STRONG>str</STRONG> that expects a linefeed for input-loop termination.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       <STRONG>getmouse</STRONG>, <STRONG>ungetmouse</STRONG> and <STRONG>mouseinterval</STRONG> return the  integer
-       <STRONG>ERR</STRONG> upon failure or <STRONG>OK</STRONG> upon successful completion.  <STRONG>mouse-</STRONG>
-       <STRONG>mask</STRONG> returns the mask of reportable events.  <STRONG>wenclose</STRONG>  and
-       <STRONG>wmouse_trafo</STRONG> are boolean functions returning <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>
-       depending on their test result.
+       <STRONG>getmouse</STRONG>  and <STRONG>ungetmouse</STRONG> return the integer <STRONG>ERR</STRONG> upon fail-
+       ure or <STRONG>OK</STRONG> upon successful completion.
+
+              <STRONG>getmouse</STRONG>
+                   returns an error.  If no mouse driver was ini-
+                   tialized, or if the mask parameter is zero,
+
+              <STRONG>ungetmouse</STRONG>
+                   returns an error if the FIFO is full.
+
+       <STRONG>mousemask</STRONG> returns the mask of reportable events.
+
+       <STRONG>mouseinterval</STRONG>  returns the previous interval value, unless
+       the terminal was not initialized.  In that  case,  it  re-
+       turns the maximum interval value (166).
+
+       <STRONG>wenclose</STRONG>  and <STRONG>wmouse_trafo</STRONG> are boolean functions returning
+       <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG> depending on their test result.
 
 
 </PRE>
@@ -202,17 +228,25 @@
 
        The feature macro <STRONG>NCURSES_MOUSE_VERSION</STRONG> is provided so the
        preprocessor  can  be  used to test whether these features
-       are present  (its  value  is  1).   If  the  interface  is
-       changed, the value of <STRONG>NCURSES_MOUSE_VERSION</STRONG> will be incre-
-       mented.
+       are present.  If the interface is changed,  the  value  of
+       <STRONG>NCURSES_MOUSE_VERSION</STRONG>  will  be incremented.  These values
+       for <STRONG>NCURSES_MOUSE_VERSION</STRONG> may be specified when  configur-
+       ing ncurses:
+
+              1  has  definitions  for reserved events.  The mask
+                 uses 28 bits.
+
+              2  adds definitions for button 5, removes the defi-
+                 nitions  for  reserved events.  The mask uses 29
+                 bits.
 
        The order of the <STRONG>MEVENT</STRONG> structure members is  not  guaran-
        teed.   Additional fields may be added to the structure in
        the future.
 
-       Under  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>,  these  calls  are  implemented  using
-       either  xterm's  built-in  mouse-tracking API or platform-
-       specific drivers including
+       Under <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>, these calls are implemented  using  ei-
+       ther  xterm's built-in mouse-tracking API or platform-spe-
+       cific drivers including
               Alessandro Rubini's gpm server.
               FreeBSD sysmouse
               OS/2 EMX
@@ -240,9 +274,9 @@
 
        Mouse events under xterm will not be detected correctly in
        a window with its keypad bit off, since  they  are  inter-
-       preted  as  a  variety  of  function  key.   Your terminfo
-       description must have <STRONG>kmous</STRONG> set to "\E[M"  (the  beginning
-       of the response from xterm for mouse clicks).
+       preted  as  a  variety of function key.  Your terminfo de-
+       scription must have <STRONG>kmous</STRONG> set to "\E[M" (the beginning  of
+       the response from xterm for mouse clicks).
 
        Because  there  are  no  standard  terminal responses that
        would serve to identify terminals which support the  xterm
@@ -258,7 +292,7 @@
 
 
 
-                                                   <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>
+                                                         <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

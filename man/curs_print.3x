@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_print.3x,v 1.6 2003/05/10 20:33:49 jmc Exp $
+.\" $Id: curs_print.3x,v 1.7 2005/05/15 15:59:36 tom Exp $
 .TH curs_print 3X ""
 .SH NAME
 \fBmcprint\fR - ship binary data to printer
@@ -51,7 +51,7 @@ for some reason.  In this case, errno will contain either an error associated
 with \fBwrite(2)\fR or one of the following:
 .TP 5
 ENODEV
-Capabilities for printer redirection don't exist.
+Capabilities for printer redirection do not exist.
 .TP 5
 ENOMEM
 Couldn't allocate sufficient memory to buffer the printer write.

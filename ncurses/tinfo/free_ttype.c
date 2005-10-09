@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,10 +43,10 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: free_ttype.c,v 1.10 2003/08/09 21:22:03 tom Exp $")
+MODULE_ID("$Id: free_ttype.c,v 1.11 2005/06/04 21:54:50 tom Exp $")
 
 NCURSES_EXPORT(void)
-_nc_free_termtype(TERMTYPE * ptr)
+_nc_free_termtype(TERMTYPE *ptr)
 {
     T(("_nc_free_termtype(%s)", ptr->term_names));
 
@@ -89,6 +89,7 @@ _nc_free_termtype(TERMTYPE * ptr)
     FreeIfNeeded(ptr->ext_Names);
 #endif
     memset(ptr, 0, sizeof(TERMTYPE));
+    _nc_free_entry(_nc_head, ptr);
 }
 
 #if NCURSES_XNAMES

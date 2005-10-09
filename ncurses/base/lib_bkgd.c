@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2001-2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,11 +29,14 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Juergen Pfeifer                         1997                    *
+ *     and: Sven Verdoolaege                        2000                    *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.30 2003/07/05 16:46:49 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.32 2005/04/16 18:03:48 tom Exp $")
 
 /*
  * Set the window's background information.
@@ -54,10 +57,23 @@ wbkgrndset(WINDOW *win, const ARG_CH_T ch)
 	toggle_attr_off(win->_attrs, off);
 	toggle_attr_on(win->_attrs, on);
 
-	if (CharOf(CHDEREF(ch)) == L('\0'))
+#if NCURSES_EXT_COLORS
+	{
+	    int pair;
+
+	    if ((pair = GetPair(win->_nc_bkgd)) != 0)
+		SET_WINDOW_PAIR(win, 0);
+	    if ((pair = GetPair(CHDEREF(ch))) != 0)
+		SET_WINDOW_PAIR(win, pair);
+	}
+#endif
+
+	if (CharOf(CHDEREF(ch)) == L('\0')) {
 	    SetChar(win->_nc_bkgd, BLANK_TEXT, AttrOf(CHDEREF(ch)));
-	else
+	    SetPair(win->_nc_bkgd, GetPair(CHDEREF(ch)));
+	} else {
 	    win->_nc_bkgd = CHDEREF(ch);
+	}
 #if USE_WIDEC_SUPPORT
 	/*
 	 * If we're compiled for wide-character support, _bkgrnd is the
@@ -70,9 +86,11 @@ wbkgrndset(WINDOW *win, const ARG_CH_T ch)
 	    int tmp;
 
 	    wgetbkgrnd(win, &wch);
-	    tmp = _nc_to_char(CharOf(wch));
+	    tmp = _nc_to_char((wint_t) CharOf(wch));
 
-	    win->_bkgd = ((tmp == EOF) ? ' ' : (chtype) tmp) | AttrOf(wch);
+	    win->_bkgd = (((tmp == EOF) ? ' ' : (chtype) tmp)
+			  | (AttrOf(wch) & ALL_BUT_COLOR)
+			  | COLOR_PAIR(GET_WINDOW_PAIR(win)));
 	}
 #endif
     }

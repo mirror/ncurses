@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,18 +41,40 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.15 2002/12/28 01:21:34 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.17 2004/07/31 20:24:38 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
 static int current_lines;
 static int current_cols;
 
+#ifdef TRACE
+static void
+show_window_sizes(const char *name)
+{
+    WINDOWLIST *wp;
+
+    _tracef("%s resizing: %2d x %2d (%2d x %2d)", name, LINES, COLS,
+	    screen_lines, screen_columns);
+    for (wp = _nc_windows; wp != 0; wp = wp->next) {
+	_tracef("  window %p is %2d x %2d at %2d,%2d",
+		&(wp->win),
+		wp->win._maxy + 1,
+		wp->win._maxx + 1,
+		wp->win._begy,
+		wp->win._begx);
+    }
+}
+#endif
+
 NCURSES_EXPORT(bool)
 is_term_resized(int ToLines, int ToCols)
 {
-    return (ToLines != screen_lines
-	    || ToCols != screen_columns);
+    T((T_CALLED("is_term_resized(%d, %d)"), ToLines, ToCols));
+    returnCode(ToLines > 0
+	       && ToCols > 0
+	       && (ToLines != screen_lines
+		   || ToCols != screen_columns));
 }
 
 /*
@@ -162,6 +184,7 @@ decrease_size(int ToLines, int ToCols, int stolen)
 
 	    if (!(win->_flags & _ISPAD)) {
 		if (child_depth(win) == depth) {
+		    found = TRUE;
 		    if (adjust_window(win, ToLines, ToCols, stolen) != OK)
 			returnCode(ERR);
 		}
@@ -194,6 +217,7 @@ increase_size(int ToLines, int ToCols, int stolen)
 
 	    if (!(win->_flags & _ISPAD)) {
 		if (parent_depth(win) == depth) {
+		    found = TRUE;
 		    if (adjust_window(win, ToLines, ToCols, stolen) != OK)
 			returnCode(ERR);
 		}
@@ -222,6 +246,10 @@ resize_term(int ToLines, int ToCols)
 	int myLines = current_lines = screen_lines;
 	int myCols = current_cols = screen_columns;
 
+#ifdef TRACE
+	if (_nc_tracing & TRACE_UPDATE)
+	    show_window_sizes("before");
+#endif
 	if (ToLines > screen_lines) {
 	    increase_size(myLines = ToLines, myCols, was_stolen);
 	    current_lines = myLines;
@@ -250,6 +278,13 @@ resize_term(int ToLines, int ToCols)
 	if (SP->newhash) {
 	    FreeAndNull(SP->newhash);
 	}
+#ifdef TRACE
+	if (_nc_tracing & TRACE_UPDATE) {
+	    LINES = ToLines - was_stolen;
+	    COLS = ToCols;
+	    show_window_sizes("after");
+	}
+#endif
     }
 
     /*

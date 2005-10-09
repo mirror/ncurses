@@ -15,15 +15,15 @@
 ** 
 ** You should have received a copy of the GNU General Public License
 ** along with TACK; see the file COPYING.  If not, write to
-** the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-** Boston, MA 02111-1307, USA.
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+** Boston, MA 02110-1301, USA
 */
 /* screen formatting and I/O utility functions */
 
 #include <tack.h>
 #include <time.h>
 
-MODULE_ID("$Id: output.c,v 1.8 2003/10/25 20:43:43 tom Exp $")
+MODULE_ID("$Id: output.c,v 1.10 2005/09/17 19:49:16 tom Exp $")
 
 /* globals */
 long char_sent;			/* number of characters sent */
@@ -34,7 +34,7 @@ int replace_mode;		/* used to output replace mode padding */
 int can_go_home;		/* TRUE if we can fashion a home command */
 int can_clear_screen;		/* TRUE if we can somehow clear the screen */
 int raw_characters_sent;	/* Total output characters */
-int log_count;			/* Number of characters on a log line */
+static int log_count;		/* Number of characters on a log line */
 
 /* translate mode default strings */
 #define TM_carriage_return	TM_string[0].value

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.22 $
+--  $Revision: 1.25 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -105,8 +106,8 @@ package body Terminal_Interface.Curses.Menus is
       type Desc_String_Ptr is access Desc_String;
       pragma Controlled (Desc_String_Ptr);
 
-      Name_Str : Name_String_Ptr := new Name_String;
-      Desc_Str : Desc_String_Ptr := new Desc_String;
+      Name_Str : constant Name_String_Ptr := new Name_String;
+      Desc_Str : constant Desc_String_Ptr := new Desc_String;
       Name_Len, Desc_Len : size_t;
       Result : Item;
    begin
@@ -194,7 +195,7 @@ package body Terminal_Interface.Curses.Menus is
                               Opt : C_Int) return C_Int;
       pragma Import (C, Set_Item_Opts, "set_item_opts");
 
-      Opt : C_Int := IOS_2_CInt (Options);
+      Opt : constant C_Int := IOS_2_CInt (Options);
       Res : Eti_Error;
    begin
       Res := Set_Item_Opts (Itm, Opt);
@@ -214,7 +215,7 @@ package body Terminal_Interface.Curses.Menus is
                               Opt : C_Int) return C_Int;
       pragma Import (C, Item_Opts_Off, "item_opts_off");
 
-      Opt : C_Int := IOS_2_CInt (Options);
+      Opt : constant C_Int := IOS_2_CInt (Options);
       Err : Eti_Error;
    begin
       if On then
@@ -233,7 +234,7 @@ package body Terminal_Interface.Curses.Menus is
       function Item_Opts (Itm : Item) return C_Int;
       pragma Import (C, Item_Opts, "item_opts");
 
-      Res : C_Int := Item_Opts (Itm);
+      Res : constant C_Int := Item_Opts (Itm);
    begin
       Options := CInt_2_IOS (Res);
    end Get_Options;
@@ -374,7 +375,7 @@ package body Terminal_Interface.Curses.Menus is
                               Opt : C_Int) return C_Int;
       pragma Import (C, Set_Menu_Opts, "set_menu_opts");
 
-      Opt : C_Int := MOS_2_CInt (Options);
+      Opt : constant C_Int := MOS_2_CInt (Options);
       Res : Eti_Error;
    begin
       Res := Set_Menu_Opts (Men, Opt);
@@ -394,7 +395,7 @@ package body Terminal_Interface.Curses.Menus is
                               Opt : C_Int) return C_Int;
       pragma Import (C, Menu_Opts_Off, "menu_opts_off");
 
-      Opt : C_Int := MOS_2_CInt (Options);
+      Opt : constant C_Int := MOS_2_CInt (Options);
       Err : Eti_Error;
    begin
       if On then
@@ -413,7 +414,7 @@ package body Terminal_Interface.Curses.Menus is
       function Menu_Opts (Men : Menu) return C_Int;
       pragma Import (C, Menu_Opts, "menu_opts");
 
-      Res : C_Int := Menu_Opts (Men);
+      Res : constant C_Int := Menu_Opts (Men);
    begin
       Options := CInt_2_MOS (Res);
    end Get_Options;
@@ -973,7 +974,7 @@ package body Terminal_Interface.Curses.Menus is
                        Key : C_Int) return C_Int;
       pragma Import (C, Driver, "menu_driver");
 
-      R : Eti_Error := Driver (Men, C_Int (Key));
+      R : constant Eti_Error := Driver (Men, C_Int (Key));
    begin
       if R /= E_Ok then
          case R is
@@ -996,7 +997,7 @@ package body Terminal_Interface.Curses.Menus is
    begin
       if IA /= null and then Free_Items then
          for I in IA'First .. (IA'Last - 1) loop
-            if (IA (I) /= Null_Item) then
+            if IA (I) /= Null_Item then
                Delete (IA (I));
             end if;
          end loop;

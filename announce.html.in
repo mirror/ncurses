@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.0//EN">
 <!--
-  $Id: announce.html.in,v 1.53 2004/01/18 01:27:26 tom Exp $
+  $Id: announce.html.in,v 1.57 2005/10/01 22:07:23 tom Exp $
 -->
 <HTML>
 <HEAD>
@@ -19,8 +19,8 @@ and multiple highlights and forms characters and function-key mapping,
 and has all the other SYSV-curses enhancements over BSD curses.<P>
 
 In mid-June 1995, the maintainer of 4.4BSD curses declared that he
-considered 4.4BSD curses obsolete, and is encouraging the keepers of
-Unix releases such as BSD/OS, freeBSD and netBSD to switch over to
+considered 4.4BSD curses obsolete, and encouraged the keepers of
+Unix releases such as BSD/OS, FreeBSD and NetBSD to switch over to
 ncurses.<P>
 
 The ncurses code was developed under GNU/Linux.
@@ -42,198 +42,186 @@ the GNU distribution site
 
 <H1>Release Notes</H1>
 
-This release is designed to be upward compatible from ncurses 5.0 and 5.3;
+This release is designed to be upward compatible from ncurses 5.0 through 5.4;
 very few applications will require recompilation, depending on the platform.
-These are the highlights from the change-log since ncurses 5.3 release.
+These are the highlights from the change-log since ncurses 5.4 release.
 <p>
 Interface changes:
 <ul>
-        <li>add the remaining functions for X/Open curses wide-character
-            support.
-                <ul>
-                <li>pecho_wchar()
-                <li>slk_wset()
-                </ul>
-            These are only available if the library is configured using the
-            <kbd>--enable-widec</kbd> option.
+        <li>terminfo installs "xterm-new" as "xterm" entry rather than
+            "xterm-old" (aka xterm-r6).
 
-        <li>write <code>getyx()</code> and related 2-return macros in terms of
-            <code>getcury()</code>,
-            <code>getcurx()</code>, etc.
+        <li>terminfo data is installed using the tic -x option (few systems
+            still use ncurses 4.2).
 
-        <li>simplify ifdef for <code>bool</code> declaration in curses.h
+        <li>modify C++ binding to work with newer C++ compilers by providing
+            initializers and using modern casts.  Old-style header names are
+            still used in this release to allow compiling with not-so-old
+            compilers.
 
-        <li>modify ifdef's in curses.h that disabled use of
-            <code>__attribute__()</code> for g++, since recent versions
-            implement the cases which ncurses uses.
+        <li>modify parameter type in c++ binding for insch() and mvwinsch() to
+            be consistent with underlying ncurses library (was char, is chtype).
 
-        <li>add <code>key_defined()</code> function, to tell which keycode a
-            string is bound to.
+        <li>change NCursesWindow::err_handler() to a virtual function.
+
+        <li>form and menu libraries now work with wide-character data.
+            Applications which bypassed the form library and manipulated the
+            FIELD.buf data directly will not work properly with libformw,
+            since that no longer points to an array of char.  The
+            set_field_buffer() and field_buffer() functions translate to/from
+            the actual field data.
+
+
+        <li>add symbol to curses.h which can be used to suppress include of
+          stdbool.h, e.g.,
+          <pre>
+                #define NCURSES_ENABLE_STDBOOL_H 0
+                #include &lt;curses.h&gt;
+          </pre>
+
+        <li>change SP->_current_attr to a pointer, adjust ifdef's to ensure
+            that libtinfo.so and libtinfow.so have the same ABI.  The reason
+            for this is that the corresponding data which belongs to the
+            upper-level ncurses library has a different size in each model.
+
+        <li>winnstr() now returns multibyte character strings for the
+            wide-character configuration.
+
+        <li>assume_default_colors() no longer requires that
+            use_default_colors() be called first.
+
+        <li>data_ahead() now works with wide-characters.
+
+        <li>slk_set() and slk_wset() now accept and store multibyte or
+            multicolumn characters.
+
+        <li>start_color() now returns OK if colors have
+            already been started.
+            start_color() also returns ERR if it cannot allocate memory.
+
+        <li>pair_content() now returns -1 for consistency with init_pair()
+            if it corresponds to the default-color.
+
+        <li>unctrl() now returns null if its parameter does not correspond
+            to an unsigned char.
+
 </ul>
 New features and improvements:
 <ul>
         <li>library
           <ul>
-            <li>implement logic in lib_mouse.c to handle position reports which
-              are generated when XFree86 xterm is initialized with private
-              modes 1002 or 1003. These are returned to the application as the
-              REPORT_MOUSE_POSITION mask, which was not implemented.
-            <li>modify soft-key initialization to use A_REVERSE if A_STANDOUT
-              would not be shown when colors are used, i.e., if ncv#1 is set in
-              the terminfo as is done in "screen".
-            <li>add configure option for FreeBSD sysmouse, --with-sysmouse, and
-              implement library support for that.
+            <li>environment variable NCURSES_NO_UTF8_ACS supports
+                miscellaneous terminal emulators which ignore alternate
+                character set escape sequences when in UTF-8 mode.
+
+            <li>modify initialization of key lookup table so that if an extended
+                capability (tic -x) string is defined, and its name begins with 'k',
+                ncurses will automatically treat it as a key.
+
+            <li>change GPM initialization, using dl library to load it
+                dynamically at runtime.
+
+            <li>form, menu and panel libraries support debug-tracing.
+
           </ul>
+
+        <li>add NCURSES-Programming-HOWTO.html by Pradeep Padala
+            (see http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/).
 
         <li>programs:
 
-          <ul>
-          <li>tack:
-
+          <li>infocmp:
             <ul>
-            <li>allow it to run from fallback terminfo data.
-            <li>reset colors after each color test, correct a place
-                where <code>exit_standout_mode</code> was used instead of
-                <code>exit_attribute_mode</code>.
-            <li>improve <code>bce</code> test by making it set colors other
-                than black on white.
+            <li>The -i option now matches 8-bit controls against its table
+                entries, e.g., so it can analyze the xterm-8bit entry.
+
+            <li>add "-x" option to infocmp like tic's "-x", for use in "-F"
+                comparisons.  This modifies infocmp to only report extended
+                capabilities if the -x option is given, making this more
+                consistent with tic.  Some scripts may break, since infocmp
+                previous gave this information without an option.
+
             </ul>
 
           <li>tic:
 
             <ul>
-            <li>handle a case where an entry has no
-                description, and capabilities begin on the same line as the entry
-                name.
-            <li>allow a terminfo entry with a leading 2-character name.
-            <li>improved warnings when suppressing items to fit in termcap's
-                1023-byte limit.
-            <li>add check for multiple "tc=" clauses in a termcap.
-            <li>correct logic for resolving "use=" clauses
-                allow infocmp and tic to show cancelled capabilities.
-            <li>check for incomplete line-drawing character mapping.
-            <li>check for missing/empty/illegal terminfo name.
-            </ul>
 
-          <li>tput:
-            <ul>
-            <li>modify tput to use the same parameter analysis as tparm() does,
-              to provide for user-defined strings, e.g., for xterm title, a
-              corresponding capability might be
-                title=\E]2;%p1%s^G,
+            <li>modify termcap-parsing to retain 2-character aliases at the
+                beginning of an entry if the "-x" option is used in tic.
+
+            <li>filter out long extended names when translating to termcap
+                format.  Only two characters are permissible for termcap
+                capability names.
+
+            <li>correct translation of "%%" in terminfo format to termcap,
+                e.g., using "tic -C".
+
+            <li>modify the "-c -v" options to ignore delays when comparing
+                strings.  Also modify it to ignore a canceled sgr string,
+                e.g., for terminals which cannot properly combine attributes
+                in one control sequence.
+
+            <li>add a check for improperly ended strings, i.e., where a
+                following line begins in column 1.
+
+            <li>add a check in tic for terminfo entries having an sgr0 but no
+                sgr string.  This confuses Tru64 and HPUX curses when combined
+                with color, e.g., making them leave line-drawing characters in
+                odd places.
+
+            <li>add check (with debug configuration) that provides about the
+                runtime changes that would be made to sgr0 for termcap
+                applications.
+
             </ul>
 
           <li>tset:
 
             <ul>
-            <li>use the system's default values for CKILL and other default
-                control characters.
-            <li>correct interchanged defaults for kill and interrupt
-                characters, which caused it to report unnecessarily.
+
+            <li>add -c and -w options to allow user to suppress ncurses'
+                resizing of the terminal emulator window in the special case
+                where it is not able to detect the true size.
+
             </ul>
 
-          </ul>
 </ul>
 Major bug fixes:
 <ul>
-        <li>prevent recursion in wgetch() via wgetnstr() if the connection
-          cannot be switched between cooked/raw modes because it is not a TTY.
 
-        <li>correct a case in _nc_remove_string(), used by
-          <code>define_key()</code>, to avoid infinite loop if the given string
-          happens to be a substring of other strings which are assigned to keys.
+        <li>improve logic in tgetent() which adjusts the termcap "me" string
+            to work with ISO-2022 string used in xterm-new.
+            This is a feature that was incompletely implemented in ncurses 5.3.
+            ncurses attempts to provide termcap clients with the portion of
+            the sgr0 (termcap "me") string that does not reset line-drawing.
 
-        <li>modify logic of acsc to use the original character if no mapping is
-          defined, rather than a null.
+        <li>cells in the WINDOW which are continuations of a multicolumn
+            character are encoded differently, making repainting more
+            reliable.
 
-        <li>several improvements for handling multi-cell display of wide
-            characters.
-          <ul>
-          <li>modify setcchar() to allow converting control characters to complex
-            characters.
-          <li>correct handling of multibyte characters in waddch_literal() which
-            force wrapping because they are started too late on the line.
-          <li>modify setcchar() to allow for wchar_t input strings that have
-            more than one spacing character.
-          </ul>
+        <li>amend change to setupterm() in ncurses 5.4 (20030405) which would
+            reuse the value of cur_term if the same output was selected.  This
+            now reuses it only when setupterm() is called from tgetent(),
+            which has no notion of separate SCREENs.  Note that tgetent() must
+            be called after initscr() or newterm() to use this feature.
 
-	<li>other fixes for wide-character support:
-	  <ul>
-          <li>rewrote lib_acs.c to allow PutAttrChar() to decide how to render
-            alternate-characters, i.e., to work with Linux console and UTF-8
-            locale.
-          <li>implement a workaround so that line-drawing works with screen's
-            crippled UTF-8 support (tested with 3.9.13).  This only works with
-	    the wide-character support (--enable-widec); the normal library
-	    will simply suppress line-drawing when running in a UTF-8 locale in
-	    screen.
-          <li>corrections to lib_get_wstr.c:
-            <ul>
-            <li>null-terminate buffer passed to setcchar(), which occasionally
-              failed.
-            <li>map special characters such as erase- and kill-characters into
-              key-codes so those will work as expected even if they are not
-              mentioned in the terminfo.
-            </ul>
-	  </ul>
+        <li>make setcchar() now works when its wchar_t* parameter is
+            pointing to a string which contains more data than can be converted.
 
-        <li>modify <code>setupterm()</code> to check if the terminfo and
-          terminal-modes have already been read.  This ensures that it does not
-          reinvoke <code>def_prog_mode()</code> when an application calls more
-          than one function, such as <code>tgetent()</code> and
-          <code>initscr()</code>.
+        <li>win_wchnstr() now works for more than one cell.
 
-        <li>fix form_driver() cases for REQ_CLR_EOF, REQ_CLR_EOL, REQ_DEL_CHAR,
-          REQ_DEL_PREV and REQ_NEW_LINE, which did not ensure the cursor was at
-          the editing position before making modifications.
+        <li>resizeterm() now processes all levels of window hierarchy.
 
-        <li>correct <code>keybound()</code>, which reported definitions in the
-          wrong table, i.e., the list of definitions which are disabled by
-          <code>keyok()</code>.
+        <li>disable GPM mouse support when $TERM happens to be prefixed with
+            "xterm". Gpm_Open() would otherwise assert that it can deal with
+            mouse events in this case.
 
-        <li>fixes related to safe_sprintf.c:
-          <ul>
-          <li>correct an allocation size in safe_sprintf.c for the "*" format
-          code.
-          <li>correct safe_sprintf.c to not return a null pointer if the format
-            happens to be an empty string.
-          <li>make return value from _nc_printf_string() consistent. Before,
-            depending on whether --enable-safe-sprintf was used, it might not
-            be cached for reallocating.
-          </ul>
+        <li>add SP-&gt;_screen_acs_map[], used to ensure that mapping of missing
+          line-drawing characters is handled properly.  For example, ACS_DARROW
+          is absent from xterm-new, and it was coincidentally displayed the
+          same as ACS_BTEE.
 
-        <li>other low-level improvements to the optimization code include:
-          <ul>
-          <li>if the output is a socket or other non-tty device, use 1
-            millisecond
-            for the cost in mvcur; previously it was 9 milliseconds because the
-            baudrate was not known.
-          <li>modify lib_getch.c to avoid recursion via wgetnstr() when the
-            input
-            is not a tty and consequently mode-changes do not work.
-          <li>fix several places in tack/pad.c which tested and used the
-            parameter- and parameterless strings inconsistently.
-          <li>change several tputs() calls in scrolling code to use putp(), to
-            enable padding which may be needed for some terminals.
-          <li>improve mvcur() by checking if it is safe to move when video
-            attributes are set (msgr), and if not, reset/restore attributes
-            within that function rather than doing it separately in the GoTo()
-            function in tty_update.c.
-	  <li>use tputs() rather than putp() in a few cases in tty_update.c
-	    since the corresponding delays are proportional to the number of
-	    lines affected: repeat_char, clr_eos, change_scroll_region.
-          </ul>
-
-        <li>correct line/column reference in adjust_window(), needed to make
-          special windows such as curscr track properly when resizing.
-
-        <li>fix a potential recursion between napms() and _nc_timed_wait()
-
-        <li>rewrote lib_insch.c, combining it with lib_insstr.c so both handle
-          tab and other control characters consistently.
-
-        <li>do not try to open gpm mouse driver if standard output is not a
-          tty; the gpm library does not make this check.
 </ul>
 
 Portability:
@@ -242,97 +230,85 @@ Portability:
           <ul>
           <li>new options:
             <dl>
-            <dt>--with-abi-version option.
-	      <dd>addresses platforms where packagers have diverged from
-		  ncurses ABI numbering.
-            <dt>--with-manpage-format=catonly
-              <dd>addresses
-                  behavior of BSDI, allow install of man+cat files on NetBSD,
-                  whose behavior has diverged by requiring both to be present.
-            <dt>--with-manpage-aliases
-              <dd>extends
-                  "--with-manpage-aliases" to provide the option of generating
-                  ".so" files rather than symbolic links for manpage aliases.
-            <dt>--with-rel-version
-              <dd>workaround to force
-		  libtool on Darwin generate the "same" library names as with
-		  the "--with-shared" option.  The Darwin ld program does not
-		  work well with a zero as the minor-version value.
-            <dt>--with-trace
-              <dd>simplifies defining TRACE to incorporate trace() in libraries.
+            <dt>--enable-largefile
+            <dd>set compiler and linker flags to use largefile support.
+
+            <dt>--enable-ext-colors
+            <dd>Allow encoding of 256 foreground
+                and background colors, e.g., with the xterm-256color or
+                xterm-88color terminfo entries.
+                This requires ABI 6 because it changes the size of cchar_t.
+
+            <dt>--enable-ext-mouse
+            <dd>This defines NCURSES_MOUSE_VERSION 2, and modifies the encoding of
+                mouse events to support wheel mice, which may transmit buttons
+                4 and 5.  This works with xterm and similar terminal
+                emulators.
+                This requires ABI 6 because it changes the encoding of
+                mouse events.
+
+            <dt>--with-chtype
+            <dd>overriding of the non-LP64 model's use of chtype
+
+            <dt>--with-mmask-t
+            <dd>overriding of the non-LP64 model's use of mmask_t
+
+            <dt>--without-xterm-new
+            <dd>Installs "xterm-old" as the "xterm" entry of the terminfo
+                database.
+
             </dl>
-  
+
+          <li>The --with-termlib option now accepts a value which sets
+              the name of the terminfo library. This would allow a packager to
+              build libtinfow.so renamed to coincide with libtinfo.so
+
           <li>fixes/improvements for cross-compiling:
-  
+
             <ul>
-            <li>allow BUILD_CC and related configure script variables to be
-              overridden from the environment.
-            <li>use AC_CHECK_TOOL to get proper values for AR and LD for cross
-              compiling.
-	    <li>use <code>$cross_compiling</code> variable in configure script
-	      rather than comparing <code>$host_alias</code> and
-	      <code>$target</code> alias, since "host" is traditionally misused
-	      in autoconf to refer to the target platform.
-            <li>modify run_tic.in to avoid using wrong shared libraries when
-              cross-compiling.
+            <li>suppress $suffix in misc/run_tic.sh when cross-compiling.
+                This allows cross-compiles to use the host's tic program to
+                handle the "make install.data" step.
+
+            <li>correct BUILD_CPPFLAGS substitution in ncurses/Makefile.in, to allow
+                cross-compiling from a separate directory tree.
+
             </ul>
-  
-          <li>fixes for Mac OS X:
-            <ul>
-            <li>fix a redefinition of <code>$RANLIB</code> in the configure
-              script when libtool is used.
-            <li>modify MKlib_gen.sh to avoid passing "#" tokens through the C
-              preprocessor.  This works around Mac OS X's preprocessor, which
-              insists on adding a blank on each side of the token.
-            </ul>
-  
-          <li>workarounds for broken tools:
-            <ul>
-            <li>add configure check for wchar_t and wint_t types, rather than
-              rely on preprocessor definitions.  Also work around for gcc
-	      <code>fixinclude</code> bug which creates a shadow copy of
-	      curses.h if it sees these symbols apparently typedef'd.
-	    <li>modify configure script to omit -Winline for gcc 3.3, since
-	      that feature is broken.
-            <li>several script fixes to work around the ironically named
-              <em>POSIXLY_CORRECT</em> feature of GNU sed 4.0.
-	    <li>modify configure script to avoid using "head -1", which does
-	      not work if POSIXLY_CORRECT (sic) is set.
-            <li>update configure script to reflect fix for
-              AC_PROG_GCC_TRADITIONAL, which is broken in autoconf 2.5x for Mac
-              OS X 10.2.3.
-            <li>repair check for missing C++ compiler, which is broken in
-              autoconf 2.5x by hardcoding it to g++.
-            </ul>
-  
-          <li>corrected ifdef's relating to configure check for wchar_t, etc.
-          <li>remove configure script check to allow -Wconversion for older
-            versions of gcc
-	  <li>modify configure script to accommodate libtool 1.5, as well as
-	    add an parameter to the "--with-libtool" option which can specify
-	    the pathname of libtool.
-          <li>change several sed scripts to avoid using "\+" since it is not a
-	    BRE (basic regular expression).  One instance caused terminfo.5 to
-	    be misformatted on FreeBSD.
-          <li>use '%' as sed substitute delimiter in run_tic script to avoid
-            problems with pathname delimiters such as ':' and '@'.
-          <li>add -D_XOPEN_SOURCE=500 if needed when configuring with
-	    "--enable-widec", to get <code>mbstate_t</code> declaration on HPUX
-	    11.11.
+
           </ul>
 
         <li>library:
           <ul>
-          <li>adjust include-options in CF_ETIP_DEFINES to avoid missing
-            ncurses_dll.h, fixing special definitions that may be needed for
-            etip.h.
-          <li>modify CF_LIB_SUFFIX for Itanium releases of HP-UX, which use a
-            ".so" suffix.
-          <li>improve ifdef's to guard against redefinition of wchar_t and wint_t
-            in curses.h.
-          <li>remove an #undef for KEY_EVENT from curses.tail used in the
-            experimental NCURSES_WGETCH_EVENTS feature.  The #undef confuses
-            Debian <code>dpkg</code>'s build script.
+
+            <li>add ifdef's for _LP64 in curses.h to avoid using wasteful
+                64-bits for chtype and mmask_t, but add configure option
+                --disable-lp64 in case anyone used that configuration.
+
+            <li>modify C++ binding to use some C internal functions to make it
+                compile properly on Solaris (and other platforms).
+
+            <li>remove check in newwin() that prevents allocating windows that
+                extend beyond the screen (Solaris does this).
+
+            <li>check for <code>nl_langinfo(CODESET)</code>, use it if available.
+	        This replaces ad hoc tests of environment variables to
+		check if the terminal is setup for UTF-8 encoding.
+		Applications which do not call <code>setlocale()</code>
+		should be corrected, to make them work properly with
+		UTF-8 encoding.
+		<br>
+		<strong>In particular, applications which assume (and
+		do not call <code>setlocale()</code>) that
+		Latin-1 codes are printable will no longer work in
+		a UTF-8 locale since the ad hoc check of environment
+		variables to see if the locale was UTF-8 is not used
+		when <code>nl_langinfo(CODESET)</code> is available.</strong>
+
+            <li>use setlocale() to query the program's current locale rather
+                than using getenv().  This supports applications which rely
+                upon legacy treatment of 8-bit characters when the locale is
+                not initialized.
+
           </ul>
 </ul>
 

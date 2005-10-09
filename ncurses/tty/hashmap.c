@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -70,7 +70,7 @@ AUTHOR
 #include <curses.priv.h>
 #include <term.h>		/* for back_color_erase */
 
-MODULE_ID("$Id: hashmap.c,v 1.46 2002/09/07 18:13:15 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.47 2005/01/29 21:27:58 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -143,7 +143,7 @@ update_cost_from_blank(NCURSES_CH_T * to)
     NCURSES_CH_T blank = NewChar2(BLANK_TEXT, BLANK_ATTR);
 
     if (back_color_erase)
-	AddAttr(blank, (AttrOf(stdscr->_nc_bkgd) & A_COLOR));
+	SetPair(blank, GetPair(stdscr->_nc_bkgd));
 
     for (i = TEXTWIDTH; i > 0; i--)
 	if (!(CharEq(blank, *to++)))

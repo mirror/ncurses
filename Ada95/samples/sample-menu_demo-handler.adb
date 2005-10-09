@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.12 $
+--  $Revision: 1.15 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Sample.Menu_Demo.Aux;
@@ -75,7 +76,7 @@ package body Sample.Menu_Demo.Handler is
       loop
          declare
             K : Key_Code := Aux.Get_Request (M, Pan);
-            R : Driver_Result := Driver (M, K);
+            R : constant Driver_Result := Driver (M, K);
          begin
             case R is
                when Menu_Ok => null;

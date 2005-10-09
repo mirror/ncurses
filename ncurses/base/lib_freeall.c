@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,6 +32,7 @@
 
 #include <curses.priv.h>
 #include <term_entry.h>
+#include <tic.h>
 
 #if HAVE_NC_FREEALL
 
@@ -39,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.26 2003/12/27 18:21:57 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.33 2005/06/04 22:34:01 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -54,7 +55,9 @@ _nc_freeall(void)
     T((T_CALLED("_nc_freeall()")));
 #if NO_LEAKS
     _nc_free_tparm();
-    FreeAndNull(_nc_oldnums);
+    if (_nc_oldnums != 0) {
+	FreeAndNull(_nc_oldnums);
+    }
 #endif
     if (SP != 0) {
 	while (_nc_windows != 0) {
@@ -82,6 +85,16 @@ _nc_freeall(void)
 
     del_curterm(cur_term);
     _nc_free_entries(_nc_head);
+    _nc_get_type(0);
+    _nc_first_name(0);
+#if USE_WIDEC_SUPPORT
+    FreeIfNeeded(_nc_wacs);
+#endif
+#if NO_LEAKS
+    _nc_alloc_entry_leaks();
+    _nc_captoinfo_leaks();
+    _nc_comp_scan_leaks();
+#endif
 
     if ((s = _nc_home_terminfo()) != 0)
 	free(s);
@@ -94,6 +107,8 @@ _nc_freeall(void)
 #if HAVE_LIBDBMALLOC
     malloc_dump(malloc_errfd);
 #elif HAVE_LIBDMALLOC
+#elif HAVE_LIBMPATROL
+    __mp_summary();
 #elif HAVE_PURIFY
     purify_all_inuse();
 #endif

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.6 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Windows and scrolling tester.
@@ -224,8 +225,8 @@ procedure ncurses2.acs_and_scroll is
          );
 
       buf : Bounded_String;
-      do_keypad : Boolean := HaveKeyPad (curpw);
-      do_scroll : Boolean := HaveScroll (curpw);
+      do_keypad : constant Boolean := HaveKeyPad (curpw);
+      do_scroll : constant Boolean := HaveScroll (curpw);
 
       pos : Natural;
 
@@ -331,8 +332,8 @@ procedure ncurses2.acs_and_scroll is
       res : pair;
       i : Line_Position := 0;
       j : Column_Position := 0;
-      si : Line_Position := lri - uli + 1;
-      sj : Column_Position := lrj - ulj + 1;
+      si : constant Line_Position := lri - uli + 1;
+      sj : constant Column_Position := lrj - ulj + 1;
    begin
       res.y := uli;
       res.x := ulj;
@@ -714,7 +715,7 @@ begin
 
    Allow_Scrolling (Mode => True);
 
-   End_Mouse;
+   End_Mouse (Mask2);
    Set_Raw_Mode (SwitchOn => True);
    Erase;
    End_Windows;

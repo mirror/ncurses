@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
 #define TTY_DISPLAY_H 1
 
 /*
- * $Id: tty_display.h,v 1.5 2003/08/02 22:59:07 Philippe.Blain Exp $
+ * $Id: tty_display.h,v 1.6 2005/01/01 23:41:12 tom Exp $
  */
 extern NCURSES_EXPORT(bool) _nc_tty_beep (void);
 extern NCURSES_EXPORT(bool) _nc_tty_check_resize (void);
@@ -118,7 +118,7 @@ struct tty_display_data {
 		    : INFINITY)))
 
 #if USE_XMC_SUPPORT
-#define UpdateAttrs(c)	if (D->_current_attr != AttrOf(c)) { \
+#define UpdateAttrs(c)	if (!SameAttrOf(D->_current_attr, AttrOf(c))) { \
 				attr_t chg = D->_current_attr; \
 				vidattr(AttrOf(c)); \
 				if (magic_cookie_glitch > 0 \
@@ -131,7 +131,7 @@ struct tty_display_data {
 				} \
 			}
 #else
-#define UpdateAttrs(c)	if (D->_current_attr != AttrOf(c)) \
+#define UpdateAttrs(c)	if (!SameAttrOf(D->_current_attr, AttrOf(c))) \
 				vidattr(AttrOf(c));
 #endif
 

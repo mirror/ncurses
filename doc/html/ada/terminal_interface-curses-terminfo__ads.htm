@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML><HEAD><TITLE>terminal_interface-curses-terminfo.ads</TITLE></HEAD>
 <BODY>
 <HR><DIV ALIGN="center"><H1> File : terminal_interface-curses-terminfo.ads </H1></DIV><HR>
@@ -43,10 +44,10 @@
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
-<b>with</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C;
+<b>with</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C;
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<FONT COLOR=red><A NAME="44_35">Terminfo</A></FONT> <b>is</b>
-   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-terminfo__ads.htm#44_35">Terminfo</A>);
+<b>package</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_44_35" HREF="terminal_interface-curses-terminfo__adb.htm#ref_47_40">Terminfo</A></FONT> <b>is</b>
+   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-terminfo__ads.htm#ref_44_35">Terminfo</A>);
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
    <FONT COLOR=green><EM>--  | Man page curs_terminfo.3x</EM></FONT>
@@ -55,32 +56,32 @@
    <FONT COLOR=green><EM>--                    restartterm, tparm, putp, vidputs,  vidattr,</EM></FONT>
    <FONT COLOR=green><EM>--                    mvcur</EM></FONT>
 
-   <b>type</b> <FONT COLOR=red><A NAME="54_9">Terminfo_String</A></FONT> <b>is</b> <b>new</b> String;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_54_9">Terminfo_String</A></FONT> <b>is</b> <b>new</b> String;
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>procedure</b> <A HREF="terminal_interface-curses-terminfo__adb.htm#83_14">Get_String</A><FONT COLOR=red><A NAME="57_14"></A></FONT> (<FONT COLOR=red><A NAME="57_26">Name</A></FONT>   : String;
-                         <FONT COLOR=red><A NAME="58_26">Value</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses-terminfo__ads.htm#54_9">Terminfo_String</A>;
-                         <FONT COLOR=red><A NAME="59_26">Result</A></FONT> : <b>out</b> Boolean);
-   <b>function</b> <FONT COLOR=red><A NAME="60_13">Has_String</A></FONT> (<FONT COLOR=red><A NAME="60_25">Name</A></FONT> : String) <b>return</b> Boolean;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_57_14" HREF="terminal_interface-curses-terminfo__adb.htm#ref_83_14">Get_String</A></FONT> (<FONT COLOR=red><A NAME="ref_57_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_83_26">Name</A></FONT>   : String;
+                         <FONT COLOR=red><A NAME="ref_58_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_84_26">Value</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_54_9">Terminfo_String</A>;
+                         <FONT COLOR=red><A NAME="ref_59_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_85_26">Result</A></FONT> : <b>out</b> Boolean);
+   <b>function</b> <FONT COLOR=red><A NAME="ref_60_13" HREF="terminal_interface-curses-terminfo__adb.htm#ref_106_13">Has_String</A></FONT> (<FONT COLOR=red><A NAME="ref_60_25" HREF="terminal_interface-curses-terminfo__adb.htm#ref_106_25">Name</A></FONT> : String) <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: tigetstr()</EM></FONT>
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="64_13">Get_Flag</A></FONT> (<FONT COLOR=red><A NAME="64_23">Name</A></FONT> : String) <b>return</b> Boolean;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_64_13" HREF="terminal_interface-curses-terminfo__adb.htm#ref_67_13">Get_Flag</A></FONT> (<FONT COLOR=red><A NAME="ref_64_23" HREF="terminal_interface-curses-terminfo__adb.htm#ref_67_23">Name</A></FONT> : String) <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: tigetflag()</EM></FONT>
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="68_13">Get_Number</A></FONT> (<FONT COLOR=red><A NAME="68_25">Name</A></FONT> : String) <b>return</b> Integer;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_68_13" HREF="terminal_interface-curses-terminfo__adb.htm#ref_126_13">Get_Number</A></FONT> (<FONT COLOR=red><A NAME="ref_68_25" HREF="terminal_interface-curses-terminfo__adb.htm#ref_126_25">Name</A></FONT> : String) <b>return</b> Integer;
    <FONT COLOR=green><EM>--  AKA: tigetnum()</EM></FONT>
 
-   <b>type</b> <FONT COLOR=red><A NAME="71_9">putctype</A></FONT> <b>is</b> <b>access</b> <b>function</b> (<FONT COLOR=red><A NAME="71_38">c</A></FONT> : <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int)
-                                    <b>return</b> <A HREF="interfac__ads.htm#23_9">Interfaces</A>.C.int;
-   <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-terminfo__ads.htm#71_9">putctype</A>);
+   <b>type</b> <FONT COLOR=red><A NAME="ref_71_9">putctype</A></FONT> <b>is</b> <b>access</b> <b>function</b> (<FONT COLOR=red><A NAME="ref_71_38">c</A></FONT> : <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.int)
+                                    <b>return</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.int;
+   <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_71_9">putctype</A>);
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>procedure</b> <A HREF="terminal_interface-curses-terminfo__adb.htm#137_14">Put_String</A><FONT COLOR=red><A NAME="76_14"></A></FONT> (<FONT COLOR=red><A NAME="76_26">Str</A></FONT>    : <A HREF="terminal_interface-curses-terminfo__ads.htm#54_9">Terminfo_String</A>;
-                         <FONT COLOR=red><A NAME="77_26">affcnt</A></FONT> : Natural := 1;
-                         <FONT COLOR=red><A NAME="78_26">putc</A></FONT>   : <A HREF="terminal_interface-curses-terminfo__ads.htm#71_9">putctype</A> := <b>null</b>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_76_14" HREF="terminal_interface-curses-terminfo__adb.htm#ref_137_14">Put_String</A></FONT> (<FONT COLOR=red><A NAME="ref_76_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_137_26">Str</A></FONT>    : <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_54_9">Terminfo_String</A>;
+                         <FONT COLOR=red><A NAME="ref_77_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_138_26">affcnt</A></FONT> : Natural := 1;
+                         <FONT COLOR=red><A NAME="ref_78_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_139_26">putc</A></FONT>   : <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_71_9">putctype</A> := <b>null</b>);
    <FONT COLOR=green><EM>--  AKA: tputs()</EM></FONT>
 
-<b>end</b> <A HREF="terminal_interface__ads.htm#41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#48_28">Curses</A>.<A HREF="terminal_interface-curses-terminfo__ads.htm#44_35">Terminfo</A><A HREF="terminal_interface-curses-terminfo__ads.htm#44_35">;</A>
+<b>end</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-terminfo__ads.htm#ref_44_35">Terminfo</A>;
 </PRE></BODY></HTML>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997                   *
  ****************************************************************************/
-/* $Id: nc_alloc.h,v 1.11 2002/07/20 13:16:40 tom Exp $ */
+/* $Id: nc_alloc.h,v 1.13 2005/01/16 00:27:35 tom Exp $ */
 
 #ifndef NC_ALLOC_included
 #define NC_ALLOC_included 1
@@ -52,6 +52,13 @@ extern "C" {
 #define HAVE_LIBDBMALLOC 0
 #endif
 
+#if HAVE_LIBMPATROL
+#include <mpatrol.h>    /* Memory-Patrol library */
+#else
+#undef  HAVE_LIBMPATROL
+#define HAVE_LIBMPATROL 0
+#endif
+
 #ifndef NO_LEAKS
 #define NO_LEAKS 0
 #endif
@@ -59,9 +66,9 @@ extern "C" {
 #if HAVE_LIBDBMALLOC || HAVE_LIBDMALLOC || NO_LEAKS
 #define HAVE_NC_FREEALL 1
 struct termtype;
-extern void _nc_free_and_exit(int) GCC_NORETURN;
-extern void _nc_free_tparm(void);
-extern void _nc_leaks_dump_entry(void);
+extern NCURSES_EXPORT(void) _nc_free_and_exit(int) GCC_NORETURN;
+extern NCURSES_EXPORT(void) _nc_free_tparm(void);
+extern NCURSES_EXPORT(void) _nc_leaks_dump_entry(void);
 #define ExitProgram(code) _nc_free_and_exit(code)
 #endif
 

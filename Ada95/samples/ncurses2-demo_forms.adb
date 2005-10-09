@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.4 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -282,7 +283,7 @@ procedure ncurses2.demo_forms is
          );
 
       c : Key_Code := Getchar (w);
-      me : Field := Current (f);
+      me : constant Field := Current (f);
 
    begin
       if c = Character'Pos (']') mod 16#20# then
@@ -314,7 +315,7 @@ procedure ncurses2.demo_forms is
    end form_virtualize;
 
    function my_form_driver (f : Form; c : Key_Code) return Boolean is
-      flag : Driver_Result := Driver (f, F_Validate_Field);
+      flag : constant Driver_Result := Driver (f, F_Validate_Field);
    begin
       if c = Form_Request_Code'Last + 1
         and flag = Form_Ok then
@@ -328,7 +329,7 @@ procedure ncurses2.demo_forms is
    function make_label (frow  : Line_Position;
                         fcol  : Column_Position;
                         label : String) return Field is
-      f : Field := Create (1, label'Length, frow, fcol, 0, 0);
+      f : constant Field := Create (1, label'Length, frow, fcol, 0, 0);
       o : Field_Option_Set := Get_Options (f);
    begin
       if f /= Null_Field then

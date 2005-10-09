@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML><HEAD><TITLE>terminal_interface-curses-panels-user_data.ads</TITLE></HEAD>
 <BODY>
 <HR><DIV ALIGN="center"><H1> File : terminal_interface-curses-panels-user_data.ads </H1></DIV><HR>
@@ -45,9 +46,9 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
 <b>generic</b>
-   <b>type</b> <FONT COLOR=red><A NAME="44_9">User</A></FONT> <b>is</b> <b>limited</b> <b>private</b>;
-   <b>type</b> <A HREF="terminal_interface__ads.htm#41_9">User_Access</A> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-panels__ads.htm#43_35">User</A>;
-<b>package</b> Terminal_Interface.Curses.Panels.User_Data<A HREF="terminal_interface-curses-panels__ads.htm#43_35"> </A><b>is</b>
+   <b>type</b> <FONT COLOR=red><A NAME="ref_44_9">User</A></FONT> <b>is</b> <b>limited</b> <b>private</b>;
+   <b>type</b> <A HREF="terminal_interface__ads.htm#ref_41_9">User_Access</A> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-panels__ads.htm#ref_43_35">User</A>;
+<b>package</b> Terminal_Interface.Curses.Panels.User_Data<A HREF="terminal_interface-curses-panels__ads.htm#ref_43_35"> </A><b>is</b>
    <b>pragma</b> Preelaborate (Terminal_Interface.Curses.Panels.User_Data);
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
@@ -55,13 +56,13 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_1"#2|</EM></FONT>
-   <b>procedure</b> Set_User_Data (<FONT COLOR=red><A NAME="54_29">Pan</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-panels-user_data__ads.htm#44_9">Panel</A>;
+   <b>procedure</b> Set_User_Data (<FONT COLOR=red><A NAME="ref_54_29" HREF="terminal_interface-curses-panels-user_data__adb.htm#ref_52_29">Pan</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-panels-user_data__ads.htm#ref_44_9">Panel</A>;
                             Data : <b>in</b> User_Access);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">set_panel_userptr</A></EM></FONT>
    <b>pragma</b> Inline (Set_User_Data);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_2"#2|</EM></FONT>
-   <b>procedure</b> Get_User_Data (<FONT COLOR=red><A NAME="60_29">Pan</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-panels-user_data__ads.htm#44_9">Panel</A>;
+   <b>procedure</b> Get_User_Data (<FONT COLOR=red><A NAME="ref_60_29" HREF="terminal_interface-curses-panels-user_data__adb.htm#ref_72_29">Pan</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-panels-user_data__ads.htm#ref_44_9">Panel</A>;
                             Data : <b>out</b> User_Access);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">panel_userptr</A></EM></FONT>
 

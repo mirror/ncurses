@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,8 +26,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.12 2004/01/31 17:24:53 tom Exp $
+.\" $Id: curs_util.3x,v 1.17 2005/06/25 21:51:37 tom Exp $
 .TH curs_util 3X ""
+.na
+.hy 0
 .SH NAME
 \fBdelay_output\fR,
 \fBfilter\fR,
@@ -39,6 +41,8 @@
 \fBunctrl\fR,
 \fBuse_env\fR,
 \fBwunctrl\fR - miscellaneous \fBcurses\fR utility routines
+.ad
+.hy
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
@@ -93,6 +97,8 @@ argument, the values of \fBlines\fR and \fBcolumns\fR specified in the
 \fBcurses\fR is running in a window (in which case default behavior
 would be to use the window size if \fBLINES\fR and \fBCOLUMNS\fR are
 not set).
+Note that setting \fBLINES\fR or \fBCOLUMNS\fR overrides the
+corresponding size which may be obtained from the operating system.
 .PP
 The \fBputwin\fR routine writes all data associated with window \fIwin\fR into
 the file to which \fIfilep\fR points.  This information can be later retrieved
@@ -114,9 +120,18 @@ Except for \fBflushinp\fR, routines that return an integer return \fBERR\fR
 upon failure and \fBOK\fR (SVr4 specifies only "an integer value other than
 \fBERR\fR") upon successful completion.
 .PP
-\fBflushinp\fR always returns \fBOK\fR.
-.PP
 Routines that return pointers return \fBNULL\fR on error.
+.PP
+X/Open does not define any error conditions.
+In this implementation
+.RS
+.TP 5
+\fBflushinp\fR
+returns an error if the terminal was not initialized.
+.TP 5
+\fBputwin\fP
+returns an error if the associated \fBfwrite\fP calls return an error.
+.RE
 .SH PORTABILITY
 The XSI Curses standard, Issue 4 describes these functions.
 It states that \fBunctrl\fR and \fBwunctrl\fR will return a null pointer if
@@ -133,6 +148,10 @@ Other implementations typically show both sets of control characters with `^',
 and may strip the parameter to 7 bits.
 This implementation uses 8 bits but does not modify the string to reflect
 locale.
+.PP
+The \fBkeyname\fP function may return the names of user-defined
+string capabilities which are defined in the terminfo entry via the \fB-x\fP
+option of \fBtic\fP.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_initscr\fR(3X),

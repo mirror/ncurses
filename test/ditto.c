@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2001 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2001,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: ditto.c,v 1.4 2001/09/15 21:53:37 tom Exp $
+ * $Id: ditto.c,v 1.5 2005/04/16 16:35:49 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.  Invoke the program by specifying another terminal on the same
@@ -80,9 +80,8 @@ open_tty(char *path)
 }
 
 int
-main(
-	int argc GCC_UNUSED,
-	char *argv[]GCC_UNUSED)
+main(int argc GCC_UNUSED,
+     char *argv[]GCC_UNUSED)
 {
     int j;
     int active_tty = 0;
@@ -91,7 +90,7 @@ main(
     if (argc <= 1)
 	usage();
 
-    if ((data = (DITTO *) calloc(argc, sizeof(DITTO))) == 0)
+    if ((data = (DITTO *) calloc((unsigned) argc, sizeof(DITTO))) == 0)
 	failed("calloc data");
 
     data[0].input = stdin;
@@ -107,10 +106,9 @@ main(
      */
     for (j = 0; j < argc; j++) {
 	active_tty++;
-	data[j].screen = newterm(
-				    (char *) 0,		/* assume $TERM is the same */
-				    data[j].output,
-				    data[j].input);
+	data[j].screen = newterm((char *) 0,	/* assume $TERM is the same */
+				 data[j].output,
+				 data[j].input);
 	if (data[j].screen == 0)
 	    failed("newterm");
 	cbreak();
@@ -132,7 +130,7 @@ main(
 	    break;
 	for (j = 0; j < argc; j++) {
 	    set_term(data[j].screen);
-	    addch(ch);
+	    addch(UChar(ch));
 	    refresh();
 	}
     }

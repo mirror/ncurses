@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-2003               *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -48,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.40 2003/11/08 21:29:54 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.45 2005/06/04 22:07:53 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -59,10 +59,17 @@ static char *stringbuf;		/* buffer for string capabilities */
 static size_t next_free;	/* next free character in stringbuf */
 
 NCURSES_EXPORT(void)
-_nc_init_entry(TERMTYPE * const tp)
+_nc_init_entry(TERMTYPE *const tp)
 /* initialize a terminal type data block */
 {
     unsigned i;
+
+#if NO_LEAKS
+    if (tp == 0 && stringbuf != 0) {
+	FreeAndNull(stringbuf);
+	return;
+    }
+#endif
 
     if (stringbuf == 0)
 	stringbuf = (char *) malloc(MAX_STRTAB);
@@ -106,20 +113,32 @@ _nc_copy_entry(ENTRY * oldp)
     return newp;
 }
 
+/* save a copy of string in the string buffer */
 NCURSES_EXPORT(char *)
 _nc_save_str(const char *const string)
-/* save a copy of string in the string buffer */
 {
+    char *result = 0;
     size_t old_next_free = next_free;
     size_t len = strlen(string) + 1;
 
-    if (next_free + len < MAX_STRTAB) {
+    if (len == 1 && next_free != 0) {
+	/*
+	 * Cheat a little by making an empty string point to the end of the
+	 * previous string.
+	 */
+	if (next_free < MAX_STRTAB) {
+	    result = (stringbuf + next_free - 1);
+	}
+    } else if (next_free + len < MAX_STRTAB) {
 	strcpy(&stringbuf[next_free], string);
 	DEBUG(7, ("Saved string %s", _nc_visbuf(string)));
 	DEBUG(7, ("at location %d", (int) next_free));
 	next_free += len;
+	result = (stringbuf + old_next_free);
+    } else {
+	_nc_warning("Too much data, some is lost");
     }
-    return (stringbuf + old_next_free);
+    return result;
 }
 
 NCURSES_EXPORT(void)
@@ -211,7 +230,7 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 }
 
 NCURSES_EXPORT(void)
-_nc_merge_entry(TERMTYPE * const to, TERMTYPE * const from)
+_nc_merge_entry(TERMTYPE *const to, TERMTYPE *const from)
 /* merge capabilities from `from' entry into `to' entry */
 {
     unsigned i;
@@ -220,7 +239,7 @@ _nc_merge_entry(TERMTYPE * const to, TERMTYPE * const from)
     _nc_align_termtype(to, from);
 #endif
     for_each_boolean(i, from) {
-	if (to->Booleans[i] != CANCELLED_BOOLEAN) {
+	if (to->Booleans[i] != (char) CANCELLED_BOOLEAN) {
 	    int mergebool = from->Booleans[i];
 
 	    if (mergebool == CANCELLED_BOOLEAN)
@@ -257,3 +276,12 @@ _nc_merge_entry(TERMTYPE * const to, TERMTYPE * const from)
 	}
     }
 }
+
+#if NO_LEAKS
+NCURSES_EXPORT(void)
+_nc_alloc_entry_leaks(void)
+{
+    FreeAndNull(stringbuf);
+    next_free = 0;
+}
+#endif

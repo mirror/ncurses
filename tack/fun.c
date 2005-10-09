@@ -15,13 +15,13 @@
 ** 
 ** You should have received a copy of the GNU General Public License
 ** along with TACK; see the file COPYING.  If not, write to
-** the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-** Boston, MA 02111-1307, USA.
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+** Boston, MA 02110-1301, USA
 */
 
 #include <tack.h>
 
-MODULE_ID("$Id: fun.c,v 1.3 2000/03/04 20:29:21 tom Exp $")
+MODULE_ID("$Id: fun.c,v 1.6 2005/09/17 19:49:16 tom Exp $")
 
 /*
  * Test the function keys on the terminal.  The code for echo tests
@@ -58,10 +58,6 @@ struct test_list printer_test_list[] = {
 
 #define MAX_STRINGS STRCOUNT
 
-/* scan code externals */
-extern int scan_max;		/* length of longest scan code */
-extern char **scan_up, **scan_down, **scan_name;
-extern int *scan_tested, *scan_length;
 
 /* local definitions */
 static const char *fk_name[MAX_STRINGS];
@@ -102,7 +98,7 @@ keys_tested(
 			if (fk_label[i]) {
 				sprintf(outbuf, "%s %s",
 					fk_name[i] ? fk_name[i] : "??", fk_label[i]);
-				put_columns(outbuf, strlen(outbuf), 16);
+				put_columns(outbuf, (int) strlen(outbuf), 16);
 			}
 		}
 		put_newlines(2);

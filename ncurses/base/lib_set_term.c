@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-2003               *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -44,10 +44,10 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.81 2003/11/15 23:57:01 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.85 2005/01/22 17:36:01 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
-set_term(SCREEN * screenp)
+set_term(SCREEN *screenp)
 {
     SCREEN *oldSP;
 
@@ -81,7 +81,7 @@ _nc_free_keytry(struct tries *kt)
  * Free the storage associated with the given SCREEN sp.
  */
 NCURSES_EXPORT(void)
-delscreen(SCREEN * sp)
+delscreen(SCREEN *sp)
 {
     SCREEN **scan = &_nc_screen_chain;
     int i;
@@ -117,6 +117,8 @@ delscreen(SCREEN * sp)
 
     _nc_free_keytry(sp->_key_ok);
     sp->_key_ok = 0;
+
+    FreeIfNeeded(sp->_current_attr);
 
     FreeIfNeeded(sp->_color_table);
     FreeIfNeeded(sp->_color_pairs);
@@ -162,13 +164,13 @@ static ripoff_t *rsp = rippedoff;
 #define N_RIPS SIZEOF(SP->_rippedoff)
 
 static bool
-no_mouse_event(SCREEN * sp GCC_UNUSED)
+no_mouse_event(SCREEN *sp GCC_UNUSED)
 {
     return FALSE;
 }
 
 static bool
-no_mouse_inline(SCREEN * sp GCC_UNUSED)
+no_mouse_inline(SCREEN *sp GCC_UNUSED)
 {
     return FALSE;
 }
@@ -180,12 +182,12 @@ no_mouse_parse(int code GCC_UNUSED)
 }
 
 static void
-no_mouse_resume(SCREEN * sp GCC_UNUSED)
+no_mouse_resume(SCREEN *sp GCC_UNUSED)
 {
 }
 
 static void
-no_mouse_wrap(SCREEN * sp GCC_UNUSED)
+no_mouse_wrap(SCREEN *sp GCC_UNUSED)
 {
 }
 
@@ -221,8 +223,12 @@ _nc_setupscreen(short slines, short const scolumns, FILE *output)
     if (!_nc_alloc_screen())
 	returnCode(ERR);
 
+    T(("created SP %p", SP));
     SP->_next_screen = _nc_screen_chain;
     _nc_screen_chain = SP;
+
+    if ((SP->_current_attr = typeCalloc(NCURSES_CH_T, 1)) == 0)
+	returnCode(ERR);
 
 #ifdef __DJGPP__
     T(("setting output mode to binary"));
@@ -392,9 +398,9 @@ _nc_setupscreen(short slines, short const scolumns, FILE *output)
     SP->_screen_acs_fix = (_nc_unicode_locale() && _nc_locale_breaks_acs());
     {
 	char *env = _nc_get_locale();
-	SP->_posix_locale = ((env == 0)
-			     || !strcmp(env, "C")
-			     || !strcmp(env, "POSIX"));
+	SP->_legacy_coding = ((env == 0)
+			      || !strcmp(env, "C")
+			      || !strcmp(env, "POSIX"));
     }
 #endif
 

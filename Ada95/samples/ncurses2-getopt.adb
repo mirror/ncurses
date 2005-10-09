@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.3 $
+--  $Revision: 1.6 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  A simplified version of the  GNU getopt function
@@ -46,8 +47,6 @@ with Ada.Strings.Bounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 package body ncurses2.getopt is
-
-   optopt : Character := '?';
 
    nextchar : Natural := 0;
 
@@ -104,13 +103,12 @@ package body ncurses2.getopt is
       --  Look at and handle the next short option-character.
       declare
          c : Character := argv (optind) (nextchar);
-         temp : Natural :=
+         temp : constant Natural :=
            Ada.Strings.Fixed.Index (optstring, String'(1 => c));
       begin
          if temp = 0 or c = ':' then
             Put_Line (Standard_Error,
                       argv (optind) & ": invalid option -- " & c);
-            optopt := c;
             c := '?';
             return;
          end if;
@@ -134,7 +132,6 @@ package body ncurses2.getopt is
                   Put_Line (Standard_Error,
                             argv (optind) &
                             ": option requires an argument -- " & c);
-                  optopt := c;
                   if optstring (1) = ':'  then
                      c := ':';
                   else

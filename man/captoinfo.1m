@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,14 +27,14 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: captoinfo.1m,v 1.17 2003/05/11 00:32:53 tom Exp $
+.\" $Id: captoinfo.1m,v 1.18 2004/07/05 13:16:08 tom Exp $
 .TH captoinfo 1M ""
 .ds n 5
 .ds d @TERMINFO@
 .SH NAME
 \fBcaptoinfo\fR - convert a \fItermcap\fR description into a \fIterminfo\fR description
 .SH SYNOPSIS
-\fBcaptoinfo\fR [\fB\-v\fR\fIn\fR \fIwidth\fR]  [\fB\-V\fR] [\fB\-1\fR] [\fB\-w\fR \fIwidth\fR] \fIfile\fR . . .
+\fBcaptoinfo\fR [\fB-v\fR\fIn\fR \fIwidth\fR]  [\fB-V\fR] [\fB-1\fR] [\fB-w\fR \fIwidth\fR] \fIfile\fR . . .
 .SH DESCRIPTION
 \fBcaptoinfo\fR looks in \fIfile\fR for \fBtermcap\fR descriptions.  For each
 one found, an equivalent \fBterminfo\fR description is written to standard
@@ -47,18 +47,18 @@ the terminal whose name is specified in the environment variable \fBTERM\fR is
 extracted from that file.  If the environment variable \fBTERMCAP\fR is not
 set, then the file \fB\*d\fR is read.
 .TP 5
-\fB\-v\fR
+\fB-v\fR
 print out tracing information on standard error as the program runs.
 .TP 5
-\fB\-V\fR
+\fB-V\fR
 print out the version of the program in use on standard error and exit.
 .TP 5
-\fB\-1\fR
+\fB-1\fR
 cause the fields to print out one to a line.  Otherwise, the fields
 will be printed several to a line to a maximum width of 60
 characters.
 .TP 5
-\fB\-w\fR
+\fB-w\fR
 change the output to \fIwidth\fR characters.
 .SH FILES
 .TP 20
@@ -172,11 +172,11 @@ Hewlett-Packard's terminfo library supports two nonstandard terminfo
 capabilities \fBmeml\fR (memory lock) and \fBmemu\fR (memory unlock).
 These will be discarded with a warning message.
 .SH NOTES
-This utility is actually a link to \fItic\fR(1M), running in \fI\-I\fR mode.
-You can use other \fItic\fR options such as \fB\-f\fR and  \fB\-x\fR.
+This utility is actually a link to \fItic\fR(1M), running in \fI-I\fR mode.
+You can use other \fItic\fR options such as \fB-f\fR and  \fB-x\fR.
 
 The trace option isn't identical to SVr4's.  Under SVr4, instead of following
-the \fB\-v\fR with a trace level n, you repeat it n times.
+the \fB-v\fR with a trace level n, you repeat it n times.
 .SH SEE ALSO
 \fBcurses\fR(3X), \fB@INFOCMP@\fR(1M), \fBterminfo\fR(\*n)
 .SH AUTHOR

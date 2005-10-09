@@ -13,12 +13,12 @@
  * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is
  * just as good.
  *
- * $Id: blue.c,v 1.24 2002/06/29 23:32:18 tom Exp $
+ * $Id: blue.c,v 1.25 2005/05/28 21:38:03 tom Exp $
  */
 
-#include <time.h>
-
 #include <test.priv.h>
+
+#include <time.h>
 
 #define NOCARD		(-1)
 

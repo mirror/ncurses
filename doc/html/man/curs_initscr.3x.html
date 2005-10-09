@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_initscr.3x,v 1.12 2003/05/10 20:33:49 jmc Exp @
+  * @Id: curs_initscr.3x,v 1.14 2005/05/15 16:18:01 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,14 +40,14 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>                                 <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>
+<STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>                                       <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>initscr</STRONG>,  <STRONG>newterm</STRONG>, <STRONG>endwin</STRONG>, <STRONG>isendwin</STRONG>, <STRONG>set_term</STRONG>, <STRONG>delscreen</STRONG> -
+       <STRONG>initscr</STRONG>, <STRONG>newterm</STRONG>, <STRONG>endwin</STRONG>, <STRONG>isendwin</STRONG>, <STRONG>set_term</STRONG>, <STRONG>delscreen</STRONG> -
        <STRONG>curses</STRONG> screen initialization and manipulation routines
 
 
@@ -73,10 +73,10 @@
 
        The initscr code determines the terminal type and initial-
        izes  all <STRONG>curses</STRONG> data structures.  <STRONG>initscr</STRONG> also causes the
-       first call to <STRONG>refresh</STRONG> to  clear  the  screen.   If  errors
-       occur,  <STRONG>initscr</STRONG>  writes  an  appropriate  error message to
-       standard error and exits; otherwise, a pointer is returned
-       to <STRONG>stdscr</STRONG>.
+       first call to <STRONG>refresh</STRONG> to clear the screen.  If errors  oc-
+       cur,  <STRONG>initscr</STRONG> writes an appropriate error message to stan-
+       dard error and exits; otherwise, a pointer is returned  to
+       <STRONG>stdscr</STRONG>.
 
        A  program  that  outputs to more than one terminal should
        use the <STRONG>newterm</STRONG>  routine  for  each  terminal  instead  of
@@ -95,10 +95,10 @@
        same  terminal, the first terminal referred to must be the
        last one for which <STRONG>endwin</STRONG> is called.
 
-       A program should always  call  <STRONG>endwin</STRONG>  before  exiting  or
-       escaping  from  <STRONG>curses</STRONG>  mode  temporarily.   This  routine
-       restores tty modes, moves the cursor to  the  lower  left-
-       hand corner of the screen and resets the terminal into the
+       A program should always call <STRONG>endwin</STRONG> before exiting or  es-
+       caping  from  <STRONG>curses</STRONG>  mode  temporarily.  This routine re-
+       stores tty modes, moves the cursor to the lower  left-hand
+       corner  of  the  screen  and  resets the terminal into the
        proper non-visual mode.  Calling <STRONG>refresh</STRONG> or <STRONG>doupdate</STRONG> after
        a  temporary  escape  causes  the program to resume visual
        mode.
@@ -111,8 +111,8 @@
        terminals.   The screen reference <STRONG>new</STRONG> becomes the new cur-
        rent terminal.  The previous terminal is returned  by  the
        routine.   This  is  the  only  routine  which manipulates
-       <STRONG>SCREEN</STRONG>  pointers;  all  other  routines  affect  only  the
-       current terminal.
+       <STRONG>SCREEN</STRONG> pointers; all other routines affect only  the  cur-
+       rent terminal.
 
        The  <STRONG>delscreen</STRONG>  routine  frees storage associated with the
        <STRONG>SCREEN</STRONG> data structure.  The <STRONG>endwin</STRONG>  routine  does  not  do
@@ -126,6 +126,10 @@
        successful completion.
 
        Routines that return pointers always return <STRONG>NULL</STRONG> on error.
+
+       X/Open defines no error conditions.  In  this  implementa-
+       tion  <STRONG>endwin</STRONG> returns an error if the terminal was not ini-
+       tialized.
 
 
 </PRE>
@@ -152,7 +156,7 @@
 
 
 
-                                                 <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>
+                                                       <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

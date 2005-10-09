@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998,2001 Free Software Foundation, Inc.                   *
+  * Copyright (c) 1998-2001,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_move.3x,v 1.7 2001/11/03 19:58:47 tom Exp @
+  * @Id: curs_move.3x,v 1.11 2005/05/15 17:36:19 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,7 +40,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>                                       <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>
+<STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>                                             <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>
 
 
 
@@ -73,6 +73,9 @@
        fies only "an integer value other than <STRONG>ERR</STRONG>") upon success-
        ful completion.
 
+       Specifically,  they  return an error if the window pointer
+       is null, or if the position is outside the window.
+
 
 </PRE>
 <H2>NOTES</H2><PRE>
@@ -81,12 +84,8 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These  functions are described in the XSI Curses standard,
-       Issue 4.  The standard specifies that if (y,x) is within a
-       multi-column  character,  the cursor is moved to the first
-       column of that  character;  however,  this  implementation
-       does  not  yet  support  the  extended-level XSI multibyte
-       characters.
+       These functions are described in the XSI Curses  standard,
+       Issue 4.
 
 
 </PRE>
@@ -95,7 +94,7 @@
 
 
 
-                                                    <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>
+                                                          <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

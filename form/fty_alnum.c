@@ -1,4 +1,3 @@
-
 /*
  * THIS CODE IS SPECIFICALLY EXEMPTED FROM THE NCURSES PACKAGE COPYRIGHT.
  * You may freely copy it for use as a template for your own field types.
@@ -13,42 +12,48 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_alnum.c,v 1.12 2003/10/25 14:54:48 tom Exp $")
+MODULE_ID("$Id: fty_alnum.c,v 1.18 2005/08/20 18:26:16 tom Exp $")
 
-typedef struct {
-  int width;
-} alnumARG;
+#define thisARG alnumARG
+
+typedef struct
+  {
+    int width;
+  }
+thisARG;
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
-|   Function      :  static void *Make_AlphaNumeric_Type(va_list *ap)
-|   
+|   Facility      :  libnform
+|   Function      :  static void *Make_This_Type(va_list *ap)
+|
 |   Description   :  Allocate structure for alphanumeric type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error
 +--------------------------------------------------------------------------*/
-static void *Make_AlphaNumeric_Type(va_list * ap)
+static void *
+Make_This_Type(va_list *ap)
 {
-  alnumARG *argp = (alnumARG *)malloc(sizeof(alnumARG));
+  thisARG *argp = (thisARG *) malloc(sizeof(thisARG));
 
   if (argp)
-    argp->width = va_arg(*ap,int);
+    argp->width = va_arg(*ap, int);
 
   return ((void *)argp);
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
-|   Function      :  static void *Copy_AlphaNumericType(const void *argp)
-|   
-|   Description   :  Copy structure for alphanumeric type argument.  
+|   Facility      :  libnform
+|   Function      :  static void *Copy_ThisType(const void *argp)
+|
+|   Description   :  Copy structure for alphanumeric type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error.
 +--------------------------------------------------------------------------*/
-static void *Copy_AlphaNumeric_Type(const void *argp)
+static void *
+Copy_This_Type(const void *argp)
 {
-  const alnumARG *ap = (const alnumARG *)argp;
-  alnumARG *result = (alnumARG *)malloc(sizeof(alnumARG));
+  const thisARG *ap = (const thisARG *)argp;
+  thisARG *result = (thisARG *) malloc(sizeof(thisARG));
 
   if (result)
     *result = *ap;
@@ -57,81 +62,78 @@ static void *Copy_AlphaNumeric_Type(const void *argp)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
-|   Function      :  static void Free_AlphaNumeric_Type(void *argp)
-|   
+|   Facility      :  libnform
+|   Function      :  static void Free_This_Type(void *argp)
+|
 |   Description   :  Free structure for alphanumeric type argument.
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-static void Free_AlphaNumeric_Type(void * argp)
+static void
+Free_This_Type(void *argp)
 {
-  if (argp) 
+  if (argp)
     free(argp);
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
-|   Function      :  static bool Check_AlphaNumeric_Field(
-|                                      FIELD *field,
+|   Facility      :  libnform
+|   Function      :  static bool Check_This_Character(
+|                                      int c,
 |                                      const void *argp)
-|   
-|   Description   :  Validate buffer content to be a valid alphanumeric value
 |
-|   Return Values :  TRUE  - field is valid
-|                    FALSE - field is invalid
-+--------------------------------------------------------------------------*/
-static bool Check_AlphaNumeric_Field(FIELD * field, const void * argp)
-{
-  int width = ((const alnumARG *)argp)->width;
-  unsigned char *bp  = (unsigned char *)field_buffer(field,0);
-  int  l = -1;
-  unsigned char *s;
-
-  while(*bp && *bp==' ') 
-    bp++;
-  if (*bp)
-    {
-      s = bp;
-      while(*bp && isalnum(*bp)) 
-	bp++;
-      l = (int)(bp-s);
-      while(*bp && *bp==' ') 
-	bp++;
-    }
-  return ((*bp || (l < width)) ? FALSE : TRUE);
-}
-
-/*---------------------------------------------------------------------------
-|   Facility      :  libnform  
-|   Function      :  static bool Check_AlphaNumeric_Character(
-|                                      int c, 
-|                                      const void *argp )
-|   
 |   Description   :  Check a character for the alphanumeric type.
 |
 |   Return Values :  TRUE  - character is valid
 |                    FALSE - character is invalid
 +--------------------------------------------------------------------------*/
-static bool Check_AlphaNumeric_Character(int c, const void * argp GCC_UNUSED)
+static bool
+Check_This_Character(int c, const void *argp GCC_UNUSED)
 {
-  return (isalnum(c) ? TRUE : FALSE);
+#if USE_WIDEC_SUPPORT
+  if (iswalnum((wint_t) c))
+    return TRUE;
+#endif
+  return (isalnum(UChar(c)) ? TRUE : FALSE);
 }
 
-static FIELDTYPE typeALNUM = {
+/*---------------------------------------------------------------------------
+|   Facility      :  libnform
+|   Function      :  static bool Check_This_Field(
+|                                      FIELD *field,
+|                                      const void *argp)
+|
+|   Description   :  Validate buffer content to be a valid alphanumeric value
+|
+|   Return Values :  TRUE  - field is valid
+|                    FALSE - field is invalid
++--------------------------------------------------------------------------*/
+static bool
+Check_This_Field(FIELD *field, const void *argp)
+{
+  int width = ((const thisARG *)argp)->width;
+  unsigned char *bp = (unsigned char *)field_buffer(field, 0);
+  bool result = (width < 0);
+
+  Check_CTYPE_Field(result, bp, width, Check_This_Character);
+  return (result);
+}
+
+static FIELDTYPE typeTHIS =
+{
   _HAS_ARGS | _RESIDENT,
-  1,                           /* this is mutable, so we can't be const */
+  1,				/* this is mutable, so we can't be const */
   (FIELDTYPE *)0,
   (FIELDTYPE *)0,
-  Make_AlphaNumeric_Type,
-  Copy_AlphaNumeric_Type,
-  Free_AlphaNumeric_Type,
-  Check_AlphaNumeric_Field,
-  Check_AlphaNumeric_Character,
+  Make_This_Type,
+  Copy_This_Type,
+  Free_This_Type,
+  Check_This_Field,
+  Check_This_Character,
   NULL,
   NULL
 };
 
-NCURSES_EXPORT_VAR(FIELDTYPE*) TYPE_ALNUM = &typeALNUM;
+NCURSES_EXPORT_VAR(FIELDTYPE*) TYPE_ALNUM = &typeTHIS;
 
 /* fty_alnum.c ends here */

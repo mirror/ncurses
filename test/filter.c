@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: filter.c,v 1.7 2002/03/23 23:02:15 tom Exp $
+ * $Id: filter.c,v 1.8 2004/06/05 21:57:30 tom Exp $
  */
 #include <test.priv.h>
 
@@ -66,6 +66,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     char buffer[80];
     attr_t underline;
+
+    setlocale(LC_ALL, "");
 
     filter();
     (void) newterm((char *) 0, stdout, stdin);

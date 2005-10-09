@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2002,2004 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Thomas Dickey 2002                                               *
+ * Author: Thomas Dickey 2002,2004                                          *
  ****************************************************************************/
 
 /*
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_in_wch.c,v 1.2 2002/08/03 20:23:29 tom Exp $")
+MODULE_ID("$Id: lib_in_wch.c,v 1.3 2004/05/16 00:13:52 tom Exp $")
 
 NCURSES_EXPORT(int)
 win_wch(WINDOW *win, cchar_t * wcval)
@@ -56,5 +56,6 @@ win_wch(WINDOW *win, cchar_t * wcval)
     } else {
 	code = ERR;
     }
-    returnCode(code);
+    TR(TRACE_CCALLS, (T_RETURN("%d"), code));
+    return (code);
 }

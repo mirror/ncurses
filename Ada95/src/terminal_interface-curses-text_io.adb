@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.14 $
+--  $Revision: 1.17 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package body Terminal_Interface.Curses.Text_IO is
@@ -86,9 +87,9 @@ package body Terminal_Interface.Curses.Text_IO is
       N_Cols  : Column_Count;
    begin
       Get_Size (Win, N_Lines, N_Cols);
-      if Natural (N_Cols) > Natural (Count'Last) then
-         raise Layout_Error;
-      end if;
+      --  if Natural (N_Cols) > Natural (Count'Last) then
+      --     raise Layout_Error;
+      --  end if;
       return Count (N_Cols);
    end Line_Length;
 
@@ -107,9 +108,9 @@ package body Terminal_Interface.Curses.Text_IO is
          return 0;
       else
          Get_Size (Win, N_Lines, N_Cols);
-         if Natural (N_Lines) > Natural (Count'Last) then
-            raise Layout_Error;
-         end if;
+         --  if Natural (N_Lines) > Natural (Count'Last) then
+         --     raise Layout_Error;
+         --  end if;
          return Count (N_Lines);
       end if;
    end Page_Length;
@@ -229,9 +230,9 @@ package body Terminal_Interface.Curses.Text_IO is
    begin
       Get_Cursor_Position (Win, Y, X);
       N := Natural (X); N := N + 1;
-      if N > Natural (Count'Last) then
-         raise Layout_Error;
-      end if;
+      --  if N > Natural (Count'Last) then
+      --     raise Layout_Error;
+      --  end if;
       return Positive_Count (N);
    end Col;
 
@@ -249,9 +250,9 @@ package body Terminal_Interface.Curses.Text_IO is
    begin
       Get_Cursor_Position (Win, Y, X);
       N := Natural (Y); N := N + 1;
-      if N > Natural (Count'Last) then
-         raise Layout_Error;
-      end if;
+      --  if N > Natural (Count'Last) then
+      --     raise Layout_Error;
+      --  end if;
       return Positive_Count (N);
    end Line;
 

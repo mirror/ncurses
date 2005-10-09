@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.4 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -115,10 +116,10 @@ procedure ncurses2.demo_panels (nap_mseci : Integer) is
    procedure wait_a_while (msec : Integer) is
    begin
       --  The C version had some #ifdef blocks here
-      if nap_msec = 1 then
+      if msec = 1 then
          Getchar;
       else
-         Nap_Milli_Seconds (nap_msec);
+         Nap_Milli_Seconds (msec);
       end if;
    end wait_a_while;
 
@@ -137,8 +138,8 @@ procedure ncurses2.demo_panels (nap_mseci : Integer) is
    use PUD;
 
    procedure fill_panel (pan : Panel) is
-      win : Window := Panel_Window (pan);
-      num : Character := Get_User_Data (pan) (2);
+      win : constant Window := Panel_Window (pan);
+      num : constant Character := Get_User_Data (pan) (2);
       tmp6 : String (1 .. 6) := "-panx-";
       maxy : Line_Count;
       maxx : Column_Count;
@@ -158,7 +159,7 @@ procedure ncurses2.demo_panels (nap_mseci : Integer) is
       end loop;
    end fill_panel;
 
-   modstr : array (0 .. 5) of String (1 .. 5) :=
+   modstr : constant array (0 .. 5) of String (1 .. 5) :=
      ("test ",
       "TEST ",
       "(**) ",
@@ -185,11 +186,11 @@ begin
    for y in 0 .. 4 loop
       declare
          p1, p2, p3, p4, p5 : Panel;
-         U1 : User_Data_Access := new User_Data'("p1");
-         U2 : User_Data_Access := new User_Data'("p2");
-         U3 : User_Data_Access := new User_Data'("p3");
-         U4 : User_Data_Access := new User_Data'("p4");
-         U5 : User_Data_Access := new User_Data'("p5");
+         U1 : constant User_Data_Access := new User_Data'("p1");
+         U2 : constant User_Data_Access := new User_Data'("p2");
+         U3 : constant User_Data_Access := new User_Data'("p3");
+         U4 : constant User_Data_Access := new User_Data'("p4");
+         U5 : constant User_Data_Access := new User_Data'("p5");
 
       begin
          p1 := mkpanel (Red, Lines / 2 - 2, Columns / 8 + 1, 0, 0);
@@ -295,8 +296,8 @@ begin
 
          for itmp in  0 ..  5 loop
             declare
-               w4 : Window := Panel_Window (p4);
-               w5 : Window := Panel_Window (p5);
+               w4 : constant Window := Panel_Window (p4);
+               w5 : constant Window := Panel_Window (p5);
             begin
 
                saywhat ("m4; press any key to continue");
@@ -364,7 +365,7 @@ begin
          rmpanel (p5);
          pflush;
          wait_a_while (nap_msec);
-         if (nap_msec = 1) then
+         if nap_msec = 1 then
             exit;
          else
             nap_msec := 100;

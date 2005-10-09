@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 #ifndef NCURSES_CURSESP_H_incl
 #define NCURSES_CURSESP_H_incl 1
 
-// $Id: cursesp.h,v 1.18 2003/10/25 15:04:46 tom Exp $
+// $Id: cursesp.h,v 1.26 2005/08/13 18:09:21 tom Exp $
 
 #include <cursesw.h>
 
@@ -42,7 +42,9 @@ extern "C" {
 #  include <panel.h>
 }
 
-class NCURSES_IMPEXP NCursesPanel : public NCursesWindow {
+class NCURSES_IMPEXP NCursesPanel
+  : public NCursesWindow
+{
 protected:
   PANEL *p;
   static NCursesPanel *dummy;
@@ -56,23 +58,33 @@ private:
     const PANEL*        m_owner;     // the panel itself
   } UserHook;
 
+  inline UserHook *UserPointer()
+  {
+    UserHook* uptr = reinterpret_cast<UserHook*>(
+                           const_cast<void *>(::panel_userptr (p)));
+    return uptr;
+  }
+
   void init();                       // Initialize the panel object
 
 protected:
-  void set_user(void *user) {
-    UserHook* uptr = (UserHook*)::panel_userptr (p);
+  void set_user(void *user)
+  {
+    UserHook* uptr = UserPointer();
     assert (uptr != 0 && uptr->m_back==this && uptr->m_owner==p);
     uptr->m_user = user;
   }
   // Set the user pointer of the panel.
-  
-  void *get_user() {
-    UserHook* uptr = (UserHook*)::panel_userptr (p);
+
+  void *get_user()
+  {
+    UserHook* uptr = UserPointer();
     assert (uptr != 0 && uptr->m_back==this && uptr->m_owner==p);
     return uptr->m_user;
   }
-  
-  void OnError (int err) const THROWS((NCursesPanelException)) {
+
+  void OnError (int err) const THROWS((NCursesPanelException))
+  {
     if (err==ERR)
       THROW(new NCursesPanelException (this, err));
   }
@@ -83,50 +95,76 @@ protected:
   virtual int getKey(void);
 
 public:
-  NCursesPanel(int lines,
-	       int cols,
+  NCursesPanel(int nlines,
+	       int ncols,
 	       int begin_y = 0,
 	       int begin_x = 0)
-    : NCursesWindow(lines,cols,begin_y,begin_x) {
-      init();
-  } 
+    : NCursesWindow(nlines,ncols,begin_y,begin_x), p(0)
+  {
+    init();
+  }
   // Create a panel with this size starting at the requested position.
 
-  NCursesPanel() : NCursesWindow(::stdscr) { init(); }
+  NCursesPanel()
+    : NCursesWindow(::stdscr), p(0)
+  {
+    init();
+  }
   // This constructor creates the default Panel associated with the
   // ::stdscr window
 
+  NCursesPanel& operator=(const NCursesPanel& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+      NCursesWindow::operator=(rhs);
+    }
+    return *this;
+  }
+
+  NCursesPanel(const NCursesPanel& rhs)
+    : NCursesWindow(rhs),
+      p(rhs.p)
+  {
+  }
+
   virtual ~NCursesPanel();
-  
+
   // basic manipulation
-  inline void hide() {
+  inline void hide()
+  {
     OnError (::hide_panel(p));
   }
   // Hide the panel. It stays in the stack but becomes invisible.
 
-  inline void show() {
+  inline void show()
+  {
     OnError (::show_panel(p));
   }
   // Show the panel, i.e. make it visible.
 
-  inline void top() {
+  inline void top()
+  {
     OnError (::top_panel(p));
   }
   // Make this panel the top panel in the stack.
-  
-  inline void bottom() {
+
+  inline void bottom()
+  {
     OnError (::bottom_panel(p));
   }
   // Make this panel the bottom panel in the stack.
   // N.B.: The panel associated with ::stdscr is always on the bottom. So
   // actually bottom() makes the panel the first above ::stdscr.
-  
-  virtual int mvwin(int y, int x) {
+
+  virtual int mvwin(int y, int x)
+  {
     OnError(::move_panel(p, y, x));
     return OK;
   }
-  
-  inline bool hidden() const {
+
+  inline bool hidden() const
+  {
     return (::panel_hidden (p) ? TRUE : FALSE);
   }
   // Return TRUE if the panel is hidden, FALSE otherwise.
@@ -138,12 +176,14 @@ public:
    need a reverse mapping from PANEL to NCursesPanel which needs some
    redesign of the low level stuff. At the moment, we define them in the
    interface but they will always produce an error. */
-  inline NCursesPanel& above() const {
+  inline NCursesPanel& above() const
+  {
     OnError(ERR);
     return *dummy;
   }
 
-  inline NCursesPanel& below() const {
+  inline NCursesPanel& below() const
+  {
     OnError(ERR);
     return *dummy;
   }
@@ -151,7 +191,7 @@ public:
   // Those two are rewrites of the corresponding virtual members of
   // NCursesWindow
   virtual int refresh();
-  // Propagate all panel changes to the virtual screen and update the 
+  // Propagate all panel changes to the virtual screen and update the
   // physical screen.
 
   virtual int noutrefresh();
@@ -159,9 +199,9 @@ public:
 
   static void redraw();
   // Redraw all panels.
- 
+
   // decorations
-  virtual void frame(const char* title=NULL, 
+  virtual void frame(const char* title=NULL,
 		     const char* btitle=NULL);
   // Put a frame around the panel and put the title centered in the top line
   // and btitle in the bottom line.
@@ -179,43 +219,47 @@ public:
 };
 
 /* We use templates to provide a typesafe mechanism to associate
- * user data with a panel. A NCursesUserPanel<T> is a panel 
+ * user data with a panel. A NCursesUserPanel<T> is a panel
  * associated with some user data of type T.
  */
 template<class T> class NCursesUserPanel : public NCursesPanel
 {
 public:
-  NCursesUserPanel (int lines,
-		    int cols,
+  NCursesUserPanel (int nlines,
+		    int ncols,
 		    int begin_y = 0,
 		    int begin_x = 0,
-		    const T* p_UserData = (T*)0)
-    : NCursesPanel (lines, cols, begin_y, begin_x) {
+		    const T* p_UserData = STATIC_CAST(T*)(0))
+    : NCursesPanel (nlines, ncols, begin_y, begin_x)
+  {
       if (p)
-	set_user ((void *)p_UserData);
+	set_user (const_cast<void *>(p_UserData));
   };
   // This creates an user panel of the requested size with associated
   // user data pointed to by p_UserData.
-  
-  NCursesUserPanel(const T* p_UserData = (T*)0) : NCursesPanel() {
+
+  NCursesUserPanel(const T* p_UserData = STATIC_CAST(T*)(0)) : NCursesPanel()
+  {
     if (p)
-      set_user((void *)p_UserData);
+      set_user(const_cast<void *>(p_UserData));
   };
   // This creates an user panel associated with the ::stdscr and user data
   // pointed to by p_UserData.
 
   virtual ~NCursesUserPanel() {};
 
-  T* UserData (void) const {
-    return (T*)get_user ();
+  T* UserData (void) const
+  {
+    return reinterpret_cast<T*>(get_user ());
   };
   // Retrieve the user data associated with the panel.
-  
-  virtual void setUserData (const T* p_UserData) {
+
+  virtual void setUserData (const T* p_UserData)
+  {
     if (p)
-      set_user ((void *)p_UserData);
+      set_user (const_cast<void *>(p_UserData));
   }
   // Associate the user panel with the user data pointed to by p_UserData.
 };
 
-#endif // NCURSES_CURSESP_H_incl
+#endif /* NCURSES_CURSESP_H_incl */

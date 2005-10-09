@@ -6,16 +6,13 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.24 2004/01/15 00:21:27 tom Exp $
+ * $Id: demo.cc,v 1.32 2005/08/13 18:14:44 tom Exp $
  */
 
+#include "internal.h"
 #include "cursesapp.h"
 #include "cursesm.h"
 #include "cursesf.h"
-
-#if HAVE_LIBC_H
-#  include <libc.h>
-#endif
 
 extern "C" unsigned int sleep(unsigned int);
 
@@ -141,10 +138,10 @@ template<class T> class MyAction : public NCursesUserItem<T>
 public:
   MyAction (const char* p_name,
             const T* p_UserData)
-    : NCursesUserItem<T>(p_name, (const char*)0, p_UserData)
-  {};
+    : NCursesUserItem<T>(p_name, static_cast<const char*>(0), p_UserData)
+  {}
 
-  ~MyAction() {}
+  virtual ~MyAction() {}
 
   bool action() {
     SillyDemo a;
@@ -152,6 +149,9 @@ public:
     return FALSE;
   }
 };
+
+template class MyAction<UserData>;
+template class NCURSES_IMPEXP NCursesUserItem<UserData>;
 
 class QuitItem : public NCursesMenuItem
 {
@@ -171,7 +171,7 @@ class Label : public NCursesFormField
 public:
   Label(const char* title,
         int row, int col)
-    : NCursesFormField(1,(int)::strlen(title),row,col) {
+    : NCursesFormField(1, static_cast<int>(::strlen(title)), row, col) {
       set_value(title);
       options_off(O_EDIT|O_ACTIVE);
   }
@@ -179,7 +179,8 @@ public:
 //
 // -------------------------------------------------------------------------
 //
-class MyFieldType : public UserDefinedFieldType {
+class MyFieldType : public UserDefinedFieldType
+{
 private:
   int chk;
 protected:
@@ -207,7 +208,13 @@ private:
   static const char *weekdays[];
 
 public:
-  TestForm() : NCursesForm(13,51,(lines()-15)/2,(cols()-53)/2) {
+  TestForm()
+    : NCursesForm(13, 51, (lines() - 15)/2, (cols() - 53)/2),
+      F(0),
+      mft(0),
+      ift(0),
+      eft(0)
+  {
 
     F     = new NCursesFormField*[10];
     mft   = new MyFieldType('X');
@@ -239,6 +246,19 @@ public:
     F[8]->options_off(O_STATIC);  // make field dynamic
   }
 
+  TestForm& operator=(const TestForm& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+    }
+    return *this;
+  }
+
+  TestForm(const TestForm& rhs)
+    : NCursesForm(rhs), F(0), mft(0), ift(0), eft(0)
+  {
+  }
+
   ~TestForm() {
     delete mft;
     delete ift;
@@ -248,7 +268,7 @@ public:
 
 const char* TestForm::weekdays[] = {
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-    "Friday", "Saturday", (const char *)0 };
+    "Friday", "Saturday", NULL };
 //
 // -------------------------------------------------------------------------
 //
@@ -297,7 +317,7 @@ public:
           if (i==0 || j==0)
             FP.addch('+');
           else
-            FP.addch((chtype)('A' + (gridcount++ % 26)));
+            FP.addch(static_cast<chtype>('A' + (gridcount++ % 26)));
         }
         else if (i % GRIDSIZE == 0)
           FP.addch('-');
@@ -318,7 +338,8 @@ public:
 //
 // -------------------------------------------------------------------------
 //
-class PassiveItem : public NCursesMenuItem {
+class PassiveItem : public NCursesMenuItem
+{
 public:
   PassiveItem(const char* text) : NCursesMenuItem(text) {
     options_off(O_SELECTABLE);
@@ -346,13 +367,13 @@ public:
     ::echo();
 
     s->printw("Enter decimal integers.  The running total will be shown\n");
-    int value = -1;
+    int nvalue = -1;
     int result = 0;
-    while (value != 0) {
-      value = 0;
-      s->scanw("%d", &value);
-      if (value != 0) {
-        s->printw("%d: ", result += value);
+    while (nvalue != 0) {
+      nvalue = 0;
+      s->scanw("%d", &nvalue);
+      if (nvalue != 0) {
+        s->printw("%d: ", result += nvalue);
       }
       s->refresh();
     }
@@ -380,7 +401,8 @@ private:
 
 public:
   MyMenu ()
-    : NCursesMenu (n_items+2, 8, (lines()-10)/2, (cols()-10)/2)
+    : NCursesMenu (n_items+2, 8, (lines()-10)/2, (cols()-10)/2),
+      P(0), I(0), u(0)
   {
     u = new UserData(1);
     I = new NCursesMenuItem*[1+n_items];
@@ -398,6 +420,19 @@ public:
     P = new NCursesPanel(1,n_items,LINES-1,1);
     boldframe("Demo","Silly");
     P->show();
+  }
+
+  MyMenu& operator=(const MyMenu& rhs)
+  {
+    if (this != &rhs) {
+      *this = rhs;
+    }
+    return *this;
+  }
+
+  MyMenu(const MyMenu& rhs)
+    : NCursesMenu(rhs), P(0), I(0), u(0)
+  {
   }
 
   ~MyMenu()
@@ -445,7 +480,8 @@ public:
 //
 // -------------------------------------------------------------------------
 //
-class TestApplication : public NCursesApplication {
+class TestApplication : public NCursesApplication
+{
 protected:
   int titlesize() const { return 1; }
   void title();
@@ -461,7 +497,8 @@ public:
   int run();
 };
 
-void TestApplication::init_labels(Soft_Label_Key_Set& S) const {
+void TestApplication::init_labels(Soft_Label_Key_Set& S) const
+{
   for(int i=1; i <= S.labels(); i++) {
     char buf[5];
     ::sprintf(buf,"Key%02d",i);
@@ -470,17 +507,19 @@ void TestApplication::init_labels(Soft_Label_Key_Set& S) const {
   }
 }
 
-void TestApplication::title() {
-  const char * const title = "Simple C++ Binding Demo";
-  const int len = ::strlen(title);
+void TestApplication::title()
+{
+  const char * const titleText = "Simple C++ Binding Demo";
+  const int len = ::strlen(titleText);
 
   titleWindow->bkgd(screen_titles());
-  titleWindow->addstr(0,(titleWindow->cols()-len)/2,title);
+  titleWindow->addstr(0,(titleWindow->cols() - len)/2, titleText);
   titleWindow->noutrefresh();
 }
 
 
-int TestApplication::run() {
+int TestApplication::run()
+{
   MyMenu M;
   M();
   return 0;

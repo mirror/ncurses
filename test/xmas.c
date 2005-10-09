@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.19 2002/06/29 23:32:18 tom Exp $
+ * $Id: xmas.c,v 1.20 2005/04/16 16:34:38 tom Exp $
  */
 #include <test.priv.h>
 
@@ -156,7 +156,7 @@ set_color(WINDOW *win, chtype color)
 	static bool *pairs;
 	int n = (color + 1);
 	if (pairs == 0)
-	    pairs = (bool *) calloc(COLORS + 1, sizeof(bool));
+	    pairs = (bool *) calloc((unsigned) (COLORS + 1), sizeof(bool));
 	if (!pairs[n]) {
 	    init_pair(n, color, my_bg);
 	    pairs[n] = TRUE;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-2003               *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -48,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.60 2003/11/08 21:57:09 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.62 2005/06/02 22:04:32 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -232,7 +232,11 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
      * 2-character name, but was instead the first alias after that.
      */
     ptr = _nc_curr_token.tk_name;
-    if (_nc_syntax == SYN_TERMCAP) {
+    if (_nc_syntax == SYN_TERMCAP
+#if NCURSES_XNAMES
+	&& !_nc_user_definable
+#endif
+	) {
 	if (ptr[2] == '|') {
 	    ptr += 3;
 	    _nc_curr_token.tk_name[2] = '\0';
@@ -367,22 +371,25 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 		 */
 
 		/* tell max_attributes from arrow_key_map */
-		if (token_type == NUMBER && !strcmp("ma", _nc_curr_token.tk_name))
+		if (token_type == NUMBER
+		    && !strcmp("ma", _nc_curr_token.tk_name)) {
 		    entry_ptr = _nc_find_type_entry("ma", NUMBER,
 						    _nc_get_table(_nc_syntax
 								  != 0));
 
-		/* map terminfo's string MT to MT */
-		else if (token_type == STRING && !strcmp("MT", _nc_curr_token.tk_name))
+		    /* map terminfo's string MT to MT */
+		} else if (token_type == STRING
+			   && !strcmp("MT", _nc_curr_token.tk_name)) {
 		    entry_ptr = _nc_find_type_entry("MT", STRING,
 						    _nc_get_table(_nc_syntax
 								  != 0));
 
-		/* treat strings without following "=" as empty strings */
-		else if (token_type == BOOLEAN && entry_ptr->nte_type == STRING)
+		    /* treat strings without following "=" as empty strings */
+		} else if (token_type == BOOLEAN
+			   && entry_ptr->nte_type == STRING) {
 		    token_type = STRING;
-		/* we couldn't recover; skip this token */
-		else {
+		    /* we couldn't recover; skip this token */
+		} else {
 		    if (!silent) {
 			const char *type_name;
 			switch (entry_ptr->nte_type) {
@@ -616,7 +623,7 @@ static const char C_HT[] = "\t";
 #define CUR tp->
 
 static void
-postprocess_termcap(TERMTYPE * tp, bool has_base)
+postprocess_termcap(TERMTYPE *tp, bool has_base)
 {
     char buf[MAX_LINE * 2 + 2];
     string_desc result;
@@ -896,7 +903,7 @@ postprocess_termcap(TERMTYPE * tp, bool has_base)
 }
 
 static void
-postprocess_terminfo(TERMTYPE * tp)
+postprocess_terminfo(TERMTYPE *tp)
 {
     /*
      * TERMINFO-TO-TERMINFO MAPPINGS FOR SOURCE TRANSLATION

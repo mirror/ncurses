@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,23 +34,26 @@
 #include "internal.h"
 #include "cursslk.h"
 #include "cursesapp.h"
-#include <string.h>
 
-MODULE_ID("$Id: cursslk.cc,v 1.11 2003/10/25 15:04:46 tom Exp $")
+MODULE_ID("$Id: cursslk.cc,v 1.15 2005/08/06 22:12:36 tom Exp $")
 
-void Soft_Label_Key_Set::Soft_Label_Key::operator=(char *text)  {
+Soft_Label_Key_Set::Soft_Label_Key&
+  Soft_Label_Key_Set::Soft_Label_Key::operator=(char *text)
+{
   delete[] label;
   label = new char[1 + ::strlen(text)];
   (::strcpy)(label,text);
+  return *this;
 }
 
 long Soft_Label_Key_Set::count      = 0L;
 int  Soft_Label_Key_Set::num_labels = 0;
 
-Soft_Label_Key_Set::Label_Layout 
+Soft_Label_Key_Set::Label_Layout
   Soft_Label_Key_Set::format = None;
 
-void Soft_Label_Key_Set::init() {
+void Soft_Label_Key_Set::init()
+{
   slk_array = new Soft_Label_Key[num_labels];
   for(int i=0; i < num_labels; i++) {
     slk_array[i].num = i+1;
@@ -58,18 +61,24 @@ void Soft_Label_Key_Set::init() {
   b_attrInit = FALSE;
 }
 
-Soft_Label_Key_Set::Soft_Label_Key_Set() {
+Soft_Label_Key_Set::Soft_Label_Key_Set()
+  : b_attrInit(FALSE),
+    slk_array(NULL)
+{
   if (format==None)
     Error("No default SLK layout");
   init();
 }
 
-Soft_Label_Key_Set::Soft_Label_Key_Set(Soft_Label_Key_Set::Label_Layout fmt) {
+Soft_Label_Key_Set::Soft_Label_Key_Set(Soft_Label_Key_Set::Label_Layout fmt)
+  : b_attrInit(FALSE),
+    slk_array(NULL)
+{
   if (fmt==None)
     Error("Invalid SLK Layout");
   if (count++==0) {
     format = fmt;
-    if (ERR == ::slk_init((int)fmt))
+    if (ERR == ::slk_init(static_cast<int>(fmt)))
       Error("slk_init");
     num_labels = (fmt>=PC_Style?12:8);
   }
@@ -103,7 +112,8 @@ void Soft_Label_Key_Set::activate_label(int i, bool bf) {
   noutrefresh();
 }
 
-void Soft_Label_Key_Set::activate_labels(bool bf) {
+void Soft_Label_Key_Set::activate_labels(bool bf)
+{
   if (!b_attrInit) {
     NCursesApplication* A = NCursesApplication::getApplication();
     if (A) attrset(A->labels());

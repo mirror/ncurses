@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2002,2005 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 2002                        *
+ *  Author: Thomas E. Dickey                    2002,2005                   *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -132,6 +132,11 @@ void	_nc_Disconnect_Items(
 		MENU	*menu)
 		{ /* void */ }
 
+#undef _nc_Calculate_Text_Width
+int	_nc_Calculate_Text_Width(
+		const TEXT *item)
+		{ return(*(int *)0); }
+
 #undef _nc_Calculate_Item_Length_and_Width
 void	_nc_Calculate_Item_Length_and_Width(
 		MENU	*menu)
@@ -231,6 +236,8 @@ const char *item_description(
 		{ return(*(const char **)0); }
 
 /* ./m_item_new.c */
+
+#include <wctype.h>
 
 #undef new_item
 ITEM	*new_item(
@@ -480,6 +487,38 @@ int	set_menu_sub(
 WINDOW	*menu_sub(
 		const MENU *menu)
 		{ return(*(WINDOW **)0); }
+
+/* ./m_trace.c */
+
+#undef _nc_retrace_item
+ITEM	*_nc_retrace_item(
+		ITEM	*code)
+		{ return(*(ITEM **)0); }
+
+#undef _nc_retrace_item_ptr
+ITEM	**_nc_retrace_item_ptr(
+		ITEM	**code)
+		{ return(*(ITEM ***)0); }
+
+#undef _nc_retrace_item_opts
+Item_Options _nc_retrace_item_opts(
+		Item_Options code)
+		{ return(*(Item_Options *)0); }
+
+#undef _nc_retrace_menu
+MENU	*_nc_retrace_menu(
+		MENU	*code)
+		{ return(*(MENU **)0); }
+
+#undef _nc_retrace_menu_hook
+Menu_Hook _nc_retrace_menu_hook(
+		Menu_Hook code)
+		{ return(*(Menu_Hook *)0); }
+
+#undef _nc_retrace_menu_opts
+Menu_Options _nc_retrace_menu_opts(
+		Menu_Options code)
+		{ return(*(Menu_Options *)0); }
 
 /* ./m_userptr.c */
 

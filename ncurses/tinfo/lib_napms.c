@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -49,7 +49,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_napms.c,v 1.14 2003/11/30 00:54:29 Philippe.Blain Exp $")
+MODULE_ID("$Id: lib_napms.c,v 1.15 2005/04/03 13:58:14 tom Exp $")
 
 NCURSES_EXPORT(int)
 napms(int ms)
@@ -59,10 +59,9 @@ napms(int ms)
 #if HAVE_NANOSLEEP
     {
 	struct timespec request, remaining;
-	int err;
 	request.tv_sec = ms / 1000;
 	request.tv_nsec = (ms % 1000) * 1000000;
-	while ((err = nanosleep(&request, &remaining)) == -1
+	while (nanosleep(&request, &remaining) == -1
 	       && errno == EINTR) {
 	    request = remaining;
 	}

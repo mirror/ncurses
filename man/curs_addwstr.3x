@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2002,2003 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 2002-2004,2005 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,8 +26,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addwstr.3x,v 1.3 2003/12/27 18:51:01 tom Exp $
+.\" $Id: curs_addwstr.3x,v 1.6 2005/05/15 17:02:54 tom Exp $
 .TH curs_addwstr 3X ""
+.na
+.hy 0
 .SH NAME
 \fBaddwstr\fR,
 \fBaddnwstr\fR,
@@ -37,6 +39,8 @@
 \fBmvaddnwstr\fR,
 \fBmvwaddwstr\fR,
 \fBmvwaddnwstr\fR \- add a string of wide characters to a \fBcurses\fR window and advance cursor
+.ad
+.hy
 .SH SYNOPSIS
 .nf
 \fB#include <curses.h>\fR
@@ -58,7 +62,8 @@
 \fBint mvwaddnwstr(WINDOW *\fR\fIwin\fR\fB, int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const wchar_t *\fR\fIwstr\fR\fB, int \fR\fIn\fR\fB);\fR
 .fi
 .SH DESCRIPTION
-These routines write the characters of the (null-terminated) \fBwchar_t\fRcharacter string
+These routines write the characters of the
+(null-terminated) \fBwchar_t\fR character string
 \fIwstr\fR on the given window.
 It is similar to constructing a \fBcchar_t\fR for each wchar_t in the string,
 then calling \fBwadd_wch\fR for the resulting \fBcchar_t\fR.

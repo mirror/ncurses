@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.5 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -104,7 +105,7 @@ procedure ncurses2.demo_pad is
       package myP is new System.Address_To_Access_Conversions (timeval);
       use myP;
 
-      t : Object_Pointer := new timeval;
+      t : constant Object_Pointer := new timeval;
 
       function gettimeofday
         (TP : System.Storage_Elements.Integer_Address;
@@ -116,8 +117,13 @@ procedure ncurses2.demo_pad is
                            (myP.To_Address (t)),
                            System.Storage_Elements.To_Integer
                            (myP.To_Address (null)));
-      retval.seconds := Integer (t.tv_sec);
-      retval.microseconds := Integer (t.tv_usec);
+      if tmp < 0 then
+         retval.seconds := 0;
+         retval.microseconds := 0;
+      else
+         retval.seconds := Integer (t.tv_sec);
+         retval.microseconds := Integer (t.tv_usec);
+      end if;
       return retval;
    end gettime;
 
@@ -202,7 +208,7 @@ procedure ncurses2.demo_pad is
          "Use <,> (or h,l) to grow/shrink the panner horizontally.     ");
       legendsize : constant := 4;
 
-      n : Integer := legendsize - Integer (Lines - line);
+      n : constant Integer := legendsize - Integer (Lines - line);
    begin
       if line < Lines and n >= 0 then
          Move_Cursor (Line => line, Column => 0);
@@ -216,9 +222,10 @@ procedure ncurses2.demo_pad is
    end panner_legend;
 
    procedure panner_legend (line : Line_Position) is
-      tmp : Boolean;
    begin
-      tmp := panner_legend (line);
+      if not panner_legend (line) then
+         Beep;
+      end if;
    end panner_legend;
 
    procedure panner_h_cleanup (from_y : Line_Position;
@@ -435,8 +442,8 @@ procedure ncurses2.demo_pad is
             when Key_Cursor_Right =>
                --  pan rightwards
                --  if (basex + portx - (pymax > porty) < pxmax)
-               if (basex + portx -
-                   Column_Position (greater (pymax, porty)) < pxmax) then
+               if basex + portx -
+                   Column_Position (greater (pymax, porty)) < pxmax then
                   --  if basex + portx  < pxmax or
                   --      (pymax > porty and basex + portx - 1 < pxmax) then
                   basex := basex + 1;
@@ -455,8 +462,8 @@ procedure ncurses2.demo_pad is
             when Key_Cursor_Down =>
                --  pan downwards
                --  same as if (basey + porty - (pxmax > portx) < pymax)
-               if (basey + porty -
-                   Line_Position (greater (pxmax, portx)) < pymax) then
+               if basey + porty -
+                   Line_Position (greater (pxmax, portx)) < pymax then
                   --  if (basey + porty  < pymax) or
                   --      (pxmax > portx and basey + porty - 1 < pymax) then
                   basey := basey + 1;
@@ -472,9 +479,10 @@ procedure ncurses2.demo_pad is
             when   Character'Pos ('E') |
               Key_End |
               Key_Select =>
-               basey := pymax - porty;
-               if basey < 0 then --  basey := max(basey, 0);
+               if pymax < porty then
                   basey := 0;
+               else
+                  basey := pymax - porty;
                end if;
 
             when others =>
@@ -500,7 +508,7 @@ procedure ncurses2.demo_pad is
          --  in C was ... pxmax > portx - 1
          if scrollers and pxmax >= portx then
             declare
-               length : Column_Position := portx - top_x - 1;
+               length : constant Column_Position := portx - top_x - 1;
                lowend, highend : Column_Position;
             begin
                --  Instead of using floats, I'll use integers only.
@@ -527,7 +535,7 @@ procedure ncurses2.demo_pad is
 
          if scrollers and pymax >= porty then
             declare
-               length : Line_Position := porty - top_y - 1;
+               length : constant Line_Position := porty - top_y - 1;
                lowend, highend : Line_Position;
             begin
                lowend := top_y + (basey * length) / pymax;

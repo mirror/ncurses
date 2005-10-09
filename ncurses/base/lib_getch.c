@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -40,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.71 2003/05/17 23:49:28 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.73 2005/06/11 18:08:57 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -233,7 +234,7 @@ _nc_wgetch(WINDOW *win,
     T((T_CALLED("_nc_wgetch(%p)"), win));
 
     *result = 0;
-    if (!win)
+    if (win == 0 || SP == 0)
 	returnCode(ERR);
 
     if (cooked_key_in_fifo()) {
@@ -466,7 +467,7 @@ wgetch(WINDOW *win)
     T((T_CALLED("wgetch(%p)"), win));
     code = _nc_wgetch(win,
 		      &value,
-		      SP->_use_meta
+		      (SP ? SP->_use_meta : 0)
 		      EVENTLIST_2nd((_nc_eventlist *) 0));
     if (code != ERR)
 	code = value;

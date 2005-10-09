@@ -15,11 +15,11 @@
 ** 
 ** You should have received a copy of the GNU General Public License
 ** along with TACK; see the file COPYING.  If not, write to
-** the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-** Boston, MA 02111-1307, USA.
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+** Boston, MA 02110-1301, USA
 */
 
-/* $Id: tack.h,v 1.10 2003/10/18 22:26:59 tom Exp $ */
+/* $Id: tack.h,v 1.14 2005/09/17 19:49:16 tom Exp $ */
 
 #ifndef NCURSES_TACK_H_incl
 #define NCURSES_TACK_H_incl 1
@@ -77,9 +77,9 @@ extern char tty_shortname[];
 extern int tty_can_sync;
 extern int total_pads_sent;	/* count pad characters sent */
 extern int total_caps_sent;	/* count caps sent */
-extern int total_printing_characters;	/* count printing characters sent */
+extern int total_printing_characters; /* count printing characters sent */
 extern int no_alarm_event;	/* TRUE if the alarm has not gone off yet */
-extern int usec_run_time;	/* length of last test in microseconds */
+extern unsigned long usec_run_time; /* length of last test in microseconds */
 extern int raw_characters_sent;	/* Total output characters */
 
 /* Stopwatch event timers */
@@ -129,8 +129,8 @@ extern int select_delay_type;
 extern int select_xon_xoff;
 
 extern int tty_frame_size;
-extern unsigned long tty_baud_rate;
-extern int tty_cps;		/* The number of characters per second */
+extern unsigned tty_baud_rate;
+extern unsigned long tty_cps;	/* The number of characters per second */
 extern int not_a_tty, nodelay_read;
 extern int send_reset_init;
 
@@ -194,7 +194,7 @@ extern int tx_delay[TT_MAX];	/* Number of milliseconds delay */
 extern int tx_index[TT_MAX];	/* String index */
 extern int txp;			/* number of entries used */
 extern int tx_characters;	/* printing characters sent by test */
-extern int tx_cps;		/* characters per second */
+extern unsigned long tx_cps;	/* characters per second */
 
 /*
 	Menu control for tack.
@@ -268,82 +268,104 @@ struct test_menu {
 
 #define REQUEST_PROMPT 256
 
-extern char prompt_string[80];	/* menu prompt storage */
-extern struct test_menu edit_menu;
-extern struct test_list *augment_test;
-
 /* tack.c */
+extern struct test_menu edit_menu;
 extern void show_usage(char *);
 extern void print_version(void);
 
 /* output.c */
-extern void tt_tputs(const char *, int);
-extern void tt_putp(const char *);
-extern void tt_putparm(NCURSES_CONST char *, int, int, int);
-extern int tc_putp(const char *);
-extern int tc_putch(int);
-extern void putchp(int);
-extern void put_cr(void);
-extern void put_crlf(void);
-extern void put_clear(void);
-extern void put_dec(char *, int);
-extern void put_str(const char *);
-extern void put_lf(void);
-extern void put_ind(void);
-extern void put_newlines(int);
-extern void put_columns(const char *, int, int);
-extern void put_this(int);
-extern void putln(const char *);
-extern void ptext(const char *);
-extern void ptextln(const char *);
-extern void home_down(void);
-extern void go_home(void);
-extern void three_digit(char *, int);
-extern int getchp(int);
 extern char *expand(const char *);
-extern char *expand_to(char *, int);
 extern char *expand_command(const char *);
+extern char *expand_to(char *, int);
 extern char *hex_expand_to(char *, int);
 extern char *print_expand(char *);
-extern void maybe_wait(int);
-extern int wait_here(void);
-extern void read_string(char *, int);
+extern int getchp(int);
 extern int getnext(int);
+extern int tc_putch(int);
+extern int tc_putp(const char *);
+extern int wait_here(void);
+extern void go_home(void);
+extern void home_down(void);
+extern void maybe_wait(int);
+extern void ptext(const char *);
+extern void ptextln(const char *);
+extern void put_clear(void);
+extern void put_columns(const char *, int, int);
+extern void put_cr(void);
+extern void put_crlf(void);
+extern void put_dec(char *, int);
+extern void put_ind(void);
+extern void put_lf(void);
+extern void put_newlines(int);
+extern void put_str(const char *);
+extern void put_this(int);
+extern void putchp(int);
+extern void putln(const char *);
+extern void read_string(char *, int);
+extern void three_digit(char *, int);
+extern void tt_putp(const char *);
+extern void tt_putparm(NCURSES_CONST char *, int, int, int);
+extern void tt_tputs(const char *, int);
+
+#define put_that(n) put_this((int) (n))
 
 /* control.c */
-extern void event_start(int);
-extern long event_time(int);
+extern struct test_list color_test_list[];
 extern char *liberated(char *);
-extern void page_loop(void);
-extern void control_init(void);
+extern char txt_longer_augment[80];
+extern char txt_longer_test_time[80];
+extern char txt_shorter_augment[80];
+extern char txt_shorter_test_time[80];
 extern int msec_cost(const char *const, int);
 extern int skip_pad_test(struct test_list *, int *, int *, const char *);
-extern void pad_test_startup(int);
+extern int sliding_scale(int, int, unsigned long);
 extern int still_testing(void);
-extern void pad_test_shutdown(struct test_list *, int);
+extern long event_time(int);
+extern void control_init(void);
 extern void dump_test_stats(struct test_list *, int *, int *);
-extern void longer_test_time(struct test_list *, int *, int *);
-extern void shorter_test_time(struct test_list *, int *, int *);
-extern char txt_longer_test_time[80];
-extern char txt_shorter_test_time[80];
-extern void set_augment_txt(void);
+extern void event_start(int);
 extern void longer_augment(struct test_list *, int *, int *);
+extern void longer_test_time(struct test_list *, int *, int *);
+extern void pad_test_shutdown(struct test_list *, int);
+extern void pad_test_startup(int);
+extern void page_loop(void);
+extern void set_augment_txt(void);
 extern void shorter_augment(struct test_list *, int *, int *);
-extern char txt_longer_augment[80];
-extern char txt_shorter_augment[80];
-extern int sliding_scale(int, int, int);
-
-/* sync.c */
-extern void verify_time(void);
-extern int tty_sync_error(void);
-extern void flush_input(void);
-extern void sync_test(struct test_menu *);
-extern void sync_handshake(struct test_list *, int *, int *);
+extern void shorter_test_time(struct test_list *, int *, int *);
 
 /* charset.c */
+extern struct test_list acs_test_list[];
 extern void set_attr(int);
 extern void eat_cookie(void);
 extern void put_mode(char *);
+
+/* crum.c */
+extern struct test_list crum_test_list[];
+
+/* ansi.c */
+extern void tools_status(struct test_list *, int *, int *);
+extern void tools_charset(struct test_list *, int *, int *);
+extern void tools_sgr(struct test_list *, int *, int *);
+
+/* edit.c */
+extern struct test_menu change_pad_menu;
+extern struct test_list edit_test_list[];
+extern char *get_string_cap_byname(const char *, const char **);
+extern int cap_match(const char *names, const char *cap);
+extern int get_string_cap_byvalue(const char *);
+extern int user_modified(void);
+extern void can_test(const char *, int);
+extern void cap_index(const char *, int *);
+extern void edit_init(void);
+extern void save_info(struct test_list *, int *, int *);
+extern void show_report(struct test_list *, int *, int *);
+
+/* fun.c */
+extern struct test_list funkey_test_list[];
+extern struct test_list printer_test_list[];
+extern void enter_key(const char *, char *, char *);
+extern int tty_meta_prep(void);
+extern void tools_report(struct test_list *, int *, int *);
 
 /* init.c */
 extern void reset_init(void);
@@ -354,52 +376,48 @@ extern void curses_setup(char *);
 extern void bye_kids(int);
 
 /* scan.c */
+extern char **scan_up, **scan_down, **scan_name;
 extern int scan_key(void);
+extern unsigned scan_max;	/* length of longest scan code */
+extern unsigned *scan_tested, *scan_length;
 extern void scan_init(char *fn);
 
-/* ansi.c */
-extern void tools_status(struct test_list *, int *, int *);
-extern void tools_charset(struct test_list *, int *, int *);
-extern void tools_sgr(struct test_list *, int *, int *);
-
-/* pad.c */
-
-/* fun.c */
-extern void enter_key(const char *, char *, char *);
-extern int tty_meta_prep(void);
-extern void tools_report(struct test_list *, int *, int *);
-
 /* sysdep.c */
-extern void tty_set(void);
-extern void tty_raw(int, int);
-extern void tty_init(void);
-extern void tty_reset(void);
-extern void spin_flush(void);
+extern int initial_stty_query(int);
+extern int stty_query(int);
+extern void ignoresig(void);
 extern void read_key(char *, int);
 extern void set_alarm_clock(int);
-extern void ignoresig(void);
-extern int stty_query(int);
-extern int initial_stty_query(int);
-
-/* edit.c */
-extern int user_modified(void);
-extern void save_info(struct test_list *, int *, int *);
-extern void can_test(const char *, int);
-extern void cap_index(const char *, int *);
-extern int cap_match(const char *names, const char *cap);
-extern void edit_init(void);
-extern char *get_string_cap_byname(const char *, const char **);
-extern int get_string_cap_byvalue(const char *);
-extern void show_report(struct test_list *, int *, int *);
+extern void spin_flush(void);
+extern void tty_init(void);
+extern void tty_raw(int, int);
+extern void tty_reset(void);
+extern void tty_set(void);
 
 /* menu.c */
-extern void menu_prompt(void);
-extern void menu_can_scan(const struct test_menu *);
-extern void menu_display(struct test_menu *, int *);
-extern void generic_done_message(struct test_list *, int *, int *);
-extern void pad_done_message(struct test_list *, int *, int *);
-extern void menu_clear_screen(struct test_list *, int *, int *);
-extern void menu_reset_init(struct test_list *, int *, int *);
+extern char prompt_string[80];	/* menu prompt storage */
 extern int subtest_menu(struct test_list *, int *, int *);
+extern struct test_list *augment_test;
+extern void generic_done_message(struct test_list *, int *, int *);
+extern void menu_can_scan(const struct test_menu *);
+extern void menu_clear_screen(struct test_list *, int *, int *);
+extern void menu_display(struct test_menu *, int *);
+extern void menu_prompt(void);
+extern void menu_reset_init(struct test_list *, int *, int *);
+extern void pad_done_message(struct test_list *, int *, int *);
+
+/* modes.c */
+extern struct test_list mode_test_list[];
+
+/* pad.c */
+extern struct test_list pad_test_list[];
+
+/* sync.c */
+extern struct test_menu sync_menu;
+extern int tty_sync_error(void);
+extern void flush_input(void);
+extern void sync_handshake(struct test_list *, int *, int *);
+extern void sync_test(struct test_menu *);
+extern void verify_time(void);
 
 #endif /* NCURSES_TACK_H_incl */

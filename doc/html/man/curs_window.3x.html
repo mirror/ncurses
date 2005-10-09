@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_window.3x,v 1.10 2003/05/10 20:33:49 jmc Exp @
+  * @Id: curs_window.3x,v 1.13 2005/05/15 16:32:02 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,15 +40,15 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>                                   <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
+<STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>                                         <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>newwin</STRONG>,  <STRONG>delwin</STRONG>,  <STRONG>mvwin</STRONG>, <STRONG>subwin</STRONG>, <STRONG>derwin</STRONG>, <STRONG>mvderwin</STRONG>, <STRONG>dupwin</STRONG>,
-       <STRONG>wsyncup</STRONG>, <STRONG>syncok</STRONG>, <STRONG>wcursyncup</STRONG>,  <STRONG>wsyncdown</STRONG>  -  create  <STRONG>curses</STRONG>
+       <STRONG>newwin</STRONG>, <STRONG>delwin</STRONG>, <STRONG>mvwin</STRONG>, <STRONG>subwin</STRONG>, <STRONG>derwin</STRONG>, <STRONG>mvderwin</STRONG>, <STRONG>dupwin</STRONG>,
+       <STRONG>wsyncup</STRONG>, <STRONG>syncok</STRONG>, <STRONG>wcursyncup</STRONG>, <STRONG>wsyncdown</STRONG> - create <STRONG>curses</STRONG>
        windows
 
 
@@ -81,9 +81,9 @@
        to  <STRONG>LINES</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>y</EM> and <STRONG>COLS</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>x</EM>.  A new full-screen
        window is created by calling <STRONG>newwin(0,0,0,0)</STRONG>.
 
-       Calling <STRONG>delwin</STRONG> deletes the named window, freeing all  mem-
-       ory  associated  with  it  (it does not actually erase the
-       window's screen image).  Subwindows must be deleted before
+       Calling <STRONG>delwin</STRONG> deletes the named window, freeing all memo-
+       ry associated with it (it does not actually erase the win-
+       dow's screen image).  Subwindows must  be  deleted  before
        the main window can be deleted.
 
        Calling <STRONG>mvwin</STRONG> moves the window so that the upper left-hand
@@ -108,10 +108,10 @@
        dow <EM>orig</EM> rather than the screen.  There is  no  difference
        between the subwindows and the derived windows.
 
-       Calling  <STRONG>mvderwin</STRONG>  moves  a  derived window (or subwindow)
-       inside its parent window.  The screen-relative  parameters
-       of  the  window  are not changed.  This routine is used to
-       display different parts of the parent window at  the  same
+       Calling <STRONG>mvderwin</STRONG> moves a derived window (or subwindow) in-
+       side its parent window.  The screen-relative parameters of
+       the  window are not changed.  This routine is used to dis-
+       play different parts of the  parent  window  at  the  same
        physical position on the screen.
 
        Calling  <STRONG>dupwin</STRONG>  creates  an exact duplicate of the window
@@ -119,8 +119,8 @@
 
        Calling <STRONG>wsyncup</STRONG> touches all locations in ancestors of  <EM>win</EM>
        that  are changed in <EM>win</EM>.  If <STRONG>syncok</STRONG> is called with second
-       argument <STRONG>TRUE</STRONG> then <STRONG>wsyncup</STRONG> is called  automatically  when-
-       ever there is a change in the window.
+       argument <STRONG>TRUE</STRONG> then <STRONG>wsyncup</STRONG> is called automatically whenev-
+       er there is a change in the window.
 
        The  <STRONG>wsyncdown</STRONG>  routine  touches each location in <EM>win</EM> that
        has been touched in any of  its  ancestor  windows.   This
@@ -134,19 +134,44 @@
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Routines that return an integer  return  the  integer  <STRONG>ERR</STRONG>
-       upon failure and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value
+       Routines that return an integer return the integer <STRONG>ERR</STRONG> up-
+       on  failure  and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value
        other than <STRONG>ERR</STRONG>") upon successful completion.
 
-       <STRONG>delwin</STRONG> returns the integer <STRONG>ERR</STRONG> upon failure  and  <STRONG>OK</STRONG>  upon
-       successful completion.
-
        Routines that return pointers return <STRONG>NULL</STRONG> on error.
+
+       X/Open defines no error conditions.  In  this  implementa-
+       tion
+
+              <STRONG>delwin</STRONG>
+                   returns  an  error  if  the  window pointer is
+                   null, or if the window is the parent of anoth-
+                   er window.
+
+                   This  implementation  also maintains a list of
+                   windows, and checks that the pointer passed to
+                   <STRONG>delwin</STRONG>  is  one  that it created, returning an
+                   error if it was not..
+
+              <STRONG>mvderwin</STRONG>
+                   returns an error  if  the  window  pointer  is
+                   null,  or  if some part of the window would be
+                   placed off-screen.
+
+              <STRONG>mvwin</STRONG>
+                   returns an error  if  the  window  pointer  is
+                   null,  or if the window is really a pad, or if
+                   some part of the window would be  placed  off-
+                   screen.
+
+              <STRONG>syncok</STRONG>
+                   returns  an  error  if  the  window pointer is
+                   null.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       If  many small changes are made to the window, the <STRONG>wsyncup</STRONG>
+       If many small changes are made to the window, the  <STRONG>wsyncup</STRONG>
        option could degrade performance.
 
        Note that <STRONG>syncok</STRONG> may be a macro.
@@ -154,22 +179,22 @@
 
 </PRE>
 <H2>BUGS</H2><PRE>
-       The subwindow functions (<EM>subwin</EM>, <EM>derwin</EM>,  <EM>mvderwin</EM>,  <STRONG>wsyn-</STRONG>
-       <STRONG>cup</STRONG>,  <STRONG>wsyncdown</STRONG>,  <STRONG>wcursyncup</STRONG>,  <STRONG>syncok</STRONG>)  are  flaky, incom-
-       pletely implemented, and not well tested.
+       The  subwindow  functions (<EM>subwin</EM>, <EM>derwin</EM>, <EM>mvderwin</EM>, <STRONG>wsyn-</STRONG>
+       <STRONG>cup</STRONG>, <STRONG>wsyncdown</STRONG>, <STRONG>wcursyncup</STRONG>, <STRONG>syncok</STRONG>) are flaky, incomplete-
+       ly implemented, and not well tested.
 
-       The System V curses documentation is  very  unclear  about
+       The  System  V  curses documentation is very unclear about
        what <STRONG>wsyncup</STRONG> and <STRONG>wsyncdown</STRONG> actually do.  It seems to imply
-       that they are only supposed to touch exactly  those  lines
+       that  they  are only supposed to touch exactly those lines
        that are affected by ancestor changes.  The language here,
-       and the behavior of the  <STRONG>curses</STRONG>  implementation,  is  pat-
-       terned  on the XPG4 curses standard.  The weaker XPG4 spec
+       and  the  behavior  of  the <STRONG>curses</STRONG> implementation, is pat-
+       terned on the XPG4 curses standard.  The weaker XPG4  spec
        may result in slower updates.
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The XSI Curses standard, Issue  4  describes  these  func-
+       The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.
 
 
@@ -179,7 +204,7 @@
 
 
 
-                                                  <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
+                                                        <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

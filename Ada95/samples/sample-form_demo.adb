@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,13 +35,13 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.10 $
+--  $Revision: 1.13 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
 with Terminal_Interface.Curses.Forms; use Terminal_Interface.Curses.Forms;
 with Terminal_Interface.Curses.Forms.Field_User_Data;
-with Terminal_Interface.Curses.Forms.Form_User_Data;
 with Sample.My_Field_Type; use Sample.My_Field_Type;
 with Sample.Explanation; use Sample.Explanation;
 with Sample.Form_Demo.Aux; use Sample.Form_Demo.Aux;
@@ -65,10 +65,6 @@ package body Sample.Form_Demo is
    package Fld_U is new
      Terminal_Interface.Curses.Forms.Field_User_Data (User_Data,
                                                       User_Access);
-
-   package Frm_U is new
-     Terminal_Interface.Curses.Forms.Form_User_Data (User_Data,
-                                                     User_Access);
 
    type Weekday is (Sunday, Monday, Tuesday, Wednesday, Thursday,
                     Friday, Saturday);

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  * Copyright (c) 1998-2000,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inchstr.3x,v 1.8 2000/07/01 20:16:18 tom Exp @
+  * @Id: curs_inchstr.3x,v 1.10 2005/05/15 16:54:53 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,15 +40,15 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>                                 <STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>
+<STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>                                       <STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>inchstr</STRONG>,   <STRONG>inchnstr</STRONG>,   <STRONG>winchstr</STRONG>,   <STRONG>winchnstr</STRONG>,   <STRONG>mvinchstr</STRONG>,
-       <STRONG>mvinchnstr</STRONG>, <STRONG>mvwinchstr</STRONG>, <STRONG>mvwinchnstr</STRONG>  -  get  a  string  of
+       <STRONG>inchstr</STRONG>, <STRONG>inchnstr</STRONG>, <STRONG>winchstr</STRONG>, <STRONG>winchnstr</STRONG>, <STRONG>mvinchstr</STRONG>,
+       <STRONG>mvinchnstr</STRONG>, <STRONG>mvwinchstr</STRONG>, <STRONG>mvwinchnstr</STRONG> - get a string of
        characters (and attributes) from a <STRONG>curses</STRONG> window
 
 
@@ -87,6 +87,10 @@
        (the number of  characters  retrieved,  exclusive  of  the
        trailing 0).
 
+       No  error  conditions are defined.  If the <EM>chstr</EM> parameter
+       is null, no data is returned, and the return value is  ze-
+       ro.
+
 
 </PRE>
 <H2>NOTES</H2><PRE>
@@ -111,7 +115,7 @@
 
 
 
-                                                 <STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>
+                                                       <STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.20 2003/05/11 00:32:53 tom Exp @
+  * @Id: tput.1,v 1.22 2005/01/08 17:44:26 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -41,7 +41,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>                                                   <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>
+<STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>                                                         <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>
 
 
 
@@ -68,17 +68,28 @@
        values  of terminal-dependent capabilities and information
        available to the shell (see <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>), to initialize or reset
        the  terminal,  or  return  the long name of the requested
-       terminal type.  <STRONG>tput</STRONG> outputs a  string  if  the  attribute
-       (<EM>cap</EM>ability  <EM>name</EM>) is of type string, or an integer if the
-       attribute is of type integer.  If the attribute is of type
-       boolean, <STRONG>tput</STRONG> simply sets the exit code (<STRONG>0</STRONG> for TRUE if the
-       terminal has the capability, <STRONG>1</STRONG> for FALSE if it does  not),
-       and  produces no output.  Before using a value returned on
-       standard output, the user should test the exit  code  [<STRONG>$?</STRONG>,
-       see  <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>]  to  be sure it is <STRONG>0</STRONG>.  (See the <STRONG>EXIT</STRONG> <STRONG>CODES</STRONG> and
-       <STRONG>DIAGNOSTICS</STRONG> sections.)  For a complete list  of  capabili-
-       ties  and  the  <EM>capname</EM>  associated  with  each,  see <STRONG>ter-</STRONG>
-       <STRONG><A HREF="terminfo.1.html">minfo(1)</A></STRONG>.
+       terminal type.  The result depends upon  the  capability's
+       type:
+
+              string
+                   <STRONG>tput</STRONG> writes the string to the standard output.
+                   No trailing newline is supplied.
+
+              integer
+                   <STRONG>tput</STRONG> writes the decimal value to the  standard
+                   output, with a trailing newline.
+
+              boolean
+                   <STRONG>tput</STRONG>  simply sets the exit code (<STRONG>0</STRONG> for TRUE if
+                   the terminal has the capability, <STRONG>1</STRONG>  for  FALSE
+                   if  it  does  not),  and writes nothing to the
+                   standard output.
+
+       Before using a value returned on the standard output,  the
+       application  should  test  the  exit  code  (e.g., <STRONG>$?</STRONG>, see
+       <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>) to be sure it is <STRONG>0</STRONG>.  (See the <STRONG>EXIT</STRONG> <STRONG>CODES</STRONG> and  <STRONG>DIAG-</STRONG>
+       <STRONG>NOSTICS</STRONG>  sections.)   For  a complete list of capabilities
+       and the <EM>capname</EM> associated with each, see <STRONG><A HREF="terminfo.1.html">terminfo(1)</A></STRONG>.
 
        <STRONG>-T</STRONG><EM>type</EM> indicates the  <EM>type</EM>  of  terminal.   Normally  this
               option is unnecessary, because the default is taken
@@ -88,21 +99,21 @@
               be queried for the actual screen size.
 
        <EM>capname</EM>
-              indicates the attribute from the <STRONG>terminfo</STRONG> database.
-              When <STRONG>termcap</STRONG> support is compiled  in,  the  <STRONG>termcap</STRONG>
-              name for the attribute is also accepted.
+              indicates   the   capability   from   the  <STRONG>terminfo</STRONG>
+              database.  When <STRONG>termcap</STRONG> support is compiled in, the
+              <STRONG>termcap</STRONG> name for the capability is also accepted.
 
-       <EM>parms</EM>  If the attribute is a string that takes parameters,
-              the arguments <EM>parms</EM> will be instantiated  into  the
-              string.   An all-numeric argument will be passed to
-              the attribute as a number.
+       <EM>parms</EM>  If  the  capability  is a string that takes parame-
+              ters, the arguments <EM>parms</EM> will be instantiated into
+              the string.
 
-              Only a few  terminfo  capabilities  require  string
-              parameters;  <STRONG>tput</STRONG>  uses  a table to decide which to
-              pass as strings.  Normally <STRONG>tput</STRONG> uses <STRONG>tparm</STRONG> (3x)  to
-              perform  the  substitution.   If  no parameters are
-              given for the attribute,  <STRONG>tput</STRONG>  writes  the  string
-              without performing the substitution.
+              Most  parameters  are numbers.  Only a few terminfo
+              capabilities require string parameters; <STRONG>tput</STRONG> uses a
+              table to decide which to pass as strings.  Normally
+              <STRONG>tput</STRONG> uses <STRONG>tparm</STRONG> (3x) to perform  the  substitution.
+              If no parameters are given for the capability, <STRONG>tput</STRONG>
+              writes   the   string   without   performing    the
+              substitution.
 
        <STRONG>-S</STRONG>     allows  more  than one capability per invocation of
               <STRONG>tput</STRONG>.  The capabilities must be passed to <STRONG>tput</STRONG> from
@@ -112,9 +123,9 @@
               and <STRONG>1</STRONG> boolean and string exit codes (see  the  EXIT
               CODES section).
 
-              Again,  <STRONG>tput</STRONG>  uses  a  table  and  the  presence of
-              parameters in its input to decide  whether  to  use
-              <STRONG>tparm</STRONG> (3x), and how to interpret the parameters.
+              Again, <STRONG>tput</STRONG> uses a table and the presence of param-
+              eters in its input to decide whether to  use  <STRONG>tparm</STRONG>
+              (3x), and how to interpret the parameters.
 
        <STRONG>-V</STRONG>     reports  the  version  of ncurses which was used in
               this program, and exits.
@@ -222,12 +233,6 @@
        <STRONG>/usr/share/terminfo</STRONG>
               compiled terminal description database
 
-       <STRONG>/usr/include/curses.h</STRONG>
-              <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> header file
-
-       <STRONG>/usr/include/term.h</STRONG>
-              <STRONG>terminfo</STRONG> header file
-
        <STRONG>/usr/share/tabset/*</STRONG>
               tab settings for some terminals, in a format appro-
               priate   to  be  output  to  the  terminal  (escape
@@ -279,6 +284,7 @@
        <STRONG>tput</STRONG> prints the following error messages and sets the cor-
        responding exit codes.
 
+
        exit code   error message
        ---------------------------------------------------------------------
        <STRONG>0</STRONG>           (<EM>capname</EM>  is a numeric variable that is not specified in
@@ -305,7 +311,7 @@
 
 
 
-                                                          <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>
+                                                                <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

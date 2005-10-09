@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.9 $
+--  $Revision: 1.12 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Strings; use Ada.Strings;
@@ -95,6 +96,9 @@ package body Sample.Keyboard_Handler is
          is
             Ch : Character;
          begin
+            if P = Null_Panel then
+               raise Panel_Exception;
+            end if;
             if C in User_Key_Code'Range and then C = QUIT then
                if Driver (F, F_Validate_Field) = Form_Ok  then
                   K := Key_None;
@@ -102,7 +106,7 @@ package body Sample.Keyboard_Handler is
                end if;
             elsif C in Normal_Key_Code'Range then
                Ch := Character'Val (C);
-               if (Ch = LF or else Ch = CR) then
+               if Ch = LF or else Ch = CR then
                   if Driver (F, F_Validate_Field) = Form_Ok  then
                      declare
                         Buffer : String (1 .. Positive (Columns - 11));

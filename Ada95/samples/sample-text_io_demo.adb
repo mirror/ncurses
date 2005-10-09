@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.11 $
+--  $Revision: 1.14 $
+--  $Date: 2004/08/21 21:37:00 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Numerics.Generic_Elementary_Functions;
@@ -109,9 +110,9 @@ package body Sample.Text_IO_Demo is
       W : Window;
       P : Panel := Create (Standard_Window);
       K : Real_Key_Code;
-      Im : Complex := (0.0, 1.0);
-      Fx : Fix := 3.14;
-      Dc : Dec := 2.72;
+      Im : constant Complex := (0.0, 1.0);
+      Fx : constant Fix := 3.14;
+      Dc : constant Dec := 2.72;
       L : Md;
 
    begin

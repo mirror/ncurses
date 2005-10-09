@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.41 2003/11/01 22:44:33 tom Exp $
+# $Id: Makefile.in,v 1.42 2004/12/11 23:33:16 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -79,7 +79,7 @@ CC		= @CC@
 CPP		= @CPP@
 CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= -DHAVE_CONFIG_H @CPPFLAGS@
+CPPFLAGS	= -I@top_srcdir@/ncurses -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 

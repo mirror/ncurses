@@ -2,12 +2,12 @@
  * Test lower-right-hand corner access
  *
  * originally by Eric S. Raymond <esr@thyrsus.com>, written for animation
- * and resizing -TD
+ * and resizing -T.Dickey
  *
  * This can't be part of the ncurses test-program, because ncurses rips off the
  * bottom line to do labels.
  *
- * $Id: lrtest.c,v 1.19 2002/07/13 16:55:50 tom Exp $
+ * $Id: lrtest.c,v 1.20 2004/08/07 16:08:01 tom Exp $
  */
 
 #include <test.priv.h>
@@ -22,7 +22,7 @@ typedef struct {
  * really write to all positions properly.
  */
 static void
-show(MARK * m)
+show(MARK *m)
 {
     mvaddch(m->y, m->x, m->value);
     if (m->mode == 0) {		/* along the x-direction */
@@ -120,7 +120,7 @@ main(
 	    else if (ch == 'T')
 		trace(0);
 	    else if (ch == 't')
-		trace(TRACE_CALLS|TRACE_ICALLS|TRACE_UPDATE);
+		trace(TRACE_CALLS | TRACE_ICALLS | TRACE_UPDATE);
 #endif
 #ifdef KEY_RESIZE
 	    else if (ch == KEY_RESIZE) {

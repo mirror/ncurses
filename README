@@ -1,4 +1,4 @@
--- $Id: README,v 1.21 2003/02/08 19:36:39 tom Exp $
+-- $Id: README,v 1.22 2004/08/07 23:42:43 tom Exp $
 -------------------------------------------------------------------------------
 		README file for the ncurses package
 
@@ -64,7 +64,7 @@ install.libs' rule as libncurses++.
 In the `Ada95' directory, you'll find code and documentation for an
 Ada95 binding of the curses API, to be used with the GNAT compiler.
 This binding is built by a normal top-level `make' if configure detects
-an usable version of GNAT (3.10 or above). It is not installed automatically.
+an usable version of GNAT (3.11 or above). It is not installed automatically.
 See the Ada95 directory for more build and installation instructions and
 for documentation of the binding.
 

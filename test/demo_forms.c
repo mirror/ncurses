@@ -1,5 +1,5 @@
 /*
- * $Id: demo_forms.c,v 1.3 2003/05/03 22:08:20 tom Exp $
+ * $Id: demo_forms.c,v 1.18 2005/10/08 21:54:20 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -7,23 +7,15 @@
 /*
 TYPE_ALNUM			-
 TYPE_ENUM			-
-TYPE_INTEGER			-
-TYPE_IPV4			-
-TYPE_NUMERIC			-
 TYPE_REGEXP			-
-data_ahead			-
-data_behind			-
 dup_field			-
-dynamic_field_info		-
 field_arg			-
 field_back			-
 field_count			-
 field_fore			-
 field_init			-
 field_just			-
-field_opts_on			-
 field_pad			-
-field_status			-
 field_term			-
 field_type			-
 form_init			-
@@ -40,11 +32,8 @@ link_fieldtype			-
 move_field			-
 new_page			-
 pos_form_cursor			-
-set_current_field		-
-set_field_fore			-
 set_field_init			-
 set_field_pad			-
-set_field_status		-
 set_field_term			-
 set_fieldtype_arg		-
 set_fieldtype_choice		-
@@ -63,14 +52,20 @@ set_max_field			-
 
 #include <edit_field.h>
 
+static int d_option = 0;
+static int j_value = 0;
+static int m_value = 0;
+static int o_value = 0;
+static char *t_value = 0;
+
 static FIELD *
 make_label(int frow, int fcol, NCURSES_CONST char *label)
 {
-    FIELD *f = new_field(1, strlen(label), frow, fcol, 0, 0);
+    FIELD *f = new_field(1, (int) strlen(label), frow, fcol, 0, 0);
 
     if (f) {
 	set_field_buffer(f, 0, label);
-	set_field_opts(f, field_opts(f) & ~O_ACTIVE);
+	set_field_opts(f, (int) (field_opts(f) & ~O_ACTIVE));
     }
     return (f);
 }
@@ -81,11 +76,32 @@ make_label(int frow, int fcol, NCURSES_CONST char *label)
 static FIELD *
 make_field(int frow, int fcol, int rows, int cols)
 {
-    FIELD *f = new_field(rows, cols, frow, fcol, 0, 1);
+    FIELD *f = new_field(rows, cols, frow, fcol, o_value, 1);
 
     if (f) {
 	set_field_back(f, A_UNDERLINE);
+	/*
+	 * If -j and -d options are combined, -j loses.  It is documented in
+	 * "Character User Interface Programming", page 12-15 that setting
+	 * O_STATIC off makes the form library ignore justification.
+	 */
+	set_field_just(f, j_value);
 	set_field_userptr(f, (void *) 0);
+	if (d_option) {
+	    if (has_colors()) {
+		set_field_fore(f, COLOR_PAIR(2));
+	    } else {
+		set_field_fore(f, A_BOLD);
+	    }
+	    /*
+	     * The field_opts_off() call dumps core with Solaris curses,
+	     * but that is a known bug in Solaris' form library -TD
+	     */
+	    field_opts_off(f, O_STATIC);
+	    set_max_field(f, m_value);
+	}
+	if (t_value)
+	    set_field_buffer(f, 0, t_value);
     }
     return (f);
 }
@@ -126,16 +142,72 @@ erase_form(FORM * f)
     delwin(w);
 }
 
+static void
+show_insert_mode(bool insert_mode)
+{
+    mvaddstr(5, 57, (insert_mode
+		     ? "form_status: insert "
+		     : "form_status: overlay"));
+}
+
+#define O_SELECTABLE (O_ACTIVE | O_VISIBLE)
+
+static FIELD *
+another_field(FORM * form, FIELD * field)
+{
+    FIELD **f = form_fields(form);
+    FIELD *result = 0;
+    int n;
+
+    for (n = 0; f[n] != 0; ++n) {
+	if (f[n] != field) {
+	    result = f[n];
+	    field_opts_on(result, O_SELECTABLE);
+	    break;
+	}
+    }
+    return result;
+}
+
 static int
 my_form_driver(FORM * form, int c)
 {
+    static bool insert_mode = TRUE;
+    FIELD *field;
+
     switch (c) {
-    case EDIT_FIELD('q'):
+    case MY_QUIT:
 	if (form_driver(form, REQ_VALIDATION) == E_OK)
 	    return (TRUE);
 	break;
-    case EDIT_FIELD('h'):
+    case MY_HELP:
 	help_edit_field();
+	break;
+    case MY_EDT_MODE:
+	if ((field = current_field(form)) != 0) {
+	    set_current_field(form, another_field(form, field));
+	    if (field_opts(field) & O_EDIT) {
+		field_opts_off(field, O_EDIT);
+		set_field_status(field, 0);
+	    } else {
+		field_opts_on(field, O_EDIT);
+	    }
+	    set_current_field(form, field);
+	}
+	break;
+    case MY_INS_MODE:
+	/* there should be a form_status() function, but there is none */
+	if (!insert_mode) {
+	    if (form_driver(form, REQ_INS_MODE) == E_OK) {
+		insert_mode = TRUE;
+	    }
+	} else {
+	    if (form_driver(form, REQ_OVL_MODE) == E_OK) {
+		insert_mode = FALSE;
+	    }
+	}
+	show_insert_mode(insert_mode);
+	refresh();
 	break;
     default:
 	beep();
@@ -151,12 +223,18 @@ show_current_field(WINDOW *win, FORM * form)
     FIELDTYPE *type;
     char *buffer;
     int nbuf;
+    int field_rows, field_cols, field_max;
 
     if (has_colors()) {
 	wbkgd(win, COLOR_PAIR(1));
     }
     werase(win);
-    wprintw(win, "Cursor: %d,%d\n", form->currow, form->curcol);
+    wprintw(win, "Cursor: %d,%d", form->currow, form->curcol);
+    if (data_ahead(form))
+	waddstr(win, " ahead");
+    if (data_behind(form))
+	waddstr(win, " behind");
+    waddch(win, '\n');
     if ((field = current_field(form)) != 0) {
 	wprintw(win, "Field %d:", field_index(field));
 	if ((type = field_type(field)) != 0) {
@@ -168,12 +246,30 @@ show_current_field(WINDOW *win, FORM * form)
 		waddstr(win, "ENUM");
 	    else if (type == TYPE_INTEGER)
 		waddstr(win, "INTEGER");
+#ifdef NCURSES_VERSION
+	    else if (type == TYPE_IPV4)
+		waddstr(win, "IPV4");
+#endif
 	    else if (type == TYPE_NUMERIC)
 		waddstr(win, "NUMERIC");
 	    else if (type == TYPE_REGEXP)
 		waddstr(win, "REGEXP");
 	    else
 		waddstr(win, "other");
+	}
+
+	if (field_opts(field) & O_EDIT)
+	    waddstr(win, " editable");
+	else
+	    waddstr(win, " readonly");
+
+	if (field_status(field))
+	    waddstr(win, " modified");
+
+	if (dynamic_field_info(field, &field_rows, &field_cols, &field_max)
+	    != ERR) {
+	    wprintw(win, " size %dx%d (max %d)",
+		    field_rows, field_cols, field_max);
 	}
 	waddstr(win, "\n");
 	for (nbuf = 0; nbuf <= 2; ++nbuf) {
@@ -203,27 +299,55 @@ demo_forms(void)
     help_edit_field();
 
     mvaddstr(4, 57, "Forms Entry Test");
+    show_insert_mode(TRUE);
 
     refresh();
 
     /* describe the form */
-    for (pg = 0; pg < 3; ++pg) {
+    for (pg = 0; pg < 4; ++pg) {
 	char label[80];
 	sprintf(label, "Sample Form Page %d", pg + 1);
 	f[n++] = make_label(0, 15, label);
 	set_new_page(f[n - 1], TRUE);
 
-	f[n++] = make_label(2, 0, "Last Name");
-	f[n++] = make_field(3, 0, 1, 18);
-	set_field_type(f[n - 1], TYPE_ALPHA, 1);
+	switch (pg) {
+	default:
+	    f[n++] = make_label(2, 0, "Last Name");
+	    f[n++] = make_field(3, 0, 1, 18);
+	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
 
-	f[n++] = make_label(2, 20, "First Name");
-	f[n++] = make_field(3, 20, 1, 12);
-	set_field_type(f[n - 1], TYPE_ALPHA, 1);
+	    f[n++] = make_label(2, 20, "First Name");
+	    f[n++] = make_field(3, 20, 1, 12);
+	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
 
-	f[n++] = make_label(2, 34, "Middle Name");
-	f[n++] = make_field(3, 34, 1, 12);
-	set_field_type(f[n - 1], TYPE_ALPHA, 1);
+	    f[n++] = make_label(2, 34, "Middle Name");
+	    f[n++] = make_field(3, 34, 1, 12);
+	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
+	    break;
+	case 2:
+	    f[n++] = make_label(2, 0, "Host Name");
+	    f[n++] = make_field(3, 0, 1, 18);
+	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
+
+#ifdef NCURSES_VERSION
+	    f[n++] = make_label(2, 20, "IP Address");
+	    f[n++] = make_field(3, 20, 1, 12);
+	    set_field_type(f[n - 1], TYPE_IPV4, 1);
+#endif
+
+	    break;
+
+	case 3:
+	    f[n++] = make_label(2, 0, "Four digits");
+	    f[n++] = make_field(3, 0, 1, 18);
+	    set_field_type(f[n - 1], TYPE_INTEGER, 4, 0, 0);
+
+	    f[n++] = make_label(2, 20, "Numeric");
+	    f[n++] = make_field(3, 20, 1, 12);
+	    set_field_type(f[n - 1], TYPE_NUMERIC, 3, -10000.0, 100000000.0);
+
+	    break;
+	}
 
 	f[n++] = make_label(5, 0, "Comments");
 	f[n++] = make_field(6, 0, 4, 46);
@@ -262,9 +386,58 @@ demo_forms(void)
     nl();
 }
 
-int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+static void
+usage(void)
 {
+    static const char *tbl[] =
+    {
+	"Usage: demo_forms [options]"
+	,""
+	," -d        make fields dynamic"
+	," -j value  justify (1=left, 2=center, 3=right)"
+	," -m value  set maximum size of dynamic fields"
+	," -o value  specify number of offscreen rows in new_field()"
+	," -t value  specify text to fill fields initially"
+    };
+    unsigned int j;
+    for (j = 0; j < SIZEOF(tbl); ++j)
+	fprintf(stderr, "%s\n", tbl[j]);
+    exit(EXIT_FAILURE);
+}
+
+int
+main(int argc, char *argv[])
+{
+    int ch;
+
+    setlocale(LC_ALL, "");
+
+    while ((ch = getopt(argc, argv, "dj:m:o:t:")) != EOF) {
+	switch (ch) {
+	case 'd':
+	    d_option = TRUE;
+	    break;
+	case 'j':
+	    j_value = atoi(optarg);
+	    if (j_value < NO_JUSTIFICATION
+		|| j_value > JUSTIFY_RIGHT)
+		usage();
+	    break;
+	case 'm':
+	    m_value = atoi(optarg);
+	    break;
+	case 'o':
+	    o_value = atoi(optarg);
+	    break;
+	case 't':
+	    t_value = optarg;
+	    break;
+	default:
+	    usage();
+
+	}
+    }
+
     initscr();
     cbreak();
     noecho();
@@ -276,6 +449,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     if (has_colors()) {
 	start_color();
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);
+	init_pair(2, COLOR_GREEN, COLOR_BLACK);
 	bkgd(COLOR_PAIR(1));
 	refresh();
     }
@@ -283,7 +457,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     demo_forms();
 
     endwin();
-    return EXIT_SUCCESS;
+    ExitProgram(EXIT_SUCCESS);
 }
 #else
 int

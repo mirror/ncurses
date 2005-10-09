@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -99,11 +100,10 @@ char *ttyname(int fd);
 #include <sys/ptem.h>
 #endif
 
-#include <curses.h>		/* for bool typedef */
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 0.56 2003/12/06 17:21:01 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.60 2005/09/25 00:43:52 tom Exp $")
 
 extern char **environ;
 
@@ -113,6 +113,9 @@ extern char **environ;
 const char *_nc_progname = "tset";
 
 static TTY mode, oldmode, original;
+
+static bool opt_c;		/* set control-chars */
+static bool opt_w;		/* set window-size */
 
 static bool can_restore = FALSE;
 static bool isreset = FALSE;	/* invoked as reset */
@@ -151,7 +154,7 @@ err(const char *fmt,...)
 {
     va_list ap;
     va_start(ap, fmt);
-    (void) fprintf(stderr, "tset: ");
+    (void) fprintf(stderr, "%s: ", _nc_progname);
     (void) vfprintf(stderr, fmt, ap);
     va_end(ap);
     exit_error();
@@ -162,7 +165,15 @@ static void
 failed(const char *msg)
 {
     char temp[BUFSIZ];
-    perror(strncat(strcpy(temp, "tset: "), msg, sizeof(temp) - 10));
+    unsigned len = strlen(_nc_progname) + 2;
+
+    if (len < sizeof(temp) - 12) {
+	strcpy(temp, _nc_progname);
+	strcat(temp, ": ");
+    } else {
+	strcpy(temp, "tset: ");
+    }
+    perror(strncat(temp, msg, sizeof(temp) - strlen(temp) - 2));
     exit_error();
     /* NOTREACHED */
 }
@@ -603,13 +614,13 @@ get_termcap_entry(char *userarg)
     while (setupterm((NCURSES_CONST char *) ttype, STDOUT_FILENO, &errret)
 	   != OK) {
 	if (errret == 0) {
-	    (void) fprintf(stderr, "tset: unknown terminal type %s\n",
-			   ttype);
+	    (void) fprintf(stderr, "%s: unknown terminal type %s\n",
+			   _nc_progname, ttype);
 	    ttype = 0;
 	} else {
 	    (void) fprintf(stderr,
-			   "tset: can't initialize terminal type %s (error %d)\n",
-			   ttype, errret);
+			   "%s: can't initialize terminal type %s (error %d)\n",
+			   _nc_progname, ttype, errret);
 	    ttype = 0;
 	}
 	ttype = askuser(ttype);
@@ -972,10 +983,10 @@ set_tabs()
 	     * used to try a bunch of half-clever things
 	     * with cup and hpa, for an average saving of
 	     * somewhat less than two character times per
-	     * tab stop, less that .01 sec at 2400cps. We
+	     * tab stop, less than .01 sec at 2400cps. We
 	     * lost all this cruft because it seemed to be
 	     * introducing some odd bugs.
-	     * ----------12345678----------- */
+	     * -----------12345678----------- */
 	    (void) fputs("        ", stderr);
 	    tputs(set_tab, 0, outc);
 	}
@@ -1021,9 +1032,9 @@ report(const char *name, int which, unsigned def)
 	(void) fprintf(stderr, "backspace.\n");
     else if (newer < 040) {
 	newer ^= 0100;
-	(void) fprintf(stderr, "control-%c (^%c).\n", newer, newer);
+	(void) fprintf(stderr, "control-%c (^%c).\n", UChar(newer), UChar(newer));
     } else
-	(void) fprintf(stderr, "%c.\n", newer);
+	(void) fprintf(stderr, "%c.\n", UChar(newer));
 }
 #endif
 
@@ -1062,10 +1073,28 @@ obsolete(char **argv)
 }
 
 static void
-usage(const char *pname)
+usage(void)
 {
-    (void) fprintf(stderr,
-		   "usage: %s [-IQVrs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]", pname);
+    static const char *tbl[] =
+    {
+	""
+	,"Options:"
+	,"  -c          set control characters"
+	,"  -e ch       erase character"
+	,"  -I          no initialization strings"
+	,"  -i ch       interrupt character"
+	,"  -k ch       kill character"
+	,"  -m mapping  map identifier to type"
+	,"  -Q          do not output control key settings"
+	,"  -r          display term on stderr"
+	,"  -s          output TERM set command"
+	,"  -V          print curses-version"
+	,"  -w          set window-size"
+    };
+    unsigned n;
+    (void) fprintf(stderr, "Usage: %s [options] [terminal]\n", _nc_progname);
+    for (n = 0; n < sizeof(tbl) / sizeof(tbl[0]); ++n)
+	fprintf(stderr, "%s\n", tbl[n]);
     exit_error();
     /* NOTREACHED */
 }
@@ -1088,28 +1117,12 @@ main(int argc, char **argv)
     const char *p;
     const char *ttype;
 
-    if (GET_TTY(STDERR_FILENO, &mode) < 0)
-	failed("standard error");
-    can_restore = TRUE;
-    original = oldmode = mode;
-#ifdef TERMIOS
-    ospeed = cfgetospeed(&mode);
-#else
-    ospeed = mode.sg_ospeed;
-#endif
-
-    p = _nc_rootname(*argv);
-    if (!strcmp(p, PROG_RESET)) {
-	isreset = TRUE;
-	reset_mode();
-    }
-
     obsolete(argv);
     noinit = noset = quiet = Sflag = sflag = showterm = 0;
-    while ((ch = getopt(argc, argv, "a:d:e:Ii:k:m:np:qQSrsV")) != EOF) {
+    while ((ch = getopt(argc, argv, "a:cd:e:Ii:k:m:np:qQSrsVw")) != EOF) {
 	switch (ch) {
-	case 'q':		/* display term only */
-	    noset = 1;
+	case 'c':		/* set control-chars */
+	    opt_c = TRUE;
 	    break;
 	case 'a':		/* OBSOLETE: map identifier to type */
 	    add_mapping("arpanet", optarg);
@@ -1140,28 +1153,54 @@ main(int argc, char **argv)
 	case 'Q':		/* don't output control key settings */
 	    quiet = 1;
 	    break;
-	case 'S':		/* OBSOLETE: output TERM & TERMCAP */
-	    Sflag = 1;
+	case 'q':		/* display term only */
+	    noset = 1;
 	    break;
 	case 'r':		/* display term on stderr */
 	    showterm = 1;
 	    break;
+	case 'S':		/* OBSOLETE: output TERM & TERMCAP */
+	    Sflag = 1;
+	    break;
 	case 's':		/* output TERM set command */
 	    sflag = 1;
 	    break;
-	case 'V':
+	case 'V':		/* print curses-version */
 	    puts(curses_version());
 	    return EXIT_SUCCESS;
+	case 'w':		/* set window-size */
+	    opt_w = TRUE;
+	    break;
 	case '?':
 	default:
-	    usage(*argv);
+	    usage();
 	}
     }
+
+    _nc_progname = _nc_rootname(*argv);
     argc -= optind;
     argv += optind;
 
     if (argc > 1)
-	usage(*argv);
+	usage();
+
+    if (!opt_c && !opt_w)
+	opt_c = opt_w = TRUE;
+
+    if (GET_TTY(STDERR_FILENO, &mode) < 0)
+	failed("standard error");
+    can_restore = TRUE;
+    original = oldmode = mode;
+#ifdef TERMIOS
+    ospeed = cfgetospeed(&mode);
+#else
+    ospeed = mode.sg_ospeed;
+#endif
+
+    if (!strcmp(_nc_progname, PROG_RESET)) {
+	isreset = TRUE;
+	reset_mode();
+    }
 
     ttype = get_termcap_entry(*argv);
 
@@ -1170,24 +1209,28 @@ main(int argc, char **argv)
 	tlines = lines;
 
 #if defined(TIOCGWINSZ) && defined(TIOCSWINSZ)
-	/* Set window size */
-	(void) ioctl(STDERR_FILENO, TIOCGWINSZ, &win);
-	if (win.ws_row == 0 && win.ws_col == 0 &&
-	    tlines > 0 && tcolumns > 0) {
-	    win.ws_row = tlines;
-	    win.ws_col = tcolumns;
-	    (void) ioctl(STDERR_FILENO, TIOCSWINSZ, &win);
+	if (opt_w) {
+	    /* Set window size */
+	    (void) ioctl(STDERR_FILENO, TIOCGWINSZ, &win);
+	    if (win.ws_row == 0 && win.ws_col == 0 &&
+		tlines > 0 && tcolumns > 0) {
+		win.ws_row = tlines;
+		win.ws_col = tcolumns;
+		(void) ioctl(STDERR_FILENO, TIOCSWINSZ, &win);
+	    }
 	}
 #endif
-	set_control_chars();
-	set_conversions();
+	if (opt_c) {
+	    set_control_chars();
+	    set_conversions();
 
-	if (!noinit)
-	    set_init();
+	    if (!noinit)
+		set_init();
 
-	/* Set the modes if they've changed. */
-	if (memcmp(&mode, &oldmode, sizeof(mode))) {
-	    SET_TTY(STDERR_FILENO, &mode);
+	    /* Set the modes if they've changed. */
+	    if (memcmp(&mode, &oldmode, sizeof(mode))) {
+		SET_TTY(STDERR_FILENO, &mode);
+	    }
 	}
     }
 

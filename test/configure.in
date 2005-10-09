@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.47 2004/01/31 00:07:01 tom Exp $
+dnl $Id: configure.in,v 1.51 2005/02/26 23:58:27 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -58,7 +58,6 @@ DFT_DEP_SUFFIX=""			AC_SUBST(DFT_DEP_SUFFIX)
 DFT_OBJ_SUBDIR=`pwd|sed -e's:.*/::'`	AC_SUBST(DFT_OBJ_SUBDIR)
 DFT_UPR_MODEL="NORMAL"			AC_SUBST(DFT_UPR_MODEL)
 ECHO_LINK='@ echo linking $@ ... ;'	AC_SUBST(ECHO_LINK)
-EXTRA_LIBS=""				AC_SUBST(EXTRA_LIBS)
 LD="ld"					AC_SUBST(LD)
 LDFLAGS_SHARED=""			AC_SUBST(LDFLAGS_SHARED)
 LD_MODEL=""				AC_SUBST(LD_MODEL)
@@ -76,6 +75,7 @@ LOCAL_LDFLAGS=""			AC_SUBST(LOCAL_LDFLAGS)
 MATH_LIB="-lm"				AC_SUBST(MATH_LIB)
 TEST_ARGS=""				AC_SUBST(TEST_ARGS)
 TEST_DEPS=""				AC_SUBST(TEST_DEPS)
+TINFO_ARGS='$(LIBS_CURSES)'		AC_SUBST(TINFO_ARGS)
 cf_cv_abi_version=""			AC_SUBST(cf_cv_abi_version)
 cf_cv_rel_version=""			AC_SUBST(cf_cv_rel_version)
 
@@ -84,7 +84,10 @@ cf_cv_libtype=
 
 AC_EXEEXT
 AC_OBJEXT
-CF_GNU_SOURCE
+
+CF_ANSI_CC_REQD
+CF_XOPEN_SOURCE
+
 CF_WITH_CURSES_DIR
 
 dnl SunOS 4.x
@@ -118,8 +121,6 @@ ncurses)
 ncursesw)
 	cf_cv_libtype=w
 	CF_UTF8_LIB
-	CF_PREDEFINE(_XOPEN_SOURCE,500)
-	CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
 	CF_NCURSES_CPPFLAGS(ncursesw)
 	CF_NCURSES_LIBS(ncursesw)
 	LIB_NAME=ncursesw
@@ -131,9 +132,9 @@ dnl installed conventionally (e.g., SunOS 5.x - solaris).
 
 dnl Autoconf builds up the $LIBS in reverse order
 
-AC_CHECK_LIB(form$cf_cv_libtype,form_driver)
-AC_CHECK_LIB(menu$cf_cv_libtype,menu_driver)
 AC_CHECK_LIB(panel$cf_cv_libtype,new_panel)
+AC_CHECK_LIB(menu$cf_cv_libtype,menu_driver)
+AC_CHECK_LIB(form$cf_cv_libtype,form_driver)
 
 AC_TYPE_SIGNAL
 
@@ -192,6 +193,9 @@ CF_CURSES_ACS_MAP
 CF_CURSES_WACS_MAP
 CF_CURSES_CHECK_TYPE(attr_t,long)
 CF_CURSES_CHECK_TYPE(mbstate_t,long)
+
+TEST_ARGS="$LIBS"
+LIBS=
 
 dnl ---------------------------------------------------------------------------
 

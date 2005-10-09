@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_insstr.3x,v 1.12 2001/11/03 19:59:03 tom Exp @
+  * @Id: curs_insstr.3x,v 1.16 2005/05/15 17:48:33 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -40,7 +40,7 @@
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>                                   <STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>
+<STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>                                         <STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>
 
 
 
@@ -71,22 +71,14 @@
        These  routines insert a character string (as many charac-
        ters as will fit on the line) before the  character  under
        the cursor.  All characters to the right of the cursor are
-       shifted right, with the possibility of the rightmost char-
+       shifted right with the possibility of the rightmost  char-
        acters  on  the line being lost.  The cursor position does
-       not change (after moving to <EM>y</EM>, <EM>x</EM>, if specified). The  four
-       routines with <EM>n</EM> as the last argument insert a leading sub-
-       string of at most <EM>n</EM> characters.  If <EM>n</EM>&lt;=0, then the  entire
-       string is inserted.
+       not change (after moving to  <EM>y</EM>,  <EM>x</EM>,  if  specified).   The
+       functions  with  <EM>n</EM>  as  the last argument insert a leading
+       substring of at most <EM>n</EM>  characters.   If  <EM>n</EM>&lt;=0,  then  the
+       entire string is inserted.
 
-       If  a  character in <EM>str</EM> is a tab, newline, carriage return
-       or backspace, the cursor is moved appropriately within the
-       window.   A  newline  also  does a <STRONG>clrtoeol</STRONG> before moving.
-       Tabs are considered to be at every eighth  column.   If  a
-       character in <EM>str</EM> is another control character, it is drawn
-       in the <STRONG>^</STRONG><EM>X</EM> notation.  Calling <STRONG>winch</STRONG> after adding a  control
-       character (and moving to it, if necessary) does not return
-       the control character, but instead returns a character  in
-       the ^-representation of the control character.
+       Special characters are handled as in <STRONG>addch</STRONG>.
 
 
 </PRE>
@@ -95,6 +87,10 @@
        ure and OK (SVr4 specifies only "an  integer  value  other
        than  <STRONG>ERR</STRONG>")  upon  successful completion, unless otherwise
        noted in the preceding routine descriptions.
+
+       X/Open defines no error conditions.  In  this  implementa-
+       tion, if the window parameter is null or the str parameter
+       is null, an error is returned.
 
 
 </PRE>
@@ -105,20 +101,22 @@
 </PRE>
 <H2>PORTABILITY</H2><PRE>
        These functions are described in the XSI Curses  standard,
-       Issue  4,  which  adds  const qualifiers to the arguments.
-       The XSI Curses error  conditions  <STRONG>EILSEQ</STRONG>  and  <STRONG>EILOVERFLOW</STRONG>
-       associated  with  extended-level  conformance  are not yet
-       detected (this implementation does not  yet  support  XPG4
-       multibyte characters).
+       Issue 4, which adds const qualifiers to the arguments.
+
+       The  Single  Unix  Specification,  Version  2  states that
+       <STRONG>insnstr</STRONG> and <STRONG>winsnstr</STRONG> perform wrapping.  This  is  probably
+       an error, since it makes this group of functions inconsis-
+       tent.  Also, no implementation of  curses  documents  this
+       inconsistency.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_clear.3x.html">curs_clear(3x)</A></STRONG>, <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="unctrl.3x.html">unctrl(3x)</A></STRONG>, <STRONG><A HREF="curs_clear.3x.html">curs_clear(3x)</A></STRONG>, <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>.
 
 
 
-                                                  <STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>
+                                                        <STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2002,2005 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,13 +27,40 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 2002                        *
+ *  Author: Thomas E. Dickey                    2002,2005                   *
  ****************************************************************************/
 /* LINTLIBRARY */
 
-/* ./fld_arg.c */
+/* ./f_trace.c */
 
 #include "form.priv.h"
+
+#undef _nc_retrace_field_ptr
+FIELD	**_nc_retrace_field_ptr(
+		FIELD	**code)
+		{ return(*(FIELD ***)0); }
+
+#undef _nc_retrace_field
+FIELD	*_nc_retrace_field(
+		FIELD	*code)
+		{ return(*(FIELD **)0); }
+
+#undef _nc_retrace_field_type
+FIELDTYPE *_nc_retrace_field_type(
+		FIELDTYPE *code)
+		{ return(*(FIELDTYPE **)0); }
+
+#undef _nc_retrace_form
+FORM	*_nc_retrace_form(
+		FORM	*code)
+		{ return(*(FORM **)0); }
+
+#undef _nc_retrace_form_hook
+Form_Hook _nc_retrace_form_hook(
+		Form_Hook code)
+		{ return(*(Form_Hook *)0); }
+
+/* ./fld_arg.c */
 
 #undef set_fieldtype_arg
 int	set_fieldtype_arg(
@@ -441,10 +468,12 @@ int	_nc_Set_Form_Page(
 		FIELD	*field)
 		{ return(*(int *)0); }
 
-typedef struct {
-  int keycode;           
-  int (*cmd)(FORM *);    
-} Binding_Info;
+typedef struct
+{
+  int keycode; 
+  int (*cmd) (FORM *); 
+}
+Binding_Info;
 
 #undef form_driver
 int	form_driver(
@@ -464,6 +493,12 @@ char	*field_buffer(
 		const FIELD *field, 
 		int	buffer)
 		{ return(*(char **)0); }
+
+#undef _nc_Widen_String
+wchar_t	*_nc_Widen_String(
+		char	*source, 
+		int	*lengthp)
+		{ return(*(wchar_t **)0); }
 
 /* ./frm_hook.c */
 
@@ -623,41 +658,49 @@ WINDOW	*form_win(
 
 /* ./fty_alnum.c */
 
-typedef struct {
-  int width;
-} alnumARG;
+typedef struct
+  {
+    int width;
+  }
+alnumARG;
 
 #undef TYPE_ALNUM
 FIELDTYPE *TYPE_ALNUM;
 
 /* ./fty_alpha.c */
 
-typedef struct {
-  int width;
-} alphaARG;
+typedef struct
+  {
+    int width;
+  }
+alphaARG;
 
 #undef TYPE_ALPHA
 FIELDTYPE *TYPE_ALPHA;
 
 /* ./fty_enum.c */
 
-typedef struct {
-  char **kwds;
-  int  count;
-  NCURSES_BOOL  checkcase;
-  NCURSES_BOOL  checkunique;
-} enumARG;
+typedef struct
+  {
+    char **kwds;
+    int count;
+    NCURSES_BOOL checkcase;
+    NCURSES_BOOL checkunique;
+  }
+enumARG;
 
 #undef TYPE_ENUM
 FIELDTYPE *TYPE_ENUM;
 
 /* ./fty_int.c */
 
-typedef struct {
-  int precision;
-  long low;
-  long high;
-} integerARG;
+typedef struct
+  {
+    int precision;
+    long low;
+    long high;
+  }
+integerARG;
 
 #undef TYPE_INTEGER
 FIELDTYPE *TYPE_INTEGER;
@@ -668,12 +711,16 @@ FIELDTYPE *TYPE_IPV4;
 
 /* ./fty_num.c */
 
-typedef struct {
-  int    precision;
-  double low;
-  double high;
-  struct lconv* L;
-} numericARG;
+#include <locale.h>
+
+typedef struct
+  {
+    int precision;
+    double low;
+    double high;
+    struct lconv *L;
+  }
+numericARG;
 
 #undef TYPE_NUMERIC
 FIELDTYPE *TYPE_NUMERIC;
@@ -683,10 +730,11 @@ FIELDTYPE *TYPE_NUMERIC;
 #include <regex.h>
 
 typedef struct
-{
-  regex_t *pRegExp;
-  unsigned long *refCount;
-} RegExp_Arg;
+  {
+    regex_t *pRegExp;
+    unsigned long *refCount;
+  }
+RegExp_Arg;
 
 #undef TYPE_REGEXP
 FIELDTYPE *TYPE_REGEXP;

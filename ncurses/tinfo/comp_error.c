@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -40,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_error.c,v 1.25 2002/09/07 20:05:07 tom Exp $")
+MODULE_ID("$Id: comp_error.c,v 1.29 2005/08/20 19:22:36 tom Exp $")
 
 NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings = FALSE;
 NCURSES_EXPORT_VAR(int) _nc_curr_line = 0; /* current line # in input */
@@ -48,6 +49,12 @@ NCURSES_EXPORT_VAR(int) _nc_curr_col = 0; /* current column # in input */
 
 static const char *sourcename;
 static char *termtype;
+
+NCURSES_EXPORT(const char *)
+_nc_get_source(void)
+{
+    return sourcename;
+}
 
 NCURSES_EXPORT(void)
 _nc_set_source(const char *const name)
@@ -70,7 +77,14 @@ _nc_set_type(const char *const name)
 NCURSES_EXPORT(void)
 _nc_get_type(char *name)
 {
-    strcpy(name, termtype != 0 ? termtype : "");
+#if NO_LEAKS
+    if (name == 0 && termtype != 0) {
+	FreeAndNull(termtype);
+	return;
+    }
+#endif
+    if (name != 0)
+	strcpy(name, termtype != 0 ? termtype : "");
 }
 
 static inline void

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2004 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,12 +29,13 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 #include <curses.priv.h>
 #include <term.h>		/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.25 2002/12/28 16:26:46 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.27 2004/10/16 15:42:40 tom Exp $")
 
 #if BROKEN_LINKER
 NCURSES_EXPORT_VAR(chtype *)
@@ -70,6 +71,7 @@ _nc_init_acs(void)
 	for (j = 1; j < ACS_LEN; ++j) {
 	    real_map[j] = 0;
 	    fake_map[j] = A_ALTCHARSET | j;
+	    SP->_screen_acs_map[j] = FALSE;
 	}
     } else {
 	for (j = 1; j < ACS_LEN; ++j) {
@@ -119,6 +121,9 @@ _nc_init_acs(void)
     if (_nc_unicode_locale() && _nc_locale_breaks_acs()) {
 	acs_chars = NULL;
 	ena_acs = NULL;
+	enter_alt_charset_mode = NULL;
+	exit_alt_charset_mode = NULL;
+	set_attributes = NULL;
     }
 #endif
 
@@ -134,6 +139,8 @@ _nc_init_acs(void)
 	while (i + 1 < length) {
 	    if (acs_chars[i] != 0 && UChar(acs_chars[i]) < ACS_LEN) {
 		real_map[UChar(acs_chars[i])] = UChar(acs_chars[i + 1]) | A_ALTCHARSET;
+		if (SP != 0)
+		    SP->_screen_acs_map[UChar(acs_chars[i])] = TRUE;
 	    }
 	    i += 2;
 	}
@@ -152,6 +159,10 @@ _nc_init_acs(void)
 	    }
 	}
 	show[m] = 0;
+	if (acs_chars == NULL || strcmp(acs_chars, show))
+	    _tracef("%s acs_chars %s",
+		    (acs_chars == NULL) ? "NULL" : "READ",
+		    _nc_visbuf(acs_chars));
 	_tracef("%s acs_chars %s",
 		(acs_chars == NULL)
 		? "NULL"
