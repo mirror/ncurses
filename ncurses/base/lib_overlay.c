@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_overlay.c,v 1.21 2002/09/21 23:03:32 tom Exp $")
+MODULE_ID("$Id: lib_overlay.c,v 1.22 2006/10/14 20:43:31 tom Exp $")
 
 static int
 overlap(const WINDOW *const s, WINDOW *const d, int const flag)
@@ -56,10 +56,16 @@ overlap(const WINDOW *const s, WINDOW *const d, int const flag)
     if (s == 0 || d == 0) {
 	returnCode(ERR);
     } else {
-	T(("src : begy %d, begx %d, maxy %d, maxx %d",
-	   s->_begy, s->_begx, s->_maxy, s->_maxx));
-	T(("dst : begy %d, begx %d, maxy %d, maxx %d",
-	   d->_begy, d->_begx, d->_maxy, d->_maxx));
+	T(("src : begy %ld, begx %ld, maxy %ld, maxx %ld",
+	   (long) s->_begy,
+	   (long) s->_begx,
+	   (long) s->_maxy,
+	   (long) s->_maxx));
+	T(("dst : begy %ld, begx %ld, maxy %ld, maxx %ld",
+	   (long) d->_begy,
+	   (long) d->_begx,
+	   (long) d->_maxy,
+	   (long) d->_maxx));
 
 	sx1 = s->_begx;
 	sy1 = s->_begy;

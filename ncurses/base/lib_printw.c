@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_printw.c,v 1.16 2005/06/11 19:30:51 tom Exp $")
+MODULE_ID("$Id: lib_printw.c,v 1.18 2006/12/17 19:21:39 tom Exp $")
 
 NCURSES_EXPORT(int)
 printw(const char *fmt,...)

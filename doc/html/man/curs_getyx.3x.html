@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2003,2006 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getyx.3x,v 1.10 2003/05/10 20:33:49 jmc Exp @
+  * @Id: curs_getyx.3x,v 1.13 2006/05/27 20:28:05 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -91,12 +91,15 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The  <STRONG>getyx</STRONG>,  <STRONG>getparyx</STRONG>, <STRONG>getbegyx</STRONG> and <STRONG>getmaxyx</STRONG> functions are
+       The  <STRONG>getyx</STRONG>,  <STRONG>getparyx</STRONG>,  <STRONG>getbegyx</STRONG>  and  <STRONG>getmaxyx</STRONG> macros are
        described in the XSI Curses standard, Issue 4.
 
        This  implementation  also  provides   <STRONG>getbegx</STRONG>,   <STRONG>getbegy</STRONG>,
        <STRONG>getcurx</STRONG>,  <STRONG>getcury</STRONG>,  <STRONG>getmaxx</STRONG>,  <STRONG>getmaxy</STRONG>, <STRONG>getparx</STRONG> and <STRONG>getpary</STRONG>
-       for compatibility with older versions of curses.
+       for compatibility with older versions of  curses.   X/Open
+       does  not define a corresponding <STRONG>getcuryx</STRONG> function, though
+       that would be needed to  make  references  to  the  WINDOW
+       structure opaque.
 
 
 </PRE>

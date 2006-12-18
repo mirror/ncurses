@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,11 +40,11 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.17 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2004/08/21 21:37:00 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.18 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2006/06/25 14:24:40 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_42_40" HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A></FONT> <b>is</b>
+<b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_42_40" HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A></FONT> <b>is</b>
 
    <FONT COLOR=red><A NAME="ref_44_4">Default_Window</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_58_4">Null_Window</A>;
 
@@ -133,7 +133,7 @@
    <b>is</b>
       <FONT COLOR=red><A NAME="ref_129_7">P_Size</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_47_12">Count</A> := <A HREF="terminal_interface-curses-text_io__ads.htm#ref_80_13">Page_Length</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#ref_86_24">Win</A>);
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_86_41">Spacing</A> <b>not</b> <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_48_12">Positive_Count</A> <b>then</b>
+      <b>if</b> <b>not</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_86_41">Spacing</A>'Valid <b>then</b>
          <b>raise</b> Constraint_Error;
       <b>end</b> <b>if</b>;
 
@@ -171,7 +171,7 @@
       <FONT COLOR=red><A NAME="ref_166_7">X2</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
       <FONT COLOR=red><A NAME="ref_167_7">N</A></FONT>  : Natural;
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_92_41">To</A> <b>not</b> <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_48_12">Positive_Count</A> <b>then</b>
+      <b>if</b> <b>not</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_92_41">To</A>'Valid <b>then</b>
          <b>raise</b> Constraint_Error;
       <b>end</b> <b>if</b>;
 
@@ -205,7 +205,7 @@
       <FONT COLOR=red><A NAME="ref_200_7">X</A></FONT>  : <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
       <FONT COLOR=red><A NAME="ref_201_7">N</A></FONT>  : Natural;
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_95_41">To</A> <b>not</b> <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_48_12">Positive_Count</A> <b>then</b>
+      <b>if</b> <b>not</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_95_41">To</A>'Valid <b>then</b>
          <b>raise</b> Constraint_Error;
       <b>end</b> <b>if</b>;
 
@@ -339,5 +339,5 @@
       <A HREF="terminal_interface-curses-text_io__ads.htm#ref_118_14">Put_Line</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#ref_62_13">Get_Window</A>, <A HREF="terminal_interface-curses-text_io__ads.htm#ref_123_7">Item</A>);
    <b>end</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_122_14">Put_Line</A>;
 
-<b>end</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A>;
+<b>end</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A>;
 </PRE></BODY></HTML>

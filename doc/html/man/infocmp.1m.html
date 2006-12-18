@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.39 2004/08/28 22:43:49 tom Exp @
+  * @Id: infocmp.1m,v 1.43 2006/05/13 15:14:01 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -53,7 +53,7 @@
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <STRONG>infocmp</STRONG> [<STRONG>-1CEFGILTVcdegilnpqrtux</STRONG>]
+       <STRONG>infocmp</STRONG> [<STRONG>-1CEFGILTUVcdegilnpqrtux</STRONG>]
              [<STRONG>-v</STRONG> <EM>n</EM>] [<STRONG>-s</STRONG> <STRONG>d</STRONG>| <STRONG>i</STRONG>| <STRONG>l</STRONG>| <STRONG>c</STRONG>] [<STRONG>-R</STRONG> <STRONG>subset</STRONG>]
              [<STRONG>-w</STRONG> <EM>width</EM>] [<STRONG>-A</STRONG> <EM>directory</EM>] [<STRONG>-B</STRONG> <EM>directory</EM>]
              [<EM>termname</EM>...]
@@ -103,7 +103,6 @@
        The <STRONG>-I</STRONG>, <STRONG>-L</STRONG>, and <STRONG>-C</STRONG> options will produce a  source  listing
        for each terminal named.
 
-
       <STRONG>-I</STRONG>   use the <STRONG>terminfo</STRONG> names
       <STRONG>-L</STRONG>   use the long C variable name listed in &lt;<STRONG>term.h</STRONG>&gt;
       <STRONG>-C</STRONG>   use the <STRONG>termcap</STRONG> names
@@ -144,7 +143,6 @@
        Some  common  <STRONG>terminfo</STRONG>  parameter sequences, their <STRONG>termcap</STRONG>
        equivalents, and some terminal types which  commonly  have
        such sequences, are:
-
 
      <STRONG>terminfo</STRONG>                    <STRONG>termcap</STRONG>   Representative Terminals
      ---------------------------------------------------------------
@@ -280,8 +278,7 @@
             the capability string with sections  matching  recog-
             nized  actions  translated into {}-bracketed descrip-
             tions.  Here  is  a  list  of  the  DEC/ANSI  special
-            sequences recognized:
-
+            sequences recognized: i.
 
                   Action        Meaning
                   -----------------------------------------
@@ -290,30 +287,30 @@
                   RC            restore cursor
                   LL            home-down
                   RSR           reset scroll region
-
+                  -----------------------------------------
                   DECSTR        soft reset (VT320)
                   S7C1T         7-bit controls (VT220)
-
+                  -----------------------------------------
                   ISO DEC G0    enable DEC graphics for G0
                   ISO UK G0     enable UK chars for G0
                   ISO US G0     enable US chars for G0
                   ISO DEC G1    enable DEC graphics for G1
                   ISO UK G1     enable UK chars for G1
                   ISO US G1     enable US chars for G1
-
+                  -----------------------------------------
                   DECPAM        application keypad mode
                   DECPNM        normal keypad mode
                   DECANSI       enter ANSI mode
-
+                  -----------------------------------------
                   ECMA[+-]AM    keyboard action mode
                   ECMA[+-]IRM   insert replace mode
                   ECMA[+-]SRM   send receive mode
                   ECMA[+-]LNM   linefeed mode
-
+                  -----------------------------------------
                   DEC[+-]CKM    application cursor keys
                   DEC[+-]ANM    set VT52 mode
-
                   DEC[+-]COLM   132-column mode
+
                   DEC[+-]SCLM   smooth scroll
                   DEC[+-]SCNM   reverse video mode
                   DEC[+-]OM     origin mode
@@ -326,8 +323,8 @@
             All but NORMAL may be prefixed with `+' (turn on)  or
             `-' (turn off).
 
-            An   SGR0  designates  an  empty  highlight  sequence
-            (equivalent to {SGR:NORMAL}).
+       An SGR0 designates an empty highlight sequence (equivalent
+       to {SGR:NORMAL}).
 
        <STRONG>-l</STRONG>   Set output format to terminfo.
 
@@ -378,6 +375,12 @@
             Normally  when  translating from terminfo to termcap,
             untranslatable capabilities are commented-out.
 
+       <STRONG>-U</STRONG>   tells <STRONG>infocmp</STRONG> to  not  post-process  the  data  after
+            parsing  the  source  file.   This feature helps when
+            comparing the actual contents of  two  source  files,
+            since  it  excludes the inferences that <STRONG>infocmp</STRONG> makes
+            to fill in missing data.
+
        <STRONG>-V</STRONG>   reports the version of ncurses which was used in this
             program, and exits.
 
@@ -417,8 +420,10 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,    <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,
-       <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
+       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,    <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,     <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,     <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
+
+       This describes <STRONG>ncurses</STRONG> version 5.5 (patch 20061209).
 
 
 </PRE>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2000,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <term_entry.h>
 
-MODULE_ID("$Id: init_keytry.c,v 1.7 2005/04/30 19:32:03 tom Exp $")
+MODULE_ID("$Id: init_keytry.c,v 1.8 2006/01/21 23:43:28 tom Exp $")
 
 /*
 **      _nc_init_keytry()
@@ -90,7 +90,7 @@ _nc_init_keytry(void)
 	{
 	    TERMTYPE *tp = &(SP->_term->type);
 	    for (n = STRCOUNT; n < NUM_STRINGS(tp); ++n) {
-		char *name = ExtStrname(tp, n, strnames);
+		const char *name = ExtStrname(tp, n, strnames);
 		char *value = tp->Strings[n];
 		if (name != 0
 		    && *name == 'k'

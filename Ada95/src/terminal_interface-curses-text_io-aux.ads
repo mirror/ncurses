@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.12 $
+--  $Revision: 1.13 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 private package Terminal_Interface.Curses.Text_IO.Aux is
@@ -52,4 +53,3 @@ private package Terminal_Interface.Curses.Text_IO.Aux is
       Ljust  : in Boolean := False);    -- The Buf is left justified
 
 end Terminal_Interface.Curses.Text_IO.Aux;
-

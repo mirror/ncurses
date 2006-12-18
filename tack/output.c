@@ -23,7 +23,7 @@
 #include <tack.h>
 #include <time.h>
 
-MODULE_ID("$Id: output.c,v 1.10 2005/09/17 19:49:16 tom Exp $")
+MODULE_ID("$Id: output.c,v 1.11 2006/11/26 00:16:49 tom Exp $")
 
 /* globals */
 long char_sent;			/* number of characters sent */
@@ -216,7 +216,7 @@ tt_putparm(
 				break;
 			}
 		}
-		(void) tputs(tparm((NCURSES_CONST char *)string, arg1, arg2), reps, tc_putch);
+		(void) tputs(TPARM_2((NCURSES_CONST char *)string, arg1, arg2), reps, tc_putch);
 	}
 }
 
@@ -506,10 +506,10 @@ expand(const char *s)
 		for (; (ch = *s); s++) {
 			if ((ch & 0x80) && v) {	/* print it in reverse video
 						   mode */
-				strcpy(t, liberated(tparm(v)));
+				strcpy(t, liberated(TPARM_0(v)));
 				for (; *t; t++);
 				expand_one(ch & 0x7f, &t);
-				strcpy(t, liberated(tparm(exit_attribute_mode)));
+				strcpy(t, liberated(TPARM_0(exit_attribute_mode)));
 				for (; *t; t++);
 			} else {
 				expand_one(ch, &t);

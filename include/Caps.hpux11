@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 2002,2003 Free Software Foundation, Inc.                     #
+# Copyright (c) 2002-2003,2006 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 # Author: Thomas Dickey
 #
-# $Id: Caps.hpux11,v 1.3 2003/11/15 20:27:40 tom Exp $
+# $Id: Caps.hpux11,v 1.4 2006/05/27 15:33:04 tom Exp $
 #
 # This is an adaptation of ncurses' termcap/terminfo capability table, which
 # is designed to align with HPUX 11.x's terminfo.
@@ -473,8 +473,8 @@ prtr_non			mc5p	str	pO	-		-	-B-G-*	turn on printer for #1 bytes
 # SVr4 up to this point, but has a different set afterwards.
 #
 # HPUX defines these if __HP_CURSES_COMPAT is defined:
-memory_lock			meml	str	ml	-		-	----K	memory lock above
-memory_unlock			memu	str	mu	-		-	----K	memory unlock
+memory_lock			meml	str	ml	-		-	----K	lock memory above cursor
+memory_unlock			memu	str	mu	-		-	----K	unlock memory
 #
 #
 plab_norm			pln	str	pn	-		-	-----	program label #1 to show string #2

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.14 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.16 $
+--  $Date: 2006/06/25 14:30:22 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Calendar; use Ada.Calendar;
@@ -66,7 +66,6 @@ package body Sample.Header_Handler is
    pragma Convention (C, Init_Header_Window);
 
    procedure Internal_Update_Header_Window (Do_Update : in Boolean);
-
 
    --  The initialization must be called before Init_Screen. It steals two
    --  lines from the top of the screen.

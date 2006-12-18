@@ -1,5 +1,32 @@
+/****************************************************************************
+ * Copyright (c) 2002-2005,2006 Free Software Foundation, Inc.              *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.13 2004/01/04 00:01:13 tom Exp $
+ * $Id: demo_defkey.c,v 1.16 2006/04/01 19:08:03 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -8,8 +35,6 @@
 #include <test.priv.h>
 
 #if defined(NCURSES_VERSION) && NCURSES_EXT_FUNCS
-
-#include <term.h>
 
 #define MY_LOGFILE "demo_defkey.log"
 
@@ -24,9 +49,12 @@ log_last_line(WINDOW *win)
     char temp[256];
 
     if ((fp = fopen(MY_LOGFILE, "a")) != 0) {
+	int need = sizeof(temp) - 1;
+	if (need > COLS)
+	    need = COLS;
 	getyx(win, y, x);
 	wmove(win, y - 1, 0);
-	n = winnstr(win, temp, sizeof(temp));
+	n = winnstr(win, temp, need);
 	while (n-- > 0) {
 	    if (isspace(UChar(temp[n])))
 		temp[n] = '\0';
@@ -120,6 +148,8 @@ really_define_key(WINDOW *win, const char *new_string, int code)
 	vis_string = 0;
     }
 
+    if (vis_string != 0)
+	free(vis_string);
     vis_string = visible(new_string);
     if ((rc = key_defined(new_string)) > 0) {
 	wprintw(win, "%s was bound to %s\n", vis_string, keyname(rc));
@@ -141,7 +171,7 @@ really_define_key(WINDOW *win, const char *new_string, int code)
 	wprintw(win, "%s deleted\n", code_name);
 	log_last_line(win);
     }
-    if (vis_string != 0 && *vis_string != 0)
+    if (vis_string != 0)
 	free(vis_string);
     if (old_string != 0)
 	free(old_string);
@@ -236,9 +266,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 		name != 0 ? name : "<null>");
 	log_last_line(win);
 	wclrtoeol(win);
+	if (ch == 'q')
+	    break;
     }
     endwin();
-    return EXIT_SUCCESS;
+    ExitProgram(EXIT_FAILURE);
 }
 #else
 int

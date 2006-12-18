@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,9 +29,11 @@
 /*
  * Author:  Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: filter.c,v 1.8 2004/06/05 21:57:30 tom Exp $
+ * $Id: filter.c,v 1.11 2006/12/09 16:53:47 tom Exp $
  */
 #include <test.priv.h>
+
+#if HAVE_FILTER
 
 /*
  * An example of the 'filter()' function in ncurses, this program prompts
@@ -54,6 +56,21 @@ new_command(char *buffer, int length, attr_t underline)
     printw("Command: ");
     attron(underline);
     code = getnstr(buffer, length);
+    /*
+     * If this returns anything except ERR/OK, it would be one of ncurses's
+     * extensions.  Fill the buffer with something harmless that the shell
+     * will execute as a comment.
+     */
+#ifdef KEY_EVENT
+    if (code == KEY_EVENT)
+	strcpy(buffer, "# event!");
+#endif
+#ifdef KEY_RESIZE
+    if (code == KEY_RESIZE) {
+	strcpy(buffer, "# resize!");
+	getch();
+    }
+#endif
     attroff(underline);
     attroff(A_BOLD);
     printw("\n");
@@ -103,3 +120,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(void)
+{
+    printf("This program requires the filter function\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif /* HAVE_FILTER */

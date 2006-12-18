@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,15 +35,14 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.5 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.6 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
-with Terminal_Interface.Curses; use Terminal_Interface.Curses;
+with Terminal_Interface.Curses;
 
 with Ada.Text_IO;
 
-with Terminal_Interface.Curses; use Terminal_Interface.Curses;
 pragma Warnings (Off);
 with Terminal_Interface.Curses.Aux;
 pragma Warnings (On);
@@ -58,7 +57,6 @@ with Interfaces.C.Strings;
 with Ada.Characters.Handling;
 
 with ncurses2.genericPuts;
-
 
 package body ncurses2.util is
 
@@ -111,14 +109,12 @@ package body ncurses2.util is
       end if;
    end Getchar;
 
-
    procedure Pause is
    begin
       Move_Cursor (Line => Lines - 1, Column => 0);
       Add (Str => "Press any key to continue... ");
       Getchar;
    end Pause;
-
 
    procedure Cannot (s : String) is
       use Interfaces.C;
@@ -163,8 +159,6 @@ package body ncurses2.util is
       Refresh;
    end ShellOut;
 
-
-
    function Is_Digit (c : Key_Code) return Boolean is
    begin
       if c >= 16#100# then
@@ -179,7 +173,6 @@ package body ncurses2.util is
       Add (Str => s);
       Add (Ch => newl);
    end P;
-
 
    function Code_To_Char (c : Key_Code) return Character is
    begin

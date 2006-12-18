@@ -19,7 +19,7 @@
 ** Boston, MA 02110-1301, USA
 */
 
-/* $Id: tack.h,v 1.14 2005/09/17 19:49:16 tom Exp $ */
+/* $Id: tack.h,v 1.16 2006/11/25 23:45:00 tom Exp $ */
 
 #ifndef NCURSES_TACK_H_incl
 #define NCURSES_TACK_H_incl 1
@@ -48,6 +48,7 @@
 
 #include <curses.h>
 #include <term_entry.h>
+#include <nc_tparm.h>
 
 #if USE_RCS_IDS
 #define MODULE_ID(id) static const char Ident[] = id;
@@ -59,6 +60,10 @@
 extern char *_nc_strstr(const char *, const char *);
 #define strstr(h,n) _nc_strstr(h,n)
 #endif
+
+#define CUR_TP      (&(cur_term->type))
+#define MAX_STRINGS NUM_STRINGS(CUR_TP)
+#define STR_NAME(n) ExtStrname(CUR_TP,n,strnames)
 
 #define UChar(c)    ((unsigned char)(c))
 

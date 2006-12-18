@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -65,7 +65,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.44 2005/01/22 22:15:44 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.46 2006/01/21 23:39:40 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 
@@ -109,11 +109,47 @@ vidputs(chtype newmode, int (*outc) (int))
 
     TR(TRACE_ATTRS, ("previous attribute was %s", _traceattr(previous_attr)));
 
-#if !USE_XMC_SUPPORT
     if ((SP != 0)
-	&& (magic_cookie_glitch > 0))
+	&& (magic_cookie_glitch > 0)) {
+#if USE_XMC_SUPPORT
+	static chtype table[] =
+	{
+	    A_STANDOUT,
+	    A_UNDERLINE,
+	    A_REVERSE,
+	    A_BLINK,
+	    A_DIM,
+	    A_BOLD,
+	    A_INVIS,
+	    A_PROTECT,
+	};
+	unsigned n;
+	int used = 0;
+	int limit = (max_attributes <= 0) ? 1 : max_attributes;
+	chtype retain = 0;
+
+	/*
+	 * Limit the number of attribute bits set in the newmode according to
+	 * the terminfo max_attributes value.
+	 */
+	for (n = 0; n < SIZEOF(table); ++n) {
+	    if ((table[n] & SP->_ok_attributes) == 0) {
+		newmode &= ~table[n];
+	    } else if ((table[n] & newmode) != 0) {
+		if (used++ >= limit) {
+		    newmode &= ~table[n];
+		    if (newmode == retain)
+			break;
+		} else {
+		    retain = newmode;
+		}
+	    }
+	}
+#else
 	newmode &= ~(SP->_xmc_suppress);
 #endif
+	TR(TRACE_ATTRS, ("suppressed attribute is %s", _traceattr(newmode)));
+    }
 
     /*
      * If we have a terminal that cannot combine color with video

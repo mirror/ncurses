@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997                   *
+ *  Author: Thomas E. Dickey                    1996,1997                   *
  ****************************************************************************/
 
 #include <curses.priv.h>
@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.33 2005/06/04 22:34:01 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.38 2006/12/02 22:36:43 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -51,6 +51,7 @@ _nc_freeall(void)
 {
     WINDOWLIST *p, *q;
     char *s;
+    static va_list empty_va;
 
     T((T_CALLED("_nc_freeall()")));
 #if NO_LEAKS
@@ -82,7 +83,9 @@ _nc_freeall(void)
 	}
 	delscreen(SP);
     }
-
+#if NO_LEAKS
+    _nc_tgetent_leaks();
+#endif
     del_curterm(cur_term);
     _nc_free_entries(_nc_head);
     _nc_get_type(0);
@@ -94,12 +97,14 @@ _nc_freeall(void)
     _nc_alloc_entry_leaks();
     _nc_captoinfo_leaks();
     _nc_comp_scan_leaks();
+    _nc_keyname_leaks();
+    _nc_tic_expand(0, FALSE, 0);
 #endif
 
     if ((s = _nc_home_terminfo()) != 0)
 	free(s);
 
-    (void) _nc_printf_string(0, 0);
+    (void) _nc_printf_string(0, empty_va);
 #ifdef TRACE
     (void) _nc_trace_buf(-1, 0);
 #endif

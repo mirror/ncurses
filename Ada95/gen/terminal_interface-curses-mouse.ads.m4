@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,8 +38,8 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.25 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.27 $
+--  $Date: 2006/06/25 14:30:22 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Mouse_Base_Defs')
@@ -176,7 +176,6 @@ include(`Mouse_Event_Rep')
    --  This constant may be different on your system.
 
 include(`Mouse_Events')
-
    No_Events  : constant Event_Mask := 0;
    All_Events : constant Event_Mask := ALL_MOUSE_EVENTS;
 

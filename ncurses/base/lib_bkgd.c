@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.32 2005/04/16 18:03:48 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.35 2006/05/27 19:20:11 tom Exp $")
 
 /*
  * Set the window's background information.
@@ -44,7 +44,7 @@ MODULE_ID("$Id: lib_bkgd.c,v 1.32 2005/04/16 18:03:48 tom Exp $")
 #if USE_WIDEC_SUPPORT
 NCURSES_EXPORT(void)
 #else
-static inline void
+static NCURSES_INLINE void
 #endif
 wbkgrndset(WINDOW *win, const ARG_CH_T ch)
 {
@@ -54,8 +54,8 @@ wbkgrndset(WINDOW *win, const ARG_CH_T ch)
 	attr_t off = AttrOf(win->_nc_bkgd);
 	attr_t on = AttrOf(CHDEREF(ch));
 
-	toggle_attr_off(win->_attrs, off);
-	toggle_attr_on(win->_attrs, on);
+	toggle_attr_off(WINDOW_ATTRS(win), off);
+	toggle_attr_on(WINDOW_ATTRS(win), on);
 
 #if NCURSES_EXT_COLORS
 	{
@@ -111,7 +111,7 @@ wbkgdset(WINDOW *win, chtype ch)
 #if USE_WIDEC_SUPPORT
 NCURSES_EXPORT(int)
 #else
-static inline int
+static NCURSES_INLINE int
 #undef wbkgrnd
 #endif
 wbkgrnd(WINDOW *win, const ARG_CH_T ch)
@@ -131,11 +131,11 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 
 	for (y = 0; y <= win->_maxy; y++) {
 	    for (x = 0; x <= win->_maxx; x++) {
-		if (CharEq(win->_line[y].text[x], old_bkgrnd))
+		if (CharEq(win->_line[y].text[x], old_bkgrnd)) {
 		    win->_line[y].text[x] = win->_nc_bkgd;
-		else {
+		} else {
 		    NCURSES_CH_T wch = win->_line[y].text[x];
-		    RemAttr(wch, (~A_ALTCHARSET));
+		    RemAttr(wch, (~(A_ALTCHARSET | A_CHARTEXT)));
 		    win->_line[y].text[x] = _nc_render(win, wch);
 		}
 	    }

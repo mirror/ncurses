@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_data.c,v 1.13 2004/12/11 22:29:28 tom Exp $")
+MODULE_ID("$Id: frm_data.c,v 1.14 2005/11/26 15:34:01 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -80,7 +80,7 @@ data_behind(const FORM *form)
 |
 |   Return Values :  true if only padding cells are found
 +--------------------------------------------------------------------------*/
-INLINE static bool
+NCURSES_INLINE static bool
 Only_Padding(WINDOW *w, int len, int pad)
 {
   bool result = TRUE;

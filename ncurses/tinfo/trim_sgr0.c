@@ -37,7 +37,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: trim_sgr0.c,v 1.5 2005/07/17 00:13:24 tom Exp $")
+MODULE_ID("$Id: trim_sgr0.c,v 1.7 2006/12/02 19:37:57 tom Exp $")
 
 #undef CUR
 #define CUR tp->
@@ -83,7 +83,7 @@ skip_delay(const char *s)
 {
     if (s[0] == '$' && s[1] == '<') {
 	s += 2;
-	while ((*s != '\0') && (isdigit(*s) || *s == '/'))
+	while (isdigit(UChar(*s)) || *s == '/')
 	    ++s;
 	if (*s == '>')
 	    ++s;

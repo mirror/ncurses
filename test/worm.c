@@ -1,3 +1,30 @@
+/****************************************************************************
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 /*
 
 	 @@@        @@@    @@@@@@@@@@     @@@@@@@@@@@    @@@@@@@@@@@@
@@ -34,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.39 2005/08/20 20:26:29 tom Exp $
+  $Id: worm.c,v 1.41 2006/07/01 22:57:24 tom Exp $
 */
 
 #include <test.priv.h>
@@ -184,6 +211,7 @@ main(int argc, char *argv[])
     int h;
     short *ip;
     int last, bottom;
+    bool done = FALSE;
 
     setlocale(LC_ALL, "");
 
@@ -316,7 +344,7 @@ main(int argc, char *argv[])
     nodelay(stdscr, TRUE);
 #endif
 
-    for (;;) {
+    while (!done) {
 #ifdef TRACE
 	if (trace_start || trace_end) {
 	    if (generation == trace_start) {
@@ -364,8 +392,8 @@ main(int argc, char *argv[])
 	     * normal operation -T.Dickey
 	     */
 	    if (ch == 'q') {
-		cleanup();
-		ExitProgram(EXIT_SUCCESS);
+		done = TRUE;
+		continue;
 	    } else if (ch == 's') {
 		nodelay(stdscr, FALSE);
 	    } else if (ch == ' ') {
@@ -406,8 +434,8 @@ main(int argc, char *argv[])
 		    (y == 0 ? upper : (y == bottom ? lower : normal))))[w->orientation];
 	    switch (op->nopts) {
 	    case 0:
-		cleanup();
-		ExitProgram(EXIT_SUCCESS);
+		done = TRUE;
+		continue;
 	    case 1:
 		w->orientation = op->opts[0];
 		break;
@@ -424,4 +452,17 @@ main(int argc, char *argv[])
 	napms(10);
 	refresh();
     }
+
+    cleanup();
+#ifdef NO_LEAKS
+    for (y = 0; y < LINES; y++) {
+	free(ref[y]);
+    }
+    free(ref);
+    for (n = number, w = &worm[0]; --n >= 0; w++) {
+	free(w->xpos);
+	free(w->ypos);
+    }
+#endif
+    ExitProgram(EXIT_SUCCESS);
 }

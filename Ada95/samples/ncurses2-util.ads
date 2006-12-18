@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.2 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
@@ -46,7 +47,6 @@ package ncurses2.util is
    Blank : constant Character := ' ';
    Blank2 : constant Attributed_Character :=
      (Ch => Blank, Attr => Normal_Video, Color => Color_Pair'First);
-
 
    newl : constant Character :=  Character'Val (10);
 
@@ -60,14 +60,11 @@ package ncurses2.util is
 
    procedure Pause;
 
-
    procedure Cannot (s : String);
 
    procedure ShellOut (message : Boolean);
 
-
    package Int_IO is new Ada.Text_IO.Integer_IO (Integer);
-
 
    function Is_Digit (c : Key_Code) return Boolean;
 
@@ -75,5 +72,5 @@ package ncurses2.util is
 
    function Code_To_Char (c : Key_Code) return Character;
    function ctoi (c : Character) return Integer;
-end ncurses2.util;
 
+end ncurses2.util;

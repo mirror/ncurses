@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_window.c,v 1.21 2002/09/14 23:28:02 tom Exp $")
+MODULE_ID("$Id: lib_window.c,v 1.22 2006/05/27 19:21:19 tom Exp $")
 
 NCURSES_EXPORT(void)
 _nc_synchook(WINDOW *win)
@@ -211,7 +211,7 @@ dupwin(WINDOW *win)
 	     * The text is really copied into the clone.
 	     */
 
-	    nwin->_attrs = win->_attrs;
+	    WINDOW_ATTRS(nwin) = WINDOW_ATTRS(win);
 	    nwin->_nc_bkgd = win->_nc_bkgd;
 
 	    nwin->_notimeout = win->_notimeout;

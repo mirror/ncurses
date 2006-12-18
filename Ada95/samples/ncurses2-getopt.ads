@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.2 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package ncurses2.getopt is
@@ -44,7 +45,6 @@ package ncurses2.getopt is
 
    type stringfunc is access
      function (n : Positive) return String;
-
 
    procedure Qgetopt (retval    : out Integer;
                       argc      : Integer;
@@ -56,4 +56,5 @@ package ncurses2.getopt is
                       Optarg    : out stringa
                         --  a garbage collector would be useful here.
                      );
+
 end ncurses2.getopt;

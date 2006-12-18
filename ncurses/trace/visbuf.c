@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,12 +36,17 @@
  *	visbuf.c - Tracing/Debugging support routines
  */
 
+#define NEED_NCURSES_CH_T
 #include <curses.priv.h>
 
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.14 2005/08/20 20:01:20 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.21 2006/12/02 21:20:28 tom Exp $")
+
+static const char d_quote[] = {D_QUOTE, 0};
+static const char l_brace[] = {L_BRACE, 0};
+static const char r_brace[] = {R_BRACE, 0};
 
 static char *
 _nc_vischar(char *tp, unsigned c)
@@ -126,8 +131,8 @@ _nc_visbufn(const char *buf, int len)
     return _nc_visbuf2n(0, buf, len);
 }
 
-#if USE_WIDEC_SUPPORT
 #ifdef TRACE
+#if USE_WIDEC_SUPPORT
 
 #if defined(USE_TERMLIB)
 #define _nc_wchstrlen _my_wchstrlen
@@ -173,7 +178,7 @@ _nc_viswbuf2n(int bufnum, const wchar_t *buf, int len)
 	    j = strlen(temp);
 	}
 	for (k = 0; k < j; ++k) {
-	    tp = _nc_vischar(tp, temp[k]);
+	    tp = _nc_vischar(tp, UChar(temp[k]));
 	}
     }
     *tp++ = D_QUOTE;
@@ -220,85 +225,87 @@ _nc_viswibuf(const wint_t *buf)
 
     return _nc_viswbuf2(0, mybuf);
 }
+#endif /* USE_WIDEC_SUPPORT */
 
+/* use these functions for displaying parts of a line within a window */
 NCURSES_EXPORT(const char *)
-_nc_viscbuf2(int bufnum, const cchar_t *buf, int len)
+_nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 {
     char *result = _nc_trace_buf(bufnum, BUFSIZ);
-    int n;
-    bool same = TRUE;
-    attr_t attr = A_NORMAL;
+    int first;
     const char *found;
 
+#if USE_WIDEC_SUPPORT
     if (len < 0)
 	len = _nc_wchstrlen(buf);
-
-    for (n = 1; n < len; n++) {
-	if (!SameAttrOf(buf[n], buf[0])) {
-	    same = FALSE;
-	    break;
-	}
-    }
+#endif /* USE_WIDEC_SUPPORT */
 
     /*
-     * If the rendition is the same for the whole string, display it as a
-     * quoted string, followed by the rendition.  Otherwise, use the more
-     * detailed trace function that displays each character separately.
+     * Display one or more strings followed by attributes.
      */
-    if (same) {
-	static const char d_quote[] =
-	{D_QUOTE, 0};
+    first = 0;
+    while (first < len) {
+	attr_t attr = AttrOf(buf[first]);
+	int last = len - 1;
+	int j;
 
+	for (j = first + 1; j < len; ++j) {
+	    if (!SameAttrOf(buf[j], buf[first])) {
+		last = j - 1;
+		break;
+	    }
+	}
+
+	result = _nc_trace_bufcat(bufnum, l_brace);
 	result = _nc_trace_bufcat(bufnum, d_quote);
-	while (len-- > 0) {
-	    if ((found = _nc_altcharset_name(attr, CharOfD(buf))) != 0) {
+	for (j = first; j <= last; ++j) {
+	    if ((found = _nc_altcharset_name(attr, (chtype) CharOf(buf[j]))) != 0) {
 		result = _nc_trace_bufcat(bufnum, found);
 		attr &= ~A_ALTCHARSET;
-	    } else if (!isWidecExt(CHDEREF(buf))) {
+	    } else
+#if USE_WIDEC_SUPPORT
+	    if (!isWidecExt(buf[j])) {
 		PUTC_DATA;
 
 		PUTC_INIT;
-		do {
-		    PUTC_ch = PUTC_i < CCHARW_MAX ? buf->chars[PUTC_i] : L'\0';
-		    PUTC_n = wcrtomb(PUTC_buf, buf->chars[PUTC_i], &PUT_st);
+		for (PUTC_i = 0; PUTC_i < CCHARW_MAX; ++PUTC_i) {
+		    int k;
+
+		    PUTC_ch = buf[j].chars[PUTC_i];
 		    if (PUTC_ch == L'\0')
-			--PUTC_n;
+			break;
+		    PUTC_n = wcrtomb(PUTC_buf, buf[j].chars[PUTC_i], &PUT_st);
 		    if (PUTC_n <= 0)
 			break;
-		    for (n = 0; n < PUTC_n; n++) {
+		    for (k = 0; k < PUTC_n; k++) {
 			char temp[80];
-			_nc_vischar(temp, UChar(PUTC_buf[n]));
+			_nc_vischar(temp, UChar(PUTC_buf[k]));
 			result = _nc_trace_bufcat(bufnum, temp);
 		    }
-		    ++PUTC_i;
-		} while (PUTC_ch != L'\0');
+		}
 	    }
-	    buf++;
+#else
+	    {
+		char temp[80];
+		_nc_vischar(temp, UChar(buf[j]));
+		result = _nc_trace_bufcat(bufnum, temp);
+	    }
+#endif /* USE_WIDEC_SUPPORT */
 	}
 	result = _nc_trace_bufcat(bufnum, d_quote);
 	if (attr != A_NORMAL) {
 	    result = _nc_trace_bufcat(bufnum, " | ");
 	    result = _nc_trace_bufcat(bufnum, _traceattr2(bufnum + 20, attr));
 	}
-    } else {
-	static const char l_brace[] =
-	{L_BRACE, 0};
-	static const char r_brace[] =
-	{R_BRACE, 0};
-	strcpy(result, l_brace);
-	while (len-- > 0) {
-	    result = _nc_trace_bufcat(bufnum,
-				      _tracecchar_t2(bufnum + 20, buf++));
-	}
 	result = _nc_trace_bufcat(bufnum, r_brace);
+	first = last + 1;
     }
     return result;
 }
 
 NCURSES_EXPORT(const char *)
-_nc_viscbuf(const cchar_t *buf, int len)
+_nc_viscbuf(const NCURSES_CH_T * buf, int len)
 {
     return _nc_viscbuf2(0, buf, len);
 }
 #endif /* TRACE */
-#endif /* USE_WIDEC_SUPPORT */

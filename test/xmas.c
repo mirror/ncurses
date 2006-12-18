@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.20 2005/04/16 16:34:38 tom Exp $
+ * $Id: xmas.c,v 1.22 2006/05/20 15:35:47 tom Exp $
  */
 #include <test.priv.h>
 
@@ -131,6 +131,7 @@ static WINDOW *lookdeer3;
 static WINDOW *lookdeer4;
 static WINDOW *w_holiday;
 static WINDOW *w_del_msg;
+static bool *my_pairs;
 
 static int boxit(void);
 static int seas(void);
@@ -153,13 +154,12 @@ static void
 set_color(WINDOW *win, chtype color)
 {
     if (has_colors()) {
-	static bool *pairs;
 	int n = (color + 1);
-	if (pairs == 0)
-	    pairs = (bool *) calloc((unsigned) (COLORS + 1), sizeof(bool));
-	if (!pairs[n]) {
+	if (my_pairs == 0)
+	    my_pairs = (bool *) calloc((unsigned) (COLORS + 1), sizeof(bool));
+	if (!my_pairs[n]) {
 	    init_pair(n, color, my_bg);
-	    pairs[n] = TRUE;
+	    my_pairs[n] = TRUE;
 	}
 	wattroff(win, A_COLOR);
 	wattron(win, COLOR_PAIR(n));
@@ -194,12 +194,9 @@ main(int argc GCC_UNUSED, char **argv GCC_UNUSED)
     noecho();
     nonl();
     refresh();
-    signal(SIGINT, done);
-    signal(SIGTERM, done);
-#if !defined	DOS && !defined OS2
-    signal(SIGHUP, done);
-    signal(SIGQUIT, done);
-#endif
+
+    CATCHALL(done);
+
     if (has_colors()) {
 	start_color();
 #if HAVE_USE_DEFAULT_COLORS
@@ -1145,15 +1142,17 @@ reindeer(void)
 static RETSIGTYPE
 done(int sig GCC_UNUSED)
 {
-    signal(SIGINT, done);
-    signal(SIGTERM, done);
-#if !defined	DOS && !defined OS2
-    signal(SIGHUP, done);
-    signal(SIGQUIT, done);
-#endif
+    CATCHALL(done);
+
     move(LINES - 1, 0);
     refresh();
     endwin();
     curs_set(1);
+
+#if NO_LEAKS
+    if (my_pairs != 0)
+	free(my_pairs);
+#endif
+
     ExitProgram(EXIT_SUCCESS);
 }

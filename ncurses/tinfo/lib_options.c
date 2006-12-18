@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.48 2005/01/22 21:13:34 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.49 2006/03/04 19:28:25 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
@@ -99,7 +99,7 @@ nodelay(WINDOW *win, bool flag)
 NCURSES_EXPORT(int)
 notimeout(WINDOW *win, bool f)
 {
-    T((T_CALLED("notimout(%p,%d)"), win, f));
+    T((T_CALLED("notimeout(%p,%d)"), win, f));
 
     if (win) {
 	win->_notimeout = f;

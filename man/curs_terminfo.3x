@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1999-2003,2005 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1999-2005,2006 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.20 2005/05/15 16:19:13 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.24 2006/11/04 21:50:03 tom Exp $
 .TH curs_terminfo 3X ""
 .ds n 5
 .na
@@ -154,15 +154,15 @@ means that the \fBterminfo\fR database could not be found.
 If \fIerrret\fR is
 null, \fBsetupterm\fR prints an error message upon finding an error
 and exits.  Thus, the simplest call is:
-
+.sp
       \fBsetupterm((char *)0, 1, (int *)0);\fR,
-
+.sp
 which uses all the defaults and sends the output to \fBstdout\fR.
 .PP
 The \fBsetterm\fR routine is being replaced by \fBsetupterm\fR.  The call:
-
+.sp
       \fBsetupterm(\fR\fIterm\fR\fB, 1, (int *)0)\fR
-
+.sp
 provides the same functionality as \fBsetterm(\fR\fIterm\fR\fB)\fR.
 The \fBsetterm\fR routine is included here for BSD compatibility, and
 is not recommended for new programs.
@@ -240,13 +240,15 @@ or \fB0\fR if it is canceled or absent from the terminal description.
 .PP
 The \fIcapname\fR for each capability is given in the table column entitled
 \fIcapname\fR code in the capabilities section of \fBterminfo\fR(\*n).
-
-\fBchar *boolnames\fR, \fB*boolcodes\fR, \fB*boolfnames\fR
-
-\fBchar *numnames\fR, \fB*numcodes\fR, \fB*numfnames\fR
-
-\fBchar *strnames\fR, \fB*strcodes\fR, \fB*strfnames\fR
-
+.sp
+.RS
+\fBchar *boolnames[]\fR, \fB*boolcodes[]\fR, \fB*boolfnames[]\fR
+.sp
+\fBchar *numnames[]\fR, \fB*numcodes[]\fR, \fB*numfnames[]\fR
+.sp
+\fBchar *strnames[]\fR, \fB*strcodes[]\fR, \fB*strfnames[]\fR
+.RE
+.PP
 These null-terminated arrays contain the \fIcapnames\fR, the
 \fBtermcap\fR codes, and the full C names, for each of the
 \fBterminfo\fR variables.
@@ -306,6 +308,13 @@ Both ncurses and System V Release 4 curses implement \fBmvcur\fR using
 the SCREEN data allocated in either \fBinitscr\fR or \fBnewterm\fR.
 So though it is documented as a terminfo function,
 \fBmvcur\fR is really a curses function which is not well specified.
+.PP
+XSI states that the old location must be given.
+This implementation allows the caller to use -1's for the old ordinates.
+In that case, the old location is unknown.
+.PP
+Extended terminal capability names, e.g., as defined by \fBtic\ -x\fP,
+are not stored in the arrays described in this section.
 .SH SEE ALSO
 \fBcurses\fR(3X), \fBcurs_initscr\fR(3X), \fBcurs_kernel\fR(3X), \fBcurs_termcap\fR(3X),
 \fBputc\fR(3S), \fBterminfo\fR(\*n)

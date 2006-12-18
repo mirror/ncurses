@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.9 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.11 $
+--  $Date: 2006/06/25 14:30:22 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 
@@ -159,6 +159,5 @@ package body Terminal_Interface.Curses.Termcap is
       return Termcap_String (Fill_String
                              (tgoto (Txt, C_Int (Col), C_Int (Row))));
    end TGoto;
-
 
 end Terminal_Interface.Curses.Termcap;

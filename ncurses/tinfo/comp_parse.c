@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -53,7 +53,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.60 2005/06/04 21:42:44 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.63 2006/07/08 18:55:14 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -107,8 +107,10 @@ NCURSES_EXPORT(void)
 _nc_free_entries(ENTRY * headp)
 /* free the allocated storage consumed by list entries */
 {
+    (void) headp;		/* unused - _nc_head is altered here! */
+
     while (_nc_head != 0) {
-	_nc_free_entry(headp, &(headp->tterm));
+	_nc_free_termtype(&(_nc_head->tterm));
     }
 }
 
@@ -120,14 +122,15 @@ _nc_delink_entry(ENTRY * headp, TERMTYPE *tterm)
 
     for (last = 0, ep = headp; ep != 0; last = ep, ep = ep->next) {
 	if (&(ep->tterm) == tterm) {
-	    if (last != 0)
+	    if (last != 0) {
 		last->next = ep->next;
-	    else
-		headp = ep->next;
-	    if (ep == _nc_head)
-		_nc_head = 0;
-	    if (ep == _nc_tail)
-		_nc_tail = 0;
+	    }
+	    if (ep == _nc_head) {
+		_nc_head = ep->next;
+	    }
+	    if (ep == _nc_tail) {
+		_nc_tail = last;
+	    }
 	    break;
 	}
     }
@@ -141,7 +144,6 @@ _nc_free_entry(ENTRY * headp, TERMTYPE *tterm)
     ENTRY *ep;
 
     if ((ep = _nc_delink_entry(headp, tterm)) != 0) {
-	_nc_free_termtype(&(ep->tterm));
 	free(ep);
     }
 }
@@ -207,17 +209,24 @@ _nc_read_entry_source(FILE *fp, char *buf,
 	    _nc_err_abort("terminal names must start with letter or digit");
 
 	/*
-	 * This can be used for immediate compilation of entries with no
-	 * use references to disk, so as to avoid chewing up a lot of
-	 * core when the resolution code could fetch entries off disk.
+	 * This can be used for immediate compilation of entries with no "use="
+	 * references to disk.  That avoids consuming a lot of memory when the
+	 * resolution code could fetch entries off disk.
 	 */
 	if (hook != NULLHOOK && (*hook) (&thisentry)) {
 	    immediate++;
 	} else {
 	    enqueue(&thisentry);
+	    /*
+	     * The enqueued entry is copied with _nc_copy_termtype(), so we can
+	     * free some of the data from thisentry, i.e., the arrays.
+	     */
 	    FreeIfNeeded(thisentry.tterm.Booleans);
 	    FreeIfNeeded(thisentry.tterm.Numbers);
 	    FreeIfNeeded(thisentry.tterm.Strings);
+#if NCURSES_XNAMES
+	    FreeIfNeeded(thisentry.tterm.ext_Names);
+#endif
 	}
     }
 
@@ -374,10 +383,10 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 			}
 
 		    /*
-		       * First, make sure there's no garbage in the
-		       * merge block.  as a side effect, copy into
-		       * the merged entry the name field and string
-		       * table pointer.
+		     * First, make sure there is no garbage in the
+		     * merge block.  As a side effect, copy into
+		     * the merged entry the name field and string
+		     * table pointer.
 		     */
 		    _nc_copy_termtype(&merged, &(qp->tterm));
 
@@ -400,6 +409,9 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		    FreeIfNeeded(qp->tterm.Booleans);
 		    FreeIfNeeded(qp->tterm.Numbers);
 		    FreeIfNeeded(qp->tterm.Strings);
+#if NCURSES_XNAMES
+		    FreeIfNeeded(qp->tterm.ext_Names);
+#endif
 		    qp->tterm = merged;
 		    _nc_wrap_entry(qp, TRUE);
 

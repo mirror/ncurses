@@ -228,10 +228,6 @@ How to Design Extensions
    comments  of hardscroll.c and hashmap.c; then try it out. You can also
    test the hardware-scrolling optimization separately with hardscroll.
 
-   There's   one   other   interactive  tester,  tctest,  that  exercises
-   translation  between  termcap  and  terminfo  formats.  If  you have a
-   serious need to run this, you probably belong on our development team!
-
                          A Tour of the Ncurses Library
 
 Library Overview
@@ -401,7 +397,7 @@ The Engine Room
    transformations  of curscr lines to newscr lines. Its main tool is the
    routine  mvcur()  in  lib_mvcur.c.  This  routine does cursor-movement
    optimization,  attempting to get from given screen location A to given
-   location B in the fewest output characters posible.
+   location B in the fewest output characters possible.
 
    If  you  want to work on screen optimizations, you should use the fact
    that  (in  the  trace-enabled  version  of  the  library) enabling the

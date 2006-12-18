@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.62 2005/06/02 22:04:32 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.63 2006/06/17 17:57:50 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -142,7 +142,7 @@ _nc_extend_names(ENTRY * entryp, char *name, int token_type)
 	case BOOLEAN:
 	    tp->ext_Booleans += 1;
 	    tp->num_Booleans += 1;
-	    tp->Booleans = typeRealloc(char, tp->num_Booleans, tp->Booleans);
+	    tp->Booleans = typeRealloc(NCURSES_SBOOL, tp->num_Booleans, tp->Booleans);
 	    for (last = tp->num_Booleans - 1; last > tindex; last--)
 		tp->Booleans[last] = tp->Booleans[last - 1];
 	    break;

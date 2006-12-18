@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_slk.3x,v 1.14 2005/05/15 16:19:06 tom Exp $
+.\" $Id: curs_slk.3x,v 1.15 2006/02/25 21:49:19 tom Exp $
 .TH curs_slk 3X ""
 .na
 .hy 0
@@ -51,7 +51,7 @@
 .hy
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
-
+.sp
 \fBint slk_init(int fmt);\fR
 .br
 \fBint slk_set(int labnum, const char *label, int fmt);\fR
@@ -97,7 +97,7 @@ characters each. This is most common for todays PC like enduser devices.
 Please note that ncurses simulates this mode by taking over up to two lines at
 the bottom of the screen, it doesn't try to use any hardware support for this
 mode.
-
+.PP
 The \fBslk_init\fR routine must be called before \fBinitscr\fR or \fBnewterm\fR
 is called.  If \fBinitscr\fR eventually uses a line from \fBstdscr\fR to
 emulate the soft labels, then \fIfmt\fR determines how the labels are arranged
@@ -106,7 +106,7 @@ the labels, \fB1\fR indicates a 4-4 arrangement and \fB2\fR indicates the
 PC like 4-4-4 mode. If \fBfmt\fR is set to \fB3\fR, it is again the PC like
 4-4-4 mode, but in addition an index line is generated, helping the user to
 identify the key numbers easily.
-
+.PP
 The \fBslk_set\fR routine requires \fIlabnum\fR to be a label number,
 from \fB1\fR to \fB8\fR (resp. \fB12\fR); \fIlabel\fR must be the string
 to be put on the label, up to eight (resp. five) characters in length.
@@ -114,30 +114,30 @@ A null string or a null pointer sets up a blank label. \fIfmt\fR is either
 \fB0\fR, \fB1\fR, or \fB2\fR, indicating whether the label is  to be
 left-justified, centered, or right-justified, respectively, within the
 label.
-
+.PP
 The \fBslk_refresh\fR and \fBslk_noutrefresh\fR routines correspond to
 the \fBwrefresh\fR and \fBwnoutrefresh\fR routines.
-
+.PP
 The \fBslk_label\fR routine returns the current label for label number
 \fIlabnum\fR, with leading and trailing blanks stripped.
-
+.PP
 The \fBslk_clear\fR routine clears the soft labels from the screen.
-
+.PP
 The \fBslk_restore\fR routine restores the soft labels to the screen
 after a \fBslk_clear\fR has been performed.
-
+.PP
 The \fBslk_touch\fR routine forces all the soft labels to be output
 the next time a \fBslk_noutrefresh\fR is performed.
-
+.PP
 The \fBslk_attron\fR, \fBslk_attrset\fR, \fBslk_attroff\fR and \fBslk_attr\fR
 routines correspond to \fBattron\fR, \fBattrset\fR, \fBattroff\fR and \fBattr_get\fR.
 They have an effect only if soft labels are simulated on the bottom line of
 the screen.  The default highlight for soft keys is A_STANDOUT (as in
 System V curses, which does not document this fact).
-
+.PP
 The \fBslk_color\fR routine corresponds to \fBcolor_set\fR. It has an effect only
 if soft labels are simulated on the bottom line of the screen.
-
+.
 .SH RETURN VALUE
 These routines return \fBERR\fR upon failure and OK (SVr4 specifies only "an
 integer value other than \fBERR\fR") upon successful completion.

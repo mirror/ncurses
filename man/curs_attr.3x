@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.29 2005/05/15 16:17:25 tom Exp $
+.\" $Id: curs_attr.3x,v 1.30 2006/07/15 18:39:05 tom Exp $
 .TH curs_attr 3X ""
 .na
 .hy 0
@@ -159,10 +159,6 @@ window; the \fBmvwchgat\fR function does a cursor move before acting.  In these
 functions, the color argument is a color-pair index (as in the first argument
 of \fIinit_pair\fR, see \fBcurs_color\fR(3X)).  The \fBopts\fR argument is not
 presently used, but is reserved for the future (leave it \fBNULL\fR).
-Note that changing the attributes does not imply
-that a subsequent \fBrefresh\fR will update the screen to match,
-since the character values are not modified.
-Use \fBtouchwin\fR to force the screen to match the updated attributes.
 .SS Attributes
 The following video attributes, defined in \fB<curses.h>\fR, can be passed to
 the routines \fBattron\fR, \fBattroff\fR, and \fBattrset\fR, or OR'd with the
@@ -222,6 +218,10 @@ XSI Curses added the new entry points, \fBattr_get\fR, \fBattr_on\fR,
 \fBattr_off\fR, \fBattr_set\fR, \fBwattr_on\fR, \fBwattr_off\fR,
 \fBwattr_get\fR, \fBwattr_set\fR.  These are intended to work with
 a new series of highlight macros prefixed with \fBWA_\fR.
+.PP
+Older versions of this library did not force an update of the screen
+when changing the attributes.
+Use \fBtouchwin\fR to force the screen to match the updated attributes.
 .PP
 .TS
 center ;

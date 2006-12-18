@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 1996-2004,2005                                 *
+ *  Author: Thomas E. Dickey 1996-2006                                      *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -242,8 +242,8 @@ int	pair_content(
 
 #undef _nc_do_color
 void	_nc_do_color(
-		int	old_pair, 
-		int	pair, 
+		short	old_pair, 
+		short	pair, 
 		NCURSES_BOOL reverse, 
 		int	(*outc)(
 		int	p1))
@@ -1017,8 +1017,48 @@ int	wstandend(
 		WINDOW	*z)
 		{ return(*(int *)0); }
 
+#undef getcurx
+int	getcurx(
+		const WINDOW *z)
+		{ return(*(int *)0); }
+
+#undef getcury
+int	getcury(
+		const WINDOW *z)
+		{ return(*(int *)0); }
+
+#undef getbegx
+int	getbegx(
+		const WINDOW *z)
+		{ return(*(int *)0); }
+
+#undef getbegy
+int	getbegy(
+		const WINDOW *z)
+		{ return(*(int *)0); }
+
+#undef getmaxx
+int	getmaxx(
+		const WINDOW *z)
+		{ return(*(int *)0); }
+
+#undef getmaxy
+int	getmaxy(
+		const WINDOW *z)
+		{ return(*(int *)0); }
+
+#undef getparx
+int	getparx(
+		const WINDOW *z)
+		{ return(*(int *)0); }
+
+#undef getpary
+int	getpary(
+		const WINDOW *z)
+		{ return(*(int *)0); }
+
 #undef mouse_trafo
-NCURSES_BOOL	mouse_trafo(
+NCURSES_BOOL mouse_trafo(
 		int	*a1, 
 		int	*a2, 
 		NCURSES_BOOL	z)
@@ -1233,6 +1273,10 @@ int	mvwin(
 
 #undef filter
 void	filter(void)
+		{ /* void */ }
+
+#undef nofilter
+void	nofilter(void)
 		{ /* void */ }
 
 #undef newterm
@@ -1555,9 +1599,11 @@ void	delscreen(
 
 #undef _nc_setupscreen
 int	_nc_setupscreen(
-		short	slines, 
-		short const scolumns, 
-		FILE	*output)
+		int	slines, 
+		int	scolumns, 
+		FILE	*output, 
+		NCURSES_BOOL filtered, 
+		int	slk_format)
 		{ return(*(int *)0); }
 
 #undef _nc_ripoffline
@@ -1699,46 +1745,6 @@ int	wtouchln(
 		int	n, 
 		int	changed)
 		{ return(*(int *)0); }
-
-/* ./trace/lib_traceatr.c */
-
-#undef _traceattr2
-char	*_traceattr2(
-		int	bufnum, 
-		attr_t	newmode)
-		{ return(*(char **)0); }
-
-#undef _traceattr
-char	*_traceattr(
-		attr_t	newmode)
-		{ return(*(char **)0); }
-
-#undef _nc_retrace_attr_t
-attr_t	_nc_retrace_attr_t(
-		attr_t	code)
-		{ return(*(attr_t *)0); }
-
-#undef _nc_altcharset_name
-const char *_nc_altcharset_name(
-		attr_t	attr, 
-		chtype	ch)
-		{ return(*(const char **)0); }
-
-#undef _tracechtype2
-char	*_tracechtype2(
-		int	bufnum, 
-		chtype	ch)
-		{ return(*(char **)0); }
-
-#undef _tracechtype
-char	*_tracechtype(
-		chtype	ch)
-		{ return(*(char **)0); }
-
-#undef _nc_retrace_chtype
-chtype	_nc_retrace_chtype(
-		chtype	code)
-		{ return(*(chtype *)0); }
 
 /* ./trace/lib_tracedmp.c */
 
@@ -1976,6 +1982,13 @@ void	_nc_UpdateAttrs(
 		chtype	c)
 		{ /* void */ }
 
+/* ./base/legacy_coding.c */
+
+#undef use_legacy_coding
+int	use_legacy_coding(
+		int	level)
+		{ return(*(int *)0); }
+
 /* ./base/lib_dft_fgbg.c */
 
 #undef use_default_colors
@@ -2034,12 +2047,18 @@ int	wresize(
 
 /* ./tinfo/access.c */
 
+#include <sys/stat.h>
 #include <nc_alloc.h>
 
 #undef _nc_rootname
 char	*_nc_rootname(
 		char	*path)
 		{ return(*(char **)0); }
+
+#undef _nc_is_abs_path
+NCURSES_BOOL _nc_is_abs_path(
+		const char *path)
+		{ return(*(NCURSES_BOOL *)0); }
 
 #undef _nc_pathlast
 unsigned _nc_pathlast(
@@ -2057,6 +2076,16 @@ int	_nc_access(
 		int	mode)
 		{ return(*(int *)0); }
 
+#undef _nc_is_dir_path
+NCURSES_BOOL _nc_is_dir_path(
+		const char *path)
+		{ return(*(NCURSES_BOOL *)0); }
+
+#undef _nc_is_file_path
+NCURSES_BOOL _nc_is_file_path(
+		const char *path)
+		{ return(*(NCURSES_BOOL *)0); }
+
 #undef _nc_env_access
 int	_nc_env_access(void)
 		{ return(*(int *)0); }
@@ -2067,7 +2096,7 @@ int	_nc_env_access(void)
 void	_nc_add_to_try(
 		struct tries **tree, 
 		const char *str, 
-		unsigned short code)
+		unsigned code)
 		{ /* void */ }
 
 /* ./tinfo/alloc_entry.c */
@@ -2169,6 +2198,10 @@ NCURSES_BOOL _nc_suppress_warnings;
 int	_nc_curr_line;
 #undef _nc_curr_col
 int	_nc_curr_col;
+
+#undef _nc_get_source
+const char *_nc_get_source(void)
+		{ return(*(const char **)0); }
 
 #undef _nc_set_source
 void	_nc_set_source(
@@ -2329,6 +2362,34 @@ void	_nc_push_token(
 #undef _nc_panic_mode
 void	_nc_panic_mode(
 		char	ch)
+		{ /* void */ }
+
+/* ./tinfo/db_iterator.c */
+
+#undef _nc_tic_dir
+const char *_nc_tic_dir(
+		const char *path)
+		{ return(*(const char **)0); }
+
+#undef _nc_keep_tic_dir
+void	_nc_keep_tic_dir(
+		const char *path)
+		{ /* void */ }
+
+#undef _nc_last_db
+void	_nc_last_db(void)
+		{ /* void */ }
+
+#undef _nc_next_db
+const char *_nc_next_db(
+		DBDIRS	*state, 
+		int	*offset)
+		{ return(*(const char **)0); }
+
+#undef _nc_first_db
+void	_nc_first_db(
+		DBDIRS	*state, 
+		int	*offset)
 		{ /* void */ }
 
 /* ./tinfo/doalloc.c */
@@ -2614,6 +2675,11 @@ int	COLS;
 #undef TABSIZE
 int	TABSIZE;
 
+#undef _nc_handle_sigwinch
+int	_nc_handle_sigwinch(
+		int	enable)
+		{ return(*(int *)0); }
+
 #undef use_env
 void	use_env(
 		NCURSES_BOOL f)
@@ -2721,8 +2787,8 @@ char	*tigetstr(
 
 typedef struct {
     union {
-        int num;
-        char *str;
+ int num;
+ char *str;
     } data;
     NCURSES_BOOL num_type;
 } stack_frame;
@@ -2844,6 +2910,46 @@ WINDOW	*_nc_retrace_win(
 		WINDOW	*code)
 		{ return(*(WINDOW **)0); }
 
+/* ./trace/lib_traceatr.c */
+
+#undef _traceattr2
+char	*_traceattr2(
+		int	bufnum, 
+		chtype	newmode)
+		{ return(*(char **)0); }
+
+#undef _traceattr
+char	*_traceattr(
+		attr_t	newmode)
+		{ return(*(char **)0); }
+
+#undef _nc_retrace_attr_t
+attr_t	_nc_retrace_attr_t(
+		attr_t	code)
+		{ return(*(attr_t *)0); }
+
+#undef _nc_altcharset_name
+const char *_nc_altcharset_name(
+		attr_t	attr, 
+		chtype	ch)
+		{ return(*(const char **)0); }
+
+#undef _tracechtype2
+char	*_tracechtype2(
+		int	bufnum, 
+		chtype	ch)
+		{ return(*(char **)0); }
+
+#undef _tracechtype
+char	*_tracechtype(
+		chtype	ch)
+		{ return(*(char **)0); }
+
+#undef _nc_retrace_chtype
+chtype	_nc_retrace_chtype(
+		chtype	code)
+		{ return(*(chtype *)0); }
+
 /* ./trace/lib_tracebits.c */
 
 typedef struct {
@@ -2963,15 +3069,14 @@ typedef struct {
 
 /* ./tinfo/read_entry.c */
 
-#undef _nc_tic_dir
-const char *_nc_tic_dir(
-		const char *path)
-		{ return(*(const char **)0); }
+#include <hashed_db.h>
 
-#undef _nc_keep_tic_dir
-void	_nc_keep_tic_dir(
-		const char *path)
-		{ /* void */ }
+#undef _nc_read_termtype
+int	_nc_read_termtype(
+		TERMTYPE *ptr, 
+		char	*buffer, 
+		int	limit)
+		{ return(*(int *)0); }
 
 #undef _nc_read_file_entry
 int	_nc_read_file_entry(
@@ -2981,7 +3086,7 @@ int	_nc_read_file_entry(
 
 #undef _nc_read_entry
 int	_nc_read_entry(
-		const char *const tn, 
+		const char *const name, 
 		char	*const filename, 
 		TERMTYPE *const tp)
 		{ return(*(int *)0); }
@@ -2989,7 +3094,6 @@ int	_nc_read_entry(
 /* ./tinfo/read_termcap.c */
 
 #include <sys/types.h>
-#include <sys/stat.h>
 
 #undef _nc_read_termcap_entry
 int	_nc_read_termcap_entry(
@@ -3069,7 +3173,7 @@ void	_nc_trace_tries(
 #undef _nc_expand_try
 char	*_nc_expand_try(
 		struct tries *tree, 
-		unsigned short code, 
+		unsigned code, 
 		int	*count, 
 		size_t	len)
 		{ return(*(char **)0); }
@@ -3077,7 +3181,7 @@ char	*_nc_expand_try(
 #undef _nc_remove_key
 int	_nc_remove_key(
 		struct tries **tree, 
-		unsigned short code)
+		unsigned code)
 		{ return(*(int *)0); }
 
 #undef _nc_remove_string
@@ -3119,6 +3223,19 @@ const char *_nc_visbufn(
 		int	len)
 		{ return(*(const char **)0); }
 
+#undef _nc_viscbuf2
+const char *_nc_viscbuf2(
+		int	bufnum, 
+		const chtype *buf, 
+		int	len)
+		{ return(*(const char **)0); }
+
+#undef _nc_viscbuf
+const char *_nc_viscbuf(
+		const chtype *buf, 
+		int	len)
+		{ return(*(const char **)0); }
+
 /* ./tinfo/write_entry.c */
 
 #undef _nc_set_writedir
@@ -3142,6 +3259,12 @@ int	define_key(
 		const char *str, 
 		int	keycode)
 		{ return(*(int *)0); }
+
+/* ./tinfo/hashed_db.c */
+
+#undef _nc_hashed_db
+void	_nc_hashed_db(void)
+		{ /* void */ }
 
 /* ./base/key_defined.c */
 

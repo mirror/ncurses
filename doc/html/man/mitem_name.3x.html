@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+  * Copyright (c) 1998,2006 Free Software Foundation, Inc.                   *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: mitem_name.3x,v 1.5 1998/11/29 01:11:29 Rick.Ohnemus Exp @
+  * @Id: mitem_name.3x,v 1.6 2006/11/04 17:53:40 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -68,7 +68,8 @@
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       These routines returns <STRONG>NULL</STRONG> on error.
+       These routines return a pointer (which may be <STRONG>NULL</STRONG>).  They
+       do not set errno.
 
 
 </PRE>
@@ -84,13 +85,13 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These routines emulate the System V  menu  library.   They
+       These  routines  emulate  the System V menu library.  They
        were not supported on Version 7 or BSD versions.
 
 
 </PRE>
 <H2>AUTHORS</H2><PRE>
-       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
+       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
        curses by Eric S. Raymond.
 
 

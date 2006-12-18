@@ -1,6 +1,6 @@
-# $Id: mk-1st.awk,v 1.65 2005/06/18 19:15:57 tom Exp $
+# $Id: mk-1st.awk,v 1.68 2006/10/08 00:14:08 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -31,25 +31,25 @@
 #
 # Generate list of objects for a given model library
 # Variables:
-#	name (library name, e.g., "ncurses", "panel", "forms", "menus")
-#	traces ("all" or "DEBUG", to control whether tracing is compiled in)
-#	MODEL (e.g., "DEBUG", uppercase; toupper is not portable)
-#	model (directory into which we compile, e.g., "obj")
-#	prefix (e.g., "lib", for Unix-style libraries)
-#	suffix (e.g., "_g.a", for debug libraries)
-#	subset ("none", "base", "base+ext_funcs" or "termlib")
-#	ShlibVer ("rel", "abi" or "auto", to augment DoLinks variable)
+#	name		  (library name, e.g., "ncurses", "panel", "forms", "menus")
+#	traces		  ("all" or "DEBUG", to control whether tracing is compiled in)
+#	MODEL		  (e.g., "DEBUG", uppercase; toupper is not portable)
+#	model		  (directory into which we compile, e.g., "obj")
+#	prefix		  (e.g., "lib", for Unix-style libraries)
+#	suffix		  (e.g., "_g.a", for debug libraries)
+#	subset		  ("none", "base", "base+ext_funcs" or "termlib")
+#	ShlibVer	  ("rel", "abi" or "auto", to augment DoLinks variable)
 #	ShlibVerInfix ("yes" or "no", determines location of version #)
-#	DoLinks ("yes", "reverse" or "no", flag to add symbolic links)
-#	rmSoLocs ("yes" or "no", flag to add extra clean target)
-#	ldconfig (path for this tool, if used)
-#	overwrite ("yes" or "no", flag to add link to libcurses.a
-#	depend (optional dependencies for all objects, e.g, ncurses_cfg.h)
-#	host (cross-compile host, if any)
+#	DoLinks		  ("yes", "reverse" or "no", flag to add symbolic links)
+#	rmSoLocs	  ("yes" or "no", flag to add extra clean target)
+#	ldconfig	  (path for this tool, if used)
+#	overwrite	  ("yes" or "no", flag to add link to libcurses.a
+#	depend		  (optional dependencies for all objects, e.g, ncurses_cfg.h)
+#	host		  (cross-compile host, if any)
 #
 # Notes:
 #	CLIXs nawk does not like underscores in command-line variable names.
-#	Mixed-case is ok.
+#	Mixed-case variable names are ok.
 #	HP/UX requires shared libraries to have executable permissions.
 #
 function symlink(src,dst) {
@@ -60,7 +60,7 @@ function symlink(src,dst) {
 	}
 function rmlink(directory, dst) {
 		printf "\t-rm -f %s/%s\n", directory, dst
-}
+	}
 function removelinks(directory) {
 		rmlink(directory, end_name);
 		if ( DoLinks == "reverse" ) {
@@ -78,6 +78,9 @@ function removelinks(directory) {
 					rmlink(directory, lib_name);
 				}
 		}
+	}
+function make_shlib(objs, shlib_list) {
+		printf "\t$(MK_SHARED_LIB) $(%s_OBJS) $(%s) $(LDFLAGS)\n", objs, shlib_list
 	}
 function sharedlinks(directory) {
 		if ( ShlibVer != "auto" && ShlibVer != "cygdll" ) {
@@ -99,6 +102,34 @@ function sharedlinks(directory) {
 			}
 			printf ")\n"
 		}
+	}
+function shlib_rule(directory) {
+		if ( ShlibVer == "cygdll" ) {
+				dst_libs = sprintf("%s/$(SHARED_LIB) %s/$(IMPORT_LIB)", directory, directory);
+		} else {
+				dst_libs = sprintf("%s/%s", directory, end_name);
+		}
+		printf "%s : %s $(%s_OBJS)\n", dst_libs, directory, OBJS
+		printf "\t@echo linking $@\n"
+		print "\t-@rm -f %s", dst_libs;
+		if ( subset == "termlib" || subset == "termlib+ext_tinfo" ) {
+				make_shlib(OBJS, "TINFO_LIST")
+		} else {
+				make_shlib(OBJS, "SHLIB_LIST")
+		}
+		sharedlinks(directory)
+	}
+function install_dll(directory,filename) {
+		src_name = sprintf("../lib/%s", filename);
+		dst_name = sprintf("$(DESTDIR)%s/%s", directory, filename);
+		printf "\t@echo installing %s as %s\n", src_name, dst_name
+		printf "\t-@rm -f %s\n", dst_name
+		if ( directory == "$(bindir)" ) {
+			program = "$(INSTALL) -m 755";
+		} else {
+			program = "$(INSTALL_LIB)";
+		}
+		printf "\t%s %s %s\n", program, src_name, dst_name
 	}
 BEGIN	{
 		found = 0
@@ -200,51 +231,25 @@ END	{
 					}
 				}
 
-				if ( ShlibVer == "cygdll" ) {
-					dst_dirs = "$(DESTDIR)$(bindir) $(DESTDIR)$(libdir)";
-					printf "$(SHARED_LIB) $(IMPORT_LIB) : $(%s_OBJS)\n", OBJS;
-					print "\t-@rm -f $(SHARED_LIB) $(IMPORT_LIB)";
-				} else {
-					dst_dirs = "$(DESTDIR)$(libdir)";
-					printf "../lib/%s : $(%s_OBJS)\n", end_name, OBJS
-					print "\t-@rm -f $@";
-				}
-				if ( subset == "termlib" || subset == "termlib+ext_tinfo" ) {
-					printf "\t$(MK_SHARED_LIB) $(%s_OBJS) $(TINFO_LIST) $(LDFLAGS)\n", OBJS
-				} else {
-					printf "\t$(MK_SHARED_LIB) $(%s_OBJS) $(SHLIB_LIST) $(LDFLAGS)\n", OBJS
-				}
-				sharedlinks("../lib")
+				shlib_rule("../lib")
 
 				print  ""
 				print  "install \\"
 				print  "install.libs \\"
-				printf "install.%s :: %s $(LIBRARIES)\n", name, dst_dirs
 
 				if ( ShlibVer == "cygdll" ) {
 
-					src_name = sprintf("../lib/%s", end_name);
-					dst_name = sprintf("$(DESTDIR)$(bindir)/%s", end_name);
-					printf "\t@echo installing %s as %s\n", src_name, dst_name
-					printf "\t-@rm -f %s\n", dst_name
-					printf "\t$(INSTALL_LIB) %s %s\n", src_name, dst_name
-
-					src_name = sprintf("../lib/%s", imp_name);
-					dst_name = sprintf("$(DESTDIR)$(libdir)/%s", imp_name);
-					printf "\t@echo installing %s as %s\n", src_name, dst_name
-					printf "\t-@rm -f %s\n", dst_name
-					printf "\t$(INSTALL_LIB) %s %s\n", src_name, dst_name
+					dst_dirs = "$(DESTDIR)$(bindir) $(DESTDIR)$(libdir)";
+					printf "install.%s :: %s $(LIBRARIES)\n", name, dst_dirs
+					install_dll("$(bindir)",end_name);
+					install_dll("$(libdir)",imp_name);
 
 				} else {
 
-					src_name = sprintf("../lib/%s", end_name);
-					dst_name = sprintf("$(DESTDIR)$(libdir)/%s", end_name);
-					printf "\t@echo installing %s as %s\n", src_name, dst_name
-					printf "\t-@rm -f %s\n", dst_name
-					printf "\t$(INSTALL_LIB) %s %s\n", src_name, dst_name
-
-					sharedlinks("$(DESTDIR)$(libdir)")
-
+					lib_dir = "$(DESTDIR)$(libdir)";
+					printf "install.%s :: %s/%s\n", name, lib_dir, end_name
+					print ""
+					shlib_rule(lib_dir)
 				}
 
 				if ( overwrite == "yes" && name == "ncurses" )
@@ -259,7 +264,7 @@ END	{
 						printf "\tcd $(DESTDIR)$(libdir) && (rm -f %s; $(LN_S) %s %s; )\n", ovr_name, end_name, ovr_name
 					}
 				}
-				if ( ldconfig != "" ) {
+				if ( ldconfig != "" && ldconfig != ":" ) {
 					printf "\t- test -z \"$(DESTDIR)\" && %s\n", ldconfig
 				}
 				print  ""

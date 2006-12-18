@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.24 2005/04/09 20:40:25 tom Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.25 2005/11/26 20:46:59 tom Exp $")
 
 /* Macros */
 
@@ -157,7 +157,7 @@ _nc_Match_Next_Character_In_Item_Name
 	  if (++idx >= menu->nitems)
 	    idx = 0;
 	}
-      if (Is_Sub_String((menu->opt & O_IGNORECASE) != 0,
+      if (Is_Sub_String((bool)((menu->opt & O_IGNORECASE) != 0),
 			menu->pattern,
 			menu->items[idx]->name.str)
 	)

@@ -48,9 +48,9 @@
 <FONT COLOR=green><EM>--  This module is generated. Please don't change it manually!</EM></FONT>
 <FONT COLOR=green><EM>--  Run the generator instead.</EM></FONT>
 <FONT COLOR=green><EM>--  |</EM></FONT>
-<b>with</b> <A HREF="interfac__ads.htm#ref_23_9">System</A>;
-<b>with</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C;
-<b>with</b> <A HREF="unchconv__ads.htm#ref_22_10">Interfaces</A>.C.Strings; <b>use</b> Interfaces.C.Strings;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">System</A>;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;
+<b>with</b> <A HREF="unchconv__ads.htm#ref_20_10">Interfaces</A>.C.Strings; <b>use</b> Interfaces.C.Strings;
 <b>with</b> Unchecked_Conversion;
 
 <b>package</b> Terminal_Interface.Curses.Aux <b>is</b>
@@ -58,12 +58,12 @@
 
    <b>use</b> <b>type</b> Interfaces.C.int;
 
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_56_12">C_Int</A></FONT>      <b>is</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.int;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_57_12">C_Short</A></FONT>    <b>is</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.short;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_58_12">C_Long_Int</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.long;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_59_12">C_Size_T</A></FONT>   <b>is</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.size_t;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_60_12">C_UInt</A></FONT>     <b>is</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.unsigned;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_61_12">C_ULong</A></FONT>    <b>is</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.unsigned_long;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_56_12">C_Int</A></FONT>      <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_57_12">C_Short</A></FONT>    <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_58_12">C_Long_Int</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.long;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_59_12">C_Size_T</A></FONT>   <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.size_t;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_60_12">C_UInt</A></FONT>     <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.unsigned;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_61_12">C_ULong</A></FONT>    <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.unsigned_long;
    <b>subtype</b> <FONT COLOR=red><A NAME="ref_62_12">C_Char_Ptr</A></FONT> <b>is</b> Interfaces.C.Strings.chars_ptr;
    <b>type</b>    <FONT COLOR=red><A NAME="ref_63_12">C_Void_Ptr</A></FONT> <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_60_12">System</A>.Address;
    <b>type</b>    <FONT COLOR=red><A NAME="ref_64_12">C_Chtype</A></FONT>   <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_60_12">C_ULong</A>;
@@ -105,18 +105,18 @@
    <FONT COLOR=green><EM>--</EM></FONT>
    <FONT COLOR=green><EM>--  Some helpers</EM></FONT>
    <b>function</b> Chtype_To_AttrChar <b>is</b> <b>new</b>
-     Unchecked_Conversion (Source =&gt; <A HREF="terminal_interface-curses__ads.htm#ref_352_9">C_Chtype</A>,
-            <FONT COLOR=red><A NAME="ref_104_13"> </A></FONT>              Target =&gt; Attributed_Character);
+     Unchecked_Conversion (<A HREF="unchconv__ads.htm#ref_18_9">Source</A> =&gt; <A HREF="terminal_interface-curses__ads.htm#ref_352_9">C_Chtype</A>,
+                           Target =&gt; Attributed_Character);
    <b>function</b> AttrChar_To_Chtype <b>is</b> <b>new</b>
-     Unchecked_Conversion (Source =&gt; <A HREF="terminal_interface-curses-aux__ads.htm#ref_63_12">Attributed_Character</A>,
+     Unchecked_Conversion (<A HREF="unchconv__ads.htm#ref_18_9">Source</A> =&gt; <A HREF="terminal_interface-curses-aux__ads.htm#ref_63_12">Attributed_Character</A>,
                            Target =&gt; C_Chtype);
 
    <b>function</b> AttrChar_To_AttrType <b>is</b> <b>new</b>
-     Unchecked_Conversion (Source =&gt; <A HREF="terminal_interface-curses-aux__ads.htm#ref_64_12">Attributed_Character</A>,
+     Unchecked_Conversion (<A HREF="unchconv__ads.htm#ref_18_9">Source</A> =&gt; <A HREF="terminal_interface-curses-aux__ads.htm#ref_64_12">Attributed_Character</A>,
                            Target =&gt; C_AttrType);
 
    <b>function</b> AttrType_To_AttrChar <b>is</b> <b>new</b>
-     Unchecked_Conversion (Source =&gt; <A HREF="terminal_interface-curses__ads.htm#ref_352_9">C_AttrType</A>,
+     Unchecked_Conversion (<A HREF="unchconv__ads.htm#ref_18_9">Source</A> =&gt; <A HREF="terminal_interface-curses__ads.htm#ref_352_9">C_AttrType</A>,
                            Target =&gt; Attributed_Character);
 
    <b>procedure</b> Fill_String (<FONT COLOR=red><A NAME="ref_117_27" HREF="terminal_interface-curses-aux__adb.htm#ref_45_27">Cp</A></FONT>  : <b>in</b>  chars_ptr;

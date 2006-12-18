@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.47 2005/06/04 22:06:43 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.49 2006/12/16 19:16:53 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -137,7 +137,7 @@ save_string(char *d, const char *const s)
     return d + strlen(d);
 }
 
-static inline char *
+static NCURSES_INLINE char *
 save_char(char *s, int c)
 {
     static char temp[2];
@@ -839,7 +839,9 @@ main(int argc, char *argv[])
 NCURSES_EXPORT(void)
 _nc_captoinfo_leaks(void)
 {
-    FreeAndNull(my_string);
+    if (my_string != 0) {
+	FreeAndNull(my_string);
+    }
     my_length = 0;
 }
 #endif

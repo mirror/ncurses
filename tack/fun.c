@@ -1,18 +1,18 @@
 /*
 ** Copyright (C) 1991, 1997 Free Software Foundation, Inc.
-** 
+**
 ** This file is part of TACK.
-** 
+**
 ** TACK is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2, or (at your option)
 ** any later version.
-** 
+**
 ** TACK is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
 ** along with TACK; see the file COPYING.  If not, write to
 ** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -21,7 +21,7 @@
 
 #include <tack.h>
 
-MODULE_ID("$Id: fun.c,v 1.6 2005/09/17 19:49:16 tom Exp $")
+MODULE_ID("$Id: fun.c,v 1.9 2006/11/26 00:15:53 tom Exp $")
 
 /*
  * Test the function keys on the terminal.  The code for echo tests
@@ -56,14 +56,13 @@ struct test_list printer_test_list[] = {
 	{MENU_LAST, 0, 0, 0, 0, 0, 0}
 };
 
-#define MAX_STRINGS STRCOUNT
-
-
 /* local definitions */
-static const char *fk_name[MAX_STRINGS];
-static char *fkval[MAX_STRINGS];
-static char *fk_label[MAX_STRINGS];	/* function key labels (if any) */
-static int fk_tested[MAX_STRINGS];
+static const char **fk_name;
+static char **fkval;
+static char **fk_label;		/* function key labels (if any) */
+static int *fk_tested;
+static int num_strings = 0;
+
 static int fkmax = 1;		/* length of longest key */
 static int got_labels = 0;	/* true if we have some labels */
 static int key_count = 0;
@@ -74,6 +73,21 @@ static int end_state;
 static char *fk_unknown[MAX_FK_UNK];
 static int fk_length[MAX_FK_UNK];
 static int funk;
+
+/*
+ * Initialize arrays that depend on the actual number of strings.
+ */
+static void
+alloc_strings(void)
+{
+	if (num_strings != MAX_STRINGS) {
+		num_strings = MAX_STRINGS;
+		fk_name = (const char **)calloc(num_strings, sizeof(const char *));
+		fkval = (char **)calloc(num_strings, sizeof(char *));
+		fk_label = (char **)calloc(num_strings, sizeof(char *));
+		fk_tested = (int *)calloc(num_strings, sizeof(int));
+	}
+}
 
 /*
 **	keys_tested(first-time, show-help, hex-output)
@@ -89,6 +103,7 @@ keys_tested(
 	int i, l;
 	char outbuf[256];
 
+	alloc_strings();
 	put_clear();
 	tty_set();
 	flush_input();
@@ -189,6 +204,7 @@ enter_key(
 {
 	int j;
 
+	alloc_strings();
 	if (value) {
 		j = strlen(value);
 		fkmax = fkmax > j ? fkmax : j;
@@ -271,6 +287,7 @@ found_match(char *s, int hx, int cc)
 	int j, f;
 	char outbuf[256];
 
+	alloc_strings();
 	if (!*s) {
 		return 0;
 	}
@@ -567,7 +584,7 @@ funkey_label(
 		for (i = 1; i <= num_labels; i++) {
 			sprintf(outbuf, "L%d..............................", i);
 			outbuf[label_width] = '\0';
-			tc_putp(tparm(plab_norm, i, outbuf));
+			tc_putp(TPARM_2(plab_norm, i, outbuf));
 		}
 		if (label_off) {
 			ptext("Hit any key to remove the labels: ");
@@ -598,7 +615,7 @@ funkey_prog(
 		sprintf(temp,
 			"(pfx) Set function key %d to transmit abc\\n", fk);
 		ptextln(temp);
-		tc_putp(tparm(pkey_xmit, fk, "abc\n"));
+		tc_putp(TPARM_2(pkey_xmit, fk, "abc\n"));
 		sprintf(temp, "Hit function key %d\n", fk);
 		ptextln(temp);
 		for (i = 0; i < 4; ++i)
@@ -613,7 +630,7 @@ funkey_prog(
 		}
 		flush_input();
 		if (key_f1) {
-			tc_putp(tparm(pkey_xmit, fk, key_f1));
+			tc_putp(TPARM_2(pkey_xmit, fk, key_f1));
 		}
 	} else {
 		ptextln("Function key transmit (pfx), not present.");
@@ -641,13 +658,13 @@ funkey_local(
 			"(pfloc) Set function key %d to execute a clear and print \"Done!\"", fk);
 		ptextln(temp);
 		sprintf(temp, "%sDone!", liberated(clear_screen));
-		tc_putp(tparm(pkey_local, fk, temp));
+		tc_putp(TPARM_2(pkey_local, fk, temp));
 		sprintf(temp, "Hit function key %d.  Then hit return.", fk);
 		ptextln(temp);
 		(void) wait_here();
 		flush_input();
 		if (key_f1 && pkey_xmit) {
-			tc_putp(tparm(pkey_xmit, fk, key_f1));
+			tc_putp(TPARM_2(pkey_xmit, fk, key_f1));
 		}
 	} else {
 		ptextln("Function key execute local (pfloc), not present.");
@@ -802,7 +819,7 @@ tools_report(
 		ptextln("Begin echo test.");
 		report_help(crx);
 	}
-	txt[sizeof(txt) - 1] = '\0';
+	memset(txt, 0, sizeof(txt));
 	save_scan_mode = scan_mode;
 	tty_raw(1, char_mask);
 	for (i = crp = high_bit = 0;;) {

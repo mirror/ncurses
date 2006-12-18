@@ -1,7 +1,10 @@
-
+/*
+ * This file is part of ncurses, designed to be appended after curses.h.in
+ * (see that file for the relevant copyright).
+ */
 #ifdef _XOPEN_SOURCE_EXTENDED
 
-/* $Id: curses.wide,v 1.29 2005/01/28 21:11:53 tom Exp $ */
+/* $Id: curses.wide,v 1.32 2006/05/27 19:44:23 tom Exp $ */
 
 extern NCURSES_EXPORT_VAR(cchar_t *) _nc_wacs;
 
@@ -148,7 +151,7 @@ extern NCURSES_EXPORT(int) wborder_set (WINDOW *,const cchar_t*,const cchar_t*,c
 extern NCURSES_EXPORT(int) wecho_wchar (WINDOW *, const cchar_t *);	/* implemented */
 extern NCURSES_EXPORT(int) wget_wch (WINDOW *, wint_t *);		/* implemented */
 extern NCURSES_EXPORT(int) wget_wstr (WINDOW *, wint_t *);		/* generated:WIDEC */
-extern NCURSES_EXPORT(int) wgetbkgrnd (WINDOW *, cchar_t *);		/* implemented */
+extern NCURSES_EXPORT(int) wgetbkgrnd (WINDOW *, cchar_t *);		/* generated:WIDEC */
 extern NCURSES_EXPORT(int) wgetn_wstr (WINDOW *,wint_t *, int);		/* implemented */
 extern NCURSES_EXPORT(int) whline_set (WINDOW *, const cchar_t *, int);	/* implemented */
 extern NCURSES_EXPORT(int) win_wch (WINDOW *, cchar_t *);		/* implemented */
@@ -161,6 +164,8 @@ extern NCURSES_EXPORT(int) wins_wstr (WINDOW *, const wchar_t *);	/* generated:W
 extern NCURSES_EXPORT(int) winwstr (WINDOW *, wchar_t *);		/* implemented */
 extern NCURSES_EXPORT(wchar_t*) wunctrl (cchar_t *);			/* implemented */
 extern NCURSES_EXPORT(int) wvline_set (WINDOW *, const cchar_t *, int);	/* implemented */
+
+#ifndef NCURSES_NOMACROS
 
 /*
  * XSI curses macros for XPG4 conformance.
@@ -233,5 +238,12 @@ extern NCURSES_EXPORT(int) wvline_set (WINDOW *, const cchar_t *, int);	/* imple
 #define mvwins_wstr(win,y,x,t)		(wmove(win,y,x) == ERR ? ERR : wins_wstr(win,t))
 #define mvwinwstr(win,y,x,c)		(wmove(win,y,x) == ERR ? ERR : winwstr(win,c))
 #define mvwvline_set(win,y,x,c,n)	(wmove(win,y,x) == ERR ? ERR : wvline_set(win,c,n))
+
+#endif /* NCURSES_NOMACROS */
+
+#if defined(TRACE) || defined(NCURSES_TEST)
+extern NCURSES_EXPORT(const char *) _nc_viswbuf(const wchar_t *);
+extern NCURSES_EXPORT(const char *) _nc_viswibuf(const wint_t *);
+#endif
 
 #endif /* _XOPEN_SOURCE_EXTENDED */

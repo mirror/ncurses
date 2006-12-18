@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.51 2005/02/26 23:58:27 tom Exp $
+dnl $Id: configure.in,v 1.58 2006/07/15 18:54:07 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -49,6 +49,7 @@ CF_CHECK_CACHE
 AC_PROG_MAKE_SET
 AC_PROG_CC
 AC_PROG_CPP
+AC_PROG_AWK
 
 dnl Things that we don't need (or must override) if we're not building ncurses
 CC_G_OPT="-g"				AC_SUBST(CC_G_OPT)
@@ -66,8 +67,6 @@ LIBTOOL=""				AC_SUBST(LIBTOOL)
 LIB_CLEAN=""				AC_SUBST(LIB_CLEAN)
 LIB_COMPILE=""				AC_SUBST(LIB_COMPILE)
 LIB_LINK=""				AC_SUBST(LIB_LINK)
-LIB_NAME=curses				AC_SUBST(LIB_NAME)
-LIB_PREFIX="-l"				AC_SUBST(LIB_PREFIX)
 LINK_TESTS=""				AC_SUBST(LINK_TESTS)
 LINT=lint				AC_SUBST(LINT)
 LINT_OPTS=""				AC_SUBST(LINT_OPTS)
@@ -86,6 +85,8 @@ AC_EXEEXT
 AC_OBJEXT
 
 CF_ANSI_CC_REQD
+CF_ENABLE_WARNINGS
+CF_GCC_ATTRIBUTES
 CF_XOPEN_SOURCE
 
 CF_WITH_CURSES_DIR
@@ -100,12 +101,16 @@ dnl ---------------------------------------------------------------------------
 dnl NcursesW, installed in conventional location
 AC_ARG_WITH(ncursesw,
 	[  --with-ncursesw         use wide ncurses-libraries (installed)],
-	[cf_cv_screen=ncursesw])
+	[cf_cv_screen=ncursesw],[
 
 dnl Ncurses, installed in conventional location
 AC_ARG_WITH(ncurses,
 	[  --with-ncurses          use ncurses-libraries (installed)],
-	[cf_cv_screen=ncurses])
+	[cf_cv_screen=ncurses],[
+
+AC_ARG_WITH(pdcurses,
+	[  --with-pdcurses         compile/link with pdcurses X11 library],
+	[cf_cv_screen=pdcurses])])])
 
 case $cf_cv_screen in
 curses)
@@ -116,14 +121,15 @@ curses)
 ncurses)
 	CF_NCURSES_CPPFLAGS
 	CF_NCURSES_LIBS
-	LIB_NAME=ncurses
 	;;
 ncursesw)
 	cf_cv_libtype=w
 	CF_UTF8_LIB
 	CF_NCURSES_CPPFLAGS(ncursesw)
 	CF_NCURSES_LIBS(ncursesw)
-	LIB_NAME=ncursesw
+	;;
+pdcurses) #(vi
+	CF_PDCURSES_X11
 	;;
 esac
 
@@ -132,22 +138,34 @@ dnl installed conventionally (e.g., SunOS 5.x - solaris).
 
 dnl Autoconf builds up the $LIBS in reverse order
 
-AC_CHECK_LIB(panel$cf_cv_libtype,new_panel)
-AC_CHECK_LIB(menu$cf_cv_libtype,menu_driver)
-AC_CHECK_LIB(form$cf_cv_libtype,form_driver)
+case $cf_cv_screen in #(vi
+pdcurses) #(vi
+	;;
+*)
+	# look for curses-related libraries
+	AC_CHECK_LIB(panel$cf_cv_libtype,new_panel)
+	AC_CHECK_LIB(menu$cf_cv_libtype,menu_driver)
+	AC_CHECK_LIB(form$cf_cv_libtype,form_driver)
+
+	# look for curses-related headers
+	AC_CHECK_HEADERS( \
+		nc_alloc.h \
+		nomacros.h \
+		form.h \
+		menu.h \
+		panel.h \
+		)
+	;;
+esac
 
 AC_TYPE_SIGNAL
 
 AC_STDC_HEADERS
 AC_HEADER_TIME
 AC_CHECK_HEADERS( \
-form.h \
 getopt.h \
 locale.h \
-menu.h \
-nc_alloc.h \
-nomacros.h \
-panel.h \
+stdarg.h \
 sys/ioctl.h \
 sys/select.h \
 sys/time.h \
@@ -156,17 +174,35 @@ unistd.h \
 )
 
 AC_CHECK_FUNCS( \
+chgat \
 color_set \
+filter \
+getbegx \
+getcurx \
+getmaxx \
 getnstr \
 gettimeofday \
+getwin \
+mvvline \
+mvwvline \
 napms \
+putwin \
 resize_term \
 resizeterm \
+ripoffline \
+setupterm \
 slk_color \
+slk_init \
 strdup \
+termattrs \
+tgetent \
+tigetnum \
+tigetstr \
+typeahead \
 use_default_colors \
 vsscanf \
 wchgat \
+winsstr \
 wresize \
 )
 
@@ -200,6 +236,7 @@ LIBS=
 dnl ---------------------------------------------------------------------------
 
 AC_OUTPUT(Makefile,[
+CF_PRG_RULES([$srcdir/mk-test.awk ECHO_LINK="$ECHO_LINK"], .)
 	cat >>Makefile <<TEST_EOF
 
 # These rules are generated so we do not rely on suffix rules, which do not
@@ -217,4 +254,6 @@ do
 	@echo compiling $N; \$(CC) -c \$(CFLAGS_DEFAULT) $N.c
 TEST_EOF
 done
-],[],sort)
+],[
+AWK="$AWK"
+],cat)

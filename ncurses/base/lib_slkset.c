@@ -39,10 +39,12 @@
 #include <ctype.h>
 
 #if USE_WIDEC_SUPPORT
+#if HAVE_WCTYPE_H
 #include <wctype.h>
 #endif
+#endif
 
-MODULE_ID("$Id: lib_slkset.c,v 1.15 2005/04/16 17:47:34 tom Exp $")
+MODULE_ID("$Id: lib_slkset.c,v 1.16 2006/12/17 19:47:09 tom Exp $")
 
 NCURSES_EXPORT(int)
 slk_set(int i, const char *astr, int format)

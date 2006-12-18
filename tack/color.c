@@ -21,7 +21,7 @@
 
 #include <tack.h>
 
-MODULE_ID("$Id: color.c,v 1.6 2005/09/17 19:49:16 tom Exp $")
+MODULE_ID("$Id: color.c,v 1.7 2006/11/26 00:14:25 tom Exp $")
 
 /*
  * Color terminal tests.  Has only one entry point: test_color().
@@ -87,7 +87,7 @@ static int R, G, B;
 static void reset_colors(void)
 {
 	tc_putp(orig_colors);
-	tc_putp(tparm(orig_pair));
+	tc_putp(TPARM_0(orig_pair));
 }
 
 static int
@@ -110,10 +110,10 @@ color_trans(int c)
 	fg_color[pairs_used] = c;
 	bg_color[pairs_used] = c;
 	if (hue_lightness_saturation) {
-		tc_putp(tparm(initialize_color, pairs_used,
+		tc_putp(TPARM_4(initialize_color, pairs_used,
 			def_colors[c].h, def_colors[c].l, def_colors[c].s));
 	} else {
-		tc_putp(tparm(initialize_color, pairs_used,
+		tc_putp(TPARM_4(initialize_color, pairs_used,
 			def_colors[c].r, def_colors[c].g, def_colors[c].b));
 	}
 	return pairs_used++;
@@ -132,17 +132,17 @@ new_color(
 	}
 	if (set_a_foreground) {
 		/* set ANSI color (setaf) (setab) */
-		tc_putp(tparm(set_a_foreground, fg));
-		tc_putp(tparm(set_a_background, bg));
+		tc_putp(TPARM_1(set_a_foreground, fg));
+		tc_putp(TPARM_1(set_a_background, bg));
 	} else if (set_foreground) {
 		/* make sure black is zero */
 		(void) color_trans(COLOR_BLACK);
-		tc_putp(tparm(set_foreground, color_trans(fg)));
-		tc_putp(tparm(set_background, color_trans(bg)));
+		tc_putp(TPARM_1(set_foreground, color_trans(fg)));
+		tc_putp(TPARM_1(set_background, color_trans(bg)));
 	} else {	/* set color pair */
 		for (i = 0; i < pairs_used; i++) {
 			if (fg_color[i] == fg && bg_color[i] == bg) {
-				tc_putp(tparm(set_color_pair, i));
+				tc_putp(TPARM_1(set_color_pair, i));
 				if (hungry) {
 					eat_cookie();
 				}
@@ -155,7 +155,7 @@ new_color(
 				if (fg_color[i] == fg)
 					break;
 			}
-			tc_putp(tparm(set_color_pair, i));
+			tc_putp(TPARM_1(set_color_pair, i));
 			if (hungry) {
 				eat_cookie();
 			}
@@ -168,15 +168,15 @@ new_color(
 		fg_color[pairs_used] = fg;
 		bg_color[pairs_used] = bg;
 		if (hue_lightness_saturation) {
-			tc_putp(tparm(initialize_pair, pairs_used,
+			tc_putp(TPARM_7(initialize_pair, pairs_used,
 				def_colors[fg].h, def_colors[fg].l, def_colors[fg].s,
 				def_colors[bg].h, def_colors[bg].l, def_colors[bg].s));
 		} else {
-			tc_putp(tparm(initialize_pair, pairs_used,
+			tc_putp(TPARM_7(initialize_pair, pairs_used,
 				def_colors[fg].r, def_colors[fg].g, def_colors[fg].b,
 				def_colors[bg].r, def_colors[bg].g, def_colors[bg].b));
 		}
-		tc_putp(tparm(set_color_pair, pairs_used));
+		tc_putp(TPARM_1(set_color_pair, pairs_used));
 		pairs_used++;
 	}
 	if (hungry) {
@@ -245,9 +245,9 @@ send_color(int p, int r, int g, int b)
 
 	if (hue_lightness_saturation) {
 		rgb_2_hls(r, g, b, &h, &l, &s);
-		tc_putp(tparm(initialize_color, p, h, l, s));
+		tc_putp(TPARM_4(initialize_color, p, h, l, s));
 	} else {
-		tc_putp(tparm(initialize_color, p, r, g, b));
+		tc_putp(TPARM_4(initialize_color, p, r, g, b));
 	}
 }
 
@@ -260,9 +260,9 @@ send_pair(int p, int fr, int fg, int fb, int br, int bg, int bb)
 	if (hue_lightness_saturation) {
 		rgb_2_hls(fr, fg, fb, &fh, &fl, &fs);
 		rgb_2_hls(br, bg, bb, &bh, &bl, &bs);
-		tc_putp(tparm(initialize_pair, p, fh, fl, fs, bh, bl, bs));
+		tc_putp(TPARM_7(initialize_pair, p, fh, fl, fs, bh, bl, bs));
 	} else {
-		tc_putp(tparm(initialize_pair, p, fr, fg, fb, bb, bg, bb));
+		tc_putp(TPARM_7(initialize_pair, p, fr, fg, fb, bb, bg, bb));
 	}
 }
 
@@ -355,19 +355,19 @@ rainbow(int n)
 				if (i >= max_colors) {
 					break;
 				}
-				tc_putp(tparm(set_a_foreground, i));
-				tc_putp(tparm(set_a_background, i));
+				tc_putp(TPARM_1(set_a_foreground, i));
+				tc_putp(TPARM_1(set_a_background, i));
 			} else if (set_foreground) {
 				if (i >= max_colors) {
 					break;
 				}
-				tc_putp(tparm(set_foreground, i));
-				tc_putp(tparm(set_background, i));
+				tc_putp(TPARM_1(set_foreground, i));
+				tc_putp(TPARM_1(set_background, i));
 			} else {
 				if (i >= max_pairs) {
 					break;
 				}
-				tc_putp(tparm(set_color_pair, i));
+				tc_putp(TPARM_1(set_color_pair, i));
 			}
 			putchp(c);
 		}
@@ -375,13 +375,13 @@ rainbow(int n)
 			put_mode(exit_attribute_mode);
 		}
 		if (set_a_foreground) {
-			tc_putp(tparm(set_a_foreground, a_bright_color));
-			tc_putp(tparm(set_a_background, 0));
+			tc_putp(TPARM_1(set_a_foreground, a_bright_color));
+			tc_putp(TPARM_1(set_a_background, 0));
 		} else if (set_foreground) {
-			tc_putp(tparm(set_foreground, a_bright_color));
-			tc_putp(tparm(set_background, 0));
+			tc_putp(TPARM_1(set_foreground, a_bright_color));
+			tc_putp(TPARM_1(set_background, 0));
 		} else {
-			tc_putp(tparm(set_color_pair, 0));
+			tc_putp(TPARM_1(set_color_pair, 0));
 		}
 		put_str("   ");
 		put_str(splat[d].name);
@@ -443,19 +443,19 @@ dump_colors(void)
 							continue;
 						}
 						send_color(p, R, G, B);
-						tc_putp(tparm(set_a_background, p));
+						tc_putp(TPARM_1(set_a_background, p));
 					} else if (set_background) {
 						if (p >= max_colors) {
 							continue;
 						}
 						send_color(p, R, G, B);
-						tc_putp(tparm(set_background, p));
+						tc_putp(TPARM_1(set_background, p));
 					} else {
 						if (p >= max_pairs) {
 							continue;
 						}
 						send_pair(p, R, G, B, R, G, B);
-						tc_putp(tparm(set_color_pair, p));
+						tc_putp(TPARM_1(set_color_pair, p));
 					}
 					found_one = TRUE;
 					putchp(' ');

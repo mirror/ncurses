@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.17 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.19 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C;
@@ -53,8 +53,10 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    use type Interfaces.C.int;
    use type System.Address;
 
+   pragma Warnings (Off);
    function To_Argument_Access is new Ada.Unchecked_Conversion
      (System.Address, Argument_Access);
+   pragma Warnings (On);
 
    function Get_Fieldtype (F : Field) return C_Field_Type;
    pragma Import (C, Get_Fieldtype, "field_type");
@@ -139,7 +141,6 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
          Freeargs (To_Be_Free);
       end if;
    end Free_Arg;
-
 
    procedure Wrap_Builtin (Fld : Field;
                            Typ : Field_Type'Class;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: wresize.c,v 1.23 2002/09/28 15:15:51 tom Exp $")
+MODULE_ID("$Id: wresize.c,v 1.24 2006/10/14 20:43:31 tom Exp $")
 
 static int
 cleanup_lines(struct ldat *data, int length)
@@ -92,10 +92,10 @@ wresize(WINDOW *win, int ToLines, int ToCols)
 #ifdef TRACE
     T((T_CALLED("wresize(%p,%d,%d)"), win, ToLines, ToCols));
     if (win) {
-	TR(TRACE_UPDATE, ("...beg (%d, %d), max(%d,%d), reg(%d,%d)",
-			  win->_begy, win->_begx,
-			  win->_maxy, win->_maxx,
-			  win->_regtop, win->_regbottom));
+	TR(TRACE_UPDATE, ("...beg (%ld, %ld), max(%ld,%ld), reg(%ld,%ld)",
+			  (long) win->_begy, (long) win->_begx,
+			  (long) win->_maxy, (long) win->_maxx,
+			  (long) win->_regtop, (long) win->_regbottom));
 	if (_nc_tracing & TRACE_UPDATE)
 	    _tracedump("...before", win);
     }
@@ -228,10 +228,10 @@ wresize(WINDOW *win, int ToLines, int ToCols)
     repair_subwindows(win);
 
 #ifdef TRACE
-    TR(TRACE_UPDATE, ("...beg (%d, %d), max(%d,%d), reg(%d,%d)",
-		      win->_begy, win->_begx,
-		      win->_maxy, win->_maxx,
-		      win->_regtop, win->_regbottom));
+    TR(TRACE_UPDATE, ("...beg (%ld, %ld), max(%ld,%ld), reg(%ld,%ld)",
+		      (long) win->_begy, (long) win->_begx,
+		      (long) win->_maxy, (long) win->_maxx,
+		      (long) win->_regtop, (long) win->_regbottom));
     if (_nc_tracing & TRACE_UPDATE)
 	_tracedump("...after:", win);
 #endif

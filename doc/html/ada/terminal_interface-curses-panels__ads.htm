@@ -13,7 +13,7 @@
 <FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -41,7 +41,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.17 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.19 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2006/06/25 14:30:22 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> System;
@@ -76,7 +77,7 @@
    <FONT COLOR=green><EM>--  #1A NAME="AFU_2"#2|</EM></FONT>
    <b>function</b> New_Panel (Win : Window) <b>return</b> Panel <b>renames</b> Create;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">new_panel()</A></EM></FONT>
-   <b>pragma</b> Inline (New_Panel);
+   <FONT COLOR=green><EM>--  pragma Inline (New_Panel);</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_3"#2|</EM></FONT>
    <b>procedure</b> Bottom (Pan : <b>in</b> Panel);
@@ -110,17 +111,17 @@
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_9"#2|</EM></FONT>
    <b>function</b> Panel_Window (Pan : Panel) <b>return</b> Window <b>renames</b> Get_Window;
-   <b>pragma</b> Inline (Panel_Window);
+   <FONT COLOR=green><EM>--  pragma Inline (Panel_Window);</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_10"#2|</EM></FONT>
-   <b>procedure</b> Replace (<FONT COLOR=red><A NAME="ref_111_23" HREF="terminal_interface-curses-panels__adb.htm#ref_117_23">Pan</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Panel</A>;
+   <b>procedure</b> Replace (<FONT COLOR=red><A NAME="ref_112_23" HREF="terminal_interface-curses-panels__adb.htm#ref_117_23">Pan</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Panel</A>;
                       Win : <b>in</b> Window);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">replace_panel()</A></EM></FONT>
    <b>pragma</b> Inline (Replace);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_11"#2|</EM></FONT>
-   <b>procedure</b> Move (<FONT COLOR=red><A NAME="ref_117_20" HREF="terminal_interface-curses-panels__adb.htm#ref_129_20">Pan</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Panel</A>;
-                   <FONT COLOR=red><A NAME="ref_118_20" HREF="terminal_interface-curses-panels__adb.htm#ref_130_20">Line</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Line_Position</A>;
+   <b>procedure</b> Move (<FONT COLOR=red><A NAME="ref_118_20" HREF="terminal_interface-curses-panels__adb.htm#ref_129_20">Pan</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Panel</A>;
+                   <FONT COLOR=red><A NAME="ref_119_20" HREF="terminal_interface-curses-panels__adb.htm#ref_130_20">Line</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Line_Position</A>;
                    Column : <b>in</b> Column_Position);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">move_panel()</A></EM></FONT>
    <b>pragma</b> Inline (Move);

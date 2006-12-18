@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tset.1,v 1.15 2005/03/20 18:27:09 tom Exp @
+  * @Id: tset.1,v 1.18 2006/07/29 11:34:07 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -175,7 +175,6 @@
            eval `tset -s options ... `
 
 
-
 </PRE>
 <H2>TERMINAL TYPE MAPPING</H2><PRE>
        When the terminal is not hardwired into the system (or the
@@ -288,8 +287,20 @@
 
 </PRE>
 <H2>ENVIRONMENT</H2><PRE>
-       The <STRONG>tset</STRONG> command uses the <STRONG>SHELL</STRONG> and <STRONG>TERM</STRONG> environment vari-
-       ables.
+       The <STRONG>tset</STRONG> command uses these environment variables:
+
+       SHELL
+            tells <STRONG>tset</STRONG> whether to initialize <STRONG>TERM</STRONG> using <STRONG>sh</STRONG> or <STRONG>csh</STRONG>
+            syntax.
+
+       TERM Denotes  your  terminal  type.  Each terminal type is
+            distinct, though many are similar.
+
+       TERMCAP
+            may denote the location of a termcap database.  If it
+            is not an absolute pathname, e.g., begins with a `/',
+            <STRONG>tset</STRONG> removes the variable from the environment before
+            looking for the terminal description.
 
 
 </PRE>
@@ -304,9 +315,10 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="csh.1.html">csh(1)</A></STRONG>, <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>, <STRONG><A HREF="stty.1.html">stty(1)</A></STRONG>, <STRONG><A HREF="setupterm.3.html">setupterm(3)</A></STRONG>, <STRONG><A HREF="tty.4.html">tty(4)</A></STRONG>,  <STRONG><A HREF="termcap.5.html">termcap(5)</A></STRONG>,
-       <STRONG><A HREF="ttys.5.html">ttys(5)</A></STRONG>, <STRONG><A HREF="environ.7.html">environ(7)</A></STRONG>
+       <STRONG><A HREF="csh.1.html">csh(1)</A></STRONG>,  <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>,  <STRONG><A HREF="stty.1.html">stty(1)</A></STRONG>,  <STRONG><A HREF="setupterm.3x.html">setupterm(3x)</A></STRONG>,   <STRONG><A HREF="tty.4.html">tty(4)</A></STRONG>,   ter-
+       <STRONG><A HREF="minfo.5.html">minfo(5)</A></STRONG>, <STRONG><A HREF="ttys.5.html">ttys(5)</A></STRONG>, <STRONG><A HREF="environ.7.html">environ(7)</A></STRONG>
 
+       This describes <STRONG>ncurses</STRONG> version 5.5 (patch 20061209).
 
 
 

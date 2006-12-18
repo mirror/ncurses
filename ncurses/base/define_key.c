@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,12 +27,12 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1997                        *
+ *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: define_key.c,v 1.9 2005/04/30 16:21:26 tom Exp $")
+MODULE_ID("$Id: define_key.c,v 1.10 2006/06/17 18:19:48 tom Exp $")
 
 NCURSES_EXPORT(int)
 define_key(const char *str, int keycode)
@@ -46,12 +46,12 @@ define_key(const char *str, int keycode)
 	if (str != 0) {
 	    define_key(str, 0);
 	} else if (has_key(keycode)) {
-	    while (_nc_remove_key(&(SP->_keytry), keycode))
+	    while (_nc_remove_key(&(SP->_keytry), (unsigned) keycode))
 		code = OK;
 	}
 	if (str != 0) {
 	    if (key_defined(str) == 0) {
-		(void) _nc_add_to_try(&(SP->_keytry), str, keycode);
+		(void) _nc_add_to_try(&(SP->_keytry), str, (unsigned) keycode);
 		code = OK;
 	    } else {
 		code = ERR;

@@ -44,10 +44,10 @@
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
-<b>with</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_44_35" HREF="terminal_interface-curses-terminfo__adb.htm#ref_47_40">Terminfo</A></FONT> <b>is</b>
-   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-terminfo__ads.htm#ref_44_35">Terminfo</A>);
+<b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_44_35" HREF="terminal_interface-curses-terminfo__adb.htm#ref_48_40">Terminfo</A></FONT> <b>is</b>
+   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-terminfo__ads.htm#ref_44_35">Terminfo</A>);
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
    <FONT COLOR=green><EM>--  | Man page curs_terminfo.3x</EM></FONT>
@@ -73,8 +73,8 @@
    <b>function</b> <FONT COLOR=red><A NAME="ref_68_13" HREF="terminal_interface-curses-terminfo__adb.htm#ref_126_13">Get_Number</A></FONT> (<FONT COLOR=red><A NAME="ref_68_25" HREF="terminal_interface-curses-terminfo__adb.htm#ref_126_25">Name</A></FONT> : String) <b>return</b> Integer;
    <FONT COLOR=green><EM>--  AKA: tigetnum()</EM></FONT>
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_71_9">putctype</A></FONT> <b>is</b> <b>access</b> <b>function</b> (<FONT COLOR=red><A NAME="ref_71_38">c</A></FONT> : <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.int)
-                                    <b>return</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.int;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_71_9">putctype</A></FONT> <b>is</b> <b>access</b> <b>function</b> (<FONT COLOR=red><A NAME="ref_71_38">c</A></FONT> : <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int)
+                                    <b>return</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_71_9">putctype</A>);
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
@@ -83,5 +83,5 @@
                          <FONT COLOR=red><A NAME="ref_78_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_139_26">putc</A></FONT>   : <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_71_9">putctype</A> := <b>null</b>);
    <FONT COLOR=green><EM>--  AKA: tputs()</EM></FONT>
 
-<b>end</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-terminfo__ads.htm#ref_44_35">Terminfo</A>;
+<b>end</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-terminfo__ads.htm#ref_44_35">Terminfo</A>;
 </PRE></BODY></HTML>

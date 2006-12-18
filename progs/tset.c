@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -103,7 +103,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.60 2005/09/25 00:43:52 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.67 2006/09/16 17:51:10 tom Exp $")
 
 extern char **environ;
 
@@ -585,7 +585,7 @@ get_termcap_entry(char *userarg)
      * real entry from /etc/termcap.  This prevents us from being fooled
      * by out of date stuff in the environment.
      */
-  found:if ((p = getenv("TERMCAP")) != 0 && *p != '/') {
+  found:if ((p = getenv("TERMCAP")) != 0 && !_nc_is_abs_path(p)) {
 	/* 'unsetenv("TERMCAP")' is not portable.
 	 * The 'environ' array is better.
 	 */
@@ -686,7 +686,15 @@ get_termcap_entry(char *userarg)
 #define CSUSP	CTRL('Z')
 #endif
 
-#define	CHK(val, dft)	((int)val <= 0 ? dft : val)
+#if defined(_POSIX_VDISABLE)
+#define DISABLED(val)   (((_POSIX_VDISABLE != -1) \
+		       && ((val) == _POSIX_VDISABLE)) \
+		      || ((val) <= 0))
+#else
+#define DISABLED(val)   ((int)(val) <= 0)
+#endif
+
+#define CHK(val, dft)   (DISABLED(val) ? dft : val)
 
 static bool set_tabs(void);
 
@@ -838,13 +846,13 @@ static void
 set_control_chars(void)
 {
 #ifdef TERMIOS
-    if (mode.c_cc[VERASE] == 0 || terasechar >= 0)
+    if (DISABLED(mode.c_cc[VERASE]) || terasechar >= 0)
 	mode.c_cc[VERASE] = terasechar >= 0 ? terasechar : default_erase();
 
-    if (mode.c_cc[VINTR] == 0 || intrchar >= 0)
+    if (DISABLED(mode.c_cc[VINTR]) || intrchar >= 0)
 	mode.c_cc[VINTR] = intrchar >= 0 ? intrchar : CINTR;
 
-    if (mode.c_cc[VKILL] == 0 || tkillchar >= 0)
+    if (DISABLED(mode.c_cc[VKILL]) || tkillchar >= 0)
 	mode.c_cc[VKILL] = tkillchar >= 0 ? tkillchar : CKILL;
 #endif
 }
@@ -970,7 +978,7 @@ set_init(void)
  * Return TRUE if we set any tab stops, FALSE if not.
  */
 static bool
-set_tabs()
+set_tabs(void)
 {
     if (set_tab && clear_all_tabs) {
 	int c;
@@ -1020,11 +1028,13 @@ report(const char *name, int which, unsigned def)
 
     (void) fprintf(stderr, "%s %s ", name, older == newer ? "is" : "set to");
 
+    if (DISABLED(newer))
+	(void) fprintf(stderr, "undef.\n");
     /*
      * Check 'delete' before 'backspace', since the key_backspace value
      * is ambiguous.
      */
-    if (newer == 0177)
+    else if (newer == 0177)
 	(void) fprintf(stderr, "delete.\n");
     else if ((p = key_backspace) != 0
 	     && newer == (unsigned char) p[0]
@@ -1167,7 +1177,7 @@ main(int argc, char **argv)
 	    break;
 	case 'V':		/* print curses-version */
 	    puts(curses_version());
-	    return EXIT_SUCCESS;
+	    ExitProgram(EXIT_SUCCESS);
 	case 'w':		/* set window-size */
 	    opt_w = TRUE;
 	    break;
@@ -1260,18 +1270,20 @@ main(int argc, char **argv)
 
     if (sflag) {
 	int len;
+	char *var;
+	char *leaf;
 	/*
 	 * Figure out what shell we're using.  A hack, we look for an
 	 * environmental variable SHELL ending in "csh".
 	 */
-	if ((p = getenv("SHELL")) != 0
-	    && (len = strlen(p)) >= 3
-	    && !strcmp(p + len - 3, "csh"))
+	if ((var = getenv("SHELL")) != 0
+	    && ((len = strlen(leaf = _nc_basename(var))) >= 3)
+	    && !strcmp(leaf + len - 3, "csh"))
 	    p = "set noglob;\nsetenv TERM %s;\nunset noglob;\n";
 	else
 	    p = "TERM=%s;\n";
 	(void) printf(p, ttype);
     }
 
-    return EXIT_SUCCESS;
+    ExitProgram(EXIT_SUCCESS);
 }

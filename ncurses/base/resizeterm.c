@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.17 2004/07/31 20:24:38 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.18 2006/10/14 20:43:31 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
@@ -57,12 +57,12 @@ show_window_sizes(const char *name)
     _tracef("%s resizing: %2d x %2d (%2d x %2d)", name, LINES, COLS,
 	    screen_lines, screen_columns);
     for (wp = _nc_windows; wp != 0; wp = wp->next) {
-	_tracef("  window %p is %2d x %2d at %2d,%2d",
+	_tracef("  window %p is %2ld x %2ld at %2ld,%2ld",
 		&(wp->win),
-		wp->win._maxy + 1,
-		wp->win._maxx + 1,
-		wp->win._begy,
-		wp->win._begx);
+		(long) wp->win._maxy + 1,
+		(long) wp->win._maxx + 1,
+		(long) wp->win._begy,
+		(long) wp->win._begx);
     }
 }
 #endif
@@ -128,10 +128,10 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
     int myLines = win->_maxy + 1;
     int myCols = win->_maxx + 1;
 
-    T((T_CALLED("adjust_window(%p,%d,%d) currently %dx%d at %d,%d"),
+    T((T_CALLED("adjust_window(%p,%d,%d) currently %ldx%ld at %ld,%ld"),
        win, ToLines, ToCols,
-       getmaxy(win), getmaxx(win),
-       getbegy(win), getbegx(win)));
+       (long) getmaxy(win), (long) getmaxx(win),
+       (long) getbegy(win), (long) getbegx(win)));
 
     if (win->_begy >= bottom) {
 	win->_begy += (ToLines - current_lines);

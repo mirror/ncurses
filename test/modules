@@ -1,7 +1,7 @@
 # Test-Program modules
-# $Id: modules,v 1.23 2005/09/25 00:56:17 tom Exp $
+# $Id: modules,v 1.28 2006/11/04 18:56:08 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey 1997-2005
+# Author: Thomas E. Dickey 1997-on
 #
 
 @ base
@@ -36,7 +36,9 @@ background	progs		$(srcdir)	$(HEADER_DEPS)
 blue		progs		$(srcdir)	$(HEADER_DEPS)
 bs		progs		$(srcdir)	$(HEADER_DEPS)
 cardfile	progs		$(srcdir)	$(HEADER_DEPS)	../include/panel.h ../include/form.h
+chgat		progs		$(srcdir)	$(HEADER_DEPS)
 color_set	progs		$(srcdir)	$(HEADER_DEPS)
+demo_altkeys	progs		$(srcdir)	$(HEADER_DEPS)
 demo_defkey	progs		$(srcdir)	$(HEADER_DEPS)
 demo_keyok	progs		$(srcdir)	$(HEADER_DEPS)
 demo_forms	progs		$(srcdir)	$(HEADER_DEPS)	../include/form.h $(srcdir)/edit_field.h
@@ -45,10 +47,12 @@ demo_panels	progs		$(srcdir)	$(HEADER_DEPS)	../include/panel.h
 demo_termcap	progs		$(srcdir)	$(HEADER_DEPS)
 ditto		progs		$(srcdir)	$(HEADER_DEPS)
 dots		progs		$(srcdir)	$(HEADER_DEPS)
+echochar	progs		$(srcdir)	$(HEADER_DEPS)
 edit_field	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/edit_field.h
 filter		progs		$(srcdir)	$(HEADER_DEPS)	../include/form.h
 firework	progs		$(srcdir)	$(HEADER_DEPS)
 firstlast	progs		$(srcdir)	$(HEADER_DEPS)
+foldkeys	progs		$(srcdir)	$(HEADER_DEPS)
 gdc		progs		$(srcdir)	$(HEADER_DEPS)
 hanoi		progs		$(srcdir)	$(HEADER_DEPS)
 hashtest	progs		$(srcdir)	$(HEADER_DEPS)
@@ -58,9 +62,12 @@ keynames	progs		$(srcdir)	$(HEADER_DEPS)
 knight		progs		$(srcdir)	$(HEADER_DEPS)
 lrtest		progs		$(srcdir)	$(HEADER_DEPS)
 ncurses		progs		$(srcdir)	$(HEADER_DEPS)	../include/panel.h ../include/menu.h ../include/form.h
+movewindow	progs		$(srcdir)	$(HEADER_DEPS)
 newdemo		progs		$(srcdir)	$(HEADER_DEPS)
 railroad	progs		$(srcdir)	$(HEADER_DEPS)
 rain		progs		$(srcdir)	$(HEADER_DEPS)
+redraw		progs		$(srcdir)	$(HEADER_DEPS)
+savescreen	progs		$(srcdir)	$(HEADER_DEPS)
 tclock		progs		$(srcdir)	$(HEADER_DEPS)
 testaddch	progs		$(srcdir)	$(HEADER_DEPS)
 testcurs	progs		$(srcdir)	$(HEADER_DEPS)

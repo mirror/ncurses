@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+  * Copyright (c) 1998-2000,2006 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: clear.1,v 1.3 2000/07/15 23:59:35 china Exp @
+  * @Id: clear.1,v 1.5 2006/07/01 21:55:09 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -61,10 +61,15 @@
        the environment for the terminal type and then in the <STRONG>ter-</STRONG>
        <STRONG>minfo</STRONG> database to figure out how to clear the screen.
 
+       <STRONG>clear</STRONG>  ignores  any  command-line  parameters  that may be
+       present.
+
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
+
+       This describes <STRONG>ncurses</STRONG> version 5.5 (patch 20061209).
 
 
 

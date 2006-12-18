@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.2 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 
@@ -46,7 +47,6 @@ with Interfaces.C; use Interfaces.C;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
 with Terminal_Interface.Curses;
 
-
 generic
    Max : Natural;
    --   type mystring is private;
@@ -55,7 +55,6 @@ package ncurses2.genericPuts is
    package BS is new
      Ada.Strings.Bounded.Generic_Bounded_Length (Max);
    use BS;
-
 
    procedure myGet (Win : in  Terminal_Interface.Curses.Window
                       := Terminal_Interface.Curses.Standard_Window;

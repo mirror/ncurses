@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.77 2005/06/12 22:52:56 tom Exp $
+# $Id: Makefile.in,v 1.78 2006/10/21 17:07:49 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -88,6 +88,8 @@ NCURSES_MAJOR	= @NCURSES_MAJOR@
 NCURSES_MINOR	= @NCURSES_MINOR@
 REL_VERSION     = @cf_cv_rel_version@
 ABI_VERSION	= @cf_cv_abi_version@
+
+LOCAL_LIBDIR	= @top_builddir@/lib
 
 LINK		= @LINK_PROGS@ $(LIBTOOL_LINK) $(CXX) @CXXLDFLAGS@
 SHLIB_DIRS	= -L../lib

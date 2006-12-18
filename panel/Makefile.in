@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.46 2003/11/01 22:44:33 tom Exp $
+# $Id: Makefile.in,v 1.47 2006/10/14 20:40:36 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2003,2006 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -67,7 +67,7 @@ LIBTOOL_UNINSTALL = @LIB_UNINSTALL@
 
 INSTALL		= @INSTALL@
 INSTALL_LIB	= @INSTALL@ @INSTALL_LIB@
-INSTALL_PROG	= @INSTALL_PROG@
+INSTALL_PROG	= @INSTALL_PROGRAM@
 INSTALL_DATA	= @INSTALL_DATA@
 
 AR		= @AR@

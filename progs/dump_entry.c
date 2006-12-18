@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.70 2005/07/23 20:03:30 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.79 2006/09/30 20:18:15 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -60,7 +60,6 @@ static int oldcol;		/* last value of column before wrap */
 static bool pretty;		/* true if we format if-then-else strings */
 
 static char *save_sgr;
-static char *save_acsc;
 
 static DYNBUF outbuf;
 static DYNBUF tmpbuf;
@@ -369,9 +368,17 @@ version_filter(PredType type, PredIdx idx)
 }
 
 static void
+trim_trailing(void)
+{
+    while (outbuf.used > 0 && outbuf.text[outbuf.used - 1] == ' ')
+	outbuf.text[--outbuf.used] = '\0';
+}
+
+static void
 force_wrap(void)
 {
     oldcol = column;
+    trim_trailing();
     strcpy_DYN(&outbuf, trailer);
     column = INDENT;
 }
@@ -425,43 +432,81 @@ termcap_length(const char *src)
 #define termcap_length(src) strlen(src)
 #endif
 
+static void
+indent_DYN(DYNBUF * buffer, int level)
+{
+    int n;
+
+    for (n = 0; n < level; n++)
+	strncpy_DYN(buffer, "\t", 1);
+}
+
+static bool
+has_params(const char *src)
+{
+    bool result = FALSE;
+    int len = strlen(src);
+    int n;
+    bool ifthen = FALSE;
+    bool params = FALSE;
+
+    for (n = 0; n < len - 1; ++n) {
+	if (!strncmp(src + n, "%p", 2)) {
+	    params = TRUE;
+	} else if (!strncmp(src + n, "%;", 2)) {
+	    ifthen = TRUE;
+	    result = params;
+	    break;
+	}
+    }
+    if (!ifthen) {
+	result = ((len > 50) && params);
+    }
+    return result;
+}
+
 static char *
 fmt_complex(char *src, int level)
 {
-    int percent = 0;
-    int n;
-    bool if_then = strstr(src, "%?") != 0;
-    bool params = !if_then && (strlen(src) > 50) && (strstr(src, "%p") != 0);
+    bool percent = FALSE;
+    bool params = has_params(src);
 
     while (*src != '\0') {
 	switch (*src) {
 	case '\\':
-	    percent = 0;
+	    percent = FALSE;
 	    strncpy_DYN(&tmpbuf, src++, 1);
 	    break;
 	case '%':
-	    percent = 1;
+	    percent = TRUE;
 	    break;
 	case '?':		/* "if" */
 	case 't':		/* "then" */
 	case 'e':		/* "else" */
 	    if (percent) {
-		percent = 0;
+		percent = FALSE;
 		tmpbuf.text[tmpbuf.used - 1] = '\n';
-		/* treat a "%e%?" as else-if, on the same level */
-		if (!strncmp(src, "e%?", 3)) {
-		    for (n = 0; n < level; n++)
-			strncpy_DYN(&tmpbuf, "\t", 1);
+		/* treat a "%e" as else-if, on the same level */
+		if (*src == 'e') {
+		    indent_DYN(&tmpbuf, level);
 		    strncpy_DYN(&tmpbuf, "%", 1);
-		    strncpy_DYN(&tmpbuf, src, 3);
-		    src += 3;
+		    strncpy_DYN(&tmpbuf, src, 1);
+		    src++;
+		    params = has_params(src);
+		    if (!params && *src != '\0' && *src != '%') {
+			strncpy_DYN(&tmpbuf, "\n", 1);
+			indent_DYN(&tmpbuf, level + 1);
+		    }
 		} else {
-		    for (n = 0; n <= level; n++)
-			strncpy_DYN(&tmpbuf, "\t", 1);
+		    indent_DYN(&tmpbuf, level + 1);
 		    strncpy_DYN(&tmpbuf, "%", 1);
 		    strncpy_DYN(&tmpbuf, src, 1);
 		    if (*src++ == '?') {
 			src = fmt_complex(src, level + 1);
+			if (*src != '\0' && *src != '%') {
+			    strncpy_DYN(&tmpbuf, "\n", 1);
+			    indent_DYN(&tmpbuf, level + 1);
+			}
 		    } else if (level == 1) {
 			_nc_warning("%%%c without %%?", *src);
 		    }
@@ -471,11 +516,10 @@ fmt_complex(char *src, int level)
 	    break;
 	case ';':		/* "endif" */
 	    if (percent) {
-		percent = 0;
+		percent = FALSE;
 		if (level > 1) {
 		    tmpbuf.text[tmpbuf.used - 1] = '\n';
-		    for (n = 0; n < level; n++)
-			strncpy_DYN(&tmpbuf, "\t", 1);
+		    indent_DYN(&tmpbuf, level);
 		    strncpy_DYN(&tmpbuf, "%", 1);
 		    strncpy_DYN(&tmpbuf, src++, 1);
 		    return src;
@@ -486,14 +530,14 @@ fmt_complex(char *src, int level)
 	case 'p':
 	    if (percent && params) {
 		tmpbuf.text[tmpbuf.used - 1] = '\n';
-		for (n = 0; n <= level; n++)
-		    strncpy_DYN(&tmpbuf, "\t", 1);
+		indent_DYN(&tmpbuf, level + 1);
 		strncpy_DYN(&tmpbuf, "%", 1);
 	    }
-	    percent = 0;
+	    params = FALSE;
+	    percent = FALSE;
 	    break;
 	default:
-	    percent = 0;
+	    percent = FALSE;
 	    break;
 	}
 	strncpy_DYN(&tmpbuf, src++, 1);
@@ -740,7 +784,7 @@ fmt_entry(TERMTYPE *tterm,
 
     /*
      * This piece of code should be an effective inverse of the functions
-     * postprocess_terminfo and postprocess_terminfo in parse_entry.c.
+     * postprocess_terminfo() and postprocess_terminfo() in parse_entry.c.
      * Much more work should be done on this to support dumping termcaps.
      */
     if (tversion == V_HPUX) {
@@ -803,6 +847,7 @@ fmt_entry(TERMTYPE *tterm,
 	if (trimmed) {
 	    outbuf.text[outbuf.used] = '\0';
 	    column = oldcol;
+	    strcpy_DYN(&outbuf, " ");
 	}
     }
 #if 0
@@ -902,23 +947,66 @@ kill_fkeys(TERMTYPE *tterm, int target)
     return result;
 }
 
+/*
+ * Check if the given acsc string is a 1-1 mapping, i.e., just-like-vt100.
+ * Also, since this is for termcap, we only care about the line-drawing map.
+ */
+#define isLine(c) (strchr("lmkjtuvwqxn", c) != 0)
+
+static bool
+one_one_mapping(const char *mapping)
+{
+    bool result = TRUE;
+
+    if (mapping != ABSENT_STRING) {
+	int n = 0;
+	while (mapping[n] != '\0') {
+	    if (isLine(mapping[n]) &&
+		mapping[n] != mapping[n + 1]) {
+		result = FALSE;
+		break;
+	    }
+	    n += 2;
+	}
+    }
+    return result;
+}
+
 #define FMT_ENTRY() \
 		fmt_entry(tterm, pred, \
-			(already_used > 0), \
+			0, \
 			suppress_untranslatable, \
 			infodump, numbers)
 
-#define SHOW_WHY if (!already_used) PRINTF
+#define SHOW_WHY PRINTF
 
-int
+static bool
+purged_acs(TERMTYPE *tterm)
+{
+    bool result = FALSE;
+
+    if (VALID_STRING(acs_chars)) {
+	if (!one_one_mapping(acs_chars)) {
+	    enter_alt_charset_mode = ABSENT_STRING;
+	    exit_alt_charset_mode = ABSENT_STRING;
+	    SHOW_WHY("# (rmacs/smacs removed for consistency)\n");
+	}
+	result = TRUE;
+    }
+    return result;
+}
+
+/*
+ * Dump a single entry.
+ */
+void
 dump_entry(TERMTYPE *tterm,
 	   bool suppress_untranslatable,
 	   bool limited,
-	   int already_used,
 	   int numbers,
 	   PredFunc pred)
-/* dump a single entry */
 {
+    TERMTYPE save_tterm;
     int len, critlen;
     const char *legend;
     bool infodump;
@@ -933,13 +1021,13 @@ dump_entry(TERMTYPE *tterm,
 	legend = "terminfo";
 	infodump = TRUE;
     }
-    critlen -= already_used;
 
     save_sgr = set_attributes;
-    save_acsc = acs_chars;
 
     if (((len = FMT_ENTRY()) > critlen)
 	&& limited) {
+
+	save_tterm = *tterm;
 	if (!suppress_untranslatable) {
 	    SHOW_WHY("# (untranslatable capabilities removed to fit entry within %d bytes)\n",
 		     critlen);
@@ -960,7 +1048,7 @@ dump_entry(TERMTYPE *tterm,
 	     */
 	    int n;
 	    for (n = STRCOUNT; n < NUM_STRINGS(tterm); n++) {
-		char *name = ExtStrname(tterm, n, strnames);
+		const char *name = ExtStrname(tterm, n, strnames);
 
 		if (VALID_STRING(tterm->Strings[n])) {
 		    set_attributes = ABSENT_STRING;
@@ -983,7 +1071,7 @@ dump_entry(TERMTYPE *tterm,
 		changed = TRUE;
 	    }
 	    if (!changed || ((len = FMT_ENTRY()) > critlen)) {
-		if (VALID_STRING(acs_chars)) {
+		if (purged_acs(tterm)) {
 		    acs_chars = ABSENT_STRING;
 		    SHOW_WHY("# (acsc removed to fit entry within %d bytes)\n",
 			     critlen);
@@ -1010,35 +1098,46 @@ dump_entry(TERMTYPE *tterm,
 			     critlen);
 		    len = FMT_ENTRY();
 		}
-		if (len > critlen && !already_used) {
+		if (len > critlen) {
 		    (void) fprintf(stderr,
 				   "warning: %s entry is %d bytes long\n",
 				   _nc_first_name(tterm->term_names),
 				   len);
 		    SHOW_WHY("# WARNING: this entry, %d bytes long, may core-dump %s libraries!\n",
-			     already_used + len, legend);
+			     len, legend);
 		}
 		tversion = oldversion;
 	    }
 	    set_attributes = save_sgr;
-	    acs_chars = save_acsc;
+	    *tterm = save_tterm;
 	}
+    } else if (!version_filter(STRING, STR_IDX(acs_chars))) {
+	save_tterm = *tterm;
+	if (purged_acs(tterm)) {
+	    len = FMT_ENTRY();
+	}
+	*tterm = save_tterm;
     }
-
-    (void) fputs(outbuf.text, stdout);
-    return len;
 }
 
-int
+void
 dump_uses(const char *name, bool infodump)
 /* dump "use=" clauses in the appropriate format */
 {
     char buffer[MAX_TERMINFO_LENGTH];
 
-    strcpy_DYN(&outbuf, 0);
+    if (outform == F_TERMCAP || outform == F_TCONVERR)
+	trim_trailing();
     (void) sprintf(buffer, "%s%s", infodump ? "use=" : "tc=", name);
     wrap_concat(buffer);
+}
+
+int
+show_entry(void)
+{
+    trim_trailing();
     (void) fputs(outbuf.text, stdout);
+    putchar('\n');
     return outbuf.used;
 }
 

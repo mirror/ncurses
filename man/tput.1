@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.22 2005/01/08 17:44:26 tom Exp $
+.\" $Id: tput.1,v 1.25 2006/05/13 15:14:01 tom Exp $
 .TH tput 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -118,12 +118,28 @@ reports the version of ncurses which was used in this program, and exits.
 \fBinit\fR
 If the \fBterminfo\fR database is present and an entry for the user's
 terminal exists (see \fB-T\fR\fItype\fR, above), the following will
-occur: (1) if present, the terminal's initialization strings will be
-output (\fBis1\fR, \fBis2\fR, \fBis3\fR, \fBif\fR, \fBiprog\fR), (2)
-any delays (e.g., newline) specified in the entry will be set in the
-tty driver, (3) tabs expansion will be turned on or off according to
-the specification in the entry, and (4) if tabs are not expanded,
-standard tabs will be set (every 8 spaces).  If an entry does not
+occur:
+.RS
+.TP
+(1)
+if present, the terminal's initialization strings will be
+output as detailed in the \fBterminfo\fR(5) section on
+.IR "Tabs and Initialization" ,
+.TP
+(2)
+any delays (e.g., newline) specified in the entry will
+be set in the tty driver,
+.TP
+(3)
+tabs expansion will be turned on or off according to
+the specification in the entry, and
+.TP
+(4)
+if tabs are not expanded,
+standard tabs will be set (every 8 spaces).
+.RE
+.IP
+If an entry does not
 contain the information needed for any of the four above activities,
 that activity will silently be skipped.
 .TP
@@ -280,14 +296,27 @@ T}
 =
 .TE
 .SH PORTABILITY
+.PP
 The \fBlongname\fR and \fB-S\fR options, and the parameter-substitution
 features used in the \fBcup\fR example, are not supported in BSD curses or in
 AT&T/USL curses before SVr4.
+.PP
+X/Open documents only the operands for \fBclear\fP, \fBinit\fP and \fBreset\fP.
+In this implementation, \fBclear\fP is part of the \fIcapname\fR support.
+Other implementations of \fBtput\fP on
+SVr4-based systems such as Solaris, IRIX64 and HPUX
+as well as others such as AIX and Tru64
+provide support for \fIcapname\fR operands.
+A few platforms such as FreeBSD and NetBSD recognize termcap names rather
+than terminfo capability names in their respective \fBtput\fP commands.
 .SH SEE ALSO
 \fB@CLEAR@\fR(1),
 \fBstty\fR(1),
 \fBtabs\fR(\*n),
 \fBterminfo\fR(5).
+.PP
+This describes \fBncurses\fR
+version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:

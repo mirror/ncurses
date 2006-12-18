@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2002,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,17 +29,21 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.11 2005/05/28 21:38:45 tom Exp $
+ * $Id: dots.c,v 1.15 2006/11/04 19:54:42 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
 #include <test.priv.h>
+
+#if HAVE_SETUPTERM
 
 #include <time.h>
 
 #define valid(s) ((s != 0) && s != (char *)-1)
 
 static bool interrupted = FALSE;
+static long total_chars = 0;
+static time_t started;
 
 static int
 outc(int c)
@@ -71,14 +75,16 @@ cleanup(void)
 	outs(orig_pair);
     outs(clear_screen);
     outs(cursor_normal);
+
+    printf("\n\n%ld total chars, rate %.2f/sec\n",
+	   total_chars,
+	   ((double) (total_chars) / (time((time_t *) 0) - started)));
 }
 
 static void
 onsig(int n GCC_UNUSED)
 {
     interrupted = TRUE;
-    cleanup();
-    ExitProgram(EXIT_FAILURE);
 }
 
 static float
@@ -93,13 +99,11 @@ main(
 	int argc GCC_UNUSED,
 	char *argv[]GCC_UNUSED)
 {
-    int x, y, z, j, p;
+    int x, y, z, p;
     float r;
     float c;
 
-    for (j = SIGHUP; j <= SIGTERM; j++)
-	if (signal(j, SIG_IGN) != SIG_IGN)
-	    signal(j, onsig);
+    CATCHALL(onsig);
 
     srand((unsigned) time(0));
     setupterm((char *) 0, 1, (int *) 0);
@@ -114,8 +118,9 @@ main(
 
     r = (float) (lines - 4);
     c = (float) (columns - 4);
+    started = time((time_t *) 0);
 
-    for (;;) {
+    while (!interrupted) {
 	x = (int) (c * ranf()) + 2;
 	y = (int) (r * ranf()) + 2;
 	p = (ranf() > 0.9) ? '*' : ' ';
@@ -140,5 +145,17 @@ main(
 	}
 	outc(p);
 	fflush(stdout);
+	++total_chars;
     }
+    cleanup();
+    ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(int argc GCC_UNUSED,
+     char *argv[]GCC_UNUSED)
+{
+    fprintf(stderr, "This program requires terminfo\n");
+    exit(EXIT_FAILURE);
+}
+#endif

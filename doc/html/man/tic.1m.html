@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tic.1m,v 1.38 2005/04/30 19:39:28 tom Exp @
+  * @Id: tic.1m,v 1.43 2006/05/13 15:14:01 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -52,7 +52,7 @@
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <STRONG>tic</STRONG>  [<STRONG>-1CGILNTVacfgrstx</STRONG>]  [<STRONG>-e</STRONG>  <EM>names</EM>] [<STRONG>-o</STRONG> <EM>dir</EM>] [<STRONG>-R</STRONG> <EM>subset</EM>]
+       <STRONG>tic</STRONG>  [<STRONG>-1CGILNTUVacfgrstx</STRONG>]  [<STRONG>-e</STRONG> <EM>names</EM>] [<STRONG>-o</STRONG> <EM>dir</EM>] [<STRONG>-R</STRONG> <EM>subset</EM>]
        [<STRONG>-v</STRONG>[<EM>n</EM>]] [<STRONG>-w</STRONG>[<EM>n</EM>]] <EM>file</EM>
 
 
@@ -179,31 +179,37 @@
               Normally when translating from terminfo to termcap,
               untranslatable capabilities are commented-out.
 
-       <STRONG>-V</STRONG>     reports  the  version  of ncurses which was used in
-              this program, and exits.
+       <STRONG>-U</STRONG>   tells  <STRONG>tic</STRONG> to not post-process the data after parsing
+            the source file.  Normally, it infers data  which  is
+            commonly  missing in older terminfo data, or in term-
+            caps.
 
-       <STRONG>-v</STRONG><EM>n</EM>    specifies that (verbose) output be written to stan-
-              dard   error   trace   information   showing  <STRONG>tic</STRONG>'s
-              progress.  The optional integer <EM>n</EM> is a number  from
-              1 to 10, inclusive, indicating the desired level of
-              detail  of  information.   If  <EM>n</EM>  is  omitted,  the
-              default  level is 1.  If <EM>n</EM> is specified and greater
-              than 1, the level of detail is increased.
+       <STRONG>-V</STRONG>   reports the version of ncurses which was used in this
+            program, and exits.
 
-       <STRONG>-w</STRONG><EM>n</EM>    specifies the width of the output.
+       <STRONG>-v</STRONG><EM>n</EM>  specifies  that  (verbose) output be written to stan-
+            dard error trace information showing <STRONG>tic</STRONG>'s  progress.
+            The  optional  parameter  <EM>n</EM> is a number from 1 to 10,
+            inclusive, indicating the desired level of detail  of
+            information.   If  <EM>n</EM> is omitted, the default level is
+            1.  If <EM>n</EM> is specified and greater than 1,  the  level
+            of detail is increased.
 
-       <STRONG>-x</STRONG>     Treat unknown capabilities as  user-defined.   That
-              is,  if you supply a capability name which <STRONG>tic</STRONG> does
-              not recognize, it will  infer  its  type  (boolean,
-              number  or  string)  from  the  syntax  and make an
-              extended table entry for that.  User-defined  capa-
-              bility  strings  whose  name  begins with ``k'' are
-              treated as function keys.
+       <STRONG>-w</STRONG><EM>n</EM>  specifies  the width of the output.  The parameter is
+            optional.  If it is omitted, it defaults to 60.
 
-       <EM>file</EM>   contains one or more <STRONG>terminfo</STRONG> terminal descriptions
-              in  source format [see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].  Each descrip-
-              tion in the file describes the  capabilities  of  a
-              particular terminal.
+       <STRONG>-x</STRONG>   Treat unknown capabilities as user-defined.  That is,
+            if  you  supply  a capability name which <STRONG>tic</STRONG> does not
+            recognize, it will infer its type (boolean, number or
+            string)  from  the  syntax and make an extended table
+            entry  for  that.   User-defined  capability  strings
+            whose  name begins with ``k'' are treated as function
+            keys.
+
+       <EM>file</EM> contains one or more <STRONG>terminfo</STRONG>  terminal  descriptions
+            in source format [see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].  Each description
+            in the file describes the capabilities of a  particu-
+            lar terminal.
 
        The debug flag levels are as follows:
 
@@ -302,6 +308,8 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,    <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,   <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
+
+       This describes <STRONG>ncurses</STRONG> version 5.5 (patch 20061209).
 
 
 

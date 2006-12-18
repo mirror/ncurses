@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.73 2005/06/11 18:08:57 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.75 2006/03/04 20:06:09 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -80,7 +80,7 @@ check_mouse_activity(int delay EVENTLIST_2nd(_nc_eventlist * evl))
     return rc;
 }
 
-static inline int
+static NCURSES_INLINE int
 fifo_peek(void)
 {
     int ch = SP->_fifo[peek];
@@ -90,7 +90,7 @@ fifo_peek(void)
     return ch;
 }
 
-static inline int
+static NCURSES_INLINE int
 fifo_pull(void)
 {
     int ch;
@@ -110,7 +110,7 @@ fifo_pull(void)
     return ch;
 }
 
-static inline int
+static NCURSES_INLINE int
 fifo_push(EVENTLIST_0th(_nc_eventlist * evl))
 {
     int n;
@@ -206,7 +206,7 @@ fifo_push(EVENTLIST_0th(_nc_eventlist * evl))
     return ch;
 }
 
-static inline void
+static NCURSES_INLINE void
 fifo_clear(void)
 {
     memset(SP->_fifo, 0, sizeof(SP->_fifo));
@@ -296,23 +296,24 @@ _nc_wgetch(WINDOW *win,
 	wrefresh(win);
 
     if (!win->_notimeout && (win->_delay >= 0 || SP->_cbreak > 1)) {
-	int delay;
+	if (head == -1) {	/* fifo is empty */
+	    int delay;
+	    int rc;
 
-	TR(TRACE_IEVENT, ("timed delay in wgetch()"));
-	if (SP->_cbreak > 1)
-	    delay = (SP->_cbreak - 1) * 100;
-	else
-	    delay = win->_delay;
+	    TR(TRACE_IEVENT, ("timed delay in wgetch()"));
+	    if (SP->_cbreak > 1)
+		delay = (SP->_cbreak - 1) * 100;
+	    else
+		delay = win->_delay;
 
 #ifdef NCURSES_WGETCH_EVENTS
-	if (event_delay >= 0 && delay > event_delay)
-	    delay = event_delay;
+	    if (event_delay >= 0 && delay > event_delay)
+		delay = event_delay;
 #endif
 
-	TR(TRACE_IEVENT, ("delay is %d milliseconds", delay));
+	    TR(TRACE_IEVENT, ("delay is %d milliseconds", delay));
 
-	if (head == -1) {	/* fifo is empty */
-	    int rc = check_mouse_activity(delay EVENTLIST_2nd(evl));
+	    rc = check_mouse_activity(delay EVENTLIST_2nd(evl));
 
 #ifdef NCURSES_WGETCH_EVENTS
 	    if (rc & 4) {
@@ -559,7 +560,7 @@ kgetch(EVENTLIST_0th(_nc_eventlist * evl))
 #ifdef NCURSES_WGETCH_EVENTS
 	    if (rc & 4) {
 		TR(TRACE_IEVENT, ("interrupted by a user event"));
-		/* FIXME Should have preserved remainder timeleft for reusal... */
+		/* FIXME Should have preserved remainder timeleft for reuse... */
 		peek = head;	/* Restart interpreting later */
 		return KEY_EVENT;
 	    }

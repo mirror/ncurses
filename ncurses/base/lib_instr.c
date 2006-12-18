@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_instr.c,v 1.14 2005/04/16 17:51:12 tom Exp $")
+MODULE_ID("$Id: lib_instr.c,v 1.15 2005/11/20 01:38:03 tom Exp $")
 
 NCURSES_EXPORT(int)
 winnstr(WINDOW *win, char *str, int n)
@@ -99,7 +99,7 @@ winnstr(WINDOW *win, char *str, int n)
 		}
 	    }
 #else
-	    str[i++] = CharOf(win->_line[row].text[col]);
+	    str[i++] = (char) CharOf(win->_line[row].text[col]);
 #endif
 	    if (++col > win->_maxx) {
 		col = 0;

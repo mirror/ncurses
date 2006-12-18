@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ins_wch.c,v 1.7 2005/09/17 19:25:13 tom Exp $")
+MODULE_ID("$Id: lib_ins_wch.c,v 1.8 2005/12/03 20:24:19 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -117,7 +117,7 @@ wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
 	    for (cp = wstr; *cp && ((cp - wstr) < n); cp++) {
 		int len = wcwidth(*cp);
 
-		if (len != 1) {
+		if (len != 1 || !is8bits(*cp)) {
 		    cchar_t tmp_cchar;
 		    wchar_t tmp_wchar = *cp;
 		    memset(&tmp_cchar, 0, sizeof(tmp_cchar));

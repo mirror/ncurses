@@ -7,7 +7,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.34 2005/04/16 16:19:12 tom Exp $
+ * $Id: testcurs.c,v 1.37 2005/12/31 20:23:09 tom Exp $
  */
 
 #include <test.priv.h>
@@ -342,13 +342,19 @@ inputTest(WINDOW *win)
     mvwaddstr(win, 1, 1, "Press keys (or mouse buttons) to show their names");
     mvwaddstr(win, 2, 1, "Press spacebar to finish");
     wrefresh(win);
+
     keypad(win, TRUE);
     raw();
     noecho();
+
+#if HAVE_TYPEAHEAD
     typeahead(-1);
+#endif
+
 #if defined(PDCURSES)
     mouse_set(ALL_MOUSE_EVENTS);
 #endif
+
     for (;;) {
 	wmove(win, 3, 5);
 	c = wgetch(win);
@@ -440,6 +446,17 @@ outputTest(WINDOW *win)
     chtype ch;
     int by, bx;
 
+#if !HAVE_TIGETSTR
+#if HAVE_TGETENT
+    char tc_buffer[4096];
+    char tc_parsed[4096];
+    char *area_pointer = tc_parsed;
+    tgetent(tc_buffer, getenv("TERM"));
+#else
+#define tgetstr(a,b) 0
+#endif
+#endif /* !HAVE_TIGETSTR */
+
     nl();
     wclear(win);
     mvwaddstr(win, 1, 1,
@@ -530,8 +547,10 @@ outputTest(WINDOW *win)
     winsch(win, ch);
     Continue(win);
 
+#if HAVE_WINSSTR
     mvwinsstr(win, 6, 2, "A1B2C3D4E5");
     Continue(win);
+#endif
 
     wmove(win, 5, 1);
     winsertln(win);
@@ -554,14 +573,14 @@ outputTest(WINDOW *win)
     *Buffer = 0;
     scanw("%s", Buffer);
 
-    if (tigetstr("cvvis") != 0) {
+    if (TIGETSTR("cvvis", "vs") != 0) {
 	wclear(win);
 	curs_set(2);
 	mvwaddstr(win, 1, 1, "The cursor should appear as a block (visible)");
 	Continue(win);
     }
 
-    if (tigetstr("civis") != 0) {
+    if (TIGETSTR("civis", "vi") != 0) {
 	wclear(win);
 	curs_set(0);
 	mvwaddstr(win, 1, 1,
@@ -569,7 +588,7 @@ outputTest(WINDOW *win)
 	Continue(win);
     }
 
-    if (tigetstr("cnorm") != 0) {
+    if (TIGETSTR("cnorm", "ve") != 0) {
 	wclear(win);
 	curs_set(1);
 	mvwaddstr(win, 1, 1, "The cursor should be an underline (normal)");
@@ -586,6 +605,8 @@ outputTest(WINDOW *win)
 #endif
 
     werase(win);
+
+#if HAVE_TERMNAME
     mvwaddstr(win, 1, 1, "Information About Your Terminal");
     mvwaddstr(win, 3, 1, termname());
     mvwaddstr(win, 4, 1, longname());
@@ -593,6 +614,7 @@ outputTest(WINDOW *win)
 	mvwaddstr(win, 5, 1, "This terminal supports blinking.");
     else
 	mvwaddstr(win, 5, 1, "This terminal does NOT support blinking.");
+#endif
 
     mvwaddnstr(win, 7, 5, "Have a nice day!ok", 16);
     wrefresh(win);

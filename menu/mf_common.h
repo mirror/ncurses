@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: mf_common.h,v 0.21 2004/12/11 22:40:40 tom Exp $ */
+/* $Id: mf_common.h,v 0.22 2005/11/26 15:26:52 tom Exp $ */
 
 /* Common internal header for menu and form library */
 
@@ -91,14 +91,5 @@ extern int errno;
 	(object)->handler(object);\
 	(object)->status &= ~_IN_DRIVER;\
    }
-
-#define INLINE
-
-#ifndef TRACE
-#  if CC_HAS_INLINE_FUNCS
-#    undef INLINE
-#    define INLINE inline
-#  endif
-#endif
 
 #endif /* MF_COMMON_H_incl */

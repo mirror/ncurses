@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* acs_chars */
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.53 2005/08/20 20:21:20 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.56 2006/12/02 21:18:28 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -69,7 +69,7 @@ color_of(int c)
 #endif /* !USE_TERMLIB */
 
 NCURSES_EXPORT(char *)
-_traceattr2(int bufnum, attr_t newmode)
+_traceattr2(int bufnum, chtype newmode)
 {
     char *buf = _nc_trace_buf(bufnum, BUFSIZ);
     char temp[80];
@@ -285,7 +285,7 @@ _tracecchar_t2 (int bufnum, const cchar_t *ch)
     strcpy(buf, l_brace);
     if (ch != 0) {
 	attr = AttrOfD(ch);
-	if ((found = _nc_altcharset_name(attr, CharOfD(ch))) != 0) {
+	if ((found = _nc_altcharset_name(attr, (chtype) CharOfD(ch))) != 0) {
 	    (void) _nc_trace_bufcat(bufnum, found);
 	    attr &= ~A_ALTCHARSET;
 	} else if (isWidecExt(CHDEREF(ch))) {
@@ -297,11 +297,11 @@ _tracecchar_t2 (int bufnum, const cchar_t *ch)
 
 	    PUTC_INIT;
 	    (void) _nc_trace_bufcat(bufnum, "{ ");
-	    do {
-		PUTC_ch = PUTC_i < CCHARW_MAX ? ch->chars[PUTC_i] : L'\0';
-		PUTC_n = wcrtomb(PUTC_buf, ch->chars[PUTC_i], &PUT_st);
+	    for (PUTC_i = 0; PUTC_i < CCHARW_MAX; ++PUTC_i) {
+		PUTC_ch = ch->chars[PUTC_i];
 		if (PUTC_ch == L'\0')
-		    --PUTC_n;
+		    break;
+		PUTC_n = wcrtomb(PUTC_buf, ch->chars[PUTC_i], &PUT_st);
 		if (PUTC_n <= 0) {
 		    if (PUTC_ch != L'\0') {
 			/* it could not be a multibyte sequence */
@@ -314,8 +314,7 @@ _tracecchar_t2 (int bufnum, const cchar_t *ch)
 			(void) _nc_trace_bufcat(bufnum, ", ");
 		    (void) _nc_trace_bufcat(bufnum, _tracechar(UChar(PUTC_buf[n])));
 		}
-		++PUTC_i;
-	    } while (PUTC_ch != L'\0');
+	    }
 	    (void) _nc_trace_bufcat(bufnum, " }");
 	}
 	if (attr != A_NORMAL) {

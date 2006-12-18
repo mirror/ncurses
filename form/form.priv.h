@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.25 2005/03/05 23:47:26 tom Exp $ */
+/* $Id: form.priv.h,v 0.26 2006/12/17 19:47:09 tom Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
@@ -40,7 +40,10 @@
 
 #if USE_WIDEC_SUPPORT
 #include <wchar.h>
+
+#if HAVE_WCTYPE_H
 #include <wctype.h>
+#endif
 
 #ifndef MB_LEN_MAX
 #define MB_LEN_MAX 8 /* should be >= MB_CUR_MAX, but that may be a function */

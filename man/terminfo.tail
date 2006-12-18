@@ -1,10 +1,11 @@
-.\" $Id: terminfo.tail,v 1.42 2005/06/25 22:46:03 tom Exp $
+.\" $Id: terminfo.tail,v 1.44 2006/04/01 22:47:01 tom Exp $
 .\" Beginning of terminfo.tail file
+.\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
 .ps +1
-.PP
+..
 .SS A Sample Entry
-.PP
+..
 The following entry, describing an ANSI-standard terminal, is representative
 of what a \fBterminfo\fR entry for a modern terminal typically looks like.
 .PP
@@ -995,25 +996,33 @@ option of the
 .IR tput
 program, each time the user logs in.
 They will be printed in the following order:
+.RS
+.TP
 run the program
-.BR iprog ;
+.BR iprog
+.TP
 output
-.BR is1 ;
-.BR is2 ;
+.BR is1
+.BR is2
+.TP
 set the margins using
 .BR mgc ,
 .BR smgl
 and
-.BR smgr ;
+.BR smgr
+.TP
 set tabs using
 .B tbc
 and
-.BR hts ;
+.BR hts
+.TP
 print the file
-.BR if ;
+.BR if
+.TP
 and finally
 output
 .BR is3 .
+.RE
 .PP
 Most initialization is done with
 .BR is2 .
@@ -1024,17 +1033,21 @@ and special cases in
 .B is1
 and
 .BR is3 .
-A pair of sequences that does a harder reset from a totally unknown state
-can be analogously given as
+.PP
+A set of sequences that does a harder reset from a totally unknown state
+can be given as
 .BR rs1 ,
 .BR rs2 ,
-.BR rf ,
+.BR rf
 and
 .BR rs3 ,
 analogous to
-.B is2
+.B is1 ,
+.B is2 ,
+.B if
 and
-.BR if .
+.BR is3
+respectively.
 These strings are output by the
 .IR reset
 program, which is used when the terminal gets into a wedged state.
@@ -1051,6 +1064,28 @@ normally be part of
 .BR is2 ,
 but it causes an annoying glitch of the screen and is not normally
 needed since the terminal is usually already in 80 column mode.
+.PP
+The
+.IR reset
+program writes strings
+including
+.BR iprog ,
+etc., in the same order as the
+.IR init
+program, using 
+.BR rs1 ,
+etc., instead of
+.BR is1 ,
+etc.
+If any of
+.BR rs1 ,
+.BR rs2 ,
+.BR rs3 ,
+or
+.BR rf
+reset capability strings are missing, the
+.IR reset
+program falls back upon the corresponding initialization capability string.
 .PP
 If there are commands to set and clear tab stops, they can be given as
 .B tbc
@@ -1650,8 +1685,8 @@ Supports both the SVr4 set and the AIX extensions.
 \*d/?/*
 files containing terminal descriptions
 .SH SEE ALSO
-\fBtic\fR(1M),
-\fBinfocmp\fR(1M),
+\fB@TIC@\fR(1M),
+\fB@INFOCMP@\fR(1M),
 \fBcurses\fR(3X),
 \fBprintf\fR(3S),
 \fBterm\fR(\*n).

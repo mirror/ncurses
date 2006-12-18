@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.4 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.5 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -55,7 +55,6 @@ procedure ncurses2.acs_display is
                          code :  Attributed_Character)
                         return Integer;
    procedure show_acs_chars;
-
 
    procedure show_upper_chars (first : Integer)  is
       C1 : constant Boolean := (first = 128);
@@ -231,4 +230,3 @@ begin
    Erase;
    End_Windows;
 end ncurses2.acs_display;
-

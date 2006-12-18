@@ -1,6 +1,6 @@
-# $Id: MKunctrl.awk,v 1.10 2004/04/03 22:50:37 tom Exp $
+# $Id: MKunctrl.awk,v 1.11 2005/12/17 22:48:37 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,2001,2004 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -41,6 +41,7 @@ BEGIN	{
 END	{
 		print "NCURSES_EXPORT(NCURSES_CONST char *) unctrl (register chtype ch)"
 		print "{"
+
 		printf "static const char* const table[] = {"
 		for ( ch = 0; ch < 256; ch++ ) {
 			gap = ","
@@ -63,10 +64,44 @@ END	{
 			printf "%s", gap
 		}
 		print "};"
-		print "int check = ChCharOf(ch);"
+
 		print ""
-		print "\tif (check < 0 || check >= (int)SIZEOF(table)) return 0;"
+		print "#if NCURSES_EXT_FUNCS"
+		printf "static const char* const table2[] = {"
+		for ( ch = 128; ch < 160; ch++ ) {
+			gap = ","
+			if ((ch % 8) == 0)
+				printf "\n    "
+			if (ch >= 128 && ch < 160) {
+				printf "\"\\%03o\"", ch
+				gap = gap " "
+			}
+			if (ch == 255)
+				gap = "\n"
+			else if (((ch + 1) % 8) != 0)
+				gap = gap " "
+			printf "%s", gap
+		}
+		print "};"
+		print "#endif /* NCURSES_EXT_FUNCS */"
+
 		print ""
-		print "\treturn (NCURSES_CONST char *)table[check];"
+		print "\tint check = ChCharOf(ch);"
+		print "\tconst char *result;"
+		print ""
+		print "\tif (check >= 0 && check < (int)SIZEOF(table)) {"
+		print "#if NCURSES_EXT_FUNCS"
+		print "\t\tif ((SP != 0)"
+		print "\t\t && (SP->_legacy_coding > 1)"
+		print "\t\t && (check >= 128)"
+		print "\t\t && (check < 160))"
+		print "\t\t\tresult = table2[check - 128];"
+		print "\t\telse"
+		print "#endif /* NCURSES_EXT_FUNCS */"
+		print "\t\t\tresult = table[check];"
+		print "\t} else {"
+		print "\t\tresult = 0;"
+		print "\t}"
+		print "\treturn (NCURSES_CONST char *)result;"
 		print "}"
 	}

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.2 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -68,7 +69,6 @@ procedure ncurses2.color_test is
       "WHITE"
       );
 
-
    procedure show_color_name (y, x : Integer; color : Integer) is
       tmp5 : String (1 .. 5);
    begin
@@ -82,7 +82,6 @@ procedure ncurses2.color_test is
               Str => color_names (color));
       end if;
    end show_color_name;
-
 
    top, width : Integer;
    hello : String (1 .. 5);

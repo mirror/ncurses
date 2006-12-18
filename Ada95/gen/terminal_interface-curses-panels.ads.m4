@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,7 +38,8 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.17 $
+--  $Revision: 1.19 $
+--  $Date: 2006/06/25 14:30:22 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -70,7 +71,7 @@ include(`Linker_Options')
    --  ANCHOR(`new_panel()',`New_Panel')
    function New_Panel (Win : Window) return Panel renames Create;
    --  AKA
-   pragma Inline (New_Panel);
+   --  pragma Inline (New_Panel);
 
    --  ANCHOR(`bottom_panel()',`Bottom')
    procedure Bottom (Pan : in Panel);
@@ -104,7 +105,7 @@ include(`Linker_Options')
 
    --  ANCHOR(`panel_window()',`Panel_Window')
    function Panel_Window (Pan : Panel) return Window renames Get_Window;
-   pragma Inline (Panel_Window);
+   --  pragma Inline (Panel_Window);
 
    --  ANCHOR(`replace_panel()',`Replace')
    procedure Replace (Pan : in Panel;

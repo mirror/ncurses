@@ -69,7 +69,7 @@
    <b>type</b> Field_Type_Access <b>is</b> <b>access</b> <b>all</b> Field_Type'Class;
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_1"#2|</EM></FONT>
-   <b>procedure</b> Set_Field_Type (<FONT COLOR=red><A NAME="ref_67_30">Fld</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field</A>;
+   <b>procedure</b> Set_Field_Type (<FONT COLOR=red><A NAME="ref_67_30" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_66_14">Fld</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field</A>;
                              Fld_Type : <b>in</b> Field_Type) <b>is</b> <b>abstract</b>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_fieldtype.3x.html">set_field_type()</A></EM></FONT>
    <FONT COLOR=green><EM>--  But: we hide the vararg mechanism of the C interface. You always</EM></FONT>
@@ -124,7 +124,7 @@
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <b>type</b> Low_Level_Field_Type <b>is</b>
       <b>record</b>
-         <FONT COLOR=red><A NAME="ref_122_10">Status</A></FONT> :              <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.short;
+         <FONT COLOR=red><A NAME="ref_122_10">Status</A></FONT> :              <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short;
          <FONT COLOR=red><A NAME="ref_123_10">Ref_Count</A></FONT> :           Interfaces.C.long;
          <FONT COLOR=red><A NAME="ref_124_10">Left</A></FONT>, Right :         <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_92_9">System</A>.Address;
          <FONT COLOR=red><A NAME="ref_125_10">Makearg</A></FONT> :             <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_96_9">Makearg_Function</A>;
@@ -151,11 +151,11 @@
 
    <FONT COLOR=green><EM>--  Two wrapper functions to access those low-level fieldtypes defined</EM></FONT>
    <FONT COLOR=green><EM>--  in this package.</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_149_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_265_13">C_Builtin_Router</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_132_9">C_Field_Type</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_149_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_266_13">C_Builtin_Router</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_132_9">C_Field_Type</A>;
    <b>function</b> C_Choice_Router  <b>return</b> C_Field_Type;
 
-   <b>procedure</b> Wrap_Builtin (<FONT COLOR=red><A NAME="ref_152_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_145_28">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field</A>;
-                           <FONT COLOR=red><A NAME="ref_153_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_146_28">Typ</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_132_9">Field_Type</A>'Class<A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_148_13">;</A>
+   <b>procedure</b> Wrap_Builtin (<FONT COLOR=red><A NAME="ref_152_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_146_28">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field</A>;
+                           <FONT COLOR=red><A NAME="ref_153_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_147_28">Typ</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_132_9">Field_Type</A>'Class<A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_148_13">;</A>
                            Cft : C_Field_Type := C_Builtin_Router);
    <FONT COLOR=green><EM>--  This procedure has to be called by the Set_Field_Type implementation</EM></FONT>
    <FONT COLOR=green><EM>--  for builtin low-level fieldtypes to replace it by an Ada95</EM></FONT>
@@ -180,7 +180,7 @@
    <FONT COLOR=green><EM>--  This is the Freearg_Function for the internal low-level types</EM></FONT>
    <FONT COLOR=green><EM>--  introduced by this binding.</EM></FONT>
 
-   <b>function</b> Field_Check_Router (<FONT COLOR=red><A NAME="ref_178_33" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_181_33">Fld</A></FONT> : Field;
+   <b>function</b> Field_Check_Router (<FONT COLOR=red><A NAME="ref_178_33" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_182_33">Fld</A></FONT> : Field;
                          <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_177_13"> </A>      Usr : System.Address) <b>return</b> C_Int;
    <b>pragma</b> Convention (C, Field_Check_Router);
    <FONT COLOR=green><EM>--  This is the Field_Check_Function for the internal low-level types</EM></FONT>
@@ -188,7 +188,7 @@
    <FONT COLOR=green><EM>--  type. It routes the call to the corresponding low-level validation</EM></FONT>
    <FONT COLOR=green><EM>--  function.</EM></FONT>
 
-   <b>function</b> Char_Check_Router (<FONT COLOR=red><A NAME="ref_186_32" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_195_32">Ch</A></FONT> : C_Int;
+   <b>function</b> Char_Check_Router (<FONT COLOR=red><A NAME="ref_186_32" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_196_32">Ch</A></FONT> : C_Int;
                          <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_185_13"> </A>     Usr : System.Address) <b>return</b> C_Int;
    <b>pragma</b> Convention (C, Char_Check_Router);
    <FONT COLOR=green><EM>--  This is the Char_Check_Function for the internal low-level types</EM></FONT>
@@ -196,7 +196,7 @@
    <FONT COLOR=green><EM>--  type. It routes the call to the corresponding low-level validation</EM></FONT>
    <FONT COLOR=green><EM>--  function.</EM></FONT>
 
-   <b>function</b> Next_Router (<FONT COLOR=red><A NAME="ref_194_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_209_26">Fld</A></FONT> : Field;
+   <b>function</b> Next_Router (<FONT COLOR=red><A NAME="ref_194_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_210_26">Fld</A></FONT> : Field;
                          <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_193_13">Usr</A> : System.Address) <b>return</b> C_Int;
    <b>pragma</b> Convention (C, Next_Router);
    <FONT COLOR=green><EM>--  This is the Choice_Function for the internal low-level types</EM></FONT>
@@ -204,7 +204,7 @@
    <FONT COLOR=green><EM>--  type. It routes the call to the corresponding low-level next_choice</EM></FONT>
    <FONT COLOR=green><EM>--  function.</EM></FONT>
 
-   <b>function</b> Prev_Router (<FONT COLOR=red><A NAME="ref_202_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_223_26">Fld</A></FONT> : Field;
+   <b>function</b> Prev_Router (<FONT COLOR=red><A NAME="ref_202_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_224_26">Fld</A></FONT> : Field;
                          <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_201_13">Usr</A> : System.Address) <b>return</b> C_Int;
    <b>pragma</b> Convention (C, Prev_Router);
    <FONT COLOR=green><EM>--  This is the Choice_Function for the internal low-level types</EM></FONT>
@@ -225,19 +225,19 @@
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <FONT COLOR=green><EM>--  | Some Imports of libform routines to deal with low-level fieldtypes.</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>function</b> New_Fieldtype (<FONT COLOR=red><A NAME="ref_223_28">Fcheck</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_108_9">Field_Check_Function</A>;
+   <b>function</b> New_Fieldtype (<FONT COLOR=red><A NAME="ref_223_28" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_222_13">Fcheck</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_108_9">Field_Check_Function</A>;
             <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_132_9"> </A>              Ccheck : Char_Check_Function)
      <b>return</b> C_Field_Type;
    <b>pragma</b> Import (C, New_Fieldtype, "new_fieldtype");
 
-   <b>function</b> Set_Fieldtype_Arg (<FONT COLOR=red><A NAME="ref_228_32">Cft</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_92_9">C_Field_Type</A>;
-                               <FONT COLOR=red><A NAME="ref_229_32">Mak</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_96_9">Makearg_Function</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_167_13">Make_Arg</A>'<b>Access</b>;
-                               <FONT COLOR=red><A NAME="ref_230_32">Cop</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_100_9">Copyarg_Function</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_172_14">Copy_Arg</A>'<b>Access</b>;
+   <b>function</b> Set_Fieldtype_Arg (<FONT COLOR=red><A NAME="ref_228_32" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_227_13">Cft</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_92_9">C_Field_Type</A>;
+                               <FONT COLOR=red><A NAME="ref_229_32" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_227_13">Mak</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_96_9">Makearg_Function</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_167_13">Make_Arg</A>'<b>Access</b>;
+                               <FONT COLOR=red><A NAME="ref_230_32" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_227_13">Cop</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_100_9">Copyarg_Function</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_172_14">Copy_Arg</A>'<b>Access</b>;
             <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_46_12"> </A>                  Fre : Freearg_Function := Free_Arg'<b>Access</b>)
      <b>return</b> C_Int;
    <b>pragma</b> Import (C, Set_Fieldtype_Arg, "set_fieldtype_arg");
 
-   <b>function</b> Set_Fieldtype_Choice (<FONT COLOR=red><A NAME="ref_235_35">Cft</A></FONT> : <FONT COLOR=red><A NAME="ref_235_41">C_Field_Type</A></FONT>;
+   <b>function</b> Set_Fieldtype_Choice (<FONT COLOR=red><A NAME="ref_235_35" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_234_13">Cft</A></FONT> : <FONT COLOR=red><A NAME="ref_235_41" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_234_13">C_Field_Type</A></FONT>;
             <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_46_12"> </A>                     Next, Prev : Choice_Function)
      <b>return</b> C_Int;
    <b>pragma</b> Import (C, Set_Fieldtype_Choice, "set_fieldtype_choice");

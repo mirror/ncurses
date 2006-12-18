@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,12 +32,12 @@
 
 /***************************************************************************
 * Module m_cursor                                                          *
-* Correctly position a menus cursor                                        *
+* Correctly position a menu's cursor                                       *
 ***************************************************************************/
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_cursor.c,v 1.19 2004/12/25 22:03:00 tom Exp $")
+MODULE_ID("$Id: m_cursor.c,v 1.20 2005/10/22 23:03:32 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -83,7 +83,7 @@ NCURSES_EXPORT(int)
 pos_menu_cursor(const MENU * menu)
 {
   WINDOW *win, *sub;
-  int x, y;
+  int x = 0, y = 0;
   int err = _nc_menu_cursor_pos(menu, (ITEM *) 0, &y, &x);
 
   T((T_CALLED("pos_menu_cursor(%p)"), menu));

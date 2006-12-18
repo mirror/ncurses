@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.24 2005/06/11 19:26:05 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.27 2006/07/01 21:25:39 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -380,6 +380,7 @@ BEGIN		{
 			print " * pull most of the rest of the library into your link image."
 		}
 		print " */"
+		print "#define NCURSES_ATTR_T int"
 		print "#include <curses.priv.h>"
 		print ""
 		}
@@ -394,6 +395,7 @@ EOF1
 
 cat >$TMP <<EOF
 #include <ncurses_cfg.h>
+#undef NCURSES_NOMACROS
 #include <curses.h>
 
 DECLARATIONS
@@ -407,7 +409,10 @@ sed -n -f $ED1 \
 | sed -e 's/^\([a-z_][a-z_]*[ *]*\)/\1 gen_/' -e 's/  / /g' >>$TMP
 
 $preprocessor $TMP 2>/dev/null \
-| sed -e 's/  / /g' -e 's/^ //' \
+| sed \
+	-e 's/  / /g' \
+	-e 's/^ //' \
+	-e 's/^_Bool/bool/' \
 | $AWK -f $AW2 \
 | sed -f $ED3 \
 | sed \

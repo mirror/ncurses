@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,12 +35,12 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.2 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
 with ncurses2.util; use ncurses2.util;
-
 
 --  Graphic-rendition test (adapted from vttest)
 
@@ -73,7 +73,6 @@ begin
       xAdd (1, 20, "Graphic rendition test pattern:");
 
       xAdd (4, 1, "vanilla");
-
 
       current := normal;
       current.Attr.Bold_Character := not current.Attr.Bold_Character;

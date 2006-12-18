@@ -33,7 +33,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_dft_fgbg.c,v 1.17 2005/01/29 21:42:15 tom Exp $")
+MODULE_ID("$Id: lib_dft_fgbg.c,v 1.18 2005/11/26 20:03:38 tom Exp $")
 
 /*
  * Modify the behavior of color-pair 0 so that the library doesn't assume that
@@ -68,7 +68,7 @@ assume_default_colors(int fg, int bg)
     if (SP->_color_pairs != 0) {
 	bool save = SP->_default_color;
 	SP->_default_color = TRUE;
-	init_pair(0, fg, bg);
+	init_pair(0, (short) fg, (short) bg);
 	SP->_default_color = save;
     }
     returnCode(OK);

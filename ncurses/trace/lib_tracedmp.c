@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracedmp.c,v 1.26 2005/01/29 16:23:51 tom Exp $")
+MODULE_ID("$Id: lib_tracedmp.c,v 1.27 2006/10/14 20:43:31 tom Exp $")
 
 #ifdef TRACE
 NCURSES_EXPORT(void)
@@ -93,10 +93,10 @@ _tracedump(const char *name, WINDOW *win)
 		: '?';
 	}
 	ep[j] = '\0';
-	_tracef("%s[%2d] %3d%3d ='%s'",
+	_tracef("%s[%2d] %3ld%3ld ='%s'",
 		name, n,
-		win->_line[n].firstchar,
-		win->_line[n].lastchar,
+		(long) win->_line[n].firstchar,
+		(long) win->_line[n].lastchar,
 		ep);
 
 	/* dump A_COLOR part, will screw up if there are more than 96 */

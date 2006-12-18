@@ -43,18 +43,18 @@
 <FONT COLOR=green><EM>--  @Revision: 1.12 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<b>with</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>; <b>use</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>;
+<b>with</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>; <b>use</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>;
 
-<b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-menus__ads.htm#ref_48_35">Menus</A>.<FONT COLOR=red><A NAME="ref_43_46" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_45_41">Menu_User_Data</A></FONT> <b>is</b>
+<b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-menus__ads.htm#ref_49_35">Menus</A>.<FONT COLOR=red><A NAME="ref_43_46" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_45_41">Menu_User_Data</A></FONT> <b>is</b>
 
-   <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.int;
+   <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_47_14" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_53_14">Set_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_47_29" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_53_29">Men</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Menu</A>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_47_14" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_53_14">Set_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_47_29" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_53_29">Men</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>;
                             <FONT COLOR=red><A NAME="ref_48_29" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_54_29">Data</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_44_9">User_Access</A>)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_50_16">Set_Menu_Userptr</A></FONT> (<FONT COLOR=red><A NAME="ref_50_34">Men</A></FONT>  : <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Menu</A>;
-                                 <FONT COLOR=red><A NAME="ref_51_34">Data</A></FONT> : <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_44_9">User_Access</A>)  <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses-menus-menu_user_data__adb.htm#ref_50_16">Set_Menu_Userptr</A>, "set_menu_userptr");
+      <b>function</b> <FONT COLOR=red><A NAME="ref_50_16">Set_Menu_Userptr</A></FONT> (<FONT COLOR=red><A NAME="ref_50_34" HREF="terminal_interface-curses-menus-menu_user_data__adb.htm#ref_50_16">Men</A></FONT>  : <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>;
+                                 <FONT COLOR=red><A NAME="ref_51_34" HREF="terminal_interface-curses-menus-menu_user_data__adb.htm#ref_50_16">Data</A></FONT> : <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_44_9">User_Access</A>)  <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>pragma</b> Import (C, Set_Menu_Userptr, "set_menu_userptr");
 
       <FONT COLOR=red><A NAME="ref_54_7">Res</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_78_12">Eti_Error</A> := <A HREF="terminal_interface-curses-menus-menu_user_data__adb.htm#ref_50_16">Set_Menu_Userptr</A> (<A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_53_29">Men</A>, <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_54_29">Data</A>);
    <b>begin</b>
@@ -63,20 +63,20 @@
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_53_14">Set_User_Data</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_61_13" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_64_13">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_61_28" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_64_28">Men</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Menu</A>) <b>return</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_44_9">User_Access</A>
+   <b>function</b> <FONT COLOR=red><A NAME="ref_61_13" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_64_13">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_61_28" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_64_28">Men</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>) <b>return</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_44_9">User_Access</A>
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_63_16">Menu_Userptr</A></FONT> (<FONT COLOR=red><A NAME="ref_63_30">Men</A></FONT> : <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Menu</A>) <b>return</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_44_9">User_Access</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses-menus-menu_user_data__adb.htm#ref_63_16">Menu_Userptr</A>, "menu_userptr");
+      <b>function</b> <FONT COLOR=red><A NAME="ref_63_16">Menu_Userptr</A></FONT> (<FONT COLOR=red><A NAME="ref_63_30" HREF="terminal_interface-curses-menus-menu_user_data__adb.htm#ref_63_16">Men</A></FONT> : <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>) <b>return</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_44_9">User_Access</A>;
+      <b>pragma</b> Import (C, Menu_Userptr, "menu_userptr");
    <b>begin</b>
       <b>return</b> <A HREF="terminal_interface-curses-menus-menu_user_data__adb.htm#ref_63_16">Menu_Userptr</A> (<A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_64_28">Men</A>);
    <b>end</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_64_13">Get_User_Data</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_69_14" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_59_14">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_69_29" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_59_29">Men</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Menu</A>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_69_14" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_59_14">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_69_29" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_59_29">Men</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>;
                             <FONT COLOR=red><A NAME="ref_70_29" HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_60_29">Data</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_44_9">User_Access</A>)
    <b>is</b>
    <b>begin</b>
       <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_60_29">Data</A> := <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_64_13">Get_User_Data</A> (<A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_59_29">Men</A>);
    <b>end</b> <A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_59_14">Get_User_Data</A>;
 
-<b>end</b> <A HREF="terminal_interface__ads.htm#ref_41_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-menus__ads.htm#ref_48_35">Menus</A>.<A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_45_41">Menu_User_Data</A>;
+<b>end</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-menus__ads.htm#ref_49_35">Menus</A>.<A HREF="terminal_interface-curses-menus-menu_user_data__ads.htm#ref_45_41">Menu_User_Data</A>;
 </PRE></BODY></HTML>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.85 2005/01/22 17:36:01 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.91 2006/05/20 14:58:02 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -126,6 +126,9 @@ delscreen(SCREEN *sp)
     FreeIfNeeded(sp->oldhash);
     FreeIfNeeded(sp->newhash);
     FreeIfNeeded(sp->hashtab);
+
+    FreeIfNeeded(sp->_acs_map);
+    FreeIfNeeded(sp->_screen_acs_map);
 
     del_curterm(sp->_term);
 
@@ -211,17 +214,27 @@ extract_fgbg(char *src, int *result)
 }
 #endif
 
-NCURSES_EXPORT(int)
-_nc_setupscreen(short slines, short const scolumns, FILE *output)
 /* OS-independent screen initializations */
+NCURSES_EXPORT(int)
+_nc_setupscreen(int slines,
+		int scolumns,
+		FILE *output,
+		bool filtered,
+		int slk_format)
 {
     int bottom_stolen = 0;
     int i;
+    bool support_cookies = USE_XMC_SUPPORT;
 
-    T((T_CALLED("_nc_setupscreen(%d, %d, %p)"), slines, scolumns, output));
+    T((T_CALLED("_nc_setupscreen(%d, %d, %p, %d, %d)"),
+       slines, scolumns, output, filtered, slk_format));
+
     assert(SP == 0);		/* has been reset in newterm() ! */
-    if (!_nc_alloc_screen())
+    if (!_nc_alloc_screen()
+	|| ((SP->_acs_map = typeCalloc(chtype, ACS_LEN)) == 0)
+	|| ((SP->_screen_acs_map = typeCalloc(bool, ACS_LEN)) == 0)) {
 	returnCode(ERR);
+    }
 
     T(("created SP %p", SP));
     SP->_next_screen = _nc_screen_chain;
@@ -230,6 +243,33 @@ _nc_setupscreen(short slines, short const scolumns, FILE *output)
     if ((SP->_current_attr = typeCalloc(NCURSES_CH_T, 1)) == 0)
 	returnCode(ERR);
 
+    SP->_filtered = filtered;
+
+    /* implement filter mode */
+    if (filtered) {
+	slines = LINES = 1;
+
+	clear_screen = 0;
+	cursor_down = parm_down_cursor = 0;
+	cursor_address = 0;
+	cursor_up = parm_up_cursor = 0;
+	row_address = 0;
+
+	cursor_home = carriage_return;
+	T(("filter screensize %dx%d", LINES, COLS));
+    }
+
+    /* If we must simulate soft labels, grab off the line to be used.
+       We assume that we must simulate, if it is none of the standard
+       formats (4-4  or 3-2-3) for which there may be some hardware
+       support. */
+    if (num_labels <= 0 || !SLK_STDFMT(slk_format)) {
+	if (slk_format) {
+	    if (ERR == _nc_ripoffline(-SLK_LINES(slk_format),
+				      _nc_slk_initialize))
+		returnCode(ERR);
+	}
+    }
 #ifdef __DJGPP__
     T(("setting output mode to binary"));
     fflush(output);
@@ -358,36 +398,89 @@ _nc_setupscreen(short slines, short const scolumns, FILE *output)
     SP->_panelHook.stdscr_pseudo_panel = (struct panel *) 0;
 
     /*
-     * If we've no magic cookie support, we suppress attributes that xmc
-     * would affect, i.e., the attributes that affect the rendition of a
-     * space.  Note that this impacts the alternate character set mapping
-     * as well.
+     * If we've no magic cookie support, we suppress attributes that xmc would
+     * affect, i.e., the attributes that affect the rendition of a space.
      */
-    if (magic_cookie_glitch > 0) {
+    SP->_ok_attributes = termattrs();
+    if (has_colors()) {
+	SP->_ok_attributes |= A_COLOR;
+    }
+#if USE_XMC_SUPPORT
+    /*
+     * If we have no magic-cookie support compiled-in, or if it is suppressed
+     * in the environment, reset the support-flag.
+     */
+    if (magic_cookie_glitch >= 0) {
+	if (getenv("NCURSES_NO_MAGIC_COOKIE") != 0) {
+	    support_cookies = FALSE;
+	}
+    }
+#endif
 
-	SP->_xmc_triggers = termattrs() & (
-					      A_ALTCHARSET |
-					      A_BLINK |
-					      A_BOLD |
-					      A_REVERSE |
-					      A_STANDOUT |
-					      A_UNDERLINE
+    if (!support_cookies && magic_cookie_glitch >= 0) {
+	T(("will disable attributes to work w/o magic cookies"));
+    }
+
+    if (magic_cookie_glitch > 0) {	/* tvi, wyse */
+
+	SP->_xmc_triggers = SP->_ok_attributes & (
+						     A_STANDOUT |
+						     A_UNDERLINE |
+						     A_REVERSE |
+						     A_BLINK |
+						     A_DIM |
+						     A_BOLD |
+						     A_INVIS |
+						     A_PROTECT
 	    );
+#if 0
+	/*
+	 * We "should" treat colors as an attribute.  The wyse350 (and its
+	 * clones) appear to be the only ones that have both colors and magic
+	 * cookies.
+	 */
+	if (has_colors()) {
+	    SP->_xmc_triggers |= A_COLOR;
+	}
+#endif
 	SP->_xmc_suppress = SP->_xmc_triggers & (chtype) ~(A_BOLD);
 
 	T(("magic cookie attributes %s", _traceattr(SP->_xmc_suppress)));
+	/*
+	 * Supporting line-drawing may be possible.  But make the regular
+	 * video attributes work first.
+	 */
+	acs_chars = ABSENT_STRING;
+	ena_acs = ABSENT_STRING;
+	enter_alt_charset_mode = ABSENT_STRING;
+	exit_alt_charset_mode = ABSENT_STRING;
 #if USE_XMC_SUPPORT
 	/*
-	 * To keep this simple, suppress all of the optimization hooks
-	 * except for clear_screen and the cursor addressing.
+	 * To keep the cookie support simple, suppress all of the optimization
+	 * hooks except for clear_screen and the cursor addressing.
 	 */
-	clr_eol = 0;
-	clr_eos = 0;
-	set_attributes = 0;
-#else
-	magic_cookie_glitch = ABSENT_NUMERIC;
-	acs_chars = 0;
+	if (support_cookies) {
+	    clr_eol = ABSENT_STRING;
+	    clr_eos = ABSENT_STRING;
+	    set_attributes = ABSENT_STRING;
+	}
 #endif
+    } else if (magic_cookie_glitch == 0) {	/* hpterm */
+    }
+
+    /*
+     * If magic cookies are not supported, cancel the strings that set
+     * video attributes.
+     */
+    if (!support_cookies && magic_cookie_glitch >= 0) {
+	magic_cookie_glitch = ABSENT_NUMERIC;
+	set_attributes = ABSENT_STRING;
+	enter_blink_mode = ABSENT_STRING;
+	enter_bold_mode = ABSENT_STRING;
+	enter_dim_mode = ABSENT_STRING;
+	enter_reverse_mode = ABSENT_STRING;
+	enter_standout_mode = ABSENT_STRING;
+	enter_underline_mode = ABSENT_STRING;
     }
 
     /* initialize normal acs before wide, since we use mapping in the latter */

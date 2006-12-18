@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.49 2005/05/14 13:57:14 tom Exp $
+#  $Id: Makefile.in,v 1.51 2006/12/17 16:53:33 tom Exp $
 #
 .SUFFIXES:
 
@@ -65,6 +65,10 @@ CFLAGS_PROFILE	= $(CCFLAGS) -pg
 CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
 
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
+
+REL_VERSION	= @cf_cv_rel_version@
+ABI_VERSION	= @cf_cv_abi_version@
+LOCAL_LIBDIR	= @top_builddir@/lib
 
 LINK		= $(HOST_CC)
 LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS) @TINFO_ARGS2@
@@ -160,13 +164,16 @@ $(ADA_OBJECTS) :
 install \
 install.libs :: $(ADA_INCLUDE)
 	@echo installing package $(ALIB) in $(ADA_INCLUDE)
+	@$(top_srcdir)/tar-copy.sh '$(ALIB)*.ad?' $(ADA_SRCDIR) $(ADA_INCLUDE)
 	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ad?' $(ADA_SRCDIR) $(ADA_INCLUDE)
+	@test $(srcdir) != ./ && $(top_srcdir)/tar-copy.sh '$(ALIB)*.ad?' $(srcdir)/../src $(ADA_INCLUDE)
 	@test $(srcdir) != ./ && $(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ad?' $(srcdir)/../src $(ADA_INCLUDE)
 
 install \
 install.libs :: $(ADA_OBJECTS)
 	@echo installing package $(ALIB) in $(ADA_OBJECTS)
 	@-chmod a-wx $(ADA_SRCDIR)/*.ali
+	@$(top_srcdir)/tar-copy.sh '$(ALIB)*.ali' $(ADA_SRCDIR) $(ADA_OBJECTS)
 	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ali' $(ADA_SRCDIR) $(ADA_OBJECTS)
 	@-chmod u+x $(ADA_SRCDIR)/*.ali
 

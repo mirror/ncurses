@@ -1,5 +1,32 @@
+/****************************************************************************
+ * Copyright (c) 2003-2005,2006 Free Software Foundation, Inc.              *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 /*
- * $Id: edit_field.c,v 1.11 2005/10/01 16:21:55 tom Exp $
+ * $Id: edit_field.c,v 1.13 2006/12/09 16:50:11 tom Exp $
  *
  * A wrapper for form_driver() which keeps track of the user's editing changes
  * for each field, and makes the result available as a null-terminated string
@@ -270,7 +297,6 @@ edit_field(FORM * form, int *result)
     int ch = wgetch(form_win(form));
     int status;
     FIELD *before;
-    FIELD *after;
     unsigned n;
     char lengths[80];
     int length;
@@ -412,7 +438,7 @@ edit_field(FORM * form, int *result)
 	set_field_buffer(before, 1, lengths);
     }
 
-    if ((after = current_field(form)) != before)
+    if (current_field(form) != before)
 	set_field_back(before, A_UNDERLINE);
     return status;
 }

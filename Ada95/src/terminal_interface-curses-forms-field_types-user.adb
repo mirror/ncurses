@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.13 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.14 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Conversion;
@@ -79,8 +79,10 @@ package body Terminal_Interface.Curses.Forms.Field_Types.User is
       end if;
    end Set_Field_Type;
 
+   pragma Warnings (Off);
    function To_Argument_Access is new Ada.Unchecked_Conversion
      (System.Address, Argument_Access);
+   pragma Warnings (On);
 
    function Generic_Field_Check (Fld : Field;
                                  Usr : System.Address) return C_Int

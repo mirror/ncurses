@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_def.c,v 1.17 2004/12/25 22:26:01 tom Exp $")
+MODULE_ID("$Id: frm_def.c,v 1.20 2006/11/04 16:57:15 tom Exp $")
 
 /* this can't be readonly */
 static FORM default_form =
@@ -182,7 +182,7 @@ Connect_Fields(FORM *form, FIELD **fields)
 	page_nr++;
       fields[field_cnt]->form = form;
     }
-  if (field_cnt == 0)
+  if (field_cnt == 0 || (short)field_cnt < 0)
     RETURN(E_BAD_ARGUMENT);
 
   /* allocate page structures */
@@ -247,9 +247,11 @@ Connect_Fields(FORM *form, FIELD **fields)
 |                    If there are fields, position to first active field.
 |
 |   Return Values :  E_OK            - success
-|                    any other       - error occurred
+|                    E_BAD_ARGUMENT  - Invalid form pointer or field array
+|                    E_CONNECTED     - a field is already connected
+|                    E_SYSTEM_ERROR  - not enough memory
 +--------------------------------------------------------------------------*/
-INLINE static int
+NCURSES_INLINE static int
 Associate_Fields(FORM *form, FIELD **fields)
 {
   int res = Connect_Fields(form, fields);
@@ -277,6 +279,11 @@ Associate_Fields(FORM *form, FIELD **fields)
 |   Description   :  Create new form with given array of fields.
 |
 |   Return Values :  Pointer to form. NULL if error occurred.
+!                    Set errno:
+|                    E_OK            - success
+|                    E_BAD_ARGUMENT  - Invalid form pointer or field array
+|                    E_CONNECTED     - a field is already connected
+|                    E_SYSTEM_ERROR  - not enough memory
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(FORM *)
 new_form(FIELD **fields)
@@ -337,9 +344,11 @@ free_form(FORM *form)
 |   
 |   Description   :  Set a new association of an array of fields to a form
 |
-|   Return Values :  E_OK              - no error
-|                    E_BAD_ARGUMENT    - invalid form pointer
-|                    E_POSTED          - form is posted
+|   Return Values :  E_OK            - no error
+|                    E_BAD_ARGUMENT  - Invalid form pointer or field array
+|                    E_CONNECTED     - a field is already connected
+|                    E_POSTED        - form is posted
+|                    E_SYSTEM_ERROR  - not enough memory
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(int)
 set_form_fields(FORM *form, FIELD **fields)

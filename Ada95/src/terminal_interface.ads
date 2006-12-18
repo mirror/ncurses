@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.12 $
+--  $Revision: 1.14 $
+--  $Date: 2006/06/25 14:30:22 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package Terminal_Interface is
@@ -44,5 +45,3 @@ package Terminal_Interface is
 --  Everything is in the child units
 --
 end Terminal_Interface;
-
-

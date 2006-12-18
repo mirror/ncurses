@@ -25,7 +25,7 @@
 #include <sys/time.h>
 #endif
 
-MODULE_ID("$Id: control.c,v 1.8 2005/09/17 19:49:16 tom Exp $")
+MODULE_ID("$Id: control.c,v 1.9 2006/06/24 21:27:53 tom Exp $")
 
 /* terminfo test program control subroutines */
 
@@ -72,7 +72,15 @@ static struct test_list *tx_source;	/* The test that generated this data */
 #define RESULT_BLOCK		1024
 static int blocks;		/* number of result blocks available */
 static struct test_results *results;	/* pointer to next available */
-static struct test_results *pads[STRCOUNT];	/* save pad results here */
+static struct test_results **pads;	/* save pad results here */
+
+static void
+alloc_arrays(void)
+{
+    	if (pads == 0) {
+	    	pads = (struct test_results **)calloc(MAX_STRINGS, sizeof(struct test_results *));
+	}
+}
 
 /*
 **	event_start(number)
@@ -429,6 +437,7 @@ pad_test_shutdown(
 	struct test_results *r;		/* Results of current test */
 	int ss_index[TT_MAX];		/* String index */
 
+	alloc_arrays();
 	if (tty_can_sync == SYNC_TESTED) {
 		bogus = tty_sync_error();
 	} else {
@@ -492,6 +501,7 @@ show_cap_results(
 	struct test_results *r;		/* a result */
 	int delay;
 
+	alloc_arrays();
 	if ((r = pads[x])) {
 		sprintf(temp, "(%s)", strnames[x]);
 		ptext(temp);

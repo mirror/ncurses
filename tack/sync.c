@@ -22,7 +22,7 @@
 #include <tack.h>
 #include <time.h>
 
-MODULE_ID("$Id: sync.c,v 1.8 2005/09/17 19:49:16 tom Exp $")
+MODULE_ID("$Id: sync.c,v 1.9 2006/05/06 20:45:48 tom Exp $")
 
 /* terminal-synchronization and performance tests */
 
@@ -256,7 +256,7 @@ verify_time(void)
 **
 **	Baudrate test
 */
-void
+static void
 sync_home(
 	struct test_list *t,
 	int *state,

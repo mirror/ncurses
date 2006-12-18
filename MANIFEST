@@ -1,4 +1,5 @@
 ./ANNOUNCE
+./AUTHORS
 ./Ada95/Makefile.in
 ./Ada95/README
 ./Ada95/TODO
@@ -397,6 +398,7 @@
 ./doc/html/man/key_defined.3x.html
 ./doc/html/man/keybound.3x.html
 ./doc/html/man/keyok.3x.html
+./doc/html/man/legacy_coding.3x.html
 ./doc/html/man/menu.3x.html
 ./doc/html/man/menu_attributes.3x.html
 ./doc/html/man/menu_cursor.3x.html
@@ -498,9 +500,11 @@
 ./include/curses.tail
 ./include/curses.wide
 ./include/edit_cfg.sh
+./include/hashed_db.h
 ./include/headers
 ./include/nc_alloc.h
 ./include/nc_panel.h
+./include/nc_tparm.h
 ./include/ncurses_cfg.hin
 ./include/ncurses_defs
 ./include/ncurses_dll.h
@@ -598,6 +602,7 @@
 ./man/key_defined.3x
 ./man/keybound.3x
 ./man/keyok.3x
+./man/legacy_coding.3x
 ./man/make_sed.sh
 ./man/man_db.renames
 ./man/manlinks.sed
@@ -688,6 +693,7 @@
 ./misc/menu.def
 ./misc/menu.ref
 ./misc/ncu-indent
+./misc/ncurses-config.in
 ./misc/ncurses.def
 ./misc/ncurses.ref
 ./misc/panel.def
@@ -716,6 +722,7 @@
 ./ncurses/base/key_defined.c
 ./ncurses/base/keybound.c
 ./ncurses/base/keyok.c
+./ncurses/base/legacy_coding.c
 ./ncurses/base/lib_addch.c
 ./ncurses/base/lib_addstr.c
 ./ncurses/base/lib_beep.c
@@ -815,9 +822,11 @@
 ./ncurses/tinfo/comp_hash.c
 ./ncurses/tinfo/comp_parse.c
 ./ncurses/tinfo/comp_scan.c
+./ncurses/tinfo/db_iterator.c
 ./ncurses/tinfo/doalloc.c
 ./ncurses/tinfo/free_ttype.c
 ./ncurses/tinfo/getenv_num.c
+./ncurses/tinfo/hashed_db.c
 ./ncurses/tinfo/home_terminfo.c
 ./ncurses/tinfo/init_keytry.c
 ./ncurses/tinfo/lib_acs.c
@@ -956,11 +965,14 @@
 ./test/blue.c
 ./test/bs.6
 ./test/bs.c
+./test/bulgarian-utf8.txt
 ./test/cardfile.c
 ./test/cardfile.dat
+./test/chgat.c
 ./test/color_set.c
 ./test/configure
 ./test/configure.in
+./test/demo_altkeys.c
 ./test/demo_defkey.c
 ./test/demo_forms.c
 ./test/demo_keyok.c
@@ -969,11 +981,13 @@
 ./test/demo_termcap.c
 ./test/ditto.c
 ./test/dots.c
+./test/echochar.c
 ./test/edit_field.c
 ./test/edit_field.h
 ./test/filter.c
 ./test/firework.c
 ./test/firstlast.c
+./test/foldkeys.c
 ./test/gdc.6
 ./test/gdc.c
 ./test/hanoi.c
@@ -985,12 +999,17 @@
 ./test/linux-color.dat
 ./test/listused.sh
 ./test/lrtest.c
+./test/mk-test.awk
 ./test/modules
+./test/movewindow.c
 ./test/ncurses.c
 ./test/ncurses_tst.hin
 ./test/newdemo.c
+./test/programs
 ./test/railroad.c
 ./test/rain.c
+./test/redraw.c
+./test/savescreen.c
 ./test/tclock.c
 ./test/test.priv.h
 ./test/testaddch.c
@@ -998,6 +1017,7 @@
 ./test/testscanw.c
 ./test/tracemunch
 ./test/view.c
+./test/widechars-utf8.txt
 ./test/worm.c
 ./test/xmas.c
 ./test/xterm-16color.dat

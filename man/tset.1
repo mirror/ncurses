@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.15 2005/03/20 18:27:09 tom Exp $
+.\" $Id: tset.1,v 1.18 2006/07/29 11:34:07 tom Exp $
 .TH tset 1 ""
 .SH NAME
 \fBtset\fR, \fBreset\fR - terminal initialization
@@ -77,9 +77,9 @@ resets any unset special characters to their default values before
 doing the terminal initialization described above.  This is useful
 after a program dies leaving a terminal in an abnormal state.  Note,
 you may have to type
-
+.sp
     \fB<LF>reset<LF>\fR
-
+.sp
 (the line-feed character is normally control-J) to get the terminal
 to work, as carriage-return may no longer work in the abnormal state.
 Also, the terminal will often not echo the command.
@@ -150,9 +150,9 @@ are for \fBcsh\fR, otherwise, they are for \fBsh\fR.
 Note, the \fBcsh\fR commands set and unset the shell variable
 \fBnoglob\fR, leaving it unset.  The following line in the \fB.login\fR
 or \fB.profile\fR files will initialize the environment correctly:
-
+.sp
     eval \`tset -s options ... \`
-
+.
 .SH TERMINAL TYPE MAPPING
 When the terminal is not hardwired into the system (or the current
 system information is incorrect) the terminal type derived from the
@@ -246,8 +246,21 @@ As of 4.4BSD, executing \fBtset\fR as \fBreset\fR no longer implies the \fB-Q\fR
 option.  Also, the interaction between the - option and the \fIterminal\fR
 argument in some historic implementations of \fBtset\fR has been removed.
 .SH ENVIRONMENT
-The \fBtset\fR command uses the \fBSHELL\fR and \fBTERM\fR
-environment variables.
+The \fBtset\fR command uses these environment variables:
+.TP 5
+SHELL
+tells \fBtset\fP whether to initialize \fBTERM\fP using \fBsh\fP or
+\fBcsh\fP syntax.
+.TP 5
+TERM
+Denotes your terminal type.
+Each terminal type is distinct, though many are similar.
+.TP 5
+TERMCAP
+may denote the location of a termcap database.
+If it is not an absolute pathname, e.g., begins with a `/',
+\fBtset\fP removes the variable from the environment before looking
+for the terminal description.
 .SH FILES
 .TP 5
 /etc/ttys
@@ -259,15 +272,17 @@ terminal capability database
 csh(1),
 sh(1),
 stty(1),
-setupterm(3),
+setupterm(3X),
 tty(4),
-termcap(5),
+terminfo(5),
 ttys(5),
 environ(7)
+.PP
+This describes \fBncurses\fR
+version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:
 .\"# mode:nroff
 .\"# fill-column:79
 .\"# End:
-

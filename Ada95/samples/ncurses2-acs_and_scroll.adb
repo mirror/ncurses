@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.6 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.7 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Windows and scrolling tester.
@@ -56,13 +56,11 @@ with Ada.Streams; use Ada.Streams;
 
 procedure ncurses2.acs_and_scroll is
 
-
    Macro_Quit   : constant Key_Code := Character'Pos ('Q') mod 16#20#;
    Macro_Escape : constant Key_Code := Character'Pos ('[') mod 16#20#;
 
    Quit : constant Key_Code := CTRL ('Q');
    Escape : constant Key_Code := CTRL ('[');
-
 
    Botlines : constant Line_Position := 4;
 
@@ -96,7 +94,6 @@ procedure ncurses2.acs_and_scroll is
    function delete_framed (fp : FrameA; showit : Boolean) return FrameA;
 
    use Ada.Streams.Stream_IO;
-
 
    --  A linked list
    --  I  wish there was a standard library linked list. Oh well.
@@ -172,7 +169,6 @@ procedure ncurses2.acs_and_scroll is
    exception
       when Curses_Exception => return False;
    end HaveScroll;
-
 
    procedure newwin_legend (curpw : Window) is
 
@@ -273,7 +269,6 @@ procedure ncurses2.acs_and_scroll is
       Clear_To_End_Of_Line;
    end newwin_legend;
 
-
    procedure transient (curpw : Window; msg : String) is
    begin
       newwin_legend (curpw);
@@ -298,7 +293,6 @@ procedure ncurses2.acs_and_scroll is
 
       Clear_To_End_Of_Line;
    end transient;
-
 
    procedure newwin_report (win : Window := Standard_Window) is
       y : Line_Position;
@@ -402,7 +396,6 @@ procedure ncurses2.acs_and_scroll is
       end loop;
    end selectcell;
 
-
    function getwindow return Window is
       rwindow : Window;
       ul, lr : pair;
@@ -441,7 +434,6 @@ procedure ncurses2.acs_and_scroll is
       Clear_To_End_Of_Line;
       return rwindow;
    end getwindow;
-
 
    procedure newwin_move (win : Window;
                           dy  : Line_Position;
@@ -500,8 +492,9 @@ begin
       case c is
          when Character'Pos ('c') mod 16#20# => --  Ctrl('c')
             declare
-               neww : FrameA := new Frame'(null, null, False, False,
-                                           Null_Window);
+               neww : constant FrameA := new Frame'(null, null,
+                                                    False, False,
+                                                    Null_Window);
             begin
                neww.wind := getwindow;
                if neww.wind = Null_Window  then

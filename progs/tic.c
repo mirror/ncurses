@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.125 2005/09/25 00:39:43 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.131 2006/12/02 22:13:17 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -731,18 +731,18 @@ main(int argc, char *argv[])
 		    _nc_set_type(_nc_first_name(qp->tterm.term_names));
 
 		    (void) fseek(tmp_fp, qp->cstart, SEEK_SET);
-		    while (j--) {
+		    while (j-- > 0) {
 			if (infodump)
 			    (void) putchar(fgetc(tmp_fp));
 			else
 			    put_translate(fgetc(tmp_fp));
 		    }
 
-		    len = dump_entry(&qp->tterm, suppress_untranslatable,
-				     limited, 0, numbers, NULL);
+		    dump_entry(&qp->tterm, suppress_untranslatable,
+			       limited, numbers, NULL);
 		    for (j = 0; j < qp->nuses; j++)
-			len += dump_uses(qp->uses[j].name, !capdump);
-		    (void) putchar('\n');
+			dump_uses(qp->uses[j].name, !capdump);
+		    len = show_entry();
 		    if (debug_level != 0 && !limited)
 			printf("# length=%d\n", len);
 		}
@@ -793,9 +793,6 @@ main(int argc, char *argv[])
  * references to locations in the arrays Booleans, Numbers, and Strings ---
  * precisely what's needed (see comp_parse.c).
  */
-
-TERMINAL *cur_term;		/* tweak to avoid linking lib_cur_term.c */
-
 #undef CUR
 #define CUR tp->
 
@@ -1276,16 +1273,16 @@ check_sgr(TERMTYPE *tp, char *zero, int num, char *cap, const char *name)
     char *test;
 
     _nc_tparm_err = 0;
-    test = tparm(set_attributes,
-		 num == 1,
-		 num == 2,
-		 num == 3,
-		 num == 4,
-		 num == 5,
-		 num == 6,
-		 num == 7,
-		 num == 8,
-		 num == 9);
+    test = TPARM_9(set_attributes,
+		   num == 1,
+		   num == 2,
+		   num == 3,
+		   num == 4,
+		   num == 5,
+		   num == 6,
+		   num == 7,
+		   num == 8,
+		   num == 9);
     if (test != 0) {
 	if (PRESENT(cap)) {
 	    if (!similar_sgr(num, test, cap)) {
@@ -1317,7 +1314,7 @@ check_sgr(TERMTYPE *tp, char *zero, int num, char *cap, const char *name)
 static void
 show_where(unsigned level)
 {
-    if (_nc_tracing >= level) {
+    if (_nc_tracing >= DEBUG_LEVEL(level)) {
 	char my_name[256];
 	_nc_get_type(my_name);
 	fprintf(stderr, "\"%s\", line %d, '%s' ",
@@ -1327,7 +1324,7 @@ show_where(unsigned level)
 }
 
 #else
-#define show_where(level) /* nothing */
+#define show_where(level)	/* nothing */
 #endif
 
 /* other sanity-checks (things that we don't want in the normal
@@ -1416,7 +1413,7 @@ check_termtype(TERMTYPE *tp, bool literal)
 	if (PRESENT(exit_attribute_mode)) {
 	    zero = strdup(CHECK_SGR(0, exit_attribute_mode));
 	} else {
-	    zero = strdup(tparm(set_attributes, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+	    zero = strdup(TPARM_9(set_attributes, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 	}
 	if (_nc_tparm_err)
 	    _nc_warning("stack error in sgr(0) string");

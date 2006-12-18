@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -61,7 +61,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: lib_twait.c,v 1.50 2004/09/25 22:53:43 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.51 2006/05/27 21:57:43 tom Exp $")
 
 static long
 _nc_gettime(bool first)
@@ -102,19 +102,18 @@ _nc_gettime(bool first)
 NCURSES_EXPORT(int)
 _nc_eventlist_timeout(_nc_eventlist * evl)
 {
-    _nc_event **ev, **last;
     int event_delay = -1;
+    int n;
 
     if (evl != 0) {
 
-	ev = evl->events;
-	last = ev + evl->count;
+	for (n = 0; n < evl->count; ++n) {
+	    _nc_event *ev = evl->events[n];
 
-	while (ev < last) {
-	    if ((*ev)->type == _NC_EVENT_TIMEOUT_MSEC) {
-		event_delay = (*ev)->data.timeout_msec;
+	    if (ev->type == _NC_EVENT_TIMEOUT_MSEC) {
+		event_delay = ev->data.timeout_msec;
 		if (event_delay < 0)
-		    event_delay = LONG_MAX;	/* FIXME Is this defined? */
+		    event_delay = INT_MAX;	/* FIXME Is this defined? */
 	    }
 	}
     }
@@ -152,10 +151,12 @@ _nc_timed_wait(int mode,
 
 #ifdef NCURSES_WGETCH_EVENTS
     int timeout_is_event = 0;
+    int n;
 #endif
 
 #if USE_FUNC_POLL
-    struct pollfd fd_list[2];
+#define MIN_FDS 2
+    struct pollfd fd_list[MIN_FDS];
     struct pollfd *fds = fd_list;
 #elif defined(__BEOS__)
 #elif HAVE_SELECT
@@ -196,7 +197,7 @@ _nc_timed_wait(int mode,
 
 #ifdef NCURSES_WGETCH_EVENTS
     if ((mode & 4) && evl)
-	fds = typeMalloc(struct pollfd, 2 + evl->count);
+	fds = typeMalloc(struct pollfd, MIN_FDS + evl->count);
 #endif
 
     if (mode & 1) {
@@ -212,13 +213,12 @@ _nc_timed_wait(int mode,
     }
 #ifdef NCURSES_WGETCH_EVENTS
     if ((mode & 4) && evl) {
-	_nc_event **ev = evl->events;
-	_nc_event **last = ev + evl->count;
+	for (n = 0; n < evl->count; ++n) {
+	    _nc_event *ev = evl->events[n];
 
-	while (ev < last) {
-	    if ((*ev)->type == _NC_EVENT_FILE
-		&& ((*ev)->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
-		fds[count].fd = (*ev)->data.fev.fd;
+	    if (ev->type == _NC_EVENT_FILE
+		&& (ev->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
+		fds[count].fd = ev->data.fev.fd;
 		fds[count].events = POLLIN;
 		count++;
 	    }
@@ -230,23 +230,24 @@ _nc_timed_wait(int mode,
 
 #ifdef NCURSES_WGETCH_EVENTS
     if ((mode & 4) && evl) {
-	_nc_event **ev = evl->events;
-	_nc_event **last = ev + evl->count;
 	int c;
 
 	if (!result)
 	    count = 0;
-	while (ev < last) {
-	    if ((*ev)->type == _NC_EVENT_FILE
-		&& ((*ev)->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
-		(*ev)->data.fev.result = 0;
+
+	for (n = 0; n < evl->count; ++n) {
+	    _nc_event *ev = evl->events[n];
+
+	    if (ev->type == _NC_EVENT_FILE
+		&& (ev->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
+		ev->data.fev.result = 0;
 		for (c = 0; c < count; c++)
-		    if (fds[c].fd == (*ev)->data.fev.fd
+		    if (fds[c].fd == ev->data.fev.fd
 			&& fds[c].revents & POLLIN) {
-			(*ev)->data.fev.result |= _NC_EVENT_FILE_READABLE;
+			ev->data.fev.result |= _NC_EVENT_FILE_READABLE;
 			evl->result_flags |= _NC_EVENT_FILE_READABLE;
 		    }
-	    } else if ((*ev)->type == _NC_EVENT_TIMEOUT_MSEC
+	    } else if (ev->type == _NC_EVENT_TIMEOUT_MSEC
 		       && !result && timeout_is_event) {
 		evl->result_flags |= _NC_EVENT_TIMEOUT_MSEC;
 	    }
@@ -318,14 +319,13 @@ _nc_timed_wait(int mode,
     }
 #ifdef NCURSES_WGETCH_EVENTS
     if ((mode & 4) && evl) {
-	_nc_event **ev = evl->events;
-	_nc_event **last = ev + evl->count;
+	for (n = 0; n < evl->count; ++n) {
+	    _nc_event *ev = evl->events[n];
 
-	while (ev < last) {
-	    if ((*ev)->type == _NC_EVENT_FILE
-		&& ((*ev)->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
-		FD_SET((*ev)->data.fev.fd, &set);
-		count = max((*ev)->data.fev.fd + 1, count);
+	    if (ev->type == _NC_EVENT_FILE
+		&& (ev->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
+		FD_SET(ev->data.fev.fd, &set);
+		count = max(ev->data.fev.fd + 1, count);
 	    }
 	}
     }
@@ -342,19 +342,18 @@ _nc_timed_wait(int mode,
 
 #ifdef NCURSES_WGETCH_EVENTS
     if ((mode & 4) && evl) {
-	_nc_event **ev = evl->events;
-	_nc_event **last = ev + evl->count;
-
 	evl->result_flags = 0;
-	while (ev < last) {
-	    if ((*ev)->type == _NC_EVENT_FILE
-		&& ((*ev)->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
-		(*ev)->data.fev.result = 0;
-		if (FD_ISSET((*ev)->data.fev.fd, &set)) {
-		    (*ev)->data.fev.result |= _NC_EVENT_FILE_READABLE;
+	for (n = 0; n < evl->count; ++n) {
+	    _nc_event *ev = evl->events[n];
+
+	    if (ev->type == _NC_EVENT_FILE
+		&& (ev->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
+		ev->data.fev.result = 0;
+		if (FD_ISSET(ev->data.fev.fd, &set)) {
+		    ev->data.fev.result |= _NC_EVENT_FILE_READABLE;
 		    evl->result_flags |= _NC_EVENT_FILE_READABLE;
 		}
-	    } else if ((*ev)->type == _NC_EVENT_TIMEOUT_MSEC
+	    } else if (ev->type == _NC_EVENT_TIMEOUT_MSEC
 		       && !result && timeout_is_event)
 		evl->result_flags |= _NC_EVENT_TIMEOUT_MSEC;
 	}
@@ -370,17 +369,16 @@ _nc_timed_wait(int mode,
 
 #ifdef NCURSES_WGETCH_EVENTS
     if (evl) {
-	_nc_event **ev = evl->events;
-	_nc_event **last = ev + evl->count;
-
 	evl->result_flags = 0;
-	while (ev < last) {
-	    if ((*ev)->type == _NC_EVENT_TIMEOUT_MSEC) {
+	for (n = 0; n < evl->count; ++n) {
+	    _nc_event *ev = evl->events[n];
+
+	    if (ev->type == _NC_EVENT_TIMEOUT_MSEC) {
 		long diff = (returntime - starttime);
-		if ((*ev)->data.timeout_msec <= diff)
-		    (*ev)->data.timeout_msec = 0;
+		if (ev->data.timeout_msec <= diff)
+		    ev->data.timeout_msec = 0;
 		else
-		    (*ev)->data.timeout_msec -= diff;
+		    ev->data.timeout_msec -= diff;
 	    }
 
 	}
@@ -418,7 +416,7 @@ _nc_timed_wait(int mode,
 	if (result > 0) {
 	    result = 0;
 #if USE_FUNC_POLL
-	    for (count = 0; count < 2; count++) {
+	    for (count = 0; count < MIN_FDS; count++) {
 		if ((mode & (1 << count))
 		    && (fds[count].revents & POLLIN)) {
 		    result |= (1 << count);

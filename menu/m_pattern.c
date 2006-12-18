@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_pattern.c,v 1.14 2005/04/16 17:53:16 tom Exp $")
+MODULE_ID("$Id: m_pattern.c,v 1.15 2006/11/04 18:46:39 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -68,8 +68,8 @@ menu_pattern(const MENU * menu)
 |
 |   Return Values :  E_OK              - success
 |                    E_BAD_ARGUMENT    - invalid menu or pattern pointer
-|                    E_NOT_CONNECTED   - no items connected to menu
 |                    E_BAD_STATE       - menu in user hook routine
+|                    E_NOT_CONNECTED   - no items connected to menu
 |                    E_NO_MATCH        - no item matches pattern
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(int)

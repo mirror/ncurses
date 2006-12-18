@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_color.c,v 1.75 2005/06/18 20:19:08 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.80 2006/11/26 01:33:16 tom Exp $")
 
 /*
  * These should be screen structure members.  They need to be globals for
@@ -55,6 +55,8 @@ NCURSES_EXPORT_VAR(int) COLORS = 0;
 #define DATA(r,g,b) {r,g,b, 0,0,0, 0}
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
+
+#define OkColorHi(n)	(((n) < COLORS) && ((n) < max_colors))
 
 /*
  * Given a RGB range of 0..1000, we'll normally set the individual values
@@ -133,10 +135,10 @@ set_background_color(int bg, int (*outc) (int))
 {
     if (set_a_background) {
 	TPUTS_TRACE("set_a_background");
-	tputs(tparm(set_a_background, bg), 1, outc);
+	tputs(TPARM_1(set_a_background, bg), 1, outc);
     } else {
 	TPUTS_TRACE("set_background");
-	tputs(tparm(set_background, toggled_colors(bg)), 1, outc);
+	tputs(TPARM_1(set_background, toggled_colors(bg)), 1, outc);
     }
 }
 
@@ -145,10 +147,10 @@ set_foreground_color(int fg, int (*outc) (int))
 {
     if (set_a_foreground) {
 	TPUTS_TRACE("set_a_foreground");
-	tputs(tparm(set_a_foreground, fg), 1, outc);
+	tputs(TPARM_1(set_a_foreground, fg), 1, outc);
     } else {
 	TPUTS_TRACE("set_foreground");
-	tputs(tparm(set_foreground, toggled_colors(fg)), 1, outc);
+	tputs(TPARM_1(set_foreground, toggled_colors(fg)), 1, outc);
     }
 }
 
@@ -320,15 +322,15 @@ init_pair(short pair, short f, short b)
 	    f = COLOR_DEFAULT;
 	if (b < 0)
 	    b = COLOR_DEFAULT;
-	if (f >= COLORS && !isDefaultColor(f))
+	if (!OkColorHi(f) && !isDefaultColor(f))
 	    returnCode(ERR);
-	if (b >= COLORS && !isDefaultColor(b))
+	if (!OkColorHi(b) && !isDefaultColor(b))
 	    returnCode(ERR);
     } else
 #endif
     {
-	if ((f < 0) || (f >= COLORS)
-	    || (b < 0) || (b >= COLORS)
+	if ((f < 0) || !OkColorHi(f)
+	    || (b < 0) || !OkColorHi(b)
 	    || (pair < 1))
 	    returnCode(ERR);
     }
@@ -361,7 +363,7 @@ init_pair(short pair, short f, short b)
     }
     SP->_color_pairs[pair] = result;
     if (GET_SCREEN_PAIR(SP) == pair)
-	SET_SCREEN_PAIR(SP, ~0);	/* force attribute update */
+	SET_SCREEN_PAIR(SP, (chtype) (~0));	/* force attribute update */
 
     if (initialize_pair) {
 	const color_t *tp = hue_lightness_saturation ? hls_palette : cga_palette;
@@ -371,13 +373,11 @@ init_pair(short pair, short f, short b)
 	   tp[f].red, tp[f].green, tp[f].blue,
 	   tp[b].red, tp[b].green, tp[b].blue));
 
-	if (initialize_pair) {
-	    TPUTS_TRACE("initialize_pair");
-	    putp(tparm(initialize_pair,
-		       pair,
-		       tp[f].red, tp[f].green, tp[f].blue,
-		       tp[b].red, tp[b].green, tp[b].blue));
-	}
+	TPUTS_TRACE("initialize_pair");
+	putp(TPARM_7(initialize_pair,
+		     pair,
+		     tp[f].red, tp[f].green, tp[f].blue,
+		     tp[b].red, tp[b].green, tp[b].blue));
     }
 
     returnCode(OK);
@@ -395,7 +395,7 @@ init_color(short color, short r, short g, short b)
     if (initialize_color != NULL
 	&& SP != 0
 	&& SP->_coloron
-	&& (color >= 0 && color < COLORS)
+	&& (color >= 0 && OkColorHi(color))
 	&& (okRGB(r) && okRGB(g) && okRGB(b))) {
 
 	SP->_color_table[color].init = 1;
@@ -415,7 +415,7 @@ init_color(short color, short r, short g, short b)
 	}
 
 	TPUTS_TRACE("initialize_color");
-	putp(tparm(initialize_color, color, r, g, b));
+	putp(TPARM_4(initialize_color, color, r, g, b));
 	SP->_color_defs = max(color + 1, SP->_color_defs);
 	result = OK;
     }
@@ -447,7 +447,7 @@ color_content(short color, short *r, short *g, short *b)
     int result;
 
     T((T_CALLED("color_content(%d,%p,%p,%p)"), color, r, g, b));
-    if (color < 0 || color >= COLORS || SP == 0 || !SP->_coloron) {
+    if (color < 0 || !OkColorHi(color) || SP == 0 || !SP->_coloron) {
 	result = ERR;
     } else {
 	NCURSES_COLOR_T c_r = SP->_color_table[color].red;
@@ -499,7 +499,7 @@ pair_content(short pair, short *f, short *b)
 }
 
 NCURSES_EXPORT(void)
-_nc_do_color(int old_pair, int pair, bool reverse, int (*outc) (int))
+_nc_do_color(short old_pair, short pair, bool reverse, int (*outc) (int))
 {
     NCURSES_COLOR_T fg = COLOR_DEFAULT;
     NCURSES_COLOR_T bg = COLOR_DEFAULT;
@@ -510,10 +510,10 @@ _nc_do_color(int old_pair, int pair, bool reverse, int (*outc) (int))
     } else if (pair != 0) {
 	if (set_color_pair) {
 	    TPUTS_TRACE("set_color_pair");
-	    tputs(tparm(set_color_pair, pair), 1, outc);
+	    tputs(TPARM_1(set_color_pair, pair), 1, outc);
 	    return;
 	} else if (SP != 0) {
-	    pair_content(pair, &fg, &bg);
+	    pair_content((short) pair, &fg, &bg);
 	}
     }
 

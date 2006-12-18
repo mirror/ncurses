@@ -1,3 +1,30 @@
+/****************************************************************************
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 /*****************************************************************************
  *                                                                           *
  *                         B l u e   M o o n                                 *
@@ -13,7 +40,7 @@
  * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is
  * just as good.
  *
- * $Id: blue.c,v 1.25 2005/05/28 21:38:03 tom Exp $
+ * $Id: blue.c,v 1.29 2006/05/20 15:38:18 tom Exp $
  */
 
 #include <test.priv.h>
@@ -90,7 +117,7 @@ static chtype letters[4] =
     OR_COLORS('c', BLACK_ON_WHITE),	/* clubs */
 };
 
-#if defined(__i386__)
+#if defined(__i386__) && defined(A_ALTCHARSET) && HAVE_TIGETSTR
 static chtype glyphs[] =
 {
     PC_COLORS('\003', RED_ON_WHITE),	/* hearts */
@@ -98,6 +125,9 @@ static chtype glyphs[] =
     PC_COLORS('\004', RED_ON_WHITE),	/* diamonds */
     PC_COLORS('\005', BLACK_ON_WHITE),	/* clubs */
 };
+#define USE_CP437 1
+#else
+#define USE_CP437 0
 #endif /* __i386__ */
 
 static chtype *suits = letters;	/* this may change to glyphs below */
@@ -372,7 +402,7 @@ game_finished(int deal)
 int
 main(int argc, char *argv[])
 {
-    (void) signal(SIGINT, die);
+    CATCHALL(die);
 
     setlocale(LC_ALL, "");
 
@@ -391,7 +421,7 @@ main(int argc, char *argv[])
     letters[1] = OR_COLORS('s', BLACK_ON_WHITE);	/* spades */
     letters[2] = OR_COLORS('d', RED_ON_WHITE);	/* diamonds */
     letters[3] = OR_COLORS('c', BLACK_ON_WHITE);	/* clubs */
-#if defined(__i386__) && defined(A_ALTCHARSET)
+#if USE_CP437
     glyphs[0] = PC_COLORS('\003', RED_ON_WHITE);	/* hearts */
     glyphs[1] = PC_COLORS('\006', BLACK_ON_WHITE);	/* spades */
     glyphs[2] = PC_COLORS('\004', RED_ON_WHITE);	/* diamonds */
@@ -399,10 +429,10 @@ main(int argc, char *argv[])
 #endif
 #endif
 
-#if defined(__i386__) && defined(A_ALTCHARSET)
+#if USE_CP437
     if (tigetstr("smpch"))
 	suits = glyphs;
-#endif /* __i386__ && A_ALTCHARSET */
+#endif /* USE_CP437 */
 
     cbreak();
 

@@ -13,7 +13,7 @@
 <FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -41,13 +41,14 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.14 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.16 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2006/06/25 14:30:22 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
 <b>generic</b>
-   <b>type</b> <FONT COLOR=red><A NAME="ref_44_9">User</A></FONT> <b>is</b> <b>limited</b> <b>private</b>;
-   <b>type</b> <A HREF="terminal_interface__ads.htm#ref_41_9">User_Access</A> <b>is</b> <b>access</b> User<A HREF="terminal_interface-curses-menus__ads.htm#ref_48_35">;</A>
+   <b>type</b> <FONT COLOR=red><A NAME="ref_45_9" HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_46_41">User</A></FONT> <b>is</b> <b>limited</b> <b>private</b>;
+   <b>type</b> <A HREF="terminal_interface__ads.htm#ref_42_9">User_Access</A> <b>is</b> <b>access</b> User<A HREF="terminal_interface-curses-menus__ads.htm#ref_49_35">;</A>
 <b>package</b> Terminal_Interface.Curses.Menus.Item_User_Data <b>is</b>
    <b>pragma</b> Preelaborate (Terminal_Interface.Curses.Menus.Item_User_Data);
 
@@ -60,13 +61,13 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_1"#2|</EM></FONT>
-   <b>procedure</b> Set_User_Data (<FONT COLOR=red><A NAME="ref_58_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_49_29">Itm</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_44_9">Item</A>;
+   <b>procedure</b> Set_User_Data (<FONT COLOR=red><A NAME="ref_59_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_49_29">Itm</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_45_9">Item</A>;
                             Data : <b>in</b> User_Access);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_userptr.3x.html">set_item_userptr</A></EM></FONT>
    <b>pragma</b> Inline (Set_User_Data);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_2"#2|</EM></FONT>
-   <b>procedure</b> Get_User_Data (<FONT COLOR=red><A NAME="ref_64_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_71_29">Itm</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_44_9">Item</A>;
+   <b>procedure</b> Get_User_Data (<FONT COLOR=red><A NAME="ref_65_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_71_29">Itm</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_45_9">Item</A>;
                             Data : <b>out</b> User_Access);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_userptr.3x.html">item_userptr</A></EM></FONT>
 
@@ -77,5 +78,4 @@
    <b>pragma</b> Inline (Get_User_Data);
 
 <b>end</b> Terminal_Interface.Curses.Menus.Item_User_Data;
-
 </PRE></BODY></HTML>

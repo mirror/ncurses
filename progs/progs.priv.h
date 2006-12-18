@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.29 2005/08/06 20:05:32 tom Exp $
+ * $Id: progs.priv.h,v 1.30 2006/11/26 00:28:01 tom Exp $
  *
  *	progs.priv.h
  *
@@ -109,6 +109,7 @@ extern int optind;
 #include <curses.h>
 #include <term_entry.h>
 #include <tic.h>
+#include <nc_tparm.h>
 #include <nc_alloc.h>
 
 /* usually in <unistd.h> */

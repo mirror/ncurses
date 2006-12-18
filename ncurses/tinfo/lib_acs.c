@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.27 2004/10/16 15:42:40 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.30 2006/01/07 21:27:15 tom Exp $")
 
 #if BROKEN_LINKER
 NCURSES_EXPORT_VAR(chtype *)
@@ -131,6 +131,32 @@ _nc_init_acs(void)
 	TPUTS_TRACE("ena_acs");
 	putp(ena_acs);
     }
+#if NCURSES_EXT_FUNCS
+    /*
+     * Linux console "supports" the "PC ROM" character set by the coincidence
+     * that smpch/rmpch and smacs/rmacs have the same values.  ncurses has
+     * no codepage support (see SCO Merge for an example).  Outside of the
+     * values defined in acsc, there are no definitions for the "PC ROM"
+     * character set (assumed by some applications to be codepage 437), but we
+     * allow those applications to use those codepoints.
+     *
+     * test/blue.c uses this feature.
+     */
+#define PCH_KLUDGE(a,b) (a != 0 && b != 0 && !strcmp(a,b))
+    if (PCH_KLUDGE(enter_pc_charset_mode, enter_alt_charset_mode) &&
+	PCH_KLUDGE(exit_pc_charset_mode, exit_alt_charset_mode)) {
+	size_t i;
+	for (i = 1; i < ACS_LEN; ++i) {
+	    if (real_map[i] == 0) {
+		real_map[i] = i;
+		if (real_map != fake_map) {
+		    if (SP != 0)
+			SP->_screen_acs_map[i] = TRUE;
+		}
+	    }
+	}
+    }
+#endif
 
     if (acs_chars != NULL) {
 	size_t i = 0;
@@ -151,7 +177,7 @@ _nc_init_acs(void)
      */
     if (_nc_tracing & TRACE_CALLS) {
 	size_t n, m;
-	char show[ACS_LEN + 1];
+	char show[ACS_LEN * 2 + 1];
 	for (n = 1, m = 0; n < ACS_LEN; n++) {
 	    if (real_map[n] != 0) {
 		show[m++] = (char) n;

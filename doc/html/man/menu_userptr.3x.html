@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998 Free Software Foundation, Inc.                        *
+  * Copyright (c) 1998,2006 Free Software Foundation, Inc.                   *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: menu_userptr.3x,v 1.6 1998/11/29 01:11:02 Rick.Ohnemus Exp @
+  * @Id: menu_userptr.3x,v 1.8 2006/11/04 18:21:03 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -68,13 +68,10 @@
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Except  for  <STRONG>menu_userptr</STRONG>  (which  returns <STRONG>NULL</STRONG> on error),
-       each function returns one of the following:
+       <STRONG>menu_userptr</STRONG>  returns  a  pointer (which may be <STRONG>NULL</STRONG>).  It
+       does not set errno.
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
-
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno</STRONG>).
+       <STRONG>set_menu_userptr</STRONG> returns <STRONG>E_OK</STRONG> (success).
 
 
 </PRE>
@@ -93,8 +90,8 @@
        These  routines  emulate  the System V menu library.  They
        were not supported on Version 7 or BSD versions.
 
-       The user pointer should be a void pointer.  We leave it as
-       a char pointer for SVr4 compatibility.
+       The user pointer is a void pointer.  We chose not to leave
+       it as a char pointer for SVr4 compatibility.
 
 
 </PRE>

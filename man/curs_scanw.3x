@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 1998-2000,2006 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scanw.3x,v 1.12 2002/07/20 15:48:09 tom Exp $
+.\" $Id: curs_scanw.3x,v 1.13 2006/02/25 21:42:22 tom Exp $
 .TH curs_scanw 3X ""
 .SH NAME
 \fBscanw\fR,
@@ -36,7 +36,7 @@
 \fBvwscanw\fR, \fBvw_scanw\fR - convert formatted input from a \fBcurses\fR window
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
-
+.sp
 \fBint scanw(char *fmt, ...);\fR
 .br
 \fBint wscanw(WINDOW *win, char *fmt, ...);\fR
@@ -54,7 +54,7 @@ The \fBscanw\fR, \fBwscanw\fR and \fBmvscanw\fR routines are analogous to
 \fBwgetstr\fR were called on the window, and the resulting line used as input
 for \fBsscanf\fR(3).  Fields which do not map to a variable in the \fIfmt\fR
 field are lost.
-
+.PP
 The \fBvwscanw\fR and \fBvw_scanw\fR routines are analogous to \fBvscanf\fR.
 They perform a \fBwscanw\fR using a variable argument list.
 The third argument is a \fIva_list\fR,
@@ -62,7 +62,7 @@ a pointer to a list of arguments, as defined in \fB<stdarg.h>\fR.
 .SH RETURN VALUE
 \fBvwscanw\fR returns \fBERR\fR on failure and an integer equal to the
 number of fields scanned on success.
-
+.PP
 Applications may use the return value from the \fBscanw\fR, \fBwscanw\fR,
 \fBmvscanw\fR and \fBmvwscanw\fR routines to determine the number of fields
 which were mapped in the call.

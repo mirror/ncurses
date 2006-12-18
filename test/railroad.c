@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2000-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 2000-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,13 +27,15 @@
  ****************************************************************************/
 
 /*
- * Author: Thomas E. Dickey <dickey@clark.net> 2000
+ * Author: Thomas E. Dickey - 2000
  *
- * $Id: railroad.c,v 1.11 2002/10/19 22:11:24 tom Exp $
+ * $Id: railroad.c,v 1.14 2006/05/20 16:02:04 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
 #include <test.priv.h>
+
+#if HAVE_TGETENT
 
 static char *wipeit;
 static char *moveit;
@@ -180,11 +182,10 @@ railroad(char **args)
     NCURSES_CONST char *name = getenv("TERM");
     char buffer[1024];
     char area[1024], *ap = area;
-    int j;
 
     if (name == 0)
 	name = "dumb";
-    if (tgetent(buffer, name)) {
+    if (tgetent(buffer, name) >= 0) {
 
 	wipeit = tgetstr("ce", &ap);
 	height = tgetnum("li");
@@ -214,9 +215,7 @@ railroad(char **args)
 
 	ShowCursor(0);
 
-	for (j = SIGHUP; j <= SIGTERM; j++)
-	    if (signal(j, SIG_IGN) != SIG_IGN)
-		signal(j, onsig);
+	CATCHALL(onsig);
 
 	while (*args) {
 	    ShowSign(*args++);
@@ -238,3 +237,13 @@ main(int argc, char *argv[])
     }
     ExitProgram(EXIT_SUCCESS);
 }
+
+#else
+int
+main(int argc GCC_UNUSED,
+     char *argv[]GCC_UNUSED)
+{
+    printf("This program requires termcap\n");
+    exit(EXIT_FAILURE);
+}
+#endif

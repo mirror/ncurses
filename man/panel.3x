@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2000,2003 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2003,2006 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: panel.3x,v 1.11 2003/05/17 22:44:09 jmc Exp $
+.\" $Id: panel.3x,v 1.12 2006/05/13 15:35:45 tom Exp $
 .TH panel 3X ""
 .ds n 5
 .ds d @TERMINFO@
@@ -166,7 +166,7 @@ function to ensure compatibility with native panel libraries.
 .SH NOTE
 In your library list, libpanel.a should be before libncurses.a; that is,
 you want to say `-lpanel -lncurses', not the other way around (which would
-give you a link error using GNU \fBld\fR(1) and some other linkers).
+usually give a link-error).
 .SH FILES
 .P
 panel.h
@@ -176,6 +176,9 @@ libpanel.a
 the panels library itself
 .SH SEE ALSO
 \fBcurses\fR(3X)
+.PP
+This describes \fBncurses\fR
+version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .SH AUTHOR
 Originally written by Warren Tucker <wht@n4hgf.mt-park.ga.us>,
 primarily to assist in porting u386mon to systems without a native

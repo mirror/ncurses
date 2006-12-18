@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.17 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.18 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package body Terminal_Interface.Curses.Text_IO is
@@ -128,7 +128,7 @@ package body Terminal_Interface.Curses.Text_IO is
    is
       P_Size : constant Count := Page_Length (Win);
    begin
-      if Spacing not in Positive_Count then
+      if not Spacing'Valid then
          raise Constraint_Error;
       end if;
 
@@ -166,7 +166,7 @@ package body Terminal_Interface.Curses.Text_IO is
       X2 : Column_Position;
       N  : Natural;
    begin
-      if To not in Positive_Count then
+      if not To'Valid then
          raise Constraint_Error;
       end if;
 
@@ -200,7 +200,7 @@ package body Terminal_Interface.Curses.Text_IO is
       X  : Column_Position;
       N  : Natural;
    begin
-      if To not in Positive_Count then
+      if not To'Valid then
          raise Constraint_Error;
       end if;
 

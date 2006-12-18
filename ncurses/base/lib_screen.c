@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,10 +34,10 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_screen.c,v 1.28 2002/09/14 23:30:41 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.29 2006/05/27 19:21:38 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
-getwin(FILE * filep)
+getwin(FILE *filep)
 {
     WINDOW tmp, *nwin;
     int n;
@@ -70,7 +70,7 @@ getwin(FILE * filep)
 	nwin->_yoffset = tmp._yoffset;
 	nwin->_flags = tmp._flags & ~(_SUBWIN);
 
-	nwin->_attrs = tmp._attrs;
+	WINDOW_ATTRS(nwin) = WINDOW_ATTRS(&tmp);
 	nwin->_nc_bkgd = tmp._nc_bkgd;
 
 	nwin->_notimeout = tmp._notimeout;
@@ -107,7 +107,7 @@ getwin(FILE * filep)
 }
 
 NCURSES_EXPORT(int)
-putwin(WINDOW *win, FILE * filep)
+putwin(WINDOW *win, FILE *filep)
 {
     int code = ERR;
     int n;

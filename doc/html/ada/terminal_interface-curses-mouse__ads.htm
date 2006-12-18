@@ -13,7 +13,7 @@
 <FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -41,8 +41,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.25 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2004/08/21 21:37:00 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.27 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2006/06/25 14:30:22 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  mouse binding.</EM></FONT>
@@ -173,9 +173,9 @@
 
    <b>type</b> Mouse_Event <b>is</b>
       <b>record</b>
-         Id      : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.short'First) ..
-         <FONT COLOR=red><A NAME="ref_172_10"> </A></FONT>  <FONT COLOR=red><A NAME="ref_172_13"> </A></FONT>  <FONT COLOR=red><A NAME="ref_172_16"> </A></FONT>                 Integer (<A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.short'Last);
-         X, Y, Z : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_23_9">Interfaces</A>.C.int'First) ..
+         Id      : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short'First) ..
+         <FONT COLOR=red><A NAME="ref_172_10"> </A></FONT>  <FONT COLOR=red><A NAME="ref_172_13"> </A></FONT>  <FONT COLOR=red><A NAME="ref_172_16"> </A></FONT>                 Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short'Last);
+         X, Y, Z : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int'First) ..
          <FONT COLOR=red><A NAME="ref_174_10"> </A></FONT>         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9"> </A>             Integer (Interfaces.C.int'Last);
          Bstate  : Event_Mask;
       <b>end</b> <b>record</b>;
@@ -228,7 +228,6 @@
    <FONT COLOR=red><A NAME="ref_223_4">BUTTON2_EVENTS</A></FONT>            : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> := 8#00000007700#;
    <FONT COLOR=red><A NAME="ref_224_4">BUTTON3_EVENTS</A></FONT>            : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> := 8#00000770000#;
    BUTTON4_EVENTS            : <b>constant</b> Event_Mask := 8#00077000000#;
-
 
    <A HREF="terminal_interface-curses-mouse__ads.htm#ref_66_4">No_Events</A>  : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_220_4">0</A>;
    All_Events : <b>constant</b> Event_Mask := ALL_MOUSE_EVENTS;

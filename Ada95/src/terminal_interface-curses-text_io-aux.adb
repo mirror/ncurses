@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package body Terminal_Interface.Curses.Text_IO.Aux is
@@ -125,4 +126,3 @@ package body Terminal_Interface.Curses.Text_IO.Aux is
    end Put_Buf;
 
 end Terminal_Interface.Curses.Text_IO.Aux;
-

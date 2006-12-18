@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998,2003 Free Software Foundation, Inc.                   *
+  * Copyright (c) 1998-2003,2006 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_field.3x,v 1.6 2003/05/10 20:33:49 jmc Exp @
+  * @Id: form_field.3x,v 1.8 2006/11/04 18:01:38 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -79,28 +79,29 @@
 
 </PRE>
 <H2>RETURN VALUES</H2><PRE>
-       The function <STRONG>form_fields</STRONG> returns <STRONG>NULL</STRONG> on error.
+       The  function  <STRONG>form_fields</STRONG> returns a pointer (which may be
+       <STRONG>NULL</STRONG>).  It does not set errno.
 
-       The  function  <STRONG>field_count</STRONG> returns <STRONG>ERR</STRONG> (the general <STRONG>curses</STRONG>
-       error return value) on error.
+       The function <STRONG>field_count</STRONG> returns <STRONG>ERR</STRONG> if the <EM>form</EM> parameter
+       is <STRONG>NULL</STRONG>.
 
        The functions <STRONG>set_form_fields</STRONG> and <STRONG>move_field</STRONG> return one of
        the following codes on error:
 
        <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno</STRONG>).
-
        <STRONG>E_BAD_ARGUMENT</STRONG>
-            Routine  detected  an incorrect or out-of-range argu-
+            Routine detected an incorrect or  out-of-range  argu-
             ment.
+
+       <STRONG>E_CONNECTED</STRONG>
+            The field is already connected to a form.
 
        <STRONG>E_POSTED</STRONG>
             The form is already posted.
 
-       <STRONG>E_CONNECTED</STRONG>
-            The field is already connected to a form.
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno</STRONG>).
 
 
 </PRE>
@@ -116,16 +117,16 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These  routines  emulate the System V forms library.  They
+       These routines emulate the System V forms  library.   They
        were not supported on Version 7 or BSD versions.
 
-       The  SVr4  forms  library  documentation   specifies   the
+       The   SVr4   forms  library  documentation  specifies  the
        <STRONG>field_count</STRONG> error value as -1 (which is the value of <STRONG>ERR</STRONG>).
 
 
 </PRE>
 <H2>AUTHORS</H2><PRE>
-       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
+       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
        curses by Eric S. Raymond.
 
 

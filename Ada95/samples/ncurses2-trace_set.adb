@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000 Free Software Foundation, Inc.                        --
+-- Copyright (c) 2000,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.1 $
+--  $Revision: 1.2 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -83,7 +84,6 @@ procedure ncurses2.trace_set is
       end case;
    end menu_virtualize;
 
-
    type string_a is access String;
    type tbl_entry is record
       name : string_a;
@@ -125,7 +125,6 @@ procedure ncurses2.trace_set is
       );
 
    package BS is new Ada.Strings.Bounded.Generic_Bounded_Length (300);
-
 
    function subset (super, sub : Trace_Attribute_Set) return Boolean is
    begin
@@ -238,7 +237,6 @@ procedure ncurses2.trace_set is
       return result'Img;
    end trace_num;
 
-
    function tracetrace (tlevel : Trace_Attribute_Set) return String is
 
       use BS;
@@ -250,7 +248,6 @@ procedure ncurses2.trace_set is
       if tlevel = Trace_Disable then
          Append (buf, "Trace_Disable");
       else
-
 
          if subset (tlevel,
                     Trace_Attribute_Set'(Times => True, others => False)) then
@@ -392,7 +389,7 @@ procedure ncurses2.trace_set is
 
    nc_tracing, mask : Trace_Attribute_Set;
    pragma Import (C, nc_tracing, "_nc_tracing");
-   items_a : Item_Array_Access :=
+   items_a : constant Item_Array_Access :=
      new Item_Array (t_tbl'First .. t_tbl'Last + 1);
    mrows : Line_Count;
    mcols : Column_Count;

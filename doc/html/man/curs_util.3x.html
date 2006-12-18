@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.17 2005/06/25 21:51:37 tom Exp @
+  * @Id: curs_util.3x,v 1.21 2006/08/26 14:17:48 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -48,8 +48,8 @@
 </PRE>
 <H2>NAME</H2><PRE>
        <STRONG>delay_output</STRONG>, <STRONG>filter</STRONG>, <STRONG>flushinp</STRONG>, <STRONG>getwin</STRONG>, <STRONG>key_name</STRONG>, <STRONG>keyname</STRONG>,
-       <STRONG>putwin</STRONG>, <STRONG>unctrl</STRONG>, <STRONG>use_env</STRONG>, <STRONG>wunctrl</STRONG> - miscellaneous <STRONG>curses</STRONG>
-       utility routines
+       <STRONG>nofilter</STRONG>, <STRONG>putwin</STRONG>, <STRONG>unctrl</STRONG>, <STRONG>use_env</STRONG>, <STRONG>wunctrl</STRONG> - miscellaneous
+       <STRONG>curses</STRONG> utility routines
 
 
 </PRE>
@@ -61,6 +61,7 @@
        <STRONG>char</STRONG> <STRONG>*keyname(int</STRONG> <STRONG>c);</STRONG>
        <STRONG>char</STRONG> <STRONG>*key_name(wchar_t</STRONG> <STRONG>w);</STRONG>
        <STRONG>void</STRONG> <STRONG>filter(void);</STRONG>
+       <STRONG>void</STRONG> <STRONG>nofilter(void);</STRONG>
        <STRONG>void</STRONG> <STRONG>use_env(bool</STRONG> <STRONG>f);</STRONG>
        <STRONG>int</STRONG> <STRONG>putwin(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>FILE</STRONG> <STRONG>*filep);</STRONG>
        <STRONG>WINDOW</STRONG> <STRONG>*getwin(FILE</STRONG> <STRONG>*filep);</STRONG>
@@ -92,6 +93,12 @@
        calls, <STRONG>LINES</STRONG> is set to 1;  the  capabilities  <STRONG>clear</STRONG>,  <STRONG>cup</STRONG>,
        <STRONG>cud</STRONG>,  <STRONG>cud1</STRONG>,  <STRONG>cuu1</STRONG>,  <STRONG>cuu</STRONG>,  <STRONG>vpa</STRONG>  are  disabled; and the <STRONG>home</STRONG>
        string is set to the value of <STRONG>cr</STRONG>.
+
+       The <STRONG>nofilter</STRONG> routine cancels the  effect  of  a  preceding
+       <STRONG>filter</STRONG>  call.   That  allows  the  caller  to initialize a
+       screen on a different device, using a different  value  of
+       <STRONG>$TERM</STRONG>.   The  limitation arises because the <STRONG>filter</STRONG> routine
+       modifies the in-memory copy of the terminal information.
 
        The <STRONG>use_env</STRONG> routine, if used, is called before <STRONG>initscr</STRONG>  or
        <STRONG>newterm</STRONG>  are  called.   When called with <STRONG>FALSE</STRONG> as an argu-
@@ -159,20 +166,33 @@
        The  strings returned by <STRONG>unctrl</STRONG> in this implementation are
        determined at compile time, showing C1 controls  from  the
        upper-128  codes with a `~' prefix rather than `^'.  Other
-       implementations typically show both sets of control  char-
-       acters  with  `^',  and may strip the parameter to 7 bits.
-       This implementation uses 8 bits but does  not  modify  the
-       string to reflect locale.
+       implementations have different conventions.  For  example,
+       they  may  show  both sets of control characters with `^',
+       and strip the parameter to 7 bits.  Or they may ignore  C1
+       controls  and  treat all of the upper-1280 codes as print-
+       able.  This implementation uses 8 bits but does not modify
+       the string to reflect locale.  The <STRONG>use_legacy_coding</STRONG> func-
+       tion allows the caller to change the output of <STRONG>unctrl</STRONG>.
 
-       The  <STRONG>keyname</STRONG> function may return the names of user-defined
-       string capabilities which are defined in the terminfo  en-
-       try via the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG>.
+       The <STRONG>keyname</STRONG> function may return the names of  user-defined
+       string  capabilities which are defined in the terminfo en-
+       try via the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG>.  This  implementation  auto-
+       matically  assigns  at  run-time  keycodes to user-defined
+       strings which begin  with  "k".   The  keycodes  start  at
+       KEY_MAX,  but  are not guaranteed to be the same value for
+       different runs because user-defined codes are merged  from
+       all terminal descriptions which have been loaded.
+
+       The  <STRONG>nofilter</STRONG>  routine is specific to ncurses.  It was not
+       supported on Version 7, BSD or System  V  implementations.
+       It  is  recommended that any code depending on ncurses ex-
+       tensions be conditioned using NCURSES_VERSION.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,       <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>.
+       <STRONG><A HREF="use_legacy_coding.3.html">use_legacy_coding(3)</A></STRONG>,    <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,     <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,
+       <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>, <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>.
 
 
 

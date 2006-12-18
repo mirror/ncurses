@@ -1,11 +1,37 @@
+/****************************************************************************
+ * Copyright (c) 2003-2005,2006 Free Software Foundation, Inc.              *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.18 2005/10/08 21:54:20 tom Exp $
+ * $Id: demo_forms.c,v 1.22 2006/12/10 00:30:24 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
  */
 /*
-TYPE_ALNUM			-
 TYPE_ENUM			-
 TYPE_REGEXP			-
 dup_field			-
@@ -324,10 +350,23 @@ demo_forms(void)
 	    f[n++] = make_field(3, 34, 1, 12);
 	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
 	    break;
+	case 1:
+	    f[n++] = make_label(2, 0, "Last Name");
+	    f[n++] = make_field(3, 0, 1, 18);
+	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
+
+	    f[n++] = make_label(2, 20, "First Name");
+	    f[n++] = make_field(3, 20, 1, 12);
+	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
+
+	    f[n++] = make_label(2, 34, "MI");
+	    f[n++] = make_field(3, 34, 1, 1);
+	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
+	    break;
 	case 2:
 	    f[n++] = make_label(2, 0, "Host Name");
 	    f[n++] = make_field(3, 0, 1, 18);
-	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
+	    set_field_type(f[n - 1], TYPE_ALNUM, 1);
 
 #ifdef NCURSES_VERSION
 	    f[n++] = make_label(2, 20, "IP Address");

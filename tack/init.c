@@ -22,7 +22,7 @@
 
 #include <tack.h>
 
-MODULE_ID("$Id: init.c,v 1.6 2005/09/17 19:49:16 tom Exp $")
+MODULE_ID("$Id: init.c,v 1.7 2006/11/26 00:16:01 tom Exp $")
 
 #if NCURSES_VERSION_MAJOR >= 5 || NCURSES_VERSION_PATCH >= 981219
 #define _nc_get_curterm(p) _nc_get_tty_mode(p)
@@ -159,7 +159,7 @@ display_basic(void)
 	}
 	report_cap("      (clear)", clear_screen);
 	if (!cursor_home && cursor_address) {
-		report_cap("(cup) (home)", tparm(cursor_address, 0, 0));
+		report_cap("(cup) (home)", TPARM_2(cursor_address, 0, 0));
 	} else {
 		report_cap("      (home)", cursor_home);
 	}

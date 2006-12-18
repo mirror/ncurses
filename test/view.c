@@ -1,3 +1,30 @@
+/****************************************************************************
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
 /*
  * view.c -- a silly little viewer program
  *
@@ -23,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.62 2005/05/28 21:40:25 tom Exp $
+ * $Id: view.c,v 1.64 2006/05/20 15:37:03 tom Exp $
  */
 
 #include <test.priv.h>
@@ -208,9 +235,7 @@ main(int argc, char *argv[])
 	    try_color = TRUE;
 	    break;
 	case 'i':
-	    signal(SIGINT, SIG_IGN);
-	    signal(SIGQUIT, SIG_IGN);
-	    signal(SIGTERM, SIG_IGN);
+	    CATCHALL(SIG_IGN);
 	    break;
 	case 'n':
 	    if ((MAXLINES = atoi(optarg)) < 1)

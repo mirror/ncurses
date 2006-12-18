@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.45 2005/06/04 22:07:53 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.47 2006/12/16 19:06:58 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -83,7 +83,7 @@ _nc_init_entry(TERMTYPE *const tp)
     tp->ext_Strings = 0;
 #endif
     if (tp->Booleans == 0)
-	tp->Booleans = typeMalloc(char, BOOLCOUNT);
+	tp->Booleans = typeMalloc(NCURSES_SBOOL, BOOLCOUNT);
     if (tp->Numbers == 0)
 	tp->Numbers = typeMalloc(short, NUMCOUNT);
     if (tp->Strings == 0)
@@ -281,7 +281,9 @@ _nc_merge_entry(TERMTYPE *const to, TERMTYPE *const from)
 NCURSES_EXPORT(void)
 _nc_alloc_entry_leaks(void)
 {
-    FreeAndNull(stringbuf);
+    if (stringbuf != 0) {
+	FreeAndNull(stringbuf);
+    }
     next_free = 0;
 }
 #endif

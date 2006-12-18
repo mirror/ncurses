@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_new.c,v 1.16 2004/12/25 21:57:53 tom Exp $")
+MODULE_ID("$Id: m_new.c,v 1.18 2006/11/04 19:04:06 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -53,6 +53,7 @@ MODULE_ID("$Id: m_new.c,v 1.16 2004/12/25 21:57:53 tom Exp $")
 NCURSES_EXPORT(MENU *)
 new_menu(ITEM ** items)
 {
+  int err = E_SYSTEM_ERROR;
   MENU *menu = (MENU *) calloc(1, sizeof(MENU));
 
   T((T_CALLED("new_menu(%p)"), items));
@@ -66,6 +67,7 @@ new_menu(ITEM ** items)
 	{
 	  if (!_nc_Connect_Items(menu, items))
 	    {
+	      err = E_NOT_CONNECTED;
 	      free(menu);
 	      menu = (MENU *) 0;
 	    }
@@ -73,7 +75,7 @@ new_menu(ITEM ** items)
     }
 
   if (!menu)
-    SET_ERROR(E_SYSTEM_ERROR);
+    SET_ERROR(err);
 
   returnMenu(menu);
 }

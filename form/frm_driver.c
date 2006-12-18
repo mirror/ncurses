@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.71 2005/10/01 19:42:40 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.76 2006/11/04 18:45:35 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -346,7 +346,7 @@ delete_char(FORM *form)
 |
 |   Return Values :  Pointer to first non-blank position in buffer
 +--------------------------------------------------------------------------*/
-INLINE static FIELD_CELL *
+NCURSES_INLINE static FIELD_CELL *
 Get_Start_Of_Data(FIELD_CELL *buf, int blen)
 {
   FIELD_CELL *p = buf;
@@ -368,7 +368,7 @@ Get_Start_Of_Data(FIELD_CELL *buf, int blen)
 |   Return Values :  Pointer to position after last non-blank position in
 |                    buffer.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD_CELL *
+NCURSES_INLINE static FIELD_CELL *
 After_End_Of_Data(FIELD_CELL *buf, int blen)
 {
   FIELD_CELL *p = &buf[blen];
@@ -388,7 +388,7 @@ After_End_Of_Data(FIELD_CELL *buf, int blen)
 |
 |   Return Values :  Pointer to first whitespace character in buffer.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD_CELL *
+NCURSES_INLINE static FIELD_CELL *
 Get_First_Whitespace_Character(FIELD_CELL *buf, int blen)
 {
   FIELD_CELL *p = buf;
@@ -410,7 +410,7 @@ Get_First_Whitespace_Character(FIELD_CELL *buf, int blen)
 |   Return Values :  Pointer to position after last whitespace character in
 |                    buffer.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD_CELL *
+NCURSES_INLINE static FIELD_CELL *
 After_Last_Whitespace_Character(FIELD_CELL *buf, int blen)
 {
   FIELD_CELL *p = &buf[blen];
@@ -439,7 +439,7 @@ After_Last_Whitespace_Character(FIELD_CELL *buf, int blen)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-INLINE static void
+NCURSES_INLINE static void
 Adjust_Cursor_Position(FORM *form, const FIELD_CELL *pos)
 {
   FIELD *field;
@@ -543,7 +543,7 @@ Window_To_Buffer(WINDOW *win, FIELD *field)
 #if USE_WIDEC_SUPPORT
 	      && p->chars[1] == 0
 #endif
-	      && AttrOf(*p) == ChAttrOf(pad))
+	    )
 	    *p = myBLANK;
 	}
     }
@@ -560,7 +560,7 @@ Window_To_Buffer(WINDOW *win, FIELD *field)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-INLINE static void
+NCURSES_INLINE static void
 Synchronize_Buffer(FORM *form)
 {
   if (form->status & _WINDOW_MODIFIED)
@@ -1034,7 +1034,7 @@ Display_Or_Erase_Field(FIELD *field, bool bEraseFlag)
       if (field->opts & O_VISIBLE)
 	Set_Field_Window_Attributes(field, win);
       else
-	wattrset(win, getattrs(fwin));
+	wattrset(win, WINDOW_ATTRS(fwin));
       werase(win);
     }
 
@@ -1212,6 +1212,7 @@ _nc_Synchronize_Attributes(FIELD *field)
 |
 |   Return Values :  E_OK                - success
 |                    E_BAD_ARGUMENT      - invalid field pointer
+|                    E_CURRENT           - field is the current one
 |                    E_SYSTEM_ERROR      - some severe basic error
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(int)
@@ -1312,9 +1313,10 @@ _nc_Synchronize_Options(FIELD *field, Field_Options newopts)
 |
 |   Description   :  Make the newfield the new current field.
 |
-|   Return Values :  E_OK                - success
-|                    E_BAD_ARGUMENT      - invalid form or field pointer
-|                    E_SYSTEM_ERROR      - some severe basic error
+|   Return Values :  E_OK              - success
+|                    E_BAD_ARGUMENT    - invalid form or field pointer
+|                    E_SYSTEM_ERROR    - some severe basic error
+|                    E_NOT_CONNECTED   - no fields are connected to the form
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(int)
 _nc_Set_Current_Field(FORM *form, FIELD *newfield)
@@ -2206,7 +2208,7 @@ HSC_Horizontal_Half_Line_Backward(FORM *form)
 |   Return Values :  TRUE   - there is enough space
 |                    FALSE  - there is not enough space
 +--------------------------------------------------------------------------*/
-INLINE static bool
+NCURSES_INLINE static bool
 Is_There_Room_For_A_Line(FORM *form)
 {
   FIELD *field = form->current;
@@ -2228,7 +2230,7 @@ Is_There_Room_For_A_Line(FORM *form)
 |   Return Values :  TRUE    - there is room
 |                    FALSE   - there is not enough room (line full)
 +--------------------------------------------------------------------------*/
-INLINE static bool
+NCURSES_INLINE static bool
 Is_There_Room_For_A_Char_In_Line(FORM *form)
 {
   int last_char_in_line;
@@ -2690,7 +2692,7 @@ FE_Delete_Previous(FORM *form)
        * automatically (given the proper options).  But we cannot eat the
        * keystroke to back over the wrapping point, since that would put the
        * cursor past the end of the form field.  In this case, just delete the
-       * character at the end of the field. 
+       * character at the end of the field.
        */
       if (form->currow == this_row && this_row > 0)
 	{
@@ -3110,7 +3112,7 @@ FV_Validation(FORM *form)
 |
 |   Return Values :  Pointer to the next field.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD *
+NCURSES_INLINE static FIELD *
 Next_Field_On_Page(FIELD *field)
 {
   FORM *form = field->form;
@@ -3192,7 +3194,7 @@ _nc_First_Active_Field(FORM *form)
 |
 |   Return Values :  Pointer to the previous field.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD *
+NCURSES_INLINE static FIELD *
 Previous_Field_On_Page(FIELD *field)
 {
   FORM *form = field->form;
@@ -3222,7 +3224,7 @@ Previous_Field_On_Page(FIELD *field)
 |
 |   Return Values :  Pointer to the next field.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD *
+NCURSES_INLINE static FIELD *
 Sorted_Next_Field(FIELD *field)
 {
   FIELD *field_on_page = field;
@@ -3248,7 +3250,7 @@ Sorted_Next_Field(FIELD *field)
 |
 |   Return Values :  Pointer to the previous field.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD *
+NCURSES_INLINE static FIELD *
 Sorted_Previous_Field(FIELD *field)
 {
   FIELD *field_on_page = field;
@@ -3273,7 +3275,7 @@ Sorted_Previous_Field(FIELD *field)
 |
 |   Return Values :  Pointer to left neighbor field.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD *
+NCURSES_INLINE static FIELD *
 Left_Neighbor_Field(FIELD *field)
 {
   FIELD *field_on_page = field;
@@ -3301,7 +3303,7 @@ Left_Neighbor_Field(FIELD *field)
 |
 |   Return Values :  Pointer to right neighbor field.
 +--------------------------------------------------------------------------*/
-INLINE static FIELD *
+NCURSES_INLINE static FIELD *
 Right_Neighbor_Field(FIELD *field)
 {
   FIELD *field_on_page = field;
@@ -3690,6 +3692,8 @@ FN_Down_Field(FORM *form)
 |
 |   Return Values :  E_OK                - success
 |                    != E_OK             - error from subordinate call
+|                    E_BAD_ARGUMENT      - invalid field pointer
+|                    E_SYSTEM_ERROR      - some severe basic error
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(int)
 _nc_Set_Form_Page(FORM *form, int page, FIELD *field)
@@ -3734,7 +3738,7 @@ _nc_Set_Form_Page(FORM *form, int page, FIELD *field)
 |
 |   Return Values :  The next page number
 +--------------------------------------------------------------------------*/
-INLINE static int
+NCURSES_INLINE static int
 Next_Page_Number(const FORM *form)
 {
   return (form->curpage + 1) % form->maxpage;
@@ -3750,7 +3754,7 @@ Next_Page_Number(const FORM *form)
 |
 |   Return Values :  The previous page number
 +--------------------------------------------------------------------------*/
-INLINE static int
+NCURSES_INLINE static int
 Previous_Page_Number(const FORM *form)
 {
   return (form->curpage != 0 ? form->curpage - 1 : form->maxpage - 1);
@@ -3873,8 +3877,8 @@ PN_Last_Page(FORM *form)
 |   Description   :  Enter character c into at the current position of the
 |                    current field of the form.
 |
-|   Return Values :  E_OK              -
-|                    E_REQUEST_DENIED  -
+|   Return Values :  E_OK              - success
+|                    E_REQUEST_DENIED  - driver could not process the request
 |                    E_SYSTEM_ERROR    -
 +--------------------------------------------------------------------------*/
 static int
@@ -3883,7 +3887,7 @@ Data_Entry(FORM *form, int c)
   FIELD *field = form->current;
   int result = E_REQUEST_DENIED;
 
-  T((T_CALLED("Data_Entry(%p,%s)"), form, _tracechtype(c)));
+  T((T_CALLED("Data_Entry(%p,%s)"), form, _tracechtype((chtype)c)));
   if ((field->opts & O_EDIT)
 #if FIX_FORM_INACTIVE_BUG
       && (field->opts & O_ACTIVE)
@@ -4075,6 +4079,7 @@ static const Binding_Info bindings[MAX_FORM_COMMAND - MIN_FORM_COMMAND + 1] =
 |                    E_INVALID_FIELD   - field contents are invalid
 |                    E_BAD_STATE       - called from inside a hook routine
 |                    E_REQUEST_DENIED  - request failed
+|                    E_NOT_CONNECTED   - no fields are connected to the form
 |                    E_UNKNOWN_COMMAND - command not known
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(int)

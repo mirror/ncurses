@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.35 2005/04/03 14:25:32 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.38 2006/11/26 00:27:47 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -177,14 +177,14 @@ tput(int argc, char *argv[])
 
 #ifdef set_lr_margin
 	if (set_lr_margin != 0) {
-	    PUTS(tparm(set_lr_margin, 0, columns - 1));
+	    PUTS(TPARM_2(set_lr_margin, 0, columns - 1));
 	} else
 #endif
 #ifdef set_left_margin_parm
 	    if (set_left_margin_parm != 0
 		&& set_right_margin_parm != 0) {
-	    PUTS(tparm(set_left_margin_parm, 0));
-	    PUTS(tparm(set_right_margin_parm, columns - 1));
+	    PUTS(TPARM_1(set_left_margin_parm, 0));
+	    PUTS(TPARM_1(set_right_margin_parm, columns - 1));
 	} else
 #endif
 	    if (clear_margins != 0
@@ -198,7 +198,7 @@ tput(int argc, char *argv[])
 	    }
 	    PUTS(set_left_margin);
 	    if (parm_right_cursor) {
-		PUTS(tparm(parm_right_cursor, columns - 1));
+		PUTS(TPARM_1(parm_right_cursor, columns - 1));
 	    } else {
 		for (i = 0; i < columns - 1; i++) {
 		    PUTCHAR(' ');
@@ -217,7 +217,7 @@ tput(int argc, char *argv[])
 	    if (clear_all_tabs != 0 && set_tab != 0) {
 		for (i = 0; i < columns - 1; i += 8) {
 		    if (parm_right_cursor) {
-			PUTS(tparm(parm_right_cursor, 8));
+			PUTS(TPARM_1(parm_right_cursor, 8));
 		    } else {
 			for (j = 0; j < 8; j++)
 			    PUTCHAR(' ');
@@ -251,8 +251,8 @@ tput(int argc, char *argv[])
 
 	if (is_reset && reset_3string != 0) {
 	    PUTS(reset_3string);
-	} else if (init_2string != 0) {
-	    PUTS(init_2string);
+	} else if (init_3string != 0) {
+	    PUTS(init_3string);
 	}
 	FLUSH;
 	return 0;
@@ -320,24 +320,24 @@ tput(int argc, char *argv[])
 
 	    switch (tparm_type(name)) {
 	    case Num_Str:
-		s = tparm(s, numbers[1], strings[2]);
+		s = TPARM_2(s, numbers[1], strings[2]);
 		break;
 	    case Num_Str_Str:
-		s = tparm(s, numbers[1], strings[2], strings[3]);
+		s = TPARM_3(s, numbers[1], strings[2], strings[3]);
 		break;
 	    default:
 		(void) _nc_tparm_analyze(s, p_is_s, &popcount);
 #define myParam(n) (p_is_s[n - 1] != 0 ? ((long) strings[n]) : numbers[n])
-		s = tparm(s,
-			  myParam(1),
-			  myParam(2),
-			  myParam(3),
-			  myParam(4),
-			  myParam(5),
-			  myParam(6),
-			  myParam(7),
-			  myParam(8),
-			  myParam(9));
+		s = TPARM_9(s,
+			    myParam(1),
+			    myParam(2),
+			    myParam(3),
+			    myParam(4),
+			    myParam(5),
+			    myParam(6),
+			    myParam(7),
+			    myParam(8),
+			    myParam(9));
 		break;
 	    }
 	}
@@ -374,7 +374,7 @@ main(int argc, char **argv)
 	    break;
 	case 'V':
 	    puts(curses_version());
-	    return EXIT_SUCCESS;
+	    ExitProgram(EXIT_SUCCESS);
 	default:
 	    usage();
 	    /* NOTREACHED */
@@ -404,7 +404,7 @@ main(int argc, char **argv)
     if (cmdline) {
 	if ((argc <= 0) && !is_reset && !is_init)
 	    usage();
-	return tput(argc, argv);
+	ExitProgram(tput(argc, argv));
     }
 
     while (fgets(buf, sizeof(buf), stdin) != 0) {
@@ -432,5 +432,5 @@ main(int argc, char **argv)
 	}
     }
 
-    return result;
+    ExitProgram(result);
 }

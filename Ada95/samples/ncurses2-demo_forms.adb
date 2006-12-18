@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.4 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.5 $
+--  $Date: 2006/06/25 14:24:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -416,7 +416,7 @@ procedure ncurses2.demo_forms is
    end erase_form;
 
    finished : Boolean := False;
-   f : Field_Array_Access := new Field_Array (1 .. 12);
+   f : constant Field_Array_Access := new Field_Array (1 .. 12);
    secure : Field;
    myform : Form;
    w : Window;

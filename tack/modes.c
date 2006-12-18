@@ -21,7 +21,7 @@
 
 #include <tack.h>
 
-MODULE_ID("$Id: modes.c,v 1.2 2005/09/17 19:49:16 tom Exp $")
+MODULE_ID("$Id: modes.c,v 1.3 2006/11/26 00:16:21 tom Exp $")
 
 /*
  * Tests boolean flags and terminal modes.
@@ -760,16 +760,16 @@ subtest_mir(
 		i = line_count;
 		put_str("\nXXX\nXXX\nXXX\nXXX");
 		tc_putp(enter_insert_mode);
-		s = tparm(cursor_address, i + 1, 0);
+		s = TPARM_2(cursor_address, i + 1, 0);
 		tputs(s, lines, tc_putch);
 		putchp('X');
-		s = tparm(cursor_address, i + 2, 1);
+		s = TPARM_2(cursor_address, i + 2, 1);
 		tputs(s, lines, tc_putch);
 		putchp('X');
-		s = tparm(cursor_address, i + 3, 2);
+		s = TPARM_2(cursor_address, i + 3, 2);
 		tputs(s, lines, tc_putch);
 		putchp('X');
-		s = tparm(cursor_address, i + 4, 3);
+		s = TPARM_2(cursor_address, i + 4, 3);
 		tputs(s, lines, tc_putch);
 		putchp('X');
 		tc_putp(exit_insert_mode);
@@ -812,7 +812,7 @@ subtest_msgr(
 		(enter_alt_charset_mode && exit_alt_charset_mode))) {
 		put_crlf();
 		i = line_count + 1;
-		tputs(tparm(cursor_address, i, 0), lines, tc_putch);
+		tputs(TPARM_2(cursor_address, i, 0), lines, tc_putch);
 		put_mode(enter_alt_charset_mode);
 		put_crlf();
 		/*
@@ -826,11 +826,11 @@ subtest_msgr(
 		put_mode(exit_alt_charset_mode);
 		put_mode(enter_standout_mode);
 		putchp('X');
-		tputs(tparm(cursor_address, i + 2, 1), lines, tc_putch);
+		tputs(TPARM_2(cursor_address, i + 2, 1), lines, tc_putch);
 		putchp('X');
-		tputs(tparm(cursor_address, i + 3, 2), lines, tc_putch);
+		tputs(TPARM_2(cursor_address, i + 3, 2), lines, tc_putch);
 		putchp('X');
-		tputs(tparm(cursor_address, i + 4, 3), lines, tc_putch);
+		tputs(TPARM_2(cursor_address, i + 4, 3), lines, tc_putch);
 		putchp('X');
 		put_mode(exit_standout_mode);
 		put_crlf();

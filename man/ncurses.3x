@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.76 2005/09/03 17:42:29 tom Exp $
+.\" $Id: ncurses.3x,v 1.81 2006/12/02 19:23:11 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ds n 5
@@ -42,12 +42,14 @@ The \fBncurses\fR library routines give the user a terminal-independent method
 of updating character screens with reasonable optimization.  This
 implementation is ``new curses'' (ncurses) and is the approved replacement for
 4.4BSD classic curses, which has been discontinued.
+This describes \fBncurses\fR
+version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .PP
 The \fBncurses\fR routines emulate the \fBcurses\fR(3X) library of System V
 Release 4 UNIX, and the XPG4 curses standard (XSI curses) but the \fBncurses\fR
 library is freely redistributable in source form.  Differences from the SVr4
-curses are summarized under the EXTENSIONS and PORTABILITY sections below and
-described in detail in the respective EXTENSIONS, PORTABILITY and BUGS sections
+curses are summarized under the \fBEXTENSIONS\fP and \fBPORTABILITY\fP sections below and
+described in detail in the respective \fBEXTENSIONS\fP, \fBPORTABILITY\fP and \fBBUGS\fP sections
 of individual man pages.
 .PP
 A program using these routines must be linked with the \fB-lncurses\fR option,
@@ -56,6 +58,7 @@ or (if it has been generated) with the debugging library \fB-lncurses_g\fR.
 the names \fB-lcurses\fR and \fB-lcurses_g\fR.)
 The ncurses_g library generates trace logs (in a file called 'trace' in the
 current directory) that describe curses actions.
+See also the section on \fBALTERNATE CONFIGURATIONS\fP.
 .PP
 The \fBncurses\fR package supports: overall screen, window and pad
 manipulation; output to windows and pads; reading terminal input; control over
@@ -99,11 +102,11 @@ undesired, effects.
 .PP
 Windows are referred to by variables declared as \fBWINDOW *\fR.
 These data structures are manipulated with routines described here and
-elsewhere in the \fBncurses\fR manual pages.  Among which the most basic
+elsewhere in the \fBncurses\fR manual pages.  Among those, the most basic
 routines are \fBmove\fR and \fBaddch\fR.  More general versions of
 these routines are included with names beginning with \fBw\fR,
 allowing the user to specify a window.  The routines not beginning
-with \fBw\fR affect \fBstdscr\fR.)
+with \fBw\fR affect \fBstdscr\fR.
 .PP
 After using routines to manipulate a window, \fBrefresh\fR is called,
 telling \fBcurses\fR to make the user's CRT screen look like
@@ -727,6 +730,19 @@ about the colors, set this to "-1,-1".
 To make it green-on-black, set it to "2,0".
 Any positive value from zero to the terminfo \fBmax_colors\fR value is allowed.
 .TP 5
+NCURSES_NO_HARD_TABS
+\fBNcurses\fP may use tabs as part of the cursor movement optimization.
+In some cases,
+your terminal driver may not handle these properly.
+Set this environment variable to disable the feature.
+You can also adjust your \fBstty\fP settings to avoid the problem.
+.TP 5
+NCURSES_NO_MAGIC_COOKIES
+Some terminals use a magic-cookie feature which requires special handling
+to make highlighting and other video attributes display properly. 
+You can suppress the highlighting entirely for these terminals by
+setting this environment variable.
+.TP 5
 NCURSES_NO_PADDING
 Most of the terminal descriptions in the terminfo database are written
 for real "hardware" terminals.
@@ -846,6 +862,76 @@ The library may be configured to disregard the following variables when the
 current user is the superuser (root), or if the application uses setuid or
 setgid permissions:
 $TERMINFO, $TERMINFO_DIRS, $TERMPATH, as well as $HOME.
+.SH ALTERNATE CONFIGURATIONS
+Several different configurations are possible,
+depending on the configure script options used when building \fBncurses\fP.
+There are a few main options whose effects are visible to the applications
+developer using \fBncurses\fP:
+.TP 5
+--disable-overwrite
+The standard include for \fBncurses\fP is as noted in \fBSYNOPSIS\fP:
+.RS
+.sp
+\fB#include <curses.h>\fR
+.RE
+.IP
+This option is used to avoid filename conflicts when \fBncurses\fP
+is not the main implementation of curses of the computer.
+If \fBncurses\fP is installed disabling overwrite, it puts its headers in
+a subdirectory, e.g.,
+.RS
+.sp
+\fB#include <ncurses/curses.h>\fR
+.RE
+.IP
+It also omits a symbolic link which would allow you to use \fB-lcurses\fP
+to build executables.
+.TP 5
+--enable-widec
+The configure script renames the library and (if the \fB--disable-overwrite\fP
+option is used) puts the header files in a different subdirectory.
+All of the library names have a "w" appended to them,
+i.e., instead of
+.RS
+.sp
+\fB-lncurses\fR
+.RE
+.IP
+you link with
+.RS
+.sp
+\fB-lncursesw\fR
+.RE
+.IP
+You must also define \fB_XOPEN_SOURCE_EXTENDED\fP when compiling for the
+wide-character library to use the extended (wide-character) functions.
+The \fBcurses.h\fP file which is installed for the wide-character
+library is designed to be compatible with the normal library's header.
+Only the size of the \fBWINDOW\fP structure differs, and very few
+applications require more than a pointer to \fBWINDOW\fPs.
+If the headers are installed allowing overwrite,
+the wide-character library's headers should be installed last,
+to allow applications to be built using either library
+from the same set of headers.
+.TP 5
+--with-shared
+.TP
+--with-normal
+.TP
+--with-debug
+.TP
+--with-profile
+The shared and normal (static) library names differ by their suffixes,
+e.g., \fBlibncurses.so\fP and \fBlibncurses.a\fP.
+The debug and profiling libraries add a "_g" and a "_p" to the root
+names respectively,
+e.g., \fBlibncurses_g.a\fP and \fBlibncurses_p.a\fP.
+.TP 5
+--with-trace
+The \fBtrace\fP function normally resides in the debug library,
+but it is sometimes useful to configure this in the shared library.
+Configure scripts should check for the function's existence rather
+than assuming it is always in the debug library.
 .SH FILES
 .TP 5
 @DATADIR@/tabset

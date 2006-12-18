@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 
-/* $Id: panel.priv.h,v 1.20 2005/02/19 17:16:54 tom Exp $ */
+/* $Id: panel.priv.h,v 1.21 2005/11/26 15:27:00 tom Exp $ */
 
 #ifndef NCURSES_PANEL_PRIV_H
 #define NCURSES_PANEL_PRIV_H 1
@@ -50,12 +50,6 @@
 #include "curses.priv.h"
 #include "panel.h"
 #include <nc_panel.h>
-
-#if ( CC_HAS_INLINE_FUNCS && !defined(TRACE) )
-#  define INLINE inline
-#else
-#  define INLINE
-#endif
 
 #if USE_RCS_IDS
 #  define MODULE_ID(id) static const char Ident[] = id;

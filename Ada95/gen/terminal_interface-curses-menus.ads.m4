@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,7 +38,8 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.24 $
+--  $Revision: 1.26 $
+--  $Date: 2006/06/25 14:30:22 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Menu_Base_Defs')
@@ -549,7 +550,7 @@ include(`Item_Rep')dnl
 
    procedure Set_Items (Men   : in Menu;
                         Items : in Item_Array_Access) renames Redefine;
-   pragma Inline (Set_Items);
+   --  pragma Inline (Set_Items);
 
    --  ANCHOR(`menu_items()',`Items')
    function Items (Men   : Menu;

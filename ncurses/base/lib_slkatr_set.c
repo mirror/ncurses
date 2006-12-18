@@ -38,7 +38,7 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkatr_set.c,v 1.9 2005/01/08 22:59:37 tom Exp $")
+MODULE_ID("$Id: lib_slkatr_set.c,v 1.10 2005/01/28 21:11:53 tom Exp $")
 
 NCURSES_EXPORT(int)
 slk_attr_set(const attr_t attr, short color_pair_number, void *opts)

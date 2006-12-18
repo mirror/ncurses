@@ -1,4 +1,8 @@
-/* $Id: curses.tail,v 1.12 2005/03/27 00:09:51 tom Exp $ */
+/*
+ * This file is part of ncurses, designed to be appended after curses.h.in
+ * (see that file for the relevant copyright).
+ */
+/* $Id: curses.tail,v 1.14 2006/05/27 16:28:29 tom Exp $ */
 
 /* mouse interface */
 
@@ -148,10 +152,6 @@ extern NCURSES_EXPORT(void) trace (const unsigned int);
 
 #if defined(TRACE) || defined(NCURSES_TEST)
 extern NCURSES_EXPORT_VAR(int) _nc_optimize_enable;		/* enable optimizations */
-#ifdef _XOPEN_SOURCE_EXTENDED
-extern NCURSES_EXPORT(const char *) _nc_viswbuf(const wchar_t *);
-extern NCURSES_EXPORT(const char *) _nc_viswibuf(const wint_t *);
-#endif
 extern NCURSES_EXPORT(const char *) _nc_visbuf (const char *);
 #define OPTIMIZE_MVCUR		0x01	/* cursor movement optimization */
 #define OPTIMIZE_HASHMAP	0x02	/* diff hashing to detect scrolls */
@@ -161,12 +161,16 @@ extern NCURSES_EXPORT(const char *) _nc_visbuf (const char *);
 
 #ifdef __cplusplus
 
+#ifndef NCURSES_NOMACROS
+
 /* these names conflict with STL */
 #undef box
 #undef clear
 #undef erase
 #undef move
 #undef refresh
+
+#endif /* NCURSES_NOMACROS */
 
 }
 #endif
