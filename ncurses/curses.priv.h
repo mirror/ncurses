@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.314 2006/12/10 00:55:14 tom Exp $
+ * $Id: curses.priv.h,v 1.317 2006/12/30 21:36:59 tom Exp $
  *
  *	curses.priv.h
  *
@@ -202,12 +202,14 @@ extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
  * delays and expansion in raw mode.
  */
 
-struct tries {
-	struct tries    *child;     /* ptr to child.  NULL if none          */
-	struct tries    *sibling;   /* ptr to sibling.  NULL if none        */
+#define TRIES struct tries
+typedef TRIES {
+	TRIES    *child;            /* ptr to child.  NULL if none          */
+	TRIES    *sibling;          /* ptr to sibling.  NULL if none        */
 	unsigned char    ch;        /* character at this node               */
 	unsigned short   value;     /* code of string so far.  0 if none.   */
-};
+#undef TRIES
+} TRIES;
 
 /*
  * Common/troublesome character definitions
@@ -405,6 +407,7 @@ struct screen {
 	bool		_buffered;	/* setvbuf uses _setbuf data	    */
 	int		_checkfd;	/* filedesc for typeahead check	    */
 	TERMINAL	*_term;		/* terminal type information	    */
+	TTY		_saved_tty;	/* savetty/resetty information	    */
 	short		_lines;		/* screen lines			    */
 	short		_columns;	/* screen columns		    */
 
@@ -417,8 +420,8 @@ struct screen {
 	WINDOW		*_newscr;	/* virtual screen to be updated to  */
 	WINDOW		*_stdscr;	/* screen's full-window context	    */
 
-	struct tries	*_keytry;	/* "Try" for use with keypad mode   */
-	struct tries	*_key_ok;	/* Disabled keys via keyok(,FALSE)  */
+	TRIES		*_keytry;	/* "Try" for use with keypad mode   */
+	TRIES		*_key_ok;	/* Disabled keys via keyok(,FALSE)  */
 	bool		_tried;		/* keypad mode was initialized	    */
 	bool		_keypad_on;	/* keypad mode is currently on	    */
 
@@ -597,6 +600,8 @@ struct screen {
 	unsigned long	*oldhash, *newhash;
 	HASHMAP		*hashtab;
 	int		hashtab_len;
+	int		*_oldnum_list;
+	int		_oldnum_size;
 
 	bool		_cleanup;	/* cleanup after int/quit signal */
 	int		(*_outch)(int); /* output handler if not putc */
@@ -1177,10 +1182,10 @@ extern NCURSES_EXPORT(char *) _nc_strstr (const char *, const char *);
 extern NCURSES_EXPORT(char *) _nc_printf_string (const char *, va_list);
 
 /* tries.c */
-extern NCURSES_EXPORT(void) _nc_add_to_try (struct tries **, const char *, unsigned);
-extern NCURSES_EXPORT(char *) _nc_expand_try (struct tries *, unsigned, int *, size_t);
-extern NCURSES_EXPORT(int) _nc_remove_key (struct tries **, unsigned);
-extern NCURSES_EXPORT(int) _nc_remove_string (struct tries **, const char *);
+extern NCURSES_EXPORT(int) _nc_add_to_try (TRIES **, const char *, unsigned);
+extern NCURSES_EXPORT(char *) _nc_expand_try (TRIES *, unsigned, int *, size_t);
+extern NCURSES_EXPORT(int) _nc_remove_key (TRIES **, unsigned);
+extern NCURSES_EXPORT(int) _nc_remove_string (TRIES **, const char *);
 
 /* elsewhere ... */
 extern NCURSES_EXPORT(ENTRY *) _nc_delink_entry(ENTRY *, TERMTYPE *);
@@ -1210,7 +1215,7 @@ extern NCURSES_EXPORT(void) _nc_scroll_optimize (void);
 extern NCURSES_EXPORT(void) _nc_set_buffer (FILE *, bool);
 extern NCURSES_EXPORT(void) _nc_signal_handler (bool);
 extern NCURSES_EXPORT(void) _nc_synchook (WINDOW *);
-extern NCURSES_EXPORT(void) _nc_trace_tries (struct tries *);
+extern NCURSES_EXPORT(void) _nc_trace_tries (TRIES *);
 
 #if NO_LEAKS
 extern NCURSES_EXPORT(void) _nc_alloc_entry_leaks(void);

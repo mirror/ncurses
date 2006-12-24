@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2000,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -145,7 +145,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.36 2001/01/14 00:17:28 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.38 2006/12/30 22:19:34 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -164,15 +164,16 @@ oldnums[MAXLINES];
    if OLDNUM(n) == _NEWINDEX, then the line n in new, not shifted from
    somewhere. */
 NCURSES_EXPORT_VAR(int *)
-_nc_oldnums = 0;
+_nc_oldnums = 0;		/* obsolete: keep for ABI compat */
 
 # if USE_HASHMAP
-     static int oldnums_allocated = 0;
-#  define oldnums       _nc_oldnums
+#  define oldnums       SP->_oldnum_list
 #  define OLDNUM(n)	oldnums[n]
 # else				/* !USE_HASHMAP */
 #  define OLDNUM(n)	newscr->_line[n].oldindex
 # endif				/* !USE_HASHMAP */
+
+#define OLDNUM_SIZE     SP->_oldnum_size
 
 #endif /* defined(SCROLLDEBUG) || defined(HASHDEBUG) */
 
@@ -188,12 +189,12 @@ _nc_scroll_optimize(void)
 #if !defined(SCROLLDEBUG) && !defined(HASHDEBUG)
 #if USE_HASHMAP
     /* get enough storage */
-    if (oldnums_allocated < screen_lines) {
+    if (OLDNUM_SIZE < screen_lines) {
 	int *new_oldnums = typeRealloc(int, screen_lines, oldnums);
 	if (!new_oldnums)
 	    return;
 	oldnums = new_oldnums;
-	oldnums_allocated = screen_lines;
+	OLDNUM_SIZE = screen_lines;
     }
     /* calculate the indices */
     _nc_hash_map();
@@ -260,23 +261,17 @@ NCURSES_EXPORT(void)
 _nc_linedump(void)
 /* dump the state of the real and virtual oldnum fields */
 {
-    static size_t have;
-    static char *buf;
-
     int n;
+    char *buf = 0;
     size_t want = (screen_lines + 1) * 4;
 
-    if (have < want)
-	buf = typeMalloc(char, have = want);
+    buf = typeMalloc(char, want);
 
     (void) strcpy(buf, "virt");
     for (n = 0; n < screen_lines; n++)
 	(void) sprintf(buf + strlen(buf), " %02d", OLDNUM(n));
     TR(TRACE_UPDATE | TRACE_MOVE, (buf));
-#if NO_LEAKS
     free(buf);
-    have = 0;
-#endif
 }
 #endif /* defined(TRACE) || defined(SCROLLDEBUG) */
 

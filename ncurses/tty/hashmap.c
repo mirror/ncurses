@@ -70,7 +70,7 @@ AUTHOR
 #include <curses.priv.h>
 #include <term.h>		/* for back_color_erase */
 
-MODULE_ID("$Id: hashmap.c,v 1.49 2006/03/11 19:33:49 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.50 2006/12/30 22:19:58 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -89,7 +89,7 @@ static chtype oldtext[MAXLINES][TEXTWIDTH], newtext[MAXLINES][TEXTWIDTH];
 
 #else /* !HASHDEBUG */
 
-# define OLDNUM(n)	_nc_oldnums[n]
+# define OLDNUM(n)	SP->_oldnum_list[n]
 # define OLDTEXT(n)	curscr->_line[n].text
 # define NEWTEXT(m)	newscr->_line[m].text
 # define TEXTWIDTH	(curscr->_maxx+1)

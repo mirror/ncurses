@@ -42,7 +42,7 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_color.c,v 1.80 2006/11/26 01:33:16 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.82 2006/12/31 00:22:19 tom Exp $")
 
 /*
  * These should be screen structure members.  They need to be globals for
@@ -368,10 +368,11 @@ init_pair(short pair, short f, short b)
     if (initialize_pair) {
 	const color_t *tp = hue_lightness_saturation ? hls_palette : cga_palette;
 
-	T(("initializing pair: pair = %d, fg=(%d,%d,%d), bg=(%d,%d,%d)",
-	   pair,
-	   tp[f].red, tp[f].green, tp[f].blue,
-	   tp[b].red, tp[b].green, tp[b].blue));
+	TR(TRACE_ATTRS,
+	   ("initializing pair: pair = %d, fg=(%d,%d,%d), bg=(%d,%d,%d)",
+	    pair,
+	    tp[f].red, tp[f].green, tp[f].blue,
+	    tp[b].red, tp[b].green, tp[b].blue));
 
 	TPUTS_TRACE("initialize_pair");
 	putp(TPARM_7(initialize_pair,
@@ -461,7 +462,8 @@ color_content(short color, short *r, short *g, short *b)
 	if (b)
 	    *b = c_b;
 
-	T(("...color_content(%d,%d,%d,%d)", color, c_r, c_g, c_b));
+	TR(TRACE_ATTRS, ("...color_content(%d,%d,%d,%d)",
+			 color, c_r, c_g, c_b));
 	result = OK;
     }
     returnCode(result);

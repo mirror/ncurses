@@ -79,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.85 2006/11/25 22:30:28 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.87 2006/12/30 16:30:06 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -403,11 +403,11 @@ enable_gpm_mouse(int enable)
 }
 #endif /* USE_GPM_SUPPORT */
 
+#define xterm_kmous "\033[M"
+
 static void
 initialize_mousetype(void)
 {
-    static const char *xterm_kmous = "\033[M";
-
     T((T_CALLED("initialize_mousetype()")));
 
     /* Try gpm first, because gpm may be configured to run in xterm */
@@ -565,8 +565,8 @@ initialize_mousetype(void)
 	    init_xterm_mouse();
 	}
     } else if (strstr(cur_term->type.term_names, "xterm") != 0) {
-	(void) _nc_add_to_try(&(SP->_keytry), xterm_kmous, KEY_MOUSE);
-	init_xterm_mouse();
+	if (_nc_add_to_try(&(SP->_keytry), xterm_kmous, KEY_MOUSE) == OK)
+	    init_xterm_mouse();
     }
     returnVoid;
 }

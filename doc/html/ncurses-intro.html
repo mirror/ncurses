@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.0//EN">
 <!--
-  $Id: ncurses-intro.html,v 1.41 2005/12/24 15:47:05 tom Exp $
+  $Id: ncurses-intro.html,v 1.42 2006/12/24 16:11:25 tom Exp $
   ****************************************************************************
   * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
   *                                                                          *
@@ -2184,7 +2184,7 @@ These requests treat the list as cyclic; that is, <CODE>REQ_NEXT_PAGE</CODE>
 from the last page goes to the first, and <CODE>REQ_PREV_PAGE</CODE> from
 the first page goes to the last.
 
-<H3><A NAME="#ffield">Inter-Field Navigation Requests</A></H3>
+<H3><A NAME="ffield">Inter-Field Navigation Requests</A></H3>
 
 These requests handle navigation between fields on the same page.
 
@@ -2238,7 +2238,7 @@ of B and C to the right of B.  A <CODE>REQ_MOVE_RIGHT</CODE> from A will
 go to B only if A, B, and C <EM>all</EM> share the same first line;
 otherwise it will skip over B to C.
 
-<H3><A NAME="#fifield">Intra-Field Navigation Requests</A></H3>
+<H3><A NAME="fifield">Intra-Field Navigation Requests</A></H3>
 
 These requests drive movement of the edit cursor within the currently
 selected field.

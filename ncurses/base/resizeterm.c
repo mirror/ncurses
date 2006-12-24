@@ -41,12 +41,24 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.18 2006/10/14 20:43:31 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.19 2006/12/30 17:12:29 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
+/*
+ * If we're trying to be reentrant, do not want any local statics.
+ */
+#ifdef _REENTRANT
+#define EXTRA_ARGS ,     CurLines,     CurCols
+#define EXTRA_DCLS , int CurLines, int CurCols
+#else
 static int current_lines;
 static int current_cols;
+#define CurLines current_lines
+#define CurCols  current_cols
+#define EXTRA_ARGS		/* nothing */
+#define EXTRA_DCLS		/* nothing */
+#endif
 
 #ifdef TRACE
 static void
@@ -121,10 +133,10 @@ parent_depth(WINDOW *cmp)
  * FIXME: must adjust position so it's within the parent!
  */
 static int
-adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
+adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen EXTRA_DCLS)
 {
     int result;
-    int bottom = current_lines + SP->_topstolen - stolen;
+    int bottom = CurLines + SP->_topstolen - stolen;
     int myLines = win->_maxy + 1;
     int myCols = win->_maxx + 1;
 
@@ -134,13 +146,13 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
        (long) getbegy(win), (long) getbegx(win)));
 
     if (win->_begy >= bottom) {
-	win->_begy += (ToLines - current_lines);
+	win->_begy += (ToLines - CurLines);
     } else {
-	if (myLines == current_lines - stolen
-	    && ToLines != current_lines)
+	if (myLines == CurLines - stolen
+	    && ToLines != CurLines)
 	    myLines = ToLines - stolen;
-	else if (myLines == current_lines
-		 && ToLines != current_lines)
+	else if (myLines == CurLines
+		 && ToLines != CurLines)
 	    myLines = ToLines;
     }
 
@@ -150,12 +162,12 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
     if (myCols > ToCols)
 	myCols = ToCols;
 
-    if (myLines == current_lines
-	&& ToLines != current_lines)
+    if (myLines == CurLines
+	&& ToLines != CurLines)
 	myLines = ToLines;
 
-    if (myCols == current_cols
-	&& ToCols != current_cols)
+    if (myCols == CurCols
+	&& ToCols != CurCols)
 	myCols = ToCols;
 
     result = wresize(win, myLines, myCols);
@@ -167,7 +179,7 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen)
  * children, decrease those to fit, then decrease the containing window, etc.
  */
 static int
-decrease_size(int ToLines, int ToCols, int stolen)
+decrease_size(int ToLines, int ToCols, int stolen EXTRA_DCLS)
 {
     bool found;
     int depth = 0;
@@ -185,7 +197,8 @@ decrease_size(int ToLines, int ToCols, int stolen)
 	    if (!(win->_flags & _ISPAD)) {
 		if (child_depth(win) == depth) {
 		    found = TRUE;
-		    if (adjust_window(win, ToLines, ToCols, stolen) != OK)
+		    if (adjust_window(win, ToLines, ToCols,
+				      stolen EXTRA_ARGS) != OK)
 			returnCode(ERR);
 		}
 	    }
@@ -200,7 +213,7 @@ decrease_size(int ToLines, int ToCols, int stolen)
  * parent, increase those to fit, then increase the contained window, etc.
  */
 static int
-increase_size(int ToLines, int ToCols, int stolen)
+increase_size(int ToLines, int ToCols, int stolen EXTRA_DCLS)
 {
     bool found;
     int depth = 0;
@@ -218,7 +231,8 @@ increase_size(int ToLines, int ToCols, int stolen)
 	    if (!(win->_flags & _ISPAD)) {
 		if (parent_depth(win) == depth) {
 		    found = TRUE;
-		    if (adjust_window(win, ToLines, ToCols, stolen) != OK)
+		    if (adjust_window(win, ToLines, ToCols,
+				      stolen EXTRA_ARGS) != OK)
 			returnCode(ERR);
 		}
 	    }
@@ -235,7 +249,7 @@ increase_size(int ToLines, int ToCols, int stolen)
 NCURSES_EXPORT(int)
 resize_term(int ToLines, int ToCols)
 {
-    int result = OK;
+    int result = OK EXTRA_ARGS;
     int was_stolen = (screen_lines - SP->_lines_avail);
 
     T((T_CALLED("resize_term(%d,%d) old(%d,%d)"),
@@ -243,28 +257,28 @@ resize_term(int ToLines, int ToCols)
        screen_lines, screen_columns));
 
     if (is_term_resized(ToLines, ToCols)) {
-	int myLines = current_lines = screen_lines;
-	int myCols = current_cols = screen_columns;
+	int myLines = CurLines = screen_lines;
+	int myCols = CurCols = screen_columns;
 
 #ifdef TRACE
 	if (_nc_tracing & TRACE_UPDATE)
 	    show_window_sizes("before");
 #endif
 	if (ToLines > screen_lines) {
-	    increase_size(myLines = ToLines, myCols, was_stolen);
-	    current_lines = myLines;
-	    current_cols = myCols;
+	    increase_size(myLines = ToLines, myCols, was_stolen EXTRA_ARGS);
+	    CurLines = myLines;
+	    CurCols = myCols;
 	}
 
 	if (ToCols > screen_columns) {
-	    increase_size(myLines, myCols = ToCols, was_stolen);
-	    current_lines = myLines;
-	    current_cols = myCols;
+	    increase_size(myLines, myCols = ToCols, was_stolen EXTRA_ARGS);
+	    CurLines = myLines;
+	    CurCols = myCols;
 	}
 
 	if (ToLines < myLines ||
 	    ToCols < myCols) {
-	    decrease_size(ToLines, ToCols, was_stolen);
+	    decrease_size(ToLines, ToCols, was_stolen EXTRA_ARGS);
 	}
 
 	screen_lines = lines = ToLines;

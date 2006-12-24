@@ -46,7 +46,7 @@
 #define _POSIX_SOURCE
 #endif
 
-MODULE_ID("$Id: lib_tstp.c,v 1.32 2006/04/01 19:31:34 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.33 2006/12/30 21:44:53 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -359,21 +359,21 @@ _nc_signal_handler(bool enable)
 	static bool ignore_tstp = FALSE;
 
 	if (!ignore_tstp) {
-	    static sigaction_t act, oact;
+	    static sigaction_t new_sigaction, old_sigaction;
 
 	    if (!enable) {
-		act.sa_handler = SIG_IGN;
-		sigaction(SIGTSTP, &act, &oact);
-	    } else if (act.sa_handler != SIG_DFL) {
-		sigaction(SIGTSTP, &oact, NULL);
-	    } else if (sigaction(SIGTSTP, NULL, &oact) == 0
-		       && (oact.sa_handler == SIG_DFL)) {
-		sigemptyset(&act.sa_mask);
+		new_sigaction.sa_handler = SIG_IGN;
+		sigaction(SIGTSTP, &new_sigaction, &old_sigaction);
+	    } else if (new_sigaction.sa_handler != SIG_DFL) {
+		sigaction(SIGTSTP, &old_sigaction, NULL);
+	    } else if (sigaction(SIGTSTP, NULL, &old_sigaction) == 0
+		       && (old_sigaction.sa_handler == SIG_DFL)) {
+		sigemptyset(&new_sigaction.sa_mask);
 #ifdef SA_RESTART
-		act.sa_flags |= SA_RESTART;
+		new_sigaction.sa_flags |= SA_RESTART;
 #endif /* SA_RESTART */
-		act.sa_handler = tstp;
-		(void) sigaction(SIGTSTP, &act, NULL);
+		new_sigaction.sa_handler = tstp;
+		(void) sigaction(SIGTSTP, &new_sigaction, NULL);
 	    } else {
 		ignore_tstp = TRUE;
 	    }

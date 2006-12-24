@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.25 2006/05/13 15:14:01 tom Exp @
+  * @Id: tput.1,v 1.26 2006/12/24 15:16:27 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -89,7 +89,7 @@
        application  should  test  the  exit  code  (e.g., <STRONG>$?</STRONG>, see
        <STRONG><A HREF="sh.1.html">sh(1)</A></STRONG>) to be sure it is <STRONG>0</STRONG>.  (See the <STRONG>EXIT</STRONG> <STRONG>CODES</STRONG> and  <STRONG>DIAG-</STRONG>
        <STRONG>NOSTICS</STRONG>  sections.)   For  a complete list of capabilities
-       and the <EM>capname</EM> associated with each, see <STRONG><A HREF="terminfo.1.html">terminfo(1)</A></STRONG>.
+       and the <EM>capname</EM> associated with each, see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
        <STRONG>-T</STRONG><EM>type</EM> indicates the  <EM>type</EM>  of  terminal.   Normally  this
               option is unnecessary, because the default is taken
@@ -298,7 +298,7 @@
        exit code   error message
        ---------------------------------------------------------------------
        <STRONG>0</STRONG>           (<EM>capname</EM> is a numeric variable that is not specified  in
-                   the  <STRONG><A HREF="terminfo.1.html">terminfo(1)</A></STRONG>  database  for this terminal type, e.g.
+                   the  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  database  for this terminal type, e.g.
                    <STRONG>tput</STRONG> <STRONG>-T450</STRONG> <STRONG>lines</STRONG> and <STRONG>tput</STRONG> <STRONG>-T2621</STRONG> <STRONG>xmc</STRONG>)
        <STRONG>1</STRONG>           no error message is printed, see the <STRONG>EXIT</STRONG> <STRONG>CODES</STRONG> section.
        <STRONG>2</STRONG>           usage error
@@ -328,7 +328,7 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG><A HREF="stty.1.html">stty(1)</A></STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 5.5 (patch 20061209).
+       This describes <STRONG>ncurses</STRONG> version 5.6 (patch 20061224).
 
 
 

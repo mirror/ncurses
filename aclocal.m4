@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.408 2006/12/23 23:07:35 tom Exp $
+dnl $Id: aclocal.m4,v 1.411 2006/12/31 00:00:26 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2776,7 +2776,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 31 updated: 2006/12/09 12:27:08
+dnl CF_MAN_PAGES version: 32 updated: 2006/12/24 15:18:27
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -2826,6 +2826,7 @@ case "$MANPAGE_FORMAT" in #(vi
 esac
 
 cf_edit_man=./edit_man.sh
+cf_man_alias=`pwd`/man_alias.sed
 
 cat >$cf_edit_man <<CF_EOF
 #! /bin/sh
@@ -2889,6 +2890,32 @@ case \$i in #(vi
 		\$MKDIRS \$cf_subdir\$section
 	fi
 	fi
+
+	# replace variables in man page
+	if test ! -f $cf_man_alias ; then
+cat >>$cf_man_alias <<-CF_EOF2
+		s,@DATADIR@,\$datadir,
+		s,@TERMINFO@,\$TERMINFO,
+		s,@NCURSES_MAJOR@,\$NCURSES_MAJOR,
+		s,@NCURSES_MINOR@,\$NCURSES_MINOR,
+		s,@NCURSES_PATCH@,\$NCURSES_PATCH,
+		s,@NCURSES_OSPEED@,\$NCURSES_OSPEED,
+CF_EOF
+	ifelse($1,,,[
+	for cf_name in $1
+	do
+		cf_NAME=`echo "$cf_name" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
+		cf_name=`echo $cf_name|sed "$program_transform_name"`
+cat >>$cf_edit_man <<-CF_EOF
+		s,@$cf_NAME@,$cf_name,
+CF_EOF
+	done
+	])
+cat >>$cf_edit_man <<CF_EOF
+CF_EOF2
+		echo "...made $cf_man_alias"
+	fi
+
 	aliases=
 	cf_source=\`basename \$i\`
 	inalias=\$cf_source
@@ -2901,7 +2928,7 @@ CF_EOF
 
 if test "$MANPAGE_ALIASES" != no ; then
 cat >>$cf_edit_man <<CF_EOF
-	aliases=\`sed -f \$top_srcdir/man/manlinks.sed \$inalias | sort -u\`
+	aliases=\`sed -f \$top_srcdir/man/manlinks.sed \$inalias |sed -f $cf_man_alias | sort -u\`
 CF_EOF
 fi
 
@@ -2922,36 +2949,13 @@ cat >>$cf_edit_man <<CF_EOF
 		cf_target="\$cf_source"
 	fi
 	cf_target="\$cf_subdir\${section}/\${cf_target}"
+
 CF_EOF
 fi
 
-	# replace variables in man page
-	ifelse($1,,,[
-	for cf_name in $1
-	do
 cat >>$cf_edit_man <<CF_EOF
-	prog_$cf_name=\`echo $cf_name|sed "\${transform}"\`
+	sed	-f $cf_man_alias \\
 CF_EOF
-	done
-	])
-cat >>$cf_edit_man <<CF_EOF
-	sed	-e "s,@DATADIR@,\$datadir," \\
-		-e "s,@TERMINFO@,\$TERMINFO," \\
-		-e "s,@NCURSES_MAJOR@,\$NCURSES_MAJOR," \\
-		-e "s,@NCURSES_MINOR@,\$NCURSES_MINOR," \\
-		-e "s,@NCURSES_PATCH@,\$NCURSES_PATCH," \\
-		-e "s,@NCURSES_OSPEED@,\$NCURSES_OSPEED," \\
-CF_EOF
-
-	ifelse($1,,,[
-	for cf_name in $1
-	do
-		cf_NAME=`echo "$cf_name" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
-cat >>$cf_edit_man <<CF_EOF
-		-e "s,@$cf_NAME@,\$prog_$cf_name," \\
-CF_EOF
-	done
-	])
 
 if test -f $MANPAGE_RENAMES ; then
 cat >>$cf_edit_man <<CF_EOF
@@ -4643,7 +4647,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 10 updated: 2006/10/14 15:23:15
+dnl CF_WITH_LIBTOOL version: 12 updated: 2006/12/30 19:00:13
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -4734,7 +4738,7 @@ ifdef([AC_PROG_LIBTOOL],[
 	# Save the version in a cache variable - this is not entirely a good
 	# thing, but the version string from libtool is very ugly, and for
 	# bug reports it might be useful to have the original string.
-	cf_cv_libtool_version=`$LIBTOOL --version 2>&1 | sed -e '2,$d' -e 's/([[^)]]*)//g' -e 's/^[[^1-9]]*//' -e 's/[[^0-9.]].*//'`
+	cf_cv_libtool_version=`$LIBTOOL --version 2>&1 | sed -e '/^$/d' -e '2,$d' -e 's/([[^)]]*)//g' -e 's/^[[^1-9]]*//' -e 's/[[^0-9.]].*//'`
 	AC_MSG_RESULT($cf_cv_libtool_version)
 	if test -z "$cf_cv_libtool_version" ; then
 		AC_MSG_ERROR(This is not libtool)

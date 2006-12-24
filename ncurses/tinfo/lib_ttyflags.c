@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.13 2006/12/10 01:31:54 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.14 2006/12/30 21:37:20 tom Exp $")
 
 NCURSES_EXPORT(int)
 _nc_get_tty_mode(TTY * buf)
@@ -169,14 +169,12 @@ reset_shell_mode(void)
 **
 */
 
-static TTY buf;
-
 NCURSES_EXPORT(int)
 savetty(void)
 {
     T((T_CALLED("savetty()")));
 
-    returnCode(_nc_get_tty_mode(&buf));
+    returnCode(_nc_get_tty_mode(&(SP->_saved_tty)));
 }
 
 NCURSES_EXPORT(int)
@@ -184,5 +182,5 @@ resetty(void)
 {
     T((T_CALLED("resetty()")));
 
-    returnCode(_nc_set_tty_mode(&buf));
+    returnCode(_nc_set_tty_mode(&(SP->_saved_tty)));
 }

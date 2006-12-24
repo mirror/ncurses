@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999,2000,2001 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2001,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,14 +35,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_tries.c,v 1.10 2001/10/20 22:42:51 tom Exp $")
+MODULE_ID("$Id: trace_tries.c,v 1.11 2006/12/30 16:25:45 tom Exp $")
 
 #ifdef TRACE
 static unsigned char *buffer;
 static unsigned len;
 
 static void
-recur_tries(struct tries *tree, unsigned level)
+recur_tries(TRIES * tree, unsigned level)
 {
     if (level > len)
 	buffer = (unsigned char *) realloc(buffer, len = (level + 1) * 4);
@@ -62,7 +62,7 @@ recur_tries(struct tries *tree, unsigned level)
 }
 
 NCURSES_EXPORT(void)
-_nc_trace_tries(struct tries *tree)
+_nc_trace_tries(TRIES * tree)
 {
     buffer = typeMalloc(unsigned char, len = 80);
     _tracef("BEGIN tries %p", tree);

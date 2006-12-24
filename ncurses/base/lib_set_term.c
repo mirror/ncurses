@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.91 2006/05/20 14:58:02 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.93 2006/12/30 21:40:58 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -68,7 +68,7 @@ set_term(SCREEN *screenp)
 }
 
 static void
-_nc_free_keytry(struct tries *kt)
+_nc_free_keytry(TRIES * kt)
 {
     if (kt != 0) {
 	_nc_free_keytry(kt->child);
@@ -562,9 +562,10 @@ _nc_setupscreen(int slines,
     returnCode(OK);
 }
 
-/* The internal implementation interprets line as the number of
-   lines to rip off from the top or bottom.
-   */
+/*
+ * The internal implementation interprets line as the number of lines to rip
+ * off from the top or bottom.
+ */
 NCURSES_EXPORT(int)
 _nc_ripoffline(int line, int (*init) (WINDOW *, int))
 {

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.39 2005/07/16 17:26:45 tom Exp $
+# $Id: Makefile.in,v 1.40 2006/12/24 20:16:32 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -77,4 +77,4 @@ clean:	mostlyclean
 	sh $(srcdir)/make_sed.sh @MANPAGE_RENAMES@ >../edit_man.sed
 
 distclean realclean: clean
-	rm -f Makefile ../edit_man.*
+	rm -f Makefile ../edit_man.* ../man_alias.*

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000,2002 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -76,7 +77,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.22 2002/01/19 23:07:53 Andrey.A.Chernov Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.23 2006/12/30 18:06:16 tom Exp $")
 
 /*
  *	int
@@ -141,16 +142,20 @@ static struct speed const speeds[] =
 NCURSES_EXPORT(int)
 _nc_baudrate(int OSpeed)
 {
+#ifndef _REENTRANT
     static int last_OSpeed;
     static int last_baudrate;
+#endif
 
-    int result;
+    int result = ERR;
     unsigned i;
 
+#ifndef _REENTRANT
     if (OSpeed == last_OSpeed) {
 	result = last_baudrate;
-    } else {
-	result = ERR;
+    }
+#endif
+    if (result == ERR) {
 	if (OSpeed >= 0) {
 	    for (i = 0; i < SIZEOF(speeds); i++) {
 		if (speeds[i].s == OSpeed) {
@@ -159,7 +164,12 @@ _nc_baudrate(int OSpeed)
 		}
 	    }
 	}
-	last_baudrate = result;
+#ifndef _REENTRANT
+	if (OSpeed == last_OSpeed) {
+	    last_OSpeed = OSpeed;
+	    last_baudrate = result;
+	}
+#endif
     }
     return (result);
 }

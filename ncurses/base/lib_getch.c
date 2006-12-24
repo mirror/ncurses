@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.75 2006/03/04 20:06:09 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.76 2006/12/30 16:03:27 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -493,7 +493,7 @@ wgetch(WINDOW *win)
 static int
 kgetch(EVENTLIST_0th(_nc_eventlist * evl))
 {
-    struct tries *ptr;
+    TRIES *ptr;
     int ch = 0;
     int timeleft = ESCDELAY;
 
