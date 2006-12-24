@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.383 2006/12/17 01:26:06 tom Exp $
+dnl $Id: configure.in,v 1.384 2006/12/23 23:33:52 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.383 $)
+AC_REVISION($Revision: 1.384 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1377,10 +1377,12 @@ AC_MSG_CHECKING(for library subsets)
 if test "$with_termlib" != no ; then
 	LIB_SUBSETS="termlib"
 	test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_tinfo"
+	test "$cf_with_progs"  = yes && LIB_SUBSETS="${LIB_SUBSETS}+programs"
 	LIB_SUBSETS="${LIB_SUBSETS} "
 else
 	LIB_SUBSETS="termlib+"
 	test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}ext_tinfo+"
+	test "$cf_with_progs"  = yes && LIB_SUBSETS="${LIB_SUBSETS}programs+"
 fi
 LIB_SUBSETS="${LIB_SUBSETS}base"
 test "$with_widec"     = yes && LIB_SUBSETS="${LIB_SUBSETS}+widechar"

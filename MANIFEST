@@ -824,6 +824,7 @@
 ./ncurses/tinfo/comp_scan.c
 ./ncurses/tinfo/db_iterator.c
 ./ncurses/tinfo/doalloc.c
+./ncurses/tinfo/entries.c
 ./ncurses/tinfo/free_ttype.c
 ./ncurses/tinfo/getenv_num.c
 ./ncurses/tinfo/hashed_db.c

@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.68 2006/10/08 00:14:08 tom Exp $
+# $Id: mk-1st.awk,v 1.69 2006/12/24 00:12:23 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -37,7 +37,7 @@
 #	model		  (directory into which we compile, e.g., "obj")
 #	prefix		  (e.g., "lib", for Unix-style libraries)
 #	suffix		  (e.g., "_g.a", for debug libraries)
-#	subset		  ("none", "base", "base+ext_funcs" or "termlib")
+#	subset		  ("none", "base", "base+ext_funcs" or "termlib", etc.)
 #	ShlibVer	  ("rel", "abi" or "auto", to augment DoLinks variable)
 #	ShlibVerInfix ("yes" or "no", determines location of version #)
 #	DoLinks		  ("yes", "reverse" or "no", flag to add symbolic links)
@@ -52,6 +52,9 @@
 #	Mixed-case variable names are ok.
 #	HP/UX requires shared libraries to have executable permissions.
 #
+function is_termlib() {
+		return ( subset ~ /^termlib(\+(ext_tinfo|programs))*$/ );
+	}
 function symlink(src,dst) {
 		if ( src != dst ) {
 			printf "rm -f %s; ", dst
@@ -64,19 +67,19 @@ function rmlink(directory, dst) {
 function removelinks(directory) {
 		rmlink(directory, end_name);
 		if ( DoLinks == "reverse" ) {
-				if ( ShlibVer == "rel" ) {
-					rmlink(directory, abi_name);
-					rmlink(directory, rel_name);
-				} else if ( ShlibVer == "abi" ) {
-					rmlink(directory, abi_name);
-				}
+			if ( ShlibVer == "rel" ) {
+				rmlink(directory, abi_name);
+				rmlink(directory, rel_name);
+			} else if ( ShlibVer == "abi" ) {
+				rmlink(directory, abi_name);
+			}
 		} else {
-				if ( ShlibVer == "rel" ) {
-					rmlink(directory, abi_name);
-					rmlink(directory, lib_name);
-				} else if ( ShlibVer == "abi" ) {
-					rmlink(directory, lib_name);
-				}
+			if ( ShlibVer == "rel" ) {
+				rmlink(directory, abi_name);
+				rmlink(directory, lib_name);
+			} else if ( ShlibVer == "abi" ) {
+				rmlink(directory, lib_name);
+			}
 		}
 	}
 function make_shlib(objs, shlib_list) {
@@ -105,17 +108,17 @@ function sharedlinks(directory) {
 	}
 function shlib_rule(directory) {
 		if ( ShlibVer == "cygdll" ) {
-				dst_libs = sprintf("%s/$(SHARED_LIB) %s/$(IMPORT_LIB)", directory, directory);
+			dst_libs = sprintf("%s/$(SHARED_LIB) %s/$(IMPORT_LIB)", directory, directory);
 		} else {
-				dst_libs = sprintf("%s/%s", directory, end_name);
+			dst_libs = sprintf("%s/%s", directory, end_name);
 		}
 		printf "%s : %s $(%s_OBJS)\n", dst_libs, directory, OBJS
 		printf "\t@echo linking $@\n"
 		print "\t-@rm -f %s", dst_libs;
-		if ( subset == "termlib" || subset == "termlib+ext_tinfo" ) {
-				make_shlib(OBJS, "TINFO_LIST")
+		if ( is_termlib() ) {
+			make_shlib(OBJS, "TINFO_LIST")
 		} else {
-				make_shlib(OBJS, "SHLIB_LIST")
+			make_shlib(OBJS, "SHLIB_LIST")
 		}
 		sharedlinks(directory)
 	}
@@ -163,7 +166,7 @@ BEGIN	{
 				}
 				using = 1
 			}
-			if ( subset == "termlib" || subset == "termlib+ext_tinfo" ) {
+			if ( is_termlib() ) {
 				OBJS  = MODEL "_T"
 			} else {
 				OBJS  = MODEL
@@ -393,3 +396,4 @@ END	{
 			}
 		}
 	}
+# vile:ts=4 sw=4

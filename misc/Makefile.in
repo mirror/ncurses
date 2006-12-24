@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.40 2006/10/21 13:28:03 tom Exp $
+# $Id: Makefile.in,v 1.41 2006/12/23 22:16:53 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -76,7 +76,7 @@ depend :
 
 sources :
 
-install : install.data install.scripts
+install : install.data install.libs
 
 install.data :	terminfo.tmp \
 		$(DESTDIR)$(libdir) \
@@ -103,7 +103,7 @@ install.data :	terminfo.tmp \
 
 NCURSES_CONFIG	= ncurses@DFT_ARG_SUFFIX@@cf_cv_abi_version@-config
 
-install.scripts :	ncurses-config
+install.libs : ncurses-config
 	$(INSTALL_PROG) ncurses-config $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
 
 terminfo.tmp : run_tic.sed $(source)
@@ -120,14 +120,14 @@ $(DESTDIR)$(datadir) \
 $(DESTDIR)$(tabsetdir) :
 	$(SHELL) $(top_srcdir)/mkinstalldirs $@
 
-uninstall : uninstall.data uninstall.scripts
+uninstall : uninstall.data uninstall.libs
 
 uninstall.data :
 	-test -d $(DESTDIR)$(tabsetdir) && rm -rf $(DESTDIR)$(tabsetdir)
 	-test -d $(DESTDIR)$(ticdir) && rm -rf $(DESTDIR)$(ticdir)
 	-test -f $(DESTDIR)$(ticfile) && rm -f $(DESTDIR)$(ticfile)
 
-uninstall.scripts :
+uninstall.libs :
 	-rm -f $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
 
 tags :
