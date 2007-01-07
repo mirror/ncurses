@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2006,2007 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.5 2006/07/15 22:48:27 tom Exp $
+ * $Id: chgat.c,v 1.6 2007/01/06 23:28:46 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
@@ -50,22 +50,22 @@ typedef struct {
     int pair, attr;
     int count;
     int ch;
-    char *c_msg;
-    char *v_msg;
+    const char *c_msg;
+    const char *v_msg;
     int y_val;
     int x_val;
     int y_beg, x_beg;
     int y_max, x_max;
 } STATUS;
 
-static char *
+static const char *
 color_params(unsigned state, int *pair)
 {
     /* *INDENT-OFF* */
     static struct {
 	int pair;
 	int fg, bg;
-	char *msg;
+	const char *msg;
     } table[] = {
 	{ 0, COLOR_DEFAULT, COLOR_DEFAULT, "default" },
 	{ 1, COLOR_RED,     COLOR_BLACK,   "red/black" },
@@ -74,7 +74,7 @@ color_params(unsigned state, int *pair)
     /* *INDENT-ON* */
 
     static bool first = TRUE;
-    char *result = 0;
+    const char *result = 0;
 
     if (has_colors()) {
 	if (first) {
@@ -93,13 +93,13 @@ color_params(unsigned state, int *pair)
     return result;
 }
 
-static char *
+static const char *
 video_params(unsigned state, int *attr)
 {
     /* *INDENT-OFF* */
     static struct {
 	int attr;
-	char *msg;
+	const char *msg;
     } table[] = {
 	{ A_NORMAL,	"normal" },
 	{ A_BOLD,	"bold" },
@@ -109,7 +109,7 @@ video_params(unsigned state, int *attr)
     };
     /* *INDENT-ON* */
 
-    char *result = 0;
+    const char *result = 0;
 
     if (state < SIZEOF(table)) {
 	*attr = table[state].attr;

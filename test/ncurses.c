@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.280 2006/12/10 00:13:15 tom Exp $
+$Id: ncurses.c,v 1.281 2007/01/06 23:32:00 tom Exp $
 
 ***************************************************************************/
 
@@ -3124,7 +3124,7 @@ show_utf8_chars(attr_t attr, short pair)
 /* *INDENT-OFF* */
 static struct {
     attr_t attr;
-    char *name;
+    const char *name;
 } attrs_to_cycle[] = {
     { A_NORMAL,		"normal" },
     { A_BOLD,		"bold" },

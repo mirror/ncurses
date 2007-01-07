@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.317 2006/12/30 21:36:59 tom Exp $
+ * $Id: curses.priv.h,v 1.319 2007/01/06 21:16:26 tom Exp $
  *
  *	curses.priv.h
  *
@@ -408,11 +408,11 @@ struct screen {
 	int		_checkfd;	/* filedesc for typeahead check	    */
 	TERMINAL	*_term;		/* terminal type information	    */
 	TTY		_saved_tty;	/* savetty/resetty information	    */
-	short		_lines;		/* screen lines			    */
-	short		_columns;	/* screen columns		    */
+	NCURSES_SIZE_T	_lines;		/* screen lines			    */
+	NCURSES_SIZE_T	_columns;	/* screen columns		    */
 
-	short		_lines_avail;	/* lines available for stdscr	    */
-	short		_topstolen;	/* lines stolen from top	    */
+	NCURSES_SIZE_T	_lines_avail;	/* lines available for stdscr	    */
+	NCURSES_SIZE_T	_topstolen;	/* lines stolen from top	    */
 	ripoff_t	_rippedoff[5];	/* list of lines stolen		    */
 	int		_rip_count;	/* ...and total lines stolen	    */
 

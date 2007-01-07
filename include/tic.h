@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.55 2006/08/19 14:17:49 tom Exp $
+ * $Id: tic.h,v 1.57 2007/01/06 23:17:38 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -167,7 +167,7 @@ extern NCURSES_EXPORT_VAR(struct token)	_nc_curr_token;
 	 * List of keynames with their corresponding code.
 	 */
 struct kn {
-	const char *name;
+	int offset;
 	int code;
 };
 
@@ -189,7 +189,7 @@ extern NCURSES_EXPORT(struct tinfo_fkeys *) _nc_tinfo_fkeysf (void);
 
 #else
 
-extern NCURSES_EXPORT_VAR(struct tinfo_fkeys) _nc_tinfo_fkeys[];
+extern NCURSES_EXPORT_VAR(const struct tinfo_fkeys) _nc_tinfo_fkeys[];
 
 #endif
 

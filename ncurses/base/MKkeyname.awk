@@ -1,6 +1,6 @@
-# $Id: MKkeyname.awk,v 1.30 2006/05/20 17:35:30 tom Exp $
+# $Id: MKkeyname.awk,v 1.31 2007/01/06 21:19:44 Miroslav.Lichvar Exp $
 ##############################################################################
-# Copyright (c) 1999-2005,2006 Free Software Foundation, Inc.                #
+# Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -37,11 +37,15 @@ BEGIN {
 }
 
 /^[^#]/ {
-	printf "\t{ \"%s\", %s },\n", $1, $1;
+	printf "\t{ %d, %s },\n", offset, $1
+	offset += length($1) + 1
+	names = names"\n\t\""$1"\\0\""
 	}
 
 END {
-	printf "\t{ 0, 0 }};\n"
+	printf "\t{ -1, 0 }};\n"
+	print ""
+	print "static const char key_names[] = "names";"
 	print ""
 	print "#define SIZEOF_TABLE 256"
 	print "static char **keyname_table;"
@@ -56,9 +60,9 @@ END {
 	print "	if (c == -1) {"
 	print "		result = \"-1\";"
 	print "	} else {"
-	print "		for (i = 0; _nc_key_names[i].name != 0; i++) {"
+	print "		for (i = 0; _nc_key_names[i].offset != -1; i++) {"
 	print "			if (_nc_key_names[i].code == c) {"
-	print "				result = (NCURSES_CONST char *)_nc_key_names[i].name;"
+	print "				result = (NCURSES_CONST char *)key_names + _nc_key_names[i].offset;"
 	print "				break;"
 	print "			}"
 	print "		}"
