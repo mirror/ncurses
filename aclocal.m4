@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.411 2006/12/31 00:00:26 tom Exp $
+dnl $Id: aclocal.m4,v 1.413 2007/01/13 19:46:41 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1852,7 +1852,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 41 updated: 2006/12/23 18:04:51
+dnl CF_LIB_RULES version: 43 updated: 2007/01/13 14:44:50
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -1933,11 +1933,29 @@ do
 
 		if test $cf_dir = ncurses ; then
 			cf_subsets="$LIB_SUBSETS"
-			cf_termlib=`echo "$cf_subsets" |sed -e 's/ .*$//'`
-			if test "$cf_termlib" != "$cf_subsets" ; then
-				cf_item=`echo $LIBS_TO_MAKE |sed -e s%${LIB_NAME}${LIB_SUFFIX}%${TINFO_LIB_SUFFIX}%g`
-				LIBS_TO_MAKE="$cf_item $LIBS_TO_MAKE"
-			fi
+			cf_r_parts="$cf_subsets"
+
+			while test -n "$cf_r_parts"
+			do
+				cf_l_parts=`echo "$cf_r_parts" |sed -e 's/ .*$//'`
+				cf_r_parts=`echo "$cf_r_parts" |sed -e 's/^[[^ ]]* //'`
+				if test "$cf_l_parts" != "$cf_r_parts" ; then
+					case $cf_l_parts in #(vi
+					*termlib*) #(vi
+						cf_item=`echo $LIBS_TO_MAKE |sed -e s%${LIB_NAME}${LIB_SUFFIX}%${TINFO_LIB_SUFFIX}%g`
+						;;
+					*ticlib*)
+						cf_item=`echo $LIBS_TO_MAKE |sed -e s%${LIB_NAME}${LIB_SUFFIX}%${TICS_LIB_SUFFIX}%g`
+						;;
+					*)
+						break
+						;;
+					esac
+					LIBS_TO_MAKE="$cf_item $LIBS_TO_MAKE"
+				else
+					break
+				fi
+			done
 		else
 			cf_subsets=`echo "$LIB_SUBSETS" | sed -e 's/^termlib.* //'`
 		fi
@@ -1974,7 +1992,14 @@ do
 						# undo $LIB_SUFFIX add-on in CF_LIB_SUFFIX
 						cf_suffix=`echo $cf_suffix |sed -e "s%^${LIB_SUFFIX}%%"`
 					fi
-				;;
+					;;
+				ticlib*)
+					cf_libname=$TICS_LIB_SUFFIX
+					if test -n "${DFT_ARG_SUFFIX}" ; then
+						# undo $LIB_SUFFIX add-on in CF_LIB_SUFFIX
+						cf_suffix=`echo $cf_suffix |sed -e "s%^${LIB_SUFFIX}%%"`
+					fi
+					;;
 				esac
 			fi
 
@@ -2224,41 +2249,10 @@ do
 	fi
 
 	if test -f $srcdir/$cf_dir/headers; then
-	cat >>$cf_dir/Makefile <<CF_EOF
-\${DESTDIR}\${includedir} :
-	sh \${srcdir}/../mkinstalldirs \[$]@
-
-install \\
-install.libs \\
-install.includes :: \${AUTO_SRC} \${DESTDIR}\${includedir} \\
-CF_EOF
-		j=""
-		for i in `cat $srcdir/$cf_dir/headers |fgrep -v "#"`
-		do
-			test -n "$j" && echo "		$j \\" >>$cf_dir/Makefile
-			j=$i
-		done
-
-		echo "		$j" >>$cf_dir/Makefile
-
-		for i in `cat $srcdir/$cf_dir/headers |fgrep -v "#"`
-		do
-			echo "	@ (cd \${DESTDIR}\${includedir} && rm -f `basename $i`) ; ../headers.sh \${INSTALL_DATA} \${DESTDIR}\${includedir} \${srcdir} $i" >>$cf_dir/Makefile
-			test $i = curses.h && test $WITH_CURSES_H = yes && echo "	@ (cd \${DESTDIR}\${includedir} && rm -f ncurses.h && \${LN_S} curses.h ncurses.h)" >>$cf_dir/Makefile
-		done
-
-	cat >>$cf_dir/Makefile <<CF_EOF
-
-uninstall \\
-uninstall.libs \\
-uninstall.includes ::
-CF_EOF
-		for i in `cat $srcdir/$cf_dir/headers |fgrep -v "#"`
-		do
-			i=`basename $i`
-			echo "	-@ (cd \${DESTDIR}\${includedir} && rm -f $i)" >>$cf_dir/Makefile
-			test $i = curses.h && echo "	-@ (cd \${DESTDIR}\${includedir} && rm -f ncurses.h)" >>$cf_dir/Makefile
-		done
+		$AWK -f $srcdir/mk-hdr.awk \
+			subset="$LIB_SUBSETS" \
+			compat="$WITH_CURSES_H" \
+			$srcdir/$cf_dir/headers >>$cf_dir/Makefile
 	fi
 
 	if test -f $srcdir/$cf_dir/modules; then

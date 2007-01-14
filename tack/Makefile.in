@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.38 2006/12/17 15:58:32 tom Exp $
+# $Id: Makefile.in,v 1.41 2007/01/14 00:07:45 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -95,7 +95,7 @@ LOCAL_LIBDIR	= @top_builddir@/lib
 LD		= @LD@
 LINK		= @LINK_PROGS@ $(LIBTOOL_LINK) $(CC)
 LDFLAGS		= @EXTRA_LDFLAGS@ \
-		@TINFO_ARGS@ @LDFLAGS@ @LD_MODEL@ @LIBS@
+		@TICS_ARGS@ @TINFO_ARGS@ @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
 LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
@@ -111,8 +111,8 @@ LINT_LIBS	= -lncurses@LIB_SUFFIX@ @LIBS@
 
 PROGS = tack$x
 
-# Default library, for linking applications
-DEPS_CURSES = ../lib/@LIB_PREFIX@ncurses@DFT_DEP_SUFFIX@
+@NCURSES_TREE@# Default library, for linking applications
+@NCURSES_TREE@DEPS_CURSES = ../lib/@LIB_PREFIX@ncurses@DFT_DEP_SUFFIX@
 
 ################################################################################
 all:	$(PROGS)
@@ -165,7 +165,7 @@ DEPS_TACK = \
 	$(MODEL)/sysdep$o \
 	$(MODEL)/tack$o
 
-tack$x: $(DEPS_TACK) $(DEPS_CURSES)
+tack$x: $(DEPS_TACK) @NCURSES_TREE@$(DEPS_CURSES)
 	@ECHO_LINK@ $(LINK) $(DEPS_TACK) $(LDFLAGS_DEFAULT) -o $@
 
 #
@@ -183,10 +183,13 @@ mostlyclean ::
 
 clean :: mostlyclean
 	-sh -c "if test -n '$x' ; then $(MAKE) clean x=''; fi"
+	-rm -f $(DEPS_TACK)
 	-rm -f $(PROGS)
 	-rm -rf .libs
 
 distclean :: clean
+	-rm -f ncurses_cfg.h
+	-rm -f config.* *.log *.out
 	-rm -f Makefile
 
 realclean :: distclean
@@ -195,13 +198,13 @@ tack.tar: Makefile.in modules *.[ch] tack.1 HISTORY COPYING
 	tar -cvf tack.tar Makefile.in modules *.[ch] tack.1 HISTORY COPYING
 
 # These rules are used to allow "make -n" to work on a clean directory-tree
-../include/hashsize.h \
-../include/parametrized.h \
-../include/term.h :
-	cd ../include; $(MAKE) $(CF_MFLAGS)
+@NCURSES_TREE@../include/hashsize.h \
+@NCURSES_TREE@../include/parametrized.h \
+@NCURSES_TREE@../include/term.h :
+@NCURSES_TREE@	cd ../include; $(MAKE) $(CF_MFLAGS)
 
-$(DEPS_CURSES) :
-	cd ../ncurses; $(MAKE) $(CF_MFLAGS)
+@NCURSES_TREE@$(DEPS_CURSES) :
+@NCURSES_TREE@	cd ../ncurses; $(MAKE) $(CF_MFLAGS)
 
 lint:
 	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/*.c $(LINT_LIBS)

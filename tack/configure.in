@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+dnl Copyright (c) 2007 Free Software Foundation, Inc.                        *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -26,20 +26,17 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl Author: Thomas E. Dickey 1996, etc.
+dnl Author: Thomas E. Dickey	2007
 dnl
-dnl $Id: configure.in,v 1.60 2007/01/13 22:59:00 tom Exp $
-dnl This is a simple configuration-script for the ncurses test programs that
-dnl allows the test-directory to be separately configured against a reference
-dnl system (i.e., sysvr4 curses)
-dnl
-dnl If you're configuring ncurses, you shouldn't need to use this script.
-dnl It's only for testing purposes.
+dnl $Id: configure.in,v 1.2 2007/01/14 00:02:41 tom Exp $
+dnl This is a simple configuration-script for tack which makes it simpler to
+dnl build outside the ncurses tree (provided that ncurses was configured using
+dnl the --with-ticlib option).
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_INIT(ncurses.c)
+AC_INIT(tack.c)
 AC_CONFIG_HEADER(ncurses_cfg.h:ncurses_tst.hin)
 
 CF_INHERIT_SCRIPT(config.guess)
@@ -50,15 +47,20 @@ AC_PROG_MAKE_SET
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_AWK
+CF_PROG_INSTALL
+AC_PROG_LN_S
+CF_MAKE_TAGS
 
 dnl Things that we don't need (or must override) if we're not building ncurses
 CC_G_OPT="-g"				AC_SUBST(CC_G_OPT)
 CC_SHARED_OPTS=unknown			AC_SUBST(CC_SHARED_OPTS)
 CPPFLAGS="$CPPFLAGS"			AC_SUBST(CPPFLAGS)
+DESTDIR=""				AC_SUBST(DESTDIR)
 DFT_DEP_SUFFIX=""			AC_SUBST(DFT_DEP_SUFFIX)
 DFT_OBJ_SUBDIR=`pwd|sed -e's:.*/::'`	AC_SUBST(DFT_OBJ_SUBDIR)
 DFT_UPR_MODEL="NORMAL"			AC_SUBST(DFT_UPR_MODEL)
 ECHO_LINK='@ echo linking $@ ... ;'	AC_SUBST(ECHO_LINK)
+EXTRA_LDFLAGS=""			AC_SUBST(EXTRA_LDFLAGS)
 LD="ld"					AC_SUBST(LD)
 LDFLAGS_SHARED=""			AC_SUBST(LDFLAGS_SHARED)
 LD_MODEL=""				AC_SUBST(LD_MODEL)
@@ -66,18 +68,22 @@ LD_SHARED_OPTS=""			AC_SUBST(LD_SHARED_OPTS)
 LIBTOOL=""				AC_SUBST(LIBTOOL)
 LIB_CLEAN=""				AC_SUBST(LIB_CLEAN)
 LIB_COMPILE=""				AC_SUBST(LIB_COMPILE)
+LIB_INSTALL=""				AC_SUBST(LIB_INSTALL)
 LIB_LINK=""				AC_SUBST(LIB_LINK)
-LINK_TESTS=""				AC_SUBST(LINK_TESTS)
+LIB_SUFFIX=""				AC_SUBST(LIB_SUFFIX)
+LIB_UNINSTALL=""			AC_SUBST(LIB_UNINSTALL)
+LINK_PROGS=""				AC_SUBST(LINK_PROGS)
 LINT=lint				AC_SUBST(LINT)
 LINT_OPTS=""				AC_SUBST(LINT_OPTS)
 LOCAL_LDFLAGS=""			AC_SUBST(LOCAL_LDFLAGS)
 MATH_LIB="-lm"				AC_SUBST(MATH_LIB)
-TEST_ARGS=""				AC_SUBST(TEST_ARGS)
-TEST_DEPS=""				AC_SUBST(TEST_DEPS)
-TICS_LEAKS=""				AC_SUBST(TICS_LEAKS)
+TICS_ARGS=""				AC_SUBST(TICS_ARGS)
 TINFO_ARGS='$(LIBS_CURSES)'		AC_SUBST(TINFO_ARGS)
 cf_cv_abi_version=""			AC_SUBST(cf_cv_abi_version)
 cf_cv_rel_version=""			AC_SUBST(cf_cv_rel_version)
+
+NCURSES_TREE="#"
+AC_SUBST(NCURSES_TREE)
 
 cf_cv_screen=curses
 cf_cv_libtype=
@@ -125,12 +131,8 @@ ncurses)
 	;;
 ncursesw)
 	cf_cv_libtype=w
-	CF_UTF8_LIB
 	CF_NCURSES_CPPFLAGS(ncursesw)
 	CF_NCURSES_LIBS(ncursesw)
-	;;
-pdcurses) #(vi
-	CF_PDCURSES_X11
 	;;
 esac
 
@@ -139,25 +141,11 @@ dnl installed conventionally (e.g., SunOS 5.x - solaris).
 
 dnl Autoconf builds up the $LIBS in reverse order
 
-case $cf_cv_screen in #(vi
-pdcurses) #(vi
-	;;
-*)
-	# look for curses-related libraries
-	AC_CHECK_LIB(panel$cf_cv_libtype,new_panel)
-	AC_CHECK_LIB(menu$cf_cv_libtype,menu_driver)
-	AC_CHECK_LIB(form$cf_cv_libtype,form_driver)
-
-	# look for curses-related headers
-	AC_CHECK_HEADERS( \
-		nc_alloc.h \
-		nomacros.h \
-		form.h \
-		menu.h \
-		panel.h \
-		)
-	;;
-esac
+# look for curses-related headers
+AC_CHECK_HEADERS( \
+	nc_alloc.h \
+	nomacros.h \
+	)
 
 AC_TYPE_SIGNAL
 
@@ -175,84 +163,15 @@ unistd.h \
 )
 
 AC_CHECK_FUNCS( \
-chgat \
-color_set \
-filter \
-getbegx \
-getcurx \
-getmaxx \
-getnstr \
-gettimeofday \
-getwin \
-mvvline \
-mvwvline \
-napms \
-putwin \
-resize_term \
-resizeterm \
-ripoffline \
-setupterm \
-slk_color \
-slk_init \
-strdup \
-termattrs \
 tgetent \
 tigetnum \
 tigetstr \
-typeahead \
-use_default_colors \
-vsscanf \
-wchgat \
-winsstr \
-wresize \
+strstr \
 )
 
-AC_CACHE_CHECK(for ncurses extended functions,cf_cv_ncurses_ext_funcs,[
-AC_TRY_LINK([
-#include <${cf_cv_ncurses_header-curses.h}>],
-[
-	(void) assume_default_colors (0, 0);
-	(void) curses_version ();
-	(void) define_key (0, 0);
-	(void) is_term_resized (0, 0);
-	(void) key_defined (0);
-	(void) keybound (0, 0);
-	(void) keyok (0, 0);
-	(void) resize_term (0, 0);
-	(void) resizeterm (0, 0);
-	(void) use_default_colors ();
-	(void) use_extended_names (0);
-	(void) wresize (0, 0, 0);],
-	[cf_cv_ncurses_ext_funcs=yes],
-	[cf_cv_ncurses_ext_funcs=no])
-])
-test "$cf_cv_ncurses_ext_funcs" != no && AC_DEFINE(NCURSES_EXT_FUNCS)
-
-AC_CACHE_CHECK(for wide-character functions,cf_cv_widechar_funcs,[
-AC_TRY_LINK([
-#include <${cf_cv_ncurses_header-curses.h}>],
-[
-	static wchar_t src_wchar[2];
-	static cchar_t dst_cchar;
-	setcchar(&dst_cchar, src_wchar, A_NORMAL, 0, (void *) 0);
-	],
-	[cf_cv_widechar_funcs=yes],
-	[cf_cv_widechar_funcs=no])
-])
-if test "$cf_cv_widechar_funcs" != no ; then
-	AC_DEFINE(USE_WIDEC_SUPPORT,1)
-else
-	AC_DEFINE(USE_WIDEC_SUPPORT,0)
-fi
-
 CF_SYS_TIME_SELECT
-CF_FUNC_CURSES_VERSION
-CF_CURSES_ACS_MAP
-CF_CURSES_WACS_MAP
-CF_CURSES_CHECK_TYPE(attr_t,long)
-CF_CURSES_CHECK_TYPE(mbstate_t,long)
 
-TEST_ARGS="$LIBS"
+TICS_ARGS="$LIBS"
 LIBS=
 
 dnl ---------------------------------------------------------------------------
@@ -271,7 +190,7 @@ do
 	cat >>Makefile <<TEST_EOF
 
 \$(MODEL)/$N.o : $N.c \\
-	test.priv.h \\
+	tack.h \\
 	ncurses_cfg.h
 	@echo compiling $N; \$(CC) -c \$(CFLAGS_DEFAULT) $N.c
 TEST_EOF

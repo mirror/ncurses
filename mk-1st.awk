@@ -1,6 +1,6 @@
-# $Id: mk-1st.awk,v 1.69 2006/12/24 00:12:23 tom Exp $
+# $Id: mk-1st.awk,v 1.71 2007/01/13 21:33:25 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -52,8 +52,63 @@
 #	Mixed-case variable names are ok.
 #	HP/UX requires shared libraries to have executable permissions.
 #
+function is_ticlib() {
+		return ( subset ~ /^ticlib$/ );
+	}
 function is_termlib() {
-		return ( subset ~ /^termlib(\+(ext_tinfo|programs))*$/ );
+		return ( subset ~ /^(ticlib\+)?termlib(\+ext_tinfo)?$/ );
+	}
+# see lib_name
+function lib_name_of(a_name) {
+		return sprintf("%s%s%s", prefix, a_name, suffix)
+	}
+# see imp_name
+function imp_name_of(a_name) {
+		if (ShlibVerInfix == "cygdll") {
+			result = sprintf("%s%s%s.a", prefix, a_name, suffix);
+		} else {
+			result = "";
+		}
+		return result;
+	}
+# see abi_name
+function abi_name_of(a_name) {
+		if (ShlibVerInfix == "cygdll") {
+			result = sprintf("%s%s$(ABI_VERSION)%s", "cyg", a_name, suffix);
+		} else if (ShlibVerInfix == "yes") {
+			result = sprintf("%s%s.$(ABI_VERSION)%s", prefix, a_name, suffix);
+		} else {
+			result = sprintf("%s.$(ABI_VERSION)", lib_name_of(a_name));
+		}
+		return result;
+	}
+# see rel_name
+function rel_name_of(a_name) {
+		if (ShlibVerInfix == "cygdll") {
+			result = sprintf("%s%s$(REL_VERSION)%s", "cyg", a_name, suffix);
+		} else if (ShlibVerInfix == "yes") {
+			result = sprintf("%s%s.$(REL_VERSION)%s", prefix, a_name, suffix);
+		} else {
+			result = sprintf("%s.$(REL_VERSION)", lib_name_of(a_name));
+		}
+		return result;
+	}
+# see end_name
+function end_name_of(a_name) {
+		if ( MODEL != "SHARED" ) {
+			result = lib_name_of(a_name);
+		} else if ( DoLinks == "reverse") {
+			result = lib_name_of(a_name);
+		} else {
+			if ( ShlibVer == "rel" ) {
+				result = rel_name_of(a_name);
+			} else if ( ShlibVer == "abi" || ShlibVer == "cygdll" ) {
+				result = abi_name_of(a_name);
+			} else {
+				result = lib_name_of(a_name);
+			}
+		}
+		return result
 	}
 function symlink(src,dst) {
 		if ( src != dst ) {
@@ -112,10 +167,20 @@ function shlib_rule(directory) {
 		} else {
 			dst_libs = sprintf("%s/%s", directory, end_name);
 		}
-		printf "%s : %s $(%s_OBJS)\n", dst_libs, directory, OBJS
+		printf "%s : \\\n", dst_libs
+		printf "\t\t%s \\\n", directory
+		if (subset ~ /^base/ ) {
+			if (directory != "../lib") {
+				printf "\t\t%s/%s \\\n", "../lib", end_name_of("tinfo");
+			}
+			printf "\t\t%s/%s \\\n", directory, end_name_of("tinfo");
+		}
+		printf "\t\t$(%s_OBJS)\n", OBJS
 		printf "\t@echo linking $@\n"
 		print "\t-@rm -f %s", dst_libs;
-		if ( is_termlib() ) {
+		if ( is_ticlib() ) {
+			make_shlib(OBJS, "TICS_LIST")
+		} else if ( is_termlib() ) {
 			make_shlib(OBJS, "TINFO_LIST")
 		} else {
 			make_shlib(OBJS, "SHLIB_LIST")
@@ -166,7 +231,9 @@ BEGIN	{
 				}
 				using = 1
 			}
-			if ( is_termlib() ) {
+			if ( is_ticlib() ) {
+				OBJS  = MODEL "_P"
+			} else if ( is_termlib() ) {
 				OBJS  = MODEL "_T"
 			} else {
 				OBJS  = MODEL
@@ -208,31 +275,13 @@ END	{
 		if ( found == 1 )
 		{
 			print  ""
-			lib_name = sprintf("%s%s%s", prefix, name, suffix)
+			lib_name = lib_name_of(name);
 			if ( MODEL == "SHARED" )
 			{
-				if (ShlibVerInfix == "cygdll") {
-					abi_name = sprintf("%s%s$(ABI_VERSION)%s", "cyg", name, suffix);
-					rel_name = sprintf("%s%s$(REL_VERSION)%s", "cyg", name, suffix);
-					imp_name = sprintf("%s%s%s.a", prefix, name, suffix);
-				} else if (ShlibVerInfix == "yes") {
-					abi_name = sprintf("%s%s.$(ABI_VERSION)%s", prefix, name, suffix);
-					rel_name = sprintf("%s%s.$(REL_VERSION)%s", prefix, name, suffix);
-				} else {
-					abi_name = sprintf("%s.$(ABI_VERSION)", lib_name);
-					rel_name = sprintf("%s.$(REL_VERSION)", lib_name);
-				}
-				if ( DoLinks == "reverse") {
-					end_name = lib_name;
-				} else {
-					if ( ShlibVer == "rel" ) {
-						end_name = rel_name;
-					} else if ( ShlibVer == "abi" || ShlibVer == "cygdll" ) {
-						end_name = abi_name;
-					} else {
-						end_name = lib_name;
-					}
-				}
+				abi_name = abi_name_of(name);
+				rel_name = rel_name_of(name);
+				imp_name = imp_name_of(name);
+				end_name = end_name_of(name);
 
 				shlib_rule("../lib")
 

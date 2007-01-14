@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.92 2006/10/21 22:56:03 tom Exp $
+# $Id: Makefile.in,v 1.94 2007/01/13 22:31:09 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -96,7 +96,8 @@ LIBS_CURSES	= `echo "@TEST_ARGS@ @LIBS@" | sed -e 's/-lform.*-lpanel[^ ]*//'` $(
 LDFLAGS_CURSES	= $(LDFLAGS_@DFT_UPR_MODEL@) $(LIBS_CURSES)
 
 # use these for linking with the tinfo library if we have it, or curses library if not
-LIBS_TINFO	= @TINFO_ARGS@ @LIBS@ $(MATH_LIB)
+# FIXME: TICS_LEAKS fixes linkage for --disable-leaks
+LIBS_TINFO	= @TICS_LEAKS@ @TINFO_ARGS@ @LIBS@ $(MATH_LIB)
 LDFLAGS_TINFO	= $(LDFLAGS_@DFT_UPR_MODEL@) $(LIBS_TINFO)
 
 LINT		= @LINT@

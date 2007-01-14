@@ -709,6 +709,7 @@
 ./mk-0th.awk
 ./mk-1st.awk
 ./mk-2nd.awk
+./mk-hdr.awk
 ./mkinstalldirs
 ./ncurses/Makefile.in
 ./ncurses/README
@@ -939,9 +940,12 @@
 ./tack/HISTORY
 ./tack/Makefile.in
 ./tack/README
+./tack/aclocal.m4
 ./tack/ansi.c
 ./tack/charset.c
 ./tack/color.c
+./tack/configure
+./tack/configure.in
 ./tack/control.c
 ./tack/crum.c
 ./tack/edit.c
@@ -950,6 +954,7 @@
 ./tack/menu.c
 ./tack/modes.c
 ./tack/modules
+./tack/ncurses_tst.hin
 ./tack/output.c
 ./tack/pad.c
 ./tack/scan.c

@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.384 2006/12/23 23:33:52 tom Exp $
+dnl $Id: configure.in,v 1.388 2007/01/14 00:23:57 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.384 $)
+AC_REVISION($Revision: 1.388 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -255,6 +255,9 @@ CF_UPPER(DFT_UPR_MODEL,$DFT_LWR_MODEL)dnl
 AC_SUBST(DFT_LWR_MODEL)dnl	the default model ("normal")
 AC_SUBST(DFT_UPR_MODEL)dnl	the default model ("NORMAL")
 
+TICS_NAME=tic
+AC_SUBST(TICS_NAME)
+
 TINFO_NAME=tinfo
 AC_SUBST(TINFO_NAME)
 
@@ -279,6 +282,13 @@ AC_ARG_WITH(termlib,
 	[with_termlib=$withval],
 	[with_termlib=no])
 AC_MSG_RESULT($with_termlib)
+
+AC_MSG_CHECKING(if you want to build a separate tic library)
+AC_ARG_WITH(ticlib,
+	[  --with-ticlib           generate separate tic library],
+	[with_ticlib=$withval],
+	[with_ticlib=no])
+AC_MSG_RESULT($with_ticlib)
 
 ### Checks for special libraries, must be done up-front.
 SHLIB_LIST=""
@@ -1371,22 +1381,38 @@ fi
 fi
 fi
 
-### Construct the library-subsets, if any, from this set of keywords:
-### none, base, ext_funcs, ext_tinfo, termlib, widechar (see CF_LIB_RULES).
+### Construct the ncurses library-subsets, if any, from this set of keywords:
+###	none, base, ext_funcs, ext_tinfo, ticlib, termlib, widechar
+###
+### ticlib modules may be a separate library, otherwise contained in termlib.
+### termlib modules may be a separate library, otherwise contained in ncurses.
+###
+### The of "+" or " " between the tokens controls the way the script
+### chooses to split module lists into libraries.
+###
+### (see CF_LIB_RULES).
 AC_MSG_CHECKING(for library subsets)
-if test "$with_termlib" != no ; then
-	LIB_SUBSETS="termlib"
-	test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_tinfo"
-	test "$cf_with_progs"  = yes && LIB_SUBSETS="${LIB_SUBSETS}+programs"
+LIB_SUBSETS=
+
+test "$cf_with_progs"  = yes && LIB_SUBSETS="${LIB_SUBSETS}ticlib"
+if test "$with_ticlib" != no ; then
 	LIB_SUBSETS="${LIB_SUBSETS} "
 else
-	LIB_SUBSETS="termlib+"
-	test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}ext_tinfo+"
-	test "$cf_with_progs"  = yes && LIB_SUBSETS="${LIB_SUBSETS}programs+"
+	LIB_SUBSETS="${LIB_SUBSETS}+"
 fi
+
+LIB_SUBSETS="${LIB_SUBSETS}termlib"
+test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_tinfo"
+if test "$with_termlib" != no ; then
+	LIB_SUBSETS="${LIB_SUBSETS} "
+else
+	LIB_SUBSETS="${LIB_SUBSETS}+"
+fi
+
 LIB_SUBSETS="${LIB_SUBSETS}base"
 test "$with_widec"     = yes && LIB_SUBSETS="${LIB_SUBSETS}+widechar"
 test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_funcs"
+
 AC_MSG_RESULT($LIB_SUBSETS)
 
 ### Construct the list of include-directories to be generated
@@ -1429,7 +1455,49 @@ AC_SUBST(CXX_LIB_SUFFIX)
 fi
 
 ### Set up low-level terminfo dependencies for makefiles.
+
+# TICS_LIST and TINFO_LIST are needed to build the libtic.so and libterm.so
+TICS_LIST="$SHLIB_LIST"
 TINFO_LIST="$SHLIB_LIST"
+
+TICS_LEAKS=
+
+if test "$with_ticlib" != no ; then
+
+	if test "$with_ticlib" != yes ; then
+		TICS_NAME=$with_ticlib
+		TICS_ARG_SUFFIX="${with_ticlib}`echo ${DFT_ARG_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
+		TICS_DEP_SUFFIX="${with_ticlib}`echo ${DFT_DEP_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
+		TICS_LIB_SUFFIX="${with_ticlib}"
+	else
+		TICS_ARG_SUFFIX="${TICS_NAME}${DFT_ARG_SUFFIX}"
+		TICS_DEP_SUFFIX="${TICS_NAME}${DFT_DEP_SUFFIX}"
+		TICS_LIB_SUFFIX="${TICS_NAME}${LIB_SUFFIX}"
+	fi
+
+	TEST_DEPS="${LIB_DIR}/${LIB_PREFIX}${TICS_DEP_SUFFIX}"
+	TEST_DEP2="${LIB_2ND}/${LIB_PREFIX}${TICS_DEP_SUFFIX}"
+	if test "$DFT_LWR_MODEL" = "libtool"; then
+		TEST_ARGS="${TEST_DEPS}"
+		TEST_ARG2="${TEST_DEP2}"
+		TICS_ARGS="-L${LIB_DIR} $TEST_ARGS"
+	else
+		TEST_ARGS="-l${TICS_ARG_SUFFIX}"
+		TEST_ARG2="-l${TICS_ARG_SUFFIX}"
+		TICS_ARGS="-L${LIB_DIR} $TEST_ARGS"
+		# SHLIB_LIST="$SHLIB_LIST -l${TICS_LIB_SUFFIX}"
+	fi
+	test "$with_no_leaks" != no && TICS_LEAKS="-l${TICS_NAME}"
+else
+	TICS_ARGS="-L${LIB_DIR} -l${LIB_NAME}${DFT_ARG_SUFFIX}"
+fi
+AC_SUBST(TICS_ARG_SUFFIX)
+AC_SUBST(TICS_DEP_SUFFIX)
+AC_SUBST(TICS_LIB_SUFFIX)
+AC_SUBST(TICS_ARGS)
+
+AC_SUBST(TICS_LEAKS)
+
 if test "$with_termlib" != no ; then
 
 	if test "$with_termlib" != yes ; then
@@ -1485,6 +1553,10 @@ fi
 AC_SUBST(WITH_OVERWRITE)
 AC_SUBST(TINFO_LIST)
 AC_SUBST(SHLIB_LIST)
+
+# used to separate tack out of the tree
+NCURSES_TREE=
+AC_SUBST(NCURSES_TREE)
 
 ### predefined stuff for the test programs
 AC_DEFINE(HAVE_SLK_COLOR)
@@ -1542,6 +1614,9 @@ TERMINFO="$TERMINFO"
 TINFO_ARG_SUFFIX="$TINFO_ARG_SUFFIX"
 TINFO_LIB_SUFFIX="$TINFO_LIB_SUFFIX"
 TINFO_NAME="$TINFO_NAME"
+TICS_ARG_SUFFIX="$TICS_ARG_SUFFIX"
+TICS_LIB_SUFFIX="$TICS_LIB_SUFFIX"
+TICS_NAME="$TICS_NAME"
 WITH_CURSES_H="$with_curses_h"
 WITH_ECHO="$with_echo"
 WITH_OVERWRITE="$with_overwrite"
