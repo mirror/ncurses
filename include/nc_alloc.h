@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey <dickey@clark.net> 1996,1997                   *
  ****************************************************************************/
-/* $Id: nc_alloc.h,v 1.13 2005/01/16 00:27:35 tom Exp $ */
+/* $Id: nc_alloc.h,v 1.14 2007/01/21 01:09:07 tom Exp $ */
 
 #ifndef NC_ALLOC_included
 #define NC_ALLOC_included 1
@@ -69,6 +69,7 @@ struct termtype;
 extern NCURSES_EXPORT(void) _nc_free_and_exit(int) GCC_NORETURN;
 extern NCURSES_EXPORT(void) _nc_free_tparm(void);
 extern NCURSES_EXPORT(void) _nc_leaks_dump_entry(void);
+extern NCURSES_EXPORT(void) _nc_leaks_tic(void);
 #define ExitProgram(code) _nc_free_and_exit(code)
 #endif
 

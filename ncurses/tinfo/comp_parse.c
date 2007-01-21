@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -53,7 +53,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.64 2006/12/24 00:45:20 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.65 2007/01/21 01:10:09 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -465,3 +465,14 @@ sanity_check(TERMTYPE *tp)
 {
     sanity_check2(tp, FALSE);
 }
+
+#if NO_LEAKS
+NCURSES_EXPORT(void)
+_nc_leaks_tic(void)
+{
+    _nc_alloc_entry_leaks();
+    _nc_captoinfo_leaks();
+    _nc_comp_scan_leaks();
+    _nc_tic_expand(0, FALSE, 0);
+}
+#endif

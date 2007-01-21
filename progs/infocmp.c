@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.85 2006/08/19 21:20:37 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.86 2007/01/21 01:09:07 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -96,6 +96,7 @@ ExitProgram(int code)
     while (termcount-- > 0)
 	_nc_free_termtype(&entries[termcount].tterm);
     _nc_leaks_dump_entry();
+    _nc_leaks_tic();
     _nc_free_and_exit(code);
 }
 #endif

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1067 2007/01/14 01:21:07 tom Exp $
+-- $Id: NEWS,v 1.1069 2007/01/20 22:37:14 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,13 +45,20 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20070120
+	+ add _nc_leaks_tic() to separate leak-checking of tic library from
+	  term/ncurses libraries, and thereby eliminate a library dependency.
+	+ fix test/mk-test.awk to ignore blank lines.
+	+ correct paths in include/headers, for --srcdir (patch by Miroslav
+	  Lichvar).
+
 20070113
 	+ add a break-statement in misc/shlib to ensure that it exits on the
 	  _first_ matched directory (report by Paul Novak).
 	+ add tack/configure, which can be used to build tack outside the
 	  ncurses build-tree.
 	+ add --with-ticlib option, to build/install the tic-support functions
-	  in a separate library (suggestd by Miroslav Lichvar).
+	  in a separate library (suggested by Miroslav Lichvar).
 
 20070106
 	+ change MKunctrl.awk to reduce relocation table for unctrl.o

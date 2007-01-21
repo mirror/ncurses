@@ -1,4 +1,4 @@
-# $Id: headers,v 1.8 2007/01/13 23:31:33 tom Exp $
+# $Id: headers,v 1.9 2007/01/20 19:57:04 Miroslav.Lichvar Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -35,8 +35,8 @@ unctrl.h
 termcap.h
 $(srcdir)/ncurses_dll.h
 @ ticlib
-tic.h
-term_entry.h
-nc_tparm.h
+$(srcdir)/tic.h
+$(srcdir)/term_entry.h
+$(srcdir)/nc_tparm.h
 
 # vile:makemode

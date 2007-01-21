@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.388 2007/01/14 00:23:57 tom Exp $
+dnl $Id: configure.in,v 1.389 2007/01/21 00:30:30 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.388 $)
+AC_REVISION($Revision: 1.389 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -693,7 +693,7 @@ AC_SUBST(cf_cv_enable_lp64)
 
 CF_LARGEFILE
 
-###   use option --disable-tparm-varargs to make tparm() conform to X/Open 
+###   use option --disable-tparm-varargs to make tparm() conform to X/Open
 AC_MSG_CHECKING(if you want tparm not to use X/Open fixed-parameter list)
 AC_ARG_ENABLE(tparm-varargs,
 	[  --disable-tparm-varargs compile tparm() without varargs interface],
@@ -1474,20 +1474,7 @@ if test "$with_ticlib" != no ; then
 		TICS_DEP_SUFFIX="${TICS_NAME}${DFT_DEP_SUFFIX}"
 		TICS_LIB_SUFFIX="${TICS_NAME}${LIB_SUFFIX}"
 	fi
-
-	TEST_DEPS="${LIB_DIR}/${LIB_PREFIX}${TICS_DEP_SUFFIX}"
-	TEST_DEP2="${LIB_2ND}/${LIB_PREFIX}${TICS_DEP_SUFFIX}"
-	if test "$DFT_LWR_MODEL" = "libtool"; then
-		TEST_ARGS="${TEST_DEPS}"
-		TEST_ARG2="${TEST_DEP2}"
-		TICS_ARGS="-L${LIB_DIR} $TEST_ARGS"
-	else
-		TEST_ARGS="-l${TICS_ARG_SUFFIX}"
-		TEST_ARG2="-l${TICS_ARG_SUFFIX}"
-		TICS_ARGS="-L${LIB_DIR} $TEST_ARGS"
-		# SHLIB_LIST="$SHLIB_LIST -l${TICS_LIB_SUFFIX}"
-	fi
-	test "$with_no_leaks" != no && TICS_LEAKS="-l${TICS_NAME}"
+	TICS_ARGS="-L${LIB_DIR} -l${TICS_LIB_SUFFIX}"
 else
 	TICS_ARGS="-L${LIB_DIR} -l${LIB_NAME}${DFT_ARG_SUFFIX}"
 fi
