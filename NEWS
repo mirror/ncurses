@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1069 2007/01/20 22:37:14 tom Exp $
+-- $Id: NEWS,v 1.1073 2007/01/28 00:38:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070127
+	+ improve fix for FreeBSD gnu/98975, to allow for null pointer passed
+	  to tgetent() (report by Rong-en Fan).
+	+ update tack/HISTORY and tack/README to tell how to build it after
+	  it is removed from the ncurses tree.
+	+ fix configure check for libtool's version to trim blank lines
+	  (report by sci-fi@hush.ai).
+	+ review/eliminate other original-file artifacts in cursesw.cc, making
+	  its license consistent with ncurses.
+	+ use ncurses vw_scanw() rather than reading into a fixed buffer in
+	  the c++ binding for scanw() methods.
+	+ eliminate fixed-buffer vsprintf() calls in c++ binding.
 
 20070120
 	+ add _nc_leaks_tic() to separate leak-checking of tic library from

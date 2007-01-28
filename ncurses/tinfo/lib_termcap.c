@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,13 +45,14 @@
 
 #include <term_entry.h>
 
-MODULE_ID("$Id: lib_termcap.c,v 1.58 2006/09/02 19:39:46 Miroslav.Lichvar Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.59 2007/01/28 00:33:11 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
 
 typedef struct {
     long sequence;
+    bool last_used;
     char *fix_sgr0;		/* this holds the filtered sgr0 string */
     char *last_bufp;		/* help with fix_sgr0 leak */
     TERMINAL *last_term;
@@ -64,6 +65,7 @@ static int in_cache = 0;
 #define FIX_SGR0 cache[in_cache].fix_sgr0
 #define LAST_TRM cache[in_cache].last_term
 #define LAST_BUF cache[in_cache].last_bufp
+#define LAST_USE cache[in_cache].last_used
 #define LAST_SEQ cache[in_cache].sequence
 
 /***************************************************************************
@@ -100,9 +102,15 @@ tgetent(char *bufp, const char *name)
      * caller, but if tgetent() is called with the same buffer, that is
      * good enough, since the previous data would be invalidated by the
      * current call.
+     *
+     * bufp may be a null pointer, e.g., GNU termcap.  That allocates data,
+     * which is good until the next tgetent() call.  The conventional termcap
+     * is inconvenient because of the fixed buffer size, but because it uses
+     * caller-supplied buffers, can have multiple terminal descriptions in
+     * use at a given time.
      */
     for (n = 0; n < MAX_CACHE; ++n) {
-	bool same_result = (bufp != 0 && cache[n].last_bufp == bufp);
+	bool same_result = (cache[n].last_used && cache[n].last_bufp == bufp);
 	if (same_result) {
 	    in_cache = n;
 	    if (FIX_SGR0 != 0) {
@@ -164,6 +172,7 @@ tgetent(char *bufp, const char *name)
 	    }
 	}
 	LAST_BUF = bufp;
+	LAST_USE = TRUE;
 
 	(void) baudrate();	/* sets ospeed as a side-effect */
 

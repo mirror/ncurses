@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.34 2006/04/22 22:38:57 tom Exp $
+ * $Id: demo.cc,v 1.35 2007/01/27 20:28:51 tom Exp $
  */
 
 #include "internal.h"
@@ -557,4 +557,4 @@ int TestApplication::run()
 //
 // -------------------------------------------------------------------------
 //
-static TestApplication Demo;
+static TestApplication *Demo = new TestApplication();

@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.60 2007/01/13 22:59:00 tom Exp $
+dnl $Id: configure.in,v 1.61 2007/01/27 22:56:49 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -74,7 +74,6 @@ LOCAL_LDFLAGS=""			AC_SUBST(LOCAL_LDFLAGS)
 MATH_LIB="-lm"				AC_SUBST(MATH_LIB)
 TEST_ARGS=""				AC_SUBST(TEST_ARGS)
 TEST_DEPS=""				AC_SUBST(TEST_DEPS)
-TICS_LEAKS=""				AC_SUBST(TICS_LEAKS)
 TINFO_ARGS='$(LIBS_CURSES)'		AC_SUBST(TINFO_ARGS)
 cf_cv_abi_version=""			AC_SUBST(cf_cv_abi_version)
 cf_cv_rel_version=""			AC_SUBST(cf_cv_rel_version)

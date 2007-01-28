@@ -1,6 +1,7 @@
 
 Current history:
 
+2007/01/27	1.03	Update README to tell how to build tack after removal.
 2006/11/25		Fixes for ncurses tparm() prototype.
 2006/06/24	1.02	Modify to support ncurses extended string capabilities.
 2003/10/18	1.01	Fix some logic in pad.c, improve bce test.

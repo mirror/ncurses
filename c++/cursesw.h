@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,16 +30,12 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.38 2005/07/23 20:51:39 tom Exp $
+// $Id: cursesw.h,v 1.41 2007/01/27 22:29:36 tom Exp $
 
 #include <stdarg.h>
 #include <stdio.h>
 
 #include <etip.h>
-
-#if HAVE_STRSTREAM_H && (USE_STRSTREAM_VSCAN||USE_STRSTREAM_VSCAN_CAST)
-#include <strstream.h>
-#endif
 
 extern "C" {
 #  include   <curses.h>
@@ -705,9 +701,10 @@ class NCURSES_IMPEXP NCursesWindow
 private:
   static bool    b_initialized;
   static void    initialize();
+  void           constructing();
   friend int     _nc_xx_ripoff_init(WINDOW *, int);
 
-  void           init();
+  void           set_keyboard();
 
   short          getcolor(int getback) const;
 

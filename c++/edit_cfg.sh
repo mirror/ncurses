@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: edit_cfg.sh,v 1.14 2005/04/30 21:00:22 tom Exp $
+# $Id: edit_cfg.sh,v 1.15 2007/01/27 18:51:04 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey 1997
+# Author: Thomas E. Dickey 1997-on
 #
 # Edit the default value of the etip.h file based on the autoconf-generated
 # values:
@@ -45,11 +45,8 @@ for name in \
 	HAVE_BUILTIN_H \
 	HAVE_GPP_BUILTIN_H \
 	HAVE_GXX_BUILTIN_H \
-	HAVE_STRSTREAM_H \
 	HAVE_TYPEINFO \
-	HAVE_VALUES_H \
-	USE_STRSTREAM_VSCAN \
-	USE_STRSTREAM_VSCAN_CAST
+	HAVE_VALUES_H
 do
 	rm -f $2.bak
 	mv $2 $2.bak

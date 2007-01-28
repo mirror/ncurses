@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2002,2003 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2003,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,12 +34,16 @@
 #include "internal.h"
 #include "cursesapp.h"
 
-MODULE_ID("$Id: cursesmain.cc,v 1.11 2003/10/25 14:53:13 tom Exp $")
+MODULE_ID("$Id: cursesmain.cc,v 1.13 2007/01/27 20:29:27 tom Exp $")
 
 #if HAVE_LOCALE_H
 #include <locale.h>
 #else
 #define setlocale(name,string) /* nothing */
+#endif
+
+#if NO_LEAKS
+#include <nc_alloc.h>
 #endif
 
 /* This is the default implementation of main() for a NCursesApplication.
@@ -60,6 +64,11 @@ int main(int argc, char* argv[])
     ::endwin();
     res = (*A)();
     ::endwin();
+#if NO_LEAKS
+    delete A;
+    _nc_free_and_exit(res);
+#else
     return(res);
+#endif
   }
 }

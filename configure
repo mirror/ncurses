@@ -4137,7 +4137,7 @@ echo $ECHO_N "checking version of libtool... $ECHO_C" >&6
 	# Save the version in a cache variable - this is not entirely a good
 	# thing, but the version string from libtool is very ugly, and for
 	# bug reports it might be useful to have the original string.
-	cf_cv_libtool_version=`$LIBTOOL --version 2>&1 | sed -e '/^$/d' -e '2,$d' -e 's/([^)]*)//g' -e 's/^[^1-9]*//' -e 's/[^0-9.].*//'`
+	cf_cv_libtool_version=`$LIBTOOL --version 2>&1 | sed -e '/^$/d' |sed -e '2,$d' -e 's/([^)]*)//g' -e 's/^[^1-9]*//' -e 's/[^0-9.].*//'`
 	echo "$as_me:4141: result: $cf_cv_libtool_version" >&5
 echo "${ECHO_T}$cf_cv_libtool_version" >&6
 	if test -z "$cf_cv_libtool_version" ; then
