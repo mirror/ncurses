@@ -16640,7 +16640,7 @@ cf_ITEM=`echo "$cf_item" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQ
 				case $cf_subset in
 				*base*)
 					;;
-				termlib*)
+				*termlib*)
 					cf_libname=$TINFO_LIB_SUFFIX
 					if test -n "${DFT_ARG_SUFFIX}" ; then
 						# undo $LIB_SUFFIX add-on in CF_LIB_SUFFIX
