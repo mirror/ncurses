@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005,2006 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2005-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,10 +29,11 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.5 2006/05/06 19:06:36 tom Exp $
+ * $Id: demo_termcap.c,v 1.6 2007/02/03 18:51:23 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
+#define USE_TINFO
 #include <test.priv.h>
 
 #if HAVE_TGETENT

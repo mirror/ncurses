@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,10 +29,11 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.15 2006/11/04 19:54:42 tom Exp $
+ * $Id: dots.c,v 1.16 2007/02/03 18:51:23 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
+#define USE_TINFO
 #include <test.priv.h>
 
 #if HAVE_SETUPTERM

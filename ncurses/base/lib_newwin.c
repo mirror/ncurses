@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.38 2006/10/14 20:31:19 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.39 2007/02/03 23:09:20 tom Exp $")
 
 static WINDOW *
 remove_window_from_screen(WINDOW *win)
@@ -208,22 +208,22 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
     WINDOW *win;
     bool is_pad = (flags & _ISPAD);
 
-    T(("_nc_makenew(%d,%d,%d,%d)", num_lines, num_columns, begy, begx));
+    T((T_CALLED("_nc_makenew(%d,%d,%d,%d)"), num_lines, num_columns, begy, begx));
 
     if (SP == 0)
-	return 0;
+	returnWin(0);
 
     if (!dimension_limit(num_lines) || !dimension_limit(num_columns))
-	return 0;
+	returnWin(0);
 
     if ((wp = typeCalloc(WINDOWLIST, 1)) == 0)
-	return 0;
+	returnWin(0);
 
     win = &(wp->win);
 
     if ((win->_line = typeCalloc(struct ldat, ((unsigned) num_lines))) == 0) {
 	free(win);
-	return 0;
+	returnWin(0);
     }
 
     win->_curx = 0;
@@ -303,5 +303,5 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
 
     T((T_CREATE("window %p"), win));
 
-    return (win);
+    returnWin(win);
 }

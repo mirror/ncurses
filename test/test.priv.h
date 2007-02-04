@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.63 2006/07/15 18:27:24 tom Exp $ */
+/* $Id: test.priv.h,v 1.65 2007/02/03 20:00:54 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -404,6 +404,10 @@ extern int optind;
 
 #if defined(NCURSES_VERSION) && HAVE_NC_ALLOC_H
 #include <nc_alloc.h>
+#if HAVE_NC_FREEALL && defined(USE_TINFO)
+#undef ExitProgram
+#define ExitProgram(code) _nc_free_tinfo(code)
+#endif
 #else
 #define typeMalloc(type,n) (type *) malloc((n) * sizeof(type))
 #define typeRealloc(type,n,p) (type *) realloc(p, (n) * sizeof(type))

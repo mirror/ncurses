@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_alpha.c,v 1.21 2006/04/22 21:33:05 tom Exp $")
+MODULE_ID("$Id: fty_alpha.c,v 1.22 2007/02/03 23:37:46 tom Exp $")
 
 #define thisARG alphaARG
 
@@ -58,7 +58,10 @@ Make_This_Type(va_list *ap)
   thisARG *argp = (thisARG *) malloc(sizeof(thisARG));
 
   if (argp)
-    argp->width = va_arg(*ap, int);
+    {
+      T((T_CREATE("thisARG %p"), argp));
+      argp->width = va_arg(*ap, int);
+    }
 
   return ((void *)argp);
 }
@@ -78,7 +81,10 @@ Copy_This_Type(const void *argp)
   thisARG *result = (thisARG *) malloc(sizeof(thisARG));
 
   if (result)
-    *result = *ap;
+    {
+      T((T_CREATE("thisARG %p"), result));
+      *result = *ap;
+    }
 
   return ((void *)result);
 }

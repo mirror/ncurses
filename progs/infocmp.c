@@ -41,7 +41,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.86 2007/01/21 01:09:07 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.87 2007/02/03 19:10:27 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -96,8 +96,7 @@ ExitProgram(int code)
     while (termcount-- > 0)
 	_nc_free_termtype(&entries[termcount].tterm);
     _nc_leaks_dump_entry();
-    _nc_leaks_tic();
-    _nc_free_and_exit(code);
+    _nc_free_tic(code);
 }
 #endif
 

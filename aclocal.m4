@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.415 2007/01/28 16:51:41 tom Exp $
+dnl $Id: aclocal.m4,v 1.416 2007/02/03 16:35:13 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -701,84 +701,6 @@ public:
 fi
 
 test "$cf_cv_cpp_static_cast" = yes && AC_DEFINE(CPP_HAS_STATIC_CAST)
-])dnl
-dnl ---------------------------------------------------------------------------
-dnl CF_CPP_VSCAN_FUNC version: 5 updated: 2001/12/02 01:39:28
-dnl -----------------
-dnl Check if the g++ compiler supports vscan function (not a standard feature).
-AC_DEFUN([CF_CPP_VSCAN_FUNC],
-[
-if test -n "$CXX"; then
-
-AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
-AC_CHECK_HEADERS(strstream.h)
-
-AC_CACHE_CHECK(if $CXX supports vscan function,cf_cv_cpp_vscan_func,[
-	for cf_vscan_func in strstream strstream_cast stdio
-	do
-	case $cf_vscan_func in #(vi
-	stdio)		cf_vscan_defs=USE_STDIO_VSCAN ;; #(vi
-	strstream)	cf_vscan_defs=USE_STRSTREAM_VSCAN ;;
-	strstream_cast)	cf_vscan_defs=USE_STRSTREAM_VSCAN_CAST ;;
-	esac
-	AC_TRY_LINK([
-#include <stdio.h>
-#include <stdarg.h>
-#define $cf_vscan_defs 1
-#if defined(USE_STDIO_VSCAN)
-#elif defined(HAVE_STRSTREAM_H) && defined(USE_STRSTREAM_VSCAN)
-#include <strstream.h>
-#endif
-
-int scanw(const char* fmt, ...)
-{
-    int result = -1;
-    char buf[BUFSIZ];
-
-    va_list args;
-    va_start(args, fmt);
-#if defined(USE_STDIO_VSCAN)
-    if (::vsscanf(buf, fmt, args) != -1)
-	result = 0;
-#elif defined(USE_STRSTREAM_VSCAN)
-    strstreambuf ss(buf, sizeof(buf));
-    if (ss.vscan(fmt, args) != -1)
-	result = 0;
-#elif defined(USE_STRSTREAM_VSCAN_CAST)
-    strstreambuf ss(buf, sizeof(buf));
-    if (ss.vscan(fmt, (_IO_va_list)args) != -1)
-	result = 0;
-#else
-#error case $cf_vscan_func failed
-#endif
-    va_end(args);
-    return result;
-}
-],[int tmp, foo = scanw("%d", &tmp)],
-	[cf_cv_cpp_vscan_func=$cf_vscan_func; break],
-	[cf_cv_cpp_vscan_func=no])
-	test "$cf_cv_cpp_vscan_func" != no && break
-	done
-])
-
-AC_LANG_RESTORE
-fi
-
-case $cf_cv_cpp_vscan_func in #(vi
-stdio) #(vi
-	AC_DEFINE(CPP_HAS_VSCAN_FUNC)
-	AC_DEFINE(USE_STDIO_VSCAN)
-	;;
-strstream)
-	AC_DEFINE(CPP_HAS_VSCAN_FUNC)
-	AC_DEFINE(USE_STRSTREAM_VSCAN)
-	;;
-strstream_cast)
-	AC_DEFINE(CPP_HAS_VSCAN_FUNC)
-	AC_DEFINE(USE_STRSTREAM_VSCAN_CAST)
-	;;
-esac
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_DIRNAME version: 4 updated: 2002/12/21 19:25:52

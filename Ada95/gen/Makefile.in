@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.52 2007/01/14 00:13:32 tom Exp $
+#  $Id: Makefile.in,v 1.53 2007/02/04 00:42:40 tom Exp $
 #
 .SUFFIXES:
 
@@ -71,7 +71,7 @@ ABI_VERSION	= @cf_cv_abi_version@
 LOCAL_LIBDIR	= @top_builddir@/lib
 
 LINK		= $(HOST_CC)
-LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS) @TICS_LEAKS@ @TINFO_ARGS2@
+LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS) @TINFO_ARGS2@
 
 RANLIB		= @RANLIB@
 

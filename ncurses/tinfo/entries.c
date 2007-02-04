@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2006,2007 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: entries.c,v 1.2 2006/12/24 00:58:33 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.3 2007/02/03 18:51:23 tom Exp $")
 
 /****************************************************************************
  *
@@ -107,3 +107,34 @@ _nc_delink_entry(ENTRY * headp, TERMTYPE *tterm)
     }
     return ep;
 }
+
+NCURSES_EXPORT(void)
+_nc_leaks_tinfo(void)
+{
+    char *s;
+
+    T((T_CALLED("_nc_free_tinfo()")));
+#if NO_LEAKS
+    _nc_free_tparm();
+    _nc_tgetent_leaks();
+#endif
+    _nc_free_entries(_nc_head);
+    _nc_get_type(0);
+    _nc_first_name(0);
+#if NO_LEAKS
+    _nc_keyname_leaks();
+#endif
+
+    if ((s = _nc_home_terminfo()) != 0)
+	free(s);
+    returnVoid;
+}
+
+#if NO_LEAKS
+NCURSES_EXPORT(void)
+_nc_free_tinfo(int code)
+{
+    _nc_leaks_tinfo();
+    exit(code);
+}
+#endif

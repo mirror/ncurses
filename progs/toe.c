@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.42 2007/01/21 01:09:07 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.43 2007/02/03 19:10:39 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -60,8 +60,7 @@ ExitProgram(int code)
 {
     _nc_free_entries(_nc_head);
     _nc_leaks_dump_entry();
-    _nc_leaks_tic();
-    _nc_free_and_exit(code);
+    _nc_free_tic(code);
 }
 #endif
 

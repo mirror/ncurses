@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_regex.c,v 1.19 2006/04/22 21:33:05 tom Exp $")
+MODULE_ID("$Id: fty_regex.c,v 1.20 2007/02/03 23:37:46 tom Exp $")
 
 #if HAVE_REGEX_H_FUNCS		/* We prefer POSIX regex */
 #include <regex.h>
@@ -109,10 +109,12 @@ Make_RegularExpression_Type(va_list *ap)
 
   if (preg)
     {
+      T((T_CREATE("RegExp_Arg %p"), preg));
       if (((preg->pRegExp = (regex_t *) malloc(sizeof(regex_t))) != 0)
 	  && !regcomp(preg->pRegExp, rx,
 		      (REG_EXTENDED | REG_NOSUB | REG_NEWLINE)))
 	{
+	  T((T_CREATE("regex_t %p"), preg->pRegExp));
 	  preg->refCount = (unsigned long *)malloc(sizeof(unsigned long));
 
 	  *(preg->refCount) = 1;
@@ -136,6 +138,7 @@ Make_RegularExpression_Type(va_list *ap)
     {
       int blen = RX_INCREMENT;
 
+      T((T_CREATE("RegExp_Arg %p"), pArg));
       pArg->compiled_expression = NULL;
       pArg->refCount = (unsigned long *)malloc(sizeof(unsigned long));
 

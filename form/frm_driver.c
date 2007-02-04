@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.76 2006/11/04 18:45:35 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.78 2007/02/04 00:28:38 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -262,7 +262,19 @@ wins_wchnstr(WINDOW *w, cchar_t *s, int n)
 static int
 fix_wchnstr(WINDOW *w, cchar_t *s, int n)
 {
+  int x;
+
   win_wchnstr(w, s, n);
+  /*
+   * This function is used to extract the text only from the window.
+   * Strip attributes and color from the string so they will not be added
+   * back when copying the string to the window.
+   */
+  for (x = 0; x < n; ++x)
+    {
+      RemAttr(s[x], A_ATTRIBUTES);
+      SetPair(s[x], 0);
+    }
   return n;
 }
 
@@ -651,6 +663,7 @@ Field_Grown(FIELD *field, int amount)
 
 	  result = TRUE;	/* allow sharing of recovery on failure */
 
+	  T((T_CREATE("fieldcell %p"), newbuf));
 	  field->buf = newbuf;
 	  for (i = 0; i <= field->nbuf; i++)
 	    {

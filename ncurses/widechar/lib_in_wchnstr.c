@@ -39,14 +39,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_in_wchnstr.c,v 1.3 2004/05/16 00:12:30 tom Exp $")
+MODULE_ID("$Id: lib_in_wchnstr.c,v 1.4 2007/02/03 23:10:20 tom Exp $")
 
 NCURSES_EXPORT(int)
-win_wchnstr(WINDOW *win, cchar_t * wchstr, int n)
+win_wchnstr(WINDOW *win, cchar_t *wchstr, int n)
 {
     int code = OK;
 
-    TR(TRACE_CALLS, (T_CALLED("win_wchnstr(%p,%p,%d)"), win, wchstr, n));
+    T((T_CALLED("win_wchnstr(%p,%p,%d)"), win, wchstr, n));
     if (win != 0
 	&& wchstr != 0) {
 	int row, col;

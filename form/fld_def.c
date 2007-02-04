@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_def.c,v 1.33 2005/04/16 17:31:17 tom Exp $")
+MODULE_ID("$Id: fld_def.c,v 1.34 2007/02/03 23:37:46 tom Exp $")
 
 /* this can't be readonly */
 static FIELD default_field =
@@ -291,6 +291,7 @@ new_field(int rows, int cols, int frow, int fcol, int nrow, int nbuf)
       ((err = E_SYSTEM_ERROR) != 0) &&	/* trick: this resets the default error */
       (New_Field = (FIELD *)malloc(sizeof(FIELD))) != 0)
     {
+      T((T_CREATE("field %p"), New_Field));
       *New_Field = default_field;
       New_Field->rows = rows;
       New_Field->cols = cols;

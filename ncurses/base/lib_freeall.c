@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.41 2007/01/21 01:09:07 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.42 2007/02/03 18:44:28 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -50,12 +50,10 @@ NCURSES_EXPORT(void)
 _nc_freeall(void)
 {
     WINDOWLIST *p, *q;
-    char *s;
     static va_list empty_va;
 
     T((T_CALLED("_nc_freeall()")));
 #if NO_LEAKS
-    _nc_free_tparm();
     if (SP != 0) {
 	if (SP->_oldnum_list != 0) {
 	    FreeAndNull(SP->_oldnum_list);
@@ -85,27 +83,17 @@ _nc_freeall(void)
 	}
 	delscreen(SP);
     }
-#if NO_LEAKS
-    _nc_tgetent_leaks();
-#endif
     del_curterm(cur_term);
-    _nc_free_entries(_nc_head);
-    _nc_get_type(0);
-    _nc_first_name(0);
+
 #if USE_WIDEC_SUPPORT
     FreeIfNeeded(_nc_wacs);
 #endif
-#if NO_LEAKS
-    _nc_keyname_leaks();
-#endif
-
-    if ((s = _nc_home_terminfo()) != 0)
-	free(s);
-
     (void) _nc_printf_string(0, empty_va);
 #ifdef TRACE
     (void) _nc_trace_buf(-1, 0);
 #endif
+
+    _nc_leaks_tinfo();
 
 #if HAVE_LIBDBMALLOC
     malloc_dump(malloc_errfd);

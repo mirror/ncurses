@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_color.c,v 1.82 2006/12/31 00:22:19 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.83 2007/02/03 23:10:06 tom Exp $")
 
 /*
  * These should be screen structure members.  They need to be globals for
@@ -494,7 +494,7 @@ pair_content(short pair, short *f, short *b)
 	if (b)
 	    *b = bg;
 
-	T(("...pair_content(%d,%d,%d)", pair, fg, bg));
+	TR(TRACE_ATTRS, ("...pair_content(%d,%d,%d)", pair, fg, bg));
 	result = OK;
     }
     returnCode(result);

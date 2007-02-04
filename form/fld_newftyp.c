@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_newftyp.c,v 1.13 2004/12/25 22:24:10 tom Exp $")
+MODULE_ID("$Id: fld_newftyp.c,v 1.14 2007/02/03 23:37:46 tom Exp $")
 
 static FIELDTYPE const default_fieldtype =
 {
@@ -80,6 +80,7 @@ new_fieldtype(bool (*const field_check) (FIELD *, const void *),
 
       if (nftyp)
 	{
+	  T((T_CREATE("fieldtype %p"), nftyp));
 	  *nftyp = default_fieldtype;
 	  nftyp->fcheck = field_check;
 	  nftyp->ccheck = char_check;
