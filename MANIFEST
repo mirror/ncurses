@@ -971,6 +971,8 @@
 ./test/gdc.c
 ./test/hanoi.c
 ./test/hashtest.c
+./test/inch_wide.c
+./test/inchs.c
 ./test/ins_wide.c
 ./test/inserts.c
 ./test/keynames.c

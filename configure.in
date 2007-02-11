@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.393 2007/02/03 19:26:12 tom Exp $
+dnl $Id: configure.in,v 1.395 2007/02/10 22:47:04 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.393 $)
+AC_REVISION($Revision: 1.395 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1401,11 +1401,13 @@ fi
 AC_MSG_CHECKING(for library subsets)
 LIB_SUBSETS=
 
-test "$cf_with_progs"  = yes && LIB_SUBSETS="${LIB_SUBSETS}ticlib"
-if test "$with_ticlib" != no ; then
-	LIB_SUBSETS="${LIB_SUBSETS} "
-else
-	LIB_SUBSETS="${LIB_SUBSETS}+"
+if test "$cf_with_progs" = yes || test "$with_ticlib" != no; then
+	LIB_SUBSETS="${LIB_SUBSETS}ticlib"
+	if test "$with_ticlib" != no ; then
+		LIB_SUBSETS="${LIB_SUBSETS} "
+	else
+		LIB_SUBSETS="${LIB_SUBSETS}+"
+	fi
 fi
 
 LIB_SUBSETS="${LIB_SUBSETS}termlib"
@@ -1465,7 +1467,7 @@ fi
 
 # TICS_LIST and TINFO_LIST are needed to build the libtic.so and libterm.so
 TICS_LIST="$SHLIB_LIST"
-TINFO_LIST="$SHLIB_LIST"
+TINFO_LIST=`echo "$SHLIB_LIST" | sed -e 's/-ldl//'`
 
 if test "$with_ticlib" != no ; then
 

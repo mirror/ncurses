@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002,2004 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2002-2004-2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Thomas Dickey 2002,2004                                          *
+ * Author: Thomas Dickey                                                    *
  ****************************************************************************/
 
 /*
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_in_wchnstr.c,v 1.4 2007/02/03 23:10:20 tom Exp $")
+MODULE_ID("$Id: lib_in_wchnstr.c,v 1.7 2007/02/11 01:00:00 tom Exp $")
 
 NCURSES_EXPORT(int)
 win_wchnstr(WINDOW *win, cchar_t *wchstr, int n)
@@ -49,17 +49,25 @@ win_wchnstr(WINDOW *win, cchar_t *wchstr, int n)
     T((T_CALLED("win_wchnstr(%p,%p,%d)"), win, wchstr, n));
     if (win != 0
 	&& wchstr != 0) {
+	NCURSES_CH_T *src;
 	int row, col;
-	int j;
+	int j, k, limit;
 
 	getyx(win, row, col);
+	limit = getmaxx(win) - col;
+	src = &(win->_line[row].text[col]);
 
 	if (n < 0) {
-	    n = getmaxx(win) + 1 - getcurx(win);
+	    n = limit;
+	} else if (n > limit) {
+	    n = limit;
 	}
-	for (j = 0; j < n; ++j) {
-	    wchstr[j] = win->_line[row].text[col + j];
+	for (j = k = 0; j < n; ++j) {
+	    if (j == 0 || !WidecExt(src[j]) || isWidecBase(src[j])) {
+		wchstr[k++] = src[j];
+	    }
 	}
+	memset(&(wchstr[k]), 0, sizeof(*wchstr));
 	T(("result = %s", _nc_viscbuf(wchstr, n)));
     } else {
 	code = ERR;

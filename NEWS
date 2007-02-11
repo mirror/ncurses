@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1079 2007/02/04 00:30:41 tom Exp $
+-- $Id: NEWS,v 1.1084 2007/02/11 01:17:49 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070210
+	+ add test/inchs.c, test_inch_wide.c, to test win_wchnstr().
+	+ remove libdl from library list for termlib (report by Miroslav
+	  Lichvar).
+	+ fix configure.in to allow --without-progs --with-termlib (patch by
+	  Miroslav Lichvar).
+	+ modify win_wchnstr() to ensure that only a base cell is returned
+	  for each multi-column character (prompted by report by Wei Kong
+	  regarding change in mvwin_wch() cf: 20041023).
 
 20070203
 	+ modify fix_wchnstr() in form library to strip attributes (and color)
