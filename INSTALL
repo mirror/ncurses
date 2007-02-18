@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.115 2007/01/13 17:16:34 tom Exp $
+-- $Id: INSTALL,v 1.116 2007/02/17 21:53:16 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -358,6 +358,13 @@ SUMMARY OF CONFIGURE OPTIONS:
 	rather than the include directory.  This makes it simpler to avoid
 	compile-time conflicts with other versions of curses.h
 
+    --disable-relink
+	If --enable-rpath is given, the generated makefiles normally will
+	rebuild the libraries during install.  Use this option to simply
+	copy whatever the linked produced.
+
+	This option is ignored if --enable-rpath is not given.
+
     --disable-root-environ
 	Compile with environment restriction, so certain environment variables
 	are not available when running as root, or via a setuid/setgid
@@ -494,6 +501,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	you may be able to use workarounds such as the $LD_LIBRARY_PATH
 	environment variable, they do not work with setuid applications since
 	the LD_LIBRARY_PATH variable would be unset in that situation.
+
+	This option does not apply to --with-libtool, since libtool makes
+	extra assumptions about rpath.
 
     --enable-safe-sprintf
 	Compile with experimental safe-sprintf code.  You may consider using

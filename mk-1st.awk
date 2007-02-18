@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.71 2007/01/13 21:33:25 tom Exp $
+# $Id: mk-1st.awk,v 1.73 2007/02/17 21:31:09 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -40,6 +40,8 @@
 #	subset		  ("none", "base", "base+ext_funcs" or "termlib", etc.)
 #	ShlibVer	  ("rel", "abi" or "auto", to augment DoLinks variable)
 #	ShlibVerInfix ("yes" or "no", determines location of version #)
+#   TermlibRoot   ("tinfo" or other root for libterm.so)
+#	ReLink		  ("yes", or "no", flag to rebuild shared libs on install)
 #	DoLinks		  ("yes", "reverse" or "no", flag to add symbolic links)
 #	rmSoLocs	  ("yes" or "no", flag to add extra clean target)
 #	ldconfig	  (path for this tool, if used)
@@ -161,7 +163,7 @@ function sharedlinks(directory) {
 			printf ")\n"
 		}
 	}
-function shlib_rule(directory) {
+function shlib_build(directory) {
 		if ( ShlibVer == "cygdll" ) {
 			dst_libs = sprintf("%s/$(SHARED_LIB) %s/$(IMPORT_LIB)", directory, directory);
 		} else {
@@ -169,11 +171,14 @@ function shlib_rule(directory) {
 		}
 		printf "%s : \\\n", dst_libs
 		printf "\t\t%s \\\n", directory
-		if (subset ~ /^base/ ) {
+		if (subset ~ /^base/ || subset == "ticlib" ) {
+			save_suffix = suffix
+			sub(/^[^.]\./,".",suffix)
 			if (directory != "../lib") {
-				printf "\t\t%s/%s \\\n", "../lib", end_name_of("tinfo");
+				printf "\t\t%s/%s \\\n", "../lib", end_name_of(TermlibRoot);
 			}
-			printf "\t\t%s/%s \\\n", directory, end_name_of("tinfo");
+			printf "\t\t%s/%s \\\n", directory, end_name_of(TermlibRoot);
+			suffix = save_suffix
 		}
 		printf "\t\t$(%s_OBJS)\n", OBJS
 		printf "\t@echo linking $@\n"
@@ -184,6 +189,32 @@ function shlib_rule(directory) {
 			make_shlib(OBJS, "TINFO_LIST")
 		} else {
 			make_shlib(OBJS, "SHLIB_LIST")
+		}
+		sharedlinks(directory)
+	}
+function shlib_install(directory) {
+		if ( ShlibVer == "cygdll" ) {
+			src_lib1 = sprintf("%s/$(SHARED_LIB)", "../lib");
+			src_lib2 = sprintf("%s/$(IMPORT_LIB)", "../lib");
+			src_libs = sprintf("%s %s", src_lib1, src_lib2);
+			dst_lib1 = sprintf("%s/$(SHARED_LIB)", directory);
+			dst_lib2 = sprintf("%s/$(IMPORT_LIB)", directory);
+			dst_libs = sprintf("%s %s", dst_lib1, dst_lib2);
+		} else {
+			src_lib1 = sprintf("../lib/%s", end_name);
+			src_lib2 = ""
+			src_libs = src_lib1
+			dst_lib1 = sprintf("%s/%s", directory, end_name);
+			dst_libs = dst_lib1;
+		}
+		printf "%s : \\\n", dst_libs
+		printf "\t\t%s \\\n", directory
+		printf "\t\t%s\n", src_libs
+		printf "\t@echo installing $@\n"
+		print "\t-@rm -f %s", dst_libs;
+		printf "\t$(INSTALL_LIB) %s %s\n", src_lib1, dst_lib1;
+		if ( src_lib2 != "" ) {
+			printf "\t$(INSTALL_LIB) %s %s\n", src_lib2, dst_lib2;
 		}
 		sharedlinks(directory)
 	}
@@ -221,6 +252,8 @@ BEGIN	{
 					printf "#  subset:        %s\n", subset 
 					printf "#  ShlibVer:      %s\n", ShlibVer 
 					printf "#  ShlibVerInfix: %s\n", ShlibVerInfix 
+					printf "#  TermlibRoot:   %s\n", TermlibRoot 
+					printf "#  ReLink:        %s\n", ReLink 
 					printf "#  DoLinks:       %s\n", DoLinks 
 					printf "#  rmSoLocs:      %s\n", rmSoLocs 
 					printf "#  ldconfig:      %s\n", ldconfig 
@@ -283,7 +316,7 @@ END	{
 				imp_name = imp_name_of(name);
 				end_name = end_name_of(name);
 
-				shlib_rule("../lib")
+				shlib_build("../lib")
 
 				print  ""
 				print  "install \\"
@@ -301,7 +334,11 @@ END	{
 					lib_dir = "$(DESTDIR)$(libdir)";
 					printf "install.%s :: %s/%s\n", name, lib_dir, end_name
 					print ""
-					shlib_rule(lib_dir)
+					if ( ReLink == "yes" ) {
+						shlib_build(lib_dir)
+					} else {
+						shlib_install(lib_dir)
+					}
 				}
 
 				if ( overwrite == "yes" && name == "ncurses" )

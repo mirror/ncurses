@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1084 2007/02/11 01:17:49 tom Exp $
+-- $Id: NEWS,v 1.1087 2007/02/17 22:19:25 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,25 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070217
+	+ fixes for $(TICS_LIST) in ncurses/Makefile (report by Miroslav
+	  Lichvar).
+	+ modify relinking of shared libraries to apply only when rpath is
+	  enabled, and add --disable-relink option which can be used to
+	  disable the feature altogether (reports by Michail Vidiassov,
+	  Adam J Richter).
+	+ fix --with-termlib option for wide-character configuration, stripping
+	  the "w" suffix in one place (report by Miroslav Lichvar).
+	+ remove "-ldl" from some library lists to reduce dependencies in
+	  programs (report by Miroslav Lichvar).
+	+ correct description of --enable-signed-char in configure --help
+	  (report by Michail Vidiassov).   
+	+ add pattern for GNU/kFreeBSD configuration to CF_XOPEN_SOURCE,
+	  which matches an earlier change to CF_SHARED_OPTS, from xterm #224
+	  fixes.
+	+ remove "${DESTDIR}" from -install_name option used for linking
+	  shared libraries on Darwin (report by Michail Vidiassov).
 
 20070210
 	+ add test/inchs.c, test_inch_wide.c, to test win_wchnstr().
@@ -146,7 +165,7 @@ it is not possible to add this information.
 	+ modify configure --with-gpm option to allow it to accept a parameter,
 	  i.e., the name of the dynamic GPM library to load via dlopen()
 	  (requested by Bryan Henderson).
-	+ add configure option --with-valgrind (from vile).
+	+ add configure option --with-valgrind, changes from vile.
 	+ modify configure script AC_TRY_RUN and AC_TRY_LINK checks to use
 	  'return' in preference to 'exit()'.
 
@@ -4350,7 +4369,7 @@ it is not possible to add this information.
 	  <bledp@voila.fr>)).
 	+ change renaming of dft_fgbg.3x to use_default_colors.3ncurses in
 	  man_db.renames, since Debian is not concerned with 14-character
-	  filename limitation (from Debian bug report by Josip Rodin
+	  filename limitation (Debian bug report by Josip Rodin
 	  <joy@cibalia.gkvk.hr>).
 	+ corrected scoansi terminfo entry by testing with scoterm and console.
 	+ revert change from 990614 to terminal_interface-curses-forms.ads.m4,
@@ -5393,7 +5412,7 @@ it is not possible to add this information.
 
 980321
 	+ revise configure macro CF_SPEED_TYPE so that termcap.h has speed_t
-	  declared (from Adam J. Richter <adam@yggdrasil.com>)
+	  declared (from Adam J Richter <adam@yggdrasil.com>)
 	+ remove spurious curs_set() call from leaveok() (J T Conklin).
 	+ corrected handling leaveok() in doupdate() (patch by Alexander V.
 	  Lukyanov).
