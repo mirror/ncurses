@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.102 2007/02/17 23:13:24 tom Exp $
+# $Id: Makefile.in,v 1.103 2007/02/24 21:50:17 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -129,8 +129,6 @@ ABI_VERSION	= @cf_cv_abi_version@
 
 RANLIB		= @LIB_PREP@
 
-IMPORT_LIB	= @IMPORT_LIB@
-SHARED_LIB	= @SHARED_LIB@
 LIBRARIES	= @LIBS_TO_MAKE@
 
 LINT		= @LINT@

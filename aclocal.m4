@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.420 2007/02/17 21:50:10 tom Exp $
+dnl $Id: aclocal.m4,v 1.425 2007/02/24 23:59:46 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1774,11 +1774,11 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 46 updated: 2007/02/17 16:49:32
+dnl CF_LIB_RULES version: 49 updated: 2007/02/24 17:12:45
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
-dnl subdirectory is a library-source directory, modify the LIBRARIES list in
+dnl subdirectory is a library-source directory, modify the LIBS_TO_MAKE list in
 dnl the corresponding makefile to list the models that we'll generate.
 dnl
 dnl For shared libraries, make a list of symbolic links to construct when
@@ -1797,7 +1797,6 @@ do
 		continue
 	elif test -f $srcdir/$cf_dir/modules; then
 
-		IMPORT_LIB=
 		SHARED_LIB=
 		LIBS_TO_MAKE=
 		for cf_item in $cf_LIST_MODELS
@@ -1844,9 +1843,7 @@ do
 			# use autodetected ${cf_prefix} for import lib and static lib, but
 			# use 'cyg' prefix for shared lib.
 			if test $cf_cv_shlib_version = cygdll ; then
-				SHARED_LIB="cyg${cf_dir}\${ABI_VERSION}.dll"
-				IMPORT_LIB="${cf_prefix}${cf_dir}.dll.a"
-				LIBS_TO_MAKE="$LIBS_TO_MAKE ../lib/\${SHARED_LIB} ../lib/\${IMPORT_LIB}"
+				LIBS_TO_MAKE="$LIBS_TO_MAKE ../lib/cyg${cf_dir}\${ABI_VERSION}.dll"
 				continue
 			fi
 			fi
@@ -1883,7 +1880,6 @@ do
 		fi
 
 		sed -e "s%@LIBS_TO_MAKE@%$LIBS_TO_MAKE%" \
-		    -e "s%@IMPORT_LIB@%$IMPORT_LIB%" \
 		    -e "s%@SHARED_LIB@%$SHARED_LIB%" \
 			$cf_dir/Makefile >$cf_dir/Makefile.out
 		mv $cf_dir/Makefile.out $cf_dir/Makefile
@@ -1962,7 +1958,7 @@ do
 				prefix=$cf_prefix \
 				suffix=$cf_suffix \
 				subset=$cf_subset \
-				TermlibRoot=$TINFO_NAME \
+				TermlibRoot=$TINFO_ARG_SUFFIX \
 				ShlibVer=$cf_cv_shlib_version \
 				ShlibVerInfix=$cf_cv_shlib_version_infix \
 				ReLink=${cf_cv_do_relink-no} \
@@ -2062,7 +2058,7 @@ uninstall.man ::
 
 distclean ::
 	rm -f config.cache config.log config.status Makefile include/ncurses_cfg.h
-	rm -f headers.sh headers.sed
+	rm -f headers.sh headers.sed mk_shared_lib.sh
 	rm -rf \${DIRS_TO_MAKE}
 CF_EOF
 
@@ -2694,7 +2690,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 32 updated: 2006/12/24 15:18:27
+dnl CF_MAN_PAGES version: 33 updated: 2007/02/24 14:42:36
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -2934,6 +2930,7 @@ cat >>$cf_edit_man <<CF_EOF
 	if test \$verb = installing ; then
 		echo \$verb \$cf_target
 		\$INSTALL_DATA \$TMP \$cf_target
+		test -d \$cf_subdir\${section} &&
 		test -n "\$aliases" && (
 			cd \$cf_subdir\${section} && (
 				cf_source=\`echo \$cf_target |sed -e 's%^.*/\([[^/]][[^/]]*/[[^/]][[^/]]*$\)%\1%'\`
@@ -2975,8 +2972,11 @@ cat >>$cf_edit_man <<CF_EOF
 			)
 		)
 	elif test \$verb = removing ; then
-		echo \$verb \$cf_target
-		rm -f \$cf_target
+		test -f \$cf_target && (
+			echo \$verb \$cf_target
+			rm -f \$cf_target
+		)
+		test -d \$cf_subdir\${section} &&
 		test -n "\$aliases" && (
 			cd \$cf_subdir\${section} && (
 				for cf_alias in \$aliases
@@ -3615,7 +3615,7 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 43 updated: 2007/02/17 13:35:29
+dnl CF_SHARED_OPTS version: 46 updated: 2007/02/24 18:58:09
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -3692,9 +3692,22 @@ AC_DEFUN([CF_SHARED_OPTS],
 		;;
 	cygwin*)
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,--out-implib=../lib/${IMPORT_LIB} -Wl,--export-all-symbols -o ../lib/${SHARED_LIB}'
+		MK_SHARED_LIB='sh ../mk_shared_lib.sh [$]@ [$]{CC} [$]{CFLAGS}'
 		cf_cv_shlib_version=cygdll
 		cf_cv_shlib_version_infix=cygdll
+		cat >mk_shared_lib.sh <<-CF_EOF
+		#!/bin/sh
+		SHARED_LIB=\[$]1
+		IMPORT_LIB=\`echo "\[$]1" | sed -e 's/cyg/lib/' -e 's/[[0-9]]*\.dll[$]/.dll.a/'\`
+		shift
+		cat <<-EOF
+		Linking shared library
+		** SHARED_LIB \[$]SHARED_LIB
+		** IMPORT_LIB \[$]IMPORT_LIB
+EOF
+		exec \[$]* -shared -Wl,--out-implib=../lib/\[$]{IMPORT_LIB} -Wl,--export-all-symbols -o ../lib/\[$]{SHARED_LIB}
+CF_EOF
+		chmod +x mk_shared_lib.sh 
 		;;
 	darwin*)
 		EXTRA_CFLAGS="-no-cpp-precomp"

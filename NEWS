@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1087 2007/02/17 22:19:25 tom Exp $
+-- $Id: NEWS,v 1.1092 2007/02/25 00:45:56 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070224
+	+ change internal return codes of _nc_wgetch() to check for cases
+	  where KEY_CODE_YES should be returned, e.g., if a KEY_RESIZE was
+	  ungetch'd, and read by wget_wch().
+	+ fix static-library build broken in 20070217 changes to remove "-ldl"
+	  (report by Miroslav Lichvar).
+	+ change makefile/scripts for cygwin to allow building termlib.
+	+ use Form_Hook in manpages to match form.h
+	+ use Menu_Hook in manpages, as well as a few places in menu.h
+	+ correct form- and menu-manpages to use specific Field_Options,
+	  Menu_Options and Item_Options types.
+	+ correct prototype for _tracechar() in manpage (cf: 20011229).
+	+ correct prototype for wunctrl() in manpage.
 
 20070217
 	+ fixes for $(TICS_LIST) in ncurses/Makefile (report by Miroslav
@@ -1627,7 +1641,8 @@ it is not possible to add this information.
 20031108
 	+ add DJGPP to special case of DOS-style drive letters potentially
 	  appearing in TERMCAP environment variable.
-	+ fix some spelling in comments (reports by jmc, Jonathon Gray).
+	+ fix some spelling in comments (reports by Jason McIntyre, Jonathon
+	  Gray).
 	+ update config.guess, config.sub
 
 20031101
@@ -1917,7 +1932,7 @@ it is not possible to add this information.
 	  "--srcdir" work (report by Warren L Dodge).
 	+ correct missing definition of $(CC) in Ada95/gen/Makefile.in
 	  (reported by Warren L Dodge <warrend@mdhost.cse.tek.com>).
-	+ fix typos and whitespace in manpages (patch by jmc
+	+ fix typos and whitespace in manpages (patch by Jason McIntyre
 	  <jmc@prioris.mini.pw.edu.pl>).
 
 20030503

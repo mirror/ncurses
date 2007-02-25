@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.402 2007/02/17 22:52:40 tom Exp $
+dnl $Id: configure.in,v 1.404 2007/02/24 21:18:03 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.402 $)
+AC_REVISION($Revision: 1.404 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1470,13 +1470,20 @@ AC_SUBST(CXX_LIB_SUFFIX)
 fi
 
 # do not want -ldl in build except as needed for -lncurses dependency
-CF_REMOVE_LIB(LIBS,$LIBS,dl)
+if test "$with_dlsym" = yes ; then
+if test $DFT_LWR_MODEL = shared || \
+   test $DFT_LWR_MODEL = libtool ; then
+	CF_REMOVE_LIB(LIBS,$LIBS,dl)
+fi
+fi
 ### Set up low-level terminfo dependencies for makefiles.
 
 # TICS_LIST and TINFO_LIST are needed to build libtic.so and libterm.so, but
 # do not need libdl
 TICS_LIST=
-CF_REMOVE_LIB(TINFO_LIST,$SHLIB_LIST,dl)
+if test "$with_dlsym" = yes ; then
+	CF_REMOVE_LIB(TINFO_LIST,$SHLIB_LIST,dl)
+fi
 
 if test "$with_ticlib" != no ; then
 
@@ -1527,7 +1534,7 @@ if test "$with_termlib" != no ; then
 	fi
 else
 	# the next lines are needed for linking libtic over libncurses
-	TINFO_NAME=${LIB_NAME}${DFT_ARG_SUFFIX}
+	TINFO_ARG_SUFFIX=${LIB_NAME}${DFT_ARG_SUFFIX}
 	TICS_LIST="$SHLIB_LIST -l${LIB_NAME}${DFT_ARG_SUFFIX}"
 
 	TINFO_ARGS="-L${LIB_DIR} -l${LIB_NAME}${DFT_ARG_SUFFIX}"
@@ -1537,7 +1544,9 @@ AC_SUBST(TINFO_DEP_SUFFIX)
 AC_SUBST(TINFO_LIB_SUFFIX)
 AC_SUBST(TINFO_ARGS)
 
-CF_REMOVE_LIB(TICS_LIST,$TICS_LIST,dl)
+if test "$with_dlsym" = yes ; then
+	CF_REMOVE_LIB(TICS_LIST,$TICS_LIST,dl)
+fi
 
 # needed for Ada95
 TINFO_ARGS2=`echo "$TINFO_ARGS" | sed -e 's,-L\.\./,-L../../,'`

@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.76 2006/12/30 16:03:27 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.77 2007/02/25 00:43:54 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -234,15 +234,16 @@ _nc_wgetch(WINDOW *win,
     T((T_CALLED("_nc_wgetch(%p)"), win));
 
     *result = 0;
-    if (win == 0 || SP == 0)
+    if (win == 0 || SP == 0) {
 	returnCode(ERR);
+    }
 
     if (cooked_key_in_fifo()) {
 	if (wgetch_should_refresh(win))
 	    wrefresh(win);
 
 	*result = fifo_pull();
-	returnCode(OK);
+	returnCode(*result >= KEY_MIN ? KEY_CODE_YES : OK);
     }
 #ifdef NCURSES_WGETCH_EVENTS
     if (evl && (evl->count == 0))
@@ -281,12 +282,10 @@ _nc_wgetch(WINDOW *win,
 	/* Return it first */
 	if (rc == KEY_EVENT) {
 	    *result = rc;
-	    returnCode(OK);
-	}
+	} else
 #endif
-
-	*result = fifo_pull();
-	returnCode(OK);
+	    *result = fifo_pull();
+	returnCode(*result >= KEY_MIN ? KEY_CODE_YES : OK);
     }
 
     if (win->_use_keypad != SP->_keypad_on)
@@ -318,7 +317,7 @@ _nc_wgetch(WINDOW *win,
 #ifdef NCURSES_WGETCH_EVENTS
 	    if (rc & 4) {
 		*result = KEY_EVENT;
-		returnCode(OK);
+		returnCode(KEY_CODE_YES);
 	    }
 #endif
 	    if (!rc)

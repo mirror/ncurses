@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.73 2007/02/17 21:31:09 tom Exp $
+# $Id: mk-1st.awk,v 1.75 2007/02/24 22:10:21 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -164,11 +164,7 @@ function sharedlinks(directory) {
 		}
 	}
 function shlib_build(directory) {
-		if ( ShlibVer == "cygdll" ) {
-			dst_libs = sprintf("%s/$(SHARED_LIB) %s/$(IMPORT_LIB)", directory, directory);
-		} else {
-			dst_libs = sprintf("%s/%s", directory, end_name);
-		}
+		dst_libs = sprintf("%s/%s", directory, end_name);
 		printf "%s : \\\n", dst_libs
 		printf "\t\t%s \\\n", directory
 		if (subset ~ /^base/ || subset == "ticlib" ) {
@@ -193,20 +189,8 @@ function shlib_build(directory) {
 		sharedlinks(directory)
 	}
 function shlib_install(directory) {
-		if ( ShlibVer == "cygdll" ) {
-			src_lib1 = sprintf("%s/$(SHARED_LIB)", "../lib");
-			src_lib2 = sprintf("%s/$(IMPORT_LIB)", "../lib");
-			src_libs = sprintf("%s %s", src_lib1, src_lib2);
-			dst_lib1 = sprintf("%s/$(SHARED_LIB)", directory);
-			dst_lib2 = sprintf("%s/$(IMPORT_LIB)", directory);
-			dst_libs = sprintf("%s %s", dst_lib1, dst_lib2);
-		} else {
-			src_lib1 = sprintf("../lib/%s", end_name);
-			src_lib2 = ""
-			src_libs = src_lib1
-			dst_lib1 = sprintf("%s/%s", directory, end_name);
-			dst_libs = dst_lib1;
-		}
+		src_lib1 = sprintf("../lib/%s", end_name);
+		dst_lib1 = sprintf("%s/%s", directory, end_name);
 		printf "%s : \\\n", dst_libs
 		printf "\t\t%s \\\n", directory
 		printf "\t\t%s\n", src_libs
