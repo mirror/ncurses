@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: dist.mk,v 1.579 2007/02/18 15:15:32 tom Exp $
+# $Id: dist.mk,v 1.581 2007/03/04 00:04:01 tom Exp $
 # Makefile for creating ncurses distributions.
 #
 # This only needs to be used directly as a makefile by developers, but
@@ -37,7 +37,7 @@ SHELL = /bin/sh
 # These define the major/minor/patch versions of ncurses.
 NCURSES_MAJOR = 5
 NCURSES_MINOR = 6
-NCURSES_PATCH = 20070224
+NCURSES_PATCH = 20070303
 
 # We don't append the patch to the version, since this only applies to releases
 VERSION = $(NCURSES_MAJOR).$(NCURSES_MINOR)
@@ -106,6 +106,7 @@ manhtml:
 	   fi ;\
 	done
 	# change some things to make weblint happy:
+	@cat man_alias.sed           >> subst.tmp
 	@echo 's/<B>/<STRONG>/g'     >> subst.tmp
 	@echo 's/<\/B>/<\/STRONG>/g' >> subst.tmp
 	@echo 's/<I>/<EM>/g'         >> subst.tmp

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.43 2007/02/24 21:57:31 tom Exp $
+# $Id: Makefile.in,v 1.44 2007/03/03 20:51:25 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -95,7 +95,7 @@ LINK		= $(LIBTOOL_LINK) $(CC)
 LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 SHLIB_DIRS	= -L../lib
-SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@LIB_SUFFIX@ @SHLIB_LIST@
+SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@LIB_SUFFIX@ # @SHLIB_LIST@
 
 MK_SHARED_LIB	= @MK_SHARED_LIB@
 

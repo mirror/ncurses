@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.281 2007/01/06 23:32:00 tom Exp $
+$Id: ncurses.c,v 1.282 2007/03/03 21:26:24 tom Exp $
 
 ***************************************************************************/
 
@@ -3379,7 +3379,7 @@ FRAME
     WINDOW *wind;
 };
 
-#ifdef NCURSES_VERSION
+#if defined(NCURSES_VERSION) && !NCURSES_OPAQUE
 #define keypad_active(win) (win)->_use_keypad
 #define scroll_active(win) (win)->_scroll
 #else

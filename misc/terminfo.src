@@ -15183,6 +15183,88 @@ ncr7901|ncr 7901 model,
 	sgr0=^O, smso=\E0Q\016, smul=\E0`\016,
 	vpa=\013%p1%{64}%+%c,
 
+# Newbury Data Recording Limited (Newbury Data)
+#
+# Have been manufacturing and reselling  various peripherals for a long time
+# They don't make terminals anymore, but are still in business (in 2007).
+# Their e-mail address is at ndsales@newburydata.co.uk
+# and their post address is:
+#
+# Newbury Data Recording Ltd,
+# Premier Park, Road One,
+# Winsford, Cheshire, CW7 3PT
+#
+# Their technical support is still good, they sent me for free a printed copy
+# of the 9500 user manual and I got it just 1 week after I first contacted them
+# (in 2005)!
+
+# NDR 9500
+# Manufactured in the early/mid eighties, behaves almost the same as a
+# Televideo 950.  Take a 950, change its cabinet for a more 80s-ish one (but
+# keep the same keyboard layout), add an optional 25-line mode, replace the DIP
+# switches with a menu and remove the "lock line" feature (ESC !  1 and ESC ! 
+# 2), here is the NDR 9500.  Even the line-lock, albeit disabled, is
+# recognized:  if you type in "ESC !", the next (third) character is not
+# echoed, showing that the terminal was actually waiting for a parameter!
+ndr9500|nd9500|Newbury Data 9500,
+	xon, hs, am, bw, ul, mir, msgr, mc5i,
+	cols#80, lines#24, wsl#79,
+	is2=\Ew\E'\EDF\El\Er\EO,
+	civis=\E.0, cnorm=\E.1,
+	bel=^G, flash=\Eb$<50/>\Ed, cr=^M, nel=^_,
+	ht=^I, cbt=\EI, hts=\E1, tbc=\E3,
+	clear=\E;, el=\ET, ed=\EY,
+	cud1=^V, cub1=^H, cuf1=^L, cuu1=^K, home=^^,
+	ind=^j, ri=\Ej,
+	cup=\E=%p1%{32}%+%c%p2%{32}%+%c,
+	dch1=\EW, dl1=\ER,
+	ich1=\EQ, il1=\EE,
+	el=\ET, ed=\EY,
+	dim=\E), prot=\E),
+	smso=\E), rmso=\E(,
+	smacs=\E$, rmacs=\E%%, acsc=qKnImAjDwNuLtMvOlBkCxJ,
+	sgr0=\EG0\E%%\E(,
+	sgr=\E%%\E(%?%p1%p5%p8%|%|%t\E)%;%?%p9%t\E$%;,
+	smir=\Eq, rmir=\Er,
+	smxon=^O, rmxon=^N,
+	dsl=\Eh, fsl=\r, tsl=\Eg\Ef^I%p1%{32}%+%c,
+	mc5=\E`, mc4=\Ea,
+	kcud1=^V, kcub1=^H, kcuf1=^L, kcuu1=^K,
+	kcbt=\EI,
+	.kbs=^H, kclr=^Z, kel=\ET, ked=\EY,
+	                  kEOL=\Et,
+	kdch1=\EW, kdl1=\ER, kich1=\EQ, kil1=\EE,
+	kDC=\Er,   kDL=\EO,  kIC=\Eq,
+	kent=^M, khome=^^, kprt=\EP,
+	kf1=^A@\r, kf2=^AA\r, kf3=^AB\r, kf4=^AC\r, kf5=^AD\r, kf6=^AE\r, kf7=^AF\r, kf8=^AG\r, kf9=^AH\r, kf10=^AI\r, kf11=^AJ\r, kf12=^A`\r, kf13=^Aa\r, kf14=^Ab\r, kf15=^Ac\r, kf16=^Ad\r, kf17=^Ae\r, kf18=^Af\r, kf19=^Ag\r, kf20=^Ah\r, kf21=^Ai\r, kf22=^Aj\r,
+	pkey_local=\E|%{48}%p1%+%c2%p2^Y, pkey_xmit=\E|%{48}%p1%+%c1%p2^Y,
+
+ndr9500-nl|NDR 9500 with no status line,
+	hs@, wsl@, dsl@, fsl@, tsl@, use=ndr9500,
+
+ndr9500-25|NDR 9500 with 25th line enabled,
+	lines#25, use=ndr9500,
+
+ndr9500-25-nl|NDR 9500 with 25 lines and no status line,
+	lines#25, use=ndr9500-nl,
+
+ndr9500-mc|NDR 9500 with magic cookies (enables underline inverse video invisible and blink),
+	msgr@,
+	xmc#1,
+	blink=\EG2, rev=\EG4, invis=\EG1, smul=\EG8, rmul=\EG0, smso=\EG4, rmso=\EG0,
+	sgr0=\EG0\E%%\E(,
+	sgr=\E%%\E(%?%p5%p8%|%t\E)%;%?%p9%t\E$%;\EG%{48}%?%p7%t%{1}%+%;%?%p4%t%{2}%+%;%?%p3%p1%|%t%{4}%+%;%?%p2%t%{8}%+%;%c,
+	use=ndr9500,
+
+ndr9500-25-mc|NDR 500 with 25 lines and magic cookies,
+	lines#25, use=ndr9500-mc,
+
+ndr9500-mc-nl|NDR 9500 with magic cookies and no status line,
+	hs@, wsl@, dsl@, fsl@, tsl@, use=ndr9500-mc,
+
+ndr9500-25-mc-nl|NDR 9500 with 25 lines and magic cookies and no status line,
+	lines#25, use=ndr9500-mc-nl,
+
 #### Perkin-Elmer (Owl)
 #
 # These are official terminfo entries from within Perkin-Elmer.
@@ -21308,6 +21390,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2006-10-07
 #	* add several GNU Screen variations with 16- and 256-colors, and
 #	  status line (Alain Bench).
+#
+# 2007-03-03
+#	* add Newbury Data entries (Jean-Charles Billaud).
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

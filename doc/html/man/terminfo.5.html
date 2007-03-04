@@ -32,9 +32,9 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: terminfo.head,v 1.14 2006/12/24 15:29:28 tom Exp @
+  * @Id: terminfo.head,v 1.15 2006/12/24 18:04:42 tom Exp @
   * Head of terminfo man page ends here
-  * @Id: terminfo.tail,v 1.45 2006/12/24 15:27:57 tom Exp @
+  * @Id: terminfo.tail,v 1.47 2006/12/24 18:14:22 tom Exp @
   * Beginning of terminfo.tail file
   * This file is part of ncurses.
   * See "terminfo.head" for copyright.
@@ -78,7 +78,7 @@
        nals by giving a set of capabilities which they  have,  by
        specifying how to perform screen operations, and by speci-
        fying padding requirements and  initialization  sequences.
-       This describes <STRONG>ncurses</STRONG> version 5.6 (patch 20061224).
+       This describes <STRONG>ncurses</STRONG> version 5.6 (patch 20070303).
 
        Entries in <EM>terminfo</EM> consist of a sequence of `,' separated
        fields (embedded commas may be escaped with a backslash or
@@ -95,13 +95,13 @@
 
        Lines beginning with a `#' in the first column are treated
        as  comments.  While comment lines are legal at any point,
-       the output of <EM>captoinfo</EM> and <EM>infotocap</EM>  (aliases  for  <EM>tic</EM>)
+       the output of <STRONG>captoinfo</STRONG> and <STRONG>infotocap</STRONG>  (aliases  for  <STRONG>tic</STRONG>)
        will move comments so they occur only between entries.
 
        Newlines  and  leading  tabs  may  be  used for formatting
        entries for readability.  These are  removed  from  parsed
-       entries.   The  <EM>infocmp</EM> <EM>-f</EM> option relies on this to format
-       if-then-else expressions: the result can be read by <EM>tic</EM>.
+       entries.   The  <STRONG>infocmp</STRONG> <STRONG>-f</STRONG> option relies on this to format
+       if-then-else expressions: the result can be read by <STRONG>tic</STRONG>.
 
        Terminal names (except for the last, verbose entry) should
        be chosen using the following conventions.  The particular
@@ -1234,7 +1234,7 @@
    <STRONG>Parameterized</STRONG> <STRONG>Strings</STRONG>
        Cursor addressing and other strings  requiring  parameters
        in  the  terminal  are described by a parameterized string
-       capability, with <STRONG><A HREF="printf.3S.html">printf(3S)</A></STRONG> like escapes <STRONG>%x</STRONG>  in  it.   For
+       capability, with <STRONG><A HREF="printf.3.html">printf(3)</A></STRONG> like escapes  <STRONG>%x</STRONG>  in  it.   For
        example,  to  address  the  cursor,  the <STRONG>cup</STRONG> capability is
        given, using two parameters: the row and column to address
        to.  (Rows and columns are numbered from zero and refer to
@@ -2351,7 +2351,7 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="printf.3S.html">printf(3S)</A></STRONG>, <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.
+       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="printf.3.html">printf(3)</A></STRONG>, <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.
 
 
 </PRE>

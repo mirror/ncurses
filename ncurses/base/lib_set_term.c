@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.93 2006/12/30 21:40:58 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.94 2007/03/03 21:12:48 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -484,6 +484,15 @@ _nc_setupscreen(int slines,
     }
 
     /* initialize normal acs before wide, since we use mapping in the latter */
+#if !USE_WIDEC_SUPPORT
+    if (_nc_unicode_locale() && _nc_locale_breaks_acs()) {
+	acs_chars = NULL;
+	ena_acs = NULL;
+	enter_alt_charset_mode = NULL;
+	exit_alt_charset_mode = NULL;
+	set_attributes = NULL;
+    }
+#endif
     _nc_init_acs();
 #if USE_WIDEC_SUPPORT
     _nc_init_wacs();

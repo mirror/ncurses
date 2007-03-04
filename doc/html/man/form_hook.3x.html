@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998,2006 Free Software Foundation, Inc.                   *
+  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_hook.3x,v 1.8 2006/11/04 17:12:00 tom Exp @
+  * @Id: form_hook.3x,v 1.9 2007/02/24 17:34:18 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -55,14 +55,14 @@
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
-       int set_field_init(FORM *form, void (*func)(FORM *));
-       void (*)(FORM *) field_init(const FORM *form);
-       int set_field_term(FORM *form, void (*func)(FORM *));
-       void (*)(FORM *) field_term(const FORM *form);
-       int set_form_init(FORM *form, void (*func)(FORM *));
-       void (*)(FORM *) form_init(const FORM *form);
-       int set_form_term(FORM *form, void (*func)(FORM *));
-       void (*)(FORM *) form_term(const FORM *form);
+       int set_field_init(FORM *form, Form_Hook func);
+       Form_Hook field_init(const FORM *form);
+       int set_field_term(FORM *form, Form_Hook func);
+       Form_Hook field_term(const FORM *form);
+       int set_form_init(FORM *form, Form_Hook func);
+       Form_Hook form_init(const FORM *form);
+       int set_form_term(FORM *form, Form_Hook func);
+       Form_Hook form_term(const FORM *form);
 
 
 </PRE>

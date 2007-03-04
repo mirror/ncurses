@@ -42,7 +42,7 @@
 #include "internal.h"
 #include "cursesw.h"
 
-MODULE_ID("$Id: cursesw.cc,v 1.46 2007/01/27 22:31:12 tom Exp $")
+MODULE_ID("$Id: cursesw.cc,v 1.47 2007/03/03 21:49:24 tom Exp $")
 
 #define COLORS_NEED_INITIALIZATION  -1
 #define COLORS_NOT_INITIALIZED       0
@@ -356,12 +356,18 @@ NCursesWindow::useColors(void)
 }
 
 short
+NCursesWindow::getPair() const
+{
+    return static_cast<short>(PAIR_NUMBER(getattrs(w)));
+}
+
+short
 NCursesWindow::getcolor(int getback) const
 {
     short fore, back;
 
     if (HaveColors()) {
-	if (::pair_content(static_cast<short>(PAIR_NUMBER(w->_attrs)), &fore, &back) == ERR)
+	if (::pair_content(getPair(), &fore, &back) == ERR)
 	    err_handler("Can't get color pair");
     } else {
 	// Monochrome means white on black
@@ -379,7 +385,7 @@ int NCursesWindow::NumberOfColors()
 short
 NCursesWindow::getcolor() const
 {
-    return (HaveColors()) ? PAIR_NUMBER(w->_attrs) : 0;
+    return (HaveColors()) ? getPair() : 0;
 }
 
 int
@@ -391,7 +397,7 @@ NCursesWindow::setpalette(short fore, short back, short pair)
 int
 NCursesWindow::setpalette(short fore, short back)
 {
-    return setpalette(fore, back, static_cast<short>(PAIR_NUMBER(w->_attrs)));
+    return setpalette(fore, back, getPair());
 }
 
 

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1092 2007/02/25 00:45:56 tom Exp $
+-- $Id: NEWS,v 1.1096 2007/03/04 00:17:25 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,25 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070303
+	+ regenerated html documentation.
+	+ add NCURSES_OPAQUE symbol to curses.h, will use to make structs
+	  opaque in selected configurations.
+	+ move the chunk in lib_acs.c which resets acs capabilities when
+	  running on a terminal whose locale interferes with those into
+	  _nc_setupscreen(), so the libtinfo/libtinfow files can be made
+	  identical (requested by Miroslav Lichvar).
+	+ do not use configure variable SHLIB_LIBS for building libraries
+	  outside the ncurses directory, since that symbol is customized
+	  only for that directory, and using it introduces an unneeded
+	  dependency on libdl (requested by Miroslav Lichvar).
+	+ modify mk-1st.awk so the generated makefile rules for linking or
+	  installing shared libraries do not first remove the library, in
+	  case it is in use, e.g., libncurses.so by /bin/sh (report by Jeff
+	  Chua).
+	+ revised section "Using NCURSES under XTERM" in ncurses-intro.html
+	  (prompted by newsgroup comment by Nick Guenther).
 
 20070224
 	+ change internal return codes of _nc_wgetch() to check for cases
@@ -71,7 +90,7 @@ it is not possible to add this information.
 	+ remove "-ldl" from some library lists to reduce dependencies in
 	  programs (report by Miroslav Lichvar).
 	+ correct description of --enable-signed-char in configure --help
-	  (report by Michail Vidiassov).   
+	  (report by Michail Vidiassov).
 	+ add pattern for GNU/kFreeBSD configuration to CF_XOPEN_SOURCE,
 	  which matches an earlier change to CF_SHARED_OPTS, from xterm #224
 	  fixes.
@@ -90,7 +109,7 @@ it is not possible to add this information.
 
 20070203
 	+ modify fix_wchnstr() in form library to strip attributes (and color)
-	  from the cchar_t array (field cells) read from a field's window. 
+	  from the cchar_t array (field cells) read from a field's window.
 	  Otherwise, when copying the field cells back to the window, the
 	  associated color overrides the field's background color (report by
 	  Ricardo Cantu).
@@ -102,7 +121,7 @@ it is not possible to add this information.
 	  no longer relies on it.
 	+ disallow combining configure script options --with-ticlib and
 	  --enable-termcap (report by Rong-En Fan).
-	+ remove tack from ncurses tree.  
+	+ remove tack from ncurses tree.
 
 20070128
 	+ fix typo in configure script that broke --with-termlib option
@@ -118,7 +137,7 @@ it is not possible to add this information.
 	+ review/eliminate other original-file artifacts in cursesw.cc, making
 	  its license consistent with ncurses.
 	+ use ncurses vw_scanw() rather than reading into a fixed buffer in
-	  the c++ binding for scanw() methods.
+	  the c++ binding for scanw() methods (prompted by report by Nuno Dias).
 	+ eliminate fixed-buffer vsprintf() calls in c++ binding.
 
 20070120

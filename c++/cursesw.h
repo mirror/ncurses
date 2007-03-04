@@ -30,7 +30,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.41 2007/01/27 22:29:36 tom Exp $
+// $Id: cursesw.h,v 1.42 2007/03/03 21:49:18 tom Exp $
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -707,6 +707,7 @@ private:
   void           set_keyboard();
 
   short          getcolor(int getback) const;
+  short          getPair() const;
 
   static int     setpalette(short fore, short back, short pair);
   static int     colorInitialized;
@@ -820,16 +821,16 @@ public:
   int            width() const { return maxx() + 1; }
   // Number of columns in this window
 
-  int            begx() const { return w->_begx; }
+  int            begx() const { return getbegx(w); }
   // Column of top left corner relative to stdscr
 
-  int            begy() const { return w->_begy; }
+  int            begy() const { return getbegy(w); }
   // Line of top left corner relative to stdscr
 
-  int            maxx() const { return w->_maxx; }
+  int            maxx() const { return getmaxx(w) == ERR ? ERR : getmaxx(w)-1; }
   // Largest x coord in window
 
-  int            maxy() const { return w->_maxy; }
+  int            maxy() const { return getmaxy(w) == ERR ? ERR : getmaxy(w)-1; }
   // Largest y coord in window
 
   short          getcolor() const;

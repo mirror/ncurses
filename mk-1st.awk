@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.75 2007/02/24 22:10:21 tom Exp $
+# $Id: mk-1st.awk,v 1.76 2007/03/03 20:26:06 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -178,7 +178,6 @@ function shlib_build(directory) {
 		}
 		printf "\t\t$(%s_OBJS)\n", OBJS
 		printf "\t@echo linking $@\n"
-		print "\t-@rm -f %s", dst_libs;
 		if ( is_ticlib() ) {
 			make_shlib(OBJS, "TICS_LIST")
 		} else if ( is_termlib() ) {
@@ -195,7 +194,6 @@ function shlib_install(directory) {
 		printf "\t\t%s \\\n", directory
 		printf "\t\t%s\n", src_libs
 		printf "\t@echo installing $@\n"
-		print "\t-@rm -f %s", dst_libs;
 		printf "\t$(INSTALL_LIB) %s %s\n", src_lib1, dst_lib1;
 		if ( src_lib2 != "" ) {
 			printf "\t$(INSTALL_LIB) %s %s\n", src_lib2, dst_lib2;
@@ -206,7 +204,6 @@ function install_dll(directory,filename) {
 		src_name = sprintf("../lib/%s", filename);
 		dst_name = sprintf("$(DESTDIR)%s/%s", directory, filename);
 		printf "\t@echo installing %s as %s\n", src_name, dst_name
-		printf "\t-@rm -f %s\n", dst_name
 		if ( directory == "$(bindir)" ) {
 			program = "$(INSTALL) -m 755";
 		} else {

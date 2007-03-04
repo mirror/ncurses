@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.319 2007/01/06 21:16:26 tom Exp $
+ * $Id: curses.priv.h,v 1.321 2007/03/03 21:56:33 tom Exp $
  *
  *	curses.priv.h
  *
@@ -249,6 +249,9 @@ color_t;
 #define wgetbkgrnd(win, wch)	*wch = win->_bkgd
 #define wbkgrnd	    wbkgd
 #endif
+
+#undef NCURSES_OPAQUE
+#define NCURSES_OPAQUE 0
 
 #include <curses.h>	/* we'll use -Ipath directive to get the right one! */
 #include <term.h>

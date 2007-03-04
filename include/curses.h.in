@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.167 2006/11/26 01:14:54 tom Exp $ */
+/* $Id: curses.h.in,v 1.168 2007/03/03 21:52:38 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -101,6 +101,13 @@
  */
 #undef	NCURSES_COLOR_T
 #define	NCURSES_COLOR_T short
+
+/*
+ * Definition used to make WINDOW and similar structs opaque.
+ */
+#ifndef NCURSES_OPAQUE
+#define NCURSES_OPAQUE 0
+#endif
 
 /*
  * The internal type used for window dimensions.
@@ -353,6 +360,7 @@ cchar_t;
 
 #endif /* _XOPEN_SOURCE_EXTENDED */
 
+#if !NCURSES_OPAQUE
 struct ldat;
 
 struct _win_st
@@ -409,6 +417,7 @@ struct _win_st
 #endif
 #endif
 };
+#endif /* NCURSES_OPAQUE */
 
 extern NCURSES_EXPORT_VAR(WINDOW *)   stdscr;
 extern NCURSES_EXPORT_VAR(WINDOW *)   curscr;
@@ -836,6 +845,7 @@ extern NCURSES_EXPORT_VAR(char) ttytype[];	/* needed for backward compatibility 
 /*
  * These functions are not in X/Open, but we use them in macro definitions:
  */
+extern NCURSES_EXPORT(int) getattrs (const WINDOW *);			/* generated */
 extern NCURSES_EXPORT(int) getcurx (const WINDOW *);			/* generated */
 extern NCURSES_EXPORT(int) getcury (const WINDOW *);			/* generated */
 extern NCURSES_EXPORT(int) getbegx (const WINDOW *);			/* generated */
@@ -892,12 +902,14 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 #define getmaxyx(win,y,x)	(y = getmaxy(win), x = getmaxx(win))
 #define getparyx(win,y,x)	(y = getpary(win), x = getparx(win))
 
+#if !NCURSES_OPAQUE
 #define getsyx(y,x) do { if(newscr->_leaveok) (y)=(x)=-1; \
 			 else getyx(newscr,(y),(x)); \
 		    } while(0)
 #define setsyx(y,x) do { if((y)==-1 && (x)==-1) newscr->_leaveok=TRUE; \
 			 else {newscr->_leaveok=FALSE;wmove(newscr,(y),(x));} \
 		    } while(0)
+#endif /* NCURSES_OPAQUE */
 
 #ifndef NCURSES_NOMACROS
 
@@ -918,6 +930,7 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 #define gettmode()
 
 /* It seems older SYSV curses versions define these */
+#if !NCURSES_OPAQUE
 #define getattrs(win)		((win)?(win)->_attrs:A_NORMAL)
 #define getcurx(win)		((win)?(win)->_curx:ERR)
 #define getcury(win)		((win)?(win)->_cury:ERR)
@@ -927,6 +940,7 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 #define getmaxy(win)		((win)?((win)->_maxy + 1):ERR)
 #define getparx(win)		((win)?(win)->_parx:ERR)
 #define getpary(win)		((win)?(win)->_pary:ERR)
+#endif /* NCURSES_OPAQUE */
 
 #define wstandout(win)      	(wattrset(win,A_STANDOUT))
 #define wstandend(win)      	(wattrset(win,A_NORMAL))
@@ -934,12 +948,14 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 #define wattron(win,at)		wattr_on(win, NCURSES_CAST(attr_t, at), NULL)
 #define wattroff(win,at)	wattr_off(win, NCURSES_CAST(attr_t, at), NULL)
 
+#if !NCURSES_OPAQUE
 #if defined(_XOPEN_SOURCE_EXTENDED) && @NCURSES_EXT_COLORS@
 #define wattrset(win,at)	((win)->_color = PAIR_NUMBER(at), \
 				 (win)->_attrs = (at))
 #else
 #define wattrset(win,at)	((win)->_attrs = (at))
 #endif
+#endif /* NCURSES_OPAQUE */
 
 #define scroll(win)		wscrl(win,1)
 
@@ -956,7 +972,10 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 #define winchstr(w, s)		winchnstr(w, s, -1)
 #define winsstr(w, s)		winsnstr(w, s, -1)
 
+#if !NCURSES_OPAQUE
 #define redrawwin(win)		wredrawln(win, 0, (win)->_maxy+1)
+#endif /* NCURSES_OPAQUE */
+
 #define waddstr(win,str)	waddnstr(win,str,-1)
 #define waddchstr(win,str)	waddchnstr(win,str,-1)
 
@@ -1064,11 +1083,14 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 /*
  * Some wide-character functions can be implemented without the extensions.
  */
+#if !NCURSES_OPAQUE
 #define getbkgd(win)                    ((win)->_bkgd)
+#endif /* NCURSES_OPAQUE */
 
 #define slk_attr_off(a,v)		((v) ? ERR : slk_attroff(a))
 #define slk_attr_on(a,v)		((v) ? ERR : slk_attron(a))
 
+#if !NCURSES_OPAQUE
 #if defined(_XOPEN_SOURCE_EXTENDED) && @NCURSES_EXT_COLORS@
 #define wattr_set(win,a,p,opts)		((win)->_attrs = ((a) & ~A_COLOR), \
 					 (win)->_color = (p), \
@@ -1082,6 +1104,7 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 					 (void)((p) != 0 && (*(p) = PAIR_NUMBER((win)->_attrs))), \
 					 OK)
 #endif
+#endif /* NCURSES_OPAQUE */
 
 /*
  * XSI curses deprecates SVr4 vwprintw/vwscanw, which are supposed to use

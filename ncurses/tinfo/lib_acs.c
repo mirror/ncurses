@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.30 2006/01/07 21:27:15 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.31 2007/03/03 21:12:34 tom Exp $")
 
 #if BROKEN_LINKER
 NCURSES_EXPORT_VAR(chtype *)
@@ -116,16 +116,6 @@ _nc_init_acs(void)
     real_map['{'] = '*';	/* should be greek pi */
     real_map['|'] = '!';	/* should be not-equal */
     real_map['}'] = 'f';	/* should be pound-sterling symbol */
-
-#if !USE_WIDEC_SUPPORT
-    if (_nc_unicode_locale() && _nc_locale_breaks_acs()) {
-	acs_chars = NULL;
-	ena_acs = NULL;
-	enter_alt_charset_mode = NULL;
-	exit_alt_charset_mode = NULL;
-	set_attributes = NULL;
-    }
-#endif
 
     if (ena_acs != NULL) {
 	TPUTS_TRACE("ena_acs");
