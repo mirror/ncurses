@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.76 2007/03/03 20:26:06 tom Exp $
+# $Id: mk-1st.awk,v 1.77 2007/03/11 13:37:22 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -190,14 +190,11 @@ function shlib_build(directory) {
 function shlib_install(directory) {
 		src_lib1 = sprintf("../lib/%s", end_name);
 		dst_lib1 = sprintf("%s/%s", directory, end_name);
-		printf "%s : \\\n", dst_libs
+		printf "%s : \\\n", dst_lib1
 		printf "\t\t%s \\\n", directory
-		printf "\t\t%s\n", src_libs
+		printf "\t\t%s\n", src_lib1
 		printf "\t@echo installing $@\n"
 		printf "\t$(INSTALL_LIB) %s %s\n", src_lib1, dst_lib1;
-		if ( src_lib2 != "" ) {
-			printf "\t$(INSTALL_LIB) %s %s\n", src_lib2, dst_lib2;
-		}
 		sharedlinks(directory)
 	}
 function install_dll(directory,filename) {

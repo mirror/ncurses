@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1099 2007/03/11 00:10:14 tom Exp $
+-- $Id: NEWS,v 1.1100 2007/03/11 13:57:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070311
+	+ fix mk-1st.awk script install_shlib() function, broken in 20070224
+	  changes for cygwin (report by  Michail Vidiassov).
 
 20070310
 	+ increase size of array in _nc_visbuf2n() to make "tic -v" work
