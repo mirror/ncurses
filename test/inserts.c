@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inserts.c,v 1.15 2006/10/14 20:43:46 tom Exp $
+ * $Id: inserts.c,v 1.17 2007/03/11 00:19:00 tom Exp $
  *
  * Demonstrate the winsstr() and winsch functions.
  * Thomas Dickey - 2002/10/19
@@ -50,7 +50,7 @@
 #define MvWInsCh   mvwinsch
 #define WInsCh     winsch
 
-#define TABSIZE 8
+#define MY_TABSIZE 8
 
 typedef enum {
     oDefault = 0,
@@ -116,7 +116,7 @@ ColOf(char *buffer, int length, int margin)
 		--result;
 	    break;
 	case '\t':
-	    result += (TABSIZE - (result % TABSIZE));
+	    result += (MY_TABSIZE - (result % MY_TABSIZE));
 	    break;
 	case '\177':
 	    result += 2;
@@ -147,7 +147,7 @@ test_inserts(int level)
     WINDOW *look = 0;
     WINDOW *work = 0;
     WINDOW *show = 0;
-    int margin = (2 * TABSIZE) - 1;
+    int margin = (2 * MY_TABSIZE) - 1;
     Options option = (Options) ((unsigned) (m_opt
 					    ? oMove
 					    : oDefault)
@@ -181,7 +181,7 @@ test_inserts(int level)
     }
     keypad(work, TRUE);
 
-    for (col = margin + 1; col < COLS; col += TABSIZE)
+    for (col = margin + 1; col < COLS; col += MY_TABSIZE)
 	mvwvline(work, row, col, '.', limit - 2);
 
     mvwvline(work, row, margin, ACS_VLINE, limit - 2);

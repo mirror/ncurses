@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.21 2006/12/02 21:20:28 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.22 2007/03/11 00:03:11 tom Exp $")
 
 static const char d_quote[] = {D_QUOTE, 0};
 static const char l_brace[] = {L_BRACE, 0};
@@ -99,7 +99,7 @@ _nc_visbuf2n(int bufnum, const char *buf, int len)
     tp = vbuf = _nc_trace_buf(bufnum, (unsigned) (len * 4) + 5);
 #else
     {
-	static char *mybuf[2];
+	static char *mybuf[4];
 	mybuf[bufnum] = typeRealloc(char, (unsigned) (len * 4) + 5, mybuf[bufnum]);
 	tp = vbuf = mybuf[bufnum];
     }

@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.168 2007/03/03 21:52:38 tom Exp $ */
+/* $Id: curses.h.in,v 1.170 2007/03/10 18:15:33 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -105,15 +105,15 @@
 /*
  * Definition used to make WINDOW and similar structs opaque.
  */
-#ifndef NCURSES_OPAQUE
-#define NCURSES_OPAQUE 0
+#ifndef @cf_cv_enable_opaque@
+#define NCURSES_OPAQUE @NCURSES_OPAQUE@
 #endif
 
 /*
  * The internal type used for window dimensions.
  */
 #undef	NCURSES_SIZE_T
-#define	NCURSES_SIZE_T short
+#define	NCURSES_SIZE_T @NCURSES_SIZE_T@
 
 /*
  * Control whether tparm() supports varargs or fixed-parameter list.
@@ -213,9 +213,6 @@ extern "C" {
 #define WA_VERTICAL	A_VERTICAL
 
 /* colors */
-extern NCURSES_EXPORT_VAR(int) COLORS;
-extern NCURSES_EXPORT_VAR(int) COLOR_PAIRS;
-
 #define COLOR_BLACK	0
 #define COLOR_RED	1
 #define COLOR_GREEN	2
@@ -227,8 +224,8 @@ extern NCURSES_EXPORT_VAR(int) COLOR_PAIRS;
 
 /* line graphics */
 
-#if @BROKEN_LINKER@
-extern NCURSES_EXPORT_VAR(chtype*) _nc_acs_map(void);
+#if @BROKEN_LINKER@ || @cf_cv_enable_reentrant@
+NCURSES_WRAPPED_VAR(chtype*, acs_map);
 #define acs_map (_nc_acs_map())
 #else
 extern NCURSES_EXPORT_VAR(chtype) acs_map[];
@@ -418,19 +415,6 @@ struct _win_st
 #endif
 };
 #endif /* NCURSES_OPAQUE */
-
-extern NCURSES_EXPORT_VAR(WINDOW *)   stdscr;
-extern NCURSES_EXPORT_VAR(WINDOW *)   curscr;
-extern NCURSES_EXPORT_VAR(WINDOW *)   newscr;
-
-extern NCURSES_EXPORT_VAR(int)	LINES;
-extern NCURSES_EXPORT_VAR(int)	COLS;
-extern NCURSES_EXPORT_VAR(int)	TABSIZE;
-
-/*
- * This global was an undocumented feature under AIX curses.
- */
-extern NCURSES_EXPORT_VAR(int) ESCDELAY;	/* ESC expire time in milliseconds */
 
 /*
  * These functions are extensions - not in XSI Curses.
@@ -840,8 +824,6 @@ extern NCURSES_EXPORT(char *) tparm (NCURSES_CONST char *, long,long,long,long,l
 extern NCURSES_EXPORT(char *) tparm_varargs (NCURSES_CONST char *, ...);	/* implemented */
 #endif
 
-extern NCURSES_EXPORT_VAR(char) ttytype[];	/* needed for backward compatibility */
-
 /*
  * These functions are not in X/Open, but we use them in macro definitions:
  */
@@ -1124,6 +1106,53 @@ NCURSES_EXPORT(int) vsscanf(const char *, const char *, va_list);
 #endif
 
 #endif /* NCURSES_NOMACROS */
+
+/*
+ * Public variables.
+ *
+ * Notes:
+ *	a. ESCDELAY was an undocumented feature under AIX curses.
+ *	   It gives the ESC expire time in milliseconds.
+ *	b. ttytype is needed for backward compatibility
+ */
+#if @cf_cv_enable_reentrant@
+
+NCURSES_WRAPPED_VAR(WINDOW *, curscr);
+NCURSES_WRAPPED_VAR(WINDOW *, newscr);
+NCURSES_WRAPPED_VAR(WINDOW *, stdscr);
+NCURSES_WRAPPED_VAR(char *, ttytype);
+NCURSES_WRAPPED_VAR(int, COLORS);
+NCURSES_WRAPPED_VAR(int, COLOR_PAIRS);
+NCURSES_WRAPPED_VAR(int, COLS);
+NCURSES_WRAPPED_VAR(int, ESCDELAY);
+NCURSES_WRAPPED_VAR(int, LINES);
+NCURSES_WRAPPED_VAR(int, TABSIZE);
+
+#define curscr      NCURSES_PUBLIC_VAR(curscr())
+#define newscr      NCURSES_PUBLIC_VAR(newscr())
+#define stdscr      NCURSES_PUBLIC_VAR(stdscr())
+#define ttytype     NCURSES_PUBLIC_VAR(ttytype())
+#define COLORS      NCURSES_PUBLIC_VAR(COLORS())
+#define COLOR_PAIRS NCURSES_PUBLIC_VAR(COLOR_PAIRS())
+#define COLS        NCURSES_PUBLIC_VAR(COLS())
+#define ESCDELAY    NCURSES_PUBLIC_VAR(ESCDELAY())
+#define LINES       NCURSES_PUBLIC_VAR(LINES())
+#define TABSIZE     NCURSES_PUBLIC_VAR(TABSIZE())
+
+#else
+
+extern NCURSES_EXPORT_VAR(WINDOW *) curscr;
+extern NCURSES_EXPORT_VAR(WINDOW *) newscr;
+extern NCURSES_EXPORT_VAR(WINDOW *) stdscr;
+extern NCURSES_EXPORT_VAR(char) ttytype[];
+extern NCURSES_EXPORT_VAR(int) COLORS;
+extern NCURSES_EXPORT_VAR(int) COLOR_PAIRS;
+extern NCURSES_EXPORT_VAR(int) COLS;
+extern NCURSES_EXPORT_VAR(int) ESCDELAY;
+extern NCURSES_EXPORT_VAR(int) LINES;
+extern NCURSES_EXPORT_VAR(int) TABSIZE;
+
+#endif
 
 /*
  * Pseudo-character tokens outside ASCII range.  The curses wgetch() function

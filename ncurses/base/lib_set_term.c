@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.94 2007/03/03 21:12:48 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.95 2007/03/10 23:52:01 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -57,11 +57,13 @@ set_term(SCREEN *screenp)
     _nc_set_screen(screenp);
 
     set_curterm(SP->_term);
+#if !USE_REENTRANT
     curscr = SP->_curscr;
     newscr = SP->_newscr;
     stdscr = SP->_stdscr;
     COLORS = SP->_color_count;
     COLOR_PAIRS = SP->_pair_count;
+#endif
 
     T((T_RETURN("%p"), oldSP));
     return (oldSP);
@@ -152,11 +154,13 @@ delscreen(SCREEN *sp)
      * multiple references in different screens).
      */
     if (sp == SP) {
+#if !USE_REENTRANT
 	curscr = 0;
 	newscr = 0;
 	stdscr = 0;
 	COLORS = 0;
 	COLOR_PAIRS = 0;
+#endif
 	_nc_set_screen(0);
     }
     returnVoid;
@@ -216,8 +220,8 @@ extract_fgbg(char *src, int *result)
 
 /* OS-independent screen initializations */
 NCURSES_EXPORT(int)
-_nc_setupscreen(int slines,
-		int scolumns,
+_nc_setupscreen(int slines GCC_UNUSED,
+		int scolumns GCC_UNUSED,
 		FILE *output,
 		bool filtered,
 		int slk_format)
@@ -243,12 +247,20 @@ _nc_setupscreen(int slines,
     if ((SP->_current_attr = typeCalloc(NCURSES_CH_T, 1)) == 0)
 	returnCode(ERR);
 
+    /*
+     * We should always check the screensize, just in case.
+     */
+    _nc_get_screensize(&slines, &scolumns);
+    SET_LINES(slines);
+    SET_COLS(scolumns);
+    T((T_CREATE("screen %s %dx%d"), termname(), LINES, COLS));
+
     SP->_filtered = filtered;
 
     /* implement filter mode */
     if (filtered) {
-	slines = LINES = 1;
-
+	slines = 1;
+	SET_LINES(slines);
 	clear_screen = 0;
 	cursor_down = parm_down_cursor = 0;
 	cursor_address = 0;
@@ -515,15 +527,17 @@ _nc_setupscreen(int slines,
     SP->newhash = 0;
 
     T(("creating newscr"));
-    if ((newscr = newwin(slines, scolumns, 0, 0)) == 0)
+    if ((SP->_newscr = newwin(slines, scolumns, 0, 0)) == 0)
 	returnCode(ERR);
 
     T(("creating curscr"));
-    if ((curscr = newwin(slines, scolumns, 0, 0)) == 0)
+    if ((SP->_curscr = newwin(slines, scolumns, 0, 0)) == 0)
 	returnCode(ERR);
 
-    SP->_newscr = newscr;
-    SP->_curscr = curscr;
+#if !USE_REENTRANT
+    newscr = SP->_newscr;
+    curscr = SP->_curscr;
+#endif
 #if USE_SIZECHANGE
     SP->_resize = resizeterm;
 #endif
@@ -564,9 +578,13 @@ _nc_setupscreen(int slines,
 
     T(("creating stdscr"));
     assert((SP->_lines_avail + SP->_topstolen + bottom_stolen) == slines);
-    if ((stdscr = newwin(LINES = SP->_lines_avail, scolumns, 0, 0)) == 0)
+    if ((SP->_stdscr = newwin(SP->_lines_avail, scolumns, 0, 0)) == 0)
 	returnCode(ERR);
-    SP->_stdscr = stdscr;
+
+    SET_LINES(SP->_lines_avail);
+#if !USE_REENTRANT
+    stdscr = SP->_stdscr;
+#endif
 
     returnCode(OK);
 }

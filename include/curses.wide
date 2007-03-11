@@ -1,10 +1,10 @@
+/* $Id: curses.wide,v 1.34 2007/03/10 17:52:23 tom Exp $ */
 /*
+ * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
  * (see that file for the relevant copyright).
  */
 #ifdef _XOPEN_SOURCE_EXTENDED
-
-/* $Id: curses.wide,v 1.33 2007/03/03 21:59:14 tom Exp $ */
 
 extern NCURSES_EXPORT_VAR(cchar_t *) _nc_wacs;
 

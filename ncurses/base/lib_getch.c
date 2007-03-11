@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,12 +41,20 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.77 2007/02/25 00:43:54 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.78 2007/03/10 19:22:28 tom Exp $")
 
 #include <fifo_defs.h>
 
+#if USE_REENTRANT
+NCURSES_EXPORT(int)
+NCURSES_PUBLIC_VAR(ESCDELAY) (void)
+{
+    return SP ? SP->_ESCDELAY : 1000;
+}
+#else
 NCURSES_EXPORT_VAR(int)
 ESCDELAY = 1000;		/* max interval betw. chars in funkeys, in millisecs */
+#endif
 
 #ifdef NCURSES_WGETCH_EVENTS
 #define TWAIT_MASK 7

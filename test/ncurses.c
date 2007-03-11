@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.282 2007/03/03 21:26:24 tom Exp $
+$Id: ncurses.c,v 1.283 2007/03/10 19:11:50 tom Exp $
 
 ***************************************************************************/
 
@@ -3395,6 +3395,7 @@ static bool
 HaveKeypad(FRAME * curp)
 {
     WINDOW *win = (curp ? curp->wind : stdscr);
+    (void) win;
     return keypad_active(win);
 }
 
@@ -3402,6 +3403,7 @@ static bool
 HaveScroll(FRAME * curp)
 {
     WINDOW *win = (curp ? curp->wind : stdscr);
+    (void) win;
     return scroll_active(win);
 }
 

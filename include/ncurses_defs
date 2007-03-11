@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.31 2007/02/03 16:37:17 tom Exp $
+# $Id: ncurses_defs,v 1.32 2007/03/10 15:40:16 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -188,6 +188,7 @@ USE_LINKS
 USE_MY_MEMMOVE
 USE_OK_BCOPY
 USE_RCS_IDS
+USE_REENTRANT
 USE_SAFE_SPRINTF
 USE_SCROLL_HINTS
 USE_SIGWINCH

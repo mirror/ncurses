@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.39 2007/02/03 23:09:20 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.40 2007/03/10 18:18:59 tom Exp $")
 
 static WINDOW *
 remove_window_from_screen(WINDOW *win)
@@ -52,16 +52,22 @@ remove_window_from_screen(WINDOW *win)
 	SCREEN *sp = *scan;
 	if (sp->_curscr == win) {
 	    sp->_curscr = 0;
+#if !USE_REENTRANT
 	    if (win == curscr)
 		curscr = 0;
+#endif
 	} else if (sp->_stdscr == win) {
 	    sp->_stdscr = 0;
+#if !USE_REENTRANT
 	    if (win == stdscr)
 		stdscr = 0;
+#endif
 	} else if (sp->_newscr == win) {
 	    sp->_newscr = 0;
+#if !USE_REENTRANT
 	    if (win == newscr)
 		newscr = 0;
+#endif
 	} else {
 	    scan = &(*scan)->_next_screen;
 	    continue;

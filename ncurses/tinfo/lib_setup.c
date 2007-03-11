@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey 1996-2003                                      *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.95 2006/07/28 22:58:13 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.96 2007/03/10 23:36:05 tom Exp $")
 
 /****************************************************************************
  *
@@ -99,10 +99,33 @@ MODULE_ID("$Id: lib_setup.c,v 1.95 2006/07/28 22:58:13 tom Exp $")
 # endif
 #endif
 
+#if USE_REENTRANT
+NCURSES_EXPORT(char *)
+NCURSES_PUBLIC_VAR(ttytype) (void)
+{
+    return cur_term ? cur_term->type.term_names : "";
+}
+NCURSES_EXPORT(int)
+NCURSES_PUBLIC_VAR(LINES) (void)
+{
+    return SP ? SP->_LINES : 0;
+}
+NCURSES_EXPORT(int)
+NCURSES_PUBLIC_VAR(COLS) (void)
+{
+    return SP ? SP->_COLS : 0;
+}
+NCURSES_EXPORT(int)
+NCURSES_PUBLIC_VAR(TABSIZE) (void)
+{
+    return SP ? SP->_TABSIZE : 8;
+}
+#else
 NCURSES_EXPORT_VAR(char) ttytype[NAMESIZE] = "";
 NCURSES_EXPORT_VAR(int) LINES = 0;
 NCURSES_EXPORT_VAR(int) COLS = 0;
 NCURSES_EXPORT_VAR(int) TABSIZE = 0;
+#endif
 
 static int _use_env = TRUE;
 
@@ -160,10 +183,12 @@ use_env(bool f)
     returnVoid;
 }
 
-static void
+void
 _nc_get_screensize(int *linep, int *colp)
 /* Obtain lines/columns values from the environment and/or terminfo entry */
 {
+    int my_tabsize;
+
     /* figure out the size of the screen */
     T(("screen size: terminfo lines = %d columns = %d", lines, columns));
 
@@ -251,9 +276,16 @@ _nc_get_screensize(int *linep, int *colp)
     T(("screen size is %dx%d", *linep, *colp));
 
     if (VALID_NUMERIC(init_tabs))
-	TABSIZE = (int) init_tabs;
+	my_tabsize = (int) init_tabs;
     else
-	TABSIZE = 8;
+	my_tabsize = 8;
+
+#if USE_REENTRANT
+    if (SP != 0)
+	SP->_TABSIZE = my_tabsize;
+#else
+    TABSIZE = my_tabsize;
+#endif
     T(("TABSIZE = %d", TABSIZE));
 }
 
@@ -536,8 +568,10 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 	if (command_character && getenv("CC"))
 	    do_prototype();
 
+#if !USE_REENTRANT
 	strncpy(ttytype, cur_term->type.term_names, NAMESIZE - 1);
 	ttytype[NAMESIZE - 1] = '\0';
+#endif
 
 	cur_term->Filedes = Filedes;
 	cur_term->_termname = strdup(tname);
@@ -554,15 +588,8 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 	}
     }
 
-    /*
-     * We should always check the screensize, just in case.
-     */
-    _nc_get_screensize(&LINES, &COLS);
-
     if (errret)
 	*errret = TGETENT_YES;
-
-    T((T_CREATE("screen %s %dx%d"), tname, LINES, COLS));
 
     if (generic_type) {
 	ret_error(TGETENT_NO, "'%s': I need something more specific.\n", tname);

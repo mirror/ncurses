@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.7 2006/04/01 19:08:03 tom Exp $
+ * $Id: ins_wide.c,v 1.8 2007/03/11 00:18:29 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -55,7 +55,7 @@
 #define WInsNStr   wins_nwstr
 #define WInsStr    wins_wstr
 
-#define TABSIZE 8
+#define MY_TABSIZE 8
 
 typedef enum {
     oDefault = 0,
@@ -123,7 +123,7 @@ ColOf(wchar_t *buffer, int length, int margin)
 		--result;
 	    break;
 	case '\t':
-	    result += (TABSIZE - (result % TABSIZE));
+	    result += (MY_TABSIZE - (result % MY_TABSIZE));
 	    break;
 	case '\177':
 	    result += 2;
@@ -225,7 +225,7 @@ test_inserts(int level)
     WINDOW *look = 0;
     WINDOW *work = 0;
     WINDOW *show = 0;
-    int margin = (2 * TABSIZE) - 1;
+    int margin = (2 * MY_TABSIZE) - 1;
     Options option = ((m_opt ? oMove : oDefault)
 		      | ((w_opt || (level > 0)) ? oWindow : oDefault));
 
@@ -255,7 +255,7 @@ test_inserts(int level)
     }
     keypad(work, TRUE);
 
-    for (col = margin + 1; col < COLS; col += TABSIZE)
+    for (col = margin + 1; col < COLS; col += MY_TABSIZE)
 	mvwvline(work, row, col, '.', limit - 2);
 
     mvwvline(work, row, margin, ACS_VLINE, limit - 2);

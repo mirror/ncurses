@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.116 2007/02/17 21:53:16 tom Exp $
+-- $Id: INSTALL,v 1.118 2007/03/11 00:06:53 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -334,6 +334,16 @@ SUMMARY OF CONFIGURE OPTIONS:
 	For testing, compile-in code that frees memory that normally would not
 	be freed, to simplify analysis of memory-leaks.
 
+	Any implementation of curses must not free the memory associated with
+	a screen, since (even after calling endwin()), it must be available
+	for use in the next call to refresh().  There are also chunks of
+	memory held for performance reasons.  That makes it hard to analyze
+	curses applications for memory leaks.  To work around this, build
+	a debugging version of the ncurses library which frees those chunks
+	which it can, and provides the _nc_free_and_exit() function to free
+	the remainder on exit.  The ncurses utility and test programs use this
+	feature, e.g., via the ExitProgram() macro.
+
     --disable-lp64
 	The header files will ignore use of the _LP64 symbol to make chtype
 	and mmask_t types 32 bits (they may be long on 64-bit hosts, for
@@ -488,6 +498,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	which allows you to suppress the effect of non-mandatory padding in
 	terminfo entries.  This is the default, unless you have disabled the
 	extended functions.
+
+    --enable-reentrant
+	Compile experimental configuration which improves reentrant use of the
+	library by reducing global and static variables.
 
     --enable-rpath
 	Use rpath option when generating shared libraries, and (with some

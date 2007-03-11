@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,15 +41,33 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.17 2005/01/22 17:39:22 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.19 2007/03/10 19:31:27 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
  * constructing a dll (reported by J.J.G.Ripoll).
  */
+#if USE_REENTRANT
+NCURSES_EXPORT(WINDOW *)
+NCURSES_PUBLIC_VAR(stdscr) (void)
+{
+    return SP ? SP->_stdscr : 0;
+}
+NCURSES_EXPORT(WINDOW *)
+NCURSES_PUBLIC_VAR(curscr) (void)
+{
+    return SP ? SP->_curscr : 0;
+}
+NCURSES_EXPORT(WINDOW *)
+NCURSES_PUBLIC_VAR(newscr) (void)
+{
+    return SP ? SP->_newscr : 0;
+}
+#else
 NCURSES_EXPORT_VAR(WINDOW *) stdscr = 0;
 NCURSES_EXPORT_VAR(WINDOW *) curscr = 0;
 NCURSES_EXPORT_VAR(WINDOW *) newscr = 0;
+#endif
 
 NCURSES_EXPORT_VAR(SCREEN *) _nc_screen_chain = 0;
 

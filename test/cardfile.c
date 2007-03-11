@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2004,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.28 2006/12/10 00:30:09 tom Exp $
+ * $Id: cardfile.c,v 1.29 2007/03/10 19:16:45 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -306,8 +306,8 @@ form_virtualize(WINDOW *w)
 	return (MY_CTRL_N);
     case CTRL('P'):
 	return (MY_CTRL_P);
-    case CTRL('Q'):
-    case 033:
+    case QUIT:
+    case ESCAPE:
 	return (MY_CTRL_Q);
 
     case KEY_BACKSPACE:

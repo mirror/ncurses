@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,14 +41,14 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.19 2006/12/30 17:12:29 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.21 2007/03/10 23:45:14 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
  */
-#ifdef _REENTRANT
+#if USE_REENTRANT
 #define EXTRA_ARGS ,     CurLines,     CurCols
 #define EXTRA_DCLS , int CurLines, int CurCols
 #else
@@ -294,8 +294,8 @@ resize_term(int ToLines, int ToCols)
 	}
 #ifdef TRACE
 	if (_nc_tracing & TRACE_UPDATE) {
-	    LINES = ToLines - was_stolen;
-	    COLS = ToCols;
+	    SET_LINES(ToLines - was_stolen);
+	    SET_COLS(ToCols);
 	    show_window_sizes("after");
 	}
 #endif
@@ -305,8 +305,8 @@ resize_term(int ToLines, int ToCols)
      * Always update LINES, to allow for call from lib_doupdate.c which
      * needs to have the count adjusted by the stolen (ripped off) lines.
      */
-    LINES = ToLines - was_stolen;
-    COLS = ToCols;
+    SET_LINES(ToLines - was_stolen);
+    SET_COLS(ToCols);
 
     returnCode(result);
 }

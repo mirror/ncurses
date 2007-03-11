@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.321 2007/03/03 21:56:33 tom Exp $
+ * $Id: curses.priv.h,v 1.325 2007/03/10 23:43:50 tom Exp $
  *
  *	curses.priv.h
  *
@@ -251,6 +251,7 @@ color_t;
 #endif
 
 #undef NCURSES_OPAQUE
+#define NCURSES_INTERNALS 1
 #define NCURSES_OPAQUE 0
 
 #include <curses.h>	/* we'll use -Ipath directive to get the right one! */
@@ -288,6 +289,14 @@ color_t;
 #define SCREEN_ATTRS(s)		(*((s)->_current_attr))
 #define GET_SCREEN_PAIR(s)	GetPair(SCREEN_ATTRS(s))
 #define SET_SCREEN_PAIR(s,p)	SetPair(SCREEN_ATTRS(s), p)
+
+#if USE_REENTRANT
+#define SET_LINES(value) SP->_LINES = value
+#define SET_COLS(value)  SP->_COLS = value
+#else
+#define SET_LINES(value) LINES = value
+#define SET_COLS(value)  COLS = value
+#endif
 
 /*
  * Definitions for color pairs
@@ -611,6 +620,13 @@ struct screen {
 
 	int		_legacy_coding;	/* see use_legacy_coding() */
 
+#if USE_REENTRANT
+	char		_ttytype[NAMESIZE];
+	int		_ESCDELAY;
+	int		_TABSIZE;
+	int		_LINES;
+	int		_COLS;
+#endif
 	/*
 	 * ncurses/ncursesw are the same up to this point.
 	 */
@@ -1149,6 +1165,7 @@ extern NCURSES_EXPORT(char *) _nc_get_locale(void);
 extern NCURSES_EXPORT(int) _nc_unicode_locale(void);
 extern NCURSES_EXPORT(int) _nc_locale_breaks_acs(void);
 extern NCURSES_EXPORT(int) _nc_setupterm(NCURSES_CONST char *, int, int *, bool);
+extern NCURSES_EXPORT(void) _nc_get_screensize(int *, int *);
 
 /* lib_tstp.c */
 #if USE_SIGWINCH

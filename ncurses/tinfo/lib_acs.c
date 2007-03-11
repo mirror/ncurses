@@ -35,9 +35,9 @@
 #include <curses.priv.h>
 #include <term.h>		/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.31 2007/03/03 21:12:34 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.32 2007/03/10 18:47:26 tom Exp $")
 
-#if BROKEN_LINKER
+#if BROKEN_LINKER || USE_REENTRANT
 NCURSES_EXPORT_VAR(chtype *)
 _nc_acs_map(void)
 {

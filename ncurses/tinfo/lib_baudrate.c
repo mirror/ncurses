@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -77,7 +77,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.23 2006/12/30 18:06:16 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.24 2007/03/10 19:25:57 tom Exp $")
 
 /*
  *	int
@@ -142,7 +142,7 @@ static struct speed const speeds[] =
 NCURSES_EXPORT(int)
 _nc_baudrate(int OSpeed)
 {
-#ifndef _REENTRANT
+#if !USE_REENTRANT
     static int last_OSpeed;
     static int last_baudrate;
 #endif
@@ -150,7 +150,7 @@ _nc_baudrate(int OSpeed)
     int result = ERR;
     unsigned i;
 
-#ifndef _REENTRANT
+#if !USE_REENTRANT
     if (OSpeed == last_OSpeed) {
 	result = last_baudrate;
     }
@@ -164,7 +164,7 @@ _nc_baudrate(int OSpeed)
 		}
 	    }
 	}
-#ifndef _REENTRANT
+#if !USE_REENTRANT
 	if (OSpeed == last_OSpeed) {
 	    last_OSpeed = OSpeed;
 	    last_baudrate = result;

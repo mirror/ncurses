@@ -42,15 +42,28 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_color.c,v 1.83 2007/02/03 23:10:06 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.84 2007/03/10 19:20:15 tom Exp $")
 
 /*
  * These should be screen structure members.  They need to be globals for
  * historical reasons.  So we assign them in start_color() and also in
  * set_term()'s screen-switching logic.
  */
+#if USE_REENTRANT
+NCURSES_EXPORT(int)
+NCURSES_PUBLIC_VAR(COLOR_PAIRS) (void)
+{
+    return SP ? SP->_pair_count : -1;
+}
+NCURSES_EXPORT(int)
+NCURSES_PUBLIC_VAR(COLORS) (void)
+{
+    return SP ? SP->_color_count : -1;
+}
+#else
 NCURSES_EXPORT_VAR(int) COLOR_PAIRS = 0;
 NCURSES_EXPORT_VAR(int) COLORS = 0;
+#endif
 
 #define DATA(r,g,b) {r,g,b, 0,0,0, 0}
 
@@ -239,8 +252,12 @@ start_color(void)
 	}
 
 	if (max_pairs > 0 && max_colors > 0) {
-	    COLOR_PAIRS = SP->_pair_count = max_pairs;
-	    COLORS = SP->_color_count = max_colors;
+	    SP->_pair_count = max_pairs;
+	    SP->_color_count = max_colors;
+#if !USE_REENTRANT
+	    COLOR_PAIRS = max_pairs;
+	    COLORS = max_colors;
+#endif
 
 	    if ((SP->_color_pairs = TYPE_CALLOC(colorpair_t,
 						max_pairs)) != 0) {
