@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.406 2007/03/10 18:06:55 tom Exp $
+dnl $Id: configure.in,v 1.408 2007/03/17 20:47:14 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.406 $)
+AC_REVISION($Revision: 1.408 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -919,7 +919,7 @@ AC_MSG_RESULT($with_ext_colors)
 NCURSES_EXT_COLORS=0
 if test "$with_ext_colors" = yes ; then
 	if test "$with_widec" != yes ; then
-		AC_MSG_WARN(This option applies only to wide-character library)
+		AC_MSG_ERROR(This option applies only to wide-character library)
 	else
 		# cannot be ABI 5 since it changes sizeof(cchar_t)
 		CF_NCURSES_ABI_6
@@ -1153,12 +1153,13 @@ if test $NCURSES_CHTYPE = auto ; then
 else
 	cf_cv_typeof_chtype=$NCURSES_CHTYPE
 fi
+test "$cf_cv_typeof_chtype" = unsigned && cf_cv_typeof_chtype=""
 AC_SUBST(cf_cv_typeof_chtype)
 
 CF_UNSIGNED_LITERALS
 cf_cv_1UL="1"
-test "$cf_cv_unsigned_literals" = yes && cf_cv_1UL="${cf_cv_1UL}U"
-test "$cf_cv_typeof_chtype"    = long && cf_cv_1UL="${cf_cv_1UL}L"
+test ".$cf_cv_unsigned_literals" = .yes && cf_cv_1UL="${cf_cv_1UL}U"
+test ".$cf_cv_typeof_chtype"    = .long && cf_cv_1UL="${cf_cv_1UL}L"
 AC_SUBST(cf_cv_1UL)
 
 if test $NCURSES_MMASK_T = auto ; then
@@ -1166,6 +1167,7 @@ if test $NCURSES_MMASK_T = auto ; then
 else
 	cf_cv_typeof_mmask_t=$NCURSES_MMASK_T
 fi
+test "$cf_cv_typeof_mmask_t" = unsigned && cf_cv_typeof_mmask_t=""
 AC_SUBST(cf_cv_typeof_mmask_t)
 
 ###	Checks for external-data

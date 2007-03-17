@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.425 2007/02/24 23:59:46 tom Exp $
+dnl $Id: aclocal.m4,v 1.426 2007/03/17 20:18:53 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2690,7 +2690,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 33 updated: 2007/02/24 14:42:36
+dnl CF_MAN_PAGES version: 34 updated: 2007/03/17 16:15:10
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -2808,12 +2808,12 @@ case \$i in #(vi
 	# replace variables in man page
 	if test ! -f $cf_man_alias ; then
 cat >>$cf_man_alias <<-CF_EOF2
-		s,@DATADIR@,\$datadir,
-		s,@TERMINFO@,\$TERMINFO,
-		s,@NCURSES_MAJOR@,\$NCURSES_MAJOR,
-		s,@NCURSES_MINOR@,\$NCURSES_MINOR,
-		s,@NCURSES_PATCH@,\$NCURSES_PATCH,
-		s,@NCURSES_OSPEED@,\$NCURSES_OSPEED,
+		s,@DATADIR@,\$datadir,g
+		s,@TERMINFO@,\$TERMINFO,g
+		s,@NCURSES_MAJOR@,\$NCURSES_MAJOR,g
+		s,@NCURSES_MINOR@,\$NCURSES_MINOR,g
+		s,@NCURSES_PATCH@,\$NCURSES_PATCH,g
+		s,@NCURSES_OSPEED@,\$NCURSES_OSPEED,g
 CF_EOF
 	ifelse($1,,,[
 	for cf_name in $1
@@ -4591,7 +4591,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 13 updated: 2007/01/27 17:52:16
+dnl CF_WITH_LIBTOOL version: 15 updated: 2007/03/17 16:15:10
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -4685,7 +4685,7 @@ ifdef([AC_PROG_LIBTOOL],[
 	cf_cv_libtool_version=`$LIBTOOL --version 2>&1 | sed -e '/^$/d' |sed -e '2,$d' -e 's/([[^)]]*)//g' -e 's/^[[^1-9]]*//' -e 's/[[^0-9.]].*//'`
 	AC_MSG_RESULT($cf_cv_libtool_version)
 	if test -z "$cf_cv_libtool_version" ; then
-		AC_MSG_ERROR(This is not libtool)
+		AC_MSG_ERROR(This is not GNU libtool)
 	fi
 
 	# special hack to add --tag option for C++ compiler
