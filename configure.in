@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.408 2007/03/17 20:47:14 tom Exp $
+dnl $Id: configure.in,v 1.410 2007/03/24 23:12:57 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.408 $)
+AC_REVISION($Revision: 1.410 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1539,10 +1539,12 @@ if test "$with_termlib" != no ; then
 
 	if test "$with_termlib" != yes ; then
 		TINFO_NAME=$with_termlib
+		TINFO_SUFFIX="`echo ${DFT_DEP_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
 		TINFO_ARG_SUFFIX="${with_termlib}`echo ${DFT_ARG_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
 		TINFO_DEP_SUFFIX="${with_termlib}`echo ${DFT_DEP_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
 		TINFO_LIB_SUFFIX="${with_termlib}"
 	else
+		TINFO_SUFFIX=${DFT_DEP_SUFFIX}
 		TINFO_ARG_SUFFIX="${TINFO_NAME}${DFT_ARG_SUFFIX}"
 		TINFO_DEP_SUFFIX="${TINFO_NAME}${DFT_DEP_SUFFIX}"
 		TINFO_LIB_SUFFIX="${TINFO_NAME}${LIB_SUFFIX}"
@@ -1563,6 +1565,8 @@ if test "$with_termlib" != no ; then
 	fi
 else
 	# the next lines are needed for linking libtic over libncurses
+	TINFO_NAME=${LIB_NAME}
+	TINFO_SUFFIX=${DFT_DEP_SUFFIX}
 	TINFO_ARG_SUFFIX=${LIB_NAME}${DFT_ARG_SUFFIX}
 	TICS_LIST="$SHLIB_LIST -l${LIB_NAME}${DFT_ARG_SUFFIX}"
 
@@ -1661,6 +1665,7 @@ TERMINFO="$TERMINFO"
 TINFO_ARG_SUFFIX="$TINFO_ARG_SUFFIX"
 TINFO_LIB_SUFFIX="$TINFO_LIB_SUFFIX"
 TINFO_NAME="$TINFO_NAME"
+TINFO_SUFFIX="$TINFO_SUFFIX"
 TICS_ARG_SUFFIX="$TICS_ARG_SUFFIX"
 TICS_LIB_SUFFIX="$TICS_LIB_SUFFIX"
 TICS_NAME="$TICS_NAME"

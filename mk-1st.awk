@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.77 2007/03/11 13:37:22 tom Exp $
+# $Id: mk-1st.awk,v 1.78 2007/03/24 22:10:55 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -41,6 +41,7 @@
 #	ShlibVer	  ("rel", "abi" or "auto", to augment DoLinks variable)
 #	ShlibVerInfix ("yes" or "no", determines location of version #)
 #   TermlibRoot   ("tinfo" or other root for libterm.so)
+#   TermlibSuffix (".so" or other suffix for libterm.so)
 #	ReLink		  ("yes", or "no", flag to rebuild shared libs on install)
 #	DoLinks		  ("yes", "reverse" or "no", flag to add symbolic links)
 #	rmSoLocs	  ("yes" or "no", flag to add extra clean target)
@@ -163,6 +164,15 @@ function sharedlinks(directory) {
 			printf ")\n"
 		}
 	}
+# termlib may be named explicitly via "--with-termlib=XXX", which overrides
+# any suffix.  Temporarily override "suffix" to account for this.
+function termlib_end_of() {
+	termlib_save_suffix = suffix;
+	suffix = TermlibSuffix;
+	termlib_temp_result = end_name_of(TermlibRoot);
+	suffix = termlib_save_suffix;
+	return termlib_temp_result;
+}
 function shlib_build(directory) {
 		dst_libs = sprintf("%s/%s", directory, end_name);
 		printf "%s : \\\n", dst_libs
@@ -171,9 +181,9 @@ function shlib_build(directory) {
 			save_suffix = suffix
 			sub(/^[^.]\./,".",suffix)
 			if (directory != "../lib") {
-				printf "\t\t%s/%s \\\n", "../lib", end_name_of(TermlibRoot);
+				printf "\t\t%s/%s \\\n", "../lib", termlib_end_of();
 			}
-			printf "\t\t%s/%s \\\n", directory, end_name_of(TermlibRoot);
+			printf "\t\t%s/%s \\\n", directory, termlib_end_of();
 			suffix = save_suffix
 		}
 		printf "\t\t$(%s_OBJS)\n", OBJS
@@ -231,6 +241,7 @@ BEGIN	{
 					printf "#  ShlibVer:      %s\n", ShlibVer 
 					printf "#  ShlibVerInfix: %s\n", ShlibVerInfix 
 					printf "#  TermlibRoot:   %s\n", TermlibRoot 
+					printf "#  TermlibSuffix: %s\n", TermlibSuffix 
 					printf "#  ReLink:        %s\n", ReLink 
 					printf "#  DoLinks:       %s\n", DoLinks 
 					printf "#  rmSoLocs:      %s\n", rmSoLocs 

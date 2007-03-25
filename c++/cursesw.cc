@@ -42,7 +42,7 @@
 #include "internal.h"
 #include "cursesw.h"
 
-MODULE_ID("$Id: cursesw.cc,v 1.47 2007/03/03 21:49:24 tom Exp $")
+MODULE_ID("$Id: cursesw.cc,v 1.48 2007/03/24 19:00:58 tom Exp $")
 
 #define COLORS_NEED_INITIALIZATION  -1
 #define COLORS_NOT_INITIALIZED       0
@@ -165,12 +165,17 @@ NCursesWindow::NCursesWindow(int nlines, int ncols, int begin_y, int begin_x)
     set_keyboard();
 }
 
-NCursesWindow::NCursesWindow(WINDOW* &window)
+NCursesWindow::NCursesWindow(WINDOW* window)
   : w(0), alloced(FALSE), par(0), subwins(0), sib(0)
 {
     constructing();
 
-    w = window;
+    // We used to use a reference on the "window" parameter, but we cannot do
+    // that with an opaque pointer (see NCURSES_OPAQUE).  If the parameter was
+    // "::stdscr", that is first set via the "constructing() call, and is null
+    // up to that point.  So we allow a null pointer here as meaning the "same"
+    // as "::stdscr".
+    w = window ? window : ::stdscr;
     set_keyboard();
 }
 

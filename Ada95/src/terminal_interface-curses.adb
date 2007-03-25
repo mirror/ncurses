@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.34 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.35 $
+--  $Date: 2007/03/24 23:03:56 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -1399,11 +1399,15 @@ package body Terminal_Interface.Curses is
       Number_Of_Lines   : out Line_Count;
       Number_Of_Columns : out Column_Count)
    is
-      --  Please note: in ncurses they are one off.
-      --  This might be different in other implementations of curses
-      Y : constant C_Int := C_Int (W_Get_Short (Win, Offset_maxy))
+      function GetMaxY (W : Window) return C_Int;
+      pragma Import (C, GetMaxY, "getmaxy");
+
+      function GetMaxX (W : Window) return C_Int;
+      pragma Import (C, GetMaxX, "getmaxx");
+
+      Y : constant C_Int := GetMaxY (Win)
                           + C_Int (Offset_XY);
-      X : constant C_Int := C_Int (W_Get_Short (Win, Offset_maxx))
+      X : constant C_Int := GetMaxX (Win)
                           + C_Int (Offset_XY);
    begin
       Number_Of_Lines   := Line_Count (Y);
@@ -1415,8 +1419,14 @@ package body Terminal_Interface.Curses is
       Top_Left_Line   : out Line_Position;
       Top_Left_Column : out Column_Position)
    is
-      Y : constant C_Short := W_Get_Short (Win, Offset_begy);
-      X : constant C_Short := W_Get_Short (Win, Offset_begx);
+      function GetBegY (W : Window) return C_Int;
+      pragma Import (C, GetBegY, "getbegy");
+
+      function GetBegX (W : Window) return C_Int;
+      pragma Import (C, GetBegX, "getbegx");
+
+      Y : constant C_Short := C_Short (GetBegY (Win));
+      X : constant C_Short := C_Short (GetBegX (Win));
    begin
       Top_Left_Line   := Line_Position (Y);
       Top_Left_Column := Column_Position (X);
@@ -1427,8 +1437,14 @@ package body Terminal_Interface.Curses is
       Line   : out Line_Position;
       Column : out Column_Position)
    is
-      Y : constant C_Short := W_Get_Short (Win, Offset_cury);
-      X : constant C_Short := W_Get_Short (Win, Offset_curx);
+      function GetCurY (W : Window) return C_Int;
+      pragma Import (C, GetCurY, "getcury");
+
+      function GetCurX (W : Window) return C_Int;
+      pragma Import (C, GetCurX, "getcurx");
+
+      Y : constant C_Short := C_Short (GetCurY (Win));
+      X : constant C_Short := C_Short (GetCurX (Win));
    begin
       Line   := Line_Position (Y);
       Column := Column_Position (X);
@@ -1440,8 +1456,14 @@ package body Terminal_Interface.Curses is
       Top_Left_Column    : out Column_Position;
       Is_Not_A_Subwindow : out Boolean)
    is
-      Y : constant C_Int := W_Get_Int (Win, Offset_pary);
-      X : constant C_Int := W_Get_Int (Win, Offset_parx);
+      function GetParY (W : Window) return C_Int;
+      pragma Import (C, GetParY, "getpary");
+
+      function GetParX (W : Window) return C_Int;
+      pragma Import (C, GetParX, "getparx");
+
+      Y : constant C_Int := GetParY (Win);
+      X : constant C_Int := GetParX (Win);
    begin
       if Y = -1 then
          Top_Left_Line   := Line_Position'Last;

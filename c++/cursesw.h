@@ -30,7 +30,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.42 2007/03/03 21:49:18 tom Exp $
+// $Id: cursesw.h,v 1.43 2007/03/24 18:33:50 tom Exp $
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -741,7 +741,7 @@ protected:
   NCursesWindow();
 
 public:
-  NCursesWindow(WINDOW* &window);  // useful only for stdscr
+  NCursesWindow(WINDOW* window);   // useful only for stdscr
 
   NCursesWindow(int nlines,        // number of lines
 		int ncols,         // number of columns
