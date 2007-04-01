@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.170 2007/03/10 18:15:33 tom Exp $ */
+/* $Id: curses.h.in,v 1.172 2007/03/31 20:46:06 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -144,7 +144,7 @@ typedef unsigned @cf_cv_typeof_mmask_t@ mmask_t;
 #include <stddef.h>	/* we want wchar_t */
 #endif /* _XOPEN_SOURCE_EXTENDED */
 
-/* XSI and SVr4 specify that curses implements 'bool'.  However, C++ may also
+/* X/Open and SVr4 specify that curses implements 'bool'.  However, C++ may also
  * implement it.  If so, we must use the C++ compiler's type to avoid conflict
  * with other interfaces.
  *
@@ -191,7 +191,7 @@ extern "C" {
 #endif
 
 /*
- * XSI attributes.  In the ncurses implementation, they are identical to the
+ * X/Open attributes.  In the ncurses implementation, they are identical to the
  * A_ attributes.
  */
 #define WA_ATTRIBUTES	A_ATTRIBUTES
@@ -417,28 +417,6 @@ struct _win_st
 #endif /* NCURSES_OPAQUE */
 
 /*
- * These functions are extensions - not in XSI Curses.
- */
-#if @NCURSES_EXT_FUNCS@
-extern NCURSES_EXPORT(bool) is_term_resized (int, int);
-extern NCURSES_EXPORT(char *) keybound (int, int);
-extern NCURSES_EXPORT(const char *) curses_version (void);
-extern NCURSES_EXPORT(int) assume_default_colors (int, int);
-extern NCURSES_EXPORT(int) define_key (const char *, int);
-extern NCURSES_EXPORT(int) key_defined (const char *);
-extern NCURSES_EXPORT(int) keyok (int, bool);
-extern NCURSES_EXPORT(int) resize_term (int, int);
-extern NCURSES_EXPORT(int) resizeterm (int, int);
-extern NCURSES_EXPORT(int) use_default_colors (void);
-extern NCURSES_EXPORT(int) use_extended_names (bool);
-extern NCURSES_EXPORT(int) use_legacy_coding (int);
-extern NCURSES_EXPORT(int) wresize (WINDOW *, int, int);
-extern NCURSES_EXPORT(void) nofilter(void);
-#else
-#define curses_version() NCURSES_VERSION
-#endif
-
-/*
  * This is an extension to support events...
  */
 #if @NCURSES_EXT_FUNCS@
@@ -530,7 +508,7 @@ extern NCURSES_EXPORT(int) wgetnstr_events(WINDOW *,char *,int,_nc_eventlist *);
 #endif
 
 /*
- * Function prototypes.  This is the complete XSI Curses list of required
+ * Function prototypes.  This is the complete X/Open Curses list of required
  * functions.  Those marked `generated' will have sources generated from the
  * macro definitions later in this file, in order to satisfy XPG4.2
  * requirements.
@@ -838,10 +816,48 @@ extern NCURSES_EXPORT(int) getparx (const WINDOW *);			/* generated */
 extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 
 /*
- * vid_attr() was implemented originally based on a draft of XSI curses.
+ * vid_attr() was implemented originally based on a draft of X/Open curses.
  */
 #ifndef _XOPEN_SOURCE_EXTENDED
 #define vid_attr(a,pair,opts) vidattr(a)
+#endif
+
+/*
+ * These functions are extensions - not in X/Open Curses.
+ */
+#if @NCURSES_EXT_FUNCS@
+extern NCURSES_EXPORT(bool) is_term_resized (int, int);
+extern NCURSES_EXPORT(char *) keybound (int, int);
+extern NCURSES_EXPORT(const char *) curses_version (void);
+extern NCURSES_EXPORT(int) assume_default_colors (int, int);
+extern NCURSES_EXPORT(int) define_key (const char *, int);
+extern NCURSES_EXPORT(int) key_defined (const char *);
+extern NCURSES_EXPORT(int) keyok (int, bool);
+extern NCURSES_EXPORT(int) resize_term (int, int);
+extern NCURSES_EXPORT(int) resizeterm (int, int);
+extern NCURSES_EXPORT(int) use_default_colors (void);
+extern NCURSES_EXPORT(int) use_extended_names (bool);
+extern NCURSES_EXPORT(int) use_legacy_coding (int);
+extern NCURSES_EXPORT(int) wresize (WINDOW *, int, int);
+extern NCURSES_EXPORT(void) nofilter(void);
+
+/*
+ * These extensions provide access to information stored in the WINDOW even
+ * when NCURSES_OPAQUE is set:
+ */
+extern NCURSES_EXPORT(bool) is_cleared (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_idcok (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_idlok (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_immedok (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_keypad (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_leaveok (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_nodelay (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_notimeout (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_scrollok (WINDOW *);	/* generated */
+extern NCURSES_EXPORT(bool) is_syncok (WINDOW *);	/* generated */
+
+#else
+#define curses_version() NCURSES_VERSION
 #endif
 
 /* attributes */
@@ -1089,7 +1105,7 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 #endif /* NCURSES_OPAQUE */
 
 /*
- * XSI curses deprecates SVr4 vwprintw/vwscanw, which are supposed to use
+ * X/Open curses deprecates SVr4 vwprintw/vwscanw, which are supposed to use
  * varargs.h.  It adds new calls vw_printw/vw_scanw, which are supposed to
  * use POSIX stdarg.h.  The ncurses versions of vwprintw/vwscanw already
  * use stdarg.h, so...
@@ -1103,6 +1119,24 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 #if !@HAVE_VSSCANF@
 #define vsscanf(a,b,c) _nc_vsscanf(a,b,c)
 NCURSES_EXPORT(int) vsscanf(const char *, const char *, va_list);
+#endif
+
+/*
+ * These macros are extensions - not in X/Open Curses.
+ */
+#if @NCURSES_EXT_FUNCS@
+#if !NCURSES_OPAQUE
+#define is_cleared(win)		((win)->_clear)
+#define is_idcok(win)		((win)->_idcok)
+#define is_idlok(win)		((win)->_idlok)
+#define is_immedok(win)		((win)->_immed)
+#define is_keypad(win)		((win)->_use_keypad)
+#define is_leaveok(win)		((win)->_leaveok)
+#define is_nodelay(win)		((win)->_delay == 0)
+#define is_notimeout(win)	((win)->_notimeout)
+#define is_scrollok(win)	((win)->_scroll)
+#define is_syncok(win)		((win)->_sync)
+#endif
 #endif
 
 #endif /* NCURSES_NOMACROS */

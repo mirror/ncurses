@@ -9,7 +9,7 @@ include(M4MACRO)----------------------------------------------------------------
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -37,8 +37,8 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.37 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.39 $
+--  $Date: 2007/03/31 23:36:32 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Base_Defs')
@@ -188,24 +188,20 @@ include(`AC_Rep')
    function Number_Of_Color_Pairs return Natural;
    pragma Inline (Number_Of_Color_Pairs);
 
-   ACS_Map : array (Character'Val (0) .. Character'Val (127)) of
-     Attributed_Character;
-   pragma Import (C, ACS_Map, "acs_map");
-   --
-   --
-   --  Constants for several characters from the Alternate Character Set
-   --  You must use this constants as indices into the ACS_Map array
-   --  to get the corresponding attributed character at runtime.
-   --
 include(`ACS_Map')dnl
 
    --  MANPAGE(`curs_initscr.3x')
-   --  | Not implemented: newterm, set_term, delscreen, curscr
+   --  | Not implemented: newterm, set_term, delscreen
 
    --  ANCHOR(`stdscr',`Standard_Window')
    function Standard_Window return Window;
    --  AKA
    pragma Inline (Standard_Window);
+
+   --  ANCHOR(`curscr',`Current_Window')
+   function Current_Window return Window;
+   --  AKA
+   pragma Inline (Current_Window);
 
    --  ANCHOR(`initscr()',`Init_Screen')
    procedure Init_Screen;

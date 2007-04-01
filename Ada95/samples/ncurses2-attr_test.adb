@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2006,2007 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.6 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.7 $
+--  $Date: 2007/03/31 23:45:22 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -237,16 +237,13 @@ procedure ncurses2.attr_test is
                                             result : out Boolean) is
       ch : constant Key_Code := Getchar;
       nc : constant Color_Number := Color_Number (Number_Of_Colors);
-      curscr : Window;
-      pragma Import (C, curscr, "curscr");
-      --  curscr is not implemented in the Ada binding
    begin
       result := True;
       if Ada.Characters.Handling.Is_Digit (Character'Val (ch)) then
          skip := ctoi (Code_To_Char (ch));
       elsif ch = CTRL ('L') then
          Touch;
-         Touch (curscr);
+         Touch (Current_Window);
          Refresh;
       elsif Has_Colors then
          case ch is

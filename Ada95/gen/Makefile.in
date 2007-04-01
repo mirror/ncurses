@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.53 2007/02/04 00:42:40 tom Exp $
+#  $Id: Makefile.in,v 1.54 2007/03/31 21:53:14 tom Exp $
 #
 .SUFFIXES:
 
@@ -92,17 +92,18 @@ ADA_SRCDIR	= ../src
 
 GEN_FILES0      = Base_Defs
 
-GEN_FILES1      = Key_Definitions              		\
-		  Old_Keys                     		\
-		  Character_Attribute_Set_Rep  		\
+GEN_FILES1      = ACS_Map                      		\
 		  AC_Rep                       		\
-		  Color_Defs                   		\
-		  ACS_Map                      		\
-		  Linker_Options               		\
 		  Base_Defs			        \
-		  Window_Offsets                        \
+		  Character_Attribute_Set_Rep  		\
+		  Color_Defs                   		\
+		  Key_Definitions              		\
+		  Linker_Options               		\
+		  Old_Keys                     		\
+		  Public_Variables                      \
+		  Trace_Defs				\
 		  Version_Info				\
-		  Trace_Defs
+		  Window_Offsets
 
 GEN_FILES2      = Menu_Opt_Rep        		    	\
 		  Menu_Base_Defs               		\
@@ -123,6 +124,7 @@ GEN_FILES5	= Chtype_Def                            \
 		  Eti_Defs
 
 GEN_TARGETS     = $(ADA_SRCDIR)/$(ABASE).ads         			\
+		  $(ADA_SRCDIR)/$(ABASE).adb         			\
 	          $(ADA_SRCDIR)/$(ABASE)-aux.ads   			\
 	          $(ADA_SRCDIR)/$(ABASE)-trace.ads   			\
 	          $(ADA_SRCDIR)/$(ABASE)-menus.ads   			\
@@ -137,6 +139,7 @@ GEN_TARGETS     = $(ADA_SRCDIR)/$(ABASE).ads         			\
 	          $(ADA_SRCDIR)/$(ABASE)-panels-user_data.ads
 
 GEN_SRC		= $(srcdir)/$(ABASE).ads.m4				\
+		  $(srcdir)/$(ABASE).adb.m4				\
 	          $(srcdir)/$(ABASE)-aux.ads.m4 	  		\
 	          $(srcdir)/$(ABASE)-trace.ads.m4 	  		\
 	          $(srcdir)/$(ABASE)-menus.ads.m4 	  		\
@@ -192,7 +195,7 @@ gen$x:	gen.o
 
 gen.o:	$(srcdir)/gen.c
 	$(HOST_CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/gen.c
-
+################################################################################
 Character_Attribute_Set_Rep: gen$x
 	$(GENERATE) B A >$@
 
@@ -202,30 +205,33 @@ Base_Defs: gen$x
 Color_Defs: gen$x
 	$(GENERATE) B C >$@
 
+Window_Offsets: gen$x
+	$(GENERATE) B D >$@
+
 Key_Definitions: gen$x
 	$(GENERATE) B K >$@
-
-Old_Keys: gen$x
-	$(GENERATE) B O >$@
-
-ACS_Map: gen$x
-	$(GENERATE) B M >$@
-
-AC_Rep: gen$x
-	$(GENERATE) B R >$@
 
 Linker_Options: gen$x
 	$(GENERATE) B L >$@
 
+ACS_Map: gen$x
+	$(GENERATE) B M >$@
+
+Old_Keys: gen$x
+	$(GENERATE) B O >$@
+
+Public_Variables: gen$x
+	$(GENERATE) B P >$@
+
+AC_Rep: gen$x
+	$(GENERATE) B R >$@
+
 Version_Info: gen$x
 	$(GENERATE) B V >$@
 
-Window_Offsets: gen$x
-	$(GENERATE) B D >$@
-
 Trace_Defs: gen$x
 	$(GENERATE) B T >$@
-
+################################################################################
 Menu_Opt_Rep: gen$x
 	$(GENERATE) M R >$@
 
@@ -237,7 +243,7 @@ Menu_Linker_Options: gen$x
 
 Item_Rep: gen$x
 	$(GENERATE) M I >$@
-
+################################################################################
 Form_Opt_Rep: gen$x
 	$(GENERATE) F R >$@
 
@@ -249,7 +255,7 @@ Form_Linker_Options: gen$x
 
 Field_Rep: gen$x
 	$(GENERATE) F I >$@
-
+################################################################################
 Mouse_Base_Defs: gen$x
 	$(GENERATE) P B >$@
 
@@ -267,11 +273,17 @@ Chtype_Def: gen$x
 
 Eti_Defs: gen$x
 	$(GENERATE) E E >$@
-
+################################################################################
 $(ADA_SRCDIR)/$(ABASE).ads: 	$(srcdir)/$(ABASE).ads.m4 \
 				$(GEN_FILES1) $(srcdir)/normal.m4
 	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
 	$(srcdir)/$(ABASE).ads.m4 |\
+	$(DEL_ADAMODE) >$@
+
+$(ADA_SRCDIR)/$(ABASE).adb: 	$(srcdir)/$(ABASE).adb.m4 \
+				$(GEN_FILES1) $(srcdir)/normal.m4
+	$(M4) $(M4FLAGS) -DM4MACRO=$(srcdir)/normal.m4 \
+	$(srcdir)/$(ABASE).adb.m4 |\
 	$(DEL_ADAMODE) >$@
 
 $(ADA_SRCDIR)/$(ABASE)-aux.ads: $(srcdir)/$(ABASE)-aux.ads.m4 \

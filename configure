@@ -4123,7 +4123,7 @@ echo "$as_me: error: Cannot find libtool" >&2;}
    { (exit 1); exit 1; }; }
  	fi
 	LIB_CREATE='${LIBTOOL} --mode=link ${CC} -rpath ${DESTDIR}${libdir} -version-info `cut -f1 ${srcdir}/VERSION` -o'
-	LIB_OBJECT='${OBJECTS}.o=.lo)'
+	LIB_OBJECT='${OBJECTS:.o=.lo}'
 	LIB_SUFFIX=.la
 	LIB_CLEAN='${LIBTOOL} --mode=clean'
 	LIB_COMPILE='${LIBTOOL} --mode=compile'
@@ -8116,7 +8116,7 @@ NCURSES_PATCH="$NCURSES_PATCH"
 NCURSES_OSPEED="$NCURSES_OSPEED"
 TERMINFO="$TERMINFO"
 
-MKDIRS="sh `cd $srcdir && pwd`/mkinstalldirs"
+MKDIRS="sh `cd $srcdir && pwd`/mkdirs.sh"
 
 INSTALL="$INSTALL"
 INSTALL_DATA="$INSTALL_DATA"

@@ -20,6 +20,7 @@
 ./Ada95/gen/terminal_interface-curses-panels-user_data.ads.m4
 ./Ada95/gen/terminal_interface-curses-panels.ads.m4
 ./Ada95/gen/terminal_interface-curses-trace.ads.m4
+./Ada95/gen/terminal_interface-curses.adb.m4
 ./Ada95/gen/terminal_interface-curses.ads.m4
 ./Ada95/samples/Makefile.in
 ./Ada95/samples/README
@@ -163,7 +164,6 @@
 ./Ada95/src/terminal_interface-curses-text_io.adb
 ./Ada95/src/terminal_interface-curses-text_io.ads
 ./Ada95/src/terminal_interface-curses-trace.adb_p
-./Ada95/src/terminal_interface-curses.adb
 ./Ada95/src/terminal_interface.ads
 ./INSTALL
 ./MANIFEST
@@ -710,7 +710,7 @@
 ./mk-1st.awk
 ./mk-2nd.awk
 ./mk-hdr.awk
-./mkinstalldirs
+./mkdirs.sh
 ./ncurses/Makefile.in
 ./ncurses/README
 ./ncurses/README.IZ

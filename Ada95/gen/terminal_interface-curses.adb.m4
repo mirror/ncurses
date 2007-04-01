@@ -1,4 +1,6 @@
-------------------------------------------------------------------------------
+--  -*- ada -*-
+define(`HTMLNAME',`terminal_interface-curses__adb.htm')dnl
+include(M4MACRO)------------------------------------------------------------------------------
 --                                                                          --
 --                           GNAT ncurses Binding                           --
 --                                                                          --
@@ -35,8 +37,8 @@
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.35 $
---  $Date: 2007/03/24 23:03:56 $
+--  $Revision: 1.2 $
+--  $Date: 2007/03/31 23:02:22 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -44,10 +46,8 @@ with System;
 with Terminal_Interface.Curses.Aux;
 with Interfaces.C;                  use Interfaces.C;
 with Interfaces.C.Strings;          use Interfaces.C.Strings;
-with Interfaces.C.Pointers;
 with Ada.Characters.Handling;       use Ada.Characters.Handling;
 with Ada.Strings.Fixed;
-with Ada.Unchecked_Conversion;
 
 package body Terminal_Interface.Curses is
 
@@ -59,57 +59,6 @@ package body Terminal_Interface.Curses is
    type chtype_array is array (size_t range <>)
       of aliased Attributed_Character;
    pragma Convention (C, chtype_array);
-
-------------------------------------------------------------------------------
-   generic
-      type Element is (<>);
-   function W_Get_Element (Win    : in Window;
-                           Offset : in Natural) return Element;
-
-   function W_Get_Element (Win    : in Window;
-                           Offset : in Natural) return Element is
-      type E_Array is array (Natural range <>) of aliased Element;
-      package C_E_Array is new
-        Interfaces.C.Pointers (Natural, Element, E_Array, Element'Val (0));
-      use C_E_Array;
-
-      function To_Pointer is new
-        Ada.Unchecked_Conversion (Window, Pointer);
-
-      P : Pointer := To_Pointer (Win);
-   begin
-      if Win = Null_Window then
-         raise Curses_Exception;
-      else
-         P := P + ptrdiff_t (Offset);
-         return P.all;
-      end if;
-   end W_Get_Element;
-
-   function W_Get_Int   is new W_Get_Element (C_Int);
-   function W_Get_Short is new W_Get_Element (C_Short);
-   function W_Get_Byte  is new W_Get_Element (Interfaces.C.unsigned_char);
-
-   function Get_Flag (Win    : Window;
-                      Offset : Natural) return Boolean;
-
-   function Get_Flag (Win    : Window;
-                      Offset : Natural) return Boolean
-   is
-      Res : C_Int;
-   begin
-      case Sizeof_bool is
-         when 1 => Res := C_Int (W_Get_Byte  (Win, Offset));
-         when 2 => Res := C_Int (W_Get_Short (Win, Offset));
-         when 4 => Res := C_Int (W_Get_Int   (Win, Offset));
-         when others => raise Curses_Exception;
-      end case;
-
-      case Res is
-         when 0       => return False;
-         when others  => return True;
-      end case;
-   end Get_Flag;
 
 ------------------------------------------------------------------------------
    function Key_Name (Key : in Real_Key_Code) return String
@@ -901,8 +850,10 @@ package body Terminal_Interface.Curses is
    function Get_KeyPad_Mode (Win : in Window := Standard_Window)
                              return Boolean
    is
+      function Is_Keypad (W : Window) return Curses_Bool;
+      pragma Import (C, Is_Keypad, "is_keypad");
    begin
-      return Get_Flag (Win, Offset_use_keypad);
+      return (Is_Keypad (Win) /= Curses_Bool_False);
    end Get_KeyPad_Mode;
 
    procedure Half_Delay (Amount : in Half_Delay_Amount)
@@ -1089,8 +1040,10 @@ package body Terminal_Interface.Curses is
    function Scrolling_Allowed (Win : Window := Standard_Window)
                                return Boolean
    is
+      function Is_Scroll_Ok (W : Window) return Curses_Bool;
+      pragma Import (C, Is_Scroll_Ok, "is_scrollok");
    begin
-      return Get_Flag (Win, Offset_scroll);
+      return (Is_Scroll_Ok (Win) /= Curses_Bool_False);
    end Scrolling_Allowed;
 
    procedure Set_Scroll_Region
@@ -2389,54 +2342,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Nap_Milli_Seconds;
 ------------------------------------------------------------------------------
-
-   function Standard_Window return Window
-   is
-      Stdscr : Window;
-      pragma Import (C, Stdscr, "stdscr");
-   begin
-      return Stdscr;
-   end Standard_Window;
-
-   function Lines return Line_Count
-   is
-      C_Lines : C_Int;
-      pragma Import (C, C_Lines, "LINES");
-   begin
-      return Line_Count (C_Lines);
-   end Lines;
-
-   function Columns return Column_Count
-   is
-      C_Columns : C_Int;
-      pragma Import (C, C_Columns, "COLS");
-   begin
-      return Column_Count (C_Columns);
-   end Columns;
-
-   function Tab_Size return Natural
-   is
-      C_Tab_Size : C_Int;
-      pragma Import (C, C_Tab_Size, "TABSIZE");
-   begin
-      return Natural (C_Tab_Size);
-   end Tab_Size;
-
-   function Number_Of_Colors return Natural
-   is
-      C_Number_Of_Colors : C_Int;
-      pragma Import (C, C_Number_Of_Colors, "COLORS");
-   begin
-      return Natural (C_Number_Of_Colors);
-   end Number_Of_Colors;
-
-   function Number_Of_Color_Pairs return Natural
-   is
-      C_Number_Of_Color_Pairs : C_Int;
-      pragma Import (C, C_Number_Of_Color_Pairs, "COLOR_PAIRS");
-   begin
-      return Natural (C_Number_Of_Color_Pairs);
-   end Number_Of_Color_Pairs;
+include(`Public_Variables')
 ------------------------------------------------------------------------------
    procedure Transform_Coordinates
      (W      : in Window := Standard_Window;

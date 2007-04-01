@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1106 2007/03/24 22:58:37 tom Exp $
+-- $Id: NEWS,v 1.1109 2007/04/01 00:30:22 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,12 +45,23 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20070331
+	+ modify Ada95 binding to build with --enable-reentrant by wrapping
+	  global variables (bug: acs_map does not yet work).
+	+ modify Ada95 binding to use the new access-functions, allowing it
+	  to build/run when NCURSES_OPAQUE is set.
+	+ add access-functions and macros to return properties of the WINDOW
+	  structure, e.g., when NCURSES_OPAQUE is set.
+	+ improved install-sh's quoting.
+	+ use mkdirs.sh rather than mkinstalldirs, e.g., to use fixes from
+	  other programs.
+
 20070324
 	+ eliminate part of the direct use of WINDOW data from Ada95 interface.
 	+ fix substitutions for termlib filename to make configure option
 	  --enable-reentrant work with --with-termlib.
 	+ change a constructor for NCursesWindow to allow compiling with
-	  NCURSES_OPAQUE defined, since we cannot pass a reference to
+	  NCURSES_OPAQUE set, since we cannot pass a reference to
 	  an opaque pointer.
 
 20070317

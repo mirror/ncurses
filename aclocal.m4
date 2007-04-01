@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.427 2007/03/24 22:29:27 tom Exp $
+dnl $Id: aclocal.m4,v 1.428 2007/03/31 15:53:01 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2691,7 +2691,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 34 updated: 2007/03/17 16:15:10
+dnl CF_MAN_PAGES version: 35 updated: 2007/03/31 11:47:29
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -2757,7 +2757,7 @@ NCURSES_PATCH="$NCURSES_PATCH"
 NCURSES_OSPEED="$NCURSES_OSPEED"
 TERMINFO="$TERMINFO"
 
-MKDIRS="sh `cd $srcdir && pwd`/mkinstalldirs"
+MKDIRS="sh `cd $srcdir && pwd`/mkdirs.sh"
 
 INSTALL="$INSTALL"
 INSTALL_DATA="$INSTALL_DATA"
@@ -4592,7 +4592,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 15 updated: 2007/03/17 16:15:10
+dnl CF_WITH_LIBTOOL version: 16 updated: 2007/03/25 18:05:48
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -4668,7 +4668,7 @@ ifdef([AC_PROG_LIBTOOL],[
  	fi
 ])dnl
 	LIB_CREATE='${LIBTOOL} --mode=link ${CC} -rpath ${DESTDIR}${libdir} -version-info `cut -f1 ${srcdir}/VERSION` -o'
-	LIB_OBJECT='${OBJECTS}.o=.lo)'
+	LIB_OBJECT='${OBJECTS:.o=.lo}'
 	LIB_SUFFIX=.la
 	LIB_CLEAN='${LIBTOOL} --mode=clean'
 	LIB_COMPILE='${LIBTOOL} --mode=compile'
