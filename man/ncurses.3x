@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.84 2007/03/17 20:30:11 tom Exp $
+.\" $Id: ncurses.3x,v 1.86 2007/04/07 23:08:08 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ds n 5
@@ -276,23 +276,23 @@ flushinp/\fBcurs_util\fR(3X)
 get_wch/\fBcurs_get_wch\fR(3X)
 get_wstr/\fBcurs_get_wstr\fR(3X)
 getattrs/\fBcurs_attr\fR(3X)
-getbegx/\fBcurs_getyx\fR(3X)
-getbegy/\fBcurs_getyx\fR(3X)
+getbegx/\fBcurs_legacy\fR(3X)*
+getbegy/\fBcurs_legacy\fR(3X)*
 getbegyx/\fBcurs_getyx\fR(3X)
 getbkgd/\fBcurs_bkgd\fR(3X)
 getbkgrnd/\fBcurs_bkgrnd\fR(3X)
 getcchar/\fBcurs_getcchar\fR(3X)
 getch/\fBcurs_getch\fR(3X)
-getcurx/\fBcurs_getyx\fR(3X)
-getcury/\fBcurs_getyx\fR(3X)
-getmaxx/\fBcurs_getyx\fR(3X)
-getmaxy/\fBcurs_getyx\fR(3X)
+getcurx/\fBcurs_legacy\fR(3X)*
+getcury/\fBcurs_legacy\fR(3X)*
+getmaxx/\fBcurs_legacy\fR(3X)*
+getmaxy/\fBcurs_legacy\fR(3X)*
 getmaxyx/\fBcurs_getyx\fR(3X)
 getmouse/\fBcurs_mouse\fR(3X)*
 getn_wstr/\fBcurs_get_wstr\fR(3X)
 getnstr/\fBcurs_getstr\fR(3X)
-getparx/\fBcurs_getyx\fR(3X)
-getpary/\fBcurs_getyx\fR(3X)
+getparx/\fBcurs_legacy\fR(3X)*
+getpary/\fBcurs_legacy\fR(3X)*
 getparyx/\fBcurs_getyx\fR(3X)
 getstr/\fBcurs_getstr\fR(3X)
 getsyx/\fBcurs_kernel\fR(3X)
@@ -330,7 +330,18 @@ insstr/\fBcurs_insstr\fR(3X)
 instr/\fBcurs_instr\fR(3X)
 intrflush/\fBcurs_inopts\fR(3X)
 inwstr/\fBcurs_inwstr\fR(3X)
+is_cleared/\fBcurs_opaque\fR(3X)*
+is_idcok/\fBcurs_opaque\fR(3X)*
+is_idlok/\fBcurs_opaque\fR(3X)*
+is_immedok/\fBcurs_opaque\fR(3X)*
+is_keypad/\fBcurs_opaque\fR(3X)*
+is_leaveok/\fBcurs_opaque\fR(3X)*
 is_linetouched/\fBcurs_touch\fR(3X)
+is_nodelay/\fBcurs_opaque\fR(3X)*
+is_notimeout/\fBcurs_opaque\fR(3X)*
+is_scrollok/\fBcurs_opaque\fR(3X)*
+is_syncok/\fBcurs_opaque\fR(3X)*
+is_term_resized/\fBresizeterm\fR(3X)*
 is_wintouched/\fBcurs_touch\fR(3X)
 isendwin/\fBcurs_initscr\fR(3X)
 key_defined/\fBkey_defined\fR(3X)*
@@ -440,6 +451,7 @@ nl/\fBcurs_outopts\fR(3X)
 nocbreak/\fBcurs_inopts\fR(3X)
 nodelay/\fBcurs_inopts\fR(3X)
 noecho/\fBcurs_inopts\fR(3X)
+nofilter/\fBcurs_util\fR(3X)*
 nonl/\fBcurs_outopts\fR(3X)
 noqiflush/\fBcurs_inopts\fR(3X)
 noraw/\fBcurs_inopts\fR(3X)
@@ -528,6 +540,7 @@ untouchwin/\fBcurs_touch\fR(3X)
 use_default_colors/\fBdefault_colors\fR(3X)*
 use_env/\fBcurs_util\fR(3X)
 use_extended_names/\fBcurs_extend\fR(3X)*
+use_legacy_coding/\fBlegacy_coding\fR(3X)*
 vid_attr/\fBcurs_terminfo\fR(3X)
 vid_puts/\fBcurs_terminfo\fR(3X)
 vidattr/\fBcurs_terminfo\fR(3X)
@@ -994,22 +1007,30 @@ A small number of local differences (that is, individual differences between
 the XSI Curses and \fBncurses\fR calls) are described in \fBPORTABILITY\fR
 sections of the library man pages.
 .PP
+This implementation also contains several extensions:
+.RS 5
+.PP
 The routine \fBhas_key\fR is not part of XPG4, nor is it present in SVr4.  See
 the \fBcurs_getch\fR(3X) manual page for details.
 .PP
-The routine \fBslk_attr\fR is not part of XPG4, nor is it present in SVr4.  See
-the \fBcurs_slk\fR(3X) manual page for details.
+The routine \fBslk_attr\fR is not part of XPG4, nor is it present in SVr4.
+See the \fBcurs_slk\fR(3X) manual page for details.
 .PP
 The routines \fBgetmouse\fR, \fBmousemask\fR, \fBungetmouse\fR,
 \fBmouseinterval\fR, and \fBwenclose\fR relating to mouse interfacing are not
-part of XPG4, nor are they present in SVr4.  See the \fBcurs_mouse\fR(3X)
-manual page for details.
+part of XPG4, nor are they present in SVr4.
+See the \fBcurs_mouse\fR(3X) manual page for details.
 .PP
-The routine \fBmcprint\fR was not present in any previous curses
-implementation.  See the \fBcurs_print\fR(3X) manual page for details.
+The routine \fBmcprint\fR was not present in any previous curses implementation.
+See the \fBcurs_print\fR(3X) manual page for details.
 .PP
-The routine \fBwresize\fR is not part of XPG4, nor is it present in SVr4.  See
-the \fBwresize\fR(3X) manual page for details.
+The routine \fBwresize\fR is not part of XPG4, nor is it present in SVr4.
+See the \fBwresize\fR(3X) manual page for details.
+.PP
+The WINDOW structure's internal details can be hidden from application
+programs.
+See \fBcurs_opaque\fR(3X) for the discussion of \fBis_scrollok\fR, etc.
+.RE
 .PP
 In historic curses versions, delays embedded in the capabilities \fBcr\fR,
 \fBind\fR, \fBcub1\fR, \fBff\fR and \fBtab\fR activated corresponding delay

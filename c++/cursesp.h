@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 #ifndef NCURSES_CURSESP_H_incl
 #define NCURSES_CURSESP_H_incl 1
 
-// $Id: cursesp.h,v 1.26 2005/08/13 18:09:21 tom Exp $
+// $Id: cursesp.h,v 1.27 2007/04/07 17:12:54 tom Exp $
 
 #include <cursesw.h>
 
@@ -83,7 +83,7 @@ protected:
     return uptr->m_user;
   }
 
-  void OnError (int err) const THROWS((NCursesPanelException))
+  void OnError (int err) const THROWS(NCursesPanelException)
   {
     if (err==ERR)
       THROW(new NCursesPanelException (this, err));

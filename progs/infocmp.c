@@ -41,7 +41,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.87 2007/02/03 19:10:27 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.88 2007/04/07 17:07:30 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1083,7 +1083,6 @@ dump_initializers(TERMTYPE *term)
 	    }
 	    *tp++ = '"';
 	    *tp = '\0';
-	    size += (strlen(term->Strings[n]) + 1);
 	    (void) printf("static char %-20s[] = %s;\n",
 			  string_variable(ExtStrname(term, n, strnames)), buf);
 	}

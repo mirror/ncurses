@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,12 +33,10 @@
 
 #include "internal.h"
 
-#include <stdio.h>
+#include <etip.h>
+#include <cursesw.h>
 
-#include "etip.h"
-#include "cursesw.h"
-
-MODULE_ID("$Id: cursespad.cc,v 1.11 2005/07/23 20:51:23 tom Exp $")
+MODULE_ID("$Id: cursespad.cc,v 1.12 2007/04/07 18:43:54 tom Exp $")
 
 NCursesPad::NCursesPad(int nlines, int ncols)
   : NCursesWindow(),

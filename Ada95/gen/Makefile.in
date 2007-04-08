@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.54 2007/03/31 21:53:14 tom Exp $
+#  $Id: Makefile.in,v 1.56 2007/04/07 21:45:46 tom Exp $
 #
 .SUFFIXES:
 
@@ -42,10 +42,13 @@ DESTDIR		= @DESTDIR@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+
 ADA_INCLUDE	= $(DESTDIR)@ADA_INCLUDE@
 ADA_OBJECTS	= $(DESTDIR)@ADA_OBJECTS@
 
 INSTALL		= @INSTALL@
+INSTALL_PROG	= @INSTALL_PROGRAM@
 INSTALL_DATA	= @INSTALL_DATA@
 
 AWK		= @AWK@
@@ -77,6 +80,8 @@ RANLIB		= @RANLIB@
 
 M4		= m4
 M4FLAGS		=
+
+ADACURSES_CONFIG = adacurses-config
 
 GENERATE	= ./gen$x '@DFT_ARG_SUFFIX@'
 DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
@@ -162,7 +167,7 @@ sources:
 
 $(ADA_INCLUDE) \
 $(ADA_OBJECTS) :
-	$(top_srcdir)/mkinstalldirs $@
+	sh $(top_srcdir)/mkdirs.sh $@
 
 install \
 install.libs :: $(ADA_INCLUDE)
@@ -180,6 +185,10 @@ install.libs :: $(ADA_OBJECTS)
 	@$(top_srcdir)/tar-copy.sh '$(ALIB)[-.]*.ali' $(ADA_SRCDIR) $(ADA_OBJECTS)
 	@-chmod u+x $(ADA_SRCDIR)/*.ali
 
+install \
+install.libs :: $(DESTDIR)$(bindir) adacurses-config
+	$(INSTALL_PROG) adacurses-config $(DESTDIR)$(bindir)/$(ADACURSES_CONFIG)
+
 uninstall \
 uninstall.libs ::
 	@echo removing package $(ALIB) from $(ADA_INCLUDE)
@@ -189,6 +198,10 @@ uninstall \
 uninstall.libs ::
 	@echo removing package $(ALIB) from $(ADA_OBJECTS)
 	-@cd $(ADA_OBJECTS) && rm -f $(ALIB)[-.]*
+
+uninstall \
+uninstall.libs ::
+	-rm -f $(DESTDIR)$(bindir)/$(ADACURSES_CONFIG)
 
 gen$x:	gen.o
 	@ECHO_LINK@ $(LINK) $(CFLAGS_NORMAL) gen.o $(LD_FLAGS) -o $@
@@ -369,8 +382,8 @@ install.progs ::
 tags:
 	ctags *.[ch]
 
-TAGS:
-	etags *.[ch]
+@MAKE_UPPER_TAGS@TAGS:
+@MAKE_UPPER_TAGS@	etags *.[ch]
 
 mostlyclean ::
 	-rm -f a.out core gen$x *.o
@@ -384,7 +397,8 @@ clean :: mostlyclean
 	-rm -f $(GEN_TARGETS) instab.tmp *.ad[bs] *.html *.ali *.tmp
 
 distclean :: clean
-	rm -f Makefile
+	-rm -f adacurses-config
+	-rm -f Makefile
 
 realclean :: distclean
 

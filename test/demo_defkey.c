@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.16 2006/04/01 19:08:03 tom Exp $
+ * $Id: demo_defkey.c,v 1.17 2007/04/07 17:13:03 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -143,13 +143,12 @@ really_define_key(WINDOW *win, const char *new_string, int code)
 		code_name);
     }
     log_last_line(win);
+
     if (vis_string != 0) {
 	free(vis_string);
 	vis_string = 0;
     }
 
-    if (vis_string != 0)
-	free(vis_string);
     vis_string = visible(new_string);
     if ((rc = key_defined(new_string)) > 0) {
 	wprintw(win, "%s was bound to %s\n", vis_string, keyname(rc));

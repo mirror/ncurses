@@ -42,7 +42,7 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_color.c,v 1.84 2007/03/10 19:20:15 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.85 2007/04/07 17:07:28 tom Exp $")
 
 /*
  * These should be screen structure members.  They need to be globals for
@@ -69,7 +69,10 @@ NCURSES_EXPORT_VAR(int) COLORS = 0;
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
+#define MAX_PALETTE	8
+
 #define OkColorHi(n)	(((n) < COLORS) && ((n) < max_colors))
+#define InPalette(n)	((n) >= 0 && (n) < MAX_PALETTE)
 
 /*
  * Given a RGB range of 0..1000, we'll normally set the individual values
@@ -175,10 +178,10 @@ init_color_table(void)
 
     tp = (hue_lightness_saturation) ? hls_palette : cga_palette;
     for (n = 0; n < COLORS; n++) {
-	if (n < 8) {
+	if (InPalette(n)) {
 	    SP->_color_table[n] = tp[n];
 	} else {
-	    SP->_color_table[n] = tp[n % 8];
+	    SP->_color_table[n] = tp[n % MAX_PALETTE];
 	    if (hue_lightness_saturation) {
 		SP->_color_table[n].green = 100;
 	    } else {
@@ -382,7 +385,7 @@ init_pair(short pair, short f, short b)
     if (GET_SCREEN_PAIR(SP) == pair)
 	SET_SCREEN_PAIR(SP, (chtype) (~0));	/* force attribute update */
 
-    if (initialize_pair) {
+    if (initialize_pair && InPalette(f) && InPalette(b)) {
 	const color_t *tp = hue_lightness_saturation ? hls_palette : cga_palette;
 
 	TR(TRACE_ATTRS,

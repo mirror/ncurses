@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2007 Free Software Foundation, Inc.                        *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,62 +26,95 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getyx.3x,v 1.15 2007/04/07 23:21:34 tom Exp $
-.TH curs_getyx 3X ""
+.\" $Id: curs_opaque.3x,v 1.1 2007/04/07 23:19:40 tom Exp $
+.TH curs_opaque 3X ""
+.na
+.hy 0
 .SH NAME
-\fBgetyx\fR,
-\fBgetparyx\fR,
-\fBgetbegyx\fR,
-\fBgetmaxyx\fR - get \fBcurses\fR cursor and window coordinates
+\fBis_cleared\fR,
+\fBis_idlok\fR,
+\fBis_idcok\fR,
+\fBis_immedok\fR,
+\fBis_keypad\fR,
+\fBis_leaveok\fR,
+\fBis_nodelay\fR,
+\fBis_timeout\fR,
+\fBis_scrollok\fR,
+\fBis_syncok\fR - \fBcurses\fR output options
+.ad
+.hy
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBvoid getyx(WINDOW *win, int y, int x);\fR
+\fBbool is_cleared (WINDOW *win);\fR
 .br
-\fBvoid getparyx(WINDOW *win, int y, int x);\fR
+\fBbool is_idcok (WINDOW *win);\fR
 .br
-\fBvoid getbegyx(WINDOW *win, int y, int x);\fR
+\fBbool is_idlok (WINDOW *win);\fR
 .br
-\fBvoid getmaxyx(WINDOW *win, int y, int x);\fR
+\fBbool is_immedok (WINDOW *win);\fR
+.br
+\fBbool is_keypad (WINDOW *win);\fR
+.br
+\fBbool is_leaveok (WINDOW *win);\fR
+.br
+\fBbool is_nodelay (WINDOW *win);\fR
+.br
+\fBbool is_notimeout (WINDOW *win);\fR
+.br
+\fBbool is_scrollok (WINDOW *win);\fR
+.br
+\fBbool is_syncok (WINDOW *win);\fR
 .br
 .SH DESCRIPTION
-The \fBgetyx\fR macro places the current cursor position of the given window in
-the two integer variables \fIy\fR and \fIx\fR.
-.PP
-If \fIwin\fR is a subwindow, the \fBgetparyx\fR macro places the beginning
-coordinates of the subwindow relative to the parent window into two integer
-variables \fIy\fR and \fIx\fR.
-Otherwise, \fB-1\fR is placed into \fIy\fR and \fIx\fR.
-.PP
-Like \fBgetyx\fR, the \fBgetbegyx\fR and \fBgetmaxyx\fR macros store
-the current beginning coordinates and size of the specified window.
+This implementation provides functions which return properties
+set in the WINDOW structure, allowing it to be ``opaque'' if
+the symbol \fBNCURSES_OPAQUE\fR is defined:
+.TP 5
+\fBis_cleared\fR
+returns the value set in \fBclearok\fR
+.TP 5
+\fBis_idcok\fR
+returns the value set in \fBidcok\fR
+.TP 5
+\fBis_idlok\fR
+returns the value set in \fBidlok\fR
+.TP 5
+\fBis_immedok\fR
+returns the value set in \fBimmedok\fR
+.TP 5
+\fBis_keypad\fR
+returns the value set in \fBkeypad\fR
+.TP 5
+\fBis_leaveok\fR
+returns the value set in \fBleaveok\fR
+.TP 5
+\fBis_nodelay\fR
+returns the value set in \fBnodelay\fR
+.TP 5
+\fBis_notimeout\fR
+returns the value set in \fBnotimeout\fR
+.TP 5
+\fBis_scrollok\fR
+returns the value set in \fBscrollok\fR
+.TP 5
+\fBis_syncok\fR
+returns the value set in \fBsyncok\fR
+.RE
 .SH RETURN VALUE
-The return values of these macros are undefined (i.e.,
-they should not be used as the right-hand side of assignment statements).
+These functions all return TRUE or FALSE.
 .SH NOTES
-All of these interfaces are macros.
-A "\fB&\fR" is not necessary before the variables \fIy\fR and \fIx\fR.
+Both a macro and a function are provided for each name.
 .SH PORTABILITY
-The
-\fBgetyx\fR,
-\fBgetparyx\fR,
-\fBgetbegyx\fR and
-\fBgetmaxyx\fR
-macros are described in the XSI Curses standard, Issue 4.
-.PP
-This implementation also provides
-\fBgetbegx\fR,
-\fBgetbegy\fR,
-\fBgetcurx\fR,
-\fBgetcury\fR,
-\fBgetmaxx\fR,
-\fBgetmaxy\fR,
-\fBgetparx\fR and
-\fBgetpary\fR
-for compatibility with older versions of curses.
+These routines are specific to ncurses.
+They were not supported on Version 7, BSD or System V implementations.
+It is recommended that any code depending on ncurses extensions
+be conditioned using NCURSES_VERSION.
 .SH SEE ALSO
 \fBcurses\fR(3X),
-\fBcurs_legacy\fR(3X)
+\fBcurs_inopts\fR(3X),
+\fBcurs_outopts\fR(3X),
+\fBcurs_window\fR(3X)
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:

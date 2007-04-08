@@ -30,10 +30,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.43 2007/03/24 18:33:50 tom Exp $
-
-#include <stdarg.h>
-#include <stdio.h>
+// $Id: cursesw.h,v 1.44 2007/04/07 18:42:04 tom Exp $
 
 #include <etip.h>
 

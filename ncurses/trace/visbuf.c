@@ -42,11 +42,13 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.22 2007/03/11 00:03:11 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.23 2007/04/07 19:25:28 tom Exp $")
 
+#ifdef TRACE
 static const char d_quote[] = {D_QUOTE, 0};
 static const char l_brace[] = {L_BRACE, 0};
 static const char r_brace[] = {R_BRACE, 0};
+#endif
 
 static char *
 _nc_vischar(char *tp, unsigned c)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.79 2006/09/30 20:18:15 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.80 2007/04/07 17:13:36 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -352,14 +352,17 @@ version_filter(PredType type, PredIdx idx)
 	}
 	break;
 
+#define is_termcap(type) (idx < (int) sizeof(type##_from_termcap) && \
+			  type##_from_termcap[idx])
+
     case V_BSD:		/* BSD */
 	switch (type) {
 	case BOOLEAN:
-	    return bool_from_termcap[idx];
+	    return is_termcap(bool);
 	case NUMBER:
-	    return num_from_termcap[idx];
+	    return is_termcap(num);
 	case STRING:
-	    return str_from_termcap[idx];
+	    return is_termcap(str);
 	}
 	break;
     }
@@ -788,11 +791,11 @@ fmt_entry(TERMTYPE *tterm,
      * Much more work should be done on this to support dumping termcaps.
      */
     if (tversion == V_HPUX) {
-	if (memory_lock) {
+	if (VALID_STRING(memory_lock)) {
 	    (void) sprintf(buffer, "meml=%s", memory_lock);
 	    WRAP_CONCAT;
 	}
-	if (memory_unlock) {
+	if (VALID_STRING(memory_unlock)) {
 	    (void) sprintf(buffer, "memu=%s", memory_unlock);
 	    WRAP_CONCAT;
 	}

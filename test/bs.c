@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.44 2006/05/20 15:38:52 tom Exp $
+ * $Id: bs.c,v 1.45 2007/04/07 17:13:11 tom Exp $
  */
 
 #include <test.priv.h>
@@ -459,7 +459,7 @@ initgame(void)
 	do {
 	    c = getch();
 	} while
-	    (!strchr("hjklrR", c) || c == FF);
+	    (!(strchr("hjklrR", c) || c == FF));
 
 	if (c == FF) {
 	    (void) clearok(stdscr, TRUE);

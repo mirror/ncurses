@@ -34,7 +34,14 @@
 #include "internal.h"
 #include "cursesapp.h"
 
-MODULE_ID("$Id: cursesmain.cc,v 1.13 2007/01/27 20:29:27 tom Exp $")
+#if CPP_HAS_TRY_CATCH && HAVE_IOSTREAM
+#include <iostream>
+#else
+#undef CPP_HAS_TRY_CATCH
+#define CPP_HAS_TRY_CATCH 0
+#endif
+
+MODULE_ID("$Id: cursesmain.cc,v 1.14 2007/04/07 17:10:11 tom Exp $")
 
 #if HAVE_LOCALE_H
 #include <locale.h>
@@ -62,8 +69,20 @@ int main(int argc, char* argv[])
 
     A->handleArgs(argc,argv);
     ::endwin();
+#if CPP_HAS_TRY_CATCH
+    try {
+      res = (*A)();
+      ::endwin();
+    }
+    catch(const NCursesException &e) {
+      ::endwin();
+      std::cerr << e.message << std::endl;
+      res = e.errorno;
+    }
+#else
     res = (*A)();
     ::endwin();
+#endif
 #if NO_LEAKS
     delete A;
     _nc_free_and_exit(res);

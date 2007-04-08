@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,13 +32,13 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: wresize.c,v 1.24 2006/10/14 20:43:31 tom Exp $")
+MODULE_ID("$Id: wresize.c,v 1.25 2007/04/07 17:13:42 tom Exp $")
 
 static int
 cleanup_lines(struct ldat *data, int length)
 {
     while (--length >= 0)
-	free(data->text);
+	free(data[length].text);
     free(data);
     return ERR;
 }

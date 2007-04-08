@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: etip.h.in,v 1.34 2007/01/27 18:49:00 tom Exp $
+// $Id: etip.h.in,v 1.36 2007/04/07 18:56:32 tom Exp $
 
 #ifndef NCURSES_ETIP_H_incl
 #define NCURSES_ETIP_H_incl 1
@@ -47,6 +47,10 @@
 
 #ifndef HAVE_GPP_BUILTIN_H
 #define HAVE_GPP_BUILTIN_H 0
+#endif
+
+#ifndef HAVE_IOSTREAM
+#define HAVE_IOSTREAM 0
 #endif
 
 #ifndef HAVE_TYPEINFO
@@ -323,30 +327,46 @@ public:
 };
 
 #if !((defined(__GNUG__) && defined(__EXCEPTIONS)) || defined(__SUNPRO_CC))
-#  include <iostream.h>
+#  if HAVE_IOSTREAM
+#     include <iostream>
+using std::cerr;
+using std::endl;
+#  else
+#     include <iostream.h>
+#  endif
    extern "C" void exit(int);
 #endif
 
 inline void THROW(const NCursesException *e) {
 #if defined(__GNUG__) && defined(__EXCEPTIONS)
 #  if ((__GNUG__ <= 2) && (__GNUC_MINOR__ < 8))
-      (*lib_error_handler)(e?e->classname():"",e?e->message:"");
+      (*lib_error_handler)(e ? e->classname() : "", e ? e->message : "");
 #else
-      throw *e;
+#define CPP_HAS_TRY_CATCH 1
 #endif
 #elif defined(__SUNPRO_CC)
 #  if !defined(__SUNPRO_CC_COMPAT) || (__SUNPRO_CC_COMPAT < 5)
   genericerror(1, ((e != 0) ? (char *)(e->message) : ""));
 #else
-  throw *e;
+#define CPP_HAS_TRY_CATCH 1
 #endif
 #else
   if (e)
     cerr << e->message << endl;
   exit(0);
 #endif
-}
 
-#define THROWS(s)
+#ifndef CPP_HAS_TRY_CATCH
+#define CPP_HAS_TRY_CATCH 0
+#define NCURSES_CPP_TRY		/* nothing */
+#define NCURSES_CPP_CATCH(e)	if (false)
+#define THROWS(s)		/* nothing */
+#elif CPP_HAS_TRY_CATCH
+  throw *e;
+#define NCURSES_CPP_TRY		try
+#define NCURSES_CPP_CATCH(e)	catch(e)
+#define THROWS(s)		throw(s)
+#endif
+}
 
 #endif /* NCURSES_ETIP_H_incl */

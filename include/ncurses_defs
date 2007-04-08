@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.32 2007/03/10 15:40:16 tom Exp $
+# $Id: ncurses_defs,v 1.33 2007/04/07 17:07:27 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -67,6 +67,7 @@ HAVE_GPM_H
 HAVE_GPP_BUILTIN_H
 HAVE_GXX_BUILTIN_H
 HAVE_HAS_KEY
+HAVE_IOSTREAM
 HAVE_ISASCII
 HAVE_ISSETUGID
 HAVE_LANGINFO_CODESET

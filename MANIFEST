@@ -4,6 +4,7 @@
 ./Ada95/README
 ./Ada95/TODO
 ./Ada95/gen/Makefile.in
+./Ada95/gen/adacurses-config.in
 ./Ada95/gen/gen.c
 ./Ada95/gen/html.m4
 ./Ada95/gen/normal.m4
@@ -553,8 +554,10 @@
 ./man/curs_instr.3x
 ./man/curs_inwstr.3x
 ./man/curs_kernel.3x
+./man/curs_legacy.3x
 ./man/curs_mouse.3x
 ./man/curs_move.3x
+./man/curs_opaque.3x
 ./man/curs_outopts.3x
 ./man/curs_overlay.3x
 ./man/curs_pad.3x

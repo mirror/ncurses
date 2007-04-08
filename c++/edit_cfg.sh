@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: edit_cfg.sh,v 1.15 2007/01/27 18:51:04 tom Exp $
+# $Id: edit_cfg.sh,v 1.16 2007/04/07 19:08:49 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -45,6 +45,7 @@ for name in \
 	HAVE_BUILTIN_H \
 	HAVE_GPP_BUILTIN_H \
 	HAVE_GXX_BUILTIN_H \
+	HAVE_IOSTREAM \
 	HAVE_TYPEINFO \
 	HAVE_VALUES_H
 do
