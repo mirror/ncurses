@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.428 2007/03/31 15:53:01 tom Exp $
+dnl $Id: aclocal.m4,v 1.429 2007/04/19 20:04:46 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3992,6 +3992,41 @@ done
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_SIG_ATOMIC_T version: 2 updated: 2005/09/18 17:27:12
+dnl ---------------
+dnl signal handler, but there are some gcc depedencies in that recommendation.
+dnl Try anyway.
+AC_DEFUN([CF_SIG_ATOMIC_T],
+[
+AC_MSG_CHECKING(for signal global datatype)
+AC_CACHE_VAL(cf_cv_sig_atomic_t,[
+	for cf_type in \
+		"volatile sig_atomic_t" \
+		"sig_atomic_t" \
+		"int"
+	do
+	AC_TRY_COMPILE([
+#include <sys/types.h>
+#include <signal.h>
+#include <stdio.h>
+
+extern $cf_type x;
+$cf_type x;
+static void handler(int sig)
+{
+	x = 5;
+}],
+		[signal(SIGINT, handler);
+		 x = 1],
+		[cf_cv_sig_atomic_t=$cf_type],
+		[cf_cv_sig_atomic_t=no])
+		test "$cf_cv_sig_atomic_t" != no && break
+	done
+	])
+AC_MSG_RESULT($cf_cv_sig_atomic_t)
+test "$cf_cv_sig_atomic_t" != no && AC_DEFINE_UNQUOTED(SIG_ATOMIC_T, $cf_cv_sig_atomic_t)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_SIZECHANGE version: 8 updated: 2000/11/04 12:22:16
 dnl -------------
 dnl Check for definitions & structures needed for window size-changing
@@ -4592,7 +4627,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 16 updated: 2007/03/25 18:05:48
+dnl CF_WITH_LIBTOOL version: 18 updated: 2007/04/08 20:02:38
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -4641,7 +4676,7 @@ LIB_PREP="$RANLIB"
 # doing:
 LIB_CLEAN=
 LIB_COMPILE=
-LIB_LINK=
+LIB_LINK='${CC}'
 LIB_INSTALL=
 LIB_UNINSTALL=
 
@@ -4667,12 +4702,12 @@ ifdef([AC_PROG_LIBTOOL],[
  		AC_MSG_ERROR(Cannot find libtool)
  	fi
 ])dnl
-	LIB_CREATE='${LIBTOOL} --mode=link ${CC} -rpath ${DESTDIR}${libdir} -version-info `cut -f1 ${srcdir}/VERSION` -o'
+	LIB_CREATE='${LIBTOOL} --mode=link ${CC} -rpath ${DESTDIR}${libdir} -version-info `cut -f1 ${srcdir}/VERSION` ${LIBTOOL_OPTS} -o'
 	LIB_OBJECT='${OBJECTS:.o=.lo}'
 	LIB_SUFFIX=.la
 	LIB_CLEAN='${LIBTOOL} --mode=clean'
 	LIB_COMPILE='${LIBTOOL} --mode=compile'
-	LIB_LINK='${LIBTOOL} --mode=link'
+	LIB_LINK='${LIBTOOL} --mode=link ${CC} ${LIBTOOL_OPTS}'
 	LIB_INSTALL='${LIBTOOL} --mode=install'
 	LIB_UNINSTALL='${LIBTOOL} --mode=uninstall'
 	LIB_PREP=:
@@ -4707,6 +4742,7 @@ test -z "$LIBTOOL" && ECHO_LT=
 
 AC_SUBST(LIBTOOL)
 AC_SUBST(LIBTOOL_CXX)
+AC_SUBST(LIBTOOL_OPTS)
 
 AC_SUBST(LIB_CREATE)
 AC_SUBST(LIB_OBJECT)

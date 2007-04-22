@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1116 2007/04/14 20:25:08 tom Exp $
+-- $Id: NEWS,v 1.1118 2007/04/21 23:57:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20060421
+	+ move most static variables into structures _nc_globals and
+	  _nc_prescreen, to simplify storage.
+	+ add/use configure script macro CF_SIG_ATOMIC_T, use the corresponding
+	  type for data manipulated by signal handlers (prompted by comments
+	  in mailing.openbsd.bugs newsgroup).
+	+ modify CF_WITH_LIBTOOL to allow one to pass options such as -static
+	  to the libtool create- and link-operations.
 
 20060414
 	+ fix whitespace in curs_opaque.3x which caused a spurious ';' in

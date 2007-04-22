@@ -35,17 +35,18 @@
 #include <curses.priv.h>
 #include <term.h>		/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.32 2007/03/10 18:47:26 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.33 2007/04/21 23:31:24 tom Exp $")
 
 #if BROKEN_LINKER || USE_REENTRANT
+#define MyBuffer _nc_prescreen.real_acs_map
 NCURSES_EXPORT_VAR(chtype *)
 _nc_acs_map(void)
 {
-    static chtype *the_map = 0;
-    if (the_map == 0)
-	the_map = typeCalloc(chtype, ACS_LEN);
-    return the_map;
+    if (MyBuffer == 0)
+	MyBuffer = typeCalloc(chtype, ACS_LEN);
+    return MyBuffer;
 }
+#undef MyBuffer
 #else
 NCURSES_EXPORT_VAR(chtype) acs_map[ACS_LEN] =
 {

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -46,7 +46,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.59 2006/08/19 12:05:25 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.61 2007/04/21 23:06:07 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -54,29 +54,28 @@ NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 NCURSES_EXPORT_VAR(const char *) _nc_tputs_trace = "";
 NCURSES_EXPORT_VAR(long) _nc_outchars = 0;
 
-static FILE *tracefp = 0;	/* default to writing to stderr */
+#define TraceFP		_nc_globals.trace_fp
+#define TracePath	_nc_globals.trace_fname
+#define TraceLevel	_nc_globals.trace_level
 
 NCURSES_EXPORT(void)
 trace(const unsigned int tracelevel)
 {
-    static bool been_here = FALSE;
-    static char my_name[PATH_MAX];
+    if ((TraceFP == 0) && tracelevel) {
+	const char *mode = _nc_globals.init_trace ? "ab" : "wb";
 
-    if ((tracefp == 0) && tracelevel) {
-	const char *mode = been_here ? "ab" : "wb";
-
-	if (*my_name == '\0') {
-	    if (getcwd(my_name, sizeof(my_name) - 10) == 0) {
+	if (TracePath[0] == '\0') {
+	    if (getcwd(TracePath, sizeof(TracePath) - 10) == 0) {
 		perror("curses: Can't get working directory");
 		exit(EXIT_FAILURE);
 	    }
-	    strcat(my_name, "/trace");
+	    strcat(TracePath, "/trace");
 	}
 
-	been_here = TRUE;
+	_nc_globals.init_trace = TRUE;
 	_nc_tracing = tracelevel;
-	if (_nc_access(my_name, W_OK) < 0
-	    || (tracefp = fopen(my_name, mode)) == 0) {
+	if (_nc_access(TracePath, W_OK) < 0
+	    || (TraceFP = fopen(TracePath, mode)) == 0) {
 	    perror("curses: Can't open 'trace' file");
 	    exit(EXIT_FAILURE);
 	}
@@ -85,18 +84,18 @@ trace(const unsigned int tracelevel)
 	 * end of each line.  This is useful in case the program dies. 
 	 */
 #if HAVE_SETVBUF		/* ANSI */
-	(void) setvbuf(tracefp, (char *) 0, _IOLBF, 0);
+	(void) setvbuf(TraceFP, (char *) 0, _IOLBF, 0);
 #elif HAVE_SETBUF		/* POSIX */
-	(void) setbuffer(tracefp, (char *) 0);
+	(void) setbuffer(TraceFP, (char *) 0);
 #endif
 	_tracef("TRACING NCURSES version %s.%d (tracelevel=%#x)",
 		NCURSES_VERSION,
 		NCURSES_VERSION_PATCH,
 		tracelevel);
     } else if (tracelevel == 0) {
-	if (tracefp != 0) {
-	    fclose(tracefp);
-	    tracefp = 0;
+	if (TraceFP != 0) {
+	    fclose(TraceFP);
+	    TraceFP = 0;
 	}
 	_nc_tracing = tracelevel;
     } else if (_nc_tracing != tracelevel) {
@@ -110,7 +109,6 @@ _tracef(const char *fmt,...)
 {
     static const char Called[] = T_CALLED("");
     static const char Return[] = T_RETURN("");
-    static int level;
     va_list ap;
     bool before = FALSE;
     bool after = FALSE;
@@ -120,12 +118,12 @@ _tracef(const char *fmt,...)
     if (strlen(fmt) >= sizeof(Called) - 1) {
 	if (!strncmp(fmt, Called, sizeof(Called) - 1)) {
 	    before = TRUE;
-	    level++;
+	    TraceLevel++;
 	} else if (!strncmp(fmt, Return, sizeof(Return) - 1)) {
 	    after = TRUE;
 	}
 	if (before || after) {
-	    if ((level <= 1)
+	    if ((TraceLevel <= 1)
 		|| (doit & TRACE_ICALLS) != 0)
 		doit &= (TRACE_CALLS | TRACE_CCALLS);
 	    else
@@ -134,22 +132,22 @@ _tracef(const char *fmt,...)
     }
 
     if (doit != 0) {
-	if (tracefp == 0)
-	    tracefp = stderr;
+	if (TraceFP == 0)
+	    TraceFP = stderr;
 	if (before || after) {
 	    int n;
-	    for (n = 1; n < level; n++)
-		fputs("+ ", tracefp);
+	    for (n = 1; n < TraceLevel; n++)
+		fputs("+ ", TraceFP);
 	}
 	va_start(ap, fmt);
-	vfprintf(tracefp, fmt, ap);
-	fputc('\n', tracefp);
+	vfprintf(TraceFP, fmt, ap);
+	fputc('\n', TraceFP);
 	va_end(ap);
-	fflush(tracefp);
+	fflush(TraceFP);
     }
 
-    if (after && level)
-	level--;
+    if (after && TraceLevel)
+	TraceLevel--;
     errno = save_err;
 }
 

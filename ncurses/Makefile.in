@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.104 2007/03/31 15:46:42 tom Exp $
+# $Id: Makefile.in,v 1.106 2007/04/22 00:09:18 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -112,7 +112,7 @@ CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
 
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 
-LINK		= $(LIBTOOL) $(CC)
+LINK		= $(LIBTOOL)
 LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 SHLIB_DIRS	= -L../lib
@@ -266,17 +266,17 @@ test_progs : $(TEST_PROGS)
 	sh $(base)/MKlib_gen.sh "$(CPP) $(CPPFLAGS)" "$(AWK)" implemented <../include/curses.h >$@
 
 captoinfo$x : $(tinfo)/captoinfo.c $(TEST_DEPS)
-	@ECHO_LINK@ $(CC) -o $@ $(CFLAGS_DEFAULT) -DMAIN $(tinfo)/captoinfo.c $(TEST_LDFLAGS)
+	@ECHO_LINK@ $(LIBTOOL_LINK) -o $@ $(CFLAGS_DEFAULT) -DMAIN $(tinfo)/captoinfo.c $(TEST_LDFLAGS)
 
 hardscroll$x : $(serial)/hardscroll.c $(TEST_DEPS)
-	@ECHO_LINK@ $(CC) -o $@ $(CFLAGS_DEFAULT) -DSCROLLDEBUG $(serial)/hardscroll.c $(TEST_LDFLAGS)
+	@ECHO_LINK@ $(LIBTOOL_LINK) -o $@ $(CFLAGS_DEFAULT) -DSCROLLDEBUG $(serial)/hardscroll.c $(TEST_LDFLAGS)
 
 hashmap$x : $(serial)/hashmap.c $(TEST_DEPS)
-	@ECHO_LINK@ $(CC) -o $@ $(CFLAGS_DEFAULT) -DHASHDEBUG $(serial)/hashmap.c $(TEST_LDFLAGS)
+	@ECHO_LINK@ $(LIBTOOL_LINK) -o $@ $(CFLAGS_DEFAULT) -DHASHDEBUG $(serial)/hashmap.c $(TEST_LDFLAGS)
 
 lib_mvcur$x : $(serial)/lib_mvcur.c $(TEST_DEPS) \
 		../@DFT_OBJ_SUBDIR@/dump_entry$o
-	@ECHO_LINK@ $(CC) -o $@ $(CFLAGS_DEFAULT) -DNCURSES_TEST -I$(serial)/../../progs $(serial)/lib_mvcur.c ../@DFT_OBJ_SUBDIR@/dump_entry$o $(TEST_LDFLAGS)
+	@ECHO_LINK@ $(LIBTOOL_LINK) -o $@ $(CFLAGS_DEFAULT) -DNCURSES_TEST -I$(serial)/../../progs $(serial)/lib_mvcur.c ../@DFT_OBJ_SUBDIR@/dump_entry$o $(TEST_LDFLAGS)
 
 link_test$x : ./link_test.c $(TEST_DEPS) \
 		../@DFT_OBJ_SUBDIR@/link_test$o

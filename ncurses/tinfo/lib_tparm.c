@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.72 2006/12/30 20:14:43 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.73 2007/04/21 20:43:19 tom Exp $")
 
 /*
  *	char *
@@ -105,43 +105,9 @@ MODULE_ID("$Id: lib_tparm.c,v 1.72 2006/12/30 20:14:43 tom Exp $")
  *	resulting in x mod y, not the reverse.
  */
 
-#define STACKSIZE	20
-
-typedef struct {
-    union {
-	int num;
-	char *str;
-    } data;
-    bool num_type;
-} stack_frame;
-
 NCURSES_EXPORT_VAR(int) _nc_tparm_err = 0;
 
-#define NUM_VARS 26
-
-typedef struct {
-#ifdef TRACE
-    const char *tname;
-#endif
-    const char *tparam_base;
-
-    stack_frame stack[STACKSIZE];
-    int stack_ptr;
-
-    char *out_buff;
-    size_t out_size;
-    size_t out_used;
-
-    char *fmt_buff;
-    size_t fmt_size;
-
-    int dynamic_var[NUM_VARS];
-    int static_vars[NUM_VARS];
-} tparm_state;
-
-static tparm_state tps;
-
-#define TPS(var) tps.var
+#define TPS(var) _nc_prescreen.tparm_state.var
 
 #if NO_LEAKS
 NCURSES_EXPORT(void)

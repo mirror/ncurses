@@ -48,7 +48,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.65 2007/03/10 23:39:27 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.67 2007/04/21 20:47:32 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -94,14 +94,12 @@ _nc_initscr(void)
  * aside from possibly delaying a filter() call until some terminals have been
  * initialized.
  */
-static bool filter_mode = FALSE;
-
 NCURSES_EXPORT(void)
 filter(void)
 {
     START_TRACE();
     T((T_CALLED("filter")));
-    filter_mode = TRUE;
+    _nc_prescreen.filter_mode = TRUE;
     returnVoid;
 }
 
@@ -115,7 +113,7 @@ nofilter(void)
 {
     START_TRACE();
     T((T_CALLED("nofilter")));
-    filter_mode = FALSE;
+    _nc_prescreen.filter_mode = FALSE;
     returnVoid;
 }
 #endif
@@ -131,8 +129,6 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 
     START_TRACE();
     T((T_CALLED("newterm(\"%s\",%p,%p)"), name, ofp, ifp));
-
-    _nc_handle_sigwinch(0);
 
     /* this loads the capability entry, then sets LINES and COLS */
     if (setupterm(name, fileno(ofp), &errret) == ERR) {
@@ -154,7 +150,11 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 #endif
 	}
 
-	if (_nc_setupscreen(LINES, COLS, ofp, filter_mode, slk_format) == ERR) {
+	if (_nc_setupscreen(LINES,
+			    COLS,
+			    ofp,
+			    _nc_prescreen.filter_mode,
+			    slk_format) == ERR) {
 	    _nc_set_screen(current);
 	    result = 0;
 	} else {
@@ -216,6 +216,5 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 	    result = SP;
 	}
     }
-    _nc_handle_sigwinch(1);
     returnSP(result);
 }

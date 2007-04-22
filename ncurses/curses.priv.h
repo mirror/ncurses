@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.325 2007/03/10 23:43:50 tom Exp $
+ * $Id: curses.priv.h,v 1.330 2007/04/21 23:52:28 tom Exp $
  *
  *	curses.priv.h
  *
@@ -407,6 +407,156 @@ typedef int (*TYPE_Gpm_GetEvent) (Gpm_Event *);
 #endif /* HAVE_LIBDL */
 #endif /* USE_GPM_SUPPORT */
 
+typedef struct {
+    long sequence;
+    bool last_used;
+    char *fix_sgr0;		/* this holds the filtered sgr0 string */
+    char *last_bufp;		/* help with fix_sgr0 leak */
+    TERMINAL *last_term;
+} TGETENT_CACHE;
+
+#define TGETENT_MAX 4
+
+/*
+ * State of tparm().
+ */
+#define STACKSIZE 20
+
+typedef struct {
+	union {
+		int	num;
+		char	*str;
+	} data;
+	bool num_type;
+} STACK_FRAME;
+
+#define NUM_VARS 26
+
+typedef struct {
+#ifdef TRACE
+	const char	*tname;
+#endif
+	const char	*tparam_base;
+
+	STACK_FRAME	stack[STACKSIZE];
+	int		stack_ptr;
+
+	char		*out_buff;
+	size_t		out_size;
+	size_t		out_used;
+
+	char		*fmt_buff;
+	size_t		fmt_size;
+
+	int		dynamic_var[NUM_VARS];
+	int		static_vars[NUM_VARS];
+} TPARM_STATE;
+
+typedef struct {
+    char *text;
+    size_t size;
+} TRACEBUF;
+
+/*
+ * TRACEMSE_FMT is no longer than 80 columns, there are 5 numbers that
+ * could at most have 10 digits, and the mask contains no more than 32 bits
+ * with each bit representing less than 15 characters.  Usually the whole
+ * string is less than 80 columns, but this buffer size is an absolute
+ * limit.
+ */
+#define TRACEMSE_MAX	(80 + (5 * 10) + (32 * 15))
+#define TRACEMSE_FMT	"id %2d  at (%2d, %2d, %2d) state %4lx = {" /* } */
+
+/*
+ * Global data which is not specific to a screen.
+ */
+typedef struct {
+	SIG_ATOMIC_T	have_sigwinch;
+	SIG_ATOMIC_T	cleanup_nested;
+
+	bool		init_signals;
+	bool		init_screen;
+
+	const char	*comp_sourcename;
+	char		*comp_termtype;
+
+	bool		have_tic_directory;
+	bool		keep_tic_directory;
+	const char	*tic_directory;
+
+	char		*dbi_list;
+	int		dbi_size;
+
+	char		*first_name;
+	char		**keyname_table;
+
+	char		*safeprint_buf;
+	size_t		safeprint_used;
+
+	TGETENT_CACHE	tgetent_cache[TGETENT_MAX];
+	int		tgetent_index;
+	long		tgetent_sequence;
+
+#if USE_HOME_TERMINFO
+	char		*home_terminfo;
+#endif
+
+#if !USE_SAFE_SPRINTF
+	int		safeprint_cols;
+	int		safeprint_rows;
+#endif
+
+#ifdef TRACE
+	bool		init_trace;
+	char		trace_fname[PATH_MAX];
+	int		trace_level;
+	FILE		*trace_fp;
+
+	char		*tracearg_buf;
+	size_t		tracearg_used;
+
+	TRACEBUF	*tracebuf_ptr;
+	size_t		tracebuf_used;
+
+	char		tracechr_buf[40];
+
+	char		*tracedmp_buf;
+	size_t		tracedmp_used;
+
+	char		tracemse_buf[TRACEMSE_MAX];
+
+	unsigned char	*tracetry_buf;
+	size_t		tracetry_used;
+
+#ifndef USE_TERMLIB
+	char		traceatr_color_buf[2][80];
+	int		traceatr_color_sel;
+	int		traceatr_color_last;
+#endif	/* USE_TERMLIB */
+
+#endif	/* TRACE */
+} NCURSES_GLOBALS;
+
+extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;
+
+/*
+ * Global data which is swept up into a SCREEN when one is created.
+ * It may be modified before the next SCREEN is created.
+ */
+typedef struct {
+	bool		use_env;
+	bool		filter_mode;
+	attr_t		previous_attr;
+	ripoff_t	rippedoff[5];
+	ripoff_t	*rsp;
+	TPARM_STATE	tparm_state;
+#if BROKEN_LINKER || USE_REENTRANT
+	chtype		*real_acs_map;
+#endif
+} NCURSES_PRESCREEN;
+
+extern NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen;
+
 /*
  * The SCREEN structure.
  */
@@ -639,6 +789,7 @@ struct screen {
 };
 
 extern NCURSES_EXPORT_VAR(SCREEN *) _nc_screen_chain;
+extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 	WINDOWLIST {
 	WINDOW	win;	/* first, so WINDOW_EXT() works */

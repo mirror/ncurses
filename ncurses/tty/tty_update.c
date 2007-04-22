@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -74,7 +74,7 @@
 #include <ctype.h>
 #include <term.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.238 2006/11/25 22:33:21 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.239 2007/04/19 20:57:49 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -640,7 +640,7 @@ doupdate(void)
 	SP->_fifohold--;
 
 #if USE_SIZECHANGE
-    if (SP->_endwin || SP->_sig_winch) {
+    if (SP->_endwin || _nc_handle_sigwinch(FALSE)) {
 	/*
 	 * This is a transparent extension:  XSI does not address it,
 	 * and applications need not know that ncurses can do it.

@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.78 2007/03/10 19:22:28 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.79 2007/04/19 20:57:49 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -391,7 +391,7 @@ _nc_wgetch(WINDOW *win,
 
     if (ch == ERR) {
 #if USE_SIZECHANGE
-	if (SP->_sig_winch) {
+	if (_nc_handle_sigwinch(FALSE)) {
 	    _nc_update_screensize();
 	    /* resizeterm can push KEY_RESIZE */
 	    if (cooked_key_in_fifo()) {

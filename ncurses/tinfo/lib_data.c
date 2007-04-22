@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.19 2007/03/10 19:31:27 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.24 2007/04/21 23:55:13 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -105,3 +105,113 @@ _nc_set_screen(SCREEN *sp)
 #else
 NCURSES_EXPORT_VAR(SCREEN *) SP = NULL; /* Some linkers require initialized data... */
 #endif
+/* *INDENT-OFF* */
+#define CHARS_0s { '\0' }
+
+#define TGETENT_0 { 0L, FALSE, NULL, NULL, NULL }
+#define TGETENT_0s { TGETENT_0, TGETENT_0, TGETENT_0, TGETENT_0 } 
+
+NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
+    0,				/* have_sigwinch */
+    0,				/* cleanup_nested */
+
+    FALSE,			/* init_signals */
+    FALSE,			/* init_screen */
+
+    NULL,			/* comp_sourcename */
+    NULL,			/* comp_termtype */
+
+    FALSE,			/* have_tic_directory */
+    FALSE,			/* keep_tic_directory */
+    TERMINFO,			/* tic_directory */
+
+    NULL,			/* dbi_list */
+    0,				/* dbi_size */
+
+    NULL,			/* first_name */
+    NULL,			/* keyname_table */
+
+    NULL,			/* safeprint_buf */
+    0,				/* safeprint_used */
+
+    TGETENT_0s,			/* tgetent_cache */
+    0,				/* tgetent_index */
+    0,				/* tgetent_sequence */
+
+#if USE_HOME_TERMINFO
+    NULL,			/* home_terminfo */
+#endif
+
+#if !USE_SAFE_SPRINTF
+    0,				/* safeprint_cols */
+    0,				/* safeprint_rows */
+#endif
+
+#ifdef TRACE
+    FALSE,			/* init_trace */
+    CHARS_0s,			/* trace_fname */
+    0,				/* trace_level */
+    NULL,			/* trace_fp */
+
+    NULL,			/* tracearg_buf */
+    0,				/* tracearg_used */
+
+    NULL,			/* tracebuf_ptr */
+    0,				/* tracebuf_used */
+
+    CHARS_0s,			/* tracechr_buf */
+
+    NULL,			/* tracedmp_buf */
+    0,				/* tracedmp_used */
+
+    CHARS_0s,			/* tracemse_buf */
+
+    NULL,			/* tracetry_buf */
+    0,				/* tracetry_used */
+
+#ifndef USE_TERMLIB
+    { CHARS_0s, CHARS_0s },	/* traceatr_color_buf */
+    0,				/* traceatr_color_sel */
+    -1,				/* traceatr_color_last */
+#endif /* USE_TERMLIB */
+
+#endif /* TRACE */
+};
+
+#define STACK_FRAME_0	{ { 0 }, 0 }
+#define STACK_FRAME_0s	{ STACK_FRAME_0 }
+#define NUM_VARS_0s	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+
+#define RIPOFF_0	{ 0,0,0 }
+#define RIPOFF_0s	{ RIPOFF_0 }
+
+NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {
+    TRUE,			/* use_env */
+    FALSE,			/* filter_mode */
+    A_NORMAL,			/* previous_attr */
+    RIPOFF_0s,			/* ripoff */
+    NULL,			/* rsp */
+    {				/* tparm_state */
+#ifdef TRACE
+	NULL,			/* tname */
+#endif
+	NULL,			/* tparam_base */
+
+	STACK_FRAME_0s,		/* stack */
+	0,			/* stack_ptr */
+
+	NULL,			/* out_buff */
+	0,			/* out_size */
+	0,			/* out_used */
+
+	NULL,			/* fmt_buff */
+	0,			/* fmt_size */
+
+	NUM_VARS_0s,		/* dynamic_var */
+	NUM_VARS_0s,		/* static_vars */
+    },
+#if BROKEN_LINKER || USE_REENTRANT
+    NULL,			/* real_acs_map */
+#endif
+};
+/* *INDENT-ON* */

@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.95 2007/03/10 23:52:01 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.96 2007/04/21 20:51:44 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -166,8 +166,6 @@ delscreen(SCREEN *sp)
     returnVoid;
 }
 
-static ripoff_t rippedoff[5];
-static ripoff_t *rsp = rippedoff;
 #define N_RIPS SIZEOF(SP->_rippedoff)
 
 static bool
@@ -217,6 +215,9 @@ extract_fgbg(char *src, int *result)
     return dst;
 }
 #endif
+
+#define ripoff_sp	_nc_prescreen.rsp
+#define ripoff_stack	_nc_prescreen.rippedoff
 
 /* OS-independent screen initializations */
 NCURSES_EXPORT(int)
@@ -548,15 +549,22 @@ _nc_setupscreen(int slines GCC_UNUSED,
     def_shell_mode();
     def_prog_mode();
 
-    for (i = 0, rsp = rippedoff; rsp->line && (i < (int) N_RIPS); rsp++, i++) {
-	T(("ripping off line %d at %s", i, rsp->line < 0 ? "bottom" : "top"));
-	SP->_rippedoff[i] = rippedoff[i];
-	if (rsp->hook) {
-	    int count = (rsp->line < 0) ? -rsp->line : rsp->line;
+    for (i = 0, ripoff_sp = ripoff_stack;
+	 ripoff_sp->line && (i < (int) N_RIPS);
+	 ripoff_sp++, i++) {
+
+	T(("ripping off line %d at %s", i,
+	   ((ripoff_sp->line < 0)
+	    ? "bottom"
+	    : "top")));
+
+	SP->_rippedoff[i] = ripoff_stack[i];
+	if (ripoff_sp->hook) {
+	    int count = (ripoff_sp->line < 0) ? -ripoff_sp->line : ripoff_sp->line;
 
 	    SP->_rippedoff[i].w = newwin(count,
 					 scolumns,
-					 ((rsp->line < 0)
+					 ((ripoff_sp->line < 0)
 					  ? SP->_lines_avail - count
 					  : 0),
 					 0);
@@ -564,17 +572,17 @@ _nc_setupscreen(int slines GCC_UNUSED,
 		SP->_rippedoff[i].hook(SP->_rippedoff[i].w, scolumns);
 	    else
 		returnCode(ERR);
-	    if (rsp->line < 0)
+	    if (ripoff_sp->line < 0)
 		bottom_stolen += count;
 	    else
 		SP->_topstolen += count;
 	    SP->_lines_avail -= count;
 	}
-	rsp->line = 0;
+	ripoff_sp->line = 0;
     }
     SP->_rip_count = i;
     /* reset the stack */
-    rsp = rippedoff;
+    ripoff_sp = ripoff_stack;
 
     T(("creating stdscr"));
     assert((SP->_lines_avail + SP->_topstolen + bottom_stolen) == slines);
@@ -600,13 +608,13 @@ _nc_ripoffline(int line, int (*init) (WINDOW *, int))
 
     if (line != 0) {
 
-	if (rsp >= rippedoff + N_RIPS)
+	if (ripoff_sp >= ripoff_stack + N_RIPS)
 	    returnCode(ERR);
 
-	rsp->line = line;
-	rsp->hook = init;
-	rsp->w = 0;
-	rsp++;
+	ripoff_sp->line = line;
+	ripoff_sp->hook = init;
+	ripoff_sp->w = 0;
+	ripoff_sp++;
     }
 
     returnCode(OK);

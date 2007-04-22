@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.96 2007/03/10 23:36:05 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.98 2007/04/21 19:57:42 tom Exp $")
 
 /****************************************************************************
  *
@@ -127,50 +127,28 @@ NCURSES_EXPORT_VAR(int) COLS = 0;
 NCURSES_EXPORT_VAR(int) TABSIZE = 0;
 #endif
 
-static int _use_env = TRUE;
-
 #if USE_SIGWINCH
-int
-_nc_handle_sigwinch(int enable)
+/*
+ * If we have a pending SIGWINCH, set the flag in each screen.
+ */
+NCURSES_EXPORT(int)
+_nc_handle_sigwinch(int update)
 {
-    static int have_sigwinch = 0;	/* initially no SIGWINCH's */
-    static int can_resizeall = 1;	/* initially enabled */
     SCREEN *scan;
-    int result;
 
-    switch (enable) {
-    default:
-	/* record a SIGWINCH */
-	have_sigwinch = 1;
-	break;
-    case 0:
-	/* temporarily disable the next block */
-	--can_resizeall;
-	break;
-    case 1:
-	/* temporarily enable the next block */
-	++can_resizeall;
-	break;
-    }
+    (void) update;		/* no longer used */
 
-    /*
-     * If we have a pending SIGWINCH, set the flag in each screen.
-     * But do this only if the block is enabled.
-     */
-    if (can_resizeall-- >= 0) {	/* test and disable */
-	if (have_sigwinch) {
-	    scan = _nc_screen_chain;
-	    while (scan) {
-		scan->_sig_winch = TRUE;
-		scan = scan->_next_screen;
-	    }
-	    have_sigwinch = 0;
+    if (_nc_globals.have_sigwinch) {
+	_nc_globals.have_sigwinch = 0;
+
+	scan = _nc_screen_chain;
+	while (scan) {
+	    scan->_sig_winch = TRUE;
+	    scan = scan->_next_screen;
 	}
     }
-    result = can_resizeall + 1;	/* reenable (unless disables are nested) */
-    can_resizeall = result;
 
-    return result;
+    return (SP ? SP->_sig_winch : 0);
 }
 
 #endif
@@ -179,11 +157,11 @@ NCURSES_EXPORT(void)
 use_env(bool f)
 {
     T((T_CALLED("use_env()")));
-    _use_env = f;
+    _nc_prescreen.use_env = f;
     returnVoid;
 }
 
-void
+NCURSES_EXPORT(void)
 _nc_get_screensize(int *linep, int *colp)
 /* Obtain lines/columns values from the environment and/or terminfo entry */
 {
@@ -192,8 +170,7 @@ _nc_get_screensize(int *linep, int *colp)
     /* figure out the size of the screen */
     T(("screen size: terminfo lines = %d columns = %d", lines, columns));
 
-    _nc_handle_sigwinch(0);
-    if (!_use_env) {
+    if (!_nc_prescreen.use_env) {
 	*linep = (int) lines;
 	*colp = (int) columns;
     } else {			/* usually want to query LINES and COLUMNS from environment */
@@ -271,7 +248,6 @@ _nc_get_screensize(int *linep, int *colp)
 	lines = (short) (*linep);
 	columns = (short) (*colp);
     }
-    _nc_handle_sigwinch(1);
 
     T(("screen size is %dx%d", *linep, *colp));
 
