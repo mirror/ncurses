@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.96 2007/04/19 20:15:16 tom Exp $
+# $Id: Makefile.in,v 1.97 2007/04/28 15:28:28 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -87,16 +87,18 @@ LDFLAGS_DEBUG	= $(LDFLAGS) $(CFLAGS_DEBUG)
 LDFLAGS_PROFILE	= $(LDFLAGS) $(CFLAGS_PROFILE)
 LDFLAGS_SHARED	= $(LDFLAGS) $(CFLAGS_SHARED) @LD_SHARED_OPTS@
 
+TEST_ARGS	= @LDFLAGS_STATIC@ @TEST_ARGS@ @LDFLAGS_SHARED@ 
+
 # use these for linking with all of the libraries
-LIBS_DEFAULT	= @TEST_ARGS@ @LIBS@ $(MATH_LIB)
+LIBS_DEFAULT	= $(TEST_ARGS) @LIBS@ $(MATH_LIB)
 LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@) $(LIBS_DEFAULT)
 
 # use these for linking with the (n)curses library
-LIBS_CURSES	= `echo "@TEST_ARGS@ @LIBS@" | sed -e 's/-lform.*-lpanel[^ ]*//'` $(MATH_LIB)
+LIBS_CURSES	= `echo "$(TEST_ARGS) @LIBS@" | sed -e 's/-lform.*-lpanel[^ ]*//'` $(MATH_LIB)
 LDFLAGS_CURSES	= $(LDFLAGS_@DFT_UPR_MODEL@) $(LIBS_CURSES)
 
 # use these for linking with the tinfo library if we have it, or curses library if not
-LIBS_TINFO	= @TINFO_ARGS@ @LIBS@ $(MATH_LIB)
+LIBS_TINFO	= @LDFLAGS_STATIC@ @TINFO_ARGS@ @LDFLAGS_SHARED@ @LIBS@ $(MATH_LIB)
 LDFLAGS_TINFO	= $(LDFLAGS_@DFT_UPR_MODEL@) $(LIBS_TINFO)
 
 LINT		= @LINT@

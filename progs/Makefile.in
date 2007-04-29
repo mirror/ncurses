@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.73 2007/04/19 20:15:02 tom Exp $
+# $Id: Makefile.in,v 1.74 2007/04/28 15:47:19 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -99,8 +99,7 @@ LOCAL_LIBDIR	= @top_builddir@/lib
 
 LD		= @LD@
 LINK		= @LINK_PROGS@ $(LIBTOOL_LINK)
-LDFLAGS		= @EXTRA_LDFLAGS@ \
-		@TICS_ARGS@ @TINFO_ARGS@ @LDFLAGS@ @LD_MODEL@ @LIBS@
+LDFLAGS		= @EXTRA_LDFLAGS@ @LDFLAGS_STATIC@ @TICS_ARGS@ @TINFO_ARGS@ @LDFLAGS_SHARED@ @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
 LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)

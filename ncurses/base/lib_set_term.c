@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.96 2007/04/21 20:51:44 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.97 2007/04/26 19:39:48 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -608,6 +608,8 @@ _nc_ripoffline(int line, int (*init) (WINDOW *, int))
 
     if (line != 0) {
 
+	if (ripoff_sp == 0)
+	    ripoff_sp = ripoff_stack;
 	if (ripoff_sp >= ripoff_stack + N_RIPS)
 	    returnCode(ERR);
 

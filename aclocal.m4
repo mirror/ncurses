@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.429 2007/04/19 20:04:46 tom Exp $
+dnl $Id: aclocal.m4,v 1.433 2007/04/28 19:26:13 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -612,6 +612,50 @@ fi
 
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_GPM_WGETCH version: 1 updated: 2007/04/28 14:38:06
+dnl -------------------
+dnl Check if GPM is already linked with curses.  If so - and if the linkage
+dnl is not "weak" - warn about this because it can create problems linking
+dnl applications with ncurses.
+AC_DEFUN([CF_CHECK_GPM_WGETCH],[
+AC_CHECK_LIB(gpm,Gpm_Wgetch,[
+
+AC_CACHE_CHECK(if GPM is weakly bound to curses library, cf_cv_check_gpm_wgetch,[
+cf_cv_check_gpm_wgetch=unknown
+if test "$cross_compiling" != yes ; then
+
+cat >conftest.$ac_ext <<CF_EOF
+#include <gpm.h>
+int main()
+{
+	Gpm_Wgetch();
+	${cf_cv_main_return:-return}(0);
+}
+CF_EOF
+
+	cf_save_LIBS="$LIBS"
+	# This only works if we can look at the symbol table.  If a shared
+	# library is stripped for install, we cannot use that.  So we're forced
+	# to rely on the static library, noting that some packagers may not
+	# include it.
+	LIBS="-static -lgpm -dynamic $LIBS"
+	if AC_TRY_EVAL(ac_compile) ; then
+		if AC_TRY_EVAL(ac_link) ; then
+			cf_cv_check_gpm_wgetch=`nm conftest$ac_exeext | egrep '\<wgetch\>' | egrep '\<[[vVwW]]\>'`
+			test -n "$cf_cv_check_gpm_wgetch" && cf_cv_check_gpm_wgetch=yes
+			test -z "$cf_cv_check_gpm_wgetch" && cf_cv_check_gpm_wgetch=no
+		fi
+	fi
+	rm -f conftest*
+	LIBS="$cf_save_LIBS"
+fi
+])
+
+if test "$cf_cv_check_gpm_wgetch" != yes ; then
+	AC_MSG_WARN(GPM library is already linked with curses - read the FAQ)
+fi
+])])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_CPP_PARAM_INIT version: 4 updated: 2001/04/07 22:31:18
 dnl -----------------
 dnl Check if the C++ compiler accepts duplicate parameter initialization.  This
@@ -701,6 +745,35 @@ public:
 fi
 
 test "$cf_cv_cpp_static_cast" = yes && AC_DEFINE(CPP_HAS_STATIC_CAST)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_C_INLINE version: 1 updated: 2007/04/28 15:03:44
+dnl -----------
+dnl Check if the C compiler supports "inline".
+dnl $1 is the name of a shell variable to set if inline is supported
+dnl $2 is the threshold for gcc 4.x's option controlling maximum inline size
+AC_DEFUN([CF_C_INLINE],[
+AC_C_INLINE
+$1=
+if test "$ac_cv_c_inline" != no ; then
+	$1=inline
+	if test "$GCC" = yes
+	then
+		AC_CACHE_CHECK(if gcc supports options to tune inlining,cf_cv_gcc_inline,[
+			cf_save_CFLAGS=$CFLAGS
+			CFLAGS="$CFLAGS --param max-inline-insns-single=$2"
+			AC_TRY_COMPILE([inline int foo(void) { return 1; }],
+			[${cf_cv_main_return:-return} foo()],
+			[cf_cv_gcc_inline=yes],
+			[cf_cv_gcc_inline=no])
+			CFLAGS=$cf_save_CFLAGS
+		])
+		if test "$cf_cv_gcc_inline" = yes ; then
+			CF_ADD_CFLAGS([--param max-inline-insns-single=$2])
+		fi
+	fi
+fi
+AC_SUBST($1)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_DIRNAME version: 4 updated: 2002/12/21 19:25:52
@@ -1736,6 +1809,48 @@ ifdef([AC_FUNC_FSEEKO],[
 	test "$cf_cv_struct_dirent64" = yes && AC_DEFINE(HAVE_STRUCT_DIRENT64)
     fi
 ])
+])
+dnl ---------------------------------------------------------------------------
+dnl CF_LDFLAGS_STATIC version: 2 updated: 2007/04/28 15:25:27
+dnl -----------------
+dnl Check for compiler/linker flags used to temporarily force usage of static
+dnl libraries.  This depends on the compiler and platform.  Use this to help
+dnl ensure that the linker picks up a given library based on its position in
+dnl the list of linker options and libraries.
+AC_DEFUN([CF_LDFLAGS_STATIC],[
+
+if test "$GCC" = yes ; then
+	LDFLAGS_STATIC=-static
+	LDFLAGS_SHARED=-dynamic
+else
+	case $cf_cv_system_name in #(
+	aix[[45]]*) 	#( from ld manpage
+		LDFLAGS_STATIC=-bstatic
+		LDFLAGS_SHARED=-bdynamic
+		;;
+	hpux*)		#( from ld manpage for hpux10.20, hpux11.11
+		# We could also use just "archive" and "shared".
+		LDFLAGS_STATIC=-Wl,-a,archive_shared
+		LDFLAGS_SHARED=-Wl,-a,shared_archive
+		;;
+	irix*)		#( from ld manpage IRIX64
+		LDFLAGS_STATIC=-Bstatic
+		LDFLAGS_SHARED=-Bdynamic
+		;;
+	osf[[45]]*)	#( from ld manpage osf4.0d, osf5.1
+		# alternative "-oldstyle_liblookup" (not in cc manpage)
+		LDFLAGS_STATIC=-noso 
+		LDFLAGS_SHARED=-so_archive
+		;;
+	solaris2*)
+		LDFLAGS_STATIC=-Bstatic
+		LDFLAGS_SHARED=-Bdynamic
+		;;
+	esac
+fi
+
+AC_SUBST(LDFLAGS_STATIC)
+AC_SUBST(LDFLAGS_SHARED)
 ])
 dnl ---------------------------------------------------------------------------
 dnl CF_LIBUTF8 version: 2 updated: 2002/01/19 22:51:32

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.414 2007/04/19 20:04:08 tom Exp $
+dnl $Id: configure.in,v 1.418 2007/04/28 18:54:05 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.414 $)
+AC_REVISION($Revision: 1.418 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -314,9 +314,7 @@ if test "$with_gpm" != no ; then
 		SHLIB_LIST="-lgpm $SHLIB_LIST"
 	fi
 	AC_DEFINE(HAVE_LIBGPM)
-	AC_CHECK_LIB(gpm,Gpm_Wgetch,[
-		AC_MSG_WARN(GPM library is already linked with curses - read the FAQ)
-	])
+	CF_CHECK_GPM_WGETCH
 fi
 
 CF_WITH_SYSMOUSE
@@ -1139,15 +1137,8 @@ CF_SYS_TIME_SELECT
 ###	checks for compiler characteristics
 AC_LANG_C
 AC_C_CONST
-AC_C_INLINE
+CF_C_INLINE(NCURSES_INLINE,500)
 CF_SIG_ATOMIC_T
-
-NCURSES_INLINE=
-if test "$ac_cv_c_inline" != no ; then
-	AC_DEFINE(CC_HAS_INLINE_FUNCS)
-	NCURSES_INLINE=inline
-fi
-AC_SUBST(NCURSES_INLINE)
 
 if test $NCURSES_CHTYPE = auto ; then
 	CF_TYPEOF_CHTYPE
@@ -1474,10 +1465,12 @@ AC_MSG_RESULT($DFT_ARG_SUFFIX)
 
 AC_MSG_CHECKING(default library-dependency suffix)
 CF_LIB_SUFFIX($DFT_LWR_MODEL,DFT_DEP_SUFFIX)dnl
+DFT_LIB_SUFFIX=$DFT_DEP_SUFFIX
 if test $DFT_LWR_MODEL = shared ; then
 	case $cf_cv_system_name in #(vi
 	cygwin*)
 		DFT_DEP_SUFFIX=".dll.a"
+		DFT_LIB_SUFFIX=".dll"
 		;;
 	esac
 fi
@@ -1542,12 +1535,12 @@ if test "$with_termlib" != no ; then
 
 	if test "$with_termlib" != yes ; then
 		TINFO_NAME=$with_termlib
-		TINFO_SUFFIX="`echo ${DFT_DEP_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
+		TINFO_SUFFIX="`echo ${DFT_LIB_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
 		TINFO_ARG_SUFFIX="${with_termlib}`echo ${DFT_ARG_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
 		TINFO_DEP_SUFFIX="${with_termlib}`echo ${DFT_DEP_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
 		TINFO_LIB_SUFFIX="${with_termlib}"
 	else
-		TINFO_SUFFIX=${DFT_DEP_SUFFIX}
+		TINFO_SUFFIX=${DFT_LIB_SUFFIX}
 		TINFO_ARG_SUFFIX="${TINFO_NAME}${DFT_ARG_SUFFIX}"
 		TINFO_DEP_SUFFIX="${TINFO_NAME}${DFT_DEP_SUFFIX}"
 		TINFO_LIB_SUFFIX="${TINFO_NAME}${LIB_SUFFIX}"
@@ -1569,12 +1562,22 @@ if test "$with_termlib" != no ; then
 else
 	# the next lines are needed for linking libtic over libncurses
 	TINFO_NAME=${LIB_NAME}
-	TINFO_SUFFIX=${DFT_DEP_SUFFIX}
+	TINFO_SUFFIX=${DFT_LIB_SUFFIX}
 	TINFO_ARG_SUFFIX=${LIB_NAME}${DFT_ARG_SUFFIX}
 	TICS_LIST="$SHLIB_LIST -l${LIB_NAME}${DFT_ARG_SUFFIX}"
 
 	TINFO_ARGS="-L${LIB_DIR} -l${LIB_NAME}${DFT_ARG_SUFFIX}"
 fi
+
+if test "$DFT_LWR_MODEL" = shared ; then
+	case $cf_cv_system_name in #(vi
+	cygwin*)
+		# "lib" files have ".dll.a" suffix, "cyg" files have ".dll"
+		TINFO_SUFFIX=.dll
+		;;
+	esac
+fi
+
 AC_SUBST(TINFO_ARG_SUFFIX)
 AC_SUBST(TINFO_DEP_SUFFIX)
 AC_SUBST(TINFO_LIB_SUFFIX)
@@ -1587,6 +1590,12 @@ fi
 # needed for Ada95
 TINFO_ARGS2=`echo "$TINFO_ARGS" | sed -e 's,-L\.\./,-L../../,'`
 AC_SUBST(TINFO_ARGS2)
+
+case $DFT_LWR_MODEL in
+normal|debug|profile)
+	CF_LDFLAGS_STATIC
+	;;
+esac
 
 AC_MSG_CHECKING(where we will install curses.h)
 test "$with_overwrite" = no && \

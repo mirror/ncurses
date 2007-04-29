@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -145,7 +145,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.38 2006/12/30 22:19:34 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.39 2007/04/28 20:14:08 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -157,6 +157,8 @@ oldnums[MAXLINES];
 # define _tracef	printf
 # undef TR
 # define TR(n, a)	if (_nc_tracing & (n)) { _tracef a ; putchar('\n'); }
+
+extern NCURSES_EXPORT_VAR(unsigned)     _nc_tracing;
 
 #else /* no debug */
 

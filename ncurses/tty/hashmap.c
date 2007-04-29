@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -70,7 +70,7 @@ AUTHOR
 #include <curses.priv.h>
 #include <term.h>		/* for back_color_erase */
 
-MODULE_ID("$Id: hashmap.c,v 1.50 2006/12/30 22:19:58 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.51 2007/04/28 20:14:15 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -86,6 +86,8 @@ static chtype oldtext[MAXLINES][TEXTWIDTH], newtext[MAXLINES][TEXTWIDTH];
 # define OLDTEXT(n)	oldtext[n]
 # define NEWTEXT(m)	newtext[m]
 # define PENDING(n)     1
+
+extern NCURSES_EXPORT_VAR(unsigned)     _nc_tracing;
 
 #else /* !HASHDEBUG */
 
