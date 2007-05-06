@@ -60,7 +60,7 @@
       <b>function</b> <FONT COLOR=red><A NAME="ref_55_16">Mouse_Avail</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Mouse_Avail, "_nc_has_mouse");
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__ads.htm#ref_761_13">Has_Key</A> (<A HREF="terminal_interface-curses__ads.htm#ref_204_4">Key_Mouse</A>) <b>or</b> <b>else</b> <A HREF="terminal_interface-curses-mouse__adb.htm#ref_55_16">Mouse_Avail</A> /= 0 <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__ads.htm#ref_767_13">Has_Key</A> (<A HREF="terminal_interface-curses__ads.htm#ref_204_4">Key_Mouse</A>) <b>or</b> <b>else</b> <A HREF="terminal_interface-curses-mouse__adb.htm#ref_55_16">Mouse_Avail</A> /= 0 <b>then</b>
          <b>return</b> True;
       <b>else</b>
          <b>return</b> False;
@@ -123,7 +123,7 @@
    <b>begin</b>
       <A HREF="terminal_interface-curses-mouse__adb.htm#ref_116_7">R</A> := <A HREF="terminal_interface-curses-mouse__adb.htm#ref_113_16">MMask</A> (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_123_26">Mask</A>, <A HREF="terminal_interface-curses-mouse__adb.htm#ref_117_7">Old</A>'<b>Access</b>);
       <b>if</b> <A HREF="terminal_interface-curses-mouse__adb.htm#ref_116_7">R</A> = <A HREF="terminal_interface-curses-mouse__ads.htm#ref_65_4">No_Events</A> <b>then</b>
-         <A HREF="terminal_interface-curses__ads.htm#ref_864_14">Beep</A>;
+         <A HREF="terminal_interface-curses__ads.htm#ref_870_14">Beep</A>;
       <b>end</b> <b>if</b>;
       <b>return</b> <A HREF="terminal_interface-curses-mouse__adb.htm#ref_117_7">Old</A>;
    <b>end</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_123_13">Start_Mouse</A>;
@@ -132,7 +132,7 @@
    <b>is</b>
    <b>begin</b>
       <b>if</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_128_25">Mask</A> /= <A HREF="terminal_interface-curses-mouse__ads.htm#ref_65_4">No_Events</A> <b>then</b>
-         <A HREF="terminal_interface-curses__ads.htm#ref_864_14">Beep</A>;
+         <A HREF="terminal_interface-curses__ads.htm#ref_870_14">Beep</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_128_14">End_Mouse</A>;
 
@@ -199,15 +199,15 @@
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_149_14">Unget_Mouse</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_197_13" HREF="terminal_interface-curses-mouse__ads.htm#ref_154_13">Enclosed_In_Window</A></FONT> (<FONT COLOR=red><A NAME="ref_197_33" HREF="terminal_interface-curses-mouse__ads.htm#ref_154_33">Win</A></FONT>    : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_475_13">Standard_Window</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_197_13" HREF="terminal_interface-curses-mouse__ads.htm#ref_154_13">Enclosed_In_Window</A></FONT> (<FONT COLOR=red><A NAME="ref_197_33" HREF="terminal_interface-curses-mouse__ads.htm#ref_154_33">Win</A></FONT>    : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
                                 <FONT COLOR=red><A NAME="ref_198_33" HREF="terminal_interface-curses-mouse__ads.htm#ref_155_33">Event</A></FONT>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>) <b>return</b> Boolean
    <b>is</b>
       <b>function</b> <FONT COLOR=red><A NAME="ref_200_16">Wenclose</A></FONT> (<FONT COLOR=red><A NAME="ref_200_26" HREF="terminal_interface-curses-mouse__adb.htm#ref_200_16">Win</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>; <FONT COLOR=red><A NAME="ref_200_40" HREF="terminal_interface-curses-mouse__adb.htm#ref_200_16">Y</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>; <FONT COLOR=red><A NAME="ref_200_51" HREF="terminal_interface-curses-mouse__adb.htm#ref_200_16">X</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>)
-                         <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_1930_9">Curses_Bool</A>;
+                         <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>;
       <b>pragma</b> Import (C, Wenclose, "wenclose");
    <b>begin</b>
       <b>if</b> <A HREF="terminal_interface-curses-mouse__adb.htm#ref_200_16">Wenclose</A> (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_154_33">Win</A>, <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_155_33">Event</A>.<A HREF="terminal_interface-curses-mouse__ads.htm#ref_172_13">Y</A>), <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_155_33">Event</A>.<A HREF="terminal_interface-curses-mouse__ads.htm#ref_172_10">X</A>))
-        = <A HREF="terminal_interface-curses__ads.htm#ref_1931_4">Curses_Bool_False</A> <b>then</b>
+        = <A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A> <b>then</b>
          <b>return</b> False;
       <b>else</b>
          <b>return</b> True;

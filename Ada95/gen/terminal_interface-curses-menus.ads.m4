@@ -38,8 +38,8 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.26 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.27 $
+--  $Date: 2007/05/05 20:20:52 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Menu_Base_Defs')
@@ -360,7 +360,7 @@ include(`Item_Rep')dnl
    --  Implemented as function
    pragma Inline (Mark);
 
-   --  MANPAGE(`menu_attribs.3x')
+   --  MANPAGE(`menu_attributes.3x')
 
    --  ANCHOR(`set_menu_fore()',`Set_Foreground')
    procedure Set_Foreground

@@ -71,13 +71,13 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
    <b>function</b> <FONT COLOR=red><A NAME="ref_67_13" HREF="terminal_interface-curses-terminfo__ads.htm#ref_64_13">Get_Flag</A></FONT> (<FONT COLOR=red><A NAME="ref_67_23" HREF="terminal_interface-curses-terminfo__ads.htm#ref_64_23">Name</A></FONT> : String) <b>return</b> Boolean
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_69_16">tigetflag</A></FONT> (<FONT COLOR=red><A NAME="ref_69_27" HREF="terminal_interface-curses-terminfo__adb.htm#ref_69_16">id</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_1930_9">Curses_Bool</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_69_16">tigetflag</A></FONT> (<FONT COLOR=red><A NAME="ref_69_27" HREF="terminal_interface-curses-terminfo__adb.htm#ref_69_16">id</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>;
       <b>pragma</b> Import (C, tigetflag);
       <FONT COLOR=red><A NAME="ref_71_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_64_23">Name</A>'Length);
       <FONT COLOR=red><A NAME="ref_72_7">Length</A></FONT> : size_t;
    <b>begin</b>
       To_C (<A HREF="terminal_interface-curses-terminfo__ads.htm#ref_64_23">Name</A>, <A HREF="terminal_interface-curses-terminfo__adb.htm#ref_71_7">Txt</A>, <A HREF="terminal_interface-curses-terminfo__adb.htm#ref_72_7">Length</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-terminfo__adb.htm#ref_69_16">tigetflag</A> (<A HREF="terminal_interface-curses-terminfo__adb.htm#ref_71_7">Txt</A>) = <A HREF="terminal_interface-curses__ads.htm#ref_1930_9">Curses_Bool</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_74_4">Curses_True</A>) <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses-terminfo__adb.htm#ref_69_16">tigetflag</A> (<A HREF="terminal_interface-curses-terminfo__adb.htm#ref_71_7">Txt</A>) = <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_74_4">Curses_True</A>) <b>then</b>
          <b>return</b> True;
       <b>else</b>
          <b>return</b> False;

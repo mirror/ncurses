@@ -37,8 +37,8 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.2 $
---  $Date: 2007/03/31 23:02:22 $
+--  $Revision: 1.4 $
+--  $Date: 2007/05/05 20:09:10 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -913,7 +913,7 @@ package body Terminal_Interface.Curses is
                                Mode   : in Timeout_Mode;
                                Amount : in Natural)
    is
-      function Wtimeout (Win : Window; Amount : C_Int) return C_Int;
+      procedure Wtimeout (Win : Window; Amount : C_Int);
       pragma Import (C, Wtimeout, "wtimeout");
 
       Time : C_Int;
@@ -927,9 +927,7 @@ package body Terminal_Interface.Curses is
             end if;
             Time := C_Int (Amount);
       end case;
-      if Wtimeout (Win, Time) = Curses_Err then
-         raise Curses_Exception;
-      end if;
+      Wtimeout (Win, Time);
    end Set_Timeout_Mode;
 
    procedure Set_Escape_Timer_Mode
@@ -993,12 +991,10 @@ package body Terminal_Interface.Curses is
      (Win    : in Window := Standard_Window;
       Do_Idc : in Boolean := True)
    is
-      function IDC_Ok (W : Window; Flag : Curses_Bool) return C_Int;
+      procedure IDC_Ok (W : Window; Flag : Curses_Bool);
       pragma Import (C, IDC_Ok, "idcok");
    begin
-      if IDC_Ok (Win, Curses_Bool (Boolean'Pos (Do_Idc))) = Curses_Err then
-         raise Curses_Exception;
-      end if;
+      IDC_Ok (Win, Curses_Bool (Boolean'Pos (Do_Idc)));
    end Use_Insert_Delete_Character;
 
    procedure Leave_Cursor_After_Update
@@ -1017,12 +1013,10 @@ package body Terminal_Interface.Curses is
      (Win  : in Window := Standard_Window;
       Mode : in Boolean := False)
    is
-      function Immedok (Win : Window; Mode : Curses_Bool) return C_Int;
+      procedure Immedok (Win : Window; Mode : Curses_Bool);
       pragma Import (C, Immedok, "immedok");
    begin
-      if Immedok (Win, Curses_Bool (Boolean'Pos (Mode))) = Curses_Err then
-         raise Curses_Exception;
-      end if;
+      Immedok (Win, Curses_Bool (Boolean'Pos (Mode)));
    end Immediate_Update_Mode;
 
    procedure Allow_Scrolling
@@ -2406,6 +2400,20 @@ include(`Public_Variables')
    begin
       return Fill_String (Result);
    end Curses_Version;
+------------------------------------------------------------------------------
+   procedure Curses_Free_All is
+      procedure curses_freeall;
+      pragma Import (C, curses_freeall, "_nc_freeall");
+   begin
+      --  Use this only for testing: you cannot use curses after calling it,
+      --  so it has to be the "last" thing done before exiting the program.
+      --  This will not really free ALL of memory used by curses.  That is
+      --  because it cannot free the memory used for stdout's setbuf.  The
+      --  _nc_free_and_exit() procedure can do that, but it can be invoked
+      --  safely only from C - and again, that only as the "last" thing done
+      --  before exiting the program.
+      curses_freeall;
+   end Curses_Free_All;
 ------------------------------------------------------------------------------
    function Use_Extended_Names (Enable : Boolean) return Boolean
    is

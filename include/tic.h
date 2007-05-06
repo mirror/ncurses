@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.57 2007/01/06 23:17:38 tom Exp $
+ * $Id: tic.h,v 1.58 2007/04/29 22:56:15 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -185,7 +185,7 @@ struct tinfo_fkeys {
 #if	BROKEN_LINKER
 
 #define	_nc_tinfo_fkeys	_nc_tinfo_fkeysf()
-extern NCURSES_EXPORT(struct tinfo_fkeys *) _nc_tinfo_fkeysf (void);
+extern NCURSES_EXPORT(const struct tinfo_fkeys *) _nc_tinfo_fkeysf (void);
 
 #else
 

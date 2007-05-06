@@ -37,8 +37,8 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.39 $
---  $Date: 2007/03/31 23:36:32 $
+--  $Revision: 1.41 $
+--  $Date: 2007/05/05 20:33:52 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Base_Defs')
@@ -1474,7 +1474,7 @@ include(`ACS_Map')dnl
    --  Window or if you pass the Null_Window as argument.
    --  We don't inline this procedure
 
-   --  MANPAGE(`dft_fgbg.3x')
+   --  MANPAGE(`default_colors.3x')
 
    --  ANCHOR(`use_default_colors()',`Use_Default_Colors')
    procedure Use_Default_Colors;
@@ -1496,6 +1496,12 @@ include(`ACS_Map')dnl
    --  ANCHOR(`use_extended_names()',`Use_Extended_Names')
    --  The returnvalue is the previous setting of the flag
    function Use_Extended_Names (Enable : Boolean) return Boolean;
+   --  AKA
+
+   --  MANPAGE(`curs_trace.3x')
+
+   --  ANCHOR(`_nc_freeall()',`Curses_Free_All')
+   procedure Curses_Free_All;
    --  AKA
 
    --  MANPAGE(`curs_scr_dump.3x')

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1121 2007/04/28 19:06:11 tom Exp $
+-- $Id: NEWS,v 1.1124 2007/05/05 21:31:43 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070505
+	+ fix a bug in Ada95/samples/ncurses which caused a variable to
+	  become uninitialized in the "b" test.
+	+ fix Ada95/gen/Makefile.in adahtml rule to account for recent
+	  movement of files, fix a few incorrect manpage references in the
+	  generated html.
+	+ add Ada95 binding to _nc_freeall() as Curses_Free_All to help with
+	  memory-checking.
+	+ correct some functions in Ada95 binding which were using return value
+	  from C where none was returned:  idcok(), immedok() and wtimeout().
+	+ amend recent changes for Ada95 binding to make it build with
+	  Cygwin's linker, e.g., with configure options
+		--enable-broken-linker --with-ticlib
 
 20070428
 	+ add a configure check for gcc's options for inlining, use that to

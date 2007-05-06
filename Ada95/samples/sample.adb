@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.14 $
+--  $Revision: 1.15 $
+--  $Date: 2007/05/05 18:46:21 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Text_IO;
@@ -204,6 +205,7 @@ package body Sample is
       --  We have some fixed key throughout this sample
       Main_Menu;
       End_Windows;
+      Curses_Free_All;
 
    exception
       when Event : others =>

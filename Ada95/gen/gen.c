@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.47 2007/04/07 22:29:23 tom Exp $
+    $Id: gen.c,v 1.48 2007/05/05 17:24:36 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -775,7 +775,7 @@ gen_acs(void)
 {
   printf("   type C_ACS_Map is array (Character'Val (0) .. Character'Val (127))\n");
   printf("        of Attributed_Character;\n");
-#if USE_REENTRANT
+#if USE_REENTRANT || BROKEN_LINKER
   printf("   type C_ACS_Ptr is access C_ACS_Map;\n");
   printf("   function ACS_Map return C_ACS_Ptr;\n");
   printf("   pragma Import (C, ACS_Map, \"_nc_acs_map\");\n");

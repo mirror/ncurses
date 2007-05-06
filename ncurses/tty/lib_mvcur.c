@@ -155,7 +155,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.108 2007/04/28 19:58:24 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.109 2007/05/05 21:47:03 tom Exp $")
 
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
@@ -1018,7 +1018,7 @@ roll(int n)
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
-    (void) strcpy(tname, termname());
+    strcpy(tname, getenv("TERM"));
     load_term();
     _nc_setupscreen(lines, columns, stdout, FALSE, 0);
     baudrate();

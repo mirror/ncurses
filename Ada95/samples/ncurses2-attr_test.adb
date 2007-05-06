@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.7 $
---  $Date: 2007/03/31 23:45:22 $
+--  $Revision: 1.8 $
+--  $Date: 2007/05/05 21:28:18 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -56,7 +56,7 @@ procedure ncurses2.attr_test is
                         attr : Character_Attribute_Set;
                         name : String;
                         once : Boolean) return Line_Position;
-   procedure attr_getc (skip : out Integer;
+   procedure attr_getc (skip : in out Integer;
                         fg, bg : in out Color_Number;
                         result : out Boolean);
 
@@ -233,8 +233,9 @@ procedure ncurses2.attr_test is
       return row + 2;
    end show_attr;
 
-   procedure attr_getc (skip : out Integer; fg, bg : in out Color_Number;
-                                            result : out Boolean) is
+   procedure attr_getc (skip : in out Integer;
+                        fg, bg : in out Color_Number;
+                        result : out Boolean) is
       ch : constant Key_Code := Getchar;
       nc : constant Color_Number := Color_Number (Number_Of_Colors);
    begin

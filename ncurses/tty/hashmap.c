@@ -70,7 +70,7 @@ AUTHOR
 #include <curses.priv.h>
 #include <term.h>		/* for back_color_erase */
 
-MODULE_ID("$Id: hashmap.c,v 1.51 2007/04/28 20:14:15 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.52 2007/05/05 21:50:48 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -448,7 +448,9 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     char line[BUFSIZ], *st;
     int n;
 
-    SP = typeCalloc(SCREEN, 1);
+    if (!_nc_alloc_screen())
+	return EXIT_FAILURE;
+
     for (n = 0; n < screen_lines; n++) {
 	reallines[n] = n;
 	oldnums[n] = _NEWINDEX;

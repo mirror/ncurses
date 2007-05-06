@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.6 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.7 $
+--  $Date: 2007/05/05 18:02:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  TODO use Default_Character where appropriate
@@ -442,6 +442,7 @@ package body ncurses2.m is
 
          exit when command = 'q';
       end loop;
+      Curses_Free_All;
       return 0; -- TODO ExitProgram(EXIT_SUCCESS);
    end main;
 

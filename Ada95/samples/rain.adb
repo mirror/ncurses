@@ -36,7 +36,8 @@
 --  Author:  Laurent Pautet <pautet@gnat.com>
 --  Modified by:  Juergen Pfeifer, 1997
 --  Version Control
---  $Revision: 1.6 $
+--  $Revision: 1.7 $
+--  $Date: 2007/05/05 18:54:03 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --                                                                          --
@@ -158,5 +159,6 @@ begin
    Visibility := Normal;
    Set_Cursor_Visibility (Visibility);
    End_Windows;
+   Curses_Free_All;
 
 end Rain;

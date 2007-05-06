@@ -36,7 +36,7 @@
 
 #include <term_entry.h>
 
-MODULE_ID("$Id: init_keytry.c,v 1.9 2006/12/30 23:29:42 tom Exp $")
+MODULE_ID("$Id: init_keytry.c,v 1.10 2007/04/29 22:57:50 tom Exp $")
 
 /*
 **      _nc_init_keytry()
@@ -56,7 +56,7 @@ MODULE_ID("$Id: init_keytry.c,v 1.9 2006/12/30 23:29:42 tom Exp $")
 #endif*/
 
 #if	BROKEN_LINKER
-struct tinfo_fkeys *
+const struct tinfo_fkeys *
 _nc_tinfo_fkeysf(void)
 {
     return _nc_tinfo_fkeys;
