@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -54,7 +54,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.68 2006/10/14 20:45:16 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.69 2007/05/12 19:04:13 tom Exp $")
 
 static int total_written;
 
@@ -502,7 +502,8 @@ compute_offsets(char **Strings, unsigned strmax, short *offsets)
 	} else {
 	    offsets[i] = nextfree;
 	    nextfree += strlen(Strings[i]) + 1;
-	    TRACE_OUT(("put Strings[%d]=%s(%d)", i, _nc_visbuf(Strings[i]), nextfree));
+	    TRACE_OUT(("put Strings[%d]=%s(%d)", (int) i,
+		       _nc_visbuf(Strings[i]), nextfree));
 	}
     }
     return nextfree;
@@ -740,7 +741,7 @@ write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 	 */
 	for (i = 0; i < tp->ext_Strings; i++) {
 	    if (VALID_STRING(tp->Strings[i + STRCOUNT])) {
-		TRACE_OUT(("WRITE ext_Strings[%d]=%s", i,
+		TRACE_OUT(("WRITE ext_Strings[%d]=%s", (int) i,
 			   _nc_visbuf(tp->Strings[i + STRCOUNT])));
 		if (!WRITE_STRING(tp->Strings[i + STRCOUNT]))
 		    return (ERR);
@@ -751,7 +752,7 @@ write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 	 * Write the extended names
 	 */
 	for (i = 0; i < extcnt; i++) {
-	    TRACE_OUT(("WRITE ext_Names[%d]=%s", i, tp->ext_Names[i]));
+	    TRACE_OUT(("WRITE ext_Names[%d]=%s", (int) i, tp->ext_Names[i]));
 	    if (!WRITE_STRING(tp->ext_Names[i]))
 		return (ERR);
 	}

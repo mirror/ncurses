@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -62,7 +62,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: lib_twait.c,v 1.52 2006/12/30 16:56:28 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.53 2007/05/12 19:02:31 tom Exp $")
 
 #if HAVE_GETTIMEOFDAY
 # define PRECISE_GETTIME 1
@@ -186,7 +186,7 @@ _nc_timed_wait(int mode,
     }
 #endif
 
-#if PRECISE_GETTIME
+#if PRECISE_GETTIME && HAVE_NANOSLEEP
   retry:
 #endif
     starttime = _nc_gettime(&t0, TRUE);

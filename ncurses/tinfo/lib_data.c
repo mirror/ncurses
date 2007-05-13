@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.24 2007/04/21 23:55:13 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.25 2007/05/12 18:12:12 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -182,7 +182,7 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
 #define STACK_FRAME_0s	{ STACK_FRAME_0 }
 #define NUM_VARS_0s	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
 
-#define RIPOFF_0	{ 0,0,0 }
+#define RIPOFF_0	{ 0,0 }
 #define RIPOFF_0s	{ RIPOFF_0 }
 
 NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {

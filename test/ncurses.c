@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.283 2007/03/10 19:11:50 tom Exp $
+$Id: ncurses.c,v 1.288 2007/05/12 23:04:11 tom Exp $
 
 ***************************************************************************/
 
@@ -955,11 +955,11 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 		for (n = 0; (wchar_buf[n] = wint_buf[n]) != 0; ++n) ;
 		if ((temp = wcstos(wchar_buf)) != 0) {
 		    wprintw(win, "I saw %d characters:\n\t`%s'.",
-			    wcslen(wchar_buf), temp);
+			    (int) wcslen(wchar_buf), temp);
 		    free(temp);
 		} else {
 		    wprintw(win, "I saw %d characters (cannot convert).",
-			    wcslen(wchar_buf));
+			    (int) wcslen(wchar_buf));
 		}
 	    }
 	    wclrtoeol(win);
@@ -3947,7 +3947,11 @@ saywhat(NCURSES_CONST char *text)
 {
     wmove(stdscr, LINES - 1, 0);
     wclrtoeol(stdscr);
-    waddstr(stdscr, text);
+    if (text != 0 && *text != '\0') {
+	waddstr(stdscr, text);
+	waddstr(stdscr, "; ");
+    }
+    waddstr(stdscr, "press any key to continue");
 }				/* end of saywhat */
 
 /*+-------------------------------------------------------------------------
@@ -4000,6 +4004,17 @@ pflush(void)
 	fill_panel(win)
 --------------------------------------------------------------------------*/
 static void
+init_panel(void)
+{
+    register int y, x;
+
+    for (y = 0; y < LINES - 1; y++) {
+	for (x = 0; x < COLS; x++)
+	    wprintw(stdscr, "%d", (y + x) % 10);
+    }
+}
+
+static void
 fill_panel(PANEL * pan)
 {
     WINDOW *win = panel_window(pan);
@@ -4016,217 +4031,214 @@ fill_panel(PANEL * pan)
 	    waddch(win, UChar(num));
 	}
     }
-}				/* end of fill_panel */
+}
+
+#if USE_WIDEC_SUPPORT
+static void
+make_fullwidth_digit(cchar_t *target, int digit)
+{
+    wchar_t source[2];
+
+    source[0] = digit + 0xff10;
+    source[1] = 0;
+    setcchar(target, source, A_NORMAL, 0, 0);
+}
 
 static void
-demo_panels(void)
+init_wide_panel(void)
 {
-    int itmp;
-    register int y, x;
+    int digit;
+    cchar_t temp[10];
 
+    for (digit = 0; digit < 10; ++digit)
+	make_fullwidth_digit(&temp[digit], digit);
+
+    do {
+	int y, x;
+	getyx(stdscr, y, x);
+	digit = (y + x / 2) % 10;
+    } while (add_wch(&temp[digit]) != ERR);
+}
+
+static void
+fill_wide_panel(PANEL * pan)
+{
+    WINDOW *win = panel_window(pan);
+    int num = ((const char *) panel_userptr(pan))[1];
+    int y, x;
+
+    wmove(win, 1, 1);
+    wprintw(win, "-pan%c-", num);
+    wclrtoeol(win);
+    box(win, 0, 0);
+    for (y = 2; y < getmaxy(win) - 1; y++) {
+	for (x = 1; x < getmaxx(win) - 1; x++) {
+	    wmove(win, y, x);
+	    waddch(win, UChar(num));
+	}
+    }
+}
+#endif
+
+#define MAX_PANELS 5
+
+static void
+canned_panel(PANEL * px[MAX_PANELS + 1], NCURSES_CONST char *cmd)
+{
+    int which = cmd[1] - '0';
+
+    saywhat(cmd);
+    switch (*cmd) {
+    case 'h':
+	hide_panel(px[which]);
+	break;
+    case 's':
+	show_panel(px[which]);
+	break;
+    case 't':
+	top_panel(px[which]);
+	break;
+    case 'b':
+	bottom_panel(px[which]);
+	break;
+    case 'd':
+	rmpanel(px[which]);
+	break;
+    }
+    pflush();
+    wait_a_while(nap_msec);
+}
+
+static void
+demo_panels(void (*InitPanel) (void), void (*FillPanel) (PANEL *))
+{
+    int count;
+    int itmp;
+    PANEL *px[MAX_PANELS + 1];
+
+    scrollok(stdscr, FALSE);	/* we don't want stdscr to scroll! */
     refresh();
 
-    for (y = 0; y < LINES - 1; y++) {
-	for (x = 0; x < COLS; x++)
-	    wprintw(stdscr, "%d", (y + x) % 10);
-    }
-    for (y = 0; y < 5; y++) {
-	PANEL *p1;
-	PANEL *p2;
-	PANEL *p3;
-	PANEL *p4;
-	PANEL *p5;
+    InitPanel();
+    for (count = 0; count < 5; count++) {
+	px[1] = mkpanel(COLOR_RED,
+			LINES / 2 - 2,
+			COLS / 8 + 1,
+			0,
+			0);
+	set_panel_userptr(px[1], (NCURSES_CONST void *) "p1");
 
-	p1 = mkpanel(COLOR_RED,
-		     LINES / 2 - 2,
-		     COLS / 8 + 1,
-		     0,
-		     0);
-	set_panel_userptr(p1, (NCURSES_CONST void *) "p1");
+	px[2] = mkpanel(COLOR_GREEN,
+			LINES / 2 + 1,
+			COLS / 7,
+			LINES / 4,
+			COLS / 10);
+	set_panel_userptr(px[2], (NCURSES_CONST void *) "p2");
 
-	p2 = mkpanel(COLOR_GREEN,
-		     LINES / 2 + 1,
-		     COLS / 7,
-		     LINES / 4,
-		     COLS / 10);
-	set_panel_userptr(p2, (NCURSES_CONST void *) "p2");
+	px[3] = mkpanel(COLOR_YELLOW,
+			LINES / 4,
+			COLS / 10,
+			LINES / 2,
+			COLS / 9);
+	set_panel_userptr(px[3], (NCURSES_CONST void *) "p3");
 
-	p3 = mkpanel(COLOR_YELLOW,
-		     LINES / 4,
-		     COLS / 10,
-		     LINES / 2,
-		     COLS / 9);
-	set_panel_userptr(p3, (NCURSES_CONST void *) "p3");
+	px[4] = mkpanel(COLOR_BLUE,
+			LINES / 2 - 2,
+			COLS / 8,
+			LINES / 2 - 2,
+			COLS / 3);
+	set_panel_userptr(px[4], (NCURSES_CONST void *) "p4");
 
-	p4 = mkpanel(COLOR_BLUE,
-		     LINES / 2 - 2,
-		     COLS / 8,
-		     LINES / 2 - 2,
-		     COLS / 3);
-	set_panel_userptr(p4, (NCURSES_CONST void *) "p4");
+	px[5] = mkpanel(COLOR_MAGENTA,
+			LINES / 2 - 2,
+			COLS / 8,
+			LINES / 2,
+			COLS / 2 - 2);
+	set_panel_userptr(px[5], (NCURSES_CONST void *) "p5");
 
-	p5 = mkpanel(COLOR_MAGENTA,
-		     LINES / 2 - 2,
-		     COLS / 8,
-		     LINES / 2,
-		     COLS / 2 - 2);
-	set_panel_userptr(p5, (NCURSES_CONST void *) "p5");
+	FillPanel(px[1]);
+	FillPanel(px[2]);
+	FillPanel(px[3]);
+	FillPanel(px[4]);
+	FillPanel(px[5]);
 
-	fill_panel(p1);
-	fill_panel(p2);
-	fill_panel(p3);
-	fill_panel(p4);
-	fill_panel(p5);
-	hide_panel(p4);
-	hide_panel(p5);
+	hide_panel(px[4]);
+	hide_panel(px[5]);
 	pflush();
-	saywhat("press any key to continue");
+	saywhat("");
 	wait_a_while(nap_msec);
 
-	saywhat("h3 s1 s2 s4 s5; press any key to continue");
-	move_panel(p1, 0, 0);
-	hide_panel(p3);
-	show_panel(p1);
-	show_panel(p2);
-	show_panel(p4);
-	show_panel(p5);
+	saywhat("h3 s1 s2 s4 s5");
+	move_panel(px[1], 0, 0);
+	hide_panel(px[3]);
+	show_panel(px[1]);
+	show_panel(px[2]);
+	show_panel(px[4]);
+	show_panel(px[5]);
 	pflush();
 	wait_a_while(nap_msec);
 
-	saywhat("s1; press any key to continue");
-	show_panel(p1);
+	canned_panel(px, "s1");
+	canned_panel(px, "s2");
+
+	saywhat("m2");
+	move_panel(px[2], LINES / 3 + 1, COLS / 8);
 	pflush();
 	wait_a_while(nap_msec);
 
-	saywhat("s2; press any key to continue");
-	show_panel(p2);
+	canned_panel(px, "s3");
+
+	saywhat("m3");
+	move_panel(px[3], LINES / 4 + 1, COLS / 15);
 	pflush();
 	wait_a_while(nap_msec);
 
-	saywhat("m2; press any key to continue");
-	move_panel(p2, LINES / 3 + 1, COLS / 8);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("s3;");
-	show_panel(p3);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("m3; press any key to continue");
-	move_panel(p3, LINES / 4 + 1, COLS / 15);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("b3; press any key to continue");
-	bottom_panel(p3);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("s4; press any key to continue");
-	show_panel(p4);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("s5; press any key to continue");
-	show_panel(p5);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("t3; press any key to continue");
-	top_panel(p3);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("t1; press any key to continue");
-	top_panel(p1);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("t2; press any key to continue");
-	top_panel(p2);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("t3; press any key to continue");
-	top_panel(p3);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("t4; press any key to continue");
-	top_panel(p4);
-	pflush();
-	wait_a_while(nap_msec);
+	canned_panel(px, "b3");
+	canned_panel(px, "s4");
+	canned_panel(px, "s5");
+	canned_panel(px, "t3");
+	canned_panel(px, "t1");
+	canned_panel(px, "t2");
+	canned_panel(px, "t3");
+	canned_panel(px, "t4");
 
 	for (itmp = 0; itmp < 6; itmp++) {
-	    WINDOW *w4 = panel_window(p4);
-	    WINDOW *w5 = panel_window(p5);
+	    WINDOW *w4 = panel_window(px[4]);
+	    WINDOW *w5 = panel_window(px[5]);
 
-	    saywhat("m4; press any key to continue");
+	    saywhat("m4");
 	    wmove(w4, LINES / 8, 1);
 	    waddstr(w4, mod[itmp]);
-	    move_panel(p4, LINES / 6, itmp * (COLS / 8));
+	    move_panel(px[4], LINES / 6, itmp * (COLS / 8));
 	    wmove(w5, LINES / 6, 1);
 	    waddstr(w5, mod[itmp]);
 	    pflush();
 	    wait_a_while(nap_msec);
 
-	    saywhat("m5; press any key to continue");
+	    saywhat("m5");
 	    wmove(w4, LINES / 6, 1);
 	    waddstr(w4, mod[itmp]);
-	    move_panel(p5, LINES / 3 - 1, (itmp * 10) + 6);
+	    move_panel(px[5], LINES / 3 - 1, (itmp * 10) + 6);
 	    wmove(w5, LINES / 8, 1);
 	    waddstr(w5, mod[itmp]);
 	    pflush();
 	    wait_a_while(nap_msec);
 	}
 
-	saywhat("m4; press any key to continue");
-	move_panel(p4, LINES / 6, itmp * (COLS / 8));
+	saywhat("m4");
+	move_panel(px[4], LINES / 6, itmp * (COLS / 8));
 	pflush();
 	wait_a_while(nap_msec);
 
-	saywhat("t5; press any key to continue");
-	top_panel(p5);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("t2; press any key to continue");
-	top_panel(p2);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("t1; press any key to continue");
-	top_panel(p1);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("d2; press any key to continue");
-	rmpanel(p2);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("h3; press any key to continue");
-	hide_panel(p3);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("d1; press any key to continue");
-	rmpanel(p1);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("d4; press any key to continue");
-	rmpanel(p4);
-	pflush();
-	wait_a_while(nap_msec);
-
-	saywhat("d5; press any key to continue");
-	rmpanel(p5);
-	pflush();
-
-	rmpanel(p3);
-	pflush();
+	canned_panel(px, "t5");
+	canned_panel(px, "t2");
+	canned_panel(px, "t1");
+	canned_panel(px, "d2");
+	canned_panel(px, "h3");
+	canned_panel(px, "d1");
+	canned_panel(px, "d4");
+	canned_panel(px, "d5");
+	canned_panel(px, "d3");
 
 	wait_a_while(nap_msec);
 	if (nap_msec == 1)
@@ -5886,7 +5898,13 @@ do_single_test(const char c)
 
 #if USE_LIBPANEL
     case 'o':
-	demo_panels();
+	demo_panels(init_panel, fill_panel);
+	break;
+#endif
+
+#if USE_WIDEC_SUPPORT
+    case 'O':
+	demo_panels(init_wide_panel, fill_wide_panel);
 	break;
 #endif
 
@@ -6054,9 +6072,12 @@ main_menu(bool top)
 #endif
 #if USE_LIBPANEL
 	(void) puts("o = exercise panels library");
+#if USE_WIDEC_SUPPORT
+	(void) puts("O = exercise panels with wide-characters");
+#endif
+#endif
 	(void) puts("p = exercise pad features");
 	(void) puts("q = quit");
-#endif
 #if USE_LIBFORM
 	(void) puts("r = exercise forms code");
 #endif

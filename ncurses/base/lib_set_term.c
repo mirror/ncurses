@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.97 2007/04/26 19:39:48 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.98 2007/05/12 19:37:04 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -166,8 +166,6 @@ delscreen(SCREEN *sp)
     returnVoid;
 }
 
-#define N_RIPS SIZEOF(SP->_rippedoff)
-
 static bool
 no_mouse_event(SCREEN *sp GCC_UNUSED)
 {
@@ -228,8 +226,8 @@ _nc_setupscreen(int slines GCC_UNUSED,
 		int slk_format)
 {
     int bottom_stolen = 0;
-    int i;
     bool support_cookies = USE_XMC_SUPPORT;
+    ripoff_t *rop;
 
     T((T_CALLED("_nc_setupscreen(%d, %d, %p, %d, %d)"),
        slines, scolumns, output, filtered, slk_format));
@@ -270,18 +268,6 @@ _nc_setupscreen(int slines GCC_UNUSED,
 
 	cursor_home = carriage_return;
 	T(("filter screensize %dx%d", LINES, COLS));
-    }
-
-    /* If we must simulate soft labels, grab off the line to be used.
-       We assume that we must simulate, if it is none of the standard
-       formats (4-4  or 3-2-3) for which there may be some hardware
-       support. */
-    if (num_labels <= 0 || !SLK_STDFMT(slk_format)) {
-	if (slk_format) {
-	    if (ERR == _nc_ripoffline(-SLK_LINES(slk_format),
-				      _nc_slk_initialize))
-		returnCode(ERR);
-	}
     }
 #ifdef __DJGPP__
     T(("setting output mode to binary"));
@@ -549,38 +535,43 @@ _nc_setupscreen(int slines GCC_UNUSED,
     def_shell_mode();
     def_prog_mode();
 
-    for (i = 0, ripoff_sp = ripoff_stack;
-	 ripoff_sp->line && (i < (int) N_RIPS);
-	 ripoff_sp++, i++) {
+    for (rop = ripoff_stack;
+	 rop != ripoff_sp && (rop - ripoff_stack) < N_RIPS;
+	 rop++) {
 
-	T(("ripping off line %d at %s", i,
-	   ((ripoff_sp->line < 0)
-	    ? "bottom"
-	    : "top")));
+	/* If we must simulate soft labels, grab off the line to be used.
+	   We assume that we must simulate, if it is none of the standard
+	   formats (4-4 or 3-2-3) for which there may be some hardware
+	   support. */
+	if (rop->hook == _nc_slk_initialize)
+	    if (!(num_labels <= 0 || !SLK_STDFMT(slk_format)))
+		continue;
+	if (rop->hook) {
+	    int count;
+	    WINDOW *w;
 
-	SP->_rippedoff[i] = ripoff_stack[i];
-	if (ripoff_sp->hook) {
-	    int count = (ripoff_sp->line < 0) ? -ripoff_sp->line : ripoff_sp->line;
+	    count = (rop->line < 0) ? -rop->line : rop->line;
+	    T(("ripping off %i lines at %s", count,
+	       ((rop->line < 0)
+		? "bottom"
+		: "top")));
 
-	    SP->_rippedoff[i].w = newwin(count,
-					 scolumns,
-					 ((ripoff_sp->line < 0)
-					  ? SP->_lines_avail - count
-					  : 0),
-					 0);
-	    if (SP->_rippedoff[i].w != 0)
-		SP->_rippedoff[i].hook(SP->_rippedoff[i].w, scolumns);
+	    w = newwin(count, scolumns,
+		       ((rop->line < 0)
+			? SP->_lines_avail - count
+			: 0),
+		       0);
+	    if (w)
+		rop->hook(w, scolumns);
 	    else
 		returnCode(ERR);
-	    if (ripoff_sp->line < 0)
+	    if (rop->line < 0)
 		bottom_stolen += count;
 	    else
 		SP->_topstolen += count;
 	    SP->_lines_avail -= count;
 	}
-	ripoff_sp->line = 0;
     }
-    SP->_rip_count = i;
     /* reset the stack */
     ripoff_sp = ripoff_stack;
 
@@ -615,7 +606,6 @@ _nc_ripoffline(int line, int (*init) (WINDOW *, int))
 
 	ripoff_sp->line = line;
 	ripoff_sp->hook = init;
-	ripoff_sp->w = 0;
 	ripoff_sp++;
     }
 

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getyx.3x,v 1.15 2007/04/07 23:21:34 tom Exp $
+.\" $Id: curs_getyx.3x,v 1.16 2007/05/12 16:34:49 tom Exp $
 .TH curs_getyx 3X ""
 .SH NAME
 \fBgetyx\fR,
@@ -69,7 +69,7 @@ The
 \fBgetmaxyx\fR
 macros are described in the XSI Curses standard, Issue 4.
 .PP
-This implementation also provides
+This implementation also provides functions
 \fBgetbegx\fR,
 \fBgetbegy\fR,
 \fBgetcurx\fR,
@@ -79,9 +79,25 @@ This implementation also provides
 \fBgetparx\fR and
 \fBgetpary\fR
 for compatibility with older versions of curses.
+.PP
+Although X/Open Curses does not address this,
+many implementations provide members of the WINDOW structure
+containing values corresponding to these macros.
+For best portability, do not rely on using the data in WINDOW,
+since some implementations make WINDOW opaque (do not allow
+direct use of its members).
+.PP
+Besides the problem of opaque structures,
+the data stored in like-named members may not have like-values in
+different implementations.
+For example, the WINDOW._maxx and WINDOW._maxy values in ncurses
+have (at least since release 1.8.1) differed by one from some
+other implementations.
+The difference is hidden by means of the macro \fBgetmaxyx\fP.
 .SH SEE ALSO
 \fBcurses\fR(3X),
-\fBcurs_legacy\fR(3X)
+\fBcurs_legacy\fR(3X),
+\fBcurs_opaque\fR(3X)
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:

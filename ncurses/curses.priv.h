@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.330 2007/04/21 23:52:28 tom Exp $
+ * $Id: curses.priv.h,v 1.331 2007/05/12 18:10:46 tom Exp $
  *
  *	curses.priv.h
  *
@@ -380,7 +380,6 @@ typedef struct _SLK {
 typedef	struct {
 	int	line;		/* lines to take, < 0 => from bottom*/
 	int	(*hook)(WINDOW *, int); /* callback for user	    */
-	WINDOW *w;		/* maybe we need this for cleanup   */
 } ripoff_t;
 
 #if USE_GPM_SUPPORT
@@ -539,6 +538,8 @@ typedef struct {
 
 extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;
 
+#define N_RIPS 5
+
 /*
  * Global data which is swept up into a SCREEN when one is created.
  * It may be modified before the next SCREEN is created.
@@ -547,7 +548,7 @@ typedef struct {
 	bool		use_env;
 	bool		filter_mode;
 	attr_t		previous_attr;
-	ripoff_t	rippedoff[5];
+	ripoff_t	rippedoff[N_RIPS];
 	ripoff_t	*rsp;
 	TPARM_STATE	tparm_state;
 #if BROKEN_LINKER || USE_REENTRANT
@@ -575,8 +576,6 @@ struct screen {
 
 	NCURSES_SIZE_T	_lines_avail;	/* lines available for stdscr	    */
 	NCURSES_SIZE_T	_topstolen;	/* lines stolen from top	    */
-	ripoff_t	_rippedoff[5];	/* list of lines stolen		    */
-	int		_rip_count;	/* ...and total lines stolen	    */
 
 	WINDOW		*_curscr;	/* current screen		    */
 	WINDOW		*_newscr;	/* virtual screen to be updated to  */
