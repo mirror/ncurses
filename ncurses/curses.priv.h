@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.331 2007/05/12 18:10:46 tom Exp $
+ * $Id: curses.priv.h,v 1.332 2007/05/26 18:47:51 tom Exp $
  *
  *	curses.priv.h
  *
@@ -551,6 +551,7 @@ typedef struct {
 	ripoff_t	rippedoff[N_RIPS];
 	ripoff_t	*rsp;
 	TPARM_STATE	tparm_state;
+	TTY		*saved_tty;	/* savetty/resetty information	    */
 #if BROKEN_LINKER || USE_REENTRANT
 	chtype		*real_acs_map;
 #endif

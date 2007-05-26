@@ -1,4 +1,4 @@
-# $Id: MKkeyname.awk,v 1.32 2007/04/21 23:01:49 tom Exp $
+# $Id: MKkeyname.awk,v 1.33 2007/05/26 20:58:24 tom Exp $
 ##############################################################################
 # Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -74,7 +74,7 @@ END {
 	print "				if (MyTable[c] == 0) {"
 	print "					int cc = c;"
 	print "					p = name;"
-	print "					if (cc >= 128) {"
+	print "					if (cc >= 128 && (SP == 0 || SP->_use_meta)) {"
 	print "						strcpy(p, \"M-\");"
 	print "						p += 2;"
 	print "						cc -= 128;"

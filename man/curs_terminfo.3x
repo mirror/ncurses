@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.27 2007/03/11 00:15:07 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.28 2007/05/26 20:09:06 tom Exp $
 .TH curs_terminfo 3X ""
 .ds n 5
 .na
@@ -319,7 +319,7 @@ the SCREEN data allocated in either \fBinitscr\fR or \fBnewterm\fR.
 So though it is documented as a terminfo function,
 \fBmvcur\fR is really a curses function which is not well specified.
 .PP
-XSI states that the old location must be given.
+XSI states that the old location must be given for \fBmvcur\fP.
 This implementation allows the caller to use -1's for the old ordinates.
 In that case, the old location is unknown.
 .PP
