@@ -42,12 +42,16 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.23 2007/04/07 19:25:28 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.24 2007/06/02 18:55:10 tom Exp $")
+
+#define NormalLen(len) (unsigned) ((len + 1) * 4)
+#define WideLen(len)   (unsigned) ((len + 1) * 4 * MB_CUR_MAX)
 
 #ifdef TRACE
-static const char d_quote[] = {D_QUOTE, 0};
-static const char l_brace[] = {L_BRACE, 0};
-static const char r_brace[] = {R_BRACE, 0};
+#define StringOf(ch) {ch, 0}
+static const char d_quote[] = StringOf(D_QUOTE);
+static const char l_brace[] = StringOf(L_BRACE);
+static const char r_brace[] = StringOf(R_BRACE);
 #endif
 
 static char *
@@ -98,11 +102,11 @@ _nc_visbuf2n(int bufnum, const char *buf, int len)
 	len = strlen(buf);
 
 #ifdef TRACE
-    tp = vbuf = _nc_trace_buf(bufnum, (unsigned) (len * 4) + 5);
+    tp = vbuf = _nc_trace_buf(bufnum, NormalLen(len));
 #else
     {
 	static char *mybuf[4];
-	mybuf[bufnum] = typeRealloc(char, (unsigned) (len * 4) + 5, mybuf[bufnum]);
+	mybuf[bufnum] = typeRealloc(char, NormalLen(len), mybuf[bufnum]);
 	tp = vbuf = mybuf[bufnum];
     }
 #endif
@@ -163,11 +167,11 @@ _nc_viswbuf2n(int bufnum, const wchar_t *buf, int len)
 	len = wcslen(buf);
 
 #ifdef TRACE
-    tp = vbuf = _nc_trace_buf(bufnum, (unsigned) (len * 4) + 5);
+    tp = vbuf = _nc_trace_buf(bufnum, WideLen(len));
 #else
     {
 	static char *mybuf[2];
-	mybuf[bufnum] = typeRealloc(char, (unsigned) (len * 4) + 5, mybuf[bufnum]);
+	mybuf[bufnum] = typeRealloc(char, WideLen(len), mybuf[bufnum]);
 	tp = vbuf = mybuf[bufnum];
     }
 #endif
@@ -261,7 +265,8 @@ _nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 	result = _nc_trace_bufcat(bufnum, l_brace);
 	result = _nc_trace_bufcat(bufnum, d_quote);
 	for (j = first; j <= last; ++j) {
-	    if ((found = _nc_altcharset_name(attr, (chtype) CharOf(buf[j]))) != 0) {
+	    found = _nc_altcharset_name(attr, (chtype) CharOf(buf[j]));
+	    if (found != 0) {
 		result = _nc_trace_bufcat(bufnum, found);
 		attr &= ~A_ALTCHARSET;
 	    } else

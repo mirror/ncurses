@@ -45,7 +45,7 @@
 
 #include <term_entry.h>
 
-MODULE_ID("$Id: lib_termcap.c,v 1.60 2007/04/21 22:23:46 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.61 2007/06/02 19:36:03 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -283,7 +283,8 @@ _nc_tgetent_leaks(void)
 {
     for (CacheInx = 0; CacheInx < TGETENT_MAX; ++CacheInx) {
 	FreeIfNeeded(FIX_SGR0);
-	del_curterm(LAST_TRM);
+	if (LAST_TRM != 0)
+	    del_curterm(LAST_TRM);
     }
 }
 #endif

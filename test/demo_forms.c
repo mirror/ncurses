@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.22 2006/12/10 00:30:24 tom Exp $
+ * $Id: demo_forms.c,v 1.23 2007/06/02 21:37:55 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -322,6 +322,10 @@ demo_forms(void)
     int pg;
     WINDOW *also;
 
+#ifdef NCURSES_MOUSE_VERSION
+    mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
+#endif
+
     help_edit_field();
 
     mvaddstr(4, 57, "Forms Entry Test");
@@ -423,6 +427,10 @@ demo_forms(void)
 	free_field(f[c]);
     noraw();
     nl();
+
+#ifdef NCURSES_MOUSE_VERSION
+    mousemask(0, (mmask_t *) 0);
+#endif
 }
 
 static void

@@ -1,4 +1,4 @@
-# $Id: modules,v 1.30 2007/02/10 22:28:07 tom Exp $
+# $Id: modules,v 1.31 2007/06/02 20:00:13 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -47,6 +47,7 @@ demo_panels	progs		$(srcdir)	$(HEADER_DEPS)	../include/panel.h
 demo_termcap	progs		$(srcdir)	$(HEADER_DEPS)
 ditto		progs		$(srcdir)	$(HEADER_DEPS)
 dots		progs		$(srcdir)	$(HEADER_DEPS)
+dots_mvcur	progs		$(srcdir)	$(HEADER_DEPS)
 echochar	progs		$(srcdir)	$(HEADER_DEPS)
 edit_field	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/edit_field.h
 filter		progs		$(srcdir)	$(HEADER_DEPS)	../include/form.h

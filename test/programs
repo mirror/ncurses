@@ -1,4 +1,4 @@
-# $Id: programs,v 1.7 2007/02/10 22:27:58 tom Exp $
+# $Id: programs,v 1.8 2007/06/02 20:04:03 tom Exp $
 ##############################################################################
 # Copyright (c) 2006,2007 Free Software Foundation, Inc.                     #
 #                                                                            #
@@ -45,6 +45,7 @@ demo_panels	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_panels
 demo_termcap	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	demo_termcap
 ditto		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	ditto
 dots		$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	dots
+dots_mvcur	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_mvcur
 echochar	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	echochar
 filter		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	filter
 firework	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	firework

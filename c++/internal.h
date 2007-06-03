@@ -31,14 +31,14 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: internal.h,v 1.14 2007/04/07 18:44:17 tom Exp $
+// $Id: internal.h,v 1.15 2007/06/02 15:58:00 tom Exp $
 
 #ifndef NCURSES_CPLUS_INTERNAL_H
 #define NCURSES_CPLUS_INTERNAL_H 1
 
-#include <stdlib.h>
-
 #include <ncurses_cfg.h>
+
+#include <stdlib.h>
 
 #if USE_RCS_IDS
 #define MODULE_ID(id) static const char Ident[] = id;

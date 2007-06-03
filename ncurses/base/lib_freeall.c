@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey                    1996,1997                   *
+ *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
 
 #include <curses.priv.h>
@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.43 2007/05/05 20:56:17 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.44 2007/06/02 19:40:25 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -83,7 +83,8 @@ _nc_freeall(void)
 	}
 	delscreen(SP);
     }
-    del_curterm(cur_term);
+    if (cur_term != 0)
+	del_curterm(cur_term);
 
 #if USE_WIDEC_SUPPORT
     FreeIfNeeded(_nc_wacs);

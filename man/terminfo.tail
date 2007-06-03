@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.47 2006/12/24 18:14:22 tom Exp $
+.\" $Id: terminfo.tail,v 1.48 2007/06/02 20:30:40 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -1578,7 +1578,7 @@ and the application has only allocated a 1k buffer,
 *
 and the termcap library (like the one in BSD/OS 1.1 and GNU) reads
 the whole entry into the buffer, no matter what its length, to see
-if it's the entry it wants,
+if it is the entry it wants,
 .TP 5
 *
 and \fBtgetent()\fP is searching for a terminal type that either is the
@@ -1599,13 +1599,13 @@ here but will return incorrect data for the terminal.
 .PP
 The "after tc expansion" length will have a similar effect to the
 above, but only for people who actually set TERM to that terminal
-type, since \fBtgetent()\fP only does "tc" expansion once it's found the
+type, since \fBtgetent()\fP only does "tc" expansion once it is found the
 terminal type it was looking for, not while searching.
 .PP
 In summary, a termcap entry that is longer than 1023 bytes can cause,
 on various combinations of termcap libraries and applications, a core
 dump, warnings, or incorrect operation.
-If it's too long even before
+If it is too long even before
 "tc" expansion, it will have this effect even for users of some other
 terminal types and users whose TERM variable does not have a termcap
 entry.

@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.332 2007/05/26 18:47:51 tom Exp $
+ * $Id: curses.priv.h,v 1.333 2007/06/02 19:25:27 tom Exp $
  *
  *	curses.priv.h
  *
@@ -893,9 +893,9 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define NulChar		0,0,0,0	/* FIXME: see CCHARW_MAX */
 #define CharOf(c)	((c).chars[0])
 #define AttrOf(c)	((c).attr)
-#define AddAttr(c,a)	AttrOf(c) |= ((a) & A_ATTRIBUTES)
+#define AddAttr(c,a)	AttrOf(c) |=  ((a) & A_ATTRIBUTES)
 #define RemAttr(c,a)	AttrOf(c) &= ~((a) & A_ATTRIBUTES)
-#define SetAttr(c,a)	AttrOf(c) = ((a) & A_ATTRIBUTES)
+#define SetAttr(c,a)	AttrOf(c) =   ((a) & A_ATTRIBUTES) | WidecExt(c)
 #define NewChar2(c,a)	{ a, { c, NulChar } NulColor }
 #define NewChar(ch)	NewChar2(ChCharOf(ch), ChAttrOf(ch))
 #define CharEq(a,b)	(!memcmp(&(a), &(b), sizeof(a)))

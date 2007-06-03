@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.79 2007/03/12 21:49:00 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.82 2007/06/02 22:59:24 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -736,6 +736,34 @@ Field_Grown(FIELD *field, int amount)
     }
   return (result);
 }
+
+#ifdef NCURSES_MOUSE_VERSION
+/*---------------------------------------------------------------------------
+|   Facility      :  libnform
+|   Function      :  int Field_encloses(FIELD *field, int ry, int rx)
+|
+|   Description   :  Check if the given coordinates lie within the given field.
+|
+|   Return Values :  E_OK              - success
+|                    E_BAD_ARGUMENT    - invalid form pointer
+|                    E_SYSTEM_ERROR    - form has no current field or
+|                                        field-window
++--------------------------------------------------------------------------*/
+static int
+Field_encloses(FIELD *field, int ry, int rx)
+{
+  T((T_CALLED("Field_encloses(%p)"), field));
+  if (field != 0
+      && field->frow <= ry
+      && (field->frow + field->rows) > ry
+      && field->fcol <= rx
+      && (field->fcol + field->cols) > rx)
+    {
+      RETURN(E_OK);
+    }
+  RETURN(E_INVALID_FIELD);
+}
+#endif
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
@@ -4162,6 +4190,83 @@ form_driver(FORM *form, int c)
 	    res = (BI->cmd) (form);
 	}
     }
+#ifdef NCURSES_MOUSE_VERSION
+  else if (KEY_MOUSE == c)
+    {
+      MEVENT event;
+      WINDOW *win = form->win ? form->win : stdscr;
+      WINDOW *sub = form->sub ? form->sub : win;
+
+      getmouse(&event);
+      if ((event.bstate & (BUTTON1_CLICKED |
+			   BUTTON1_DOUBLE_CLICKED |
+			   BUTTON1_TRIPLE_CLICKED))
+	  && wenclose(win, event.y, event.x))
+	{			/* we react only if the click was in the userwin, that means
+				 * inside the form display area or at the decoration window.
+				 */
+	  int ry = event.y, rx = event.x;	/* screen coordinates */
+
+	  res = E_REQUEST_DENIED;
+	  if (mouse_trafo(&ry, &rx, FALSE))
+	    {			/* rx, ry are now "curses" coordinates */
+	      if (ry < sub->_begy)
+		{		/* we clicked above the display region; this is
+				 * interpreted as "scroll up" request
+				 */
+		  if (event.bstate & BUTTON1_CLICKED)
+		    res = form_driver(form, REQ_PREV_FIELD);
+		  else if (event.bstate & BUTTON1_DOUBLE_CLICKED)
+		    res = form_driver(form, REQ_PREV_PAGE);
+		  else if (event.bstate & BUTTON1_TRIPLE_CLICKED)
+		    res = form_driver(form, REQ_FIRST_FIELD);
+		}
+	      else if (ry > sub->_begy + sub->_maxy)
+		{		/* we clicked below the display region; this is
+				 * interpreted as "scroll down" request
+				 */
+		  if (event.bstate & BUTTON1_CLICKED)
+		    res = form_driver(form, REQ_NEXT_FIELD);
+		  else if (event.bstate & BUTTON1_DOUBLE_CLICKED)
+		    res = form_driver(form, REQ_NEXT_PAGE);
+		  else if (event.bstate & BUTTON1_TRIPLE_CLICKED)
+		    res = form_driver(form, REQ_LAST_FIELD);
+		}
+	      else if (wenclose(sub, event.y, event.x))
+		{		/* Inside the area we try to find the hit item */
+		  int i;
+
+		  ry = event.y;
+		  rx = event.x;
+		  if (wmouse_trafo(sub, &ry, &rx, FALSE))
+		    {
+		      int min_field = form->page[form->curpage].pmin;
+		      int max_field = form->page[form->curpage].pmax;
+
+		      for (i = min_field; i <= max_field; ++i)
+			{
+			  FIELD *field = form->field[i];
+
+			  if (Field_Is_Selectable(field)
+			      && Field_encloses(field, ry, rx) == E_OK)
+			    {
+			      res = _nc_Set_Current_Field(form, field);
+			      if (res == E_OK)
+				res = _nc_Position_Form_Cursor(form);
+			      if (res == E_OK
+				  && (event.bstate & BUTTON1_DOUBLE_CLICKED))
+				res = E_UNKNOWN_COMMAND;
+			      break;
+			    }
+			}
+		    }
+		}
+	    }
+	}
+      else
+	res = E_REQUEST_DENIED;
+    }
+#endif /* NCURSES_MOUSE_VERSION */
   else if (!(c & (~(int)MAX_REGULAR_CHARACTER)))
     {
       /*

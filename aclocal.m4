@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.433 2007/04/28 19:26:13 tom Exp $
+dnl $Id: aclocal.m4,v 1.434 2007/06/02 16:03:25 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1773,7 +1773,7 @@ AC_MSG_RESULT($cf_cv_have_isascii)
 test "$cf_cv_have_isascii" = yes && AC_DEFINE(HAVE_ISASCII)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LARGEFILE version: 6 updated: 2006/09/23 19:07:52
+dnl CF_LARGEFILE version: 7 updated: 2007/06/02 11:58:50
 dnl ------------
 dnl Add checks for large file support.
 AC_DEFUN([CF_LARGEFILE],[
@@ -1791,6 +1791,7 @@ ifdef([AC_FUNC_FSEEKO],[
 	# the config.h
 	test "$ac_cv_sys_large_files"      != no && CPPFLAGS="$CPPFLAGS -D_LARGE_FILES "
 	test "$ac_cv_sys_largefile_source" != no && CPPFLAGS="$CPPFLAGS -D_LARGEFILE_SOURCE "
+	test "$ac_cv_sys_file_offset_bits" != no && CPPFLAGS="$CPPFLAGS -D_FILE_OFFSET_BITS=$ac_cv_sys_file_offset_bits "
 
 	AC_CACHE_CHECK(whether to use struct dirent64, cf_cv_struct_dirent64,[
 		AC_TRY_COMPILE([
@@ -4872,7 +4873,7 @@ AC_SUBST(LIB_UNINSTALL)
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PATH version: 7 updated: 2006/08/03 15:20:08
+dnl CF_WITH_PATH version: 8 updated: 2007/05/13 13:16:35
 dnl ------------
 dnl Wrapper for AC_ARG_WITH to ensure that user supplies a pathname, not just
 dnl defaulting to yes/no.
@@ -4886,7 +4887,9 @@ dnl
 AC_DEFUN([CF_WITH_PATH],
 [AC_ARG_WITH($1,[$2 ](default: ifelse($4,,empty,$4)),,
 ifelse($4,,[withval="${$3}"],[withval="${$3-ifelse($5,,$4,$5)}"]))dnl
+if ifelse($5,,true,[test -n "$5"]) ; then
 CF_PATH_SYNTAX(withval)
+fi
 $3="$withval"
 AC_SUBST($3)dnl
 ])dnl

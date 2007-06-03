@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.288 2007/05/12 23:04:11 tom Exp $
+$Id: ncurses.c,v 1.289 2007/06/02 23:04:12 tom Exp $
 
 ***************************************************************************/
 
@@ -5403,6 +5403,10 @@ demo_forms(void)
     int finished = 0, c;
     unsigned n = 0;
 
+#ifdef NCURSES_MOUSE_VERSION
+    mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
+#endif
+
     move(18, 0);
     addstr("Defined edit/traversal keys:   ^Q/ESC- exit form\n");
     addstr("^N   -- go to next field       ^P  -- go to previous field\n");
@@ -5476,6 +5480,10 @@ demo_forms(void)
     free_fieldtype(fty_passwd);
     noraw();
     nl();
+
+#ifdef NCURSES_MOUSE_VERSION
+    mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
+#endif
 }
 #endif /* USE_LIBFORM */
 
