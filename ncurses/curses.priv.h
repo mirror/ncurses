@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.333 2007/06/02 19:25:27 tom Exp $
+ * $Id: curses.priv.h,v 1.334 2007/06/09 17:21:53 tom Exp $
  *
  *	curses.priv.h
  *
@@ -214,6 +214,8 @@ typedef TRIES {
 /*
  * Common/troublesome character definitions
  */
+#define StringOf(ch) {ch, 0}
+
 #define L_BRACE '{'
 #define R_BRACE '}'
 #define S_QUOTE '\''

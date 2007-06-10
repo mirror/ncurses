@@ -39,14 +39,14 @@
 #include <curses.priv.h>
 #include <term.h>		/* acs_chars */
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.58 2007/04/21 22:54:45 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.59 2007/06/09 17:22:10 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
 #ifdef TRACE
 
-static const char l_brace[] = {L_BRACE, 0};
-static const char r_brace[] = {R_BRACE, 0};
+static const char l_brace[] = StringOf(L_BRACE);
+static const char r_brace[] = StringOf(R_BRACE);
 
 #ifndef USE_TERMLIB
 

@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.65 2007/02/03 20:00:54 tom Exp $ */
+/* $Id: test.priv.h,v 1.66 2007/06/09 19:55:16 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -189,6 +189,10 @@
 
 #ifndef NCURSES_EXT_FUNCS
 #define NCURSES_EXT_FUNCS 0
+#endif
+
+#ifndef NCURSES_OPAQUE
+#define NCURSES_OPAQUE 0
 #endif
 
 #ifndef NEED_PTEM_H

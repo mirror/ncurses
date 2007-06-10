@@ -1,4 +1,4 @@
-# $Id: programs,v 1.8 2007/06/02 20:04:03 tom Exp $
+# $Id: programs,v 1.9 2007/06/09 22:24:51 tom Exp $
 ##############################################################################
 # Copyright (c) 2006,2007 Free Software Foundation, Inc.                     #
 #                                                                            #
@@ -58,6 +58,7 @@ inch_wide	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	inch_wide
 inchs		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	inchs
 ins_wide	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	ins_wide
 inserts		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	inserts
+key_names	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	key_names
 keynames	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	keynames
 knight		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	knight
 lrtest		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	lrtest

@@ -979,6 +979,7 @@
 ./test/inchs.c
 ./test/ins_wide.c
 ./test/inserts.c
+./test/key_names.c
 ./test/keynames.c
 ./test/knight.c
 ./test/linux-color.dat

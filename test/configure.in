@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.61 2007/01/27 22:56:49 tom Exp $
+dnl $Id: configure.in,v 1.63 2007/06/09 20:02:57 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -58,15 +58,15 @@ CPPFLAGS="$CPPFLAGS"			AC_SUBST(CPPFLAGS)
 DFT_DEP_SUFFIX=""			AC_SUBST(DFT_DEP_SUFFIX)
 DFT_OBJ_SUBDIR=`pwd|sed -e's:.*/::'`	AC_SUBST(DFT_OBJ_SUBDIR)
 DFT_UPR_MODEL="NORMAL"			AC_SUBST(DFT_UPR_MODEL)
-ECHO_LINK='@ echo linking $@ ... ;'	AC_SUBST(ECHO_LINK)
 LD="ld"					AC_SUBST(LD)
 LDFLAGS_SHARED=""			AC_SUBST(LDFLAGS_SHARED)
+LDFLAGS_STATIC=""			AC_SUBST(LDFLAGS_STATIC)
 LD_MODEL=""				AC_SUBST(LD_MODEL)
 LD_SHARED_OPTS=""			AC_SUBST(LD_SHARED_OPTS)
 LIBTOOL=""				AC_SUBST(LIBTOOL)
 LIB_CLEAN=""				AC_SUBST(LIB_CLEAN)
 LIB_COMPILE=""				AC_SUBST(LIB_COMPILE)
-LIB_LINK=""				AC_SUBST(LIB_LINK)
+LIB_LINK='${CC}'			AC_SUBST(LIB_LINK)
 LINK_TESTS=""				AC_SUBST(LINK_TESTS)
 LINT=lint				AC_SUBST(LINT)
 LINT_OPTS=""				AC_SUBST(LINT_OPTS)
@@ -85,9 +85,13 @@ AC_EXEEXT
 AC_OBJEXT
 
 CF_ANSI_CC_REQD
-CF_ENABLE_WARNINGS
 CF_GCC_ATTRIBUTES
 CF_XOPEN_SOURCE
+AC_C_CONST
+CF_SIG_ATOMIC_T
+
+CF_DISABLE_ECHO
+CF_ENABLE_WARNINGS
 
 CF_WITH_CURSES_DIR
 
@@ -257,7 +261,7 @@ LIBS=
 dnl ---------------------------------------------------------------------------
 
 AC_OUTPUT(Makefile,[
-CF_PRG_RULES([$srcdir/mk-test.awk ECHO_LINK="$ECHO_LINK"], .)
+CF_PRG_RULES([$srcdir/mk-test.awk ECHO_LINK="$ECHO_LD"], .)
 	cat >>Makefile <<TEST_EOF
 
 # These rules are generated so we do not rely on suffix rules, which do not
@@ -277,4 +281,5 @@ TEST_EOF
 done
 ],[
 AWK="$AWK"
+ECHO_LD="$ECHO_LD"
 ],cat)

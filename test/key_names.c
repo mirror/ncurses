@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -25,35 +25,32 @@
  * sale, use or other dealings in this Software without prior written       *
  * authorization.                                                           *
  ****************************************************************************/
-
 /*
-**	lib_wunctrl.c
-**
-**	The routine wunctrl().
-**
-*/
+ * $Id: key_names.c,v 1.2 2007/06/09 22:32:34 tom Exp $
+ */
 
-#include <curses.priv.h>
+#include <test.priv.h>
 
 #if USE_WIDEC_SUPPORT
 
-MODULE_ID("$Id: lib_wunctrl.c,v 1.11 2007/06/09 22:44:30 tom Exp $")
-
-NCURSES_EXPORT(wchar_t *)
-wunctrl(cchar_t *wc)
+int
+main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
-    static wchar_t str[CCHARW_MAX + 1], *sp;
+    int n;
 
-    if (Charable(*wc)) {
-	const char *p = unctrl((unsigned) _nc_to_char((wint_t) CharOf(*wc)));
-
-	for (sp = str; *p; ++p) {
-	    *sp++ = _nc_to_widechar(*p);
-	}
-	*sp = 0;
-	return str;
-    } else
-	return wc->chars;
+    setlocale(LC_ALL, "");
+    for (n = -1; n < KEY_MAX + 512; n++) {
+	const char *result = key_name(n);
+	if (result != 0)
+	    printf("%d(%5o):%s\n", n, n, result);
+    }
+    ExitProgram(EXIT_SUCCESS);
 }
-
+#else
+int
+main(void)
+{
+    printf("This program requires the wide-ncurses library\n");
+    ExitProgram(EXIT_FAILURE);
+}
 #endif

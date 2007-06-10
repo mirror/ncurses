@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.17 2006/12/03 00:10:15 tom Exp $
+dnl $Id: aclocal.m4,v 1.19 2007/06/09 20:01:31 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -229,6 +229,12 @@ You have the following choices:
 	c. use a wrapper such as unproto])
 fi
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ARG_DISABLE version: 3 updated: 1999/03/30 17:24:31
+dnl --------------
+dnl Allow user to disable a normally-on option.
+AC_DEFUN([CF_ARG_DISABLE],
+[CF_ARG_OPTION($1,[$2],[$3],[$4],yes)])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ARG_ENABLE version: 3 updated: 1999/03/30 17:24:31
 dnl -------------
@@ -537,6 +543,43 @@ dnl ----------
 dnl "dirname" is not portable, so we fake it with a shell script.
 AC_DEFUN([CF_DIRNAME],[$1=`echo $2 | sed -e 's%/[[^/]]*$%%'`])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_DISABLE_ECHO version: 10 updated: 2003/04/17 22:27:11
+dnl ---------------
+dnl You can always use "make -n" to see the actual options, but it's hard to
+dnl pick out/analyze warning messages when the compile-line is long.
+dnl
+dnl Sets:
+dnl	ECHO_LT - symbol to control if libtool is verbose
+dnl	ECHO_LD - symbol to prefix "cc -o" lines
+dnl	RULE_CC - symbol to put before implicit "cc -c" lines (e.g., .c.o)
+dnl	SHOW_CC - symbol to put before explicit "cc -c" lines
+dnl	ECHO_CC - symbol to put before any "cc" line
+dnl
+AC_DEFUN([CF_DISABLE_ECHO],[
+AC_MSG_CHECKING(if you want to see long compiling messages)
+CF_ARG_DISABLE(echo,
+	[  --disable-echo          display "compiling" commands],
+	[
+    ECHO_LT='--silent'
+    ECHO_LD='@echo linking [$]@;'
+    RULE_CC='	@echo compiling [$]<'
+    SHOW_CC='	@echo compiling [$]@'
+    ECHO_CC='@'
+],[
+    ECHO_LT=''
+    ECHO_LD=''
+    RULE_CC='# compiling'
+    SHOW_CC='# compiling'
+    ECHO_CC=''
+])
+AC_MSG_RESULT($enableval)
+AC_SUBST(ECHO_LT)
+AC_SUBST(ECHO_LD)
+AC_SUBST(RULE_CC)
+AC_SUBST(SHOW_CC)
+AC_SUBST(ECHO_CC)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_ENABLE_WARNINGS version: 3 updated: 2003/05/24 14:24:29
 dnl ------------------
 dnl Configure-option to enable gcc warnings
@@ -606,7 +649,7 @@ fi
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_CURSES_VERSION version: 3 updated: 2003/05/17 22:19:02
+dnl CF_FUNC_CURSES_VERSION version: 4 updated: 2007/04/28 09:15:55
 dnl ----------------------
 dnl Solaris has a data item 'curses_version', which confuses AC_CHECK_FUNCS.
 dnl It's a character string "SVR4", not documented.
@@ -619,7 +662,7 @@ int main()
 {
 	char temp[1024];
 	sprintf(temp, "%s\n", curses_version());
-	exit(0);
+	${cf_cv_main_return-return}(0);
 }]
 ,[cf_cv_func_curses_version=yes]
 ,[cf_cv_func_curses_version=no]
@@ -1155,7 +1198,7 @@ CF_UPPER(cf_nculib_ROOT,HAVE_LIB$cf_nculib_root)
 AC_DEFINE_UNQUOTED($cf_nculib_ROOT)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_VERSION version: 11 updated: 2003/11/06 19:59:57
+dnl CF_NCURSES_VERSION version: 12 updated: 2007/04/28 09:15:55
 dnl ------------------
 dnl Check for the version of ncurses, to aid in reporting bugs, etc.
 dnl Call CF_CURSES_CPPFLAGS first, or CF_NCURSES_CPPFLAGS.  We don't use
@@ -1186,7 +1229,7 @@ int main()
 	make an error
 # endif
 #endif
-	exit(0);
+	${cf_cv_main_return-return}(0);
 }],[
 	cf_cv_ncurses_version=`cat $cf_tempfile`],,[
 
@@ -1442,6 +1485,41 @@ $1=`echo "$2" | \
 		-e 's/-[[UD]]$3\(=[[^ 	]]*\)\?[$]//g'`
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_SIG_ATOMIC_T version: 2 updated: 2005/09/18 17:27:12
+dnl ---------------
+dnl signal handler, but there are some gcc depedencies in that recommendation.
+dnl Try anyway.
+AC_DEFUN([CF_SIG_ATOMIC_T],
+[
+AC_MSG_CHECKING(for signal global datatype)
+AC_CACHE_VAL(cf_cv_sig_atomic_t,[
+	for cf_type in \
+		"volatile sig_atomic_t" \
+		"sig_atomic_t" \
+		"int"
+	do
+	AC_TRY_COMPILE([
+#include <sys/types.h>
+#include <signal.h>
+#include <stdio.h>
+
+extern $cf_type x;
+$cf_type x;
+static void handler(int sig)
+{
+	x = 5;
+}],
+		[signal(SIGINT, handler);
+		 x = 1],
+		[cf_cv_sig_atomic_t=$cf_type],
+		[cf_cv_sig_atomic_t=no])
+		test "$cf_cv_sig_atomic_t" != no && break
+	done
+	])
+AC_MSG_RESULT($cf_cv_sig_atomic_t)
+test "$cf_cv_sig_atomic_t" != no && AC_DEFINE_UNQUOTED(SIG_ATOMIC_T, $cf_cv_sig_atomic_t)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_SUBDIR_PATH version: 4 updated: 2006/11/18 17:13:19
 dnl --------------
 dnl Construct a search-list for a nonstandard header/lib-file
@@ -1630,7 +1708,7 @@ AC_ARG_WITH(curses-dir,
 	[cf_cv_curses_dir=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 24 updated: 2006/04/02 16:41:09
+dnl CF_XOPEN_SOURCE version: 25 updated: 2007/01/29 18:36:38
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -1664,7 +1742,7 @@ hpux*) #(vi
 irix[[56]].*) #(vi
 	CPPFLAGS="$CPPFLAGS -D_SGI_SOURCE"
 	;;
-linux*|gnu*) #(vi
+linux*|gnu*|k*bsd*-gnu) #(vi
 	CF_GNU_SOURCE
 	;;
 mirbsd*) #(vi

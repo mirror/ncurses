@@ -1,4 +1,4 @@
-# $Id: modules,v 1.31 2007/06/02 20:00:13 tom Exp $
+# $Id: modules,v 1.32 2007/06/09 21:40:02 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -61,6 +61,7 @@ inch_wide	progs		$(srcdir)	$(HEADER_DEPS)
 inchs		progs		$(srcdir)	$(HEADER_DEPS)
 ins_wide	progs		$(srcdir)	$(HEADER_DEPS)
 inserts		progs		$(srcdir)	$(HEADER_DEPS)
+key_names	progs		$(srcdir)	$(HEADER_DEPS)
 keynames	progs		$(srcdir)	$(HEADER_DEPS)
 knight		progs		$(srcdir)	$(HEADER_DEPS)
 lrtest		progs		$(srcdir)	$(HEADER_DEPS)

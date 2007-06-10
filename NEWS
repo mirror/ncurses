@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1130 2007/06/02 22:39:42 tom Exp $
+-- $Id: NEWS,v 1.1134 2007/06/09 22:47:59 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070609
+	+ add test/key_name.c
+	+ add stdscr cases to test/inchs.c and test_inch_wide.c
+	+ update test/configure
+	+ correct formatting of DEL (0x7f) in _nc_vischar().
+	+ null-terminate result of wunctrl().
+	+ add null-pointer check in key_name() (report by Andreas Krennmair,
+	  cf: 20020901).
 
 20070602
 	+ adapt mouse-handling code from menu library in form-library

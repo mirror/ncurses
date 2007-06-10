@@ -42,13 +42,12 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.24 2007/06/02 18:55:10 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.26 2007/06/09 17:21:53 tom Exp $")
 
 #define NormalLen(len) (unsigned) ((len + 1) * 4)
 #define WideLen(len)   (unsigned) ((len + 1) * 4 * MB_CUR_MAX)
 
 #ifdef TRACE
-#define StringOf(ch) {ch, 0}
 static const char d_quote[] = StringOf(D_QUOTE);
 static const char l_brace[] = StringOf(L_BRACE);
 static const char r_brace[] = StringOf(R_BRACE);
@@ -74,6 +73,10 @@ _nc_vischar(char *tp, unsigned c)
     } else if (c == '\033') {
 	*tp++ = '\\';
 	*tp++ = 'e';
+    } else if (UChar(c) == 0x7f) {
+	*tp++ = '\\';
+	*tp++ = '^';
+	*tp++ = '?';
     } else if (is7bits(c) && iscntrl(UChar(c))) {
 	*tp++ = '\\';
 	*tp++ = '^';

@@ -1,4 +1,4 @@
-# $Id: MKkeyname.awk,v 1.33 2007/05/26 20:58:24 tom Exp $
+# $Id: MKkeyname.awk,v 1.35 2007/06/09 22:36:10 tom Exp $
 ##############################################################################
 # Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -118,8 +118,24 @@ END {
 	print "#if USE_WIDEC_SUPPORT"
 	print "NCURSES_EXPORT(NCURSES_CONST char *) key_name (wchar_t c)"
 	print "{"
-	print "	NCURSES_CONST char *result = keyname((int)c);"
-	print "	if (!strncmp(result, \"M-\", 2)) result = 0;"
+	print "	cchar_t my_cchar;"
+	print "	wchar_t *my_wchars;"
+	print "	size_t len;"
+	print ""
+	print "	/* FIXME: move to _nc_globals */"
+	print "	static char result[MB_LEN_MAX + 1];"
+	print ""
+	print "	memset(&my_cchar, 0, sizeof(my_cchar));"
+	print "	my_cchar.chars[0] = c;"
+	print "	my_cchar.chars[1] = L'\\0';"
+	print ""
+	print "	my_wchars = wunctrl(&my_cchar);"
+	print "	len = wcstombs(result, my_wchars, sizeof(result)-1);"
+	print "	if (isEILSEQ(len) || (len == 0)) {"
+	print "		return \"UNKNOWN KEY\";"
+	print "	}"
+	print ""
+	print "	result[len] = '\\0';"
 	print "	return result;"
 	print "}"
 	print "#endif"
