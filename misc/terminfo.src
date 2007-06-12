@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.303 $
-#	$Date: 2006/10/07 17:52:03 $
+#	$Revision: 1.305 $
+#	$Date: 2007/06/10 13:33:54 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3101,24 +3101,25 @@ xterm+pcf0|fragment with modifyFunctionKeys:0,
 	kf59=\E[23;3~, kf6=\E[17~, kf60=\E[24;3~, kf61=\EO4P,
 	kf62=\EO4Q, kf63=\EO4R, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
 #
-xterm+pcf2|fragment with modifyFunctionKeys:0,
+xterm+pcf2|fragment with modifyFunctionKeys:2,
 	kf1=\EOP, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~,
-	kf13=\E[2P, kf14=\E[2Q, kf15=\E[2R, kf16=\E[2S,
+	kf13=\E[1;2P, kf14=\E[1;2Q, kf15=\E[1;2R, kf16=\E[1;2S,
 	kf17=\E[15;2~, kf18=\E[17;2~, kf19=\E[18;2~, kf2=\EOQ,
 	kf20=\E[19;2~, kf21=\E[20;2~, kf22=\E[21;2~,
-	kf23=\E[23;2~, kf24=\E[24;2~, kf25=\E[5P, kf26=\E[5Q,
-	kf27=\E[5R, kf28=\E[5S, kf29=\E[15;5~, kf3=\EOR,
+	kf23=\E[23;2~, kf24=\E[24;2~, kf25=\E[1;5P, kf26=\E[1;5Q,
+	kf27=\E[1;5R, kf28=\E[1;5S, kf29=\E[15;5~, kf3=\EOR,
 	kf30=\E[17;5~, kf31=\E[18;5~, kf32=\E[19;5~,
 	kf33=\E[20;5~, kf34=\E[21;5~, kf35=\E[23;5~,
-	kf36=\E[24;5~, kf37=\E[6P, kf38=\E[6Q, kf39=\E[6R,
-	kf4=\EOS, kf40=\E[6S, kf41=\E[15;6~, kf42=\E[17;6~,
+	kf36=\E[24;5~, kf37=\E[1;6P, kf38=\E[1;6Q, kf39=\E[1;6R,
+	kf4=\EOS, kf40=\E[1;6S, kf41=\E[15;6~, kf42=\E[17;6~,
 	kf43=\E[18;6~, kf44=\E[19;6~, kf45=\E[20;6~,
-	kf46=\E[21;6~, kf47=\E[23;6~, kf48=\E[24;6~, kf49=\E[3P,
-	kf5=\E[15~, kf50=\E[3Q, kf51=\E[3R, kf52=\E[3S,
-	kf53=\E[15;3~, kf54=\E[17;3~, kf55=\E[18;3~,
-	kf56=\E[19;3~, kf57=\E[20;3~, kf58=\E[21;3~,
-	kf59=\E[23;3~, kf6=\E[17~, kf60=\E[24;3~, kf61=\E[4P,
-	kf62=\E[4Q, kf63=\E[4R, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
+	kf46=\E[21;6~, kf47=\E[23;6~, kf48=\E[24;6~,
+	kf49=\E[1;3P, kf5=\E[15~, kf50=\E[1;3Q, kf51=\E[1;3R,
+	kf52=\E[1;3S, kf53=\E[15;3~, kf54=\E[17;3~,
+	kf55=\E[18;3~, kf56=\E[19;3~, kf57=\E[20;3~,
+	kf58=\E[21;3~, kf59=\E[23;3~, kf6=\E[17~, kf60=\E[24;3~,
+	kf61=\E[1;4P, kf62=\E[1;4Q, kf63=\E[1;4R, kf7=\E[18~,
+	kf8=\E[19~, kf9=\E[20~,
 #
 # This chunk is used for building the VT220/Sun/PC keyboard variants.
 xterm-basic|modern xterm terminal emulator - common,
@@ -15207,40 +15208,33 @@ ncr7901|ncr 7901 model,
 # recognized:  if you type in "ESC !", the next (third) character is not
 # echoed, showing that the terminal was actually waiting for a parameter!
 ndr9500|nd9500|Newbury Data 9500,
-	xon, hs, am, bw, ul, mir, msgr, mc5i,
+	am, bw, hs, mc5i, mir, msgr, ul, xon,
 	cols#80, lines#24, wsl#79,
-	is2=\Ew\E'\EDF\El\Er\EO,
-	civis=\E.0, cnorm=\E.1,
-	bel=^G, flash=\Eb$<50/>\Ed, cr=^M, nel=^_,
-	ht=^I, cbt=\EI, hts=\E1, tbc=\E3,
-	clear=\E;, el=\ET, ed=\EY,
-	cud1=^V, cub1=^H, cuf1=^L, cuu1=^K, home=^^,
-	ind=^j, ri=\Ej,
-	cup=\E=%p1%{32}%+%c%p2%{32}%+%c,
-	dch1=\EW, dl1=\ER,
-	ich1=\EQ, il1=\EE,
-	el=\ET, ed=\EY,
-	dim=\E), prot=\E),
-	smso=\E), rmso=\E(,
-	smacs=\E$, rmacs=\E%%, acsc=qKnImAjDwNuLtMvOlBkCxJ,
-	sgr0=\EG0\E%%\E(,
+	acsc=qKnImAjDwNuLtMvOlBkCxJ, bel=^G, cbt=\EI, civis=\E.0,
+	clear=\E;, cnorm=\E.1, cr=^M, cub1=^H, cud1=^V, cuf1=^L,
+	cup=\E=%p1%{32}%+%c%p2%{32}%+%c, cuu1=^K, dch1=\EW,
+	dim=\E), dl1=\ER, dsl=\Eh, ed=\EY, el=\ET,
+	flash=\Eb$<50/>\Ed, fsl=^M, home=^^, ht=^I, hts=\E1,
+	ich1=\EQ, il1=\EE, ind=^J, is2=\Ew\E'\EDF\El\Er\EO,
+	kDC=\Er, kDL=\EO, kEOL=\Et, kIC=\Eq, kcbt=\EI, kclr=^Z,
+	kcub1=^H, kcud1=^V, kcuf1=^L, kcuu1=^K, kdch1=\EW, kdl1=\ER,
+	ked=\EY, kel=\ET, kent=^M, kf1=^A@\r, kf10=^AI\r, kf11=^AJ\r,
+	kf12=^A`\r, kf13=^Aa\r, kf14=^Ab\r, kf15=^Ac\r, kf16=^Ad\r,
+	kf17=^Ae\r, kf18=^Af\r, kf19=^Ag\r, kf2=^AA\r, kf20=^Ah\r,
+	kf21=^Ai\r, kf22=^Aj\r, kf3=^AB\r, kf4=^AC\r, kf5=^AD\r,
+	kf6=^AE\r, kf7=^AF\r, kf8=^AG\r, kf9=^AH\r, khome=^^,
+	kich1=\EQ, kil1=\EE, kprt=\EP, mc4=\Ea, mc5=\E`, nel=^_,
+	pfloc=\E|%{48}%p1%+%c2%p2\031,
+	pfx=\E|%{48}%p1%+%c1%p2\031, prot=\E), ri=\Ej,
+	rmacs=\E%%, rmir=\Er, rmso=\E(, rmxon=^N,
 	sgr=\E%%\E(%?%p1%p5%p8%|%|%t\E)%;%?%p9%t\E$%;,
-	smir=\Eq, rmir=\Er,
-	smxon=^O, rmxon=^N,
-	dsl=\Eh, fsl=\r, tsl=\Eg\Ef^I%p1%{32}%+%c,
-	mc5=\E`, mc4=\Ea,
-	kcud1=^V, kcub1=^H, kcuf1=^L, kcuu1=^K,
-	kcbt=\EI,
-	.kbs=^H, kclr=^Z, kel=\ET, ked=\EY,
-	                  kEOL=\Et,
-	kdch1=\EW, kdl1=\ER, kich1=\EQ, kil1=\EE,
-	kDC=\Er,   kDL=\EO,  kIC=\Eq,
-	kent=^M, khome=^^, kprt=\EP,
-	kf1=^A@\r, kf2=^AA\r, kf3=^AB\r, kf4=^AC\r, kf5=^AD\r, kf6=^AE\r, kf7=^AF\r, kf8=^AG\r, kf9=^AH\r, kf10=^AI\r, kf11=^AJ\r, kf12=^A`\r, kf13=^Aa\r, kf14=^Ab\r, kf15=^Ac\r, kf16=^Ad\r, kf17=^Ae\r, kf18=^Af\r, kf19=^Ag\r, kf20=^Ah\r, kf21=^Ai\r, kf22=^Aj\r,
-	pkey_local=\E|%{48}%p1%+%c2%p2^Y, pkey_xmit=\E|%{48}%p1%+%c1%p2^Y,
+	sgr0=\EG0\E%%\E(, smacs=\E$, smir=\Eq, smso=\E), smxon=^O,
+	tbc=\E3, tsl=\Eg\Ef\011%p1%{32}%+%c, .kbs=^H,
 
 ndr9500-nl|NDR 9500 with no status line,
-	hs@, wsl@, dsl@, fsl@, tsl@, use=ndr9500,
+	hs@,
+	wsl@,
+	dsl@, fsl@, tsl@, use=ndr9500,
 
 ndr9500-25|NDR 9500 with 25th line enabled,
 	lines#25, use=ndr9500,
@@ -15251,16 +15245,17 @@ ndr9500-25-nl|NDR 9500 with 25 lines and no status line,
 ndr9500-mc|NDR 9500 with magic cookies (enables underline inverse video invisible and blink),
 	msgr@,
 	xmc#1,
-	blink=\EG2, rev=\EG4, invis=\EG1, smul=\EG8, rmul=\EG0, smso=\EG4, rmso=\EG0,
-	sgr0=\EG0\E%%\E(,
+	blink=\EG2, invis=\EG1, rev=\EG4, rmso=\EG0, rmul=\EG0,
 	sgr=\E%%\E(%?%p5%p8%|%t\E)%;%?%p9%t\E$%;\EG%{48}%?%p7%t%{1}%+%;%?%p4%t%{2}%+%;%?%p3%p1%|%t%{4}%+%;%?%p2%t%{8}%+%;%c,
-	use=ndr9500,
+	sgr0=\EG0\E%%\E(, smso=\EG4, smul=\EG8, use=ndr9500,
 
 ndr9500-25-mc|NDR 500 with 25 lines and magic cookies,
 	lines#25, use=ndr9500-mc,
 
 ndr9500-mc-nl|NDR 9500 with magic cookies and no status line,
-	hs@, wsl@, dsl@, fsl@, tsl@, use=ndr9500-mc,
+	hs@,
+	wsl@,
+	dsl@, fsl@, tsl@, use=ndr9500-mc,
 
 ndr9500-25-mc-nl|NDR 9500 with 25 lines and magic cookies and no status line,
 	lines#25, use=ndr9500-mc-nl,
@@ -21393,6 +21388,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2007-03-03
 #	* add Newbury Data entries (Jean-Charles Billaud).
+#
+# 2007-06-10
+#	* corrected xterm+pcf2 modifiers for F1-F4, match xterm #226 -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

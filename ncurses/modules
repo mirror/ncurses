@@ -1,4 +1,4 @@
-# $Id: modules,v 1.109 2007/01/13 17:33:52 tom Exp $
+# $Id: modules,v 1.110 2007/06/12 20:21:42 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -127,14 +127,15 @@ charable	lib		$(wide)
 lib_add_wch	lib		$(wide)
 lib_box_set	lib		$(wide)
 lib_cchar	lib		$(wide)
-lib_get_wch	lib		$(wide)
 lib_erasewchar	lib		$(wide)
+lib_get_wch	lib		$(wide)
 lib_get_wstr	lib		$(wide)
 lib_hline_set	lib		$(wide)
 lib_in_wch	lib		$(wide)
 lib_in_wchnstr	lib		$(wide)
 lib_ins_wch	lib		$(wide)
 lib_inwstr	lib		$(wide)
+lib_key_name	lib		$(wide)
 lib_pecho_wchar	lib		$(wide)
 lib_slk_wset	lib		$(wide)
 lib_unget_wch	lib		$(wide)

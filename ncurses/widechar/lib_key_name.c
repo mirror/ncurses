@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,29 +27,36 @@
  ****************************************************************************/
 
 /*
-**	lib_wunctrl.c
+**	lib_key_name.c
 **
-**	The routine wunctrl().
+**	The routine key_name().
 **
 */
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_wunctrl.c,v 1.12 2007/06/12 20:22:32 tom Exp $")
+MODULE_ID("$Id: lib_key_name.c,v 1.2 2007/06/12 21:01:13 tom Exp $")
 
-NCURSES_EXPORT(wchar_t *)
-wunctrl(cchar_t *wc)
+NCURSES_EXPORT(NCURSES_CONST char *)
+key_name(wchar_t c)
 {
-    static wchar_t str[CCHARW_MAX + 1], *sp;
+    cchar_t my_cchar;
+    wchar_t *my_wchars;
+    size_t len;
 
-    if (Charable(*wc)) {
-	const char *p = unctrl((unsigned) _nc_to_char((wint_t) CharOf(*wc)));
+    /* FIXME: move to _nc_globals */
+    static char result[MB_LEN_MAX + 1];
 
-	for (sp = str; *p; ++p) {
-	    *sp++ = _nc_to_widechar(*p);
-	}
-	*sp = 0;
-	return str;
-    } else
-	return wc->chars;
+    memset(&my_cchar, 0, sizeof(my_cchar));
+    my_cchar.chars[0] = c;
+    my_cchar.chars[1] = L'\0';
+
+    my_wchars = wunctrl(&my_cchar);
+    len = wcstombs(result, my_wchars, sizeof(result) - 1);
+    if (isEILSEQ(len) || (len == 0)) {
+	return "UNKNOWN KEY";
+    }
+
+    result[len] = '\0';
+    return result;
 }

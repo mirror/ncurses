@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1134 2007/06/09 22:47:59 tom Exp $
+-- $Id: NEWS,v 1.1137 2007/06/12 20:37:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070612
+	+ corrected xterm+pcf2 terminfo modifiers for F1-F4, to match xterm
+	  #226 -TD
+	+ split-out key_name() from MKkeyname.awk since it now depends upon
+	  wunctrl() which is not in libtinfo (report by Rong-En Fan).
 
 20070609
 	+ add test/key_name.c

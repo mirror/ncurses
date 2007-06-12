@@ -1,4 +1,4 @@
-# $Id: MKkeyname.awk,v 1.35 2007/06/09 22:36:10 tom Exp $
+# $Id: MKkeyname.awk,v 1.36 2007/06/12 20:28:18 tom Exp $
 ##############################################################################
 # Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -114,31 +114,6 @@ END {
 	print "	}"
 	print "	return result;"
 	print "}"
-	print ""
-	print "#if USE_WIDEC_SUPPORT"
-	print "NCURSES_EXPORT(NCURSES_CONST char *) key_name (wchar_t c)"
-	print "{"
-	print "	cchar_t my_cchar;"
-	print "	wchar_t *my_wchars;"
-	print "	size_t len;"
-	print ""
-	print "	/* FIXME: move to _nc_globals */"
-	print "	static char result[MB_LEN_MAX + 1];"
-	print ""
-	print "	memset(&my_cchar, 0, sizeof(my_cchar));"
-	print "	my_cchar.chars[0] = c;"
-	print "	my_cchar.chars[1] = L'\\0';"
-	print ""
-	print "	my_wchars = wunctrl(&my_cchar);"
-	print "	len = wcstombs(result, my_wchars, sizeof(result)-1);"
-	print "	if (isEILSEQ(len) || (len == 0)) {"
-	print "		return \"UNKNOWN KEY\";"
-	print "	}"
-	print ""
-	print "	result[len] = '\\0';"
-	print "	return result;"
-	print "}"
-	print "#endif"
 	print ""
 	print "#if NO_LEAKS"
 	print "void _nc_keyname_leaks(void)"

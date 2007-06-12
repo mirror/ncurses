@@ -896,6 +896,7 @@
 ./ncurses/widechar/lib_in_wchnstr.c
 ./ncurses/widechar/lib_ins_wch.c
 ./ncurses/widechar/lib_inwstr.c
+./ncurses/widechar/lib_key_name.c
 ./ncurses/widechar/lib_pecho_wchar.c
 ./ncurses/widechar/lib_slk_wset.c
 ./ncurses/widechar/lib_unget_wch.c
