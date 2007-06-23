@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.173 2007/04/28 20:34:23 tom Exp $ */
+/* $Id: curses.h.in,v 1.174 2007/06/23 15:56:44 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -900,14 +900,19 @@ extern NCURSES_EXPORT(bool) is_syncok (WINDOW *);	/* generated */
 #define getmaxyx(win,y,x)	(y = getmaxy(win), x = getmaxx(win))
 #define getparyx(win,y,x)	(y = getpary(win), x = getparx(win))
 
-#if !NCURSES_OPAQUE
-#define getsyx(y,x) do { if(newscr->_leaveok) (y)=(x)=-1; \
-			 else getyx(newscr,(y),(x)); \
+#define getsyx(y,x) do { if (is_leaveok(newscr)) \
+			    (y) = (x) = -1; \
+			 else \
+			     getyx(newscr,(y), (x)); \
 		    } while(0)
-#define setsyx(y,x) do { if((y)==-1 && (x)==-1) newscr->_leaveok=TRUE; \
-			 else {newscr->_leaveok=FALSE;wmove(newscr,(y),(x));} \
+
+#define setsyx(y,x) do { if ((y) == -1 && (x) == -1) \
+			    leaveok(newscr, TRUE); \
+			 else { \
+			    leaveok(newscr, FALSE); \
+			    wmove(newscr, (y), (x)); \
+			} \
 		    } while(0)
-#endif /* NCURSES_OPAQUE */
 
 #ifndef NCURSES_NOMACROS
 
@@ -929,15 +934,15 @@ extern NCURSES_EXPORT(bool) is_syncok (WINDOW *);	/* generated */
 
 /* It seems older SYSV curses versions define these */
 #if !NCURSES_OPAQUE
-#define getattrs(win)		((win)?(win)->_attrs:A_NORMAL)
-#define getcurx(win)		((win)?(win)->_curx:ERR)
-#define getcury(win)		((win)?(win)->_cury:ERR)
-#define getbegx(win)		((win)?(win)->_begx:ERR)
-#define getbegy(win)		((win)?(win)->_begy:ERR)
-#define getmaxx(win)		((win)?((win)->_maxx + 1):ERR)
-#define getmaxy(win)		((win)?((win)->_maxy + 1):ERR)
-#define getparx(win)		((win)?(win)->_parx:ERR)
-#define getpary(win)		((win)?(win)->_pary:ERR)
+#define getattrs(win)		((win) ? (win)->_attrs : A_NORMAL)
+#define getcurx(win)		((win) ? (win)->_curx : ERR)
+#define getcury(win)		((win) ? (win)->_cury : ERR)
+#define getbegx(win)		((win) ? (win)->_begx : ERR)
+#define getbegy(win)		((win) ? (win)->_begy : ERR)
+#define getmaxx(win)		((win) ? ((win)->_maxx + 1) : ERR)
+#define getmaxy(win)		((win) ? ((win)->_maxy + 1) : ERR)
+#define getparx(win)		((win) ? (win)->_parx : ERR)
+#define getpary(win)		((win) ? (win)->_pary : ERR)
 #endif /* NCURSES_OPAQUE */
 
 #define wstandout(win)      	(wattrset(win,A_STANDOUT))

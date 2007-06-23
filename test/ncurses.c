@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.289 2007/06/02 23:04:12 tom Exp $
+$Id: ncurses.c,v 1.291 2007/06/23 21:43:25 tom Exp $
 
 ***************************************************************************/
 
@@ -3379,12 +3379,14 @@ FRAME
     WINDOW *wind;
 };
 
-#if defined(NCURSES_VERSION) && !NCURSES_OPAQUE
-#define keypad_active(win) (win)->_use_keypad
-#define scroll_active(win) (win)->_scroll
+#if defined(NCURSES_VERSION)
+#if NCURSES_VERSION_PATCH < 20070331
+#define is_keypad(win)   (win)->_use_keypad
+#define is_scrollok(win) (win)->_scroll
+#endif
 #else
-#define keypad_active(win) FALSE
-#define scroll_active(win) FALSE
+#define is_keypad(win)   FALSE
+#define is_scrollok(win) FALSE
 #endif
 
 /* We need to know if these flags are actually set, so don't look in FRAME.
@@ -3396,7 +3398,7 @@ HaveKeypad(FRAME * curp)
 {
     WINDOW *win = (curp ? curp->wind : stdscr);
     (void) win;
-    return keypad_active(win);
+    return is_keypad(win);
 }
 
 static bool
@@ -3404,7 +3406,7 @@ HaveScroll(FRAME * curp)
 {
     WINDOW *win = (curp ? curp->wind : stdscr);
     (void) win;
-    return scroll_active(win);
+    return is_scrollok(win);
 }
 
 static void

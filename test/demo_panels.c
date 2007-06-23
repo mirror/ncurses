@@ -26,17 +26,10 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.5 2007/05/26 22:35:46 tom Exp $
+ * $Id: demo_panels.c,v 1.16 2007/06/23 21:24:23 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
- * Thomas Dickey - 2003/4/26
  */
-/*
-panel_above			-
-panel_below			-
-panel_hidden			-
-replace_panel			-
-*/
 
 #include <test.priv.h>
 
@@ -48,31 +41,142 @@ typedef void (*InitPanel) (void);
 typedef void (*FillPanel) (PANEL *);
 
 static bool use_colors;
+static FILE *log_in;
+static FILE *log_out;
 
-static NCURSES_CONST char *mod[] =
+static void
+close_input(void)
 {
-    "test ",
-    "TEST ",
-    "(**) ",
-    "*()* ",
-    "<--> ",
-    "LAST "
-};
+    if (log_in != 0) {
+	fclose(log_in);
+	log_in = 0;
+    }
+}
 
-/*+-------------------------------------------------------------------------
-	saywhat(text)
---------------------------------------------------------------------------*/
+static void
+close_output(void)
+{
+    if (log_out != 0) {
+	fclose(log_out);
+	log_out = 0;
+    }
+}
+
+static WINDOW *
+statusline(void)
+{
+    WINDOW *result = stdscr;
+
+    wmove(result, LINES - 1, 0);
+    wclrtoeol(result);
+    return result;
+}
+
+static void
+pflush(void)
+{
+    update_panels();
+    doupdate();
+}
+
 static void
 saywhat(NCURSES_CONST char *text)
 {
-    wmove(stdscr, LINES - 1, 0);
-    wclrtoeol(stdscr);
+    WINDOW *win = statusline();
     if (text != 0 && *text != '\0') {
-	waddstr(stdscr, text);
-	waddstr(stdscr, "; ");
+	waddstr(win, text);
+	waddstr(win, "; ");
     }
-    waddstr(stdscr, "press any key to continue");
-}				/* end of saywhat */
+    waddstr(win, "press any key to continue");
+}
+
+static void
+show_position(NCURSES_CONST char *text,
+	      NCURSES_CONST char *also,
+	      int which,
+	      int ypos,
+	      int xpos)
+{
+    WINDOW *win = statusline();
+
+    wprintw(win, "%s for panel %d now %d,%d%s", text, which, ypos, xpos, also);
+    wmove(stdscr, ypos, xpos);
+}
+
+static int
+get_position(NCURSES_CONST char *text,
+	     NCURSES_CONST char *also,
+	     int which,
+	     int *xpos,
+	     int *ypos)
+{
+    int result = 0;
+    int x1, y1;
+    WINDOW *win;
+
+    getyx(stdscr, y1, x1);
+    win = statusline();
+
+    show_position(text, also, which, y1, x1);
+
+    if (log_in != 0) {
+	(void) wgetch(stdscr);
+	if (fscanf(log_in, "@%d,%d\n", &y1, &x1) == 2) {
+	    result = 1;
+	} else {
+	    result = -1;
+	}
+    } else {
+
+	switch (wgetch(stdscr)) {
+	case QUIT:
+	case ESCAPE:
+	case ERR:
+	    result = -1;
+	    break;
+	case ' ':
+	    result = 1;
+	    break;
+	case KEY_UP:
+	    if (y1 > 0) {
+		--y1;
+	    } else {
+		beep();
+	    }
+	    break;
+	case KEY_DOWN:
+	    if (y1 < getmaxy(stdscr)) {
+		++y1;
+	    } else {
+		beep();
+	    }
+	    break;
+	case KEY_LEFT:
+	    if (x1 > 0) {
+		--x1;
+	    } else {
+		beep();
+	    }
+	    break;
+	case KEY_RIGHT:
+	    if (x1 < getmaxx(stdscr)) {
+		++x1;
+	    } else {
+		beep();
+	    }
+	    break;
+	}
+    }
+
+    wmove(stdscr, y1, x1);
+    if (result > 0) {
+	if (log_out)
+	    fprintf(log_out, "@%d,%d\n", y1, x1);
+	*ypos = y1;
+	*xpos = x1;
+    }
+    return result;
+}
 
 static PANEL *
 mkpanel(short color, int rows, int cols, int tly, int tlx)
@@ -82,10 +186,13 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
     char *userdata = malloc(3);
 
     if ((win = newwin(rows, cols, tly, tlx)) != 0) {
+	keypad(win, TRUE);
 	if ((pan = new_panel(win)) == 0) {
 	    delwin(win);
 	} else if (use_colors) {
-	    short fg = (color == COLOR_BLUE) ? COLOR_WHITE : COLOR_BLACK;
+	    short fg = ((color == COLOR_BLUE)
+			? COLOR_WHITE
+			: COLOR_BLACK);
 	    short bg = color;
 
 	    init_pair(color, fg, bg);
@@ -99,30 +206,123 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
     return pan;
 }
 
-/*+-------------------------------------------------------------------------
-	rmpanel(pan)
---------------------------------------------------------------------------*/
 static void
-rmpanel(PANEL * pan)
+remove_panel(PANEL ** pans, int which)
 {
-    WINDOW *win = panel_window(pan);
-    del_panel(pan);
-    delwin(win);
-}				/* end of rmpanel */
+    if (pans[which] != 0) {
+	PANEL *pan = pans[which];
+	WINDOW *win = panel_window(pan);
+	char *user = panel_userptr(pan);
 
-/*+-------------------------------------------------------------------------
-	pflush()
---------------------------------------------------------------------------*/
+	free(user);
+	del_panel(pan);
+	delwin(win);
+
+	pans[which] = 0;
+    }
+}
+
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#define ABS(a)   ((a) < 0 ? -(a) : (a))
+
 static void
-pflush(void)
+create_panel(PANEL ** pans, int which, FillPanel myFill)
 {
-    update_panels();
-    doupdate();
-}				/* end of pflush */
+    PANEL *pan = 0;
+    int code;
+    int pair = which;
+    short fg = (pair == COLOR_BLUE) ? COLOR_WHITE : COLOR_BLACK;
+    short bg = pair;
+    int x0, y0, x1, y1;
 
-/*+-------------------------------------------------------------------------
-	fill_panel(win)
---------------------------------------------------------------------------*/
+    init_pair(pair, fg, bg);
+
+    /* remove the old panel, if any */
+    remove_panel(pans, which);
+
+    /* get the position of one corner */
+    wmove(stdscr, getmaxy(stdscr) / 2, getmaxx(stdscr) / 2);
+    getyx(stdscr, y0, x0);
+    while ((code = get_position("First corner", "", which, &x0, &y0)) == 0) {
+	;
+    }
+
+    if (code > 0) {
+	char also[80];
+	sprintf(also, " (first %d,%d)", y0, x0);
+	/* get the position of the opposite corner */
+	while ((code = get_position("Opposite corner",
+				    also, which, &x1, &y1)) == 0) {
+	    ;
+	}
+
+	if (code > 0) {
+	    int tly = MIN(y0, y1);
+	    int tlx = MIN(x0, x1);
+	    pan = mkpanel(pair, ABS(y1 - y0) + 1, ABS(x1 - x0) + 1, tly, tlx);
+	    /* finish */
+	    myFill(pan);
+	    pans[which] = pan;
+	    pflush();
+	    wmove(stdscr, y1, x1);
+	}
+    }
+}
+
+static void
+my_move_panel(PANEL ** pans, int which)
+{
+    int code;
+    int y0, x0;
+    int y1, x1;
+    WINDOW *win = panel_window(pans[which]);
+    char also[80];
+
+    getbegyx(win, y0, x0);
+    sprintf(also, " (start %d,%d)", y0, x0);
+    wmove(stdscr, y0, x0);
+    while ((code = get_position("Move panel", also, which, &x1, &y1)) == 0) {
+	;
+    }
+    if (code > 0) {
+	move_panel(pans[which], y1, x1);
+    }
+}
+
+static void
+resize_panel(PANEL ** pans, int which, FillPanel myFill)
+{
+    int code;
+    int y0, x0;
+    int y1, x1;
+    WINDOW *win = panel_window(pans[which]);
+    char also[80];
+
+    getbegyx(win, y0, x0);
+    sprintf(also, " (start %d,%d)", y0, x0);
+    wmove(stdscr, y0, x0);
+    while ((code = get_position("Resize panel", also, which, &x1, &y1)) == 0) {
+	;
+    }
+    if (code > 0) {
+	WINDOW *next = newwin(ABS(y1 - y0) + 1,
+			      ABS(x1 - x0) + 1,
+			      MIN(y0, y1),
+			      MIN(x0, x1));
+	if (next != 0) {
+	    keypad(next, TRUE);
+	    if (use_colors) {
+		wbkgdset(next, (chtype) (COLOR_PAIR(which) | ' '));
+	    } else {
+		wbkgdset(next, A_BOLD | ' ');
+	    }
+	    replace_panel(pans[which], next);
+	    myFill(pans[which]);
+	    delwin(win);
+	}
+    }
+}
+
 static void
 init_panel(void)
 {
@@ -202,15 +402,126 @@ fill_wide_panel(PANEL * pan)
 
 #define MAX_PANELS 5
 
+static int
+which_panel(PANEL * px[MAX_PANELS + 1], PANEL * pan)
+{
+    int result = 0;
+    int j;
+
+    for (j = 1; j <= MAX_PANELS; ++j) {
+	if (px[j] == pan) {
+	    result = j;
+	    break;
+	}
+    }
+    return result;
+}
+
 static void
-canned_panel(PANEL * px[MAX_PANELS + 1], NCURSES_CONST char *cmd)
+show_panels(PANEL * px[MAX_PANELS + 1])
+{
+    static const char *help[] =
+    {
+	"",
+	"Commands are letter/digit pairs.  Digits are the panel number.",
+	"",
+	"  b - put the panel on the bottom of the stack",
+	"  c - create the panel",
+	"  d - delete the panel",
+	"  h - hide the panel",
+	"  m - move the panel",
+	"  r - resize the panel",
+	"  s - show the panel",
+	"  b - put the panel on the top of the stack"
+    };
+
+    struct {
+	bool valid;
+	bool hidden;
+	PANEL *above;
+	PANEL *below;
+    } table[MAX_PANELS + 1];
+
+    WINDOW *win;
+    PANEL *pan;
+    int j;
+
+    for (j = 1; j <= MAX_PANELS; ++j) {
+	table[j].valid = (px[j] != 0);
+	if (table[j].valid) {
+	    table[j].hidden = panel_hidden(px[j]);
+	    table[j].above = panel_above(px[j]);
+	    table[j].below = panel_below(px[j]);
+	}
+    }
+
+    if ((win = newwin(LINES - 1, COLS, 0, 0)) != 0) {
+	keypad(win, TRUE);
+	if ((pan = new_panel(win)) != 0) {
+	    werase(win);
+	    mvwprintw(win, 0, 0, "Panels:\n");
+	    for (j = 1; j <= MAX_PANELS; ++j) {
+		if (table[j].valid) {
+		    wprintw(win, " %d:", j);
+		    if (table[j].hidden) {
+			waddstr(win, " hidden");
+		    } else {
+			if (table[j].above) {
+			    wprintw(win, " above %d",
+				    which_panel(px, table[j].above));
+			}
+			if (table[j].below) {
+			    wprintw(win, "%s below %d",
+				    table[j].above ? "," : "",
+				    which_panel(px, table[j].below));
+			}
+		    }
+		    waddch(win, '\n');
+		}
+	    }
+	    for (j = 0; j < (int) SIZEOF(help); ++j) {
+		if (wprintw(win, "%s\n", help[j]) == ERR)
+		    break;
+	    }
+	    wgetch(win);
+	    del_panel(pan);
+	    pflush();
+	}
+	delwin(win);
+    }
+}
+
+static void
+do_panel(PANEL * px[MAX_PANELS + 1],
+	 NCURSES_CONST char *cmd,
+	 FillPanel myFill)
 {
     int which = cmd[1] - '0';
 
+    if (log_in != 0) {
+	pflush();
+	(void) wgetch(stdscr);
+    }
+
     saywhat(cmd);
     switch (*cmd) {
+    case 'b':
+	bottom_panel(px[which]);
+	break;
+    case 'c':
+	create_panel(px, which, myFill);
+	break;
+    case 'd':
+	remove_panel(px, which);
+	break;
     case 'h':
 	hide_panel(px[which]);
+	break;
+    case 'm':
+	my_move_panel(px, which);
+	break;
+    case 'r':
+	resize_panel(px, which, myFill);
 	break;
     case 's':
 	show_panel(px[which]);
@@ -218,148 +529,131 @@ canned_panel(PANEL * px[MAX_PANELS + 1], NCURSES_CONST char *cmd)
     case 't':
 	top_panel(px[which]);
 	break;
-    case 'b':
-	bottom_panel(px[which]);
-	break;
-    case 'd':
-	rmpanel(px[which]);
-	break;
     }
-    pflush();
-    wgetch(stdscr);
+}
+
+static bool
+ok_letter(int ch)
+{
+    return isalpha(UChar(ch)) && strchr("bcdhmrst", ch) != 0;
+}
+
+static bool
+ok_digit(int ch)
+{
+    return isdigit(UChar(ch)) && (ch >= '1') && (ch - '0' <= MAX_PANELS);
+}
+
+/*
+ * A command consists of one or more letter/digit pairs separated by a space.
+ * Digits are limited to 1..MAX_PANELS.
+ *
+ * End the command with a newline.  Reject other characters.
+ */
+static bool
+get_command(PANEL * px[MAX_PANELS + 1], char *buffer, int limit)
+{
+    int length = 0;
+    int y0, x0;
+    int c0, ch;
+    WINDOW *win;
+
+    getyx(stdscr, y0, x0);
+    win = statusline();
+    waddstr(win, "Command:");
+    buffer[length = 0] = '\0';
+
+    if (log_in != 0) {
+	(void) wgetch(win);
+	if (fgets(buffer, limit - 3, log_in) != 0) {
+	    length = strlen(buffer);
+	    while (length > 0 && isspace(buffer[length - 1]))
+		buffer[--length] = '\0';
+	} else {
+	    close_input();
+	}
+    } else {
+	c0 = 0;
+	for (;;) {
+	    ch = wgetch(win);
+	    if (ch == ERR || ch == QUIT || ch == ESCAPE) {
+		buffer[0] = '\0';
+		break;
+	    } else if (ch == '\n' || ch == KEY_ENTER) {
+		break;
+	    } else if (ch == '?') {
+		show_panels(px);
+	    } else if (length + 3 < limit) {
+		if (ch >= KEY_MIN) {
+		    beep();
+		} else if (ok_letter(UChar(ch))) {
+		    if (isalpha(UChar(c0))) {
+			beep();
+		    } else if (isdigit(UChar(c0))) {
+			wprintw(win, " %c", ch);
+			buffer[length++] = ' ';
+			buffer[length++] = c0 = ch;
+		    } else {
+			wprintw(win, "%c", ch);
+			buffer[length++] = c0 = ch;
+		    }
+		} else if (ok_digit(ch)) {
+		    if (isalpha(UChar(c0))) {
+			wprintw(win, "%c", ch);
+			buffer[length++] = c0 = ch;
+		    } else {
+			beep();
+		    }
+		} else if (ch == ' ') {
+		    if (isdigit(UChar(c0))) {
+			wprintw(win, "%c", ch);
+			buffer[length++] = c0 = ch;
+		    } else {
+			beep();
+		    }
+		} else {
+		    beep();
+		}
+	    } else {
+		beep();
+	    }
+	}
+    }
+
+    wmove(stdscr, y0, x0);
+
+    buffer[length] = '\0';
+    if (log_out && length) {
+	fprintf(log_out, "%s\n", buffer);
+    }
+    return (length != 0);
 }
 
 static void
-demo_panels(void (*myInit) (void), void (*myFill) (PANEL *))
+demo_panels(InitPanel myInit, FillPanel myFill)
 {
     int itmp;
     PANEL *px[MAX_PANELS + 1];
+    char buffer[BUFSIZ];
 
     scrollok(stdscr, FALSE);	/* we don't want stdscr to scroll! */
     refresh();
 
     myInit();
-    for (itmp = 1; itmp <= MAX_PANELS; ++itmp)
-	px[itmp] = 0;
+    memset(px, 0, sizeof(px));
 
-    px[1] = mkpanel(COLOR_RED,
-		    LINES / 2 - 2,
-		    COLS / 8 + 1,
-		    0,
-		    0);
-
-    px[2] = mkpanel(COLOR_GREEN,
-		    LINES / 2 + 1,
-		    COLS / 7,
-		    LINES / 4,
-		    COLS / 10);
-
-    px[3] = mkpanel(COLOR_YELLOW,
-		    LINES / 4,
-		    COLS / 10,
-		    LINES / 2,
-		    COLS / 9);
-
-    px[4] = mkpanel(COLOR_BLUE,
-		    LINES / 2 - 2,
-		    COLS / 8,
-		    LINES / 2 - 2,
-		    COLS / 3);
-
-    px[5] = mkpanel(COLOR_MAGENTA,
-		    LINES / 2 - 2,
-		    COLS / 8,
-		    LINES / 2,
-		    COLS / 2 - 2);
-
-    myFill(px[1]);
-    myFill(px[2]);
-    myFill(px[3]);
-    myFill(px[4]);
-    myFill(px[5]);
-
-    hide_panel(px[4]);
-    hide_panel(px[5]);
-    pflush();
-    saywhat("");
-    wgetch(stdscr);
-
-    saywhat("h3 s1 s2 s4 s5");
-    move_panel(px[1], 0, 0);
-    hide_panel(px[3]);
-    show_panel(px[1]);
-    show_panel(px[2]);
-    show_panel(px[4]);
-    show_panel(px[5]);
-    pflush();
-    wgetch(stdscr);
-
-    canned_panel(px, "s1");
-    canned_panel(px, "s2");
-
-    saywhat("m2");
-    move_panel(px[2], LINES / 3 + 1, COLS / 8);
-    pflush();
-    wgetch(stdscr);
-
-    canned_panel(px, "s3");
-
-    saywhat("m3");
-    move_panel(px[3], LINES / 4 + 1, COLS / 15);
-    pflush();
-    wgetch(stdscr);
-
-    canned_panel(px, "b3");
-    canned_panel(px, "s4");
-    canned_panel(px, "s5");
-    canned_panel(px, "t3");
-    canned_panel(px, "t1");
-    canned_panel(px, "t2");
-    canned_panel(px, "t3");
-    canned_panel(px, "t4");
-
-    for (itmp = 0; itmp < 6; itmp++) {
-	WINDOW *w4 = panel_window(px[4]);
-	WINDOW *w5 = panel_window(px[5]);
-
-	saywhat("m4");
-	wmove(w4, LINES / 8, 1);
-	waddstr(w4, mod[itmp]);
-	move_panel(px[4], LINES / 6, itmp * (COLS / 8));
-	wmove(w5, LINES / 6, 1);
-	waddstr(w5, mod[itmp]);
+    while (get_command(px, buffer, sizeof(buffer))) {
+	int limit = strlen(buffer);
+	for (itmp = 0; itmp < limit; itmp += 3) {
+	    do_panel(px, buffer + itmp, myFill);
+	}
 	pflush();
-	wgetch(stdscr);
-
-	saywhat("m5");
-	wmove(w4, LINES / 6, 1);
-	waddstr(w4, mod[itmp]);
-	move_panel(px[5], LINES / 3 - 1, (itmp * 10) + 6);
-	wmove(w5, LINES / 8, 1);
-	waddstr(w5, mod[itmp]);
-	pflush();
-	wgetch(stdscr);
     }
-
-    saywhat("m4");
-    move_panel(px[4], LINES / 6, itmp * (COLS / 8));
-    pflush();
-    wgetch(stdscr);
-
-    canned_panel(px, "t5");
-    canned_panel(px, "t2");
-    canned_panel(px, "t1");
-    canned_panel(px, "d2");
-    canned_panel(px, "h3");
-    canned_panel(px, "d1");
-    canned_panel(px, "d4");
-    canned_panel(px, "d5");
-    canned_panel(px, "d3");
-
-    wgetch(stdscr);
-
-    erase();
-    endwin();
+#if NO_LEAKS
+    for (itmp = 1; itmp <= MAX_PANELS; ++itmp) {
+	remove_panel(px, itmp);
+    }
+#endif
 }
 
 static void
@@ -370,6 +664,8 @@ usage(void)
 	"Usage: demo_panels [options]"
 	,""
 	,"Options:"
+	,"  -i file  read commands from file"
+	,"  -o file  record commands in file"
 	,"  -m       do not use colors"
 #if USE_WIDEC_SUPPORT
 	,"  -w       use wide-characters in panels and background"
@@ -389,8 +685,14 @@ main(int argc, char *argv[])
     InitPanel myInit = init_panel;
     FillPanel myFill = fill_panel;
 
-    while ((c = getopt(argc, argv, "mw")) != EOF) {
+    while ((c = getopt(argc, argv, "i:o:mw")) != EOF) {
 	switch (c) {
+	case 'i':
+	    log_in = fopen(optarg, "r");
+	    break;
+	case 'o':
+	    log_out = fopen(optarg, "w");
+	    break;
 	case 'm':
 	    monochrome = TRUE;
 	    break;
@@ -406,6 +708,9 @@ main(int argc, char *argv[])
     }
 
     initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
 
     use_colors = monochrome ? FALSE : has_colors();
     if (use_colors)
@@ -414,7 +719,10 @@ main(int argc, char *argv[])
     demo_panels(myInit, myFill);
     endwin();
 
-    return EXIT_SUCCESS;
+    close_input();
+    close_output();
+
+    ExitProgram(EXIT_SUCCESS);
 }
 #else
 int

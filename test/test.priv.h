@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.66 2007/06/09 19:55:16 tom Exp $ */
+/* $Id: test.priv.h,v 1.67 2007/06/23 15:46:17 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -191,10 +191,6 @@
 #define NCURSES_EXT_FUNCS 0
 #endif
 
-#ifndef NCURSES_OPAQUE
-#define NCURSES_OPAQUE 0
-#endif
-
 #ifndef NEED_PTEM_H
 #define NEED_PTEM_H 0
 #endif
@@ -322,6 +318,10 @@ extern int optind;
 #define NCURSES_CH_T chtype
 #else
 #define NCURSES_CH_T cchar_t
+#endif
+
+#ifndef NCURSES_OPAQUE
+#define NCURSES_OPAQUE 0
 #endif
 
 #ifndef CCHARW_MAX
