@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2006,2007 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: redraw.c,v 1.3 2006/11/04 23:20:27 tom Exp $
+ * $Id: redraw.c,v 1.4 2007/06/30 17:55:06 tom Exp $
  *
  * Demonstrate the redrawwin() and wredrawln() functions.
  * Thomas Dickey - 2006/11/4
@@ -148,7 +148,7 @@ test_redraw(WINDOW *win)
 	    if (ch > KEY_MIN) {
 		waddstr(win, keyname(ch));
 	    } else {
-		waddstr(win, unctrl(ch));
+		waddstr(win, unctrl(UChar(ch)));
 	    }
 	    break;
 	}

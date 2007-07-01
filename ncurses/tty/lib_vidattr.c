@@ -65,7 +65,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.48 2007/04/21 23:25:38 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.49 2007/06/30 21:58:04 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 
@@ -102,6 +102,7 @@ vidputs(chtype newmode, int (*outc) (int))
 #define fix_pair0 FALSE
 #endif
 
+    newmode &= A_ATTRIBUTES;
     T((T_CALLED("vidputs(%s)"), _traceattr(newmode)));
 
     /* this allows us to go on whether or not newterm() has been called */

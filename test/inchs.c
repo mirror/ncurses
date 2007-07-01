@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inchs.c,v 1.6 2007/06/09 21:25:06 tom Exp $
+ * $Id: inchs.c,v 1.7 2007/06/30 17:50:44 tom Exp $
  */
 /*
        chtype inch(void);
@@ -96,7 +96,7 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 
     if ((fp = fopen(argv[level], "r")) != 0) {
 	while ((j = fgetc(fp)) != EOF) {
-	    if (waddch(txtwin, j) != OK) {
+	    if (waddch(txtwin, UChar(j)) != OK) {
 		break;
 	    }
 	}

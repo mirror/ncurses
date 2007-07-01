@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.16 2007/06/23 21:24:23 tom Exp $
+ * $Id: demo_panels.c,v 1.22 2007/06/30 21:38:08 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -40,7 +40,8 @@
 typedef void (*InitPanel) (void);
 typedef void (*FillPanel) (PANEL *);
 
-static bool use_colors;
+static bool use_colors = FALSE;
+static bool unboxed = FALSE;
 static FILE *log_in;
 static FILE *log_out;
 
@@ -197,7 +198,7 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 
 	    init_pair(color, fg, bg);
 	    wbkgdset(win, (chtype) (COLOR_PAIR(color) | ' '));
-	} else {
+	} else if (!unboxed) {
 	    wbkgdset(win, A_BOLD | ' ');
 	}
     }
@@ -207,7 +208,7 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 }
 
 static void
-remove_panel(PANEL ** pans, int which)
+my_remove_panel(PANEL ** pans, int which)
 {
     if (pans[which] != 0) {
 	PANEL *pan = pans[which];
@@ -226,7 +227,7 @@ remove_panel(PANEL ** pans, int which)
 #define ABS(a)   ((a) < 0 ? -(a) : (a))
 
 static void
-create_panel(PANEL ** pans, int which, FillPanel myFill)
+my_create_panel(PANEL ** pans, int which, FillPanel myFill)
 {
     PANEL *pan = 0;
     int code;
@@ -238,7 +239,7 @@ create_panel(PANEL ** pans, int which, FillPanel myFill)
     init_pair(pair, fg, bg);
 
     /* remove the old panel, if any */
-    remove_panel(pans, which);
+    my_remove_panel(pans, which);
 
     /* get the position of one corner */
     wmove(stdscr, getmaxy(stdscr) / 2, getmaxx(stdscr) / 2);
@@ -272,53 +273,58 @@ create_panel(PANEL ** pans, int which, FillPanel myFill)
 static void
 my_move_panel(PANEL ** pans, int which)
 {
-    int code;
-    int y0, x0;
-    int y1, x1;
-    WINDOW *win = panel_window(pans[which]);
-    char also[80];
+    if (pans[which] != 0) {
+	int code;
+	int y0, x0;
+	int y1, x1;
+	WINDOW *win = panel_window(pans[which]);
+	char also[80];
 
-    getbegyx(win, y0, x0);
-    sprintf(also, " (start %d,%d)", y0, x0);
-    wmove(stdscr, y0, x0);
-    while ((code = get_position("Move panel", also, which, &x1, &y1)) == 0) {
-	;
-    }
-    if (code > 0) {
-	move_panel(pans[which], y1, x1);
+	getbegyx(win, y0, x0);
+	sprintf(also, " (start %d,%d)", y0, x0);
+	wmove(stdscr, y0, x0);
+	while ((code = get_position("Move panel", also, which, &x1, &y1)) == 0) {
+	    ;
+	}
+	if (code > 0) {
+	    move_panel(pans[which], y1, x1);
+	}
     }
 }
 
 static void
-resize_panel(PANEL ** pans, int which, FillPanel myFill)
+my_resize_panel(PANEL ** pans, int which, FillPanel myFill)
 {
-    int code;
-    int y0, x0;
-    int y1, x1;
-    WINDOW *win = panel_window(pans[which]);
-    char also[80];
+    if (pans[which] != 0) {
+	int code;
+	int y0, x0;
+	int y1, x1;
+	WINDOW *win = panel_window(pans[which]);
+	char also[80];
 
-    getbegyx(win, y0, x0);
-    sprintf(also, " (start %d,%d)", y0, x0);
-    wmove(stdscr, y0, x0);
-    while ((code = get_position("Resize panel", also, which, &x1, &y1)) == 0) {
-	;
-    }
-    if (code > 0) {
-	WINDOW *next = newwin(ABS(y1 - y0) + 1,
-			      ABS(x1 - x0) + 1,
-			      MIN(y0, y1),
-			      MIN(x0, x1));
-	if (next != 0) {
-	    keypad(next, TRUE);
-	    if (use_colors) {
-		wbkgdset(next, (chtype) (COLOR_PAIR(which) | ' '));
-	    } else {
-		wbkgdset(next, A_BOLD | ' ');
+	getbegyx(win, y0, x0);
+	sprintf(also, " (start %d,%d)", y0, x0);
+	wmove(stdscr, y0, x0);
+	while ((code = get_position("Resize panel",
+				    also, which, &x1, &y1)) == 0) {
+	    ;
+	}
+	if (code > 0) {
+	    WINDOW *next = newwin(ABS(y1 - y0) + 1,
+				  ABS(x1 - x0) + 1,
+				  MIN(y0, y1),
+				  MIN(x0, x1));
+	    if (next != 0) {
+		keypad(next, TRUE);
+		if (use_colors) {
+		    wbkgdset(next, (chtype) (COLOR_PAIR(which) | ' '));
+		} else if (!unboxed) {
+		    wbkgdset(next, A_BOLD | ' ');
+		}
+		replace_panel(pans[which], next);
+		myFill(pans[which]);
+		delwin(win);
 	    }
-	    replace_panel(pans[which], next);
-	    myFill(pans[which]);
-	    delwin(win);
 	}
     }
 }
@@ -347,6 +353,21 @@ fill_panel(PANEL * pan)
     box(win, 0, 0);
     for (y = 2; y < getmaxy(win) - 1; y++) {
 	for (x = 1; x < getmaxx(win) - 1; x++) {
+	    wmove(win, y, x);
+	    waddch(win, UChar(num));
+	}
+    }
+}
+
+static void
+fill_unboxed(PANEL * pan)
+{
+    WINDOW *win = panel_window(pan);
+    int num = ((const char *) panel_userptr(pan))[1];
+    int y, x;
+
+    for (y = 0; y < getmaxy(win); y++) {
+	for (x = 0; x < getmaxx(win); x++) {
 	    wmove(win, y, x);
 	    waddch(win, UChar(num));
 	}
@@ -491,6 +512,22 @@ show_panels(PANEL * px[MAX_PANELS + 1])
     }
 }
 
+#define wrapper(func) \
+static int my_##func(PANEL *pan) \
+{ \
+    int code = ERR; \
+    if (pan != 0) { \
+	code = func(pan); \
+    } \
+    return code; \
+}
+/* *INDENT-OFF* */
+wrapper(bottom_panel)
+wrapper(hide_panel)
+wrapper(show_panel)
+wrapper(top_panel)
+/* *INDENT-ON* */
+
 static void
 do_panel(PANEL * px[MAX_PANELS + 1],
 	 NCURSES_CONST char *cmd,
@@ -506,28 +543,28 @@ do_panel(PANEL * px[MAX_PANELS + 1],
     saywhat(cmd);
     switch (*cmd) {
     case 'b':
-	bottom_panel(px[which]);
+	my_bottom_panel(px[which]);
 	break;
     case 'c':
-	create_panel(px, which, myFill);
+	my_create_panel(px, which, myFill);
 	break;
     case 'd':
-	remove_panel(px, which);
+	my_remove_panel(px, which);
 	break;
     case 'h':
-	hide_panel(px[which]);
+	my_hide_panel(px[which]);
 	break;
     case 'm':
 	my_move_panel(px, which);
 	break;
     case 'r':
-	resize_panel(px, which, myFill);
+	my_resize_panel(px, which, myFill);
 	break;
     case 's':
-	show_panel(px[which]);
+	my_show_panel(px[which]);
 	break;
     case 't':
-	top_panel(px[which]);
+	my_top_panel(px[which]);
 	break;
     }
 }
@@ -579,6 +616,8 @@ get_command(PANEL * px[MAX_PANELS + 1], char *buffer, int limit)
 	    if (ch == ERR || ch == QUIT || ch == ESCAPE) {
 		buffer[0] = '\0';
 		break;
+	    } else if (ch == CTRL('L')) {
+		wrefresh(curscr);
 	    } else if (ch == '\n' || ch == KEY_ENTER) {
 		break;
 	    } else if (ch == '?') {
@@ -651,7 +690,7 @@ demo_panels(InitPanel myInit, FillPanel myFill)
     }
 #if NO_LEAKS
     for (itmp = 1; itmp <= MAX_PANELS; ++itmp) {
-	remove_panel(px, itmp);
+	my_remove_panel(px, itmp);
     }
 #endif
 }
@@ -670,6 +709,7 @@ usage(void)
 #if USE_WIDEC_SUPPORT
 	,"  -w       use wide-characters in panels and background"
 #endif
+	,"  -x       do not enclose panels in boxes"
     };
     size_t n;
     for (n = 0; n < SIZEOF(tbl); n++)
@@ -685,7 +725,9 @@ main(int argc, char *argv[])
     InitPanel myInit = init_panel;
     FillPanel myFill = fill_panel;
 
-    while ((c = getopt(argc, argv, "i:o:mw")) != EOF) {
+    setlocale(LC_ALL, "");
+
+    while ((c = getopt(argc, argv, "i:o:mwx")) != EOF) {
 	switch (c) {
 	case 'i':
 	    log_in = fopen(optarg, "r");
@@ -702,10 +744,15 @@ main(int argc, char *argv[])
 	    myFill = fill_wide_panel;
 	    break;
 #endif
+	case 'x':
+	    unboxed = TRUE;
+	    break;
 	default:
 	    usage();
 	}
     }
+    if (unboxed)
+	myFill = fill_unboxed;
 
     initscr();
     cbreak();

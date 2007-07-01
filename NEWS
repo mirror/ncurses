@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1138 2007/06/23 21:28:00 tom Exp $
+-- $Id: NEWS,v 1.1140 2007/06/30 23:37:37 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070630
+	+ add "widec" row to _tracedump() output to help diagnose remaining
+	  problems with multi-column characters.
+	+ partial fix for refresh of window on top of multi-column characters
+	  which are partly overwritten (report by Sadrul H Chowdhury).
+	+ ignore A_CHARTEXT bits in vidattr() and vid_attr(), in case
+	  multi-column extension bits are passed there.
+	+ add setlocale() call to demo_panels.c, needed for wide-characters.
+	+ add some output flags to _nc_trace_ttymode to help diagnose a bug
+	  report by Larry Virden, i.e., ONLCR, OCRNL, ONOCR and ONLRET,
 
 20070623
 	+ add test/demo_panels.c

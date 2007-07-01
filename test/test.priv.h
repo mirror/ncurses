@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.67 2007/06/23 15:46:17 tom Exp $ */
+/* $Id: test.priv.h,v 1.68 2007/06/30 17:53:09 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -309,7 +309,7 @@ extern int optind;
 
 #ifndef HAVE_TYPE_ATTR_T
 #if !USE_WIDEC_SUPPORT
-#define attr_t long
+#define attr_t chtype
 #endif
 #endif
 

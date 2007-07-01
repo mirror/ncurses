@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracedmp.c,v 1.28 2007/04/21 21:10:54 tom Exp $")
+MODULE_ID("$Id: lib_tracedmp.c,v 1.29 2007/06/30 23:01:19 tom Exp $")
 
 #ifdef TRACE
 
@@ -99,6 +99,30 @@ _tracedump(const char *name, WINDOW *win)
 		(long) win->_line[n].firstchar,
 		(long) win->_line[n].lastchar,
 		ep);
+
+	/* if there are multi-column characters on the line, print them now */
+	if_WIDEC({
+	    bool multicolumn = FALSE;
+	    for (j = 0; j < width; ++j)
+		if (WidecExt(win->_line[n].text[j]) != 0) {
+		    multicolumn = TRUE;
+		    break;
+		}
+	    if (multicolumn) {
+		ep = my_buffer;
+		for (j = 0; j < width; ++j) {
+		    int test = WidecExt(win->_line[n].text[j]);
+		    if (test) {
+			ep[j] = test + '0';
+		    } else {
+			ep[j] = ' ';
+		    }
+		}
+		ep[j] = '\0';
+		_tracef("%*s[%2d]%*s='%s'", (int) strlen(name),
+			"widec", n, 8, " ", my_buffer);
+	    }
+	});
 
 	/* dump A_COLOR part, will screw up if there are more than 96 */
 	havecolors = FALSE;

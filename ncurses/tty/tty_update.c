@@ -74,7 +74,7 @@
 #include <ctype.h>
 #include <term.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.239 2007/04/19 20:57:49 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.240 2007/06/30 21:07:51 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -836,7 +836,6 @@ doupdate(void)
 
     nonempty = 0;
     if (curscr->_clear || newscr->_clear) {	/* force refresh ? */
-	TR(TRACE_UPDATE, ("clearing and updating from scratch"));
 	ClrUpdate();
 	curscr->_clear = FALSE;	/* reset flag */
 	newscr->_clear = FALSE;	/* reset flag */
@@ -967,7 +966,7 @@ ClrUpdate(void)
     NCURSES_CH_T blank = ClrBlank(stdscr);
     int nonempty = min(screen_lines, newscr->_maxy + 1);
 
-    TR(TRACE_UPDATE, ("ClrUpdate() called"));
+    TR(TRACE_UPDATE, (T_CALLED("ClrUpdate")));
 
     ClearScreen(blank);
 
@@ -977,6 +976,8 @@ ClrUpdate(void)
 
     for (i = 0; i < nonempty; i++)
 	TransformLine(i);
+
+    TR(TRACE_UPDATE, (T_RETURN("")));
 }
 
 /*

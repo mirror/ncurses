@@ -999,6 +999,8 @@
 ./test/savescreen.c
 ./test/tclock.c
 ./test/test.priv.h
+./test/test_getstr.c
+./test/test_instr.c
 ./test/testaddch.c
 ./test/testcurs.c
 ./test/testscanw.c

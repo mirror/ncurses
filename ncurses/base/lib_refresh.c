@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_refresh.c,v 1.34 2006/05/27 19:21:19 tom Exp $")
+MODULE_ID("$Id: lib_refresh.c,v 1.37 2007/06/30 23:35:43 tom Exp $")
 
 NCURSES_EXPORT(int)
 wrefresh(WINDOW *win)
@@ -74,10 +74,10 @@ NCURSES_EXPORT(int)
 wnoutrefresh(WINDOW *win)
 {
     NCURSES_SIZE_T limit_x;
-    NCURSES_SIZE_T i, j;
+    NCURSES_SIZE_T src_row, src_col;
     NCURSES_SIZE_T begx;
     NCURSES_SIZE_T begy;
-    NCURSES_SIZE_T m, n;
+    NCURSES_SIZE_T dst_row, dst_col;
 #if USE_SCROLL_HINTS
     bool wide;
 #endif
@@ -132,17 +132,17 @@ wnoutrefresh(WINDOW *win)
      * so we'll force the issue.
      */
 
-    /* limit(n) */
+    /* limit(dst_col) */
     limit_x = win->_maxx;
-    /* limit(j) */
+    /* limit(src_col) */
     if (limit_x > newscr->_maxx - begx)
 	limit_x = newscr->_maxx - begx;
 
-    for (i = 0, m = begy + win->_yoffset;
-	 i <= win->_maxy && m <= newscr->_maxy;
-	 i++, m++) {
-	register struct ldat *nline = &newscr->_line[m];
-	register struct ldat *oline = &win->_line[i];
+    for (src_row = 0, dst_row = begy + win->_yoffset;
+	 src_row <= win->_maxy && dst_row <= newscr->_maxy;
+	 src_row++, dst_row++) {
+	register struct ldat *nline = &newscr->_line[dst_row];
+	register struct ldat *oline = &win->_line[src_row];
 
 	if (oline->firstchar != _NOCHANGE) {
 	    int last = oline->lastchar;
@@ -150,10 +150,70 @@ wnoutrefresh(WINDOW *win)
 	    if (last > limit_x)
 		last = limit_x;
 
-	    for (j = oline->firstchar, n = j + begx; j <= last; j++, n++) {
-		if (!CharEq(oline->text[j], nline->text[n])) {
-		    nline->text[n] = oline->text[j];
-		    CHANGED_CELL(nline, n);
+	    src_col = oline->firstchar;
+	    dst_col = src_col + begx;
+
+	    if_WIDEC({
+		static cchar_t blank = BLANK;
+		int last_col = begx + ((last < win->_maxx)
+				       ? last
+				       : win->_maxx);
+		int fix_left = dst_col;
+		int fix_right = last_col;
+		register int j;
+
+		/*
+		 * Check for boundary cases where we may overwrite part of a
+		 * multi-column character.  For those, wipe the remainder of
+		 * the character to blanks.
+		 */
+		j = dst_col;
+		if (isWidecExt(nline->text[j])) {
+		    /*
+		     * On the left, we only care about multi-column characters
+		     * that extend into the changed region.
+		     */
+		    fix_left = 1 + j - WidecExt(nline->text[j]);
+		    if (fix_left < 0)
+			fix_left = 0;	/* only if cell is corrupt */
+		}
+
+		j = last_col;
+		if (WidecExt(nline->text[j]) != 0) {
+		    /*
+		     * On the right, any multi-column character is a problem,
+		     * unless it happens to be contained in the change, and
+		     * ending at the right boundary of the change.  The
+		     * computation for 'fix_left' accounts for the left-side of
+		     * this character.  Find the end of the character.
+		     */
+		    fix_right = ++j;
+		    while (j <= newscr->_maxx && isWidecExt(nline->text[j])) {
+			fix_right = j++;
+		    }
+		}
+
+		/*
+		 * The analysis is simpler if we do the clearing afterwards.
+		 * Do that now.
+		 */
+		for (j = fix_left; j < dst_col; ++j) {
+		    nline->text[j] = blank;
+		    CHANGED_CELL(nline, j);
+		}
+		for (j = last_col + 1; j <= fix_right; ++j) {
+		    nline->text[j] = blank;
+		    CHANGED_CELL(nline, j);
+		}
+	    });
+
+	    /*
+	     * Copy the changed text.
+	     */
+	    for (; src_col <= last; src_col++, dst_col++) {
+		if (!CharEq(oline->text[src_col], nline->text[dst_col])) {
+		    nline->text[dst_col] = oline->text[src_col];
+		    CHANGED_CELL(nline, dst_col);
 		}
 	    }
 
@@ -162,13 +222,14 @@ wnoutrefresh(WINDOW *win)
 	if (wide) {
 	    int oind = oline->oldindex;
 
-	    nline->oldindex = (oind == _NEWINDEX) ? _NEWINDEX : begy + oind
-		+ win->_yoffset;
+	    nline->oldindex = ((oind == _NEWINDEX)
+			       ? _NEWINDEX
+			       : (begy + oind + win->_yoffset));
 	}
 #endif /* USE_SCROLL_HINTS */
 
 	oline->firstchar = oline->lastchar = _NOCHANGE;
-	if_USE_SCROLL_HINTS(oline->oldindex = i);
+	if_USE_SCROLL_HINTS(oline->oldindex = src_row);
     }
 
     if (win->_clear) {
