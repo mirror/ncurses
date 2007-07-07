@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.22 2007/06/30 21:38:08 tom Exp $
+ * $Id: demo_panels.c,v 1.26 2007/07/07 22:16:33 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -36,6 +36,9 @@
 #if USE_LIBPANEL
 
 #include <panel.h>
+
+#define LAST_POS '@'
+#define TEMP_POS '>'
 
 typedef void (*InitPanel) (void);
 typedef void (*FillPanel) (PANEL *);
@@ -113,6 +116,7 @@ get_position(NCURSES_CONST char *text,
 {
     int result = 0;
     int x1, y1;
+    char cmd;
     WINDOW *win;
 
     getyx(stdscr, y1, x1);
@@ -121,9 +125,21 @@ get_position(NCURSES_CONST char *text,
     show_position(text, also, which, y1, x1);
 
     if (log_in != 0) {
-	(void) wgetch(stdscr);
-	if (fscanf(log_in, "@%d,%d\n", &y1, &x1) == 2) {
-	    result = 1;
+	if (fscanf(log_in, "%c%d,%d\n", &cmd, &y1, &x1) == 3) {
+	    switch (cmd) {
+	    case LAST_POS:
+		result = 1;
+		(void) wgetch(stdscr);
+		break;
+	    case TEMP_POS:
+		result = 0;
+		wrefresh(stdscr);
+		napms(100);
+		break;
+	    default:
+		result = -1;
+		break;
+	    }
 	} else {
 	    result = -1;
 	}
@@ -170,11 +186,16 @@ get_position(NCURSES_CONST char *text,
     }
 
     wmove(stdscr, y1, x1);
-    if (result > 0) {
+    *ypos = y1;
+    *xpos = x1;
+
+    if (result >= 0) {
 	if (log_out)
-	    fprintf(log_out, "@%d,%d\n", y1, x1);
-	*ypos = y1;
-	*xpos = x1;
+	    fprintf(log_out, "%c%d,%d\n",
+		    ((result > 0)
+		     ? LAST_POS
+		     : TEMP_POS),
+		    y1, x1);
     }
     return result;
 }
@@ -271,7 +292,7 @@ my_create_panel(PANEL ** pans, int which, FillPanel myFill)
 }
 
 static void
-my_move_panel(PANEL ** pans, int which)
+my_move_panel(PANEL ** pans, int which, bool continuous)
 {
     if (pans[which] != 0) {
 	int code;
@@ -284,7 +305,10 @@ my_move_panel(PANEL ** pans, int which)
 	sprintf(also, " (start %d,%d)", y0, x0);
 	wmove(stdscr, y0, x0);
 	while ((code = get_position("Move panel", also, which, &x1, &y1)) == 0) {
-	    ;
+	    if (continuous) {
+		move_panel(pans[which], y1, x1);
+		pflush();
+	    }
 	}
 	if (code > 0) {
 	    move_panel(pans[which], y1, x1);
@@ -450,7 +474,7 @@ show_panels(PANEL * px[MAX_PANELS + 1])
 	"  c - create the panel",
 	"  d - delete the panel",
 	"  h - hide the panel",
-	"  m - move the panel",
+	"  m - move the panel (M for continuous move)",
 	"  r - resize the panel",
 	"  s - show the panel",
 	"  b - put the panel on the top of the stack"
@@ -535,9 +559,13 @@ do_panel(PANEL * px[MAX_PANELS + 1],
 {
     int which = cmd[1] - '0';
 
+    if (which < 1 || which > MAX_PANELS) {
+	beep();
+	return;
+    }
+
     if (log_in != 0) {
 	pflush();
-	(void) wgetch(stdscr);
     }
 
     saywhat(cmd);
@@ -555,7 +583,10 @@ do_panel(PANEL * px[MAX_PANELS + 1],
 	my_hide_panel(px[which]);
 	break;
     case 'm':
-	my_move_panel(px, which);
+	my_move_panel(px, which, FALSE);
+	break;
+    case 'M':
+	my_move_panel(px, which, TRUE);
 	break;
     case 'r':
 	my_resize_panel(px, which, myFill);
@@ -572,7 +603,7 @@ do_panel(PANEL * px[MAX_PANELS + 1],
 static bool
 ok_letter(int ch)
 {
-    return isalpha(UChar(ch)) && strchr("bcdhmrst", ch) != 0;
+    return isalpha(UChar(ch)) && strchr("bcdhmMrst", ch) != 0;
 }
 
 static bool
@@ -601,14 +632,15 @@ get_command(PANEL * px[MAX_PANELS + 1], char *buffer, int limit)
     buffer[length = 0] = '\0';
 
     if (log_in != 0) {
-	(void) wgetch(win);
 	if (fgets(buffer, limit - 3, log_in) != 0) {
 	    length = strlen(buffer);
 	    while (length > 0 && isspace(buffer[length - 1]))
 		buffer[--length] = '\0';
+	    waddstr(win, buffer);
 	} else {
 	    close_input();
 	}
+	(void) wgetch(win);
     } else {
 	c0 = 0;
 	for (;;) {

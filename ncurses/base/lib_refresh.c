@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_refresh.c,v 1.37 2007/06/30 23:35:43 tom Exp $")
+MODULE_ID("$Id: lib_refresh.c,v 1.40 2007/07/07 22:08:38 tom Exp $")
 
 NCURSES_EXPORT(int)
 wrefresh(WINDOW *win)
@@ -145,21 +145,56 @@ wnoutrefresh(WINDOW *win)
 	register struct ldat *oline = &win->_line[src_row];
 
 	if (oline->firstchar != _NOCHANGE) {
-	    int last = oline->lastchar;
+	    int last_src = oline->lastchar;
 
-	    if (last > limit_x)
-		last = limit_x;
+	    if (last_src > limit_x)
+		last_src = limit_x;
 
 	    src_col = oline->firstchar;
 	    dst_col = src_col + begx;
 
 	    if_WIDEC({
+		register int j;
+
+		/*
+		 * Ensure that we will copy complete multi-column characters
+		 * on the left-boundary.
+		 */
+		if (isWidecExt(oline->text[src_col])) {
+		    j = 1 + dst_col - WidecExt(oline->text[src_col]);
+		    if (j < 0)
+			j = 0;
+		    if (dst_col > j) {
+			src_col -= (dst_col - j);
+			dst_col = j;
+		    }
+		}
+
+		/*
+		 * Ensure that we will copy complete multi-column characters
+		 * on the right-boundary.
+		 */
+		j = last_src;
+		if (WidecExt(oline->text[j])) {
+		    ++j;
+		    while (j <= limit_x) {
+			if (isWidecBase(oline->text[j])) {
+			    break;
+			} else {
+			    last_src = j;
+			}
+			++j;
+		    }
+		}
+	    });
+
+	    if_WIDEC({
 		static cchar_t blank = BLANK;
-		int last_col = begx + ((last < win->_maxx)
-				       ? last
+		int last_dst = begx + ((last_src < win->_maxx)
+				       ? last_src
 				       : win->_maxx);
 		int fix_left = dst_col;
-		int fix_right = last_col;
+		int fix_right = last_dst;
 		register int j;
 
 		/*
@@ -178,7 +213,7 @@ wnoutrefresh(WINDOW *win)
 			fix_left = 0;	/* only if cell is corrupt */
 		}
 
-		j = last_col;
+		j = last_dst;
 		if (WidecExt(nline->text[j]) != 0) {
 		    /*
 		     * On the right, any multi-column character is a problem,
@@ -187,7 +222,7 @@ wnoutrefresh(WINDOW *win)
 		     * computation for 'fix_left' accounts for the left-side of
 		     * this character.  Find the end of the character.
 		     */
-		    fix_right = ++j;
+		    ++j;
 		    while (j <= newscr->_maxx && isWidecExt(nline->text[j])) {
 			fix_right = j++;
 		    }
@@ -197,20 +232,18 @@ wnoutrefresh(WINDOW *win)
 		 * The analysis is simpler if we do the clearing afterwards.
 		 * Do that now.
 		 */
-		for (j = fix_left; j < dst_col; ++j) {
-		    nline->text[j] = blank;
-		    CHANGED_CELL(nline, j);
-		}
-		for (j = last_col + 1; j <= fix_right; ++j) {
-		    nline->text[j] = blank;
-		    CHANGED_CELL(nline, j);
+		if (fix_left < dst_col || fix_right > last_dst) {
+		    for (j = fix_left; j <= fix_right; ++j) {
+			nline->text[j] = blank;
+			CHANGED_CELL(nline, j);
+		    }
 		}
 	    });
 
 	    /*
 	     * Copy the changed text.
 	     */
-	    for (; src_col <= last; src_col++, dst_col++) {
+	    for (; src_col <= last_src; src_col++, dst_col++) {
 		if (!CharEq(oline->text[src_col], nline->text[dst_col])) {
 		    nline->text[dst_col] = oline->text[src_col];
 		    CHANGED_CELL(nline, dst_col);
