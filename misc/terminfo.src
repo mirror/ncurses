@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.305 $
-#	$Date: 2007/06/10 13:33:54 $
+#	$Revision: 1.308 $
+#	$Date: 2007/07/14 19:17:05 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2691,8 +2691,9 @@ putty|PuTTY terminal emulator,
 vt100-putty|Reset PuTTY to pure vt100,
 	rs2=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p,
 	use=vt100,
+# palette is hardcoded...
 putty-256color|PuTTY 0.58 with xterm 256-colors,
-	use=xterm+256color, use=putty,
+	initc@, use=xterm+256color, use=putty,
 
 # One of the keyboard selections is "VT100+".
 # pterm (the X11 port) uses shifted F1-F10 as F11-F20
@@ -3158,6 +3159,8 @@ xterm-xi|xterm on XI Graphics Accelerated X under BSD/OS 3.1,
 xterm-16color|xterm with 16 colors like aixterm,
 	use=ibm+16color, use=xterm-new,
 
+# This is a compile-time feature of XFree86 xterm beginning with
+# patch #111 (1999/7/10) -TD
 xterm+256color|xterm 256-color feature,
 	ccc,
 	colors#256, pairs#32767,
@@ -3166,6 +3169,18 @@ xterm+256color|xterm 256-color feature,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m,
 	setb@, setf@,
 
+# This is a compile-time feature of XFree86 xterm beginning with
+# patch #115 (1999/9/18) -TD
+#
+# Note that the escape sequences used are the same as for 256-colors - xterm
+# has a different table of default color resource values.  If built for
+# 256-colors, it can still handle an 88-color palette by using the initc
+# capability.
+#
+# At this time (2007/7/14), except for rxvt 2.7.x, none of the other terminals
+# which support the xterm+256color feature support the associated initc
+# capability.  So it is cancelled in the entries which use this and/or the
+# xterm+256color block.
 xterm+88color|xterm 88-color feature,
 	colors#88, pairs#7744, use=xterm+256color,
 
@@ -3448,8 +3463,9 @@ gnome-fc5|GNOME Terminal,
 gnome|GNOME Terminal,
 	use=gnome-fc5,
 
+# palette is hardcoded...
 gnome-256color|GNOME Terminal with xterm 256-colors,
-	use=xterm+256color, use=gnome,
+	initc@, use=xterm+256color, use=gnome,
 
 # XFCE Terminal 0.2.5.4beta2
 #
@@ -3551,6 +3567,10 @@ konsole-16color|klone of xterm-16color,
 # make a default entry for konsole
 konsole|KDE console window,
 	use=konsole-xf4x,
+
+# palette is hardcoded...
+konsole-256color|KDE console window with xterm 256-colors,
+	initc@, use=xterm+256color, use=konsole,
 
 # Based on mlterm 2.9.2's mlterm.ti, with corrections/additions from reading
 # the source code and running tack -TD
@@ -20773,6 +20793,99 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* Back off the xterm entry to use r6 as a base.
 # 9.13.22 (Sat Nov 30 11:51:31 EST 1996):
 #	* Added dec-vt220 at Adrian Garside's request.
+#
+#-(original-changelog-1996/12/29-to-1998/02/28-by-TD)---------------------------
+#
+# 10.1.0 (Sun Dec 29 02:36:31 EST 1996): withdrawn
+#	* Minor corrections to xterm entries.
+#	* Replaced EWAN telnet entry.
+#	* Dropped the reorder script generator.  It was a fossil.
+# 9.13.23 (Fri Feb 21 16:36:06 EST 1997):
+#	* Replaced minitel-2 entry.
+#	* Added MGR, ansi-nt.
+# 9.13.24 (Sun Feb 23 20:55:23 EST 1997):
+#	* Thorsten Lockert added termcap `bs' to a lot of types, working from
+#	  the 4.4BSD Lite2 file.
+#
+# 10.1.1 (Sat May  3 21:41:27 EDT 1997):
+#	* Use setaf/setab consistently with SVr4.
+#	* Remove ech, el1 from cons25w, they do not work in FreeBSD 2.1.5
+# 10.1.2 (Sat May 24 21:10:57 EDT 1997)
+#	* update xterm-xf86-v32 to match XFree86 3.2A (changes F1-F4)
+#	* add xterm-16color, for XFree86 3.3
+# 10.1.3 (Sat May 31 12:21:05 EDT 1997)
+#	* correct typo in emu
+#	* correct typo in vt102-w (Robert Wuest)
+#	* make new entry xterm-xf86-v33, restored xterm-xf86-v32.
+# 10.1.4 (Sun Jun 15 08:29:05 EDT 1997)
+#	* remove ech capability from rxvt (it does the wrong thing)
+# 10.1.5 (Sat Jun 28 21:34:36 EDT 1997)
+#	* remove spurious newlines from several entries (hp+color, wy50,
+#	  wy350, wy370-nk, wy99gt-tek, wy370-tek, ibm3161, tek4205, ctrm,
+#	  gs6300)
+# 10.1.6 (Sat Jul  5 15:08:16 EDT 1997)
+#	* correct rmso capability of wy50-mc
+# 10.1.7 (Sat Jul 12 20:05:55 EDT 1997)
+#	* add cbt to xterm-xf86-v32
+#	* disentangle some entries from 'xterm', preferring xterm-r6 in case
+#	  'xterm' is derived from xterm-xf86-v32, which implements ech and
+#	  other capabilities not in xterm-r6.
+#	* remove alternate character set from kterm entry.
+# 10.1.8 (Sat Aug  2 18:43:18 EDT 1997)
+#	* correct acsc entries for ACS_LANTERN, which is 'i', not 'I'.
+# 10.1.9 (Sat Aug 23 17:54:38 EDT 1997)
+#	* add xterm-8bit entry.
+# 10.1.10 (Sat Oct  4 18:17:13 EDT 1997)
+#	* repair several places where early version of tic replaced \, with \\\,
+#	* make acsc entries canonical form (sorted, uniq).
+#	* modify acsc entries for linux, linux-koi8
+#	* new rxvt entry, from corrected copy of distribution in rxvt 2.21b
+#	* add color, mouse support to kterm.
+# 10.1.11 (Sat Oct 11 14:57:10 EDT 1997)
+#	* correct wy120 smxon/tbc capabilities which were stuck together.
+# 10.1.12 (Sat Oct 18 17:38:41 EDT 1997)
+#	* add entry for xterm-xf86-v39t
+# 10.1.13 (Sat Nov  8 13:43:33 EST 1997)
+#	* add u8,u9 to sun-il description
+# 10.1.14 (Sat Nov 22 19:59:03 EST 1997)
+#	* add vt220-js, pilot, rbcomm, datapoint entries from esr's 27-jun-97
+#	  version.
+#	* add hds200 description (Walter Skorski)
+#	* add EMX 0.9b descriptions
+#	* correct rmso/smso capabilities in wy30-mc and wy50-mc (Daniel Weaver)
+#	* rename xhpterm back to hpterm.
+# 10.1.15 (Sat Nov 29 19:21:59 EST 1997)
+#	* change initc in linux-c-nc to use 0..1000 range.
+# 10.1.16 (Sat Dec 13 19:41:59 EST 1997)
+#	* remove hpa/vpa from rxvt, which implements them incorrectly.
+#	* add sgr0 for rxvt.
+#	* remove bogus smacs/rmacs from EMX descriptions.
+# 10.1.17 (Sat Dec 20 17:54:10 EST 1997)
+#	* revised entry for att7300
+# 10.1.18 (Sat Jan  3 17:58:49 EST 1998)
+#	* use \0 rather than \200.
+#	* rename rxvt-color to rxvt to match rxvt 2.4.5 distribution.
+# 10.1.19 (Sat Jan 17 14:24:57 EST 1998)
+#	* change xterm (xterm-xf86-v40), xterm-8bit rs1 to use hard reset.
+#	* rename xterm-xf86-v39t to xterm-xf86-v40
+#	* remove bold/underline from sun console entries since they're not
+#	  implemented.
+# 10.1.20 (Sat Jan 24 11:02:51 EST 1998)
+#	* add beterm entry (Fred Fish)
+#	* add irix-color/xwsh entry.
+#	* turn ncv off for linux.
+# 10.1.21 (Sat Jan 31 17:39:16 EST 1998)
+#	* set ncv for FreeBSD console (treat colors with reverse specially).
+#	* remove sgr string from qnx based on report by Xiaodan Tang
+# 10.1.22 (Wed Feb 11 18:40:12 EST 1998)
+#	* remove spurious commas from descriptions
+#	* correct xterm-8bit to match XFree86 3.9Ad F1-F4.
+# 10.1.23 (Sat Feb 28 17:48:38 EST 1998)
+#	* add linux-koi8r to replace linux-koi8 (which uses a corrupt acsc,
+#	  apparently based on cp-866).
+#
+#-(replaced-changelog-1998/02/28-by-ESR)----------------------------------------
+#
 # 9.13.23 (Fri Feb 21 16:36:06 EST 1997):
 #	* Replaced minitel-2 entry.
 #	* Added MGR, ansi-nt.
@@ -20824,6 +20937,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* Incorporated NCR terminfos from the Boundless Technology FTP site.
 #	* Incorporated att700 from the Boundless Technology FTP site.
 #	* Miscellaneous contact-address and Web-page updates.
+#
+#-(changelog-beginning-ncurses-4.2)---------------------------------------------
 #
 # 1998/5/9
 #	* add nxterm and xterm-color terminfo description (request by Cristian
@@ -21391,6 +21506,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2007-06-10
 #	* corrected xterm+pcf2 modifiers for F1-F4, match xterm #226 -TD
+#
+# 2007-07-14
+#	* restore section of pre-ncurses-4.2 changelog to fix attribution -TD
+#	* add konsole-256color entry -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

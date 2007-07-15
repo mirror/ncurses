@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.107 2007/04/28 15:41:08 tom Exp $
+# $Id: Makefile.in,v 1.108 2007/07/14 15:00:07 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -271,8 +271,8 @@ captoinfo$x : $(tinfo)/captoinfo.c $(TEST_DEPS)
 hardscroll$x : $(serial)/hardscroll.c $(TEST_DEPS)
 	@ECHO_LINK@ $(LIBTOOL_LINK) -o $@ $(CFLAGS_DEFAULT) -DSCROLLDEBUG $(serial)/hardscroll.c $(TEST_LDFLAGS)
 
-hashmap$x : $(serial)/hashmap.c $(TEST_DEPS)
-	@ECHO_LINK@ $(LIBTOOL_LINK) -o $@ $(CFLAGS_DEFAULT) -DHASHDEBUG $(serial)/hashmap.c $(TEST_LDFLAGS)
+hashmap$x : $(serial)/hashmap.c $(serial)/hardscroll.c $(TEST_DEPS)
+	@ECHO_LINK@ $(LIBTOOL_LINK) -o $@ $(CFLAGS_DEFAULT) -DHASHDEBUG $(serial)/hashmap.c $(serial)/hardscroll.c $(TEST_LDFLAGS)
 
 lib_mvcur$x : $(serial)/lib_mvcur.c $(TEST_DEPS) \
 		../@DFT_OBJ_SUBDIR@/dump_entry$o

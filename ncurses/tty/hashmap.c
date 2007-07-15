@@ -70,7 +70,7 @@ AUTHOR
 #include <curses.priv.h>
 #include <term.h>		/* for back_color_erase */
 
-MODULE_ID("$Id: hashmap.c,v 1.52 2007/05/05 21:50:48 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.55 2007/07/14 15:33:39 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -81,13 +81,12 @@ MODULE_ID("$Id: hashmap.c,v 1.52 2007/05/05 21:50:48 tom Exp $")
 # define screen_lines MAXLINES
 # define TEXTWIDTH	1
 int oldnums[MAXLINES], reallines[MAXLINES];
-static chtype oldtext[MAXLINES][TEXTWIDTH], newtext[MAXLINES][TEXTWIDTH];
+static NCURSES_CH_T oldtext[MAXLINES][TEXTWIDTH];
+static NCURSES_CH_T newtext[MAXLINES][TEXTWIDTH];
 # define OLDNUM(n)	oldnums[n]
 # define OLDTEXT(n)	oldtext[n]
 # define NEWTEXT(m)	newtext[m]
 # define PENDING(n)     1
-
-extern NCURSES_EXPORT_VAR(unsigned)     _nc_tracing;
 
 #else /* !HASHDEBUG */
 
@@ -448,13 +447,14 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     char line[BUFSIZ], *st;
     int n;
 
-    if (!_nc_alloc_screen())
+    if (setupterm(NULL, fileno(stdout), (int *) 0) == ERR)
 	return EXIT_FAILURE;
+    (void) _nc_alloc_screen();
 
     for (n = 0; n < screen_lines; n++) {
 	reallines[n] = n;
 	oldnums[n] = _NEWINDEX;
-	oldtext[n][0] = newtext[n][0] = '.';
+	CharOf(oldtext[n][0]) = CharOf(newtext[n][0]) = '.';
     }
 
     if (isatty(fileno(stdin)))
@@ -466,7 +466,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     for (;;) {
 	/* grab a test command */
 	if (fgets(line, sizeof(line), stdin) == (char *) NULL)
-	    exit(EXIT_SUCCESS);
+	    break;
 
 	switch (line[0]) {
 	case '#':		/* comment */
@@ -488,22 +488,22 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
 	case 'n':		/* use following letters as text of new lines */
 	    for (n = 0; n < screen_lines; n++)
-		newtext[n][0] = '.';
+		CharOf(newtext[n][0]) = '.';
 	    for (n = 0; n < screen_lines; n++)
 		if (line[n + 1] == '\n')
 		    break;
 		else
-		    newtext[n][0] = line[n + 1];
+		    CharOf(newtext[n][0]) = line[n + 1];
 	    break;
 
 	case 'o':		/* use following letters as text of old lines */
 	    for (n = 0; n < screen_lines; n++)
-		oldtext[n][0] = '.';
+		CharOf(oldtext[n][0]) = '.';
 	    for (n = 0; n < screen_lines; n++)
 		if (line[n + 1] == '\n')
 		    break;
 		else
-		    oldtext[n][0] = line[n + 1];
+		    CharOf(oldtext[n][0]) = line[n + 1];
 	    break;
 
 	case 'd':		/* dump state of test arrays */
@@ -512,12 +512,12 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 #endif
 	    (void) fputs("Old lines: [", stdout);
 	    for (n = 0; n < screen_lines; n++)
-		putchar(oldtext[n][0]);
+		putchar(CharOf(oldtext[n][0]));
 	    putchar(']');
 	    putchar('\n');
 	    (void) fputs("New lines: [", stdout);
 	    for (n = 0; n < screen_lines; n++)
-		putchar(newtext[n][0]);
+		putchar(CharOf(newtext[n][0]));
 	    putchar(']');
 	    putchar('\n');
 	    break;
@@ -531,12 +531,17 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    _nc_scroll_optimize();
 	    (void) fputs("Done.\n", stderr);
 	    break;
+	default:
 	case '?':
 	    usage();
 	    break;
 	}
     }
+#if NO_LEAKS
+    _nc_free_and_exit(EXIT_SUCCESS);
+#else
     return EXIT_SUCCESS;
+#endif
 }
 
 #endif /* HASHDEBUG */

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.419 2007/05/05 15:45:26 tom Exp $
+dnl $Id: configure.in,v 1.421 2007/07/14 15:45:08 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.419 $)
+AC_REVISION($Revision: 1.421 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1010,6 +1010,7 @@ if test "$with_echo" = yes; then
 else
 	ECHO_LINK='@ echo linking $@ ... ;'
 	test -n "$LIBTOOL" && LIBTOOL="$LIBTOOL --silent"
+	test -n "$LIBTOOL_CXX" && LIBTOOL_CXX="$LIBTOOL_CXX --silent"
 fi
 AC_MSG_RESULT($with_echo)
 AC_SUBST(ECHO_LINK)
@@ -1023,7 +1024,7 @@ AC_MSG_RESULT($with_warnings)
 
 if test -n "$with_warnings"; then
  	ADAFLAGS="$ADAFLAGS -gnatg"
-	CF_GCC_WARNINGS
+	CF_GCC_WARNINGS(Wdeclaration-after-statement Wextra Wno-unknown-pragmas Wswitch-enum)
 	if test "$cf_with_cxx" = yes ; then
 		CF_GXX_WARNINGS(Wno-unused)
 	fi
@@ -1328,9 +1329,22 @@ AC_SUBST(USE_CXX_BOOL)
 
 CF_HELP_MESSAGE(Ada95 Binding Options:)
 
+dnl If the Ada95 source-tree is present, add that to the build unless it will
+dnl not work, or was not requested.
+if test -f "${srcdir}/Ada95/Makefile.in" ; then
+
+dnl libtool does not know anything about GNAT, though a change made in 1998
+dnl provided for it "someday".  Disable the ada subtree if we are using
+dnl libtool -TD 20070714
+if test "$cf_with_ada" != "no" ; then
+    if test "$with_libtool" != "no"; then
+	AC_MSG_WARN(libtool does not support Ada - disabling feature)
+	cf_with_ada=no
+    fi
+fi
+
 dnl Check for availability of GNU Ada Translator (GNAT).
 dnl At the moment we support no other Ada95 compiler.
-if test -f "${srcdir}/Ada95/Makefile.in" ; then
 if test "$cf_with_ada" != "no" ; then
 cf_ada_make=gnatmake
 AC_CHECK_PROG(gnat_exists, $cf_ada_make, yes, no)

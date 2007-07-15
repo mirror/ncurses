@@ -997,6 +997,7 @@
 ./test/rain.c
 ./test/redraw.c
 ./test/savescreen.c
+./test/savescreen.sh
 ./test/tclock.c
 ./test/test.priv.h
 ./test/test_getstr.c

@@ -34,7 +34,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: varargs.c,v 1.5 2007/04/21 23:21:23 tom Exp $")
+MODULE_ID("$Id: varargs.c,v 1.6 2007/07/14 15:51:27 tom Exp $")
 
 #ifdef TRACE
 
@@ -160,6 +160,7 @@ _nc_varargs(const char *fmt, va_list ap)
 			case atString:
 			    param = _nc_visbuf2(1, sval);
 			    break;
+			case atUnknown:
 			default:
 			    strcpy(buffer, "?");
 			    break;
