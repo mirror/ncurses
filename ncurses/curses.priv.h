@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.334 2007/06/09 17:21:53 tom Exp $
+ * $Id: curses.priv.h,v 1.335 2007/07/16 20:32:12 tom Exp $
  *
  *	curses.priv.h
  *
@@ -556,6 +556,8 @@ typedef struct {
 	TTY		*saved_tty;	/* savetty/resetty information	    */
 #if BROKEN_LINKER || USE_REENTRANT
 	chtype		*real_acs_map;
+	int		_LINES;
+	int		_COLS;
 #endif
 } NCURSES_PRESCREEN;
 

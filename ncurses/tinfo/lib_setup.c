@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.98 2007/04/21 19:57:42 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.99 2007/07/16 20:32:27 tom Exp $")
 
 /****************************************************************************
  *
@@ -108,12 +108,12 @@ NCURSES_PUBLIC_VAR(ttytype) (void)
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(LINES) (void)
 {
-    return SP ? SP->_LINES : 0;
+    return (SP ? SP->_LINES : _nc_prescreen._LINES);
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(COLS) (void)
 {
-    return SP ? SP->_COLS : 0;
+    return SP ? SP->_COLS : _nc_prescreen._COLS;
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(TABSIZE) (void)
@@ -563,6 +563,16 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 	    baudrate();
 	}
     }
+
+    /*
+     * We should always check the screensize, just in case.
+     */
+#if USE_REENTRANT
+    _nc_get_screensize(SP ? &(SP->_LINES) : &(_nc_prescreen._LINES),
+		       SP ? &(SP->_COLS) : &(_nc_prescreen._COLS));
+#else
+    _nc_get_screensize(&LINES, &COLS);
+#endif
 
     if (errret)
 	*errret = TGETENT_YES;

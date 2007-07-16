@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1143 2007/07/14 23:19:06 tom Exp $
+-- $Id: NEWS,v 1.1145 2007/07/16 21:14:00 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070716
+	+ restore a call to obtain screen-size in _nc_setupterm(), which
+	  is used in tput and other non-screen applications via setupterm()
+	  (Debian #433357, reported by Florent Bayle, Christian Ohm,
+	  cf: 20070310).
 
 20070714
 	+ add test/savescreen.c test-program
