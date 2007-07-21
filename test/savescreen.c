@@ -26,15 +26,11 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.9 2007/07/14 23:16:55 tom Exp $
+ * $Id: savescreen.c,v 1.10 2007/07/21 17:57:37 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
  */
-/*
-scr_set			-
-scr_init		-
-*/
 
 #include <test.priv.h>
 
@@ -48,6 +44,8 @@ scr_init		-
 #  include <time.h>
 # endif
 #endif
+
+static bool use_init = FALSE;
 
 static void
 setup_next(void)
@@ -64,6 +62,20 @@ cleanup(char *files[])
     for (n = 0; files[n] != 0; ++n) {
 	unlink(files[n]);
     }
+}
+
+static int
+load_screen(char *filename)
+{
+    int result;
+
+    if (use_init) {
+	if ((result = scr_init(filename)) != ERR)
+	    result = scr_restore(filename);
+    } else {
+	result = scr_set(filename);
+    }
+    return result;
 }
 
 /*
@@ -117,6 +129,7 @@ usage(void)
 	"Usage: savescreen [-r] files",
 	"",
 	"Options:",
+	" -i  use scr_init/scr_restore rather than scr_set",
 	" -r  replay the screen-dump files"
     };
     unsigned n;
@@ -136,8 +149,11 @@ main(int argc, char *argv[])
     bool done = FALSE;
     char **files;
 
-    while ((ch = getopt(argc, argv, "r")) != -1) {
+    while ((ch = getopt(argc, argv, "ir")) != -1) {
 	switch (ch) {
+	case 'i':
+	    use_init = TRUE;
+	    break;
 	case 'r':
 	    replaying = TRUE;
 	    break;
@@ -174,7 +190,7 @@ main(int argc, char *argv[])
 	}
 
 	which = last;
-	if (scr_set(files[which]) == ERR) {
+	if (load_screen(files[which]) == ERR) {
 	    endwin();
 	    printf("Cannot load screen-dump %s\n", files[which]);
 	    ExitProgram(EXIT_FAILURE);

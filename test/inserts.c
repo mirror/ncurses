@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inserts.c,v 1.17 2007/03/11 00:19:00 tom Exp $
+ * $Id: inserts.c,v 1.18 2007/07/21 17:41:55 tom Exp $
  *
  * Demonstrate the winsstr() and winsch functions.
  * Thomas Dickey - 2002/10/19
@@ -405,7 +405,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "mn:w")) != EOF) {
+    while ((ch = getopt(argc, argv, "mn:w")) != -1) {
 	switch (ch) {
 	case 'm':
 	    m_opt = TRUE;

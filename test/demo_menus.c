@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005,2006 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2005-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.20 2006/06/17 17:39:37 tom Exp $
+ * $Id: demo_menus.c,v 1.21 2007/07/21 17:45:09 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -834,7 +834,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((c = getopt(argc, argv, "a:de:fhmp:s:t:")) != EOF) {
+    while ((c = getopt(argc, argv, "a:de:fhmp:s:t:")) != -1) {
 	switch (c) {
 #if HAVE_RIPOFFLINE
 	case 'f':

@@ -1,4 +1,4 @@
-# $Id: modules,v 1.33 2007/07/14 15:56:38 tom Exp $
+# $Id: modules,v 1.34 2007/07/21 18:27:57 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -73,8 +73,10 @@ rain		progs		$(srcdir)	$(HEADER_DEPS)
 redraw		progs		$(srcdir)	$(HEADER_DEPS)
 savescreen	progs		$(srcdir)	$(HEADER_DEPS)
 tclock		progs		$(srcdir)	$(HEADER_DEPS)
+test_get_wstr	progs		$(srcdir)	$(HEADER_DEPS)
 test_getstr	progs		$(srcdir)	$(HEADER_DEPS)
 test_instr	progs		$(srcdir)	$(HEADER_DEPS)
+test_inwstr	progs		$(srcdir)	$(HEADER_DEPS)
 testaddch	progs		$(srcdir)	$(HEADER_DEPS)
 testcurs	progs		$(srcdir)	$(HEADER_DEPS)
 testscanw	progs		$(srcdir)	$(HEADER_DEPS)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.28 2006/05/20 15:37:44 tom Exp $
+ * $Id: gdc.c,v 1.29 2007/07/21 17:45:09 tom Exp $
  */
 
 #include <test.priv.h>
@@ -171,7 +171,7 @@ main(int argc, char *argv[])
 
     CATCHALL(sighndl);
 
-    while ((k = getopt(argc, argv, "sn")) != EOF) {
+    while ((k = getopt(argc, argv, "sn")) != -1) {
 	switch (k) {
 	case 's':
 	    scrol = TRUE;

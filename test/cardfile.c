@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.30 2007/04/07 17:07:34 tom Exp $
+ * $Id: cardfile.c,v 1.31 2007/07/21 17:41:55 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -570,7 +570,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((n = getopt(argc, argv, "c")) != EOF) {
+    while ((n = getopt(argc, argv, "c")) != -1) {
 	switch (n) {
 	case 'c':
 	    try_color = TRUE;

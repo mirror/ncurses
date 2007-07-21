@@ -41,7 +41,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.88 2007/04/07 17:07:30 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.89 2007/07/21 17:45:59 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1271,7 +1271,7 @@ main(int argc, char *argv[])
 
     while ((c = getopt(argc,
 		       argv,
-		       "1A:aB:CcdEeFfGgIiLlnpqR:rs:TtUuVv:w:x")) != EOF) {
+		       "1A:aB:CcdEeFfGgIiLlnpqR:rs:TtUuVv:w:x")) != -1) {
 	switch (c) {
 	case '1':
 	    mwidth = 0;

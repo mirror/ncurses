@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *
  * Generate timing statistics for vertical-motion optimization.
  *
- * $Id: hashtest.c,v 1.26 2006/05/20 16:02:16 tom Exp $
+ * $Id: hashtest.c,v 1.27 2007/07/21 17:45:09 tom Exp $
  */
 
 #ifdef TRACE
@@ -190,7 +190,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((c = getopt(argc, argv, "cf:h:l:norsx")) != EOF) {
+    while ((c = getopt(argc, argv, "cf:h:l:norsx")) != -1) {
 	switch (c) {
 	case 'c':
 	    continuous = TRUE;

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.4 2007/06/30 17:54:56 tom Exp $
+ * $Id: echochar.c,v 1.5 2007/07/21 17:41:55 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -89,7 +89,7 @@ main(
     int last_fg = 0;
     int last_bg = 0;
 
-    while ((ch = getopt(argc, argv, "r")) != EOF) {
+    while ((ch = getopt(argc, argv, "r")) != -1) {
 	switch (ch) {
 	case 'r':
 	    opt_r = TRUE;

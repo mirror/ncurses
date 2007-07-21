@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.65 2007/06/30 16:40:04 tom Exp $
+ * $Id: view.c,v 1.66 2007/07/21 17:41:55 tom Exp $
  */
 
 #include <test.priv.h>
@@ -229,7 +229,7 @@ main(int argc, char *argv[])
     (void) signal(SIGINT, finish);	/* arrange interrupts to terminate */
 #endif
 
-    while ((i = getopt(argc, argv, "cin:rtT:")) != EOF) {
+    while ((i = getopt(argc, argv, "cin:rtT:")) != -1) {
 	switch (i) {
 	case 'c':
 	    try_color = TRUE;

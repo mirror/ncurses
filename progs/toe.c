@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.43 2007/02/03 19:10:39 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.44 2007/07/21 17:45:59 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -326,7 +326,7 @@ main(int argc, char *argv[])
 
     _nc_progname = _nc_rootname(argv[0]);
 
-    while ((this_opt = getopt(argc, argv, "0123456789ahuvUV")) != EOF) {
+    while ((this_opt = getopt(argc, argv, "0123456789ahuvUV")) != -1) {
 	/* handle optional parameter */
 	if (isdigit(this_opt)) {
 	    switch (last_opt) {

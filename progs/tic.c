@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.132 2007/04/07 17:14:27 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.133 2007/07/21 17:45:59 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -510,7 +510,7 @@ main(int argc, char *argv[])
      * be optional.
      */
     while ((this_opt = getopt(argc, argv,
-			      "0123456789CILNR:TUVace:fGgo:rstvwx")) != EOF) {
+			      "0123456789CILNR:TUVace:fGgo:rstvwx")) != -1) {
 	if (isdigit(this_opt)) {
 	    switch (last_opt) {
 	    case 'v':

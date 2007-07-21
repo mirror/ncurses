@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.291 2007/06/23 21:43:25 tom Exp $
+$Id: ncurses.c,v 1.292 2007/07/21 17:41:55 tom Exp $
 
 ***************************************************************************/
 
@@ -6176,7 +6176,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((c = getopt(argc, argv, "a:de:fhmp:s:t:")) != EOF) {
+    while ((c = getopt(argc, argv, "a:de:fhmp:s:t:")) != -1) {
 	switch (c) {
 #ifdef NCURSES_VERSION
 	case 'a':

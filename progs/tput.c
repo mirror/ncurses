@@ -45,7 +45,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.39 2007/07/14 19:31:08 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.40 2007/07/21 17:45:59 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -364,7 +364,7 @@ main(int argc, char **argv)
 
     term = getenv("TERM");
 
-    while ((c = getopt(argc, argv, "ST:V")) != EOF) {
+    while ((c = getopt(argc, argv, "ST:V")) != -1) {
 	switch (c) {
 	case 'S':
 	    cmdline = FALSE;

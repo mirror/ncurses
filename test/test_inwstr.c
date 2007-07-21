@@ -26,28 +26,27 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inchs.c,v 1.9 2007/07/21 19:01:43 tom Exp $
+ * $Id: test_inwstr.c,v 1.3 2007/07/21 22:47:42 tom Exp $
  *
  * Author: Thomas E Dickey
+ *
+ * Demonstrate the inwstr functions from the curses library.
+
+       int inwstr(wchar_t *str);
+       int innwstr(wchar_t *str, int n);
+       int winwstr(WINDOW *win, wchar_t *str);
+       int winnwstr(WINDOW *win, wchar_t *str, int n);
+       int mvinwstr(int y, int x, wchar_t *str);
+       int mvinnwstr(int y, int x, wchar_t *str, int n);
+       int mvwinwstr(WINDOW *win, int y, int x, wchar_t *str);
+       int mvwinnwstr(WINDOW *win, int y, int x, wchar_t *str, int n);
  */
-/*
-       chtype inch(void);
-       chtype winch(WINDOW *win);
-       chtype mvinch(int y, int x);
-       chtype mvwinch(WINDOW *win, int y, int x);
-       int inchstr(chtype *chstr);
-       int inchnstr(chtype *chstr, int n);
-       int winchstr(WINDOW *win, chtype *chstr);
-       int winchnstr(WINDOW *win, chtype *chstr, int n);
-       int mvinchstr(int y, int x, chtype *chstr);
-       int mvinchnstr(int y, int x, chtype *chstr, int n);
-       int mvwinchstr(WINDOW *win, int y, int x, chtype *chstr);
-       int mvwinchnstr(WINDOW *win, int y, int x, chtype *chstr, int n);
-*/
 
 #include <test.priv.h>
 
-#define BASE_Y 7
+#if USE_WIDEC_SUPPORT
+
+#define BASE_Y 6
 #define MAX_COLS 1024
 
 static bool
@@ -56,17 +55,31 @@ Quit(int ch)
     return (ch == ERR || ch == 'q' || ch == QUIT || ch == ESCAPE);
 }
 
+static void
+show_1st(WINDOW *win, int line, wchar_t *buffer)
+{
+    mvwaddwstr(win, line, 5, buffer);
+}
+
+static void
+showmore(WINDOW *win, int line, wchar_t *buffer)
+{
+    wmove(win, line, 0);
+    wclrtoeol(win);
+    show_1st(win, line, buffer);
+}
+
 static int
 test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 {
     WINDOW *txtbox = 0;
     WINDOW *txtwin = 0;
     FILE *fp;
-    int ch, j;
+    int ch;
     int txt_x = 0, txt_y = 0;
     int base_y;
-    int limit;
-    chtype text[MAX_COLS];
+    int limit = getmaxx(strwin) - 5;
+    wchar_t buffer[MAX_COLS];
 
     if (argv[level] == 0) {
 	beep();
@@ -97,8 +110,8 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
     wmove(txtwin, txt_y, txt_x);
 
     if ((fp = fopen(argv[level], "r")) != 0) {
-	while ((j = fgetc(fp)) != EOF) {
-	    if (waddch(txtwin, UChar(j)) != OK) {
+	while ((ch = fgetc(fp)) != EOF) {
+	    if (waddch(txtwin, UChar(ch)) != OK) {
 		break;
 	    }
 	}
@@ -107,8 +120,8 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	wprintw(txtwin, "Cannot open:\n%s", argv[1]);
     }
 
-    while (!Quit(j = mvwgetch(txtwin, txt_y, txt_x))) {
-	switch (j) {
+    while (!Quit(ch = mvwgetch(txtwin, txt_y, txt_x))) {
+	switch (ch) {
 	case KEY_DOWN:
 	case 'j':
 	    if (txt_y < getmaxy(txtwin) - 1)
@@ -147,89 +160,65 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 		wnoutrefresh(txtwin);
 	    }
 	    break;
+	case '-':
+	    if (limit > 0) {
+		--limit;
+	    } else {
+		beep();
+	    }
+	    break;
+	case '+':
+	    ++limit;
+	    break;
 	default:
 	    beep();
 	    break;
 	}
 
-	mvwprintw(chrwin, 0, 0, "char:");
+	mvwprintw(chrwin, 0, 0, "line:");
 	wclrtoeol(chrwin);
 
 	if (txtwin != stdscr) {
 	    wmove(txtwin, txt_y, txt_x);
 
-	    if ((ch = winch(txtwin)) != ERR) {
-		if (waddch(chrwin, (chtype) ch) != ERR) {
-		    for (j = txt_x + 1; j < getmaxx(txtwin); ++j) {
-			if ((ch = mvwinch(txtwin, txt_y, j)) != ERR) {
-			    if (waddch(chrwin, (chtype) ch) == ERR) {
-				break;
-			    }
-			} else {
-			    break;
-			}
-		    }
-		}
+	    if (winwstr(txtwin, buffer) != ERR) {
+		show_1st(chrwin, 0, buffer);
+	    }
+	    if (mvwinwstr(txtwin, txt_y, txt_x, buffer) != ERR) {
+		showmore(chrwin, 1, buffer);
 	    }
 	} else {
 	    move(txt_y, txt_x);
 
-	    if ((ch = inch()) != ERR) {
-		if (waddch(chrwin, (chtype) ch) != ERR) {
-		    for (j = txt_x + 1; j < getmaxx(txtwin); ++j) {
-			if ((ch = mvinch(txt_y, j)) != ERR) {
-			    if (waddch(chrwin, (chtype) ch) == ERR) {
-				break;
-			    }
-			} else {
-			    break;
-			}
-		    }
-		}
+	    if (inwstr(buffer) != ERR) {
+		show_1st(chrwin, 0, buffer);
+	    }
+	    if (mvinwstr(txt_y, txt_x, buffer) != ERR) {
+		showmore(chrwin, 1, buffer);
 	    }
 	}
 	wnoutrefresh(chrwin);
 
-	mvwprintw(strwin, 0, 0, "text:");
+	mvwprintw(strwin, 0, 0, "%4d:", limit);
 	wclrtobot(strwin);
-
-	limit = getmaxx(strwin) - 5;
 
 	if (txtwin != stdscr) {
 	    wmove(txtwin, txt_y, txt_x);
-	    if (winchstr(txtwin, text) != ERR) {
-		mvwaddchstr(strwin, 0, 5, text);
+	    if (winnwstr(txtwin, buffer, limit) != ERR) {
+		show_1st(strwin, 0, buffer);
 	    }
 
-	    wmove(txtwin, txt_y, txt_x);
-	    if (winchnstr(txtwin, text, limit) != ERR) {
-		mvwaddchstr(strwin, 1, 5, text);
-	    }
-
-	    if (mvwinchstr(txtwin, txt_y, txt_x, text) != ERR) {
-		mvwaddchstr(strwin, 2, 5, text);
-	    }
-
-	    if (mvwinchnstr(txtwin, txt_y, txt_x, text, limit) != ERR) {
-		mvwaddchstr(strwin, 3, 5, text);
+	    if (mvwinnwstr(txtwin, txt_y, txt_x, buffer, limit) != ERR) {
+		showmore(strwin, 1, buffer);
 	    }
 	} else {
 	    move(txt_y, txt_x);
-	    if (inchstr(text) != ERR) {
-		mvwaddchstr(strwin, 0, 5, text);
+	    if (innwstr(buffer, limit) != ERR) {
+		show_1st(strwin, 0, buffer);
 	    }
 
-	    move(txt_y, txt_x);
-	    if (inchnstr(text, limit) != ERR) {
-		mvwaddchstr(strwin, 1, 5, text);
-	    }
-
-	    if (mvinchstr(txt_y, txt_x, text) != ERR) {
-		mvwaddchstr(strwin, 2, 5, text);
-	    }
-
-	    if (mvinchnstr(txt_y, txt_x, text, limit) != ERR) {
-		mvwaddchstr(strwin, 3, 5, text);
+	    if (mvinnwstr(txt_y, txt_x, buffer, limit) != ERR) {
+		showmore(strwin, 1, buffer);
 	    }
 	}
 
@@ -262,11 +251,19 @@ main(int argc, char *argv[])
     box(chrbox, 0, 0);
     wnoutrefresh(chrbox);
 
-    chrwin = derwin(chrbox, 1, COLS - 2, 1, 1);
-    strwin = derwin(chrbox, 4, COLS - 2, 2, 1);
+    chrwin = derwin(chrbox, 2, COLS - 2, 1, 1);
+    strwin = derwin(chrbox, 2, COLS - 2, 3, 1);
 
     test_inchs(1, argv, chrwin, strwin);
 
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(void)
+{
+    printf("This program requires the wide-ncurses library\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif

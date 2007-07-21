@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.8 2007/03/11 00:18:29 tom Exp $
+ * $Id: ins_wide.c,v 1.9 2007/07/21 17:41:55 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -490,7 +490,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "mn:w")) != EOF) {
+    while ((ch = getopt(argc, argv, "mn:w")) != -1) {
 	switch (ch) {
 	case 'm':
 	    m_opt = TRUE;

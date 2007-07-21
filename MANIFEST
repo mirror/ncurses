@@ -1000,8 +1000,12 @@
 ./test/savescreen.sh
 ./test/tclock.c
 ./test/test.priv.h
+./test/test_get_wstr.c
+./test/test_getstr.c
 ./test/test_getstr.c
 ./test/test_instr.c
+./test/test_instr.c
+./test/test_inwstr.c
 ./test/testaddch.c
 ./test/testcurs.c
 ./test/testscanw.c

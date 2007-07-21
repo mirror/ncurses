@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.26 2007/07/07 22:16:33 tom Exp $
+ * $Id: demo_panels.c,v 1.27 2007/07/21 17:41:55 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -759,7 +759,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((c = getopt(argc, argv, "i:o:mwx")) != EOF) {
+    while ((c = getopt(argc, argv, "i:o:mwx")) != -1) {
 	switch (c) {
 	case 'i':
 	    log_in = fopen(optarg, "r");

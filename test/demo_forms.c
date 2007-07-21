@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.23 2007/06/02 21:37:55 tom Exp $
+ * $Id: demo_forms.c,v 1.24 2007/07/21 17:45:09 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -459,7 +459,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "dj:m:o:t:")) != EOF) {
+    while ((ch = getopt(argc, argv, "dj:m:o:t:")) != -1) {
 	switch (ch) {
 	case 'd':
 	    d_option = TRUE;

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inch_wide.c,v 1.5 2007/06/30 17:50:44 tom Exp $
+ * $Id: inch_wide.c,v 1.6 2007/07/21 18:37:38 tom Exp $
  */
 /*
        int in_wch(cchar_t *wcval);
@@ -103,10 +103,10 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 		break;
 	    }
 	}
+	fclose(fp);
     } else {
 	wprintw(txtwin, "Cannot open:\n%s", argv[1]);
     }
-    fclose(fp);
 
     while (!Quit(j = mvwgetch(txtwin, txt_y, txt_x))) {
 	switch (j) {
@@ -267,7 +267,7 @@ main(int argc, char *argv[])
     test_inchs(1, argv, chrwin, strwin);
 
     endwin();
-    return EXIT_SUCCESS;
+    ExitProgram(EXIT_SUCCESS);
 }
 #else
 int

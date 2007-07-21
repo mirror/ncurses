@@ -26,23 +26,25 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_getstr.c,v 1.5 2007/07/21 22:22:55 tom Exp $
+ * $Id: test_get_wstr.c,v 1.3 2007/07/21 22:47:21 tom Exp $
  *
  * Author: Thomas E Dickey
  *
- * Demonstrate the getstr functions from the curses library.
+ * Demonstrate the get_wstr functions from the curses library.
 
-       int getstr(char *str);
-       int getnstr(char *str, int n);
-       int wgetstr(WINDOW *win, char *str);
-       int wgetnstr(WINDOW *win, char *str, int n);
-       int mvgetstr(int y, int x, char *str);
-       int mvwgetstr(WINDOW *win, int y, int x, char *str);
-       int mvgetnstr(int y, int x, char *str, int n);
-       int mvwgetnstr(WINDOW *, int y, int x, char *str, int n);
+       int get_wstr(wint_t *wstr);
+       int getn_wstr(wint_t *wstr, int n);
+       int wget_wstr(WINDOW *win, wint_t *wstr);
+       int wgetn_wstr(WINDOW *win, wint_t *wstr, int n);
+       int mvget_wstr(int y, int x, wint_t *wstr);
+       int mvgetn_wstr(int y, int x, wint_t *wstr, int n);
+       int mvwget_wstr(WINDOW *win, int y, int x, wint_t *wstr);
+       int mvwgetn_wstr(WINDOW *win, int y, int x, wint_t *wstr, int n);
  */
 
 #include <test.priv.h>
+
+#if USE_WIDEC_SUPPORT
 
 #define BASE_Y 6
 #define MAX_COLS 1024
@@ -96,18 +98,18 @@ ShowFlavor(WINDOW *strwin, WINDOW *txtwin, Flavors flavor, int limit)
 
     switch (flavor) {
     case eGetStr:
-	name = wins ? "wgetstr" : "getstr";
+	name = wins ? "wget_wstr" : "get_wstr";
 	break;
     case eGetNStr:
 	limited = TRUE;
-	name = wins ? "wgetnstr" : "getnstr";
+	name = wins ? "wgetn_wstr" : "getn_wstr";
 	break;
     case eMvGetStr:
-	name = wins ? "mvwgetstr" : "mvgetstr";
+	name = wins ? "mvwget_wstr" : "mvget_wstr";
 	break;
     case eMvGetNStr:
 	limited = TRUE;
-	name = wins ? "mvwgetnstr" : "mvgetnstr";
+	name = wins ? "mvwgetn_wstr" : "mvgetn_wstr";
 	break;
     case eMaxFlavor:
 	break;
@@ -129,7 +131,7 @@ ShowFlavor(WINDOW *strwin, WINDOW *txtwin, Flavors flavor, int limit)
 }
 
 static int
-test_getstr(int level, char **argv, WINDOW *strwin)
+test_get_wstr(int level, char **argv, WINDOW *strwin)
 {
     WINDOW *txtbox = 0;
     WINDOW *txtwin = 0;
@@ -141,8 +143,7 @@ test_getstr(int level, char **argv, WINDOW *strwin)
     int flavor = 0;
     int limit = getmaxx(strwin) - 5;
     int actual;
-
-    char buffer[MAX_COLS];
+    wint_t buffer[MAX_COLS];
 
     if (argv[level] == 0) {
 	beep();
@@ -221,7 +222,7 @@ test_getstr(int level, char **argv, WINDOW *strwin)
 	    break;
 
 	case 'w':
-	    test_getstr(level + 1, argv, strwin);
+	    test_get_wstr(level + 1, argv, strwin);
 	    if (txtbox != 0) {
 		touchwin(txtbox);
 		wnoutrefresh(txtbox);
@@ -273,33 +274,33 @@ test_getstr(int level, char **argv, WINDOW *strwin)
 	    case eGetStr:
 		if (txtwin != stdscr) {
 		    wmove(txtwin, txt_y, txt_x);
-		    rc = wgetstr(txtwin, buffer);
+		    rc = wget_wstr(txtwin, buffer);
 		} else {
 		    move(txt_y, txt_x);
-		    rc = getstr(buffer);
+		    rc = get_wstr(buffer);
 		}
 		break;
 	    case eGetNStr:
 		if (txtwin != stdscr) {
 		    wmove(txtwin, txt_y, txt_x);
-		    rc = wgetnstr(txtwin, buffer, limit);
+		    rc = wgetn_wstr(txtwin, buffer, limit);
 		} else {
 		    move(txt_y, txt_x);
-		    rc = getnstr(buffer, limit);
+		    rc = getn_wstr(buffer, limit);
 		}
 		break;
 	    case eMvGetStr:
 		if (txtwin != stdscr) {
-		    rc = mvwgetstr(txtwin, txt_y, txt_x, buffer);
+		    rc = mvwget_wstr(txtwin, txt_y, txt_x, buffer);
 		} else {
-		    rc = mvgetstr(txt_y, txt_x, buffer);
+		    rc = mvget_wstr(txt_y, txt_x, buffer);
 		}
 		break;
 	    case eMvGetNStr:
 		if (txtwin != stdscr) {
-		    rc = mvwgetnstr(txtwin, txt_y, txt_x, buffer, limit);
+		    rc = mvwgetn_wstr(txtwin, txt_y, txt_x, buffer, limit);
 		} else {
-		    rc = mvgetnstr(txt_y, txt_x, buffer, limit);
+		    rc = mvgetn_wstr(txt_y, txt_x, buffer, limit);
 		}
 		break;
 	    case eMaxFlavor:
@@ -307,7 +308,8 @@ test_getstr(int level, char **argv, WINDOW *strwin)
 	    }
 	    noecho();
 	    wattrset(txtwin, A_NORMAL);
-	    wprintw(strwin, "%d:%s", rc, buffer);
+	    wprintw(strwin, "%d", rc);
+	    waddwstr(strwin, (wchar_t *) buffer);
 	    wnoutrefresh(strwin);
 	    break;
 	default:
@@ -344,8 +346,16 @@ main(int argc, char *argv[])
 
     strwin = derwin(chrbox, 4, COLS - 2, 1, 1);
 
-    test_getstr(1, argv, strwin);
+    test_get_wstr(1, argv, strwin);
 
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(void)
+{
+    printf("This program requires the wide-ncurses library\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif
