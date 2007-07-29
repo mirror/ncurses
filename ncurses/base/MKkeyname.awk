@@ -1,4 +1,4 @@
-# $Id: MKkeyname.awk,v 1.36 2007/06/12 20:28:18 tom Exp $
+# $Id: MKkeyname.awk,v 1.37 2007/07/28 21:47:21 tom Exp $
 ##############################################################################
 # Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -33,19 +33,36 @@ BEGIN {
 	print "#include <tic.h>"
 	print "#include <term_entry.h>"
 	print ""
-	print "const struct kn _nc_key_names[] = {"
+	first = 1;
 }
 
 /^[^#]/ {
-	printf "\t{ %d, %s },\n", offset, $1
-	offset += length($1) + 1
-	names = names"\n\t\""$1"\\0\""
+		if (bigstrings) {
+			if (first)  {
+				print "struct kn { int offset; int code; };"
+				print "static const struct kn _nc_key_names[] = {"
+			}
+			printf "\t{ %d, %s },\n", offset, $1
+			offset += length($1) + 1
+			names = names"\n\t\""$1"\\0\""
+		} else {
+			if (first) {
+				print "struct kn { const char *name; int code; };"
+				print "static const struct kn _nc_key_names[] = {"
+			}
+			printf "\t{ \"%s\", %s },\n", $1, $1;
+		}
+		first = 0;
 	}
 
 END {
-	printf "\t{ -1, 0 }};\n"
-	print ""
-	print "static const char key_names[] = "names";"
+	if (bigstrings) {
+		printf "\t{ -1, 0 }};\n"
+		print ""
+		print "static const char key_names[] = "names";"
+	} else {
+		printf "\t{ 0, 0 }};\n"
+	}
 	print ""
 	print "#define SIZEOF_TABLE 256"
 	print "#define MyTable _nc_globals.keyname_table"
@@ -60,12 +77,21 @@ END {
 	print "	if (c == -1) {"
 	print "		result = \"-1\";"
 	print "	} else {"
-	print "		for (i = 0; _nc_key_names[i].offset != -1; i++) {"
-	print "			if (_nc_key_names[i].code == c) {"
-	print "				result = (NCURSES_CONST char *)key_names + _nc_key_names[i].offset;"
-	print "				break;"
-	print "			}"
-	print "		}"
+	if (bigstrings) {
+		print "		for (i = 0; _nc_key_names[i].offset != -1; i++) {"
+		print "			if (_nc_key_names[i].code == c) {"
+		print "				result = (NCURSES_CONST char *)key_names + _nc_key_names[i].offset;"
+		print "				break;"
+		print "			}"
+		print "		}"
+	} else {
+		print "		for (i = 0; _nc_key_names[i].name != 0; i++) {"
+		print "			if (_nc_key_names[i].code == c) {"
+		print "				result = (NCURSES_CONST char *)_nc_key_names[i].name;"
+		print "				break;"
+		print "			}"
+		print "		}"
+	}
 	print ""
 	print "		if (result == 0 && (c >= 0 && c < SIZEOF_TABLE)) {"
 	print "			if (MyTable == 0)"

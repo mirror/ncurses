@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.58 2007/04/29 22:56:15 tom Exp $
+ * $Id: tic.h,v 1.61 2007/07/28 22:20:07 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -164,16 +164,6 @@ struct token
 extern NCURSES_EXPORT_VAR(struct token)	_nc_curr_token;
 
 	/*
-	 * List of keynames with their corresponding code.
-	 */
-struct kn {
-	int offset;
-	int code;
-};
-
-extern NCURSES_EXPORT_VAR(const struct kn) _nc_key_names[];
-
-	/*
 	 * Offsets to string capabilities, with the corresponding functionkey
 	 * codes.
 	 */
@@ -214,14 +204,12 @@ struct alias
 	const char	*source;
 };
 
-extern NCURSES_EXPORT_VAR(const struct name_table_entry * const) _nc_info_hash_table[];
-extern NCURSES_EXPORT_VAR(const struct name_table_entry * const) _nc_cap_hash_table[];
-
-extern NCURSES_EXPORT_VAR(const struct alias) _nc_capalias_table[];
-extern NCURSES_EXPORT_VAR(const struct alias) _nc_infoalias_table[];
+extern NCURSES_EXPORT_VAR(const short) _nc_info_hash_table[];
+extern NCURSES_EXPORT_VAR(const short) _nc_cap_hash_table[];
 
 extern NCURSES_EXPORT(const struct name_table_entry *) _nc_get_table (bool);
-extern NCURSES_EXPORT(const struct name_table_entry * const *) _nc_get_hash_table (bool);
+extern NCURSES_EXPORT(const short *) _nc_get_hash_table (bool);
+extern NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool);
 
 #define NOTFOUND	((struct name_table_entry *) 0)
 
@@ -259,7 +247,7 @@ extern NCURSES_EXPORT(char *) _nc_rootname (char *);
 
 /* comp_hash.c: name lookup */
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_entry
-	(const char *, const struct name_table_entry *const *);
+	(const char *, const short *);
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_type_entry
 	(const char *, int, const struct name_table_entry *);
 

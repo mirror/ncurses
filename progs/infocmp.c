@@ -35,18 +35,18 @@
 /*
  *	infocmp.c -- decompile an entry, or compare two entries
  *		written by Eric S. Raymond
+ *		and Thomas E Dickey
  */
 
 #include <progs.priv.h>
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.89 2007/07/21 17:45:59 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.91 2007/07/28 23:00:19 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
 
-#define MAXTERMS	32	/* max # terminal arguments we can handle */
 #define MAX_STRING	1024	/* maximum formatted string */
 
 const char *_nc_progname = "infocmp";
@@ -60,8 +60,7 @@ typedef char path[PATH_MAX];
  *
  ***************************************************************************/
 
-static char *tname[MAXTERMS];	/* terminal type names */
-static ENTRY entries[MAXTERMS];	/* terminfo entries */
+static ENTRY *entries;		/* terminfo entries */
 static int termcount;		/* count of terminal entries */
 
 static bool limited = TRUE;	/* "-r" option is not set */
@@ -96,6 +95,7 @@ ExitProgram(int code)
     while (termcount-- > 0)
 	_nc_free_termtype(&entries[termcount].tterm);
     _nc_leaks_dump_entry();
+    free(entries);
     _nc_free_tic(code);
 }
 #endif
@@ -932,7 +932,8 @@ file_comparison(int argc, char *argv[])
 		case C_DIFFERENCE:
 		    if (itrace)
 			(void) fprintf(stderr,
-				       "infocmp: dumping differences\n");
+				       "%s: dumping differences\n",
+				       _nc_progname);
 		    (void) printf("comparing %s to %s.\n", name1, name2);
 		    compare_entry(compare_predicate, &entries->tterm, quiet);
 		    break;
@@ -940,7 +941,8 @@ file_comparison(int argc, char *argv[])
 		case C_COMMON:
 		    if (itrace)
 			(void) fprintf(stderr,
-				       "infocmp: dumping common capabilities\n");
+				       "%s: dumping common capabilities\n",
+				       _nc_progname);
 		    (void) printf("comparing %s to %s.\n", name1, name2);
 		    compare_entry(compare_predicate, &entries->tterm, quiet);
 		    break;
@@ -948,7 +950,8 @@ file_comparison(int argc, char *argv[])
 		case C_NAND:
 		    if (itrace)
 			(void) fprintf(stderr,
-				       "infocmp: dumping differences\n");
+				       "%s: dumping differences\n",
+				       _nc_progname);
 		    (void) printf("comparing %s to %s.\n", name1, name2);
 		    compare_entry(compare_predicate, &entries->tterm, quiet);
 		    break;
@@ -1236,7 +1239,8 @@ terminal_env(void)
 
     if ((terminal = getenv("TERM")) == 0) {
 	(void) fprintf(stderr,
-		       "infocmp: environment variable TERM not set\n");
+		       "%s: environment variable TERM not set\n",
+		       _nc_progname);
 	exit(EXIT_FAILURE);
     }
     return terminal;
@@ -1251,10 +1255,13 @@ terminal_env(void)
 int
 main(int argc, char *argv[])
 {
-    char *firstdir, *restdir;
     /* Avoid "local data >32k" error with mwcc */
     /* Also avoid overflowing smaller stacks on systems like AmigaOS */
-    path *tfile = (path *) malloc(sizeof(path) * MAXTERMS);
+    path *tfile = 0;
+    char **tname = 0;
+    int maxterms;
+
+    char *firstdir, *restdir;
     int c, i, len;
     bool formatted = FALSE;
     bool filecompare = FALSE;
@@ -1268,6 +1275,8 @@ main(int argc, char *argv[])
 #if NCURSES_XNAMES
     use_extended_names(FALSE);
 #endif
+
+    _nc_progname = _nc_rootname(argv[0]);
 
     while ((c = getopt(argc,
 		       argv,
@@ -1386,7 +1395,8 @@ main(int argc, char *argv[])
 		sortmode = S_TERMCAP;
 	    else {
 		(void) fprintf(stderr,
-			       "infocmp: unknown sort mode\n");
+			       "%s: unknown sort mode\n",
+			       _nc_progname);
 		ExitProgram(EXIT_FAILURE);
 	    }
 	    break;
@@ -1434,6 +1444,18 @@ main(int argc, char *argv[])
 	}
     }
 
+    maxterms = (argc + 1 - optind);
+    tfile = typeMalloc(path, maxterms);
+    tname = typeCalloc(char *, maxterms);
+    entries = typeCalloc(ENTRY, maxterms);
+
+    if (tfile == 0
+	|| tname == 0
+	|| entries == 0) {
+	fprintf(stderr, "%s: not enough memory\n", _nc_progname);
+	ExitProgram(EXIT_FAILURE);
+    }
+
     /* by default, sort by terminfo name */
     if (sortmode == S_DEFAULT)
 	sortmode = S_TERMINFO;
@@ -1457,53 +1479,51 @@ main(int argc, char *argv[])
 	/* grab the entries */
 	termcount = 0;
 	for (; optind < argc; optind++) {
-	    if (termcount >= MAXTERMS) {
-		(void) fprintf(stderr,
-			       "infocmp: too many terminal type arguments\n");
-		ExitProgram(EXIT_FAILURE);
-	    } else {
-		const char *directory = termcount ? restdir : firstdir;
-		int status;
+	    const char *directory = termcount ? restdir : firstdir;
+	    int status;
 
-		tname[termcount] = argv[optind];
+	    tname[termcount] = argv[optind];
 
-		if (directory) {
+	    if (directory) {
 #if USE_DATABASE
-		    (void) sprintf(tfile[termcount], "%s/%c/%s",
-				   directory,
-				   *argv[optind], argv[optind]);
-		    if (itrace)
-			(void) fprintf(stderr,
-				       "infocmp: reading entry %s from file %s\n",
-				       argv[optind], tfile[termcount]);
-
-		    status = _nc_read_file_entry(tfile[termcount],
-						 &entries[termcount].tterm);
-#else
-		    (void) fprintf(stderr, "terminfo files not supported\n");
-		    ExitProgram(EXIT_FAILURE);
-#endif
-		} else {
-		    if (itrace)
-			(void) fprintf(stderr,
-				       "infocmp: reading entry %s from database\n",
-				       tname[termcount]);
-
-		    status = _nc_read_entry(tname[termcount],
-					    tfile[termcount],
-					    &entries[termcount].tterm);
-		    directory = TERMINFO;	/* for error message */
-		}
-
-		if (status <= 0) {
+		(void) sprintf(tfile[termcount], "%s/%c/%s",
+			       directory,
+			       *argv[optind], argv[optind]);
+		if (itrace)
 		    (void) fprintf(stderr,
-				   "infocmp: couldn't open terminfo file %s.\n",
-				   tfile[termcount]);
-		    ExitProgram(EXIT_FAILURE);
-		}
-		repair_acsc(&entries[termcount].tterm);
-		termcount++;
+				   "%s: reading entry %s from file %s\n",
+				   _nc_progname,
+				   argv[optind], tfile[termcount]);
+
+		status = _nc_read_file_entry(tfile[termcount],
+					     &entries[termcount].tterm);
+#else
+		(void) fprintf(stderr, "%s: terminfo files not supported\n",
+			       _nc_progname);
+		ExitProgram(EXIT_FAILURE);
+#endif
+	    } else {
+		if (itrace)
+		    (void) fprintf(stderr,
+				   "%s: reading entry %s from database\n",
+				   _nc_progname,
+				   tname[termcount]);
+
+		status = _nc_read_entry(tname[termcount],
+					tfile[termcount],
+					&entries[termcount].tterm);
+		directory = TERMINFO;	/* for error message */
 	    }
+
+	    if (status <= 0) {
+		(void) fprintf(stderr,
+			       "%s: couldn't open terminfo file %s.\n",
+			       _nc_progname,
+			       tfile[termcount]);
+		ExitProgram(EXIT_FAILURE);
+	    }
+	    repair_acsc(&entries[termcount].tterm);
+	    termcount++;
 	}
 
 #if NCURSES_XNAMES
@@ -1541,7 +1561,8 @@ main(int argc, char *argv[])
 	    case C_DEFAULT:
 		if (itrace)
 		    (void) fprintf(stderr,
-				   "infocmp: about to dump %s\n",
+				   "%s: about to dump %s\n",
+				   _nc_progname,
 				   tname[0]);
 		(void) printf("#\tReconstructed via infocmp from file: %s\n",
 			      tfile[0]);
@@ -1552,12 +1573,12 @@ main(int argc, char *argv[])
 			   NULL);
 		len = show_entry();
 		if (itrace)
-		    (void) fprintf(stderr, "infocmp: length %d\n", len);
+		    (void) fprintf(stderr, "%s: length %d\n", _nc_progname, len);
 		break;
 
 	    case C_DIFFERENCE:
 		if (itrace)
-		    (void) fprintf(stderr, "infocmp: dumping differences\n");
+		    (void) fprintf(stderr, "%s: dumping differences\n", _nc_progname);
 		(void) printf("comparing %s to %s.\n", tname[0], tname[1]);
 		compare_entry(compare_predicate, &entries->tterm, quiet);
 		break;
@@ -1565,7 +1586,8 @@ main(int argc, char *argv[])
 	    case C_COMMON:
 		if (itrace)
 		    (void) fprintf(stderr,
-				   "infocmp: dumping common capabilities\n");
+				   "%s: dumping common capabilities\n",
+				   _nc_progname);
 		(void) printf("comparing %s to %s.\n", tname[0], tname[1]);
 		compare_entry(compare_predicate, &entries->tterm, quiet);
 		break;
@@ -1573,14 +1595,15 @@ main(int argc, char *argv[])
 	    case C_NAND:
 		if (itrace)
 		    (void) fprintf(stderr,
-				   "infocmp: dumping differences\n");
+				   "%s: dumping differences\n",
+				   _nc_progname);
 		(void) printf("comparing %s to %s.\n", tname[0], tname[1]);
 		compare_entry(compare_predicate, &entries->tterm, quiet);
 		break;
 
 	    case C_USEALL:
 		if (itrace)
-		    (void) fprintf(stderr, "infocmp: dumping use entry\n");
+		    (void) fprintf(stderr, "%s: dumping use entry\n", _nc_progname);
 		dump_entry(&entries[0].tterm,
 			   suppress_untranslatable,
 			   limited,
@@ -1591,7 +1614,7 @@ main(int argc, char *argv[])
 					  || outform == F_TCONVERR));
 		len = show_entry();
 		if (itrace)
-		    (void) fprintf(stderr, "infocmp: length %d\n", len);
+		    (void) fprintf(stderr, "%s: length %d\n", _nc_progname, len);
 		break;
 	    }
 	}
@@ -1605,7 +1628,10 @@ main(int argc, char *argv[])
     else
 	file_comparison(argc - optind, argv + optind);
 
+#if NO_LEAKS
     free(tfile);
+    free(tname);
+#endif
     ExitProgram(EXIT_SUCCESS);
 }
 

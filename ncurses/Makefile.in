@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.108 2007/07/14 15:00:07 tom Exp $
+# $Id: Makefile.in,v 1.110 2007/07/28 20:24:39 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -137,6 +137,7 @@ LINT_LIBS	= -lncurses @LIBS@
 
 FALLBACK_LIST	= @FALLBACK_LIST@
 
+USE_BIG_STRINGS	= @USE_BIG_STRINGS@
 TERMINFO_CAPS	= $(top_srcdir)/include/@TERMINFO_CAPS@
 
 AUTO_SRC = \
@@ -210,14 +211,15 @@ make_hash$(BUILD_EXEEXT) : \
 ./comp_captab.c: \
 		make_hash$(BUILD_EXEEXT) \
 		../include/hashsize.h \
+		$(tinfo)/MKcaptab.sh \
 		$(tinfo)/MKcaptab.awk
-	sh $(tinfo)/MKcaptab.awk $(AWK) $(srcdir)/../include/@TERMINFO_CAPS@ > $@
+	sh $(tinfo)/MKcaptab.sh $(AWK) $(USE_BIG_STRINGS) $(tinfo)/MKcaptab.awk $(srcdir)/../include/@TERMINFO_CAPS@ > $@
 
 ./lib_keyname.c: keys.list $(base)/MKkeyname.awk
-	$(AWK) -f $(base)/MKkeyname.awk keys.list > $@
+	$(AWK) -f $(base)/MKkeyname.awk bigstrings=$(USE_BIG_STRINGS) keys.list > $@
 
 names-stamp: $(tinfo)/MKnames.awk
-	$(AWK) -f $(tinfo)/MKnames.awk $(srcdir)/../include/@TERMINFO_CAPS@
+	$(AWK) -f $(tinfo)/MKnames.awk bigstrings=$(USE_BIG_STRINGS) $(srcdir)/../include/@TERMINFO_CAPS@
 	cat namehdr boolnames boolfnames numnames numfnames strnames strfnames nameftr >names.c
 	cat namehdr boolcodes numcodes strcodes codeftr >codes.c
 	-rm -f namehdr nameftr codeftr boolnames boolfnames boolcodes numnames numfnames numcodes strnames strfnames strcodes
@@ -230,7 +232,7 @@ names-stamp: $(tinfo)/MKnames.awk
 	@echo made $@
 
 ./unctrl.c: $(base)/MKunctrl.awk
-	echo | $(AWK) -f $(base)/MKunctrl.awk >$@
+	echo | $(AWK) -f $(base)/MKunctrl.awk bigstrings=$(USE_BIG_STRINGS) >$@
 
 tags:
 	ctags *.[ch] */*.[ch]

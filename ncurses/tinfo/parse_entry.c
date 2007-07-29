@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.63 2006/06/17 17:57:50 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.64 2007/07/28 22:21:22 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -300,7 +300,7 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 		    if (entryp->nuses != 0) {
 			BAD_TC_USAGE
 		    }
-		    for (ap = _nc_capalias_table; ap->from; ap++)
+		    for (ap = _nc_get_alias_table(TRUE); ap->from; ap++)
 			if (strcmp(ap->from, _nc_curr_token.tk_name) == 0) {
 			    if (ap->to == (char *) 0) {
 				_nc_warning("%s (%s termcap extension) ignored",
@@ -315,7 +315,7 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 			    break;
 			}
 		} else {	/* if (_nc_syntax == SYN_TERMINFO) */
-		    for (ap = _nc_infoalias_table; ap->from; ap++)
+		    for (ap = _nc_get_alias_table(FALSE); ap->from; ap++)
 			if (strcmp(ap->from, _nc_curr_token.tk_name) == 0) {
 			    if (ap->to == (char *) 0) {
 				_nc_warning("%s (%s terminfo extension) ignored",

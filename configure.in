@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.421 2007/07/14 15:45:08 tom Exp $
+dnl $Id: configure.in,v 1.422 2007/07/28 18:23:55 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.421 $)
+AC_REVISION($Revision: 1.422 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -487,6 +487,19 @@ int main() {
 	[with_big_core=no])])
 AC_MSG_RESULT($with_big_core)
 test "$with_big_core" = "yes" && AC_DEFINE(HAVE_BIG_CORE)
+
+### ISO C only guarantees 512-char strings, we have tables which load faster
+### when constructed using "big" strings.
+AC_MSG_CHECKING(if big-strings option selected)
+AC_ARG_ENABLE(big-strings,
+	[  --disable-big-strings   assume compiler has only standard-size strings],
+	[with_big_strings=no],
+	[with_big_strings=yes])
+AC_MSG_RESULT($with_big_strings)
+
+USE_BIG_STRINGS=0
+test "$with_big_strings" = "yes" && USE_BIG_STRINGS=1
+AC_SUBST(USE_BIG_STRINGS)
 
 ###	use option --enable-termcap to compile in the termcap fallback support
 AC_MSG_CHECKING(if you want termcap-fallback support)

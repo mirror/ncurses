@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_getstr.c,v 1.5 2007/07/21 22:22:55 tom Exp $
+ * $Id: test_getstr.c,v 1.6 2007/07/28 19:46:43 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -89,7 +89,7 @@ MovePrompt(WINDOW *txtwin, int limit, int y, int x)
 static int
 ShowFlavor(WINDOW *strwin, WINDOW *txtwin, Flavors flavor, int limit)
 {
-    char *name = "?";
+    const char *name = "?";
     bool limited = FALSE;
     bool wins = (txtwin != stdscr);
     int result;

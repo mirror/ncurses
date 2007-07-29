@@ -812,6 +812,7 @@
 ./ncurses/llib-lncursesw
 ./ncurses/modules
 ./ncurses/tinfo/MKcaptab.awk
+./ncurses/tinfo/MKcaptab.sh
 ./ncurses/tinfo/MKfallback.sh
 ./ncurses/tinfo/MKkeys_list.sh
 ./ncurses/tinfo/MKnames.awk
@@ -1002,8 +1003,6 @@
 ./test/test.priv.h
 ./test/test_get_wstr.c
 ./test/test_getstr.c
-./test/test_getstr.c
-./test/test_instr.c
 ./test/test_instr.c
 ./test/test_inwstr.c
 ./test/testaddch.c

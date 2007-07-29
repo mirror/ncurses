@@ -50,7 +50,7 @@
 #define DEBUG(level, params)	/*nothing */
 #endif
 
-MODULE_ID("$Id: comp_hash.c,v 1.28 2005/08/20 19:58:18 tom Exp $")
+MODULE_ID("$Id: comp_hash.c,v 1.29 2007/07/28 19:44:40 tom Exp $")
 
 static int hash_function(const char *);
 
@@ -71,21 +71,24 @@ static int hash_function(const char *);
 
 static void
 _nc_make_hash_table(struct name_table_entry *table,
-		    struct name_table_entry **hash_table)
+		    short *hash_table)
 {
     int i;
     int hashvalue;
     int collisions = 0;
 
+    for (i = 0; i < HASHTABSIZE; i++) {
+	hash_table[i] = -1;
+    }
     for (i = 0; i < CAPTABSIZE; i++) {
 	hashvalue = hash_function(table[i].nte_name);
 
-	if (hash_table[hashvalue] != (struct name_table_entry *) 0)
+	if (hash_table[hashvalue] >= 0)
 	    collisions++;
 
 	if (hash_table[hashvalue] != 0)
-	    table[i].nte_link = (short) (hash_table[hashvalue] - table);
-	hash_table[hashvalue] = &table[i];
+	    table[i].nte_link = hash_table[hashvalue];
+	hash_table[hashvalue] = i;
     }
 
     DEBUG(4, ("Hash table complete: %d collisions out of %d entries",
@@ -130,18 +133,21 @@ hash_function(const char *string)
 #ifndef MAIN_PROGRAM
 NCURSES_EXPORT(struct name_table_entry const *)
 _nc_find_entry(const char *string,
-	       const struct name_table_entry *const *hash_table)
+	       const short *hash_table)
 {
     int hashvalue;
-    struct name_table_entry const *ptr;
+    struct name_table_entry const *ptr = 0;
+    struct name_table_entry const *real_table;
 
     hashvalue = hash_function(string);
 
-    if ((ptr = hash_table[hashvalue]) != 0) {
+    if (hash_table[hashvalue] >= 0) {
+	real_table = _nc_get_table(hash_table != _nc_get_hash_table(FALSE));
+	ptr = real_table + hash_table[hashvalue];
 	while (strcmp(ptr->nte_name, string) != 0) {
 	    if (ptr->nte_link < 0)
 		return 0;
-	    ptr = ptr->nte_link + hash_table[HASHTABSIZE];
+	    ptr = real_table + (ptr->nte_link + hash_table[HASHTABSIZE]);
 	}
     }
 
@@ -231,8 +237,7 @@ main(int argc, char **argv)
 {
     struct name_table_entry *name_table = typeCalloc(struct
 						     name_table_entry, CAPTABSIZE);
-    struct name_table_entry **hash_table = typeCalloc(struct name_table_entry
-						      *, HASHTABSIZE);
+    short *hash_table = typeCalloc(short, HASHTABSIZE);
     const char *root_name = "";
     int column = 0;
     int n;
@@ -303,21 +308,14 @@ main(int argc, char **argv)
     }
     printf("};\n\n");
 
-    printf("const struct name_table_entry * const _nc_%s_hash_table[%d] =\n",
+    printf("const short _nc_%s_hash_table[%d] =\n",
 	   root_name,
 	   HASHTABSIZE + 1);
     printf("{\n");
     for (n = 0; n < HASHTABSIZE; n++) {
-	if (hash_table[n] != 0) {
-	    sprintf(buffer, "_nc_%s_table + %3ld",
-		    root_name,
-		    (long) (hash_table[n] - name_table));
-	} else {
-	    strcpy(buffer, "0");
-	}
-	printf("\t%s,\n", buffer);
+	printf("\t%3d,\n", hash_table[n]);
     }
-    printf("\t_nc_%s_table\t/* base-of-table */\n", root_name);
+    printf("\t0\t/* base-of-table */\n");
     printf("};\n\n");
 
     printf("#if (BOOLCOUNT!=%d)||(NUMCOUNT!=%d)||(STRCOUNT!=%d)\n",

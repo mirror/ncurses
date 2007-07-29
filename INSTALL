@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.118 2007/03/11 00:06:53 tom Exp $
+-- $Id: INSTALL,v 1.119 2007/07/28 19:56:35 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -303,6 +303,11 @@ SUMMARY OF CONFIGURE OPTIONS:
 	terminfo database without writing portions to disk.  Some allocators
 	return deceptive results, so you may have to override the configure
 	script.  Or you may be building tic for a smaller machine.
+
+    --disable-big-strings
+	Disable compile-time optimization of predefined tables which puts
+	all of their strings into a very long string, to reduce relocation
+	overhead.
 
     --disable-database
 	Use only built-in data.  The ncurses libraries normally read terminfo

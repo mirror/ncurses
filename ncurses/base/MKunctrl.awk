@@ -1,4 +1,4 @@
-# $Id: MKunctrl.awk,v 1.13 2007/01/06 22:52:02 tom Exp $
+# $Id: MKunctrl.awk,v 1.14 2007/07/28 21:13:21 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -44,7 +44,11 @@ END	{
 
 		blob=""
 		offset=0
-		printf "static const short unctrl_table[] = {"
+		if (bigstrings) {
+			printf "static const short unctrl_table[] = {"
+		} else {
+			printf "static const char* const unctrl_table[] = {"
+		}
 		for ( ch = 0; ch < 256; ch++ ) {
 			gap = ","
 			part=""
@@ -54,34 +58,43 @@ END	{
 					blob = blob "\""
 				blob = blob "\n    \""
 			}
-			printf "%4d%s", offset, gap;
+			if (bigstrings)
+				printf "%4d%s", offset, gap;
 			if (ch < 32) {
-				part = sprintf ("^\\%03o\\0", ch + 64);
+				part = sprintf ("^\\%03o", ch + 64);
 				offset = offset + 3;
 			} else if (ch == 127) {
-				part = "^?\\0";
+				part = "^?";
 				offset = offset + 3;
 			} else if (ch >= 128 && ch < 160) {
-				part = sprintf("~\\%03o\\0", ch - 64);
+				part = sprintf("~\\%03o", ch - 64);
 				offset = offset + 3;
 			} else {
 				gap = gap " "
-				part = sprintf("\\%03o\\0", ch);
+				part = sprintf("\\%03o", ch);
 				offset = offset + 2;
 			}
-			blob = blob part
 			if (ch == 255)
 				gap = "\n"
 			else if (((ch + 1) % 8) != 0)
 				gap = gap " "
+			if (bigstrings) {
+				blob = blob part "\\0";
+			} else {
+				printf "\"%s\"%s", part, gap
+			}
 		}
 		print "};"
 		blob = blob "\"";
 
 		print ""
 		print "#if NCURSES_EXT_FUNCS"
-		blob = blob "\n#if NCURSES_EXT_FUNCS"
-		printf "static const short unctrl_c1[] = {"
+		if (bigstrings) {
+			blob = blob "\n#if NCURSES_EXT_FUNCS"
+			printf "static const short unctrl_c1[] = {"
+		} else {
+			printf "static const char* const unctrl_c1[] = {"
+		}
 		for ( ch = 128; ch < 160; ch++ ) {
 			gap = ","
 			if ((ch % 8) == 0) {
@@ -90,20 +103,37 @@ END	{
 				printf "\n    "
 				blob = blob "\n    \""
 			}
-			printf "%4d%s", offset, gap;
-			part = sprintf("\\%03o\\0", ch);
-			blob = blob part
-			offset = offset + 2;
-			if (((ch + 1) % 8) != 0)
-				gap = gap " "
+			if (bigstrings) {
+				printf "%4d%s", offset, gap;
+				part = sprintf("\\%03o\\0", ch);
+				blob = blob part
+				offset = offset + 2;
+				if (((ch + 1) % 8) != 0)
+					gap = gap " "
+			} else {
+				if (ch >= 128 && ch < 160) {
+					printf "\"\\%03o\"", ch
+					gap = gap " "
+				}
+				if (ch == 255)
+					gap = "\n"
+				else if (((ch + 1) % 8) != 0)
+					gap = gap " "
+				printf "%s", gap
+			}
 		}
 		print "};"
 		print "#endif /* NCURSES_EXT_FUNCS */"
 		blob = blob "\"\n#endif /* NCURSES_EXT_FUNCS */\n"
 
 		print ""
-		print "static const char unctrl_blob[] = "blob";"
-		print ""
+		if (bigstrings) {
+			print "static const char unctrl_blob[] = "blob";"
+			print ""
+			stringname = "unctrl_blob + unctrl"
+		} else {
+			stringname = "unctrl"
+		}
 		print "\tint check = ChCharOf(ch);"
 		print "\tconst char *result;"
 		print ""
@@ -113,10 +143,10 @@ END	{
 		print "\t\t && (SP->_legacy_coding > 1)"
 		print "\t\t && (check >= 128)"
 		print "\t\t && (check < 160))"
-		print "\t\t\tresult = unctrl_blob + unctrl_c1[check - 128];"
+		printf "\t\t\tresult = %s_c1[check - 128];\n", stringname;
 		print "\t\telse"
 		print "#endif /* NCURSES_EXT_FUNCS */"
-		print "\t\t\tresult = unctrl_blob + unctrl_table[check];"
+		printf "\t\t\tresult = %s_table[check];\n", stringname;
 		print "\t} else {"
 		print "\t\tresult = 0;"
 		print "\t}"
