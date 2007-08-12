@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.335 2007/07/16 20:32:12 tom Exp $
+ * $Id: curses.priv.h,v 1.337 2007/08/12 13:14:12 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1262,6 +1262,21 @@ extern NCURSES_EXPORT(int) _nc_to_char(wint_t);
 extern NCURSES_EXPORT(wint_t) _nc_to_widechar(int);
 #endif
 
+/* comp_captab.c */
+typedef struct {
+	short	nte_name;	/* offset of name to hash on */
+	int	nte_type;	/* BOOLEAN, NUMBER or STRING */
+	short	nte_index;	/* index of associated variable in its array */
+	short	nte_link;	/* index in table of next hash, or -1 */
+} name_table_data;
+
+typedef struct
+{
+	short	from;
+	short	to;
+	short	source;
+} alias_table_data;
+
 /* doupdate.c */
 #if USE_XMC_SUPPORT
 extern NCURSES_EXPORT(void) _nc_do_xmc_glitch (attr_t);
@@ -1395,6 +1410,7 @@ extern NCURSES_EXPORT(void) _nc_trace_tries (TRIES *);
 #if NO_LEAKS
 extern NCURSES_EXPORT(void) _nc_alloc_entry_leaks(void);
 extern NCURSES_EXPORT(void) _nc_captoinfo_leaks(void);
+extern NCURSES_EXPORT(void) _nc_comp_captab_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_scan_leaks(void);
 extern NCURSES_EXPORT(void) _nc_keyname_leaks(void);
 extern NCURSES_EXPORT(void) _nc_tgetent_leaks(void);

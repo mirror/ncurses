@@ -62,7 +62,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: lib_twait.c,v 1.53 2007/05/12 19:02:31 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.54 2007/08/11 16:32:48 tom Exp $")
 
 #if HAVE_GETTIMEOFDAY
 # define PRECISE_GETTIME 1
@@ -152,7 +152,7 @@ _nc_timed_wait(int mode,
 {
     int fd;
     int count;
-    int result;
+    int result = 0;
     TimeType t0;
 
 #ifdef NCURSES_WGETCH_EVENTS

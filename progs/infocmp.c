@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.91 2007/07/28 23:00:19 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.93 2007/08/12 13:53:44 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1261,6 +1261,8 @@ main(int argc, char *argv[])
     char **tname = 0;
     int maxterms;
 
+    char **myargv;
+
     char *firstdir, *restdir;
     int c, i, len;
     bool formatted = FALSE;
@@ -1277,6 +1279,11 @@ main(int argc, char *argv[])
 #endif
 
     _nc_progname = _nc_rootname(argv[0]);
+
+    /* make sure we have enough space to add two terminal entries */
+    myargv = typeCalloc(char *, argc + 3);
+    memcpy(myargv, argv, sizeof(char *) * argc);
+    argv = myargv;
 
     while ((c = getopt(argc,
 		       argv,
@@ -1381,7 +1388,6 @@ main(int argc, char *argv[])
 
 	case 'r':
 	    tversion = 0;
-	    limited = FALSE;
 	    break;
 
 	case 's':
@@ -1629,6 +1635,7 @@ main(int argc, char *argv[])
 	file_comparison(argc - optind, argv + optind);
 
 #if NO_LEAKS
+    free(myargv);
     free(tfile);
     free(tname);
 #endif

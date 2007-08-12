@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.61 2007/07/28 22:20:07 tom Exp $
+ * $Id: tic.h,v 1.62 2007/08/11 16:12:43 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -203,9 +203,6 @@ struct alias
 	const char	*to;
 	const char	*source;
 };
-
-extern NCURSES_EXPORT_VAR(const short) _nc_info_hash_table[];
-extern NCURSES_EXPORT_VAR(const short) _nc_cap_hash_table[];
 
 extern NCURSES_EXPORT(const struct name_table_entry *) _nc_get_table (bool);
 extern NCURSES_EXPORT(const short *) _nc_get_hash_table (bool);

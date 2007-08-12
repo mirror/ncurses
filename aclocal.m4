@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.435 2007/07/14 13:40:10 tom Exp $
+dnl $Id: aclocal.m4,v 1.436 2007/08/11 18:12:19 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -747,7 +747,7 @@ fi
 test "$cf_cv_cpp_static_cast" = yes && AC_DEFINE(CPP_HAS_STATIC_CAST)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_C_INLINE version: 1 updated: 2007/04/28 15:03:44
+dnl CF_C_INLINE version: 2 updated: 2007/08/11 14:09:50
 dnl -----------
 dnl Check if the C compiler supports "inline".
 dnl $1 is the name of a shell variable to set if inline is supported
@@ -756,22 +756,25 @@ AC_DEFUN([CF_C_INLINE],[
 AC_C_INLINE
 $1=
 if test "$ac_cv_c_inline" != no ; then
-	$1=inline
-	if test "$GCC" = yes
-	then
-		AC_CACHE_CHECK(if gcc supports options to tune inlining,cf_cv_gcc_inline,[
-			cf_save_CFLAGS=$CFLAGS
-			CFLAGS="$CFLAGS --param max-inline-insns-single=$2"
-			AC_TRY_COMPILE([inline int foo(void) { return 1; }],
-			[${cf_cv_main_return:-return} foo()],
-			[cf_cv_gcc_inline=yes],
-			[cf_cv_gcc_inline=no])
-			CFLAGS=$cf_save_CFLAGS
-		])
-		if test "$cf_cv_gcc_inline" = yes ; then
-			CF_ADD_CFLAGS([--param max-inline-insns-single=$2])
-		fi
-	fi
+  $1=inline
+  if test "$INTEL_COMPILER" = yes
+  then
+    :
+  elif test "$GCC" = yes
+  then
+    AC_CACHE_CHECK(if gcc supports options to tune inlining,cf_cv_gcc_inline,[
+      cf_save_CFLAGS=$CFLAGS
+      CFLAGS="$CFLAGS --param max-inline-insns-single=$2"
+      AC_TRY_COMPILE([inline int foo(void) { return 1; }],
+      [${cf_cv_main_return:-return} foo()],
+      [cf_cv_gcc_inline=yes],
+      [cf_cv_gcc_inline=no])
+      CFLAGS=$cf_save_CFLAGS
+    ])
+    if test "$cf_cv_gcc_inline" = yes ; then
+        CF_ADD_CFLAGS([--param max-inline-insns-single=$2])
+    fi
+  fi
 fi
 AC_SUBST($1)
 ])dnl
@@ -1065,7 +1068,7 @@ esac
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_ATTRIBUTES version: 10 updated: 2005/05/28 13:16:28
+dnl CF_GCC_ATTRIBUTES version: 11 updated: 2007/07/29 09:55:12
 dnl -----------------
 dnl Test for availability of useful gcc __attribute__ directives to quiet
 dnl compiler warnings.  Though useful, not all are supported -- and contrary
@@ -1092,7 +1095,7 @@ if test "$GCC" = yes
 then
 	AC_CHECKING([for $CC __attribute__ directives])
 cat > conftest.$ac_ext <<EOF
-#line __oline__ "configure"
+#line __oline__ "${as_me-configure}"
 #include "confdefs.h"
 #include "conftest.h"
 #include "conftest.i"
@@ -1154,7 +1157,7 @@ if test "$GCC" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 21 updated: 2007/06/27 18:12:15
+dnl CF_GCC_WARNINGS version: 22 updated: 2007/07/29 09:55:12
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -1179,7 +1182,7 @@ AC_REQUIRE([CF_GCC_VERSION])
 CF_INTEL_COMPILER(GCC,INTEL_COMPILER,CFLAGS)
 
 cat > conftest.$ac_ext <<EOF
-#line __oline__ "configure"
+#line __oline__ "${as_me-configure}"
 int main(int argc, char *argv[[]]) { return (argv[[argc-1]] == 0) ; }
 EOF
 
@@ -3231,12 +3234,12 @@ if test "$cf_cv_func_mkstemp" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MSG_LOG version: 3 updated: 1997/09/07 14:05:52
+dnl CF_MSG_LOG version: 4 updated: 2007/07/29 09:55:12
 dnl ----------
 dnl Write a debug message to config.log, along with the line number in the
 dnl configure script.
 AC_DEFUN([CF_MSG_LOG],[
-echo "(line __oline__) testing $* ..." 1>&AC_FD_CC
+echo "${as_me-configure}:__oline__: testing $* ..." 1>&AC_FD_CC
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_NCURSES_ABI_6 version: 1 updated: 2005/09/17 18:42:49
@@ -4603,11 +4606,12 @@ AC_DEFUN([CF_UPPER],
 $1=`echo "$2" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_VERBOSE version: 2 updated: 1997/09/05 10:45:14
+dnl CF_VERBOSE version: 3 updated: 2007/07/29 09:55:12
 dnl ----------
 dnl Use AC_VERBOSE w/o the warnings
 AC_DEFUN([CF_VERBOSE],
 [test -n "$verbose" && echo "	$1" 1>&AC_FD_MSG
+CF_MSG_LOG([$1])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_WCHAR_TYPE version: 2 updated: 2004/01/17 19:18:20

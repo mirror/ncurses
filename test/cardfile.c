@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.31 2007/07/21 17:41:55 tom Exp $
+ * $Id: cardfile.c,v 1.32 2007/08/11 16:34:27 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -71,7 +71,7 @@ static char default_name[] = "cardfile.dat";
 #if !HAVE_STRDUP
 #define strdup my_strdup
 static char *
-strdup(char *s)
+strdup(const char *s)
 {
     char *p = (char *) malloc(strlen(s) + 1);
     if (p)

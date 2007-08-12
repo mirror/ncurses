@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_get_wstr.c,v 1.4 2007/07/28 19:46:34 tom Exp $
+ * $Id: test_get_wstr.c,v 1.5 2007/08/11 17:01:43 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -89,7 +89,7 @@ MovePrompt(WINDOW *txtwin, int limit, int y, int x)
 }
 
 static int
-ShowFlavor(WINDOW *strwin, WINDOW *txtwin, Flavors flavor, int limit)
+ShowFlavor(WINDOW *strwin, WINDOW *txtwin, int flavor, int limit)
 {
     const char *name = "?";
     bool limited = FALSE;

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.27 2007/07/21 17:41:55 tom Exp $
+ * $Id: demo_panels.c,v 1.28 2007/08/11 16:34:49 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -234,7 +234,7 @@ my_remove_panel(PANEL ** pans, int which)
     if (pans[which] != 0) {
 	PANEL *pan = pans[which];
 	WINDOW *win = panel_window(pan);
-	char *user = panel_userptr(pan);
+	char *user = (char *) panel_userptr(pan);
 
 	free(user);
 	del_panel(pan);

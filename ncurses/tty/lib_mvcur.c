@@ -155,7 +155,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.109 2007/05/05 21:47:03 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.110 2007/08/11 16:15:57 tom Exp $")
 
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
@@ -1089,7 +1089,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    load_term();
 	} else if (sscanf(buf, "d %s", capname) == 1) {
 	    struct name_table_entry const *np = _nc_find_entry(capname,
-							       _nc_info_hash_table);
+							       _nc_get_hash_table(FALSE));
 
 	    if (np == NULL)
 		(void) printf("No such capability as \"%s\"\n", capname);
