@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.110 2007/07/28 20:24:39 tom Exp $
+# $Id: Makefile.in,v 1.111 2007/08/18 19:29:31 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -151,8 +151,7 @@ AUTO_SRC = \
 	./names.c \
 	./unctrl.c \
 	init_keytry.h \
-	keys.list \
-	names-stamp
+	keys.list
 
 TEST_DEPS	= ../lib/@LIB_PREFIX@ncurses@DFT_DEP_SUFFIX@
 TEST_ARGS	= @LDFLAGS_STATIC@ @TEST_ARGS@ @LDFLAGS_SHARED@ 
@@ -197,7 +196,8 @@ keys.list :	$(tinfo)/MKkeys_list.sh
 
 make_keys$(BUILD_EXEEXT) : \
 		$(tinfo)/make_keys.c \
-		names-stamp
+		codes.c \
+		names.c
 	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) $(tinfo)/make_keys.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 
 make_hash$(BUILD_EXEEXT) : \
@@ -218,18 +218,11 @@ make_hash$(BUILD_EXEEXT) : \
 ./lib_keyname.c: keys.list $(base)/MKkeyname.awk
 	$(AWK) -f $(base)/MKkeyname.awk bigstrings=$(USE_BIG_STRINGS) keys.list > $@
 
-names-stamp: $(tinfo)/MKnames.awk
-	$(AWK) -f $(tinfo)/MKnames.awk bigstrings=$(USE_BIG_STRINGS) $(srcdir)/../include/@TERMINFO_CAPS@
-	cat namehdr boolnames boolfnames numnames numfnames strnames strfnames nameftr >names.c
-	cat namehdr boolcodes numcodes strcodes codeftr >codes.c
-	-rm -f namehdr nameftr codeftr boolnames boolfnames boolcodes numnames numfnames numcodes strnames strfnames strcodes
-	@echo >$@
+./codes.c: $(tinfo)/MKcodes.awk
+	$(AWK) -f $(tinfo)/MKcodes.awk bigstrings=$(USE_BIG_STRINGS) $(srcdir)/../include/@TERMINFO_CAPS@ >$@
 
-./names.c: names-stamp
-	@echo made $@
-
-./codes.c: names-stamp
-	@echo made $@
+./names.c: $(tinfo)/MKnames.awk
+	$(AWK) -f $(tinfo)/MKnames.awk bigstrings=$(USE_BIG_STRINGS) $(srcdir)/../include/@TERMINFO_CAPS@ >$@
 
 ./unctrl.c: $(base)/MKunctrl.awk
 	echo | $(AWK) -f $(base)/MKunctrl.awk bigstrings=$(USE_BIG_STRINGS) >$@

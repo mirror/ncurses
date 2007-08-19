@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1151 2007/08/12 13:56:58 tom Exp $
+-- $Id: NEWS,v 1.1155 2007/08/18 22:31:19 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070818
+	+ add 9term terminal description (request by Juhapekka Tolvanen) -TD
+	+ modify comp_hash.c's string output to avoid misinterpreting a null
+	  "\0" followed by a digit.
+	+ modify MKnames.awk and MKcodes.awk to support big-strings.
+	  This only applies to the cases (broken linker, reentrant) where
+	  the corresponding arrays are accessed via wrapper functions.
+	+ split MKnames.awk into two scripts, eliminating the shell redirection
+	  which complicated the make process and also the bogus timestamp file
+	  which was introduced to fix "make -j".
+	+ add test/test_opaque.c, test/test_arrays.c
+	+ add wgetscrreg() and wgetparent() for applications that may need it
+	  when NCURSES_OPAQUE is defined (prompted by Bryan Christ).
 
 20070812
 	+ amend treatment of infocmp "-r" option to retain the 1023-byte limit

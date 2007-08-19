@@ -813,6 +813,7 @@
 ./ncurses/modules
 ./ncurses/tinfo/MKcaptab.awk
 ./ncurses/tinfo/MKcaptab.sh
+./ncurses/tinfo/MKcodes.awk
 ./ncurses/tinfo/MKfallback.sh
 ./ncurses/tinfo/MKkeys_list.sh
 ./ncurses/tinfo/MKnames.awk
@@ -1001,10 +1002,12 @@
 ./test/savescreen.sh
 ./test/tclock.c
 ./test/test.priv.h
+./test/test_arrays.c
 ./test/test_get_wstr.c
 ./test/test_getstr.c
 ./test/test_instr.c
 ./test/test_inwstr.c
+./test/test_opaque.c
 ./test/testaddch.c
 ./test/testcurs.c
 ./test/testscanw.c

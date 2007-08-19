@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_opaque.3x,v 1.3 2007/05/12 17:04:47 tom Exp $
+.\" $Id: curs_opaque.3x,v 1.5 2007/08/18 18:14:52 tom Exp $
 .TH curs_opaque 3X ""
 .na
 .hy 0
@@ -40,31 +40,35 @@
 \fBis_nodelay\fR,
 \fBis_timeout\fR,
 \fBis_scrollok\fR,
-\fBis_syncok\fR - \fBcurses\fR output options
+\fBis_syncok\fR - \fBcurses\fR window properties
 .ad
 .hy
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBbool is_cleared(WINDOW *win);\fR
+\fBbool is_cleared(const WINDOW *win);\fR
 .br
-\fBbool is_idcok(WINDOW *win);\fR
+\fBbool is_idcok(const WINDOW *win);\fR
 .br
-\fBbool is_idlok(WINDOW *win);\fR
+\fBbool is_idlok(const WINDOW *win);\fR
 .br
-\fBbool is_immedok(WINDOW *win);\fR
+\fBbool is_immedok(const WINDOW *win);\fR
 .br
-\fBbool is_keypad(WINDOW *win);\fR
+\fBbool is_keypad(const WINDOW *win);\fR
 .br
-\fBbool is_leaveok(WINDOW *win);\fR
+\fBbool is_leaveok(const WINDOW *win);\fR
 .br
-\fBbool is_nodelay(WINDOW *win);\fR
+\fBbool is_nodelay(const WINDOW *win);\fR
 .br
-\fBbool is_notimeout(WINDOW *win);\fR
+\fBbool is_notimeout(const WINDOW *win);\fR
 .br
-\fBbool is_scrollok(WINDOW *win);\fR
+\fBbool is_scrollok(const WINDOW *win);\fR
 .br
-\fBbool is_syncok(WINDOW *win);\fR
+\fBbool is_syncok(const WINDOW *win);\fR
+.br
+\fBWINDOW * wgetparent (const WINDOW *win);\fR
+.br
+\fBint wgetscrreg (const WINDOW *win, int *top, int *bottom);\fR
 .br
 .SH DESCRIPTION
 This implementation provides functions which return properties
@@ -100,8 +104,15 @@ returns the value set in \fBscrollok\fR
 .TP 5
 \fBis_syncok\fR
 returns the value set in \fBsyncok\fR
+.TP 5
+\fBwgetparent\fR
+returns the parent WINDOW pointer for subwindows,
+or NULL for windows having no parent.
+.TP 5
+\fBwgetscrreg\fR
+returns the top and bottom rows for the scrolling margin as set in \fBwsetscrreg\fP.
 .SH RETURN VALUE
-These functions all return TRUE or FALSE.
+These functions all return TRUE or FALSE, except as noted.
 .SH NOTES
 Both a macro and a function are provided for each name.
 .SH PORTABILITY

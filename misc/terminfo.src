@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.308 $
-#	$Date: 2007/07/14 19:17:05 $
+#	$Revision: 1.310 $
+#	$Date: 2007/08/18 22:27:38 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -316,6 +316,16 @@ glasstty|classic glass tty interpreting ASCII control characters,
 vanilla|dumb tty,
 	OTbs,
 	bel=^G, cr=^M, cud1=^J, ind=^J,
+
+# This is almost the same as "dumb", but with no prespecified width.
+# DEL and ^C are hardcoded to act as kill characters.
+# ^D acts as a line break (just like newline).
+# It also interprets
+#      \033];xxx\007 
+# for compatibility with xterm -TD
+9term|Plan9 terminal emulator for X,
+	am,
+	OTnl=^J, bel=^G, cud1=^J,
 
 #### ANSI.SYS/ISO 6429/ECMA-48 Capabilities
 #
@@ -21510,6 +21520,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2007-07-14
 #	* restore section of pre-ncurses-4.2 changelog to fix attribution -TD
 #	* add konsole-256color entry -TD
+#
+# 2007-08-18
+#	* add 9term entry (request by Juhapekka Tolvanen) -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

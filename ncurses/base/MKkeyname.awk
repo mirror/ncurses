@@ -1,4 +1,4 @@
-# $Id: MKkeyname.awk,v 1.37 2007/07/28 21:47:21 tom Exp $
+# $Id: MKkeyname.awk,v 1.38 2007/08/18 18:41:18 tom Exp $
 ##############################################################################
 # Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -39,7 +39,7 @@ BEGIN {
 /^[^#]/ {
 		if (bigstrings) {
 			if (first)  {
-				print "struct kn { int offset; int code; };"
+				print "struct kn { short offset; int code; };"
 				print "static const struct kn _nc_key_names[] = {"
 			}
 			printf "\t{ %d, %s },\n", offset, $1

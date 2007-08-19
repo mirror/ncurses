@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.28 2007/03/10 17:15:33 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.29 2007/08/18 13:17:14 tom Exp $)
 #
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
@@ -406,7 +406,11 @@ sed -n -f $ED1 \
 | sed -e 's/NCURSES_EXPORT(\(.*\)) \(.*\) (\(.*\))/\1 \2(\3)/' \
 | sed -f $ED2 \
 | $AWK -f $AW1 using=$USE \
-| sed -e 's/^\([a-z_][a-z_]*[ *]*\)/\1 gen_/' -e 's/  / /g' >>$TMP
+| sed \
+	-e 's/ [ ]*$//g' \
+	-e 's/^\([a-zA-Z_][a-zA-Z_]*[ *]*\)/\1 gen_/' \
+	-e 's/gen_$//' \
+	-e 's/  / /g' >>$TMP
 
 $preprocessor $TMP 2>/dev/null \
 | sed \

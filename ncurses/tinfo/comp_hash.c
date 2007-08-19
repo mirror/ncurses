@@ -50,7 +50,7 @@
 #define DEBUG(level, params)	/*nothing */
 #endif
 
-MODULE_ID("$Id: comp_hash.c,v 1.32 2007/08/12 00:40:27 tom Exp $")
+MODULE_ID("$Id: comp_hash.c,v 1.33 2007/08/18 21:42:25 tom Exp $")
 
 static int hash_function(const char *);
 
@@ -299,17 +299,17 @@ main(int argc, char **argv)
 	int len = 0;
 	int nxt;
 
-	printf("static const char %s_names_text[] = \"\\\n", root_name);
+	printf("static const char %s_names_text[] = \\\n", root_name);
 	for (n = 0; n < CAPTABSIZE; n++) {
-	    nxt = strlen(name_table[n].nte_name) + 2;
+	    nxt = strlen(name_table[n].nte_name) + 5;
 	    if (nxt + len > 72) {
 		printf("\\\n");
 		len = 0;
 	    }
-	    printf("%s\\0", name_table[n].nte_name);
+	    printf("\"%s\\0\" ", name_table[n].nte_name);
 	    len += nxt;
 	}
-	printf("\";\n\n");
+	printf(";\n\n");
 
 	len = 0;
 	printf("static name_table_data const %s_names_data[] =\n",
