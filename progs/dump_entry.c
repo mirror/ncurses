@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.80 2007/04/07 17:13:36 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.81 2007/08/25 20:05:35 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -1226,7 +1226,7 @@ repair_acsc(TERMTYPE *tp)
 	bool fix_needed = FALSE;
 
 	for (n = 0, source = 0; acs_chars[n] != 0; n++) {
-	    target = acs_chars[n];
+	    target = UChar(acs_chars[n]);
 	    if (source >= target) {
 		fix_needed = TRUE;
 		break;
@@ -1238,7 +1238,7 @@ repair_acsc(TERMTYPE *tp)
 	if (fix_needed) {
 	    memset(mapped, 0, sizeof(mapped));
 	    for (n = 0; acs_chars[n] != 0; n++) {
-		source = acs_chars[n];
+		source = UChar(acs_chars[n]);
 		if ((target = (unsigned char) acs_chars[n + 1]) != 0) {
 		    mapped[source] = target;
 		    n++;
