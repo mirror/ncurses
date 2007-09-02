@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1157 2007/08/25 20:12:52 tom Exp $
+-- $Id: NEWS,v 1.1162 2007/09/02 00:01:06 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20070901
+	+ remove a spurious newline from output of html.m4, which caused links
+	  for Ada95 html to be incorrect for the files generated using m4.
+	+ start investigating mutex's for SCREEN manipulation (incomplete).
+	+ minor cleanup of codes.c/names.c for --enable-const
+	+ expand/revise "Routine and Argument Names" section of ncurses manpage
+	  to address report by David Givens in newsgroup discussion.
+	+ fix interaction between --without-progs/--with-termcap configure
+	  options (report by Michail Vidiassov).
+	+ fix typo in "--disable-relink" option (report by Michail Vidiassov).
 
 20070825
 	+ fix a sign-extension bug in infocmp's repair_acsc() function

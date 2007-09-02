@@ -3,7 +3,6 @@
 <BODY>
 <HR><DIV ALIGN="center"><H1> File : terminal_interface-curses-forms-form_user_data.ads </H1></DIV><HR>
 <PRE>
-
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>--                           <A HREF="http://www.gnat.com">GNAT</A> ncurses Binding                           --</EM></FONT>
@@ -46,31 +45,31 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
 <b>generic</b>
-   <b>type</b> <FONT COLOR=red><A NAME="ref_44_9" HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_45_41">User</A></FONT> <b>is</b> <b>limited</b> <b>private</b>;
-   <b>type</b> <A HREF="terminal_interface__ads.htm#ref_42_9">User_Access</A> <b>is</b> <b>access</b> User<A HREF="terminal_interface-curses-forms__ads.htm#ref_49_35">;</A>
-<b>package</b> Terminal_Interface.Curses.Forms.Form_User_Data <b>is</b>
-   <b>pragma</b> Preelaborate (Terminal_Interface.Curses.Forms.Form_User_Data);
+   <b>type</b> <FONT COLOR=red><A NAME="ref_43_9" HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_45_41">User</A></FONT> <b>is</b> <b>limited</b> <b>private</b>;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_44_9" HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_45_41">User_Access</A></FONT> <b>is</b> <b>access</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_43_9">User</A>;
+<b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#ref_49_35">Forms</A>.<FONT COLOR=red><A NAME="ref_45_41" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_48_46">Form_User_Data</A></FONT> <b>is</b>
+   <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#ref_49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_45_41">Form_User_Data</A>);
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
    <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_userptr.3x.html">form_userptr.3x</A></EM></FONT>
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_1"#2|</EM></FONT>
-   <b>procedure</b> Set_User_Data (<FONT COLOR=red><A NAME="ref_54_29" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_56_29">Frm</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_44_9">Form</A>;
-                            Data : <b>in</b> User_Access);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_53_14" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_55_14">Set_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_53_29" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_55_29">Frm</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_57_9">Form</A>;
+                            <FONT COLOR=red><A NAME="ref_54_29" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_56_29">Data</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_44_9">User_Access</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_userptr.3x.html">set_form_userptr</A></EM></FONT>
-   <b>pragma</b> Inline (Set_User_Data);
+   <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_53_14">Set_User_Data</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_2"#2|</EM></FONT>
-   <b>procedure</b> Get_User_Data (<FONT COLOR=red><A NAME="ref_60_29" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_80_29">Frm</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_44_9">Form</A>;
-                            Data : <b>out</b> User_Access);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_59_14" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_79_14">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_59_29" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_79_29">Frm</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-forms__ads.htm#ref_57_9">Form</A>;
+                            <FONT COLOR=red><A NAME="ref_60_29" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_80_29">Data</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_44_9">User_Access</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_userptr.3x.html">form_userptr</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_3"#2|</EM></FONT>
-   <b>function</b> Get_User_Data (Frm  : <b>in</b>  Form) <b>return</b> User_Access;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_64_13" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_71_13">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_64_28" HREF="terminal_interface-curses-forms-form_user_data__adb.htm#ref_71_28">Frm</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-forms__ads.htm#ref_57_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_44_9">User_Access</A>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_userptr.3x.html">form_userptr</A></EM></FONT>
    <FONT COLOR=green><EM>--  Same as function</EM></FONT>
    <b>pragma</b> Inline (Get_User_Data);
 
-<b>end</b> Terminal_Interface.Curses.Forms.Form_User_Data;
+<b>end</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#ref_49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-form_user_data__ads.htm#ref_45_41">Form_User_Data</A>;
 </PRE></BODY></HTML>

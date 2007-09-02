@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.337 2007/08/12 13:14:12 tom Exp $
+ * $Id: curses.priv.h,v 1.338 2007/09/01 21:35:50 tom Exp $
  *
  *	curses.priv.h
  *
@@ -300,6 +300,19 @@ color_t;
 #define SET_COLS(value)  COLS = value
 #endif
 
+#ifdef USE_PTHREADS
+#if USE_REENTRANT
+#include <pthread.h>
+#define _nc_lock_mutex(name)	pthread_mutex_lock(&_nc_globals.mutex_##name)
+#define _nc_unlock_mutex(name)	pthread_mutex_unlock(&_nc_globals.mutex_##name)
+#else
+#error POSIX threads requires --enable-reentrant option
+#endif
+#else
+#define _nc_lock_mutex(name)	/* nothing */
+#define _nc_unlock_mutex(name)	/* nothing */
+#endif
+
 /*
  * Definitions for color pairs
  */
@@ -536,6 +549,10 @@ typedef struct {
 #endif	/* USE_TERMLIB */
 
 #endif	/* TRACE */
+
+#ifdef USE_PTHREADS
+       pthread_mutex_t	mutex_set_SP;
+#endif
 } NCURSES_GLOBALS;
 
 extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;

@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKnames.awk,v 1.16 2007/08/18 21:37:52 tom Exp $
+# $Id: MKnames.awk,v 1.17 2007/09/01 20:49:32 tom Exp $
 function large_item(value) {
 	result = sprintf("%d,", offset);
 	offset = offset + length(value) + 1;
@@ -62,7 +62,7 @@ function print_offsets(name,value) {
 	printf "%s",  value
 	print  "};"
 	print  ""
-	printf "static char ** ptr_%s = 0;\n", name
+	printf "static NCURSES_CONST char ** ptr_%s = 0;\n", name
 	print  ""
 }
 
@@ -120,10 +120,10 @@ END	{
 			print_offsets("strnames", large_strnames);
 			print  ""
 			print  "static IT *"
-			print  "alloc_array(char ***value, const short *offsets, unsigned size)"
+			print  "alloc_array(NCURSES_CONST char ***value, const short *offsets, unsigned size)"
 			print  "{"
 			print  "	if (*value == 0) {"
-			print  "		if ((*value = typeCalloc(char *, size + 1)) != 0) {"
+			print  "		if ((*value = typeCalloc(NCURSES_CONST char *, size + 1)) != 0) {"
 			print  "			unsigned n;"
 			print  "			for (n = 0; n < size; ++n) {"
 			print  "				(*value)[n] = _nc_name_blob + offsets[n];"

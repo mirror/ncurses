@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.99 2007/07/16 20:32:27 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.100 2007/09/01 20:58:26 tom Exp $")
 
 /****************************************************************************
  *
@@ -103,7 +103,8 @@ MODULE_ID("$Id: lib_setup.c,v 1.99 2007/07/16 20:32:27 tom Exp $")
 NCURSES_EXPORT(char *)
 NCURSES_PUBLIC_VAR(ttytype) (void)
 {
-    return cur_term ? cur_term->type.term_names : "";
+    static char empty[] = "";
+    return cur_term ? cur_term->type.term_names : empty;
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(LINES) (void)

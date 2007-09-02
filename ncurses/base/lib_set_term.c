@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.98 2007/05/12 19:37:04 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.99 2007/09/01 21:36:25 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -52,6 +52,8 @@ set_term(SCREEN *screenp)
     SCREEN *oldSP;
 
     T((T_CALLED("set_term(%p)"), screenp));
+
+    _nc_lock_mutex(set_SP);
 
     oldSP = SP;
     _nc_set_screen(screenp);
@@ -64,6 +66,8 @@ set_term(SCREEN *screenp)
     COLORS = SP->_color_count;
     COLOR_PAIRS = SP->_pair_count;
 #endif
+
+    _nc_unlock_mutex(set_SP);
 
     T((T_RETURN("%p"), oldSP));
     return (oldSP);
@@ -90,6 +94,7 @@ delscreen(SCREEN *sp)
 
     T((T_CALLED("delscreen(%p)"), sp));
 
+    _nc_lock_mutex(set_SP);
     while (*scan) {
 	if (*scan == sp) {
 	    *scan = sp->_next_screen;
@@ -163,6 +168,8 @@ delscreen(SCREEN *sp)
 #endif
 	_nc_set_screen(0);
     }
+    _nc_unlock_mutex(set_SP);
+
     returnVoid;
 }
 

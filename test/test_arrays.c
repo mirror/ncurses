@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_arrays.c,v 1.1 2007/08/18 18:02:35 tom Exp $
+ * $Id: test_arrays.c,v 1.2 2007/09/01 20:11:57 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -44,6 +44,7 @@ extern NCURSES_EXPORT_VAR(NCURSES_CONST char * const ) strfnames[];
 
  */
 
+#define USE_TINFO
 #include <test.priv.h>
 
 #define DUMP(name) dump_array(#name, name)

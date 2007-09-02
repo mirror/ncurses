@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: ditto.c,v 1.5 2005/04/16 16:35:49 tom Exp $
+ * $Id: ditto.c,v 1.8 2007/09/01 21:10:38 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.  Invoke the program by specifying another terminal on the same
@@ -72,11 +72,24 @@ open_tty(char *path)
 	errno = ENOTTY;
 	failed(path);
     }
-    fp = fopen(path, "a+");
+    fp = fopen(path, "r+");
     if (fp == 0)
 	failed(path);
     printf("opened %s\n", path);
     return fp;
+}
+
+static void
+show_ditto(DITTO * data, int count, int which, int ch)
+{
+    int n;
+
+    for (n = 0; n < count; n++) {
+	set_term(data[n].screen);
+	addch(UChar(ch));
+	refresh();
+    }
+    set_term(data[which].screen);
 }
 
 int
@@ -84,7 +97,7 @@ main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
 {
     int j;
-    int active_tty = 0;
+    int count;
     DITTO *data;
 
     if (argc <= 1)
@@ -105,7 +118,6 @@ main(int argc GCC_UNUSED,
      * Set up the screens.
      */
     for (j = 0; j < argc; j++) {
-	active_tty++;
 	data[j].screen = newterm((char *) 0,	/* assume $TERM is the same */
 				 data[j].output,
 				 data[j].input);
@@ -114,25 +126,27 @@ main(int argc GCC_UNUSED,
 	cbreak();
 	noecho();
 	scrollok(stdscr, TRUE);
+	nodelay(stdscr, TRUE);
     }
 
     /*
      * Loop, reading characters from any of the inputs and writing to all
      * of the screens.
      */
-    for (;;) {
+    for (count = 0;; ++count) {
 	int ch;
-	set_term(data[0].screen);
+	int which = (count % argc);
+
+	set_term(data[which].screen);
+	napms(20);
 	ch = getch();
-	if (ch == ERR)
+	if (ch == ERR) {
+	    /* echochar('.'); */
 	    continue;
-	if (ch == 4)
-	    break;
-	for (j = 0; j < argc; j++) {
-	    set_term(data[j].screen);
-	    addch(UChar(ch));
-	    refresh();
 	}
+	if (ch == CTRL('D'))
+	    break;
+	show_ditto(data, argc, which, ch);
     }
 
     /*
