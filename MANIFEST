@@ -803,6 +803,7 @@
 ./ncurses/base/safe_sprintf.c
 ./ncurses/base/sigaction.c
 ./ncurses/base/tries.c
+./ncurses/base/use_window.c
 ./ncurses/base/version.c
 ./ncurses/base/vsscanf.c
 ./ncurses/base/wresize.c
@@ -863,6 +864,7 @@
 ./ncurses/tinfo/setbuf.c
 ./ncurses/tinfo/strings.c
 ./ncurses/tinfo/trim_sgr0.c
+./ncurses/tinfo/use_screen.c
 ./ncurses/tinfo/write_entry.c
 ./ncurses/trace/README
 ./ncurses/trace/lib_trace.c

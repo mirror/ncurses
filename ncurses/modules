@@ -1,4 +1,4 @@
-# $Id: modules,v 1.110 2007/06/12 20:21:42 tom Exp $
+# $Id: modules,v 1.112 2007/09/08 22:03:34 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -152,6 +152,8 @@ lib_dft_fgbg	lib		$(base)		../include/term.h
 lib_print	lib		$(tinfo)	../include/term.h
 resizeterm	lib		$(base)		../include/term.h
 trace_xnames	lib		$(trace)	../include/term.h $(INCDIR)/term_entry.h
+use_screen	lib		$(tinfo)
+use_window	lib		$(base)
 wresize		lib		$(base)		../include/term.h
 
 # Support for termcap (and tic, etc.), which can be a separate library

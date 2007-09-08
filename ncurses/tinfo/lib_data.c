@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.28 2007/09/01 21:35:54 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.30 2007/09/08 21:59:56 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -177,7 +177,9 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
 
 #endif /* TRACE */
 #ifdef USE_PTHREADS
-    PTHREAD_MUTEX_INITIALIZER	/* mutex_set_SP */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_set_SP */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_use_screen */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_windowlist */
 #endif
 };
 

@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.177 2007/08/18 18:35:01 tom Exp $ */
+/* $Id: curses.h.in,v 1.178 2007/09/08 21:24:55 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -826,6 +826,7 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
  * These functions are extensions - not in X/Open Curses.
  */
 #if @NCURSES_EXT_FUNCS@
+typedef int (*NCURSES_CALLBACK)(WINDOW *, void *);
 extern NCURSES_EXPORT(bool) is_term_resized (int, int);
 extern NCURSES_EXPORT(char *) keybound (int, int);
 extern NCURSES_EXPORT(const char *) curses_version (void);
@@ -838,6 +839,8 @@ extern NCURSES_EXPORT(int) resizeterm (int, int);
 extern NCURSES_EXPORT(int) use_default_colors (void);
 extern NCURSES_EXPORT(int) use_extended_names (bool);
 extern NCURSES_EXPORT(int) use_legacy_coding (int);
+extern NCURSES_EXPORT(int) use_screen (SCREEN *, NCURSES_CALLBACK, void *);
+extern NCURSES_EXPORT(int) use_window (WINDOW *, NCURSES_CALLBACK, void *);
 extern NCURSES_EXPORT(int) wresize (WINDOW *, int, int);
 extern NCURSES_EXPORT(void) nofilter(void);
 

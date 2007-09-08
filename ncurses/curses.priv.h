@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.338 2007/09/01 21:35:50 tom Exp $
+ * $Id: curses.priv.h,v 1.340 2007/09/08 21:44:40 tom Exp $
  *
  *	curses.priv.h
  *
@@ -303,15 +303,21 @@ color_t;
 #ifdef USE_PTHREADS
 #if USE_REENTRANT
 #include <pthread.h>
-#define _nc_lock_mutex(name)	pthread_mutex_lock(&_nc_globals.mutex_##name)
-#define _nc_unlock_mutex(name)	pthread_mutex_unlock(&_nc_globals.mutex_##name)
+#define _nc_lock_global(name)	pthread_mutex_lock(&_nc_globals.mutex_##name)
+#define _nc_unlock_global(name)	pthread_mutex_unlock(&_nc_globals.mutex_##name)
 #else
 #error POSIX threads requires --enable-reentrant option
 #endif
 #else
-#define _nc_lock_mutex(name)	/* nothing */
-#define _nc_unlock_mutex(name)	/* nothing */
+#define _nc_lock_global(name)	/* nothing */
+#define _nc_unlock_global(name)	/* nothing */
 #endif
+
+#define _nc_lock_screen(name)	/* nothing */
+#define _nc_unlock_screen(name)	/* nothing */
+
+#define _nc_lock_window(name)	/* nothing */
+#define _nc_unlock_window(name)	/* nothing */
 
 /*
  * Definitions for color pairs
@@ -552,6 +558,8 @@ typedef struct {
 
 #ifdef USE_PTHREADS
        pthread_mutex_t	mutex_set_SP;
+       pthread_mutex_t	mutex_use_screen;
+       pthread_mutex_t	mutex_windowlist;
 #endif
 } NCURSES_GLOBALS;
 
