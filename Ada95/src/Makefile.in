@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.30 2004/08/21 21:29:50 tom Exp $
+#  $Id: Makefile.in,v 1.31 2007/09/15 18:22:24 tom Exp $
 #
 .SUFFIXES:
 
@@ -197,7 +197,7 @@ distclean :: clean
 
 realclean :: distclean
 
-BASEDEPS=$(ABASE).ads $(ABASE)-aux.ads $(srcdir)/$(ABASE).adb
+BASEDEPS=$(ABASE).ads $(ABASE)-aux.ads $(ABASE).adb
 
 $(ALIB).o: $(srcdir)/$(ALIB).ads
 	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ALIB).ads
@@ -207,8 +207,8 @@ $(ABASE)-aux.o: $(srcdir)/$(ABASE)-aux.adb $(BASEDEPS)
 	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-aux.adb
 
 
-$(ABASE).o: $(srcdir)/$(ABASE).adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE).adb
+$(ABASE).o: $(ABASE).adb $(BASEDEPS)
+	$(ADA) $(ADAFLAGS) -c -o $@ $(ABASE).adb
 
 
 $(ABASE)-terminfo.o: \

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.41 2006/07/01 22:57:24 tom Exp $
+  $Id: worm.c,v 1.48 2007/09/15 21:42:16 tom Exp $
 */
 
 #include <test.priv.h>
@@ -77,17 +77,24 @@ static const short xinc[] =
 {
     -1, 0, 1, 1, 1, 0, -1, -1
 };
-static struct worm {
-    int orientation, head;
-    short *xpos, *ypos;
-} worm[40];
+
+typedef struct worm {
+    int orientation;
+    int head;
+    short *xpos;
+    short *ypos;
+    chtype attrs;
+} WORM;
+
+static WORM worm[40];
+static short **refs;
 
 static const char *field;
 static int length = 16, number = 3;
 static chtype trail = ' ';
 
 #ifdef TRACE
-static int generation, trace_start, trace_end, singlestep;
+static int generation, trace_start, trace_end;
 #endif /* TRACE */
 /* *INDENT-OFF* */
 static const struct options {
@@ -200,15 +207,110 @@ ranf(void)
     return ((float) r / 32768.);
 }
 
+static int
+draw_worm(WINDOW *win, void *data)
+{
+    WORM *w = (WORM *) data;
+    const struct options *op;
+
+    int x;
+    int y;
+    int h;
+
+    int bottom = LINES - 1;
+    int last = COLS - 1;
+
+    bool done = FALSE;
+
+    if ((x = w->xpos[h = w->head]) < 0) {
+	wmove(win, y = w->ypos[h] = bottom, x = w->xpos[h] = 0);
+	waddch(win, w->attrs);
+	refs[y][x]++;
+    } else {
+	y = w->ypos[h];
+    }
+
+    if (x > last)
+	x = last;
+    if (y > bottom)
+	y = bottom;
+
+    if (++h == length)
+	h = 0;
+
+    if (w->xpos[w->head = h] >= 0) {
+	int x1, y1;
+	x1 = w->xpos[h];
+	y1 = w->ypos[h];
+	if (y1 < LINES
+	    && x1 < COLS
+	    && --refs[y1][x1] == 0) {
+	    wmove(win, y1, x1);
+	    waddch(win, trail);
+	}
+    }
+
+    op = &(x == 0
+	   ? (y == 0
+	      ? upleft
+	      : (y == bottom
+		 ? lowleft
+		 : left))
+	   : (x == last
+	      ? (y == 0
+		 ? upright
+		 : (y == bottom
+		    ? lowright
+		    : right))
+	      : (y == 0
+		 ? upper
+		 : (y == bottom
+		    ? lower
+		    : normal))))[w->orientation];
+
+    switch (op->nopts) {
+    case 0:
+	done = TRUE;
+	break;
+    case 1:
+	w->orientation = op->opts[0];
+	break;
+    default:
+	w->orientation = op->opts[(int) (ranf() * (float) op->nopts)];
+	break;
+    }
+
+    if (!done) {
+	x += xinc[w->orientation];
+	y += yinc[w->orientation];
+	wmove(win, y, x);
+
+	if (y < 0)
+	    y = 0;
+	waddch(win, w->attrs);
+
+	w->ypos[h] = y;
+	w->xpos[h] = x;
+	refs[y][x]++;
+    }
+
+    return done;
+}
+
+#if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915)
+static int
+use_window(WINDOW *win, int (*func)(WINDOW *, void *), void *data)
+{
+    return func(win, data);
+}
+#endif
+
 int
 main(int argc, char *argv[])
 {
-    short **ref;
     int x, y;
     int n;
     struct worm *w;
-    const struct options *op;
-    int h;
     short *ip;
     int last, bottom;
     bool done = FALSE;
@@ -244,9 +346,6 @@ main(int argc, char *argv[])
 	    trail = '.';
 	    break;
 #ifdef TRACE
-	case 'S':
-	    singlestep = TRUE;
-	    break;
 	case 'T':
 	    trace_start = atoi(argv[++x]);
 	    trace_end = atoi(argv[++x]);
@@ -297,21 +396,24 @@ main(int argc, char *argv[])
     }
 #endif /* A_COLOR */
 
-    ref = typeMalloc(short *, LINES);
+    refs = typeMalloc(short *, LINES);
     for (y = 0; y < LINES; y++) {
-	ref[y] = typeMalloc(short, COLS);
+	refs[y] = typeMalloc(short, COLS);
 	for (x = 0; x < COLS; x++) {
-	    ref[y][x] = 0;
+	    refs[y][x] = 0;
 	}
     }
 
 #ifdef BADCORNER
     /* if addressing the lower right corner doesn't work in your curses */
-    ref[bottom][last] = 1;
+    refs[bottom][last] = 1;
 #endif /* BADCORNER */
 
     for (n = number, w = &worm[0]; --n >= 0; w++) {
-	w->orientation = w->head = 0;
+	w->attrs = flavor[n % SIZEOF(flavor)];
+	w->orientation = 0;
+	w->head = 0;
+
 	if (!(ip = typeMalloc(short, (length + 1)))) {
 	    fprintf(stderr, "%s: out of memory\n", *argv);
 	    ExitProgram(EXIT_FAILURE);
@@ -340,48 +442,43 @@ main(int argc, char *argv[])
     }
     napms(10);
     refresh();
-#ifndef TRACE
     nodelay(stdscr, TRUE);
-#endif
 
     while (!done) {
-#ifdef TRACE
-	if (trace_start || trace_end) {
-	    if (generation == trace_start) {
-		trace(TRACE_CALLS);
-		getch();
-	    } else if (generation == trace_end) {
-		trace(0);
-		getch();
-	    }
-
-	    if (singlestep && generation > trace_start && generation < trace_end)
-		getch();
-
-	    generation++;
-	}
-#else
 	int ch;
 
 	if ((ch = getch()) > 0) {
+#ifdef TRACE
+	    if (trace_start || trace_end) {
+		if (generation == trace_start) {
+		    trace(TRACE_CALLS);
+		    getch();
+		} else if (generation == trace_end) {
+		    trace(0);
+		    getch();
+		}
+
+		generation++;
+	    }
+#endif
 #ifdef KEY_RESIZE
 	    if (ch == KEY_RESIZE) {
 		if (last != COLS - 1) {
 		    for (y = 0; y <= bottom; y++) {
-			ref[y] = typeRealloc(short, COLS, ref[y]);
+			refs[y] = typeRealloc(short, COLS, refs[y]);
 			for (x = last + 1; x < COLS; x++)
-			    ref[y][x] = 0;
+			    refs[y][x] = 0;
 		    }
 		    last = COLS - 1;
 		}
 		if (bottom != LINES - 1) {
 		    for (y = LINES; y <= bottom; y++)
-			free(ref[y]);
-		    ref = typeRealloc(short *, LINES, ref);
+			free(refs[y]);
+		    refs = typeRealloc(short *, LINES, refs);
 		    for (y = bottom + 1; y < LINES; y++) {
-			ref[y] = typeMalloc(short, COLS);
+			refs[y] = typeMalloc(short, COLS);
 			for (x = 0; x < COLS; x++)
-			    ref[y][x] = 0;
+			    refs[y][x] = 0;
 		    }
 		    bottom = LINES - 1;
 		}
@@ -400,54 +497,10 @@ main(int argc, char *argv[])
 		nodelay(stdscr, TRUE);
 	    }
 	}
-#endif /* TRACE */
 
 	for (n = 0, w = &worm[0]; n < number; n++, w++) {
-	    if ((x = w->xpos[h = w->head]) < 0) {
-		move(y = w->ypos[h] = bottom, x = w->xpos[h] = 0);
-		addch(flavor[n % SIZEOF(flavor)]);
-		ref[y][x]++;
-	    } else {
-		y = w->ypos[h];
-	    }
-	    if (x > last)
-		x = last;
-	    if (y > bottom)
-		y = bottom;
-	    if (++h == length)
-		h = 0;
-	    if (w->xpos[w->head = h] >= 0) {
-		int x1, y1;
-		x1 = w->xpos[h];
-		y1 = w->ypos[h];
-		if (y1 < LINES
-		    && x1 < COLS
-		    && --ref[y1][x1] == 0) {
-		    move(y1, x1);
-		    addch(trail);
-		}
-	    }
-	    op = &(x == 0 ? (y == 0 ? upleft : (y == bottom ? lowleft :
-						left)) :
-		   (x == last ? (y == 0 ? upright : (y == bottom ? lowright :
-						     right)) :
-		    (y == 0 ? upper : (y == bottom ? lower : normal))))[w->orientation];
-	    switch (op->nopts) {
-	    case 0:
+	    if (use_window(stdscr, draw_worm, w))
 		done = TRUE;
-		continue;
-	    case 1:
-		w->orientation = op->opts[0];
-		break;
-	    default:
-		w->orientation = op->opts[(int) (ranf() * (float) op->nopts)];
-	    }
-	    move(y += yinc[w->orientation], x += xinc[w->orientation]);
-
-	    if (y < 0)
-		y = 0;
-	    addch(flavor[n % SIZEOF(flavor)]);
-	    ref[w->ypos[h] = y][w->xpos[h] = x]++;
 	}
 	napms(10);
 	refresh();
@@ -456,9 +509,9 @@ main(int argc, char *argv[])
     cleanup();
 #ifdef NO_LEAKS
     for (y = 0; y < LINES; y++) {
-	free(ref[y]);
+	free(refs[y]);
     }
-    free(ref);
+    free(refs);
     for (n = number, w = &worm[0]; --n >= 0; w++) {
 	free(w->xpos);
 	free(w->ypos);
