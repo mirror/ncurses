@@ -41,7 +41,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.21 2007/03/10 23:45:14 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.22 2007/09/29 20:37:13 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
@@ -261,8 +261,10 @@ resize_term(int ToLines, int ToCols)
 	int myCols = CurCols = screen_columns;
 
 #ifdef TRACE
-	if (_nc_tracing & TRACE_UPDATE)
+	if (USE_TRACEF(TRACE_UPDATE)) {
 	    show_window_sizes("before");
+	    _nc_unlock_global(tracef);
+	}
 #endif
 	if (ToLines > screen_lines) {
 	    increase_size(myLines = ToLines, myCols, was_stolen EXTRA_ARGS);
@@ -293,10 +295,11 @@ resize_term(int ToLines, int ToCols)
 	    FreeAndNull(SP->newhash);
 	}
 #ifdef TRACE
-	if (_nc_tracing & TRACE_UPDATE) {
+	if (USE_TRACEF(TRACE_UPDATE)) {
 	    SET_LINES(ToLines - was_stolen);
 	    SET_COLS(ToCols);
 	    show_window_sizes("after");
+	    _nc_unlock_global(tracef);
 	}
 #endif
     }

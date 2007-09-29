@@ -61,10 +61,14 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.48 2007/09/15 21:42:16 tom Exp $
+  $Id: worm.c,v 1.49 2007/09/29 17:35:57 tom Exp $
 */
 
 #include <test.priv.h>
+
+#ifdef USE_PTHREADS
+#include <pthread.h>
+#endif
 
 static chtype flavor[] =
 {
@@ -84,6 +88,9 @@ typedef struct worm {
     short *xpos;
     short *ypos;
     chtype attrs;
+#ifdef USE_PTHREADS
+    pthread_t thread;
+#endif
 } WORM;
 
 static WORM worm[40];
@@ -299,11 +306,48 @@ draw_worm(WINDOW *win, void *data)
 
 #if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915)
 static int
-use_window(WINDOW *win, int (*func)(WINDOW *, void *), void *data)
+use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data)
 {
     return func(win, data);
 }
 #endif
+
+#ifdef USE_PTHREADS
+static void *
+start_worm(void *arg)
+{
+    for (;;) {
+	napms(20);
+	use_window(stdscr, draw_worm, arg);
+    }
+    return NULL;
+}
+#endif
+
+static bool
+draw_all_worms(void)
+{
+    bool done = FALSE;
+    int n;
+    struct worm *w;
+
+#ifdef USE_PTHREADS
+    static bool first = TRUE;
+    if (first) {
+	first = FALSE;
+	for (n = 0, w = &worm[0]; n < number; n++, w++) {
+	    int rc;
+	    rc = pthread_create(&(w->thread), NULL, start_worm, w);
+	}
+    }
+#else
+    for (n = 0, w = &worm[0]; n < number; n++, w++) {
+	if (use_window(stdscr, draw_worm, w))
+	    done = TRUE;
+    }
+#endif
+    return done;
+}
 
 int
 main(int argc, char *argv[])
@@ -498,10 +542,7 @@ main(int argc, char *argv[])
 	    }
 	}
 
-	for (n = 0, w = &worm[0]; n < number; n++, w++) {
-	    if (use_window(stdscr, draw_worm, w))
-		done = TRUE;
-	}
+	done = draw_all_worms();
 	napms(10);
 	refresh();
     }

@@ -43,7 +43,7 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.73 2007/04/21 20:43:19 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.74 2007/09/29 20:37:13 tom Exp $")
 
 /*
  *	char *
@@ -508,7 +508,7 @@ tparam_internal(const char *string, va_list ap)
 	    npush(param[i]);
     }
 #ifdef TRACE
-    if (_nc_tracing & TRACE_CALLS) {
+    if (USE_TRACEF(TRACE_CALLS)) {
 	for (i = 0; i < popcount; i++) {
 	    if (p_is_s[i] != 0)
 		save_text(", %s", _nc_visbuf(p_is_s[i]), 0);
@@ -517,6 +517,7 @@ tparam_internal(const char *string, va_list ap)
 	}
 	_tracef(T_CALLED("%s(%s%s)"), TPS(tname), _nc_visbuf(cp), TPS(out_buff));
 	TPS(out_used) = 0;
+	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
 

@@ -35,7 +35,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.33 2007/04/21 23:31:24 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.34 2007/09/29 20:37:13 tom Exp $")
 
 #if BROKEN_LINKER || USE_REENTRANT
 #define MyBuffer _nc_prescreen.real_acs_map
@@ -166,7 +166,7 @@ _nc_init_acs(void)
     /* Show the equivalent mapping, noting if it does not match the
      * given attribute, whether by re-ordering or duplication.
      */
-    if (_nc_tracing & TRACE_CALLS) {
+    if (USE_TRACEF(TRACE_CALLS)) {
 	size_t n, m;
 	char show[ACS_LEN * 2 + 1];
 	for (n = 1, m = 0; n < ACS_LEN; n++) {
@@ -187,6 +187,7 @@ _nc_init_acs(void)
 		   ? "DIFF"
 		   : "SAME"),
 		_nc_visbuf(show));
+	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
 }

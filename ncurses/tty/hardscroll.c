@@ -145,7 +145,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.40 2007/06/30 21:11:01 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.41 2007/09/29 21:48:36 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -158,7 +158,7 @@ oldnums[MAXLINES];
 # undef TR
 # define TR(n, a)	if (_nc_tracing & (n)) { _tracef a ; putchar('\n'); }
 
-extern NCURSES_EXPORT_VAR(unsigned)     _nc_tracing;
+extern NCURSES_EXPORT_VAR(unsigned) _nc_tracing;
 
 #else /* no debug */
 
@@ -204,8 +204,10 @@ _nc_scroll_optimize(void)
 #endif /* !defined(SCROLLDEBUG) && !defined(HASHDEBUG) */
 
 #ifdef TRACE
-    if (_nc_tracing & (TRACE_UPDATE | TRACE_MOVE))
+    if (USE_TRACEF(TRACE_UPDATE | TRACE_MOVE)) {
 	_nc_linedump();
+	_nc_unlock_global(tracef);
+    }
 #endif /* TRACE */
 
     /* pass 1 - from top to bottom scrolling up */

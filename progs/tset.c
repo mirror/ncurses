@@ -103,7 +103,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.68 2007/07/21 17:46:24 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.69 2007/09/29 15:51:35 tom Exp $")
 
 extern char **environ;
 
@@ -777,7 +777,22 @@ reset_mode(void)
 		      | OFDEL
 #endif
 #ifdef NLDLY
-		      | NLDLY | CRDLY | TABDLY | BSDLY | VTDLY | FFDLY
+		      | NLDLY
+#endif
+#ifdef CRDLY 
+		      | CRDLY
+#endif
+#ifdef TABDLY 
+		      | TABDLY
+#endif
+#ifdef BSDLY 
+		      | BSDLY
+#endif
+#ifdef VTDLY 
+		      | VTDLY
+#endif
+#ifdef FFDLY
+		      | FFDLY
 #endif
 	);
 

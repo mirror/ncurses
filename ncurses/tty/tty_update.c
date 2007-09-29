@@ -74,7 +74,7 @@
 #include <ctype.h>
 #include <term.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.240 2007/06/30 21:07:51 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.242 2007/09/29 20:37:13 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -289,7 +289,7 @@ PutAttrChar(CARG_CH_T ch)
 #endif
     {
 	PUTC(CHDEREF(ch), SP->_ofp);	/* macro's fastest... */
-	TRACE_OUTCHARS(1);
+	COUNT_OUTCHARS(1);
     }
     SP->_curscol += chlen;
     if (char_padding) {
@@ -625,12 +625,13 @@ doupdate(void)
     T((T_CALLED("doupdate()")));
 
 #ifdef TRACE
-    if (_nc_tracing & TRACE_UPDATE) {
+    if (USE_TRACEF(TRACE_UPDATE)) {
 	if (curscr->_clear)
 	    _tracef("curscr is clear");
 	else
 	    _tracedump("curscr", curscr);
 	_tracedump("newscr", newscr);
+	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
 
@@ -666,7 +667,7 @@ doupdate(void)
     }
 #if USE_TRACE_TIMES
     /* zero the metering machinery */
-    _nc_outchars = 0;
+    RESET_OUTCHARS();
     (void) times(&before);
 #endif /* USE_TRACE_TIMES */
 
@@ -826,9 +827,10 @@ doupdate(void)
 
 #ifdef TRACE
 	/* show altered highlights after magic-cookie check */
-	if (_nc_tracing & TRACE_UPDATE) {
+	if (USE_TRACEF(TRACE_UPDATE)) {
 	    _tracef("After magic-cookie check...");
 	    _tracedump("newscr", newscr);
+	    _nc_unlock_global(tracef);
 	}
 #endif /* TRACE */
     }

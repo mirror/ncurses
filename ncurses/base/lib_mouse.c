@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -79,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.87 2006/12/30 16:30:06 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.88 2007/09/29 21:50:04 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -985,12 +985,13 @@ _nc_mouse_parse(int runcount)
     }
 
 #ifdef TRACE
-    if (_nc_tracing & TRACE_IEVENT) {
+    if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot("before mouse press/release merge:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
 		(long) (runp - SP->_mouse_events),
 		(long) ((eventp - SP->_mouse_events) + (EV_MAX - 1)) % EV_MAX,
 		runcount);
+	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
 
@@ -1028,12 +1029,13 @@ _nc_mouse_parse(int runcount)
 	(merge);
 
 #ifdef TRACE
-    if (_nc_tracing & TRACE_IEVENT) {
+    if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot("before mouse click merge:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
 		(long) (runp - SP->_mouse_events),
 		(long) ((eventp - SP->_mouse_events) + (EV_MAX - 1)) % EV_MAX,
 		runcount);
+	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
 
@@ -1099,12 +1101,13 @@ _nc_mouse_parse(int runcount)
 	(merge);
 
 #ifdef TRACE
-    if (_nc_tracing & TRACE_IEVENT) {
+    if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot("before mouse event queue compaction:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
 		(long) (runp - SP->_mouse_events),
 		(long) ((eventp - SP->_mouse_events) + (EV_MAX - 1)) % EV_MAX,
 		runcount);
+	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
 
@@ -1117,12 +1120,13 @@ _nc_mouse_parse(int runcount)
 	    SP->_mouse_eventp = eventp = prev;
 	}
 #ifdef TRACE
-    if (_nc_tracing & TRACE_IEVENT) {
+    if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot("after mouse event queue compaction:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
 		(long) (runp - SP->_mouse_events),
 		(long) ((eventp - SP->_mouse_events) + (EV_MAX - 1)) % EV_MAX,
 		runcount);
+	_nc_unlock_global(tracef);
     }
     for (ep = runp; ep != eventp; ep = NEXT(ep))
 	if (ep->id != INVALID_EVENT)

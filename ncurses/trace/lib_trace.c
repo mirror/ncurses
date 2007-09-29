@@ -46,13 +46,43 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.62 2007/07/14 19:32:54 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.65 2007/09/29 21:47:46 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
 #ifdef TRACE
+
+#if USE_REENTRANT
+NCURSES_EXPORT(const char *)
+NCURSES_PUBLIC_VAR(_nc_tputs_trace) (void)
+{
+    return SP ? SP->_tputs_trace : _nc_prescreen._tputs_trace;
+}
+NCURSES_EXPORT(long)
+NCURSES_PUBLIC_VAR(_nc_outchars) (void)
+{
+    return SP ? SP->_outchars : _nc_prescreen._outchars;
+}
+NCURSES_EXPORT(void)
+_nc_set_tputs_trace(const char *s)
+{
+    if (SP)
+	SP->_tputs_trace = s;
+    else
+	_nc_prescreen._tputs_trace = s;
+}
+NCURSES_EXPORT(void)
+_nc_count_outchars(long increment)
+{
+    if (SP)
+	SP->_outchars += increment;
+    else
+	_nc_prescreen._outchars += increment;
+}
+#else
 NCURSES_EXPORT_VAR(const char *) _nc_tputs_trace = "";
 NCURSES_EXPORT_VAR(long) _nc_outchars = 0;
+#endif
 
 #define TraceFP		_nc_globals.trace_fp
 #define TracePath	_nc_globals.trace_fname
@@ -107,12 +137,12 @@ trace(const unsigned int tracelevel)
     }
 }
 
-NCURSES_EXPORT(void)
-_tracef(const char *fmt,...)
+static void
+_nc_va_tracef(const char *fmt, va_list ap)
 {
     static const char Called[] = T_CALLED("");
     static const char Return[] = T_RETURN("");
-    va_list ap;
+
     bool before = FALSE;
     bool after = FALSE;
     unsigned doit = _nc_tracing;
@@ -142,16 +172,25 @@ _tracef(const char *fmt,...)
 	    for (n = 1; n < TraceLevel; n++)
 		fputs("+ ", TraceFP);
 	}
-	va_start(ap, fmt);
 	vfprintf(TraceFP, fmt, ap);
 	fputc('\n', TraceFP);
-	va_end(ap);
 	fflush(TraceFP);
     }
 
     if (after && TraceLevel)
 	TraceLevel--;
+
     errno = save_err;
+}
+
+NCURSES_EXPORT(void)
+_tracef(const char *fmt,...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    _nc_va_tracef(fmt, ap);
+    va_end(ap);
 }
 
 /* Trace 'bool' return-values */
@@ -225,4 +264,53 @@ _nc_retrace_win(WINDOW *code)
     T((T_RETURN("%p"), code));
     return code;
 }
+
+#if USE_REENTRANT
+/*
+ * Check if the given trace-mask is enabled.
+ *
+ * This function may be called from within one of the functions that fills
+ * in parameters for _tracef(), but in that case we do not want to lock the
+ * mutex, since it is already locked.
+ */
+NCURSES_EXPORT(int)
+_nc_use_tracef(unsigned mask)
+{
+    bool result = FALSE;
+
+    _nc_lock_global(tst_tracef);
+    if (!_nc_globals.nested_tracef++) {
+	if ((result = (_nc_tracing & (mask))) != 0) {
+	    /* we will call _nc_locked_tracef(), no nesting so far */
+	    _nc_lock_global(tracef);
+	} else {
+	    /* we will not call _nc_locked_tracef() */
+	    _nc_globals.nested_tracef = 0;
+	}
+    } else {
+	/* we may call _nc_locked_tracef(), but with nested_tracef > 0 */
+	result = (_nc_tracing & (mask));
+    }
+    _nc_unlock_global(tst_tracef);
+    return result;
+}
+
+/*
+ * We call this if _nc_use_tracef() returns true, which means we must unlock
+ * the tracef mutex.
+ */
+NCURSES_EXPORT(void)
+_nc_locked_tracef(const char *fmt,...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    _nc_va_tracef(fmt, ap);
+    va_end(ap);
+
+    if (--(_nc_globals.nested_tracef) == 0)
+	_nc_unlock_global(tracef);
+}
+#endif /* USE_REENTRANT */
+
 #endif /* TRACE */

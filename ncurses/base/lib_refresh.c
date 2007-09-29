@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_refresh.c,v 1.40 2007/07/07 22:08:38 tom Exp $")
+MODULE_ID("$Id: lib_refresh.c,v 1.41 2007/09/29 20:39:34 tom Exp $")
 
 NCURSES_EXPORT(int)
 wrefresh(WINDOW *win)
@@ -84,8 +84,10 @@ wnoutrefresh(WINDOW *win)
 
     T((T_CALLED("wnoutrefresh(%p)"), win));
 #ifdef TRACE
-    if (_nc_tracing & TRACE_UPDATE)
+    if (USE_TRACEF(TRACE_UPDATE)) {
 	_tracedump("...win", win);
+	_nc_unlock_global(tracef);
+    }
 #endif /* TRACE */
 
     /*
@@ -277,8 +279,10 @@ wnoutrefresh(WINDOW *win)
     newscr->_leaveok = win->_leaveok;
 
 #ifdef TRACE
-    if (_nc_tracing & TRACE_UPDATE)
+    if (USE_TRACEF(TRACE_UPDATE)) {
 	_tracedump("newscr", newscr);
+	_nc_unlock_global(tracef);
+    }
 #endif /* TRACE */
     returnCode(OK);
 }

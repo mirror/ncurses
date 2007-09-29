@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.340 2007/09/08 21:44:40 tom Exp $
+ * $Id: curses.priv.h,v 1.343 2007/09/29 21:33:24 tom Exp $
  *
  *	curses.priv.h
  *
@@ -560,6 +560,9 @@ typedef struct {
        pthread_mutex_t	mutex_set_SP;
        pthread_mutex_t	mutex_use_screen;
        pthread_mutex_t	mutex_windowlist;
+       pthread_mutex_t	mutex_tst_tracef;
+       pthread_mutex_t	mutex_tracef;
+       int		nested_tracef;
 #endif
 } NCURSES_GLOBALS;
 
@@ -583,6 +586,10 @@ typedef struct {
 	chtype		*real_acs_map;
 	int		_LINES;
 	int		_COLS;
+#ifdef TRACE
+	long		_outchars;
+	const char	*_tputs_trace;
+#endif
 #endif
 } NCURSES_PRESCREEN;
 
@@ -805,6 +812,10 @@ struct screen {
 	int		_TABSIZE;
 	int		_LINES;
 	int		_COLS;
+#ifdef TRACE
+	int		_outchars;
+	const char	*_tputs_trace;
+#endif
 #endif
 	/*
 	 * ncurses/ncursesw are the same up to this point.
@@ -895,10 +906,16 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #endif
 
 #ifdef TRACE
-#define TRACE_OUTCHARS(n) _nc_outchars += (n);
+#if USE_REENTRANT
+#define COUNT_OUTCHARS(n) _nc_count_outchars(n);
 #else
-#define TRACE_OUTCHARS(n) /* nothing */
+#define COUNT_OUTCHARS(n) _nc_outchars += (n);
 #endif
+#else
+#define COUNT_OUTCHARS(n) /* nothing */
+#endif
+
+#define RESET_OUTCHARS() COUNT_OUTCHARS(-_nc_outchars)
 
 #define UChar(c)	((unsigned char)(c))
 #define ChCharOf(c)	((c) & (chtype)A_CHARTEXT)
@@ -945,7 +962,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define PUTC(ch,b)	do { if(!isWidecExt(ch)) {				    \
 			if (Charable(ch)) {					    \
 			    fputc(CharOf(ch), b);				    \
-			    TRACE_OUTCHARS(1);					    \
+			    COUNT_OUTCHARS(1);					    \
 			} else {						    \
 			    PUTC_INIT;						    \
 			    for (PUTC_i = 0; PUTC_i < CCHARW_MAX; ++PUTC_i) {	    \
@@ -961,7 +978,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 				}						    \
 				fwrite(PUTC_buf, (unsigned) PUTC_n, 1, b);	    \
 			    }							    \
-			    TRACE_OUTCHARS(PUTC_i);				    \
+			    COUNT_OUTCHARS(PUTC_i);				    \
 			} } } while (0)
 
 #define BLANK		{ WA_NORMAL, {' '} NulColor }
@@ -1091,6 +1108,12 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 #ifdef TRACE
 
+#if USE_REENTRANT
+#define TPUTS_TRACE(s)	_nc_set_tputs_trace(s);
+#else
+#define TPUTS_TRACE(s)	_nc_tputs_trace = s;
+#endif
+
 #define START_TRACE() \
 	if ((_nc_tracing & TRACE_MAXIMUM) == 0) { \
 	    int t = _nc_getenv_num("NCURSES_TRACE"); \
@@ -1098,9 +1121,21 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 		trace((unsigned) t); \
 	}
 
-#define TR(n, a)	if (_nc_tracing & (n)) _tracef a
+/*
+ * Many of the _tracef() calls use static buffers; lock the trace state before
+ * trying to fill them.
+ */
+#if USE_REENTRANT
+#define USE_TRACEF(mask) _nc_use_tracef(mask)
+extern NCURSES_EXPORT(int)	_nc_use_tracef (unsigned);
+extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE(1,2);
+#else
+#define USE_TRACEF(mask) (_nc_tracing & (mask))
+#define _nc_locked_tracef _tracef
+#endif
+
+#define TR(n, a)	if (USE_TRACEF(n)) _nc_locked_tracef a
 #define T(a)		TR(TRACE_CALLS, a)
-#define TPUTS_TRACE(s)	_nc_tputs_trace = s;
 #define TRACE_RETURN(value,type) return _nc_retrace_##type(value)
 
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)
@@ -1131,8 +1166,19 @@ extern NCURSES_EXPORT(int)              _nc_retrace_int (int);
 extern NCURSES_EXPORT(unsigned)         _nc_retrace_unsigned (unsigned);
 extern NCURSES_EXPORT(void *)           _nc_retrace_void_ptr (void *);
 extern NCURSES_EXPORT(void)             _nc_fifo_dump (void);
+
+#if USE_REENTRANT
+NCURSES_WRAPPED_VAR(long, _nc_outchars);
+NCURSES_WRAPPED_VAR(const char *, _nc_tputs_trace);
+#define _nc_outchars       NCURSES_PUBLIC_VAR(_nc_outchars())
+#define _nc_tputs_trace    NCURSES_PUBLIC_VAR(_nc_tputs_trace())
+extern NCURSES_EXPORT(void)		_nc_set_tputs_trace (const char *);
+extern NCURSES_EXPORT(void)		_nc_count_outchars (long);
+#else
 extern NCURSES_EXPORT_VAR(const char *) _nc_tputs_trace;
 extern NCURSES_EXPORT_VAR(long)         _nc_outchars;
+#endif
+
 extern NCURSES_EXPORT_VAR(unsigned)     _nc_tracing;
 
 #if USE_WIDEC_SUPPORT

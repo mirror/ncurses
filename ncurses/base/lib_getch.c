@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.79 2007/04/19 20:57:49 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.80 2007/09/29 20:39:34 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -112,8 +112,10 @@ fifo_pull(void)
 	h_inc();
 
 #ifdef TRACE
-    if (_nc_tracing & TRACE_IEVENT)
+    if (USE_TRACEF(TRACE_IEVENT)) {
 	_nc_fifo_dump();
+	_nc_unlock_global(tracef);
+    }
 #endif
     return ch;
 }
@@ -208,8 +210,10 @@ fifo_push(EVENTLIST_0th(_nc_eventlist * evl))
     t_inc();
     TR(TRACE_IEVENT, ("pushed %s at %d", _tracechar(ch), tail));
 #ifdef TRACE
-    if (_nc_tracing & TRACE_IEVENT)
+    if (USE_TRACEF(TRACE_IEVENT)) {
 	_nc_fifo_dump();
+	_nc_unlock_global(tracef);
+    }
 #endif
     return ch;
 }
