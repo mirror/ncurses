@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.343 2007/09/29 21:33:24 tom Exp $
+ * $Id: curses.priv.h,v 1.344 2007/10/06 21:29:02 tom Exp $
  *
  *	curses.priv.h
  *
@@ -936,6 +936,35 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define NulColor	/* nothing */
 #endif
 
+#define AttrEq(a,b)	((a).attr == (b).attr)
+#define ExtcEq(a,b)	((a).ext_color == (b).ext_color)
+#define TextEq(a,b)	(!memcmp((a).chars, (b).chars, sizeof(a.chars)))
+
+/*
+ * cchar_t may not be packed, e.g., on a 64-bit platform.
+ *
+ * Set "NCURSES_CHAR_EQ" to use a workaround that compares the structure
+ * member-by-member so that valgrind will not see compares against the
+ * uninitialized filler bytes.
+ */
+#if NCURSES_CHAR_EQ
+#if defined(USE_TERMLIB) && !defined(NEED_NCURSES_CH_T)
+#else
+static NCURSES_INLINE int
+_nc_char_eq(NCURSES_CH_T a, NCURSES_CH_T b)
+{
+#if NCURSES_EXT_COLORS
+    return (AttrEq(a,b) && TextEq(a,b) && ExtcEq(a,b));
+#else
+    return (AttrEq(a,b) && TextEq(a,b));
+#endif
+}
+#define CharEq(a,b)	_nc_char_eq(a,b)
+#endif
+#else
+#define CharEq(a,b)	(!memcmp(&(a), &(b), sizeof(a)))
+#endif
+
 #define NulChar		0,0,0,0	/* FIXME: see CCHARW_MAX */
 #define CharOf(c)	((c).chars[0])
 #define AttrOf(c)	((c).attr)
@@ -944,7 +973,6 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define SetAttr(c,a)	AttrOf(c) =   ((a) & A_ATTRIBUTES) | WidecExt(c)
 #define NewChar2(c,a)	{ a, { c, NulChar } NulColor }
 #define NewChar(ch)	NewChar2(ChCharOf(ch), ChAttrOf(ch))
-#define CharEq(a,b)	(!memcmp(&(a), &(b), sizeof(a)))
 #define SetChar(ch,c,a) do {							    \
 			    NCURSES_CH_T *_cp = &ch;				    \
 			    memset(_cp, 0, sizeof(ch));				    \
@@ -981,8 +1009,8 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 			    COUNT_OUTCHARS(PUTC_i);				    \
 			} } } while (0)
 
-#define BLANK		{ WA_NORMAL, {' '} NulColor }
-#define ZEROS		{ WA_NORMAL, {'\0'} NulColor }
+#define BLANK		NewChar2(' ', WA_NORMAL)
+#define ZEROS		NewChar2('\0', WA_NORMAL)
 #define ISBLANK(ch)	((ch).chars[0] == L' ' && (ch).chars[1] == L'\0')
 
 	/*

@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.34 2007/04/28 18:48:33 tom Exp $
+# $Id: ncurses_defs,v 1.35 2007/10/06 21:18:16 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -158,6 +158,7 @@ HAVE_WORKING_POLL
 HAVE_WRESIZE
 HAVE__DOSCAN
 MIXEDCASE_FILENAMES
+NCURSES_CHAR_EQ
 NCURSES_EXPANDED
 NCURSES_EXT_COLORS
 NCURSES_EXT_FUNCS
