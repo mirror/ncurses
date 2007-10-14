@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_int.c,v 1.21 2007/02/03 23:37:46 tom Exp $")
+MODULE_ID("$Id: fty_int.c,v 1.22 2007/10/13 19:32:40 tom Exp $")
 
 #if USE_WIDEC_SUPPORT
 #define isDigit(c) (iswdigit((wint_t)(c)) || isdigit(UChar(c)))
@@ -63,7 +63,7 @@ thisARG;
 static void *
 Make_This_Type(va_list *ap)
 {
-  thisARG *argp = (thisARG *) malloc(sizeof(thisARG));
+  thisARG *argp = typeMalloc(thisARG, 1);
 
   if (argp)
     {
@@ -91,7 +91,7 @@ Copy_This_Type(const void *argp)
 
   if (argp)
     {
-      result = (thisARG *) malloc(sizeof(thisARG));
+      result = typeMalloc(thisARG, 1);
       if (result)
 	{
 	  T((T_CREATE("thisARG %p"), result));

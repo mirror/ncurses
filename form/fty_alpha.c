@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_alpha.c,v 1.22 2007/02/03 23:37:46 tom Exp $")
+MODULE_ID("$Id: fty_alpha.c,v 1.23 2007/10/13 19:32:09 tom Exp $")
 
 #define thisARG alphaARG
 
@@ -55,7 +55,7 @@ thisARG;
 static void *
 Make_This_Type(va_list *ap)
 {
-  thisARG *argp = (thisARG *) malloc(sizeof(thisARG));
+  thisARG *argp = typeMalloc(thisARG, 1);
 
   if (argp)
     {
@@ -78,7 +78,7 @@ static void *
 Copy_This_Type(const void *argp)
 {
   const thisARG *ap = (const thisARG *)argp;
-  thisARG *result = (thisARG *) malloc(sizeof(thisARG));
+  thisARG *result = typeMalloc(thisARG, 1);
 
   if (result)
     {

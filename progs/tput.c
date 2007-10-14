@@ -38,6 +38,7 @@
  * Ross Ridge's mytinfo package.
  */
 
+#define USE_LIBTINFO
 #include <progs.priv.h>
 
 #if !PURE_TERMINFO
@@ -45,7 +46,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.40 2007/07/21 17:45:59 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.41 2007/10/13 20:34:16 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)

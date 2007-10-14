@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_def.c,v 1.21 2007/02/03 23:37:46 tom Exp $")
+MODULE_ID("$Id: frm_def.c,v 1.22 2007/10/13 19:31:17 tom Exp $")
 
 /* this can't be readonly */
 static FORM default_form =
@@ -186,7 +186,7 @@ Connect_Fields(FORM *form, FIELD **fields)
     RETURN(E_BAD_ARGUMENT);
 
   /* allocate page structures */
-  if ((pg = (_PAGE *) malloc(page_nr * sizeof(_PAGE))) != (_PAGE *) 0)
+  if ((pg = typeMalloc(_PAGE, page_nr)) != (_PAGE *) 0)
     {
       T((T_CREATE("_PAGE %p"), pg));
       form->page = pg;
@@ -291,7 +291,7 @@ new_form(FIELD **fields)
 {
   int err = E_SYSTEM_ERROR;
 
-  FORM *form = (FORM *)malloc(sizeof(FORM));
+  FORM *form = typeMalloc(FORM, 1);
 
   T((T_CALLED("new_form(%p)"), fields));
   if (form)

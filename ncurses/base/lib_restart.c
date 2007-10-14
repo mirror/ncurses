@@ -48,22 +48,22 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_restart.c,v 1.7 2007/04/19 21:05:25 tom Exp $")
+MODULE_ID("$Id: lib_restart.c,v 1.8 2007/10/13 19:59:47 tom Exp $")
 
 NCURSES_EXPORT(int)
 restartterm(NCURSES_CONST char *termp, int filenum, int *errret)
 {
-    int saveecho = SP->_echo;
-    int savecbreak = SP->_cbreak;
-    int saveraw = SP->_raw;
-    int savenl = SP->_nl;
     int result;
 
     T((T_CALLED("restartterm(%s,%d,%p)"), termp, filenum, errret));
 
     if (setupterm(termp, filenum, errret) != OK) {
 	result = ERR;
-    } else {
+    } else if (SP != 0) {
+	int saveecho = SP->_echo;
+	int savecbreak = SP->_cbreak;
+	int saveraw = SP->_raw;
+	int savenl = SP->_nl;
 
 	if (saveecho)
 	    echo();
@@ -92,6 +92,8 @@ restartterm(NCURSES_CONST char *termp, int filenum, int *errret)
 #endif
 
 	result = OK;
+    } else {
+	result = ERR;
     }
     returnCode(result);
 }

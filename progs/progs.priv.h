@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.32 2007/02/03 19:59:02 tom Exp $
+ * $Id: progs.priv.h,v 1.33 2007/10/13 20:33:53 tom Exp $
  *
  *	progs.priv.h
  *
@@ -114,7 +114,11 @@ extern int optind;
 #include <nc_alloc.h>
 #if HAVE_NC_FREEALL
 #undef ExitProgram
+#ifdef USE_LIBTINFO
+#define ExitProgram(code) _nc_free_tinfo(code)
+#else
 #define ExitProgram(code) _nc_free_tic(code)
+#endif
 #endif
 
 /* usually in <unistd.h> */

@@ -73,6 +73,7 @@
  * SUCH DAMAGE.
  */
 
+#define USE_LIBTINFO
 #define __INTERNAL_CAPS_VISIBLE	/* we need to see has_hardware_tabs */
 #include <progs.priv.h>
 
@@ -103,7 +104,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.69 2007/09/29 15:51:35 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.70 2007/10/13 22:22:04 tom Exp $")
 
 extern char **environ;
 

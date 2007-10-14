@@ -74,7 +74,7 @@
 #include <ctype.h>
 #include <term.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.242 2007/09/29 20:37:13 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.243 2007/10/13 20:03:32 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -623,6 +623,10 @@ doupdate(void)
 #endif /* USE_TRACE_TIMES */
 
     T((T_CALLED("doupdate()")));
+
+    if (curscr == 0
+	|| newscr == 0)
+	returnCode(ERR);
 
 #ifdef TRACE
     if (USE_TRACEF(TRACE_UPDATE)) {

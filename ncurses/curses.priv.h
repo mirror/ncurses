@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.344 2007/10/06 21:29:02 tom Exp $
+ * $Id: curses.priv.h,v 1.346 2007/10/13 18:55:29 Miroslav.Lichvar Exp $
  *
  *	curses.priv.h
  *
@@ -936,43 +936,29 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define NulColor	/* nothing */
 #endif
 
-#define AttrEq(a,b)	((a).attr == (b).attr)
-#define ExtcEq(a,b)	((a).ext_color == (b).ext_color)
-#define TextEq(a,b)	(!memcmp((a).chars, (b).chars, sizeof(a.chars)))
+#define NulChar		0,0,0,0	/* FIXME: see CCHARW_MAX */
+#define CharOf(c)	((c).chars[0])
+#define AttrOf(c)	((c).attr)
 
-/*
- * cchar_t may not be packed, e.g., on a 64-bit platform.
- *
- * Set "NCURSES_CHAR_EQ" to use a workaround that compares the structure
- * member-by-member so that valgrind will not see compares against the
- * uninitialized filler bytes.
- */
-#if NCURSES_CHAR_EQ
-#if defined(USE_TERMLIB) && !defined(NEED_NCURSES_CH_T)
-#else
-static NCURSES_INLINE int
-_nc_char_eq(NCURSES_CH_T a, NCURSES_CH_T b)
-{
-#if NCURSES_EXT_COLORS
-    return (AttrEq(a,b) && TextEq(a,b) && ExtcEq(a,b));
-#else
-    return (AttrEq(a,b) && TextEq(a,b));
-#endif
-}
-#define CharEq(a,b)	_nc_char_eq(a,b)
-#endif
+#define AddAttr(c,a)	AttrOf(c) |=  ((a) & A_ATTRIBUTES)
+#define RemAttr(c,a)	AttrOf(c) &= ~((a) & A_ATTRIBUTES)
+#define SetAttr(c,a)	AttrOf(c) =   ((a) & A_ATTRIBUTES) | WidecExt(c)
+
+#define NewChar2(c,a)	{ a, { c, NulChar } NulColor }
+#define NewChar(ch)	NewChar2(ChCharOf(ch), ChAttrOf(ch))
+
+#if CCHARW_MAX == 5
+#define CharEq(a,b)	(((a).attr == (b).attr) \
+		       && (a).chars[0] == (b).chars[0] \
+		       && (a).chars[1] == (b).chars[1] \
+		       && (a).chars[2] == (b).chars[2] \
+		       && (a).chars[3] == (b).chars[3] \
+		       && (a).chars[4] == (b).chars[4] \
+			if_EXT_COLORS(&& (a).ext_color == (b).ext_color))
 #else
 #define CharEq(a,b)	(!memcmp(&(a), &(b), sizeof(a)))
 #endif
 
-#define NulChar		0,0,0,0	/* FIXME: see CCHARW_MAX */
-#define CharOf(c)	((c).chars[0])
-#define AttrOf(c)	((c).attr)
-#define AddAttr(c,a)	AttrOf(c) |=  ((a) & A_ATTRIBUTES)
-#define RemAttr(c,a)	AttrOf(c) &= ~((a) & A_ATTRIBUTES)
-#define SetAttr(c,a)	AttrOf(c) =   ((a) & A_ATTRIBUTES) | WidecExt(c)
-#define NewChar2(c,a)	{ a, { c, NulChar } NulColor }
-#define NewChar(ch)	NewChar2(ChCharOf(ch), ChAttrOf(ch))
 #define SetChar(ch,c,a) do {							    \
 			    NCURSES_CH_T *_cp = &ch;				    \
 			    memset(_cp, 0, sizeof(ch));				    \

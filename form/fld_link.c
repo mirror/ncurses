@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_link.c,v 1.10 2007/02/03 23:37:46 tom Exp $")
+MODULE_ID("$Id: fld_link.c,v 1.11 2007/10/13 19:30:43 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -57,7 +57,7 @@ link_field(FIELD *field, int frow, int fcol)
   T((T_CALLED("link_field(%p,%d,%d)"), field, frow, fcol));
   if (field && (frow >= 0) && (fcol >= 0) &&
       ((err = E_SYSTEM_ERROR) != 0) &&	/* trick: this resets the default error */
-      (New_Field = (FIELD *)malloc(sizeof(FIELD))))
+      (New_Field = typeMalloc(FIELD, 1)))
     {
       T((T_CREATE("field %p"), New_Field));
       *New_Field = *_nc_Default_Field;

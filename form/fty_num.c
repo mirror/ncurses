@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_num.c,v 1.24 2007/02/03 23:37:46 tom Exp $")
+MODULE_ID("$Id: fty_num.c,v 1.25 2007/10/13 19:32:54 tom Exp $")
 
 #if HAVE_LOCALE_H
 #include <locale.h>
@@ -74,7 +74,7 @@ thisARG;
 static void *
 Make_This_Type(va_list *ap)
 {
-  thisARG *argn = (thisARG *) malloc(sizeof(thisARG));
+  thisARG *argn = typeMalloc(thisARG, 1);
 
   if (argn)
     {
@@ -108,7 +108,7 @@ Copy_This_Type(const void *argp)
 
   if (argp)
     {
-      result = (thisARG *) malloc(sizeof(thisARG));
+      result = typeMalloc(thisARG, 1);
       if (result)
 	{
 	  T((T_CREATE("thisARG %p"), result));

@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_ftlink.c,v 1.12 2007/02/03 23:37:46 tom Exp $")
+MODULE_ID("$Id: fld_ftlink.c,v 1.13 2007/10/13 19:30:35 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -56,7 +56,7 @@ link_fieldtype(FIELDTYPE *type1, FIELDTYPE *type2)
   T((T_CALLED("link_fieldtype(%p,%p)"), type1, type2));
   if (type1 && type2)
     {
-      nftyp = (FIELDTYPE *)malloc(sizeof(FIELDTYPE));
+      nftyp = typeMalloc(FIELDTYPE, 1);
 
       if (nftyp)
 	{

@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_enum.c,v 1.21 2007/02/03 23:37:46 tom Exp $")
+MODULE_ID("$Id: fty_enum.c,v 1.22 2007/10/13 19:32:26 tom Exp $")
 
 typedef struct
   {
@@ -56,7 +56,7 @@ enumARG;
 static void *
 Make_Enum_Type(va_list *ap)
 {
-  enumARG *argp = (enumARG *)malloc(sizeof(enumARG));
+  enumARG *argp = typeMalloc(enumARG, 1);
 
   if (argp)
     {
@@ -97,7 +97,7 @@ Copy_Enum_Type(const void *argp)
     {
       const enumARG *ap = (const enumARG *)argp;
 
-      result = (enumARG *)malloc(sizeof(enumARG));
+      result = typeMalloc(enumARG, 1);
 
       if (result)
 	{

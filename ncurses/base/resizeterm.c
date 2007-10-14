@@ -41,7 +41,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.22 2007/09/29 20:37:13 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.23 2007/10/13 20:12:13 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
@@ -250,12 +250,16 @@ NCURSES_EXPORT(int)
 resize_term(int ToLines, int ToCols)
 {
     int result = OK EXTRA_ARGS;
-    int was_stolen = (screen_lines - SP->_lines_avail);
+    int was_stolen;
 
     T((T_CALLED("resize_term(%d,%d) old(%d,%d)"),
        ToLines, ToCols,
        screen_lines, screen_columns));
 
+    if (SP == 0) {
+	returnCode(ERR);
+    }
+    was_stolen = (screen_lines - SP->_lines_avail);
     if (is_term_resized(ToLines, ToCols)) {
 	int myLines = CurLines = screen_lines;
 	int myCols = CurCols = screen_columns;
@@ -325,22 +329,25 @@ resize_term(int ToLines, int ToCols)
 NCURSES_EXPORT(int)
 resizeterm(int ToLines, int ToCols)
 {
-    int result = OK;
-
-    SP->_sig_winch = FALSE;
+    int result = ERR;
 
     T((T_CALLED("resizeterm(%d,%d) old(%d,%d)"),
        ToLines, ToCols,
        screen_lines, screen_columns));
 
-    if (is_term_resized(ToLines, ToCols)) {
+    if (SP != 0) {
+	result = OK;
+	SP->_sig_winch = FALSE;
+
+	if (is_term_resized(ToLines, ToCols)) {
 
 #if USE_SIGWINCH
-	ungetch(KEY_RESIZE);	/* so application can know this */
-	clearok(curscr, TRUE);	/* screen contents are unknown */
+	    ungetch(KEY_RESIZE);	/* so application can know this */
+	    clearok(curscr, TRUE);	/* screen contents are unknown */
 #endif
 
-	result = resize_term(ToLines, ToCols);
+	    result = resize_term(ToLines, ToCols);
+	}
     }
 
     returnCode(result);

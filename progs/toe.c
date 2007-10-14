@@ -40,13 +40,11 @@
 
 #include <sys/stat.h>
 
-#include <dump_entry.h>
-
 #if USE_HASHED_DB
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.44 2007/07/21 17:45:59 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.46 2007/10/13 22:26:38 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -59,7 +57,6 @@ static void
 ExitProgram(int code)
 {
     _nc_free_entries(_nc_head);
-    _nc_leaks_dump_entry();
     _nc_free_tic(code);
 }
 #endif

@@ -70,7 +70,7 @@ AUTHOR
 #include <curses.priv.h>
 #include <term.h>		/* for back_color_erase */
 
-MODULE_ID("$Id: hashmap.c,v 1.55 2007/07/14 15:33:39 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.56 2007/10/13 18:47:25 Miroslav.Lichvar Exp $")
 
 #ifdef HASHDEBUG
 
@@ -131,8 +131,8 @@ update_cost(NCURSES_CH_T * from, NCURSES_CH_T * to)
     int cost = 0;
     int i;
 
-    for (i = TEXTWIDTH; i > 0; i--)
-	if (!(CharEq(*from++, *to++)))
+    for (i = TEXTWIDTH; i > 0; i--, from++, to++)
+	if (!(CharEq(*from, *to)))
 	    cost++;
 
     return cost;
@@ -148,8 +148,8 @@ update_cost_from_blank(NCURSES_CH_T * to)
     if (back_color_erase)
 	SetPair(blank, GetPair(stdscr->_nc_bkgd));
 
-    for (i = TEXTWIDTH; i > 0; i--)
-	if (!(CharEq(blank, *to++)))
+    for (i = TEXTWIDTH; i > 0; i--, to++)
+	if (!(CharEq(blank, *to)))
 	    cost++;
 
     return cost;

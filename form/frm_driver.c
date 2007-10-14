@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.82 2007/06/02 22:59:24 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.84 2007/10/13 19:26:54 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4379,7 +4379,7 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
   wclear(field->working);
   mvwaddstr(field->working, 0, 0, value);
 
-  if ((widevalue = (FIELD_CELL *)calloc(len + 1, sizeof(FIELD_CELL))) == 0)
+  if ((widevalue = typeCalloc(FIELD_CELL, len + 1)) == 0)
     {
       RETURN(E_SYSTEM_ERROR);
     }
@@ -4476,7 +4476,7 @@ field_buffer(const FIELD *field, int buffer)
 	{
 	  wclear(field->working);
 	  mvwadd_wchnstr(field->working, 0, 0, data, size);
-	  mvwinnstr(field->working, 0, 0, result, (int)need + 1);
+	  mvwinnstr(field->working, 0, 0, result, (int)need);
 	}
 #else
       result = Address_Of_Nth_Buffer(field, buffer);
