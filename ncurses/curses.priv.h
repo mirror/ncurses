@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.346 2007/10/13 18:55:29 Miroslav.Lichvar Exp $
+ * $Id: curses.priv.h,v 1.347 2007/10/20 19:56:55 tom Exp $
  *
  *	curses.priv.h
  *
@@ -305,19 +305,24 @@ color_t;
 #include <pthread.h>
 #define _nc_lock_global(name)	pthread_mutex_lock(&_nc_globals.mutex_##name)
 #define _nc_unlock_global(name)	pthread_mutex_unlock(&_nc_globals.mutex_##name)
+
+extern NCURSES_EXPORT(void) _nc_lock_window(WINDOW *);
+extern NCURSES_EXPORT(void) _nc_unlock_window(WINDOW *);
+
 #else
 #error POSIX threads requires --enable-reentrant option
 #endif
 #else
 #define _nc_lock_global(name)	/* nothing */
 #define _nc_unlock_global(name)	/* nothing */
+
+#define _nc_lock_window(name)	TRUE
+#define _nc_unlock_window(name)	/* nothing */
+
 #endif
 
 #define _nc_lock_screen(name)	/* nothing */
 #define _nc_unlock_screen(name)	/* nothing */
-
-#define _nc_lock_window(name)	/* nothing */
-#define _nc_unlock_window(name)	/* nothing */
 
 /*
  * Definitions for color pairs
@@ -559,6 +564,7 @@ typedef struct {
 #ifdef USE_PTHREADS
        pthread_mutex_t	mutex_set_SP;
        pthread_mutex_t	mutex_use_screen;
+       pthread_mutex_t	mutex_use_window;
        pthread_mutex_t	mutex_windowlist;
        pthread_mutex_t	mutex_tst_tracef;
        pthread_mutex_t	mutex_tracef;
@@ -839,6 +845,9 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 	unsigned addch_used;	/* number of bytes in addch_work[] */
 	int addch_x;		/* x-position for addch_work[] */
 	int addch_y;		/* y-position for addch_work[] */
+#endif
+#ifdef USE_PTHREADS
+	pthread_mutex_t	mutex_use_window;
 #endif
 };
 

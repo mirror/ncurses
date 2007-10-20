@@ -40,6 +40,9 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term, pad_char */
 #include <termcap.h>		/* ospeed */
+#if defined(__FreeBSD__)
+#include <sys/param.h>
+#endif
 
 /*
  * These systems use similar header files, which define B1200 as 1200, etc.,
@@ -47,7 +50,7 @@
  * of the indices up to B115200 fit nicely in a 'short', allowing us to retain
  * ospeed's type for compatibility.
  */
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#if (defined(__FreeBSD__) && (__FreeBSD_version < 700000)) || defined(__NetBSD__) || defined(__OpenBSD__)
 #undef B0
 #undef B50
 #undef B75
@@ -77,7 +80,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.24 2007/03/10 19:25:57 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.25 2007/10/20 15:00:41 Rong-En.Fan Exp $")
 
 /*
  *	int
