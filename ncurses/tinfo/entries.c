@@ -37,7 +37,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: entries.c,v 1.3 2007/02/03 18:51:23 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.4 2007/11/03 21:00:27 tom Exp $")
 
 /****************************************************************************
  *
@@ -123,6 +123,10 @@ _nc_leaks_tinfo(void)
     _nc_first_name(0);
 #if NO_LEAKS
     _nc_keyname_leaks();
+#endif
+#if BROKEN_LINKER || USE_REENTRANT
+    _nc_names_leaks();
+    _nc_codes_leaks();
 #endif
 
     if ((s = _nc_home_terminfo()) != 0)

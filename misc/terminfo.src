@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.317 $
-#	$Date: 2007/10/20 18:34:36 $
+#	$Revision: 1.318 $
+#	$Date: 2007/11/03 19:02:01 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -18319,19 +18319,19 @@ h19-us|h19us|h19-smul|heathkit w/keypad shifted/underscore cursor,
 h19|heath|h19-b|heathkit|heath-19|z19|zenith|heathkit h19,
 	OTbs, am, eslok, hs, mir, msgr,
 	cols#80, it#8, lines#24,
-	acsc=, bel=^G, clear=\EE, cnorm=\Ey4, cr=^M, cub1=^H, cud1=\EB,
-	cuf1=\EC, cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA,
-	cvvis=\Ex4, dch1=\EN, ed=\EJ, el=\EK, fsl=\Ek\Ey5, home=\EH,
-	ht=^I, ind=^J, ip=<1.5/>, kbs=^H, kcub1=\ED, kcud1=\EB,
-	kcuf1=\EC, kcuu1=\EA, kf1=\ES, kf2=\ET, kf3=\EU, kf4=\EV,
-	kf5=\EW, kf6=\EP, kf7=\EQ, kf8=\ER, khome=\EH, lf6=blue,
-	lf7=red, lf8=white, ri=\EI, rmacs=\EG, rmir=\EO, rmso=\Eq,
-	smacs=\EF, smir=\E@, smso=\Ep,
-	tsl=\Ej\Ex5\EY8%p1%{32}%+%c\Eo\Eo,
+	acsc=~\^x`qanbkcjdmelfgg+hai.kwsutvutvozs{, bel=^G,
+	clear=\EE, cnorm=\Ey4, cr=^M, cub1=^H, cud1=\EB, cuf1=\EC,
+	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, cvvis=\Ex4,
+	dch1=\EN, ed=\EJ, el=\EK, fsl=\Ek\Ey5, home=\EH, ht=^I, ind=^J,
+	ip=<1.5/>, kbs=^H, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
+	kcuu1=\EA, kf1=\ES, kf2=\ET, kf3=\EU, kf4=\EV, kf5=\EW,
+	kf6=\EP, kf7=\EQ, kf8=\ER, khome=\EH, lf6=blue, lf7=red,
+	lf8=white, ri=\EI, rmacs=\EG, rmir=\EO, rmso=\Eq, smacs=\EF,
+	smir=\E@, smso=\Ep, tsl=\Ej\Ex5\EY8%p1%{32}%+%c\Eo\Eo,
 h19-u|heathkit with underscore cursor,
 	cnorm@, cvvis@, use=h19-b,
 h19-g|h19g|heathkit w/block cursor,
-	cnorm=\Ex4, use=h19-b,
+	cnorm=\Ex4, cvvis@, use=h19-b,
 alto-h19|altoh19|altoheath|alto-heath|alto emulating heathkit h19,
 	lines#60,
 	dl1=\EM, il1=\EL, use=h19,
@@ -18457,14 +18457,15 @@ z100|h100|z110|z-100|h-100|heath/zenith z-100 pc with color monitor,
 z100bw|h100bw|z110bw|z-100bw|h-100bw|heath/zenith z-100 pc,
 	OTbs, OTpt, mir, msgr,
 	OTkn#10, cols#80, it#8, lines#24,
-	acsc=, clear=\EE$<5*/>, cnorm=\Ey4, cub1=^H, cud1=\EB,
-	cuf1=\EC, cup=\EY%p1%{32}%+%c%p2%{32}%+%c$<1*/>,
-	cuu1=\EA, cvvis=\Ex4, dch1=\EN$<1*/>, dl1=\EM$<5*/>,
-	ed=\EJ, el=\EK, home=\EH, ht=^I, il1=\EL$<5*/>, kbs=^H,
-	kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA, kf0=\EJ, kf1=\ES,
-	kf2=\ET, kf3=\EU, kf4=\EV, kf5=\EW, kf6=\EP, kf7=\EQ, kf8=\ER,
-	kf9=\EOI, khome=\EH, ri=\EI, rmacs=\EG, rmir=\EO, rmso=\Eq,
-	smacs=\EF, smir=\E@, smso=\Ep,
+	acsc=~\^x`qanbkcjdmelfgg+hai.kwsutvutvozs{,
+	clear=\EE$<5*/>, cnorm=\Ey4, cub1=^H, cud1=\EB, cuf1=\EC,
+	cup=\EY%p1%{32}%+%c%p2%{32}%+%c$<1*/>, cuu1=\EA,
+	cvvis=\Ex4, dch1=\EN$<1*/>, dl1=\EM$<5*/>, ed=\EJ, el=\EK,
+	home=\EH, ht=^I, il1=\EL$<5*/>, kbs=^H, kcub1=\ED, kcud1=\EB,
+	kcuf1=\EC, kcuu1=\EA, kf0=\EJ, kf1=\ES, kf2=\ET, kf3=\EU,
+	kf4=\EV, kf5=\EW, kf6=\EP, kf7=\EQ, kf8=\ER, kf9=\EOI,
+	khome=\EH, ri=\EI, rmacs=\EG, rmir=\EO, rmso=\Eq, smacs=\EF,
+	smir=\E@, smso=\Ep,
 p19|h19-b with il1/dl1,
 	dl1=\EM$<2*/>, il1=\EL$<2*/>, use=h19-b,
 # From: <ucscc!B.fiatlux@ucbvax.berkeley.edu>
@@ -21602,6 +21603,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  xterm's capabilities -TD
 #	* add mrxvt entry -TD
 #	* add xterm+r6f2, use in mlterm and mrxvt entries -TD
+#
+# 2007-11-03
+#	* correct acsc strings for h19 and z100 (Benjamin Sittler)
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

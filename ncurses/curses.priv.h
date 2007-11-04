@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.347 2007/10/20 19:56:55 tom Exp $
+ * $Id: curses.priv.h,v 1.348 2007/11/03 20:24:15 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1504,9 +1504,11 @@ extern NCURSES_EXPORT(void) _nc_trace_tries (TRIES *);
 #if NO_LEAKS
 extern NCURSES_EXPORT(void) _nc_alloc_entry_leaks(void);
 extern NCURSES_EXPORT(void) _nc_captoinfo_leaks(void);
+extern NCURSES_EXPORT(void) _nc_codes_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_captab_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_scan_leaks(void);
 extern NCURSES_EXPORT(void) _nc_keyname_leaks(void);
+extern NCURSES_EXPORT(void) _nc_names_leaks(void);
 extern NCURSES_EXPORT(void) _nc_tgetent_leaks(void);
 #endif
 

@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKcodes.awk,v 1.3 2007/09/01 20:50:01 tom Exp $
+# $Id: MKcodes.awk,v 1.4 2007/11/03 20:24:15 tom Exp $
 function large_item(value) {
 	result = sprintf("%d,", offset);
 	offset = offset + length(value) + 1;
@@ -138,6 +138,17 @@ END	{
 		print  "FIX(numcodes)"
 		print  "FIX(strcodes)"
 		print  ""
+		print  "#define FREE_FIX(it) if (ptr_##it) { FreeAndNull(ptr_##it); }"
+		print  ""
+		print  "NCURSES_EXPORT(void)"
+		print  "_nc_codes_leaks(void)"
+		print  "{"
+		if (bigstrings) {
+		print  "FREE_FIX(boolcodes)"
+		print  "FREE_FIX(numcodes)"
+		print  "FREE_FIX(strcodes)"
+		}
+		print  "}"
 		print  "#else"
 		print  ""
 		print  "#define DCL(it) NCURSES_EXPORT_VAR(IT) it[]"

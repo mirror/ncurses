@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: use_screen.c,v 1.3 2007/10/20 22:46:13 tom Exp $")
+MODULE_ID("$Id: use_screen.c,v 1.2 2007/09/08 21:46:48 tom Exp $")
 
 NCURSES_EXPORT(int)
 use_screen(SCREEN *screen, NCURSES_CALLBACK func, void *data)
