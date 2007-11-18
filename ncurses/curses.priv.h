@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.348 2007/11/03 20:24:15 tom Exp $
+ * $Id: curses.priv.h,v 1.349 2007/11/17 23:33:18 tom Exp $
  *
  *	curses.priv.h
  *
@@ -481,6 +481,17 @@ typedef struct {
     char *text;
     size_t size;
 } TRACEBUF;
+
+/*
+ * The filesystem database normally uses a single-letter for the lower level
+ * of directories.  Use a hexadecimal code for filesystems which do not
+ * preserve mixed-case names.
+ */
+#if MIXEDCASE_FILENAMES
+#define LEAF_FMT "%c"
+#else
+#define LEAF_FMT "%02x"
+#endif
 
 /*
  * TRACEMSE_FMT is no longer than 80 columns, there are 5 numbers that

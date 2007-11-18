@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.119 2007/07/28 19:56:35 tom Exp $
+-- $Id: INSTALL,v 1.120 2007/11/17 22:05:11 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -497,6 +497,12 @@ SUMMARY OF CONFIGURE OPTIONS:
 	this a standard feature except for the concern that the terminfo entry
 	may not be accurate, or that your stty settings have disabled the use
 	of tabs.
+
+    --enable-mixed-case
+	Controls whether the filesystem on which the terminfo database resides
+	supports mixed-case filenames (normal for UNIX, but not on other
+	systems).  If you do not specify this option, the configure script
+	checks the current filesystem.
 
     --enable-no-padding
 	Compile-in support for the $NCURSES_NO_PADDING environment variable,

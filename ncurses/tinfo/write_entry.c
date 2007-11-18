@@ -54,7 +54,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.69 2007/05/12 19:04:13 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.70 2007/11/17 23:38:28 tom Exp $")
 
 static int total_written;
 
@@ -97,17 +97,16 @@ check_writeable(int code)
     static const char dirnames[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     static bool verified[sizeof(dirnames)];
 
-    char dir[2];
+    char dir[sizeof(LEAF_FMT)];
     char *s = 0;
 
     if (code == 0 || (s = strchr(dirnames, code)) == 0)
-	_nc_err_abort("Illegal terminfo subdirectory \"%c\"", code);
+	_nc_err_abort("Illegal terminfo subdirectory \"" LEAF_FMT "\"", code);
 
     if (verified[s - dirnames])
 	return;
 
-    dir[0] = code;
-    dir[1] = '\0';
+    sprintf(dir, LEAF_FMT, code);
     if (make_db_root(dir) < 0) {
 	_nc_err_abort("%s/%s: permission denied", _nc_tic_dir(0), dir);
     }
@@ -358,7 +357,7 @@ _nc_write_entry(TERMTYPE *const tp)
     if (strlen(first_name) > sizeof(filename) - 3)
 	_nc_warning("terminal name too long.");
 
-    sprintf(filename, "%c/%s", first_name[0], first_name);
+    sprintf(filename, LEAF_FMT "/%s", first_name[0], first_name);
 
     /*
      * Has this primary name been written since the first call to
@@ -399,7 +398,7 @@ _nc_write_entry(TERMTYPE *const tp)
 	}
 
 	check_writeable(ptr[0]);
-	sprintf(linkname, "%c/%s", ptr[0], ptr);
+	sprintf(linkname, LEAF_FMT "/%s", ptr[0], ptr);
 
 	if (strcmp(filename, linkname) == 0) {
 	    _nc_warning("self-synonym ignored");

@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.93 2007/08/12 13:53:44 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.94 2007/11/17 23:34:26 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1492,9 +1492,14 @@ main(int argc, char *argv[])
 
 	    if (directory) {
 #if USE_DATABASE
-		(void) sprintf(tfile[termcount], "%s/%c/%s",
+#if MIXEDCASE_FILENAMES
+#define LEAF_FMT "%c"
+#else
+#define LEAF_FMT "%02x"
+#endif
+		(void) sprintf(tfile[termcount], "%s/" LEAF_FMT "/%s",
 			       directory,
-			       *argv[optind], argv[optind]);
+			       UChar(*argv[optind]), argv[optind]);
 		if (itrace)
 		    (void) fprintf(stderr,
 				   "%s: reading entry %s from file %s\n",

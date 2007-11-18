@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.178 2007/09/08 21:24:55 tom Exp $ */
+/* $Id: curses.h.in,v 1.181 2007/11/18 00:32:03 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -350,6 +350,8 @@ typedef struct
     attr_t	attr;
     wchar_t	chars[CCHARW_MAX];
 #if @NCURSES_EXT_COLORS@
+#undef NCURSES_EXT_COLORS
+#define NCURSES_EXT_COLORS @NCURSES_PATCH@
     int		ext_color;	/* color pair, must be more than 16-bits */
 #endif
 }
@@ -825,7 +827,10 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 /*
  * These functions are extensions - not in X/Open Curses.
  */
+#undef  NCURSES_EXT_FUNCS
 #if @NCURSES_EXT_FUNCS@
+#undef  NCURSES_EXT_FUNCS
+#define NCURSES_EXT_FUNCS @NCURSES_PATCH@
 typedef int (*NCURSES_CALLBACK)(WINDOW *, void *);
 extern NCURSES_EXPORT(bool) is_term_resized (int, int);
 extern NCURSES_EXPORT(char *) keybound (int, int);

@@ -30,7 +30,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.44 2007/04/07 18:42:04 tom Exp $
+// $Id: cursesw.h,v 1.45 2007/11/17 21:42:06 tom Exp $
 
 #include <etip.h>
 
@@ -1213,6 +1213,14 @@ public:
   // Overlay or overwrite the rectangle in win given by dminrow,dmincol,
   // dmaxrow,dmaxcol with the rectangle in this window beginning at
   // sminrow,smincol.
+
+  // -------------------------------------------------------------------------
+  // Extended functions
+  // -------------------------------------------------------------------------
+#ifdef NCURSES_EXT_FUNCS
+  int            wresize(NCursesWindow& win, int newLines, int newColumns) {
+    return ::wresize(win.w, newLines, newColumns); }
+#endif
 
   // -------------------------------------------------------------------------
   // Mouse related
