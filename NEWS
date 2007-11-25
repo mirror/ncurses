@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1182 2007/11/17 23:43:07 tom Exp $
+-- $Id: NEWS,v 1.1184 2007/11/25 00:04:31 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20071124
+	+ modify configure option --with-hashed-db to accept a parameter which
+	  is the install-prefix of a given Berkeley Database (prompted by
+	  pierre4d2 comments).
+	+ rewrite wrapper for wcrtomb(), making it work on Solaris.  This is
+	  used in the form library to determine the length of the buffer needed
+	  by field_buffer (report by Alfred Fung).
+	+ remove unneeded window-parameter from C++ binding for wresize (report
+	  by Chris Lee).
 
 20071117
 	+ modify the support for filesystems which do not support mixed-case to
@@ -92,7 +102,7 @@ it is not possible to add this information.
 	+ add new functions to lib_trace.c to setup mutex's for the _tracef()
 	  calls within the ncurses library.
 	+ for the reentrant model, move _nc_tputs_trace and _nc_outchars into
-	  the SCREEN. 
+	  the SCREEN.
 	+ start modifying test/worm.c to provide threading demo (incomplete).
 	+ separated ifdef's for some BSD-related symbols in tset.c, to make
 	  it compile on LynxOS (report by Greg Gemmer).
@@ -231,7 +241,7 @@ it is not possible to add this information.
 	  (discussion with Clive Nicolson).
 	+ add a modification of test/dots.c, i.e., test/dots_mvcur.c to
 	  illustrate how to use mvcur().
-	+ modify wide-character flavor of SetAttr() to preserve the 
+	+ modify wide-character flavor of SetAttr() to preserve the
 	  WidecExt() value stored in the .attr field, e.g., in case it
 	  is overwritten by chgat (report by Aleksi Torhamo).
 	+ correct buffer-size for _nc_viswbuf2n() (report by Aleksi Torhamo).
@@ -301,7 +311,7 @@ it is not possible to add this information.
 
 20070407
 	+ add man/curs_legacy.3x, man/curs_opaque.3x
-	+ fix acs_map binding for Ada95 when --enable-reentrant is used. 
+	+ fix acs_map binding for Ada95 when --enable-reentrant is used.
 	+ add adacurses-config to the Ada95 install, based on version from
 	  FreeBSD port, in turn by Juergen Pfeifer in 2000 (prompted by
 	  comment on comp.lang.ada newsgroup).

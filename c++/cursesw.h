@@ -30,7 +30,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.45 2007/11/17 21:42:06 tom Exp $
+// $Id: cursesw.h,v 1.46 2007/11/24 19:09:09 tom Exp $
 
 #include <etip.h>
 
@@ -1218,8 +1218,8 @@ public:
   // Extended functions
   // -------------------------------------------------------------------------
 #ifdef NCURSES_EXT_FUNCS
-  int            wresize(NCursesWindow& win, int newLines, int newColumns) {
-    return ::wresize(win.w, newLines, newColumns); }
+  int            wresize(int newLines, int newColumns) {
+    return ::wresize(w, newLines, newColumns); }
 #endif
 
   // -------------------------------------------------------------------------

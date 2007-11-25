@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.349 2007/11/17 23:33:18 tom Exp $
+ * $Id: curses.priv.h,v 1.351 2007/11/25 00:57:29 tom Exp $
  *
  *	curses.priv.h
  *
@@ -946,7 +946,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #endif
 
 #if USE_WIDEC_SUPPORT /* { */
-#define isEILSEQ(status) ((status == (size_t)-1) && (errno == EILSEQ))
+#define isEILSEQ(status) (((size_t)status == (size_t)-1) && (errno == EILSEQ))
 
 #define init_mb(state)	memset(&state, 0, sizeof(state))
 
@@ -1530,11 +1530,7 @@ extern NCURSES_EXPORT(void) _nc_scroll_window (WINDOW *, int const, NCURSES_SIZE
 #endif
 
 #if USE_WIDEC_SUPPORT && !defined(USE_TERMLIB)
-#ifdef linux
 extern NCURSES_EXPORT(size_t) _nc_wcrtomb (char *, wchar_t, mbstate_t *);
-#else
-#define _nc_wcrtomb(s,wc,ps) wcrtomb(s,wc,ps)
-#endif
 #endif
 
 #if USE_SIZECHANGE

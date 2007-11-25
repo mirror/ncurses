@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.436 2007/08/11 18:12:19 tom Exp $
+dnl $Id: aclocal.m4,v 1.440 2007/11/25 00:58:01 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -166,6 +166,99 @@ fi
 
 AC_SUBST(EXTRA_CPPFLAGS)
 
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ADD_INCDIR version: 8 updated: 2007/07/30 19:22:58
+dnl -------------
+dnl Add an include-directory to $CPPFLAGS.  Don't add /usr/include, since it's
+dnl redundant.  We don't normally need to add -I/usr/local/include for gcc,
+dnl but old versions (and some misinstalled ones) need that.  To make things
+dnl worse, gcc 3.x may give error messages if -I/usr/local/include is added to
+dnl the include-path).
+AC_DEFUN([CF_ADD_INCDIR],
+[
+if test -n "$1" ; then
+  for cf_add_incdir in $1
+  do
+	while test $cf_add_incdir != /usr/include
+	do
+	  if test -d $cf_add_incdir
+	  then
+		cf_have_incdir=no
+		if test -n "$CFLAGS$CPPFLAGS" ; then
+		  # a loop is needed to ensure we can add subdirs of existing dirs
+		  for cf_test_incdir in $CFLAGS $CPPFLAGS ; do
+			if test ".$cf_test_incdir" = ".-I$cf_add_incdir" ; then
+			  cf_have_incdir=yes; break
+			fi
+		  done
+		fi
+
+		if test "$cf_have_incdir" = no ; then
+          if test "$cf_add_incdir" = /usr/local/include ; then
+			if test "$GCC" = yes
+			then
+			  cf_save_CPPFLAGS=$CPPFLAGS
+			  CPPFLAGS="$CPPFLAGS -I$cf_add_incdir"
+			  AC_TRY_COMPILE([#include <stdio.h>],
+				  [printf("Hello")],
+				  [],
+				  [cf_have_incdir=yes])
+			  CPPFLAGS=$cf_save_CPPFLAGS
+			fi
+		  fi
+		fi
+
+		if test "$cf_have_incdir" = no ; then
+		  AC_VERBOSE(adding $cf_add_incdir to include-path)
+		  ifelse($2,,CPPFLAGS,$2)="-I$cf_add_incdir $ifelse($2,,CPPFLAGS,[$]$2)"
+
+          cf_top_incdir=`echo $cf_add_incdir | sed -e 's%/include/.*$%/include%'`
+          test "$cf_top_incdir" = "$cf_add_incdir" && break
+          cf_add_incdir="$cf_top_incdir"
+		else
+		  break
+		fi
+	  fi
+	done
+  done
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ADD_LIBDIR version: 5 updated: 2007/07/30 19:12:03
+dnl -------------
+dnl	Adds to the library-path
+dnl
+dnl	Some machines have trouble with multiple -L options.
+dnl
+dnl $1 is the (list of) directory(s) to add
+dnl $2 is the optional name of the variable to update (default LDFLAGS)
+dnl
+AC_DEFUN([CF_ADD_LIBDIR],
+[
+if test -n "$1" ; then
+  for cf_add_libdir in $1
+  do
+    if test $cf_add_libdir = /usr/lib ; then
+      :
+    elif test -d $cf_add_libdir
+    then
+      cf_have_libdir=no
+      if test -n "$LDFLAGS$LIBS" ; then
+        # a loop is needed to ensure we can add subdirs of existing dirs
+        for cf_test_libdir in $LDFLAGS $LIBS ; do
+          if test ".$cf_test_libdir" = ".-L$cf_add_libdir" ; then
+            cf_have_libdir=yes; break
+          fi
+        done
+      fi
+      if test "$cf_have_libdir" = no ; then
+        AC_VERBOSE(adding $cf_add_libdir to library-path)
+        ifelse($2,,LDFLAGS,$2)="-L$cf_add_libdir $ifelse($2,,LDFLAGS,[$]$2)"
+      fi
+    fi
+  done
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ANSI_CC_CHECK version: 9 updated: 2001/12/30 17:53:34
@@ -1559,11 +1652,24 @@ AC_LANG_RESTORE
 AC_SUBST(EXTRA_CXXFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HASHED_DB version: 1 updated: 2006/08/19 09:16:14
+dnl CF_HASHED_DB version: 3 updated: 2007/11/24 17:43:37
 dnl ------------
 dnl Look for an instance of the Berkeley hashed database.
+dnl
+dnl $1 = optional parameter, to specify install-prefix for the database.
 AC_DEFUN([CF_HASHED_DB],
 [
+ifelse([$1],,,[
+case $1 in #(vi
+yes|*able*) #(vi
+    ;;
+*)
+    if test -d "$1" ; then
+        CF_ADD_INCDIR($1/include)
+        CF_ADD_LIBDIR($1/lib)
+    fi
+esac
+])
 AC_CHECK_HEADER(db.h,[
 CF_HASHED_DB_VERSION
 if test "$cf_cv_hashed_db_version" = unknown ; then
@@ -3733,6 +3839,57 @@ define([CF_REMOVE_LIB],
 [
 # remove $3 library from $2
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_RPATH_HACK version: 2 updated: 2007/11/24 19:09:03
+dnl -------------
+AC_DEFUN([CF_RPATH_HACK],
+[
+AC_REQUIRE([CF_SHARED_OPTS])
+AC_MSG_CHECKING(for updated LDFLAGS)
+if test -n "$LDFLAGS" ; then
+AC_MSG_RESULT(maybe)
+CF_VERBOSE(...checking LDFLAGS $LDFLAGS)
+CF_VERBOSE(...checking EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+case "$EXTRA_LDFLAGS" in #(vi
+-Wl,-rpath,*) #(vi
+    cf_rpath_hack="-Wl,-rpath,"
+    ;;
+-R\ *)
+    cf_rpath_hack="-R "
+    ;;
+-R*)
+    cf_rpath_hack="-R"
+    ;;
+*)
+    cf_rpath_hack=
+    ;;
+esac
+cf_rpath_dst=
+for cf_rpath_src in $LDFLAGS
+do
+    CF_VERBOSE(Filtering $cf_rpath_src)
+    case $cf_rpath_src in #(vi
+    -L*) #(vi
+        if test "$cf_rpath_hack" = "-R " ; then
+            cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
+        else
+            cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$cf_rpath_hack%`
+        fi
+        CF_VERBOSE(...Filter $cf_rpath_tmp)
+        EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
+        ;;
+    *)
+        cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
+        ;;
+    esac
+done
+LDFLAGS=$cf_rpath_dst
+CF_VERBOSE(...checked LDFLAGS $LDFLAGS)
+CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+else
+AC_MSG_RESULT(no)
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_SHARED_OPTS version: 46 updated: 2007/02/24 18:58:09
