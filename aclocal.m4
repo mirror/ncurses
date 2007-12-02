@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.440 2007/11/25 00:58:01 tom Exp $
+dnl $Id: aclocal.m4,v 1.442 2007/12/01 20:02:42 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1687,7 +1687,7 @@ fi
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HASHED_DB_LIBS version: 6 updated: 2006/12/16 12:33:30
+dnl CF_HASHED_DB_LIBS version: 7 updated: 2007/12/01 15:01:37
 dnl -----------------
 dnl Given that we have the header and version for hashed database, find the
 dnl library information.
@@ -1695,7 +1695,7 @@ AC_DEFUN([CF_HASHED_DB_LIBS],
 [
 AC_CACHE_CHECK(for db libraries, cf_cv_hashed_db_libs,[
 cf_cv_hashed_db_libs=unknown
-for cf_db_libs in db$cf_cv_hashed_db_version db ''
+for cf_db_libs in db$cf_cv_hashed_db_version db-$cf_cv_hashed_db_version db ''
 do
 	cf_save_libs="$LIBS"
 	if test -n "$cf_db_libs"; then
@@ -1759,7 +1759,7 @@ done
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HASHED_DB_VERSION version: 2 updated: 2006/08/19 15:12:49
+dnl CF_HASHED_DB_VERSION version: 3 updated: 2007/12/01 15:01:37
 dnl --------------------
 dnl Given that we have the header file for hashed database, find the version
 dnl information.
@@ -1768,7 +1768,7 @@ AC_DEFUN([CF_HASHED_DB_VERSION],
 AC_CACHE_CHECK(for version of db, cf_cv_hashed_db_version,[
 cf_cv_hashed_db_version=unknown
 
-for cf_db_version in 1 2 3 4
+for cf_db_version in 1 2 3 4 5
 do
 	CF_MSG_LOG(checking for db version $cf_db_version)
 	AC_TRY_COMPILE([
@@ -3841,7 +3841,7 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK version: 2 updated: 2007/11/24 19:09:03
+dnl CF_RPATH_HACK version: 3 updated: 2007/12/01 11:14:13
 dnl -------------
 AC_DEFUN([CF_RPATH_HACK],
 [
@@ -3865,28 +3865,30 @@ case "$EXTRA_LDFLAGS" in #(vi
     cf_rpath_hack=
     ;;
 esac
-cf_rpath_dst=
-for cf_rpath_src in $LDFLAGS
-do
-    CF_VERBOSE(Filtering $cf_rpath_src)
-    case $cf_rpath_src in #(vi
-    -L*) #(vi
-        if test "$cf_rpath_hack" = "-R " ; then
-            cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
-        else
-            cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$cf_rpath_hack%`
-        fi
-        CF_VERBOSE(...Filter $cf_rpath_tmp)
-        EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
-        ;;
-    *)
-        cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
-        ;;
-    esac
-done
-LDFLAGS=$cf_rpath_dst
-CF_VERBOSE(...checked LDFLAGS $LDFLAGS)
-CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+if test -n "$cf_rpath_hack" ; then
+    cf_rpath_dst=
+    for cf_rpath_src in $LDFLAGS
+    do
+        CF_VERBOSE(Filtering $cf_rpath_src)
+        case $cf_rpath_src in #(vi
+        -L*) #(vi
+            if test "$cf_rpath_hack" = "-R " ; then
+                cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
+            else
+                cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$cf_rpath_hack%`
+            fi
+            CF_VERBOSE(...Filter $cf_rpath_tmp)
+            EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
+            ;;
+        *)
+            cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
+            ;;
+        esac
+    done
+    LDFLAGS=$cf_rpath_dst
+    CF_VERBOSE(...checked LDFLAGS $LDFLAGS)
+    CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+fi
 else
 AC_MSG_RESULT(no)
 fi

@@ -13584,7 +13584,7 @@ else
 
 cf_cv_hashed_db_version=unknown
 
-for cf_db_version in 1 2 3 4
+for cf_db_version in 1 2 3 4 5
 do
 
 echo "${as_me-configure}:13590: testing checking for db version $cf_db_version ..." 1>&5
@@ -13659,7 +13659,7 @@ if test "${cf_cv_hashed_db_libs+set}" = set; then
 else
 
 cf_cv_hashed_db_libs=unknown
-for cf_db_libs in db$cf_cv_hashed_db_version db ''
+for cf_db_libs in db$cf_cv_hashed_db_version db-$cf_cv_hashed_db_version db ''
 do
 	cf_save_libs="$LIBS"
 	if test -n "$cf_db_libs"; then
@@ -15851,42 +15851,44 @@ case "$EXTRA_LDFLAGS" in #(vi
     cf_rpath_hack=
     ;;
 esac
-cf_rpath_dst=
-for cf_rpath_src in $LDFLAGS
-do
-    test -n "$verbose" && echo "	Filtering $cf_rpath_src" 1>&6
+if test -n "$cf_rpath_hack" ; then
+    cf_rpath_dst=
+    for cf_rpath_src in $LDFLAGS
+    do
+        test -n "$verbose" && echo "	Filtering $cf_rpath_src" 1>&6
 
-echo "${as_me-configure}:15859: testing Filtering $cf_rpath_src ..." 1>&5
+echo "${as_me-configure}:15860: testing Filtering $cf_rpath_src ..." 1>&5
 
-    case $cf_rpath_src in #(vi
-    -L*) #(vi
-        if test "$cf_rpath_hack" = "-R " ; then
-            cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
-        else
-            cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$cf_rpath_hack%`
-        fi
-        test -n "$verbose" && echo "	...Filter $cf_rpath_tmp" 1>&6
+        case $cf_rpath_src in #(vi
+        -L*) #(vi
+            if test "$cf_rpath_hack" = "-R " ; then
+                cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
+            else
+                cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$cf_rpath_hack%`
+            fi
+            test -n "$verbose" && echo "	...Filter $cf_rpath_tmp" 1>&6
 
-echo "${as_me-configure}:15870: testing ...Filter $cf_rpath_tmp ..." 1>&5
+echo "${as_me-configure}:15871: testing ...Filter $cf_rpath_tmp ..." 1>&5
 
-        EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
-        ;;
-    *)
-        cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
-        ;;
-    esac
-done
-LDFLAGS=$cf_rpath_dst
-test -n "$verbose" && echo "	...checked LDFLAGS $LDFLAGS" 1>&6
+            EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
+            ;;
+        *)
+            cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
+            ;;
+        esac
+    done
+    LDFLAGS=$cf_rpath_dst
+    test -n "$verbose" && echo "	...checked LDFLAGS $LDFLAGS" 1>&6
 
-echo "${as_me-configure}:15882: testing ...checked LDFLAGS $LDFLAGS ..." 1>&5
+echo "${as_me-configure}:15883: testing ...checked LDFLAGS $LDFLAGS ..." 1>&5
 
-test -n "$verbose" && echo "	...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS" 1>&6
+    test -n "$verbose" && echo "	...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS" 1>&6
 
-echo "${as_me-configure}:15886: testing ...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS ..." 1>&5
+echo "${as_me-configure}:15887: testing ...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS ..." 1>&5
 
+fi
 else
-echo "$as_me:15889: result: no" >&5
+echo "$as_me:15891: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -15996,7 +15998,7 @@ DEFS=-DHAVE_CONFIG_H
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:15999: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:16001: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -16172,7 +16174,7 @@ cat >>$CONFIG_STATUS <<\EOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:16175: error: ambiguous option: $1
+    { { echo "$as_me:16177: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -16191,7 +16193,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:16194: error: unrecognized option: $1
+  -*) { { echo "$as_me:16196: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -16287,7 +16289,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "default" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
   "include/ncurses_cfg.h" ) CONFIG_HEADERS="$CONFIG_HEADERS include/ncurses_cfg.h:include/ncurses_cfg.hin" ;;
-  *) { { echo "$as_me:16290: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:16292: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -16668,7 +16670,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:16671: creating $ac_file" >&5
+    { echo "$as_me:16673: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -16686,7 +16688,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:16689: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:16691: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -16699,7 +16701,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:16702: error: cannot find input file: $f" >&5
+           { { echo "$as_me:16704: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -16765,7 +16767,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:16768: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:16770: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -16776,7 +16778,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:16779: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:16781: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -16789,7 +16791,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:16792: error: cannot find input file: $f" >&5
+           { { echo "$as_me:16794: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -16847,7 +16849,7 @@ cat >>$CONFIG_STATUS <<\EOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:16850: $ac_file is unchanged" >&5
+      { echo "$as_me:16852: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
