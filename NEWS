@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1186 2007/12/01 19:38:49 tom Exp $
+-- $Id: NEWS,v 1.1187 2007/12/16 00:23:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20071215
+	+ add several functions to C++ binding which wrap C functions that
+	  pass a WINDOW* parameter (request by Chris Lee).
 
 20071201
 	+ add note about configure options needed for Berkeley database to the

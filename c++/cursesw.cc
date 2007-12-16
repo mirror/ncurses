@@ -42,7 +42,7 @@
 #include "internal.h"
 #include "cursesw.h"
 
-MODULE_ID("$Id: cursesw.cc,v 1.48 2007/03/24 19:00:58 tom Exp $")
+MODULE_ID("$Id: cursesw.cc,v 1.49 2007/12/15 23:01:57 tom Exp $")
 
 #define COLORS_NEED_INITIALIZATION  -1
 #define COLORS_NOT_INITIALIZED       0
@@ -85,6 +85,29 @@ NCursesWindow::scanw(int y, int x, const char* fmt, ...)
 
 
 int
+NCursesWindow::scanw(const char* fmt, va_list args)
+{
+    int result = ERR;
+
+    result = ::vw_scanw (w, const_cast<NCURSES_CONST char *>(fmt), args);
+
+    return result;
+}
+
+
+int
+NCursesWindow::scanw(int y, int x, const char* fmt, va_list args)
+{
+    int result = ERR;
+
+    if (::wmove(w, y, x) != ERR) {
+	result = ::vw_scanw (w, const_cast<NCURSES_CONST char *>(fmt), args);
+    }
+    return result;
+}
+
+
+int
 NCursesWindow::printw(const char * fmt, ...)
 {
     va_list args;
@@ -105,6 +128,25 @@ NCursesWindow::printw(int y, int x, const char * fmt, ...)
 	result = ::vw_printw(w, fmt, args);
     }
     va_end(args);
+    return result;
+}
+
+
+int
+NCursesWindow::printw(const char * fmt, va_list args)
+{
+    int result = ::vw_printw(w, fmt, args);
+    return result;
+}
+
+
+int
+NCursesWindow::printw(int y, int x, const char * fmt, va_list args)
+{
+    int result = ::wmove(w, y, x);
+    if (result == OK) {
+	result = ::vw_printw(w, fmt, args);
+    }
     return result;
 }
 
