@@ -41,7 +41,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.23 2007/10/13 20:12:13 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.24 2007/12/22 23:20:31 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
@@ -66,6 +66,7 @@ show_window_sizes(const char *name)
 {
     WINDOWLIST *wp;
 
+    _nc_lock_global(windowlist);
     _tracef("%s resizing: %2d x %2d (%2d x %2d)", name, LINES, COLS,
 	    screen_lines, screen_columns);
     for (wp = _nc_windows; wp != 0; wp = wp->next) {
@@ -76,6 +77,7 @@ show_window_sizes(const char *name)
 		(long) wp->win._begy,
 		(long) wp->win._begx);
     }
+    _nc_unlock_global(windowlist);
 }
 #endif
 
@@ -259,6 +261,9 @@ resize_term(int ToLines, int ToCols)
     if (SP == 0) {
 	returnCode(ERR);
     }
+
+    _nc_lock_global(windowlist);
+
     was_stolen = (screen_lines - SP->_lines_avail);
     if (is_term_resized(ToLines, ToCols)) {
 	int myLines = CurLines = screen_lines;
@@ -314,6 +319,8 @@ resize_term(int ToLines, int ToCols)
      */
     SET_LINES(ToLines - was_stolen);
     SET_COLS(ToCols);
+
+    _nc_unlock_global(windowlist);
 
     returnCode(result);
 }

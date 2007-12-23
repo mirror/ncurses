@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.41 2007/10/20 20:56:07 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.42 2007/12/22 23:20:18 tom Exp $")
 
 static WINDOW *
 remove_window_from_screen(WINDOW *win)
@@ -85,29 +85,34 @@ _nc_freewin(WINDOW *win)
     int i;
     int result = ERR;
 
+    T((T_CALLED("_nc_freewin(%p)"), win));
+
     if (win != 0) {
-	for (p = _nc_windows, q = 0; p != 0; q = p, p = p->next) {
-	    if (&(p->win) == win) {
-		remove_window_from_screen(win);
-		if (q == 0)
-		    _nc_windows = p->next;
-		else
-		    q->next = p->next;
+	if (_nc_try_global(windowlist) == 0) {
+	    for (p = _nc_windows, q = 0; p != 0; q = p, p = p->next) {
+		if (&(p->win) == win) {
+		    remove_window_from_screen(win);
+		    if (q == 0)
+			_nc_windows = p->next;
+		    else
+			q->next = p->next;
 
-		if (!(win->_flags & _SUBWIN)) {
-		    for (i = 0; i <= win->_maxy; i++)
-			FreeIfNeeded(win->_line[i].text);
+		    if (!(win->_flags & _SUBWIN)) {
+			for (i = 0; i <= win->_maxy; i++)
+			    FreeIfNeeded(win->_line[i].text);
+		    }
+		    free(win->_line);
+		    free(p);
+
+		    result = OK;
+		    T(("...deleted win=%p", win));
+		    break;
 		}
-		free(win->_line);
-		free(p);
-
-		result = OK;
-		T(("...deleted win=%p", win));
-		break;
 	    }
+	    _nc_unlock_global(windowlist);
 	}
     }
-    return result;
+    returnCode(result);
 }
 
 NCURSES_EXPORT(WINDOW *)
@@ -241,6 +246,8 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
 	returnWin(0);
     }
 
+    _nc_lock_global(windowlist);
+
     win->_curx = 0;
     win->_cury = 0;
     win->_maxy = num_lines - 1;
@@ -318,5 +325,6 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
 
     T((T_CREATE("window %p"), win));
 
+    _nc_unlock_global(windowlist);
     returnWin(win);
 }

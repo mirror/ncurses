@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.351 2007/11/25 00:57:29 tom Exp $
+ * $Id: curses.priv.h,v 1.353 2007/12/23 00:15:38 tom Exp $
  *
  *	curses.priv.h
  *
@@ -300,10 +300,22 @@ color_t;
 #define SET_COLS(value)  COLS = value
 #endif
 
+#define TR_MUTEX(data) _tracef("%s@%d: me:%08lX COUNT:%2u/%2d/%6d/%2d/%s%9u: " #data, \
+	    __FILE__, __LINE__, \
+	    (unsigned long) (pthread_self()), \
+	    data.__data.__lock, \
+	    data.__data.__count, \
+	    data.__data.__owner, \
+	    data.__data.__kind, \
+	    (data.__data.__nusers > 5) ? " OOPS " : "", \
+	    data.__data.__nusers)
+#define TR_GLOBAL_MUTEX(name) TR_MUTEX(_nc_globals.mutex_##name)
+
 #ifdef USE_PTHREADS
 #if USE_REENTRANT
 #include <pthread.h>
 #define _nc_lock_global(name)	pthread_mutex_lock(&_nc_globals.mutex_##name)
+#define _nc_try_global(name)    pthread_mutex_trylock(&_nc_globals.mutex_##name)
 #define _nc_unlock_global(name)	pthread_mutex_unlock(&_nc_globals.mutex_##name)
 
 extern NCURSES_EXPORT(void) _nc_lock_window(WINDOW *);
@@ -314,9 +326,10 @@ extern NCURSES_EXPORT(void) _nc_unlock_window(WINDOW *);
 #endif
 #else
 #define _nc_lock_global(name)	/* nothing */
+#define _nc_try_global(name)    0
 #define _nc_unlock_global(name)	/* nothing */
 
-#define _nc_lock_window(name)	TRUE
+#define _nc_lock_window(name)	(void) TRUE
 #define _nc_unlock_window(name)	/* nothing */
 
 #endif

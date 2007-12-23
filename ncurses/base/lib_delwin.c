@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_delwin.c,v 1.14 2007/11/03 20:24:15 tom Exp $")
+MODULE_ID("$Id: lib_delwin.c,v 1.15 2007/12/22 23:34:26 tom Exp $")
 
 static bool
 cannot_delete(WINDOW *win)
@@ -67,19 +67,23 @@ delwin(WINDOW *win)
 
     T((T_CALLED("delwin(%p)"), win));
 
-    _nc_lock_global(windowlist);
-    if (win == 0
-	|| cannot_delete(win)) {
-	result = ERR;
-    } else {
+    if (_nc_try_global(windowlist) == 0) {
+	_nc_lock_window(win);
+	if (win == 0
+	    || cannot_delete(win)) {
+	    result = ERR;
+	    _nc_unlock_window(win);
+	} else {
 
-	if (win->_flags & _SUBWIN)
-	    touchwin(win->_parent);
-	else if (curscr != 0)
-	    touchwin(curscr);
+	    if (win->_flags & _SUBWIN)
+		touchwin(win->_parent);
+	    else if (curscr != 0)
+		touchwin(curscr);
 
-	result = _nc_freewin(win);
+	    _nc_unlock_window(win);
+	    result = _nc_freewin(win);
+	}
+	_nc_unlock_global(windowlist);
     }
-    _nc_unlock_global(windowlist);
     returnCode(result);
 }

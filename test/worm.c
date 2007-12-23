@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.49 2007/09/29 17:35:57 tom Exp $
+  $Id: worm.c,v 1.50 2007/12/22 23:55:13 tom Exp $
 */
 
 #include <test.priv.h>
@@ -92,6 +92,8 @@ typedef struct worm {
     pthread_t thread;
 #endif
 } WORM;
+
+static bool quitting = FALSE;
 
 static WORM worm[40];
 static short **refs;
@@ -313,11 +315,17 @@ use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data)
 #endif
 
 #ifdef USE_PTHREADS
+static bool
+quit_worm(void)
+{
+    napms(20);			/* let the other thread(s) have a chance */
+    return quitting;
+}
+
 static void *
 start_worm(void *arg)
 {
-    for (;;) {
-	napms(20);
+    while (!quit_worm()) {
 	use_window(stdscr, draw_worm, arg);
     }
     return NULL;
@@ -533,6 +541,7 @@ main(int argc, char *argv[])
 	     * normal operation -T.Dickey
 	     */
 	    if (ch == 'q') {
+		quitting = TRUE;
 		done = TRUE;
 		continue;
 	    } else if (ch == 's') {
@@ -556,6 +565,14 @@ main(int argc, char *argv[])
     for (n = number, w = &worm[0]; --n >= 0; w++) {
 	free(w->xpos);
 	free(w->ypos);
+    }
+#endif
+#ifdef USE_PTHREADS
+    /*
+     * Do this just in case one of the threads did not really exit.
+     */
+    for (n = 0; n < number; n++) {
+	pthread_join(worm[n].thread, NULL);
     }
 #endif
     ExitProgram(EXIT_SUCCESS);
