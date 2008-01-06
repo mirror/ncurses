@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.100 2007/09/08 21:23:43 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.102 2007/12/29 20:36:32 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -220,9 +220,6 @@ extract_fgbg(char *src, int *result)
     return dst;
 }
 #endif
-
-#define ripoff_sp	_nc_prescreen.rsp
-#define ripoff_stack	_nc_prescreen.rippedoff
 
 /* OS-independent screen initializations */
 NCURSES_EXPORT(int)
@@ -568,10 +565,12 @@ _nc_setupscreen(int slines GCC_UNUSED,
 			? SP->_lines_avail - count
 			: 0),
 		       0);
-	    if (w)
+	    if (w) {
+		rop->win = w;
 		rop->hook(w, scolumns);
-	    else
+	    } else {
 		returnCode(ERR);
+	    }
 	    if (rop->line < 0)
 		bottom_stolen += count;
 	    else
@@ -622,6 +621,7 @@ _nc_ripoffline(int line, int (*init) (WINDOW *, int))
 NCURSES_EXPORT(int)
 ripoffline(int line, int (*init) (WINDOW *, int))
 {
+    START_TRACE();
     T((T_CALLED("ripoffline(%d,%p)"), line, init));
 
     if (line == 0)

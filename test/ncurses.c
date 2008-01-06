@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.292 2007/07/21 17:41:55 tom Exp $
+$Id: ncurses.c,v 1.296 2007/12/29 21:05:43 tom Exp $
 
 ***************************************************************************/
 
@@ -608,6 +608,20 @@ remember_boxes(unsigned level, WINDOW *txt_win, WINDOW *box_win)
     winstack[level].frame = box_win;
 }
 
+#if USE_SOFTKEYS && (NCURSES_VERSION_PATCH < 20071229)
+static void
+slk_repaint(void)
+{
+    /* this chunk is now done in resize_term() */
+    slk_touch();
+    slk_clear();
+    slk_noutrefresh();
+}
+
+#else
+#define slk_repaint()		/* nothing */
+#endif
+
 /*
  * For wgetch_test(), we create pairs of windows - one for a box, one for text.
  * Resize both and paint the box in the parent.
@@ -623,12 +637,7 @@ resize_boxes(unsigned level, WINDOW *win)
     touchwin(stdscr);
     wnoutrefresh(stdscr);
 
-#if USE_SOFTKEYS
-    /* FIXME: this chunk should be done in resizeterm() */
-    slk_touch();
-    slk_clear();
-    slk_noutrefresh();
-#endif
+    slk_repaint();
 
     for (n = 0; n < level; ++n) {
 	wresize(winstack[n].frame, high, wide);
@@ -829,6 +838,8 @@ static void
 getch_test(void)
 {
     int delay = begin_getch_test();
+
+    slk_restore();
     wgetch_test(0, stdscr, delay);
     forget_boxes();
     finish_getch_test();
@@ -836,7 +847,7 @@ getch_test(void)
 
 #if USE_WIDEC_SUPPORT
 /*
- * For wgetch_test(), we create pairs of windows - one for a box, one for text.
+ * For wget_wch_test(), we create pairs of windows - one for a box, one for text.
  * Resize both and paint the box in the parent.
  */
 #ifdef KEY_RESIZE
@@ -851,12 +862,7 @@ resize_wide_boxes(unsigned level, WINDOW *win)
     touchwin(stdscr);
     wnoutrefresh(stdscr);
 
-#if USE_SOFTKEYS
-    /* FIXME: this chunk should be done in resizeterm() */
-    slk_touch();
-    slk_clear();
-    slk_noutrefresh();
-#endif
+    slk_repaint();
 
     for (n = 0; n < level; ++n) {
 	wresize(winstack[n].frame, high, wide);
@@ -1044,6 +1050,8 @@ static void
 get_wch_test(void)
 {
     int delay = begin_getch_test();
+
+    slk_restore();
     wget_wch_test(0, stdscr, delay);
     forget_boxes();
     finish_getch_test();
@@ -2515,12 +2523,15 @@ slk_test(void)
 	    }
 	    break;
 #endif
+#if defined(NCURSES_VERSION) && defined(KEY_RESIZE) && HAVE_WRESIZE
+	case KEY_RESIZE:
+	    break;
+#endif
 
 	default:
 	    beep();
 	}
-    } while
-	((c = Getchar()) != EOF);
+    } while (!isQuit(c = Getchar()));
 
   done:
     slk_clear();
@@ -2642,12 +2653,14 @@ wide_slk_test(void)
 		call_slk_color(fg, bg);
 	    }
 	    break;
-
+#if defined(NCURSES_VERSION) && defined(KEY_RESIZE) && HAVE_WRESIZE
+	case KEY_RESIZE:
+	    break;
+#endif
 	default:
 	    beep();
 	}
-    } while
-	((c = Getchar()) != EOF);
+    } while (!isQuit(c = Getchar()));
 
   done:
     slk_clear();
@@ -6026,7 +6039,7 @@ rip_footer(WINDOW *win, int cols)
     wbkgd(win, A_REVERSE);
     werase(win);
     wmove(win, 0, 0);
-    wprintw(win, "footer: %d columns", cols);
+    wprintw(win, "footer: window %p, %d columns", win, cols);
     wnoutrefresh(win);
     return OK;
 }
@@ -6037,7 +6050,7 @@ rip_header(WINDOW *win, int cols)
     wbkgd(win, A_REVERSE);
     werase(win);
     wmove(win, 0, 0);
-    wprintw(win, "header: %d columns", cols);
+    wprintw(win, "header: window %p, %d columns", win, cols);
     wnoutrefresh(win);
     return OK;
 }

@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.353 2007/12/23 00:15:38 tom Exp $
+ * $Id: curses.priv.h,v 1.355 2007/12/29 20:32:54 tom Exp $
  *
  *	curses.priv.h
  *
@@ -417,6 +417,7 @@ typedef struct _SLK {
 #endif	/* USE_TERMLIB */
 
 typedef	struct {
+	WINDOW *win;		/* the window used in the hook      */
 	int	line;		/* lines to take, < 0 => from bottom*/
 	int	(*hook)(WINDOW *, int); /* callback for user	    */
 } ripoff_t;
@@ -622,6 +623,9 @@ typedef struct {
 #endif
 #endif
 } NCURSES_PRESCREEN;
+
+#define ripoff_sp	_nc_prescreen.rsp
+#define ripoff_stack	_nc_prescreen.rippedoff
 
 extern NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen;
 
