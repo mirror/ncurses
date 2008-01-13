@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.35 2007/12/29 20:29:27 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.39 2008/01/13 01:21:59 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -131,6 +131,8 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
     NULL,			/* first_name */
     NULL,			/* keyname_table */
 
+    0,				/* slk_format */
+
     NULL,			/* safeprint_buf */
     0,				/* safeprint_used */
 
@@ -177,10 +179,10 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
 
 #endif /* TRACE */
 #ifdef USE_PTHREADS
-    PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,	/* mutex_set_SP */
-    PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,	/* mutex_use_screen */
-    PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,	/* mutex_use_window */
-    PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,	/* mutex_windowlist */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_set_SP */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_use_screen */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_use_window */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_windowlist */
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tst_tracef */
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tracef */
     0,				/* nested_tracef */
@@ -231,3 +233,24 @@ NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {
 #endif
 };
 /* *INDENT-ON* */
+
+/******************************************************************************/
+#ifdef USE_PTHREADS
+NCURSES_EXPORT(int)
+_nc_mutex_lock(pthread_mutex_t *obj)
+{
+    return pthread_mutex_lock(obj);
+}
+
+NCURSES_EXPORT(int)
+_nc_mutex_trylock(pthread_mutex_t *obj)
+{
+    return pthread_mutex_trylock(obj);
+}
+
+NCURSES_EXPORT(int)
+_nc_mutex_unlock(pthread_mutex_t *obj)
+{
+    return pthread_mutex_unlock(obj);
+}
+#endif /* USE_PTHREADS */

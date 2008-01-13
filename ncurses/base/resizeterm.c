@@ -41,7 +41,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.28 2008/01/06 01:23:36 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.30 2008/01/12 22:26:56 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
@@ -210,23 +210,21 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen EXTRA_DCLS)
 	 */
 	win->_begy += (ToLines - CurLines);
     } else {
-	if (myLines == CurLines - stolen
-	    && ToLines != CurLines)
+	if (myLines == (CurLines - stolen)
+	    && ToLines != CurLines) {
 	    myLines = ToLines - stolen;
-	else if (myLines == CurLines
-		 && ToLines != CurLines)
+	} else if (myLines == CurLines
+		   && ToLines != CurLines) {
 	    myLines = ToLines;
+	}
     }
 
-    if (myLines > ToLines)
+    if (myLines > ToLines) {
 	myLines = ToLines;
+    }
 
     if (myCols > ToCols)
 	myCols = ToCols;
-
-    if (myLines == CurLines
-	&& ToLines != CurLines)
-	myLines = ToLines;
 
     if (myCols == CurCols
 	&& ToCols != CurCols)
@@ -425,6 +423,10 @@ resizeterm(int ToLines, int ToCols)
 
 	    /* ripped-off lines are a special case: if we did not lengthen
 	     * them, we haven't moved them either.  repaint them, too.
+	     *
+	     * for the rest - stdscr and other windows - the client has to
+	     * decide which to repaint, since without panels, ncurses does
+	     * not know which are really on top.
 	     */
 	    for (rop = ripoff_stack; (rop - ripoff_stack) < N_RIPS; rop++) {
 		if (rop->win != stdscr

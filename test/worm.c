@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.50 2007/12/22 23:55:13 tom Exp $
+  $Id: worm.c,v 1.51 2008/01/13 01:03:23 tom Exp $
 */
 
 #include <test.priv.h>
@@ -93,6 +93,7 @@ typedef struct worm {
 #endif
 } WORM;
 
+static unsigned long sequence = 0;
 static bool quitting = FALSE;
 
 static WORM worm[40];
@@ -318,15 +319,19 @@ use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data)
 static bool
 quit_worm(void)
 {
-    napms(20);			/* let the other thread(s) have a chance */
+    napms(10);			/* let the other thread(s) have a chance */
     return quitting;
 }
 
 static void *
 start_worm(void *arg)
 {
+    unsigned long compare = 0;
     while (!quit_worm()) {
-	use_window(stdscr, draw_worm, arg);
+	while (compare < sequence) {
+	    ++compare;
+	    use_window(stdscr, draw_worm, arg);
+	}
     }
     return NULL;
 }
@@ -492,13 +497,13 @@ main(int argc, char *argv[])
 	    }
 	}
     }
-    napms(10);
     refresh();
     nodelay(stdscr, TRUE);
 
     while (!done) {
 	int ch;
 
+	++sequence;
 	if ((ch = getch()) > 0) {
 #ifdef TRACE
 	    if (trace_start || trace_end) {

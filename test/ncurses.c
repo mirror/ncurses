@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.296 2007/12/29 21:05:43 tom Exp $
+$Id: ncurses.c,v 1.298 2008/01/12 23:06:58 tom Exp $
 
 ***************************************************************************/
 
@@ -76,7 +76,7 @@ $Id: ncurses.c,v 1.296 2007/12/29 21:05:43 tom Exp $
 #define NCURSES_CONST_PARAM const void
 
 #ifdef TRACE
-static unsigned save_trace = TRACE_ORDINARY | TRACE_CALLS;
+static unsigned save_trace = TRACE_ORDINARY | TRACE_ICALLS | TRACE_CALLS;
 extern unsigned _nc_tracing;
 #endif
 
@@ -2525,6 +2525,7 @@ slk_test(void)
 #endif
 #if defined(NCURSES_VERSION) && defined(KEY_RESIZE) && HAVE_WRESIZE
 	case KEY_RESIZE:
+	    wnoutrefresh(stdscr);
 	    break;
 #endif
 
@@ -2655,6 +2656,7 @@ wide_slk_test(void)
 	    break;
 #if defined(NCURSES_VERSION) && defined(KEY_RESIZE) && HAVE_WRESIZE
 	case KEY_RESIZE:
+	    wnoutrefresh(stdscr);
 	    break;
 #endif
 	default:
