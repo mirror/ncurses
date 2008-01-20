@@ -1,6 +1,7 @@
 // * This makes emacs happy -*-Mode: C++;-*-
+// vile:cppmode
 /****************************************************************************
- * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +31,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.47 2007/12/16 00:21:05 tom Exp $
+// $Id: cursesw.h,v 1.48 2008/01/19 21:09:10 tom Exp $
 
 #include <etip.h>
 
@@ -1333,7 +1334,7 @@ public:
   // -------------------------------------------------------------------------
   // Extended functions
   // -------------------------------------------------------------------------
-#ifdef NCURSES_EXT_FUNCS
+#if defined(NCURSES_EXT_FUNCS) && (NCURSES_EXT_FUNCS != 0)
   int            wresize(int newLines, int newColumns) {
     return ::wresize(w, newLines, newColumns); }
 #endif

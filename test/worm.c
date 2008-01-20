@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.51 2008/01/13 01:03:23 tom Exp $
+  $Id: worm.c,v 1.53 2008/01/19 20:56:38 tom Exp $
 */
 
 #include <test.priv.h>
@@ -307,7 +307,7 @@ draw_worm(WINDOW *win, void *data)
     return done;
 }
 
-#if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915)
+#if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915) || !NCURSES_EXT_FUNCS
 static int
 use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data)
 {
@@ -360,6 +360,18 @@ draw_all_worms(void)
     }
 #endif
     return done;
+}
+
+static int
+get_input(void)
+{
+    int ch;
+#ifdef USE_PTHREADS
+    ch = use_window(stdscr, (NCURSES_CALLBACK) wgetch, stdscr);
+#else
+    ch = getch();
+#endif
+    return ch;
 }
 
 int
@@ -504,15 +516,15 @@ main(int argc, char *argv[])
 	int ch;
 
 	++sequence;
-	if ((ch = getch()) > 0) {
+	if ((ch = get_input()) > 0) {
 #ifdef TRACE
 	    if (trace_start || trace_end) {
 		if (generation == trace_start) {
 		    trace(TRACE_CALLS);
-		    getch();
+		    get_input();
 		} else if (generation == trace_end) {
 		    trace(0);
-		    getch();
+		    get_input();
 		}
 
 		generation++;

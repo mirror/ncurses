@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.66 2007/07/21 17:41:55 tom Exp $
+ * $Id: view.c,v 1.67 2008/01/19 21:01:21 tom Exp $
  */
 
 #include <test.priv.h>
@@ -512,6 +512,7 @@ show_all(const char *tag)
     i = strlen(temp);
     sprintf(temp + i, "view %.*s", (int) (sizeof(temp) - 7 - i), fname);
 #else
+    (void) tag;
     sprintf(temp, "view %.*s", (int) sizeof(temp) - 7, fname);
 #endif
     move(0, 0);

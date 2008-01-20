@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.95 2008/01/05 20:53:20 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.96 2008/01/19 21:08:07 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1215,6 +1215,8 @@ dump_termtype(TERMTYPE *term)
 		  NUM_STRINGS(term) - STRCOUNT);
 
     (void) printf("#endif /* NCURSES_XNAMES */\n");
+#else
+    (void) term;
 #endif /* NCURSES_XNAMES */
     (void) printf("\t%s\n", R_CURL);
 }

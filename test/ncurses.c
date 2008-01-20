@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.298 2008/01/12 23:06:58 tom Exp $
+$Id: ncurses.c,v 1.300 2008/01/19 23:10:59 tom Exp $
 
 ***************************************************************************/
 
@@ -608,7 +608,7 @@ remember_boxes(unsigned level, WINDOW *txt_win, WINDOW *box_win)
     winstack[level].frame = box_win;
 }
 
-#if USE_SOFTKEYS && (NCURSES_VERSION_PATCH < 20071229)
+#if USE_SOFTKEYS && (NCURSES_VERSION_PATCH < 20071229) && NCURSES_EXT_FUNCS
 static void
 slk_repaint(void)
 {
@@ -850,7 +850,7 @@ getch_test(void)
  * For wget_wch_test(), we create pairs of windows - one for a box, one for text.
  * Resize both and paint the box in the parent.
  */
-#ifdef KEY_RESIZE
+#if defined(KEY_RESIZE) && HAVE_WRESIZE
 static void
 resize_wide_boxes(unsigned level, WINDOW *win)
 {
@@ -1024,7 +1024,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	    } else
 #endif /* NCURSES_MOUSE_VERSION */
 	    if (code == KEY_CODE_YES) {
-#ifdef KEY_RESIZE
+#if defined(KEY_RESIZE) && HAVE_WRESIZE
 		if (c == KEY_RESIZE) {
 		    resize_wide_boxes(level, win);
 		}
@@ -3395,9 +3395,12 @@ FRAME
 };
 
 #if defined(NCURSES_VERSION)
-#if NCURSES_VERSION_PATCH < 20070331
+#if (NCURSES_VERSION_PATCH < 20070331) && NCURSES_EXT_FUNCS
 #define is_keypad(win)   (win)->_use_keypad
 #define is_scrollok(win) (win)->_scroll
+#elif !defined(is_keypad)
+#define is_keypad(win)   FALSE
+#define is_scrollok(win) FALSE
 #endif
 #else
 #define is_keypad(win)   FALSE
@@ -3684,7 +3687,7 @@ static void
 acs_and_scroll(void)
 /* Demonstrate windows */
 {
-    int c, i;
+    int c;
     FRAME *current = (FRAME *) 0, *neww;
     WINDOW *usescr = stdscr;
 #if HAVE_PUTWIN && HAVE_GETWIN
@@ -3797,7 +3800,7 @@ acs_and_scroll(void)
 	case CTRL('X'):	/* resize window */
 	    if (current) {
 		pair *tmp, ul, lr;
-		int mx, my;
+		int i, mx, my;
 
 		move(0, 0);
 		clrtoeol();

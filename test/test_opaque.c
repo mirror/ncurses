@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_opaque.c,v 1.4 2007/08/18 17:51:51 tom Exp $
+ * $Id: test_opaque.c,v 1.5 2008/01/19 21:01:36 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -50,6 +50,8 @@
 
 #define BASE_Y 6
 #define MAX_COLS 1024
+
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20070818) && NCURSES_EXT_FUNCS
 
 static bool
 Quit(int ch)
@@ -321,7 +323,7 @@ test_opaque(int level, char **argv, WINDOW *stswin)
 		break;
 	    case ' ':
 		bool_funcs[active].func(txtwin,
-									 !bool_funcs[active].func(txtwin, -1));
+					!bool_funcs[active].func(txtwin, -1));
 		break;
 	    default:
 		beep();
@@ -419,3 +421,11 @@ main(int argc, char *argv[])
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(void)
+{
+    printf("This program requires the ncurses library\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif
