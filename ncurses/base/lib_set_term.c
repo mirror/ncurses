@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.102 2007/12/29 20:36:32 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.103 2008/02/03 20:31:08 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -229,6 +229,7 @@ _nc_setupscreen(int slines GCC_UNUSED,
 		bool filtered,
 		int slk_format)
 {
+    char *env;
     int bottom_stolen = 0;
     bool support_cookies = USE_XMC_SUPPORT;
     ripoff_t *rop;
@@ -501,13 +502,12 @@ _nc_setupscreen(int slines GCC_UNUSED,
     _nc_init_wacs();
 
     SP->_screen_acs_fix = (_nc_unicode_locale() && _nc_locale_breaks_acs());
-    {
-	char *env = _nc_get_locale();
-	SP->_legacy_coding = ((env == 0)
-			      || !strcmp(env, "C")
-			      || !strcmp(env, "POSIX"));
-    }
 #endif
+    env = _nc_get_locale();
+    SP->_legacy_coding = ((env == 0)
+			  || !strcmp(env, "C")
+			  || !strcmp(env, "POSIX"));
+    T(("legacy-coding %d", SP->_legacy_coding));
 
     _nc_idcok = TRUE;
     _nc_idlok = FALSE;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.68 2007/06/30 17:53:09 tom Exp $ */
+/* $Id: test.priv.h,v 1.69 2008/01/26 22:05:48 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -458,5 +458,22 @@ extern int optind;
 		    if (nsig != SIGKILL) \
 			signal(nsig, handler); \
 	    }
+
+/*
+ * Simplify setting up demo of threading with these macros.
+ */
+#if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915) || !NCURSES_EXT_FUNCS
+#define WANT_USE_WINDOW() \
+static int \
+use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data) \
+{ \
+    return func(win, data); \
+}
+#define USING_WINDOW(w,func) use_window(w, (NCURSES_CALLBACK) func, w)
+#else
+#define WANT_USE_WINDOW() /* nothing */
+#define USING_WINDOW(w,func) func(w)
+#endif
+
 
 #endif /* __TEST_PRIV_H */

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1199 2008/01/19 21:10:02 tom Exp $
+-- $Id: NEWS,v 1.1204 2008/02/03 20:34:02 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080203
+	+ modify _nc_setupscreen() to set the legacy-coding value the same
+	  for both narrow/wide models.  It had been set only for wide model,
+	  but is needed to make unctrl() work with locale in the narrow model.
+	+ improve waddch() and winsch() handling of EILSEQ from mbrtowc() by
+	  using unctrl() to display illegal bytes rather than trying to append
+	  further bytes to make up a valid sequence (reported by Andrey A
+	  Chernov).
+	+ modify unctrl() to check codes in 128-255 range versus isprint().
+	  If they are not printable, and locale was set, use a "M-" or "~"
+	  sequence.
+
+20080126
+	+ improve threading in test/worm.c (wrap refresh calls, and KEY_RESIZE
+	  handling).  Now it hangs in napms(), no matter whether nanosleep()
+	  or poll() or select() are used on Linux.
 
 20080119
 	+ fixes to build with --disable-ext-funcs

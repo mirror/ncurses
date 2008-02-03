@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.53 2008/01/19 20:56:38 tom Exp $
+  $Id: worm.c,v 1.55 2008/01/26 22:07:57 tom Exp $
 */
 
 #include <test.priv.h>
@@ -69,6 +69,11 @@ Options:
 #ifdef USE_PTHREADS
 #include <pthread.h>
 #endif
+
+WANT_USE_WINDOW();
+
+#define MAX_WORMS	40
+#define MAX_LENGTH	1024
 
 static chtype flavor[] =
 {
@@ -96,8 +101,9 @@ typedef struct worm {
 static unsigned long sequence = 0;
 static bool quitting = FALSE;
 
-static WORM worm[40];
+static WORM worm[MAX_WORMS];
 static short **refs;
+static int last_x, last_y;
 
 static const char *field;
 static int length = 16, number = 3;
@@ -197,8 +203,7 @@ static const struct options {
 static void
 cleanup(void)
 {
-    standend();
-    refresh();
+    USING_WINDOW(stdscr, wrefresh);
     curs_set(1);
     endwin();
 }
@@ -227,23 +232,20 @@ draw_worm(WINDOW *win, void *data)
     int y;
     int h;
 
-    int bottom = LINES - 1;
-    int last = COLS - 1;
-
     bool done = FALSE;
 
     if ((x = w->xpos[h = w->head]) < 0) {
-	wmove(win, y = w->ypos[h] = bottom, x = w->xpos[h] = 0);
+	wmove(win, y = w->ypos[h] = last_y, x = w->xpos[h] = 0);
 	waddch(win, w->attrs);
 	refs[y][x]++;
     } else {
 	y = w->ypos[h];
     }
 
-    if (x > last)
-	x = last;
-    if (y > bottom)
-	y = bottom;
+    if (x > last_x)
+	x = last_x;
+    if (y > last_y)
+	y = last_y;
 
     if (++h == length)
 	h = 0;
@@ -263,18 +265,18 @@ draw_worm(WINDOW *win, void *data)
     op = &(x == 0
 	   ? (y == 0
 	      ? upleft
-	      : (y == bottom
+	      : (y == last_y
 		 ? lowleft
 		 : left))
-	   : (x == last
+	   : (x == last_x
 	      ? (y == 0
 		 ? upright
-		 : (y == bottom
+		 : (y == last_y
 		    ? lowright
 		    : right))
 	      : (y == 0
 		 ? upper
-		 : (y == bottom
+		 : (y == last_y
 		    ? lower
 		    : normal))))[w->orientation];
 
@@ -306,14 +308,6 @@ draw_worm(WINDOW *win, void *data)
 
     return done;
 }
-
-#if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915) || !NCURSES_EXT_FUNCS
-static int
-use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data)
-{
-    return func(win, data);
-}
-#endif
 
 #ifdef USE_PTHREADS
 static bool
@@ -366,13 +360,39 @@ static int
 get_input(void)
 {
     int ch;
-#ifdef USE_PTHREADS
-    ch = use_window(stdscr, (NCURSES_CALLBACK) wgetch, stdscr);
-#else
-    ch = getch();
-#endif
+    ch = USING_WINDOW(stdscr, wgetch);
     return ch;
 }
+
+#ifdef KEY_RESIZE
+static int
+update_refs(WINDOW *win)
+{
+    int x, y;
+
+    (void) win;
+    if (last_x != COLS - 1) {
+	for (y = 0; y <= last_y; y++) {
+	    refs[y] = typeRealloc(short, COLS, refs[y]);
+	    for (x = last_x + 1; x < COLS; x++)
+		refs[y][x] = 0;
+	}
+	last_x = COLS - 1;
+    }
+    if (last_y != LINES - 1) {
+	for (y = LINES; y <= last_y; y++)
+	    free(refs[y]);
+	refs = typeRealloc(short *, LINES, refs);
+	for (y = last_y + 1; y < LINES; y++) {
+	    refs[y] = typeMalloc(short, COLS);
+	    for (x = 0; x < COLS; x++)
+		refs[y][x] = 0;
+	}
+	last_y = LINES - 1;
+    }
+    return OK;
+}
+#endif
 
 int
 main(int argc, char *argv[])
@@ -381,7 +401,6 @@ main(int argc, char *argv[])
     int n;
     struct worm *w;
     short *ip;
-    int last, bottom;
     bool done = FALSE;
 
     setlocale(LC_ALL, "");
@@ -398,7 +417,7 @@ main(int argc, char *argv[])
 	case 'l':
 	    if (++x == argc)
 		goto usage;
-	    if ((length = atoi(argv[x])) < 2 || length > 1024) {
+	    if ((length = atoi(argv[x])) < 2 || length > MAX_LENGTH) {
 		fprintf(stderr, "%s: Invalid length\n", *argv);
 		ExitProgram(EXIT_FAILURE);
 	    }
@@ -406,7 +425,7 @@ main(int argc, char *argv[])
 	case 'n':
 	    if (++x == argc)
 		goto usage;
-	    if ((number = atoi(argv[x])) < 1 || number > 40) {
+	    if ((number = atoi(argv[x])) < 1 || number > MAX_WORMS) {
 		fprintf(stderr, "%s: Invalid number of worms\n", *argv);
 		ExitProgram(EXIT_FAILURE);
 	    }
@@ -439,8 +458,8 @@ main(int argc, char *argv[])
 
     curs_set(0);
 
-    bottom = LINES - 1;
-    last = COLS - 1;
+    last_y = LINES - 1;
+    last_x = COLS - 1;
 
 #ifdef A_COLOR
     if (has_colors()) {
@@ -475,7 +494,7 @@ main(int argc, char *argv[])
 
 #ifdef BADCORNER
     /* if addressing the lower right corner doesn't work in your curses */
-    refs[bottom][last] = 1;
+    refs[last_y][last_x] = 1;
 #endif /* BADCORNER */
 
     for (n = number, w = &worm[0]; --n >= 0; w++) {
@@ -501,7 +520,7 @@ main(int argc, char *argv[])
     if (field) {
 	const char *p;
 	p = field;
-	for (y = bottom; --y >= 0;) {
+	for (y = last_y; --y >= 0;) {
 	    for (x = COLS; --x >= 0;) {
 		addch((chtype) (*p++));
 		if (!*p)
@@ -509,7 +528,7 @@ main(int argc, char *argv[])
 	    }
 	}
     }
-    refresh();
+    USING_WINDOW(stdscr, wrefresh);
     nodelay(stdscr, TRUE);
 
     while (!done) {
@@ -530,29 +549,13 @@ main(int argc, char *argv[])
 		generation++;
 	    }
 #endif
+
 #ifdef KEY_RESIZE
 	    if (ch == KEY_RESIZE) {
-		if (last != COLS - 1) {
-		    for (y = 0; y <= bottom; y++) {
-			refs[y] = typeRealloc(short, COLS, refs[y]);
-			for (x = last + 1; x < COLS; x++)
-			    refs[y][x] = 0;
-		    }
-		    last = COLS - 1;
-		}
-		if (bottom != LINES - 1) {
-		    for (y = LINES; y <= bottom; y++)
-			free(refs[y]);
-		    refs = typeRealloc(short *, LINES, refs);
-		    for (y = bottom + 1; y < LINES; y++) {
-			refs[y] = typeMalloc(short, COLS);
-			for (x = 0; x < COLS; x++)
-			    refs[y][x] = 0;
-		    }
-		    bottom = LINES - 1;
-		}
+		USING_WINDOW(stdscr, update_refs);
 	    }
 #endif
+
 	    /*
 	     * Make it simple to put this into single-step mode, or resume
 	     * normal operation -T.Dickey
@@ -570,7 +573,7 @@ main(int argc, char *argv[])
 
 	done = draw_all_worms();
 	napms(10);
-	refresh();
+	USING_WINDOW(stdscr, wrefresh);
     }
 
     cleanup();
