@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.28 2007/08/11 16:34:49 tom Exp $
+ * $Id: demo_panels.c,v 1.29 2008/02/09 23:05:37 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -634,7 +634,7 @@ get_command(PANEL * px[MAX_PANELS + 1], char *buffer, int limit)
     if (log_in != 0) {
 	if (fgets(buffer, limit - 3, log_in) != 0) {
 	    length = strlen(buffer);
-	    while (length > 0 && isspace(buffer[length - 1]))
+	    while (length > 0 && isspace(UChar(buffer[length - 1])))
 		buffer[--length] = '\0';
 	    waddstr(win, buffer);
 	} else {

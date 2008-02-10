@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_arrays.c,v 1.2 2007/09/01 20:11:57 tom Exp $
+ * $Id: test_arrays.c,v 1.3 2008/02/09 18:09:43 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -46,6 +46,8 @@ extern NCURSES_EXPORT_VAR(NCURSES_CONST char * const ) strfnames[];
 
 #define USE_TINFO
 #include <test.priv.h>
+
+#if defined(NCURSES_VERSION) || !defined(_XOPEN_CURSES)
 
 #define DUMP(name) dump_array(#name, name)
 
@@ -77,3 +79,12 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     ExitProgram(EXIT_SUCCESS);
 }
+
+#else
+int
+main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+{
+    printf("This program requires the terminfo arrays\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif

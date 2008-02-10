@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_getstr.c,v 1.7 2007/08/11 16:56:25 tom Exp $
+ * $Id: test_getstr.c,v 1.8 2008/02/09 18:09:35 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -43,6 +43,9 @@
  */
 
 #include <test.priv.h>
+
+#if HAVE_CHGAT
+/* Solaris SVr4 curses lacks wchgat, mvgetnstr, mvwgetnstr */
 
 #define BASE_Y 6
 #define MAX_COLS 1024
@@ -349,3 +352,12 @@ main(int argc, char *argv[])
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }
+
+#else
+int
+main(void)
+{
+    printf("This program requires the curses chgat function\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif

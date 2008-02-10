@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2004,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2006,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,12 +26,12 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_set.c,v 1.5 2006/06/03 16:40:10 tom Exp $
+ * $Id: color_set.c,v 1.6 2008/02/10 00:18:01 tom Exp $
  */
 
 #include <test.priv.h>
 
-#ifdef HAVE_COLOR_SET
+#if HAVE_COLOR_SET
 
 #define SHOW(n) ((n) == ERR ? "ERR" : "OK")
 

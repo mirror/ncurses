@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.300 2008/01/19 23:10:59 tom Exp $
+$Id: ncurses.c,v 1.301 2008/02/09 17:19:55 tom Exp $
 
 ***************************************************************************/
 
@@ -1310,7 +1310,7 @@ show_attr(int row, int skip, bool arrow, chtype attr, const char *name)
 }
 /* *INDENT-OFF* */
 static const struct {
-    attr_t			attr;
+    chtype			attr;
     NCURSES_CONST char *	name;
 } attrs_to_test[] = {
     { A_STANDOUT,	"STANDOUT" },
@@ -2893,7 +2893,7 @@ acs_display(void)
 
 #if USE_WIDEC_SUPPORT
 static cchar_t *
-merge_wide_attr(cchar_t *dst, cchar_t *src, attr_t attr, short pair)
+merge_wide_attr(cchar_t *dst, const cchar_t *src, attr_t attr, short pair)
 {
     int count = getcchar(src, NULL, NULL, NULL, 0);
     wchar_t *wch = 0;
@@ -3138,7 +3138,7 @@ show_utf8_chars(attr_t attr, short pair)
 }
 /* *INDENT-OFF* */
 static struct {
-    attr_t attr;
+    chtype attr;
     const char *name;
 } attrs_to_cycle[] = {
     { A_NORMAL,		"normal" },
@@ -4849,7 +4849,7 @@ menu_virtualize(int c)
     }
 }
 
-static const char *animals[] =
+static CONST_MENUS char *animals[] =
 {
     "Lions",
     "Tigers",
@@ -4873,7 +4873,7 @@ menu_test(void)
     MENU *m;
     ITEM *items[SIZEOF(animals)];
     ITEM **ip = items;
-    const char **ap;
+    CONST_MENUS char **ap;
     int mrows, mcols, c;
     WINDOW *menuwin;
 
@@ -5930,7 +5930,7 @@ do_single_test(const char c)
 	break;
 #endif
 
-#if USE_WIDEC_SUPPORT
+#if USE_WIDEC_SUPPORT && USE_LIBPANEL
     case 'O':
 	demo_panels(init_wide_panel, fill_wide_panel);
 	break;

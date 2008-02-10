@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.16 2007/02/03 18:51:23 tom Exp $
+ * $Id: dots.c,v 1.17 2008/02/09 18:08:50 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -47,7 +47,7 @@ static long total_chars = 0;
 static time_t started;
 
 static int
-outc(int c)
+outc(TPUTS_ARG c)
 {
     if (interrupted) {
 	char tmp = c;

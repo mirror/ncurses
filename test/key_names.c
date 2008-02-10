@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: key_names.c,v 1.2 2007/06/09 22:32:34 tom Exp $
+ * $Id: key_names.c,v 1.3 2008/02/09 18:09:18 tom Exp $
  */
 
 #include <test.priv.h>
@@ -39,7 +39,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     int n;
 
     setlocale(LC_ALL, "");
-    for (n = -1; n < KEY_MAX + 512; n++) {
+    for (n = KEY_MIN; n < KEY_MAX + 512; n++) {
 	const char *result = key_name(n);
 	if (result != 0)
 	    printf("%d(%5o):%s\n", n, n, result);

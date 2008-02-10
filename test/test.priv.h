@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.69 2008/01/26 22:05:48 tom Exp $ */
+/* $Id: test.priv.h,v 1.73 2008/02/10 00:12:55 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -59,6 +59,14 @@
 #define HAVE_CURSES_VERSION 0
 #endif
 
+#ifndef HAVE_CHGAT
+#define HAVE_CHGAT 0
+#endif
+
+#ifndef HAVE_COLOR_SET
+#define HAVE_COLOR_SET 0
+#endif
+
 #ifndef HAVE_FILTER
 #define HAVE_FILTER 0
 #endif
@@ -81,6 +89,10 @@
 
 #ifndef HAVE_GETOPT_H
 #define HAVE_GETOPT_H 0
+#endif
+
+#ifndef HAVE_GETPARX
+#define HAVE_GETPARX 0
 #endif
 
 #ifndef HAVE_GETWIN
@@ -235,9 +247,18 @@
 #include <term.h>
 #endif
 
-#ifdef NCURSES_VERSION
-#define HAVE_COLOR_SET 1
-#define HAVE_CHGAT 1
+/*
+ * Not all curses.h implementations include unctrl.h,
+ * Solaris 10 xpg4 for example.
+ */
+#if defined(NCURSES_VERSION) || defined(_XOPEN_CURSES)
+#if defined(HAVE_NCURSESW_NCURSES_H)
+#include <ncursesw/unctrl.h>
+#elif defined(HAVE_NCURSES_NCURSES_H)
+#include <ncurses/unctrl.h>
+#else
+#include <unctrl.h>
+#endif
 #endif
 
 #if HAVE_GETOPT_H
@@ -308,7 +329,7 @@ extern int optind;
 #endif
 
 #ifndef HAVE_TYPE_ATTR_T
-#if !USE_WIDEC_SUPPORT
+#if !USE_WIDEC_SUPPORT && !defined(attr_t)
 #define attr_t chtype
 #endif
 #endif
@@ -328,9 +349,8 @@ extern int optind;
 #define CCHARW_MAX 5
 #endif
 
-#ifndef CTRL
-#define CTRL(x)		((x) & 0x1f)
-#endif
+#undef CTRL
+#define CTRL(x)	((x) & 0x1f)
 
 #define QUIT		CTRL('Q')
 #define ESCAPE		CTRL('[')
@@ -369,6 +389,21 @@ extern int optind;
 #if !defined(getmaxx) && !HAVE_GETMAXX
 #define getmaxx(win)            ((win)?((win)->_maxx + 1):ERR)
 #define getmaxy(win)            ((win)?((win)->_maxy + 1):ERR)
+#endif
+
+/*
+ * Solaris 10 xpg4:
+#define	__m_getparx(w)		((w)->_parent == (WINDOW *) 0 ? -1 \
+				: (w)->_begx - (w)->_parent->_begx)
+ */
+#if !defined(getparx) && !HAVE_GETPARX
+#ifdef __m_getparx
+#define getparx(win)            __m_getparx(win)
+#define getpary(win)            __m_getpary(win)
+#else
+#define getparx(win)            ((win)?((win)->_parx + 1):ERR)
+#define getpary(win)            ((win)?((win)->_pary + 1):ERR)
+#endif
 #endif
 
 #if !defined(mvwvline) && !HAVE_MVWVLINE
@@ -460,18 +495,55 @@ extern int optind;
 	    }
 
 /*
+ * Workaround for clean(er) compile with Solaris's legacy curses.
+ * The same would be needed for HPUX 10.20
+ */
+#ifndef TPUTS_ARG
+#if defined(sun) && !defined(_XOPEN_CURSES) && !defined(NCURSES_VERSION_PATCH)
+#define TPUTS_ARG char
+extern char *tgoto(char *, int, int);	/* available, but not prototyped */
+#else
+#define TPUTS_ARG int
+#endif
+#endif
+
+/*
+ * Workarounds for Solaris's X/Open curses
+ */
+#if defined(sun) && defined(_XOPEN_CURSES) && !defined(NCURSES_VERSION_PATCH)
+#if !defined(KEY_MIN) && defined(__KEY_MIN)
+#define KEY_MIN __KEY_MIN
+#endif
+#if !defined(KEY_MAX) && defined(__KEY_MIN)
+#define KEY_MAX __KEY_MAX
+#endif
+#endif
+
+/*
+ * ncurses uses const in some places where X/Open does (or did) not allow.
+ */
+#ifdef NCURSES_VERSION
+#define CONST_MENUS const
+#else
+#define CONST_MENUS /* nothing */
+#endif
+
+/*
  * Simplify setting up demo of threading with these macros.
  */
 #if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915) || !NCURSES_EXT_FUNCS
+typedef int (*NCURSES_CALLBACK)(WINDOW *, void *);
 #define WANT_USE_WINDOW() \
 static int \
 use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data) \
 { \
     return func(win, data); \
-}
+} \
+	extern void _nc_want_use_window(void)
 #define USING_WINDOW(w,func) use_window(w, (NCURSES_CALLBACK) func, w)
 #else
-#define WANT_USE_WINDOW() /* nothing */
+#define WANT_USE_WINDOW() /* nothing */ \
+	extern void _nc_want_use_window(void)
 #define USING_WINDOW(w,func) func(w)
 #endif
 

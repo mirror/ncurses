@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.21 2007/07/21 17:45:09 tom Exp $
+ * $Id: demo_menus.c,v 1.22 2008/02/09 18:09:26 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -291,7 +291,7 @@ menu_display(MENU * m)
 static void
 build_file_menu(MenuNo number)
 {
-    static const char *labels[] =
+    static CONST_MENUS char *labels[] =
     {
 	"Exit",
 	(char *) 0
@@ -299,7 +299,7 @@ build_file_menu(MenuNo number)
     static ITEM *items[SIZEOF(labels)];
 
     ITEM **ip = items;
-    const char **ap;
+    CONST_MENUS char **ap;
 
     for (ap = labels; *ap; ap++)
 	*ip++ = new_item(*ap, "");
@@ -319,7 +319,7 @@ perform_file_menu(int cmd)
 static void
 build_select_menu(MenuNo number, char *filename)
 {
-    static const char *labels[] =
+    static CONST_MENUS char *labels[] =
     {
 	"Lions",
 	"Tigers",
@@ -339,7 +339,7 @@ build_select_menu(MenuNo number, char *filename)
     static ITEM **items;
 
     ITEM **ip;
-    const char **ap = 0;
+    CONST_MENUS char **ap = 0;
     unsigned count = 0;
 
     if (filename != 0) {
@@ -350,7 +350,8 @@ build_select_menu(MenuNo number, char *filename)
 	    unsigned size = sb.st_size;
 	    unsigned j, k;
 	    char *blob = malloc(size + 1);
-	    const char **list = (const char **) calloc(sizeof(*list), size + 1);
+	    CONST_MENUS char **list =
+	    (CONST_MENUS char **) calloc(sizeof(*list), size + 1);
 
 	    items = (ITEM **) calloc(sizeof(ITEM *), size + 1);
 	    if (blob != 0 && list != 0) {
@@ -569,7 +570,7 @@ current_menu(void)
 static void
 build_menus(char *filename)
 {
-    static const char *labels[] =
+    static CONST_MENUS char *labels[] =
     {
 	"File",
 	"Select",
@@ -581,7 +582,7 @@ build_menus(char *filename)
     static ITEM *items[SIZEOF(labels)];
 
     ITEM **ip = items;
-    const char **ap;
+    CONST_MENUS char **ap;
 
     for (ap = labels; *ap; ap++)
 	*ip++ = new_item(*ap, "");

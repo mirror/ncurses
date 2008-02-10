@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.6 2007/02/03 18:51:23 tom Exp $
+ * $Id: demo_termcap.c,v 1.7 2008/02/09 18:08:36 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -116,7 +116,7 @@ dumpit(char *cap)
 }
 
 static void
-demo_termcap(const char *name)
+demo_termcap(char *name)
 {
     char buffer[1024];
 
@@ -153,11 +153,13 @@ main(int argc, char *argv[])
     } else if ((name = getenv("TERM")) != 0) {
 	demo_termcap(name);
     } else {
-	demo_termcap("dumb");
+	static char dumb[] = "dumb";
+	demo_termcap(dumb);
     }
 
     ExitProgram(EXIT_SUCCESS);
 }
+
 #else
 int
 main(int argc GCC_UNUSED,

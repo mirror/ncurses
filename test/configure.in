@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.63 2007/06/09 20:02:57 tom Exp $
+dnl $Id: configure.in,v 1.65 2008/02/09 18:24:11 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -178,6 +178,11 @@ unistd.h \
 )
 
 AC_CHECK_FUNCS( \
+gettimeofday \
+strdup \
+)
+
+CF_CURSES_FUNCS( \
 chgat \
 color_set \
 filter \
@@ -185,7 +190,7 @@ getbegx \
 getcurx \
 getmaxx \
 getnstr \
-gettimeofday \
+getparx \
 getwin \
 mvvline \
 mvwvline \
@@ -197,7 +202,6 @@ ripoffline \
 setupterm \
 slk_color \
 slk_init \
-strdup \
 termattrs \
 tgetent \
 tigetnum \

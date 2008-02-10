@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006,2007 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2006-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,14 +26,14 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.7 2007/06/30 17:52:17 tom Exp $
+ * $Id: chgat.c,v 1.8 2008/02/09 23:19:13 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
 
 #include <test.priv.h>
 
-#ifdef HAVE_CHGAT
+#if HAVE_CHGAT
 
 #define SHOW(n) ((n) == ERR ? "ERR" : "OK")
 #define COLOR_DEFAULT (-1)
