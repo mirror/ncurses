@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.73 2008/02/10 00:12:55 tom Exp $ */
+/* $Id: test.priv.h,v 1.74 2008/02/23 23:02:41 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -547,5 +547,12 @@ use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data) \
 #define USING_WINDOW(w,func) func(w)
 #endif
 
+#ifdef TRACE
+#define Trace(p) _tracef p
+#define USE_TRACE 1
+#else
+#define Trace(p)		/* nothing */
+#define USE_TRACE 0
+#endif
 
 #endif /* __TEST_PRIV_H */

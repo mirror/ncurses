@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.22 2008/02/09 18:09:26 tom Exp $
+ * $Id: demo_menus.c,v 1.23 2008/02/23 23:06:49 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -130,14 +130,14 @@ wGetchar(WINDOW *win)
     while ((c = wgetch(win)) == CTRL('T')) {
 	if (_nc_tracing) {
 	    save_trace = _nc_tracing;
-	    _tracef("TOGGLE-TRACING OFF");
+	    Trace(("TOGGLE-TRACING OFF"));
 	    _nc_tracing = 0;
 	} else {
 	    _nc_tracing = save_trace;
 	}
 	trace(_nc_tracing);
 	if (_nc_tracing)
-	    _tracef("TOGGLE-TRACING ON");
+	    Trace(("TOGGLE-TRACING ON"));
     }
 #else
     c = wgetch(win);
@@ -270,7 +270,7 @@ menu_destroy(MENU * m)
 #if 0
 	if (count > 0) {
 	    while (*ip) {
-		_tracef("freeing item %d:%d", ip - menu_items(m), count);
+		Trace(("freeing item %d:%d", ip - menu_items(m), count));
 		free_item(*ip++);
 	    }
 	}
@@ -524,7 +524,7 @@ perform_trace_menu(int cmd)
 		    newtrace |= t_tbl[item_index(*ip)].mask;
 	    }
 	    trace(newtrace);
-	    _tracef("trace level interactively set to %s", tracetrace(_nc_tracing));
+	    Trace(("trace level interactively set to %s", tracetrace(_nc_tracing)));
 
 	    (void) mvprintw(LINES - 2, 0,
 			    "Trace level is %s\n", tracetrace(_nc_tracing));

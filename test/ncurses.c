@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.301 2008/02/09 17:19:55 tom Exp $
+$Id: ncurses.c,v 1.302 2008/02/23 23:07:28 tom Exp $
 
 ***************************************************************************/
 
@@ -183,14 +183,14 @@ wGetchar(WINDOW *win)
     while ((c = wgetch(win)) == CTRL('T')) {
 	if (_nc_tracing) {
 	    save_trace = _nc_tracing;
-	    _tracef("TOGGLE-TRACING OFF");
+	    Trace(("TOGGLE-TRACING OFF"));
 	    _nc_tracing = 0;
 	} else {
 	    _nc_tracing = save_trace;
 	}
 	trace(_nc_tracing);
 	if (_nc_tracing)
-	    _tracef("TOGGLE-TRACING ON");
+	    Trace(("TOGGLE-TRACING ON"));
     }
 #else
     c = wgetch(win);
@@ -276,14 +276,14 @@ wGet_wchar(WINDOW *win, wint_t *result)
     while ((c = wget_wch(win, result)) == CTRL('T')) {
 	if (_nc_tracing) {
 	    save_trace = _nc_tracing;
-	    _tracef("TOGGLE-TRACING OFF");
+	    Trace(("TOGGLE-TRACING OFF"));
 	    _nc_tracing = 0;
 	} else {
 	    _nc_tracing = save_trace;
 	}
 	trace(_nc_tracing);
 	if (_nc_tracing)
-	    _tracef("TOGGLE-TRACING ON");
+	    Trace(("TOGGLE-TRACING ON"));
     }
 #else
     c = wget_wch(win, result);
@@ -5079,7 +5079,7 @@ trace_set(void)
 	if (item_value(*ip))
 	    newtrace |= t_tbl[item_index(*ip)].mask;
     trace(newtrace);
-    _tracef("trace level interactively set to %s", tracetrace(_nc_tracing));
+    Trace(("trace level interactively set to %s", tracetrace(_nc_tracing)));
 
     (void) mvprintw(LINES - 2, 0,
 		    "Trace level is %s\n", tracetrace(_nc_tracing));

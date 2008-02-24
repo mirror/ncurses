@@ -40,8 +40,9 @@
 */
 
 #include <curses.priv.h>
+#include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.44 2008/01/13 00:28:13 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.45 2008/02/23 20:57:58 tom Exp $")
 
 static WINDOW *
 remove_window_from_screen(WINDOW *win)
@@ -230,14 +231,7 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
     if ((wp = typeCalloc(WINDOWLIST, 1)) == 0)
 	returnWin(0);
 
-#ifdef USE_PTHREADS
-    {
-	pthread_mutexattr_t recattr;
-	memset(&recattr, 0, sizeof(recattr));
-	pthread_mutexattr_settype(&recattr, PTHREAD_MUTEX_NORMAL);
-	pthread_mutex_init(&(wp->mutex_use_window), &recattr);
-    }
-#endif
+    _nc_mutex_init(&(wp->mutex_use_window));
 
     win = &(wp->win);
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,16 +30,8 @@
  *
  * Generate timing statistics for vertical-motion optimization.
  *
- * $Id: hashtest.c,v 1.27 2007/07/21 17:45:09 tom Exp $
+ * $Id: hashtest.c,v 1.28 2008/02/23 23:02:41 tom Exp $
  */
-
-#ifdef TRACE
-#define Trace(p) _tracef p
-#define USE_TRACE 1
-#else
-#define Trace(p)		/* nothing */
-#define USE_TRACE 0
-#endif
 
 #include <test.priv.h>
 

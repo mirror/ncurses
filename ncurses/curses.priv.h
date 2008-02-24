@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.357 2008/01/13 00:33:10 tom Exp $
+ * $Id: curses.priv.h,v 1.359 2008/02/23 21:19:56 tom Exp $
  *
  *	curses.priv.h
  *
@@ -312,8 +312,10 @@ color_t;
 #define TR_GLOBAL_MUTEX(name) TR_MUTEX(_nc_globals.mutex_##name)
 
 #ifdef USE_PTHREADS
+
 #if USE_REENTRANT
 #include <pthread.h>
+extern NCURSES_EXPORT(void) _nc_mutex_init(pthread_mutex_t *);
 extern NCURSES_EXPORT(int) _nc_mutex_lock(pthread_mutex_t *);
 extern NCURSES_EXPORT(int) _nc_mutex_trylock(pthread_mutex_t *);
 extern NCURSES_EXPORT(int) _nc_mutex_unlock(pthread_mutex_t *);
@@ -327,7 +329,16 @@ extern NCURSES_EXPORT(void) _nc_unlock_window(WINDOW *);
 #else
 #error POSIX threads requires --enable-reentrant option
 #endif
-#else
+
+#if HAVE_NANOSLEEP
+#undef HAVE_NANOSLEEP
+#define HAVE_NANOSLEEP 0	/* nanosleep suspends all threads */
+#endif
+
+#else /* !USE_PTHREADS */
+
+#define _nc_mutex_init(obj)	/* nothing */
+
 #define _nc_lock_global(name)	/* nothing */
 #define _nc_try_global(name)    0
 #define _nc_unlock_global(name)	/* nothing */
@@ -335,7 +346,7 @@ extern NCURSES_EXPORT(void) _nc_unlock_window(WINDOW *);
 #define _nc_lock_window(name)	(void) TRUE
 #define _nc_unlock_window(name)	/* nothing */
 
-#endif
+#endif /* USE_PTHREADS */
 
 #define _nc_lock_screen(name)	/* nothing */
 #define _nc_unlock_screen(name)	/* nothing */
@@ -583,11 +594,9 @@ typedef struct {
 	unsigned char	*tracetry_buf;
 	size_t		tracetry_used;
 
-#ifndef USE_TERMLIB
 	char		traceatr_color_buf[2][80];
 	int		traceatr_color_sel;
 	int		traceatr_color_last;
-#endif	/* USE_TERMLIB */
 
 #endif	/* TRACE */
 

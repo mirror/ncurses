@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.55 2008/01/26 22:07:57 tom Exp $
+  $Id: worm.c,v 1.56 2008/02/23 23:08:57 tom Exp $
 */
 
 #include <test.priv.h>
@@ -321,12 +321,14 @@ static void *
 start_worm(void *arg)
 {
     unsigned long compare = 0;
+    Trace(("start_worm"));
     while (!quit_worm()) {
 	while (compare < sequence) {
 	    ++compare;
 	    use_window(stdscr, draw_worm, arg);
 	}
     }
+    Trace(("...start_worm (done)"));
     return NULL;
 }
 #endif
@@ -576,6 +578,7 @@ main(int argc, char *argv[])
 	USING_WINDOW(stdscr, wrefresh);
     }
 
+    Trace(("Cleanup"));
     cleanup();
 #ifdef NO_LEAKS
     for (y = 0; y < LINES; y++) {
@@ -591,6 +594,7 @@ main(int argc, char *argv[])
     /*
      * Do this just in case one of the threads did not really exit.
      */
+    Trace(("join all threads"));
     for (n = 0; n < number; n++) {
 	pthread_join(worm[n].thread, NULL);
     }
