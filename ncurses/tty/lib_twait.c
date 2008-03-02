@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -62,15 +62,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: lib_twait.c,v 1.54 2007/08/11 16:32:48 tom Exp $")
-
-#if HAVE_GETTIMEOFDAY
-# define PRECISE_GETTIME 1
-# define TimeType struct timeval
-#else
-# define PRECISE_GETTIME 0
-# define TimeType time_t
-#endif
+MODULE_ID("$Id: lib_twait.c,v 1.55 2008/03/01 22:08:31 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, bool first)

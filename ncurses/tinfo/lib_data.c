@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.40 2008/02/23 21:23:44 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.42 2008/03/02 00:04:32 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -234,31 +234,59 @@ NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {
 
 /******************************************************************************/
 #ifdef USE_PTHREADS
+static void
+init_global_mutexes(void)
+{
+    static bool initialized = FALSE;
+
+    if (!initialized) {
+	initialized = TRUE;
+	_nc_mutex_init(&_nc_globals.mutex_set_SP);
+	_nc_mutex_init(&_nc_globals.mutex_use_screen);
+	_nc_mutex_init(&_nc_globals.mutex_use_window);
+	_nc_mutex_init(&_nc_globals.mutex_windowlist);
+	_nc_mutex_init(&_nc_globals.mutex_tst_tracef);
+	_nc_mutex_init(&_nc_globals.mutex_tracef);
+    }
+}
+
+/*
+ * Use recursive mutexes if we have them - they're part of Unix98.
+ * For the cases where we do not, _nc_mutex_trylock() is used to avoid a
+ * deadlock, at the expense of memory leaks and unexpected failures that
+ * may not be handled by typical clients.
+ *
+ * FIXME - need configure check for PTHREAD_MUTEX_RECURSIVE, define it to
+ * PTHREAD_MUTEX_NORMAL if not supported.
+ */
 NCURSES_EXPORT(void)
 _nc_mutex_init(pthread_mutex_t * obj)
 {
     pthread_mutexattr_t recattr;
 
     memset(&recattr, 0, sizeof(recattr));
-    pthread_mutexattr_settype(&recattr, PTHREAD_MUTEX_NORMAL);
+    pthread_mutexattr_settype(&recattr, PTHREAD_MUTEX_RECURSIVE);
     pthread_mutex_init(obj, &recattr);
 }
 
 NCURSES_EXPORT(int)
 _nc_mutex_lock(pthread_mutex_t * obj)
 {
+    init_global_mutexes();
     return pthread_mutex_lock(obj);
 }
 
 NCURSES_EXPORT(int)
 _nc_mutex_trylock(pthread_mutex_t * obj)
 {
+    init_global_mutexes();
     return pthread_mutex_trylock(obj);
 }
 
 NCURSES_EXPORT(int)
 _nc_mutex_unlock(pthread_mutex_t * obj)
 {
+    init_global_mutexes();
     return pthread_mutex_unlock(obj);
 }
 #endif /* USE_PTHREADS */

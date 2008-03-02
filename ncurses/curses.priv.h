@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.359 2008/02/23 21:19:56 tom Exp $
+ * $Id: curses.priv.h,v 1.360 2008/03/01 20:36:39 tom Exp $
  *
  *	curses.priv.h
  *
@@ -350,6 +350,14 @@ extern NCURSES_EXPORT(void) _nc_unlock_window(WINDOW *);
 
 #define _nc_lock_screen(name)	/* nothing */
 #define _nc_unlock_screen(name)	/* nothing */
+
+#if HAVE_GETTIMEOFDAY
+# define PRECISE_GETTIME 1
+# define TimeType struct timeval
+#else
+# define PRECISE_GETTIME 0
+# define TimeType time_t
+#endif
 
 /*
  * Definitions for color pairs
