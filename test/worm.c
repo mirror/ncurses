@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.56 2008/02/23 23:08:57 tom Exp $
+  $Id: worm.c,v 1.57 2008/03/02 01:43:35 tom Exp $
 */
 
 #include <test.priv.h>
@@ -109,6 +109,7 @@ static const char *field;
 static int length = 16, number = 3;
 static chtype trail = ' ';
 
+static unsigned pending;
 #ifdef TRACE
 static int generation, trace_start, trace_end;
 #endif /* TRACE */
@@ -227,6 +228,8 @@ draw_worm(WINDOW *win, void *data)
 {
     WORM *w = (WORM *) data;
     const struct options *op;
+    unsigned mask = ~(1 << (w - worm));
+    chtype attrs = w->attrs | ((mask & pending) ? A_REVERSE : 0);
 
     int x;
     int y;
@@ -236,7 +239,7 @@ draw_worm(WINDOW *win, void *data)
 
     if ((x = w->xpos[h = w->head]) < 0) {
 	wmove(win, y = w->ypos[h] = last_y, x = w->xpos[h] = 0);
-	waddch(win, w->attrs);
+	waddch(win, attrs);
 	refs[y][x]++;
     } else {
 	y = w->ypos[h];
@@ -299,7 +302,7 @@ draw_worm(WINDOW *win, void *data)
 
 	if (y < 0)
 	    y = 0;
-	waddch(win, w->attrs);
+	waddch(win, attrs);
 
 	w->ypos[h] = y;
 	w->xpos[h] = x;
@@ -311,9 +314,11 @@ draw_worm(WINDOW *win, void *data)
 
 #ifdef USE_PTHREADS
 static bool
-quit_worm(void)
+quit_worm(int bitnum)
 {
+    pending |= (1 << bitnum);
     napms(10);			/* let the other thread(s) have a chance */
+    pending &= ~(1 << bitnum);
     return quitting;
 }
 
@@ -322,7 +327,7 @@ start_worm(void *arg)
 {
     unsigned long compare = 0;
     Trace(("start_worm"));
-    while (!quit_worm()) {
+    while (!quit_worm(((struct worm *) arg) - worm)) {
 	while (compare < sequence) {
 	    ++compare;
 	    use_window(stdscr, draw_worm, arg);

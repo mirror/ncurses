@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.183 2008/01/19 20:03:48 tom Exp $ */
+/* $Id: curses.h.in,v 1.184 2008/03/08 21:03:48 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -1109,13 +1109,13 @@ extern NCURSES_EXPORT(int) wgetscrreg (const WINDOW *, int *, int *); /* generat
 #define wattr_set(win,a,p,opts)		((win)->_attrs = ((a) & ~A_COLOR), \
 					 (win)->_color = (p), \
 					 OK)
-#define wattr_get(win,a,p,opts)		((void)((a) != 0 && (*(a) = (win)->_attrs)), \
-					 (void)((p) != 0 && (*(p) = (win)->_color)), \
+#define wattr_get(win,a,p,opts)		((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
+					 (void)((p) != (void *)0 && (*(p) = (win)->_color)), \
 					 OK)
 #else
 #define wattr_set(win,a,p,opts)		((win)->_attrs = (((a) & ~A_COLOR) | COLOR_PAIR(p)), OK)
-#define wattr_get(win,a,p,opts)		((void)((a) != 0 && (*(a) = (win)->_attrs)), \
-					 (void)((p) != 0 && (*(p) = PAIR_NUMBER((win)->_attrs))), \
+#define wattr_get(win,a,p,opts)		((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
+					 (void)((p) != (void *)0 && (*(p) = PAIR_NUMBER((win)->_attrs))), \
 					 OK)
 #endif
 #endif /* NCURSES_OPAQUE */

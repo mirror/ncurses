@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.302 2008/02/23 23:07:28 tom Exp $
+$Id: ncurses.c,v 1.309 2008/03/08 20:57:09 tom Exp $
 
 ***************************************************************************/
 
@@ -117,6 +117,8 @@ extern unsigned _nc_tracing;
 #endif
 
 #endif
+
+#define ToggleAcs(temp,real) temp = ((temp == real) ? 0 : real)
 
 #define P(string)	printw("%s\n", string)
 
@@ -2677,12 +2679,89 @@ wide_slk_test(void)
  * Alternate character-set stuff
  *
  ****************************************************************************/
+/* *INDENT-OFF* */
+static struct {
+    chtype attr;
+    const char *name;
+} attrs_to_cycle[] = {
+    { A_NORMAL,		"normal" },
+    { A_BOLD,		"bold" },
+    { A_REVERSE,	"reverse" },
+    { A_UNDERLINE,	"underline" },
+};
+/* *INDENT-ON* */
+
+static bool
+cycle_attr(int ch, unsigned *at_code, chtype *attr)
+{
+    bool result = TRUE;
+
+    switch (ch) {
+    case 'v':
+	if ((*at_code += 1) >= SIZEOF(attrs_to_cycle))
+	    *at_code = 0;
+	break;
+    case 'V':
+	if (*at_code == 1)
+	    *at_code = SIZEOF(attrs_to_cycle) - 1;
+	else
+	    *at_code -= 1;
+	break;
+    default:
+	result = FALSE;
+	break;
+    }
+    if (result)
+	*attr = attrs_to_cycle[*at_code].attr;
+    return result;
+}
+
+static bool
+cycle_colors(int ch, int *fg, int *bg, short *pair)
+{
+    bool result = FALSE;
+
+    if (use_colors) {
+	result = TRUE;
+	switch (ch) {
+	case 'F':
+	    if ((*fg -= 1) < 0)
+		*fg = COLORS - 1;
+	    break;
+	case 'f':
+	    if ((*fg += 1) >= COLORS)
+		*fg = 0;
+	    break;
+	case 'B':
+	    if ((*bg -= 1) < 0)
+		*bg = COLORS - 1;
+	    break;
+	case 'b':
+	    if ((*bg += 1) >= COLORS)
+		*bg = 0;
+	    break;
+	default:
+	    result = FALSE;
+	    break;
+	}
+	if (result) {
+	    *pair = (*fg != COLOR_BLACK || *bg != COLOR_BLACK);
+	    if (*pair != 0) {
+		*pair = 1;
+		if (init_pair(*pair, *fg, *bg) == ERR) {
+		    result = FALSE;
+		}
+	    }
+	}
+    }
+    return result;
+}
 
 /* ISO 6429:  codes 0x80 to 0x9f may be control characters that cause the
  * terminal to perform functions.  The remaining codes can be graphic.
  */
 static void
-show_upper_chars(unsigned first)
+show_upper_chars(unsigned first, int repeat, attr_t attr, short pair)
 {
     bool C1 = (first == 128);
     unsigned code;
@@ -2697,27 +2776,33 @@ show_upper_chars(unsigned first)
     refresh();
 
     for (code = first; code <= last; code++) {
+	int count = repeat;
 	int row = 2 + ((code - first) % 16);
 	int col = ((code - first) / 16) * COLS / 2;
 	char tmp[80];
 	sprintf(tmp, "%3u (0x%x)", code, code);
 	mvprintw(row, col, "%*s: ", COLS / 4, tmp);
-	if (C1)
-	    nodelay(stdscr, TRUE);
-	echochar(code);
-	if (C1) {
-	    /* (yes, this _is_ crude) */
-	    while ((reply = Getchar()) != ERR) {
-		addch(UChar(reply));
-		napms(10);
+
+	do {
+	    if (C1)
+		nodelay(stdscr, TRUE);
+	    echochar(code | attr | COLOR_PAIR(pair));
+	    if (C1) {
+		/* (yes, this _is_ crude) */
+		while ((reply = Getchar()) != ERR) {
+		    addch(UChar(reply));
+		    napms(10);
+		}
+		nodelay(stdscr, FALSE);
 	    }
-	    nodelay(stdscr, FALSE);
-	}
+	} while (--count > 0);
     }
 }
 
+#define PC_COLS 4
+
 static void
-show_pc_chars(void)
+show_pc_chars(int repeat, attr_t attr, short pair)
 {
     unsigned code;
 
@@ -2728,35 +2813,41 @@ show_pc_chars(void)
     refresh();
 
     for (code = 0; code < 16; ++code) {
-	mvprintw(2, (int) code * 3 + 8, "%X", code);
+	mvprintw(2, (int) code * PC_COLS + 8, "%X", code);
     }
     for (code = 0; code < 256; code++) {
+	int count = repeat;
 	int row = 3 + (code / 16) + (code >= 128);
-	int col = 8 + (code % 16) * 3;
+	int col = 8 + (code % 16) * PC_COLS;
 	if ((code % 16) == 0)
 	    mvprintw(row, 0, "0x%02x:", code);
 	move(row, col);
-	switch (code) {
-	case '\n':
-	case '\r':
-	case '\b':
-	case '\f':
-	case '\033':
-	case 0x9b:
-	    /*
-	     * Skip the ones that do not work.
-	     */
-	    break;
-	default:
-	    addch(code | A_ALTCHARSET);
-	    break;
-	}
+	do {
+	    switch (code) {
+	    case '\n':
+	    case '\r':
+	    case '\b':
+	    case '\f':
+	    case '\033':
+	    case 0x9b:
+		/*
+		 * Skip the ones that do not work.
+		 */
+		break;
+	    default:
+		addch(code | A_ALTCHARSET | attr | COLOR_PAIR(pair));
+		break;
+	    }
+	} while (--count > 0);
     }
 }
 
 static void
-show_box_chars(void)
+show_box_chars(int repeat, attr_t attr, short pair)
 {
+    (void) repeat;
+    attr |= COLOR_PAIR(pair);
+
     erase();
     attron(A_BOLD);
     mvaddstr(0, 20, "Display of the ACS Line-Drawing Set");
@@ -2764,35 +2855,38 @@ show_box_chars(void)
     refresh();
     box(stdscr, 0, 0);
     /* *INDENT-OFF* */
-    mvhline(LINES / 2, 0,        ACS_HLINE, COLS);
-    mvvline(0,         COLS / 2, ACS_VLINE, LINES);
-    mvaddch(0,         COLS / 2, ACS_TTEE);
-    mvaddch(LINES / 2, COLS / 2, ACS_PLUS);
-    mvaddch(LINES - 1, COLS / 2, ACS_BTEE);
-    mvaddch(LINES / 2, 0,        ACS_LTEE);
-    mvaddch(LINES / 2, COLS - 1, ACS_RTEE);
+    mvhline(LINES / 2, 0,        ACS_HLINE | attr, COLS);
+    mvvline(0,         COLS / 2, ACS_VLINE | attr, LINES);
+    mvaddch(0,         COLS / 2, ACS_TTEE | attr);
+    mvaddch(LINES / 2, COLS / 2, ACS_PLUS | attr);
+    mvaddch(LINES - 1, COLS / 2, ACS_BTEE | attr);
+    mvaddch(LINES / 2, 0,        ACS_LTEE | attr);
+    mvaddch(LINES / 2, COLS - 1, ACS_RTEE | attr);
     /* *INDENT-ON* */
 
 }
 
 static int
-show_1_acs(int n, const char *name, chtype code)
+show_1_acs(int n, int repeat, const char *name, chtype code)
 {
     const int height = 16;
     int row = 2 + (n % height);
     int col = (n / height) * COLS / 2;
+
     mvprintw(row, col, "%*s : ", COLS / 4, name);
-    addch(code);
+    do {
+	addch(code);
+    } while (--repeat > 0);
     return n + 1;
 }
 
 static void
-show_acs_chars(void)
+show_acs_chars(int repeat, attr_t attr, short pair)
 /* display the ACS character set */
 {
     int n;
 
-#define BOTH(name) #name, name
+#define BOTH(name) #name, (name | attr | COLOR_PAIR(pair))
 
     erase();
     attron(A_BOLD);
@@ -2800,48 +2894,48 @@ show_acs_chars(void)
     attroff(A_BOLD);
     refresh();
 
-    n = show_1_acs(0, BOTH(ACS_ULCORNER));
-    n = show_1_acs(n, BOTH(ACS_URCORNER));
-    n = show_1_acs(n, BOTH(ACS_LLCORNER));
-    n = show_1_acs(n, BOTH(ACS_LRCORNER));
+    n = show_1_acs(0, repeat, BOTH(ACS_ULCORNER));
+    n = show_1_acs(n, repeat, BOTH(ACS_URCORNER));
+    n = show_1_acs(n, repeat, BOTH(ACS_LLCORNER));
+    n = show_1_acs(n, repeat, BOTH(ACS_LRCORNER));
 
-    n = show_1_acs(n, BOTH(ACS_LTEE));
-    n = show_1_acs(n, BOTH(ACS_RTEE));
-    n = show_1_acs(n, BOTH(ACS_TTEE));
-    n = show_1_acs(n, BOTH(ACS_BTEE));
+    n = show_1_acs(n, repeat, BOTH(ACS_LTEE));
+    n = show_1_acs(n, repeat, BOTH(ACS_RTEE));
+    n = show_1_acs(n, repeat, BOTH(ACS_TTEE));
+    n = show_1_acs(n, repeat, BOTH(ACS_BTEE));
 
-    n = show_1_acs(n, BOTH(ACS_HLINE));
-    n = show_1_acs(n, BOTH(ACS_VLINE));
+    n = show_1_acs(n, repeat, BOTH(ACS_HLINE));
+    n = show_1_acs(n, repeat, BOTH(ACS_VLINE));
 
     /*
      * HPUX's ACS definitions are broken here.  Just give up.
      */
 #if !(defined(__hpux) && !defined(NCURSES_VERSION))
-    n = show_1_acs(n, BOTH(ACS_LARROW));
-    n = show_1_acs(n, BOTH(ACS_RARROW));
-    n = show_1_acs(n, BOTH(ACS_UARROW));
-    n = show_1_acs(n, BOTH(ACS_DARROW));
+    n = show_1_acs(n, repeat, BOTH(ACS_LARROW));
+    n = show_1_acs(n, repeat, BOTH(ACS_RARROW));
+    n = show_1_acs(n, repeat, BOTH(ACS_UARROW));
+    n = show_1_acs(n, repeat, BOTH(ACS_DARROW));
 
-    n = show_1_acs(n, BOTH(ACS_BLOCK));
-    n = show_1_acs(n, BOTH(ACS_BOARD));
-    n = show_1_acs(n, BOTH(ACS_LANTERN));
-    n = show_1_acs(n, BOTH(ACS_BULLET));
-    n = show_1_acs(n, BOTH(ACS_CKBOARD));
-    n = show_1_acs(n, BOTH(ACS_DEGREE));
-    n = show_1_acs(n, BOTH(ACS_DIAMOND));
-    n = show_1_acs(n, BOTH(ACS_PLMINUS));
-    n = show_1_acs(n, BOTH(ACS_PLUS));
+    n = show_1_acs(n, repeat, BOTH(ACS_BLOCK));
+    n = show_1_acs(n, repeat, BOTH(ACS_BOARD));
+    n = show_1_acs(n, repeat, BOTH(ACS_LANTERN));
+    n = show_1_acs(n, repeat, BOTH(ACS_BULLET));
+    n = show_1_acs(n, repeat, BOTH(ACS_CKBOARD));
+    n = show_1_acs(n, repeat, BOTH(ACS_DEGREE));
+    n = show_1_acs(n, repeat, BOTH(ACS_DIAMOND));
+    n = show_1_acs(n, repeat, BOTH(ACS_PLMINUS));
+    n = show_1_acs(n, repeat, BOTH(ACS_PLUS));
 
-    n = show_1_acs(n, BOTH(ACS_GEQUAL));
-    n = show_1_acs(n, BOTH(ACS_NEQUAL));
-    n = show_1_acs(n, BOTH(ACS_LEQUAL));
+    n = show_1_acs(n, repeat, BOTH(ACS_GEQUAL));
+    n = show_1_acs(n, repeat, BOTH(ACS_NEQUAL));
+    n = show_1_acs(n, repeat, BOTH(ACS_LEQUAL));
 
-    n = show_1_acs(n, BOTH(ACS_STERLING));
-    n = show_1_acs(n, BOTH(ACS_PI));
-    n = show_1_acs(n, BOTH(ACS_S1));
-    n = show_1_acs(n, BOTH(ACS_S3));
-    n = show_1_acs(n, BOTH(ACS_S7));
-    n = show_1_acs(n, BOTH(ACS_S9));
+    n = show_1_acs(n, repeat, BOTH(ACS_STERLING));
+    n = show_1_acs(n, repeat, BOTH(ACS_PI));
+    n = show_1_acs(n, repeat, BOTH(ACS_S1));
+    n = show_1_acs(n, repeat, BOTH(ACS_S3));
+    n = show_1_acs(n, repeat, BOTH(ACS_S7));
+    n = show_1_acs(n, repeat, BOTH(ACS_S9));
 #endif
 }
 
@@ -2853,6 +2947,14 @@ acs_display(void)
     const char *pch_kludge = ((term != 0 && strstr(term, "linux"))
 			      ? "p=PC, "
 			      : "");
+    chtype attr = A_NORMAL;
+    int digit = 0;
+    int repeat = 1;
+    int fg = COLOR_BLACK;
+    int bg = COLOR_BLACK;
+    unsigned at_code = 0;
+    short pair = 0;
+    void (*last_show_acs) (int, attr_t, short) = 0;
 
     do {
 	switch (c) {
@@ -2860,29 +2962,77 @@ acs_display(void)
 	    Repaint();
 	    break;
 	case 'a':
-	    show_acs_chars();
+	    ToggleAcs(last_show_acs, show_acs_chars);
+	    break;
+	case 'p':
+	    if (*pch_kludge)
+		ToggleAcs(last_show_acs, show_pc_chars);
+	    else
+		beep();
 	    break;
 	case 'x':
-	    show_box_chars();
+	    ToggleAcs(last_show_acs, show_box_chars);
 	    break;
 	case '0':
 	case '1':
 	case '2':
 	case '3':
-	    show_upper_chars((unsigned) ((c - '0') * 32 + 128));
+	    digit = (c - '0');
+	    last_show_acs = 0;
 	    break;
-	case 'p':
-	    show_pc_chars();
+	case '-':
+	    if (digit > 0) {
+		--digit;
+		last_show_acs = 0;
+	    } else {
+		beep();
+	    }
+	    break;
+	case '+':
+	    if (digit < 3) {
+		++digit;
+		last_show_acs = 0;
+	    } else {
+		beep();
+	    }
+	    break;
+	case '>':
+	    if (repeat < (COLS / 4))
+		++repeat;
+	    break;
+	case '<':
+	    if (repeat > 1)
+		--repeat;
 	    break;
 	default:
-	    beep();
+	    if (cycle_attr(c, &at_code, &attr)
+		|| cycle_colors(c, &fg, &bg, &pair)) {
+		break;
+	    } else {
+		beep();
+	    }
 	    break;
 	}
+	if (last_show_acs != 0)
+	    last_show_acs(repeat, attr, pair);
+	else
+	    show_upper_chars(digit * 32 + 128, repeat, attr, pair);
+
 	mvprintw(LINES - 3, 0,
 		 "Note: ANSI terminals may not display C1 characters.");
 	mvprintw(LINES - 2, 0,
-		 "Select: a=ACS, x=box, %s0=C1, 1,2,3=GR characters, ESC=quit",
+		 "Select: a=ACS, x=box, %s0=C1, 1-3,+/- non-ASCII, </> repeat, ESC=quit",
 		 pch_kludge);
+	if (use_colors) {
+	    mvprintw(LINES - 1, 0,
+		     "v/V, f/F, b/B cycle through video attributes (%s) and color %d/%d.",
+		     attrs_to_cycle[at_code].name,
+		     fg, bg);
+	} else {
+	    mvprintw(LINES - 1, 0,
+		     "v/V cycles through video attributes (%s).",
+		     attrs_to_cycle[at_code].name);
+	}
 	refresh();
     } while (!isQuit(c = Getchar()));
 
@@ -2902,7 +3052,7 @@ merge_wide_attr(cchar_t *dst, const cchar_t *src, attr_t attr, short pair)
 
     *dst = *src;
     if (count > 0) {
-	if ((wch = typeMalloc(wchar_t, count)) != 0) {
+	if ((wch = typeMalloc(wchar_t, count + 1)) != 0) {
 	    if (getcchar(src, wch, &ignore_attr, &ignore_pair, 0) != ERR) {
 		attr |= (ignore_attr & A_ALTCHARSET);
 		setcchar(dst, wch, attr, pair, 0);
@@ -2965,20 +3115,23 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 }
 
 static int
-show_1_wacs(int n, const char *name, const cchar_t *code)
+show_1_wacs(int n, int repeat, const char *name, const cchar_t *code)
 {
     const int height = 16;
     int row = 2 + (n % height);
     int col = (n / height) * COLS / 2;
+
     mvprintw(row, col, "%*s : ", COLS / 4, name);
-    add_wchnstr(code, 1);
+    while (repeat-- >= 0) {
+	add_wch(code);
+    }
     return n + 1;
 }
 
 #define MERGE_ATTR(wch) merge_wide_attr(&temp, wch, attr, pair)
 
 static void
-show_wacs_chars(attr_t attr, short pair)
+show_wacs_chars(int repeat, attr_t attr, short pair)
 /* display the wide-ACS character set */
 {
     cchar_t temp;
@@ -2994,45 +3147,45 @@ show_wacs_chars(attr_t attr, short pair)
     attroff(A_BOLD);
     refresh();
 
-    n = show_1_wacs(0, BOTH2(WACS_ULCORNER));
-    n = show_1_wacs(n, BOTH2(WACS_URCORNER));
-    n = show_1_wacs(n, BOTH2(WACS_LLCORNER));
-    n = show_1_wacs(n, BOTH2(WACS_LRCORNER));
+    n = show_1_wacs(0, repeat, BOTH2(WACS_ULCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_URCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LLCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LRCORNER));
 
-    n = show_1_wacs(n, BOTH2(WACS_LTEE));
-    n = show_1_wacs(n, BOTH2(WACS_RTEE));
-    n = show_1_wacs(n, BOTH2(WACS_TTEE));
-    n = show_1_wacs(n, BOTH2(WACS_BTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_RTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_TTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BTEE));
 
-    n = show_1_wacs(n, BOTH2(WACS_HLINE));
-    n = show_1_wacs(n, BOTH2(WACS_VLINE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_HLINE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_VLINE));
 
-    n = show_1_wacs(n, BOTH2(WACS_LARROW));
-    n = show_1_wacs(n, BOTH2(WACS_RARROW));
-    n = show_1_wacs(n, BOTH2(WACS_UARROW));
-    n = show_1_wacs(n, BOTH2(WACS_DARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_RARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_UARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DARROW));
 
-    n = show_1_wacs(n, BOTH2(WACS_BLOCK));
-    n = show_1_wacs(n, BOTH2(WACS_BOARD));
-    n = show_1_wacs(n, BOTH2(WACS_LANTERN));
-    n = show_1_wacs(n, BOTH2(WACS_BULLET));
-    n = show_1_wacs(n, BOTH2(WACS_CKBOARD));
-    n = show_1_wacs(n, BOTH2(WACS_DEGREE));
-    n = show_1_wacs(n, BOTH2(WACS_DIAMOND));
-    n = show_1_wacs(n, BOTH2(WACS_PLMINUS));
-    n = show_1_wacs(n, BOTH2(WACS_PLUS));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BLOCK));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BOARD));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LANTERN));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BULLET));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_CKBOARD));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DEGREE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DIAMOND));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PLMINUS));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PLUS));
 
 #ifdef CURSES_WACS_ARRAY
-    n = show_1_wacs(n, BOTH2(WACS_GEQUAL));
-    n = show_1_wacs(n, BOTH2(WACS_NEQUAL));
-    n = show_1_wacs(n, BOTH2(WACS_LEQUAL));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_GEQUAL));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_NEQUAL));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LEQUAL));
 
-    n = show_1_wacs(n, BOTH2(WACS_STERLING));
-    n = show_1_wacs(n, BOTH2(WACS_PI));
-    n = show_1_wacs(n, BOTH2(WACS_S1));
-    n = show_1_wacs(n, BOTH2(WACS_S3));
-    n = show_1_wacs(n, BOTH2(WACS_S7));
-    n = show_1_wacs(n, BOTH2(WACS_S9));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_STERLING));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PI));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S1));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S3));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S7));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S9));
 #endif
 }
 
@@ -3041,10 +3194,11 @@ show_wacs_chars(attr_t attr, short pair)
 #define MERGE_ATTR(wch) merge_wide_attr(&temp, wch, attr, pair)
 
 static void
-show_wbox_chars(attr_t attr, short pair)
+show_wbox_chars(int repeat, attr_t attr, short pair)
 {
     cchar_t temp;
 
+    (void) repeat;
     erase();
     attron(A_BOLD);
     mvaddstr(0, 20, "Display of the Wide-ACS Line-Drawing Set");
@@ -3086,10 +3240,11 @@ show_2_wacs(int n, const char *name, const char *code, attr_t attr, short pair)
 #define SHOW_UTF8(n, name, code) show_2_wacs(n, name, code, attr, pair)
 
 static void
-show_utf8_chars(attr_t attr, short pair)
+show_utf8_chars(int repeat, attr_t attr, short pair)
 {
     int n;
 
+    (void) repeat;
     erase();
     attron(A_BOLD);
     mvaddstr(0, 20, "Display of the Wide-ACS Character Set");
@@ -3136,83 +3291,6 @@ show_utf8_chars(attr_t attr, short pair)
     /* *INDENT-ON* */
 
 }
-/* *INDENT-OFF* */
-static struct {
-    chtype attr;
-    const char *name;
-} attrs_to_cycle[] = {
-    { A_NORMAL,		"normal" },
-    { A_BOLD,		"bold" },
-    { A_REVERSE,	"reverse" },
-    { A_UNDERLINE,	"underline" },
-};
-/* *INDENT-ON* */
-
-static bool
-cycle_attr(int ch, unsigned *at_code, chtype *attr)
-{
-    bool result = TRUE;
-
-    switch (ch) {
-    case 'v':
-	if ((*at_code += 1) >= SIZEOF(attrs_to_cycle))
-	    *at_code = 0;
-	break;
-    case 'V':
-	if (*at_code == 1)
-	    *at_code = SIZEOF(attrs_to_cycle) - 1;
-	else
-	    *at_code -= 1;
-	break;
-    default:
-	result = FALSE;
-	break;
-    }
-    if (result)
-	*attr = attrs_to_cycle[*at_code].attr;
-    return result;
-}
-
-static bool
-cycle_colors(int ch, int *fg, int *bg, short *pair)
-{
-    bool result = FALSE;
-
-    if (use_colors) {
-	result = TRUE;
-	switch (ch) {
-	case 'F':
-	    if ((*fg -= 1) < 0)
-		*fg = COLORS - 1;
-	    break;
-	case 'f':
-	    if ((*fg += 1) >= COLORS)
-		*fg = 0;
-	    break;
-	case 'B':
-	    if ((*bg -= 1) < 0)
-		*bg = COLORS - 1;
-	    break;
-	case 'b':
-	    if ((*bg += 1) < 0)
-		*bg = 0;
-	    break;
-	default:
-	    result = FALSE;
-	    break;
-	}
-	if (result) {
-	    *pair = (*fg != COLOR_BLACK || *bg != COLOR_BLACK);
-	    if (*pair != 0) {
-		*pair = 1;
-		if (init_pair(*pair, *fg, *bg) == ERR) {
-		    result = FALSE;
-		}
-	    }
-	}
-    }
-    return result;
-}
 
 /* display the wide-ACS character set */
 static void
@@ -3220,14 +3298,14 @@ wide_acs_display(void)
 {
     int c = 'a';
     int digit = 0;
-    int repeat = 0;
+    int repeat = 1;
     int space = ' ';
     chtype attr = A_NORMAL;
     int fg = COLOR_BLACK;
     int bg = COLOR_BLACK;
     unsigned at_code = 0;
     short pair = 0;
-    void (*last_show_wacs) (attr_t, short) = 0;
+    void (*last_show_wacs) (int, attr_t, short) = 0;
 
     do {
 	switch (c) {
@@ -3235,27 +3313,31 @@ wide_acs_display(void)
 	    Repaint();
 	    break;
 	case 'a':
-	    last_show_wacs = show_wacs_chars;
+	    ToggleAcs(last_show_wacs, show_wacs_chars);
 	    break;
 	case 'x':
-	    last_show_wacs = show_wbox_chars;
+	    ToggleAcs(last_show_wacs, show_wbox_chars);
 	    break;
 	case 'u':
-	    last_show_wacs = show_utf8_chars;
+	    ToggleAcs(last_show_wacs, show_utf8_chars);
 	    break;
 	default:
 	    if (c < 256 && isdigit(c)) {
 		digit = (c - '0');
+		last_show_wacs = 0;
 	    } else if (c == '+') {
 		++digit;
+		last_show_wacs = 0;
 	    } else if (c == '-' && digit > 0) {
 		--digit;
+		last_show_wacs = 0;
 	    } else if (c == '>' && repeat < (COLS / 4)) {
 		++repeat;
-	    } else if (c == '<' && repeat > 0) {
+	    } else if (c == '<' && repeat > 1) {
 		--repeat;
 	    } else if (c == '_') {
 		space = (space == ' ') ? '_' : ' ';
+		last_show_wacs = 0;
 	    } else if (cycle_attr(c, &at_code, &attr)
 		       || cycle_colors(c, &fg, &bg, &pair)) {
 		if (last_show_wacs != 0)
@@ -3264,12 +3346,12 @@ wide_acs_display(void)
 		beep();
 		break;
 	    }
-	    last_show_wacs = 0;
-	    show_upper_widechars(digit * 32 + 128, repeat, space, attr, pair);
 	    break;
 	}
 	if (last_show_wacs != 0)
-	    last_show_wacs(attr, pair);
+	    last_show_wacs(repeat, attr, pair);
+	else
+	    show_upper_widechars(digit * 32 + 128, repeat, space, attr, pair);
 
 	mvprintw(LINES - 3, 0,
 		 "Select: a WACS, x box, u UTF-8, 0-9,+/- non-ASCII, </> repeat, ESC=quit");

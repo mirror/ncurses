@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1209 2008/03/01 20:02:41 tom Exp $
+-- $Id: NEWS,v 1.1213 2008/03/09 00:21:51 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080308
+	+ start modifying test/rain.c for threading demo.
+	+ modify test/ncurses.c to make 'f' test accept the f/F/b/F/</> toggles
+	  that the 'F' accepts.
+	+ modify test/worm.c to show trail in reverse-video when other threads
+	  are working concurrently.
+	+ fix a deadlock from improper nesting of mutexes for windowlist and
+	  window.
 
 20080301
 	+ fixes from 20080223 resolved issue with mutexes; change to use
