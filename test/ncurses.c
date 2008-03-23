@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.309 2008/03/08 20:57:09 tom Exp $
+$Id: ncurses.c,v 1.312 2008/03/22 23:02:57 tom Exp $
 
 ***************************************************************************/
 
@@ -172,7 +172,7 @@ isQuit(int c)
 {
     return ((c) == QUIT || (c) == ESCAPE);
 }
-#define case_QUIT	case QUIT: case ESCAPE
+#define case_QUIT	QUIT: case ESCAPE
 
 /* Common function to allow ^T to toggle trace-mode in the middle of a test
  * so that trace-files can be made smaller.
@@ -270,6 +270,42 @@ wGetstring(WINDOW *win, char *buffer, int limit)
 }
 
 #if USE_WIDEC_SUPPORT
+static wchar_t
+fullwidth_of(int ch)
+{
+    return (ch + 0xff10 - '0');
+}
+
+static void
+make_fullwidth_text(wchar_t *target, const char *source)
+{
+    int ch;
+    while ((ch = *source++) != 0) {
+	*target++ = fullwidth_of(ch);
+    }
+    *target = 0;
+}
+
+static void
+make_narrow_text(wchar_t *target, const char *source)
+{
+    int ch;
+    while ((ch = *source++) != 0) {
+	*target++ = ch;
+    }
+    *target = 0;
+}
+
+static void
+make_fullwidth_digit(cchar_t *target, int digit)
+{
+    wchar_t source[2];
+
+    source[0] = fullwidth_of(digit + '0');
+    source[1] = 0;
+    setcchar(target, source, A_NORMAL, 0, 0);
+}
+
 static int
 wGet_wchar(WINDOW *win, wint_t *result)
 {
@@ -1378,7 +1414,7 @@ attr_getc(int *skip, short *fg, short *bg, short *tx, int *ac, unsigned *kc)
 	    case '>':
 		adjust_attr_string(1);
 		break;
-	      case_QUIT:
+	    case case_QUIT:
 		result = FALSE;
 		break;
 	    default:
@@ -1654,7 +1690,7 @@ wide_attr_getc(int *skip, short *fg, short *bg, short *tx, int *ac, unsigned *kc
 	    case '>':
 		wide_adjust_attr_string(1);
 		break;
-	      case_QUIT:
+	    case case_QUIT:
 		result = FALSE;
 		break;
 	    default:
@@ -1783,7 +1819,7 @@ show_color_name(int y, int x, int color, bool wide)
 }
 
 static void
-color_legend(WINDOW *helpwin)
+color_legend(WINDOW *helpwin, bool wide)
 {
     int row = 1;
     int col = 1;
@@ -1796,18 +1832,30 @@ color_legend(WINDOW *helpwin)
     mvwprintw(helpwin, row++, col,
 	      "longer than one screen. Control/N and Control/P can be used");
     mvwprintw(helpwin, row++, col,
-	      "in place up up/down arrow.  Use pageup/pagedown to scroll a");
+	      "in place of up/down arrow.  Use pageup/pagedown to scroll a");
     mvwprintw(helpwin, row++, col,
 	      "full screen; control/B and control/F can be used here.");
     ++row;
     mvwprintw(helpwin, row++, col,
 	      "Toggles:");
     mvwprintw(helpwin, row++, col,
+	      "  a/A     toggle altcharset off/on");
+    mvwprintw(helpwin, row++, col,
 	      "  b/B     toggle bold off/on");
     mvwprintw(helpwin, row++, col,
 	      "  n/N     toggle text/number on/off");
     mvwprintw(helpwin, row++, col,
 	      "  w/W     toggle width between 8/16 colors");
+#if USE_WIDEC_SUPPORT
+    if (wide) {
+	mvwprintw(helpwin, row++, col,
+		  "Wide characters:");
+	mvwprintw(helpwin, row++, col,
+		  "  x/X     toggle text between ASCII and wide-character");
+    }
+#else
+    (void) wide;
+#endif
 }
 
 #define set_color_test(name, value) if (name != value) { name = value; base_row = 0; }
@@ -1827,6 +1875,7 @@ color_test(void)
     char numbered[80];
     const char *hello;
     bool done = FALSE;
+    bool opt_acsc = FALSE;
     bool opt_bold = FALSE;
     bool opt_wide = FALSE;
     bool opt_nums = FALSE;
@@ -1878,6 +1927,8 @@ color_test(void)
 
 		init_pair(pair, fg, bg);
 		attron((attr_t) COLOR_PAIR(pair));
+		if (opt_acsc)
+		    attron((attr_t) A_ALTCHARSET);
 		if (opt_bold)
 		    attron((attr_t) A_BOLD);
 
@@ -1898,6 +1949,12 @@ color_test(void)
 	}
 
 	switch (wGetchar(stdscr)) {
+	case 'a':
+	    opt_acsc = FALSE;
+	    break;
+	case 'A':
+	    opt_acsc = TRUE;
+	    break;
 	case 'b':
 	    opt_bold = FALSE;
 	    break;
@@ -1910,7 +1967,7 @@ color_test(void)
 	case 'N':
 	    opt_nums = TRUE;
 	    break;
-	  case_QUIT:
+	case case_QUIT:
 	    done = TRUE;
 	    continue;
 	case 'w':
@@ -1961,7 +2018,7 @@ color_test(void)
 	case '?':
 	    if ((helpwin = newwin(LINES - 1, COLS - 2, 0, 0)) != 0) {
 		box(helpwin, 0, 0);
-		color_legend(helpwin);
+		color_legend(helpwin, FALSE);
 		wGetchar(helpwin);
 		delwin(helpwin);
 	    }
@@ -1993,9 +2050,12 @@ wide_color_test(void)
     char numbered[80];
     const char *hello;
     bool done = FALSE;
+    bool opt_acsc = FALSE;
     bool opt_bold = FALSE;
     bool opt_wide = FALSE;
     bool opt_nums = FALSE;
+    bool opt_xchr = FALSE;
+    wchar_t buffer[10];
     WINDOW *helpwin;
 
     while (!done) {
@@ -2010,6 +2070,13 @@ wide_color_test(void)
 	    width = 8;
 	    hello = "Hello";
 	    per_row = 8;
+	}
+	if (opt_xchr) {
+	    make_fullwidth_text(buffer, hello);
+	    width *= 2;
+	    per_row /= 2;
+	} else {
+	    make_narrow_text(buffer, hello);
 	}
 
 	row_limit = (pairs_max + per_row - 1) / per_row;
@@ -2038,14 +2105,20 @@ wide_color_test(void)
 	    if (row >= 0 && move(row, col) != ERR) {
 		init_pair(pair, i % COLORS, i / COLORS);
 		color_set(pair, NULL);
+		if (opt_acsc)
+		    attr_on((attr_t) A_ALTCHARSET, NULL);
 		if (opt_bold)
 		    attr_on((attr_t) A_BOLD, NULL);
 
 		if (opt_nums) {
 		    sprintf(numbered, "{%02X}", i);
-		    hello = numbered;
+		    if (opt_xchr) {
+			make_fullwidth_text(buffer, numbered);
+		    } else {
+			make_narrow_text(buffer, numbered);
+		    }
 		}
-		printw("%-*.*s", width, width, hello);
+		addnwstr(buffer, width);
 		attr_set(A_NORMAL, 0, NULL);
 
 		if ((i % per_row) == 0 && (i % COLORS) == 0) {
@@ -2058,6 +2131,12 @@ wide_color_test(void)
 	}
 
 	switch (c = wGetchar(stdscr)) {
+	case 'a':
+	    opt_acsc = FALSE;
+	    break;
+	case 'A':
+	    opt_acsc = TRUE;
+	    break;
 	case 'b':
 	    opt_bold = FALSE;
 	    break;
@@ -2070,7 +2149,7 @@ wide_color_test(void)
 	case 'N':
 	    opt_nums = TRUE;
 	    break;
-	  case_QUIT:
+	case case_QUIT:
 	    done = TRUE;
 	    continue;
 	case 'w':
@@ -2078,6 +2157,12 @@ wide_color_test(void)
 	    break;
 	case 'W':
 	    set_color_test(opt_wide, TRUE);
+	    break;
+	case 'x':
+	    opt_xchr = FALSE;
+	    break;
+	case 'X':
+	    opt_xchr = TRUE;
 	    break;
 	case CTRL('p'):
 	case KEY_UP:
@@ -2121,7 +2206,7 @@ wide_color_test(void)
 	case '?':
 	    if ((helpwin = newwin(LINES - 1, COLS - 2, 0, 0)) != 0) {
 		box(helpwin, 0, 0);
-		color_legend(helpwin);
+		color_legend(helpwin, TRUE);
 		wGetchar(helpwin);
 		delwin(helpwin);
 	    }
@@ -2338,7 +2423,7 @@ color_edit(void)
 	    refresh();
 	    break;
 
-	  case_QUIT:
+	case case_QUIT:
 	    break;
 
 	default:
@@ -2508,7 +2593,7 @@ slk_test(void)
 	    clrtobot();
 	    break;
 
-	  case_QUIT:
+	case case_QUIT:
 	    goto done;
 
 #if HAVE_SLK_COLOR
@@ -2641,7 +2726,7 @@ wide_slk_test(void)
 	    clrtobot();
 	    break;
 
-	  case_QUIT:
+	case case_QUIT:
 	    goto done;
 
 	case 'F':
@@ -3644,7 +3729,7 @@ selectcell(int uli, int ulj, int lri, int lrj)
 	case KEY_RIGHT:
 	    j++;
 	    break;
-	  case_QUIT:
+	case case_QUIT:
 	    return ((pair *) 0);
 #ifdef NCURSES_MOUSE_VERSION
 	case KEY_MOUSE:
@@ -4136,16 +4221,6 @@ fill_panel(PANEL * pan)
 }
 
 #if USE_WIDEC_SUPPORT
-static void
-make_fullwidth_digit(cchar_t *target, int digit)
-{
-    wchar_t source[2];
-
-    source[0] = digit + 0xff10;
-    source[1] = 0;
-    setcchar(target, source, A_NORMAL, 0, 0);
-}
-
 static void
 init_wide_panel(void)
 {
@@ -4741,7 +4816,7 @@ padgetch(WINDOW *win)
 		c = KEY_DC;
 		break;
 	    case ERR:		/* FALLTHRU */
-	      case_QUIT:
+	    case case_QUIT:
 		count = 0;
 		c = KEY_EXIT;
 		break;

@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.74 2008/02/23 23:02:41 tom Exp $ */
+/* $Id: test.priv.h,v 1.75 2008/03/22 19:27:11 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -528,23 +528,36 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #define CONST_MENUS /* nothing */
 #endif
 
+#ifndef HAVE_USE_WINDOW
+#if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915) || !NCURSES_EXT_FUNCS
+#define HAVE_USE_WINDOW 0
+#else
+#define HAVE_USE_WINDOW 1
+#endif
+#endif
+
 /*
  * Simplify setting up demo of threading with these macros.
  */
-#if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915) || !NCURSES_EXT_FUNCS
+
+#if !HAVE_USE_WINDOW
 typedef int (*NCURSES_CALLBACK)(WINDOW *, void *);
-#define WANT_USE_WINDOW() \
-static int \
-use_window(WINDOW *win, int (*func) (WINDOW *, void *), void *data) \
-{ \
-    return func(win, data); \
-} \
-	extern void _nc_want_use_window(void)
+#endif
+
+#if HAVE_USE_WINDOW
 #define USING_WINDOW(w,func) use_window(w, (NCURSES_CALLBACK) func, w)
+#define WANT_USE_WINDOW() extern void _nc_want_use_window(void)
 #else
-#define WANT_USE_WINDOW() /* nothing */ \
-	extern void _nc_want_use_window(void)
 #define USING_WINDOW(w,func) func(w)
+#define WANT_USE_WINDOW() extern void _nc_want_use_window(void)
+#endif
+
+#if HAVE_USE_WINDOW
+#define USING_SCREEN(s,func,data) use_screen(s, (NCURSES_CALLBACK) func, data)
+#define WANT_USE_SCREEN() extern void _nc_want_use_screen(void)
+#else
+#define USING_SCREEN(s,func,data) func(data)
+#define WANT_USE_SCREEN() extern void _nc_want_use_screen(void)
 #endif
 
 #ifdef TRACE

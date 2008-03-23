@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: ditto.c,v 1.8 2007/09/01 21:10:38 tom Exp $
+ * $Id: ditto.c,v 1.11 2008/03/22 20:26:31 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.  Invoke the program by specifying another terminal on the same
@@ -79,17 +79,37 @@ open_tty(char *path)
     return fp;
 }
 
+static int
+close_screen(void *arg)
+{
+    (void) arg;
+    return endwin();
+}
+
+static int
+read_screen(void *arg)
+{
+    (void) arg;
+    return getch();
+}
+
+static int
+write_screen(WINDOW *win, void *arg)
+{
+    (void) win;
+    addstr((char *) arg);
+    refresh();
+    return OK;
+}
+
 static void
-show_ditto(DITTO * data, int count, int which, int ch)
+show_ditto(DITTO * data, int count, char *msg)
 {
     int n;
 
     for (n = 0; n < count; n++) {
-	set_term(data[n].screen);
-	addch(UChar(ch));
-	refresh();
+	USING_SCREEN(data[n].screen, write_screen, (void *) msg);
     }
-    set_term(data[which].screen);
 }
 
 int
@@ -134,27 +154,27 @@ main(int argc GCC_UNUSED,
      * of the screens.
      */
     for (count = 0;; ++count) {
+	char message[80];
 	int ch;
 	int which = (count % argc);
 
-	set_term(data[which].screen);
 	napms(20);
-	ch = getch();
+	ch = USING_SCREEN(data[which].screen, read_screen, 0);
 	if (ch == ERR) {
 	    /* echochar('.'); */
 	    continue;
 	}
 	if (ch == CTRL('D'))
 	    break;
-	show_ditto(data, argc, which, ch);
+	sprintf(message, "from[%d:%d] '%c' (%#x)\n", count, which, ch, ch);
+	show_ditto(data, argc, message);
     }
 
     /*
      * Cleanup and exit
      */
     for (j = argc - 1; j >= 0; j--) {
-	set_term(data[j].screen);
-	endwin();
+	USING_SCREEN(data[j].screen, close_screen, 0);
     }
     ExitProgram(EXIT_SUCCESS);
 }

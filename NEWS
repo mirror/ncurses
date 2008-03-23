@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1213 2008/03/09 00:21:51 tom Exp $
+-- $Id: NEWS,v 1.1216 2008/03/23 00:18:40 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080322
+	+ fill in extended-color pair two more places in wbkgrndset() and
+	  waddch_nosync() (prompted by Sedeno's patch).
+	+ fill in extended-color pair in _nc_build_wch() to make colors work
+	  for wide-characters using extended-colors (patch by Alejandro R
+	  Sedeno).
+	+ add x/X toggles to ncurses.c C color test to test/demo
+	  wide-characters with extended-colors.
+	+ add a/A toggles to ncurses.c c/C color tests.
+	+ modify test/ditto.c to use use_screen().
+	+ finish modifying test/rain.c to demonstrate threads.
 
 20080308
 	+ start modifying test/rain.c for threading demo.

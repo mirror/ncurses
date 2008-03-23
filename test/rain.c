@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.26 2008/03/09 00:17:09 tom Exp $
+ * $Id: rain.c,v 1.33 2008/03/22 18:12:01 tom Exp $
  */
 #include <test.priv.h>
 
@@ -38,7 +38,8 @@
 
 WANT_USE_WINDOW();
 
-#define MAX_DROP 5
+#define MAX_THREADS	10
+#define MAX_DROP	5
 
 struct DATA;
 
@@ -47,11 +48,23 @@ typedef void (*DrawPart) (struct DATA *);
 typedef struct DATA {
     int y, x;
 #ifdef USE_PTHREADS
-    pthread_t thread;
     DrawPart func;
     int state;
 #endif
 } DATA;
+
+#ifdef USE_PTHREADS
+pthread_cond_t cond_next_drop;
+pthread_mutex_t mutex_next_drop;
+static int used_threads;
+
+typedef struct {
+    pthread_t myself;
+    long counter;
+} STATS;
+
+static STATS drop_threads[MAX_THREADS];
+#endif
 
 static void
 onsig(int n GCC_UNUSED)
@@ -147,12 +160,11 @@ part6(DATA * drop)
 static void
 napsome(void)
 {
-    refresh();
     napms(60);
 }
 
 /*
- * This runs inside the mutex.
+ * This runs inside the use_window() mutex.
  */
 static int
 really_draw(WINDOW *win, void *arg)
@@ -162,6 +174,7 @@ really_draw(WINDOW *win, void *arg)
     (void) win;
     next_j(data->state);
     data->func(data);
+    refresh();
     return OK;
 }
 
@@ -174,40 +187,116 @@ draw_part(void (*func) (DATA *), int state, DATA * data)
     napsome();
 }
 
+/*
+ * Tell the threads that one of them can start work on a new raindrop.
+ * They may all be busy if we're sending requests too rapidly.
+ */
+static int
+put_next_drop(void)
+{
+    pthread_cond_signal(&cond_next_drop);
+    pthread_mutex_unlock(&mutex_next_drop);
+
+    return 0;
+}
+
+/*
+ * Wait until we're assigned the task of drawing a new raindrop.
+ */
+static int
+get_next_drop(void)
+{
+    pthread_mutex_lock(&mutex_next_drop);
+    pthread_cond_wait(&cond_next_drop, &mutex_next_drop);
+
+    return TRUE;
+}
+
 static void *
 draw_drop(void *arg)
 {
     DATA mydata;
+    int mystats;
 
-    mydata = *(DATA *) arg;	/* make a copy of caller's data */
+    /*
+     * Find myself in the list of threads so we can count the number of loops.
+     */
+    for (mystats = 0; mystats < MAX_THREADS; ++mystats) {
+	if (drop_threads[mystats].myself == pthread_self())
+	    break;
+    }
 
-    draw_part(part1, 0, &mydata);
-    draw_part(part2, 1, &mydata);
-    draw_part(part3, 2, &mydata);
-    draw_part(part4, 3, &mydata);
-    draw_part(part5, 4, &mydata);
-    draw_part(part6, 0, &mydata);
+    do {
+	if (mystats < MAX_THREADS)
+	    drop_threads[mystats].counter++;
+
+	/*
+	 * Make a copy of caller's data.  We're cheating for the cases after
+	 * the first loop since we still have a pointer into the main thread
+	 * to the data which it uses for setting up this thread (but it has
+	 * been modified to use different coordinates).
+	 */
+	mydata = *(DATA *) arg;
+
+	draw_part(part1, 0, &mydata);
+	draw_part(part2, 1, &mydata);
+	draw_part(part3, 2, &mydata);
+	draw_part(part4, 3, &mydata);
+	draw_part(part5, 4, &mydata);
+	draw_part(part6, 0, &mydata);
+    } while (get_next_drop());
 
     return NULL;
+}
+
+/*
+ * The description of pthread_create() is misleading, since it implies that
+ * threads will exit cleanly after their function returns.
+ * 
+ * Since they do not (and the number of threads is limited by system
+ * resources), make a limited number of threads, and signal any that are
+ * waiting when we want a thread past that limit.
+ */
+static int
+start_drop(DATA * data)
+{
+    int rc;
+
+    if (!used_threads) {
+	/* mutex and condition for signalling thread */
+	pthread_mutex_init(&mutex_next_drop, NULL);
+	pthread_cond_init(&cond_next_drop, NULL);
+    }
+
+    if (used_threads < MAX_THREADS) {
+	rc = pthread_create(&(drop_threads[used_threads].myself),
+			    NULL,
+			    draw_drop,
+			    data);
+	++used_threads;
+    } else {
+	rc = put_next_drop();
+    }
+    return rc;
 }
 #endif
 
 static int
 get_input(void)
 {
-    int ch;
-    ch = USING_WINDOW(stdscr, wgetch);
-    return ch;
+    return USING_WINDOW(stdscr, wgetch);
 }
 
 int
 main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
 {
-    DATA drop;
-    DATA last[MAX_DROP];
-    int j = 0;
     bool done = FALSE;
+    DATA drop;
+#ifndef USE_PTHREADS
+    DATA last[MAX_DROP];
+#endif
+    int j = 0;
 
     setlocale(LC_ALL, "");
 
@@ -229,20 +318,20 @@ main(int argc GCC_UNUSED,
     curs_set(0);
     timeout(0);
 
+#ifndef USE_PTHREADS
     for (j = MAX_DROP; --j >= 0;) {
 	last[j].x = random_x();
 	last[j].y = random_y();
     }
+#endif
 
     while (!done) {
 	drop.x = random_x();
 	drop.y = random_y();
 
 #ifdef USE_PTHREADS
-	if (pthread_create(&(drop.thread), NULL, draw_drop, &drop)) {
+	if (start_drop(&drop) != 0) {
 	    beep();
-	    done = TRUE;
-	    continue;
 	}
 #else
 	/*
@@ -287,5 +376,10 @@ main(int argc GCC_UNUSED,
     }
     curs_set(1);
     endwin();
+#ifdef USE_PTHREADS
+    printf("Counts per thread:\n");
+    for (j = 0; j < MAX_THREADS; ++j)
+	printf("  %d:%ld\n", j, drop_threads[j].counter);
+#endif
     ExitProgram(EXIT_SUCCESS);
 }
