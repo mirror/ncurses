@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: use_window.c,v 1.4 2008/03/02 11:42:37 tom Exp $")
+MODULE_ID("$Id: use_window.c,v 1.5 2008/03/29 20:24:15 tom Exp $")
 
 #ifdef USE_PTHREADS
 NCURSES_EXPORT(void)
@@ -65,7 +65,7 @@ _nc_unlock_window(WINDOW *win)
 #endif
 
 NCURSES_EXPORT(int)
-use_window(WINDOW *win, NCURSES_CALLBACK func, void *data)
+use_window(WINDOW *win, NCURSES_WINDOW_CB func, void *data)
 {
     int code = OK;
 

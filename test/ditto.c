@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: ditto.c,v 1.11 2008/03/22 20:26:31 tom Exp $
+ * $Id: ditto.c,v 1.14 2008/03/29 21:35:39 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.  Invoke the program by specifying another terminal on the same
@@ -80,23 +80,22 @@ open_tty(char *path)
 }
 
 static int
-close_screen(void *arg)
+close_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
 {
+    (void) sp;
     (void) arg;
     return endwin();
 }
 
 static int
-read_screen(void *arg)
+read_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
 {
-    (void) arg;
     return getch();
 }
 
 static int
-write_screen(WINDOW *win, void *arg)
+write_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
 {
-    (void) win;
     addstr((char *) arg);
     refresh();
     return OK;
@@ -175,6 +174,7 @@ main(int argc GCC_UNUSED,
      */
     for (j = argc - 1; j >= 0; j--) {
 	USING_SCREEN(data[j].screen, close_screen, 0);
+	delscreen(data[j].screen);
     }
     ExitProgram(EXIT_SUCCESS);
 }

@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.360 2008/03/01 20:36:39 tom Exp $
+ * $Id: curses.priv.h,v 1.361 2008/03/29 21:14:14 tom Exp $
  *
  *	curses.priv.h
  *
@@ -571,6 +571,9 @@ typedef struct {
 	int		tgetent_index;
 	long		tgetent_sequence;
 
+	WINDOWLIST	*_nc_windowlist;
+#define _nc_windows	_nc_globals._nc_windowlist
+
 #if USE_HOME_TERMINFO
 	char		*home_terminfo;
 #endif
@@ -840,12 +843,6 @@ struct screen {
 	 * per screen basis.
 	 */
 	struct panelhook _panelHook;
-	/*
-	 * Linked-list of all windows, to support '_nc_resizeall()' and
-	 * '_nc_freeall()'
-	 */
-	WINDOWLIST	*_nc_sp_windows;
-#define _nc_windows SP->_nc_sp_windows
 
 	bool		_sig_winch;
 	SCREEN		*_next_screen;

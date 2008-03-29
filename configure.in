@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.429 2007/11/24 22:42:43 tom Exp $
+dnl $Id: configure.in,v 1.431 2008/03/29 18:38:08 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.429 $)
+AC_REVISION($Revision: 1.431 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -969,8 +969,18 @@ if test "$with_ext_mouse" = yes ; then
 fi
 AC_SUBST(NCURSES_MOUSE_VERSION)
 
+# This is still experimental (20080329), but should ultimately be moved to
+# the script-block --with-normal, etc.
+CF_WITH_PTHREAD
+if test "$with_pthread" = "yes" ; then
+    AC_DEFINE(USE_PTHREADS)
+    enable_reentrant=yes
+fi
+
 # Reentrant code has to be opaque; there's little advantage to making ncurses
-# opaque outside of that, so there is no --enable-opaque option.
+# opaque outside of that, so there is no --enable-opaque option.  We can use
+# this option without --with-pthreads, but this will be always set for
+# pthreads.
 AC_MSG_CHECKING(if you want experimental reentrant code)
 AC_ARG_ENABLE(reentrant,
 	[  --enable-reentrant      compile with experimental reentrant code],
@@ -1627,6 +1637,10 @@ AC_SUBST(TINFO_ARGS)
 
 if test "$with_dlsym" = yes ; then
 	CF_REMOVE_LIB(TICS_LIST,$TICS_LIST,dl)
+fi
+
+if test "$DFT_LWR_MODEL" = "libtool"; then
+    OBJEXT=lo
 fi
 
 # needed for Ada95
