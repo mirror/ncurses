@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.185 2008/03/29 20:23:15 tom Exp $ */
+/* $Id: curses.h.in,v 1.186 2008/04/05 15:30:28 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -912,17 +912,21 @@ extern NCURSES_EXPORT(int) wgetscrreg (const WINDOW *, int *, int *); /* generat
 #define getmaxyx(win,y,x)	(y = getmaxy(win), x = getmaxx(win))
 #define getparyx(win,y,x)	(y = getpary(win), x = getparx(win))
 
-#define getsyx(y,x) do { if (is_leaveok(newscr)) \
-			    (y) = (x) = -1; \
-			 else \
-			     getyx(newscr,(y), (x)); \
+#define getsyx(y,x) do { if (newscr) { \
+			     if (is_leaveok(newscr)) \
+				(y) = (x) = -1; \
+			     else \
+				 getyx(newscr,(y), (x)); \
+			} \
 		    } while(0)
 
-#define setsyx(y,x) do { if ((y) == -1 && (x) == -1) \
-			    leaveok(newscr, TRUE); \
-			 else { \
-			    leaveok(newscr, FALSE); \
-			    wmove(newscr, (y), (x)); \
+#define setsyx(y,x) do { if (newscr) { \
+			    if ((y) == -1 && (x) == -1) \
+				leaveok(newscr, TRUE); \
+			    else { \
+				leaveok(newscr, FALSE); \
+				wmove(newscr, (y), (x)); \
+			    } \
 			} \
 		    } while(0)
 

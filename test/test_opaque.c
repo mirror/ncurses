@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_opaque.c,v 1.5 2008/01/19 21:01:36 tom Exp $
+ * $Id: test_opaque.c,v 1.6 2008/04/05 18:03:57 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -51,7 +51,7 @@
 #define BASE_Y 6
 #define MAX_COLS 1024
 
-#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20070818) && NCURSES_EXT_FUNCS
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20080119) && NCURSES_EXT_FUNCS
 
 static bool
 Quit(int ch)
@@ -394,6 +394,46 @@ test_opaque(int level, char **argv, WINDOW *stswin)
     return TRUE;
 }
 
+static void
+test_set_escdelay(void)
+{
+    set_escdelay((100 + ESCDELAY) / 2);
+}
+
+static void
+test_set_tabsize(void)
+{
+    int y0, x0;
+    int y, x;
+    int save_tabsize = TABSIZE;
+    bool done = FALSE;
+
+    (void) cbreak();		/* take input chars one at a time, no wait for \n */
+    (void) noecho();		/* don't echo input */
+
+    for (y = 0; y < LINES; ++y) {
+	set_tabsize(y + 1);
+	if (move(y, 0) == ERR)
+	    break;
+	for (x = 0; x < COLS;) {
+	    addch('\t');
+	    if (addch('*') == ERR) {
+		done = TRUE;
+		break;
+	    }
+	    getyx(stdscr, y0, x0);
+	    if (y0 != y || x0 == x) {
+		done = TRUE;
+		break;
+	    }
+	}
+    }
+    getch();
+    erase();
+
+    set_tabsize(save_tabsize);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -408,6 +448,9 @@ main(int argc, char *argv[])
     }
 
     initscr();
+
+    test_set_escdelay();
+    test_set_tabsize();
 
     stsbox = derwin(stdscr, BASE_Y, COLS, 0, 0);
     box(stsbox, 0, 0);
