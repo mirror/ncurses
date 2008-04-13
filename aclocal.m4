@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.445 2008/03/29 19:47:32 tom Exp $
+dnl $Id: aclocal.m4,v 1.447 2008/04/12 23:49:55 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1057,6 +1057,34 @@ int main() {
 
 test "$cf_cv_func_nanosleep" = "yes" && AC_DEFINE(HAVE_NANOSLEEP)
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_FUNC_OPENPTY version: 2 updated: 2008/04/12 19:49:01
+dnl ---------------
+dnl Check for openpty() function, along with <pty.h> header.  It may need the
+dnl "util" library as well.
+AC_DEFUN([CF_FUNC_OPENPTY],
+[
+AC_CHECK_LIB(util,openpty,cf_cv_lib_util=yes,cf_cv_lib_util=no)
+AC_CACHE_CHECK(for openpty header,cf_cv_func_openpty,[
+    cf_save_LIBS="$LIBS"
+    test $cf_cv_lib_util = yes && LIBS="-lutil $LIBS"
+    for cf_header in pty.h libutil.h util.h
+    do
+    AC_TRY_LINK([
+#include <$cf_header>
+],[
+    int x = openpty((int *)0, (int *)0, (char *)0,
+                   (struct termios *)0, (struct winsize *)0);
+],[
+        cf_cv_func_openpty=$cf_header
+        break
+],[
+        cf_cv_func_openpty=no
+])
+    done
+    LIBS="$cf_save_LIBS"
+])
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FUNC_POLL version: 4 updated: 2006/12/16 12:33:30
 dnl ------------

@@ -7,7 +7,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.37 2005/12/31 20:23:09 tom Exp $
+ * $Id: testcurs.c,v 1.38 2008/04/12 22:00:27 tom Exp $
  */
 
 #include <test.priv.h>
@@ -51,7 +51,7 @@ static const COMMAND command[] =
 static char *
 strdup(char *s)
 {
-    char *p = (char *) malloc(strlen(s) + 1);
+    char *p = typeMalloc(char, strlen(s) + 1);
     if (p)
 	strcpy(p, s);
     return (p);

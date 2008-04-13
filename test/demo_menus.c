@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.23 2008/02/23 23:06:49 tom Exp $
+ * $Id: demo_menus.c,v 1.24 2008/04/12 22:03:33 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -112,7 +112,7 @@ static MENU *mpSelect;
 static char *
 strdup(char *s)
 {
-    char *p = (char *) malloc(strlen(s) + 1);
+    char *p = typeMalloc(char, strlen(s) + 1);
     if (p)
 	strcpy(p, s);
     return (p);
@@ -349,11 +349,10 @@ build_select_menu(MenuNo number, char *filename)
 	    && sb.st_size != 0) {
 	    unsigned size = sb.st_size;
 	    unsigned j, k;
-	    char *blob = malloc(size + 1);
-	    CONST_MENUS char **list =
-	    (CONST_MENUS char **) calloc(sizeof(*list), size + 1);
+	    char *blob = typeMalloc(char, size + 1);
+	    CONST_MENUS char **list = typeCalloc(CONST_MENUS char *, size + 1);
 
-	    items = (ITEM **) calloc(sizeof(ITEM *), size + 1);
+	    items = typeCalloc(ITEM *, size + 1);
 	    if (blob != 0 && list != 0) {
 		FILE *fp = fopen(filename, "r");
 		if (fp != 0) {
@@ -384,7 +383,7 @@ build_select_menu(MenuNo number, char *filename)
     }
     if (ap == 0) {
 	count = SIZEOF(labels) - 1;
-	items = (ITEM **) calloc(count + 1, sizeof(*items));
+	items = typeCalloc(ITEM *, count + 1);
 	ap = labels;
     }
 
@@ -457,7 +456,7 @@ tracetrace(unsigned tlevel)
 	size_t need = 12;
 	for (n = 0; t_tbl[n].name != 0; n++)
 	    need += strlen(t_tbl[n].name) + 2;
-	buf = (char *) malloc(need);
+	buf = typeMalloc(char, need);
     }
     sprintf(buf, "0x%02x = {", tlevel);
     if (tlevel == 0) {

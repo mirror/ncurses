@@ -32,11 +32,11 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: use_window.c,v 1.5 2008/03/29 20:24:15 tom Exp $")
+MODULE_ID("$Id: use_window.c,v 1.6 2008/04/12 17:16:05 tom Exp $")
 
 #ifdef USE_PTHREADS
 NCURSES_EXPORT(void)
-_nc_lock_window(WINDOW *win)
+_nc_lock_window(const WINDOW *win)
 {
     WINDOWLIST *p;
 
@@ -50,7 +50,7 @@ _nc_lock_window(WINDOW *win)
 }
 
 NCURSES_EXPORT(void)
-_nc_unlock_window(WINDOW *win)
+_nc_unlock_window(const WINDOW *win)
 {
     WINDOWLIST *p;
 

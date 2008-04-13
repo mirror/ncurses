@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.361 2008/03/29 21:14:14 tom Exp $
+ * $Id: curses.priv.h,v 1.363 2008/04/12 17:16:26 tom Exp $
  *
  *	curses.priv.h
  *
@@ -323,8 +323,8 @@ extern NCURSES_EXPORT(int) _nc_mutex_unlock(pthread_mutex_t *);
 #define _nc_try_global(name)    _nc_mutex_trylock(&_nc_globals.mutex_##name)
 #define _nc_unlock_global(name)	_nc_mutex_unlock(&_nc_globals.mutex_##name)
 
-extern NCURSES_EXPORT(void) _nc_lock_window(WINDOW *);
-extern NCURSES_EXPORT(void) _nc_unlock_window(WINDOW *);
+extern NCURSES_EXPORT(void) _nc_lock_window(const WINDOW *);
+extern NCURSES_EXPORT(void) _nc_unlock_window(const WINDOW *);
 
 #else
 #error POSIX threads requires --enable-reentrant option
@@ -627,7 +627,7 @@ extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;
 #define N_RIPS 5
 
 /*
- * Global data which is swept up into a SCREEN when one is created.
+ * Global data which can be swept up into a SCREEN when one is created.
  * It may be modified before the next SCREEN is created.
  */
 typedef struct {
@@ -866,7 +866,7 @@ struct screen {
 	int		_LINES;
 	int		_COLS;
 #ifdef TRACE
-	int		_outchars;
+	long		_outchars;
 	const char	*_tputs_trace;
 #endif
 #endif

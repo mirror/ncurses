@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.29 2008/02/09 23:05:37 tom Exp $
+ * $Id: demo_panels.c,v 1.30 2008/04/12 21:59:49 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -205,7 +205,7 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 {
     WINDOW *win;
     PANEL *pan = 0;
-    char *userdata = malloc(3);
+    char *userdata = typeMalloc(char, 3);
 
     if ((win = newwin(rows, cols, tly, tlx)) != 0) {
 	keypad(win, TRUE);

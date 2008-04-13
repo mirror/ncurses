@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.431 2008/03/29 18:38:08 tom Exp $
+dnl $Id: configure.in,v 1.433 2008/04/12 23:39:06 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.431 $)
+AC_REVISION($Revision: 1.433 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1251,6 +1251,17 @@ CF_TYPE_SIGACTION
 CF_SIZECHANGE
 CF_FUNC_MEMMOVE
 CF_FUNC_POLL
+
+# special check for test/ditto.c
+CF_FUNC_OPENPTY
+if test "$cf_cv_func_openpty" != no ; then
+    AC_DEFINE_UNQUOTED(USE_OPENPTY_HEADER,<$cf_cv_func_openpty>)
+    AC_DEFINE(USE_XTERM_PTY)
+    if test "$cf_cv_lib_util" = yes ; then
+        TEST_LIBS="-lutil $TEST_LIBS"
+    fi
+fi
+AC_SUBST(TEST_LIBS)
 
 if test "$with_hashed_db" != no ; then
 	AC_DEFINE(USE_HASHED_DB)

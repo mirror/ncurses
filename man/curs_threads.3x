@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_threads.3x,v 1.10 2008/04/05 23:51:41 tom Exp $
+.\" $Id: curs_threads.3x,v 1.12 2008/04/12 18:22:51 tom Exp $
 .TH curs_threads 3X ""
 .na
 .hy 0
@@ -184,7 +184,7 @@ clrtobot/window (stdscr)
 clrtoeol/window (stdscr)
 color_content/screen
 color_set/window (stdscr)
-copywin/window (both source, target)
+copywin/window locks(source, target)
 cur_term/terminal
 curs_set/screen
 curscr/screen (readonly)
@@ -196,11 +196,11 @@ del_curterm/screen
 delay_output/screen
 delch/window (stdscr)
 deleteln/window (stdscr)
-delscreen/reentrant
-delwin/reentrant
+delscreen/global locks(screenlist, screen)
+delwin/global locks(windowlist)
 derwin/screen
 doupdate/screen
-dupwin/screen
+dupwin/screen locks(window)
 echo/screen
 echo_wchar/window (stdscr)
 echochar/window (stdscr)
@@ -249,7 +249,7 @@ inchnstr/window (stdscr)
 inchstr/window (stdscr)
 init_color/screen
 init_pair/screen
-initscr/global
+initscr/global locks(screenlist)
 innstr/window (stdscr)
 innwstr/window (stdscr)
 ins_nwstr/window (stdscr)
@@ -377,10 +377,10 @@ mvwscanw/screen
 mvwvline/window
 mvwvline_set/window
 napms/reentrant
-newpad/reentrant
+newpad/global locks(windowlist)
 newscr/screen (readonly)
-newterm/global
-newwin/reentrant
+newterm/global locks(screenlist)
+newwin/global locks(windowlist)
 nl/screen
 nocbreak/screen
 nodelay/window
@@ -394,8 +394,8 @@ numcodes/global (readonly)
 numfnames/global (readonly)
 numnames/global (readonly)
 ospeed/global
-overlay/window (both source, target)
-overwrite/window (both source, target)
+overlay/window locks(source, target)
+overwrite/window locks(source, target)
 pair_content/screen
 pecho_wchar/screen
 pechochar/screen
@@ -411,7 +411,7 @@ refresh/screen
 reset_prog_mode/screen
 reset_shell_mode/screen
 resetty/terminal
-resize_term/screen
+resize_term/screen locks(windowlist)
 resizeterm/screen
 restartterm/screen
 ripoffline/global (static data)
@@ -427,7 +427,7 @@ scrollok/window
 set_curterm/screen
 set_escdelay/screen
 set_tabsize/screen
-set_term/reentrant
+set_term/global locks(screenlist, screen)
 setcchar/reentrant
 setscrreg/window (stdscr)
 setupterm/global
@@ -486,8 +486,8 @@ use_default_colors/screen
 use_env/global (static data)
 use_extended_names/global (static data)
 use_legacy_coding/screen
-use_screen/reentrant
-use_window/reentrant
+use_screen/global locks(screenlist, screen)
+use_window/global locks(windowlist, window)
 vid_attr/screen
 vid_puts/screen
 vidattr/screen
@@ -568,7 +568,7 @@ wnoutrefresh/screen
 wprintw/window
 wredrawln/window
 wrefresh/screen
-wresize/window
+wresize/window locks(windowlist)
 wscanw/screen
 wscrl/window
 wsetscrreg/window

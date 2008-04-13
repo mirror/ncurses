@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.76 2008/03/29 20:29:10 tom Exp $ */
+/* $Id: test.priv.h,v 1.77 2008/04/12 19:25:48 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -449,6 +449,7 @@ extern int optind;
 #endif
 #else
 #define typeMalloc(type,n) (type *) malloc((n) * sizeof(type))
+#define typeCalloc(type,elts) (type *) calloc((elts), sizeof(type))
 #define typeRealloc(type,n,p) (type *) realloc(p, (n) * sizeof(type))
 #endif
 

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: ditto.c,v 1.14 2008/03/29 21:35:39 tom Exp $
+ * $Id: ditto.c,v 1.19 2008/04/12 23:37:32 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.  Invoke the program by specifying another terminal on the same
@@ -39,6 +39,10 @@
 #include <test.priv.h>
 #include <sys/stat.h>
 #include <errno.h>
+
+#ifdef USE_XTERM_PTY
+#include USE_OPENPTY_HEADER
+#endif
 
 typedef struct {
     FILE *input;
@@ -64,6 +68,26 @@ static FILE *
 open_tty(char *path)
 {
     FILE *fp;
+#ifdef USE_XTERM_PTY
+    int amaster;
+    int aslave;
+    char slave_name[1024];
+    char s_option[1024];
+    char *leaf;
+
+    if (openpty(&amaster, &aslave, slave_name, 0, 0) != 0)
+	failed("openpty");
+    if ((leaf = strrchr(slave_name, '/')) == 0) {
+	errno = EISDIR;
+	failed(slave_name);
+    }
+    sprintf(s_option, "-S%s/%d", slave_name, aslave);
+    if (fork()) {
+	execlp("xterm", "xterm", s_option, "-title", path, (char *) 0);
+	_exit(0);
+    }
+    fp = fdopen(amaster, "r+");
+#else
     struct stat sb;
 
     if (stat(path, &sb) < 0)
@@ -76,6 +100,7 @@ open_tty(char *path)
     if (fp == 0)
 	failed(path);
     printf("opened %s\n", path);
+#endif
     return fp;
 }
 
@@ -122,7 +147,7 @@ main(int argc GCC_UNUSED,
     if (argc <= 1)
 	usage();
 
-    if ((data = (DITTO *) calloc((unsigned) argc, sizeof(DITTO))) == 0)
+    if ((data = typeCalloc(DITTO, argc)) == 0)
 	failed("calloc data");
 
     data[0].input = stdin;
@@ -160,7 +185,6 @@ main(int argc GCC_UNUSED,
 	napms(20);
 	ch = USING_SCREEN(data[which].screen, read_screen, 0);
 	if (ch == ERR) {
-	    /* echochar('.'); */
 	    continue;
 	}
 	if (ch == CTRL('D'))
@@ -174,6 +198,9 @@ main(int argc GCC_UNUSED,
      */
     for (j = argc - 1; j >= 0; j--) {
 	USING_SCREEN(data[j].screen, close_screen, 0);
+	fprintf(data[j].output, "**Closed\r\n");
+	fflush(data[j].output);
+	fclose(data[j].output);
 	delscreen(data[j].screen);
     }
     ExitProgram(EXIT_SUCCESS);

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.21 2008/02/09 18:08:28 tom Exp $
+ * $Id: movewindow.c,v 1.22 2008/04/12 22:01:41 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -251,7 +251,7 @@ add_window(WINDOW *parent, WINDOW *child)
 
     keypad(child, TRUE);
     if (need > have) {
-	all_windows = (FRAME *) realloc(all_windows, need * sizeof(FRAME));
+	all_windows = typeRealloc(FRAME, need, all_windows);
     }
     all_windows[num_windows].parent = parent;
     all_windows[num_windows].child = child;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005,2006 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2005-2006,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_altkeys.c,v 1.7 2006/12/09 16:49:49 tom Exp $
+ * $Id: demo_altkeys.c,v 1.8 2008/04/12 22:06:22 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2005/10/22
@@ -110,7 +110,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     for (n = KEY_MIN; n < KEY_MAX; ++n) {
 	char *value;
 	if ((value = keybound(n, 0)) != 0) {
-	    char *temp = malloc(strlen(value) + 2);
+	    char *temp = typeMalloc(char, strlen(value) + 2);
 	    sprintf(temp, "\033%s", value);
 	    define_key(temp, n + MY_KEYS);
 	    free(temp);

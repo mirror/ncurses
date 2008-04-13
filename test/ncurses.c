@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.312 2008/03/22 23:02:57 tom Exp $
+$Id: ncurses.c,v 1.313 2008/04/12 22:04:42 tom Exp $
 
 ***************************************************************************/
 
@@ -637,10 +637,10 @@ remember_boxes(unsigned level, WINDOW *txt_win, WINDOW *box_win)
 
     if (winstack == 0) {
 	len_winstack = 20;
-	winstack = (WINSTACK *) malloc(len_winstack * sizeof(WINSTACK));
+	winstack = typeMalloc(WINSTACK, len_winstack);
     } else if (need >= len_winstack) {
 	len_winstack = need;
-	winstack = (WINSTACK *) realloc(winstack, len_winstack * sizeof(WINSTACK));
+	winstack = typeRealloc(WINSTACK, len_winstack, winstack);
     }
     winstack[level].text = txt_win;
     winstack[level].frame = box_win;
@@ -933,7 +933,7 @@ wcstos(const wchar_t *src)
     memset(&state, 0, sizeof(state));
     if ((need = wcsrtombs(0, &tmp, 0, &state)) > 0) {
 	unsigned have = need;
-	result = (char *) calloc(have + 1, 1);
+	result = typeCalloc(char, have + 1);
 	tmp = src;
 	if (wcsrtombs(result, &tmp, have, &state) != have) {
 	    free(result);
@@ -3872,7 +3872,7 @@ acs_and_scroll(void)
 	transient((FRAME *) 0, (char *) 0);
 	switch (c) {
 	case CTRL('C'):
-	    neww = (FRAME *) calloc(1, sizeof(FRAME));
+	    neww = typeCalloc(FRAME, 1);
 	    if ((neww->wind = getwindow()) == (WINDOW *) 0)
 		goto breakout;
 
@@ -3948,7 +3948,7 @@ acs_and_scroll(void)
 	    if ((fp = fopen(DUMPFILE, "r")) == (FILE *) 0) {
 		transient(current, "Can't open screen dump file");
 	    } else {
-		neww = (FRAME *) calloc(1, sizeof(FRAME));
+		neww = typeCalloc(FRAME, 1);
 
 		neww->next = current->next;
 		neww->last = current;
@@ -5125,7 +5125,7 @@ tracetrace(unsigned tlevel)
 	size_t need = 12;
 	for (n = 0; t_tbl[n].name != 0; n++)
 	    need += strlen(t_tbl[n].name) + 2;
-	buf = (char *) malloc(need);
+	buf = typeMalloc(char, need);
     }
     sprintf(buf, "0x%02x = {", tlevel);
     if (tlevel == 0) {
@@ -6454,7 +6454,7 @@ main(int argc, char *argv[])
 
 	if (can_change_color()) {
 	    short cp;
-	    all_colors = (RGB_DATA *) malloc(max_colors * sizeof(RGB_DATA));
+	    all_colors = typeMalloc(RGB_DATA, max_colors);
 	    for (cp = 0; cp < max_colors; ++cp) {
 		color_content(cp,
 			      &all_colors[cp].red,

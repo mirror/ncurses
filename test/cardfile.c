@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.32 2007/08/11 16:34:27 tom Exp $
+ * $Id: cardfile.c,v 1.33 2008/04/12 22:05:53 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -73,7 +73,7 @@ static char default_name[] = "cardfile.dat";
 static char *
 strdup(const char *s)
 {
-    char *p = (char *) malloc(strlen(s) + 1);
+    char *p = typeMalloc(char, strlen(s) + 1);
     if (p)
 	strcpy(p, s);
     return (p);
@@ -111,7 +111,7 @@ add_title(const char *title)
 	    break;
     }
 
-    card = (CARD *) calloc(1, sizeof(CARD));
+    card = typeCalloc(CARD, 1);
     card->title = strdup(title);
     card->content = strdup("");
 
@@ -135,13 +135,13 @@ add_content(CARD * card, const char *content)
     if ((total = strlen(content)) != 0) {
 	if ((offset = strlen(card->content)) != 0) {
 	    total += 1 + offset;
-	    card->content = (char *) realloc(card->content, total + 1);
+	    card->content = typeRealloc(char, total + 1, card->content);
 	    if (card->content)
 		strcpy(card->content + offset++, " ");
 	} else {
 	    if (card->content != 0)
 		free(card->content);
-	    card->content = (char *) malloc(total + 1);
+	    card->content = typeMalloc(char, total + 1);
 	}
 	if (card->content)
 	    strcpy(card->content + offset, content);
@@ -336,7 +336,7 @@ form_virtualize(WINDOW *w)
 static FIELD **
 make_fields(CARD * p, int form_high, int form_wide)
 {
-    FIELD **f = (FIELD **) calloc(3, sizeof(FIELD *));
+    FIELD **f = typeCalloc(FIELD *, 3);
 
     f[0] = new_field(1, form_wide, 0, 0, 0, 0);
     set_field_back(f[0], A_REVERSE);

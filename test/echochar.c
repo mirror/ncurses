@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006,2007 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2006-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.5 2007/07/21 17:41:55 tom Exp $
+ * $Id: echochar.c,v 1.6 2008/04/12 22:06:04 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -107,7 +107,7 @@ main(
     if (use_colors) {
 	start_color();
 	if (COLOR_PAIRS > 0) {
-	    my_pairs = calloc((unsigned) COLOR_PAIRS, sizeof(*my_pairs));
+	    my_pairs = typeCalloc(char, COLOR_PAIRS);
 	}
 	use_colors = (my_pairs != 0);
     }
