@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1225 2008/04/12 19:41:26 tom Exp $
+-- $Id: NEWS,v 1.1228 2008/04/19 23:03:52 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080419
+	+ add screen.rxvt terminfo entry -TD
+	+ modify tic -f option to format spaces as \s to prevent them from
+	  being lost when that is read back in unformatted strings.
+	+ improve test/ditto.c, using a "talk"-style layout.
 
 20080412
 	+ change test/ditto.c to use openpty() and xterm.
@@ -70,8 +76,8 @@ it is not possible to add this information.
 	  e.g., on aix when using CC=powerpc-ibm-aix5.3.0.0-gcc
 	  (report/patch by Michael Haubenwallner).
 	+ override OBJEXT to "lo" when building with libtool, to work on
-	  platforms such as AIX where libtool supports only static libraries
-	  (report/patch by Michael Haubenwallner).
+	  platforms such as AIX where libtool may use a different suffix for
+	  the object files than ".o" (report/patch by Michael Haubenwallner).
 	+ add configure --with-pthread option, for building with the POSIX
 	  thread library.
 

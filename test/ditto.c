@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: ditto.c,v 1.19 2008/04/12 23:37:32 tom Exp $
+ * $Id: ditto.c,v 1.21 2008/04/19 20:08:45 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.  Invoke the program by specifying another terminal on the same
@@ -48,7 +48,15 @@ typedef struct {
     FILE *input;
     FILE *output;
     SCREEN *screen;
+    WINDOW **windows;
 } DITTO;
+
+typedef struct {
+    int value;			/* the actual data */
+    int source;			/* which screen did data come from */
+    int target;			/* which screen is data going to */
+    DITTO *ditto;
+} DDATA;
 
 static void
 failed(const char *s)
@@ -113,26 +121,34 @@ close_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
 }
 
 static int
-read_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
+read_screen(SCREEN *sp GCC_UNUSED, void *arg)
 {
-    return getch();
+    DDATA *data = (DDATA *) arg;
+    WINDOW *win = data->ditto[data->source].windows[data->source];
+
+    return wgetch(win);
 }
 
 static int
 write_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
 {
-    addstr((char *) arg);
-    refresh();
+    DDATA *data = (DDATA *) arg;
+    WINDOW *win = data->ditto[data->target].windows[data->source];
+
+    waddch(win, data->value);
+    wnoutrefresh(win);
+    doupdate();
     return OK;
 }
 
 static void
-show_ditto(DITTO * data, int count, char *msg)
+show_ditto(DITTO * data, int count, DDATA * ddata)
 {
     int n;
 
     for (n = 0; n < count; n++) {
-	USING_SCREEN(data[n].screen, write_screen, (void *) msg);
+	ddata->target = n;
+	USING_SCREEN(data[n].screen, write_screen, (void *) ddata);
     }
 }
 
@@ -140,7 +156,7 @@ int
 main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
 {
-    int j;
+    int j, k;
     int count;
     DITTO *data;
 
@@ -162,15 +178,38 @@ main(int argc GCC_UNUSED,
      * Set up the screens.
      */
     for (j = 0; j < argc; j++) {
+	int high, wide;
+
 	data[j].screen = newterm((char *) 0,	/* assume $TERM is the same */
 				 data[j].output,
 				 data[j].input);
+
 	if (data[j].screen == 0)
 	    failed("newterm");
 	cbreak();
 	noecho();
 	scrollok(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
+	box(stdscr, 0, 0);
+
+	data[j].windows = typeCalloc(WINDOW *, argc);
+
+	high = (LINES - 2) / argc;
+	wide = (COLS - 2);
+	for (k = 0; k < argc; ++k) {
+	    WINDOW *outer = newwin(high, wide, 1 + (high * k), 1);
+	    WINDOW *inner = derwin(outer, high - 2, wide - 2, 1, 1);
+
+	    box(outer, 0, 0);
+	    mvwaddstr(outer, 0, 2, argv[k]);
+	    wnoutrefresh(outer);
+
+	    scrollok(inner, TRUE);
+	    nodelay(inner, TRUE);
+
+	    data[j].windows[k] = inner;
+	}
+	doupdate();
     }
 
     /*
@@ -178,19 +217,24 @@ main(int argc GCC_UNUSED,
      * of the screens.
      */
     for (count = 0;; ++count) {
-	char message[80];
+	DDATA ddata;
 	int ch;
 	int which = (count % argc);
 
 	napms(20);
-	ch = USING_SCREEN(data[which].screen, read_screen, 0);
+
+	ddata.source = which;
+	ddata.ditto = data;
+
+	ch = USING_SCREEN(data[which].screen, read_screen, &ddata);
 	if (ch == ERR) {
 	    continue;
 	}
 	if (ch == CTRL('D'))
 	    break;
-	sprintf(message, "from[%d:%d] '%c' (%#x)\n", count, which, ch, ch);
-	show_ditto(data, argc, message);
+
+	ddata.value = ch;
+	show_ditto(data, argc, &ddata);
     }
 
     /*
@@ -199,6 +243,11 @@ main(int argc GCC_UNUSED,
     for (j = argc - 1; j >= 0; j--) {
 	USING_SCREEN(data[j].screen, close_screen, 0);
 	fprintf(data[j].output, "**Closed\r\n");
+
+	/*
+	 * Closing before a delscreen() helps ncurses determine that there
+	 * is no valid output buffer, and can remove the setbuf() data.
+	 */
 	fflush(data[j].output);
 	fclose(data[j].output);
 	delscreen(data[j].screen);

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.326 $
-#	$Date: 2007/11/12 00:22:07 $
+#	$Revision: 1.327 $
+#	$Date: 2008/04/19 22:51:50 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4390,6 +4390,13 @@ screen.xterm-r6|screen customized for X11R6 xterm,
 screen.teraterm|disable ncv in teraterm,
 	ncv#127,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
+	use=screen,
+# Other terminals
+screen.rxvt|screen in rxvt,
+	bw,
+	cvvis@, flash@, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
+	kcuu1=\EOA, kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
+	use=vt100+enq, use=rxvt+pcfkeys, use=vt220+keypad,
 	use=screen,
 # fix the backspace key
 screen.linux|screen in linux console,
@@ -21660,6 +21667,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* extend xterm+pccX entries to match xterm #230 -TD
 #	* add xterm+app, xterm+noapp, from xterm #230 -TD
 #	* add/use xterm+pce2 from xterm #230, in xterm+pcfkeys -TD
+#
+# 2007-04-19
+#	* add screen.rxvt -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
