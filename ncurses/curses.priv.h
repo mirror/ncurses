@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.363 2008/04/12 17:16:26 tom Exp $
+ * $Id: curses.priv.h,v 1.373 2008/05/03 23:30:35 tom Exp $
  *
  *	curses.priv.h
  *
@@ -347,9 +347,6 @@ extern NCURSES_EXPORT(void) _nc_unlock_window(const WINDOW *);
 #define _nc_unlock_window(name)	/* nothing */
 
 #endif /* USE_PTHREADS */
-
-#define _nc_lock_screen(name)	/* nothing */
-#define _nc_unlock_screen(name)	/* nothing */
 
 #if HAVE_GETTIMEOFDAY
 # define PRECISE_GETTIME 1
@@ -1168,6 +1165,13 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #endif
 
 /*
+ * Standardize/simplify common loops
+ */
+#define each_screen(p) p = _nc_screen_chain; p != 0; p = (p)->_next_screen
+#define each_window(p) p = _nc_windows; p != 0; p = (p)->next
+#define each_ripoff(p) p = ripoff_stack; (p - ripoff_stack) < N_RIPS; ++p
+
+/*
  * Prefixes for call/return points of library function traces.  We use these to
  * instrument the public functions so that the traces can be easily transformed
  * into regression scripts.
@@ -1235,7 +1239,7 @@ extern NCURSES_EXPORT(const char *)     _nc_retrace_cptr (const char *);
 extern NCURSES_EXPORT(int)              _nc_retrace_int (int);
 extern NCURSES_EXPORT(unsigned)         _nc_retrace_unsigned (unsigned);
 extern NCURSES_EXPORT(void *)           _nc_retrace_void_ptr (void *);
-extern NCURSES_EXPORT(void)             _nc_fifo_dump (void);
+extern NCURSES_EXPORT(void)             _nc_fifo_dump (SCREEN *);
 
 #if USE_REENTRANT
 NCURSES_WRAPPED_VAR(long, _nc_outchars);
@@ -1476,14 +1480,17 @@ extern NCURSES_EXPORT(char *) _nc_get_locale(void);
 extern NCURSES_EXPORT(int) _nc_unicode_locale(void);
 extern NCURSES_EXPORT(int) _nc_locale_breaks_acs(void);
 extern NCURSES_EXPORT(int) _nc_setupterm(NCURSES_CONST char *, int, int *, bool);
-extern NCURSES_EXPORT(void) _nc_get_screensize(int *, int *);
+extern NCURSES_EXPORT(void) _nc_get_screensize(SCREEN *, int *, int *);
 
 /* lib_tstp.c */
 #if USE_SIGWINCH
-extern NCURSES_EXPORT(int) _nc_handle_sigwinch(int);
+extern NCURSES_EXPORT(int) _nc_handle_sigwinch(SCREEN *);
 #else
 #define _nc_handle_sigwinch(a) /* nothing */
 #endif
+
+/* lib_ungetch.c */
+extern NCURSES_EXPORT(int) _nc_ungetch (SCREEN *, int);
 
 /* lib_wacs.c */
 #if USE_WIDEC_SUPPORT
@@ -1527,18 +1534,18 @@ extern NCURSES_EXPORT(int) _nc_access (const char *, int);
 extern NCURSES_EXPORT(int) _nc_baudrate (int);
 extern NCURSES_EXPORT(int) _nc_freewin (WINDOW *);
 extern NCURSES_EXPORT(int) _nc_getenv_num (const char *);
-extern NCURSES_EXPORT(int) _nc_keypad (bool);
+extern NCURSES_EXPORT(int) _nc_keypad (SCREEN *, bool);
 extern NCURSES_EXPORT(int) _nc_ospeed (int);
 extern NCURSES_EXPORT(int) _nc_outch (int);
 extern NCURSES_EXPORT(int) _nc_read_termcap_entry (const char *const, TERMTYPE *const);
 extern NCURSES_EXPORT(int) _nc_setupscreen (int, int, FILE *, bool, int);
-extern NCURSES_EXPORT(int) _nc_timed_wait(int, int, int * EVENTLIST_2nd(_nc_eventlist *));
+extern NCURSES_EXPORT(int) _nc_timed_wait(SCREEN *, int, int, int * EVENTLIST_2nd(_nc_eventlist *));
 extern NCURSES_EXPORT(void) _nc_do_color (short, short, bool, int (*)(int));
 extern NCURSES_EXPORT(void) _nc_flush (void);
 extern NCURSES_EXPORT(void) _nc_free_entry(ENTRY *, TERMTYPE *);
 extern NCURSES_EXPORT(void) _nc_freeall (void);
 extern NCURSES_EXPORT(void) _nc_hash_map (void);
-extern NCURSES_EXPORT(void) _nc_init_keytry (void);
+extern NCURSES_EXPORT(void) _nc_init_keytry (SCREEN *);
 extern NCURSES_EXPORT(void) _nc_keep_tic_dir (const char *);
 extern NCURSES_EXPORT(void) _nc_make_oldhash (int i);
 extern NCURSES_EXPORT(void) _nc_scroll_oldhash (int n, int top, int bot);
@@ -1570,7 +1577,7 @@ extern NCURSES_EXPORT(size_t) _nc_wcrtomb (char *, wchar_t, mbstate_t *);
 #endif
 
 #if USE_SIZECHANGE
-extern NCURSES_EXPORT(void) _nc_update_screensize (void);
+extern NCURSES_EXPORT(void) _nc_update_screensize (SCREEN *);
 #endif
 
 #if HAVE_RESIZETERM

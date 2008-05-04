@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1228 2008/04/19 23:03:52 tom Exp $
+-- $Id: NEWS,v 1.1233 2008/05/03 23:14:39 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080503
+	+ modify screen.* terminfo entries using new screen+fkeys to fix
+	  overridden keys in screen.rxvt (Debian #478094) -TD
+	+ modify internal interfaces to reduce wgetch()'s dependency on the
+	  global SP.
+	+ simplify some loops with macros each_screen(), each_window() and
+	  each_ripoff().
+
+20080426
+	+ continue modifying test/ditto.c toward making it demonstrate
+	  multithreaded use_screen(), using fifos to pass data between screens.
+	+ fix typo in form.3x (report by Mike Gran).
 
 20080419
 	+ add screen.rxvt terminfo entry -TD

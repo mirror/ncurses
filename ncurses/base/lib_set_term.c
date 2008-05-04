@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.106 2008/03/29 22:47:24 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.108 2008/05/03 22:42:43 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -94,26 +94,39 @@ _nc_free_keytry(TRIES * kt)
     }
 }
 
+static bool
+delink_screen(SCREEN *sp)
+{
+    SCREEN *last = 0;
+    SCREEN *temp;
+    bool result = FALSE;
+
+    for (each_screen(temp)) {
+	if (temp == sp) {
+	    if (last)
+		last = sp->_next_screen;
+	    else
+		_nc_screen_chain = sp->_next_screen;
+	    result = TRUE;
+	    break;
+	}
+	last = temp;
+    }
+    return result;
+}
+
 /*
  * Free the storage associated with the given SCREEN sp.
  */
 NCURSES_EXPORT(void)
 delscreen(SCREEN *sp)
 {
-    SCREEN **scan = &_nc_screen_chain;
     int i;
 
     T((T_CALLED("delscreen(%p)"), sp));
 
-    if (sp != 0) {
-	_nc_lock_global(set_SP);
-	while (*scan) {
-	    if (*scan == sp) {
-		*scan = sp->_next_screen;
-		break;
-	    }
-	    scan = &(*scan)->_next_screen;
-	}
+    _nc_lock_global(set_SP);
+    if (delink_screen(sp)) {
 
 	(void) _nc_freewin(sp->_curscr);
 	(void) _nc_freewin(sp->_newscr);
@@ -180,8 +193,8 @@ delscreen(SCREEN *sp)
 #endif
 	    _nc_set_screen(0);
 	}
-	_nc_unlock_global(set_SP);
     }
+    _nc_unlock_global(set_SP);
 
     returnVoid;
 }
@@ -267,7 +280,7 @@ _nc_setupscreen(int slines GCC_UNUSED,
     /*
      * We should always check the screensize, just in case.
      */
-    _nc_get_screensize(&slines, &scolumns);
+    _nc_get_screensize(SP, &slines, &scolumns);
     SET_LINES(slines);
     SET_COLS(scolumns);
     T((T_CREATE("screen %s %dx%d"), termname(), LINES, COLS));

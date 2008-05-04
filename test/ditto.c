@@ -27,13 +27,18 @@
  ****************************************************************************/
 
 /*
- * Author: Thomas E. Dickey <dickey@clark.net> 1998
+ * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.21 2008/04/19 20:08:45 tom Exp $
+ * $Id: ditto.c,v 1.26 2008/04/26 23:42:39 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
- * program.  Invoke the program by specifying another terminal on the same
- * machine by specifying its device, e.g.,
+ * program.
+ *
+ * If openpty() is supported, the command line parameters are titles for
+ * the windows showing each screen's data.
+ *
+ * If openpty() is not supported, you must invoke the program by specifying
+ * another terminal on the same machine by specifying its device, e.g.,
  *	ditto /dev/ttyp1
  */
 #include <test.priv.h>
@@ -44,18 +49,46 @@
 #include USE_OPENPTY_HEADER
 #endif
 
+#define MAX_FIFO 256
+
+#define THIS_FIFO(n) ((n) % MAX_FIFO)
+#define NEXT_FIFO(n) THIS_FIFO((n) + 1)
+
+typedef struct {
+    unsigned long sequence;
+    int head;
+    int tail;
+    int data[MAX_FIFO];
+} FIFO;
+
+typedef struct {
+    unsigned long sequence;
+} PEEK;
+
+/*
+ * Data "owned" for a single screen.  Each screen is divided into windows that
+ * show the text read from each terminal.  Input from a given screen will also
+ * be read into one window per screen.
+ */
 typedef struct {
     FILE *input;
     FILE *output;
-    SCREEN *screen;
-    WINDOW **windows;
+    SCREEN *screen;		/* this screen - curses internal data */
+    int length;			/* length of windows[] and peeks[] */
+    char **titles;		/* per-window titles */
+    WINDOW **windows;		/* display data from each screen */
+    PEEK *peeks;		/* indices for each screen's fifo */
+    FIFO fifo;			/* fifo for this screen */
 } DITTO;
 
+/*
+ * Structure used to pass multiple parameters via the use_screen()
+ * single-parameter interface.
+ */
 typedef struct {
-    int value;			/* the actual data */
-    int source;			/* which screen did data come from */
-    int target;			/* which screen is data going to */
-    DITTO *ditto;
+    int source;			/* which screen did character come from */
+    int target;			/* which screen is character going to */
+    DITTO *ditto;		/* data for all screens */
 } DDATA;
 
 static void
@@ -70,6 +103,36 @@ usage(void)
 {
     fprintf(stderr, "usage: ditto [terminal1 ...]\n");
     ExitProgram(EXIT_FAILURE);
+}
+
+/* Add to the head of the fifo, checking for overflow. */
+static void
+put_fifo(FIFO * fifo, int value)
+{
+    int next = NEXT_FIFO(fifo->head);
+    if (next == fifo->tail)
+	fifo->tail = NEXT_FIFO(fifo->tail);
+    fifo->data[next] = value;
+    fifo->head = next;
+    fifo->sequence += 1;
+}
+
+/* Get data from the tail (oldest part) of the fifo, returning -1 if no data.
+ * Since each screen can peek into the fifo, we do not update the tail index,
+ * but modify the peek-index.
+ *
+ * FIXME - test/workaround for case where fifo gets more than a buffer
+ * ahead of peek.
+ */
+static int
+peek_fifo(FIFO * fifo, PEEK * peek)
+{
+    int result = -1;
+    if (peek->sequence < fifo->sequence) {
+	peek->sequence += 1;
+	result = fifo->data[THIS_FIFO(peek->sequence)];
+    }
+    return result;
 }
 
 static FILE *
@@ -112,6 +175,64 @@ open_tty(char *path)
     return fp;
 }
 
+static void
+init_screen(SCREEN *sp GCC_UNUSED, void *arg)
+{
+    DITTO *target = (DITTO *) arg;
+    int high, wide;
+    int k;
+
+    cbreak();
+    noecho();
+    scrollok(stdscr, TRUE);
+    nodelay(stdscr, TRUE);
+    box(stdscr, 0, 0);
+
+    target->windows = typeCalloc(WINDOW *, target->length);
+    target->peeks = typeCalloc(PEEK, target->length);
+
+    high = (LINES - 2) / target->length;
+    wide = (COLS - 2);
+    for (k = 0; k < target->length; ++k) {
+	WINDOW *outer = newwin(high, wide, 1 + (high * k), 1);
+	WINDOW *inner = derwin(outer, high - 2, wide - 2, 1, 1);
+
+	box(outer, 0, 0);
+	mvwaddstr(outer, 0, 2, target->titles[k]);
+	wnoutrefresh(outer);
+
+	scrollok(inner, TRUE);
+	nodelay(inner, TRUE);
+	keypad(inner, TRUE);
+
+	target->windows[k] = inner;
+    }
+    doupdate();
+}
+
+static void
+open_screen(DITTO * target, char **source, int length, int which)
+{
+    if (which != 0) {
+	target->input =
+	    target->output = open_tty(source[which]);
+    } else {
+	target->input = stdin;
+	target->output = stdout;
+    }
+
+    target->titles = source;
+    target->length = length;
+    target->screen = newterm((char *) 0,	/* assume $TERM is the same */
+			     target->output,
+			     target->input);
+
+    if (target->screen == 0)
+	failed("newterm");
+
+    (void) USING_SCREEN(target->screen, init_screen, target);
+}
+
 static int
 close_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
 {
@@ -120,24 +241,52 @@ close_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
     return endwin();
 }
 
+/*
+ * Read data from the 'source' screen.
+ */
 static int
 read_screen(SCREEN *sp GCC_UNUSED, void *arg)
 {
     DDATA *data = (DDATA *) arg;
-    WINDOW *win = data->ditto[data->source].windows[data->source];
+    DITTO *ditto = &(data->ditto[data->source]);
+    WINDOW *win = ditto->windows[data->source];
+    int ch = wgetch(win);
 
-    return wgetch(win);
+    if (ch > 0 && ch < 256)
+	put_fifo(&(ditto->fifo), ch);
+    else
+	ch = ERR;
+
+    return ch;
 }
 
+/*
+ * Write all of the data that's in fifos for the 'target' screen.
+ */
 static int
 write_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
 {
     DDATA *data = (DDATA *) arg;
-    WINDOW *win = data->ditto[data->target].windows[data->source];
+    DITTO *ditto = &(data->ditto[data->target]);
+    bool changed = FALSE;
+    int which;
 
-    waddch(win, data->value);
-    wnoutrefresh(win);
-    doupdate();
+    for (which = 0; which < ditto->length; ++which) {
+	WINDOW *win = ditto->windows[which];
+	FIFO *fifo = &(data->ditto[which].fifo);
+	PEEK *peek = &(ditto->peeks[which]);
+	int ch;
+
+	while ((ch = peek_fifo(fifo, peek)) > 0) {
+	    changed = TRUE;
+
+	    waddch(win, ch);
+	    wnoutrefresh(win);
+	}
+    }
+
+    if (changed)
+	doupdate();
     return OK;
 }
 
@@ -156,7 +305,7 @@ int
 main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
 {
-    int j, k;
+    int j;
     int count;
     DITTO *data;
 
@@ -166,50 +315,8 @@ main(int argc GCC_UNUSED,
     if ((data = typeCalloc(DITTO, argc)) == 0)
 	failed("calloc data");
 
-    data[0].input = stdin;
-    data[0].output = stdout;
-    for (j = 1; j < argc; j++) {
-	data[j].input =
-	    data[j].output = open_tty(argv[j]);
-    }
-
-    /*
-     * If we got this far, we have open connection(s) to the terminal(s).
-     * Set up the screens.
-     */
     for (j = 0; j < argc; j++) {
-	int high, wide;
-
-	data[j].screen = newterm((char *) 0,	/* assume $TERM is the same */
-				 data[j].output,
-				 data[j].input);
-
-	if (data[j].screen == 0)
-	    failed("newterm");
-	cbreak();
-	noecho();
-	scrollok(stdscr, TRUE);
-	nodelay(stdscr, TRUE);
-	box(stdscr, 0, 0);
-
-	data[j].windows = typeCalloc(WINDOW *, argc);
-
-	high = (LINES - 2) / argc;
-	wide = (COLS - 2);
-	for (k = 0; k < argc; ++k) {
-	    WINDOW *outer = newwin(high, wide, 1 + (high * k), 1);
-	    WINDOW *inner = derwin(outer, high - 2, wide - 2, 1, 1);
-
-	    box(outer, 0, 0);
-	    mvwaddstr(outer, 0, 2, argv[k]);
-	    wnoutrefresh(outer);
-
-	    scrollok(inner, TRUE);
-	    nodelay(inner, TRUE);
-
-	    data[j].windows[k] = inner;
-	}
-	doupdate();
+	open_screen(&data[j], argv, argc, j);
     }
 
     /*
@@ -227,14 +334,11 @@ main(int argc GCC_UNUSED,
 	ddata.ditto = data;
 
 	ch = USING_SCREEN(data[which].screen, read_screen, &ddata);
-	if (ch == ERR) {
-	    continue;
-	}
-	if (ch == CTRL('D'))
+	if (ch == CTRL('D')) {
 	    break;
-
-	ddata.value = ch;
-	show_ditto(data, argc, &ddata);
+	} else if (ch != ERR) {
+	    show_ditto(data, argc, &ddata);
+	}
     }
 
     /*

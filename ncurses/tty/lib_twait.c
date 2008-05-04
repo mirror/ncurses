@@ -62,7 +62,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: lib_twait.c,v 1.55 2008/03/01 22:08:31 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.57 2008/05/03 21:35:57 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, bool first)
@@ -137,7 +137,8 @@ _nc_eventlist_timeout(_nc_eventlist * evl)
  * descriptors.
  */
 NCURSES_EXPORT(int)
-_nc_timed_wait(int mode,
+_nc_timed_wait(SCREEN *sp,
+	       int mode,
 	       int milliseconds,
 	       int *timeleft
 	       EVENTLIST_2nd(_nc_eventlist * evl))
@@ -199,12 +200,12 @@ _nc_timed_wait(int mode,
 #endif
 
     if (mode & 1) {
-	fds[count].fd = SP->_ifd;
+	fds[count].fd = sp->_ifd;
 	fds[count].events = POLLIN;
 	count++;
     }
     if ((mode & 2)
-	&& (fd = SP->_mouse_fd) >= 0) {
+	&& (fd = sp->_mouse_fd) >= 0) {
 	fds[count].fd = fd;
 	fds[count].events = POLLIN;
 	count++;
@@ -307,11 +308,11 @@ _nc_timed_wait(int mode,
     FD_ZERO(&set);
 
     if (mode & 1) {
-	FD_SET(SP->_ifd, &set);
-	count = SP->_ifd + 1;
+	FD_SET(sp->_ifd, &set);
+	count = sp->_ifd + 1;
     }
     if ((mode & 2)
-	&& (fd = SP->_mouse_fd) >= 0) {
+	&& (fd = sp->_mouse_fd) >= 0) {
 	FD_SET(fd, &set);
 	count = max(fd, count) + 1;
     }
@@ -424,11 +425,11 @@ _nc_timed_wait(int mode,
 	    result = 1;		/* redundant, but simple */
 #elif HAVE_SELECT
 	    if ((mode & 2)
-		&& (fd = SP->_mouse_fd) >= 0
+		&& (fd = sp->_mouse_fd) >= 0
 		&& FD_ISSET(fd, &set))
 		result |= 2;
 	    if ((mode & 1)
-		&& FD_ISSET(SP->_ifd, &set))
+		&& FD_ISSET(sp->_ifd, &set))
 		result |= 1;
 #endif
 	} else

@@ -42,9 +42,9 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.46 2008/04/05 19:16:42 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.50 2008/05/03 16:36:39 tom Exp $")
 
-#define window_is(name) (sp->_##name == win)
+#define window_is(name) ((sp)->_##name == win)
 
 #if USE_REENTRANT
 #define remove_window(name) \
@@ -56,27 +56,23 @@ MODULE_ID("$Id: lib_newwin.c,v 1.46 2008/04/05 19:16:42 tom Exp $")
 		    name = 0
 #endif
 
-static WINDOW *
+static void
 remove_window_from_screen(WINDOW *win)
 {
-    SCREEN **scan = &_nc_screen_chain;
+    SCREEN *sp;
 
-    while (*scan) {
-	SCREEN *sp = *scan;
+    for (each_screen(sp)) {
 	if (window_is(curscr)) {
 	    remove_window(curscr);
+	    break;
 	} else if (window_is(stdscr)) {
 	    remove_window(stdscr);
+	    break;
 	} else if (window_is(newscr)) {
 	    remove_window(newscr);
-	} else {
-	    scan = &(*scan)->_next_screen;
-	    continue;
+	    break;
 	}
-	break;
     }
-
-    return 0;
 }
 
 NCURSES_EXPORT(int)
@@ -90,7 +86,8 @@ _nc_freewin(WINDOW *win)
 
     if (win != 0) {
 	if (_nc_try_global(windowlist) == 0) {
-	    for (p = _nc_windows, q = 0; p != 0; q = p, p = p->next) {
+	    q = 0;
+	    for (each_window(p)) {
 		if (&(p->win) == win) {
 		    remove_window_from_screen(win);
 		    if (q == 0)
@@ -109,6 +106,7 @@ _nc_freewin(WINDOW *win)
 		    T(("...deleted win=%p", win));
 		    break;
 		}
+		q = p;
 	    }
 	    _nc_unlock_global(windowlist);
 	}
