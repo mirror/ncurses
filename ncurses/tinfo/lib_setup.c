@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.105 2008/05/03 22:41:42 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.106 2008/05/17 21:35:36 tom Exp $")
 
 /****************************************************************************
  *
@@ -109,15 +109,25 @@ NCURSES_PUBLIC_VAR(ttytype) (void)
     static char empty[] = "";
     return cur_term ? cur_term->type.term_names : empty;
 }
+NCURSES_EXPORT(int *)
+_nc_ptr_Lines(void)
+{
+    return ptrLines();
+}
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(LINES) (void)
 {
-    return (SP ? SP->_LINES : _nc_prescreen._LINES);
+    return *_nc_ptr_Lines();
+}
+NCURSES_EXPORT(int *)
+_nc_ptr_Cols(void)
+{
+    return ptrCols();
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(COLS) (void)
 {
-    return SP ? SP->_COLS : _nc_prescreen._COLS;
+    return *_nc_ptr_Cols();
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(TABSIZE) (void)
@@ -585,13 +595,7 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
     /*
      * We should always check the screensize, just in case.
      */
-#if USE_REENTRANT
-    _nc_get_screensize(SP,
-		       SP ? &(SP->_LINES) : &(_nc_prescreen._LINES),
-		       SP ? &(SP->_COLS) : &(_nc_prescreen._COLS));
-#else
-    _nc_get_screensize(SP, &LINES, &COLS);
-#endif
+    _nc_get_screensize(SP, ptrLines(), ptrCols());
 
     if (errret)
 	*errret = TGETENT_YES;

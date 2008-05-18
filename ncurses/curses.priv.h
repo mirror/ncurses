@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.373 2008/05/03 23:30:35 tom Exp $
+ * $Id: curses.priv.h,v 1.374 2008/05/17 21:24:44 tom Exp $
  *
  *	curses.priv.h
  *
@@ -293,9 +293,15 @@ color_t;
 #define SET_SCREEN_PAIR(s,p)	SetPair(SCREEN_ATTRS(s), p)
 
 #if USE_REENTRANT
-#define SET_LINES(value) SP->_LINES = value
-#define SET_COLS(value)  SP->_COLS = value
+NCURSES_EXPORT(int *) _nc_ptr_Lines (void);
+NCURSES_EXPORT(int *) _nc_ptr_Cols (void);
+#define ptrLines() (SP ? &(SP->_LINES) : &(_nc_prescreen._LINES))
+#define ptrCols()  (SP ? &(SP->_COLS)  : &(_nc_prescreen._COLS))
+#define SET_LINES(value) *_nc_ptr_Lines() = value
+#define SET_COLS(value)  *_nc_ptr_Cols() = value
 #else
+#define ptrLines() &LINES
+#define ptrCols()  &COLS
 #define SET_LINES(value) LINES = value
 #define SET_COLS(value)  COLS = value
 #endif

@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.111 2008/03/29 18:48:02 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.112 2008/05/17 19:08:40 Miroslav.Lichvar Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -290,12 +290,15 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 	int len = wcwidth(CharOf(ch));
 	int i;
 	int j;
+	wchar_t *chars;
 
 	if (len == 0) {		/* non-spacing */
 	    if ((x > 0 && y >= 0)
-		|| ((y = win->_cury - 1) >= 0 &&
-		    (x = win->_maxx) > 0)) {
-		wchar_t *chars = (win->_line[y].text[x - 1].chars);
+		|| (win->_maxx >= 0 && win->_cury >= 1)) {
+		if (x > 0 && y >= 0)
+		    chars = (win->_line[y].text[x - 1].chars);
+		else
+		    chars = (win->_line[y - 1].text[win->_maxx].chars);
 		for (i = 0; i < CCHARW_MAX; ++i) {
 		    if (chars[i] == 0) {
 			TR(TRACE_VIRTPUT,
