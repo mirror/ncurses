@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.33 2008/03/22 18:12:01 tom Exp $
+ * $Id: rain.c,v 1.34 2008/05/24 23:34:34 tom Exp $
  */
 #include <test.priv.h>
 
@@ -323,6 +323,7 @@ main(int argc GCC_UNUSED,
 	last[j].x = random_x();
 	last[j].y = random_y();
     }
+    j = 0;
 #endif
 
     while (!done) {

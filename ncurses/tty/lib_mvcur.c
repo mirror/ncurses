@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -155,7 +155,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.110 2007/08/11 16:15:57 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.111 2008/05/24 14:36:54 Miroslav.Lichvar Exp $")
 
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
@@ -426,8 +426,11 @@ _nc_mvcur_wrap(void)
     mvcur(-1, -1, screen_lines - 1, 0);
 
     /* set cursor to normal mode */
-    if (SP->_cursor != -1)
+    if (SP->_cursor != -1) {
+	int cursor = SP->_cursor;
 	curs_set(1);
+	SP->_cursor = cursor;
+    }
 
     if (exit_ca_mode) {
 	TPUTS_TRACE("exit_ca_mode");

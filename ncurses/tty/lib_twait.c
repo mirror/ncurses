@@ -62,7 +62,9 @@
 # endif
 #endif
 
-MODULE_ID("$Id: lib_twait.c,v 1.57 2008/05/03 21:35:57 tom Exp $")
+#undef CUR
+
+MODULE_ID("$Id: lib_twait.c,v 1.58 2008/05/24 15:08:01 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, bool first)

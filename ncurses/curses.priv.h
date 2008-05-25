@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.374 2008/05/17 21:24:44 tom Exp $
+ * $Id: curses.priv.h,v 1.375 2008/05/24 23:08:27 tom Exp $
  *
  *	curses.priv.h
  *
@@ -645,6 +645,7 @@ typedef struct {
 	chtype		*real_acs_map;
 	int		_LINES;
 	int		_COLS;
+	TERMINAL	*_cur_term;
 #ifdef TRACE
 	long		_outchars;
 	const char	*_tputs_trace;
