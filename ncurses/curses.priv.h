@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.375 2008/05/24 23:08:27 tom Exp $
+ * $Id: curses.priv.h,v 1.382 2008/05/31 21:41:41 tom Exp $
  *
  *	curses.priv.h
  *
@@ -603,8 +603,6 @@ typedef struct {
 	char		*tracedmp_buf;
 	size_t		tracedmp_used;
 
-	char		tracemse_buf[TRACEMSE_MAX];
-
 	unsigned char	*tracetry_buf;
 	size_t		tracetry_used;
 
@@ -796,7 +794,7 @@ struct screen {
 	int		_maxclick;
 	bool		(*_mouse_event) (SCREEN *);
 	bool		(*_mouse_inline)(SCREEN *);
-	bool		(*_mouse_parse) (int);
+	bool		(*_mouse_parse) (SCREEN *, int);
 	void		(*_mouse_resume)(SCREEN *);
 	void		(*_mouse_wrap)	(SCREEN *);
 	int		_mouse_fd;	/* file-descriptor, if any */
@@ -874,6 +872,11 @@ struct screen {
 	const char	*_tputs_trace;
 #endif
 #endif
+
+#ifdef TRACE
+	char		tracechr_buf[40];
+	char		tracemse_buf[TRACEMSE_MAX];
+#endif
 	/*
 	 * ncurses/ncursesw are the same up to this point.
 	 */
@@ -889,8 +892,9 @@ extern NCURSES_EXPORT_VAR(SCREEN *) _nc_screen_chain;
 extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 	WINDOWLIST {
-	WINDOW	win;	/* first, so WINDOW_EXT() works */
+	WINDOW	win;		/* first, so WINDOW_EXT() works */
 	WINDOWLIST *next;
+	SCREEN *screen;		/* screen containing the window */
 #ifdef _XOPEN_SOURCE_EXTENDED
 	char addch_work[(MB_LEN_MAX * 9) + 1];
 	unsigned addch_used;	/* number of bytes in addch_work[] */
@@ -1533,10 +1537,15 @@ extern NCURSES_EXPORT(int) _nc_remove_key (TRIES **, unsigned);
 extern NCURSES_EXPORT(int) _nc_remove_string (TRIES **, const char *);
 
 /* elsewhere ... */
-extern NCURSES_EXPORT(ENTRY *) _nc_delink_entry(ENTRY *, TERMTYPE *);
+extern NCURSES_EXPORT(ENTRY *) _nc_delink_entry (ENTRY *, TERMTYPE *);
+extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_keyname (SCREEN *, int);
+extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *, chtype);
+extern NCURSES_EXPORT(SCREEN *) _nc_screen_of (WINDOW *);
 extern NCURSES_EXPORT(WINDOW *) _nc_makenew (int, int, int, int, int);
 extern NCURSES_EXPORT(char *) _nc_trace_buf (int, size_t);
 extern NCURSES_EXPORT(char *) _nc_trace_bufcat (int, const char *);
+extern NCURSES_EXPORT(char *) _nc_tracechar (SCREEN *, int);
+extern NCURSES_EXPORT(char *) _nc_tracemouse (SCREEN *, MEVENT const *);
 extern NCURSES_EXPORT(int) _nc_access (const char *, int);
 extern NCURSES_EXPORT(int) _nc_baudrate (int);
 extern NCURSES_EXPORT(int) _nc_freewin (WINDOW *);
@@ -1546,10 +1555,10 @@ extern NCURSES_EXPORT(int) _nc_ospeed (int);
 extern NCURSES_EXPORT(int) _nc_outch (int);
 extern NCURSES_EXPORT(int) _nc_read_termcap_entry (const char *const, TERMTYPE *const);
 extern NCURSES_EXPORT(int) _nc_setupscreen (int, int, FILE *, bool, int);
-extern NCURSES_EXPORT(int) _nc_timed_wait(SCREEN *, int, int, int * EVENTLIST_2nd(_nc_eventlist *));
+extern NCURSES_EXPORT(int) _nc_timed_wait (SCREEN *, int, int, int * EVENTLIST_2nd(_nc_eventlist *));
 extern NCURSES_EXPORT(void) _nc_do_color (short, short, bool, int (*)(int));
 extern NCURSES_EXPORT(void) _nc_flush (void);
-extern NCURSES_EXPORT(void) _nc_free_entry(ENTRY *, TERMTYPE *);
+extern NCURSES_EXPORT(void) _nc_free_entry (ENTRY *, TERMTYPE *);
 extern NCURSES_EXPORT(void) _nc_freeall (void);
 extern NCURSES_EXPORT(void) _nc_hash_map (void);
 extern NCURSES_EXPORT(void) _nc_init_keytry (SCREEN *);

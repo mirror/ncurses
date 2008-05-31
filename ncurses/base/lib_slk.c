@@ -45,7 +45,7 @@
 #include <ctype.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slk.c,v 1.31 2008/01/12 20:21:00 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.33 2008/05/31 22:05:57 tom Exp $")
 
 /*
  * We'd like to move these into the screen context structure, but cannot,
@@ -60,14 +60,16 @@ _nc_slk_format = 0;		/* one more than format specified in slk_init() */
 static void
 slk_paint_info(WINDOW *win)
 {
-    if (win && SP->slk_format == 4) {
+    SCREEN *sp = _nc_screen_of(win);
+
+    if (win && sp && (sp->slk_format == 4)) {
 	int i;
 
 	mvwhline(win, 0, 0, 0, getmaxx(win));
 	wmove(win, 0, 0);
 
-	for (i = 0; i < SP->_slk->maxlab; i++) {
-	    mvwprintw(win, 0, SP->_slk->ent[i].ent_x, "F%d", i + 1);
+	for (i = 0; i < sp->_slk->maxlab; i++) {
+	    mvwprintw(win, 0, sp->_slk->ent[i].ent_x, "F%d", i + 1);
 	}
     }
 }

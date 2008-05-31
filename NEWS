@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1237 2008/05/24 22:23:07 tom Exp $
+-- $Id: NEWS,v 1.1241 2008/05/31 21:52:48 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080531
+	+ modify wgetch() to use the screen which corresponds to its window
+	  parameter rather than relying on SP; some dependent functions still
+	  use SP internally.
+	+ factor out most use of SP in lib_mouse.c, using parameter.
+	+ add internal _nc_keyname(), replacing keyname() to associate with a
+	  particular SCREEN rather than the global SP.
+	+ add internal _nc_unctrl(), replacing unctrl() to associate with a
+	  particular SCREEN rather than the global SP.
+	+ add internal _nc_tracemouse(), replacing _tracemouse() to eliminate
+	  its associated global buffer _nc_globals.tracemse_buf now in SCREEN.
+	+ add internal _nc_tracechar(), replacing _tracechar() to use SCREEN in
+	  preference to the global _nc_globals.tracechr_buf buffer.
 
 20080524
 	+ modify _nc_keypad() to make it switch temporarily as needed to the

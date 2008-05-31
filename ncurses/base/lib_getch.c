@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.87 2008/05/03 22:42:10 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.91 2008/05/31 21:47:48 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -123,7 +123,7 @@ fifo_pull(SCREEN *sp)
 {
     int ch;
     ch = sp->_fifo[head];
-    TR(TRACE_IEVENT, ("pulling %s from %d", _tracechar(ch), head));
+    TR(TRACE_IEVENT, ("pulling %s from %d", _nc_tracechar(sp, ch), head));
 
     if (peek == head) {
 	h_inc();
@@ -228,7 +228,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
     if (head == -1)
 	head = peek = tail;
     t_inc();
-    TR(TRACE_IEVENT, ("pushed %s at %d", _tracechar(ch), tail));
+    TR(TRACE_IEVENT, ("pushed %s at %d", _nc_tracechar(sp, ch), tail));
 #ifdef TRACE
     if (USE_TRACEF(TRACE_IEVENT)) {
 	_nc_fifo_dump(sp);
@@ -248,9 +248,14 @@ fifo_clear(SCREEN *sp)
 
 static int kgetch(SCREEN *EVENTLIST_2nd(_nc_eventlist * evl));
 
-#define wgetch_should_refresh(win) (\
-	(is_wintouched(win) || (win->_flags & _HASMOVED)) \
-	&& !(win->_flags & _ISPAD))
+static void
+refresh_if_needed(WINDOW *win)
+{
+    if ((is_wintouched(win) || (win->_flags & _HASMOVED))
+	&& !(win->_flags & _ISPAD)) {
+	wrefresh(win);
+    }
+}
 
 NCURSES_EXPORT(int)
 _nc_wgetch(WINDOW *win,
@@ -258,7 +263,7 @@ _nc_wgetch(WINDOW *win,
 	   int use_meta
 	   EVENTLIST_2nd(_nc_eventlist * evl))
 {
-    SCREEN *sp = SP;
+    SCREEN *sp = _nc_screen_of(win);
     int ch;
 #ifdef NCURSES_WGETCH_EVENTS
     long event_delay = -1;
@@ -272,9 +277,7 @@ _nc_wgetch(WINDOW *win,
     }
 
     if (cooked_key_in_fifo()) {
-	if (wgetch_should_refresh(win))
-	    wrefresh(win);
-
+	refresh_if_needed(win);
 	*result = fifo_pull(sp);
 	returnCode(*result >= KEY_MIN ? KEY_CODE_YES : OK);
     }
@@ -324,8 +327,7 @@ _nc_wgetch(WINDOW *win,
     if (win->_use_keypad != sp->_keypad_on)
 	_nc_keypad(sp, win->_use_keypad);
 
-    if (wgetch_should_refresh(win))
-	wrefresh(win);
+    refresh_if_needed(win);
 
     if (!win->_notimeout && (win->_delay >= 0 || sp->_cbreak > 1)) {
 	if (head == -1) {	/* fifo is empty */
@@ -388,7 +390,7 @@ _nc_wgetch(WINDOW *win,
 	     && (((rc = check_mouse_activity(sp, sp->_maxclick
 					     EVENTLIST_2nd(evl))) != 0
 		  && !(rc & 4))
-		 || !sp->_mouse_parse(runcount)));
+		 || !sp->_mouse_parse(sp, runcount)));
 #ifdef NCURSES_WGETCH_EVENTS
 	if ((rc & 4) && !ch == KEY_EVENT) {
 	    _nc_ungetch(sp, ch);
@@ -467,7 +469,7 @@ _nc_wgetch(WINDOW *win,
 	if ((ch < KEY_MIN) && (ch & 0x80))
 	    ch &= 0x7f;
 
-    T(("wgetch returning : %s", _tracechar(ch)));
+    T(("wgetch returning : %s", _nc_tracechar(sp, ch)));
 
     *result = ch;
     returnCode(ch >= KEY_MIN ? KEY_CODE_YES : OK);
@@ -477,7 +479,7 @@ _nc_wgetch(WINDOW *win,
 NCURSES_EXPORT(int)
 wgetch_events(WINDOW *win, _nc_eventlist * evl)
 {
-    SCREEN *sp = SP;
+    SCREEN *sp = _nc_screen_of(win);
     int code;
     unsigned long value;
 
@@ -495,7 +497,7 @@ wgetch_events(WINDOW *win, _nc_eventlist * evl)
 NCURSES_EXPORT(int)
 wgetch(WINDOW *win)
 {
-    SCREEN *sp = SP;
+    SCREEN *sp = _nc_screen_of(win);
     int code;
     unsigned long value;
 
@@ -564,7 +566,7 @@ kgetch(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 	    return ch;
 	}
 
-	TR(TRACE_IEVENT, ("ch: %s", _tracechar((unsigned char) ch)));
+	TR(TRACE_IEVENT, ("ch: %s", _nc_tracechar(sp, (unsigned char) ch)));
 	while ((ptr != NULL) && (ptr->ch != (unsigned char) ch))
 	    ptr = ptr->sibling;
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* acs_chars */
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.59 2007/06/09 17:22:10 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.60 2008/05/31 16:53:15 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -255,7 +255,7 @@ _tracechtype2(int bufnum, chtype ch)
     if ((found = _nc_altcharset_name(ChAttrOf(ch), ch)) != 0) {
 	(void) _nc_trace_bufcat(bufnum, found);
     } else
-	(void) _nc_trace_bufcat(bufnum, _tracechar((int)ChCharOf(ch)));
+	(void) _nc_trace_bufcat(bufnum, _nc_tracechar(SP, (int)ChCharOf(ch)));
 
     if (ChAttrOf(ch) != A_NORMAL) {
 	(void) _nc_trace_bufcat(bufnum, " | ");
@@ -311,14 +311,14 @@ _tracecchar_t2 (int bufnum, const cchar_t *ch)
 		if (PUTC_n <= 0) {
 		    if (PUTC_ch != L'\0') {
 			/* it could not be a multibyte sequence */
-			(void) _nc_trace_bufcat(bufnum, _tracechar(UChar(ch->chars[PUTC_i])));
+			(void) _nc_trace_bufcat(bufnum, _nc_tracechar(SP, UChar(ch->chars[PUTC_i])));
 		    }
 		    break;
 		}
 		for (n = 0; n < PUTC_n; n++) {
 		    if (n)
 			(void) _nc_trace_bufcat(bufnum, ", ");
-		    (void) _nc_trace_bufcat(bufnum, _tracechar(UChar(PUTC_buf[n])));
+		    (void) _nc_trace_bufcat(bufnum, _nc_tracechar(SP, UChar(PUTC_buf[n])));
 		}
 	    }
 	    (void) _nc_trace_bufcat(bufnum, " }");

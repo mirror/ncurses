@@ -42,7 +42,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.50 2008/05/03 16:36:39 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.51 2008/05/31 21:50:09 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -313,10 +313,28 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
     }
 
     wp->next = _nc_windows;
+    wp->screen = SP;
     _nc_windows = wp;
 
     T((T_CREATE("window %p"), win));
 
     _nc_unlock_global(windowlist);
     returnWin(win);
+}
+
+/*
+ * wgetch() and other functions with a WINDOW* parameter may use a SCREEN*
+ * internally, and it is useful to allow those to be invoked without switching
+ * SCREEN's, e.g., for multi-threaded applications.
+ */
+NCURSES_EXPORT(SCREEN *)
+_nc_screen_of(WINDOW *win)
+{
+    SCREEN *sp = 0;
+
+    if (win != 0) {
+	WINDOWLIST *wp = (WINDOWLIST *) win;
+	sp = wp->screen;
+    }
+    return (sp);
 }

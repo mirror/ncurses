@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.108 2008/05/03 22:42:43 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.109 2008/05/31 20:11:26 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -212,7 +212,7 @@ no_mouse_inline(SCREEN *sp GCC_UNUSED)
 }
 
 static bool
-no_mouse_parse(int code GCC_UNUSED)
+no_mouse_parse(SCREEN *sp GCC_UNUSED, int code GCC_UNUSED)
 {
     return TRUE;
 }
