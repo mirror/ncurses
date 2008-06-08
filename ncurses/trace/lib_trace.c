@@ -46,7 +46,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.66 2008/03/22 16:56:48 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.67 2008/06/07 20:49:56 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -292,9 +292,9 @@ _nc_use_tracef(unsigned mask)
 
     _nc_lock_global(tst_tracef);
     if (!_nc_globals.nested_tracef++) {
-	if ((result = (_nc_tracing & (mask))) != 0) {
+	if ((result = (_nc_tracing & (mask))) != 0
+	    && _nc_try_global(tracef) == 0) {
 	    /* we will call _nc_locked_tracef(), no nesting so far */
-	    _nc_lock_global(tracef);
 	} else {
 	    /* we will not call _nc_locked_tracef() */
 	    _nc_globals.nested_tracef = 0;

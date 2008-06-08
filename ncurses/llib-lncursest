@@ -1151,7 +1151,14 @@ int	set_escdelay(
 int	_nc_wgetch(
 		WINDOW	*win, 
 		unsigned long *result, 
-		int	use_meta)
+		int	use_meta, 
+		_nc_eventlist *evl)
+		{ return(*(int *)0); }
+
+#undef wgetch_events
+int	wgetch_events(
+		WINDOW	*win, 
+		_nc_eventlist *evl)
 		{ return(*(int *)0); }
 
 #undef wgetch
@@ -1160,6 +1167,14 @@ int	wgetch(
 		{ return(*(int *)0); }
 
 /* ./base/lib_getstr.c */
+
+#undef wgetnstr_events
+int	wgetnstr_events(
+		WINDOW	*win, 
+		char	*str, 
+		int	maxlen, 
+		_nc_eventlist *evl)
+		{ return(*(int *)0); }
 
 #undef wgetnstr
 int	wgetnstr(
@@ -1403,6 +1418,11 @@ WINDOW	*_nc_makenew(
 		int	begx, 
 		int	flags)
 		{ return(*(WINDOW **)0); }
+
+#undef _nc_screen_of
+SCREEN	*_nc_screen_of(
+		WINDOW	*win)
+		{ return(*(SCREEN **)0); }
 
 /* ./base/lib_nl.c */
 
@@ -1832,6 +1852,12 @@ void	_tracedump(
 
 /* ./trace/lib_tracemse.c */
 
+#undef _nc_tracemouse
+char	*_nc_tracemouse(
+		SCREEN	*sp, 
+		MEVENT const *ep)
+		{ return(*(char **)0); }
+
 #undef _tracemouse
 char	*_tracemouse(
 		MEVENT const *ep)
@@ -1849,8 +1875,15 @@ void	_nc_signal_handler(
 /* ./base/lib_ungetch.c */
 
 #undef _nc_fifo_dump
-void	_nc_fifo_dump(void)
+void	_nc_fifo_dump(
+		SCREEN	*sp)
 		{ /* void */ }
+
+#undef _nc_ungetch
+int	_nc_ungetch(
+		SCREEN	*sp, 
+		int	ch)
+		{ return(*(int *)0); }
 
 #undef ungetch
 int	ungetch(
@@ -1992,6 +2025,11 @@ void	_nc_screen_init(void)
 void	_nc_screen_wrap(void)
 		{ /* void */ }
 
+#undef _nc_do_xmc_glitch
+void	_nc_do_xmc_glitch(
+		attr_t	previous)
+		{ /* void */ }
+
 /* ./trace/varargs.c */
 
 typedef enum {
@@ -2094,26 +2132,16 @@ void	_nc_trace_xnames(
 #undef use_screen
 int	use_screen(
 		SCREEN	*screen, 
-		NCURSES_CALLBACK func, 
+		NCURSES_SCREEN_CB func, 
 		void	*data)
 		{ return(*(int *)0); }
 
 /* ./base/use_window.c */
 
-#undef _nc_lock_window
-void	_nc_lock_window(
-		WINDOW	*win)
-		{ /* void */ }
-
-#undef _nc_unlock_window
-void	_nc_unlock_window(
-		WINDOW	*win)
-		{ /* void */ }
-
 #undef use_window
 int	use_window(
 		WINDOW	*win, 
-		NCURSES_CALLBACK func, 
+		NCURSES_WINDOW_CB func, 
 		void	*data)
 		{ return(*(int *)0); }
 
@@ -2370,7 +2398,8 @@ const struct tinfo_fkeys _nc_tinfo_fkeys[] = {0};
 #endif
 
 #undef _nc_init_keytry
-void	_nc_init_keytry(void)
+void	_nc_init_keytry(
+		SCREEN	*sp)
 		{ /* void */ }
 
 /* ./tinfo/lib_acs.c */
@@ -2408,8 +2437,9 @@ int	baudrate(void)
 
 /* ./tinfo/lib_cur_term.c */
 
-#undef cur_term
-TERMINAL *cur_term;
+#undef _nc_cur_term
+TERMINAL *_nc_cur_term(void)
+		{ return(*(TERMINAL **)0); }
 
 #undef set_curterm
 TERMINAL *set_curterm(
@@ -2443,6 +2473,11 @@ SCREEN	*SP;
 NCURSES_GLOBALS _nc_globals;
 #undef _nc_prescreen
 NCURSES_PRESCREEN _nc_prescreen;
+
+#undef _nc_mutex_init
+void	_nc_mutex_init(
+		pthread_mutex_t *obj)
+		{ /* void */ }
 
 #undef _nc_mutex_lock
 int	_nc_mutex_lock(
@@ -2487,6 +2522,12 @@ int	flushinp(void)
 
 struct kn { short offset; int code; };
 
+#undef _nc_keyname
+const char *_nc_keyname(
+		SCREEN	*sp, 
+		int	c)
+		{ return(*(const char **)0); }
+
 #undef keyname
 const char *keyname(
 		int	c)
@@ -2503,8 +2544,6 @@ char	*longname(void)
 		{ return(*(char **)0); }
 
 /* ./tinfo/lib_napms.c */
-
-#include <time.h>
 
 #undef napms
 int	napms(
@@ -2577,6 +2616,7 @@ int	has_key(
 
 #undef _nc_keypad
 int	_nc_keypad(
+		SCREEN	*sp, 
 		NCURSES_BOOL flag)
 		{ return(*(int *)0); }
 
@@ -2622,9 +2662,17 @@ int	intrflush(
 char	*_nc_ttytype(void)
 		{ return(*(char **)0); }
 
+#undef _nc_ptr_Lines
+int	*_nc_ptr_Lines(void)
+		{ return(*(int **)0); }
+
 #undef _nc_LINES
 int	_nc_LINES(void)
 		{ return(*(int *)0); }
+
+#undef _nc_ptr_Cols
+int	*_nc_ptr_Cols(void)
+		{ return(*(int **)0); }
 
 #undef _nc_COLS
 int	_nc_COLS(void)
@@ -2641,7 +2689,7 @@ int	set_tabsize(
 
 #undef _nc_handle_sigwinch
 int	_nc_handle_sigwinch(
-		int	update)
+		SCREEN	*sp)
 		{ return(*(int *)0); }
 
 #undef use_env
@@ -2651,12 +2699,14 @@ void	use_env(
 
 #undef _nc_get_screensize
 void	_nc_get_screensize(
+		SCREEN	*sp, 
 		int	*linep, 
 		int	*colp)
 		{ /* void */ }
 
 #undef _nc_update_screensize
-void	_nc_update_screensize(void)
+void	_nc_update_screensize(
+		SCREEN	*sp)
 		{ /* void */ }
 
 #undef _nc_get_locale
@@ -2963,6 +3013,12 @@ char	*_nc_tracebits(void)
 
 /* ./trace/lib_tracechr.c */
 
+#undef _nc_tracechar
+char	*_nc_tracechar(
+		SCREEN	*sp, 
+		int	ch)
+		{ return(*(char **)0); }
+
 #undef _tracechar
 char	*_tracechar(
 		int	ch)
@@ -3006,11 +3062,18 @@ int	resetty(void)
 
 /* ./tty/lib_twait.c */
 
+#undef _nc_eventlist_timeout
+int	_nc_eventlist_timeout(
+		_nc_eventlist *evl)
+		{ return(*(int *)0); }
+
 #undef _nc_timed_wait
 int	_nc_timed_wait(
+		SCREEN	*sp, 
 		int	mode, 
 		int	milliseconds, 
-		int	*timeleft)
+		int	*timeleft, 
+		_nc_eventlist *evl)
 		{ return(*(int *)0); }
 
 /* ./tinfo/name_match.c */
@@ -3182,9 +3245,15 @@ char	*_nc_trim_sgr0(
 
 /* ./unctrl.c */
 
+#undef _nc_unctrl
+const char *_nc_unctrl(
+		SCREEN	*sp, 
+		chtype	ch)
+		{ return(*(const char **)0); }
+
 #undef unctrl
 const char *unctrl(
-		 chtype	ch)
+		chtype	ch)
 		{ return(*(const char **)0); }
 
 /* ./trace/visbuf.c */

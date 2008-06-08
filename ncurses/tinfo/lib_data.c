@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.47 2008/05/31 19:44:36 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.48 2008/06/07 14:03:15 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -177,10 +177,7 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
 
 #endif /* TRACE */
 #ifdef USE_PTHREADS
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_set_SP */
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_use_screen */
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_use_window */
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_windowlist */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_curses */
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tst_tracef */
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tracef */
     0,				/* nested_tracef */
@@ -242,10 +239,7 @@ init_global_mutexes(void)
 
     if (!initialized) {
 	initialized = TRUE;
-	_nc_mutex_init(&_nc_globals.mutex_set_SP);
-	_nc_mutex_init(&_nc_globals.mutex_use_screen);
-	_nc_mutex_init(&_nc_globals.mutex_use_window);
-	_nc_mutex_init(&_nc_globals.mutex_windowlist);
+	_nc_mutex_init(&_nc_globals.mutex_curses);
 	_nc_mutex_init(&_nc_globals.mutex_tst_tracef);
 	_nc_mutex_init(&_nc_globals.mutex_tracef);
     }

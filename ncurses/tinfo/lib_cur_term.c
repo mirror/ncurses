@@ -40,7 +40,10 @@
 #include <term_entry.h>		/* TTY, cur_term */
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.15 2008/05/24 23:11:18 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.16 2008/06/07 22:22:16 tom Exp $")
+
+#undef CUR
+#define CUR termp->type.
 
 #if USE_REENTRANT
 NCURSES_EXPORT(TERMINAL *)
@@ -55,10 +58,12 @@ NCURSES_EXPORT_VAR(TERMINAL *) cur_term = 0;
 NCURSES_EXPORT(TERMINAL *)
 set_curterm(TERMINAL * termp)
 {
-    TERMINAL *oldterm = cur_term;
+    TERMINAL *oldterm;
 
     T((T_CALLED("set_curterm(%p)"), termp));
 
+    _nc_lock_global(curses);
+    oldterm = cur_term;
     if (SP)
 	SP->_term = termp;
 #if USE_REENTRANT
@@ -68,8 +73,11 @@ set_curterm(TERMINAL * termp)
 #endif
     if (termp != 0) {
 	ospeed = _nc_ospeed(termp->_baudrate);
-	PC = (pad_char != NULL) ? pad_char[0] : 0;
+	if (termp->type.Strings) {
+	    PC = (pad_char != NULL) ? pad_char[0] : 0;
+	}
     }
+    _nc_unlock_global(curses);
 
     T((T_RETURN("%p"), oldterm));
     return (oldterm);
@@ -78,15 +86,20 @@ set_curterm(TERMINAL * termp)
 NCURSES_EXPORT(int)
 del_curterm(TERMINAL * termp)
 {
+    int rc = ERR;
+
     T((T_CALLED("del_curterm(%p)"), termp));
 
+    _nc_lock_global(curses);
     if (termp != 0) {
 	_nc_free_termtype(&(termp->type));
 	FreeIfNeeded(termp->_termname);
 	free(termp);
 	if (termp == cur_term)
 	    set_curterm(0);
-	returnCode(OK);
+	rc = OK;
     }
-    returnCode(ERR);
+    _nc_unlock_global(curses);
+
+    returnCode(rc);
 }

@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.106 2008/05/17 21:35:36 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.107 2008/06/07 22:22:58 tom Exp $")
 
 /****************************************************************************
  *
@@ -566,19 +566,18 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 		ret_error(status, "'%s': unknown terminal type.\n", tname);
 	    }
 	}
+#if !USE_REENTRANT
+	strncpy(ttytype, term_ptr->type.term_names, NAMESIZE - 1);
+	ttytype[NAMESIZE - 1] = '\0';
+#endif
+
+	term_ptr->Filedes = Filedes;
+	term_ptr->_termname = strdup(tname);
 
 	set_curterm(term_ptr);
 
 	if (command_character && getenv("CC"))
 	    do_prototype();
-
-#if !USE_REENTRANT
-	strncpy(ttytype, cur_term->type.term_names, NAMESIZE - 1);
-	ttytype[NAMESIZE - 1] = '\0';
-#endif
-
-	cur_term->Filedes = Filedes;
-	cur_term->_termname = strdup(tname);
 
 	/*
 	 * If an application calls setupterm() rather than initscr() or

@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.46 2008/05/03 14:13:51 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.47 2008/06/07 13:58:29 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -61,7 +61,7 @@ _nc_freeall(void)
     }
 #endif
     if (SP != 0) {
-	_nc_lock_global(windowlist);
+	_nc_lock_global(curses);
 
 	while (_nc_windows != 0) {
 	    bool deleted = FALSE;
@@ -93,7 +93,7 @@ _nc_freeall(void)
 		break;
 	}
 	delscreen(SP);
-	_nc_unlock_global(windowlist);
+	_nc_unlock_global(curses);
     }
     if (cur_term != 0)
 	del_curterm(cur_term);

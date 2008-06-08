@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2004,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_get_wstr.c,v 1.8 2004/10/16 21:55:36 tom Exp $")
+MODULE_ID("$Id: lib_get_wstr.c,v 1.9 2008/06/07 14:50:11 tom Exp $")
 
 static int
 wadd_wint(WINDOW *win, wint_t *src)
@@ -86,6 +86,7 @@ WipeOut(WINDOW *win, int y, int x, wint_t *first, wint_t *last, bool echoed)
 NCURSES_EXPORT(int)
 wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
 {
+    SCREEN *sp = _nc_screen_of(win);
     TTY buf;
     bool oldnl, oldecho, oldraw, oldcbreak;
     wint_t erasec;
@@ -102,10 +103,10 @@ wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
 
     _nc_get_tty_mode(&buf);
 
-    oldnl = SP->_nl;
-    oldecho = SP->_echo;
-    oldraw = SP->_raw;
-    oldcbreak = SP->_cbreak;
+    oldnl = sp->_nl;
+    oldecho = sp->_echo;
+    oldraw = sp->_raw;
+    oldcbreak = sp->_cbreak;
     nl();
     noecho();
     noraw();
@@ -209,10 +210,10 @@ wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
     /* Restore with a single I/O call, to fix minor asymmetry between
      * raw/noraw, etc.
      */
-    SP->_nl = oldnl;
-    SP->_echo = oldecho;
-    SP->_raw = oldraw;
-    SP->_cbreak = oldcbreak;
+    sp->_nl = oldnl;
+    sp->_echo = oldecho;
+    sp->_raw = oldraw;
+    sp->_cbreak = oldcbreak;
 
     (void) _nc_set_tty_mode(&buf);
 

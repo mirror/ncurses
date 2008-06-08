@@ -44,28 +44,30 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.109 2008/05/31 20:11:26 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.112 2008/06/07 22:29:07 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
 {
     SCREEN *oldSP;
+    SCREEN *newSP;
 
     T((T_CALLED("set_term(%p)"), screenp));
 
-    _nc_lock_global(set_SP);
+    _nc_lock_global(curses);
 
     oldSP = SP;
     _nc_set_screen(screenp);
+    newSP = SP;
 
-    if (SP != 0) {
-	set_curterm(SP->_term);
+    if (newSP != 0) {
+	set_curterm(newSP->_term);
 #if !USE_REENTRANT
-	curscr = SP->_curscr;
-	newscr = SP->_newscr;
-	stdscr = SP->_stdscr;
-	COLORS = SP->_color_count;
-	COLOR_PAIRS = SP->_pair_count;
+	curscr = newSP->_curscr;
+	newscr = newSP->_newscr;
+	stdscr = newSP->_stdscr;
+	COLORS = newSP->_color_count;
+	COLOR_PAIRS = newSP->_pair_count;
 #endif
     } else {
 	set_curterm(0);
@@ -78,7 +80,7 @@ set_term(SCREEN *screenp)
 #endif
     }
 
-    _nc_unlock_global(set_SP);
+    _nc_unlock_global(curses);
 
     T((T_RETURN("%p"), oldSP));
     return (oldSP);
@@ -125,7 +127,7 @@ delscreen(SCREEN *sp)
 
     T((T_CALLED("delscreen(%p)"), sp));
 
-    _nc_lock_global(set_SP);
+    _nc_lock_global(curses);
     if (delink_screen(sp)) {
 
 	(void) _nc_freewin(sp->_curscr);
@@ -162,7 +164,10 @@ delscreen(SCREEN *sp)
 	FreeIfNeeded(sp->_acs_map);
 	FreeIfNeeded(sp->_screen_acs_map);
 
+#if 0
+	/* FIXME - this should be a copy of the struct, not a pointer */
 	del_curterm(sp->_term);
+#endif
 
 	/*
 	 * If the associated output stream has been closed, we can discard the
@@ -194,7 +199,7 @@ delscreen(SCREEN *sp)
 	    _nc_set_screen(0);
 	}
     }
-    _nc_unlock_global(set_SP);
+    _nc_unlock_global(curses);
 
     returnVoid;
 }

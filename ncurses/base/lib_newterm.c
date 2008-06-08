@@ -48,7 +48,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.69 2008/04/12 18:15:04 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.70 2008/06/07 14:00:23 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -129,7 +129,7 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
     START_TRACE();
     T((T_CALLED("newterm(\"%s\",%p,%p)"), name, ofp, ifp));
 
-    _nc_lock_global(set_SP);
+    _nc_lock_global(curses);
     /* this loads the capability entry, then sets LINES and COLS */
     if (setupterm(name, fileno(ofp), &errret) != ERR) {
 	int slk_format = _nc_globals.slk_format;
@@ -212,6 +212,6 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 	    result = SP;
 	}
     }
-    _nc_unlock_global(set_SP);
+    _nc_unlock_global(curses);
     returnSP(result);
 }

@@ -43,7 +43,7 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.55 2008/05/25 00:32:17 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.56 2008/06/07 14:01:46 tom Exp $")
 
 static int _nc_curs_set(SCREEN *, int);
 static int _nc_meta(SCREEN *, bool);
@@ -249,12 +249,12 @@ _nc_keypad(SCREEN *sp, bool flag)
 	    SCREEN *save_sp;
 
 	    /* cannot use use_screen(), since that is not in tinfo library */
-	    _nc_lock_global(use_screen);
+	    _nc_lock_global(curses);
 	    save_sp = SP;
 	    SP = sp;
 	    rc = _nc_keypad(sp, flag);
 	    SP = save_sp;
-	    _nc_unlock_global(use_screen);
+	    _nc_unlock_global(curses);
 	} else
 #endif
 	{

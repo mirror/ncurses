@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.26 2008/04/26 23:42:39 tom Exp $
+ * $Id: ditto.c,v 1.28 2008/06/07 22:35:58 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -44,6 +44,11 @@
 #include <test.priv.h>
 #include <sys/stat.h>
 #include <errno.h>
+#undef USE_PTHREADS
+
+#ifdef USE_PTHREADS
+#include <pthread.h>
+#endif
 
 #ifdef USE_XTERM_PTY
 #include USE_OPENPTY_HEADER
@@ -74,11 +79,15 @@ typedef struct {
     FILE *input;
     FILE *output;
     SCREEN *screen;		/* this screen - curses internal data */
+    int which1;			/* this screen's index in DITTO[] array */
     int length;			/* length of windows[] and peeks[] */
     char **titles;		/* per-window titles */
     WINDOW **windows;		/* display data from each screen */
     PEEK *peeks;		/* indices for each screen's fifo */
     FIFO fifo;			/* fifo for this screen */
+#ifdef USE_PTHREADS
+    pthread_t thread;
+#endif
 } DITTO;
 
 /*
@@ -185,7 +194,6 @@ init_screen(SCREEN *sp GCC_UNUSED, void *arg)
     cbreak();
     noecho();
     scrollok(stdscr, TRUE);
-    nodelay(stdscr, TRUE);
     box(stdscr, 0, 0);
 
     target->windows = typeCalloc(WINDOW *, target->length);
@@ -202,8 +210,10 @@ init_screen(SCREEN *sp GCC_UNUSED, void *arg)
 	wnoutrefresh(outer);
 
 	scrollok(inner, TRUE);
-	nodelay(inner, TRUE);
 	keypad(inner, TRUE);
+#ifndef USE_PTHREADS
+	nodelay(inner, TRUE);
+#endif
 
 	target->windows[k] = inner;
     }
@@ -211,16 +221,17 @@ init_screen(SCREEN *sp GCC_UNUSED, void *arg)
 }
 
 static void
-open_screen(DITTO * target, char **source, int length, int which)
+open_screen(DITTO * target, char **source, int length, int which1)
 {
-    if (which != 0) {
+    if (which1 != 0) {
 	target->input =
-	    target->output = open_tty(source[which]);
+	    target->output = open_tty(source[which1]);
     } else {
 	target->input = stdin;
 	target->output = stdout;
     }
 
+    target->which1 = which1;
     target->titles = source;
     target->length = length;
     target->screen = newterm((char *) 0,	/* assume $TERM is the same */
@@ -301,13 +312,33 @@ show_ditto(DITTO * data, int count, DDATA * ddata)
     }
 }
 
+#ifdef USE_PTHREADS
+static void *
+handle_screen(void *arg)
+{
+    DDATA ddata;
+    int ch;
+
+    ddata.ditto = (DITTO *) arg;
+    ddata.source = ddata.ditto->which1;
+    for (;;) {
+	ch = read_screen(ddata.ditto->screen, &ddata);
+	if (ch == CTRL('D'))
+	    break;
+	show_ditto(ddata.ditto, ddata.ditto->length, &ddata);
+    }
+    return NULL;
+}
+#endif
+
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int j;
-    int count;
     DITTO *data;
+#ifndef USE_PTHREADS
+    int count;
+#endif
 
     if (argc <= 1)
 	usage();
@@ -319,6 +350,16 @@ main(int argc GCC_UNUSED,
 	open_screen(&data[j], argv, argc, j);
     }
 
+#ifdef USE_PTHREADS
+    /*
+     * For multi-threaded operation, set up a reader for each of the screens.
+     * That uses blocking I/O rather than polling for input, so no calls to
+     * napms() are needed.
+     */
+    for (j = 0; j < argc; j++) {
+	(void) pthread_create(&(data[j].thread), NULL, handle_screen, &data[j]);
+    }
+#else
     /*
      * Loop, reading characters from any of the inputs and writing to all
      * of the screens.
@@ -340,6 +381,7 @@ main(int argc GCC_UNUSED,
 	    show_ditto(data, argc, &ddata);
 	}
     }
+#endif
 
     /*
      * Cleanup and exit

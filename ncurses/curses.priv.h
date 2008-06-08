@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.382 2008/05/31 21:41:41 tom Exp $
+ * $Id: curses.priv.h,v 1.383 2008/06/07 14:13:19 tom Exp $
  *
  *	curses.priv.h
  *
@@ -329,9 +329,6 @@ extern NCURSES_EXPORT(int) _nc_mutex_unlock(pthread_mutex_t *);
 #define _nc_try_global(name)    _nc_mutex_trylock(&_nc_globals.mutex_##name)
 #define _nc_unlock_global(name)	_nc_mutex_unlock(&_nc_globals.mutex_##name)
 
-extern NCURSES_EXPORT(void) _nc_lock_window(const WINDOW *);
-extern NCURSES_EXPORT(void) _nc_unlock_window(const WINDOW *);
-
 #else
 #error POSIX threads requires --enable-reentrant option
 #endif
@@ -348,9 +345,6 @@ extern NCURSES_EXPORT(void) _nc_unlock_window(const WINDOW *);
 #define _nc_lock_global(name)	/* nothing */
 #define _nc_try_global(name)    0
 #define _nc_unlock_global(name)	/* nothing */
-
-#define _nc_lock_window(name)	(void) TRUE
-#define _nc_unlock_window(name)	/* nothing */
 
 #endif /* USE_PTHREADS */
 
@@ -613,10 +607,7 @@ typedef struct {
 #endif	/* TRACE */
 
 #ifdef USE_PTHREADS
-       pthread_mutex_t	mutex_set_SP;
-       pthread_mutex_t	mutex_use_screen;
-       pthread_mutex_t	mutex_use_window;
-       pthread_mutex_t	mutex_windowlist;
+       pthread_mutex_t	mutex_curses;
        pthread_mutex_t	mutex_tst_tracef;
        pthread_mutex_t	mutex_tracef;
        int		nested_tracef;
@@ -900,9 +891,6 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 	unsigned addch_used;	/* number of bytes in addch_work[] */
 	int addch_x;		/* x-position for addch_work[] */
 	int addch_y;		/* y-position for addch_work[] */
-#endif
-#ifdef USE_PTHREADS
-	pthread_mutex_t	mutex_use_window;
 #endif
 };
 

@@ -42,7 +42,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.51 2008/05/31 21:50:09 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.52 2008/06/07 13:58:09 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -85,7 +85,7 @@ _nc_freewin(WINDOW *win)
     T((T_CALLED("_nc_freewin(%p)"), win));
 
     if (win != 0) {
-	if (_nc_try_global(windowlist) == 0) {
+	if (_nc_try_global(curses) == 0) {
 	    q = 0;
 	    for (each_window(p)) {
 		if (&(p->win) == win) {
@@ -108,7 +108,7 @@ _nc_freewin(WINDOW *win)
 		}
 		q = p;
 	    }
-	    _nc_unlock_global(windowlist);
+	    _nc_unlock_global(curses);
 	}
     }
     returnCode(result);
@@ -229,8 +229,6 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
     if ((wp = typeCalloc(WINDOWLIST, 1)) == 0)
 	returnWin(0);
 
-    _nc_mutex_init(&(wp->mutex_use_window));
-
     win = &(wp->win);
 
     if ((win->_line = typeCalloc(struct ldat, ((unsigned) num_lines))) == 0) {
@@ -238,7 +236,7 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
 	returnWin(0);
     }
 
-    _nc_lock_global(windowlist);
+    _nc_lock_global(curses);
 
     win->_curx = 0;
     win->_cury = 0;
@@ -318,7 +316,7 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
 
     T((T_CREATE("window %p"), win));
 
-    _nc_unlock_global(windowlist);
+    _nc_unlock_global(curses);
     returnWin(win);
 }
 

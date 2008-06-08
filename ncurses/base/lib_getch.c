@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.91 2008/05/31 21:47:48 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.95 2008/06/07 15:52:51 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -75,6 +75,13 @@ set_escdelay(int value)
     return code;
 }
 #endif
+
+static int
+_nc_use_meta(WINDOW *win)
+{
+    SCREEN *sp = _nc_screen_of(win);
+    return (sp ? sp->_use_meta : 0);
+}
 
 #ifdef NCURSES_WGETCH_EVENTS
 #define TWAIT_MASK 7
@@ -249,12 +256,53 @@ fifo_clear(SCREEN *sp)
 static int kgetch(SCREEN *EVENTLIST_2nd(_nc_eventlist * evl));
 
 static void
-refresh_if_needed(WINDOW *win)
+recur_wrefresh(WINDOW *win)
 {
-    if ((is_wintouched(win) || (win->_flags & _HASMOVED))
-	&& !(win->_flags & _ISPAD)) {
+#ifdef USE_PTHREADS
+    SCREEN *sp = _nc_screen_of(win);
+    if (sp != SP) {
+	SCREEN *save_SP;
+
+	/* temporarily switch to the window's screen to check/refresh */
+	_nc_lock_global(curses);
+	save_SP = SP;
+	SP = sp;
+	recur_wrefresh(win);
+	SP = save_SP;
+	_nc_unlock_global(curses);
+    } else
+#endif
+	if ((is_wintouched(win) || (win->_flags & _HASMOVED))
+	    && !(win->_flags & _ISPAD)) {
 	wrefresh(win);
     }
+}
+
+static int
+recur_wgetnstr(WINDOW *win, char *buf)
+{
+    SCREEN *sp = _nc_screen_of(win);
+    int rc;
+
+#ifdef USE_PTHREADS
+    if (sp != SP) {
+	SCREEN *save_SP;
+
+	/* temporarily switch to the window's screen to get cooked input */
+	_nc_lock_global(curses);
+	save_SP = SP;
+	SP = sp;
+	rc = recur_wgetnstr(win, buf);
+	SP = save_SP;
+	_nc_unlock_global(curses);
+    } else
+#endif
+    {
+	sp->_called_wgetch = TRUE;
+	rc = wgetnstr(win, buf, MAXCOLUMNS);
+	sp->_called_wgetch = FALSE;
+    }
+    return rc;
 }
 
 NCURSES_EXPORT(int)
@@ -263,7 +311,7 @@ _nc_wgetch(WINDOW *win,
 	   int use_meta
 	   EVENTLIST_2nd(_nc_eventlist * evl))
 {
-    SCREEN *sp = _nc_screen_of(win);
+    SCREEN *sp;
     int ch;
 #ifdef NCURSES_WGETCH_EVENTS
     long event_delay = -1;
@@ -272,12 +320,14 @@ _nc_wgetch(WINDOW *win,
     T((T_CALLED("_nc_wgetch(%p)"), win));
 
     *result = 0;
+
+    sp = _nc_screen_of(win);
     if (win == 0 || sp == 0) {
 	returnCode(ERR);
     }
 
     if (cooked_key_in_fifo()) {
-	refresh_if_needed(win);
+	recur_wrefresh(win);
 	*result = fifo_pull(sp);
 	returnCode(*result >= KEY_MIN ? KEY_CODE_YES : OK);
     }
@@ -302,9 +352,7 @@ _nc_wgetch(WINDOW *win,
 
 	TR(TRACE_IEVENT, ("filling queue in cooked mode"));
 
-	sp->_called_wgetch = TRUE;
-	rc = wgetnstr(win, buf, MAXCOLUMNS);
-	sp->_called_wgetch = FALSE;
+	rc = recur_wgetnstr(win, buf);
 
 	/* ungetch in reverse order */
 #ifdef NCURSES_WGETCH_EVENTS
@@ -327,7 +375,7 @@ _nc_wgetch(WINDOW *win,
     if (win->_use_keypad != sp->_keypad_on)
 	_nc_keypad(sp, win->_use_keypad);
 
-    refresh_if_needed(win);
+    recur_wrefresh(win);
 
     if (!win->_notimeout && (win->_delay >= 0 || sp->_cbreak > 1)) {
 	if (head == -1) {	/* fifo is empty */
@@ -355,8 +403,9 @@ _nc_wgetch(WINDOW *win,
 		returnCode(KEY_CODE_YES);
 	    }
 #endif
-	    if (!rc)
+	    if (!rc) {
 		returnCode(ERR);
+	    }
 	}
 	/* else go on to read data available */
     }
@@ -479,14 +528,13 @@ _nc_wgetch(WINDOW *win,
 NCURSES_EXPORT(int)
 wgetch_events(WINDOW *win, _nc_eventlist * evl)
 {
-    SCREEN *sp = _nc_screen_of(win);
     int code;
     unsigned long value;
 
     T((T_CALLED("wgetch_events(%p,%p)"), win, evl));
     code = _nc_wgetch(win,
 		      &value,
-		      sp->_use_meta
+		      _nc_use_meta(win)
 		      EVENTLIST_2nd(evl));
     if (code != ERR)
 	code = value;
@@ -497,14 +545,13 @@ wgetch_events(WINDOW *win, _nc_eventlist * evl)
 NCURSES_EXPORT(int)
 wgetch(WINDOW *win)
 {
-    SCREEN *sp = _nc_screen_of(win);
     int code;
     unsigned long value;
 
     T((T_CALLED("wgetch(%p)"), win));
     code = _nc_wgetch(win,
 		      &value,
-		      (sp ? sp->_use_meta : 0)
+		      _nc_use_meta(win)
 		      EVENTLIST_2nd((_nc_eventlist *) 0));
     if (code != ERR)
 	code = value;
