@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.447 2008/04/12 23:49:55 tom Exp $
+dnl $Id: aclocal.m4,v 1.448 2008/06/14 19:12:45 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3922,7 +3922,7 @@ AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 47 updated: 2008/03/23 14:48:54
+dnl CF_SHARED_OPTS version: 48 updated: 2008/06/14 15:08:17
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -4158,9 +4158,7 @@ CF_EOF
 		;;
 	solaris2*)
 		# tested with SunOS 5.5.1 (solaris 2.5.1) and gcc 2.7.2
-		if test "$GCC" != yes; then
-			CC_SHARED_OPTS='-KPIC'
-		fi
+		# tested with SunOS 5.10 (solaris 10) and gcc 3.4.3
 		if test "$DFT_LWR_MODEL" = "shared" ; then
 			LOCAL_LDFLAGS="-R \$(LOCAL_LIBDIR):\${libdir}"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
@@ -4170,7 +4168,12 @@ CF_EOF
 			EXTRA_LDFLAGS="$LOCAL_LDFLAGS $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
-		MK_SHARED_LIB='${CC} -dy -G -h '$cf_shared_soname' -o $[@]'
+		if test "$GCC" != yes; then
+			CC_SHARED_OPTS='-xcode=pic32'
+			MK_SHARED_LIB='${CC} -dy -G -h '$cf_shared_soname' -o $[@]'
+		else
+			MK_SHARED_LIB='${CC} -shared -dy -G -h '$cf_shared_soname' -o $[@]'
+		fi
 		;;
 	sysv5uw7*|unix_sv*)
 		# tested with UnixWare 7.1.0 (gcc 2.95.2 and cc)

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.28 2008/06/07 22:35:58 tom Exp $
+ * $Id: ditto.c,v 1.30 2008/06/14 23:00:26 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -44,7 +44,6 @@
 #include <test.priv.h>
 #include <sys/stat.h>
 #include <errno.h>
-#undef USE_PTHREADS
 
 #ifdef USE_PTHREADS
 #include <pthread.h>
@@ -319,12 +318,27 @@ handle_screen(void *arg)
     DDATA ddata;
     int ch;
 
+    memset(&ddata, 0, sizeof(ddata));
     ddata.ditto = (DITTO *) arg;
     ddata.source = ddata.ditto->which1;
+    ddata.ditto -= ddata.source;	/* -> base of array */
+
     for (;;) {
 	ch = read_screen(ddata.ditto->screen, &ddata);
-	if (ch == CTRL('D'))
+	if (ch == CTRL('D')) {
+	    int later = (ddata.source ? ddata.source : -1);
+	    int j;
+
+	    for (j = ddata.ditto->length - 1; j > 0; --j) {
+		if (j != later) {
+		    pthread_cancel(ddata.ditto[j].thread);
+		}
+	    }
+	    if (later > 0) {
+		pthread_cancel(ddata.ditto[later].thread);
+	    }
 	    break;
+	}
 	show_ditto(ddata.ditto, ddata.ditto->length, &ddata);
     }
     return NULL;
@@ -359,6 +373,7 @@ main(int argc, char *argv[])
     for (j = 0; j < argc; j++) {
 	(void) pthread_create(&(data[j].thread), NULL, handle_screen, &data[j]);
     }
+    pthread_join(data[1].thread, NULL);
 #else
     /*
      * Loop, reading characters from any of the inputs and writing to all
