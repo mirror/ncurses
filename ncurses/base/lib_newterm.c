@@ -48,7 +48,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.70 2008/06/07 14:00:23 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.71 2008/06/21 20:55:11 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -125,11 +125,16 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
     int errret;
     SCREEN *current;
     SCREEN *result = 0;
+    TERMINAL *its_term;
 
     START_TRACE();
     T((T_CALLED("newterm(\"%s\",%p,%p)"), name, ofp, ifp));
 
     _nc_lock_global(curses);
+
+    current = SP;
+    its_term = (SP ? SP->_term : 0);
+
     /* this loads the capability entry, then sets LINES and COLS */
     if (setupterm(name, fileno(ofp), &errret) != ERR) {
 	int slk_format = _nc_globals.slk_format;
@@ -138,7 +143,6 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 	 * This actually allocates the screen structure, and saves the original
 	 * terminal settings.
 	 */
-	current = SP;
 	_nc_set_screen(0);
 
 	/* allow user to set maximum escape delay from the environment */
@@ -154,6 +158,18 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 	    _nc_set_screen(current);
 	    result = 0;
 	} else {
+	    /*
+	     * In setupterm() we did a set_curterm(), but it was before we set
+	     * SP.  So the "current" screen's terminal pointer was overwritten
+	     * with a different terminal.  Later, in _nc_setupscreen(), we set
+	     * SP and the terminal pointer in the new screen.
+	     *
+	     * Restore the terminal-pointer for the pre-existing screen, if
+	     * any.
+	     */
+	    if (current)
+		current->_term = its_term;
+
 	    /* if the terminal type has real soft labels, set those up */
 	    if (slk_format && num_labels > 0 && SLK_STDFMT(slk_format))
 		_nc_slk_initialize(stdscr, COLS);

@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.107 2008/06/07 22:22:58 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.108 2008/06/21 21:00:18 tom Exp $")
 
 /****************************************************************************
  *
@@ -379,7 +379,7 @@ grab_entry(const char *const tn, TERMTYPE *const tp)
 **	and substitute it in for the prototype given in 'command_character'.
 */
 static void
-do_prototype(void)
+do_prototype(TERMINAL * termp)
 {
     int i;
     char CC;
@@ -390,8 +390,8 @@ do_prototype(void)
     CC = *tmp;
     proto = *command_character;
 
-    for_each_string(i, &(cur_term->type)) {
-	for (tmp = cur_term->type.Strings[i]; *tmp; tmp++) {
+    for_each_string(i, &(termp->type)) {
+	for (tmp = termp->type.Strings[i]; *tmp; tmp++) {
 	    if (*tmp == proto)
 		*tmp = CC;
 	}
@@ -483,6 +483,7 @@ _nc_locale_breaks_acs(void)
 NCURSES_EXPORT(int)
 _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 {
+    TERMINAL *term_ptr;
     int status;
 
     START_TRACE();
@@ -527,14 +528,13 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
      * properly with this feature).
      */
     if (reuse
-	&& cur_term != 0
-	&& cur_term->Filedes == Filedes
-	&& cur_term->_termname != 0
-	&& !strcmp(cur_term->_termname, tname)
-	&& _nc_name_match(cur_term->type.term_names, tname, "|")) {
+	&& (term_ptr = cur_term) != 0
+	&& term_ptr->Filedes == Filedes
+	&& term_ptr->_termname != 0
+	&& !strcmp(term_ptr->_termname, tname)
+	&& _nc_name_match(term_ptr->type.term_names, tname, "|")) {
 	T(("reusing existing terminal information and mode-settings"));
     } else {
-	TERMINAL *term_ptr;
 
 	term_ptr = typeCalloc(TERMINAL, 1);
 
@@ -577,7 +577,7 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 	set_curterm(term_ptr);
 
 	if (command_character && getenv("CC"))
-	    do_prototype();
+	    do_prototype(term_ptr);
 
 	/*
 	 * If an application calls setupterm() rather than initscr() or

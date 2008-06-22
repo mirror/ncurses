@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -80,7 +80,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.25 2007/10/20 15:00:41 Rong-En.Fan Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.26 2008/06/21 20:46:10 tom Exp $")
 
 /*
  *	int
@@ -217,19 +217,22 @@ baudrate(void)
     }
 #endif
 
+    if (cur_term != 0) {
 #ifdef USE_OLD_TTY
-    result = cfgetospeed(&cur_term->Nttyb);
-    ospeed = _nc_ospeed(result);
+	result = cfgetospeed(&cur_term->Nttyb);
+	ospeed = _nc_ospeed(result);
 #else /* !USE_OLD_TTY */
 #ifdef TERMIOS
-    ospeed = cfgetospeed(&cur_term->Nttyb);
+	ospeed = cfgetospeed(&cur_term->Nttyb);
 #else
-    ospeed = cur_term->Nttyb.sg_ospeed;
+	ospeed = cur_term->Nttyb.sg_ospeed;
 #endif
-    result = _nc_baudrate(ospeed);
+	result = _nc_baudrate(ospeed);
 #endif
-    if (cur_term != 0)
 	cur_term->_baudrate = result;
+    } else {
+	result = ERR;
+    }
 
     returnCode(result);
 }

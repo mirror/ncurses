@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.30 2006/07/15 18:39:05 tom Exp @
+  * @Id: curs_attr.3x,v 1.31 2007/03/17 20:30:33 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -241,7 +241,8 @@
        This implementation returns an error if the window pointer
        is  null.  The <STRONG>wcolor_set</STRONG> function returns an error if the
        color  pair  parameter  is  outside  the   range   0..COL-
-       OR_PAIRS-1.
+       OR_PAIRS-1.   This  implementation  also provides <STRONG>getattrs</STRONG>
+       for compatibility with older versions of curses.
 
 
 </PRE>

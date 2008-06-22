@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2003,2006 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getyx.3x,v 1.13 2006/05/27 20:28:05 tom Exp @
+  * @Id: curs_getyx.3x,v 1.16 2007/05/12 16:34:49 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -94,17 +94,29 @@
        The  <STRONG>getyx</STRONG>,  <STRONG>getparyx</STRONG>,  <STRONG>getbegyx</STRONG>  and  <STRONG>getmaxyx</STRONG> macros are
        described in the XSI Curses standard, Issue 4.
 
-       This  implementation  also  provides   <STRONG>getbegx</STRONG>,   <STRONG>getbegy</STRONG>,
-       <STRONG>getcurx</STRONG>,  <STRONG>getcury</STRONG>,  <STRONG>getmaxx</STRONG>,  <STRONG>getmaxy</STRONG>, <STRONG>getparx</STRONG> and <STRONG>getpary</STRONG>
-       for compatibility with older versions of  curses.   X/Open
-       does  not define a corresponding <STRONG>getcuryx</STRONG> function, though
-       that would be needed to  make  references  to  the  WINDOW
-       structure opaque.
+       This implementation also provides functions <STRONG>getbegx</STRONG>, <STRONG>getb-</STRONG>
+       <STRONG>egy</STRONG>,  <STRONG>getcurx</STRONG>, <STRONG>getcury</STRONG>, <STRONG>getmaxx</STRONG>, <STRONG>getmaxy</STRONG>, <STRONG>getparx</STRONG> and <STRONG>get-</STRONG>
+       <STRONG>pary</STRONG> for compatibility with older versions of curses.
+
+       Although X/Open Curses does not address this, many  imple-
+       mentations  provide  members  of the WINDOW structure con-
+       taining values corresponding to these  macros.   For  best
+       portability,  do  not  rely  on  using the data in WINDOW,
+       since some implementations  make  WINDOW  opaque  (do  not
+       allow direct use of its members).
+
+       Besides  the problem of opaque structures, the data stored
+       in like-named members may not have like-values in  differ-
+       ent  implementations.   For  example, the WINDOW._maxx and
+       WINDOW._maxy  values  in  ncurses  have  (at  least  since
+       release 1.8.1) differed by one from some other implementa-
+       tions.  The difference is hidden by  means  of  the  macro
+       <STRONG>getmaxyx</STRONG>.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>, <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>
 
 
 

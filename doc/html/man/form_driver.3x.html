@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_driver.3x,v 1.12 2006/11/04 18:51:00 tom Exp @
+  * @Id: form_driver.3x,v 1.16 2008/06/21 21:55:39 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -60,9 +60,21 @@
 <H2>DESCRIPTION</H2><PRE>
        Once a form has been posted (displayed), you should funnel
        input events to it through <STRONG>form_driver</STRONG>.  This routine  has
-       two  major input cases; either the input is a form naviga-
-       tion request or it's a  printable  ASCII  character.   The
-       form driver requests are as follows:
+       three major input cases:
+
+       -  The  input  is  a  form navigation request.  Navigation
+          request codes are constants defined in <STRONG>&lt;form.h&gt;</STRONG>,  which
+          are distinct from the key- and character codes returned
+          by <STRONG>wgetch</STRONG>.
+
+       -  The input is a printable character.  Printable  charac-
+          ters  (which  must  be  positive,  less  than  256) are
+          checked according to the program's locale settings.
+
+       -  The input is the KEY_MOUSE special key associated  with
+          an mouse event.
+
+       The form driver requests are as follows:
 
        REQ_NEXT_PAGE
             Move to the next page.
@@ -241,17 +253,62 @@
        REQ_PREV_CHOICE
             Display previous field choice.
 
-       If the second argument is a printable ASCII character, the
+       If  the  second  argument  is  a  printable character, the
        driver places it in the current position  in  the  current
        field.   If  it is one of the forms requests listed above,
        that request is executed.
 
-       If the second argument is neither printable ASCII nor  one
-       of the above pre-defined form requests, the driver assumes
-       it  is  an  application-specific   command   and   returns
-       <STRONG>E_UNKNOWN_COMMAND</STRONG>.  Application-defined commands should be
-       defined relative to  <STRONG>MAX_COMMAND</STRONG>,  the  maximum  value  of
-       these pre-defined requests.
+   <STRONG>MOUSE</STRONG> <STRONG>HANDLING</STRONG>
+       If the second argument is the KEY_MOUSE special  key,  the
+       associated mouse event is translated into one of the above
+       pre-defined requests.  Currently only clicks in  the  user
+       window  (e.g.  inside the form display area or the decora-
+       tion window) are handled.
+
+       If you click above the display region of the form:
+
+              a REQ_PREV_FIELD is generated for a single click,
+
+              a REQ_PREV_PAGE is generated for a double-click and
+
+              a REQ_FIRST_FIELD is generated for a  triple-click.
+
+       If you click below the display region of the form:
+
+              a REQ_NEXT_FIELD is generated for a single click,
+
+              a REQ_NEXT_PAGE is generated for a double-click and
+
+              a REQ_LAST_FIELD is generated for a triple-click.
+
+       If you click at an field inside the display  area  of  the
+       form:
+
+              -  the form cursor is positioned to that field.
+
+              -  If  you double-click a field, the form cursor is
+                 positioned to that field  and  <STRONG>E_UNKNOWN_COMMAND</STRONG>
+                 is  returned.   This  return  value makes sense,
+                 because a double click  usually  means  that  an
+                 field-specific action should be returned.  It is
+                 exactly the purpose of this return value to sig-
+                 nal  that an application specific command should
+                 be executed.
+
+              -  If  a  translation  into  a  request  was  done,
+                 <STRONG>form_driver</STRONG>  returns the result of this request.
+
+       If you clicked outside the user window or the mouse  event
+       could   not   be   translated   into  a  form  request  an
+       <STRONG>E_REQUEST_DENIED</STRONG> is returned.
+
+   <STRONG>APPLICATION-DEFINED</STRONG> <STRONG>COMMANDS</STRONG>
+       If the second argument is neither printable nor one of the
+       above  pre-defined form requests, the driver assumes it is
+       an application-specific command and returns <STRONG>E_UNKNOWN_COM-</STRONG>
+       <STRONG>MAND</STRONG>.  Application-defined commands should be defined rel-
+       ative to <STRONG>MAX_COMMAND</STRONG>, the  maximum  value  of  these  pre-
+       defined requests.
 
 
 </PRE>
@@ -286,7 +343,7 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>, <STRONG><A HREF="wgetch.3x.html">wgetch(3x)</A></STRONG>.
 
 
 </PRE>

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.124 2008/03/29 18:07:32 tom Exp $
+-- $Id: INSTALL,v 1.126 2008/06/21 22:31:04 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -795,6 +795,14 @@ SUMMARY OF CONFIGURE OPTIONS:
 	may be unsigned.  Use this option if you need to preserve compatibility
 	with 64-bit executables.
 
+    --with-normal
+	Generate normal (i.e., static) libraries (default).
+
+	Note:  on Linux, the configure script will attempt to use the GPM
+	library via the dlsym() function call.  Use --without-dlsym to disable
+	this feature, or --without-gpm, depending on whether you wish to use
+	GPM.
+
     --with-ospeed=TYPE
 	Override type of ospeed variable, which is part of the termcap
 	compatibility interface.  In termcap, this is a 'short', which works
@@ -807,14 +815,6 @@ SUMMARY OF CONFIGURE OPTIONS:
 	applications that required knowledge of the ospeed variable, i.e.,
 	those using termcap, do not use the higher speeds.  Your application
 	(or system, in general) may or may not.
-
-    --with-normal
-	Generate normal (i.e., static) libraries (default).
-
-	Note:  on Linux, the configure script will attempt to use the GPM
-	library via the dlsym() function call.  Use --without-dlsym to disable
-	this feature, or --without-gpm, depending on whether you wish to use
-	GPM.
 
     --with-profile
 	Generate profile-libraries These are named by adding "_p" to the root,

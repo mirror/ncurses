@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.112 2008/06/07 22:29:07 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.113 2008/06/21 19:00:09 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -164,11 +164,6 @@ delscreen(SCREEN *sp)
 	FreeIfNeeded(sp->_acs_map);
 	FreeIfNeeded(sp->_screen_acs_map);
 
-#if 0
-	/* FIXME - this should be a copy of the struct, not a pointer */
-	del_curterm(sp->_term);
-#endif
-
 	/*
 	 * If the associated output stream has been closed, we can discard the
 	 * set-buffer.  Limit the error check to EBADF, since fflush may fail
@@ -181,6 +176,7 @@ delscreen(SCREEN *sp)
 	    free(sp->_setbuf);
 	}
 
+	del_curterm(sp->_term);
 	free(sp);
 
 	/*

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2003,2006 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: panel.3x,v 1.12 2006/05/13 15:35:45 tom Exp @
+  * @Id: panel.3x,v 1.14 2007/05/12 20:45:20 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -102,7 +102,7 @@
               (causes   it  to   be   displayed  above  any other
               panel) and returns a pointer to the new panel.
 
-       <STRONG>void</STRONG> <STRONG>update_panels()</STRONG>
+       <STRONG>update_panels()</STRONG>
               refreshes the virtual screen to reflect  the  rela-
               tions between the panels in the stack, but does not
               call doupdate() to  refresh  the  physical  screen.
@@ -120,6 +120,11 @@
               removes  the  given  panel from the panel stack and
               thus hides it from view. The <STRONG>PANEL</STRONG> structure is not
               lost, merely removed from the stack.
+
+       <STRONG>panel_hidden(pan)</STRONG>
+              returns  TRUE  if  the panel is in the panel stack,
+              FALSE if it  is  not.   If  the  panel  is  a  null
+              pointer, return ERR.
 
        <STRONG>show_panel(pan)</STRONG>
               makes  a  hidden panel visible by placing it on top
@@ -178,10 +183,10 @@
 <H2>COMPATIBILITY</H2><PRE>
        Reasonable  care  has been taken to  ensure  compatibility
        with  the  native  panel  facility  introduced  in  SVr3.2
-       (inspection of the SVr4 manual pages suggests the program-
-       ming interface is unchanged).  The <STRONG>PANEL</STRONG>  data  structures
-       are  merely   similar. The  programmer is cautioned not to
-       directly use <STRONG>PANEL</STRONG> fields.
+       (inspection   of   the  SVr4  manual  pages  suggests  the
+       programming  interface  is  unchanged).   The  <STRONG>PANEL</STRONG>  data
+       structures  are  merely   similar. The  programmer is cau-
+       tioned not to directly use <STRONG>PANEL</STRONG> fields.
 
        The functions <STRONG>show_panel()</STRONG> and <STRONG>top_panel()</STRONG>  are  identical
        in  this  implementation,  and work equally well with dis-
@@ -213,7 +218,7 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 5.6 (patch 20070303).
+       This describes <STRONG>ncurses</STRONG> version 5.6 (patch 20080621).
 
 
 </PRE>

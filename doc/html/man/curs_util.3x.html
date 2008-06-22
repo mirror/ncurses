@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.23 2007/02/24 15:59:07 tom Exp @
+  * @Id: curs_util.3x,v 1.25 2007/05/26 21:44:42 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -156,7 +156,27 @@
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.  It states that <STRONG>unctrl</STRONG> and <STRONG>wunctrl</STRONG>  will  return  a
        null  pointer if unsuccessful, but does not define any er-
-       ror conditions.
+       ror conditions.  This implementation checks for three cas-
+       es:
+
+              -    the  parameter is a 7-bit US-ASCII code.  This
+                   is the case that X/Open Curses documented.
+
+              -    the parameter is in the range 128-159, i.e., a
+                   C1  control  code.   If  <STRONG>use_legacy_coding</STRONG> has
+                   been called with a <STRONG>2</STRONG> parameter, <STRONG>unctrl</STRONG> returns
+                   the  parameter,  i.e.,  a one-character string
+                   with the parameter  as  the  first  character.
+                   Otherwise,  it  returns  ``~@'', ``~A'', etc.,
+                   analogous to ``^@'', ``^A'', C0 controls.
+
+                   X/Open Curses does not document whether <STRONG>unctrl</STRONG>
+                   can  be  called  before  initializing  curses.
+                   This implementation permits that, and  returns
+                   the ``~@'', etc., values in that case.
+
+              -    parameter  values  outside the 0 to 255 range.
+                   <STRONG>unctrl</STRONG> returns a null pointer.
 
        The SVr4 documentation describes the action of <STRONG>filter</STRONG> only
        in  the  vaguest  terms.   The description here is adapted
@@ -169,10 +189,20 @@
        implementations have different conventions.  For  example,
        they  may  show  both sets of control characters with `^',
        and strip the parameter to 7 bits.  Or they may ignore  C1
-       controls  and  treat all of the upper-1280 codes as print-
+       controls  and  treat  all of the upper-128 codes as print-
        able.  This implementation uses 8 bits but does not modify
        the string to reflect locale.  The <STRONG>use_legacy_coding</STRONG> func-
        tion allows the caller to change the output of <STRONG>unctrl</STRONG>.
+
+       Likewise, the <STRONG>meta</STRONG> function allows the  caller  to  change
+       the  output of <STRONG>keyname</STRONG>, i.e., it determines whether to use
+       the `M-' prefix for ``meta'' keys (codes in the range  128
+       to 255).  Both <STRONG>use_legacy_coding</STRONG> and <STRONG>meta</STRONG> succeed only af-
+       ter curses is initialized.  X/Open Curses does  not  docu-
+       ment  the  treatment  of  codes 128 to 159.  When treating
+       them as ``meta'' keys (or if <STRONG>keyname</STRONG> is called before ini-
+       tializing  curses),  this  implementation  returns strings
+       ``M-^@'', ``M-^A'', etc.
 
        The <STRONG>keyname</STRONG> function may return the names of  user-defined
        string  capabilities which are defined in the terminfo en-
@@ -192,7 +222,7 @@
 </PRE>
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG>curs_ker-</STRONG>
-       <STRONG><A HREF="curs_kernel.3x.html">nel(3x)</A></STRONG>, <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>.
+       <STRONG><A HREF="curs_kernel.3x.html">nel(3x)</A></STRONG>, <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>, <STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>.
 
 
 

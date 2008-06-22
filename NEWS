@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1245 2008/06/14 23:08:10 tom Exp $
+-- $Id: NEWS,v 1.1248 2008/06/21 23:26:56 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080621
+	+ regenerated html documentation.
+	+ expand manpage description of parameters for form_driver() and
+	  menu_driver() (prompted by discussion with Adam Spragg).
+	+ add null-pointer checks for cur_term in baudrate() and
+	  def_shell_mode(), def_prog_mode()
+	+ fix some memory leaks in delscreen() and wide acs.
 
 20080614
 	+ modify test/ditto.c to illustrate multi-threaded use_screen().

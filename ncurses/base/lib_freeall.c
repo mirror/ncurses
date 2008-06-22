@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.47 2008/06/07 13:58:29 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.49 2008/06/21 21:26:33 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -98,16 +98,9 @@ _nc_freeall(void)
     if (cur_term != 0)
 	del_curterm(cur_term);
 
-#if USE_WIDEC_SUPPORT
-    FreeIfNeeded(_nc_wacs);
-#endif
     (void) _nc_printf_string(0, empty_va);
 #ifdef TRACE
     (void) _nc_trace_buf(-1, 0);
-#endif
-
-#if BROKEN_LINKER || USE_REENTRANT
-    FreeIfNeeded(_nc_prescreen.real_acs_map);
 #endif
 
     _nc_leaks_tinfo();
