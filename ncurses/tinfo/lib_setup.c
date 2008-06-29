@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.108 2008/06/21 21:00:18 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.109 2008/06/28 15:31:42 tom Exp $")
 
 /****************************************************************************
  *
@@ -98,6 +98,12 @@ MODULE_ID("$Id: lib_setup.c,v 1.108 2008/06/21 21:00:18 tom Exp $")
 #  define WINSIZE_COLS(n) (int)n.ws_col
 # endif
 #endif
+
+/*
+ * Reduce explicit use of "cur_term" global variable.
+ */
+#undef CUR
+#define CUR termp->type.
 
 /*
  * Wrap global variables in this module.
@@ -193,6 +199,7 @@ NCURSES_EXPORT(void)
 _nc_get_screensize(SCREEN *sp, int *linep, int *colp)
 /* Obtain lines/columns values from the environment and/or terminfo entry */
 {
+    TERMINAL *termp = cur_term;
     int my_tabsize;
 
     /* figure out the size of the screen */
@@ -297,6 +304,7 @@ _nc_get_screensize(SCREEN *sp, int *linep, int *colp)
 NCURSES_EXPORT(void)
 _nc_update_screensize(SCREEN *sp)
 {
+    TERMINAL *termp = cur_term;
     int old_lines = lines;
     int new_lines;
     int old_cols = columns;
@@ -453,7 +461,7 @@ _nc_unicode_locale(void)
  * character set.
  */
 NCURSES_EXPORT(int)
-_nc_locale_breaks_acs(void)
+_nc_locale_breaks_acs(TERMINAL * termp)
 {
     char *env;
 
@@ -483,7 +491,7 @@ _nc_locale_breaks_acs(void)
 NCURSES_EXPORT(int)
 _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 {
-    TERMINAL *term_ptr;
+    TERMINAL *termp;
     int status;
 
     START_TRACE();
@@ -528,22 +536,22 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
      * properly with this feature).
      */
     if (reuse
-	&& (term_ptr = cur_term) != 0
-	&& term_ptr->Filedes == Filedes
-	&& term_ptr->_termname != 0
-	&& !strcmp(term_ptr->_termname, tname)
-	&& _nc_name_match(term_ptr->type.term_names, tname, "|")) {
+	&& (termp = cur_term) != 0
+	&& termp->Filedes == Filedes
+	&& termp->_termname != 0
+	&& !strcmp(termp->_termname, tname)
+	&& _nc_name_match(termp->type.term_names, tname, "|")) {
 	T(("reusing existing terminal information and mode-settings"));
     } else {
 
-	term_ptr = typeCalloc(TERMINAL, 1);
+	termp = typeCalloc(TERMINAL, 1);
 
-	if (term_ptr == 0) {
+	if (termp == 0) {
 	    ret_error0(TGETENT_ERR,
 		       "Not enough memory to create terminal structure.\n");
 	}
 #if USE_DATABASE || USE_TERMCAP
-	status = grab_entry(tname, &term_ptr->type);
+	status = grab_entry(tname, &termp->type);
 #else
 	status = TGETENT_NO;
 #endif
@@ -553,13 +561,13 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 	    const TERMTYPE *fallback = _nc_fallback(tname);
 
 	    if (fallback) {
-		term_ptr->type = *fallback;
+		termp->type = *fallback;
 		status = TGETENT_YES;
 	    }
 	}
 
 	if (status != TGETENT_YES) {
-	    del_curterm(term_ptr);
+	    del_curterm(termp);
 	    if (status == TGETENT_ERR) {
 		ret_error0(status, "terminals database is inaccessible\n");
 	    } else if (status == TGETENT_NO) {
@@ -567,17 +575,17 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
 	    }
 	}
 #if !USE_REENTRANT
-	strncpy(ttytype, term_ptr->type.term_names, NAMESIZE - 1);
+	strncpy(ttytype, termp->type.term_names, NAMESIZE - 1);
 	ttytype[NAMESIZE - 1] = '\0';
 #endif
 
-	term_ptr->Filedes = Filedes;
-	term_ptr->_termname = strdup(tname);
+	termp->Filedes = Filedes;
+	termp->_termname = strdup(tname);
 
-	set_curterm(term_ptr);
+	set_curterm(termp);
 
 	if (command_character && getenv("CC"))
-	    do_prototype(term_ptr);
+	    do_prototype(termp);
 
 	/*
 	 * If an application calls setupterm() rather than initscr() or

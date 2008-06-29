@@ -80,7 +80,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.26 2008/06/21 20:46:10 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.27 2008/06/28 15:19:24 tom Exp $")
 
 /*
  *	int
@@ -207,7 +207,7 @@ baudrate(void)
      * that take into account costs that depend on baudrate.
      */
 #ifdef TRACE
-    if (SP && !isatty(fileno(SP->_ofp))
+    if (!isatty(fileno(SP ? SP->_ofp : stdout))
 	&& getenv("BAUDRATE") != 0) {
 	int ret;
 	if ((ret = _nc_getenv_num("BAUDRATE")) <= 0)

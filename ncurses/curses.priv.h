@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.383 2008/06/07 14:13:19 tom Exp $
+ * $Id: curses.priv.h,v 1.386 2008/06/28 15:27:47 tom Exp $
  *
  *	curses.priv.h
  *
@@ -284,6 +284,15 @@ color_t;
 				WINDOW_ATTRS(w) |= (A_COLOR & COLOR_PAIR(p))
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b))
 #define VIDATTR(attr, pair)	vidattr(attr)
+#endif
+
+#if NCURSES_NO_PADDING
+#define GetNoPadding(sp)	((sp) ? (sp)->_no_padding : _nc_prescreen._no_padding)
+#define SetNoPadding(sp)	_nc_set_no_padding(sp)
+extern NCURSES_EXPORT(void) _nc_set_no_padding(SCREEN *);
+#else
+#define GetNoPadding(sp)	FALSE
+#define SetNoPadding(sp)	/*nothing*/
 #endif
 
 #define WINDOW_ATTRS(w)		((w)->_attrs)
@@ -630,6 +639,9 @@ typedef struct {
 	ripoff_t	*rsp;
 	TPARM_STATE	tparm_state;
 	TTY		*saved_tty;	/* savetty/resetty information	    */
+#if NCURSES_NO_PADDING
+	bool		_no_padding;	/* flag to set if padding disabled  */
+#endif
 #if BROKEN_LINKER || USE_REENTRANT
 	chtype		*real_acs_map;
 	int		_LINES;
@@ -700,7 +712,7 @@ struct screen {
 	int		slk_format;	/* selected format for this screen  */
 	/* cursor movement costs; units are 10ths of milliseconds */
 #if NCURSES_NO_PADDING
-	int		_no_padding;	/* flag to set if padding disabled  */
+	bool		_no_padding;	/* flag to set if padding disabled  */
 #endif
 	int		_char_padding;	/* cost of character put	    */
 	int		_cr_cost;	/* cost of (carriage_return)	    */
@@ -1477,7 +1489,7 @@ extern NCURSES_EXPORT(int) _nc_has_mouse (void);
 /* lib_setup.c */
 extern NCURSES_EXPORT(char *) _nc_get_locale(void);
 extern NCURSES_EXPORT(int) _nc_unicode_locale(void);
-extern NCURSES_EXPORT(int) _nc_locale_breaks_acs(void);
+extern NCURSES_EXPORT(int) _nc_locale_breaks_acs(TERMINAL *);
 extern NCURSES_EXPORT(int) _nc_setupterm(NCURSES_CONST char *, int, int *, bool);
 extern NCURSES_EXPORT(void) _nc_get_screensize(SCREEN *, int *, int *);
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracechr.c,v 1.17 2008/05/31 19:57:47 tom Exp $")
+MODULE_ID("$Id: lib_tracechr.c,v 1.18 2008/06/28 15:52:05 tom Exp $")
 
 #ifdef TRACE
 

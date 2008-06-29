@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.113 2008/06/21 19:00:09 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.115 2008/06/28 15:33:52 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -322,11 +322,7 @@ _nc_setupscreen(int slines GCC_UNUSED,
     SP->_ofp = output;
     SP->_cursor = -1;		/* cannot know real cursor shape */
 
-#if NCURSES_NO_PADDING
-    SP->_no_padding = getenv("NCURSES_NO_PADDING") != 0;
-    TR(TRACE_CHARPUT | TRACE_MOVE, ("padding will%s be used",
-				    SP->_no_padding ? " not" : ""));
-#endif
+    SetNoPadding(SP);
 
 #if NCURSES_EXT_FUNCS
     SP->_default_color = FALSE;
@@ -516,7 +512,7 @@ _nc_setupscreen(int slines GCC_UNUSED,
 
     /* initialize normal acs before wide, since we use mapping in the latter */
 #if !USE_WIDEC_SUPPORT
-    if (_nc_unicode_locale() && _nc_locale_breaks_acs()) {
+    if (_nc_unicode_locale() && _nc_locale_breaks_acs(cur_term)) {
 	acs_chars = NULL;
 	ena_acs = NULL;
 	enter_alt_charset_mode = NULL;
@@ -528,7 +524,8 @@ _nc_setupscreen(int slines GCC_UNUSED,
 #if USE_WIDEC_SUPPORT
     _nc_init_wacs();
 
-    SP->_screen_acs_fix = (_nc_unicode_locale() && _nc_locale_breaks_acs());
+    SP->_screen_acs_fix = (_nc_unicode_locale()
+			   && _nc_locale_breaks_acs(cur_term));
 #endif
     env = _nc_get_locale();
     SP->_legacy_coding = ((env == 0)

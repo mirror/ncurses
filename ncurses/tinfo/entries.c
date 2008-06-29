@@ -37,7 +37,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: entries.c,v 1.6 2008/06/21 21:25:01 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.7 2008/06/28 23:08:51 tom Exp $")
 
 /****************************************************************************
  *
@@ -111,19 +111,18 @@ _nc_delink_entry(ENTRY * headp, TERMTYPE *tterm)
 NCURSES_EXPORT(void)
 _nc_leaks_tinfo(void)
 {
+#if NO_LEAKS
     char *s;
+#endif
 
     T((T_CALLED("_nc_free_tinfo()")));
 #if NO_LEAKS
     _nc_free_tparm();
     _nc_tgetent_leaks();
-#endif
     _nc_free_entries(_nc_head);
     _nc_get_type(0);
     _nc_first_name(0);
-#if NO_LEAKS
     _nc_keyname_leaks();
-#endif
 #if BROKEN_LINKER || USE_REENTRANT
     _nc_names_leaks();
     _nc_codes_leaks();
@@ -135,6 +134,7 @@ _nc_leaks_tinfo(void)
 
     if ((s = _nc_home_terminfo()) != 0)
 	free(s);
+#endif /* NO_LEAKS */
     returnVoid;
 }
 

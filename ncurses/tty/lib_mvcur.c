@@ -155,7 +155,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.111 2008/05/24 14:36:54 Miroslav.Lichvar Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.112 2008/06/28 12:50:46 tom Exp $")
 
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
@@ -230,7 +230,7 @@ _nc_msec_cost(const char *const cap, int affcnt)
 		}
 
 #if NCURSES_NO_PADDING
-		if (!(SP->_no_padding))
+		if (!GetNoPadding(SP))
 #endif
 		    cum_cost += number * 10;
 	    } else

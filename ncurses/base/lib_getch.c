@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.95 2008/06/07 15:52:51 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.96 2008/06/28 23:29:20 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -266,9 +266,9 @@ recur_wrefresh(WINDOW *win)
 	/* temporarily switch to the window's screen to check/refresh */
 	_nc_lock_global(curses);
 	save_SP = SP;
-	SP = sp;
+	_nc_set_screen(sp);
 	recur_wrefresh(win);
-	SP = save_SP;
+	_nc_set_screen(save_SP);
 	_nc_unlock_global(curses);
     } else
 #endif
@@ -291,9 +291,9 @@ recur_wgetnstr(WINDOW *win, char *buf)
 	/* temporarily switch to the window's screen to get cooked input */
 	_nc_lock_global(curses);
 	save_SP = SP;
-	SP = sp;
+	_nc_set_screen(sp);
 	rc = recur_wgetnstr(win, buf);
-	SP = save_SP;
+	_nc_set_screen(save_SP);
 	_nc_unlock_global(curses);
     } else
 #endif

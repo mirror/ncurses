@@ -40,12 +40,12 @@
 #include <term_entry.h>		/* TTY, cur_term */
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.16 2008/06/07 22:22:16 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.17 2008/06/28 22:59:22 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.
 
-#if USE_REENTRANT
+#if BROKEN_LINKER || USE_REENTRANT
 NCURSES_EXPORT(TERMINAL *)
 NCURSES_PUBLIC_VAR(cur_term) (void)
 {
@@ -66,7 +66,7 @@ set_curterm(TERMINAL * termp)
     oldterm = cur_term;
     if (SP)
 	SP->_term = termp;
-#if USE_REENTRANT
+#if BROKEN_LINKER || USE_REENTRANT
     _nc_prescreen._cur_term = termp;
 #else
     cur_term = termp;

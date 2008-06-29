@@ -2718,7 +2718,8 @@ int	_nc_unicode_locale(void)
 		{ return(*(int *)0); }
 
 #undef _nc_locale_breaks_acs
-int	_nc_locale_breaks_acs(void)
+int	_nc_locale_breaks_acs(
+		TERMINAL *termp)
 		{ return(*(int *)0); }
 
 #undef _nc_setupterm

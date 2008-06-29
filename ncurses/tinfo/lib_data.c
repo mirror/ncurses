@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.48 2008/06/07 14:03:15 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.49 2008/06/28 12:46:53 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -217,6 +217,9 @@ NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {
 	NUM_VARS_0s,		/* static_vars */
     },
     NULL,			/* saved_tty */
+#if NCURSES_NO_PADDING
+    FALSE,			/* flag to set if padding disabled  */
+#endif
 #if BROKEN_LINKER || USE_REENTRANT
     NULL,			/* real_acs_map */
     0,				/* LINES */
