@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.313 2008/04/12 22:04:42 tom Exp $
+$Id: ncurses.c,v 1.315 2008/07/05 23:26:35 tom Exp $
 
 ***************************************************************************/
 
@@ -1048,7 +1048,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	    kill(getpid(), SIGTSTP);
 #endif
 	} else {
-	    wprintw(win, "Key pressed: %04o ", c);
+	    wprintw(win, "Key pressed: %04o ", (int) c);
 #ifdef NCURSES_MOUSE_VERSION
 	    if (c == KEY_MOUSE) {
 		MEVENT event;
@@ -3160,7 +3160,7 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
     mvprintw(0, 20, "Display of Character Codes %d to %d", first, last);
     attroff(A_BOLD);
 
-    for (code = first; code <= last; code++) {
+    for (code = first; (int) code <= last; code++) {
 	int row = 2 + ((code - first) % 16);
 	int col = ((code - first) / 16) * COLS / 2;
 	wchar_t codes[10];

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_opaque.c,v 1.6 2008/04/05 18:03:57 tom Exp $
+ * $Id: test_opaque.c,v 1.7 2008/07/05 23:18:40 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -406,7 +406,6 @@ test_set_tabsize(void)
     int y0, x0;
     int y, x;
     int save_tabsize = TABSIZE;
-    bool done = FALSE;
 
     (void) cbreak();		/* take input chars one at a time, no wait for \n */
     (void) noecho();		/* don't echo input */
@@ -418,12 +417,10 @@ test_set_tabsize(void)
 	for (x = 0; x < COLS;) {
 	    addch('\t');
 	    if (addch('*') == ERR) {
-		done = TRUE;
 		break;
 	    }
 	    getyx(stdscr, y0, x0);
 	    if (y0 != y || x0 == x) {
-		done = TRUE;
 		break;
 	    }
 	}

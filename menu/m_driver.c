@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.25 2005/11/26 20:46:59 tom Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.26 2008/07/05 20:54:33 tom Exp $")
 
 /* Macros */
 
@@ -74,7 +74,7 @@ Is_Sub_String(
     {
       while (*string && *part)
 	{
-	  if (toupper(*string++) != toupper(*part))
+	  if (toupper(UChar(*string++)) != toupper(UChar(*part)))
 	    break;
 	  part++;
 	}

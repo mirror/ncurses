@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.30 2008/04/12 21:59:49 tom Exp $
+ * $Id: demo_panels.c,v 1.31 2008/07/05 23:13:47 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -244,6 +244,7 @@ my_remove_panel(PANEL ** pans, int which)
     }
 }
 
+#undef MIN
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define ABS(a)   ((a) < 0 ? -(a) : (a))
 

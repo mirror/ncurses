@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.126 2008/06/21 22:31:04 tom Exp $
+-- $Id: INSTALL,v 1.127 2008/07/05 20:17:23 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -625,19 +625,31 @@ SUMMARY OF CONFIGURE OPTIONS:
 	to do this if the target compiler has unusual flags which confuse the
 	host compiler.
 
+	You can also set the environment variable $BUILD_CFLAGS rather than
+	use this option.
+
     --with-build-cppflags=XXX
 	If cross-compiling, specify the host C preprocessor-flags.  You might
 	need to do this if the target compiler has unusual flags which confuse
 	the host compiler.
+
+	You can also set the environment variable $BUILD_CPPFLAGS rather than
+	use this option.
 
     --with-build-ldflags=XXX
 	If cross-compiling, specify the host linker-flags.  You might need to
 	do this if the target linker has unusual flags which confuse the host
 	compiler.
 
+	You can also set the environment variable $BUILD_LDFLAGS rather than
+	use this option.
+
     --with-build-libs=XXX
 	If cross-compiling, the host libraries.  You might need to do this if
 	the target environment requires unusual libraries.
+
+	You can also set the environment variable $BUILD_LIBS rather than
+	use this option.
 
     --with-caps=XXX
 	Specify an alternate terminfo capabilities file, which makes the

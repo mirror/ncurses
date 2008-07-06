@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.45 2007/04/07 17:13:11 tom Exp $
+ * $Id: bs.c,v 1.46 2008/07/05 20:56:25 tom Exp $
  */
 
 #include <test.priv.h>
@@ -222,7 +222,7 @@ intro(void)
 
     if ((tmpname = getlogin()) != 0) {
 	(void) strcpy(name, tmpname);
-	name[0] = toupper(name[0]);
+	name[0] = toupper(UChar(name[0]));
     } else
 	(void) strcpy(name, dftname);
 

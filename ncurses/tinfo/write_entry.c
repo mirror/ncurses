@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -54,7 +54,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.70 2007/11/17 23:38:28 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.71 2008/07/05 20:06:25 tom Exp $")
 
 static int total_written;
 
@@ -502,7 +502,7 @@ compute_offsets(char **Strings, unsigned strmax, short *offsets)
 	    offsets[i] = nextfree;
 	    nextfree += strlen(Strings[i]) + 1;
 	    TRACE_OUT(("put Strings[%d]=%s(%d)", (int) i,
-		       _nc_visbuf(Strings[i]), nextfree));
+		       _nc_visbuf(Strings[i]), (int) nextfree));
 	}
     }
     return nextfree;

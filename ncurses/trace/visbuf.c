@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.26 2007/06/09 17:21:53 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.27 2008/07/05 23:19:59 tom Exp $")
 
 #define NormalLen(len) (unsigned) ((len + 1) * 4)
 #define WideLen(len)   (unsigned) ((len + 1) * 4 * MB_CUR_MAX)
@@ -183,7 +183,7 @@ _nc_viswbuf2n(int bufnum, const wchar_t *buf, int len)
 	char temp[CCHARW_MAX + 80];
 	int j = wctomb(temp, c), k;
 	if (j <= 0) {
-	    sprintf(temp, "\\u%08X", (wint_t) c);
+	    sprintf(temp, "\\u%08X", (unsigned) c);
 	    j = strlen(temp);
 	}
 	for (k = 0; k < j; ++k) {

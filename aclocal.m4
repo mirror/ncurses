@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.448 2008/06/14 19:12:45 tom Exp $
+dnl $Id: aclocal.m4,v 1.449 2008/07/05 18:19:39 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1949,7 +1949,7 @@ ifdef([AC_FUNC_FSEEKO],[
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LDFLAGS_STATIC version: 2 updated: 2007/04/28 15:25:27
+dnl CF_LDFLAGS_STATIC version: 3 updated: 2008/07/05 13:56:40
 dnl -----------------
 dnl Check for compiler/linker flags used to temporarily force usage of static
 dnl libraries.  This depends on the compiler and platform.  Use this to help
@@ -1958,8 +1958,16 @@ dnl the list of linker options and libraries.
 AC_DEFUN([CF_LDFLAGS_STATIC],[
 
 if test "$GCC" = yes ; then
-	LDFLAGS_STATIC=-static
-	LDFLAGS_SHARED=-dynamic
+	case $cf_cv_system_name in #(
+	aix[[45]]*) 	#( gcc 4.2.4 linkage on AIX is broken 
+		LDFLAGS_STATIC=
+		LDFLAGS_SHARED=
+		;;
+    *) 	#( normally, except when broken
+        LDFLAGS_STATIC=-static
+        LDFLAGS_SHARED=-dynamic
+        ;;
+    esac
 else
 	case $cf_cv_system_name in #(
 	aix[[45]]*) 	#( from ld manpage
