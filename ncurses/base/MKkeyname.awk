@@ -1,4 +1,4 @@
-# $Id: MKkeyname.awk,v 1.39 2008/05/31 19:54:58 tom Exp $
+# $Id: MKkeyname.awk,v 1.40 2008/07/12 18:40:00 tom Exp $
 ##############################################################################
 # Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -124,7 +124,7 @@ END {
 	print ""
 	print "			_nc_tracing = 0;	/* prevent recursion via keybound() */"
 	print "			for (j = 0; (bound = keybound(c, j)) != 0; ++j) {"
-	print "				for(k = STRCOUNT; k < NUM_STRINGS(tp);  k++) {"
+	print "				for(k = STRCOUNT; k < (int) NUM_STRINGS(tp);  k++) {"
 	print "					if (tp->Strings[k] != 0 && !strcmp(bound, tp->Strings[k])) {"
 	print "						result = ExtStrname(tp, k, strnames);"
 	print "						break;"

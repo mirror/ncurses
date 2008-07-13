@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.82 2008/04/19 22:27:04 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.83 2008/07/12 21:06:33 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -293,9 +293,9 @@ static void set_obsolete_termcaps(TERMTYPE *tp);
  * If we configure with a different Caps file, the offsets into the arrays
  * will change.  So we use an address expression.
  */
-#define BOOL_IDX(name) (&(name) - &(CUR Booleans[0]))
-#define NUM_IDX(name)  (&(name) - &(CUR Numbers[0]))
-#define STR_IDX(name)  (&(name) - &(CUR Strings[0]))
+#define BOOL_IDX(name) (PredType) (&(name) - &(CUR Booleans[0]))
+#define NUM_IDX(name)  (PredType) (&(name) - &(CUR Numbers[0]))
+#define STR_IDX(name)  (PredType) (&(name) - &(CUR Strings[0]))
 
 static bool
 version_filter(PredType type, PredIdx idx)
@@ -877,7 +877,7 @@ fmt_entry(TERMTYPE *tterm,
 static bool
 kill_string(TERMTYPE *tterm, char *cap)
 {
-    int n;
+    unsigned n;
     for (n = 0; n < NUM_STRINGS(tterm); ++n) {
 	if (cap == tterm->Strings[n]) {
 	    tterm->Strings[n] = ABSENT_STRING;
@@ -1053,7 +1053,7 @@ dump_entry(TERMTYPE *tterm,
 	     * Extended names are most likely function-key definitions.  Drop
 	     * those first.
 	     */
-	    int n;
+	    unsigned n;
 	    for (n = STRCOUNT; n < NUM_STRINGS(tterm); n++) {
 		const char *name = ExtStrname(tterm, n, strnames);
 

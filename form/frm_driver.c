@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.86 2008/01/19 20:11:03 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.87 2008/07/12 21:24:07 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4176,7 +4176,7 @@ form_driver(FORM *form, int c)
 	NULL			/* Choice Request is generic           */
       };
       size_t nMethods = (sizeof(Generic_Methods) / sizeof(Generic_Methods[0]));
-      size_t method = ((BI->keycode & ID_Mask) >> ID_Shft) & 0xffff;
+      size_t method = (BI->keycode >> ID_Shft) & 0xffff;	/* see ID_Mask */
 
       if ((method >= nMethods) || !(BI->cmd))
 	res = E_SYSTEM_ERROR;

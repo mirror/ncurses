@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.109 2008/06/28 15:31:42 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.110 2008/07/12 18:40:23 tom Exp $")
 
 /****************************************************************************
  *
@@ -389,7 +389,7 @@ grab_entry(const char *const tn, TERMTYPE *const tp)
 static void
 do_prototype(TERMINAL * termp)
 {
-    int i;
+    unsigned i;
     char CC;
     char proto;
     char *tmp;
