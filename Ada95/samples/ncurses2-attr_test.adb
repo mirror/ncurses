@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2006,2007 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2007,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.8 $
---  $Date: 2007/05/05 21:28:18 $
+--  $Revision: 1.9 $
+--  $Date: 2008/07/26 18:47:26 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -178,9 +178,9 @@ procedure ncurses2.attr_test is
          end if;
          m := rest mod 2;
          rest := rest / 2;
---       if 1 = m then
---          a.Protected_Character := True;
---       end if;
+         if 1 = m then
+            a.Protected_Character := True;
+         end if;
          m := rest mod 2;
          rest := rest / 2;
          if 1 = m then
@@ -287,18 +287,18 @@ begin
       begin
          --  row := 2; -- weird, row is set to 0 without this.
          --  TODO delete the above line, it was a gdb quirk that confused me
-         if Has_Colors then declare
-            pair : constant Color_Pair :=
+         if Has_Colors then
+            declare pair : constant Color_Pair :=
               Color_Pair (fg * Color_Number (Number_Of_Colors) + bg);
-         begin
-            --  Go though each color pair. Assume that the number of
-            --  Redefinable_Color_Pairs is 8*8 with predefined Colors 0..7
-            if not pairs (pair) then
-               Init_Pair (pair, fg, bg);
-               pairs (pair) := True;
-            end if;
-            normal.Color := pair;
-         end;
+            begin
+               --  Go though each color pair. Assume that the number of
+               --  Redefinable_Color_Pairs is 8*8 with predefined Colors 0..7
+               if not pairs (pair) then
+                  Init_Pair (pair, fg, bg);
+                  pairs (pair) := True;
+               end if;
+               normal.Color := pair;
+            end;
          end if;
          Set_Background (Ch => normal);
          Erase;

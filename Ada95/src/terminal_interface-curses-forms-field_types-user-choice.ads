@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2008 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
+--  $Date: 2008/07/26 18:49:20 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C;
@@ -44,7 +45,6 @@ package Terminal_Interface.Curses.Forms.Field_Types.User.Choice is
    pragma Preelaborate
      (Terminal_Interface.Curses.Forms.Field_Types.User.Choice);
 
-   use type Interfaces.C.int;
    subtype C_Int is Interfaces.C.int;
 
    type User_Defined_Field_Type_With_Choice is abstract new
@@ -75,8 +75,6 @@ package Terminal_Interface.Curses.Forms.Field_Types.User.Choice is
    --  | Private Part.
    --  |
 private
-   use type Interfaces.C.int;
-
    function C_Generic_Choice return C_Field_Type;
 
    function Generic_Next (Fld : Field;

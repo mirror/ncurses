@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998,2008 Free Software Foundation, Inc.                   --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.15 $
---  $Date: 2007/05/05 18:46:21 $
+--  $Revision: 1.16 $
+--  $Date: 2008/07/26 18:48:46 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Text_IO;
@@ -111,7 +111,7 @@ package body Sample is
                if K = QUIT then
                   return True;
                elsif K = SELECT_ITEM then
-                  if Idx in 1 .. 4 then
+                  if Idx <= 4 then
                      Hide (Pan);
                      Update_Panels;
                   end if;
@@ -122,7 +122,7 @@ package body Sample is
                      when 4 => Sample.Text_IO_Demo.Demo;
                      when others => null;
                   end case;
-                  if Idx in 1 .. 4 then
+                  if Idx <= 4 then
                      Top (Pan);
                      Show (Pan);
                      Update_Panels;

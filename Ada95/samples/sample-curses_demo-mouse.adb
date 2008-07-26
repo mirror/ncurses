@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.15 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.16 $
+--  $Date: 2008/07/26 18:48:19 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
@@ -104,7 +104,7 @@ package body Sample.Curses_Demo.Mouse is
             if Enclosed_In_Window (W, Evt) then
                Transform_Coordinates (W, Y, X, From_Screen);
                Put (Msg, ",Box(");
-               Put (Msg, Integer (I), 1); Put (Msg, ",");
+               Put (Msg, (I), 1); Put (Msg, ",");
                Put (Msg, Integer (Y), 1); Put (Msg, ",");
                Put (Msg, Integer (X), 1); Put (Msg, ")");
             end if;
@@ -158,7 +158,7 @@ package body Sample.Curses_Demo.Mouse is
          W             : Window;
       begin
          for I in Ctl'Range loop
-            Position := (Integer (I) - Integer (Middle_Index)) *
+            Position := ((I) - Integer (Middle_Index)) *
               Integer (Half + Space + Width) + Middle_Column;
             W := Create (Height,
                          Width,
@@ -177,7 +177,7 @@ package body Sample.Curses_Demo.Mouse is
             Ctl (I) := Create (W);
             Box (W);
             Move_Cursor (W, 1, Half);
-            Put (W, Integer (I), 1);
+            Put (W, (I), 1);
             Refresh_Without_Update (W);
          end loop;
       end;

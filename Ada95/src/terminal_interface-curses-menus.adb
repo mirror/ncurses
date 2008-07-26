@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.25 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.26 $
+--  $Date: 2008/07/26 18:50:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -925,7 +925,7 @@ package body Terminal_Interface.Curses.Menus is
 
       P : Pointer := C_Mitems (Men);
    begin
-      if P = null or else Index not in 1 .. Item_Count (Men) then
+      if P = null or else Index > Item_Count (Men) then
          raise Menu_Exception;
       else
          P := P + ptrdiff_t (C_Int (Index) - 1);

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.5 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.6 $
+--  $Date: 2008/07/26 18:47:34 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -203,6 +203,9 @@ procedure ncurses2.acs_display is
       n := show_1_acs (n, "ACS_Not_Equal", ACS_Map (ACS_Not_Equal));
       n := show_1_acs (n, "ACS_Sterling", ACS_Map (ACS_Sterling));
 
+      if n = 0 then
+         raise Constraint_Error;
+      end if;
    end show_acs_chars;
 
    c1 : Key_Code;

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2004,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.6 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.7 $
+--  $Date: 2008/07/26 18:46:44 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  A simplified version of the  GNU getopt function
@@ -132,7 +132,7 @@ package body ncurses2.getopt is
                   Put_Line (Standard_Error,
                             argv (optind) &
                             ": option requires an argument -- " & c);
-                  if optstring (1) = ':'  then
+                  if optstring (optstring'First) = ':'  then
                      c := ':';
                   else
                      c := '?';

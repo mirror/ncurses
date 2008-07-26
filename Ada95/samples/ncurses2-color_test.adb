@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2006 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.2 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.3 $
+--  $Date: 2008/07/26 18:47:17 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -51,22 +51,22 @@ procedure ncurses2.color_test is
 
    color_names : constant array (0 .. 15) of String (1 .. 7) :=
      (
-      "black",
-      "red",
-      "green",
-      "yellow",
-      "blue",
+      "black  ",
+      "red    ",
+      "green  ",
+      "yellow ",
+      "blue   ",
       "magenta",
-      "cyan",
-      "white",
-      "BLACK",
-      "RED",
-      "GREEN",
-      "YELLOW",
-      "BLUE",
+      "cyan   ",
+      "white  ",
+      "BLACK  ",
+      "RED    ",
+      "GREEN  ",
+      "YELLOW ",
+      "BLUE   ",
       "MAGENTA",
-      "CYAN",
-      "WHITE"
+      "CYAN   ",
+      "WHITE  "
       );
 
    procedure show_color_name (y, x : Integer; color : Integer) is
@@ -105,7 +105,7 @@ begin
    end if;
 
    if Number_Of_Colors > 8 then
-      hello := "Test";
+      hello := "Test ";
    else
       hello := "Hello";
    end if;

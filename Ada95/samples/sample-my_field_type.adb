@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,11 +35,10 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.15 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.16 $
+--  $Date: 2008/07/26 18:47:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
-with Terminal_Interface.Curses.Forms;
 
 --  This is a very simple user defined field type. It accepts only a
 --  defined character as input into the field.

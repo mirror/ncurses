@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.7 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.8 $
+--  $Date: 2008/07/26 18:47:42 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Windows and scrolling tester.
@@ -527,11 +527,11 @@ begin
                current := current.last;
             end if;
          when Character'Pos ('F') mod 16#20#  => --  Ctrl('F')
-            if current /= null and HaveScroll (current.wind) then
+            if current /= null and then HaveScroll (current.wind) then
                Scroll (current.wind, 1);
             end if;
          when Character'Pos ('B') mod 16#20#  => --  Ctrl('B')
-            if current /= null and HaveScroll (current.wind) then
+            if current /= null and then HaveScroll (current.wind) then
             --  The C version of Scroll may return ERR which is ignored
             --  we need to avoid the exception
             --  with the 'and HaveScroll(current.wind)'

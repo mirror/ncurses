@@ -9583,7 +9583,7 @@ echo "${ECHO_T}... -$cf_opt" >&6
 				;;
 			Winline) #(vi
 				case $GCC_VERSION in
-				3.3*)
+				[34].*)
 					test -n "$verbose" && echo "	feature is broken in gcc $GCC_VERSION" 1>&6
 
 echo "${as_me-configure}:9589: testing feature is broken in gcc $GCC_VERSION ..." 1>&5

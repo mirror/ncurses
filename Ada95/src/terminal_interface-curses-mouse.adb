@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,12 +35,10 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.21 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.22 $
+--  $Date: 2008/07/26 18:51:11 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
-with System;
-
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
 with Interfaces.C; use Interfaces.C;
 use Interfaces;
@@ -48,7 +46,6 @@ use Interfaces;
 package body Terminal_Interface.Curses.Mouse is
 
    use type System.Bit_Order;
-   use type Interfaces.C.int;
 
    function Has_Mouse return Boolean
    is

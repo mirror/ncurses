@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.7 $
---  $Date: 2007/05/05 18:02:40 $
+--  $Revision: 1.8 $
+--  $Date: 2008/07/26 18:47:50 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  TODO use Default_Character where appropriate
@@ -64,7 +64,6 @@ with ncurses2.demo_panels;
 with ncurses2.color_edit;
 with ncurses2.slk_test;
 with ncurses2.acs_display;
-with ncurses2.color_edit;
 with ncurses2.acs_and_scroll;
 with ncurses2.flushinp_test;
 with ncurses2.test_sgr_attributes;

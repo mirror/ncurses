@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,21 +35,17 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.6 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.7 $
+--  $Date: 2008/07/26 18:51:20 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
-with Terminal_Interface.Curses;
-
-with Ada.Text_IO;
+with Ada.Text_IO; use Ada.Text_IO;
 
 pragma Warnings (Off);
 with Terminal_Interface.Curses.Aux;
 pragma Warnings (On);
 
 with Terminal_Interface.Curses.Trace; use Terminal_Interface.Curses.Trace;
-
-with Ada.Text_IO; use Ada.Text_IO;
 
 with Interfaces.C;
 with Interfaces.C.Strings;

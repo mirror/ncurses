@@ -9,7 +9,7 @@ include(M4MACRO)----------------------------------------------------------------
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -37,8 +37,8 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.4 $
---  $Date: 2007/05/05 20:09:10 $
+--  $Revision: 1.5 $
+--  $Date: 2008/07/26 18:46:32 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -2152,7 +2152,8 @@ package body Terminal_Interface.Curses is
          raise Constraint_Error;
       end if;
       if Integer (Fore) >= Number_Of_Colors or else
-        Integer (Back) >= Number_Of_Colors then raise Constraint_Error;
+         Integer (Back) >= Number_Of_Colors then
+         raise Constraint_Error;
       end if;
       if Initpair (C_Short (Pair), C_Short (Fore), C_Short (Back))
         = Curses_Err then
