@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.30 2008/06/14 23:00:26 tom Exp $
+ * $Id: ditto.c,v 1.32 2008/08/04 13:21:41 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -151,10 +151,11 @@ open_tty(char *path)
     int amaster;
     int aslave;
     char slave_name[1024];
-    char s_option[1024];
+    char s_option[sizeof(slave_name) + 80];
     char *leaf;
 
-    if (openpty(&amaster, &aslave, slave_name, 0, 0) != 0)
+    if (openpty(&amaster, &aslave, slave_name, 0, 0) != 0
+	|| strlen(slave_name) > sizeof(slave_name) - 1)
 	failed("openpty");
     if ((leaf = strrchr(slave_name, '/')) == 0) {
 	errno = EISDIR;
@@ -166,6 +167,8 @@ open_tty(char *path)
 	_exit(0);
     }
     fp = fdopen(amaster, "r+");
+    if (fp == 0)
+	failed(path);
 #else
     struct stat sb;
 
@@ -180,6 +183,7 @@ open_tty(char *path)
 	failed(path);
     printf("opened %s\n", path);
 #endif
+    assert(fp != 0);
     return fp;
 }
 
@@ -195,8 +199,8 @@ init_screen(SCREEN *sp GCC_UNUSED, void *arg)
     scrollok(stdscr, TRUE);
     box(stdscr, 0, 0);
 
-    target->windows = typeCalloc(WINDOW *, target->length);
-    target->peeks = typeCalloc(PEEK, target->length);
+    target->windows = typeCalloc(WINDOW *, (size_t) target->length);
+    target->peeks = typeCalloc(PEEK, (size_t) target->length);
 
     high = (LINES - 2) / target->length;
     wide = (COLS - 2);
@@ -290,7 +294,7 @@ write_screen(SCREEN *sp GCC_UNUSED, void *arg GCC_UNUSED)
 	while ((ch = peek_fifo(fifo, peek)) > 0) {
 	    changed = TRUE;
 
-	    waddch(win, ch);
+	    waddch(win, (chtype) ch);
 	    wnoutrefresh(win);
 	}
     }
@@ -357,7 +361,7 @@ main(int argc, char *argv[])
     if (argc <= 1)
 	usage();
 
-    if ((data = typeCalloc(DITTO, argc)) == 0)
+    if ((data = typeCalloc(DITTO, (size_t) argc)) == 0)
 	failed("calloc data");
 
     for (j = 0; j < argc; j++) {

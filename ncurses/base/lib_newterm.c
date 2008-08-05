@@ -48,7 +48,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.71 2008/06/21 20:55:11 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.72 2008/08/03 22:49:49 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -158,6 +158,7 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 	    _nc_set_screen(current);
 	    result = 0;
 	} else {
+	    assert(SP != 0);
 	    /*
 	     * In setupterm() we did a set_curterm(), but it was before we set
 	     * SP.  So the "current" screen's terminal pointer was overwritten

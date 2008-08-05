@@ -53,7 +53,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.110 2008/07/12 18:40:23 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.111 2008/08/03 22:42:33 tom Exp $")
 
 /****************************************************************************
  *
@@ -394,14 +394,16 @@ do_prototype(TERMINAL * termp)
     char proto;
     char *tmp;
 
-    tmp = getenv("CC");
-    CC = *tmp;
-    proto = *command_character;
+    if ((tmp = getenv("CC")) != 0) {
+	if ((CC = *tmp) != 0) {
+	    proto = *command_character;
 
-    for_each_string(i, &(termp->type)) {
-	for (tmp = termp->type.Strings[i]; *tmp; tmp++) {
-	    if (*tmp == proto)
-		*tmp = CC;
+	    for_each_string(i, &(termp->type)) {
+		for (tmp = termp->type.Strings[i]; *tmp; tmp++) {
+		    if (*tmp == proto)
+			*tmp = CC;
+		}
+	    }
 	}
     }
 }

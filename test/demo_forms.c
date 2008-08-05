@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.24 2007/07/21 17:45:09 tom Exp $
+ * $Id: demo_forms.c,v 1.25 2008/08/04 15:45:04 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -316,7 +316,7 @@ demo_forms(void)
 {
     WINDOW *w;
     FORM *form;
-    FIELD *f[100];
+    FIELD *f[100];		// FIXME memset to zero
     int finished = 0, c;
     unsigned n = 0;
     int pg;
@@ -334,6 +334,7 @@ demo_forms(void)
     refresh();
 
     /* describe the form */
+    memset(f, 0, sizeof(f));
     for (pg = 0; pg < 4; ++pg) {
 	char label[80];
 	sprintf(label, "Sample Form Page %d", pg + 1);
@@ -398,31 +399,32 @@ demo_forms(void)
 
     f[n++] = (FIELD *) 0;
 
-    form = new_form(f);
+    if ((form = new_form(f)) != 0) {
 
-    display_form(form);
+	display_form(form);
 
-    w = form_win(form);
-    also = newwin(getmaxy(stdscr) - getmaxy(w), COLS, getmaxy(w), 0);
-    show_current_field(also, form);
-
-    while (!finished) {
-	switch (edit_field(form, &c)) {
-	case E_OK:
-	    break;
-	case E_UNKNOWN_COMMAND:
-	    finished = my_form_driver(form, c);
-	    break;
-	default:
-	    beep();
-	    break;
-	}
+	w = form_win(form);
+	also = newwin(getmaxy(stdscr) - getmaxy(w), COLS, getmaxy(w), 0);
 	show_current_field(also, form);
+
+	while (!finished) {
+	    switch (edit_field(form, &c)) {
+	    case E_OK:
+		break;
+	    case E_UNKNOWN_COMMAND:
+		finished = my_form_driver(form, c);
+		break;
+	    default:
+		beep();
+		break;
+	    }
+	    show_current_field(also, form);
+	}
+
+	erase_form(form);
+
+	free_form(form);
     }
-
-    erase_form(form);
-
-    free_form(form);
     for (c = 0; f[c] != 0; c++)
 	free_field(f[c]);
     noraw();

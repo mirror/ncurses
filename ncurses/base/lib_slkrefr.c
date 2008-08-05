@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.15 2006/11/25 22:32:15 tom Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.16 2008/08/03 22:40:27 tom Exp $")
 
 /*
  * Write the soft labels to the soft-key window.
@@ -61,7 +61,7 @@ slk_intern_refresh(SLK * slk)
 		    }
 		} else {
 		    wmove(slk->win, SLK_LINES(fmt) - 1, slk->ent[i].ent_x);
-		    if (SP && SP->_slk) {
+		    if (SP->_slk) {
 			wattrset(slk->win, AttrOf(SP->_slk->attr));
 		    }
 		    waddstr(slk->win, slk->ent[i].form_text);

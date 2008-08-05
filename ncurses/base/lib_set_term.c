@@ -44,7 +44,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.115 2008/06/28 15:33:52 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.117 2008/08/04 18:11:12 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -359,11 +359,10 @@ _nc_setupscreen(int slines GCC_UNUSED,
      * Allow those assumed/default color assumptions to be overridden at
      * runtime:
      */
-    if (getenv("NCURSES_ASSUMED_COLORS") != 0) {
-	char *p = getenv("NCURSES_ASSUMED_COLORS");
+    if ((env = getenv("NCURSES_ASSUMED_COLORS")) != 0) {
 	int fg, bg;
 	char sep1, sep2;
-	int count = sscanf(p, "%d%c%d%c", &fg, &sep1, &bg, &sep2);
+	int count = sscanf(env, "%d%c%d%c", &fg, &sep1, &bg, &sep2);
 	if (count >= 1) {
 	    SP->_default_fg = (fg >= 0 && fg < max_colors) ? fg : C_MASK;
 	    if (count >= 3) {
@@ -418,11 +417,6 @@ _nc_setupscreen(int slines GCC_UNUSED,
     SP->_mouse_resume = no_mouse_resume;
     SP->_mouse_wrap = no_mouse_wrap;
     SP->_mouse_fd = -1;
-
-    /* initialize the panel hooks */
-    SP->_panelHook.top_panel = (struct panel *) 0;
-    SP->_panelHook.bottom_panel = (struct panel *) 0;
-    SP->_panelHook.stdscr_pseudo_panel = (struct panel *) 0;
 
     /*
      * If we've no magic cookie support, we suppress attributes that xmc would

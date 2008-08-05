@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.96 2008/06/28 23:29:20 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.97 2008/08/03 22:56:42 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -284,23 +284,27 @@ recur_wgetnstr(WINDOW *win, char *buf)
     SCREEN *sp = _nc_screen_of(win);
     int rc;
 
+    if (sp != 0) {
 #ifdef USE_PTHREADS
-    if (sp != SP) {
-	SCREEN *save_SP;
+	if (sp != SP) {
+	    SCREEN *save_SP;
 
-	/* temporarily switch to the window's screen to get cooked input */
-	_nc_lock_global(curses);
-	save_SP = SP;
-	_nc_set_screen(sp);
-	rc = recur_wgetnstr(win, buf);
-	_nc_set_screen(save_SP);
-	_nc_unlock_global(curses);
-    } else
+	    /* temporarily switch to the window's screen to get cooked input */
+	    _nc_lock_global(curses);
+	    save_SP = SP;
+	    _nc_set_screen(sp);
+	    rc = recur_wgetnstr(win, buf);
+	    _nc_set_screen(save_SP);
+	    _nc_unlock_global(curses);
+	} else
 #endif
-    {
-	sp->_called_wgetch = TRUE;
-	rc = wgetnstr(win, buf, MAXCOLUMNS);
-	sp->_called_wgetch = FALSE;
+	{
+	    sp->_called_wgetch = TRUE;
+	    rc = wgetnstr(win, buf, MAXCOLUMNS);
+	    sp->_called_wgetch = FALSE;
+	}
+    } else {
+	rc = ERR;
     }
     return rc;
 }

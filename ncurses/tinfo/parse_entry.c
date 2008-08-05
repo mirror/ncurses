@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.65 2007/08/11 16:19:02 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.67 2008/08/03 20:10:45 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -245,6 +245,9 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 
     entryp->tterm.str_table = entryp->tterm.term_names = _nc_save_str(ptr);
 
+    if (entryp->tterm.str_table == 0)
+	return (ERR);
+
     DEBUG(1, ("Starting '%s'", ptr));
 
     /*
@@ -372,26 +375,28 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 		 * type, this will do the job.
 		 */
 
-		/* tell max_attributes from arrow_key_map */
 		if (token_type == NUMBER
 		    && !strcmp("ma", _nc_curr_token.tk_name)) {
+		    /* tell max_attributes from arrow_key_map */
 		    entry_ptr = _nc_find_type_entry("ma", NUMBER,
 						    _nc_get_table(_nc_syntax
 								  != 0));
+		    assert(entry_ptr != 0);
 
-		    /* map terminfo's string MT to MT */
 		} else if (token_type == STRING
 			   && !strcmp("MT", _nc_curr_token.tk_name)) {
+		    /* map terminfo's string MT to MT */
 		    entry_ptr = _nc_find_type_entry("MT", STRING,
 						    _nc_get_table(_nc_syntax
 								  != 0));
+		    assert(entry_ptr != 0);
 
-		    /* treat strings without following "=" as empty strings */
 		} else if (token_type == BOOLEAN
 			   && entry_ptr->nte_type == STRING) {
+		    /* treat strings without following "=" as empty strings */
 		    token_type = STRING;
-		    /* we couldn't recover; skip this token */
 		} else {
+		    /* we couldn't recover; skip this token */
 		    if (!silent) {
 			const char *type_name;
 			switch (entry_ptr->nte_type) {
@@ -785,11 +790,12 @@ postprocess_termcap(TERMTYPE *tp, bool has_base)
 	     base = cp + 1) {
 	    size_t len = cp - base;
 
-	    for (ap = ko_xlate; ap->from; ap++)
+	    for (ap = ko_xlate; ap->from; ap++) {
 		if (len == strlen(ap->from)
 		    && strncmp(ap->from, base, len) == 0)
 		    break;
-	    if (!ap->to) {
+	    }
+	    if (!(ap->from && ap->to)) {
 		_nc_warning("unknown capability `%.*s' in ko string",
 			    (int) len, base);
 		continue;

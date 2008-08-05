@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.450 2008/07/26 21:57:19 tom Exp $
+dnl $Id: aclocal.m4,v 1.451 2008/08/04 10:26:11 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1715,7 +1715,7 @@ fi
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HASHED_DB_LIBS version: 7 updated: 2007/12/01 15:01:37
+dnl CF_HASHED_DB_LIBS version: 8 updated: 2008/08/04 06:18:06
 dnl -----------------
 dnl Given that we have the header and version for hashed database, find the
 dnl library information.
@@ -1723,7 +1723,7 @@ AC_DEFUN([CF_HASHED_DB_LIBS],
 [
 AC_CACHE_CHECK(for db libraries, cf_cv_hashed_db_libs,[
 cf_cv_hashed_db_libs=unknown
-for cf_db_libs in db$cf_cv_hashed_db_version db-$cf_cv_hashed_db_version db ''
+for cf_db_libs in "" db$cf_cv_hashed_db_version db-$cf_cv_hashed_db_version db ''
 do
 	cf_save_libs="$LIBS"
 	if test -n "$cf_db_libs"; then
@@ -5228,7 +5228,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 25 updated: 2007/01/29 18:36:38
+dnl CF_XOPEN_SOURCE version: 26 updated: 2008/07/27 11:26:57
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -5248,7 +5248,7 @@ case $host_os in #(vi
 aix[[45]]*) #(vi
 	CPPFLAGS="$CPPFLAGS -D_ALL_SOURCE"
 	;;
-freebsd*) #(vi
+freebsd*|dragonfly*) #(vi
 	# 5.x headers associate
 	#	_XOPEN_SOURCE=600 with _POSIX_C_SOURCE=200112L
 	#	_XOPEN_SOURCE=500 with _POSIX_C_SOURCE=199506L

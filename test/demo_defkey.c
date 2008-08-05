@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.18 2008/04/12 22:06:12 tom Exp $
+ * $Id: demo_defkey.c,v 1.19 2008/08/04 16:24:47 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -76,6 +76,7 @@ visichar(int ch)
     static char temp[10];
 
     ch = UChar(ch);
+    assert(ch >= 0 && ch < 256);
     if (ch == '\\') {
 	strcpy(temp, "\\\\");
     } else if (ch == '\033') {

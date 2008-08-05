@@ -46,7 +46,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.67 2008/06/07 20:49:56 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.68 2008/08/03 22:22:57 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -95,10 +95,13 @@ trace(const unsigned int tracelevel)
 	const char *mode = _nc_globals.init_trace ? "ab" : "wb";
 
 	if (TracePath[0] == '\0') {
-	    if (getcwd(TracePath, sizeof(TracePath) - 12) == 0) {
+	    int size = sizeof(TracePath) - 12;
+	    if (getcwd(TracePath, size) == 0) {
 		perror("curses: Can't get working directory");
 		exit(EXIT_FAILURE);
 	    }
+	    TracePath[size] = '\0';
+	    assert(strlen(TracePath) <= size);
 	    strcat(TracePath, "/trace");
 	    if (_nc_is_dir_path(TracePath)) {
 		strcat(TracePath, ".log");

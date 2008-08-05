@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.31 2008/07/05 23:13:47 tom Exp $
+ * $Id: demo_panels.c,v 1.33 2008/08/04 13:33:48 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -212,9 +212,9 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 	if ((pan = new_panel(win)) == 0) {
 	    delwin(win);
 	} else if (use_colors) {
-	    short fg = ((color == COLOR_BLUE)
-			? COLOR_WHITE
-			: COLOR_BLACK);
+	    short fg = (short) ((color == COLOR_BLUE)
+				? COLOR_WHITE
+				: COLOR_BLACK);
 	    short bg = color;
 
 	    init_pair(color, fg, bg);
@@ -253,8 +253,8 @@ my_create_panel(PANEL ** pans, int which, FillPanel myFill)
 {
     PANEL *pan = 0;
     int code;
-    int pair = which;
-    short fg = (pair == COLOR_BLUE) ? COLOR_WHITE : COLOR_BLACK;
+    short pair = (short) which;
+    short fg = (short) ((pair == COLOR_BLUE) ? COLOR_WHITE : COLOR_BLACK);
     short bg = pair;
     int x0, y0, x1, y1;
 
@@ -369,7 +369,8 @@ static void
 fill_panel(PANEL * pan)
 {
     WINDOW *win = panel_window(pan);
-    int num = ((const char *) panel_userptr(pan))[1];
+    const char *userptr = (const char *) panel_userptr(pan);
+    int num = (userptr && *userptr) ? userptr[1] : '?';
     int y, x;
 
     wmove(win, 1, 1);
@@ -388,7 +389,8 @@ static void
 fill_unboxed(PANEL * pan)
 {
     WINDOW *win = panel_window(pan);
-    int num = ((const char *) panel_userptr(pan))[1];
+    const char *userptr = (const char *) panel_userptr(pan);
+    int num = (userptr && *userptr) ? userptr[1] : '?';
     int y, x;
 
     for (y = 0; y < getmaxy(win); y++) {
@@ -634,7 +636,7 @@ get_command(PANEL * px[MAX_PANELS + 1], char *buffer, int limit)
 
     if (log_in != 0) {
 	if (fgets(buffer, limit - 3, log_in) != 0) {
-	    length = strlen(buffer);
+	    length = (int) strlen(buffer);
 	    while (length > 0 && isspace(UChar(buffer[length - 1])))
 		buffer[--length] = '\0';
 	    waddstr(win, buffer);
@@ -664,22 +666,22 @@ get_command(PANEL * px[MAX_PANELS + 1], char *buffer, int limit)
 		    } else if (isdigit(UChar(c0))) {
 			wprintw(win, " %c", ch);
 			buffer[length++] = ' ';
-			buffer[length++] = c0 = ch;
+			buffer[length++] = (char) (c0 = ch);
 		    } else {
 			wprintw(win, "%c", ch);
-			buffer[length++] = c0 = ch;
+			buffer[length++] = (char) (c0 = ch);
 		    }
 		} else if (ok_digit(ch)) {
 		    if (isalpha(UChar(c0))) {
 			wprintw(win, "%c", ch);
-			buffer[length++] = c0 = ch;
+			buffer[length++] = (char) (c0 = ch);
 		    } else {
 			beep();
 		    }
 		} else if (ch == ' ') {
 		    if (isdigit(UChar(c0))) {
 			wprintw(win, "%c", ch);
-			buffer[length++] = c0 = ch;
+			buffer[length++] = (char) (c0 = ch);
 		    } else {
 			beep();
 		    }
@@ -715,7 +717,7 @@ demo_panels(InitPanel myInit, FillPanel myFill)
     memset(px, 0, sizeof(px));
 
     while (get_command(px, buffer, sizeof(buffer))) {
-	int limit = strlen(buffer);
+	int limit = (int) strlen(buffer);
 	for (itmp = 0; itmp < limit; itmp += 3) {
 	    do_panel(px, buffer + itmp, myFill);
 	}

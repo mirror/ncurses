@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.17 2008/06/21 20:53:06 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.18 2008/08/03 22:10:44 tom Exp $")
 
 NCURSES_EXPORT(int)
 _nc_get_tty_mode(TTY * buf)
@@ -65,7 +65,8 @@ _nc_get_tty_mode(TTY * buf)
 	    memset(buf, 0, sizeof(*buf));
 
 	TR(TRACE_BITS, ("_nc_get_tty_mode(%d): %s",
-			cur_term->Filedes, _nc_trace_ttymode(buf)));
+			cur_term ? cur_term->Filedes : -1,
+			_nc_trace_ttymode(buf)));
     }
     return (result);
 }
@@ -93,7 +94,8 @@ _nc_set_tty_mode(TTY * buf)
 	    }
 	}
 	TR(TRACE_BITS, ("_nc_set_tty_mode(%d): %s",
-			cur_term->Filedes, _nc_trace_ttymode(buf)));
+			cur_term ? cur_term->Filedes : -1,
+			_nc_trace_ttymode(buf)));
     }
     return (result);
 }

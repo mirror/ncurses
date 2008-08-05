@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.27 2006/04/22 22:41:22 tom Exp $
+ * $Id: knight.c,v 1.28 2008/08/03 23:04:26 tom Exp $
  */
 
 #include <test.priv.h>
@@ -383,7 +383,7 @@ drawmove(chtype tchar, int oldy, int oldx, int row, int column)
 	mark_possibles(oldy, oldx, ' ');
     }
 
-    if (row != -1 && column != -1) {
+    if (row >= 0 && column >= 0) {
 	markcell(trail, row, column);
 	mark_possibles(row, column, minus);
 	board[row][column] = TRUE;

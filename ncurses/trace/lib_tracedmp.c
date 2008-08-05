@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracedmp.c,v 1.29 2007/06/30 23:01:19 tom Exp $")
+MODULE_ID("$Id: lib_tracedmp.c,v 1.30 2008/08/03 15:44:31 tom Exp $")
 
 #ifdef TRACE
 
@@ -180,5 +180,5 @@ _tracedump(const char *name, WINDOW *win)
 }
 
 #else
-empty_module(_nc_lib_tracedmp)
+EMPTY_MODULE(_nc_lib_tracedmp)
 #endif /* TRACE */

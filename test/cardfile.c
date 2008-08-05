@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.33 2008/04/12 22:05:53 tom Exp $
+ * $Id: cardfile.c,v 1.35 2008/08/05 00:42:24 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -133,12 +133,13 @@ add_content(CARD * card, const char *content)
 
     content = skip(content);
     if ((total = strlen(content)) != 0) {
-	if ((offset = strlen(card->content)) != 0) {
+	if (card->content != 0 && (offset = strlen(card->content)) != 0) {
 	    total += 1 + offset;
 	    card->content = typeRealloc(char, total + 1, card->content);
 	    if (card->content)
 		strcpy(card->content + offset++, " ");
 	} else {
+	    offset = 0;
 	    if (card->content != 0)
 		free(card->content);
 	    card->content = typeMalloc(char, total + 1);

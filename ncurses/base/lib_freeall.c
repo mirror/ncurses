@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.49 2008/06/21 21:26:33 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.50 2008/08/04 18:29:12 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -57,6 +57,9 @@ _nc_freeall(void)
     if (SP != 0) {
 	if (SP->_oldnum_list != 0) {
 	    FreeAndNull(SP->_oldnum_list);
+	}
+	if (SP->_panelHook.destroy != 0) {
+	    SP->_panelHook.destroy(SP->_panelHook.stdscr_pseudo_panel);
 	}
     }
 #endif

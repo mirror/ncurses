@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.46 2008/07/05 20:56:25 tom Exp $
+ * $Id: bs.c,v 1.47 2008/08/03 18:30:28 tom Exp $
  */
 
 #include <test.priv.h>
@@ -465,6 +465,7 @@ initgame(void)
 	    (void) clearok(stdscr, TRUE);
 	    (void) refresh();
 	} else if (c == 'r') {
+	    assert(ss != 0);
 	    prompt(1, "Random-placing your %s", ss->name);
 	    randomplace(PLAYER, ss);
 	    placeship(PLAYER, ss, TRUE);
@@ -480,6 +481,7 @@ initgame(void)
 		}
 	    error((char *) NULL);
 	} else if (strchr("hjkl8462", c)) {
+	    assert(ss != 0);
 	    ss->x = curx;
 	    ss->y = cury;
 

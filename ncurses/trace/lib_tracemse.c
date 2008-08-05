@@ -38,7 +38,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_tracemse.c,v 1.14 2008/05/31 17:20:25 tom Exp $")
+MODULE_ID("$Id: lib_tracemse.c,v 1.15 2008/08/03 15:39:29 tom Exp $")
 
 #ifdef TRACE
 
@@ -121,5 +121,5 @@ _tracemouse(MEVENT const *ep)
 }
 
 #else /* !TRACE */
-empty_module(_nc_lib_tracemouse)
+EMPTY_MODULE(_nc_lib_tracemouse)
 #endif

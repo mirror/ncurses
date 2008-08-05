@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.101 2008/07/12 20:23:13 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.102 2008/08/03 19:33:04 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -313,6 +313,8 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 	}
 
 	if (need) {
+	    if (ext_str_count >= (MAX_ENTRY_SIZE * 2))
+		  return (TGETENT_NO);
 	    if ((ptr->ext_Names = TYPE_CALLOC(char *, need)) == 0)
 		  return (TGETENT_NO);
 	    TR(TRACE_DATABASE,

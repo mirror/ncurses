@@ -6178,7 +6178,7 @@ case $host_os in #(vi
 aix[45]*) #(vi
 	CPPFLAGS="$CPPFLAGS -D_ALL_SOURCE"
 	;;
-freebsd*) #(vi
+freebsd*|dragonfly*) #(vi
 	# 5.x headers associate
 	#	_XOPEN_SOURCE=600 with _POSIX_C_SOURCE=200112L
 	#	_XOPEN_SOURCE=500 with _POSIX_C_SOURCE=199506L
@@ -13937,7 +13937,7 @@ if test "${cf_cv_hashed_db_libs+set}" = set; then
 else
 
 cf_cv_hashed_db_libs=unknown
-for cf_db_libs in db$cf_cv_hashed_db_version db-$cf_cv_hashed_db_version db ''
+for cf_db_libs in "" db$cf_cv_hashed_db_version db-$cf_cv_hashed_db_version db ''
 do
 	cf_save_libs="$LIBS"
 	if test -n "$cf_db_libs"; then

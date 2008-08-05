@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.386 2008/06/28 15:27:47 tom Exp $
+ * $Id: curses.priv.h,v 1.387 2008/08/03 15:39:29 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1307,7 +1307,7 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 extern NCURSES_EXPORT(const char *) _nc_visbuf2 (int, const char *);
 extern NCURSES_EXPORT(const char *) _nc_visbufn (const char *, int);
 
-#define empty_module(name) \
+#define EMPTY_MODULE(name) \
 extern	NCURSES_EXPORT(void) name (void); \
 	NCURSES_EXPORT(void) name (void) { }
 

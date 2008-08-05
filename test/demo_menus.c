@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.24 2008/04/12 22:03:33 tom Exp $
+ * $Id: demo_menus.c,v 1.27 2008/08/04 15:37:52 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -256,23 +256,35 @@ menu_create(ITEM ** items, int count, int ncols, MenuNo number)
 static void
 menu_destroy(MENU * m)
 {
-    ITEM **ip;
     int count;
 
+    Trace(("menu_destroy %p", m));
     if (m != 0) {
-	delwin(menu_sub(m));
-	delwin(menu_win(m));
+	ITEM **items = menu_items(m);
+	const char *blob = 0;
 
-	ip = menu_items(m);
 	count = item_count(m);
+	Trace(("menu_destroy %p count %d", m, count));
+	if ((count > 0) && (m == mpSelect)) {
+	    blob = item_name(*items);
+	}
 
+	unpost_menu(m);
 	free_menu(m);
-#if 0
-	if (count > 0) {
-	    while (*ip) {
-		Trace(("freeing item %d:%d", ip - menu_items(m), count));
-		free_item(*ip++);
+
+	/* free the extra data allocated in build_select_menu() */
+	if ((count > 0) && (m == mpSelect)) {
+	    if (blob) {
+		Trace(("freeing blob %p", blob));
+		free((char *) blob);
 	    }
+	    free(items);
+	}
+#ifdef TRACE
+	if ((count > 0) && (m == mpTrace)) {
+	    ITEM **ip = items;
+	    while (*ip)
+		free(*ip++);
 	}
 #endif
     }
@@ -340,6 +352,7 @@ build_select_menu(MenuNo number, char *filename)
 
     ITEM **ip;
     CONST_MENUS char **ap = 0;
+    CONST_MENUS char **myList = 0;
     unsigned count = 0;
 
     if (filename != 0) {
@@ -347,12 +360,13 @@ build_select_menu(MenuNo number, char *filename)
 	if (stat(filename, &sb) == 0
 	    && (sb.st_mode & S_IFMT) == S_IFREG
 	    && sb.st_size != 0) {
-	    unsigned size = sb.st_size;
+	    size_t size = (size_t) sb.st_size;
 	    unsigned j, k;
 	    char *blob = typeMalloc(char, size + 1);
 	    CONST_MENUS char **list = typeCalloc(CONST_MENUS char *, size + 1);
 
 	    items = typeCalloc(ITEM *, size + 1);
+	    Trace(("build_select_menu blob=%p, items=%p", blob, items));
 	    if (blob != 0 && list != 0) {
 		FILE *fp = fopen(filename, "r");
 		if (fp != 0) {
@@ -374,7 +388,7 @@ build_select_menu(MenuNo number, char *filename)
 			}
 			list[k] = 0;
 			count = k;
-			ap = list;
+			ap = myList = list;
 		    }
 		    fclose(fp);
 		}
@@ -393,6 +407,8 @@ build_select_menu(MenuNo number, char *filename)
     *ip = 0;
 
     mpSelect = menu_create(items, (int) count, 1, number);
+    if (myList != 0)
+	free(myList);
 }
 
 static int

@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.36 2007/04/07 20:24:49 tom Exp $
+ * $Id: demo.cc,v 1.38 2008/08/04 17:16:57 tom Exp $
  */
 
 #include "internal.h"
@@ -312,6 +312,7 @@ public:
     Soft_Label_Key_Set* S = new Soft_Label_Key_Set;
     for(int i=1; i <= S->labels(); i++) {
       char buf[8];
+      assert(i < 100);
       ::sprintf(buf, "Frm%02d", i);
       (*S)[i] = buf;                                      // Text
       (*S)[i] = Soft_Label_Key_Set::Soft_Label_Key::Left; // Justification
@@ -319,6 +320,7 @@ public:
     NCursesApplication::getApplication()->push(*S);
     F();
     NCursesApplication::getApplication()->pop();
+    delete S;
     return FALSE;
   }
 };
@@ -530,6 +532,7 @@ void TestApplication::init_labels(Soft_Label_Key_Set& S) const
 {
   for(int i=1; i <= S.labels(); i++) {
     char buf[8];
+    assert(i < 100);
     ::sprintf(buf, "Key%02d", i);
     S[i] = buf;                                      // Text
     S[i] = Soft_Label_Key_Set::Soft_Label_Key::Left; // Justification

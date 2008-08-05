@@ -39,7 +39,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracechr.c,v 1.18 2008/06/28 15:52:05 tom Exp $")
+MODULE_ID("$Id: lib_tracechr.c,v 1.19 2008/08/03 15:39:29 tom Exp $")
 
 #ifdef TRACE
 
@@ -78,5 +78,5 @@ _tracechar(int ch)
     return _nc_tracechar(SP, ch);
 }
 #else
-empty_module(_nc_lib_tracechr)
+EMPTY_MODULE(_nc_lib_tracechr)
 #endif

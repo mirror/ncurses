@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.29 2007/07/21 17:45:09 tom Exp $
+ * $Id: gdc.c,v 1.31 2008/08/03 23:58:42 tom Exp $
  */
 
 #include <test.priv.h>
@@ -85,13 +85,14 @@ drawbox(bool scrolling)
     mvaddch(YBASE - 1, XBASE + XLENGTH, ACS_URCORNER);
 
     mvaddch(YBASE + YDEPTH, XBASE - 1, ACS_LLCORNER);
-    mvinchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
-    for (n = 0; n < XLENGTH; n++) {
-	if (!scrolling)
-	    bottom[n] &= ~A_COLOR;
-	bottom[n] = ACS_HLINE | (bottom[n] & (A_ATTRIBUTES | A_COLOR));
+    if ((mvinchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH)) != ERR) {
+	for (n = 0; n < XLENGTH; n++) {
+	    if (!scrolling)
+		bottom[n] &= ~A_COLOR;
+	    bottom[n] = ACS_HLINE | (bottom[n] & (A_ATTRIBUTES | A_COLOR));
+	}
+	mvaddchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
     }
-    mvaddchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
     mvaddch(YBASE + YDEPTH, XBASE + XLENGTH, ACS_LRCORNER);
 
     move(YBASE, XBASE - 1);
@@ -186,6 +187,7 @@ main(int argc, char *argv[])
     }
     if (optind < argc) {
 	count = atoi(argv[optind++]);
+	assert(count >= 0);
     }
     if (optind < argc)
 	usage();

@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.26 2008/07/05 20:54:33 tom Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.27 2008/08/03 22:08:22 tom Exp $")
 
 /* Macros */
 
@@ -303,7 +303,7 @@ menu_driver(MENU * menu, int c)
 	  else
 	    {
 	      my_top_row += rdiff;
-	      while (rdiff-- > 0 && item != (ITEM *) 0)
+	      while (rdiff-- > 0 && item != 0 && item->down != 0)
 		item = item->down;
 	    }
 	  break;
@@ -316,7 +316,7 @@ menu_driver(MENU * menu, int c)
 	  else
 	    {
 	      my_top_row -= rdiff;
-	      while (rdiff-- && item != (ITEM *) 0)
+	      while (rdiff-- > 0 && item != 0 && item->up != 0)
 		item = item->up;
 	    }
 	  break;

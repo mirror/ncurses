@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -104,7 +104,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.70 2007/10/13 22:22:04 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.73 2008/08/04 12:47:05 tom Exp $")
 
 extern char **environ;
 
@@ -168,7 +168,7 @@ failed(const char *msg)
     char temp[BUFSIZ];
     unsigned len = strlen(_nc_progname) + 2;
 
-    if (len < sizeof(temp) - 12) {
+    if ((int) len < (int) sizeof(temp) - 12) {
 	strcpy(temp, _nc_progname);
 	strcat(temp, ": ");
     } else {
@@ -440,11 +440,15 @@ add_mapping(const char *port, char *arg)
 	mapp->conditional = ~mapp->conditional & (EQ | GT | LT);
 
     /* If user specified a port with an option flag, set it. */
-  done:if (port) {
-	if (mapp->porttype)
-	  badmopt:err("illegal -m option format: %s", copy);
+  done:
+    if (port) {
+	if (mapp->porttype) {
+	  badmopt:
+	    err("illegal -m option format: %s", copy);
+	}
 	mapp->porttype = port;
     }
+    free(copy);
 #ifdef MAPDEBUG
     (void) printf("port: %s\n", mapp->porttype ? mapp->porttype : "ANY");
     (void) printf("type: %s\n", mapp->type);
@@ -780,16 +784,16 @@ reset_mode(void)
 #ifdef NLDLY
 		      | NLDLY
 #endif
-#ifdef CRDLY 
+#ifdef CRDLY
 		      | CRDLY
 #endif
-#ifdef TABDLY 
+#ifdef TABDLY
 		      | TABDLY
 #endif
-#ifdef BSDLY 
+#ifdef BSDLY
 		      | BSDLY
 #endif
-#ifdef VTDLY 
+#ifdef VTDLY
 		      | VTDLY
 #endif
 #ifdef FFDLY
@@ -1128,9 +1132,9 @@ usage(void)
 static char
 arg_to_char(void)
 {
-    return (optarg[0] == '^' && optarg[1] != '\0')
-	? ((optarg[1] == '?') ? '\177' : CTRL(optarg[1]))
-	: optarg[0];
+    return (char) ((optarg[0] == '^' && optarg[1] != '\0')
+		   ? ((optarg[1] == '?') ? '\177' : CTRL(optarg[1]))
+		   : optarg[0]);
 }
 
 int
@@ -1218,9 +1222,9 @@ main(int argc, char **argv)
     can_restore = TRUE;
     original = oldmode = mode;
 #ifdef TERMIOS
-    ospeed = cfgetospeed(&mode);
+    ospeed = (NCURSES_OSPEED) cfgetospeed(&mode);
 #else
-    ospeed = mode.sg_ospeed;
+    ospeed = (NCURSES_OSPEED) mode.sg_ospeed;
 #endif
 
     if (!strcmp(_nc_progname, PROG_RESET)) {
@@ -1293,7 +1297,7 @@ main(int argc, char **argv)
 	 * environmental variable SHELL ending in "csh".
 	 */
 	if ((var = getenv("SHELL")) != 0
-	    && ((len = strlen(leaf = _nc_basename(var))) >= 3)
+	    && ((len = (int) strlen(leaf = _nc_basename(var))) >= 3)
 	    && !strcmp(leaf + len - 3, "csh"))
 	    p = "set noglob;\nsetenv TERM %s;\nunset noglob;\n";
 	else

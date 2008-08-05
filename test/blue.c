@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
  * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is
  * just as good.
  *
- * $Id: blue.c,v 1.29 2006/05/20 15:38:18 tom Exp $
+ * $Id: blue.c,v 1.30 2008/08/03 18:20:27 tom Exp $
  */
 
 #include <test.priv.h>
@@ -173,6 +173,7 @@ deal_cards(void)
 {
     int ptr, card = 0, value, csuit, crank, suit, aces[4];
 
+    memset(aces, 0, sizeof(aces));
     for (suit = HEARTS; suit <= CLUBS; suit++) {
 	ptr = freeptr[suit];
 	grid[ptr++] = NOCARD;	/* 1st card space is blank */

@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.67 2008/01/19 21:01:21 tom Exp $
+ * $Id: view.c,v 1.68 2008/08/03 11:37:07 tom Exp $
  */
 
 #include <test.priv.h>
@@ -238,7 +238,8 @@ main(int argc, char *argv[])
 	    CATCHALL(SIG_IGN);
 	    break;
 	case 'n':
-	    if ((MAXLINES = atoi(optarg)) < 1)
+	    if ((MAXLINES = atoi(optarg)) < 1 ||
+		(MAXLINES + 2) <= 1)
 		usage();
 	    break;
 #if CAN_RESIZE
@@ -508,9 +509,10 @@ show_all(const char *tag)
     time_t this_time;
 
 #if CAN_RESIZE
-    sprintf(temp, "%s (%3dx%3d) col %d ", tag, LINES, COLS, shift);
+    sprintf(temp, "%.20s (%3dx%3d) col %d ", tag, LINES, COLS, shift);
     i = strlen(temp);
-    sprintf(temp + i, "view %.*s", (int) (sizeof(temp) - 7 - i), fname);
+    if ((i + 7) < (int) sizeof(temp))
+	sprintf(temp + i, "view %.*s", (int) (sizeof(temp) - 7 - i), fname);
 #else
     (void) tag;
     sprintf(temp, "view %.*s", (int) sizeof(temp) - 7, fname);

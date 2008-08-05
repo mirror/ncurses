@@ -7,7 +7,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.38 2008/04/12 22:00:27 tom Exp $
+ * $Id: testcurs.c,v 1.39 2008/08/03 17:58:09 tom Exp $
  */
 
 #include <test.priv.h>
@@ -44,7 +44,7 @@ static const COMMAND command[] =
     {"Input Test", inputTest},
     {"Output Test", outputTest}
 };
-#define MAX_OPTIONS SIZEOF(command)
+#define MAX_OPTIONS (int) SIZEOF(command)
 
 #if !HAVE_STRDUP
 #define strdup my_strdup
@@ -70,7 +70,7 @@ main(
     int old_option = (-1);
     int new_option = 0;
     bool quit = FALSE;
-    unsigned n;
+    int n;
 
     setlocale(LC_ALL, "");
 
@@ -120,12 +120,15 @@ main(
 	    display_menu(old_option, new_option);
 	    break;
 	case KEY_UP:
-	    new_option = (new_option == 0) ? new_option : new_option - 1;
+	    new_option = ((new_option == 0)
+			  ? new_option
+			  : new_option - 1);
 	    display_menu(old_option, new_option);
 	    break;
 	case KEY_DOWN:
-	    new_option = (new_option == MAX_OPTIONS - 1) ? new_option :
-		new_option + 1;
+	    new_option = ((new_option == (MAX_OPTIONS - 1))
+			  ? new_option
+			  : new_option + 1);
 	    display_menu(old_option, new_option);
 	    break;
 	case 'Q':
@@ -676,37 +679,38 @@ padTest(WINDOW *dummy GCC_UNUSED)
 {
     WINDOW *pad, *spad;
 
-    pad = newpad(50, 100);
-    wattron(pad, A_REVERSE);
-    mvwaddstr(pad, 5, 2, "This is a new pad");
-    wattrset(pad, A_NORMAL);
-    mvwaddstr(pad, 8, 0,
-	      "The end of this line should be truncated here:except  now");
-    mvwaddstr(pad, 11, 1, "This line should not appear.It will now");
-    wmove(pad, 10, 1);
-    wclrtoeol(pad);
-    mvwaddstr(pad, 10, 1, " Press any key to continue");
-    prefresh(pad, 0, 0, 0, 0, 10, 45);
-    keypad(pad, TRUE);
-    raw();
-    wgetch(pad);
+    if ((pad = newpad(50, 100)) != 0) {
+	wattron(pad, A_REVERSE);
+	mvwaddstr(pad, 5, 2, "This is a new pad");
+	wattrset(pad, A_NORMAL);
+	mvwaddstr(pad, 8, 0,
+		  "The end of this line should be truncated here:except  now");
+	mvwaddstr(pad, 11, 1, "This line should not appear.It will now");
+	wmove(pad, 10, 1);
+	wclrtoeol(pad);
+	mvwaddstr(pad, 10, 1, " Press any key to continue");
+	prefresh(pad, 0, 0, 0, 0, 10, 45);
+	keypad(pad, TRUE);
+	raw();
+	wgetch(pad);
 
-    spad = subpad(pad, 12, 25, 6, 52);
-    mvwaddstr(spad, 2, 2, "This is a new subpad");
-    box(spad, 0, 0);
-    prefresh(pad, 0, 0, 0, 0, 15, 75);
-    keypad(pad, TRUE);
-    raw();
-    wgetch(pad);
+	spad = subpad(pad, 12, 25, 6, 52);
+	mvwaddstr(spad, 2, 2, "This is a new subpad");
+	box(spad, 0, 0);
+	prefresh(pad, 0, 0, 0, 0, 15, 75);
+	keypad(pad, TRUE);
+	raw();
+	wgetch(pad);
 
-    mvwaddstr(pad, 35, 2, "This is displayed at line 35 in the pad");
-    mvwaddstr(pad, 40, 1, " Press any key to continue");
-    prefresh(pad, 30, 0, 0, 0, 10, 45);
-    keypad(pad, TRUE);
-    raw();
-    wgetch(pad);
+	mvwaddstr(pad, 35, 2, "This is displayed at line 35 in the pad");
+	mvwaddstr(pad, 40, 1, " Press any key to continue");
+	prefresh(pad, 30, 0, 0, 0, 10, 45);
+	keypad(pad, TRUE);
+	raw();
+	wgetch(pad);
 
-    delwin(pad);
+	delwin(pad);
+    }
 }
 
 static void
@@ -714,13 +718,17 @@ display_menu(int old_option, int new_option)
 {
     int i;
 
+    assert((new_option >= 0) && (new_option < MAX_OPTIONS));
+
     attrset(A_NORMAL);
     mvaddstr(3, 20, "PDCurses Test Program");
 
     for (i = 0; i < (int) MAX_OPTIONS; i++)
 	mvaddstr(5 + i, 25, command[i].text);
-    if (old_option != (-1))
+
+    if ((old_option >= 0) && (old_option < MAX_OPTIONS))
 	mvaddstr(5 + old_option, 25, command[old_option].text);
+
     attrset(A_REVERSE);
     mvaddstr(5 + new_option, 25, command[new_option].text);
     attrset(A_NORMAL);
