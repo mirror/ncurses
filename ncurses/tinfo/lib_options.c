@@ -43,7 +43,7 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.57 2008/06/28 23:31:15 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.58 2008/08/16 21:20:48 Werner.Fink Exp $")
 
 static int _nc_curs_set(SCREEN *, int);
 static int _nc_meta(SCREEN *, bool);
@@ -245,7 +245,7 @@ _nc_keypad(SCREEN *sp, bool flag)
 	 * has wgetch() reading in more than one thread.  putp() and below
 	 * may use SP explicitly.
 	 */
-	if (sp != SP) {
+	if (_nc_use_pthreads && sp != SP) {
 	    SCREEN *save_sp;
 
 	    /* cannot use use_screen(), since that is not in tinfo library */

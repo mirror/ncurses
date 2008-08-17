@@ -41,7 +41,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_getstr.c,v 1.26 2008/05/31 22:05:15 tom Exp $")
+MODULE_ID("$Id: lib_getstr.c,v 1.27 2008/08/16 19:20:04 tom Exp $")
 
 /*
  * This wipes out the last character, no matter whether it was a tab, control
@@ -146,7 +146,7 @@ wgetnstr_events(WINDOW *win,
 		   || (maxlen >= 0 && str - oldstr >= maxlen)) {
 	    beep();
 	} else {
-	    *str++ = ch;
+	    *str++ = (char) ch;
 	    if (oldecho == TRUE) {
 		int oldy = win->_cury;
 		if (waddch(win, (chtype) ch) == ERR) {

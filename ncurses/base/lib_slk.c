@@ -45,7 +45,7 @@
 #include <ctype.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slk.c,v 1.33 2008/05/31 22:05:57 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.34 2008/08/16 19:20:04 tom Exp $")
 
 /*
  * We'd like to move these into the screen context structure, but cannot,
@@ -147,7 +147,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 	memset(SP->_slk->ent[i].form_text, 0, used);
 
 	memset(SP->_slk->ent[i].form_text, ' ', max_length);
-	SP->_slk->ent[i].visible = (i < SP->_slk->maxlab);
+	SP->_slk->ent[i].visible = (char) (i < SP->_slk->maxlab);
     }
     if (_nc_globals.slk_format >= 3) {	/* PC style */
 	int gap = (cols - 3 * (3 + 4 * max_length)) / 2;

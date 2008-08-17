@@ -48,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.67 2008/08/03 20:10:45 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.69 2008/08/16 21:52:03 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -459,7 +459,7 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 	    default:
 		if (!silent)
 		    _nc_warning("unknown token type");
-		_nc_panic_mode((_nc_syntax == SYN_TERMCAP) ? ':' : ',');
+		_nc_panic_mode((char) ((_nc_syntax == SYN_TERMCAP) ? ':' : ','));
 		continue;
 	    }
 	}			/* end else cur_token.name != "use" */
@@ -479,7 +479,7 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
     if (!literal) {
 	if (_nc_syntax == SYN_TERMCAP) {
 	    bool has_base_entry = FALSE;
-	    int i;
+	    unsigned i;
 
 	    /*
 	     * Don't insert defaults if this is a `+' entry meant only
@@ -554,8 +554,8 @@ append_acs0(string_desc * dst, int code, int src)
 {
     if (src != 0) {
 	char temp[3];
-	temp[0] = code;
-	temp[1] = src;
+	temp[0] = (char) code;
+	temp[1] = (char) src;
 	temp[2] = 0;
 	_nc_safe_strcat(dst, temp);
     }

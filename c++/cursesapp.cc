@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,12 +29,13 @@
 
 /****************************************************************************
  *   Author: Juergen Pfeifer, 1997                                          *
+ *      and: Thomas E. Dickey                                               *
  ****************************************************************************/
 
 #include "internal.h"
 #include "cursesapp.h"
 
-MODULE_ID("$Id: cursesapp.cc,v 1.14 2007/01/27 20:16:42 tom Exp $")
+MODULE_ID("$Id: cursesapp.cc,v 1.15 2008/08/16 17:15:35 tom Exp $")
 
 void
 NCursesApplication::init(bool bColors)
@@ -108,8 +109,11 @@ bool NCursesApplication::pop()
     SLK_Link* L = slk_stack;
     slk_stack = slk_stack->prev;
     delete L;
-    if (Root_Window && top())
-      top()->show();
+    if (Root_Window) {
+      Soft_Label_Key_Set* xx = top();
+      if (xx != 0)
+        xx->show();
+    }
   }
   return (slk_stack ? FALSE : TRUE);
 }

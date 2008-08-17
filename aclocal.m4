@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.451 2008/08/04 10:26:11 tom Exp $
+dnl $Id: aclocal.m4,v 1.452 2008/08/16 23:19:46 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4859,6 +4859,32 @@ ifelse($3,,,[
 if test "$cf_cv_$1" != unknown ; then
 	$3=1
 fi
+])
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WEAK_SYMBOLS version: 1 updated: 2008/08/16 19:18:06
+dnl ---------------
+dnl Check for compiler-support for weak symbols.
+dnl This works with "recent" gcc.
+AC_DEFUN([CF_WEAK_SYMBOLS],[
+AC_CACHE_CHECK(if $CC supports weak symbols,cf_cv_weak_symbols,[
+
+AC_TRY_COMPILE([
+#include <stdio.h>],
+[
+#if defined(__GNUC__)
+#  if defined __USE_ISOC99
+#    define _cat_pragma(exp)	_Pragma(#exp)
+#    define _weak_pragma(exp)	_cat_pragma(weak name)
+#  else
+#    define _weak_pragma(exp)
+#  endif
+#  define _declare(name)	__extension__ extern __typeof__(name) name
+#  define weak_symbol(name)	_weak_pragma(name) _declare(name) __attribute__((weak))
+#endif
+
+weak_symbol(fopen);
+],[cf_cv_weak_symbols=yes],[cf_cv_weak_symbols=no])
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------

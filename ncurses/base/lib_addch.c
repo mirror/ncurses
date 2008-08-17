@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.112 2008/05/17 19:08:40 Miroslav.Lichvar Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.113 2008/08/16 19:20:04 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -210,7 +210,7 @@ _nc_build_wch(WINDOW *win, ARG_CH_T ch)
     WINDOW_EXT(win, addch_y) = y;
 
     init_mb(state);
-    buffer[WINDOW_EXT(win, addch_used)] = CharOf(CHDEREF(ch));
+    buffer[WINDOW_EXT(win, addch_used)] = (char) CharOf(CHDEREF(ch));
     WINDOW_EXT(win, addch_used) += 1;
     buffer[WINDOW_EXT(win, addch_used)] = '\0';
     if ((len = mbrtowc(&result,

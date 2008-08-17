@@ -46,7 +46,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.68 2008/08/03 22:22:57 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.70 2008/08/16 23:13:52 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -180,7 +180,10 @@ _nc_va_tracef(const char *fmt, va_list ap)
 	 * Rather than add the complication of a per-thread stack, just
 	 * show the thread-id in each line of the trace.
 	 */
-	fprintf(TraceFP, "%#lx:", (long) pthread_self());
+# if USE_WEAK_SYMBOLS
+	if ((pthread_self))
+# endif
+	    fprintf(TraceFP, "%#lx:", (long) pthread_self());
 #endif
 	if (before || after) {
 	    int n;

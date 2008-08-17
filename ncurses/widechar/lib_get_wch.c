@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_get_wch.c,v 1.16 2008/06/07 15:14:33 tom Exp $")
+MODULE_ID("$Id: lib_get_wch.c,v 1.17 2008/08/16 19:22:55 tom Exp $")
 
 #if HAVE_MBTOWC && HAVE_MBLEN
 #define reset_mbytes(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
@@ -104,7 +104,7 @@ wget_wch(WINDOW *win, wint_t *result)
 		code = ERR;
 		break;
 	    } else {
-		buffer[count++] = UChar(value);
+		buffer[count++] = (char) UChar(value);
 		reset_mbytes(state);
 		status = count_mbytes(buffer, count, state);
 		if (status >= 0) {

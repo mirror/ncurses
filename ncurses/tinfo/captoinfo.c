@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.51 2008/08/03 18:35:47 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.52 2008/08/16 19:24:51 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -183,7 +183,7 @@ cvtchar(register const char *sp)
 	case '$':
 	case '\\':
 	case '%':
-	    c = *sp;
+	    c = (unsigned char) (*sp);
 	    len = 2;
 	    break;
 	case '\0':
@@ -201,7 +201,7 @@ cvtchar(register const char *sp)
 	    }
 	    break;
 	default:
-	    c = *sp;
+	    c = (unsigned char) (*sp);
 	    len = 2;
 	    break;
 	}
@@ -211,7 +211,7 @@ cvtchar(register const char *sp)
 	len = 2;
 	break;
     default:
-	c = *sp;
+	c = (unsigned char) (*sp);
 	len = 1;
     }
     if (isgraph(c) && c != ',' && c != '\'' && c != '\\' && c != ':') {

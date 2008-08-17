@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.50 2008/08/03 17:12:05 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.51 2008/08/16 21:53:25 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -330,7 +330,7 @@ main(int argc, char *argv[])
     bool invert_dependencies = FALSE;
     bool header = FALSE;
     char *report_file = 0;
-    int i;
+    unsigned i;
     int code;
     int this_opt, last_opt = '?';
     int v_opt = 0;
@@ -399,7 +399,7 @@ main(int argc, char *argv[])
 
 	for_entry_list(qp) {
 	    if (qp->nuses) {
-		int j;
+		unsigned j;
 
 		(void) printf("%s:", _nc_first_name(qp->tterm.term_names));
 		for (j = 0; j < qp->nuses; j++)

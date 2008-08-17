@@ -51,7 +51,7 @@
 #include <term_entry.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.82 2008/08/04 20:25:03 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.83 2008/08/16 19:22:55 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -300,7 +300,7 @@ eat_escaped_newline(int ch)
 	((tok_ptr - tok_buf) < (TOK_BUF_SIZE - 2))
 
 #define AddCh(ch) \
-	*tok_ptr++ = ch; \
+	*tok_ptr++ = (char) ch; \
 	*tok_ptr = '\0'
 
 /*
@@ -519,7 +519,7 @@ _nc_get_token(bool silent)
 		ch = *after_name;
 		*after_name = '\0';
 		_nc_set_type(tok_buf);
-		*after_name = ch;
+		*after_name = (char) ch;
 	    }
 
 	    /*
@@ -604,7 +604,7 @@ _nc_get_token(bool silent)
 	    case '#':
 		found = 0;
 		while (isalnum(ch = next_char())) {
-		    numbuf[found++] = ch;
+		    numbuf[found++] = (char) ch;
 		    if (found >= sizeof(numbuf) - 1)
 			break;
 		}
@@ -868,7 +868,7 @@ _nc_trans_string(char *ptr, char *last)
 
 	if (!ignored) {
 	    if (_nc_curr_col <= 1) {
-		push_back(ch);
+		push_back((char) ch);
 		ch = '\n';
 		break;
 	    }

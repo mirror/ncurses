@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.38 2008/02/10 00:12:03 tom Exp $
+# $Id: ncurses_defs,v 1.39 2008/08/16 23:12:31 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -199,5 +199,6 @@ USE_SIGWINCH
 USE_SYMLINKS
 USE_SYSMOUSE
 USE_TERMCAP
+USE_WEAK_SYMBOLS
 USE_WIDEC_SUPPORT
 USE_XMC_SUPPORT

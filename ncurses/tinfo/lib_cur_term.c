@@ -40,7 +40,7 @@
 #include <term_entry.h>		/* TTY, cur_term */
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.17 2008/06/28 22:59:22 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.18 2008/08/16 19:22:55 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.
@@ -74,7 +74,7 @@ set_curterm(TERMINAL * termp)
     if (termp != 0) {
 	ospeed = _nc_ospeed(termp->_baudrate);
 	if (termp->type.Strings) {
-	    PC = (pad_char != NULL) ? pad_char[0] : 0;
+	    PC = (char) ((pad_char != NULL) ? pad_char[0] : 0);
 	}
     }
     _nc_unlock_global(curses);

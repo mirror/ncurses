@@ -79,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.94 2008/05/31 20:30:10 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.97 2008/08/16 18:55:01 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -160,15 +160,24 @@ static void _nc_mouse_wrap(SCREEN *);
 
 /* maintain a circular list of mouse events */
 
+#define FirstEV(sp)	((sp)->_mouse_events)
+#define LastEV(sp)	((sp)->_mouse_events + EV_MAX - 1)
+
 #undef  NEXT
-#define NEXT(ep)	((ep == sp->_mouse_events + EV_MAX - 1) \
-			 ? sp->_mouse_events \
+#define NEXT(ep)	((ep >= LastEV(sp)) \
+			 ? FirstEV(sp) \
 			 : ep + 1)
 
 #undef  PREV
-#define PREV(ep)	((ep == sp->_mouse_events) \
-			 ? sp->_mouse_events + EV_MAX - 1 \
+#define PREV(ep)	((ep <= FirstEV(sp)) \
+			 ? LastEV(sp) \
 			 : ep - 1)
+
+#define IndexEV(sp, ep)	(ep - FirstEV(sp))
+
+#define RunParams(sp, eventp, runp) \
+		(long) IndexEV(sp, runp), \
+		(long) (IndexEV(sp, eventp) + (EV_MAX - 1)) % EV_MAX
 
 #ifdef TRACE
 static void
@@ -178,9 +187,9 @@ _trace_slot(SCREEN *sp, const char *tag)
 
     _tracef(tag);
 
-    for (ep = sp->_mouse_events; ep < sp->_mouse_events + EV_MAX; ep++)
+    for (ep = FirstEV(sp); ep <= LastEV(sp); ep++)
 	_tracef("mouse event queue slot %ld = %s",
-		(long) (ep - sp->_mouse_events),
+		(long) IndexEV(sp, ep),
 		_nc_tracemouse(sp, ep));
 }
 #endif
@@ -383,7 +392,7 @@ enable_gpm_mouse(SCREEN *sp, int enable)
 	/* GPM: initialize connection to gpm server */
 	sp->_mouse_gpm_connect.eventMask = GPM_DOWN | GPM_UP;
 	sp->_mouse_gpm_connect.defaultMask =
-	    ~(sp->_mouse_gpm_connect.eventMask | GPM_HARD);
+	    (unsigned short) (~(sp->_mouse_gpm_connect.eventMask | GPM_HARD));
 	sp->_mouse_gpm_connect.minMod = 0;
 	sp->_mouse_gpm_connect.maxMod =
 	    (unsigned short) (~((1 << KG_SHIFT) |
@@ -591,7 +600,7 @@ _nc_mouse_init(SCREEN *sp)
 
 	    TR(MY_TRACE, ("_nc_mouse_init() called"));
 
-	    sp->_mouse_eventp = sp->_mouse_events;
+	    sp->_mouse_eventp = FirstEV(sp);
 	    for (i = 0; i < EV_MAX; i++)
 		sp->_mouse_events[i].id = INVALID_EVENT;
 
@@ -758,7 +767,7 @@ _nc_mouse_inline(SCREEN *sp)
 	 * Wheel mice may return buttons 4 and 5 when the wheel is turned.
 	 * We encode those as button presses.
 	 */
-	for (grabbed = 0; grabbed < 3; grabbed += res) {
+	for (grabbed = 0; grabbed < 3; grabbed += (size_t) res) {
 
 	    /* For VIO mouse we add extra bit 64 to disambiguate button-up. */
 #if USE_EMX_MOUSE
@@ -788,9 +797,9 @@ _nc_mouse_inline(SCREEN *sp)
 	    eventp->bstate = MASK_RELEASE(n)
 #else
 #define PRESS_POSITION(n) \
-	eventp->bstate = (prev & MASK_PRESS(n) \
-			? REPORT_MOUSE_POSITION \
-			: MASK_PRESS(n))
+	eventp->bstate = (mmask_t) (prev & MASK_PRESS(n) \
+				    ? REPORT_MOUSE_POSITION \
+				    : MASK_PRESS(n))
 #endif
 
 	switch (kbuf[0] & 0x3) {
@@ -855,7 +864,7 @@ _nc_mouse_inline(SCREEN *sp)
 	TR(MY_TRACE,
 	   ("_nc_mouse_inline: primitive mouse-event %s has slot %ld",
 	    _nc_tracemouse(sp, eventp),
-	    (long) (eventp - sp->_mouse_events)));
+	    (long) IndexEV(sp, eventp)));
 
 	/* bump the next-free pointer into the circular list */
 	sp->_mouse_eventp = NEXT(eventp);
@@ -979,7 +988,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 	TR(MY_TRACE,
 	   ("_nc_mouse_parse: returning simple mouse event %s at slot %ld",
 	    _nc_tracemouse(sp, prev),
-	    (long) (prev - sp->_mouse_events)));
+	    (long) IndexEV(sp, prev)));
 	return (prev->id >= NORMAL_EVENT)
 	    ? ((prev->bstate & sp->_mouse_mask) ? TRUE : FALSE)
 	    : FALSE;
@@ -995,8 +1004,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
     if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot(sp, "before mouse press/release merge:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
-		(long) (runp - sp->_mouse_events),
-		(long) ((eventp - sp->_mouse_events) + (EV_MAX - 1)) % EV_MAX,
+		RunParams(sp, eventp, runp),
 		runcount);
 	_nc_unlock_global(tracef);
     }
@@ -1039,8 +1047,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
     if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot(sp, "before mouse click merge:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
-		(long) (runp - sp->_mouse_events),
-		(long) ((eventp - sp->_mouse_events) + (EV_MAX - 1)) % EV_MAX,
+		RunParams(sp, eventp, runp),
 		runcount);
 	_nc_unlock_global(tracef);
     }
@@ -1111,8 +1118,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
     if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot(sp, "before mouse event queue compaction:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
-		(long) (runp - sp->_mouse_events),
-		(long) ((eventp - sp->_mouse_events) + (EV_MAX - 1)) % EV_MAX,
+		RunParams(sp, eventp, runp),
 		runcount);
 	_nc_unlock_global(tracef);
     }
@@ -1130,8 +1136,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
     if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot(sp, "after mouse event queue compaction:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
-		(long) (runp - sp->_mouse_events),
-		(long) ((eventp - sp->_mouse_events) + (EV_MAX - 1)) % EV_MAX,
+		RunParams(sp, eventp, runp),
 		runcount);
 	_nc_unlock_global(tracef);
     }
@@ -1140,7 +1145,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 	    TR(MY_TRACE,
 	       ("_nc_mouse_parse: returning composite mouse event %s at slot %ld",
 		_nc_tracemouse(sp, ep),
-		(long) (ep - sp->_mouse_events)));
+		(long) IndexEV(sp, ep)));
 #endif /* TRACE */
 
     /* after all this, do we have a valid event? */
@@ -1227,7 +1232,7 @@ _nc_getmouse(SCREEN *sp, MEVENT * aevent)
 
 	TR(TRACE_IEVENT, ("getmouse: returning event %s from slot %ld",
 			  _nc_tracemouse(sp, prev),
-			  (long) (prev - sp->_mouse_events)));
+			  (long) IndexEV(sp, prev)));
 
 	prev->id = INVALID_EVENT;	/* so the queue slot becomes free */
 	returnCode(OK);
@@ -1302,9 +1307,6 @@ mousemask(mmask_t newmask, mmask_t * oldmask)
 		SP->_mouse_mask = result;
 	    }
 	}
-    } else {
-	if (oldmask)
-	    *oldmask = SP->_mouse_mask;
     }
     returnBits(result);
 }

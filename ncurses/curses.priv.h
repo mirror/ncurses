@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.387 2008/08/03 15:39:29 tom Exp $
+ * $Id: curses.priv.h,v 1.389 2008/08/16 23:14:43 tom Exp $
  *
  *	curses.priv.h
  *
@@ -330,6 +330,7 @@ NCURSES_EXPORT(int *) _nc_ptr_Cols (void);
 
 #if USE_REENTRANT
 #include <pthread.h>
+extern NCURSES_EXPORT(void) _nc_init_pthreads(void);
 extern NCURSES_EXPORT(void) _nc_mutex_init(pthread_mutex_t *);
 extern NCURSES_EXPORT(int) _nc_mutex_lock(pthread_mutex_t *);
 extern NCURSES_EXPORT(int) _nc_mutex_trylock(pthread_mutex_t *);
@@ -342,6 +343,35 @@ extern NCURSES_EXPORT(int) _nc_mutex_unlock(pthread_mutex_t *);
 #error POSIX threads requires --enable-reentrant option
 #endif
 
+#if USE_WEAK_SYMBOLS
+#if defined(__GNUC__)
+#  if defined __USE_ISOC99
+#    define _cat_pragma(exp)	_Pragma(#exp)
+#    define _weak_pragma(exp)	_cat_pragma(weak name)
+#  else
+#    define _weak_pragma(exp)
+#  endif
+#  define _declare(name)	__extension__ extern __typeof__(name) name
+#  define weak_symbol(name)	_weak_pragma(name) _declare(name) __attribute__((weak))
+#endif
+#endif
+
+#ifdef USE_PTHREADS
+#  if USE_WEAK_SYMBOLS
+weak_symbol(pthread_sigmask);
+weak_symbol(pthread_self);
+weak_symbol(pthread_equal);
+weak_symbol(pthread_mutex_init);
+weak_symbol(pthread_mutex_lock);
+weak_symbol(pthread_mutex_unlock);
+weak_symbol(pthread_mutex_trylock);
+weak_symbol(pthread_mutexattr_settype);
+extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
+#    undef  sigprocmask
+#    define sigprocmask _nc_sigprocmask
+#  endif
+#endif
+
 #if HAVE_NANOSLEEP
 #undef HAVE_NANOSLEEP
 #define HAVE_NANOSLEEP 0	/* nanosleep suspends all threads */
@@ -349,6 +379,7 @@ extern NCURSES_EXPORT(int) _nc_mutex_unlock(pthread_mutex_t *);
 
 #else /* !USE_PTHREADS */
 
+#define _nc_init_pthreads()	/* nothing */
 #define _nc_mutex_init(obj)	/* nothing */
 
 #define _nc_lock_global(name)	/* nothing */
@@ -616,10 +647,12 @@ typedef struct {
 #endif	/* TRACE */
 
 #ifdef USE_PTHREADS
-       pthread_mutex_t	mutex_curses;
-       pthread_mutex_t	mutex_tst_tracef;
-       pthread_mutex_t	mutex_tracef;
-       int		nested_tracef;
+	pthread_mutex_t	mutex_curses;
+	pthread_mutex_t	mutex_tst_tracef;
+	pthread_mutex_t	mutex_tracef;
+	int		nested_tracef;
+	int		use_pthreads;
+#define _nc_use_pthreads	_nc_globals.use_pthreads
 #endif
 } NCURSES_GLOBALS;
 

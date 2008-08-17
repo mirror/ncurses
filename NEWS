@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1261 2008/08/04 18:22:11 tom Exp $
+-- $Id: NEWS,v 1.1268 2008/08/17 01:28:30 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080816
+	+ add configure option --enable-weak-symbols to turn on new feature.
+	+ add configure-check for availability of weak symbols.
+	+ modify linkage with pthread library to use weak symbols so that
+	  applications not linked to that library will not use the mutexes,
+	  etc.  This relies on gcc, and may be platform-specific (patch by Dr
+	  Werner Fink).
+	+ add note to INSTALL to document limitation of renaming of tic library
+	  using the --with-ticlib configure option (report by Dr Werner Fink).
+	+ document (in manpage) why tputs does not detect I/O errors (prompted
+	  by comments by Samuel Thibault).
+	+ fix remaining warnings from Klocwork report.
 
 20080804
 	+ modify _nc_panelhook() data to account for a permanent memory leak.

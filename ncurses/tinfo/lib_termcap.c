@@ -45,7 +45,7 @@
 
 #include <term_entry.h>
 
-MODULE_ID("$Id: lib_termcap.c,v 1.62 2008/06/28 13:33:08 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.63 2008/08/16 19:22:55 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -142,7 +142,7 @@ tgetent(char *bufp, const char *name)
     if (errcode == 1) {
 
 	if (cursor_left)
-	    if ((backspaces_with_bs = !strcmp(cursor_left, "\b")) == 0)
+	    if ((backspaces_with_bs = (char) !strcmp(cursor_left, "\b")) == 0)
 		backspace_if_not_bs = cursor_left;
 
 	/* we're required to export these */

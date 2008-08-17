@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.135 2008/08/04 12:43:40 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.136 2008/08/16 21:52:36 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -759,7 +759,7 @@ main(int argc, char *argv[])
 
 		    dump_entry(&qp->tterm, suppress_untranslatable,
 			       limited, numbers, NULL);
-		    for (j = 0; j < qp->nuses; j++)
+		    for (j = 0; j < (int) qp->nuses; j++)
 			dump_uses(qp->uses[j].name, !capdump);
 		    len = show_entry();
 		    if (debug_level != 0 && !limited)

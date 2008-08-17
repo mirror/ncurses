@@ -30,7 +30,7 @@
  *
  * Generate timing statistics for vertical-motion optimization.
  *
- * $Id: hashtest.c,v 1.28 2008/02/23 23:02:41 tom Exp $
+ * $Id: hashtest.c,v 1.29 2008/08/16 17:26:44 tom Exp $
  */
 
 #include <test.priv.h>
@@ -195,6 +195,7 @@ main(int argc, char *argv[])
 	    break;
 	case 'l':
 	    test_loops = atoi(optarg);
+	    assert(test_loops >= 0);
 	    break;
 	case 'n':
 	    test_normal = TRUE;

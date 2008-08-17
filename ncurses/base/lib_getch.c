@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.97 2008/08/03 22:56:42 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.98 2008/08/16 21:20:48 Werner.Fink Exp $")
 
 #include <fifo_defs.h>
 
@@ -260,7 +260,7 @@ recur_wrefresh(WINDOW *win)
 {
 #ifdef USE_PTHREADS
     SCREEN *sp = _nc_screen_of(win);
-    if (sp != SP) {
+    if (_nc_use_pthreads && sp != SP) {
 	SCREEN *save_SP;
 
 	/* temporarily switch to the window's screen to check/refresh */
@@ -286,7 +286,7 @@ recur_wgetnstr(WINDOW *win, char *buf)
 
     if (sp != 0) {
 #ifdef USE_PTHREADS
-	if (sp != SP) {
+	if (_nc_use_pthreads && sp != SP) {
 	    SCREEN *save_SP;
 
 	    /* temporarily switch to the window's screen to get cooked input */

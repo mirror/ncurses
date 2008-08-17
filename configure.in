@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.435 2008/06/28 15:52:20 tom Exp $
+dnl $Id: configure.in,v 1.439 2008/08/17 01:26:58 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.435 $)
+AC_REVISION($Revision: 1.439 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -972,10 +972,31 @@ test "$with_colorfgbg" = yes && AC_DEFINE(USE_COLORFGBG)
 # This is still experimental (20080329), but should ultimately be moved to
 # the script-block --with-normal, etc.
 CF_WITH_PTHREAD
+
+AC_ARG_ENABLE(weak-symbols,
+    [  --enable-weak-symbols       enable weak-symbols for pthreads],
+    [use_weak_symbols=$withval],
+    [use_weak_symbols=no])
+AC_MSG_RESULT($use_weak_symbols)
+if test "$use_weak_symbols" = yes ; then
+    CF_WEAK_SYMBOLS
+else
+    cf_cv_weak_symbols=no
+fi
+
+if test $cf_cv_weak_symbols = yes ; then
+    AC_DEFINE(USE_WEAK_SYMBOLS)
+fi
+
+PTHREAD=
 if test "$with_pthread" = "yes" ; then
     AC_DEFINE(USE_PTHREADS)
     enable_reentrant=yes
+    if test $cf_cv_weak_symbols = yes ; then
+        PTHREAD=-lpthread
+    fi
 fi
+AC_SUBST(PTHREAD)
 
 # Reentrant code has to be opaque; there's little advantage to making ncurses
 # opaque outside of that, so there is no --enable-opaque option.  We can use
@@ -992,7 +1013,11 @@ if test "$with_reentrant" = yes ; then
 	cf_cv_enable_opaque="NCURSES_INTERNALS"
 	NCURSES_OPAQUE=1
 	NCURSES_SIZE_T=int
-	LIB_SUFFIX="t${LIB_SUFFIX}"
+    if test $cf_cv_weak_symbols = yes ; then
+        CF_REMOVE_LIB(LIBS,$LIBS,pthread)
+    else
+        LIB_SUFFIX="t${LIB_SUFFIX}"
+    fi
 	AC_DEFINE(USE_REENTRANT)
 	CF_NCURSES_ABI_6
 else

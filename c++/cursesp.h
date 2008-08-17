@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 #ifndef NCURSES_CURSESP_H_incl
 #define NCURSES_CURSESP_H_incl 1
 
-// $Id: cursesp.h,v 1.27 2007/04/07 17:12:54 tom Exp $
+// $Id: cursesp.h,v 1.29 2008/08/16 17:20:23 tom Exp $
 
 #include <cursesw.h>
 
@@ -71,16 +71,19 @@ protected:
   void set_user(void *user)
   {
     UserHook* uptr = UserPointer();
-    assert (uptr != 0 && uptr->m_back==this && uptr->m_owner==p);
-    uptr->m_user = user;
+    if (uptr != 0 && uptr->m_back==this && uptr->m_owner==p) {
+      uptr->m_user = user;
+    }
   }
   // Set the user pointer of the panel.
 
   void *get_user()
   {
     UserHook* uptr = UserPointer();
-    assert (uptr != 0 && uptr->m_back==this && uptr->m_owner==p);
-    return uptr->m_user;
+    void *result = 0;
+    if (uptr != 0 && uptr->m_back==this && uptr->m_owner==p)
+      result = uptr->m_user;
+    return result;
   }
 
   void OnError (int err) const THROWS(NCursesPanelException)

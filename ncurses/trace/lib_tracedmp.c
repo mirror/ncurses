@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracedmp.c,v 1.30 2008/08/03 15:44:31 tom Exp $")
+MODULE_ID("$Id: lib_tracedmp.c,v 1.31 2008/08/16 19:30:56 tom Exp $")
 
 #ifdef TRACE
 
@@ -83,15 +83,15 @@ _tracedump(const char *name, WINDOW *win)
 	 */
 	for (j = 0; j < width; ++j) {
 	    chtype test = CharOf(win->_line[n].text[j]);
-	    ep[j] = (UChar(test) == test
+	    ep[j] = (char) ((UChar(test) == test
 #if USE_WIDEC_SUPPORT
-		     && (win->_line[n].text[j].chars[1] == 0)
+			     && (win->_line[n].text[j].chars[1] == 0)
 #endif
-		)
-		? (iscntrl(UChar(test))
-		   ? '.'
-		   : UChar(test))
-		: '?';
+			    )
+			    ? (iscntrl(UChar(test))
+			       ? '.'
+			       : UChar(test))
+			    : '?');
 	}
 	ep[j] = '\0';
 	_tracef("%s[%2d] %3ld%3ld ='%s'",
@@ -113,7 +113,7 @@ _tracedump(const char *name, WINDOW *win)
 		for (j = 0; j < width; ++j) {
 		    int test = WidecExt(win->_line[n].text[j]);
 		    if (test) {
-			ep[j] = test + '0';
+			ep[j] = (char) (test + '0');
 		    } else {
 			ep[j] = ' ';
 		    }
@@ -138,11 +138,11 @@ _tracedump(const char *name, WINDOW *win)
 		if (pair >= 52)
 		    ep[j] = '?';
 		else if (pair >= 36)
-		    ep[j] = pair + 'A';
+		    ep[j] = (char) (pair + 'A');
 		else if (pair >= 10)
-		    ep[j] = pair + 'a';
+		    ep[j] = (char) (pair + 'a');
 		else if (pair >= 1)
-		    ep[j] = pair + '0';
+		    ep[j] = (char) (pair + '0');
 		else
 		    ep[j] = ' ';
 	    }

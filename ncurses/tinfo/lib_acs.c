@@ -35,7 +35,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.35 2008/08/03 22:59:48 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.36 2008/08/16 19:22:55 tom Exp $")
 
 #if BROKEN_LINKER || USE_REENTRANT
 #define MyBuffer _nc_prescreen.real_acs_map
@@ -173,7 +173,7 @@ _nc_init_acs(void)
 	for (n = 1, m = 0; n < ACS_LEN; n++) {
 	    if (real_map[n] != 0) {
 		show[m++] = (char) n;
-		show[m++] = ChCharOf(real_map[n]);
+		show[m++] = (char) ChCharOf(real_map[n]);
 	    }
 	}
 	show[m] = 0;

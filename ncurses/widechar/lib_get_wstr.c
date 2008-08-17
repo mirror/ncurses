@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_get_wstr.c,v 1.9 2008/06/07 14:50:11 tom Exp $")
+MODULE_ID("$Id: lib_get_wstr.c,v 1.10 2008/08/16 19:25:33 tom Exp $")
 
 static int
 wadd_wint(WINDOW *win, wint_t *src)
@@ -48,7 +48,7 @@ wadd_wint(WINDOW *win, wint_t *src)
     cchar_t tmp;
     wchar_t wch[2];
 
-    wch[0] = *src;
+    wch[0] = (wchar_t) (*src);
     wch[1] = 0;
     setcchar(&tmp, wch, A_NORMAL, 0, NULL);
     return wadd_wch(win, &tmp);
@@ -112,8 +112,8 @@ wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
     noraw();
     cbreak();
 
-    erasec = erasechar();
-    killc = killchar();
+    erasec = (wint_t) erasechar();
+    killc = (wint_t) killchar();
 
     getyx(win, y, x);
 

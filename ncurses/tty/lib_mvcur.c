@@ -155,7 +155,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.112 2008/06/28 12:50:46 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.113 2008/08/16 19:30:58 tom Exp $")
 
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
@@ -631,7 +631,8 @@ relative_move(string_desc * target, int from_y, int from_x, int to_y, int
 		    int i;
 
 		    for (i = 0; i < n; i++)
-			*check.s_tail++ = CharOf(WANT_CHAR(to_y, from_x + i));
+			*check.s_tail++ = (char) CharOf(WANT_CHAR(to_y,
+								  from_x + i));
 		    *check.s_tail = '\0';
 		    check.s_size -= n;
 		    lhcost += n * SP->_char_padding;

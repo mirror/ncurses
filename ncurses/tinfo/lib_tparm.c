@@ -43,7 +43,7 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.75 2008/08/03 22:37:22 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.76 2008/08/16 19:22:55 tom Exp $")
 
 /*
  *	char *
@@ -166,7 +166,7 @@ save_char(int c)
     if (c == 0)
 	c = 0200;
     get_space(1);
-    TPS(out_buff)[TPS(out_used)++] = c;
+    TPS(out_buff)[TPS(out_used)++] = (char) c;
 }
 
 static NCURSES_INLINE void

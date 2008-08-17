@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.49 2008/06/28 12:46:53 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.51 2008/08/16 23:13:52 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -181,6 +181,7 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tst_tracef */
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tracef */
     0,				/* nested_tracef */
+    0,				/* use_pthreads */
 #endif
 };
 
@@ -248,6 +249,27 @@ init_global_mutexes(void)
     }
 }
 
+NCURSES_EXPORT(void)
+_nc_init_pthreads(void)
+{
+    if (_nc_use_pthreads)
+	return;
+# if USE_WEAK_SYMBOLS
+    if ((pthread_mutex_init) == 0)
+	return;
+    if ((pthread_mutex_lock) == 0)
+	return;
+    if ((pthread_mutex_unlock) == 0)
+	return;
+    if ((pthread_mutex_trylock) == 0)
+	return;
+    if ((pthread_mutexattr_settype) == 0)
+	return;
+# endif
+    _nc_use_pthreads = 1;
+    init_global_mutexes();
+}
+
 /*
  * Use recursive mutexes if we have them - they're part of Unix98.
  * For the cases where we do not, _nc_mutex_trylock() is used to avoid a
@@ -262,6 +284,8 @@ _nc_mutex_init(pthread_mutex_t * obj)
 {
     pthread_mutexattr_t recattr;
 
+    if (_nc_use_pthreads == 0)
+	return;
     memset(&recattr, 0, sizeof(recattr));
     pthread_mutexattr_settype(&recattr, PTHREAD_MUTEX_RECURSIVE);
     pthread_mutex_init(obj, &recattr);
@@ -270,21 +294,39 @@ _nc_mutex_init(pthread_mutex_t * obj)
 NCURSES_EXPORT(int)
 _nc_mutex_lock(pthread_mutex_t * obj)
 {
-    init_global_mutexes();
+    if (_nc_use_pthreads == 0)
+	return 0;
     return pthread_mutex_lock(obj);
 }
 
 NCURSES_EXPORT(int)
 _nc_mutex_trylock(pthread_mutex_t * obj)
 {
-    init_global_mutexes();
+    if (_nc_use_pthreads == 0)
+	return 0;
     return pthread_mutex_trylock(obj);
 }
 
 NCURSES_EXPORT(int)
 _nc_mutex_unlock(pthread_mutex_t * obj)
 {
-    init_global_mutexes();
+    if (_nc_use_pthreads == 0)
+	return 0;
     return pthread_mutex_unlock(obj);
 }
+
+#if USE_WEAK_SYMBOLS
+/*
+ * NB: sigprocmask(2) is global but pthread_sigmask(3p)
+ * only for the calling thread.
+ */
+NCURSES_EXPORT(int)
+_nc_sigprocmask(int how, const sigset_t * newmask, sigset_t * oldmask)
+{
+    if ((pthread_sigmask))
+	return pthread_sigmask(how, newmask, oldmask);
+    else
+	return sigprocmask(how, newmask, oldmask);
+}
+#endif
 #endif /* USE_PTHREADS */

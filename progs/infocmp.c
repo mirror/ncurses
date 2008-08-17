@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.102 2008/08/04 13:05:18 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.103 2008/08/16 22:04:56 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -221,7 +221,7 @@ static bool
 useeq(ENTRY * e1, ENTRY * e2)
 /* are the use references in two entries equivalent? */
 {
-    int i, j;
+    unsigned i, j;
 
     if (e1->nuses != e2->nuses)
 	return (FALSE);
@@ -271,7 +271,7 @@ static void
 print_uses(ENTRY * ep, FILE *fp)
 /* print an entry's use references */
 {
-    int i;
+    unsigned i;
 
     if (!ep->nuses)
 	fputs("NULL", fp);
@@ -659,7 +659,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	if (!expansion) {
 	    csi = skip_csi(sp);
 	    for (ap = std_caps; ap->from; ap++) {
-		size_t adj = (size_t)(csi ? 2 : 0);
+		size_t adj = (size_t) (csi ? 2 : 0);
 
 		len = strlen(ap->from);
 		if (csi && skip_csi(ap->from) != csi)
@@ -1284,7 +1284,7 @@ main(int argc, char *argv[])
     _nc_progname = _nc_rootname(argv[0]);
 
     /* make sure we have enough space to add two terminal entries */
-    myargv = typeCalloc(char *, (size_t)(argc + 3));
+    myargv = typeCalloc(char *, (size_t) (argc + 3));
     memcpy(myargv, argv, (sizeof(char *) * (size_t) argc));
     argv = myargv;
 
