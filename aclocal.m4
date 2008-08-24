@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.452 2008/08/16 23:19:46 tom Exp $
+dnl $Id: aclocal.m4,v 1.453 2008/08/23 22:27:51 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -649,13 +649,14 @@ if test ".$system_name" != ".$cf_cv_system_name" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_ERRNO version: 9 updated: 2001/12/30 18:03:23
+dnl CF_CHECK_ERRNO version: 10 updated: 2008/08/22 16:33:22
 dnl --------------
 dnl Check for data that is usually declared in <stdio.h> or <errno.h>, e.g.,
 dnl the 'errno' variable.  Define a DECL_xxx symbol if we must declare it
 dnl ourselves.
 dnl
 dnl $1 = the name to check
+dnl $2 = the assumed type
 AC_DEFUN([CF_CHECK_ERRNO],
 [
 AC_CACHE_CHECK(if external $1 is declared, cf_cv_dcl_$1,[
@@ -666,7 +667,7 @@ AC_CACHE_CHECK(if external $1 is declared, cf_cv_dcl_$1,[
 #include <stdio.h>
 #include <sys/types.h>
 #include <errno.h> ],
-    [long x = (long) $1],
+    ifelse($2,,int,$2) x = (ifelse($2,,int,$2)) $1,
     [cf_cv_dcl_$1=yes],
     [cf_cv_dcl_$1=no])
 ])
@@ -677,7 +678,7 @@ if test "$cf_cv_dcl_$1" = no ; then
 fi
 
 # It's possible (for near-UNIX clones) that the data doesn't exist
-CF_CHECK_EXTERN_DATA($1,int)
+CF_CHECK_EXTERN_DATA($1,ifelse($2,,int,$2))
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CHECK_EXTERN_DATA version: 3 updated: 2001/12/30 18:03:23
@@ -5165,7 +5166,7 @@ AC_SUBST($3)dnl
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PTHREAD version: 1 updated: 2008/03/29 13:42:21
+dnl CF_WITH_PTHREAD version: 2 updated: 2008/08/23 18:26:05
 dnl ---------------
 dnl Check for POSIX thread library.
 AC_DEFUN([CF_WITH_PTHREAD],
@@ -5180,13 +5181,24 @@ AC_MSG_RESULT($with_pthread)
 if test "$with_pthread" != no ; then
     AC_CHECK_HEADER(pthread.h,[
         AC_DEFINE(HAVE_PTHREADS_H)
-        AC_CHECK_LIB(pthread,pthread_create,[
+
+        AC_MSG_CHECKING(if we can link with the pthread library)
+        cf_save_LIBS="$LIBS"
+        LIBS="-lpthread $LIBS"
+        AC_TRY_LINK([
+#include <pthread.h>
+],[
+        int rc = pthread_create(0,0,0,0);
+],[with_pthread=yes],[with_pthread=no])
+        LIBS="$cf_save_LIBS"
+        AC_MSG_RESULT($with_pthread)
+
+        if test "$with_pthread" = yes ; then
             LIBS="-lpthread $LIBS"
             AC_DEFINE(HAVE_LIBPTHREADS)
-            with_pthread=yes
-        ],[
+        else
             AC_MSG_ERROR(Cannot link with pthread library)
-        ])
+        fi
     ])
 fi
 ])

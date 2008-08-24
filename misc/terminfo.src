@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.330 $
-#	$Date: 2008/06/28 17:22:46 $
+#	$Revision: 1.332 $
+#	$Date: 2008/08/23 17:03:36 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3251,6 +3251,10 @@ xterm+256color|xterm 256-color feature,
 # which support the xterm+256color feature support the associated initc
 # capability.  So it is cancelled in the entries which use this and/or the
 # xterm+256color block.
+#
+# The default color palette for the 256- and 88-colors are different.  A
+# given executable will have one palette (perhaps compiled-in).  If the program
+# supports xterm's control sequence, it can be programmed using initc.
 xterm+88color|xterm 88-color feature,
 	colors#88, pairs#7744, use=xterm+256color,
 
@@ -3871,6 +3875,8 @@ rxvt-color|rxvt terminal emulator (X Window System),
 	use=rxvt,
 rxvt-256color|rxvt 2.7.9 with xterm 256-colors,
 	use=xterm+256color, use=rxvt,
+rxvt-88color|rxvt 2.7.9 with xterm 88-colors,
+	use=xterm+88color, use=rxvt,
 rxvt-xpm|rxvt terminal emulator (X Window System),
 	use=rxvt,
 rxvt-cygwin|rxvt terminal emulator (X Window System) on cygwin,
@@ -3930,6 +3936,12 @@ Eterm|Eterm-color|Eterm with xterm-style color support (X Window System),
 	smir=\E[4h, smkx=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 	vpa=\E[%i%p1%dd, use=vt100+enq, use=rxvt+pcfkeys,
 	use=ecma+color,
+
+Eterm-256color|Eterm with xterm 256-colors,
+	use=xterm+256color, use=Eterm,
+
+Eterm-88color|Eterm with 88 colors,
+	use=xterm+88color, use=Eterm,
 
 # xiterm  0.5-5.2
 # This is not based on xterm's source...
@@ -21688,6 +21700,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2008-06-28
 #	* add screen.mlterm -TD
 #	* improve mlterm and mlterm+pcfkeys -TD
+#
+# 2008-08-23
+#	* add Eterm-256color, Eterm-88color -TD
+#	* add rxvt-88color -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

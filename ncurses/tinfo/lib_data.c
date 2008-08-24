@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.51 2008/08/16 23:13:52 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.52 2008/08/23 22:16:15 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -284,11 +284,11 @@ _nc_mutex_init(pthread_mutex_t * obj)
 {
     pthread_mutexattr_t recattr;
 
-    if (_nc_use_pthreads == 0)
-	return;
-    memset(&recattr, 0, sizeof(recattr));
-    pthread_mutexattr_settype(&recattr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(obj, &recattr);
+    if (_nc_use_pthreads) {
+	pthread_mutexattr_init(&recattr);
+	pthread_mutexattr_settype(&recattr, PTHREAD_MUTEX_RECURSIVE);
+	pthread_mutex_init(obj, &recattr);
+    }
 }
 
 NCURSES_EXPORT(int)

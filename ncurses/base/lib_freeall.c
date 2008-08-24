@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.50 2008/08/04 18:29:12 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.51 2008/08/23 22:41:39 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -127,7 +127,10 @@ _nc_free_and_exit(int code)
     _nc_freeall();
 #ifdef TRACE
     trace(0);			/* close trace file, freeing its setbuf */
-    free(_nc_varargs("?", 0));
+    {
+	va_list fake;
+	free(_nc_varargs("?", fake));
+    }
 #endif
     fclose(stdout);
     FreeIfNeeded(last_setbuf);

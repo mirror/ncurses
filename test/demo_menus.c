@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.27 2008/08/04 15:37:52 tom Exp $
+ * $Id: demo_menus.c,v 1.28 2008/08/23 20:31:54 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -106,6 +106,8 @@ typedef enum {
 static MENU *mpBanner;
 static MENU *mpFile;
 static MENU *mpSelect;
+
+static bool loaded_file = FALSE;
 
 #if !HAVE_STRDUP
 #define strdup my_strdup
@@ -274,7 +276,7 @@ menu_destroy(MENU * m)
 
 	/* free the extra data allocated in build_select_menu() */
 	if ((count > 0) && (m == mpSelect)) {
-	    if (blob) {
+	    if (blob && loaded_file) {
 		Trace(("freeing blob %p", blob));
 		free((char *) blob);
 	    }
@@ -392,6 +394,7 @@ build_select_menu(MenuNo number, char *filename)
 		    }
 		    fclose(fp);
 		}
+		loaded_file = TRUE;
 	    }
 	}
     }

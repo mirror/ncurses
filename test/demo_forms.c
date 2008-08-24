@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.25 2008/08/04 15:45:04 tom Exp $
+ * $Id: demo_forms.c,v 1.26 2008/08/23 23:22:55 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -316,7 +316,7 @@ demo_forms(void)
 {
     WINDOW *w;
     FORM *form;
-    FIELD *f[100];		// FIXME memset to zero
+    FIELD *f[100];		/* FIXME memset to zero */
     int finished = 0, c;
     unsigned n = 0;
     int pg;
