@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1274 2008/08/23 22:29:54 tom Exp $
+-- $Id: NEWS,v 1.1281 2008/08/30 23:33:29 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080830
+	+ fixes to make Ada95 demo_panels() example work.
+	+ modify Ada95 'rain' test program to accept keyboard commands like the
+	  C-version.
+	+ modify BeOS-specific ifdef's to build on Haiku (patch by Scott
+	  Mccreary).
+	+ add configure-check to see if the std namespace is legal for cerr
+	  and endl, to fix a build issue with Tru64.
+	+ consistently use NCURSES_BOOL in lib_gen.c
+	+ filter #line's from lib_gen.c
+	+ change delimiter in MKlib_gen.sh from '%' to '@', to avoid
+	  substitution by IBM xlc to '#' as part of its extensions to digraphs.
+	+ update config.guess, config.sub from
+		http://savannah.gnu.org/projects/config
+	  (caveat - its maintainer removed support for older Linux systems).
 
 20080823
 	+ modify configure check for pthread library to work with OSF/1 5.1,

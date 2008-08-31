@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.442 2008/08/23 19:28:46 tom Exp $
+dnl $Id: configure.in,v 1.443 2008/08/30 19:53:49 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.442 $)
+AC_REVISION($Revision: 1.443 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1322,6 +1322,20 @@ if test -n "$CXX" ; then
 	esac
 
 	AC_CHECK_HEADERS(iostream typeinfo)
+
+    if test x"$ac_cv_header_iostream" = xyes ; then
+        AC_MSG_CHECKING(if iostream uses std-namespace)
+        AC_TRY_COMPILE([
+#include <iostream>
+using std::endl;
+using std::cerr;],[
+cerr << "testing" << endl;
+],[cf_iostream_namespace=yes],[cf_iostream_namespace=no])
+        AC_MSG_RESULT($cf_iostream_namespace)
+        if test "$cf_iostream_namespace" = yes ; then
+            AC_DEFINE(IOSTREAM_NAMESPACE)
+        fi
+    fi
 
 	CF_BOOL_DECL
 	CF_BOOL_SIZE

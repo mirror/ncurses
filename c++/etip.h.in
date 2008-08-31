@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: etip.h.in,v 1.36 2007/04/07 18:56:32 tom Exp $
+// $Id: etip.h.in,v 1.37 2008/08/30 19:27:32 tom Exp $
 
 #ifndef NCURSES_ETIP_H_incl
 #define NCURSES_ETIP_H_incl 1
@@ -75,6 +75,10 @@
 
 #ifndef CPP_HAS_STATIC_CAST
 #define CPP_HAS_STATIC_CAST 0	// workaround for g++ 2.95.3
+#endif
+
+#ifndef IOSTREAM_NAMESPACE
+#define IOSTREAM_NAMESPACE 0
 #endif
 
 #ifdef __GNUG__
@@ -329,8 +333,10 @@ public:
 #if !((defined(__GNUG__) && defined(__EXCEPTIONS)) || defined(__SUNPRO_CC))
 #  if HAVE_IOSTREAM
 #     include <iostream>
+#     if IOSTREAM_NAMESPACE
 using std::cerr;
 using std::endl;
+#     endif
 #  else
 #     include <iostream.h>
 #  endif

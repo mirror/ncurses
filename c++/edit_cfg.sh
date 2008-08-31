@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: edit_cfg.sh,v 1.16 2007/04/07 19:08:49 tom Exp $
+# $Id: edit_cfg.sh,v 1.17 2008/08/30 19:44:25 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -47,7 +47,8 @@ for name in \
 	HAVE_GXX_BUILTIN_H \
 	HAVE_IOSTREAM \
 	HAVE_TYPEINFO \
-	HAVE_VALUES_H
+	HAVE_VALUES_H \
+	IOSTREAM_NAMESPACE
 do
 	rm -f $2.bak
 	mv $2 $2.bak

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -36,11 +36,12 @@
 --  Author:  Laurent Pautet <pautet@gnat.com>
 --  Modified by:  Juergen Pfeifer, 1997
 --  Version Control
---  $Revision: 1.7 $
---  $Date: 2007/05/05 18:54:03 $
+--  $Revision: 1.8 $
+--  $Date: 2008/08/30 21:38:07 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --                                                                          --
+with ncurses2.util; use ncurses2.util;
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
 with Status; use Status;
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
@@ -54,6 +55,10 @@ procedure Rain is
 
    Xpos    : array (1 .. 5) of X_Position;
    Ypos    : array (1 .. 5) of Y_Position;
+
+   done : Boolean;
+
+   c : Key_Code;
 
    N : Integer;
 
@@ -88,6 +93,7 @@ begin
 
    Visibility := Invisible;
    Set_Cursor_Visibility (Visibility);
+   Set_Timeout_Mode (Standard_Window, Non_Blocking, 0);
 
    Max_X := Lines - 5;
    Max_Y := Columns - 5;
@@ -98,7 +104,8 @@ begin
    end loop;
 
    N := 1;
-   while Process.Continue loop
+   done := False;
+   while not done and Process.Continue loop
 
       X := X_Position (Float (Max_X) * Random (G)) + 2;
       Y := Y_Position (Float (Max_Y) * Random (G)) + 2;
@@ -152,7 +159,15 @@ begin
       Xpos (N) := X;
       Ypos (N) := Y;
 
-      Refresh;
+      c := Getchar;
+      case c is
+      when Character'Pos ('q') => done := True;
+      when Character'Pos ('Q') => done := True;
+      when Character'Pos ('s') => Set_NoDelay_Mode (Standard_Window, False);
+      when Character'Pos (' ') => Set_NoDelay_Mode (Standard_Window, True);
+      when others => null;
+      end case;
+
       Nap_Milli_Seconds (50);
    end loop;
 
