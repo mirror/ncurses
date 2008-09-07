@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.443 2008/08/30 19:53:49 tom Exp $
+dnl $Id: configure.in,v 1.446 2008/09/06 21:02:20 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.443 $)
+AC_REVISION($Revision: 1.446 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -504,12 +504,13 @@ AC_MSG_RESULT($with_big_core)
 test "$with_big_core" = "yes" && AC_DEFINE(HAVE_BIG_CORE)
 
 ### ISO C only guarantees 512-char strings, we have tables which load faster
-### when constructed using "big" strings.
+### when constructed using "big" strings.  More than the C compiler, the awk
+### program is a limit on most vendor UNIX systems.  Check that we can build.
 AC_MSG_CHECKING(if big-strings option selected)
 AC_ARG_ENABLE(big-strings,
 	[  --disable-big-strings   assume compiler has only standard-size strings],
-	[with_big_strings=no],
-	[with_big_strings=yes])
+	[with_big_strings=$enableval],
+	[CF_AWK_BIG_PRINTF(4000,with_big_strings)])
 AC_MSG_RESULT($with_big_strings)
 
 USE_BIG_STRINGS=0
@@ -681,7 +682,7 @@ if test "$with_widec" = yes ; then
 	CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
 	# with_overwrite=no
 	NCURSES_CH_T=cchar_t
-	AC_CHECK_FUNCS(putwc btowc wctob mbtowc wctomb mblen mbrlen mbrtowc)
+	AC_CHECK_FUNCS(putwc btowc wctob mbtowc wctomb mblen mbrlen mbrtowc wcsrtombs mbsrtowcs wcstombs mbstowcs)
 	if test "$ac_cv_func_putwc" != yes ; then
 		CF_LIBUTF8
 		if test "$cf_cv_libutf8" = yes ; then

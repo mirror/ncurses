@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.453 2008/08/23 22:27:51 tom Exp $
+dnl $Id: aclocal.m4,v 1.457 2008/09/06 21:36:49 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -329,6 +329,30 @@ You have the following choices:
 	b. get an up-to-date compiler
 	c. use a wrapper such as unproto])
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_AWK_BIG_PRINTF version: 1 updated: 2008/09/06 17:17:18
+dnl -----------------
+dnl Check if awk can handle big strings using printf.  Some older versions of
+dnl awk choke on large strings passed via "%s".
+dnl
+dnl $1 = desired string size
+dnl $2 = variable to set with result
+AC_DEFUN([CF_AWK_BIG_PRINTF],
+[
+    case x$AWK in #(vi
+    x)
+        eval $2=no
+        ;;
+    *) #(vi
+        if ( ${AWK} 'BEGIN { xx = "x"; while (length(xx) < $1) { xx = xx "x"; }; printf("%s\n", xx); }' \
+            | $AWK '{ if (length([$]0) != $1) exit 1; }' 2>/dev/null >/dev/null ); then
+            eval $2=yes
+        else
+            eval $2=no
+        fi
+        ;;
+    esac
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_BOOL_DECL version: 8 updated: 2004/01/30 15:51:18
@@ -3931,7 +3955,7 @@ AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 48 updated: 2008/06/14 15:08:17
+dnl CF_SHARED_OPTS version: 49 updated: 2008/09/06 17:36:03
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -4066,8 +4090,10 @@ CF_EOF
 		# tested with IRIX 5.2 and 'cc'.
 		if test "$GCC" != yes; then
 			CC_SHARED_OPTS='-KPIC'
+            MK_SHARED_LIB='${CC} -shared -rdata_shared -soname `basename $[@]` -o $[@]'
+        else
+            MK_SHARED_LIB='${CC} -shared -Wl,-soname,`basename $[@]` -o $[@]'
 		fi
-		MK_SHARED_LIB='${CC} -shared -rdata_shared -soname `basename $[@]` -o $[@]'
 		cf_cv_rm_so_locs=yes
 		;;
 	linux*|gnu*|k*bsd*-gnu)

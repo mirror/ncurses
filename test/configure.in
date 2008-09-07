@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.65 2008/02/09 18:24:11 tom Exp $
+dnl $Id: configure.in,v 1.67 2008/09/06 22:10:23 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -52,28 +52,30 @@ AC_PROG_CPP
 AC_PROG_AWK
 
 dnl Things that we don't need (or must override) if we're not building ncurses
-CC_G_OPT="-g"				AC_SUBST(CC_G_OPT)
+CC_G_OPT="-g"					AC_SUBST(CC_G_OPT)
 CC_SHARED_OPTS=unknown			AC_SUBST(CC_SHARED_OPTS)
 CPPFLAGS="$CPPFLAGS"			AC_SUBST(CPPFLAGS)
-DFT_DEP_SUFFIX=""			AC_SUBST(DFT_DEP_SUFFIX)
+DFT_DEP_SUFFIX=""				AC_SUBST(DFT_DEP_SUFFIX)
 DFT_OBJ_SUBDIR=`pwd|sed -e's:.*/::'`	AC_SUBST(DFT_OBJ_SUBDIR)
 DFT_UPR_MODEL="NORMAL"			AC_SUBST(DFT_UPR_MODEL)
-LD="ld"					AC_SUBST(LD)
-LDFLAGS_SHARED=""			AC_SUBST(LDFLAGS_SHARED)
-LDFLAGS_STATIC=""			AC_SUBST(LDFLAGS_STATIC)
-LD_MODEL=""				AC_SUBST(LD_MODEL)
-LD_SHARED_OPTS=""			AC_SUBST(LD_SHARED_OPTS)
-LIBTOOL=""				AC_SUBST(LIBTOOL)
-LIB_CLEAN=""				AC_SUBST(LIB_CLEAN)
-LIB_COMPILE=""				AC_SUBST(LIB_COMPILE)
-LIB_LINK='${CC}'			AC_SUBST(LIB_LINK)
-LINK_TESTS=""				AC_SUBST(LINK_TESTS)
-LINT=lint				AC_SUBST(LINT)
-LINT_OPTS=""				AC_SUBST(LINT_OPTS)
-LOCAL_LDFLAGS=""			AC_SUBST(LOCAL_LDFLAGS)
-MATH_LIB="-lm"				AC_SUBST(MATH_LIB)
-TEST_ARGS=""				AC_SUBST(TEST_ARGS)
-TEST_DEPS=""				AC_SUBST(TEST_DEPS)
+LD="ld"							AC_SUBST(LD)
+LDFLAGS_SHARED=""				AC_SUBST(LDFLAGS_SHARED)
+LDFLAGS_STATIC=""				AC_SUBST(LDFLAGS_STATIC)
+LD_MODEL=""						AC_SUBST(LD_MODEL)
+LD_SHARED_OPTS=""				AC_SUBST(LD_SHARED_OPTS)
+LIBTOOL=""						AC_SUBST(LIBTOOL)
+LIB_CLEAN=""					AC_SUBST(LIB_CLEAN)
+LIB_COMPILE=""					AC_SUBST(LIB_COMPILE)
+LIB_LINK='${CC}'				AC_SUBST(LIB_LINK)
+LINK_TESTS=""					AC_SUBST(LINK_TESTS)
+LINT=lint						AC_SUBST(LINT)
+LINT_OPTS=""					AC_SUBST(LINT_OPTS)
+LOCAL_LDFLAGS=""				AC_SUBST(LOCAL_LDFLAGS)
+MATH_LIB="-lm"					AC_SUBST(MATH_LIB)
+PTHREAD="-lm"					AC_SUBST(PTHREAD)
+TEST_ARGS=""					AC_SUBST(TEST_ARGS)
+TEST_DEPS=""					AC_SUBST(TEST_DEPS)
+TEST_LIBS=""					AC_SUBST(TEST_LIBS)
 TINFO_ARGS='$(LIBS_CURSES)'		AC_SUBST(TINFO_ARGS)
 cf_cv_abi_version=""			AC_SUBST(cf_cv_abi_version)
 cf_cv_rel_version=""			AC_SUBST(cf_cv_rel_version)
@@ -179,7 +181,15 @@ unistd.h \
 
 AC_CHECK_FUNCS( \
 gettimeofday \
+mblen \
+mbrlen \
+mbrtowc \
+mbsrtowcs \
+mbstowcs \
+mbtowc \
 strdup \
+wcsrtombs \
+wcstombs \
 )
 
 CF_CURSES_FUNCS( \

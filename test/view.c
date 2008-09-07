@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.68 2008/08/03 11:37:07 tom Exp $
+ * $Id: view.c,v 1.69 2008/09/06 22:10:50 tom Exp $
  */
 
 #include <test.priv.h>
@@ -78,6 +78,23 @@
 #include <sys/stream.h>
 #include <sys/ptem.h>
 #endif
+
+#if USE_WIDEC_SUPPORT
+#if HAVE_MBTOWC && HAVE_MBLEN
+#define reset_mbytes(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
+#define count_mbytes(buffer,length,state) mblen(buffer,length)
+#define check_mbytes(wch,buffer,length,state) \
+	(int) mbtowc(&wch, buffer, length)
+#define state_unused
+#elif HAVE_MBRTOWC && HAVE_MBRLEN
+#define reset_mbytes(state) init_mb(state)
+#define count_mbytes(buffer,length,state) mbrlen(buffer,length,&state)
+#define check_mbytes(wch,buffer,length,state) \
+	(int) mbrtowc(&wch, buffer, length, &state)
+#else
+make an error
+#endif
+#endif				/* USE_WIDEC_SUPPORT */
 
 static RETSIGTYPE finish(int sig) GCC_NORETURN;
 static void show_all(const char *tag);
@@ -158,17 +175,19 @@ ch_dup(char *src)
     wchar_t wstr[CCHARW_MAX + 1];
     wchar_t wch;
     int l = 0;
-    mbstate_t state;
     size_t rc;
     int width;
+#ifndef state_unused
+    mbstate_t state;
 #endif
+#endif /* USE_WIDEC_SUPPORT */
 
 #if USE_WIDEC_SUPPORT
-    memset(&state, 0, sizeof(state));
+    reset_mbytes(state);
 #endif
     for (j = k = 0; j < len; j++) {
 #if USE_WIDEC_SUPPORT
-	rc = mbrtowc(&wch, src + j, len - j, &state);
+	rc = check_mbytes(wch, src + j, len - j, state);
 	if (rc == (size_t) -1 || rc == (size_t) -2)
 	    break;
 	j += rc - 1;

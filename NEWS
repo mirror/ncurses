@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1281 2008/08/30 23:33:29 tom Exp $
+-- $Id: NEWS,v 1.1287 2008/09/06 22:04:07 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20080906
+	+ corrected gcc options for building shared libraries on IRIX64.
+	+ add configure check for awk programs unable to handle big-strings,
+	  use that to improve the default for --enable-big-strings option.
+	+ makefile-fixes for --enable-weak-symbols (report by Frederic L W
+	  Meunier).
+	+ update test/configure script.
+	+ adapt ifdef's from library to make test/view.c build when mbrtowc()
+	  is unavailable, e.g., with HPUX 10.20.
+	+ add configure check for wcsrtombs, mbsrtowcs, which are used in
+	  test/ncurses.c, and use wcstombs, mbstowcs instead if available,
+	  fixing build of ncursew for HPUX 11.00
 
 20080830
 	+ fixes to make Ada95 demo_panels() example work.

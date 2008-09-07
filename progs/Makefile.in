@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.77 2007/10/13 22:25:53 tom Exp $
+# $Id: Makefile.in,v 1.78 2008/09/06 17:28:26 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -109,10 +109,10 @@ LDFLAGS_SHARED	= $(LDFLAGS) $(CFLAGS_SHARED) @LD_SHARED_OPTS@
 
 LDFLAGS_DEFAULT	= $(LDFLAGS_@DFT_UPR_MODEL@)
 
-LIBS_TIC	= @LDFLAGS_STATIC@ @TICS_ARGS@ @TINFO_ARGS@ @LDFLAGS_SHARED@ @LD_MODEL@ @LIBS@
+LIBS_TIC	= @LDFLAGS_STATIC@ @TICS_ARGS@ @TINFO_ARGS@ @LDFLAGS_SHARED@ @LD_MODEL@ @LIBS@ @PTHREAD@
 LDFLAGS_TIC	= $(LDFLAGS_@DFT_UPR_MODEL@) $(LIBS_TIC)
 
-LIBS_TINFO	= @LDFLAGS_STATIC@ @TINFO_ARGS@ @LDFLAGS_SHARED@ @LD_MODEL@ @LIBS@
+LIBS_TINFO	= @LDFLAGS_STATIC@ @TINFO_ARGS@ @LDFLAGS_SHARED@ @LD_MODEL@ @LIBS@ @PTHREAD@
 LDFLAGS_TINFO	= $(LDFLAGS_@DFT_UPR_MODEL@) $(LIBS_TINFO)
 
 LINT		= @LINT@

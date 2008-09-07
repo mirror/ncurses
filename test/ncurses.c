@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.324 2008/08/04 16:27:54 tom Exp $
+$Id: ncurses.c,v 1.327 2008/09/06 17:31:44 tom Exp $
 
 ***************************************************************************/
 
@@ -116,6 +116,28 @@ extern unsigned _nc_tracing;
 #define WACS_STERLING   (&(CURSES_WACS_ARRAY['}']))	/* UK pound sign */
 #endif
 
+#endif
+
+#if HAVE_WCSRTOMBS
+#define count_wchars(src, len, state)      wcsrtombs(0,   &src, len, state)
+#define trans_wchars(dst, src, len, state) wcsrtombs(dst, &src, len, state)
+#define reset_wchars(state) memset(&state, 0, sizeof(state))
+#elif HAVE_WCSTOMBS && HAVE_MBTOWC && HAVE_MBLEN
+#define count_wchars(src, len, state)      wcstombs(0,   src, len)
+#define trans_wchars(dst, src, len, state) wcstombs(dst, src, len)
+#define reset_wchars(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
+#define state_unused
+#endif
+
+#if HAVE_MBSRTOWCS
+#define count_mbytes(src, len, state)      mbsrtowcs(0,   &src, len, state)
+#define trans_mbytes(dst, src, len, state) mbsrtowcs(dst, &src, len, state)
+#define reset_mbytes(state) memset(&state, 0, sizeof(state))
+#elif HAVE_MBSTOWCS && HAVE_MBTOWC && HAVE_MBLEN
+#define count_mbytes(src, len, state)      mbstowcs(0,   src, len)
+#define trans_mbytes(dst, src, len, state) mbstowcs(dst, src, len)
+#define reset_mbytes(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
+#define state_unused
 #endif
 
 #define ToggleAcs(temp,real) temp = ((temp == real) ? 0 : real)
@@ -928,16 +950,18 @@ static char *
 wcstos(const wchar_t *src)
 {
     int need;
-    mbstate_t state;
     char *result = 0;
     const wchar_t *tmp = src;
+#ifndef state_unused
+    mbstate_t state;
+#endif
 
-    memset(&state, 0, sizeof(state));
-    if ((need = (int) wcsrtombs(0, &tmp, 0, &state)) > 0) {
+    reset_wchars(state);
+    if ((need = (int) count_wchars(tmp, 0, &state)) > 0) {
 	unsigned have = (unsigned) need;
 	if ((result = typeCalloc(char, have + 1)) != 0) {
 	    tmp = src;
-	    if (wcsrtombs(result, &tmp, have, &state) != have) {
+	    if (trans_wchars(result, tmp, have, &state) != have) {
 		free(result);
 		result = 0;
 	    }
@@ -2705,20 +2729,22 @@ wide_slk_test(void)
 		size_t used = strlen(temp);
 		size_t want = SLKLEN;
 		size_t test;
+#ifndef state_unused
 		mbstate_t state;
+#endif
 
 		buf[0] = L'\0';
 		while (want > 0 && used != 0) {
 		    const char *base = s;
-		    memset(&state, 0, sizeof(state));
-		    test = mbsrtowcs(0, &base, 0, &state);
+		    reset_mbytes(state);
+		    test = count_mbytes(base, 0, &state);
 		    if (test == (size_t) -1) {
 			temp[--used] = 0;
 		    } else if (test > want) {
 			temp[--used] = 0;
 		    } else {
-			memset(&state, 0, sizeof(state));
-			mbsrtowcs(buf, &base, want, &state);
+			reset_mbytes(state);
+			trans_mbytes(buf, base, want, &state);
 			break;
 		    }
 		}

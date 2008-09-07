@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.77 2008/04/12 19:25:48 tom Exp $ */
+/* $Id: test.priv.h,v 1.78 2008/09/06 22:01:24 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -569,5 +569,7 @@ typedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);
 #define Trace(p)		/* nothing */
 #define USE_TRACE 0
 #endif
+
+#define init_mb(state)	memset(&state, 0, sizeof(state))
 
 #endif /* __TEST_PRIV_H */
