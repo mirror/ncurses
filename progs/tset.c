@@ -104,7 +104,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.73 2008/08/04 12:47:05 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.74 2008/09/13 18:55:15 tom Exp $")
 
 extern char **environ;
 
@@ -867,13 +867,13 @@ set_control_chars(void)
 {
 #ifdef TERMIOS
     if (DISABLED(mode.c_cc[VERASE]) || terasechar >= 0)
-	mode.c_cc[VERASE] = terasechar >= 0 ? terasechar : default_erase();
+	mode.c_cc[VERASE] = (terasechar >= 0) ? terasechar : default_erase();
 
     if (DISABLED(mode.c_cc[VINTR]) || intrchar >= 0)
-	mode.c_cc[VINTR] = intrchar >= 0 ? intrchar : CINTR;
+	mode.c_cc[VINTR] = (intrchar >= 0) ? intrchar : CINTR;
 
     if (DISABLED(mode.c_cc[VKILL]) || tkillchar >= 0)
-	mode.c_cc[VKILL] = tkillchar >= 0 ? tkillchar : CKILL;
+	mode.c_cc[VKILL] = (tkillchar >= 0) ? tkillchar : CKILL;
 #endif
 }
 

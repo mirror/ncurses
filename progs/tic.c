@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.136 2008/08/16 21:52:36 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.137 2008/09/13 16:59:24 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -99,7 +99,7 @@ free_namelist(char **src)
 #endif
 
 static void
-cleanup(char **namelst)
+cleanup(char **namelst GCC_UNUSED)
 {
 #if NO_LEAKS
     free_namelist(namelst);

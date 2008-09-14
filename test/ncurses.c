@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.327 2008/09/06 17:31:44 tom Exp $
+$Id: ncurses.c,v 1.328 2008/09/13 18:56:02 tom Exp $
 
 ***************************************************************************/
 
@@ -1103,7 +1103,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 		} else {
 		    wchar_t c2 = (wchar_t) c;
 		    waddnwstr(win, &c2, 1);
-		    (void) wprintw(win, " = %#x (printable character)", c);
+		    (void) wprintw(win, " = %#x (printable character)", (unsigned) c);
 		}
 	    }
 	    wgetch_wrap(win, first_y);

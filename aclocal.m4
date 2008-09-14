@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.457 2008/09/06 21:36:49 tom Exp $
+dnl $Id: aclocal.m4,v 1.463 2008/09/13 16:54:28 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -943,6 +943,20 @@ AC_MSG_RESULT($with_no_leaks)
 if test "$with_no_leaks" = yes ; then
 	AC_DEFINE(NO_LEAKS)
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ENABLE_RPATH version: 1 updated: 2008/09/13 10:22:30
+dnl ---------------
+dnl Check if the rpath option should be used, setting cache variable
+dnl cf_cv_ld_rpath if so.
+AC_DEFUN([CF_ENABLE_RPATH],
+[
+AC_MSG_CHECKING(if rpath option should be used)
+AC_ARG_ENABLE(rpath,
+[  --enable-rpath          use rpath option when generating shared libraries],
+[cf_cv_ld_rpath=$enableval],
+[cf_cv_ld_rpath=no])
+AC_MSG_RESULT($cf_cv_ld_rpath)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ERRNO version: 5 updated: 1997/11/30 12:44:39
@@ -2045,22 +2059,24 @@ if test "$cf_cv_libutf8" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_PREFIX version: 7 updated: 2001/01/12 01:23:48
+dnl CF_LIB_PREFIX version: 8 updated: 2008/09/13 11:34:16
 dnl -------------
 dnl Compute the library-prefix for the given host system
 dnl $1 = variable to set
 AC_DEFUN([CF_LIB_PREFIX],
 [
-	case $cf_cv_system_name in
-	OS/2*)	LIB_PREFIX=''     ;;
-	os2*)	LIB_PREFIX=''     ;;
-	*)	LIB_PREFIX='lib'  ;;
+	case $cf_cv_system_name in #(vi
+	OS/2*|os2*) #(vi
+        LIB_PREFIX=''
+        ;;
+	*)	LIB_PREFIX='lib'
+        ;;
 	esac
 ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 50 updated: 2007/03/24 18:26:59
+dnl CF_LIB_RULES version: 51 updated: 2008/09/13 11:34:16
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -2087,7 +2103,7 @@ do
 		LIBS_TO_MAKE=
 		for cf_item in $cf_LIST_MODELS
 		do
-			CF_LIB_SUFFIX($cf_item,cf_suffix)
+			CF_LIB_SUFFIX($cf_item,cf_suffix,cf_depsuf)
 			if test $cf_item = shared ; then
 			if test "$cf_cv_do_symlinks" = yes ; then
 				case "$cf_cv_shlib_version" in #(vi
@@ -2181,7 +2197,7 @@ do
 			do
 			echo "Appending rules for ${cf_item} model (${cf_dir}: ${cf_subset})"
 			CF_UPPER(cf_ITEM,$cf_item)
-			CF_LIB_SUFFIX($cf_item,cf_suffix)
+			CF_LIB_SUFFIX($cf_item,cf_suffix,cf_depsuf)
 			CF_OBJ_SUBDIR($cf_item,cf_subdir)
 
 			# Test for case where we build libtinfo with a different name.
@@ -2513,34 +2529,62 @@ fi
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SUFFIX version: 13 updated: 2003/11/01 16:09:07
+dnl CF_LIB_SUFFIX version: 15 updated: 2008/09/13 11:54:48
 dnl -------------
 dnl Compute the library file-suffix from the given model name
 dnl $1 = model name
-dnl $2 = variable to set
+dnl $2 = variable to set (the nominal library suffix)
+dnl $3 = dependency variable to set (actual filename)
 dnl The variable $LIB_SUFFIX, if set, prepends the variable to set.
 AC_DEFUN([CF_LIB_SUFFIX],
 [
 	AC_REQUIRE([CF_SUBST_NCURSES_VERSION])
 	case $1 in
-	libtool) $2='.la'  ;;
-	normal)  $2='.a'   ;;
-	debug)   $2='_g.a' ;;
-	profile) $2='_p.a' ;;
+	libtool)
+		$2='.la'
+		$3=[$]$2
+		;;
+	normal)
+		$2='.a'
+		$3=[$]$2
+		;;
+	debug)
+		$2='_g.a'
+		$3=[$]$2
+		;;
+	profile)
+		$2='_p.a'
+		$3=[$]$2
+		;;
 	shared)
 		case $cf_cv_system_name in
-		cygwin*) $2='.dll' ;;
-		darwin*) $2='.dylib' ;;
+		cygwin*)
+			$2='.dll'
+			$3='.dll.a'
+			;;
+		darwin*)
+			$2='.dylib'
+			$3=[$]$2
+			;;
 		hpux*)
 			case $target in
-			ia64*)	$2='.so' ;;
-			*)	$2='.sl' ;;
+			ia64*)
+				$2='.so'
+				$3=[$]$2
+				;;
+			*)
+				$2='.sl'
+				$3=[$]$2
+				;;
 			esac
 			;;
-		*)	$2='.so'  ;;
+		*)	$2='.so'
+			$3=[$]$2
+			;;
 		esac
 	esac
 	test -n "$LIB_SUFFIX" && $2="${LIB_SUFFIX}[$]{$2}"
+	test -n "$LIB_SUFFIX" && $3="${LIB_SUFFIX}[$]{$3}"
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_LIB_TYPE version: 4 updated: 2000/10/20 22:57:49
@@ -3902,7 +3946,7 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK version: 3 updated: 2007/12/01 11:14:13
+dnl CF_RPATH_HACK version: 4 updated: 2008/09/13 12:53:26
 dnl -------------
 AC_DEFUN([CF_RPATH_HACK],
 [
@@ -3914,48 +3958,46 @@ CF_VERBOSE(...checking LDFLAGS $LDFLAGS)
 CF_VERBOSE(...checking EXTRA_LDFLAGS $EXTRA_LDFLAGS)
 case "$EXTRA_LDFLAGS" in #(vi
 -Wl,-rpath,*) #(vi
-    cf_rpath_hack="-Wl,-rpath,"
-    ;;
+	cf_rpath_hack="-Wl,-rpath,"
+	;;
 -R\ *)
-    cf_rpath_hack="-R "
-    ;;
+	cf_rpath_hack="-R "
+	;;
 -R*)
-    cf_rpath_hack="-R"
-    ;;
+	cf_rpath_hack="-R"
+	;;
 *)
-    cf_rpath_hack=
-    ;;
+	cf_rpath_hack=
+	;;
 esac
 if test -n "$cf_rpath_hack" ; then
-    cf_rpath_dst=
-    for cf_rpath_src in $LDFLAGS
-    do
-        CF_VERBOSE(Filtering $cf_rpath_src)
-        case $cf_rpath_src in #(vi
-        -L*) #(vi
-            if test "$cf_rpath_hack" = "-R " ; then
-                cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
-            else
-                cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$cf_rpath_hack%`
-            fi
-            CF_VERBOSE(...Filter $cf_rpath_tmp)
-            EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
-            ;;
-        *)
-            cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
-            ;;
-        esac
-    done
-    LDFLAGS=$cf_rpath_dst
-    CF_VERBOSE(...checked LDFLAGS $LDFLAGS)
-    CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+	cf_rpath_dst=
+	for cf_rpath_src in $LDFLAGS
+	do
+		CF_VERBOSE(Filtering $cf_rpath_src)
+		case $cf_rpath_src in #(vi
+		-L*) #(vi
+			if test "$cf_rpath_hack" = "-R " ; then
+				cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
+			else
+				cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$cf_rpath_hack%`
+			fi
+			CF_VERBOSE(...Filter $cf_rpath_tmp)
+			EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
+			;;
+		esac
+		cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
+	done
+	LDFLAGS=$cf_rpath_dst
+	CF_VERBOSE(...checked LDFLAGS $LDFLAGS)
+	CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
 fi
 else
 AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 49 updated: 2008/09/06 17:36:03
+dnl CF_SHARED_OPTS version: 52 updated: 2008/09/13 11:54:48
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -4090,9 +4132,9 @@ CF_EOF
 		# tested with IRIX 5.2 and 'cc'.
 		if test "$GCC" != yes; then
 			CC_SHARED_OPTS='-KPIC'
-            MK_SHARED_LIB='${CC} -shared -rdata_shared -soname `basename $[@]` -o $[@]'
-        else
-            MK_SHARED_LIB='${CC} -shared -Wl,-soname,`basename $[@]` -o $[@]'
+			MK_SHARED_LIB='${CC} -shared -rdata_shared -soname `basename $[@]` -o $[@]'
+		else
+			MK_SHARED_LIB='${CC} -shared -Wl,-soname,`basename $[@]` -o $[@]'
 		fi
 		cf_cv_rm_so_locs=yes
 		;;
@@ -4106,11 +4148,20 @@ CF_EOF
 			EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
-		MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_shared_soname',-stats,-lc -o $[@]'
+		MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
 		;;
 	openbsd[[2-9]].*)
+		if test "$DFT_LWR_MODEL" = "shared" ; then
+			LOCAL_LDFLAGS="-Wl,-rpath,\$(LOCAL_LIBDIR)"
+			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
+		fi
+		if test "$cf_cv_ld_rpath" = yes ; then
+			cf_ld_rpath_opt="-Wl,-rpath,"
+			EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
+		fi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
-		MK_SHARED_LIB='${LD} -Bshareable -soname,`basename $[@].${ABI_VERSION}` -o $[@]'
+		CF_SHARED_SONAME
+		MK_SHARED_LIB='${CC} ${CFLAGS} -Wl,-Bshareable,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
 		;;
 	openbsd*|freebsd[[12]].*)
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
@@ -4143,7 +4194,7 @@ CF_EOF
 			fi
 			fi
 			CF_SHARED_SONAME
-			MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_shared_soname' -o $[@]'
+			MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname' -o $[@]'
 		else
 			MK_SHARED_LIB='${LD} -Bshareable -o $[@]'
 		fi
@@ -4205,9 +4256,9 @@ CF_EOF
 		CF_SHARED_SONAME
 		if test "$GCC" != yes; then
 			CC_SHARED_OPTS='-xcode=pic32'
-			MK_SHARED_LIB='${CC} -dy -G -h '$cf_shared_soname' -o $[@]'
+			MK_SHARED_LIB='${CC} -dy -G -h '$cf_cv_shared_soname' -o $[@]'
 		else
-			MK_SHARED_LIB='${CC} -shared -dy -G -h '$cf_shared_soname' -o $[@]'
+			MK_SHARED_LIB='${CC} -shared -dy -G -h '$cf_cv_shared_soname' -o $[@]'
 		fi
 		;;
 	sysv5uw7*|unix_sv*)
@@ -4259,9 +4310,9 @@ CF_EOF
 	AC_SUBST(INSTALL_LIB)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_SONAME version: 2 updated: 2006/10/21 12:33:41
+dnl CF_SHARED_SONAME version: 3 updated: 2008/09/08 18:34:43
 dnl ----------------
-dnl utility macro for CF_SHARED_OPTS, constructs "$cf_shared_soname" for
+dnl utility macro for CF_SHARED_OPTS, constructs "$cf_cv_shared_soname" for
 dnl substitution into MK_SHARED_LIB string for the "-soname" (or similar)
 dnl option.
 dnl
@@ -4271,9 +4322,9 @@ define([CF_SHARED_SONAME],
 [
 	test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=ifelse($1,,rel,$1)
 	if test "$cf_cv_shlib_version" = rel; then
-		cf_shared_soname='`basename $[@] .${REL_VERSION}`.${ABI_VERSION}'
+		cf_cv_shared_soname='`basename $[@] .${REL_VERSION}`.${ABI_VERSION}'
 	else
-		cf_shared_soname='`basename $[@]`'
+		cf_cv_shared_soname='`basename $[@]`'
 	fi
 ])
 dnl ---------------------------------------------------------------------------
