@@ -703,6 +703,7 @@
 ./misc/ncurses-config.in
 ./misc/ncurses.def
 ./misc/ncurses.ref
+./misc/ncurses.supp
 ./misc/panel.def
 ./misc/panel.ref
 ./misc/run_tic.in

@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.390 2008/09/07 14:01:37 tom Exp $
+ * $Id: curses.priv.h,v 1.392 2008/09/20 21:14:11 tom Exp $
  *
  *	curses.priv.h
  *
@@ -845,6 +845,7 @@ struct screen {
 	bool		_mouse_gpm_loaded;
 	bool		_mouse_gpm_found;
 #ifdef HAVE_LIBDL
+	void		*_dlopen_gpm;
 	TYPE_gpm_fd	_mouse_gpm_fd;
 	TYPE_Gpm_Open	_mouse_Gpm_Open;
 	TYPE_Gpm_Close	_mouse_Gpm_Close;
@@ -1592,6 +1593,7 @@ extern NCURSES_EXPORT(int) _nc_setupscreen (int, int, FILE *, bool, int);
 extern NCURSES_EXPORT(int) _nc_timed_wait (SCREEN *, int, int, int * EVENTLIST_2nd(_nc_eventlist *));
 extern NCURSES_EXPORT(void) _nc_do_color (short, short, bool, int (*)(int));
 extern NCURSES_EXPORT(void) _nc_flush (void);
+extern NCURSES_EXPORT(void) _nc_free_and_exit (int);
 extern NCURSES_EXPORT(void) _nc_free_entry (ENTRY *, TERMTYPE *);
 extern NCURSES_EXPORT(void) _nc_freeall (void);
 extern NCURSES_EXPORT(void) _nc_hash_map (void);

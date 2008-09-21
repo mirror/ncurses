@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.463 2008/09/13 16:54:28 tom Exp $
+dnl $Id: aclocal.m4,v 1.465 2008/09/20 23:52:48 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2076,7 +2076,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 51 updated: 2008/09/13 11:34:16
+dnl CF_LIB_RULES version: 53 updated: 2008/09/20 19:51:59
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -2093,6 +2093,12 @@ AC_DEFUN([CF_LIB_RULES],
 [
 CF_LIB_PREFIX(cf_prefix)
 AC_REQUIRE([CF_SUBST_NCURSES_VERSION])
+
+if test $cf_cv_shlib_version = cygdll ; then
+	TINFO_NAME=$TINFO_ARG_SUFFIX
+	TINFO_SUFFIX=.dll
+fi
+
 for cf_dir in $SRC_SUBDIRS
 do
 	if test ! -d $srcdir/$cf_dir ; then
@@ -2145,7 +2151,8 @@ do
 			# use autodetected ${cf_prefix} for import lib and static lib, but
 			# use 'cyg' prefix for shared lib.
 			if test $cf_cv_shlib_version = cygdll ; then
-				LIBS_TO_MAKE="$LIBS_TO_MAKE ../lib/cyg${cf_dir}\${ABI_VERSION}.dll"
+				cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
+				LIBS_TO_MAKE="$LIBS_TO_MAKE ../lib/cyg${cf_dir}${cf_cygsuf}"
 				continue
 			fi
 			fi
@@ -2155,24 +2162,28 @@ do
 		if test $cf_dir = ncurses ; then
 			cf_subsets="$LIB_SUBSETS"
 			cf_r_parts="$cf_subsets"
+			cf_liblist="$LIBS_TO_MAKE"
 
 			while test -n "$cf_r_parts"
 			do
 				cf_l_parts=`echo "$cf_r_parts" |sed -e 's/ .*$//'`
 				cf_r_parts=`echo "$cf_r_parts" |sed -e 's/^[[^ ]]* //'`
 				if test "$cf_l_parts" != "$cf_r_parts" ; then
+					cf_item=
 					case $cf_l_parts in #(vi
 					*termlib*) #(vi
-						cf_item=`echo $LIBS_TO_MAKE |sed -e s%${LIB_NAME}${LIB_SUFFIX}%${TINFO_LIB_SUFFIX}%g`
+						cf_item=`echo $cf_liblist |sed -e s%${LIB_NAME}${LIB_SUFFIX}%${TINFO_LIB_SUFFIX}%g`
 						;;
 					*ticlib*)
-						cf_item=`echo $LIBS_TO_MAKE |sed -e s%${LIB_NAME}${LIB_SUFFIX}%${TICS_LIB_SUFFIX}%g`
+						cf_item=`echo $cf_liblist |sed -e s%${LIB_NAME}${LIB_SUFFIX}%${TICS_LIB_SUFFIX}%g`
 						;;
 					*)
 						break
 						;;
 					esac
-					LIBS_TO_MAKE="$cf_item $LIBS_TO_MAKE"
+					if test -n "$cf_item"; then
+						LIBS_TO_MAKE="$cf_item $LIBS_TO_MAKE"
+					fi
 				else
 					break
 				fi
@@ -2205,22 +2216,21 @@ do
 			if test $cf_dir = ncurses ; then
 				case $cf_subset in
 				*base*)
+					cf_libname=${cf_libname}$LIB_SUFFIX
 					;;
 				*termlib*)
 					cf_libname=$TINFO_LIB_SUFFIX
-					if test -n "${DFT_ARG_SUFFIX}" ; then
-						# undo $LIB_SUFFIX add-on in CF_LIB_SUFFIX
-						cf_suffix=`echo $cf_suffix |sed -e "s%^${LIB_SUFFIX}%%"`
-					fi
 					;;
 				ticlib*)
 					cf_libname=$TICS_LIB_SUFFIX
-					if test -n "${DFT_ARG_SUFFIX}" ; then
-						# undo $LIB_SUFFIX add-on in CF_LIB_SUFFIX
-						cf_suffix=`echo $cf_suffix |sed -e "s%^${LIB_SUFFIX}%%"`
-					fi
 					;;
 				esac
+			else
+				cf_libname=${cf_libname}$LIB_SUFFIX
+			fi
+			if test -n "${DFT_ARG_SUFFIX}" ; then
+				# undo $LIB_SUFFIX add-on in CF_LIB_SUFFIX
+				cf_suffix=`echo $cf_suffix |sed -e "s%^${LIB_SUFFIX}%%"`
 			fi
 
 			# These dependencies really are for development, not

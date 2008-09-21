@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.98 2008/08/16 21:20:48 Werner.Fink Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.99 2008/09/20 19:46:13 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -381,7 +381,7 @@ _nc_wgetch(WINDOW *win,
 
     recur_wrefresh(win);
 
-    if (!win->_notimeout && (win->_delay >= 0 || sp->_cbreak > 1)) {
+    if (win->_notimeout || (win->_delay >= 0) || (sp->_cbreak > 1)) {
 	if (head == -1) {	/* fifo is empty */
 	    int delay;
 	    int rc;

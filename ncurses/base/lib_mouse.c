@@ -79,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.97 2008/08/16 18:55:01 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.98 2008/09/20 21:26:19 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -150,7 +150,7 @@ make an error
 #define LIBGPM_SONAME "libgpm.so"
 #endif
 
-#define GET_DLSYM(name) (my_##name = (TYPE_##name) dlsym(obj, #name))
+#define GET_DLSYM(name) (my_##name = (TYPE_##name) dlsym(SP->_dlopen_gpm, #name))
 
 #endif				/* USE_GPM_SUPPORT */
 
@@ -415,6 +415,15 @@ enable_gpm_mouse(SCREEN *sp, int enable)
 	}
 	result = FALSE;
     }
+#ifdef HAVE_LIBDL
+    if (!result && (SP->_dlopen_gpm != 0)) {
+	T(("unload GPM library"));
+	SP->_mouse_gpm_found = FALSE;
+	SP->_mouse_gpm_loaded = FALSE;
+	dlclose(SP->_dlopen_gpm);
+	SP->_dlopen_gpm = 0;
+    }
+#endif
     returnBool(result);
 }
 #endif /* USE_GPM_SUPPORT */
@@ -431,15 +440,13 @@ initialize_mousetype(SCREEN *sp)
     if (allow_gpm_mouse()) {
 	if (!sp->_mouse_gpm_loaded) {
 #ifdef HAVE_LIBDL
-	    void *obj;
-
-	    if ((obj = dlopen(LIBGPM_SONAME, my_RTLD)) != 0) {
+	    if ((SP->_dlopen_gpm = dlopen(LIBGPM_SONAME, my_RTLD)) != 0) {
 		if (GET_DLSYM(gpm_fd) == 0 ||
 		    GET_DLSYM(Gpm_Open) == 0 ||
 		    GET_DLSYM(Gpm_Close) == 0 ||
 		    GET_DLSYM(Gpm_GetEvent) == 0) {
 		    T(("GPM initialization failed: %s", dlerror()));
-		    dlclose(obj);
+		    dlclose(SP->_dlopen_gpm);
 		} else {
 		    sp->_mouse_gpm_found = TRUE;
 		}
