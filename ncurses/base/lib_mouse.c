@@ -79,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.98 2008/09/20 21:26:19 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.99 2008/09/25 21:47:51 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -381,29 +381,69 @@ allow_gpm_mouse(void)
     return FALSE;
 }
 
+#ifdef HAVE_LIBDL
+static void
+unload_gpm_library(SCREEN *sp)
+{
+    if (SP->_dlopen_gpm != 0) {
+	T(("unload GPM library"));
+	sp->_mouse_gpm_loaded = FALSE;
+	dlclose(sp->_dlopen_gpm);
+	sp->_dlopen_gpm = 0;
+    }
+}
+
+static void
+load_gpm_library(SCREEN *sp)
+{
+    sp->_mouse_gpm_found = FALSE;
+    if ((sp->_dlopen_gpm = dlopen(LIBGPM_SONAME, my_RTLD)) != 0) {
+	if (GET_DLSYM(gpm_fd) == 0 ||
+	    GET_DLSYM(Gpm_Open) == 0 ||
+	    GET_DLSYM(Gpm_Close) == 0 ||
+	    GET_DLSYM(Gpm_GetEvent) == 0) {
+	    T(("GPM initialization failed: %s", dlerror()));
+	    unload_gpm_library(sp);
+	} else {
+	    sp->_mouse_gpm_found = TRUE;
+	    sp->_mouse_gpm_loaded = TRUE;
+	}
+    }
+}
+#endif
+
 static bool
-enable_gpm_mouse(SCREEN *sp, int enable)
+enable_gpm_mouse(SCREEN *sp, bool enable)
 {
     bool result;
 
     T((T_CALLED("enable_gpm_mouse(%d)"), enable));
 
     if (enable && !sp->_mouse_active) {
-	/* GPM: initialize connection to gpm server */
-	sp->_mouse_gpm_connect.eventMask = GPM_DOWN | GPM_UP;
-	sp->_mouse_gpm_connect.defaultMask =
-	    (unsigned short) (~(sp->_mouse_gpm_connect.eventMask | GPM_HARD));
-	sp->_mouse_gpm_connect.minMod = 0;
-	sp->_mouse_gpm_connect.maxMod =
-	    (unsigned short) (~((1 << KG_SHIFT) |
-				(1 << KG_SHIFTL) |
-				(1 << KG_SHIFTR)));
-	/*
-	 * Note: GPM hardcodes \E[?1001s and \E[?1000h during its open.
-	 * The former is recognized by wscons (SunOS), and the latter by
-	 * xterm.  Those will not show up in ncurses' traces.
-	 */
-	result = (my_Gpm_Open(&sp->_mouse_gpm_connect, 0) >= 0);
+#ifdef HAVE_LIBDL
+	if (sp->_mouse_gpm_found && !sp->_mouse_gpm_loaded) {
+	    load_gpm_library(sp);
+	}
+#endif
+	if (sp->_mouse_gpm_loaded) {
+	    /* GPM: initialize connection to gpm server */
+	    sp->_mouse_gpm_connect.eventMask = GPM_DOWN | GPM_UP;
+	    sp->_mouse_gpm_connect.defaultMask =
+		(unsigned short) (~(sp->_mouse_gpm_connect.eventMask | GPM_HARD));
+	    sp->_mouse_gpm_connect.minMod = 0;
+	    sp->_mouse_gpm_connect.maxMod =
+		(unsigned short) (~((1 << KG_SHIFT) |
+				    (1 << KG_SHIFTL) |
+				    (1 << KG_SHIFTR)));
+	    /*
+	     * Note: GPM hardcodes \E[?1001s and \E[?1000h during its open.
+	     * The former is recognized by wscons (SunOS), and the latter by
+	     * xterm.  Those will not show up in ncurses' traces.
+	     */
+	    result = (my_Gpm_Open(&sp->_mouse_gpm_connect, 0) >= 0);
+	} else {
+	    result = FALSE;
+	}
 	sp->_mouse_active = result;
 	T(("GPM open %s", result ? "succeeded" : "failed"));
     } else {
@@ -413,15 +453,11 @@ enable_gpm_mouse(SCREEN *sp, int enable)
 	    sp->_mouse_active = FALSE;
 	    T(("GPM closed"));
 	}
-	result = FALSE;
+	result = enable;
     }
 #ifdef HAVE_LIBDL
-    if (!result && (SP->_dlopen_gpm != 0)) {
-	T(("unload GPM library"));
-	SP->_mouse_gpm_found = FALSE;
-	SP->_mouse_gpm_loaded = FALSE;
-	dlclose(SP->_dlopen_gpm);
-	SP->_dlopen_gpm = 0;
+    if (!result) {
+	unload_gpm_library(sp);
     }
 #endif
     returnBool(result);
@@ -440,21 +476,11 @@ initialize_mousetype(SCREEN *sp)
     if (allow_gpm_mouse()) {
 	if (!sp->_mouse_gpm_loaded) {
 #ifdef HAVE_LIBDL
-	    if ((SP->_dlopen_gpm = dlopen(LIBGPM_SONAME, my_RTLD)) != 0) {
-		if (GET_DLSYM(gpm_fd) == 0 ||
-		    GET_DLSYM(Gpm_Open) == 0 ||
-		    GET_DLSYM(Gpm_Close) == 0 ||
-		    GET_DLSYM(Gpm_GetEvent) == 0) {
-		    T(("GPM initialization failed: %s", dlerror()));
-		    dlclose(SP->_dlopen_gpm);
-		} else {
-		    sp->_mouse_gpm_found = TRUE;
-		}
-	    }
+	    load_gpm_library(sp);
 #else /* !HAVE_LIBDL */
 	    sp->_mouse_gpm_found = TRUE;
-#endif
 	    sp->_mouse_gpm_loaded = TRUE;
+#endif
 	}
 
 	/*
@@ -904,7 +930,7 @@ mouse_activate(SCREEN *sp, bool on)
 	    break;
 #if USE_GPM_SUPPORT
 	case M_GPM:
-	    if (enable_gpm_mouse(sp, 1)) {
+	    if (enable_gpm_mouse(sp, TRUE)) {
 		sp->_mouse_fd = *(my_gpm_fd);
 		T(("GPM mouse_fd %d", sp->_mouse_fd));
 	    }
@@ -936,7 +962,7 @@ mouse_activate(SCREEN *sp, bool on)
 	    break;
 #if USE_GPM_SUPPORT
 	case M_GPM:
-	    enable_gpm_mouse(sp, 0);
+	    enable_gpm_mouse(sp, FALSE);
 	    break;
 #endif
 #if USE_SYSMOUSE
