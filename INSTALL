@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.129 2008/08/23 20:02:46 tom Exp $
+-- $Id: INSTALL,v 1.130 2008/09/27 22:04:56 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -604,6 +604,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Override the ABI version, which is used in shared library filenames.
 	Normally this is the same as the release version; some ports have
 	special requirements for compatibility.
+
+	This option does not affect linking with libtool, which uses the
+	release major/minor numbers.
 
     --with-ada-compiler=CMD
 	Specify the Ada95 compiler command (default "gnatmake")

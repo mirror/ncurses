@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.328 2008/09/13 18:56:02 tom Exp $
+$Id: ncurses.c,v 1.329 2008/09/27 14:34:58 tom Exp $
 
 ***************************************************************************/
 
@@ -2513,7 +2513,7 @@ slk_help(void)
 #if HAVE_SLK_COLOR
 	,"F/B        -- cycle through foreground/background colors"
 #endif
-	,"ESC  -- return to main menu"
+	,"ESC        -- return to main menu"
 	,""
 	,"Note: if activating the soft keys causes your terminal to scroll up"
 	,"one line, your terminal auto-scrolls when anything is written to the"

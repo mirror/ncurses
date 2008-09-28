@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.89 2007/09/01 18:57:29 tom Exp $
+.\" $Id: ncurses.3x,v 1.90 2008/09/27 19:30:39 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ds n 5
@@ -829,6 +829,18 @@ For example, to tell ncurses to not assume anything
 about the colors, set this to "-1,-1".
 To make it green-on-black, set it to "2,0".
 Any positive value from zero to the terminfo \fBmax_colors\fR value is allowed.
+.TP 5
+NCURSES_GPM_TERMS
+This applies only to ncurses configured to use the GPM interface.
+.IP
+If present,
+the environment variable is a list of one or more terminal names
+against which the TERM environment variable is matched.
+Setting it to an empty value disables the GPM interface;
+using the built-in support for xterm, etc.
+.IP
+If the environment variable is absent,
+ncurses will attempt to open GPM if TERM contains "linux".
 .TP 5
 NCURSES_NO_HARD_TABS
 \fBNcurses\fP may use tabs as part of the cursor movement optimization.

@@ -40,7 +40,27 @@
 #include <curses.priv.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.16 2008/08/03 22:40:27 tom Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.17 2008/09/27 14:07:53 juergen Exp $")
+
+/*
+ * Paint the info line for the PC style SLK emulation.
+ */
+static void
+slk_paint_info(WINDOW *win)
+{
+    SCREEN *sp = _nc_screen_of(win);
+
+    if (win && sp && (sp->slk_format == 4)) {
+	int i;
+
+	mvwhline(win, 0, 0, 0, getmaxx(win));
+	wmove(win, 0, 0);
+
+	for (i = 0; i < sp->_slk->maxlab; i++) {
+	    mvwprintw(win, 0, sp->_slk->ent[i].ent_x, "F%d", i + 1);
+	}
+    }
+}
 
 /*
  * Write the soft labels to the soft-key window.
@@ -60,6 +80,8 @@ slk_intern_refresh(SLK * slk)
 			putp(TPARM_2(plab_norm, i + 1, slk->ent[i].form_text));
 		    }
 		} else {
+		    if (fmt == 4)
+			slk_paint_info(slk->win);
 		    wmove(slk->win, SLK_LINES(fmt) - 1, slk->ent[i].ent_x);
 		    if (SP->_slk) {
 			wattrset(slk->win, AttrOf(SP->_slk->attr));

@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.16 $
---  $Date: 2008/07/26 18:48:46 $
+--  $Revision: 1.17 $
+--  $Date: 2008/09/27 14:42:40 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Text_IO;
@@ -191,7 +191,7 @@ package body Sample is
 
          Set_Soft_Label_Key_Attributes (Color => Header_Color);
          --  This propagates the attributes to the label window
-         Clear_Soft_Label_Keys; Restore_Soft_Label_Keys;
+         Refresh_Soft_Label_Keys;
       end if;
 
       Init_Keyboard_Handler;

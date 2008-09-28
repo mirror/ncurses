@@ -79,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.99 2008/09/25 21:47:51 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.101 2008/09/27 19:14:52 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -365,20 +365,33 @@ enable_xterm_mouse(SCREEN *sp, int enable)
 }
 
 #if USE_GPM_SUPPORT
-static int
+static bool
 allow_gpm_mouse(void)
 {
+    bool result = FALSE;
+
     /* GPM does printf's without checking if stdout is a terminal */
     if (isatty(fileno(stdout))) {
+	char *list = getenv("NCURSES_GPM_TERMS");
 	char *env = getenv("TERM");
-	/* GPM checks the beginning of the $TERM variable to decide if
-	 * it should pass xterm events through.  There is no real advantage
-	 * in allowing GPM to do this.
-	 */
-	if (env == 0 || strncmp(env, "xterm", 5))
-	    return TRUE;
+	if (list != 0) {
+	    if (env != 0) {
+		result = _nc_name_match(list, env, "|:");
+	    }
+	} else {
+	    /* GPM checks the beginning of the $TERM variable to decide if it
+	     * should pass xterm events through.  There is no real advantage in
+	     * allowing GPM to do this.  Recent versions relax that check, and
+	     * pretend that GPM can work with any terminal having the kmous
+	     * capability.  Perhaps that works for someone.  If so, they can
+	     * set the environment variable (above).
+	     */
+	    if (env != 0 && strstr(env, "linux") != 0) {
+		result = TRUE;
+	    }
+	}
     }
-    return FALSE;
+    return result;
 }
 
 #ifdef HAVE_LIBDL
@@ -388,6 +401,7 @@ unload_gpm_library(SCREEN *sp)
     if (SP->_dlopen_gpm != 0) {
 	T(("unload GPM library"));
 	sp->_mouse_gpm_loaded = FALSE;
+	sp->_mouse_fd = -1;
 	dlclose(sp->_dlopen_gpm);
 	sp->_dlopen_gpm = 0;
     }

@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.392 2008/09/20 21:14:11 tom Exp $
+ * $Id: curses.priv.h,v 1.393 2008/09/27 22:12:07 tom Exp $
  *
  *	curses.priv.h
  *
@@ -147,7 +147,7 @@ extern int errno;
 #define HAVE_SIZECHANGE 0
 #endif
 
-#if HAVE_SIZECHANGE && defined(SIGWINCH)
+#if HAVE_SIZECHANGE && USE_SIGWINCH && defined(SIGWINCH)
 #define USE_SIZECHANGE 1
 #else
 #define USE_SIZECHANGE 0
