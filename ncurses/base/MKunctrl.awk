@@ -1,4 +1,4 @@
-# $Id: MKunctrl.awk,v 1.22 2008/05/31 19:36:11 tom Exp $
+# $Id: MKunctrl.awk,v 1.23 2008/10/04 21:40:24 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -101,6 +101,7 @@ END	{
 		blob = blob "\"";
 
 		print ""
+		printf "#if NCURSES_EXT_FUNCS\n";
 		if (bigstrings) {
 			blob = blob "\n/* printable values in 128-255 range */"
 			printf "static const short unctrl_c1[] = {"
@@ -135,6 +136,7 @@ END	{
 			}
 		}
 		print "};"
+		print "#endif /* NCURSES_EXT_FUNCS */"
 		blob = blob "\"\n"
 
 		print ""

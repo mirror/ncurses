@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.78 2008/09/06 22:01:24 tom Exp $ */
+/* $Id: test.priv.h,v 1.79 2008/10/04 21:53:41 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -548,9 +548,11 @@ typedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);
 
 #if HAVE_USE_WINDOW
 #define USING_WINDOW(w,func) use_window(w, (NCURSES_WINDOW_CB) func, w)
+#define USING_WINDOW2(w,func,data) use_window(w, (NCURSES_WINDOW_CB) func, data)
 #define WANT_USE_WINDOW() extern void _nc_want_use_window(void)
 #else
 #define USING_WINDOW(w,func) func(w)
+#define USING_WINDOW2(w,func,data) func(w,data)
 #define WANT_USE_WINDOW() extern void _nc_want_use_window(void)
 #endif
 
@@ -558,7 +560,7 @@ typedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);
 #define USING_SCREEN(s,func,data) use_screen(s, (NCURSES_SCREEN_CB) func, data)
 #define WANT_USE_SCREEN() extern void _nc_want_use_screen(void)
 #else
-#define USING_SCREEN(s,func,data) func(data)
+#define USING_SCREEN(s,func,data) func(s,data)
 #define WANT_USE_SCREEN() extern void _nc_want_use_screen(void)
 #endif
 

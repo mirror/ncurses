@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.60 2007/09/15 17:55:33 tom Exp $
+#  $Id: Makefile.in,v 1.61 2008/10/04 22:58:31 tom Exp $
 #
 .SUFFIXES:
 
@@ -79,7 +79,7 @@ LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS)
 RANLIB		= @RANLIB@
 
 M4		= m4
-M4FLAGS		=
+M4FLAGS		= -DNCURSES_EXT_FUNCS=@NCURSES_EXT_FUNCS@
 
 ADACURSES_CONFIG = adacurses-config
 

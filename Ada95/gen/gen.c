@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2005,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998,2007,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.48 2007/05/05 17:24:36 tom Exp $
+    $Id: gen.c,v 1.49 2008/10/04 21:59:37 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -1147,15 +1147,13 @@ color_def(const char *name, int value)
   printf("   %-16s : constant Color_Number := %d;\n", name, value);
 }
 
-#define HAVE_USE_DEFAULT_COLORS 1
-
 /*
  * Generate all color definitions
  */
 static void
 gen_color(void)
 {
-#ifdef HAVE_USE_DEFAULT_COLORS
+#if HAVE_USE_DEFAULT_COLORS
   color_def("Default_Color", -1);
 #endif
 #ifdef COLOR_BLACK

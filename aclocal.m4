@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.465 2008/09/20 23:52:48 tom Exp $
+dnl $Id: aclocal.m4,v 1.466 2008/10/04 21:21:40 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -331,7 +331,7 @@ You have the following choices:
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_AWK_BIG_PRINTF version: 1 updated: 2008/09/06 17:17:18
+dnl CF_AWK_BIG_PRINTF version: 2 updated: 2008/10/04 17:16:18
 dnl -----------------
 dnl Check if awk can handle big strings using printf.  Some older versions of
 dnl awk choke on large strings passed via "%s".
@@ -346,7 +346,7 @@ AC_DEFUN([CF_AWK_BIG_PRINTF],
         ;;
     *) #(vi
         if ( ${AWK} 'BEGIN { xx = "x"; while (length(xx) < $1) { xx = xx "x"; }; printf("%s\n", xx); }' \
-            | $AWK '{ if (length([$]0) != $1) exit 1; }' 2>/dev/null >/dev/null ); then
+            | $AWK '{ printf "%d\n", length([$]0); }' | $AWK 'BEGIN { eqls=0; recs=0; } { recs++; if ([$]0 == 12000) eqls++; } END { if (recs != 1 || eqls != 1) exit 1; }' 2>/dev/null >/dev/null ) ; then
             eval $2=yes
         else
             eval $2=no

@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.393 2008/09/27 22:12:07 tom Exp $
+ * $Id: curses.priv.h,v 1.394 2008/10/04 21:37:45 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1440,6 +1440,10 @@ extern NCURSES_EXPORT(void) _nc_UpdateAttrs (NCURSES_CH_T);
 
 extern NCURSES_EXPORT(void) _nc_expanded (void);
 
+#endif
+
+#if !NCURSES_EXT_FUNCS
+#define set_escdelay(value) ESCDELAY = value
 #endif
 
 #if !HAVE_GETCWD
