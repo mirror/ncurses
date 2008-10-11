@@ -50,7 +50,7 @@
 <FONT COLOR=green><EM>--  |</EM></FONT>
 <b>with</b> System;
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_48_35" HREF="terminal_interface-curses-mouse__adb.htm#ref_48_40">Mouse</A></FONT> <b>is</b>
+<b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_48_35" HREF="terminal_interface-curses-mouse__adb.htm#ref_46_40">Mouse</A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-mouse__ads.htm#ref_48_35">Mouse</A>);
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
@@ -87,12 +87,12 @@
                          <FONT COLOR=red><A NAME="ref_82_26">Double_Clicked</A></FONT>,
                          <FONT COLOR=red><A NAME="ref_83_26">Triple_Clicked</A></FONT>);
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_85_9">Button_States</A></FONT> <b>is</b> <b>array</b> (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_79_9">Button_State</A>) <b>of</b> Boolean;
-   <b>pragma</b> Pack (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_85_9">Button_States</A>);
+   <b>type</b> Button_States <b>is</b> <b>array</b> (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_79_9">Button_State</A>) <b>of</b> Boolean;
+   <b>pragma</b> Pack (Button_States);
 
-   <FONT COLOR=red><A NAME="ref_88_4">All_Clicks</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_85_9">Button_States</A> := (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_81_26">Clicked</A> .. <A HREF="terminal_interface-curses-mouse__ads.htm#ref_83_26">Triple_Clicked</A> =&gt; True,
+   <FONT COLOR=red><A NAME="ref_88_4">All_Clicks</A></FONT> : <b>constant</b> Button_States := (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_81_26">Clicked</A> .. <A HREF="terminal_interface-curses-mouse__ads.htm#ref_83_26">Triple_Clicked</A> =&gt; True,
                                            <b>others</b> =&gt; False);
-   <FONT COLOR=red><A NAME="ref_90_4">All_States</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_85_9">Button_States</A> := (<b>others</b> =&gt; True);
+   <FONT COLOR=red><A NAME="ref_90_4">All_States</A></FONT> : <b>constant</b> Button_States := (<b>others</b> =&gt; True);
 
    <b>type</b> <FONT COLOR=red><A NAME="ref_92_9">Mouse_Event</A></FONT> <b>is</b> <b>private</b>;
 
@@ -100,22 +100,22 @@
    <FONT COLOR=green><EM>--  | Man page <A HREF="../man/curs_mouse.3x.html">curs_mouse.3x</A></EM></FONT>
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_98_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_53_13">Has_Mouse</A></FONT> <b>return</b> Boolean;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_98_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_50_13">Has_Mouse</A></FONT> <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  Return true if a mouse device is supported, false otherwise.</EM></FONT>
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_101_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_80_14">Register_Reportable_Event</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_102_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_80_41">Button</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_68_9">Mouse_Button</A>;
-      <FONT COLOR=red><A NAME="ref_103_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_81_41">State</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_79_9">Button_State</A>;
-      <FONT COLOR=red><A NAME="ref_104_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_82_41">Mask</A></FONT>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_101_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_77_14">Register_Reportable_Event</A></FONT>
+     (<FONT COLOR=red><A NAME="ref_102_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_77_41">Button</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_68_9">Mouse_Button</A>;
+      <FONT COLOR=red><A NAME="ref_103_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_78_41">State</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_79_9">Button_State</A>;
+      <FONT COLOR=red><A NAME="ref_104_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_79_41">Mask</A></FONT>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A>);
    <FONT COLOR=green><EM>--  Stores the event described by the button and the state in the mask.</EM></FONT>
    <FONT COLOR=green><EM>--  Before you call this the first time, you should init the mask</EM></FONT>
    <FONT COLOR=green><EM>--  with the Empty_Mask constant</EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_101_14">Register_Reportable_Event</A>);
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_110_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_98_14">Register_Reportable_Events</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_111_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_98_42">Button</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_68_9">Mouse_Button</A>;
-      <FONT COLOR=red><A NAME="ref_112_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_99_42">State</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_85_9">Button_States</A>;
-      <FONT COLOR=red><A NAME="ref_113_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_100_42">Mask</A></FONT>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_110_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_95_14">Register_Reportable_Events</A></FONT>
+     (<FONT COLOR=red><A NAME="ref_111_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_95_42">Button</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_68_9">Mouse_Button</A>;
+      <FONT COLOR=red><A NAME="ref_112_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_96_42">State</A></FONT>  : <b>in</b> Button_States;
+      <FONT COLOR=red><A NAME="ref_113_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_97_42">Mask</A></FONT>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A>);
    <FONT COLOR=green><EM>--  Register all events described by the Button and the State bitmap.</EM></FONT>
    <FONT COLOR=green><EM>--  Before you call this the first time, you should init the mask</EM></FONT>
    <FONT COLOR=green><EM>--  with the Empty_Mask constant</EM></FONT>
@@ -125,25 +125,25 @@
    <FONT COLOR=green><EM>--  old mask, that means the event mask value before this call.</EM></FONT>
    <FONT COLOR=green><EM>--  Not Implemented: The library version</EM></FONT>
    <FONT COLOR=green><EM>--  returns a Mouse_Mask that tells which events are reported.</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_123_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_110_13">Start_Mouse</A></FONT> (<FONT COLOR=red><A NAME="ref_123_26" HREF="terminal_interface-curses-mouse__adb.htm#ref_110_26">Mask</A></FONT> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_66_4">All_Events</A>)
+   <b>function</b> <FONT COLOR=red><A NAME="ref_123_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_107_13">Start_Mouse</A></FONT> (<FONT COLOR=red><A NAME="ref_123_26" HREF="terminal_interface-curses-mouse__adb.htm#ref_107_26">Mask</A></FONT> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_66_4">All_Events</A>)
                          <b>return</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">mousemask()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_123_13">Start_Mouse</A>);
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_128_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_126_14">End_Mouse</A></FONT> (<FONT COLOR=red><A NAME="ref_128_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_126_25">Mask</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_65_4">No_Events</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_128_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_123_14">End_Mouse</A></FONT> (<FONT COLOR=red><A NAME="ref_128_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_123_25">Mask</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_65_4">No_Events</A>);
    <FONT COLOR=green><EM>--  Terminates the mouse, restores the specified event mask</EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_128_14">End_Mouse</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_2"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_133_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_65_13">Get_Mouse</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_133_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_62_13">Get_Mouse</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">getmouse()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_133_13">Get_Mouse</A>);
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_137_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_174_14">Get_Event</A></FONT> (<FONT COLOR=red><A NAME="ref_137_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_174_25">Event</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>;
-                        <FONT COLOR=red><A NAME="ref_138_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_175_25">Y</A></FONT>      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
-                        <FONT COLOR=red><A NAME="ref_139_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_176_25">X</A></FONT>      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
-                        <FONT COLOR=red><A NAME="ref_140_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_177_25">Button</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_68_9">Mouse_Button</A>;
-                        <FONT COLOR=red><A NAME="ref_141_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_178_25">State</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_79_9">Button_State</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_137_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_171_14">Get_Event</A></FONT> (<FONT COLOR=red><A NAME="ref_137_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_171_25">Event</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>;
+                        <FONT COLOR=red><A NAME="ref_138_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_172_25">Y</A></FONT>      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
+                        <FONT COLOR=red><A NAME="ref_139_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_173_25">X</A></FONT>      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
+                        <FONT COLOR=red><A NAME="ref_140_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_174_25">Button</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_68_9">Mouse_Button</A>;
+                        <FONT COLOR=red><A NAME="ref_141_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_175_25">State</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_79_9">Button_State</A>);
    <FONT COLOR=green><EM>--  !!! Warning: X and Y are screen coordinates. Due to ripped of lines they</EM></FONT>
    <FONT COLOR=green><EM>--  may not be identical to window coordinates.</EM></FONT>
    <FONT COLOR=green><EM>--  Not Implemented: Get_Event only reports one event, the C library</EM></FONT>
@@ -151,19 +151,19 @@
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_137_14">Get_Event</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_3"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_149_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_187_14">Unget_Mouse</A></FONT> (<FONT COLOR=red><A NAME="ref_149_27" HREF="terminal_interface-curses-mouse__adb.htm#ref_187_27">Event</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_149_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_184_14">Unget_Mouse</A></FONT> (<FONT COLOR=red><A NAME="ref_149_27" HREF="terminal_interface-curses-mouse__adb.htm#ref_184_27">Event</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">ungetmouse()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_149_14">Unget_Mouse</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_4"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_154_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_197_13">Enclosed_In_Window</A></FONT> (<FONT COLOR=red><A NAME="ref_154_33" HREF="terminal_interface-curses-mouse__adb.htm#ref_197_33">Win</A></FONT>    : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-                                <FONT COLOR=red><A NAME="ref_155_33" HREF="terminal_interface-curses-mouse__adb.htm#ref_198_33">Event</A></FONT>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>) <b>return</b> Boolean;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_154_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_194_13">Enclosed_In_Window</A></FONT> (<FONT COLOR=red><A NAME="ref_154_33" HREF="terminal_interface-curses-mouse__adb.htm#ref_194_33">Win</A></FONT>    : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
+                                <FONT COLOR=red><A NAME="ref_155_33" HREF="terminal_interface-curses-mouse__adb.htm#ref_195_33">Event</A></FONT>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>) <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">wenclose()</A></EM></FONT>
    <FONT COLOR=green><EM>--  But : use event instead of screen coordinates.</EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_154_13">Enclosed_In_Window</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_5"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_161_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_212_13">Mouse_Interval</A></FONT> (<FONT COLOR=red><A NAME="ref_161_29" HREF="terminal_interface-curses-mouse__adb.htm#ref_212_29">Msec</A></FONT> : Natural := 200) <b>return</b> Natural;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_161_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_209_13">Mouse_Interval</A></FONT> (<FONT COLOR=red><A NAME="ref_161_29" HREF="terminal_interface-curses-mouse__adb.htm#ref_209_29">Msec</A></FONT> : Natural := 200) <b>return</b> Natural;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">mouseinterval()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_161_13">Mouse_Interval</A>);
 
@@ -182,11 +182,11 @@
 
    <b>for</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A> <b>use</b>
       <b>record</b>
-         Id      <b>at</b> 0 <b>range</b>   0 ..  15;
-         X       <b>at</b> 0 <b>range</b>  32 ..  63;
-         Y       <b>at</b> 0 <b>range</b>  64 ..  95;
-         Z       <b>at</b> 0 <b>range</b>  96 .. 127;
-         Bstate  <b>at</b> 0 <b>range</b> 128 .. 159;
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_170_10">Id</A>      <b>at</b> 0 <b>range</b>   0 ..  15;
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_172_10">X</A>       <b>at</b> 0 <b>range</b>  32 ..  63;
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_172_13">Y</A>       <b>at</b> 0 <b>range</b>  64 ..  95;
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_172_16">Z</A>       <b>at</b> 0 <b>range</b>  96 .. 127;
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_174_10">Bstate</A>  <b>at</b> 0 <b>range</b> 128 .. 159;
       <b>end</b> <b>record</b>;
       <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
       <FONT COLOR=green><EM>--               different on your system.</EM></FONT>

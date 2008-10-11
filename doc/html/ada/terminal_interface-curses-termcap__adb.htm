@@ -116,8 +116,8 @@
       <FONT COLOR=red><A NAME="ref_111_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses-termcap__ads.htm#ref_73_26">Name</A>'Length);
       <FONT COLOR=red><A NAME="ref_112_7">Length</A></FONT> : size_t;
       <FONT COLOR=red><A NAME="ref_113_7">Txt2</A></FONT>   : chars_ptr;
-      <b>type</b> <FONT COLOR=red><A NAME="ref_114_12">t</A></FONT> <b>is</b> <b>new</b> char_array (0 .. 1024); <FONT COLOR=green><EM>--  does it need to be 1024?</EM></FONT>
-      <FONT COLOR=red><A NAME="ref_115_7">Return_Buffer</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-termcap__adb.htm#ref_114_12">t</A> := (<b>others</b> =&gt; nul);
+      <b>type</b> t <b>is</b> <b>new</b> char_array (0 .. 1024); <FONT COLOR=green><EM>--  does it need to be 1024?</EM></FONT>
+      <FONT COLOR=red><A NAME="ref_115_7">Return_Buffer</A></FONT> : <b>constant</b> t := (<b>others</b> =&gt; nul);
    <b>begin</b>
       To_C (<A HREF="terminal_interface-curses-termcap__ads.htm#ref_73_26">Name</A>, <A HREF="terminal_interface-curses-termcap__adb.htm#ref_111_7">Txt</A>, <A HREF="terminal_interface-curses-termcap__adb.htm#ref_112_7">Length</A>);
       <A HREF="terminal_interface-curses-termcap__adb.htm#ref_113_7">Txt2</A> := <A HREF="terminal_interface-curses-termcap__adb.htm#ref_108_16">tgetstr</A> (<A HREF="terminal_interface-curses-termcap__adb.htm#ref_111_7">Txt</A>, char_array (<A HREF="terminal_interface-curses-termcap__adb.htm#ref_115_7">Return_Buffer</A>));
@@ -137,8 +137,8 @@
       <FONT COLOR=red><A NAME="ref_132_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses-termcap__ads.htm#ref_76_25">Name</A>'Length);
       <FONT COLOR=red><A NAME="ref_133_7">Length</A></FONT> : size_t;
       <FONT COLOR=red><A NAME="ref_134_7">Txt2</A></FONT>   : chars_ptr;
-      <b>type</b> <FONT COLOR=red><A NAME="ref_135_12">t</A></FONT> <b>is</b> <b>new</b> char_array (0 .. 1024); <FONT COLOR=green><EM>--  does it need to be 1024?</EM></FONT>
-      <FONT COLOR=red><A NAME="ref_136_7">Phony_Txt</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-termcap__adb.htm#ref_135_12">t</A> := (<b>others</b> =&gt; nul);
+      <b>type</b> t <b>is</b> <b>new</b> char_array (0 .. 1024); <FONT COLOR=green><EM>--  does it need to be 1024?</EM></FONT>
+      <FONT COLOR=red><A NAME="ref_136_7">Phony_Txt</A></FONT> : <b>constant</b> t := (<b>others</b> =&gt; nul);
    <b>begin</b>
       To_C (<A HREF="terminal_interface-curses-termcap__ads.htm#ref_76_25">Name</A>, <A HREF="terminal_interface-curses-termcap__adb.htm#ref_132_7">Txt</A>, <A HREF="terminal_interface-curses-termcap__adb.htm#ref_133_7">Length</A>);
       <A HREF="terminal_interface-curses-termcap__adb.htm#ref_134_7">Txt2</A> := <A HREF="terminal_interface-curses-termcap__adb.htm#ref_129_16">tgetstr</A> (<A HREF="terminal_interface-curses-termcap__adb.htm#ref_132_7">Txt</A>, char_array (<A HREF="terminal_interface-curses-termcap__adb.htm#ref_136_7">Phony_Txt</A>));
@@ -152,7 +152,7 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
    <b>function</b> <FONT COLOR=red><A NAME="ref_148_13" HREF="terminal_interface-curses-termcap__ads.htm#ref_53_13">TGoto</A></FONT> (<FONT COLOR=red><A NAME="ref_148_20" HREF="terminal_interface-curses-termcap__ads.htm#ref_53_20">Cap</A></FONT> : String;
                    <FONT COLOR=red><A NAME="ref_149_20" HREF="terminal_interface-curses-termcap__ads.htm#ref_54_20">Col</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
-                   <FONT COLOR=red><A NAME="ref_150_20" HREF="terminal_interface-curses-termcap__ads.htm#ref_55_20">Row</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>) <b>return</b> <A HREF="terminal_interface-curses-termcap__ads.htm#ref_50_9">Termcap_String</A> <b>is</b>
+                   <FONT COLOR=red><A NAME="ref_150_20" HREF="terminal_interface-curses-termcap__ads.htm#ref_55_20">Row</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>) <b>return</b> Termcap_String <b>is</b>
       <b>function</b> <FONT COLOR=red><A NAME="ref_151_16">tgoto</A></FONT> (<FONT COLOR=red><A NAME="ref_151_23" HREF="terminal_interface-curses-termcap__adb.htm#ref_151_16">cap</A></FONT> : char_array;
                       <FONT COLOR=red><A NAME="ref_152_23" HREF="terminal_interface-curses-termcap__adb.htm#ref_151_16">col</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
                       <FONT COLOR=red><A NAME="ref_153_23" HREF="terminal_interface-curses-termcap__adb.htm#ref_151_16">row</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> chars_ptr;
@@ -161,7 +161,7 @@
       <FONT COLOR=red><A NAME="ref_156_7">Length</A></FONT> : size_t;
    <b>begin</b>
       To_C (<A HREF="terminal_interface-curses-termcap__ads.htm#ref_53_20">Cap</A>, <A HREF="terminal_interface-curses-termcap__adb.htm#ref_155_7">Txt</A>, <A HREF="terminal_interface-curses-termcap__adb.htm#ref_156_7">Length</A>);
-      <b>return</b> <A HREF="terminal_interface-curses-termcap__ads.htm#ref_50_9">Termcap_String</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_121_13">Fill_String</A>
+      <b>return</b> Termcap_String (<A HREF="terminal_interface-curses-aux__ads.htm#ref_121_13">Fill_String</A>
                              (<A HREF="terminal_interface-curses-termcap__adb.htm#ref_151_16">tgoto</A> (<A HREF="terminal_interface-curses-termcap__adb.htm#ref_155_7">Txt</A>, <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses-termcap__ads.htm#ref_54_20">Col</A>), <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses-termcap__ads.htm#ref_55_20">Row</A>))));
    <b>end</b> <A HREF="terminal_interface-curses-termcap__ads.htm#ref_53_13">TGoto</A>;
 

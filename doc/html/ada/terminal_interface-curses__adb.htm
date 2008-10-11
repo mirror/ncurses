@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,8 +40,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author: Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.4 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2007/05/05 20:09:10 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.5 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2008/07/26 18:46:32 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> System;
@@ -59,9 +59,9 @@
 
    <b>package</b> <FONT COLOR=red><A NAME="ref_55_12">ASF</A></FONT> <b>renames</b> Ada.Strings.Fixed;
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_57_9">chtype_array</A></FONT> <b>is</b> <b>array</b> (size_t <b>range</b> &lt;&gt;)
+   <b>type</b> chtype_array <b>is</b> <b>array</b> (size_t <b>range</b> &lt;&gt;)
       <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses__ads.htm#ref_352_9">Attributed_Character</A>;
-   <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses__adb.htm#ref_57_9">chtype_array</A>);
+   <b>pragma</b> Convention (C, chtype_array);
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
    <b>function</b> <FONT COLOR=red><A NAME="ref_62_13" HREF="terminal_interface-curses__ads.htm#ref_1616_13">Key_Name</A></FONT> (<FONT COLOR=red><A NAME="ref_62_23" HREF="terminal_interface-curses__ads.htm#ref_1616_23">Key</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_73_12">Real_Key_Code</A>) <b>return</b> String
@@ -406,15 +406,15 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_402_14" HREF="terminal_interface-curses__ads.htm#ref_677_14">Add</A></FONT>
      (<FONT COLOR=red><A NAME="ref_403_7" HREF="terminal_interface-curses__ads.htm#ref_677_19">Win</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-      <FONT COLOR=red><A NAME="ref_404_7" HREF="terminal_interface-curses__ads.htm#ref_678_19">Str</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>;
+      <FONT COLOR=red><A NAME="ref_404_7" HREF="terminal_interface-curses__ads.htm#ref_678_19">Str</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_371_4">Attributed_String</A>;
       <FONT COLOR=red><A NAME="ref_405_7" HREF="terminal_interface-curses__ads.htm#ref_679_19">Len</A></FONT> : <b>in</b> Integer := -1)
    <b>is</b>
       <b>function</b> <FONT COLOR=red><A NAME="ref_407_16">Waddchnstr</A></FONT> (<FONT COLOR=red><A NAME="ref_407_28" HREF="terminal_interface-curses__adb.htm#ref_407_16">Win</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-                           <FONT COLOR=red><A NAME="ref_408_28" HREF="terminal_interface-curses__adb.htm#ref_407_16">Str</A></FONT> : <A HREF="terminal_interface-curses__adb.htm#ref_57_9">chtype_array</A>;
+                           <FONT COLOR=red><A NAME="ref_408_28" HREF="terminal_interface-curses__adb.htm#ref_407_16">Str</A></FONT> : chtype_array;
                            <FONT COLOR=red><A NAME="ref_409_28" HREF="terminal_interface-curses__adb.htm#ref_407_16">Len</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := -1) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Waddchnstr, "waddchnstr");
 
-      <FONT COLOR=red><A NAME="ref_412_7">Txt</A></FONT> : <A HREF="terminal_interface-curses__adb.htm#ref_57_9">chtype_array</A> (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_678_19">Str</A>'Length);
+      <FONT COLOR=red><A NAME="ref_412_7">Txt</A></FONT> : chtype_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_678_19">Str</A>'Length);
    <b>begin</b>
       <b>for</b> <FONT COLOR=red><A NAME="ref_414_11">Length</A></FONT> <b>in</b> 1 .. size_t (<A HREF="terminal_interface-curses__ads.htm#ref_678_19">Str</A>'Length) <b>loop</b>
          <A HREF="terminal_interface-curses__adb.htm#ref_412_7">Txt</A> (<A HREF="terminal_interface-curses__adb.htm#ref_414_11">Length</A> - 1) := <A HREF="terminal_interface-curses__ads.htm#ref_678_19">Str</A> (Natural (<A HREF="terminal_interface-curses__adb.htm#ref_414_11">Length</A>));
@@ -431,7 +431,7 @@
      (<FONT COLOR=red><A NAME="ref_426_7" HREF="terminal_interface-curses__ads.htm#ref_686_19">Win</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
       <FONT COLOR=red><A NAME="ref_427_7" HREF="terminal_interface-curses__ads.htm#ref_687_19">Line</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
       <FONT COLOR=red><A NAME="ref_428_7" HREF="terminal_interface-curses__ads.htm#ref_688_19">Column</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
-      <FONT COLOR=red><A NAME="ref_429_7" HREF="terminal_interface-curses__ads.htm#ref_689_19">Str</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>;
+      <FONT COLOR=red><A NAME="ref_429_7" HREF="terminal_interface-curses__ads.htm#ref_689_19">Str</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_371_4">Attributed_String</A>;
       <FONT COLOR=red><A NAME="ref_430_7" HREF="terminal_interface-curses__ads.htm#ref_690_19">Len</A></FONT>    : <b>in</b> Integer := -1)
    <b>is</b>
    <b>begin</b>
@@ -1730,16 +1730,16 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_1726_14" HREF="terminal_interface-curses__ads.htm#ref_1438_14">Peek</A></FONT>
      (<FONT COLOR=red><A NAME="ref_1727_7" HREF="terminal_interface-curses__ads.htm#ref_1438_20">Win</A></FONT> : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-      <FONT COLOR=red><A NAME="ref_1728_7" HREF="terminal_interface-curses__ads.htm#ref_1439_20">Str</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>;
+      <FONT COLOR=red><A NAME="ref_1728_7" HREF="terminal_interface-curses__ads.htm#ref_1439_20">Str</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_371_4">Attributed_String</A>;
       <FONT COLOR=red><A NAME="ref_1729_7" HREF="terminal_interface-curses__ads.htm#ref_1440_20">Len</A></FONT> : <b>in</b>  Integer := -1)
    <b>is</b>
       <b>function</b> <FONT COLOR=red><A NAME="ref_1731_16">Winchnstr</A></FONT> (<FONT COLOR=red><A NAME="ref_1731_27" HREF="terminal_interface-curses__adb.htm#ref_1731_16">Win</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-                          <FONT COLOR=red><A NAME="ref_1732_27" HREF="terminal_interface-curses__adb.htm#ref_1731_16">Str</A></FONT> : <A HREF="terminal_interface-curses__adb.htm#ref_57_9">chtype_array</A>;             <FONT COLOR=green><EM>-- out</EM></FONT>
+                          <FONT COLOR=red><A NAME="ref_1732_27" HREF="terminal_interface-curses__adb.htm#ref_1731_16">Str</A></FONT> : chtype_array;             <FONT COLOR=green><EM>-- out</EM></FONT>
                           <FONT COLOR=red><A NAME="ref_1733_27" HREF="terminal_interface-curses__adb.htm#ref_1731_16">Len</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Winchnstr, "winchnstr");
 
       <FONT COLOR=red><A NAME="ref_1736_7">N</A></FONT>   : Integer := <A HREF="terminal_interface-curses__ads.htm#ref_1440_20">Len</A>;
-      <FONT COLOR=red><A NAME="ref_1737_7">Txt</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses__adb.htm#ref_57_9">chtype_array</A> (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1439_20">Str</A>'Length)
+      <FONT COLOR=red><A NAME="ref_1737_7">Txt</A></FONT> : <b>constant</b> chtype_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1439_20">Str</A>'Length)
           := (0 =&gt; <A HREF="terminal_interface-curses__ads.htm#ref_371_4">Default_Character</A>);
       <FONT COLOR=red><A NAME="ref_1739_7">Cnt</A></FONT> : Natural := 0;
    <b>begin</b>
@@ -1769,7 +1769,7 @@
      (<FONT COLOR=red><A NAME="ref_1764_7" HREF="terminal_interface-curses__ads.htm#ref_1447_20">Win</A></FONT>    : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
       <FONT COLOR=red><A NAME="ref_1765_7" HREF="terminal_interface-curses__ads.htm#ref_1448_20">Line</A></FONT>   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
       <FONT COLOR=red><A NAME="ref_1766_7" HREF="terminal_interface-curses__ads.htm#ref_1449_20">Column</A></FONT> : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
-      <FONT COLOR=red><A NAME="ref_1767_7" HREF="terminal_interface-curses__ads.htm#ref_1450_20">Str</A></FONT>    : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>;
+      <FONT COLOR=red><A NAME="ref_1767_7" HREF="terminal_interface-curses__ads.htm#ref_1450_20">Str</A></FONT>    : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_371_4">Attributed_String</A>;
       <FONT COLOR=red><A NAME="ref_1768_7" HREF="terminal_interface-curses__ads.htm#ref_1451_20">Len</A></FONT>    : <b>in</b> Integer := -1)
    <b>is</b>
    <b>begin</b>
@@ -2155,7 +2155,8 @@
          <b>raise</b> Constraint_Error;
       <b>end</b> <b>if</b>;
       <b>if</b> Integer (<A HREF="terminal_interface-curses__ads.htm#ref_1713_25">Fore</A>) &gt;= <A HREF="terminal_interface-curses__ads.htm#ref_421_13">Number_Of_Colors</A> <b>or</b> <b>else</b>
-        Integer (<A HREF="terminal_interface-curses__ads.htm#ref_1714_25">Back</A>) &gt;= <A HREF="terminal_interface-curses__ads.htm#ref_421_13">Number_Of_Colors</A> <b>then</b> <b>raise</b> Constraint_Error;
+         Integer (<A HREF="terminal_interface-curses__ads.htm#ref_1714_25">Back</A>) &gt;= <A HREF="terminal_interface-curses__ads.htm#ref_421_13">Number_Of_Colors</A> <b>then</b>
+         <b>raise</b> Constraint_Error;
       <b>end</b> <b>if</b>;
       <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2144_16">Initpair</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1712_25">Pair</A>), <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1713_25">Fore</A>), <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1714_25">Back</A>))
         = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
@@ -2163,305 +2164,305 @@
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1712_14">Init_Pair</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2161_14" HREF="terminal_interface-curses__ads.htm#ref_1719_14">Pair_Content</A></FONT> (<FONT COLOR=red><A NAME="ref_2161_28" HREF="terminal_interface-curses__ads.htm#ref_1719_28">Pair</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_299_9">Color_Pair</A>;
-                           <FONT COLOR=red><A NAME="ref_2162_28" HREF="terminal_interface-curses__ads.htm#ref_1720_28">Fore</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
-                           <FONT COLOR=red><A NAME="ref_2163_28" HREF="terminal_interface-curses__ads.htm#ref_1721_28">Back</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2162_14" HREF="terminal_interface-curses__ads.htm#ref_1719_14">Pair_Content</A></FONT> (<FONT COLOR=red><A NAME="ref_2162_28" HREF="terminal_interface-curses__ads.htm#ref_1719_28">Pair</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_299_9">Color_Pair</A>;
+                           <FONT COLOR=red><A NAME="ref_2163_28" HREF="terminal_interface-curses__ads.htm#ref_1720_28">Fore</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
+                           <FONT COLOR=red><A NAME="ref_2164_28" HREF="terminal_interface-curses__ads.htm#ref_1721_28">Back</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>)
    <b>is</b>
-      <b>type</b> <FONT COLOR=red><A NAME="ref_2165_12">C_Short_Access</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2166_16">Paircontent</A></FONT> (<FONT COLOR=red><A NAME="ref_2166_29" HREF="terminal_interface-curses__adb.htm#ref_2166_16">Pair</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
-                            <FONT COLOR=red><A NAME="ref_2167_29" HREF="terminal_interface-curses__adb.htm#ref_2166_16">Fp</A></FONT>   : <A HREF="terminal_interface-curses__adb.htm#ref_2165_12">C_Short_Access</A>;
-                            <FONT COLOR=red><A NAME="ref_2168_29" HREF="terminal_interface-curses__adb.htm#ref_2166_16">Bp</A></FONT>   : <A HREF="terminal_interface-curses__adb.htm#ref_2165_12">C_Short_Access</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>type</b> <FONT COLOR=red><A NAME="ref_2166_12">C_Short_Access</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2167_16">Paircontent</A></FONT> (<FONT COLOR=red><A NAME="ref_2167_29" HREF="terminal_interface-curses__adb.htm#ref_2167_16">Pair</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
+                            <FONT COLOR=red><A NAME="ref_2168_29" HREF="terminal_interface-curses__adb.htm#ref_2167_16">Fp</A></FONT>   : <A HREF="terminal_interface-curses__adb.htm#ref_2166_12">C_Short_Access</A>;
+                            <FONT COLOR=red><A NAME="ref_2169_29" HREF="terminal_interface-curses__adb.htm#ref_2167_16">Bp</A></FONT>   : <A HREF="terminal_interface-curses__adb.htm#ref_2166_12">C_Short_Access</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Paircontent, "pair_content");
 
-      <FONT COLOR=red><A NAME="ref_2171_7">F</A></FONT>, <FONT COLOR=red><A NAME="ref_2171_10">B</A></FONT> : <b>aliased</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
+      <FONT COLOR=red><A NAME="ref_2172_7">F</A></FONT>, <FONT COLOR=red><A NAME="ref_2172_10">B</A></FONT> : <b>aliased</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2166_16">Paircontent</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1719_28">Pair</A>), <A HREF="terminal_interface-curses__adb.htm#ref_2171_7">F</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2171_10">B</A>'<b>Access</b>) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2167_16">Paircontent</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1719_28">Pair</A>), <A HREF="terminal_interface-curses__adb.htm#ref_2172_7">F</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2172_10">B</A>'<b>Access</b>) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>else</b>
-         <A HREF="terminal_interface-curses__ads.htm#ref_1720_28">Fore</A> := <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2171_7">F</A>);
-         <A HREF="terminal_interface-curses__ads.htm#ref_1721_28">Back</A> := <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2171_10">B</A>);
+         <A HREF="terminal_interface-curses__ads.htm#ref_1720_28">Fore</A> := <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2172_7">F</A>);
+         <A HREF="terminal_interface-curses__ads.htm#ref_1721_28">Back</A> := <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2172_10">B</A>);
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1719_14">Pair_Content</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2181_13" HREF="terminal_interface-curses__ads.htm#ref_1726_13">Has_Colors</A></FONT> <b>return</b> Boolean
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2182_13" HREF="terminal_interface-curses__ads.htm#ref_1726_13">Has_Colors</A></FONT> <b>return</b> Boolean
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2183_16">Hascolors</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2184_16">Hascolors</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>;
       <b>pragma</b> Import (C, Hascolors, "has_colors");
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2183_16">Hascolors</A> = <A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2184_16">Hascolors</A> = <A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A> <b>then</b>
          <b>return</b> False;
       <b>else</b>
          <b>return</b> True;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1726_13">Has_Colors</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2193_14" HREF="terminal_interface-curses__ads.htm#ref_1731_14">Init_Color</A></FONT> (<FONT COLOR=red><A NAME="ref_2193_26" HREF="terminal_interface-curses__ads.htm#ref_1731_26">Color</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
-                         <FONT COLOR=red><A NAME="ref_2194_26" HREF="terminal_interface-curses__ads.htm#ref_1732_26">Red</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
-                         <FONT COLOR=red><A NAME="ref_2195_26" HREF="terminal_interface-curses__ads.htm#ref_1733_26">Green</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
-                         <FONT COLOR=red><A NAME="ref_2196_26" HREF="terminal_interface-curses__ads.htm#ref_1734_26">Blue</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2194_14" HREF="terminal_interface-curses__ads.htm#ref_1731_14">Init_Color</A></FONT> (<FONT COLOR=red><A NAME="ref_2194_26" HREF="terminal_interface-curses__ads.htm#ref_1731_26">Color</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
+                         <FONT COLOR=red><A NAME="ref_2195_26" HREF="terminal_interface-curses__ads.htm#ref_1732_26">Red</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
+                         <FONT COLOR=red><A NAME="ref_2196_26" HREF="terminal_interface-curses__ads.htm#ref_1733_26">Green</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
+                         <FONT COLOR=red><A NAME="ref_2197_26" HREF="terminal_interface-curses__ads.htm#ref_1734_26">Blue</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2198_16">Initcolor</A></FONT> (<FONT COLOR=red><A NAME="ref_2198_27" HREF="terminal_interface-curses__adb.htm#ref_2198_16">Col</A></FONT>   : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
-                          <FONT COLOR=red><A NAME="ref_2199_27" HREF="terminal_interface-curses__adb.htm#ref_2198_16">Red</A></FONT>   : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
-                          <FONT COLOR=red><A NAME="ref_2200_27" HREF="terminal_interface-curses__adb.htm#ref_2198_16">Green</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
-                          <FONT COLOR=red><A NAME="ref_2201_27" HREF="terminal_interface-curses__adb.htm#ref_2198_16">Blue</A></FONT>  : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2199_16">Initcolor</A></FONT> (<FONT COLOR=red><A NAME="ref_2199_27" HREF="terminal_interface-curses__adb.htm#ref_2199_16">Col</A></FONT>   : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
+                          <FONT COLOR=red><A NAME="ref_2200_27" HREF="terminal_interface-curses__adb.htm#ref_2199_16">Red</A></FONT>   : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
+                          <FONT COLOR=red><A NAME="ref_2201_27" HREF="terminal_interface-curses__adb.htm#ref_2199_16">Green</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
+                          <FONT COLOR=red><A NAME="ref_2202_27" HREF="terminal_interface-curses__adb.htm#ref_2199_16">Blue</A></FONT>  : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Initcolor, "init_color");
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2198_16">Initcolor</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1731_26">Color</A>), <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1732_26">Red</A>), <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1733_26">Green</A>),
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2199_16">Initcolor</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1731_26">Color</A>), <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1732_26">Red</A>), <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1733_26">Green</A>),
                     <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1734_26">Blue</A>)) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
             <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1731_14">Init_Color</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2210_13" HREF="terminal_interface-curses__ads.htm#ref_1739_13">Can_Change_Color</A></FONT> <b>return</b> Boolean
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2211_13" HREF="terminal_interface-curses__ads.htm#ref_1739_13">Can_Change_Color</A></FONT> <b>return</b> Boolean
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2212_16">Canchangecolor</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2213_16">Canchangecolor</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>;
       <b>pragma</b> Import (C, Canchangecolor, "can_change_color");
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2212_16">Canchangecolor</A> = <A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2213_16">Canchangecolor</A> = <A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A> <b>then</b>
          <b>return</b> False;
       <b>else</b>
          <b>return</b> True;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1739_13">Can_Change_Color</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2222_14" HREF="terminal_interface-curses__ads.htm#ref_1744_14">Color_Content</A></FONT> (<FONT COLOR=red><A NAME="ref_2222_29" HREF="terminal_interface-curses__ads.htm#ref_1744_29">Color</A></FONT> : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
-                            <FONT COLOR=red><A NAME="ref_2223_29" HREF="terminal_interface-curses__ads.htm#ref_1745_29">Red</A></FONT>   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
-                            <FONT COLOR=red><A NAME="ref_2224_29" HREF="terminal_interface-curses__ads.htm#ref_1746_29">Green</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
-                            <FONT COLOR=red><A NAME="ref_2225_29" HREF="terminal_interface-curses__ads.htm#ref_1747_29">Blue</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2223_14" HREF="terminal_interface-curses__ads.htm#ref_1744_14">Color_Content</A></FONT> (<FONT COLOR=red><A NAME="ref_2223_29" HREF="terminal_interface-curses__ads.htm#ref_1744_29">Color</A></FONT> : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
+                            <FONT COLOR=red><A NAME="ref_2224_29" HREF="terminal_interface-curses__ads.htm#ref_1745_29">Red</A></FONT>   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
+                            <FONT COLOR=red><A NAME="ref_2225_29" HREF="terminal_interface-curses__ads.htm#ref_1746_29">Green</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
+                            <FONT COLOR=red><A NAME="ref_2226_29" HREF="terminal_interface-curses__ads.htm#ref_1747_29">Blue</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>)
    <b>is</b>
-      <b>type</b> <FONT COLOR=red><A NAME="ref_2227_12">C_Short_Access</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
+      <b>type</b> <FONT COLOR=red><A NAME="ref_2228_12">C_Short_Access</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
 
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2229_16">Colorcontent</A></FONT> (<FONT COLOR=red><A NAME="ref_2229_30" HREF="terminal_interface-curses__adb.htm#ref_2229_16">Color</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>; <FONT COLOR=red><A NAME="ref_2229_47" HREF="terminal_interface-curses__adb.htm#ref_2229_16">R</A></FONT>, <FONT COLOR=red><A NAME="ref_2229_50" HREF="terminal_interface-curses__adb.htm#ref_2229_16">G</A></FONT>, <FONT COLOR=red><A NAME="ref_2229_53" HREF="terminal_interface-curses__adb.htm#ref_2229_16">B</A></FONT> : <A HREF="terminal_interface-curses__adb.htm#ref_2227_12">C_Short_Access</A>)
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2230_16">Colorcontent</A></FONT> (<FONT COLOR=red><A NAME="ref_2230_30" HREF="terminal_interface-curses__adb.htm#ref_2230_16">Color</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>; <FONT COLOR=red><A NAME="ref_2230_47" HREF="terminal_interface-curses__adb.htm#ref_2230_16">R</A></FONT>, <FONT COLOR=red><A NAME="ref_2230_50" HREF="terminal_interface-curses__adb.htm#ref_2230_16">G</A></FONT>, <FONT COLOR=red><A NAME="ref_2230_53" HREF="terminal_interface-curses__adb.htm#ref_2230_16">B</A></FONT> : <A HREF="terminal_interface-curses__adb.htm#ref_2228_12">C_Short_Access</A>)
                              <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Colorcontent, "color_content");
 
-      <FONT COLOR=red><A NAME="ref_2233_7">R</A></FONT>, <FONT COLOR=red><A NAME="ref_2233_10">G</A></FONT>, <FONT COLOR=red><A NAME="ref_2233_13">B</A></FONT> : <b>aliased</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
+      <FONT COLOR=red><A NAME="ref_2234_7">R</A></FONT>, <FONT COLOR=red><A NAME="ref_2234_10">G</A></FONT>, <FONT COLOR=red><A NAME="ref_2234_13">B</A></FONT> : <b>aliased</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A>;
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2229_16">Colorcontent</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1744_29">Color</A>), <A HREF="terminal_interface-curses__adb.htm#ref_2233_7">R</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2233_10">G</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2233_13">B</A>'<b>Access</b>) =
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2230_16">Colorcontent</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_56_12">C_Short</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1744_29">Color</A>), <A HREF="terminal_interface-curses__adb.htm#ref_2234_7">R</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2234_10">G</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2234_13">B</A>'<b>Access</b>) =
         <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>else</b>
-         <A HREF="terminal_interface-curses__ads.htm#ref_1745_29">Red</A>   := <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2233_7">R</A>);
-         <A HREF="terminal_interface-curses__ads.htm#ref_1746_29">Green</A> := <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2233_10">G</A>);
-         <A HREF="terminal_interface-curses__ads.htm#ref_1747_29">Blue</A>  := <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2233_13">B</A>);
+         <A HREF="terminal_interface-curses__ads.htm#ref_1745_29">Red</A>   := <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2234_7">R</A>);
+         <A HREF="terminal_interface-curses__ads.htm#ref_1746_29">Green</A> := <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2234_10">G</A>);
+         <A HREF="terminal_interface-curses__ads.htm#ref_1747_29">Blue</A>  := <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2234_13">B</A>);
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1744_14">Color_Content</A>;
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2246_14" HREF="terminal_interface-curses__ads.htm#ref_1759_14">Save_Curses_Mode</A></FONT> (<FONT COLOR=red><A NAME="ref_2246_32" HREF="terminal_interface-curses__ads.htm#ref_1759_32">Mode</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_9">Curses_Mode</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2247_14" HREF="terminal_interface-curses__ads.htm#ref_1759_14">Save_Curses_Mode</A></FONT> (<FONT COLOR=red><A NAME="ref_2247_32" HREF="terminal_interface-curses__ads.htm#ref_1759_32">Mode</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_9">Curses_Mode</A>)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2248_16">Def_Prog_Mode</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2249_16">Def_Prog_Mode</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Def_Prog_Mode, "def_prog_mode");
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2250_16">Def_Shell_Mode</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2251_16">Def_Shell_Mode</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Def_Shell_Mode, "def_shell_mode");
 
-      <FONT COLOR=red><A NAME="ref_2253_7">Err</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <FONT COLOR=red><A NAME="ref_2254_7">Err</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
    <b>begin</b>
       <b>case</b> <A HREF="terminal_interface-curses__ads.htm#ref_1759_32">Mode</A> <b>is</b>
-         <b>when</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_25">Curses</A> =&gt; <A HREF="terminal_interface-curses__adb.htm#ref_2253_7">Err</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2248_16">Def_Prog_Mode</A>;
-         <b>when</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_33">Shell</A>  =&gt; <A HREF="terminal_interface-curses__adb.htm#ref_2253_7">Err</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2250_16">Def_Shell_Mode</A>;
+         <b>when</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_25">Curses</A> =&gt; <A HREF="terminal_interface-curses__adb.htm#ref_2254_7">Err</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2249_16">Def_Prog_Mode</A>;
+         <b>when</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_33">Shell</A>  =&gt; <A HREF="terminal_interface-curses__adb.htm#ref_2254_7">Err</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2251_16">Def_Shell_Mode</A>;
       <b>end</b> <b>case</b>;
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2253_7">Err</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2254_7">Err</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1759_14">Save_Curses_Mode</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2264_14" HREF="terminal_interface-curses__ads.htm#ref_1765_14">Reset_Curses_Mode</A></FONT> (<FONT COLOR=red><A NAME="ref_2264_33" HREF="terminal_interface-curses__ads.htm#ref_1765_33">Mode</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_9">Curses_Mode</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2265_14" HREF="terminal_interface-curses__ads.htm#ref_1765_14">Reset_Curses_Mode</A></FONT> (<FONT COLOR=red><A NAME="ref_2265_33" HREF="terminal_interface-curses__ads.htm#ref_1765_33">Mode</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_9">Curses_Mode</A>)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2266_16">Reset_Prog_Mode</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2267_16">Reset_Prog_Mode</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Reset_Prog_Mode, "reset_prog_mode");
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2268_16">Reset_Shell_Mode</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2269_16">Reset_Shell_Mode</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Reset_Shell_Mode, "reset_shell_mode");
 
-      <FONT COLOR=red><A NAME="ref_2271_7">Err</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <FONT COLOR=red><A NAME="ref_2272_7">Err</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
    <b>begin</b>
       <b>case</b> <A HREF="terminal_interface-curses__ads.htm#ref_1765_33">Mode</A> <b>is</b>
-         <b>when</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_25">Curses</A> =&gt; <A HREF="terminal_interface-curses__adb.htm#ref_2271_7">Err</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2266_16">Reset_Prog_Mode</A>;
-         <b>when</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_33">Shell</A>  =&gt; <A HREF="terminal_interface-curses__adb.htm#ref_2271_7">Err</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2268_16">Reset_Shell_Mode</A>;
+         <b>when</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_25">Curses</A> =&gt; <A HREF="terminal_interface-curses__adb.htm#ref_2272_7">Err</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2267_16">Reset_Prog_Mode</A>;
+         <b>when</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_33">Shell</A>  =&gt; <A HREF="terminal_interface-curses__adb.htm#ref_2272_7">Err</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2269_16">Reset_Shell_Mode</A>;
       <b>end</b> <b>case</b>;
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2271_7">Err</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2272_7">Err</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1765_14">Reset_Curses_Mode</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2282_14" HREF="terminal_interface-curses__ads.htm#ref_1771_14">Save_Terminal_State</A></FONT>
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2283_14" HREF="terminal_interface-curses__ads.htm#ref_1771_14">Save_Terminal_State</A></FONT>
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2284_16">Savetty</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2285_16">Savetty</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Savetty, "savetty");
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2284_16">Savetty</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2285_16">Savetty</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1771_14">Save_Terminal_State</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2292_14" HREF="terminal_interface-curses__ads.htm#ref_1776_14">Reset_Terminal_State</A></FONT>
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2293_14" HREF="terminal_interface-curses__ads.htm#ref_1776_14">Reset_Terminal_State</A></FONT>
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2294_16">Resetty</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2295_16">Resetty</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Resetty, "resetty");
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2294_16">Resetty</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2295_16">Resetty</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1776_14">Reset_Terminal_State</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2302_14" HREF="terminal_interface-curses__ads.htm#ref_1789_14">Rip_Off_Lines</A></FONT> (<FONT COLOR=red><A NAME="ref_2302_29" HREF="terminal_interface-curses__ads.htm#ref_1789_29">Lines</A></FONT> : <b>in</b> Integer;
-                            <FONT COLOR=red><A NAME="ref_2303_29" HREF="terminal_interface-curses__ads.htm#ref_1790_29">Proc</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1780_9">Stdscr_Init_Proc</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2303_14" HREF="terminal_interface-curses__ads.htm#ref_1789_14">Rip_Off_Lines</A></FONT> (<FONT COLOR=red><A NAME="ref_2303_29" HREF="terminal_interface-curses__ads.htm#ref_1789_29">Lines</A></FONT> : <b>in</b> Integer;
+                            <FONT COLOR=red><A NAME="ref_2304_29" HREF="terminal_interface-curses__ads.htm#ref_1790_29">Proc</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1780_9">Stdscr_Init_Proc</A>)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2305_16">Ripoffline</A></FONT> (<FONT COLOR=red><A NAME="ref_2305_28" HREF="terminal_interface-curses__adb.htm#ref_2305_16">Lines</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-                           <FONT COLOR=red><A NAME="ref_2306_28" HREF="terminal_interface-curses__adb.htm#ref_2305_16">Proc</A></FONT>  : <A HREF="terminal_interface-curses__ads.htm#ref_1780_9">Stdscr_Init_Proc</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2306_16">Ripoffline</A></FONT> (<FONT COLOR=red><A NAME="ref_2306_28" HREF="terminal_interface-curses__adb.htm#ref_2306_16">Lines</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+                           <FONT COLOR=red><A NAME="ref_2307_28" HREF="terminal_interface-curses__adb.htm#ref_2306_16">Proc</A></FONT>  : <A HREF="terminal_interface-curses__ads.htm#ref_1780_9">Stdscr_Init_Proc</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Ripoffline, "_nc_ripoffline");
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2305_16">Ripoffline</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1789_29">Lines</A>), <A HREF="terminal_interface-curses__ads.htm#ref_1790_29">Proc</A>) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2306_16">Ripoffline</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1789_29">Lines</A>), <A HREF="terminal_interface-curses__ads.htm#ref_1790_29">Proc</A>) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1789_14">Rip_Off_Lines</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2314_14" HREF="terminal_interface-curses__ads.htm#ref_1801_14">Set_Cursor_Visibility</A></FONT> (<FONT COLOR=red><A NAME="ref_2314_37" HREF="terminal_interface-curses__ads.htm#ref_1801_37">Visibility</A></FONT> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_1798_9">Cursor_Visibility</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2315_14" HREF="terminal_interface-curses__ads.htm#ref_1801_14">Set_Cursor_Visibility</A></FONT> (<FONT COLOR=red><A NAME="ref_2315_37" HREF="terminal_interface-curses__ads.htm#ref_1801_37">Visibility</A></FONT> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_1798_9">Cursor_Visibility</A>)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2316_16">Curs_Set</A></FONT> (<FONT COLOR=red><A NAME="ref_2316_26" HREF="terminal_interface-curses__adb.htm#ref_2316_16">Curs</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2317_16">Curs_Set</A></FONT> (<FONT COLOR=red><A NAME="ref_2317_26" HREF="terminal_interface-curses__adb.htm#ref_2317_16">Curs</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Curs_Set, "curs_set");
 
-      <FONT COLOR=red><A NAME="ref_2319_7">Res</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <FONT COLOR=red><A NAME="ref_2320_7">Res</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
    <b>begin</b>
-      <A HREF="terminal_interface-curses__adb.htm#ref_2319_7">Res</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2316_16">Curs_Set</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1798_9">Cursor_Visibility</A>'Pos (<A HREF="terminal_interface-curses__ads.htm#ref_1801_37">Visibility</A>));
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2319_7">Res</A> /= <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
-         <A HREF="terminal_interface-curses__ads.htm#ref_1801_37">Visibility</A> := <A HREF="terminal_interface-curses__ads.htm#ref_1798_9">Cursor_Visibility</A>'Val (<A HREF="terminal_interface-curses__adb.htm#ref_2319_7">Res</A>);
+      <A HREF="terminal_interface-curses__adb.htm#ref_2320_7">Res</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2317_16">Curs_Set</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1798_9">Cursor_Visibility</A>'Pos (<A HREF="terminal_interface-curses__ads.htm#ref_1801_37">Visibility</A>));
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2320_7">Res</A> /= <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+         <A HREF="terminal_interface-curses__ads.htm#ref_1801_37">Visibility</A> := <A HREF="terminal_interface-curses__ads.htm#ref_1798_9">Cursor_Visibility</A>'Val (<A HREF="terminal_interface-curses__adb.htm#ref_2320_7">Res</A>);
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1801_14">Set_Cursor_Visibility</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2327_14" HREF="terminal_interface-curses__ads.htm#ref_1806_14">Nap_Milli_Seconds</A></FONT> (<FONT COLOR=red><A NAME="ref_2327_33" HREF="terminal_interface-curses__ads.htm#ref_1806_33">Ms</A></FONT> : <b>in</b> Natural)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2328_14" HREF="terminal_interface-curses__ads.htm#ref_1806_14">Nap_Milli_Seconds</A></FONT> (<FONT COLOR=red><A NAME="ref_2328_33" HREF="terminal_interface-curses__ads.htm#ref_1806_33">Ms</A></FONT> : <b>in</b> Natural)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2329_16">Napms</A></FONT> (<FONT COLOR=red><A NAME="ref_2329_23" HREF="terminal_interface-curses__adb.htm#ref_2329_16">Ms</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2330_16">Napms</A></FONT> (<FONT COLOR=red><A NAME="ref_2330_23" HREF="terminal_interface-curses__adb.htm#ref_2330_16">Ms</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Napms, "napms");
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2329_16">Napms</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1806_33">Ms</A>)) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2330_16">Napms</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1806_33">Ms</A>)) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1806_14">Nap_Milli_Seconds</A>;
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2338_13" HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2339_13" HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>
    <b>is</b>
-      <FONT COLOR=red><A NAME="ref_2340_7">Result</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2340_7">Result</A>, "stdscr");
+      <FONT COLOR=red><A NAME="ref_2341_7">Result</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2341_7">Result</A>, "stdscr");
    <b>begin</b>
-      <b>return</b> <A HREF="terminal_interface-curses__adb.htm#ref_2340_7">Result</A>;
+      <b>return</b> <A HREF="terminal_interface-curses__adb.htm#ref_2341_7">Result</A>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2346_13" HREF="terminal_interface-curses__ads.htm#ref_481_13">Current_Window</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2347_13" HREF="terminal_interface-curses__ads.htm#ref_481_13">Current_Window</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>
    <b>is</b>
-      <FONT COLOR=red><A NAME="ref_2348_7">Result</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2348_7">Result</A>, "curscr");
+      <FONT COLOR=red><A NAME="ref_2349_7">Result</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2349_7">Result</A>, "curscr");
    <b>begin</b>
-      <b>return</b> <A HREF="terminal_interface-curses__adb.htm#ref_2348_7">Result</A>;
+      <b>return</b> <A HREF="terminal_interface-curses__adb.htm#ref_2349_7">Result</A>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_481_13">Current_Window</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2354_13" HREF="terminal_interface-curses__ads.htm#ref_412_13">Lines</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A>
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2355_13" HREF="terminal_interface-curses__ads.htm#ref_412_13">Lines</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A>
    <b>is</b>
-      <FONT COLOR=red><A NAME="ref_2356_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2356_7">Result</A>, "LINES");
+      <FONT COLOR=red><A NAME="ref_2357_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2357_7">Result</A>, "LINES");
    <b>begin</b>
-      <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2356_7">Result</A>);
+      <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2357_7">Result</A>);
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_412_13">Lines</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2362_13" HREF="terminal_interface-curses__ads.htm#ref_415_13">Columns</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A>
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2363_13" HREF="terminal_interface-curses__ads.htm#ref_415_13">Columns</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A>
    <b>is</b>
-      <FONT COLOR=red><A NAME="ref_2364_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2364_7">Result</A>, "COLS");
+      <FONT COLOR=red><A NAME="ref_2365_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2365_7">Result</A>, "COLS");
    <b>begin</b>
-      <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2364_7">Result</A>);
+      <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2365_7">Result</A>);
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_415_13">Columns</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2370_13" HREF="terminal_interface-curses__ads.htm#ref_418_13">Tab_Size</A></FONT> <b>return</b> Natural
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2371_13" HREF="terminal_interface-curses__ads.htm#ref_418_13">Tab_Size</A></FONT> <b>return</b> Natural
    <b>is</b>
-      <FONT COLOR=red><A NAME="ref_2372_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2372_7">Result</A>, "TABSIZE");
+      <FONT COLOR=red><A NAME="ref_2373_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2373_7">Result</A>, "TABSIZE");
    <b>begin</b>
-      <b>return</b> Natural (<A HREF="terminal_interface-curses__adb.htm#ref_2372_7">Result</A>);
+      <b>return</b> Natural (<A HREF="terminal_interface-curses__adb.htm#ref_2373_7">Result</A>);
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_418_13">Tab_Size</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2378_13" HREF="terminal_interface-curses__ads.htm#ref_421_13">Number_Of_Colors</A></FONT> <b>return</b> Natural
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2379_13" HREF="terminal_interface-curses__ads.htm#ref_421_13">Number_Of_Colors</A></FONT> <b>return</b> Natural
    <b>is</b>
-      <FONT COLOR=red><A NAME="ref_2380_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2380_7">Result</A>, "COLORS");
+      <FONT COLOR=red><A NAME="ref_2381_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2381_7">Result</A>, "COLORS");
    <b>begin</b>
-      <b>return</b> Natural (<A HREF="terminal_interface-curses__adb.htm#ref_2380_7">Result</A>);
+      <b>return</b> Natural (<A HREF="terminal_interface-curses__adb.htm#ref_2381_7">Result</A>);
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_421_13">Number_Of_Colors</A>;
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2386_13" HREF="terminal_interface-curses__ads.htm#ref_424_13">Number_Of_Color_Pairs</A></FONT> <b>return</b> Natural
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2387_13" HREF="terminal_interface-curses__ads.htm#ref_424_13">Number_Of_Color_Pairs</A></FONT> <b>return</b> Natural
    <b>is</b>
-      <FONT COLOR=red><A NAME="ref_2388_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2388_7">Result</A>, "COLOR_PAIRS");
+      <FONT COLOR=red><A NAME="ref_2389_7">Result</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__adb.htm#ref_2389_7">Result</A>, "COLOR_PAIRS");
    <b>begin</b>
-      <b>return</b> Natural (<A HREF="terminal_interface-curses__adb.htm#ref_2388_7">Result</A>);
+      <b>return</b> Natural (<A HREF="terminal_interface-curses__adb.htm#ref_2389_7">Result</A>);
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_424_13">Number_Of_Color_Pairs</A>;
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2395_14" HREF="terminal_interface-curses__ads.htm#ref_1814_14">Transform_Coordinates</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_2396_7" HREF="terminal_interface-curses__ads.htm#ref_1815_7">W</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-      <FONT COLOR=red><A NAME="ref_2397_7" HREF="terminal_interface-curses__ads.htm#ref_1816_7">Line</A></FONT>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
-      <FONT COLOR=red><A NAME="ref_2398_7" HREF="terminal_interface-curses__ads.htm#ref_1817_7">Column</A></FONT> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
-      <FONT COLOR=red><A NAME="ref_2399_7" HREF="terminal_interface-curses__ads.htm#ref_1818_7">Dir</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1813_9">Transform_Direction</A> := <A HREF="terminal_interface-curses__ads.htm#ref_1813_33">From_Screen</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2396_14" HREF="terminal_interface-curses__ads.htm#ref_1814_14">Transform_Coordinates</A></FONT>
+     (<FONT COLOR=red><A NAME="ref_2397_7" HREF="terminal_interface-curses__ads.htm#ref_1815_7">W</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
+      <FONT COLOR=red><A NAME="ref_2398_7" HREF="terminal_interface-curses__ads.htm#ref_1816_7">Line</A></FONT>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
+      <FONT COLOR=red><A NAME="ref_2399_7" HREF="terminal_interface-curses__ads.htm#ref_1817_7">Column</A></FONT> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
+      <FONT COLOR=red><A NAME="ref_2400_7" HREF="terminal_interface-curses__ads.htm#ref_1818_7">Dir</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1813_9">Transform_Direction</A> := <A HREF="terminal_interface-curses__ads.htm#ref_1813_33">From_Screen</A>)
    <b>is</b>
-      <b>type</b> <FONT COLOR=red><A NAME="ref_2401_12">Int_Access</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2402_16">Transform</A></FONT> (<FONT COLOR=red><A NAME="ref_2402_27" HREF="terminal_interface-curses__adb.htm#ref_2402_16">W</A></FONT>    : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-                          <FONT COLOR=red><A NAME="ref_2403_27" HREF="terminal_interface-curses__adb.htm#ref_2402_16">Y</A></FONT>, <FONT COLOR=red><A NAME="ref_2403_30" HREF="terminal_interface-curses__adb.htm#ref_2402_16">X</A></FONT> : <A HREF="terminal_interface-curses__adb.htm#ref_2401_12">Int_Access</A>;
-                          <FONT COLOR=red><A NAME="ref_2404_27" HREF="terminal_interface-curses__adb.htm#ref_2402_16">Dir</A></FONT>  : <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>type</b> <FONT COLOR=red><A NAME="ref_2402_12">Int_Access</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2403_16">Transform</A></FONT> (<FONT COLOR=red><A NAME="ref_2403_27" HREF="terminal_interface-curses__adb.htm#ref_2403_16">W</A></FONT>    : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+                          <FONT COLOR=red><A NAME="ref_2404_27" HREF="terminal_interface-curses__adb.htm#ref_2403_16">Y</A></FONT>, <FONT COLOR=red><A NAME="ref_2404_30" HREF="terminal_interface-curses__adb.htm#ref_2403_16">X</A></FONT> : <A HREF="terminal_interface-curses__adb.htm#ref_2402_12">Int_Access</A>;
+                          <FONT COLOR=red><A NAME="ref_2405_27" HREF="terminal_interface-curses__adb.htm#ref_2403_16">Dir</A></FONT>  : <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Transform, "wmouse_trafo");
 
-      <FONT COLOR=red><A NAME="ref_2407_7">X</A></FONT> : <b>aliased</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1817_7">Column</A>);
-      <FONT COLOR=red><A NAME="ref_2408_7">Y</A></FONT> : <b>aliased</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1816_7">Line</A>);
-      <FONT COLOR=red><A NAME="ref_2409_7">D</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A> := <A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A>;
-      <FONT COLOR=red><A NAME="ref_2410_7">R</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <FONT COLOR=red><A NAME="ref_2408_7">X</A></FONT> : <b>aliased</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1817_7">Column</A>);
+      <FONT COLOR=red><A NAME="ref_2409_7">Y</A></FONT> : <b>aliased</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1816_7">Line</A>);
+      <FONT COLOR=red><A NAME="ref_2410_7">D</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A> := <A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A>;
+      <FONT COLOR=red><A NAME="ref_2411_7">R</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
    <b>begin</b>
       <b>if</b> <A HREF="terminal_interface-curses__ads.htm#ref_1818_7">Dir</A> = <A HREF="terminal_interface-curses__ads.htm#ref_1813_46">To_Screen</A> <b>then</b>
-         <A HREF="terminal_interface-curses__adb.htm#ref_2409_7">D</A> := 1;
+         <A HREF="terminal_interface-curses__adb.htm#ref_2410_7">D</A> := 1;
       <b>end</b> <b>if</b>;
-      <A HREF="terminal_interface-curses__adb.htm#ref_2410_7">R</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2402_16">Transform</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1815_7">W</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2408_7">Y</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2407_7">X</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2409_7">D</A>);
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2410_7">R</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_75_4">Curses_False</A> <b>then</b>
+      <A HREF="terminal_interface-curses__adb.htm#ref_2411_7">R</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2403_16">Transform</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1815_7">W</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2409_7">Y</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2408_7">X</A>'<b>Access</b>, <A HREF="terminal_interface-curses__adb.htm#ref_2410_7">D</A>);
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2411_7">R</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_75_4">Curses_False</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>else</b>
-         <A HREF="terminal_interface-curses__ads.htm#ref_1816_7">Line</A>   := <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2408_7">Y</A>);
-         <A HREF="terminal_interface-curses__ads.htm#ref_1817_7">Column</A> := <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2407_7">X</A>);
+         <A HREF="terminal_interface-curses__ads.htm#ref_1816_7">Line</A>   := <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2409_7">Y</A>);
+         <A HREF="terminal_interface-curses__ads.htm#ref_1817_7">Column</A> := <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2408_7">X</A>);
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1814_14">Transform_Coordinates</A>;
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2424_14" HREF="terminal_interface-curses__ads.htm#ref_1831_14">Use_Default_Colors</A></FONT> <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2425_16">C_Use_Default_Colors</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2425_14" HREF="terminal_interface-curses__ads.htm#ref_1831_14">Use_Default_Colors</A></FONT> <b>is</b>
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2426_16">C_Use_Default_Colors</A></FONT> <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, C_Use_Default_Colors, "use_default_colors");
-      <FONT COLOR=red><A NAME="ref_2427_7">Err</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2425_16">C_Use_Default_Colors</A>;
+      <FONT COLOR=red><A NAME="ref_2428_7">Err</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2426_16">C_Use_Default_Colors</A>;
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2427_7">Err</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2428_7">Err</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1831_14">Use_Default_Colors</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2434_14" HREF="terminal_interface-curses__ads.htm#ref_1836_14">Assume_Default_Colors</A></FONT> (<FONT COLOR=red><A NAME="ref_2434_37" HREF="terminal_interface-curses__ads.htm#ref_1836_37">Fore</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := <A HREF="terminal_interface-curses__ads.htm#ref_285_4">Default_Color</A>;
-                                    <FONT COLOR=red><A NAME="ref_2435_37" HREF="terminal_interface-curses__ads.htm#ref_1837_37">Back</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := <A HREF="terminal_interface-curses__ads.htm#ref_285_4">Default_Color</A>)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2435_14" HREF="terminal_interface-curses__ads.htm#ref_1836_14">Assume_Default_Colors</A></FONT> (<FONT COLOR=red><A NAME="ref_2435_37" HREF="terminal_interface-curses__ads.htm#ref_1836_37">Fore</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := <A HREF="terminal_interface-curses__ads.htm#ref_285_4">Default_Color</A>;
+                                    <FONT COLOR=red><A NAME="ref_2436_37" HREF="terminal_interface-curses__ads.htm#ref_1837_37">Back</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := <A HREF="terminal_interface-curses__ads.htm#ref_285_4">Default_Color</A>)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2437_16">C_Assume_Default_Colors</A></FONT> (<FONT COLOR=red><A NAME="ref_2437_41" HREF="terminal_interface-curses__adb.htm#ref_2437_16">Fore</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-                                        <FONT COLOR=red><A NAME="ref_2438_41" HREF="terminal_interface-curses__adb.htm#ref_2437_16">Back</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2438_16">C_Assume_Default_Colors</A></FONT> (<FONT COLOR=red><A NAME="ref_2438_41" HREF="terminal_interface-curses__adb.htm#ref_2438_16">Fore</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+                                        <FONT COLOR=red><A NAME="ref_2439_41" HREF="terminal_interface-curses__adb.htm#ref_2438_16">Back</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, C_Assume_Default_Colors, "assume_default_colors");
 
-      <FONT COLOR=red><A NAME="ref_2441_7">Err</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2437_16">C_Assume_Default_Colors</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1836_37">Fore</A>),
+      <FONT COLOR=red><A NAME="ref_2442_7">Err</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> := <A HREF="terminal_interface-curses__adb.htm#ref_2438_16">C_Assume_Default_Colors</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1836_37">Fore</A>),
                                                        <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1837_37">Back</A>));
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2441_7">Err</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2442_7">Err</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1836_14">Assume_Default_Colors</A>;
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2449_13" HREF="terminal_interface-curses__ads.htm#ref_1846_13">Curses_Version</A></FONT> <b>return</b> String
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2450_13" HREF="terminal_interface-curses__ads.htm#ref_1846_13">Curses_Version</A></FONT> <b>return</b> String
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2451_16">curses_versionC</A></FONT> <b>return</b> chars_ptr;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2452_16">curses_versionC</A></FONT> <b>return</b> chars_ptr;
       <b>pragma</b> Import (C, curses_versionC, "curses_version");
-      <FONT COLOR=red><A NAME="ref_2453_7">Result</A></FONT> : <b>constant</b> chars_ptr := <A HREF="terminal_interface-curses__adb.htm#ref_2451_16">curses_versionC</A>;
+      <FONT COLOR=red><A NAME="ref_2454_7">Result</A></FONT> : <b>constant</b> chars_ptr := <A HREF="terminal_interface-curses__adb.htm#ref_2452_16">curses_versionC</A>;
    <b>begin</b>
-      <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_121_13">Fill_String</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2453_7">Result</A>);
+      <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_121_13">Fill_String</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2454_7">Result</A>);
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1846_13">Curses_Version</A>;
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2458_14" HREF="terminal_interface-curses__ads.htm#ref_1859_14">Curses_Free_All</A></FONT> <b>is</b>
-      <b>procedure</b> <FONT COLOR=red><A NAME="ref_2459_17">curses_freeall</A></FONT>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2459_14" HREF="terminal_interface-curses__ads.htm#ref_1859_14">Curses_Free_All</A></FONT> <b>is</b>
+      <b>procedure</b> <FONT COLOR=red><A NAME="ref_2460_17">curses_freeall</A></FONT>;
       <b>pragma</b> Import (C, curses_freeall, "_nc_freeall");
    <b>begin</b>
       <FONT COLOR=green><EM>--  Use this only for testing: you cannot use curses after calling it,</EM></FONT>
@@ -2471,85 +2472,85 @@
       <FONT COLOR=green><EM>--  _nc_free_and_exit() procedure can do that, but it can be invoked</EM></FONT>
       <FONT COLOR=green><EM>--  safely only from C - and again, that only as the "last" thing done</EM></FONT>
       <FONT COLOR=green><EM>--  before exiting the program.</EM></FONT>
-      <A HREF="terminal_interface-curses__adb.htm#ref_2459_17">curses_freeall</A>;
+      <A HREF="terminal_interface-curses__adb.htm#ref_2460_17">curses_freeall</A>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1859_14">Curses_Free_All</A>;
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_2472_13" HREF="terminal_interface-curses__ads.htm#ref_1851_13">Use_Extended_Names</A></FONT> (<FONT COLOR=red><A NAME="ref_2472_33" HREF="terminal_interface-curses__ads.htm#ref_1851_33">Enable</A></FONT> : Boolean) <b>return</b> Boolean
+   <b>function</b> <FONT COLOR=red><A NAME="ref_2473_13" HREF="terminal_interface-curses__ads.htm#ref_1851_13">Use_Extended_Names</A></FONT> (<FONT COLOR=red><A NAME="ref_2473_33" HREF="terminal_interface-curses__ads.htm#ref_1851_33">Enable</A></FONT> : Boolean) <b>return</b> Boolean
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2474_16">use_extended_namesC</A></FONT> (<FONT COLOR=red><A NAME="ref_2474_37" HREF="terminal_interface-curses__adb.htm#ref_2474_16">e</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2475_16">use_extended_namesC</A></FONT> (<FONT COLOR=red><A NAME="ref_2475_37" HREF="terminal_interface-curses__adb.htm#ref_2475_16">e</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, use_extended_namesC, "use_extended_names");
 
-      <FONT COLOR=red><A NAME="ref_2477_7">Res</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> :=
-         <A HREF="terminal_interface-curses__adb.htm#ref_2474_16">use_extended_namesC</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A> (Boolean'Pos (<A HREF="terminal_interface-curses__ads.htm#ref_1851_33">Enable</A>)));
+      <FONT COLOR=red><A NAME="ref_2478_7">Res</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> :=
+         <A HREF="terminal_interface-curses__adb.htm#ref_2475_16">use_extended_namesC</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A> (Boolean'Pos (<A HREF="terminal_interface-curses__ads.htm#ref_1851_33">Enable</A>)));
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2477_7">Res</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A>) <b>then</b>
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2478_7">Res</A> = <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1927_4">Curses_Bool_False</A>) <b>then</b>
          <b>return</b> False;
       <b>else</b>
          <b>return</b> True;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1851_13">Use_Extended_Names</A>;
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2487_14" HREF="terminal_interface-curses__ads.htm#ref_1867_14">Screen_Dump_To_File</A></FONT> (<FONT COLOR=red><A NAME="ref_2487_35" HREF="terminal_interface-curses__ads.htm#ref_1867_35">Filename</A></FONT> : <b>in</b> String)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2488_14" HREF="terminal_interface-curses__ads.htm#ref_1867_14">Screen_Dump_To_File</A></FONT> (<FONT COLOR=red><A NAME="ref_2488_35" HREF="terminal_interface-curses__ads.htm#ref_1867_35">Filename</A></FONT> : <b>in</b> String)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2489_16">scr_dump</A></FONT> (<FONT COLOR=red><A NAME="ref_2489_26" HREF="terminal_interface-curses__adb.htm#ref_2489_16">f</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2490_16">scr_dump</A></FONT> (<FONT COLOR=red><A NAME="ref_2490_26" HREF="terminal_interface-curses__adb.htm#ref_2490_16">f</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, scr_dump, "scr_dump");
-      <FONT COLOR=red><A NAME="ref_2491_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1867_35">Filename</A>'Length);
-      <FONT COLOR=red><A NAME="ref_2492_7">Length</A></FONT> : size_t;
+      <FONT COLOR=red><A NAME="ref_2492_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1867_35">Filename</A>'Length);
+      <FONT COLOR=red><A NAME="ref_2493_7">Length</A></FONT> : size_t;
    <b>begin</b>
-      To_C (<A HREF="terminal_interface-curses__ads.htm#ref_1867_35">Filename</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2491_7">Txt</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2492_7">Length</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> = <A HREF="terminal_interface-curses__adb.htm#ref_2489_16">scr_dump</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2491_7">Txt</A>) <b>then</b>
+      To_C (<A HREF="terminal_interface-curses__ads.htm#ref_1867_35">Filename</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2492_7">Txt</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2493_7">Length</A>);
+      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> = <A HREF="terminal_interface-curses__adb.htm#ref_2490_16">scr_dump</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2492_7">Txt</A>) <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1867_14">Screen_Dump_To_File</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2500_14" HREF="terminal_interface-curses__ads.htm#ref_1871_14">Screen_Restore_From_File</A></FONT> (<FONT COLOR=red><A NAME="ref_2500_40" HREF="terminal_interface-curses__ads.htm#ref_1871_40">Filename</A></FONT> : <b>in</b> String)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2501_14" HREF="terminal_interface-curses__ads.htm#ref_1871_14">Screen_Restore_From_File</A></FONT> (<FONT COLOR=red><A NAME="ref_2501_40" HREF="terminal_interface-curses__ads.htm#ref_1871_40">Filename</A></FONT> : <b>in</b> String)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2502_16">scr_restore</A></FONT> (<FONT COLOR=red><A NAME="ref_2502_29" HREF="terminal_interface-curses__adb.htm#ref_2502_16">f</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2503_16">scr_restore</A></FONT> (<FONT COLOR=red><A NAME="ref_2503_29" HREF="terminal_interface-curses__adb.htm#ref_2503_16">f</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, scr_restore, "scr_restore");
-      <FONT COLOR=red><A NAME="ref_2504_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1871_40">Filename</A>'Length);
-      <FONT COLOR=red><A NAME="ref_2505_7">Length</A></FONT> : size_t;
+      <FONT COLOR=red><A NAME="ref_2505_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1871_40">Filename</A>'Length);
+      <FONT COLOR=red><A NAME="ref_2506_7">Length</A></FONT> : size_t;
    <b>begin</b>
-      To_C (<A HREF="terminal_interface-curses__ads.htm#ref_1871_40">Filename</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2504_7">Txt</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2505_7">Length</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> = <A HREF="terminal_interface-curses__adb.htm#ref_2502_16">scr_restore</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2504_7">Txt</A>)  <b>then</b>
+      To_C (<A HREF="terminal_interface-curses__ads.htm#ref_1871_40">Filename</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2505_7">Txt</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2506_7">Length</A>);
+      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> = <A HREF="terminal_interface-curses__adb.htm#ref_2503_16">scr_restore</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2505_7">Txt</A>)  <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1871_14">Screen_Restore_From_File</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2513_14" HREF="terminal_interface-curses__ads.htm#ref_1875_14">Screen_Init_From_File</A></FONT> (<FONT COLOR=red><A NAME="ref_2513_37" HREF="terminal_interface-curses__ads.htm#ref_1875_37">Filename</A></FONT> : <b>in</b> String)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2514_14" HREF="terminal_interface-curses__ads.htm#ref_1875_14">Screen_Init_From_File</A></FONT> (<FONT COLOR=red><A NAME="ref_2514_37" HREF="terminal_interface-curses__ads.htm#ref_1875_37">Filename</A></FONT> : <b>in</b> String)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2515_16">scr_init</A></FONT> (<FONT COLOR=red><A NAME="ref_2515_26" HREF="terminal_interface-curses__adb.htm#ref_2515_16">f</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2516_16">scr_init</A></FONT> (<FONT COLOR=red><A NAME="ref_2516_26" HREF="terminal_interface-curses__adb.htm#ref_2516_16">f</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, scr_init, "scr_init");
-      <FONT COLOR=red><A NAME="ref_2517_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1875_37">Filename</A>'Length);
-      <FONT COLOR=red><A NAME="ref_2518_7">Length</A></FONT> : size_t;
+      <FONT COLOR=red><A NAME="ref_2518_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1875_37">Filename</A>'Length);
+      <FONT COLOR=red><A NAME="ref_2519_7">Length</A></FONT> : size_t;
    <b>begin</b>
-      To_C (<A HREF="terminal_interface-curses__ads.htm#ref_1875_37">Filename</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2517_7">Txt</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2518_7">Length</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> = <A HREF="terminal_interface-curses__adb.htm#ref_2515_16">scr_init</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2517_7">Txt</A>) <b>then</b>
+      To_C (<A HREF="terminal_interface-curses__ads.htm#ref_1875_37">Filename</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2518_7">Txt</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2519_7">Length</A>);
+      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> = <A HREF="terminal_interface-curses__adb.htm#ref_2516_16">scr_init</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2518_7">Txt</A>) <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1875_14">Screen_Init_From_File</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2526_14" HREF="terminal_interface-curses__ads.htm#ref_1879_14">Screen_Set_File</A></FONT> (<FONT COLOR=red><A NAME="ref_2526_31" HREF="terminal_interface-curses__ads.htm#ref_1879_31">Filename</A></FONT> : <b>in</b> String)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2527_14" HREF="terminal_interface-curses__ads.htm#ref_1879_14">Screen_Set_File</A></FONT> (<FONT COLOR=red><A NAME="ref_2527_31" HREF="terminal_interface-curses__ads.htm#ref_1879_31">Filename</A></FONT> : <b>in</b> String)
    <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2528_16">scr_set</A></FONT> (<FONT COLOR=red><A NAME="ref_2528_25" HREF="terminal_interface-curses__adb.htm#ref_2528_16">f</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2529_16">scr_set</A></FONT> (<FONT COLOR=red><A NAME="ref_2529_25" HREF="terminal_interface-curses__adb.htm#ref_2529_16">f</A></FONT> : char_array) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, scr_set, "scr_set");
-      <FONT COLOR=red><A NAME="ref_2530_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1879_31">Filename</A>'Length);
-      <FONT COLOR=red><A NAME="ref_2531_7">Length</A></FONT> : size_t;
+      <FONT COLOR=red><A NAME="ref_2531_7">Txt</A></FONT>    : char_array (0 .. <A HREF="terminal_interface-curses__ads.htm#ref_1879_31">Filename</A>'Length);
+      <FONT COLOR=red><A NAME="ref_2532_7">Length</A></FONT> : size_t;
    <b>begin</b>
-      To_C (<A HREF="terminal_interface-curses__ads.htm#ref_1879_31">Filename</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2530_7">Txt</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2531_7">Length</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> = <A HREF="terminal_interface-curses__adb.htm#ref_2528_16">scr_set</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2530_7">Txt</A>) <b>then</b>
+      To_C (<A HREF="terminal_interface-curses__ads.htm#ref_1879_31">Filename</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2531_7">Txt</A>, <A HREF="terminal_interface-curses__adb.htm#ref_2532_7">Length</A>);
+      <b>if</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> = <A HREF="terminal_interface-curses__adb.htm#ref_2529_16">scr_set</A> (<A HREF="terminal_interface-curses__adb.htm#ref_2531_7">Txt</A>) <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses__ads.htm#ref_1879_14">Screen_Set_File</A>;
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2539_14" HREF="terminal_interface-curses__ads.htm#ref_1911_14">Resize</A></FONT> (<FONT COLOR=red><A NAME="ref_2539_22" HREF="terminal_interface-curses__ads.htm#ref_1911_22">Win</A></FONT>               : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-                     <FONT COLOR=red><A NAME="ref_2540_22" HREF="terminal_interface-curses__ads.htm#ref_1912_22">Number_Of_Lines</A></FONT>   : <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A>;
-                     <FONT COLOR=red><A NAME="ref_2541_22" HREF="terminal_interface-curses__ads.htm#ref_1913_22">Number_Of_Columns</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A>) <b>is</b>
-      <b>function</b> <FONT COLOR=red><A NAME="ref_2542_16">wresize</A></FONT> (<FONT COLOR=red><A NAME="ref_2542_25" HREF="terminal_interface-curses__adb.htm#ref_2542_16">win</A></FONT>     : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-                        <FONT COLOR=red><A NAME="ref_2543_25" HREF="terminal_interface-curses__adb.htm#ref_2542_16">lines</A></FONT>   : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
-                        <FONT COLOR=red><A NAME="ref_2544_25" HREF="terminal_interface-curses__adb.htm#ref_2542_16">columns</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_2540_14" HREF="terminal_interface-curses__ads.htm#ref_1911_14">Resize</A></FONT> (<FONT COLOR=red><A NAME="ref_2540_22" HREF="terminal_interface-curses__ads.htm#ref_1911_22">Win</A></FONT>               : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
+                     <FONT COLOR=red><A NAME="ref_2541_22" HREF="terminal_interface-curses__ads.htm#ref_1912_22">Number_Of_Lines</A></FONT>   : <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A>;
+                     <FONT COLOR=red><A NAME="ref_2542_22" HREF="terminal_interface-curses__ads.htm#ref_1913_22">Number_Of_Columns</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A>) <b>is</b>
+      <b>function</b> <FONT COLOR=red><A NAME="ref_2543_16">wresize</A></FONT> (<FONT COLOR=red><A NAME="ref_2543_25" HREF="terminal_interface-curses__adb.htm#ref_2543_16">win</A></FONT>     : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+                        <FONT COLOR=red><A NAME="ref_2544_25" HREF="terminal_interface-curses__adb.htm#ref_2543_16">lines</A></FONT>   : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
+                        <FONT COLOR=red><A NAME="ref_2545_25" HREF="terminal_interface-curses__adb.htm#ref_2543_16">columns</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, wresize);
    <b>begin</b>
-      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2542_16">wresize</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1911_22">Win</A>,
+      <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_2543_16">wresize</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1911_22">Win</A>,
                   <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1912_22">Number_Of_Lines</A>),
                   <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1913_22">Number_Of_Columns</A>)) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;

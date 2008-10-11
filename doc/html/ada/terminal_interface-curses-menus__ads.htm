@@ -53,8 +53,8 @@
 
 <b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_49_35" HREF="terminal_interface-curses-menus__adb.htm#ref_51_40">Menus</A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-menus__ads.htm#ref_49_35">Menus</A>);
-   <b>pragma</b> Linker_Options ("-lmenu");
-   <b>pragma</b> Linker_Options ("-lncurses");
+   <b>pragma</b> Linker_Options ("-lmenuw");
+   <b>pragma</b> Linker_Options ("-lncursesw");
 
    Space : Character <b>renames</b> Ada.Characters.Latin_1.Space;
 
@@ -136,12 +136,12 @@
 
    <b>for</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_121_9">Menu_Option_Set</A> <b>use</b>
       <b>record</b>
-         One_Valued        <b>at</b> 0 <b>range</b>  0 ..  0;
-         Show_Descriptions <b>at</b> 0 <b>range</b>  1 ..  1;
-         Row_Major_Order   <b>at</b> 0 <b>range</b>  2 ..  2;
-         Ignore_Case       <b>at</b> 0 <b>range</b>  3 ..  3;
-         Show_Matches      <b>at</b> 0 <b>range</b>  4 ..  4;
-         Non_Cyclic        <b>at</b> 0 <b>range</b>  5 ..  5;
+         <A HREF="terminal_interface-curses-menus__ads.htm#ref_123_10">One_Valued</A>        <b>at</b> 0 <b>range</b>  0 ..  0;
+         <A HREF="terminal_interface-curses-menus__ads.htm#ref_124_10">Show_Descriptions</A> <b>at</b> 0 <b>range</b>  1 ..  1;
+         <A HREF="terminal_interface-curses-menus__ads.htm#ref_125_10">Row_Major_Order</A>   <b>at</b> 0 <b>range</b>  2 ..  2;
+         <A HREF="terminal_interface-curses-menus__ads.htm#ref_126_10">Ignore_Case</A>       <b>at</b> 0 <b>range</b>  3 ..  3;
+         <A HREF="terminal_interface-curses-menus__ads.htm#ref_127_10">Show_Matches</A>      <b>at</b> 0 <b>range</b>  4 ..  4;
+         <A HREF="terminal_interface-curses-menus__ads.htm#ref_128_10">Non_Cyclic</A>        <b>at</b> 0 <b>range</b>  5 ..  5;
       <b>end</b> <b>record</b>;
    <b>for</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_121_9">Menu_Option_Set</A>'Size <b>use</b> 32;
    <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
@@ -163,7 +163,7 @@
 
    <b>for</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_153_9">Item_Option_Set</A> <b>use</b>
       <b>record</b>
-         Selectable  <b>at</b> 0 <b>range</b>  0 ..  0;
+         <A HREF="terminal_interface-curses-menus__ads.htm#ref_155_10">Selectable</A>  <b>at</b> 0 <b>range</b>  0 ..  0;
       <b>end</b> <b>record</b>;
    <b>for</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_153_9">Item_Option_Set</A>'Size <b>use</b> 32;
    <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
@@ -177,10 +177,10 @@
    <FONT COLOR=green><EM>--</EM></FONT>
    <FONT COLOR=green><EM>--  Item Array</EM></FONT>
    <FONT COLOR=green><EM>--</EM></FONT>
-   <b>type</b> <FONT COLOR=red><A NAME="ref_175_9">Item_Array</A></FONT> <b>is</b> <b>array</b> (Positive <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
-   <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-menus__ads.htm#ref_175_9">Item_Array</A>);
+   <b>type</b> Item_Array <b>is</b> <b>array</b> (Positive <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
+   <b>pragma</b> Convention (C, Item_Array);
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_178_9">Item_Array_Access</A></FONT> <b>is</b> <b>access</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_175_9">Item_Array</A>;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_178_9">Item_Array_Access</A></FONT> <b>is</b> <b>access</b> Item_Array;
 
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_180_14" HREF="terminal_interface-curses-menus__adb.htm#ref_992_14">Free</A></FONT> (<FONT COLOR=red><A NAME="ref_180_20" HREF="terminal_interface-curses-menus__adb.htm#ref_992_20">IA</A></FONT>         : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_178_9">Item_Array_Access</A>;
                    <FONT COLOR=red><A NAME="ref_181_20" HREF="terminal_interface-curses-menus__adb.htm#ref_993_20">Free_Items</A></FONT> : Boolean := False);

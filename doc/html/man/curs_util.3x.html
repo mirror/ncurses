@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.25 2007/05/26 21:44:42 tom Exp @
+  * @Id: curs_util.3x,v 1.26 2008/10/11 20:32:56 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -79,14 +79,35 @@
        of a wide-character.
 
        The <STRONG>keyname</STRONG> routine returns a character string correspond-
-       ing to the key <EM>c</EM>.  Control characters are displayed in the
-       <STRONG>^</STRONG><EM>X</EM> notation.  Values above 128 are either meta characters,
-       shown  in the <STRONG>M-</STRONG><EM>X</EM> notation, or the names of function keys,
-       or null.  The corresponding <STRONG>key_name</STRONG> returns  a  character
-       string  corresponding  to the wide-character value <EM>w</EM>.  The
-       two functions do not return the same set of  strings;  the
-       latter  returns null where the former would display a meta
-       character.
+       ing to the key <EM>c</EM>:
+
+          -  Printable  characters  are  displayed as themselves,
+             e.g., a one-character string containing the key.
+
+          -  Control characters are displayed in the <STRONG>^</STRONG><EM>X</EM> notation.
+
+          -  DEL (character 127) is displayed as <STRONG>^?</STRONG>.
+
+          -  Values  above 128 are either meta characters (if the
+             screen has not been initialized, or if <STRONG>meta</STRONG> has been
+             called  with a TRUE parameter), shown in the <STRONG>M-</STRONG><EM>X</EM> no-
+             tation, or are displayed as themselves.  In the lat-
+             ter case, the values may not be printable; this fol-
+             lows the X/Open specification.
+
+          -  Values above 256 may be the names of  the  names  of
+             function keys.
+
+          -  Otherwise  (if  there  is no corresponding name) the
+             function returns null, to denote an  error.   X/Open
+             also lists an "UNKNOWN KEY" return value, which some
+             implementations return rather than null.
+
+       The corresponding <STRONG>key_name</STRONG> returns a character string cor-
+       responding  to  the wide-character value <EM>w</EM>.  The two func-
+       tions do not return the same set of  strings;  the  latter
+       returns null where the former would display a meta charac-
+       ter.
 
        The <STRONG>filter</STRONG> routine, if used, must be called before <STRONG>initscr</STRONG>
        or  <STRONG>newterm</STRONG>  are called.  The effect is that, during those
@@ -211,11 +232,14 @@
        strings which begin  with  "k".   The  keycodes  start  at
        KEY_MAX,  but  are not guaranteed to be the same value for
        different runs because user-defined codes are merged  from
-       all terminal descriptions which have been loaded.
+       all  terminal  descriptions  which  have been loaded.  The
+       <STRONG>use_extended_names</STRONG> function controls whether this data  is
+       loaded  when  the  terminal description is read by the li-
+       brary.
 
-       The  <STRONG>nofilter</STRONG>  routine is specific to ncurses.  It was not
-       supported on Version 7, BSD or System  V  implementations.
-       It  is  recommended that any code depending on ncurses ex-
+       The <STRONG>nofilter</STRONG> routine is specific to ncurses.  It  was  not
+       supported  on  Version 7, BSD or System V implementations.
+       It is recommended that any code depending on  ncurses  ex-
        tensions be conditioned using NCURSES_VERSION.
 
 

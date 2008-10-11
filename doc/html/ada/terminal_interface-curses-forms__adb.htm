@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2004,2008 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,8 +40,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.25 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2004/08/21 21:37:00 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.26 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2008/07/26 18:50:44 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> Ada.Unchecked_Deallocation;
@@ -57,9 +57,9 @@
 
    <b>use</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>;
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_55_9">C_Field_Array</A></FONT> <b>is</b> <b>array</b> (Natural <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>;
+   <b>type</b> C_Field_Array <b>is</b> <b>array</b> (Natural <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>;
    <b>package</b> F_Array <b>is</b> <b>new</b>
-     <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Pointers (Natural, <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>, <A HREF="terminal_interface-curses-forms__adb.htm#ref_55_9">C_Field_Array</A>, <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A>);
+     <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Pointers (Natural, <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>, C_Field_Array, <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A>);
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
@@ -764,7 +764,7 @@
 
       P : Pointer := C_Fields (<A HREF="terminal_interface-curses-forms__ads.htm#ref_601_21">Frm</A>);
    <b>begin</b>
-      <b>if</b> P = <b>null</b> <b>or</b> <b>else</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_602_21">Index</A> <b>not</b> <b>in</b> 1 .. <A HREF="terminal_interface-curses-forms__ads.htm#ref_607_13">Field_Count</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_601_21">Frm</A>) <b>then</b>
+      <b>if</b> P = <b>null</b> <b>or</b> <b>else</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_602_21">Index</A> &gt; <A HREF="terminal_interface-curses-forms__ads.htm#ref_607_13">Field_Count</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_601_21">Frm</A>) <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_286_4">Form_Exception</A>;
       <b>else</b>
          P := P + ptrdiff_t (<A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_602_21">Index</A>) - 1);
@@ -1137,7 +1137,7 @@
                    <FONT COLOR=red><A NAME="ref_1132_20" HREF="terminal_interface-curses-forms__ads.htm#ref_137_20">Free_Fields</A></FONT> : <b>in</b> Boolean := False)
    <b>is</b>
       <b>procedure</b> Release <b>is</b> <b>new</b> Ada.Unchecked_Deallocation
-        (<A HREF="terminal_interface-curses-forms__ads.htm#ref_131_9">Field_Array</A>, <A HREF="terminal_interface-curses-forms__ads.htm#ref_134_9">Field_Array_Access</A>);
+        (Field_Array, <A HREF="terminal_interface-curses-forms__ads.htm#ref_134_9">Field_Array_Access</A>);
    <b>begin</b>
       <b>if</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_136_20">FA</A> /= <b>null</b> <b>and</b> <b>then</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_137_20">Free_Fields</A> <b>then</b>
          <b>for</b> <FONT COLOR=red><A NAME="ref_1138_14">I</A></FONT> <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_136_20">FA</A>'First .. (<A HREF="terminal_interface-curses-forms__ads.htm#ref_136_20">FA</A>'Last - 1) <b>loop</b>

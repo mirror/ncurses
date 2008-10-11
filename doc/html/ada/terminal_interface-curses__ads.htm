@@ -53,7 +53,7 @@
 
 <b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<FONT COLOR=red><A NAME="ref_49_28" HREF="terminal_interface-curses__adb.htm#ref_50_33">Curses</A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>);
-   <b>pragma</b> Linker_Options ("-lncurses");
+   <b>pragma</b> Linker_Options ("-lncursesw");
 
    <FONT COLOR=red><A NAME="ref_53_4">NC_Major_Version</A></FONT> : <b>constant</b> := 5; <FONT COLOR=green><EM>--  Major version of the library</EM></FONT>
    <FONT COLOR=red><A NAME="ref_54_4">NC_Minor_Version</A></FONT> : <b>constant</b> := 6; <FONT COLOR=green><EM>--  Minor version of the library</EM></FONT>
@@ -331,21 +331,21 @@
 
    <b>for</b> <A HREF="terminal_interface-curses__ads.htm#ref_307_9">Character_Attribute_Set</A> <b>use</b>
       <b>record</b>
-         Stand_Out               <b>at</b> 0 <b>range</b>  0 ..  0;
-         Under_Line              <b>at</b> 0 <b>range</b>  1 ..  1;
-         Reverse_Video           <b>at</b> 0 <b>range</b>  2 ..  2;
-         Blink                   <b>at</b> 0 <b>range</b>  3 ..  3;
-         Dim_Character           <b>at</b> 0 <b>range</b>  4 ..  4;
-         Bold_Character          <b>at</b> 0 <b>range</b>  5 ..  5;
-         Alternate_Character_Set <b>at</b> 0 <b>range</b>  6 ..  6;
-         Invisible_Character     <b>at</b> 0 <b>range</b>  7 ..  7;
-         Protected_Character     <b>at</b> 0 <b>range</b>  8 ..  8;
-         Horizontal              <b>at</b> 0 <b>range</b>  9 ..  9;
-         Left                    <b>at</b> 0 <b>range</b> 10 .. 10;
-         Low                     <b>at</b> 0 <b>range</b> 11 .. 11;
-         Right                   <b>at</b> 0 <b>range</b> 12 .. 12;
-         Top                     <b>at</b> 0 <b>range</b> 13 .. 13;
-         Vertical                <b>at</b> 0 <b>range</b> 14 .. 14;
+         <A HREF="terminal_interface-curses__ads.htm#ref_309_10">Stand_Out</A>               <b>at</b> 0 <b>range</b>  0 ..  0;
+         <A HREF="terminal_interface-curses__ads.htm#ref_310_10">Under_Line</A>              <b>at</b> 0 <b>range</b>  1 ..  1;
+         <A HREF="terminal_interface-curses__ads.htm#ref_311_10">Reverse_Video</A>           <b>at</b> 0 <b>range</b>  2 ..  2;
+         <A HREF="terminal_interface-curses__ads.htm#ref_312_10">Blink</A>                   <b>at</b> 0 <b>range</b>  3 ..  3;
+         <A HREF="terminal_interface-curses__ads.htm#ref_313_10">Dim_Character</A>           <b>at</b> 0 <b>range</b>  4 ..  4;
+         <A HREF="terminal_interface-curses__ads.htm#ref_314_10">Bold_Character</A>          <b>at</b> 0 <b>range</b>  5 ..  5;
+         <A HREF="terminal_interface-curses__ads.htm#ref_315_10">Alternate_Character_Set</A> <b>at</b> 0 <b>range</b>  6 ..  6;
+         <A HREF="terminal_interface-curses__ads.htm#ref_316_10">Invisible_Character</A>     <b>at</b> 0 <b>range</b>  7 ..  7;
+         <A HREF="terminal_interface-curses__ads.htm#ref_317_10">Protected_Character</A>     <b>at</b> 0 <b>range</b>  8 ..  8;
+         <A HREF="terminal_interface-curses__ads.htm#ref_318_10">Horizontal</A>              <b>at</b> 0 <b>range</b>  9 ..  9;
+         <A HREF="terminal_interface-curses__ads.htm#ref_319_10">Left</A>                    <b>at</b> 0 <b>range</b> 10 .. 10;
+         <A HREF="terminal_interface-curses__ads.htm#ref_320_10">Low</A>                     <b>at</b> 0 <b>range</b> 11 .. 11;
+         <A HREF="terminal_interface-curses__ads.htm#ref_321_10">Right</A>                   <b>at</b> 0 <b>range</b> 12 .. 12;
+         <A HREF="terminal_interface-curses__ads.htm#ref_322_10">Top</A>                     <b>at</b> 0 <b>range</b> 13 .. 13;
+         <A HREF="terminal_interface-curses__ads.htm#ref_323_10">Vertical</A>                <b>at</b> 0 <b>range</b> 14 .. 14;
       <b>end</b> <b>record</b>;
    <b>for</b> <A HREF="terminal_interface-curses__ads.htm#ref_307_9">Character_Attribute_Set</A>'Size <b>use</b> 16;
    <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
@@ -365,9 +365,9 @@
 
    <b>for</b> <A HREF="terminal_interface-curses__ads.htm#ref_352_9">Attributed_Character</A> <b>use</b>
       <b>record</b>
-         Ch    <b>at</b> 0 <b>range</b>  0 ..  7;
-         Color <b>at</b> 0 <b>range</b>  8 .. 15;
-         Attr  <b>at</b> 0 <b>range</b> 16 .. 31;
+         <A HREF="terminal_interface-curses__ads.htm#ref_356_10">Ch</A>    <b>at</b> 0 <b>range</b>  0 ..  7;
+         <A HREF="terminal_interface-curses__ads.htm#ref_355_10">Color</A> <b>at</b> 0 <b>range</b>  8 .. 15;
+         <A HREF="terminal_interface-curses__ads.htm#ref_354_10">Attr</A>  <b>at</b> 0 <b>range</b> 16 .. 31;
       <b>end</b> <b>record</b>;
    <b>for</b> <A HREF="terminal_interface-curses__ads.htm#ref_352_9">Attributed_Character</A>'Size <b>use</b> 32;
       <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
@@ -378,8 +378,8 @@
          <A HREF="terminal_interface-curses__ads.htm#ref_355_10">Color</A> =&gt; <A HREF="terminal_interface-curses__ads.htm#ref_299_9">Color_Pair</A>'First,
          <A HREF="terminal_interface-curses__ads.htm#ref_354_10">Attr</A>  =&gt; (<b>others</b> =&gt; False));  <FONT COLOR=green><EM>--  preelaboratable Normal_Video</EM></FONT>
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_376_9">Attributed_String</A></FONT> <b>is</b> <b>array</b> (Positive <b>range</b> &lt;&gt;) <b>of</b> <A HREF="terminal_interface-curses__ads.htm#ref_352_9">Attributed_Character</A>;
-   <b>pragma</b> Pack (<A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>);
+   <b>type</b> Attributed_String <b>is</b> <b>array</b> (Positive <b>range</b> &lt;&gt;) <b>of</b> <A HREF="terminal_interface-curses__ads.htm#ref_352_9">Attributed_Character</A>;
+   <b>pragma</b> Pack (Attributed_String);
    <FONT COLOR=green><EM>--  In this binding we allow strings of attributed characters.</EM></FONT>
 
    <FONT COLOR=green><EM>------------------</EM></FONT>
@@ -414,24 +414,24 @@
    <FONT COLOR=green><EM>--  this is to use functions.</EM></FONT>
    <FONT COLOR=green><EM>--------------------------------------------------------------------------</EM></FONT>
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_412_13" HREF="terminal_interface-curses__adb.htm#ref_2354_13">Lines</A></FONT>            <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_412_13" HREF="terminal_interface-curses__adb.htm#ref_2355_13">Lines</A></FONT>            <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A>;
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_412_13">Lines</A>);
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_415_13" HREF="terminal_interface-curses__adb.htm#ref_2362_13">Columns</A></FONT>          <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_415_13" HREF="terminal_interface-curses__adb.htm#ref_2363_13">Columns</A></FONT>          <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A>;
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_415_13">Columns</A>);
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_418_13" HREF="terminal_interface-curses__adb.htm#ref_2370_13">Tab_Size</A></FONT>         <b>return</b> Natural;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_418_13" HREF="terminal_interface-curses__adb.htm#ref_2371_13">Tab_Size</A></FONT>         <b>return</b> Natural;
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_418_13">Tab_Size</A>);
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_421_13" HREF="terminal_interface-curses__adb.htm#ref_2378_13">Number_Of_Colors</A></FONT> <b>return</b> Natural;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_421_13" HREF="terminal_interface-curses__adb.htm#ref_2379_13">Number_Of_Colors</A></FONT> <b>return</b> Natural;
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_421_13">Number_Of_Colors</A>);
 
-   <b>function</b> <FONT COLOR=red><A NAME="ref_424_13" HREF="terminal_interface-curses__adb.htm#ref_2386_13">Number_Of_Color_Pairs</A></FONT> <b>return</b> Natural;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_424_13" HREF="terminal_interface-curses__adb.htm#ref_2387_13">Number_Of_Color_Pairs</A></FONT> <b>return</b> Natural;
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_424_13">Number_Of_Color_Pairs</A>);
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_427_9">C_ACS_Map</A></FONT> <b>is</b> <b>array</b> (Character'Val (0) .. Character'Val (127))
+   <b>type</b> C_ACS_Map <b>is</b> <b>array</b> (Character'Val (0) .. Character'Val (127))
         <b>of</b> <A HREF="terminal_interface-curses__ads.htm#ref_352_9">Attributed_Character</A>;
-   <FONT COLOR=red><A NAME="ref_429_4">ACS_Map</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_427_9">C_ACS_Map</A>;
+   <FONT COLOR=red><A NAME="ref_429_4">ACS_Map</A></FONT> : C_ACS_Map;
    <b>pragma</b> Import (C, <A HREF="terminal_interface-curses__ads.htm#ref_429_4">ACS_Map</A>, "acs_map");
    <FONT COLOR=green><EM>--</EM></FONT>
    <FONT COLOR=green><EM>--</EM></FONT>
@@ -478,12 +478,12 @@
    <FONT COLOR=green><EM>--  | Not implemented: newterm, set_term, delscreen</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_1"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_476_13" HREF="terminal_interface-curses__adb.htm#ref_2338_13">Standard_Window</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_476_13" HREF="terminal_interface-curses__adb.htm#ref_2339_13">Standard_Window</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_initscr.3x.html">stdscr</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_2"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_481_13" HREF="terminal_interface-curses__adb.htm#ref_2346_13">Current_Window</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_481_13" HREF="terminal_interface-curses__adb.htm#ref_2347_13">Current_Window</A></FONT> <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_initscr.3x.html">curscr</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_481_13">Current_Window</A>);
 
@@ -680,7 +680,7 @@
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_23"#2|</EM></FONT>
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_677_14" HREF="terminal_interface-curses__adb.htm#ref_402_14">Add</A></FONT> (<FONT COLOR=red><A NAME="ref_677_19" HREF="terminal_interface-curses__adb.htm#ref_403_7">Win</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-                  <FONT COLOR=red><A NAME="ref_678_19" HREF="terminal_interface-curses__adb.htm#ref_404_7">Str</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>;
+                  <FONT COLOR=red><A NAME="ref_678_19" HREF="terminal_interface-curses__adb.htm#ref_404_7">Str</A></FONT> : <b>in</b> Attributed_String;
                   <FONT COLOR=red><A NAME="ref_679_19" HREF="terminal_interface-curses__adb.htm#ref_405_7">Len</A></FONT> : <b>in</b> Integer := -1);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addchstr.3x.html">waddchnstr()</A></EM></FONT>
    <FONT COLOR=green><EM>--  AKA: waddchstr()</EM></FONT>
@@ -691,7 +691,7 @@
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_686_14" HREF="terminal_interface-curses__adb.htm#ref_425_14">Add</A></FONT> (<FONT COLOR=red><A NAME="ref_686_19" HREF="terminal_interface-curses__adb.htm#ref_426_7">Win</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
                   <FONT COLOR=red><A NAME="ref_687_19" HREF="terminal_interface-curses__adb.htm#ref_427_7">Line</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
                   <FONT COLOR=red><A NAME="ref_688_19" HREF="terminal_interface-curses__adb.htm#ref_428_7">Column</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
-                  <FONT COLOR=red><A NAME="ref_689_19" HREF="terminal_interface-curses__adb.htm#ref_429_7">Str</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>;
+                  <FONT COLOR=red><A NAME="ref_689_19" HREF="terminal_interface-curses__adb.htm#ref_429_7">Str</A></FONT>    : <b>in</b> Attributed_String;
                   <FONT COLOR=red><A NAME="ref_690_19" HREF="terminal_interface-curses__adb.htm#ref_430_7">Len</A></FONT>    : <b>in</b> Integer := -1);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_addchstr.3x.html">mvwaddchnstr()</A></EM></FONT>
    <FONT COLOR=green><EM>--  AKA: mvwaddchstr()</EM></FONT>
@@ -1441,7 +1441,7 @@
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_105"#2|</EM></FONT>
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_1438_14" HREF="terminal_interface-curses__adb.htm#ref_1726_14">Peek</A></FONT> (<FONT COLOR=red><A NAME="ref_1438_20" HREF="terminal_interface-curses__adb.htm#ref_1727_7">Win</A></FONT> : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-                   <FONT COLOR=red><A NAME="ref_1439_20" HREF="terminal_interface-curses__adb.htm#ref_1728_7">Str</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>;
+                   <FONT COLOR=red><A NAME="ref_1439_20" HREF="terminal_interface-curses__adb.htm#ref_1728_7">Str</A></FONT> : <b>out</b> Attributed_String;
                    <FONT COLOR=red><A NAME="ref_1440_20" HREF="terminal_interface-curses__adb.htm#ref_1729_7">Len</A></FONT> : <b>in</b>  Integer := -1);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inchstr.3x.html">winchnstr()</A></EM></FONT>
    <FONT COLOR=green><EM>--  AKA: winchstr()</EM></FONT>
@@ -1452,7 +1452,7 @@
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_1447_14" HREF="terminal_interface-curses__adb.htm#ref_1763_14">Peek</A></FONT> (<FONT COLOR=red><A NAME="ref_1447_20" HREF="terminal_interface-curses__adb.htm#ref_1764_7">Win</A></FONT>    : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
                    <FONT COLOR=red><A NAME="ref_1448_20" HREF="terminal_interface-curses__adb.htm#ref_1765_7">Line</A></FONT>   : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
                    <FONT COLOR=red><A NAME="ref_1449_20" HREF="terminal_interface-curses__adb.htm#ref_1766_7">Column</A></FONT> : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
-                   <FONT COLOR=red><A NAME="ref_1450_20" HREF="terminal_interface-curses__adb.htm#ref_1767_7">Str</A></FONT>    : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_376_9">Attributed_String</A>;
+                   <FONT COLOR=red><A NAME="ref_1450_20" HREF="terminal_interface-curses__adb.htm#ref_1767_7">Str</A></FONT>    : <b>out</b> Attributed_String;
                    <FONT COLOR=red><A NAME="ref_1451_20" HREF="terminal_interface-curses__adb.htm#ref_1768_7">Len</A></FONT>    : <b>in</b>  Integer := -1);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_inchstr.3x.html">mvwinchnstr()</A></EM></FONT>
    <FONT COLOR=green><EM>--  AKA: mvwinchstr()</EM></FONT>
@@ -1721,35 +1721,35 @@
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1712_14">Init_Pair</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_143"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1719_14" HREF="terminal_interface-curses__adb.htm#ref_2161_14">Pair_Content</A></FONT> (<FONT COLOR=red><A NAME="ref_1719_28" HREF="terminal_interface-curses__adb.htm#ref_2161_28">Pair</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_299_9">Color_Pair</A>;
-                           <FONT COLOR=red><A NAME="ref_1720_28" HREF="terminal_interface-curses__adb.htm#ref_2162_28">Fore</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
-                           <FONT COLOR=red><A NAME="ref_1721_28" HREF="terminal_interface-curses__adb.htm#ref_2163_28">Back</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1719_14" HREF="terminal_interface-curses__adb.htm#ref_2162_14">Pair_Content</A></FONT> (<FONT COLOR=red><A NAME="ref_1719_28" HREF="terminal_interface-curses__adb.htm#ref_2162_28">Pair</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_299_9">Color_Pair</A>;
+                           <FONT COLOR=red><A NAME="ref_1720_28" HREF="terminal_interface-curses__adb.htm#ref_2163_28">Fore</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
+                           <FONT COLOR=red><A NAME="ref_1721_28" HREF="terminal_interface-curses__adb.htm#ref_2164_28">Back</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">pair_content()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1719_14">Pair_Content</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_144"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_1726_13" HREF="terminal_interface-curses__adb.htm#ref_2181_13">Has_Colors</A></FONT> <b>return</b> Boolean;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_1726_13" HREF="terminal_interface-curses__adb.htm#ref_2182_13">Has_Colors</A></FONT> <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">has_colors()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1726_13">Has_Colors</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_145"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1731_14" HREF="terminal_interface-curses__adb.htm#ref_2193_14">Init_Color</A></FONT> (<FONT COLOR=red><A NAME="ref_1731_26" HREF="terminal_interface-curses__adb.htm#ref_2193_26">Color</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
-                         <FONT COLOR=red><A NAME="ref_1732_26" HREF="terminal_interface-curses__adb.htm#ref_2194_26">Red</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
-                         <FONT COLOR=red><A NAME="ref_1733_26" HREF="terminal_interface-curses__adb.htm#ref_2195_26">Green</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
-                         <FONT COLOR=red><A NAME="ref_1734_26" HREF="terminal_interface-curses__adb.htm#ref_2196_26">Blue</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1731_14" HREF="terminal_interface-curses__adb.htm#ref_2194_14">Init_Color</A></FONT> (<FONT COLOR=red><A NAME="ref_1731_26" HREF="terminal_interface-curses__adb.htm#ref_2194_26">Color</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
+                         <FONT COLOR=red><A NAME="ref_1732_26" HREF="terminal_interface-curses__adb.htm#ref_2195_26">Red</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
+                         <FONT COLOR=red><A NAME="ref_1733_26" HREF="terminal_interface-curses__adb.htm#ref_2196_26">Green</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
+                         <FONT COLOR=red><A NAME="ref_1734_26" HREF="terminal_interface-curses__adb.htm#ref_2197_26">Blue</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">init_color()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1731_14">Init_Color</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_146"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_1739_13" HREF="terminal_interface-curses__adb.htm#ref_2210_13">Can_Change_Color</A></FONT> <b>return</b> Boolean;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_1739_13" HREF="terminal_interface-curses__adb.htm#ref_2211_13">Can_Change_Color</A></FONT> <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">can_change_color()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1739_13">Can_Change_Color</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_147"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1744_14" HREF="terminal_interface-curses__adb.htm#ref_2222_14">Color_Content</A></FONT> (<FONT COLOR=red><A NAME="ref_1744_29" HREF="terminal_interface-curses__adb.htm#ref_2222_29">Color</A></FONT> : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
-                            <FONT COLOR=red><A NAME="ref_1745_29" HREF="terminal_interface-curses__adb.htm#ref_2223_29">Red</A></FONT>   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
-                            <FONT COLOR=red><A NAME="ref_1746_29" HREF="terminal_interface-curses__adb.htm#ref_2224_29">Green</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
-                            <FONT COLOR=red><A NAME="ref_1747_29" HREF="terminal_interface-curses__adb.htm#ref_2225_29">Blue</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1744_14" HREF="terminal_interface-curses__adb.htm#ref_2223_14">Color_Content</A></FONT> (<FONT COLOR=red><A NAME="ref_1744_29" HREF="terminal_interface-curses__adb.htm#ref_2223_29">Color</A></FONT> : <b>in</b>  <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>;
+                            <FONT COLOR=red><A NAME="ref_1745_29" HREF="terminal_interface-curses__adb.htm#ref_2224_29">Red</A></FONT>   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
+                            <FONT COLOR=red><A NAME="ref_1746_29" HREF="terminal_interface-curses__adb.htm#ref_2225_29">Green</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>;
+                            <FONT COLOR=red><A NAME="ref_1747_29" HREF="terminal_interface-curses__adb.htm#ref_2226_29">Blue</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_color.3x.html">color_content()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1744_14">Color_Content</A>);
 
@@ -1761,24 +1761,24 @@
    <b>type</b> <FONT COLOR=red><A NAME="ref_1756_9">Curses_Mode</A></FONT> <b>is</b> (<FONT COLOR=red><A NAME="ref_1756_25">Curses</A></FONT>, <FONT COLOR=red><A NAME="ref_1756_33">Shell</A></FONT>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_148"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1759_14" HREF="terminal_interface-curses__adb.htm#ref_2246_14">Save_Curses_Mode</A></FONT> (<FONT COLOR=red><A NAME="ref_1759_32" HREF="terminal_interface-curses__adb.htm#ref_2246_32">Mode</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_9">Curses_Mode</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1759_14" HREF="terminal_interface-curses__adb.htm#ref_2247_14">Save_Curses_Mode</A></FONT> (<FONT COLOR=red><A NAME="ref_1759_32" HREF="terminal_interface-curses__adb.htm#ref_2247_32">Mode</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_9">Curses_Mode</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">def_prog_mode()</A></EM></FONT>
    <FONT COLOR=green><EM>--  AKA: def_shell_mode()</EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1759_14">Save_Curses_Mode</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_149"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1765_14" HREF="terminal_interface-curses__adb.htm#ref_2264_14">Reset_Curses_Mode</A></FONT> (<FONT COLOR=red><A NAME="ref_1765_33" HREF="terminal_interface-curses__adb.htm#ref_2264_33">Mode</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_9">Curses_Mode</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1765_14" HREF="terminal_interface-curses__adb.htm#ref_2265_14">Reset_Curses_Mode</A></FONT> (<FONT COLOR=red><A NAME="ref_1765_33" HREF="terminal_interface-curses__adb.htm#ref_2265_33">Mode</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1756_9">Curses_Mode</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">reset_prog_mode()</A></EM></FONT>
    <FONT COLOR=green><EM>--  AKA: reset_shell_mode()</EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1765_14">Reset_Curses_Mode</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_150"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1771_14" HREF="terminal_interface-curses__adb.htm#ref_2282_14">Save_Terminal_State</A></FONT>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1771_14" HREF="terminal_interface-curses__adb.htm#ref_2283_14">Save_Terminal_State</A></FONT>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">savetty()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1771_14">Save_Terminal_State</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_151"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1776_14" HREF="terminal_interface-curses__adb.htm#ref_2292_14">Reset_Terminal_State</A></FONT>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1776_14" HREF="terminal_interface-curses__adb.htm#ref_2293_14">Reset_Terminal_State</A></FONT>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">resetty();</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1776_14">Reset_Terminal_State</A>);
 
@@ -1791,8 +1791,8 @@
    <FONT COLOR=green><EM>--        and -1 otherwise.</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_152"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1789_14" HREF="terminal_interface-curses__adb.htm#ref_2302_14">Rip_Off_Lines</A></FONT> (<FONT COLOR=red><A NAME="ref_1789_29" HREF="terminal_interface-curses__adb.htm#ref_2302_29">Lines</A></FONT> : <b>in</b> Integer;
-                            <FONT COLOR=red><A NAME="ref_1790_29" HREF="terminal_interface-curses__adb.htm#ref_2303_29">Proc</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1780_9">Stdscr_Init_Proc</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1789_14" HREF="terminal_interface-curses__adb.htm#ref_2303_14">Rip_Off_Lines</A></FONT> (<FONT COLOR=red><A NAME="ref_1789_29" HREF="terminal_interface-curses__adb.htm#ref_2303_29">Lines</A></FONT> : <b>in</b> Integer;
+                            <FONT COLOR=red><A NAME="ref_1790_29" HREF="terminal_interface-curses__adb.htm#ref_2304_29">Proc</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1780_9">Stdscr_Init_Proc</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">ripoffline()</A></EM></FONT>
    <FONT COLOR=green><EM>--  N.B.: to be more precise, this uses a ncurses specific enhancement of</EM></FONT>
    <FONT COLOR=green><EM>--        ripoffline(), in which the Lines argument absolute value is the</EM></FONT>
@@ -1803,12 +1803,12 @@
    <b>type</b> <FONT COLOR=red><A NAME="ref_1798_9">Cursor_Visibility</A></FONT> <b>is</b> (<FONT COLOR=red><A NAME="ref_1798_31">Invisible</A></FONT>, <FONT COLOR=red><A NAME="ref_1798_42">Normal</A></FONT>, <FONT COLOR=red><A NAME="ref_1798_50">Very_Visible</A></FONT>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_153"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1801_14" HREF="terminal_interface-curses__adb.htm#ref_2314_14">Set_Cursor_Visibility</A></FONT> (<FONT COLOR=red><A NAME="ref_1801_37" HREF="terminal_interface-curses__adb.htm#ref_2314_37">Visibility</A></FONT> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_1798_9">Cursor_Visibility</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1801_14" HREF="terminal_interface-curses__adb.htm#ref_2315_14">Set_Cursor_Visibility</A></FONT> (<FONT COLOR=red><A NAME="ref_1801_37" HREF="terminal_interface-curses__adb.htm#ref_2315_37">Visibility</A></FONT> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_1798_9">Cursor_Visibility</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">curs_set()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1801_14">Set_Cursor_Visibility</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_154"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1806_14" HREF="terminal_interface-curses__adb.htm#ref_2327_14">Nap_Milli_Seconds</A></FONT> (<FONT COLOR=red><A NAME="ref_1806_33" HREF="terminal_interface-curses__adb.htm#ref_2327_33">Ms</A></FONT> : <b>in</b> Natural);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1806_14" HREF="terminal_interface-curses__adb.htm#ref_2328_14">Nap_Milli_Seconds</A></FONT> (<FONT COLOR=red><A NAME="ref_1806_33" HREF="terminal_interface-curses__adb.htm#ref_2328_33">Ms</A></FONT> : <b>in</b> Natural);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_kernel.3x.html">napms()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1806_14">Nap_Milli_Seconds</A>);
 
@@ -1816,11 +1816,11 @@
    <FONT COLOR=green><EM>--  | Some useful helpers.</EM></FONT>
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
    <b>type</b> <FONT COLOR=red><A NAME="ref_1813_9">Transform_Direction</A></FONT> <b>is</b> (<FONT COLOR=red><A NAME="ref_1813_33">From_Screen</A></FONT>, <FONT COLOR=red><A NAME="ref_1813_46">To_Screen</A></FONT>);
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1814_14" HREF="terminal_interface-curses__adb.htm#ref_2395_14">Transform_Coordinates</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_1815_7" HREF="terminal_interface-curses__adb.htm#ref_2396_7">W</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-      <FONT COLOR=red><A NAME="ref_1816_7" HREF="terminal_interface-curses__adb.htm#ref_2397_7">Line</A></FONT>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
-      <FONT COLOR=red><A NAME="ref_1817_7" HREF="terminal_interface-curses__adb.htm#ref_2398_7">Column</A></FONT> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
-      <FONT COLOR=red><A NAME="ref_1818_7" HREF="terminal_interface-curses__adb.htm#ref_2399_7">Dir</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1813_9">Transform_Direction</A> := <A HREF="terminal_interface-curses__ads.htm#ref_1813_33">From_Screen</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1814_14" HREF="terminal_interface-curses__adb.htm#ref_2396_14">Transform_Coordinates</A></FONT>
+     (<FONT COLOR=red><A NAME="ref_1815_7" HREF="terminal_interface-curses__adb.htm#ref_2397_7">W</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
+      <FONT COLOR=red><A NAME="ref_1816_7" HREF="terminal_interface-curses__adb.htm#ref_2398_7">Line</A></FONT>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
+      <FONT COLOR=red><A NAME="ref_1817_7" HREF="terminal_interface-curses__adb.htm#ref_2399_7">Column</A></FONT> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>;
+      <FONT COLOR=red><A NAME="ref_1818_7" HREF="terminal_interface-curses__adb.htm#ref_2400_7">Dir</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_1813_9">Transform_Direction</A> := <A HREF="terminal_interface-curses__ads.htm#ref_1813_33">From_Screen</A>);
    <FONT COLOR=green><EM>--  This procedure transforms screen coordinates into coordinates relative</EM></FONT>
    <FONT COLOR=green><EM>--  to the window and vice versa, depending on the Dir parameter.</EM></FONT>
    <FONT COLOR=green><EM>--  Screen coordinates are the position informations on the physical device.</EM></FONT>
@@ -1833,13 +1833,13 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_155"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1831_14" HREF="terminal_interface-curses__adb.htm#ref_2424_14">Use_Default_Colors</A></FONT>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1831_14" HREF="terminal_interface-curses__adb.htm#ref_2425_14">Use_Default_Colors</A></FONT>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/default_colors.3x.html">use_default_colors()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1831_14">Use_Default_Colors</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_156"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1836_14" HREF="terminal_interface-curses__adb.htm#ref_2434_14">Assume_Default_Colors</A></FONT> (<FONT COLOR=red><A NAME="ref_1836_37" HREF="terminal_interface-curses__adb.htm#ref_2434_37">Fore</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := <A HREF="terminal_interface-curses__ads.htm#ref_285_4">Default_Color</A>;
-                                    <FONT COLOR=red><A NAME="ref_1837_37" HREF="terminal_interface-curses__adb.htm#ref_2435_37">Back</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := <A HREF="terminal_interface-curses__ads.htm#ref_285_4">Default_Color</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1836_14" HREF="terminal_interface-curses__adb.htm#ref_2435_14">Assume_Default_Colors</A></FONT> (<FONT COLOR=red><A NAME="ref_1836_37" HREF="terminal_interface-curses__adb.htm#ref_2435_37">Fore</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := <A HREF="terminal_interface-curses__ads.htm#ref_285_4">Default_Color</A>;
+                                    <FONT COLOR=red><A NAME="ref_1837_37" HREF="terminal_interface-curses__adb.htm#ref_2436_37">Back</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := <A HREF="terminal_interface-curses__ads.htm#ref_285_4">Default_Color</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/default_colors.3x.html">assume_default_colors()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses__ads.htm#ref_1836_14">Assume_Default_Colors</A>);
 
@@ -1848,12 +1848,12 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_157"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_1846_13" HREF="terminal_interface-curses__adb.htm#ref_2449_13">Curses_Version</A></FONT> <b>return</b> String;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_1846_13" HREF="terminal_interface-curses__adb.htm#ref_2450_13">Curses_Version</A></FONT> <b>return</b> String;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_extend.3x.html">curses_version()</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_158"#2|</EM></FONT>
    <FONT COLOR=green><EM>--  The returnvalue is the previous setting of the flag</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_1851_13" HREF="terminal_interface-curses__adb.htm#ref_2472_13">Use_Extended_Names</A></FONT> (<FONT COLOR=red><A NAME="ref_1851_33" HREF="terminal_interface-curses__adb.htm#ref_2472_33">Enable</A></FONT> : Boolean) <b>return</b> Boolean;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_1851_13" HREF="terminal_interface-curses__adb.htm#ref_2473_13">Use_Extended_Names</A></FONT> (<FONT COLOR=red><A NAME="ref_1851_33" HREF="terminal_interface-curses__adb.htm#ref_2473_33">Enable</A></FONT> : Boolean) <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_extend.3x.html">use_extended_names()</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
@@ -1861,7 +1861,7 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_159"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1859_14" HREF="terminal_interface-curses__adb.htm#ref_2458_14">Curses_Free_All</A></FONT>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1859_14" HREF="terminal_interface-curses__adb.htm#ref_2459_14">Curses_Free_All</A></FONT>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_trace.3x.html">_nc_freeall()</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
@@ -1869,19 +1869,19 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_160"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1867_14" HREF="terminal_interface-curses__adb.htm#ref_2487_14">Screen_Dump_To_File</A></FONT> (<FONT COLOR=red><A NAME="ref_1867_35" HREF="terminal_interface-curses__adb.htm#ref_2487_35">Filename</A></FONT> : <b>in</b> String);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1867_14" HREF="terminal_interface-curses__adb.htm#ref_2488_14">Screen_Dump_To_File</A></FONT> (<FONT COLOR=red><A NAME="ref_1867_35" HREF="terminal_interface-curses__adb.htm#ref_2488_35">Filename</A></FONT> : <b>in</b> String);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_scr_dump.3x.html">scr_dump()</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_161"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1871_14" HREF="terminal_interface-curses__adb.htm#ref_2500_14">Screen_Restore_From_File</A></FONT> (<FONT COLOR=red><A NAME="ref_1871_40" HREF="terminal_interface-curses__adb.htm#ref_2500_40">Filename</A></FONT> : <b>in</b> String);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1871_14" HREF="terminal_interface-curses__adb.htm#ref_2501_14">Screen_Restore_From_File</A></FONT> (<FONT COLOR=red><A NAME="ref_1871_40" HREF="terminal_interface-curses__adb.htm#ref_2501_40">Filename</A></FONT> : <b>in</b> String);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_scr_dump.3x.html">scr_restore()</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_162"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1875_14" HREF="terminal_interface-curses__adb.htm#ref_2513_14">Screen_Init_From_File</A></FONT> (<FONT COLOR=red><A NAME="ref_1875_37" HREF="terminal_interface-curses__adb.htm#ref_2513_37">Filename</A></FONT> : <b>in</b> String);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1875_14" HREF="terminal_interface-curses__adb.htm#ref_2514_14">Screen_Init_From_File</A></FONT> (<FONT COLOR=red><A NAME="ref_1875_37" HREF="terminal_interface-curses__adb.htm#ref_2514_37">Filename</A></FONT> : <b>in</b> String);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_scr_dump.3x.html">scr_init()</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_163"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1879_14" HREF="terminal_interface-curses__adb.htm#ref_2526_14">Screen_Set_File</A></FONT> (<FONT COLOR=red><A NAME="ref_1879_31" HREF="terminal_interface-curses__adb.htm#ref_2526_31">Filename</A></FONT> : <b>in</b> String);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1879_14" HREF="terminal_interface-curses__adb.htm#ref_2527_14">Screen_Set_File</A></FONT> (<FONT COLOR=red><A NAME="ref_1879_31" HREF="terminal_interface-curses__adb.htm#ref_2527_31">Filename</A></FONT> : <b>in</b> String);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/curs_scr_dump.3x.html">scr_set()</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
@@ -1913,9 +1913,9 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_164"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1911_14" HREF="terminal_interface-curses__adb.htm#ref_2539_14">Resize</A></FONT> (<FONT COLOR=red><A NAME="ref_1911_22" HREF="terminal_interface-curses__adb.htm#ref_2539_22">Win</A></FONT>               : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
-                     <FONT COLOR=red><A NAME="ref_1912_22" HREF="terminal_interface-curses__adb.htm#ref_2540_22">Number_Of_Lines</A></FONT>   : <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A>;
-                     <FONT COLOR=red><A NAME="ref_1913_22" HREF="terminal_interface-curses__adb.htm#ref_2541_22">Number_Of_Columns</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_1911_14" HREF="terminal_interface-curses__adb.htm#ref_2540_14">Resize</A></FONT> (<FONT COLOR=red><A NAME="ref_1911_22" HREF="terminal_interface-curses__adb.htm#ref_2540_22">Win</A></FONT>               : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_476_13">Standard_Window</A>;
+                     <FONT COLOR=red><A NAME="ref_1912_22" HREF="terminal_interface-curses__adb.htm#ref_2541_22">Number_Of_Lines</A></FONT>   : <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Line_Count</A>;
+                     <FONT COLOR=red><A NAME="ref_1913_22" HREF="terminal_interface-curses__adb.htm#ref_2542_22">Number_Of_Columns</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_65_12">Column_Count</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/wresize.3x.html">wresize()</A></EM></FONT>
 
 <b>private</b>

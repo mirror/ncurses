@@ -89,9 +89,12 @@
 char *ttyname(int fd);
 #endif
 
-/* this is just to stifle a missing-prototype warning */
-#ifdef linux
-# include <sys/ioctl.h>
+#if HAVE_SIZECHANGE
+# if !defined(sun) || !TERMIOS
+#  if HAVE_SYS_IOCTL_H
+#   include <sys/ioctl.h>
+#  endif
+# endif
 #endif
 
 #if NEED_PTEM_H
@@ -104,7 +107,27 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.74 2008/09/13 18:55:15 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.76 2008/10/11 19:26:19 tom Exp $")
+
+/*
+ * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
+ * Solaris, IRIX) define TIOCGWINSZ and struct winsize.
+ */
+#ifdef TIOCGSIZE
+# define IOCTL_GET_WINSIZE TIOCGSIZE
+# define IOCTL_SET_WINSIZE TIOCSSIZE
+# define STRUCT_WINSIZE struct ttysize
+# define WINSIZE_ROWS(n) n.ts_lines
+# define WINSIZE_COLS(n) n.ts_cols
+#else
+# ifdef TIOCGWINSZ
+#  define IOCTL_GET_WINSIZE TIOCGWINSZ
+#  define IOCTL_SET_WINSIZE TIOCSWINSZ
+#  define STRUCT_WINSIZE struct winsize
+#  define WINSIZE_ROWS(n) n.ws_row
+#  define WINSIZE_COLS(n) n.ws_col
+# endif
+#endif
 
 extern char **environ;
 
@@ -1140,9 +1163,6 @@ arg_to_char(void)
 int
 main(int argc, char **argv)
 {
-#if defined(TIOCGWINSZ) && defined(TIOCSWINSZ)
-    struct winsize win;
-#endif
     int ch, noinit, noset, quiet, Sflag, sflag, showterm;
     const char *p;
     const char *ttype;
@@ -1238,15 +1258,17 @@ main(int argc, char **argv)
 	tcolumns = columns;
 	tlines = lines;
 
-#if defined(TIOCGWINSZ) && defined(TIOCSWINSZ)
+#if HAVE_SIZECHANGE
 	if (opt_w) {
-	    /* Set window size */
-	    (void) ioctl(STDERR_FILENO, TIOCGWINSZ, &win);
-	    if (win.ws_row == 0 && win.ws_col == 0 &&
+	    STRUCT_WINSIZE win;
+	    /* Set window size if not set already */
+	    (void) ioctl(STDERR_FILENO, IOCTL_GET_WINSIZE, &win);
+	    if (WINSIZE_ROWS(win) == 0 &&
+		WINSIZE_COLS(win) == 0 &&
 		tlines > 0 && tcolumns > 0) {
-		win.ws_row = tlines;
-		win.ws_col = tcolumns;
-		(void) ioctl(STDERR_FILENO, TIOCSWINSZ, &win);
+		WINSIZE_ROWS(win) = tlines;
+		WINSIZE_COLS(win) = tcolumns;
+		(void) ioctl(STDERR_FILENO, IOCTL_SET_WINSIZE, &win);
 	    }
 	}
 #endif

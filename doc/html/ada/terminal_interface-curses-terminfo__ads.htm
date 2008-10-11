@@ -56,11 +56,11 @@
    <FONT COLOR=green><EM>--                    restartterm, tparm, putp, vidputs,  vidattr,</EM></FONT>
    <FONT COLOR=green><EM>--                    mvcur</EM></FONT>
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_54_9">Terminfo_String</A></FONT> <b>is</b> <b>new</b> String;
+   <b>type</b> Terminfo_String <b>is</b> <b>new</b> String;
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_57_14" HREF="terminal_interface-curses-terminfo__adb.htm#ref_83_14">Get_String</A></FONT> (<FONT COLOR=red><A NAME="ref_57_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_83_26">Name</A></FONT>   : String;
-                         <FONT COLOR=red><A NAME="ref_58_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_84_26">Value</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_54_9">Terminfo_String</A>;
+                         <FONT COLOR=red><A NAME="ref_58_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_84_26">Value</A></FONT>  : <b>out</b> Terminfo_String;
                          <FONT COLOR=red><A NAME="ref_59_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_85_26">Result</A></FONT> : <b>out</b> Boolean);
    <b>function</b> <FONT COLOR=red><A NAME="ref_60_13" HREF="terminal_interface-curses-terminfo__adb.htm#ref_106_13">Has_String</A></FONT> (<FONT COLOR=red><A NAME="ref_60_25" HREF="terminal_interface-curses-terminfo__adb.htm#ref_106_25">Name</A></FONT> : String) <b>return</b> Boolean;
    <FONT COLOR=green><EM>--  AKA: tigetstr()</EM></FONT>
@@ -78,7 +78,7 @@
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_71_9">putctype</A>);
 
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_76_14" HREF="terminal_interface-curses-terminfo__adb.htm#ref_137_14">Put_String</A></FONT> (<FONT COLOR=red><A NAME="ref_76_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_137_26">Str</A></FONT>    : <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_54_9">Terminfo_String</A>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_76_14" HREF="terminal_interface-curses-terminfo__adb.htm#ref_137_14">Put_String</A></FONT> (<FONT COLOR=red><A NAME="ref_76_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_137_26">Str</A></FONT>    : Terminfo_String;
                          <FONT COLOR=red><A NAME="ref_77_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_138_26">affcnt</A></FONT> : Natural := 1;
                          <FONT COLOR=red><A NAME="ref_78_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_139_26">putc</A></FONT>   : <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_71_9">putctype</A> := <b>null</b>);
    <FONT COLOR=green><EM>--  AKA: tputs()</EM></FONT>

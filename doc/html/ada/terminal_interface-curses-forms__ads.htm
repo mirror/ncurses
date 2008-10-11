@@ -53,8 +53,8 @@
 
 <b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_49_35" HREF="terminal_interface-curses-forms__adb.htm#ref_51_40">Forms</A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#ref_49_35">Forms</A>);
-   <b>pragma</b> Linker_Options ("-lform");
-   <b>pragma</b> Linker_Options ("-lncurses");
+   <b>pragma</b> Linker_Options ("-lformw");
+   <b>pragma</b> Linker_Options ("-lncursesw");
 
    Space : Character <b>renames</b> Ada.Characters.Latin_1.Space;
 
@@ -87,16 +87,16 @@
 
    <b>for</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_68_9">Field_Option_Set</A> <b>use</b>
       <b>record</b>
-         Visible     <b>at</b> 0 <b>range</b>  0 ..  0;
-         Active      <b>at</b> 0 <b>range</b>  1 ..  1;
-         Public      <b>at</b> 0 <b>range</b>  2 ..  2;
-         Edit        <b>at</b> 0 <b>range</b>  3 ..  3;
-         Wrap        <b>at</b> 0 <b>range</b>  4 ..  4;
-         Blank       <b>at</b> 0 <b>range</b>  5 ..  5;
-         Auto_Skip   <b>at</b> 0 <b>range</b>  6 ..  6;
-         Null_Ok     <b>at</b> 0 <b>range</b>  7 ..  7;
-         Pass_Ok     <b>at</b> 0 <b>range</b>  8 ..  8;
-         Static      <b>at</b> 0 <b>range</b>  9 ..  9;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_70_10">Visible</A>     <b>at</b> 0 <b>range</b>  0 ..  0;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_71_10">Active</A>      <b>at</b> 0 <b>range</b>  1 ..  1;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_72_10">Public</A>      <b>at</b> 0 <b>range</b>  2 ..  2;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_73_10">Edit</A>        <b>at</b> 0 <b>range</b>  3 ..  3;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_74_10">Wrap</A>        <b>at</b> 0 <b>range</b>  4 ..  4;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_75_10">Blank</A>       <b>at</b> 0 <b>range</b>  5 ..  5;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_76_10">Auto_Skip</A>   <b>at</b> 0 <b>range</b>  6 ..  6;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_77_10">Null_Ok</A>     <b>at</b> 0 <b>range</b>  7 ..  7;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_78_10">Pass_Ok</A>     <b>at</b> 0 <b>range</b>  8 ..  8;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_79_10">Static</A>      <b>at</b> 0 <b>range</b>  9 ..  9;
       <b>end</b> <b>record</b>;
    <b>for</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_68_9">Field_Option_Set</A>'Size <b>use</b> 32;
    <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
@@ -118,8 +118,8 @@
 
    <b>for</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_107_9">Form_Option_Set</A> <b>use</b>
       <b>record</b>
-         NL_Overload <b>at</b> 0 <b>range</b>  0 ..  0;
-         BS_Overload <b>at</b> 0 <b>range</b>  1 ..  1;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_109_10">NL_Overload</A> <b>at</b> 0 <b>range</b>  0 ..  0;
+         <A HREF="terminal_interface-curses-forms__ads.htm#ref_110_10">BS_Overload</A> <b>at</b> 0 <b>range</b>  1 ..  1;
       <b>end</b> <b>record</b>;
    <b>for</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_107_9">Form_Option_Set</A>'Size <b>use</b> 32;
    <FONT COLOR=green><EM>--  Please note: this rep. clause is generated and may be</EM></FONT>
@@ -133,10 +133,10 @@
 
    <b>type</b> <FONT COLOR=red><A NAME="ref_129_9">Buffer_Number</A></FONT> <b>is</b> <b>new</b> Natural;
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_131_9">Field_Array</A></FONT> <b>is</b> <b>array</b> (Positive <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>;
-   <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms__ads.htm#ref_131_9">Field_Array</A>);
+   <b>type</b> Field_Array <b>is</b> <b>array</b> (Positive <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>;
+   <b>pragma</b> Convention (C, Field_Array);
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_134_9">Field_Array_Access</A></FONT> <b>is</b> <b>access</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_131_9">Field_Array</A>;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_134_9">Field_Array_Access</A></FONT> <b>is</b> <b>access</b> Field_Array;
 
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_136_14" HREF="terminal_interface-curses-forms__adb.htm#ref_1131_14">Free</A></FONT> (<FONT COLOR=red><A NAME="ref_136_20" HREF="terminal_interface-curses-forms__adb.htm#ref_1131_20">FA</A></FONT>          : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_134_9">Field_Array_Access</A>;
                    <FONT COLOR=red><A NAME="ref_137_20" HREF="terminal_interface-curses-forms__adb.htm#ref_1132_20">Free_Fields</A></FONT> : <b>in</b> Boolean := False);

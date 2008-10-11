@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.451 2008/10/04 21:00:54 tom Exp $
+dnl $Id: configure.in,v 1.452 2008/10/11 16:02:56 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.451 $)
+AC_REVISION($Revision: 1.452 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -739,6 +739,18 @@ AC_MSG_RESULT($with_tparm_varargs)
 NCURSES_TPARM_VARARGS=0
 test "$with_tparm_varargs" = yes && NCURSES_TPARM_VARARGS=1
 AC_SUBST(NCURSES_TPARM_VARARGS)
+
+###   use option --disable-tic-depends to make libtic not explicitly depend on ncurses/ncursesw
+if test "$with_ticlib" != no ; then
+AC_MSG_CHECKING(if you want tic library to use explicit dependency on ncurses$LIB_SUFFIX library)
+AC_ARG_ENABLE(tic-depends,
+	[  --disable-tic-depends   link tic library without explicit dependency on ncurses library],
+	[with_tic_depends=$enableval],
+	[with_tic_depends=yes])
+AC_MSG_RESULT($with_tic_depends)
+else
+	with_tic_depends=no
+fi
 
 ###   use option --with-bool to override bool's type
 AC_MSG_CHECKING(for type of bool)
@@ -1654,7 +1666,11 @@ else
 	TINFO_NAME=${LIB_NAME}
 	TINFO_SUFFIX=${DFT_LIB_SUFFIX}
 	TINFO_ARG_SUFFIX=${LIB_NAME}${DFT_ARG_SUFFIX}
-	TICS_LIST="$SHLIB_LIST"
+	if test "$with_tic_depends" = yes ; then
+		TICS_LIST="$SHLIB_LIST -l${LIB_NAME}${DFT_ARG_SUFFIX}"
+	else
+		TICS_LIST="$SHLIB_LIST"
+	fi
 
 	TINFO_ARGS="-L${LIB_DIR} -l${LIB_NAME}${DFT_ARG_SUFFIX}"
 fi

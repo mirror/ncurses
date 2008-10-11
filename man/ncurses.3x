@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.90 2008/09/27 19:30:39 tom Exp $
+.\" $Id: ncurses.3x,v 1.91 2008/10/11 20:43:11 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ds n 5
@@ -74,10 +74,23 @@ terminal and \fBcurses\fR input and output options; environment query
 routines; color manipulation; use of soft label keys; terminfo capabilities;
 and access to low-level terminal-manipulation routines.
 .PP
-To initialize the routines, the routine \fBinitscr\fR or \fBnewterm\fR
-must be called before any of the other routines that deal with windows
+The library uses the locale which the calling program has initialized.
+That is normally done with \fBsetlocale\fP:
+.sp
+      \fBsetlocale(LC_ALL, "");\fP
+.sp
+If the locale is not initialized,
+the library assumes that characters are printable as in ISO-8859-1,
+to work with certain legacy programs.
+You should initialize the locale and not rely on specific details of
+the library when the locale has not been setup.
+.PP
+The function \fBinitscr\fR or \fBnewterm\fR
+must be called to initialize the library
+before any of the other routines that deal with windows
 and screens are used.
 The routine \fBendwin\fR must be called before exiting.
+.PP
 To get character-at-a-time input without echoing (most
 interactive, screen oriented programs want this), the following
 sequence should be used:

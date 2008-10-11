@@ -1128,7 +1128,7 @@ int	wgetscrreg(
 NCURSES_BOOL mouse_trafo(
 		int	*a1, 
 		int	*a2, 
-		NCURSES_BOOL	z)
+		NCURSES_BOOL z)
 		{ return(*(NCURSES_BOOL *)0); }
 
 /* ./base/lib_getch.c */
@@ -1701,9 +1701,6 @@ int	ripoffline(
 
 /* ./base/lib_slk.c */
 
-#undef _nc_slk_format
-int	_nc_slk_format;
-
 #undef _nc_slk_initialize
 int	_nc_slk_initialize(
 		WINDOW	*stwin, 
@@ -2041,6 +2038,11 @@ void	_nc_vsscanf(void)
 
 #undef _nc_freeall
 void	_nc_freeall(void)
+		{ /* void */ }
+
+#undef _nc_free_and_exit
+void	_nc_free_and_exit(
+		int	code)
 		{ /* void */ }
 
 /* ./expanded.c */
@@ -2773,6 +2775,11 @@ char	PC;
 NCURSES_OSPEED	ospeed;
 #undef _nc_nulls_sent
 int	_nc_nulls_sent;
+
+#undef _nc_set_no_padding
+void	_nc_set_no_padding(
+		SCREEN	*sp)
+		{ /* void */ }
 
 #undef delay_output
 int	delay_output(

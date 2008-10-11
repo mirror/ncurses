@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1304 2008/10/04 23:01:08 tom Exp $
+-- $Id: NEWS,v 1.1309 2008/10/11 21:42:24 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20081011
+	+ update html documentation.
+	+ add -m and -s options to test/keynames.c and test/key_names.c to test
+	  the meta() function with keyname() or key_name(), respectively.
+	+ correct return value of key_name() on error; it is null.
+	+ document some unresolved issues for rpath and pthreads in TO-DO.
+	+ fix a missing prototype for ioctl() on OpenBSD in tset.c
+	+ add configure option --disable-tic-depends to make explicit whether
+	  tic library depends on ncurses/ncursesw library, amends change from
+	  20080823 (prompted by Debian #501421).
 
 20081004
 	+ some build-fixes for configure --disable-ext-funcs (incomplete, but

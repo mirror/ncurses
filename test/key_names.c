@@ -26,20 +26,57 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: key_names.c,v 1.3 2008/02/09 18:09:18 tom Exp $
+ * $Id: key_names.c,v 1.4 2008/10/11 20:22:37 tom Exp $
  */
 
 #include <test.priv.h>
 
 #if USE_WIDEC_SUPPORT
 
+static void
+usage(void)
+{
+    fprintf(stderr, "Usage: key_names [-m] [-s]\n");
+    ExitProgram(EXIT_FAILURE);
+}
+
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int n;
 
+    bool do_setup = FALSE;
+    bool do_meta = FALSE;
+
     setlocale(LC_ALL, "");
-    for (n = KEY_MIN; n < KEY_MAX + 512; n++) {
+
+    while ((n = getopt(argc, argv, "ms")) != -1) {
+	switch (n) {
+	case 'm':
+	    do_meta = TRUE;
+	    break;
+	case 's':
+	    do_setup = TRUE;
+	    break;
+	default:
+	    usage();
+	    /* NOTREACHED */
+	}
+    }
+
+    if (do_setup) {
+	/*
+	 * Get the terminfo entry into memory, and tell ncurses that we want to
+	 * use function keys.  That will make it add any user-defined keys that
+	 * appear in the terminfo.
+	 */
+	newterm(getenv("TERM"), stderr, stdin);
+	keypad(stdscr, TRUE);
+	if (do_meta)
+	    meta(stdscr, TRUE);
+	endwin();
+    }
+    for (n = -1; n < KEY_MAX + 512; n++) {
 	const char *result = key_name(n);
 	if (result != 0)
 	    printf("%d(%5o):%s\n", n, n, result);

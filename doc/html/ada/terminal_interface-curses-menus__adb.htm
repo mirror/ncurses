@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2004,2008 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,8 +40,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.25 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2004/08/21 21:37:00 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.26 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2008/07/26 18:50:58 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> Ada.Unchecked_Deallocation;
@@ -55,9 +55,9 @@
 
 <b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_51_40" HREF="terminal_interface-curses-menus__ads.htm#ref_49_35">Menus</A></FONT> <b>is</b>
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_53_9">C_Item_Array</A></FONT> <b>is</b> <b>array</b> (Natural <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
+   <b>type</b> C_Item_Array <b>is</b> <b>array</b> (Natural <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
    <b>package</b> I_Array <b>is</b> <b>new</b>
-     <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Pointers (Natural, <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>, <A HREF="terminal_interface-curses-menus__adb.htm#ref_53_9">C_Item_Array</A>, <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A>);
+     <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Pointers (Natural, <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>, C_Item_Array, <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A>);
 
    <b>use</b> <b>type</b> System.Bit_Order;
    <b>subtype</b> <FONT COLOR=red><A NAME="ref_58_12">chars_ptr</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings.chars_ptr;
@@ -103,16 +103,16 @@
       <b>function</b> <FONT COLOR=red><A NAME="ref_98_16">Newitem</A></FONT> (<FONT COLOR=red><A NAME="ref_98_25" HREF="terminal_interface-curses-menus__adb.htm#ref_98_16">Name</A></FONT>, <FONT COLOR=red><A NAME="ref_98_31" HREF="terminal_interface-curses-menus__adb.htm#ref_98_16">Desc</A></FONT> : <A HREF="terminal_interface-curses-menus__adb.htm#ref_97_12">Char_Ptr</A>) <b>return</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
       <b>pragma</b> Import (C, Newitem, "new_item");
 
-      <b>type</b> <FONT COLOR=red><A NAME="ref_101_12">Name_String</A></FONT> <b>is</b> <b>new</b> char_array (0 .. <A HREF="terminal_interface-curses-menus__ads.htm#ref_191_21">Name</A>'Length);
-      <b>type</b> <FONT COLOR=red><A NAME="ref_102_12">Name_String_Ptr</A></FONT> <b>is</b> <b>access</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_101_12">Name_String</A>;
+      <b>type</b> Name_String <b>is</b> <b>new</b> char_array (0 .. <A HREF="terminal_interface-curses-menus__ads.htm#ref_191_21">Name</A>'Length);
+      <b>type</b> <FONT COLOR=red><A NAME="ref_102_12">Name_String_Ptr</A></FONT> <b>is</b> <b>access</b> Name_String;
       <b>pragma</b> Controlled (<A HREF="terminal_interface-curses-menus__adb.htm#ref_102_12">Name_String_Ptr</A>);
 
-      <b>type</b> <FONT COLOR=red><A NAME="ref_105_12">Desc_String</A></FONT> <b>is</b> <b>new</b> char_array (0 .. <A HREF="terminal_interface-curses-menus__ads.htm#ref_192_21">Description</A>'Length);
-      <b>type</b> <FONT COLOR=red><A NAME="ref_106_12">Desc_String_Ptr</A></FONT> <b>is</b> <b>access</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_105_12">Desc_String</A>;
+      <b>type</b> Desc_String <b>is</b> <b>new</b> char_array (0 .. <A HREF="terminal_interface-curses-menus__ads.htm#ref_192_21">Description</A>'Length);
+      <b>type</b> <FONT COLOR=red><A NAME="ref_106_12">Desc_String_Ptr</A></FONT> <b>is</b> <b>access</b> Desc_String;
       <b>pragma</b> Controlled (<A HREF="terminal_interface-curses-menus__adb.htm#ref_106_12">Desc_String_Ptr</A>);
 
-      <FONT COLOR=red><A NAME="ref_109_7">Name_Str</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_102_12">Name_String_Ptr</A> := <b>new</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_101_12">Name_String</A>;
-      <FONT COLOR=red><A NAME="ref_110_7">Desc_Str</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_106_12">Desc_String_Ptr</A> := <b>new</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_105_12">Desc_String</A>;
+      <FONT COLOR=red><A NAME="ref_109_7">Name_Str</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_102_12">Name_String_Ptr</A> := <b>new</b> Name_String;
+      <FONT COLOR=red><A NAME="ref_110_7">Desc_Str</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_106_12">Desc_String_Ptr</A> := <b>new</b> Desc_String;
       <FONT COLOR=red><A NAME="ref_111_7">Name_Len</A></FONT>, <FONT COLOR=red><A NAME="ref_111_17">Desc_Len</A></FONT> : size_t;
       <FONT COLOR=red><A NAME="ref_112_7">Result</A></FONT> : <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
    <b>begin</b>
@@ -930,7 +930,7 @@
 
       P : Pointer := C_Mitems (<A HREF="terminal_interface-curses-menus__ads.htm#ref_623_20">Men</A>);
    <b>begin</b>
-      <b>if</b> P = <b>null</b> <b>or</b> <b>else</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_624_20">Index</A> <b>not</b> <b>in</b> 1 .. <A HREF="terminal_interface-curses-menus__ads.htm#ref_629_13">Item_Count</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_623_20">Men</A>) <b>then</b>
+      <b>if</b> P = <b>null</b> <b>or</b> <b>else</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_624_20">Index</A> &gt; <A HREF="terminal_interface-curses-menus__ads.htm#ref_629_13">Item_Count</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_623_20">Men</A>) <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_116_4">Menu_Exception</A>;
       <b>else</b>
          P := P + ptrdiff_t (<A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_624_20">Index</A>) - 1);
@@ -998,7 +998,7 @@
                    <FONT COLOR=red><A NAME="ref_993_20" HREF="terminal_interface-curses-menus__ads.htm#ref_181_20">Free_Items</A></FONT> : <b>in</b> Boolean := False)
    <b>is</b>
       <b>procedure</b> Release <b>is</b> <b>new</b> Ada.Unchecked_Deallocation
-        (<A HREF="terminal_interface-curses-menus__ads.htm#ref_175_9">Item_Array</A>, <A HREF="terminal_interface-curses-menus__ads.htm#ref_178_9">Item_Array_Access</A>);
+        (Item_Array, <A HREF="terminal_interface-curses-menus__ads.htm#ref_178_9">Item_Array_Access</A>);
    <b>begin</b>
       <b>if</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_180_20">IA</A> /= <b>null</b> <b>and</b> <b>then</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_181_20">Free_Items</A> <b>then</b>
          <b>for</b> <FONT COLOR=red><A NAME="ref_999_14">I</A></FONT> <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_180_20">IA</A>'First .. (<A HREF="terminal_interface-curses-menus__ads.htm#ref_180_20">IA</A>'Last - 1) <b>loop</b>

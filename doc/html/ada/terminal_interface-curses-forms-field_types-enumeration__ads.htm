@@ -54,12 +54,12 @@
    <FONT COLOR=green><EM>--  Type_Set is used by the child package Ada</EM></FONT>
    <b>type</b> <FONT COLOR=red><A NAME="ref_50_9">Type_Set</A></FONT> <b>is</b> (<FONT COLOR=red><A NAME="ref_50_22">Lower_Case</A></FONT>, <FONT COLOR=red><A NAME="ref_50_34">Upper_Case</A></FONT>, <FONT COLOR=red><A NAME="ref_50_46">Mixed_Case</A></FONT>);
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_52_9">Enum_Array</A></FONT> <b>is</b> <b>array</b> (Positive <b>range</b> &lt;&gt;)
+   <b>type</b> Enum_Array <b>is</b> <b>array</b> (Positive <b>range</b> &lt;&gt;)
      <b>of</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_47_9">String_Access</A>;
 
    <b>type</b> <FONT COLOR=red><A NAME="ref_55_9">Enumeration_Info</A></FONT> (<FONT COLOR=red><A NAME="ref_55_27" HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_55_9">C</A></FONT> : Positive) <b>is</b>
       <b>record</b>
-         <FONT COLOR=red><A NAME="ref_57_10">Names</A></FONT>                : <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_52_9">Enum_Array</A> (1 .. <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_55_27">C</A>);
+         <FONT COLOR=red><A NAME="ref_57_10">Names</A></FONT>                : Enum_Array (1 .. <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_55_27">C</A>);
          <FONT COLOR=red><A NAME="ref_58_10">Case_Sensitive</A></FONT>       : Boolean := False;
          <FONT COLOR=red><A NAME="ref_59_10">Match_Must_Be_Unique</A></FONT> : Boolean := False;
       <b>end</b> <b>record</b>;

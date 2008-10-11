@@ -86,7 +86,7 @@
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_83_14" HREF="terminal_interface-curses-terminfo__ads.htm#ref_57_14">Get_String</A></FONT> (<FONT COLOR=red><A NAME="ref_83_26" HREF="terminal_interface-curses-terminfo__ads.htm#ref_57_26">Name</A></FONT>   : String;
-                         <FONT COLOR=red><A NAME="ref_84_26" HREF="terminal_interface-curses-terminfo__ads.htm#ref_58_26">Value</A></FONT>  : <b>out</b> <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_54_9">Terminfo_String</A>;
+                         <FONT COLOR=red><A NAME="ref_84_26" HREF="terminal_interface-curses-terminfo__ads.htm#ref_58_26">Value</A></FONT>  : <b>out</b> Terminfo_String;
                          <FONT COLOR=red><A NAME="ref_85_26" HREF="terminal_interface-curses-terminfo__ads.htm#ref_59_26">Result</A></FONT> : <b>out</b> Boolean)
    <b>is</b>
       <b>function</b> <FONT COLOR=red><A NAME="ref_87_16">tigetstr</A></FONT> (<FONT COLOR=red><A NAME="ref_87_26" HREF="terminal_interface-curses-terminfo__adb.htm#ref_87_16">id</A></FONT> : char_array) <b>return</b> chars_ptr;
@@ -102,7 +102,7 @@
       <b>elsif</b> <A HREF="terminal_interface-curses-terminfo__adb.htm#ref_50_13">Is_MinusOne_Pointer</A> (<A HREF="terminal_interface-curses-terminfo__adb.htm#ref_91_7">Txt2</A>) <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>else</b>
-         <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_58_26">Value</A>  := <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_54_9">Terminfo_String</A> (<A HREF="terminal_interface-curses-aux__ads.htm#ref_121_13">Fill_String</A> (<A HREF="terminal_interface-curses-terminfo__adb.htm#ref_91_7">Txt2</A>));
+         <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_58_26">Value</A>  := Terminfo_String (<A HREF="terminal_interface-curses-aux__ads.htm#ref_121_13">Fill_String</A> (<A HREF="terminal_interface-curses-terminfo__adb.htm#ref_91_7">Txt2</A>));
          <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_59_26">Result</A> := True;
       <b>end</b> <b>if</b>;
    <b>end</b> <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_57_14">Get_String</A>;
@@ -139,7 +139,7 @@
    <b>end</b> <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_68_13">Get_Number</A>;
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_137_14" HREF="terminal_interface-curses-terminfo__ads.htm#ref_76_14">Put_String</A></FONT> (<FONT COLOR=red><A NAME="ref_137_26" HREF="terminal_interface-curses-terminfo__ads.htm#ref_76_26">Str</A></FONT>    : <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_54_9">Terminfo_String</A>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_137_14" HREF="terminal_interface-curses-terminfo__ads.htm#ref_76_14">Put_String</A></FONT> (<FONT COLOR=red><A NAME="ref_137_26" HREF="terminal_interface-curses-terminfo__ads.htm#ref_76_26">Str</A></FONT>    : Terminfo_String;
                          <FONT COLOR=red><A NAME="ref_138_26" HREF="terminal_interface-curses-terminfo__ads.htm#ref_77_26">affcnt</A></FONT> : Natural := 1;
                          <FONT COLOR=red><A NAME="ref_139_26" HREF="terminal_interface-curses-terminfo__ads.htm#ref_78_26">putc</A></FONT>   : <A HREF="terminal_interface-curses-terminfo__ads.htm#ref_71_9">putctype</A> := <b>null</b>) <b>is</b>
       <b>function</b> <FONT COLOR=red><A NAME="ref_140_16">tputs</A></FONT> (<FONT COLOR=red><A NAME="ref_140_23" HREF="terminal_interface-curses-terminfo__adb.htm#ref_140_16">str</A></FONT>    : char_array;
