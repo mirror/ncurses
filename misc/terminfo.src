@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.332 $
-#	$Date: 2008/08/23 17:03:36 $
+#	$Revision: 1.341 $
+#	$Date: 2008/10/12 23:03:54 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -760,6 +760,15 @@ linux-c|linux console 1.3.6+ for older ncurses,
 linux|linux console,
 	civis=\E[?25l\E[?1c, cnorm=\E[?25h\E[?0c,
 	cvvis=\E[?25h\E[?8c, use=linux-c-nc,
+
+# Subject: linux 2.6.26 vt back_color_erase
+# Changes to the Linux console driver broke bce model as reported in
+#	https://bugzilla.novell.com/show_bug.cgi?id=418613
+# apparently from
+#	http://lkml.org/lkml/2008/4/26/305
+#	http://groups.google.com/group/fa.linux.kernel/browse_thread/thread/87f98338f0d636bb/aa96e8b86cee0d1e?lnk=st&q=#aa96e8b86cee0d1e
+linux2.6.26|linux console w/o bce,
+	bce@, use=linux,
 
 # See the note on ICH/ICH1 VERSUS RMIR/SMIR near the end of file
 linux-nic|linux with ich/ich1 suppressed for non-curses programs,
@@ -2751,7 +2760,7 @@ putty-vt100|VT100+ keyboard layout,
 # retrieving the window title, and for setting the window size (i.e., using
 # "resize -s"), though it does not pass SIGWINCH to the application if the
 # user resizes the window with the mouse.
-teraterm|Tera Term Pro,
+teraterm2.3|Tera Term Pro,
 	km, xon@,
 	ncv#43, vt@,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
@@ -2770,6 +2779,28 @@ teraterm|Tera Term Pro,
 	rmso=\E[27m, rmul=\E[24m, sgr0=\E[0m\017, smso=\E[7m,
 	smul=\E[4m, vpa=\E[%i%p1%dd, use=vt100+enq,
 	use=klone+color, use=vt100,
+
+# Version 4.59 has regular vt100 line-drawing (so it is no longer necessary
+# to choose a Windows OEM font).
+#
+# Testing with tack:
+#	- it does not have xenl (suppress that)
+#	- underline seems to work with color (modify ncv).
+# Testing with vttest:
+#	- wrapping differs from vt100 (menu 1).
+#	- it recognizes xterm's X10 and normal mouse tracking, but none of the
+#	  other flavors.
+#	- it recognizes the dtterm window controls for reporting size in
+#	  characters and pixels.
+#	- it passes SIGWINCH.
+teraterm4.59|Tera Term Pro,
+	bce, xenl@,
+	ncv#41,
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
+	kmous=\E[M, use=teraterm2.3,
+
+teraterm|Tera Term,
+	use=teraterm4.59,
 
 # Tested with WinNT 4.0, the telnet application assumes the screensize is
 # 25x80.  This entry uses the 'Terminal' font, to get line-drawing characters.
@@ -3546,8 +3577,43 @@ gnome-fc5|GNOME Terminal,
 gnome-2007|GNOME Terminal snapshot 2.18.1,
 	use=xterm+pcc2, use=gnome-fc5,
 
+# GNOME Terminal 2.22.3 (2008 snapshot)
+#
+# In vttest, it claims to be a vt220 with national replacement character-sets,
+# but aside from the identifier string, implements only a small fraction of
+# vt220's behavior, which will make it less usable on a VMS system (unclear
+# what the intent of the developer is, since the NRC feature exposed in vttest
+# by this change does not work).
+gnome-2008|GNOME Terminal snapshot 2.22.3,
+	use=gnome+pcfkeys, use=gnome-2007,
+
+# GNOME terminal may automatically use the contents of the "xterm" terminfo to
+# supply key information which is not built into the program.  With 2.22.3,
+# this list is built into the program (which addresses the inadvertant use of
+# random terminfo data, though using a set of values which does not correspond
+# to any that xterm produces - still not solving the problem that GNOME
+# terminal hardcodes the $TERM variable as "xterm").
+#
+#	terminfo	modifier	code	keys
+#	kf13-kf24	shift		2	F1 to F12
+#	kf25-kf36	control		5	F1 to F12
+#	kf37-kf48	shift/control	6	F1 to F12
+#	kf49-kf60	alt		3	F1 to F12
+#	kf61-kf63	shift-alt	4	F1 to F3
+#
+# The parameters with \EO (SS3) are technically an error, since SS3 should have
+# no parameters.  This appears to be rote copying based on xterm+pcc0.
+gnome+pcfkeys|gnome variation on xterm+pcfkeys,
+	kf1=\EOP, kf13=\EO1;2P, kf14=\EO1;2Q, kf15=\EO1;2R,
+	kf16=\EO1;2S, kf2=\EOQ, kf25=\EO1;5P, kf26=\EO1;5Q,
+	kf27=\EO1;5R, kf28=\EO1;5S, kf3=\EOR, kf37=\EO1;6P,
+	kf38=\EO1;6Q, kf39=\EO1;6R, kf4=\EOS, kf40=\EO1;6S,
+	kf49=\EO1;3P, kf50=\EO1;3Q, kf51=\EO1;3R, kf52=\EO1;3S,
+	kf61=\EO1;4P, kf62=\EO1;4Q, kf63=\EO1;4R,
+	use=xterm+pcfkeys,
+
 gnome|GNOME Terminal,
-	use=gnome-2007,
+	use=gnome-2008,
 
 # palette is hardcoded...
 gnome-256color|GNOME Terminal with xterm 256-colors,
@@ -3605,6 +3671,13 @@ kvt|KDE terminal,
 #
 # Updated for konsole 1.6.4:
 #    add konsole-solaris
+#
+# Updated for konsole 1.6.6:
+#    add control-key modifiers for function-keys, etc.
+#
+# vttest menu 1 shows that both konsole and gnome terminal do wrapping
+# different from xterm (and vt100's).  They have the same behavior in this
+# detail, but it is unclear which copies the other.
 konsole-base|KDE console window,
 	bce, km@, npc,
 	bel@, blink=\E[5m, civis=\E[?25l, cnorm=\E[?25h,
@@ -3633,11 +3706,12 @@ konsole-xf3x|KDE console window with keyboard for XFree86 3.x xterm,
 # The value for kbs reflects local customization rather than the settings used
 # for XFree86 xterm.
 konsole-xf4x|KDE console window with keyboard for XFree86 4.x xterm,
-	kend=\EOF, kf1=\EOP, kf13=\EO2P, kf14=\EO2Q, kf15=\EO2R,
-	kf16=\EO2S, kf17=\E[15;2~, kf18=\E[17;2~, kf19=\E[18;2~,
-	kf2=\EOQ, kf20=\E[19;2~, kf21=\E[20;2~, kf22=\E[21;2~,
-	kf23=\E[23;2~, kf24=\E[24;2~, kf3=\EOR, kf4=\EOS,
-	khome=\EOH, use=konsole-vt100,
+	kend=\EOF, khome=\EOH, use=konsole+pcfkeys,
+	use=konsole-vt100,
+# Konsole does not implement shifted cursor-keys.
+konsole+pcfkeys|konsole subset of xterm+pcfkeys,
+	kLFT@, kRIT@, kcbt=\E[Z, kind@, kri@, kDN@, kUP@, use=xterm+pcc2,
+	use=xterm+pcf0,
 # KDE's "vt100" keyboard has no relationship to any terminal that DEC made, but
 # it is still useful for deriving the other entries.
 konsole-vt100|KDE console window with vt100 (sic) keyboard,
@@ -3942,6 +4016,10 @@ Eterm-256color|Eterm with xterm 256-colors,
 
 Eterm-88color|Eterm with 88 colors,
 	use=xterm+88color, use=Eterm,
+
+# Based on rxvt 2.4.8, it has a few differences in key bindings
+aterm|AfterStep terminal,
+	kbs=\177, kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, use=rxvt,
 
 # xiterm  0.5-5.2
 # This is not based on xterm's source...
@@ -21704,6 +21782,14 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2008-08-23
 #	* add Eterm-256color, Eterm-88color -TD
 #	* add rxvt-88color -TD
+#
+# 2008-10-12
+#	* add teraterm4.59 entry, use that as primary teraterm entry, rename
+#	  original to teraterm2.3 -TD
+#	* update "gnome" to 2.22.3 -TD
+#	* update "konsole" to 1.6.6 -TD
+#	* add "aterm" -TD
+#	* add "linux2.6.26" -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
