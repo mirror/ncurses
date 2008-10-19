@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2006,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: edit_field.c,v 1.13 2006/12/09 16:50:11 tom Exp $
+ * $Id: edit_field.c,v 1.14 2008/10/18 20:40:20 tom Exp $
  *
  * A wrapper for form_driver() which keeps track of the user's editing changes
  * for each field, and makes the result available as a null-terminated string
@@ -291,6 +291,13 @@ offset_in_field(FORM * form)
     return form->curcol + form->currow * field->dcols;
 }
 
+static void
+inactive_field(FIELD * f)
+{
+    void *ptr = field_userptr(f);
+    set_field_back(f, (chtype) ptr);
+}
+
 int
 edit_field(FORM * form, int *result)
 {
@@ -310,7 +317,7 @@ edit_field(FORM * form, int *result)
     if (ch <= KEY_MAX) {
 	set_field_back(before, A_REVERSE);
     } else if (ch <= MAX_FORM_COMMAND) {
-	set_field_back(before, A_UNDERLINE);
+	inactive_field(before);
     }
 
     *result = ch;
@@ -439,7 +446,7 @@ edit_field(FORM * form, int *result)
     }
 
     if (current_field(form) != before)
-	set_field_back(before, A_UNDERLINE);
+	inactive_field(before);
     return status;
 }
 #else

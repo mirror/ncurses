@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1311 2008/10/12 23:06:21 tom Exp $
+-- $Id: NEWS,v 1.1316 2008/10/18 21:51:20 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20081018
+	+ build-fixes for OS/2 EMX.
+	+ modify form library to accept control characters such as newline
+	  in set_field_buffer(), which is compatible with Solaris (report by
+	  Nit Khair).
+	+ modify configure script to assume --without-hashed-db when
+	  --disable-database is used.
+	+ add "-e" option in ncurses/Makefile.in when generating source-files
+	  to force earlier exit if the build environment fails unexpectedly
+	  (prompted by patch by Adrian Bunk).
+	+ change configure script to use CF_UTF8_LIB, improved variant of
+	  CF_LIBUTF8.
 
 20081012
 	+ add teraterm4.59 terminfo entry, use that as primary teraterm entry, rename

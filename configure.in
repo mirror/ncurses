@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.452 2008/10/11 16:02:56 tom Exp $
+dnl $Id: configure.in,v 1.454 2008/10/18 14:53:32 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.452 $)
+AC_REVISION($Revision: 1.454 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -423,6 +423,8 @@ if test "$use_database" != no ; then
 		[  --with-hashed-db        specify hashed-database library],,
 		[with_hashed_db=no])
 	AC_MSG_RESULT($with_hashed_db)
+else
+	with_hashed_db=no
 fi
 
 AC_MSG_CHECKING(for list of fallback descriptions)
@@ -679,8 +681,8 @@ if test "$with_widec" = yes ; then
 	NCURSES_CH_T=cchar_t
 	AC_CHECK_FUNCS(putwc btowc wctob mbtowc wctomb mblen mbrlen mbrtowc wcsrtombs mbsrtowcs wcstombs mbstowcs)
 	if test "$ac_cv_func_putwc" != yes ; then
-		CF_LIBUTF8
-		if test "$cf_cv_libutf8" = yes ; then
+		CF_UTF8_LIB
+		if test "$cf_cv_utf8_lib" != no ; then
 			NCURSES_LIBUTF8=1
 		fi
 	fi

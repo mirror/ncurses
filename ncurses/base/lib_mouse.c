@@ -79,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.101 2008/09/27 19:14:52 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.102 2008/10/18 21:48:55 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -255,13 +255,13 @@ mouse_server(unsigned long param)
 		 *      3 = middle.
 		 */
 		if ((mouev.fs ^ oldstate) & MOUSE_BN1_DOWN)
-		    write_event(mouev.fs & MOUSE_BN1_DOWN,
+		    write_event(sp, mouev.fs & MOUSE_BN1_DOWN,
 				sp->_emxmouse_buttons[1], mouev.col, mouev.row);
 		if ((mouev.fs ^ oldstate) & MOUSE_BN2_DOWN)
-		    write_event(mouev.fs & MOUSE_BN2_DOWN,
+		    write_event(sp, mouev.fs & MOUSE_BN2_DOWN,
 				sp->_emxmouse_buttons[3], mouev.col, mouev.row);
 		if ((mouev.fs ^ oldstate) & MOUSE_BN3_DOWN)
-		    write_event(mouev.fs & MOUSE_BN3_DOWN,
+		    write_event(sp, mouev.fs & MOUSE_BN3_DOWN,
 				sp->_emxmouse_buttons[2], mouev.col, mouev.row);
 
 	      finish:
@@ -545,7 +545,7 @@ initialize_mousetype(SCREEN *sp)
 	    setmode(handles[1], O_BINARY);
 	    /* Do not use CRT functions, we may single-threaded. */
 	    rc = DosCreateThread((unsigned long *) &sp->_emxmouse_thread,
-				 mouse_server, sp, 0, 8192);
+				 mouse_server, (long) sp, 0, 8192);
 	    if (rc) {
 		printf("mouse thread error %d=%#x", rc, rc);
 	    } else {

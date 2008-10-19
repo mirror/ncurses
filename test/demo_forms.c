@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.26 2008/08/23 23:22:55 tom Exp $
+ * $Id: demo_forms.c,v 1.30 2008/10/18 20:38:20 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -35,20 +35,13 @@
 TYPE_ENUM			-
 TYPE_REGEXP			-
 dup_field			-
-field_arg			-
-field_back			-
-field_count			-
-field_fore			-
 field_init			-
 field_just			-
-field_pad			-
 field_term			-
-field_type			-
 form_init			-
 form_opts			-
 form_opts_off			-
 form_opts_on			-
-form_page			-
 form_request_by_name		-
 form_term			-
 form_userptr			-
@@ -59,7 +52,6 @@ move_field			-
 new_page			-
 pos_form_cursor			-
 set_field_init			-
-set_field_pad			-
 set_field_term			-
 set_fieldtype_arg		-
 set_fieldtype_choice		-
@@ -112,10 +104,10 @@ make_field(int frow, int fcol, int rows, int cols)
 	 * O_STATIC off makes the form library ignore justification.
 	 */
 	set_field_just(f, j_value);
-	set_field_userptr(f, (void *) 0);
 	if (d_option) {
 	    if (has_colors()) {
 		set_field_fore(f, COLOR_PAIR(2));
+		set_field_back(f, A_UNDERLINE | COLOR_PAIR(3));
 	    } else {
 		set_field_fore(f, A_BOLD);
 	    }
@@ -126,6 +118,11 @@ make_field(int frow, int fcol, int rows, int cols)
 	    field_opts_off(f, O_STATIC);
 	    set_max_field(f, m_value);
 	}
+
+	/*
+	 * The userptr is used in edit_field.c's inactive_field().
+	 */
+	set_field_userptr(f, (void *) (long) field_back(f));
 	if (t_value)
 	    set_field_buffer(f, 0, t_value);
     }
@@ -262,7 +259,11 @@ show_current_field(WINDOW *win, FORM * form)
 	waddstr(win, " behind");
     waddch(win, '\n');
     if ((field = current_field(form)) != 0) {
-	wprintw(win, "Field %d:", field_index(field));
+	wprintw(win, "Page %d%s, Field %d/%d%s:",
+		form_page(form),
+		new_page(field) ? "*" : "",
+		field_index(field), field_count(form),
+		field_arg(field) ? "(arg)" : "");
 	if ((type = field_type(field)) != 0) {
 	    if (type == TYPE_ALNUM)
 		waddstr(win, "ALNUM");
@@ -297,6 +298,21 @@ show_current_field(WINDOW *win, FORM * form)
 	    wprintw(win, " size %dx%d (max %d)",
 		    field_rows, field_cols, field_max);
 	}
+
+	waddch(win, ' ');
+	wattrset(win, field_fore(field));
+	waddstr(win, "fore");
+	wattroff(win, field_fore(field));
+
+	waddch(win, '/');
+
+	wattrset(win, field_back(field));
+	waddstr(win, "back");
+	wattroff(win, field_back(field));
+
+	wprintw(win, ", pad '%c'",
+		field_pad(field));
+
 	waddstr(win, "\n");
 	for (nbuf = 0; nbuf <= 2; ++nbuf) {
 	    if ((buffer = field_buffer(field, nbuf)) != 0) {
@@ -366,6 +382,7 @@ demo_forms(void)
 
 	    f[n++] = make_label(2, 34, "MI");
 	    f[n++] = make_field(3, 34, 1, 1);
+	    set_field_pad(f[n - 1], '?');
 	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
 	    break;
 	case 2:
@@ -395,6 +412,8 @@ demo_forms(void)
 
 	f[n++] = make_label(5, 0, "Comments");
 	f[n++] = make_field(6, 0, 4, 46);
+	set_field_buffer(f[n - 1], 0, "HELLO\nWORLD!");
+	set_field_buffer(f[n - 1], 1, "Hello\nWorld!");
     }
 
     f[n++] = (FIELD *) 0;
@@ -499,6 +518,7 @@ main(int argc, char *argv[])
 	start_color();
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);
 	init_pair(2, COLOR_GREEN, COLOR_BLACK);
+	init_pair(3, COLOR_CYAN, COLOR_BLACK);
 	bkgd(COLOR_PAIR(1));
 	refresh();
     }
