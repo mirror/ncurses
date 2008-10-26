@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.26 2008/10/11 20:32:56 tom Exp $
+.\" $Id: curs_util.3x,v 1.27 2008/10/25 23:45:41 tom Exp $
 .TH curs_util 3X ""
 .na
 .hy 0
@@ -161,9 +161,12 @@ Routines that return pointers return \fBNULL\fR on error.
 .PP
 X/Open does not define any error conditions.
 In this implementation
-.RS
+.RS 3
 .TP 5
 \fBflushinp\fR
+returns an error if the terminal was not initialized.
+.TP 5
+\fBmeta\fR
 returns an error if the terminal was not initialized.
 .TP 5
 \fBputwin\fP

@@ -5145,7 +5145,7 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 
 		MK_SHARED_LIB='${CC} ${CFLAGS} -Wl,-Bshareable,-soname,'$cf_cv_shared_soname',-stats,-lc -o $@'
 		;;
-	openbsd*|freebsd[12].*)
+	nto-qnx*|openbsd*|freebsd[12].*)
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 		MK_SHARED_LIB='${LD} -Bshareable -o $@'
 		test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=rel

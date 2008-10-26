@@ -558,6 +558,7 @@
 ./man/curs_inwstr.3x
 ./man/curs_kernel.3x
 ./man/curs_legacy.3x
+./man/curs_memleaks.3x
 ./man/curs_mouse.3x
 ./man/curs_move.3x
 ./man/curs_opaque.3x
