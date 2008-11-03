@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.131 2008/10/11 18:48:48 tom Exp $
+-- $Id: INSTALL,v 1.135 2008/11/02 21:13:51 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1000,6 +1000,94 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
     Here are some of the major interface changes, and related problems which
     you may encounter when building a system with different versions of
     ncurses:
+
+    5.7 (November 2, 2008)
+	Interface changes:
+
+	+ generate linkable stubs for some macros:
+		getattrs
+
+	+ Add new library configuration for tic-library (the non-curses portion
+	  of the ncurses library used for the tic program as well as some
+	  others such as tack.  There is no API change, but makefiles would be
+	  changed to use the tic-library built separately.
+	  
+	  tack, distributed separately from ncurses, uses some of the internal
+	  _nc_XXX functions, which are declared in the tic.h header file.
+
+	  The reason for providing this separate library is that none of the
+	  functions in it are suitable for threaded applications.
+
+	+ Add new library configuration (ncursest, ncurseswt) which provides
+	  rudimentary support for POSIX threads.  This introduces opaque
+	  access functions to the WINDOW structure and adds a parameter to
+	  several internal functions.
+
+	+ move most internal variables (except tic-library) into data blocks
+	  _nc_globals and _nc_prescreen to simplify analysis.  Those were
+	  globally accessible, but since they were not part of the documented
+	  API, there is no ABI change.
+
+	+ changed static tables of strings to be indices into long strings, to
+	  improve startup performance.  This changes parameter lists for some
+	  of the internal functions.
+
+	Added extensions:
+
+	+ add NCURSES_OPAQUE definition in curses.h to control whether internal
+	  details of the WINDOW structure are visible to an application.  This
+	  is always defined when the threaded library is built, and is optional
+	  otherwise.  New functions for this:  is_cleared, is_idcok, is_idlok,
+	  is_immedok, is_keypad, is_leaveok, is_nodelay, is_notimeout,
+	  is_scrollok, is_syncok, wgetparent and wgetscrreg.
+
+	+ the threaded library (ncursest) also disallows direct updating of
+	  global curses-level variables, providing functions (via macros) for
+	  obtaining their value.  A few of those variables can be modified by
+	  the application, using new functions:  set_escdelay, set_tabsize
+
+	+ added functions use_window() and use_screen() which wrap a mutex
+	  (if threading is configured) around a call to a user-supplied
+	  function.
+
+	Added internal functions:
+		_nc_get_alias_table
+		_nc_get_screensize
+		_nc_keyname
+		_nc_screen_of
+		_nc_set_no_padding
+		_nc_tracechar
+		_nc_tracemouse
+		_nc_unctrl
+		_nc_ungetch
+
+		These are used for leak-testing, and are stubs for
+		ABI compatibility when ncurses is not configured for that
+		using the --disable-leaks configure script option:
+
+		_nc_free_and_exit
+		_nc_leaks_tinfo
+
+	Removed internal functions:
+		none
+
+	Modified internal functions:
+		_nc_fifo_dump
+		_nc_find_entry
+		_nc_handle_sigwinch
+		_nc_init_keytry
+		_nc_keypad
+		_nc_locale_breaks_acs
+		_nc_timed_wait
+		_nc_update_screensize
+
+		Use new typedef TRIES to replace "struct tries":
+
+		_nc_add_to_try
+		_nc_expand_try
+		_nc_remove_key
+		_nc_remove_string
+		_nc_trace_tries
 
     5.6 (December 17, 2006)
 	Interface changes:
