@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.454 2008/10/18 14:53:32 tom Exp $
+dnl $Id: configure.in,v 1.456 2008/11/16 00:36:30 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.454 $)
+AC_REVISION($Revision: 1.456 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -121,6 +121,13 @@ AC_ARG_WITH(ada,
 	[cf_with_ada=$withval],
 	[cf_with_ada=yes])
 AC_MSG_RESULT($cf_with_ada)
+
+AC_MSG_CHECKING(if you want to install manpages)
+AC_ARG_WITH(manpages,
+	[  --without-manpages      suppress install of manpages],
+	[cf_with_manpages=$withval],
+	[cf_with_manpages=yes])
+AC_MSG_RESULT($cf_with_manpages)
 
 AC_MSG_CHECKING(if you want to build programs such as tic)
 AC_ARG_WITH(progs,
@@ -807,7 +814,7 @@ AC_MSG_RESULT($with_rcs_ids)
 test "$with_rcs_ids" = yes && AC_DEFINE(USE_RCS_IDS)
 
 ###############################################################################
-CF_MAN_PAGES([ captoinfo clear infocmp infotocap tic toe tput ])
+CF_MAN_PAGES([ captoinfo clear infocmp infotocap tabs tic toe tput tset ])
 
 ###############################################################################
 CF_HELP_MESSAGE(Extensions:)
@@ -1821,6 +1828,7 @@ cf_cv_shlib_version="$cf_cv_shlib_version"
 cf_cv_shlib_version_infix="$cf_cv_shlib_version_infix"
 cf_cv_system_name="$cf_cv_system_name"
 cf_with_cxx_binding="$cf_with_cxx_binding"
+cf_with_manpages="$cf_with_manpages"
 host="$host"
 target="$target"
 

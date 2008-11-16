@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.341 $
-#	$Date: 2008/10/12 23:03:54 $
+#	$Revision: 1.342 $
+#	$Date: 2008/11/15 21:54:35 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -340,7 +340,7 @@ ansi+local,
 	cub=\E[%p1%dD, cud=\E[%p1%dB, cuf=\E[%p1%dC,
 	cuu=\E[%p1%dA, use=ansi+local1,
 ansi+tabs,
-	cbt=\E[Z, ht=^I, hts=\EH, tbc=\E[2g,
+	cbt=\E[Z, ht=^I, hts=\EH, tbc=\E[3g,
 ansi+inittabs,
 	it#8, use=ansi+tabs,
 ansi+erase,
@@ -545,7 +545,7 @@ pcansi-m|pcansi-mono|ibm-pc terminal programs claiming to be ansi (mono mode),
 	cud1=\E[B, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A,
 	dch1=\E[P, dl1=\E[M, ed=\E[J, el=\E[K, home=\E[H, ht=^I,
 	hts=\EH, il1=\E[L, ind=^J, kbs=^H, kcub1=\E[D, kcud1=\E[B,
-	kcuf1=\E[C, kcuu1=\E[A, khome=\E[H, tbc=\E[2g,
+	kcuf1=\E[C, kcuu1=\E[A, khome=\E[H, tbc=\E[3g,
 	use=klone+sgr-dumb,
 pcansi-25-m|pcansi25m|ibm-pc terminal programs with 25 lines (mono mode),
 	lines#25, use=pcansi-m,
@@ -576,7 +576,7 @@ ansi-m|ansi-mono|ANSI X3.64-1979 terminal with ANSI.SYS compatible attributes,
 	kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	kich1=\E[L, mc4=\E[4i, mc5=\E[5i, nel=\r\E[S,
 	rep=%p1%c\E[%p2%{1}%-%db, rin=\E[%p1%dT, s0ds=\E(B,
-	s1ds=\E)B, s2ds=\E*B, s3ds=\E+B, tbc=\E[2g,
+	s1ds=\E)B, s2ds=\E*B, s3ds=\E+B, tbc=\E[3g,
 	vpa=\E[%i%p1%dd, use=pcansi-m,
 
 ansi+enq|ncurses extension for ANSI ENQ,
@@ -1005,7 +1005,7 @@ att6386|at386|386at|AT&T WGS 6386 console,
 	sc=\E7,
 	sgr=\E[10m\E[0%?%p1%p3%|%t;7%;%?%p2%t;4%;%?%p4%t;5%;%?%p5%t;2%;%?%p6%t;1%;%?%p9%t;12%e;10%;%?%p7%t;9%;m,
 	sgr0=\E[0;10m, smacs=\E[12m, smso=\E[7m, smul=\E[4m,
-	tbc=\E[2g, vpa=\E[%i%p1%dd, use=klone+color,
+	tbc=\E[3g, vpa=\E[%i%p1%dd, use=klone+color,
 # (pc6300plus: removed ":KM=/usr/lib/ua/kmap.s5:"; renamed BO/EE/CI/CV -- esr)
 pc6300plus|AT&T 6300 plus,
 	OTbs, am, xon,
@@ -1416,7 +1416,7 @@ qansi-g|QNX ANSI,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
 	sgr=\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;%?%p4%t;5%;%?%p3%p1%|%t;7%;%?%p7%t;9%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smso=\E[7m,
-	smul=\E[4m, tbc=\E[2g,
+	smul=\E[4m, tbc=\E[3g,
 	tsl=\E7\E1;24r\E[?6l\E[25;%i%p1%dH,
 #
 qansi|QNX ansi with console writes,
@@ -5247,7 +5247,7 @@ cygwinDBG|Debug Version for Cygwin,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;12%;m,
 	sgr0=\E[0;10m, smacs=\E[11m, smir=\E[4h, smso=\E[7m,
-	smul=\E[4m, tbc=\E[2g, vpa=\E[%i%p1%dd, use=vt102+enq,
+	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, use=vt102+enq,
 
 # Key definitions:
 # The encodings for unshifted arrow keys, F1-F12, Home, Insert, etc.  match the
@@ -11060,7 +11060,7 @@ aaa+unk|aaa-unk|ann arbor ambassador (internal - don't use this directly),
 	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;m,
 	sgr0=\E[m,
 	smkx=\EP`>z~[[J`8xz~[[A`4xz~[[D`6xz~[[C`2xz~[[B\E\\,
-	smm=\E[>52h, smso=\E[7m, smul=\E[4m, tbc=\E[2g,
+	smm=\E[>52h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 	vpa=\E[%p1%{1}%+%dd,
 
 aaa+rv|ann arbor ambassador in reverse video,
@@ -12147,7 +12147,7 @@ avt-ns|concept avt no status line,
 	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;m,
 	sgr0=\E[m, smacs=\017$<1>, smcup=\E[=4l\E[1;24w\E2\r,
 	smir=\E[4h, smkx=\E[1!z\E[0;3u, smso=\E[7m, smul=\E[4m,
-	tbc=\E[2g, vpa=\E[%p1%{1}%+%dd,
+	tbc=\E[3g, vpa=\E[%p1%{1}%+%dd,
 avt-rv-ns|concept avt in reverse video mode/no status line,
 	flash=\E[=205l$<200>\E[=205h, is1=\E[=103l\E[=205h,
 	use=avt-ns,
@@ -14584,7 +14584,7 @@ prism9|p9|P9|MDC Prism-9 in ANSII mode,
 	sc=\E[%y,
 	sgr=\E[%{0}%?%p1%p3%|%t%{7}%+%;%?%p2%t%{2}%+%;%?%p4%t%{5}%+%;%?%p6%t%{1}%+%;m%?%p8%t\E[%{32}%+%d%%{%;%?%p9%t\016%e\017%;,
 	sgr0=\E[0m\017, smir=\E[4h, smso=\E[7m, smul=\E[4m,
-	tbc=\E[2g, tsl=\E[%i%p1%d%%}, vpa=\E[%i%p1%dd,
+	tbc=\E[3g, tsl=\E[%i%p1%d%%}, vpa=\E[%i%p1%dd,
 
 # p9-w: Prism-9 in 132 column mode
 # --------------------------------
@@ -16037,7 +16037,7 @@ tek4115|newer tektronix 4115 entry with more ANSI capabilities,
 	rep=%p1%c\E[%p2%{1}%-%db, rev=\E[7m, rmam=\E[?7l,
 	rmso=\E[m, rmul=\E[m,
 	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;m,
-	sgr0=\E[m, smam=\E[?7h, smso=\E[7m, smul=\E[4m, tbc=\E[2g,
+	sgr0=\E[m, smam=\E[?7h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 	vpa=\E[%p1%{1}%+%dd,
 # The tek4125 emulates a vt100 incorrectly - the scrolling region
 # command is ignored.  The following entry replaces <csr> with the needed
@@ -17729,7 +17729,7 @@ tws-generic|dku7102|Bull Questar tws terminals,
 	rmul=\E[m, rs2=\E[?=h\Ec, s0ds=^O, s1ds=^N,
 	sgr=\E[0%?%p1%p3%|%t;7%;%?%p2%t;4%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smcup=\E[?>h\EPY99\:98\E\\,
-	smir=\E[4h, smso=\E[0;7m, smul=\E[0;4m, tbc=\E[2g,
+	smir=\E[4h, smso=\E[0;7m, smul=\E[0;4m, tbc=\E[3g,
 	tsl=\EPY99\:98\E\\\E[0;98v\E[2;7m,
 tws2102-sna|dku7102-sna|BULL Questar tws2102 for SNA,
 	dsl=\E[0;98v\E[2J\E[v, fsl=\E[v, is3=\Eb, tsl=\E[0;98v,
@@ -21790,6 +21790,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* update "konsole" to 1.6.6 -TD
 #	* add "aterm" -TD
 #	* add "linux2.6.26" -TD
+#
+# 2008-11-15
+#	* change several \E[2g (clear tab at current column) to \E[3g
+#	  (clear all tabs) to match definition for tbc capability -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

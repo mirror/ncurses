@@ -640,6 +640,7 @@
 ./man/ncurses.3x
 ./man/panel.3x
 ./man/resizeterm.3x
+./man/tabs.1
 ./man/term.5
 ./man/term.7
 ./man/terminfo.head
@@ -947,6 +948,7 @@
 ./progs/infocmp.c
 ./progs/modules
 ./progs/progs.priv.h
+./progs/tabs.c
 ./progs/tic.c
 ./progs/toe.c
 ./progs/tput.c

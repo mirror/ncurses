@@ -1,0 +1,383 @@
+/****************************************************************************
+ * Copyright (c) 2008 Free Software Foundation, Inc.                        *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice shall be included  *
+ * in all copies or substantial portions of the Software.                   *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
+
+/****************************************************************************
+ *  Author: Thomas E. Dickey                        2008                    *
+ ****************************************************************************/
+
+/*
+ * tabs.c --  set terminal hard-tabstops
+ */
+
+#define USE_LIBTINFO
+#include <progs.priv.h>
+
+MODULE_ID("$Id: tabs.c,v 1.11 2008/11/16 00:58:24 tom Exp $")
+
+static void usage(void) GCC_NORETURN;
+
+static int max_cols;
+
+static int
+putch(int c)
+{
+    return putchar(c);
+}
+
+static void
+do_tabs(int *tab_list)
+{
+    int last = 1;
+    int stop;
+
+    putchar('\r');
+    while ((stop = *tab_list++) > 0) {
+	if (last < stop) {
+	    while (last++ < stop) {
+		if (last > max_cols)
+		    break;
+		putchar(' ');
+	    }
+	}
+	if (stop <= max_cols) {
+	    tputs(tparm(set_tab, stop), 1, putch);
+	    last = stop;
+	} else {
+	    break;
+	}
+    }
+    putchar('\n');
+}
+
+static int *
+decode_tabs(const char *tab_list)
+{
+    int *result = typeCalloc(int, strlen(tab_list) + (unsigned) max_cols);
+    int n = 0;
+    int value = 0;
+    int prior = 0;
+    int ch;
+
+    while ((ch = *tab_list++) != '\0') {
+	if (isdigit(UChar(ch))) {
+	    value *= 10;
+	    value += (ch - '0');
+	} else if (ch == ',') {
+	    result[n] = value + prior;
+	    if (n > 0 && value <= result[n - 1]) {
+		fprintf(stderr, "tab-stops are not in increasing order\n");
+		ExitProgram(EXIT_FAILURE);
+	    }
+	    ++n;
+	    value = 0;
+	    prior = 0;
+	} else if (ch == '+') {
+	    if (n)
+		prior = result[n - 1];
+	}
+    }
+
+    /*
+     * If there is only one value, then it is an option such as "-8".
+     */
+    if ((n == 0) && (value > 0)) {
+	int step = value;
+	while (n < max_cols - 1) {
+	    result[n++] = value;
+	    value += step;
+	}
+    }
+
+    /*
+     * Add the last value, if any.
+     */
+    result[n++] = value;
+    result[n] = 0;
+    return result;
+}
+
+static void
+print_ruler(int *tab_list)
+{
+    int last = 0;
+    int stop;
+    int n;
+
+    /* first print a readable ruler */
+    for (n = 0; n < max_cols; n += 10) {
+	int ch = 1 + (n / 10);
+	char buffer[20];
+	sprintf(buffer, "----+----%c",
+		((ch < 10)
+		 ? (ch + '0')
+		 : (ch + 'A' - 10)));
+	printf("%.*s", ((max_cols - n) > 10) ? 10 : (max_cols - n), buffer);
+    }
+    putchar('\n');
+
+    /* now, print '*' for each stop */
+    for (n = 0, last = 0; (tab_list[n] > 0) && (last < max_cols); ++n) {
+	stop = tab_list[n];
+	while (++last < stop) {
+	    if (last <= max_cols) {
+		putchar('-');
+	    } else {
+		break;
+	    }
+	}
+	if (last <= max_cols) {
+	    putchar('*');
+	    last = stop;
+	} else {
+	    break;
+	}
+    }
+    while (++last <= max_cols)
+	putchar('-');
+    putchar('\n');
+}
+
+/*
+ * Write an '*' on each tabstop, to demonstrate whether it lines up with the
+ * ruler.
+ */
+static void
+write_tabs(int *tab_list)
+{
+    int stop;
+
+    while ((stop = *tab_list++) > 0 && stop <= max_cols) {
+	fputs((stop == 1) ? "*" : "\t*", stdout);
+    };
+    /* also show a tab _past_ the stops */
+    if (stop < max_cols)
+	fputs("\t+", stdout);
+    putchar('\n');
+}
+
+static void
+usage(void)
+{
+    static const char *msg[] =
+    {
+	"Usage: tabs [options] [tabstop-list]"
+	,""
+	,"Options:"
+	,"  -0       reset tabs"
+	,"  -8       set tabs to standard interval"
+	,"  -a       Assembler, IBM S/370, first format"
+	,"  -a2      Assembler, IBM S/370, second format"
+	,"  -c       COBOL, normal format"
+	,"  -c2      COBOL compact format"
+	,"  -c3      COBOL compact format extended"
+	,"  -d       debug (show ruler with expected/actual tab positions)"
+	,"  -f       FORTRAN"
+	,"  -n       no-op (do not modify terminal settings)"
+	,"  -p       PL/I"
+	,"  -s       SNOBOL"
+	,"  -u       UNIVAC 1100 Assembler"
+	,"  -T name  use terminal type 'name'"
+	,""
+	,"A tabstop-list is an ordered list of column numbers, e.g., 1,11,21"
+	,"or 1,+10,+10 which is the same."
+    };
+    unsigned n;
+
+    fflush(stdout);
+    for (n = 0; n < SIZEOF(msg); ++n) {
+	fprintf(stderr, "%s\n", msg[n]);
+    }
+    ExitProgram(EXIT_FAILURE);
+}
+
+int
+main(int argc, char *argv[])
+{
+    int rc = EXIT_SUCCESS;
+    bool debug = FALSE;
+    bool no_op = FALSE;
+    int n, ch;
+    NCURSES_CONST char *term_name = 0;
+    const char *mar_list = 0;	/* ignored */
+    char *append = 0;
+    const char *tab_list = 0;
+
+    if ((term_name = getenv("TERM")) == 0)
+	term_name = "ansi+tabs";
+
+    /* cannot use getopt, since some options are two-character */
+    for (n = 1; n < argc; ++n) {
+	char *option = argv[n];
+	switch (option[0]) {
+	case '-':
+	    while ((ch = *++option) != '\0') {
+		switch (ch) {
+		case 'a':
+		    switch (*option) {
+		    case '\0':
+			tab_list = "1,10,16,36,72";
+			/* Assembler, IBM S/370, first format */
+			break;
+		    case '2':
+			tab_list = "1,10,16,40,72";
+			/* Assembler, IBM S/370, second format */
+			break;
+		    default:
+			usage();
+		    }
+		    break;
+		case 'c':
+		    switch (*option) {
+		    case '\0':
+			tab_list = "1,8,12,16,20,55";
+			/* COBOL, normal format */
+			break;
+		    case '2':
+			tab_list = "1,6,10,14,49";
+			/* COBOL compact format */
+			break;
+		    case '3':
+			tab_list = "1,6,10,14,18,22,26,30,34,38,42,46,50,54,58,62,67";
+			/* COBOL compact format extended */
+			break;
+		    default:
+			usage();
+		    }
+		    break;
+		case 'd':	/* ncurses extension */
+		    debug = TRUE;
+		    break;
+		case 'f':
+		    tab_list = "1,7,11,15,19,23";
+		    /* FORTRAN */
+		    break;
+		case 'n':	/* ncurses extension */
+		    no_op = TRUE;
+		    break;
+		case 'p':
+		    tab_list = "1,5,9,13,17,21,25,29,33,37,41,45,49,53,57,61";
+		    /* PL/I */
+		    break;
+		case 's':
+		    tab_list = "1,10,55";
+		    /* SNOBOL */
+		    break;
+		case 'u':
+		    tab_list = "1,12,20,44";
+		    /* UNIVAC 1100 Assembler */
+		    break;
+		case 'T':
+		    ++n;
+		    if (*++option != '\0') {
+			term_name = option;
+		    } else {
+			term_name = argv[n++];
+		    }
+		    option += ((int) strlen(option)) - 1;
+		    continue;
+		default:
+		    if (isdigit(UChar(*option))) {
+			tab_list = option;
+			++n;
+		    } else {
+			usage();
+		    }
+		    option += ((int) strlen(option)) - 1;
+		    break;
+		}
+	    }
+	    break;
+	case '+':
+	    while ((ch = *++option) != '\0') {
+		switch (ch) {
+		case 'm':
+		    mar_list = option;
+		    break;
+		default:
+		    usage();
+		}
+	    }
+	    break;
+	default:
+	    if (isdigit(*option)) {
+		if (append != 0) {
+		    if (tab_list != (const char *) append) {
+			/* one of the predefined options was used */
+			append = strdup(option);
+			tab_list = append;
+		    } else {
+			append = malloc(strlen(tab_list) + strlen(option) + 2);
+			sprintf(append, "%s,%s", tab_list, option);
+			free((char *) tab_list);
+			tab_list = append;
+		    }
+		} else {
+		    append = strdup(option);
+		    tab_list = append;
+		}
+	    } else {
+		usage();
+	    }
+	    break;
+	}
+    }
+
+    setupterm(term_name, STDOUT_FILENO, (int *) 0);
+
+    max_cols = (columns > 0) ? columns : 80;
+
+    if (!VALID_STRING(clear_all_tabs)) {
+	fprintf(stderr,
+		"%s: terminal type '%s' cannot reset tabs\n",
+		argv[0], term_name);
+	rc = EXIT_FAILURE;
+    } else if (!VALID_STRING(set_tab)) {
+	fprintf(stderr,
+		"%s: terminal type '%s' cannot set tabs\n",
+		argv[0], term_name);
+	rc = EXIT_FAILURE;
+    } else {
+	int *list = decode_tabs(tab_list);
+
+	if (!no_op)
+	    tputs(clear_all_tabs, 1, putch);
+
+	if (list != 0) {
+	    if (!no_op)
+		do_tabs(list);
+	    if (debug) {
+		print_ruler(list);
+		write_tabs(list);
+	    }
+	    free(list);
+	}
+    }
+    if (append)
+	free(append);
+    ExitProgram(rc);
+}

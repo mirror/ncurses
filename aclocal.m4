@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.470 2008/10/25 22:15:32 tom Exp $
+dnl $Id: aclocal.m4,v 1.471 2008/11/08 16:03:21 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2216,7 +2216,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 53 updated: 2008/09/20 19:51:59
+dnl CF_LIB_RULES version: 54 updated: 2008/11/08 11:03:00
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -2504,10 +2504,18 @@ cat >> Makefile <<CF_EOF
 install.libs uninstall.libs \\
 install.data uninstall.data ::
 $MAKE_TERMINFO	cd misc && \${MAKE} \${CF_MFLAGS} \[$]@
+CF_EOF
+
+if test "x$cf_with_manpages" = xyes; then
+cat >> Makefile <<CF_EOF
 
 install.man \\
 uninstall.man ::
 	cd man && \${MAKE} \${CF_MFLAGS} \[$]@
+CF_EOF
+fi
+
+cat >> Makefile <<CF_EOF
 
 distclean ::
 	rm -f config.cache config.log config.status Makefile include/ncurses_cfg.h
@@ -2516,6 +2524,7 @@ distclean ::
 CF_EOF
 
 # Special case: tack's manpage lives in its own directory.
+if test "x$cf_with_manpages" = xyes; then
 if test -d tack ; then
 if test -f $srcdir/$tack.h; then
 cat >> Makefile <<CF_EOF
@@ -2524,6 +2533,7 @@ install.man \\
 uninstall.man ::
 	cd tack && \${MAKE} \${CF_MFLAGS} \[$]@
 CF_EOF
+fi
 fi
 fi
 

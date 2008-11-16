@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.79 2008/09/07 13:58:55 tom Exp $
+# $Id: Makefile.in,v 1.80 2008/11/15 19:04:19 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -124,7 +124,7 @@ AUTO_SRC = \
 	transform.h
 
 # tic relies on direct access to the terminfo database
-GET_PROGS = infocmp$x clear$x tput$x tset$x toe$x
+GET_PROGS = infocmp$x clear$x tabs$x tput$x tset$x toe$x
 PUT_PROGS = @MAKE_TERMINFO@ tic$x
 PROGS = $(PUT_PROGS) $(GET_PROGS)
 
@@ -159,6 +159,7 @@ actual_infocmp   = `echo infocmp$x|   $(TRANSFORM)`
 actual_infotocap = `echo infotocap$x| $(TRANSFORM)`
 actual_init      = `echo init$x|      $(TRANSFORM)`
 actual_reset     = `echo reset$x|     $(TRANSFORM)`
+actual_tabs      = `echo tabs$x|      $(TRANSFORM)`
 actual_tic       = `echo tic$x|       $(TRANSFORM)`
 actual_toe       = `echo toe$x|       $(TRANSFORM)`
 actual_tput      = `echo tput$x|      $(TRANSFORM)`
@@ -187,6 +188,7 @@ install.progs: $(AUTO_SRC) $(PROGS) $(DESTDIR)$(bindir)
 @MAKE_TERMINFO@	(cd $(DESTDIR)$(bindir) && $(LN_S) $(actual_tic) $(actual_captoinfo))
 	$(LIBTOOL_INSTALL) $(INSTALL_PROG) infocmp$x $(DESTDIR)$(bindir)/$(actual_infocmp)
 	$(LIBTOOL_INSTALL) $(INSTALL_PROG) clear$x   $(DESTDIR)$(bindir)/$(actual_clear)
+	$(LIBTOOL_INSTALL) $(INSTALL_PROG) tabs$x    $(DESTDIR)$(bindir)/$(actual_tabs)
 	$(LIBTOOL_INSTALL) $(INSTALL_PROG) tput$x    $(DESTDIR)$(bindir)/$(actual_tput)
 	$(LIBTOOL_INSTALL) $(INSTALL_PROG) tset$x    $(DESTDIR)$(bindir)/$(actual_tset)
 	@echo "linking $(actual_reset) to $(actual_tset)"
@@ -200,6 +202,7 @@ uninstall.progs:
 @MAKE_TERMINFO@	-@rm -f $(DESTDIR)$(bindir)/$(actual_infotocap)
 	-@$(LIBTOOL_CLEAN) rm -f $(DESTDIR)$(bindir)/$(actual_infocmp)
 	-@$(LIBTOOL_CLEAN) rm -f $(DESTDIR)$(bindir)/$(actual_clear)
+	-@$(LIBTOOL_CLEAN) rm -f $(DESTDIR)$(bindir)/$(actual_tabs)
 	-@$(LIBTOOL_CLEAN) rm -f $(DESTDIR)$(bindir)/$(actual_tput)
 	-@$(LIBTOOL_CLEAN) rm -f $(DESTDIR)$(bindir)/$(actual_tset)
 	-@rm -f $(DESTDIR)$(bindir)/$(actual_reset)
@@ -229,6 +232,12 @@ DEPS_CLEAR = \
 
 clear$x: $(DEPS_CLEAR) $(DEPS_CURSES)
 	@ECHO_LINK@ $(LINK) $(DEPS_CLEAR) $(LDFLAGS_TINFO) -o $@
+
+DEPS_TABS = \
+	$(MODEL)/tabs$o
+
+tabs$x: $(DEPS_TABS) $(DEPS_TABS)
+	@ECHO_LINK@ $(LINK) $(DEPS_TABS) $(LDFLAGS_TINFO) -o $@
 
 DEPS_TPUT = \
 	$(MODEL)/tput$o
@@ -289,6 +298,7 @@ lint:
 @MAKE_TERMINFO@	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/toe.c     $(srcdir)/dump_entry.c $(LINT_LIBS)
 	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/clear.c                          $(LINT_LIBS)
 	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/infocmp.c $(srcdir)/dump_entry.c $(LINT_LIBS)
+	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/tabs.c                           $(LINT_LIBS)
 	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/tput.c                           $(LINT_LIBS)
 	$(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/tset.c    $(srcdir)/dump_entry.c $(LINT_LIBS)
 
