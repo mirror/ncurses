@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,11 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.30 2006/12/30 23:43:34 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.31 2008/11/23 00:09:53 tom Exp $
 .TH curs_mouse 3X ""
 .na
 .hy 0
 .SH NAME
+\fBhas_mouse\fR,
 \fBgetmouse\fR, \fBungetmouse\fR,
 \fBmousemask\fR, \fBwenclose\fR,
 \fBmouse_trafo\fR, \fBwmouse_trafo\fR,
@@ -53,7 +54,9 @@ typedef struct
 MEVENT;\fR
 .fi
 .br
-\fBint getmouse(MEVENT *event);\fR
+\fBbool has_mouse(void);\fR
+.br
+-\fBint getmouse(MEVENT *event);\fR
 .br
 \fBint ungetmouse(MEVENT *event);\fR
 .br
@@ -196,6 +199,9 @@ Use \fBmouseinterval(0)\fR to disable click resolution.
 This function returns the previous interval value.
 Use \fBmouseinterval(-1)\fR to obtain the interval without altering it.
 The default is one sixth of a second.
+.PP
+The \fBhas_mouse\fP function returns TRUE if the mouse driver has been
+successfully initialized.
 .PP
 Note that mouse events will be ignored when input is in cooked mode, and will
 cause an error beep when cooked mode is being simulated in a window by a

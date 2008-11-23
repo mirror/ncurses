@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.394 2008/10/04 21:37:45 tom Exp $
+ * $Id: curses.priv.h,v 1.395 2008/11/23 00:09:04 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1519,7 +1519,7 @@ extern NCURSES_EXPORT(void) _nc_screen_resume (void);
 extern NCURSES_EXPORT(void) _nc_screen_wrap (void);
 
 /* lib_mouse.c */
-extern NCURSES_EXPORT(int) _nc_has_mouse (void);
+extern NCURSES_EXPORT(bool) _nc_has_mouse (SCREEN *);
 
 /* lib_mvcur.c */
 #define INFINITY	1000000	/* cost: too high to use */

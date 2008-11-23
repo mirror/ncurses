@@ -79,7 +79,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.102 2008/10/18 21:48:55 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.103 2008/11/23 00:11:46 tom Exp $")
 
 #include <term.h>
 #include <tic.h>
@@ -1397,10 +1397,16 @@ mouseinterval(int maxclick)
 
 /* This may be used by other routines to ask for the existence of mouse
    support */
-NCURSES_EXPORT(int)
-_nc_has_mouse(void)
+NCURSES_EXPORT(bool)
+_nc_has_mouse(SCREEN *sp)
 {
-    return (SP->_mouse_type == M_NONE ? 0 : 1);
+    return ((sp->_mouse_type == M_NONE) ? FALSE : TRUE);
+}
+
+NCURSES_EXPORT(bool)
+has_mouse(void)
+{
+    return _nc_has_mouse(SP);
 }
 
 NCURSES_EXPORT(bool)

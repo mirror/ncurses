@@ -1,4 +1,4 @@
-/* $Id: curses.tail,v 1.16 2008/07/05 20:20:38 tom Exp $ */
+/* $Id: curses.tail,v 1.17 2008/11/23 00:12:12 tom Exp $ */
 /*
  * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
@@ -94,6 +94,7 @@ typedef struct
 }
 MEVENT;
 
+extern NCURSES_EXPORT(bool) has_mouse (void);
 extern NCURSES_EXPORT(int) getmouse (MEVENT *);
 extern NCURSES_EXPORT(int) ungetmouse (MEVENT *);
 extern NCURSES_EXPORT(mmask_t) mousemask (mmask_t, mmask_t *);

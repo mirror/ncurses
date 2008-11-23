@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include "internal.h"
 #include "cursesw.h"
 
-MODULE_ID("$Id: cursesw.cc,v 1.49 2007/12/15 23:01:57 tom Exp $")
+MODULE_ID("$Id: cursesw.cc,v 1.50 2008/11/23 00:17:31 juergen Exp $")
 
 #define COLORS_NEED_INITIALIZATION  -1
 #define COLORS_NOT_INITIALIZED       0
@@ -287,7 +287,6 @@ NCursesWindow::NCursesWindow(WINDOW *win, int ncols)
 {
     initialize();
     w = win;
-    assert((w->_maxx +1 ) == ncols);
 }
 
 int _nc_xx_ripoff_init(WINDOW *w, int ncols)
@@ -464,7 +463,7 @@ NCursesWindow::setcolor(short pair)
 #if HAVE_HAS_KEY
 bool NCursesWindow::has_mouse() const
 {
-    return ((::has_key(KEY_MOUSE) || ::_nc_has_mouse())
+    return ((::has_key(KEY_MOUSE) || ::has_mouse())
 	     ? TRUE : FALSE);
 }
 #endif

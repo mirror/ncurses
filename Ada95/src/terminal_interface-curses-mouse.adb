@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.22 $
---  $Date: 2008/07/26 18:51:11 $
+--  $Revision: 1.23 $
+--  $Date: 2008/11/16 00:19:59 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
@@ -50,7 +50,7 @@ package body Terminal_Interface.Curses.Mouse is
    function Has_Mouse return Boolean
    is
       function Mouse_Avail return C_Int;
-      pragma Import (C, Mouse_Avail, "_nc_has_mouse");
+      pragma Import (C, Mouse_Avail, "has_mouse");
    begin
       if Has_Key (Key_Mouse) or else Mouse_Avail /= 0 then
          return True;

@@ -37,7 +37,7 @@
 #define USE_LIBTINFO
 #include <progs.priv.h>
 
-MODULE_ID("$Id: tabs.c,v 1.11 2008/11/16 00:58:24 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.15 2008/11/23 00:47:51 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
@@ -83,41 +83,48 @@ decode_tabs(const char *tab_list)
     int prior = 0;
     int ch;
 
-    while ((ch = *tab_list++) != '\0') {
-	if (isdigit(UChar(ch))) {
-	    value *= 10;
-	    value += (ch - '0');
-	} else if (ch == ',') {
-	    result[n] = value + prior;
-	    if (n > 0 && value <= result[n - 1]) {
-		fprintf(stderr, "tab-stops are not in increasing order\n");
-		ExitProgram(EXIT_FAILURE);
+    if (result != 0) {
+	while ((ch = *tab_list++) != '\0') {
+	    if (isdigit(UChar(ch))) {
+		value *= 10;
+		value += (ch - '0');
+	    } else if (ch == ',') {
+		result[n] = value + prior;
+		if (n > 0 && value <= result[n - 1]) {
+		    fprintf(stderr,
+			    "tab-stops are not in increasing order\n");
+		    free(result);
+		    result = 0;
+		    break;
+		}
+		++n;
+		value = 0;
+		prior = 0;
+	    } else if (ch == '+') {
+		if (n)
+		    prior = result[n - 1];
 	    }
-	    ++n;
-	    value = 0;
-	    prior = 0;
-	} else if (ch == '+') {
-	    if (n)
-		prior = result[n - 1];
 	}
     }
 
-    /*
-     * If there is only one value, then it is an option such as "-8".
-     */
-    if ((n == 0) && (value > 0)) {
-	int step = value;
-	while (n < max_cols - 1) {
-	    result[n++] = value;
-	    value += step;
+    if (result != 0) {
+	/*
+	 * If there is only one value, then it is an option such as "-8".
+	 */
+	if ((n == 0) && (value > 0)) {
+	    int step = value;
+	    while (n < max_cols - 1) {
+		result[n++] = value;
+		value += step;
+	    }
 	}
-    }
 
-    /*
-     * Add the last value, if any.
-     */
-    result[n++] = value;
-    result[n] = 0;
+	/*
+	 * Add the last value, if any.
+	 */
+	result[n++] = value;
+	result[n] = 0;
+    }
     return result;
 }
 
@@ -180,6 +187,128 @@ write_tabs(int *tab_list)
     putchar('\n');
 }
 
+/*
+ * Trim leading/trailing blanks, as well as blanks after a comma.
+ * Convert embedded blanks to commas.
+ */
+static char *
+trimmed_tab_list(const char *source)
+{
+    char *result = strdup(source);
+    int ch, j, k, last;
+
+    if (result != 0) {
+	for (j = k = last = 0; result[j] != 0; ++j) {
+	    ch = UChar(result[j]);
+	    if (isspace(ch)) {
+		if (last == '\0') {
+		    continue;
+		} else if (isdigit(last) || last == ',') {
+		    ch = ',';
+		}
+	    } else if (ch == ',') {
+		;
+	    } else {
+		if (last == ',')
+		    result[k++] = last;
+		result[k++] = ch;
+	    }
+	    last = ch;
+	}
+	result[k] = '\0';
+    }
+    return result;
+}
+
+static bool
+comma_is_needed(const char *source)
+{
+    bool result = FALSE;
+
+    if (source != 0) {
+	unsigned len = strlen(source);
+	if (len != 0)
+	    result = (source[len - 1] != ',');
+    } else {
+	result = FALSE;
+    }
+    return result;
+}
+
+/*
+ * Add a command-line parameter to the tab-list.  It can be blank- or comma-
+ * separated (or a mixture).  For simplicity, empty tabs are ignored, e.g.,
+ *	tabs 1,,6,11
+ *	tabs 1,6,11
+ * are treated the same.
+ */
+static const char *
+add_to_tab_list(char **append, const char *value)
+{
+    char *result = *append;
+    char *copied = trimmed_tab_list(value);
+
+    if (copied != 0 && *copied != '\0') {
+	const char *comma = ",";
+	unsigned need = 1 + strlen(copied);
+
+	if (*copied == ',')
+	    comma = "";
+	else if (!comma_is_needed(*append))
+	    comma = "";
+
+	need += strlen(comma);
+	if (*append != 0)
+	    need += strlen(*append);
+
+	result = malloc(need);
+	if (result != 0) {
+	    *result = '\0';
+	    if (*append != 0) {
+		strcpy(result, *append);
+		free(*append);
+	    }
+	    strcat(result, comma);
+	    strcat(result, copied);
+	}
+
+	*append = result;
+    }
+    return result;
+}
+
+/*
+ * Check for illegal characters in the tab-list.
+ */
+static bool
+legal_tab_list(const char *program, const char *tab_list)
+{
+    bool result = TRUE;
+
+    if (tab_list != 0 && *tab_list != '\0') {
+	if (comma_is_needed(tab_list)) {
+	    int n, ch;
+	    for (n = 0; tab_list[n] != '\0'; ++n) {
+		ch = UChar(tab_list[n]);
+		if (!(isdigit(ch) || ch == ',')) {
+		    fprintf(stderr,
+			    "%s: unexpected character found '%c'\n",
+			    program, ch);
+		    result = FALSE;
+		    break;
+		}
+	    }
+	} else {
+	    fprintf(stderr, "%s: trailing comma found '%s'\n", program, tab_list);
+	    result = FALSE;
+	}
+    } else {
+	fprintf(stderr, "%s: no tab-list given\n", program);
+	result = FALSE;
+    }
+    return result;
+}
+
 static void
 usage(void)
 {
@@ -218,7 +347,7 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-    int rc = EXIT_SUCCESS;
+    int rc = EXIT_FAILURE;
     bool debug = FALSE;
     bool no_op = FALSE;
     int n, ch;
@@ -324,25 +453,15 @@ main(int argc, char *argv[])
 	    }
 	    break;
 	default:
-	    if (isdigit(*option)) {
-		if (append != 0) {
-		    if (tab_list != (const char *) append) {
-			/* one of the predefined options was used */
-			append = strdup(option);
-			tab_list = append;
-		    } else {
-			append = malloc(strlen(tab_list) + strlen(option) + 2);
-			sprintf(append, "%s,%s", tab_list, option);
-			free((char *) tab_list);
-			tab_list = append;
-		    }
-		} else {
-		    append = strdup(option);
-		    tab_list = append;
+	    if (append != 0) {
+		if (tab_list != (const char *) append) {
+		    /* one of the predefined options was used */
+		    free(append);
+		    append = 0;
 		}
-	    } else {
-		usage();
 	    }
+	    tab_list = add_to_tab_list(&append, option);
+	    option += ((int) strlen(option)) - 1;
 	    break;
 	}
     }
@@ -355,13 +474,11 @@ main(int argc, char *argv[])
 	fprintf(stderr,
 		"%s: terminal type '%s' cannot reset tabs\n",
 		argv[0], term_name);
-	rc = EXIT_FAILURE;
     } else if (!VALID_STRING(set_tab)) {
 	fprintf(stderr,
 		"%s: terminal type '%s' cannot set tabs\n",
 		argv[0], term_name);
-	rc = EXIT_FAILURE;
-    } else {
+    } else if (legal_tab_list(argv[0], tab_list)) {
 	int *list = decode_tabs(tab_list);
 
 	if (!no_op)
@@ -371,13 +488,19 @@ main(int argc, char *argv[])
 	    if (!no_op)
 		do_tabs(list);
 	    if (debug) {
+		fflush(stderr);
+		printf("tabs %s\n", tab_list);
 		print_ruler(list);
 		write_tabs(list);
 	    }
 	    free(list);
+	} else if (debug) {
+	    fflush(stderr);
+	    printf("tabs %s\n", tab_list);
 	}
+	rc = EXIT_SUCCESS;
     }
-    if (append)
+    if (append != 0)
 	free(append);
     ExitProgram(rc);
 }
