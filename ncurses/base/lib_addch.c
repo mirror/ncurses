@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.113 2008/08/16 19:20:04 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.114 2008/11/29 21:02:10 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -265,15 +265,25 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 	    int len = _nc_build_wch(win, CHREF(ch));
 
 	    if (len >= -1) {
-		/* handle EILSEQ */
+		attr_t attr = AttrOf(ch);
+
+		/* handle EILSEQ (i.e., when len >= -1) */
 		if (is8bits(CharOf(ch))) {
+		    int rc = OK;
 		    const char *s = unctrl((chtype) CharOf(ch));
-		    if (s[1] != 0) {
-			return waddstr(win, s);
+
+		    if (s[1] != '\0') {
+			while (*s != '\0') {
+			    rc = waddch(win, UChar(*s) | attr);
+			    if (rc != OK)
+				break;
+			    ++s;
+			}
+			return rc;
 		    }
 		}
 		if (len == -1)
-		    return waddch(win, ' ');
+		    return waddch(win, ' ' | attr);
 	    } else {
 		return OK;
 	    }

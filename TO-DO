@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: TO-DO,v 1.52 2008/11/22 22:58:59 tom Exp $
+-- $Id: TO-DO,v 1.53 2008/11/28 16:39:12 tom Exp $
 -------------------------------------------------------------------------------
 
 SHORT-TERM TO-DO ITEMS:
@@ -45,7 +45,7 @@ Known Problems:
 + Scrolling optimization has holes:  for example, it forces repaints of the
   screen between calls to refresh().
 
-+ SVr4 uses slightly different rules for determining when softkeys are shown. 
++ SVr4 uses slightly different rules for determining when softkeys are shown.
   For example, they are initially displayed (before the ncurses 'e' test
   activates them), and a touchwin can apparently also force them to be
   displayed.
@@ -58,7 +58,7 @@ Known Problems:
 + The window classes defined in the c++ subdirectory need documentation.  Some
   C++ programmer could earn a lot of good karma by doing this...
 
-+ vid_attr() should support the set_a_attributes (sgr1) string, but does not. 
++ vid_attr() should support the set_a_attributes (sgr1) string, but does not.
   There appear to be no terminals that require that functionality.
 
 + the configure --disable-ext-funcs option does not work for Ada95 tree.
@@ -69,7 +69,7 @@ Known Problems:
 + the Ada95 tree requires a small fix to build on Cygwin, since the GNAT port
   to that platform provides an incomplete Interrupts.Names package.  For
   instance (your gcc version may be different):
-        /usr/lib/gcc/i686-pc-cygwin/3.4.4/adainclude/a-intnam.ads        
+        /usr/lib/gcc/i686-pc-cygwin/3.4.4/adainclude/a-intnam.ads
 
   cut here...
 -------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ Known Problems:
 
     DUMMY_INTERRUPT_1 : constant Interrupt_ID := 1;
     DUMMY_INTERRUPT_2 : constant Interrupt_ID := 2;
-+   SIGINT : constant Interrupt_ID := 1;
++   SIGINT : constant Interrupt_ID := 2;
 
  end Ada.Interrupts.Names;
 -------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ supporting internationalization.
 2. DOS port
 
 Only a few of the files in the library depend on the terminfo format.
-It should be possible to further kernelize the package, then rewrite 
+It should be possible to further kernelize the package, then rewrite
 a small number of core files to produce a functionally-compatible
 port that would do updates to a memory-mapped screen area.  The first
 result of this would be a DOS port.
@@ -213,10 +213,10 @@ F. Unused VDT capabilities:
 		move_insert, dest_tabs_magic_smso, transparent_underline,
 		needs_xon_xoff, hard_cursor.
 	Numerics: lines_of_memory, buttons.
-	Strings: pkey_key, pkey_local, pkey_xmit, underline_char, 
-		enter_xon_mode,	exit_xon_mode, xon_character, xoff_character, 
+	Strings: pkey_key, pkey_local, pkey_xmit, underline_char,
+		enter_xon_mode,	exit_xon_mode, xon_character, xoff_character,
 		display_clock, remove_clock, user[0-5], display_pc_char,
-		enter_scancode_mode, exit_scancode_mode, pc_term_options, 
+		enter_scancode_mode, exit_scancode_mode, pc_term_options,
 		scancode_escape, alt_scancode_esc.
 
 These are the potentially important ones for ncurses.  Notes:

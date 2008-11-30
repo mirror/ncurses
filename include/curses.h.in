@@ -32,19 +32,13 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.187 2008/08/30 20:11:29 tom Exp $ */
+/* $Id: curses.h.in,v 1.189 2008/11/29 18:35:46 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
 
 #define CURSES 1
 #define CURSES_H 1
-
-/* This should be defined for the enhanced functionality to be visible.
- * However, some of the wide-character (enhanced) functionality is missing.
- * So we do not define it (yet).
-#define _XOPEN_CURSES 1
- */
 
 /* These are defined only in curses.h, and are used for conditional compiles */
 #define NCURSES_VERSION_MAJOR @NCURSES_MAJOR@

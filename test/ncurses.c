@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.329 2008/09/27 14:34:58 tom Exp $
+$Id: ncurses.c,v 1.332 2008/11/29 20:08:42 tom Exp $
 
 ***************************************************************************/
 
@@ -569,8 +569,11 @@ mouse_decode(MEVENT const *ep)
  *
  ****************************************************************************/
 
+#define NUM_GETCH_FLAGS 256
+typedef bool GetchFlags[NUM_GETCH_FLAGS];
+
 static void
-setup_getch(WINDOW *win, bool flags[])
+setup_getch(WINDOW *win, GetchFlags flags)
 {
     keypad(win, flags['k']);	/* should be redundant, but for testing */
     meta(win, flags['m']);	/* force this to a known state */
@@ -581,7 +584,17 @@ setup_getch(WINDOW *win, bool flags[])
 }
 
 static void
-wgetch_help(WINDOW *win, bool flags[])
+init_getch(WINDOW *win, GetchFlags flags)
+{
+    memset(flags, FALSE, NUM_GETCH_FLAGS);
+    flags[UChar('k')] = (win == stdscr);
+    flags[UChar('m')] = TRUE;
+
+    setup_getch(win, flags);
+}
+
+static void
+wgetch_help(WINDOW *win, GetchFlags flags)
 {
     static const char *help[] =
     {
@@ -731,13 +744,10 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
     int first_y, first_x;
     int c;
     int incount = 0;
-    bool flags[256];
+    GetchFlags flags;
     bool blocking = (delay < 0);
 
-    memset(flags, FALSE, sizeof(flags));
-    flags[UChar('k')] = (win == stdscr);
-
-    setup_getch(win, flags);
+    init_getch(win, flags);
     wtimeout(win, delay);
     getyx(win, first_y, first_x);
 
@@ -835,12 +845,18 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
 		}
 #endif
 		(void) waddstr(win, keyname(c));
-	    } else if (c > 0x80) {
-		unsigned c2 = (unsigned) (c & 0x7f);
-		if (isprint(c2))
-		    (void) wprintw(win, "M-%c", UChar(c2));
-		else
+	    } else if (c >= 0x80) {
+		unsigned c2 = (unsigned) c;
+#if !(defined(NCURSES_VERSION) || defined(_XOPEN_CURSES))
+		/* at least Solaris SVR4 curses breaks unctrl(128), etc. */
+		c2 &= 0x7f;
+#endif
+		if (isprint(c))
+		    (void) wprintw(win, "%c", UChar(c));
+		else if (c2 != UChar(c))
 		    (void) wprintw(win, "M-%s", unctrl(c2));
+		else
+		    (void) wprintw(win, "%s", unctrl(c2));
 		waddstr(win, " (high-half character)");
 	    } else {
 		if (isprint(c))
@@ -854,6 +870,9 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
     }
 
     wtimeout(win, -1);
+
+    if (!level)
+	init_getch(win, flags);
 }
 
 static int
@@ -978,15 +997,12 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
     int first_y, first_x;
     wint_t c;
     int incount = 0;
-    bool flags[256];
+    GetchFlags flags;
     bool blocking = (delay < 0);
     int y, x, code;
     char *temp;
 
-    memset(flags, FALSE, sizeof(flags));
-    flags[UChar('k')] = (win == stdscr);
-
-    setup_getch(win, flags);
+    init_getch(win, flags);
     wtimeout(win, delay);
     getyx(win, first_y, first_x);
 
@@ -1096,14 +1112,14 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 		    resize_wide_boxes(level, win);
 		}
 #endif
-		(void) waddstr(win, key_name((wchar_t) c));
+		(void) waddstr(win, keyname((wchar_t) c));
 	    } else {
+		(void) waddstr(win, key_name((wchar_t) c));
 		if (c < 256 && iscntrl(c)) {
-		    (void) wprintw(win, "%s (control character)", unctrl(c));
+		    (void) wprintw(win, " (control character)");
 		} else {
-		    wchar_t c2 = (wchar_t) c;
-		    waddnwstr(win, &c2, 1);
-		    (void) wprintw(win, " = %#x (printable character)", (unsigned) c);
+		    (void) wprintw(win, " = %#x (printable character)",
+				   (unsigned) c);
 		}
 	    }
 	    wgetch_wrap(win, first_y);
@@ -1111,6 +1127,9 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
     }
 
     wtimeout(win, -1);
+
+    if (!level)
+	init_getch(win, flags);
 }
 
 static void
@@ -3238,7 +3257,7 @@ show_1_wacs(int n, int repeat, const char *name, const cchar_t *code)
     int col = (n / height) * COLS / 2;
 
     mvprintw(row, col, "%*s : ", COLS / 4, name);
-    while (repeat-- >= 0) {
+    while (--repeat >= 0) {
 	add_wch(code);
     }
     return n + 1;
