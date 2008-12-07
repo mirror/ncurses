@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: filter.c,v 1.11 2006/12/09 16:53:47 tom Exp $
+ * $Id: filter.c,v 1.12 2008/12/06 21:59:27 tom Exp $
  */
 #include <test.priv.h>
 
@@ -78,16 +78,50 @@ new_command(char *buffer, int length, attr_t underline)
     return code;
 }
 
-int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+static void
+usage(void)
 {
+    static const char *msg[] =
+    {
+	"Usage: filter [options]"
+	,""
+	,"Options:"
+	,"  -i   use initscr() rather than newterm()"
+    };
+    unsigned n;
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+    ExitProgram(EXIT_FAILURE);
+}
+
+int
+main(int argc, char *argv[])
+{
+    int ch;
     char buffer[80];
     attr_t underline;
+    bool i_option = FALSE;
 
     setlocale(LC_ALL, "");
 
+    while ((ch = getopt(argc, argv, "i")) != -1) {
+	switch (ch) {
+	case 'i':
+	    i_option = TRUE;
+	    break;
+	default:
+	    usage();
+	}
+    }
+
+    printf("starting filter program using %s...\n",
+	   i_option ? "initscr" : "newterm");
     filter();
-    (void) newterm((char *) 0, stdout, stdin);
+    if (i_option) {
+	initscr();
+    } else {
+	(void) newterm((char *) 0, stdout, stdin);
+    }
     cbreak();
     keypad(stdscr, TRUE);
 
