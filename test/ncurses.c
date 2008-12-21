@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.332 2008/11/29 20:08:42 tom Exp $
+$Id: ncurses.c,v 1.334 2008/12/20 17:13:27 tom Exp $
 
 ***************************************************************************/
 
@@ -2821,6 +2821,7 @@ static struct {
 } attrs_to_cycle[] = {
     { A_NORMAL,		"normal" },
     { A_BOLD,		"bold" },
+    { A_BLINK,		"blink" },
     { A_REVERSE,	"reverse" },
     { A_UNDERLINE,	"underline" },
 };
@@ -2921,7 +2922,7 @@ show_upper_chars(unsigned first, int repeat, attr_t attr, short pair)
 	do {
 	    if (C1)
 		nodelay(stdscr, TRUE);
-	    echochar(code | attr | COLOR_PAIR(pair));
+	    echochar(colored_chtype(code, attr, pair));
 	    if (C1) {
 		/* (yes, this _is_ crude) */
 		while ((reply = Getchar()) != ERR) {
@@ -2970,7 +2971,7 @@ show_pc_chars(int repeat, attr_t attr, short pair)
 		 */
 		break;
 	    default:
-		addch(code | A_ALTCHARSET | attr | COLOR_PAIR(pair));
+		addch(colored_chtype(code, A_ALTCHARSET | attr, pair));
 		break;
 	    }
 	} while (--count > 0);
@@ -2988,15 +2989,23 @@ show_box_chars(int repeat, attr_t attr, short pair)
     mvaddstr(0, 20, "Display of the ACS Line-Drawing Set");
     attroff(A_BOLD);
     refresh();
-    box(stdscr, 0, 0);
     /* *INDENT-OFF* */
-    mvhline(LINES / 2, 0,        ACS_HLINE | attr, COLS);
-    mvvline(0,         COLS / 2, ACS_VLINE | attr, LINES);
-    mvaddch(0,         COLS / 2, ACS_TTEE | attr);
-    mvaddch(LINES / 2, COLS / 2, ACS_PLUS | attr);
-    mvaddch(LINES - 1, COLS / 2, ACS_BTEE | attr);
-    mvaddch(LINES / 2, 0,        ACS_LTEE | attr);
-    mvaddch(LINES / 2, COLS - 1, ACS_RTEE | attr);
+    wborder(stdscr,
+	    colored_chtype(ACS_VLINE,	 attr, pair),
+	    colored_chtype(ACS_VLINE,	 attr, pair),
+            colored_chtype(ACS_HLINE,    attr, pair),
+	    colored_chtype(ACS_HLINE,	 attr, pair),
+	    colored_chtype(ACS_ULCORNER, attr, pair),
+	    colored_chtype(ACS_URCORNER, attr, pair),
+            colored_chtype(ACS_LLCORNER, attr, pair),
+	    colored_chtype(ACS_LRCORNER, attr, pair));
+    mvhline(LINES / 2, 0,        colored_chtype(ACS_HLINE, attr, pair), COLS);
+    mvvline(0,         COLS / 2, colored_chtype(ACS_VLINE, attr, pair), LINES);
+    mvaddch(0,         COLS / 2, colored_chtype(ACS_TTEE,  attr, pair));
+    mvaddch(LINES / 2, COLS / 2, colored_chtype(ACS_PLUS,  attr, pair));
+    mvaddch(LINES - 1, COLS / 2, colored_chtype(ACS_BTEE,  attr, pair));
+    mvaddch(LINES / 2, 0,        colored_chtype(ACS_LTEE,  attr, pair));
+    mvaddch(LINES / 2, COLS - 1, colored_chtype(ACS_RTEE,  attr, pair));
     /* *INDENT-ON* */
 
 }
@@ -3021,7 +3030,7 @@ show_acs_chars(int repeat, attr_t attr, short pair)
 {
     int n;
 
-#define BOTH(name) #name, (name | attr | COLOR_PAIR(pair))
+#define BOTH(name) #name, colored_chtype(name, attr, pair)
 
     erase();
     attron(A_BOLD);
@@ -3326,12 +3335,12 @@ show_wacs_chars(int repeat, attr_t attr, short pair)
 
 #undef MERGE_ATTR
 
-#define MERGE_ATTR(wch) merge_wide_attr(&temp, wch, attr, pair)
+#define MERGE_ATTR(n,wch) merge_wide_attr(&temp[n], wch, attr, pair)
 
 static void
 show_wbox_chars(int repeat, attr_t attr, short pair)
 {
-    cchar_t temp;
+    cchar_t temp[8];
 
     (void) repeat;
     erase();
@@ -3340,17 +3349,23 @@ show_wbox_chars(int repeat, attr_t attr, short pair)
     attroff(A_BOLD);
     refresh();
 
-    attr_set(attr, pair, 0);
-    box_set(stdscr, 0, 0);
-    attr_set(A_NORMAL, 0, 0);
+    wborder_set(stdscr,
+		MERGE_ATTR(0, WACS_VLINE),
+		MERGE_ATTR(1, WACS_VLINE),
+		MERGE_ATTR(2, WACS_HLINE),
+		MERGE_ATTR(3, WACS_HLINE),
+		MERGE_ATTR(4, WACS_ULCORNER),
+		MERGE_ATTR(5, WACS_URCORNER),
+		MERGE_ATTR(6, WACS_LLCORNER),
+		MERGE_ATTR(7, WACS_LRCORNER));
     /* *INDENT-OFF* */
-    mvhline_set(LINES / 2, 0,        MERGE_ATTR(WACS_HLINE), COLS);
-    mvvline_set(0,         COLS / 2, MERGE_ATTR(WACS_VLINE), LINES);
-    mvadd_wch(0,           COLS / 2, MERGE_ATTR(WACS_TTEE));
-    mvadd_wch(LINES / 2,   COLS / 2, MERGE_ATTR(WACS_PLUS));
-    mvadd_wch(LINES - 1,   COLS / 2, MERGE_ATTR(WACS_BTEE));
-    mvadd_wch(LINES / 2,   0,        MERGE_ATTR(WACS_LTEE));
-    mvadd_wch(LINES / 2,   COLS - 1, MERGE_ATTR(WACS_RTEE));
+    mvhline_set(LINES / 2, 0,        MERGE_ATTR(0, WACS_HLINE), COLS);
+    mvvline_set(0,         COLS / 2, MERGE_ATTR(0, WACS_VLINE), LINES);
+    mvadd_wch(0,           COLS / 2, MERGE_ATTR(0, WACS_TTEE));
+    mvadd_wch(LINES / 2,   COLS / 2, MERGE_ATTR(0, WACS_PLUS));
+    mvadd_wch(LINES - 1,   COLS / 2, MERGE_ATTR(0, WACS_BTEE));
+    mvadd_wch(LINES / 2,   0,        MERGE_ATTR(0, WACS_LTEE));
+    mvadd_wch(LINES / 2,   COLS - 1, MERGE_ATTR(0, WACS_RTEE));
     /* *INDENT-ON* */
 
 }
@@ -5823,7 +5838,7 @@ overlap_test_2_attr(WINDOW *win, int flavor, int col)
 	break;
     case 2:
 	init_pair(cpair, COLOR_RED, COLOR_GREEN);
-	wbkgdset(win, ' ' | A_BLINK | COLOR_PAIR(cpair));
+	wbkgdset(win, colored_chtype(' ', A_BLINK, cpair));
 	break;
     case 3:
 	wbkgdset(win, ' ' | A_NORMAL);

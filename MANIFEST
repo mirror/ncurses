@@ -965,6 +965,7 @@
 ./test/cardfile.c
 ./test/cardfile.dat
 ./test/chgat.c
+./test/clip_printw.c
 ./test/color_set.c
 ./test/configure
 ./test/configure.in
@@ -992,6 +993,7 @@
 ./test/inch_wide.c
 ./test/inchs.c
 ./test/ins_wide.c
+./test/insdelln.c
 ./test/inserts.c
 ./test/key_names.c
 ./test/keynames.c

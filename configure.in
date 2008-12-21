@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.456 2008/11/16 00:36:30 tom Exp $
+dnl $Id: configure.in,v 1.457 2008/12/20 22:28:22 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.456 $)
+AC_REVISION($Revision: 1.457 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -835,10 +835,13 @@ if test "$with_ext_funcs" = yes ; then
 	AC_DEFINE(HAVE_USE_DEFAULT_COLORS)
 	AC_DEFINE(HAVE_WRESIZE)
 	AC_DEFINE(NCURSES_EXT_FUNCS)
+	GENERATED_EXT_FUNCS=generated
 else
 	NCURSES_EXT_FUNCS=0
+	GENERATED_EXT_FUNCS=
 fi
 AC_SUBST(NCURSES_EXT_FUNCS)
+AC_SUBST(GENERATED_EXT_FUNCS)
 
 ###   use option --enable-const to turn on use of const beyond that in XSI.
 AC_MSG_CHECKING(for extended use of const keyword)

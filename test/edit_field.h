@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2006,2008 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: edit_field.h,v 1.5 2006/06/03 16:38:57 tom Exp $
+ * $Id: edit_field.h,v 1.6 2008/12/20 19:23:18 tom Exp $
  *
  * Interface of edit_field.c
  */
@@ -42,6 +42,10 @@
 #define MY_QUIT		EDIT_FIELD('q')
 #define MY_EDT_MODE	EDIT_FIELD('e')
 #define MY_INS_MODE	EDIT_FIELD('t')
+
+typedef struct {
+    chtype background;
+} FieldAttrs;
 
 extern void help_edit_field(void);
 extern int edit_field(FORM * form, int *result);

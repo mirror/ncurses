@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.30 2008/10/18 20:38:20 tom Exp $
+ * $Id: demo_forms.c,v 1.31 2008/12/20 19:23:00 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -97,6 +97,8 @@ make_field(int frow, int fcol, int rows, int cols)
     FIELD *f = new_field(rows, cols, frow, fcol, o_value, 1);
 
     if (f) {
+	FieldAttrs *ptr;
+
 	set_field_back(f, A_UNDERLINE);
 	/*
 	 * If -j and -d options are combined, -j loses.  It is documented in
@@ -122,7 +124,12 @@ make_field(int frow, int fcol, int rows, int cols)
 	/*
 	 * The userptr is used in edit_field.c's inactive_field().
 	 */
-	set_field_userptr(f, (void *) (long) field_back(f));
+	ptr = (FieldAttrs *) field_userptr(f);
+	if (ptr == 0) {
+	    ptr = typeCalloc(FieldAttrs, 1);
+	    ptr->background = field_back(f);
+	}
+	set_field_userptr(f, (void *) ptr);
 	if (t_value)
 	    set_field_buffer(f, 0, t_value);
     }

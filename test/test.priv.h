@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.79 2008/10/04 21:53:41 tom Exp $ */
+/* $Id: test.priv.h,v 1.80 2008/12/20 16:37:20 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -358,6 +358,9 @@ extern int optind;
 #ifndef KEY_MIN
 #define KEY_MIN 256	/* not defined in Solaris 8 */
 #endif
+
+#define colored_chtype(ch, attr, pair) \
+	((ch) | (attr) | COLOR_PAIR(pair))
 
 /*
  * Workaround for HPUX

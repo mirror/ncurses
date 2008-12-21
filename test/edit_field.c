@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: edit_field.c,v 1.14 2008/10/18 20:40:20 tom Exp $
+ * $Id: edit_field.c,v 1.15 2008/12/20 19:23:01 tom Exp $
  *
  * A wrapper for form_driver() which keeps track of the user's editing changes
  * for each field, and makes the result available as a null-terminated string
@@ -294,8 +294,8 @@ offset_in_field(FORM * form)
 static void
 inactive_field(FIELD * f)
 {
-    void *ptr = field_userptr(f);
-    set_field_back(f, (chtype) ptr);
+    FieldAttrs *ptr = (FieldAttrs *) field_userptr(f);
+    set_field_back(f, ptr->background);
 }
 
 int

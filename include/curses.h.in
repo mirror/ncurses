@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.189 2008/11/29 18:35:46 tom Exp $ */
+/* $Id: curses.h.in,v 1.190 2008/12/20 22:28:52 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -850,18 +850,18 @@ extern NCURSES_EXPORT(void) nofilter(void);
  * These extensions provide access to information stored in the WINDOW even
  * when NCURSES_OPAQUE is set:
  */
-extern NCURSES_EXPORT(WINDOW *) wgetparent (const WINDOW *);	/* generated */
-extern NCURSES_EXPORT(bool) is_cleared (const WINDOW *);	/* generated */
-extern NCURSES_EXPORT(bool) is_idcok (const WINDOW *);		/* generated */
-extern NCURSES_EXPORT(bool) is_idlok (const WINDOW *);		/* generated */
-extern NCURSES_EXPORT(bool) is_immedok (const WINDOW *);	/* generated */
-extern NCURSES_EXPORT(bool) is_keypad (const WINDOW *);		/* generated */
-extern NCURSES_EXPORT(bool) is_leaveok (const WINDOW *);	/* generated */
-extern NCURSES_EXPORT(bool) is_nodelay (const WINDOW *);	/* generated */
-extern NCURSES_EXPORT(bool) is_notimeout (const WINDOW *);	/* generated */
-extern NCURSES_EXPORT(bool) is_scrollok (const WINDOW *);	/* generated */
-extern NCURSES_EXPORT(bool) is_syncok (const WINDOW *);		/* generated */
-extern NCURSES_EXPORT(int) wgetscrreg (const WINDOW *, int *, int *); /* generated */
+extern NCURSES_EXPORT(WINDOW *) wgetparent (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_cleared (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_idcok (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_idlok (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_immedok (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_keypad (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_leaveok (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_nodelay (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_notimeout (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_scrollok (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_syncok (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(int) wgetscrreg (const WINDOW *, int *, int *); /* @GENERATED_EXT_FUNCS@ */
 
 #else
 #define curses_version() NCURSES_VERSION
