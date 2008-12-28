@@ -1,6 +1,6 @@
-# $Id: mk-1st.awk,v 1.78 2007/03/24 22:10:55 tom Exp $
+# $Id: mk-1st.awk,v 1.79 2008/12/28 01:17:54 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -59,7 +59,7 @@ function is_ticlib() {
 		return ( subset ~ /^ticlib$/ );
 	}
 function is_termlib() {
-		return ( subset ~ /^(ticlib\+)?termlib(\+ext_tinfo)?$/ );
+		return ( subset ~ /^(ticlib\+)?termlib((\+[^+ ]+)*\+ext_tinfo)?$/ );
 	}
 # see lib_name
 function lib_name_of(a_name) {
