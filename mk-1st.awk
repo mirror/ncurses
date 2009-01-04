@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.79 2008/12/28 01:17:54 tom Exp $
+# $Id: mk-1st.awk,v 1.80 2009/01/04 21:51:38 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -404,7 +404,7 @@ END	{
 			{
 				end_name = lib_name;
 				printf "../lib/%s : $(%s_OBJS)\n", lib_name, OBJS
-				printf "\t$(AR) $(AR_OPTS) $@ $?\n"
+				printf "\t$(AR) $(ARFLAGS) $@ $?\n"
 				printf "\t$(RANLIB) $@\n"
 				if ( host == "vxworks" )
 				{
