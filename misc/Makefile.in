@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.44 2008/12/13 18:48:47 tom Exp $
+# $Id: Makefile.in,v 1.48 2009/01/03 23:52:41 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -69,6 +69,8 @@ INSTALL		= @INSTALL@
 INSTALL_PROG	= @INSTALL_SCRIPT@
 INSTALL_DATA	= @INSTALL_DATA@
 
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+
 ################################################################################
 all :	terminfo.tmp
 
@@ -103,8 +105,15 @@ install.data :	terminfo.tmp \
 
 NCURSES_CONFIG	= ncurses@DFT_ARG_SUFFIX@@cf_cv_abi_version@-config
 
-install.libs : $(DESTDIR)$(bindir) ncurses-config
+install.libs :: $(DESTDIR)$(bindir) ncurses-config
 	$(INSTALL_PROG) ncurses-config $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
+
+@MAKE_PC_FILES@install.libs :: pc-files
+@MAKE_PC_FILES@	$(SHELL) -c 'for name in *.pc; do $(INSTALL_DATA) $$name $(PKG_CONFIG_LIBDIR)/$$name; done'
+
+@MAKE_PC_FILES@pc-files :
+@MAKE_PC_FILES@	$(SHELL) ./gen-pkgconfig
+@MAKE_PC_FILES@	touch $@
 
 terminfo.tmp : run_tic.sed $(source)
 	echo '** adjusting tabset paths'
@@ -130,6 +139,7 @@ uninstall.data :
 
 uninstall.libs :
 	-rm -f $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
+@MAKE_PC_FILES@	$(SHELL) 'for name in *.pc; do rm -f $(PKG_CONFIG_LIBDIR)/$$name; done'
 
 tags :
 
@@ -138,11 +148,13 @@ tags :
 mostlyclean :
 	-rm -f terminfo.tmp
 	-rm -f run_tic.sed
+@MAKE_PC_FILES@	-rm -f *.pc pc-files
 	-rm -f core tags TAGS *~ *.bak *.ln *.atac trace
 
 clean :: mostlyclean
 
 distclean : clean
+@MAKE_PC_FILES@	-rm -f gen-pkgconfig
 	-rm -f Makefile run_tic.sh ncurses-config
 
 realclean : distclean

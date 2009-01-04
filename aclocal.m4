@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.477 2008/12/27 17:35:01 tom Exp $
+dnl $Id: aclocal.m4,v 1.481 2009/01/04 00:11:12 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -352,6 +352,40 @@ You have the following choices:
 	c. use a wrapper such as unproto])
 fi
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_AR_FLAGS version: 2 updated: 2009/01/01 20:45:18
+dnl -----------
+dnl Check for suitable "ar" (archiver) options for updating an archive.
+AC_DEFUN([CF_AR_FLAGS],[
+AC_REQUIRE([CF_PROG_AR])
+
+AC_CACHE_CHECK(for options to update archives, cf_cv_ar_flags,[
+	cf_cv_ar_flags=unknown
+	for cf_ar_flags in -curv curv -crv crv -cqv cqv -rv rv
+	do
+		rm -f conftest.$ac_cv_objext
+		rm -f conftest.a
+
+		cat >conftest.$ac_ext <<EOF
+#line __oline__ "configure"
+int	testdata[[3]] = { 123, 456, 789 };
+EOF
+		if AC_TRY_EVAL(ac_compile) ; then
+			$AR $cf_ar_flags conftest.a conftest.$ac_cv_objext 2>&AC_FD_CC 1>/dev/null
+			if test -f conftest.a ; then
+				cf_cv_ar_flags=$cf_ar_flags
+				break
+			fi
+		else
+			CF_VERBOSE(cannot compile test-program)
+			break
+		fi
+	done
+	rm -f conftest.a conftest.$ac_ext conftest.$ac_cv_objext
+])
+
+AC_SUBST(ARFLAGS,$cf_cv_ar_flags)
+])
 dnl ---------------------------------------------------------------------------
 dnl CF_AWK_BIG_PRINTF version: 3 updated: 2008/12/27 12:30:03
 dnl -----------------
@@ -2814,7 +2848,7 @@ AC_DEFUN([CF_LIB_TYPE],
 	test -n "$LIB_SUFFIX" && $2="${LIB_SUFFIX}[$]{$2}"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LINK_DATAONLY version: 8 updated: 2006/12/16 12:33:30
+dnl CF_LINK_DATAONLY version: 9 updated: 2009/01/01 20:21:38
 dnl ----------------
 dnl Some systems have a non-ANSI linker that doesn't pull in modules that have
 dnl only data (i.e., no functions), for example NeXT.  On those systems we'll
@@ -2831,7 +2865,7 @@ int	testdata[[3]] = { 123, 456, 789 };
 EOF
 	if AC_TRY_EVAL(ac_compile) ; then
 		mv conftest.o data.o && \
-		( $AR $AR_OPTS conftest.a data.o ) 2>&AC_FD_CC 1>/dev/null
+		( $AR $ARFLAGS conftest.a data.o ) 2>&AC_FD_CC 1>/dev/null
 	fi
 	rm -f conftest.$ac_ext data.o
 	cat >conftest.$ac_ext <<EOF
@@ -2850,7 +2884,7 @@ int	testfunc()
 EOF
 	if AC_TRY_EVAL(ac_compile); then
 		mv conftest.o func.o && \
-		( $AR $AR_OPTS conftest.a func.o ) 2>&AC_FD_CC 1>/dev/null
+		( $AR $ARFLAGS conftest.a func.o ) 2>&AC_FD_CC 1>/dev/null
 	fi
 	rm -f conftest.$ac_ext func.o
 	( eval $RANLIB conftest.a ) 2>&AC_FD_CC >/dev/null
@@ -3796,6 +3830,38 @@ case ".[$]$1" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_PKG_CONFIG version: 2 updated: 2008/12/24 07:57:28
+dnl -------------
+dnl Check for the package-config program, unless disabled by command-line.
+AC_DEFUN([CF_PKG_CONFIG],
+[
+AC_MSG_CHECKING(if you want to use pkg-config)
+AC_ARG_WITH(pkg-config,
+	[  --with-pkg-config{=path} enable/disable use of pkg-config],
+	[cf_pkg_config=$withval],
+	[cf_pkg_config=yes])
+AC_MSG_RESULT($cf_pkg_config)
+
+case $cf_pkg_config in
+no)
+	PKG_CONFIG=none
+	;;
+yes)
+	AC_PATH_PROG(PKG_CONFIG, pkg-config, none)
+	;;
+*)
+	PKG_CONFIG=$withval
+	;;
+esac
+
+test -z "$PKG_CONFIG" && PKG_CONFIG=none
+if test "$PKG_CONFIG" != none ; then
+	CF_PATH_SYNTAX(PKG_CONFIG)
+fi
+
+AC_SUBST(PKG_CONFIG)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_POSIX_C_SOURCE version: 6 updated: 2005/07/14 20:25:10
 dnl -----------------
 dnl Define _POSIX_C_SOURCE to the given level, and _POSIX_SOURCE if needed.
@@ -3930,6 +3996,13 @@ do
 done
 
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_PROG_AR version: 1 updated: 2009/01/01 20:15:22
+dnl ----------
+dnl Check for archiver "ar".
+AC_DEFUN([CF_PROG_AR],[
+AC_CHECK_TOOL(AR, ar, ar)
+])
 dnl ---------------------------------------------------------------------------
 dnl CF_PROG_AWK version: 1 updated: 2006/09/16 11:40:59
 dnl -----------
@@ -4206,7 +4279,7 @@ AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 54 updated: 2008/12/27 12:30:03
+dnl CF_SHARED_OPTS version: 56 updated: 2009/01/03 19:10:38
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -4235,6 +4308,7 @@ AC_DEFUN([CF_SHARED_OPTS],
 	AC_REQUIRE([CF_SUBST_NCURSES_VERSION])
 	LOCAL_LDFLAGS=
 	LOCAL_LDFLAGS2=
+	LD_RPATH_OPT=
 	LD_SHARED_OPTS=
 	INSTALL_LIB="-m 644"
 
@@ -4337,10 +4411,10 @@ CF_EOF
 	irix*)
 		if test "$cf_cv_ld_rpath" = yes ; then
 			if test "$GCC" = yes; then
-				cf_ld_rpath_opt="-Wl,-rpath,"
+				LD_RPATH_OPT="-Wl,-rpath,"
 				EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
 			else
-				cf_ld_rpath_opt="-rpath "
+				LD_RPATH_OPT="-rpath "
 				EXTRA_LDFLAGS="-rpath \${libdir} $EXTRA_LDFLAGS"
 			fi
 		fi
@@ -4359,7 +4433,7 @@ CF_EOF
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_ld_rpath" = yes ; then
-			cf_ld_rpath_opt="-Wl,-rpath,"
+			LD_RPATH_OPT="-Wl,-rpath,"
 			EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
@@ -4371,7 +4445,7 @@ CF_EOF
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_ld_rpath" = yes ; then
-			cf_ld_rpath_opt="-Wl,-rpath,"
+			LD_RPATH_OPT="-Wl,-rpath,"
 			EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
 		fi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
@@ -4388,7 +4462,7 @@ CF_EOF
 		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_ld_rpath" = yes ; then
 			LOCAL_LDFLAGS="-rpath \$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="-rpath \${libdir} $LOCAL_LDFLAGS"
-			cf_ld_rpath_opt="-rpath "
+			LD_RPATH_OPT="-rpath "
 			EXTRA_LDFLAGS="-rpath \${libdir} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
@@ -4396,7 +4470,7 @@ CF_EOF
 		;;
 	netbsd*)
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
-		test "$cf_cv_ld_rpath" = yes && cf_ld_rpath_opt="-Wl,-rpath,"
+		test "$cf_cv_ld_rpath" = yes && LD_RPATH_OPT="-Wl,-rpath,"
 		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_ld_rpath" = yes ; then
 			LOCAL_LDFLAGS="-Wl,-rpath,\$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
@@ -4430,7 +4504,7 @@ CF_EOF
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_ld_rpath" = yes ; then
-			cf_ld_rpath_opt="-rpath"
+			LD_RPATH_OPT="-rpath"
 			# EXTRA_LDFLAGS="$LOCAL_LDFLAGS $EXTRA_LDFLAGS"
 		fi
 		cf_cv_rm_so_locs=yes
@@ -4465,12 +4539,19 @@ CF_EOF
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_ld_rpath" = yes ; then
-			cf_ld_rpath_opt="-R"
+			LD_RPATH_OPT="-R"
 			EXTRA_LDFLAGS="$LOCAL_LDFLAGS $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
 		if test "$GCC" != yes; then
-			CC_SHARED_OPTS='-xcode=pic32'
+			cf_save_CFLAGS="$CFLAGS"
+			for cf_shared_opts in -xcode=pic13 -xcode=pic32 -Kpic -KPIC -O
+			do
+				CFLAGS="$cf_shared_opts $cf_save_CFLAGS"
+				AC_TRY_COMPILE([#include <stdio.h>],[printf("Hello\n");],[break])
+			done
+			CFLAGS="$cf_save_CFLAGS"
+			CC_SHARED_OPTS=$cf_shared_opts
 			MK_SHARED_LIB='${CC} -dy -G -h '$cf_cv_shared_soname' -o $[@]'
 		else
 			MK_SHARED_LIB='${CC} -shared -dy -G -h '$cf_cv_shared_soname' -o $[@]'
@@ -4503,18 +4584,19 @@ CF_EOF
 		;;
 	esac
 
-	if test -n "$cf_ld_rpath_opt" ; then
+	if test -n "$LD_RPATH_OPT" ; then
 		AC_MSG_CHECKING(if we need a space after rpath option)
 		cf_save_LIBS="$LIBS"
-		LIBS="$LIBS ${cf_ld_rpath_opt}$libdir"
+		LIBS="$LIBS ${LD_RPATH_OPT}$libdir"
 		AC_TRY_LINK(, , cf_rpath_space=no, cf_rpath_space=yes)
 		LIBS="$cf_save_LIBS"
 		AC_MSG_RESULT($cf_rpath_space)
-		test "$cf_rpath_space" = yes && cf_ld_rpath_opt="$cf_ld_rpath_opt "
-		MK_SHARED_LIB="$MK_SHARED_LIB $cf_ld_rpath_opt\${libdir}"
+		test "$cf_rpath_space" = yes && LD_RPATH_OPT="$LD_RPATH_OPT "
+		MK_SHARED_LIB="$MK_SHARED_LIB $LD_RPATH_OPT\${libdir}"
 	fi
 
 	AC_SUBST(CC_SHARED_OPTS)
+	AC_SUBST(LD_RPATH_OPT)
 	AC_SUBST(LD_SHARED_OPTS)
 	AC_SUBST(MK_SHARED_LIB)
 	AC_SUBST(LINK_PROGS)

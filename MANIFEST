@@ -695,6 +695,7 @@
 ./misc/emx.src
 ./misc/form.def
 ./misc/form.ref
+./misc/gen-pkgconfig.in
 ./misc/gen_edit.sh
 ./misc/jpf-indent
 ./misc/makedef.cmd

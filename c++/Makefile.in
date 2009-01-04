@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.84 2007/04/28 15:29:12 tom Exp $
+# $Id: Makefile.in,v 1.85 2009/01/03 19:10:40 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -61,10 +61,10 @@ INSTALL_LIB	= @INSTALL@ @INSTALL_LIB@
 INSTALL_DATA	= @INSTALL_DATA@
 
 AR		= @AR@
-AR_OPTS		= @AR_OPTS@
+ARFLAGS		= @ARFLAGS@
 
 CXX_AR		= @CXX_AR@
-CXX_AR_OPTS	= @CXX_AR_OPTS@
+CXX_ARFLAGS	= @CXX_ARFLAGS@
 RANLIB		= @LIB_PREP@
 
 CXX		= @CXX@
@@ -153,7 +153,7 @@ LIB_OBJS = \
 	$(MODEL)/cursesmain$o
 
 ../lib/$(LIBNAME_NORMAL) : $(LIB_OBJS)
-	$(CXX_AR) $(CXX_AR_OPTS) $@ $?
+	$(CXX_AR) $(CXX_ARFLAGS) $@ $?
 	$(RANLIB) $@
 
 ../lib/$(LIBNAME_LIBTOOL) : $(LIB_OBJS)

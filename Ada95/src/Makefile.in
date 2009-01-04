@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.31 2007/09/15 18:22:24 tom Exp $
+#  $Id: Makefile.in,v 1.32 2009/01/03 19:12:01 tom Exp $
 #
 .SUFFIXES:
 
@@ -46,7 +46,7 @@ INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
 
 AR		= @AR@
-AR_OPTS		= @AR_OPTS@
+ARFLAGS		= @ARFLAGS@
 AWK		= @AWK@
 LN_S		= @LN_S@
 
@@ -168,7 +168,7 @@ all ::  libAdaCurses.a
 	@echo done
 
 libAdaCurses.a :: dotouch $(LIBOBJS) @cf_generic_objects@
-	$(AR) $(AR_OPTS) $@ $(LIBOBJS) @cf_generic_objects@
+	$(AR) $(ARFLAGS) $@ $(LIBOBJS) @cf_generic_objects@
 
 dotouch :
 	@sh -c 'for f in $(LIBALIS) $(GENALIS); do test -f $$f || touch $$f; done'

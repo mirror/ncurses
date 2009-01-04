@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.12 2007/03/17 20:02:19 tom Exp $
+# $Id: ncurses-config.in,v 1.15 2009/01/03 21:10:18 tom Exp $
 ##############################################################################
-# Copyright (c) 2006,2007 Free Software Foundation, Inc.                     #
+# Copyright (c) 2006-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -34,11 +34,12 @@ prefix="@prefix@"
 exec_prefix="@exec_prefix@"
 
 bindir="@bindir@"
+includedir="@includedir@"
 libdir="@libdir@"
 datadir="@datadir@"
 mandir="@mandir@"
 
-THIS="ncurses@DFT_ARG_SUFFIX@"
+THIS="${LIB_NAME}@DFT_ARG_SUFFIX@"
 
 LANG=C;		export LANG
 LANGUAGE=C;	export LANGUAGE
@@ -75,11 +76,11 @@ while test $# -gt 0; do
 	# compile/link
 	--cflags)
 		INCS=
-		if test "${prefix}/include" != /usr/include ; then
-			INCS="-I${prefix}/include"
+		if test "${includedir}" != /usr/include ; then
+			INCS="-I${includedir}"
 		fi
 		if test "@WITH_OVERWRITE@" != no ; then
-			INCS="$INCS -I${prefix}/include/${THIS}"
+			INCS="$INCS -I${includedir}/${THIS}"
 		fi
 		sed -e 's,^[ ]*,,' -e 's, [ ]*, ,g' -e 's,[ ]*$,,' <<-ENDECHO
 			$INCS
@@ -87,7 +88,7 @@ ENDECHO
 		;;
 	--libs)
 		sed -e 's,^[ ]*,,' -e 's, [ ]*, ,g' -e 's,[ ]*$,,' <<-ENDECHO
-			-L${exec_prefix}/lib @EXTRA_LDFLAGS@ -l${THIS} @LIBS@
+			-L$libdir @EXTRA_LDFLAGS@ -l${THIS} @LIBS@
 ENDECHO
 		;;
 	# identification
@@ -106,6 +107,9 @@ ENDECHO
 		;;
 	--datadir)
 		echo "${datadir}"
+		;;
+	--includedir)
+		echo "${includedir}"
 		;;
 	--libdir)
 		echo "${libdir}"
@@ -142,6 +146,7 @@ Options:
 
   --bindir           echos the directory containing ${THIS} programs
   --datadir          echos the directory containing ${THIS} data
+  --includedir       echos the directory containing ${THIS} header files
   --libdir           echos the directory containing ${THIS} libraries
   --mandir           echos the directory containing ${THIS} manpages
   --terminfo         echos the \$TERMINFO terminfo database path

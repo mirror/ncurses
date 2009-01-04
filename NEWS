@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1344 2008/12/28 01:14:55 tom Exp $
+-- $Id: NEWS,v 1.1349 2009/01/04 00:09:31 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090103
+	+ add a configure-time check to pick a suitable value for
+	  CC_SHARED_OPTS for Solaris (report by Dagobert Michelsen).
+	+ add configure --with-pkg-config and --enable-pc-files options, along
+	  with misc/gen-pkgconfig.in which can be used to generate ".pc" files
+	  for pkg-config (request by Jan Engelhardt).
+	+ use $includedir symbol in misc/ncurses-config.in, add --includedir
+	  option.
+	+ change makefiles to use $ARFLAGS rather than $AR_OPTS, provide a
+	  configure check to detect whether a "-" is needed before "ar"
+	  options.
+	+ update config.guess, config.sub from
+		http://savannah.gnu.org/projects/config
 
 20081227
 	+ modify mk-1st.awk to work with extra categories for tinfo library.

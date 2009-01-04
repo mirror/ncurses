@@ -1,0 +1,122 @@
+#!@SHELL@
+# $Id: gen-pkgconfig.in,v 1.3 2009/01/03 22:26:47 tom Exp $
+##############################################################################
+# Copyright (c) 2009 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+# Author: Thomas E. Dickey, 2009
+#
+# The complete configure script for ncurses is the ncurses5-config (or similar
+# name, depending on the flavor, e.g., ncursesw5-config, ncurses6-config, etc).
+# That provides more information than pkg-config, and is the portable and
+# recommended solution.
+#
+# For each library, generate a ".pc" file which depends on the base ncurses
+# library, except that the tinfo library does not depend on ncurses.
+LIB_NAME=@LIB_NAME@
+TINFO_NAME=@TINFO_NAME@
+DFT_DEP_SUFFIX=@DFT_DEP_SUFFIX@
+CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@
+LD_RPATH_OPT=@LD_RPATH_OPT@
+
+prefix="@prefix@"
+exec_prefix="@exec_prefix@"
+includedir="@includedir@"
+libdir="@libdir@"
+
+show_prefix='@prefix@'
+show_exec_prefix='@exec_prefix@'
+show_includedir='@includedir@'
+show_libdir='@libdir@'
+
+MAIN_LIBRARY="${LIB_NAME}@DFT_ARG_SUFFIX@"
+SUB_LIBRARY="${TINFO_NAME}@DFT_ARG_SUFFIX@"
+
+for lib in ../lib/*
+do
+	name=`basename $lib`
+	root=`basename $name "$DFT_DEP_SUFFIX"`
+	if test "$name" == "$root" ; then
+		root=`basename $name "$CXX_LIB_SUFFIX"`
+		if test "$name" == "$root" ; then
+			continue
+		fi
+	fi
+
+	name=`echo "$name" | sed -e 's/^lib//' -e 's/\..*$//'`
+
+	desc="ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@"
+	if test $name = $MAIN_LIBRARY ; then
+		reqs=
+		desc="$desc library"
+	elif test $name = $SUB_LIBRARY ; then
+		reqs=
+		desc="$desc terminal interface library"
+	else
+		reqs=$MAIN_LIBRARY
+		desc="$desc add-on library"
+	fi
+
+	if test "$includedir" = "/usr/include" ; then
+		cflags=
+	else
+		cflags="-I\${includedir}"
+	fi
+
+	if test "$libdir" = "/usr/lib" ; then
+		libs=
+	else
+		libs="-L\${libdir}"
+	fi
+	libs="$libs -l$name"
+
+	# add dependencies that pkg-config cannot guess about
+	if test -z "$reqs" ; then
+		if test -z "$LD_RPATH_OPT" ; then
+			libs="$libs @LIBS@"
+		fi
+	fi
+
+	echo "** creating ${name}.pc"
+	cat >${name}.pc <<EOF
+prefix=$show_prefix
+exec_prefix=$show_exec_prefix
+libdir=$show_libdir
+includedir=$show_includedir
+major_version=@NCURSES_MAJOR@
+version=@NCURSES_MAJOR@.@NCURSES_MINOR@.@NCURSES_PATCH@
+
+Name: $name
+Description: $desc
+Version: \${version}
+Requires: $reqs
+Libs: $libs
+Cflags: $cflags
+EOF
+	# pr -f ${name}.pc
+done
+# vile:shmode
