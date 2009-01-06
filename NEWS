@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1351 2009/01/04 22:43:22 tom Exp $
+-- $Id: NEWS,v 1.1353 2009/01/06 00:26:35 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090105
+	+ remove undeveloped feature in ncurses-config.in for setting
+	  prefix variable.
+	+ recent change to ncurses-config.in did not take into account the
+	  --disable-overwrite option, which sets $includedir to the
+	  subdirectory and using just that for a -I option does not work - fix
+	  (report by Frederic L W Meunier).
 
 20090104
 	+ modify gen-pkgconfig.in to eliminate a dependency on rpath when

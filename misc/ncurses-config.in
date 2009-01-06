@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.15 2009/01/03 21:10:18 tom Exp $
+# $Id: ncurses-config.in,v 1.21 2009/01/06 01:06:21 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -28,7 +28,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey, 2006
+# Author: Thomas E. Dickey, 2006-on
 
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
@@ -39,36 +39,31 @@ libdir="@libdir@"
 datadir="@datadir@"
 mandir="@mandir@"
 
-THIS="${LIB_NAME}@DFT_ARG_SUFFIX@"
+THIS="@LIB_NAME@@DFT_ARG_SUFFIX@"
 
 LANG=C;		export LANG
 LANGUAGE=C;	export LANGUAGE
 LC_ALL=C;	export LC_ALL
 LC_CTYPE=C;	export LC_CTYPE
 
+# with --disable-overwrite, we installed into a subdirectory, but transformed
+# the headers to include like this:
+#	<ncurses@LIB_SUFFIX@/curses.h>
+if test x@WITH_OVERWRITE@ = xno ; then
+	case $includedir in
+	$prefix/include/ncurses@LIB_SUFFIX@)
+		includedir=`echo "$includedir" | sed -e 's,/[^/]*$,,'`
+		;;
+	esac
+fi
+
 test $# = 0 && exec @SHELL@ $0 --error
 
 while test $# -gt 0; do
 	case "$1" in
-	-*=*)
-		ARG=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'`
-		;;
-	*)
-		ARG=
-		;;
-	esac
-
-	case "$1" in
 	# basic configuration
-	--prefix=*)
-		prefix="$ARG"
-		test -z "$exec_prefix" && exec_prefix="$ARG"
-		;;
 	--prefix)
 		echo "$prefix"
-		;;
-	--exec-prefix=*)
-		exec_prefix="$ARG"
 		;;
 	--exec-prefix)
 		echo "$exec_prefix"
@@ -79,7 +74,7 @@ while test $# -gt 0; do
 		if test "${includedir}" != /usr/include ; then
 			INCS="-I${includedir}"
 		fi
-		if test "@WITH_OVERWRITE@" != no ; then
+		if test "x@WITH_OVERWRITE@" == xno ; then
 			INCS="$INCS -I${includedir}/${THIS}"
 		fi
 		sed -e 's,^[ ]*,,' -e 's, [ ]*, ,g' -e 's,[ ]*$,,' <<-ENDECHO
@@ -133,9 +128,7 @@ Usage: ${THIS}-config [options]
 
 Options:
   --prefix           echos the package-prefix of ${THIS}
-  --prefix=ARG       sets the package-prefix of ${THIS}
   --exec-prefix      echos the executable-prefix of ${THIS}
-  --exec-prefix=ARG  sets the executable-prefix of ${THIS}
 
   --cflags           echos the C compiler flags needed to compile with ${THIS}
   --libs             echos the libraries needed to link with ${THIS}
