@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.463 2009/01/06 01:40:09 tom Exp $
+dnl $Id: configure.in,v 1.464 2009/01/10 19:18:03 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.463 $)
+AC_REVISION($Revision: 1.464 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1778,7 +1778,7 @@ AC_DEFINE(HAVE_SLK_COLOR)
 CF_SRC_MODULES($modules_to_build)
 
 if test "$cf_with_ada" != "no" && test "$cf_cv_prog_gnat_correct" != "no"; then
-   SUB_MAKEFILES="$SUB_MAKEFILES Ada95/gen/adacurses-config"
+   SUB_MAKEFILES="$SUB_MAKEFILES Ada95/gen/adacurses${DFT_ARG_SUFFIX}-config:Ada95/gen/adacurses-config.in"
 fi
 
 CF_DIRS_TO_MAKE

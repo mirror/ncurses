@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.343 $
-#	$Date: 2008/11/29 15:27:35 $
+#	$Revision: 1.345 $
+#	$Date: 2009/01/11 00:47:37 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4517,6 +4517,8 @@ screen.rxvt|screen in rxvt,
 	cvvis@, flash@, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
 	kcuu1=\EOA, use=screen+fkeys, use=vt100+enq,
 	use=rxvt+pcfkeys, use=vt220+keypad, use=screen,
+screen.Eterm|screen in Eterm,
+	use=screen+fkeys, use=Eterm,
 # fix the backspace key
 screen.linux|screen in linux console,
 	bw,
@@ -21817,6 +21819,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2008-11-29
 #	* add eterm-color -TD
+#
+# 2009-01-10
+#	* add screen.Eterm -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
