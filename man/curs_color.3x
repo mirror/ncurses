@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.28 2005/12/18 00:00:37 tom Exp $
+.\" $Id: curs_color.3x,v 1.29 2009/01/24 23:10:02 tom Exp $
 .TH curs_color 3X ""
 .na
 .hy 0
@@ -96,7 +96,10 @@ For portable applications:
 .TP 5
 -
 The value of the first argument
-must be between \fB1\fR and \fBCOLOR_PAIRS-1\fR.
+must be between \fB1\fR and \fBCOLOR_PAIRS-1\fR,
+except that if default colors are used (see \fBuse_default_colors\fP)
+the upper limit is adjusted to allow for extra pairs which use
+a default color in foreground and/or background.
 .TP 5
 -
 The value of the second and

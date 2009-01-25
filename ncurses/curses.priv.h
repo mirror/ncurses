@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.395 2008/11/23 00:09:04 tom Exp $
+ * $Id: curses.priv.h,v 1.396 2009/01/24 23:04:59 tom Exp $
  *
  *	curses.priv.h
  *
@@ -404,6 +404,8 @@ typedef unsigned colorpair_t;	/* type big enough to store PAIR_OF() */
 #define C_SHIFT 9		/* we need more bits than there are colors */
 #define C_MASK			((1 << C_SHIFT) - 1)
 #define PAIR_OF(fg, bg)		((((fg) & C_MASK) << C_SHIFT) | ((bg) & C_MASK))
+#define FORE_OF(c)		(((c) >> C_SHIFT) & C_MASK)
+#define BACK_OF(c)		((c) & C_MASK)
 #define isDefaultColor(c)	((c) >= COLOR_DEFAULT || (c) < 0)
 
 #define COLOR_DEFAULT		C_MASK
@@ -794,11 +796,13 @@ struct screen {
 	int		_color_count;	/* count of colors in palette	     */
 	colorpair_t	*_color_pairs;	/* screen's color pair list	     */
 	int		_pair_count;	/* count of color pairs		     */
+	int		_pair_limit;	/* actual limit of color-pairs       */
 #if NCURSES_EXT_FUNCS
 	bool		_default_color; /* use default colors		     */
 	bool		_has_sgr_39_49; /* has ECMA default color support    */
 	int		_default_fg;	/* assumed default foreground	     */
 	int		_default_bg;	/* assumed default background	     */
+	int		_default_pairs;	/* count pairs using default color   */
 #endif
 	chtype		_ok_attributes; /* valid attributes for terminal     */
 	chtype		_xmc_suppress;	/* attributes to suppress if xmc     */

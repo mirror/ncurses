@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_color.c,v 1.85 2007/04/07 17:07:28 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.87 2009/01/25 00:25:31 tom Exp $")
 
 /*
  * These should be screen structure members.  They need to be globals for
@@ -107,6 +107,13 @@ static const color_t hls_palette[] =
     DATA(	0,	50,	100),		/* COLOR_WHITE */
 };
 /* *INDENT-ON* */
+
+/*
+ * Ensure that we use color pairs only when colors have been started, and also
+ * that the index is within the limits of the table which we allocated.
+ */
+#define ValidPair(pair) \
+    ((SP != 0) && (pair >= 0) && (pair < SP->_pair_limit) && SP->_coloron)
 
 #if NCURSES_EXT_FUNCS
 /*
@@ -255,6 +262,15 @@ start_color(void)
 	}
 
 	if (max_pairs > 0 && max_colors > 0) {
+	    SP->_pair_limit = max_pairs;
+
+#if NCURSES_EXT_FUNCS
+	    /*
+	     * If using default colors, allocate extra space in table to
+	     * allow for default-color as a component of a color-pair.
+	     */
+	    SP->_pair_limit += (1 + (2 * max_colors));
+#endif
 	    SP->_pair_count = max_pairs;
 	    SP->_color_count = max_colors;
 #if !USE_REENTRANT
@@ -263,7 +279,7 @@ start_color(void)
 #endif
 
 	    if ((SP->_color_pairs = TYPE_CALLOC(colorpair_t,
-						max_pairs)) != 0) {
+						SP->_pair_limit)) != 0) {
 		if ((SP->_color_table = TYPE_CALLOC(color_t,
 						    max_colors)) != 0) {
 		    SP->_color_pairs[0] = PAIR_OF(default_fg(), default_bg());
@@ -331,21 +347,69 @@ NCURSES_EXPORT(int)
 init_pair(short pair, short f, short b)
 {
     colorpair_t result;
+    colorpair_t previous;
 
     T((T_CALLED("init_pair(%d,%d,%d)"), pair, f, b));
 
-    if ((pair < 0) || (pair >= COLOR_PAIRS) || SP == 0 || !SP->_coloron)
+    if (!ValidPair(pair))
 	returnCode(ERR);
+
+    previous = SP->_color_pairs[pair];
 #if NCURSES_EXT_FUNCS
     if (SP->_default_color) {
-	if (f < 0)
+	bool isDefault = FALSE;
+	bool wasDefault = FALSE;
+	int default_pairs = SP->_default_pairs;
+
+	/*
+	 * Map caller's color number, e.g., -1, 0, 1, .., 7, etc., into
+	 * internal unsigned values which we will store in the _color_pairs[]
+	 * table.
+	 */
+	if (isDefaultColor(f)) {
 	    f = COLOR_DEFAULT;
-	if (b < 0)
+	    isDefault = TRUE;
+	} else if (!OkColorHi(f)) {
+	    returnCode(ERR);
+	}
+
+	if (isDefaultColor(b)) {
 	    b = COLOR_DEFAULT;
-	if (!OkColorHi(f) && !isDefaultColor(f))
+	    isDefault = TRUE;
+	} else if (!OkColorHi(b)) {
 	    returnCode(ERR);
-	if (!OkColorHi(b) && !isDefaultColor(b))
+	}
+
+	/*
+	 * Check if the table entry that we are going to init/update used
+	 * default colors.
+	 */
+	if ((FORE_OF(previous) == COLOR_DEFAULT)
+	    || (BACK_OF(previous) == COLOR_DEFAULT))
+	    wasDefault = TRUE;
+
+	/*
+	 * Keep track of the number of entries in the color pair table which
+	 * used a default color.
+	 */
+	if (isDefault && !wasDefault) {
+	    ++default_pairs;
+	} else if (wasDefault && !isDefault) {
+	    --default_pairs;
+	}
+
+	/*
+	 * As an extension, ncurses allows the pair number to exceed the
+	 * terminal's color_pairs value for pairs using a default color.
+	 *
+	 * Note that updating a pair which used a default color with one
+	 * that does not will decrement the count - and possibly interfere
+	 * with sequentially adding new pairs.
+	 */
+	if (pair > (SP->_pair_count + default_pairs)) {
 	    returnCode(ERR);
+	}
+	SP->_default_pairs = default_pairs;
     } else
 #endif
     {
@@ -361,8 +425,8 @@ init_pair(short pair, short f, short b)
      * pair colors with the new ones).
      */
     result = PAIR_OF(f, b);
-    if (SP->_color_pairs[pair] != 0
-	&& SP->_color_pairs[pair] != result) {
+    if (previous != 0
+	&& previous != result) {
 	int y, x;
 
 	for (y = 0; y <= curscr->_maxy; y++) {
@@ -496,11 +560,11 @@ pair_content(short pair, short *f, short *b)
 
     T((T_CALLED("pair_content(%d,%p,%p)"), pair, f, b));
 
-    if ((pair < 0) || (pair >= COLOR_PAIRS) || SP == 0 || !SP->_coloron) {
+    if (!ValidPair(pair)) {
 	result = ERR;
     } else {
-	NCURSES_COLOR_T fg = ((SP->_color_pairs[pair] >> C_SHIFT) & C_MASK);
-	NCURSES_COLOR_T bg = (SP->_color_pairs[pair] & C_MASK);
+	NCURSES_COLOR_T fg = FORE_OF(SP->_color_pairs[pair]);
+	NCURSES_COLOR_T bg = BACK_OF(SP->_color_pairs[pair]);
 
 #if NCURSES_EXT_FUNCS
 	if (fg == COLOR_DEFAULT)
@@ -527,7 +591,7 @@ _nc_do_color(short old_pair, short pair, bool reverse, int (*outc) (int))
     NCURSES_COLOR_T bg = COLOR_DEFAULT;
     NCURSES_COLOR_T old_fg, old_bg;
 
-    if (pair < 0 || pair >= COLOR_PAIRS) {
+    if (!ValidPair(pair)) {
 	return;
     } else if (pair != 0) {
 	if (set_color_pair) {

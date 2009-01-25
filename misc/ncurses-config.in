@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.21 2009/01/06 01:06:21 tom Exp $
+# $Id: ncurses-config.in,v 1.22 2009/01/24 21:06:45 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -74,7 +74,7 @@ while test $# -gt 0; do
 		if test "${includedir}" != /usr/include ; then
 			INCS="-I${includedir}"
 		fi
-		if test "x@WITH_OVERWRITE@" == xno ; then
+		if test "x@WITH_OVERWRITE@" = xno ; then
 			INCS="$INCS -I${includedir}/${THIS}"
 		fi
 		sed -e 's,^[ ]*,,' -e 's, [ ]*, ,g' -e 's,[ ]*$,,' <<-ENDECHO

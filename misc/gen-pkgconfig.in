@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.4 2009/01/04 21:52:33 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.5 2009/01/24 21:06:36 tom Exp $
 ##############################################################################
 # Copyright (c) 2009 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -59,9 +59,9 @@ for lib in ../lib/*
 do
 	name=`basename $lib`
 	root=`basename $name "$DFT_DEP_SUFFIX"`
-	if test "$name" == "$root" ; then
+	if test "$name" = "$root" ; then
 		root=`basename $name "$CXX_LIB_SUFFIX"`
-		if test "$name" == "$root" ; then
+		if test "$name" = "$root" ; then
 			continue
 		fi
 	fi

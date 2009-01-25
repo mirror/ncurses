@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.334 2008/12/20 17:13:27 tom Exp $
+$Id: ncurses.c,v 1.336 2009/01/25 00:39:14 tom Exp $
 
 ***************************************************************************/
 
@@ -1859,6 +1859,8 @@ show_color_name(int y, int x, int color, bool wide)
 	    width = 4;
 	} else if (color >= 8) {
 	    sprintf(temp, "[%02d]", color);
+	} else if (color < 0) {
+	    strcpy(temp, "default");
 	} else {
 	    strcpy(temp, the_color_names[color]);
 	}
@@ -1893,6 +1895,8 @@ color_legend(WINDOW *helpwin, bool wide)
     mvwprintw(helpwin, row++, col,
 	      "  n/N     toggle text/number on/off");
     mvwprintw(helpwin, row++, col,
+	      "  r/R     toggle reverse on/off");
+    mvwprintw(helpwin, row++, col,
 	      "  w/W     toggle width between 8/16 colors");
 #if USE_WIDEC_SUPPORT
     if (wide) {
@@ -1925,12 +1929,19 @@ color_test(void)
     bool done = FALSE;
     bool opt_acsc = FALSE;
     bool opt_bold = FALSE;
-    bool opt_wide = FALSE;
+    bool opt_revs = FALSE;
     bool opt_nums = FALSE;
+    bool opt_wide = FALSE;
     WINDOW *helpwin;
 
-    if (pairs_max > COLOR_PAIRS)
-	pairs_max = COLOR_PAIRS;
+    if (COLORS * COLORS == COLOR_PAIRS) {
+	int limit = (COLORS - min_colors) * (COLORS - min_colors);
+	if (pairs_max > limit)
+	    pairs_max = limit;
+    } else {
+	if (pairs_max > COLOR_PAIRS)
+	    pairs_max = COLOR_PAIRS;
+    }
 
     while (!done) {
 	int shown = 0;
@@ -1945,12 +1956,14 @@ color_test(void)
 	    hello = "Hello";
 	    per_row = 8;
 	}
+	per_row -= min_colors;
 
 	row_limit = (pairs_max + per_row - 1) / per_row;
 
 	move(0, 0);
-	(void) printw("There are %d color pairs and %d colors\n",
-		      pairs_max, COLORS);
+	(void) printw("There are %d color pairs and %d colors%s\n",
+		      pairs_max, COLORS,
+		      min_colors ? " besides 'default'" : "");
 
 	clrtobot();
 	(void) mvprintw(top + 1, 0,
@@ -1961,7 +1974,7 @@ color_test(void)
 
 	/* show color names/numbers across the top */
 	for (i = 0; i < per_row; i++)
-	    show_color_name(top + 2, (i + 1) * width, i, opt_wide);
+	    show_color_name(top + 2, (i + 1) * width, i + min_colors, opt_wide);
 
 	/* show a grid of colors, with color names/ numbers on the left */
 	for (i = (short) (base_row * per_row); i < pairs_max; i++) {
@@ -1969,9 +1982,11 @@ color_test(void)
 	    int col = (i % per_row + 1) * width;
 	    short pair = i;
 
+#define InxToFG(i) (short) ((i % (COLORS - min_colors)) + min_colors)
+#define InxToBG(i) (short) ((i / (COLORS - min_colors)) + min_colors)
 	    if (row >= 0 && move(row, col) != ERR) {
-		short fg = (short) (i % COLORS);
-		short bg = (short) (i / COLORS);
+		short fg = InxToFG(i);
+		short bg = InxToBG(i);
 
 		init_pair(pair, fg, bg);
 		attron((attr_t) COLOR_PAIR(pair));
@@ -1979,6 +1994,8 @@ color_test(void)
 		    attron((attr_t) A_ALTCHARSET);
 		if (opt_bold)
 		    attron((attr_t) A_BOLD);
+		if (opt_revs)
+		    attron((attr_t) A_REVERSE);
 
 		if (opt_nums) {
 		    sprintf(numbered, "{%02X}", i);
@@ -1987,8 +2004,8 @@ color_test(void)
 		printw("%-*.*s", width, width, hello);
 		attrset(A_NORMAL);
 
-		if ((i % per_row) == 0 && (i % COLORS) == 0) {
-		    show_color_name(row, 0, i / COLORS, opt_wide);
+		if ((i % per_row) == 0 && InxToFG(i) == min_colors) {
+		    show_color_name(row, 0, InxToBG(i), opt_wide);
 		}
 		++shown;
 	    } else if (shown) {
@@ -2014,6 +2031,12 @@ color_test(void)
 	    break;
 	case 'N':
 	    opt_nums = TRUE;
+	    break;
+	case 'r':
+	    opt_revs = FALSE;
+	    break;
+	case 'R':
+	    opt_revs = TRUE;
 	    break;
 	case case_QUIT:
 	    done = TRUE;
@@ -2092,7 +2115,7 @@ wide_color_test(void)
     int base_row = 0;
     int grid_top = top + 3;
     int page_size = (LINES - grid_top);
-    int pairs_max = COLOR_PAIRS;
+    int pairs_max = (unsigned short) (-1);
     int row_limit;
     int per_row;
     char numbered[80];
@@ -2100,11 +2123,21 @@ wide_color_test(void)
     bool done = FALSE;
     bool opt_acsc = FALSE;
     bool opt_bold = FALSE;
+    bool opt_revs = FALSE;
     bool opt_wide = FALSE;
     bool opt_nums = FALSE;
     bool opt_xchr = FALSE;
     wchar_t buffer[10];
     WINDOW *helpwin;
+
+    if (COLORS * COLORS == COLOR_PAIRS) {
+	int limit = (COLORS - min_colors) * (COLORS - min_colors);
+	if (pairs_max > limit)
+	    pairs_max = limit;
+    } else {
+	if (pairs_max > COLOR_PAIRS)
+	    pairs_max = COLOR_PAIRS;
+    }
 
     while (!done) {
 	int shown = 0;
@@ -2119,6 +2152,8 @@ wide_color_test(void)
 	    hello = "Hello";
 	    per_row = 8;
 	}
+	per_row -= min_colors;
+
 	if (opt_xchr) {
 	    make_fullwidth_text(buffer, hello);
 	    width *= 2;
@@ -2130,8 +2165,9 @@ wide_color_test(void)
 	row_limit = (pairs_max + per_row - 1) / per_row;
 
 	move(0, 0);
-	(void) printw("There are %d color pairs and %d colors\n",
-		      pairs_max, COLORS);
+	(void) printw("There are %d color pairs and %d colors%s\n",
+		      pairs_max, COLORS,
+		      min_colors ? " besides 'default'" : "");
 
 	clrtobot();
 	(void) mvprintw(top + 1, 0,
@@ -2142,7 +2178,7 @@ wide_color_test(void)
 
 	/* show color names/numbers across the top */
 	for (i = 0; i < per_row; i++)
-	    show_color_name(top + 2, (i + 1) * width, i, opt_wide);
+	    show_color_name(top + 2, (i + 1) * width, i + min_colors, opt_wide);
 
 	/* show a grid of colors, with color names/ numbers on the left */
 	for (i = (base_row * per_row); i < pairs_max; i++) {
@@ -2151,12 +2187,14 @@ wide_color_test(void)
 	    short pair = (short) i;
 
 	    if (row >= 0 && move(row, col) != ERR) {
-		init_pair(pair, (short) (i % COLORS), (short) (i / COLORS));
+		init_pair(pair, InxToFG(i), InxToBG(i));
 		color_set(pair, NULL);
 		if (opt_acsc)
 		    attr_on((attr_t) A_ALTCHARSET, NULL);
 		if (opt_bold)
 		    attr_on((attr_t) A_BOLD, NULL);
+		if (opt_revs)
+		    attr_on((attr_t) A_REVERSE, NULL);
 
 		if (opt_nums) {
 		    sprintf(numbered, "{%02X}", i);
@@ -2169,8 +2207,8 @@ wide_color_test(void)
 		addnwstr(buffer, width);
 		attr_set(A_NORMAL, 0, NULL);
 
-		if ((i % per_row) == 0 && (i % COLORS) == 0) {
-		    show_color_name(row, 0, i / COLORS, opt_wide);
+		if ((i % per_row) == 0 && InxToFG(i) == min_colors) {
+		    show_color_name(row, 0, InxToBG(i), opt_wide);
 		}
 		++shown;
 	    } else if (shown) {
@@ -2196,6 +2234,12 @@ wide_color_test(void)
 	    break;
 	case 'N':
 	    opt_nums = TRUE;
+	    break;
+	case 'r':
+	    opt_revs = FALSE;
+	    break;
+	case 'R':
+	    opt_revs = TRUE;
 	    break;
 	case case_QUIT:
 	    done = TRUE;

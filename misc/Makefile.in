@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.48 2009/01/03 23:52:41 tom Exp $
+# $Id: Makefile.in,v 1.50 2009/01/24 21:42:15 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -76,7 +76,7 @@ all :	terminfo.tmp
 
 depend :
 
-sources :
+sources :: terminfo.tmp 
 
 install : install.data install.libs
 
@@ -111,6 +111,7 @@ install.libs :: $(DESTDIR)$(bindir) ncurses-config
 @MAKE_PC_FILES@install.libs :: pc-files
 @MAKE_PC_FILES@	$(SHELL) -c 'for name in *.pc; do $(INSTALL_DATA) $$name $(PKG_CONFIG_LIBDIR)/$$name; done'
 
+@MAKE_PC_FILES@sources :: pc-files
 @MAKE_PC_FILES@pc-files :
 @MAKE_PC_FILES@	$(SHELL) ./gen-pkgconfig
 @MAKE_PC_FILES@	touch $@

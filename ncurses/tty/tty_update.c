@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -78,7 +78,7 @@
 #include <ctype.h>
 #include <term.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.246 2008/08/30 20:08:19 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.247 2009/01/25 00:48:36 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -1165,8 +1165,8 @@ TransformLine(int const lineno)
 		newPair = GetPair(newLine[n]);
 		if (oldPair != newPair
 		    && unColor(oldLine[n]) == unColor(newLine[n])) {
-		    if (oldPair < COLOR_PAIRS
-			&& newPair < COLOR_PAIRS
+		    if (oldPair < SP->_pair_limit
+			&& newPair < SP->_pair_limit
 			&& SP->_color_pairs[oldPair] == SP->_color_pairs[newPair]) {
 			SetPair(oldLine[n], GetPair(newLine[n]));
 		    }
