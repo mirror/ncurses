@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.482 2009/01/17 21:10:05 tom Exp $
+dnl $Id: aclocal.m4,v 1.483 2009/02/07 19:12:17 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -86,7 +86,7 @@ fi
 AC_SUBST(ACPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_CFLAGS version: 7 updated: 2004/04/25 17:48:30
+dnl CF_ADD_CFLAGS version: 8 updated: 2009/01/06 19:33:30
 dnl -------------
 dnl Copy non-preprocessor flags to $CFLAGS, preprocessor flags to $CPPFLAGS
 dnl The second parameter if given makes this macro verbose.
@@ -156,7 +156,7 @@ fi
 
 if test -n "$cf_new_cppflags" ; then
 	ifelse($2,,,[CF_VERBOSE(add to \$CPPFLAGS $cf_new_cppflags)])
-	CPPFLAGS="$cf_new_cppflags $CPPFLAGS"
+	CPPFLAGS="$CPPFLAGS $cf_new_cppflags"
 fi
 
 if test -n "$cf_new_extra_cppflags" ; then
@@ -168,7 +168,7 @@ AC_SUBST(EXTRA_CPPFLAGS)
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_INCDIR version: 10 updated: 2008/12/27 12:30:03
+dnl CF_ADD_INCDIR version: 12 updated: 2009/01/18 10:00:47
 dnl -------------
 dnl Add an include-directory to $CPPFLAGS.  Don't add /usr/include, since it's
 dnl redundant.  We don't normally need to add -I/usr/local/include for gcc,
@@ -211,7 +211,7 @@ if test -n "$1" ; then
 
 		if test "$cf_have_incdir" = no ; then
 		  CF_VERBOSE(adding $cf_add_incdir to include-path)
-		  ifelse($2,,CPPFLAGS,$2)="-I$cf_add_incdir $ifelse($2,,CPPFLAGS,[$]$2)"
+		  ifelse($2,,CPPFLAGS,$2)="$ifelse($2,,CPPFLAGS,$2) -I$cf_add_incdir"
 
 		  cf_top_incdir=`echo $cf_add_incdir | sed -e 's%/include/.*$%/include%'`
 		  test "$cf_top_incdir" = "$cf_add_incdir" && break
@@ -225,7 +225,7 @@ if test -n "$1" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_LIBDIR version: 6 updated: 2008/02/09 13:15:34
+dnl CF_ADD_LIBDIR version: 8 updated: 2009/01/18 10:01:08
 dnl -------------
 dnl	Adds to the library-path
 dnl
@@ -254,7 +254,7 @@ if test -n "$1" ; then
       fi
       if test "$cf_have_libdir" = no ; then
         CF_VERBOSE(adding $cf_add_libdir to library-path)
-        ifelse($2,,LDFLAGS,$2)="-L$cf_add_libdir $ifelse($2,,LDFLAGS,[$]$2)"
+        ifelse($2,,LDFLAGS,$2)="-L$cf_add_libdir $ifelse($2,,LDFLAGS,$2)"
       fi
     fi
   done
@@ -353,7 +353,7 @@ You have the following choices:
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_AR_FLAGS version: 2 updated: 2009/01/01 20:45:18
+dnl CF_AR_FLAGS version: 4 updated: 2009/02/07 13:42:23
 dnl -----------
 dnl Check for suitable "ar" (archiver) options for updating an archive.
 AC_DEFUN([CF_AR_FLAGS],[
@@ -383,7 +383,7 @@ EOF
 	done
 	rm -f conftest.a conftest.$ac_ext conftest.$ac_cv_objext
 ])
-
+test -z "$ARFLAGS" && ARFLAGS=$cf_cv_ar_flags
 AC_SUBST(ARFLAGS,$cf_cv_ar_flags)
 ])
 dnl ---------------------------------------------------------------------------
@@ -2082,7 +2082,7 @@ AC_DEFUN([CF_HELP_MESSAGE],
 [AC_DIVERT_HELP([$1])dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INCLUDE_DIRS version: 5 updated: 2006/10/14 15:23:15
+dnl CF_INCLUDE_DIRS version: 6 updated: 2009/01/06 19:37:40
 dnl ---------------
 dnl Construct the list of include-options according to whether we're building
 dnl in the source directory or using '--srcdir=DIR' option.  If we're building
@@ -2090,9 +2090,9 @@ dnl with gcc, don't append the includedir if it happens to be /usr/include,
 dnl since that usually breaks gcc's shadow-includes.
 AC_DEFUN([CF_INCLUDE_DIRS],
 [
-CPPFLAGS="-I. -I../include $CPPFLAGS"
+CPPFLAGS="$CPPFLAGS -I. -I../include"
 if test "$srcdir" != "."; then
-	CPPFLAGS="-I\${srcdir}/../include $CPPFLAGS"
+	CPPFLAGS="$CPPFLAGS -I\${srcdir}/../include"
 fi
 if test "$GCC" != yes; then
 	CPPFLAGS="$CPPFLAGS -I\${includedir}"
@@ -3049,7 +3049,7 @@ fi
 AC_SUBST(MAKE_LOWER_TAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_FORMAT version: 7 updated: 2003/12/20 19:30:34
+dnl CF_MANPAGE_FORMAT version: 8 updated: 2009/01/11 20:30:50
 dnl -----------------
 dnl Option to allow user to override automatic configuration of manpage format.
 dnl There are several special cases:
@@ -3091,7 +3091,7 @@ unknown)
   cf_catonly=yes
   cf_example=date
 
-  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}${PATHSEP}"
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}${PATH_SEPARATOR}"
   for cf_dir in $MANPATH; do
     test -z "$cf_dir" && cf_dir=/usr/man
     for cf_name in $cf_dir/man*/$cf_example.[[01]]* $cf_dir/cat*/$cf_example.[[01]]* $cf_dir/man*/$cf_example $cf_dir/cat*/$cf_example
@@ -3780,17 +3780,17 @@ AC_DEFUN([CF_OBJ_SUBDIR],
 	esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PATHSEP version: 3 updated: 2001/01/12 01:23:53
+dnl CF_PATHSEP version: 4 updated: 2009/01/11 20:30:23
 dnl ----------
 dnl Provide a value for the $PATH and similar separator
 AC_DEFUN([CF_PATHSEP],
 [
 	case $cf_cv_system_name in
-	os2*)	PATHSEP=';'  ;;
-	*)	PATHSEP=':'  ;;
+	os2*)	PATH_SEPARATOR=';'  ;;
+	*)	PATH_SEPARATOR=':'  ;;
 	esac
-ifelse($1,,,[$1=$PATHSEP])
-	AC_SUBST(PATHSEP)
+ifelse($1,,,[$1=$PATH_SEPARATOR])
+	AC_SUBST(PATH_SEPARATOR)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_PATH_SYNTAX version: 12 updated: 2008/03/23 14:45:59
@@ -3830,7 +3830,7 @@ case ".[$]$1" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 2 updated: 2008/12/24 07:57:28
+dnl CF_PKG_CONFIG version: 3 updated: 2009/01/25 10:55:09
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
 AC_DEFUN([CF_PKG_CONFIG],
@@ -3842,11 +3842,11 @@ AC_ARG_WITH(pkg-config,
 	[cf_pkg_config=yes])
 AC_MSG_RESULT($cf_pkg_config)
 
-case $cf_pkg_config in
-no)
+case $cf_pkg_config in #(vi
+no) #(vi
 	PKG_CONFIG=none
 	;;
-yes)
+yes) #(vi
 	AC_PATH_PROG(PKG_CONFIG, pkg-config, none)
 	;;
 *)
@@ -5544,7 +5544,7 @@ $3="$withval"
 AC_SUBST($3)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PATHLIST version: 5 updated: 2001/12/10 01:28:30
+dnl CF_WITH_PATHLIST version: 6 updated: 2009/01/11 20:30:23
 dnl ----------------
 dnl Process an option specifying a list of colon-separated paths.
 dnl
@@ -5560,7 +5560,7 @@ AC_REQUIRE([CF_PATHSEP])
 AC_ARG_WITH($1,[$2 ](default: ifelse($4,,empty,$4)),,
 ifelse($4,,[withval=${$3}],[withval=${$3-ifelse($5,,$4,$5)}]))dnl
 
-IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${PATHSEP}"
+IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${PATH_SEPARATOR}"
 cf_dst_path=
 for cf_src_path in $withval
 do
