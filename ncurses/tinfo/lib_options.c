@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -43,7 +44,7 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.58 2008/08/16 21:20:48 Werner.Fink Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.59 2009/02/15 00:48:40 tom Exp $")
 
 static int _nc_curs_set(SCREEN *, int);
 static int _nc_meta(SCREEN *, bool);
@@ -72,17 +73,25 @@ idcok(WINDOW *win, bool flag)
 }
 
 NCURSES_EXPORT(int)
-halfdelay(int t)
+NCURSES_SP_NAME(halfdelay) (NCURSES_SP_DCLx int t)
 {
     T((T_CALLED("halfdelay(%d)"), t));
 
-    if (t < 1 || t > 255 || SP == 0)
+    if (t < 1 || t > 255 || SP_PARM == 0)
 	returnCode(ERR);
 
     cbreak();
-    SP->_cbreak = t + 1;
+    SP_PARM->_cbreak = t + 1;
     returnCode(OK);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+halfdelay(int t)
+{
+    return NCURSES_SP_NAME(halfdelay) (CURRENT_SCREEN, t);
+}
+#endif
 
 NCURSES_EXPORT(int)
 nodelay(WINDOW *win, bool flag)
@@ -158,16 +167,24 @@ curs_set(int vis)
 }
 
 NCURSES_EXPORT(int)
-typeahead(int fd)
+NCURSES_SP_NAME(typeahead) (NCURSES_SP_DCLx int fd)
 {
     T((T_CALLED("typeahead(%d)"), fd));
-    if (SP != 0) {
-	SP->_checkfd = fd;
+    if (SP_PARM != 0) {
+	SP_PARM->_checkfd = fd;
 	returnCode(OK);
     } else {
 	returnCode(ERR);
     }
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+typeahead(int fd)
+{
+    return NCURSES_SP_NAME(typeahead) (CURRENT_SCREEN, fd);
+}
+#endif
 
 /*
 **      has_key()

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -44,7 +45,7 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.117 2008/08/04 18:11:12 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.118 2009/02/15 00:39:46 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -635,7 +636,9 @@ _nc_ripoffline(int line, int (*init) (WINDOW *, int))
 }
 
 NCURSES_EXPORT(int)
-ripoffline(int line, int (*init) (WINDOW *, int))
+NCURSES_SP_NAME(ripoffline) (NCURSES_SP_DCLx
+			     int line,
+			     int (*init) (WINDOW *, int))
 {
     START_TRACE();
     T((T_CALLED("ripoffline(%d,%p)"), line, init));
@@ -645,3 +648,11 @@ ripoffline(int line, int (*init) (WINDOW *, int))
 
     returnCode(_nc_ripoffline((line < 0) ? -1 : 1, init));
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+ripoffline(int line, int (*init) (WINDOW *, int))
+{
+    return NCURSES_SP_NAME(ripoffline) (CURRENT_SCREEN, line, init);
+}
+#endif

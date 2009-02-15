@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey 2002                                           *
+ *     and: Thomas E. Dickey                        2002                    *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -48,7 +49,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_kernel.c,v 1.24 2004/05/08 17:11:21 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.25 2009/02/15 00:47:52 tom Exp $")
 
 static int
 _nc_vdisable(void)
@@ -79,7 +80,7 @@ _nc_vdisable(void)
  */
 
 NCURSES_EXPORT(char)
-erasechar(void)
+NCURSES_SP_NAME(erasechar) (NCURSES_SP_DCL0)
 {
     int result = ERR;
     T((T_CALLED("erasechar()")));
@@ -96,6 +97,14 @@ erasechar(void)
     returnCode(result);
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(char)
+erasechar(void)
+{
+    return NCURSES_SP_NAME(erasechar) (CURRENT_SCREEN);
+}
+#endif
+
 /*
  *	killchar()
  *
@@ -104,7 +113,7 @@ erasechar(void)
  */
 
 NCURSES_EXPORT(char)
-killchar(void)
+NCURSES_SP_NAME(killchar) (NCURSES_SP_DCL0)
 {
     int result = ERR;
     T((T_CALLED("killchar()")));
@@ -121,6 +130,14 @@ killchar(void)
     returnCode(result);
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(char)
+killchar(void)
+{
+    return NCURSES_SP_NAME(killchar) (CURRENT_SCREEN);
+}
+#endif
+
 /*
  *	flushinp()
  *
@@ -129,7 +146,7 @@ killchar(void)
  */
 
 NCURSES_EXPORT(int)
-flushinp(void)
+NCURSES_SP_NAME(flushinp) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("flushinp()")));
 
@@ -143,12 +160,20 @@ flushinp(void)
 	} while
 	    (errno == EINTR);
 #endif
-	if (SP) {
-	    SP->_fifohead = -1;
-	    SP->_fifotail = 0;
-	    SP->_fifopeek = 0;
+	if (SP_PARM) {
+	    SP_PARM->_fifohead = -1;
+	    SP_PARM->_fifotail = 0;
+	    SP_PARM->_fifopeek = 0;
 	}
 	returnCode(OK);
     }
     returnCode(ERR);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+flushinp(void)
+{
+    return NCURSES_SP_NAME(flushinp) (CURRENT_SCREEN);
+}
+#endif

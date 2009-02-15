@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -48,7 +49,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.73 2008/08/16 21:20:48 Werner.Fink Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.74 2009/02/15 00:37:10 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -95,7 +96,7 @@ _nc_initscr(void)
  * initialized.
  */
 NCURSES_EXPORT(void)
-filter(void)
+NCURSES_SP_NAME(filter) (NCURSES_SP_DCL0)
 {
     START_TRACE();
     T((T_CALLED("filter")));
@@ -103,23 +104,40 @@ filter(void)
     returnVoid;
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
+filter(void)
+{
+    NCURSES_SP_NAME(filter) (CURRENT_SCREEN);
+}
+#endif
+
 #if NCURSES_EXT_FUNCS
 /*
  * An extension, allowing the application to open a new screen without
  * requiring it to also be filtered.
  */
 NCURSES_EXPORT(void)
-nofilter(void)
+NCURSES_SP_NAME(nofilter) (NCURSES_SP_DCL0)
 {
     START_TRACE();
     T((T_CALLED("nofilter")));
     _nc_prescreen.filter_mode = FALSE;
     returnVoid;
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
+nofilter(void)
+{
+    NCURSES_SP_NAME(nofilter) (CURRENT_SCREEN);
+}
 #endif
+#endif /* NCURSES_EXT_FUNCS */
 
 NCURSES_EXPORT(SCREEN *)
-newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
+NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx NCURSES_CONST char *name, FILE
+			  *ofp, FILE *ifp)
 {
     int value;
     int errret;
@@ -133,8 +151,8 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
     _nc_init_pthreads();
     _nc_lock_global(curses);
 
-    current = SP;
-    its_term = (SP ? SP->_term : 0);
+    current = SP_PARM;
+    its_term = (SP_PARM ? SP_PARM->_term : 0);
 
     /* this loads the capability entry, then sets LINES and COLS */
     if (setupterm(name, fileno(ofp), &errret) != ERR) {
@@ -159,7 +177,7 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 	    _nc_set_screen(current);
 	    result = 0;
 	} else {
-	    assert(SP != 0);
+	    assert(SP_PARM != 0);
 	    /*
 	     * In setupterm() we did a set_curterm(), but it was before we set
 	     * SP.  So the "current" screen's terminal pointer was overwritten
@@ -233,3 +251,11 @@ newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
     _nc_unlock_global(curses);
     returnSP(result);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(SCREEN *)
+newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
+{
+    return NCURSES_SP_NAME(newterm) (CURRENT_SCREEN, name, ofp, ifp);
+}
+#endif

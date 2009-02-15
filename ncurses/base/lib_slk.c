@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #include <ctype.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slk.c,v 1.35 2008/09/27 14:07:33 juergen Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.36 2009/02/15 00:33:48 tom Exp $")
 
 /*
  * Free any memory related to soft labels, return an error.
@@ -178,14 +178,22 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
  * Restore the soft labels on the screen.
  */
 NCURSES_EXPORT(int)
-slk_restore(void)
+NCURSES_SP_NAME(slk_restore) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("slk_restore()")));
 
-    if (SP->_slk == NULL)
+    if (SP_PARM->_slk == NULL)
 	return (ERR);
-    SP->_slk->hidden = FALSE;
-    SP->_slk->dirty = TRUE;
+    SP_PARM->_slk->hidden = FALSE;
+    SP_PARM->_slk->dirty = TRUE;
 
     returnCode(slk_refresh());
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+slk_restore(void)
+{
+    return NCURSES_SP_NAME(slk_restore) (CURRENT_SCREEN);
+}
+#endif

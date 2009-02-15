@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.18 2008/08/03 22:10:44 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.19 2009/02/15 00:33:49 tom Exp $")
 
 NCURSES_EXPORT(int)
 _nc_get_tty_mode(TTY * buf)
@@ -101,7 +101,7 @@ _nc_set_tty_mode(TTY * buf)
 }
 
 NCURSES_EXPORT(int)
-def_shell_mode(void)
+NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_DCL0)
 {
     int rc = ERR;
 
@@ -125,8 +125,16 @@ def_shell_mode(void)
     returnCode(rc);
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-def_prog_mode(void)
+def_shell_mode(void)
+{
+    return NCURSES_SP_NAME(def_shell_mode) (CURRENT_SCREEN);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_DCL0)
 {
     int rc = ERR;
 
@@ -148,16 +156,24 @@ def_prog_mode(void)
     returnCode(rc);
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-reset_prog_mode(void)
+def_prog_mode(void)
+{
+    return NCURSES_SP_NAME(def_prog_mode) (CURRENT_SCREEN);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("reset_prog_mode()")));
 
     if (cur_term != 0) {
 	if (_nc_set_tty_mode(&cur_term->Nttyb) == OK) {
-	    if (SP) {
-		if (SP->_keypad_on)
-		    _nc_keypad(SP, TRUE);
+	    if (SP_PARM) {
+		if (SP_PARM->_keypad_on)
+		    _nc_keypad(SP_PARM, TRUE);
 		NC_BUFFERED(TRUE);
 	    }
 	    returnCode(OK);
@@ -166,14 +182,22 @@ reset_prog_mode(void)
     returnCode(ERR);
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-reset_shell_mode(void)
+reset_prog_mode(void)
+{
+    return NCURSES_SP_NAME(reset_prog_mode) (CURRENT_SCREEN);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(reset_shell_mode) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("reset_shell_mode()")));
 
     if (cur_term != 0) {
-	if (SP) {
-	    _nc_keypad(SP, FALSE);
+	if (SP_PARM) {
+	    _nc_keypad(SP_PARM, FALSE);
 	    _nc_flush();
 	    NC_BUFFERED(FALSE);
 	}
@@ -181,6 +205,14 @@ reset_shell_mode(void)
     }
     returnCode(ERR);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+reset_shell_mode(void)
+{
+    return NCURSES_SP_NAME(reset_shell_mode) (CURRENT_SCREEN);
+}
+#endif
 
 static TTY *
 saved_tty(void)

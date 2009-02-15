@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -39,10 +40,10 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkinit.c,v 1.7 2008/01/12 20:23:39 tom Exp $")
+MODULE_ID("$Id: lib_slkinit.c,v 1.8 2009/02/15 00:42:36 tom Exp $")
 
 NCURSES_EXPORT(int)
-slk_init(int format)
+NCURSES_SP_NAME(slk_init) (NCURSES_SP_DCLx int format)
 {
     int code = ERR;
 
@@ -53,3 +54,11 @@ slk_init(int format)
     }
     returnCode(code);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+slk_init(int format)
+{
+    return NCURSES_SP_NAME(slk_init) (CURRENT_SCREEN, format);
+}
+#endif

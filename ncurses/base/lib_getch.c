@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -41,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.99 2008/09/20 19:46:13 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.100 2009/02/15 00:36:00 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -54,27 +55,36 @@ NCURSES_PUBLIC_VAR(ESCDELAY) (void)
 }
 #else
 #define GetEscdelay(sp) ESCDELAY
-NCURSES_EXPORT_VAR(int)
-ESCDELAY = 1000;		/* max interval betw. chars in funkeys, in millisecs */
+NCURSES_EXPORT_VAR (int)
+  ESCDELAY = 1000;		/* max interval betw. chars in funkeys, in millisecs */
 #endif
 
 #if NCURSES_EXT_FUNCS
 NCURSES_EXPORT(int)
-set_escdelay(int value)
+NCURSES_SP_NAME(set_escdelay) (NCURSES_SP_DCLx int value)
 {
     int code = OK;
 #if USE_REENTRANT
-    if (SP) {
-	SP->_ESCDELAY = value;
+    if (SP_PARM) {
+	SP_PARM->_ESCDELAY = value;
     } else {
 	code = ERR;
     }
 #else
+    (void) SP_PARM;
     ESCDELAY = value;
 #endif
     return code;
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+set_escdelay(int value)
+{
+    return NCURSES_SP_NAME(set_escdelay) (CURRENT_SCREEN, value);
+}
 #endif
+#endif /* NCURSES_EXT_FUNCS */
 
 static int
 _nc_use_meta(WINDOW *win)

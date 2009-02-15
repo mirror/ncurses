@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.396 2009/01/24 23:04:59 tom Exp $
+ * $Id: curses.priv.h,v 1.399 2009/02/15 01:05:47 tom Exp $
  *
  *	curses.priv.h
  *
@@ -96,8 +96,6 @@ extern "C" {
 #if DECL_ERRNO
 extern int errno;
 #endif
-
-#include <nc_panel.h>
 
 /* Some systems have a broken 'select()', but workable 'poll()'.  Use that */
 #if HAVE_WORKING_POLL
@@ -257,6 +255,38 @@ color_t;
 #define NCURSES_OPAQUE 0
 
 #include <curses.h>	/* we'll use -Ipath directive to get the right one! */
+
+/*
+ * If curses.h did not expose the SCREEN-functions, then we do not need the
+ * parameter in the corresponding unextended functions.
+ */
+#if NCURSES_SP_FUNCS
+#define SP_PARM         sp	/* use parameter */
+#define NCURSES_SP_ARG          SP_PARM
+#define NCURSES_SP_DCL  SCREEN *NCURSES_SP_ARG
+#define NCURSES_SP_DCL0 NCURSES_SP_DCL
+#define NCURSES_SP_ARGx         NCURSES_SP_ARG,
+#define NCURSES_SP_DCLx SCREEN *NCURSES_SP_ARGx
+#else
+#define SP_PARM         SP	/* use global variable */
+#define NCURSES_SP_ARG
+#define NCURSES_SP_DCL
+#define NCURSES_SP_DCL0 void
+#define NCURSES_SP_ARGx
+#define NCURSES_SP_DCLx
+#endif
+
+#include <nc_panel.h>
+
+#define IsPreScreen(sp)      (((sp)!=0) && sp->_prescreen)
+#define HasTerminal(sp)      (((sp)!=0) && (0!=((sp)->_term)))
+#define IsValidScreen(sp)    (HasTerminal(sp) && !sp->_prescreen)
+#if BROKEN_LINKER || USE_REENTRANT
+#define TerminalOf(sp)       ((sp)?((sp)->_term?(sp)->_term:_nc_prescreen._cur_term): _nc_prescreen._cur_term)
+#else
+#define TerminalOf(sp)       ((sp)?((sp)->_term?(sp)->_term:cur_term):cur_term)
+#endif
+
 #include <term.h>
 #include <term_entry.h>
 #include <nc_tparm.h>
@@ -705,6 +735,8 @@ struct screen {
 	char		*_setbuf;	/* buffered I/O for output	    */
 	bool		_filtered;	/* filter() was called		    */
 	bool		_buffered;	/* setvbuf uses _setbuf data	    */
+        bool            _prescreen;     /* is in prescreen phase            */
+        bool            _use_env;       /* LINES & COLS from environment?   */
 	int		_checkfd;	/* filedesc for typeahead check	    */
 	TERMINAL	*_term;		/* terminal type information	    */
 	TTY		_saved_tty;	/* savetty/resetty information	    */
@@ -1684,6 +1716,8 @@ extern NCURSES_EXPORT_VAR(SCREEN *) SP;
 #define _nc_alloc_screen() ((SP = typeCalloc(SCREEN, 1)) != 0)
 #define _nc_set_screen(sp) SP = sp
 #endif
+
+#define CURRENT_SCREEN SP
 
 /*
  * We don't want to use the lines or columns capabilities internally, because

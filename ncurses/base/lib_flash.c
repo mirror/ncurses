@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2000,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -41,7 +43,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* beep, flash */
 
-MODULE_ID("$Id: lib_flash.c,v 1.6 2000/12/10 02:43:27 tom Exp $")
+MODULE_ID("$Id: lib_flash.c,v 1.7 2009/02/15 00:35:15 tom Exp $")
 
 /*
  *	flash()
@@ -52,7 +54,7 @@ MODULE_ID("$Id: lib_flash.c,v 1.6 2000/12/10 02:43:27 tom Exp $")
  */
 
 NCURSES_EXPORT(int)
-flash(void)
+NCURSES_SP_NAME(flash) (NCURSES_SP_DCL0)
 {
     int res = ERR;
 
@@ -71,3 +73,11 @@ flash(void)
 
     returnCode(res);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+flash(void)
+{
+    return NCURSES_SP_NAME(flash) (CURRENT_SCREEN);
+}
+#endif

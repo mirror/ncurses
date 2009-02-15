@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996 on                 *
+ *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -65,7 +66,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.49 2007/06/30 21:58:04 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.50 2009/02/15 00:51:03 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 
@@ -299,7 +300,7 @@ vidattr(chtype newmode)
 }
 
 NCURSES_EXPORT(chtype)
-termattrs(void)
+NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
 {
     chtype attrs = A_NORMAL;
 
@@ -331,8 +332,16 @@ termattrs(void)
     if (enter_underline_mode)
 	attrs |= A_UNDERLINE;
 
-    if (SP->_coloron)
+    if (SP_PARM->_coloron)
 	attrs |= A_COLOR;
 
     returnChar(attrs);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(chtype)
+termattrs(void)
+{
+    return NCURSES_SP_NAME(termattrs) (CURRENT_SCREEN);
+}
+#endif

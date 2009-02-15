@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -155,7 +156,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.113 2008/08/16 19:30:58 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.114 2009/02/15 00:50:33 tom Exp $")
 
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
@@ -853,9 +854,10 @@ onscreen_mvcur(int yold, int xold, int ynew, int xnew, bool ovw)
 	return (ERR);
 }
 
-NCURSES_EXPORT(int)
-mvcur(int yold, int xold, int ynew, int xnew)
 /* optimized cursor move from (yold, xold) to (ynew, xnew) */
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx
+			int yold, int xold, int ynew, int xnew)
 {
     NCURSES_CH_T oldattr;
     int code;
@@ -863,7 +865,7 @@ mvcur(int yold, int xold, int ynew, int xnew)
     TR(TRACE_CALLS | TRACE_MOVE, (T_CALLED("mvcur(%d,%d,%d,%d)"),
 				  yold, xold, ynew, xnew));
 
-    if (SP == 0) {
+    if (SP_PARM == 0) {
 	code = ERR;
     } else if (yold == ynew && xold == xnew) {
 	code = OK;
@@ -884,7 +886,7 @@ mvcur(int yold, int xold, int ynew, int xnew)
 	 * character set -- these have a strong tendency to screw up the CR &
 	 * LF used for local character motions!
 	 */
-	oldattr = SCREEN_ATTRS(SP);
+	oldattr = SCREEN_ATTRS(SP_PARM);
 	if ((AttrOf(oldattr) & A_ALTCHARSET)
 	    || (AttrOf(oldattr) && !move_standout_mode)) {
 	    TR(TRACE_CHARPUT, ("turning off (%#lx) %s before move",
@@ -896,7 +898,7 @@ mvcur(int yold, int xold, int ynew, int xnew)
 	if (xold >= screen_columns) {
 	    int l;
 
-	    if (SP->_nl) {
+	    if (SP_PARM->_nl) {
 		l = (xold + 1) / screen_columns;
 		yold += l;
 		if (yold >= screen_lines)
@@ -940,7 +942,7 @@ mvcur(int yold, int xold, int ynew, int xnew)
 	/*
 	 * Restore attributes if we disabled them before moving.
 	 */
-	if (!SameAttrOf(oldattr, SCREEN_ATTRS(SP))) {
+	if (!SameAttrOf(oldattr, SCREEN_ATTRS(SP_PARM))) {
 	    TR(TRACE_CHARPUT, ("turning on (%#lx) %s after move",
 			       (unsigned long) AttrOf(oldattr),
 			       _traceattr(AttrOf(oldattr))));
@@ -949,6 +951,14 @@ mvcur(int yold, int xold, int ynew, int xnew)
     }
     returnCode(code);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+mvcur(int yold, int xold, int ynew, int xnew)
+{
+    return NCURSES_SP_NAME(mvcur) (CURRENT_SCREEN, yold, xold, ynew, xnew);
+}
+#endif
 
 #if defined(TRACE) || defined(NCURSES_TEST)
 NCURSES_EXPORT_VAR(int) _nc_optimize_enable = OPTIMIZE_ALL;

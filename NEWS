@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1362 2009/02/07 19:20:43 tom Exp $
+-- $Id: NEWS,v 1.1364 2009/02/15 00:20:00 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090214
+	+ add configure script --enable-sp-funcs to enable the new set of
+	  extended functions.
+	+ start integrating patches by Juergen Pfeifer:
+	  + add extended functions which specify the SCREEN pointer for several
+	    curses functions which use the global SP (these are incomplete;
+	    some internals work is needed to complete these).
+	  + add special cases to configure script for MinGW port.
 
 20090207
 	+ update several configure macros from lynx changes

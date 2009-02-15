@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -42,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.52 2008/06/07 13:58:09 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.53 2009/02/15 00:38:00 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -115,7 +116,8 @@ _nc_freewin(WINDOW *win)
 }
 
 NCURSES_EXPORT(WINDOW *)
-newwin(int num_lines, int num_columns, int begy, int begx)
+NCURSES_SP_NAME(newwin) (NCURSES_SP_DCLx
+			 int num_lines, int num_columns, int begy, int begx)
 {
     WINDOW *win;
     NCURSES_CH_T *ptr;
@@ -127,7 +129,7 @@ newwin(int num_lines, int num_columns, int begy, int begx)
 	returnWin(0);
 
     if (num_lines == 0)
-	num_lines = SP->_lines_avail - begy;
+	num_lines = SP_PARM->_lines_avail - begy;
     if (num_columns == 0)
 	num_columns = screen_columns - begx;
 
@@ -148,6 +150,15 @@ newwin(int num_lines, int num_columns, int begy, int begx)
 
     returnWin(win);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(WINDOW *)
+newwin(int num_lines, int num_columns, int begy, int begx)
+{
+    return NCURSES_SP_NAME(newwin) (CURRENT_SCREEN, num_lines, num_columns,
+				    begy, begx);
+}
+#endif
 
 NCURSES_EXPORT(WINDOW *)
 derwin(WINDOW *orig, int num_lines, int num_columns, int begy, int begx)

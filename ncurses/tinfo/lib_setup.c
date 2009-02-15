@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -53,7 +54,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.111 2008/08/03 22:42:33 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.113 2009/02/14 22:21:40 tom Exp $")
 
 /****************************************************************************
  *
@@ -149,21 +150,30 @@ NCURSES_EXPORT_VAR(int) TABSIZE = 0;
 
 #if NCURSES_EXT_FUNCS
 NCURSES_EXPORT(int)
-set_tabsize(int value)
+NCURSES_SP_NAME(set_tabsize) (NCURSES_SP_DCLx int value)
 {
     int code = OK;
 #if USE_REENTRANT
-    if (SP) {
-	SP->_TABSIZE = value;
+    if (SP_PARM) {
+	SP_PARM->_TABSIZE = value;
     } else {
 	code = ERR;
     }
 #else
+    (void) SP_PARM;
     TABSIZE = value;
 #endif
     return code;
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+set_tabsize(int value)
+{
+    return NCURSES_SP_NAME(set_tabsize) (CURRENT_SCREEN, value);
+}
 #endif
+#endif /* NCURSES_EXT_FUNCS */
 
 #if USE_SIGWINCH
 /*
@@ -188,12 +198,24 @@ _nc_handle_sigwinch(SCREEN *sp)
 #endif
 
 NCURSES_EXPORT(void)
-use_env(bool f)
+NCURSES_SP_NAME(use_env) (NCURSES_SP_DCLx bool f)
 {
     T((T_CALLED("use_env()")));
-    _nc_prescreen.use_env = f;
+    if (IsPreScreen(SP_PARM)) {
+	SP_PARM->_use_env = f;
+    } else {
+	_nc_prescreen.use_env = f;
+    }
     returnVoid;
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
+use_env(bool f)
+{
+    NCURSES_SP_NAME(use_env) (CURRENT_SCREEN, f);
+}
+#endif
 
 NCURSES_EXPORT(void)
 _nc_get_screensize(SCREEN *sp, int *linep, int *colp)

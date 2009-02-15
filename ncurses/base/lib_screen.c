@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,11 +30,12 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996 on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_screen.c,v 1.31 2008/08/16 19:05:37 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.32 2009/02/15 00:39:13 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -141,7 +142,7 @@ putwin(WINDOW *win, FILE *filep)
 }
 
 NCURSES_EXPORT(int)
-scr_restore(const char *file)
+NCURSES_SP_NAME(scr_restore) (NCURSES_SP_DCLx const char *file)
 {
     FILE *fp = 0;
 
@@ -152,14 +153,22 @@ scr_restore(const char *file)
 	returnCode(ERR);
     } else {
 	delwin(newscr);
-	SP->_newscr = getwin(fp);
+	SP_PARM->_newscr = getwin(fp);
 #if !USE_REENTRANT
-	newscr = SP->_newscr;
+	newscr = SP_PARM->_newscr;
 #endif
 	(void) fclose(fp);
 	returnCode(OK);
     }
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+scr_restore(const char *file)
+{
+    return NCURSES_SP_NAME(scr_restore) (CURRENT_SCREEN, file);
+}
+#endif
 
 NCURSES_EXPORT(int)
 scr_dump(const char *file)
@@ -179,7 +188,7 @@ scr_dump(const char *file)
 }
 
 NCURSES_EXPORT(int)
-scr_init(const char *file)
+NCURSES_SP_NAME(scr_init) (NCURSES_SP_DCLx const char *file)
 {
     FILE *fp = 0;
 
@@ -193,17 +202,25 @@ scr_init(const char *file)
 	returnCode(ERR);
     } else {
 	delwin(curscr);
-	SP->_curscr = getwin(fp);
+	SP_PARM->_curscr = getwin(fp);
 #if !USE_REENTRANT
-	curscr = SP->_curscr;
+	curscr = SP_PARM->_curscr;
 #endif
 	(void) fclose(fp);
 	returnCode(OK);
     }
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-scr_set(const char *file)
+scr_init(const char *file)
+{
+    return NCURSES_SP_NAME(scr_init) (CURRENT_SCREEN, file);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(scr_set) (NCURSES_SP_DCLx const char *file)
 {
     T((T_CALLED("scr_set(%s)"), _nc_visbuf(file)));
 
@@ -211,10 +228,18 @@ scr_set(const char *file)
 	returnCode(ERR);
     } else {
 	delwin(newscr);
-	SP->_newscr = dupwin(curscr);
+	SP_PARM->_newscr = dupwin(curscr);
 #if !USE_REENTRANT
-	newscr = SP->_newscr;
+	newscr = SP_PARM->_newscr;
 #endif
 	returnCode(OK);
     }
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+scr_set(const char *file)
+{
+    return NCURSES_SP_NAME(scr_set) (CURRENT_SCREEN, file);
+}
+#endif

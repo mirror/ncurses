@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2000,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -42,18 +44,18 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_nl.c,v 1.8 2000/12/10 02:43:27 tom Exp $")
+MODULE_ID("$Id: lib_nl.c,v 1.9 2009/02/15 00:38:22 tom Exp $")
 
 #ifdef __EMX__
 #include <io.h>
 #endif
 
 NCURSES_EXPORT(int)
-nl(void)
+NCURSES_SP_NAME(nl) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("nl()")));
 
-    SP->_nl = TRUE;
+    SP_PARM->_nl = TRUE;
 
 #ifdef __EMX__
     _nc_flush();
@@ -63,12 +65,20 @@ nl(void)
     returnCode(OK);
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-nonl(void)
+nl(void)
+{
+    return NCURSES_SP_NAME(nl) (CURRENT_SCREEN);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(nonl) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("nonl()")));
 
-    SP->_nl = FALSE;
+    SP_PARM->_nl = FALSE;
 
 #ifdef __EMX__
     _nc_flush();
@@ -77,3 +87,11 @@ nonl(void)
 
     returnCode(OK);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+nonl(void)
+{
+    return NCURSES_SP_NAME(nonl) (CURRENT_SCREEN);
+}
+#endif

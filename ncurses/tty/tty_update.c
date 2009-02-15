@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*-----------------------------------------------------------------
@@ -78,7 +79,7 @@
 #include <ctype.h>
 #include <term.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.247 2009/01/25 00:48:36 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.248 2009/02/15 00:51:22 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -618,7 +619,7 @@ PutRange(const NCURSES_CH_T * otext,
 		if_USE_SCROLL_HINTS(win->_line[row].oldindex = row)
 
 NCURSES_EXPORT(int)
-doupdate(void)
+NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 {
     int i;
     int nonempty;
@@ -645,11 +646,11 @@ doupdate(void)
 
     _nc_signal_handler(FALSE);
 
-    if (SP->_fifohold)
-	SP->_fifohold--;
+    if (SP_PARM->_fifohold)
+	SP_PARM->_fifohold--;
 
 #if USE_SIZECHANGE
-    if (SP->_endwin || _nc_handle_sigwinch(SP)) {
+    if (SP_PARM->_endwin || _nc_handle_sigwinch(SP_PARM)) {
 	/*
 	 * This is a transparent extension:  XSI does not address it,
 	 * and applications need not know that ncurses can do it.
@@ -658,20 +659,20 @@ doupdate(void)
 	 * (this can happen in an xterm, for example), and resize the
 	 * ncurses data structures accordingly.
 	 */
-	_nc_update_screensize(SP);
+	_nc_update_screensize(SP_PARM);
     }
 #endif
 
-    if (SP->_endwin) {
+    if (SP_PARM->_endwin) {
 
 	T(("coming back from shell mode"));
 	reset_prog_mode();
 
 	_nc_mvcur_resume();
 	_nc_screen_resume();
-	SP->_mouse_resume(SP);
+	SP_PARM->_mouse_resume(SP_PARM);
 
-	SP->_endwin = FALSE;
+	SP_PARM->_endwin = FALSE;
     }
 #if USE_TRACE_TIMES
     /* zero the metering machinery */
@@ -699,7 +700,7 @@ doupdate(void)
 	    for (j = 0; j < screen_columns; j++) {
 		bool failed = FALSE;
 		NCURSES_CH_T *thisline = newscr->_line[i].text;
-		attr_t thisattr = AttrOf(thisline[j]) & SP->_xmc_triggers;
+		attr_t thisattr = AttrOf(thisline[j]) & SP_PARM->_xmc_triggers;
 		attr_t turnon = thisattr & ~rattr;
 
 		/* is an attribute turned on here? */
@@ -717,7 +718,7 @@ doupdate(void)
 		 * there's enough room to set the attribute before the first
 		 * non-blank in the run.
 		 */
-#define SAFE(a)	(!((a) & SP->_xmc_triggers))
+#define SAFE(a)	(!((a) & SP_PARM->_xmc_triggers))
 		if (ISBLANK(thisline[j]) && SAFE(turnon)) {
 		    RemAttr(thisline[j], turnon);
 		    continue;
@@ -748,7 +749,7 @@ doupdate(void)
 		    for (m = i; m < screen_lines; m++) {
 			for (; n < screen_columns; n++) {
 			    attr_t testattr = AttrOf(newscr->_line[m].text[n]);
-			    if ((testattr & SP->_xmc_triggers) == rattr) {
+			    if ((testattr & SP_PARM->_xmc_triggers) == rattr) {
 				end_onscreen = TRUE;
 				TR(TRACE_ATTRS,
 				   ("Range attributed with %s ends at (%d, %d)",
@@ -809,7 +810,7 @@ doupdate(void)
 		    for (p = i; p < screen_lines; p++) {
 			for (; q < screen_columns; q++) {
 			    attr_t testattr = AttrOf(newscr->_line[p].text[q]);
-			    if ((testattr & SP->_xmc_triggers) == rattr)
+			    if ((testattr & SP_PARM->_xmc_triggers) == rattr)
 				goto foundend;
 			    RemAttr(newscr->_line[p].text[q], turnon);
 			}
@@ -857,7 +858,7 @@ doupdate(void)
 
 	nonempty = min(screen_lines, newscr->_maxy + 1);
 
-	if (SP->_scrolling) {
+	if (SP_PARM->_scrolling) {
 	    _nc_scroll_optimize();
 	}
 
@@ -939,6 +940,14 @@ doupdate(void)
 
     returnCode(OK);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+doupdate(void)
+{
+    return NCURSES_SP_NAME(doupdate) (CURRENT_SCREEN);
+}
+#endif
 
 /*
  *	ClrBlank(win)

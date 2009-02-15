@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.17 2008/09/27 14:07:53 juergen Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.18 2009/02/15 00:33:48 tom Exp $")
 
 /*
  * Paint the info line for the PC style SLK emulation.
@@ -113,32 +113,48 @@ slk_intern_refresh(SLK * slk)
  * Refresh the soft labels.
  */
 NCURSES_EXPORT(int)
-slk_noutrefresh(void)
+NCURSES_SP_NAME(slk_noutrefresh) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("slk_noutrefresh()")));
 
-    if (SP == NULL || SP->_slk == NULL)
+    if (SP_PARM == NULL || SP_PARM->_slk == NULL)
 	returnCode(ERR);
-    if (SP->_slk->hidden)
+    if (SP_PARM->_slk->hidden)
 	returnCode(OK);
-    slk_intern_refresh(SP->_slk);
+    slk_intern_refresh(SP_PARM->_slk);
 
-    returnCode(wnoutrefresh(SP->_slk->win));
+    returnCode(wnoutrefresh(SP_PARM->_slk->win));
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+slk_noutrefresh(void)
+{
+    return NCURSES_SP_NAME(slk_noutrefresh) (CURRENT_SCREEN);
+}
+#endif
 
 /*
  * Refresh the soft labels.
  */
 NCURSES_EXPORT(int)
-slk_refresh(void)
+NCURSES_SP_NAME(slk_refresh) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("slk_refresh()")));
 
-    if (SP == NULL || SP->_slk == NULL)
+    if (SP_PARM == NULL || SP_PARM->_slk == NULL)
 	returnCode(ERR);
-    if (SP->_slk->hidden)
+    if (SP_PARM->_slk->hidden)
 	returnCode(OK);
-    slk_intern_refresh(SP->_slk);
+    slk_intern_refresh(SP_PARM->_slk);
 
-    returnCode(wrefresh(SP->_slk->win));
+    returnCode(wrefresh(SP_PARM->_slk->win));
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+slk_refresh(void)
+{
+    return NCURSES_SP_NAME(slk_refresh) (CURRENT_SCREEN);
+}
+#endif

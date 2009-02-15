@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey 1998 on                                        *
+ *     and: Thomas E. Dickey                        1998-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -49,7 +50,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_raw.c,v 1.14 2007/09/29 21:50:22 tom Exp $")
+MODULE_ID("$Id: lib_raw.c,v 1.15 2009/02/15 00:49:02 tom Exp $")
 
 #if SVR4_TERMIO && !defined(_POSIX_SOURCE)
 #define _POSIX_SOURCE
@@ -61,7 +62,7 @@ MODULE_ID("$Id: lib_raw.c,v 1.14 2007/09/29 21:50:22 tom Exp $")
 
 #ifdef __EMX__
 #include <io.h>
-#define _nc_setmode(mode) setmode(SP->_ifd, mode)
+#define _nc_setmode(mode) setmode(SP_PARM->_ifd, mode)
 #else
 #define _nc_setmode(mode)	/* nothing */
 #endif
@@ -77,13 +78,13 @@ MODULE_ID("$Id: lib_raw.c,v 1.14 2007/09/29 21:50:22 tom Exp $")
 #endif /* TRACE */
 
 NCURSES_EXPORT(int)
-raw(void)
+NCURSES_SP_NAME(raw) (NCURSES_SP_DCL0)
 {
     int result = ERR;
 
     T((T_CALLED("raw()")));
 
-    if (SP != 0 && cur_term != 0) {
+    if (SP_PARM != 0 && cur_term != 0) {
 	TTY buf;
 
 	BEFORE("raw");
@@ -99,8 +100,8 @@ raw(void)
 	buf.sg_flags |= RAW;
 #endif
 	if ((result = _nc_set_tty_mode(&buf)) == OK) {
-	    SP->_raw = TRUE;
-	    SP->_cbreak = 1;
+	    SP_PARM->_raw = TRUE;
+	    SP_PARM->_cbreak = 1;
 	    cur_term->Nttyb = buf;
 	}
 	AFTER("raw");
@@ -108,14 +109,22 @@ raw(void)
     returnCode(result);
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-cbreak(void)
+raw(void)
+{
+    return NCURSES_SP_NAME(raw) (CURRENT_SCREEN);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(cbreak) (NCURSES_SP_DCL0)
 {
     int result = ERR;
 
     T((T_CALLED("cbreak()")));
 
-    if (SP != 0 && cur_term != 0) {
+    if (SP_PARM != 0 && cur_term != 0) {
 	TTY buf;
 
 	BEFORE("cbreak");
@@ -132,7 +141,7 @@ cbreak(void)
 	buf.sg_flags |= CBREAK;
 #endif
 	if ((result = _nc_set_tty_mode(&buf)) == OK) {
-	    SP->_cbreak = 1;
+	    SP_PARM->_cbreak = 1;
 	    cur_term->Nttyb = buf;
 	}
 	AFTER("cbreak");
@@ -140,12 +149,20 @@ cbreak(void)
     returnCode(result);
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+cbreak(void)
+{
+    return NCURSES_SP_NAME(cbreak) (CURRENT_SCREEN);
+}
+#endif
+
 /*
  * Note:
  * this implementation may be wrong.  See the comment under intrflush().
  */
 NCURSES_EXPORT(void)
-qiflush(void)
+NCURSES_SP_NAME(qiflush) (NCURSES_SP_DCL0)
 {
     int result = ERR;
 
@@ -169,14 +186,22 @@ qiflush(void)
     returnVoid;
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
+qiflush(void)
+{
+    NCURSES_SP_NAME(qiflush) (CURRENT_SCREEN);
+}
+#endif
+
 NCURSES_EXPORT(int)
-noraw(void)
+NCURSES_SP_NAME(noraw) (NCURSES_SP_DCL0)
 {
     int result = ERR;
 
     T((T_CALLED("noraw()")));
 
-    if (SP != 0 && cur_term != 0) {
+    if (SP_PARM != 0 && cur_term != 0) {
 	TTY buf;
 
 	BEFORE("noraw");
@@ -191,8 +216,8 @@ noraw(void)
 	buf.sg_flags &= ~(RAW | CBREAK);
 #endif
 	if ((result = _nc_set_tty_mode(&buf)) == OK) {
-	    SP->_raw = FALSE;
-	    SP->_cbreak = 0;
+	    SP_PARM->_raw = FALSE;
+	    SP_PARM->_cbreak = 0;
 	    cur_term->Nttyb = buf;
 	}
 	AFTER("noraw");
@@ -200,14 +225,22 @@ noraw(void)
     returnCode(result);
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-nocbreak(void)
+noraw(void)
+{
+    return NCURSES_SP_NAME(noraw) (CURRENT_SCREEN);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(nocbreak) (NCURSES_SP_DCL0)
 {
     int result = ERR;
 
     T((T_CALLED("nocbreak()")));
 
-    if (SP != 0 && cur_term != 0) {
+    if (SP_PARM != 0 && cur_term != 0) {
 	TTY buf;
 
 	BEFORE("nocbreak");
@@ -221,7 +254,7 @@ nocbreak(void)
 	buf.sg_flags &= ~CBREAK;
 #endif
 	if ((result = _nc_set_tty_mode(&buf)) == OK) {
-	    SP->_cbreak = 0;
+	    SP_PARM->_cbreak = 0;
 	    cur_term->Nttyb = buf;
 	}
 	AFTER("nocbreak");
@@ -229,12 +262,20 @@ nocbreak(void)
     returnCode(result);
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+nocbreak(void)
+{
+    return NCURSES_SP_NAME(nocbreak) (CURRENT_SCREEN);
+}
+#endif
+
 /*
  * Note:
  * this implementation may be wrong.  See the comment under intrflush().
  */
 NCURSES_EXPORT(void)
-noqiflush(void)
+NCURSES_SP_NAME(noqiflush) (NCURSES_SP_DCL0)
 {
     int result = ERR;
 
@@ -259,6 +300,14 @@ noqiflush(void)
     returnVoid;
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
+noqiflush(void)
+{
+    NCURSES_SP_NAME(noqiflush) (CURRENT_SCREEN);
+}
+#endif
+
 /*
  * This call does the same thing as the qiflush()/noqiflush() pair.  We know
  * for certain that SVr3 intrflush() tweaks the NOFLSH bit; on the other hand,
@@ -267,7 +316,7 @@ noqiflush(void)
  * curs_inopts(3x) is too exact to be coincidence.
  */
 NCURSES_EXPORT(int)
-intrflush(WINDOW *win GCC_UNUSED, bool flag)
+NCURSES_SP_NAME(intrflush) (NCURSES_SP_DCLx WINDOW *win GCC_UNUSED, bool flag)
 {
     int result = ERR;
 
@@ -294,3 +343,11 @@ intrflush(WINDOW *win GCC_UNUSED, bool flag)
     }
     returnCode(result);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+intrflush(WINDOW *win GCC_UNUSED, bool flag)
+{
+    return NCURSES_SP_NAME(intrflush) (CURRENT_SCREEN, win, flag);
+}
+#endif

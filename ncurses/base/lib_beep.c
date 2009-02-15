@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -42,7 +43,7 @@
 #include <curses.priv.h>
 #include <term.h>		/* beep, flash */
 
-MODULE_ID("$Id: lib_beep.c,v 1.10 2005/04/09 15:20:04 tom Exp $")
+MODULE_ID("$Id: lib_beep.c,v 1.11 2009/02/15 00:32:06 tom Exp $")
 
 /*
  *	beep()
@@ -53,7 +54,7 @@ MODULE_ID("$Id: lib_beep.c,v 1.10 2005/04/09 15:20:04 tom Exp $")
  */
 
 NCURSES_EXPORT(int)
-beep(void)
+NCURSES_SP_NAME(beep) (NCURSES_SP_DCL0)
 {
     int res = ERR;
 
@@ -74,3 +75,11 @@ beep(void)
 
     returnCode(res);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+beep(void)
+{
+    return NCURSES_SP_NAME(beep) (CURRENT_SCREEN);
+}
+#endif

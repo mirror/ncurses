@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2000,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -41,16 +43,16 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_endwin.c,v 1.19 2000/12/10 02:43:27 tom Exp $")
+MODULE_ID("$Id: lib_endwin.c,v 1.20 2009/02/15 00:35:00 tom Exp $")
 
 NCURSES_EXPORT(int)
-endwin(void)
+NCURSES_SP_NAME(endwin) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("endwin()")));
 
-    if (SP) {
-	SP->_endwin = TRUE;
-	SP->_mouse_wrap(SP);
+    if (SP_PARM) {
+	SP_PARM->_endwin = TRUE;
+	SP_PARM->_mouse_wrap(SP_PARM);
 	_nc_screen_wrap();
 	_nc_mvcur_wrap();	/* wrap up cursor addressing */
 	returnCode(reset_shell_mode());
@@ -58,3 +60,11 @@ endwin(void)
 
     returnCode(ERR);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+endwin(void)
+{
+    return NCURSES_SP_NAME(endwin) (CURRENT_SCREEN);
+}
+#endif

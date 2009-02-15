@@ -1,6 +1,6 @@
-# $Id: MKkeyname.awk,v 1.40 2008/07/12 18:40:00 tom Exp $
+# $Id: MKkeyname.awk,v 1.41 2009/02/15 00:24:58 tom Exp $
 ##############################################################################
-# Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.                #
+# Copyright (c) 1999-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -141,10 +141,19 @@ END {
 	print "	return result;"
 	print "}"
 	print ""
-	print "NCURSES_EXPORT(NCURSES_CONST char *) keyname (int c)"
+	print "NCURSES_EXPORT(NCURSES_CONST char *)"
+	print "NCURSES_SP_NAME(keyname) (NCURSES_SP_DCLx int c)"
 	print "{"
-	print "\treturn _nc_keyname(SP, c);"
+	print "\treturn _nc_keyname(SP_PARM, c);"
 	print "}"
+	print ""
+	print "#if NCURSES_SP_FUNCS"
+	print "NCURSES_EXPORT(NCURSES_CONST char *)"
+	print "keyname (int c)"
+	print "{"
+	print "	return NCURSES_SP_NAME(keyname) (CURRENT_SCREEN, c);"
+	print "}"
+	print "#endif"
 	print ""
 	print "#if NO_LEAKS"
 	print "void _nc_keyname_leaks(void)"

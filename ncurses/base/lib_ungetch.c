@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -41,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ungetch.c,v 1.11 2008/05/31 16:44:54 tom Exp $")
+MODULE_ID("$Id: lib_ungetch.c,v 1.12 2009/02/15 00:46:58 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -83,8 +84,16 @@ _nc_ungetch(SCREEN *sp, int ch)
 }
 
 NCURSES_EXPORT(int)
+NCURSES_SP_NAME(ungetch) (NCURSES_SP_DCLx int ch)
+{
+    T((T_CALLED("ungetch(%s)"), _nc_tracechar(SP_PARM, ch)));
+    returnCode(_nc_ungetch(SP_PARM, ch));
+}
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
 ungetch(int ch)
 {
-    T((T_CALLED("ungetch(%s)"), _nc_tracechar(SP, ch)));
-    returnCode(_nc_ungetch(SP, ch));
+    return NCURSES_SP_NAME(ungetch) (CURRENT_SCREEN, ch);
 }
+#endif

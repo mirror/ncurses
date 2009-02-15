@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -80,7 +80,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.27 2008/06/28 15:19:24 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.28 2009/02/14 21:41:22 tom Exp $")
 
 /*
  *	int
@@ -195,7 +195,7 @@ _nc_ospeed(int BaudRate)
 }
 
 NCURSES_EXPORT(int)
-baudrate(void)
+NCURSES_SP_NAME(baudrate) (NCURSES_SP_DCL0)
 {
     int result;
 
@@ -207,7 +207,7 @@ baudrate(void)
      * that take into account costs that depend on baudrate.
      */
 #ifdef TRACE
-    if (!isatty(fileno(SP ? SP->_ofp : stdout))
+    if (!isatty(fileno(SP_PARM ? SP_PARM->_ofp : stdout))
 	&& getenv("BAUDRATE") != 0) {
 	int ret;
 	if ((ret = _nc_getenv_num("BAUDRATE")) <= 0)
@@ -236,3 +236,11 @@ baudrate(void)
 
     returnCode(result);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+baudrate(void)
+{
+    return NCURSES_SP_NAME(baudrate) (CURRENT_SCREEN);
+}
+#endif

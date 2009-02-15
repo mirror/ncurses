@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -46,7 +47,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.66 2008/06/28 13:12:15 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.67 2009/02/15 00:49:44 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -72,7 +73,7 @@ _nc_set_no_padding(SCREEN *sp)
 static int (*my_outch) (int c) = _nc_outch;
 
 NCURSES_EXPORT(int)
-delay_output(int ms)
+NCURSES_SP_NAME(delay_output) (NCURSES_SP_DCLx int ms)
 {
     T((T_CALLED("delay_output(%d)"), ms));
 
@@ -91,6 +92,14 @@ delay_output(int ms)
 
     returnCode(OK);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+delay_output(int ms)
+{
+    return NCURSES_SP_NAME(delay_output) (CURRENT_SCREEN, ms);
+}
+#endif
 
 NCURSES_EXPORT(void)
 _nc_flush(void)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003,2006 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2003-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,12 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey, 2003                                          *
+ *  Author: Thomas E. Dickey                        2003                    *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: key_defined.c,v 1.6 2006/12/30 23:22:55 tom Exp $")
+MODULE_ID("$Id: key_defined.c,v 1.7 2009/02/15 00:30:00 tom Exp $")
 
 static int
 find_definition(TRIES * tree, const char *str)
@@ -65,14 +66,22 @@ find_definition(TRIES * tree, const char *str)
  * Otherwise, return the keycode's value (neither OK/ERR).
  */
 NCURSES_EXPORT(int)
-key_defined(const char *str)
+NCURSES_SP_NAME(key_defined) (NCURSES_SP_DCLx const char *str)
 {
     int code = ERR;
 
     T((T_CALLED("key_defined(%s)"), _nc_visbuf(str)));
-    if (SP != 0 && str != 0) {
-	code = find_definition(SP->_keytry, str);
+    if (SP_PARM != 0 && str != 0) {
+	code = find_definition(SP_PARM->_keytry, str);
     }
 
     returnCode(code);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+key_defined(const char *str)
+{
+    return NCURSES_SP_NAME(key_defined) (CURRENT_SCREEN, str);
+}
+#endif

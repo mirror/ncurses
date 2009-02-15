@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -40,10 +42,10 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_pad.c,v 1.41 2006/10/14 20:47:13 tom Exp $")
+MODULE_ID("$Id: lib_pad.c,v 1.42 2009/02/15 00:38:48 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
-newpad(int l, int c)
+NCURSES_SP_NAME(newpad) (NCURSES_SP_DCLx int l, int c)
 {
     WINDOW *win;
     NCURSES_CH_T *ptr;
@@ -69,6 +71,14 @@ newpad(int l, int c)
 
     returnWin(win);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(WINDOW *)
+newpad(int l, int c)
+{
+    return NCURSES_SP_NAME(newpad) (CURRENT_SCREEN, l, c);
+}
+#endif
 
 NCURSES_EXPORT(WINDOW *)
 subpad(WINDOW *orig, int l, int c, int begy, int begx)
