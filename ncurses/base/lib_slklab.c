@@ -29,8 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-on                 *
- *     and: Juergen Pfeifer                         2009                    *
+ *     and:  Juergen Pfeifer,                       1998,2009               *
+ *     and:  Thomas E. Dickey                       1998-on                 *
  ****************************************************************************/
 
 /*
@@ -40,14 +40,14 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slklab.c,v 1.8 2009/02/15 00:42:53 tom Exp $")
+MODULE_ID("$Id: lib_slklab.c,v 1.9 2009/02/21 18:48:42 tom Exp $")
 
 NCURSES_EXPORT(char *)
 NCURSES_SP_NAME(slk_label) (NCURSES_SP_DCLx int n)
 {
-    T((T_CALLED("slk_label(%d)"), n));
+    T((T_CALLED("slk_label(%p,%d)"), SP_PARM, n));
 
-    if (SP_PARM == NULL || SP_PARM->_slk == NULL || n < 1 || n > SP_PARM->_slk->labcnt)
+    if (SP_PARM == 0 || SP_PARM->_slk == 0 || n < 1 || n > SP_PARM->_slk->labcnt)
 	returnPtr(0);
     returnPtr(SP_PARM->_slk->ent[n - 1].ent_text);
 }

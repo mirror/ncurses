@@ -27,13 +27,12 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey                        2003                    *
- *     and: Juergen Pfeifer                         2009                    *
+ *  Author: Thomas E. Dickey, 2003                                          *
  ****************************************************************************/
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: key_defined.c,v 1.7 2009/02/15 00:30:00 tom Exp $")
+MODULE_ID("$Id: key_defined.c,v 1.8 2009/02/21 16:24:26 tom Exp $")
 
 static int
 find_definition(TRIES * tree, const char *str)
@@ -70,7 +69,7 @@ NCURSES_SP_NAME(key_defined) (NCURSES_SP_DCLx const char *str)
 {
     int code = ERR;
 
-    T((T_CALLED("key_defined(%s)"), _nc_visbuf(str)));
+    T((T_CALLED("key_defined(%p, %s)"), SP_PARM, _nc_visbuf(str)));
     if (SP_PARM != 0 && str != 0) {
 	code = find_definition(SP_PARM->_keytry, str);
     }

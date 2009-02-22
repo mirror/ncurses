@@ -38,7 +38,7 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkatr_set.c,v 1.12 2009/02/15 00:33:48 tom Exp $")
+MODULE_ID("$Id: lib_slkatr_set.c,v 1.13 2009/02/21 17:20:17 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_attr_set) (NCURSES_SP_DCLx
@@ -48,7 +48,7 @@ NCURSES_SP_NAME(slk_attr_set) (NCURSES_SP_DCLx
 {
     int code = ERR;
 
-    T((T_CALLED("slk_attr_set(%s,%d)"), _traceattr(attr), color_pair_number));
+    T((T_CALLED("slk_attr_set(%p,%s,%d)"), SP_PARM, _traceattr(attr), color_pair_number));
 
     if (SP_PARM != 0
 	&& SP_PARM->_slk != 0

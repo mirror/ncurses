@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: tries.c,v 1.27 2008/08/16 19:22:55 tom Exp $")
+MODULE_ID("$Id: tries.c,v 1.28 2008/11/16 00:19:59 juergen Exp $")
 
 /*
  * Expand a keycode into the string that it corresponds to, returning null if
@@ -72,7 +72,9 @@ _nc_expand_try(TRIES * tree, unsigned code, int *count, size_t len)
 	    *((unsigned char *) (result + len)) = 128;
 #ifdef TRACE
 	if (len == 0 && USE_TRACEF(TRACE_MAXIMUM)) {
-	    _tracef("expand_key %s %s", _nc_tracechar(SP, code), _nc_visbuf(result));
+	    _tracef("expand_key %s %s",
+		    _nc_tracechar(CURRENT_SCREEN, code),
+		    _nc_visbuf(result));
 	    _nc_unlock_global(tracef);
 	}
 #endif

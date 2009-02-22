@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.34 2008/08/30 19:20:50 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.35 2008/11/16 00:19:59 juergen Exp $)
 #
 ##############################################################################
 # Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
@@ -199,7 +199,7 @@ $0 !~ /^P_/ {
 	}
 	second = first + 1;
 	if ( $first == "chtype" ) {
-		returnType = "Char";
+		returnType = "Chtype";
 	} else if ( $first == "SCREEN" ) {
 		returnType = "SP";
 	} else if ( $first == "WINDOW" ) {

@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKnames.awk,v 1.20 2008/10/11 21:07:56 tom Exp $
+# $Id: MKnames.awk,v 1.21 2008/11/16 00:19:59 juergen Exp $
 function large_item(value) {
 	result = sprintf("%d,", offset);
 	offset = offset + length(value) + 1;
@@ -106,8 +106,6 @@ $3 == "str"	{
 END	{
 		print  ""
 		print  "#if BROKEN_LINKER || USE_REENTRANT"
-		print  ""
-		print  "#include <term.h>"
 		print  ""
 		if (bigstrings) {
 			printf "static const char _nc_name_blob[] = \n"

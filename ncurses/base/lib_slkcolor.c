@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author:  Juergen Pfeifer, 1998                                          *
+ *  Author:  Juergen Pfeifer, 1998,2009                                     *
  *     and:  Thomas E. Dickey 2005-on                                       *
  ****************************************************************************/
 
@@ -38,14 +38,14 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkcolor.c,v 1.14 2009/02/15 00:33:48 tom Exp $")
+MODULE_ID("$Id: lib_slkcolor.c,v 1.15 2009/02/21 16:59:50 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_color) (NCURSES_SP_DCLx short color_pair_number)
 {
     int code = ERR;
 
-    T((T_CALLED("slk_color(%d)"), color_pair_number));
+    T((T_CALLED("slk_color(%p,%d)"), SP_PARM, color_pair_number));
 
     if (SP_PARM != 0
 	&& SP_PARM->_slk != 0

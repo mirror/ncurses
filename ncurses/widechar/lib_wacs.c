@@ -31,9 +31,8 @@
  ****************************************************************************/
 
 #include <curses.priv.h>
-#include <term.h>
 
-MODULE_ID("$Id: lib_wacs.c,v 1.7 2006/12/17 15:16:17 tom Exp $")
+MODULE_ID("$Id: lib_wacs.c,v 1.8 2008/11/16 00:19:59 juergen Exp $")
 
 NCURSES_EXPORT_VAR(cchar_t) * _nc_wacs = 0;
 

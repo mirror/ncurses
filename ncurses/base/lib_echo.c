@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,12 +44,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_echo.c,v 1.6 2009/02/15 00:34:19 tom Exp $")
+MODULE_ID("$Id: lib_echo.c,v 1.7 2009/02/21 20:20:40 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(echo) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("echo()")));
+    T((T_CALLED("echo(%p)"), SP_PARM));
+    if (0 == SP_PARM)
+	returnCode(ERR);
     SP_PARM->_echo = TRUE;
     returnCode(OK);
 }
@@ -65,7 +67,9 @@ echo(void)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(noecho) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("noecho()")));
+    T((T_CALLED("noecho(%p)"), SP_PARM));
+    if (0 == SP_PARM)
+	returnCode(ERR);
     SP_PARM->_echo = FALSE;
     returnCode(OK);
 }

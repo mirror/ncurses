@@ -34,7 +34,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.399 2009/02/15 01:05:47 tom Exp $
+ * $Id: curses.priv.h,v 1.402 2009/02/21 22:54:34 tom Exp $
  *
  *	curses.priv.h
  *
@@ -319,7 +319,7 @@ color_t;
 #if NCURSES_NO_PADDING
 #define GetNoPadding(sp)	((sp) ? (sp)->_no_padding : _nc_prescreen._no_padding)
 #define SetNoPadding(sp)	_nc_set_no_padding(sp)
-extern NCURSES_EXPORT(void) _nc_set_no_padding(SCREEN *);
+extern NCURSES_EXPORT(void)     _nc_set_no_padding(SCREEN *);
 #else
 #define GetNoPadding(sp)	FALSE
 #define SetNoPadding(sp)	/*nothing*/
@@ -496,13 +496,13 @@ typedef struct
 } slk_ent;
 
 typedef struct _SLK {
-	char dirty;		/* all labels have changed */
-	char hidden;		/* soft labels are hidden */
-	WINDOW *win;
+	bool    dirty;		/* all labels have changed */
+	bool    hidden;		/* soft labels are hidden */
+	WINDOW  *win;
 	slk_ent *ent;
-	short  maxlab;		/* number of available labels */
-	short  labcnt;		/* number of allocated labels */
-	short  maxlen;		/* length of labels */
+	short   maxlab;		/* number of available labels */
+	short   labcnt;		/* number of allocated labels */
+	short   maxlen;		/* length of labels */
 	NCURSES_CH_T attr;	/* soft label attribute */
 } SLK;
 
@@ -735,8 +735,8 @@ struct screen {
 	char		*_setbuf;	/* buffered I/O for output	    */
 	bool		_filtered;	/* filter() was called		    */
 	bool		_buffered;	/* setvbuf uses _setbuf data	    */
-        bool            _prescreen;     /* is in prescreen phase            */
-        bool            _use_env;       /* LINES & COLS from environment?   */
+	bool		_prescreen;	/* is in prescreen phase	    */
+	bool		_use_env;	/* LINES & COLS from environment?   */
 	int		_checkfd;	/* filedesc for typeahead check	    */
 	TERMINAL	*_term;		/* terminal type information	    */
 	TTY		_saved_tty;	/* savetty/resetty information	    */
@@ -1299,7 +1299,7 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 #define returnBool(code)	TRACE_RETURN(code,bool)
 #define returnCPtr(code)	TRACE_RETURN(code,cptr)
 #define returnCVoidPtr(code)	TRACE_RETURN(code,cvoid_ptr)
-#define returnChar(code)	TRACE_RETURN(code,chtype)
+#define returnChtype(code)	TRACE_RETURN(code,chtype)
 #define returnCode(code)	TRACE_RETURN(code,int)
 #define returnPtr(code)		TRACE_RETURN(code,ptr)
 #define returnSP(code)		TRACE_RETURN(code,sp)
@@ -1358,7 +1358,7 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 #define returnBool(code)	return code
 #define returnCPtr(code)	return code
 #define returnCVoidPtr(code)	return code
-#define returnChar(code)	return code
+#define returnChtype(code)	return code
 #define returnCode(code)	return code
 #define returnPtr(code)		return code
 #define returnSP(code)		return code
@@ -1752,6 +1752,66 @@ extern NCURSES_EXPORT(int) _nc_ripoffline (int line, int (*init)(WINDOW *,int));
  */
 #define MSG_NO_MEMORY "Out of memory"
 #define MSG_NO_INPUTS "Premature EOF"
+
+/* timed_wait flag definitions */
+#define TW_NONE    0
+#define TW_INPUT   1
+#define TW_MOUSE   2
+#define TW_ANY     (TW_INPUT | TW_MOUSE)
+#define TW_EVENT   4
+
+/*
+ * Exported entrypoints beyond the published API
+ */
+extern NCURSES_EXPORT(WINDOW *) _nc_curscr_of(SCREEN*);
+extern NCURSES_EXPORT(WINDOW *) _nc_newscr_of(SCREEN*);
+extern NCURSES_EXPORT(WINDOW *) _nc_stdscr_of(SCREEN*);
+extern NCURSES_EXPORT(int)      _nc_outc_wrapper(SCREEN*,int);
+
+extern NCURSES_EXPORT(TERMINAL*) NCURSES_SP_NAME(_nc_set_curterm)(SCREEN*,TERMINAL*);
+extern NCURSES_EXPORT(int)       NCURSES_SP_NAME(_nc_del_curterm)(SCREEN*,TERMINAL*);
+
+#if NCURSES_EXT_FUNCS
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_set_tabsize)(SCREEN*, int);
+#endif
+
+extern NCURSES_EXPORT(chtype)   NCURSES_SP_NAME(_nc_acs_char)(SCREEN*,int);
+
+/*
+ * We put the safe versions of various calls here as they are not published
+ * part of the API up to now
+ */
+extern NCURSES_EXPORT(SCREEN*)  _nc_SP(void);
+
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vidputs)(SCREEN*,chtype,int(*) (SCREEN*, int));
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vidattr)(SCREEN *, chtype);
+
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scr_restore)(SCREEN*, const char*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scr_init)(SCREEN*,const char*);
+
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_restartterm)(SCREEN*,NCURSES_CONST char*,int,int*);
+extern NCURSES_EXPORT(bool)     NCURSES_SP_NAME(_nc_is_term_resized)(SCREEN*,int,int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resize_term)(SCREEN*,int,int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resizeterm)(SCREEN*,int,int);
+
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetent)(SCREEN*,char*,const char *);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tputs)(SCREEN*,const char*,int,int(*)(SCREEN*, int));
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_savetty)(SCREEN*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resetty)(SCREEN*);
+
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_mcprint)(SCREEN*,char*, int);
+extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_tgetstr)(SCREEN*,NCURSES_CONST char*,char**);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetflag)(SCREEN*,NCURSES_CONST char*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetnum)(SCREEN*,NCURSES_CONST char*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tigetflag)(SCREEN*,NCURSES_CONST char*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tigetnum)(SCREEN*,NCURSES_CONST char*);
+extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_tigetstr)(SCREEN*, NCURSES_CONST char*);
+extern NCURSES_EXPORT(void)     _nc_cookie_init(SCREEN *sp);
+extern NCURSES_EXPORT(int)      _nc_tinfo_doupdate(SCREEN *sp);
+extern NCURSES_EXPORT(int)      _nc_tinfo_mcprint(SCREEN*,char*,int);
+#if USE_WIDEC_SUPPORT
+extern NCURSES_EXPORT(wchar_t *) NCURSES_SP_NAME(_nc_wunctrl)(SCREEN*, cchar_t *);
+#endif
 
 #ifdef __cplusplus
 }

@@ -40,10 +40,9 @@
 #include <curses.priv.h>
 
 #include <ctype.h>
-#include <term.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.76 2008/08/16 19:22:55 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.77 2008/11/16 00:19:59 juergen Exp $")
 
 /*
  *	char *

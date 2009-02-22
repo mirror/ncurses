@@ -66,7 +66,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.50 2009/02/15 00:51:03 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.51 2009/02/21 21:43:40 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 
@@ -335,7 +335,7 @@ NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
     if (SP_PARM->_coloron)
 	attrs |= A_COLOR;
 
-    returnChar(attrs);
+    returnChtype(attrs);
 }
 
 #if NCURSES_SP_FUNCS

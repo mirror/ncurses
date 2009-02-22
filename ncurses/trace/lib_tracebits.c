@@ -33,9 +33,8 @@
  ****************************************************************************/
 
 #include <curses.priv.h>
-#include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_tracebits.c,v 1.17 2008/08/03 16:09:26 tom Exp $")
+MODULE_ID("$Id: lib_tracebits.c,v 1.18 2008/11/16 00:19:59 juergen Exp $")
 
 #if SVR4_TERMIO && !defined(_POSIX_SOURCE)
 #define _POSIX_SOURCE

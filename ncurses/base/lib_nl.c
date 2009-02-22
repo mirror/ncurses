@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_nl.c,v 1.9 2009/02/15 00:38:22 tom Exp $")
+MODULE_ID("$Id: lib_nl.c,v 1.10 2009/02/21 20:58:21 tom Exp $")
 
 #ifdef __EMX__
 #include <io.h>
@@ -53,15 +53,14 @@ MODULE_ID("$Id: lib_nl.c,v 1.9 2009/02/15 00:38:22 tom Exp $")
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(nl) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("nl()")));
-
+    T((T_CALLED("nl(%p)"), SP_PARM));
+    if (0 == SP_PARM)
+	returnCode(ERR);
     SP_PARM->_nl = TRUE;
-
 #ifdef __EMX__
     _nc_flush();
     _fsetmode(NC_OUTPUT, "t");
 #endif
-
     returnCode(OK);
 }
 
@@ -76,15 +75,14 @@ nl(void)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(nonl) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("nonl()")));
-
+    T((T_CALLED("nonl(%p)"), SP_PARM));
+    if (0 == SP_PARM)
+	returnCode(ERR);
     SP_PARM->_nl = FALSE;
-
 #ifdef __EMX__
     _nc_flush();
     _fsetmode(NC_OUTPUT, "b");
 #endif
-
     returnCode(OK);
 }
 

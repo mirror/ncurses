@@ -38,9 +38,8 @@
 */
 
 #include <curses.priv.h>
-#include <term.h>
 
-MODULE_ID("$Id: lib_get_wstr.c,v 1.10 2008/08/16 19:25:33 tom Exp $")
+MODULE_ID("$Id: lib_get_wstr.c,v 1.11 2008/11/16 00:19:59 juergen Exp $")
 
 static int
 wadd_wint(WINDOW *win, wint_t *src)

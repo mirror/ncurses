@@ -39,16 +39,16 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_winch.c,v 1.5 2001/06/02 23:42:08 skimo Exp $")
+MODULE_ID("$Id: lib_winch.c,v 1.6 2008/11/16 00:19:59 juergen Exp $")
 
 NCURSES_EXPORT(chtype)
 winch(WINDOW *win)
 {
     T((T_CALLED("winch(%p)"), win));
     if (win != 0) {
-	returnChar(CharOf(win->_line[win->_cury].text[win->_curx]) |
-		   AttrOf(win->_line[win->_cury].text[win->_curx]));
+	returnChtype(CharOf(win->_line[win->_cury].text[win->_curx]) |
+		     AttrOf(win->_line[win->_cury].text[win->_curx]));
     } else {
-	returnChar(0);
+	returnChtype(0);
     }
 }

@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: use_screen.c,v 1.6 2008/06/07 19:16:56 tom Exp $")
+MODULE_ID("$Id: use_screen.c,v 1.7 2008/11/16 00:19:59 juergen Exp $")
 
 NCURSES_EXPORT(int)
 use_screen(SCREEN *screen, NCURSES_SCREEN_CB func, void *data)
@@ -47,7 +47,7 @@ use_screen(SCREEN *screen, NCURSES_SCREEN_CB func, void *data)
      * recurred through this point, return an error if so.
      */
     _nc_lock_global(curses);
-    save_SP = SP;
+    save_SP = CURRENT_SCREEN;
     set_term(screen);
 
     code = func(screen, data);
