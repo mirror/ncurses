@@ -44,7 +44,7 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.59 2009/02/15 00:48:40 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.60 2009/02/28 21:07:56 tom Exp $")
 
 static int _nc_curs_set(SCREEN *, int);
 static int _nc_meta(SCREEN *, bool);
@@ -221,8 +221,9 @@ has_key(int keycode)
 #undef CUR
 #define CUR (sp->_term)->type.
 
-static int
-_nc_putp(const char *name GCC_UNUSED, const char *value)
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_DCLx
+			   const char *name GCC_UNUSED, const char *value)
 {
     int rc = ERR;
 
@@ -233,8 +234,17 @@ _nc_putp(const char *name GCC_UNUSED, const char *value)
     return rc;
 }
 
-static int
-_nc_putp_flush(const char *name, const char *value)
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_putp(const char *name, const char *value)
+{
+    return NCURSES_SP_NAME(_nc_putp) (CURRENT_SCREEN, name, value);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(_nc_putp_flush) (NCURSES_SP_DCLx
+				 const char *name, const char *value)
 {
     int rc = _nc_putp(name, value);
     if (rc != ERR) {
@@ -242,6 +252,14 @@ _nc_putp_flush(const char *name, const char *value)
     }
     return rc;
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_putp_flush(const char *name, const char *value)
+{
+    return NCURSES_SP_NAME(_nc_putp_flush) (CURRENT_SCREEN, name, value);
+}
+#endif
 
 /* Turn the keypad on/off
  *
@@ -262,12 +280,12 @@ _nc_keypad(SCREEN *sp, bool flag)
 	 * has wgetch() reading in more than one thread.  putp() and below
 	 * may use SP explicitly.
 	 */
-	if (_nc_use_pthreads && sp != SP) {
+	if (_nc_use_pthreads && sp != CURRENT_SCREEN) {
 	    SCREEN *save_sp;
 
 	    /* cannot use use_screen(), since that is not in tinfo library */
 	    _nc_lock_global(curses);
-	    save_sp = SP;
+	    save_sp = CURRENT_SCREEN;
 	    _nc_set_screen(sp);
 	    rc = _nc_keypad(sp, flag);
 	    _nc_set_screen(save_sp);
@@ -330,8 +348,8 @@ _nc_meta(SCREEN *sp, bool flag)
 
     /* Ok, we stay relaxed and don't signal an error if win is NULL */
 
-    if (SP != 0) {
-	SP->_use_meta = flag;
+    if (sp != 0) {
+	sp->_use_meta = flag;
 
 	if (flag) {
 	    _nc_putp("meta_on", meta_on);

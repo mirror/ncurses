@@ -26,7 +26,7 @@
 #* sale, use or other dealings in this Software without prior written       *
 #* authorization.                                                           *
 #****************************************************************************/
-# $Id: ncu-indent,v 1.17 2008/08/03 15:46:44 tom Exp $
+# $Id: ncu-indent,v 1.20 2009/02/21 20:56:23 tom Exp $
 NOOP=no
 OPTS='
 --blank-lines-after-procedures
@@ -44,6 +44,8 @@ OPTS='
 --swallow-optional-blank-lines
 --tab-size8
 
+-T NCURSES_SP_ARGx
+-T NCURSES_SP_DCLx
 -T NCURSES_EXPORT_VAR
 -T NCURSES_INLINE
 -T SCREEN
@@ -88,11 +90,12 @@ do
 		mv "$name" "$save"
 		sed \
 			-e '/EMPTY_MODULE(/s/)$/);/' \
+			-e 's,\(MODULEID(\),//\1,' \
 			-e '/MODULE_ID(/s/)$/);/' \
 			-e 's,\<GCC_NORETURN;,;//GCC_NORETURN;,' \
 			-e 's,\<GCC_PRINTFLIKE(,;//GCC_PRINTFLIKE(,' \
 			-e 's,\<GCC_SCANFLIKE(,;//GCC_SCANFLIKE(,' \
-			-e 's,\(\<NCURSES_EXPORT_VAR\>\),//\1,' \
+			-e 's,\(\<NCURSES_EXPORT_VAR\>.*;\),//\1,' \
 			"$save" >"$test"
 		cp "$test" "$name"
 		chmod u+w "$name"
@@ -100,11 +103,12 @@ do
 		${INDENT_PROG-indent} -npro $OPTS "$name"
 		sed \
 			-e '/EMPTY_MODULE(/s/);$/)/' \
+			-e 's,//\(MODULEID(\),\1,' \
 			-e '/MODULE_ID(/s/);$/)/' \
 			-e 's,;[ 	]*//GCC_NORETURN;, GCC_NORETURN;,' \
 			-e 's,;[ 	]*//GCC_PRINTFLIKE(, GCC_PRINTFLIKE(,' \
 			-e 's,;[ 	]*//GCC_SCANFLIKE(, GCC_SCANFLIKE(,' \
-			-e 's,//\(\<NCURSES_EXPORT_VAR\>\),\1,' \
+			-e 's,//\(\<NCURSES_EXPORT_VAR\>[ ]*\),\1,' \
 			"$name" >"$test"
 		mv "$test" "$name"
 		rm -f "${name}~"

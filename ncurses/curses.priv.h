@@ -30,11 +30,12 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                                                 *
  ****************************************************************************/
 
 
 /*
- * $Id: curses.priv.h,v 1.402 2009/02/21 22:54:34 tom Exp $
+ * $Id: curses.priv.h,v 1.403 2009/02/28 20:55:48 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1628,6 +1629,8 @@ extern NCURSES_EXPORT(int) _nc_getenv_num (const char *);
 extern NCURSES_EXPORT(int) _nc_keypad (SCREEN *, bool);
 extern NCURSES_EXPORT(int) _nc_ospeed (int);
 extern NCURSES_EXPORT(int) _nc_outch (int);
+extern NCURSES_EXPORT(int) _nc_putp(const char *, const char *);
+extern NCURSES_EXPORT(int) _nc_putp_flush(const char *, const char *);
 extern NCURSES_EXPORT(int) _nc_read_termcap_entry (const char *const, TERMTYPE *const);
 extern NCURSES_EXPORT(int) _nc_setupscreen (int, int, FILE *, bool, int);
 extern NCURSES_EXPORT(int) _nc_timed_wait (SCREEN *, int, int, int * EVENTLIST_2nd(_nc_eventlist *));
@@ -1699,7 +1702,7 @@ extern NCURSES_EXPORT_VAR(int *) _nc_oldnums;
 
 #define NC_BUFFERED(flag) _nc_set_buffer(SP->_ofp, flag)
 
-#define NC_OUTPUT ((SP != 0) ? SP->_ofp : stdout)
+#define NC_OUTPUT ((SP_PARM != 0) ? SP_PARM->_ofp : stdout)
 
 /*
  * On systems with a broken linker, define 'SP' as a function to force the
@@ -1763,6 +1766,7 @@ extern NCURSES_EXPORT(int) _nc_ripoffline (int line, int (*init)(WINDOW *,int));
 /*
  * Exported entrypoints beyond the published API
  */
+#if NCURSES_SP_FUNCS
 extern NCURSES_EXPORT(WINDOW *) _nc_curscr_of(SCREEN*);
 extern NCURSES_EXPORT(WINDOW *) _nc_newscr_of(SCREEN*);
 extern NCURSES_EXPORT(WINDOW *) _nc_stdscr_of(SCREEN*);
@@ -1794,6 +1798,10 @@ extern NCURSES_EXPORT(bool)     NCURSES_SP_NAME(_nc_is_term_resized)(SCREEN*,int
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resize_term)(SCREEN*,int,int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resizeterm)(SCREEN*,int,int);
 
+extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_outch)(SCREEN*, int ch);
+extern NCURSES_EXPORT(void)	NCURSES_SP_NAME(_nc_flush)(SCREEN*);
+extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_putp)(SCREEN*, const char *, const char *);
+extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_putp_flush)(SCREEN*, const char *, const char *);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetent)(SCREEN*,char*,const char *);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tputs)(SCREEN*,const char*,int,int(*)(SCREEN*, int));
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_savetty)(SCREEN*);
@@ -1812,6 +1820,14 @@ extern NCURSES_EXPORT(int)      _nc_tinfo_mcprint(SCREEN*,char*,int);
 #if USE_WIDEC_SUPPORT
 extern NCURSES_EXPORT(wchar_t *) NCURSES_SP_NAME(_nc_wunctrl)(SCREEN*, cchar_t *);
 #endif
+
+/* FIXME - move these to curses.h.in */
+extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(getmouse) (SCREEN*, MEVENT *);
+extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(ungetmouse) (SCREEN*, MEVENT *);
+extern NCURSES_EXPORT(mmask_t)	NCURSES_SP_NAME(mousemask) (SCREEN*, mmask_t, mmask_t *);
+extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(mouseinterval) (SCREEN*, int);
+extern NCURSES_EXPORT(bool)	NCURSES_SP_NAME(has_mouse) (SCREEN*);
+#endif /* NCURSES_SP_FUNCS */
 
 #ifdef __cplusplus
 }

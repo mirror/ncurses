@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                                                 *
  ****************************************************************************/
 
 /*
@@ -46,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.71 2008/08/23 18:04:29 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.72 2009/02/28 20:37:37 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -56,26 +57,26 @@ NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 NCURSES_EXPORT(const char *)
 NCURSES_PUBLIC_VAR(_nc_tputs_trace) (void)
 {
-    return SP ? SP->_tputs_trace : _nc_prescreen._tputs_trace;
+    return CURRENT_SCREEN ? CURRENT_SCREEN->_tputs_trace : _nc_prescreen._tputs_trace;
 }
 NCURSES_EXPORT(long)
 NCURSES_PUBLIC_VAR(_nc_outchars) (void)
 {
-    return SP ? SP->_outchars : _nc_prescreen._outchars;
+    return CURRENT_SCREEN ? CURRENT_SCREEN->_outchars : _nc_prescreen._outchars;
 }
 NCURSES_EXPORT(void)
 _nc_set_tputs_trace(const char *s)
 {
-    if (SP)
-	SP->_tputs_trace = s;
+    if (CURRENT_SCREEN)
+	CURRENT_SCREEN->_tputs_trace = s;
     else
 	_nc_prescreen._tputs_trace = s;
 }
 NCURSES_EXPORT(void)
 _nc_count_outchars(long increment)
 {
-    if (SP)
-	SP->_outchars += increment;
+    if (CURRENT_SCREEN)
+	CURRENT_SCREEN->_outchars += increment;
     else
 	_nc_prescreen._outchars += increment;
 }

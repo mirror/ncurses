@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.27 2008/08/03 22:08:22 tom Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.28 2009/02/28 21:02:46 juergen Exp $")
 
 /* Macros */
 
@@ -197,7 +197,7 @@ _nc_Match_Next_Character_In_Item_Name
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
-|   Function      :  int menu_driver(MENU *menu, int c)
+|   Function      :  int menu_driver(MENU* menu, int c)
 |
 |   Description   :  Central dispatcher for the menu. Translates the logical
 |                    request 'c' into a menu action.

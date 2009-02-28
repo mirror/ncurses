@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.26 2004/12/25 23:57:04 tom Exp $")
+MODULE_ID("$Id: m_post.c,v 1.27 2009/02/28 21:02:46 juergen Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -255,7 +255,7 @@ _nc_Draw_Menu(const MENU * menu)
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
-|   Function      :  int post_menu(MENU *)
+|   Function      :  int post_menu(MENU* menu)
 |
 |   Description   :  Post a menu to the screen. This makes it visible.
 |
@@ -329,7 +329,7 @@ post_menu(MENU * menu)
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
-|   Function      :  int unpost_menu(MENU *)
+|   Function      :  int unpost_menu(MENU*)
 |
 |   Description   :  Detach menu from screen
 |

@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_def.c,v 1.36 2007/10/13 19:29:58 tom Exp $")
+MODULE_ID("$Id: fld_def.c,v 1.37 2009/02/28 19:00:51 juergen Exp $")
 
 /* this can't be readonly */
 static FIELD default_field =
@@ -252,8 +252,8 @@ _nc_Free_Type(FIELD *field)
   if (field->type != 0)
     {
       field->type->ref--;
+      _nc_Free_Argument(field->type, (TypeArgument *)(field->arg));
     }
-  _nc_Free_Argument(field->type, (TypeArgument *)(field->arg));
 }
 
 /*---------------------------------------------------------------------------

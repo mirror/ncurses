@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,12 +40,14 @@
 #include <term_entry.h>		/* TTY, cur_term */
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.18 2008/08/16 19:22:55 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.19 2009/02/28 15:49:58 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.
 
-#if BROKEN_LINKER || USE_REENTRANT
+#if BROKEN_LINKER && !USE_REENTRANT
+NCURSES_EXPORT_VAR(TERMINAL *) cur_term = 0;
+#elif BROKEN_LINKER || USE_REENTRANT
 NCURSES_EXPORT(TERMINAL *)
 NCURSES_PUBLIC_VAR(cur_term) (void)
 {

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2000
  *
- * $Id: railroad.c,v 1.16 2008/02/09 18:08:43 tom Exp $
+ * $Id: railroad.c,v 1.17 2008/12/07 02:07:41 juergen Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -82,7 +82,7 @@ Backup(void)
 }
 
 static void
-ShowCursor(int flag)
+MyShowCursor(int flag)
 {
     if (startC != 0 && finisC != 0) {
 	tputs(flag ? startC : finisC, 1, outc);
@@ -166,7 +166,7 @@ cleanup(void)
 {
     Underline(0);
     StandOut(0);
-    ShowCursor(1);
+    MyShowCursor(1);
 }
 
 static void
@@ -214,14 +214,14 @@ railroad(char **args)
 	startC = tgetstr("ve", &ap);
 	finisC = tgetstr("vi", &ap);
 
-	ShowCursor(0);
+	MyShowCursor(0);
 
 	CATCHALL(onsig);
 
 	while (*args) {
 	    ShowSign(*args++);
 	}
-	ShowCursor(1);
+	MyShowCursor(1);
     }
 }
 
