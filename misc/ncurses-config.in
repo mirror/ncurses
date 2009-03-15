@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.22 2009/01/24 21:06:45 tom Exp $
+# $Id: ncurses-config.in,v 1.23 2009/03/14 19:20:57 Charles.Wilson Exp $
 ##############################################################################
 # Copyright (c) 2006-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -40,6 +40,7 @@ datadir="@datadir@"
 mandir="@mandir@"
 
 THIS="@LIB_NAME@@DFT_ARG_SUFFIX@"
+TINFO_LIB="@TINFO_NAME@@DFT_ARG_SUFFIX@"
 
 LANG=C;		export LANG
 LANGUAGE=C;	export LANGUAGE
@@ -82,9 +83,15 @@ while test $# -gt 0; do
 ENDECHO
 		;;
 	--libs)
+		if test @TINFO_NAME@ = @LIB_NAME@ ; then
 		sed -e 's,^[ ]*,,' -e 's, [ ]*, ,g' -e 's,[ ]*$,,' <<-ENDECHO
 			-L$libdir @EXTRA_LDFLAGS@ -l${THIS} @LIBS@
 ENDECHO
+		else
+		sed -e 's,^[ ]*,,' -e 's, [ ]*, ,g' -e 's,[ ]*$,,' <<-ENDECHO
+			-L$libdir @EXTRA_LDFLAGS@ -l${THIS} -l${TINFO_LIB} @LIBS@
+ENDECHO
+		fi
 		;;
 	# identification
 	--version)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.137 2008/09/13 16:59:24 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.138 2009/03/14 18:45:55 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -495,11 +495,11 @@ main(int argc, char *argv[])
 
     _nc_progname = _nc_rootname(argv[0]);
 
-    if ((infodump = (strcmp(_nc_progname, PROG_CAPTOINFO) == 0)) != FALSE) {
+    if ((infodump = same_program(_nc_progname, PROG_CAPTOINFO)) != FALSE) {
 	outform = F_TERMINFO;
 	sortmode = S_TERMINFO;
     }
-    if ((capdump = (strcmp(_nc_progname, PROG_INFOTOCAP) == 0)) != FALSE) {
+    if ((capdump = same_program(_nc_progname, PROG_INFOTOCAP)) != FALSE) {
 	outform = F_TERMCAP;
 	sortmode = S_TERMCAP;
     }

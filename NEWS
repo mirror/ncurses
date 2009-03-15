@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1367 2009/02/28 22:38:03 tom Exp $
+-- $Id: NEWS,v 1.1370 2009/03/14 20:40:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090314
+	+ modify scripts to generate ncurses*-config and pc-files to add
+	  dependency for tinfo library (patch by Charles Wilson).
+	+ improve comparison of program-names when checking for linked flavors
+	  such as "reset" by ignoring the executable suffix (reports by Charles
+	  Wilson, Samuel Thibault and Cedric Bretaudeau on Cygwin mailing
+	  list). 
+	+ suppress configure check for static/dynamic linker flags for gcc on
+	  Solaris 10, since gcc is confused by absence of static libc, and
+	  does not switch back to dynamic mode before finishing the libraries
+	  (reports by Joel Bertrand, Alan Pae).
+	+ minor fixes to Intel compiler warning checks in configure script.
+	+ modify _nc_leaks_tinfo() so leak-checking in test/railroad.c works.
+	+ modify set_curterm() to make broken-linker configuration work with
+	  changes from 20090228 (report by Charles Wilson).
 
 20090228
 	+ continue integrating "sp-funcs" by Juergen Pfeifer (incomplete).

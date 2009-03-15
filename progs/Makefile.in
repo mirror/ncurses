@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.80 2008/11/15 19:04:19 tom Exp $
+# $Id: Makefile.in,v 1.81 2009/03/14 18:45:55 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -172,10 +172,16 @@ define_init      = `echo init|        $(TRANSFORM)`
 define_reset     = `echo reset|       $(TRANSFORM)`
 
 transform.h :
-	echo "#define PROG_CAPTOINFO \"$(define_captoinfo)\"" >$@
-	echo "#define PROG_INFOTOCAP \"$(define_infotocap)\"" >>$@
-	echo "#define PROG_RESET     \"$(define_reset)\""     >>$@
-	echo "#define PROG_INIT      \"$(define_init)\""      >>$@
+	echo "#ifndef __TRANSFORM_H"					>$@
+	echo "#define __TRANSFORM_H 1"					>>$@
+	echo "#include <progs.priv.h>"					>>$@
+	echo "extern bool same_program(const char *, const char *);"	>>$@
+	-test -n "$x" && echo "#define SUFFIX_IGNORED \"$x\""		>>$@
+	echo "#define PROG_CAPTOINFO \"$(define_captoinfo)\""		>>$@
+	echo "#define PROG_INFOTOCAP \"$(define_infotocap)\""		>>$@
+	echo "#define PROG_RESET     \"$(define_reset)\""		>>$@
+	echo "#define PROG_INIT      \"$(define_init)\""		>>$@
+	echo "#endif /* __TRANSFORM_H */"				>>$@
 
 install.progs: $(AUTO_SRC) $(PROGS) $(DESTDIR)$(bindir)
 @MAKE_TERMINFO@	$(LIBTOOL_INSTALL) $(INSTALL_PROG) tic$x     $(DESTDIR)$(bindir)/$(actual_tic)
@@ -216,7 +222,8 @@ $(DESTDIR)$(bindir) :
 
 DEPS_TIC = \
 	$(MODEL)/tic$o \
-	$(MODEL)/dump_entry$o
+	$(MODEL)/dump_entry$o \
+	$(MODEL)/transform$o
 
 tic$x: $(DEPS_TIC) $(DEPS_CURSES) transform.h
 	@ECHO_LINK@ $(LINK) $(DEPS_TIC) $(LDFLAGS_TIC) -o $@
@@ -240,7 +247,8 @@ tabs$x: $(DEPS_TABS) $(DEPS_TABS)
 	@ECHO_LINK@ $(LINK) $(DEPS_TABS) $(LDFLAGS_TINFO) -o $@
 
 DEPS_TPUT = \
-	$(MODEL)/tput$o
+	$(MODEL)/tput$o \
+	$(MODEL)/transform$o
 
 tput$x: $(DEPS_TPUT) $(DEPS_CURSES) transform.h
 	@ECHO_LINK@ $(LINK) $(DEPS_TPUT) $(LDFLAGS_TINFO) -o $@
@@ -253,7 +261,8 @@ infocmp$x: $(DEPS_INFOCMP) $(DEPS_CURSES)
 	@ECHO_LINK@ $(LINK) $(DEPS_INFOCMP) $(LDFLAGS_TIC) -o $@
 
 DEPS_TSET = \
-	$(MODEL)/tset$o
+	$(MODEL)/tset$o \
+	$(MODEL)/transform$o
 
 tset$x: $(DEPS_TSET) $(DEPS_CURSES) transform.h
 	@ECHO_LINK@ $(LINK) $(DEPS_TSET) $(LDFLAGS_TINFO) -o $@

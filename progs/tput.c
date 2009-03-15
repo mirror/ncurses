@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.42 2008/07/13 11:05:12 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.43 2009/03/14 18:45:55 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -86,8 +86,8 @@ usage(void)
 static void
 check_aliases(const char *name)
 {
-    is_init = (strcmp(name, PROG_INIT) == 0);
-    is_reset = (strcmp(name, PROG_RESET) == 0);
+    is_init = same_program(name, PROG_INIT);
+    is_reset = same_program(name, PROG_RESET);
 }
 
 /*

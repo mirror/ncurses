@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.5 2009/01/24 21:06:36 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.7 2009/03/14 20:37:54 tom Exp $
 ##############################################################################
 # Copyright (c) 2009 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -39,6 +39,10 @@
 # library, except that the tinfo library does not depend on ncurses.
 LIB_NAME=@LIB_NAME@
 TINFO_NAME=@TINFO_NAME@
+PANEL_NAME=panel # @PANEL_NAME@
+MENU_NAME=menu # @MENU_NAME@
+FORM_NAME=form # @FORM_NAME@
+CXX_NAME=ncurses++ # @CXX_NAME@
 DFT_DEP_SUFFIX=@DFT_DEP_SUFFIX@
 CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@
 
@@ -54,10 +58,24 @@ show_libdir='@libdir@'
 
 MAIN_LIBRARY="${LIB_NAME}@DFT_ARG_SUFFIX@"
 SUB_LIBRARY="${TINFO_NAME}@DFT_ARG_SUFFIX@"
+PANEL_LIBRARY="${PANEL_NAME}@DFT_ARG_SUFFIX@"
+MENU_LIBRARY="${MENU_NAME}@DFT_ARG_SUFFIX@"
+FORM_LIBRARY="${FORM_NAME}@DFT_ARG_SUFFIX@"
+
+SUB_LIBRARY_REQ=${SUB_LIBRARY}
+TINFO_NAME_REQ=${TINFO_NAME}
+if test $TINFO_NAME = $LIB_NAME ; then
+	SUB_LIBRARY_REQ=
+	TINFO_NAME_REQ=
+fi
 
 for lib in ../lib/*
 do
 	name=`basename $lib`
+	if test "$name" = "*" ; then
+		break
+	fi
+
 	root=`basename $name "$DFT_DEP_SUFFIX"`
 	if test "$name" = "$root" ; then
 		root=`basename $name "$CXX_LIB_SUFFIX"`
@@ -70,13 +88,16 @@ do
 
 	desc="ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@"
 	if test $name = $MAIN_LIBRARY ; then
-		reqs=
+		reqs=$TINFO_NAME_REQ
 		desc="$desc library"
 	elif test $name = $SUB_LIBRARY ; then
 		reqs=
 		desc="$desc terminal interface library"
+	elif expr $name : ".*${CXX_NAME}.*" >/dev/null ; then
+		reqs="$PANEL_LIBRARY $MENU_LIBRARY $FORM_LIBRARY $MAIN_LIBRARY $SUB_LIBRARY_REQ"
+		desc="$desc add-on library"
 	else
-		reqs=$MAIN_LIBRARY
+		reqs="$MAIN_LIBRARY $SUB_LIBRARY_REQ"
 		desc="$desc add-on library"
 	fi
 

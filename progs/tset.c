@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -107,7 +107,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.76 2008/10/11 19:26:19 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.77 2009/03/14 19:08:35 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1247,7 +1247,7 @@ main(int argc, char **argv)
     ospeed = (NCURSES_OSPEED) mode.sg_ospeed;
 #endif
 
-    if (!strcmp(_nc_progname, PROG_RESET)) {
+    if (same_program(_nc_progname, PROG_RESET)) {
 	isreset = TRUE;
 	reset_mode();
     }

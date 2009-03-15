@@ -953,6 +953,7 @@
 ./progs/tic.c
 ./progs/toe.c
 ./progs/tput.c
+./progs/transform.c
 ./progs/tset.c
 ./tar-copy.sh
 ./test/Makefile.in
