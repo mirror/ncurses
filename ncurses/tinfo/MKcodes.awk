@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKcodes.awk,v 1.5 2008/06/28 23:13:25 tom Exp $
+# $Id: MKcodes.awk,v 1.6 2009/03/21 21:03:39 tom Exp $
 function large_item(value) {
 	result = sprintf("%d,", offset);
 	offset = offset + length(value) + 1;
@@ -124,7 +124,7 @@ END	{
 			print  "	return *value;"
 			print  "}"
 			print  ""
-			print  "#define FIX(it) NCURSES_IMPEXP IT * NCURSES_API _nc_##it(void) { return alloc_array(&ptr_##it, _nc_offset_##it, SIZEOF(_nc_offset_##it)); }"
+			print  "#define FIX(it) NCURSES_IMPEXP IT * NCURSES_API NCURSES_PUBLIC_VAR(it)(void) { return alloc_array(&ptr_##it, _nc_offset_##it, SIZEOF(_nc_offset_##it)); }"
 		} else {
 			print  "#define DCL(it) static IT data##it[]"
 			print  ""
@@ -134,11 +134,22 @@ END	{
 			print  "#define FIX(it) NCURSES_IMPEXP IT * NCURSES_API _nc_##it(void) { return data##it; }"
 		}
 		print  ""
+		print  "/* remove public definition which conflicts with FIX() */"
+		print  "#undef boolcodes"
+		print  "#undef numcodes"
+		print  "#undef strcodes"
+		print  ""
+		print  "/* add local definition */"
 		print  "FIX(boolcodes)"
 		print  "FIX(numcodes)"
 		print  "FIX(strcodes)"
 		print  ""
+		print  "/* restore the public definition */"
+		print  ""
 		print  "#define FREE_FIX(it) if (ptr_##it) { FreeAndNull(ptr_##it); }"
+		print  "#define boolcodes  NCURSES_PUBLIC_VAR(boolcodes())"
+		print  "#define numcodes   NCURSES_PUBLIC_VAR(numcodes())"
+		print  "#define strcodes   NCURSES_PUBLIC_VAR(strcodes())"
 		print  ""
 		print  "#if NO_LEAKS"
 		print  "NCURSES_EXPORT(void)"

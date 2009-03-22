@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1370 2009/03/14 20:40:10 tom Exp $
+-- $Id: NEWS,v 1.1373 2009/03/21 23:24:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090321
+	+ add TICS_LIST and SHLIB_LIST to allow libtool 2.2.6 on Cygwin to
+	  build with tic and term libraries (patch by Charles Wilson).
+	+ add -no-undefined option to libtool for Cygwin, MinGW, U/Win and AIX
+	  (report by Charles Wilson).
+	+ fix definition for c++/Makefile.in's SHLIB_LIST, which did not list
+	  the form, menu or panel libraries (patch by Charles Wilson).
+	+ add configure option --with-wrap-prefix to allow setting the prefix
+	  for functions used to wrap global variables to something other than
+	  "_nc_" (discussion with Charles Wilson).
 
 20090314
 	+ modify scripts to generate ncurses*-config and pc-files to add

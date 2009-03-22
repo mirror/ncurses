@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.194 2009/02/21 22:44:41 tom Exp $ */
+/* $Id: curses.h.in,v 1.195 2009/03/21 21:04:57 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -109,6 +109,13 @@
 #ifndef NCURSES_REENTRANT
 #define NCURSES_REENTRANT @cf_cv_enable_reentrant@
 #endif
+
+/*
+ * For reentrant code, we map the various global variables into SCREEN by
+ * using functions to access them.
+ */
+#define NCURSES_PUBLIC_VAR(name) @NCURSES_WRAP_PREFIX@##name
+#define NCURSES_WRAPPED_VAR(type,name) extern type NCURSES_PUBLIC_VAR(name)(void)
 
 /*
  * The internal type used for window dimensions.
@@ -227,7 +234,7 @@ extern "C" {
 
 #if @BROKEN_LINKER@ || NCURSES_REENTRANT
 NCURSES_WRAPPED_VAR(chtype*, acs_map);
-#define acs_map (_nc_acs_map())
+#define acs_map NCURSES_PUBLIC_VAR(acs_map())
 #else
 extern NCURSES_EXPORT_VAR(chtype) acs_map[];
 #endif

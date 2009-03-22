@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.137 2009/01/03 23:59:23 tom Exp $
+-- $Id: INSTALL,v 1.138 2009/03/21 20:23:29 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -953,6 +953,17 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-valgrind
 	For testing, compile with debug option.
 	This also sets the --disable-leaks option.
+
+    --with-wrap-prefix=XXX
+	When using the --enable-reentrant option, ncurses redefines variables
+	that would be global in curses, e.g., LINES, as a macro that calls a
+	"wrapping" function which fetches the data from the current SCREEN
+	structure.  Normally that function is named by prepending "_nc_" to the
+	variable's name.  The function is technically private (since portable
+	applications would not refer directly to it).  But according to one
+	line of reasoning, it is not the same type of "private" as functions
+	which applications should not call even via a macro.  This configure
+	option lets you choose the prefix for these wrapped variables.
 
     --without-ada
 	Suppress the configure script's check for Ada95, do not build the

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998,2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.49 2008/10/04 21:59:37 tom Exp $
+    $Id: gen.c,v 1.50 2009/03/21 21:34:20 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -778,7 +778,9 @@ gen_acs(void)
 #if USE_REENTRANT || BROKEN_LINKER
   printf("   type C_ACS_Ptr is access C_ACS_Map;\n");
   printf("   function ACS_Map return C_ACS_Ptr;\n");
-  printf("   pragma Import (C, ACS_Map, \"_nc_acs_map\");\n");
+  printf("   pragma Import (C, ACS_Map, \""
+	 NCURSES_WRAP_PREFIX
+	 "acs_map\");\n");
 #else
   printf("   ACS_Map : C_ACS_Map;\n");
   printf("   pragma Import (C, ACS_Map, \"acs_map\");\n");
@@ -1034,7 +1036,7 @@ wrap_one_var(const char *c_var,
   printf("   function %s return %s\n", ada_func, ada_type);
   printf("   is\n");
   printf("      function Result return %s;\n", c_type);
-  printf("      pragma Import (C, Result, \"_nc_%s\");\n", c_var);
+  printf("      pragma Import (C, Result, \"" NCURSES_WRAP_PREFIX "%s\");\n", c_var);
   printf("   begin\n");
   if (strcmp(c_type, ada_type))
     printf("      return %s (Result);\n", ada_type);

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.85 2009/01/03 19:10:40 tom Exp $
+# $Id: Makefile.in,v 1.86 2009/03/21 20:02:11 Charles.Wilson Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -95,7 +95,7 @@ LOCAL_LIBDIR	= @top_builddir@/lib
 
 LINK		= @LINK_PROGS@ $(LIBTOOL_LINK) @CXXLDFLAGS@
 SHLIB_DIRS	= -L../lib
-SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@LIB_SUFFIX@ @SHLIB_LIST@
+SHLIB_LIST	= $(SHLIB_DIRS) -lform@LIB_SUFFIX@ -lmenu@LIB_SUFFIX@ -lpanel@LIB_SUFFIX@ -lncurses@LIB_SUFFIX@ @SHLIB_LIST@
 
 LIBROOT		= ncurses++
 
