@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKcodes.awk,v 1.6 2009/03/21 21:03:39 tom Exp $
+# $Id: MKcodes.awk,v 1.7 2009/03/28 18:22:39 Charles.Wilson Exp $
 function large_item(value) {
 	result = sprintf("%d,", offset);
 	offset = offset + length(value) + 1;
@@ -131,7 +131,7 @@ END	{
 			print_strings("boolcodes", small_boolcodes);
 			print_strings("numcodes", small_numcodes);
 			print_strings("strcodes", small_strcodes);
-			print  "#define FIX(it) NCURSES_IMPEXP IT * NCURSES_API _nc_##it(void) { return data##it; }"
+			print  "#define FIX(it) NCURSES_IMPEXP IT * NCURSES_API NCURSES_PUBLIC_VAR(it)(void) { return data##it; }"
 		}
 		print  ""
 		print  "/* remove public definition which conflicts with FIX() */"

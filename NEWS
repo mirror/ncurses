@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1373 2009/03/21 23:24:10 tom Exp $
+-- $Id: NEWS,v 1.1378 2009/03/28 23:26:18 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,36 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20090328
+	+ extend ansi.sys pfkey capability from kf1-kf10 to kf1-kf48, moving
+	  function key definitions from emx-base for consistency -TD
+	+ correct missing final 'p' in pfkey capability of ansi.sys-old (report
+	  by Kalle Olavi Niemitalo).
+	+ improve test/ncurses.c 'F' test, show combining characters in color.
+	+ quiet a false report by cppcheck in c++/cursesw.cc by eliminating
+	  a temporary variable.
+	+ use _nc_doalloc() rather than realloc() in a few places in ncurses
+	  library to avoid leak in out-of-memory condition (reports by William
+	  Egert and Martin Ettl based on cppcheck tool).
+	+ add --with-ncurses-wrap-prefix option to test/configure (discussion
+	  with Charles Wilson).
+	+ use ncurses*-config scripts if available for test/configure.
+	+ update test/aclocal.m4 and test/configure
+	> patches by Charles Wilson:
+	+ modify CF_WITH_LIBTOOL configure check to allow unreleased libtool
+	  version numbers (e.g.  which include alphabetic chars, as well as
+	  digits, after the final '.').
+	+ improve use of -no-undefined option for libtool by setting an
+	  intermediate variable LT_UNDEF in the configure script, and then
+	  using that in the libtool link-commands.
+	+ fix an missing use of NCURSES_PUBLIC_VAR() in tinfo/MKcodes.awk
+	  from 2009031 changes.
+	+ improve mk-1st.awk script by writing separate cases for the
+	  LIBTOOL_LINK command, depending on which library (ncurses, ticlib,
+	  termlib) is to be linked.
+	+ modify configure.in to allow broken-linker configurations, not just
+	  enable-reentrant, to set public wrap prefix.
+
 20090321
 	+ add TICS_LIST and SHLIB_LIST to allow libtool 2.2.6 on Cygwin to
 	  build with tic and term libraries (patch by Charles Wilson).
@@ -62,7 +92,7 @@ it is not possible to add this information.
 	+ improve comparison of program-names when checking for linked flavors
 	  such as "reset" by ignoring the executable suffix (reports by Charles
 	  Wilson, Samuel Thibault and Cedric Bretaudeau on Cygwin mailing
-	  list). 
+	  list).
 	+ suppress configure check for static/dynamic linker flags for gcc on
 	  Solaris 10, since gcc is confused by absence of static libc, and
 	  does not switch back to dynamic mode before finishing the libraries

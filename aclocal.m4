@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.485 2009/03/21 23:15:19 tom Exp $
+dnl $Id: aclocal.m4,v 1.486 2009/03/28 19:15:23 Charles.Wilson Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5390,7 +5390,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 22 updated: 2009/03/21 19:14:56
+dnl CF_WITH_LIBTOOL version: 23 updated: 2009/03/28 14:26:27
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -5465,7 +5465,7 @@ ifdef([AC_PROG_LIBTOOL],[
 		AC_MSG_ERROR(Cannot find libtool)
 	fi
 ])dnl
-	LIB_CREATE='${LIBTOOL} --mode=link ${CC} -rpath ${DESTDIR}${libdir} -version-info `cut -f1 ${srcdir}/VERSION` ${LIBTOOL_OPTS} -o'
+	LIB_CREATE='${LIBTOOL} --mode=link ${CC} -rpath ${DESTDIR}${libdir} -version-info `cut -f1 ${srcdir}/VERSION` ${LIBTOOL_OPTS} ${LT_UNDEF} -o'
 	LIB_OBJECT='${OBJECTS:.o=.lo}'
 	LIB_SUFFIX=.la
 	LIB_CLEAN='${LIBTOOL} --mode=clean'
@@ -5488,15 +5488,17 @@ ifdef([AC_PROG_LIBTOOL],[
 	fi
 
 	# special hack to add -no-undefined (which libtool should do for itself)
+	LT_UNDEF=
 	case "$cf_cv_system_name" in #(vi
 	cygwin*|mingw32*|uwin*|aix[[456]]) #(vi
-		LIBTOOL="$LIBTOOL -no-undefined"
+		LT_UNDEF=-no-undefined
 		;;
 	esac
+	AC_SUBST([LT_UNDEF])
 
 	# special hack to add --tag option for C++ compiler
 	case $cf_cv_libtool_version in #(vi
-	1.[[5-9]]*|[[2-9]]*) #(vi
+	1.[[5-9]]*|[[2-9]].[[0-9.a-z]]*) #(vi
 		LIBTOOL_CXX="$LIBTOOL --tag=CXX"
 		LIBTOOL="$LIBTOOL --tag=CC"
 		;;

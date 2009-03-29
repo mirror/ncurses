@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: safe_sprintf.c,v 1.20 2007/04/21 22:28:06 tom Exp $")
+MODULE_ID("$Id: safe_sprintf.c,v 1.21 2009/03/28 20:44:12 tom Exp $")
 
 #if USE_SAFE_SPRINTF
 
@@ -111,7 +111,7 @@ _nc_printf_length(const char *fmt, va_list ap)
 		    }
 		    sprintf(fmt_arg, "%d", ival);
 		    fmt_len += strlen(fmt_arg);
-		    if ((format = realloc(format, fmt_len)) == 0) {
+		    if ((format = _nc_doalloc(format, fmt_len)) == 0) {
 			return -1;
 		    }
 		    strcpy(&format[--f], fmt_arg);

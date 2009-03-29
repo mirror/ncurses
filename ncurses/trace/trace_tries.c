@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_tries.c,v 1.13 2008/08/03 15:43:30 tom Exp $")
+MODULE_ID("$Id: trace_tries.c,v 1.14 2009/03/28 20:44:01 tom Exp $")
 
 #ifdef TRACE
 #define my_buffer _nc_globals.tracetry_buf
@@ -46,7 +46,7 @@ recur_tries(TRIES * tree, unsigned level)
 {
     if (level > my_length) {
 	my_length = (level + 1) * 4;
-	my_buffer = (unsigned char *) realloc(my_buffer, my_length);
+	my_buffer = (unsigned char *) _nc_doalloc(my_buffer, my_length);
     }
 
     while (tree != 0) {

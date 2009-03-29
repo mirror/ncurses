@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.336 2009/01/25 00:39:14 tom Exp $
+$Id: ncurses.c,v 1.338 2009/03/28 21:40:51 tom Exp $
 
 ***************************************************************************/
 
@@ -3284,7 +3284,7 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 	     * the display.
 	     */
 	    if (wcwidth(code) == 0)
-		addch(space | A_REVERSE);
+		addch(space | (A_REVERSE ^ attr) | COLOR_PAIR(pair));
 	    /*
 	     * This could use add_wch(), but is done for comparison with the
 	     * normal 'f' test (and to make a test-case for echo_wchar()).

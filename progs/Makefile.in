@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.81 2009/03/14 18:45:55 tom Exp $
+# $Id: Makefile.in,v 1.82 2009/03/28 20:30:58 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -176,7 +176,7 @@ transform.h :
 	echo "#define __TRANSFORM_H 1"					>>$@
 	echo "#include <progs.priv.h>"					>>$@
 	echo "extern bool same_program(const char *, const char *);"	>>$@
-	-test -n "$x" && echo "#define SUFFIX_IGNORED \"$x\""		>>$@
+	-sh -c 'if test -n "$x" ; then echo "#define SUFFIX_IGNORED \"$x\"">>$@; fi'
 	echo "#define PROG_CAPTOINFO \"$(define_captoinfo)\""		>>$@
 	echo "#define PROG_INFOTOCAP \"$(define_infotocap)\""		>>$@
 	echo "#define PROG_RESET     \"$(define_reset)\""		>>$@

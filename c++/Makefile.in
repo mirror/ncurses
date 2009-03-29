@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.86 2009/03/21 20:02:11 Charles.Wilson Exp $
+# $Id: Makefile.in,v 1.87 2009/03/28 18:22:39 Charles.Wilson Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -55,6 +55,7 @@ LIBTOOL_COMPILE	= @LIB_COMPILE@
 LIBTOOL_LINK	= @LIB_LINK@
 LIBTOOL_INSTALL	= @LIB_INSTALL@
 LIBTOOL_UNINSTALL = @LIB_UNINSTALL@
+LT_UNDEF	= @LT_UNDEF@
 
 INSTALL		= @INSTALL@
 INSTALL_LIB	= @INSTALL@ @INSTALL_LIB@
@@ -160,7 +161,7 @@ LIB_OBJS = \
 	cd ../lib && $(LIBTOOL_LINK) $(CXX) $(CXXFLAGS) \
 		-o $(LIBNAME) $(LIB_OBJS:$o=.lo) \
 		-rpath $(INSTALL_PREFIX)$(libdir) \
-		-version-info $(NCURSES_MAJOR):$(NCURSES_MINOR) $(SHLIB_LIST)
+		-version-info $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(SHLIB_LIST)
 
 OBJS_DEMO = $(MODEL)/demo$o
 

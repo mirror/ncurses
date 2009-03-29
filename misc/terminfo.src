@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.345 $
-#	$Date: 2009/01/11 00:47:37 $
+#	$Revision: 1.347 $
+#	$Date: 2009/03/28 23:19:33 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -617,11 +617,45 @@ ansi.sys-old|ANSI.SYS under PC-DOS 2.1,
 	clear=\E[2J, cub1=^H, cud1=\E[B, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, el=\E[k, home=\E[H,
 	is2=\E[m\E[?7h, kcub1=^H, kcud1=^J, kcuf1=^L, kcuu1=^K,
-	khome=^^, pfkey=\E[0;%p1%{58}%+%d;%p2"%s", rc=\E[u,
+	khome=^^, pfkey=\E[0;%p1%{58}%+%d;%p2"%s"p, rc=\E[u,
 	rmam=\E[?7l, sc=\E[s, smam=\E[?7h, u6=\E[%i%d;%dR,
 	u7=\E[6n, use=klone+color, use=klone+sgr8,
+
+# Keypad:	Home=\0G	Up=\0H	PrPag=\0I
+#		ka1,kh		kcuu1		kpp,ka3
+#
+#		Left=\0K	5=\0L		Right=\0M
+#		kcub1		kb2		kcuf1
+#
+#		End=\0O		Down=\0P	NxPag=\0Q
+#		kc1,kend	kcud1		kc3,knp
+#
+#		Ins=\0R		Del=\0S
+#		kich1		kdch1
+#
+# On keyboard with 12 function keys,
+#	shifted f-keys: F13-F24
+#	control f-keys: F25-F36
+#	alt f-keys:     F37-F48
+# The shift/control/alt keys do not modify each other, but alt overrides both,
+# and control overrides shift.
+#
+# <pfkey> capability for F1-F48 -TD
 ansi.sys|ANSI.SYS 3.1 and later versions,
-	el=\E[K, use=ansi.sys-old,
+	el=\E[K, ka1=\0G, ka3=\0I, kb2=\0L, kbs=^H, kc1=\0O, kc3=\0Q,
+	kcbt=\0^O, kcub1=\0K, kcud1=\0P, kcuf1=\0M, kcuu1=\0H,
+	kdch1=\0S, kend=\0O, kf1=\0;, kf10=\0D, kf11=\0\205,
+	kf12=\0\206, kf13=\0T, kf14=\0U, kf15=\0V, kf16=\0W,
+	kf17=\0X, kf18=\0Y, kf19=\0Z, kf2=\0<, kf20=\0[, kf21=\0\\,
+	kf22=\0], kf23=\0\207, kf24=\0\210, kf25=\0\^, kf26=\0_,
+	kf27=\0`, kf28=\0a, kf29=\0b, kf3=\0=, kf30=\0c, kf31=\0d,
+	kf32=\0e, kf33=\0f, kf34=\0g, kf35=\0\211, kf36=\0\212,
+	kf37=\0h, kf38=\0i, kf39=\0j, kf4=\0>, kf40=\0k, kf41=\0l,
+	kf42=\0m, kf43=\0n, kf44=\0o, kf45=\0p, kf46=\0q,
+	kf47=\0\213, kf48=\0\214, kf5=\0?, kf6=\0@, kf7=\0A, kf8=\0B,
+	kf9=\0C, khome=\0G, kich1=\0R, knp=\0Q, kpp=\0I,
+	pfkey=\E[0;%?%p1%{11}%<%t%'\:'%e%?%p1%{13}%<%t%'z'%e%?%p1%{23}%<%t%'G'%e%?%p1%{25}%<%t%'p'%e%?%p1%'#'%<%t%'E'%e%?%p1%'%'%<%t%'f'%e%?%p1%'/'%<%t%'C'%e%{92}%;%;%;%;%;%;%;%p1%+%d;%p2"%s"p,
+	use=ansi.sys-old,
 
 #
 # Define IBM PC keypad keys for vi as per MS-Kermit while using ANSI.SYS.
@@ -5064,44 +5098,13 @@ dtterm|CDE desktop terminal,
 
 ### EMX termcap.dat compatibility modes
 #
-# Keypad:	Home=\0G	Up=\0H	PrPag=\0I
-#		ka1,kh		kcuu1		kpp,ka3
-#
-#		Left=\0K	5=\0L		Right=\0M
-#		kcub1		kb2		kcuf1
-#
-#		End=\0O		Down=\0P	NxPag=\0Q
-#		kc1,kend	kcud1		kc3,knp
-#
-#		Ins=\0R		Del=\0S
-#		kich1		kdch1
-#
-# On keyboard with 12 function keys,
-#	shifted f-keys: F13-F24
-#	control f-keys: F25-F36
-#	alt f-keys:     F37-F48
-# The shift/control/alt keys do not modify each other, but alt overrides both,
-# and control overrides shift.
-#
 # Also (possibly only EMX, so we don't put it in ansi.sys, etc): set the
 # no_color_video to inform the application that standout(1), underline(2)
 # reverse(4) and invisible(64) don't work with color.
 emx-base|DOS special keys,
 	bce, bw,
 	it#8, ncv#71,
-	bel=^G, ka1=\0G, ka3=\0I, kb2=\0L, kbs=^H, kc1=\0O, kc3=\0Q,
-	kcbt=\0^O, kcub1=\0K, kcud1=\0P, kcuf1=\0M, kcuu1=\0H,
-	kdch1=\0S, kend=\0O, kf1=\0;, kf10=\0D, kf11=\0\205,
-	kf12=\0\206, kf13=\0T, kf14=\0U, kf15=\0V, kf16=\0W,
-	kf17=\0X, kf18=\0Y, kf19=\0Z, kf2=\0<, kf20=\0[, kf21=\0\\,
-	kf22=\0], kf23=\0\207, kf24=\0\210, kf25=\0\^, kf26=\0_,
-	kf27=\0`, kf28=\0a, kf29=\0b, kf3=\0=, kf30=\0c, kf31=\0d,
-	kf32=\0e, kf33=\0f, kf34=\0g, kf35=\0\211, kf36=\0\212,
-	kf37=\0h, kf38=\0i, kf39=\0j, kf4=\0>, kf40=\0k, kf41=\0l,
-	kf42=\0m, kf43=\0n, kf44=\0o, kf45=\0p, kf46=\0q,
-	kf47=\0\213, kf48=\0\214, kf5=\0?, kf6=\0@, kf7=\0A, kf8=\0B,
-	kf9=\0C, khome=\0G, kich1=\0R, knp=\0Q, kpp=\0I,
-	use=ansi.sys,
+	bel=^G, use=ansi.sys,
 
 # Except for the "-emx" suffixes, these are as distributed with EMX 0.9b,
 # a Unix-style environment used on OS/2.  (Note that the suffix makes some
@@ -21822,6 +21825,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2009-01-10
 #	* add screen.Eterm -TD
+#
+# 2009-03-28
+#	* correct typo in pfkey of ansi.sys-old
+#	  (report by Kalle Olavi Niemitalo)
+#	* move function- and cursor-keys from emx-base to ansi.sys, and create
+#	  a pfkey capability which handles F1-F48 -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

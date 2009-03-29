@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.469 2009/03/21 21:45:29 Charles.Wilson Exp $
+dnl $Id: configure.in,v 1.470 2009/03/28 18:22:39 Charles.Wilson Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.469 $)
+AC_REVISION($Revision: 1.470 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1095,7 +1095,7 @@ AC_SUBST(NCURSES_OPAQUE)
 AC_SUBST(NCURSES_SIZE_T)
 
 ### Allow using a different wrap-prefix
-if test "$cf_cv_enable_reentrant" != 0 ; then
+if test "$cf_cv_enable_reentrant" != 0 || test "$BROKEN_LINKER" = 1 ; then
 	AC_MSG_CHECKING(for prefix used to wrap public variables)
 	AC_ARG_WITH(wrap-prefix,
 		[  --with-wrap-prefix=XXX  override prefix used for public variables],

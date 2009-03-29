@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.52 2008/08/16 19:24:51 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.53 2009/03/28 20:44:23 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -128,7 +128,7 @@ save_string(char *d, const char *const s)
     size_t have = (d - my_string);
     size_t need = have + strlen(s) + 2;
     if (need > my_length) {
-	my_string = (char *) realloc(my_string, my_length = (need + need));
+	my_string = (char *) _nc_doalloc(my_string, my_length = (need + need));
 	if (my_string == 0)
 	    _nc_err_abort(MSG_NO_MEMORY);
 	d = my_string + have;

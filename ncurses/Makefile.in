@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.114 2009/01/03 19:09:26 tom Exp $
+# $Id: Makefile.in,v 1.115 2009/03/28 18:22:39 Charles.Wilson Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -71,6 +71,7 @@ LIBTOOL_COMPILE	= @LIB_COMPILE@
 LIBTOOL_LINK	= @LIB_LINK@
 LIBTOOL_INSTALL	= @LIB_INSTALL@
 LIBTOOL_UNINSTALL = @LIB_UNINSTALL@
+LT_UNDEF	= @LT_UNDEF@
 
 INSTALL		= @INSTALL@
 INSTALL_LIB	= @INSTALL@ @INSTALL_LIB@
