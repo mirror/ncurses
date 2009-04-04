@@ -16908,7 +16908,7 @@ normal|debug|profile)
 
 if test "$GCC" = yes ; then
 	case $cf_cv_system_name in #(
-	OS/2*|os2*|aix[4]*|solaris2.1[0-9]) 	#( vi
+	OS/2*|os2*|aix[4]*|solaris2.1[0-9]|darwin*) 	#( vi
 		LDFLAGS_STATIC=
 		LDFLAGS_SHARED=
 		;;

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.486 2009/03/28 19:15:23 Charles.Wilson Exp $
+dnl $Id: aclocal.m4,v 1.487 2009/04/04 22:32:42 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2197,7 +2197,7 @@ ifdef([AC_FUNC_FSEEKO],[
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LDFLAGS_STATIC version: 6 updated: 2009/03/14 14:03:25
+dnl CF_LDFLAGS_STATIC version: 7 updated: 2009/04/04 18:31:04
 dnl -----------------
 dnl Check for compiler/linker flags used to temporarily force usage of static
 dnl libraries.  This depends on the compiler and platform.  Use this to help
@@ -2207,7 +2207,7 @@ AC_DEFUN([CF_LDFLAGS_STATIC],[
 
 if test "$GCC" = yes ; then
 	case $cf_cv_system_name in #(
-	OS/2*|os2*|aix[[4]]*|solaris2.1[[0-9]]) 	#( vi
+	OS/2*|os2*|aix[[4]]*|solaris2.1[[0-9]]|darwin*) 	#( vi
 		LDFLAGS_STATIC=
 		LDFLAGS_SHARED=
 		;;
