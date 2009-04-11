@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_attribs.c,v 1.14 2004/12/11 23:29:12 tom Exp $")
+MODULE_ID("$Id: m_attribs.c,v 1.15 2008/11/16 00:19:59 juergen Exp $")
 
 /* Macro to redraw menu if it is posted and changed */
 #define Refresh_Menu(menu) \
@@ -49,9 +49,9 @@ MODULE_ID("$Id: m_attribs.c,v 1.14 2004/12/11 23:29:12 tom Exp $")
 
 /* "Template" macro to generate a function to set a menus attribute */
 #define GEN_MENU_ATTR_SET_FCT( name ) \
-NCURSES_IMPEXP int NCURSES_API set_menu_ ## name (MENU * menu, chtype attr)\
+NCURSES_IMPEXP int NCURSES_API set_menu_ ## name (MENU* menu, chtype attr) \
 {\
-   T((T_CALLED("set_menu_" #name "(%p,%s)"), menu, _traceattr(attr)));\
+  T((T_CALLED("set_menu_" #name "(%p,%s)"), menu, _traceattr(attr))); \
    if (!(attr==A_NORMAL || (attr & A_ATTRIBUTES)==attr))\
       RETURN(E_BAD_ARGUMENT);\
    if (menu && ( menu -> name != attr))\
@@ -140,4 +140,5 @@ GEN_MENU_ATTR_SET_FCT(grey)
 |   Return Values :  Attribute value
 +--------------------------------------------------------------------------*/
 GEN_MENU_ATTR_GET_FCT(grey)
+
 /* m_attribs.c ends here */

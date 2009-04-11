@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,12 +29,14 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1995                    *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Juergen Pfeifer                         1996-1999,2008          *
+ *     and: Thomas E. Dickey                                                *
  ****************************************************************************/
 
 /* panel.c -- implementation of panels library, some core routines */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: panel.c,v 1.23 2005/02/19 18:04:31 tom Exp $")
+MODULE_ID("$Id: panel.c,v 1.24 2009/04/11 21:29:10 tom Exp $")
 
 /*+-------------------------------------------------------------------------
 	_nc_retrace_panel (pan)
@@ -90,6 +92,8 @@ NCURSES_EXPORT(void)
 _nc_dStack(const char *fmt, int num, const PANEL * pan)
 {
   char s80[80];
+
+  GetPanelHook(pan);
 
   sprintf(s80, fmt, num, pan);
   _tracef("%s b=%s t=%s", s80,

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.27 2008/09/08 20:29:05 tom Exp $ */
+/* $Id: form.priv.h,v 0.28 2009/04/11 21:27:04 tom Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
@@ -62,6 +62,13 @@
 
 #include "form.h"
 
+	/***********************
+	*   Default objects    *
+	***********************/
+extern NCURSES_EXPORT_VAR(FORM *)      _nc_Default_Form;
+extern NCURSES_EXPORT_VAR(FIELD *)     _nc_Default_Field;
+extern NCURSES_EXPORT_VAR(FIELDTYPE *) _nc_Default_FieldType;
+
 /* form  status values */
 #define _OVLMODE         (0x04U) /* Form is in overlay mode                */
 #define _WINDOW_MODIFIED (0x10U) /* Current field window has been modified */
@@ -90,6 +97,11 @@
 /* If field is NULL replace field argument by default-field */
 #define Normalize_Field(field) \
   ((field) = (field != 0) ? (field) : _nc_Default_Field)
+
+#if NCURSES_SP_FUNCS
+#define Get_Form_Screen(form) \
+  ((form)->win ? _nc_screen_of((form->win)):CURRENT_SCREEN)
+#endif
 
 /* Retrieve forms window */
 #define Get_Form_Window(form) \
@@ -144,8 +156,6 @@ TypeArgument;
 
 #define C_ZEROS '\0'
 
-extern NCURSES_EXPORT_VAR(const FIELDTYPE *) _nc_Default_FieldType;
-
 extern NCURSES_EXPORT(TypeArgument *) _nc_Make_Argument (const FIELDTYPE*, va_list*, int*);
 extern NCURSES_EXPORT(TypeArgument *) _nc_Copy_Argument (const FIELDTYPE*, const TypeArgument*, int*);
 extern NCURSES_EXPORT(void) _nc_Free_Argument (const FIELDTYPE*, TypeArgument*);
@@ -176,8 +186,8 @@ extern NCURSES_EXPORT(wchar_t *) _nc_Widen_String(char *, int *);
 extern NCURSES_EXPORT(FIELD **)	    _nc_retrace_field_ptr (FIELD **);
 extern NCURSES_EXPORT(FIELD *)	    _nc_retrace_field (FIELD *);
 extern NCURSES_EXPORT(FIELDTYPE *)  _nc_retrace_field_type (FIELDTYPE *);
-extern NCURSES_EXPORT(FORM *)  _nc_retrace_form (FORM *);
-extern NCURSES_EXPORT(Form_Hook)  _nc_retrace_form_hook (Form_Hook);
+extern NCURSES_EXPORT(FORM *)       _nc_retrace_form (FORM *);
+extern NCURSES_EXPORT(Form_Hook)    _nc_retrace_form_hook (Form_Hook);
 
 #else /* !TRACE */
 

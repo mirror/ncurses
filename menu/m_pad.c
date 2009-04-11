@@ -37,19 +37,19 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_pad.c,v 1.10 2004/12/25 21:40:58 tom Exp $")
+MODULE_ID("$Id: m_pad.c,v 1.11 2009/02/07 23:11:44 tom Exp $")
 
 /* Macro to redraw menu if it is posted and changed */
 #define Refresh_Menu(menu) \
    if ( (menu) && ((menu)->status & _POSTED) )\
    {\
       _nc_Draw_Menu( menu );\
-      _nc_Show_Menu( menu );\
+      _nc_Show_Menu( menu ); \
    }
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
-|   Function      :  int set_menu_pad(MENU *menu, int pad)
+|   Function      :  int set_menu_pad(MENU* menu, int pad)
 |   
 |   Description   :  Set the character to be used to separate the item name
 |                    from its description. This must be a printable 

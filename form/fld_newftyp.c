@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,9 +32,9 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_newftyp.c,v 1.15 2007/10/13 19:30:55 tom Exp $")
+MODULE_ID("$Id: fld_newftyp.c,v 1.16 2009/04/11 21:27:33 tom Exp $")
 
-static FIELDTYPE const default_fieldtype =
+static FIELDTYPE default_fieldtype =
 {
   0,				/* status                                      */
   0L,				/* reference count                             */
@@ -49,7 +49,7 @@ static FIELDTYPE const default_fieldtype =
   NULL				/* enumerate previous function                 */
 };
 
-NCURSES_EXPORT_VAR(const FIELDTYPE *)
+NCURSES_EXPORT_VAR(FIELDTYPE *)
 _nc_Default_FieldType = &default_fieldtype;
 
 /*---------------------------------------------------------------------------

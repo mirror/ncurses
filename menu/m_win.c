@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_win.c,v 1.15 2004/12/25 21:39:20 tom Exp $")
+MODULE_ID("$Id: m_win.c,v 1.16 2009/04/05 00:38:22 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -57,8 +57,22 @@ set_menu_win(MENU * menu, WINDOW *win)
     {
       if (menu->status & _POSTED)
 	RETURN(E_POSTED);
-      menu->userwin = win;
-      _nc_Calculate_Item_Length_and_Width(menu);
+      else
+#if NCURSES_SP_FUNCS
+	{
+	  /* We ensure that userwin is never null. So even if a null
+	     WINDOW parameter is passed, we store the SCREENS stdscr.
+	     The only MENU that can have a null userwin is the static
+	     _nc_default_Menu.
+	   */
+	  SCREEN *sp = _nc_screen_of(menu->userwin);
+
+	  menu->userwin = win ? win : sp->_stdscr;
+	  _nc_Calculate_Item_Length_and_Width(menu);
+	}
+#else
+	menu->userwin = win;
+#endif
     }
   else
     _nc_Default_Menu.userwin = win;
@@ -68,7 +82,7 @@ set_menu_win(MENU * menu, WINDOW *win)
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
-|   Function      :  WINDOW *menu_win(const MENU *)
+|   Function      :  WINDOW* menu_win(const MENU*)
 |   
 |   Description   :  Returns pointer to the window of the menu
 |
@@ -80,7 +94,7 @@ menu_win(const MENU * menu)
   const MENU *m = Normalize_Menu(menu);
 
   T((T_CALLED("menu_win(%p)"), menu));
-  returnWin(m->userwin ? m->userwin : stdscr);
+  returnWin(Get_Menu_UserWin(m));
 }
 
 /* m_win.c ends here */

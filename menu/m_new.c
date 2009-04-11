@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,57 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_new.c,v 1.18 2006/11/04 19:04:06 tom Exp $")
+MODULE_ID("$Id: m_new.c,v 1.19 2009/04/05 00:32:13 tom Exp $")
+
+/*---------------------------------------------------------------------------
+|   Facility      :  libnmenu  
+|   Function      :  MENU* _nc_new_menu(SCREEN*, ITEM **items)
+|   
+|   Description   :  Creates a new menu connected to the item pointer
+|                    array items and returns a pointer to the new menu.
+|                    The new menu is initialized with the values from the
+|                    default menu.
+|
+|   Return Values :  NULL on error
++--------------------------------------------------------------------------*/
+NCURSES_EXPORT(MENU *)
+NCURSES_SP_NAME(new_menu) (NCURSES_SP_DCLx ITEM ** items)
+{
+  int err = E_SYSTEM_ERROR;
+  MENU *menu = (MENU *) calloc(1, sizeof(MENU));
+
+  T((T_CALLED("new_menu(%p,%p)"), SP_PARM, items));
+  if (menu)
+    {
+      *menu = _nc_Default_Menu;
+      menu->status = 0;
+      menu->rows = menu->frows;
+      menu->cols = menu->fcols;
+#if NCURSES_SP_FUNCS
+      /* This ensures userwin and usersub are always non-null,
+         so we can derive always the SCREEN that this menu is
+         running on. */
+      menu->userwin = SP_PARM->_stdscr;
+      menu->usersub = SP_PARM->_stdscr;
+#endif
+      if (items && *items)
+	{
+	  if (!_nc_Connect_Items(menu, items))
+	    {
+	      err = E_NOT_CONNECTED;
+	      free(menu);
+	      menu = (MENU *) 0;
+	    }
+	  else
+	    err = E_OK;
+	}
+    }
+
+  if (!menu)
+    SET_ERROR(err);
+
+  returnMenu(menu);
+}
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -50,35 +100,13 @@ MODULE_ID("$Id: m_new.c,v 1.18 2006/11/04 19:04:06 tom Exp $")
 |
 |   Return Values :  NULL on error
 +--------------------------------------------------------------------------*/
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(MENU *)
 new_menu(ITEM ** items)
 {
-  int err = E_SYSTEM_ERROR;
-  MENU *menu = (MENU *) calloc(1, sizeof(MENU));
-
-  T((T_CALLED("new_menu(%p)"), items));
-  if (menu)
-    {
-      *menu = _nc_Default_Menu;
-      menu->status = 0;
-      menu->rows = menu->frows;
-      menu->cols = menu->fcols;
-      if (items && *items)
-	{
-	  if (!_nc_Connect_Items(menu, items))
-	    {
-	      err = E_NOT_CONNECTED;
-	      free(menu);
-	      menu = (MENU *) 0;
-	    }
-	}
-    }
-
-  if (!menu)
-    SET_ERROR(err);
-
-  returnMenu(menu);
+  return NCURSES_SP_NAME(new_menu) (CURRENT_SCREEN, items);
 }
+#endif
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  

@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.35 2008/08/16 16:16:03 tom Exp $ */
+/* $Id: term_entry.h,v 1.36 2008/11/16 00:19:59 juergen Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -81,7 +81,7 @@ ENTRY;
 #define EXT_NAMES(tp,i,limit,index,table) table[i]
 #endif
 
-#define NUM_EXT_NAMES(tp) ((tp)->ext_Booleans + (tp)->ext_Numbers + (tp)->ext_Strings)
+#define NUM_EXT_NAMES(tp) (unsigned) ((tp)->ext_Booleans + (tp)->ext_Numbers + (tp)->ext_Strings)
 
 #define for_each_boolean(n,tp) for(n = 0; n < NUM_BOOLEANS(tp); n++)
 #define for_each_number(n,tp)  for(n = 0; n < NUM_NUMBERS(tp);  n++)
