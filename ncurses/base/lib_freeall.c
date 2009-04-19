@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.56 2009/04/18 17:18:56 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.57 2009/04/19 14:31:26 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -152,12 +152,12 @@ _nc_freeall(void)
 }
 
 NCURSES_EXPORT(void)
-NCURSES_SP_NAME(_nc_free_and_exit) (SCREEN *SP_PARM, int code)
+NCURSES_SP_NAME(_nc_free_and_exit) (NCURSES_SP_DCLx int code)
 {
     if (SP_PARM) {
 	delscreen(SP_PARM);
 	if (SP_PARM->_term)
-	    NCURSES_SP_NAME(_nc_del_curterm) (SP_PARM, SP_PARM->_term);
+	    NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx SP_PARM->_term);
     }
     exit(code);
 }

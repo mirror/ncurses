@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.407 2009/04/18 23:42:28 tom Exp $
+ * $Id: curses.priv.h,v 1.408 2009/04/19 14:32:33 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1789,7 +1789,6 @@ extern NCURSES_EXPORT(WINDOW *) _nc_stdscr_of(SCREEN*);
 extern NCURSES_EXPORT(int)      _nc_outc_wrapper(SCREEN*,int);
 
 extern NCURSES_EXPORT(TERMINAL*) NCURSES_SP_NAME(_nc_set_curterm)(SCREEN*,TERMINAL*);
-extern NCURSES_EXPORT(int)       NCURSES_SP_NAME(_nc_del_curterm)(SCREEN*,TERMINAL*);
 
 #if NCURSES_EXT_FUNCS
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_set_tabsize)(SCREEN*, int);
