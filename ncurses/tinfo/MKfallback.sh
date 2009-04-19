@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 1998-2001,2006 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKfallback.sh,v 1.13 2006/07/15 16:54:20 tom Exp $
+# $Id: MKfallback.sh,v 1.14 2009/04/18 21:01:38 tom Exp $
 #
 # MKfallback.sh -- create fallback table for entry reads
 #
@@ -63,7 +63,6 @@ cat <<EOF
  */
 
 #include <curses.priv.h>
-#include <term.h>
 
 EOF
 

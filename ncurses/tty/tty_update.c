@@ -79,7 +79,7 @@
 #include <ctype.h>
 #include <term.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.248 2009/02/15 00:51:22 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.250 2009/04/18 23:32:17 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -105,12 +105,20 @@ static NCURSES_CH_T normal = NewChar(BLANK_TEXT);
 /* #define POSITION_DEBUG */
 
 static NCURSES_INLINE NCURSES_CH_T ClrBlank(WINDOW *win);
-static int ClrBottom(int total);
-static void ClearScreen(NCURSES_CH_T blank);
-static void ClrUpdate(void);
 static void DelChar(int count);
 static void InsStr(NCURSES_CH_T * line, int count);
+
+#if NCURSES_SP_FUNCS
+static void ClearScreen(SCREEN *, NCURSES_CH_T blank);
+static int ClrBottom(SCREEN *, int total);
+static void ClrUpdate(SCREEN *);
+static void TransformLine(SCREEN *, int const lineno);
+#else
+static void ClearScreen(NCURSES_CH_T blank);
+static int ClrBottom(int total);
+static void ClrUpdate(void);
 static void TransformLine(int const lineno);
+#endif
 
 #ifdef POSITION_DEBUG
 /****************************************************************************
@@ -363,7 +371,7 @@ check_pending(void)
 
 /* put char at lower right corner */
 static void
-PutCharLR(const ARG_CH_T ch)
+PutCharLR(NCURSES_SP_DCLx const ARG_CH_T ch)
 {
     if (!auto_right_margin) {
 	/* we can put the char directly */
@@ -374,17 +382,19 @@ PutCharLR(const ARG_CH_T ch)
 	putp(exit_am_mode);
 
 	PutAttrChar(ch);
-	SP->_curscol--;
-	position_check(SP->_cursrow, SP->_curscol, "exit_am_mode");
+	SP_PARM->_curscol--;
+	position_check(SP_PARM->_cursrow, SP_PARM->_curscol, "exit_am_mode");
 
 	TPUTS_TRACE("enter_am_mode");
 	putp(enter_am_mode);
     } else if ((enter_insert_mode && exit_insert_mode)
 	       || insert_character || parm_ich) {
-	GoTo(screen_lines - 1, screen_columns - 2);
+	GoTo(screen_lines(SP_PARM) - 1, screen_columns(SP_PARM) - 2);
 	PutAttrChar(ch);
-	GoTo(screen_lines - 1, screen_columns - 2);
-	InsStr(newscr->_line[screen_lines - 1].text + screen_columns - 2, 1);
+	GoTo(screen_lines(SP_PARM) - 1, screen_columns(SP_PARM) - 2);
+	InsStr(newscr->_line[screen_lines(SP_PARM) - 1].text
+	       + screen_columns(SP_PARM) - 2,
+	       1);
     }
 }
 
@@ -430,18 +440,19 @@ wrap_cursor(void)
 }
 
 static NCURSES_INLINE void
-PutChar(const ARG_CH_T ch)
+PutChar(NCURSES_SP_DCLx const ARG_CH_T ch)
 /* insert character, handling automargin stuff */
 {
-    if (SP->_cursrow == screen_lines - 1 && SP->_curscol == screen_columns - 1)
-	PutCharLR(ch);
+    if (SP_PARM->_cursrow == screen_lines(SP_PARM) - 1
+	&& SP_PARM->_curscol == screen_columns(SP_PARM) - 1)
+	PutCharLR(NCURSES_SP_ARGx ch);
     else
 	PutAttrChar(ch);
 
-    if (SP->_curscol >= screen_columns)
+    if (SP_PARM->_curscol >= screen_columns(SP_PARM))
 	wrap_cursor();
 
-    position_check(SP->_cursrow, SP->_curscol, "PutChar");
+    position_check(SP_PARM->_cursrow, SP_PARM->_curscol, "PutChar");
 }
 
 /*
@@ -489,7 +500,7 @@ can_clear_with(ARG_CH_T ch)
  * This code is optimized using ech and rep.
  */
 static int
-EmitRange(const NCURSES_CH_T * ntext, int num)
+EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
 {
     int i;
 
@@ -501,13 +512,13 @@ EmitRange(const NCURSES_CH_T * ntext, int num)
 	    NCURSES_CH_T ntext0;
 
 	    while (num > 1 && !CharEq(ntext[0], ntext[1])) {
-		PutChar(CHREF(ntext[0]));
+		PutChar(NCURSES_SP_ARGx CHREF(ntext[0]));
 		ntext++;
 		num--;
 	    }
 	    ntext0 = ntext[0];
 	    if (num == 1) {
-		PutChar(CHREF(ntext0));
+		PutChar(NCURSES_SP_ARGx CHREF(ntext0));
 		return 0;
 	    }
 	    runcount = 2;
@@ -524,7 +535,7 @@ EmitRange(const NCURSES_CH_T * ntext, int num)
 	     * which it would be marginally advantageous.
 	     */
 	    if (erase_chars
-		&& runcount > SP->_ech_cost + SP->_cup_ch_cost
+		&& runcount > SP_PARM->_ech_cost + SP_PARM->_cup_ch_cost
 		&& can_clear_with(CHREF(ntext0))) {
 		UpdateAttrs(ntext0);
 		putp(TPARM_1(erase_chars, runcount));
@@ -535,12 +546,13 @@ EmitRange(const NCURSES_CH_T * ntext, int num)
 		 * last update on the line.
 		 */
 		if (runcount < num) {
-		    GoTo(SP->_cursrow, SP->_curscol + runcount);
+		    GoTo(SP_PARM->_cursrow, SP_PARM->_curscol + runcount);
 		} else {
 		    return 1;	/* cursor stays in the middle */
 		}
-	    } else if (repeat_char && runcount > SP->_rep_cost) {
-		bool wrap_possible = (SP->_curscol + runcount >= screen_columns);
+	    } else if (repeat_char && runcount > SP_PARM->_rep_cost) {
+		bool wrap_possible = (SP_PARM->_curscol + runcount
+				      >= screen_columns(SP_PARM));
 		int rep_count = runcount;
 
 		if (wrap_possible)
@@ -549,13 +561,13 @@ EmitRange(const NCURSES_CH_T * ntext, int num)
 		UpdateAttrs(ntext0);
 		tputs(TPARM_2(repeat_char, CharOf(ntext0), rep_count),
 		      rep_count, _nc_outch);
-		SP->_curscol += rep_count;
+		SP_PARM->_curscol += rep_count;
 
 		if (wrap_possible)
-		    PutChar(CHREF(ntext0));
+		    PutChar(NCURSES_SP_ARGx CHREF(ntext0));
 	    } else {
 		for (i = 0; i < runcount; i++)
-		    PutChar(CHREF(ntext[i]));
+		    PutChar(NCURSES_SP_ARGx CHREF(ntext[i]));
 	    }
 	    ntext += runcount;
 	    num -= runcount;
@@ -564,7 +576,7 @@ EmitRange(const NCURSES_CH_T * ntext, int num)
     }
 
     for (i = 0; i < num; i++)
-	PutChar(CHREF(ntext[i]));
+	PutChar(NCURSES_SP_ARGx CHREF(ntext[i]));
     return 0;
 }
 
@@ -577,7 +589,8 @@ EmitRange(const NCURSES_CH_T * ntext, int num)
  * Returns: same as EmitRange
  */
 static int
-PutRange(const NCURSES_CH_T * otext,
+PutRange(NCURSES_SP_DCLx
+	 const NCURSES_CH_T * otext,
 	 const NCURSES_CH_T * ntext,
 	 int row,
 	 int first, int last)
@@ -588,28 +601,28 @@ PutRange(const NCURSES_CH_T * otext,
 		       otext, ntext, row, first, last));
 
     if (otext != ntext
-	&& (last - first + 1) > SP->_inline_cost) {
+	&& (last - first + 1) > SP_PARM->_inline_cost) {
 	for (j = first, same = 0; j <= last; j++) {
 	    if (!same && isWidecExt(otext[j]))
 		continue;
 	    if (CharEq(otext[j], ntext[j])) {
 		same++;
 	    } else {
-		if (same > SP->_inline_cost) {
-		    EmitRange(ntext + first, j - same - first);
+		if (same > SP_PARM->_inline_cost) {
+		    EmitRange(NCURSES_SP_ARGx ntext + first, j - same - first);
 		    GoTo(row, first = j);
 		}
 		same = 0;
 	    }
 	}
-	i = EmitRange(ntext + first, j - same - first);
+	i = EmitRange(NCURSES_SP_ARGx ntext + first, j - same - first);
 	/*
 	 * Always return 1 for the next GoTo() after a PutRange() if we found
 	 * identical characters at end of interval
 	 */
 	return (same == 0 ? i : 1);
     }
-    return EmitRange(ntext + first, last - first + 1);
+    return EmitRange(NCURSES_SP_ARGx ntext + first, last - first + 1);
 }
 
 /* leave unbracketed here so 'indent' works */
@@ -696,8 +709,8 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 	int j, k;
 	attr_t rattr = A_NORMAL;
 
-	for (i = 0; i < screen_lines; i++) {
-	    for (j = 0; j < screen_columns; j++) {
+	for (i = 0; i < screen_lines(SP_PARM); i++) {
+	    for (j = 0; j < screen_columns(SP_PARM); j++) {
 		bool failed = FALSE;
 		NCURSES_CH_T *thisline = newscr->_line[i].text;
 		attr_t thisattr = AttrOf(thisline[j]) & SP_PARM->_xmc_triggers;
@@ -746,8 +759,8 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 		    int m, n = j;
 
 		    /* find end of span, if it's onscreen */
-		    for (m = i; m < screen_lines; m++) {
-			for (; n < screen_columns; n++) {
+		    for (m = i; m < screen_lines(SP_PARM); m++) {
+			for (; n < screen_columns(SP_PARM); n++) {
 			    attr_t testattr = AttrOf(newscr->_line[m].text[n]);
 			    if ((testattr & SP_PARM->_xmc_triggers) == rattr) {
 				end_onscreen = TRUE;
@@ -780,7 +793,7 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 
 			/* check that there's enough room at end of span */
 			for (k = 1; k <= magic_cookie_glitch; k++) {
-			    if (n + k >= screen_columns
+			    if (n + k >= screen_columns(SP_PARM)
 				|| !ISBLANK(lastline[n + k])
 				|| !SAFE(AttrOf(lastline[n + k]))) {
 				failed = TRUE;
@@ -807,8 +820,8 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 			_traceattr(turnon), i, j));
 
 		    /* turn off new attributes over span */
-		    for (p = i; p < screen_lines; p++) {
-			for (; q < screen_columns; q++) {
+		    for (p = i; p < screen_lines(SP_PARM); p++) {
+			for (; q < screen_columns(SP_PARM); q++) {
 			    attr_t testattr = AttrOf(newscr->_line[p].text[q]);
 			    if ((testattr & SP_PARM->_xmc_triggers) == rattr)
 				goto foundend;
@@ -847,7 +860,7 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 
     nonempty = 0;
     if (curscr->_clear || newscr->_clear) {	/* force refresh ? */
-	ClrUpdate();
+	ClrUpdate(NCURSES_SP_ARG);
 	curscr->_clear = FALSE;	/* reset flag */
 	newscr->_clear = FALSE;	/* reset flag */
     } else {
@@ -856,13 +869,13 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 	if (check_pending())
 	    goto cleanup;
 
-	nonempty = min(screen_lines, newscr->_maxy + 1);
+	nonempty = min(screen_lines(SP_PARM), newscr->_maxy + 1);
 
 	if (SP_PARM->_scrolling) {
 	    _nc_scroll_optimize();
 	}
 
-	nonempty = ClrBottom(nonempty);
+	nonempty = ClrBottom(NCURSES_SP_ARGx nonempty);
 
 	TR(TRACE_UPDATE, ("Transforming lines, nonempty %d", nonempty));
 	for (i = 0; i < nonempty; i++) {
@@ -883,7 +896,7 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 	     */
 	    if (newscr->_line[i].firstchar != _NOCHANGE
 		|| curscr->_line[i].firstchar != _NOCHANGE) {
-		TransformLine(i);
+		TransformLine(NCURSES_SP_ARGx i);
 		changedlines++;
 	    }
 
@@ -979,22 +992,22 @@ ClrBlank(WINDOW *win)
 */
 
 static void
-ClrUpdate(void)
+ClrUpdate(NCURSES_SP_DCL0)
 {
     int i;
     NCURSES_CH_T blank = ClrBlank(stdscr);
-    int nonempty = min(screen_lines, newscr->_maxy + 1);
+    int nonempty = min(screen_lines(SP_PARM), newscr->_maxy + 1);
 
     TR(TRACE_UPDATE, (T_CALLED("ClrUpdate")));
 
-    ClearScreen(blank);
+    ClearScreen(NCURSES_SP_ARGx blank);
 
     TR(TRACE_UPDATE, ("updating screen from scratch"));
 
-    nonempty = ClrBottom(nonempty);
+    nonempty = ClrBottom(NCURSES_SP_ARGx nonempty);
 
     for (i = 0; i < nonempty; i++)
-	TransformLine(i);
+	TransformLine(NCURSES_SP_ARGx i);
 
     TR(TRACE_UPDATE, (T_RETURN("")));
 }
@@ -1006,15 +1019,15 @@ ClrUpdate(void)
 */
 
 static void
-ClrToEOL(NCURSES_CH_T blank, bool needclear)
+ClrToEOL(NCURSES_SP_DCLx NCURSES_CH_T blank, bool needclear)
 {
     int j;
 
     if (curscr != 0
-	&& SP->_cursrow >= 0) {
-	for (j = SP->_curscol; j < screen_columns; j++) {
+	&& SP_PARM->_cursrow >= 0) {
+	for (j = SP_PARM->_curscol; j < screen_columns(SP_PARM); j++) {
 	    if (j >= 0) {
-		NCURSES_CH_T *cp = &(curscr->_line[SP->_cursrow].text[j]);
+		NCURSES_CH_T *cp = &(curscr->_line[SP_PARM->_cursrow].text[j]);
 
 		if (!CharEq(*cp, blank)) {
 		    *cp = blank;
@@ -1029,12 +1042,12 @@ ClrToEOL(NCURSES_CH_T blank, bool needclear)
     if (needclear) {
 	UpdateAttrs(blank);
 	TPUTS_TRACE("clr_eol");
-	if (clr_eol && SP->_el_cost <= (screen_columns - SP->_curscol)) {
+	if (clr_eol && SP_PARM->_el_cost <= (screen_columns(SP_PARM) - SP_PARM->_curscol)) {
 	    putp(clr_eol);
 	} else {
-	    int count = (screen_columns - SP->_curscol);
+	    int count = (screen_columns(SP_PARM) - SP_PARM->_curscol);
 	    while (count-- > 0)
-		PutChar(CHREF(blank));
+		PutChar(NCURSES_SP_ARGx CHREF(blank));
 	}
     }
 }
@@ -1046,22 +1059,22 @@ ClrToEOL(NCURSES_CH_T blank, bool needclear)
 */
 
 static void
-ClrToEOS(NCURSES_CH_T blank)
+ClrToEOS(NCURSES_SP_DCLx NCURSES_CH_T blank)
 {
     int row, col;
 
-    row = SP->_cursrow;
-    col = SP->_curscol;
+    row = SP_PARM->_cursrow;
+    col = SP_PARM->_curscol;
 
     UpdateAttrs(blank);
     TPUTS_TRACE("clr_eos");
-    tputs(clr_eos, screen_lines - row, _nc_outch);
+    tputs(clr_eos, screen_lines(SP_PARM) - row, _nc_outch);
 
-    while (col < screen_columns)
+    while (col < screen_columns(SP_PARM))
 	curscr->_line[row].text[col++] = blank;
 
-    for (row++; row < screen_lines; row++) {
-	for (col = 0; col < screen_columns; col++)
+    for (row++; row < screen_lines(SP_PARM); row++) {
+	for (col = 0; col < screen_columns(SP_PARM); col++)
 	    curscr->_line[row].text[col] = blank;
     }
 }
@@ -1074,12 +1087,12 @@ ClrToEOS(NCURSES_CH_T blank)
  *	screen, checking if each is blank, and one or more are changed.
  */
 static int
-ClrBottom(int total)
+ClrBottom(NCURSES_SP_DCLx int total)
 {
     int row;
     int col;
     int top = total;
-    int last = min(screen_columns, newscr->_maxx + 1);
+    int last = min(screen_columns(SP_PARM), newscr->_maxx + 1);
     NCURSES_CH_T blank = newscr->_line[total - 1].text[last - 1];
     bool ok;
 
@@ -1102,10 +1115,10 @@ ClrBottom(int total)
 	/* don't use clr_eos for just one line if clr_eol available */
 	if (top < total) {
 	    GoTo(top, 0);
-	    ClrToEOS(blank);
-	    if (SP->oldhash && SP->newhash) {
-		for (row = top; row < screen_lines; row++)
-		    SP->oldhash[row] = SP->newhash[row];
+	    ClrToEOS(NCURSES_SP_ARGx blank);
+	    if (SP_PARM->oldhash && SP_PARM->newhash) {
+		for (row = top; row < screen_lines(SP_PARM); row++)
+		    SP_PARM->oldhash[row] = SP_PARM->newhash[row];
 	    }
 	}
     }
@@ -1144,7 +1157,7 @@ ClrBottom(int total)
 */
 
 static void
-TransformLine(int const lineno)
+TransformLine(NCURSES_SP_DCLx int const lineno)
 {
     int firstChar, oLastChar, nLastChar;
     NCURSES_CH_T *newLine = newscr->_line[lineno].text;
@@ -1155,8 +1168,8 @@ TransformLine(int const lineno)
     TR(TRACE_UPDATE, (T_CALLED("TransformLine(%d)"), lineno));
 
     /* copy new hash value to old one */
-    if (SP->oldhash && SP->newhash)
-	SP->oldhash[lineno] = SP->newhash[lineno];
+    if (SP_PARM->oldhash && SP_PARM->newhash)
+	SP_PARM->oldhash[lineno] = SP_PARM->newhash[lineno];
 
     /*
      * If we have colors, there is the possibility of having two color pairs
@@ -1164,19 +1177,20 @@ TransformLine(int const lineno)
      * for this case, and update the old line with the new line's colors when
      * they are equivalent.
      */
-    if (SP->_coloron) {
+    if (SP_PARM->_coloron) {
 	int oldPair;
 	int newPair;
 
-	for (n = 0; n < screen_columns; n++) {
+	for (n = 0; n < screen_columns(SP_PARM); n++) {
 	    if (!CharEq(newLine[n], oldLine[n])) {
 		oldPair = GetPair(oldLine[n]);
 		newPair = GetPair(newLine[n]);
 		if (oldPair != newPair
 		    && unColor(oldLine[n]) == unColor(newLine[n])) {
-		    if (oldPair < SP->_pair_limit
-			&& newPair < SP->_pair_limit
-			&& SP->_color_pairs[oldPair] == SP->_color_pairs[newPair]) {
+		    if (oldPair < SP_PARM->_pair_limit
+			&& newPair < SP_PARM->_pair_limit
+			&& (SP_PARM->_color_pairs[oldPair] ==
+			    SP_PARM->_color_pairs[newPair])) {
 			SetPair(oldLine[n], GetPair(newLine[n]));
 		    }
 		}
@@ -1186,7 +1200,7 @@ TransformLine(int const lineno)
 
     if (ceol_standout_glitch && clr_eol) {
 	firstChar = 0;
-	while (firstChar < screen_columns) {
+	while (firstChar < screen_columns(SP_PARM)) {
 	    if (!SameAttrOf(newLine[firstChar], oldLine[firstChar])) {
 		attrchanged = TRUE;
 		break;
@@ -1199,8 +1213,9 @@ TransformLine(int const lineno)
 
     if (attrchanged) {		/* we may have to disregard the whole line */
 	GoTo(lineno, firstChar);
-	ClrToEOL(ClrBlank(curscr), FALSE);
-	PutRange(oldLine, newLine, lineno, 0, (screen_columns - 1));
+	ClrToEOL(NCURSES_SP_ARGx ClrBlank(curscr), FALSE);
+	PutRange(NCURSES_SP_ARGx oldLine, newLine, lineno,
+		 0, (screen_columns(SP_PARM) - 1));
 #if USE_XMC_SUPPORT
 
 	/*
@@ -1216,7 +1231,7 @@ TransformLine(int const lineno)
 	 */
     } else if (magic_cookie_glitch > 0) {
 	GoTo(lineno, firstChar);
-	for (n = 0; n < screen_columns; n++) {
+	for (n = 0; n < screen_columns(SP_PARM); n++) {
 	    int m = n + magic_cookie_glitch;
 
 	    /* check for turn-on:
@@ -1228,22 +1243,22 @@ TransformLine(int const lineno)
 		     && xmc_turn_on(newLine[n - 1], newLine[n]))
 		    || (n == 0
 			&& lineno > 0
-			&& xmc_turn_on(xmc_new(lineno - 1, screen_columns - 1),
+			&& xmc_turn_on(xmc_new(lineno - 1, screen_columns(SP_PARM) - 1),
 				       newLine[n])))) {
 		n = m;
 	    }
 
-	    PutChar(CHREF(newLine[n]));
+	    PutChar(NCURSES_SP_ARGx CHREF(newLine[n]));
 
 	    /* check for turn-off:
 	     * If we are writing an attributed non-blank, where the
 	     * next cell is blank, and not attributed.
 	     */
 	    if (!ISBLANK(newLine[n])
-		&& ((n + 1 < screen_columns
+		&& ((n + 1 < screen_columns(SP_PARM)
 		     && xmc_turn_off(newLine[n], newLine[n + 1]))
-		    || (n + 1 >= screen_columns
-			&& lineno + 1 < screen_lines
+		    || (n + 1 >= screen_columns(SP_PARM)
+			&& lineno + 1 < screen_lines(SP_PARM)
 			&& xmc_turn_off(newLine[n], xmc_new(lineno + 1, 0))))) {
 		n = m;
 	    }
@@ -1258,26 +1273,30 @@ TransformLine(int const lineno)
 	if (clr_bol && can_clear_with(CHREF(blank))) {
 	    int oFirstChar, nFirstChar;
 
-	    for (oFirstChar = 0; oFirstChar < screen_columns; oFirstChar++)
+	    for (oFirstChar = 0;
+		 oFirstChar < screen_columns(SP_PARM);
+		 oFirstChar++)
 		if (!CharEq(oldLine[oFirstChar], blank))
 		    break;
-	    for (nFirstChar = 0; nFirstChar < screen_columns; nFirstChar++)
+	    for (nFirstChar = 0;
+		 nFirstChar < screen_columns(SP_PARM);
+		 nFirstChar++)
 		if (!CharEq(newLine[nFirstChar], blank))
 		    break;
 
 	    if (nFirstChar == oFirstChar) {
 		firstChar = nFirstChar;
 		/* find the first differing character */
-		while (firstChar < screen_columns
+		while (firstChar < screen_columns(SP_PARM)
 		       && CharEq(newLine[firstChar], oldLine[firstChar]))
 		    firstChar++;
 	    } else if (oFirstChar > nFirstChar) {
 		firstChar = nFirstChar;
 	    } else {		/* oFirstChar < nFirstChar */
 		firstChar = oFirstChar;
-		if (SP->_el1_cost < nFirstChar - oFirstChar) {
-		    if (nFirstChar >= screen_columns
-			&& SP->_el_cost <= SP->_el1_cost) {
+		if (SP_PARM->_el1_cost < nFirstChar - oFirstChar) {
+		    if (nFirstChar >= screen_columns(SP_PARM)
+			&& SP_PARM->_el_cost <= SP_PARM->_el1_cost) {
 			GoTo(lineno, 0);
 			UpdateAttrs(blank);
 			TPUTS_TRACE("clr_eol");
@@ -1295,21 +1314,21 @@ TransformLine(int const lineno)
 	    }
 	} else {
 	    /* find the first differing character */
-	    while (firstChar < screen_columns
+	    while (firstChar < screen_columns(SP_PARM)
 		   && CharEq(newLine[firstChar], oldLine[firstChar]))
 		firstChar++;
 	}
 	/* if there wasn't one, we're done */
-	if (firstChar >= screen_columns) {
+	if (firstChar >= screen_columns(SP_PARM)) {
 	    TR(TRACE_UPDATE, (T_RETURN("")));
 	    return;
 	}
 
-	blank = newLine[screen_columns - 1];
+	blank = newLine[screen_columns(SP_PARM) - 1];
 
 	if (!can_clear_with(CHREF(blank))) {
 	    /* find the last differing character */
-	    nLastChar = screen_columns - 1;
+	    nLastChar = screen_columns(SP_PARM) - 1;
 
 	    while (nLastChar > firstChar
 		   && CharEq(newLine[nLastChar], oldLine[nLastChar]))
@@ -1317,7 +1336,8 @@ TransformLine(int const lineno)
 
 	    if (nLastChar >= firstChar) {
 		GoTo(lineno, firstChar);
-		PutRange(oldLine, newLine, lineno, firstChar, nLastChar);
+		PutRange(NCURSES_SP_ARGx oldLine, newLine, lineno,
+			 firstChar, nLastChar);
 		memcpy(oldLine + firstChar,
 		       newLine + firstChar,
 		       (nLastChar - firstChar + 1) * sizeof(NCURSES_CH_T));
@@ -1327,32 +1347,35 @@ TransformLine(int const lineno)
 	}
 
 	/* find last non-blank character on old line */
-	oLastChar = screen_columns - 1;
+	oLastChar = screen_columns(SP_PARM) - 1;
 	while (oLastChar > firstChar && CharEq(oldLine[oLastChar], blank))
 	    oLastChar--;
 
 	/* find last non-blank character on new line */
-	nLastChar = screen_columns - 1;
+	nLastChar = screen_columns(SP_PARM) - 1;
 	while (nLastChar > firstChar && CharEq(newLine[nLastChar], blank))
 	    nLastChar--;
 
 	if ((nLastChar == firstChar)
-	    && (SP->_el_cost < (oLastChar - nLastChar))) {
+	    && (SP_PARM->_el_cost < (oLastChar - nLastChar))) {
 	    GoTo(lineno, firstChar);
 	    if (!CharEq(newLine[firstChar], blank))
-		PutChar(CHREF(newLine[firstChar]));
-	    ClrToEOL(blank, FALSE);
+		PutChar(NCURSES_SP_ARGx CHREF(newLine[firstChar]));
+	    ClrToEOL(NCURSES_SP_ARGx blank, FALSE);
 	} else if ((nLastChar != oLastChar)
 		   && (!CharEq(newLine[nLastChar], oldLine[oLastChar])
 		       || !(_nc_idcok && has_ic()))) {
 	    GoTo(lineno, firstChar);
-	    if ((oLastChar - nLastChar) > SP->_el_cost) {
-		if (PutRange(oldLine, newLine, lineno, firstChar, nLastChar))
+	    if ((oLastChar - nLastChar) > SP_PARM->_el_cost) {
+		if (PutRange(NCURSES_SP_ARGx oldLine, newLine, lineno,
+			     firstChar, nLastChar)) {
 		    GoTo(lineno, nLastChar + 1);
-		ClrToEOL(blank, FALSE);
+		}
+		ClrToEOL(NCURSES_SP_ARGx blank, FALSE);
 	    } else {
 		n = max(nLastChar, oLastChar);
-		PutRange(oldLine, newLine, lineno, firstChar, n);
+		PutRange(NCURSES_SP_ARGx oldLine, newLine, lineno,
+			 firstChar, n);
 	    }
 	} else {
 	    int nLastNonblank = nLastChar;
@@ -1374,7 +1397,8 @@ TransformLine(int const lineno)
 	    n = min(oLastChar, nLastChar);
 	    if (n >= firstChar) {
 		GoTo(lineno, firstChar);
-		PutRange(oldLine, newLine, lineno, firstChar, n);
+		PutRange(NCURSES_SP_ARGx oldLine, newLine, lineno,
+			 firstChar, n);
 	    }
 
 	    if (oLastChar < nLastChar) {
@@ -1388,18 +1412,19 @@ TransformLine(int const lineno)
 		GoTo(lineno, n + 1);
 		if ((nLastChar < nLastNonblank)
 		    || InsCharCost(nLastChar - oLastChar) > (m - n)) {
-		    PutRange(oldLine, newLine, lineno, n + 1, m);
+		    PutRange(NCURSES_SP_ARGx oldLine, newLine, lineno,
+			     n + 1, m);
 		} else {
 		    InsStr(&newLine[n + 1], nLastChar - oLastChar);
 		}
 	    } else if (oLastChar > nLastChar) {
 		GoTo(lineno, n + 1);
 		if (DelCharCost(oLastChar - nLastChar)
-		    > SP->_el_cost + nLastNonblank - (n + 1)) {
-		    if (PutRange(oldLine, newLine, lineno,
+		    > SP_PARM->_el_cost + nLastNonblank - (n + 1)) {
+		    if (PutRange(NCURSES_SP_ARGx oldLine, newLine, lineno,
 				 n + 1, nLastNonblank))
-			GoTo(lineno, nLastNonblank + 1);
-		    ClrToEOL(blank, FALSE);
+			  GoTo(lineno, nLastNonblank + 1);
+		    ClrToEOL(NCURSES_SP_ARGx blank, FALSE);
 		} else {
 		    /*
 		     * The delete-char sequence will
@@ -1417,10 +1442,10 @@ TransformLine(int const lineno)
     }
 
     /* update the code's internal representation */
-    if (screen_columns > firstChar)
+    if (screen_columns(SP_PARM) > firstChar)
 	memcpy(oldLine + firstChar,
 	       newLine + firstChar,
-	       (screen_columns - firstChar) * sizeof(NCURSES_CH_T));
+	       (screen_columns(SP_PARM) - firstChar) * sizeof(NCURSES_CH_T));
     TR(TRACE_UPDATE, (T_RETURN("")));
     return;
 }
@@ -1433,7 +1458,7 @@ TransformLine(int const lineno)
 */
 
 static void
-ClearScreen(NCURSES_CH_T blank)
+ClearScreen(NCURSES_SP_DCLx NCURSES_CH_T blank)
 {
     int i, j;
     bool fast_clear = (clear_screen || clr_eos || clr_eol);
@@ -1441,9 +1466,9 @@ ClearScreen(NCURSES_CH_T blank)
     TR(TRACE_UPDATE, ("ClearScreen() called"));
 
 #if NCURSES_EXT_FUNCS
-    if (SP->_coloron
-	&& !SP->_default_color) {
-	_nc_do_color(GET_SCREEN_PAIR(SP), 0, FALSE, _nc_outch);
+    if (SP_PARM->_coloron
+	&& !SP_PARM->_default_color) {
+	_nc_do_color(GET_SCREEN_PAIR(SP_PARM), 0, FALSE, _nc_outch);
 	if (!back_color_erase) {
 	    fast_clear = FALSE;
 	}
@@ -1455,20 +1480,21 @@ ClearScreen(NCURSES_CH_T blank)
 	    UpdateAttrs(blank);
 	    TPUTS_TRACE("clear_screen");
 	    putp(clear_screen);
-	    SP->_cursrow = SP->_curscol = 0;
-	    position_check(SP->_cursrow, SP->_curscol, "ClearScreen");
+	    SP_PARM->_cursrow = SP_PARM->_curscol = 0;
+	    position_check(SP_PARM->_cursrow, SP_PARM->_curscol,
+			   "ClearScreen");
 	} else if (clr_eos) {
-	    SP->_cursrow = SP->_curscol = -1;
+	    SP_PARM->_cursrow = SP_PARM->_curscol = -1;
 	    GoTo(0, 0);
 
 	    UpdateAttrs(blank);
 	    TPUTS_TRACE("clr_eos");
-	    tputs(clr_eos, screen_lines, _nc_outch);
+	    tputs(clr_eos, screen_lines(SP_PARM), _nc_outch);
 	} else if (clr_eol) {
-	    SP->_cursrow = SP->_curscol = -1;
+	    SP_PARM->_cursrow = SP_PARM->_curscol = -1;
 
 	    UpdateAttrs(blank);
-	    for (i = 0; i < screen_lines; i++) {
+	    for (i = 0; i < screen_lines(SP_PARM); i++) {
 		GoTo(i, 0);
 		TPUTS_TRACE("clr_eol");
 		putp(clr_eol);
@@ -1477,16 +1503,16 @@ ClearScreen(NCURSES_CH_T blank)
 	}
     } else {
 	UpdateAttrs(blank);
-	for (i = 0; i < screen_lines; i++) {
+	for (i = 0; i < screen_lines(SP_PARM); i++) {
 	    GoTo(i, 0);
-	    for (j = 0; j < screen_columns; j++)
-		PutChar(CHREF(blank));
+	    for (j = 0; j < screen_columns(SP_PARM); j++)
+		PutChar(NCURSES_SP_ARGx CHREF(blank));
 	}
 	GoTo(0, 0);
     }
 
-    for (i = 0; i < screen_lines; i++) {
-	for (j = 0; j < screen_columns; j++)
+    for (i = 0; i < screen_lines(SP_PARM); i++) {
+	for (j = 0; j < screen_columns(SP_PARM); j++)
 	    curscr->_line[i].text[j] = blank;
     }
 
@@ -1543,7 +1569,7 @@ InsStr(NCURSES_CH_T * line, int count)
 	    count--;
 	}
     }
-    position_check(SP->_cursrow, SP->_curscol, "InsStr");
+    position_check(SP_PARM->_cursrow, SP_PARM->_curscol, "InsStr");
 }
 
 /*
@@ -1608,7 +1634,13 @@ DelChar(int count)
 
 /* Try to scroll up assuming given csr (miny, maxy). Returns ERR on failure */
 static int
-scroll_csr_forward(int n, int top, int bot, int miny, int maxy, NCURSES_CH_T blank)
+scroll_csr_forward(NCURSES_SP_DCLx
+		   int n,
+		   int top,
+		   int bot,
+		   int miny,
+		   int maxy,
+		   NCURSES_CH_T blank)
 {
     int i;
 
@@ -1654,8 +1686,8 @@ scroll_csr_forward(int n, int top, int bot, int miny, int maxy, NCURSES_CH_T bla
 	int j;
 	for (i = 0; i < n; i++) {
 	    GoTo(bot - i, 0);
-	    for (j = 0; j < screen_columns; j++)
-		PutChar(CHREF(blank));
+	    for (j = 0; j < screen_columns(SP_PARM); j++)
+		PutChar(NCURSES_SP_ARGx CHREF(blank));
 	}
     }
 #endif
@@ -1665,7 +1697,12 @@ scroll_csr_forward(int n, int top, int bot, int miny, int maxy, NCURSES_CH_T bla
 /* Try to scroll down assuming given csr (miny, maxy). Returns ERR on failure */
 /* n > 0 */
 static int
-scroll_csr_backward(int n, int top, int bot, int miny, int maxy,
+scroll_csr_backward(NCURSES_SP_DCLx
+		    int n,
+		    int top,
+		    int bot,
+		    int miny,
+		    int maxy,
 		    NCURSES_CH_T blank)
 {
     int i;
@@ -1712,8 +1749,8 @@ scroll_csr_backward(int n, int top, int bot, int miny, int maxy,
 	int j;
 	for (i = 0; i < n; i++) {
 	    GoTo(top + i, 0);
-	    for (j = 0; j < screen_columns; j++)
-		PutChar(CHREF(blank));
+	    for (j = 0; j < screen_columns(SP_PARM); j++)
+		PutChar(NCURSES_SP_ARGx CHREF(blank));
 	}
     }
 #endif
@@ -1772,7 +1809,11 @@ scroll_idl(int n, int del, int ins, NCURSES_CH_T blank)
  * save/restore cursor capabilities if the terminal has them.
  */
 NCURSES_EXPORT(int)
-_nc_scrolln(int n, int top, int bot, int maxy)
+NCURSES_SP_NAME(_nc_scrolln) (NCURSES_SP_DCLx
+			      int n,
+			      int top,
+			      int bot,
+			      int maxy)
 /* scroll region from top to bot by n lines */
 {
     NCURSES_CH_T blank = ClrBlank(stdscr);
@@ -1796,11 +1837,11 @@ _nc_scrolln(int n, int top, int bot, int maxy)
 	 * Explicitly clear if stuff pushed off top of region might
 	 * be saved by the terminal.
 	 */
-	res = scroll_csr_forward(n, top, bot, 0, maxy, blank);
+	res = scroll_csr_forward(NCURSES_SP_ARGx n, top, bot, 0, maxy, blank);
 
 	if (res == ERR && change_scroll_region) {
 	    if ((((n == 1 && scroll_forward) || parm_index)
-		 && (SP->_cursrow == bot || SP->_cursrow == bot - 1))
+		 && (SP_PARM->_cursrow == bot || SP_PARM->_cursrow == bot - 1))
 		&& save_cursor && restore_cursor) {
 		cursor_saved = TRUE;
 		TPUTS_TRACE("save_cursor");
@@ -1812,14 +1853,14 @@ _nc_scrolln(int n, int top, int bot, int maxy)
 		TPUTS_TRACE("restore_cursor");
 		putp(restore_cursor);
 	    } else {
-		SP->_cursrow = SP->_curscol = -1;
+		SP_PARM->_cursrow = SP_PARM->_curscol = -1;
 	    }
 
-	    res = scroll_csr_forward(n, top, bot, top, bot, blank);
+	    res = scroll_csr_forward(NCURSES_SP_ARGx n, top, bot, top, bot, blank);
 
 	    TPUTS_TRACE("change_scroll_region");
 	    putp(TPARM_2(change_scroll_region, 0, maxy));
-	    SP->_cursrow = SP->_curscol = -1;
+	    SP_PARM->_cursrow = SP_PARM->_curscol = -1;
 	}
 
 	if (res == ERR && _nc_idlok)
@@ -1833,20 +1874,21 @@ _nc_scrolln(int n, int top, int bot, int maxy)
 	    static const NCURSES_CH_T blank2 = NewChar(BLANK_TEXT);
 	    if (bot == maxy && clr_eos) {
 		GoTo(bot - n + 1, 0);
-		ClrToEOS(blank2);
+		ClrToEOS(NCURSES_SP_ARGx blank2);
 	    } else {
 		for (i = 0; i < n; i++) {
 		    GoTo(bot - i, 0);
-		    ClrToEOL(blank2, FALSE);
+		    ClrToEOL(NCURSES_SP_ARGx blank2, FALSE);
 		}
 	    }
 	}
 
     } else {			/* (n < 0) - scroll down (backward) */
-	res = scroll_csr_backward(-n, top, bot, 0, maxy, blank);
+	res = scroll_csr_backward(NCURSES_SP_ARGx -n, top, bot, 0, maxy, blank);
 
 	if (res == ERR && change_scroll_region) {
-	    if (top != 0 && (SP->_cursrow == top || SP->_cursrow == top - 1)
+	    if (top != 0
+		&& (SP_PARM->_cursrow == top || SP_PARM->_cursrow == top - 1)
 		&& save_cursor && restore_cursor) {
 		cursor_saved = TRUE;
 		TPUTS_TRACE("save_cursor");
@@ -1858,14 +1900,15 @@ _nc_scrolln(int n, int top, int bot, int maxy)
 		TPUTS_TRACE("restore_cursor");
 		putp(restore_cursor);
 	    } else {
-		SP->_cursrow = SP->_curscol = -1;
+		SP_PARM->_cursrow = SP_PARM->_curscol = -1;
 	    }
 
-	    res = scroll_csr_backward(-n, top, bot, top, bot, blank);
+	    res = scroll_csr_backward(NCURSES_SP_ARGx
+				      -n, top, bot, top, bot, blank);
 
 	    TPUTS_TRACE("change_scroll_region");
 	    putp(TPARM_2(change_scroll_region, 0, maxy));
-	    SP->_cursrow = SP->_curscol = -1;
+	    SP_PARM->_cursrow = SP_PARM->_curscol = -1;
 	}
 
 	if (res == ERR && _nc_idlok)
@@ -1879,7 +1922,7 @@ _nc_scrolln(int n, int top, int bot, int maxy)
 	    static const NCURSES_CH_T blank2 = NewChar(BLANK_TEXT);
 	    for (i = 0; i < -n; i++) {
 		GoTo(i + top, 0);
-		ClrToEOL(blank2, FALSE);
+		ClrToEOL(NCURSES_SP_ARGx blank2, FALSE);
 	    }
 	}
     }
@@ -1894,6 +1937,14 @@ _nc_scrolln(int n, int top, int bot, int maxy)
 
     return (OK);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_scrolln(int n, int top, int bot, int maxy)
+{
+    return NCURSES_SP_NAME(_nc_scrolln) (CURRENT_SCREEN, n, top, bot, maxy);
+}
+#endif
 
 NCURSES_EXPORT(void)
 _nc_screen_resume(void)
@@ -1945,26 +1996,36 @@ _nc_screen_init(void)
 
 /* wrap up screen handling */
 NCURSES_EXPORT(void)
-_nc_screen_wrap(void)
+NCURSES_SP_NAME(_nc_screen_wrap) (NCURSES_SP_DCL0)
 {
     UpdateAttrs(normal);
 #if NCURSES_EXT_FUNCS
-    if (SP->_coloron
-	&& !SP->_default_color) {
+    if (SP_PARM->_coloron
+	&& !SP_PARM->_default_color) {
 	static const NCURSES_CH_T blank = NewChar(BLANK_TEXT);
-	SP->_default_color = TRUE;
+	SP_PARM->_default_color = TRUE;
 	_nc_do_color(-1, 0, FALSE, _nc_outch);
-	SP->_default_color = FALSE;
+	SP_PARM->_default_color = FALSE;
 
-	mvcur(SP->_cursrow, SP->_curscol, screen_lines - 1, 0);
+	mvcur(SP_PARM->_cursrow,
+	      SP_PARM->_curscol,
+	      screen_lines(SP_PARM) - 1, 0);
 
-	ClrToEOL(blank, TRUE);
+	ClrToEOL(NCURSES_SP_ARGx blank, TRUE);
     }
 #endif
-    if (SP->_color_defs) {
+    if (SP_PARM->_color_defs) {
 	_nc_reset_colors();
     }
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
+_nc_screen_wrap(void)
+{
+    NCURSES_SP_NAME(_nc_screen_wrap) (CURRENT_SCREEN);
+}
+#endif
 
 #if USE_XMC_SUPPORT
 NCURSES_EXPORT(void)

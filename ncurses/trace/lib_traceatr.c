@@ -38,9 +38,8 @@
  */
 
 #include <curses.priv.h>
-#include <term.h>		/* acs_chars */
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.64 2009/02/28 21:10:20 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.65 2009/04/18 18:06:31 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -187,6 +186,9 @@ _nc_altcharset_name(attr_t attr, chtype ch)
 	unsigned int val;
 	const char *name;
     } ALT_NAMES;
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     static const ALT_NAMES names[] =
     {
 	{'l', "ACS_ULCORNER"},	/* upper left corner */
@@ -261,8 +263,9 @@ _tracechtype2(int bufnum, chtype ch)
 	if ((found = _nc_altcharset_name(ChAttrOf(ch), ch)) != 0) {
 	    (void) _nc_trace_bufcat(bufnum, found);
 	} else
-	    (void) _nc_trace_bufcat(bufnum, _nc_tracechar(CURRENT_SCREEN,
-				    (int) ChCharOf(ch)));
+	    (void) _nc_trace_bufcat(bufnum,
+				    _nc_tracechar(CURRENT_SCREEN,
+						  (int) ChCharOf(ch)));
 
 	if (ChAttrOf(ch) != A_NORMAL) {
 	    (void) _nc_trace_bufcat(bufnum, " | ");

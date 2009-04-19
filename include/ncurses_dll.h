@@ -25,7 +25,7 @@
  * sale, use or other dealings in this Software without prior written       *
  * authorization.                                                           *
  ****************************************************************************/
-/* $Id: ncurses_dll.h,v 1.7 2009/03/21 18:55:22 tom Exp $ */
+/* $Id: ncurses_dll.h,v 1.8 2009/04/04 22:26:27 tom Exp $ */
 
 #ifndef NCURSES_DLL_H_incl
 #define NCURSES_DLL_H_incl 1
@@ -37,7 +37,7 @@
 #undef NCURSES_DLL
 #define NCURSES_STATIC
 
-#if defined(__CYGWIN__)
+#if defined(__CYGWIN__) || defined(__MINGW32__)
 #  if defined(NCURSES_DLL)
 #    if defined(NCURSES_STATIC)
 #      undef NCURSES_STATIC

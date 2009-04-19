@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_get_wch.c,v 1.17 2008/08/16 19:22:55 tom Exp $")
+MODULE_ID("$Id: lib_get_wch.c,v 1.18 2009/04/18 22:41:33 tom Exp $")
 
 #if HAVE_MBTOWC && HAVE_MBLEN
 #define reset_mbytes(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
@@ -95,12 +95,12 @@ wget_wch(WINDOW *win, wint_t *result)
 		 * whether the improvement would be worth the effort.
 		 */
 		if (count != 0) {
-		    _nc_ungetch(sp, (int) value);
+		    safe_ungetch (SP_PARM, (int) value);
 		    code = ERR;
 		}
 		break;
 	    } else if (count + 1 >= sizeof(buffer)) {
-		_nc_ungetch(sp, (int) value);
+		safe_ungetch (SP_PARM, (int) value);
 		code = ERR;
 		break;
 	    } else {
@@ -111,7 +111,7 @@ wget_wch(WINDOW *win, wint_t *result)
 		    reset_mbytes(state);
 		    if (check_mbytes(wch, buffer, count, state) != status) {
 			code = ERR;	/* the two calls should match */
-			_nc_ungetch(sp, (int) value);
+			safe_ungetch (SP_PARM, (int) value);
 		    }
 		    value = wch;
 		    break;

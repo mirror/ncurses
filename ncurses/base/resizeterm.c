@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: resizeterm.c,v 1.34 2008/06/07 13:58:40 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.35 2009/04/18 20:32:33 tom Exp $")
 
 #define stolen_lines (screen_lines - SP->_lines_avail)
 
@@ -68,7 +68,7 @@ show_window_sizes(const char *name)
 
     _nc_lock_global(curses);
     _tracef("%s resizing: %2d x %2d (%2d x %2d)", name, LINES, COLS,
-	    screen_lines, screen_columns);
+	    screen_lines(CURRENT_SCREEN), screen_columns(CURRENT_SCREEN));
     for (each_window(wp)) {
 	_tracef("  window %p is %2ld x %2ld at %2ld,%2ld",
 		&(wp->win),
@@ -91,8 +91,8 @@ is_term_resized(int ToLines, int ToCols)
     T((T_CALLED("is_term_resized(%d, %d)"), ToLines, ToCols));
     returnCode(ToLines > 0
 	       && ToCols > 0
-	       && (ToLines != screen_lines
-		   || ToCols != screen_columns));
+	       && (ToLines != screen_lines(CURRENT_SCREEN)
+		   || ToCols != screen_columns(CURRENT_SCREEN)));
 }
 
 /*
@@ -314,7 +314,7 @@ resize_term(int ToLines, int ToCols)
 
     T((T_CALLED("resize_term(%d,%d) old(%d,%d)"),
        ToLines, ToCols,
-       screen_lines, screen_columns));
+       screen_lines(CURRENT_SCREEN), screen_columns(CURRENT_SCREEN)));
 
     if (SP == 0) {
 	returnCode(ERR);
@@ -322,10 +322,10 @@ resize_term(int ToLines, int ToCols)
 
     _nc_lock_global(curses);
 
-    was_stolen = (screen_lines - SP->_lines_avail);
+    was_stolen = (screen_lines(CURRENT_SCREEN) - SP->_lines_avail);
     if (is_term_resized(ToLines, ToCols)) {
-	int myLines = CurLines = screen_lines;
-	int myCols = CurCols = screen_columns;
+	int myLines = CurLines = screen_lines(CURRENT_SCREEN);
+	int myCols = CurCols = screen_columns(CURRENT_SCREEN);
 
 #ifdef TRACE
 	if (USE_TRACEF(TRACE_UPDATE)) {
@@ -333,13 +333,13 @@ resize_term(int ToLines, int ToCols)
 	    _nc_unlock_global(tracef);
 	}
 #endif
-	if (ToLines > screen_lines) {
+	if (ToLines > screen_lines(CURRENT_SCREEN)) {
 	    increase_size(myLines = ToLines, myCols, was_stolen EXTRA_ARGS);
 	    CurLines = myLines;
 	    CurCols = myCols;
 	}
 
-	if (ToCols > screen_columns) {
+	if (ToCols > screen_columns(CURRENT_SCREEN)) {
 	    increase_size(myLines, myCols = ToCols, was_stolen EXTRA_ARGS);
 	    CurLines = myLines;
 	    CurCols = myCols;
@@ -350,8 +350,8 @@ resize_term(int ToLines, int ToCols)
 	    decrease_size(ToLines, ToCols, was_stolen EXTRA_ARGS);
 	}
 
-	screen_lines = lines = ToLines;
-	screen_columns = columns = ToCols;
+	screen_lines(CURRENT_SCREEN) = lines = ToLines;
+	screen_columns(CURRENT_SCREEN) = columns = ToCols;
 
 	SP->_lines_avail = lines - was_stolen;
 
@@ -398,7 +398,7 @@ resizeterm(int ToLines, int ToCols)
 
     T((T_CALLED("resizeterm(%d,%d) old(%d,%d)"),
        ToLines, ToCols,
-       screen_lines, screen_columns));
+       screen_lines(CURRENT_SCREEN), screen_columns(CURRENT_SCREEN)));
 
     if (SP != 0) {
 	result = OK;
@@ -418,7 +418,7 @@ resizeterm(int ToLines, int ToCols)
 	    result = resize_term(ToLines, ToCols);
 
 #if USE_SIGWINCH
-	    _nc_ungetch(SP, KEY_RESIZE);	/* so application can know this */
+	    safe_ungetch(SP, KEY_RESIZE);	/* so application can know this */
 	    clearok(curscr, TRUE);	/* screen contents are unknown */
 
 	    /* ripped-off lines are a special case: if we did not lengthen

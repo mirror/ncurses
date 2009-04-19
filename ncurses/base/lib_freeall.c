@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,30 +40,30 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.55 2008/12/06 23:52:29 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.56 2009/04/18 17:18:56 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
  * use for it as an extension).
  */
 NCURSES_EXPORT(void)
-_nc_freeall(void)
+NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 {
     WINDOWLIST *p, *q;
     static va_list empty_va;
 
     T((T_CALLED("_nc_freeall()")));
 #if NO_LEAKS
-    if (SP != 0) {
-	if (SP->_oldnum_list != 0) {
-	    FreeAndNull(SP->_oldnum_list);
+    if (SP_PARM != 0) {
+	if (SP_PARM->_oldnum_list != 0) {
+	    FreeAndNull(SP_PARM->_oldnum_list);
 	}
-	if (SP->_panelHook.destroy != 0) {
-	    SP->_panelHook.destroy(SP->_panelHook.stdscr_pseudo_panel);
+	if (SP_PARM->_panelHook.destroy != 0) {
+	    SP_PARM->_panelHook.destroy(SP_PARM->_panelHook.stdscr_pseudo_panel);
 	}
     }
 #endif
-    if (SP != 0) {
+    if (SP_PARM != 0) {
 	_nc_lock_global(curses);
 
 	while (_nc_windows != 0) {
@@ -95,7 +95,7 @@ _nc_freeall(void)
 	    if (!deleted)
 		break;
 	}
-	delscreen(SP);
+	delscreen(SP_PARM);
 	_nc_unlock_global(curses);
     }
 
@@ -119,12 +119,20 @@ _nc_freeall(void)
     returnVoid;
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(void)
-_nc_free_and_exit(int code)
+_nc_freeall(void)
 {
-    char *last_setbuf = (SP != 0) ? SP->_setbuf : 0;
+    NCURSES_SP_NAME(_nc_freeall) (CURRENT_SCREEN);
+}
+#endif
 
-    _nc_freeall();
+NCURSES_EXPORT(void)
+NCURSES_SP_NAME(_nc_free_and_exit) (NCURSES_SP_DCLx int code)
+{
+    char *last_setbuf = (SP_PARM != 0) ? SP_PARM->_setbuf : 0;
+
+    NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_ARG);
 #ifdef TRACE
     trace(0);			/* close trace file, freeing its setbuf */
     {
@@ -144,12 +152,21 @@ _nc_freeall(void)
 }
 
 NCURSES_EXPORT(void)
+NCURSES_SP_NAME(_nc_free_and_exit) (SCREEN *SP_PARM, int code)
+{
+    if (SP_PARM) {
+	delscreen(SP_PARM);
+	if (SP_PARM->_term)
+	    NCURSES_SP_NAME(_nc_del_curterm) (SP_PARM, SP_PARM->_term);
+    }
+    exit(code);
+}
+#endif
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
 _nc_free_and_exit(int code)
 {
-    if (SP)
-	delscreen(SP);
-    if (cur_term != 0)
-	del_curterm(cur_term);
-    exit(code);
+    NCURSES_SP_NAME(_nc_free_and_exit) (CURRENT_SCREEN, code);
 }
 #endif

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_pad.c,v 1.42 2009/02/15 00:38:48 tom Exp $")
+MODULE_ID("$Id: lib_pad.c,v 1.43 2009/04/18 18:25:37 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
 NCURSES_SP_NAME(newpad) (NCURSES_SP_DCLx int l, int c)
@@ -172,8 +172,8 @@ pnoutrefresh(WINDOW *win,
 	pmaxcol = pmincol + smaxcol - smincol;
     }
 
-    if (smaxrow >= screen_lines
-	|| smaxcol >= screen_columns
+    if (smaxrow >= screen_lines(CURRENT_SCREEN)
+	|| smaxcol >= screen_columns(CURRENT_SCREEN)
 	|| sminrow > smaxrow
 	|| smincol > smaxcol)
 	returnCode(ERR);

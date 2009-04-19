@@ -111,7 +111,7 @@
  * we'll consider nonlocal.
  */
 #define NOT_LOCAL(fy, fx, ty, tx)	((tx > LONG_DIST) \
- 		 && (tx < screen_columns - 1 - LONG_DIST) \
+ 		 && (tx < screen_columns(CURRENT_SCREEN) - 1 - LONG_DIST) \
 		 && (abs(ty-fy) + abs(tx-fx) > LONG_DIST))
 
 /****************************************************************************
@@ -156,7 +156,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.114 2009/02/15 00:50:33 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.115 2009/04/18 19:03:05 tom Exp $")
 
 #define WANT_CHAR(y, x)	SP->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE	cur_term->_baudrate	/* bits per second */
@@ -258,7 +258,7 @@ reset_scroll_region(void)
 {
     if (change_scroll_region) {
 	TPUTS_TRACE("change_scroll_region");
-	putp(TPARM_2(change_scroll_region, 0, screen_lines - 1));
+	putp(TPARM_2(change_scroll_region, 0, screen_lines(CURRENT_SCREEN) - 1));
     }
 }
 
@@ -424,7 +424,7 @@ _nc_mvcur_wrap(void)
 /* wrap up cursor-addressing mode */
 {
     /* leave cursor at screen bottom */
-    mvcur(-1, -1, screen_lines - 1, 0);
+    mvcur(-1, -1, screen_lines(CURRENT_SCREEN) - 1, 0);
 
     /* set cursor to normal mode */
     if (SP->_cursor != -1) {
@@ -781,7 +781,8 @@ onscreen_mvcur(int yold, int xold, int ynew, int xnew, bool ovw)
 
     /* tactic #4: use home-down + local movement */
     if (cursor_to_ll
-	&& ((newcost = relative_move(NullResult, screen_lines - 1, 0, ynew,
+	&& ((newcost = relative_move(NullResult,
+				     screen_lines(CURRENT_SCREEN) - 1, 0, ynew,
 				     xnew, ovw)) != INFINITY)
 	&& SP->_ll_cost + newcost < usecost) {
 	tactic = 4;
@@ -795,8 +796,12 @@ onscreen_mvcur(int yold, int xold, int ynew, int xnew, bool ovw)
     t5_cr_cost = (xold > 0 ? SP->_cr_cost : 0);
     if (auto_left_margin && !eat_newline_glitch
 	&& yold > 0 && cursor_left
-	&& ((newcost = relative_move(NullResult, yold - 1, screen_columns -
-				     1, ynew, xnew, ovw)) != INFINITY)
+	&& ((newcost = relative_move(NullResult,
+				     yold - 1,
+				     screen_columns(CURRENT_SCREEN) - 1,
+				     ynew,
+				     xnew,
+				     ovw)) != INFINITY)
 	&& t5_cr_cost + SP->_cub1_cost + newcost < usecost) {
 	tactic = 5;
 	usecost = t5_cr_cost + SP->_cub1_cost + newcost;
@@ -821,14 +826,23 @@ onscreen_mvcur(int yold, int xold, int ynew, int xnew, bool ovw)
 	break;
     case 4:
 	(void) _nc_safe_strcpy(&result, cursor_to_ll);
-	(void) relative_move(&result, screen_lines - 1, 0, ynew, xnew, ovw);
+	(void) relative_move(&result,
+			     screen_lines(CURRENT_SCREEN) - 1,
+			     0,
+			     ynew,
+			     xnew,
+			     ovw);
 	break;
     case 5:
 	if (xold > 0)
 	    (void) _nc_safe_strcat(&result, carriage_return);
 	(void) _nc_safe_strcat(&result, cursor_left);
-	(void) relative_move(&result, yold - 1, screen_columns - 1, ynew,
-			     xnew, ovw);
+	(void) relative_move(&result,
+			     yold - 1,
+			     screen_columns(CURRENT_SCREEN) - 1,
+			     ynew,
+			     xnew,
+			     ovw);
 	break;
     }
 #endif /* !NO_OPTIMIZE */
@@ -876,9 +890,9 @@ NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx
 	 * column position implied by wraparound or the lack thereof and
 	 * rolling up the screen to get ynew on the screen.
 	 */
-	if (xnew >= screen_columns) {
-	    ynew += xnew / screen_columns;
-	    xnew %= screen_columns;
+	if (xnew >= screen_columns(CURRENT_SCREEN)) {
+	    ynew += xnew / screen_columns(CURRENT_SCREEN);
+	    xnew %= screen_columns(CURRENT_SCREEN);
 	}
 
 	/*
@@ -895,14 +909,14 @@ NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx
 	    (void) VIDATTR(A_NORMAL, 0);
 	}
 
-	if (xold >= screen_columns) {
+	if (xold >= screen_columns(CURRENT_SCREEN)) {
 	    int l;
 
 	    if (SP_PARM->_nl) {
-		l = (xold + 1) / screen_columns;
+		l = (xold + 1) / screen_columns(CURRENT_SCREEN);
 		yold += l;
-		if (yold >= screen_lines)
-		    l -= (yold - screen_lines - 1);
+		if (yold >= screen_lines(CURRENT_SCREEN))
+		    l -= (yold - screen_lines(CURRENT_SCREEN) - 1);
 
 		if (l > 0) {
 		    if (carriage_return) {
@@ -931,10 +945,10 @@ NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx
 	    }
 	}
 
-	if (yold > screen_lines - 1)
-	    yold = screen_lines - 1;
-	if (ynew > screen_lines - 1)
-	    ynew = screen_lines - 1;
+	if (yold > screen_lines(CURRENT_SCREEN) - 1)
+	    yold = screen_lines(CURRENT_SCREEN) - 1;
+	if (ynew > screen_lines(CURRENT_SCREEN) - 1)
+	    ynew = screen_lines(CURRENT_SCREEN) - 1;
 
 	/* destination location is on screen now */
 	code = onscreen_mvcur(yold, xold, ynew, xnew, TRUE);

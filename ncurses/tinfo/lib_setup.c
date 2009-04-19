@@ -54,7 +54,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.113 2009/02/14 22:21:40 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.114 2009/04/18 23:52:03 tom Exp $")
 
 /****************************************************************************
  *
@@ -119,7 +119,7 @@ NCURSES_PUBLIC_VAR(ttytype) (void)
 NCURSES_EXPORT(int *)
 _nc_ptr_Lines(void)
 {
-    return ptrLines();
+    return ptrLines(CURRENT_SCREEN);
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(LINES) (void)
@@ -129,7 +129,7 @@ NCURSES_PUBLIC_VAR(LINES) (void)
 NCURSES_EXPORT(int *)
 _nc_ptr_Cols(void)
 {
-    return ptrCols();
+    return ptrCols(CURRENT_SCREEN);
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(COLS) (void)
@@ -626,7 +626,7 @@ _nc_setupterm(NCURSES_CONST char *tname, int Filedes, int *errret, bool reuse)
     /*
      * We should always check the screensize, just in case.
      */
-    _nc_get_screensize(SP, ptrLines(), ptrCols());
+    _nc_get_screensize(SP, ptrLines(SP), ptrCols(SP));
 
     if (errret)
 	*errret = TGETENT_YES;

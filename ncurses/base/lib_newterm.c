@@ -49,7 +49,7 @@
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.74 2009/02/15 00:37:10 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.75 2009/04/18 19:22:08 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -136,8 +136,10 @@ nofilter(void)
 #endif /* NCURSES_EXT_FUNCS */
 
 NCURSES_EXPORT(SCREEN *)
-NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx NCURSES_CONST char *name, FILE
-			  *ofp, FILE *ifp)
+NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
+			  NCURSES_CONST char *name,
+			  FILE *ofp,
+			  FILE *ifp)
 {
     int value;
     int errret;

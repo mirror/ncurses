@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.115 2009/01/17 20:37:32 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.118 2009/04/18 23:53:04 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -261,6 +261,9 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
      * Build up multibyte characters until we have a wide-character.
      */
     if_WIDEC({
+#if NCURSES_SP_FUNCS
+	SCREEN *sp = _nc_screen_of(win);
+#endif
 	if (WINDOW_EXT(win, addch_used) != 0 || !Charable(ch)) {
 	    int len = _nc_build_wch(win, CHREF(ch));
 
@@ -270,7 +273,8 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 		/* handle EILSEQ (i.e., when len >= -1) */
 		if (is8bits(CharOf(ch))) {
 		    int rc = OK;
-		    const char *s = unctrl((chtype) CharOf(ch));
+		    const char *s = NCURSES_SP_NAME(unctrl)
+		      (NCURSES_SP_ARGx (chtype) CharOf(ch));
 
 		    if (s[1] != '\0') {
 			while (*s != '\0') {
@@ -405,8 +409,11 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 {
     NCURSES_SIZE_T x, y;
     chtype t = CharOf(ch);
-    const char *s = unctrl(t);
-
+#if USE_WIDEC_SUPPORT || NCURSES_SP_FUNCS || USE_REENTRANT
+    SCREEN *sp = _nc_screen_of(win);
+#endif
+    const char *s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx t);
+    int tabsize = 8;
     /*
      * If we are using the alternate character set, forget about locale.
      * Otherwise, if unctrl() returns a single-character or the locale
@@ -415,14 +422,14 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
     if ((AttrOf(ch) & A_ALTCHARSET)
 	|| (
 #if USE_WIDEC_SUPPORT
-	       (SP != 0 && SP->_legacy_coding) &&
+	       (sp != 0 && sp->_legacy_coding) &&
 #endif
 	       s[1] == 0
 	)
 	|| (
 	       isprint(t)
 #if USE_WIDEC_SUPPORT
-	       || ((SP == 0 || !SP->_legacy_coding) &&
+	       || ((sp == 0 || !sp->_legacy_coding) &&
 		   (WINDOW_EXT(win, addch_used)
 		    || !_nc_is_charable(CharOf(ch))))
 #endif
@@ -438,8 +445,12 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 
     switch (t) {
     case '\t':
-	x += (TABSIZE - (x % TABSIZE));
-
+#if USE_REENTRANT
+	tabsize = sp->_TABSIZE;
+#else
+	tabsize = TABSIZE;
+#endif
+	x += (tabsize - (x % tabsize));
 	/*
 	 * Space-fill the tab on the bottom line so that we'll get the
 	 * "correct" cursor position.

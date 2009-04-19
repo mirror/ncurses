@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.17 2008/10/12 16:12:00 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.18 2009/04/18 21:01:38 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -147,10 +147,10 @@ realign_data(TERMTYPE *to, char **ext_Names,
 /*
  * Returns the first index in ext_Names[] for the given token-type
  */
-static int
+static unsigned
 _nc_first_ext_name(TERMTYPE *tp, int token_type)
 {
-    int first;
+    unsigned first;
 
     switch (token_type) {
     case BOOLEAN:
@@ -160,7 +160,7 @@ _nc_first_ext_name(TERMTYPE *tp, int token_type)
 	first = tp->ext_Booleans;
 	break;
     case STRING:
-	first = tp->ext_Booleans + tp->ext_Numbers;
+	first = (unsigned) (tp->ext_Booleans + tp->ext_Numbers);
 	break;
     default:
 	first = 0;
@@ -172,17 +172,17 @@ _nc_first_ext_name(TERMTYPE *tp, int token_type)
 /*
  * Returns the last index in ext_Names[] for the given token-type
  */
-static int
+static unsigned
 _nc_last_ext_name(TERMTYPE *tp, int token_type)
 {
-    int last;
+    unsigned last;
 
     switch (token_type) {
     case BOOLEAN:
 	last = tp->ext_Booleans;
 	break;
     case NUMBER:
-	last = tp->ext_Booleans + tp->ext_Numbers;
+	last = (unsigned) (tp->ext_Booleans + tp->ext_Numbers);
 	break;
     default:
     case STRING:
@@ -204,7 +204,7 @@ _nc_find_ext_name(TERMTYPE *tp, char *name, int token_type)
 
     for (j = first; j < last; j++) {
 	if (!strcmp(name, tp->ext_Names[j])) {
-	    return j;
+	    return (int) j;
 	}
     }
     return -1;
@@ -244,7 +244,7 @@ _nc_del_ext_name(TERMTYPE *tp, char *name, int token_type)
     int first, last;
 
     if ((first = _nc_find_ext_name(tp, name, token_type)) >= 0) {
-	last = NUM_EXT_NAMES(tp) - 1;
+	last = (int) NUM_EXT_NAMES(tp) - 1;
 	for (j = first; j < last; j++) {
 	    tp->ext_Names[j] = tp->ext_Names[j + 1];
 	}
@@ -254,22 +254,22 @@ _nc_del_ext_name(TERMTYPE *tp, char *name, int token_type)
 	    last = tp->num_Booleans - 1;
 	    for (j = first; j < last; j++)
 		tp->Booleans[j] = tp->Booleans[j + 1];
-	    tp->ext_Booleans -= 1;
-	    tp->num_Booleans -= 1;
+	    tp->ext_Booleans--;
+	    tp->num_Booleans--;
 	    break;
 	case NUMBER:
 	    last = tp->num_Numbers - 1;
 	    for (j = first; j < last; j++)
 		tp->Numbers[j] = tp->Numbers[j + 1];
-	    tp->ext_Numbers -= 1;
-	    tp->num_Numbers -= 1;
+	    tp->ext_Numbers--;
+	    tp->num_Numbers--;
 	    break;
 	case STRING:
 	    last = tp->num_Strings - 1;
 	    for (j = first; j < last; j++)
 		tp->Strings[j] = tp->Strings[j + 1];
-	    tp->ext_Strings -= 1;
-	    tp->num_Strings -= 1;
+	    tp->ext_Strings--;
+	    tp->num_Strings--;
 	    break;
 	}
 	return TRUE;
@@ -307,22 +307,22 @@ _nc_ins_ext_name(TERMTYPE *tp, char *name, int token_type)
 
     switch (token_type) {
     case BOOLEAN:
-	tp->ext_Booleans += 1;
-	tp->num_Booleans += 1;
+	tp->ext_Booleans++;
+	tp->num_Booleans++;
 	tp->Booleans = typeRealloc(NCURSES_SBOOL, tp->num_Booleans, tp->Booleans);
 	for (k = tp->num_Booleans - 1; k > j; k--)
 	    tp->Booleans[k] = tp->Booleans[k - 1];
 	break;
     case NUMBER:
-	tp->ext_Numbers += 1;
-	tp->num_Numbers += 1;
+	tp->ext_Numbers++;
+	tp->num_Numbers++;
 	tp->Numbers = typeRealloc(short, tp->num_Numbers, tp->Numbers);
 	for (k = tp->num_Numbers - 1; k > j; k--)
 	    tp->Numbers[k] = tp->Numbers[k - 1];
 	break;
     case STRING:
-	tp->ext_Strings += 1;
-	tp->num_Strings += 1;
+	tp->ext_Strings++;
+	tp->num_Strings++;
 	tp->Strings = typeRealloc(char *, tp->num_Strings, tp->Strings);
 	for (k = tp->num_Strings - 1; k > j; k--)
 	    tp->Strings[k] = tp->Strings[k - 1];
@@ -345,7 +345,7 @@ adjust_cancels(TERMTYPE *to, TERMTYPE *from)
 
     for (j = first; j < last;) {
 	char *name = to->ext_Names[j];
-	unsigned j_str = to->num_Strings - first - to->ext_Strings;
+	int j_str = to->num_Strings - first - to->ext_Strings;
 
 	if (to->Strings[j + j_str] == CANCELLED_STRING) {
 	    if ((k = _nc_find_ext_name(from, to->ext_Names[j], BOOLEAN)) >= 0) {

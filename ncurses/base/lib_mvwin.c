@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2001,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mvwin.c,v 1.14 2006/02/25 22:53:46 tom Exp $")
+MODULE_ID("$Id: lib_mvwin.c,v 1.15 2009/04/18 18:25:37 tom Exp $")
 
 NCURSES_EXPORT(int)
 mvwin(WINDOW *win, int by, int bx)
@@ -96,8 +96,8 @@ mvwin(WINDOW *win, int by, int bx)
     }
 #endif
 
-    if (by + win->_maxy > screen_lines - 1
-	|| bx + win->_maxx > screen_columns - 1
+    if (by + win->_maxy > screen_lines(CURRENT_SCREEN) - 1
+	|| bx + win->_maxx > screen_columns(CURRENT_SCREEN) - 1
 	|| by < 0
 	|| bx < 0)
 	returnCode(ERR);

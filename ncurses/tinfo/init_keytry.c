@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,16 +27,11 @@
  ****************************************************************************/
 
 #include <curses.priv.h>
-
-#include <term.h>
-/* keypad_xmit, keypad_local, meta_on, meta_off */
-/* cursor_visible,cursor_normal,cursor_invisible */
-
 #include <tic.h>		/* struct tinfo_fkeys */
 
 #include <term_entry.h>
 
-MODULE_ID("$Id: init_keytry.c,v 1.12 2008/05/24 21:44:51 tom Exp $")
+MODULE_ID("$Id: init_keytry.c,v 1.13 2009/04/18 18:53:37 tom Exp $")
 
 /*
 **      _nc_init_keytry()
@@ -102,7 +97,8 @@ _nc_init_keytry(SCREEN *sp)
 		if (name != 0
 		    && *name == 'k'
 		    && value != 0
-		    && key_defined(value) == 0) {
+		    && NCURSES_SP_NAME(key_defined) (NCURSES_SP_ARGx
+						     value) == 0) {
 		    (void) _nc_add_to_try(&(sp->_keytry),
 					  value,
 					  n - STRCOUNT + KEY_MAX);

@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.403 2009/02/28 20:55:48 tom Exp $
+ * $Id: curses.priv.h,v 1.407 2009/04/18 23:42:28 tom Exp $
  *
  *	curses.priv.h
  *
@@ -333,17 +333,17 @@ extern NCURSES_EXPORT(void)     _nc_set_no_padding(SCREEN *);
 #define SET_SCREEN_PAIR(s,p)	SetPair(SCREEN_ATTRS(s), p)
 
 #if USE_REENTRANT
-NCURSES_EXPORT(int *) _nc_ptr_Lines (void);
-NCURSES_EXPORT(int *) _nc_ptr_Cols (void);
-#define ptrLines() (SP ? &(SP->_LINES) : &(_nc_prescreen._LINES))
-#define ptrCols()  (SP ? &(SP->_COLS)  : &(_nc_prescreen._COLS))
-#define SET_LINES(value) *_nc_ptr_Lines() = value
-#define SET_COLS(value)  *_nc_ptr_Cols() = value
+NCURSES_EXPORT(int *)        _nc_ptr_Lines (void);
+NCURSES_EXPORT(int *)        _nc_ptr_Cols (void);
+#define ptrLines(sp)         (sp ? &(sp->_LINES) : &(_nc_prescreen._LINES))
+#define ptrCols(sp)          (sp ? &(sp->_COLS) : &(_nc_prescreen._COLS))
+#define SET_LINES(value)     *_nc_ptr_Lines() = value
+#define SET_COLS(value)      *_nc_ptr_Cols() = value
 #else
-#define ptrLines() &LINES
-#define ptrCols()  &COLS
-#define SET_LINES(value) LINES = value
-#define SET_COLS(value)  COLS = value
+#define ptrLines(sp)         &LINES
+#define ptrCols(sp)          &COLS
+#define SET_LINES(value)     LINES = value
+#define SET_COLS(value)      COLS = value
 #endif
 
 #define TR_MUTEX(data) _tracef("%s@%d: me:%08lX COUNT:%2u/%2d/%6d/%2d/%s%9u: " #data, \
@@ -526,10 +526,10 @@ typedef int (*TYPE_Gpm_Open) (Gpm_Connect *, int);
 typedef int (*TYPE_Gpm_Close) (void);
 typedef int (*TYPE_Gpm_GetEvent) (Gpm_Event *);
 
-#define my_gpm_fd       SP->_mouse_gpm_fd
-#define my_Gpm_Open     SP->_mouse_Gpm_Open
-#define my_Gpm_Close    SP->_mouse_Gpm_Close
-#define my_Gpm_GetEvent SP->_mouse_Gpm_GetEvent
+#define my_gpm_fd       SP_PARM->_mouse_gpm_fd
+#define my_Gpm_Open     SP_PARM->_mouse_Gpm_Open
+#define my_Gpm_Close    SP_PARM->_mouse_Gpm_Close
+#define my_Gpm_GetEvent SP_PARM->_mouse_Gpm_GetEvent
 #else
 /* link statically to GPM */
 #define my_gpm_fd       &gpm_fd
@@ -979,6 +979,20 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 };
 
 #define WINDOW_EXT(win,field) (((WINDOWLIST *)(win))->field)
+
+#define SP_PRE_INIT(sp)                         \
+    sp->_cursrow = -1;                          \
+    sp->_curscol = -1;                          \
+    sp->_nl = TRUE;                             \
+    sp->_raw = FALSE;                           \
+    sp->_cbreak = 0;                            \
+    sp->_echo = TRUE;                           \
+    sp->_fifohead = -1;                         \
+    sp->_endwin = TRUE;                         \
+    sp->_cursor = -1;                           \
+    sp->_windowlist = 0;                        \
+    sp->_outch = NCURSES_SP_NAME(_nc_outch);    \
+    sp->jump = 0                                \
 
 /* usually in <limits.h> */
 #ifndef UCHAR_MAX
@@ -1576,9 +1590,6 @@ extern NCURSES_EXPORT(int) _nc_handle_sigwinch(SCREEN *);
 #define _nc_handle_sigwinch(a) /* nothing */
 #endif
 
-/* lib_ungetch.c */
-extern NCURSES_EXPORT(int) _nc_ungetch (SCREEN *, int);
-
 /* lib_wacs.c */
 #if USE_WIDEC_SUPPORT
 extern NCURSES_EXPORT(void) _nc_init_wacs(void);
@@ -1615,7 +1626,6 @@ extern NCURSES_EXPORT(int) _nc_remove_string (TRIES **, const char *);
 /* elsewhere ... */
 extern NCURSES_EXPORT(ENTRY *) _nc_delink_entry (ENTRY *, TERMTYPE *);
 extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_keyname (SCREEN *, int);
-extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *, chtype);
 extern NCURSES_EXPORT(SCREEN *) _nc_screen_of (WINDOW *);
 extern NCURSES_EXPORT(WINDOW *) _nc_makenew (int, int, int, int, int);
 extern NCURSES_EXPORT(char *) _nc_trace_buf (int, size_t);
@@ -1722,13 +1732,15 @@ extern NCURSES_EXPORT_VAR(SCREEN *) SP;
 
 #define CURRENT_SCREEN SP
 
+#define CURRENT_SCREEN_PRE      (IsPreScreen(CURRENT_SCREEN) ? CURRENT_SCREEN : new_prescr())
+
 /*
  * We don't want to use the lines or columns capabilities internally, because
  * if the application is running multiple screens under X, it's quite possible
  * they could all have type xterm but have different sizes!  So...
  */
-#define screen_lines	SP->_lines
-#define screen_columns	SP->_columns
+#define screen_lines(sp)	(sp)->_lines
+#define screen_columns(sp)	(sp)->_columns
 
 extern NCURSES_EXPORT(int) _nc_slk_initialize (WINDOW *, int);
 
@@ -1763,6 +1775,10 @@ extern NCURSES_EXPORT(int) _nc_ripoffline (int line, int (*init)(WINDOW *,int));
 #define TW_ANY     (TW_INPUT | TW_MOUSE)
 #define TW_EVENT   4
 
+#define IsTermInfo(sp) TRUE
+#define HasTInfoTerminal(sp) ((0!=TerminalOf(sp)) && IsTermInfo(sp))
+#define IsValidTIScreen(sp)  (HasTInfoTerminal(sp))
+
 /*
  * Exported entrypoints beyond the published API
  */
@@ -1794,18 +1810,30 @@ extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scr_restore)(SCREEN*, const 
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scr_init)(SCREEN*,const char*);
 
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_restartterm)(SCREEN*,NCURSES_CONST char*,int,int*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_ripoffline)(SCREEN*, int, int (*)(WINDOW *,int));
 extern NCURSES_EXPORT(bool)     NCURSES_SP_NAME(_nc_is_term_resized)(SCREEN*,int,int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resize_term)(SCREEN*,int,int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resizeterm)(SCREEN*,int,int);
 
-extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_outch)(SCREEN*, int ch);
+extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_outch)(SCREEN*, int);
 extern NCURSES_EXPORT(void)	NCURSES_SP_NAME(_nc_flush)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_freeall)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_free_and_exit)(SCREEN*, int);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_hash_map)(SCREEN*);
+extern NCURSES_EXPORT(WINDOW *) NCURSES_SP_NAME(_nc_makenew) (SCREEN*, int, int, int, int, int);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_make_oldhash)(SCREEN*, int i);
+extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_printf_string)(SCREEN*, const char *, va_list);
 extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_putp)(SCREEN*, const char *, const char *);
 extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_putp_flush)(SCREEN*, const char *, const char *);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_set_buffer)(SCREEN*, FILE *, bool);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetent)(SCREEN*,char*,const char *);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tputs)(SCREEN*,const char*,int,int(*)(SCREEN*, int));
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_savetty)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_screen_wrap)(SCREEN*);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resetty)(SCREEN*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scrolln)(SCREEN*, int, int, int, int);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_scroll_oldhash)(SCREEN*, int n, int top, int bot);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_scroll_optimize)(SCREEN*);
 
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_mcprint)(SCREEN*,char*, int);
 extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_tgetstr)(SCREEN*,NCURSES_CONST char*,char**);
@@ -1817,6 +1845,11 @@ extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_tigetstr)(SCREEN*, NCURSES_C
 extern NCURSES_EXPORT(void)     _nc_cookie_init(SCREEN *sp);
 extern NCURSES_EXPORT(int)      _nc_tinfo_doupdate(SCREEN *sp);
 extern NCURSES_EXPORT(int)      _nc_tinfo_mcprint(SCREEN*,char*,int);
+
+#if defined(TRACE) || defined(SCROLLDEBUG) || defined(HASHDEBUG)
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_linedump)(SCREEN*);
+#endif
+
 #if USE_WIDEC_SUPPORT
 extern NCURSES_EXPORT(wchar_t *) NCURSES_SP_NAME(_nc_wunctrl)(SCREEN*, cchar_t *);
 #endif
@@ -1828,6 +1861,23 @@ extern NCURSES_EXPORT(mmask_t)	NCURSES_SP_NAME(mousemask) (SCREEN*, mmask_t, mma
 extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(mouseinterval) (SCREEN*, int);
 extern NCURSES_EXPORT(bool)	NCURSES_SP_NAME(has_mouse) (SCREEN*);
 #endif /* NCURSES_SP_FUNCS */
+
+#if NCURSES_SP_FUNCS
+
+#define safe_keyname NCURSES_SP_NAME(keyname)
+#define safe_unctrl  NCURSES_SP_NAME(unctrl)
+#define safe_ungetch NCURSES_SP_NAME(ungetch)
+
+#else
+
+#define safe_keyname _nc_keyname
+#define safe_unctrl  _nc_unctrl
+#define safe_ungetch _nc_ungetch
+
+extern NCURSES_EXPORT(int) _nc_ungetch (SCREEN *, int);
+extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *, chtype);
+
+#endif
 
 #ifdef __cplusplus
 }

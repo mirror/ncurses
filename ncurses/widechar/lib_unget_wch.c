@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_unget_wch.c,v 1.10 2008/06/07 14:50:37 tom Exp $")
+MODULE_ID("$Id: lib_unget_wch.c,v 1.11 2009/04/04 23:57:25 tom Exp $")
 
 /*
  * Wrapper for wcrtomb() which obtains the length needed for the given
@@ -65,14 +65,14 @@ _nc_wcrtomb(char *target, wchar_t source, mbstate_t * state)
 }
 
 NCURSES_EXPORT(int)
-unget_wch(const wchar_t wch)
+NCURSES_SP_NAME(unget_wch) (NCURSES_SP_DCLx const wchar_t wch)
 {
     int result = OK;
     mbstate_t state;
     size_t length;
     int n;
 
-    T((T_CALLED("unget_wch(%#lx)"), (unsigned long) wch));
+    T((T_CALLED("unget_wch(%p, %#lx)"), SP_PARM, (unsigned long) wch));
 
     init_mb(state);
     length = _nc_wcrtomb(0, wch, &state);
@@ -86,7 +86,7 @@ unget_wch(const wchar_t wch)
 	    wcrtomb(string, wch, &state);
 
 	    for (n = (int) (length - 1); n >= 0; --n) {
-		if (_nc_ungetch(SP, string[n]) != OK) {
+		if (NCURSES_SP_NAME(ungetch) (NCURSES_SP_ARGx string[n]) != OK) {
 		    result = ERR;
 		    break;
 		}
@@ -101,3 +101,11 @@ unget_wch(const wchar_t wch)
 
     returnCode(result);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+unget_wch(const wchar_t wch)
+{
+    return NCURSES_SP_NAME(unget_wch) (CURRENT_SCREEN, wch);
+}
+#endif

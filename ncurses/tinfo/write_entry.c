@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -54,7 +54,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.72 2008/08/03 19:24:00 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.73 2009/04/18 21:01:38 tom Exp $")
 
 static int total_written;
 
@@ -171,7 +171,11 @@ make_db_root(const char *path)
 	struct stat statbuf;
 
 	if ((rc = stat(path, &statbuf)) < 0) {
-	    rc = mkdir(path, 0777);
+	    rc = mkdir(path
+#if !defined(__MINGW32__)
+		       ,0777
+#endif
+		);
 	} else if (_nc_access(path, R_OK | W_OK | X_OK) < 0) {
 	    rc = -1;		/* permission denied */
 	} else if (!(S_ISDIR(statbuf.st_mode))) {
@@ -338,6 +342,7 @@ _nc_write_entry(TERMTYPE *const tp)
 
 	    while (*other_names != '\0') {
 		ptr = other_names++;
+		assert(ptr < buffer + sizeof(buffer) - 1);
 		while (*other_names != '|' && *other_names != '\0')
 		    other_names++;
 
@@ -385,7 +390,6 @@ _nc_write_entry(TERMTYPE *const tp)
     }
     while (*other_names != '\0') {
 	ptr = other_names++;
-	assert(ptr < buffer + sizeof(buffer) - 1);
 	while (*other_names != '|' && *other_names != '\0')
 	    other_names++;
 
@@ -468,18 +472,18 @@ fake_write(char *dst,
 	   unsigned want,
 	   unsigned size)
 {
-    int have = (limit - *offset);
+    unsigned have = (limit - *offset);
 
     want *= size;
     if (have > 0) {
-	if ((int) want > have)
+	if (want > have)
 	    want = have;
 	memcpy(dst + *offset, src, want);
 	*offset += want;
     } else {
 	want = 0;
     }
-    return (int) (want / size);
+    return (want / size);
 }
 
 #define Write(buf, size, count) fake_write(buffer, offset, limit, (char *) buf, count, size)
@@ -487,14 +491,15 @@ fake_write(char *dst,
 #undef LITTLE_ENDIAN		/* BSD/OS defines this as a feature macro */
 #define HI(x)			((x) / 256)
 #define LO(x)			((x) % 256)
-#define LITTLE_ENDIAN(p, x)	(p)[0] = LO(x), (p)[1] = HI(x)
+#define LITTLE_ENDIAN(p, x)	(p)[0] = (unsigned char)LO(x),  \
+                                (p)[1] = (unsigned char)HI(x)
 
 #define WRITE_STRING(str) (Write(str, sizeof(char), strlen(str) + 1) == strlen(str) + 1)
 
 static int
 compute_offsets(char **Strings, unsigned strmax, short *offsets)
 {
-    size_t nextfree = 0;
+    int nextfree = 0;
     unsigned i;
 
     for (i = 0; i < strmax; i++) {
@@ -503,8 +508,8 @@ compute_offsets(char **Strings, unsigned strmax, short *offsets)
 	} else if (Strings[i] == CANCELLED_STRING) {
 	    offsets[i] = -2;
 	} else {
-	    offsets[i] = nextfree;
-	    nextfree += strlen(Strings[i]) + 1;
+	    offsets[i] = (short) nextfree;
+	    nextfree += (int) strlen(Strings[i]) + 1;
 	    TRACE_OUT(("put Strings[%d]=%s(%d)", (int) i,
 		       _nc_visbuf(Strings[i]), (int) nextfree));
 	}
@@ -536,8 +541,8 @@ convert_shorts(unsigned char *buf, short *Numbers, unsigned count)
 static unsigned
 extended_Booleans(TERMTYPE *tp)
 {
-    unsigned short result = 0;
-    unsigned short i;
+    unsigned result = 0;
+    unsigned i;
 
     for (i = 0; i < tp->ext_Booleans; ++i) {
 	if (tp->Booleans[BOOLCOUNT + i] == TRUE)
@@ -549,8 +554,8 @@ extended_Booleans(TERMTYPE *tp)
 static unsigned
 extended_Numbers(TERMTYPE *tp)
 {
-    unsigned short result = 0;
-    unsigned short i;
+    unsigned result = 0;
+    unsigned i;
 
     for (i = 0; i < tp->ext_Numbers; ++i) {
 	if (tp->Numbers[NUMCOUNT + i] != ABSENT_NUMERIC)
@@ -597,7 +602,7 @@ write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
     size_t namelen, boolmax, nummax, strmax;
     char zero = '\0';
     size_t i;
-    short nextfree;
+    int nextfree;
     short offsets[MAX_ENTRY_SIZE / 2];
     unsigned char buf[MAX_ENTRY_SIZE];
     unsigned last_bool = BOOLWRITE;
@@ -690,7 +695,7 @@ write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 
 #if NCURSES_XNAMES
     if (extended_object(tp)) {
-	unsigned extcnt = NUM_EXT_NAMES(tp);
+	unsigned extcnt = (unsigned) NUM_EXT_NAMES(tp);
 
 	if (even_boundary(nextfree))
 	    return (ERR);

@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.101 2009/02/28 19:16:40 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.102 2009/04/18 20:32:33 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -185,7 +185,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 
     if (mask & TW_EVENT) {
 	T(("fifo_push: ungetch KEY_EVENT"));
-	_nc_ungetch(sp, KEY_EVENT);
+	safe_ungetch(sp, KEY_EVENT);
 	return KEY_EVENT;
     }
 #elif USE_GPM_SUPPORT || USE_EMX_MOUSE || USE_SYSMOUSE
@@ -372,9 +372,9 @@ _nc_wgetch(WINDOW *win,
 #ifdef NCURSES_WGETCH_EVENTS
 	if (rc != KEY_EVENT)
 #endif
-	    _nc_ungetch(sp, '\n');
+	    safe_ungetch(sp, '\n');
 	for (bufp = buf + strlen(buf); bufp > buf; bufp--)
-	    _nc_ungetch(sp, bufp[-1]);
+	    safe_ungetch(sp, bufp[-1]);
 
 #ifdef NCURSES_WGETCH_EVENTS
 	/* Return it first */
@@ -456,7 +456,7 @@ _nc_wgetch(WINDOW *win,
 		 || !sp->_mouse_parse(sp, runcount)));
 #ifdef NCURSES_WGETCH_EVENTS
 	if ((rc & TW_EVENT) && !(ch == KEY_EVENT)) {
-	    _nc_ungetch(sp, ch);
+	    safe_ungetch(sp, ch);
 	    ch = KEY_EVENT;
 	}
 #endif
@@ -464,12 +464,12 @@ _nc_wgetch(WINDOW *win,
 #ifdef NCURSES_WGETCH_EVENTS
 	    /* mouse event sequence ended by an event, report event */
 	    if (ch == KEY_EVENT) {
-		_nc_ungetch(sp, KEY_MOUSE);	/* FIXME This interrupts a gesture... */
+		safe_ungetch(sp, KEY_MOUSE);	/* FIXME This interrupts a gesture... */
 	    } else
 #endif
 	    {
 		/* mouse event sequence ended by keystroke, store keystroke */
-		_nc_ungetch(sp, ch);
+		safe_ungetch(sp, ch);
 		ch = KEY_MOUSE;
 	    }
 	}

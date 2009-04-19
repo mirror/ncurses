@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_window.c,v 1.25 2008/06/07 14:12:56 tom Exp $")
+MODULE_ID("$Id: lib_window.c,v 1.26 2009/04/18 18:46:09 tom Exp $")
 
 NCURSES_EXPORT(void)
 _nc_synchook(WINDOW *win)
@@ -185,16 +185,20 @@ dupwin(WINDOW *win)
     T((T_CALLED("dupwin(%p)"), win));
 
     if (win != 0) {
-
+#if NCURSES_SP_FUNCS
+	SCREEN *sp = _nc_screen_of(win);
+#endif
 	_nc_lock_global(curses);
 	if (win->_flags & _ISPAD) {
-	    nwin = newpad(win->_maxy + 1,
-			  win->_maxx + 1);
+	    nwin = NCURSES_SP_NAME(newpad) (NCURSES_SP_ARGx
+					    win->_maxy + 1,
+					    win->_maxx + 1);
 	} else {
-	    nwin = newwin(win->_maxy + 1,
-			  win->_maxx + 1,
-			  win->_begy,
-			  win->_begx);
+	    nwin = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx
+					    win->_maxy + 1,
+					    win->_maxx + 1,
+					    win->_begy,
+					    win->_begx);
 	}
 
 	if (nwin != 0) {

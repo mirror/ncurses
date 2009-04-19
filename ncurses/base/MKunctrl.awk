@@ -1,6 +1,6 @@
-# $Id: MKunctrl.awk,v 1.23 2008/10/04 21:40:24 tom Exp $
+# $Id: MKunctrl.awk,v 1.25 2009/04/18 23:43:49 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -46,9 +46,8 @@ BEGIN	{
 		print ""
 	}
 END	{
-		print "NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *sp, chtype ch)"
+		print "NCURSES_EXPORT(NCURSES_CONST char *) safe_unctrl(SCREEN *sp, chtype ch)"
 		print "{"
-
 		blob=""
 		offset=0
 		if (bigstrings) {
@@ -187,6 +186,6 @@ END	{
 		print  ""
 		print  "NCURSES_EXPORT(NCURSES_CONST char *) unctrl (chtype ch)"
 		print  "{"
-		print  "\treturn _nc_unctrl(SP, ch);"
+		print  "\treturn safe_unctrl(CURRENT_SCREEN, ch);"
 		print  "}"
 	}

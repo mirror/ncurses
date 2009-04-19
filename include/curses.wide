@@ -1,4 +1,4 @@
-/* $Id: curses.wide,v 1.36 2008/11/29 18:44:08 tom Exp $ */
+/* $Id: curses.wide,v 1.37 2009/04/18 21:34:06 tom Exp $ */
 /*
  * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
@@ -166,6 +166,12 @@ extern NCURSES_EXPORT(int) wins_wstr (WINDOW *, const wchar_t *);	/* generated:W
 extern NCURSES_EXPORT(int) winwstr (WINDOW *, wchar_t *);		/* implemented */
 extern NCURSES_EXPORT(wchar_t*) wunctrl (cchar_t *);			/* implemented */
 extern NCURSES_EXPORT(int) wvline_set (WINDOW *, const cchar_t *, int);	/* implemented */
+
+#if NCURSES_SP_FUNCS
+extern NCURSES_EXPORT(attr_t) NCURSES_SP_NAME(term_attrs) (SCREEN*);		/* implemented */
+extern NCURSES_EXPORT(int) NCURSES_SP_NAME(unget_wch) (SCREEN*, const wchar_t);	/* implemented */
+extern NCURSES_EXPORT(wchar_t*) NCURSES_SP_NAME(wunctrl) (SCREEN*, cchar_t *);	/* implemented */
+#endif
 
 #ifndef NCURSES_NOMACROS
 

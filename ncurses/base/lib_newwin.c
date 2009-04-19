@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.53 2009/02/15 00:38:00 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.54 2009/04/18 21:02:34 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -131,7 +131,7 @@ NCURSES_SP_NAME(newwin) (NCURSES_SP_DCLx
     if (num_lines == 0)
 	num_lines = SP_PARM->_lines_avail - begy;
     if (num_columns == 0)
-	num_columns = screen_columns - begx;
+	num_columns = screen_columns(SP_PARM) - begx;
 
     if ((win = _nc_makenew(num_lines, num_columns, begy, begx, 0)) == 0)
 	returnWin(0);
@@ -155,7 +155,8 @@ NCURSES_SP_NAME(newwin) (NCURSES_SP_DCLx
 NCURSES_EXPORT(WINDOW *)
 newwin(int num_lines, int num_columns, int begy, int begx)
 {
-    return NCURSES_SP_NAME(newwin) (CURRENT_SCREEN, num_lines, num_columns,
+    return NCURSES_SP_NAME(newwin) (CURRENT_SCREEN,
+				    num_lines, num_columns,
 				    begy, begx);
 }
 #endif
@@ -222,7 +223,12 @@ dimension_limit(int value)
 }
 
 NCURSES_EXPORT(WINDOW *)
-_nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
+NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
+			      int num_lines,
+			      int num_columns,
+			      int begy,
+			      int begx,
+			      int flags)
 {
     int i;
     WINDOWLIST *wp;
@@ -231,7 +237,7 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
 
     T((T_CALLED("_nc_makenew(%d,%d,%d,%d)"), num_lines, num_columns, begy, begx));
 
-    if (SP == 0)
+    if (SP_PARM == 0)
 	returnWin(0);
 
     if (!dimension_limit(num_lines) || !dimension_limit(num_columns))
@@ -255,14 +261,16 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
     win->_maxx = num_columns - 1;
     win->_begy = begy;
     win->_begx = begx;
-    win->_yoffset = SP->_topstolen;
+    win->_yoffset = SP_PARM->_topstolen;
 
     win->_flags = flags;
     WINDOW_ATTRS(win) = A_NORMAL;
     SetChar(win->_nc_bkgd, BLANK_TEXT, BLANK_ATTR);
 
-    win->_clear = is_pad ? FALSE : (num_lines == screen_lines
-				    && num_columns == screen_columns);
+    win->_clear = (is_pad
+		   ? FALSE
+		   : (num_lines == screen_lines(SP_PARM)
+		      && num_columns == screen_columns(SP_PARM)));
     win->_idlok = FALSE;
     win->_idcok = TRUE;
     win->_scroll = FALSE;
@@ -311,18 +319,18 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
 	if_USE_SCROLL_HINTS(win->_line[i].oldindex = i);
     }
 
-    if (!is_pad && (begx + num_columns == screen_columns)) {
+    if (!is_pad && (begx + num_columns == screen_columns(SP_PARM))) {
 	win->_flags |= _ENDLINE;
 
-	if (begx == 0 && num_lines == screen_lines && begy == 0)
+	if (begx == 0 && num_lines == screen_lines(SP_PARM) && begy == 0)
 	    win->_flags |= _FULLWIN;
 
-	if (begy + num_lines == screen_lines)
+	if (begy + num_lines == screen_lines(SP_PARM))
 	    win->_flags |= _SCROLLWIN;
     }
 
     wp->next = _nc_windows;
-    wp->screen = SP;
+    wp->screen = SP_PARM;
     _nc_windows = wp;
 
     T((T_CREATE("window %p"), win));
@@ -330,6 +338,16 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
     _nc_unlock_global(curses);
     returnWin(win);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(WINDOW *)
+_nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
+{
+    return NCURSES_SP_NAME(_nc_makenew) (CURRENT_SCREEN,
+					 num_lines, num_columns,
+					 begy, begx, flags);
+}
+#endif
 
 /*
  * wgetch() and other functions with a WINDOW* parameter may use a SCREEN*
