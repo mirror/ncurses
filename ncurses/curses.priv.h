@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.408 2009/04/19 14:32:33 tom Exp $
+ * $Id: curses.priv.h,v 1.410 2009/04/25 23:38:37 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1163,7 +1163,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 				AttrOf(dst) |= (ext + 1)
 
 #define if_WIDEC(code)  code
-#define Charable(ch)	((SP != 0 && SP->_legacy_coding)		\
+#define Charable(ch)	((SP_PARM != 0 && SP_PARM->_legacy_coding)	\
 			 || (AttrOf(ch) & A_ALTCHARSET)			\
 			 || (!isWidecExt(ch) &&				\
 			     (ch).chars[1] == L'\0' &&			\
@@ -1418,37 +1418,37 @@ extern	NCURSES_EXPORT(void) name (void); \
    }\
    TR(TRACE_ATTRS, ("new attribute is %s", _traceattr((S))));}
 
-#define DelCharCost(count) \
+#define DelCharCost(sp,count) \
 		((parm_dch != 0) \
-		? SP->_dch_cost \
+		? sp->_dch_cost \
 		: ((delete_character != 0) \
-			? (SP->_dch1_cost * count) \
+			? (sp->_dch1_cost * count) \
 			: INFINITY))
 
-#define InsCharCost(count) \
+#define InsCharCost(sp,count) \
 		((parm_ich != 0) \
-		? SP->_ich_cost \
+		? sp->_ich_cost \
 		: ((enter_insert_mode && exit_insert_mode) \
-		  ? SP->_smir_cost + SP->_rmir_cost + (SP->_ip_cost * count) \
+		  ? sp->_smir_cost + sp->_rmir_cost + (sp->_ip_cost * count) \
 		  : ((insert_character != 0) \
-		    ? ((SP->_ich1_cost + SP->_ip_cost) * count) \
+		    ? ((sp->_ich1_cost + sp->_ip_cost) * count) \
 		    : INFINITY)))
 
 #if USE_XMC_SUPPORT
-#define UpdateAttrs(c)	if (!SameAttrOf(SCREEN_ATTRS(SP), c)) { \
-				attr_t chg = AttrOf(SCREEN_ATTRS(SP)); \
+#define UpdateAttrs(sp,c)	if (!SameAttrOf(SCREEN_ATTRS(sp), c)) { \
+				attr_t chg = AttrOf(SCREEN_ATTRS(sp)); \
 				VIDATTR(AttrOf(c), GetPair(c)); \
 				if (magic_cookie_glitch > 0 \
-				 && XMC_CHANGES((chg ^ AttrOf(SCREEN_ATTRS(SP))))) { \
+				 && XMC_CHANGES((chg ^ AttrOf(SCREEN_ATTRS(sp))))) { \
 					T(("%s @%d before glitch %d,%d", \
 						__FILE__, __LINE__, \
-						SP->_cursrow, \
-						SP->_curscol)); \
+						sp->_cursrow, \
+						sp->_curscol)); \
 					_nc_do_xmc_glitch(chg); \
 				} \
 			}
 #else
-#define UpdateAttrs(c)	if (!SameAttrOf(SCREEN_ATTRS(SP), c)) \
+#define UpdateAttrs(sp,c)	if (!SameAttrOf(SCREEN_ATTRS(sp), c)) \
 				VIDATTR(AttrOf(c), GetPair(c));
 #endif
 
@@ -1721,13 +1721,13 @@ extern NCURSES_EXPORT_VAR(int *) _nc_oldnums;
 #if BROKEN_LINKER
 #define SP _nc_screen()
 extern NCURSES_EXPORT(SCREEN *) _nc_screen (void);
-extern NCURSES_EXPORT(int) _nc_alloc_screen (void);
-extern NCURSES_EXPORT(void) _nc_set_screen (SCREEN *);
+extern NCURSES_EXPORT(int)      _nc_alloc_screen (void);
+extern NCURSES_EXPORT(void)     _nc_set_screen (SCREEN *);
 #else
 /* current screen is private data; avoid possible linking conflicts too */
 extern NCURSES_EXPORT_VAR(SCREEN *) SP;
-#define _nc_alloc_screen() ((SP = typeCalloc(SCREEN, 1)) != 0)
-#define _nc_set_screen(sp) SP = sp
+#define _nc_alloc_screen()      ((SP = typeCalloc(SCREEN, 1)) != 0)
+#define _nc_set_screen(sp)      SP = sp
 #endif
 
 #define CURRENT_SCREEN SP
@@ -1739,8 +1739,8 @@ extern NCURSES_EXPORT_VAR(SCREEN *) SP;
  * if the application is running multiple screens under X, it's quite possible
  * they could all have type xterm but have different sizes!  So...
  */
-#define screen_lines(sp)	(sp)->_lines
-#define screen_columns(sp)	(sp)->_columns
+#define screen_lines(sp)        (sp)->_lines
+#define screen_columns(sp)      (sp)->_columns
 
 extern NCURSES_EXPORT(int) _nc_slk_initialize (WINDOW *, int);
 
@@ -1802,45 +1802,52 @@ extern NCURSES_EXPORT(chtype)   NCURSES_SP_NAME(_nc_acs_char)(SCREEN*,int);
  */
 extern NCURSES_EXPORT(SCREEN*)  _nc_SP(void);
 
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vidputs)(SCREEN*,chtype,int(*) (SCREEN*, int));
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vidattr)(SCREEN *, chtype);
-
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scr_restore)(SCREEN*, const char*);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scr_init)(SCREEN*,const char*);
-
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_restartterm)(SCREEN*,NCURSES_CONST char*,int,int*);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_ripoffline)(SCREEN*, int, int (*)(WINDOW *,int));
+extern NCURSES_EXPORT(WINDOW *) NCURSES_SP_NAME(_nc_makenew) (SCREEN*, int, int, int, int, int);
 extern NCURSES_EXPORT(bool)     NCURSES_SP_NAME(_nc_is_term_resized)(SCREEN*,int,int);
+extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_printf_string)(SCREEN*, const char *, va_list);
+extern NCURSES_EXPORT(chtype)   NCURSES_SP_NAME(_nc_acs_char)(SCREEN*,int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_curs_set)(SCREEN*,int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_get_tty_mode)(SCREEN*,TTY*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_mcprint)(SCREEN*,char*, int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_msec_cost)(SCREEN*, const char *, int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_outch)(SCREEN*, int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_putp)(SCREEN*, const char *, const char *);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_putp_flush)(SCREEN*, const char *, const char *);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resetty)(SCREEN*);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resize_term)(SCREEN*,int,int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resizeterm)(SCREEN*,int,int);
-
-extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_outch)(SCREEN*, int);
-extern NCURSES_EXPORT(void)	NCURSES_SP_NAME(_nc_flush)(SCREEN*);
-extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_freeall)(SCREEN*);
-extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_free_and_exit)(SCREEN*, int);
-extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_hash_map)(SCREEN*);
-extern NCURSES_EXPORT(WINDOW *) NCURSES_SP_NAME(_nc_makenew) (SCREEN*, int, int, int, int, int);
-extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_make_oldhash)(SCREEN*, int i);
-extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_printf_string)(SCREEN*, const char *, va_list);
-extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_putp)(SCREEN*, const char *, const char *);
-extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(_nc_putp_flush)(SCREEN*, const char *, const char *);
-extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_set_buffer)(SCREEN*, FILE *, bool);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetent)(SCREEN*,char*,const char *);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tputs)(SCREEN*,const char*,int,int(*)(SCREEN*, int));
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_restartterm)(SCREEN*,NCURSES_CONST char*,int,int*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_ripoffline)(SCREEN*, int, int (*)(WINDOW *,int));
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_savetty)(SCREEN*);
-extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_screen_wrap)(SCREEN*);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resetty)(SCREEN*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scr_init)(SCREEN*,const char*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scr_restore)(SCREEN*, const char*);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_scrolln)(SCREEN*, int, int, int, int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_set_tty_mode)(SCREEN*,TTY*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_setupscreen)(SCREEN**, int, int, FILE *, bool, int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetent)(SCREEN*,char*,const char *);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tigetnum)(SCREEN*,NCURSES_CONST char*);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tputs)(SCREEN*,const char*,int,int(*)(SCREEN*, int));
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vid_attr)(SCREEN *, attr_t, short, void *);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vidattr)(SCREEN *, chtype);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vidputs)(SCREEN*,chtype,int(*) (SCREEN*, int));
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_do_color)(SCREEN*, short, short, bool, int (*)(SCREEN*,int));
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_do_xmc_glitch)(SCREEN*, attr_t);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_flush)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_free_and_exit)(SCREEN*,int) GCC_NORETURN;
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_freeall)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_hash_map)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_init_acs)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_make_oldhash)(SCREEN*, int i);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_mvcur_init)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_mvcur_resume)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_mvcur_wrap)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_screen_init)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_screen_resume)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_screen_wrap)(SCREEN*);
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_scroll_oldhash)(SCREEN*, int n, int top, int bot);
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_scroll_optimize)(SCREEN*);
+extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_set_buffer)(SCREEN*, FILE *, bool);
 
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_mcprint)(SCREEN*,char*, int);
-extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_tgetstr)(SCREEN*,NCURSES_CONST char*,char**);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetflag)(SCREEN*,NCURSES_CONST char*);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetnum)(SCREEN*,NCURSES_CONST char*);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tigetflag)(SCREEN*,NCURSES_CONST char*);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tigetnum)(SCREEN*,NCURSES_CONST char*);
-extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_tigetstr)(SCREEN*, NCURSES_CONST char*);
 extern NCURSES_EXPORT(void)     _nc_cookie_init(SCREEN *sp);
 extern NCURSES_EXPORT(int)      _nc_tinfo_doupdate(SCREEN *sp);
 extern NCURSES_EXPORT(int)      _nc_tinfo_mcprint(SCREEN*,char*,int);
@@ -1853,12 +1860,6 @@ extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_linedump)(SCREEN*);
 extern NCURSES_EXPORT(wchar_t *) NCURSES_SP_NAME(_nc_wunctrl)(SCREEN*, cchar_t *);
 #endif
 
-/* FIXME - move these to curses.h.in */
-extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(getmouse) (SCREEN*, MEVENT *);
-extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(ungetmouse) (SCREEN*, MEVENT *);
-extern NCURSES_EXPORT(mmask_t)	NCURSES_SP_NAME(mousemask) (SCREEN*, mmask_t, mmask_t *);
-extern NCURSES_EXPORT(int)	NCURSES_SP_NAME(mouseinterval) (SCREEN*, int);
-extern NCURSES_EXPORT(bool)	NCURSES_SP_NAME(has_mouse) (SCREEN*);
 #endif /* NCURSES_SP_FUNCS */
 
 #if NCURSES_SP_FUNCS
