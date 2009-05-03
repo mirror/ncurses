@@ -66,7 +66,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.51 2009/02/21 21:43:40 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.53 2009/05/02 22:35:03 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 
@@ -91,14 +91,16 @@ MODULE_ID("$Id: lib_vidattr.c,v 1.51 2009/02/21 21:43:40 tom Exp $")
 #define PreviousAttr _nc_prescreen.previous_attr
 
 NCURSES_EXPORT(int)
-vidputs(chtype newmode, int (*outc) (int))
+NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
+			  chtype newmode,
+			  int (*outc) (int))
 {
     attr_t turn_on, turn_off;
     int pair;
     bool reverse = FALSE;
-    bool can_color = (SP == 0 || SP->_coloron);
+    bool can_color = (SP_PARM == 0 || SP_PARM->_coloron);
 #if NCURSES_EXT_FUNCS
-    bool fix_pair0 = (SP != 0 && SP->_coloron && !SP->_default_color);
+    bool fix_pair0 = (SP_PARM != 0 && SP_PARM->_coloron && !SP_PARM->_default_color);
 #else
 #define fix_pair0 FALSE
 #endif
@@ -107,12 +109,12 @@ vidputs(chtype newmode, int (*outc) (int))
     T((T_CALLED("vidputs(%s)"), _traceattr(newmode)));
 
     /* this allows us to go on whether or not newterm() has been called */
-    if (SP)
-	PreviousAttr = AttrOf(SCREEN_ATTRS(SP));
+    if (SP_PARM)
+	PreviousAttr = AttrOf(SCREEN_ATTRS(SP_PARM));
 
     TR(TRACE_ATTRS, ("previous attribute was %s", _traceattr(PreviousAttr)));
 
-    if ((SP != 0)
+    if ((SP_PARM != 0)
 	&& (magic_cookie_glitch > 0)) {
 #if USE_XMC_SUPPORT
 	static const chtype table[] =
@@ -136,7 +138,7 @@ vidputs(chtype newmode, int (*outc) (int))
 	 * the terminfo max_attributes value.
 	 */
 	for (n = 0; n < SIZEOF(table); ++n) {
-	    if ((table[n] & SP->_ok_attributes) == 0) {
+	    if ((table[n] & SP_PARM->_ok_attributes) == 0) {
 		newmode &= ~table[n];
 	    } else if ((table[n] & newmode) != 0) {
 		if (used++ >= limit) {
@@ -149,7 +151,7 @@ vidputs(chtype newmode, int (*outc) (int))
 	    }
 	}
 #else
-	newmode &= ~(SP->_xmc_suppress);
+	newmode &= ~(SP_PARM->_xmc_suppress);
 #endif
 	TR(TRACE_ATTRS, ("suppressed attribute is %s", _traceattr(newmode)));
     }
@@ -209,10 +211,10 @@ vidputs(chtype newmode, int (*outc) (int))
 	    if (exit_attribute_mode) {
 		doPut(exit_attribute_mode);
 	    } else {
-		if (!SP || SP->_use_rmul) {
+		if (!SP_PARM || SP_PARM->_use_rmul) {
 		    TurnOff(A_UNDERLINE, exit_underline_mode);
 		}
-		if (!SP || SP->_use_rmso) {
+		if (!SP_PARM || SP_PARM->_use_rmso) {
 		    TurnOff(A_STANDOUT, exit_standout_mode);
 		}
 	    }
@@ -242,11 +244,11 @@ vidputs(chtype newmode, int (*outc) (int))
 
 	TurnOff(A_ALTCHARSET, exit_alt_charset_mode);
 
-	if (!SP || SP->_use_rmul) {
+	if (!SP_PARM || SP_PARM->_use_rmul) {
 	    TurnOff(A_UNDERLINE, exit_underline_mode);
 	}
 
-	if (!SP || SP->_use_rmso) {
+	if (!SP_PARM || SP_PARM->_use_rmso) {
 	    TurnOff(A_STANDOUT, exit_standout_mode);
 	}
 
@@ -283,12 +285,26 @@ vidputs(chtype newmode, int (*outc) (int))
     if (reverse)
 	newmode |= A_REVERSE;
 
-    if (SP)
-	SetAttr(SCREEN_ATTRS(SP), newmode);
+    if (SP_PARM)
+	SetAttr(SCREEN_ATTRS(SP_PARM), newmode);
     else
 	PreviousAttr = newmode;
 
     returnCode(OK);
+}
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(vidattr) (NCURSES_SP_DCLx
+			  chtype newmode)
+{
+    return NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx newmode, _nc_outch);
+}
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+vidputs(chtype newmode, int (*outc) (int))
+{
+    return NCURSES_SP_NAME(vidputs) (CURRENT_SCREEN, newmode, outc);
 }
 
 NCURSES_EXPORT(int)
@@ -298,6 +314,7 @@ vidattr(chtype newmode)
 
     returnCode(vidputs(newmode, _nc_outch));
 }
+#endif
 
 NCURSES_EXPORT(chtype)
 NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)

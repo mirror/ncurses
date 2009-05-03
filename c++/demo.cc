@@ -35,7 +35,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.38 2008/08/04 17:16:57 tom Exp $
+ * $Id: demo.cc,v 1.39 2008/12/07 02:07:34 juergen Exp $
  */
 
 #include "internal.h"
@@ -43,7 +43,13 @@
 #include "cursesm.h"
 #include "cursesf.h"
 
+#ifdef __MINGW32__
+#undef KEY_EVENT
+#endif
+
+#ifndef __MINGW32__
 extern "C" unsigned int sleep(unsigned int);
+#endif
 
 #undef index // needed for NeXT
 

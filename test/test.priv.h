@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.80 2008/12/20 16:37:20 tom Exp $ */
+/* $Id: test.priv.h,v 1.81 2008/12/28 20:20:39 juergen Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -467,6 +467,14 @@ extern int optind;
 #define EXIT_FAILURE 1
 #endif
 
+#ifdef __MINGW32__
+#include <nc_mingw.h>
+/* conflicts in test/firstlast.c */
+#undef large
+#undef small
+
+#endif
+
 /* Use this to quiet gcc's -Wwrite-strings warnings, but accommodate SVr4
  * curses which doesn't have const parameters declared (so far) in the places
  * that XSI shows.
@@ -563,7 +571,7 @@ typedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);
 #define USING_SCREEN(s,func,data) use_screen(s, (NCURSES_SCREEN_CB) func, data)
 #define WANT_USE_SCREEN() extern void _nc_want_use_screen(void)
 #else
-#define USING_SCREEN(s,func,data) func(s,data)
+#define USING_SCREEN(s,func,data) func(data)
 #define WANT_USE_SCREEN() extern void _nc_want_use_screen(void)
 #endif
 

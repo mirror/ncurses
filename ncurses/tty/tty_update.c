@@ -78,7 +78,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.251 2009/04/25 23:46:09 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.252 2009/05/02 20:52:11 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -439,7 +439,7 @@ wrap_cursor(NCURSES_SP_DCL0)
 	    TR(TRACE_CHARPUT, ("turning off (%#lx) %s before wrapping",
 			       (unsigned long) AttrOf(SCREEN_ATTRS(SP_PARM)),
 			       _traceattr(AttrOf(SCREEN_ATTRS(SP_PARM)))));
-	    (void) VIDATTR(A_NORMAL, 0);
+	    (void) VIDATTR(SP_PARM, A_NORMAL, 0);
 	}
     } else {
 	SP_PARM->_curscol--;
@@ -2002,7 +2002,7 @@ NCURSES_SP_NAME(_nc_screen_resume) (NCURSES_SP_DCL0)
 
     /* reset color pairs and definitions */
     if (SP_PARM->_coloron || SP_PARM->_color_defs)
-	_nc_reset_colors ();
+	_nc_reset_colors();
 
     /* restore user-defined colors, if any */
     if (SP_PARM->_color_defs < 0) {
@@ -2081,7 +2081,7 @@ NCURSES_SP_NAME(_nc_screen_wrap) (NCURSES_SP_DCL0)
     }
 #endif
     if (SP_PARM->_color_defs) {
-	_nc_reset_colors ();
+	_nc_reset_colors();
     }
 }
 

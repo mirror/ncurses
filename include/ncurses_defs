@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.40 2008/09/06 15:57:41 tom Exp $
+# $Id: ncurses_defs,v 1.41 2008/11/16 00:19:59 juergen Exp $
 ##############################################################################
 # Copyright (c) 2000-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -171,7 +171,6 @@ NCURSES_EXT_COLORS
 NCURSES_EXT_FUNCS
 NCURSES_NO_PADDING
 NCURSES_PATHSEP	':'
-NDEBUG
 NEED_PTEM_H
 NO_LEAKS
 PURE_TERMINFO

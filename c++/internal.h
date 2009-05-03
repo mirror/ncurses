@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: internal.h,v 1.16 2008/10/25 21:35:44 tom Exp $
+// $Id: internal.h,v 1.17 2008/12/07 02:07:34 juergen Exp $
 
 #ifndef NCURSES_CPLUS_INTERNAL_H
 #define NCURSES_CPLUS_INTERNAL_H 1
@@ -42,6 +42,11 @@
 #define MODULE_ID(id) static const char Ident[] = id;
 #else
 #define MODULE_ID(id) /*nothing*/
+#endif
+
+#ifdef __MINGW32__
+#include <nc_mingw.h>
+#undef KEY_EVENT
 #endif
 
 #ifndef _QNX_SOURCE

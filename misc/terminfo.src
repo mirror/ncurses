@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.347 $
-#	$Date: 2009/03/28 23:19:33 $
+#	$Revision: 1.348 $
+#	$Date: 2009/05/02 22:23:20 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4318,6 +4318,30 @@ decansi|ANSI emulation with DEC compatibility hacks,
 	sgr0=\E[m, smacs=^N, smam=\E[?7h, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, u6=\E[%i%d;%dR,
 	u7=\E[6n, vpa=\E[%i%p1%dd,
+
+#### VWM
+#
+# vwmterm is a terminal emulator written for the VWM console window manager
+#
+vwmterm|(vwm term),
+	am, bce, ccc, mir, msgr, npc, xenl, xon,
+	colors#8, pairs#64,
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
+	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
+	clear=\E[H\E[J, cnorm=\E[?25h, cr=^M, cub1=^H,
+	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH,
+	cvvis=\E[?25h, dim=\E[2m, ed=\E[J, el=\E[K, home=\E[H,
+	il1=\E[L, ind=^J, invis=\E[8m, kcub1=\E[D, kcud1=\E[B,
+	kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[3~, kend=\E[4~, kf1=\E[[A,
+	kf10=\E[21~, kf11=\E[22~, kf12=\E[23~, kf2=\E[[B,
+	kf3=\E[[C, kf4=\E[[D, kf5=\E[[E, kf6=\E[17~, kf7=\E[18~,
+	kf8=\E[19~, kf9=\E[20~, khome=\E[1~, knp=\E[6~, kpp=\E[5~,
+	rev=\E[7m, rmacs=\E[10m, rmam=\E[?7l, rmcup=\E[?1049l,
+	rs1=\E[H\E[J\E[m\Ec, setab=\E[4%p1%dm,
+	setaf=\E[3%p1%dm,
+	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;11%;m,
+	sgr0=\E[0;10m, smacs=\E[11m, smam=\E[?7h,
+	smcup=\E[?1049h, smso=\E[3m, smul=\E[4m,
 
 #### MGR
 #
@@ -21831,6 +21855,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  (report by Kalle Olavi Niemitalo)
 #	* move function- and cursor-keys from emx-base to ansi.sys, and create
 #	  a pfkey capability which handles F1-F48 -TD
+#
+# 2009-05-02
+#	* add vwmterm entry (Bryan Christ)
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

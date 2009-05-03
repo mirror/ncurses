@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.58 2008/10/04 21:54:09 tom Exp $
+  $Id: worm.c,v 1.59 2008/11/16 00:19:59 juergen Exp $
 */
 
 #include <test.priv.h>
@@ -330,7 +330,11 @@ start_worm(void *arg)
     while (!quit_worm(((struct worm *) arg) - worm)) {
 	while (compare < sequence) {
 	    ++compare;
+#if HAVE_USE_WINDOW
 	    use_window(stdscr, draw_worm, arg);
+#else
+	    draw_worm(stdscr, arg);
+#endif
 	}
     }
     Trace(("...start_worm (done)"));
@@ -356,7 +360,13 @@ draw_all_worms(void)
     }
 #else
     for (n = 0, w = &worm[0]; n < number; n++, w++) {
-	if (USING_WINDOW2(stdscr, draw_worm, w))
+	if (
+#if HAVE_USE_WINDOW
+	       USING_WINDOW2(stdscr, draw_worm, w)
+#else
+	       draw_worm(stdscr, w)
+#endif
+	    )
 	    done = TRUE;
     }
 #endif

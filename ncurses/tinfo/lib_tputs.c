@@ -47,7 +47,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.68 2009/02/28 21:08:18 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.70 2009/05/02 20:54:22 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -104,7 +104,7 @@ delay_output(int ms)
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_DCL0)
 {
-    (void) fflush(NC_OUTPUT);
+    (void) fflush(NC_OUTPUT(SP_PARM));
 }
 
 #if NCURSES_SP_FUNCS
@@ -127,9 +127,9 @@ NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_DCLx int ch)
 	 * POSIX says write() is safe in a signal handler, but the
 	 * buffered I/O is not.
 	 */
-	write(fileno(NC_OUTPUT), &tmp, 1);
+	write(fileno(NC_OUTPUT(SP_PARM)), &tmp, 1);
     } else {
-	putc(ch, NC_OUTPUT);
+	putc(ch, NC_OUTPUT(SP_PARM));
     }
     return OK;
 }

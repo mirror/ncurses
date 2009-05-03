@@ -44,9 +44,8 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.60 2009/02/28 21:07:56 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.61 2009/05/02 21:19:53 tom Exp $")
 
-static int _nc_curs_set(SCREEN *, int);
 static int _nc_meta(SCREEN *, bool);
 
 NCURSES_EXPORT(int)
@@ -157,14 +156,43 @@ meta(WINDOW *win GCC_UNUSED, bool flag)
 /* curs_set() moved here to narrow the kernel interface */
 
 NCURSES_EXPORT(int)
-curs_set(int vis)
+NCURSES_SP_NAME(curs_set) (NCURSES_SP_DCLx int vis)
 {
-    int result;
+    int result = ERR;
 
-    T((T_CALLED("curs_set(%d)"), vis));
-    result = _nc_curs_set(SP, vis);
+    T((T_CALLED("curs_set(%p,%d)"), SP_PARM, vis));
+    if (SP_PARM != 0 && vis >= 0 && vis <= 2) {
+	int cursor = SP_PARM->_cursor;
+
+	if (vis == cursor) {
+	    result = cursor;
+	} else {
+	    switch (vis) {
+	    case 2:
+		result = _nc_putp_flush("cursor_visible", cursor_visible);
+		break;
+	    case 1:
+		result = _nc_putp_flush("cursor_normal", cursor_normal);
+		break;
+	    case 0:
+		result = _nc_putp_flush("cursor_invisible", cursor_invisible);
+		break;
+	    }
+	    if (result != ERR)
+		result = (cursor == -1 ? 1 : cursor);
+	    SP_PARM->_cursor = vis;
+	}
+    }
     returnCode(result);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+curs_set(int vis)
+{
+    return (NCURSES_SP_NAME(curs_set) (CURRENT_SCREEN, vis));
+}
+#endif
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(typeahead) (NCURSES_SP_DCLx int fd)
@@ -308,37 +336,6 @@ _nc_keypad(SCREEN *sp, bool flag)
 	}
     }
     return (rc);
-}
-
-static int
-_nc_curs_set(SCREEN *sp, int vis)
-{
-    int result = ERR;
-
-    T((T_CALLED("curs_set(%d)"), vis));
-    if (sp != 0 && vis >= 0 && vis <= 2) {
-	int cursor = sp->_cursor;
-
-	if (vis == cursor) {
-	    result = cursor;
-	} else {
-	    switch (vis) {
-	    case 2:
-		result = _nc_putp_flush("cursor_visible", cursor_visible);
-		break;
-	    case 1:
-		result = _nc_putp_flush("cursor_normal", cursor_normal);
-		break;
-	    case 0:
-		result = _nc_putp_flush("cursor_invisible", cursor_invisible);
-		break;
-	    }
-	    if (result != ERR)
-		result = (cursor == -1 ? 1 : cursor);
-	    sp->_cursor = vis;
-	}
-    }
-    returnCode(result);
 }
 
 static int

@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.69 2008/09/06 22:10:50 tom Exp $
+ * $Id: view.c,v 1.70 2008/11/16 00:19:59 juergen Exp $
  */
 
 #include <test.priv.h>
@@ -62,7 +62,9 @@
 #if HAVE_TERMIOS_H
 # include <termios.h>
 #else
+#if !defined(__MINGW32__)
 # include <sgtty.h>
+#endif
 #endif
 
 #if !defined(sun) || !HAVE_TERMIOS_H

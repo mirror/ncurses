@@ -156,7 +156,7 @@
 #include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.117 2009/04/26 00:15:22 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.118 2009/05/02 20:38:58 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) (sp)->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE(sp)	cur_term->_baudrate	/* bits per second */
@@ -265,8 +265,10 @@ reset_scroll_region(NCURSES_SP_DCL0)
 /* Set the scroll-region to a known state (the default) */
 {
     if (change_scroll_region) {
-	TPUTS_TRACE("change_scroll_region");
-	putp(TPARM_2(change_scroll_region, 0, screen_lines(CURRENT_SCREEN) - 1));
+	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
+				   "change_scroll_region",
+				   TPARM_2(change_scroll_region,
+					   0, screen_lines(SP_PARM) - 1));
     }
 }
 
@@ -276,8 +278,9 @@ NCURSES_SP_NAME(_nc_mvcur_resume) (NCURSES_SP_DCL0)
 {
     /* initialize screen for cursor access */
     if (enter_ca_mode) {
-	TPUTS_TRACE("enter_ca_mode");
-	putp(enter_ca_mode);
+	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
+				   "enter_ca_mode",
+				   enter_ca_mode);
     }
 
     /*
@@ -296,7 +299,7 @@ NCURSES_SP_NAME(_nc_mvcur_resume) (NCURSES_SP_DCL0)
     if (SP_PARM->_cursor != -1) {
 	int cursor = SP_PARM->_cursor;
 	SP_PARM->_cursor = -1;
-	curs_set(cursor);
+	NCURSES_SP_NAME(curs_set) (NCURSES_SP_ARGx cursor);
     }
 }
 
@@ -312,7 +315,7 @@ NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
 /* initialize the cost structure */
 {
-    if (isatty(fileno(SP_PARM->_ofp)))
+    if (SP_PARM->_ofp && isatty(fileno(SP_PARM->_ofp)))
 	SP_PARM->_char_padding = ((BAUDBYTE * 1000 * 10)
 				  / (BAUDRATE(SP_PARM) > 0
 				     ? BAUDRATE(SP_PARM)
@@ -410,7 +413,8 @@ NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
 
     SP_PARM->_cup_ch_cost = NormalizedCost(
 					      TPARM_2(SP_PARM->_address_cursor,
-						      23, 23), 1);
+						      23, 23),
+					      1);
     SP_PARM->_hpa_ch_cost = NormalizedCost(TPARM_1(column_address, 23), 1);
     SP_PARM->_cuf_ch_cost = NormalizedCost(TPARM_1(parm_right_cursor, 23), 1);
     SP_PARM->_inline_cost = min(SP_PARM->_cup_ch_cost,
@@ -458,13 +462,14 @@ NCURSES_SP_NAME(_nc_mvcur_wrap) (NCURSES_SP_DCL0)
     /* set cursor to normal mode */
     if (SP_PARM->_cursor != -1) {
 	int cursor = SP_PARM->_cursor;
-	curs_set(1);
+	NCURSES_SP_NAME(curs_set) (NCURSES_SP_ARGx 1);
 	SP_PARM->_cursor = cursor;
     }
 
     if (exit_ca_mode) {
-	TPUTS_TRACE("exit_ca_mode");
-	putp(exit_ca_mode);
+	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
+				   "exit_ca_mode",
+				   exit_ca_mode);
     }
     /*
      * Reset terminal's tab counter.  There's a long-time bug that
@@ -474,7 +479,7 @@ NCURSES_SP_NAME(_nc_mvcur_wrap) (NCURSES_SP_DCL0)
      * escape sequences that reset things as column positions.
      * Utter a \r to reset this invisibly.
      */
-    _nc_outch('\r');
+    NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx '\r');
 }
 
 #if NCURSES_SP_FUNCS
@@ -801,8 +806,9 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
     /* tactic #1: use local movement */
     if (yold != -1 && xold != -1
 	&& ((newcost = relative_move(NCURSES_SP_ARGx
-				     NullResult, yold, xold, ynew, xnew,
-				     ovw)) != INFINITY)
+				     NullResult,
+				     yold, xold,
+				     ynew, xnew, ovw)) != INFINITY)
 	&& newcost < usecost) {
 	tactic = 1;
 	usecost = newcost;
@@ -811,8 +817,9 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
     /* tactic #2: use carriage-return + local movement */
     if (yold != -1 && carriage_return
 	&& ((newcost = relative_move(NCURSES_SP_ARGx
-				     NullResult, yold, 0, ynew, xnew, ovw))
-	    != INFINITY)
+				     NullResult,
+				     yold, 0,
+				     ynew, xnew, ovw)) != INFINITY)
 	&& SP_PARM->_cr_cost + newcost < usecost) {
 	tactic = 2;
 	usecost = SP_PARM->_cr_cost + newcost;
@@ -821,7 +828,9 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
     /* tactic #3: use home-cursor + local movement */
     if (cursor_home
 	&& ((newcost = relative_move(NCURSES_SP_ARGx
-				     NullResult, 0, 0, ynew, xnew, ovw)) != INFINITY)
+				     NullResult,
+				     0, 0,
+				     ynew, xnew, ovw)) != INFINITY)
 	&& SP_PARM->_home_cost + newcost < usecost) {
 	tactic = 3;
 	usecost = SP_PARM->_home_cost + newcost;
@@ -831,8 +840,8 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
     if (cursor_to_ll
 	&& ((newcost = relative_move(NCURSES_SP_ARGx
 				     NullResult,
-				     screen_lines(SP_PARM) - 1, 0, ynew,
-				     xnew, ovw)) != INFINITY)
+				     screen_lines(SP_PARM) - 1, 0,
+				     ynew, xnew, ovw)) != INFINITY)
 	&& SP_PARM->_ll_cost + newcost < usecost) {
 	tactic = 4;
 	usecost = SP_PARM->_ll_cost + newcost;
@@ -845,12 +854,10 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
     t5_cr_cost = (xold > 0 ? SP_PARM->_cr_cost : 0);
     if (auto_left_margin && !eat_newline_glitch
 	&& yold > 0 && cursor_left
-	&& ((newcost = relative_move(NCURSES_SP_ARGx NullResult,
-				     yold - 1,
-				     screen_columns(SP_PARM) - 1,
-				     ynew,
-				     xnew,
-				     ovw)) != INFINITY)
+	&& ((newcost = relative_move(NCURSES_SP_ARGx
+				     NullResult,
+				     yold - 1, screen_columns(SP_PARM) - 1,
+				     ynew, xnew, ovw)) != INFINITY)
 	&& t5_cr_cost + SP_PARM->_cub1_cost + newcost < usecost) {
 	tactic = 5;
 	usecost = t5_cr_cost + SP_PARM->_cub1_cost + newcost;
@@ -864,13 +871,15 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
     switch (tactic) {
     case 1:
 	(void) relative_move(NCURSES_SP_ARGx
-			     &result, yold, xold,
+			     &result,
+			     yold, xold,
 			     ynew, xnew, ovw);
 	break;
     case 2:
 	(void) _nc_safe_strcpy(&result, carriage_return);
 	(void) relative_move(NCURSES_SP_ARGx
-			     &result, yold, 0,
+			     &result,
+			     yold, 0,
 			     ynew, xnew, ovw);
 	break;
     case 3:
@@ -881,7 +890,8 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
 	break;
     case 4:
 	(void) _nc_safe_strcpy(&result, cursor_to_ll);
-	(void) relative_move(NCURSES_SP_ARGx &result,
+	(void) relative_move(NCURSES_SP_ARGx
+			     &result,
 			     screen_lines(SP_PARM) - 1, 0,
 			     ynew, xnew, ovw);
 	break;
@@ -889,7 +899,8 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
 	if (xold > 0)
 	    (void) _nc_safe_strcat(&result, carriage_return);
 	(void) _nc_safe_strcat(&result, cursor_left);
-	(void) relative_move(NCURSES_SP_ARGx &result,
+	(void) relative_move(NCURSES_SP_ARGx
+			     &result,
 			     yold - 1, screen_columns(SP_PARM) - 1,
 			     ynew, xnew, ovw);
 	break;
@@ -955,7 +966,7 @@ NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx
 	    TR(TRACE_CHARPUT, ("turning off (%#lx) %s before move",
 			       (unsigned long) AttrOf(oldattr),
 			       _traceattr(AttrOf(oldattr))));
-	    (void) VIDATTR(A_NORMAL, 0);
+	    (void) VIDATTR(SP_PARM, A_NORMAL, 0);
 	}
 
 	if (xold >= screen_columns(SP_PARM)) {
@@ -969,18 +980,20 @@ NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx
 
 		if (l > 0) {
 		    if (carriage_return) {
-			TPUTS_TRACE("carriage_return");
-			putp(carriage_return);
+			NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
+						   "carriage_return",
+						   carriage_return);
 		    } else
-			_nc_outch('\r');
+			NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx '\r');
 		    xold = 0;
 
 		    while (l > 0) {
 			if (newline) {
-			    TPUTS_TRACE("newline");
-			    putp(newline);
+			    NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
+						       "newline",
+						       newline);
 			} else
-			    _nc_outch('\n');
+			    NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx '\n');
 			l--;
 		    }
 		}
@@ -1009,7 +1022,7 @@ NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx
 	    TR(TRACE_CHARPUT, ("turning on (%#lx) %s after move",
 			       (unsigned long) AttrOf(oldattr),
 			       _traceattr(AttrOf(oldattr))));
-	    (void) VIDATTR(AttrOf(oldattr), GetPair(oldattr));
+	    (void) VIDATTR(SP_PARM, AttrOf(oldattr), GetPair(oldattr));
 	}
     }
     returnCode(code);

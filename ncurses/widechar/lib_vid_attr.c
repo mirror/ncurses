@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.5 2007/06/30 22:03:02 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.7 2009/05/02 23:30:44 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
 
@@ -57,7 +57,11 @@ MODULE_ID("$Id: lib_vid_attr.c,v 1.5 2007/06/30 22:03:02 tom Exp $")
 #define set_color(mode, pair) mode &= ALL_BUT_COLOR; mode |= COLOR_PAIR(pair)
 
 NCURSES_EXPORT(int)
-vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
+NCURSES_SP_NAME(vid_puts)(NCURSES_SP_DCLx
+			  attr_t newmode,
+			  short pair,
+			  void *opts GCC_UNUSED,
+			  int (*outc) (int))
 {
 #if NCURSES_EXT_COLORS
     static attr_t previous_attr = A_NORMAL;
@@ -65,9 +69,9 @@ vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
 
     attr_t turn_on, turn_off;
     bool reverse = FALSE;
-    bool can_color = (SP == 0 || SP->_coloron);
+    bool can_color = (SP_PARM == 0 || SP_PARM->_coloron);
 #if NCURSES_EXT_FUNCS
-    bool fix_pair0 = (SP != 0 && SP->_coloron && !SP->_default_color);
+    bool fix_pair0 = (SP_PARM != 0 && SP_PARM->_coloron && !SP_PARM->_default_color);
 #else
 #define fix_pair0 FALSE
 #endif
@@ -76,18 +80,18 @@ vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
     T((T_CALLED("vid_puts(%s,%d)"), _traceattr(newmode), pair));
 
     /* this allows us to go on whether or not newterm() has been called */
-    if (SP) {
-	previous_attr = AttrOf(SCREEN_ATTRS(SP));
-	previous_pair = GetPair(SCREEN_ATTRS(SP));
+    if (SP_PARM) {
+	previous_attr = AttrOf(SCREEN_ATTRS(SP_PARM));
+	previous_pair = GetPair(SCREEN_ATTRS(SP_PARM));
     }
 
     TR(TRACE_ATTRS, ("previous attribute was %s, %d",
 		     _traceattr(previous_attr), previous_pair));
 
 #if !USE_XMC_SUPPORT
-    if ((SP != 0)
+    if ((SP_PARM != 0)
 	&& (magic_cookie_glitch > 0))
-	newmode &= ~(SP->_xmc_suppress);
+	newmode &= ~(SP_PARM->_xmc_suppress);
 #endif
 
     /*
@@ -144,10 +148,10 @@ vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
 	    if (exit_attribute_mode) {
 		doPut(exit_attribute_mode);
 	    } else {
-		if (!SP || SP->_use_rmul) {
+		if (!SP_PARM || SP_PARM->_use_rmul) {
 		    TurnOff(A_UNDERLINE, exit_underline_mode);
 		}
-		if (!SP || SP->_use_rmso) {
+		if (!SP_PARM || SP_PARM->_use_rmso) {
 		    TurnOff(A_STANDOUT, exit_standout_mode);
 		}
 	    }
@@ -179,11 +183,11 @@ vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
 
 	TurnOff(A_ALTCHARSET, exit_alt_charset_mode);
 
-	if (!SP || SP->_use_rmul) {
+	if (!SP_PARM || SP_PARM->_use_rmul) {
 	    TurnOff(A_UNDERLINE, exit_underline_mode);
 	}
 
-	if (!SP || SP->_use_rmso) {
+	if (!SP_PARM || SP_PARM->_use_rmso) {
 	    TurnOff(A_STANDOUT, exit_standout_mode);
 	}
 
@@ -221,9 +225,9 @@ vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
     if (reverse)
 	newmode |= A_REVERSE;
 
-    if (SP) {
-	SetAttr(SCREEN_ATTRS(SP), newmode);
-	SetPair(SCREEN_ATTRS(SP), pair);
+    if (SP_PARM) {
+	SetAttr(SCREEN_ATTRS(SP_PARM), newmode);
+	SetPair(SCREEN_ATTRS(SP_PARM), pair);
     } else {
 	previous_attr = newmode;
 	previous_pair = pair;
@@ -239,11 +243,28 @@ vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
 
 #undef vid_attr
 NCURSES_EXPORT(int)
-vid_attr(attr_t newmode, short pair, void *opts)
+NCURSES_SP_NAME(vid_attr) (NCURSES_SP_DCLx
+			   attr_t newmode,
+			   short pair,
+			   void *opts)
 {
     T((T_CALLED("vid_attr(%s,%d)"), _traceattr(newmode), pair));
     returnCode(vid_puts(newmode, pair, opts, _nc_outch));
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
+{
+    return NCURSES_SP_NAME(vid_puts) (CURRENT_SCREEN, newmode, pair, opts, outc);
+}
+
+NCURSES_EXPORT(int)
+vid_attr(attr_t newmode, short pair, void *opts)
+{
+    return NCURSES_SP_NAME(vid_attr) (CURRENT_SCREEN, newmode, pair, opts);
+}
+#endif
 
 /*
  * This implementation uses the same mask values for A_xxx and WA_xxx, so
