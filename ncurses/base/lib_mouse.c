@@ -79,7 +79,11 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mouse.c,v 1.105 2009/02/28 21:09:20 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_mouse.c,v 1.107 2009/05/10 00:48:29 tom Exp $")
 
 #include <tic.h>
 

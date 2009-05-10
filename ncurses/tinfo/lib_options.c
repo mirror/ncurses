@@ -44,13 +44,20 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_options.c,v 1.61 2009/05/02 21:19:53 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_options.c,v 1.63 2009/05/10 00:48:29 tom Exp $")
 
 static int _nc_meta(SCREEN *, bool);
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     T((T_CALLED("idlok(%p,%d)"), win, flag));
 
     if (win) {
@@ -235,11 +242,19 @@ has_key_internal(int keycode, TRIES * tp)
 }
 
 NCURSES_EXPORT(int)
+NCURSES_SP_NAME(has_key) (NCURSES_SP_DCLx int keycode)
+{
+    T((T_CALLED("has_key(%p,%d)"), SP_PARM, keycode));
+    returnCode(SP != 0 ? has_key_internal(keycode, SP_PARM->_keytry) : FALSE);
+}
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
 has_key(int keycode)
 {
-    T((T_CALLED("has_key(%d)"), keycode));
-    returnCode(SP != 0 ? has_key_internal(keycode, SP->_keytry) : FALSE);
+    return NCURSES_SP_NAME(has_key) (CURRENT_SCREEN, keycode);
 }
+#endif
 #endif /* NCURSES_EXT_FUNCS */
 
 /*
@@ -247,7 +262,7 @@ has_key(int keycode)
  * than cur_term.
  */
 #undef CUR
-#define CUR (sp->_term)->type.
+#define CUR SP_TERMTYPE 
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_DCLx

@@ -153,10 +153,13 @@
  */
 
 #include <curses.priv.h>
-#include <term.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.118 2009/05/02 20:38:58 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE
+#endif
+
+MODULE_ID("$Id: lib_mvcur.c,v 1.120 2009/05/10 00:52:29 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) (sp)->_newscr->_line[y].text[x]	/* desired state */
 #define BAUDRATE(sp)	cur_term->_baudrate	/* bits per second */
@@ -254,7 +257,7 @@ static int
 normalized_cost(NCURSES_SP_DCLx const char *const cap, int affcnt)
 /* compute the effective character-count for an operation (round up) */
 {
-    int cost = _nc_msec_cost(cap, affcnt);
+    int cost = NCURSES_SP_NAME(_nc_msec_cost) (NCURSES_SP_ARGx cap, affcnt);
     if (cost != INFINITY)
 	cost = (cost + SP_PARM->_char_padding - 1) / SP_PARM->_char_padding;
     return cost;
@@ -440,7 +443,7 @@ NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
      * SCREEN's _endwin to TRUE at window initialization time and let this be
      * called by doupdate's return-from-shellout code.
      */
-    _nc_mvcur_resume();
+    NCURSES_SP_NAME(_nc_mvcur_resume) (NCURSES_SP_ARG);
 }
 
 #if NCURSES_SP_FUNCS
@@ -920,7 +923,8 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
 
     if (usecost != INFINITY) {
 	TPUTS_TRACE("mvcur");
-	tputs(buffer, 1, _nc_outch);
+	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
+				buffer, 1, NCURSES_SP_NAME(_nc_outch));
 	SP_PARM->_cursrow = ynew;
 	SP_PARM->_curscol = xnew;
 	return (OK);

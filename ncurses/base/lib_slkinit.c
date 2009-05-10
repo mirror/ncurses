@@ -30,7 +30,6 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
- *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -40,17 +39,21 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkinit.c,v 1.8 2009/02/15 00:42:36 tom Exp $")
+MODULE_ID("$Id: lib_slkinit.c,v 1.10 2009/05/09 18:32:07 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_init) (NCURSES_SP_DCLx int format)
 {
     int code = ERR;
 
-    T((T_CALLED("slk_init(%d)"), format));
-    if (format >= 0 && format <= 3 && !_nc_globals.slk_format) {
-	_nc_globals.slk_format = 1 + format;
-	code = _nc_ripoffline(-SLK_LINES(_nc_globals.slk_format), _nc_slk_initialize);
+    T((T_CALLED("slk_init(%p,%d)"), SP_PARM, format));
+
+    if (SP_PARM && format >= 0 && format <= 3 && !SP_PARM->slk_format &&
+	SP_PARM->_prescreen) {
+	SP_PARM->slk_format = 1 + format;
+	code = NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_ARGx
+						-SLK_LINES(SP_PARM->slk_format),
+						_nc_slk_initialize);
     }
     returnCode(code);
 }
@@ -59,6 +62,6 @@ NCURSES_SP_NAME(slk_init) (NCURSES_SP_DCLx int format)
 NCURSES_EXPORT(int)
 slk_init(int format)
 {
-    return NCURSES_SP_NAME(slk_init) (CURRENT_SCREEN, format);
+    return NCURSES_SP_NAME(slk_init) (CURRENT_SCREEN_PRE, format);
 }
 #endif

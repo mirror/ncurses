@@ -43,7 +43,11 @@
 #include <curses.priv.h>
 #include <term.h>		/* beep, flash */
 
-MODULE_ID("$Id: lib_beep.c,v 1.11 2009/02/15 00:32:06 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_beep.c,v 1.13 2009/05/10 00:48:29 tom Exp $")
 
 /*
  *	beep()

@@ -46,7 +46,7 @@
 #define _POSIX_SOURCE
 #endif
 
-MODULE_ID("$Id: lib_tstp.c,v 1.38 2009/04/18 19:36:11 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.39 2009/05/09 15:46:20 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -269,7 +269,7 @@ cleanup(int sig)
 		if (scan->_ofp != 0
 		    && isatty(fileno(scan->_ofp))) {
 		    scan->_cleanup = TRUE;
-		    scan->_outch = _nc_outch;
+		    scan->_outch = NCURSES_SP_NAME(_nc_outch);
 		}
 		set_term(scan);
 		NCURSES_SP_NAME(endwin) (NCURSES_SP_ARG);

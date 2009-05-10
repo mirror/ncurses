@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,11 @@
 
 #include <term_entry.h>
 
-MODULE_ID("$Id: lib_termcap.c,v 1.63 2008/08/16 19:22:55 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_termcap.c,v 1.65 2009/05/10 00:48:29 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -78,6 +82,9 @@ NCURSES_EXPORT_VAR(char *) BC = 0;
 NCURSES_EXPORT(int)
 tgetent(char *bufp, const char *name)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     int errcode;
     int n;
     bool found_cache = FALSE;
@@ -246,6 +253,9 @@ tgetnum(NCURSES_CONST char *id)
 NCURSES_EXPORT(char *)
 tgetstr(NCURSES_CONST char *id, char **area)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     unsigned i;
     char *result = NULL;
 

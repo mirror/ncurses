@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,12 +35,16 @@
 #include <curses.priv.h>
 #include <term.h>		/* ena_acs, acs_chars */
 
-MODULE_ID("$Id: lib_acs.c,v 1.37 2009/03/21 19:39:23 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_acs.c,v 1.39 2009/05/10 00:48:29 tom Exp $")
 
 #if BROKEN_LINKER || USE_REENTRANT
 #define MyBuffer _nc_prescreen.real_acs_map
-NCURSES_EXPORT_VAR(chtype *)
-NCURSES_PUBLIC_VAR(acs_map)(void)
+NCURSES_EXPORT(chtype *)
+NCURSES_PUBLIC_VAR(acs_map) (void)
 {
     if (MyBuffer == 0)
 	MyBuffer = typeCalloc(chtype, ACS_LEN);
@@ -48,7 +52,7 @@ NCURSES_PUBLIC_VAR(acs_map)(void)
 }
 #undef MyBuffer
 #else
-NCURSES_EXPORT_VAR(chtype) acs_map[ACS_LEN] =
+NCURSES_EXPORT_VAR (chtype) acs_map[ACS_LEN] =
 {
     0
 };
@@ -57,6 +61,9 @@ NCURSES_EXPORT_VAR(chtype) acs_map[ACS_LEN] =
 NCURSES_EXPORT(void)
 _nc_init_acs(void)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     chtype *fake_map = acs_map;
     chtype *real_map = SP != 0 ? SP->_acs_map : fake_map;
     int j;

@@ -40,7 +40,11 @@
 #include <curses.priv.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.18 2009/02/15 00:33:48 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_slkrefr.c,v 1.20 2009/05/10 00:48:29 tom Exp $")
 
 /*
  * Paint the info line for the PC style SLK emulation.
@@ -68,6 +72,9 @@ slk_paint_info(WINDOW *win)
 static void
 slk_intern_refresh(SLK * slk)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     int i;
     int fmt = SP->slk_format;
 

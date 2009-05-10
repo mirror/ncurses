@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,12 +35,19 @@
 
 #include <term.h>
 
-MODULE_ID("$Id: lib_print.c,v 1.16 2006/11/26 00:26:34 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_print.c,v 1.18 2009/05/10 00:48:29 tom Exp $")
 
 NCURSES_EXPORT(int)
 mcprint(char *data, int len)
 /* ship binary character data to the printer via mc4/mc5/mc5p */
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     char *mybuf, *switchon;
     size_t onsize, offsize, res;
 

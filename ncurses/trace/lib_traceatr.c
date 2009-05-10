@@ -39,7 +39,11 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.65 2009/04/18 18:06:31 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_traceatr.c,v 1.66 2009/05/10 00:48:29 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 

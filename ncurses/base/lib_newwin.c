@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.54 2009/04/18 21:02:34 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.57 2009/05/09 23:40:03 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -88,11 +88,11 @@ _nc_freewin(WINDOW *win)
     if (win != 0) {
 	if (_nc_try_global(curses) == 0) {
 	    q = 0;
-	    for (each_window(p)) {
+	    for (each_window(SP, p)) {
 		if (&(p->win) == win) {
 		    remove_window_from_screen(win);
 		    if (q == 0)
-			_nc_windows = p->next;
+			WindowList(SP) = p->next;
 		    else
 			q->next = p->next;
 
@@ -133,7 +133,9 @@ NCURSES_SP_NAME(newwin) (NCURSES_SP_DCLx
     if (num_columns == 0)
 	num_columns = screen_columns(SP_PARM) - begx;
 
-    if ((win = _nc_makenew(num_lines, num_columns, begy, begx, 0)) == 0)
+    win = NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_ARGx
+					num_lines, num_columns, begy, begx, 0);
+    if (win == 0)
 	returnWin(0);
 
     for (i = 0; i < num_lines; i++) {
@@ -164,6 +166,9 @@ newwin(int num_lines, int num_columns, int begy, int begx)
 NCURSES_EXPORT(WINDOW *)
 derwin(WINDOW *orig, int num_lines, int num_columns, int begy, int begx)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     WINDOW *win;
     int i;
     int flags = _SUBWIN;
@@ -189,8 +194,10 @@ derwin(WINDOW *orig, int num_lines, int num_columns, int begy, int begx)
     if (orig->_flags & _ISPAD)
 	flags |= _ISPAD;
 
-    if ((win = _nc_makenew(num_lines, num_columns, orig->_begy + begy,
-			   orig->_begx + begx, flags)) == 0)
+    win = NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_ARGx num_lines, num_columns,
+					orig->_begy + begy,
+					orig->_begx + begx, flags);
+    if (win == 0)
 	returnWin(0);
 
     win->_pary = begy;
@@ -235,7 +242,8 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
     WINDOW *win;
     bool is_pad = (flags & _ISPAD);
 
-    T((T_CALLED("_nc_makenew(%d,%d,%d,%d)"), num_lines, num_columns, begy, begx));
+    T((T_CALLED("_nc_makenew(%p,%d,%d,%d,%d)"),
+       SP_PARM, num_lines, num_columns, begy, begx));
 
     if (SP_PARM == 0)
 	returnWin(0);
@@ -329,9 +337,9 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
 	    win->_flags |= _SCROLLWIN;
     }
 
-    wp->next = _nc_windows;
+    wp->next = WindowList(SP_PARM);
     wp->screen = SP_PARM;
-    _nc_windows = wp;
+    WindowList(SP_PARM) = wp;
 
     T((T_CREATE("window %p"), win));
 
@@ -365,3 +373,23 @@ _nc_screen_of(WINDOW *win)
     }
     return (sp);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(WINDOW *)
+_nc_curscr_of(SCREEN *sp)
+{
+    return sp == 0 ? 0 : sp->_curscr;
+}
+
+NCURSES_EXPORT(WINDOW *)
+_nc_newscr_of(SCREEN *sp)
+{
+    return sp == 0 ? 0 : sp->_newscr;
+}
+
+NCURSES_EXPORT(WINDOW *)
+_nc_stdscr_of(SCREEN *sp)
+{
+    return sp == 0 ? 0 : sp->_stdscr;
+}
+#endif

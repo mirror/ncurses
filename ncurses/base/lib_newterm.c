@@ -46,10 +46,14 @@
 #define _POSIX_SOURCE
 #endif
 
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
 #include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.75 2009/04/18 19:22:08 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.77 2009/05/10 00:48:29 tom Exp $")
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0

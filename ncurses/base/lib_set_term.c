@@ -45,7 +45,11 @@
 #include <term.h>		/* cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_set_term.c,v 1.118 2009/02/15 00:39:46 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_set_term.c,v 1.122 2009/05/10 00:48:29 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -257,6 +261,9 @@ _nc_setupscreen(int slines GCC_UNUSED,
 		bool filtered,
 		int slk_format)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     char *env;
     int bottom_stolen = 0;
     bool support_cookies = USE_XMC_SUPPORT;
@@ -556,8 +563,8 @@ _nc_setupscreen(int slines GCC_UNUSED,
     def_shell_mode();
     def_prog_mode();
 
-    for (rop = ripoff_stack;
-	 rop != ripoff_sp && (rop - ripoff_stack) < N_RIPS;
+    for (rop = safe_ripoff_stack;
+	 rop != safe_ripoff_sp && (rop - safe_ripoff_stack) < N_RIPS;
 	 rop++) {
 
 	/* If we must simulate soft labels, grab off the line to be used.
@@ -596,7 +603,7 @@ _nc_setupscreen(int slines GCC_UNUSED,
 	}
     }
     /* reset the stack */
-    ripoff_sp = ripoff_stack;
+    safe_ripoff_sp = safe_ripoff_stack;
 
     T(("creating stdscr"));
     assert((SP->_lines_avail + SP->_topstolen + bottom_stolen) == slines);
@@ -616,24 +623,34 @@ _nc_setupscreen(int slines GCC_UNUSED,
  * off from the top or bottom.
  */
 NCURSES_EXPORT(int)
-_nc_ripoffline(int line, int (*init) (WINDOW *, int))
+NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_DCLx
+				 int line,
+				 int (*init) (WINDOW *, int))
 {
     T((T_CALLED("_nc_ripoffline(%d, %p)"), line, init));
 
     if (line != 0) {
 
-	if (ripoff_sp == 0)
-	    ripoff_sp = ripoff_stack;
-	if (ripoff_sp >= ripoff_stack + N_RIPS)
+	if (safe_ripoff_sp == 0)
+	    safe_ripoff_sp = safe_ripoff_stack;
+	if (safe_ripoff_sp >= safe_ripoff_stack + N_RIPS)
 	    returnCode(ERR);
 
-	ripoff_sp->line = line;
-	ripoff_sp->hook = init;
-	ripoff_sp++;
+	safe_ripoff_sp->line = line;
+	safe_ripoff_sp->hook = init;
+	safe_ripoff_sp++;
     }
 
     returnCode(OK);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_ripoffline(int line, int (*init) (WINDOW *, int))
+{
+    return NCURSES_SP_NAME(_nc_ripoffline) (CURRENT_SCREEN, line, init);
+}
+#endif
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(ripoffline) (NCURSES_SP_DCLx
@@ -646,7 +663,9 @@ NCURSES_SP_NAME(ripoffline) (NCURSES_SP_DCLx
     if (line == 0)
 	returnCode(OK);
 
-    returnCode(_nc_ripoffline((line < 0) ? -1 : 1, init));
+    returnCode(NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_ARGx
+						(line < 0) ? -1 : 1,
+						init));
 }
 
 #if NCURSES_SP_FUNCS

@@ -31,7 +31,7 @@
 
 #include <term_entry.h>
 
-MODULE_ID("$Id: init_keytry.c,v 1.13 2009/04/18 18:53:37 tom Exp $")
+MODULE_ID("$Id: init_keytry.c,v 1.14 2009/05/10 00:48:29 tom Exp $")
 
 /*
 **      _nc_init_keytry()
@@ -45,7 +45,7 @@ MODULE_ID("$Id: init_keytry.c,v 1.13 2009/04/18 18:53:37 tom Exp $")
  * than cur_term.
  */
 #undef CUR
-#define CUR (sp->_term)->type.
+#define CUR SP_TERMTYPE 
 
 #if	BROKEN_LINKER
 #undef	_nc_tinfo_fkeys

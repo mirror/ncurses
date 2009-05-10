@@ -38,10 +38,14 @@
 #include <curses.priv.h>
 #include <term.h>		/* cur_term */
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.19 2009/02/15 00:33:49 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_ttyflags.c,v 1.24 2009/05/10 00:48:29 tom Exp $")
 
 NCURSES_EXPORT(int)
-_nc_get_tty_mode(TTY * buf)
+NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
 {
     int result = OK;
 
@@ -71,8 +75,16 @@ _nc_get_tty_mode(TTY * buf)
     return (result);
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-_nc_set_tty_mode(TTY * buf)
+_nc_get_tty_mode(TTY * buf)
+{
+    return NCURSES_SP_NAME(_nc_get_tty_mode) (CURRENT_SCREEN, buf);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_DCLx TTY * buf)
 {
     int result = OK;
 
@@ -86,8 +98,8 @@ _nc_set_tty_mode(TTY * buf)
 		if (SET_TTY(cur_term->Filedes, buf) != 0) {
 		    if (errno == EINTR)
 			continue;
-		    if ((errno == ENOTTY) && (SP != 0))
-			SP->_notty = TRUE;
+		    if ((errno == ENOTTY) && (SP_PARM != 0))
+			SP_PARM->_notty = TRUE;
 		    result = ERR;
 		}
 		break;
@@ -99,6 +111,14 @@ _nc_set_tty_mode(TTY * buf)
     }
     return (result);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_set_tty_mode(TTY * buf)
+{
+    return NCURSES_SP_NAME(_nc_set_tty_mode) (CURRENT_SCREEN, buf);
+}
+#endif
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_DCL0)
@@ -174,7 +194,7 @@ NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_DCL0)
 	    if (SP_PARM) {
 		if (SP_PARM->_keypad_on)
 		    _nc_keypad(SP_PARM, TRUE);
-		NC_BUFFERED(TRUE);
+		NC_BUFFERED(SP_PARM, TRUE);
 	    }
 	    returnCode(OK);
 	}
@@ -199,7 +219,7 @@ NCURSES_SP_NAME(reset_shell_mode) (NCURSES_SP_DCL0)
 	if (SP_PARM) {
 	    _nc_keypad(SP_PARM, FALSE);
 	    _nc_flush();
-	    NC_BUFFERED(FALSE);
+	    NC_BUFFERED(SP_PARM, FALSE);
 	}
 	returnCode(_nc_set_tty_mode(&cur_term->Ottyb));
     }

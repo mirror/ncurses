@@ -33,9 +33,13 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.7 2009/05/02 23:30:44 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
 
-#define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
+MODULE_ID("$Id: lib_vid_attr.c,v 1.11 2009/05/10 00:48:29 tom Exp $")
+
+#define doPut(mode) TPUTS_TRACE(#mode); NCURSES_SP_NAME(tputs)(NCURSES_SP_ARGx mode, 1, outc)
 
 #define TurnOn(mask,mode) \
 	if ((turn_on & mask) && mode) { doPut(mode); }
@@ -50,18 +54,20 @@ MODULE_ID("$Id: lib_vid_attr.c,v 1.7 2009/05/02 23:30:44 tom Exp $")
 		if ((pair != old_pair) \
 		 || (fix_pair0 && (pair == 0)) \
 		 || (reverse ^ ((old_attr & A_REVERSE) != 0))) { \
-			_nc_do_color(old_pair, pair, reverse, outc); \
+		    NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_ARGx \
+						   old_pair, pair, \
+						   reverse, outc); \
 		} \
 	}
 
 #define set_color(mode, pair) mode &= ALL_BUT_COLOR; mode |= COLOR_PAIR(pair)
 
 NCURSES_EXPORT(int)
-NCURSES_SP_NAME(vid_puts)(NCURSES_SP_DCLx
-			  attr_t newmode,
-			  short pair,
-			  void *opts GCC_UNUSED,
-			  int (*outc) (int))
+NCURSES_SP_NAME(vid_puts) (NCURSES_SP_DCLx
+			   attr_t newmode,
+			   short pair,
+			   void *opts GCC_UNUSED,
+			   NCURSES_SP_OUTC outc)
 {
 #if NCURSES_EXT_COLORS
     static attr_t previous_attr = A_NORMAL;
@@ -163,16 +169,18 @@ NCURSES_SP_NAME(vid_puts)(NCURSES_SP_DCLx
     } else if (set_attributes) {
 	if (turn_on || turn_off) {
 	    TPUTS_TRACE("set_attributes");
-	    tputs(TPARM_9(set_attributes,
-			  (newmode & A_STANDOUT) != 0,
-			  (newmode & A_UNDERLINE) != 0,
-			  (newmode & A_REVERSE) != 0,
-			  (newmode & A_BLINK) != 0,
-			  (newmode & A_DIM) != 0,
-			  (newmode & A_BOLD) != 0,
-			  (newmode & A_INVIS) != 0,
-			  (newmode & A_PROTECT) != 0,
-			  (newmode & A_ALTCHARSET) != 0), 1, outc);
+	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
+				    TPARM_9(set_attributes,
+					    (newmode & A_STANDOUT) != 0,
+					    (newmode & A_UNDERLINE) != 0,
+					    (newmode & A_REVERSE) != 0,
+					    (newmode & A_BLINK) != 0,
+					    (newmode & A_DIM) != 0,
+					    (newmode & A_BOLD) != 0,
+					    (newmode & A_INVIS) != 0,
+					    (newmode & A_PROTECT) != 0,
+					    (newmode & A_ALTCHARSET) != 0),
+				    1, outc);
 	    previous_attr &= ALL_BUT_COLOR;
 	    previous_pair = 0;
 	}
@@ -237,9 +245,25 @@ NCURSES_SP_NAME(vid_puts)(NCURSES_SP_DCLx
 #else
     T((T_CALLED("vid_puts(%s,%d)"), _traceattr(newmode), pair));
     set_color(newmode, pair);
-    returnCode(vidputs(newmode, outc));
+    returnCode(NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx newmode, outc));
 #endif
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+vid_puts(attr_t newmode,
+	 short pair,
+	 void *opts GCC_UNUSED,
+	 NCURSES_OUTC outc)
+{
+    SetSafeOutcWrapper(outc);
+    return NCURSES_SP_NAME(vid_puts) (CURRENT_SCREEN,
+				      newmode,
+				      pair,
+				      opts,
+				      _nc_outc_wrapper);
+}
+#endif
 
 #undef vid_attr
 NCURSES_EXPORT(int)
@@ -249,16 +273,14 @@ NCURSES_SP_NAME(vid_attr) (NCURSES_SP_DCLx
 			   void *opts)
 {
     T((T_CALLED("vid_attr(%s,%d)"), _traceattr(newmode), pair));
-    returnCode(vid_puts(newmode, pair, opts, _nc_outch));
+    returnCode(NCURSES_SP_NAME(vid_puts) (NCURSES_SP_ARGx
+					  newmode,
+					  pair,
+					  opts,
+					  NCURSES_SP_NAME(_nc_outch)));
 }
 
 #if NCURSES_SP_FUNCS
-NCURSES_EXPORT(int)
-vid_puts(attr_t newmode, short pair, void *opts GCC_UNUSED, int (*outc) (int))
-{
-    return NCURSES_SP_NAME(vid_puts) (CURRENT_SCREEN, newmode, pair, opts, outc);
-}
-
 NCURSES_EXPORT(int)
 vid_attr(attr_t newmode, short pair, void *opts)
 {
@@ -271,12 +293,12 @@ vid_attr(attr_t newmode, short pair, void *opts)
  * we can use termattrs() for part of the logic.
  */
 NCURSES_EXPORT(attr_t)
-term_attrs(void)
+NCURSES_SP_NAME(term_attrs) (NCURSES_SP_DCL0)
 {
     attr_t attrs;
 
     T((T_CALLED("term_attrs()")));
-    attrs = termattrs();
+    attrs = SP_PARM ? NCURSES_SP_NAME(termattrs) (NCURSES_SP_ARG) : 0;
 
     /* these are only supported for wide-character mode */
     if (enter_horizontal_hl_mode)
@@ -294,3 +316,11 @@ term_attrs(void)
 
     returnAttr(attrs);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(attr_t)
+term_attrs(void)
+{
+    return NCURSES_SP_NAME(term_attrs) (CURRENT_SCREEN);
+}
+#endif

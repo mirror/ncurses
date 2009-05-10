@@ -66,9 +66,15 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.53 2009/05/02 22:35:03 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
 
-#define doPut(mode) TPUTS_TRACE(#mode); tputs(mode, 1, outc)
+MODULE_ID("$Id: lib_vidattr.c,v 1.56 2009/05/10 00:48:29 tom Exp $")
+
+#define doPut(mode) \
+	TPUTS_TRACE(#mode); \
+	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx mode, 1, outc)
 
 #define TurnOn(mask,mode) \
 	if ((turn_on & mask) && mode) { doPut(mode); }
@@ -84,7 +90,8 @@ MODULE_ID("$Id: lib_vidattr.c,v 1.53 2009/05/02 22:35:03 tom Exp $")
 		if ((pair != old_pair) \
 		 || (fix_pair0 && (pair == 0)) \
 		 || (reverse ^ ((old_attr & A_REVERSE) != 0))) { \
-			_nc_do_color(old_pair, pair, reverse, outc); \
+		     NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_ARGx \
+		     		     old_pair, pair, reverse, outc); \
 		} \
 	}
 
@@ -93,7 +100,7 @@ MODULE_ID("$Id: lib_vidattr.c,v 1.53 2009/05/02 22:35:03 tom Exp $")
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 			  chtype newmode,
-			  int (*outc) (int))
+			  NCURSES_SP_OUTC outc)
 {
     attr_t turn_on, turn_off;
     int pair;
@@ -225,16 +232,18 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
     } else if (set_attributes) {
 	if (turn_on || turn_off) {
 	    TPUTS_TRACE("set_attributes");
-	    tputs(tparm(set_attributes,
-			(newmode & A_STANDOUT) != 0,
-			(newmode & A_UNDERLINE) != 0,
-			(newmode & A_REVERSE) != 0,
-			(newmode & A_BLINK) != 0,
-			(newmode & A_DIM) != 0,
-			(newmode & A_BOLD) != 0,
-			(newmode & A_INVIS) != 0,
-			(newmode & A_PROTECT) != 0,
-			(newmode & A_ALTCHARSET) != 0), 1, outc);
+	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
+				    tparm(set_attributes,
+					  (newmode & A_STANDOUT) != 0,
+					  (newmode & A_UNDERLINE) != 0,
+					  (newmode & A_REVERSE) != 0,
+					  (newmode & A_BLINK) != 0,
+					  (newmode & A_DIM) != 0,
+					  (newmode & A_BOLD) != 0,
+					  (newmode & A_INVIS) != 0,
+					  (newmode & A_PROTECT) != 0,
+					  (newmode & A_ALTCHARSET) != 0),
+				    1, outc);
 	    PreviousAttr &= ALL_BUT_COLOR;
 	}
 	SetColorsIf((pair != 0) || fix_pair0, PreviousAttr);
@@ -297,14 +306,17 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(vidattr) (NCURSES_SP_DCLx
 			  chtype newmode)
 {
-    return NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx newmode, _nc_outch);
+    return NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx
+				     newmode,
+				     NCURSES_SP_NAME(_nc_outch));
 }
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-vidputs(chtype newmode, int (*outc) (int))
+vidputs(chtype newmode, NCURSES_OUTC outc)
 {
-    return NCURSES_SP_NAME(vidputs) (CURRENT_SCREEN, newmode, outc);
+    SetSafeOutcWrapper(outc);
+    return NCURSES_SP_NAME(vidputs) (CURRENT_SCREEN, newmode, _nc_outc_wrapper);
 }
 
 NCURSES_EXPORT(int)

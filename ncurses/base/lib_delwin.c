@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_delwin.c,v 1.17 2008/06/07 14:10:56 tom Exp $")
+MODULE_ID("$Id: lib_delwin.c,v 1.18 2009/05/09 18:30:57 tom Exp $")
 
 static bool
 cannot_delete(WINDOW *win)
@@ -48,7 +48,7 @@ cannot_delete(WINDOW *win)
     WINDOWLIST *p;
     bool result = TRUE;
 
-    for (each_window(p)) {
+    for (each_window(SP, p)) {
 	if (&(p->win) == win) {
 	    result = FALSE;
 	} else if ((p->win._flags & _SUBWIN) != 0

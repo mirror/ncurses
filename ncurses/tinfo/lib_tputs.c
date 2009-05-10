@@ -42,12 +42,17 @@
  */
 
 #include <curses.priv.h>
+
+#ifndef CUR
+#define CUR SP_TERMTYPE
+#endif
+
 #include <ctype.h>
 #include <term.h>		/* padding_baud_rate, xon_xoff */
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.70 2009/05/02 20:54:22 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.73 2009/05/10 00:54:17 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -70,24 +75,28 @@ _nc_set_no_padding(SCREEN *sp)
 }
 #endif
 
-static int (*my_outch) (int c) = _nc_outch;
+#if NCURSES_SP_FUNCS
+#define my_outch SP_PARM->_outch
+#else
+static NCURSES_SP_OUTC my_outch = NCURSES_SP_NAME(_nc_outch);
+#endif
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(delay_output) (NCURSES_SP_DCLx int ms)
 {
-    T((T_CALLED("delay_output(%d)"), ms));
+    T((T_CALLED("delay_output(%p,%d)"), SP_PARM, ms));
 
     if (no_pad_char) {
-	_nc_flush();
+	NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
 	napms(ms);
     } else {
 	register int nullcount;
 
 	nullcount = (ms * _nc_baudrate(ospeed)) / (BAUDBYTE * 1000);
 	for (_nc_nulls_sent += nullcount; nullcount > 0; nullcount--)
-	    my_outch(PC);
-	if (my_outch == _nc_outch)
-	    _nc_flush();
+	    my_outch(NCURSES_SP_ARGx PC);
+	if (my_outch == NCURSES_SP_NAME(_nc_outch))
+	    NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
     }
 
     returnCode(OK);
@@ -143,13 +152,25 @@ _nc_outch(int ch)
 #endif
 
 NCURSES_EXPORT(int)
-putp(const char *string)
+NCURSES_SP_NAME(putp) (NCURSES_SP_DCLx const char *string)
 {
-    return tputs(string, 1, _nc_outch);
+    return NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
+				   string, 1, NCURSES_SP_NAME(_nc_outch));
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-tputs(const char *string, int affcnt, int (*outc) (int))
+putp(const char *string)
+{
+    return NCURSES_SP_NAME(putp) (CURRENT_SCREEN, string);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
+			const char *string,
+			int affcnt,
+			NCURSES_SP_OUTC outc)
 {
     bool always_delay;
     bool normal_delay;
@@ -162,7 +183,7 @@ tputs(const char *string, int affcnt, int (*outc) (int))
     char addrbuf[32];
 
     if (USE_TRACEF(TRACE_TPUTS)) {
-	if (outc == _nc_outch)
+	if (outc == NCURSES_SP_NAME(_nc_outch))
 	    (void) strcpy(addrbuf, "_nc_outch");
 	else
 	    (void) sprintf(addrbuf, "%p", outc);
@@ -189,7 +210,7 @@ tputs(const char *string, int affcnt, int (*outc) (int))
 	    !xon_xoff
 	    && padding_baud_rate
 #if NCURSES_NO_PADDING
-	    && !GetNoPadding(SP)
+	    && !GetNoPadding(SP_PARM)
 #endif
 	    && (_nc_baudrate(ospeed) >= padding_baud_rate);
     }
@@ -226,21 +247,21 @@ tputs(const char *string, int affcnt, int (*outc) (int))
     my_outch = outc;		/* redirect delay_output() */
     while (*string) {
 	if (*string != '$')
-	    (*outc) (*string);
+	    (*outc) (NCURSES_SP_ARGx *string);
 	else {
 	    string++;
 	    if (*string != '<') {
-		(*outc) ('$');
+		(*outc) (NCURSES_SP_ARGx '$');
 		if (*string)
-		    (*outc) (*string);
+		    (*outc) (NCURSES_SP_ARGx *string);
 	    } else {
 		bool mandatory;
 
 		string++;
 		if ((!isdigit(UChar(*string)) && *string != '.')
 		    || !strchr(string, '>')) {
-		    (*outc) ('$');
-		    (*outc) ('<');
+		    (*outc) (NCURSES_SP_ARGx '$');
+		    (*outc) (NCURSES_SP_ARGx '<');
 		    continue;
 		}
 
@@ -275,7 +296,7 @@ tputs(const char *string, int affcnt, int (*outc) (int))
 		    && (always_delay
 			|| normal_delay
 			|| mandatory))
-		    delay_output(number / 10);
+		    NCURSES_SP_NAME(delay_output) (NCURSES_SP_ARGx number / 10);
 
 	    }			/* endelse (*string == '<') */
 	}			/* endelse (*string == '$') */
@@ -295,6 +316,25 @@ tputs(const char *string, int affcnt, int (*outc) (int))
 	delay_output(trailpad / 10);
 #endif /* BSD_TPUTS */
 
-    my_outch = _nc_outch;
+    my_outch = NCURSES_SP_NAME(_nc_outch);
     return OK;
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_outc_wrapper(SCREEN *sp, int c)
+{
+    if (0 == sp) {
+	return (ERR);
+    } else {
+	return sp->jump(c);
+    }
+}
+
+NCURSES_EXPORT(int)
+tputs(const char *string, int affcnt, int (*outc) (int))
+{
+    SetSafeOutcWrapper(outc);
+    return NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx string, affcnt, _nc_outc_wrapper);
+}
+#endif

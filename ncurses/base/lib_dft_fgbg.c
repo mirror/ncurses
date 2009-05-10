@@ -34,7 +34,11 @@
 #include <curses.priv.h>
 #include <term.h>
 
-MODULE_ID("$Id: lib_dft_fgbg.c,v 1.19 2009/02/14 21:53:21 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_dft_fgbg.c,v 1.21 2009/05/10 00:48:29 tom Exp $")
 
 /*
  * Modify the behavior of color-pair 0 so that the library doesn't assume that
@@ -44,7 +48,7 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(use_default_colors) (NCURSES_SP_DCL0)
 {
     T((T_CALLED("use_default_colors()")));
-    returnCode(NCURSES_SP_NAME(assume_default_colors) (NCURSES_SP_ARGx - 1, -1));
+    returnCode(NCURSES_SP_NAME(assume_default_colors) (NCURSES_SP_ARGx -1, -1));
 }
 
 #if NCURSES_SP_FUNCS

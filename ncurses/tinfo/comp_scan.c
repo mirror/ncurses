@@ -51,7 +51,7 @@
 #include <term_entry.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.83 2008/08/16 19:22:55 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.84 2009/05/09 16:37:42 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -61,19 +61,13 @@ MODULE_ID("$Id: comp_scan.c,v 1.83 2008/08/16 19:22:55 tom Exp $")
 
 #define iswhite(ch)	(ch == ' '  ||  ch == '\t')
 
-NCURSES_EXPORT_VAR(int)
-_nc_syntax = 0;			/* termcap or terminfo? */
-NCURSES_EXPORT_VAR(long)
-_nc_curr_file_pos = 0;		/* file offset of current line */
-NCURSES_EXPORT_VAR(long)
-_nc_comment_start = 0;		/* start of comment range before name */
-NCURSES_EXPORT_VAR(long)
-_nc_comment_end = 0;		/* end of comment range before name */
-NCURSES_EXPORT_VAR(long)
-_nc_start_line = 0;		/* start line of current entry */
+NCURSES_EXPORT_VAR (int) _nc_syntax = 0;         /* termcap or terminfo? */
+NCURSES_EXPORT_VAR (long) _nc_curr_file_pos = 0; /* file offset of current line */
+NCURSES_EXPORT_VAR (long) _nc_comment_start = 0; /* start of comment range before name */
+NCURSES_EXPORT_VAR (long) _nc_comment_end = 0;   /* end of comment range before name */
+NCURSES_EXPORT_VAR (long) _nc_start_line = 0;    /* start line of current entry */
 
-NCURSES_EXPORT_VAR(struct token)
-_nc_curr_token =
+NCURSES_EXPORT_VAR (struct token) _nc_curr_token =
 {
     0, 0, 0
 };
@@ -91,8 +85,7 @@ static int pushtype;		/* type of pushback token */
 static char *pushname;
 
 #if NCURSES_EXT_FUNCS
-NCURSES_EXPORT_VAR(bool)
-_nc_disable_period = FALSE;	/* used by tic -a option */
+NCURSES_EXPORT_VAR (bool) _nc_disable_period = FALSE; /* used by tic -a option */
 #endif
 
 /*****************************************************************************
@@ -637,7 +630,8 @@ _nc_get_token(bool silent)
 		/* just to get rid of the compiler warning */
 		type = UNDEF;
 		if (!silent)
-		    _nc_warning("Illegal character - '%s'", unctrl((chtype) ch));
+		    _nc_warning("Illegal character - '%s'",
+				unctrl((chtype) ch));
 	    }
 	}			/* end else (first_column == FALSE) */
     }				/* end else (ch != EOF) */

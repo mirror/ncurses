@@ -45,7 +45,11 @@
 #include <ctype.h>
 #include <term.h>		/* num_labels, label_*, plab_norm */
 
-MODULE_ID("$Id: lib_slk.c,v 1.36 2009/02/15 00:33:48 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE 
+#endif
+
+MODULE_ID("$Id: lib_slk.c,v 1.38 2009/05/10 00:48:29 tom Exp $")
 
 /*
  * Free any memory related to soft labels, return an error.
@@ -68,6 +72,9 @@ slk_failed(void)
 NCURSES_EXPORT(int)
 _nc_slk_initialize(WINDOW *stwin, int cols)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     int i, x;
     int res = OK;
     unsigned max_length;

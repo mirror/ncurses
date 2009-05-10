@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2008                    *
  ****************************************************************************/
 
 /*
@@ -40,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: setbuf.c,v 1.13 2007/05/12 19:04:02 tom Exp $")
+MODULE_ID("$Id: setbuf.c,v 1.14 2009/05/09 23:09:00 tom Exp $")
 
 /*
  * If the output file descriptor is connected to a tty (the typical case) it
@@ -98,11 +100,11 @@ MODULE_ID("$Id: setbuf.c,v 1.13 2007/05/12 19:04:02 tom Exp $")
  * buffer.  So we disable this by default (there may yet be a workaround).
  */
 NCURSES_EXPORT(void)
-_nc_set_buffer(FILE *ofp, bool buffered)
+NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_DCLx FILE *ofp, bool buffered)
 {
     /* optional optimization hack -- do before any output to ofp */
 #if HAVE_SETVBUF || HAVE_SETBUFFER
-    if (SP->_buffered != buffered) {
+    if (SP_PARM->_buffered != buffered) {
 	unsigned buf_len;
 	char *buf_ptr;
 
@@ -115,10 +117,10 @@ _nc_set_buffer(FILE *ofp, bool buffered)
 #endif
 	if (buffered != 0) {
 	    buf_len = min(LINES * (COLS + 6), 2800);
-	    if ((buf_ptr = SP->_setbuf) == 0) {
+	    if ((buf_ptr = SP_PARM->_setbuf) == 0) {
 		if ((buf_ptr = typeMalloc(char, buf_len)) == NULL)
 		      return;
-		SP->_setbuf = buf_ptr;
+		SP_PARM->_setbuf = buf_ptr;
 		/* Don't try to free this! */
 	    }
 #if !USE_SETBUF_0
@@ -144,7 +146,15 @@ _nc_set_buffer(FILE *ofp, bool buffered)
 	(void) setbuffer(ofp, buf_ptr, (int) buf_len);
 #endif
 
-	SP->_buffered = buffered;
+	SP_PARM->_buffered = buffered;
     }
 #endif /* HAVE_SETVBUF || HAVE_SETBUFFER */
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
+_nc_set_buffer(FILE *ofp, bool buffered)
+{
+    return NCURSES_SP_NAME(_nc_set_buffer) (CURRENT_SCREEN, ofp, buffered);
+}
+#endif

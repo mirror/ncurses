@@ -69,7 +69,11 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hashmap.c,v 1.57 2009/04/18 19:03:50 tom Exp $")
+#ifndef CUR
+#define CUR SP_TERMTYPE
+#endif
+
+MODULE_ID("$Id: hashmap.c,v 1.59 2009/05/10 00:51:57 tom Exp $")
 
 #ifdef HASHDEBUG
 
