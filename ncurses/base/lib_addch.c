@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.118 2009/04/18 23:53:04 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.119 2009/05/15 23:47:26 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -260,10 +260,13 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
     /*
      * Build up multibyte characters until we have a wide-character.
      */
-    if_WIDEC({
 #if NCURSES_SP_FUNCS
-	SCREEN *sp = _nc_screen_of(win);
+#define DeriveSP() SCREEN *sp = _nc_screen_of(win);
+#else
+#define DeriveSP() /*nothing*/
 #endif
+    if_WIDEC({
+	DeriveSP();
 	if (WINDOW_EXT(win, addch_used) != 0 || !Charable(ch)) {
 	    int len = _nc_build_wch(win, CHREF(ch));
 

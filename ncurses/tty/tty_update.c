@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.255 2009/05/10 00:53:14 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.256 2009/05/17 00:13:49 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -668,8 +668,27 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
 
     T((T_CALLED("doupdate()")));
 
+#if !USE_REENTRANT
+    /*
+     * It is "legal" but unlikely that an application could assign a new
+     * value to one of the standard windows.  Check for that possibility
+     * and try to recover.
+     *
+     * We do not allow applications to assign new values in the reentrant
+     * model.
+     */
+#define SyncScreens(internal,exported) \
+	if (internal == 0) internal = exported; \
+	if (internal != exported) exported = internal
+
+    SyncScreens(CurScreen(SP_PARM), curscr);
+    SyncScreens(NewScreen(SP_PARM), newscr);
+    SyncScreens(StdScreen(SP_PARM), stdscr);
+#endif
+
     if (CurScreen(SP_PARM) == 0
-	|| NewScreen(SP_PARM) == 0)
+	|| NewScreen(SP_PARM) == 0
+	|| StdScreen(SP_PARM) == 0)
 	returnCode(ERR);
 
 #ifdef TRACE
