@@ -1,4 +1,4 @@
-/* $Id: curses.tail,v 1.18 2009/04/18 21:30:52 tom Exp $ */
+/* $Id: curses.tail,v 1.19 2009/05/23 19:19:43 tom Exp $ */
 /*
  * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
@@ -120,6 +120,7 @@ extern NCURSES_EXPORT(int) has_key (int);		/* do we have given key? */
 
 #if NCURSES_SP_FUNCS
 extern NCURSES_EXPORT(int) NCURSES_SP_NAME(has_key) (SCREEN*, int);    /* do we have given key? */
+extern NCURSES_EXPORT(int) NCURSES_SP_NAME(mcprint) (SCREEN*, char *, int);	/* direct data to printer */
 #endif
 
 /* Debugging : use with libncurses_g.a */

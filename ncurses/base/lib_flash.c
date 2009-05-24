@@ -41,13 +41,12 @@
  */
 
 #include <curses.priv.h>
-#include <term.h>		/* beep, flash */
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_flash.c,v 1.9 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_flash.c,v 1.10 2009/05/23 19:37:09 tom Exp $")
 
 /*
  *	flash()
@@ -62,8 +61,11 @@ NCURSES_SP_NAME(flash) (NCURSES_SP_DCL0)
 {
     int res = ERR;
 
-    T((T_CALLED("flash()")));
-
+    T((T_CALLED("flash(%p)"), SP_PARM));
+#ifdef USE_TERM_DRIVER
+    if (SP_PARM != 0)
+	res = CallDriver_1(SP_PARM, doBeepOrFlash, FALSE);
+#else
     /* FIXME: should make sure that we are not in altchar mode */
     if (flash_screen) {
 	TPUTS_TRACE("flash_screen");
@@ -74,7 +76,7 @@ NCURSES_SP_NAME(flash) (NCURSES_SP_DCL0)
 	res = putp(bell);
 	_nc_flush();
     }
-
+#endif
     returnCode(res);
 }
 

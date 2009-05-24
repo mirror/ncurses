@@ -32,13 +32,12 @@
  ****************************************************************************/
 
 #include <curses.priv.h>
-#include <term.h>
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_dft_fgbg.c,v 1.21 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_dft_fgbg.c,v 1.23 2009/05/23 23:04:15 tom Exp $")
 
 /*
  * Modify the behavior of color-pair 0 so that the library doesn't assume that
@@ -47,7 +46,7 @@ MODULE_ID("$Id: lib_dft_fgbg.c,v 1.21 2009/05/10 00:48:29 tom Exp $")
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(use_default_colors) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("use_default_colors()")));
+    T((T_CALLED("use_default_colors(%p)"), SP_PARM));
     returnCode(NCURSES_SP_NAME(assume_default_colors) (NCURSES_SP_ARGx -1, -1));
 }
 
@@ -66,25 +65,29 @@ use_default_colors(void)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(assume_default_colors) (NCURSES_SP_DCLx int fg, int bg)
 {
-    T((T_CALLED("assume_default_colors(%d,%d)"), fg, bg));
+    int code = ERR;
 
-    if (!orig_pair && !orig_colors)
-	returnCode(ERR);
+    T((T_CALLED("assume_default_colors(%p,%d,%d)"), SP_PARM, fg, bg));
+#ifdef USE_TERM_DRIVER
+    if (SP_PARM != 0)
+	code = CallDriver_2(SP_PARM, defaultcolors, fg, bg);
+#else
+    if ((orig_pair || orig_colors) && !initialize_pair) {
 
-    if (initialize_pair)	/* don't know how to handle this */
-	returnCode(ERR);
-
-    SP_PARM->_default_color = isDefaultColor(fg) || isDefaultColor(bg);
-    SP_PARM->_has_sgr_39_49 = (tigetflag("AX") == TRUE);
-    SP_PARM->_default_fg = isDefaultColor(fg) ? COLOR_DEFAULT : (fg & C_MASK);
-    SP_PARM->_default_bg = isDefaultColor(bg) ? COLOR_DEFAULT : (bg & C_MASK);
-    if (SP_PARM->_color_pairs != 0) {
-	bool save = SP_PARM->_default_color;
-	SP_PARM->_default_color = TRUE;
-	init_pair(0, (short) fg, (short) bg);
-	SP_PARM->_default_color = save;
+	SP_PARM->_default_color = isDefaultColor(fg) || isDefaultColor(bg);
+	SP_PARM->_has_sgr_39_49 = (tigetflag("AX") == TRUE);
+	SP_PARM->_default_fg = isDefaultColor(fg) ? COLOR_DEFAULT : (fg & C_MASK);
+	SP_PARM->_default_bg = isDefaultColor(bg) ? COLOR_DEFAULT : (bg & C_MASK);
+	if (SP_PARM->_color_pairs != 0) {
+	    bool save = SP_PARM->_default_color;
+	    SP_PARM->_default_color = TRUE;
+	    init_pair(0, (short) fg, (short) bg);
+	    SP_PARM->_default_color = save;
+	}
+	code = OK;
     }
-    returnCode(OK);
+#endif
+    returnCode(code);
 }
 
 #if NCURSES_SP_FUNCS

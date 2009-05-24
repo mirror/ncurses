@@ -48,11 +48,10 @@
 #endif
 
 #include <ctype.h>
-#include <term.h>		/* padding_baud_rate, xon_xoff */
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.73 2009/05/10 00:54:17 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.74 2009/05/23 23:56:23 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -158,11 +157,31 @@ NCURSES_SP_NAME(putp) (NCURSES_SP_DCLx const char *string)
 				   string, 1, NCURSES_SP_NAME(_nc_outch));
 }
 
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_DCLx
+			   const char *name GCC_UNUSED,
+			   const char *string)
+{
+    int rc = ERR;
+
+    if (string != 0) {
+	TPUTS_TRACE(name);
+	rc = NCURSES_SP_NAME(putp) (NCURSES_SP_ARGx string);
+    }
+    return rc;
+}
+
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
 putp(const char *string)
 {
     return NCURSES_SP_NAME(putp) (CURRENT_SCREEN, string);
+}
+
+NCURSES_EXPORT(int)
+_nc_putp(const char *name, const char *string)
+{
+    return NCURSES_SP_NAME(_nc_putp) (CURRENT_SCREEN, name, string);
 }
 #endif
 

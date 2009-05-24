@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,13 +41,12 @@
  */
 
 #include <curses.priv.h>
-#include <term.h>		/* beep, flash */
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_beep.c,v 1.13 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_beep.c,v 1.14 2009/05/23 19:33:20 tom Exp $")
 
 /*
  *	beep()
@@ -62,8 +61,12 @@ NCURSES_SP_NAME(beep) (NCURSES_SP_DCL0)
 {
     int res = ERR;
 
-    T((T_CALLED("beep()")));
+    T((T_CALLED("beep(%p)"), SP_PARM));
 
+#ifdef USE_TERM_DRIVER
+    if (SP_PARM != 0)
+	res = CallDriver_1(SP_PARM, doBeepOrFlash, TRUE);
+#else
     /* FIXME: should make sure that we are not in altchar mode */
     if (cur_term == 0) {
 	res = ERR;
@@ -76,6 +79,7 @@ NCURSES_SP_NAME(beep) (NCURSES_SP_DCL0)
 	res = putp(flash_screen);
 	_nc_flush();
     }
+#endif
 
     returnCode(res);
 }

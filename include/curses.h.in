@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.200 2009/05/16 23:27:59 tom Exp $ */
+/* $Id: curses.h.in,v 1.201 2009/05/23 21:31:35 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -917,6 +917,7 @@ extern NCURSES_EXPORT(char) NCURSES_SP_NAME(erasechar) (SCREEN*);/* implemented 
 extern NCURSES_EXPORT(void) NCURSES_SP_NAME(filter) (SCREEN*); /* implemented */
 extern NCURSES_EXPORT(int) NCURSES_SP_NAME(flash) (SCREEN*); /* implemented */
 extern NCURSES_EXPORT(int) NCURSES_SP_NAME(flushinp) (SCREEN*); /* implemented */
+extern NCURSES_EXPORT(WINDOW *) NCURSES_SP_NAME(getwin) (SCREEN*, FILE *);			/* implemented */
 extern NCURSES_EXPORT(int) NCURSES_SP_NAME(halfdelay)(SCREEN*, int); /* implemented */
 extern NCURSES_EXPORT(bool) NCURSES_SP_NAME(has_colors) (SCREEN*); /* implemented */
 extern NCURSES_EXPORT(bool) NCURSES_SP_NAME(has_ic) (SCREEN*); /* implemented */

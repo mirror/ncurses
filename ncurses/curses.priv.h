@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.416 2009/05/10 01:01:51 tom Exp $
+ * $Id: curses.priv.h,v 1.417 2009/05/23 23:01:44 tom Exp $
  *
  *	curses.priv.h
  *
@@ -194,9 +194,14 @@ extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
 #endif
 
 /*
- * Terminal drivers...
+ * Options for terminal drivers, etc...
  */
-#define USE_TERM_DRIVER 0
+#if 0
+#define USE_SP_RIPOFF     1
+#define USE_SP_TERMTYPE   1
+#define USE_SP_WINDOWLIST 1
+#define USE_TERM_DRIVER   1
+#endif
 
 /*
  * Note:  ht/cbt expansion flakes out randomly under Linux 1.1.47, but only
@@ -678,8 +683,10 @@ typedef struct {
 	int		tgetent_index;
 	long		tgetent_sequence;
 
+#ifndef USE_SP_WINDOWLIST
 	WINDOWLIST	*_nc_windowlist;
 #define WindowList(sp)	_nc_globals._nc_windowlist
+#endif
 
 #if USE_HOME_TERMINFO
 	char		*home_terminfo;
@@ -740,8 +747,10 @@ typedef struct {
 	bool		use_env;
 	bool		filter_mode;
 	attr_t		previous_attr;
+#ifndef USE_SP_RIPOFF
 	ripoff_t	rippedoff[N_RIPS];
 	ripoff_t	*rsp;
+#endif
 	TPARM_STATE	tparm_state;
 	TTY		*saved_tty;	/* savetty/resetty information	    */
 #if NCURSES_NO_PADDING
@@ -1002,7 +1011,7 @@ struct screen {
 	char		tracechr_buf[40];
 	char		tracemse_buf[TRACEMSE_MAX];
 #endif
-#if 0
+#ifdef USE_SP_WINDOWLIST
 	WINDOWLIST*	_windowlist;
 #define WindowList(sp)  (sp)->_windowlist
 #endif
@@ -1805,6 +1814,7 @@ extern NCURSES_EXPORT_VAR(SCREEN *) SP;
 #define screen_columns(sp)      (sp)->_columns
 
 extern NCURSES_EXPORT(int) _nc_slk_initialize (WINDOW *, int);
+extern NCURSES_EXPORT(int) _nc_format_slks (SCREEN *, int);
 
 /*
  * Some constants related to SLK's
@@ -1829,6 +1839,9 @@ extern NCURSES_EXPORT(int) _nc_ripoffline (int line, int (*init)(WINDOW *,int));
  */
 #define MSG_NO_MEMORY "Out of memory"
 #define MSG_NO_INPUTS "Premature EOF"
+
+extern NCURSES_EXPORT(int) _nc_set_tty_mode(TTY *);
+extern NCURSES_EXPORT(int) _nc_get_tty_mode(TTY *);
 
 /* timed_wait flag definitions */
 #define TW_NONE    0
@@ -1937,13 +1950,20 @@ typedef struct DriverTCB
 extern NCURSES_EXPORT_VAR(const color_t*) _nc_cga_palette;
 extern NCURSES_EXPORT_VAR(const color_t*) _nc_hls_palette;
 
+#ifdef USE_TERM_DRIVER
+extern NCURSES_EXPORT(int)      _nc_tinfo_has_key(SCREEN*, int);
+extern NCURSES_EXPORT(int)      _nc_tinfo_doupdate(SCREEN *sp);
+extern NCURSES_EXPORT(int)      _nc_tinfo_mvcur(SCREEN*,int,int,int,int);
+extern NCURSES_EXPORT(int)      _nc_get_driver(TERMINAL_CONTROL_BLOCK*, const char*, int*);
+#endif
+
 #ifdef __MINGW32__
 #include <nc_mingw.h>
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_WIN_DRIVER;
 #endif
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 
-#if USE_TERM_DRIVER
+#ifdef USE_TERM_DRIVER
 #define IsTermInfo(sp)       (TCBOf(sp) && ((TCBOf(sp)->drv->isTerminfo)))
 #else
 #define IsTermInfo(sp)       TRUE
@@ -1988,7 +2008,7 @@ extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_get_tty_mode)(SCREEN*,TTY*);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_mcprint)(SCREEN*,char*, int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_msec_cost)(SCREEN*, const char *, int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_outch)(SCREEN*, int);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_putp)(SCREEN*, const char *, const char *);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_putp)(SCREEN*, const char *, const char*);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_putp_flush)(SCREEN*, const char *, const char *);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resetty)(SCREEN*);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resize_term)(SCREEN*,int,int);
@@ -2022,8 +2042,6 @@ extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_scroll_optimize)(SCREEN*);
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_set_buffer)(SCREEN*, FILE *, bool);
 
 extern NCURSES_EXPORT(void)     _nc_cookie_init(SCREEN *sp);
-extern NCURSES_EXPORT(int)      _nc_tinfo_doupdate(SCREEN *sp);
-extern NCURSES_EXPORT(int)      _nc_tinfo_mcprint(SCREEN*,char*,int);
 
 #if defined(TRACE) || defined(SCROLLDEBUG) || defined(HASHDEBUG)
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_linedump)(SCREEN*);

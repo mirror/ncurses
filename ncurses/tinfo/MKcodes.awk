@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKcodes.awk,v 1.7 2009/03/28 18:22:39 Charles.Wilson Exp $
+# $Id: MKcodes.awk,v 1.8 2009/05/23 19:09:54 tom Exp $
 function large_item(value) {
 	result = sprintf("%d,", offset);
 	offset = offset + length(value) + 1;
@@ -117,7 +117,7 @@ END	{
 			print  "		if ((*value = typeCalloc(NCURSES_CONST char *, size + 1)) != 0) {"
 			print  "			unsigned n;"
 			print  "			for (n = 0; n < size; ++n) {"
-			print  "				(*value)[n] = _nc_code_blob + offsets[n];"
+			print  "				(*value)[n] = (NCURSES_CONST char *) _nc_code_blob + offsets[n];"
 			print  "			}"
 			print  "		}"
 			print  "	}"

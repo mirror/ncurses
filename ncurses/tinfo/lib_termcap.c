@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                                                 *
  *                                                                          *
  * some of the code in here was contributed by:                             *
  * Magnus Bengtsson, d6mbeng@dtek.chalmers.se (Nov'93)                      *
@@ -46,10 +47,10 @@
 #include <term_entry.h>
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.65 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.66 2009/05/23 23:47:34 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -80,11 +81,8 @@ NCURSES_EXPORT_VAR(char *) BC = 0;
  ***************************************************************************/
 
 NCURSES_EXPORT(int)
-tgetent(char *bufp, const char *name)
+NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 {
-#if NCURSES_SP_FUNCS
-    SCREEN *sp = CURRENT_SCREEN;
-#endif
     int errcode;
     int n;
     bool found_cache = FALSE;
@@ -118,7 +116,7 @@ tgetent(char *bufp, const char *name)
 	     */
 	    if (LAST_TRM != 0 && LAST_TRM != cur_term) {
 		TERMINAL *trm = LAST_TRM;
-		del_curterm(LAST_TRM);
+		NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx LAST_TRM);
 		for (CacheInx = 0; CacheInx < TGETENT_MAX; ++CacheInx)
 		    if (LAST_TRM == trm)
 			LAST_TRM = 0;
@@ -171,8 +169,8 @@ tgetent(char *bufp, const char *name)
 	LAST_BUF = bufp;
 	LAST_USE = TRUE;
 
-	SetNoPadding(SP);
-	(void) baudrate();	/* sets ospeed as a side-effect */
+	SetNoPadding(SP_PARM);
+	(void) NCURSES_SP_NAME(baudrate) (NCURSES_SP_ARG);	/* sets ospeed as a side-effect */
 
 /* LINT_PREPRO
 #if 0*/
@@ -184,6 +182,14 @@ tgetent(char *bufp, const char *name)
     returnCode(errcode);
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+tgetent(char *bufp, const char *name)
+{
+    return NCURSES_SP_NAME(tgetent) (CURRENT_SCREEN, bufp, name);
+}
+#endif
+
 /***************************************************************************
  *
  * tgetflag(str)
@@ -194,7 +200,7 @@ tgetent(char *bufp, const char *name)
  ***************************************************************************/
 
 NCURSES_EXPORT(int)
-tgetflag(NCURSES_CONST char *id)
+NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
     unsigned i;
 
@@ -212,6 +218,14 @@ tgetflag(NCURSES_CONST char *id)
     returnCode(0);		/* Solaris does this */
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+tgetflag(NCURSES_CONST char *id)
+{
+    return NCURSES_SP_NAME(tgetflag) (CURRENT_SCREEN, id);
+}
+#endif
+
 /***************************************************************************
  *
  * tgetnum(str)
@@ -222,7 +236,7 @@ tgetflag(NCURSES_CONST char *id)
  ***************************************************************************/
 
 NCURSES_EXPORT(int)
-tgetnum(NCURSES_CONST char *id)
+NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
     unsigned i;
 
@@ -241,6 +255,14 @@ tgetnum(NCURSES_CONST char *id)
     returnCode(ABSENT_NUMERIC);
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+tgetnum(NCURSES_CONST char *id)
+{
+    return NCURSES_SP_NAME(tgetnum) (CURRENT_SCREEN, id);
+}
+#endif
+
 /***************************************************************************
  *
  * tgetstr(str, area)
@@ -251,11 +273,8 @@ tgetnum(NCURSES_CONST char *id)
  ***************************************************************************/
 
 NCURSES_EXPORT(char *)
-tgetstr(NCURSES_CONST char *id, char **area)
+NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 {
-#if NCURSES_SP_FUNCS
-    SCREEN *sp = CURRENT_SCREEN;
-#endif
     unsigned i;
     char *result = NULL;
 
@@ -287,6 +306,14 @@ tgetstr(NCURSES_CONST char *id, char **area)
     }
     returnPtr(result);
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(char *)
+tgetstr(NCURSES_CONST char *id, char **area)
+{
+    return NCURSES_SP_NAME(tgetstr) (CURRENT_SCREEN, id, area);
+}
+#endif
 
 #if NO_LEAKS
 NCURSES_EXPORT(void)

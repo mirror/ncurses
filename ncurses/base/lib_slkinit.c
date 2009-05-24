@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2009                    *
  ****************************************************************************/
 
 /*
@@ -39,7 +40,13 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkinit.c,v 1.10 2009/05/09 18:32:07 tom Exp $")
+MODULE_ID("$Id: lib_slkinit.c,v 1.11 2009/05/23 23:32:57 tom Exp $")
+
+#ifdef USE_SP_RIPOFF
+#define SoftkeyFormat SP_PARM->slk_format
+#else
+#define SoftkeyFormat _nc_globals.slk_format
+#endif
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_init) (NCURSES_SP_DCLx int format)
@@ -48,11 +55,16 @@ NCURSES_SP_NAME(slk_init) (NCURSES_SP_DCLx int format)
 
     T((T_CALLED("slk_init(%p,%d)"), SP_PARM, format));
 
-    if (SP_PARM && format >= 0 && format <= 3 && !SP_PARM->slk_format &&
-	SP_PARM->_prescreen) {
-	SP_PARM->slk_format = 1 + format;
+    if (format >= 0
+	&& format <= 3
+#ifdef USE_SP_RIPOFF
+	&& SP_PARM
+	&& SP_PARM->_prescreen
+#endif
+	&& !SoftkeyFormat) {
+	SoftkeyFormat = 1 + format;
 	code = NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_ARGx
-						-SLK_LINES(SP_PARM->slk_format),
+						-SLK_LINES(SoftkeyFormat),
 						_nc_slk_initialize);
     }
     returnCode(code);

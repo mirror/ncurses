@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,12 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 1996-2002                                      *
+ *  Author: Thomas E. Dickey 1996-on                                        *
+ *     and: Juergen Pfeifer                                                 *
  ****************************************************************************/
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: wresize.c,v 1.30 2009/05/09 18:37:43 tom Exp $")
+MODULE_ID("$Id: wresize.c,v 1.31 2009/05/23 19:50:16 tom Exp $")
 
 static int
 cleanup_lines(struct ldat *data, int length)
@@ -53,10 +54,13 @@ repair_subwindows(WINDOW *cmp)
     WINDOWLIST *wp;
     struct ldat *pline = cmp->_line;
     int row;
+#ifdef USE_SP_WINDOWLIST
+    SCREEN *sp = _nc_screen_of(cmp);
+#endif
 
     _nc_lock_global(curses);
 
-    for (each_window(SP, wp)) {
+    for (each_window(SP_PARM, wp)) {
 	WINDOW *tst = &(wp->win);
 
 	if (tst->_parent == cmp) {

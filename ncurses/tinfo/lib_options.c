@@ -45,10 +45,10 @@
 #include <term.h>
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_options.c,v 1.63 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.64 2009/05/23 23:58:07 tom Exp $")
 
 static int _nc_meta(SCREEN *, bool);
 
@@ -262,28 +262,7 @@ has_key(int keycode)
  * than cur_term.
  */
 #undef CUR
-#define CUR SP_TERMTYPE 
-
-NCURSES_EXPORT(int)
-NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_DCLx
-			   const char *name GCC_UNUSED, const char *value)
-{
-    int rc = ERR;
-
-    if (value) {
-	TPUTS_TRACE(name);
-	rc = putp(value);
-    }
-    return rc;
-}
-
-#if NCURSES_SP_FUNCS
-NCURSES_EXPORT(int)
-_nc_putp(const char *name, const char *value)
-{
-    return NCURSES_SP_NAME(_nc_putp) (CURRENT_SCREEN, name, value);
-}
-#endif
+#define CUR SP_TERMTYPE
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_putp_flush) (NCURSES_SP_DCLx
