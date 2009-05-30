@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.417 2009/05/23 23:01:44 tom Exp $
+ * $Id: curses.priv.h,v 1.420 2009/05/30 15:53:46 tom Exp $
  *
  *	curses.priv.h
  *
@@ -374,17 +374,31 @@ extern NCURSES_EXPORT(void)     _nc_set_no_padding(SCREEN *);
 #define SET_SCREEN_PAIR(s,p)	SetPair(SCREEN_ATTRS(s), p)
 
 #if USE_REENTRANT
-NCURSES_EXPORT(int *)        _nc_ptr_Lines (void);
-NCURSES_EXPORT(int *)        _nc_ptr_Cols (void);
+
+NCURSES_EXPORT(int *)        _nc_ptr_Lines (SCREEN *);
+NCURSES_EXPORT(int *)        _nc_ptr_Cols (SCREEN *);
+NCURSES_EXPORT(int *)        _nc_ptr_Tabsize (SCREEN *);
+NCURSES_EXPORT(int *)        _nc_ptr_Escdelay (SCREEN *);
+
 #define ptrLines(sp)         (sp ? &(sp->_LINES) : &(_nc_prescreen._LINES))
 #define ptrCols(sp)          (sp ? &(sp->_COLS) : &(_nc_prescreen._COLS))
-#define SET_LINES(value)     *_nc_ptr_Lines() = value
-#define SET_COLS(value)      *_nc_ptr_Cols() = value
+#define ptrTabsize(sp)       (sp ? &(sp->_TABSIZE) : &(_nc_prescreen._TABSIZE))
+#define ptrEscdelay(sp)      (sp ? &(sp->_ESCDELAY) : &(_nc_prescreen._ESCDELAY))
+
+#define SET_LINES(value)     *_nc_ptr_Lines(SP_PARM) = value
+#define SET_COLS(value)      *_nc_ptr_Cols(SP_PARM) = value
+#define SET_TABSIZE(value)   *_nc_ptr_Tabsize(SP_PARM) = value
+#define SET_ESCDELAY(value)  *_nc_ptr_Escdelay(SP_PARM) = value
+
 #else
+
 #define ptrLines(sp)         &LINES
 #define ptrCols(sp)          &COLS
 #define SET_LINES(value)     LINES = value
 #define SET_COLS(value)      COLS = value
+#define SET_TABSIZE(value)   TABSIZE = value
+#define SET_ESCDELAY(value)  ESCDELAY = value
+
 #endif
 
 #define TR_MUTEX(data) _tracef("%s@%d: me:%08lX COUNT:%2u/%2d/%6d/%2d/%s%9u: " #data, \
@@ -760,6 +774,8 @@ typedef struct {
 	chtype		*real_acs_map;
 	int		_LINES;
 	int		_COLS;
+	int		_TABSIZE;
+	int		_ESCDELAY;
 	TERMINAL	*_cur_term;
 #ifdef TRACE
 	long		_outchars;
@@ -1622,7 +1638,7 @@ extern NCURSES_EXPORT(bool) _nc_reset_colors(void);
 extern NCURSES_EXPORT(int) _nc_wgetch(WINDOW *, unsigned long *, int EVENTLIST_2nd(_nc_eventlist *));
 
 /* lib_insch.c */
-extern NCURSES_EXPORT(int) _nc_insert_ch(WINDOW *, chtype);
+extern NCURSES_EXPORT(int) _nc_insert_ch(SCREEN *, WINDOW *, chtype);
 
 /* lib_mvcur.c */
 #define INFINITY	1000000	/* cost: too high to use */
@@ -1650,6 +1666,9 @@ extern NCURSES_EXPORT(int)    _nc_unicode_locale(void);
 extern NCURSES_EXPORT(int)    _nc_locale_breaks_acs(TERMINAL *);
 extern NCURSES_EXPORT(int)    _nc_setupterm(NCURSES_CONST char *, int, int *, bool);
 extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, int *, int *);
+
+/* lib_set_term.c */
+extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
 
 /* lib_tstp.c */
 #if USE_SIGWINCH
@@ -1831,8 +1850,6 @@ extern NCURSES_EXPORT(int) _nc_format_slks (SCREEN *, int);
 
 #define MAX_SKEY(fmt)     (SLK_STDFMT(fmt)? MAX_SKEY_OLD : MAX_SKEY_PC)
 #define MAX_SKEY_LEN(fmt) (SLK_STDFMT(fmt)? MAX_SKEY_LEN_OLD : MAX_SKEY_LEN_PC)
-
-extern NCURSES_EXPORT(int) _nc_ripoffline (int line, int (*init)(WINDOW *,int));
 
 /*
  * Common error messages

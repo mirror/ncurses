@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.31 2008/12/20 19:23:00 tom Exp $
+ * $Id: demo_forms.c,v 1.32 2009/05/30 16:52:42 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -451,8 +451,11 @@ demo_forms(void)
 
 	free_form(form);
     }
-    for (c = 0; f[c] != 0; c++)
+    for (c = 0; f[c] != 0; c++) {
+	void *ptr = field_userptr(f[c]);
+	free(ptr);
 	free_field(f[c]);
+    }
     noraw();
     nl();
 

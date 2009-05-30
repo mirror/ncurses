@@ -43,22 +43,19 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insch.c,v 1.27 2009/04/18 23:53:33 tom Exp $")
+MODULE_ID("$Id: lib_insch.c,v 1.29 2009/05/30 16:45:16 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
  * inserting a string.
  */
 NCURSES_EXPORT(int)
-_nc_insert_ch(WINDOW *win, chtype ch)
+_nc_insert_ch(SCREEN *sp, WINDOW *win, chtype ch)
 {
     int code = OK;
     NCURSES_CH_T wch;
     int count;
     NCURSES_CONST char *s;
-#if NCURSES_SP_FUNCS || USE_REENTRANT
-    SCREEN *sp = _nc_screen_of(win);
-#endif
     int tabsize =
 #if USE_REENTRANT
     sp->_TABSIZE
@@ -66,10 +63,11 @@ _nc_insert_ch(WINDOW *win, chtype ch)
     TABSIZE
 #endif
      ;
+
     switch (ch) {
     case '\t':
 	for (count = (tabsize - (win->_curx % tabsize)); count > 0; count--) {
-	    if ((code = _nc_insert_ch(win, ' ')) != OK)
+	    if ((code = _nc_insert_ch(sp, win, ' ')) != OK)
 		break;
 	}
 	break;
@@ -85,7 +83,9 @@ _nc_insert_ch(WINDOW *win, chtype ch)
 	       WINDOW_EXT(win, addch_used) == 0 &&
 #endif
 	       is8bits(ChCharOf(ch)) &&
-	       isprint(ChCharOf(ch))) {
+	       (isprint(ChCharOf(ch)) ||
+		(ChAttrOf(ch) & A_ALTCHARSET) ||
+		(sp != 0 && sp->_legacy_coding && !iscntrl(ChCharOf(ch))))) {
 	    if (win->_curx <= win->_maxx) {
 		struct ldat *line = &(win->_line[win->_cury]);
 		NCURSES_CH_T *end = &(line->text[win->_curx]);
@@ -104,7 +104,7 @@ _nc_insert_ch(WINDOW *win, chtype ch)
 	} else if (is8bits(ChCharOf(ch)) && iscntrl(ChCharOf(ch))) {
 	    s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx ChCharOf(ch));
 	    while (*s != '\0') {
-		code = _nc_insert_ch(win, ChAttrOf(ch) | UChar(*s));
+		code = _nc_insert_ch(sp, win, ChAttrOf(ch) | UChar(*s));
 		if (code != OK)
 		    break;
 		++s;
@@ -124,11 +124,16 @@ _nc_insert_ch(WINDOW *win, chtype ch)
 		/* handle EILSEQ */
 		if (is8bits(ch)) {
 		    s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx ChCharOf(ch));
-		    while (*s != '\0') {
-			code = _nc_insert_ch(win, ChAttrOf(ch) | UChar(*s));
-			if (code != OK)
-			    break;
-			++s;
+		    if (strlen(s) > 1) {
+			while (*s != '\0') {
+			    code = _nc_insert_ch(sp, win,
+						 ChAttrOf(ch) | UChar(*s));
+			    if (code != OK)
+				break;
+			    ++s;
+			}
+		    } else {
+			code = ERR;
 		    }
 		} else {
 		    code = ERR;
@@ -154,7 +159,7 @@ winsch(WINDOW *win, chtype c)
 	oy = win->_cury;
 	ox = win->_curx;
 
-	code = _nc_insert_ch(win, c);
+	code = _nc_insert_ch(_nc_screen_of(win), win, c);
 
 	win->_curx = ox;
 	win->_cury = oy;

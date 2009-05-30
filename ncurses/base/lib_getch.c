@@ -42,16 +42,21 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.102 2009/04/18 20:32:33 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.103 2009/05/30 15:50:47 tom Exp $")
 
 #include <fifo_defs.h>
 
 #if USE_REENTRANT
 #define GetEscdelay(sp) (sp)->_ESCDELAY
+NCURSES_EXPORT(int *)
+_nc_ptr_Escdelay(SCREEN *sp)
+{
+    return ptrEscdelay(sp);
+}
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(ESCDELAY) (void)
 {
-    return SP ? GetEscdelay(SP) : 1000;
+    return *_nc_ptr_Escdelay(CURRENT_SCREEN);
 }
 #else
 #define GetEscdelay(sp) ESCDELAY

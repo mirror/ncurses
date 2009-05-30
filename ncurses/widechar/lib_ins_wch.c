@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2003,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2005,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ins_wch.c,v 1.8 2005/12/03 20:24:19 tom Exp $")
+MODULE_ID("$Id: lib_ins_wch.c,v 1.9 2009/05/30 14:52:42 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -112,6 +112,8 @@ wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
 	    n = wcslen(wstr);
 	code = OK;
 	if (n > 0) {
+	    SCREEN *sp = _nc_screen_of(win);
+
 	    oy = win->_cury;
 	    ox = win->_curx;
 	    for (cp = wstr; *cp && ((cp - wstr) < n); cp++) {
@@ -129,7 +131,7 @@ wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
 		    code = _nc_insert_wch(win, &tmp_cchar);
 		} else {
 		    /* tabs, other ASCII stuff */
-		    code = _nc_insert_ch(win, (chtype) (*cp));
+		    code = _nc_insert_ch(sp, win, (chtype) (*cp));
 		}
 		if (code != OK)
 		    break;

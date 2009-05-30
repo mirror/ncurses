@@ -40,7 +40,7 @@
 #include <term_entry.h>		/* TTY, cur_term */
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.21 2009/04/18 21:02:22 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.22 2009/05/30 13:55:19 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.
@@ -98,6 +98,10 @@ NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
     if (termp != 0) {
 	_nc_free_termtype(&(termp->type));
 	FreeIfNeeded(termp->_termname);
+#if USE_HOME_TERMINFO
+	if (_nc_globals.home_terminfo != 0)
+	    FreeAndNull(_nc_globals.home_terminfo);
+#endif
 	free(termp);
 	if (termp == cur_term)
 	    set_curterm(0);

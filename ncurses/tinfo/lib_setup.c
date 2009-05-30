@@ -54,7 +54,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.114 2009/04/18 23:52:03 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.116 2009/05/30 20:39:21 tom Exp $")
 
 /****************************************************************************
  *
@@ -117,35 +117,40 @@ NCURSES_PUBLIC_VAR(ttytype) (void)
     return cur_term ? cur_term->type.term_names : empty;
 }
 NCURSES_EXPORT(int *)
-_nc_ptr_Lines(void)
+_nc_ptr_Lines(SCREEN *sp)
 {
-    return ptrLines(CURRENT_SCREEN);
+    return ptrLines(sp);
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(LINES) (void)
 {
-    return *_nc_ptr_Lines();
+    return *_nc_ptr_Lines(CURRENT_SCREEN);
 }
 NCURSES_EXPORT(int *)
-_nc_ptr_Cols(void)
+_nc_ptr_Cols(SCREEN *sp)
 {
-    return ptrCols(CURRENT_SCREEN);
+    return ptrCols(sp);
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(COLS) (void)
 {
-    return *_nc_ptr_Cols();
+    return *_nc_ptr_Cols(CURRENT_SCREEN);
+}
+NCURSES_EXPORT(int *)
+_nc_ptr_Tabsize(SCREEN *sp)
+{
+    return ptrTabsize(sp);
 }
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(TABSIZE) (void)
 {
-    return SP ? SP->_TABSIZE : 8;
+    return *_nc_ptr_Tabsize(CURRENT_SCREEN);
 }
 #else
 NCURSES_EXPORT_VAR(char) ttytype[NAMESIZE] = "";
 NCURSES_EXPORT_VAR(int) LINES = 0;
 NCURSES_EXPORT_VAR(int) COLS = 0;
-NCURSES_EXPORT_VAR(int) TABSIZE = 0;
+NCURSES_EXPORT_VAR(int) TABSIZE = 8;
 #endif
 
 #if NCURSES_EXT_FUNCS
