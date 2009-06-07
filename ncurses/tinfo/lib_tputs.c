@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.75 2009/05/30 19:44:43 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.77 2009/06/07 13:59:11 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -132,6 +132,7 @@ NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_DCLx int ch)
     COUNT_OUTCHARS(1);
 
     if (HasTInfoTerminal(SP_PARM)
+	&& SP_PARM != 0
 	&& SP_PARM->_cleanup) {
 	char tmp = ch;
 	/*
@@ -226,7 +227,13 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
     if (!VALID_STRING(string))
 	return ERR;
 
-    if (SP_PARM != 0 && SP_PARM->_term == 0) {
+    if (
+#if NCURSES_SP_FUNCS
+	   (SP_PARM != 0 && SP_PARM->_term == 0)
+#else
+	   cur_term == 0
+#endif
+	) {
 	always_delay = FALSE;
 	normal_delay = TRUE;
     } else {
