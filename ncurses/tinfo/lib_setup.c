@@ -54,7 +54,7 @@
 
 #include <term.h>		/* lines, columns, cur_term */
 
-MODULE_ID("$Id: lib_setup.c,v 1.116 2009/05/30 20:39:21 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.117 2009/06/06 17:56:31 tom Exp $")
 
 /****************************************************************************
  *
@@ -347,7 +347,7 @@ _nc_update_screensize(SCREEN *sp)
     if (sp != 0
 	&& sp->_resize != 0) {
 	if ((new_lines != old_lines) || (new_cols != old_cols))
-	    sp->_resize(new_lines, new_cols);
+	    sp->_resize(NCURSES_SP_ARGx new_lines, new_cols);
 	sp->_sig_winch = FALSE;
     }
 }

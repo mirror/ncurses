@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.57 2009/05/09 23:40:03 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.58 2009/06/06 17:53:11 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -362,18 +362,6 @@ _nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
  * internally, and it is useful to allow those to be invoked without switching
  * SCREEN's, e.g., for multi-threaded applications.
  */
-NCURSES_EXPORT(SCREEN *)
-_nc_screen_of(WINDOW *win)
-{
-    SCREEN *sp = 0;
-
-    if (win != 0) {
-	WINDOWLIST *wp = (WINDOWLIST *) win;
-	sp = wp->screen;
-    }
-    return (sp);
-}
-
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(WINDOW *)
 _nc_curscr_of(SCREEN *sp)

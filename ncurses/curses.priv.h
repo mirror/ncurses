@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.420 2009/05/30 15:53:46 tom Exp $
+ * $Id: curses.priv.h,v 1.421 2009/06/06 18:12:52 tom Exp $
  *
  *	curses.priv.h
  *
@@ -340,6 +340,7 @@ color_t;
 #endif
 
 #else /* !(NCURSES_EXT_COLORS && USE_WIDEC_SUPPORT) */
+
 #define if_EXT_COLORS(stmt)	/* nothing */
 #define SetPair(value,p)	RemAttr(value, A_COLOR), \
 				SetAttr(value, AttrOf(value) | (A_COLOR & COLOR_PAIR(p)))
@@ -932,6 +933,7 @@ struct screen {
 	 */
 	bool		_nc_sp_idlok;
 	bool		_nc_sp_idcok;
+
 #define _nc_idlok SP->_nc_sp_idlok
 #define _nc_idcok SP->_nc_sp_idcok
 
@@ -987,7 +989,7 @@ struct screen {
 	 * This supports automatic resizing
 	 */
 #if USE_SIZECHANGE
-	int		(*_resize)(int,int);
+	int		(*_resize)(NCURSES_SP_DCLx int y, int x);
 #endif
 
 	/*
@@ -1804,8 +1806,9 @@ extern NCURSES_EXPORT_VAR(int *) _nc_oldnums;
  * On systems with a broken linker, define 'SP' as a function to force the
  * linker to pull in the data-only module with 'SP'.
  */
+#define _nc_alloc_screen_sp() typeCalloc(SCREEN, 1)
+
 #if BROKEN_LINKER
-#define SP _nc_screen()
 extern NCURSES_EXPORT(SCREEN *) _nc_screen (void);
 extern NCURSES_EXPORT(int)      _nc_alloc_screen (void);
 extern NCURSES_EXPORT(void)     _nc_set_screen (SCREEN *);
@@ -1814,7 +1817,7 @@ extern NCURSES_EXPORT(void)     _nc_set_screen (SCREEN *);
 /* current screen is private data; avoid possible linking conflicts too */
 extern NCURSES_EXPORT_VAR(SCREEN *) SP;
 #define CURRENT_SCREEN SP
-#define _nc_alloc_screen()      ((SP = typeCalloc(SCREEN, 1)) != 0)
+#define _nc_alloc_screen()      ((SP = _nc_alloc_screen_sp()) != 0)
 #define _nc_set_screen(sp)      SP = sp
 #endif
 
@@ -2012,9 +2015,6 @@ extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_set_tabsize)(SCREEN*, int);
  * We put the safe versions of various calls here as they are not published
  * part of the API up to now
  */
-extern NCURSES_EXPORT(SCREEN*)  _nc_SP(void);
-
-extern NCURSES_EXPORT(TERMINAL*) NCURSES_SP_NAME(_nc_set_curterm)(SCREEN*,TERMINAL*);
 extern NCURSES_EXPORT(TERMINAL*) NCURSES_SP_NAME(cur_term)(SCREEN *sp);
 extern NCURSES_EXPORT(WINDOW *) NCURSES_SP_NAME(_nc_makenew) (SCREEN*, int, int, int, int, int);
 extern NCURSES_EXPORT(bool)     NCURSES_SP_NAME(_nc_reset_colors)(SCREEN*);

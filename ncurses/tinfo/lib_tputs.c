@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.74 2009/05/23 23:56:23 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.75 2009/05/30 19:44:43 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -84,6 +84,9 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(delay_output) (NCURSES_SP_DCLx int ms)
 {
     T((T_CALLED("delay_output(%p,%d)"), SP_PARM, ms));
+
+    if (!HasTInfoTerminal(SP_PARM))
+	returnCode(ERR);
 
     if (no_pad_char) {
 	NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
@@ -128,7 +131,7 @@ NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_DCLx int ch)
 {
     COUNT_OUTCHARS(1);
 
-    if (SP_PARM != 0
+    if (HasTInfoTerminal(SP_PARM)
 	&& SP_PARM->_cleanup) {
 	char tmp = ch;
 	/*
@@ -217,10 +220,13 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
     }
 #endif /* TRACE */
 
+    if (SP_PARM != 0 && !HasTInfoTerminal(SP_PARM))
+	return ERR;
+
     if (!VALID_STRING(string))
 	return ERR;
 
-    if (cur_term == 0) {
+    if (SP_PARM != 0 && SP_PARM->_term == 0) {
 	always_delay = FALSE;
 	normal_delay = TRUE;
     } else {

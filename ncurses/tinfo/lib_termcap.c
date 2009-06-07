@@ -50,7 +50,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.66 2009/05/23 23:47:34 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.67 2009/05/30 20:05:20 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -83,14 +83,26 @@ NCURSES_EXPORT_VAR(char *) BC = 0;
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 {
-    int errcode;
+    int errcode = ERR;
     int n;
     bool found_cache = FALSE;
+#ifdef USE_TERM_DRIVER
+    TERMINAL *termp = 0;
+#endif
 
     START_TRACE();
     T((T_CALLED("tgetent()")));
 
+#ifdef USE_TERM_DRIVER
+    _nc_setupterm_ex(&termp, (NCURSES_CONST char *) name,
+		     STDOUT_FILENO, &errcode, TRUE);
+
+    if (termp == 0 ||
+	!((TERMINAL_CONTROL_BLOCK *) termp)->drv->isTerminfo)
+	return (errcode);
+#else
     _nc_setupterm((NCURSES_CONST char *) name, STDOUT_FILENO, &errcode, TRUE);
+#endif
 
     /*
      * In general we cannot tell if the fixed sgr0 is still used by the
@@ -114,7 +126,7 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 	    /*
 	     * Also free the terminfo data that we loaded (much bigger leak).
 	     */
-	    if (LAST_TRM != 0 && LAST_TRM != cur_term) {
+	    if (LAST_TRM != 0 && LAST_TRM != TerminalOf(SP_PARM)) {
 		TERMINAL *trm = LAST_TRM;
 		NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx LAST_TRM);
 		for (CacheInx = 0; CacheInx < TGETENT_MAX; ++CacheInx)
@@ -136,7 +148,7 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 	}
 	CacheInx = best;
     }
-    LAST_TRM = cur_term;
+    LAST_TRM = TerminalOf(SP_PARM);
     LAST_SEQ = ++CacheSeq;
 
     PC = 0;
@@ -158,7 +170,7 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 	if (backspace_if_not_bs != NULL)
 	    BC = backspace_if_not_bs;
 
-	if ((FIX_SGR0 = _nc_trim_sgr0(&(cur_term->type))) != 0) {
+	if ((FIX_SGR0 = _nc_trim_sgr0(&(TerminalOf(SP_PARM)->type))) != 0) {
 	    if (!strcmp(FIX_SGR0, exit_attribute_mode)) {
 		if (FIX_SGR0 != exit_attribute_mode) {
 		    free(FIX_SGR0);
@@ -204,9 +216,9 @@ NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
     unsigned i;
 
-    T((T_CALLED("tgetflag(%s)"), id));
-    if (cur_term != 0) {
-	TERMTYPE *tp = &(cur_term->type);
+    T((T_CALLED("tgetflag(%p, %s)"), SP_PARM, id));
+    if (HasTInfoTerminal(SP_PARM)) {
+	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	for_each_boolean(i, tp) {
 	    const char *capname = ExtBoolname(tp, i, boolcodes);
 	    if (!strncmp(id, capname, 2)) {
@@ -240,9 +252,9 @@ NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
     unsigned i;
 
-    T((T_CALLED("tgetnum(%s)"), id));
-    if (cur_term != 0) {
-	TERMTYPE *tp = &(cur_term->type);
+    T((T_CALLED("tgetnum(%p, %s)"), SP_PARM, id));
+    if (HasTInfoTerminal(SP_PARM)) {
+	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	for_each_number(i, tp) {
 	    const char *capname = ExtNumname(tp, i, numcodes);
 	    if (!strncmp(id, capname, 2)) {
@@ -279,8 +291,8 @@ NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
     char *result = NULL;
 
     T((T_CALLED("tgetstr(%s,%p)"), id, area));
-    if (cur_term != 0) {
-	TERMTYPE *tp = &(cur_term->type);
+    if (HasTInfoTerminal(SP_PARM)) {
+	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	for_each_string(i, tp) {
 	    const char *capname = ExtStrname(tp, i, strcodes);
 	    if (!strncmp(id, capname, 2)) {

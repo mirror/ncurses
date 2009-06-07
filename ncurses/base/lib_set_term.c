@@ -46,10 +46,10 @@
 #include <tic.h>
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.122 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.123 2009/06/06 20:26:17 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -554,7 +554,7 @@ _nc_setupscreen(int slines GCC_UNUSED,
     curscr = SP->_curscr;
 #endif
 #if USE_SIZECHANGE
-    SP->_resize = resizeterm;
+    SP->_resize = NCURSES_SP_NAME(resizeterm);
 #endif
 
     newscr->_clear = TRUE;

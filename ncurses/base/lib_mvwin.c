@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                                                 *
  ****************************************************************************/
 
 /*
@@ -40,11 +42,15 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mvwin.c,v 1.15 2009/04/18 18:25:37 tom Exp $")
+MODULE_ID("$Id: lib_mvwin.c,v 1.16 2009/06/06 20:25:07 tom Exp $")
 
 NCURSES_EXPORT(int)
 mvwin(WINDOW *win, int by, int bx)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = _nc_screen_of(win);
+#endif
+
     T((T_CALLED("mvwin(%p,%d,%d)"), win, by, bx));
 
     if (!win || (win->_flags & _ISPAD))
@@ -96,8 +102,8 @@ mvwin(WINDOW *win, int by, int bx)
     }
 #endif
 
-    if (by + win->_maxy > screen_lines(CURRENT_SCREEN) - 1
-	|| bx + win->_maxx > screen_columns(CURRENT_SCREEN) - 1
+    if (by + win->_maxy > screen_lines(SP_PARM) - 1
+	|| bx + win->_maxx > screen_columns(SP_PARM) - 1
 	|| by < 0
 	|| bx < 0)
 	returnCode(ERR);

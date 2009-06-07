@@ -44,10 +44,10 @@
 #include <tic.h>
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.91 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.92 2009/06/06 20:26:16 tom Exp $")
 
 /*
  * These should be screen structure members.  They need to be globals for
@@ -199,18 +199,18 @@ init_color_table(NCURSES_SP_DCL0)
     tp = (hue_lightness_saturation) ? hls_palette : cga_palette;
     for (n = 0; n < COLORS; n++) {
 	if (InPalette(n)) {
-	    SP->_color_table[n] = tp[n];
+	    SP_PARM->_color_table[n] = tp[n];
 	} else {
-	    SP->_color_table[n] = tp[n % MAX_PALETTE];
+	    SP_PARM->_color_table[n] = tp[n % MAX_PALETTE];
 	    if (hue_lightness_saturation) {
-		SP->_color_table[n].green = 100;
+		SP_PARM->_color_table[n].green = 100;
 	    } else {
-		if (SP->_color_table[n].red)
-		    SP->_color_table[n].red = 1000;
-		if (SP->_color_table[n].green)
-		    SP->_color_table[n].green = 1000;
-		if (SP->_color_table[n].blue)
-		    SP->_color_table[n].blue = 1000;
+		if (SP_PARM->_color_table[n].red)
+		    SP_PARM->_color_table[n].red = 1000;
+		if (SP_PARM->_color_table[n].green)
+		    SP_PARM->_color_table[n].green = 1000;
+		if (SP_PARM->_color_table[n].blue)
+		    SP_PARM->_color_table[n].blue = 1000;
 	    }
 	}
     }
@@ -238,16 +238,12 @@ reset_color_pair(NCURSES_SP_DCL0)
  * someone has changed the color definitions.
  */
 bool
-_nc_reset_colors(void)
-{
-#if NCURSES_SP_FUNCS
-    SCREEN *sp = CURRENT_SCREEN;
-#endif
+NCURSES_SP_NAME(_nc_reset_colors) (NCURSES_SP_DCL0) {
     int result = FALSE;
 
     T((T_CALLED("_nc_reset_colors()")));
-    if (SP->_color_defs > 0)
-	SP->_color_defs = -(SP->_color_defs);
+    if (SP_PARM->_color_defs > 0)
+	SP_PARM->_color_defs = -(SP_PARM->_color_defs);
 
     if (reset_color_pair(NCURSES_SP_ARG))
 	result = TRUE;
@@ -258,6 +254,14 @@ _nc_reset_colors(void)
     }
     returnBool(result);
 }
+
+#if NCURSES_SP_FUNCS
+bool
+_nc_reset_colors(void)
+{
+    return NCURSES_SP_NAME(_nc_reset_colors) (CURRENT_SCREEN);
+}
+#endif
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(start_color) (NCURSES_SP_DCL0)
@@ -685,13 +689,13 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
 				    TPARM_1(set_color_pair, pair),
 				    1, outc);
 	    return;
-	} else if (SP != 0) {
+	} else if (SP_PARM != 0) {
 	    pair_content((short) pair, &fg, &bg);
 	}
     }
 
     if (old_pair >= 0
-	&& SP != 0
+	&& SP_PARM != 0
 	&& pair_content(old_pair, &old_fg, &old_bg) != ERR) {
 	if ((isDefaultColor(fg) && !isDefaultColor(old_fg))
 	    || (isDefaultColor(bg) && !isDefaultColor(old_bg))) {
@@ -701,11 +705,11 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
 	     * the terminal description, treat it as screen's indicator of ECMA
 	     * SGR 39 and SGR 49, and assume the two sequences are independent.
 	     */
-	    if (SP->_has_sgr_39_49
+	    if (SP_PARM->_has_sgr_39_49
 		&& isDefaultColor(old_bg)
 		&& !isDefaultColor(old_fg)) {
 		NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx "\033[39m", 1, outc);
-	    } else if (SP->_has_sgr_39_49
+	    } else if (SP_PARM->_has_sgr_39_49
 		       && isDefaultColor(old_fg)
 		       && !isDefaultColor(old_bg)) {
 		NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx "\033[49m", 1, outc);

@@ -30,16 +30,16 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                         2008                    *
  ****************************************************************************/
 
 #include <curses.priv.h>
-#include <term.h>		/* ena_acs, acs_chars */
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_acs.c,v 1.39 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.40 2009/06/06 18:08:04 tom Exp $")
 
 #if BROKEN_LINKER || USE_REENTRANT
 #define MyBuffer _nc_prescreen.real_acs_map
@@ -58,14 +58,29 @@ NCURSES_EXPORT_VAR (chtype) acs_map[ACS_LEN] =
 };
 #endif
 
-NCURSES_EXPORT(void)
-_nc_init_acs(void)
+#ifdef USE_TERM_DRIVER
+NCURSES_EXPORT(chtype)
+NCURSES_SP_NAME(_nc_acs_char) (NCURSES_SP_DCLx int c)
 {
-#if NCURSES_SP_FUNCS
-    SCREEN *sp = CURRENT_SCREEN;
+    chtype *map;
+    if (c < 0 || c >= ACS_LEN)
+	return (chtype) 0;
+    map = (SP_PARM != 0) ? SP_PARM->_acs_map :
+#if BROKEN_LINKER || USE_REENTRANT
+	_nc_prescreen.real_acs_map
+#else
+	acs_map
 #endif
+	;
+    return map[c];
+}
+#endif /* USE_TERM_DRIVER */
+
+NCURSES_EXPORT(void)
+NCURSES_SP_NAME(_nc_init_acs) (NCURSES_SP_DCL0)
+{
     chtype *fake_map = acs_map;
-    chtype *real_map = SP != 0 ? SP->_acs_map : fake_map;
+    chtype *real_map = SP_PARM != 0 ? SP_PARM->_acs_map : fake_map;
     int j;
 
     T(("initializing ACS map"));
@@ -79,8 +94,8 @@ _nc_init_acs(void)
 	for (j = 1; j < ACS_LEN; ++j) {
 	    real_map[j] = 0;
 	    fake_map[j] = A_ALTCHARSET | j;
-	    if (SP)
-		SP->_screen_acs_map[j] = FALSE;
+	    if (SP_PARM)
+		SP_PARM->_screen_acs_map[j] = FALSE;
 	}
     } else {
 	for (j = 1; j < ACS_LEN; ++j) {
@@ -126,6 +141,9 @@ _nc_init_acs(void)
     real_map['|'] = '!';	/* should be not-equal */
     real_map['}'] = 'f';	/* should be pound-sterling symbol */
 
+#ifdef USE_TERM_DRIVER
+    CallDriver_2(SP_PARM, initacs, real_map, fake_map);
+#else
     if (ena_acs != NULL) {
 	TPUTS_TRACE("ena_acs");
 	putp(ena_acs);
@@ -198,4 +216,13 @@ _nc_init_acs(void)
 	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
+#endif
 }
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(void)
+_nc_init_acs(void)
+{
+    NCURSES_SP_NAME(_nc_init_acs) (CURRENT_SCREEN);
+}
+#endif
