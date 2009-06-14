@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.201 2009/05/23 21:31:35 tom Exp $ */
+/* $Id: curses.h.in,v 1.202 2009/06/13 21:44:51 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -109,13 +109,6 @@
 #ifndef NCURSES_REENTRANT
 #define NCURSES_REENTRANT @cf_cv_enable_reentrant@
 #endif
-
-/*
- * For reentrant code, we map the various global variables into SCREEN by
- * using functions to access them.
- */
-#define NCURSES_PUBLIC_VAR(name) @NCURSES_WRAP_PREFIX@##name
-#define NCURSES_WRAPPED_VAR(type,name) extern type NCURSES_PUBLIC_VAR(name)(void)
 
 /*
  * The internal type used for window dimensions.

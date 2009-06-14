@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.35 2001/12/08 18:50:06 tom Exp $
+# $Id: Makefile.in,v 1.36 2009/06/13 21:42:45 tom Exp $
 ##############################################################################
 # Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -72,6 +72,7 @@ AUTO_SRC = \
 	curses.h \
 	hashsize.h \
 	ncurses_def.h \
+	ncurses_dll.h \
 	parametrized.h \
 	term.h
 

@@ -64,13 +64,12 @@
  */
 
 #include <curses.priv.h>
-#include <term.h>
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.56 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.57 2009/05/23 20:46:28 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -90,8 +89,8 @@ MODULE_ID("$Id: lib_vidattr.c,v 1.56 2009/05/10 00:48:29 tom Exp $")
 		if ((pair != old_pair) \
 		 || (fix_pair0 && (pair == 0)) \
 		 || (reverse ^ ((old_attr & A_REVERSE) != 0))) { \
-		     NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_ARGx \
-		     		     old_pair, pair, reverse, outc); \
+		     NCURSES_SP_NAME(_nc_do_color)(NCURSES_SP_ARGx \
+				     old_pair, pair, reverse, outc); \
 		} \
 	}
 
@@ -113,7 +112,11 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 #endif
 
     newmode &= A_ATTRIBUTES;
-    T((T_CALLED("vidputs(%s)"), _traceattr(newmode)));
+
+    T((T_CALLED("vidputs(%p,%s)"), SP_PARM, _traceattr(newmode)));
+
+    if (!IsTermInfo(SP_PARM))
+	returnCode(ERR);
 
     /* this allows us to go on whether or not newterm() has been called */
     if (SP_PARM)
@@ -302,29 +305,31 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
     returnCode(OK);
 }
 
-NCURSES_EXPORT(int)
-NCURSES_SP_NAME(vidattr) (NCURSES_SP_DCLx
-			  chtype newmode)
-{
-    return NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx
-				     newmode,
-				     NCURSES_SP_NAME(_nc_outch));
-}
-
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
 vidputs(chtype newmode, NCURSES_OUTC outc)
 {
     SetSafeOutcWrapper(outc);
-    return NCURSES_SP_NAME(vidputs) (CURRENT_SCREEN, newmode, _nc_outc_wrapper);
+    return NCURSES_SP_NAME(vidputs) (CURRENT_SCREEN,
+				     newmode,
+				     _nc_outc_wrapper);
+}
+#endif
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(vidattr) (NCURSES_SP_DCLx chtype newmode)
+{
+    T((T_CALLED("vidattr(%p,%s)"), SP_PARM, _traceattr(newmode)));
+    returnCode(NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx
+					 newmode,
+					 NCURSES_SP_NAME(_nc_outch)));
 }
 
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
 vidattr(chtype newmode)
 {
-    T((T_CALLED("vidattr(%s)"), _traceattr(newmode)));
-
-    returnCode(vidputs(newmode, _nc_outch));
+    return NCURSES_SP_NAME(vidattr) (CURRENT_SCREEN, newmode);
 }
 #endif
 
@@ -332,6 +337,12 @@ NCURSES_EXPORT(chtype)
 NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
 {
     chtype attrs = A_NORMAL;
+
+    T((T_CALLED("termattrs(%p)"), SP_PARM));
+#ifdef USE_TERM_DRIVER
+    if (HasTerminal(SP_PARM))
+	attrs = CallDriver(SP_PARM, conattr);
+#else
 
     T((T_CALLED("termattrs()")));
     if (enter_alt_charset_mode)
@@ -364,6 +375,7 @@ NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
     if (SP_PARM->_coloron)
 	attrs |= A_COLOR;
 
+#endif
     returnChtype(attrs);
 }
 

@@ -30,6 +30,7 @@
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
  *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Juergen Pfeifer                                                 *
  ****************************************************************************/
 
 /*
@@ -41,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.54 2009/06/06 18:46:31 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.55 2009/06/07 14:48:25 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
