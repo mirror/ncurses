@@ -43,6 +43,7 @@
  *
  *-----------------------------------------------------------------*/
 
+#define NEED_NCURSES_CH_T 1
 #include <curses.priv.h>
 
 #ifndef CUR
@@ -82,7 +83,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.257 2009/06/06 20:26:16 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.258 2009/06/27 19:16:17 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a

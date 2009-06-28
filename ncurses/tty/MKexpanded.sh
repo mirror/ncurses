@@ -1,6 +1,6 @@
 #! /bin/sh
 ##############################################################################
-# Copyright (c) 1998-2005,2008 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -27,9 +27,9 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey <dickey@clark.net> 1997
+# Author: Thomas E. Dickey, 1997-on
 #
-# $Id: MKexpanded.sh,v 1.12 2008/11/16 00:19:59 juergen Exp $
+# $Id: MKexpanded.sh,v 1.15 2009/06/27 20:37:50 tom Exp $
 #
 # Script to generate 'expanded.c', a dummy source that contains functions
 # corresponding to complex macros used in this library.  By making functions,
@@ -69,41 +69,59 @@ cat >$TMP <<EOF
 #undef FALSE
 /* this is a marker */
 IGNORE
-NCURSES_EXPORT(void) _nc_toggle_attr_on (attr_t *S, attr_t at)
+NCURSES_EXPORT(void)
+_nc_toggle_attr_on (attr_t *S, attr_t at)
 {
 	toggle_attr_on(*S,at);
 }
-NCURSES_EXPORT(void) _nc_toggle_attr_off (attr_t *S, attr_t at) 
+
+NCURSES_EXPORT(void)
+_nc_toggle_attr_off (attr_t *S, attr_t at) 
 {
 	toggle_attr_off(*S,at);
 }
-NCURSES_EXPORT(int) _nc_safe_DelCharCost (SCREEN* sp, int count)
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(_nc_DelCharCost) (NCURSES_SP_DCLx int count)
 {
-	return DelCharCost(sp,count);
+	return DelCharCost(SP_PARM, count);
 }
-NCURSES_EXPORT(int) _nc_DelCharCost (int count)
+
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(_nc_InsCharCost) (NCURSES_SP_DCLx int count)
 {
-	return _nc_safe_DelCharCost (CURRENT_SCREEN, count);
+	return InsCharCost(SP_PARM, count);
 }
-NCURSES_EXPORT(int) _nc_safe_InsCharCost (SCREEN* sp, int count)
+
+NCURSES_EXPORT(void)
+NCURSES_SP_NAME(_nc_UpdateAttrs) (NCURSES_SP_DCLx CARG_CH_T c)
 {
-	return InsCharCost(sp, count);
+	UpdateAttrs(SP_PARM, CHDEREF(c));
 }
-NCURSES_EXPORT(int) _nc_InsCharCost (int count)
+
+@if_NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_DelCharCost (int count)
 {
-	return _nc_safe_InsCharCost(CURRENT_SCREEN, count);
+	return NCURSES_SP_NAME(_nc_DelCharCost) (CURRENT_SCREEN, count);
 }
-NCURSES_EXPORT(void) _nc_safe_UpdateAttrs (SCREEN* sp, NCURSES_CH_T c)
+
+NCURSES_EXPORT(int)
+_nc_InsCharCost (int count)
 {
-	UpdateAttrs(sp,c);
+	return NCURSES_SP_NAME(_nc_InsCharCost)(CURRENT_SCREEN, count);
 }
-NCURSES_EXPORT(void) _nc_UpdateAttrs (NCURSES_CH_T c)
+
+NCURSES_EXPORT(void)
+_nc_UpdateAttrs (CARG_CH_T c)
 {
-	_nc_safe_UpdateAttrs(CURRENT_SCREEN,c);
+	NCURSES_SP_NAME(_nc_UpdateAttrs)(CURRENT_SCREEN,c);
 }
+@endif
 EOF
 
-$preprocessor $TMP 2>/dev/null | sed -e '1,/^IGNORE$/d'
+$preprocessor $TMP 2>/dev/null | \
+	sed -e '1,/^IGNORE$/d' -e 's/^@/#/' -e 's/^#if_/#if /'
 
 cat <<EOF
 #else /* ! NCURSES_EXPANDED */

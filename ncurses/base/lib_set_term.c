@@ -49,7 +49,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.123 2009/06/06 20:26:17 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.124 2009/06/27 21:36:14 tom Exp $")
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -280,6 +280,9 @@ _nc_setupscreen(int slines GCC_UNUSED,
     }
 
     T(("created SP %p", SP));
+#if NCURSES_SP_FUNCS
+    sp = SP;			/* fixup so SET_LINES and SET_COLS works */
+#endif
     SP->_next_screen = _nc_screen_chain;
     _nc_screen_chain = SP;
 

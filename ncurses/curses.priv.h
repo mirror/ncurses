@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.421 2009/06/06 18:12:52 tom Exp $
+ * $Id: curses.priv.h,v 1.427 2009/06/27 20:31:54 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1562,16 +1562,28 @@ extern NCURSES_EXPORT(void) _nc_toggle_attr_on (attr_t *, attr_t);
 extern NCURSES_EXPORT(void) _nc_toggle_attr_off (attr_t *, attr_t);
 
 #undef  DelCharCost
-#define DelCharCost(count) _nc_DelCharCost(count)
-extern NCURSES_EXPORT(int) _nc_DelCharCost (int);
+#define DelCharCost(sp, count) NCURSES_SP_NAME(_nc_DelCharCost)(NCURSES_SP_ARGx count)
 
 #undef  InsCharCost
-#define InsCharCost(count) _nc_InsCharCost(count)
-extern NCURSES_EXPORT(int) _nc_InsCharCost (int);
+#define InsCharCost(sp, count) NCURSES_SP_NAME(_nc_InsCharCost)(NCURSES_SP_ARGx count)
+
+extern NCURSES_EXPORT(int) NCURSES_SP_NAME(_nc_DelCharCost) (NCURSES_SP_DCLx int _c);
+extern NCURSES_EXPORT(int) NCURSES_SP_NAME(_nc_InsCharCost) (NCURSES_SP_DCLx int _c);
 
 #undef  UpdateAttrs
-#define UpdateAttrs(c) _nc_UpdateAttrs(c)
-extern NCURSES_EXPORT(void) _nc_UpdateAttrs (NCURSES_CH_T);
+#define UpdateAttrs(sp,c) NCURSES_SP_NAME(_nc_UpdateAttrs)(NCURSES_SP_ARGx CHREF(c))
+
+#if defined(NEED_NCURSES_CH_T)
+extern NCURSES_EXPORT(void) NCURSES_SP_NAME(_nc_UpdateAttrs) (NCURSES_SP_DCLx CARG_CH_T _c);
+#else
+extern NCURSES_EXPORT(void) NCURSES_SP_NAME(_nc_UpdateAttrs) (NCURSES_SP_DCLx chtype c);
+#endif
+
+#if NCURSES_SP_FUNCS
+extern NCURSES_EXPORT(int) _nc_DelCharCost (int);
+extern NCURSES_EXPORT(int) _nc_InsCharCost (int);
+extern NCURSES_EXPORT(void) _nc_UpdateAttrs (CARG_CH_T);
+#endif /* NCURSES_SP_FUNCS */
 
 #else
 
