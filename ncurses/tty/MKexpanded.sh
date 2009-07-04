@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey, 1997-on
 #
-# $Id: MKexpanded.sh,v 1.15 2009/06/27 20:37:50 tom Exp $
+# $Id: MKexpanded.sh,v 1.16 2009/07/04 16:45:03 tom Exp $
 #
 # Script to generate 'expanded.c', a dummy source that contains functions
 # corresponding to complex macros used in this library.  By making functions,
@@ -55,6 +55,11 @@ cat <<EOF
 #define NEED_NCURSES_CH_T 1
 #include <curses.priv.h>
 #include <term.h>
+
+#ifndef CUR
+#define CUR SP_TERMTYPE
+#endif
+
 #if NCURSES_EXPANDED
 EOF
 

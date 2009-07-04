@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_options.c,v 1.64 2009/05/23 23:58:07 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.65 2009/07/04 18:14:31 tom Exp $")
 
 static int _nc_meta(SCREEN *, bool);
 
@@ -70,6 +70,9 @@ idlok(WINDOW *win, bool flag)
 NCURSES_EXPORT(void)
 idcok(WINDOW *win, bool flag)
 {
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = CURRENT_SCREEN;
+#endif
     T((T_CALLED("idcok(%p,%d)"), win, flag));
 
     if (win)

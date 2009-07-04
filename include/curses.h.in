@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.202 2009/06/13 21:44:51 tom Exp $ */
+/* $Id: curses.h.in,v 1.203 2009/07/04 20:19:26 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -844,6 +844,7 @@ extern NCURSES_EXPORT(char *) keybound (int, int);
 extern NCURSES_EXPORT(const char *) curses_version (void);
 extern NCURSES_EXPORT(int) assume_default_colors (int, int);
 extern NCURSES_EXPORT(int) define_key (const char *, int);
+extern NCURSES_EXPORT(int) get_escdelay (void);
 extern NCURSES_EXPORT(int) key_defined (const char *);
 extern NCURSES_EXPORT(int) keyok (int, bool);
 extern NCURSES_EXPORT(int) resize_term (int, int);

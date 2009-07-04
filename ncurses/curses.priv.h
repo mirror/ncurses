@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.427 2009/06/27 20:31:54 tom Exp $
+ * $Id: curses.priv.h,v 1.430 2009/07/04 20:40:42 tom Exp $
  *
  *	curses.priv.h
  *
@@ -395,6 +395,9 @@ NCURSES_EXPORT(int *)        _nc_ptr_Escdelay (SCREEN *);
 
 #define ptrLines(sp)         &LINES
 #define ptrCols(sp)          &COLS
+#define ptrTabsize(sp)       &TABSIZE
+#define ptrEscdelay(sp)      &ESCDELAY
+
 #define SET_LINES(value)     LINES = value
 #define SET_COLS(value)      COLS = value
 #define SET_TABSIZE(value)   TABSIZE = value
@@ -934,8 +937,8 @@ struct screen {
 	bool		_nc_sp_idlok;
 	bool		_nc_sp_idcok;
 
-#define _nc_idlok SP->_nc_sp_idlok
-#define _nc_idcok SP->_nc_sp_idcok
+#define _nc_idlok SP_PARM->_nc_sp_idlok
+#define _nc_idcok SP_PARM->_nc_sp_idcok
 
 	/*
 	 * These are the data that support the mouse interface.
@@ -1848,7 +1851,7 @@ extern NCURSES_EXPORT_VAR(SCREEN *) SP;
 #define screen_columns(sp)      (sp)->_columns
 
 extern NCURSES_EXPORT(int) _nc_slk_initialize (WINDOW *, int);
-extern NCURSES_EXPORT(int) _nc_format_slks (SCREEN *, int);
+extern NCURSES_EXPORT(int) _nc_format_slks (NCURSES_SP_DCLx int _c);
 
 /*
  * Some constants related to SLK's

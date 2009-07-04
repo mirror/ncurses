@@ -1,4 +1,4 @@
-# $Id: MKunctrl.awk,v 1.25 2009/04/18 23:43:49 tom Exp $
+# $Id: MKunctrl.awk,v 1.26 2009/07/04 22:05:15 Clemens.Ladisch Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -35,12 +35,6 @@ BEGIN	{
 		print ""
 		print "#include <curses.priv.h>"
 		print "#include <ctype.h>"
-		print ""
-		print "#if USE_WIDEC_SUPPORT"
-		print "#if HAVE_WCTYPE_H"
-		print "#include <wctype.h>"
-		print "#endif"
-		print "#endif"
 		print ""
 		print "#undef unctrl"
 		print ""
@@ -157,16 +151,6 @@ END	{
 		print  "\t\t && (check < 160))"
 		printf "\t\t\tresult = %s_c1[check - 128];\n", stringname;
 		print  "\t\telse"
-		print  "#if USE_WIDEC_SUPPORT"
-		print  "\t\tif ((check >= 160)"
-		print  "\t\t && (check < 256)"
-		print  "\t\t && ((sp != 0)"
-		print  "\t\t  && ((sp->_legacy_coding > 0)"
-		print  "\t\t   || (sp->_legacy_coding == 0"
-		print  "\t\t       && (isprint(check) || iswprint(check))))))"
-		printf "\t\t\tresult = %s_c1[check - 128];\n", stringname;
-		print  "\t\telse"
-		print  "#else"
 		print  "\t\tif ((check >= 160)"
 		print  "\t\t && (check < 256)"
 		print  "\t\t && ((sp != 0)"
@@ -175,7 +159,6 @@ END	{
 		print  "\t\t       && isprint(check)))))"
 		printf "\t\t\tresult = %s_c1[check - 128];\n", stringname;
 		print  "\t\telse"
-		print  "#endif /* USE_WIDEC_SUPPORT */"
 		print  "#endif /* NCURSES_EXT_FUNCS */"
 		printf "\t\t\tresult = %s_table[check];\n", stringname;
 		print  "\t} else {"
