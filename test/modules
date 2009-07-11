@@ -1,6 +1,6 @@
-# $Id: modules,v 1.37 2008/12/20 21:38:44 tom Exp $
+# $Id: modules,v 1.38 2009/07/11 12:43:09 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -46,6 +46,7 @@ demo_keyok	progs		$(srcdir)	$(HEADER_DEPS)
 demo_menus	progs		$(srcdir)	$(HEADER_DEPS)	../include/menu.h
 demo_panels	progs		$(srcdir)	$(HEADER_DEPS)	../include/panel.h
 demo_termcap	progs		$(srcdir)	$(HEADER_DEPS)
+demo_terminfo	progs		$(srcdir)	$(HEADER_DEPS)
 ditto		progs		$(srcdir)	$(HEADER_DEPS)
 dots		progs		$(srcdir)	$(HEADER_DEPS)
 dots_mvcur	progs		$(srcdir)	$(HEADER_DEPS)

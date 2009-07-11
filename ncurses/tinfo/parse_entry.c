@@ -48,7 +48,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.70 2009/04/18 21:01:38 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.71 2009/07/11 18:14:21 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -383,16 +383,14 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 		    && !strcmp("ma", _nc_curr_token.tk_name)) {
 		    /* tell max_attributes from arrow_key_map */
 		    entry_ptr = _nc_find_type_entry("ma", NUMBER,
-						    _nc_get_table(_nc_syntax
-								  != 0));
+						    _nc_syntax != 0);
 		    assert(entry_ptr != 0);
 
 		} else if (token_type == STRING
 			   && !strcmp("MT", _nc_curr_token.tk_name)) {
 		    /* map terminfo's string MT to MT */
 		    entry_ptr = _nc_find_type_entry("MT", STRING,
-						    _nc_get_table(_nc_syntax
-								  != 0));
+						    _nc_syntax != 0);
 		    assert(entry_ptr != 0);
 
 		} else if (token_type == BOOLEAN

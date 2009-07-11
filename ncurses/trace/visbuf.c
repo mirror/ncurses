@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,9 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.32 2008/08/04 23:07:39 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.33 2009/07/11 14:44:20 tom Exp $")
+
+#define NUM_VISBUFS 4
 
 #define NormalLen(len) (size_t) (((size_t)(len) + 1) * 4)
 #define WideLen(len)   (size_t) (((size_t)(len) + 1) * 4 * MB_CUR_MAX)
@@ -108,9 +110,16 @@ _nc_visbuf2n(int bufnum, const char *buf, int len)
     vbuf = tp = _nc_trace_buf(bufnum, NormalLen(len));
 #else
     {
-	static char *mybuf[4];
-	mybuf[bufnum] = typeRealloc(char, NormalLen(len), mybuf[bufnum]);
-	vbuf = tp = mybuf[bufnum];
+	static char *mybuf[NUM_VISBUFS];
+	if (bufnum < 0) {
+	    for (c = 0; c < NUM_VISBUFS; ++c) {
+		FreeAndNull(mybuf[c]);
+	    }
+	    tp = 0;
+	} else {
+	    mybuf[bufnum] = typeRealloc(char, NormalLen(len), mybuf[bufnum]);
+	    vbuf = tp = mybuf[bufnum];
+	}
     }
 #endif
     if (tp != 0) {
@@ -177,7 +186,7 @@ _nc_viswbuf2n(int bufnum, const wchar_t *buf, int len)
     vbuf = tp = _nc_trace_buf(bufnum, WideLen(len));
 #else
     {
-	static char *mybuf[2];
+	static char *mybuf[NUM_VISBUFS];
 	mybuf[bufnum] = typeRealloc(char, WideLen(len), mybuf[bufnum]);
 	vbuf = tp = mybuf[bufnum];
     }
@@ -293,7 +302,8 @@ _nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 			PUTC_ch = buf[j].chars[PUTC_i];
 			if (PUTC_ch == L'\0')
 			    break;
-			PUTC_n = (int) wcrtomb(PUTC_buf, buf[j].chars[PUTC_i], &PUT_st);
+			PUTC_n = (int) wcrtomb(PUTC_buf,
+					       buf[j].chars[PUTC_i], &PUT_st);
 			if (PUTC_n <= 0)
 			    break;
 			for (k = 0; k < PUTC_n; k++) {

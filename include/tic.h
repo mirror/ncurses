@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.62 2007/08/11 16:12:43 tom Exp $
+ * $Id: tic.h,v 1.63 2009/07/11 18:11:15 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -246,7 +246,7 @@ extern NCURSES_EXPORT(char *) _nc_rootname (char *);
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_entry
 	(const char *, const short *);
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_type_entry
-	(const char *, int, const struct name_table_entry *);
+	(const char *, int, bool);
 
 /* comp_scan.c: lexical analysis */
 extern NCURSES_EXPORT(int)  _nc_get_token (bool);

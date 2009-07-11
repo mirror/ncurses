@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #define DEBUG(level, params)	/*nothing */
 #endif
 
-MODULE_ID("$Id: comp_hash.c,v 1.36 2008/08/16 17:06:53 tom Exp $")
+MODULE_ID("$Id: comp_hash.c,v 1.39 2009/07/11 18:27:26 tom Exp $")
 
 static int hash_function(const char *);
 
@@ -131,6 +131,19 @@ hash_function(const char *string)
  */
 
 #ifndef MAIN_PROGRAM
+
+#define SameName(a,b,termcap) (termcap ? !strncmp(a,b,2) : !strcmp(a,b))
+#if 0
+static bool
+same_name(const char *a, const char *b, bool termcap)
+{
+    fprintf(stderr, "compare(%s,%s)\n", a, b);
+    return SameName(a, b, termcap);
+}
+#else
+#define same_name(a,b,termcap) SameName(a,b,termcap)
+#endif
+
 NCURSES_EXPORT(struct name_table_entry const *)
 _nc_find_entry(const char *string,
 	       const short *hash_table)
@@ -142,9 +155,11 @@ _nc_find_entry(const char *string,
     hashvalue = hash_function(string);
 
     if (hash_table[hashvalue] >= 0) {
-	real_table = _nc_get_table(hash_table != _nc_get_hash_table(FALSE));
+	bool termcap = (hash_table != _nc_get_hash_table(FALSE));
+
+	real_table = _nc_get_table(termcap);
 	ptr = real_table + hash_table[hashvalue];
-	while (strcmp(ptr->nte_name, string) != 0) {
+	while (!same_name(ptr->nte_name, string, termcap)) {
 	    if (ptr->nte_link < 0)
 		return 0;
 	    ptr = real_table + (ptr->nte_link + hash_table[HASHTABSIZE]);
@@ -168,16 +183,21 @@ _nc_find_entry(const char *string,
 NCURSES_EXPORT(struct name_table_entry const *)
 _nc_find_type_entry(const char *string,
 		    int type,
-		    const struct name_table_entry *table)
+		    bool termcap)
 {
+    struct name_table_entry const *result = NULL;
+    const struct name_table_entry *const table = _nc_get_table(termcap);
     struct name_table_entry const *ptr;
 
     for (ptr = table; ptr < table + CAPTABSIZE; ptr++) {
-	if (ptr->nte_type == type && strcmp(string, ptr->nte_name) == 0)
-	    return (ptr);
+	if (ptr->nte_type == type) {
+	    if (same_name(ptr->nte_name, string, termcap)) {
+		result = ptr;
+	    }
+	}
     }
 
-    return ((struct name_table_entry *) NULL);
+    return result;
 }
 #endif
 

@@ -50,7 +50,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.67 2009/05/30 20:05:20 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.69 2009/07/11 18:14:21 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -202,6 +202,17 @@ tgetent(char *bufp, const char *name)
 }
 #endif
 
+#if 0
+static bool
+same_tcname(const char *a, const char *b)
+{
+    fprintf(stderr, "compare(%s,%s)\n", a, b);
+    return !strncmp(a, b, 2);
+}
+#else
+#define same_tcname(a,b) !strncmp(a,b,2)
+#endif
+
 /***************************************************************************
  *
  * tgetflag(str)
@@ -214,20 +225,36 @@ tgetent(char *bufp, const char *name)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
-    unsigned i;
+    int result = 0;		/* Solaris returns zero for missing flag */
+    int i, j;
 
     T((T_CALLED("tgetflag(%p, %s)"), SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
-	for_each_boolean(i, tp) {
-	    const char *capname = ExtBoolname(tp, i, boolcodes);
-	    if (!strncmp(id, capname, 2)) {
-		/* setupterm forces invalid booleans to false */
-		returnCode(tp->Booleans[i]);
+	struct name_table_entry const *entry_ptr;
+
+	entry_ptr = _nc_find_type_entry(id, BOOLEAN, TRUE);
+	if (entry_ptr != 0) {
+	    j = entry_ptr->nte_index;
+	}
+#if NCURSES_XNAMES
+	else {
+	    j = -1;
+	    for_each_ext_boolean(i, tp) {
+		const char *capname = ExtBoolname(tp, i, boolcodes);
+		if (same_tcname(id, capname)) {
+		    j = i;
+		    break;
+		}
 	    }
 	}
+#endif
+	if (j >= 0) {
+	    /* note: setupterm forces invalid booleans to false */
+	    result = tp->Booleans[j];
+	}
     }
-    returnCode(0);		/* Solaris does this */
+    returnCode(result);
 }
 
 #if NCURSES_SP_FUNCS
@@ -250,21 +277,36 @@ tgetflag(NCURSES_CONST char *id)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
-    unsigned i;
+    int result = ABSENT_NUMERIC;
+    int i, j;
 
     T((T_CALLED("tgetnum(%p, %s)"), SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
-	for_each_number(i, tp) {
-	    const char *capname = ExtNumname(tp, i, numcodes);
-	    if (!strncmp(id, capname, 2)) {
-		if (!VALID_NUMERIC(tp->Numbers[i]))
-		    returnCode(ABSENT_NUMERIC);
-		returnCode(tp->Numbers[i]);
+	struct name_table_entry const *entry_ptr;
+
+	entry_ptr = _nc_find_type_entry(id, NUMBER, TRUE);
+	if (entry_ptr != 0) {
+	    j = entry_ptr->nte_index;
+	}
+#if NCURSES_XNAMES
+	else {
+	    j = -1;
+	    for_each_ext_number(i, tp) {
+		const char *capname = ExtNumname(tp, i, numcodes);
+		if (same_tcname(id, capname)) {
+		    j = i;
+		    break;
+		}
 	    }
 	}
+#endif
+	if (j >= 0) {
+	    if (VALID_NUMERIC(tp->Numbers[j]))
+		result = tp->Numbers[j];
+	}
     }
-    returnCode(ABSENT_NUMERIC);
+    returnCode(result);
 }
 
 #if NCURSES_SP_FUNCS
@@ -287,32 +329,46 @@ tgetnum(NCURSES_CONST char *id)
 NCURSES_EXPORT(char *)
 NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 {
-    unsigned i;
     char *result = NULL;
+    int i, j;
 
     T((T_CALLED("tgetstr(%s,%p)"), id, area));
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
-	for_each_string(i, tp) {
-	    const char *capname = ExtStrname(tp, i, strcodes);
-	    if (!strncmp(id, capname, 2)) {
-		result = tp->Strings[i];
-		TR(TRACE_DATABASE, ("found match : %s", _nc_visbuf(result)));
-		/* setupterm forces canceled strings to null */
-		if (VALID_STRING(result)) {
-		    if (result == exit_attribute_mode
-			&& FIX_SGR0 != 0) {
-			result = FIX_SGR0;
-			TR(TRACE_DATABASE, ("altered to : %s", _nc_visbuf(result)));
-		    }
-		    if (area != 0
-			&& *area != 0) {
-			(void) strcpy(*area, result);
-			result = *area;
-			*area += strlen(*area) + 1;
-		    }
+	struct name_table_entry const *entry_ptr;
+
+	entry_ptr = _nc_find_type_entry(id, STRING, TRUE);
+	if (entry_ptr != 0) {
+	    j = entry_ptr->nte_index;
+	}
+#if NCURSES_XNAMES
+	else {
+	    j = -1;
+	    for_each_ext_string(i, tp) {
+		const char *capname = ExtStrname(tp, i, strcodes);
+		if (same_tcname(id, capname)) {
+		    j = i;
+		    break;
 		}
-		break;
+	    }
+	}
+#endif
+	if (j >= 0) {
+	    result = tp->Strings[j];
+	    TR(TRACE_DATABASE, ("found match : %s", _nc_visbuf(result)));
+	    /* setupterm forces canceled strings to null */
+	    if (VALID_STRING(result)) {
+		if (result == exit_attribute_mode
+		    && FIX_SGR0 != 0) {
+		    result = FIX_SGR0;
+		    TR(TRACE_DATABASE, ("altered to : %s", _nc_visbuf(result)));
+		}
+		if (area != 0
+		    && *area != 0) {
+		    (void) strcpy(*area, result);
+		    result = *area;
+		    *area += strlen(*area) + 1;
+		}
 	    }
 	}
     }

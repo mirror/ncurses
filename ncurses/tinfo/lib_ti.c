@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 #include <curses.priv.h>
@@ -36,27 +37,54 @@
 #include <term_entry.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_ti.c,v 1.24 2009/04/18 17:37:50 tom Exp $")
+MODULE_ID("$Id: lib_ti.c,v 1.26 2009/07/11 18:14:21 tom Exp $")
+
+#if 0
+static bool
+same_name(const char *a, const char *b)
+{
+    fprintf(stderr, "compare(%s,%s)\n", a, b);
+    return !strcmp(a, b);
+}
+#else
+#define same_name(a,b) !strcmp(a,b)
+#endif
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tigetflag) (NCURSES_SP_DCLx NCURSES_CONST char *str)
 {
-    unsigned i;
+    int result = ABSENT_BOOLEAN;
+    int i, j;
 
     T((T_CALLED("tigetflag(%p, %s)"), SP_PARM, str));
 
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
-	for_each_boolean(i, tp) {
-	    const char *capname = ExtBoolname(tp, i, boolnames);
-	    if (!strcmp(str, capname)) {
-		/* setupterm forces invalid booleans to false */
-		returnCode(tp->Booleans[i]);
+	struct name_table_entry const *entry_ptr;
+
+	entry_ptr = _nc_find_type_entry(str, BOOLEAN, FALSE);
+	if (entry_ptr != 0) {
+	    j = entry_ptr->nte_index;
+	}
+#if NCURSES_XNAMES
+	else {
+	    j = -1;
+	    for_each_ext_boolean(i, tp) {
+		const char *capname = ExtBoolname(tp, i, boolnames);
+		if (same_name(str, capname)) {
+		    j = i;
+		    break;
+		}
 	    }
+	}
+#endif
+	if (j >= 0) {
+	    /* note: setupterm forces invalid booleans to false */
+	    result = tp->Booleans[j];
 	}
     }
 
-    returnCode(ABSENT_BOOLEAN);
+    returnCode(result);
 }
 
 #if NCURSES_SP_FUNCS
@@ -70,23 +98,38 @@ tigetflag(NCURSES_CONST char *str)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tigetnum) (NCURSES_SP_DCLx NCURSES_CONST char *str)
 {
-    unsigned i;
+    int i, j;
+    int result = CANCELLED_NUMERIC;	/* Solaris returns a -1 on error */
 
     T((T_CALLED("tigetnum(%p, %s)"), SP_PARM, str));
 
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
-	for_each_number(i, tp) {
-	    const char *capname = ExtNumname(tp, i, numnames);
-	    if (!strcmp(str, capname)) {
-		if (!VALID_NUMERIC(tp->Numbers[i]))
-		    returnCode(ABSENT_NUMERIC);
-		returnCode(tp->Numbers[i]);
+	struct name_table_entry const *entry_ptr;
+
+	entry_ptr = _nc_find_type_entry(str, NUMBER, FALSE);
+	if (entry_ptr != 0) {
+	    j = entry_ptr->nte_index;
+	}
+#if NCURSES_XNAMES
+	else {
+	    j = -1;
+	    for_each_ext_number(i, tp) {
+		const char *capname = ExtNumname(tp, i, numnames);
+		if (same_name(str, capname)) {
+		    j = i;
+		    break;
+		}
 	    }
 	}
+#endif
+	if (j >= 0 && VALID_NUMERIC(tp->Numbers[j]))
+	    result = tp->Numbers[j];
+	else
+	    result = ABSENT_NUMERIC;
     }
 
-    returnCode(CANCELLED_NUMERIC);	/* Solaris returns a -1 instead */
+    returnCode(result);
 }
 
 #if NCURSES_SP_FUNCS
@@ -100,22 +143,38 @@ tigetnum(NCURSES_CONST char *str)
 NCURSES_EXPORT(char *)
 NCURSES_SP_NAME(tigetstr) (NCURSES_SP_DCLx NCURSES_CONST char *str)
 {
-    unsigned i;
+    char *result = CANCELLED_STRING;
+    int i, j;
 
     T((T_CALLED("tigetstr(%p, %s)"), SP_PARM, str));
 
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
-	for_each_string(i, tp) {
-	    const char *capname = ExtStrname(tp, i, strnames);
-	    if (!strcmp(str, capname)) {
-		/* setupterm forces cancelled strings to null */
-		returnPtr(tp->Strings[i]);
+	struct name_table_entry const *entry_ptr;
+
+	entry_ptr = _nc_find_type_entry(str, STRING, FALSE);
+	if (entry_ptr != 0) {
+	    j = entry_ptr->nte_index;
+	}
+#if NCURSES_XNAMES
+	else {
+	    j = -1;
+	    for_each_ext_string(i, tp) {
+		const char *capname = ExtStrname(tp, i, strnames);
+		if (same_name(str, capname)) {
+		    j = i;
+		    break;
+		}
 	    }
+	}
+#endif
+	if (j >= 0) {
+	    /* note: setupterm forces cancelled strings to null */
+	    result = tp->Strings[j];
 	}
     }
 
-    returnPtr(CANCELLED_STRING);
+    returnPtr(result);
 }
 
 #if NCURSES_SP_FUNCS
