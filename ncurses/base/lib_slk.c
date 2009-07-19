@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slk.c,v 1.39 2009/07/04 18:37:57 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.40 2009/07/19 00:34:07 tom Exp $")
 
 /*
  * Free any memory related to soft labels, return an error.
@@ -67,11 +67,12 @@ NCURSES_EXPORT(int)
 _nc_format_slks(NCURSES_SP_DCLx int cols)
 {
     int gap, i, x;
-    unsigned max_length = SP_PARM->_slk->maxlen;
+    unsigned max_length;
 
-    if (!SP_PARM)
+    if (!SP_PARM || !SP_PARM->_slk)
 	return ERR;
 
+    max_length = SP_PARM->_slk->maxlen;
     if (SP_PARM->slk_format >= 3) {	/* PC style */
 	gap = (cols - 3 * (3 + 4 * max_length)) / 2;
 

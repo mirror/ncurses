@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.471 2009/06/13 21:40:19 tom Exp $
+dnl $Id: configure.in,v 1.472 2009/07/18 16:18:30 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.471 $)
+AC_REVISION($Revision: 1.472 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -828,6 +828,15 @@ AC_ARG_WITH(mmask-t,
 	[NCURSES_MMASK_T="$withval"],
 	[NCURSES_MMASK_T=auto])
 AC_MSG_RESULT($NCURSES_MMASK_T)
+
+###   use option --with-ccharw-max to override CCHARW_MAX size
+AC_MSG_CHECKING(for size CCHARW_MAX)
+AC_ARG_WITH(ccharw-max,
+	[  --with-ccharw-max=XXX   override size CCHARW_MAX],
+	[NCURSES_CCHARW_MAX="$withval"],
+	[NCURSES_CCHARW_MAX=5])
+AC_MSG_RESULT($NCURSES_CCHARW_MAX)
+AC_SUBST(NCURSES_CCHARW_MAX)
 
 ### Enable compiling-in rcs id's
 AC_MSG_CHECKING(if RCS identifiers should be compiled-in)

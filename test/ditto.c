@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.33 2008/11/16 00:19:59 juergen Exp $
+ * $Id: ditto.c,v 1.34 2009/07/17 00:07:25 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -259,7 +259,9 @@ close_screen(
 #endif
 		void *arg GCC_UNUSED)
 {
+#if HAVE_USE_WINDOW
     (void) sp;
+#endif
     (void) arg;
     return endwin();
 }

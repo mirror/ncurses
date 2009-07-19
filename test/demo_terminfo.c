@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.5 2009/07/11 17:39:41 tom Exp $
+ * $Id: demo_terminfo.c,v 1.6 2009/07/17 01:02:08 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -41,6 +41,8 @@
 #include <term_entry.h>
 #endif
 #endif
+
+#if defined(HAVE_CURSES_DATA_BOOLNAMES) || defined(DECL_CURSES_DATA_BOOLNAMES)
 
 static bool b_opt = FALSE;
 static bool f_opt = FALSE;
@@ -291,3 +293,12 @@ main(int argc, char *argv[])
 
     ExitProgram(EXIT_SUCCESS);
 }
+
+#else
+int
+main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+{
+    printf("This program requires the terminfo arrays\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif

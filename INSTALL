@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.138 2009/03/21 20:23:29 tom Exp $
+-- $Id: INSTALL,v 1.139 2009/07/18 20:50:08 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -686,6 +686,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	legacy applications.  For those systems, you can configure ncurses
 	to use a terminfo database which is compatible with the native
 	applications.
+
+    --with-ccharw-max=XXX
+	Override the size of the wide-character array in cchar_t structures.
+	Changing this will alter the binary interface.  This defaults to 5.
 
     --with-chtype=TYPE
 	Override type of chtype, which stores the video attributes and (if

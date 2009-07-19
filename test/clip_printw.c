@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2008,2009 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,12 +26,14 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.1 2008/12/20 21:03:06 tom Exp $
+ * $Id: clip_printw.c,v 1.3 2009/07/17 09:28:52 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
 
 #include <test.priv.h>
+
+#ifdef HAVE_VW_PRINTW
 
 #define SHOW(n) ((n) == ERR ? "ERR" : "OK")
 #define COLOR_DEFAULT (-1)
@@ -53,7 +55,7 @@ typedef struct {
 } STATUS;
 
 static int
-clip_wprintw(WINDOW *win, const char *fmt,...)
+clip_wprintw(WINDOW *win, NCURSES_CONST char *fmt,...)
 {
     int y0, x0, y1, x1, width;
     WINDOW *sub;
@@ -150,10 +152,17 @@ static void
 fill_window(WINDOW *win)
 {
     int y, x;
+    int y0 = -1, x0 = -1;
 
     getyx(win, y, x);
     wmove(win, 0, 0);
     while (waddstr(win, "0123456789 abcdefghijklmnopqrstuvwxyz ") != ERR) {
+	int y1, x1;
+	getyx(win, y1, x1);
+	if (y1 == y0 && x1 == x0)
+	    break;
+	x0 = x1;
+	y0 = y1;
     }
     wmove(win, y, x);
 }
@@ -358,3 +367,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(void)
+{
+    printf("This program requires the curses vw_printw function\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif

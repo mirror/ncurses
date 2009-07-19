@@ -50,7 +50,7 @@
 #define DEBUG(level, params)	/*nothing */
 #endif
 
-MODULE_ID("$Id: comp_hash.c,v 1.39 2009/07/11 18:27:26 tom Exp $")
+MODULE_ID("$Id: comp_hash.c,v 1.45 2009/07/18 20:30:21 tom Exp $")
 
 static int hash_function(const char *);
 
@@ -91,8 +91,7 @@ _nc_make_hash_table(struct name_table_entry *table,
 	hash_table[hashvalue] = i;
     }
 
-    DEBUG(4, ("Hash table complete: %d collisions out of %d entries",
-	      collisions, CAPTABSIZE));
+    printf("/* %d collisions out of %d entries */\n", collisions, CAPTABSIZE);
 }
 #endif
 
@@ -121,15 +120,6 @@ hash_function(const char *string)
     return (int) (sum % HASHTABSIZE);
 }
 
-/*
- *	struct name_table_entry *
- *	find_entry(string)
- *
- *	Finds the entry for the given string in the hash table if present.
- *	Returns a pointer to the entry in the table or 0 if not found.
- *
- */
-
 #ifndef MAIN_PROGRAM
 
 #define SameName(a,b,termcap) (termcap ? !strncmp(a,b,2) : !strcmp(a,b))
@@ -144,6 +134,10 @@ same_name(const char *a, const char *b, bool termcap)
 #define same_name(a,b,termcap) SameName(a,b,termcap)
 #endif
 
+/*
+ * Finds the entry for the given string in the hash table if present.
+ * Returns a pointer to the entry in the table or 0 if not found.
+ */
 NCURSES_EXPORT(struct name_table_entry const *)
 _nc_find_entry(const char *string,
 	       const short *hash_table)
@@ -160,8 +154,10 @@ _nc_find_entry(const char *string,
 	real_table = _nc_get_table(termcap);
 	ptr = real_table + hash_table[hashvalue];
 	while (!same_name(ptr->nte_name, string, termcap)) {
-	    if (ptr->nte_link < 0)
-		return 0;
+	    if (ptr->nte_link < 0) {
+		ptr = 0;
+		break;
+	    }
 	    ptr = real_table + (ptr->nte_link + hash_table[HASHTABSIZE]);
 	}
     }
@@ -170,34 +166,36 @@ _nc_find_entry(const char *string,
 }
 
 /*
- *	struct name_table_entry *
- *	find_type_entry(string, type, table)
+ * Finds the entry for the given name with the given type in the given table if
+ * present (as distinct from _nc_find_entry, which finds the last entry
+ * regardless of type).
  *
- *	Finds the first entry for the given name with the given type in the
- *	given table if present (as distinct from find_entry, which finds the
- *	the last entry regardless of type).  You can use this if you detect
- *	a name clash.  It's slower, though.  Returns a pointer to the entry
- *	in the table or 0 if not found.
+ * Returns a pointer to the entry in the table or 0 if not found.
  */
-
 NCURSES_EXPORT(struct name_table_entry const *)
 _nc_find_type_entry(const char *string,
 		    int type,
 		    bool termcap)
 {
-    struct name_table_entry const *result = NULL;
-    const struct name_table_entry *const table = _nc_get_table(termcap);
-    struct name_table_entry const *ptr;
+    struct name_table_entry const *ptr = NULL;
+    const short *hash_table = _nc_get_hash_table(termcap);
+    int hashvalue = hash_function(string);
 
-    for (ptr = table; ptr < table + CAPTABSIZE; ptr++) {
-	if (ptr->nte_type == type) {
-	    if (same_name(ptr->nte_name, string, termcap)) {
-		result = ptr;
+    if (hash_table[hashvalue] >= 0) {
+	const struct name_table_entry *const table = _nc_get_table(termcap);
+
+	ptr = table + hash_table[hashvalue];
+	while (ptr->nte_type != type
+	       || !same_name(ptr->nte_name, string, termcap)) {
+	    if (ptr->nte_link < 0) {
+		ptr = 0;
+		break;
 	    }
+	    ptr = table + (ptr->nte_link + hash_table[HASHTABSIZE]);
 	}
     }
 
-    return result;
+    return ptr;
 }
 #endif
 

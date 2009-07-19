@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.81 2008/12/28 20:20:39 juergen Exp $ */
+/* $Id: test.priv.h,v 1.91 2009/07/18 12:19:23 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -42,14 +42,17 @@
  */
 #ifdef  HAVE_LIBFORMW
 #define HAVE_LIBFORMW 1
+#define HAVE_LIBFORM 1
 #endif
 
 #ifdef  HAVE_LIBMENUW
 #define HAVE_LIBMENUW 1
+#define HAVE_LIBMENU 1
 #endif
 
 #ifdef  HAVE_LIBPANELW
 #define HAVE_LIBPANELW 1
+#define HAVE_LIBPANEL 1
 #endif
 
 /*
@@ -207,11 +210,16 @@
 #define NEED_PTEM_H 0
 #endif
 
+#ifndef NEED_WCHAR_H
+#define NEED_WCHAR_H 0
+#endif
+
 #ifndef NO_LEAKS
 #define NO_LEAKS 0
 #endif
 
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -220,6 +228,13 @@
 #endif
 
 #include <signal.h>	/* include before curses.h to work around glibc bug */
+
+#if NEED_WCHAR_H
+#include <wchar.h>
+#ifdef HAVE_LIBUTF8_H
+#include <libutf8.h>
+#endif
+#endif
 
 #if defined(HAVE_XCURSES)
 #include <xcurses.h>
@@ -359,6 +374,12 @@ extern int optind;
 #define KEY_MIN 256	/* not defined in Solaris 8 */
 #endif
 
+#ifdef DECL_CURSES_DATA_BOOLNAMES
+extern char	*boolnames[], *boolcodes[], *boolfnames[],
+		*numnames[], *numcodes[], *numfnames[],
+		*strnames[], *strcodes[], *strfnames[];
+#endif
+
 #define colored_chtype(ch, attr, pair) \
 	((ch) | (attr) | COLOR_PAIR(pair))
 
@@ -376,6 +397,25 @@ extern int optind;
 #define getpary(w) __getpary(w)
 #endif
 
+/*
+ * Workaround in case getcchar() returns a positive value when the source
+ * string produces only a L'\0'.
+ */
+#define TEST_CCHAR(s, count, then_stmt, else_stmt) \
+	if ((count = getcchar(s, NULL, NULL, NULL, NULL)) > 0) { \
+	    wchar_t test_wch[CCHARW_MAX + 2]; \
+	    attr_t test_attrs; \
+	    short test_pair; \
+	    \
+	    if (getcchar( s, test_wch, &test_attrs, &test_pair, NULL) == OK \
+		&& test_wch[0] != L'\0') { \
+		then_stmt \
+	    } else { \
+		else_stmt \
+	    } \
+	} else { \
+	    else_stmt \
+	}
 /*
  * These usually are implemented as macros, but may be functions.
  */
@@ -528,6 +568,26 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #endif
 #if !defined(KEY_MAX) && defined(__KEY_MIN)
 #define KEY_MAX __KEY_MAX
+#endif
+#endif
+
+/*
+ * Workaround to build with Sun's default SVr4 curses.
+ */
+#ifdef NCURSES_VERSION
+#ifndef HAVE_VW_PRINTW
+#define HAVE_VW_PRINTW 1
+#endif
+#endif
+
+/*
+ * ncurses provides arrays of capability names; X/Open discarded these SVr4
+ * features.  Some implementations continue to provide them (see the test
+ * configure script).
+ */
+#ifdef NCURSES_VERSION
+#ifndef HAVE_CURSES_DATA_BOOLNAMES
+#define HAVE_CURSES_DATA_BOOLNAMES 1
 #endif
 #endif
 

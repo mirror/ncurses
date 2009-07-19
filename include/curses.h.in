@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.203 2009/07/04 20:19:26 tom Exp $ */
+/* $Id: curses.h.in,v 1.204 2009/07/18 16:02:07 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -344,7 +344,13 @@ typedef unsigned short wchar_t@NCURSES_OK_WCHAR_T@;
 typedef unsigned int wint_t@NCURSES_OK_WCHAR_T@;
 #endif
 
-#define CCHARW_MAX	5
+/*
+ * cchar_t stores an array of CCHARW_MAX wide characters.  The first is
+ * normally a spacing character.  The others are non-spacing.  If those
+ * (spacing and nonspacing) do not fill the array, a null L'\0' follows. 
+ * Otherwise, a null is assumed to follow when extracting via getcchar().
+ */
+#define CCHARW_MAX	@NCURSES_CCHARW_MAX@
 typedef struct
 {
     attr_t	attr;

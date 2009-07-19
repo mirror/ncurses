@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.70 2008/11/16 00:19:59 juergen Exp $
+ * $Id: view.c,v 1.75 2009/07/19 00:34:07 tom Exp $
  */
 
 #include <test.priv.h>
@@ -151,11 +151,19 @@ ch_len(NCURSES_CH_T * src)
 {
     int result = 0;
 #if USE_WIDEC_SUPPORT
+    int count;
 #endif
 
 #if USE_WIDEC_SUPPORT
-    while (getcchar(src++, NULL, NULL, NULL, NULL) > 0)
-	result++;
+    for (;;) {
+	TEST_CCHAR(src, count, {
+	    ++result;
+	    ++src;
+	}
+	, {
+	    break;
+	})
+    }
 #else
     while (*src++)
 	result++;
@@ -283,7 +291,7 @@ main(int argc, char *argv[])
     if (optind + 1 != argc)
 	usage();
 
-    if ((vec_lines = typeMalloc(NCURSES_CH_T *, MAXLINES + 2)) == 0)
+    if ((vec_lines = typeCalloc(NCURSES_CH_T *, MAXLINES + 2)) == 0)
 	usage();
 
     fname = argv[optind];

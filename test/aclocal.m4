@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.25 2009/03/28 20:09:37 tom Exp $
+dnl $Id: aclocal.m4,v 1.29 2009/07/17 01:07:50 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -420,6 +420,37 @@ done
 test "$cf_cv_curses_acs_map" != unknown && AC_DEFINE_UNQUOTED(CURSES_ACS_ARRAY,$cf_cv_curses_acs_map)
 ])
 dnl ---------------------------------------------------------------------------
+dnl CF_CURSES_CHECK_DATA version: 2 updated: 2009/07/16 21:03:10
+dnl --------------------
+dnl Check if curses.h defines the given data/variable.
+dnl Use this after CF_NCURSES_CONFIG or CF_CURSES_CONFIG.
+AC_DEFUN([CF_CURSES_CHECK_DATA],
+[
+AC_MSG_CHECKING(for data $1 declaration in ${cf_cv_ncurses_header-curses.h})
+AC_TRY_COMPILE(CF__CURSES_HEAD,[
+void *foo = &($1)
+],cf_result=yes,cf_result=no)
+AC_MSG_RESULT($cf_result)
+if test $cf_result = yes ; then
+	CF_UPPER(cf_result,have_curses_data_$1)
+	AC_DEFINE_UNQUOTED($cf_result)
+else
+	AC_MSG_CHECKING(for data $1 in library)
+	AC_TRY_LINK(CF__CURSES_HEAD
+[extern char $1;],[
+	do {
+		void *foo = &($1);
+		${cf_cv_main_return-return}(foo == 0);
+	} while (0)
+],[cf_result=yes],[cf_result=no])
+	AC_MSG_RESULT($cf_result)
+	if test $cf_result = yes ; then
+		CF_UPPER(cf_result,decl_curses_data_$1)
+		AC_DEFINE_UNQUOTED($cf_result)
+	fi
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_CURSES_CHECK_TYPE version: 2 updated: 2003/03/01 23:40:33
 dnl --------------------
 dnl Check if curses.h defines the given type
@@ -440,6 +471,18 @@ if test $cf_result = yes ; then
 else
 	AC_DEFINE_UNQUOTED($1,$2)
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CURSES_CONFIG version: 2 updated: 2006/10/29 11:06:27
+dnl ----------------
+dnl Tie together the configure-script macros for curses.  It may be ncurses,
+dnl but unless asked, we do not make a special search for ncurses.  However,
+dnl still check for the ncurses version number, for use in other macros.
+AC_DEFUN([CF_CURSES_CONFIG],
+[
+CF_CURSES_CPPFLAGS
+CF_NCURSES_VERSION
+CF_CURSES_LIBS
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CURSES_CPPFLAGS version: 10 updated: 2009/01/06 19:34:11
@@ -467,7 +510,7 @@ CF_CURSES_HEADER
 CF_TERM_HEADER
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_FUNCS version: 13 updated: 2007/04/28 09:15:55
+dnl CF_CURSES_FUNCS version: 14 updated: 2009/07/16 19:34:55
 dnl ---------------
 dnl Curses-functions are a little complicated, since a lot of them are macros.
 AC_DEFUN([CF_CURSES_FUNCS],
@@ -483,24 +526,7 @@ do
 	AC_CACHE_VAL(cf_cv_func_$cf_func,[
 		eval cf_result='$ac_cv_func_'$cf_func
 		if test ".$cf_result" != ".no"; then
-			AC_TRY_LINK([
-#ifdef HAVE_XCURSES
-#include <xcurses.h>
-char * XCursesProgramName = "test";
-#else
-#include <${cf_cv_ncurses_header-curses.h}>
-#if defined(NCURSES_VERSION) && defined(HAVE_NCURSESW_TERM_H)
-#include <ncursesw/term.h>
-#else
-#if defined(NCURSES_VERSION) && defined(HAVE_NCURSES_TERM_H)
-#include <ncurses/term.h>
-#else
-#ifdef HAVE_TERM_H
-#include <term.h>
-#endif
-#endif
-#endif
-#endif],
+			AC_TRY_LINK(CF__CURSES_HEAD,
 			[
 #ifndef ${cf_func}
 long foo = (long)(&${cf_func});
@@ -1301,6 +1327,37 @@ CF_SUBDIR_PATH($1,$2,lib)
 $1="$cf_library_path_list [$]$1"
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_MIN_GETCCHAR version: 2 updated: 2009/07/16 21:03:10
+dnl ---------------
+dnl CF_MIN_GETCCHAR
+dnl Check whether getcchar's return value counts the trailing null in a wchar_t
+dnl string, or not.  X/Open says it does, but Tru64 and Solaris do not do this.
+AC_DEFUN([CF_MIN_GETCCHAR],[
+AC_CACHE_CHECK(if getcchar counts trailing null,cf_cv_min_getcchar,[
+AC_TRY_RUN([
+#include <stdlib.h>
+#include <stdarg.h>
+#include <${cf_cv_ncurses_header-curses.h}>
+
+int main()
+{
+	wchar_t data[2];
+	cchar_t temp[2];
+	int count;
+	data[0] = L'\0';
+    setcchar(temp, data, 0, 0, (void *)0);
+	count = getcchar(temp, (wchar_t *)0, (attr_t *)0, (short *)0, (void *)0);
+	${cf_cv_main_return-return}(count != 0);
+}],
+	[cf_cv_min_getcchar=no],
+	[cf_cv_min_getcchar=yes],
+	[cf_cv_min_getcchar=yes])
+])
+if test "$cf_cv_min_getcchar" = yes ; then
+	AC_DEFINE(MIN_GETCCHAR,1)
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_MSG_LOG version: 4 updated: 2007/07/29 09:55:12
 dnl ----------
 dnl Write a debug message to config.log, along with the line number in the
@@ -2034,6 +2091,56 @@ AC_DEFUN([CF_VERBOSE],
 CF_MSG_LOG([$1])
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_WCHAR_TYPE version: 2 updated: 2004/01/17 19:18:20
+dnl -------------
+dnl Check if type wide-character type $1 is declared, and if so, which header
+dnl file is needed.  The second parameter is used to set a shell variable when
+dnl the type is not found.  The first parameter sets a shell variable for the
+dnl opposite sense.
+AC_DEFUN([CF_WCHAR_TYPE],
+[
+# This is needed on Tru64 5.0 to declare $1
+AC_CACHE_CHECK(if we must include wchar.h to declare $1,cf_cv_$1,[
+AC_TRY_COMPILE([
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdio.h>
+#ifdef HAVE_LIBUTF8_H
+#include <libutf8.h>
+#endif],
+	[$1 state],
+	[cf_cv_$1=no],
+	[AC_TRY_COMPILE([
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <wchar.h>
+#ifdef HAVE_LIBUTF8_H
+#include <libutf8.h>
+#endif],
+	[$1 value],
+	[cf_cv_$1=yes],
+	[cf_cv_$1=unknown])])])
+
+if test "$cf_cv_$1" = yes ; then
+	AC_DEFINE(NEED_WCHAR_H)
+	NEED_WCHAR_H=1
+fi
+
+ifelse($2,,,[
+# if we do not find $1 in either place, use substitution to provide a fallback.
+if test "$cf_cv_$1" = unknown ; then
+	$2=1
+fi
+])
+ifelse($3,,,[
+# if we find $1 in either place, use substitution to provide a fallback.
+if test "$cf_cv_$1" != unknown ; then
+	$3=1
+fi
+])
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_WITH_CURSES_DIR version: 2 updated: 2002/11/10 14:46:59
 dnl ------------------
 dnl Wrapper for AC_ARG_WITH to specify directory under which to look for curses
@@ -2076,7 +2183,7 @@ AC_TRY_LINK([
 test $cf_cv_need_xopen_extension = yes && CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE_EXTENDED"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 28 updated: 2008/12/27 12:30:03
+dnl CF_XOPEN_SOURCE version: 29 updated: 2009/07/16 21:07:04
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -2103,6 +2210,9 @@ freebsd*|dragonfly*) #(vi
 	cf_POSIX_C_SOURCE=200112L
 	cf_XOPEN_SOURCE=600
 	CPPFLAGS="$CPPFLAGS -D_BSD_TYPES -D__BSD_VISIBLE -D_POSIX_C_SOURCE=$cf_POSIX_C_SOURCE -D_XOPEN_SOURCE=$cf_XOPEN_SOURCE"
+	;;
+hpux11*) #(vi
+	CPPFLAGS="$CPPFLAGS -D_HPUX_SOURCE -D_XOPEN_SOURCE=500"
 	;;
 hpux*) #(vi
 	CPPFLAGS="$CPPFLAGS -D_HPUX_SOURCE"
@@ -2349,3 +2459,23 @@ test program.  You will have to check and add the proper libraries by hand
 to makefile.])
 fi
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF__CURSES_HEAD version: 1 updated: 2009/07/16 19:32:31
+dnl ---------------
+dnl Define a reusable chunk which includes <curses.h> and <term.h> when they
+dnl are both available.
+define([CF__CURSES_HEAD],[
+#ifdef HAVE_XCURSES
+#include <xcurses.h>
+char * XCursesProgramName = "test";
+#else
+#include <${cf_cv_ncurses_header-curses.h}>
+#if defined(NCURSES_VERSION) && defined(HAVE_NCURSESW_TERM_H)
+#include <ncursesw/term.h>
+#elif defined(NCURSES_VERSION) && defined(HAVE_NCURSES_TERM_H)
+#include <ncurses/term.h>
+#elif defined(HAVE_TERM_H)
+#include <term.h>
+#endif
+#endif
+])

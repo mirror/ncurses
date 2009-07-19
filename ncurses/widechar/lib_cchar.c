@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.13 2008/11/16 00:19:59 juergen Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.14 2009/07/18 15:20:42 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch
@@ -112,7 +112,11 @@ getcchar(const cchar_t *wcval,
 	    : CCHARW_MAX;
 
 	if (wch == NULL) {
-	    code = len;
+	    /*
+	     * If the value is a null, set the length to 1.
+	     * If the value is not a null, return the length plus 1 for null.
+	     */
+	    code = (len < CCHARW_MAX) ? (len + 1) : CCHARW_MAX;
 	} else if (attrs == 0 || color_pair == 0) {
 	    code = ERR;
 	} else if (len >= 0) {

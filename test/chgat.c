@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.8 2008/02/09 23:19:13 tom Exp $
+ * $Id: chgat.c,v 1.9 2009/07/15 23:21:04 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
@@ -124,10 +124,17 @@ static void
 fill_window(WINDOW *win)
 {
     int y, x;
+    int y0 = -1, x0 = -1;
 
     getyx(win, y, x);
     wmove(win, 0, 0);
     while (waddstr(win, "0123456789 abcdefghijklmnopqrstuvwxyz ") != ERR) {
+	int y1, x1;
+	getyx(win, y1, x1);
+	if (y1 == y0 && x1 == x0)
+	    break;
+	x0 = x1;
+	y0 = y1;
     }
     wmove(win, y, x);
 }

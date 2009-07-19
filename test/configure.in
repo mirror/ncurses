@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.68 2009/03/28 19:49:55 tom Exp $
+dnl $Id: configure.in,v 1.74 2009/07/18 20:52:09 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -120,9 +120,7 @@ AC_ARG_WITH(pdcurses,
 
 case $cf_cv_screen in
 curses)
-	CF_CURSES_CPPFLAGS
-	CF_NCURSES_VERSION
-	CF_CURSES_LIBS
+	CF_CURSES_CONFIG
 	;;
 ncurses)
 	CF_NCURSES_CONFIG
@@ -216,6 +214,7 @@ tigetnum \
 tigetstr \
 typeahead \
 use_default_colors \
+vw_printw \
 vsscanf \
 wchgat \
 winsstr \
@@ -264,8 +263,27 @@ CF_SYS_TIME_SELECT
 CF_FUNC_CURSES_VERSION
 CF_CURSES_ACS_MAP
 CF_CURSES_WACS_MAP
+
 CF_CURSES_CHECK_TYPE(attr_t,long)
-CF_CURSES_CHECK_TYPE(mbstate_t,long)
+
+CF_WCHAR_TYPE(mbstate_t, NCURSES_MBSTATE_T, NCURSES_OK_MBSTATE_T)
+CF_WCHAR_TYPE(wchar_t,   NCURSES_WCHAR_T,   NCURSES_OK_WCHAR_T)
+CF_WCHAR_TYPE(wint_t,    NCURSES_WINT_T,    NCURSES_OK_WINT_T)
+
+if test "$NCURSES_OK_MBSTATE_T" = 0 ; then
+	CF_CURSES_CHECK_TYPE(mbstate_t,long)
+fi
+
+if test "$NCURSES_OK_WCHAR_T" = 0 ; then
+	CF_CURSES_CHECK_TYPE(wchar_t,long)
+fi
+
+if test "$NCURSES_OK_WINT_T" = 0 ; then
+	CF_CURSES_CHECK_TYPE(wint_t,long)
+fi
+
+CF_CURSES_CHECK_DATA(boolnames)
+CF_CURSES_CHECK_DATA(boolfnames)
 
 TEST_ARGS="$LIBS"
 LIBS=

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
  * This test was written by Alexander V. Lukyanov to demonstrate difference
  * between ncurses 4.1 and SVR4 curses
  *
- * $Id: firstlast.c,v 1.5 2006/04/01 19:03:18 tom Exp $
+ * $Id: firstlast.c,v 1.6 2009/07/15 23:29:46 tom Exp $
  */
 
 #include <test.priv.h>
@@ -38,12 +38,19 @@ static void
 fill(WINDOW *w, const char *str)
 {
     const char *s;
+    int x0 = -1, y0 = -1;
+    int x1, y1;
+
     for (;;) {
 	for (s = str; *s; s++) {
-	    if (waddch(w, UChar(*s)) == ERR) {
+	    getyx(w, y1, x1);
+	    if (waddch(w, UChar(*s)) == ERR
+		|| (x1 == x0 && y1 == y0)) {
 		wmove(w, 0, 0);
 		return;
 	    }
+	    x0 = x1;
+	    y0 = y1;
 	}
     }
 }

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.339 2009/04/04 22:46:11 juergen Exp $
+$Id: ncurses.c,v 1.342 2009/07/18 11:48:42 tom Exp $
 
 ***************************************************************************/
 
@@ -318,6 +318,7 @@ make_narrow_text(wchar_t *target, const char *source)
     *target = 0;
 }
 
+#if USE_LIBPANEL
 static void
 make_fullwidth_digit(cchar_t *target, int digit)
 {
@@ -327,6 +328,7 @@ make_fullwidth_digit(cchar_t *target, int digit)
     source[1] = 0;
     setcchar(target, source, A_NORMAL, 0, 0);
 }
+#endif
 
 static int
 wGet_wchar(WINDOW *win, wint_t *result)
@@ -674,7 +676,7 @@ remember_boxes(unsigned level, WINDOW *txt_win, WINDOW *box_win)
 {
     unsigned need = (level + 1) * 2;
 
-    assert(level < COLS);
+    assert(level < (unsigned) COLS);
 
     if (winstack == 0) {
 	len_winstack = 20;
@@ -3239,21 +3241,18 @@ acs_display(void)
 static cchar_t *
 merge_wide_attr(cchar_t *dst, const cchar_t *src, attr_t attr, short pair)
 {
-    int count = getcchar(src, NULL, NULL, NULL, 0);
-    wchar_t *wch = 0;
-    attr_t ignore_attr;
-    short ignore_pair;
+    int count;
 
     *dst = *src;
-    if (count > 0) {
-	if ((wch = typeMalloc(wchar_t, (unsigned) count + 1)) != 0) {
-	    if (getcchar(src, wch, &ignore_attr, &ignore_pair, 0) != ERR) {
-		attr |= (ignore_attr & A_ALTCHARSET);
-		setcchar(dst, wch, attr, pair, 0);
-	    }
-	    free(wch);
+    do {
+	TEST_CCHAR(src, count, {
+	    attr |= (test_attrs & A_ALTCHARSET);
+	    setcchar(dst, test_wch, attr, pair, NULL);
 	}
-    }
+	, {
+	    ;
+	});
+    } while (0);
     return dst;
 }
 
