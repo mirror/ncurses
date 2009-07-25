@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.119 2009/05/15 23:47:26 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.120 2009/07/25 14:38:19 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -263,7 +263,7 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 #if NCURSES_SP_FUNCS
 #define DeriveSP() SCREEN *sp = _nc_screen_of(win);
 #else
-#define DeriveSP() /*nothing*/
+#define DeriveSP()		/*nothing */
 #endif
     if_WIDEC({
 	DeriveSP();
@@ -449,7 +449,7 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
     switch (t) {
     case '\t':
 #if USE_REENTRANT
-	tabsize = sp->_TABSIZE;
+	tabsize = *ptrTabsize(sp);
 #else
 	tabsize = TABSIZE;
 #endif

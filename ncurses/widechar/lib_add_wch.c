@@ -39,7 +39,7 @@
 #include <wctype.h>
 #endif
 
-MODULE_ID("$Id: lib_add_wch.c,v 1.7 2009/07/04 21:59:25 tom Exp $")
+MODULE_ID("$Id: lib_add_wch.c,v 1.8 2009/07/25 14:38:01 tom Exp $")
 
 /* clone/adapt lib_addch.c */
 static const cchar_t blankchar = NewChar(BLANK_TEXT);
@@ -308,6 +308,9 @@ wadd_wch_nosync(WINDOW *win, cchar_t ch)
     NCURSES_SIZE_T x, y;
     wchar_t *s;
     int tabsize = 8;
+#if USE_REENTRANT
+    SCREEN *sp = _nc_screen_of(win);
+#endif
 
     /*
      * If we are using the alternate character set, forget about locale.
@@ -328,7 +331,7 @@ wadd_wch_nosync(WINDOW *win, cchar_t ch)
     switch (CharOf(ch)) {
     case '\t':
 #if USE_REENTRANT
-	tabsize = sp->_TABSIZE;
+	tabsize = *ptrTabsize(sp);
 #else
 	tabsize = TABSIZE;
 #endif

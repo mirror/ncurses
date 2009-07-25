@@ -42,26 +42,26 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.104 2009/07/04 20:41:13 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.106 2009/07/25 17:02:03 tom Exp $")
 
 #include <fifo_defs.h>
 
 #if USE_REENTRANT
 #define GetEscdelay(sp) *_nc_ptr_Escdelay(sp)
-NCURSES_EXPORT(int *)
-_nc_ptr_Escdelay(SCREEN *sp)
-{
-    return ptrEscdelay(sp);
-}
 NCURSES_EXPORT(int)
 NCURSES_PUBLIC_VAR(ESCDELAY) (void)
 {
     return *(_nc_ptr_Escdelay(CURRENT_SCREEN));
 }
+
+NCURSES_EXPORT(int *)
+_nc_ptr_Escdelay(SCREEN *sp)
+{
+    return ptrEscdelay(sp);
+}
 #else
 #define GetEscdelay(sp) ESCDELAY
-NCURSES_EXPORT_VAR (int)
-  ESCDELAY = 1000;		/* max interval betw. chars in funkeys, in millisecs */
+NCURSES_EXPORT_VAR(int) ESCDELAY = 1000;
 #endif
 
 #if NCURSES_EXT_FUNCS

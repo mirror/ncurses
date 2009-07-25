@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1409 2009/07/19 00:09:05 tom Exp $
+-- $Id: NEWS,v 1.1410 2009/07/25 15:50:22 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,9 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090725
+	+ continue integrating "sp-funcs" by Juergen Pfeifer (incomplete).
 
 20090718
 	+ fix a null-pointer check in _nc_format_slks() in lib_slk.c, from
