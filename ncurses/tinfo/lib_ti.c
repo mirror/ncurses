@@ -37,7 +37,7 @@
 #include <term_entry.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_ti.c,v 1.26 2009/07/11 18:14:21 tom Exp $")
+MODULE_ID("$Id: lib_ti.c,v 1.27 2009/07/28 22:03:36 tom Exp $")
 
 #if 0
 static bool
@@ -123,10 +123,12 @@ NCURSES_SP_NAME(tigetnum) (NCURSES_SP_DCLx NCURSES_CONST char *str)
 	    }
 	}
 #endif
-	if (j >= 0 && VALID_NUMERIC(tp->Numbers[j]))
-	    result = tp->Numbers[j];
-	else
-	    result = ABSENT_NUMERIC;
+	if (j >= 0) {
+	    if (VALID_NUMERIC(tp->Numbers[j]))
+		result = tp->Numbers[j];
+	    else
+		result = ABSENT_NUMERIC;
+	}
     }
 
     returnCode(result);
