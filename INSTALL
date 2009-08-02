@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.139 2009/07/18 20:50:08 tom Exp $
+-- $Id: INSTALL,v 1.140 2009/08/01 19:32:04 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1610,7 +1610,8 @@ CONFIGURING FALLBACK ENTRIES:
 	tree is accessible (that is, in single-user mode or at OS installation
 	time) the ncurses library can be compiled to include an array of
 	pre-fetched fallback entries.  This must be done on a machine which
-	has ncurses' infocmp and terminfo database installed.
+	has ncurses' infocmp and terminfo database installed (as well as
+	ncurses' tic and infocmp programs).
 
 	These entries are checked by setupterm() only when the conventional
 	fetches from the terminfo tree and the termcap fallback (if configured)
@@ -1760,6 +1761,10 @@ BUILDING NCURSES WITH A CROSS-COMPILER
 	install tree.  Note that in this case (as with the --with-fallbacks
 	option), ncurses uses the development platform's tic to do the
 	"make install.data" portion.
+
+	The system's tic program is used to install the terminal database,
+	even for cross-compiles.  For best results, the tic program should
+	be from the most current version of ncurses.
 
 BUGS:
 	Send any feedback to the ncurses mailing list at

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.342 2009/07/18 11:48:42 tom Exp $
+$Id: ncurses.c,v 1.343 2009/07/30 09:13:37 tom Exp $
 
 ***************************************************************************/
 
@@ -2890,7 +2890,7 @@ cycle_attr(int ch, unsigned *at_code, chtype *attr)
 	    *at_code = 0;
 	break;
     case 'V':
-	if (*at_code == 1)
+	if (*at_code == 0)
 	    *at_code = SIZEOF(attrs_to_cycle) - 1;
 	else
 	    *at_code -= 1;

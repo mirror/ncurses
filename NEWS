@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1411 2009/07/28 22:22:43 tom Exp $
+-- $Id: NEWS,v 1.1414 2009/08/01 20:44:21 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090801
+	+ improve discussion in INSTALL for use of system's tic/infocmp for
+	  cross-compiling and building fallbacks.
+	+ modify test/demo_termcap.c to correspond better to options in
+	  test/demo_terminfo.c
+	+ continue integrating "sp-funcs" by Juergen Pfeifer (incomplete).
+	+ fix logic for 'V' in test/ncurses.c tests f/F.
 
 20090728
 	+ correct logic in tigetnum(), which caused tput program to treat all
