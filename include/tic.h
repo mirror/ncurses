@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.63 2009/07/11 18:11:15 tom Exp $
+ * $Id: tic.h,v 1.65 2009/08/08 17:52:46 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -183,6 +183,8 @@ extern NCURSES_EXPORT_VAR(const struct tinfo_fkeys) _nc_tinfo_fkeys[];
 
 #endif
 
+typedef short HashValue;
+
 	/*
 	 * The file comp_captab.c contains an array of these structures, one
 	 * per possible capability.  These are indexed by a hash table array of
@@ -193,9 +195,20 @@ struct name_table_entry
 {
 	const char *nte_name;	/* name to hash on */
 	int	nte_type;	/* BOOLEAN, NUMBER or STRING */
-	short	nte_index;	/* index of associated variable in its array */
-	short	nte_link;	/* index in table of next hash, or -1 */
+	HashValue nte_index;	/* index of associated variable in its array */
+	HashValue nte_link;	/* index in table of next hash, or -1 */
 };
+
+	/*
+	 * Use this structure to hide differences between terminfo and termcap
+	 * tables.
+	 */
+typedef struct {
+	unsigned table_size;
+	const HashValue *table_data;
+	HashValue (*hash_of)(const char *);
+	int (*compare_names)(const char *, const char *);
+} HashData;
 
 struct alias
 {
@@ -205,7 +218,8 @@ struct alias
 };
 
 extern NCURSES_EXPORT(const struct name_table_entry *) _nc_get_table (bool);
-extern NCURSES_EXPORT(const short *) _nc_get_hash_table (bool);
+extern NCURSES_EXPORT(const HashData *) _nc_get_hash_info (bool);
+extern NCURSES_EXPORT(const HashValue *) _nc_get_hash_table (bool);
 extern NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool);
 
 #define NOTFOUND	((struct name_table_entry *) 0)
@@ -244,7 +258,7 @@ extern NCURSES_EXPORT(char *) _nc_rootname (char *);
 
 /* comp_hash.c: name lookup */
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_entry
-	(const char *, const short *);
+	(const char *, const HashValue *);
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_type_entry
 	(const char *, int, bool);
 

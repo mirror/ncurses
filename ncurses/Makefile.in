@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.117 2009/07/04 16:36:11 tom Exp $
+# $Id: Makefile.in,v 1.118 2009/08/08 17:42:06 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -202,9 +202,9 @@ make_keys$(BUILD_EXEEXT) : \
 	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) $(tinfo)/make_keys.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 
 make_hash$(BUILD_EXEEXT) : \
-		$(tinfo)/comp_hash.c \
+		$(tinfo)/make_hash.c \
 		../include/hashsize.h
-	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) -DMAIN_PROGRAM $(tinfo)/comp_hash.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
+	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) $(tinfo)/make_hash.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 
 ./expanded.c : curses.priv.h $(serial)/MKexpanded.sh
 	sh -e $(serial)/MKexpanded.sh "$(CPP)" $(CPPFLAGS) > $@

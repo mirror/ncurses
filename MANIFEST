@@ -872,6 +872,7 @@
 ./ncurses/tinfo/lib_tparm.c
 ./ncurses/tinfo/lib_tputs.c
 ./ncurses/tinfo/lib_ttyflags.c
+./ncurses/tinfo/make_hash.c
 ./ncurses/tinfo/make_keys.c
 ./ncurses/tinfo/name_match.c
 ./ncurses/tinfo/parse_entry.c

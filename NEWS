@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1416 2009/08/04 00:45:58 tom Exp $
+-- $Id: NEWS,v 1.1417 2009/08/08 18:08:44 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090808
+	+ separate _nc_find_entry() and _nc_find_type_entry() from
+	  implementation details of hash function.
 
 20090803
 	+ add tabs.1 to man/man_db.renames
