@@ -47,7 +47,19 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slk.c,v 1.40 2009/07/19 00:34:07 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.42 2009/08/15 23:05:02 tom Exp $")
+
+#ifdef USE_TERM_DRIVER
+#define NumLabels    InfoOf(SP_PARM).numlabels
+#define NoColorVideo InfoOf(SP_PARM).nocolorvideo
+#define LabelWidth   InfoOf(SP_PARM).labelwidth
+#define LabelHeight  InfoOf(SP_PARM).labelheight
+#else
+#define NumLabels    num_labels
+#define NoColorVideo no_color_video
+#define LabelWidth   label_width
+#define LabelHeight  label_height
+#endif
 
 /*
  * Free any memory related to soft labels, return an error.
@@ -107,8 +119,9 @@ _nc_format_slks(NCURSES_SP_DCLx int cols)
 		    x += max_length;
 		    x += (i == 2 || i == 4) ? gap : 1;
 		}
-	    } else
-		returnCode(slk_failed(NCURSES_SP_ARG));
+	    } else {
+		return slk_failed(NCURSES_SP_ARG);
+	    }
 	}
     }
     SP_PARM->_slk->dirty = TRUE;
@@ -141,7 +154,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
     term = TerminalOf(SP_PARM);
     assert(term);
 
-    numlab = InfoOf(SP_PARM).numlabels;
+    numlab = NumLabels;
 
     if (SP_PARM->_slk) {	/* we did this already, so simply return */
 	returnCode(OK);
@@ -158,7 +171,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
      * with colors.  In that case, we're still guaranteed that "reverse" would
      * work.
      */
-    if ((InfoOf(SP_PARM).nocolorvideo & 1) == 0)
+    if ((NoColorVideo & 1) == 0)
 	SetAttr(SP_PARM->_slk->attr, A_STANDOUT);
     else
 	SetAttr(SP_PARM->_slk->attr, A_REVERSE);
@@ -167,7 +180,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 			     ? numlab
 			     : MAX_SKEY(SP_PARM->slk_format));
     SP_PARM->_slk->maxlen = ((numlab > 0)
-			     ? InfoOf(SP_PARM).labelwidth * InfoOf(SP_PARM).labelheight
+			     ? LabelWidth * LabelHeight
 			     : MAX_SKEY_LEN(SP_PARM->slk_format));
     SP_PARM->_slk->labcnt = ((SP_PARM->_slk->maxlab < MAX_SKEY(SP_PARM->slk_format))
 			     ? MAX_SKEY(SP_PARM->slk_format)

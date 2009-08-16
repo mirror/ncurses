@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.106 2009/07/25 17:02:03 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.107 2009/08/15 20:41:24 Clemens.Ladisch Exp $")
 
 #include <fifo_defs.h>
 
@@ -110,9 +110,9 @@ NCURSES_SP_NAME(get_escdelay) (NCURSES_SP_DCL0)
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-get_escdelay (void)
+get_escdelay(void)
 {
-    return NCURSES_SP_NAME(get_escdelay)(CURRENT_SCREEN);
+    return NCURSES_SP_NAME(get_escdelay) (CURRENT_SCREEN);
 }
 #endif
 #endif /* NCURSES_EXT_FUNCS */
@@ -467,7 +467,7 @@ _nc_wgetch(WINDOW *win,
 	    }
 #endif
 	    if (!rc) {
-		returnCode(ERR);
+		goto check_sigwinch;
 	    }
 	}
 	/* else go on to read data available */
@@ -529,6 +529,7 @@ _nc_wgetch(WINDOW *win,
     }
 
     if (ch == ERR) {
+      check_sigwinch:
 #if USE_SIZECHANGE
 	if (_nc_handle_sigwinch(sp)) {
 	    _nc_update_screensize(sp);

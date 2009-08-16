@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1417 2009/08/08 18:08:44 tom Exp $
+-- $Id: NEWS,v 1.1421 2009/08/15 23:09:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090815
+	+ correct use of terminfo capabilities for initializing soft-keys,
+	  broken in 20090509 merging.
+	+ modify wgetch() to ensure it checks SIGWINCH when it gets an error
+	  in non-blocking mode (patch by Clemens Ladisch).
+	+ use PATH_SEPARATOR symbol when substituting into run_tic.sh, to
+	  help with builds on non-Unix platforms such as OS/2 EMX.
+	+ modify scripting for misc/run_tic.sh to test configure script's
+	  $cross_compiling variable directly rather than comparing host/build
+	  compiler names (prompted by comment in GenToo #249363).
+	+ fix configure script option --with-database, which was coded as an
+	  enable-type switch.
+	+ build-fixes for --srcdir (report by Frederic L W Meunier).
 
 20090808
 	+ separate _nc_find_entry() and _nc_find_type_entry() from

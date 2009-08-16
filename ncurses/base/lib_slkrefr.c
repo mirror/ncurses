@@ -43,7 +43,13 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.21 2009/06/06 20:26:17 tom Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.23 2009/08/15 23:08:28 tom Exp $")
+
+#ifdef USE_TERM_DRIVER
+#define NumLabels    InfoOf(SP_PARM).numlabels
+#else
+#define NumLabels    num_labels
+#endif
 
 /*
  * Paint the info line for the PC style SLK emulation.
@@ -81,7 +87,7 @@ slk_intern_refresh(SCREEN *sp)
 
     slk = sp->_slk;
     fmt = sp->slk_format;
-    numlab = InfoOf(sp).numlabels;
+    numlab = NumLabels;
 
     if (slk->hidden)
 	return;

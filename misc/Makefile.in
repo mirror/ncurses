@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.51 2009/02/07 18:17:17 Miroslav.Lichvar Exp $
+# $Id: Makefile.in,v 1.52 2009/08/15 17:13:49 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -57,9 +57,6 @@ bindir		= @bindir@
 libdir		= @libdir@
 datadir		= @datadir@
 
-CC		= @CC@
-HOSTCC		= @BUILD_CC@
-
 tabsetdir	= $(datadir)/tabset
 ticdir		= @TERMINFO@
 ticfile		= $(ticdir).db
@@ -93,8 +90,7 @@ install.data :	terminfo.tmp \
 	datadir=${datadir} \
 	ticdir=${ticdir} \
 	source=terminfo.tmp \
-	THIS_CC="$(CC)" \
-	THAT_CC="$(HOSTCC)" \
+	cross_compiling=@cross_compiling@ \
 	$(SHELL) ./run_tic.sh
 	@cd $(srcdir)/tabset && \
 		$(SHELL) -c 'for i in * ; do \

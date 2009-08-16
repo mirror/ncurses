@@ -69,7 +69,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.57 2009/05/23 20:46:28 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.58 2009/08/15 22:12:01 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -344,7 +344,6 @@ NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
 	attrs = CallDriver(SP_PARM, conattr);
 #else
 
-    T((T_CALLED("termattrs()")));
     if (enter_alt_charset_mode)
 	attrs |= A_ALTCHARSET;
 

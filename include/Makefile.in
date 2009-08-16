@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.36 2009/06/13 21:42:45 tom Exp $
+# $Id: Makefile.in,v 1.37 2009/08/10 20:50:04 tom Exp $
 ##############################################################################
-# Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.                #
+# Copyright (c) 1998,2001,2009 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -64,6 +64,7 @@ TERMINFO_CAPS	= $(srcdir)/@TERMINFO_CAPS@
 CONFIG_SRC = \
 	MKterm.h.awk \
 	curses.head \
+	ncurses_dll.h \
 	termcap.h \
 	unctrl.h
 
@@ -72,7 +73,6 @@ AUTO_SRC = \
 	curses.h \
 	hashsize.h \
 	ncurses_def.h \
-	ncurses_dll.h \
 	parametrized.h \
 	term.h
 
