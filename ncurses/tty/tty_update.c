@@ -43,7 +43,6 @@
  *
  *-----------------------------------------------------------------*/
 
-#define NEED_NCURSES_CH_T 1
 #include <curses.priv.h>
 
 #ifndef CUR
@@ -83,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.258 2009/06/27 19:16:17 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.258.1.2 2009/08/16 14:20:30 tom Exp tom $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -198,8 +197,10 @@ GoTo(NCURSES_SP_DCLx int const row, int const col)
 
     position_check(SP_PARM, SP_PARM->_cursrow, SP_PARM->_curscol, "GoTo");
 
-    NCURSES_SP_NAME(mvcur) (NCURSES_SP_ARGx SP_PARM->_cursrow,
-			    SP_PARM->_curscol, row, col);
+    TINFO_MVCUR(NCURSES_SP_ARGx
+		SP_PARM->_cursrow,
+		SP_PARM->_curscol,
+		row, col);
     position_check(SP_PARM, SP_PARM->_cursrow, SP_PARM->_curscol, "GoTo2");
 }
 
@@ -661,7 +662,7 @@ PutRange(NCURSES_SP_DCLx
 		if_USE_SCROLL_HINTS(win->_line[row].oldindex = row)
 
 NCURSES_EXPORT(int)
-NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
+TINFO_DOUPDATE(NCURSES_SP_DCL0)
 {
     int i;
     int nonempty;
@@ -1004,11 +1005,11 @@ NCURSES_SP_NAME(doupdate) (NCURSES_SP_DCL0)
     returnCode(OK);
 }
 
-#if NCURSES_SP_FUNCS
+#if NCURSES_SP_FUNCS && !defined(USE_TERM_DRIVER)
 NCURSES_EXPORT(int)
 doupdate(void)
 {
-    return NCURSES_SP_NAME(doupdate) (CURRENT_SCREEN);
+    return TINFO_DOUPDATE(CURRENT_SCREEN);
 }
 #endif
 
@@ -2162,11 +2163,11 @@ NCURSES_SP_NAME(_nc_screen_wrap) (NCURSES_SP_DCL0)
 				       NCURSES_SP_NAME(_nc_outch));
 	SP_PARM->_default_color = FALSE;
 
-	NCURSES_SP_NAME(mvcur) (NCURSES_SP_ARGx
-				SP_PARM->_cursrow,
-				SP_PARM->_curscol,
-				screen_lines(SP_PARM) - 1,
-				0);
+	TINFO_MVCUR(NCURSES_SP_ARGx
+		    SP_PARM->_cursrow,
+		    SP_PARM->_curscol,
+		    screen_lines(SP_PARM) - 1,
+		    0);
 
 	ClrToEOL(NCURSES_SP_ARGx blank, TRUE);
     }

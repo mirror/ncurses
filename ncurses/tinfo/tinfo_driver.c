@@ -42,7 +42,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.1 2009/05/23 22:40:30 juergen Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.2 2009/08/16 14:17:08 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -173,7 +173,7 @@ static int
 drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 {
     AssertTCB();
-    return _nc_tinfo_doupdate(TCB->csp);
+    return TINFO_DOUPDATE(TCB->csp);
 }
 
 /*
@@ -945,7 +945,7 @@ drv_mvcur(TERMINAL_CONTROL_BLOCK * TCB, int yold, int xold, int ynew, int xnew)
 {
     SCREEN *sp = TCB->csp;
     AssertTCB();
-    return _nc_tinfo_mvcur(sp, yold, xold, ynew, xnew);
+    return TINFO_MVCUR(sp, yold, xold, ynew, xnew);
 }
 
 static void
@@ -1383,7 +1383,7 @@ drv_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int key)
 
     AssertTCB();
     if (TCB->csp)
-	res = _nc_tinfo_has_key(TCB->csp, key) == 0 ? FALSE : TRUE;
+	res = TINFO_HAS_KEY(TCB->csp, key) == 0 ? FALSE : TRUE;
 
     return res;
 }

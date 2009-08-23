@@ -46,7 +46,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_options.c,v 1.69 2009/07/25 16:05:16 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.70 2009/08/16 14:16:38 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
@@ -274,7 +274,7 @@ has_key_internal(int keycode, TRIES * tp)
 
 #ifdef USE_TERM_DRIVER
 NCURSES_EXPORT(int)
-_nc_tinfo_has_key(SCREEN *sp, int keycode)
+TINFO_HAS_KEY(SCREEN *sp, int keycode)
 {
     return IsValidTIScreen(sp) ?
 	has_key_internal(keycode, sp->_keytry) : 0;

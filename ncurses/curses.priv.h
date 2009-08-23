@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.430 2009/07/04 20:40:42 tom Exp $
+ * $Id: curses.priv.h,v 1.435 2009/08/22 22:33:25 tom Exp $
  *
  *	curses.priv.h
  *
@@ -374,12 +374,14 @@ extern NCURSES_EXPORT(void)     _nc_set_no_padding(SCREEN *);
 #define GET_SCREEN_PAIR(s)	GetPair(SCREEN_ATTRS(s))
 #define SET_SCREEN_PAIR(s,p)	SetPair(SCREEN_ATTRS(s), p)
 
-#if USE_REENTRANT
-
+#if USE_REENTRANT || NCURSES_SP_FUNCS
 NCURSES_EXPORT(int *)        _nc_ptr_Lines (SCREEN *);
 NCURSES_EXPORT(int *)        _nc_ptr_Cols (SCREEN *);
 NCURSES_EXPORT(int *)        _nc_ptr_Tabsize (SCREEN *);
 NCURSES_EXPORT(int *)        _nc_ptr_Escdelay (SCREEN *);
+#endif
+
+#if USE_REENTRANT
 
 #define ptrLines(sp)         (sp ? &(sp->_LINES) : &(_nc_prescreen._LINES))
 #define ptrCols(sp)          (sp ? &(sp->_COLS) : &(_nc_prescreen._COLS))
@@ -1682,7 +1684,6 @@ extern NCURSES_EXPORT(char *) _nc_get_locale(void);
 extern NCURSES_EXPORT(int)    _nc_unicode_locale(void);
 extern NCURSES_EXPORT(int)    _nc_locale_breaks_acs(TERMINAL *);
 extern NCURSES_EXPORT(int)    _nc_setupterm(NCURSES_CONST char *, int, int *, bool);
-extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, int *, int *);
 
 /* lib_set_term.c */
 extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
@@ -1730,6 +1731,7 @@ extern NCURSES_EXPORT(int) _nc_remove_string (TRIES **, const char *);
 /* elsewhere ... */
 extern NCURSES_EXPORT(ENTRY *) _nc_delink_entry (ENTRY *, TERMTYPE *);
 extern NCURSES_EXPORT(SCREEN *) _nc_screen_of (WINDOW *);
+extern NCURSES_EXPORT(TERMINAL*) _nc_get_cur_term (void);
 extern NCURSES_EXPORT(WINDOW *) _nc_makenew (int, int, int, int, int);
 extern NCURSES_EXPORT(char *) _nc_trace_buf (int, size_t);
 extern NCURSES_EXPORT(char *) _nc_trace_bufcat (int, const char *);
@@ -1895,6 +1897,7 @@ extern NCURSES_EXPORT(int) _nc_get_tty_mode(TTY *);
     }\
     sp->jump = outc
 
+#ifdef USE_TERM_DRIVER
 struct DriverTCB; /* Terminal Control Block forward declaration */
 typedef void* TERM_HANDLE;
 
@@ -1956,7 +1959,6 @@ typedef struct term_driver {
     bool   (*kyExist)(struct DriverTCB*, int);
 } TERM_DRIVER;
 
-
 typedef struct DriverTCB
 {
     TERMINAL      term;   /* needs to be the first Element !!! */
@@ -1985,18 +1987,56 @@ typedef struct DriverTCB
 extern NCURSES_EXPORT_VAR(const color_t*) _nc_cga_palette;
 extern NCURSES_EXPORT_VAR(const color_t*) _nc_hls_palette;
 
-#ifdef USE_TERM_DRIVER
-extern NCURSES_EXPORT(int)      _nc_tinfo_has_key(SCREEN*, int);
-extern NCURSES_EXPORT(int)      _nc_tinfo_doupdate(SCREEN *sp);
-extern NCURSES_EXPORT(int)      _nc_tinfo_mvcur(SCREEN*,int,int,int,int);
 extern NCURSES_EXPORT(int)      _nc_get_driver(TERMINAL_CONTROL_BLOCK*, const char*, int*);
+extern NCURSES_EXPORT(void)     _nc_get_screensize_ex(SCREEN *, TERMINAL *, int *, int *);
+#endif /* USE_TERM_DRIVER */
+
+/*
+ * Entrypoints which are actually provided in the terminal driver, which would
+ * be an sp-name otherwise.
+ */
+#ifdef USE_TERM_DRIVER
+#define TINFO_HAS_KEY           _nc_tinfo_has_key
+#define TINFO_DOUPDATE          _nc_tinfo_doupdate
+#define TINFO_MVCUR             _nc_tinfo_mvcur
+extern NCURSES_EXPORT(int)      TINFO_HAS_KEY(SCREEN*, int);
+extern NCURSES_EXPORT(int)      TINFO_DOUPDATE(SCREEN *);
+extern NCURSES_EXPORT(int)      TINFO_MVCUR(SCREEN*, int, int, int, int);
+#else
+#define TINFO_HAS_KEY           NCURSES_SP_NAME(has_key)
+#define TINFO_DOUPDATE          NCURSES_SP_NAME(doupdate)
+#define TINFO_MVCUR             NCURSES_SP_NAME(mvcur)
 #endif
 
+/*
+ * Entrypoints using an extra parameter with the terminal driver.
+ */
+#ifdef USE_TERM_DRIVER
+extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, TERMINAL *, int *, int *);
+extern NCURSES_EXPORT(int)    _nc_setupterm_ex(TERMINAL **, NCURSES_CONST char *, int , int *, bool);
+#define TINFO_GET_SIZE(sp, tp, lp, cp) \
+	_nc_get_screensize(sp, tp, lp, cp)
+#define TINFO_SET_CURTERM(sp, tp) \
+	NCURSES_SP_NAME(set_curterm)(sp, tp)
+#define TINFO_SETUP_TERM(tpp, name, fd, err, reuse) \
+	_nc_setupterm_ex(tpp, name, fd, err, reuse)
+#else /* !USE_TERM_DRIVER */
+extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, int *, int *);
+#define TINFO_GET_SIZE(sp, tp, lp, cp) \
+	_nc_get_screensize(sp, lp, cp)
+#define TINFO_SET_CURTERM(sp, tp) \
+	set_curterm(tp)
+#define TINFO_SETUP_TERM(tpp, name, fd, err, reuse) \
+	_nc_setupterm(name, fd, err, reuse)
+#endif /* !USE_TERM_DRIVER */
+
+#ifdef USE_TERM_DRIVER
 #ifdef __MINGW32__
 #include <nc_mingw.h>
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_WIN_DRIVER;
 #endif
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
+#endif
 
 #ifdef USE_TERM_DRIVER
 #define IsTermInfo(sp)       (TCBOf(sp) && ((TCBOf(sp)->drv->isTerminfo)))
@@ -2030,7 +2070,7 @@ extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_set_tabsize)(SCREEN*, int);
  * We put the safe versions of various calls here as they are not published
  * part of the API up to now
  */
-extern NCURSES_EXPORT(TERMINAL*) NCURSES_SP_NAME(cur_term)(SCREEN *sp);
+extern NCURSES_EXPORT(TERMINAL*) NCURSES_SP_NAME(_nc_get_cur_term) (SCREEN *sp);
 extern NCURSES_EXPORT(WINDOW *) NCURSES_SP_NAME(_nc_makenew) (SCREEN*, int, int, int, int, int);
 extern NCURSES_EXPORT(bool)     NCURSES_SP_NAME(_nc_reset_colors)(SCREEN*);
 extern NCURSES_EXPORT(char *)   NCURSES_SP_NAME(_nc_printf_string)(SCREEN*, const char *, va_list);
