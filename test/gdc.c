@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.31 2008/08/03 23:58:42 tom Exp $
+ * $Id: gdc.c,v 1.32 2009/08/29 19:02:25 tom Exp $
  */
 
 #include <test.priv.h>
@@ -78,7 +78,7 @@ drawbox(bool scrolling)
     int n;
 
     if (hascolor)
-	attrset(COLOR_PAIR(PAIR_FRAMES));
+	(void) attrset(COLOR_PAIR(PAIR_FRAMES));
 
     mvaddch(YBASE - 1, XBASE - 1, ACS_ULCORNER);
     hline(ACS_HLINE, XLENGTH);
@@ -102,7 +102,7 @@ drawbox(bool scrolling)
     vline(ACS_VLINE, YDEPTH);
 
     if (hascolor)
-	attrset(COLOR_PAIR(PAIR_OTHERS));
+	(void) attrset(COLOR_PAIR(PAIR_OTHERS));
 }
 
 static void
@@ -220,7 +220,7 @@ main(int argc, char *argv[])
 	init_pair(PAIR_DIGITS, COLOR_BLACK, COLOR_RED);
 	init_pair(PAIR_OTHERS, COLOR_RED, bg);
 	init_pair(PAIR_FRAMES, COLOR_WHITE, bg);
-	attrset(COLOR_PAIR(PAIR_OTHERS));
+	(void) attrset(COLOR_PAIR(PAIR_OTHERS));
     }
 
   restart:
@@ -335,7 +335,7 @@ main(int argc, char *argv[])
 	    goto restart;
 	case ERR:
 	    if (sigtermed) {
-		standend();
+		(void) standend();
 		endwin();
 		fprintf(stderr, "gdc terminated by signal %d\n", sigtermed);
 		ExitProgram(EXIT_FAILURE);
@@ -345,7 +345,7 @@ main(int argc, char *argv[])
 	    continue;
 	}
     } while (--count);
-    standend();
+    (void) standend();
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }

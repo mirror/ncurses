@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.47 2008/08/03 18:30:28 tom Exp $
+ * $Id: bs.c,v 1.48 2009/08/29 19:02:25 tom Exp $
  */
 
 #include <test.priv.h>
@@ -374,7 +374,7 @@ initgame(void)
 	for (j = 0; j < BWIDTH; j++)
 	    (void) addstr(" . ");
 #ifdef A_COLOR
-	attrset(0);
+	(void) attrset(0);
 #endif /* A_COLOR */
 	(void) addch(' ');
 	(void) addch((chtype) (i + 'A'));
@@ -392,7 +392,7 @@ initgame(void)
 	for (j = 0; j < BWIDTH; j++)
 	    (void) addstr(" . ");
 #ifdef A_COLOR
-	attrset(0);
+	(void) attrset(0);
 #endif /* A_COLOR */
 	(void) addch(' ');
 	(void) addch((chtype) (i + 'A'));
@@ -773,7 +773,7 @@ hitship(int x, int y)
 #endif /* A_COLOR */
 				    (void) addch(MARK_MISS);
 #ifdef A_COLOR
-				    attrset(0);
+				    (void) attrset(0);
 #endif /* A_COLOR */
 				} else {
 				    pgoto(y1, x1);
@@ -799,7 +799,7 @@ hitship(int x, int y)
 #endif /* A_COLOR */
 			(void) addch(SHOWHIT);
 #ifdef A_COLOR
-			attrset(0);
+			(void) attrset(0);
 #endif /* A_COLOR */
 		    }
 		}
@@ -841,7 +841,7 @@ plyturn(void)
 #endif /* A_COLOR */
     (void) addch((chtype) hits[PLAYER][curx][cury]);
 #ifdef A_COLOR
-    attrset(0);
+    (void) attrset(0);
 #endif /* A_COLOR */
 
     prompt(1, "You %s.", hit ? "scored a hit" : "missed");
@@ -971,7 +971,7 @@ cpufire(int x, int y)
 #endif /* A_COLOR */
     (void) addch((chtype) (hit ? SHOWHIT : SHOWSPLASH));
 #ifdef A_COLOR
-    attrset(0);
+    (void) attrset(0);
 #endif /* A_COLOR */
 
     return hit ? (sunk ? S_SUNK : S_HIT) : S_MISS;

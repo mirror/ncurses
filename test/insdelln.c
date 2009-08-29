@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: insdelln.c,v 1.2 2009/07/15 23:21:04 tom Exp $
+ * $Id: insdelln.c,v 1.3 2009/08/29 18:47:26 tom Exp $
  *
  * test-driver for deleteln, wdeleteln, insdelln, winsdelln, insertln, winsertln
  */
@@ -300,7 +300,7 @@ test_winsdelln(WINDOW *win)
     init_status(win, &st);
 
     do {
-	wattrset(win, st.attr | COLOR_PAIR(st.pair));
+	(void) wattrset(win, st.attr | COLOR_PAIR(st.pair));
 	switch (st.ch) {
 	case 'i':
 	    for (n = 0; n < st.count; ++n)
@@ -341,7 +341,7 @@ test_insdelln(void)
     init_status(stdscr, &st);
 
     do {
-	attrset(st.attr | COLOR_PAIR(st.pair));
+	(void) attrset(st.attr | COLOR_PAIR(st.pair));
 	switch (st.ch) {
 	case 'i':
 	    for (n = 0; n < st.count; ++n)

@@ -7,7 +7,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.39 2008/08/03 17:58:09 tom Exp $
+ * $Id: testcurs.c,v 1.40 2009/08/29 18:47:26 tom Exp $
  */
 
 #include <test.priv.h>
@@ -682,7 +682,7 @@ padTest(WINDOW *dummy GCC_UNUSED)
     if ((pad = newpad(50, 100)) != 0) {
 	wattron(pad, A_REVERSE);
 	mvwaddstr(pad, 5, 2, "This is a new pad");
-	wattrset(pad, A_NORMAL);
+	(void) wattrset(pad, A_NORMAL);
 	mvwaddstr(pad, 8, 0,
 		  "The end of this line should be truncated here:except  now");
 	mvwaddstr(pad, 11, 1, "This line should not appear.It will now");
@@ -720,7 +720,7 @@ display_menu(int old_option, int new_option)
 
     assert((new_option >= 0) && (new_option < MAX_OPTIONS));
 
-    attrset(A_NORMAL);
+    (void) attrset(A_NORMAL);
     mvaddstr(3, 20, "PDCurses Test Program");
 
     for (i = 0; i < (int) MAX_OPTIONS; i++)
@@ -729,9 +729,9 @@ display_menu(int old_option, int new_option)
     if ((old_option >= 0) && (old_option < MAX_OPTIONS))
 	mvaddstr(5 + old_option, 25, command[old_option].text);
 
-    attrset(A_REVERSE);
+    (void) attrset(A_REVERSE);
     mvaddstr(5 + new_option, 25, command[new_option].text);
-    attrset(A_NORMAL);
+    (void) attrset(A_NORMAL);
     mvaddstr(13, 3,
 	     "Use Up and Down Arrows to select - Enter to run - Q to quit");
     refresh();

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.89 2008/12/06 23:08:12 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.90 2009/08/29 19:02:25 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -188,7 +188,7 @@ static int FE_Delete_Previous(FORM *);
 /* Macro to set the attributes for a fields window */
 #define Set_Field_Window_Attributes(field,win) \
 (  wbkgdset((win),(chtype)((field)->pad | (field)->back)), \
-   wattrset((win),(field)->fore) )
+   (void) wattrset((win),(field)->fore) )
 
 /* Logic to decide whether or not a field really appears on the form */
 #define Field_Really_Appears(field)         \
@@ -1073,9 +1073,13 @@ Display_Or_Erase_Field(FIELD *field, bool bEraseFlag)
   else
     {
       if (field->opts & O_VISIBLE)
-	Set_Field_Window_Attributes(field, win);
+	{
+	  Set_Field_Window_Attributes(field, win);
+	}
       else
-	wattrset(win, WINDOW_ATTRS(fwin));
+	{
+	  (void)wattrset(win, WINDOW_ATTRS(fwin));
+	}
       werase(win);
     }
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2009 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_get_wstr.c,v 1.5 2007/08/11 17:01:43 tom Exp $
+ * $Id: test_get_wstr.c,v 1.6 2009/08/29 19:02:25 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -269,7 +269,7 @@ test_get_wstr(int level, char **argv, WINDOW *strwin)
 	    *buffer = '\0';
 	    rc = ERR;
 	    echo();
-	    wattrset(txtwin, A_REVERSE);
+	    (void) wattrset(txtwin, A_REVERSE);
 	    switch (flavor) {
 	    case eGetStr:
 		if (txtwin != stdscr) {
@@ -307,9 +307,9 @@ test_get_wstr(int level, char **argv, WINDOW *strwin)
 		break;
 	    }
 	    noecho();
-	    wattrset(txtwin, A_NORMAL);
+	    (void) wattrset(txtwin, A_NORMAL);
 	    wprintw(strwin, "%d", rc);
-	    waddwstr(strwin, (wchar_t *) buffer);
+	    (void) waddwstr(strwin, (wchar_t *) buffer);
 	    wnoutrefresh(strwin);
 	    break;
 	default:

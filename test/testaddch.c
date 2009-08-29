@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
  * This is an example written by Alexander V. Lukyanov <lav@yars.free.net>,
  * to demonstrate an inconsistency between ncurses and SVr4 curses.
  *
- * $Id: testaddch.c,v 1.6 2006/04/01 19:08:03 tom Exp $
+ * $Id: testaddch.c,v 1.7 2009/08/29 19:02:25 tom Exp $
  */
 #include <test.priv.h>
 
@@ -66,7 +66,7 @@ main(
 	attr = (i & 4) ? COLOR_PAIR(4) : 0;
 
 	bkgdset(back);
-	attrset(set);
+	(void) attrset(set);
 
 	attr_addstr("Test string with spaces ->   <-\n", attr);
     }
@@ -77,7 +77,7 @@ main(
 	attr = (i & 4) ? COLOR_PAIR(4) : 0;
 
 	bkgdset(back);
-	attrset(set);
+	(void) attrset(set);
 
 	attr_addstr("Test string with spaces ->   <-\n", attr);
     }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2007-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_opaque.c,v 1.7 2008/07/05 23:18:40 tom Exp $
+ * $Id: test_opaque.c,v 1.8 2009/08/29 19:02:25 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -185,10 +185,10 @@ show_keyword(WINDOW *stswin, int cell, int active, const char *name)
 {
     to_keyword(stswin, cell);
     if (active == cell)
-	wstandout(stswin);
+	(void) wstandout(stswin);
     wprintw(stswin, "%s:", name);
     if (active == cell)
-	wstandend(stswin);
+	(void) wstandend(stswin);
 }
 /* *INDENT-OFF* */
 static struct {

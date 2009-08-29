@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.3 2009/07/17 09:28:52 tom Exp $
+ * $Id: clip_printw.c,v 1.4 2009/08/29 19:00:44 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
@@ -327,7 +327,7 @@ test_clipping(WINDOW *win)
     do {
 	switch (st.ch) {
 	case '.':		/* change from current position */
-	    wattrset(win, st.attr | COLOR_PAIR(st.pair));
+	    (void) wattrset(win, st.attr | COLOR_PAIR(st.pair));
 	    if (st.count > 0) {
 		need = st.count + 1;
 		sprintf(fmt, "%%c%%%ds%%c", st.count);
@@ -367,6 +367,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     ExitProgram(EXIT_SUCCESS);
 }
+
 #else
 int
 main(void)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
  * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is
  * just as good.
  *
- * $Id: blue.c,v 1.30 2008/08/03 18:20:27 tom Exp $
+ * $Id: blue.c,v 1.31 2009/08/29 19:02:25 tom Exp $
  */
 
 #include <test.priv.h>
@@ -353,9 +353,9 @@ play_game(void)
     }
 
     move(PROMPTROW, 0);
-    standout();
+    (void) standout();
     (void) printw("Finished deal %d - type any character to continue...", deal_number);
-    standend();
+    (void) standend();
     (void) getch();
 }
 
@@ -386,7 +386,7 @@ game_finished(int deal)
 {
     clear();
     (void) printw("You finished the game in %d deals. This is ", deal);
-    standout();
+    (void) standout();
     if (deal < 2)
 	(void) addstr("excellent");
     else if (deal < 4)
@@ -395,7 +395,7 @@ game_finished(int deal)
 	(void) addstr("average");
     else
 	(void) addstr("poor");
-    standend();
+    (void) standend();
     (void) addstr(".         ");
     refresh();
 }

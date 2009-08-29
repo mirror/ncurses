@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.23 2009/08/15 23:08:28 tom Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.24 2009/08/29 18:43:13 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels    InfoOf(SP_PARM).numlabels
@@ -109,13 +109,13 @@ slk_intern_refresh(SCREEN *sp)
 			slk_paint_info(slk->win);
 		    wmove(slk->win, SLK_LINES(fmt) - 1, slk->ent[i].ent_x);
 		    if (sp->_slk) {
-			wattrset(slk->win, AttrOf(sp->_slk->attr));
+			(void) wattrset(slk->win, AttrOf(sp->_slk->attr));
 		    }
 		    waddstr(slk->win, slk->ent[i].form_text);
 		    /* if we simulate SLK's, it's looking much more
 		       natural to use the current ATTRIBUTE also
 		       for the label window */
-		    wattrset(slk->win, WINDOW_ATTRS(StdScreen(sp)));
+		    (void) wattrset(slk->win, WINDOW_ATTRS(StdScreen(sp)));
 		}
 	    }
 	    slk->ent[i].dirty = FALSE;

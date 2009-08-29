@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.24 2008/08/03 11:08:59 tom Exp $
+ * $Id: xmas.c,v 1.25 2009/08/29 18:47:26 tom Exp $
  */
 #include <test.priv.h>
 
@@ -170,7 +170,7 @@ static void
 unset_color(WINDOW *win)
 {
     if (has_colors())
-	wattrset(win, COLOR_PAIR(0));
+	(void) wattrset(win, COLOR_PAIR(0));
 }
 
 static void
@@ -533,9 +533,9 @@ main(int argc GCC_UNUSED, char **argv GCC_UNUSED)
 	mvwaddch(treescrn4, 12, 23, ' ');
 
 	/*star */
-	wstandout(treescrn4);
+	(void) wstandout(treescrn4);
 	mvwaddch(treescrn4, 0, 12, '*');
-	wstandend(treescrn4);
+	(void) wstandend(treescrn4);
 
 	/*strng1 */
 	mvwaddch(treescrn4, 3, 13, ' ');
@@ -597,9 +597,9 @@ main(int argc GCC_UNUSED, char **argv GCC_UNUSED)
 	mvwaddch(treescrn6, 11, 23, ' ');
 
 	/*star */
-	wstandout(treescrn6);
+	(void) wstandout(treescrn6);
 	mvwaddch(treescrn6, 0, 12, '*');
-	wstandend(treescrn6);
+	(void) wstandend(treescrn6);
 
 	/*strng1 */
 
@@ -816,11 +816,11 @@ balls(void)
 static int
 star(void)
 {
-    wattrset(treescrn2, A_BOLD | A_BLINK);
+    (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_YELLOW);
 
     mvwaddch(treescrn2, 0, 12, (chtype) '*');
-    wstandend(treescrn2);
+    (void) wstandend(treescrn2);
 
     unset_color(treescrn2);
     wrefresh(treescrn2);
@@ -831,7 +831,7 @@ star(void)
 static int
 strng1(void)
 {
-    wattrset(treescrn2, A_BOLD | A_BLINK);
+    (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
     mvwaddch(treescrn2, 3, 13, (chtype) '\'');
@@ -849,7 +849,7 @@ strng1(void)
 static int
 strng2(void)
 {
-    wattrset(treescrn2, A_BOLD | A_BLINK);
+    (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
     mvwaddch(treescrn2, 5, 14, (chtype) '\'');
@@ -870,7 +870,7 @@ strng2(void)
 static int
 strng3(void)
 {
-    wattrset(treescrn2, A_BOLD | A_BLINK);
+    (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
     mvwaddch(treescrn2, 7, 16, (chtype) '\'');
@@ -893,7 +893,7 @@ strng3(void)
 static int
 strng4(void)
 {
-    wattrset(treescrn2, A_BOLD | A_BLINK);
+    (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
     mvwaddch(treescrn2, 9, 17, (chtype) '\'');
@@ -921,7 +921,7 @@ strng4(void)
 static int
 strng5(void)
 {
-    wattrset(treescrn2, A_BOLD | A_BLINK);
+    (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
     mvwaddch(treescrn2, 11, 19, (chtype) '\'');

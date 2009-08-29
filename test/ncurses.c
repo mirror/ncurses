@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.343 2009/07/30 09:13:37 tom Exp $
+$Id: ncurses.c,v 1.345 2009/08/29 20:24:57 tom Exp $
 
 ***************************************************************************/
 
@@ -232,7 +232,7 @@ wGetstring(WINDOW *win, char *buffer, int limit)
 
     echo();
     getyx(win, y0, x0);
-    wattrset(win, A_REVERSE);
+    (void) wattrset(win, A_REVERSE);
 
     x = (int) strlen(buffer);
     while (!done) {
@@ -365,7 +365,7 @@ wGet_wstring(WINDOW *win, wchar_t *buffer, int limit)
 
     echo();
     getyx(win, y0, x0);
-    wattrset(win, A_REVERSE);
+    (void) wattrset(win, A_REVERSE);
 
     x = (int) wcslen(buffer);
     while (!done) {
@@ -629,12 +629,12 @@ wgetch_help(WINDOW *win, GetchFlags flags)
 	int flg = ((strstr(help[n], "toggle") != 0)
 		   && (flags[UChar(*help[n])] != FALSE));
 	if (flg)
-	    standout();
+	    (void) standout();
 	mvprintw(row, col, "%s", help[n]);
 	if (col == 0)
 	    clrtoeol();
 	if (flg)
-	    standend();
+	    (void) standend();
     }
     wrefresh(stdscr);
     wmove(win, y, x);
@@ -1358,7 +1358,7 @@ show_attr(int row, int skip, bool arrow, chtype attr, const char *name)
 	    addch(ch | attr);
 	}
     } else {
-	attrset(attr);
+	(void) attrset(attr);
 	addstr(attr_test_string);
 	attroff(attr);
     }
@@ -2010,7 +2010,7 @@ color_test(void)
 		    hello = numbered;
 		}
 		printw("%-*.*s", width, width, hello);
-		attrset(A_NORMAL);
+		(void) attrset(A_NORMAL);
 
 		if ((i % per_row) == 0 && InxToFG(i) == min_colors) {
 		    show_color_name(row, 0, InxToBG(i), opt_wide);
@@ -2395,9 +2395,9 @@ color_edit(void)
 		     (i == current ? '>' : ' '),
 		     (i < (int) SIZEOF(the_color_names)
 		      ? the_color_names[i] : numeric));
-	    attrset(COLOR_PAIR(i));
+	    (void) attrset(COLOR_PAIR(i));
 	    addstr("        ");
-	    attrset(A_NORMAL);
+	    (void) attrset(A_NORMAL);
 
 	    color_content((short) i, &red, &green, &blue);
 	    addstr("   R = ");
@@ -2405,20 +2405,20 @@ color_edit(void)
 		attron(A_STANDOUT);
 	    printw("%04d", red);
 	    if (current == i && field == 0)
-		attrset(A_NORMAL);
+		(void) attrset(A_NORMAL);
 	    addstr(", G = ");
 	    if (current == i && field == 1)
 		attron(A_STANDOUT);
 	    printw("%04d", green);
 	    if (current == i && field == 1)
-		attrset(A_NORMAL);
+		(void) attrset(A_NORMAL);
 	    addstr(", B = ");
 	    if (current == i && field == 2)
 		attron(A_STANDOUT);
 	    printw("%04d", blue);
 	    if (current == i && field == 2)
-		attrset(A_NORMAL);
-	    attrset(A_NORMAL);
+		(void) attrset(A_NORMAL);
+	    (void) attrset(A_NORMAL);
 	    printw(" ( %3d %3d %3d )",
 		   scaled_rgb(red),
 		   scaled_rgb(green),
@@ -5037,7 +5037,7 @@ flushinp_test(WINDOW *win)
 	wbkgd(subWin, COLOR_PAIR(2) | ' ');
     }
 #endif
-    wattrset(subWin, A_BOLD);
+    (void) wattrset(subWin, A_BOLD);
     box(subWin, ACS_VLINE, ACS_HLINE);
     mvwaddstr(subWin, 2, 1, "This is a subwindow");
     wrefresh(win);
@@ -5857,18 +5857,18 @@ overlap_test_1_attr(WINDOW *win, int flavor, int col)
 
     switch (flavor) {
     case 0:
-	wattrset(win, A_NORMAL);
+	(void) wattrset(win, A_NORMAL);
 	break;
     case 1:
-	wattrset(win, A_BOLD);
+	(void) wattrset(win, A_BOLD);
 	break;
     case 2:
 	init_pair(cpair, COLOR_BLUE, COLOR_WHITE);
-	wattrset(win, COLOR_PAIR(cpair) | A_NORMAL);
+	(void) wattrset(win, COLOR_PAIR(cpair) | A_NORMAL);
 	break;
     case 3:
 	init_pair(cpair, COLOR_WHITE, COLOR_BLUE);
-	wattrset(win, COLOR_PAIR(cpair) | A_BOLD);
+	(void) wattrset(win, COLOR_PAIR(cpair) | A_BOLD);
 	break;
     }
 }
@@ -5973,7 +5973,7 @@ overlap_help(int state, int flavors[OVERLAP_FLAVORS])
 	    break;
 	}
 	overlap_helpitem(state, item, msg);
-	wattrset(stdscr, A_NORMAL);
+	(void) wattrset(stdscr, A_NORMAL);
 	wbkgdset(stdscr, ' ' | A_NORMAL);
     }
     move(LINES - 1, 0);
@@ -5998,7 +5998,7 @@ overlap_test_1(int flavor, int col, WINDOW *a, char fill)
 {
     overlap_test_1_attr(a, flavor, col);
     fillwin(a, fill);
-    wattrset(a, A_NORMAL);
+    (void) wattrset(a, A_NORMAL);
 }
 
 static void
@@ -6580,7 +6580,7 @@ main(int argc, char *argv[])
 	    min_colors = -1;
 	}
 #if NCURSES_VERSION_PATCH >= 20000708
-	else if (assumed_colors)
+	if (assumed_colors)
 	    assume_default_colors(default_fg, default_bg);
 #endif
 #endif

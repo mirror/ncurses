@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.25 2005/04/16 16:39:27 tom Exp $ */
+/* $Id: tclock.c,v 1.26 2009/08/29 18:47:26 tom Exp $ */
 
 #include <test.priv.h>
 
@@ -67,7 +67,7 @@ dline(int pair, int from_x, int from_y, int x2, int y2, char ch)
     int d;
 
     if (has_colors())
-	attrset(COLOR_PAIR(pair));
+	(void) attrset(COLOR_PAIR(pair));
 
     dx = x2 - from_x;
     dy = y2 - from_y;
@@ -209,17 +209,17 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
 	dline(3, cx, cy, cx + mdx, cy - mdy, '#');
 
-	attrset(A_REVERSE);
+	(void) attrset(A_REVERSE);
 	dline(2, cx, cy, cx + hdx, cy - hdy, '.');
 	attroff(A_REVERSE);
 
 	if (has_colors())
-	    attrset(COLOR_PAIR(1));
+	    (void) attrset(COLOR_PAIR(1));
 
 	dline(1, cx, cy, cx + sdx, cy - sdy, 'O');
 
 	if (has_colors())
-	    attrset(COLOR_PAIR(0));
+	    (void) attrset(COLOR_PAIR(0));
 
 	text = ctime(&tim);
 	mvprintw(2, 0, "%.*s", (int) (strlen(text) - 1), text);
