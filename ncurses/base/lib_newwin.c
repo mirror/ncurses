@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.59 2009/08/30 16:35:23 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.60 2009/09/06 16:32:48 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -259,7 +259,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
     int i;
     WINDOWLIST *wp;
     WINDOW *win;
-    bool is_pad = (flags & _ISPAD);
+    bool is_padwin = (flags & _ISPAD);
 
     T((T_CALLED("_nc_makenew(%p,%d,%d,%d,%d)"),
        SP_PARM, num_lines, num_columns, begy, begx));
@@ -294,7 +294,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
     WINDOW_ATTRS(win) = A_NORMAL;
     SetChar(win->_nc_bkgd, BLANK_TEXT, BLANK_ATTR);
 
-    win->_clear = (is_pad
+    win->_clear = (is_padwin
 		   ? FALSE
 		   : (num_lines == screen_lines(SP_PARM)
 		      && num_columns == screen_columns(SP_PARM)));
@@ -346,7 +346,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
 	if_USE_SCROLL_HINTS(win->_line[i].oldindex = i);
     }
 
-    if (!is_pad && (begx + num_columns == screen_columns(SP_PARM))) {
+    if (!is_padwin && (begx + num_columns == screen_columns(SP_PARM))) {
 	win->_flags |= _ENDLINE;
 
 	if (begx == 0 && num_lines == screen_lines(SP_PARM) && begy == 0)

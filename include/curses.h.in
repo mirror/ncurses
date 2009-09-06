@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.205 2009/08/29 18:33:18 tom Exp $ */
+/* $Id: curses.h.in,v 1.206 2009/09/06 15:55:10 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -878,7 +878,9 @@ extern NCURSES_EXPORT(bool) is_keypad (const WINDOW *);		/* @GENERATED_EXT_FUNCS
 extern NCURSES_EXPORT(bool) is_leaveok (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
 extern NCURSES_EXPORT(bool) is_nodelay (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
 extern NCURSES_EXPORT(bool) is_notimeout (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_pad (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
 extern NCURSES_EXPORT(bool) is_scrollok (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(bool) is_subwin (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
 extern NCURSES_EXPORT(bool) is_syncok (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
 extern NCURSES_EXPORT(int) wgetscrreg (const WINDOW *, int *, int *); /* @GENERATED_EXT_FUNCS@ */
 
@@ -1273,16 +1275,18 @@ NCURSES_EXPORT(int) vsscanf(const char *, const char *, va_list);
  */
 #if @NCURSES_EXT_FUNCS@
 #if !NCURSES_OPAQUE
-#define is_cleared(win)		((win)->_clear)
-#define is_idcok(win)		((win)->_idcok)
-#define is_idlok(win)		((win)->_idlok)
-#define is_immedok(win)		((win)->_immed)
-#define is_keypad(win)		((win)->_use_keypad)
-#define is_leaveok(win)		((win)->_leaveok)
-#define is_nodelay(win)		((win)->_delay == 0)
-#define is_notimeout(win)	((win)->_notimeout)
-#define is_scrollok(win)	((win)->_scroll)
-#define is_syncok(win)		((win)->_sync)
+#define is_cleared(win)		((win) ? (win)->_clear : FALSE)
+#define is_idcok(win)		((win) ? (win)->_idcok : FALSE)
+#define is_idlok(win)		((win) ? (win)->_idlok : FALSE)
+#define is_immedok(win)		((win) ? (win)->_immed : FALSE)
+#define is_keypad(win)		((win) ? (win)->_use_keypad : FALSE)
+#define is_leaveok(win)		((win) ? (win)->_leaveok : FALSE)
+#define is_nodelay(win)		((win) ? ((win)->_delay == 0) : FALSE)
+#define is_notimeout(win)	((win) ? (win)->_notimeout : FALSE)
+#define is_pad(win)		((win) ? ((win)->_flags & _ISPAD) != 0 : FALSE)
+#define is_scrollok(win)	((win) ? (win)->_scroll : FALSE)
+#define is_subwin(win)		((win) ? ((win)->_flags & _SUBWIN) != 0 : FALSE)
+#define is_syncok(win)		((win) ? (win)->_sync : FALSE)
 #define wgetparent(win)		((win) ? (win)->_parent : 0)
 #define wgetscrreg(win,t,b)	((win) ? (*(t) = (win)->_regtop, *(b) = (win)->_regbottom, OK) : ERR)
 #endif

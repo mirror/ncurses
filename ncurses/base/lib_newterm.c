@@ -52,7 +52,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.78 2009/08/30 19:02:28 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.79 2009/09/06 15:13:41 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -220,6 +220,8 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	} else {
 #ifdef USE_TERM_DRIVER
 	    TERMINAL_CONTROL_BLOCK *TCB;
+#else
+	    SP_PARM = CURRENT_SCREEN;
 #endif
 	    assert(SP_PARM != 0);
 	    cols = *(ptrCols(SP_PARM));
@@ -243,7 +245,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 		current->_term = its_term;
 
 	    /* if the terminal type has real soft labels, set those up */
-	    if (slk_format && num_labels > 0 && SLK_STDFMT(slk_format))
+	    if (slk_format && NumLabels > 0 && SLK_STDFMT(slk_format))
 		_nc_slk_initialize(stdscr, COLS);
 
 	    SP_PARM->_ifd = fileno(_ifp);
