@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: resizeterm.c,v 1.40 2009/07/04 18:38:49 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.41 2009/08/30 16:18:58 tom Exp $")
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
@@ -230,9 +230,9 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen EXTRA_DCLS)
 	if (rop->hook == _nc_slk_initialize)
 	    _nc_format_slks(
 #if NCURSES_SP_FUNCS
-		_nc_screen_of(win),
+			       _nc_screen_of(win),
 #endif
-		ToCols);
+			       ToCols);
     } else if (win->_begy >= bottom) {
 	/*
 	 * If it is below the bottom of the new screen, move up by the same
@@ -351,7 +351,7 @@ NCURSES_SP_NAME(resize_term) (NCURSES_SP_DCLx int ToLines, int ToCols)
 	returnCode(ERR);
     }
 
-    _nc_lock_global(curses);
+    _nc_nonsp_lock_global(curses);
 
     was_stolen = (screen_lines(SP_PARM) - SP_PARM->_lines_avail);
     if (NCURSES_SP_NAME(is_term_resized) (NCURSES_SP_ARGx ToLines, ToCols)) {
@@ -418,7 +418,7 @@ NCURSES_SP_NAME(resize_term) (NCURSES_SP_DCLx int ToLines, int ToCols)
     SET_LINES(ToLines - was_stolen);
     SET_COLS(ToCols);
 
-    _nc_unlock_global(curses);
+    _nc_nonsp_unlock_global(curses);
 
     returnCode(result);
 }
@@ -428,9 +428,9 @@ NCURSES_EXPORT(int)
 resize_term(int ToLines, int ToCols)
 {
     int res = ERR;
-    _nc_lock_global(curses);
+    _nc_sp_lock_global(curses);
     res = NCURSES_SP_NAME(resize_term) (CURRENT_SCREEN, ToLines, ToCols);
-    _nc_unlock_global(curses);
+    _nc_sp_unlock_global(curses);
     return (res);
 }
 #endif

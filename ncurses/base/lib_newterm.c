@@ -47,13 +47,18 @@
 #endif
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-#include <term.h>		/* clear_screen, cup & friends, cur_term */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.77 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.78 2009/08/30 19:02:28 tom Exp $")
+
+#ifdef USE_TERM_DRIVER
+#define NumLabels      InfoOf(SP_PARM).numlabels
+#else
+#define NumLabels      num_labels
+#endif
 
 #ifndef ONLCR			/* Allows compilation under the QNX 4.2 OS */
 #define ONLCR 0
@@ -68,16 +73,17 @@ MODULE_ID("$Id: lib_newterm.c,v 1.77 2009/05/10 00:48:29 tom Exp $")
  * is supposed to behave as if it calls newterm, we do it here.
  */
 static NCURSES_INLINE int
-_nc_initscr(void)
+_nc_initscr(NCURSES_SP_DCL0)
 {
     int result = ERR;
+    TERMINAL *term = TerminalOf(SP_PARM);
 
     /* for extended XPG4 conformance requires cbreak() at this point */
     /* (SVr4 curses does this anyway) */
-    if (cbreak() == OK) {
+    if (NCURSES_SP_NAME(cbreak) (NCURSES_SP_ARG) == OK) {
 	TTY buf;
 
-	buf = cur_term->Nttyb;
+	buf = term->Nttyb;
 #ifdef TERMIOS
 	buf.c_lflag &= ~(ECHO | ECHONL);
 	buf.c_iflag &= ~(ICRNL | INLCR | IGNCR);
@@ -87,8 +93,9 @@ _nc_initscr(void)
 #else
 	memset(&buf, 0, sizeof(buf));
 #endif
-	if ((result = _nc_set_tty_mode(&buf)) == OK)
-	    cur_term->Nttyb = buf;
+	result = NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_ARGx &buf);
+	if (result == OK)
+	    term->Nttyb = buf;
     }
     return result;
 }
@@ -103,8 +110,14 @@ NCURSES_EXPORT(void)
 NCURSES_SP_NAME(filter) (NCURSES_SP_DCL0)
 {
     START_TRACE();
-    T((T_CALLED("filter")));
+    T((T_CALLED("filter(%p)"), SP_PARM));
+#if NCURSES_SP_FUNCS
+    if (IsPreScreen(SP_PARM)) {
+	SP_PARM->_filtered = TRUE;
+    }
+#else
     _nc_prescreen.filter_mode = TRUE;
+#endif
     returnVoid;
 }
 
@@ -112,7 +125,10 @@ NCURSES_SP_NAME(filter) (NCURSES_SP_DCL0)
 NCURSES_EXPORT(void)
 filter(void)
 {
-    NCURSES_SP_NAME(filter) (CURRENT_SCREEN);
+    START_TRACE();
+    T((T_CALLED("filter()")));
+    _nc_prescreen.filter_mode = TRUE;
+    returnVoid;
 }
 #endif
 
@@ -125,8 +141,14 @@ NCURSES_EXPORT(void)
 NCURSES_SP_NAME(nofilter) (NCURSES_SP_DCL0)
 {
     START_TRACE();
-    T((T_CALLED("nofilter")));
+    T((T_CALLED("nofilter(%p)"), SP_PARM));
+#if NCURSES_SP_FUNCS
+    if (IsPreScreen(SP_PARM)) {
+	SP_PARM->_filtered = FALSE;
+    }
+#else
     _nc_prescreen.filter_mode = FALSE;
+#endif
     returnVoid;
 }
 
@@ -134,7 +156,10 @@ NCURSES_SP_NAME(nofilter) (NCURSES_SP_DCL0)
 NCURSES_EXPORT(void)
 nofilter(void)
 {
-    NCURSES_SP_NAME(nofilter) (CURRENT_SCREEN);
+    START_TRACE();
+    T((T_CALLED("nofilter()")));
+    _nc_prescreen.filter_mode = FALSE;
+    returnVoid;
 }
 #endif
 #endif /* NCURSES_EXT_FUNCS */
@@ -147,12 +172,19 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 {
     int value;
     int errret;
-    SCREEN *current;
     SCREEN *result = 0;
+    SCREEN *current;
     TERMINAL *its_term;
+    FILE *_ofp = ofp ? ofp : stdout;
+    FILE *_ifp = ifp ? ifp : stdin;
+    int cols;
+    int numlab;
+#ifdef USE_TERM_DRIVER
+    TERMINAL *new_term;
+#endif
 
     START_TRACE();
-    T((T_CALLED("newterm(\"%s\",%p,%p)"), name, ofp, ifp));
+    T((T_CALLED("newterm(%p, \"%s\", %p,%p)"), SP_PARM, name, ofp, ifp));
 
     _nc_init_pthreads();
     _nc_lock_global(curses);
@@ -161,34 +193,48 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
     its_term = (SP_PARM ? SP_PARM->_term : 0);
 
     /* this loads the capability entry, then sets LINES and COLS */
-    if (setupterm(name, fileno(ofp), &errret) != ERR) {
+    if (setupterm(name, fileno(_ofp), &errret) != ERR) {
 	int slk_format = _nc_globals.slk_format;
 
-	/*
-	 * This actually allocates the screen structure, and saves the original
-	 * terminal settings.
-	 */
 	_nc_set_screen(0);
+#ifdef USE_TERM_DRIVER
+	assert(new_term != 0);
+#endif
 
 	/* allow user to set maximum escape delay from the environment */
 	if ((value = _nc_getenv_num("ESCDELAY")) >= 0) {
 	    set_escdelay(value);
 	}
 
+	/*
+	 * This actually allocates the screen structure, and saves the original
+	 * terminal settings.
+	 */
 	if (_nc_setupscreen(LINES,
 			    COLS,
-			    ofp,
+			    _ofp,
 			    _nc_prescreen.filter_mode,
 			    slk_format) == ERR) {
 	    _nc_set_screen(current);
 	    result = 0;
 	} else {
+#ifdef USE_TERM_DRIVER
+	    TERMINAL_CONTROL_BLOCK *TCB;
+#endif
 	    assert(SP_PARM != 0);
+	    cols = *(ptrCols(SP_PARM));
+#ifdef USE_TERM_DRIVER
+	    TCB = (TERMINAL_CONTROL_BLOCK *) new_term;
+	    TCB->csp = SP_PARM;
+#endif
+	    numlab = NumLabels;
+
 	    /*
 	     * In setupterm() we did a set_curterm(), but it was before we set
-	     * SP.  So the "current" screen's terminal pointer was overwritten
-	     * with a different terminal.  Later, in _nc_setupscreen(), we set
-	     * SP and the terminal pointer in the new screen.
+	     * CURRENT_SCREEN.  So the "current" screen's terminal pointer was
+	     * overwritten with a different terminal.  Later, in
+	     * _nc_setupscreen(), we set CURRENT_SCREEN and the terminal
+	     * pointer in the new screen.
 	     *
 	     * Restore the terminal-pointer for the pre-existing screen, if
 	     * any.
@@ -200,33 +246,38 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	    if (slk_format && num_labels > 0 && SLK_STDFMT(slk_format))
 		_nc_slk_initialize(stdscr, COLS);
 
-	    SP->_ifd = fileno(ifp);
-	    typeahead(fileno(ifp));
+	    SP_PARM->_ifd = fileno(_ifp);
+	    NCURSES_SP_NAME(typeahead) (NCURSES_SP_ARGx fileno(_ifp));
 #ifdef TERMIOS
-	    SP->_use_meta = ((cur_term->Ottyb.c_cflag & CSIZE) == CS8 &&
-			     !(cur_term->Ottyb.c_iflag & ISTRIP));
+	    SP_PARM->_use_meta = ((cur_term->Ottyb.c_cflag & CSIZE) == CS8 &&
+				  !(cur_term->Ottyb.c_iflag & ISTRIP));
 #else
-	    SP->_use_meta = FALSE;
+	    SP_PARM->_use_meta = FALSE;
 #endif
-	    SP->_endwin = FALSE;
-
+	    SP_PARM->_endwin = FALSE;
+#ifndef USE_TERM_DRIVER
 	    /*
 	     * Check whether we can optimize scrolling under dumb terminals in
 	     * case we do not have any of these capabilities, scrolling
 	     * optimization will be useless.
 	     */
-	    SP->_scrolling = ((scroll_forward && scroll_reverse) ||
-			      ((parm_rindex ||
-				parm_insert_line ||
-				insert_line) &&
-			       (parm_index ||
-				parm_delete_line ||
-				delete_line)));
+	    SP_PARM->_scrolling = ((scroll_forward && scroll_reverse) ||
+				   ((parm_rindex ||
+				     parm_insert_line ||
+				     insert_line) &&
+				    (parm_index ||
+				     parm_delete_line ||
+				     delete_line)));
+#endif
 
-	    baudrate();		/* sets a field in the SP structure */
+	    NCURSES_SP_NAME(baudrate) (NCURSES_SP_ARG);		/* sets a field in the screen structure */
 
-	    SP->_keytry = 0;
+	    SP_PARM->_keytry = 0;
 
+	    /* compute movement costs so we can do better move optimization */
+#ifdef USE_TERM_DRIVER
+	    TCBOf(SP_PARM)->drv->scinit(SP_PARM);
+#else
 	    /*
 	     * Check for mismatched graphic-rendition capabilities.  Most SVr4
 	     * terminfo trees contain entries that have rmul or rmso equated to
@@ -237,21 +288,21 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	     * shouldn't be looking at this detail.
 	     */
 #define SGR0_TEST(mode) (mode != 0) && (exit_attribute_mode == 0 || strcmp(mode, exit_attribute_mode))
-	    SP->_use_rmso = SGR0_TEST(exit_standout_mode);
-	    SP->_use_rmul = SGR0_TEST(exit_underline_mode);
+	    SP_PARM->_use_rmso = SGR0_TEST(exit_standout_mode);
+	    SP_PARM->_use_rmul = SGR0_TEST(exit_underline_mode);
 
 	    /* compute movement costs so we can do better move optimization */
 	    _nc_mvcur_init();
 
 	    /* initialize terminal to a sane state */
 	    _nc_screen_init();
+#endif
 
 	    /* Initialize the terminal line settings. */
-	    _nc_initscr();
+	    _nc_initscr(NCURSES_SP_ARG);
 
 	    _nc_signal_handler(TRUE);
-
-	    result = SP;
+	    result = SP_PARM;
 	}
     }
     _nc_unlock_global(curses);

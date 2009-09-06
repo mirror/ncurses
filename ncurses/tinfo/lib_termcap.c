@@ -50,7 +50,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.69 2009/07/11 18:14:21 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.70 2009/08/30 17:16:00 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -93,15 +93,13 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
     START_TRACE();
     T((T_CALLED("tgetent()")));
 
-#ifdef USE_TERM_DRIVER
-    _nc_setupterm_ex(&termp, (NCURSES_CONST char *) name,
+    TINFO_SETUP_TERM(&termp, (NCURSES_CONST char *) name,
 		     STDOUT_FILENO, &errcode, TRUE);
 
+#ifdef USE_TERM_DRIVER
     if (termp == 0 ||
 	!((TERMINAL_CONTROL_BLOCK *) termp)->drv->isTerminfo)
 	return (errcode);
-#else
-    _nc_setupterm((NCURSES_CONST char *) name, STDOUT_FILENO, &errcode, TRUE);
 #endif
 
     /*

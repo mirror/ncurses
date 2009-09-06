@@ -40,7 +40,7 @@
 #include <term_entry.h>		/* TTY, cur_term */
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.24 2009/08/22 22:37:13 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.26 2009/09/05 18:05:27 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.

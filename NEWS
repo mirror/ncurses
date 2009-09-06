@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1425 2009/08/29 18:33:51 tom Exp $
+-- $Id: NEWS,v 1.1428 2009/09/05 17:51:48 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090905
+	+ build-fix for building outside source-tree (report by Sven Joachim).
+	+ fix Debian lintian warning for man/tabs.1 by making section number
+	  agree with file-suffix (report by Sven Joachim).
+	+ continue integrating "sp-funcs" by Juergen Pfeifer (incomplete).
 
 20090829
 	+ workaround for bug in g++ 4.1-4.4 warnings for wattrset() macro on

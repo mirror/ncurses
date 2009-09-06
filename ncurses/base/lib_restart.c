@@ -45,7 +45,7 @@
 #define _POSIX_SOURCE
 #endif
 
-MODULE_ID("$Id: lib_restart.c,v 1.11 2009/05/02 20:47:42 tom Exp $")
+MODULE_ID("$Id: lib_restart.c,v 1.12 2009/08/30 17:59:13 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(restartterm) (NCURSES_SP_DCLx
@@ -54,10 +54,13 @@ NCURSES_SP_NAME(restartterm) (NCURSES_SP_DCLx
 			      int *errret)
 {
     int result;
+#ifdef USE_TERM_DRIVER
+    TERMINAL *new_term;
+#endif
 
     T((T_CALLED("restartterm(%p,%s,%d,%p)"), SP_PARM, termp, filenum, errret));
 
-    if (setupterm(termp, filenum, errret) != OK) {
+    if (TINFO_SETUP_TERM(&new_term, termp, filenum, errret, FALSE) != OK) {
 	result = ERR;
     } else if (SP_PARM != 0) {
 	int saveecho = SP_PARM->_echo;
@@ -65,6 +68,9 @@ NCURSES_SP_NAME(restartterm) (NCURSES_SP_DCLx
 	int saveraw = SP_PARM->_raw;
 	int savenl = SP_PARM->_nl;
 
+#ifdef USE_TERM_DRIVER
+	SP_PARM->_term = new_term;
+#endif
 	if (saveecho) {
 	    NCURSES_SP_NAME(echo) (NCURSES_SP_ARG);
 	} else {

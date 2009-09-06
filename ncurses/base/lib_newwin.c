@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.58 2009/06/06 17:53:11 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.59 2009/08/30 16:35:23 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -62,6 +62,17 @@ remove_window_from_screen(WINDOW *win)
 {
     SCREEN *sp;
 
+#ifdef USE_SP_WINDOWLIST
+    if ((sp = _nc_screen_of(win)) != 0) {
+	if (window_is(curscr)) {
+	    remove_window(curscr);
+	} else if (window_is(stdscr)) {
+	    remove_window(stdscr);
+	} else if (window_is(newscr)) {
+	    remove_window(newscr);
+	}
+    }
+#else
     for (each_screen(sp)) {
 	if (window_is(curscr)) {
 	    remove_window(curscr);
@@ -74,6 +85,7 @@ remove_window_from_screen(WINDOW *win)
 	    break;
 	}
     }
+#endif
 }
 
 NCURSES_EXPORT(int)
@@ -82,17 +94,20 @@ _nc_freewin(WINDOW *win)
     WINDOWLIST *p, *q;
     int i;
     int result = ERR;
+#ifdef USE_SP_WINDOWLIST
+    SCREEN *sp = _nc_screen_of(win);	/* pretend this is parameter */
+#endif
 
     T((T_CALLED("_nc_freewin(%p)"), win));
 
     if (win != 0) {
-	if (_nc_try_global(curses) == 0) {
+	if (_nc_nonsp_try_global(curses) == 0) {
 	    q = 0;
-	    for (each_window(SP, p)) {
+	    for (each_window(SP_PARM, p)) {
 		if (&(p->win) == win) {
 		    remove_window_from_screen(win);
 		    if (q == 0)
-			WindowList(SP) = p->next;
+			WindowList(SP_PARM) = p->next;
 		    else
 			q->next = p->next;
 
@@ -109,7 +124,7 @@ _nc_freewin(WINDOW *win)
 		}
 		q = p;
 	    }
-	    _nc_unlock_global(curses);
+	    _nc_nonsp_unlock_global(curses);
 	}
     }
     returnCode(result);
@@ -123,7 +138,8 @@ NCURSES_SP_NAME(newwin) (NCURSES_SP_DCLx
     NCURSES_CH_T *ptr;
     int i;
 
-    T((T_CALLED("newwin(%d,%d,%d,%d)"), num_lines, num_columns, begy, begx));
+    T((T_CALLED("newwin(%p, %d,%d,%d,%d)"), SP_PARM, num_lines, num_columns,
+       begy, begx));
 
     if (begy < 0 || begx < 0 || num_lines < 0 || num_columns < 0)
 	returnWin(0);
@@ -157,21 +173,24 @@ NCURSES_SP_NAME(newwin) (NCURSES_SP_DCLx
 NCURSES_EXPORT(WINDOW *)
 newwin(int num_lines, int num_columns, int begy, int begx)
 {
-    return NCURSES_SP_NAME(newwin) (CURRENT_SCREEN,
-				    num_lines, num_columns,
-				    begy, begx);
+    WINDOW *win;
+    _nc_sp_lock_global(curses);
+    win = NCURSES_SP_NAME(newwin) (CURRENT_SCREEN,
+				   num_lines, num_columns, begy, begx);
+    _nc_sp_unlock_global(curses);
+    return (win);
 }
 #endif
 
 NCURSES_EXPORT(WINDOW *)
 derwin(WINDOW *orig, int num_lines, int num_columns, int begy, int begx)
 {
-#if NCURSES_SP_FUNCS
-    SCREEN *sp = CURRENT_SCREEN;
-#endif
     WINDOW *win;
     int i;
     int flags = _SUBWIN;
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = _nc_screen_of(orig);
+#endif
 
     T((T_CALLED("derwin(%p,%d,%d,%d,%d)"), orig, num_lines, num_columns,
        begy, begx));
@@ -261,7 +280,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
 	returnWin(0);
     }
 
-    _nc_lock_global(curses);
+    _nc_nonsp_lock_global(curses);
 
     win->_curx = 0;
     win->_cury = 0;
@@ -343,19 +362,9 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
 
     T((T_CREATE("window %p"), win));
 
-    _nc_unlock_global(curses);
+    _nc_nonsp_unlock_global(curses);
     returnWin(win);
 }
-
-#if NCURSES_SP_FUNCS
-NCURSES_EXPORT(WINDOW *)
-_nc_makenew(int num_lines, int num_columns, int begy, int begx, int flags)
-{
-    return NCURSES_SP_NAME(_nc_makenew) (CURRENT_SCREEN,
-					 num_lines, num_columns,
-					 begy, begx, flags);
-}
-#endif
 
 /*
  * wgetch() and other functions with a WINDOW* parameter may use a SCREEN*

@@ -42,14 +42,21 @@
 
 #include <curses.priv.h>
 
-#include <term.h>		/* cur_term */
 #include <tic.h>
 
 #ifndef CUR
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.124 2009/06/27 21:36:14 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.126 2009/09/05 18:18:10 tom Exp $")
+
+#ifdef USE_TERM_DRIVER
+#define MaxColors      InfoOf(sp).maxcolors
+#define NumLabels      InfoOf(sp).numlabels
+#else
+#define MaxColors      max_colors
+#define NumLabels      num_labels
+#endif
 
 NCURSES_EXPORT(SCREEN *)
 set_term(SCREEN *screenp)
@@ -66,7 +73,7 @@ set_term(SCREEN *screenp)
     newSP = SP;
 
     if (newSP != 0) {
-	set_curterm(newSP->_term);
+	TINFO_SET_CURTERM(newSP, newSP->_term);
 #if !USE_REENTRANT
 	curscr = newSP->_curscr;
 	newscr = newSP->_newscr;
@@ -75,7 +82,7 @@ set_term(SCREEN *screenp)
 	COLOR_PAIRS = newSP->_pair_count;
 #endif
     } else {
-	set_curterm(0);
+	TINFO_SET_CURTERM(oldSP, 0);
 #if !USE_REENTRANT
 	curscr = 0;
 	newscr = 0;
@@ -134,6 +141,19 @@ delscreen(SCREEN *sp)
 
     _nc_lock_global(curses);
     if (delink_screen(sp)) {
+#ifdef USE_SP_RIPOFF
+	ripoff_t *rop;
+	if (safe_ripoff_sp && safe_ripoff_sp != safe_ripoff_stack) {
+	    for (rop = safe_ripoff_stack;
+		 rop != safe_ripoff_sp && (rop - safe_ripoff_stack) < N_RIPS;
+		 rop++) {
+		if (rop->win) {
+		    (void) delwin(rop->win);
+		    rop->win = 0;
+		}
+	    }
+	}
+#endif
 
 	(void) _nc_freewin(sp->_curscr);
 	(void) _nc_freewin(sp->_newscr);
@@ -181,7 +201,7 @@ delscreen(SCREEN *sp)
 	    free(sp->_setbuf);
 	}
 
-	del_curterm(sp->_term);
+	NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx sp->_term);
 	free(sp);
 
 	/*
@@ -253,6 +273,41 @@ extract_fgbg(char *src, int *result)
 }
 #endif
 
+#if NCURSES_SP_FUNCS
+/*
+ * In case of handling multiple screens, we need to have a screen before
+ * initialization in setupscreen takes place.  This is to extend the substitute
+ * for some of the stuff in _nc_prescreen, especially for slk and ripoff
+ * handling which should be done per screen.
+ */
+NCURSES_EXPORT(SCREEN *)
+new_prescr(void)
+{
+    SCREEN *sp = _nc_alloc_screen_sp();
+    if (sp) {
+	sp->rsp = sp->rippedoff;
+	sp->_filtered = _nc_prescreen.filter_mode;
+	sp->_use_env = _nc_prescreen.use_env;
+#if NCURSES_NO_PADDING
+	sp->_no_padding = _nc_prescreen._no_padding;
+#endif
+	sp->slk_format = 0;
+	sp->_slk = 0;
+	sp->_prescreen = TRUE;
+	SP_PRE_INIT(sp);
+#if USE_REENTRANT
+	sp->_TABSIZE = _nc_prescreen._TABSIZE;
+	sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
+#endif
+	_nc_set_screen(sp);
+    }
+    return sp;
+}
+#endif
+
+#define ReturnScreenError() _nc_set_screen(0); \
+                            returnCode(ERR)
+
 /* OS-independent screen initializations */
 NCURSES_EXPORT(int)
 _nc_setupscreen(int slines GCC_UNUSED,
@@ -303,6 +358,9 @@ _nc_setupscreen(int slines GCC_UNUSED,
     if (filtered) {
 	slines = 1;
 	SET_LINES(slines);
+#ifdef USE_TERM_DRIVER
+	CallDriver(sp, setfilter);
+#else
 	clear_screen = 0;
 	cursor_down = parm_down_cursor = 0;
 	cursor_address = 0;
@@ -310,6 +368,7 @@ _nc_setupscreen(int slines GCC_UNUSED,
 	row_address = 0;
 
 	cursor_home = carriage_return;
+#endif
 	T(("filter screensize %dx%d", LINES, COLS));
     }
 #ifdef __DJGPP__
@@ -375,9 +434,9 @@ _nc_setupscreen(int slines GCC_UNUSED,
 	char sep1, sep2;
 	int count = sscanf(env, "%d%c%d%c", &fg, &sep1, &bg, &sep2);
 	if (count >= 1) {
-	    SP->_default_fg = (fg >= 0 && fg < max_colors) ? fg : C_MASK;
+	    SP->_default_fg = (fg >= 0 && fg < MaxColors) ? fg : C_MASK;
 	    if (count >= 3) {
-		SP->_default_bg = (bg >= 0 && bg < max_colors) ? bg : C_MASK;
+		SP->_default_bg = (bg >= 0 && bg < MaxColors) ? bg : C_MASK;
 	    }
 	    TR(TRACE_CHARPUT | TRACE_MOVE,
 	       ("from environment assumed fg=%d, bg=%d",
@@ -401,20 +460,20 @@ _nc_setupscreen(int slines GCC_UNUSED,
 	    p = extract_fgbg(p, &(SP->_default_bg));
 	TR(TRACE_CHARPUT | TRACE_MOVE, ("decoded fg=%d, bg=%d",
 					SP->_default_fg, SP->_default_bg));
-	if (SP->_default_fg >= max_colors) {
+	if (SP->_default_fg >= MaxColors) {
 	    if (set_a_foreground != ABSENT_STRING
 		&& !strcmp(set_a_foreground, "\033[3%p1%dm")) {
 		set_a_foreground = "\033[3%?%p1%{8}%>%t9%e%p1%d%;m";
 	    } else {
-		SP->_default_fg %= max_colors;
+		SP->_default_fg %= MaxColors;
 	    }
 	}
-	if (SP->_default_bg >= max_colors) {
+	if (SP->_default_bg >= MaxColors) {
 	    if (set_a_background != ABSENT_STRING
 		&& !strcmp(set_a_background, "\033[4%p1%dm")) {
 		set_a_background = "\033[4%?%p1%{8}%>%t9%e%p1%d%;m";
 	    } else {
-		SP->_default_bg %= max_colors;
+		SP->_default_bg %= MaxColors;
 	    }
 	}
     }
@@ -575,7 +634,7 @@ _nc_setupscreen(int slines GCC_UNUSED,
 	   formats (4-4 or 3-2-3) for which there may be some hardware
 	   support. */
 	if (rop->hook == _nc_slk_initialize)
-	    if (!(num_labels <= 0 || !SLK_STDFMT(slk_format)))
+	    if (!(NumLabels <= 0 || !SLK_STDFMT(slk_format)))
 		continue;
 	if (rop->hook) {
 	    int count;
