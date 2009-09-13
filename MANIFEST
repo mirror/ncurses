@@ -1012,6 +1012,7 @@
 ./test/key_names.c
 ./test/keynames.c
 ./test/knight.c
+./test/linedata.h
 ./test/linux-color.dat
 ./test/listused.sh
 ./test/lrtest.c
@@ -1029,6 +1030,10 @@
 ./test/savescreen.sh
 ./test/tclock.c
 ./test/test.priv.h
+./test/test_add_wchstr.c
+./test/test_addchstr.c
+./test/test_addstr.c
+./test/test_addwstr.c
 ./test/test_arrays.c
 ./test/test_get_wstr.c
 ./test/test_getstr.c

@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.436 2009/08/30 18:13:54 tom Exp $
+ * $Id: curses.priv.h,v 1.437 2009/09/12 18:09:17 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1810,6 +1810,10 @@ extern NCURSES_EXPORT(void) _nc_tgetent_leaks(void);
 extern NCURSES_EXPORT(NCURSES_CH_T) _nc_render (WINDOW *, NCURSES_CH_T);
 extern NCURSES_EXPORT(int) _nc_waddch_nosync (WINDOW *, const NCURSES_CH_T);
 extern NCURSES_EXPORT(void) _nc_scroll_window (WINDOW *, int const, NCURSES_SIZE_T const, NCURSES_SIZE_T const, NCURSES_CH_T);
+#endif
+
+#if USE_WIDEC_SUPPORT
+extern NCURSES_EXPORT(int) _nc_insert_wch(WINDOW *, const cchar_t *);
 #endif
 
 #if USE_WIDEC_SUPPORT && !defined(USE_TERMLIB)

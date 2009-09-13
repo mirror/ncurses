@@ -39,13 +39,13 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ins_wch.c,v 1.9 2009/05/30 14:52:42 tom Exp $")
+MODULE_ID("$Id: lib_ins_wch.c,v 1.10 2009/09/12 18:07:23 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
  * inserting a string.
  */
-static int
+NCURSES_EXPORT(int)
 _nc_insert_wch(WINDOW *win, const cchar_t *wch)
 {
     int cells = wcwidth(CharOf(CHDEREF(wch)));

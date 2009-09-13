@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inserts.c,v 1.18 2007/07/21 17:41:55 tom Exp $
+ * $Id: inserts.c,v 1.19 2009/09/12 22:50:03 tom Exp $
  *
  * Demonstrate the winsstr() and winsch functions.
  * Thomas Dickey - 2002/10/19
@@ -35,6 +35,8 @@
 #include <test.priv.h>
 
 #if HAVE_WINSSTR
+
+#include <linedata.h>
 
 #define InsNStr    insnstr
 #define InsStr     insstr
@@ -208,14 +210,10 @@ test_inserts(int level)
 	wbkgdset(work, COLOR_PAIR(1) | ' ');
     }
 
-    while ((ch = wgetch(work)) != 'q') {
-	if (ch == ERR) {
-	    beep();
-	    break;
-	}
+    while ((ch = read_linedata(work)) != ERR && !isQUIT(ch)) {
 	wmove(work, row, margin + 1);
 	switch (ch) {
-	case 'w':
+	case key_RECUR:
 	    test_inserts(level + 1);
 
 	    touchwin(look);
@@ -228,8 +226,7 @@ test_inserts(int level)
 
 	    doupdate();
 	    break;
-	case CTRL('N'):
-	case KEY_DOWN:
+	case key_NEWLINE:
 	    if (row < limit) {
 		++row;
 		/* put the whole string in, all at once */
@@ -312,9 +309,6 @@ test_inserts(int level)
 		beep();
 	    }
 	    break;
-	case KEY_BACKSPACE:
-	    ch = '\b';
-	    /* FALLTHRU */
 	default:
 	    if (ch <= 0 || ch > 255) {
 		beep();
@@ -388,6 +382,7 @@ usage(void)
 	"Usage: inserts [options]"
 	,""
 	,"Options:"
+	,"  -f FILE read data from given file"
 	,"  -n NUM  limit string-inserts to NUM bytes on ^N replay"
 	,"  -m      perform wmove/move separately from insert-functions"
 	,"  -w      use window-parameter even when stdscr would be implied"
@@ -405,8 +400,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "mn:w")) != -1) {
+    while ((ch = getopt(argc, argv, "f:mn:w")) != -1) {
 	switch (ch) {
+	case 'f':
+	    init_linedata(optarg);
+	    break;
 	case 'm':
 	    m_opt = TRUE;
 	    break;

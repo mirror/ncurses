@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,18 +26,18 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.11 2009/09/12 23:02:26 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.7 2009/09/13 00:00:28 tom Exp $
  *
- * Demonstrate the wins_wstr() and wins_wch functions.
- * Thomas Dickey - 2002/11/23
+ * Demonstrate the waddwchstr() and wadd_wch functions.
+ * Thomas Dickey - 2009/9/12
  *
- * Note: to provide inputs for *ins_wch(), we use setcchar().  A quirk of the
+ * Note: to provide inputs for *add_wch(), we use setcchar().  A quirk of the
  * X/Open definition for that function is that the string contains no
  * characters with negative width.  Any control character (such as tab) falls
- * into that category.  So it follows that *ins_wch() cannot render a tab
+ * into that category.  So it follows that *add_wch() cannot render a tab
  * character because there is no legal way to construct a cchar_t containing
  * one.  X/Open does not document this, and it would be logical to assume that
- * *ins_wstr() has the same limitation, but it uses a wchar_t string directly,
+ * *addwchstr() has the same limitation, but it uses a wchar_t string directly,
  * and does not document how tabs are handled.
  */
 
@@ -48,15 +48,15 @@
 #define WIDE_LINEDATA
 #include <linedata.h>
 
-/* definitions to make it simpler to compare with inserts.c */
-#define InsNStr    ins_nwstr
-#define InsStr     ins_wstr
-#define MvInsNStr  mvins_nwstr
-#define MvInsStr   mvins_wstr
-#define MvWInsNStr mvwins_nwstr
-#define MvWInsStr  mvwins_wstr
-#define WInsNStr   wins_nwstr
-#define WInsStr    wins_wstr
+/* definitions to make it simpler to compare with test_addstr.c */
+#define AddNStr    add_wchnstr
+#define AddStr     add_wchstr
+#define MvAddNStr  mvadd_wchnstr
+#define MvAddStr   mvadd_wchstr
+#define MvWAddNStr mvwadd_wchnstr
+#define MvWAddStr  mvwadd_wchstr
+#define WAddNStr   wadd_wchnstr
+#define WAddStr    wadd_wchstr
 
 #define MY_TABSIZE 8
 
@@ -70,6 +70,44 @@ typedef enum {
 static bool m_opt = FALSE;
 static bool w_opt = FALSE;
 static int n_opt = -1;
+
+static cchar_t *temp_buffer;
+static size_t temp_length;
+
+#define TempBuffer(source_len, source_cast) \
+    if (source != 0) { \
+	size_t need = source_len + 1; \
+	wchar_t have[2]; \
+	int n = 0; \
+ \
+	if (need > temp_length) { \
+	    temp_length = need * 2; \
+	    temp_buffer = typeRealloc(cchar_t, temp_length, temp_buffer); \
+	} \
+	have[0] = 0; \
+	have[1] = 0; \
+	do { \
+	    have[0] = source_cast; \
+	    setcchar(&temp_buffer[n++], have, A_NORMAL, 0, NULL); \
+	} while (have[0] != 0); \
+    } else if (temp_buffer != 0) { \
+	free(temp_buffer); \
+	temp_buffer = 0; \
+	temp_length = 0; \
+    } \
+    return temp_buffer;
+
+static cchar_t *
+ChStr(const char *source)
+{
+    TempBuffer(strlen(source), UChar(*source++));
+}
+
+static cchar_t *
+ChWStr(const wchar_t *source)
+{
+    TempBuffer(wcslen(source), *source++);
+}
 
 static void
 legend(WINDOW *win, int level, Options state, wchar_t *buffer, int length)
@@ -98,7 +136,7 @@ legend(WINDOW *win, int level, Options state, wchar_t *buffer, int length)
     wprintw(win,
 	    "down-arrow or ^N to repeat on next line, 'w' for inner window, 'q' to exit.\n");
     wclrtoeol(win);
-    wprintw(win, "Level %d,%s inserted %d characters <", level,
+    wprintw(win, "Level %d,%s added %d characters <", level,
 	    showstate, length);
     waddwstr(win, buffer);
     waddstr(win, ">");
@@ -156,64 +194,64 @@ ConvertCh(chtype source, cchar_t *target)
 }
 
 static int
-MvWInsCh(WINDOW *win, int y, int x, chtype ch)
+MvWAddCh(WINDOW *win, int y, int x, chtype ch)
 {
     int code;
     cchar_t tmp_cchar;
 
     if (ConvertCh(ch, &tmp_cchar)) {
-	code = mvwins_wch(win, y, x, &tmp_cchar);
+	code = mvwadd_wch(win, y, x, &tmp_cchar);
     } else {
-	code = mvwinsch(win, y, x, ch);
+	code = mvwaddch(win, y, x, ch);
     }
     return code;
 }
 
 static int
-MvInsCh(int y, int x, chtype ch)
+MvAddCh(int y, int x, chtype ch)
 {
     int code;
     cchar_t tmp_cchar;
 
     if (ConvertCh(ch, &tmp_cchar)) {
-	code = mvins_wch(y, x, &tmp_cchar);
+	code = mvadd_wch(y, x, &tmp_cchar);
     } else {
-	code = mvinsch(y, x, ch);
+	code = mvaddch(y, x, ch);
     }
     return code;
 }
 
 static int
-WInsCh(WINDOW *win, chtype ch)
+WAddCh(WINDOW *win, chtype ch)
 {
     int code;
     cchar_t tmp_cchar;
 
     if (ConvertCh(ch, &tmp_cchar)) {
-	code = wins_wch(win, &tmp_cchar);
+	code = wadd_wch(win, &tmp_cchar);
     } else {
-	code = winsch(win, ch);
+	code = waddch(win, ch);
     }
     return code;
 }
 
 static int
-InsCh(chtype ch)
+AddCh(chtype ch)
 {
     int code;
     cchar_t tmp_cchar;
 
     if (ConvertCh(ch, &tmp_cchar)) {
-	code = ins_wch(&tmp_cchar);
+	code = add_wch(&tmp_cchar);
     } else {
-	code = insch(ch);
+	code = addch(ch);
     }
     return code;
 }
 
 #define LEN(n) ((length - (n) > n_opt) ? n_opt : (length - (n)))
 static void
-test_inserts(int level)
+test_add_wchstr(int level)
 {
     static bool first = TRUE;
 
@@ -264,8 +302,8 @@ test_inserts(int level)
     mvwvline(work, row, margin + 1, ACS_VLINE, limit - 2);
     limit /= 2;
 
-    mvwaddstr(work, 1, 2, "String");
-    mvwaddstr(work, limit + 1, 2, "Chars");
+    mvwadd_wchstr(work, 1, 2, ChStr("String"));
+    mvwadd_wchstr(work, limit + 1, 2, ChStr("Chars"));
     wnoutrefresh(work);
 
     buffer[length = 0] = '\0';
@@ -275,7 +313,7 @@ test_inserts(int level)
     doupdate();
 
     /*
-     * Show the characters inserted in color, to distinguish from those that
+     * Show the characters added in color, to distinguish from those that
      * are shifted.
      */
     if (has_colors()) {
@@ -288,7 +326,7 @@ test_inserts(int level)
 	wmove(work, row, margin + 1);
 	switch (ch) {
 	case key_RECUR:
-	    test_inserts(level + 1);
+	    test_add_wchstr(level + 1);
 
 	    touchwin(look);
 	    touchwin(work);
@@ -311,12 +349,12 @@ test_inserts(int level)
 			for (col = 0; col < length; col += n_opt) {
 			    col2 = ColOf(buffer, col, margin);
 			    if (move(row, col2) != ERR) {
-				InsNStr(buffer + col, LEN(col));
+				AddNStr(ChWStr(buffer + col), LEN(col));
 			    }
 			}
 		    } else {
 			if (move(row, col2) != ERR) {
-			    InsStr(buffer);
+			    AddStr(ChWStr(buffer));
 			}
 		    }
 		    break;
@@ -324,10 +362,10 @@ test_inserts(int level)
 		    if (n_opt > 1) {
 			for (col = 0; col < length; col += n_opt) {
 			    col2 = ColOf(buffer, col, margin);
-			    MvInsNStr(row, col2, buffer + col, LEN(col));
+			    MvAddNStr(row, col2, ChWStr(buffer + col), LEN(col));
 			}
 		    } else {
-			MvInsStr(row, col2, buffer);
+			MvAddStr(row, col2, ChWStr(buffer));
 		    }
 		    break;
 		case oWindow:
@@ -335,12 +373,12 @@ test_inserts(int level)
 			for (col = 0; col < length; col += n_opt) {
 			    col2 = ColOf(buffer, col, margin);
 			    if (wmove(work, row, col2) != ERR) {
-				WInsNStr(work, buffer + col, LEN(col));
+				WAddNStr(work, ChWStr(buffer + col), LEN(col));
 			    }
 			}
 		    } else {
 			if (wmove(work, row, col2) != ERR) {
-			    WInsStr(work, buffer);
+			    WAddStr(work, ChWStr(buffer));
 			}
 		    }
 		    break;
@@ -348,34 +386,35 @@ test_inserts(int level)
 		    if (n_opt > 1) {
 			for (col = 0; col < length; col += n_opt) {
 			    col2 = ColOf(buffer, col, margin);
-			    MvWInsNStr(work, row, col2, buffer + col, LEN(col));
+			    MvWAddNStr(work, row, col2, ChWStr(buffer +
+							       col), LEN(col));
 			}
 		    } else {
-			MvWInsStr(work, row, col2, buffer);
+			MvWAddStr(work, row, col2, ChWStr(buffer));
 		    }
 		    break;
 		}
 
-		/* do the corresponding single-character insertion */
+		/* do the corresponding single-character add */
 		row2 = limit + row;
 		for (col = 0; col < length; ++col) {
 		    col2 = ColOf(buffer, col, margin);
 		    switch (option) {
 		    case oDefault:
 			if (move(row2, col2) != ERR) {
-			    InsCh((chtype) buffer[col]);
+			    AddCh((chtype) buffer[col]);
 			}
 			break;
 		    case oMove:
-			MvInsCh(row2, col2, (chtype) buffer[col]);
+			MvAddCh(row2, col2, (chtype) buffer[col]);
 			break;
 		    case oWindow:
 			if (wmove(work, row2, col2) != ERR) {
-			    WInsCh(work, (chtype) buffer[col]);
+			    WAddCh(work, (chtype) buffer[col]);
 			}
 			break;
 		    case oMoveWindow:
-			MvWInsCh(work, row2, col2, (chtype) buffer[col]);
+			MvWAddCh(work, row2, col2, (chtype) buffer[col]);
 			break;
 		    }
 		}
@@ -392,39 +431,39 @@ test_inserts(int level)
 	    switch (option) {
 	    case oDefault:
 		if (move(row, col) != ERR) {
-		    InsStr(buffer + length - 1);
+		    AddStr(ChWStr(buffer + length - 1));
 		}
 		break;
 	    case oMove:
-		MvInsStr(row, col, buffer + length - 1);
+		MvAddStr(row, col, ChWStr(buffer + length - 1));
 		break;
 	    case oWindow:
 		if (wmove(work, row, col) != ERR) {
-		    WInsStr(work, buffer + length - 1);
+		    WAddStr(work, ChWStr(buffer + length - 1));
 		}
 		break;
 	    case oMoveWindow:
-		MvWInsStr(work, row, col, buffer + length - 1);
+		MvWAddStr(work, row, col, ChWStr(buffer + length - 1));
 		break;
 	    }
 
-	    /* do the corresponding single-character insertion */
+	    /* do the corresponding single-character add */
 	    switch (option) {
 	    case oDefault:
 		if (move(limit + row, col) != ERR) {
-		    InsCh(ch);
+		    AddCh(ch);
 		}
 		break;
 	    case oMove:
-		MvInsCh(limit + row, col, ch);
+		MvAddCh(limit + row, col, ch);
 		break;
 	    case oWindow:
 		if (wmove(work, limit + row, col) != ERR) {
-		    WInsCh(work, ch);
+		    WAddCh(work, ch);
 		}
 		break;
 	    case oMoveWindow:
-		MvWInsCh(work, limit + row, col, ch);
+		MvWAddCh(work, limit + row, col, ch);
 		break;
 	    }
 
@@ -449,12 +488,12 @@ usage(void)
 {
     static const char *tbl[] =
     {
-	"Usage: inserts [options]"
+	"Usage: test_add_wchstr [options]"
 	,""
 	,"Options:"
 	,"  -f FILE read data from given file"
-	,"  -n NUM  limit string-inserts to NUM bytes on ^N replay"
-	,"  -m      perform wmove/move separately from insert-functions"
+	,"  -n NUM  limit string-adds to NUM bytes on ^N replay"
+	,"  -m      perform wmove/move separately from add-functions"
 	,"  -w      use window-parameter even when stdscr would be implied"
     };
     unsigned n;
@@ -494,7 +533,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     if (optind < argc)
 	usage();
 
-    test_inserts(0);
+    test_add_wchstr(0);
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }

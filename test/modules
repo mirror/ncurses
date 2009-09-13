@@ -1,4 +1,4 @@
-# $Id: modules,v 1.38 2009/07/11 12:43:09 tom Exp $
+# $Id: modules,v 1.41 2009/09/12 21:21:06 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -61,9 +61,9 @@ hanoi		progs		$(srcdir)	$(HEADER_DEPS)
 hashtest	progs		$(srcdir)	$(HEADER_DEPS)
 inch_wide	progs		$(srcdir)	$(HEADER_DEPS)
 inchs		progs		$(srcdir)	$(HEADER_DEPS)
-ins_wide	progs		$(srcdir)	$(HEADER_DEPS)
+ins_wide	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/linedata.h
 insdelln	progs		$(srcdir)	$(HEADER_DEPS)
-inserts		progs		$(srcdir)	$(HEADER_DEPS)
+inserts		progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/linedata.h
 key_names	progs		$(srcdir)	$(HEADER_DEPS)
 keynames	progs		$(srcdir)	$(HEADER_DEPS)
 knight		progs		$(srcdir)	$(HEADER_DEPS)
@@ -76,6 +76,10 @@ rain		progs		$(srcdir)	$(HEADER_DEPS)
 redraw		progs		$(srcdir)	$(HEADER_DEPS)
 savescreen	progs		$(srcdir)	$(HEADER_DEPS)
 tclock		progs		$(srcdir)	$(HEADER_DEPS)
+test_add_wchstr	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/linedata.h
+test_addchstr	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/linedata.h
+test_addstr	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/linedata.h
+test_addwstr	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/linedata.h
 test_arrays	progs		$(srcdir)	$(HEADER_DEPS)
 test_get_wstr	progs		$(srcdir)	$(HEADER_DEPS)
 test_getstr	progs		$(srcdir)	$(HEADER_DEPS)

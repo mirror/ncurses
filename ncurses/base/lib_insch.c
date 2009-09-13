@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insch.c,v 1.29 2009/05/30 16:45:16 tom Exp $")
+MODULE_ID("$Id: lib_insch.c,v 1.31 2009/09/12 18:11:55 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -56,13 +56,13 @@ _nc_insert_ch(SCREEN *sp, WINDOW *win, chtype ch)
     NCURSES_CH_T wch;
     int count;
     NCURSES_CONST char *s;
-    int tabsize =
+    int tabsize = (
 #if USE_REENTRANT
-    sp->_TABSIZE
+		      sp->_TABSIZE
 #else
-    TABSIZE
+		      TABSIZE
 #endif
-     ;
+    );
 
     switch (ch) {
     case '\t':
@@ -119,7 +119,7 @@ _nc_insert_ch(SCREEN *sp, WINDOW *win, chtype ch)
 	    wch = _nc_render(win, wch);
 	    count = _nc_build_wch(win, &wch);
 	    if (count > 0) {
-		code = wins_wch(win, &wch);
+		code = _nc_insert_wch(win, &wch);
 	    } else if (count == -1) {
 		/* handle EILSEQ */
 		if (is8bits(ch)) {
