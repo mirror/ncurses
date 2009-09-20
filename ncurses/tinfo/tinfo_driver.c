@@ -42,7 +42,15 @@
 #endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.2 2009/08/16 14:17:08 tom Exp $")
+#if HAVE_SIZECHANGE
+# if !defined(sun) || !TERMIOS
+#  if HAVE_SYS_IOCTL_H
+#   include <sys/ioctl.h>
+#  endif
+# endif
+#endif
+
+MODULE_ID("$Id: tinfo_driver.c,v 1.3 2009/09/27 17:29:39 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,

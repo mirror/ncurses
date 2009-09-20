@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.437 2009/09/12 18:09:17 tom Exp $
+ * $Id: curses.priv.h,v 1.439 2009/09/26 22:25:35 tom Exp $
  *
  *	curses.priv.h
  *
@@ -196,11 +196,10 @@ extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
 /*
  * Options for terminal drivers, etc...
  */
-#if 0
+#ifdef USE_TERM_DRIVER
 #define USE_SP_RIPOFF     1
 #define USE_SP_TERMTYPE   1
 #define USE_SP_WINDOWLIST 1
-#define USE_TERM_DRIVER   1
 #endif
 
 /*
@@ -968,9 +967,6 @@ struct screen {
 	 */
 	bool		_nc_sp_idlok;
 	bool		_nc_sp_idcok;
-
-#define _nc_idlok SP_PARM->_nc_sp_idlok
-#define _nc_idcok SP_PARM->_nc_sp_idcok
 
 	/*
 	 * These are the data that support the mouse interface.
@@ -1872,7 +1868,7 @@ extern NCURSES_EXPORT_VAR(SCREEN *) SP;
 #define _nc_set_screen(sp)      SP = sp
 #endif
 
-#if NCURSES_SP_FUNCS && 0
+#if NCURSES_SP_FUNCS
 #define CURRENT_SCREEN_PRE      (IsPreScreen(CURRENT_SCREEN) ? CURRENT_SCREEN : new_prescr())
 #else
 #define CURRENT_SCREEN_PRE      CURRENT_SCREEN

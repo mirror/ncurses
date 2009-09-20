@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.258.1.2 2009/08/16 14:20:30 tom Exp tom $")
+MODULE_ID("$Id: tty_update.c,v 1.260 2009/09/26 18:14:44 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -1201,7 +1201,7 @@ ClrBottom(NCURSES_SP_DCLx int total)
 **	TransformLine(lineno)
 **
 **	Transform the given line in curscr to the one in newscr, using
-**	Insert/Delete Character if _nc_idcok && has_ic().
+**	Insert/Delete Character if idcok && has_ic().
 **
 **		firstChar = position of first different character in line
 **		oLastChar = position of last different character in old line

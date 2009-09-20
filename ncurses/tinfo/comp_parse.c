@@ -53,7 +53,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.70 2009/07/18 20:38:52 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.71 2009/09/27 14:45:02 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -475,7 +475,6 @@ _nc_leaks_tic(void)
 {
     _nc_alloc_entry_leaks();
     _nc_captoinfo_leaks();
-    _nc_comp_captab_leaks();
     _nc_comp_scan_leaks();
 #if BROKEN_LINKER || USE_REENTRANT
     _nc_names_leaks();

@@ -52,7 +52,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.79 2009/09/06 15:13:41 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.81 2009/09/27 00:34:05 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -178,59 +178,74 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
     FILE *_ofp = ofp ? ofp : stdout;
     FILE *_ifp = ifp ? ifp : stdin;
     int cols;
-    int numlab;
-#ifdef USE_TERM_DRIVER
-    TERMINAL *new_term;
-#endif
+    int slk_format;
+    int filter_mode;
+    TERMINAL *new_term = 0;
 
     START_TRACE();
     T((T_CALLED("newterm(%p, \"%s\", %p,%p)"), SP_PARM, name, ofp, ifp));
 
+#if NCURSES_SP_FUNCS
+    assert(SP_PARM != 0);
+    if (SP_PARM == 0)
+	returnSP(SP_PARM);
+#endif
+
     _nc_init_pthreads();
     _nc_lock_global(curses);
 
-    current = SP_PARM;
-    its_term = (SP_PARM ? SP_PARM->_term : 0);
+    current = CURRENT_SCREEN;
+    its_term = (current ? current->_term : 0);
 
     /* this loads the capability entry, then sets LINES and COLS */
-    if (setupterm(name, fileno(_ofp), &errret) != ERR) {
-	int slk_format = _nc_globals.slk_format;
+    if (
+#if NCURSES_SP_FUNCS
+	   SP_PARM->_prescreen &&
+#endif
+	   TINFO_SETUP_TERM(&new_term, name,
+			    fileno(_ofp), &errret, FALSE) != ERR) {
 
 	_nc_set_screen(0);
 #ifdef USE_TERM_DRIVER
 	assert(new_term != 0);
 #endif
 
-	/* allow user to set maximum escape delay from the environment */
-	if ((value = _nc_getenv_num("ESCDELAY")) >= 0) {
-	    set_escdelay(value);
-	}
+#if NCURSES_SP_FUNCS
+	slk_format = SP_PARM->slk_format;
+	filter_mode = SP_PARM->_filtered;
+#else
+	slk_format = _nc_globals.slk_format;
+	filter_mode = _nc_prescreen.filter_mode;
+#endif
 
 	/*
 	 * This actually allocates the screen structure, and saves the original
 	 * terminal settings.
 	 */
-	if (_nc_setupscreen(LINES,
-			    COLS,
-			    _ofp,
-			    _nc_prescreen.filter_mode,
-			    slk_format) == ERR) {
+	if (NCURSES_SP_NAME(_nc_setupscreen) (
+#if NCURSES_SP_FUNCS
+						 &SP_PARM,
+#endif
+						 *(ptrLines(SP_PARM)),
+						 *(ptrCols(SP_PARM)),
+						 _ofp,
+						 filter_mode,
+						 slk_format) == ERR) {
 	    _nc_set_screen(current);
 	    result = 0;
 	} else {
 #ifdef USE_TERM_DRIVER
 	    TERMINAL_CONTROL_BLOCK *TCB;
-#else
+#elif !NCURSES_SP_FUNCS
 	    SP_PARM = CURRENT_SCREEN;
 #endif
 	    assert(SP_PARM != 0);
 	    cols = *(ptrCols(SP_PARM));
 #ifdef USE_TERM_DRIVER
+	    _nc_set_screen(SP_PARM);
 	    TCB = (TERMINAL_CONTROL_BLOCK *) new_term;
 	    TCB->csp = SP_PARM;
 #endif
-	    numlab = NumLabels;
-
 	    /*
 	     * In setupterm() we did a set_curterm(), but it was before we set
 	     * CURRENT_SCREEN.  So the "current" screen's terminal pointer was
@@ -244,15 +259,26 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	    if (current)
 		current->_term = its_term;
 
+#ifdef USE_TERM_DRIVER
+	    SP_PARM->_term = new_term;
+#else
+	    new_term = SP_PARM->_term;
+#endif
+
+	    /* allow user to set maximum escape delay from the environment */
+	    if ((value = _nc_getenv_num("ESCDELAY")) >= 0) {
+		NCURSES_SP_NAME(set_escdelay) (NCURSES_SP_ARGx value);
+	    }
+
 	    /* if the terminal type has real soft labels, set those up */
 	    if (slk_format && NumLabels > 0 && SLK_STDFMT(slk_format))
-		_nc_slk_initialize(stdscr, COLS);
+		_nc_slk_initialize(SP_PARM->_stdscr, cols);
 
 	    SP_PARM->_ifd = fileno(_ifp);
 	    NCURSES_SP_NAME(typeahead) (NCURSES_SP_ARGx fileno(_ifp));
 #ifdef TERMIOS
-	    SP_PARM->_use_meta = ((cur_term->Ottyb.c_cflag & CSIZE) == CS8 &&
-				  !(cur_term->Ottyb.c_iflag & ISTRIP));
+	    SP_PARM->_use_meta = ((new_term->Ottyb.c_cflag & CSIZE) == CS8 &&
+				  !(new_term->Ottyb.c_iflag & ISTRIP));
 #else
 	    SP_PARM->_use_meta = FALSE;
 #endif
@@ -315,6 +341,6 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 NCURSES_EXPORT(SCREEN *)
 newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 {
-    return NCURSES_SP_NAME(newterm) (CURRENT_SCREEN, name, ofp, ifp);
+    return NCURSES_SP_NAME(newterm) (CURRENT_SCREEN_PRE, name, ofp, ifp);
 }
 #endif
