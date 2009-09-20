@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1434 2009/09/12 23:38:28 tom Exp $
+-- $Id: NEWS,v 1.1437 2009/09/19 21:13:13 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20090919
+	+ document return code from define_key (report by Mike Gran).
+	+ make some symbolic links in the terminfo directory-tree shorter
+	  (patch by Daniel Jacobowitz, forwarded by Sven Joachim).).
+	+ fix some groff warnings in terminfo.5, etc., from recent Debian
+	  changes.
+	+ change ncv and op capabilities in sun-color terminfo entry to match
+	  Sun's entry for this (report by Laszlo Peter).
+	+ improve interix smso terminfo capability by using reverse rather than
+	  bold (report by Kristof Zelechovski).
 
 20090912
 	+ add some test programs (and make these use the same special keys

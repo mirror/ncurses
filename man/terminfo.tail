@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.49 2008/02/16 20:57:43 tom Exp $
+.\" $Id: terminfo.tail,v 1.50 2009/09/19 19:56:15 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -759,9 +759,9 @@ For example, the DEC vt220 supports most of the modes:
 .PP
 .TS
 center;
-l c c
-l c c
-lw28 lw6 lw2 lw20.
+l l l
+l l l
+lw18 lw14 lw18.
 \fBtparm parameter	attribute	escape sequence\fP
 
 none	none	\\E[0m
@@ -794,9 +794,9 @@ Writing out the above sequences, along with their dependencies yields
 .PP
 .TS
 center;
-l c c
-l c c
-lw28 lw6 lw2 lw20.
+l l l
+l l l
+lw18 lw14 lw18.
 \fBsequence	when to output	terminfo translation\fP
 
 \\E[0	always	\\E[0
@@ -1174,9 +1174,9 @@ This alternate character set may be specified by the \fBacsc\fR capability.
 .PP
 .TS H
 center expand;
-c l l c
-c l l c
-lw28 lw6 lw2 lw20.
+l l l l
+l l l l
+lw25 lw10 lw6 lw6.
 .\".TH
 \fBGlyph	ACS	Ascii	VT100\fR
 \fBName	Name	Default	Name\fR

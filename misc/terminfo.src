@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.348 $
-#	$Date: 2009/05/02 22:23:20 $
+#	$Revision: 1.350 $
+#	$Date: 2009/09/19 19:32:02 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4842,11 +4842,28 @@ sun-type4|Sun Workstation console with type 4 keyboard,
 # Most of the current references to sun-color are from users wondering why this
 # is the default on install.  Details from reading the wscons manpage, adding
 # cub, etc., here (rather than in the base sun-il entry) since it is not clear
-# when those were added -TD
+# when those were added -TD (2005-05-28)
+#
+# According to wscons manpage, color is supported only on IA systems.
+# Sun's terminfo entry documents bold and smul/rmul capabilities, but wscons
+# does not list these.  It also sets ncv#3, however that corresponds to
+# underline and standout.
+#
+# Since the documentation and terminfo do not agree, see also current code at
+# http://src.opensolaris.org/source/xref/onnv/onnv-gate/usr/src/uts/common/io/tem_safe.c
+#
+# That (actually a different driver which "supports" sun-color) also supports
+# these features:
+#	vpa=\E[%i%p1%dd
+#	hpa=\E[%i%p1%d`
+#	cbt=\E[Z
+#	dim=\E[2m
+#	blink=\E[5m
+# It supports bold, but not underline -TD (2009-09-19)
 sun-color|Sun Microsystems Workstation console with color support (IA systems),
-	colors#8, pairs#64,
+	colors#8, ncv#3, pairs#64,
 	cub=\E[%p1%dD, cud=\E[%p1%dB, cuf=\E[%p1%dC,
-	cuu=\E[%p1%dA, home=\E[H, op=\E[m\E[p, setab=\E[4%p1%dm,
+	cuu=\E[%p1%dA, home=\E[H, op=\E[0m, setab=\E[4%p1%dm,
 	setaf=\E[3%p1%dm,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
@@ -5585,7 +5602,7 @@ interix|opennt|opennt-25|ntconsole|ntconsole-25|OpenNT-term compatible with colo
 	rmcup=\E[2b\E[u\r\E[K, rmso=\E[m, rmul=\E[m, rs1=\Ec,
 	sc=\E[s, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	setb=\E[%p1%{40}%+%dm, setf=\E[%p1%{30}%+%dm,
-	sgr0=\E[0m, smcup=\E[s\E[1b, smso=\E[1m, smul=\E[4m,
+	sgr0=\E[0m, smcup=\E[s\E[1b, smso=\E[7m, smul=\E[4m,
 
 opennt-35|ntconsole-35|OpenNT-term35 compatible with color,
 	lines#35, use=opennt,
@@ -21858,6 +21875,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2009-05-02
 #	* add vwmterm entry (Bryan Christ)
+#
+# 2009-09-19
+#	* change ncv and op capabilities in sun-color to match Sun's entry for
+#	  this (report by Laszlo Peter)
+#	* improve interix smso by using reverse rather than bold (report by
+#	  Kristof Zelechovski).
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
