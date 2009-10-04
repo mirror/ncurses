@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.2 2008/02/09 18:08:57 tom Exp $
+ * $Id: dots_mvcur.c,v 1.3 2008/02/09 18:08:57 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */

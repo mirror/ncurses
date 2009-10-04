@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.350 $
-#	$Date: 2009/09/19 19:32:02 $
+#	$Revision: 1.353 $
+#	$Date: 2009/10/03 18:57:06 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -780,12 +780,12 @@ linux-m|Linux console no color,
 # 1.9.9.
 linux-c-nc|linux console with color-change,
 	ccc,
-	initc=\E]P%p1%x%p2%{256}%*%{1000}%/%02x%p3%{256}%*%{1000}%/%02x%p4%{256}%*%{1000}%/%02x,
+	initc=\E]P%p1%x%p2%{255}%*%{1000}%/%02x%p3%{255}%*%{1000}%/%02x%p4%{255}%*%{1000}%/%02x,
 	oc=\E]R, use=linux-basic,
 # From: Dennis Henriksen <opus@osrl.dk>, 9 July 1996
 linux-c|linux console 1.3.6+ for older ncurses,
 	ccc,
-	initc=\E]P%?%p1%{9}%>%t%p1%{10}%-%'a'%+%c%e%p1%d%;%p2%{256}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%p3%{256}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%p4%{256}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;,
+	initc=\E]P%?%p1%{9}%>%t%p1%{10}%-%'a'%+%c%e%p1%d%;%p2%{255}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%p3%{255}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%p4%{255}%*%{1000}%/%Pr%gr%{16}%/%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;%gr%{15}%&%Px%?%gx%{9}%>%t%gx%{10}%-%'a'%+%c%e%gx%d%;,
 	oc=\E]R, use=linux-basic,
 
 # The 2.2.x kernels add a private mode that sets the cursor type; use that to
@@ -846,6 +846,16 @@ kon|kon2|jfbterm|Kanji ON Linux console,
 	ccc@, hs,
 	civis@, cnorm@, cvvis@, dsl=\E[?H, flash@, fsl=\E[?F, initc@,
 	initp@, kcbt@, oc@, op=\E[37;40m, rs1=\Ec, tsl=\E[?T,
+	use=linux,
+
+# 16-color linux console entry; this works with a 256-character
+# console font but bright background colors turn into dim ones when
+# you use a 512-character console font. This uses bold for bright
+# foreground colors and blink for bright background colors.
+linux-16color|linux console with 16 colors,
+	colors#16, ncv#54, pairs#256,
+	setab=\E[4%p1%{7}%m%d%?%p1%{7}%>%t;5%e;25%;m,
+	setaf=\E[3%p1%{7}%m%d%?%p1%{7}%>%t;1%e;21%;m,
 	use=linux,
 
 #### Mach
@@ -2722,13 +2732,13 @@ putty|PuTTY terminal emulator,
 	indn=\E[%p1%dS,
 	initc=\E]P%p1%x%p2%{255}%*%{1000}%/%02x%p3%{255}%*%{1000}%/%02x%p4%{255}%*%{1000}%/%02x,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>\E]R,
-	kb2=\E[G, kbs=\177, kcan=^C, kcbt=\E[Z, kcub1=\E[D,
-	kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[3~,
-	kend=\E[4~, kf1=\E[11~, kf10=\E[21~, kf11=\E[23~,
-	kf12=\E[24~, kf13=\E[25~, kf14=\E[26~, kf15=\E[28~,
-	kf16=\E[29~, kf17=\E[31~, kf18=\E[32~, kf19=\E[33~,
-	kf2=\E[12~, kf20=\E[34~, kf3=\E[13~, kf4=\E[14~,
-	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
+	kb2=\E[G, kbs=\177, kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B,
+	kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[3~, kend=\E[4~,
+	kf1=\E[11~, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~,
+	kf13=\E[25~, kf14=\E[26~, kf15=\E[28~, kf16=\E[29~,
+	kf17=\E[31~, kf18=\E[32~, kf19=\E[33~, kf2=\E[12~,
+	kf20=\E[34~, kf3=\E[13~, kf4=\E[14~, kf5=\E[15~,
+	kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
 	khome=\E[1~, kich1=\E[2~, kmous=\E[M, knp=\E[6~, kpp=\E[5~,
 	kspd=^Z, nel=^M^J, oc=\E]R, op=\E[39;49m, rc=\E8, rev=\E[7m,
 	ri=\EM, rin=\E[%p1%dT, rmacs=^O, rmam=\E[?7l,
@@ -3290,11 +3300,15 @@ xterm-basic|modern xterm terminal emulator - common,
 xterm-xi|xterm on XI Graphics Accelerated X under BSD/OS 3.1,
 	rmso=\E[m, rmul=\E[m, use=xterm-xf86-v33,
 
-# This is one of the variants of XFree86 3.3 xterm, updated for 4.0 (T.Dickey)
+# 16-colors is one of the variants of XFree86 3.3 xterm, updated for 4.0 (T.Dickey)
+# If configured to support 88- or 256-colors (which is fairly common in 2009),
+# xterm also recognizes the control sequences for initc -TD
 xterm-16color|xterm with 16 colors like aixterm,
+	ccc,
+	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*%{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
 	use=ibm+16color, use=xterm-new,
 
-# This is a compile-time feature of XFree86 xterm beginning with
+# 256-colors is a compile-time feature of XFree86 xterm beginning with
 # patch #111 (1999/7/10) -TD
 xterm+256color|xterm 256-color feature,
 	ccc,
@@ -3304,7 +3318,7 @@ xterm+256color|xterm 256-color feature,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m,
 	setb@, setf@,
 
-# This is a compile-time feature of XFree86 xterm beginning with
+# 88-colors is a compile-time feature of XFree86 xterm beginning with
 # patch #115 (1999/9/18) -TD
 #
 # Note that the escape sequences used are the same as for 256-colors - xterm
@@ -12423,7 +12437,7 @@ dgmode+color|Color info for Data General D470C terminals in DG mode,
 dgunix+ccc|Configurable color info for DG D430C terminals in DG-UNIX mode,
 	bce, ccc,
 	colors#52, ncv#53, pairs#26,
-	initp=\036RG0%p1%02X%p2%{256}%*%{1001}%/%02X%p3%{256}%*%{1001}%/%02X%p4%{256}%*%{1001}%/%02X%p5%{256}%*%{1001}%/%02X%p6%{256}%*%{1001}%/%02X%p7%{256}%*%{1001}%/%02X,
+	initp=\036RG0%p1%02X%p2%{255}%*%{1000}%/%02X%p3%{255}%*%{1000}%/%02X%p4%{255}%*%{1000}%/%02X%p5%{255}%*%{1000}%/%02X%p6%{255}%*%{1000}%/%02X%p7%{255}%*%{1000}%/%02X,
 	oc=\036RG01A00FF00000000\036RG01B00000000FF00\036RG01C007F00000000\036RG01D000000007F00,
 	op=\036RF4831A\036RF2E31B\036RF1D31C\036RF3F31D,
 	scp=\036RG2%p1%02X,
@@ -12432,7 +12446,7 @@ dgunix+ccc|Configurable color info for DG D430C terminals in DG-UNIX mode,
 dg+ccc|Configurable color info for DG D430C terminals in DG mode,
 	bce, ccc,
 	colors#52, ncv#53, pairs#26,
-	initp=\036RG0%p1%{16}%/%{48}%+%c%p1%{16}%m%{48}%+%c%p2%{256}%*%{1001}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p3%{256}%*%{1001}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p4%{256}%*%{1001}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p5%{256}%*%{1001}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p6%{256}%*%{1001}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p7%{256}%*%{1001}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c,
+	initp=\036RG0%p1%{16}%/%{48}%+%c%p1%{16}%m%{48}%+%c%p2%{255}%*%{1000}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p3%{255}%*%{1000}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p4%{255}%*%{1000}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p5%{255}%*%{1000}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p6%{255}%*%{1000}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c%p7%{255}%*%{1000}%/%Pa%ga%{16}%/%{48}%+%c%ga%{16}%m%{48}%+%c,
 	oc=\036RG01\:00??00000000\036RG01;00000000??00\036RG01<007?00000000\036RG01=000000007?00,
 	op=\036RF4831\:\036RF2>31;\036RF1=31<\036RF3?31=,
 	scp=\036RG2%p1%{16}%/%{48}%+%c%p1%{16}%m%{48}%+%c,
@@ -21881,6 +21895,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  this (report by Laszlo Peter)
 #	* improve interix smso by using reverse rather than bold (report by
 #	  Kristof Zelechovski).
+#
+# 2009-10-03
+#	* remove unnecessary kcan assignment to ^C from putty (Sven Joachim)
+#	* add linux-16color (Benjamin Sittler)
+#	* correct initc capability of linux-c-nc end-of-range (Benjamin Sittler)
+#	* similar change for dg+ccc and dgunix+ccc (Benjamin Sittler)
+#	* add ccc and initc capabilities to xterm-16color -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

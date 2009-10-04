@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.345 2009/08/29 20:24:57 tom Exp $
+$Id: ncurses.c,v 1.347 2009/10/03 22:01:56 tom Exp $
 
 ***************************************************************************/
 
@@ -3382,6 +3382,128 @@ show_wacs_chars(int repeat, attr_t attr, short pair)
 #endif
 }
 
+#ifdef WACS_D_PLUS
+static void
+show_wacs_chars_double(int repeat, attr_t attr, short pair)
+/* display the wide-ACS character set */
+{
+    cchar_t temp;
+
+    int n;
+
+/*#define BOTH2(name) #name, &(name) */
+#define BOTH2(name) #name, MERGE_ATTR(name)
+
+    erase();
+    attron(A_BOLD);
+    mvaddstr(0, 20, "Display of the Wide-ACS Character Set");
+    attroff(A_BOLD);
+    refresh();
+
+    n = show_1_wacs(0, repeat, BOTH2(WACS_D_ULCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_URCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_LLCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_LRCORNER));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_LTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_RTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_TTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_BTEE));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_HLINE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_VLINE));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_RARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_UARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DARROW));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BLOCK));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BOARD));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LANTERN));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BULLET));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_CKBOARD));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DEGREE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DIAMOND));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PLMINUS));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PLUS));
+
+#ifdef CURSES_WACS_ARRAY
+    n = show_1_wacs(n, repeat, BOTH2(WACS_GEQUAL));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_NEQUAL));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LEQUAL));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_STERLING));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PI));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S1));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S3));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S7));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S9));
+#endif
+}
+#endif
+
+#ifdef WACS_T_PLUS
+static void
+show_wacs_chars_thick(int repeat, attr_t attr, short pair)
+/* display the wide-ACS character set */
+{
+    cchar_t temp;
+
+    int n;
+
+/*#define BOTH2(name) #name, &(name) */
+#define BOTH2(name) #name, MERGE_ATTR(name)
+
+    erase();
+    attron(A_BOLD);
+    mvaddstr(0, 20, "Display of the Wide-ACS Character Set");
+    attroff(A_BOLD);
+    refresh();
+
+    n = show_1_wacs(0, repeat, BOTH2(WACS_T_ULCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_URCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_LLCORNER));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_LRCORNER));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_LTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_RTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_TTEE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_BTEE));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_HLINE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_VLINE));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_RARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_UARROW));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DARROW));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BLOCK));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BOARD));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LANTERN));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_BULLET));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_CKBOARD));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DEGREE));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_DIAMOND));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PLMINUS));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PLUS));
+
+#ifdef CURSES_WACS_ARRAY
+    n = show_1_wacs(n, repeat, BOTH2(WACS_GEQUAL));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_NEQUAL));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_LEQUAL));
+
+    n = show_1_wacs(n, repeat, BOTH2(WACS_STERLING));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_PI));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S1));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S3));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S7));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_S9));
+#endif
+}
+#endif
+
 #undef MERGE_ATTR
 
 #define MERGE_ATTR(n,wch) merge_wide_attr(&temp[n], wch, attr, pair)
@@ -3514,6 +3636,16 @@ wide_acs_display(void)
 	case 'a':
 	    ToggleAcs(last_show_wacs, show_wacs_chars);
 	    break;
+#ifdef WACS_D_PLUS
+	case 'd':
+	    ToggleAcs(last_show_wacs, show_wacs_chars_double);
+	    break;
+#endif
+#ifdef WACS_T_PLUS
+	case 't':
+	    ToggleAcs(last_show_wacs, show_wacs_chars_thick);
+	    break;
+#endif
 	case 'x':
 	    ToggleAcs(last_show_wacs, show_wbox_chars);
 	    break;
@@ -3553,7 +3685,7 @@ wide_acs_display(void)
 	    show_upper_widechars(digit * 32 + 128, repeat, space, attr, pair);
 
 	mvprintw(LINES - 3, 0,
-		 "Select: a WACS, x box, u UTF-8, 0-9,+/- non-ASCII, </> repeat, ESC=quit");
+		 "Select: a/d/t WACS, x box, u UTF-8, 0-9,+/- non-ASCII, </> repeat, ESC=quit");
 	if (use_colors) {
 	    mvprintw(LINES - 2, 0,
 		     "v/V, f/F, b/B cycle through video attributes (%s) and color %d/%d.",

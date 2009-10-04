@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002,2006 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2002-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_wacs.c,v 1.8 2008/11/16 00:19:59 juergen Exp $")
+MODULE_ID("$Id: lib_wacs.c,v 1.9 2009/10/03 20:18:21 tom Exp $")
 
 NCURSES_EXPORT_VAR(cchar_t) * _nc_wacs = 0;
 
@@ -79,6 +79,30 @@ _nc_init_wacs(void)
 	{ '{',	{ '*',	0x03c0 }},	/* greek pi */
 	{ '|',	{ '!',	0x2260 }},	/* not-equal */
 	{ '}',	{ 'f',	0x00a3 }},	/* pound-sterling symbol */
+	/* thick-line-drawing */
+	{ 'L',	{ '+',	0x250f }},	/* upper left corner */
+	{ 'M',	{ '+',	0x2517 }},	/* lower left corner */
+	{ 'K',	{ '+',	0x2513 }},	/* upper right corner */
+	{ 'J',	{ '+',	0x251b }},	/* lower right corner */
+	{ 'T',	{ '+',	0x2523 }},	/* tee pointing left */
+	{ 'U',	{ '+',	0x252b }},	/* tee pointing right */
+	{ 'V',	{ '+',	0x253b }},	/* tee pointing up */
+	{ 'W',	{ '+',	0x2533 }},	/* tee pointing down */
+	{ 'Q',	{ '-',	0x2501 }},	/* horizontal line */
+	{ 'X',	{ '|',	0x2503 }},	/* vertical line */
+	{ 'N',	{ '+',	0x254b }},	/* large plus or crossover */
+	/* double-line-drawing */
+	{ 'C',	{ '+',	0x2554 }},	/* upper left corner */
+	{ 'D',	{ '+',	0x255a }},	/* lower left corner */
+	{ 'B',	{ '+',	0x2557 }},	/* upper right corner */
+	{ 'A',	{ '+',	0x255d }},	/* lower right corner */
+	{ 'G',	{ '+',	0x2563 }},	/* tee pointing left */
+	{ 'F',	{ '+',	0x2560 }},	/* tee pointing right */
+	{ 'H',	{ '+',	0x2569 }},	/* tee pointing up */
+	{ 'I',	{ '+',	0x2566 }},	/* tee pointing down */
+	{ 'R',	{ '-',	0x2550 }},	/* horizontal line */
+	{ 'Y',	{ '|',	0x2551 }},	/* vertical line */
+	{ 'E',	{ '+',	0x256c }},	/* large plus or crossover */
     };
     /* *INDENT-ON* */
 

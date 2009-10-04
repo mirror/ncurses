@@ -39,7 +39,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_acs.c,v 1.40 2009/06/06 18:08:04 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.41 2009/10/04 00:26:54 tom Exp $")
 
 #if BROKEN_LINKER || USE_REENTRANT
 #define MyBuffer _nc_prescreen.real_acs_map
@@ -140,6 +140,30 @@ NCURSES_SP_NAME(_nc_init_acs) (NCURSES_SP_DCL0)
     real_map['{'] = '*';	/* should be greek pi */
     real_map['|'] = '!';	/* should be not-equal */
     real_map['}'] = 'f';	/* should be pound-sterling symbol */
+    /* thick-line-drawing */
+    real_map['L'] = '+';	/* upper left corner */
+    real_map['M'] = '+';	/* lower left corner */
+    real_map['K'] = '+';	/* upper right corner */
+    real_map['J'] = '+';	/* lower right corner */
+    real_map['T'] = '+';	/* tee pointing left */
+    real_map['U'] = '+';	/* tee pointing right */
+    real_map['V'] = '+';	/* tee pointing up */
+    real_map['W'] = '+';	/* tee pointing down */
+    real_map['Q'] = '-';	/* horizontal line */
+    real_map['X'] = '|';	/* vertical line */
+    real_map['N'] = '+';	/* large plus or crossover */
+    /* double-line-drawing */
+    real_map['C'] = '+';	/* upper left corner */
+    real_map['D'] = '+';	/* lower left corner */
+    real_map['B'] = '+';	/* upper right corner */
+    real_map['A'] = '+';	/* lower right corner */
+    real_map['G'] = '+';	/* tee pointing left */
+    real_map['F'] = '+';	/* tee pointing right */
+    real_map['H'] = '+';	/* tee pointing up */
+    real_map['I'] = '+';	/* tee pointing down */
+    real_map['R'] = '-';	/* horizontal line */
+    real_map['Y'] = '|';	/* vertical line */
+    real_map['E'] = '+';	/* large plus or crossover */
 
 #ifdef USE_TERM_DRIVER
     CallDriver_2(SP_PARM, initacs, real_map, fake_map);
