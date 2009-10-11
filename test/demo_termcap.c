@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.11 2009/08/02 00:02:53 tom Exp $
+ * $Id: demo_termcap.c,v 1.12 2009/10/10 16:01:41 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -144,10 +144,10 @@ brute_force(const char *name)
 
 	cap[2] = 0;
 	for (c1 = 0; c1 < 256; ++c1) {
-	    cap[0] = c1;
+	    cap[0] = (char) c1;
 	    if (isCapName(c1)) {
 		for (c2 = 0; c2 < 256; ++c2) {
-		    cap[1] = c2;
+		    cap[1] = (char) c2;
 		    if (isCapName(c2)) {
 			dumpit(cap);
 		    }

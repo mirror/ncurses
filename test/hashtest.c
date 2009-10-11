@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *
  * Generate timing statistics for vertical-motion optimization.
  *
- * $Id: hashtest.c,v 1.29 2008/08/16 17:26:44 tom Exp $
+ * $Id: hashtest.c,v 1.30 2009/10/10 16:14:53 tom Exp $
  */
 
 #include <test.priv.h>
@@ -140,10 +140,10 @@ run_test(bool optimized GCC_UNUSED)
 #endif
 
     if (reverse_loops)
-	for (ch = hi; ch >= lo; ch--)
+	for (ch = (char) hi; ch >= lo; ch--)
 	    one_cycle(ch);
     else
-	for (ch = lo; ch <= hi; ch++)
+	for (ch = (char) lo; ch <= hi; ch++)
 	    one_cycle(ch);
 }
 

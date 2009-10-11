@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addstr.c,v 1.2 2009/09/12 22:52:29 tom Exp $
+ * $Id: test_addstr.c,v 1.3 2009/10/10 16:01:41 tom Exp $
  *
  * Demonstrate the waddstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
@@ -312,7 +312,7 @@ test_adds(int level)
 		beep();
 		break;
 	    }
-	    buffer[length++] = ch;
+	    buffer[length++] = (char) ch;
 	    buffer[length] = '\0';
 
 	    /* put the string in, one character at a time */

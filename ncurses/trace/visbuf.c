@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.33 2009/07/11 14:44:20 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.34 2009/10/10 20:41:55 tom Exp $")
 
 #define NUM_VISBUFS 4
 
@@ -238,7 +238,9 @@ _nc_viswibuf(const wint_t *buf)
     static unsigned mylen;
     unsigned n;
 
-    for (n = 0; buf[n] != 0; ++n) ;
+    for (n = 0; buf[n] != 0; ++n) {
+	;			/* empty */
+    }
     if (mylen < ++n) {
 	mylen = n + 80;
 	if (mybuf != 0)
@@ -246,8 +248,10 @@ _nc_viswibuf(const wint_t *buf)
 	else
 	    mybuf = typeMalloc(wchar_t, mylen);
     }
-    for (n = 0; buf[n] != 0; ++n)
+    for (n = 0; buf[n] != 0; ++n) {
 	mybuf[n] = (wchar_t) buf[n];
+    }
+    mybuf[n] = L'\0';
 
     return _nc_viswbuf2(0, mybuf);
 }

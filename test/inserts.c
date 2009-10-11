@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inserts.c,v 1.19 2009/09/12 22:50:03 tom Exp $
+ * $Id: inserts.c,v 1.20 2009/10/10 16:01:41 tom Exp $
  *
  * Demonstrate the winsstr() and winsch functions.
  * Thomas Dickey - 2002/10/19
@@ -314,7 +314,7 @@ test_inserts(int level)
 		beep();
 		break;
 	    }
-	    buffer[length++] = ch;
+	    buffer[length++] = (char) ch;
 	    buffer[length] = '\0';
 
 	    /* put the string in, one character at a time */

@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.77 2009/06/07 13:59:11 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.78 2009/10/10 16:01:42 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -129,21 +129,25 @@ _nc_flush(void)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_DCLx int ch)
 {
+    int rc = OK;
+
     COUNT_OUTCHARS(1);
 
     if (HasTInfoTerminal(SP_PARM)
 	&& SP_PARM != 0
 	&& SP_PARM->_cleanup) {
-	char tmp = ch;
+	char tmp = (char) ch;
 	/*
 	 * POSIX says write() is safe in a signal handler, but the
 	 * buffered I/O is not.
 	 */
-	write(fileno(NC_OUTPUT(SP_PARM)), &tmp, 1);
+	if (write(fileno(NC_OUTPUT(SP_PARM)), &tmp, 1) == -1)
+	    rc = ERR;
     } else {
-	putc(ch, NC_OUTPUT(SP_PARM));
+	if (putc(ch, NC_OUTPUT(SP_PARM)) == EOF)
+	    rc = ERR;
     }
-    return OK;
+    return rc;
 }
 
 #if NCURSES_SP_FUNCS

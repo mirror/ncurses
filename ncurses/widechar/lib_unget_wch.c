@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_unget_wch.c,v 1.11 2009/04/04 23:57:25 tom Exp $")
+MODULE_ID("$Id: lib_unget_wch.c,v 1.12 2009/10/10 20:01:13 tom Exp $")
 
 /*
  * Wrapper for wcrtomb() which obtains the length needed for the given
@@ -86,7 +86,7 @@ NCURSES_SP_NAME(unget_wch) (NCURSES_SP_DCLx const wchar_t wch)
 	    wcrtomb(string, wch, &state);
 
 	    for (n = (int) (length - 1); n >= 0; --n) {
-		if (NCURSES_SP_NAME(ungetch) (NCURSES_SP_ARGx string[n]) != OK) {
+		if (NCURSES_SP_NAME(ungetch) (NCURSES_SP_ARGx UChar(string[n])) != OK) {
 		    result = ERR;
 		    break;
 		}

@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 2007 Free Software Foundation, Inc.                          #
+# Copyright (c) 2007,2009 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: savescreen.sh,v 1.3 2007/07/14 21:50:26 tom Exp $
+# $Id: savescreen.sh,v 1.4 2009/10/10 17:08:45 tom Exp $
 #
 # Use this script to exercise "savescreen".
 # It starts by generating a series of temporary-filenames, which are passed
@@ -49,6 +49,7 @@ then
 	while test -f $BEGINS
 	do
 		./savescreen -r $PARAMS
+		test $? != 0 && break
 	done
 else
 	echo "No screens were saved"

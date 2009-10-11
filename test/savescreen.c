@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2009 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,13 +26,16 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.10 2007/07/21 17:57:37 tom Exp $
+ * $Id: savescreen.c,v 1.11 2009/10/10 19:38:21 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
  */
 
 #include <test.priv.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -46,6 +49,13 @@
 #endif
 
 static bool use_init = FALSE;
+
+static int
+fexists(const char *name)
+{
+    struct stat sb;
+    return (stat(name, &sb) == 0 && (sb.st_mode & S_IFMT) == S_IFREG);
+}
 
 static void
 setup_next(void)
@@ -163,6 +173,14 @@ main(int argc, char *argv[])
 	}
     }
 
+    files = argv + optind;
+    last = argc - optind - 1;
+
+    if (replaying) {
+	while (last >= 0 && !fexists(files[last]))
+	    --last;
+    }
+
     initscr();
     cbreak();
     noecho();
@@ -176,8 +194,6 @@ main(int argc, char *argv[])
 	}
     }
 
-    files = argv + optind;
-    last = argc - optind - 1;
     if (replaying) {
 
 	/*

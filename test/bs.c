@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.48 2009/08/29 19:02:25 tom Exp $
+ * $Id: bs.c,v 1.49 2009/10/10 16:01:41 tom Exp $
  */
 
 #include <test.priv.h>
@@ -222,7 +222,7 @@ intro(void)
 
     if ((tmpname = getlogin()) != 0) {
 	(void) strcpy(name, tmpname);
-	name[0] = toupper(UChar(name[0]));
+	name[0] = (char) toupper(UChar(name[0]));
     } else
 	(void) strcpy(name, dftname);
 
@@ -440,7 +440,7 @@ initgame(void)
 	/* get a command letter */
 	prompt(1, "Type one of [%s] to pick a ship.", docked + 1);
 	do {
-	    c = getcoord(PLAYER);
+	    c = (char) getcoord(PLAYER);
 	} while
 	    (!strchr(docked, c));
 
@@ -457,7 +457,7 @@ initgame(void)
 	}
 
 	do {
-	    c = getch();
+	    c = (char) getch();
 	} while
 	    (!(strchr("hjklrR", c) || c == FF));
 
@@ -829,7 +829,7 @@ plyturn(void)
 	    break;
     }
     hit = IS_SHIP(board[COMPUTER][curx][cury]);
-    hits[PLAYER][curx][cury] = (hit ? MARK_HIT : MARK_MISS);
+    hits[PLAYER][curx][cury] = (char) (hit ? MARK_HIT : MARK_MISS);
     cgoto(cury, curx);
 #ifdef A_COLOR
     if (has_colors()) {
@@ -952,7 +952,7 @@ cpufire(int x, int y)
     bool hit, sunk;
     ship_t *ss = NULL;
 
-    hits[COMPUTER][x][y] = (hit = (board[PLAYER][x][y])) ? MARK_HIT : MARK_MISS;
+    hits[COMPUTER][x][y] = (char) (hit = (board[PLAYER][x][y])) ? MARK_HIT : MARK_MISS;
     (void) mvprintw(PROMPTLINE, 0,
 		    "I shoot at %c%d. I %s!", y + 'A', x, hit ? "hit" :
 		    "miss");

@@ -39,7 +39,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.35 2009/06/06 20:26:17 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.37 2009/10/10 19:37:07 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -52,17 +52,19 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
     T((T_CALLED("getwin(%p)"), filep));
 
     clearerr(filep);
-    (void) fread(&tmp, sizeof(WINDOW), 1, filep);
-    if (ferror(filep)
+    if (fread(&tmp, 1, sizeof(WINDOW), filep) < sizeof(WINDOW)
+	|| ferror(filep)
 	|| tmp._maxy == 0
 	|| tmp._maxy > MAX_SIZE
 	|| tmp._maxx == 0
-	|| tmp._maxx > MAX_SIZE)
+	|| tmp._maxx > MAX_SIZE) {
 	returnWin(0);
+    }
 
     if (tmp._flags & _ISPAD) {
 	nwin = NCURSES_SP_NAME(newpad) (NCURSES_SP_ARGx
-					tmp._maxy + 1, tmp._maxx + 1);
+					tmp._maxy + 1,
+					tmp._maxx + 1);
     } else {
 	nwin = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx
 					tmp._maxy + 1,
@@ -75,6 +77,8 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
      * made sense is probably gone.
      */
     if (nwin != 0) {
+	size_t linesize = sizeof(NCURSES_CH_T) * (size_t) (tmp._maxx + 1);
+
 	nwin->_curx = tmp._curx;
 	nwin->_cury = tmp._cury;
 	nwin->_maxy = tmp._maxy;
@@ -106,11 +110,8 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 
 	for (n = 0; n <= nwin->_maxy; n++) {
 	    clearerr(filep);
-	    (void) fread(nwin->_line[n].text,
-			 sizeof(NCURSES_CH_T),
-			 (size_t) (nwin->_maxx + 1),
-			 filep);
-	    if (ferror(filep)) {
+	    if (fread(nwin->_line[n].text, 1, linesize, filep) < linesize
+		|| ferror(filep)) {
 		delwin(nwin);
 		returnWin(0);
 	    }
