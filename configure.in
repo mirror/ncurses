@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.474 2009/09/26 22:36:43 tom Exp $
+dnl $Id: configure.in,v 1.475 2009/10/17 12:38:32 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.474 $)
+AC_REVISION($Revision: 1.475 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -169,8 +169,8 @@ if test "$PKG_CONFIG" != no ; then
 	if test -z "$PKG_CONFIG_LIBDIR" ; then
 		PKG_CONFIG_LIBDIR=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`/lib/pkgconfig
 	fi
-
-	if test -d "$PKG_CONFIG_LIBDIR" ; then
+	PKG_CONFIG_LIBDIR=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/^://' -e 's/:.*//'`
+	if test -n "$PKG_CONFIG_LIBDIR" && test -d "$PKG_CONFIG_LIBDIR" ; then
 		AC_ARG_ENABLE(pc-files,
 			[  --enable-pc-files       generate and install .pc files for pkg-config],
 			[enable_pc_files=$enableval],
