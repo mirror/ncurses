@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: resizeterm.c,v 1.41 2009/08/30 16:18:58 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.42 2009/10/24 20:38:43 tom Exp $")
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
@@ -71,13 +71,13 @@ show_window_sizes(const char *name)
 
     _nc_lock_global(curses);
     for (each_screen(sp)) {
-	_tracef("%s resizing: %p: %2d x %2d (%2d x %2d)", name, sp,
+	_tracef("%s resizing: %p: %2d x %2d (%2d x %2d)", name, (void *) sp,
 		*(ptrLines(sp)),
 		*(ptrCols(sp)),
 		screen_lines(sp), screen_columns(sp));
 	for (each_window(sp, wp)) {
 	    _tracef("  window %p is %2ld x %2ld at %2ld,%2ld",
-		    &(wp->win),
+		    (void *) &(wp->win),
 		    (long) wp->win._maxy + 1,
 		    (long) wp->win._maxx + 1,
 		    (long) wp->win._begy,
@@ -95,7 +95,7 @@ show_window_sizes(const char *name)
 NCURSES_EXPORT(bool)
 NCURSES_SP_NAME(is_term_resized) (NCURSES_SP_DCLx int ToLines, int ToCols)
 {
-    T((T_CALLED("is_term_resized(%p, %d, %d)"), SP_PARM, ToLines, ToCols));
+    T((T_CALLED("is_term_resized(%p, %d, %d)"), (void *) SP_PARM, ToLines, ToCols));
     returnCode(ToLines > 0
 	       && ToCols > 0
 	       && (ToLines != screen_lines(SP_PARM)
@@ -214,7 +214,7 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen EXTRA_DCLS)
     ripoff_t *rop = ripped_window(win);
 
     T((T_CALLED("adjust_window(%p,%d,%d)%s depth %d/%d currently %ldx%ld at %ld,%ld"),
-       win, ToLines, ToCols,
+       (void *) win, ToLines, ToCols,
        (rop != 0) ? " (rip)" : "",
        parent_depth(win),
        child_depth(win),
@@ -226,7 +226,7 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen EXTRA_DCLS)
 	 * If it is a ripped-off window at the bottom of the screen, simply
 	 * move it to the same relative position.
 	 */
-	win->_begy = ToLines - ripped_bottom(win) - 0 - win->_yoffset;
+	win->_begy = (NCURSES_SIZE_T) (ToLines - ripped_bottom(win) - 0 - win->_yoffset);
 	if (rop->hook == _nc_slk_initialize)
 	    _nc_format_slks(
 #if NCURSES_SP_FUNCS
@@ -238,7 +238,7 @@ adjust_window(WINDOW *win, int ToLines, int ToCols, int stolen EXTRA_DCLS)
 	 * If it is below the bottom of the new screen, move up by the same
 	 * amount that the screen shrank.
 	 */
-	win->_begy += (ToLines - CurLines);
+	win->_begy = (NCURSES_SIZE_T) (win->_begy + (ToLines - CurLines));
     } else {
 	if (myLines == (CurLines - stolen)
 	    && ToLines != CurLines) {
@@ -275,7 +275,7 @@ decrease_size(NCURSES_SP_DCLx int ToLines, int ToCols, int stolen EXTRA_DCLS)
     int depth = 0;
     WINDOWLIST *wp;
 
-    T((T_CALLED("decrease_size(%p, %d, %d)"), SP_PARM, ToLines, ToCols));
+    T((T_CALLED("decrease_size(%p, %d, %d)"), (void *) SP_PARM, ToLines, ToCols));
 
     do {
 	found = FALSE;
@@ -309,7 +309,7 @@ increase_size(NCURSES_SP_DCLx int ToLines, int ToCols, int stolen EXTRA_DCLS)
     int depth = 0;
     WINDOWLIST *wp;
 
-    T((T_CALLED("increase_size(%p, %d, %d)"), SP_PARM, ToLines, ToCols));
+    T((T_CALLED("increase_size(%p, %d, %d)"), (void *) SP_PARM, ToLines, ToCols));
 
     do {
 	found = FALSE;
@@ -343,9 +343,9 @@ NCURSES_SP_NAME(resize_term) (NCURSES_SP_DCLx int ToLines, int ToCols)
     int was_stolen;
 
     T((T_CALLED("resize_term(%p,%d,%d) old(%d,%d)"),
-       SP_PARM, ToLines, ToCols,
-       SP_PARM == 0 ? -1 : screen_lines(SP_PARM),
-       SP_PARM == 0 ? -1 : screen_columns(SP_PARM)));
+       (void *) SP_PARM, ToLines, ToCols,
+       (SP_PARM == 0) ? -1 : screen_lines(SP_PARM),
+       (SP_PARM == 0) ? -1 : screen_columns(SP_PARM)));
 
     if (SP_PARM == 0) {
 	returnCode(ERR);
@@ -383,17 +383,17 @@ NCURSES_SP_NAME(resize_term) (NCURSES_SP_DCLx int ToLines, int ToCols)
 	    decrease_size(NCURSES_SP_ARGx ToLines, ToCols, was_stolen EXTRA_ARGS);
 	}
 
-	screen_lines(SP_PARM) = ToLines;
-	screen_columns(SP_PARM) = ToCols;
+	screen_lines(SP_PARM) = (NCURSES_SIZE_T) ToLines;
+	screen_columns(SP_PARM) = (NCURSES_SIZE_T) ToCols;
 
 #ifdef USE_TERM_DRIVER
 	CallDriver_2(SP_PARM, setsize, ToLines, ToCols);
 #else
-	lines = ToLines;
-	columns = ToCols;
+	lines = (NCURSES_SIZE_T) ToLines;
+	columns = (NCURSES_SIZE_T) ToCols;
 #endif
 
-	SP_PARM->_lines_avail = ToLines - was_stolen;
+	SP_PARM->_lines_avail = (NCURSES_SIZE_T) (ToLines - was_stolen);
 
 	if (SP_PARM->oldhash) {
 	    FreeAndNull(SP_PARM->oldhash);
@@ -449,8 +449,9 @@ NCURSES_SP_NAME(resizeterm) (NCURSES_SP_DCLx int ToLines, int ToCols)
     int result = ERR;
 
     T((T_CALLED("resizeterm(%p, %d,%d) old(%d,%d)"),
-       SP_PARM, ToLines, ToCols,
-       SP_PARM == 0 ? -1 : screen_lines(SP_PARM), screen_columns(SP_PARM)));
+       (void *) SP_PARM, ToLines, ToCols,
+       (SP_PARM == 0) ? -1 : screen_lines(SP_PARM),
+       screen_columns(SP_PARM)));
 
     if (SP_PARM != 0) {
 	result = OK;

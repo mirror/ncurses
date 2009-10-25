@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.72 2009/02/28 20:37:37 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.73 2009/10/24 21:56:58 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -272,7 +272,7 @@ _nc_retrace_void_ptr(void *code)
 NCURSES_EXPORT(SCREEN *)
 _nc_retrace_sp(SCREEN *code)
 {
-    T((T_RETURN("%p"), code));
+    T((T_RETURN("%p"), (void *) code));
     return code;
 }
 
@@ -280,7 +280,7 @@ _nc_retrace_sp(SCREEN *code)
 NCURSES_EXPORT(WINDOW *)
 _nc_retrace_win(WINDOW *code)
 {
-    T((T_RETURN("%p"), code));
+    T((T_RETURN("%p"), (void *) code));
     return code;
 }
 

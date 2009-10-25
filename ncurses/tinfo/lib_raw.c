@@ -49,7 +49,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_raw.c,v 1.17 2009/08/01 23:11:02 tom Exp $")
+MODULE_ID("$Id: lib_raw.c,v 1.18 2009/10/24 21:56:15 tom Exp $")
 
 #if SVR4_TERMIO && !defined(_POSIX_SOURCE)
 #define _POSIX_SOURCE
@@ -82,7 +82,7 @@ NCURSES_SP_NAME(raw) (NCURSES_SP_DCL0)
     int result = ERR;
     TERMINAL *termp;
 
-    T((T_CALLED("raw(%p)"), SP_PARM));
+    T((T_CALLED("raw(%p)"), (void *) SP_PARM));
     if ((termp = TerminalOf(SP_PARM)) != 0) {
 	TTY buf;
 
@@ -123,7 +123,7 @@ NCURSES_SP_NAME(cbreak) (NCURSES_SP_DCL0)
     int result = ERR;
     TERMINAL *termp;
 
-    T((T_CALLED("cbreak(%p)"), SP_PARM));
+    T((T_CALLED("cbreak(%p)"), (void *) SP_PARM));
     if ((termp = TerminalOf(SP_PARM)) != 0) {
 	TTY buf;
 
@@ -168,7 +168,7 @@ NCURSES_SP_NAME(qiflush) (NCURSES_SP_DCL0)
     int result = ERR;
     TERMINAL *termp;
 
-    T((T_CALLED("qiflush(%p)"), SP_PARM));
+    T((T_CALLED("qiflush(%p)"), (void *) SP_PARM));
     if ((termp = TerminalOf(SP_PARM)) != 0) {
 	TTY buf;
 
@@ -201,7 +201,7 @@ NCURSES_SP_NAME(noraw) (NCURSES_SP_DCL0)
     int result = ERR;
     TERMINAL *termp;
 
-    T((T_CALLED("noraw(%p)"), SP_PARM));
+    T((T_CALLED("noraw(%p)"), (void *) SP_PARM));
     if ((termp = TerminalOf(SP_PARM)) != 0) {
 	TTY buf;
 
@@ -241,7 +241,7 @@ NCURSES_SP_NAME(nocbreak) (NCURSES_SP_DCL0)
     int result = ERR;
     TERMINAL *termp;
 
-    T((T_CALLED("nocbreak(%p)"), SP_PARM));
+    T((T_CALLED("nocbreak(%p)"), (void *) SP_PARM));
     if ((termp = TerminalOf(SP_PARM)) != 0) {
 	TTY buf;
 
@@ -279,7 +279,7 @@ NCURSES_SP_NAME(noqiflush) (NCURSES_SP_DCL0)
     int result = ERR;
     TERMINAL *termp;
 
-    T((T_CALLED("noqiflush(%p)"), SP_PARM));
+    T((T_CALLED("noqiflush(%p)"), (void *) SP_PARM));
     if ((termp = TerminalOf(SP_PARM)) != 0) {
 	TTY buf;
 
@@ -319,7 +319,7 @@ NCURSES_SP_NAME(intrflush) (NCURSES_SP_DCLx WINDOW *win GCC_UNUSED, bool flag)
     int result = ERR;
     TERMINAL *termp;
 
-    T((T_CALLED("intrflush(%p,%d)"), SP_PARM, flag));
+    T((T_CALLED("intrflush(%p,%d)"), (void *) SP_PARM, flag));
     if (SP_PARM == 0)
 	returnCode(ERR);
 

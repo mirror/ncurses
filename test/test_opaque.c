@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_opaque.c,v 1.8 2009/08/29 19:02:25 tom Exp $
+ * $Id: test_opaque.c,v 1.9 2009/10/24 21:21:29 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -231,7 +231,7 @@ show_opaque(WINDOW *stswin, WINDOW *txtwin, bool before, int active)
 
     show_keyword(stswin, n, active, "wgetparent");
     to_result(stswin, n, TRUE);
-    wprintw(stswin, "%p", wgetparent(txtwin));
+    wprintw(stswin, "%p", (void *) wgetparent(txtwin));
 
     ++n;
     show_keyword(stswin, n, active, "wgetscrreg");

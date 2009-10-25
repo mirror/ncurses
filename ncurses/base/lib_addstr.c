@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_addstr.c,v 1.48 2007/10/13 19:56:57 tom Exp $")
+MODULE_ID("$Id: lib_addstr.c,v 1.50 2009/10/24 23:24:03 tom Exp $")
 
 NCURSES_EXPORT(int)
 waddnstr(WINDOW *win, const char *astr, int n)
@@ -52,7 +52,7 @@ waddnstr(WINDOW *win, const char *astr, int n)
     const char *str = astr;
     int code = ERR;
 
-    T((T_CALLED("waddnstr(%p,%s,%d)"), win, _nc_visbufn(astr, n), n));
+    T((T_CALLED("waddnstr(%p,%s,%d)"), (void *) win, _nc_visbufn(astr, n), n));
 
     if (win && (str != 0)) {
 	TR(TRACE_VIRTPUT | TRACE_ATTRS,
@@ -85,7 +85,7 @@ waddchnstr(WINDOW *win, const chtype *astr, int n)
     int i;
     struct ldat *line;
 
-    T((T_CALLED("waddchnstr(%p,%p,%d)"), win, astr, n));
+    T((T_CALLED("waddchnstr(%p,%p,%d)"), (void *) win, (const void *) astr, n));
 
     if (!win)
 	returnCode(ERR);
@@ -135,7 +135,10 @@ wadd_wchnstr(WINDOW *win, const cchar_t *astr, int n)
     struct ldat *line;
     int i, j, start, len, end;
 
-    T((T_CALLED("wadd_wchnstr(%p,%s,%d)"), win, _nc_viscbuf(astr, n), n));
+    T((T_CALLED("wadd_wchnstr(%p,%s,%d)"),
+       (void *) win,
+       _nc_viscbuf(astr, n),
+       n));
 
     if (!win)
 	returnCode(ERR);
@@ -217,7 +220,7 @@ waddnwstr(WINDOW *win, const wchar_t *str, int n)
 {
     int code = ERR;
 
-    T((T_CALLED("waddnwstr(%p,%s,%d)"), win, _nc_viswbufn(str, n), n));
+    T((T_CALLED("waddnwstr(%p,%s,%d)"), (void *) win, _nc_viswbufn(str, n), n));
 
     if (win && (str != 0)) {
 	TR(TRACE_VIRTPUT | TRACE_ATTRS,

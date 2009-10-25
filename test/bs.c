@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.49 2009/10/10 16:01:41 tom Exp $
+ * $Id: bs.c,v 1.50 2009/10/24 21:24:24 tom Exp $
  */
 
 #include <test.priv.h>
@@ -952,7 +952,8 @@ cpufire(int x, int y)
     bool hit, sunk;
     ship_t *ss = NULL;
 
-    hits[COMPUTER][x][y] = (char) (hit = (board[PLAYER][x][y])) ? MARK_HIT : MARK_MISS;
+    hit = board[PLAYER][x][y] ? MARK_HIT : MARK_MISS;
+    hits[COMPUTER][x][y] = (char) hit;
     (void) mvprintw(PROMPTLINE, 0,
 		    "I shoot at %c%d. I %s!", y + 'A', x, hit ? "hit" :
 		    "miss");
@@ -1129,7 +1130,7 @@ playagain(void)
 	++cpuwon;
     else
 	++plywon;
-    j = 18 + strlen(name);
+    j = 18 + (int) strlen(name);
     if (plywon >= 10)
 	++j;
     if (cpuwon >= 10)

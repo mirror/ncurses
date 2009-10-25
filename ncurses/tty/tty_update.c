@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.260 2009/09/26 18:14:44 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.262 2009/10/24 23:21:31 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -193,7 +193,7 @@ static NCURSES_INLINE void
 GoTo(NCURSES_SP_DCLx int const row, int const col)
 {
     TR(TRACE_MOVE, ("GoTo(%p, %d, %d) from (%d, %d)",
-		    SP_PARM, row, col, SP_PARM->_cursrow, SP_PARM->_curscol));
+		    (void *) SP_PARM, row, col, SP_PARM->_cursrow, SP_PARM->_curscol));
 
     position_check(SP_PARM, SP_PARM->_cursrow, SP_PARM->_curscol, "GoTo");
 
@@ -628,7 +628,10 @@ PutRange(NCURSES_SP_DCLx
     int i, j, same;
 
     TR(TRACE_CHARPUT, ("PutRange(%p, %p, %p, %d, %d, %d)",
-		       SP_PARM, otext, ntext, row, first, last));
+		       (void *) SP_PARM,
+		       (const void *) otext,
+		       (const void *) ntext,
+		       row, first, last));
 
     if (otext != ntext
 	&& (last - first + 1) > SP_PARM->_inline_cost) {
@@ -670,7 +673,7 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
     struct tms before, after;
 #endif /* USE_TRACE_TIMES */
 
-    T((T_CALLED("_nc_tinfo:doupdate(%p)"), SP_PARM));
+    T((T_CALLED("_nc_tinfo:doupdate(%p)"), (void *) SP_PARM));
 
 #if !USE_REENTRANT
     /*
@@ -1224,7 +1227,7 @@ TransformLine(NCURSES_SP_DCLx int const lineno)
     int n;
     bool attrchanged = FALSE;
 
-    TR(TRACE_UPDATE, (T_CALLED("TransformLine(%p, %d)"), SP_PARM, lineno));
+    TR(TRACE_UPDATE, (T_CALLED("TransformLine(%p, %d)"), (void *) SP_PARM, lineno));
 
     /* copy new hash value to old one */
     if (SP_PARM->oldhash && SP_PARM->newhash)
@@ -1623,7 +1626,9 @@ ClearScreen(NCURSES_SP_DCLx NCURSES_CH_T blank)
 static void
 InsStr(NCURSES_SP_DCLx NCURSES_CH_T * line, int count)
 {
-    TR(TRACE_UPDATE, ("InsStr(%p, %p,%d) called", SP_PARM, line, count));
+    TR(TRACE_UPDATE, ("InsStr(%p, %p,%d) called",
+		      (void *) SP_PARM,
+		      (void *) line, count));
 
     /* Prefer parm_ich as it has the smallest cost - no need to shift
      * the whole line on each character. */
@@ -1682,7 +1687,7 @@ DelChar(NCURSES_SP_DCLx int count)
     int n;
 
     TR(TRACE_UPDATE, ("DelChar(%p, %d) called, position = (%ld,%ld)",
-		      SP_PARM, count,
+		      (void *) SP_PARM, count,
 		      (long) NewScreen(SP_PARM)->_cury,
 		      (long) NewScreen(SP_PARM)->_curx));
 
@@ -1939,7 +1944,8 @@ NCURSES_SP_NAME(_nc_scrolln) (NCURSES_SP_DCLx
     bool cursor_saved = FALSE;
     int res;
 
-    TR(TRACE_MOVE, ("_nc_scrolln(%p, %d, %d, %d, %d)", SP_PARM, n, top, bot, maxy));
+    TR(TRACE_MOVE, ("_nc_scrolln(%p, %d, %d, %d, %d)",
+		    (void *) SP_PARM, n, top, bot, maxy));
 
     if (!IsValidScreen(SP_PARM))
 	return (ERR);

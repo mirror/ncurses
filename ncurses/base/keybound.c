@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: keybound.c,v 1.9 2009/02/21 16:32:34 tom Exp $")
+MODULE_ID("$Id: keybound.c,v 1.10 2009/10/24 22:15:47 tom Exp $")
 
 /*
  * Returns the count'th string definition which is associated with the
@@ -44,7 +44,7 @@ NCURSES_SP_NAME(keybound) (NCURSES_SP_DCLx int code, int count)
 {
     char *result = 0;
 
-    T((T_CALLED("keybound(%p, %d,%d)"), SP_PARM, code, count));
+    T((T_CALLED("keybound(%p, %d,%d)"), (void *) SP_PARM, code, count));
     if (SP_PARM != 0 && code >= 0) {
 	result = _nc_expand_try(SP_PARM->_keytry, (unsigned) code, &count, 0);
     }

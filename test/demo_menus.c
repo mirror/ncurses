@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.28 2008/08/23 20:31:54 tom Exp $
+ * $Id: demo_menus.c,v 1.29 2009/10/24 21:19:27 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -260,13 +260,13 @@ menu_destroy(MENU * m)
 {
     int count;
 
-    Trace(("menu_destroy %p", m));
+    Trace(("menu_destroy %p", (void *) m));
     if (m != 0) {
 	ITEM **items = menu_items(m);
 	const char *blob = 0;
 
 	count = item_count(m);
-	Trace(("menu_destroy %p count %d", m, count));
+	Trace(("menu_destroy %p count %d", (void *) m, count));
 	if ((count > 0) && (m == mpSelect)) {
 	    blob = item_name(*items);
 	}
@@ -368,7 +368,9 @@ build_select_menu(MenuNo number, char *filename)
 	    CONST_MENUS char **list = typeCalloc(CONST_MENUS char *, size + 1);
 
 	    items = typeCalloc(ITEM *, size + 1);
-	    Trace(("build_select_menu blob=%p, items=%p", blob, items));
+	    Trace(("build_select_menu blob=%p, items=%p",
+		   (void *) blob,
+		   (void *) items));
 	    if (blob != 0 && list != 0) {
 		FILE *fp = fopen(filename, "r");
 		if (fp != 0) {

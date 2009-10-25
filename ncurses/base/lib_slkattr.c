@@ -38,12 +38,12 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkattr.c,v 1.8 2009/02/21 17:48:14 tom Exp $")
+MODULE_ID("$Id: lib_slkattr.c,v 1.9 2009/10/24 22:12:21 tom Exp $")
 
 NCURSES_EXPORT(attr_t)
 NCURSES_SP_NAME(slk_attr) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("slk_attr(%p)"), SP_PARM));
+    T((T_CALLED("slk_attr(%p)"), (void *) SP_PARM));
 
     if (SP_PARM != 0 && SP_PARM->_slk != 0) {
 	attr_t result = AttrOf(SP_PARM->_slk->attr) & ALL_BUT_COLOR;

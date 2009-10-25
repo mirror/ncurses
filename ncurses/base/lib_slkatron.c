@@ -38,12 +38,12 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkatron.c,v 1.10 2009/02/21 18:16:04 tom Exp $")
+MODULE_ID("$Id: lib_slkatron.c,v 1.11 2009/10/24 22:12:21 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_attron) (NCURSES_SP_DCLx const chtype attr)
 {
-    T((T_CALLED("slk_attron(%p,%s)"), SP_PARM, _traceattr(attr)));
+    T((T_CALLED("slk_attron(%p,%s)"), (void *) SP_PARM, _traceattr(attr)));
 
     if (SP_PARM != 0 && SP_PARM->_slk != 0) {
 	TR(TRACE_ATTRS, ("... current %s", _tracech_t(CHREF(SP_PARM->_slk->attr))));

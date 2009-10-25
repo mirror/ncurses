@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_printw.c,v 1.19 2009/04/18 18:45:55 tom Exp $")
+MODULE_ID("$Id: lib_printw.c,v 1.20 2009/10/24 22:07:03 tom Exp $")
 
 NCURSES_EXPORT(int)
 printw(const char *fmt,...)
@@ -70,7 +70,7 @@ wprintw(WINDOW *win, const char *fmt,...)
 #ifdef TRACE
     va_start(argp, fmt);
     T((T_CALLED("wprintw(%p,%s%s)"),
-       win, _nc_visbuf(fmt), _nc_varargs(fmt, argp)));
+       (void *) win, _nc_visbuf(fmt), _nc_varargs(fmt, argp)));
     va_end(argp);
 #endif
 
@@ -111,7 +111,7 @@ mvwprintw(WINDOW *win, int y, int x, const char *fmt,...)
 #ifdef TRACE
     va_start(argp, fmt);
     T((T_CALLED("mvwprintw(%d,%d,%p,%s%s)"),
-       y, x, win, _nc_visbuf(fmt), _nc_varargs(fmt, argp)));
+       y, x, (void *) win, _nc_visbuf(fmt), _nc_varargs(fmt, argp)));
     va_end(argp);
 #endif
 
@@ -132,7 +132,7 @@ vwprintw(WINDOW *win, const char *fmt, va_list argp)
     SCREEN *sp = _nc_screen_of(win);
 #endif
 
-    T((T_CALLED("vwprintw(%p,%s,va_list)"), win, _nc_visbuf(fmt)));
+    T((T_CALLED("vwprintw(%p,%s,va_list)"), (void *) win, _nc_visbuf(fmt)));
 
     buf = NCURSES_SP_NAME(_nc_printf_string) (NCURSES_SP_ARGx fmt, argp);
     if (buf != 0) {

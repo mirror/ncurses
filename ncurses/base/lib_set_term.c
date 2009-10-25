@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.128 2009/09/27 14:21:25 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.129 2009/10/24 22:09:47 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -63,7 +63,7 @@ set_term(SCREEN *screenp)
     SCREEN *oldSP;
     SCREEN *newSP;
 
-    T((T_CALLED("set_term(%p)"), screenp));
+    T((T_CALLED("set_term(%p)"), (void *) screenp));
 
     _nc_lock_global(curses);
 
@@ -93,7 +93,7 @@ set_term(SCREEN *screenp)
 
     _nc_unlock_global(curses);
 
-    T((T_RETURN("%p"), oldSP));
+    T((T_RETURN("%p"), (void *) oldSP));
     return (oldSP);
 }
 
@@ -136,7 +136,7 @@ delscreen(SCREEN *sp)
 {
     int i;
 
-    T((T_CALLED("delscreen(%p)"), sp));
+    T((T_CALLED("delscreen(%p)"), (void *) sp));
 
     _nc_lock_global(curses);
     if (delink_screen(sp)) {
@@ -327,7 +327,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 #endif
 
     T((T_CALLED("_nc_setupscreen(%d, %d, %p, %d, %d)"),
-       slines, scolumns, output, filtered, slk_format));
+       slines, scolumns, (void *) output, filtered, slk_format));
 
     assert(CURRENT_SCREEN == 0);	/* has been reset in newterm() ! */
 
@@ -359,7 +359,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	returnCode(ERR);
     }
 
-    T(("created SP %p", SP));
+    T(("created SP %p", (void *) SP));
 
     sp = SP;			/* fixup so SET_LINES and SET_COLS works */
     sp->_next_screen = _nc_screen_chain;
@@ -751,7 +751,7 @@ NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_DCLx
     int code = ERR;
 
     START_TRACE();
-    T((T_CALLED("ripoffline(%p,%d,%p)"), SP_PARM, line, init));
+    T((T_CALLED("ripoffline(%p,%d,%p)"), (void *) SP_PARM, line, (void *) init));
 
     if (SP_PARM != 0 && SP_PARM->_prescreen) {
 	if (line == 0) {

@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insch.c,v 1.31 2009/09/12 18:11:55 tom Exp $")
+MODULE_ID("$Id: lib_insch.c,v 1.32 2009/10/24 22:04:35 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -153,7 +153,7 @@ winsch(WINDOW *win, chtype c)
     NCURSES_SIZE_T ox;
     int code = ERR;
 
-    T((T_CALLED("winsch(%p, %s)"), win, _tracechtype(c)));
+    T((T_CALLED("winsch(%p, %s)"), (void *) win, _tracechtype(c)));
 
     if (win != 0) {
 	oy = win->_cury;

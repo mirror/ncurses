@@ -40,12 +40,12 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slklab.c,v 1.9 2009/02/21 18:48:42 tom Exp $")
+MODULE_ID("$Id: lib_slklab.c,v 1.10 2009/10/24 22:12:21 tom Exp $")
 
 NCURSES_EXPORT(char *)
 NCURSES_SP_NAME(slk_label) (NCURSES_SP_DCLx int n)
 {
-    T((T_CALLED("slk_label(%p,%d)"), SP_PARM, n));
+    T((T_CALLED("slk_label(%p,%d)"), (void *) SP_PARM, n));
 
     if (SP_PARM == 0 || SP_PARM->_slk == 0 || n < 1 || n > SP_PARM->_slk->labcnt)
 	returnPtr(0);

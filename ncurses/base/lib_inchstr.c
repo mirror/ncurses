@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2001,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,14 +40,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_inchstr.c,v 1.10 2001/06/02 23:37:58 skimo Exp $")
+MODULE_ID("$Id: lib_inchstr.c,v 1.11 2009/10/24 22:49:33 tom Exp $")
 
 NCURSES_EXPORT(int)
-winchnstr(WINDOW *win, chtype * str, int n)
+winchnstr(WINDOW *win, chtype *str, int n)
 {
     int i = 0;
 
-    T((T_CALLED("winchnstr(%p,%p,%d)"), win, str, n));
+    T((T_CALLED("winchnstr(%p,%p,%d)"), (void *) win, (void *) str, n));
 
     if (!str)
 	returnCode(0);

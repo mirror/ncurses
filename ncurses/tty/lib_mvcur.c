@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.121 2009/08/30 16:52:00 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.122 2009/10/24 22:05:03 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) (sp)->_newscr->_line[y].text[x]	/* desired state */
 
@@ -950,7 +950,7 @@ TINFO_MVCUR(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew)
     int code;
 
     TR(TRACE_CALLS | TRACE_MOVE, (T_CALLED("_nc_tinfo_mvcur(%p,%d,%d,%d,%d)"),
-				  SP_PARM, yold, xold, ynew, xnew));
+				  (void *) SP_PARM, yold, xold, ynew, xnew));
 
     if (SP_PARM == 0) {
 	code = ERR;

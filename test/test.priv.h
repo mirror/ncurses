@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.91 2009/07/18 12:19:23 tom Exp $ */
+/* $Id: test.priv.h,v 1.93 2009/10/24 21:30:13 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -222,6 +222,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -642,6 +643,15 @@ typedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);
 #define Trace(p)		/* nothing */
 #define USE_TRACE 0
 #endif
+
+/*
+ * Workaround for defective implementation of gcc attribute warn_unused_result
+ */
+#if defined(__GNUC__) && defined(_FORTIFY_SOURCE)
+#define IGNORE_RC(func) errno = func
+#else
+#define IGNORE_RC(func) (void) func
+#endif /* gcc workarounds */
 
 #define init_mb(state)	memset(&state, 0, sizeof(state))
 

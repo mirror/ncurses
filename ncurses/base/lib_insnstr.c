@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insnstr.c,v 1.2 2009/05/30 14:53:49 tom Exp $")
+MODULE_ID("$Id: lib_insnstr.c,v 1.3 2009/10/24 22:04:35 tom Exp $")
 
 NCURSES_EXPORT(int)
 winsnstr(WINDOW *win, const char *s, int n)
@@ -51,7 +51,7 @@ winsnstr(WINDOW *win, const char *s, int n)
     const unsigned char *str = (const unsigned char *) s;
     const unsigned char *cp;
 
-    T((T_CALLED("winsnstr(%p,%s,%d)"), win, _nc_visbufn(s, n), n));
+    T((T_CALLED("winsnstr(%p,%s,%d)"), (void *) win, _nc_visbufn(s, n), n));
 
     if (win != 0 && str != 0) {
 	SCREEN *sp = _nc_screen_of(win);

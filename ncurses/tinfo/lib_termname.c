@@ -28,14 +28,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_termname.c,v 1.11 2009/02/21 16:37:12 tom Exp $")
+MODULE_ID("$Id: lib_termname.c,v 1.12 2009/10/24 21:56:58 tom Exp $")
 
 NCURSES_EXPORT(char *)
 NCURSES_SP_NAME(termname) (NCURSES_SP_DCL0)
 {
     char *name = 0;
 
-    T((T_CALLED("termname(%p)"), SP_PARM));
+    T((T_CALLED("termname(%p)"), (void *) SP_PARM));
 
 #if NCURSES_SP_FUNCS
     if (TerminalOf(SP_PARM) != 0) {

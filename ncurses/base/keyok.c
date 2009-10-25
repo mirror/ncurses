@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: keyok.c,v 1.9 2009/06/06 19:24:57 tom Exp $")
+MODULE_ID("$Id: keyok.c,v 1.10 2009/10/24 22:15:47 tom Exp $")
 
 /*
  * Enable (or disable) ncurses' interpretation of a keycode by adding (or
@@ -50,7 +50,7 @@ NCURSES_SP_NAME(keyok) (NCURSES_SP_DCLx int c, bool flag)
 {
     int code = ERR;
 
-    T((T_CALLED("keyok(%p, %d,%d)"), SP_PARM, c, flag));
+    T((T_CALLED("keyok(%p, %d,%d)"), (void *) SP_PARM, c, flag));
 #ifdef USE_TERM_DRIVER
     code = CallDriver_2(sp, kyOk, c, flag);
 #else

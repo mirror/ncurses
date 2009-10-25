@@ -44,7 +44,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_slkset.c,v 1.19 2009/02/21 17:34:06 tom Exp $")
+MODULE_ID("$Id: lib_slkset.c,v 1.20 2009/10/24 22:12:21 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_set) (NCURSES_SP_DCLx int i, const char *astr, int format)
@@ -57,7 +57,7 @@ NCURSES_SP_NAME(slk_set) (NCURSES_SP_DCLx int i, const char *astr, int format)
     const char *str = astr;
     const char *p;
 
-    T((T_CALLED("slk_set(%p, %d, \"%s\", %d)"), SP_PARM, i, str, format));
+    T((T_CALLED("slk_set(%p, %d, \"%s\", %d)"), (void *) SP_PARM, i, str, format));
 
     if (SP_PARM == 0
 	|| (slk = SP_PARM->_slk) == 0

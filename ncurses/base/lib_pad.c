@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_pad.c,v 1.44 2009/07/04 19:45:20 tom Exp $")
+MODULE_ID("$Id: lib_pad.c,v 1.45 2009/10/24 22:07:03 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
 NCURSES_SP_NAME(newpad) (NCURSES_SP_DCLx int l, int c)
@@ -51,7 +51,7 @@ NCURSES_SP_NAME(newpad) (NCURSES_SP_DCLx int l, int c)
     NCURSES_CH_T *ptr;
     int i;
 
-    T((T_CALLED("newpad(%p,%d, %d)"), SP_PARM, l, c));
+    T((T_CALLED("newpad(%p,%d, %d)"), (void *) SP_PARM, l, c));
 
     if (l <= 0 || c <= 0)
 	returnWin(0);
@@ -140,7 +140,7 @@ pnoutrefresh(WINDOW *win,
 #endif
 
     T((T_CALLED("pnoutrefresh(%p, %d, %d, %d, %d, %d, %d)"),
-       win, pminrow, pmincol, sminrow, smincol, smaxrow, smaxcol));
+       (void *) win, pminrow, pmincol, sminrow, smincol, smaxrow, smaxcol));
 
     if (win == 0)
 	returnCode(ERR);
@@ -320,7 +320,7 @@ pnoutrefresh(WINDOW *win,
 NCURSES_EXPORT(int)
 pechochar(WINDOW *pad, const chtype ch)
 {
-    T((T_CALLED("pechochar(%p, %s)"), pad, _tracechtype(ch)));
+    T((T_CALLED("pechochar(%p, %s)"), (void *) pad, _tracechtype(ch)));
 
     if (pad == 0)
 	returnCode(ERR);

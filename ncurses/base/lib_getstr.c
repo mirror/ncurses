@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getstr.c,v 1.28 2009/05/09 17:02:41 tom Exp $")
+MODULE_ID("$Id: lib_getstr.c,v 1.29 2009/10/24 21:59:02 tom Exp $")
 
 /*
  * This wipes out the last character, no matter whether it was a tab, control
@@ -83,7 +83,7 @@ wgetnstr_events(WINDOW *win,
     int ch;
     int y, x;
 
-    T((T_CALLED("wgetnstr(%p,%p, %d)"), win, str, maxlen));
+    T((T_CALLED("wgetnstr(%p,%p,%d)"), (void *) win, (void *) str, maxlen));
 
     if (!win)
 	returnCode(ERR);

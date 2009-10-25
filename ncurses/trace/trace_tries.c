@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_tries.c,v 1.14 2009/03/28 20:44:01 tom Exp $")
+MODULE_ID("$Id: trace_tries.c,v 1.15 2009/10/24 22:15:47 tom Exp $")
 
 #ifdef TRACE
 #define my_buffer _nc_globals.tracetry_buf
@@ -67,9 +67,9 @@ NCURSES_EXPORT(void)
 _nc_trace_tries(TRIES * tree)
 {
     my_buffer = typeMalloc(unsigned char, my_length = 80);
-    _tracef("BEGIN tries %p", tree);
+    _tracef("BEGIN tries %p", (void *) tree);
     recur_tries(tree, 0);
-    _tracef(". . . tries %p", tree);
+    _tracef(". . . tries %p", (void *) tree);
     free(my_buffer);
 }
 

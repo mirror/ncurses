@@ -39,7 +39,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.37 2009/10/10 19:37:07 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.38 2009/10/24 22:08:55 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -49,7 +49,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
     WINDOW tmp, *nwin;
     int n;
 
-    T((T_CALLED("getwin(%p)"), filep));
+    T((T_CALLED("getwin(%p)"), (void *) filep));
 
     clearerr(filep);
     if (fread(&tmp, 1, sizeof(WINDOW), filep) < sizeof(WINDOW)
@@ -135,7 +135,7 @@ putwin(WINDOW *win, FILE *filep)
     int code = ERR;
     int n;
 
-    T((T_CALLED("putwin(%p,%p)"), win, filep));
+    T((T_CALLED("putwin(%p,%p)"), (void *) win, (void *) filep));
 
     if (win != 0) {
 	size_t len = (size_t) (win->_maxx + 1);
@@ -162,7 +162,7 @@ NCURSES_SP_NAME(scr_restore) (NCURSES_SP_DCLx const char *file)
 {
     FILE *fp = 0;
 
-    T((T_CALLED("scr_restore(%p,%s)"), SP_PARM, _nc_visbuf(file)));
+    T((T_CALLED("scr_restore(%p,%s)"), (void *) SP_PARM, _nc_visbuf(file)));
 
     if (_nc_access(file, R_OK) < 0
 	|| (fp = fopen(file, "rb")) == 0) {
@@ -209,7 +209,7 @@ NCURSES_SP_NAME(scr_init) (NCURSES_SP_DCLx const char *file)
     FILE *fp = 0;
     int code = ERR;
 
-    T((T_CALLED("scr_init(%p,%s)"), SP_PARM, _nc_visbuf(file)));
+    T((T_CALLED("scr_init(%p,%s)"), (void *) SP_PARM, _nc_visbuf(file)));
 
     if (SP_PARM != 0 &&
 #ifdef USE_TERM_DRIVER
@@ -243,7 +243,7 @@ scr_init(const char *file)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(scr_set) (NCURSES_SP_DCLx const char *file)
 {
-    T((T_CALLED("scr_set(%p,%s)"), SP_PARM, _nc_visbuf(file)));
+    T((T_CALLED("scr_set(%p,%s)"), (void *) SP_PARM, _nc_visbuf(file)));
 
     if (NCURSES_SP_NAME(scr_init) (NCURSES_SP_ARGx file) == ERR) {
 	returnCode(ERR);

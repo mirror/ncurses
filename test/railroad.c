@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2000
  *
- * $Id: railroad.c,v 1.18 2009/10/10 16:14:42 tom Exp $
+ * $Id: railroad.c,v 1.19 2009/10/24 21:37:56 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -58,13 +58,17 @@ static bool interrupted = FALSE;
 static int
 outc(TPUTS_ARG c)
 {
+    int rc = OK;
+
     if (interrupted) {
 	char tmp = (char) c;
-	write(STDOUT_FILENO, &tmp, 1);
+	if (write(STDOUT_FILENO, &tmp, 1) == -1)
+	    rc = ERR;
     } else {
-	putc(c, stdout);
+	if (putc(c, stdout) == EOF)
+	    rc = ERR;
     }
-    return 0;
+    return rc;
 }
 
 static void

@@ -40,7 +40,7 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkinit.c,v 1.11 2009/05/23 23:32:57 tom Exp $")
+MODULE_ID("$Id: lib_slkinit.c,v 1.12 2009/10/24 22:12:21 tom Exp $")
 
 #ifdef USE_SP_RIPOFF
 #define SoftkeyFormat SP_PARM->slk_format
@@ -53,7 +53,7 @@ NCURSES_SP_NAME(slk_init) (NCURSES_SP_DCLx int format)
 {
     int code = ERR;
 
-    T((T_CALLED("slk_init(%p,%d)"), SP_PARM, format));
+    T((T_CALLED("slk_init(%p,%d)"), (void *) SP_PARM, format));
 
     if (format >= 0
 	&& format <= 3

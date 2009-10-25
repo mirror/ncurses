@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.34 2009/07/17 00:07:25 tom Exp $
+ * $Id: ditto.c,v 1.35 2009/10/24 21:33:24 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -43,7 +43,6 @@
  */
 #include <test.priv.h>
 #include <sys/stat.h>
-#include <errno.h>
 
 #ifdef USE_PTHREADS
 #include <pthread.h>
@@ -379,7 +378,7 @@ main(int argc, char *argv[])
 
     if (argc <= 1)
 	usage();
-    
+
     if ((data = typeCalloc(DITTO, (size_t) argc)) == 0)
 	failed("calloc data");
 

@@ -44,7 +44,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_nl.c,v 1.11 2009/07/04 00:25:53 tom Exp $")
+MODULE_ID("$Id: lib_nl.c,v 1.12 2009/10/24 22:05:55 tom Exp $")
 
 #ifdef __EMX__
 #include <io.h>
@@ -53,7 +53,7 @@ MODULE_ID("$Id: lib_nl.c,v 1.11 2009/07/04 00:25:53 tom Exp $")
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(nl) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("nl(%p)"), SP_PARM));
+    T((T_CALLED("nl(%p)"), (void *) SP_PARM));
     if (0 == SP_PARM)
 	returnCode(ERR);
     SP_PARM->_nl = TRUE;
@@ -75,7 +75,7 @@ nl(void)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(nonl) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("nonl(%p)"), SP_PARM));
+    T((T_CALLED("nonl(%p)"), (void *) SP_PARM));
     if (0 == SP_PARM)
 	returnCode(ERR);
     SP_PARM->_nl = FALSE;

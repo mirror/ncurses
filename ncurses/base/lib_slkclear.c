@@ -40,14 +40,14 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkclear.c,v 1.12 2009/02/21 17:47:14 tom Exp $")
+MODULE_ID("$Id: lib_slkclear.c,v 1.13 2009/10/24 22:12:21 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_clear) (NCURSES_SP_DCL0)
 {
     int rc = ERR;
 
-    T((T_CALLED("slk_clear(%p)"), SP_PARM));
+    T((T_CALLED("slk_clear(%p)"), (void *) SP_PARM));
 
     if (SP_PARM != 0 && SP_PARM->_slk != 0) {
 	SP_PARM->_slk->hidden = TRUE;

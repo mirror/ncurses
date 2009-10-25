@@ -39,7 +39,7 @@
 #include <wctype.h>
 #endif
 
-MODULE_ID("$Id: lib_add_wch.c,v 1.8 2009/07/25 14:38:01 tom Exp $")
+MODULE_ID("$Id: lib_add_wch.c,v 1.9 2009/10/24 22:45:42 tom Exp $")
 
 /* clone/adapt lib_addch.c */
 static const cchar_t blankchar = NewChar(BLANK_TEXT);
@@ -415,7 +415,8 @@ wadd_wch(WINDOW *win, const cchar_t *wch)
 {
     int code = ERR;
 
-    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wadd_wch(%p, %s)"), win,
+    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wadd_wch(%p, %s)"),
+				      (void *) win,
 				      _tracecchar_t(wch)));
 
     if (win && (wadd_wch_nosync(win, *wch) != ERR)) {
@@ -432,7 +433,8 @@ wecho_wchar(WINDOW *win, const cchar_t *wch)
 {
     int code = ERR;
 
-    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wechochar(%p, %s)"), win,
+    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wechochar(%p, %s)"),
+				      (void *) win,
 				      _tracecchar_t(wch)));
 
     if (win && (wadd_wch_nosync(win, *wch) != ERR)) {

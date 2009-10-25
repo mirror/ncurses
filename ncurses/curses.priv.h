@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.439 2009/09/26 22:25:35 tom Exp $
+ * $Id: curses.priv.h,v 1.441 2009/10/24 20:29:56 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1257,7 +1257,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 					putc(PUTC_ch,b);			    \
 				    break;					    \
 				}						    \
-				fwrite(PUTC_buf, (unsigned) PUTC_n, 1, b);	    \
+				IGNORE_RC(fwrite(PUTC_buf, (unsigned) PUTC_n, 1, b)); \
 			    }							    \
 			    COUNT_OUTCHARS(PUTC_i);				    \
 			} } } while (0)
@@ -1499,6 +1499,15 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 #define returnWin(code)		return code
 
 #endif /* TRACE/!TRACE */
+
+/*
+ * Workaround for defective implementation of gcc attribute warn_unused_result
+ */
+#if defined(__GNUC__) && defined(_FORTIFY_SOURCE)
+#define IGNORE_RC(func) errno = func
+#else
+#define IGNORE_RC(func) (void) func
+#endif /* gcc workarounds */
 
 /*
  * Return-codes for tgetent() and friends.
@@ -1831,6 +1840,26 @@ extern NCURSES_EXPORT(int) _nc_eventlist_timeout(_nc_eventlist *);
 #else
 #define wgetch_events(win, evl) wgetch(win)
 #define wgetnstr_events(win, str, maxlen, evl) wgetnstr(win, str, maxlen)
+#endif
+
+/*
+ * Wide-character macros to hide some platform-differences.
+ */
+#if USE_WIDEC_SUPPORT
+#if HAVE_MBTOWC && HAVE_MBLEN
+#define reset_mbytes(state) IGNORE_RC(mblen(NULL, 0)), IGNORE_RC(mbtowc(NULL, NULL, 0))
+#define count_mbytes(buffer,length,state) mblen(buffer,length)
+#define check_mbytes(wch,buffer,length,state) \
+	(int) mbtowc(&wch, buffer, length)
+#define state_unused
+#elif HAVE_MBRTOWC && HAVE_MBRLEN
+#define reset_mbytes(state) init_mb(state)
+#define count_mbytes(buffer,length,state) mbrlen(buffer,length,&state)
+#define check_mbytes(wch,buffer,length,state) \
+	(int) mbrtowc(&wch, buffer, length, &state)
+#else
+make an error
+#endif
 #endif
 
 /*

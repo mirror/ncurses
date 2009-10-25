@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.60 2009/09/06 16:32:48 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.61 2009/10/24 22:05:55 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -98,7 +98,7 @@ _nc_freewin(WINDOW *win)
     SCREEN *sp = _nc_screen_of(win);	/* pretend this is parameter */
 #endif
 
-    T((T_CALLED("_nc_freewin(%p)"), win));
+    T((T_CALLED("_nc_freewin(%p)"), (void *) win));
 
     if (win != 0) {
 	if (_nc_nonsp_try_global(curses) == 0) {
@@ -119,7 +119,7 @@ _nc_freewin(WINDOW *win)
 		    free(p);
 
 		    result = OK;
-		    T(("...deleted win=%p", win));
+		    T(("...deleted win=%p", (void *) win));
 		    break;
 		}
 		q = p;
@@ -138,7 +138,7 @@ NCURSES_SP_NAME(newwin) (NCURSES_SP_DCLx
     NCURSES_CH_T *ptr;
     int i;
 
-    T((T_CALLED("newwin(%p, %d,%d,%d,%d)"), SP_PARM, num_lines, num_columns,
+    T((T_CALLED("newwin(%p, %d,%d,%d,%d)"), (void *) SP_PARM, num_lines, num_columns,
        begy, begx));
 
     if (begy < 0 || begx < 0 || num_lines < 0 || num_columns < 0)
@@ -192,7 +192,7 @@ derwin(WINDOW *orig, int num_lines, int num_columns, int begy, int begx)
     SCREEN *sp = _nc_screen_of(orig);
 #endif
 
-    T((T_CALLED("derwin(%p,%d,%d,%d,%d)"), orig, num_lines, num_columns,
+    T((T_CALLED("derwin(%p,%d,%d,%d,%d)"), (void *) orig, num_lines, num_columns,
        begy, begx));
 
     /*
@@ -235,7 +235,7 @@ derwin(WINDOW *orig, int num_lines, int num_columns, int begy, int begx)
 NCURSES_EXPORT(WINDOW *)
 subwin(WINDOW *w, int l, int c, int y, int x)
 {
-    T((T_CALLED("subwin(%p, %d, %d, %d, %d)"), w, l, c, y, x));
+    T((T_CALLED("subwin(%p, %d, %d, %d, %d)"), (void *) w, l, c, y, x));
     T(("parent has begy = %ld, begx = %ld", (long) w->_begy, (long) w->_begx));
 
     returnWin(derwin(w, l, c, y - w->_begy, x - w->_begx));
@@ -262,7 +262,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
     bool is_padwin = (flags & _ISPAD);
 
     T((T_CALLED("_nc_makenew(%p,%d,%d,%d,%d)"),
-       SP_PARM, num_lines, num_columns, begy, begx));
+       (void *) SP_PARM, num_lines, num_columns, begy, begx));
 
     if (SP_PARM == 0)
 	returnWin(0);
@@ -360,7 +360,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
     wp->screen = SP_PARM;
     WindowList(SP_PARM) = wp;
 
-    T((T_CREATE("window %p"), win));
+    T((T_CREATE("window %p"), (void *) win));
 
     _nc_nonsp_unlock_global(curses);
     returnWin(win);

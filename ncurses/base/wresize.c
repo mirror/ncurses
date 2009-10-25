@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: wresize.c,v 1.31 2009/05/23 19:50:16 tom Exp $")
+MODULE_ID("$Id: wresize.c,v 1.32 2009/10/24 22:15:00 tom Exp $")
 
 static int
 cleanup_lines(struct ldat *data, int length)
@@ -97,7 +97,7 @@ wresize(WINDOW *win, int ToLines, int ToCols)
     struct ldat *new_lines = 0;
 
 #ifdef TRACE
-    T((T_CALLED("wresize(%p,%d,%d)"), win, ToLines, ToCols));
+    T((T_CALLED("wresize(%p,%d,%d)"), (void *) win, ToLines, ToCols));
     if (win) {
 	TR(TRACE_UPDATE, ("...beg (%ld, %ld), max(%ld,%ld), reg(%ld,%ld)",
 			  (long) win->_begy, (long) win->_begx,

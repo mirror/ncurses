@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.24 2009/08/29 18:43:13 tom Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.25 2009/10/24 22:12:21 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels    InfoOf(SP_PARM).numlabels
@@ -144,7 +144,7 @@ slk_intern_refresh(SCREEN *sp)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_noutrefresh) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("slk_noutrefresh(%p)"), SP_PARM));
+    T((T_CALLED("slk_noutrefresh(%p)"), (void *) SP_PARM));
 
     if (SP_PARM == 0 || SP_PARM->_slk == 0)
 	returnCode(ERR);
@@ -169,7 +169,7 @@ slk_noutrefresh(void)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_refresh) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("slk_refresh(%p)"), SP_PARM));
+    T((T_CALLED("slk_refresh(%p)"), (void *) SP_PARM));
 
     if (SP_PARM == 0 || SP_PARM->_slk == 0)
 	returnCode(ERR);

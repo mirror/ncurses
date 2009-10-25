@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.347 2009/10/03 22:01:56 tom Exp $
+$Id: ncurses.c,v 1.349 2009/10/24 21:28:36 tom Exp $
 
 ***************************************************************************/
 
@@ -121,22 +121,22 @@ extern unsigned _nc_tracing;
 #if HAVE_WCSRTOMBS
 #define count_wchars(src, len, state)      wcsrtombs(0,   &src, len, state)
 #define trans_wchars(dst, src, len, state) wcsrtombs(dst, &src, len, state)
-#define reset_wchars(state) memset(&state, 0, sizeof(state))
+#define reset_wchars(state) init_mb(state)
 #elif HAVE_WCSTOMBS && HAVE_MBTOWC && HAVE_MBLEN
 #define count_wchars(src, len, state)      wcstombs(0,   src, len)
 #define trans_wchars(dst, src, len, state) wcstombs(dst, src, len)
-#define reset_wchars(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
+#define reset_wchars(state) IGNORE_RC(mblen(NULL, 0)), IGNORE_RC(mbtowc(NULL, NULL, 0))
 #define state_unused
 #endif
 
 #if HAVE_MBSRTOWCS
 #define count_mbytes(src, len, state)      mbsrtowcs(0,   &src, len, state)
 #define trans_mbytes(dst, src, len, state) mbsrtowcs(dst, &src, len, state)
-#define reset_mbytes(state) memset(&state, 0, sizeof(state))
+#define reset_mbytes(state) init_mb(state)
 #elif HAVE_MBSTOWCS && HAVE_MBTOWC && HAVE_MBLEN
 #define count_mbytes(src, len, state)      mbstowcs(0,   src, len)
 #define trans_mbytes(dst, src, len, state) mbstowcs(dst, src, len)
-#define reset_mbytes(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
+#define reset_mbytes(state) IGNORE_RC(mblen(NULL, 0)), IGNORE_RC(mbtowc(NULL, NULL, 0))
 #define state_unused
 #endif
 
@@ -6470,7 +6470,7 @@ rip_footer(WINDOW *win, int cols)
     wbkgd(win, A_REVERSE);
     werase(win);
     wmove(win, 0, 0);
-    wprintw(win, "footer: window %p, %d columns", win, cols);
+    wprintw(win, "footer: window %p, %d columns", (void *) win, cols);
     wnoutrefresh(win);
     return OK;
 }
@@ -6481,7 +6481,7 @@ rip_header(WINDOW *win, int cols)
     wbkgd(win, A_REVERSE);
     werase(win);
     wmove(win, 0, 0);
-    wprintw(win, "header: window %p, %d columns", win, cols);
+    wprintw(win, "header: window %p, %d columns", (void *) win, cols);
     wnoutrefresh(win);
     return OK;
 }

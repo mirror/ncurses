@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.107 2009/08/15 20:41:24 Clemens.Ladisch Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.109 2009/10/24 21:58:34 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -380,7 +380,7 @@ _nc_wgetch(WINDOW *win,
     long event_delay = -1;
 #endif
 
-    T((T_CALLED("_nc_wgetch(%p)"), win));
+    T((T_CALLED("_nc_wgetch(%p)"), (void *) win));
 
     *result = 0;
 
@@ -536,6 +536,12 @@ _nc_wgetch(WINDOW *win,
 	    /* resizeterm can push KEY_RESIZE */
 	    if (cooked_key_in_fifo()) {
 		*result = fifo_pull(sp);
+		/*
+		 * Get the ERR from queue -- it is from WINCH,
+		 * so we should take it out, the "error" is handled.
+		 */
+		if (fifo_peek(sp) == -1)
+		    fifo_pull(sp);
 		returnCode(*result >= KEY_MIN ? KEY_CODE_YES : OK);
 	    }
 	}
@@ -612,7 +618,7 @@ wgetch(WINDOW *win)
     int code;
     unsigned long value;
 
-    T((T_CALLED("wgetch(%p)"), win));
+    T((T_CALLED("wgetch(%p)"), (void *) win));
     code = _nc_wgetch(win,
 		      &value,
 		      _nc_use_meta(win)
@@ -686,7 +692,7 @@ kgetch(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 	    break;
 	}
 	TR(TRACE_IEVENT, ("ptr=%p, ch=%d, value=%d",
-			  ptr, ptr->ch, ptr->value));
+			  (void *) ptr, ptr->ch, ptr->value));
 
 	if (ptr->value != 0) {	/* sequence terminated */
 	    TR(TRACE_IEVENT, ("end of sequence"));

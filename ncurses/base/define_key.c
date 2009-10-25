@@ -33,14 +33,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: define_key.c,v 1.17 2009/05/09 18:30:16 tom Exp $")
+MODULE_ID("$Id: define_key.c,v 1.18 2009/10/24 22:15:47 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(define_key) (NCURSES_SP_DCLx const char *str, int keycode)
 {
     int code = ERR;
 
-    T((T_CALLED("define_key(%p, %s,%d)"), SP_PARM, _nc_visbuf(str), keycode));
+    T((T_CALLED("define_key(%p, %s,%d)"), (void *) SP_PARM, _nc_visbuf(str), keycode));
     if (SP_PARM == 0 || !HasTInfoTerminal(SP_PARM)) {
 	code = ERR;
     } else if (keycode > 0) {

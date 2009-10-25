@@ -52,7 +52,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.81 2009/09/27 00:34:05 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.82 2009/10/24 22:52:04 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -110,7 +110,7 @@ NCURSES_EXPORT(void)
 NCURSES_SP_NAME(filter) (NCURSES_SP_DCL0)
 {
     START_TRACE();
-    T((T_CALLED("filter(%p)"), SP_PARM));
+    T((T_CALLED("filter(%p)"), (void *) SP_PARM));
 #if NCURSES_SP_FUNCS
     if (IsPreScreen(SP_PARM)) {
 	SP_PARM->_filtered = TRUE;
@@ -141,7 +141,7 @@ NCURSES_EXPORT(void)
 NCURSES_SP_NAME(nofilter) (NCURSES_SP_DCL0)
 {
     START_TRACE();
-    T((T_CALLED("nofilter(%p)"), SP_PARM));
+    T((T_CALLED("nofilter(%p)"), (void *) SP_PARM));
 #if NCURSES_SP_FUNCS
     if (IsPreScreen(SP_PARM)) {
 	SP_PARM->_filtered = FALSE;
@@ -183,7 +183,11 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
     TERMINAL *new_term = 0;
 
     START_TRACE();
-    T((T_CALLED("newterm(%p, \"%s\", %p,%p)"), SP_PARM, name, ofp, ifp));
+    T((T_CALLED("newterm(%p, \"%s\", %p,%p)"),
+       (void *) SP_PARM,
+       name,
+       (void *) ofp,
+       (void *) ifp));
 
 #if NCURSES_SP_FUNCS
     assert(SP_PARM != 0);

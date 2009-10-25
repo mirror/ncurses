@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: tries.c,v 1.28 2008/11/16 00:19:59 juergen Exp $")
+MODULE_ID("$Id: tries.c,v 1.29 2009/10/24 22:39:11 tom Exp $")
 
 /*
  * Expand a keycode into the string that it corresponds to, returning null if
@@ -89,7 +89,7 @@ _nc_expand_try(TRIES * tree, unsigned code, int *count, size_t len)
 NCURSES_EXPORT(int)
 _nc_remove_key(TRIES ** tree, unsigned code)
 {
-    T((T_CALLED("_nc_remove_key(%p,%d)"), tree, code));
+    T((T_CALLED("_nc_remove_key(%p,%d)"), (void *) tree, code));
 
     if (code == 0)
 	returnCode(FALSE);
@@ -121,7 +121,7 @@ _nc_remove_key(TRIES ** tree, unsigned code)
 NCURSES_EXPORT(int)
 _nc_remove_string(TRIES ** tree, const char *string)
 {
-    T((T_CALLED("_nc_remove_string(%p,%s)"), tree, _nc_visbuf(string)));
+    T((T_CALLED("_nc_remove_string(%p,%s)"), (void *) tree, _nc_visbuf(string)));
 
     if (string == 0 || *string == 0)
 	returnCode(FALSE);

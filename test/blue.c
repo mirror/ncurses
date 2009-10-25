@@ -40,7 +40,7 @@
  * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is
  * just as good.
  *
- * $Id: blue.c,v 1.32 2009/10/10 16:16:46 tom Exp $
+ * $Id: blue.c,v 1.33 2009/10/24 21:03:35 tom Exp $
  */
 
 #include <test.priv.h>
@@ -300,7 +300,7 @@ play_game(void)
 		if (selection[i] != NOCARD) {
 		    move(BASEROW + (selection[i] / GRID_WIDTH) * 2 + 3,
 			 (selection[i] % GRID_WIDTH) * 5);
-		    (void) printw("   %c ", (char) (*lp++ = 'a' + i));
+		    (void) printw("   %c ", (*lp++ = (char) ('a' + i)));
 		}
 	    };
 	    *lp = '\0';

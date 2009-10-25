@@ -46,14 +46,14 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_has_cap.c,v 1.8 2009/05/10 00:53:52 tom Exp $")
+MODULE_ID("$Id: lib_has_cap.c,v 1.9 2009/10/24 22:15:47 tom Exp $")
 
 NCURSES_EXPORT(bool)
 NCURSES_SP_NAME(has_ic) (NCURSES_SP_DCL0)
 {
     bool code = FALSE;
 
-    T((T_CALLED("has_ic(%p)"), SP_PARM));
+    T((T_CALLED("has_ic(%p)"), (void *) SP_PARM));
 
     if (IsValidTIScreen(SP_PARM) && IsTermInfo(SP_PARM)) {
 	code = ((insert_character || parm_ich
@@ -76,7 +76,7 @@ NCURSES_EXPORT(bool)
 NCURSES_SP_NAME(has_il) (NCURSES_SP_DCL0)
 {
     bool code = FALSE;
-    T((T_CALLED("has_il(%p)"), SP_PARM));
+    T((T_CALLED("has_il(%p)"), (void *) SP_PARM));
     if (IsValidTIScreen(SP_PARM) && IsTermInfo(SP_PARM)) {
 	code = ((insert_line || parm_insert_line)
 		&& (delete_line || parm_delete_line)) ? TRUE : FALSE;

@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mvwin.c,v 1.16 2009/06/06 20:25:07 tom Exp $")
+MODULE_ID("$Id: lib_mvwin.c,v 1.17 2009/10/24 22:05:03 tom Exp $")
 
 NCURSES_EXPORT(int)
 mvwin(WINDOW *win, int by, int bx)
@@ -51,7 +51,7 @@ mvwin(WINDOW *win, int by, int bx)
     SCREEN *sp = _nc_screen_of(win);
 #endif
 
-    T((T_CALLED("mvwin(%p,%d,%d)"), win, by, bx));
+    T((T_CALLED("mvwin(%p,%d,%d)"), (void *) win, by, bx));
 
     if (!win || (win->_flags & _ISPAD))
 	returnCode(ERR);

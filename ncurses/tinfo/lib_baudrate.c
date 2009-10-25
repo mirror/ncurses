@@ -79,7 +79,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.29 2009/02/21 17:22:13 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.30 2009/10/24 22:15:00 tom Exp $")
 
 /*
  *	int
@@ -198,7 +198,7 @@ NCURSES_SP_NAME(baudrate) (NCURSES_SP_DCL0)
 {
     int result;
 
-    T((T_CALLED("baudrate(%p)"), SP_PARM));
+    T((T_CALLED("baudrate(%p)"), (void *) SP_PARM));
 
     /*
      * In debugging, allow the environment symbol to override when we're

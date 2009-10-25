@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.9 2009/07/15 23:21:04 tom Exp $
+ * $Id: chgat.c,v 1.10 2009/10/24 21:32:57 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
@@ -47,7 +47,7 @@
 typedef struct {
     unsigned c;
     unsigned v;
-    int pair;
+    short pair;
     unsigned attr;
     int count;
     int ch;
@@ -60,12 +60,12 @@ typedef struct {
 } STATUS;
 
 static const char *
-color_params(unsigned state, int *pair)
+color_params(unsigned state, short *pair)
 {
     /* *INDENT-OFF* */
     static struct {
-	int pair;
-	int fg, bg;
+	short pair;
+	short fg, bg;
 	const char *msg;
     } table[] = {
 	{ 0, COLOR_DEFAULT, COLOR_DEFAULT, "default" },

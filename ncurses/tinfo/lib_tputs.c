@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.78 2009/10/10 16:01:42 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.79 2009/10/24 21:56:58 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -83,7 +83,7 @@ static NCURSES_SP_OUTC my_outch = NCURSES_SP_NAME(_nc_outch);
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(delay_output) (NCURSES_SP_DCLx int ms)
 {
-    T((T_CALLED("delay_output(%p,%d)"), SP_PARM, ms));
+    T((T_CALLED("delay_output(%p,%d)"), (void *) SP_PARM, ms));
 
     if (!HasTInfoTerminal(SP_PARM))
 	returnCode(ERR);
@@ -213,7 +213,7 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
 	if (outc == NCURSES_SP_NAME(_nc_outch))
 	    (void) strcpy(addrbuf, "_nc_outch");
 	else
-	    (void) sprintf(addrbuf, "%p", outc);
+	    (void) sprintf(addrbuf, "%p", (void *) outc);
 	if (_nc_tputs_trace) {
 	    _tracef("tputs(%s = %s, %d, %s) called", _nc_tputs_trace,
 		    _nc_visbuf(string), affcnt, addrbuf);

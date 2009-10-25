@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ungetch.c,v 1.13 2009/04/18 20:30:12 tom Exp $")
+MODULE_ID("$Id: lib_ungetch.c,v 1.14 2009/10/24 22:12:21 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -62,7 +62,7 @@ safe_ungetch(SCREEN *sp, int ch)
 {
     int rc = ERR;
 
-    T((T_CALLED("ungetch(%p,%s)"), sp, _nc_tracechar(sp, ch)));
+    T((T_CALLED("ungetch(%p,%s)"), (void *) sp, _nc_tracechar(sp, ch)));
 
     if (tail != -1) {
 	if (head == -1) {

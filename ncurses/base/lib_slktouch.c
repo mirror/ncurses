@@ -38,12 +38,12 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slktouch.c,v 1.7 2009/02/21 17:42:59 tom Exp $")
+MODULE_ID("$Id: lib_slktouch.c,v 1.8 2009/10/24 22:12:21 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_touch) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("slk_touch(%p)"), SP_PARM));
+    T((T_CALLED("slk_touch(%p)"), (void *) SP_PARM));
 
     if (SP_PARM == 0 || SP_PARM->_slk == 0)
 	returnCode(ERR);

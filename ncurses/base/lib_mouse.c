@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.108 2009/07/04 19:51:08 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.110 2009/10/24 23:21:31 tom Exp $")
 
 #include <tic.h>
 
@@ -1286,7 +1286,7 @@ _nc_mouse_resume(SCREEN *sp)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 {
-    T((T_CALLED("getmouse(%p,%p)"), SP_PARM, aevent));
+    T((T_CALLED("getmouse(%p,%p)"), (void *) SP_PARM, (void *) aevent));
 
     if ((aevent != 0) && (SP_PARM != 0) && (SP_PARM->_mouse_type != M_NONE)) {
 	MEVENT *eventp = SP_PARM->_mouse_eventp;
@@ -1320,7 +1320,7 @@ NCURSES_SP_NAME(ungetmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 {
     int result = ERR;
 
-    T((T_CALLED("ungetmouse(%p,%p)"), SP_PARM, aevent));
+    T((T_CALLED("ungetmouse(%p,%p)"), (void *) SP_PARM, (void *) aevent));
 
     if (aevent != 0 && SP_PARM != 0) {
 	MEVENT *eventp = SP_PARM->_mouse_eventp;
@@ -1352,7 +1352,10 @@ NCURSES_SP_NAME(mousemask) (NCURSES_SP_DCLx mmask_t newmask, mmask_t * oldmask)
 {
     mmask_t result = 0;
 
-    T((T_CALLED("mousemask(%p,%#lx,%p)"), SP_PARM, (unsigned long) newmask, oldmask));
+    T((T_CALLED("mousemask(%p,%#lx,%p)"),
+       (void *) SP_PARM,
+       (unsigned long) newmask,
+       (void *) oldmask));
 
     if (SP_PARM != 0) {
 	if (oldmask)
@@ -1395,7 +1398,7 @@ wenclose(const WINDOW *win, int y, int x)
 {
     bool result = FALSE;
 
-    T((T_CALLED("wenclose(%p,%d,%d)"), win, y, x));
+    T((T_CALLED("wenclose(%p,%d,%d)"), (const void *) win, y, x));
 
     if (win != 0) {
 	y -= win->_yoffset;
@@ -1413,7 +1416,7 @@ NCURSES_SP_NAME(mouseinterval) (NCURSES_SP_DCLx int maxclick)
 {
     int oldval;
 
-    T((T_CALLED("mouseinterval(%p,%d)"), SP_PARM, maxclick));
+    T((T_CALLED("mouseinterval(%p,%d)"), (void *) SP_PARM, maxclick));
 
     if (SP_PARM != 0) {
 	oldval = SP_PARM->_maxclick;
@@ -1461,7 +1464,11 @@ wmouse_trafo(const WINDOW *win, int *pY, int *pX, bool to_screen)
 {
     bool result = FALSE;
 
-    T((T_CALLED("wmouse_trafo(%p,%p,%p,%d)"), win, pY, pX, to_screen));
+    T((T_CALLED("wmouse_trafo(%p,%p,%p,%d)"),
+       (const void *) win,
+       (void *) pY,
+       (void *) pX,
+       to_screen));
 
     if (win && pY && pX) {
 	int y = *pY;

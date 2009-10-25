@@ -69,7 +69,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.58 2009/08/15 22:12:01 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.59 2009/10/24 22:12:21 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -113,7 +113,7 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 
     newmode &= A_ATTRIBUTES;
 
-    T((T_CALLED("vidputs(%p,%s)"), SP_PARM, _traceattr(newmode)));
+    T((T_CALLED("vidputs(%p,%s)"), (void *) SP_PARM, _traceattr(newmode)));
 
     if (!IsTermInfo(SP_PARM))
 	returnCode(ERR);
@@ -319,7 +319,7 @@ vidputs(chtype newmode, NCURSES_OUTC outc)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(vidattr) (NCURSES_SP_DCLx chtype newmode)
 {
-    T((T_CALLED("vidattr(%p,%s)"), SP_PARM, _traceattr(newmode)));
+    T((T_CALLED("vidattr(%p,%s)"), (void *) SP_PARM, _traceattr(newmode)));
     returnCode(NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx
 					 newmode,
 					 NCURSES_SP_NAME(_nc_outch)));
@@ -338,7 +338,7 @@ NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
 {
     chtype attrs = A_NORMAL;
 
-    T((T_CALLED("termattrs(%p)"), SP_PARM));
+    T((T_CALLED("termattrs(%p)"), (void *) SP_PARM));
 #ifdef USE_TERM_DRIVER
     if (HasTerminal(SP_PARM))
 	attrs = CallDriver(SP_PARM, conattr);

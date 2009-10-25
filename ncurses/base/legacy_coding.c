@@ -33,14 +33,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: legacy_coding.c,v 1.4 2009/02/21 16:16:38 tom Exp $")
+MODULE_ID("$Id: legacy_coding.c,v 1.5 2009/10/24 22:15:00 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(use_legacy_coding) (NCURSES_SP_DCLx int level)
 {
     int result = ERR;
 
-    T((T_CALLED("use_legacy_coding(%p,%d)"), SP_PARM, level));
+    T((T_CALLED("use_legacy_coding(%p,%d)"), (void *) SP_PARM, level));
     if (level >= 0 && level <= 2 && SP_PARM != 0) {
 	result = SP_PARM->_legacy_coding;
 	SP_PARM->_legacy_coding = level;

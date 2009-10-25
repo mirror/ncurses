@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slk.c,v 1.42 2009/08/15 23:05:02 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.43 2009/10/24 22:12:21 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels    InfoOf(SP_PARM).numlabels
@@ -231,7 +231,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_restore) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("slk_restore(%p)"), SP_PARM));
+    T((T_CALLED("slk_restore(%p)"), (void *) SP_PARM));
 
     if (0 == SP_PARM)
 	returnCode(ERR);

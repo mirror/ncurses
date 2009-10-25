@@ -48,7 +48,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_kernel.c,v 1.27 2009/06/06 21:25:50 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.28 2009/10/24 22:15:47 tom Exp $")
 
 static int
 _nc_vdisable(void)
@@ -84,7 +84,7 @@ NCURSES_SP_NAME(erasechar) (NCURSES_SP_DCL0)
     int result = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("erasechar(%p)"), SP_PARM));
+    T((T_CALLED("erasechar(%p)"), (void *) SP_PARM));
 
     if (termp != 0) {
 #ifdef TERMIOS
@@ -119,7 +119,7 @@ NCURSES_SP_NAME(killchar) (NCURSES_SP_DCL0)
     int result = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("killchar(%p)"), SP_PARM));
+    T((T_CALLED("killchar(%p)"), (void *) SP_PARM));
 
     if (termp != 0) {
 #ifdef TERMIOS
@@ -153,7 +153,7 @@ NCURSES_SP_NAME(flushinp) (NCURSES_SP_DCL0)
 {
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("flushinp(%p)"), SP_PARM));
+    T((T_CALLED("flushinp(%p)"), (void *) SP_PARM));
 
     if (termp != 0) {
 #ifdef TERMIOS

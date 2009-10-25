@@ -46,7 +46,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_beep.c,v 1.14 2009/05/23 19:33:20 tom Exp $")
+MODULE_ID("$Id: lib_beep.c,v 1.15 2009/10/24 22:02:14 tom Exp $")
 
 /*
  *	beep()
@@ -61,7 +61,7 @@ NCURSES_SP_NAME(beep) (NCURSES_SP_DCL0)
 {
     int res = ERR;
 
-    T((T_CALLED("beep(%p)"), SP_PARM));
+    T((T_CALLED("beep(%p)"), (void *) SP_PARM));
 
 #ifdef USE_TERM_DRIVER
     if (SP_PARM != 0)

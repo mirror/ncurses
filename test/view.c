@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.75 2009/07/19 00:34:07 tom Exp $
+ * $Id: view.c,v 1.76 2009/10/24 21:26:38 tom Exp $
  */
 
 #include <test.priv.h>
@@ -83,7 +83,7 @@
 
 #if USE_WIDEC_SUPPORT
 #if HAVE_MBTOWC && HAVE_MBLEN
-#define reset_mbytes(state) mblen(NULL, 0), mbtowc(NULL, NULL, 0)
+#define reset_mbytes(state) IGNORE_RC(mblen(NULL, 0)), IGNORE_RC(mbtowc(NULL, NULL, 0))
 #define count_mbytes(buffer,length,state) mblen(buffer,length)
 #define check_mbytes(wch,buffer,length,state) \
 	(int) mbtowc(&wch, buffer, length)

@@ -40,7 +40,7 @@
 #include <term_entry.h>		/* TTY, cur_term */
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.27 2009/09/13 14:40:05 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.28 2009/10/24 22:15:00 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.
@@ -82,7 +82,7 @@ NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 {
     TERMINAL *oldterm;
 
-    T((T_CALLED("set_curterm(%p)"), termp));
+    T((T_CALLED("set_curterm(%p)"), (void *) termp));
 
     _nc_lock_global(curses);
     oldterm = cur_term;
@@ -110,7 +110,7 @@ NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
     }
     _nc_unlock_global(curses);
 
-    T((T_RETURN("%p"), oldterm));
+    T((T_RETURN("%p"), (void *) oldterm));
     return (oldterm);
 }
 
@@ -127,7 +127,7 @@ NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 {
     int rc = ERR;
 
-    T((T_CALLED("del_curterm(%p, %p)"), SP_PARM, termp));
+    T((T_CALLED("del_curterm(%p, %p)"), (void *) SP_PARM, (void *) termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER

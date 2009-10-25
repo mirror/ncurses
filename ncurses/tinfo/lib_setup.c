@@ -52,7 +52,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.119 2009/09/05 20:10:02 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.120 2009/10/24 21:56:15 tom Exp $")
 
 /****************************************************************************
  *
@@ -224,7 +224,7 @@ _nc_handle_sigwinch(SCREEN *sp)
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(use_env) (NCURSES_SP_DCLx bool f)
 {
-    T((T_CALLED("use_env(%p,%d)"), SP_PARM, (int) f));
+    T((T_CALLED("use_env(%p,%d)"), (void *) SP_PARM, (int) f));
 #if NCURSES_SP_FUNCS
     if (IsPreScreen(SP_PARM)) {
 	SP_PARM->_use_env = f;
@@ -602,7 +602,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	termp = *tp;
 #else
     termp = cur_term;
-    T((T_CALLED("setupterm(%s,%d,%p)"), _nc_visbuf(tname), Filedes, errret));
+    T((T_CALLED("setupterm(%s,%d,%p)"), _nc_visbuf(tname), Filedes, (void *) errret));
 #endif
 
     if (tname == 0) {

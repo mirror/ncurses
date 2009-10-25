@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_refresh.c,v 1.42 2009/06/06 20:27:39 tom Exp $")
+MODULE_ID("$Id: lib_refresh.c,v 1.43 2009/10/24 22:08:32 tom Exp $")
 
 NCURSES_EXPORT(int)
 wrefresh(WINDOW *win)
@@ -52,7 +52,7 @@ wrefresh(WINDOW *win)
     SCREEN *SP_PARM = _nc_screen_of(win);
 #endif
 
-    T((T_CALLED("wrefresh(%p)"), win));
+    T((T_CALLED("wrefresh(%p)"), (void *) win));
 
     if (win == 0) {
 	code = ERR;
@@ -89,7 +89,7 @@ wnoutrefresh(WINDOW *win)
     SCREEN *SP_PARM = _nc_screen_of(win);
 #endif
 
-    T((T_CALLED("wnoutrefresh(%p)"), win));
+    T((T_CALLED("wnoutrefresh(%p)"), (void *) win));
 #ifdef TRACE
     if (USE_TRACEF(TRACE_UPDATE)) {
 	_tracedump("...win", win);

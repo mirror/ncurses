@@ -46,13 +46,13 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_options.c,v 1.70 2009/08/16 14:16:38 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.71 2009/10/24 21:56:15 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
 {
     int res = ERR;
-    T((T_CALLED("idlok(%p,%d)"), win, flag));
+    T((T_CALLED("idlok(%p,%d)"), (void *) win, flag));
 
     if (win) {
 	SCREEN *sp = _nc_screen_of(win);
@@ -69,7 +69,7 @@ idlok(WINDOW *win, bool flag)
 NCURSES_EXPORT(void)
 idcok(WINDOW *win, bool flag)
 {
-    T((T_CALLED("idcok(%p,%d)"), win, flag));
+    T((T_CALLED("idcok(%p,%d)"), (void *) win, flag));
 
     if (win) {
 	SCREEN *sp = _nc_screen_of(win);
@@ -81,7 +81,7 @@ idcok(WINDOW *win, bool flag)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(halfdelay) (NCURSES_SP_DCLx int t)
 {
-    T((T_CALLED("halfdelay(%p,%d)"), SP_PARM, t));
+    T((T_CALLED("halfdelay(%p,%d)"), (void *) SP_PARM, t));
 
     if (t < 1 || t > 255 || !IsValidTIScreen(SP_PARM))
 	returnCode(ERR);
@@ -102,7 +102,7 @@ halfdelay(int t)
 NCURSES_EXPORT(int)
 nodelay(WINDOW *win, bool flag)
 {
-    T((T_CALLED("nodelay(%p,%d)"), win, flag));
+    T((T_CALLED("nodelay(%p,%d)"), (void *) win, flag));
 
     if (win) {
 	if (flag == TRUE)
@@ -117,7 +117,7 @@ nodelay(WINDOW *win, bool flag)
 NCURSES_EXPORT(int)
 notimeout(WINDOW *win, bool f)
 {
-    T((T_CALLED("notimeout(%p,%d)"), win, f));
+    T((T_CALLED("notimeout(%p,%d)"), (void *) win, f));
 
     if (win) {
 	win->_notimeout = f;
@@ -129,7 +129,7 @@ notimeout(WINDOW *win, bool f)
 NCURSES_EXPORT(void)
 wtimeout(WINDOW *win, int delay)
 {
-    T((T_CALLED("wtimeout(%p,%d)"), win, delay));
+    T((T_CALLED("wtimeout(%p,%d)"), (void *) win, delay));
 
     if (win) {
 	win->_delay = delay;
@@ -140,7 +140,7 @@ wtimeout(WINDOW *win, int delay)
 NCURSES_EXPORT(int)
 keypad(WINDOW *win, bool flag)
 {
-    T((T_CALLED("keypad(%p,%d)"), win, flag));
+    T((T_CALLED("keypad(%p,%d)"), (void *) win, flag));
 
     if (win) {
 	win->_use_keypad = flag;
@@ -156,7 +156,7 @@ meta(WINDOW *win GCC_UNUSED, bool flag)
     SCREEN *sp = (win == 0) ? CURRENT_SCREEN : _nc_screen_of(win);
 
     /* Ok, we stay relaxed and don't signal an error if win is NULL */
-    T((T_CALLED("meta(%p,%d)"), win, flag));
+    T((T_CALLED("meta(%p,%d)"), (void *) win, flag));
 
     /* Ok, we stay relaxed and don't signal an error if win is NULL */
 
@@ -188,7 +188,7 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(curs_set) (NCURSES_SP_DCLx int vis)
 {
     int code = ERR;
-    T((T_CALLED("curs_set(%p,%d)"), SP_PARM, vis));
+    T((T_CALLED("curs_set(%p,%d)"), (void *) SP_PARM, vis));
 
     if (SP_PARM != 0 && vis >= 0 && vis <= 2) {
 	int cursor = SP_PARM->_cursor;
@@ -235,7 +235,7 @@ curs_set(int vis)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(typeahead) (NCURSES_SP_DCLx int fd)
 {
-    T((T_CALLED("typeahead(%p, %d)"), SP_PARM, fd));
+    T((T_CALLED("typeahead(%p, %d)"), (void *) SP_PARM, fd));
     if (IsValidTIScreen(SP_PARM)) {
 	SP_PARM->_checkfd = fd;
 	returnCode(OK);
@@ -283,7 +283,7 @@ TINFO_HAS_KEY(SCREEN *sp, int keycode)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(has_key) (NCURSES_SP_DCLx int keycode)
 {
-    T((T_CALLED("has_key(%p,%d)"), SP_PARM, keycode));
+    T((T_CALLED("has_key(%p,%d)"), (void *) SP_PARM, keycode));
     returnCode(SP != 0 ? has_key_internal(keycode, SP_PARM->_keytry) : FALSE);
 }
 

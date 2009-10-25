@@ -41,14 +41,14 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_colorset.c,v 1.12 2009/01/25 00:44:40 tom Exp $")
+MODULE_ID("$Id: lib_colorset.c,v 1.13 2009/10/24 22:02:14 tom Exp $")
 
 NCURSES_EXPORT(int)
 wcolor_set(WINDOW *win, short color_pair_number, void *opts)
 {
     int code = ERR;
 
-    T((T_CALLED("wcolor_set(%p,%d)"), win, color_pair_number));
+    T((T_CALLED("wcolor_set(%p,%d)"), (void *) win, color_pair_number));
     if (win
 	&& !opts
 	&& (SP != 0)

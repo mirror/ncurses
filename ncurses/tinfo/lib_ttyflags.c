@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.25 2009/06/06 19:10:05 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.26 2009/10/24 22:15:47 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
@@ -137,7 +137,7 @@ NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("def_shell_mode(%p)"), SP_PARM));
+    T((T_CALLED("def_shell_mode(%p)"), (void *) SP_PARM));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -175,7 +175,7 @@ NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("def_prog_mode(%p)"), SP_PARM));
+    T((T_CALLED("def_prog_mode(%p)"), (void *) SP_PARM));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -211,7 +211,7 @@ NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("reset_prog_mode(%p)"), SP_PARM));
+    T((T_CALLED("reset_prog_mode(%p)"), (void *) SP_PARM));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -244,7 +244,7 @@ NCURSES_SP_NAME(reset_shell_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("reset_shell_mode(%p)"), SP_PARM));
+    T((T_CALLED("reset_shell_mode(%p)"), (void *) SP_PARM));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -293,7 +293,7 @@ saved_tty(NCURSES_SP_DCL0)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(savetty) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("savetty(%p)"), SP_PARM));
+    T((T_CALLED("savetty(%p)"), (void *) SP_PARM));
     returnCode(NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_ARGx saved_tty(NCURSES_SP_ARG)));
 }
 
@@ -308,7 +308,7 @@ savetty(void)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(resetty) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("resetty(%p)"), SP_PARM));
+    T((T_CALLED("resetty(%p)"), (void *) SP_PARM));
     returnCode(NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_ARGx saved_tty(NCURSES_SP_ARG)));
 }
 

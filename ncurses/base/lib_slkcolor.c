@@ -38,14 +38,14 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkcolor.c,v 1.15 2009/02/21 16:59:50 tom Exp $")
+MODULE_ID("$Id: lib_slkcolor.c,v 1.16 2009/10/24 22:12:21 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_color) (NCURSES_SP_DCLx short color_pair_number)
 {
     int code = ERR;
 
-    T((T_CALLED("slk_color(%p,%d)"), SP_PARM, color_pair_number));
+    T((T_CALLED("slk_color(%p,%d)"), (void *) SP_PARM, color_pair_number));
 
     if (SP_PARM != 0
 	&& SP_PARM->_slk != 0

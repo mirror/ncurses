@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_redrawln.c,v 1.13 2009/04/18 18:46:00 tom Exp $")
+MODULE_ID("$Id: lib_redrawln.c,v 1.14 2009/10/24 22:08:32 tom Exp $")
 
 NCURSES_EXPORT(int)
 wredrawln(WINDOW *win, int beg, int num)
@@ -49,7 +49,7 @@ wredrawln(WINDOW *win, int beg, int num)
     size_t len;
     SCREEN *sp;
 
-    T((T_CALLED("wredrawln(%p,%d,%d)"), win, beg, num));
+    T((T_CALLED("wredrawln(%p,%d,%d)"), (void *) win, beg, num));
 
     if (win == 0)
 	returnCode(ERR);

@@ -44,12 +44,12 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_echo.c,v 1.7 2009/02/21 20:20:40 tom Exp $")
+MODULE_ID("$Id: lib_echo.c,v 1.8 2009/10/24 22:02:14 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(echo) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("echo(%p)"), SP_PARM));
+    T((T_CALLED("echo(%p)"), (void *) SP_PARM));
     if (0 == SP_PARM)
 	returnCode(ERR);
     SP_PARM->_echo = TRUE;
@@ -67,7 +67,7 @@ echo(void)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(noecho) (NCURSES_SP_DCL0)
 {
-    T((T_CALLED("noecho(%p)"), SP_PARM));
+    T((T_CALLED("noecho(%p)"), (void *) SP_PARM));
     if (0 == SP_PARM)
 	returnCode(ERR);
     SP_PARM->_echo = FALSE;

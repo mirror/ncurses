@@ -147,7 +147,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.43 2009/04/18 21:41:30 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.44 2009/10/24 21:57:38 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -188,7 +188,7 @@ NCURSES_SP_NAME(_nc_scroll_optimize) (NCURSES_SP_DCL0)
     int i;
     int start, end, shift;
 
-    TR(TRACE_ICALLS, (T_CALLED("_nc_scroll_optimize(%p)"), SP_PARM));
+    TR(TRACE_ICALLS, (T_CALLED("_nc_scroll_optimize(%p)"), (void *) SP_PARM));
 
 #if !defined(SCROLLDEBUG) && !defined(HASHDEBUG)
 #if USE_HASHMAP

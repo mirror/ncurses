@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.121 2009/08/04 00:20:09 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.122 2009/10/24 22:49:16 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -539,7 +539,7 @@ waddch(WINDOW *win, const chtype ch)
     NCURSES_CH_T wch;
     SetChar2(wch, ch);
 
-    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("waddch(%p, %s)"), win,
+    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("waddch(%p, %s)"), (void *) win,
 				      _tracechtype(ch)));
 
     if (win && (waddch_nosync(win, wch) != ERR)) {
@@ -558,7 +558,8 @@ wechochar(WINDOW *win, const chtype ch)
     NCURSES_CH_T wch;
     SetChar2(wch, ch);
 
-    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wechochar(%p, %s)"), win,
+    TR(TRACE_VIRTPUT | TRACE_CCALLS, (T_CALLED("wechochar(%p, %s)"),
+				      (void *) win,
 				      _tracechtype(ch)));
 
     if (win && (waddch_nosync(win, wch) != ERR)) {

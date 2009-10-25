@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ins_wch.c,v 1.10 2009/09/12 18:07:23 tom Exp $")
+MODULE_ID("$Id: lib_ins_wch.c,v 1.11 2009/10/24 22:43:14 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -81,7 +81,7 @@ wins_wch(WINDOW *win, const cchar_t *wch)
     NCURSES_SIZE_T ox;
     int code = ERR;
 
-    T((T_CALLED("wins_wch(%p, %s)"), win, _tracecchar_t(wch)));
+    T((T_CALLED("wins_wch(%p, %s)"), (void *) win, _tracecchar_t(wch)));
 
     if (win != 0) {
 	oy = win->_cury;
@@ -104,7 +104,8 @@ wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
     NCURSES_SIZE_T ox;
     const wchar_t *cp;
 
-    T((T_CALLED("wins_nwstr(%p,%s,%d)"), win, _nc_viswbufn(wstr, n), n));
+    T((T_CALLED("wins_nwstr(%p,%s,%d)"),
+       (void *) win, _nc_viswbufn(wstr, n), n));
 
     if (win != 0
 	&& wstr != 0) {

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,14 +42,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_chgat.c,v 1.7 2006/07/15 22:07:11 tom Exp $")
+MODULE_ID("$Id: lib_chgat.c,v 1.8 2009/10/24 22:33:37 tom Exp $")
 
 NCURSES_EXPORT(int)
 wchgat(WINDOW *win, int n, attr_t attr, short color, const void *opts GCC_UNUSED)
 {
     int i;
 
-    T((T_CALLED("wchgat(%p,%d,%s,%d)"), win, n, _traceattr(attr), color));
+    T((T_CALLED("wchgat(%p,%d,%s,%d)"), (void *) win, n, _traceattr(attr), color));
 
     if (win) {
 	struct ldat *line = &(win->_line[win->_cury]);

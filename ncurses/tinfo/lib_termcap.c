@@ -50,7 +50,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.70 2009/08/30 17:16:00 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.71 2009/10/24 21:56:58 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -226,7 +226,7 @@ NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
     int result = 0;		/* Solaris returns zero for missing flag */
     int i, j;
 
-    T((T_CALLED("tgetflag(%p, %s)"), SP_PARM, id));
+    T((T_CALLED("tgetflag(%p, %s)"), (void *) SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;
@@ -278,7 +278,7 @@ NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
     int result = ABSENT_NUMERIC;
     int i, j;
 
-    T((T_CALLED("tgetnum(%p, %s)"), SP_PARM, id));
+    T((T_CALLED("tgetnum(%p, %s)"), (void *) SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;
@@ -330,7 +330,7 @@ NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
     char *result = NULL;
     int i, j;
 
-    T((T_CALLED("tgetstr(%s,%p)"), id, area));
+    T((T_CALLED("tgetstr(%s,%p)"), id, (void *) area));
     if (HasTInfoTerminal(SP_PARM)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;

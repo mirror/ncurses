@@ -42,14 +42,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_endwin.c,v 1.21 2009/07/04 18:35:43 tom Exp $")
+MODULE_ID("$Id: lib_endwin.c,v 1.22 2009/10/24 22:02:14 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(endwin) (NCURSES_SP_DCL0)
 {
     int code = ERR;
 
-    T((T_CALLED("endwin(%p)"), SP_PARM));
+    T((T_CALLED("endwin(%p)"), (void *) SP_PARM));
 
     if (SP_PARM) {
 #ifdef USE_TERM_DRIVER

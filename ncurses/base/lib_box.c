@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_box.c,v 1.22 2005/11/26 15:39:42 tom Exp $")
+MODULE_ID("$Id: lib_box.c,v 1.23 2009/10/24 22:33:46 tom Exp $")
 
 #if USE_WIDEC_SUPPORT
 static NCURSES_INLINE chtype
@@ -70,7 +70,7 @@ wborder(WINDOW *win,
     chtype wls, wrs, wts, wbs, wtl, wtr, wbl, wbr;
 
     T((T_CALLED("wborder(%p,%s,%s,%s,%s,%s,%s,%s,%s)"),
-       win,
+       (void *) win,
        _tracechtype2(1, ls),
        _tracechtype2(2, rs),
        _tracechtype2(3, ts),
