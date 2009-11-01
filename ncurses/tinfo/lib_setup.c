@@ -52,7 +52,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.120 2009/10/24 21:56:15 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.123 2009/10/31 20:39:36 tom Exp $")
 
 /****************************************************************************
  *
@@ -465,35 +465,34 @@ grab_entry(const char *const tn, TERMTYPE *const tp)
     return (status);
 }
 #endif
+#endif /* !USE_TERM_DRIVER */
 
 /*
-**	do_prototype()
-**
 **	Take the real command character out of the CC environment variable
 **	and substitute it in for the prototype given in 'command_character'.
 */
-static void
-do_prototype(TERMINAL * termp)
+void
+_nc_tinfo_cmdch(TERMINAL * termp, char proto)
 {
     unsigned i;
     char CC;
-    char proto;
     char *tmp;
 
-    if ((tmp = getenv("CC")) != 0) {
-	if ((CC = *tmp) != 0) {
-	    proto = *command_character;
-
-	    for_each_string(i, &(termp->type)) {
-		for (tmp = termp->type.Strings[i]; *tmp; tmp++) {
-		    if (*tmp == proto)
-			*tmp = CC;
-		}
+    /*
+     * Only use the character if the string is a single character,
+     * since it is fairly common for developers to set the C compiler
+     * name as an environment variable - using the same symbol.
+     */
+    if ((tmp = getenv("CC")) != 0 && strlen(tmp) == 1) {
+	CC = *tmp;
+	for_each_string(i, &(termp->type)) {
+	    for (tmp = termp->type.Strings[i]; *tmp; tmp++) {
+		if (*tmp == proto)
+		    *tmp = CC;
 	    }
 	}
     }
 }
-#endif /* !USE_TERM_DRIVER */
 
 /*
  * Find the locale which is in effect.
@@ -706,8 +705,8 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 
 	set_curterm(termp);
 
-	if (command_character && getenv("CC"))
-	    do_prototype(termp);
+	if (command_character)
+	    _nc_tinfo_cmdch(termp, *command_character);
 
 	/*
 	 * If an application calls setupterm() rather than initscr() or

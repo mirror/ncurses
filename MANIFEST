@@ -1049,4 +1049,5 @@
 ./test/worm.c
 ./test/xmas.c
 ./test/xterm-16color.dat
+./test/xterm-256color.dat
 ./test/xterm-88color.dat

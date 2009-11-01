@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.3 2009/09/27 17:29:39 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.5 2009/10/31 20:32:01 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -184,35 +184,6 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
     return TINFO_DOUPDATE(TCB->csp);
 }
 
-/*
-**	do_prototype()
-**
-**	Take the real command character out of the CC environment variable
-**	and substitute it in for the prototype given in 'command_character'.
-*/
-static void
-do_prototype(TERMINAL * termp)
-{
-    unsigned i;
-    char CC;
-    char proto;
-    char *tmp;
-    TERMINAL_CONTROL_BLOCK *TCB = (TERMINAL_CONTROL_BLOCK *) termp;
-
-    if ((tmp = getenv("CC")) != 0) {
-	if ((CC = *tmp) != 0) {
-	    proto = *command_character;
-
-	    for_each_string(i, &(termp->type)) {
-		for (tmp = termp->type.Strings[i]; *tmp; tmp++) {
-		    if (*tmp == proto)
-			*tmp = CC;
-		}
-	    }
-	}
-    }
-}
-
 #define ret_error(code, fmt, arg)	if (errret) {\
 					    *errret = code;\
 					    return(FALSE); \
@@ -304,8 +275,8 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     ttytype[NAMESIZE - 1] = '\0';
 #endif
 
-    if (command_character && getenv("CC"))
-	do_prototype(termp);
+    if (command_character)
+	_nc_tinfo_cmdch(termp, *command_character);
 
     if (generic_type) {
 	ret_error(TGETENT_NO, "'%s': I need something more specific.\n", tname);

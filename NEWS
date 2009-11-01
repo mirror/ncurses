@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1452 2009/10/24 20:34:42 tom Exp $
+-- $Id: NEWS,v 1.1456 2009/10/31 20:50:24 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20091031
+	+ modify use of $CC environment variable which is defined by X/Open
+	  as a curses feature, to ignore it if it is not a single character
+	  (prompted by discussion with Benjamin C W Sittler).
+	+ add START_TRACE in slk_init
+	+ fix a regression in _nc_ripoffline which made test/ncurses.c not show
+	  soft-keys, broken in 20090927 merging.
+	+ change initialization of "hidden" flag for soft-keys from true to
+	  false, broken in 20090704 merging (Ubuntu #464274).
+	+ update nsterm entries (patch by Benjamin C W Sittler, prompted by
+	  discussion with Fabian Groffen in GenToo #206201).
+	+ add test/xterm-256color.dat
 
 20091024
 	+ quiet some pedantic gcc warnings.

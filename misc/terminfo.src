@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.353 $
-#	$Date: 2009/10/03 18:57:06 $
+#	$Revision: 1.354 $
+#	$Date: 2009/10/31 17:28:35 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -16704,7 +16704,7 @@ mac-w|macterminal-w|Apple Macintosh with Macterminal in 132 column mode,
 #     export TERM
 #     if [ :"$TERM_PROGRAM_VERSION" = :41 ]
 #     then
-#         TERM="nsterm"
+#         TERM="nsterm-old"
 #     else
 #         TERM="nsterm-c-7"
 #     fi
@@ -16715,7 +16715,7 @@ mac-w|macterminal-w|Apple Macintosh with Macterminal in 132 column mode,
 # if ( $?TERM && $?TERM_PROGRAM && $?TERM_PROGRAM_VERSION) then
 #     if ( :"$TERM" == :"vt100" && :"$TERM_PROGRAM" == :"Apple_Terminal" ) then
 #          if ( :"$TERM_PROGRAM_VERSION" == :41 ) then
-#              setenv TERM "nsterm"
+#              setenv TERM "nsterm-old"
 #          else
 #              setenv TERM "nsterm-c-7"
 #          endif
@@ -16732,24 +16732,24 @@ nsterm+7|AppKit Terminal.app v41+ basic capabilities w/ASCII charset,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
 	home=\E[H, ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L, ind=^J,
-	kbs=\177, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
-	kent=\EOM, rc=\E8, rev=\E[7m, ri=\EM, rmam=\E[?7l,
-	rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m,
+	invis=\E[8m, kbs=\177, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
+	kcuu1=\EOA, kent=\EOM, rc=\E8, rev=\E[7m, ri=\EM,
+	rmam=\E[?7l, rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m,
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
 	sgr0=\E[m\017, smam=\E[?7h, smkx=\E[?1h\E=, smso=\E[7m,
 	smul=\E[4m, tbc=\E[3g, use=vt100+enq, use=vt100+pfkeys,
 
 nsterm+acs|AppKit Terminal.app v41+ basic capabilities w/VT100 alternate-charset,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	enacs=\E(B\E)0, rmacs=^O,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	smacs=^N, use=nsterm+7,
 
 nsterm+mac|AppKit Terminal.app v41+ basic capabilities w/MacRoman alternate-charset,
 	acsc=0#`\327a\:f\241g\261h#i\360jjkkllmmnno\370p\370q\321rrssttuuvvwwxxy\262z\263{\271|\255}\243~\245+\335-\366\,\334.\377,
 	enacs=\E(B\E)0, rmacs=^O,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	smacs=^N, use=nsterm+7,
 
 nsterm+s|AppKit Terminal.app v41+ status-line (window titlebar) support,
@@ -16811,7 +16811,7 @@ nsterm-m|AppKit Terminal.app v41+ w/MacRoman charset (monochrome),
 nsterm-m-s|AppKit Terminal.app v41+ w/MacRoman charset (monochrome w/statusline),
 	use=nsterm+s, use=nsterm+mac,
 
-nsterm|Apple_Terminal|AppKit Terminal.app v41+ w/MacRoman charset (color),
+nsterm-old|Apple_Terminal|AppKit Terminal.app v41+ w/MacRoman charset (color),
 	use=nsterm+c41, use=nsterm+mac,
 
 nsterm-c|AppKit Terminal.app v51+ w/MacRoman charset (full color),
@@ -16828,12 +16828,42 @@ nsterm-c-s|AppKit Terminal.app v51+ w/MacRoman charset (full color w/statusline)
 # and D P Schreber comparing to nsterm-c-s-acs.
 #
 # D P Schreber notes that $TERM can be set in Terminal.app, e.g.,
-#	defaults write com.apple.Terminal TermCapString nsterm-c-s-acs
+#	defaults write com.apple.Terminal TermCapString nsterm-16color
 # and that it is not set in Terminal's preferences dialog.
-nsterm-16color|AppKit Terminal.app v100.1.8 with MacOS X 10.3.9,
-	kdch1=\E[3~, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~,
-	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
-	knp=\E[6~, kpp=\E[5~, use=nsterm-c-s-acs,
+nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
+	npc,
+	civis=\E[?25l, cnorm=\E[?25h,
+	flash=\E[?5h$<200/>\E[?5l, kdch1=\E[3~, kend=\E[F,
+	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf13=\E[25~,
+	kf14=\E[26~, kf15=\E[28~, kf16=\E[29~, kf17=\E[31~,
+	kf18=\E[22~, kf19=\E[33~, kf20=\E[34~, kf5=\E[15~,
+	kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, khome=\E[H,
+	knp=\E[6~, kpp=\E[5~, rmcup=\E[2J\E[?47l\E8,
+	smcup=\E7\E[?47h, use=nsterm-c-s-acs,
+
+# The versions of Terminal.app in Mac OS X version 10.3.x seem to have
+# the background color erase bug. The newer version 240.2 in Mac OS X
+# version 10.5 does not.
+nsterm-bce|AppKit Terminal.app v100.1.8+ (bce),
+	bce, use=nsterm-16color,
+
+# This is an alias which should always point to the "current" version
+nsterm|AppKit Terminal.app,
+	use=nsterm-16color,
+
+# iTerm.app from http://iterm.sourceforge.net/ is an alternative (and
+# more featureful) terminal emulator for Mac OS X. It is similar
+# enough in capabilities to nsterm-16color that I have derived this
+# description from that one, but as far as I know they share no code.
+# Many of the features are user-configurable, but I attempt only to
+# describe the default configuration.
+#
+# NOTE: When tack tests (csr) + (nel) iTerm.app crashes, so (csr) is
+# disabled.
+iTerm.app|iTerm.app terminal emulator for Mac OS X,
+	bce, bw@, ccc@,
+	csr@, initc@, kend=\EOF, khome=\EOH, use=xterm+256color,
+	use=nsterm-16color,
 
 # xnuppc - Darwin PowerPC Console (a.k.a. "darwin")
 #
@@ -21902,6 +21932,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* correct initc capability of linux-c-nc end-of-range (Benjamin Sittler)
 #	* similar change for dg+ccc and dgunix+ccc (Benjamin Sittler)
 #	* add ccc and initc capabilities to xterm-16color -TD
+#
+# 2009-10-31
+#	* updated nsterm* entries (Benjamin Sittler, prompted by GenToo #206201)
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

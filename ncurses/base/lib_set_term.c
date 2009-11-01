@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.129 2009/10/24 22:09:47 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.131 2009/10/31 22:28:04 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -282,24 +282,31 @@ extract_fgbg(char *src, int *result)
 NCURSES_EXPORT(SCREEN *)
 new_prescr(void)
 {
-    SCREEN *sp = _nc_alloc_screen_sp();
-    if (sp) {
-	sp->rsp = sp->rippedoff;
-	sp->_filtered = _nc_prescreen.filter_mode;
-	sp->_use_env = _nc_prescreen.use_env;
+    static SCREEN *sp;
+
+    START_TRACE();
+    T((T_CALLED("new_prescr()")));
+
+    if (sp == 0) {
+	sp = _nc_alloc_screen_sp();
+	if (sp != 0) {
+	    sp->rsp = sp->rippedoff;
+	    sp->_filtered = _nc_prescreen.filter_mode;
+	    sp->_use_env = _nc_prescreen.use_env;
 #if NCURSES_NO_PADDING
-	sp->_no_padding = _nc_prescreen._no_padding;
+	    sp->_no_padding = _nc_prescreen._no_padding;
 #endif
-	sp->slk_format = 0;
-	sp->_slk = 0;
-	sp->_prescreen = TRUE;
-	SP_PRE_INIT(sp);
+	    sp->slk_format = 0;
+	    sp->_slk = 0;
+	    sp->_prescreen = TRUE;
+	    SP_PRE_INIT(sp);
 #if USE_REENTRANT
-	sp->_TABSIZE = _nc_prescreen._TABSIZE;
-	sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
+	    sp->_TABSIZE = _nc_prescreen._TABSIZE;
+	    sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
 #endif
+	}
     }
-    return sp;
+    returnSP(sp);
 }
 #endif
 
@@ -667,9 +674,11 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	       We assume that we must simulate, if it is none of the standard
 	       formats (4-4 or 3-2-3) for which there may be some hardware
 	       support. */
-	    if (rop->hook == _nc_slk_initialize)
-		if (!(NumLabels <= 0 || !SLK_STDFMT(slk_format)))
+	    if (rop->hook == _nc_slk_initialize) {
+		if (!(NumLabels <= 0 || !SLK_STDFMT(slk_format))) {
 		    continue;
+		}
+	    }
 	    if (rop->hook) {
 		int count;
 		WINDOW *w;
@@ -753,7 +762,10 @@ NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_DCLx
     START_TRACE();
     T((T_CALLED("ripoffline(%p,%d,%p)"), (void *) SP_PARM, line, (void *) init));
 
-    if (SP_PARM != 0 && SP_PARM->_prescreen) {
+#if NCURSES_SP_FUNCS
+    if (SP_PARM != 0 && SP_PARM->_prescreen)
+#endif
+    {
 	if (line == 0) {
 	    code = OK;
 	} else {

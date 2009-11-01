@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.441 2009/10/24 20:29:56 tom Exp $
+ * $Id: curses.priv.h,v 1.442 2009/10/31 20:33:43 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1719,6 +1719,7 @@ extern NCURSES_EXPORT(char *) _nc_get_locale(void);
 extern NCURSES_EXPORT(int)    _nc_unicode_locale(void);
 extern NCURSES_EXPORT(int)    _nc_locale_breaks_acs(TERMINAL *);
 extern NCURSES_EXPORT(int)    _nc_setupterm(NCURSES_CONST char *, int, int *, bool);
+extern NCURSES_EXPORT(void)   _nc_tinfo_cmdch(TERMINAL *, char);
 
 /* lib_set_term.c */
 extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
