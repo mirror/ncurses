@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.96 2009/10/24 22:50:51 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.97 2009/11/07 20:36:44 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -262,6 +262,7 @@ reset_color_pair(NCURSES_SP_DCL0)
 #else
     bool result = FALSE;
 
+    (void) SP_PARM;
     if (orig_pair != 0) {
 	TPUTS_TRACE("orig_pair");
 	putp(orig_pair);
@@ -644,6 +645,7 @@ NCURSES_SP_NAME(has_colors) (NCURSES_SP_DCL0)
 {
     int code;
 
+    (void) SP_PARM;
     T((T_CALLED("has_colors()")));
 #ifdef USE_TERM_DRIVER
     code = HasColor;

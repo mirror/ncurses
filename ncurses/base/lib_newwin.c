@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.61 2009/10/24 22:05:55 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.64 2009/11/07 16:27:05 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -375,18 +375,18 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
 NCURSES_EXPORT(WINDOW *)
 _nc_curscr_of(SCREEN *sp)
 {
-    return sp == 0 ? 0 : sp->_curscr;
+    return sp == 0 ? 0 : CurScreen(sp);
 }
 
 NCURSES_EXPORT(WINDOW *)
 _nc_newscr_of(SCREEN *sp)
 {
-    return sp == 0 ? 0 : sp->_newscr;
+    return sp == 0 ? 0 : NewScreen(sp);
 }
 
 NCURSES_EXPORT(WINDOW *)
 _nc_stdscr_of(SCREEN *sp)
 {
-    return sp == 0 ? 0 : sp->_stdscr;
+    return sp == 0 ? 0 : StdScreen(sp);
 }
 #endif

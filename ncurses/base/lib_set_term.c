@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.131 2009/10/31 22:28:04 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.134 2009/11/07 16:27:25 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -74,9 +74,9 @@ set_term(SCREEN *screenp)
     if (newSP != 0) {
 	TINFO_SET_CURTERM(newSP, newSP->_term);
 #if !USE_REENTRANT
-	curscr = newSP->_curscr;
-	newscr = newSP->_newscr;
-	stdscr = newSP->_stdscr;
+	curscr = CurScreen(newSP);
+	newscr = NewScreen(newSP);
+	stdscr = StdScreen(newSP);
 	COLORS = newSP->_color_count;
 	COLOR_PAIRS = newSP->_pair_count;
 #endif
@@ -154,9 +154,9 @@ delscreen(SCREEN *sp)
 	}
 #endif
 
-	(void) _nc_freewin(sp->_curscr);
-	(void) _nc_freewin(sp->_newscr);
-	(void) _nc_freewin(sp->_stdscr);
+	(void) _nc_freewin(CurScreen(sp));
+	(void) _nc_freewin(NewScreen(sp));
+	(void) _nc_freewin(StdScreen(sp));
 
 	if (sp->_slk != 0) {
 	    if (sp->_slk->ent != 0) {
@@ -640,27 +640,27 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     sp->newhash = 0;
 
     T(("creating newscr"));
-    sp->_newscr = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx slines, scolumns,
-					   0, 0);
-    if (sp->_newscr == 0) {
+    NewScreen(sp) = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx slines, scolumns,
+					     0, 0);
+    if (NewScreen(sp) == 0) {
 	ReturnScreenError();
     }
     T(("creating curscr"));
-    sp->_curscr = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx slines, scolumns,
-					   0, 0);
-    if (sp->_curscr == 0) {
+    CurScreen(sp) = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx slines, scolumns,
+					     0, 0);
+    if (CurScreen(sp) == 0) {
 	ReturnScreenError();
     }
 #if !USE_REENTRANT
-    newscr = sp->_newscr;
-    curscr = sp->_curscr;
+    newscr = NewScreen(sp);
+    curscr = CurScreen(sp);
 #endif
 #if USE_SIZECHANGE
     sp->_resize = NCURSES_SP_NAME(resizeterm);
 #endif
 
-    sp->_newscr->_clear = TRUE;
-    sp->_curscr->_clear = FALSE;
+    NewScreen(sp)->_clear = TRUE;
+    CurScreen(sp)->_clear = FALSE;
 
     NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_ARG);
     NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_ARG);
@@ -714,14 +714,14 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 
     T(("creating stdscr"));
     assert((sp->_lines_avail + sp->_topstolen + bottom_stolen) == slines);
-    if ((sp->_stdscr = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx
-						sp->_lines_avail,
-						scolumns, 0, 0)) == 0) {
+    if ((StdScreen(sp) = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx
+						  sp->_lines_avail,
+						  scolumns, 0, 0)) == 0) {
 	ReturnScreenError();
     }
     SET_LINES(sp->_lines_avail);
 #if !USE_REENTRANT
-    stdscr = sp->_stdscr;
+    stdscr = StdScreen(sp);
 #endif
     sp->_prescreen = FALSE;
     returnCode(OK);

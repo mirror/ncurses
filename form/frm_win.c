@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_win.c,v 1.14 2009/04/18 18:38:57 tom Exp $")
+MODULE_ID("$Id: frm_win.c,v 1.15 2009/11/07 17:11:21 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -55,7 +55,7 @@ set_form_win(FORM *form, WINDOW *win)
 #if NCURSES_SP_FUNCS
       FORM *f = Normalize_Form(form);
 
-      f->win = win ? win : Get_Form_Screen(f)->_stdscr;
+      f->win = win ? win : StdScreen(Get_Form_Screen(f));
       RETURN(E_OK);
 #else
       Normalize_Form(form)->win = win;
@@ -82,7 +82,7 @@ form_win(const FORM *form)
 
   f = Normalize_Form(form);
 #if NCURSES_SP_FUNCS
-  result = (f->win ? f->win : Get_Form_Screen(f)->_stdscr);
+  result = (f->win ? f->win : StdScreen(Get_Form_Screen(f)));
 #else
   result = (f->win ? f->win : stdscr);
 #endif

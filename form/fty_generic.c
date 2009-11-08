@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2008,2009 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_generic.c,v 1.1 2008/11/18 08:50:04 juergen Exp $")
+MODULE_ID("$Id: fty_generic.c,v 1.4 2009/11/07 20:42:38 tom Exp $")
 
 /*
  * This is not a full implementation of a field type, but adds some
@@ -58,7 +58,7 @@ MODULE_ID("$Id: fty_generic.c,v 1.1 2008/11/18 08:50:04 juergen Exp $")
  * that gets the arguments from a single struct passed by the caller. 
  * 
  */
-
+#if NCURSES_INTEROP_FUNCS
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -99,43 +99,44 @@ Generic_This_Type(void *arg)
 |   Return Values :  Fieldtype pointer or NULL if error occurred
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(FIELDTYPE *)
-_nc_generic_fieldtype(bool (*const field_check) (FORM*, FIELD *, const void *),
-		      bool (*const char_check)  (int, FORM*, FIELD*, const void *),
- 		      bool (*const next)(FORM*, FIELD*,const void*),
-		      bool (*const prev)(FORM*, FIELD*,const void*),
-		      void (*freecallback)(void*))
+_nc_generic_fieldtype(bool (*const field_check) (FORM *, FIELD *, const void *),
+		      bool (*const char_check) (int, FORM *, FIELD *, const
+						void *),
+		      bool (*const next) (FORM *, FIELD *, const void *),
+		      bool (*const prev) (FORM *, FIELD *, const void *),
+		      void (*freecallback) (void *))
 {
-    int code = E_SYSTEM_ERROR;
-    FIELDTYPE* res = (FIELDTYPE*)0;
+  int code = E_SYSTEM_ERROR;
+  FIELDTYPE *res = (FIELDTYPE *)0;
 
-    T((T_CALLED("_nc_generic_fieldtype(%p,%p,%p,%p,%p)"), 
-       field_check, char_check, next, prev, freecallback));
+  T((T_CALLED("_nc_generic_fieldtype(%p,%p,%p,%p,%p)"),
+     field_check, char_check, next, prev, freecallback));
 
-    if (field_check || char_check)
+  if (field_check || char_check)
     {
-      res = typeMalloc(FIELDTYPE,1);
+      res = typeMalloc(FIELDTYPE, 1);
+
       if (res)
-      {
-	*res = *_nc_Default_FieldType; 
-	res->status |= (_HAS_ARGS | _GENERIC);
-	res->fieldcheck.gfcheck = field_check;
-	res->charcheck.gccheck  = char_check;
-	res->genericarg = Generic_This_Type;
-	res->freearg = freecallback;
-	res->enum_next.gnext = next;
-	res->enum_prev.gprev = prev;
-	code = E_OK;
-      }
+	{
+	  *res = *_nc_Default_FieldType;
+	  res->status |= (_HAS_ARGS | _GENERIC);
+	  res->fieldcheck.gfcheck = field_check;
+	  res->charcheck.gccheck = char_check;
+	  res->genericarg = Generic_This_Type;
+	  res->freearg = freecallback;
+	  res->enum_next.gnext = next;
+	  res->enum_prev.gprev = prev;
+	  code = E_OK;
+	}
     }
-    else
-      code = E_BAD_ARGUMENT;
+  else
+    code = E_BAD_ARGUMENT;
 
-    if (E_OK != code)
-      SET_ERROR(code);
+  if (E_OK != code)
+    SET_ERROR(code);
 
-    returnFieldType(res);
+  returnFieldType(res);
 }
-
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -155,44 +156,46 @@ _nc_generic_fieldtype(bool (*const field_check) (FORM*, FIELD *, const void *),
 |
 |   Return Values :  Pointer to argument structure
 +--------------------------------------------------------------------------*/
-static TypeArgument*
-GenericArgument(const FIELDTYPE *typ, 
-		int (*argiterator)(void**), int *err)
+static TypeArgument *
+GenericArgument(const FIELDTYPE *typ,
+		int (*argiterator) (void **), int *err)
 {
   TypeArgument *res = (TypeArgument *)0;
 
-  if (typ!=0 && (typ->status & _HAS_ARGS) != 0 && err!=0 && argiterator != 0)
-  {
-    if (typ->status & _LINKED_TYPE)
+  if (typ != 0 && (typ->status & _HAS_ARGS) != 0 && err != 0 && argiterator != 0)
     {
-      /* Composite fieldtypes keep track internally of their own memory */
-      TypeArgument* p = typeMalloc(TypeArgument,1);
-      if (p)
-      {
-	p->left  = GenericArgument(typ->left,  argiterator, err);
-	p->right = GenericArgument(typ->right, argiterator, err);
-	return p;
-      }
-      else
-	*err += 1;
-    }
-    else
-    {
-      assert(typ->genericarg != (void*)0);
-      if (typ->genericarg == 0)
-	*err += 1;
+      if (typ->status & _LINKED_TYPE)
+	{
+	  /* Composite fieldtypes keep track internally of their own memory */
+	  TypeArgument *p = typeMalloc(TypeArgument, 1);
+
+	  if (p)
+	    {
+	      p->left = GenericArgument(typ->left, argiterator, err);
+	      p->right = GenericArgument(typ->right, argiterator, err);
+	      return p;
+	    }
+	  else
+	    *err += 1;
+	}
       else
 	{
-	  void* argp;
-	  int valid = argiterator(&argp);
-	  if (valid==0 || argp==0 || 
-	      !(res = (TypeArgument*)typ->genericarg(argp)))
+	  assert(typ->genericarg != (void *)0);
+	  if (typ->genericarg == 0)
+	    *err += 1;
+	  else
 	    {
-	      *err += 1;
+	      void *argp;
+	      int valid = argiterator(&argp);
+
+	      if (valid == 0 || argp == 0 ||
+		  !(res = (TypeArgument *)typ->genericarg(argp)))
+		{
+		  *err += 1;
+		}
 	    }
 	}
     }
-  }
   return res;
 }
 
@@ -212,46 +215,46 @@ GenericArgument(const FIELDTYPE *typ,
 +--------------------------------------------------------------------------*/
 NCURSES_EXPORT(int)
 _nc_set_generic_fieldtype(FIELD *field,
-			  FIELDTYPE* ftyp,
-			  int (*argiterator)(void**))
+			  FIELDTYPE *ftyp,
+			  int (*argiterator) (void **))
 {
   int code = E_SYSTEM_ERROR;
   int err = 0;
 
   if (field)
-  {
+    {
       if (field && field->type)
 	_nc_Free_Type(field);
 
       field->type = ftyp;
       if (ftyp)
-      {
-	if (argiterator)
 	{
-	  /* The precondition is that the iterator is reset */
-	  field->arg  = (void*)GenericArgument(field->type,argiterator,&err);
-	  
-	  if (err)
+	  if (argiterator)
 	    {
-	      _nc_Free_Argument(field->type, (TypeArgument*)(field->arg));
-	      field->type = (FIELDTYPE*)0;
-	      field->arg  = (void*)0;
-	    }
-	  else
-	    {
-	      code = E_OK;
-	      if (field->type)
-		field->type->ref++;
+	      /* The precondition is that the iterator is reset */
+	      field->arg = (void *)GenericArgument(field->type, argiterator, &err);
+
+	      if (err)
+		{
+		  _nc_Free_Argument(field->type, (TypeArgument *)(field->arg));
+		  field->type = (FIELDTYPE *)0;
+		  field->arg = (void *)0;
+		}
+	      else
+		{
+		  code = E_OK;
+		  if (field->type)
+		    field->type->ref++;
+		}
 	    }
 	}
-      }
       else
-      {
-	field->arg = (void*)0;
-	code = E_OK;
-      }
+	{
+	  field->arg = (void *)0;
+	  code = E_OK;
+	}
     }
-    return code;
+  return code;
 }
 
 /*---------------------------------------------------------------------------
@@ -265,23 +268,27 @@ _nc_set_generic_fieldtype(FIELD *field,
 |
 |   Return Values :  The fields Window or NULL on error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(WINDOW*) 
-_nc_form_cursor(const FORM* form, int* pRow, int* pCol)
+NCURSES_EXPORT(WINDOW *)
+_nc_form_cursor(const FORM *form, int *pRow, int *pCol)
 {
   int code = E_SYSTEM_ERROR;
-  WINDOW* res = (WINDOW*)0;
+  WINDOW *res = (WINDOW *)0;
 
-  if (!(form==0 || pRow==0 || pCol==0))
-  {
+  if (!(form == 0 || pRow == 0 || pCol == 0))
+    {
       *pRow = form->currow;
       *pCol = form->curcol;
-      res   = form->w;
-      code  = E_OK;
-  }
+      res = form->w;
+      code = E_OK;
+    }
   if (code != E_OK)
     SET_ERROR(code);
   return res;
 }
 
+#else
+extern void _nc_fty_generic(void);
+void _nc_fty_generic(void) { }
+#endif
 
 /* fty_generic.c ends here */

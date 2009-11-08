@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.28 2009/04/11 21:27:04 tom Exp $ */
+/* $Id: form.priv.h,v 0.32 2009/11/07 21:26:43 tom Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
@@ -85,6 +85,7 @@ extern NCURSES_EXPORT_VAR(FIELDTYPE *) _nc_Default_FieldType;
 #define _HAS_ARGS        (0x02U) /* Type has arguments                     */
 #define _HAS_CHOICE      (0x04U) /* Type has choice methods                */
 #define _RESIDENT        (0x08U) /* Type is built-in                       */
+#define _GENERIC         (0x10U) /* A generic field type                   */
 
 /* This are the field options required to be a selectable field in field
    navigation requests */
@@ -101,11 +102,17 @@ extern NCURSES_EXPORT_VAR(FIELDTYPE *) _nc_Default_FieldType;
 #if NCURSES_SP_FUNCS
 #define Get_Form_Screen(form) \
   ((form)->win ? _nc_screen_of((form->win)):CURRENT_SCREEN)
+#else
+#define Get_Form_Screen(form) CURRENT_SCREEN
 #endif
 
 /* Retrieve forms window */
 #define Get_Form_Window(form) \
-  ((form)->sub?(form)->sub:((form)->win?(form)->win:stdscr))
+  ((form)->sub \
+   ? (form)->sub \
+   : ((form)->win \
+      ? (form)->win \
+      : StdScreen(Get_Form_Screen(form))))
 
 /* Calculate the size for a single buffer for this field */
 #define Buffer_Length(field) ((field)->drows * (field)->dcols)
@@ -170,6 +177,36 @@ extern NCURSES_EXPORT(FIELD *) _nc_First_Active_Field (FORM*);
 extern NCURSES_EXPORT(bool) _nc_Internal_Validation (FORM*);
 extern NCURSES_EXPORT(int) _nc_Set_Current_Field (FORM*, FIELD*);
 extern NCURSES_EXPORT(int) _nc_Position_Form_Cursor (FORM*);
+
+#if NCURSES_INTEROP_FUNCS
+extern NCURSES_EXPORT(FIELDTYPE *) _nc_TYPE_INTEGER(void);
+extern NCURSES_EXPORT(FIELDTYPE *) _nc_TYPE_ALNUM(void);
+extern NCURSES_EXPORT(FIELDTYPE *) _nc_TYPE_ALPHA(void);
+extern NCURSES_EXPORT(FIELDTYPE *) _nc_TYPE_ENUM(void);
+extern NCURSES_EXPORT(FIELDTYPE *) _nc_TYPE_NUMERIC(void);
+extern NCURSES_EXPORT(FIELDTYPE *) _nc_TYPE_REGEXP(void);
+extern NCURSES_EXPORT(FIELDTYPE *) _nc_TYPE_IPV4(void);
+
+extern NCURSES_EXPORT(FIELDTYPE *)
+_nc_generic_fieldtype(bool (*const field_check) (FORM*, 
+						 FIELD *, 
+						 const void *),
+		      bool (*const char_check)  (int, 
+						 FORM*, 
+						 FIELD*, 
+						 const void *),
+		      bool (*const next)(FORM*,FIELD*,const void*),
+		      bool (*const prev)(FORM*,FIELD*,const void*),
+		      void (*freecallback)(void*));
+extern NCURSES_EXPORT(int) _nc_set_generic_fieldtype(FIELD*, FIELDTYPE*, int (*)(void**));
+extern NCURSES_EXPORT(WINDOW*) _nc_form_cursor(const FORM* , int* , int* );
+
+#define INIT_FT_FUNC(func) {func}
+#else
+#define INIT_FT_FUNC(func) func
+#endif
+
+extern NCURSES_EXPORT(void) _nc_get_fieldbuffer(FORM*, FIELD*, FIELD_CELL*);
 
 #if USE_WIDEC_SUPPORT
 extern NCURSES_EXPORT(wchar_t *) _nc_Widen_String(char *, int *);

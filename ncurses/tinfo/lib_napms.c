@@ -51,15 +51,16 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_napms.c,v 1.19 2009/06/06 18:50:30 tom Exp $")
+MODULE_ID("$Id: lib_napms.c,v 1.20 2009/11/07 20:37:30 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(napms) (NCURSES_SP_DCLx int ms)
 {
+    (void) SP_PARM;
     T((T_CALLED("napms(%d)"), ms));
 
 #ifdef USE_TERM_DRIVER
-    CallDriver_1(sp, nap, ms);
+    CallDriver_1(SP_PARM, nap, ms);
 #else /* !USE_TERM_DRIVER */
 #if HAVE_NANOSLEEP
     {

@@ -52,7 +52,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.82 2009/10/24 22:52:04 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.83 2009/11/07 16:27:05 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -276,7 +276,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 
 	    /* if the terminal type has real soft labels, set those up */
 	    if (slk_format && NumLabels > 0 && SLK_STDFMT(slk_format))
-		_nc_slk_initialize(SP_PARM->_stdscr, cols);
+		_nc_slk_initialize(StdScreen(SP_PARM), cols);
 
 	    SP_PARM->_ifd = fileno(_ifp);
 	    NCURSES_SP_NAME(typeahead) (NCURSES_SP_ARGx fileno(_ifp));

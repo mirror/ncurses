@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: win_driver.c,v 1.1 2009/02/21 15:11:29 juergen Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.3 2009/11/07 16:06:42 tom Exp $")
 
 static bool drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *);
 static void drv_init(TERMINAL_CONTROL_BLOCK *);
@@ -288,9 +288,9 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 
     Width = screen_columns(sp);
     Height = screen_lines(sp);
-    nonempty = min(Height, sp->_newscr->_maxy + 1);
+    nonempty = min(Height, NewScreen(sp)->_maxy + 1);
 
-    if ((sp->_curscr->_clear || sp->_newscr->_clear)) {
+    if ((CurScreen(sp)->_clear || NewScreen(sp)->_clear)) {
 	int x;
 	chtype empty[Width];
 
@@ -300,52 +300,52 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 	for (y = 0; y < nonempty; y++) {
 	    con_write(TCB, y, 0, empty, Width);
 	    memcpy(empty,
-		   sp->_curscr->_line[y].text,
+		   CurScreen(sp)->_line[y].text,
 		   Width * sizeof(chtype));
 	}
-	sp->_curscr->_clear = FALSE;
-	sp->_newscr->_clear = FALSE;
-	touchwin(sp->_newscr);
+	CurScreen(sp)->_clear = FALSE;
+	NewScreen(sp)->_clear = FALSE;
+	touchwin(NewScreen(sp));
     }
 
     for (y = 0; y < nonempty; y++) {
-	x0 = sp->_newscr->_line[y].firstchar;
+	x0 = NewScreen(sp)->_line[y].firstchar;
 	if (x0 != _NOCHANGE) {
-	    x1 = sp->_newscr->_line[y].lastchar;
+	    x1 = NewScreen(sp)->_line[y].lastchar;
 	    n = x1 - x0 + 1;
 	    if (n > 0) {
-		memcpy(sp->_curscr->_line[y].text + x0,
-		       sp->_newscr->_line[y].text + x0,
+		memcpy(CurScreen(sp)->_line[y].text + x0,
+		       NewScreen(sp)->_line[y].text + x0,
 		       n * sizeof(chtype));
 		con_write(TCB,
 			  y,
 			  x0,
-			  ((chtype *) sp->_curscr->_line[y].text) + x0, n);
+			  ((chtype *) CurScreen(sp)->_line[y].text) + x0, n);
 
 		/* mark line changed successfully */
-		if (y <= sp->_newscr->_maxy) {
-		    MARK_NOCHANGE(sp->_newscr, y);
+		if (y <= NewScreen(sp)->_maxy) {
+		    MARK_NOCHANGE(NewScreen(sp), y);
 		}
-		if (y <= sp->_curscr->_maxy) {
-		    MARK_NOCHANGE(sp->_curscr, y);
+		if (y <= CurScreen(sp)->_maxy) {
+		    MARK_NOCHANGE(CurScreen(sp), y);
 		}
 	    }
 	}
     }
 
     /* put everything back in sync */
-    for (y = nonempty; y <= sp->_newscr->_maxy; y++) {
-	MARK_NOCHANGE(sp->_newscr, y);
+    for (y = nonempty; y <= NewScreen(sp)->_maxy; y++) {
+	MARK_NOCHANGE(NewScreen(sp), y);
     }
-    for (y = nonempty; y <= sp->_curscr->_maxy; y++) {
-	MARK_NOCHANGE(sp->_curscr, y);
+    for (y = nonempty; y <= CurScreen(sp)->_maxy; y++) {
+	MARK_NOCHANGE(CurScreen(sp), y);
     }
 
-    if (!sp->_newscr->_leaveok) {
-	sp->_curscr->_curx = sp->_newscr->_curx;
-	sp->_curscr->_cury = sp->_newscr->_cury;
+    if (!NewScreen(sp)->_leaveok) {
+	CurScreen(sp)->_curx = NewScreen(sp)->_curx;
+	CurScreen(sp)->_cury = NewScreen(sp)->_cury;
 
-	TCB->drv->hwcur(TCB, 0, 0, sp->_curscr->_cury, sp->_curscr->_curx);
+	TCB->drv->hwcur(TCB, 0, 0, CurScreen(sp)->_cury, CurScreen(sp)->_curx);
     }
     SetConsoleActiveScreenBuffer(TCB->hdl);
     return OK;

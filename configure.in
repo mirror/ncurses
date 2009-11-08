@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.475 2009/10/17 12:38:32 tom Exp $
+dnl $Id: configure.in,v 1.477 2009/11/07 19:25:17 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.475 $)
+AC_REVISION($Revision: 1.477 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1044,11 +1044,23 @@ test "$with_hashmap" = yes && AC_DEFINE(USE_HASHMAP)
 ###   use option --enable-colorfgbg to turn on use of $COLORFGBG environment
 AC_MSG_CHECKING(if you want colorfgbg code)
 AC_ARG_ENABLE(colorfgbg,
-	[  --enable-colorfgbg      compile with $COLORFGBG code],
+	[  --enable-colorfgbg      compile-in experimental $COLORFGBG code],
 	[with_colorfgbg=$enableval],
 	[with_colorfgbg=no])
 AC_MSG_RESULT($with_colorfgbg)
 test "$with_colorfgbg" = yes && AC_DEFINE(USE_COLORFGBG)
+
+###   use option --enable-interop to turn on use of bindings used for interop
+AC_MSG_CHECKING(if you want interop bindings)
+AC_ARG_ENABLE(interop,
+	[  --enable-interop        compile-in experimental interop bindings],
+	[with_exp_interop=$enableval],
+	[with_exp_interop=no])
+AC_MSG_RESULT($with_exp_interop)
+
+NCURSES_INTEROP_FUNCS=0
+test "$with_exp_interop" = yes && NCURSES_INTEROP_FUNCS=1
+AC_SUBST(NCURSES_INTEROP_FUNCS)
 
 # This is still experimental (20080329), but should ultimately be moved to
 # the script-block --with-normal, etc.

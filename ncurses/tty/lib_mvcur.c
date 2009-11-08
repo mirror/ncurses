@@ -159,9 +159,9 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.122 2009/10/24 22:05:03 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.123 2009/11/07 16:07:55 tom Exp $")
 
-#define WANT_CHAR(sp, y, x) (sp)->_newscr->_line[y].text[x]	/* desired state */
+#define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
 #if NCURSES_SP_FUNCS
 #define BAUDRATE(sp)	sp->_term->_baudrate	/* bits per second */

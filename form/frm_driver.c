@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.93 2009/10/24 23:23:32 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.94 2009/11/07 19:54:03 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -512,9 +512,10 @@ Buffer_To_Window(const FIELD *field, WINDOW *win)
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
-|   Function      :  static void Window_To_Buffer(
+|   Function      :  void _nc_get_fieldbuffer(
 |                                          WINDOW * win,
-|                                          FIELD  * field)
+|                                          FIELD  * field,
+|                                          FIELD_CELL * buf)
 |
 |   Description   :  Copy the content of the window into the buffer.
 |                    The multiple lines of a window are simply
@@ -523,18 +524,22 @@ Buffer_To_Window(const FIELD *field, WINDOW *win)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-static void
-Window_To_Buffer(WINDOW *win, FIELD *field)
+NCURSES_EXPORT(void)
+_nc_get_fieldbuffer(FORM *form, FIELD *field, FIELD_CELL *buf)
 {
   int pad;
   int len = 0;
   FIELD_CELL *p;
   int row, height;
+  WINDOW *win;
 
-  assert(win && field && field->buf);
+  assert(form && field && buf);
+
+  win = form->w;
+  assert(win);
 
   pad = field->pad;
-  p = field->buf;
+  p = buf;
   height = getmaxy(win);
 
   for (row = 0; (row < height) && (row < field->drows); row++)
@@ -563,6 +568,25 @@ Window_To_Buffer(WINDOW *win, FIELD *field)
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
+|   Function      :  static void Window_To_Buffer(
+|                                          FORM   * form,
+|                                          FIELD  * field)
+|
+|   Description   :  Copy the content of the window into the buffer.
+|                    The multiple lines of a window are simply
+|                    concatenated into the buffer. Pad characters in
+|                    the window will be replaced by blanks in the buffer.
+|
+|   Return Values :  -
++--------------------------------------------------------------------------*/
+static void
+Window_To_Buffer(FORM *form, FIELD *field)
+{
+  _nc_get_fieldbuffer(form, field, field->buf);
+}
+
+/*---------------------------------------------------------------------------
+|   Facility      :  libnform
 |   Function      :  static void Synchronize_Buffer(FORM * form)
 |
 |   Description   :  If there was a change, copy the content of the
@@ -579,7 +603,7 @@ Synchronize_Buffer(FORM *form)
     {
       form->status &= ~_WINDOW_MODIFIED;
       form->status |= _FCHECK_REQUIRED;
-      Window_To_Buffer(form->w, form->current);
+      Window_To_Buffer(form, form->current);
       wmove(form->w, form->currow, form->curcol);
     }
 }
@@ -1010,7 +1034,8 @@ Undo_Justification(FIELD *field, WINDOW *win)
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
-|   Function      :  static bool Check_Char(
+|   Function      :  static bool Check_Char(FORM  *form,
+|                                           FIELD *field,
 |                                           FIELDTYPE * typ,
 |                                           int ch,
 |                                           TypeArgument *argp)
@@ -1022,7 +1047,11 @@ Undo_Justification(FIELD *field, WINDOW *win)
 |                    FALSE            - Character is invalid
 +--------------------------------------------------------------------------*/
 static bool
-Check_Char(FIELDTYPE *typ, int ch, TypeArgument *argp)
+Check_Char(FORM *form,
+	   FIELD *field,
+	   FIELDTYPE *typ,
+	   int ch,
+	   TypeArgument *argp)
 {
   if (typ)
     {
@@ -1030,13 +1059,23 @@ Check_Char(FIELDTYPE *typ, int ch, TypeArgument *argp)
 	{
 	  assert(argp);
 	  return (
-		   Check_Char(typ->left, ch, argp->left) ||
-		   Check_Char(typ->right, ch, argp->right));
+		   Check_Char(form, field, typ->left, ch, argp->left) ||
+		   Check_Char(form, field, typ->right, ch, argp->right));
 	}
       else
 	{
+#if NCURSES_INTEROP_FUNCS
+	  if (typ->charcheck.occheck)
+	    {
+	      if (typ->status & _GENERIC)
+		return typ->charcheck.gccheck(ch, form, field, (void *)argp);
+	      else
+		return typ->charcheck.occheck(ch, (void *)argp);
+	    }
+#else
 	  if (typ->ccheck)
 	    return typ->ccheck(ch, (void *)argp);
+#endif
 	}
     }
   return (!iscntrl(UChar(ch)) ? TRUE : FALSE);
@@ -1280,14 +1319,13 @@ _nc_Synchronize_Options(FIELD *field, Field_Options newopts)
 
   if (form)
     {
-      if (form->current == field)
-	{
-	  field->opts = oldopts;
-	  returnCode(E_CURRENT);
-	}
-
       if (form->status & _POSTED)
 	{
+	  if (form->current == field)
+	    {
+	      field->opts = oldopts;
+	      returnCode(E_CURRENT);
+	    }
 	  if ((form->curpage == field->page))
 	    {
 	      if (changed_opts & O_VISIBLE)
@@ -1403,7 +1441,7 @@ _nc_Set_Current_Field(FORM *form, FIELD *newfield)
 		{
 		  if (Justification_Allowed(field))
 		    {
-		      Window_To_Buffer(form->w, field);
+		      Window_To_Buffer(form, field);
 		      werase(form->w);
 		      Perform_Justification(field, form->w);
 		      wsyncup(form->w);
@@ -2410,7 +2448,7 @@ Wrapping_Not_Necessary_Or_Wrapping_Ok(FORM *form)
 	    return E_SYSTEM_ERROR;
 	}
       bp = Address_Of_Current_Row_In_Buffer(form);
-      Window_To_Buffer(form->w, field);
+      Window_To_Buffer(form, field);
       split = After_Last_Whitespace_Character(bp, field->dcols);
       /* split points to the first character of the sequence to be brought
          on the next line */
@@ -2436,7 +2474,7 @@ Wrapping_Not_Necessary_Or_Wrapping_Ok(FORM *form)
       if (result != E_OK)
 	{
 	  DeleteChar(form);
-	  Window_To_Buffer(form->w, field);
+	  Window_To_Buffer(form, field);
 	  result = E_REQUEST_DENIED;
 	}
     }
@@ -2611,7 +2649,8 @@ FE_Insert_Character(FORM *form)
   int result = E_REQUEST_DENIED;
 
   T((T_CALLED("FE_Insert_Character(%p)"), (void *)form));
-  if (Check_Char(field->type, (int)C_BLANK, (TypeArgument *)(field->arg)))
+  if (Check_Char(form, field, field->type, (int)C_BLANK,
+		 (TypeArgument *)(field->arg)))
     {
       bool There_Is_Room = Is_There_Room_For_A_Char_In_Line(form);
 
@@ -2646,7 +2685,8 @@ FE_Insert_Line(FORM *form)
   int result = E_REQUEST_DENIED;
 
   T((T_CALLED("FE_Insert_Line(%p)"), (void *)form));
-  if (Check_Char(field->type, (int)C_BLANK, (TypeArgument *)(field->arg)))
+  if (Check_Char(form, field,
+		 field->type, (int)C_BLANK, (TypeArgument *)(field->arg)))
     {
       bool Maybe_Done = (form->currow != (field->drows - 1)) &&
       Is_There_Room_For_A_Line(form);
@@ -2916,7 +2956,7 @@ EM_Insert_Mode(FORM *form)
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
-|   Function      :  static bool Next_Choice(
+|   Function      :  static bool Next_Choice(FORM * form,
 |                                            FIELDTYPE * typ,
 |                                            FIELD * field,
 |                                            TypeArgument *argp)
@@ -2928,7 +2968,7 @@ EM_Insert_Mode(FORM *form)
 |                    FALSE   - couldn't retrieve next choice
 +--------------------------------------------------------------------------*/
 static bool
-Next_Choice(FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
+Next_Choice(FORM *form, FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
 {
   if (!typ || !(typ->status & _HAS_CHOICE))
     return FALSE;
@@ -2937,19 +2977,27 @@ Next_Choice(FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
     {
       assert(argp);
       return (
-	       Next_Choice(typ->left, field, argp->left) ||
-	       Next_Choice(typ->right, field, argp->right));
+	       Next_Choice(form, typ->left, field, argp->left) ||
+	       Next_Choice(form, typ->right, field, argp->right));
     }
   else
     {
+#if NCURSES_INTEROP_FUNCS
+      assert(typ->enum_next.onext);
+      if (typ->status & _GENERIC)
+	return typ->enum_next.gnext(form, field, (void *)argp);
+      else
+	return typ->enum_next.onext(field, (void *)argp);
+#else
       assert(typ->next);
       return typ->next(field, (void *)argp);
+#endif
     }
 }
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
-|   Function      :  static bool Previous_Choice(
+|   Function      :  static bool Previous_Choice(FORM * form,
 |                                                FIELDTYPE * typ,
 |                                                FIELD * field,
 |                                                TypeArgument *argp)
@@ -2961,7 +3009,7 @@ Next_Choice(FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
 |                    FALSE   - couldn't retrieve previous choice
 +--------------------------------------------------------------------------*/
 static bool
-Previous_Choice(FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
+Previous_Choice(FORM *form, FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
 {
   if (!typ || !(typ->status & _HAS_CHOICE))
     return FALSE;
@@ -2970,13 +3018,21 @@ Previous_Choice(FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
     {
       assert(argp);
       return (
-	       Previous_Choice(typ->left, field, argp->left) ||
-	       Previous_Choice(typ->right, field, argp->right));
+	       Previous_Choice(form, typ->left, field, argp->left) ||
+	       Previous_Choice(form, typ->right, field, argp->right));
     }
   else
     {
+#if NCURSES_INTEROP_FUNCS
+      assert(typ->enum_prev.oprev);
+      if (typ->status & _GENERIC)
+	return typ->enum_prev.gprev(form, field, (void *)argp);
+      else
+	return typ->enum_prev.oprev(field, (void *)argp);
+#else
       assert(typ->prev);
       return typ->prev(field, (void *)argp);
+#endif
     }
 }
 /*----------------------------------------------------------------------------
@@ -3003,7 +3059,7 @@ CR_Next_Choice(FORM *form)
 
   T((T_CALLED("CR_Next_Choice(%p)"), (void *)form));
   Synchronize_Buffer(form);
-  returnCode((Next_Choice(field->type, field, (TypeArgument *)(field->arg)))
+  returnCode((Next_Choice(form, field->type, field, (TypeArgument *)(field->arg)))
 	     ? E_OK
 	     : E_REQUEST_DENIED);
 }
@@ -3024,7 +3080,7 @@ CR_Previous_Choice(FORM *form)
 
   T((T_CALLED("CR_Previous_Choice(%p)"), (void *)form));
   Synchronize_Buffer(form);
-  returnCode((Previous_Choice(field->type, field, (TypeArgument *)(field->arg)))
+  returnCode((Previous_Choice(form, field->type, field, (TypeArgument *)(field->arg)))
 	     ? E_OK
 	     : E_REQUEST_DENIED);
 }
@@ -3038,7 +3094,7 @@ CR_Previous_Choice(FORM *form)
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
-|   Function      :  static bool Check_Field(
+|   Function      :  static bool Check_Field(FORM* form,
 |                                            FIELDTYPE * typ,
 |                                            FIELD * field,
 |                                            TypeArgument * argp)
@@ -3051,7 +3107,7 @@ CR_Previous_Choice(FORM *form)
 |                    FALSE      - field is invalid.
 +--------------------------------------------------------------------------*/
 static bool
-Check_Field(FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
+Check_Field(FORM *form, FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
 {
   if (typ)
     {
@@ -3072,13 +3128,23 @@ Check_Field(FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
 	{
 	  assert(argp);
 	  return (
-		   Check_Field(typ->left, field, argp->left) ||
-		   Check_Field(typ->right, field, argp->right));
+		   Check_Field(form, typ->left, field, argp->left) ||
+		   Check_Field(form, typ->right, field, argp->right));
 	}
       else
 	{
+#if NCURSES_INTEROP_FUNCS
+	  if (typ->fieldcheck.ofcheck)
+	    {
+	      if (typ->status & _GENERIC)
+		return typ->fieldcheck.gfcheck(form, field, (void *)argp);
+	      else
+		return typ->fieldcheck.ofcheck(field, (void *)argp);
+	    }
+#else
 	  if (typ->fcheck)
 	    return typ->fcheck(field, (void *)argp);
+#endif
 	}
     }
   return TRUE;
@@ -3104,7 +3170,7 @@ _nc_Internal_Validation(FORM *form)
   if ((form->status & _FCHECK_REQUIRED) ||
       (!(field->opts & O_PASSOK)))
     {
-      if (!Check_Field(field->type, field, (TypeArgument *)(field->arg)))
+      if (!Check_Field(form, field->type, field, (TypeArgument *)(field->arg)))
 	return FALSE;
       form->status &= ~_FCHECK_REQUIRED;
       field->status |= _CHANGED;
@@ -4198,7 +4264,7 @@ form_driver(FORM *form, int c)
   else if (KEY_MOUSE == c)
     {
       MEVENT event;
-      WINDOW *win = form->win ? form->win : stdscr;
+      WINDOW *win = form->win ? form->win : StdScreen(Get_Form_Screen(form));
       WINDOW *sub = form->sub ? form->sub : win;
 
       getmouse(&event);
@@ -4285,7 +4351,7 @@ form_driver(FORM *form, int c)
       if (!iscntrl(UChar(c)))
 #else
       if (isprint(UChar(c)) &&
-	  Check_Char(form->current->type, c,
+	  Check_Char(form, form->current, form->current->type, c,
 		     (TypeArgument *)(form->current->arg)))
 #endif
 	res = Data_Entry(form, c);

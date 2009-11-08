@@ -147,7 +147,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.44 2009/10/24 21:57:38 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.45 2009/11/07 16:06:42 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -174,7 +174,7 @@ NCURSES_EXPORT_VAR (int *)
 #  define oldnums(sp)   (sp)->_oldnum_list
 #  define OLDNUM(sp,n)	oldnums(sp)[n]
 # else				/* !USE_HASHMAP */
-#  define OLDNUM(sp,n)	sp->_newscr->_line[n].oldindex
+#  define OLDNUM(sp,n)	NewScreen(sp)->_line[n].oldindex
 # endif				/* !USE_HASHMAP */
 
 #define OLDNUM_SIZE(sp) (sp)->_oldnum_size

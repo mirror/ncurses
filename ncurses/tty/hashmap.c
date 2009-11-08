@@ -73,7 +73,7 @@ AUTHOR
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: hashmap.c,v 1.59 2009/05/10 00:51:57 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.61 2009/11/07 16:07:55 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -94,10 +94,10 @@ static NCURSES_CH_T newtext[MAXLINES][TEXTWIDTH];
 #else /* !HASHDEBUG */
 
 # define OLDNUM(sp,n)	(sp)->_oldnum_list[n]
-# define OLDTEXT(sp,n)	(sp)->_curscr->_line[n].text
-# define NEWTEXT(sp,m)	(sp)->_newscr->_line[m].text
-# define TEXTWIDTH(sp)	((sp)->_curscr->_maxx+1)
-# define PENDING(sp,n)  ((sp)->_newscr->_line[n].firstchar != _NOCHANGE)
+# define OLDTEXT(sp,n)	CurScreen(sp)->_line[n].text
+# define NEWTEXT(sp,m)	NewScreen(sp)->_line[m].text
+# define TEXTWIDTH(sp)	(CurScreen(sp)->_maxx + 1)
+# define PENDING(sp,n)  (NewScreen(sp)->_line[n].firstchar != _NOCHANGE)
 
 #endif /* !HASHDEBUG */
 

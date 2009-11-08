@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_sub.c,v 1.10 2009/04/11 18:32:47 tom Exp $")
+MODULE_ID("$Id: frm_sub.c,v 1.11 2009/11/07 17:10:41 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -55,7 +55,7 @@ set_form_sub(FORM *form, WINDOW *win)
 #if NCURSES_SP_FUNCS
       FORM *f = Normalize_Form(form);
 
-      f->sub = win ? win : Get_Form_Screen(f)->_stdscr;
+      f->sub = win ? win : StdScreen(Get_Form_Screen(f));
       RETURN(E_OK);
 #else
       Normalize_Form(form)->sub = win;

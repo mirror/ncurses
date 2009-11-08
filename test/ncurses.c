@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.349 2009/10/24 21:28:36 tom Exp $
+$Id: ncurses.c,v 1.350 2009/11/07 22:11:27 tom Exp $
 
 ***************************************************************************/
 
@@ -2581,8 +2581,9 @@ slk_help(void)
 	,"[12345678] -- set label; labels are numbered 1 through 8"
 	,"e          -- erase stdscr (should not erase labels)"
 	,"s          -- test scrolling of shortened screen"
+	,"v/V        -- cycle through video attributes"
 #if HAVE_SLK_COLOR
-	,"F/B        -- cycle through foreground/background colors"
+	,"F/f/B/b    -- cycle through foreground/background colors"
 #endif
 	,"ESC        -- return to main menu"
 	,""
@@ -2600,6 +2601,90 @@ slk_help(void)
     refresh();
 }
 
+/****************************************************************************
+ *
+ * Alternate character-set stuff
+ *
+ ****************************************************************************/
+/* *INDENT-OFF* */
+static struct {
+    chtype attr;
+    const char *name;
+} attrs_to_cycle[] = {
+    { A_NORMAL,		"normal" },
+    { A_BOLD,		"bold" },
+    { A_BLINK,		"blink" },
+    { A_REVERSE,	"reverse" },
+    { A_UNDERLINE,	"underline" },
+};
+/* *INDENT-ON* */
+
+static bool
+cycle_attr(int ch, unsigned *at_code, chtype *attr)
+{
+    bool result = TRUE;
+
+    switch (ch) {
+    case 'v':
+	if ((*at_code += 1) >= SIZEOF(attrs_to_cycle))
+	    *at_code = 0;
+	break;
+    case 'V':
+	if (*at_code == 0)
+	    *at_code = SIZEOF(attrs_to_cycle) - 1;
+	else
+	    *at_code -= 1;
+	break;
+    default:
+	result = FALSE;
+	break;
+    }
+    if (result)
+	*attr = attrs_to_cycle[*at_code].attr;
+    return result;
+}
+
+static bool
+cycle_colors(int ch, int *fg, int *bg, short *pair)
+{
+    bool result = FALSE;
+
+    if (use_colors) {
+	result = TRUE;
+	switch (ch) {
+	case 'F':
+	    if ((*fg -= 1) < 0)
+		*fg = COLORS - 1;
+	    break;
+	case 'f':
+	    if ((*fg += 1) >= COLORS)
+		*fg = 0;
+	    break;
+	case 'B':
+	    if ((*bg -= 1) < 0)
+		*bg = COLORS - 1;
+	    break;
+	case 'b':
+	    if ((*bg += 1) >= COLORS)
+		*bg = 0;
+	    break;
+	default:
+	    result = FALSE;
+	    break;
+	}
+	if (result) {
+	    *pair = (short) (*fg != COLOR_BLACK || *bg != COLOR_BLACK);
+	    if (*pair != 0) {
+		*pair = 1;
+		if (init_pair(*pair, (short) *fg, (short) *bg) == ERR) {
+		    result = FALSE;
+		}
+	    }
+	}
+    }
+    return result;
+}
+
 #if HAVE_SLK_COLOR
 static void
 call_slk_color(short fg, short bg)
@@ -2608,6 +2693,8 @@ call_slk_color(short fg, short bg)
     slk_color(1);
     mvprintw(SLK_WORK, 0, "Colors %d/%d\n", fg, bg);
     clrtoeol();
+    slk_touch();
+    slk_noutrefresh();
     refresh();
 }
 #endif
@@ -2619,9 +2706,12 @@ slk_test(void)
     int c, fmt = 1;
     char buf[9];
     char *s;
+    chtype attr = A_NORMAL;
+    unsigned at_code = 0;
 #if HAVE_SLK_COLOR
-    short fg = COLOR_BLACK;
-    short bg = COLOR_WHITE;
+    int fg = COLOR_BLACK;
+    int bg = COLOR_WHITE;
+    short pair = 0;
 #endif
 
     c = CTRL('l');
@@ -2696,20 +2786,6 @@ slk_test(void)
 	case case_QUIT:
 	    goto done;
 
-#if HAVE_SLK_COLOR
-	case 'F':
-	    if (use_colors) {
-		fg = (short) ((fg + 1) % COLORS);
-		call_slk_color(fg, bg);
-	    }
-	    break;
-	case 'B':
-	    if (use_colors) {
-		bg = (short) ((bg + 1) % COLORS);
-		call_slk_color(fg, bg);
-	    }
-	    break;
-#endif
 #if defined(NCURSES_VERSION) && defined(KEY_RESIZE) && HAVE_WRESIZE
 	case KEY_RESIZE:
 	    wnoutrefresh(stdscr);
@@ -2717,7 +2793,24 @@ slk_test(void)
 #endif
 
 	default:
+	    if (cycle_attr(c, &at_code, &attr)) {
+		slk_attrset(attr);
+		slk_touch();
+		slk_noutrefresh();
+		break;
+	    }
+#if HAVE_SLK_COLOR
+	    if (cycle_colors(c, &fg, &bg, &pair)) {
+		if (use_colors) {
+		    call_slk_color(fg, bg);
+		} else {
+		    beep();
+		}
+		break;
+	    }
+#endif
 	    beep();
+	    break;
 	}
     } while (!isQuit(c = Getchar()));
 
@@ -2736,8 +2829,11 @@ wide_slk_test(void)
     int c, fmt = 1;
     wchar_t buf[SLKLEN + 1];
     char *s;
-    short fg = COLOR_BLACK;
-    short bg = COLOR_WHITE;
+    chtype attr = A_NORMAL;
+    unsigned at_code = 0;
+    int fg = COLOR_BLACK;
+    int bg = COLOR_WHITE;
+    short pair = 0;
 
     c = CTRL('l');
     if (use_colors) {
@@ -2849,7 +2945,24 @@ wide_slk_test(void)
 	    break;
 #endif
 	default:
+	    if (cycle_attr(c, &at_code, &attr)) {
+		slk_attr_set(attr, (fg || bg), NULL);
+		slk_touch();
+		slk_noutrefresh();
+		break;
+	    }
+#if HAVE_SLK_COLOR
+	    if (cycle_colors(c, &fg, &bg, &pair)) {
+		if (use_colors) {
+		    call_slk_color(fg, bg);
+		} else {
+		    beep();
+		}
+		break;
+	    }
+#endif
 	    beep();
+	    break;
 	}
     } while (!isQuit(c = Getchar()));
 
@@ -2860,90 +2973,6 @@ wide_slk_test(void)
 }
 #endif
 #endif /* SLK_INIT */
-
-/****************************************************************************
- *
- * Alternate character-set stuff
- *
- ****************************************************************************/
-/* *INDENT-OFF* */
-static struct {
-    chtype attr;
-    const char *name;
-} attrs_to_cycle[] = {
-    { A_NORMAL,		"normal" },
-    { A_BOLD,		"bold" },
-    { A_BLINK,		"blink" },
-    { A_REVERSE,	"reverse" },
-    { A_UNDERLINE,	"underline" },
-};
-/* *INDENT-ON* */
-
-static bool
-cycle_attr(int ch, unsigned *at_code, chtype *attr)
-{
-    bool result = TRUE;
-
-    switch (ch) {
-    case 'v':
-	if ((*at_code += 1) >= SIZEOF(attrs_to_cycle))
-	    *at_code = 0;
-	break;
-    case 'V':
-	if (*at_code == 0)
-	    *at_code = SIZEOF(attrs_to_cycle) - 1;
-	else
-	    *at_code -= 1;
-	break;
-    default:
-	result = FALSE;
-	break;
-    }
-    if (result)
-	*attr = attrs_to_cycle[*at_code].attr;
-    return result;
-}
-
-static bool
-cycle_colors(int ch, int *fg, int *bg, short *pair)
-{
-    bool result = FALSE;
-
-    if (use_colors) {
-	result = TRUE;
-	switch (ch) {
-	case 'F':
-	    if ((*fg -= 1) < 0)
-		*fg = COLORS - 1;
-	    break;
-	case 'f':
-	    if ((*fg += 1) >= COLORS)
-		*fg = 0;
-	    break;
-	case 'B':
-	    if ((*bg -= 1) < 0)
-		*bg = COLORS - 1;
-	    break;
-	case 'b':
-	    if ((*bg += 1) >= COLORS)
-		*bg = 0;
-	    break;
-	default:
-	    result = FALSE;
-	    break;
-	}
-	if (result) {
-	    *pair = (short) (*fg != COLOR_BLACK || *bg != COLOR_BLACK);
-	    if (*pair != 0) {
-		*pair = 1;
-		if (init_pair(*pair, (short) *fg, (short) *bg) == ERR) {
-		    result = FALSE;
-		}
-	    }
-	}
-    }
-    return result;
-}
 
 /* ISO 6429:  codes 0x80 to 0x9f may be control characters that cause the
  * terminal to perform functions.  The remaining codes can be graphic.

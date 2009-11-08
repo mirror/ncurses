@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1456 2009/10/31 20:50:24 tom Exp $
+-- $Id: NEWS,v 1.1459 2009/11/07 22:13:22 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20091107
+	+ improve test/ncurses.c color-cycling test by reusing attribute-
+	  and color-cycling logic from the video-attributes screen.
+	+ add ifdef'd with NCURSES_INTEROP_FUNCS experimental bindings in form
+	  library which help make it compatible with interop applications
+	  (patch by Juergen Pfeifer).
+	+ add configure option --enable-interop, for integrating changes
+	  for generic/interop support to form-library by Juergen Pfeifer
 
 20091031
 	+ modify use of $CC environment variable which is defined by X/Open

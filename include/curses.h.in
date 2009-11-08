@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.206 2009/09/06 15:55:10 tom Exp $ */
+/* $Id: curses.h.in,v 1.207 2009/11/07 19:14:00 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -109,6 +109,12 @@
 #ifndef NCURSES_REENTRANT
 #define NCURSES_REENTRANT @cf_cv_enable_reentrant@
 #endif
+
+/*
+ * Control whether bindings for interop support are added.
+ */
+#undef	NCURSES_INTEROP_FUNCS
+#define	NCURSES_INTEROP_FUNCS @NCURSES_INTEROP_FUNCS@
 
 /*
  * The internal type used for window dimensions.
