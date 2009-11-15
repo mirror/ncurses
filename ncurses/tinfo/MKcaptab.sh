@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKcaptab.sh,v 1.10 2009/08/08 17:19:25 tom Exp $
+# $Id: MKcaptab.sh,v 1.12 2009/11/14 22:09:55 tom Exp $
 AWK=${1-awk}
 OPT1=${2-0}
 OPT2=${3-tinfo/MKcaptab.awk}
@@ -55,7 +55,7 @@ EOF
 ./make_hash 1 info $OPT1 <$DATA
 ./make_hash 3 cap  $OPT1 <$DATA
 
-$AWK -f $OPT2 bigstrings=$OPT1 tablename=capalias <$DATA 
+$AWK -f $OPT2 bigstrings=$OPT1 tablename=capalias <$DATA
 
 $AWK -f $OPT2 bigstrings=$OPT1 tablename=infoalias <$DATA
 
@@ -144,7 +144,7 @@ NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool termcap)
 }
 
 static HashValue
-hash_function(const char *string)
+info_hash(const char *string)
 {
     long sum = 0;
 
@@ -158,10 +158,27 @@ hash_function(const char *string)
     return (HashValue) (sum % HASHTABSIZE);
 }
 
-static int
-compare_cap_names(const char *a, const char *b)
+#define TCAP_LEN 2		/* only 1- or 2-character names are used */
+
+static HashValue
+tcap_hash(const char *string)
 {
-    return !strncmp(a, b, 2);
+    char temp[TCAP_LEN + 1];
+    int limit = 0;
+
+    while (*string) {
+	temp[limit++] = *string++;
+	if (limit >= TCAP_LEN)
+	    break;
+    }
+    temp[limit] = '\0';
+    return info_hash(temp);
+}
+
+static int
+compare_tcap_names(const char *a, const char *b)
+{
+    return !strncmp(a, b, TCAP_LEN);
 }
 
 static int
@@ -171,8 +188,8 @@ compare_info_names(const char *a, const char *b)
 }
 
 static const HashData hash_data[2] = {
-    { HASHTABSIZE, _nc_info_hash_table, hash_function, compare_info_names },
-    { HASHTABSIZE, _nc_cap_hash_table, hash_function, compare_cap_names }
+    { HASHTABSIZE, _nc_info_hash_table, info_hash, compare_info_names },
+    { HASHTABSIZE, _nc_cap_hash_table, tcap_hash, compare_tcap_names }
 };
 
 NCURSES_EXPORT(const HashData *) _nc_get_hash_info (bool termcap)

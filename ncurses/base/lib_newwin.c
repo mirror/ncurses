@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.64 2009/11/07 16:27:05 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.65 2009/11/14 01:12:48 Nicholas.Marriott Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -276,7 +276,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
     win = &(wp->win);
 
     if ((win->_line = typeCalloc(struct ldat, ((unsigned) num_lines))) == 0) {
-	free(win);
+	free(wp);
 	returnWin(0);
     }
 
