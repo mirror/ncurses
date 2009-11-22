@@ -40,10 +40,10 @@
 #include <curses.priv.h>
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.66 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.67 2009/11/21 23:06:40 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -232,6 +232,9 @@ _nc_altcharset_name(attr_t attr, chtype ch)
 
     const char *result = 0;
 
+#if NCURSES_SP_FUNCS
+    (void) sp;
+#endif
     if ((attr & A_ALTCHARSET) && (acs_chars != 0)) {
 	char *cp;
 	char *found = 0;

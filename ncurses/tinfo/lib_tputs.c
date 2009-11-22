@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.79 2009/10/24 21:56:58 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.80 2009/11/21 23:09:31 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -75,9 +75,12 @@ _nc_set_no_padding(SCREEN *sp)
 #endif
 
 #if NCURSES_SP_FUNCS
-#define my_outch SP_PARM->_outch
+#define SetOutCh(func) if (SP_PARM) SP_PARM->_outch = func; else _nc_prescreen._outch = func
+#define GetOutCh()     (SP_PARM ? SP_PARM->_outch : _nc_prescreen._outch)
 #else
-static NCURSES_SP_OUTC my_outch = NCURSES_SP_NAME(_nc_outch);
+#define SetOutCh(func) static_outch = func
+#define GetOutCh()     static_outch
+static NCURSES_SP_OUTC static_outch = NCURSES_SP_NAME(_nc_outch);
 #endif
 
 NCURSES_EXPORT(int)
@@ -92,6 +95,7 @@ NCURSES_SP_NAME(delay_output) (NCURSES_SP_DCLx int ms)
 	NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
 	napms(ms);
     } else {
+	NCURSES_SP_OUTC my_outch = GetOutCh();
 	register int nullcount;
 
 	nullcount = (ms * _nc_baudrate(ospeed)) / (BAUDBYTE * 1000);
@@ -199,6 +203,7 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
 			int affcnt,
 			NCURSES_SP_OUTC outc)
 {
+    NCURSES_SP_OUTC my_outch = GetOutCh();
     bool always_delay;
     bool normal_delay;
     int number;
@@ -280,7 +285,7 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
     }
 #endif /* BSD_TPUTS */
 
-    my_outch = outc;		/* redirect delay_output() */
+    SetOutCh(outc);		/* redirect delay_output() */
     while (*string) {
 	if (*string != '$')
 	    (*outc) (NCURSES_SP_ARGx *string);
@@ -352,7 +357,7 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
 	delay_output(trailpad / 10);
 #endif /* BSD_TPUTS */
 
-    my_outch = NCURSES_SP_NAME(_nc_outch);
+    SetOutCh(my_outch);
     return OK;
 }
 

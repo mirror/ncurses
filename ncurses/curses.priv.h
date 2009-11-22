@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.442 2009/10/31 20:33:43 tom Exp $
+ * $Id: curses.priv.h,v 1.443 2009/11/21 22:27:52 tom Exp $
  *
  *	curses.priv.h
  *
@@ -805,6 +805,7 @@ typedef struct {
 #if NCURSES_NO_PADDING
 	bool		_no_padding;	/* flag to set if padding disabled  */
 #endif
+	NCURSES_SP_OUTC	_outch;		/* output handler if not putc */
 #if BROKEN_LINKER || USE_REENTRANT
 	chtype		*real_acs_map;
 	int		_LINES;
