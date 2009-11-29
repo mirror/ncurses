@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1465 2009/11/21 23:14:39 tom Exp $
+-- $Id: NEWS,v 1.1468 2009/11/28 22:51:06 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20091128
+	+ modify mk-1st.awk to allow tinfo library to be built when term-driver
+	  is enabled.
+	+ add error-check to configure script to ensure that sp-funcs is
+	  enabled if term-driver is, since some internal interfaces rely upon
+	  this.
 
 20091121
 	+ fix case where progs/tput is used while sp-funcs is configure; this

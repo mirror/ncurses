@@ -52,7 +52,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.83 2009/11/07 16:27:05 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.84 2009/11/28 22:43:51 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -201,6 +201,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
     current = CURRENT_SCREEN;
     its_term = (current ? current->_term : 0);
 
+    INIT_TERM_DRIVER();
     /* this loads the capability entry, then sets LINES and COLS */
     if (
 #if NCURSES_SP_FUNCS

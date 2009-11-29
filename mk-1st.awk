@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.81 2009/03/28 18:59:51 Charles.Wilson Exp $
+# $Id: mk-1st.awk,v 1.82 2009/11/28 20:09:38 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -59,7 +59,7 @@ function is_ticlib() {
 		return ( subset ~ /^ticlib$/ );
 	}
 function is_termlib() {
-		return ( subset ~ /^(ticlib\+)?termlib((\+[^+ ]+)*\+ext_tinfo)?$/ );
+		return ( subset ~ /^(ticlib\+)?termlib((\+[^+ ]+)*\+[a-z_]+_tinfo)?$/ );
 	}
 # see lib_name
 function lib_name_of(a_name) {

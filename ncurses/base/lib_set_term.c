@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.134 2009/11/07 16:27:25 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.135 2009/11/28 21:49:24 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -269,44 +269,6 @@ extract_fgbg(char *src, int *result)
     if (*dst == ';')
 	dst++;
     return dst;
-}
-#endif
-
-#if NCURSES_SP_FUNCS
-/*
- * In case of handling multiple screens, we need to have a screen before
- * initialization in setupscreen takes place.  This is to extend the substitute
- * for some of the stuff in _nc_prescreen, especially for slk and ripoff
- * handling which should be done per screen.
- */
-NCURSES_EXPORT(SCREEN *)
-new_prescr(void)
-{
-    static SCREEN *sp;
-
-    START_TRACE();
-    T((T_CALLED("new_prescr()")));
-
-    if (sp == 0) {
-	sp = _nc_alloc_screen_sp();
-	if (sp != 0) {
-	    sp->rsp = sp->rippedoff;
-	    sp->_filtered = _nc_prescreen.filter_mode;
-	    sp->_use_env = _nc_prescreen.use_env;
-#if NCURSES_NO_PADDING
-	    sp->_no_padding = _nc_prescreen._no_padding;
-#endif
-	    sp->slk_format = 0;
-	    sp->_slk = 0;
-	    sp->_prescreen = TRUE;
-	    SP_PRE_INIT(sp);
-#if USE_REENTRANT
-	    sp->_TABSIZE = _nc_prescreen._TABSIZE;
-	    sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
-#endif
-	}
-    }
-    returnSP(sp);
 }
 #endif
 

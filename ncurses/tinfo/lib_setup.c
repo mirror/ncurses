@@ -52,7 +52,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.123 2009/10/31 20:39:36 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.126 2009/11/28 22:43:34 tom Exp $")
 
 /****************************************************************************
  *
@@ -268,6 +268,7 @@ _nc_get_screensize(SCREEN *sp,
 	sp->_TABSIZE = my_tabsize;
     }
 #else
+    (void) sp;
     TABSIZE = my_tabsize;
 #endif
     T(("TABSIZE = %d", my_tabsize));
@@ -662,7 +663,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	}
 #ifdef USE_TERM_DRIVER
 	TCB = (TERMINAL_CONTROL_BLOCK *) termp;
-	code = _nc_get_driver(TCB, tname, errret);
+	code = _nc_globals.term_driver(TCB, tname, errret);
 	if (code == OK) {
 	    termp->Filedes = Filedes;
 	    termp->_termname = strdup(tname);
@@ -748,6 +749,44 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 #endif
     returnCode(code);
 }
+
+#if NCURSES_SP_FUNCS
+/*
+ * In case of handling multiple screens, we need to have a screen before
+ * initialization in setupscreen takes place.  This is to extend the substitute
+ * for some of the stuff in _nc_prescreen, especially for slk and ripoff
+ * handling which should be done per screen.
+ */
+NCURSES_EXPORT(SCREEN *)
+new_prescr(void)
+{
+    static SCREEN *sp;
+
+    START_TRACE();
+    T((T_CALLED("new_prescr()")));
+
+    if (sp == 0) {
+	sp = _nc_alloc_screen_sp();
+	if (sp != 0) {
+	    sp->rsp = sp->rippedoff;
+	    sp->_filtered = _nc_prescreen.filter_mode;
+	    sp->_use_env = _nc_prescreen.use_env;
+#if NCURSES_NO_PADDING
+	    sp->_no_padding = _nc_prescreen._no_padding;
+#endif
+	    sp->slk_format = 0;
+	    sp->_slk = 0;
+	    sp->_prescreen = TRUE;
+	    SP_PRE_INIT(sp);
+#if USE_REENTRANT
+	    sp->_TABSIZE = _nc_prescreen._TABSIZE;
+	    sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
+#endif
+	}
+    }
+    returnSP(sp);
+}
+#endif
 
 #ifdef USE_TERM_DRIVER
 /*

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.477 2009/11/07 19:25:17 tom Exp $
+dnl $Id: configure.in,v 1.479 2009/11/28 21:44:28 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.477 $)
+AC_REVISION($Revision: 1.479 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -902,6 +902,9 @@ AC_ARG_ENABLE(term-driver,
 AC_MSG_RESULT($with_term_driver)
 if test "$with_term_driver" = yes ; then
 	AC_DEFINE(USE_TERM_DRIVER)
+	if test "$with_sp_funcs" != yes ; then
+		AC_MSG_ERROR(The term-driver option relies upon sp-funcs)
+	fi
 fi
 
 ###   use option --enable-const to turn on use of const beyond that in XSI.
@@ -1658,6 +1661,16 @@ fi
 LIB_SUBSETS="${LIB_SUBSETS}termlib"
 test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_tinfo"
 
+if test "$with_termlib" != no ; then
+	LIB_SUBSETS="${LIB_SUBSETS} "
+else
+	LIB_SUBSETS="${LIB_SUBSETS}+"
+fi
+
+LIB_SUBSETS="${LIB_SUBSETS}base"
+
+# Most term-driver calls are to tinfo, but some like init_pair are to the
+# base library (so it resides in base).
 if test "$with_term_driver" != no ; then
 	LIB_SUBSETS="${LIB_SUBSETS}+port_drivers"
 	case $cf_cv_system_name in #(vi
@@ -1669,14 +1682,6 @@ if test "$with_term_driver" != no ; then
 		;;
 	esac
 fi
-
-if test "$with_termlib" != no ; then
-	LIB_SUBSETS="${LIB_SUBSETS} "
-else
-	LIB_SUBSETS="${LIB_SUBSETS}+"
-fi
-
-LIB_SUBSETS="${LIB_SUBSETS}base"
 
 test "$with_widec"     = yes && LIB_SUBSETS="${LIB_SUBSETS}+widechar"
 test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_funcs"

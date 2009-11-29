@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.443 2009/11/21 22:27:52 tom Exp $
+ * $Id: curses.priv.h,v 1.444 2009/11/28 22:43:12 tom Exp $
  *
  *	curses.priv.h
  *
@@ -700,6 +700,13 @@ typedef struct {
 #define TRACEMSE_MAX	(80 + (5 * 10) + (32 * 15))
 #define TRACEMSE_FMT	"id %2d  at (%2d, %2d, %2d) state %4lx = {" /* } */
 
+#ifdef USE_TERM_DRIVER
+struct DriverTCB; /* Terminal Control Block forward declaration */
+#define INIT_TERM_DRIVER()	_nc_globals.term_driver = _nc_get_driver
+#else
+#define INIT_TERM_DRIVER()	/* nothing */
+#endif
+
 /*
  * Global data which is not specific to a screen.
  */
@@ -744,6 +751,10 @@ typedef struct {
 #if !USE_SAFE_SPRINTF
 	int		safeprint_cols;
 	int		safeprint_rows;
+#endif
+
+#ifdef USE_TERM_DRIVER
+	int		(*term_driver)(struct DriverTCB*, const char*, int*);
 #endif
 
 #ifdef TRACE
@@ -1959,7 +1970,6 @@ extern NCURSES_EXPORT(int) _nc_get_tty_mode(TTY *);
     sp->jump = outc
 
 #ifdef USE_TERM_DRIVER
-struct DriverTCB; /* Terminal Control Block forward declaration */
 typedef void* TERM_HANDLE;
 
 typedef struct _termInfo

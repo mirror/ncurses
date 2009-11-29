@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.56 2009/11/21 22:34:17 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.57 2009/11/28 22:44:25 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -153,6 +153,10 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
 #if !USE_SAFE_SPRINTF
     0,				/* safeprint_cols */
     0,				/* safeprint_rows */
+#endif
+
+#ifdef USE_TERM_DRIVER
+    0,				/* term_driver */
 #endif
 
 #ifdef TRACE
