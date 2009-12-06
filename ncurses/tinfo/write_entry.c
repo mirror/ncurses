@@ -54,7 +54,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.74 2009/09/19 20:30:48 Daniel.Jacobowitz Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.75 2009/12/05 21:25:01 tom Exp $")
 
 static int total_written;
 
@@ -137,10 +137,12 @@ make_db_path(char *dst, const char *src, unsigned limit)
 	if (_nc_is_dir_path(dst)) {
 	    rc = -1;
 	} else {
+	    static const char suffix[] = DBM_SUFFIX;
 	    unsigned have = strlen(dst);
-	    if (have > 3 && strcmp(dst + have - 3, DBM_SUFFIX)) {
-		if (have + 3 <= limit)
-		    strcat(dst, DBM_SUFFIX);
+	    unsigned need = strlen(suffix);
+	    if (have > need && strcmp(dst + have - need, suffix)) {
+		if (have + need <= limit)
+		    strcat(dst, suffix);
 		else
 		    rc = -1;
 	    }
@@ -362,7 +364,7 @@ _nc_write_entry(TERMTYPE *const tp)
 	start_time = 0;
     }
 
-    if (strlen(first_name) >= sizeof(filename) - 3)
+    if (strlen(first_name) >= sizeof(filename) - (2 + LEAF_LEN))
 	_nc_warning("terminal name too long.");
 
     sprintf(filename, LEAF_FMT "/%s", first_name[0], first_name);
@@ -396,7 +398,7 @@ _nc_write_entry(TERMTYPE *const tp)
 	if (*other_names != '\0')
 	    *(other_names++) = '\0';
 
-	if (strlen(ptr) > sizeof(linkname) - 3) {
+	if (strlen(ptr) > sizeof(linkname) - (2 + LEAF_LEN)) {
 	    _nc_warning("terminal alias %s too long.", ptr);
 	    continue;
 	}

@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.444 2009/11/28 22:43:12 tom Exp $
+ * $Id: curses.priv.h,v 1.445 2009/12/05 21:20:51 tom Exp $
  *
  *	curses.priv.h
  *
@@ -686,8 +686,10 @@ typedef struct {
  */
 #if MIXEDCASE_FILENAMES
 #define LEAF_FMT "%c"
+#define LEAF_LEN 1
 #else
 #define LEAF_FMT "%02x"
+#define LEAF_LEN 2
 #endif
 
 /*

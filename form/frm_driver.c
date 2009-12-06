@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.94 2009/11/07 19:54:03 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.95 2009/12/05 21:45:58 Rafael.Garrido.Fernandez Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4430,11 +4430,11 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
    * and other special cases that we really do not want to handle here.
    */
 #if NCURSES_EXT_FUNCS
-  if (wresize(field->working, field->drows, field->dcols) == ERR)
+  if (wresize(field->working, 1, Buffer_Length(field) + 1) == ERR)
 #endif
     {
       delwin(field->working);
-      field->working = newpad(field->drows, field->dcols);
+      field->working = newpad(1, Buffer_Length(field) + 1);
     }
   len = Buffer_Length(field);
   wclear(field->working);
@@ -4448,7 +4448,7 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
     {
       for (i = 0; i < (unsigned)field->drows; ++i)
 	{
-	  mvwin_wchnstr(field->working, i, 0,
+	  mvwin_wchnstr(field->working, 0, i * field->dcols,
 			widevalue + (i * field->dcols),
 			field->dcols);
 	}
