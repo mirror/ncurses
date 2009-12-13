@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_new.c,v 1.19 2009/04/05 00:32:13 tom Exp $")
+MODULE_ID("$Id: m_new.c,v 1.20 2009/12/12 18:31:28 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -54,7 +54,7 @@ NCURSES_EXPORT(MENU *)
 NCURSES_SP_NAME(new_menu) (NCURSES_SP_DCLx ITEM ** items)
 {
   int err = E_SYSTEM_ERROR;
-  MENU *menu = (MENU *) calloc(1, sizeof(MENU));
+  MENU *menu = typeCalloc(MENU, 1);
 
   T((T_CALLED("new_menu(%p,%p)"), SP_PARM, items));
   if (menu)

@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.95 2009/12/05 21:45:58 Rafael.Garrido.Fernandez Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.96 2009/12/12 23:19:29 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4517,7 +4517,7 @@ field_buffer(const FIELD *field, int buffer)
       /* determine the number of bytes needed to store the expanded string */
       for (n = 0; n < size; ++n)
 	{
-	  if (!isWidecExt(data[n]))
+	  if (!isWidecExt(data[n]) && data[n].chars[0] != L'\0')
 	    {
 	      mbstate_t state;
 	      size_t next;
@@ -4534,12 +4534,25 @@ field_buffer(const FIELD *field, int buffer)
 	free(field->expanded[buffer]);
       field->expanded[buffer] = typeMalloc(char, need + 1);
 
-      /* expand the multibyte data */
+      /*
+       * Expand the multibyte data.
+       *
+       * It may also be multi-column data.  In that case, the data for a row
+       * may be null-padded to align to the dcols/drows layout (or it may
+       * contain embedded wide-character extensions).  Change the null-padding
+       * to blanks as needed.
+       */
       if ((result = field->expanded[buffer]) != 0)
 	{
 	  wclear(field->working);
-	  mvwadd_wchnstr(field->working, 0, 0, data, size);
-	  mvwinnstr(field->working, 0, 0, result, (int)need);
+	  wmove(field->working, 0, 0);
+	  for (n = 0; n < size; ++n)
+	    {
+	      if (!isWidecExt(data[n]) && data[n].chars[0] != L'\0')
+		wadd_wch(field->working, &data[n]);
+	    }
+	  wmove(field->working, 0, 0);
+	  winnstr(field->working, result, (int)need);
 	}
 #else
       result = Address_Of_Nth_Buffer(field, buffer);

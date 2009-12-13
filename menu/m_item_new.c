@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: m_item_new.c,v 1.27 2006/12/17 19:47:09 tom Exp $")
+MODULE_ID("$Id: m_item_new.c,v 1.29 2009/12/12 18:31:28 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -122,7 +122,7 @@ new_item(const char *name, const char *description)
     }
   else
     {
-      item = (ITEM *) calloc(1, sizeof(ITEM));
+      item = typeCalloc(ITEM, 1);
       if (item)
 	{
 	  *item = _nc_Default_Item;	/* hope we have struct assignment */
@@ -219,7 +219,7 @@ set_menu_mark(MENU * menu, const char *mark)
       menu->marklen = l;
       if (l)
 	{
-	  menu->mark = (char *)malloc(l + 1);
+	  menu->mark = strdup(mark);
 	  if (menu->mark)
 	    {
 	      strcpy(menu->mark, mark);
@@ -229,6 +229,7 @@ set_menu_mark(MENU * menu, const char *mark)
 	  else
 	    {
 	      menu->mark = old_mark;
+	      menu->marklen = (old_mark != 0) ? strlen(old_mark) : 0;
 	      RETURN(E_SYSTEM_ERROR);
 	    }
 	}

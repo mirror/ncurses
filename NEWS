@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1470 2009/12/05 22:07:39 tom Exp $
+-- $Id: NEWS,v 1.1473 2009/12/12 23:23:46 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,24 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20091212
+	+ correct transfer of multicolumn characters in multirow
+	  field_buffer(), which stopped at the end of the first row due to
+	  filling of unused entries in a cchar_t array with nulls.
+	+ updated nsterm* entries (Benjamin Sittler, Emanuele Giaquinta)
+	+ modify _nc_viscbuf2() and _tracecchar_t2() to show wide-character
+	  nulls.
+	+ use strdup() in set_menu_mark(), restore .marklen struct member on
+	  failure.
+	+ eliminate clause 3 from the UCB copyrights in read_termcap.c and
+	  tset.c per
+		ftp://ftp.cs.berkeley.edu/pub/4bsd/README.Impt.License.Change
+	  (patch by Nicholas Marriott).
+	+ replace a malloc in tic.c with strdup, checking for failure (patch by
+	  Nicholas Marriott).
+	+ update config.guess, config.sub from
+		http://savannah.gnu.org/projects/config
 
 20091205
 	+ correct layout of working window used to extract data in

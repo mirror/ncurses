@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.34 2009/10/10 20:41:55 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.35 2009/12/12 21:34:23 tom Exp $")
 
 #define NUM_VISBUFS 4
 
@@ -304,8 +304,11 @@ _nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 			int k;
 
 			PUTC_ch = buf[j].chars[PUTC_i];
-			if (PUTC_ch == L'\0')
+			if (PUTC_ch == L'\0') {
+			    if (PUTC_i == 0)
+				result = _nc_trace_bufcat(bufnum, "\\000");
 			    break;
+			}
 			PUTC_n = (int) wcrtomb(PUTC_buf,
 					       buf[j].chars[PUTC_i], &PUT_st);
 			if (PUTC_n <= 0)

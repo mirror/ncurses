@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.138 2009/03/14 18:45:55 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.139 2009/12/12 17:30:12 Nicholas.Marriott Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -342,8 +342,12 @@ stripped(char *src)
     while (isspace(UChar(*src)))
 	src++;
     if (*src != '\0') {
-	char *dst = strcpy((char *) malloc(strlen(src) + 1), src);
-	size_t len = strlen(dst);
+	char *dst;
+	size_t len;
+
+	if ((dst = strdup(src)) == NULL)
+	    failed("strdup");
+	len = strlen(dst);
 	while (--len != 0 && isspace(UChar(dst[len])))
 	    dst[len] = '\0';
 	return dst;

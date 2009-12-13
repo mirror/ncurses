@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.354 $
-#	$Date: 2009/10/31 17:28:35 $
+#	$Revision: 1.355 $
+#	$Date: 2009/12/12 23:04:39 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -16604,17 +16604,102 @@ mac|macintosh|Macintosh with MacTerminal,
 mac-w|macterminal-w|Apple Macintosh with Macterminal in 132 column mode,
 	cols#132, use=mac,
 
+# nsterm*|Apple_Terminal - AppKit Terminal.app
+#
+# Terminal.app is a Terminal emulator bundled with NeXT's NeXTStep and
+# OPENSTEP/Mach operating systems, and with Apple's Rhapsody, Mac OS X
+# Server and Mac OS X operating systems. There is also a
+# "terminal.app" in GNUStep, but I believe it to be an unrelated
+# codebase and I have not attempted to describe it here.
+#
+# For NeXTStep, OPENSTEP/Mach, Rhapsody and Mac OS X Server 1.0, you
+# are pretty much on your own. Use "nsterm-7-m" and hope for the best.
+# You might also try "nsterm-7" and "nsterm-old" if you suspect your
+# version supports color.
+#
+# To determine the version of Terminal.app you're using by running:
+#
+#     echo "$TERM_PROGRAM" "$TERM_PROGRAM_VERSION"
+#
+# For Apple_Terminal v200+, use "nsterm-16color" (a.k.a. "nsterm")
+#
+# For Apple_Terminal v71+/v100+, use "nsterm-bce".
+#
+# For Apple_Terminal v51+, use "nsterm-7-c" or "nsterm-7-c-s".
+#
+# For Apple_Terminal v41+, use "nsterm-old", or "nsterm-s".
+#
+# For all earlier versions (Apple_Terminal), try "nsterm-7-m"
+# (monochrome) or "nsterm-7" (color); "nsterm-7-m-s" and "nsterm-7-s"
+# might work too, but really you're on your own here since these
+# systems are very obsolete and I can't test them. I do welcome
+# patches, though :).
+
+# Other Terminals:
+#
+# For GNUstep_Terminal, you're probably best off using "linux" or
+# writing your own terminfo.
+
+# For MacTelnet, you're on your own. It's a different codebase, and
+# seems to be somewhere between "vt102", "ncsa" and "xterm-color".
+
+# For iTerm.app, see "iterm".
+
+#
 # The AppKit Terminal.app descriptions all have names beginning with
 # "nsterm". Note that the statusline (-s) versions use the window
 # titlebar as a phony status line, and may produce warnings during
-# compilation as a result ("tsl uses 0 parameters, expected 1".) Ignore
-# these warnings, or even ignore these entries entirely. Apps which
-# need to position the cursor or do other fancy stuff inside the status
-# line won't work with these entries. They're primarily useful for
-# programs like Pine which provide simple notifications in the status
-# line. Please note that non-ASCII characters don't work right in the
-# status line, since Terminal.app incorrectly interprets their Unicode
-# codepoints as MacRoman codepoints.
+# compilation as a result ("tsl uses 0 parameters, expected 1".)
+# Ignore these warnings, or even ignore these entries entirely. Apps
+# which need to position the cursor or do other fancy stuff inside the
+# status line won't work with these entries. They're primarily useful
+# for programs like Pine which provide simple notifications in the
+# status line. Please note that non-ASCII characters don't work right
+# in the status line, since Terminal.app incorrectly interprets their
+# Unicode codepoints as MacRoman codepoints (in earlier Mac OS X
+# versions) or only accepts status lines consisting entirely of
+# characters from the first 256 Unicode positions (including C1 but
+# not C0 or DEL.)
+#
+# The Mythology* of AppKit Terminal.app:
+#
+# In the days of NeXTSTep 0.x and 1.x there were two incompatible
+# bundled terminal emulators, Shell and Terminal. Scott Hess wrote a
+# shareware replacement for Terminal called "Stuart" which NeXT bought
+# and used as the basis for the Terminal.app in NeXTstep 2+,
+# OPENSTEP/Mach, Apple Rhapsody, Mac OS X Server 1.0, and Mac OS X. I
+# don't know the TERM_PROGRAM and TERM_PROGRAM_VERSION settings or
+# capabilities for the early versions, but I believe that the
+# TERM_PROGRAM_VERSION may have been reset at some point.
+#
+# The early versions were tailored to the NeXT character set. Sometime
+# after the Apple aquisition the encoding was swiched to MacRoman
+# (initally with serious altcharset bugs due to incomplete conversion
+# of the old NeXT code,) and then later to UTF-8. Alos sometime during
+# or just prior to the early days of Mac OS X, the Terminal grew ANSI
+# 8-color support (initially buggy when combined with attributes, but
+# that was later fixed.) More recently, around Mac OS X version 10.3
+# or so (Terminal.app v100+) xterm-like 16-color support was added. In
+# some versions (for instance 133-1 which shipped with Mac OS X
+# version 10.4) this suffered from the <bce> bug, but that seems to
+# have been fixed in Mac OS X version 10.5 (Terminal.app v240.2+).
+#
+# In the early days of Mac OS X the terminal was fairly buggy and
+# would routinely crash under load. Many of these bugs seem to have
+# been fixed around Mac OS X version 10.3 (Terminal.app v100+) but
+# some may still remain. This change seems to correspond to
+# Terminal.app reporting "xterm-color" as $TERM rather than "vt100" as
+# it did previously.
+#
+# * This may correspond with what actually happened, but I don't
+#   know. It is based on guesswork, hearsay, private correspondence,
+#   my faulty memory, and the following online sources and references:
+#
+# [1] "Three Scotts and a Duane" by Simson L. Garfinkel
+# http://www.nextcomputers.org/NeXTfiles/Articles/NeXTWORLD/93.8/93.8.Dec.Community1.html
+#
+# [2] NeXTSTEP entry from Wikipedia, the free encyclopedia
+# https://secure.wikimedia.org/wikipedia/en/wiki/Nextstep
 #
 # * Renamed the AppKit Terminal.app entry from "Apple_Terminal" to
 #   "nsterm" to comply with the name length and case conventions and
@@ -16811,7 +16896,7 @@ nsterm-m|AppKit Terminal.app v41+ w/MacRoman charset (monochrome),
 nsterm-m-s|AppKit Terminal.app v41+ w/MacRoman charset (monochrome w/statusline),
 	use=nsterm+s, use=nsterm+mac,
 
-nsterm-old|Apple_Terminal|AppKit Terminal.app v41+ w/MacRoman charset (color),
+nsterm-old|AppKit Terminal.app v41+ w/MacRoman charset (color),
 	use=nsterm+c41, use=nsterm+mac,
 
 nsterm-c|AppKit Terminal.app v51+ w/MacRoman charset (full color),
@@ -16823,32 +16908,51 @@ nsterm-s|AppKit Terminal.app v41+ w/MacRoman charset (color w/statusline),
 nsterm-c-s|AppKit Terminal.app v51+ w/MacRoman charset (full color w/statusline),
 	use=nsterm+s, use=nsterm+c, use=nsterm+mac,
 
-
-# This entry is based on newsgroup comments by Alain Bench, Christian Ebert,
-# and D P Schreber comparing to nsterm-c-s-acs.
+# In Mac OS X version 10.5 the format of the preferences has changed
+# and a new, more complex technique is needed, e.g.,
 #
-# D P Schreber notes that $TERM can be set in Terminal.app, e.g.,
-#	defaults write com.apple.Terminal TermCapString nsterm-16color
-# and that it is not set in Terminal's preferences dialog.
+#       python -c 'import sys,objc;NSUserDefaults=objc.lookUpClass(
+#       "NSUserDefaults");ud=NSUserDefaults.alloc();
+#       ud.init();prefs=ud.persistentDomainForName_(
+#       "com.apple.Terminal");prefs["Window Settings"][
+#       prefs["Default Window Settings"]]["TerminalType"
+#       ]=sys.argv[1];ud.setPersistentDomain_forName_(prefs,
+#       "com.apple.Terminal")' nsterm-16color
+#
+# and it is still not settable from the preferences dialog. This is
+# tracked under rdar://problem/7365108 and rdar://problem/7365134
+# in Apple's bug reporter.
 nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
-	npc,
-	civis=\E[?25l, cnorm=\E[?25h,
-	flash=\E[?5h$<200/>\E[?5l, kdch1=\E[3~, kend=\E[F,
+	mir, npc,
+	civis=\E[?25l, cnorm=\E[?25h, dch=\E[%p1%dP, dch1=\E[P,
+	flash=\E[?5h$<200/>\E[?5l, hpa=\E[%i%p1%dG,
+	ich=\E[%p1%d@, ich1=\E[@, kdch1=\E[3~, kend=\E[F,
 	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf13=\E[25~,
 	kf14=\E[26~, kf15=\E[28~, kf16=\E[29~, kf17=\E[31~,
 	kf18=\E[22~, kf19=\E[33~, kf20=\E[34~, kf5=\E[15~,
 	kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, khome=\E[H,
-	knp=\E[6~, kpp=\E[5~, rmcup=\E[2J\E[?47l\E8,
-	smcup=\E7\E[?47h, use=nsterm-c-s-acs,
+	knp=\E[6~, kpp=\E[5~, rmcup=\E[2J\E[?47l\E8, rmir=\E[4l,
+	smcup=\E7\E[?47h, smir=\E[4h, vpa=\E[%i%p1%dd,
+	use=nsterm-c-s-acs,
 
 # The versions of Terminal.app in Mac OS X version 10.3.x seem to have
 # the background color erase bug. The newer version 240.2 in Mac OS X
 # version 10.5 does not.
-nsterm-bce|AppKit Terminal.app v100.1.8+ (bce),
+#
+# This entry is based on newsgroup comments by Alain Bench, Christian Ebert,
+# and D P Schreber comparing to nsterm-c-s-acs.
+#
+# In Mac OS X version 10.4 and earlier, D P Schreber notes that $TERM
+# can be set in Terminal.app, e.g.,
+#
+#	defaults write com.apple.Terminal TermCapString nsterm-bce
+#
+# and that it is not set in Terminal's preferences dialog.
+nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (bce),
 	bce, use=nsterm-16color,
 
 # This is an alias which should always point to the "current" version
-nsterm|AppKit Terminal.app,
+nsterm|Apple_Terminal|AppKit Terminal.app,
 	use=nsterm-16color,
 
 # iTerm.app from http://iterm.sourceforge.net/ is an alternative (and
@@ -21935,6 +22039,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2009-10-31
 #	* updated nsterm* entries (Benjamin Sittler, prompted by GenToo #206201)
+#
+# 2009-12-12
+#	* updated nsterm* entries (Benjamin Sittler, Emanuele Giaquinta)
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

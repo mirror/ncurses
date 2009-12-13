@@ -38,7 +38,7 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_new.c,v 1.14 2009/04/11 20:43:04 tom Exp $")
+MODULE_ID("$Id: p_new.c,v 1.15 2009/12/12 18:30:29 tom Exp $")
 
 #ifdef TRACE
 static char *stdscr_id;
@@ -66,7 +66,7 @@ root_panel(NCURSES_SP_DCL0)
 #if NO_LEAKS
       ph->destroy = del_panel;
 #endif
-      _nc_stdscr_pseudo_panel = (PANEL *) malloc(sizeof(PANEL));
+      _nc_stdscr_pseudo_panel = typeMalloc(PANEL, 1);
       if (_nc_stdscr_pseudo_panel != 0)
 	{
 	  PANEL *pan = _nc_stdscr_pseudo_panel;
@@ -104,7 +104,7 @@ new_panel(WINDOW *win)
     (void)root_panel(NCURSES_SP_ARG);
   assert(_nc_stdscr_pseudo_panel);
 
-  if (!(win->_flags & _ISPAD) && (pan = (PANEL *) malloc(sizeof(PANEL))))
+  if (!(win->_flags & _ISPAD) && (pan = typeMalloc(PANEL, 1)))
     {
       pan->win = win;
       pan->above = (PANEL *) 0;
