@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.355 $
-#	$Date: 2009/12/12 23:04:39 $
+#	$Revision: 1.357 $
+#	$Date: 2009/12/19 21:24:52 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -16923,7 +16923,7 @@ nsterm-c-s|AppKit Terminal.app v51+ w/MacRoman charset (full color w/statusline)
 # tracked under rdar://problem/7365108 and rdar://problem/7365134
 # in Apple's bug reporter.
 nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
-	mir, npc,
+	bw@, mir, npc,
 	civis=\E[?25l, cnorm=\E[?25h, dch=\E[%p1%dP, dch1=\E[P,
 	flash=\E[?5h$<200/>\E[?5l, hpa=\E[%i%p1%dG,
 	ich=\E[%p1%d@, ich1=\E[@, kdch1=\E[3~, kend=\E[F,
@@ -16949,7 +16949,7 @@ nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
 #
 # and that it is not set in Terminal's preferences dialog.
 nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (bce),
-	bce, use=nsterm-16color,
+	bce, bw, use=nsterm-16color,
 
 # This is an alias which should always point to the "current" version
 nsterm|Apple_Terminal|AppKit Terminal.app,
@@ -17521,23 +17521,31 @@ osexec|Osborne executive,
 # even as single processes under SunOS and the Macintosh OS.
 #
 
+# See
+#	http://www.minix3.org/manpages/man4/console.4.html
+minix|minix console (v3),
+	use=ecma+color, use=minix-1.7,
+
+# See
+#	http://www.minix-vmd.org/pub/Minix-vmd/1.7.0/wwwman/man4/console.4.html
 # This is the entry provided with minix 1.7.4, with bogus :ri: removed.
-minix|minix console (v1.7),
+minix-1.7|minix console (v1.7),
 	am, xenl,
 	cols#80, it#8, lines#25,
 	bel=^G, blink=\E[5m, bold=\E[1m, clear=\E[H\E[0J, cr=^M,
 	cub=\E[%p1%dD, cub1=^H, cud=\E[%p1%dB, cud1=\E[B,
 	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH,
 	cuu=\E[%p1%dA, cuu1=\E[A, dch=\E[%p1%dP, dch1=\E[P,
-	dl=\E[%p1%dM, dl1=\E[M, ed=\E[0J, el=\E[K, home=\E[H, ht=^I,
-	ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL, il1=\E[L, ind=^J,
-	is2=\E[0m, kbs=^H, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C,
-	kcuu1=\E[A, kf0=\E[Y, kf1=\E[V, kf2=\E[U, kf3=\E[T, kf4=\E[S,
-	kf5=\E[G, khome=\E[H, lf0=End, lf1=PgUp, lf2=PgDn, lf3=Num +,
-	lf4=Num -, lf5=Num 5, nel=^M^J, rev=\E[7m, ri=\EM,
-	rmso=\E[0m, rmul=\E[0m, sgr0=\E[0m, smso=\E[7m, smul=\E[4m,
+	dl=\E[%p1%dM, dl1=\E[M, ed=\E[0J, el=\E[K, el1=\E[2K,
+	home=\E[H, ht=^I, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL,
+	il1=\E[L, ind=^J, is2=\E[0m, kbs=^H, kcub1=\E[D, kcud1=\E[B,
+	kcuf1=\E[C, kcuu1=\E[A, kf0=\E[Y, kf1=\E[V, kf2=\E[U,
+	kf3=\E[T, kf4=\E[S, kf5=\E[G, khome=\E[H, lf0=End, lf1=PgUp,
+	lf2=PgDn, lf3=Num +, lf4=Num -, lf5=Num 5, nel=^M^J,
+	rev=\E[7m, ri=\EM, rmso=\E[0m, rmul=\E[0m, sgr0=\E[0m,
+	smso=\E[7m, smul=\E[4m,
 # Corrected Jan 14, 1997 by Vincent Broman <broman@nosc.mil>
-minix-old|minix console (v1.5),
+minix-old|minix-1.5|minix console (v1.5),
 	xon,
 	cols#80, it#8, lines#25,
 	bel=^G, blink=\E[5m, bold=\E[1m, clear=\E[H\E[0J, cr=^M,
@@ -22042,6 +22050,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2009-12-12
 #	* updated nsterm* entries (Benjamin Sittler, Emanuele Giaquinta)
+#
+# 2009-12-12
+#	* add bw (auto-left-margin) to nsterm* entries (Benjamin Sittler)
+#	* rename minix to minix-1.7, add minix entry for Minux3 -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

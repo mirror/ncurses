@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1473 2009/12/12 23:23:46 tom Exp $
+-- $Id: NEWS,v 1.1480 2009/12/20 01:32:32 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20091219
+	+ remove old check in mvderwin() which prevented moving a derived
+	  window whose origin happened to coincide with its parent's origin
+	  (report by Katarina Machalkova).
+	+ improve test/ncurses.c to put mouse droppings in the proper window.
+	+ update minix terminfo entry -TD
+	+ add bw (auto-left-margin) to nsterm* entries (Benjamin Sittler)
 
 20091212
 	+ correct transfer of multicolumn characters in multirow

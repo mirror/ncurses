@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_window.c,v 1.27 2009/10/24 22:12:46 tom Exp $")
+MODULE_ID("$Id: lib_window.c,v 1.28 2009/12/19 22:01:07 tom Exp $")
 
 NCURSES_EXPORT(void)
 _nc_synchook(WINDOW *win)
@@ -57,25 +57,23 @@ mvderwin(WINDOW *win, int y, int x)
 {
     WINDOW *orig;
     int i;
+    int rc = ERR;
 
     T((T_CALLED("mvderwin(%p,%d,%d)"), (void *) win, y, x));
 
-    if (win && (orig = win->_parent)) {
-	if (win->_parx == x && win->_pary == y)
-	    returnCode(OK);
-	if (x < 0 || y < 0)
-	    returnCode(ERR);
-	if ((x + getmaxx(win) > getmaxx(orig)) ||
-	    (y + getmaxy(win) > getmaxy(orig)))
-	    returnCode(ERR);
-    } else
-	returnCode(ERR);
-    wsyncup(win);
-    win->_parx = x;
-    win->_pary = y;
-    for (i = 0; i < getmaxy(win); i++)
-	win->_line[i].text = &(orig->_line[y++].text[x]);
-    returnCode(OK);
+    if (win != 0
+	&& (orig = win->_parent) != 0
+	&& (x >= 0 && y >= 0)
+	&& (x + getmaxx(win) <= getmaxx(orig))
+	&& (y + getmaxy(win) <= getmaxy(orig))) {
+	wsyncup(win);
+	win->_parx = x;
+	win->_pary = y;
+	for (i = 0; i < getmaxy(win); i++)
+	    win->_line[i].text = &(orig->_line[y++].text[x]);
+	rc = OK;
+    }
+    returnCode(rc);
 }
 
 NCURSES_EXPORT(int)

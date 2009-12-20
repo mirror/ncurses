@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.350 2009/11/07 22:11:27 tom Exp $
+$Id: ncurses.c,v 1.353 2009/12/20 02:14:17 tom Exp $
 
 ***************************************************************************/
 
@@ -505,7 +505,7 @@ mouse_decode(MEVENT const *ep)
 {
     static char buf[80 + (5 * 10) + (32 * 15)];
 
-    (void) sprintf(buf, "id %2d  at (%2d, %2d, %2d) state %4lx = {",
+    (void) sprintf(buf, "id %2d at (%2d, %2d, %d) state %4lx = {",
 		   ep->id, ep->x, ep->y, ep->z, (unsigned long) ep->bstate);
 
 #define SHOW(m, s) if ((ep->bstate & m)==m) {strcat(buf,s); strcat(buf, ", ");}
@@ -566,6 +566,42 @@ mouse_decode(MEVENT const *ep)
 	buf[strlen(buf) - 2] = '\0';
     (void) strcat(buf, "}");
     return (buf);
+}
+
+static void
+show_mouse(WINDOW *win)
+{
+    int y, x;
+    MEVENT event;
+    bool outside;
+    bool show_loc;
+
+    getmouse(&event);
+    outside = !wenclose(win, event.y, event.x);
+
+    if (outside) {
+	(void) wstandout(win);
+	waddstr(win, "KEY_MOUSE");
+	(void) wstandend(win);
+    } else {
+	waddstr(win, "KEY_MOUSE");
+    }
+    wprintw(win, ", %s", mouse_decode(&event));
+
+    if (outside)
+	win = stdscr;
+
+    show_loc = wmouse_trafo(win, &event.y, &event.x, FALSE);
+
+    if (show_loc) {
+	getyx(win, y, x);
+	wmove(win, event.y, event.x);
+	waddch(win, '*');
+	wmove(win, y, x);
+    }
+
+    if (outside)
+	wnoutrefresh(win);
 }
 #endif /* NCURSES_MOUSE_VERSION */
 
@@ -833,15 +869,7 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
 	    wprintw(win, "Key pressed: %04o ", c);
 #ifdef NCURSES_MOUSE_VERSION
 	    if (c == KEY_MOUSE) {
-		int y, x;
-		MEVENT event;
-
-		getmouse(&event);
-		wprintw(win, "KEY_MOUSE, %s", mouse_decode(&event));
-		getyx(win, y, x);
-		move(event.y, event.x);
-		addch('*');
-		wmove(win, y, x);
+		show_mouse(win);
 	    } else
 #endif /* NCURSES_MOUSE_VERSION */
 	    if (c >= KEY_MIN) {
@@ -1006,7 +1034,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
     int incount = 0;
     GetchFlags flags;
     bool blocking = (delay < 0);
-    int y, x, code;
+    int code;
     char *temp;
 
     init_getch(win, flags);
@@ -1103,14 +1131,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	    wprintw(win, "Key pressed: %04o ", (int) c);
 #ifdef NCURSES_MOUSE_VERSION
 	    if (c == KEY_MOUSE) {
-		MEVENT event;
-
-		getmouse(&event);
-		wprintw(win, "KEY_MOUSE, %s", mouse_decode(&event));
-		getyx(win, y, x);
-		move(event.y, event.x);
-		addch('*');
-		wmove(win, y, x);
+		show_mouse(win);
 	    } else
 #endif /* NCURSES_MOUSE_VERSION */
 	    if (code == KEY_CODE_YES) {
