@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C.Strings;
@@ -81,8 +81,8 @@ package Terminal_Interface.Curses.Forms.Field_Types.Enumeration is
    --  The next type defintions are all ncurses extensions. They are typically
    --  not available in other curses implementations.
 
-   procedure Set_Field_Type (Fld : in Field;
-                             Typ : in Enumeration_Field);
+   procedure Set_Field_Type (Fld : Field;
+                             Typ : Enumeration_Field);
    pragma Inline (Set_Field_Type);
 
 private

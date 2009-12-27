@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2004,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.26 $
---  $Date: 2008/07/26 18:50:58 $
+--  $Revision: 1.27 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -74,7 +74,7 @@ package body Terminal_Interface.Curses.Menus is
                                Item_Option_Set);
 
 ------------------------------------------------------------------------------
-   procedure Request_Name (Key  : in Menu_Request_Code;
+   procedure Request_Name (Key  : Menu_Request_Code;
                            Name : out String)
    is
       function Request_Name (Key : C_Int) return chars_ptr;
@@ -149,8 +149,8 @@ package body Terminal_Interface.Curses.Menus is
       Itm := Null_Item;
    end Delete;
 -------------------------------------------------------------------------------
-   procedure Set_Value (Itm   : in Item;
-                        Value : in Boolean := True)
+   procedure Set_Value (Itm   : Item;
+                        Value : Boolean := True)
    is
       function Set_Item_Val (Itm : Item;
                              Val : C_Int) return C_Int;
@@ -188,8 +188,8 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Visible;
 -------------------------------------------------------------------------------
-   procedure Set_Options (Itm     : in Item;
-                          Options : in Item_Option_Set)
+   procedure Set_Options (Itm     : Item;
+                          Options : Item_Option_Set)
    is
       function Set_Item_Opts (Itm : Item;
                               Opt : C_Int) return C_Int;
@@ -204,8 +204,8 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Options;
 
-   procedure Switch_Options (Itm     : in Item;
-                             Options : in Item_Option_Set;
+   procedure Switch_Options (Itm     : Item;
+                             Options : Item_Option_Set;
                              On      : Boolean := True)
    is
       function Item_Opts_On (Itm : Item;
@@ -228,7 +228,7 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Switch_Options;
 
-   procedure Get_Options (Itm     : in  Item;
+   procedure Get_Options (Itm     : Item;
                           Options : out Item_Option_Set)
    is
       function Item_Opts (Itm : Item) return C_Int;
@@ -247,7 +247,7 @@ package body Terminal_Interface.Curses.Menus is
       return Ios;
    end Get_Options;
 -------------------------------------------------------------------------------
-   procedure Name (Itm  : in Item;
+   procedure Name (Itm  : Item;
                    Name : out String)
    is
       function Itemname (Itm : Item) return chars_ptr;
@@ -256,7 +256,7 @@ package body Terminal_Interface.Curses.Menus is
       Fill_String (Itemname (Itm), Name);
    end Name;
 
-   function Name (Itm : in Item) return String
+   function Name (Itm : Item) return String
    is
       function Itemname (Itm : Item) return chars_ptr;
       pragma Import (C, Itemname, "item_name");
@@ -264,7 +264,7 @@ package body Terminal_Interface.Curses.Menus is
       return Fill_String (Itemname (Itm));
    end Name;
 
-   procedure Description (Itm         : in Item;
+   procedure Description (Itm         : Item;
                           Description : out String)
    is
       function Descname (Itm  : Item) return chars_ptr;
@@ -273,7 +273,7 @@ package body Terminal_Interface.Curses.Menus is
       Fill_String (Descname (Itm), Description);
    end Description;
 
-   function Description (Itm : in Item) return String
+   function Description (Itm : Item) return String
    is
       function Descname (Itm  : Item) return chars_ptr;
       pragma Import (C, Descname, "item_description");
@@ -281,8 +281,8 @@ package body Terminal_Interface.Curses.Menus is
       return Fill_String (Descname (Itm));
    end Description;
 -------------------------------------------------------------------------------
-   procedure Set_Current (Men : in Menu;
-                          Itm : in Item)
+   procedure Set_Current (Men : Menu;
+                          Itm : Item)
    is
       function Set_Curr_Item (Men : Menu;
                               Itm : Item) return C_Int;
@@ -308,8 +308,8 @@ package body Terminal_Interface.Curses.Menus is
       return Res;
    end Current;
 
-   procedure Set_Top_Row (Men  : in Menu;
-                          Line : in Line_Position)
+   procedure Set_Top_Row (Men  : Menu;
+                          Line : Line_Position)
    is
       function Set_Toprow (Men  : Menu;
                            Line : C_Int) return C_Int;
@@ -348,8 +348,8 @@ package body Terminal_Interface.Curses.Menus is
       return Positive (Natural (Res) + Positive'First);
    end Get_Index;
 -------------------------------------------------------------------------------
-   procedure Post (Men  : in Menu;
-                   Post : in Boolean := True)
+   procedure Post (Men  : Menu;
+                   Post : Boolean := True)
    is
       function M_Post (Men : Menu) return C_Int;
       pragma Import (C, M_Post, "post_menu");
@@ -368,8 +368,8 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Post;
 -------------------------------------------------------------------------------
-   procedure Set_Options (Men     : in Menu;
-                          Options : in Menu_Option_Set)
+   procedure Set_Options (Men     : Menu;
+                          Options : Menu_Option_Set)
    is
       function Set_Menu_Opts (Men : Menu;
                               Opt : C_Int) return C_Int;
@@ -384,9 +384,9 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Options;
 
-   procedure Switch_Options (Men     : in Menu;
-                             Options : in Menu_Option_Set;
-                             On      : in Boolean := True)
+   procedure Switch_Options (Men     : Menu;
+                             Options : Menu_Option_Set;
+                             On      : Boolean := True)
    is
       function Menu_Opts_On (Men : Menu;
                              Opt : C_Int) return C_Int;
@@ -408,8 +408,8 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Switch_Options;
 
-   procedure Get_Options (Men     : in  Menu;
-                               Options : out Menu_Option_Set)
+   procedure Get_Options (Men     : Menu;
+                          Options : out Menu_Option_Set)
    is
       function Menu_Opts (Men : Menu) return C_Int;
       pragma Import (C, Menu_Opts, "menu_opts");
@@ -427,8 +427,8 @@ package body Terminal_Interface.Curses.Menus is
       return Mos;
    end Get_Options;
 -------------------------------------------------------------------------------
-   procedure Set_Window (Men : in Menu;
-                         Win : in Window)
+   procedure Set_Window (Men : Menu;
+                         Win : Window)
    is
       function Set_Menu_Win (Men : Menu;
                              Win : Window) return C_Int;
@@ -451,8 +451,8 @@ package body Terminal_Interface.Curses.Menus is
       return W;
    end Get_Window;
 
-   procedure Set_Sub_Window (Men : in Menu;
-                             Win : in Window)
+   procedure Set_Sub_Window (Men : Menu;
+                             Win : Window)
    is
       function Set_Menu_Sub (Men : Menu;
                              Win : Window) return C_Int;
@@ -475,7 +475,7 @@ package body Terminal_Interface.Curses.Menus is
       return W;
    end Get_Sub_Window;
 
-   procedure Scale (Men     : in Menu;
+   procedure Scale (Men     : Menu;
                     Lines   : out Line_Count;
                     Columns : out Column_Count)
    is
@@ -507,8 +507,8 @@ package body Terminal_Interface.Curses.Menus is
    end Position_Cursor;
 
 -------------------------------------------------------------------------------
-   procedure Set_Mark (Men  : in Menu;
-                       Mark : in String)
+   procedure Set_Mark (Men  : Menu;
+                       Mark : String)
    is
       type Char_Ptr is access all Interfaces.C.char;
       function Set_Mark (Men  : Menu;
@@ -526,7 +526,7 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Mark;
 
-   procedure Mark (Men  : in  Menu;
+   procedure Mark (Men  : Menu;
                    Mark : out String)
    is
       function Get_Menu_Mark (Men : Menu) return chars_ptr;
@@ -545,9 +545,9 @@ package body Terminal_Interface.Curses.Menus is
 
 -------------------------------------------------------------------------------
    procedure Set_Foreground
-     (Men   : in Menu;
-      Fore  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First)
+     (Men   : Menu;
+      Fore  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First)
    is
       function Set_Menu_Fore (Men  : Menu;
                               Attr : C_Chtype) return C_Int;
@@ -563,7 +563,7 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Foreground;
 
-   procedure Foreground (Men  : in  Menu;
+   procedure Foreground (Men  : Menu;
                          Fore : out Character_Attribute_Set)
    is
       function Menu_Fore (Men : Menu) return C_Chtype;
@@ -572,7 +572,7 @@ package body Terminal_Interface.Curses.Menus is
       Fore := Chtype_To_AttrChar (Menu_Fore (Men)).Attr;
    end Foreground;
 
-   procedure Foreground (Men   : in  Menu;
+   procedure Foreground (Men   : Menu;
                          Fore  : out Character_Attribute_Set;
                          Color : out Color_Pair)
    is
@@ -584,9 +584,9 @@ package body Terminal_Interface.Curses.Menus is
    end Foreground;
 
    procedure Set_Background
-     (Men   : in Menu;
-      Back  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First)
+     (Men   : Menu;
+      Back  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First)
    is
       function Set_Menu_Back (Men  : Menu;
                               Attr : C_Chtype) return C_Int;
@@ -602,7 +602,7 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Background;
 
-   procedure Background (Men  : in  Menu;
+   procedure Background (Men  : Menu;
                          Back : out Character_Attribute_Set)
    is
       function Menu_Back (Men : Menu) return C_Chtype;
@@ -611,7 +611,7 @@ package body Terminal_Interface.Curses.Menus is
       Back := Chtype_To_AttrChar (Menu_Back (Men)).Attr;
    end Background;
 
-   procedure Background (Men   : in  Menu;
+   procedure Background (Men   : Menu;
                          Back  : out Character_Attribute_Set;
                          Color : out Color_Pair)
    is
@@ -622,9 +622,9 @@ package body Terminal_Interface.Curses.Menus is
       Color := Chtype_To_AttrChar (Menu_Back (Men)).Color;
    end Background;
 
-   procedure Set_Grey (Men   : in Menu;
-                       Grey  : in Character_Attribute_Set := Normal_Video;
-                       Color : in Color_Pair := Color_Pair'First)
+   procedure Set_Grey (Men   : Menu;
+                       Grey  : Character_Attribute_Set := Normal_Video;
+                       Color : Color_Pair := Color_Pair'First)
    is
       function Set_Menu_Grey (Men  : Menu;
                               Attr : C_Chtype) return C_Int;
@@ -641,7 +641,7 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Grey;
 
-   procedure Grey (Men  : in  Menu;
+   procedure Grey (Men  : Menu;
                    Grey : out Character_Attribute_Set)
    is
       function Menu_Grey (Men : Menu) return C_Chtype;
@@ -650,7 +650,7 @@ package body Terminal_Interface.Curses.Menus is
       Grey := Chtype_To_AttrChar (Menu_Grey (Men)).Attr;
    end Grey;
 
-   procedure Grey (Men  : in  Menu;
+   procedure Grey (Men  : Menu;
                    Grey : out Character_Attribute_Set;
                    Color : out Color_Pair)
    is
@@ -661,8 +661,8 @@ package body Terminal_Interface.Curses.Menus is
       Color := Chtype_To_AttrChar (Menu_Grey (Men)).Color;
    end Grey;
 
-   procedure Set_Pad_Character (Men : in Menu;
-                                Pad : in Character := Space)
+   procedure Set_Pad_Character (Men : Menu;
+                                Pad : Character := Space)
    is
       function Set_Menu_Pad (Men : Menu;
                              Ch  : C_Int) return C_Int;
@@ -676,7 +676,7 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Pad_Character;
 
-   procedure Pad_Character (Men : in  Menu;
+   procedure Pad_Character (Men : Menu;
                             Pad : out Character)
    is
       function Menu_Pad (Men : Menu) return C_Int;
@@ -685,10 +685,10 @@ package body Terminal_Interface.Curses.Menus is
       Pad := Character'Val (Menu_Pad (Men));
    end Pad_Character;
 -------------------------------------------------------------------------------
-   procedure Set_Spacing (Men   : in Menu;
-                          Descr : in Column_Position := 0;
-                          Row   : in Line_Position   := 0;
-                          Col   : in Column_Position := 0)
+   procedure Set_Spacing (Men   : Menu;
+                          Descr : Column_Position := 0;
+                          Row   : Line_Position   := 0;
+                          Col   : Column_Position := 0)
    is
       function Set_Spacing (Men     : Menu;
                             D, R, C : C_Int) return C_Int;
@@ -704,7 +704,7 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Spacing;
 
-   procedure Spacing (Men   : in Menu;
+   procedure Spacing (Men   : Menu;
                       Descr : out Column_Position;
                       Row   : out Line_Position;
                       Col   : out Column_Position)
@@ -752,7 +752,7 @@ package body Terminal_Interface.Curses.Menus is
       end case;
    end Set_Pattern;
 
-   procedure Pattern (Men  : in  Menu;
+   procedure Pattern (Men  : Menu;
                       Text : out String)
    is
       function Get_Pattern (Men : Menu) return chars_ptr;
@@ -761,9 +761,9 @@ package body Terminal_Interface.Curses.Menus is
       Fill_String (Get_Pattern (Men), Text);
    end Pattern;
 -------------------------------------------------------------------------------
-   procedure Set_Format (Men     : in Menu;
-                         Lines   : in Line_Count;
-                         Columns : in Column_Count)
+   procedure Set_Format (Men     : Menu;
+                         Lines   : Line_Count;
+                         Columns : Column_Count)
    is
       function Set_Menu_Fmt (Men : Menu;
                              Lin : C_Int;
@@ -779,7 +779,7 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Format;
 
-   procedure Format (Men     : in  Menu;
+   procedure Format (Men     : Menu;
                      Lines   : out Line_Count;
                      Columns : out Column_Count)
    is
@@ -799,8 +799,8 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Format;
 -------------------------------------------------------------------------------
-   procedure Set_Item_Init_Hook (Men  : in Menu;
-                                 Proc : in Menu_Hook_Function)
+   procedure Set_Item_Init_Hook (Men  : Menu;
+                                 Proc : Menu_Hook_Function)
    is
       function Set_Item_Init (Men  : Menu;
                               Proc : Menu_Hook_Function) return C_Int;
@@ -813,8 +813,8 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Item_Init_Hook;
 
-   procedure Set_Item_Term_Hook (Men  : in Menu;
-                                 Proc : in Menu_Hook_Function)
+   procedure Set_Item_Term_Hook (Men  : Menu;
+                                 Proc : Menu_Hook_Function)
    is
       function Set_Item_Term (Men  : Menu;
                               Proc : Menu_Hook_Function) return C_Int;
@@ -827,8 +827,8 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Item_Term_Hook;
 
-   procedure Set_Menu_Init_Hook (Men  : in Menu;
-                                 Proc : in Menu_Hook_Function)
+   procedure Set_Menu_Init_Hook (Men  : Menu;
+                                 Proc : Menu_Hook_Function)
    is
       function Set_Menu_Init (Men  : Menu;
                               Proc : Menu_Hook_Function) return C_Int;
@@ -841,8 +841,8 @@ package body Terminal_Interface.Curses.Menus is
       end if;
    end Set_Menu_Init_Hook;
 
-   procedure Set_Menu_Term_Hook (Men  : in Menu;
-                                 Proc : in Menu_Hook_Function)
+   procedure Set_Menu_Term_Hook (Men  : Menu;
+                                 Proc : Menu_Hook_Function)
    is
       function Set_Menu_Term (Men  : Menu;
                               Proc : Menu_Hook_Function) return C_Int;
@@ -887,8 +887,8 @@ package body Terminal_Interface.Curses.Menus is
       return Menu_Term (Men);
    end Get_Menu_Term_Hook;
 -------------------------------------------------------------------------------
-   procedure Redefine (Men   : in Menu;
-                       Items : in Item_Array_Access)
+   procedure Redefine (Men   : Menu;
+                       Items : Item_Array_Access)
    is
       function Set_Items (Men   : Menu;
                           Items : System.Address) return C_Int;
@@ -990,7 +990,7 @@ package body Terminal_Interface.Curses.Menus is
    end Driver;
 
    procedure Free (IA         : in out Item_Array_Access;
-                   Free_Items : in Boolean := False)
+                   Free_Items : Boolean := False)
    is
       procedure Release is new Ada.Unchecked_Deallocation
         (Item_Array, Item_Array_Access);

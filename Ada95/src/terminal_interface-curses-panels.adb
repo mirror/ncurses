@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.13 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.14 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
@@ -60,7 +60,7 @@ package body Terminal_Interface.Curses.Panels is
       return Pan;
    end Create;
 
-   procedure Bottom (Pan : in Panel)
+   procedure Bottom (Pan : Panel)
    is
       function Bottompanel (Pan : Panel) return C_Int;
       pragma Import (C, Bottompanel, "bottom_panel");
@@ -70,7 +70,7 @@ package body Terminal_Interface.Curses.Panels is
       end if;
    end Bottom;
 
-   procedure Top (Pan : in Panel)
+   procedure Top (Pan : Panel)
    is
       function Toppanel (Pan : Panel) return C_Int;
       pragma Import (C, Toppanel, "top_panel");
@@ -80,7 +80,7 @@ package body Terminal_Interface.Curses.Panels is
       end if;
    end Top;
 
-   procedure Show (Pan : in Panel)
+   procedure Show (Pan : Panel)
    is
       function Showpanel (Pan : Panel) return C_Int;
       pragma Import (C, Showpanel, "show_panel");
@@ -90,7 +90,7 @@ package body Terminal_Interface.Curses.Panels is
       end if;
    end Show;
 
-   procedure Hide (Pan : in Panel)
+   procedure Hide (Pan : Panel)
    is
       function Hidepanel (Pan : Panel) return C_Int;
       pragma Import (C, Hidepanel, "hide_panel");
@@ -113,8 +113,8 @@ package body Terminal_Interface.Curses.Panels is
       return Win;
    end Get_Window;
 
-   procedure Replace (Pan : in Panel;
-                      Win : in Window)
+   procedure Replace (Pan : Panel;
+                      Win : Window)
    is
       function Replace_Pan (Pan : Panel;
                             Win : Window) return C_Int;
@@ -125,9 +125,9 @@ package body Terminal_Interface.Curses.Panels is
       end if;
    end Replace;
 
-   procedure Move (Pan    : in Panel;
-                   Line   : in Line_Position;
-                   Column : in Column_Position)
+   procedure Move (Pan    : Panel;
+                   Line   : Line_Position;
+                   Column : Column_Position)
    is
       function Move (Pan    : Panel;
                      Line   : C_Int;

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.12 $
+--  $Revision: 1.13 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
@@ -44,8 +44,8 @@ package body Terminal_Interface.Curses.Menus.Menu_User_Data is
 
    use type Interfaces.C.int;
 
-   procedure Set_User_Data (Men  : in Menu;
-                            Data : in User_Access)
+   procedure Set_User_Data (Men  : Menu;
+                            Data : User_Access)
    is
       function Set_Menu_Userptr (Men  : Menu;
                                  Data : User_Access)  return C_Int;
@@ -58,7 +58,7 @@ package body Terminal_Interface.Curses.Menus.Menu_User_Data is
       end if;
    end Set_User_Data;
 
-   function Get_User_Data (Men  : in  Menu) return User_Access
+   function Get_User_Data (Men  : Menu) return User_Access
    is
       function Menu_Userptr (Men : Menu) return User_Access;
       pragma Import (C, Menu_Userptr, "menu_userptr");
@@ -66,7 +66,7 @@ package body Terminal_Interface.Curses.Menus.Menu_User_Data is
       return Menu_Userptr (Men);
    end Get_User_Data;
 
-   procedure Get_User_Data (Men  : in  Menu;
+   procedure Get_User_Data (Men  : Menu;
                             Data : out User_Access)
    is
    begin

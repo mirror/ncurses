@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,8 +38,8 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.19 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.20 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -74,17 +74,17 @@ include(`Linker_Options')
    --  pragma Inline (New_Panel);
 
    --  ANCHOR(`bottom_panel()',`Bottom')
-   procedure Bottom (Pan : in Panel);
+   procedure Bottom (Pan : Panel);
    --  AKA
    pragma Inline (Bottom);
 
    --  ANCHOR(`top_panel()',`Top')
-   procedure Top (Pan : in Panel);
+   procedure Top (Pan : Panel);
    --  AKA
    pragma Inline (Top);
 
    --  ANCHOR(`show_panel()',`Show')
-   procedure Show (Pan : in Panel);
+   procedure Show (Pan : Panel);
    --  AKA
    pragma Inline (Show);
 
@@ -94,7 +94,7 @@ include(`Linker_Options')
    pragma Import (C, Update_Panels, "update_panels");
 
    --  ANCHOR(`hide_panel()',`Hide')
-   procedure Hide (Pan : in Panel);
+   procedure Hide (Pan : Panel);
    --  AKA
    pragma Inline (Hide);
 
@@ -108,15 +108,15 @@ include(`Linker_Options')
    --  pragma Inline (Panel_Window);
 
    --  ANCHOR(`replace_panel()',`Replace')
-   procedure Replace (Pan : in Panel;
-                      Win : in Window);
+   procedure Replace (Pan : Panel;
+                      Win : Window);
    --  AKA
    pragma Inline (Replace);
 
    --  ANCHOR(`move_panel()',`Move')
-   procedure Move (Pan    : in Panel;
-                   Line   : in Line_Position;
-                   Column : in Column_Position);
+   procedure Move (Pan    : Panel;
+                   Line   : Line_Position;
+                   Column : Column_Position);
    --  AKA
    pragma Inline (Move);
 

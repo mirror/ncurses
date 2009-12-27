@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.8 $
---  $Date: 2008/07/26 18:47:42 $
+--  $Revision: 1.9 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Windows and scrolling tester.
@@ -92,8 +92,6 @@ procedure ncurses2.acs_and_scroll is
                           dy  : Line_Position;
                           dx  : Column_Position);
    function delete_framed (fp : FrameA; showit : Boolean) return FrameA;
-
-   use Ada.Streams.Stream_IO;
 
    --  A linked list
    --  I  wish there was a standard library linked list. Oh well.
@@ -285,11 +283,11 @@ procedure ncurses2.acs_and_scroll is
       else
          Add (Str => "All other");
       end if;
-      Add (str => " characters are echoed, window should ");
+      Add (Str => " characters are echoed, window should ");
       if not HaveScroll (curpw) then
          Add (Str => "not ");
       end if;
-      Add (str => "scroll");
+      Add (Str => "scroll");
 
       Clear_To_End_Of_Line;
    end transient;

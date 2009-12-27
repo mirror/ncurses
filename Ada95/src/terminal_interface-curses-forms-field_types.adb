@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.20 $
---  $Date: 2008/07/26 18:50:33 $
+--  $Revision: 1.21 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
@@ -68,7 +68,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    --  |
    --  |
    --  |
-   function Get_Type (Fld : in Field) return Field_Type_Access
+   function Get_Type (Fld : Field) return Field_Type_Access
    is
       Low_Level : constant C_Field_Type := Get_Fieldtype (Fld);
       Arg : Argument_Access;
@@ -116,7 +116,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
       return Usr;
    end Copy_Arg;
 
-   procedure Free_Arg (Usr : in System.Address)
+   procedure Free_Arg (Usr : System.Address)
    is
       procedure Free_Type is new Ada.Unchecked_Deallocation
         (Field_Type'Class, Field_Type_Access);

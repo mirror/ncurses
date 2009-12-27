@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2006 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.2 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.3 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 
@@ -56,17 +56,17 @@ package ncurses2.genericPuts is
      Ada.Strings.Bounded.Generic_Bounded_Length (Max);
    use BS;
 
-   procedure myGet (Win : in  Terminal_Interface.Curses.Window
-                      := Terminal_Interface.Curses.Standard_Window;
+   procedure myGet (Win : Terminal_Interface.Curses.Window
+                       := Terminal_Interface.Curses.Standard_Window;
                     Str : out BS.Bounded_String;
-                    Len : in  Integer := -1);
+                    Len :  Integer := -1);
 
-   procedure myPut (Str : out BS.Bounded_String;
-                    i : Integer;
-                    Base : in Number_Base := 10);
+   procedure myPut (Str  : out BS.Bounded_String;
+                    i    : Integer;
+                    Base : Number_Base := 10);
    --  the default should be Ada.Text_IO.Integer_IO.Default_Base
    --  but Default_Base is hidden in the generic so doesn't exist!
    procedure myAdd (Str : BS.Bounded_String);
 
-   procedure Fill_String (Cp  : in  chars_ptr; Str : out BS.Bounded_String);
+   procedure Fill_String (Cp : chars_ptr; Str : out BS.Bounded_String);
 end ncurses2.genericPuts;

@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2008 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.12 $
---  $Date: 2008/07/26 18:49:38 $
+--  $Revision: 1.13 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C;
@@ -67,8 +67,8 @@ package Terminal_Interface.Curses.Forms.Field_Types.User is
    --  If True is returned, the character is considered as valid for the
    --  field, otherwise as invalid.
 
-   procedure Set_Field_Type (Fld : in Field;
-                             Typ : in User_Defined_Field_Type);
+   procedure Set_Field_Type (Fld : Field;
+                             Typ : User_Defined_Field_Type);
    --  This should work for all types derived from User_Defined_Field_Type.
    --  No need to reimplement it for your derived type.
 

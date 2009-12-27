@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.7 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.8 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -47,13 +47,13 @@ with Interfaces.C;
 with Terminal_Interface.Curses.Aux;
 
 procedure ncurses2.slk_test is
-   procedure myGet (Win : in  Window := Standard_Window;
+   procedure myGet (Win : Window := Standard_Window;
                     Str : out Ada.Strings.Unbounded.Unbounded_String;
-                    Len : in  Integer := -1);
+                    Len : Integer := -1);
 
-   procedure myGet (Win : in  Window := Standard_Window;
+   procedure myGet (Win : Window := Standard_Window;
                     Str : out Ada.Strings.Unbounded.Unbounded_String;
-                    Len : in  Integer := -1)
+                    Len : Integer := -1)
    is
       use Ada.Strings.Unbounded;
       use Interfaces.C;

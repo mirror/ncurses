@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.10 $
+--  $Revision: 1.11 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Text_IO;
@@ -47,11 +47,11 @@ package body Terminal_Interface.Curses.Text_IO.Decimal_IO is
    package DIO is new Ada.Text_IO.Decimal_IO (Num);
 
    procedure Put
-     (Win  : in Window;
-      Item : in Num;
-      Fore : in Field := Default_Fore;
-      Aft  : in Field := Default_Aft;
-      Exp  : in Field := Default_Exp)
+     (Win  : Window;
+      Item : Num;
+      Fore : Field := Default_Fore;
+      Aft  : Field := Default_Aft;
+      Exp  : Field := Default_Exp)
    is
       Buf : String (1 .. Field'Last);
       Len : Field := Fore + 1 + Aft;
@@ -64,10 +64,10 @@ package body Terminal_Interface.Curses.Text_IO.Decimal_IO is
    end Put;
 
    procedure Put
-     (Item  : in Num;
-      Fore : in Field := Default_Fore;
-      Aft  : in Field := Default_Aft;
-      Exp  : in Field := Default_Exp) is
+     (Item : Num;
+      Fore : Field := Default_Fore;
+      Aft  : Field := Default_Aft;
+      Exp  : Field := Default_Exp) is
    begin
       Put (Get_Window, Item, Fore, Aft, Exp);
    end Put;

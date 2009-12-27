@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 2000-2004,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.5 $
+--  $Revision: 1.6 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 #if ADA_TRACE then
@@ -69,7 +69,7 @@ package body Terminal_Interface.Curses.Trace is
       pragma Import (C, tracef, "_tracef");
       Txt    : char_array (0 .. str'Length);
       Length : size_t;
-      formatstr : constant String := "%s" &  ASCII.Nul;
+      formatstr : constant String := "%s" &  ASCII.NUL;
       formattxt : char_array (0 .. formatstr'Length);
    begin
       To_C (formatstr, formattxt, Length);

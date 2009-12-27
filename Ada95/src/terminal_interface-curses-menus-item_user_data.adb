@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C;
@@ -45,8 +45,8 @@ package body Terminal_Interface.Curses.Menus.Item_User_Data is
 
    use type Interfaces.C.int;
 
-   procedure Set_User_Data (Itm  : in Item;
-                            Data : in User_Access)
+   procedure Set_User_Data (Itm  : Item;
+                            Data : User_Access)
    is
       function Set_Item_Userptr (Itm  : Item;
                                  Addr : User_Access)  return C_Int;
@@ -59,7 +59,7 @@ package body Terminal_Interface.Curses.Menus.Item_User_Data is
       end if;
    end Set_User_Data;
 
-   function Get_User_Data (Itm  : in  Item) return User_Access
+   function Get_User_Data (Itm  : Item) return User_Access
    is
       function Item_Userptr (Itm : Item) return User_Access;
       pragma Import (C, Item_Userptr, "item_userptr");
@@ -67,7 +67,7 @@ package body Terminal_Interface.Curses.Menus.Item_User_Data is
       return Item_Userptr (Itm);
    end Get_User_Data;
 
-   procedure Get_User_Data (Itm  : in  Item;
+   procedure Get_User_Data (Itm  : Item;
                             Data : out User_Access)
    is
    begin

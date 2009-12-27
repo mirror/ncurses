@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.3 $
---  $Date: 2008/07/26 18:46:18 $
+--  $Revision: 1.4 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
@@ -44,9 +44,9 @@ with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
 
 package body ncurses2.genericPuts is
 
-   procedure myGet (Win : in  Window := Standard_Window;
+   procedure myGet (Win : Window := Standard_Window;
                     Str : out BS.Bounded_String;
-                    Len : in  Integer := -1)
+                    Len : Integer := -1)
    is
       function Wgetnstr (Win : Window;
                          Str : char_array;
@@ -74,7 +74,7 @@ package body ncurses2.genericPuts is
 
    procedure myPut (Str  : out BS.Bounded_String;
                     i    : Integer;
-                    Base : in     Number_Base := 10) is
+                    Base : Number_Base := 10) is
       package Int_IO is new Integer_IO (Integer); use Int_IO;
       tmp : String (1 .. BS.Max_Length);
    begin
@@ -89,7 +89,7 @@ package body ncurses2.genericPuts is
    end myAdd;
 
    --  from ncurses-aux
-   procedure Fill_String (Cp  : in  chars_ptr;
+   procedure Fill_String (Cp  : chars_ptr;
                           Str : out BS.Bounded_String)
    is
       --  Fill the string with the characters referenced by the

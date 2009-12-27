@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.10 $
+--  $Revision: 1.11 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and
@@ -44,13 +44,13 @@
 --
 package Sample.Explanation is
 
-   procedure Explain (Key : in String);
+   procedure Explain (Key : String);
    --  Retrieve the text associated with this key and display it.
 
    procedure Explain_Context;
    --  Explain the current context.
 
-   procedure Notepad (Key : in String);
+   procedure Notepad (Key : String);
    --  Put a note on the screen and maintain it with the context
 
    Explanation_Not_Found : exception;

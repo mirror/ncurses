@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -15,7 +15,7 @@
 -- without limitation the rights to use, copy, modify, merge, publish,      --
 -- distribute, distribute with modifications, sublicense, and/or sell       --
 -- copies of the Software, and to permit persons to whom the Software is    --
--- furnished to do so, subject to the following conditions:                 --
+-- furnished to do so, subject to the following conditions :                 --
 --                                                                          --
 -- The above copyright notice and this permission notice shall be included  --
 -- in all copies or substantial portions of the Software.                   --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.15 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.16 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Sample.Menu_Demo.Aux;
@@ -47,8 +47,8 @@ package body Sample.Menu_Demo.Handler is
 
    package Aux renames Sample.Menu_Demo.Aux;
 
-   procedure Drive_Me (M     : in Menu;
-                       Title : in String := "")
+   procedure Drive_Me (M     : Menu;
+                       Title : String := "")
    is
       L : Line_Count;
       C : Column_Count;
@@ -59,10 +59,10 @@ package body Sample.Menu_Demo.Handler is
       Drive_Me (M, Y, X, Title);
    end Drive_Me;
 
-   procedure Drive_Me (M     : in Menu;
-                       Lin   : in Line_Position;
-                       Col   : in Column_Position;
-                       Title : in String := "")
+   procedure Drive_Me (M     : Menu;
+                       Lin   : Line_Position;
+                       Col   : Column_Position;
+                       Title : String := "")
    is
       Mask : Event_Mask := No_Events;
       Old  : Event_Mask;

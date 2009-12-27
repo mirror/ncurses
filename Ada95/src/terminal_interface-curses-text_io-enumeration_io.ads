@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 generic
@@ -47,15 +47,15 @@ package Terminal_Interface.Curses.Text_IO.Enumeration_IO is
    Default_Setting : Type_Set := Mixed_Case;
 
    procedure Put
-     (Win   : in Window;
-      Item  : in Enum;
-      Width : in Field := Default_Width;
-      Set   : in Type_Set := Default_Setting);
+     (Win   : Window;
+      Item  : Enum;
+      Width : Field := Default_Width;
+      Set   : Type_Set := Default_Setting);
 
    procedure Put
-     (Item  : in Enum;
-      Width : in Field := Default_Width;
-      Set   : in Type_Set := Default_Setting);
+     (Item  : Enum;
+      Width : Field := Default_Width;
+      Set   : Type_Set := Default_Setting);
 
 private
    pragma Inline (Put);

@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,7 +38,7 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.15 $
+--  $Revision: 1.16 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 
@@ -51,18 +51,18 @@ package Terminal_Interface.Curses.Forms.Field_User_Data is
    --  MANPAGE(`form_field_userptr.3x')
 
    --  ANCHOR(`set_field_userptr',`Set_User_Data')
-   procedure Set_User_Data (Fld  : in Field;
-                            Data : in User_Access);
+   procedure Set_User_Data (Fld  : Field;
+                            Data : User_Access);
    --  AKA
    pragma Inline (Set_User_Data);
 
    --  ANCHOR(`field_userptr',`Get_User_Data')
-   procedure Get_User_Data (Fld  : in  Field;
+   procedure Get_User_Data (Fld  : Field;
                             Data : out User_Access);
    --  AKA
 
    --  ANCHOR(`field_userptr',`Get_User_Data')
-   function Get_User_Data (Fld  : in  Field) return User_Access;
+   function Get_User_Data (Fld  : Field) return User_Access;
    --  AKA
    --  Sama as function
    pragma Inline (Get_User_Data);

@@ -9,7 +9,7 @@ include(M4MACRO)----------------------------------------------------------------
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -37,8 +37,8 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.41 $
---  $Date: 2007/05/05 20:33:52 $
+--  $Revision: 1.42 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Base_Defs')
@@ -227,9 +227,9 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_move.3x')
 
    --  ANCHOR(`wmove()',`Move_Cursor')
-   procedure Move_Cursor (Win    : in Window := Standard_Window;
-                          Line   : in Line_Position;
-                          Column : in Column_Position);
+   procedure Move_Cursor (Win    : Window := Standard_Window;
+                          Line   : Line_Position;
+                          Column : Column_Position);
    --  AKA
    --  ALIAS(`move()')
    pragma Inline (Move_Cursor);
@@ -237,43 +237,43 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_addch.3x')
 
    --  ANCHOR(`waddch()',`Add')
-   procedure Add (Win :  in Window := Standard_Window;
-                  Ch  :  in Attributed_Character);
+   procedure Add (Win : Window := Standard_Window;
+                  Ch  : Attributed_Character);
    --  AKA
    --  ALIAS(`addch()')
 
-   procedure Add (Win :  in Window := Standard_Window;
-                  Ch  :  in Character);
+   procedure Add (Win : Window := Standard_Window;
+                  Ch  : Character);
    --  Add a single character at the current logical cursor position to
    --  the window. Use the current windows attributes.
 
    --  ANCHOR(`mvwaddch()',`Add')
    procedure Add
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position;
-      Ch     : in Attributed_Character);
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position;
+      Ch     : Attributed_Character);
    --  AKA
    --  ALIAS(`mvaddch()')
 
    procedure Add
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position;
-      Ch     : in Character);
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position;
+      Ch     : Character);
    --  Move to the position and add a single character into the window
    --  There are more Add routines, so the Inline pragma follows later
 
    --  ANCHOR(`wechochar()',`Add_With_Immediate_Echo')
    procedure Add_With_Immediate_Echo
-     (Win : in Window := Standard_Window;
-      Ch  : in Attributed_Character);
+     (Win : Window := Standard_Window;
+      Ch  : Attributed_Character);
    --  AKA
    --  ALIAS(`echochar()')
 
    procedure Add_With_Immediate_Echo
-     (Win : in Window := Standard_Window;
-      Ch  : in Character);
+     (Win : Window := Standard_Window;
+      Ch  : Character);
    --  Add a character and do an immediate refresh of the screen.
    pragma Inline (Add_With_Immediate_Echo);
 
@@ -331,52 +331,52 @@ include(`ACS_Map')dnl
    pragma Inline (Duplicate);
 
    --  ANCHOR(`mvwin()',`Move_Window')
-   procedure Move_Window (Win    : in Window;
-                          Line   : in Line_Position;
-                          Column : in Column_Position);
+   procedure Move_Window (Win    : Window;
+                          Line   : Line_Position;
+                          Column : Column_Position);
    --  AKA
    pragma Inline (Move_Window);
 
    --  ANCHOR(`mvderwin()',`Move_Derived_Window')
-   procedure Move_Derived_Window (Win    : in Window;
-                                  Line   : in Line_Position;
-                                  Column : in Column_Position);
+   procedure Move_Derived_Window (Win    : Window;
+                                  Line   : Line_Position;
+                                  Column : Column_Position);
    --  AKA
    pragma Inline (Move_Derived_Window);
 
    --  ANCHOR(`wsyncup()',`Synchronize_Upwards')
-   procedure Synchronize_Upwards (Win : in Window);
+   procedure Synchronize_Upwards (Win : Window);
    --  AKA
    pragma Import (C, Synchronize_Upwards, "wsyncup");
 
    --  ANCHOR(`wsyncdown()',`Synchronize_Downwards')
-   procedure Synchronize_Downwards (Win : in Window);
+   procedure Synchronize_Downwards (Win : Window);
    --  AKA
    pragma Import (C, Synchronize_Downwards, "wsyncdown");
 
    --  ANCHOR(`syncok()',`Set_Synch_Mode')
-   procedure Set_Synch_Mode (Win  : in Window := Standard_Window;
-                             Mode : in Boolean := False);
+   procedure Set_Synch_Mode (Win  : Window := Standard_Window;
+                             Mode : Boolean := False);
    --  AKA
    pragma Inline (Set_Synch_Mode);
 
    --  MANPAGE(`curs_addstr.3x')
 
    --  ANCHOR(`waddnstr()',`Add')
-   procedure Add (Win : in Window := Standard_Window;
-                  Str : in String;
-                  Len : in Integer := -1);
+   procedure Add (Win : Window := Standard_Window;
+                  Str : String;
+                  Len : Integer := -1);
    --  AKA
    --  ALIAS(`waddstr()')
    --  ALIAS(`addnstr()')
    --  ALIAS(`addstr()')
 
    --  ANCHOR(`mvwaddnstr()',`Add')
-   procedure Add (Win    : in Window := Standard_Window;
-                  Line   : in Line_Position;
-                  Column : in Column_Position;
-                  Str    : in String;
-                  Len    : in Integer := -1);
+   procedure Add (Win    : Window := Standard_Window;
+                  Line   : Line_Position;
+                  Column : Column_Position;
+                  Str    : String;
+                  Len    : Integer := -1);
    --  AKA
    --  ALIAS(`mvwaddstr()')
    --  ALIAS(`mvaddnstr()')
@@ -385,20 +385,20 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_addchstr.3x')
 
    --  ANCHOR(`waddchnstr()',`Add')
-   procedure Add (Win : in Window := Standard_Window;
-                  Str : in Attributed_String;
-                  Len : in Integer := -1);
+   procedure Add (Win : Window := Standard_Window;
+                  Str : Attributed_String;
+                  Len : Integer := -1);
    --  AKA
    --  ALIAS(`waddchstr()')
    --  ALIAS(`addchnstr()')
    --  ALIAS(`addchstr()')
 
    --  ANCHOR(`mvwaddchnstr()',`Add')
-   procedure Add (Win    : in Window := Standard_Window;
-                  Line   : in Line_Position;
-                  Column : in Column_Position;
-                  Str    : in Attributed_String;
-                  Len    : in Integer := -1);
+   procedure Add (Win    : Window := Standard_Window;
+                  Line   : Line_Position;
+                  Column : Column_Position;
+                  Str    : Attributed_String;
+                  Len    : Integer := -1);
    --  AKA
    --  ALIAS(`mvwaddchstr()')
    --  ALIAS(`mvaddchnstr()')
@@ -411,15 +411,15 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`wborder()',`Border')
    procedure Border
-     (Win                       : in Window := Standard_Window;
-      Left_Side_Symbol          : in Attributed_Character := Default_Character;
-      Right_Side_Symbol         : in Attributed_Character := Default_Character;
-      Top_Side_Symbol           : in Attributed_Character := Default_Character;
-      Bottom_Side_Symbol        : in Attributed_Character := Default_Character;
-      Upper_Left_Corner_Symbol  : in Attributed_Character := Default_Character;
-      Upper_Right_Corner_Symbol : in Attributed_Character := Default_Character;
-      Lower_Left_Corner_Symbol  : in Attributed_Character := Default_Character;
-      Lower_Right_Corner_Symbol : in Attributed_Character := Default_Character
+     (Win                       : Window := Standard_Window;
+      Left_Side_Symbol          : Attributed_Character := Default_Character;
+      Right_Side_Symbol         : Attributed_Character := Default_Character;
+      Top_Side_Symbol           : Attributed_Character := Default_Character;
+      Bottom_Side_Symbol        : Attributed_Character := Default_Character;
+      Upper_Left_Corner_Symbol  : Attributed_Character := Default_Character;
+      Upper_Right_Corner_Symbol : Attributed_Character := Default_Character;
+      Lower_Left_Corner_Symbol  : Attributed_Character := Default_Character;
+      Lower_Right_Corner_Symbol : Attributed_Character := Default_Character
      );
    --  AKA
    --  ALIAS(`border()')
@@ -427,26 +427,26 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`box()',`Box')
    procedure Box
-     (Win               : in Window := Standard_Window;
-      Vertical_Symbol   : in Attributed_Character := Default_Character;
-      Horizontal_Symbol : in Attributed_Character := Default_Character);
+     (Win               : Window := Standard_Window;
+      Vertical_Symbol   : Attributed_Character := Default_Character;
+      Horizontal_Symbol : Attributed_Character := Default_Character);
    --  AKA
    pragma Inline (Box);
 
    --  ANCHOR(`whline()',`Horizontal_Line')
    procedure Horizontal_Line
-     (Win         : in Window := Standard_Window;
-      Line_Size   : in Natural;
-      Line_Symbol : in Attributed_Character := Default_Character);
+     (Win         : Window := Standard_Window;
+      Line_Size   : Natural;
+      Line_Symbol : Attributed_Character := Default_Character);
    --  AKA
    --  ALIAS(`hline()')
    pragma Inline (Horizontal_Line);
 
    --  ANCHOR(`wvline()',`Vertical_Line')
    procedure Vertical_Line
-     (Win         : in Window := Standard_Window;
-      Line_Size   : in Natural;
-      Line_Symbol : in Attributed_Character := Default_Character);
+     (Win         : Window := Standard_Window;
+      Line_Size   : Natural;
+      Line_Symbol : Attributed_Character := Default_Character);
    --  AKA
    --  ALIAS(`vline()')
    pragma Inline (Vertical_Line);
@@ -466,7 +466,7 @@ include(`ACS_Map')dnl
    pragma Inline (Get_Keystroke);
 
    --  ANCHOR(`ungetch()',`Undo_Keystroke')
-   procedure Undo_Keystroke (Key : in Real_Key_Code);
+   procedure Undo_Keystroke (Key : Real_Key_Code);
    --  AKA
    pragma Inline (Undo_Keystroke);
 
@@ -509,9 +509,9 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`wattron()',`Switch_Character_Attribute')
    procedure Switch_Character_Attribute
-     (Win  : in Window := Standard_Window;
-      Attr : in Character_Attribute_Set := Normal_Video;
-      On   : in Boolean := True); --  if False we switch Off.
+     (Win  : Window := Standard_Window;
+      Attr : Character_Attribute_Set := Normal_Video;
+      On   : Boolean := True); --  if False we switch Off.
    --  Switches those Attributes set to true in the list.
    --  AKA
    --  ALIAS(`wattroff()')
@@ -520,49 +520,49 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`wattrset()',`Set_Character_Attributes')
    procedure Set_Character_Attributes
-     (Win   : in Window := Standard_Window;
-      Attr  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First);
+     (Win   : Window := Standard_Window;
+      Attr  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First);
    --  AKA
    --  ALIAS(`attrset()')
    pragma Inline (Set_Character_Attributes);
 
    --  ANCHOR(`wattr_get()',`Get_Character_Attributes')
    function Get_Character_Attribute
-     (Win : in Window := Standard_Window) return Character_Attribute_Set;
+     (Win : Window := Standard_Window) return Character_Attribute_Set;
    --  AKA
    --  ALIAS(`attr_get()')
 
    --  ANCHOR(`wattr_get()',`Get_Character_Attribute')
    function Get_Character_Attribute
-     (Win : in Window := Standard_Window) return Color_Pair;
+     (Win : Window := Standard_Window) return Color_Pair;
    --  AKA
    pragma Inline (Get_Character_Attribute);
 
    --  ANCHOR(`wcolor_set()',`Set_Color')
-   procedure Set_Color (Win  : in Window := Standard_Window;
-                        Pair : in Color_Pair);
+   procedure Set_Color (Win  : Window := Standard_Window;
+                        Pair : Color_Pair);
    --  AKA
    --  ALIAS(`color_set()')
    pragma Inline (Set_Color);
 
    --  ANCHOR(`wchgat()',`Change_Attributes')
    procedure Change_Attributes
-     (Win   : in Window := Standard_Window;
-      Count : in Integer := -1;
-      Attr  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First);
+     (Win   : Window := Standard_Window;
+      Count : Integer := -1;
+      Attr  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First);
    --  AKA
    --  ALIAS(`chgat()')
 
    --  ANCHOR(`mvwchgat()',`Change_Attributes')
    procedure Change_Attributes
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position := Line_Position'First;
-      Column : in Column_Position := Column_Position'First;
-      Count  : in Integer := -1;
-      Attr   : in Character_Attribute_Set := Normal_Video;
-      Color  : in Color_Pair := Color_Pair'First);
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position := Line_Position'First;
+      Column : Column_Position := Column_Position'First;
+      Count  : Integer := -1;
+      Attr   : Character_Attribute_Set := Normal_Video;
+      Color  : Color_Pair := Color_Pair'First);
    --  AKA
    --  ALIAS(`mvchgat()')
    pragma Inline (Change_Attributes);
@@ -584,36 +584,36 @@ include(`ACS_Map')dnl
    --  | Not implemented : typeahead
    --
    --  ANCHOR(`cbreak()',`Set_Cbreak_Mode')
-   procedure Set_Cbreak_Mode (SwitchOn : in Boolean := True);
+   procedure Set_Cbreak_Mode (SwitchOn : Boolean := True);
    --  AKA
    --  ALIAS(`nocbreak()')
    pragma Inline (Set_Cbreak_Mode);
 
    --  ANCHOR(`raw()',`Set_Raw_Mode')
-   procedure Set_Raw_Mode (SwitchOn : in Boolean := True);
+   procedure Set_Raw_Mode (SwitchOn : Boolean := True);
    --  AKA
    --  ALIAS(`noraw()')
    pragma Inline (Set_Raw_Mode);
 
    --  ANCHOR(`echo()',`Set_Echo_Mode')
-   procedure Set_Echo_Mode (SwitchOn : in Boolean := True);
+   procedure Set_Echo_Mode (SwitchOn : Boolean := True);
    --  AKA
    --  ALIAS(`noecho()')
    pragma Inline (Set_Echo_Mode);
 
    --  ANCHOR(`meta()',`Set_Meta_Mode')
-   procedure Set_Meta_Mode (Win      : in Window := Standard_Window;
-                            SwitchOn : in Boolean := True);
+   procedure Set_Meta_Mode (Win      : Window := Standard_Window;
+                            SwitchOn : Boolean := True);
    --  AKA
    pragma Inline (Set_Meta_Mode);
 
    --  ANCHOR(`keypad()',`Set_KeyPad_Mode')
-   procedure Set_KeyPad_Mode (Win      : in Window := Standard_Window;
-                              SwitchOn : in Boolean := True);
+   procedure Set_KeyPad_Mode (Win      : Window := Standard_Window;
+                              SwitchOn : Boolean := True);
    --  AKA
    pragma Inline (Set_KeyPad_Mode);
 
-   function Get_KeyPad_Mode (Win : in Window := Standard_Window)
+   function Get_KeyPad_Mode (Win : Window := Standard_Window)
                              return Boolean;
    --  This has no pendant in C. There you've to look into the WINDOWS
    --  structure to get the value. Bad practice, not repeated in Ada.
@@ -621,38 +621,38 @@ include(`ACS_Map')dnl
    type Half_Delay_Amount is range 1 .. 255;
 
    --  ANCHOR(`halfdelay()',`Half_Delay')
-   procedure Half_Delay (Amount : in Half_Delay_Amount);
+   procedure Half_Delay (Amount : Half_Delay_Amount);
    --  AKA
    pragma Inline (Half_Delay);
 
    --  ANCHOR(`intrflush()',`Set_Flush_On_Interrupt_Mode')
    procedure Set_Flush_On_Interrupt_Mode
-     (Win  : in Window := Standard_Window;
-      Mode : in Boolean := True);
+     (Win  : Window := Standard_Window;
+      Mode : Boolean := True);
    --  AKA
    pragma Inline (Set_Flush_On_Interrupt_Mode);
 
    --  ANCHOR(`qiflush()',`Set_Queue_Interrupt_Mode')
    procedure Set_Queue_Interrupt_Mode
-     (Win   : in Window := Standard_Window;
-      Flush : in Boolean := True);
+     (Win   : Window := Standard_Window;
+      Flush : Boolean := True);
    --  AKA
    --  ALIAS(`noqiflush()')
    pragma Inline (Set_Queue_Interrupt_Mode);
 
    --  ANCHOR(`nodelay()',`Set_NoDelay_Mode')
    procedure Set_NoDelay_Mode
-     (Win  : in Window := Standard_Window;
-      Mode : in Boolean := False);
+     (Win  : Window := Standard_Window;
+      Mode : Boolean := False);
    --  AKA
    pragma Inline (Set_NoDelay_Mode);
 
    type Timeout_Mode is (Blocking, Non_Blocking, Delayed);
 
    --  ANCHOR(`wtimeout()',`Set_Timeout_Mode')
-   procedure Set_Timeout_Mode (Win    : in Window := Standard_Window;
-                               Mode   : in Timeout_Mode;
-                               Amount : in Natural); --  in Milliseconds
+   procedure Set_Timeout_Mode (Win    : Window := Standard_Window;
+                               Mode   : Timeout_Mode;
+                               Amount : Natural); --  in Milliseconds
    --  AKA
    --  ALIAS(`timeout()')
    --  Instead of overloading the semantic of the sign of amount, we
@@ -663,58 +663,58 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`notimeout()',`Set_Escape_Time_Mode')
    procedure Set_Escape_Timer_Mode
-     (Win       : in Window := Standard_Window;
-      Timer_Off : in Boolean := False);
+     (Win       : Window := Standard_Window;
+      Timer_Off : Boolean := False);
    --  AKA
    pragma Inline (Set_Escape_Timer_Mode);
 
    --  MANPAGE(`curs_outopts.3x')
 
    --  ANCHOR(`nl()',`Set_NL_Mode')
-   procedure Set_NL_Mode (SwitchOn : in Boolean := True);
+   procedure Set_NL_Mode (SwitchOn : Boolean := True);
    --  AKA
    --  ALIAS(`nonl()')
    pragma Inline (Set_NL_Mode);
 
    --  ANCHOR(`clearok()',`Clear_On_Next_Update')
    procedure Clear_On_Next_Update
-     (Win      : in Window := Standard_Window;
-      Do_Clear : in Boolean := True);
+     (Win      : Window := Standard_Window;
+      Do_Clear : Boolean := True);
    --  AKA
    pragma Inline (Clear_On_Next_Update);
 
    --  ANCHOR(`idlok()',`Use_Insert_Delete_Line')
    procedure Use_Insert_Delete_Line
-     (Win    : in Window := Standard_Window;
-      Do_Idl : in Boolean := True);
+     (Win    : Window := Standard_Window;
+      Do_Idl : Boolean := True);
    --  AKA
    pragma Inline (Use_Insert_Delete_Line);
 
    --  ANCHOR(`idcok()',`Use_Insert_Delete_Character')
    procedure Use_Insert_Delete_Character
-     (Win    : in Window := Standard_Window;
-      Do_Idc : in Boolean := True);
+     (Win    : Window := Standard_Window;
+      Do_Idc : Boolean := True);
    --  AKA
    pragma Inline (Use_Insert_Delete_Character);
 
    --  ANCHOR(`leaveok()',`Leave_Cursor_After_Update')
    procedure Leave_Cursor_After_Update
-     (Win      : in Window := Standard_Window;
-      Do_Leave : in Boolean := True);
+     (Win      : Window := Standard_Window;
+      Do_Leave : Boolean := True);
    --  AKA
    pragma Inline (Leave_Cursor_After_Update);
 
    --  ANCHOR(`immedok()',`Immediate_Update_Mode')
    procedure Immediate_Update_Mode
-     (Win  : in Window := Standard_Window;
-      Mode : in Boolean := False);
+     (Win  : Window := Standard_Window;
+      Mode : Boolean := False);
    --  AKA
    pragma Inline (Immediate_Update_Mode);
 
    --  ANCHOR(`scrollok()',`Allow_Scrolling')
    procedure Allow_Scrolling
-     (Win  : in Window := Standard_Window;
-      Mode : in Boolean := False);
+     (Win  : Window := Standard_Window;
+      Mode : Boolean := False);
    --  AKA
    pragma Inline (Allow_Scrolling);
 
@@ -724,9 +724,9 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`wsetscrreg()',`Set_Scroll_Region')
    procedure Set_Scroll_Region
-     (Win         : in Window := Standard_Window;
-      Top_Line    : in Line_Position;
-      Bottom_Line : in Line_Position);
+     (Win         : Window := Standard_Window;
+      Top_Line    : Line_Position;
+      Bottom_Line : Line_Position);
    --  AKA
    --  ALIAS(`setscrreg()')
    pragma Inline (Set_Scroll_Region);
@@ -739,7 +739,7 @@ include(`ACS_Map')dnl
    pragma Inline (Update_Screen);
 
    --  ANCHOR(`wrefresh()',`Refresh')
-   procedure Refresh (Win : in Window := Standard_Window);
+   procedure Refresh (Win : Window := Standard_Window);
    --  AKA
    --  There is an overloaded Refresh for Pads.
    --  The Inline pragma appears there
@@ -747,47 +747,47 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`wnoutrefresh()',`Refresh_Without_Update')
    procedure Refresh_Without_Update
-     (Win : in Window := Standard_Window);
+     (Win : Window := Standard_Window);
    --  AKA
    --  There is an overloaded Refresh_Without_Update for Pads.
    --  The Inline pragma appears there
 
    --  ANCHOR(`redrawwin()',`Redraw')
-   procedure Redraw (Win : in Window := Standard_Window);
+   procedure Redraw (Win : Window := Standard_Window);
    --  AKA
 
    --  ANCHOR(`wredrawln()',`Redraw')
-   procedure Redraw (Win        : in Window := Standard_Window;
-                     Begin_Line : in Line_Position;
-                     Line_Count : in Positive);
+   procedure Redraw (Win        : Window := Standard_Window;
+                     Begin_Line : Line_Position;
+                     Line_Count : Positive);
    --  AKA
    pragma Inline (Redraw);
 
    --  MANPAGE(`curs_clear.3x')
 
    --  ANCHOR(`werase()',`Erase')
-   procedure Erase (Win : in Window := Standard_Window);
+   procedure Erase (Win : Window := Standard_Window);
    --  AKA
    --  ALIAS(`erase()')
    pragma Inline (Erase);
 
    --  ANCHOR(`wclear()',`Clear')
    procedure Clear
-     (Win : in Window := Standard_Window);
+     (Win : Window := Standard_Window);
    --  AKA
    --  ALIAS(`clear()')
    pragma Inline (Clear);
 
    --  ANCHOR(`wclrtobot()',`Clear_To_End_Of_Screen')
    procedure Clear_To_End_Of_Screen
-     (Win : in Window := Standard_Window);
+     (Win : Window := Standard_Window);
    --  AKA
    --  ALIAS(`clrtobot()')
    pragma Inline (Clear_To_End_Of_Screen);
 
    --  ANCHOR(`wclrtoeol()',`Clear_To_End_Of_Line')
    procedure Clear_To_End_Of_Line
-     (Win : in Window := Standard_Window);
+     (Win : Window := Standard_Window);
    --  AKA
    --  ALIAS(`clrtoeol()')
    pragma Inline (Clear_To_End_Of_Line);
@@ -799,16 +799,16 @@ include(`ACS_Map')dnl
    --  because in C it is common to see bkgdset(A_BOLD) or
    --  bkgdset(COLOR_PAIR(n))
    procedure Set_Background
-     (Win : in Window := Standard_Window;
-      Ch  : in Attributed_Character);
+     (Win : Window := Standard_Window;
+      Ch  : Attributed_Character);
    --  AKA
    --  ALIAS(`bkgdset()')
    pragma Inline (Set_Background);
 
    --  ANCHOR(`wbkgd()',`Change_Background')
    procedure Change_Background
-     (Win : in Window := Standard_Window;
-      Ch  : in Attributed_Character);
+     (Win : Window := Standard_Window;
+      Ch  : Attributed_Character);
    --  AKA
    --  ALIAS(`bkgd()')
    pragma Inline (Change_Background);
@@ -824,26 +824,26 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_touch.3x')
 
    --  ANCHOR(`untouchwin()',`Untouch')
-   procedure Untouch (Win : in Window := Standard_Window);
+   procedure Untouch (Win : Window := Standard_Window);
    --  AKA
    pragma Inline (Untouch);
 
    --  ANCHOR(`touchwin()',`Touch')
-   procedure Touch (Win : in Window := Standard_Window);
+   procedure Touch (Win : Window := Standard_Window);
    --  AKA
 
    --  ANCHOR(`touchline()',`Touch')
-   procedure Touch (Win   : in Window := Standard_Window;
-                    Start : in Line_Position;
-                    Count : in Positive);
+   procedure Touch (Win   : Window := Standard_Window;
+                    Start : Line_Position;
+                    Count : Positive);
    --  AKA
    pragma Inline (Touch);
 
    --  ANCHOR(`wtouchln()',`Change_Line_Status')
-   procedure Change_Lines_Status (Win   : in Window := Standard_Window;
-                                  Start : in Line_Position;
-                                  Count : in Positive;
-                                  State : in Boolean);
+   procedure Change_Lines_Status (Win   : Window := Standard_Window;
+                                  Start : Line_Position;
+                                  Count : Positive;
+                                  State : Boolean);
    --  AKA
    pragma Inline (Change_Lines_Status);
 
@@ -861,27 +861,27 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`copywin()',`Copy')
    procedure Copy
-     (Source_Window            : in Window;
-      Destination_Window       : in Window;
-      Source_Top_Row           : in Line_Position;
-      Source_Left_Column       : in Column_Position;
-      Destination_Top_Row      : in Line_Position;
-      Destination_Left_Column  : in Column_Position;
-      Destination_Bottom_Row   : in Line_Position;
-      Destination_Right_Column : in Column_Position;
-      Non_Destructive_Mode     : in Boolean := True);
+     (Source_Window            : Window;
+      Destination_Window       : Window;
+      Source_Top_Row           : Line_Position;
+      Source_Left_Column       : Column_Position;
+      Destination_Top_Row      : Line_Position;
+      Destination_Left_Column  : Column_Position;
+      Destination_Bottom_Row   : Line_Position;
+      Destination_Right_Column : Column_Position;
+      Non_Destructive_Mode     : Boolean := True);
    --  AKA
    pragma Inline (Copy);
 
    --  ANCHOR(`overwrite()',`Overwrite')
-   procedure Overwrite (Source_Window      : in Window;
-                        Destination_Window : in Window);
+   procedure Overwrite (Source_Window      : Window;
+                        Destination_Window : Window);
    --  AKA
    pragma Inline (Overwrite);
 
    --  ANCHOR(`overlay()',`Overlay')
-   procedure Overlay (Source_Window      : in Window;
-                      Destination_Window : in Window);
+   procedure Overlay (Source_Window      : Window;
+                      Destination_Window : Window);
    --  AKA
    pragma Inline (Overlay);
 
@@ -889,20 +889,20 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`winsdelln()',`Insert_Delete_Lines')
    procedure Insert_Delete_Lines
-     (Win   : in Window  := Standard_Window;
-      Lines : in Integer := 1); --  default is to insert one line above
+     (Win   : Window  := Standard_Window;
+      Lines : Integer := 1); --  default is to insert one line above
    --  AKA
    --  ALIAS(`insdelln()')
    pragma Inline (Insert_Delete_Lines);
 
    --  ANCHOR(`wdeleteln()',`Delete_Line')
-   procedure Delete_Line (Win : in Window := Standard_Window);
+   procedure Delete_Line (Win : Window := Standard_Window);
    --  AKA
    --  ALIAS(`deleteln()')
    pragma Inline (Delete_Line);
 
    --  ANCHOR(`winsertln()',`Insert_Line')
-   procedure Insert_Line (Win : in Window := Standard_Window);
+   procedure Insert_Line (Win : Window := Standard_Window);
    --  AKA
    --  ALIAS(`insertln()')
    pragma Inline (Insert_Line);
@@ -911,7 +911,7 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`getmaxyx()',`Get_Size')
    procedure Get_Size
-     (Win               : in Window := Standard_Window;
+     (Win               : Window := Standard_Window;
       Number_Of_Lines   : out Line_Count;
       Number_Of_Columns : out Column_Count);
    --  AKA
@@ -919,7 +919,7 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`getbegyx()',`Get_Window_Position')
    procedure Get_Window_Position
-     (Win             : in Window := Standard_Window;
+     (Win             : Window := Standard_Window;
       Top_Left_Line   : out Line_Position;
       Top_Left_Column : out Column_Position);
    --  AKA
@@ -927,7 +927,7 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`getyx()',`Get_Cursor_Position')
    procedure Get_Cursor_Position
-     (Win    : in  Window := Standard_Window;
+     (Win    : Window := Standard_Window;
       Line   : out Line_Position;
       Column : out Column_Position);
    --  AKA
@@ -935,7 +935,7 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`getparyx()',`Get_Origin_Relative_To_Parent')
    procedure Get_Origin_Relative_To_Parent
-     (Win                : in  Window;
+     (Win                : Window;
       Top_Left_Line      : out Line_Position;
       Top_Left_Column    : out Column_Position;
       Is_Not_A_Subwindow : out Boolean);
@@ -964,44 +964,44 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`prefresh()',`Refresh')
    procedure Refresh
-     (Pad                      : in Window;
-      Source_Top_Row           : in Line_Position;
-      Source_Left_Column       : in Column_Position;
-      Destination_Top_Row      : in Line_Position;
-      Destination_Left_Column  : in Column_Position;
-      Destination_Bottom_Row   : in Line_Position;
-      Destination_Right_Column : in Column_Position);
+     (Pad                      : Window;
+      Source_Top_Row           : Line_Position;
+      Source_Left_Column       : Column_Position;
+      Destination_Top_Row      : Line_Position;
+      Destination_Left_Column  : Column_Position;
+      Destination_Bottom_Row   : Line_Position;
+      Destination_Right_Column : Column_Position);
    --  AKA
    pragma Inline (Refresh);
 
    --  ANCHOR(`pnoutrefresh()',`Refresh_Without_Update')
    procedure Refresh_Without_Update
-     (Pad                      : in Window;
-      Source_Top_Row           : in Line_Position;
-      Source_Left_Column       : in Column_Position;
-      Destination_Top_Row      : in Line_Position;
-      Destination_Left_Column  : in Column_Position;
-      Destination_Bottom_Row   : in Line_Position;
-      Destination_Right_Column : in Column_Position);
+     (Pad                      : Window;
+      Source_Top_Row           : Line_Position;
+      Source_Left_Column       : Column_Position;
+      Destination_Top_Row      : Line_Position;
+      Destination_Left_Column  : Column_Position;
+      Destination_Bottom_Row   : Line_Position;
+      Destination_Right_Column : Column_Position);
    --  AKA
    pragma Inline (Refresh_Without_Update);
 
    --  ANCHOR(`pechochar()',`Add_Character_To_Pad_And_Echo_It')
    procedure Add_Character_To_Pad_And_Echo_It
-     (Pad : in Window;
-      Ch  : in Attributed_Character);
+     (Pad : Window;
+      Ch  : Attributed_Character);
    --  AKA
 
    procedure Add_Character_To_Pad_And_Echo_It
-     (Pad : in Window;
-      Ch  : in Character);
+     (Pad : Window;
+      Ch  : Character);
    pragma Inline (Add_Character_To_Pad_And_Echo_It);
 
    --  MANPAGE(`curs_scroll.3x')
 
    --  ANCHOR(`wscrl()',`Scroll')
-   procedure Scroll (Win    : in Window  := Standard_Window;
-                     Amount : in Integer := 1);
+   procedure Scroll (Win    : Window  := Standard_Window;
+                     Amount : Integer := 1);
    --  AKA
    --  ALIAS(`scroll()')
    --  ALIAS(`scrl()')
@@ -1010,15 +1010,15 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_delch.3x')
 
    --  ANCHOR(`wdelch()',`Delete_Character')
-   procedure Delete_Character (Win : in Window := Standard_Window);
+   procedure Delete_Character (Win : Window := Standard_Window);
    --  AKA
    --  ALIAS(`delch()')
 
    --  ANCHOR(`mvwdelch()',`Delete_Character')
    procedure Delete_Character
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position);
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position);
    --  AKA
    --  ALIAS(`mvdelch()')
    pragma Inline (Delete_Character);
@@ -1043,36 +1043,36 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_insch.3x')
 
    --  ANCHOR(`winsch()',`Insert')
-   procedure Insert (Win : in Window := Standard_Window;
-                     Ch  : in Attributed_Character);
+   procedure Insert (Win : Window := Standard_Window;
+                     Ch  : Attributed_Character);
    --  AKA
    --  ALIAS(`insch()')
 
    --  ANCHOR(`mvwinsch()',`Insert')
-   procedure Insert (Win    : in Window := Standard_Window;
-                     Line   : in Line_Position;
-                     Column : in Column_Position;
-                     Ch     : in Attributed_Character);
+   procedure Insert (Win    : Window := Standard_Window;
+                     Line   : Line_Position;
+                     Column : Column_Position;
+                     Ch     : Attributed_Character);
    --  AKA
    --  ALIAS(`mvinsch()')
 
    --  MANPAGE(`curs_insstr.3x')
 
    --  ANCHOR(`winsnstr()',`Insert')
-   procedure Insert (Win : in Window := Standard_Window;
-                     Str : in String;
-                     Len : in Integer := -1);
+   procedure Insert (Win : Window := Standard_Window;
+                     Str : String;
+                     Len : Integer := -1);
    --  AKA
    --  ALIAS(`winsstr()')
    --  ALIAS(`insnstr()')
    --  ALIAS(`insstr()')
 
    --  ANCHOR(`mvwinsnstr()',`Insert')
-   procedure Insert (Win    : in Window := Standard_Window;
-                     Line   : in Line_Position;
-                     Column : in Column_Position;
-                     Str    : in String;
-                     Len    : in Integer := -1);
+   procedure Insert (Win    : Window := Standard_Window;
+                     Line   : Line_Position;
+                     Column : Column_Position;
+                     Str    : String;
+                     Len    : Integer := -1);
    --  AKA
    --  ALIAS(`mvwinsstr()')
    --  ALIAS(`mvinsnstr()')
@@ -1082,20 +1082,20 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_instr.3x')
 
    --  ANCHOR(`winnstr()',`Peek')
-   procedure Peek (Win : in  Window := Standard_Window;
+   procedure Peek (Win : Window := Standard_Window;
                    Str : out String;
-                   Len : in  Integer := -1);
+                   Len : Integer := -1);
    --  AKA
    --  ALIAS(`winstr()')
    --  ALIAS(`innstr()')
    --  ALIAS(`instr()')
 
    --  ANCHOR(`mvwinnstr()',`Peek')
-   procedure Peek (Win    : in  Window := Standard_Window;
-                   Line   : in  Line_Position;
-                   Column : in  Column_Position;
+   procedure Peek (Win    : Window := Standard_Window;
+                   Line   : Line_Position;
+                   Column : Column_Position;
                    Str    : out String;
-                   Len    : in  Integer := -1);
+                   Len    : Integer := -1);
    --  AKA
    --  ALIAS(`mvwinstr()')
    --  ALIAS(`mvinnstr()')
@@ -1104,20 +1104,20 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_inchstr.3x')
 
    --  ANCHOR(`winchnstr()',`Peek')
-   procedure Peek (Win : in  Window := Standard_Window;
+   procedure Peek (Win : Window := Standard_Window;
                    Str : out Attributed_String;
-                   Len : in  Integer := -1);
+                   Len : Integer := -1);
    --  AKA
    --  ALIAS(`winchstr()')
    --  ALIAS(`inchnstr()')
    --  ALIAS(`inchstr()')
 
    --  ANCHOR(`mvwinchnstr()',`Peek')
-   procedure Peek (Win    : in  Window := Standard_Window;
-                   Line   : in  Line_Position;
-                   Column : in  Column_Position;
+   procedure Peek (Win    : Window := Standard_Window;
+                   Line   : Line_Position;
+                   Column : Column_Position;
                    Str    : out Attributed_String;
-                   Len    : in  Integer := -1);
+                   Len    : Integer := -1);
    --  AKA
    --  ALIAS(`mvwinchstr()')
    --  ALIAS(`mvinchnstr()')
@@ -1127,9 +1127,9 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_getstr.3x')
 
    --  ANCHOR(`wgetnstr()',`Get')
-   procedure Get (Win : in  Window := Standard_Window;
+   procedure Get (Win : Window := Standard_Window;
                   Str : out String;
-                  Len : in  Integer := -1);
+                  Len : Integer := -1);
    --  AKA
    --  ALIAS(`wgetstr()')
    --  ALIAS(`getnstr()')
@@ -1138,11 +1138,11 @@ include(`ACS_Map')dnl
    --  overflows.
 
    --  ANCHOR(`mvwgetnstr()',`Get')
-   procedure Get (Win    : in  Window := Standard_Window;
-                  Line   : in  Line_Position;
-                  Column : in  Column_Position;
+   procedure Get (Win    : Window := Standard_Window;
+                  Line   : Line_Position;
+                  Column : Column_Position;
                   Str    : out String;
-                  Len    : in  Integer := -1);
+                  Len    : Integer := -1);
    --  AKA
    --  ALIAS(`mvwgetstr()')
    --  ALIAS(`mvgetnstr()')
@@ -1162,14 +1162,14 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`slk_init()',`Init_Soft_Label_Keys')
    procedure Init_Soft_Label_Keys
-     (Format : in Soft_Label_Key_Format := Three_Two_Three);
+     (Format : Soft_Label_Key_Format := Three_Two_Three);
    --  AKA
    pragma Inline (Init_Soft_Label_Keys);
 
    --  ANCHOR(`slk_set()',`Set_Soft_Label_Key')
-   procedure Set_Soft_Label_Key (Label : in Label_Number;
-                                 Text  : in String;
-                                 Fmt   : in Label_Justification := Left);
+   procedure Set_Soft_Label_Key (Label : Label_Number;
+                                 Text  : String;
+                                 Fmt   : Label_Justification := Left);
    --  AKA
    --  We don't inline this procedure
 
@@ -1184,12 +1184,12 @@ include(`ACS_Map')dnl
    pragma Inline (Refresh_Soft_Label_Keys_Without_Update);
 
    --  ANCHOR(`slk_label()',`Get_Soft_Label_Key')
-   procedure Get_Soft_Label_Key (Label : in Label_Number;
+   procedure Get_Soft_Label_Key (Label : Label_Number;
                                  Text  : out String);
    --  AKA
 
    --  ANCHOR(`slk_label()',`Get_Soft_Label_Key')
-   function Get_Soft_Label_Key (Label : in Label_Number) return String;
+   function Get_Soft_Label_Key (Label : Label_Number) return String;
    --  AKA
    --  Same as function
    pragma Inline (Get_Soft_Label_Key);
@@ -1211,16 +1211,16 @@ include(`ACS_Map')dnl
 
    --  ANCHOR(`slk_attron()',`Switch_Soft_Label_Key_Attributes')
    procedure Switch_Soft_Label_Key_Attributes
-     (Attr : in Character_Attribute_Set;
-      On   : in Boolean := True);
+     (Attr : Character_Attribute_Set;
+      On   : Boolean := True);
    --  AKA
    --  ALIAS(`slk_attroff()')
    pragma Inline (Switch_Soft_Label_Key_Attributes);
 
    --  ANCHOR(`slk_attrset()',`Set_Soft_Label_Key_Attributes')
    procedure Set_Soft_Label_Key_Attributes
-     (Attr  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First);
+     (Attr  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First);
    --  AKA
    pragma Inline (Set_Soft_Label_Key_Attributes);
 
@@ -1234,7 +1234,7 @@ include(`ACS_Map')dnl
    pragma Inline (Get_Soft_Label_Key_Attributes);
 
    --  ANCHOR(`slk_color()',`Set_Soft_Label_Key_Color')
-   procedure Set_Soft_Label_Key_Color (Pair : in Color_Pair);
+   procedure Set_Soft_Label_Key_Color (Pair : Color_Pair);
    --  AKA
    pragma Inline (Set_Soft_Label_Key_Color);
 
@@ -1244,16 +1244,16 @@ include(`ACS_Map')dnl
    --  MANPAGE(`keyok.3x')
 
    --  ANCHOR(`keyok()',`Enable_Key')
-   procedure Enable_Key (Key    : in Special_Key_Code;
-                         Enable : in Boolean := True);
+   procedure Enable_Key (Key    : Special_Key_Code;
+                         Enable : Boolean := True);
    --  AKA
    pragma Inline (Enable_Key);
 
    --  MANPAGE(`define_key.3x')
 
    --  ANCHOR(`define_key()',`Define_Key')
-   procedure Define_Key (Definition : in String;
-                         Key        : in Special_Key_Code);
+   procedure Define_Key (Definition : String;
+                         Key        : Special_Key_Code);
    --  AKA
    pragma Inline (Define_Key);
 
@@ -1264,30 +1264,30 @@ include(`ACS_Map')dnl
    --
 
    --  ANCHOR(`keyname()',`Key_Name')
-   procedure Key_Name (Key  : in  Real_Key_Code;
+   procedure Key_Name (Key  : Real_Key_Code;
                        Name : out String);
    --  AKA
    --  The external name for a real keystroke.
 
    --  ANCHOR(`keyname()',`Key_Name')
-   function Key_Name (Key  : in  Real_Key_Code) return String;
+   function Key_Name (Key  : Real_Key_Code) return String;
    --  AKA
    --  Same as function
    --  We don't inline this routine
 
    --  ANCHOR(`unctrl()',`Un_Control')
-   procedure Un_Control (Ch  : in Attributed_Character;
+   procedure Un_Control (Ch  : Attributed_Character;
                          Str : out String);
    --  AKA
 
    --  ANCHOR(`unctrl()',`Un_Control')
-   function Un_Control (Ch  : in Attributed_Character) return String;
+   function Un_Control (Ch  : Attributed_Character) return String;
    --  AKA
    --  Same as function
    pragma Inline (Un_Control);
 
    --  ANCHOR(`delay_output()',`Delay_Output')
-   procedure Delay_Output (Msecs : in Natural);
+   procedure Delay_Output (Msecs : Natural);
    --  AKA
    pragma Inline (Delay_Output);
 
@@ -1362,14 +1362,14 @@ include(`ACS_Map')dnl
    pragma Import (C, Start_Color, "start_color");
 
    --  ANCHOR(`init_pair()',`Init_Pair')
-   procedure Init_Pair (Pair : in Redefinable_Color_Pair;
-                        Fore : in Color_Number;
-                        Back : in Color_Number);
+   procedure Init_Pair (Pair : Redefinable_Color_Pair;
+                        Fore : Color_Number;
+                        Back : Color_Number);
    --  AKA
    pragma Inline (Init_Pair);
 
    --  ANCHOR(`pair_content()',`Pair_Content')
-   procedure Pair_Content (Pair : in Color_Pair;
+   procedure Pair_Content (Pair : Color_Pair;
                            Fore : out Color_Number;
                            Back : out Color_Number);
    --  AKA
@@ -1381,10 +1381,10 @@ include(`ACS_Map')dnl
    pragma Inline (Has_Colors);
 
    --  ANCHOR(`init_color()',`Init_Color')
-   procedure Init_Color (Color : in Color_Number;
-                         Red   : in RGB_Value;
-                         Green : in RGB_Value;
-                         Blue  : in RGB_Value);
+   procedure Init_Color (Color : Color_Number;
+                         Red   : RGB_Value;
+                         Green : RGB_Value;
+                         Blue  : RGB_Value);
    --  AKA
    pragma Inline (Init_Color);
 
@@ -1394,7 +1394,7 @@ include(`ACS_Map')dnl
    pragma Inline (Can_Change_Color);
 
    --  ANCHOR(`color_content()',`Color_Content')
-   procedure Color_Content (Color : in  Color_Number;
+   procedure Color_Content (Color : Color_Number;
                             Red   : out RGB_Value;
                             Green : out RGB_Value;
                             Blue  : out RGB_Value);
@@ -1407,13 +1407,13 @@ include(`ACS_Map')dnl
    type Curses_Mode is (Curses, Shell);
 
    --  ANCHOR(`def_prog_mode()',`Save_Curses_Mode')
-   procedure Save_Curses_Mode (Mode : in Curses_Mode);
+   procedure Save_Curses_Mode (Mode : Curses_Mode);
    --  AKA
    --  ALIAS(`def_shell_mode()')
    pragma Inline (Save_Curses_Mode);
 
    --  ANCHOR(`reset_prog_mode()',`Reset_Curses_Mode')
-   procedure Reset_Curses_Mode (Mode : in Curses_Mode);
+   procedure Reset_Curses_Mode (Mode : Curses_Mode);
    --  AKA
    --  ALIAS(`reset_shell_mode()')
    pragma Inline (Reset_Curses_Mode);
@@ -1437,8 +1437,8 @@ include(`ACS_Map')dnl
    --        and -1 otherwise.
 
    --  ANCHOR(`ripoffline()',`Rip_Off_Lines')
-   procedure Rip_Off_Lines (Lines : in Integer;
-                            Proc  : in Stdscr_Init_Proc);
+   procedure Rip_Off_Lines (Lines : Integer;
+                            Proc  : Stdscr_Init_Proc);
    --  AKA
    --  N.B.: to be more precise, this uses a ncurses specific enhancement of
    --        ripoffline(), in which the Lines argument absolute value is the
@@ -1454,7 +1454,7 @@ include(`ACS_Map')dnl
    pragma Inline (Set_Cursor_Visibility);
 
    --  ANCHOR(`napms()',`Nap_Milli_Seconds')
-   procedure Nap_Milli_Seconds (Ms : in Natural);
+   procedure Nap_Milli_Seconds (Ms : Natural);
    --  AKA
    pragma Inline (Nap_Milli_Seconds);
 
@@ -1463,10 +1463,10 @@ include(`ACS_Map')dnl
    --  |=====================================================================
    type Transform_Direction is (From_Screen, To_Screen);
    procedure Transform_Coordinates
-     (W      : in Window := Standard_Window;
+     (W      : Window := Standard_Window;
       Line   : in out Line_Position;
       Column : in out Column_Position;
-      Dir    : in Transform_Direction := From_Screen);
+      Dir    : Transform_Direction := From_Screen);
    --  This procedure transforms screen coordinates into coordinates relative
    --  to the window and vice versa, depending on the Dir parameter.
    --  Screen coordinates are the position informations on the physical device.
@@ -1507,23 +1507,23 @@ include(`ACS_Map')dnl
    --  MANPAGE(`curs_scr_dump.3x')
 
    --  ANCHOR(`scr_dump()',`Screen_Dump_To_File')
-   procedure Screen_Dump_To_File (Filename : in String);
+   procedure Screen_Dump_To_File (Filename : String);
    --  AKA
 
    --  ANCHOR(`scr_restore()',`Screen_Restore_From_File')
-   procedure Screen_Restore_From_File (Filename : in String);
+   procedure Screen_Restore_From_File (Filename : String);
    --  AKA
 
    --  ANCHOR(`scr_init()',`Screen_Init_From_File')
-   procedure Screen_Init_From_File (Filename : in String);
+   procedure Screen_Init_From_File (Filename : String);
    --  AKA
 
    --  ANCHOR(`scr_set()',`Screen_Set_File')
-   procedure Screen_Set_File (Filename : in String);
+   procedure Screen_Set_File (Filename : String);
    --  AKA
 
    --  MANPAGE(`curs_print.3x')
-   --  Not implemented:  mcprint
+   --  Not implemented: mcprint
 
    --  MANPAGE(`curs_printw.3x')
    --  Not implemented: printw,  wprintw, mvprintw, mvwprintw, vwprintw,

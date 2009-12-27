@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.12 $
+--  $Revision: 1.13 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  |
@@ -52,8 +52,8 @@ package body Terminal_Interface.Curses.Forms.Form_User_Data is
    --  |
    --  |
    --  |
-   procedure Set_User_Data (Frm  : in Form;
-                            Data : in User_Access)
+   procedure Set_User_Data (Frm  : Form;
+                            Data : User_Access)
    is
       function Set_Form_Userptr (Frm  : Form;
                                  Data : User_Access)  return C_Int;
@@ -68,7 +68,7 @@ package body Terminal_Interface.Curses.Forms.Form_User_Data is
    --  |
    --  |
    --  |
-   function Get_User_Data (Frm  : in  Form) return User_Access
+   function Get_User_Data (Frm  : Form) return User_Access
    is
       function Form_Userptr (Frm : Form) return User_Access;
       pragma Import (C, Form_Userptr, "form_userptr");
@@ -76,7 +76,7 @@ package body Terminal_Interface.Curses.Forms.Form_User_Data is
       return Form_Userptr (Frm);
    end Get_User_Data;
 
-   procedure Get_User_Data (Frm  : in  Form;
+   procedure Get_User_Data (Frm  : Form;
                             Data : out User_Access)
    is
    begin

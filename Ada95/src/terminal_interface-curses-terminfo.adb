@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2000,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.5 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.6 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 
@@ -47,9 +47,9 @@ with Ada.Unchecked_Conversion;
 
 package body Terminal_Interface.Curses.Terminfo is
 
-   function Is_MinusOne_Pointer (P : in chars_ptr) return Boolean;
+   function Is_MinusOne_Pointer (P : chars_ptr) return Boolean;
 
-   function Is_MinusOne_Pointer (P : in chars_ptr) return Boolean is
+   function Is_MinusOne_Pointer (P : chars_ptr) return Boolean is
       type Weird_Address is new System.Storage_Elements.Integer_Address;
       Invalid_Pointer : constant Weird_Address := -1;
       function To_Weird is new Ada.Unchecked_Conversion

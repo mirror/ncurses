@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.13 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.14 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -81,8 +81,8 @@ package body Sample.Function_Key_Setting is
 
    Top_Of_Stack : Env_Ptr := null;
 
-   procedure Push_Environment (Key   : in String;
-                               Reset : in Boolean := True)
+   procedure Push_Environment (Key   : String;
+                               Reset : Boolean := True)
    is
       P : constant Env_Ptr := new Key_Environment (Number_Of_Keys);
    begin
@@ -160,7 +160,7 @@ package body Sample.Function_Key_Setting is
       end if;
    end Find_Context;
 
-   procedure Notepad_To_Context (Pan : in Panel)
+   procedure Notepad_To_Context (Pan : Panel)
    is
       W : Window;
    begin

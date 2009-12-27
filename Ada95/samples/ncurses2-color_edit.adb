@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.5 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.6 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -171,7 +171,7 @@ begin
             Set_Character_Attributes;
          end if;
          Set_Character_Attributes;
-         Add (ch => ')');
+         Add (Ch => ')');
       end loop;
       Add (Line => Line_Position (Number_Of_Colors + 3), Column => 0,
            Str => "Use up/down to select a color, left/right to change " &

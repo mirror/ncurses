@@ -9,7 +9,7 @@ include(M4MACRO)----------------------------------------------------------------
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -37,8 +37,8 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.5 $
---  $Date: 2008/07/26 18:46:32 $
+--  $Revision: 1.6 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -61,7 +61,7 @@ package body Terminal_Interface.Curses is
    pragma Convention (C, chtype_array);
 
 ------------------------------------------------------------------------------
-   function Key_Name (Key : in Real_Key_Code) return String
+   function Key_Name (Key : Real_Key_Code) return String
    is
       function Keyname (K : C_Int) return chars_ptr;
       pragma Import (C, Keyname, "keyname");
@@ -89,7 +89,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Key_Name;
 
-   procedure Key_Name (Key  : in  Real_Key_Code;
+   procedure Key_Name (Key  :  Real_Key_Code;
                        Name : out String)
    is
    begin
@@ -132,9 +132,9 @@ package body Terminal_Interface.Curses is
       end if;
    end Is_End_Window;
 ------------------------------------------------------------------------------
-   procedure Move_Cursor (Win    : in Window := Standard_Window;
-                          Line   : in Line_Position;
-                          Column : in Column_Position)
+   procedure Move_Cursor (Win    : Window := Standard_Window;
+                          Line   : Line_Position;
+                          Column : Column_Position)
    is
       function Wmove (Win    : Window;
                       Line   : C_Int;
@@ -147,8 +147,8 @@ package body Terminal_Interface.Curses is
       end if;
    end Move_Cursor;
 ------------------------------------------------------------------------------
-   procedure Add (Win : in Window := Standard_Window;
-                  Ch  : in Attributed_Character)
+   procedure Add (Win : Window := Standard_Window;
+                  Ch  : Attributed_Character)
    is
       function Waddch (W  : Window;
                        Ch : C_Chtype) return C_Int;
@@ -159,8 +159,8 @@ package body Terminal_Interface.Curses is
       end if;
    end Add;
 
-   procedure Add (Win : in Window := Standard_Window;
-                  Ch  : in Character)
+   procedure Add (Win : Window := Standard_Window;
+                  Ch  : Character)
    is
    begin
       Add (Win,
@@ -170,10 +170,10 @@ package body Terminal_Interface.Curses is
    end Add;
 
    procedure Add
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position;
-      Ch     : in Attributed_Character)
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position;
+      Ch     : Attributed_Character)
    is
       function mvwaddch (W  : Window;
                          Y  : C_Int;
@@ -189,10 +189,10 @@ package body Terminal_Interface.Curses is
    end Add;
 
    procedure Add
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position;
-      Ch     : in Character)
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position;
+      Ch     : Character)
    is
    begin
       Add (Win,
@@ -204,8 +204,8 @@ package body Terminal_Interface.Curses is
    end Add;
 
    procedure Add_With_Immediate_Echo
-     (Win : in Window := Standard_Window;
-      Ch  : in Attributed_Character)
+     (Win : Window := Standard_Window;
+      Ch  : Attributed_Character)
    is
       function Wechochar (W  : Window;
                           Ch : C_Chtype) return C_Int;
@@ -217,8 +217,8 @@ package body Terminal_Interface.Curses is
    end Add_With_Immediate_Echo;
 
    procedure Add_With_Immediate_Echo
-     (Win : in Window := Standard_Window;
-      Ch  : in Character)
+     (Win : Window := Standard_Window;
+      Ch  : Character)
    is
    begin
       Add_With_Immediate_Echo
@@ -331,9 +331,9 @@ package body Terminal_Interface.Curses is
       return W;
    end Duplicate;
 
-   procedure Move_Window (Win    : in Window;
-                          Line   : in Line_Position;
-                          Column : in Column_Position)
+   procedure Move_Window (Win    : Window;
+                          Line   : Line_Position;
+                          Column : Column_Position)
    is
       function Mvwin (Win    : Window;
                       Line   : C_Int;
@@ -345,9 +345,9 @@ package body Terminal_Interface.Curses is
       end if;
    end Move_Window;
 
-   procedure Move_Derived_Window (Win    : in Window;
-                                  Line   : in Line_Position;
-                                  Column : in Column_Position)
+   procedure Move_Derived_Window (Win    : Window;
+                                  Line   : Line_Position;
+                                  Column : Column_Position)
    is
       function Mvderwin (Win    : Window;
                          Line   : C_Int;
@@ -359,8 +359,8 @@ package body Terminal_Interface.Curses is
       end if;
    end Move_Derived_Window;
 
-   procedure Set_Synch_Mode (Win  : in Window  := Standard_Window;
-                             Mode : in Boolean := False)
+   procedure Set_Synch_Mode (Win  : Window  := Standard_Window;
+                             Mode : Boolean := False)
    is
       function Syncok (Win  : Window;
                        Mode : Curses_Bool) return C_Int;
@@ -371,9 +371,9 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_Synch_Mode;
 ------------------------------------------------------------------------------
-   procedure Add (Win : in Window := Standard_Window;
-                  Str : in String;
-                  Len : in Integer := -1)
+   procedure Add (Win : Window := Standard_Window;
+                  Str : String;
+                  Len : Integer := -1)
    is
       function Waddnstr (Win : Window;
                          Str : char_array;
@@ -390,11 +390,11 @@ package body Terminal_Interface.Curses is
    end Add;
 
    procedure Add
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position;
-      Str    : in String;
-      Len    : in Integer := -1)
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position;
+      Str    : String;
+      Len    : Integer := -1)
    is
    begin
       Move_Cursor (Win, Line, Column);
@@ -402,9 +402,9 @@ package body Terminal_Interface.Curses is
    end Add;
 ------------------------------------------------------------------------------
    procedure Add
-     (Win : in Window := Standard_Window;
-      Str : in Attributed_String;
-      Len : in Integer := -1)
+     (Win : Window := Standard_Window;
+      Str : Attributed_String;
+      Len : Integer := -1)
    is
       function Waddchnstr (Win : Window;
                            Str : chtype_array;
@@ -425,11 +425,11 @@ package body Terminal_Interface.Curses is
    end Add;
 
    procedure Add
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position;
-      Str    : in Attributed_String;
-      Len    : in Integer := -1)
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position;
+      Str    : Attributed_String;
+      Len    : Integer := -1)
    is
    begin
       Move_Cursor (Win, Line, Column);
@@ -437,15 +437,15 @@ package body Terminal_Interface.Curses is
    end Add;
 ------------------------------------------------------------------------------
    procedure Border
-     (Win                       : in Window := Standard_Window;
-      Left_Side_Symbol          : in Attributed_Character := Default_Character;
-      Right_Side_Symbol         : in Attributed_Character := Default_Character;
-      Top_Side_Symbol           : in Attributed_Character := Default_Character;
-      Bottom_Side_Symbol        : in Attributed_Character := Default_Character;
-      Upper_Left_Corner_Symbol  : in Attributed_Character := Default_Character;
-      Upper_Right_Corner_Symbol : in Attributed_Character := Default_Character;
-      Lower_Left_Corner_Symbol  : in Attributed_Character := Default_Character;
-      Lower_Right_Corner_Symbol : in Attributed_Character := Default_Character)
+     (Win                       : Window := Standard_Window;
+      Left_Side_Symbol          : Attributed_Character := Default_Character;
+      Right_Side_Symbol         : Attributed_Character := Default_Character;
+      Top_Side_Symbol           : Attributed_Character := Default_Character;
+      Bottom_Side_Symbol        : Attributed_Character := Default_Character;
+      Upper_Left_Corner_Symbol  : Attributed_Character := Default_Character;
+      Upper_Right_Corner_Symbol : Attributed_Character := Default_Character;
+      Lower_Left_Corner_Symbol  : Attributed_Character := Default_Character;
+      Lower_Right_Corner_Symbol : Attributed_Character := Default_Character)
    is
       function Wborder (W   : Window;
                         LS  : C_Chtype;
@@ -474,9 +474,9 @@ package body Terminal_Interface.Curses is
    end Border;
 
    procedure Box
-     (Win               : in Window := Standard_Window;
-      Vertical_Symbol   : in Attributed_Character := Default_Character;
-      Horizontal_Symbol : in Attributed_Character := Default_Character)
+     (Win               : Window := Standard_Window;
+      Vertical_Symbol   : Attributed_Character := Default_Character;
+      Horizontal_Symbol : Attributed_Character := Default_Character)
    is
    begin
       Border (Win,
@@ -485,9 +485,9 @@ package body Terminal_Interface.Curses is
    end Box;
 
    procedure Horizontal_Line
-     (Win         : in Window := Standard_Window;
-      Line_Size   : in Natural;
-      Line_Symbol : in Attributed_Character := Default_Character)
+     (Win         : Window := Standard_Window;
+      Line_Size   : Natural;
+      Line_Symbol : Attributed_Character := Default_Character)
    is
       function Whline (W   : Window;
                        Ch  : C_Chtype;
@@ -502,9 +502,9 @@ package body Terminal_Interface.Curses is
    end Horizontal_Line;
 
    procedure Vertical_Line
-     (Win         : in Window := Standard_Window;
-      Line_Size   : in Natural;
-      Line_Symbol : in Attributed_Character := Default_Character)
+     (Win         : Window := Standard_Window;
+      Line_Size   : Natural;
+      Line_Symbol : Attributed_Character := Default_Character)
    is
       function Wvline (W   : Window;
                        Ch  : C_Chtype;
@@ -534,7 +534,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Get_Keystroke;
 
-   procedure Undo_Keystroke (Key : in Real_Key_Code)
+   procedure Undo_Keystroke (Key : Real_Key_Code)
    is
       function Ungetch (Ch : C_Int) return C_Int;
       pragma Import (C, Ungetch, "ungetch");
@@ -606,9 +606,9 @@ package body Terminal_Interface.Curses is
    end Standout;
 
    procedure Switch_Character_Attribute
-     (Win  : in Window := Standard_Window;
-      Attr : in Character_Attribute_Set := Normal_Video;
-      On   : in Boolean := True)
+     (Win  : Window := Standard_Window;
+      Attr : Character_Attribute_Set := Normal_Video;
+      On   : Boolean := True)
    is
       function Wattron (Win    : Window;
                         C_Attr : C_AttrType) return C_Int;
@@ -634,9 +634,9 @@ package body Terminal_Interface.Curses is
    end Switch_Character_Attribute;
 
    procedure Set_Character_Attributes
-     (Win   : in Window := Standard_Window;
-      Attr  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First)
+     (Win   : Window := Standard_Window;
+      Attr  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First)
    is
       function Wattrset (Win    : Window;
                          C_Attr : C_AttrType) return C_Int;
@@ -697,8 +697,8 @@ package body Terminal_Interface.Curses is
       end if;
    end Get_Character_Attribute;
 
-   procedure Set_Color (Win  : in Window := Standard_Window;
-                        Pair : in Color_Pair)
+   procedure Set_Color (Win  : Window := Standard_Window;
+                        Pair : Color_Pair)
    is
       function Wset_Color (Win   : Window;
                            Color : C_Short;
@@ -713,10 +713,10 @@ package body Terminal_Interface.Curses is
    end Set_Color;
 
    procedure Change_Attributes
-     (Win   : in Window := Standard_Window;
-      Count : in Integer := -1;
-      Attr  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First)
+     (Win   : Window := Standard_Window;
+      Count : Integer := -1;
+      Attr  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First)
    is
       function Wchgat (Win   : Window;
                        Cnt   : C_Int;
@@ -736,12 +736,12 @@ package body Terminal_Interface.Curses is
    end Change_Attributes;
 
    procedure Change_Attributes
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position := Line_Position'First;
-      Column : in Column_Position := Column_Position'First;
-      Count  : in Integer := -1;
-      Attr   : in Character_Attribute_Set := Normal_Video;
-      Color  : in Color_Pair := Color_Pair'First)
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position := Line_Position'First;
+      Column : Column_Position := Column_Position'First;
+      Count  : Integer := -1;
+      Attr   : Character_Attribute_Set := Normal_Video;
+      Color  : Color_Pair := Color_Pair'First)
    is
    begin
       Move_Cursor (Win, Line, Column);
@@ -768,7 +768,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Flash_Screen;
 ------------------------------------------------------------------------------
-   procedure Set_Cbreak_Mode (SwitchOn : in Boolean := True)
+   procedure Set_Cbreak_Mode (SwitchOn : Boolean := True)
    is
       function Cbreak return C_Int;
       pragma Import (C, Cbreak, "cbreak");
@@ -787,7 +787,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_Cbreak_Mode;
 
-   procedure Set_Raw_Mode (SwitchOn : in Boolean := True)
+   procedure Set_Raw_Mode (SwitchOn : Boolean := True)
    is
       function Raw return C_Int;
       pragma Import (C, Raw, "raw");
@@ -806,7 +806,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_Raw_Mode;
 
-   procedure Set_Echo_Mode (SwitchOn : in Boolean := True)
+   procedure Set_Echo_Mode (SwitchOn : Boolean := True)
    is
       function Echo return C_Int;
       pragma Import (C, Echo, "echo");
@@ -825,8 +825,8 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_Echo_Mode;
 
-   procedure Set_Meta_Mode (Win      : in Window := Standard_Window;
-                            SwitchOn : in Boolean := True)
+   procedure Set_Meta_Mode (Win      : Window := Standard_Window;
+                            SwitchOn : Boolean := True)
    is
       function Meta (W : Window; Mode : Curses_Bool) return C_Int;
       pragma Import (C, Meta, "meta");
@@ -836,8 +836,8 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_Meta_Mode;
 
-   procedure Set_KeyPad_Mode (Win      : in Window := Standard_Window;
-                              SwitchOn : in Boolean := True)
+   procedure Set_KeyPad_Mode (Win      : Window := Standard_Window;
+                              SwitchOn : Boolean := True)
    is
       function Keypad (W : Window; Mode : Curses_Bool) return C_Int;
       pragma Import (C, Keypad, "keypad");
@@ -847,7 +847,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_KeyPad_Mode;
 
-   function Get_KeyPad_Mode (Win : in Window := Standard_Window)
+   function Get_KeyPad_Mode (Win : Window := Standard_Window)
                              return Boolean
    is
       function Is_Keypad (W : Window) return Curses_Bool;
@@ -856,7 +856,7 @@ package body Terminal_Interface.Curses is
       return (Is_Keypad (Win) /= Curses_Bool_False);
    end Get_KeyPad_Mode;
 
-   procedure Half_Delay (Amount : in Half_Delay_Amount)
+   procedure Half_Delay (Amount : Half_Delay_Amount)
    is
       function Halfdelay (Amount : C_Int) return C_Int;
       pragma Import (C, Halfdelay, "halfdelay");
@@ -867,8 +867,8 @@ package body Terminal_Interface.Curses is
    end Half_Delay;
 
    procedure Set_Flush_On_Interrupt_Mode
-     (Win  : in Window := Standard_Window;
-      Mode : in Boolean := True)
+     (Win  : Window := Standard_Window;
+      Mode : Boolean := True)
    is
       function Intrflush (Win : Window; Mode : Curses_Bool) return C_Int;
       pragma Import (C, Intrflush, "intrflush");
@@ -879,8 +879,8 @@ package body Terminal_Interface.Curses is
    end Set_Flush_On_Interrupt_Mode;
 
    procedure Set_Queue_Interrupt_Mode
-     (Win   : in Window := Standard_Window;
-      Flush : in Boolean := True)
+     (Win   : Window := Standard_Window;
+      Flush : Boolean := True)
    is
       procedure Qiflush;
       pragma Import (C, Qiflush, "qiflush");
@@ -898,8 +898,8 @@ package body Terminal_Interface.Curses is
    end Set_Queue_Interrupt_Mode;
 
    procedure Set_NoDelay_Mode
-     (Win  : in Window := Standard_Window;
-      Mode : in Boolean := False)
+     (Win  : Window := Standard_Window;
+      Mode : Boolean := False)
    is
       function Nodelay (Win : Window; Mode : Curses_Bool) return C_Int;
       pragma Import (C, Nodelay, "nodelay");
@@ -909,9 +909,9 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_NoDelay_Mode;
 
-   procedure Set_Timeout_Mode (Win    : in Window := Standard_Window;
-                               Mode   : in Timeout_Mode;
-                               Amount : in Natural)
+   procedure Set_Timeout_Mode (Win    : Window := Standard_Window;
+                               Mode   : Timeout_Mode;
+                               Amount : Natural)
    is
       procedure Wtimeout (Win : Window; Amount : C_Int);
       pragma Import (C, Wtimeout, "wtimeout");
@@ -931,8 +931,8 @@ package body Terminal_Interface.Curses is
    end Set_Timeout_Mode;
 
    procedure Set_Escape_Timer_Mode
-     (Win       : in Window := Standard_Window;
-      Timer_Off : in Boolean := False)
+     (Win       : Window := Standard_Window;
+      Timer_Off : Boolean := False)
    is
       function Notimeout (Win : Window; Mode : Curses_Bool) return C_Int;
       pragma Import (C, Notimeout, "notimeout");
@@ -944,7 +944,7 @@ package body Terminal_Interface.Curses is
    end Set_Escape_Timer_Mode;
 
 ------------------------------------------------------------------------------
-   procedure Set_NL_Mode (SwitchOn : in Boolean := True)
+   procedure Set_NL_Mode (SwitchOn : Boolean := True)
    is
       function NL return C_Int;
       pragma Import (C, NL, "nl");
@@ -964,8 +964,8 @@ package body Terminal_Interface.Curses is
    end Set_NL_Mode;
 
    procedure Clear_On_Next_Update
-     (Win      : in Window := Standard_Window;
-      Do_Clear : in Boolean := True)
+     (Win      : Window := Standard_Window;
+      Do_Clear : Boolean := True)
    is
       function Clear_Ok (W : Window; Flag : Curses_Bool) return C_Int;
       pragma Import (C, Clear_Ok, "clearok");
@@ -976,8 +976,8 @@ package body Terminal_Interface.Curses is
    end Clear_On_Next_Update;
 
    procedure Use_Insert_Delete_Line
-     (Win    : in Window := Standard_Window;
-      Do_Idl : in Boolean := True)
+     (Win    : Window := Standard_Window;
+      Do_Idl : Boolean := True)
    is
       function IDL_Ok (W : Window; Flag : Curses_Bool) return C_Int;
       pragma Import (C, IDL_Ok, "idlok");
@@ -988,8 +988,8 @@ package body Terminal_Interface.Curses is
    end Use_Insert_Delete_Line;
 
    procedure Use_Insert_Delete_Character
-     (Win    : in Window := Standard_Window;
-      Do_Idc : in Boolean := True)
+     (Win    : Window := Standard_Window;
+      Do_Idc : Boolean := True)
    is
       procedure IDC_Ok (W : Window; Flag : Curses_Bool);
       pragma Import (C, IDC_Ok, "idcok");
@@ -998,8 +998,8 @@ package body Terminal_Interface.Curses is
    end Use_Insert_Delete_Character;
 
    procedure Leave_Cursor_After_Update
-     (Win      : in Window := Standard_Window;
-      Do_Leave : in Boolean := True)
+     (Win      : Window := Standard_Window;
+      Do_Leave : Boolean := True)
    is
       function Leave_Ok (W : Window; Flag : Curses_Bool) return C_Int;
       pragma Import (C, Leave_Ok, "leaveok");
@@ -1010,8 +1010,8 @@ package body Terminal_Interface.Curses is
    end Leave_Cursor_After_Update;
 
    procedure Immediate_Update_Mode
-     (Win  : in Window := Standard_Window;
-      Mode : in Boolean := False)
+     (Win  : Window := Standard_Window;
+      Mode : Boolean := False)
    is
       procedure Immedok (Win : Window; Mode : Curses_Bool);
       pragma Import (C, Immedok, "immedok");
@@ -1020,8 +1020,8 @@ package body Terminal_Interface.Curses is
    end Immediate_Update_Mode;
 
    procedure Allow_Scrolling
-     (Win  : in Window  := Standard_Window;
-      Mode : in Boolean := False)
+     (Win  : Window  := Standard_Window;
+      Mode : Boolean := False)
    is
       function Scrollok (Win : Window; Mode : Curses_Bool) return C_Int;
       pragma Import (C, Scrollok, "scrollok");
@@ -1041,9 +1041,9 @@ package body Terminal_Interface.Curses is
    end Scrolling_Allowed;
 
    procedure Set_Scroll_Region
-     (Win         : in Window := Standard_Window;
-      Top_Line    : in Line_Position;
-      Bottom_Line : in Line_Position)
+     (Win         : Window := Standard_Window;
+      Top_Line    : Line_Position;
+      Bottom_Line : Line_Position)
    is
       function Wsetscrreg (Win : Window;
                            Lin : C_Int;
@@ -1066,7 +1066,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Update_Screen;
 
-   procedure Refresh (Win : in Window := Standard_Window)
+   procedure Refresh (Win : Window := Standard_Window)
    is
       function Wrefresh (W : Window) return C_Int;
       pragma Import (C, Wrefresh, "wrefresh");
@@ -1077,7 +1077,7 @@ package body Terminal_Interface.Curses is
    end Refresh;
 
    procedure Refresh_Without_Update
-     (Win : in Window := Standard_Window)
+     (Win : Window := Standard_Window)
    is
       function Wnoutrefresh (W : Window) return C_Int;
       pragma Import (C, Wnoutrefresh, "wnoutrefresh");
@@ -1087,7 +1087,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Refresh_Without_Update;
 
-   procedure Redraw (Win : in Window := Standard_Window)
+   procedure Redraw (Win : Window := Standard_Window)
    is
       function Redrawwin (Win : Window) return C_Int;
       pragma Import (C, Redrawwin, "redrawwin");
@@ -1098,9 +1098,9 @@ package body Terminal_Interface.Curses is
    end Redraw;
 
    procedure Redraw
-     (Win        : in Window := Standard_Window;
-      Begin_Line : in Line_Position;
-      Line_Count : in Positive)
+     (Win        : Window := Standard_Window;
+      Begin_Line : Line_Position;
+      Line_Count : Positive)
    is
       function Wredrawln (Win : Window; First : C_Int; Cnt : C_Int)
                           return C_Int;
@@ -1114,7 +1114,7 @@ package body Terminal_Interface.Curses is
    end Redraw;
 
 ------------------------------------------------------------------------------
-   procedure Erase (Win : in Window := Standard_Window)
+   procedure Erase (Win : Window := Standard_Window)
    is
       function Werase (W : Window) return C_Int;
       pragma Import (C, Werase, "werase");
@@ -1124,7 +1124,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Erase;
 
-   procedure Clear (Win : in Window := Standard_Window)
+   procedure Clear (Win : Window := Standard_Window)
    is
       function Wclear (W : Window) return C_Int;
       pragma Import (C, Wclear, "wclear");
@@ -1134,7 +1134,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Clear;
 
-   procedure Clear_To_End_Of_Screen (Win : in Window := Standard_Window)
+   procedure Clear_To_End_Of_Screen (Win : Window := Standard_Window)
    is
       function Wclearbot (W : Window) return C_Int;
       pragma Import (C, Wclearbot, "wclrtobot");
@@ -1144,7 +1144,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Clear_To_End_Of_Screen;
 
-   procedure Clear_To_End_Of_Line (Win : in Window := Standard_Window)
+   procedure Clear_To_End_Of_Line (Win : Window := Standard_Window)
    is
       function Wcleareol (W : Window) return C_Int;
       pragma Import (C, Wcleareol, "wclrtoeol");
@@ -1155,18 +1155,18 @@ package body Terminal_Interface.Curses is
    end Clear_To_End_Of_Line;
 ------------------------------------------------------------------------------
    procedure Set_Background
-     (Win : in Window := Standard_Window;
-      Ch  : in Attributed_Character)
+     (Win : Window := Standard_Window;
+      Ch  : Attributed_Character)
    is
-      procedure WBackground (W : in Window; Ch : in C_Chtype);
+      procedure WBackground (W : Window; Ch : C_Chtype);
       pragma Import (C, WBackground, "wbkgdset");
    begin
       WBackground (Win, AttrChar_To_Chtype (Ch));
    end Set_Background;
 
    procedure Change_Background
-     (Win : in Window := Standard_Window;
-      Ch  : in Attributed_Character)
+     (Win : Window := Standard_Window;
+      Ch  : Attributed_Character)
    is
       function WChangeBkgd (W : Window; Ch : C_Chtype) return C_Int;
       pragma Import (C, WChangeBkgd, "wbkgd");
@@ -1185,10 +1185,10 @@ package body Terminal_Interface.Curses is
       return Chtype_To_AttrChar (Wgetbkgd (Win));
    end Get_Background;
 ------------------------------------------------------------------------------
-   procedure Change_Lines_Status (Win   : in Window := Standard_Window;
-                                  Start : in Line_Position;
-                                  Count : in Positive;
-                                  State : in Boolean)
+   procedure Change_Lines_Status (Win   : Window := Standard_Window;
+                                  Start : Line_Position;
+                                  Count : Positive;
+                                  State : Boolean)
    is
       function Wtouchln (Win : Window;
                          Sta : C_Int;
@@ -1202,7 +1202,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Change_Lines_Status;
 
-   procedure Touch (Win : in Window := Standard_Window)
+   procedure Touch (Win : Window := Standard_Window)
    is
       Y : Line_Position;
       X : Column_Position;
@@ -1211,7 +1211,7 @@ package body Terminal_Interface.Curses is
       Change_Lines_Status (Win, 0, Positive (Y), True);
    end Touch;
 
-   procedure Untouch (Win : in Window := Standard_Window)
+   procedure Untouch (Win : Window := Standard_Window)
    is
       Y : Line_Position;
       X : Column_Position;
@@ -1220,9 +1220,9 @@ package body Terminal_Interface.Curses is
       Change_Lines_Status (Win, 0, Positive (Y), False);
    end Untouch;
 
-   procedure Touch (Win   : in Window := Standard_Window;
-                    Start : in Line_Position;
-                    Count : in Positive)
+   procedure Touch (Win   : Window := Standard_Window;
+                    Start : Line_Position;
+                    Count : Positive)
    is
    begin
       Change_Lines_Status (Win, Start, Count, True);
@@ -1256,15 +1256,15 @@ package body Terminal_Interface.Curses is
    end Is_Touched;
 ------------------------------------------------------------------------------
    procedure Copy
-     (Source_Window            : in Window;
-      Destination_Window       : in Window;
-      Source_Top_Row           : in Line_Position;
-      Source_Left_Column       : in Column_Position;
-      Destination_Top_Row      : in Line_Position;
-      Destination_Left_Column  : in Column_Position;
-      Destination_Bottom_Row   : in Line_Position;
-      Destination_Right_Column : in Column_Position;
-      Non_Destructive_Mode     : in Boolean := True)
+     (Source_Window            : Window;
+      Destination_Window       : Window;
+      Source_Top_Row           : Line_Position;
+      Source_Left_Column       : Column_Position;
+      Destination_Top_Row      : Line_Position;
+      Destination_Left_Column  : Column_Position;
+      Destination_Bottom_Row   : Line_Position;
+      Destination_Right_Column : Column_Position;
+      Non_Destructive_Mode     : Boolean := True)
    is
       function Copywin (Src : Window;
                         Dst : Window;
@@ -1292,8 +1292,8 @@ package body Terminal_Interface.Curses is
    end Copy;
 
    procedure Overwrite
-     (Source_Window      : in Window;
-      Destination_Window : in Window)
+     (Source_Window      : Window;
+      Destination_Window : Window)
    is
       function Overwrite (Src : Window; Dst : Window) return C_Int;
       pragma Import (C, Overwrite, "overwrite");
@@ -1304,8 +1304,8 @@ package body Terminal_Interface.Curses is
    end Overwrite;
 
    procedure Overlay
-     (Source_Window      : in Window;
-      Destination_Window : in Window)
+     (Source_Window      : Window;
+      Destination_Window : Window)
    is
       function Overlay (Src : Window; Dst : Window) return C_Int;
       pragma Import (C, Overlay, "overlay");
@@ -1317,8 +1317,8 @@ package body Terminal_Interface.Curses is
 
 ------------------------------------------------------------------------------
    procedure Insert_Delete_Lines
-     (Win   : in Window := Standard_Window;
-      Lines : in Integer       := 1) -- default is to insert one line above
+     (Win   : Window := Standard_Window;
+      Lines : Integer       := 1) -- default is to insert one line above
    is
       function Winsdelln (W : Window; N : C_Int) return C_Int;
       pragma Import (C, Winsdelln, "winsdelln");
@@ -1328,13 +1328,13 @@ package body Terminal_Interface.Curses is
       end if;
    end Insert_Delete_Lines;
 
-   procedure Delete_Line (Win : in Window := Standard_Window)
+   procedure Delete_Line (Win : Window := Standard_Window)
    is
    begin
       Insert_Delete_Lines (Win, -1);
    end Delete_Line;
 
-   procedure Insert_Line (Win : in Window := Standard_Window)
+   procedure Insert_Line (Win : Window := Standard_Window)
    is
    begin
       Insert_Delete_Lines (Win, 1);
@@ -1342,7 +1342,7 @@ package body Terminal_Interface.Curses is
 ------------------------------------------------------------------------------
 
    procedure Get_Size
-     (Win               : in Window := Standard_Window;
+     (Win               : Window := Standard_Window;
       Number_Of_Lines   : out Line_Count;
       Number_Of_Columns : out Column_Count)
    is
@@ -1362,7 +1362,7 @@ package body Terminal_Interface.Curses is
    end Get_Size;
 
    procedure Get_Window_Position
-     (Win             : in Window := Standard_Window;
+     (Win             : Window := Standard_Window;
       Top_Left_Line   : out Line_Position;
       Top_Left_Column : out Column_Position)
    is
@@ -1380,7 +1380,7 @@ package body Terminal_Interface.Curses is
    end Get_Window_Position;
 
    procedure Get_Cursor_Position
-     (Win    : in  Window := Standard_Window;
+     (Win    :  Window := Standard_Window;
       Line   : out Line_Position;
       Column : out Column_Position)
    is
@@ -1398,7 +1398,7 @@ package body Terminal_Interface.Curses is
    end Get_Cursor_Position;
 
    procedure Get_Origin_Relative_To_Parent
-     (Win                : in  Window;
+     (Win                :  Window;
       Top_Left_Line      : out Line_Position;
       Top_Left_Column    : out Column_Position;
       Is_Not_A_Subwindow : out Boolean)
@@ -1467,13 +1467,13 @@ package body Terminal_Interface.Curses is
    end Sub_Pad;
 
    procedure Refresh
-     (Pad                      : in Window;
-      Source_Top_Row           : in Line_Position;
-      Source_Left_Column       : in Column_Position;
-      Destination_Top_Row      : in Line_Position;
-      Destination_Left_Column  : in Column_Position;
-      Destination_Bottom_Row   : in Line_Position;
-      Destination_Right_Column : in Column_Position)
+     (Pad                      : Window;
+      Source_Top_Row           : Line_Position;
+      Source_Left_Column       : Column_Position;
+      Destination_Top_Row      : Line_Position;
+      Destination_Left_Column  : Column_Position;
+      Destination_Bottom_Row   : Line_Position;
+      Destination_Right_Column : Column_Position)
    is
       function Prefresh
         (Pad                      : Window;
@@ -1497,13 +1497,13 @@ package body Terminal_Interface.Curses is
    end Refresh;
 
    procedure Refresh_Without_Update
-     (Pad                      : in Window;
-      Source_Top_Row           : in Line_Position;
-      Source_Left_Column       : in Column_Position;
-      Destination_Top_Row      : in Line_Position;
-      Destination_Left_Column  : in Column_Position;
-      Destination_Bottom_Row   : in Line_Position;
-      Destination_Right_Column : in Column_Position)
+     (Pad                      : Window;
+      Source_Top_Row           : Line_Position;
+      Source_Left_Column       : Column_Position;
+      Destination_Top_Row      : Line_Position;
+      Destination_Left_Column  : Column_Position;
+      Destination_Bottom_Row   : Line_Position;
+      Destination_Right_Column : Column_Position)
    is
       function Pnoutrefresh
         (Pad                      : Window;
@@ -1527,8 +1527,8 @@ package body Terminal_Interface.Curses is
    end Refresh_Without_Update;
 
    procedure Add_Character_To_Pad_And_Echo_It
-     (Pad : in Window;
-      Ch  : in Attributed_Character)
+     (Pad : Window;
+      Ch  : Attributed_Character)
    is
       function Pechochar (Pad : Window; Ch : C_Chtype)
                           return C_Int;
@@ -1540,8 +1540,8 @@ package body Terminal_Interface.Curses is
    end Add_Character_To_Pad_And_Echo_It;
 
    procedure Add_Character_To_Pad_And_Echo_It
-     (Pad : in Window;
-      Ch  : in Character)
+     (Pad : Window;
+      Ch  : Character)
    is
    begin
       Add_Character_To_Pad_And_Echo_It
@@ -1551,8 +1551,8 @@ package body Terminal_Interface.Curses is
                                Attr  => Normal_Video));
    end Add_Character_To_Pad_And_Echo_It;
 ------------------------------------------------------------------------------
-   procedure Scroll (Win    : in Window := Standard_Window;
-                     Amount : in Integer := 1)
+   procedure Scroll (Win    : Window := Standard_Window;
+                     Amount : Integer := 1)
    is
       function Wscrl (Win : Window; N : C_Int) return C_Int;
       pragma Import (C, Wscrl, "wscrl");
@@ -1564,7 +1564,7 @@ package body Terminal_Interface.Curses is
    end Scroll;
 
 ------------------------------------------------------------------------------
-   procedure Delete_Character (Win : in Window := Standard_Window)
+   procedure Delete_Character (Win : Window := Standard_Window)
    is
       function Wdelch (Win : Window) return C_Int;
       pragma Import (C, Wdelch, "wdelch");
@@ -1575,9 +1575,9 @@ package body Terminal_Interface.Curses is
    end Delete_Character;
 
    procedure Delete_Character
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position)
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position)
    is
       function Mvwdelch (Win : Window;
                          Lin : C_Int;
@@ -1611,8 +1611,8 @@ package body Terminal_Interface.Curses is
       return Chtype_To_AttrChar (Mvwinch (Win, C_Int (Line), C_Int (Column)));
    end Peek;
 ------------------------------------------------------------------------------
-   procedure Insert (Win : in Window := Standard_Window;
-                     Ch  : in Attributed_Character)
+   procedure Insert (Win : Window := Standard_Window;
+                     Ch  : Attributed_Character)
    is
       function Winsch (Win : Window; Ch : C_Chtype) return C_Int;
       pragma Import (C, Winsch, "winsch");
@@ -1623,10 +1623,10 @@ package body Terminal_Interface.Curses is
    end Insert;
 
    procedure Insert
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position;
-      Ch     : in Attributed_Character)
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position;
+      Ch     : Attributed_Character)
    is
       function Mvwinsch (Win : Window;
                          Lin : C_Int;
@@ -1642,9 +1642,9 @@ package body Terminal_Interface.Curses is
       end if;
    end Insert;
 ------------------------------------------------------------------------------
-   procedure Insert (Win : in Window := Standard_Window;
-                     Str : in String;
-                     Len : in Integer := -1)
+   procedure Insert (Win : Window := Standard_Window;
+                     Str : String;
+                     Len : Integer := -1)
    is
       function Winsnstr (Win : Window;
                          Str : char_array;
@@ -1661,11 +1661,11 @@ package body Terminal_Interface.Curses is
    end Insert;
 
    procedure Insert
-     (Win    : in Window := Standard_Window;
-      Line   : in Line_Position;
-      Column : in Column_Position;
-      Str    : in String;
-      Len    : in Integer := -1)
+     (Win    : Window := Standard_Window;
+      Line   : Line_Position;
+      Column : Column_Position;
+      Str    : String;
+      Len    : Integer := -1)
    is
       function Mvwinsnstr (Win    : Window;
                            Line   : C_Int;
@@ -1684,9 +1684,9 @@ package body Terminal_Interface.Curses is
       end if;
    end Insert;
 ------------------------------------------------------------------------------
-   procedure Peek (Win : in  Window := Standard_Window;
+   procedure Peek (Win :  Window := Standard_Window;
                    Str : out String;
-                   Len : in  Integer := -1)
+                   Len :  Integer := -1)
    is
       function Winnstr (Win : Window;
                         Str : char_array;
@@ -1714,11 +1714,11 @@ package body Terminal_Interface.Curses is
    end Peek;
 
    procedure Peek
-     (Win    : in  Window := Standard_Window;
-      Line   : in  Line_Position;
-      Column : in  Column_Position;
+     (Win    :  Window := Standard_Window;
+      Line   :  Line_Position;
+      Column :  Column_Position;
       Str    : out String;
-      Len    : in  Integer := -1)
+      Len    :  Integer := -1)
    is
    begin
       Move_Cursor (Win, Line, Column);
@@ -1726,9 +1726,9 @@ package body Terminal_Interface.Curses is
    end Peek;
 ------------------------------------------------------------------------------
    procedure Peek
-     (Win : in  Window := Standard_Window;
+     (Win :  Window := Standard_Window;
       Str : out Attributed_String;
-      Len : in  Integer := -1)
+      Len :  Integer := -1)
    is
       function Winchnstr (Win : Window;
                           Str : chtype_array;             -- out
@@ -1763,20 +1763,20 @@ package body Terminal_Interface.Curses is
    end Peek;
 
    procedure Peek
-     (Win    : in  Window := Standard_Window;
-      Line   : in  Line_Position;
-      Column : in  Column_Position;
+     (Win    :  Window := Standard_Window;
+      Line   :  Line_Position;
+      Column :  Column_Position;
       Str    : out Attributed_String;
-      Len    : in Integer := -1)
+      Len    : Integer := -1)
    is
    begin
       Move_Cursor (Win, Line, Column);
       Peek (Win, Str, Len);
    end Peek;
 ------------------------------------------------------------------------------
-   procedure Get (Win : in  Window := Standard_Window;
+   procedure Get (Win :  Window := Standard_Window;
                   Str : out String;
-                  Len : in  Integer := -1)
+                  Len :  Integer := -1)
    is
       function Wgetnstr (Win : Window;
                          Str : char_array;
@@ -1804,11 +1804,11 @@ package body Terminal_Interface.Curses is
    end Get;
 
    procedure Get
-     (Win    : in  Window := Standard_Window;
-      Line   : in  Line_Position;
-      Column : in  Column_Position;
+     (Win    :  Window := Standard_Window;
+      Line   :  Line_Position;
+      Column :  Column_Position;
       Str    : out String;
-      Len    : in  Integer := -1)
+      Len    :  Integer := -1)
    is
    begin
       Move_Cursor (Win, Line, Column);
@@ -1816,7 +1816,7 @@ package body Terminal_Interface.Curses is
    end Get;
 ------------------------------------------------------------------------------
    procedure Init_Soft_Label_Keys
-     (Format : in Soft_Label_Key_Format := Three_Two_Three)
+     (Format : Soft_Label_Key_Format := Three_Two_Three)
    is
       function Slk_Init (Fmt : C_Int) return C_Int;
       pragma Import (C, Slk_Init, "slk_init");
@@ -1826,9 +1826,9 @@ package body Terminal_Interface.Curses is
       end if;
    end Init_Soft_Label_Keys;
 
-   procedure Set_Soft_Label_Key (Label : in Label_Number;
-                                 Text  : in String;
-                                 Fmt   : in Label_Justification := Left)
+   procedure Set_Soft_Label_Key (Label : Label_Number;
+                                 Text  : String;
+                                 Fmt   : Label_Justification := Left)
    is
       function Slk_Set (Label : C_Int;
                         Txt   : char_array;
@@ -1865,7 +1865,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Refresh_Soft_Label_Keys_Without_Update;
 
-   procedure Get_Soft_Label_Key (Label : in Label_Number;
+   procedure Get_Soft_Label_Key (Label : Label_Number;
                                  Text  : out String)
    is
       function Slk_Label (Label : C_Int) return chars_ptr;
@@ -1874,7 +1874,7 @@ package body Terminal_Interface.Curses is
       Fill_String (Slk_Label (C_Int (Label)), Text);
    end Get_Soft_Label_Key;
 
-   function Get_Soft_Label_Key (Label : in Label_Number) return String
+   function Get_Soft_Label_Key (Label : Label_Number) return String
    is
       function Slk_Label (Label : C_Int) return chars_ptr;
       pragma Import (C, Slk_Label, "slk_label");
@@ -1913,8 +1913,8 @@ package body Terminal_Interface.Curses is
    end Touch_Soft_Label_Keys;
 
    procedure Switch_Soft_Label_Key_Attributes
-     (Attr : in Character_Attribute_Set;
-      On   : in Boolean := True)
+     (Attr : Character_Attribute_Set;
+      On   : Boolean := True)
    is
       function Slk_Attron (Ch : C_Chtype) return C_Int;
       pragma Import (C, Slk_Attron, "slk_attron");
@@ -1937,8 +1937,8 @@ package body Terminal_Interface.Curses is
    end Switch_Soft_Label_Key_Attributes;
 
    procedure Set_Soft_Label_Key_Attributes
-     (Attr  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First)
+     (Attr  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First)
    is
       function Slk_Attrset (Ch : C_Chtype) return C_Int;
       pragma Import (C, Slk_Attrset, "slk_attrset");
@@ -1972,9 +1972,9 @@ package body Terminal_Interface.Curses is
       return Chtype_To_AttrChar (Attr).Color;
    end Get_Soft_Label_Key_Attributes;
 
-   procedure Set_Soft_Label_Key_Color (Pair : in Color_Pair)
+   procedure Set_Soft_Label_Key_Color (Pair : Color_Pair)
    is
-      function Slk_Color (Color : in C_Short) return C_Int;
+      function Slk_Color (Color : C_Short) return C_Int;
       pragma Import (C, Slk_Color, "slk_color");
    begin
       if Slk_Color (C_Short (Pair)) = Curses_Err then
@@ -1983,8 +1983,8 @@ package body Terminal_Interface.Curses is
    end Set_Soft_Label_Key_Color;
 
 ------------------------------------------------------------------------------
-   procedure Enable_Key (Key    : in Special_Key_Code;
-                         Enable : in Boolean := True)
+   procedure Enable_Key (Key    : Special_Key_Code;
+                         Enable : Boolean := True)
    is
       function Keyok (Keycode : C_Int;
                       On_Off  : Curses_Bool) return C_Int;
@@ -1996,8 +1996,8 @@ package body Terminal_Interface.Curses is
       end if;
    end Enable_Key;
 ------------------------------------------------------------------------------
-   procedure Define_Key (Definition : in String;
-                         Key        : in Special_Key_Code)
+   procedure Define_Key (Definition : String;
+                         Key        : Special_Key_Code)
    is
       function Defkey (Def : char_array;
                        Key : C_Int) return C_Int;
@@ -2012,7 +2012,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Define_Key;
 ------------------------------------------------------------------------------
-   procedure Un_Control (Ch  : in Attributed_Character;
+   procedure Un_Control (Ch  : Attributed_Character;
                          Str : out String)
    is
       function Unctrl (Ch : C_Chtype) return chars_ptr;
@@ -2021,7 +2021,7 @@ package body Terminal_Interface.Curses is
       Fill_String (Unctrl (AttrChar_To_Chtype (Ch)), Str);
    end Un_Control;
 
-   function Un_Control (Ch : in Attributed_Character) return String
+   function Un_Control (Ch : Attributed_Character) return String
    is
       function Unctrl (Ch : C_Chtype) return chars_ptr;
       pragma Import (C, Unctrl, "unctrl");
@@ -2029,7 +2029,7 @@ package body Terminal_Interface.Curses is
       return Fill_String (Unctrl (AttrChar_To_Chtype (Ch)));
    end Un_Control;
 
-   procedure Delay_Output (Msecs : in Natural)
+   procedure Delay_Output (Msecs : Natural)
    is
       function Delayoutput (Msecs : C_Int) return C_Int;
       pragma Import (C, Delayoutput, "delay_output");
@@ -2139,9 +2139,9 @@ package body Terminal_Interface.Curses is
       return Fill_String (Termname);
    end Terminal_Name;
 ------------------------------------------------------------------------------
-   procedure Init_Pair (Pair : in Redefinable_Color_Pair;
-                        Fore : in Color_Number;
-                        Back : in Color_Number)
+   procedure Init_Pair (Pair : Redefinable_Color_Pair;
+                        Fore : Color_Number;
+                        Back : Color_Number)
    is
       function Initpair (Pair : C_Short;
                          Fore : C_Short;
@@ -2161,7 +2161,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Init_Pair;
 
-   procedure Pair_Content (Pair : in Color_Pair;
+   procedure Pair_Content (Pair : Color_Pair;
                            Fore : out Color_Number;
                            Back : out Color_Number)
    is
@@ -2193,10 +2193,10 @@ package body Terminal_Interface.Curses is
       end if;
    end Has_Colors;
 
-   procedure Init_Color (Color : in Color_Number;
-                         Red   : in RGB_Value;
-                         Green : in RGB_Value;
-                         Blue  : in RGB_Value)
+   procedure Init_Color (Color : Color_Number;
+                         Red   : RGB_Value;
+                         Green : RGB_Value;
+                         Blue  : RGB_Value)
    is
       function Initcolor (Col   : C_Short;
                           Red   : C_Short;
@@ -2222,7 +2222,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Can_Change_Color;
 
-   procedure Color_Content (Color : in  Color_Number;
+   procedure Color_Content (Color :  Color_Number;
                             Red   : out RGB_Value;
                             Green : out RGB_Value;
                             Blue  : out RGB_Value)
@@ -2246,7 +2246,7 @@ package body Terminal_Interface.Curses is
    end Color_Content;
 
 ------------------------------------------------------------------------------
-   procedure Save_Curses_Mode (Mode : in Curses_Mode)
+   procedure Save_Curses_Mode (Mode : Curses_Mode)
    is
       function Def_Prog_Mode return C_Int;
       pragma Import (C, Def_Prog_Mode, "def_prog_mode");
@@ -2264,7 +2264,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Save_Curses_Mode;
 
-   procedure Reset_Curses_Mode (Mode : in Curses_Mode)
+   procedure Reset_Curses_Mode (Mode : Curses_Mode)
    is
       function Reset_Prog_Mode return C_Int;
       pragma Import (C, Reset_Prog_Mode, "reset_prog_mode");
@@ -2302,8 +2302,8 @@ package body Terminal_Interface.Curses is
       end if;
    end Reset_Terminal_State;
 
-   procedure Rip_Off_Lines (Lines : in Integer;
-                            Proc  : in Stdscr_Init_Proc)
+   procedure Rip_Off_Lines (Lines : Integer;
+                            Proc  : Stdscr_Init_Proc)
    is
       function Ripoffline (Lines : C_Int;
                            Proc  : Stdscr_Init_Proc) return C_Int;
@@ -2327,7 +2327,7 @@ package body Terminal_Interface.Curses is
       end if;
    end Set_Cursor_Visibility;
 
-   procedure Nap_Milli_Seconds (Ms : in Natural)
+   procedure Nap_Milli_Seconds (Ms : Natural)
    is
       function Napms (Ms : C_Int) return C_Int;
       pragma Import (C, Napms, "napms");
@@ -2340,10 +2340,10 @@ package body Terminal_Interface.Curses is
 include(`Public_Variables')
 ------------------------------------------------------------------------------
    procedure Transform_Coordinates
-     (W      : in Window := Standard_Window;
+     (W      : Window := Standard_Window;
       Line   : in out Line_Position;
       Column : in out Column_Position;
-      Dir    : in Transform_Direction := From_Screen)
+      Dir    : Transform_Direction := From_Screen)
    is
       type Int_Access is access all C_Int;
       function Transform (W    : Window;
@@ -2431,7 +2431,7 @@ include(`Public_Variables')
       end if;
    end Use_Extended_Names;
 ------------------------------------------------------------------------------
-   procedure Screen_Dump_To_File (Filename : in String)
+   procedure Screen_Dump_To_File (Filename : String)
    is
       function scr_dump (f : char_array) return C_Int;
       pragma Import (C, scr_dump, "scr_dump");
@@ -2444,7 +2444,7 @@ include(`Public_Variables')
       end if;
    end Screen_Dump_To_File;
 
-   procedure Screen_Restore_From_File (Filename : in String)
+   procedure Screen_Restore_From_File (Filename : String)
    is
       function scr_restore (f : char_array) return C_Int;
       pragma Import (C, scr_restore, "scr_restore");
@@ -2457,7 +2457,7 @@ include(`Public_Variables')
       end if;
    end Screen_Restore_From_File;
 
-   procedure Screen_Init_From_File (Filename : in String)
+   procedure Screen_Init_From_File (Filename : String)
    is
       function scr_init (f : char_array) return C_Int;
       pragma Import (C, scr_init, "scr_init");
@@ -2470,7 +2470,7 @@ include(`Public_Variables')
       end if;
    end Screen_Init_From_File;
 
-   procedure Screen_Set_File (Filename : in String)
+   procedure Screen_Set_File (Filename : String)
    is
       function scr_set (f : char_array) return C_Int;
       pragma Import (C, scr_set, "scr_set");

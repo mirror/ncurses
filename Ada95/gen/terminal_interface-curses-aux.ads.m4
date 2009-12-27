@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,7 +38,7 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.16 $
+--  $Revision: 1.17 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 include(`Base_Defs')
@@ -94,7 +94,7 @@ include(`Eti_Defs')
      Unchecked_Conversion (Source => C_AttrType,
                            Target => Attributed_Character);
 
-   procedure Fill_String (Cp  : in  chars_ptr;
+   procedure Fill_String (Cp  : chars_ptr;
                           Str : out String);
    --  Fill the Str parameter with the string denoted by the chars_ptr
    --  C-Style string.

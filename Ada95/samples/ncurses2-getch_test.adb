@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.7 $
---  $Date: 2008/07/26 18:46:58 $
+--  $Revision: 1.8 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Character input test
@@ -205,7 +205,7 @@ begin
                Add (Str => " I saw '");
                myAdd (Str => boundedbuf);
                Add (Str => "'.");
-               Add (ch => newl);
+               Add (Ch => newl);
             end if;
          end;
       elsif c = Character'Pos ('s') then

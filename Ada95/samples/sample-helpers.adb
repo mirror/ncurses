@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.12 $
---  $Date: 2008/07/26 18:48:08 $
+--  $Revision: 1.13 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Sample.Explanation; use Sample.Explanation;
@@ -46,8 +46,8 @@ with Sample.Explanation; use Sample.Explanation;
 --
 package body Sample.Helpers is
 
-   procedure Window_Title (Win   : in Window;
-                           Title : in String)
+   procedure Window_Title (Win   : Window;
+                           Title : String)
    is
       Height : Line_Count;
       Width  : Column_Count;

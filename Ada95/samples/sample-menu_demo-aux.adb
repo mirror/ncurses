@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.13 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.14 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
@@ -48,7 +48,7 @@ with Sample.Explanation; use Sample.Explanation;
 
 package body Sample.Menu_Demo.Aux is
 
-   procedure Geometry (M  : in  Menu;
+   procedure Geometry (M  : Menu;
                        L  : out Line_Count;
                        C  : out Column_Count;
                        Y  : out Line_Position;
@@ -56,7 +56,7 @@ package body Sample.Menu_Demo.Aux is
                        Fy : out Line_Position;
                        Fx : out Column_Position);
 
-   procedure Geometry (M  : in  Menu;
+   procedure Geometry (M  : Menu;
                        L  : out Line_Count;        -- Lines used for menu
                        C  : out Column_Count;      -- Columns used for menu
                        Y  : out Line_Position;     -- Proposed Line for menu
@@ -82,11 +82,11 @@ package body Sample.Menu_Demo.Aux is
 
    end Geometry;
 
-   procedure Geometry (M : in  Menu;
+   procedure Geometry (M : Menu;
                        L : out Line_Count;        -- Lines used for menu
                        C : out Column_Count;      -- Columns used for menu
                        Y : out Line_Position;     -- Proposed Line for menu
-                       X  : out Column_Position)  -- Proposed Column for menu
+                       X : out Column_Position)   -- Proposed Column for menu
    is
       Fy : Line_Position;
       Fx : Column_Position;
@@ -134,7 +134,7 @@ package body Sample.Menu_Demo.Aux is
       return Pan;
    end Create;
 
-   procedure Destroy (M : in Menu;
+   procedure Destroy (M : Menu;
                       P : in out Panel)
    is
       W, S : Window;

@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.50 2009/03/21 21:34:20 tom Exp $
+    $Id: gen.c,v 1.51 2009/12/26 15:45:31 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -71,7 +71,7 @@ find_pos(char *s, unsigned len, int *low, int *high)
   int l = 0;
 
   *high = -1;
-  *low = 8 * len;
+  *low = (int)(8 * len);
 
   for (i = 0; i < len; i++, s++)
     {
@@ -90,9 +90,13 @@ find_pos(char *s, unsigned len, int *low, int *high)
 		}
 	      l++;
 	      if (little_endian)
-		*s >>= 1;
+		{
+		  *s >>= 1;
+		}
 	      else
-		*s <<= 1;
+		{
+		  *s = (char)(*s << 1);
+		}
 	    }
 	}
       else
@@ -108,11 +112,11 @@ find_pos(char *s, unsigned len, int *low, int *high)
  * bit size, i.e. they fit into an (u)int or a (u)short.
  */
 static void
-  gen_reps
-  (const name_attribute_pair * nap,	/* array of name_attribute_pair records */
-   const char *name,		/* name of the represented record type  */
-   int len,			/* size of the record in bytes          */
-   int bias)
+gen_reps(
+	  const name_attribute_pair * nap,	/* array of name_attribute_pair records */
+	  const char *name,	/* name of the represented record type  */
+	  int len,		/* size of the record in bytes          */
+	  int bias)
 {
   int i, n, l, cnt = 0, low, high;
   int width = strlen(RES_NAME) + 3;
@@ -124,7 +128,7 @@ static void
   for (i = 0; nap[i].name != (char *)0; i++)
     {
       cnt++;
-      l = strlen(nap[i].name);
+      l = (int)strlen(nap[i].name);
       if (l > width)
 	width = l;
     }
@@ -162,7 +166,7 @@ static void
 static void
 chtype_rep(const char *name, attr_t mask)
 {
-  attr_t x = -1;
+  attr_t x = (attr_t)-1;
   attr_t t = x & mask;
   int low, high;
   int l = find_pos((char *)&t, sizeof(t), &low, &high);
@@ -219,7 +223,7 @@ gen_mrep_rep(const char *name)
   mrep_rep("Z", &x);
 
   memset(&x, 0, sizeof(x));
-  x.bstate = -1;
+  x.bstate = (mmask_t) - 1;
   mrep_rep("Bstate", &x);
 
   printf("      end record;\n");
@@ -285,11 +289,12 @@ gen_attr_set(const char *name)
   chtype attr = A_ATTRIBUTES & ~A_COLOR;
   int start = -1;
   int len = 0;
-  int i, set;
+  int i;
+  chtype set;
   for (i = 0; i < (int)(8 * sizeof(chtype)); i++)
 
     {
-      set = attr & 1;
+      set = (attr & 1);
       if (set)
 	{
 	  if (start < 0)
@@ -1243,7 +1248,7 @@ eti_gen(char *buf, int code, const char *name, int *etimin, int *etimax)
     *etimin = code;
   if (code > *etimax)
     *etimax = code;
-  return strlen(buf);
+  return (int)strlen(buf);
 }
 
 static void

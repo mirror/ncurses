@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,8 +38,8 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.16 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.17 $
+--  $Date: 2009/12/26 17:31:35 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 
@@ -56,18 +56,18 @@ package Terminal_Interface.Curses.Menus.Item_User_Data is
    --  MANPAGE(`mitem_userptr.3x')
 
    --  ANCHOR(`set_item_userptr',`Set_User_Data')
-   procedure Set_User_Data (Itm  : in Item;
-                            Data : in User_Access);
+   procedure Set_User_Data (Itm  : Item;
+                            Data : User_Access);
    --  AKA
    pragma Inline (Set_User_Data);
 
    --  ANCHOR(`item_userptr',`Get_User_Data')
-   procedure Get_User_Data (Itm  : in  Item;
+   procedure Get_User_Data (Itm  : Item;
                             Data : out User_Access);
    --  AKA
 
    --  ANCHOR(`item_userptr',`Get_User_Data')
-   function Get_User_Data (Itm  : in  Item) return User_Access;
+   function Get_User_Data (Itm  : Item) return User_Access;
    --  AKA
    --  Same as function
    pragma Inline (Get_User_Data);

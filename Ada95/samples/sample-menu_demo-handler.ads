@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.9 $
+--  $Revision: 1.10 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses;
@@ -51,14 +51,14 @@ generic
                              Pan : Panel) return Boolean;
 package Sample.Menu_Demo.Handler is
 
-   procedure Drive_Me (M     : in Menu;
-                       Lin   : in Line_Position;
-                       Col   : in Column_Position;
-                       Title : in String := "");
+   procedure Drive_Me (M     : Menu;
+                       Lin   : Line_Position;
+                       Col   : Column_Position;
+                       Title : String := "");
    --  Position the menu at the given point and drive it.
 
-   procedure Drive_Me (M     : in Menu;
-                       Title : in String := "");
+   procedure Drive_Me (M     : Menu;
+                       Title : String := "");
    --  Center menu and drive it.
 
 end Sample.Menu_Demo.Handler;

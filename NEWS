@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1480 2009/12/20 01:32:32 tom Exp $
+-- $Id: NEWS,v 1.1482 2009/12/26 22:19:54 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20091226
+	+ add bterm terminfo entry, based on bogl 0.1.18 -TD
+	+ minor fix to rxvt+pcfkeys terminfo entry -TD
+	+ build-fixes for Ada95 tree for gnat 4.4 "style".
 
 20091219
 	+ remove old check in mvderwin() which prevented moving a derived

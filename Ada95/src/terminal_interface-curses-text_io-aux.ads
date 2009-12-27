@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.13 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.14 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 private package Terminal_Interface.Curses.Text_IO.Aux is
@@ -46,10 +46,10 @@ private package Terminal_Interface.Curses.Text_IO.Aux is
    --  and enumeration types.
    --
    procedure Put_Buf
-     (Win    : in Window;               -- The output window
-      Buf    : in String;               -- The buffer containing the text
-      Width  : in Field;                -- The width of the output field
-      Signal : in Boolean := True;      -- If true, we raise Layout_Error
-      Ljust  : in Boolean := False);    -- The Buf is left justified
+     (Win    : Window;               -- The output window
+      Buf    : String;               -- The buffer containing the text
+      Width  : Field;                -- The width of the output field
+      Signal : Boolean := True;      -- If true, we raise Layout_Error
+      Ljust  : Boolean := False);    -- The Buf is left justified
 
 end Terminal_Interface.Curses.Text_IO.Aux;

@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.9 $
+--  $Revision: 1.10 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
@@ -45,8 +45,8 @@ with Terminal_Interface.Curses.Panels; use Terminal_Interface.Curses.Panels;
 --
 package Sample.Function_Key_Setting is
 
-   procedure Push_Environment (Key   : in String;
-                               Reset : in Boolean := True);
+   procedure Push_Environment (Key   : String;
+                               Reset : Boolean := True);
    --  Push the definition of the current function keys on an internal
    --  stack. If the reset flag is true, all labels are reset while
    --  pushed, so the new environment can assume a tabula rasa.
@@ -68,7 +68,7 @@ package Sample.Function_Key_Setting is
    --  Look for a context, return true if it is in the stack,
    --  false otherwise.
 
-   procedure Notepad_To_Context (Pan : in Panel);
+   procedure Notepad_To_Context (Pan : Panel);
    --  Add a panel representing a notepad to the current context.
 
    Function_Key_Stack_Error : exception;

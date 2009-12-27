@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.10 $
+--  $Revision: 1.11 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Text_IO.Float_IO;
@@ -46,11 +46,11 @@ package body Terminal_Interface.Curses.Text_IO.Complex_IO is
      Terminal_Interface.Curses.Text_IO.Float_IO (Complex_Types.Real'Base);
 
    procedure Put
-     (Win  : in Window;
-      Item : in Complex;
-      Fore : in Field := Default_Fore;
-      Aft  : in Field := Default_Aft;
-      Exp  : in Field := Default_Exp)
+     (Win  : Window;
+      Item : Complex;
+      Fore : Field := Default_Fore;
+      Aft  : Field := Default_Aft;
+      Exp  : Field := Default_Exp)
    is
    begin
       Put (Win, '(');
@@ -61,10 +61,10 @@ package body Terminal_Interface.Curses.Text_IO.Complex_IO is
    end Put;
 
    procedure Put
-     (Item : in Complex;
-      Fore : in Field := Default_Fore;
-      Aft  : in Field := Default_Aft;
-      Exp  : in Field := Default_Exp)
+     (Item : Complex;
+      Fore : Field := Default_Fore;
+      Aft  : Field := Default_Aft;
+      Exp  : Field := Default_Exp)
    is
    begin
       Put (Get_Window, Item, Fore, Aft, Exp);

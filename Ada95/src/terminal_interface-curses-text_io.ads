@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.13 $
+--  $Revision: 1.14 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Text_IO;
@@ -56,13 +56,13 @@ package Terminal_Interface.Curses.Text_IO is
    --  type parameter. They will operate on a default window, which can
    --  be set by the user. It is initially equal to Standard_Window.
 
-   procedure Set_Window (Win : in Window);
+   procedure Set_Window (Win : Window);
    --  Set Win as the default window
 
    function Get_Window return Window;
    --  Get the current default window
 
-   procedure Flush (Win : in Window);
+   procedure Flush (Win : Window);
    procedure Flush;
 
    --------------------------------------------
@@ -74,53 +74,53 @@ package Terminal_Interface.Curses.Text_IO is
    --  A scroll-window is interpreted as an page with unbounded page length,
    --  i.e. it returns the conventional 0 as page length.
 
-   function Line_Length (Win : in Window) return Count;
+   function Line_Length (Win : Window) return Count;
    function Line_Length return Count;
 
-   function Page_Length (Win : in Window) return Count;
+   function Page_Length (Win : Window) return Count;
    function Page_Length return Count;
 
    ------------------------------------
    -- Column, Line, and Page Control --
    ------------------------------------
-   procedure New_Line (Win : in Window; Spacing : in Positive_Count := 1);
-   procedure New_Line (Spacing : in Positive_Count := 1);
+   procedure New_Line (Win : Window; Spacing : Positive_Count := 1);
+   procedure New_Line (Spacing : Positive_Count := 1);
 
-   procedure New_Page (Win : in Window);
+   procedure New_Page (Win : Window);
    procedure New_Page;
 
-   procedure Set_Col (Win : in Window;  To : in Positive_Count);
-   procedure Set_Col (To : in Positive_Count);
+   procedure Set_Col (Win : Window;  To : Positive_Count);
+   procedure Set_Col (To : Positive_Count);
 
-   procedure Set_Line (Win : in Window; To : in Positive_Count);
-   procedure Set_Line (To : in Positive_Count);
+   procedure Set_Line (Win : Window; To : Positive_Count);
+   procedure Set_Line (To : Positive_Count);
 
-   function Col (Win : in Window) return Positive_Count;
+   function Col (Win : Window) return Positive_Count;
    function Col return Positive_Count;
 
-   function Line (Win : in Window) return Positive_Count;
+   function Line (Win : Window) return Positive_Count;
    function Line return Positive_Count;
 
    -----------------------
    -- Characters-Output --
    -----------------------
 
-   procedure Put (Win  : in Window; Item : in Character);
-   procedure Put (Item : in Character);
+   procedure Put (Win  : Window; Item : Character);
+   procedure Put (Item : Character);
 
    --------------------
    -- Strings-Output --
    --------------------
 
-   procedure Put (Win  : in Window; Item : in String);
-   procedure Put (Item : in String);
+   procedure Put (Win  : Window; Item : String);
+   procedure Put (Item : String);
 
    procedure Put_Line
-     (Win  : in Window;
-      Item : in String);
+     (Win  : Window;
+      Item : String);
 
    procedure Put_Line
-     (Item : in String);
+     (Item : String);
 
    --  Exceptions
 

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.11 $
---  $Date: 2006/06/25 14:30:22 $
+--  $Revision: 1.12 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ package body Terminal_Interface.Curses.Termcap is
    end Get_Flag;
 
 ------------------------------------------------------------------------------
-   procedure Get_Number (Name   : in  String;
+   procedure Get_Number (Name   : String;
                          Value  : out Integer;
                          Result : out Boolean)
    is

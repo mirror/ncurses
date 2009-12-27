@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,15 +35,15 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.18 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.19 $
+--  $Date: 2009/12/26 17:40:46 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package body Terminal_Interface.Curses.Text_IO is
 
    Default_Window : Window := Null_Window;
 
-   procedure Set_Window (Win : in Window)
+   procedure Set_Window (Win : Window)
    is
    begin
       Default_Window := Win;
@@ -60,7 +60,7 @@ package body Terminal_Interface.Curses.Text_IO is
    end Get_Window;
    pragma Inline (Get_Window);
 
-   procedure Flush (Win : in Window)
+   procedure Flush (Win : Window)
    is
    begin
       Refresh (Win);
@@ -81,7 +81,7 @@ package body Terminal_Interface.Curses.Text_IO is
    --  A scroll-window is interpreted as an page with unbounded page length,
    --  i.e. it returns the conventional 0 as page length.
 
-   function Line_Length (Win : in Window) return Count
+   function Line_Length (Win : Window) return Count
    is
       N_Lines : Line_Count;
       N_Cols  : Column_Count;
@@ -99,7 +99,7 @@ package body Terminal_Interface.Curses.Text_IO is
       return Line_Length (Get_Window);
    end Line_Length;
 
-   function Page_Length (Win : in Window) return Count
+   function Page_Length (Win : Window) return Count
    is
       N_Lines : Line_Count;
       N_Cols  : Column_Count;
@@ -124,7 +124,7 @@ package body Terminal_Interface.Curses.Text_IO is
    ------------------------------------
    -- Column, Line, and Page Control --
    ------------------------------------
-   procedure New_Line (Win : in Window; Spacing : in Positive_Count := 1)
+   procedure New_Line (Win : Window; Spacing : Positive_Count := 1)
    is
       P_Size : constant Count := Page_Length (Win);
    begin
@@ -141,13 +141,13 @@ package body Terminal_Interface.Curses.Text_IO is
       end loop;
    end New_Line;
 
-   procedure New_Line (Spacing : in Positive_Count := 1)
+   procedure New_Line (Spacing : Positive_Count := 1)
    is
    begin
       New_Line (Get_Window, Spacing);
    end New_Line;
 
-   procedure New_Page (Win : in Window)
+   procedure New_Page (Win : Window)
    is
    begin
       Clear (Win);
@@ -159,7 +159,7 @@ package body Terminal_Interface.Curses.Text_IO is
       New_Page (Get_Window);
    end New_Page;
 
-   procedure Set_Col (Win : in Window;  To : in Positive_Count)
+   procedure Set_Col (Win : Window;  To : Positive_Count)
    is
       Y  : Line_Position;
       X1 : Column_Position;
@@ -187,13 +187,13 @@ package body Terminal_Interface.Curses.Text_IO is
       end if;
    end Set_Col;
 
-   procedure Set_Col (To : in Positive_Count)
+   procedure Set_Col (To : Positive_Count)
    is
    begin
       Set_Col (Get_Window, To);
    end Set_Col;
 
-   procedure Set_Line (Win : in Window; To : in Positive_Count)
+   procedure Set_Line (Win : Window; To : Positive_Count)
    is
       Y1 : Line_Position;
       Y2 : Line_Position;
@@ -216,13 +216,13 @@ package body Terminal_Interface.Curses.Text_IO is
       end if;
    end Set_Line;
 
-   procedure Set_Line (To : in Positive_Count)
+   procedure Set_Line (To : Positive_Count)
    is
    begin
       Set_Line (Get_Window, To);
    end Set_Line;
 
-   function Col (Win : in Window) return Positive_Count
+   function Col (Win : Window) return Positive_Count
    is
       Y : Line_Position;
       X : Column_Position;
@@ -242,7 +242,7 @@ package body Terminal_Interface.Curses.Text_IO is
       return Col (Get_Window);
    end Col;
 
-   function Line (Win : in Window) return Positive_Count
+   function Line (Win : Window) return Positive_Count
    is
       Y : Line_Position;
       X : Column_Position;
@@ -266,7 +266,7 @@ package body Terminal_Interface.Curses.Text_IO is
    -- Characters Output --
    -----------------------
 
-   procedure Put (Win  : in Window; Item : in Character)
+   procedure Put (Win  : Window; Item : Character)
    is
       P_Size : constant Count := Page_Length (Win);
       Y : Line_Position;
@@ -284,7 +284,7 @@ package body Terminal_Interface.Curses.Text_IO is
       Add (Win, Item);
    end Put;
 
-   procedure Put (Item : in Character)
+   procedure Put (Item : Character)
    is
    begin
       Put (Get_Window, Item);
@@ -294,7 +294,7 @@ package body Terminal_Interface.Curses.Text_IO is
    -- Strings-Output --
    --------------------
 
-   procedure Put (Win  : in Window; Item : in String)
+   procedure Put (Win  : Window; Item : String)
    is
       P_Size : constant Count := Page_Length (Win);
       Y : Line_Position;
@@ -312,15 +312,15 @@ package body Terminal_Interface.Curses.Text_IO is
       Add (Win, Item);
    end Put;
 
-   procedure Put (Item : in String)
+   procedure Put (Item : String)
    is
    begin
       Put (Get_Window, Item);
    end Put;
 
    procedure Put_Line
-     (Win  : in Window;
-      Item : in String)
+     (Win  : Window;
+      Item : String)
    is
    begin
       Put (Win, Item);
@@ -328,7 +328,7 @@ package body Terminal_Interface.Curses.Text_IO is
    end Put_Line;
 
    procedure Put_Line
-     (Item : in String)
+     (Item : String)
    is
    begin
       Put_Line (Get_Window, Item);

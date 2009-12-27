@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.11 $
+--  $Revision: 1.12 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C;
@@ -48,8 +48,8 @@ package body Terminal_Interface.Curses.Panels.User_Data is
 
    use type Interfaces.C.int;
 
-   procedure Set_User_Data (Pan  : in Panel;
-                            Data : in User_Access)
+   procedure Set_User_Data (Pan  : Panel;
+                            Data : User_Access)
    is
       function Set_Panel_Userptr (Pan  : Panel;
                                   Addr : User_Access) return C_Int;
@@ -60,7 +60,7 @@ package body Terminal_Interface.Curses.Panels.User_Data is
       end if;
    end Set_User_Data;
 
-   function Get_User_Data (Pan  : in  Panel) return User_Access
+   function Get_User_Data (Pan  : Panel) return User_Access
    is
       function Panel_Userptr (Pan : Panel) return User_Access;
       pragma Import (C, Panel_Userptr, "panel_userptr");
@@ -68,7 +68,7 @@ package body Terminal_Interface.Curses.Panels.User_Data is
       return Panel_Userptr (Pan);
    end Get_User_Data;
 
-   procedure Get_User_Data (Pan  : in  Panel;
+   procedure Get_User_Data (Pan  : Panel;
                             Data : out User_Access)
    is
    begin

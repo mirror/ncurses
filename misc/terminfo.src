@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.357 $
-#	$Date: 2009/12/19 21:24:52 $
+#	$Revision: 1.358 $
+#	$Date: 2009/12/26 19:36:05 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -857,6 +857,31 @@ linux-16color|linux console with 16 colors,
 	setab=\E[4%p1%{7}%m%d%?%p1%{7}%>%t;5%e;25%;m,
 	setaf=\E[3%p1%{7}%m%d%?%p1%{7}%>%t;1%e;21%;m,
 	use=linux,
+
+# bterm (bogl 0.1.18)
+# Implementation is in bogl-term.c
+# Key capabilities from linux terminfo entry
+#
+# Notes:
+# bterm only supports acs using wide-characters, has case for these: qjxamlkut
+# bterm does not support sgr, since it only processes one parameter -TD
+bterm|bogl virtual terminal,
+	am, bce,
+	colors#8, cols#80, lines#24, pairs#64,
+	acsc=aajjkkllmmqqttuuxx, bold=\E[1m, civis=\E[?25l,
+	clear=\E[H\E[2J, cnorm=\E[?25h, cr=^M, cub1=^H, cud1=^J,
+	cup=\E[%i%p1%d;%p2%dH, ed=\E[J, el=\E[K, home=\E[H, ind=^J,
+	kb2=\E[G, kbs=\177, kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B,
+	kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[3~, kend=\E[4~, kf1=\E[[A,
+	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf13=\E[25~,
+	kf14=\E[26~, kf15=\E[28~, kf16=\E[29~, kf17=\E[31~,
+	kf18=\E[32~, kf19=\E[33~, kf2=\E[[B, kf20=\E[34~,
+	kf3=\E[[C, kf4=\E[[D, kf5=\E[[E, kf6=\E[17~, kf7=\E[18~,
+	kf8=\E[19~, kf9=\E[20~, khome=\E[1~, kich1=\E[2~,
+	kmous=\E[M, knp=\E[6~, kpp=\E[5~, kspd=^Z, nel=^M^J,
+	op=\E49;39m, rev=\E[7m, ri=\EM, rmacs=^O, rmso=\E[27m,
+	rmul=\E[24m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
+	sgr0=\E[0m, smacs=^N, smso=\E[7m, smul=\E[4m,
 
 #### Mach
 #
@@ -3982,12 +4007,12 @@ rxvt+pcfkeys|fragment for PC-style fkeys,
 	kf38=\E[29\^, kf39=\E[31\^, kf4=\E[14~, kf40=\E[32\^,
 	kf41=\E[33\^, kf42=\E[34\^, kf43=\E[23@, kf44=\E[24@,
 	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
-	kfnd=\E[1~, khome=\E[7~, kich1=\E[2~, knp=\E[6~, kpp=\E[5~,
-	kslt=\E[4~, kDC5=\E[3\^, kDC6=\E[3@, kDN=\E[b, kDN5=\EOb,
-	kEND5=\E[8\^, kEND6=\E[8@, kHOM5=\E[7\^, kHOM6=\E[7@,
-	kIC5=\E[2\^, kIC6=\E[2@, kLFT5=\EOd, kNXT5=\E[6\^,
-	kNXT6=\E[6@, kPRV5=\E[5\^, kPRV6=\E[5@, kRIT5=\EOc,
-	kUP=\E[a, kUP5=\EOa,
+	kfnd=\E[1~, khome=\E[7~, kich1=\E[2~, kind=\E[a, knp=\E[6~,
+	kpp=\E[5~, kri=\E[b, kslt=\E[4~, kDC5=\E[3\^, kDC6=\E[3@,
+	kDN=\E[b, kDN5=\EOb, kEND5=\E[8\^, kEND6=\E[8@,
+	kHOM5=\E[7\^, kHOM6=\E[7@, kIC5=\E[2\^, kIC6=\E[2@,
+	kLFT5=\EOd, kNXT5=\E[6\^, kNXT6=\E[6@, kPRV5=\E[5\^,
+	kPRV6=\E[5@, kRIT5=\EOc, kUP=\E[a, kUP5=\EOa,
 
 rxvt|rxvt terminal emulator (X Window System),
 	ncv@,
@@ -22054,6 +22079,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2009-12-12
 #	* add bw (auto-left-margin) to nsterm* entries (Benjamin Sittler)
 #	* rename minix to minix-1.7, add minix entry for Minux3 -TD
+#
+# 2009-12-26
+#	* add bterm (bogl 0.1.18) -TD
+#	* minor fix to rxvt+pcfkeys -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

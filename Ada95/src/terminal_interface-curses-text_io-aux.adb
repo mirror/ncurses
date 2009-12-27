@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,18 +35,18 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.12 $
---  $Date: 2006/06/25 14:24:40 $
+--  $Revision: 1.13 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 package body Terminal_Interface.Curses.Text_IO.Aux is
 
    procedure Put_Buf
-     (Win    : in Window;
-      Buf    : in String;
-      Width  : in Field;
-      Signal : in Boolean := True;
-      Ljust  : in Boolean := False)
+     (Win    : Window;
+      Buf    : String;
+      Width  : Field;
+      Signal : Boolean := True;
+      Ljust  : Boolean := False)
    is
       L   : Field;
       Len : Field;

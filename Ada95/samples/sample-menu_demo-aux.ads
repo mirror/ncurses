@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.9 $
+--  $Revision: 1.10 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use  Terminal_Interface.Curses;
@@ -44,7 +44,7 @@ with Terminal_Interface.Curses.Menus; use  Terminal_Interface.Curses.Menus;
 
 package Sample.Menu_Demo.Aux is
 
-   procedure Geometry (M  : in  Menu;
+   procedure Geometry (M  : Menu;
                        L  : out Line_Count;
                        C  : out Column_Count;
                        Y  : out Line_Position;
@@ -59,7 +59,7 @@ package Sample.Menu_Demo.Aux is
    --  Create a panel decorated with a frame and the title at the specified
    --  position. The dimension of the panel is derived from the menus layout.
 
-   procedure Destroy (M : in Menu;
+   procedure Destroy (M : Menu;
                       P : in out Panel);
    --  Destroy all the windowing structures associated with this menu and
    --  panel.

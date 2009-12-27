@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,7 +38,7 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.14 $
+--  $Revision: 1.15 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C;
@@ -64,8 +64,8 @@ package Terminal_Interface.Curses.Forms.Field_Types is
    type Field_Type_Access is access all Field_Type'Class;
 
    --  ANCHOR(`set_field_type()',`Set_Type')
-   procedure Set_Field_Type (Fld      : in Field;
-                             Fld_Type : in Field_Type) is abstract;
+   procedure Set_Field_Type (Fld      : Field;
+                             Fld_Type : Field_Type) is abstract;
    --  AKA
    --  But: we hide the vararg mechanism of the C interface. You always
    --       have to pass a single Field_Type parameter.
@@ -75,7 +75,7 @@ package Terminal_Interface.Curses.Forms.Field_Types is
    --  MANPAGE(`form_field_validation.3x')
 
    --  ANCHOR(`field_type()',`Get_Type')
-   function Get_Type (Fld : in Field) return Field_Type_Access;
+   function Get_Type (Fld : Field) return Field_Type_Access;
    --  AKA
    --  ALIAS(`field_arg()')
    --  In Ada95 we can combine these. If you try to retrieve the field type

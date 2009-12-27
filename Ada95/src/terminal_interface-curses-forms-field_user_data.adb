@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998 Free Software Foundation, Inc.                        --
+-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.12 $
+--  $Revision: 1.13 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Aux; use  Terminal_Interface.Curses.Aux;
@@ -51,8 +51,8 @@ package body Terminal_Interface.Curses.Forms.Field_User_Data is
    --  |
    use type Interfaces.C.int;
 
-   procedure Set_User_Data (Fld  : in Field;
-                            Data : in User_Access)
+   procedure Set_User_Data (Fld  : Field;
+                            Data : User_Access)
    is
       function Set_Field_Userptr (Fld : Field;
                                   Usr : User_Access) return C_Int;
@@ -67,7 +67,7 @@ package body Terminal_Interface.Curses.Forms.Field_User_Data is
    --  |
    --  |
    --  |
-   function Get_User_Data (Fld  : in  Field) return User_Access
+   function Get_User_Data (Fld  : Field) return User_Access
    is
       function Field_Userptr (Fld : Field) return User_Access;
       pragma Import (C, Field_Userptr, "field_userptr");
@@ -75,7 +75,7 @@ package body Terminal_Interface.Curses.Forms.Field_User_Data is
       return Field_Userptr (Fld);
    end Get_User_Data;
 
-   procedure Get_User_Data (Fld  : in  Field;
+   procedure Get_User_Data (Fld  : Field;
                             Data : out User_Access)
    is
    begin

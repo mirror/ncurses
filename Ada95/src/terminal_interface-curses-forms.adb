@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2004,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.26 $
---  $Date: 2008/07/26 18:50:44 $
+--  $Revision: 1.27 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -78,7 +78,7 @@ package body Terminal_Interface.Curses.Forms is
      Ada.Unchecked_Conversion (C_Int,
                                Form_Option_Set);
 
-   procedure Request_Name (Key  : in Form_Request_Code;
+   procedure Request_Name (Key  : Form_Request_Code;
                                 Name : out String)
    is
       function Form_Request_Name (Key : C_Int) return chars_ptr;
@@ -190,8 +190,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Justification (Fld  : in Field;
-                                Just : in Field_Justification := None)
+   procedure Set_Justification (Fld  : Field;
+                                Just : Field_Justification := None)
    is
       function Set_Field_Just (Fld  : Field;
                                Just : C_Int) return C_Int;
@@ -223,9 +223,9 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    procedure Set_Buffer
-     (Fld    : in Field;
-      Buffer : in Buffer_Number := Buffer_Number'First;
-      Str    : in String)
+     (Fld    : Field;
+      Buffer : Buffer_Number := Buffer_Number'First;
+      Str    : String)
    is
       type Char_Ptr is access all Interfaces.C.char;
       function Set_Fld_Buffer (Fld    : Field;
@@ -248,8 +248,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    procedure Get_Buffer
-     (Fld    : in Field;
-      Buffer : in Buffer_Number := Buffer_Number'First;
+     (Fld    : Field;
+      Buffer : Buffer_Number := Buffer_Number'First;
       Str    : out String)
    is
       function Field_Buffer (Fld : Field;
@@ -260,8 +260,8 @@ package body Terminal_Interface.Curses.Forms is
    end Get_Buffer;
 
    function Get_Buffer
-     (Fld    : in Field;
-      Buffer : in Buffer_Number := Buffer_Number'First) return String
+     (Fld    : Field;
+      Buffer : Buffer_Number := Buffer_Number'First) return String
    is
       function Field_Buffer (Fld : Field;
                              B   : C_Int) return chars_ptr;
@@ -272,8 +272,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Status (Fld    : in Field;
-                         Status : in Boolean := True)
+   procedure Set_Status (Fld    : Field;
+                         Status : Boolean := True)
    is
       function Set_Fld_Status (Fld : Field;
                                St  : C_Int) return C_Int;
@@ -304,8 +304,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Maximum_Size (Fld : in Field;
-                               Max : in Natural := 0)
+   procedure Set_Maximum_Size (Fld : Field;
+                               Max : Natural := 0)
    is
       function Set_Field_Max (Fld : Field;
                               M   : C_Int) return C_Int;
@@ -324,8 +324,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Options (Fld     : in Field;
-                          Options : in Field_Option_Set)
+   procedure Set_Options (Fld     : Field;
+                          Options : Field_Option_Set)
    is
       function Set_Field_Opts (Fld : Field;
                                Opt : C_Int) return C_Int;
@@ -342,8 +342,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Switch_Options (Fld     : in Field;
-                             Options : in Field_Option_Set;
+   procedure Switch_Options (Fld     : Field;
+                             Options : Field_Option_Set;
                              On      : Boolean := True)
    is
       function Field_Opts_On (Fld : Field;
@@ -368,7 +368,7 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Get_Options (Fld     : in  Field;
+   procedure Get_Options (Fld     : Field;
                           Options : out Field_Option_Set)
    is
       function Field_Opts (Fld : Field) return C_Int;
@@ -397,9 +397,9 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    procedure Set_Foreground
-     (Fld   : in Field;
-      Fore  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First)
+     (Fld   : Field;
+      Fore  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First)
    is
       function Set_Field_Fore (Fld  : Field;
                                Attr : C_Chtype) return C_Int;
@@ -418,7 +418,7 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Foreground (Fld  : in  Field;
+   procedure Foreground (Fld  : Field;
                          Fore : out Character_Attribute_Set)
    is
       function Field_Fore (Fld : Field) return C_Chtype;
@@ -427,7 +427,7 @@ package body Terminal_Interface.Curses.Forms is
       Fore := Chtype_To_AttrChar (Field_Fore (Fld)).Attr;
    end Foreground;
 
-   procedure Foreground (Fld   : in  Field;
+   procedure Foreground (Fld   : Field;
                          Fore  : out Character_Attribute_Set;
                          Color : out Color_Pair)
    is
@@ -441,9 +441,9 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    procedure Set_Background
-     (Fld   : in Field;
-      Back  : in Character_Attribute_Set := Normal_Video;
-      Color : in Color_Pair := Color_Pair'First)
+     (Fld   : Field;
+      Back  : Character_Attribute_Set := Normal_Video;
+      Color : Color_Pair := Color_Pair'First)
    is
       function Set_Field_Back (Fld  : Field;
                                Attr : C_Chtype) return C_Int;
@@ -462,7 +462,7 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Background (Fld  : in  Field;
+   procedure Background (Fld  : Field;
                          Back : out Character_Attribute_Set)
    is
       function Field_Back (Fld : Field) return C_Chtype;
@@ -471,7 +471,7 @@ package body Terminal_Interface.Curses.Forms is
       Back := Chtype_To_AttrChar (Field_Back (Fld)).Attr;
    end Background;
 
-   procedure Background (Fld   : in  Field;
+   procedure Background (Fld   : Field;
                          Back  : out Character_Attribute_Set;
                          Color : out Color_Pair)
    is
@@ -484,8 +484,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Pad_Character (Fld : in Field;
-                                Pad : in Character := Space)
+   procedure Set_Pad_Character (Fld : Field;
+                                Pad : Character := Space)
    is
       function Set_Field_Pad (Fld : Field;
                               Ch  : C_Int) return C_Int;
@@ -501,7 +501,7 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Pad_Character (Fld : in  Field;
+   procedure Pad_Character (Fld : Field;
                             Pad : out Character)
    is
       function Field_Pad (Fld : Field) return C_Int;
@@ -516,7 +516,7 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Info (Fld                : in  Field;
+   procedure Info (Fld                : Field;
                    Lines              : out Line_Count;
                    Columns            : out Column_Count;
                    First_Row          : out Line_Position;
@@ -550,7 +550,7 @@ package body Terminal_Interface.Curses.Forms is
 --  |
 --  |
 --  |
-   procedure Dynamic_Info (Fld     : in Field;
+   procedure Dynamic_Info (Fld     : Field;
                            Lines   : out Line_Count;
                            Columns : out Column_Count;
                            Max     : out Natural)
@@ -579,8 +579,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Window (Frm : in Form;
-                         Win : in Window)
+   procedure Set_Window (Frm : Form;
+                         Win : Window)
    is
       function Set_Form_Win (Frm : Form;
                              Win : Window) return C_Int;
@@ -607,8 +607,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Sub_Window (Frm : in Form;
-                             Win : in Window)
+   procedure Set_Sub_Window (Frm : Form;
+                             Win : Window)
    is
       function Set_Form_Sub (Frm : Form;
                              Win : Window) return C_Int;
@@ -635,7 +635,7 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Scale (Frm     : in Form;
+   procedure Scale (Frm     : Form;
                     Lines   : out Line_Count;
                     Columns : out Column_Count)
    is
@@ -659,8 +659,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Field_Init_Hook (Frm  : in Form;
-                                  Proc : in Form_Hook_Function)
+   procedure Set_Field_Init_Hook (Frm  : Form;
+                                  Proc : Form_Hook_Function)
    is
       function Set_Field_Init (Frm  : Form;
                                Proc : Form_Hook_Function) return C_Int;
@@ -675,8 +675,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Field_Term_Hook (Frm  : in Form;
-                                  Proc : in Form_Hook_Function)
+   procedure Set_Field_Term_Hook (Frm  : Form;
+                                  Proc : Form_Hook_Function)
    is
       function Set_Field_Term (Frm  : Form;
                                Proc : Form_Hook_Function) return C_Int;
@@ -691,8 +691,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Form_Init_Hook (Frm  : in Form;
-                                 Proc : in Form_Hook_Function)
+   procedure Set_Form_Init_Hook (Frm  : Form;
+                                 Proc : Form_Hook_Function)
    is
       function Set_Form_Init (Frm  : Form;
                               Proc : Form_Hook_Function) return C_Int;
@@ -707,8 +707,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Form_Term_Hook (Frm  : in Form;
-                                 Proc : in Form_Hook_Function)
+   procedure Set_Form_Term_Hook (Frm  : Form;
+                                 Proc : Form_Hook_Function)
    is
       function Set_Form_Term (Frm  : Form;
                               Proc : Form_Hook_Function) return C_Int;
@@ -727,8 +727,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Redefine (Frm  : in Form;
-                       Flds : in Field_Array_Access)
+   procedure Redefine (Frm  : Form;
+                       Flds : Field_Array_Access)
    is
       function Set_Frm_Fields (Frm   : Form;
                                Items : System.Address) return C_Int;
@@ -779,9 +779,9 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Move (Fld    : in Field;
-                   Line   : in Line_Position;
-                   Column : in Column_Position)
+   procedure Move (Fld    : Field;
+                   Line   : Line_Position;
+                   Column : Column_Position)
    is
       function Move (Fld : Field; L, C : C_Int) return C_Int;
       pragma Import (C, Move, "move_field");
@@ -839,8 +839,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Options (Frm     : in Form;
-                          Options : in Form_Option_Set)
+   procedure Set_Options (Frm     : Form;
+                          Options : Form_Option_Set)
    is
       function Set_Form_Opts (Frm : Form;
                               Opt : C_Int) return C_Int;
@@ -857,8 +857,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Switch_Options (Frm     : in Form;
-                             Options : in Form_Option_Set;
+   procedure Switch_Options (Frm     : Form;
+                             Options : Form_Option_Set;
                              On      : Boolean := True)
    is
       function Form_Opts_On (Frm : Form;
@@ -883,7 +883,7 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Get_Options (Frm     : in  Form;
+   procedure Get_Options (Frm     : Form;
                           Options : out Form_Option_Set)
    is
       function Form_Opts (Frm : Form) return C_Int;
@@ -910,8 +910,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Post (Frm  : in Form;
-                   Post : in Boolean := True)
+   procedure Post (Frm  : Form;
+                   Post : Boolean := True)
    is
       function M_Post (Frm : Form) return C_Int;
       pragma Import (C, M_Post, "post_form");
@@ -1020,8 +1020,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Current (Frm : in Form;
-                          Fld : in Field)
+   procedure Set_Current (Frm : Form;
+                          Fld : Field)
    is
       function Set_Current_Fld (Frm : Form; Fld : Field) return C_Int;
       pragma Import (C, Set_Current_Fld, "set_current_field");
@@ -1035,7 +1035,7 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   function Current (Frm : in Form) return Field
+   function Current (Frm : Form) return Field
    is
       function Current_Fld (Frm : Form) return Field;
       pragma Import (C, Current_Fld, "current_field");
@@ -1050,8 +1050,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_Page (Frm  : in Form;
-                       Page : in Page_Number := Page_Number'First)
+   procedure Set_Page (Frm  : Form;
+                       Page : Page_Number := Page_Number'First)
    is
       function Set_Frm_Page (Frm : Form; Pg : C_Int) return C_Int;
       pragma Import (C, Set_Frm_Page, "set_form_page");
@@ -1099,8 +1099,8 @@ package body Terminal_Interface.Curses.Forms is
    --  |
    --  |
    --  |
-   procedure Set_New_Page (Fld      : in Field;
-                           New_Page : in Boolean := True)
+   procedure Set_New_Page (Fld      : Field;
+                           New_Page : Boolean := True)
    is
       function Set_Page (Fld : Field; Flg : C_Int) return C_Int;
       pragma Import (C, Set_Page, "set_new_page");
@@ -1129,7 +1129,7 @@ package body Terminal_Interface.Curses.Forms is
    end Is_New_Page;
 
    procedure Free (FA          : in out Field_Array_Access;
-                   Free_Fields : in Boolean := False)
+                   Free_Fields : Boolean := False)
    is
       procedure Release is new Ada.Unchecked_Deallocation
         (Field_Array, Field_Array_Access);

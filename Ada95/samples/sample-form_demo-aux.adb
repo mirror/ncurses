@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998,2004 Free Software Foundation, Inc.                   --
+-- Copyright (c) 1998-2004,2009 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.16 $
---  $Date: 2004/08/21 21:37:00 $
+--  $Revision: 1.17 $
+--  $Date: 2009/12/26 17:38:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
@@ -48,7 +48,7 @@ with Sample.Explanation; use Sample.Explanation;
 
 package body Sample.Form_Demo.Aux is
 
-   procedure Geometry (F  : in  Form;
+   procedure Geometry (F  : Form;
                        L  : out Line_Count;        -- Lines used for menu
                        C  : out Column_Count;      -- Columns used for menu
                        Y  : out Line_Position;     -- Proposed Line for menu
@@ -105,7 +105,7 @@ package body Sample.Form_Demo.Aux is
       return Pan;
    end Create;
 
-   procedure Destroy (F : in Form;
+   procedure Destroy (F : Form;
                       P : in out Panel)
    is
       W, S : Window;
