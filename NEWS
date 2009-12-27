@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1482 2009/12/26 22:19:54 tom Exp $
+-- $Id: NEWS,v 1.1484 2009/12/27 16:25:58 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20091227
+	+ change order of lookup in progs/tput.c, looking for terminfo data
+	  first.  This fixes a confusion between termcap "sg" and terminfo
+	  "sgr" or "sgr0", originally from 990123 changes, but exposed by
+	  20091114 fixes for hashing.  With this change, only "dl" and "ed" are
+	  ambiguous (Mandriva #56272).
 
 20091226
 	+ add bterm terminfo entry, based on bogl 0.1.18 -TD

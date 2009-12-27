@@ -47,7 +47,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.43 2009/03/14 18:45:55 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.45 2009/12/27 16:36:12 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -153,6 +153,9 @@ tput(int argc, char *argv[])
     int i, j, c;
     int status;
     FILE *f;
+#if !PURE_TERMINFO
+    bool termcap = FALSE;
+#endif
 
     if ((name = argv[0]) == 0)
 	name = "";
@@ -265,35 +268,40 @@ tput(int argc, char *argv[])
 	return 0;
     }
 #if !PURE_TERMINFO
-    {
-	const struct name_table_entry *np;
-
-	if ((np = _nc_find_entry(name, _nc_get_hash_table(1))) != 0)
-	    switch (np->nte_type) {
-	    case BOOLEAN:
-		if (bool_from_termcap[np->nte_index])
-		    name = boolnames[np->nte_index];
-		break;
-
-	    case NUMBER:
-		if (num_from_termcap[np->nte_index])
-		    name = numnames[np->nte_index];
-		break;
-
-	    case STRING:
-		if (str_from_termcap[np->nte_index])
-		    name = strnames[np->nte_index];
-		break;
-	    }
-    }
+  retry:
 #endif
-
     if ((status = tigetflag(name)) != -1) {
 	return exit_code(BOOLEAN, status);
     } else if ((status = tigetnum(name)) != CANCELLED_NUMERIC) {
 	(void) printf("%d\n", status);
 	return exit_code(NUMBER, 0);
     } else if ((s = tigetstr(name)) == CANCELLED_STRING) {
+#if !PURE_TERMINFO
+	if (!termcap) {
+	    const struct name_table_entry *np;
+
+	    termcap = TRUE;
+	    if ((np = _nc_find_entry(name, _nc_get_hash_table(termcap))) != 0) {
+		switch (np->nte_type) {
+		case BOOLEAN:
+		    if (bool_from_termcap[np->nte_index])
+			name = boolnames[np->nte_index];
+		    break;
+
+		case NUMBER:
+		    if (num_from_termcap[np->nte_index])
+			name = numnames[np->nte_index];
+		    break;
+
+		case STRING:
+		    if (str_from_termcap[np->nte_index])
+			name = strnames[np->nte_index];
+		    break;
+		}
+		goto retry;
+	    }
+	}
+#endif
 	quit(4, "unknown terminfo capability '%s'", name);
     } else if (s != ABSENT_STRING) {
 	if (argc > 1) {
