@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1484 2009/12/27 16:25:58 tom Exp $
+-- $Id: NEWS,v 1.1486 2010/01/02 22:56:01 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100102
+	+ minor improvement to tic's checking of similar SGR's to allow for the
+	  most common case of SGR 0.
+	+ modify getmouse() to act as its documentation implied, returning on
+	  each call the preceding event until none are left.  When no more
+	  events remain, it will return ERR.
 
 20091227
 	+ change order of lookup in progs/tput.c, looking for terminfo data

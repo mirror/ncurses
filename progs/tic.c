@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.139 2009/12/12 17:30:12 Nicholas.Marriott Exp $")
+MODULE_ID("$Id: tic.c,v 1.140 2010/01/02 22:54:01 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -1272,6 +1272,8 @@ similar_sgr(int num, char *a, char *b)
 	    } else if (delaying) {
 		a = skip_delay(a);
 		b = skip_delay(b);
+	    } else if ((*b == '0' || (*b == ';')) && *a == 'm') {
+		b++;
 	    } else {
 		a++;
 	    }

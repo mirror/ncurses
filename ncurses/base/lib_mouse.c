@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.110 2009/10/24 23:21:31 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.111 2010/01/02 21:06:52 tom Exp $")
 
 #include <tic.h>
 
@@ -1286,6 +1286,8 @@ _nc_mouse_resume(SCREEN *sp)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 {
+    int result = ERR;
+
     T((T_CALLED("getmouse(%p,%p)"), (void *) SP_PARM, (void *) aevent));
 
     if ((aevent != 0) && (SP_PARM != 0) && (SP_PARM->_mouse_type != M_NONE)) {
@@ -1293,17 +1295,20 @@ NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 	/* compute the current-event pointer */
 	MEVENT *prev = PREV(eventp);
 
-	/* copy the event we find there */
-	*aevent = *prev;
+	if (prev->id != INVALID_EVENT) {
+	    /* copy the event we find there */
+	    *aevent = *prev;
 
-	TR(TRACE_IEVENT, ("getmouse: returning event %s from slot %ld",
-			  _nc_tracemouse(SP_PARM, prev),
-			  (long) IndexEV(SP_PARM, prev)));
+	    TR(TRACE_IEVENT, ("getmouse: returning event %s from slot %ld",
+			      _nc_tracemouse(SP_PARM, prev),
+			      (long) IndexEV(SP_PARM, prev)));
 
-	prev->id = INVALID_EVENT;	/* so the queue slot becomes free */
-	returnCode(OK);
+	    prev->id = INVALID_EVENT;	/* so the queue slot becomes free */
+	    SP_PARM->_mouse_eventp = PREV(prev);
+	    result = OK;
+	}
     }
-    returnCode(ERR);
+    returnCode(result);
 }
 
 #if NCURSES_SP_FUNCS
