@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,8 +40,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.20 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2008/07/26 18:50:33 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.21 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2009/12/26 17:38:58 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>; <b>use</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>;
@@ -73,7 +73,7 @@
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_71_13" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_79_13">Get_Type</A></FONT> (<FONT COLOR=red><A NAME="ref_71_23" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_79_23">Fld</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_63_9">Field_Type_Access</A>
+   <b>function</b> <FONT COLOR=red><A NAME="ref_71_13" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_79_13">Get_Type</A></FONT> (<FONT COLOR=red><A NAME="ref_71_23" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_79_23">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_63_9">Field_Type_Access</A>
    <b>is</b>
       <FONT COLOR=red><A NAME="ref_73_7">Low_Level</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_132_9">C_Field_Type</A> := <A HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_59_13">Get_Fieldtype</A> (<A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_79_23">Fld</A>);
       <FONT COLOR=red><A NAME="ref_74_7">Arg</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_216_9">Argument_Access</A>;
@@ -121,7 +121,7 @@
       <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_167_23">Usr</A>;
    <b>end</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_167_13">Copy_Arg</A>;
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_119_14" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_172_14">Free_Arg</A></FONT> (<FONT COLOR=red><A NAME="ref_119_24" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_172_24">Usr</A></FONT> : <b>in</b> System.Address)
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_119_14" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_172_14">Free_Arg</A></FONT> (<FONT COLOR=red><A NAME="ref_119_24" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_172_24">Usr</A></FONT> : System.Address)
    <b>is</b>
       <b>procedure</b> Free_Type <b>is</b> <b>new</b> Ada.Unchecked_Deallocation
         (<A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field_Type</A>'Class, <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_63_9">Field_Type_Access</A>);

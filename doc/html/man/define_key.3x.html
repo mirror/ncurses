@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1997
-  * @Id: define_key.3x,v 1.12 2006/02/25 21:49:19 tom Exp @
+  * @Id: define_key.3x,v 1.13 2009/09/19 21:09:35 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -74,15 +74,18 @@
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       The keycode  must  be  greater  than  zero,  else  ERR  is
+       The keycode must be greater than zero, and the string non-
+       null, otherwise ERR is returned.  ERR may also be returned
+       if there is insufficient memory to allocate  the  data  to
+       store  the  definition.   If  no  error is detected, OK is
        returned.
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These  routines  are  specific  to ncurses.  They were not
-       supported on Version 7, BSD or System  V  implementations.
-       It  is recommended that any code depending on them be con-
+       These routines are specific to  ncurses.   They  were  not
+       supported  on  Version 7, BSD or System V implementations.
+       It is recommended that any code depending on them be  con-
        ditioned using NCURSES_VERSION.
 
 

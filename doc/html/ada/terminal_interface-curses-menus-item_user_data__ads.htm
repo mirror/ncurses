@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,8 +40,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.16 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2006/06/25 14:30:22 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.17 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2009/12/26 17:31:35 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
@@ -60,18 +60,18 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_1"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_58_14" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_48_14">Set_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_58_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_48_29">Itm</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
-                            <FONT COLOR=red><A NAME="ref_59_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_49_29">Data</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_45_9">User_Access</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_58_14" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_48_14">Set_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_58_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_48_29">Itm</A></FONT>  : <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
+                            <FONT COLOR=red><A NAME="ref_59_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_49_29">Data</A></FONT> : <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_45_9">User_Access</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_userptr.3x.html">set_item_userptr</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_58_14">Set_User_Data</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_2"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_64_14" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_70_14">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_64_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_70_29">Itm</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_64_14" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_70_14">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_64_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_70_29">Itm</A></FONT>  : <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
                             <FONT COLOR=red><A NAME="ref_65_29" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_71_29">Data</A></FONT> : <b>out</b> <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_45_9">User_Access</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_userptr.3x.html">item_userptr</A></EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_3"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_69_13" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_62_13">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_69_28" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_62_28">Itm</A></FONT>  : <b>in</b>  <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>) <b>return</b> <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_45_9">User_Access</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_69_13" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_62_13">Get_User_Data</A></FONT> (<FONT COLOR=red><A NAME="ref_69_28" HREF="terminal_interface-curses-menus-item_user_data__adb.htm#ref_62_28">Itm</A></FONT>  : <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>) <b>return</b> <A HREF="terminal_interface-curses-menus-item_user_data__ads.htm#ref_45_9">User_Access</A>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/mitem_userptr.3x.html">item_userptr</A></EM></FONT>
    <FONT COLOR=green><EM>--  Same as function</EM></FONT>
    <b>pragma</b> Inline (Get_User_Data);

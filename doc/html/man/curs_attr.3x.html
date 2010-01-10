@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.31 2007/03/17 20:30:33 tom Exp @
+  * @Id: curs_attr.3x,v 1.32 2009/09/19 20:12:30 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -148,7 +148,6 @@
        be passed to the routines <STRONG>attron</STRONG>, <STRONG>attroff</STRONG>, and <STRONG>attrset</STRONG>, or
        OR'd with the characters passed to <STRONG>addch</STRONG>.
 
-
         <STRONG>A_NORMAL</STRONG>        Normal display (no highlight)
         <STRONG>A_STANDOUT</STRONG>      Best highlighting mode of the terminal.
         <STRONG>A_UNDERLINE</STRONG>     Underlining
@@ -210,7 +209,6 @@
        Older versions of this library did not force an update  of
        the  screen when changing the attributes.  Use <STRONG>touchwin</STRONG> to
        force the screen to match the updated attributes.
-
 
         <STRONG>WA_NORMAL</STRONG>       Normal display (no highlight)
         <STRONG>WA_STANDOUT</STRONG>     Best highlighting mode of the terminal.

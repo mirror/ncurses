@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2001-2006,2008 Free Software Foundation, Inc.              *
+  * Copyright (c) 2001-2008,2009 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getcchar.3x,v 1.11 2008/05/17 19:37:05 tom Exp @
+  * @Id: curs_getcchar.3x,v 1.12 2009/07/18 16:10:56 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -130,18 +130,19 @@
 </PRE>
 <H2>RETURN VALUES</H2><PRE>
        When <EM>wch</EM> is a null pointer, <STRONG>getcchar</STRONG> returns the number of
-       wide characters referenced by <EM>wcval</EM>.
+       wide characters referenced by <EM>wcval</EM>, including one  for  a
+       trailing null.
 
-       When <EM>wch</EM> is not a null pointer, <STRONG>getcchar</STRONG> returns  <STRONG>OK</STRONG>  upon
+       When  <EM>wch</EM>  is not a null pointer, <STRONG>getcchar</STRONG> returns <STRONG>OK</STRONG> upon
        successful completion, and <STRONG>ERR</STRONG> otherwise.
 
-       Upon  successful  completion, <STRONG>setcchar</STRONG> returns <STRONG>OK</STRONG>.  Other-
+       Upon successful completion, <STRONG>setcchar</STRONG> returns  <STRONG>OK</STRONG>.   Other-
        wise, it returns <STRONG>ERR</STRONG>.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       Functions:  <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,   <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>,   <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
+       Functions:   <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,   <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>,  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
        <STRONG><A HREF="wcwidth.3.html">wcwidth(3)</A></STRONG>.
 
 

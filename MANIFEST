@@ -351,6 +351,7 @@
 ./doc/html/man/curs_inwstr.3x.html
 ./doc/html/man/curs_kernel.3x.html
 ./doc/html/man/curs_legacy.3x.html
+./doc/html/man/curs_memleaks.3x.html
 ./doc/html/man/curs_mouse.3x.html
 ./doc/html/man/curs_move.3x.html
 ./doc/html/man/curs_opaque.3x.html
@@ -430,6 +431,7 @@
 ./doc/html/man/ncurses.3x.html
 ./doc/html/man/panel.3x.html
 ./doc/html/man/resizeterm.3x.html
+./doc/html/man/tabs.1.html
 ./doc/html/man/term.5.html
 ./doc/html/man/term.7.html
 ./doc/html/man/terminfo.5.html
@@ -487,6 +489,8 @@
 ./form/fty_regex.c
 ./form/headers
 ./form/llib-lform
+./form/llib-lformt
+./form/llib-lformtw
 ./form/llib-lformw
 ./form/modules
 ./include/Caps
@@ -659,6 +663,8 @@
 ./menu/eti.h
 ./menu/headers
 ./menu/llib-lmenu
+./menu/llib-lmenut
+./menu/llib-lmenutw
 ./menu/llib-lmenuw
 ./menu/m_attribs.c
 ./menu/m_cursor.c
@@ -728,6 +734,7 @@
 ./mk-hdr.awk
 ./mkdirs.sh
 ./ncurses/Makefile.in
+./ncurses/Makefile.orig
 ./ncurses/README
 ./ncurses/README.IZ
 ./ncurses/SigAction.h
@@ -931,6 +938,8 @@
 ./panel/Makefile.in
 ./panel/headers
 ./panel/llib-lpanel
+./panel/llib-lpanelt
+./panel/llib-lpaneltw
 ./panel/llib-lpanelw
 ./panel/modules
 ./panel/p_above.c

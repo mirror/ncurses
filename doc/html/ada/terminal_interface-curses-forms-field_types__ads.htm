@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,15 +40,15 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.14 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.15 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;
+<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C;
 
 <b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#ref_49_35">Forms</A>.<FONT COLOR=red><A NAME="ref_43_41" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_50_46">Field_Types</A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-forms__ads.htm#ref_49_35">Forms</A>.<A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_43_41">Field_Types</A>);
-   <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_46_12">C_Int</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int;
+   <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_46_12">C_Int</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int;
 
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
    <FONT COLOR=green><EM>--  | Man page <A HREF="../man/form_fieldtype.3x.html">form_fieldtype.3x</A></EM></FONT>
@@ -68,8 +68,8 @@
    <b>type</b> <FONT COLOR=red><A NAME="ref_63_9">Field_Type_Access</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field_Type</A>'Class;
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_1"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_66_14">Set_Field_Type</A></FONT> (<FONT COLOR=red><A NAME="ref_66_30" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_66_14">Fld</A></FONT>      : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>;
-                             <FONT COLOR=red><A NAME="ref_67_30" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_66_14">Fld_Type</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field_Type</A>) <b>is</b> <b>abstract</b>;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_66_14">Set_Field_Type</A></FONT> (<FONT COLOR=red><A NAME="ref_66_30" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_66_14">Fld</A></FONT>      : <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>;
+                             <FONT COLOR=red><A NAME="ref_67_30" HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_66_14">Fld_Type</A></FONT> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field_Type</A>) <b>is</b> <b>abstract</b>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_fieldtype.3x.html">set_field_type()</A></EM></FONT>
    <FONT COLOR=green><EM>--  But: we hide the vararg mechanism of the C interface. You always</EM></FONT>
    <FONT COLOR=green><EM>--       have to pass a single Field_Type parameter.</EM></FONT>
@@ -81,7 +81,7 @@
    <FONT COLOR=green><EM>--  |=====================================================================</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_2"#2|</EM></FONT>
-   <b>function</b> <FONT COLOR=red><A NAME="ref_79_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_71_13">Get_Type</A></FONT> (<FONT COLOR=red><A NAME="ref_79_23" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_71_23">Fld</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_63_9">Field_Type_Access</A>;
+   <b>function</b> <FONT COLOR=red><A NAME="ref_79_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_71_13">Get_Type</A></FONT> (<FONT COLOR=red><A NAME="ref_79_23" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_71_23">Fld</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>) <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_63_9">Field_Type_Access</A>;
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/form_field_validation.3x.html">field_type()</A></EM></FONT>
    <FONT COLOR=green><EM>--  AKA: field_arg()</EM></FONT>
    <FONT COLOR=green><EM>--  In Ada95 we can combine these. If you try to retrieve the field type</EM></FONT>
@@ -123,8 +123,8 @@
    <FONT COLOR=green><EM>--  |</EM></FONT>
    <b>type</b> <FONT COLOR=red><A NAME="ref_119_9">Low_Level_Field_Type</A></FONT> <b>is</b>
       <b>record</b>
-         <FONT COLOR=red><A NAME="ref_121_10">Status</A></FONT> :              <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short;
-         <FONT COLOR=red><A NAME="ref_122_10">Ref_Count</A></FONT> :           <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.long;
+         <FONT COLOR=red><A NAME="ref_121_10">Status</A></FONT> :              <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short;
+         <FONT COLOR=red><A NAME="ref_122_10">Ref_Count</A></FONT> :           <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.long;
          <FONT COLOR=red><A NAME="ref_123_10">Left</A></FONT>, <FONT COLOR=red><A NAME="ref_123_16">Right</A></FONT> :         System.Address;
          <FONT COLOR=red><A NAME="ref_124_10">Makearg</A></FONT> :             <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_92_9">Makearg_Function</A>;
          <FONT COLOR=red><A NAME="ref_125_10">Copyarg</A></FONT> :             <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_96_9">Copyarg_Function</A>;

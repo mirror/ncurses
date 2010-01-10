@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008,2009 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -219,7 +219,6 @@ int	wclrtoeol(
 
 /* ./base/lib_color.c */
 
-#include <term.h>
 #include <tic.h>
 
 #undef _nc_COLOR_PAIRS
@@ -1225,8 +1224,18 @@ NCURSES_BOOL is_notimeout(
 		const WINDOW *z)
 		{ return(*(NCURSES_BOOL *)0); }
 
+#undef is_pad
+NCURSES_BOOL is_pad(
+		const WINDOW *z)
+		{ return(*(NCURSES_BOOL *)0); }
+
 #undef is_scrollok
 NCURSES_BOOL is_scrollok(
+		const WINDOW *z)
+		{ return(*(NCURSES_BOOL *)0); }
+
+#undef is_subwin
+NCURSES_BOOL is_subwin(
 		const WINDOW *z)
 		{ return(*(NCURSES_BOOL *)0); }
 
@@ -1253,14 +1262,14 @@ NCURSES_BOOL mouse_trafo(
 
 #include <fifo_defs.h>
 
+#undef _nc_ESCDELAY
+int	_nc_ESCDELAY(void)
+		{ return(*(int *)0); }
+
 #undef _nc_ptr_Escdelay
 int	*_nc_ptr_Escdelay(
 		SCREEN	*sp)
 		{ return(*(int **)0); }
-
-#undef _nc_ESCDELAY
-int	_nc_ESCDELAY(void)
-		{ return(*(int *)0); }
 
 #undef set_escdelay_sp
 int	set_escdelay_sp(
@@ -1271,6 +1280,15 @@ int	set_escdelay_sp(
 #undef set_escdelay
 int	set_escdelay(
 		int	value)
+		{ return(*(int *)0); }
+
+#undef get_escdelay_sp
+int	get_escdelay_sp(
+		SCREEN	*sp)
+		{ return(*(int *)0); }
+
+#undef get_escdelay
+int	get_escdelay(void)
 		{ return(*(int *)0); }
 
 #undef _nc_wgetch
@@ -1630,15 +1648,6 @@ WINDOW	*_nc_makenew_sp(
 		int	flags)
 		{ return(*(WINDOW **)0); }
 
-#undef _nc_makenew
-WINDOW	*_nc_makenew(
-		int	num_lines, 
-		int	num_columns, 
-		int	begy, 
-		int	begx, 
-		int	flags)
-		{ return(*(WINDOW **)0); }
-
 #undef _nc_curscr_of
 WINDOW	*_nc_curscr_of(
 		SCREEN	*sp)
@@ -1972,6 +1981,16 @@ void	delscreen(
 		SCREEN	*sp)
 		{ /* void */ }
 
+#undef _nc_setupscreen_sp
+int	_nc_setupscreen_sp(
+		SCREEN	**spp, 
+		int	slines, 
+		int	scolumns, 
+		FILE	*output, 
+		NCURSES_BOOL filtered, 
+		int	slk_format)
+		{ return(*(int *)0); }
+
 #undef _nc_setupscreen
 int	_nc_setupscreen(
 		int	slines, 
@@ -2016,6 +2035,12 @@ int	ripoffline(
 		{ return(*(int *)0); }
 
 /* ./base/lib_slk.c */
+
+#undef _nc_format_slks
+int	_nc_format_slks(
+		SCREEN	*sp, 
+		int	cols)
+		{ return(*(int *)0); }
 
 #undef _nc_slk_initialize
 int	_nc_slk_initialize(
@@ -2515,6 +2540,8 @@ void	_nc_free_and_exit(
 
 /* ./expanded.c */
 
+#include <term.h>
+
 #undef _nc_toggle_attr_on
 void	_nc_toggle_attr_on(
 		attr_t	*S, 
@@ -2769,6 +2796,30 @@ char	*const *_nc_numcodes(void)
 char	*const *_nc_strcodes(void)
 		{ return(*(char **)0); }
 
+/* ./comp_captab.c */
+
+#include <hashsize.h>
+
+#undef _nc_get_table
+const struct name_table_entry *_nc_get_table(
+		NCURSES_BOOL termcap)
+		{ return(*(const struct name_table_entry **)0); }
+
+#undef _nc_get_hash_table
+const HashValue *_nc_get_hash_table(
+		NCURSES_BOOL termcap)
+		{ return(*(const HashValue **)0); }
+
+#undef _nc_get_alias_table
+const struct alias *_nc_get_alias_table(
+		NCURSES_BOOL termcap)
+		{ return(*(const struct alias **)0); }
+
+#undef _nc_get_hash_info
+const HashData *_nc_get_hash_info(
+		NCURSES_BOOL termcap)
+		{ return(*(const HashData **)0); }
+
 /* ./tinfo/comp_error.c */
 
 #undef _nc_suppress_warnings
@@ -2814,6 +2865,21 @@ void	_nc_syserr_abort(
 		const char *const fmt, 
 		...)
 		{ /* void */ }
+
+/* ./tinfo/comp_hash.c */
+
+#undef _nc_find_entry
+struct name_table_entry const *_nc_find_entry(
+		const char *string, 
+		const HashValue *hash_table)
+		{ return(*(struct name_table_entry const **)0); }
+
+#undef _nc_find_type_entry
+struct name_table_entry const *_nc_find_type_entry(
+		const char *string, 
+		int	type, 
+		NCURSES_BOOL termcap)
+		{ return(*(struct name_table_entry const **)0); }
 
 /* ./tinfo/db_iterator.c */
 
@@ -2975,8 +3041,23 @@ int	baudrate(void)
 
 /* ./tinfo/lib_cur_term.c */
 
+#undef _nc_get_cur_term_sp
+TERMINAL *_nc_get_cur_term_sp(
+		SCREEN	*sp)
+		{ return(*(TERMINAL **)0); }
+
+#undef _nc_get_cur_term
+TERMINAL *_nc_get_cur_term(void)
+		{ return(*(TERMINAL **)0); }
+
 #undef _nc_cur_term
 TERMINAL *_nc_cur_term(void)
+		{ return(*(TERMINAL **)0); }
+
+#undef set_curterm_sp
+TERMINAL *set_curterm_sp(
+		SCREEN	*sp, 
+		TERMINAL *termp)
 		{ return(*(TERMINAL **)0); }
 
 #undef set_curterm
@@ -3230,12 +3311,6 @@ int	_nc_putp_flush_sp(
 		const char *value)
 		{ return(*(int *)0); }
 
-#undef _nc_putp_flush
-int	_nc_putp_flush(
-		const char *name, 
-		const char *value)
-		{ return(*(int *)0); }
-
 #undef _nc_keypad
 int	_nc_keypad(
 		SCREEN	*sp, 
@@ -3387,6 +3462,12 @@ void	_nc_update_screensize(
 		SCREEN	*sp)
 		{ /* void */ }
 
+#undef _nc_tinfo_cmdch
+void	_nc_tinfo_cmdch(
+		TERMINAL *termp, 
+		char	proto)
+		{ /* void */ }
+
 #undef _nc_get_locale
 char	*_nc_get_locale(void)
 		{ return(*(char **)0); }
@@ -3407,6 +3488,10 @@ int	_nc_setupterm(
 		int	*errret, 
 		NCURSES_BOOL reuse)
 		{ return(*(int *)0); }
+
+#undef new_prescr
+SCREEN	*new_prescr(void)
+		{ return(*(SCREEN **)0); }
 
 #undef setupterm
 int	setupterm(
@@ -3546,6 +3631,12 @@ int	_nc_tparm_analyze(
 #undef tparm
 char	*tparm(
 		char	*string, 
+		...)
+		{ return(*(char **)0); }
+
+#undef tiparm
+char	*tiparm(
+		const char *string, 
 		...)
 		{ return(*(char **)0); }
 
@@ -4149,25 +4240,6 @@ char	*_nc_infotocap(
 		int const parameterized)
 		{ return(*(char **)0); }
 
-/* ./comp_captab.c */
-
-#include <hashsize.h>
-
-#undef _nc_get_table
-const struct name_table_entry *_nc_get_table(
-		NCURSES_BOOL termcap)
-		{ return(*(const struct name_table_entry **)0); }
-
-#undef _nc_get_hash_table
-const short *_nc_get_hash_table(
-		NCURSES_BOOL termcap)
-		{ return(*(const short **)0); }
-
-#undef _nc_get_alias_table
-const struct alias *_nc_get_alias_table(
-		NCURSES_BOOL termcap)
-		{ return(*(const struct alias **)0); }
-
 /* ./tinfo/comp_expand.c */
 
 #undef _nc_tic_expand
@@ -4176,21 +4248,6 @@ char	*_nc_tic_expand(
 		NCURSES_BOOL tic_format, 
 		int	numbers)
 		{ return(*(char **)0); }
-
-/* ./tinfo/comp_hash.c */
-
-#undef _nc_find_entry
-struct name_table_entry const *_nc_find_entry(
-		const char *string, 
-		const short *hash_table)
-		{ return(*(struct name_table_entry const **)0); }
-
-#undef _nc_find_type_entry
-struct name_table_entry const *_nc_find_type_entry(
-		const char *string, 
-		int	type, 
-		const struct name_table_entry *table)
-		{ return(*(struct name_table_entry const **)0); }
 
 /* ./tinfo/comp_parse.c */
 

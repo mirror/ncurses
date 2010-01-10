@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,8 +40,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.19 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2006/06/25 14:30:22 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.20 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2009/12/26 17:38:58 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> System;
@@ -79,17 +79,17 @@
    <FONT COLOR=green><EM>--  pragma Inline (New_Panel);</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_3"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_77_14" HREF="terminal_interface-curses-panels__adb.htm#ref_63_14">Bottom</A></FONT> (<FONT COLOR=red><A NAME="ref_77_22" HREF="terminal_interface-curses-panels__adb.htm#ref_63_22">Pan</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_77_14" HREF="terminal_interface-curses-panels__adb.htm#ref_63_14">Bottom</A></FONT> (<FONT COLOR=red><A NAME="ref_77_22" HREF="terminal_interface-curses-panels__adb.htm#ref_63_22">Pan</A></FONT> : <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">bottom_panel()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-panels__ads.htm#ref_77_14">Bottom</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_4"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_82_14" HREF="terminal_interface-curses-panels__adb.htm#ref_73_14">Top</A></FONT> (<FONT COLOR=red><A NAME="ref_82_19" HREF="terminal_interface-curses-panels__adb.htm#ref_73_19">Pan</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_82_14" HREF="terminal_interface-curses-panels__adb.htm#ref_73_14">Top</A></FONT> (<FONT COLOR=red><A NAME="ref_82_19" HREF="terminal_interface-curses-panels__adb.htm#ref_73_19">Pan</A></FONT> : <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">top_panel()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-panels__ads.htm#ref_82_14">Top</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_5"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_87_14" HREF="terminal_interface-curses-panels__adb.htm#ref_83_14">Show</A></FONT> (<FONT COLOR=red><A NAME="ref_87_20" HREF="terminal_interface-curses-panels__adb.htm#ref_83_20">Pan</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_87_14" HREF="terminal_interface-curses-panels__adb.htm#ref_83_14">Show</A></FONT> (<FONT COLOR=red><A NAME="ref_87_20" HREF="terminal_interface-curses-panels__adb.htm#ref_83_20">Pan</A></FONT> : <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">show_panel()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-panels__ads.htm#ref_87_14">Show</A>);
 
@@ -99,7 +99,7 @@
    <b>pragma</b> Import (C, Update_Panels, "update_panels");
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_7"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_97_14" HREF="terminal_interface-curses-panels__adb.htm#ref_93_14">Hide</A></FONT> (<FONT COLOR=red><A NAME="ref_97_20" HREF="terminal_interface-curses-panels__adb.htm#ref_93_20">Pan</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_97_14" HREF="terminal_interface-curses-panels__adb.htm#ref_93_14">Hide</A></FONT> (<FONT COLOR=red><A NAME="ref_97_20" HREF="terminal_interface-curses-panels__adb.htm#ref_93_20">Pan</A></FONT> : <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">hide_panel()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-panels__ads.htm#ref_97_14">Hide</A>);
 
@@ -113,15 +113,15 @@
    <FONT COLOR=green><EM>--  pragma Inline (Panel_Window);</EM></FONT>
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_10"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_111_14" HREF="terminal_interface-curses-panels__adb.htm#ref_116_14">Replace</A></FONT> (<FONT COLOR=red><A NAME="ref_111_23" HREF="terminal_interface-curses-panels__adb.htm#ref_116_23">Pan</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>;
-                      <FONT COLOR=red><A NAME="ref_112_23" HREF="terminal_interface-curses-panels__adb.htm#ref_117_23">Win</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_111_14" HREF="terminal_interface-curses-panels__adb.htm#ref_116_14">Replace</A></FONT> (<FONT COLOR=red><A NAME="ref_111_23" HREF="terminal_interface-curses-panels__adb.htm#ref_116_23">Pan</A></FONT> : <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>;
+                      <FONT COLOR=red><A NAME="ref_112_23" HREF="terminal_interface-curses-panels__adb.htm#ref_117_23">Win</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">replace_panel()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-panels__ads.htm#ref_111_14">Replace</A>);
 
    <FONT COLOR=green><EM>--  #1A NAME="AFU_11"#2|</EM></FONT>
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_117_14" HREF="terminal_interface-curses-panels__adb.htm#ref_128_14">Move</A></FONT> (<FONT COLOR=red><A NAME="ref_117_20" HREF="terminal_interface-curses-panels__adb.htm#ref_128_20">Pan</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>;
-                   <FONT COLOR=red><A NAME="ref_118_20" HREF="terminal_interface-curses-panels__adb.htm#ref_129_20">Line</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
-                   <FONT COLOR=red><A NAME="ref_119_20" HREF="terminal_interface-curses-panels__adb.htm#ref_130_20">Column</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>);
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_117_14" HREF="terminal_interface-curses-panels__adb.htm#ref_128_14">Move</A></FONT> (<FONT COLOR=red><A NAME="ref_117_20" HREF="terminal_interface-curses-panels__adb.htm#ref_128_20">Pan</A></FONT>    : <A HREF="terminal_interface-curses-panels__ads.htm#ref_49_9">Panel</A>;
+                   <FONT COLOR=red><A NAME="ref_118_20" HREF="terminal_interface-curses-panels__adb.htm#ref_129_20">Line</A></FONT>   : <A HREF="terminal_interface-curses__ads.htm#ref_60_9">Line_Position</A>;
+                   <FONT COLOR=red><A NAME="ref_119_20" HREF="terminal_interface-curses-panels__adb.htm#ref_130_20">Column</A></FONT> : <A HREF="terminal_interface-curses__ads.htm#ref_61_9">Column_Position</A>);
    <FONT COLOR=green><EM>--  AKA: <A HREF="../man/panel.3x.html">move_panel()</A></EM></FONT>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-panels__ads.htm#ref_117_14">Move</A>);
 

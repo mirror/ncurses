@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,7 +40,7 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.10 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.11 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> Ada.Text_IO;
@@ -52,10 +52,10 @@
    <b>package</b> IIO <b>is</b> <b>new</b> Ada.Text_IO.Integer_IO (<A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_42_9">Num</A>);
 
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_49_14" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_49_14">Put</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_50_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_50_7">Win</A></FONT>   : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-      <FONT COLOR=red><A NAME="ref_51_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_51_7">Item</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_42_9">Num</A>;
-      <FONT COLOR=red><A NAME="ref_52_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_52_7">Width</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_46_4">Default_Width</A>;
-      <FONT COLOR=red><A NAME="ref_53_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_53_7">Base</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_51_12">Number_Base</A> := <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_47_4">Default_Base</A>)
+     (<FONT COLOR=red><A NAME="ref_50_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_50_7">Win</A></FONT>   : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+      <FONT COLOR=red><A NAME="ref_51_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_51_7">Item</A></FONT>  : <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_42_9">Num</A>;
+      <FONT COLOR=red><A NAME="ref_52_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_52_7">Width</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_46_4">Default_Width</A>;
+      <FONT COLOR=red><A NAME="ref_53_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_53_7">Base</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_51_12">Number_Base</A> := <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_47_4">Default_Base</A>)
    <b>is</b>
       <FONT COLOR=red><A NAME="ref_55_7">Buf</A></FONT> : String (1 .. <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A>'Last);
    <b>begin</b>
@@ -64,9 +64,9 @@
    <b>end</b> <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_49_14">Put</A>;
 
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_61_14" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_55_14">Put</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_62_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_56_7">Item</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_42_9">Num</A>;
-      <FONT COLOR=red><A NAME="ref_63_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_57_7">Width</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_46_4">Default_Width</A>;
-      <FONT COLOR=red><A NAME="ref_64_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_58_7">Base</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_51_12">Number_Base</A> := <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_47_4">Default_Base</A>)
+     (<FONT COLOR=red><A NAME="ref_62_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_56_7">Item</A></FONT>  : <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_42_9">Num</A>;
+      <FONT COLOR=red><A NAME="ref_63_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_57_7">Width</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_46_4">Default_Width</A>;
+      <FONT COLOR=red><A NAME="ref_64_7" HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_58_7">Base</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_51_12">Number_Base</A> := <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_47_4">Default_Base</A>)
    <b>is</b>
    <b>begin</b>
       <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_49_14">Put</A> (<A HREF="terminal_interface-curses-text_io__ads.htm#ref_62_13">Get_Window</A>, <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_56_7">Item</A>, <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_57_7">Width</A>, <A HREF="terminal_interface-curses-text_io-integer_io__ads.htm#ref_58_7">Base</A>);

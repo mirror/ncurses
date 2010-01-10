@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.77 2008/11/16 00:19:59 juergen Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.78 2010/01/09 19:52:08 tom Exp $")
 
 /*
  *	char *
@@ -450,7 +450,7 @@ _nc_tparm_analyze(const char *string, char *p_is_s[NUM_PARM], int *popcount)
 }
 
 static NCURSES_INLINE char *
-tparam_internal(const char *string, va_list ap)
+tparam_internal(bool use_TPARM_ARG, const char *string, va_list ap)
 {
     char *p_is_s[NUM_PARM];
     TPARM_ARG param[NUM_PARM];
@@ -488,8 +488,10 @@ tparam_internal(const char *string, va_list ap)
 	 */
 	if (p_is_s[i] != 0) {
 	    p_is_s[i] = va_arg(ap, char *);
-	} else {
+	} else if (use_TPARM_ARG) {
 	    param[i] = va_arg(ap, TPARM_ARG);
+	} else {
+	    param[i] = (TPARM_ARG) va_arg(ap, int);
 	}
     }
 
@@ -771,7 +773,7 @@ tparm_varargs(NCURSES_CONST char *string,...)
 #ifdef TRACE
     TPS(tname) = "tparm";
 #endif /* TRACE */
-    result = tparam_internal(string, ap);
+    result = tparam_internal(TRUE, string, ap);
     va_end(ap);
     return result;
 }
@@ -792,3 +794,19 @@ tparm_proto(NCURSES_CONST char *string,
     return tparm_varargs(string, a1, a2, a3, a4, a5, a6, a7, a8, a9);
 }
 #endif /* NCURSES_TPARM_VARARGS */
+
+NCURSES_EXPORT(char *)
+tiparm(const char *string,...)
+{
+    va_list ap;
+    char *result;
+
+    _nc_tparm_err = 0;
+    va_start(ap, string);
+#ifdef TRACE
+    TPS(tname) = "tiparm";
+#endif /* TRACE */
+    result = tparam_internal(FALSE, string, ap);
+    va_end(ap);
+    return result;
+}

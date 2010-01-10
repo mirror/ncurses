@@ -119,8 +119,8 @@
             Clear the menu pattern buffer.
 
        REQ_BACK_PATTERN
-            Delete   the  previous  character  from  the  pattern
-            buffer.
+            Delete  the  previous character from the pattern buf-
+            fer.
 
        REQ_NEXT_MATCH
             Move to the next item matching the pattern match.
@@ -128,20 +128,20 @@
        REQ_PREV_MATCH
             Move to the previous item matching the pattern match.
 
-       If  the second argument is a printable character, the code
-       appends it to the pattern buffer and attempts to  move  to
-       the  next  item  matching the new pattern.  If there is no
+       If the second argument is a printable character, the  code
+       appends  it  to the pattern buffer and attempts to move to
+       the next item matching the new pattern.  If  there  is  no
        such match, <STRONG>menu_driver</STRONG> returns <STRONG>E_NO_MATCH</STRONG> and deletes the
        appended character from the buffer.
 
-       If  the  second  argument  is one of the above pre-defined
+       If the second argument is one  of  the  above  pre-defined
        requests, the corresponding action is performed.
 
    <STRONG>MOUSE</STRONG> <STRONG>HANDLING</STRONG>
-       If the second argument is the KEY_MOUSE special  key,  the
+       If  the  second argument is the KEY_MOUSE special key, the
        associated mouse event is translated into one of the above
-       pre-defined requests.  Currently only clicks in  the  user
-       window  (e.g.  inside the menu display area or the decora-
+       pre-defined  requests.   Currently only clicks in the user
+       window (e.g. inside the menu display area or  the  decora-
        tion window) are handled.
 
        If you click above the display region of the menu:
@@ -160,21 +160,21 @@
 
               a REQ_LAST_ITEM is generated for a triple-click.
 
-       If you click at an item inside the  display  area  of  the
+       If  you  click  at  an item inside the display area of the
        menu:
 
               -  the menu cursor is positioned to that item.
 
               -  If you double-click an item a REQ_TOGGLE_ITEM is
                  generated  and  <STRONG>E_UNKNOWN_COMMAND</STRONG>  is  returned.
-                 This  return value makes sense, because a double
+                 This return value makes sense, because a  double
                  click usually means that an item-specific action
-                 should  be  returned.  It is exactly the purpose
-                 of this return value to signal that an  applica-
+                 should be returned.  It is exactly  the  purpose
+                 of  this return value to signal that an applica-
                  tion specific command should be executed.
 
               -  If  a  translation  into  a  request  was  done,
-                 <STRONG>menu_driver</STRONG> returns the result of this  request.
+                 <STRONG>menu_driver</STRONG> returns the result of this request.
 
        If  you clicked outside the user window or the mouse event
        could  not  be  translated  into   a   menu   request   an

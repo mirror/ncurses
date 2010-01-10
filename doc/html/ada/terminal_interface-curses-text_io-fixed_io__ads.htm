@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,7 +40,7 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.11 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.12 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>generic</b>
@@ -53,17 +53,17 @@
    <FONT COLOR=red><A NAME="ref_48_4">Default_Exp</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := 0;
 
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_50_14" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_49_14">Put</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_51_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_50_7">Win</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-      <FONT COLOR=red><A NAME="ref_52_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_51_7">Item</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_42_9">Num</A>;
-      <FONT COLOR=red><A NAME="ref_53_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_52_7">Fore</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_46_4">Default_Fore</A>;
-      <FONT COLOR=red><A NAME="ref_54_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_53_7">Aft</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_47_4">Default_Aft</A>;
-      <FONT COLOR=red><A NAME="ref_55_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_54_7">Exp</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_48_4">Default_Exp</A>);
+     (<FONT COLOR=red><A NAME="ref_51_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_50_7">Win</A></FONT>  : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+      <FONT COLOR=red><A NAME="ref_52_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_51_7">Item</A></FONT> : <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_42_9">Num</A>;
+      <FONT COLOR=red><A NAME="ref_53_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_52_7">Fore</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_46_4">Default_Fore</A>;
+      <FONT COLOR=red><A NAME="ref_54_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_53_7">Aft</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_47_4">Default_Aft</A>;
+      <FONT COLOR=red><A NAME="ref_55_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_54_7">Exp</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_48_4">Default_Exp</A>);
 
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_57_14" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_66_14">Put</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_58_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_67_7">Item</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_42_9">Num</A>;
-      <FONT COLOR=red><A NAME="ref_59_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_68_7">Fore</A></FONT> : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_46_4">Default_Fore</A>;
-      <FONT COLOR=red><A NAME="ref_60_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_69_7">Aft</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_47_4">Default_Aft</A>;
-      <FONT COLOR=red><A NAME="ref_61_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_70_7">Exp</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_48_4">Default_Exp</A>);
+     (<FONT COLOR=red><A NAME="ref_58_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_67_7">Item</A></FONT> : <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_42_9">Num</A>;
+      <FONT COLOR=red><A NAME="ref_59_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_68_7">Fore</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_46_4">Default_Fore</A>;
+      <FONT COLOR=red><A NAME="ref_60_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_69_7">Aft</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_47_4">Default_Aft</A>;
+      <FONT COLOR=red><A NAME="ref_61_7" HREF="terminal_interface-curses-text_io-fixed_io__adb.htm#ref_70_7">Exp</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A> := <A HREF="terminal_interface-curses-text_io-fixed_io__ads.htm#ref_48_4">Default_Exp</A>);
 
 <b>private</b>
    <b>pragma</b> Inline (Put);

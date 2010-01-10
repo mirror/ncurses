@@ -99,8 +99,8 @@
               be queried for the actual screen size.
 
        <EM>capname</EM>
-              indicates   the   capability   from   the  <STRONG>terminfo</STRONG>
-              database.  When <STRONG>termcap</STRONG> support is compiled in, the
+              indicates  the  capability  from the <STRONG>terminfo</STRONG> data-
+              base.  When <STRONG>termcap</STRONG> support  is  compiled  in,  the
               <STRONG>termcap</STRONG> name for the capability is also accepted.
 
        <EM>parms</EM>  If  the  capability  is a string that takes parame-
@@ -112,8 +112,8 @@
               table to decide which to pass as strings.  Normally
               <STRONG>tput</STRONG> uses <STRONG>tparm</STRONG> (3x) to perform  the  substitution.
               If no parameters are given for the capability, <STRONG>tput</STRONG>
-              writes   the   string   without   performing    the
-              substitution.
+              writes the string without performing the  substitu-
+              tion.
 
        <STRONG>-S</STRONG>     allows  more  than one capability per invocation of
               <STRONG>tput</STRONG>.  The capabilities must be passed to <STRONG>tput</STRONG> from
@@ -204,16 +204,16 @@
        <STRONG>bold=`tput</STRONG> <STRONG>smso`</STRONG> <STRONG>offbold=`tput</STRONG> <STRONG>rmso`</STRONG>
             Set the shell variables <STRONG>bold</STRONG>, to begin stand-out mode
             sequence, and <STRONG>offbold</STRONG>, to end standout mode sequence,
-            for the current terminal.  This might be followed  by
-            a  prompt:  <STRONG>echo</STRONG>  <STRONG>"${bold}Please</STRONG>  <STRONG>type</STRONG>  <STRONG>in</STRONG> <STRONG>your</STRONG> <STRONG>name:</STRONG>
+            for  the current terminal.  This might be followed by
+            a prompt: <STRONG>echo</STRONG>  <STRONG>"${bold}Please</STRONG>  <STRONG>type</STRONG>  <STRONG>in</STRONG>  <STRONG>your</STRONG>  <STRONG>name:</STRONG>
             <STRONG>${offbold}\c"</STRONG>
 
        <STRONG>tput</STRONG> <STRONG>hc</STRONG>
-            Set exit code to indicate if the current terminal  is
+            Set  exit code to indicate if the current terminal is
             a hard copy terminal.
 
        <STRONG>tput</STRONG> <STRONG>cup</STRONG> <STRONG>23</STRONG> <STRONG>4</STRONG>
-            Send  the sequence to move the cursor to row 23, col-
+            Send the sequence to move the cursor to row 23,  col-
             umn 4.
 
        <STRONG>tput</STRONG> <STRONG>cup</STRONG>
@@ -221,8 +221,8 @@
             parameters substituted.
 
        <STRONG>tput</STRONG> <STRONG>longname</STRONG>
-            Print  the  long  name from the <STRONG>terminfo</STRONG> database for
-            the type of terminal specified in  the  environmental
+            Print the long name from the  <STRONG>terminfo</STRONG>  database  for
+            the  type  of terminal specified in the environmental
             variable <STRONG>TERM</STRONG>.
 
             <STRONG>tput</STRONG> <STRONG>-S</STRONG> <STRONG>&lt;&lt;!</STRONG>
@@ -231,10 +231,10 @@
             <STRONG>&gt;</STRONG> <STRONG>bold</STRONG>
             <STRONG>&gt;</STRONG> <STRONG>!</STRONG>
 
-            This  example shows <STRONG>tput</STRONG> processing several capabili-
-            ties in one invocation.  It clears the screen,  moves
-            the  cursor  to  position  10,  10  and turns on bold
-            (extra bright) mode.  The list is  terminated  by  an
+            This example shows <STRONG>tput</STRONG> processing several  capabili-
+            ties  in one invocation.  It clears the screen, moves
+            the cursor to position  10,  10  and  turns  on  bold
+            (extra  bright)  mode.   The list is terminated by an
             exclamation mark (<STRONG>!</STRONG>) on a line by itself.
 
 
@@ -245,8 +245,8 @@
 
        <STRONG>/usr/share/tabset/*</STRONG>
               tab settings for some terminals, in a format appro-
-              priate  to  be  output  to  the  terminal   (escape
-              sequences  that  set  margins  and  tabs); for more
+              priate   to  be  output  to  the  terminal  (escape
+              sequences that set  margins  and  tabs);  for  more
               information, see the "Tabs and Initialization" sec-
               tion of <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
@@ -254,16 +254,16 @@
 </PRE>
 <H2>EXIT CODES</H2><PRE>
        If the <STRONG>-S</STRONG> option is used, <STRONG>tput</STRONG> checks for errors from each
-       line, and if any errors are found, will set the exit  code
-       to  4  plus the number of lines with errors.  If no errors
-       are found, the exit code is <STRONG>0</STRONG>.   No  indication  of  which
+       line,  and if any errors are found, will set the exit code
+       to 4 plus the number of lines with errors.  If  no  errors
+       are  found,  the  exit  code is <STRONG>0</STRONG>.  No indication of which
        line failed can be given so exit code <STRONG>1</STRONG> will never appear.
-       Exit codes <STRONG>2</STRONG>, <STRONG>3</STRONG>, and <STRONG>4</STRONG> retain their usual  interpretation.
+       Exit  codes <STRONG>2</STRONG>, <STRONG>3</STRONG>, and <STRONG>4</STRONG> retain their usual interpretation.
        If the <STRONG>-S</STRONG> option is not used, the exit code depends on the
        type of <EM>capname</EM>:
 
             <EM>boolean</EM>
-                   a value of <STRONG>0</STRONG> is set for TRUE and <STRONG>1</STRONG> for  FALSE.
+                   a value of <STRONG>0</STRONG> is set for TRUE and <STRONG>1</STRONG> for FALSE.
 
             <EM>string</EM> a  value of <STRONG>0</STRONG> is set if the <EM>capname</EM> is defined
                    for this terminal <EM>type</EM> (the value  of  <EM>capname</EM>
@@ -294,7 +294,6 @@
        <STRONG>tput</STRONG> prints the following error messages and sets the cor-
        responding exit codes.
 
-
        exit code   error message
        ---------------------------------------------------------------------
        <STRONG>0</STRONG>           (<EM>capname</EM> is a numeric variable that is not specified  in
@@ -318,9 +317,9 @@
        <STRONG>reset</STRONG>.   In this implementation, <STRONG>clear</STRONG> is part of the <EM>cap-</EM>
        <EM>name</EM> support.  Other implementations of <STRONG>tput</STRONG> on SVr4-based
        systems such as Solaris, IRIX64 and HPUX as well as others
-       such  as  AIX  and  Tru64  provide  support  for   <EM>capname</EM>
-       operands.  A few platforms such as FreeBSD and NetBSD rec-
-       ognize termcap names rather than terminfo capability names
+       such as AIX and Tru64 provide support  for  <EM>capname</EM>  oper-
+       ands.   A  few platforms such as FreeBSD and NetBSD recog-
+       nize termcap names rather than terminfo  capability  names
        in their respective <STRONG>tput</STRONG> commands.
 
 
@@ -328,7 +327,7 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG><A HREF="stty.1.html">stty(1)</A></STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 5.6 (patch 20081011).
+       This describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100109).
 
 
 

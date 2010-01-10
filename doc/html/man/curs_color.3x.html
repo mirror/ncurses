@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_color.3x,v 1.28 2005/12/18 00:00:37 tom Exp @
+  * @Id: curs_color.3x,v 1.29 2009/01/24 23:10:02 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -109,43 +109,46 @@
        background color number.  For portable applications:
 
        -    The value of the first argument must be between <STRONG>1</STRONG> and
-            <STRONG>COLOR_PAIRS-1</STRONG>.
+            <STRONG>COLOR_PAIRS-1</STRONG>, except that if default colors are used
+            (see  <STRONG>use_default_colors</STRONG>) the upper limit is adjusted
+            to allow for extra pairs which use a default color in
+            foreground and/or background.
 
-       -    The value of the second and third arguments  must  be
-            between  0 and <STRONG>COLORS</STRONG>.  Color pair 0 is assumed to be
+       -    The  value  of the second and third arguments must be
+            between 0 and <STRONG>COLORS</STRONG>.  Color pair 0 is assumed to  be
             white on black, but is actually whatever the terminal
             implements before color is initialized.  It cannot be
             modified by the application.
 
-       If the color-pair was previously initialized,  the  screen
-       is  refreshed  and  all occurrences of that color-pair are
+       If  the  color-pair was previously initialized, the screen
+       is refreshed and all occurrences of  that  color-pair  are
        changed to the new definition.
 
-       As an extension, ncurses allows you to set  color  pair  0
-       via  the  <STRONG>assume_default_colors</STRONG> routine, or to specify the
-       use of default colors (color number <STRONG>-1</STRONG>) if you  first  in-
+       As  an  extension,  ncurses allows you to set color pair 0
+       via the <STRONG>assume_default_colors</STRONG> routine, or to  specify  the
+       use  of  default colors (color number <STRONG>-1</STRONG>) if you first in-
        voke the <STRONG>use_default_colors</STRONG> routine.
 
-       The  <STRONG>init_color</STRONG> routine changes the definition of a color.
-       It takes four arguments: the number of  the  color  to  be
-       changed  followed  by three RGB values (for the amounts of
-       red, green, and blue components).  The value of the  first
-       argument  must  be between <STRONG>0</STRONG> and <STRONG>COLORS</STRONG>.  (See the section
-       <STRONG>Colors</STRONG> for the default color index.)   Each  of  the  last
-       three  arguments must be a value between 0 and 1000.  When
-       <STRONG>init_color</STRONG> is used, all occurrences of that color  on  the
+       The <STRONG>init_color</STRONG> routine changes the definition of a  color.
+       It  takes  four  arguments:  the number of the color to be
+       changed followed by three RGB values (for the  amounts  of
+       red,  green, and blue components).  The value of the first
+       argument must be between <STRONG>0</STRONG> and <STRONG>COLORS</STRONG>.  (See  the  section
+       <STRONG>Colors</STRONG>  for  the  default  color index.)  Each of the last
+       three arguments must be a value between 0 and 1000.   When
+       <STRONG>init_color</STRONG>  is  used, all occurrences of that color on the
        screen immediately change to the new definition.
 
-       The  <STRONG>has_colors</STRONG> routine requires no arguments.  It returns
-       <STRONG>TRUE</STRONG> if the terminal can manipulate colors; otherwise,  it
+       The <STRONG>has_colors</STRONG> routine requires no arguments.  It  returns
+       <STRONG>TRUE</STRONG>  if the terminal can manipulate colors; otherwise, it
        returns <STRONG>FALSE</STRONG>.  This routine facilitates writing terminal-
-       independent programs.  For example, a programmer  can  use
-       it  to decide whether to use color or some other video at-
+       independent  programs.   For example, a programmer can use
+       it to decide whether to use color or some other video  at-
        tribute.
 
-       The <STRONG>can_change_color</STRONG> routine requires  no  arguments.   It
-       returns  <STRONG>TRUE</STRONG>  if  the  terminal  supports  colors and can
-       change their definitions; other, it returns  <STRONG>FALSE</STRONG>.   This
+       The  <STRONG>can_change_color</STRONG>  routine  requires no arguments.  It
+       returns <STRONG>TRUE</STRONG> if  the  terminal  supports  colors  and  can
+       change  their  definitions; other, it returns <STRONG>FALSE</STRONG>.  This
        routine facilitates writing terminal-independent programs.
 
        The <STRONG>color_content</STRONG> routine gives programmers a way to  find

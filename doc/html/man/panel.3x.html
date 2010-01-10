@@ -109,30 +109,30 @@
               Use this function and not wrefresh or wnoutrefresh.
               update_panels() may be called more than once before
               a  call  to doupdate(), but doupdate() is the func-
-              tion responsible for updating the physical  screen.
+              tion responsible for updating the physical screen.
 
        <STRONG>del_panel(pan)</STRONG>
               removes the given panel from the  stack and deallo-
-              cates the <STRONG>PANEL</STRONG> structure (but not  its  associated
+              cates  the  <STRONG>PANEL</STRONG> structure (but not its associated
               window).
 
        <STRONG>hide_panel(pan)</STRONG>
-              removes  the  given  panel from the panel stack and
+              removes the given panel from the  panel  stack  and
               thus hides it from view. The <STRONG>PANEL</STRONG> structure is not
               lost, merely removed from the stack.
 
        <STRONG>panel_hidden(pan)</STRONG>
-              returns  TRUE  if  the panel is in the panel stack,
-              FALSE if it  is  not.   If  the  panel  is  a  null
+              returns TRUE if the panel is in  the  panel  stack,
+              FALSE  if  it  is  not.   If  the  panel  is a null
               pointer, return ERR.
 
        <STRONG>show_panel(pan)</STRONG>
-              makes  a  hidden panel visible by placing it on top
+              makes a hidden panel visible by placing it  on  top
               of the panels in the panel stack. See COMPATIBILITY
               below.
 
        <STRONG>top_panel(pan)</STRONG>
-              puts  the  given visible panel on top of all panels
+              puts the given visible panel on top of  all  panels
               in the stack.  See COMPATIBILITY below.
 
        <STRONG>bottom_panel(pan)</STRONG>
@@ -140,26 +140,26 @@
 
        <STRONG>move_panel(pan,starty,startx)</STRONG>
               moves the given panel window so that its upper-left
-              corner  is  at  <STRONG>starty</STRONG>, <STRONG>startx</STRONG>.  It does not change
+              corner is at <STRONG>starty</STRONG>, <STRONG>startx</STRONG>.  It  does  not  change
               the position of the panel in the stack.  Be sure to
-              use  this  function,  not  <STRONG>mvwin()</STRONG>, to move a panel
+              use this function, not <STRONG>mvwin()</STRONG>,  to  move  a  panel
               window.
 
        <STRONG>replace_panel(pan,window)</STRONG>
-              replaces the current window of  panel  with  <STRONG>window</STRONG>
+              replaces  the  current  window of panel with <STRONG>window</STRONG>
               (useful, for example if you want to resize a panel;
               if you're using <STRONG>ncurses</STRONG>, you can call <STRONG>replace_panel</STRONG>
-              on  the output of <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>).  It does not change
+              on the output of <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>).  It does not  change
               the position of the panel in the stack.
 
        <STRONG>panel_above(pan)</STRONG>
-              returns a pointer to the panel above pan.   If  the
-              panel  argument is <STRONG>(PANEL</STRONG> <STRONG>*)0</STRONG>, it returns a pointer
+              returns  a  pointer to the panel above pan.  If the
+              panel argument is <STRONG>(PANEL</STRONG> <STRONG>*)0</STRONG>, it returns a  pointer
               to the bottom panel in the stack.
 
        <STRONG>panel_below(pan)</STRONG>
-              returns a pointer to the panel just below pan.   If
-              the  panel  argument  is  <STRONG>(PANEL</STRONG>  <STRONG>*)0</STRONG>, it returns a
+              returns  a pointer to the panel just below pan.  If
+              the panel argument is  <STRONG>(PANEL</STRONG>  <STRONG>*)0</STRONG>,  it  returns  a
               pointer to the top panel in the stack.
 
        <STRONG>set_panel_userptr(pan,ptr)</STRONG>
@@ -183,10 +183,10 @@
 <H2>COMPATIBILITY</H2><PRE>
        Reasonable  care  has been taken to  ensure  compatibility
        with  the  native  panel  facility  introduced  in  SVr3.2
-       (inspection   of   the  SVr4  manual  pages  suggests  the
-       programming  interface  is  unchanged).   The  <STRONG>PANEL</STRONG>  data
-       structures  are  merely   similar. The  programmer is cau-
-       tioned not to directly use <STRONG>PANEL</STRONG> fields.
+       (inspection of the SVr4 manual pages suggests the program-
+       ming interface is unchanged).  The <STRONG>PANEL</STRONG>  data  structures
+       are  merely   similar. The  programmer is cautioned not to
+       directly use <STRONG>PANEL</STRONG> fields.
 
        The functions <STRONG>show_panel()</STRONG> and <STRONG>top_panel()</STRONG>  are  identical
        in  this  implementation,  and work equally well with dis-
@@ -218,7 +218,7 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 5.6 (patch 20081011).
+       This describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100109).
 
 
 </PRE>

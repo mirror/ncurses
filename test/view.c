@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.76 2009/10/24 21:26:38 tom Exp $
+ * $Id: view.c,v 1.77 2010/01/09 16:34:06 tom Exp $
  */
 
 #include <test.priv.h>
@@ -500,12 +500,11 @@ finish(int sig)
 
 #if CAN_RESIZE
 /*
- * This uses functions that are "unsafe", but it seems to work on SunOS and
- * Linux.  Usually:  the "unsafe" refers to the functions that POSIX lists
- * which may be called from a signal handler.  Those do not include buffered
- * I/O, which is used for instance in wrefresh().  To be really portable, you
- * should use the KEY_RESIZE return (which relies on ncurses' sigwinch
- * handler).
+ * This uses functions that are "unsafe", but it seems to work on SunOS. 
+ * Usually: the "unsafe" refers to the functions that POSIX lists which may be
+ * called from a signal handler.  Those do not include buffered I/O, which is
+ * used for instance in wrefresh().  To be really portable, you should use the
+ * KEY_RESIZE return (which relies on ncurses' sigwinch handler).
  *
  * The 'wrefresh(curscr)' is needed to force the refresh to start from the top
  * of the screen -- some xterms mangle the bitmap while resizing.
@@ -518,7 +517,7 @@ adjust(int sig)
 
 	if (ioctl(fileno(stdout), TIOCGWINSZ, &size) == 0) {
 	    resize_term(size.ws_row, size.ws_col);
-	    wrefresh(curscr);	/* Linux needs this */
+	    wrefresh(curscr);
 	    show_all(sig ? "SIGWINCH" : "interrupt");
 	}
 	interrupted = FALSE;

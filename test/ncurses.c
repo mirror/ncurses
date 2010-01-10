@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.353 2009/12/20 02:14:17 tom Exp $
+$Id: ncurses.c,v 1.355 2010/01/09 16:52:17 tom Exp $
 
 ***************************************************************************/
 
@@ -6595,8 +6595,8 @@ main_menu(bool top)
 	(void) fflush(stdout);	/* necessary under SVr4 curses */
 
 	/*
-	 * This used to be an 'fgets()' call.  However (on Linux, at least)
-	 * mixing stream I/O and 'read()' (used in the library) causes the
+	 * This used to be an 'fgets()' call (until 1996/10).  However with
+	 * some runtime libraries, mixing stream I/O and 'read()' causes the
 	 * input stream to be flushed when switching between the two.
 	 */
 	command = 0;

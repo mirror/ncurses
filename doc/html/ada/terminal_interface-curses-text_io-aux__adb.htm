@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998,2006 Free Software Foundation, Inc.                   --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,18 +40,18 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.12 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2006/06/25 14:24:40 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.13 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2009/12/26 17:38:58 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>package</b> <b>body</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-text_io__ads.htm#ref_44_35">Text_IO</A>.<FONT COLOR=red><A NAME="ref_42_48" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_42_51">Aux</A></FONT> <b>is</b>
 
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_44_14" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_48_14">Put_Buf</A></FONT>
-     (<FONT COLOR=red><A NAME="ref_45_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_49_7">Win</A></FONT>    : <b>in</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
-      <FONT COLOR=red><A NAME="ref_46_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_50_7">Buf</A></FONT>    : <b>in</b> String;
-      <FONT COLOR=red><A NAME="ref_47_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_51_7">Width</A></FONT>  : <b>in</b> <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A>;
-      <FONT COLOR=red><A NAME="ref_48_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_52_7">Signal</A></FONT> : <b>in</b> Boolean := True;
-      <FONT COLOR=red><A NAME="ref_49_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_53_7">Ljust</A></FONT>  : <b>in</b> Boolean := False)
+     (<FONT COLOR=red><A NAME="ref_45_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_49_7">Win</A></FONT>    : <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
+      <FONT COLOR=red><A NAME="ref_46_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_50_7">Buf</A></FONT>    : String;
+      <FONT COLOR=red><A NAME="ref_47_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_51_7">Width</A></FONT>  : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A>;
+      <FONT COLOR=red><A NAME="ref_48_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_52_7">Signal</A></FONT> : Boolean := True;
+      <FONT COLOR=red><A NAME="ref_49_7" HREF="terminal_interface-curses-text_io-aux__ads.htm#ref_53_7">Ljust</A></FONT>  : Boolean := False)
    <b>is</b>
       <FONT COLOR=red><A NAME="ref_51_7">L</A></FONT>   : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A>;
       <FONT COLOR=red><A NAME="ref_52_7">Len</A></FONT> : <A HREF="terminal_interface-curses-text_io__ads.htm#ref_50_12">Field</A>;

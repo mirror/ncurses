@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.140 2009/08/01 19:32:04 tom Exp $
+-- $Id: INSTALL,v 1.143 2010/01/09 19:26:36 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -39,9 +39,8 @@ d.d is the current version number.  There should be several subdirectories,
 including `c++', `form', `man', `menu', 'misc', `ncurses', `panel', `progs',
 and `test'.  See the README file for a roadmap to the package.
 
-If you are a Linux or FreeBSD or NetBSD distribution integrator or packager,
-please read and act on the section titled IF YOU ARE A SYSTEM INTEGRATOR
-below.
+If you are a distribution integrator or packager, please read and act on the
+section titled IF YOU ARE A SYSTEM INTEGRATOR below.
 
 If you are converting from BSD curses and do not have root access, be sure
 to read the BSD CONVERSION NOTES section below.
@@ -57,10 +56,6 @@ CROSS-COMPILER.
 
 If you want to build the Ada95 binding, go to the Ada95 directory and
 follow the instructions there.  The Ada95 binding is not covered below.
-
-If you are using anything but (a) Linux, or (b) one of the 4.4BSD-based
-i386 Unixes, go read the Portability section in the TO-DO file before you
-do anything else.
 
 
 REQUIREMENTS:
@@ -86,14 +81,14 @@ INSTALLATION PROCEDURE:
 
     The --prefix option to configure changes the root directory for installing
     ncurses.  The default is normally in subdirectories of /usr/local, except
-    for systems where ncurses is normally installed as a system library, e.g.,
-    Linux, the various BSD systems and Cygwin.  Use --prefix=/usr to replace
-    your default curses distribution.
+    for systems where ncurses is normally installed as a system library (see
+    "IF YOU ARE A SYSTEM INTEGRATOR").  Use --prefix=/usr to replace your
+    default curses distribution.
 
     The package gets installed beneath the --prefix directory as follows:
 
     In $(prefix)/bin:          tic, infocmp, captoinfo, tset,
-				reset, clear, tput, toe
+				reset, clear, tput, toe, tabs
     In $(prefix)/lib:          libncurses*.* libcurses.a
     In $(prefix)/share/terminfo: compiled terminal descriptions
     In $(prefix)/include:      C header files
@@ -147,7 +142,7 @@ INSTALLATION PROCEDURE:
     library interfaces are not binary-compatible with the non-wide-character
     version.  Building and running the wide-character code relies on a fairly
     recent implementation of libiconv.  We have built this configuration on
-    Linux using libiconv, sometimes requiring libutf8.
+    various systems using libiconv, sometimes requiring libutf8.
 
     If you configure using the --with-pthread option, a "t" is appended to
     the library names (e.g., libncursest.a, libncursestw.a).
@@ -170,8 +165,8 @@ INSTALLATION PROCEDURE:
 	./configure --with-shared --without-normal --without-debug
 
     Rules for generating shared libraries are highly dependent upon the choice
-    of host system and compiler.  We've been testing shared libraries on Linux
-    and SunOS with gcc, but more work needs to be done to make shared libraries
+    of host system and compiler.  We've been testing shared libraries on
+    several systems, but more work needs to be done to make shared libraries
     work on other systems.
 
     If you have libtool installed, you can type
@@ -816,9 +811,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 
     --with-manpage-renames=XXX
 	Tell the configure script that you wish to rename the manpages while
-	installing.  Currently the only distribution which does this is
-	the Linux Debian.  The option value specifies the name of a file
-	that lists the renamed files, e.g., $srcdir/man/man_db.renames
+	installing.  Currently the only distribution which does this is Debian. 
+	The option value specifies the name of a file that lists the renamed
+	files, e.g., $srcdir/man/man_db.renames
 
     --with-manpage-symlinks
 	Tell the configure script that you wish to make symbolic links in the
@@ -1464,8 +1459,8 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
 
     4.0 (December 24, 1996)
 
-	We bumped to version 4.0 because the newly released dynamic loader
-	(ld.so.1.8.5) on Linux did not load shared libraries whose ABI and REL
+	We bumped to version 4.0 because the newly released Linux dynamic
+	loader (ld.so.1.8.5) did not load shared libraries whose ABI and REL
 	versions were inconsistent.  At that point, ncurses ABI was 3.4 and the
 	REL was 1.9.9g, so we made them consistent.
 
@@ -1525,7 +1520,7 @@ IF YOU ARE A SYSTEM INTEGRATOR:
     	On platforms where ncurses is assumed to be installed in /usr/lib,
 	the configure script uses "/usr" as a default:
 
-		Linux, FreeBSD, NetBSD, OpenBSD, Cygwin
+		GNU/Linux, FreeBSD, NetBSD, OpenBSD, Cygwin
 
 	For other platforms, the default is "/usr/local".  See the discussion
 	of the "--disable-overwrite" option.
@@ -1588,7 +1583,7 @@ IF YOU ARE A SYSTEM INTEGRATOR:
 		bsdos	-- BSD/OS
 
 	If you are responsible for integrating ncurses for one of these
-	distribution, please either use the recommended name or get back
+	distributions, please either use the recommended name or get back
 	to us explaining why you don't want to, so we can work out nomenclature
 	that will make users' lives easier rather than harder.
 
@@ -1716,8 +1711,8 @@ USING NCURSES WITH AFS:
 	with this by making tic use symbolic links.
 
 USING NCURSES WITH GPM:
-	Ncurses 4.1 and up can be configured to use GPM (General Purpose
-	Mouse) which is used on Linux console.  Be aware that GPM is commonly
+	Ncurses 4.1 and up can be configured to use GPM (General Purpose Mouse)
+	which is used with Linux console.  Be aware that GPM is commonly
 	installed as a shared library which contains a wrapper for the curses
 	wgetch() function (libcurses.o).  Some integrators have simplified
 	linking applications by combining all or part of libcurses.so into the

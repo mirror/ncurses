@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 S P E C                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998 Free Software Foundation, Inc.                        --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,7 +40,7 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.16 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.17 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  curses binding.</EM></FONT>
@@ -48,22 +48,22 @@
 <FONT COLOR=green><EM>--  Run the generator instead.</EM></FONT>
 <FONT COLOR=green><EM>--  |</EM></FONT>
 <b>with</b> System;
-<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;
-<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings; <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings;
+<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C;
+<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings; <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings;
 <b>with</b> <A HREF="unchconv__ads.htm#ref_20_10">Unchecked_Conversion</A>;
 
 <b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<FONT COLOR=red><A NAME="ref_50_35" HREF="terminal_interface-curses-aux__adb.htm#ref_41_40">Aux</A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>);
 
-   <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int;
+   <b>use</b> <b>type</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int;
 
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_55_12">C_Int</A></FONT>      <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_56_12">C_Short</A></FONT>    <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_57_12">C_Long_Int</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.long;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_58_12">C_Size_T</A></FONT>   <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.size_t;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_59_12">C_UInt</A></FONT>     <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.unsigned;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_60_12">C_ULong</A></FONT>    <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.unsigned_long;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_61_12">C_Char_Ptr</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings.chars_ptr;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_55_12">C_Int</A></FONT>      <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_56_12">C_Short</A></FONT>    <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_57_12">C_Long_Int</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.long;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_58_12">C_Size_T</A></FONT>   <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.size_t;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_59_12">C_UInt</A></FONT>     <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.unsigned;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_60_12">C_ULong</A></FONT>    <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.unsigned_long;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_61_12">C_Char_Ptr</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings.chars_ptr;
    <b>type</b>    <FONT COLOR=red><A NAME="ref_62_12">C_Void_Ptr</A></FONT> <b>is</b> <b>new</b> System.Address;
    <b>type</b>    <FONT COLOR=red><A NAME="ref_63_12">C_Chtype</A></FONT>   <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_60_12">C_ULong</A>;
    <b>type</b>    <FONT COLOR=red><A NAME="ref_64_12">C_AttrType</A></FONT> <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_60_12">C_ULong</A>;
@@ -118,7 +118,7 @@
      <A HREF="unchconv__ads.htm#ref_20_10">Unchecked_Conversion</A> (<A HREF="unchconv__ads.htm#ref_17_9">Source</A> =&gt; <A HREF="terminal_interface-curses-aux__ads.htm#ref_64_12">C_AttrType</A>,
                            <A HREF="unchconv__ads.htm#ref_18_9">Target</A> =&gt; <A HREF="terminal_interface-curses__ads.htm#ref_352_9">Attributed_Character</A>);
 
-   <b>procedure</b> <FONT COLOR=red><A NAME="ref_116_14" HREF="terminal_interface-curses-aux__adb.htm#ref_44_14">Fill_String</A></FONT> (<FONT COLOR=red><A NAME="ref_116_27" HREF="terminal_interface-curses-aux__adb.htm#ref_44_27">Cp</A></FONT>  : <b>in</b>  chars_ptr;
+   <b>procedure</b> <FONT COLOR=red><A NAME="ref_116_14" HREF="terminal_interface-curses-aux__adb.htm#ref_44_14">Fill_String</A></FONT> (<FONT COLOR=red><A NAME="ref_116_27" HREF="terminal_interface-curses-aux__adb.htm#ref_44_27">Cp</A></FONT>  : chars_ptr;
                           <FONT COLOR=red><A NAME="ref_117_27" HREF="terminal_interface-curses-aux__adb.htm#ref_45_27">Str</A></FONT> : <b>out</b> String);
    <FONT COLOR=green><EM>--  Fill the Str parameter with the string denoted by the chars_ptr</EM></FONT>
    <FONT COLOR=green><EM>--  C-Style string.</EM></FONT>

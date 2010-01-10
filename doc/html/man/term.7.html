@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: term.7,v 1.18 2007/06/02 20:40:07 tom Exp @
+  * @Id: term.7,v 1.19 2010/01/09 16:42:15 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -59,7 +59,7 @@
        mailer.
 
        A  default  <STRONG>TERM</STRONG>  value will be set on a per-line basis by
-       either <STRONG>/etc/inittab</STRONG> (Linux and  System-V-like  UNIXes)  or
+       either  <STRONG>/etc/inittab</STRONG>  (e.g.,  System-V-like   UNIXes)   or
        <STRONG>/etc/ttys</STRONG>  (BSD  UNIXes).  This will nearly always suffice
        for workstation and microcomputer consoles.
 
@@ -85,9 +85,9 @@
        the tty device and baud rate.
 
        Setting your own <STRONG>TERM</STRONG> value may also be useful if you have
-       created a custom  entry  incorporating  options  (such  as
-       visual  bell  or reverse-video) which you wish to override
-       the system default type for your line.
+       created a custom entry incorporating options (such as vis-
+       ual  bell or reverse-video) which you wish to override the
+       system default type for your line.
 
        Terminal type descriptions are stored as files of capabil-
        ity data underneath /usr/share/terminfo.  To browse a list

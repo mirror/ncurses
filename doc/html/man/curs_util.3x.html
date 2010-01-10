@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.26 2008/10/11 20:32:56 tom Exp @
+  * @Id: curs_util.3x,v 1.27 2008/10/25 23:45:41 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -88,88 +88,91 @@
 
           -  DEL (character 127) is displayed as <STRONG>^?</STRONG>.
 
-          -  Values  above 128 are either meta characters (if the
+          -  Values above 128 are either meta characters (if  the
              screen has not been initialized, or if <STRONG>meta</STRONG> has been
-             called  with a TRUE parameter), shown in the <STRONG>M-</STRONG><EM>X</EM> no-
+             called with a TRUE parameter), shown in the <STRONG>M-</STRONG><EM>X</EM>  no-
              tation, or are displayed as themselves.  In the lat-
              ter case, the values may not be printable; this fol-
              lows the X/Open specification.
 
-          -  Values above 256 may be the names of  the  names  of
+          -  Values  above  256  may be the names of the names of
              function keys.
 
-          -  Otherwise  (if  there  is no corresponding name) the
-             function returns null, to denote an  error.   X/Open
+          -  Otherwise (if there is no  corresponding  name)  the
+             function  returns  null, to denote an error.  X/Open
              also lists an "UNKNOWN KEY" return value, which some
              implementations return rather than null.
 
        The corresponding <STRONG>key_name</STRONG> returns a character string cor-
-       responding  to  the wide-character value <EM>w</EM>.  The two func-
-       tions do not return the same set of  strings;  the  latter
+       responding to the wide-character value <EM>w</EM>.  The  two  func-
+       tions  do  not  return the same set of strings; the latter
        returns null where the former would display a meta charac-
        ter.
 
        The <STRONG>filter</STRONG> routine, if used, must be called before <STRONG>initscr</STRONG>
-       or  <STRONG>newterm</STRONG>  are called.  The effect is that, during those
-       calls, <STRONG>LINES</STRONG> is set to 1;  the  capabilities  <STRONG>clear</STRONG>,  <STRONG>cup</STRONG>,
-       <STRONG>cud</STRONG>,  <STRONG>cud1</STRONG>,  <STRONG>cuu1</STRONG>,  <STRONG>cuu</STRONG>,  <STRONG>vpa</STRONG>  are  disabled; and the <STRONG>home</STRONG>
+       or <STRONG>newterm</STRONG> are called.  The effect is that,  during  those
+       calls,  <STRONG>LINES</STRONG>  is  set  to 1; the capabilities <STRONG>clear</STRONG>, <STRONG>cup</STRONG>,
+       <STRONG>cud</STRONG>, <STRONG>cud1</STRONG>, <STRONG>cuu1</STRONG>, <STRONG>cuu</STRONG>,  <STRONG>vpa</STRONG>  are  disabled;  and  the  <STRONG>home</STRONG>
        string is set to the value of <STRONG>cr</STRONG>.
 
-       The <STRONG>nofilter</STRONG> routine cancels the  effect  of  a  preceding
-       <STRONG>filter</STRONG>  call.   That  allows  the  caller  to initialize a
-       screen on a different device, using a different  value  of
-       <STRONG>$TERM</STRONG>.   The  limitation arises because the <STRONG>filter</STRONG> routine
+       The  <STRONG>nofilter</STRONG>  routine  cancels  the effect of a preceding
+       <STRONG>filter</STRONG> call.  That  allows  the  caller  to  initialize  a
+       screen  on  a different device, using a different value of
+       <STRONG>$TERM</STRONG>.  The limitation arises because the  <STRONG>filter</STRONG>  routine
        modifies the in-memory copy of the terminal information.
 
-       The <STRONG>use_env</STRONG> routine, if used, is called before <STRONG>initscr</STRONG>  or
-       <STRONG>newterm</STRONG>  are  called.   When called with <STRONG>FALSE</STRONG> as an argu-
-       ment, the values of <STRONG>lines</STRONG> and  <STRONG>columns</STRONG>  specified  in  the
-       <EM>terminfo</EM>  database will be used, even if environment vari-
-       ables <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG> (used by default) are set,  or  if
-       <STRONG>curses</STRONG>  is  running in a window (in which case default be-
-       havior would be to  use  the  window  size  if  <STRONG>LINES</STRONG>  and
-       <STRONG>COLUMNS</STRONG>  are not set).  Note that setting <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG>
-       overrides the corresponding size  which  may  be  obtained
+       The  <STRONG>use_env</STRONG> routine, if used, is called before <STRONG>initscr</STRONG> or
+       <STRONG>newterm</STRONG> are called.  When called with <STRONG>FALSE</STRONG>  as  an  argu-
+       ment,  the  values  of  <STRONG>lines</STRONG> and <STRONG>columns</STRONG> specified in the
+       <EM>terminfo</EM> database will be used, even if environment  vari-
+       ables  <STRONG>LINES</STRONG>  and <STRONG>COLUMNS</STRONG> (used by default) are set, or if
+       <STRONG>curses</STRONG> is running in a window (in which case  default  be-
+       havior  would  be to use the window size if <STRONG>LINES</STRONG> and <STRONG>COL-</STRONG>
+       <STRONG>UMNS</STRONG> are not set).  Note that  setting  <STRONG>LINES</STRONG>  or  <STRONG>COLUMNS</STRONG>
+       overrides  the  corresponding  size  which may be obtained
        from the operating system.
 
-       The  <STRONG>putwin</STRONG> routine writes all data associated with window
+       The <STRONG>putwin</STRONG> routine writes all data associated with  window
        <EM>win</EM> into the file to which <EM>filep</EM> points.  This information
        can be later retrieved using the <STRONG>getwin</STRONG> function.
 
        The <STRONG>getwin</STRONG> routine reads window related data stored in the
-       file by <STRONG>putwin</STRONG>.  The routine then creates and  initializes
+       file  by <STRONG>putwin</STRONG>.  The routine then creates and initializes
        a new window using that data.  It returns a pointer to the
        new window.
 
-       The <STRONG>delay_output</STRONG> routine inserts an <EM>ms</EM>  millisecond  pause
-       in  output.   This  routine should not be used extensively
-       because padding characters are  used  rather  than  a  CPU
-       pause.   If  no  padding character is specified, this uses
+       The  <STRONG>delay_output</STRONG>  routine inserts an <EM>ms</EM> millisecond pause
+       in output.  This routine should not  be  used  extensively
+       because  padding  characters  are  used  rather than a CPU
+       pause.  If no padding character is  specified,  this  uses
        <STRONG>napms</STRONG> to perform the delay.
 
-       The <STRONG>flushinp</STRONG> routine throws away any  typeahead  that  has
-       been  typed  by  the user and has not yet been read by the
+       The  <STRONG>flushinp</STRONG>  routine  throws away any typeahead that has
+       been typed by the user and has not yet been  read  by  the
        program.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Except for <STRONG>flushinp</STRONG>, routines that return an  integer  re-
-       turn  <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4 specifies only "an in-
+       Except  for  <STRONG>flushinp</STRONG>, routines that return an integer re-
+       turn <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4 specifies only "an  in-
        teger value other than <STRONG>ERR</STRONG>") upon successful completion.
 
        Routines that return pointers return <STRONG>NULL</STRONG> on error.
 
-       X/Open does not define any error conditions.  In this  im-
+       X/Open  does not define any error conditions.  In this im-
        plementation
 
-              <STRONG>flushinp</STRONG>
-                   returns  an error if the terminal was not ini-
-                   tialized.
+          <STRONG>flushinp</STRONG>
+               returns an error if the terminal was not  initial-
+               ized.
 
-              <STRONG>putwin</STRONG>
-                   returns an  error  if  the  associated  <STRONG>fwrite</STRONG>
-                   calls return an error.
+          <STRONG>meta</STRONG> returns  an error if the terminal was not initial-
+               ized.
+
+          <STRONG>putwin</STRONG>
+               returns an error if the  associated  <STRONG>fwrite</STRONG>  calls
+               return an error.
 
 
 </PRE>

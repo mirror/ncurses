@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.              *
+  * Copyright (c) 1999-2008,2010 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_terminfo.3x,v 1.30 2008/08/16 20:53:27 tom Exp @
+  * @Id: curs_terminfo.3x,v 1.31 2010/01/09 19:43:39 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -48,9 +48,9 @@
 </PRE>
 <H2>NAME</H2><PRE>
        <STRONG>del_curterm</STRONG>, <STRONG>mvcur</STRONG>, <STRONG>putp</STRONG>, <STRONG>restartterm</STRONG>, <STRONG>set_curterm</STRONG>,
-       <STRONG>setterm</STRONG>, <STRONG>setupterm</STRONG>, <STRONG>tigetflag</STRONG>, <STRONG>tigetnum</STRONG>, <STRONG>tigetstr</STRONG>, <STRONG>tparm</STRONG>,
-       <STRONG>tputs</STRONG>, <STRONG>vid_attr</STRONG>, <STRONG>vid_puts</STRONG>, <STRONG>vidattr</STRONG>, <STRONG>vidputs</STRONG> - <STRONG>curses</STRONG>
-       interfaces to terminfo database
+       <STRONG>setterm</STRONG>, <STRONG>setupterm</STRONG>, <STRONG>tigetflag</STRONG>, <STRONG>tigetnum</STRONG>, <STRONG>tigetstr</STRONG>, <STRONG>tiparm</STRONG>,
+       <STRONG>tparm</STRONG>, <STRONG>tputs</STRONG>, <STRONG>vid_attr</STRONG>, <STRONG>vid_puts</STRONG>, <STRONG>vidattr</STRONG>, <STRONG>vidputs</STRONG> -
+       <STRONG>curses</STRONG> interfaces to terminfo database
 
 
 </PRE>
@@ -74,6 +74,7 @@
        <STRONG>int</STRONG> <STRONG>tigetflag(char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>);</STRONG>
        <STRONG>int</STRONG> <STRONG>tigetnum(char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>);</STRONG>
        <STRONG>char</STRONG> <STRONG>*tigetstr(char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*tiparm(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
 
 
 </PRE>
@@ -180,6 +181,10 @@
        ters  <EM>pi</EM>.  A pointer is returned to the result of <EM>str</EM> with
        the parameters applied.
 
+       <STRONG>tiparm</STRONG> is a newer form  of  <STRONG>tparm</STRONG>  which  uses  <EM>&lt;stdarg.h&gt;</EM>
+       rather  than  a fixed-parameter list.  Its numeric parame-
+       ters are integers (int) rather than longs.
+
        The <STRONG>tputs</STRONG>  routine  applies  padding  information  to  the
        string  <EM>str</EM>  and  outputs  it.  The <EM>str</EM> must be a terminfo
        string variable or the return value from  <STRONG>tparm</STRONG>,  <STRONG>tgetstr</STRONG>,
@@ -253,11 +258,11 @@
 
        Routines that return pointers always return <STRONG>NULL</STRONG> on error.
 
-       X/Open  defines  no error conditions.  In this implementa-
+       X/Open defines no error conditions.  In  this  implementa-
        tion
 
               <STRONG>del_curterm</STRONG>
-                   returns an error if its terminal parameter  is
+                   returns  an error if its terminal parameter is
                    null.
 
               <STRONG>putp</STRONG> calls <STRONG>tputs</STRONG>, returning the same error-codes.
@@ -267,23 +272,23 @@
                    <STRONG>tupterm</STRONG> returns an error.
 
               <STRONG>setupterm</STRONG>
-                   returns an error if it cannot allocate  enough
+                   returns  an error if it cannot allocate enough
                    memory, or create the initial windows (stdscr,
-                   curscr, newscr).  Other error  conditions  are
+                   curscr,  newscr).   Other error conditions are
                    documented above.
 
               <STRONG>tputs</STRONG>
-                   returns  an  error  if the string parameter is
-                   null.  It does not detect I/O  errors:  X/Open
-                   states  that <STRONG>tputs</STRONG> ignores the return value of
+                   returns an error if the  string  parameter  is
+                   null.   It  does not detect I/O errors: X/Open
+                   states that <STRONG>tputs</STRONG> ignores the return value  of
                    the output function <EM>putc</EM>.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       The <STRONG>setupterm</STRONG> routine should be used in place of  <STRONG>setterm</STRONG>.
-       It  may be useful when you want to test for terminal capa-
-       bilities without committing to the allocation  of  storage
+       The  <STRONG>setupterm</STRONG> routine should be used in place of <STRONG>setterm</STRONG>.
+       It may be useful when you want to test for terminal  capa-
+       bilities  without  committing to the allocation of storage
        involved in <STRONG>initscr</STRONG>.
 
        Note that <STRONG>vidattr</STRONG> and <STRONG>vidputs</STRONG> may be macros.
@@ -291,53 +296,57 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The  function  <STRONG>setterm</STRONG> is not described by X/Open and must
-       be considered non-portable.  All other  functions  are  as
+       The function <STRONG>setterm</STRONG> is not described by X/Open  and  must
+       be  considered  non-portable.   All other functions are as
        described by X/Open.
 
-       <STRONG>setupterm</STRONG>  copies  the terminal name to the array <STRONG>ttytype</STRONG>.
-       This is not part of X/Open Curses, but is assumed by  some
+       <STRONG>setupterm</STRONG> copies the terminal name to the  array  <STRONG>ttytype</STRONG>.
+       This  is not part of X/Open Curses, but is assumed by some
        applications.
 
-       In  System V Release 4, <STRONG>set_curterm</STRONG> has an <STRONG>int</STRONG> return type
-       and returns <STRONG>OK</STRONG> or <STRONG>ERR</STRONG>.  We have chosen  to  implement  the
+       In System V Release 4, <STRONG>set_curterm</STRONG> has an <STRONG>int</STRONG> return  type
+       and  returns  <STRONG>OK</STRONG>  or <STRONG>ERR</STRONG>.  We have chosen to implement the
        X/Open Curses semantics.
 
        In System V Release 4, the third argument of <STRONG>tputs</STRONG> has the
        type <STRONG>int</STRONG> <STRONG>(*putc)(char)</STRONG>.
 
        At least one implementation of X/Open Curses (Solaris) re-
-       turns  a value other than OK/ERR from <STRONG>tputs</STRONG>.  That returns
+       turns a value other than OK/ERR from <STRONG>tputs</STRONG>.  That  returns
        the length of the string, and does no error-checking.
 
-       X/Open Curses prototypes <STRONG>tparm</STRONG> with a fixed number of  pa-
-       rameters,  rather than a variable argument list.  This im-
-       plementation uses a variable argument list.  Portable  ap-
+       X/Open  Curses prototypes <STRONG>tparm</STRONG> with a fixed number of pa-
+       rameters, rather than a variable argument list.  This  im-
+       plementation  uses  a  variable  argument list, but can be
+       configured to use the fixed-parameter list.  Portable  ap-
        plications  should  provide 9 parameters after the format;
        zeroes are fine for this purpose.
 
-       X/Open notes that after calling <STRONG>mvcur</STRONG>,  the  curses  state
-       may  not  match the actual terminal state, and that an ap-
-       plication should touch and refresh the window  before  re-
+       In response to comments by Thomas E. Dickey, X/Open Curses
+       Issue 7 proposed the <STRONG>tiparam</STRONG> function in mid-2009.
+
+       X/Open  notes  that  after calling <STRONG>mvcur</STRONG>, the curses state
+       may not match the actual terminal state, and that  an  ap-
+       plication  should  touch and refresh the window before re-
        suming normal curses calls.  Both ncurses and System V Re-
        lease 4 curses implement <STRONG>mvcur</STRONG> using the SCREEN data allo-
        cated in either <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.  So though it is docu-
-       mented as a terminfo function, <STRONG>mvcur</STRONG> is  really  a  curses
+       mented  as  a  terminfo function, <STRONG>mvcur</STRONG> is really a curses
        function which is not well specified.
 
-       X/Open  states  that  the  old  location must be given for
-       <STRONG>mvcur</STRONG>.  This implementation allows the caller to use  -1's
-       for  the old ordinates.  In that case, the old location is
+       X/Open states that the old  location  must  be  given  for
+       <STRONG>mvcur</STRONG>.   This implementation allows the caller to use -1's
+       for the old ordinates.  In that case, the old location  is
        unknown.
 
-       Extended terminal capability names, e.g.,  as  defined  by
-       <STRONG>tic</STRONG> <STRONG>-x</STRONG>,  are  not  stored  in the arrays described in this
+       Extended  terminal  capability  names, e.g., as defined by
+       <STRONG>tic</STRONG> <STRONG>-x</STRONG>, are not stored in the  arrays  described  in  this
        section.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,  <STRONG>curs_term-</STRONG>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>, <STRONG>curs_term-</STRONG>
        <STRONG><A HREF="curs_termcap.3x.html">cap(3x)</A></STRONG>, <STRONG><A HREF="putc.3.html">putc(3)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
 

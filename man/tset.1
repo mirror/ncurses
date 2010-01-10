@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.20 2008/11/15 23:14:06 tom Exp $
+.\" $Id: tset.1,v 1.21 2010/01/09 16:39:45 tom Exp $
 .TH @TSET@ 1 ""
 .SH NAME
 \fBtset\fR, \fBreset\fR - terminal initialization
@@ -44,8 +44,9 @@ This determination is done as follows, using the first terminal type found.
 2. The value of the \fBTERM\fR environmental variable.
 .PP
 3. (BSD systems only.) The terminal type associated with the standard
-error output device in the \fI/etc/ttys\fR file.  (On Linux and
-System-V-like UNIXes, \fIgetty\fR does this job by setting
+error output device in the \fI/etc/ttys\fR file.
+(On System-V-like UNIXes and systems using that convention,
+\fIgetty\fR does this job by setting
 \fBTERM\fR according to the type passed to it by \fI/etc/inittab\fR.)
 .PP
 4. The default terminal type, ``unknown''.
