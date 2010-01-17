@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_kernel.c,v 1.28 2009/10/24 22:15:47 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.29 2010/01/16 16:33:38 tom Exp $")
 
 static int
 _nc_vdisable(void)
@@ -95,7 +95,7 @@ NCURSES_SP_NAME(erasechar) (NCURSES_SP_DCL0)
 	result = termp->Ottyb.sg_erase;
 #endif
     }
-    returnCode(result);
+    returnChar(result);
 }
 
 #if NCURSES_SP_FUNCS
@@ -130,7 +130,7 @@ NCURSES_SP_NAME(killchar) (NCURSES_SP_DCL0)
 	result = termp->Ottyb.sg_kill;
 #endif
     }
-    returnCode(result);
+    returnChar(result);
 }
 
 #if NCURSES_SP_FUNCS

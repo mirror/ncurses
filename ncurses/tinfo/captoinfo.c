@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.53 2009/03/28 20:44:23 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.54 2010/01/16 17:12:19 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -125,7 +125,7 @@ init_string(void)
 static char *
 save_string(char *d, const char *const s)
 {
-    size_t have = (d - my_string);
+    size_t have = (size_t) (d - my_string);
     size_t need = have + strlen(s) + 2;
     if (need > my_length) {
 	my_string = (char *) _nc_doalloc(my_string, my_length = (need + need));
@@ -196,7 +196,7 @@ cvtchar(register const char *sp)
 	case '3':
 	    len = 1;
 	    while (isdigit(UChar(*sp))) {
-		c = 8 * c + (*sp++ - '0');
+		c = (unsigned char) (8 * c + (*sp++ - '0'));
 		len++;
 	    }
 	    break;
@@ -207,7 +207,7 @@ cvtchar(register const char *sp)
 	}
 	break;
     case '^':
-	c = (*++sp & 0x1f);
+	c = (unsigned char) (*++sp & 0x1f);
 	len = 2;
 	break;
     default:

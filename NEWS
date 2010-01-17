@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1491 2010/01/09 21:05:27 tom Exp $
+-- $Id: NEWS,v 1.1493 2010/01/16 23:47:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100116
+	+ modify win_driver.c to initialize acs_map for win32 console, so
+	  that line-drawing works.
+	+ modify win_driver.c to initialize TERMINAL struct so that programs
+	  such as test/lrtest.c and test/ncurses.c which test string
+	  capabilities can run.
+	+ modify term-driver modules to eliminate forward-reference
+	  declarations.
 
 20100109
 	+ modify configure macro CF_XOPEN_SOURCE, etc., to use CF_ADD_CFLAGS

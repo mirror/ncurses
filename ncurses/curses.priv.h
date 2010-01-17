@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.445 2009/12/05 21:20:51 tom Exp $
+ * $Id: curses.priv.h,v 1.447 2010/01/16 21:32:59 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1440,11 +1440,14 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 #define T(a)		TR(TRACE_CALLS, a)
 #define TRACE_RETURN(value,type) return _nc_retrace_##type(value)
 
+#define NonNull(s)	((s) != 0 ? s : "<null>")
+
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)
 #define returnBits(code)	TRACE_RETURN(code,unsigned)
 #define returnBool(code)	TRACE_RETURN(code,bool)
 #define returnCPtr(code)	TRACE_RETURN(code,cptr)
 #define returnCVoidPtr(code)	TRACE_RETURN(code,cvoid_ptr)
+#define returnChar(code)	TRACE_RETURN(code,char)
 #define returnChtype(code)	TRACE_RETURN(code,chtype)
 #define returnCode(code)	TRACE_RETURN(code,int)
 #define returnPtr(code)		TRACE_RETURN(code,ptr)
@@ -1464,6 +1467,7 @@ extern NCURSES_EXPORT(char *)           _nc_varargs (const char *, va_list);
 extern NCURSES_EXPORT(chtype)           _nc_retrace_chtype (chtype);
 extern NCURSES_EXPORT(const char *)     _nc_altcharset_name(attr_t, chtype);
 extern NCURSES_EXPORT(const char *)     _nc_retrace_cptr (const char *);
+extern NCURSES_EXPORT(char)             _nc_retrace_char (char);
 extern NCURSES_EXPORT(int)              _nc_retrace_int (int);
 extern NCURSES_EXPORT(unsigned)         _nc_retrace_unsigned (unsigned);
 extern NCURSES_EXPORT(void *)           _nc_retrace_void_ptr (void *);
@@ -1504,6 +1508,7 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 #define returnBool(code)	return code
 #define returnCPtr(code)	return code
 #define returnCVoidPtr(code)	return code
+#define returnChar(code)	return ((char) code)
 #define returnChtype(code)	return code
 #define returnCode(code)	return code
 #define returnPtr(code)		return code

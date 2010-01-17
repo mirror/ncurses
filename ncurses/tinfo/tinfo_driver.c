@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008,2009 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.5 2009/10/31 20:32:01 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.7 2010/01/16 16:56:16 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -90,84 +90,6 @@ NCURSES_PUBLIC_VAR(COLORS) (void)
 NCURSES_EXPORT_VAR(int) COLOR_PAIRS = 0;
 NCURSES_EXPORT_VAR(int) COLORS = 0;
 #endif
-
-static bool drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *);
-static void drv_init(TERMINAL_CONTROL_BLOCK *);
-static void drv_release(TERMINAL_CONTROL_BLOCK *);
-static int drv_size(TERMINAL_CONTROL_BLOCK *, int *, int *);
-static int drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, bool setFlag, TTY * buf);
-static chtype drv_conattr(TERMINAL_CONTROL_BLOCK * TCB);
-static int drv_mvcur(TERMINAL_CONTROL_BLOCK * TCB, int yold, int xold, int
-		     ynew, int xnew);
-static int drv_mode(TERMINAL_CONTROL_BLOCK * TCB, bool progFlag, bool defFlag);
-static bool drv_rescol(TERMINAL_CONTROL_BLOCK * TCB);
-static bool drv_rescolors(TERMINAL_CONTROL_BLOCK * TCB);
-static void drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB, bool fore, int color, int
-			   (*outc) (SCREEN *, int));
-static int drv_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB, bool beepFlag);
-static void drv_initpair(TERMINAL_CONTROL_BLOCK * TCB, short pair, short f, short b);
-static void drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB, short color, short
-			  r, short g, short b);
-static void drv_do_color(TERMINAL_CONTROL_BLOCK * TCB, short old_pair, short
-			 pair, bool reverse,
-			 int (*outc) (SCREEN *, int));
-static void drv_initmouse(TERMINAL_CONTROL_BLOCK * TCB);
-static void drv_setfilter(TERMINAL_CONTROL_BLOCK * TCB);
-static void drv_hwlabel(TERMINAL_CONTROL_BLOCK * TCB, int labnum, char *text);
-static void drv_hwlabelOnOff(TERMINAL_CONTROL_BLOCK * TCB, bool OnFlag);
-static int drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB);
-static int drv_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB, int fg, int bg);
-static int drv_print(TERMINAL_CONTROL_BLOCK * TCB, char *data, int len);
-static int drv_getsize(TERMINAL_CONTROL_BLOCK *, int *, int *);
-static int drv_setsize(TERMINAL_CONTROL_BLOCK * TCB, int l, int c);
-static void drv_initacs(TERMINAL_CONTROL_BLOCK * TCB, chtype *, chtype *);
-static void drv_wrap(SCREEN *);
-static void drv_screen_init(SCREEN *);
-static int drv_twait(TERMINAL_CONTROL_BLOCK *, int, int, int
-		     *EVENTLIST_2nd(_nc_eventlist
-				    *));
-static int drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf);
-static int drv_nap(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED, int ms);
-static int drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, bool);
-static int drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int, bool);
-static bool drv_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int);
-
-NCURSES_EXPORT_VAR (TERM_DRIVER) _nc_TINFO_DRIVER = {
-    TRUE,
-	drv_CanHandle,		/* CanHandle */
-	drv_init,		/* init */
-	drv_release,		/* release */
-	drv_size,		/* size */
-	drv_sgmode,		/* sgmode */
-	drv_conattr,		/* conattr */
-	drv_mvcur,		/* hwcur */
-	drv_mode,		/* mode */
-	drv_rescol,		/* rescol */
-	drv_rescolors,		/* rescolors */
-	drv_setcolor,		/* color */
-	drv_dobeepflash,	/* doBeepOrFlash */
-	drv_initpair,		/* initpair */
-	drv_initcolor,		/* initcolor */
-	drv_do_color,		/* docolor */
-	drv_initmouse,		/* initmouse */
-	drv_setfilter,		/* setfilter */
-	drv_hwlabel,		/* hwlabel */
-	drv_hwlabelOnOff,	/* hwlabelOnOff */
-	drv_doupdate,		/* update */
-	drv_defaultcolors,	/* defaultcolors */
-	drv_print,		/* print */
-	drv_getsize,		/* getsize */
-	drv_setsize,		/* setsize */
-	drv_initacs,		/* initacs */
-	drv_screen_init,	/* scinit */
-	drv_wrap,		/* scexit */
-	drv_twait,		/* twait  */
-	drv_read,		/* read */
-	drv_nap,		/* nap */
-	drv_kpad,		/* kpad */
-	drv_keyok,		/* kyOk */
-	drv_kyExist		/* kyExist */
-};
 
 #define TCBMAGIC NCDRV_MAGIC(NCDRV_TINFO)
 #define AssertTCB() assert(TCB!=0 && TCB->magic==TCBMAGIC)
@@ -386,8 +308,10 @@ drv_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB, int fg, int bg)
 }
 
 static void
-drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB, bool fore, int color, int (*outc)
-	       (SCREEN *, int))
+drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
+	     bool fore,
+	     int color,
+	     NCURSES_SP_OUTC outc)
 {
     SCREEN *sp;
 
@@ -566,9 +490,43 @@ static int
 drv_setsize(TERMINAL_CONTROL_BLOCK * TCB, int l, int c)
 {
     AssertTCB();
-    lines = l;
-    columns = c;
+    lines = (short) l;
+    columns = (short) c;
     return OK;
+}
+
+static int
+drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, bool setFlag, TTY * buf)
+{
+    SCREEN *sp = TCB->csp;
+    TERMINAL *_term = (TERMINAL *) TCB;
+    int result = OK;
+
+    AssertTCB();
+    if (setFlag) {
+	for (;;) {
+	    if (SET_TTY(_term->Filedes, buf) != 0) {
+		if (errno == EINTR)
+		    continue;
+		if (errno == ENOTTY) {
+		    if (sp)
+			sp->_notty = TRUE;
+		}
+		result = ERR;
+	    }
+	    break;
+	}
+    } else {
+	for (;;) {
+	    if (GET_TTY(_term->Filedes, buf) != 0) {
+		if (errno == EINTR)
+		    continue;
+		result = ERR;
+	    }
+	    break;
+	}
+    }
+    return result;
 }
 
 static int
@@ -653,7 +611,7 @@ drv_release(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED)
 
 #  define SGR0_TEST(mode) (mode != 0) && (exit_attribute_mode == 0 || strcmp(mode, exit_attribute_mode))
 
-void
+static void
 drv_screen_init(SCREEN *sp)
 {
     TERMINAL_CONTROL_BLOCK *TCB = TCBOf(sp);
@@ -865,9 +823,9 @@ drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
 
 #if NCURSES_EXT_FUNCS
     if (isDefaultColor(fg))
-	fg = default_fg(sp);
+	fg = (NCURSES_COLOR_T) default_fg(sp);
     if (isDefaultColor(bg))
-	bg = default_bg(sp);
+	bg = (NCURSES_COLOR_T) default_bg(sp);
 #endif
 
     if (reverse) {
@@ -1004,40 +962,6 @@ drv_setfilter(TERMINAL_CONTROL_BLOCK * TCB)
     cursor_up = parm_up_cursor = 0;
     row_address = 0;
     cursor_home = carriage_return;
-}
-
-static int
-drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, bool setFlag, TTY * buf)
-{
-    SCREEN *sp = TCB->csp;
-    TERMINAL *_term = (TERMINAL *) TCB;
-    int result = OK;
-
-    AssertTCB();
-    if (setFlag) {
-	for (;;) {
-	    if (SET_TTY(_term->Filedes, buf) != 0) {
-		if (errno == EINTR)
-		    continue;
-		if (errno == ENOTTY) {
-		    if (sp)
-			sp->_notty = TRUE;
-		}
-		result = ERR;
-	    }
-	    break;
-	}
-    } else {
-	for (;;) {
-	    if (GET_TTY(_term->Filedes, buf) != 0) {
-		if (errno == EINTR)
-		    continue;
-		result = ERR;
-	    }
-	    break;
-	}
-    }
-    return result;
 }
 
 static void
@@ -1366,3 +1290,40 @@ drv_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int key)
 
     return res;
 }
+
+NCURSES_EXPORT_VAR (TERM_DRIVER) _nc_TINFO_DRIVER = {
+    TRUE,
+	drv_CanHandle,		/* CanHandle */
+	drv_init,		/* init */
+	drv_release,		/* release */
+	drv_size,		/* size */
+	drv_sgmode,		/* sgmode */
+	drv_conattr,		/* conattr */
+	drv_mvcur,		/* hwcur */
+	drv_mode,		/* mode */
+	drv_rescol,		/* rescol */
+	drv_rescolors,		/* rescolors */
+	drv_setcolor,		/* color */
+	drv_dobeepflash,	/* doBeepOrFlash */
+	drv_initpair,		/* initpair */
+	drv_initcolor,		/* initcolor */
+	drv_do_color,		/* docolor */
+	drv_initmouse,		/* initmouse */
+	drv_setfilter,		/* setfilter */
+	drv_hwlabel,		/* hwlabel */
+	drv_hwlabelOnOff,	/* hwlabelOnOff */
+	drv_doupdate,		/* update */
+	drv_defaultcolors,	/* defaultcolors */
+	drv_print,		/* print */
+	drv_getsize,		/* getsize */
+	drv_setsize,		/* setsize */
+	drv_initacs,		/* initacs */
+	drv_screen_init,	/* scinit */
+	drv_wrap,		/* scexit */
+	drv_twait,		/* twait  */
+	drv_read,		/* read */
+	drv_nap,		/* nap */
+	drv_kpad,		/* kpad */
+	drv_keyok,		/* kyOk */
+	drv_kyExist		/* kyExist */
+};

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 #include <term_entry.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.84 2009/05/09 16:37:42 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.85 2010/01/16 17:02:17 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -424,7 +424,7 @@ _nc_get_token(bool silent)
 	    && !strchr(terminfo_punct, (char) ch)) {
 	    if (!silent)
 		_nc_warning("Illegal character (expected alphanumeric or %s) - '%s'",
-			    terminfo_punct, unctrl((chtype) ch));
+			    terminfo_punct, unctrl(UChar(ch)));
 	    _nc_panic_mode(separator);
 	    goto start_token;
 	}
@@ -589,7 +589,7 @@ _nc_get_token(bool silent)
 	    case '@':
 		if ((ch = next_char()) != separator && !silent)
 		    _nc_warning("Missing separator after `%s', have %s",
-				tok_buf, unctrl((chtype) ch));
+				tok_buf, unctrl(UChar(ch)));
 		_nc_curr_token.tk_name = tok_buf;
 		type = CANCEL;
 		break;
@@ -630,8 +630,7 @@ _nc_get_token(bool silent)
 		/* just to get rid of the compiler warning */
 		type = UNDEF;
 		if (!silent)
-		    _nc_warning("Illegal character - '%s'",
-				unctrl((chtype) ch));
+		    _nc_warning("Illegal character - '%s'", unctrl(UChar(ch)));
 	    }
 	}			/* end else (first_column == FALSE) */
     }				/* end else (ch != EOF) */
@@ -724,48 +723,47 @@ _nc_trans_string(char *ptr, char *last)
     int count = 0;
     int number = 0;
     int i, c;
-    chtype ch, last_ch = '\0';
+    int last_ch = '\0';
     bool ignored = FALSE;
     bool long_warning = FALSE;
 
-    while ((ch = c = next_char()) != (chtype) separator && c != EOF) {
+    while ((c = next_char()) != separator && c != EOF) {
 	if (ptr >= (last - 1)) {
 	    if (c != EOF) {
 		while ((c = next_char()) != separator && c != EOF) {
 		    ;
 		}
-		ch = c;
 	    }
 	    break;
 	}
 	if ((_nc_syntax == SYN_TERMCAP) && c == '\n')
 	    break;
-	if (ch == '^' && last_ch != '%') {
-	    ch = c = next_char();
+	if (c == '^' && last_ch != '%') {
+	    c = next_char();
 	    if (c == EOF)
 		_nc_err_abort(MSG_NO_INPUTS);
 
-	    if (!(is7bits(ch) && isprint(ch))) {
-		_nc_warning("Illegal ^ character - '%s'", unctrl(ch));
+	    if (!(is7bits(c) && isprint(c))) {
+		_nc_warning("Illegal ^ character - '%s'", unctrl(UChar(c)));
 	    }
-	    if (ch == '?') {
+	    if (c == '?') {
 		*(ptr++) = '\177';
 		if (_nc_tracing)
 		    _nc_warning("Allow ^? as synonym for \\177");
 	    } else {
-		if ((ch &= 037) == 0)
-		    ch = 128;
-		*(ptr++) = (char) (ch);
+		if ((c &= 037) == 0)
+		    c = 128;
+		*(ptr++) = (char) (c);
 	    }
-	} else if (ch == '\\') {
-	    ch = c = next_char();
+	} else if (c == '\\') {
+	    c = next_char();
 	    if (c == EOF)
 		_nc_err_abort(MSG_NO_INPUTS);
 
-	    if (ch >= '0' && ch <= '7') {
-		number = ch - '0';
+	    if (c >= '0' && c <= '7') {
+		number = c - '0';
 		for (i = 0; i < 2; i++) {
-		    ch = c = next_char();
+		    c = next_char();
 		    if (c == EOF)
 			_nc_err_abort(MSG_NO_INPUTS);
 
@@ -842,31 +840,31 @@ _nc_trans_string(char *ptr, char *last)
 
 		default:
 		    _nc_warning("Illegal character '%s' in \\ sequence",
-				unctrl(ch));
+				unctrl(UChar(c)));
 		    /* FALLTHRU */
 		case '|':
-		    *(ptr++) = (char) ch;
-		}		/* endswitch (ch) */
-	    }			/* endelse (ch < '0' ||  ch > '7') */
+		    *(ptr++) = (char) c;
+		}		/* endswitch (c) */
+	    }			/* endelse (c < '0' ||  c > '7') */
 	}
-	/* end else if (ch == '\\') */
-	else if (ch == '\n' && (_nc_syntax == SYN_TERMINFO)) {
+	/* end else if (c == '\\') */
+	else if (c == '\n' && (_nc_syntax == SYN_TERMINFO)) {
 	    /*
 	     * Newlines embedded in a terminfo string are ignored, provided
 	     * that the next line begins with whitespace.
 	     */
 	    ignored = TRUE;
 	} else {
-	    *(ptr++) = (char) ch;
+	    *(ptr++) = (char) c;
 	}
 
 	if (!ignored) {
 	    if (_nc_curr_col <= 1) {
-		push_back((char) ch);
-		ch = '\n';
+		push_back((char) c);
+		c = '\n';
 		break;
 	    }
-	    last_ch = ch;
+	    last_ch = c;
 	    count++;
 	}
 	ignored = FALSE;
@@ -879,7 +877,7 @@ _nc_trans_string(char *ptr, char *last)
 
     *ptr = '\0';
 
-    return (ch);
+    return (c);
 }
 
 /*

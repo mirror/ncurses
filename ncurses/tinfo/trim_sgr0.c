@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2006,2007 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2007,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 #include <tic.h>
 #include <term_entry.h>
 
-MODULE_ID("$Id: trim_sgr0.c,v 1.8 2007/04/07 17:14:11 tom Exp $")
+MODULE_ID("$Id: trim_sgr0.c,v 1.9 2010/01/16 16:45:13 tom Exp $")
 
 #undef CUR
 #define CUR tp->
@@ -170,13 +170,13 @@ chop_out(char *string, unsigned i, unsigned j)
  * Returns the number of chars from 'full' that we matched.  If any mismatch
  * occurs, return zero.
  */
-static int
+static unsigned
 compare_part(const char *part, const char *full)
 {
     const char *next_part;
     const char *next_full;
-    int used_full = 0;
-    int used_delay = 0;
+    unsigned used_full = 0;
+    unsigned used_delay = 0;
 
     while (*part != 0) {
 	if (*part != *full) {
@@ -199,7 +199,7 @@ compare_part(const char *part, const char *full)
 	    next_part = skip_delay(part);
 	    next_full = skip_delay(full);
 	    if (next_part != part && next_full != full) {
-		used_delay += (next_full - full);
+		used_delay += (unsigned) (next_full - full);
 		full = next_full;
 		part = next_part;
 		continue;
@@ -261,7 +261,8 @@ _nc_trim_sgr0(TERMTYPE *tp)
 		k = strlen(exit_alt_charset_mode);
 		if (j > k) {
 		    for (i = 0; i <= (j - k); ++i) {
-			int k2 = compare_part(exit_alt_charset_mode, off + i);
+			unsigned k2 = compare_part(exit_alt_charset_mode,
+						   off + i);
 			if (k2 != 0) {
 			    found = TRUE;
 			    chop_out(off, i, i + k2);
@@ -274,17 +275,17 @@ _nc_trim_sgr0(TERMTYPE *tp)
 	     * SGR 10 would reset to normal font.
 	     */
 	    if (!found) {
-		if ((i = is_csi(off)) != 0
+		if ((i = (size_t) is_csi(off)) != 0
 		    && off[strlen(off) - 1] == 'm') {
 		    TR(TRACE_DATABASE, ("looking for SGR 10 in %s",
 					_nc_visbuf(off)));
 		    tmp = skip_zero(off + i);
 		    if (tmp[0] == '1'
 			&& skip_zero(tmp + 1) != tmp + 1) {
-			i = tmp - off;
+			i = (size_t) (tmp - off);
 			if (off[i - 1] == ';')
 			    i--;
-			j = skip_zero(tmp + 1) - off;
+			j = (size_t) (skip_zero(tmp + 1) - off);
 			i = chop_out(off, i, j);
 			found = TRUE;
 		    }
@@ -293,7 +294,7 @@ _nc_trim_sgr0(TERMTYPE *tp)
 	    if (!found
 		&& (tmp = strstr(end, off)) != 0
 		&& strcmp(end, off) != 0) {
-		i = tmp - end;
+		i = (size_t) (tmp - end);
 		j = strlen(off);
 		tmp = strdup(end);
 		chop_out(tmp, i, j);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008,2009 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_driver.c,v 1.1 2009/02/21 15:11:29 juergen Exp $")
+MODULE_ID("$Id: lib_driver.c,v 1.2 2010/01/16 21:26:09 tom Exp $")
 
 typedef struct DriverEntry {
     const char *name;
@@ -48,19 +48,19 @@ static DRIVER_ENTRY DriverTable[] =
     {"tinfo", &_nc_TINFO_DRIVER}
 };
 
-#define NUM_DRIVERS (int)(sizeof(DriverTable)/sizeof(DRIVER_ENTRY))
-
 NCURSES_EXPORT(int)
 _nc_get_driver(TERMINAL_CONTROL_BLOCK * TCB, const char *name, int *errret)
 {
     int code = ERR;
-    int i;
+    size_t i;
     TERM_DRIVER *res = (TERM_DRIVER *) 0;
     TERM_DRIVER *use = 0;
 
+    T((T_CALLED("_nc_get_driver(%p, %s, %p)"), TCB, NonNull(name), errret));
+
     assert(TCB != 0);
 
-    for (i = 0; i < NUM_DRIVERS; i++) {
+    for (i = 0; i < SIZEOF(DriverTable); i++) {
 	res = DriverTable[i].driver;
 	if (res->CanHandle(TCB, name, errret)) {
 	    use = res;
@@ -71,7 +71,7 @@ _nc_get_driver(TERMINAL_CONTROL_BLOCK * TCB, const char *name, int *errret)
 	TCB->drv = use;
 	code = OK;
     }
-    return (code);
+    returnCode(code);
 }
 
 NCURSES_EXPORT(int)

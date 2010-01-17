@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.80 2009/12/12 19:49:03 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.81 2010/01/16 15:20:23 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -141,7 +141,9 @@ MODULE_ID("$Id: tset.c,v 1.80 2009/12/12 19:49:03 tom Exp $")
 # endif
 #endif
 
+#ifndef environ
 extern char **environ;
+#endif
 
 #undef CTRL
 #define CTRL(x)	((x) & 0x1f)
