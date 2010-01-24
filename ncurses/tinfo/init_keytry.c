@@ -29,9 +29,7 @@
 #include <curses.priv.h>
 #include <tic.h>		/* struct tinfo_fkeys */
 
-#include <term_entry.h>
-
-MODULE_ID("$Id: init_keytry.c,v 1.15 2010/01/16 17:20:34 tom Exp $")
+MODULE_ID("$Id: init_keytry.c,v 1.16 2010/01/23 17:10:47 tom Exp $")
 
 /*
 **      _nc_init_keytry()

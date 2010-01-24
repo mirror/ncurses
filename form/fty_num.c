@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_num.c,v 1.27 2009/11/07 20:17:58 tom Exp $")
+MODULE_ID("$Id: fty_num.c,v 1.28 2010/01/23 21:14:36 tom Exp $")
 
 #if HAVE_LOCALE_H
 #include <locale.h>
@@ -91,7 +91,7 @@ Generic_This_Type(void *arg)
 
       if (argn)
 	{
-	  T((T_CREATE("thisARG %p"), argn));
+	  T((T_CREATE("thisARG %p"), (void *)argn));
 	  argn->precision = args->precision;
 	  argn->low = args->low;
 	  argn->high = args->high;
@@ -145,7 +145,7 @@ Copy_This_Type(const void *argp)
       result = typeMalloc(thisARG, 1);
       if (result)
 	{
-	  T((T_CREATE("thisARG %p"), result));
+	  T((T_CREATE("thisARG %p"), (void *)result));
 	  *result = *ap;
 	}
     }

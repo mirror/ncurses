@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,6 @@
  ****************************************************************************/
 
 #include <curses.priv.h>
-#include <term_entry.h>
 #include <tic.h>
 
 #if HAVE_NC_FREEALL
@@ -40,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.58 2009/05/09 18:34:30 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.59 2010/01/23 17:57:43 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical

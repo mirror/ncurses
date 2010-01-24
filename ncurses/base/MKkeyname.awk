@@ -1,6 +1,6 @@
-# $Id: MKkeyname.awk,v 1.43 2009/05/09 19:01:49 tom Exp $
+# $Id: MKkeyname.awk,v 1.44 2010/01/23 17:57:43 tom Exp $
 ##############################################################################
-# Copyright (c) 1999-2008,2009 Free Software Foundation, Inc.                #
+# Copyright (c) 1999-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -31,7 +31,6 @@ BEGIN {
 	print ""
 	print "#include <curses.priv.h>"
 	print "#include <tic.h>"
-	print "#include <term_entry.h>"
 	print ""
 	first = 1;
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_new.c,v 1.20 2009/12/12 18:31:28 tom Exp $")
+MODULE_ID("$Id: m_new.c,v 1.21 2010/01/23 21:20:11 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -56,7 +56,7 @@ NCURSES_SP_NAME(new_menu) (NCURSES_SP_DCLx ITEM ** items)
   int err = E_SYSTEM_ERROR;
   MENU *menu = typeCalloc(MENU, 1);
 
-  T((T_CALLED("new_menu(%p,%p)"), SP_PARM, items));
+  T((T_CALLED("new_menu(%p,%p)"), (void *)SP_PARM, (void *)items));
   if (menu)
     {
       *menu = _nc_Default_Menu;
@@ -122,7 +122,7 @@ new_menu(ITEM ** items)
 NCURSES_EXPORT(int)
 free_menu(MENU * menu)
 {
-  T((T_CALLED("free_menu(%p)"), menu));
+  T((T_CALLED("free_menu(%p)"), (void *)menu));
   if (!menu)
     RETURN(E_BAD_ARGUMENT);
 

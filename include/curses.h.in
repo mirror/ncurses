@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.208 2010/01/09 19:34:26 tom Exp $ */
+/* $Id: curses.h.in,v 1.209 2010/01/23 21:54:01 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -1103,12 +1103,16 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);
 
 #if !NCURSES_OPAQUE
 #if defined(_XOPEN_SOURCE_EXTENDED) && @NCURSES_EXT_COLORS@
-#define wattrset(win,at)	((win)->_color = PAIR_NUMBER(at), \
-                                 (win)->_attrs = (at), \
-                                 NCURSES_CAST(int, (win)->_attrs))
+#define wattrset(win,at)	((win) \
+				  ? ((win)->_color = PAIR_NUMBER(at), \
+                                     (win)->_attrs = (at), \
+                                     OK) \
+				  : ERR)
 #else
-#define wattrset(win,at)        ((win)->_attrs = (at), \
-				 NCURSES_CAST(int, (win)->_attrs))
+#define wattrset(win,at)        ((win) \
+				  ? ((win)->_attrs = (at), \
+				     OK) \
+				  : ERR)
 #endif
 #endif /* NCURSES_OPAQUE */
 

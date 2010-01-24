@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -56,9 +56,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <tic.h>
-#include <term_entry.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.73 2009/12/12 20:21:17 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.74 2010/01/23 17:57:43 tom Exp $")
 
 #if !PURE_TERMINFO
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -46,9 +46,8 @@
 #include <curses.priv.h>
 
 #include <tic.h>
-#include <term_entry.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.48 2008/08/16 16:25:31 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.49 2010/01/23 17:57:43 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2

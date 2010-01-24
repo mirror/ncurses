@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,9 +40,8 @@
 #include <hashed_db.h>
 
 #include <tic.h>
-#include <term_entry.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.105 2009/12/06 01:22:26 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.106 2010/01/23 17:57:43 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 

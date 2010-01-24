@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,6 @@
 
 #include <curses.priv.h>
 #include <tic.h>		/* for MAX_NAME_SIZE */
-#include <term_entry.h>
 
 #if SVR4_TERMIO && !defined(_POSIX_SOURCE)
 #define _POSIX_SOURCE
@@ -52,7 +51,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.126 2009/11/28 22:43:34 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.127 2010/01/23 17:57:43 tom Exp $")
 
 /****************************************************************************
  *

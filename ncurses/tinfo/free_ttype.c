@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2005,2006 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2006,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,9 +41,8 @@
 #include <curses.priv.h>
 
 #include <tic.h>
-#include <term_entry.h>
 
-MODULE_ID("$Id: free_ttype.c,v 1.13 2006/06/25 10:46:02 tom Exp $")
+MODULE_ID("$Id: free_ttype.c,v 1.14 2010/01/23 17:57:43 tom Exp $")
 
 NCURSES_EXPORT(void)
 _nc_free_termtype(TERMTYPE *ptr)

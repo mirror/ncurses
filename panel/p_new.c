@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,7 +38,7 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_new.c,v 1.15 2009/12/12 18:30:29 tom Exp $")
+MODULE_ID("$Id: p_new.c,v 1.16 2010/01/23 21:22:16 tom Exp $")
 
 #ifdef TRACE
 static char *stdscr_id;
@@ -95,7 +95,7 @@ new_panel(WINDOW *win)
 
   GetWindowHook(win);
 
-  T((T_CALLED("new_panel(%p)"), win));
+  T((T_CALLED("new_panel(%p)"), (void *)win));
 
   if (!win)
     returnPanel(pan);

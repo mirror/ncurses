@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_alpha.c,v 1.25 2009/11/07 20:17:58 tom Exp $")
+MODULE_ID("$Id: fty_alpha.c,v 1.26 2010/01/23 21:14:36 tom Exp $")
 
 #define thisARG alphaARG
 
@@ -63,7 +63,7 @@ Generic_This_Type(void *arg)
 
       if (argp)
 	{
-	  T((T_CREATE("thisARG %p"), argp));
+	  T((T_CREATE("thisARG %p"), (void *)argp));
 	  argp->width = *((int *)arg);
 	}
     }
@@ -102,7 +102,7 @@ Copy_This_Type(const void *argp)
 
   if (result)
     {
-      T((T_CREATE("thisARG %p"), result));
+      T((T_CREATE("thisARG %p"), (void *)result));
       *result = *ap;
     }
 

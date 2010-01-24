@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 /* panel.c -- implementation of panels library, some core routines */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: panel.c,v 1.24 2009/04/11 21:29:10 tom Exp $")
+MODULE_ID("$Id: panel.c,v 1.25 2010/01/23 21:22:16 tom Exp $")
 
 /*+-------------------------------------------------------------------------
 	_nc_retrace_panel (pan)
@@ -45,7 +45,7 @@ MODULE_ID("$Id: panel.c,v 1.24 2009/04/11 21:29:10 tom Exp $")
 NCURSES_EXPORT(PANEL *)
 _nc_retrace_panel(PANEL * pan)
 {
-  T((T_RETURN("%p"), pan));
+  T((T_RETURN("%p"), (void *)pan));
   return pan;
 }
 #endif

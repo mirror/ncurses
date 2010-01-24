@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,9 +36,8 @@
 #include <sys/stat.h>
 
 #include <tic.h>
-#include <nc_alloc.h>
 
-MODULE_ID("$Id: access.c,v 1.15 2009/04/05 00:03:10 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.16 2010/01/23 17:57:43 tom Exp $")
 
 #define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
 

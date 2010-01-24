@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -46,9 +46,8 @@
 
 #include <ctype.h>
 #include <tic.h>
-#include <term_entry.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.71 2009/07/11 18:14:21 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.72 2010/01/23 17:57:43 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =

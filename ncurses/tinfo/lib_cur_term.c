@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,10 +37,9 @@
  */
 
 #include <curses.priv.h>
-#include <term_entry.h>		/* TTY, cur_term */
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.28 2009/10/24 22:15:00 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.29 2010/01/23 17:57:43 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.

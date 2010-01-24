@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.27 2009/02/28 21:02:46 juergen Exp $")
+MODULE_ID("$Id: m_post.c,v 1.28 2010/01/23 21:20:11 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -269,7 +269,7 @@ _nc_Draw_Menu(const MENU * menu)
 NCURSES_EXPORT(int)
 post_menu(MENU * menu)
 {
-  T((T_CALLED("post_menu(%p)"), menu));
+  T((T_CALLED("post_menu(%p)"), (void *)menu));
 
   if (!menu)
     RETURN(E_BAD_ARGUMENT);
@@ -343,7 +343,7 @@ unpost_menu(MENU * menu)
 {
   WINDOW *win;
 
-  T((T_CALLED("unpost_menu(%p)"), menu));
+  T((T_CALLED("unpost_menu(%p)"), (void *)menu));
 
   if (!menu)
     RETURN(E_BAD_ARGUMENT);

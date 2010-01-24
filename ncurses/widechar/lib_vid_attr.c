@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,13 +31,12 @@
  ****************************************************************************/
 
 #include <curses.priv.h>
-#include <term.h>
 
 #ifndef CUR
-#define CUR SP_TERMTYPE 
+#define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.11 2009/05/10 00:48:29 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.12 2010/01/23 17:59:27 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); NCURSES_SP_NAME(tputs)(NCURSES_SP_ARGx mode, 1, outc)
 

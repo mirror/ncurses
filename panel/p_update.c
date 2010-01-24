@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,14 +37,14 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_update.c,v 1.10 2009/04/11 19:48:36 tom Exp $")
+MODULE_ID("$Id: p_update.c,v 1.11 2010/01/23 21:22:16 tom Exp $")
 
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(update_panels) (NCURSES_SP_DCL0)
 {
   PANEL *pan;
 
-  T((T_CALLED("update_panels(%p)"), SP_PARM));
+  T((T_CALLED("update_panels(%p)"), (void *)SP_PARM));
   dBug(("--> update_panels"));
 
   if (SP_PARM)

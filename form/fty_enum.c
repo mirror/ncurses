@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_enum.c,v 1.24 2009/11/07 20:17:58 tom Exp $")
+MODULE_ID("$Id: fty_enum.c,v 1.25 2010/01/23 21:14:36 tom Exp $")
 
 typedef struct
   {
@@ -79,7 +79,7 @@ Generic_Enum_Type(void *arg)
 	  char **kptarget;
 	  int ccase, cunique;
 
-	  T((T_CREATE("enumARG %p"), argp));
+	  T((T_CREATE("enumARG %p"), (void *)argp));
 	  kwds = params->kwds;
 	  ccase = params->ccase;
 	  cunique = params->cunique;
@@ -155,7 +155,7 @@ Copy_Enum_Type(const void *argp)
 
       if (result)
 	{
-	  T((T_CREATE("enumARG %p"), result));
+	  T((T_CREATE("enumARG %p"), (void *)result));
 	  *result = *ap;
 
 	  if (ap->count > 0)

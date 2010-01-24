@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_int.c,v 1.24 2009/11/07 20:17:58 tom Exp $")
+MODULE_ID("$Id: fty_int.c,v 1.25 2010/01/23 21:14:36 tom Exp $")
 
 #if USE_WIDEC_SUPPORT
 #define isDigit(c) (iswdigit((wint_t)(c)) || isdigit(UChar(c)))
@@ -80,7 +80,7 @@ Generic_This_Type(void *arg)
 
       if (argp)
 	{
-	  T((T_CREATE("thisARG %p"), argp));
+	  T((T_CREATE("thisARG %p"), (void *)argp));
 	  *argp = *param;
 	}
     }
@@ -126,7 +126,7 @@ Copy_This_Type(const void *argp)
       result = typeMalloc(thisARG, 1);
       if (result)
 	{
-	  T((T_CREATE("thisARG %p"), result));
+	  T((T_CREATE("thisARG %p"), (void *)result));
 	  *result = *ap;
 	}
     }

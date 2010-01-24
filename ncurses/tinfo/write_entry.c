@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,6 @@
 #include <sys/stat.h>
 
 #include <tic.h>
-#include <term_entry.h>
 
 #ifndef S_ISDIR
 #define S_ISDIR(mode) ((mode & S_IFMT) == S_IFDIR)
@@ -54,7 +53,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.75 2009/12/05 21:25:01 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.76 2010/01/23 17:57:43 tom Exp $")
 
 static int total_written;
 

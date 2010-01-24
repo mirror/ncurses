@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2004,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_win.c,v 1.16 2009/04/05 00:38:22 tom Exp $")
+MODULE_ID("$Id: m_win.c,v 1.17 2010/01/23 21:20:11 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -51,7 +51,7 @@ MODULE_ID("$Id: m_win.c,v 1.16 2009/04/05 00:38:22 tom Exp $")
 NCURSES_EXPORT(int)
 set_menu_win(MENU * menu, WINDOW *win)
 {
-  T((T_CALLED("set_menu_win(%p,%p)"), menu, win));
+  T((T_CALLED("set_menu_win(%p,%p)"), (void *)menu, (void *)win));
 
   if (menu)
     {
@@ -93,7 +93,7 @@ menu_win(const MENU * menu)
 {
   const MENU *m = Normalize_Menu(menu);
 
-  T((T_CALLED("menu_win(%p)"), menu));
+  T((T_CALLED("menu_win(%p)"), (const void *)menu));
   returnWin(Get_Menu_UserWin(m));
 }
 

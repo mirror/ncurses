@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKcodes.awk,v 1.8 2009/05/23 19:09:54 tom Exp $
+# $Id: MKcodes.awk,v 1.9 2010/01/23 17:57:43 tom Exp $
 function large_item(value) {
 	result = sprintf("%d,", offset);
 	offset = offset + length(value) + 1;
@@ -100,8 +100,6 @@ $3 == "str"	{
 END	{
 		print  ""
 		print  "#if BROKEN_LINKER || USE_REENTRANT"
-		print  ""
-		print  "#include <term.h>"
 		print  ""
 		if (bigstrings) {
 			printf "static const char _nc_code_blob[] = \n"

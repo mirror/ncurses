@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.28 2009/02/28 21:02:46 juergen Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.29 2010/01/23 21:20:10 tom Exp $")
 
 /* Macros */
 
@@ -121,7 +121,8 @@ _nc_Match_Next_Character_In_Item_Name
   bool found = FALSE, passed = FALSE;
   int idx, last;
 
-  T((T_CALLED("_nc_Match_Next_Character(%p,%d,%p)"), menu, ch, item));
+  T((T_CALLED("_nc_Match_Next_Character(%p,%d,%p)"),
+     (void *)menu, ch, (void *)item));
 
   assert(menu && item && *item);
   idx = (*item)->index;
@@ -220,7 +221,7 @@ menu_driver(MENU * menu, int c)
   ITEM *item;
   int my_top_row, rdiff;
 
-  T((T_CALLED("menu_driver(%p,%d)"), menu, c));
+  T((T_CALLED("menu_driver(%p,%d)"), (void *)menu, c));
 
   if (!menu)
     RETURN(E_BAD_ARGUMENT);

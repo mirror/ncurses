@@ -35,9 +35,8 @@
 #include <ctype.h>
 
 #include <tic.h>
-#include <term_entry.h>
 
-MODULE_ID("$Id: trim_sgr0.c,v 1.9 2010/01/16 16:45:13 tom Exp $")
+MODULE_ID("$Id: trim_sgr0.c,v 1.10 2010/01/23 17:12:45 tom Exp $")
 
 #undef CUR
 #define CUR tp->

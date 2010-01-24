@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008,2009 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_generic.c,v 1.4 2009/11/07 20:42:38 tom Exp $")
+MODULE_ID("$Id: fty_generic.c,v 1.5 2010/01/23 21:14:36 tom Exp $")
 
 /*
  * This is not a full implementation of a field type, but adds some
@@ -288,7 +288,10 @@ _nc_form_cursor(const FORM *form, int *pRow, int *pCol)
 
 #else
 extern void _nc_fty_generic(void);
-void _nc_fty_generic(void) { }
+void
+_nc_fty_generic(void)
+{
+}
 #endif
 
 /* fty_generic.c ends here */

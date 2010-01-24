@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,13 +44,11 @@
 #include <tic.h>
 #include <ctype.h>
 
-#include <term_entry.h>
-
 #ifndef CUR
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.71 2009/10/24 21:56:58 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.72 2010/01/23 17:57:43 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;

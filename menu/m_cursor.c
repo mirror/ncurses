@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_cursor.c,v 1.21 2009/02/28 21:02:46 juergen Exp $")
+MODULE_ID("$Id: m_cursor.c,v 1.22 2010/01/23 21:20:10 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -86,7 +86,7 @@ pos_menu_cursor(const MENU * menu)
   int x = 0, y = 0;
   int err = _nc_menu_cursor_pos(menu, (ITEM *) 0, &y, &x);
 
-  T((T_CALLED("pos_menu_cursor(%p)"), menu));
+  T((T_CALLED("pos_menu_cursor(%p)"), (const void *)menu));
 
   if (E_OK == err)
     {

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,14 +37,14 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_bottom.c,v 1.12 2008/11/16 00:19:59 juergen Exp $")
+MODULE_ID("$Id: p_bottom.c,v 1.13 2010/01/23 21:22:16 tom Exp $")
 
 NCURSES_EXPORT(int)
 bottom_panel(PANEL * pan)
 {
   int err = OK;
 
-  T((T_CALLED("bottom_panel(%p)"), pan));
+  T((T_CALLED("bottom_panel(%p)"), (void *)pan));
   if (pan)
     {
       GetHook(pan);

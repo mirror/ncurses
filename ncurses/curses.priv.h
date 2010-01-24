@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.447 2010/01/16 21:32:59 tom Exp $
+ * $Id: curses.priv.h,v 1.450 2010/01/23 22:05:30 tom Exp $
  *
  *	curses.priv.h
  *
@@ -61,6 +61,7 @@ extern "C" {
 #define MODULE_ID(id) /*nothing*/
 #endif
 
+#include <stddef.h>		/* for offsetof */
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
@@ -1098,9 +1099,9 @@ extern NCURSES_EXPORT_VAR(SCREEN *) _nc_screen_chain;
 extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 	WINDOWLIST {
-	WINDOW	win;		/* first, so WINDOW_EXT() works */
 	WINDOWLIST *next;
 	SCREEN *screen;		/* screen containing the window */
+	WINDOW	win;		/* WINDOW_EXT() needs to account for offset */
 #ifdef _XOPEN_SOURCE_EXTENDED
 	char addch_work[(MB_LEN_MAX * 9) + 1];
 	unsigned addch_used;	/* number of bytes in addch_work[] */
@@ -1109,7 +1110,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #endif
 };
 
-#define WINDOW_EXT(win,field) (((WINDOWLIST *)(win))->field)
+#define WINDOW_EXT(w,m) (((WINDOWLIST *)((char *)(w) - offsetof(WINDOWLIST, win)))->m)
 
 #define SP_PRE_INIT(sp)                         \
     sp->_cursrow = -1;                          \

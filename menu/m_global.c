@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_global.c,v 1.24 2009/02/28 21:02:46 juergen Exp $")
+MODULE_ID("$Id: m_global.c,v 1.25 2010/01/23 21:20:10 tom Exp $")
 
 static char mark[] = "-";
 /* *INDENT-OFF* */
@@ -253,7 +253,7 @@ _nc_Calculate_Text_Width(const TEXT * item /*FIXME: limit length */ )
 #if USE_WIDEC_SUPPORT
   int result = item->length;
 
-  T((T_CALLED("_nc_menu_text_width(%p)"), item));
+  T((T_CALLED("_nc_menu_text_width(%p)"), (const void *)item));
   if (result != 0 && item->str != 0)
     {
       int count = mbstowcs(0, item->str, 0);

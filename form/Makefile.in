@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.49 2009/03/28 18:22:39 Charles.Wilson Exp $
+# $Id: Makefile.in,v 1.50 2010/01/23 16:26:46 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -133,7 +133,7 @@ $(DESTDIR)$(libdir) :
 	-rm -f $@
 	cp $(srcdir)/form.h $@
 
-FORM_PRIV_H = \
+HEADER_DEPS = \
 	$(srcdir)/form.priv.h \
 	$(srcdir)/form.h \
 	../include/mf_common.h \
