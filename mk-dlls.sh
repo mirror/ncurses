@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: mk-dlls.sh,v 1.1 2008/11/18 08:50:04 juergen Exp $
+# $Id: mk-dlls.sh,v 1.2 2010/01/30 19:23:49 tom Exp $
 ##############################################################################
-# Copyright (c) 2008 Free Software Foundation, Inc.                          #
+# Copyright (c) 2008,2010 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -43,44 +43,44 @@ else
       for t in "" "t"
       do
         for m in "" "_g"
-        do  
+        do
           if [ -f libncurses${t}${m}.a ]; then
             f=libncurses${t}${m}.a
             g=`basename $f .a | cut -c 4-`
-	    gi=libw${g}.a
-	    td=tmp-${g}
-	    rm -rf "${td}"
-	    mkdir "${td}"
-	    cd "${td}"
-	      ar x ../${f} `ar t ../${f}`
+            gi=libw${g}.a
+            td=tmp-${g}
+            rm -rf "${td}"
+            mkdir "${td}"
+            cd "${td}"
+              ar x ../${f} `ar t ../${f}`
               gcc $cf -o w${g}.dll -Wl,--out-implib,${gi} -Wl,--output-def,w${g}.def -Wl,$lf `ar t ../$f`
               lib //NOLOGO /MACHINE:i386 /DEF:w${g}.def
               rm -f `ar t ../$f`
-	      mv w${g}.dll ..
-	      mv w${g}.lib ..
-	      mv libw${g}.a ..
+              mv w${g}.dll ..
+              mv w${g}.lib ..
+              mv libw${g}.a ..
             cd ..
-	    rm -rf "${td}"
+            rm -rf "${td}"
 
             for l in panel menu form
             do
               for f in lib${l}${t}${m}.a
               do
                 g=`basename $f .a | cut -c 4-`
-		td=tmp-${g}
-	        rm -rf "${td}"
-	        mkdir "${td}"
+                td=tmp-${g}
+                rm -rf "${td}"
+                mkdir "${td}"
                 echo $g
-		cd "${td}"
-	          ar x ../$f `ar t ../$f`
+                cd "${td}"
+                  ar x ../$f `ar t ../$f`
                   gcc $cf -o w${g}.dll -Wl,--out-implib,libw${g}.a -Wl,--output-def,w${g}.def -Wl,$lf `ar t ../$f` ../${gi}
                   lib //NOLOGO /MACHINE:i386 /DEF:w${g}.def
                   rm -f `ar t ../$f`
-	          mv w${g}.dll ..
-	          mv w${g}.lib ..
-		  mv libw${g}.a ..
-		cd ..  
-		rm -rf "${td}"
+                  mv w${g}.dll ..
+                  mv w${g}.lib ..
+                  mv libw${g}.a ..
+                cd ..
+                rm -rf "${td}"
               done
             done
           fi
@@ -88,6 +88,6 @@ else
       done
     popd
   else
-    echo lib has not been build >&2
+    echo lib has not been built >&2
   fi
 fi

@@ -8149,15 +8149,258 @@ EOF
 
 fi
 
+echo $ac_n "checking for pid_t""... $ac_c" 1>&6
+echo "configure:8154: checking for pid_t" >&5
+if eval "test \"`echo '$''{'ac_cv_type_pid_t'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 8159 "configure"
+#include "confdefs.h"
+#include <sys/types.h>
+#if STDC_HEADERS
+#include <stdlib.h>
+#include <stddef.h>
+#endif
+EOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  egrep "(^|[^a-zA-Z_0-9])pid_t[^a-zA-Z_0-9]" >/dev/null 2>&1; then
+  rm -rf conftest*
+  ac_cv_type_pid_t=yes
+else
+  rm -rf conftest*
+  ac_cv_type_pid_t=no
+fi
+rm -f conftest*
+
+fi
+echo "$ac_t""$ac_cv_type_pid_t" 1>&6
+if test $ac_cv_type_pid_t = no; then
+  cat >> confdefs.h <<\EOF
+#define pid_t int
+EOF
+
+fi
+
+ac_safe=`echo "vfork.h" | sed 'y%./+-%__p_%'`
+echo $ac_n "checking for vfork.h""... $ac_c" 1>&6
+echo "configure:8188: checking for vfork.h" >&5
+if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 8193 "configure"
+#include "confdefs.h"
+#include <vfork.h>
+EOF
+ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
+{ (eval echo configure:8198: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
+if test -z "$ac_err"; then
+  rm -rf conftest*
+  eval "ac_cv_header_$ac_safe=yes"
+else
+  echo "$ac_err" >&5
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_header_$ac_safe=no"
+fi
+rm -f conftest*
+fi
+if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+  cat >> confdefs.h <<\EOF
+#define HAVE_VFORK_H 1
+EOF
+
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+echo $ac_n "checking for working vfork""... $ac_c" 1>&6
+echo "configure:8223: checking for working vfork" >&5
+if eval "test \"`echo '$''{'ac_cv_func_vfork_works'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  if test "$cross_compiling" = yes; then
+  echo $ac_n "checking for vfork""... $ac_c" 1>&6
+echo "configure:8229: checking for vfork" >&5
+if eval "test \"`echo '$''{'ac_cv_func_vfork'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 8234 "configure"
+#include "confdefs.h"
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char vfork(); below.  */
+#include <assert.h>
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char vfork();
+
+int main() {
+
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_vfork) || defined (__stub___vfork)
+choke me
+#else
+vfork();
+#endif
+
+; return 0; }
+EOF
+if { (eval echo configure:8257: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+  rm -rf conftest*
+  eval "ac_cv_func_vfork=yes"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_func_vfork=no"
+fi
+rm -f conftest*
+fi
+
+if eval "test \"`echo '$ac_cv_func_'vfork`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+  :
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+ac_cv_func_vfork_works=$ac_cv_func_vfork
+else
+  cat > conftest.$ac_ext <<EOF
+#line 8279 "configure"
+#include "confdefs.h"
+/* Thanks to Paul Eggert for this test.  */
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#ifdef HAVE_VFORK_H
+#include <vfork.h>
+#endif
+/* On some sparc systems, changes by the child to local and incoming
+   argument registers are propagated back to the parent.
+   The compiler is told about this with #include <vfork.h>,
+   but some compilers (e.g. gcc -O) don't grok <vfork.h>.
+   Test for this by using a static variable whose address
+   is put into a register that is clobbered by the vfork.  */
+static
+#ifdef __cplusplus
+sparc_address_test (int arg)
+#else
+sparc_address_test (arg) int arg;
+#endif
+{
+  static pid_t child;
+  if (!child) {
+    child = vfork ();
+    if (child < 0) {
+      perror ("vfork");
+      _exit(2);
+    }
+    if (!child) {
+      arg = getpid();
+      write(-1, "", 0);
+      _exit (arg);
+    }
+  }
+}
+main() {
+  pid_t parent = getpid ();
+  pid_t child;
+
+  sparc_address_test ();
+
+  child = vfork ();
+
+  if (child == 0) {
+    /* Here is another test for sparc vfork register problems.
+       This test uses lots of local variables, at least
+       as many local variables as main has allocated so far
+       including compiler temporaries.  4 locals are enough for
+       gcc 1.40.3 on a Solaris 4.1.3 sparc, but we use 8 to be safe.
+       A buggy compiler should reuse the register of parent
+       for one of the local variables, since it will think that
+       parent can't possibly be used any more in this routine.
+       Assigning to the local variable will thus munge parent
+       in the parent process.  */
+    pid_t
+      p = getpid(), p1 = getpid(), p2 = getpid(), p3 = getpid(),
+      p4 = getpid(), p5 = getpid(), p6 = getpid(), p7 = getpid();
+    /* Convince the compiler that p..p7 are live; otherwise, it might
+       use the same hardware register for all 8 local variables.  */
+    if (p != p1 || p != p2 || p != p3 || p != p4
+	|| p != p5 || p != p6 || p != p7)
+      _exit(1);
+
+    /* On some systems (e.g. IRIX 3.3),
+       vfork doesn't separate parent from child file descriptors.
+       If the child closes a descriptor before it execs or exits,
+       this munges the parent's descriptor as well.
+       Test for this by closing stdout in the child.  */
+    _exit(close(fileno(stdout)) != 0);
+  } else {
+    int status;
+    struct stat st;
+
+    while (wait(&status) != child)
+      ;
+    exit(
+	 /* Was there some problem with vforking?  */
+	 child < 0
+
+	 /* Did the child fail?  (This shouldn't happen.)  */
+	 || status
+
+	 /* Did the vfork/compiler bug occur?  */
+	 || parent != getpid()
+
+	 /* Did the file descriptor bug occur?  */
+	 || fstat(fileno(stdout), &st) != 0
+	 );
+  }
+}
+EOF
+if { (eval echo configure:8374: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+then
+  ac_cv_func_vfork_works=yes
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -fr conftest*
+  ac_cv_func_vfork_works=no
+fi
+rm -fr conftest*
+fi
+
+fi
+
+echo "$ac_t""$ac_cv_func_vfork_works" 1>&6
+if test $ac_cv_func_vfork_works = no; then
+  cat >> confdefs.h <<\EOF
+#define vfork fork
+EOF
+
+fi
+
 
 echo $ac_n "checking if sys/time.h works with sys/select.h""... $ac_c" 1>&6
-echo "configure:8155: checking if sys/time.h works with sys/select.h" >&5
+echo "configure:8398: checking if sys/time.h works with sys/select.h" >&5
 if eval "test \"`echo '$''{'cf_cv_sys_time_select'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
 cat > conftest.$ac_ext <<EOF
-#line 8161 "configure"
+#line 8404 "configure"
 #include "confdefs.h"
 
 #include <sys/types.h>
@@ -8172,7 +8415,7 @@ int main() {
 
 ; return 0; }
 EOF
-if { (eval echo configure:8176: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8419: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_cv_sys_time_select=yes
 else
@@ -8193,7 +8436,7 @@ EOF
 
 
 echo $ac_n "checking for function curses_version""... $ac_c" 1>&6
-echo "configure:8197: checking for function curses_version" >&5
+echo "configure:8440: checking for function curses_version" >&5
 if eval "test \"`echo '$''{'cf_cv_func_curses_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -8202,7 +8445,7 @@ if test "$cross_compiling" = yes; then
   cf_cv_func_curses_version=unknown
 else
   cat > conftest.$ac_ext <<EOF
-#line 8206 "configure"
+#line 8449 "configure"
 #include "confdefs.h"
 
 #include <${cf_cv_ncurses_header-curses.h}>
@@ -8214,7 +8457,7 @@ int main()
 }
 
 EOF
-if { (eval echo configure:8218: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:8461: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   cf_cv_func_curses_version=yes
 
@@ -8239,7 +8482,7 @@ EOF
 
 
 echo $ac_n "checking for ncurses wrap-prefix""... $ac_c" 1>&6
-echo "configure:8243: checking for ncurses wrap-prefix" >&5
+echo "configure:8486: checking for ncurses wrap-prefix" >&5
 
 # Check whether --with-ncurses-wrap-prefix or --without-ncurses-wrap-prefix was given.
 if test "${with_ncurses_wrap_prefix+set}" = set; then
@@ -8255,7 +8498,7 @@ echo "$ac_t""$NCURSES_WRAP_PREFIX" 1>&6
 
 
 echo $ac_n "checking for alternate character set array""... $ac_c" 1>&6
-echo "configure:8259: checking for alternate character set array" >&5
+echo "configure:8502: checking for alternate character set array" >&5
 if eval "test \"`echo '$''{'cf_cv_curses_acs_map'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -8264,7 +8507,7 @@ cf_cv_curses_acs_map=unknown
 for name in acs_map _acs_map __acs_map ${NCURSES_WRAP_PREFIX}acs_map
 do
 cat > conftest.$ac_ext <<EOF
-#line 8268 "configure"
+#line 8511 "configure"
 #include "confdefs.h"
 
 #include <${cf_cv_ncurses_header-curses.h}>
@@ -8275,7 +8518,7 @@ $name['k'] = ACS_PLUS
 
 ; return 0; }
 EOF
-if { (eval echo configure:8279: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:8522: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   cf_cv_curses_acs_map=$name; break
 else
@@ -8296,7 +8539,7 @@ EOF
 
 
 echo $ac_n "checking for wide alternate character set array""... $ac_c" 1>&6
-echo "configure:8300: checking for wide alternate character set array" >&5
+echo "configure:8543: checking for wide alternate character set array" >&5
 if eval "test \"`echo '$''{'cf_cv_curses_wacs_map'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -8305,7 +8548,7 @@ else
 	for name in wacs_map _wacs_map __wacs_map _nc_wacs
 	do
 	cat > conftest.$ac_ext <<EOF
-#line 8309 "configure"
+#line 8552 "configure"
 #include "confdefs.h"
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -8316,7 +8559,7 @@ int main() {
 $name['k'] = *WACS_PLUS
 ; return 0; }
 EOF
-if { (eval echo configure:8320: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:8563: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   cf_cv_curses_wacs_map=$name
 	 break
@@ -8333,9 +8576,9 @@ echo "$ac_t""$cf_cv_curses_wacs_map" 1>&6
 
 
 echo $ac_n "checking for type attr_t in ${cf_cv_ncurses_header-curses.h}""... $ac_c" 1>&6
-echo "configure:8337: checking for type attr_t in ${cf_cv_ncurses_header-curses.h}" >&5
+echo "configure:8580: checking for type attr_t in ${cf_cv_ncurses_header-curses.h}" >&5
 cat > conftest.$ac_ext <<EOF
-#line 8339 "configure"
+#line 8582 "configure"
 #include "confdefs.h"
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -8348,7 +8591,7 @@ attr_t foo
 
 ; return 0; }
 EOF
-if { (eval echo configure:8352: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8595: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_result=yes
 else
@@ -8378,13 +8621,13 @@ fi
 
 # This is needed on Tru64 5.0 to declare mbstate_t
 echo $ac_n "checking if we must include wchar.h to declare mbstate_t""... $ac_c" 1>&6
-echo "configure:8382: checking if we must include wchar.h to declare mbstate_t" >&5
+echo "configure:8625: checking if we must include wchar.h to declare mbstate_t" >&5
 if eval "test \"`echo '$''{'cf_cv_mbstate_t'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
 cat > conftest.$ac_ext <<EOF
-#line 8388 "configure"
+#line 8631 "configure"
 #include "confdefs.h"
 
 #include <stdlib.h>
@@ -8397,7 +8640,7 @@ int main() {
 mbstate_t state
 ; return 0; }
 EOF
-if { (eval echo configure:8401: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8644: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_cv_mbstate_t=no
 else
@@ -8405,7 +8648,7 @@ else
   cat conftest.$ac_ext >&5
   rm -rf conftest*
   cat > conftest.$ac_ext <<EOF
-#line 8409 "configure"
+#line 8652 "configure"
 #include "confdefs.h"
 
 #include <stdlib.h>
@@ -8419,7 +8662,7 @@ int main() {
 mbstate_t value
 ; return 0; }
 EOF
-if { (eval echo configure:8423: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8666: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_cv_mbstate_t=yes
 else
@@ -8459,13 +8702,13 @@ fi
 
 # This is needed on Tru64 5.0 to declare wchar_t
 echo $ac_n "checking if we must include wchar.h to declare wchar_t""... $ac_c" 1>&6
-echo "configure:8463: checking if we must include wchar.h to declare wchar_t" >&5
+echo "configure:8706: checking if we must include wchar.h to declare wchar_t" >&5
 if eval "test \"`echo '$''{'cf_cv_wchar_t'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
 cat > conftest.$ac_ext <<EOF
-#line 8469 "configure"
+#line 8712 "configure"
 #include "confdefs.h"
 
 #include <stdlib.h>
@@ -8478,7 +8721,7 @@ int main() {
 wchar_t state
 ; return 0; }
 EOF
-if { (eval echo configure:8482: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8725: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_cv_wchar_t=no
 else
@@ -8486,7 +8729,7 @@ else
   cat conftest.$ac_ext >&5
   rm -rf conftest*
   cat > conftest.$ac_ext <<EOF
-#line 8490 "configure"
+#line 8733 "configure"
 #include "confdefs.h"
 
 #include <stdlib.h>
@@ -8500,7 +8743,7 @@ int main() {
 wchar_t value
 ; return 0; }
 EOF
-if { (eval echo configure:8504: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8747: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_cv_wchar_t=yes
 else
@@ -8540,13 +8783,13 @@ fi
 
 # This is needed on Tru64 5.0 to declare wint_t
 echo $ac_n "checking if we must include wchar.h to declare wint_t""... $ac_c" 1>&6
-echo "configure:8544: checking if we must include wchar.h to declare wint_t" >&5
+echo "configure:8787: checking if we must include wchar.h to declare wint_t" >&5
 if eval "test \"`echo '$''{'cf_cv_wint_t'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   
 cat > conftest.$ac_ext <<EOF
-#line 8550 "configure"
+#line 8793 "configure"
 #include "confdefs.h"
 
 #include <stdlib.h>
@@ -8559,7 +8802,7 @@ int main() {
 wint_t state
 ; return 0; }
 EOF
-if { (eval echo configure:8563: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8806: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_cv_wint_t=no
 else
@@ -8567,7 +8810,7 @@ else
   cat conftest.$ac_ext >&5
   rm -rf conftest*
   cat > conftest.$ac_ext <<EOF
-#line 8571 "configure"
+#line 8814 "configure"
 #include "confdefs.h"
 
 #include <stdlib.h>
@@ -8581,7 +8824,7 @@ int main() {
 wint_t value
 ; return 0; }
 EOF
-if { (eval echo configure:8585: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8828: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_cv_wint_t=yes
 else
@@ -8622,9 +8865,9 @@ fi
 if test "$NCURSES_OK_MBSTATE_T" = 0 ; then
 	
 echo $ac_n "checking for type mbstate_t in ${cf_cv_ncurses_header-curses.h}""... $ac_c" 1>&6
-echo "configure:8626: checking for type mbstate_t in ${cf_cv_ncurses_header-curses.h}" >&5
+echo "configure:8869: checking for type mbstate_t in ${cf_cv_ncurses_header-curses.h}" >&5
 cat > conftest.$ac_ext <<EOF
-#line 8628 "configure"
+#line 8871 "configure"
 #include "confdefs.h"
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -8637,7 +8880,7 @@ mbstate_t foo
 
 ; return 0; }
 EOF
-if { (eval echo configure:8641: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8884: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_result=yes
 else
@@ -8668,9 +8911,9 @@ fi
 if test "$NCURSES_OK_WCHAR_T" = 0 ; then
 	
 echo $ac_n "checking for type wchar_t in ${cf_cv_ncurses_header-curses.h}""... $ac_c" 1>&6
-echo "configure:8672: checking for type wchar_t in ${cf_cv_ncurses_header-curses.h}" >&5
+echo "configure:8915: checking for type wchar_t in ${cf_cv_ncurses_header-curses.h}" >&5
 cat > conftest.$ac_ext <<EOF
-#line 8674 "configure"
+#line 8917 "configure"
 #include "confdefs.h"
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -8683,7 +8926,7 @@ wchar_t foo
 
 ; return 0; }
 EOF
-if { (eval echo configure:8687: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8930: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_result=yes
 else
@@ -8714,9 +8957,9 @@ fi
 if test "$NCURSES_OK_WINT_T" = 0 ; then
 	
 echo $ac_n "checking for type wint_t in ${cf_cv_ncurses_header-curses.h}""... $ac_c" 1>&6
-echo "configure:8718: checking for type wint_t in ${cf_cv_ncurses_header-curses.h}" >&5
+echo "configure:8961: checking for type wint_t in ${cf_cv_ncurses_header-curses.h}" >&5
 cat > conftest.$ac_ext <<EOF
-#line 8720 "configure"
+#line 8963 "configure"
 #include "confdefs.h"
 
 #ifndef _XOPEN_SOURCE_EXTENDED
@@ -8729,7 +8972,7 @@ wint_t foo
 
 ; return 0; }
 EOF
-if { (eval echo configure:8733: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:8976: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_result=yes
 else
@@ -8759,9 +9002,9 @@ fi
 
 
 echo $ac_n "checking for data boolnames declaration in ${cf_cv_ncurses_header-curses.h}""... $ac_c" 1>&6
-echo "configure:8763: checking for data boolnames declaration in ${cf_cv_ncurses_header-curses.h}" >&5
+echo "configure:9006: checking for data boolnames declaration in ${cf_cv_ncurses_header-curses.h}" >&5
 cat > conftest.$ac_ext <<EOF
-#line 8765 "configure"
+#line 9008 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_XCURSES
@@ -8784,7 +9027,7 @@ void *foo = &(boolnames)
 
 ; return 0; }
 EOF
-if { (eval echo configure:8788: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:9031: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_result=yes
 else
@@ -8805,9 +9048,9 @@ EOF
 
 else
 	echo $ac_n "checking for data boolnames in library""... $ac_c" 1>&6
-echo "configure:8809: checking for data boolnames in library" >&5
+echo "configure:9052: checking for data boolnames in library" >&5
 	cat > conftest.$ac_ext <<EOF
-#line 8811 "configure"
+#line 9054 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_XCURSES
@@ -8834,7 +9077,7 @@ int main() {
 
 ; return 0; }
 EOF
-if { (eval echo configure:8838: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:9081: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   cf_result=yes
 else
@@ -8858,9 +9101,9 @@ fi
 
 
 echo $ac_n "checking for data boolfnames declaration in ${cf_cv_ncurses_header-curses.h}""... $ac_c" 1>&6
-echo "configure:8862: checking for data boolfnames declaration in ${cf_cv_ncurses_header-curses.h}" >&5
+echo "configure:9105: checking for data boolfnames declaration in ${cf_cv_ncurses_header-curses.h}" >&5
 cat > conftest.$ac_ext <<EOF
-#line 8864 "configure"
+#line 9107 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_XCURSES
@@ -8883,7 +9126,7 @@ void *foo = &(boolfnames)
 
 ; return 0; }
 EOF
-if { (eval echo configure:8887: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:9130: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   cf_result=yes
 else
@@ -8904,9 +9147,9 @@ EOF
 
 else
 	echo $ac_n "checking for data boolfnames in library""... $ac_c" 1>&6
-echo "configure:8908: checking for data boolfnames in library" >&5
+echo "configure:9151: checking for data boolfnames in library" >&5
 	cat > conftest.$ac_ext <<EOF
-#line 8910 "configure"
+#line 9153 "configure"
 #include "confdefs.h"
 
 #ifdef HAVE_XCURSES
@@ -8933,7 +9176,7 @@ int main() {
 
 ; return 0; }
 EOF
-if { (eval echo configure:8937: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:9180: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   cf_result=yes
 else

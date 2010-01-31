@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.35 2009/10/24 21:33:24 tom Exp $
+ * $Id: ditto.c,v 1.36 2010/01/30 23:39:09 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -50,6 +50,10 @@
 
 #ifdef USE_XTERM_PTY
 #include USE_OPENPTY_HEADER
+#endif
+
+#ifdef HAVE_VFORK_H
+#include <vfork.h>
 #endif
 
 #define MAX_FIFO 256
@@ -161,7 +165,7 @@ open_tty(char *path)
 	failed(slave_name);
     }
     sprintf(s_option, "-S%s/%d", slave_name, aslave);
-    if (fork()) {
+    if (vfork()) {
 	execlp("xterm", "xterm", s_option, "-title", path, (char *) 0);
 	_exit(0);
     }

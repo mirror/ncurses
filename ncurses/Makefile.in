@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.122 2010/01/23 18:44:34 tom Exp $
+# $Id: Makefile.in,v 1.124 2010/01/30 19:00:34 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -156,11 +156,11 @@ AUTO_SRC = \
 
 HEADER_DEPS	= \
 	$(srcdir)/curses.priv.h \
-	$(INCDIR)/ncurses_dll.h \
-	$(INCDIR)/ncurses_cfg.h \
-	$(INCDIR)/curses.h \
+	../include/ncurses_dll.h \
+	../include/ncurses_cfg.h \
+	../include/curses.h \
 	$(INCDIR)/nc_panel.h \
-	$(INCDIR)/term.h \
+	../include/term.h \
 	$(INCDIR)/term_entry.h \
 	$(INCDIR)/nc_tparm.h \
 	$(INCDIR)/nc_alloc.h \
