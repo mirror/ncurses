@@ -31,9 +31,14 @@
  *                                                                          *
  ****************************************************************************/
 
+/*
+ * TODO - GetMousePos(POINT * result) from ntconio.c
+ * TODO - implement nodelay
+ */
+
 #include <curses.priv.h>
 
-MODULE_ID("$Id: win_driver.c,v 1.5 2010/01/16 22:42:30 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.6 2010/02/06 19:55:44 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -411,8 +416,7 @@ drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, bool setFlag, TTY * buf)
 	else
 	    dwFlag &= ~ENABLE_PROCESSED_INPUT;
 
-	/* we disable that for now to focus on keyboard. */
-	dwFlag &= ~ENABLE_MOUSE_INPUT;
+	dwFlag |= ENABLE_MOUSE_INPUT;
 
 	buf->c_iflag = iflag;
 	buf->c_lflag = lflag;
@@ -682,6 +686,8 @@ drv_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
 
     AssertTCB();
     SetSP();
+
+    sp->_mouse_type = M_TERM_DRIVER;
 }
 
 static int
@@ -908,6 +914,62 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
     return code;
 }
 
+#define BUTTON_MASK (FROM_LEFT_1ST_BUTTON_PRESSED | \
+		     FROM_LEFT_2ND_BUTTON_PRESSED | \
+		     FROM_LEFT_3RD_BUTTON_PRESSED)
+
+static bool
+handle_mouse(SCREEN *sp, MOUSE_EVENT_RECORD mer)
+{
+    MEVENT work;
+    bool result = FALSE;
+
+    sp->_drv_mouse_old_buttons = sp->_drv_mouse_new_buttons;
+    sp->_drv_mouse_new_buttons = mer.dwButtonState & BUTTON_MASK;
+
+    /*
+     * We're only interested if the button is pressed or released.
+     * FIXME: implement continuous event-tracking.
+     */
+    if (sp->_drv_mouse_new_buttons != sp->_drv_mouse_old_buttons) {
+
+	memset(&work, 0, sizeof(work));
+
+	if (sp->_drv_mouse_new_buttons) {
+
+	    if (sp->_drv_mouse_new_buttons & FROM_LEFT_1ST_BUTTON_PRESSED)
+		work.bstate |= BUTTON1_PRESSED;
+	    if (sp->_drv_mouse_new_buttons & FROM_LEFT_2ND_BUTTON_PRESSED)
+		work.bstate |= BUTTON2_PRESSED;
+	    if (sp->_drv_mouse_new_buttons & FROM_LEFT_3RD_BUTTON_PRESSED)
+		work.bstate |= BUTTON3_PRESSED;
+	    if (sp->_drv_mouse_new_buttons & FROM_LEFT_4TH_BUTTON_PRESSED)
+		work.bstate |= BUTTON4_PRESSED;
+
+	} else {
+
+	    if (sp->_drv_mouse_old_buttons & FROM_LEFT_1ST_BUTTON_PRESSED)
+		work.bstate |= BUTTON1_RELEASED;
+	    if (sp->_drv_mouse_old_buttons & FROM_LEFT_2ND_BUTTON_PRESSED)
+		work.bstate |= BUTTON2_RELEASED;
+	    if (sp->_drv_mouse_old_buttons & FROM_LEFT_3RD_BUTTON_PRESSED)
+		work.bstate |= BUTTON3_RELEASED;
+	    if (sp->_drv_mouse_old_buttons & FROM_LEFT_4TH_BUTTON_PRESSED)
+		work.bstate |= BUTTON4_RELEASED;
+
+	    result = TRUE;
+	}
+
+	work.x = mer.dwMousePosition.X;
+	work.y = mer.dwMousePosition.Y;
+
+	sp->_drv_mouse_fifo[sp->_drv_mouse_tail] = work;
+	sp->_drv_mouse_tail += 1;
+    }
+
+    return result;
+}
+
 static int
 drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 {
@@ -925,6 +987,7 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 
     memset(&inp, 0, sizeof(inp));
 
+    T((T_CALLED("drv_read(%p)"), TCB));
     while ((b = ReadConsoleInput(TCB->inp, &inp, 1, &nRead))) {
 	if (b && nRead > 0) {
 	    if (inp.EventType == KEY_EVENT) {
@@ -945,14 +1008,16 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 		} else {	/* *buf != 0 */
 		    break;
 		}
-	    } else if (0 && inp.EventType == MOUSE_EVENT) {
-		*buf = KEY_MOUSE;
-		break;
+	    } else if (inp.EventType == MOUSE_EVENT) {
+		if (handle_mouse(sp, inp.Event.MouseEvent)) {
+		    *buf = KEY_MOUSE;
+		    break;
+		}
 	    }
 	    continue;
 	}
     }
-    return n;
+    returnCode(n);
 }
 
 static int

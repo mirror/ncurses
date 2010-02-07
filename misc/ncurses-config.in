@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.23 2009/03/14 19:20:57 Charles.Wilson Exp $
+# $Id: ncurses-config.in,v 1.24 2010/02/06 22:12:16 Miroslav.Lichvar Exp $
 ##############################################################################
-# Copyright (c) 2006-2007,2009 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -40,7 +40,7 @@ datadir="@datadir@"
 mandir="@mandir@"
 
 THIS="@LIB_NAME@@DFT_ARG_SUFFIX@"
-TINFO_LIB="@TINFO_NAME@@DFT_ARG_SUFFIX@"
+TINFO_LIB="@TINFO_ARG_SUFFIX@"
 
 LANG=C;		export LANG
 LANGUAGE=C;	export LANGUAGE

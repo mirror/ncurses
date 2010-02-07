@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.111 2010/01/02 21:06:52 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.112 2010/02/06 19:54:08 tom Exp $")
 
 #include <tic.h>
 
@@ -678,7 +678,7 @@ _nc_mouse_init(SCREEN *sp)
  * fifo_push() in lib_getch.c
  */
 static bool
-_nc_mouse_event(SCREEN *sp GCC_UNUSED)
+_nc_mouse_event(SCREEN *sp)
 {
     MEVENT *eventp = sp->_mouse_eventp;
     bool result = FALSE;
@@ -777,6 +777,28 @@ _nc_mouse_event(SCREEN *sp GCC_UNUSED)
 	}
 	break;
 #endif /* USE_SYSMOUSE */
+
+#ifdef USE_TERM_DRIVER
+    case M_TERM_DRIVER:
+	while (sp->_drv_mouse_head < sp->_drv_mouse_tail) {
+	    *eventp = sp->_drv_mouse_fifo[sp->_drv_mouse_head];
+
+	    /*
+	     * Point the fifo-head to the next possible location.  If there
+	     * are none, reset the indices.
+	     */
+	    sp->_drv_mouse_head += 1;
+	    if (sp->_drv_mouse_head == sp->_drv_mouse_tail) {
+		sp->_drv_mouse_tail = 0;
+		sp->_drv_mouse_head = 0;
+	    }
+
+	    /* bump the next-free pointer into the circular list */
+	    sp->_mouse_eventp = eventp = NEXT(eventp);
+	    result = TRUE;
+	}
+	break;
+#endif
 
     case M_NONE:
 	break;
@@ -975,6 +997,11 @@ mouse_activate(SCREEN *sp, bool on)
 	    sp->_mouse_active = TRUE;
 	    break;
 #endif
+#ifdef USE_TERM_DRIVER
+	case M_TERM_DRIVER:
+	    sp->_mouse_active = TRUE;
+	    break;
+#endif
 	case M_NONE:
 	    return;
 	}
@@ -1001,6 +1028,11 @@ mouse_activate(SCREEN *sp, bool on)
 #if USE_SYSMOUSE
 	case M_SYSMOUSE:
 	    signal(SIGUSR2, SIG_IGN);
+	    sp->_mouse_active = FALSE;
+	    break;
+#endif
+#ifdef USE_TERM_DRIVER
+	case M_TERM_DRIVER:
 	    sp->_mouse_active = FALSE;
 	    break;
 #endif
@@ -1241,6 +1273,11 @@ _nc_mouse_wrap(SCREEN *sp)
 	mouse_activate(sp, FALSE);
 	break;
 #endif
+#ifdef USE_TERM_DRIVER
+    case M_TERM_DRIVER:
+	mouse_activate(sp, FALSE);
+	break;
+#endif
     case M_NONE:
 	break;
     }
@@ -1272,6 +1309,13 @@ _nc_mouse_resume(SCREEN *sp)
 	mouse_activate(sp, TRUE);
 	break;
 #endif
+
+#ifdef USE_TERM_DRIVER
+    case M_TERM_DRIVER:
+	mouse_activate(sp, TRUE);
+	break;
+#endif
+
     case M_NONE:
 	break;
     }

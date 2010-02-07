@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.358 $
-#	$Date: 2009/12/26 19:36:05 $
+#	$Revision: 1.359 $
+#	$Date: 2010/02/06 20:55:33 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4038,12 +4038,21 @@ rxvt-cygwin-native|rxvt terminal emulator (native MS Window System port) on cygw
 rxvt-16color|xterm with 16 colors like aixterm,
 	ncv#32, use=ibm+16color, use=rxvt,
 
-# mrxvt 0.5.3
+# mrxvt 0.5.4
 #
 # mrxvt is based on rxvt 2.7.11, but has by default XTERM_FKEYS defined, which
 # makes its function-keys different from other flavors of rxvt -TD
 mrxvt|multitabbed rxvt,
-	use=xterm+pcc2, use=xterm+r6f2, use=rxvt,
+	kEND=\E[8;2~, kHOM=\E[7;2~, kcub1=\E[D, kcud1=\E[B,
+	kcuf1=\E[C, kcuu1=\E[A, kend=\E[8~, khome=\E[7~,
+	kEND3=\E[8;3~, kEND4=\E[8;4~, kEND5=\E[8;5~,
+	kEND6=\E[8;6~, kEND7=\E[8;7~, kHOM3=\E[7;3~,
+	kHOM4=\E[7;4~, kHOM5=\E[7;5~, kHOM6=\E[7;6~,
+	kHOM7=\E[7;7~, use=xterm+r6f2, use=xterm+pcfkeys,
+	use=rxvt,
+
+mrxvt-256color|multitabbed rxvt with 256 colors,
+	use=xterm+256color, use=mrxvt,
 
 # From: Michael Jennings <mej@valinux.com>
 #
@@ -22083,6 +22092,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2009-12-26
 #	* add bterm (bogl 0.1.18) -TD
 #	* minor fix to rxvt+pcfkeys -TD
+#
+# 2010-02-06
+#	* update mrxvt to 0.5.4, add mrxvt-256color -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

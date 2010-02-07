@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.109 2009/10/24 21:58:34 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.110 2010/02/06 18:39:16 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -252,6 +252,14 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 	n = 1;
     } else if ((sp->_mouse_type == M_SYSMOUSE)
 	       && (mask <= 0) && errno == EINTR) {
+	sp->_mouse_event(sp);
+	ch = KEY_MOUSE;
+	n = 1;
+    } else
+#endif
+#ifdef USE_TERM_DRIVER
+	if ((sp->_mouse_type == M_TERM_DRIVER)
+	    && (sp->_drv_mouse_head < sp->_drv_mouse_tail)) {
 	sp->_mouse_event(sp);
 	ch = KEY_MOUSE;
 	n = 1;

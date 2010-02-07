@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.450 2010/01/23 22:05:30 tom Exp $
+ * $Id: curses.priv.h,v 1.451 2010/02/06 19:15:52 tom Exp $
  *
  *	curses.priv.h
  *
@@ -558,6 +558,9 @@ typedef enum {
 #if USE_SYSMOUSE
 	,M_SYSMOUSE		/* FreeBSD sysmouse on console */
 #endif
+#ifdef USE_TERM_DRIVER
+	,M_TERM_DRIVER		/* Win32 console, etc */
+#endif
 } MouseType;
 
 /*
@@ -1031,6 +1034,13 @@ struct screen {
 	int		_sysmouse_new_buttons;
 #endif
 
+#ifdef USE_TERM_DRIVER
+	MEVENT		_drv_mouse_fifo[FIFO_SIZE];
+	int		_drv_mouse_head;
+	int		_drv_mouse_tail;
+	int		_drv_mouse_old_buttons;
+	int		_drv_mouse_new_buttons;
+#endif
 	/*
 	 * This supports automatic resizing
 	 */

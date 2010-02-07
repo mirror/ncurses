@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.7 2009/03/14 20:37:54 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.8 2010/02/06 22:12:07 Miroslav.Lichvar Exp $
 ##############################################################################
-# Copyright (c) 2009 Free Software Foundation, Inc.                          #
+# Copyright (c) 2009,2010 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -44,6 +44,7 @@ MENU_NAME=menu # @MENU_NAME@
 FORM_NAME=form # @FORM_NAME@
 CXX_NAME=ncurses++ # @CXX_NAME@
 DFT_DEP_SUFFIX=@DFT_DEP_SUFFIX@
+TINFO_ARG_SUFFIX=@TINFO_ARG_SUFFIX@
 CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@
 
 prefix="@prefix@"
@@ -57,16 +58,14 @@ show_includedir='@includedir@'
 show_libdir='@libdir@'
 
 MAIN_LIBRARY="${LIB_NAME}@DFT_ARG_SUFFIX@"
-SUB_LIBRARY="${TINFO_NAME}@DFT_ARG_SUFFIX@"
+SUB_LIBRARY="${TINFO_ARG_SUFFIX}"
 PANEL_LIBRARY="${PANEL_NAME}@DFT_ARG_SUFFIX@"
 MENU_LIBRARY="${MENU_NAME}@DFT_ARG_SUFFIX@"
 FORM_LIBRARY="${FORM_NAME}@DFT_ARG_SUFFIX@"
 
 SUB_LIBRARY_REQ=${SUB_LIBRARY}
-TINFO_NAME_REQ=${TINFO_NAME}
 if test $TINFO_NAME = $LIB_NAME ; then
 	SUB_LIBRARY_REQ=
-	TINFO_NAME_REQ=
 fi
 
 for lib in ../lib/*
@@ -88,7 +87,7 @@ do
 
 	desc="ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@"
 	if test $name = $MAIN_LIBRARY ; then
-		reqs=$TINFO_NAME_REQ
+		reqs=$SUB_LIBRARY_REQ
 		desc="$desc library"
 	elif test $name = $SUB_LIBRARY ; then
 		reqs=
