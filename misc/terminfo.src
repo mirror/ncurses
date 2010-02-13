@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.359 $
-#	$Date: 2010/02/06 20:55:33 $
+#	$Revision: 1.360 $
+#	$Date: 2010/02/13 18:46:49 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4625,12 +4625,48 @@ screen.rxvt|screen in rxvt,
 	use=rxvt+pcfkeys, use=vt220+keypad, use=screen,
 screen.Eterm|screen in Eterm,
 	use=screen+fkeys, use=Eterm,
+screen.mrxvt|screen in mrxvt,
+	use=screen+fkeys, use=mrxvt,
+screen.gnome|screen in GNOME Terminal,
+	use=screen+fkeys, use=gnome,
+screen.konsole|screen in KDE console window,
+	use=screen+fkeys, use=konsole,
 # fix the backspace key
 screen.linux|screen in linux console,
 	bw,
 	kbs=\177, kcbt@, use=screen+fkeys, use=screen,
 screen.mlterm|screen in mlterm,
 	use=screen+fkeys, use=mlterm,
+
+# The default "screen" entry is reasonably portable, but not optimal for the
+# most widely-used terminal emulators.  The "bce" capability is supported in
+# screen since 3.9.13, and when used, will require fewer characters to be sent
+# to the terminal for updates.
+#
+# If you are using only terminals which support bce, then you can use this
+# feature in your screen configuration.
+#
+# Adding these lines to your ".screenrc" file will allow using these customized
+# entries:
+#	term screen-bce
+#	bce on
+#	defbce on
+screen-bce.xterm-new|screen optimized for modern xterm,
+	bce, use=screen.xterm-new,
+screen-bce.rxvt|screen optimized for rxvt,
+	bce, use=screen.rxvt,
+screen-bce.Eterm|screen optimized for Eterm,
+	bce, use=screen.Eterm,
+screen-bce.mrxvt|screen optimized for mrxvt,
+	bce, use=screen.mrxvt,
+screen-bce.gnome|screen optimized for GNOME-Terminal,
+	bce, use=screen.gnome,
+screen-bce.konsole|screen optimized for KDE console window,
+	bce, use=screen.konsole,
+screen-bce.linux|screen optimized for linux console,
+	bce, use=screen.linux,
+screen-bce.mlterm|screen optimized for mlterm,
+	bce, use=screen.mlterm,
 
 screen-w|VT 100/ANSI X3.64 virtual terminal with 132 cols,
 	cols#132, use=screen,
@@ -22095,6 +22131,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2010-02-06
 #	* update mrxvt to 0.5.4, add mrxvt-256color -TD
+#
+# 2010-02-13
+#	* add several screen-bce.XXX entries -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
