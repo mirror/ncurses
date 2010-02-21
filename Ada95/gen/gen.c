@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998,2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.51 2009/12/26 15:45:31 tom Exp $
+    $Id: gen.c,v 1.52 2010/02/20 21:59:56 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -41,7 +41,12 @@
   to produce the real source.
   */
 
+#ifdef HAVE_CONFIG_H
 #include <ncurses_cfg.h>
+#else
+#include <ncurses.h>
+#define HAVE_USE_DEFAULT_COLORS 1
+#endif
 
 #include <stdlib.h>
 #include <stddef.h>

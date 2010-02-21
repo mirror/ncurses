@@ -23,6 +23,7 @@
 ./Ada95/gen/terminal_interface-curses-trace.ads.m4
 ./Ada95/gen/terminal_interface-curses.adb.m4
 ./Ada95/gen/terminal_interface-curses.ads.m4
+./Ada95/make-tar.sh
 ./Ada95/samples/Makefile.in
 ./Ada95/samples/README
 ./Ada95/samples/explain.txt
@@ -734,7 +735,6 @@
 ./mk-hdr.awk
 ./mkdirs.sh
 ./ncurses/Makefile.in
-./ncurses/Makefile.orig
 ./ncurses/README
 ./ncurses/README.IZ
 ./ncurses/SigAction.h
@@ -1025,6 +1025,7 @@
 ./test/linux-color.dat
 ./test/listused.sh
 ./test/lrtest.c
+./test/make-tar.sh
 ./test/mk-test.awk
 ./test/modules
 ./test/movewindow.c
