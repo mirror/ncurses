@@ -3,6 +3,9 @@
 ./Ada95/Makefile.in
 ./Ada95/README
 ./Ada95/TODO
+./Ada95/aclocal.m4
+./Ada95/configure
+./Ada95/configure.in
 ./Ada95/gen/Makefile.in
 ./Ada95/gen/adacurses-config.in
 ./Ada95/gen/gen.c
@@ -23,6 +26,10 @@
 ./Ada95/gen/terminal_interface-curses-trace.ads.m4
 ./Ada95/gen/terminal_interface-curses.adb.m4
 ./Ada95/gen/terminal_interface-curses.ads.m4
+./Ada95/include/MKncurses_def.sh
+./Ada95/include/Makefile.in
+./Ada95/include/ncurses_cfg.hin
+./Ada95/include/ncurses_defs
 ./Ada95/make-tar.sh
 ./Ada95/samples/Makefile.in
 ./Ada95/samples/README

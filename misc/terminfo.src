@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.360 $
-#	$Date: 2010/02/13 18:46:49 $
+#	$Revision: 1.361 $
+#	$Date: 2010/02/24 00:56:04 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4526,7 +4526,8 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 # The bce and status-line entries are from screen 3.9.13 (and require some
 # changes to .screenrc).
 screen-bce|VT 100/ANSI X3.64 virtual terminal with bce,
-	bce, use=screen,
+	bce,
+	ech@, use=screen,
 screen-s|VT 100/ANSI X3.64 virtual terminal with hardstatus line,
 	dsl=\E_\E\\, fsl=\E\\, tsl=\E_, use=screen,
 
@@ -4652,21 +4653,29 @@ screen.mlterm|screen in mlterm,
 #	bce on
 #	defbce on
 screen-bce.xterm-new|screen optimized for modern xterm,
-	bce, use=screen.xterm-new,
+	bce,
+	ech@, use=screen.xterm-new,
 screen-bce.rxvt|screen optimized for rxvt,
-	bce, use=screen.rxvt,
+	bce,
+	ech@, use=screen.rxvt,
 screen-bce.Eterm|screen optimized for Eterm,
-	bce, use=screen.Eterm,
+	bce,
+	ech@, use=screen.Eterm,
 screen-bce.mrxvt|screen optimized for mrxvt,
-	bce, use=screen.mrxvt,
+	bce,
+	ech@, use=screen.mrxvt,
 screen-bce.gnome|screen optimized for GNOME-Terminal,
-	bce, use=screen.gnome,
+	bce,
+	ech@, use=screen.gnome,
 screen-bce.konsole|screen optimized for KDE console window,
-	bce, use=screen.konsole,
+	bce,
+	ech@, use=screen.konsole,
 screen-bce.linux|screen optimized for linux console,
-	bce, use=screen.linux,
+	bce,
+	ech@, use=screen.linux,
 screen-bce.mlterm|screen optimized for mlterm,
-	bce, use=screen.mlterm,
+	bce,
+	ech@, use=screen.mlterm,
 
 screen-w|VT 100/ANSI X3.64 virtual terminal with 132 cols,
 	cols#132, use=screen,
@@ -22134,6 +22143,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2010-02-13
 #	* add several screen-bce.XXX entries -TD
+#
+# 2010-02-23
+#	* modify screen-bce.XXX entries to exclude ech, since screen's color
+#	  model does not clear with color for that feature -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1506 2010/02/20 22:57:37 tom Exp $
+-- $Id: NEWS,v 1.1507 2010/02/27 21:51:12 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100227
+	+ add Ada95/configure script, to use in tar-file created by
+	  Ada95/make-tar.sh
+	+ fix typo in wresize.3x (patch by Tim van der Molen).
+	+ modify screen-bce.XXX entries to exclude ech, since screen's color
+	  model does not clear with color for that feature -TD
 
 20100220
 	+ add make-tar.sh scripts to Ada95 and test subdirectories to help with

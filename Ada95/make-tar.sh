@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.2 2010/02/20 23:45:13 tom Exp $
+# $Id: make-tar.sh,v 1.4 2010/02/27 23:57:56 tom Exp $
 ##############################################################################
 # Copyright (c) 2010 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -54,6 +54,15 @@ umask 022
 mkdir $BUILD/$ROOTNAME
 
 cp -p -r * $BUILD/$ROOTNAME/ || exit
+
+# Add the config.* utility scripts from the top-level directory.
+for i in . ..
+do
+	for j in config.guess config.sub install-sh tar-copy.sh
+	do
+		test -f $i/$j && cp -p $i/$j $BUILD/$ROOTNAME/
+	done
+done
 
 # Add the ada documentation.
 mkdir $BUILD/$ROOTNAME/doc || exit
