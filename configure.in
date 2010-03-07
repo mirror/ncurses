@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.484 2010/02/27 21:34:00 tom Exp $
+dnl $Id: configure.in,v 1.487 2010/03/06 21:29:37 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.484 $)
+AC_REVISION($Revision: 1.487 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1394,6 +1394,7 @@ CF_TYPE_SIGACTION
 CF_SIZECHANGE
 CF_FUNC_MEMMOVE
 CF_FUNC_POLL
+CF_VA_COPY
 AC_FUNC_VFORK
 
 # special check for test/ditto.c
@@ -1870,6 +1871,7 @@ CF_SRC_MODULES($modules_to_build)
 
 if test "$cf_with_ada" != "no" && test "$cf_cv_prog_gnat_correct" != "no"; then
    SUB_MAKEFILES="$SUB_MAKEFILES Ada95/gen/adacurses${DFT_ARG_SUFFIX}-config:Ada95/gen/adacurses-config.in"
+   SUB_MAKEFILES="$SUB_MAKEFILES man/adacurses${DFT_ARG_SUFFIX}-config.1:man/MKada_config.in"
 fi
 
 CF_DIRS_TO_MAKE
@@ -1904,6 +1906,7 @@ test "$use_database" = yes && \
 SUB_MAKEFILES="$SUB_MAKEFILES misc/run_tic.sh:misc/run_tic.in"
 
 SUB_MAKEFILES="$SUB_MAKEFILES misc/ncurses-config:misc/ncurses-config.in"
+SUB_MAKEFILES="$SUB_MAKEFILES man/ncurses${DFT_ARG_SUFFIX}${cf_cv_abi_version}-config.1:man/MKncu_config.in"
 
 if test x"$enable_pc_files" = xyes ; then \
 SUB_MAKEFILES="$SUB_MAKEFILES misc/gen-pkgconfig:misc/gen-pkgconfig.in"

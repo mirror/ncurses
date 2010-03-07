@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.451 2010/02/06 19:15:52 tom Exp $
+ * $Id: curses.priv.h,v 1.452 2010/03/06 19:15:50 tom Exp $
  *
  *	curses.priv.h
  *
@@ -175,6 +175,20 @@ extern NCURSES_EXPORT(int) _nc_env_access (void);
 #elif USE_MY_MEMMOVE
 #define memmove(d,s,n) _nc_memmove(d,s,n)
 extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
+#endif
+
+/*
+ * If we have va_copy(), use it for assigning va_list's.
+ */
+#if defined(HAVE___VA_COPY)
+#define begin_va_copy(dst,src)	__va_copy(dst, src)
+#define end_va_copy(dst)	va_end(dst)
+#elif defined(va_copy) || defined(HAVE_VA_COPY)
+#define begin_va_copy(dst,src)	va_copy(dst, src)
+#define end_va_copy(dst)	va_end(dst)
+#else
+#define begin_va_copy(dst,src) (dst) = (src)
+#define end_va_copy(dst)	/* nothing */
 #endif
 
 /*

@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.41 2008/11/16 00:19:59 juergen Exp $
+# $Id: ncurses_defs,v 1.42 2010/03/06 18:08:33 tom Exp $
 ##############################################################################
-# Copyright (c) 2000-2007,2008 Free Software Foundation, Inc.                #
+# Copyright (c) 2000-2008,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -115,6 +115,7 @@ HAVE_SETBUF
 HAVE_SETBUFFER
 HAVE_SETUPTERM	1
 HAVE_SETVBUF
+HAVE_SGTTY_H
 HAVE_SIGACTION
 HAVE_SIGVEC
 HAVE_SIZECHANGE

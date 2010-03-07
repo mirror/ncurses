@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.491 2010/01/30 23:42:10 tom Exp $
+dnl $Id: aclocal.m4,v 1.492 2010/03/06 18:47:56 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -62,13 +62,13 @@ AC_DEFUN([AM_LANGINFO_CODESET],
   fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADA_INCLUDE_DIRS version: 5 updated: 2006/10/14 15:23:15
+dnl CF_ADA_INCLUDE_DIRS version: 6 updated: 2010/02/26 19:52:07
 dnl -------------------
 dnl Construct the list of include-options for the C programs in the Ada95
 dnl binding.
 AC_DEFUN([CF_ADA_INCLUDE_DIRS],
 [
-ACPPFLAGS="-I. -I../../include $ACPPFLAGS"
+ACPPFLAGS="-I. -I../include -I../../include $ACPPFLAGS"
 if test "$srcdir" != "."; then
 	ACPPFLAGS="-I\${srcdir}/../../include $ACPPFLAGS"
 fi
@@ -5258,6 +5258,36 @@ if test "$cf_cv_utf8_lib" = "add-on" ; then
 	LIBS="-lutf8 $LIBS"
 fi
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_VA_COPY version: 2 updated: 2010/03/04 05:37:29
+dnl ----------
+dnl check for va_copy, part of stdarg.h
+dnl Also, workaround for glibc's __va_copy, by checking for both.
+AC_DEFUN([CF_VA_COPY],[
+AC_CACHE_CHECK(for va_copy, cf_cv_have_va_copy,[
+AC_TRY_LINK([
+#include <stdarg.h>
+],[
+	static va_list dst;
+	static va_list src;
+	va_copy(dst, src)],
+	cf_cv_have_va_copy=yes,
+	cf_cv_have_va_copy=no)])
+
+test "$cf_cv_have_va_copy" = yes && AC_DEFINE(HAVE_VA_COPY)
+
+AC_CACHE_CHECK(for __va_copy, cf_cv_have___va_copy,[
+AC_TRY_LINK([
+#include <stdarg.h>
+],[
+	static va_list dst;
+	static va_list src;
+	__va_copy(dst, src)],
+	cf_cv_have___va_copy=yes,
+	cf_cv_have___va_copy=no)])
+
+test "$cf_cv_have___va_copy" = yes && AC_DEFINE(HAVE___VA_COPY)
+])
 dnl ---------------------------------------------------------------------------
 dnl CF_VERBOSE version: 3 updated: 2007/07/29 09:55:12
 dnl ----------

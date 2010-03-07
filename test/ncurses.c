@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.355 2010/01/09 16:52:17 tom Exp $
+$Id: ncurses.c,v 1.356 2010/03/06 18:45:14 tom Exp $
 
 ***************************************************************************/
 
@@ -4761,12 +4761,13 @@ panner_legend(int line)
 	"Number repeats.  Toggle legend:? filler:a timer:t scrollmark:s."
     };
     int n = ((int) SIZEOF(legend) - (LINES - line));
-    if (line < LINES && (n >= 0)) {
-	move(line, 0);
-	if (show_panner_legend)
-	    printw("%s", legend[n]);
-	clrtoeol();
-	return show_panner_legend;
+    if (n >= 0) {
+	if (move(line, 0) != ERR) {
+	    if (show_panner_legend)
+		printw("%s", legend[n]);
+	    clrtoeol();
+	    return show_panner_legend;
+	}
     }
     return FALSE;
 }

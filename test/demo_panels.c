@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2007-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.33 2008/08/04 13:33:48 tom Exp $
+ * $Id: demo_panels.c,v 1.34 2010/03/06 18:14:04 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -494,6 +494,7 @@ show_panels(PANEL * px[MAX_PANELS + 1])
     PANEL *pan;
     int j;
 
+    memset(table, 0, sizeof(table));
     for (j = 1; j <= MAX_PANELS; ++j) {
 	table[j].valid = (px[j] != 0);
 	if (table[j].valid) {

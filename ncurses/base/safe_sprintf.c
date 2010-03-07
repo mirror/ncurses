@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: safe_sprintf.c,v 1.22 2009/04/18 18:46:46 tom Exp $")
+MODULE_ID("$Id: safe_sprintf.c,v 1.23 2010/03/06 20:26:10 tom Exp $")
 
 #if USE_SAFE_SPRINTF
 
@@ -222,7 +222,12 @@ NCURSES_SP_NAME(_nc_printf_string) (NCURSES_SP_DCLx
 
     if (fmt != 0) {
 #if USE_SAFE_SPRINTF
-	int len = _nc_printf_length(fmt, ap);
+	va_list ap2;
+	int len;
+
+	begin_va_copy(ap2, ap);
+	len = _nc_printf_length(fmt, ap2);
+	end_va_copy(ap2);
 
 	if ((int) my_length < len + 1) {
 	    my_length = 2 * (len + 1);

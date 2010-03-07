@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.41 2007/03/31 15:54:06 tom Exp $
+# $Id: Makefile.in,v 1.42 2010/03/06 20:59:25 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -77,4 +77,4 @@ clean:	mostlyclean
 	sh $(srcdir)/make_sed.sh @MANPAGE_RENAMES@ >../edit_man.sed
 
 distclean realclean: clean
-	rm -f Makefile ../edit_man.* ../man_alias.*
+	rm -f Makefile *-config.1 ../edit_man.* ../man_alias.*

@@ -533,6 +533,8 @@
 ./include/tic.h
 ./include/unctrl.h.in
 ./install-sh
+./man/MKada_config.in
+./man/MKncu_config.in
 ./man/MKterminfo.sh
 ./man/Makefile.in
 ./man/captoinfo.1m
