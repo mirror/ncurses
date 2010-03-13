@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.124 2010/01/30 19:00:34 tom Exp $
+# $Id: Makefile.in,v 1.125 2010/03/13 19:29:55 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -93,7 +93,7 @@ CPPFLAGS	= -DHAVE_CONFIG_H -I../ncurses -I$(srcdir) @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
-BUILD_CPPFLAGS	= -I../include @BUILD_CPPFLAGS@
+BUILD_CPPFLAGS	= -I../include -DUSE_BUILD_CC @BUILD_CPPFLAGS@
 BUILD_CC	= @BUILD_CC@
 BUILD_CCFLAGS	= -DHAVE_CONFIG_H -I../ncurses -I$(srcdir) -I$(INCDIR) $(BUILD_CPPFLAGS) @BUILD_CFLAGS@
 BUILD_LDFLAGS	= @BUILD_LDFLAGS@

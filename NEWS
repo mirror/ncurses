@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1509 2010/03/06 21:03:02 tom Exp $
+-- $Id: NEWS,v 1.1513 2010/03/13 20:30:34 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100313
+	+ modify install-rule for manpages so that *-config manpages will
+	  install when building with --srcdir (report by Sven Joachim).
+	+ modify CF_DISABLE_LEAKS configure macro so that the --enable-leaks
+	  option is not the same as --disable-leaks (GenToo #305889).
+	+ modify #define's for build-compiler to suppress cchar_t symbol from
+	  compile of make_hash and make_keys, improving cross-compilation of
+	  ncursesw (report by Bernhard Rosenkraenzer).
+	+ modify CF_MAN_PAGES configure macro to replace all occurrences of
+	  TPUT in tput.1's manpage (Debian #573597, report/analysis by Anders
+	  Kaseorg).
 
 20100306
 	+ generate manpages for the *-config scripts, adapted from help2man

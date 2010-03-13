@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.492 2010/03/06 18:47:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.494 2010/03/13 20:15:30 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -985,7 +985,7 @@ done
 AC_SUBST(DIRS_TO_MAKE)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_DISABLE_LEAKS version: 4 updated: 2006/12/16 15:10:42
+dnl CF_DISABLE_LEAKS version: 5 updated: 2010/03/13 15:14:55
 dnl ----------------
 dnl Combine no-leak checks with the libraries or tools that are used for the
 dnl checks.
@@ -998,7 +998,7 @@ AC_REQUIRE([CF_WITH_VALGRIND])
 AC_MSG_CHECKING(if you want to perform memory-leak testing)
 AC_ARG_ENABLE(leaks,
 	[  --disable-leaks         test: free permanent memory, analyze leaks],
-	[with_no_leaks=yes],
+	[if test "x$enableval" = xno; then with_no_leaks=yes; else with_no_leaks=no; fi],
 	: ${with_no_leaks:=no})
 AC_MSG_RESULT($with_no_leaks)
 
@@ -3304,7 +3304,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 35 updated: 2007/03/31 11:47:29
+dnl CF_MAN_PAGES version: 36 updated: 2010/03/13 13:41:01
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -3435,7 +3435,7 @@ CF_EOF
 		cf_NAME=`echo "$cf_name" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
 		cf_name=`echo $cf_name|sed "$program_transform_name"`
 cat >>$cf_edit_man <<-CF_EOF
-		s,@$cf_NAME@,$cf_name,
+		s,@$cf_NAME@,$cf_name,g
 CF_EOF
 	done
 	])

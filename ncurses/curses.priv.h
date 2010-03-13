@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.452 2010/03/06 19:15:50 tom Exp $
+ * $Id: curses.priv.h,v 1.453 2010/03/13 19:33:00 tom Exp $
  *
  *	curses.priv.h
  *
@@ -546,7 +546,7 @@ typedef unsigned colorpair_t;	/* type big enough to store PAIR_OF() */
 
 #define COLOR_DEFAULT		C_MASK
 
-#if defined(USE_TERMLIB) && !defined(NEED_NCURSES_CH_T)
+#if defined(USE_BUILD_CC) || (defined(USE_TERMLIB) && !defined(NEED_NCURSES_CH_T))
 
 #undef NCURSES_CH_T		/* this is not a termlib feature */
 #define NCURSES_CH_T void	/* ...but we need a pointer in SCREEN */
@@ -593,7 +593,7 @@ typedef struct {
 
 struct _SLK;
 
-#ifndef USE_TERMLIB
+#if !(defined(USE_TERMLIB) || defined(USE_BUILD_CC))
 
 typedef struct
 {
@@ -1725,7 +1725,7 @@ NCURSES_EXPORT(int) _nc_build_wch(WINDOW *win, ARG_CH_T ch);
 #endif
 
 /* lib_addstr.c */
-#if USE_WIDEC_SUPPORT && !defined(USE_TERMLIB)
+#if USE_WIDEC_SUPPORT && !(defined(USE_TERMLIB) || defined(USE_BUILD_CC))
 extern NCURSES_EXPORT(int) _nc_wchstrlen(const cchar_t *);
 #endif
 
@@ -1856,7 +1856,7 @@ extern NCURSES_EXPORT(void) _nc_names_leaks(void);
 extern NCURSES_EXPORT(void) _nc_tgetent_leaks(void);
 #endif
 
-#ifndef USE_TERMLIB
+#if !(defined(USE_TERMLIB) || defined(USE_BUILD_CC))
 extern NCURSES_EXPORT(NCURSES_CH_T) _nc_render (WINDOW *, NCURSES_CH_T);
 extern NCURSES_EXPORT(int) _nc_waddch_nosync (WINDOW *, const NCURSES_CH_T);
 extern NCURSES_EXPORT(void) _nc_scroll_window (WINDOW *, int const, NCURSES_SIZE_T const, NCURSES_SIZE_T const, NCURSES_CH_T);
@@ -1866,7 +1866,7 @@ extern NCURSES_EXPORT(void) _nc_scroll_window (WINDOW *, int const, NCURSES_SIZE
 extern NCURSES_EXPORT(int) _nc_insert_wch(WINDOW *, const cchar_t *);
 #endif
 
-#if USE_WIDEC_SUPPORT && !defined(USE_TERMLIB)
+#if USE_WIDEC_SUPPORT && !(defined(USE_TERMLIB) || defined(USE_BUILD_CC))
 extern NCURSES_EXPORT(size_t) _nc_wcrtomb (char *, wchar_t, mbstate_t *);
 #endif
 

@@ -9301,7 +9301,7 @@ CF_EOF
 		cf_NAME=`echo "$cf_name" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
 		cf_name=`echo $cf_name|sed "$program_transform_name"`
 cat >>$cf_edit_man <<-CF_EOF
-		s,@$cf_NAME@,$cf_name,
+		s,@$cf_NAME@,$cf_name,g
 CF_EOF
 	done
 
@@ -11656,7 +11656,7 @@ echo $ECHO_N "checking if you want to perform memory-leak testing... $ECHO_C" >&
 # Check whether --enable-leaks or --disable-leaks was given.
 if test "${enable_leaks+set}" = set; then
   enableval="$enable_leaks"
-  with_no_leaks=yes
+  if test "x$enableval" = xno; then with_no_leaks=yes; else with_no_leaks=no; fi
 else
   : ${with_no_leaks:=no}
 fi;
