@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1513 2010/03/13 20:30:34 tom Exp $
+-- $Id: NEWS,v 1.1514 2010/03/20 21:31:24 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100320
+	+ rename atari and st52 terminfo entries to atari-old, st52-old, use
+	  newer entries from FreeMiNT by Guido Flohr (from patch/report by Alan
+	  Hourihane).
 
 20100313
 	+ modify install-rule for manpages so that *-config manpages will
@@ -2797,7 +2802,7 @@ it is not possible to add this information.
 	  (request by Mike Aubury).
 	+ add symbol to curses.h which can be used to suppress include of
 	  stdbool.h, e.g.,
-	  	#define NCURSES_ENABLE_STDBOOL_H 0
+		#define NCURSES_ENABLE_STDBOOL_H 0
 		#include <curses.h>
 	  (discussion on XFree86 mailing list).
 

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.361 $
-#	$Date: 2010/02/24 00:56:04 $
+#	$Revision: 1.362 $
+#	$Date: 2010/03/20 20:10:08 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -690,6 +690,149 @@ nansi.sysk|nansisysk|PC-DOS Public Domain NANSI.SYS with keypad redefined for vi
 
 #### ANSI console types
 #
+
+#############################################################################
+#
+# Atari ST terminals.
+# From Guido Flohr <gufl0000@stud.uni-sb.de>.
+#
+tw52|tw52-color|Toswin window manager with color,
+	bce,
+	colors#16, pairs#256,
+	oc=\Eb?\Ec0, op=\Eb?\Ec0,
+	setab=\Ec%?%p1%{0}%=%t?%e%p1%{7}%=%t0%e%p1%{15}%=%t7%e%p1%{48}%+%c,
+	setaf=\Eb%?%p1%{0}%=%t?%e%p1%{7}%=%t0%e%p1%{15}%=%t7%e%p1%{48}%+%c,
+	setb=\Ec%?%p1%{0}%=%t?%e%p1%{7}%=%t0%e%p1%{15}%=%t7%e%p1%{48}%+%c,
+	setf=\Eb%?%p1%{0}%=%t?%e%p1%{7}%=%t0%e%p1%{15}%=%t7%e%p1%{48}%+%c,
+	use=tw52-m,
+tw52-m|Toswin window manager monochrome,
+	ul,
+	ma#999,
+	bold=\Eya, dch1=\Ea, dim=\EyB,
+	is2=\Ev\Eq\Ez_\Ee\Ei\Eb?\Ec0, rev=\EyP, rmso=\EzQ,
+	rmul=\EzH, rs2=\Ev\Eq\Ez_\Ee\Ei\Eb?\Ec0, sgr0=\Ez_,
+	smso=\EyQ, smul=\EyH, use=at-m,
+tt52|Atari TT medium and high resolution,
+	lines#30, use=at-color,
+st52-color|at-color|atari-color|atari_st-color|Atari ST with color,
+	bce,
+	colors#16, pairs#256,
+	is2=\Ev\Eq\Ee\Eb1\Ec0, rs2=\Ev\Eq\Ee\Eb1\Ec0,
+	setab=\Ec%?%p1%{0}%=%t1%e%p1%{1}%=%t2%e%p1%{2}%=%t3%e%p1%{3}%=%t>%e%p1%{4}%=%t4%e%p1%{5}%=%t7%e%p1%{6}%=%t5%e%p1%{7}%=%t0%e%p1%{8}%=%t8%e%p1%{9}%=%t9%e%p1%{10}%=%t\:%e%p1%{11}%=%t;%e%p1%{12}%=%t<%e%p1%{13}%=%t=%e%p1%{14}%=%t6%e?,
+	setaf=\Eb%?%p1%{0}%=%t1%e%p1%{1}%=%t2%e%p1%{2}%=%t3%e%p1%{3}%=%t>%e%p1%{4}%=%t4%e%p1%{5}%=%t7%e%p1%{6}%=%t5%e%p1%{7}%=%t0%e%p1%{8}%=%t8%e%p1%{9}%=%t9%e%p1%{10}%=%t\:%e%p1%{11}%=%t;%e%p1%{12}%=%t<%e%p1%{13}%=%t=%e%p1%{14}%=%t6%e?,
+	setb=\Ec%?%p1%{0}%=%t1%e%p1%{1}%=%t2%e%p1%{2}%=%t3%e%p1%{3}%=%t>%e%p1%{4}%=%t4%e%p1%{5}%=%t7%e%p1%{6}%=%t5%e%p1%{7}%=%t0%e%p1%{8}%=%t8%e%p1%{9}%=%t9%e%p1%{10}%=%t\:%e%p1%{11}%=%t;%e%p1%{12}%=%t<%e%p1%{13}%=%t=%e%p1%{14}%=%t6%e?,
+	setf=\Eb%?%p1%{0}%=%t1%e%p1%{1}%=%t2%e%p1%{2}%=%t3%e%p1%{3}%=%t>%e%p1%{4}%=%t4%e%p1%{5}%=%t7%e%p1%{6}%=%t5%e%p1%{7}%=%t0%e%p1%{8}%=%t8%e%p1%{9}%=%t9%e%p1%{10}%=%t\:%e%p1%{11}%=%t;%e%p1%{12}%=%t<%e%p1%{13}%=%t=%e%p1%{14}%=%t6%e?,
+	use=st52,
+st52|st52-m|at|at-m|atari|atari-m|atari_st|atarist-m|Atari ST,
+	am, eo, mir, npc,
+	cols#80, it#8, lines#24,
+	bel=^G, civis=\Ef, clear=\EE, cnorm=\Ee, cr=^M, cub1=\ED,
+	cud1=\EB, cuf1=\EC, cup=\EY%p1%{32}%+%c%p2%{32}%+%c,
+	cuu1=\EA, dl1=\EM, ed=\EJ, el=\EK, el1=\Eo, home=\EH, ht=^I,
+	il1=\EL, ind=^J, is2=\Ev\Eq\Ee, kLFT=\Ed, kRIT=\Ec, kbs=^H,
+	kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA, kdch1=\177,
+	kf1=\EP, kf10=\EY, kf11=\Ep, kf12=\Eq, kf13=\Er, kf14=\Es,
+	kf15=\Et, kf16=\Eu, kf17=\Ev, kf18=\Ew, kf19=\Ex, kf2=\EQ,
+	kf20=\Ey, kf3=\ER, kf4=\ES, kf5=\ET, kf6=\EU, kf7=\EV, kf8=\EW,
+	kf9=\EX, khlp=\EH, khome=\EE, kich1=\EI, knp=\Eb, kpp=\Ea,
+	kund=\EK, nel=^M^J, rc=\Ek, rev=\Ep, ri=\EI, rmso=\Eq,
+	rs2=\Ev\Eq\Ee, sc=\Ej, sgr0=\Eq, smso=\Ep,
+tw100|toswin vt100 window mgr,
+	eo, mir, msgr, xon,
+	colors#8, cols#80, it#8, lines#24, pairs#64, vt#3,
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~..--++\,\,hhII00,
+	bel=^G, blink=\E[5m, bold=\E[1m, civis=\Ef,
+	clear=\E[2J\E[H, cnorm=\Ee, cr=^M, csr=\E[%i%p1%d;%p2%dr,
+	cub=\E[%p1%dD, cub1=^H, cud=\E[%p1%dB, cud1=\EB,
+	cuf=\E[%p1%dC, cuf1=\EC, cup=\E[%i%p1%d;%p2%dH,
+	cuu=\E[%p1%dA, cuu1=\EA, dch1=\Ea, dim=\E[2m, dl=\E[%p1%dM,
+	dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K, home=\E[H, ht=^I,
+	hts=\EH, ich=\E[%p1%d@, il1=\EL, ind=^J, is2=\E<\E)0, kbs=^H,
+	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kdch1=\177,
+	kf1=\EOP, kf10=\EOY, kf11=\Ep, kf12=\Eq, kf13=\Er, kf14=\Es,
+	kf15=\Et, kf16=\Eu, kf17=\Ev, kf18=\Ew, kf19=\Ex, kf2=\EOQ,
+	kf20=\Ey, kf3=\EOR, kf4=\EOS, kf5=\EOT, kf6=\EOU, kf7=\EOV,
+	kf8=\EOW, kf9=\EOX, khlp=\EH, khome=\E\EE, kich1=\EI,
+	knp=\Eb, kpp=\E\Ea, kund=\EK, ll=\E[24H, nel=\EE,
+	oc=\E[30;47m, op=\E[30;47m, rc=\E8, rev=\E[7m, ri=\EM,
+	rmacs=^O, rmcup=\E[?7h, rmir=\Ei, rmkx=\E[?1l\E>,
+	rmso=\E[m, rmul=\E[m,
+	rs1=\E<\E[20l\E[?3;6;9l\E[r\Eq\E(B\017\E)0\E>,
+	sc=\E7,
+	setb=\E[4%p1%'0'%+%Pa%?%ga%'0'%=%t0%e%ga%'1'%=%t4%e%ga%'2'%=%t2%e%ga%'3'%=%t6%e%ga%'4'%=%t1%e%ga%'5'%=%t5%e%ga%'6'%=%t3%e7%;m,
+	setf=\E[3%p1%'0'%+%Pa%?%ga%'0'%=%t0%e%ga%'1'%=%t4%e%ga%'2'%=%t2%e%ga%'3'%=%t6%e%ga%'4'%=%t1%e%ga%'5'%=%t5%e%ga%'6'%=%t3%e7%;m,
+	sgr0=\E[m, smacs=^N, smcup=\E[?7l, smir=\Eh,
+	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
+# The entries for stv52 and stv52pc probably need a revision.
+stv52|MiNT virtual console,
+	am, msgr,
+	cols#80, it#8, lines#30,
+	bel=^G, blink=\Er, bold=\EyA, civis=\Ef, clear=\EE,
+	cnorm=\E. \Ee, cr=^M, cub1=^H, cud1=\EB, cuf1=\EC,
+	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, cvvis=\E.",
+	dim=\Em, dl1=\EM, ed=\EJ, el=\EK, home=\EH, ht=^I, il1=\EL,
+	ind=\n$<2*/>, kbs=^H, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
+	kcuu1=\EA, kdch1=\177, kf1=\EP, kf10=\EY, kf11=\Ep, kf12=\Eq,
+	kf13=\Er, kf14=\Es, kf15=\Et, kf16=\Eu, kf17=\Ev, kf18=\Ew,
+	kf19=\Ex, kf2=\EQ, kf20=\Ey, kf3=\ER, kf4=\ES, kf5=\ET,
+	kf6=\EU, kf7=\EV, kf8=\EW, kf9=\EX, khlp=\EH, khome=\EE,
+	kich1=\EI, knp=\Eb, kpp=\Ea, kund=\EK, nel=\r\n$<2*/>,
+	op=\Eb@\EcO, rev=\Ep, ri=\EI$<2*/>, rmcup=\Ev\E. \Ee\Ez_,
+	rmso=\Eq, rmul=\EzH, rs1=\Ez_\Eb@\EcA, sgr0=\Ez_,
+	smcup=\Ev\Ee\Ez_, smso=\Ep, smul=\EyH,
+stv52pc|MiNT virtual console with PC charset,
+	am, msgr,
+	cols#80, it#8, lines#30,
+	acsc=`\177a\260f\370g\361j\331k\277l\332m\300n\305o\377p-q\304r-s_t+u+v+w+x\263y\363z\362{\343|\366}\234~\371.v-\^+\257\,\256h\261I\3740\333,
+	bel=^G, blink=\Er, bold=\EyA, civis=\Ef, clear=\EE,
+	cnorm=\E. \Ee, cr=^M, cub1=^H, cud1=\EB, cuf1=\EC,
+	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, cvvis=\E.",
+	dim=\Em, dl1=\EM, ed=\EJ, el=\EK, home=\EH, ht=^I, il1=\EL,
+	ind=\n$<2*/>, kbs=^H, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
+	kcuu1=\EA, kdch1=\177, kf1=\EP, kf10=\EY, kf11=\Ep, kf12=\Eq,
+	kf13=\Er, kf14=\Es, kf15=\Et, kf16=\Eu, kf17=\Ev, kf18=\Ew,
+	kf19=\Ex, kf2=\EQ, kf20=\Ey, kf3=\ER, kf4=\ES, kf5=\ET,
+	kf6=\EU, kf7=\EV, kf8=\EW, kf9=\EX, khlp=\EH, khome=\EE,
+	kich1=\EI, knp=\Eb, kpp=\Ea, kund=\EK, nel=\r\n$<2*/>,
+	rev=\Ep, ri=\EI$<2*/>, rmcup=\Ev\E. \Ee\Ez_, rmso=\Eq,
+	rmul=\EzH, rs1=\Ez_\Eb@\EcA, sgr0=\Ez_, smcup=\Ev\Ee\Ez_,
+	smso=\Ep, smul=\EyH,
+
+#### Atari ST
+#
+
+# From: Simson L. Garfinkel <simsong@media-lab.mit.edu>
+atari-old|atari st,
+	OTbs, am,
+	cols#80, it#8, lines#25,
+	clear=\EH\EJ, cub1=\ED, cud1=\EB, cuf1=\EC,
+	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, dl1=\EM,
+	ed=\EJ, el=\EK, ht=^I, il1=\EL, kcub1=\ED, kcud1=\EB,
+	kcuf1=\EC, kcuu1=\EA, ri=\EI, rmso=\Eq, sgr0=\Eq, smso=\Ep,
+# UniTerm terminal program for the Atari ST:  49-line VT220 emulation mode
+# From: Paul M. Aoki <aoki@ucbvax.berkeley.edu>
+uniterm|uniterm49|UniTerm VT220 emulator with 49 lines,
+	lines#49,
+	is2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h\E[1;49r\E[49;1H,
+	use=vt220,
+# MiNT VT52 emulation. 80 columns, 25 rows.
+# MiNT is Now TOS, the operating system which comes with all Ataris now
+# (mainly Atari Falcon). This termcap is for the VT52 emulation you get
+# under tcsh/zsh/bash/sh/ksh/ash/csh when you run MiNT in `console' mode
+# From: Per Persson <pp@gnu.ai.mit.edu>, 27 Feb 1996
+st52-old|Atari ST with VT52 emulation,
+	am, km,
+	cols#80, lines#25,
+	bel=^G, civis=\Ef, clear=\EH\EJ, cnorm=\Ee, cr=^M, cub1=\ED,
+	cud1=\EB, cuf1=\EC, cup=\EY%p1%{32}%+%c%p2%{32}%+%c,
+	cuu1=\EA, dl1=\EM, ed=\EJ, el=\EK, home=\EH, ht=^I, il1=\EL,
+	ind=^J, ka1=\E#7, ka3=\E#5, kb2=\E#9, kbs=^H, kc1=\E#1,
+	kc3=\E#3, kclr=\E#7, kcub1=\E#K, kcud1=\E#P, kcuf1=\E#M,
+	kcuu1=\E#H, kf0=\E#D, kf1=\E#;, kf2=\E#<, kf3=\E#=, kf4=\E#>,
+	kf5=\E#?, kf6=\E#@, kf7=\E#A, kf8=\E#B, kf9=\E#C, khome=\E#G,
+	kil1=\E#R, kind=\E#2, kri=\E#8, lf0=f10, nel=^M^J, rc=\Ek,
+	ri=\EI, rmcup=, rmso=\Eq, rs1=\Ez_\Eb@\EcA, sc=\Ej, sgr0=\Eq,
+	smcup=\Ee, smso=\Ep,
 
 #### BeOS
 #
@@ -17357,42 +17500,6 @@ trs16|trs-80 model 16 console,
 	lf7=f8, mc4=\E]+, mc5=\E]=, rmacs=\ERg, rmso=\ER@, sgr0=\ER@,
 	smacs=\ERG, smso=\ERD,
 
-#### Atari ST
-#
-
-# From: Simson L. Garfinkel <simsong@media-lab.mit.edu>
-atari|atari st,
-	OTbs, am,
-	cols#80, it#8, lines#25,
-	clear=\EH\EJ, cub1=\ED, cud1=\EB, cuf1=\EC,
-	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, dl1=\EM,
-	ed=\EJ, el=\EK, ht=^I, il1=\EL, kcub1=\ED, kcud1=\EB,
-	kcuf1=\EC, kcuu1=\EA, ri=\EI, rmso=\Eq, sgr0=\Eq, smso=\Ep,
-# UniTerm terminal program for the Atari ST:  49-line VT220 emulation mode
-# From: Paul M. Aoki <aoki@ucbvax.berkeley.edu>
-uniterm|uniterm49|UniTerm VT220 emulator with 49 lines,
-	lines#49,
-	is2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h\E[1;49r\E[49;1H,
-	use=vt220,
-# MiNT VT52 emulation. 80 columns, 25 rows.
-# MiNT is Now TOS, the operating system which comes with all Ataris now
-# (mainly Atari Falcon). This termcap is for the VT52 emulation you get
-# under tcsh/zsh/bash/sh/ksh/ash/csh when you run MiNT in `console' mode
-# From: Per Persson <pp@gnu.ai.mit.edu>, 27 Feb 1996
-st52|Atari ST with VT52 emulation,
-	am, km,
-	cols#80, lines#25,
-	bel=^G, civis=\Ef, clear=\EH\EJ, cnorm=\Ee, cr=^M, cub1=\ED,
-	cud1=\EB, cuf1=\EC, cup=\EY%p1%{32}%+%c%p2%{32}%+%c,
-	cuu1=\EA, dl1=\EM, ed=\EJ, el=\EK, home=\EH, ht=^I, il1=\EL,
-	ind=^J, ka1=\E#7, ka3=\E#5, kb2=\E#9, kbs=^H, kc1=\E#1,
-	kc3=\E#3, kclr=\E#7, kcub1=\E#K, kcud1=\E#P, kcuf1=\E#M,
-	kcuu1=\E#H, kf0=\E#D, kf1=\E#;, kf2=\E#<, kf3=\E#=, kf4=\E#>,
-	kf5=\E#?, kf6=\E#@, kf7=\E#A, kf8=\E#B, kf9=\E#C, khome=\E#G,
-	kil1=\E#R, kind=\E#2, kri=\E#8, lf0=f10, nel=^M^J, rc=\Ek,
-	ri=\EI, rmcup=, rmso=\Eq, rs1=\Ez_\Eb@\EcA, sc=\Ej, sgr0=\Eq,
-	smcup=\Ee, smso=\Ep,
-
 #### Commodore Business Machines
 #
 # Formerly located in West Chester, PA; went spectacularly bust in 1994
@@ -22147,6 +22254,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2010-02-23
 #	* modify screen-bce.XXX entries to exclude ech, since screen's color
 #	  model does not clear with color for that feature -TD
+#
+# 2010-03-20
+#	* rename atari and st52 to atari-old, st52-old, use newer entries from
+#	  FreeMiNT by Guido Flohr (from patch/report by Alan Hourihane).
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
