@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1514 2010/03/20 21:31:24 tom Exp $
+-- $Id: NEWS,v 1.1518 2010/03/27 22:39:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100327
+	+ refactor CF_SHARED_OPTS configure macro, making CF_RPATH_HACK more
+	  reusable.
+	+ improve configure CF_REGEX, similar fixes.
+	+ improve configure CF_FIND_LINKAGE, adding add check between system
+	  (default) and explicit paths, where we can find the entrypoint in the
+	  given library.
+	+ add check if Gpm_Open() returns a -2, e.g., for "xterm".  This is
+	  normally suppressed but can be overridden using $NCURSES_GPM_TERMS.
+	  Ensure that Gpm_Close() is called in this case.
 
 20100320
 	+ rename atari and st52 terminfo entries to atari-old, st52-old, use

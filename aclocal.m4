@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.494 2010/03/13 20:15:30 tom Exp $
+dnl $Id: aclocal.m4,v 1.499 2010/03/28 00:14:25 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1007,18 +1007,18 @@ if test "$with_no_leaks" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_RPATH version: 1 updated: 2008/09/13 10:22:30
+dnl CF_ENABLE_RPATH version: 2 updated: 2010/03/27 18:39:42
 dnl ---------------
 dnl Check if the rpath option should be used, setting cache variable
-dnl cf_cv_ld_rpath if so.
+dnl cf_cv_enable_rpath if so.
 AC_DEFUN([CF_ENABLE_RPATH],
 [
 AC_MSG_CHECKING(if rpath option should be used)
 AC_ARG_ENABLE(rpath,
 [  --enable-rpath          use rpath option when generating shared libraries],
-[cf_cv_ld_rpath=$enableval],
-[cf_cv_ld_rpath=no])
-AC_MSG_RESULT($cf_cv_ld_rpath)
+[cf_cv_enable_rpath=$enableval],
+[cf_cv_enable_rpath=no])
+AC_MSG_RESULT($cf_cv_enable_rpath)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ERRNO version: 5 updated: 1997/11/30 12:44:39
@@ -1059,7 +1059,7 @@ AC_MSG_RESULT($cf_result)
 CXXFLAGS="$cf_save_CXXFLAGS"
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_FIND_LINKAGE version: 13 updated: 2008/12/24 07:59:55
+dnl CF_FIND_LINKAGE version: 14 updated: 2010/03/21 14:34:38
 dnl ---------------
 dnl Find a library (specifically the linkage used in the code fragment),
 dnl searching for it if it is not already in the library path.
@@ -1088,9 +1088,18 @@ cf_cv_library_path_$3=
 
 CF_MSG_LOG([Starting [FIND_LINKAGE]($3,$6)])
 
-AC_TRY_LINK([$1],[$2],
-    cf_cv_find_linkage_$3=yes,[
+AC_TRY_LINK([$1],[$2],[
+	cf_cv_find_linkage_$3=yes
+],[
+
+cf_save_LIBS="$LIBS"
+LIBS="-l$3 $7 $cf_save_LIBS"
+
+AC_TRY_LINK([$1],[$2],[
+	cf_cv_find_linkage_$3=yes
+],[
     cf_cv_find_linkage_$3=no
+	LIBS="$cf_save_LIBS"
 
     CF_VERBOSE(find linkage for $3 library)
     CF_MSG_LOG([Searching for headers in [FIND_LINKAGE]($3,$6)])
@@ -1160,6 +1169,7 @@ AC_TRY_LINK([$1],[$2],
       cf_cv_find_linkage_$3=no
     fi
     ],$7)
+])
 
 if test "$cf_cv_find_linkage_$3" = yes ; then
 ifelse([$4],,[
@@ -2288,6 +2298,60 @@ fi
 AC_SUBST(LDFLAGS_STATIC)
 AC_SUBST(LDFLAGS_SHARED)
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_LD_RPATH_OPT version: 2 updated: 2010/03/27 19:27:54
+dnl ---------------
+dnl For the given system and compiler, find the compiler flags to pass to the
+dnl loader to use the "rpath" feature.
+AC_DEFUN([CF_LD_RPATH_OPT],
+[
+AC_REQUIRE([CF_CHECK_CACHE])
+
+LD_RPATH_OPT=
+AC_MSG_CHECKING(for an rpath option)
+case $cf_cv_system_name in #(vi
+irix*) #(vi
+	if test "$GCC" = yes; then
+		LD_RPATH_OPT="-Wl,-rpath,"
+	else
+		LD_RPATH_OPT="-rpath "
+	fi
+	;;
+linux*|gnu*|k*bsd*-gnu) #(vi
+	LD_RPATH_OPT="-Wl,-rpath,"
+	;;
+openbsd[[2-9]].*) #(vi
+	LD_RPATH_OPT="-Wl,-rpath,"
+	;;
+freebsd*) #(vi
+	LD_RPATH_OPT="-rpath "
+	;;
+netbsd*) #(vi
+	LD_RPATH_OPT="-Wl,-rpath,"
+	;;
+osf*|mls+*) #(vi
+	LD_RPATH_OPT="-rpath "
+	;;
+solaris2*) #(vi
+	LD_RPATH_OPT="-R"
+	;;
+*)
+	;;
+esac
+AC_MSG_RESULT($LD_RPATH_OPT)
+
+case "x$LD_RPATH_OPT" in #(vi
+x-R*)
+	AC_MSG_CHECKING(if we need a space after rpath option)
+	cf_save_LIBS="$LIBS"
+	LIBS="${LD_RPATH_OPT}$libdir $LIBS"
+	AC_TRY_LINK(, , cf_rpath_space=no, cf_rpath_space=yes)
+	LIBS="$cf_save_LIBS"
+	AC_MSG_RESULT($cf_rpath_space)
+	test "$cf_rpath_space" = yes && LD_RPATH_OPT="$LD_RPATH_OPT "
+	;;
+esac
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_LIBRARY_PATH version: 8 updated: 2008/12/07 19:38:31
 dnl ---------------
@@ -4198,37 +4262,76 @@ AC_CHECK_PROGS(LINT, tdlint lint alint splint lclint)
 AC_SUBST(LINT_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_REGEX version: 3 updated: 1997/11/01 14:26:01
+dnl CF_REGEX version: 6 updated: 2010/03/27 13:41:56
 dnl --------
 dnl Attempt to determine if we've got one of the flavors of regular-expression
 dnl code that we can support.
 AC_DEFUN([CF_REGEX],
 [
-AC_MSG_CHECKING([for regular-expression headers])
-AC_CACHE_VAL(cf_cv_regex,[
-AC_TRY_LINK([#include <sys/types.h>
-#include <regex.h>],[
-	regex_t *p;
-	int x = regcomp(p, "", 0);
-	int y = regexec(p, "", 0, 0, 0);
-	regfree(p);
-	],[cf_cv_regex="regex.h"],[
-	AC_TRY_LINK([#include <regexp.h>],[
-		char *p = compile("", "", "", 0);
-		int x = step("", "");
-	],[cf_cv_regex="regexp.h"],[
-		cf_save_LIBS="$LIBS"
-		LIBS="-lgen $LIBS"
-		AC_TRY_LINK([#include <regexpr.h>],[
-			char *p = compile("", "", "");
-			int x = step("", "");
-		],[cf_cv_regex="regexpr.h"],[LIBS="$cf_save_LIBS"])])])
+
+cf_regex_func=no
+
+AC_CHECK_FUNC(regcomp,[cf_regex_func=regcomp],[
+	for cf_regex_lib in regex re
+	do
+		AC_CHECK_LIB($cf_regex_lib,regcomp,[
+				LIBS="-l$cf_regex_lib $LIBS"
+				cf_regex_func=regcomp
+				break])
+	done
 ])
-AC_MSG_RESULT($cf_cv_regex)
-case $cf_cv_regex in
-	regex.h)   AC_DEFINE(HAVE_REGEX_H_FUNCS) ;;
-	regexp.h)  AC_DEFINE(HAVE_REGEXP_H_FUNCS) ;;
-	regexpr.h) AC_DEFINE(HAVE_REGEXPR_H_FUNCS) ;;
+
+if test "$cf_regex_func" = no ; then
+	AC_CHECK_FUNC(compile,[cf_regex_func=compile],[
+		AC_CHECK_LIB(gen,compile,[
+				LIBS="-lgen $LIBS"
+				cf_regex_func=compile])])
+fi
+
+if test "$cf_regex_func" = no ; then
+	AC_MSG_WARN(cannot find regular expression library)
+fi
+
+AC_CACHE_CHECK(for regular-expression headers,cf_cv_regex_hdrs,[
+
+cf_cv_regex_hdrs=no
+case $cf_regex_func in #(vi
+compile) #(vi
+	for cf_regex_hdr in regexp.h regexpr.h
+	do
+		AC_TRY_LINK([#include <$cf_regex_hdr>],[
+			char *p = compile("", "", "", 0);
+			int x = step("", "");
+		],[
+			cf_cv_regex_hdrs=$cf_regex_hdr
+			break
+		])
+	done
+	;;
+*)
+	for cf_regex_hdr in regex.h
+	do
+		AC_TRY_LINK([#include <sys/types.h>
+#include <$cf_regex_hdr>],[
+			regex_t *p;
+			int x = regcomp(p, "", 0);
+			int y = regexec(p, "", 0, 0, 0);
+			regfree(p);
+		],[
+			cf_cv_regex_hdrs=$cf_regex_hdr
+			break
+		])
+	done
+	;;
+esac
+
+])
+
+case $cf_cv_regex_hdrs in #(vi
+    no)	       AC_MSG_WARN(no regular expression header found) ;; #(vi
+    regex.h)   AC_DEFINE(HAVE_REGEX_H_FUNCS) ;; #(vi
+    regexp.h)  AC_DEFINE(HAVE_REGEXP_H_FUNCS) ;; #(vi
+    regexpr.h) AC_DEFINE(HAVE_REGEXPR_H_FUNCS) ;;
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -4262,58 +4365,59 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK version: 4 updated: 2008/09/13 12:53:26
+dnl CF_RPATH_HACK version: 5 updated: 2010/03/27 18:39:42
 dnl -------------
 AC_DEFUN([CF_RPATH_HACK],
 [
+AC_REQUIRE([CF_LD_RPATH_OPT])
 AC_REQUIRE([CF_SHARED_OPTS])
 AC_MSG_CHECKING(for updated LDFLAGS)
-if test -n "$LDFLAGS" ; then
-AC_MSG_RESULT(maybe)
-CF_VERBOSE(...checking LDFLAGS $LDFLAGS)
-CF_VERBOSE(...checking EXTRA_LDFLAGS $EXTRA_LDFLAGS)
-case "$EXTRA_LDFLAGS" in #(vi
--Wl,-rpath,*) #(vi
-	cf_rpath_hack="-Wl,-rpath,"
-	;;
--R\ *)
-	cf_rpath_hack="-R "
-	;;
--R*)
-	cf_rpath_hack="-R"
-	;;
-*)
-	cf_rpath_hack=
-	;;
-esac
-if test -n "$cf_rpath_hack" ; then
-	cf_rpath_dst=
-	for cf_rpath_src in $LDFLAGS
-	do
-		CF_VERBOSE(Filtering $cf_rpath_src)
-		case $cf_rpath_src in #(vi
-		-L*) #(vi
-			if test "$cf_rpath_hack" = "-R " ; then
-				cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
-			else
-				cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$cf_rpath_hack%`
-			fi
-			CF_VERBOSE(...Filter $cf_rpath_tmp)
-			EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
-			;;
-		esac
-		cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
-	done
-	LDFLAGS=$cf_rpath_dst
-	CF_VERBOSE(...checked LDFLAGS $LDFLAGS)
+if test -n "$LD_RPATH_OPT" ; then
+	AC_MSG_RESULT(maybe)
+
+	CF_VERBOSE(...checking EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+
+	CF_RPATH_HACK_2(LDFLAGS)
+	CF_RPATH_HACK_2(LIBS)
+
 	CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
-fi
-else
-AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 58 updated: 2009/12/19 13:46:49
+dnl CF_RPATH_HACK_2 version: 1 updated: 2010/03/27 18:39:42
+dnl ---------------
+dnl Do one set of substitutions for CF_RPATH_HACK, adding an rpath option to
+dnl EXTRA_LDFLAGS for each -L option found.
+dnl
+dnl $1 = variable name to update.  The LDFLAGS variable should be the only one,
+dnl      but LIBS often has misplaced -L options.
+AC_DEFUN([CF_RPATH_HACK_2],
+[
+CF_VERBOSE(...checking $1 [$]$1)
+
+cf_rpath_dst=
+for cf_rpath_src in [$]$1
+do
+	CF_VERBOSE(Filtering $cf_rpath_src)
+	case $cf_rpath_src in #(vi
+	-L*) #(vi
+		if test "$LD_RPATH_OPT" = "-R " ; then
+			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
+		else
+			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$LD_RPATH_OPT%`
+		fi
+		CF_VERBOSE(...Filter $cf_rpath_tmp)
+		EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
+		;;
+	esac
+	cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
+done
+$1=$cf_rpath_dst
+
+CF_VERBOSE(...checked $1 [$]$1)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_SHARED_OPTS version: 61 updated: 2010/03/27 20:13:59
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -4340,13 +4444,15 @@ dnl Some loaders leave 'so_locations' lying around.  It's nice to clean up.
 AC_DEFUN([CF_SHARED_OPTS],
 [
 	AC_REQUIRE([CF_SUBST_NCURSES_VERSION])
+	AC_REQUIRE([CF_LD_RPATH_OPT])
 	LOCAL_LDFLAGS=
 	LOCAL_LDFLAGS2=
-	LD_RPATH_OPT=
 	LD_SHARED_OPTS=
 	INSTALL_LIB="-m 644"
 
 	cf_cv_do_symlinks=no
+	cf_ld_rpath_opt=
+	test "$cf_cv_enable_rpath" = yes && cf_ld_rpath_opt="$LD_RPATH_OPT"
 
 	AC_MSG_CHECKING(if release/abi version should be used for shared libs)
 	AC_ARG_WITH(shlib-version,
@@ -4385,17 +4491,17 @@ AC_DEFUN([CF_SHARED_OPTS],
 
 	cf_cv_shlib_version_infix=no
 
-	case $cf_cv_system_name in
-	aix[[56]]*)
+	case $cf_cv_system_name in #(vi
+	aix[[56]]*) #(vi
 		if test "$GCC" = yes; then
 			CC_SHARED_OPTS=
 			MK_SHARED_LIB="$(CC) -shared"
 		fi
 		;;
-	beos*)
+	beos*) #(vi
 		MK_SHARED_LIB='${CC} ${CFLAGS} -o $[@] -Xlinker -soname=`basename $[@]` -nostart -e 0'
 		;;
-	cygwin*)
+	cygwin*) #(vi
 		CC_SHARED_OPTS=
 		MK_SHARED_LIB='sh ../mk_shared_lib.sh [$]@ [$]{CC} [$]{CFLAGS}'
 		cf_cv_shlib_version=cygdll
@@ -4414,7 +4520,7 @@ EOF
 CF_EOF
 		chmod +x mk_shared_lib.sh
 		;;
-	darwin*)
+	darwin*) #(vi
 		EXTRA_CFLAGS="-no-cpp-precomp"
 		CC_SHARED_OPTS="-dynamic"
 		MK_SHARED_LIB='${CC} ${CFLAGS} -dynamiclib -install_name ${libdir}/`basename $[@]` -compatibility_version ${ABI_VERSION} -current_version ${ABI_VERSION} -o $[@]'
@@ -4429,7 +4535,7 @@ CF_EOF
 			LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
 		fi
 		;;
-	hpux*)
+	hpux*) #(vi
 		# (tested with gcc 2.7.2 -- I don't have c89)
 		if test "$GCC" = yes; then
 			LD_SHARED_OPTS='-Xlinker +b -Xlinker ${libdir}'
@@ -4442,15 +4548,9 @@ CF_EOF
 		# readonly to exploit a quirk in the memory manager.
 		INSTALL_LIB="-m 555"
 		;;
-	irix*)
-		if test "$cf_cv_ld_rpath" = yes ; then
-			if test "$GCC" = yes; then
-				LD_RPATH_OPT="-Wl,-rpath,"
-				EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
-			else
-				LD_RPATH_OPT="-rpath "
-				EXTRA_LDFLAGS="-rpath \${libdir} $EXTRA_LDFLAGS"
-			fi
+	irix*) #(vi
+		if test "$cf_cv_enable_rpath" = yes ; then
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
 		fi
 		# tested with IRIX 5.2 and 'cc'.
 		if test "$GCC" != yes; then
@@ -4461,54 +4561,50 @@ CF_EOF
 		fi
 		cf_cv_rm_so_locs=yes
 		;;
-	linux*|gnu*|k*bsd*-gnu)
+	linux*|gnu*|k*bsd*-gnu) #(vi
 		if test "$DFT_LWR_MODEL" = "shared" ; then
-			LOCAL_LDFLAGS="-Wl,-rpath,\$(LOCAL_LIBDIR)"
+			LOCAL_LDFLAGS="${LD_RPATH_OPT}\$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
-		if test "$cf_cv_ld_rpath" = yes ; then
-			LD_RPATH_OPT="-Wl,-rpath,"
-			EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
+		if test "$cf_cv_enable_rpath" = yes ; then
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
 		MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
 		;;
-	openbsd[[2-9]].*)
+	openbsd[[2-9]].*) #(vi
 		if test "$DFT_LWR_MODEL" = "shared" ; then
-			LOCAL_LDFLAGS="-Wl,-rpath,\$(LOCAL_LIBDIR)"
+			LOCAL_LDFLAGS="${LD_RPATH_OPT}\$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
-		if test "$cf_cv_ld_rpath" = yes ; then
-			LD_RPATH_OPT="-Wl,-rpath,"
-			EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
+		if test "$cf_cv_enable_rpath" = yes ; then
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
 		fi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 		CF_SHARED_SONAME
 		MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-Bshareable,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
 		;;
-	nto-qnx*|openbsd*|freebsd[[12]].*)
+	nto-qnx*|openbsd*|freebsd[[12]].*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 		MK_SHARED_LIB='${LD} -Bshareable -o $[@]'
 		test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=rel
 		;;
-	freebsd*)
+	freebsd*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
-		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_ld_rpath" = yes ; then
-			LOCAL_LDFLAGS="-rpath \$(LOCAL_LIBDIR)"
-			LOCAL_LDFLAGS2="-rpath \${libdir} $LOCAL_LDFLAGS"
-			LD_RPATH_OPT="-rpath "
-			EXTRA_LDFLAGS="-rpath \${libdir} $EXTRA_LDFLAGS"
+		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_enable_rpath" = yes ; then
+			LOCAL_LDFLAGS="${cf_ld_rpath_opt}\$(LOCAL_LIBDIR)"
+			LOCAL_LDFLAGS2="${cf_ld_rpath_opt}\${libdir} $LOCAL_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
 		MK_SHARED_LIB='${LD} -shared -Bshareable -soname=`basename $[@]` -o $[@]'
 		;;
-	netbsd*)
+	netbsd*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
-		test "$cf_cv_ld_rpath" = yes && LD_RPATH_OPT="-Wl,-rpath,"
-		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_ld_rpath" = yes ; then
-			LOCAL_LDFLAGS="-Wl,-rpath,\$(LOCAL_LIBDIR)"
+		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_enable_rpath" = yes ; then
+			LOCAL_LDFLAGS="${cf_ld_rpath_opt}\$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
-			EXTRA_LDFLAGS="-Wl,-rpath,\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
 			if test "$cf_cv_shlib_version" = auto; then
 			if test -f /usr/libexec/ld.elf_so; then
 				cf_cv_shlib_version=abi
@@ -4522,34 +4618,30 @@ CF_EOF
 			MK_SHARED_LIB='${LD} -shared -Bshareable -o $[@]'
 		fi
 		;;
-	osf*|mls+*)
+	osf*|mls+*) #(vi
 		# tested with OSF/1 V3.2 and 'cc'
 		# tested with OSF/1 V3.2 and gcc 2.6.3 (but the c++ demo didn't
 		# link with shared libs).
 		MK_SHARED_LIB='${LD} -set_version ${REL_VERSION}:${ABI_VERSION} -expect_unresolved "*" -shared -soname `basename $[@]`'
-		case $host_os in
+		case $host_os in #(vi
 		osf4*)
 			MK_SHARED_LIB="${MK_SHARED_LIB} -msym"
 			;;
 		esac
 		MK_SHARED_LIB="${MK_SHARED_LIB}"' -o $[@]'
 		if test "$DFT_LWR_MODEL" = "shared" ; then
-			LOCAL_LDFLAGS="-Wl,-rpath,\$(LOCAL_LIBDIR)"
+			LOCAL_LDFLAGS="${LD_RPATH_OPT}\$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
-		fi
-		if test "$cf_cv_ld_rpath" = yes ; then
-			LD_RPATH_OPT="-rpath"
-			# EXTRA_LDFLAGS="$LOCAL_LDFLAGS $EXTRA_LDFLAGS"
 		fi
 		cf_cv_rm_so_locs=yes
 		;;
-	sco3.2v5*)  # (also uw2* and UW7) hops 13-Apr-98
+	sco3.2v5*)  # (also uw2* and UW7: hops 13-Apr-98
 		# tested with osr5.0.5
 		if test "$GCC" != yes; then
 			CC_SHARED_OPTS='-belf -KPIC'
 		fi
 		MK_SHARED_LIB='${LD} -dy -G -h `basename $[@] .${REL_VERSION}`.${ABI_VERSION} -o [$]@'
-		if test "$cf_cv_ld_rpath" = yes ; then
+		if test "$cf_cv_enable_rpath" = yes ; then
 			# only way is to set LD_RUN_PATH but no switch for it
 			RUN_PATH=$libdir
 		fi
@@ -4557,7 +4649,7 @@ CF_EOF
 		LINK_PROGS='LD_RUN_PATH=${libdir}'
 		LINK_TESTS='Pwd=`pwd`;LD_RUN_PATH=`dirname $${Pwd}`/lib'
 		;;
-	sunos4*)
+	sunos4*) #(vi
 		# tested with SunOS 4.1.1 and gcc 2.7.0
 		if test "$GCC" != yes; then
 			CC_SHARED_OPTS='-KPIC'
@@ -4565,15 +4657,14 @@ CF_EOF
 		MK_SHARED_LIB='${LD} -assert pure-text -o $[@]'
 		test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=rel
 		;;
-	solaris2*)
+	solaris2*) #(vi
 		# tested with SunOS 5.5.1 (solaris 2.5.1) and gcc 2.7.2
 		# tested with SunOS 5.10 (solaris 10) and gcc 3.4.3
 		if test "$DFT_LWR_MODEL" = "shared" ; then
 			LOCAL_LDFLAGS="-R \$(LOCAL_LIBDIR):\${libdir}"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
-		if test "$cf_cv_ld_rpath" = yes ; then
-			LD_RPATH_OPT="-R"
+		if test "$cf_cv_enable_rpath" = yes ; then
 			EXTRA_LDFLAGS="$LOCAL_LDFLAGS $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
@@ -4591,7 +4682,7 @@ CF_EOF
 			MK_SHARED_LIB='${CC} -shared -dy -G -h '$cf_cv_shared_soname' -o $[@]'
 		fi
 		;;
-	sysv5uw7*|unix_sv*)
+	sysv5uw7*|unix_sv*) #(vi
 		# tested with UnixWare 7.1.0 (gcc 2.95.2 and cc)
 		if test "$GCC" != yes; then
 			CC_SHARED_OPTS='-KPIC'
@@ -4608,7 +4699,7 @@ CF_EOF
 	case "$cf_cv_shlib_version" in #(vi
 	rel|abi)
 		case "$MK_SHARED_LIB" in #(vi
-		*'-o $[@]')
+		*'-o $[@]') #(vi
 			test "$cf_cv_do_symlinks" = no && cf_cv_do_symlinks=yes
 			;;
 		*)
@@ -4618,15 +4709,8 @@ CF_EOF
 		;;
 	esac
 
-	if test -n "$LD_RPATH_OPT" ; then
-		AC_MSG_CHECKING(if we need a space after rpath option)
-		cf_save_LIBS="$LIBS"
-		LIBS="${LD_RPATH_OPT}$libdir $LIBS"
-		AC_TRY_LINK(, , cf_rpath_space=no, cf_rpath_space=yes)
-		LIBS="$cf_save_LIBS"
-		AC_MSG_RESULT($cf_rpath_space)
-		test "$cf_rpath_space" = yes && LD_RPATH_OPT="$LD_RPATH_OPT "
-		MK_SHARED_LIB="$MK_SHARED_LIB $LD_RPATH_OPT\${libdir}"
+	if test -n "$cf_ld_rpath_opt" ; then
+		MK_SHARED_LIB="$MK_SHARED_LIB $cf_ld_rpath_opt\${libdir}"
 	fi
 
 	AC_SUBST(CC_SHARED_OPTS)

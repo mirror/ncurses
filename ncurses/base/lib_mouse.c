@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.112 2010/02/06 19:54:08 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.113 2010/03/24 23:06:46 tom Exp $")
 
 #include <tic.h>
 
@@ -450,6 +450,8 @@ enable_gpm_mouse(SCREEN *sp, bool enable)
 	}
 #endif
 	if (sp->_mouse_gpm_loaded) {
+	    int code;
+
 	    /* GPM: initialize connection to gpm server */
 	    sp->_mouse_gpm_connect.eventMask = GPM_DOWN | GPM_UP;
 	    sp->_mouse_gpm_connect.defaultMask =
@@ -464,7 +466,16 @@ enable_gpm_mouse(SCREEN *sp, bool enable)
 	     * The former is recognized by wscons (SunOS), and the latter by
 	     * xterm.  Those will not show up in ncurses' traces.
 	     */
-	    result = (my_Gpm_Open(&sp->_mouse_gpm_connect, 0) >= 0);
+	    code = my_Gpm_Open(&sp->_mouse_gpm_connect, 0);
+	    result = (code >= 0);
+
+	    /*
+	     * GPM can return a -2 if it is trying to do something with xterm.
+	     * Ignore that, since it conflicts with our use of stdin.
+	     */
+	    if (code == -2) {
+		my_Gpm_Close();
+	    }
 	} else {
 	    result = FALSE;
 	}
