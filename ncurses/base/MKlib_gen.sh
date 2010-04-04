@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.36 2009/10/24 20:34:05 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.40 2010/03/30 22:42:16 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -51,7 +51,7 @@
 #         them.
 # 5. cpp: macro-expand the file so the macro calls turn into C calls
 # 6. awk: strip the expansion junk off the front and add the new header
-# 7. sed: squeeze spaces, strip off gen_ prefix, create needed #undef
+# 7. sed: squeeze spaces, strip off gen_ prefix.
 #
 
 # keep the editing independent of locale:
@@ -81,6 +81,8 @@ if test "$USE" = implemented ; then
 	CALL="call_"
 	cat >$ED1 <<EOF1
 /^extern.*implemented/{
+	h
+	s/NCURSES_SP_NAME(\([^)]*\))/NCURSES_SP_NAME___\1/
 	h
 	s/^.*implemented:\([^ 	*]*\).*/P_POUNDCif_USE_\1_SUPPORT/p
 	g
@@ -151,14 +153,13 @@ cat >$ED3 <<EOF3
 	s/( /(/g
 	s/ )/)/g
 	s/ gen_/ /
-	s/^M_/#undef /
 	s/^[ 	]*@[ 	]*@[ 	]*/	/
 :done
 EOF3
 
 if test "$USE" = generated ; then
 cat >$ED4 <<EOF
-	s/^\(.*\) \(.*\) (\(.*\))\$/NCURSES_EXPORT(\1) \2 (\3)/
+	s/^\(.*\) \(.*\) (\(.*\))\$/NCURSES_EXPORT(\1) (\2) (\3)/
 EOF
 else
 cat >$ED4 <<EOF
@@ -169,6 +170,7 @@ cat >$ED4 <<EOF
 	g
 	s/^\(.*\) \(.*\) (\(.*\))\$/\1 call_\2 (\3)/
 	}
+s/\([^_]\)NCURSES_SP_NAME___\([a-zA-Z][a-zA-Z_]*\)/\1NCURSES_SP_NAME(\2)/g
 EOF
 fi
 
@@ -220,9 +222,6 @@ $0 !~ /^P_/ {
 			break;
 		}
 	}
-	if (using == "generated") {
-		print "M_" $myfunc
-	}
 	print $0;
 	print "{";
 	argcount = 1;
@@ -247,6 +246,9 @@ $0 !~ /^P_/ {
 	if ($myfunc ~ /ripoffline/) {
 		dotrace = 0;
 		argcount = 2;
+		if ($myfunc ~ /NCURSES_SP_NAME/) {
+			argcount = 3;
+		}
 	}
 	if ($myfunc ~ /wunctrl/) {
 		dotrace = 0;
@@ -324,7 +326,7 @@ $0 !~ /^P_/ {
 			pointer = 0;
 			argtype = ""
 		}
-		if ( i == 2 || ch == "(" )
+		if ( i == myfunc || ch == "(" )
 			call = call ch
 	}
 	call = call "\")"
@@ -383,8 +385,17 @@ BEGIN		{
 		}
 		print " */"
 		print "#define NCURSES_ATTR_T int"
+		print "#include <ncurses_cfg.h>"
+		print ""
+		print "#undef NCURSES_NOMACROS	/* _this_ file uses macros */"
+		print ""
 		print "#include <curses.priv.h>"
 		print ""
+		print "#undef vw_scanw"
+		print "#undef vwscanw"
+		print ""
+		print "#undef vw_printw"
+		print "#undef vwprintw"
 		}
 /^DECLARATIONS/	{start = 1; next;}
 		{if (start) print \$0;}

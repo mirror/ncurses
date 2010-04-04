@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.88 2010/02/20 20:17:56 tom Exp $
+# $Id: Makefile.in,v 1.89 2010/04/03 15:23:13 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -76,6 +76,9 @@ CXXLIBS		= @CXXLIBS@
 INCDIR		= ../include
 CPPFLAGS	= -I../c++ -I$(INCDIR) -I$(srcdir) -DHAVE_CONFIG_H @CPPFLAGS@
 
+CTAGS		= @CTAGS@
+ETAGS		= @ETAGS@
+
 CC		= ${CXX}
 CCFLAGS		= $(CPPFLAGS) $(CXXFLAGS)
 
@@ -139,7 +142,7 @@ sources :	$(AUTO_SRC)
 depend :
 
 tags:
-	ctags *.[h] *.cc
+	$(CTAGS) *.[h] *.cc
 
 # Build a conventional library for installing, since a shared library would
 # pull in all of the ncurses libraries (panel, menu, form, ncurses) as direct

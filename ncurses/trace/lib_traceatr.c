@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.68 2009/12/12 21:37:37 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.69 2010/03/31 23:38:02 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -136,7 +136,7 @@ _traceattr2(int bufnum, chtype newmode)
 		result = _nc_trace_bufcat(bufnum, names[n].name);
 
 		if (names[n].val == A_COLOR) {
-		    short pairnum = PAIR_NUMBER(newmode);
+		    short pairnum = PairNumber(newmode);
 #ifdef USE_TERMLIB
 		    /* pair_content lives in libncurses */
 		    (void) sprintf(temp, "{%d}", pairnum);

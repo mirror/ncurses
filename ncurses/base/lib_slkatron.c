@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,7 +38,7 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkatron.c,v 1.11 2009/10/24 22:12:21 tom Exp $")
+MODULE_ID("$Id: lib_slkatron.c,v 1.12 2010/03/31 23:38:02 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_attron) (NCURSES_SP_DCLx const chtype attr)
@@ -49,7 +49,7 @@ NCURSES_SP_NAME(slk_attron) (NCURSES_SP_DCLx const chtype attr)
 	TR(TRACE_ATTRS, ("... current %s", _tracech_t(CHREF(SP_PARM->_slk->attr))));
 	AddAttr(SP_PARM->_slk->attr, attr);
 	if ((attr & A_COLOR) != 0) {
-	    SetPair(SP_PARM->_slk->attr, PAIR_NUMBER(attr));
+	    SetPair(SP_PARM->_slk->attr, PairNumber(attr));
 	}
 	TR(TRACE_ATTRS, ("new attribute is %s", _tracech_t(CHREF(SP_PARM->_slk->attr))));
 	returnCode(OK);

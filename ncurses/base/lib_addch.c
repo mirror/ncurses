@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.122 2009/10/24 22:49:16 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.123 2010/03/31 23:38:02 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -77,12 +77,6 @@ render_char(WINDOW *win, NCURSES_CH_T ch)
 	    if ((pair = GET_WINDOW_PAIR(win)) == 0)
 		pair = GetPair(win->_nc_bkgd);
 	}
-#if 0
-	if (pair > 255) {
-	    NCURSES_CH_T fixme = ch;
-	    SetPair(fixme, pair);
-	}
-#endif
 	AddAttr(ch, (a & COLOR_MASK(AttrOf(ch))));
 	SetPair(ch, pair);
     }

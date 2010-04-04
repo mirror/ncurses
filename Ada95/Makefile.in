@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.17 2010/02/27 00:55:23 tom Exp $
+# $Id: Makefile.in,v 1.18 2010/04/03 15:24:33 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2003,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -30,7 +30,7 @@
 #  Author:  Juergen Pfeifer, 1996
 #
 #  Version Control
-#  $Revision: 1.17 $
+#  $Revision: 1.18 $
 #
 SHELL		= /bin/sh
 THIS		= Makefile
@@ -64,6 +64,9 @@ realclean ::
 	done
 	-rm -f config.cache config.log config.status include/ncurses_cfg.h
 	-rm -f Makefile
+
+tags :
+	@
 
 preinstall :
 	@

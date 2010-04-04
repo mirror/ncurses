@@ -1,4 +1,4 @@
-/* $Id: curses.wide,v 1.40 2009/10/03 19:42:45 tom Exp $ */
+/* $Id: curses.wide,v 1.42 2010/03/30 00:39:41 tom Exp $ */
 /*
  * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
@@ -6,7 +6,7 @@
  */
 #define _XOPEN_CURSES 1
 
-#ifdef _XOPEN_SOURCE_EXTENDED
+#ifdef NCURSES_WIDECHAR
 
 extern NCURSES_EXPORT_VAR(cchar_t *) _nc_wacs;
 
@@ -218,11 +218,11 @@ extern NCURSES_EXPORT(wchar_t*) wunctrl (cchar_t *);			/* implemented */
 extern NCURSES_EXPORT(int) wvline_set (WINDOW *, const cchar_t *, int);	/* implemented */
 
 #if NCURSES_SP_FUNCS
-extern NCURSES_EXPORT(attr_t) NCURSES_SP_NAME(term_attrs) (SCREEN*);		/* implemented */
-extern NCURSES_EXPORT(int) NCURSES_SP_NAME(unget_wch) (SCREEN*, const wchar_t);	/* implemented */
-extern NCURSES_EXPORT(wchar_t*) NCURSES_SP_NAME(wunctrl) (SCREEN*, cchar_t *);	/* implemented */
-extern NCURSES_EXPORT(int) NCURSES_SP_NAME(vid_attr) (SCREEN*, attr_t, short, void *);
-extern NCURSES_EXPORT(int) NCURSES_SP_NAME(vid_puts) (SCREEN*, attr_t, short, void *, NCURSES_SP_OUTC);
+extern NCURSES_EXPORT(attr_t) NCURSES_SP_NAME(term_attrs) (SCREEN*);		/* implemented:SP_FUNC */
+extern NCURSES_EXPORT(int) NCURSES_SP_NAME(unget_wch) (SCREEN*, const wchar_t);	/* implemented:SP_FUNC */
+extern NCURSES_EXPORT(wchar_t*) NCURSES_SP_NAME(wunctrl) (SCREEN*, cchar_t *);	/* implemented:SP_FUNC */
+extern NCURSES_EXPORT(int) NCURSES_SP_NAME(vid_attr) (SCREEN*, attr_t, short, void *);	/* implemented:SP_FUNC */
+extern NCURSES_EXPORT(int) NCURSES_SP_NAME(vid_puts) (SCREEN*, attr_t, short, void *, NCURSES_SP_OUTC);	/* implemented:SP_FUNC */
 #endif
 
 #ifndef NCURSES_NOMACROS
@@ -309,4 +309,4 @@ extern NCURSES_EXPORT(const char *) _nc_viswbuf(const wchar_t *);
 extern NCURSES_EXPORT(const char *) _nc_viswibuf(const wint_t *);
 #endif
 
-#endif /* _XOPEN_SOURCE_EXTENDED */
+#endif /* NCURSES_WIDECHAR */

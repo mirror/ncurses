@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.499 2010/03/28 00:14:25 tom Exp $
+dnl $Id: aclocal.m4,v 1.507 2010/04/04 00:07:57 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1059,7 +1059,7 @@ AC_MSG_RESULT($cf_result)
 CXXFLAGS="$cf_save_CXXFLAGS"
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_FIND_LINKAGE version: 14 updated: 2010/03/21 14:34:38
+dnl CF_FIND_LINKAGE version: 15 updated: 2010/04/03 18:35:33
 dnl ---------------
 dnl Find a library (specifically the linkage used in the code fragment),
 dnl searching for it if it is not already in the library path.
@@ -1097,6 +1097,7 @@ LIBS="-l$3 $7 $cf_save_LIBS"
 
 AC_TRY_LINK([$1],[$2],[
 	cf_cv_find_linkage_$3=yes
+	cf_cv_library_file_$3="-l$3"
 ],[
     cf_cv_find_linkage_$3=no
 	LIBS="$cf_save_LIBS"
@@ -2353,7 +2354,7 @@ x-R*)
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIBRARY_PATH version: 8 updated: 2008/12/07 19:38:31
+dnl CF_LIBRARY_PATH version: 9 updated: 2010/03/28 12:52:50
 dnl ---------------
 dnl Construct a search-list of directories for a nonstandard library-file
 dnl
@@ -2362,6 +2363,7 @@ dnl	$1 = the variable to return as result
 dnl	$2 = the package name
 AC_DEFUN([CF_LIBRARY_PATH],
 [
+$1=
 cf_library_path_list=""
 if test -n "${LDFLAGS}${LIBS}" ; then
 	for cf_library_path in $LDFLAGS $LIBS
@@ -3124,16 +3126,20 @@ CF_EOF
 AC_SUBST(cf_cv_makeflags)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAKE_TAGS version: 2 updated: 2000/10/04 09:18:40
+dnl CF_MAKE_TAGS version: 5 updated: 2010/04/03 20:07:32
 dnl ------------
 dnl Generate tags/TAGS targets for makefiles.  Do not generate TAGS if we have
 dnl a monocase filesystem.
 AC_DEFUN([CF_MAKE_TAGS],[
 AC_REQUIRE([CF_MIXEDCASE_FILENAMES])
-AC_CHECK_PROG(MAKE_LOWER_TAGS, ctags, yes, no)
+
+AC_CHECK_PROGS(CTAGS, exctags ctags)
+AC_CHECK_PROGS(ETAGS, exetags etags)
+
+AC_CHECK_PROG(MAKE_LOWER_TAGS, ${CTAGS-ctags}, yes, no)
 
 if test "$cf_cv_mixedcase" = yes ; then
-	AC_CHECK_PROG(MAKE_UPPER_TAGS, etags, yes, no)
+	AC_CHECK_PROG(MAKE_UPPER_TAGS, ${ETAGS-etags}, yes, no)
 else
 	MAKE_UPPER_TAGS=no
 fi
@@ -3143,13 +3149,17 @@ if test "$MAKE_UPPER_TAGS" = yes ; then
 else
 	MAKE_UPPER_TAGS="#"
 fi
-AC_SUBST(MAKE_UPPER_TAGS)
 
 if test "$MAKE_LOWER_TAGS" = yes ; then
 	MAKE_LOWER_TAGS=
 else
 	MAKE_LOWER_TAGS="#"
 fi
+
+AC_SUBST(CTAGS)
+AC_SUBST(ETAGS)
+
+AC_SUBST(MAKE_UPPER_TAGS)
 AC_SUBST(MAKE_LOWER_TAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -4365,12 +4375,11 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK version: 5 updated: 2010/03/27 18:39:42
+dnl CF_RPATH_HACK version: 7 updated: 2010/04/02 20:27:47
 dnl -------------
 AC_DEFUN([CF_RPATH_HACK],
 [
 AC_REQUIRE([CF_LD_RPATH_OPT])
-AC_REQUIRE([CF_SHARED_OPTS])
 AC_MSG_CHECKING(for updated LDFLAGS)
 if test -n "$LD_RPATH_OPT" ; then
 	AC_MSG_RESULT(maybe)
@@ -4382,9 +4391,10 @@ if test -n "$LD_RPATH_OPT" ; then
 
 	CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
 fi
+AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK_2 version: 1 updated: 2010/03/27 18:39:42
+dnl CF_RPATH_HACK_2 version: 3 updated: 2010/04/02 20:27:47
 dnl ---------------
 dnl Do one set of substitutions for CF_RPATH_HACK, adding an rpath option to
 dnl EXTRA_LDFLAGS for each -L option found.
@@ -4398,7 +4408,6 @@ CF_VERBOSE(...checking $1 [$]$1)
 cf_rpath_dst=
 for cf_rpath_src in [$]$1
 do
-	CF_VERBOSE(Filtering $cf_rpath_src)
 	case $cf_rpath_src in #(vi
 	-L*) #(vi
 		if test "$LD_RPATH_OPT" = "-R " ; then
@@ -4406,7 +4415,7 @@ do
 		else
 			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$LD_RPATH_OPT%`
 		fi
-		CF_VERBOSE(...Filter $cf_rpath_tmp)
+		CF_VERBOSE(...Filter $cf_rpath_src ->$cf_rpath_tmp)
 		EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
 		;;
 	esac
@@ -4415,9 +4424,10 @@ done
 $1=$cf_rpath_dst
 
 CF_VERBOSE(...checked $1 [$]$1)
+AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 61 updated: 2010/03/27 20:13:59
+dnl CF_SHARED_OPTS version: 62 updated: 2010/03/28 16:12:30
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -4665,7 +4675,7 @@ CF_EOF
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_enable_rpath" = yes ; then
-			EXTRA_LDFLAGS="$LOCAL_LDFLAGS $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="-R \${libdir} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
 		if test "$GCC" != yes; then
@@ -5843,7 +5853,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 32 updated: 2010/01/09 11:05:50
+dnl CF_XOPEN_SOURCE version: 33 updated: 2010/03/28 15:35:52
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -5906,7 +5916,10 @@ nto-qnx*) #(vi
 sco*) #(vi
 	# setting _XOPEN_SOURCE breaks Lynx on SCO Unix / OpenServer
 	;;
-solaris*) #(vi
+solaris2.1[[0-9]]) #(vi
+	cf_xopen_source="-D__EXTENSIONS__ -D_XOPEN_SOURCE=$cf_XOPEN_SOURCE"
+	;;
+solaris2.[[1-9]]) #(vi
 	cf_xopen_source="-D__EXTENSIONS__"
 	;;
 *)

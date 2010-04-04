@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,7 +38,7 @@
  */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_slkattr.c,v 1.9 2009/10/24 22:12:21 tom Exp $")
+MODULE_ID("$Id: lib_slkattr.c,v 1.10 2010/03/31 23:38:02 tom Exp $")
 
 NCURSES_EXPORT(attr_t)
 NCURSES_SP_NAME(slk_attr) (NCURSES_SP_DCL0)
@@ -49,7 +49,7 @@ NCURSES_SP_NAME(slk_attr) (NCURSES_SP_DCL0)
 	attr_t result = AttrOf(SP_PARM->_slk->attr) & ALL_BUT_COLOR;
 	int pair = GetPair(SP_PARM->_slk->attr);
 
-	result |= COLOR_PAIR(pair);
+	result |= ColorPair(pair);
 	returnAttr(result);
     } else
 	returnAttr(0);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -69,7 +69,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.59 2009/10/24 22:12:21 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.60 2010/03/31 23:38:02 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -84,7 +84,7 @@ MODULE_ID("$Id: lib_vidattr.c,v 1.59 2009/10/24 22:12:21 tom Exp $")
 	/* if there is no current screen, assume we *can* do color */
 #define SetColorsIf(why,old_attr) \
 	if (can_color && (why)) { \
-		int old_pair = PAIR_NUMBER(old_attr); \
+		int old_pair = PairNumber(old_attr); \
 		TR(TRACE_ATTRS, ("old pair = %d -- new pair = %d", old_pair, pair)); \
 		if ((pair != old_pair) \
 		 || (fix_pair0 && (pair == 0)) \
@@ -201,7 +201,7 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
     if (newmode == PreviousAttr)
 	returnCode(OK);
 
-    pair = PAIR_NUMBER(newmode);
+    pair = PairNumber(newmode);
 
     if (reverse) {
 	newmode &= ~A_REVERSE;

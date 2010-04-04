@@ -38,7 +38,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: win_driver.c,v 1.6 2010/02/06 19:55:44 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.7 2010/03/31 23:21:39 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -110,7 +110,7 @@ MapAttr(TERMINAL_CONTROL_BLOCK * TCB, WORD res, chtype ch)
 
 	AssertTCB();
 	SetSP();
-	p = PAIR_NUMBER(ch);
+	p = PairNumber(ch);
 	if (p > 0 && p < NUMPAIRS && TCB != 0 && sp != 0) {
 	    WORD a;
 	    a = PropOf(TCB)->pairs[p];

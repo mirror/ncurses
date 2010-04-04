@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.93 2009/10/24 21:30:13 tom Exp $ */
+/* $Id: test.priv.h,v 1.94 2010/03/28 19:51:16 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -319,7 +319,7 @@ extern int optind;
 #endif
 
 #ifndef USE_WIDEC_SUPPORT
-#if defined(_XOPEN_SOURCE_EXTENDED) && defined(WACS_ULCORNER)
+#if (defined(_XOPEN_SOURCE_EXTENDED) || defined(_XPG5)) && defined(WACS_ULCORNER)
 #define USE_WIDEC_SUPPORT 1
 #else
 #define USE_WIDEC_SUPPORT 0

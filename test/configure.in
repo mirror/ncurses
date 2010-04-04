@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.76 2010/01/30 23:52:22 tom Exp $
+dnl $Id: configure.in,v 1.78 2010/04/03 15:43:44 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -50,6 +50,7 @@ AC_PROG_MAKE_SET
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_AWK
+CF_MAKE_TAGS
 
 dnl Things that we don't need (or must override) if we're not building ncurses
 CC_G_OPT="-g"					AC_SUBST(CC_G_OPT)
@@ -221,26 +222,7 @@ winsstr \
 wresize \
 )
 
-AC_CACHE_CHECK(for ncurses extended functions,cf_cv_ncurses_ext_funcs,[
-AC_TRY_LINK([
-#include <${cf_cv_ncurses_header-curses.h}>],
-[
-	(void) assume_default_colors (0, 0);
-	(void) curses_version ();
-	(void) define_key (0, 0);
-	(void) is_term_resized (0, 0);
-	(void) key_defined (0);
-	(void) keybound (0, 0);
-	(void) keyok (0, 0);
-	(void) resize_term (0, 0);
-	(void) resizeterm (0, 0);
-	(void) use_default_colors ();
-	(void) use_extended_names (0);
-	(void) wresize (0, 0, 0);],
-	[cf_cv_ncurses_ext_funcs=yes],
-	[cf_cv_ncurses_ext_funcs=no])
-])
-test "$cf_cv_ncurses_ext_funcs" != no && AC_DEFINE(NCURSES_EXT_FUNCS)
+CF_NCURSES_EXT_FUNCS
 
 AC_CACHE_CHECK(for wide-character functions,cf_cv_widechar_funcs,[
 AC_TRY_LINK([

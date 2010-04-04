@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.55 2010/01/23 16:31:05 tom Exp $
+# $Id: Makefile.in,v 1.56 2010/04/03 15:23:13 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -77,6 +77,9 @@ AWK		= @AWK@
 LD		= @LD@
 LN_S		= @LN_S@
 
+CTAGS		= @CTAGS@
+ETAGS		= @ETAGS@
+
 CC		= @CC@
 CPP		= @CPP@
 CFLAGS		= @CFLAGS@
@@ -139,10 +142,10 @@ HEADER_DEPS = \
 	$(srcdir)/panel.h
 
 tags:
-	ctags *.[ch]
+	$(CTAGS) *.[ch]
 
 @MAKE_UPPER_TAGS@TAGS:
-@MAKE_UPPER_TAGS@	etags *.[ch]
+@MAKE_UPPER_TAGS@	$(ETAGS) *.[ch]
 
 mostlyclean ::
 	-rm -f core tags TAGS *~ *.bak *.i *.ln *.atac trace

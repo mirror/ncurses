@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.102 2008/09/07 13:58:29 tom Exp $
+# $Id: Makefile.in,v 1.103 2010/04/03 15:31:40 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -53,6 +53,9 @@ LIBTOOL		= @LIBTOOL@
 LIBTOOL_CLEAN	= @LIB_CLEAN@
 LIBTOOL_COMPILE	= @LIB_COMPILE@
 LIBTOOL_LINK	= @LIB_LINK@
+
+CTAGS		= @CTAGS@
+ETAGS		= @ETAGS@
 
 CC		= @CC@
 CPP		= @CPP@

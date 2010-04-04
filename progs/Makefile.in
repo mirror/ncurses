@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.82 2009/03/28 20:30:58 tom Exp $
+# $Id: Makefile.in,v 1.83 2010/04/03 15:28:10 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -75,6 +75,9 @@ transform	= @program_transform_name@
 
 AWK		= @AWK@
 LN_S		= @LN_S@
+
+CTAGS		= @CTAGS@
+ETAGS		= @ETAGS@
 
 CC		= @CC@
 CPP		= @CPP@
@@ -275,10 +278,10 @@ termsort.c: $(srcdir)/MKtermsort.sh
 #
 
 tags:
-	ctags *.[ch]
+	$(CTAGS) *.[ch]
 
 @MAKE_UPPER_TAGS@TAGS:
-@MAKE_UPPER_TAGS@	etags *.[ch]
+@MAKE_UPPER_TAGS@	$(ETAGS) *.[ch]
 
 mostlyclean ::
 	-rm -f core tags TAGS *~ *.bak *.i *.ln *.atac trace

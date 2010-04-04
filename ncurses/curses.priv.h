@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.453 2010/03/13 19:33:00 tom Exp $
+ * $Id: curses.priv.h,v 1.457 2010/03/31 23:42:32 tom Exp $
  *
  *	curses.priv.h
  *
@@ -270,6 +270,7 @@ color_t;
 #define _nc_bkgd    _bkgrnd
 #else
 #undef _XOPEN_SOURCE_EXTENDED
+#undef _XPG5
 #define _nc_bkgd    _bkgd
 #define wgetbkgrnd(win, wch)	*wch = win->_bkgd
 #define wbkgrnd	    wbkgd
@@ -285,6 +286,10 @@ color_t;
  * If curses.h did not expose the SCREEN-functions, then we do not need the
  * parameter in the corresponding unextended functions.
  */
+
+#define USE_SP_FUNC_SUPPORT     NCURSES_SP_FUNCS
+#define USE_EXT_SP_FUNC_SUPPORT (NCURSES_SP_FUNCS && NCURSES_EXT_FUNCS)
+
 #if NCURSES_SP_FUNCS
 #define SP_PARM         sp	/* use parameter */
 #define NCURSES_SP_ARG          SP_PARM
@@ -335,15 +340,36 @@ color_t;
 
 #include <nc_tparm.h>
 
-#if NCURSES_EXT_COLORS && USE_WIDEC_SUPPORT
+/*
+ * Use these macros internally, to make tracing less verbose.  But leave the
+ * option for compiling the tracing into the library.
+ */
+#if 1
+#define ColorPair(n)		NCURSES_BITS(n, 0)
+#define PairNumber(a)		(NCURSES_CAST(int,(((a) & A_COLOR) >> NCURSES_ATTR_SHIFT)))
+#else
+#define ColorPair(pair)		COLOR_PAIR(pair)
+#define PairNumber(attr)	PAIR_NUMBER(attr)
+#endif
+
+#define unColor(n)		unColor2(AttrOf(n))
+#define unColor2(a)		((a) & ALL_BUT_COLOR)
+
+/*
+ * Extended-colors stores the color pair in a separate struct-member than the
+ * attributes.  But for compatibility, we handle most cases where a program
+ * written for non-extended colors stores the color in the attributes by
+ * checking for a color pair in both places.
+ */
+#if NCURSES_EXT_COLORS
 #define if_EXT_COLORS(stmt)	stmt
-#define NetPair(value,p)	(value).ext_color = (p), \
-				AttrOf(value) &= ALL_BUT_COLOR, \
-				AttrOf(value) |= (A_COLOR & COLOR_PAIR((p > 255) ? 255 : p))
-#define SetPair(value,p)	(value).ext_color = (p)
-#define GetPair(value)		(value).ext_color
-#define unColor(n)		(AttrOf(n) & ALL_BUT_COLOR)
-#define GET_WINDOW_PAIR(w)	(w)->_color
+#define SetPair(value,p)	SetPair2((value).ext_color, AttrOf(value), p)
+#define SetPair2(c,a,p)		c = (p), \
+				a = unColor2(a) | (A_COLOR & ColorPair(oldColor(c)))
+#define GetPair(value)		GetPair2((value).ext_color, AttrOf(value))
+#define GetPair2(c,a)		((c) ? (c) : PairNumber(a))
+#define oldColor(p)		(((p) > 255) ? 255 : (p))
+#define GET_WINDOW_PAIR(w)	GetPair2((w)->_color, (w)->_attrs)
 #define SET_WINDOW_PAIR(w,p)	(w)->_color = (p)
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b) && GetPair(a) == GetPair(b))
 
@@ -353,16 +379,15 @@ color_t;
 #define VIDATTR(sp,attr,pair)	vid_attr(attr, pair, 0)
 #endif
 
-#else /* !(NCURSES_EXT_COLORS && USE_WIDEC_SUPPORT) */
+#else /* !NCURSES_EXT_COLORS */
 
 #define if_EXT_COLORS(stmt)	/* nothing */
 #define SetPair(value,p)	RemAttr(value, A_COLOR), \
-				SetAttr(value, AttrOf(value) | (A_COLOR & COLOR_PAIR(p)))
-#define GetPair(value)		PAIR_NUMBER(AttrOf(value))
-#define unColor(n)		(AttrOf(n) & ALL_BUT_COLOR)
-#define GET_WINDOW_PAIR(w)	PAIR_NUMBER(WINDOW_ATTRS(w))
+				SetAttr(value, AttrOf(value) | (A_COLOR & ColorPair(p)))
+#define GetPair(value)		PairNumber(AttrOf(value))
+#define GET_WINDOW_PAIR(w)	PairNumber(WINDOW_ATTRS(w))
 #define SET_WINDOW_PAIR(w,p)	WINDOW_ATTRS(w) &= ALL_BUT_COLOR, \
-				WINDOW_ATTRS(w) |= (A_COLOR & COLOR_PAIR(p))
+				WINDOW_ATTRS(w) |= (A_COLOR & ColorPair(p))
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b))
 
 #if NCURSES_SP_FUNCS
@@ -371,7 +396,7 @@ color_t;
 #define VIDATTR(sp,attr,pair)	vidattr(attr)
 #endif
 
-#endif /* NCURSES_EXT_COLORS && USE_WIDEC_SUPPORT */
+#endif /* NCURSES_EXT_COLORS */
 
 #if NCURSES_NO_PADDING
 #define GetNoPadding(sp)	((sp) ? (sp)->_no_padding : _nc_prescreen._no_padding)
@@ -1126,7 +1151,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 	WINDOWLIST *next;
 	SCREEN *screen;		/* screen containing the window */
 	WINDOW	win;		/* WINDOW_EXT() needs to account for offset */
-#ifdef _XOPEN_SOURCE_EXTENDED
+#ifdef NCURSES_WIDECHAR
 	char addch_work[(MB_LEN_MAX * 9) + 1];
 	unsigned addch_used;	/* number of bytes in addch_work[] */
 	int addch_x;		/* x-position for addch_work[] */
@@ -1270,7 +1295,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 			    memset(_cp, 0, sizeof(ch));				    \
 			    _cp->chars[0] = (c);					    \
 			    _cp->attr = (a);					    \
-			    if_EXT_COLORS(SetPair(ch, PAIR_NUMBER(a)));		    \
+			    if_EXT_COLORS(SetPair(ch, PairNumber(a)));		    \
 			} while (0)
 #define CHREF(wch)	(&wch)
 #define CHDEREF(wch)	(*wch)
@@ -1572,7 +1597,7 @@ extern	NCURSES_EXPORT(void) name (void); \
 #define XMC_CHANGES(c) ((c) & SP_PARM->_xmc_suppress)
 
 #define toggle_attr_on(S,at) {\
-   if (PAIR_NUMBER(at) > 0) {\
+   if (PairNumber(at) > 0) {\
       (S) = ((S) & ALL_BUT_COLOR) | (at);\
    } else {\
       (S) |= (at);\
@@ -1581,7 +1606,7 @@ extern	NCURSES_EXPORT(void) name (void); \
 
 
 #define toggle_attr_off(S,at) {\
-   if (PAIR_NUMBER(at) > 0) {\
+   if (PairNumber(at) > 0) {\
       (S) &= ~(at|A_COLOR);\
    } else {\
       (S) &= ~(at);\
@@ -1605,7 +1630,7 @@ extern	NCURSES_EXPORT(void) name (void); \
 		    : INFINITY)))
 
 #if USE_XMC_SUPPORT
-#define UpdateAttrs(sp,c)	if (!SameAttrOf(SCREEN_ATTRS(sp), c)) { \
+#define UpdateAttrs(sp,c) if (!SameAttrOf(SCREEN_ATTRS(sp), c)) { \
 				attr_t chg = AttrOf(SCREEN_ATTRS(sp)); \
 				VIDATTR(sp, AttrOf(c), GetPair(c)); \
 				if (magic_cookie_glitch > 0 \
@@ -1618,8 +1643,9 @@ extern	NCURSES_EXPORT(void) name (void); \
 				} \
 			}
 #else
-#define UpdateAttrs(sp,c)	if (!SameAttrOf(SCREEN_ATTRS(sp), c)) \
-				    VIDATTR(sp, AttrOf(c), GetPair(c));
+#define UpdateAttrs(sp,c) if (!SameAttrOf(SCREEN_ATTRS(sp), c)) { \
+				    VIDATTR(sp, AttrOf(c), GetPair(c)); \
+			}
 #endif
 
 /*

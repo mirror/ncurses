@@ -51,7 +51,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.127 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.128 2010/04/03 13:54:45 tom Exp $")
 
 /****************************************************************************
  *
@@ -278,25 +278,14 @@ _nc_get_screensize(SCREEN *sp,
     /* figure out the size of the screen */
     T(("screen size: terminfo lines = %d columns = %d", lines, columns));
 
-    if (!_nc_prescreen.use_env) {
-	*linep = (int) lines;
-	*colp = (int) columns;
-    } else {			/* usually want to query LINES and COLUMNS from environment */
+    *linep = (int) lines;
+    *colp = (int) columns;
+
+    if (_nc_prescreen.use_env) {
 	int value;
 
-	*linep = *colp = 0;
-
-	/* first, look for environment variables */
-	if ((value = _nc_getenv_num("LINES")) > 0) {
-	    *linep = value;
-	}
-	if ((value = _nc_getenv_num("COLUMNS")) > 0) {
-	    *colp = value;
-	}
-	T(("screen size: environment LINES = %d COLUMNS = %d", *linep, *colp));
-
 #ifdef __EMX__
-	if (*linep <= 0 || *colp <= 0) {
+	{
 	    int screendata[2];
 	    _scrsize(screendata);
 	    *colp = screendata[0];
@@ -306,32 +295,40 @@ _nc_get_screensize(SCREEN *sp,
 	}
 #endif
 #if HAVE_SIZECHANGE
-	/* if that didn't work, maybe we can try asking the OS */
-	if (*linep <= 0 || *colp <= 0) {
-	    if (isatty(cur_term->Filedes)) {
-		STRUCT_WINSIZE size;
+	/* try asking the OS */
+	if (isatty(cur_term->Filedes)) {
+	    STRUCT_WINSIZE size;
 
-		errno = 0;
-		do {
-		    if (ioctl(cur_term->Filedes, IOCTL_WINSIZE, &size) < 0
-			&& errno != EINTR)
-			goto failure;
-		} while
-		    (errno == EINTR);
-
-		/*
-		 * Solaris lets users override either dimension with an
-		 * environment variable.
-		 */
-		if (*linep <= 0)
-		    *linep = (sp != 0 && sp->_filtered) ? 1 : WINSIZE_ROWS(size);
-		if (*colp <= 0)
+	    errno = 0;
+	    do {
+		if (ioctl(cur_term->Filedes, IOCTL_WINSIZE, &size) >= 0) {
+		    *linep = ((sp != 0 && sp->_filtered)
+			      ? 1
+			      : WINSIZE_ROWS(size));
 		    *colp = WINSIZE_COLS(size);
-	    }
-	    /* FALLTHRU */
-	  failure:;
+		    T(("SYS screen size: environment LINES = %d COLUMNS = %d",
+		       *linep, *colp));
+		    break;
+		}
+	    } while
+		(errno == EINTR);
 	}
 #endif /* HAVE_SIZECHANGE */
+
+	/*
+	 * Finally, look for environment variables.
+	 *
+	 * Solaris lets users override either dimension with an environment
+	 * variable.
+	 */
+	if ((value = _nc_getenv_num("LINES")) > 0) {
+	    *linep = value;
+	    T(("screen size: environment LINES = %d", *linep));
+	}
+	if ((value = _nc_getenv_num("COLUMNS")) > 0) {
+	    *colp = value;
+	    T(("screen size: environment COLUMNS = %d", *colp));
+	}
 
 	/* if we can't get dynamic info about the size, use static */
 	if (*linep <= 0) {

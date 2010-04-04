@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.487 2010/03/06 21:29:37 tom Exp $
+dnl $Id: configure.in,v 1.488 2010/03/28 18:19:40 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.487 $)
+AC_REVISION($Revision: 1.488 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -688,7 +688,7 @@ NCURSES_WCHAR_T=0
 NCURSES_WINT_T=0
 
 # Check to define _XOPEN_SOURCE "automatically"
-CF_XOPEN_SOURCE
+CF_XOPEN_SOURCE(500)
 
 # Work around breakage on OS X
 CF_SIGWINCH
@@ -709,7 +709,15 @@ AC_MSG_RESULT($with_widec)
 if test "$with_widec" = yes ; then
 	LIB_SUFFIX="w${LIB_SUFFIX}"
 	AC_DEFINE(USE_WIDEC_SUPPORT)
-	CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
+
+	case "$CFLAGS $CPPFLAGS" in #(vi
+	*-D_XOPEN_SOURCE=500) #(vi
+		;;
+	*)
+		CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
+		;;
+	esac
+
 	# with_overwrite=no
 	NCURSES_CH_T=cchar_t
 	AC_CHECK_FUNCS(putwc btowc wctob mbtowc wctomb mblen mbrlen mbrtowc wcsrtombs mbsrtowcs wcstombs mbstowcs)

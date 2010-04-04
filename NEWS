@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1518 2010/03/27 22:39:36 tom Exp $
+-- $Id: NEWS,v 1.1526 2010/04/03 14:46:26 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100403
+	+ add configure check for exctags vs ctags, to work around pkgsrc.
+	+ simplify logic in _nc_get_screensize() to make it easier to see how
+	  environment variables may override system- and terminfo-values
+	  (prompted by discussion with Igor Bujna).
+	+ make debug-traces for COLOR_PAIR and PAIR_NUMBER less verbose.
+	+ improve handling of color-pairs embedded in attributes for the
+	  extended-colors configuration.
+	+ modify MKlib_gen.sh to build link_test with sp-funcs.
+	+ build-fixes for OpenSolaris aka Solaris 11, for wide-character
+	  configuration as well as for rpath feature in *-config scripts.
 
 20100327
 	+ refactor CF_SHARED_OPTS configure macro, making CF_RPATH_HACK more

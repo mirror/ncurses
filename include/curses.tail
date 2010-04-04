@@ -1,4 +1,4 @@
-/* $Id: curses.tail,v 1.19 2009/05/23 19:19:43 tom Exp $ */
+/* $Id: curses.tail,v 1.20 2010/03/28 19:10:55 tom Exp $ */
 /*
  * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
@@ -133,7 +133,7 @@ extern NCURSES_EXPORT(char *) _nc_tracebits (void);
 extern NCURSES_EXPORT(char *) _tracechar (int);
 extern NCURSES_EXPORT(char *) _tracechtype (chtype);
 extern NCURSES_EXPORT(char *) _tracechtype2 (int, chtype);
-#ifdef _XOPEN_SOURCE_EXTENDED
+#ifdef NCURSES_WIDECHAR
 #define _tracech_t		_tracecchar_t
 extern NCURSES_EXPORT(char *) _tracecchar_t (const cchar_t *);
 #define _tracech_t2		_tracecchar_t2
