@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.457 2010/03/31 23:42:32 tom Exp $
+ * $Id: curses.priv.h,v 1.458 2010/04/10 19:12:32 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1655,10 +1655,12 @@ extern	NCURSES_EXPORT(void) name (void); \
 #define EVENTLIST_0th(param) param
 #define EVENTLIST_1st(param) param
 #define EVENTLIST_2nd(param) , param
+#define TWAIT_MASK (TW_ANY | TW_EVENT)
 #else
 #define EVENTLIST_0th(param) void
 #define EVENTLIST_1st(param) /* nothing */
 #define EVENTLIST_2nd(param) /* nothing */
+#define TWAIT_MASK TW_ANY
 #endif
 
 #if NCURSES_EXPANDED && NCURSES_EXT_FUNCS
@@ -2044,6 +2046,7 @@ typedef struct _termInfo
     int  maxpairs;
     int  nocolorvideo;
 
+    int  numbuttons;
     int  numlabels;
     int  labelwidth;
     int  labelheight;
@@ -2069,6 +2072,7 @@ typedef struct term_driver {
     void   (*initcolor)(struct DriverTCB*,short,short,short,short);
     void   (*docolor)(struct DriverTCB*,short,short,bool,int(*)(SCREEN*,int));
     void   (*initmouse)(struct DriverTCB*);
+    int    (*testmouse)(struct DriverTCB*,int);
     void   (*setfilter)(struct DriverTCB*);
     void   (*hwlabel)(struct DriverTCB*,int,char*);
     void   (*hwlabelOnOff)(struct DriverTCB*,bool);

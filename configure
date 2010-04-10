@@ -18465,9 +18465,9 @@ do
 	case $cf_rpath_src in #(vi
 	-L*) #(vi
 		if test "$LD_RPATH_OPT" = "-R " ; then
-			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
+			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e "s%-L%-R %"`
 		else
-			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$LD_RPATH_OPT%`
+			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e "s%-L%$LD_RPATH_OPT%"`
 		fi
 		test -n "$verbose" && echo "	...Filter $cf_rpath_src ->$cf_rpath_tmp" 1>&6
 
@@ -18494,9 +18494,9 @@ do
 	case $cf_rpath_src in #(vi
 	-L*) #(vi
 		if test "$LD_RPATH_OPT" = "-R " ; then
-			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
+			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e "s%-L%-R %"`
 		else
-			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$LD_RPATH_OPT%`
+			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e "s%-L%$LD_RPATH_OPT%"`
 		fi
 		test -n "$verbose" && echo "	...Filter $cf_rpath_src ->$cf_rpath_tmp" 1>&6
 

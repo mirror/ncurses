@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.110 2010/02/06 18:39:16 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.111 2010/04/10 19:08:59 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -124,12 +124,6 @@ _nc_use_meta(WINDOW *win)
     return (sp ? sp->_use_meta : 0);
 }
 
-#ifdef NCURSES_WGETCH_EVENTS
-#define TWAIT_MASK (TW_ANY | TW_EVENT)
-#else
-#define TWAIT_MASK TW_ANY
-#endif
-
 /*
  * Check for mouse activity, returning nonzero if we find any.
  */
@@ -138,31 +132,29 @@ check_mouse_activity(SCREEN *sp, int delay EVENTLIST_2nd(_nc_eventlist * evl))
 {
     int rc;
 
+#ifdef USE_TERM_DRIVER
+    rc = TCBOf(sp)->drv->testmouse(TCBOf(sp), delay);
+#else
 #if USE_SYSMOUSE
     if ((sp->_mouse_type == M_SYSMOUSE)
 	&& (sp->_sysmouse_head < sp->_sysmouse_tail)) {
-	return TW_MOUSE;
-    }
+	rc = TW_MOUSE;
+    } else
 #endif
-#ifdef USE_TERM_DRIVER
-    rc = TCBOf(sp)->drv->twait(TCBOf(sp),
-			       TWAIT_MASK,
-			       delay,
-			       (int *) 0
-			       EVENTLIST_2nd(evl));
-#else
-    rc = _nc_timed_wait(sp,
-			TWAIT_MASK,
-			delay,
-			(int *) 0
-			EVENTLIST_2nd(evl));
-#endif
+    {
+	rc = _nc_timed_wait(sp,
+			    TWAIT_MASK,
+			    delay,
+			    (int *) 0
+			    EVENTLIST_2nd(evl));
 #if USE_SYSMOUSE
-    if ((sp->_mouse_type == M_SYSMOUSE)
-	&& (sp->_sysmouse_head < sp->_sysmouse_tail)
-	&& (rc == 0)
-	&& (errno == EINTR)) {
-	rc |= TW_MOUSE;
+	if ((sp->_mouse_type == M_SYSMOUSE)
+	    && (sp->_sysmouse_head < sp->_sysmouse_tail)
+	    && (rc == 0)
+	    && (errno == EINTR)) {
+	    rc |= TW_MOUSE;
+	}
+#endif
     }
 #endif
     return rc;

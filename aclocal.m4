@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.507 2010/04/04 00:07:57 tom Exp $
+dnl $Id: aclocal.m4,v 1.508 2010/04/06 00:03:50 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4394,7 +4394,7 @@ fi
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK_2 version: 3 updated: 2010/04/02 20:27:47
+dnl CF_RPATH_HACK_2 version: 4 updated: 2010/04/05 20:03:50
 dnl ---------------
 dnl Do one set of substitutions for CF_RPATH_HACK, adding an rpath option to
 dnl EXTRA_LDFLAGS for each -L option found.
@@ -4411,9 +4411,9 @@ do
 	case $cf_rpath_src in #(vi
 	-L*) #(vi
 		if test "$LD_RPATH_OPT" = "-R " ; then
-			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e 's%-L%-R %'`
+			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e "s%-L%-R %"`
 		else
-			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e s%-L%$LD_RPATH_OPT%`
+			cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e "s%-L%$LD_RPATH_OPT%"`
 		fi
 		CF_VERBOSE(...Filter $cf_rpath_src ->$cf_rpath_tmp)
 		EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"

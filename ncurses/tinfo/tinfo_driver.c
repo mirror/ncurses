@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.8 2010/04/03 14:10:56 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.9 2010/04/10 16:11:17 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -877,6 +877,39 @@ drv_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static int
+drv_testmouse(TERMINAL_CONTROL_BLOCK * TCB, int delay)
+{
+    int rc = 0;
+    SCREEN *sp;
+
+    AssertTCB();
+    SetSP();
+
+#if USE_SYSMOUSE
+    if ((sp->_mouse_type == M_SYSMOUSE)
+	&& (sp->_sysmouse_head < sp->_sysmouse_tail)) {
+	rc = TW_MOUSE;
+    } else
+#endif
+    {
+	rc = TCBOf(sp)->drv->twait(TCBOf(sp),
+				   TWAIT_MASK,
+				   delay,
+				   (int *) 0
+				   EVENTLIST_2nd(evl));
+#if USE_SYSMOUSE
+	if ((sp->_mouse_type == M_SYSMOUSE)
+	    && (sp->_sysmouse_head < sp->_sysmouse_tail)
+	    && (rc == 0)
+	    && (errno == EINTR)) {
+	    rc |= TW_MOUSE;
+	}
+#endif
+    }
+    return rc;
+}
+
+static int
 drv_mvcur(TERMINAL_CONTROL_BLOCK * TCB, int yold, int xold, int ynew, int xnew)
 {
     SCREEN *sp = TCB->csp;
@@ -1308,6 +1341,7 @@ NCURSES_EXPORT_VAR (TERM_DRIVER) _nc_TINFO_DRIVER = {
 	drv_initcolor,		/* initcolor */
 	drv_do_color,		/* docolor */
 	drv_initmouse,		/* initmouse */
+	drv_testmouse,		/* testmouse */
 	drv_setfilter,		/* setfilter */
 	drv_hwlabel,		/* hwlabel */
 	drv_hwlabelOnOff,	/* hwlabelOnOff */
