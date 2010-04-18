@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.54 2010/01/16 17:12:19 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.57 2010/04/18 00:14:49 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -666,8 +666,27 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	int c1, c2;
 	char *cp = 0;
 
-	if (str[0] == '\\' && (str[1] == '^' || str[1] == ',')) {
-	    bufptr = save_char(bufptr, *++str);
+	if (str[0] == '^') {
+	    if (str[1] == '\0' || (str + 1) == trimmed) {
+		bufptr = save_string(bufptr, "\\136");
+		++str;
+	    } else {
+		bufptr = save_char(bufptr, *str++);
+		bufptr = save_char(bufptr, *str);
+	    }
+	} else if (str[0] == '\\') {
+	    if (str[1] == '\0' || (str + 1) == trimmed) {
+		bufptr = save_string(bufptr, "\\134");
+		++str;
+	    } else if (str[1] == '^') {
+		bufptr = save_string(bufptr, "\\136");
+		++str;
+	    } else if (str[1] == ',') {
+		bufptr = save_char(bufptr, *++str);
+	    } else {
+		bufptr = save_char(bufptr, *str++);
+		bufptr = save_char(bufptr, *str);
+	    }
 	} else if (str[0] == '$' && str[1] == '<') {	/* discard padding */
 	    str += 2;
 	    while (isdigit(UChar(*str))

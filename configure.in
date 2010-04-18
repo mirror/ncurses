@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.488 2010/03/28 18:19:40 tom Exp $
+dnl $Id: configure.in,v 1.489 2010/04/17 16:06:06 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.488 $)
+AC_REVISION($Revision: 1.489 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1901,7 +1901,7 @@ CF_ADD_CFLAGS($EXTRA_CFLAGS)
 
 ### If we're building with rpath, try to link non-standard libs that way too.
 if test "$DFT_LWR_MODEL" = "shared"; then
-  CF_RPATH_HACK
+	CF_DISABLE_RPATH_HACK
 fi
 
 ### Define substitutions for header files to avoid name-pollution

@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.72 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.73 2010/04/17 22:41:48 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -511,9 +511,9 @@ NCURSES_EXPORT(int)
 _nc_capcmp(const char *s, const char *t)
 /* compare two string capabilities, stripping out padding */
 {
-    if (!s && !t)
+    if (!VALID_STRING(s) && !VALID_STRING(t))
 	return (0);
-    else if (!s || !t)
+    else if (!VALID_STRING(s) || !VALID_STRING(t))
 	return (1);
 
     for (;;) {
