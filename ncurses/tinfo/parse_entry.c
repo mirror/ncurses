@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.73 2010/04/17 22:41:48 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.74 2010/04/24 21:19:18 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -668,7 +668,7 @@ postprocess_termcap(TERMTYPE *tp, bool has_base)
 	    else if (PRESENT(backspace_if_not_bs))
 		cursor_left = backspace_if_not_bs;
 	}
-	/* vi doesn't use "do", but it does seems to use nl (or '\n') instead */
+	/* vi doesn't use "do", but it does seem to use nl (or '\n') instead */
 	if (WANTED(cursor_down)) {
 	    if (PRESENT(linefeed_if_not_lf))
 		cursor_down = linefeed_if_not_lf;

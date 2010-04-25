@@ -39,11 +39,11 @@
 #define USE_TERMLIB 1
 #include <curses.priv.h>
 
-MODULE_ID("$Id: make_keys.c,v 1.15 2008/11/16 00:19:59 juergen Exp $")
+MODULE_ID("$Id: make_keys.c,v 1.16 2010/04/24 22:20:53 tom Exp $")
 
 #include <names.c>
 
-#define UNKNOWN (SIZEOF(strnames) + SIZEOF(strfnames))
+#define UNKNOWN (unsigned) (SIZEOF(strnames) + SIZEOF(strfnames))
 
 static unsigned
 lookup(const char *name)
@@ -89,7 +89,7 @@ make_keys(FILE *ifp, FILE *ofp)
 	    if (code == UNKNOWN)
 		continue;
 	    if (strlen(from) > maxlen)
-		maxlen = strlen(from);
+		maxlen = (unsigned) strlen(from);
 	    fprintf(ofp, "\t{ %4d, %-*.*s },\t/* %s */\n",
 		    code,
 		    maxlen, maxlen,

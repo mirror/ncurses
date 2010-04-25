@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.113 2010/03/24 23:06:46 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.115 2010/04/24 23:01:13 tom Exp $")
 
 #include <tic.h>
 
@@ -122,12 +122,12 @@ make an error
 
 #define MY_TRACE TRACE_ICALLS|TRACE_IEVENT
 
-#define	MASK_RELEASE(x)		NCURSES_MOUSE_MASK(x, 001)
-#define	MASK_PRESS(x)		NCURSES_MOUSE_MASK(x, 002)
-#define	MASK_CLICK(x)		NCURSES_MOUSE_MASK(x, 004)
-#define	MASK_DOUBLE_CLICK(x)	NCURSES_MOUSE_MASK(x, 010)
-#define	MASK_TRIPLE_CLICK(x)	NCURSES_MOUSE_MASK(x, 020)
-#define	MASK_RESERVED_EVENT(x)	NCURSES_MOUSE_MASK(x, 040)
+#define	MASK_RELEASE(x)		(mmask_t) NCURSES_MOUSE_MASK(x, 001)
+#define	MASK_PRESS(x)		(mmask_t) NCURSES_MOUSE_MASK(x, 002)
+#define	MASK_CLICK(x)		(mmask_t) NCURSES_MOUSE_MASK(x, 004)
+#define	MASK_DOUBLE_CLICK(x)	(mmask_t) NCURSES_MOUSE_MASK(x, 010)
+#define	MASK_TRIPLE_CLICK(x)	(mmask_t) NCURSES_MOUSE_MASK(x, 020)
+#define	MASK_RESERVED_EVENT(x)	(mmask_t) NCURSES_MOUSE_MASK(x, 040)
 
 #if NCURSES_MOUSE_VERSION == 1
 #define BUTTON_CLICKED        (BUTTON1_CLICKED        | BUTTON2_CLICKED        | BUTTON3_CLICKED        | BUTTON4_CLICKED)
@@ -189,7 +189,7 @@ _trace_slot(SCREEN *sp, const char *tag)
 {
     MEVENT *ep;
 
-    _tracef(tag);
+    _tracef("%s", tag);
 
     for (ep = FirstEV(sp); ep <= LastEV(sp); ep++)
 	_tracef("mouse event queue slot %ld = %s",
@@ -870,9 +870,9 @@ _nc_mouse_inline(SCREEN *sp)
 
 	    /* For VIO mouse we add extra bit 64 to disambiguate button-up. */
 #if USE_EMX_MOUSE
-	    res = read(M_FD(sp) >= 0 ? M_FD(sp) : sp->_ifd, &kbuf, 3);
+	    res = (int) read(M_FD(sp) >= 0 ? M_FD(sp) : sp->_ifd, &kbuf, 3);
 #else
-	    res = read(sp->_ifd, kbuf + grabbed, 3 - grabbed);
+	    res = (int) read(sp->_ifd, kbuf + grabbed, 3 - grabbed);
 #endif
 	    if (res == -1)
 		break;

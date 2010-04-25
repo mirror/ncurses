@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.123 2010/03/31 23:38:02 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.124 2010/04/24 22:41:05 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -125,7 +125,7 @@ newline_forces_scroll(WINDOW *win, NCURSES_SIZE_T * ypos)
 	*ypos = win->_regbottom;
 	result = TRUE;
     } else {
-	*ypos += 1;
+	*ypos = (NCURSES_SIZE_T) (*ypos + 1);
     }
     return result;
 }
@@ -170,8 +170,8 @@ fill_cells(WINDOW *win, int count)
 	if (waddch_literal(win, blank) == ERR)
 	    break;
     }
-    win->_curx = save_x;
-    win->_cury = save_y;
+    win->_curx = (NCURSES_SIZE_T) save_x;
+    win->_cury = (NCURSES_SIZE_T) save_y;
 }
 #endif
 
@@ -207,9 +207,9 @@ _nc_build_wch(WINDOW *win, ARG_CH_T ch)
     buffer[WINDOW_EXT(win, addch_used)] = (char) CharOf(CHDEREF(ch));
     WINDOW_EXT(win, addch_used) += 1;
     buffer[WINDOW_EXT(win, addch_used)] = '\0';
-    if ((len = mbrtowc(&result,
-		       buffer,
-		       WINDOW_EXT(win, addch_used), &state)) > 0) {
+    if ((len = (int) mbrtowc(&result,
+			     buffer,
+			     WINDOW_EXT(win, addch_used), &state)) > 0) {
 	attr_t attrs = AttrOf(CHDEREF(ch));
 	if_EXT_COLORS(int pair = GetPair(CHDEREF(ch)));
 	SetChar(CHDEREF(ch), result, attrs);
@@ -396,7 +396,7 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
     if (x > win->_maxx) {
 	return wrap_to_next_line(win);
     }
-    win->_curx = x;
+    win->_curx = (NCURSES_SIZE_T) x;
     return OK;
 }
 
@@ -405,7 +405,7 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 /* the workhorse function -- add a character to the given window */
 {
     NCURSES_SIZE_T x, y;
-    chtype t = CharOf(ch);
+    chtype t = (chtype) CharOf(ch);
 #if USE_WIDEC_SUPPORT || NCURSES_SP_FUNCS || USE_REENTRANT
     SCREEN *sp = _nc_screen_of(win);
 #endif
@@ -447,7 +447,7 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 #else
 	tabsize = TABSIZE;
 #endif
-	x += (tabsize - (x % tabsize));
+	x = (NCURSES_SIZE_T) (x + (tabsize - (x % tabsize)));
 	/*
 	 * Space-fill the tab on the bottom line so that we'll get the
 	 * "correct" cursor position.

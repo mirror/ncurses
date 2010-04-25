@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.458 2010/04/10 19:12:32 tom Exp $
+ * $Id: curses.priv.h,v 1.459 2010/04/24 23:21:58 tom Exp $
  *
  *	curses.priv.h
  *
@@ -365,7 +365,7 @@ color_t;
 #define if_EXT_COLORS(stmt)	stmt
 #define SetPair(value,p)	SetPair2((value).ext_color, AttrOf(value), p)
 #define SetPair2(c,a,p)		c = (p), \
-				a = unColor2(a) | (A_COLOR & ColorPair(oldColor(c)))
+				a = (unColor2(a) | (A_COLOR & ColorPair(oldColor(c))))
 #define GetPair(value)		GetPair2((value).ext_color, AttrOf(value))
 #define GetPair2(c,a)		((c) ? (c) : PairNumber(a))
 #define oldColor(p)		(((p) > 255) ? 255 : (p))
@@ -564,7 +564,7 @@ extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
 typedef unsigned colorpair_t;	/* type big enough to store PAIR_OF() */
 #define C_SHIFT 9		/* we need more bits than there are colors */
 #define C_MASK			((1 << C_SHIFT) - 1)
-#define PAIR_OF(fg, bg)		((((fg) & C_MASK) << C_SHIFT) | ((bg) & C_MASK))
+#define PAIR_OF(fg, bg)		(colorpair_t) ((((fg) & C_MASK) << C_SHIFT) | ((bg) & C_MASK))
 #define FORE_OF(c)		(((c) >> C_SHIFT) & C_MASK)
 #define BACK_OF(c)		((c) & C_MASK)
 #define isDefaultColor(c)	((c) >= COLOR_DEFAULT || (c) < 0)
@@ -1249,6 +1249,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define RESET_OUTCHARS() COUNT_OUTCHARS(-_nc_outchars)
 
 #define UChar(c)	((unsigned char)(c))
+#define UShort(c)	((unsigned short)(c))
 #define ChCharOf(c)	((c) & (chtype)A_CHARTEXT)
 #define ChAttrOf(c)	((c) & (chtype)A_ATTRIBUTES)
 
@@ -1341,7 +1342,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define isWidecBase(ch)	(WidecExt(ch) == 1)
 #define isWidecExt(ch)	(WidecExt(ch) > 1 && WidecExt(ch) < 32)
 #define SetWidecExt(dst, ext)	AttrOf(dst) &= ~A_CHARTEXT,		\
-				AttrOf(dst) |= (ext + 1)
+				AttrOf(dst) |= (attr_t) (ext + 1)
 
 #define if_WIDEC(code)  code
 #define Charable(ch)	((SP_PARM != 0 && SP_PARM->_legacy_coding)	\
@@ -1394,11 +1395,11 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 #define CHANGED_CELL(line,col) \
 	if (line->firstchar == _NOCHANGE) \
-		line->firstchar = line->lastchar = col; \
+		line->firstchar = line->lastchar = (NCURSES_SIZE_T) col; \
 	else if ((col) < line->firstchar) \
-		line->firstchar = col; \
+		line->firstchar = (NCURSES_SIZE_T) col; \
 	else if ((col) > line->lastchar) \
-		line->lastchar = col
+		line->lastchar = (NCURSES_SIZE_T) col
 
 #define CHANGED_RANGE(line,start,end) \
 	if (line->firstchar == _NOCHANGE \

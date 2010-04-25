@@ -48,7 +48,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_kernel.c,v 1.29 2010/01/16 16:33:38 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.30 2010/04/24 23:12:25 tom Exp $")
 
 static int
 _nc_vdisable(void)
@@ -59,7 +59,7 @@ _nc_vdisable(void)
 #endif
 #if defined(_PC_VDISABLE)
     if (value == -1) {
-	value = fpathconf(0, _PC_VDISABLE);
+	value = (int) fpathconf(0, _PC_VDISABLE);
 	if (value == -1) {
 	    value = 0377;
 	}

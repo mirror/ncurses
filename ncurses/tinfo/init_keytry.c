@@ -29,7 +29,7 @@
 #include <curses.priv.h>
 #include <tic.h>		/* struct tinfo_fkeys */
 
-MODULE_ID("$Id: init_keytry.c,v 1.16 2010/01/23 17:10:47 tom Exp $")
+MODULE_ID("$Id: init_keytry.c,v 1.17 2010/04/24 22:29:56 tom Exp $")
 
 /*
 **      _nc_init_keytry()
@@ -66,7 +66,7 @@ _nc_tinfo_fkeysf(void)
 NCURSES_EXPORT(void)
 _nc_init_keytry(SCREEN *sp)
 {
-    size_t n;
+    unsigned n;
 
     /* The sp->_keytry value is initialized in newterm(), where the sp
      * structure is created, because we can not tell where keypad() or
@@ -90,7 +90,7 @@ _nc_init_keytry(SCREEN *sp)
 	{
 	    TERMTYPE *tp = &(sp->_term->type);
 	    for (n = STRCOUNT; n < NUM_STRINGS(tp); ++n) {
-		const char *name = ExtStrname(tp, (size_t) n, strnames);
+		const char *name = ExtStrname(tp, (int) n, strnames);
 		char *value = tp->Strings[n];
 		if (name != 0
 		    && *name == 'k'

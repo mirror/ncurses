@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -49,7 +49,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_raw.c,v 1.18 2009/10/24 21:56:15 tom Exp $")
+MODULE_ID("$Id: lib_raw.c,v 1.19 2010/04/24 23:49:12 tom Exp $")
 
 #if SVR4_TERMIO && !defined(_POSIX_SOURCE)
 #define _POSIX_SOURCE
@@ -91,8 +91,8 @@ NCURSES_SP_NAME(raw) (NCURSES_SP_DCL0)
 
 	buf = termp->Nttyb;
 #ifdef TERMIOS
-	buf.c_lflag &= ~(ICANON | ISIG | IEXTEN);
-	buf.c_iflag &= ~(COOKED_INPUT);
+	buf.c_lflag &= (unsigned) ~(ICANON | ISIG | IEXTEN);
+	buf.c_iflag &= (unsigned) ~(COOKED_INPUT);
 	buf.c_cc[VMIN] = 1;
 	buf.c_cc[VTIME] = 0;
 #else
@@ -132,8 +132,8 @@ NCURSES_SP_NAME(cbreak) (NCURSES_SP_DCL0)
 
 	buf = termp->Nttyb;
 #ifdef TERMIOS
-	buf.c_lflag &= ~ICANON;
-	buf.c_iflag &= ~ICRNL;
+	buf.c_lflag &= (unsigned) ~ICANON;
+	buf.c_iflag &= (unsigned) ~ICRNL;
 	buf.c_lflag |= ISIG;
 	buf.c_cc[VMIN] = 1;
 	buf.c_cc[VTIME] = 0;
@@ -175,7 +175,7 @@ NCURSES_SP_NAME(qiflush) (NCURSES_SP_DCL0)
 	BEFORE("qiflush");
 	buf = termp->Nttyb;
 #ifdef TERMIOS
-	buf.c_lflag &= ~(NOFLSH);
+	buf.c_lflag &= (unsigned) ~(NOFLSH);
 	result = NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_ARGx &buf);
 #else
 	/* FIXME */
@@ -330,7 +330,7 @@ NCURSES_SP_NAME(intrflush) (NCURSES_SP_DCLx WINDOW *win GCC_UNUSED, bool flag)
 	buf = termp->Nttyb;
 #ifdef TERMIOS
 	if (flag)
-	    buf.c_lflag &= ~(NOFLSH);
+	    buf.c_lflag &= (unsigned) ~(NOFLSH);
 	else
 	    buf.c_lflag |= (NOFLSH);
 	result = NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_ARGx &buf);

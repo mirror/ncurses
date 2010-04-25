@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -147,7 +147,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.45 2009/11/07 16:06:42 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.47 2010/04/24 23:46:47 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -194,7 +194,9 @@ NCURSES_SP_NAME(_nc_scroll_optimize) (NCURSES_SP_DCL0)
 #if USE_HASHMAP
     /* get enough storage */
     if (OLDNUM_SIZE(SP_PARM) < screen_lines(SP_PARM)) {
-	int *new_oldnums = typeRealloc(int, screen_lines(SP_PARM), oldnums(SP_PARM));
+	int *new_oldnums = typeRealloc(int,
+				       (size_t) screen_lines(SP_PARM),
+				       oldnums(SP_PARM));
 	if (!new_oldnums)
 	    return;
 	oldnums(SP_PARM) = new_oldnums;
@@ -294,14 +296,14 @@ NCURSES_SP_NAME(_nc_linedump) (NCURSES_SP_DCL0)
 {
     int n;
     char *buf = 0;
-    size_t want = (screen_lines(SP_PARM) + 1) * 4;
+    size_t want = ((size_t) screen_lines(SP_PARM) + 1) * 4;
 
     if ((buf = typeMalloc(char, want)) != 0) {
 
-	(void) strcpy(buf, "virt");
+	*buf = '\0';
 	for (n = 0; n < screen_lines(SP_PARM); n++)
 	    (void) sprintf(buf + strlen(buf), " %02d", OLDNUM(SP_PARM, n));
-	TR(TRACE_UPDATE | TRACE_MOVE, (buf));
+	TR(TRACE_UPDATE | TRACE_MOVE, ("virt %s", buf));
 	free(buf);
     }
 }

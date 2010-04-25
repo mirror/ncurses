@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.97 2009/11/07 20:36:44 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.98 2010/04/24 22:57:53 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -394,7 +394,7 @@ rgb2hls(short r, short g, short b, short *h, short *l, short *s)
 	max = b;
 
     /* calculate lightness */
-    *l = (min + max) / 20;
+    *l = (short) ((min + max) / 20);
 
     if (min == max) {		/* black, white and all shades of gray */
 	*h = 0;
@@ -404,17 +404,17 @@ rgb2hls(short r, short g, short b, short *h, short *l, short *s)
 
     /* calculate saturation */
     if (*l < 50)
-	*s = ((max - min) * 100) / (max + min);
+	*s = (short) (((max - min) * 100) / (max + min));
     else
-	*s = ((max - min) * 100) / (2000 - max - min);
+	*s = (short) (((max - min) * 100) / (2000 - max - min));
 
     /* calculate hue */
     if (r == max)
-	t = 120 + ((g - b) * 60) / (max - min);
+	t = (short) (120 + ((g - b) * 60) / (max - min));
     else if (g == max)
-	t = 240 + ((b - r) * 60) / (max - min);
+	t = (short) (240 + ((b - r) * 60) / (max - min));
     else
-	t = 360 + ((r - g) * 60) / (max - min);
+	t = (short) (360 + ((r - g) * 60) / (max - min));
 
     *h = t % 360;
 }
@@ -822,9 +822,9 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
 
 #if NCURSES_EXT_FUNCS
     if (isDefaultColor(fg))
-	fg = default_fg(NCURSES_SP_ARG);
+	fg = (short) default_fg(NCURSES_SP_ARG);
     if (isDefaultColor(bg))
-	bg = default_bg(NCURSES_SP_ARG);
+	bg = (short) default_bg(NCURSES_SP_ARG);
 #endif
 
     if (reverse) {

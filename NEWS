@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1531 2010/04/17 22:49:16 tom Exp $
+-- $Id: NEWS,v 1.1533 2010/04/24 23:44:44 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100424
+	+ fix some strict compiler warnings in ncurses library.
+	+ modify configure macro CF_HEADER_PATH to not look for variations in
+	  the predefined include directories.
+	+ improve configure macros CF_GCC_VERSION and CF_GCC_WARNINGS to work
+	  with gcc 4.x's c89 alias, which gives warning messages for cases
+	  where older versions would produce an error.
 
 20100417
 	+ modify _nc_capcmp() to work with cancelled strings.

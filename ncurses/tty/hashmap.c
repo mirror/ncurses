@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -73,7 +73,7 @@ AUTHOR
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: hashmap.c,v 1.61 2009/11/07 16:07:55 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.62 2010/04/24 23:46:07 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -122,7 +122,7 @@ hash(SCREEN *sp, NCURSES_CH_T * text)
     unsigned long result = 0;
     for (i = TEXTWIDTH(sp); i > 0; i--) {
 	ch = *text++;
-	result += (result << 5) + HASH_VAL(ch);
+	result += (result << 5) + (unsigned long) HASH_VAL(ch);
     }
     return result;
 }
@@ -282,7 +282,8 @@ NCURSES_SP_NAME(_nc_hash_map) (NCURSES_SP_DCL0)
     if (screen_lines(SP_PARM) > lines_alloc(SP_PARM)) {
 	if (hashtab(SP_PARM))
 	    free(hashtab(SP_PARM));
-	hashtab(SP_PARM) = typeMalloc(HASHMAP, (screen_lines(SP_PARM) + 1) * 2);
+	hashtab(SP_PARM) = typeMalloc(HASHMAP,
+				      ((size_t) screen_lines(SP_PARM) + 1) * 2);
 	if (!hashtab(SP_PARM)) {
 	    if (oldhash(SP_PARM)) {
 		FreeAndNull(oldhash(SP_PARM));
@@ -303,10 +304,10 @@ NCURSES_SP_NAME(_nc_hash_map) (NCURSES_SP_DCL0)
 	/* re-hash all */
 	if (oldhash(SP_PARM) == 0)
 	    oldhash(SP_PARM) = typeCalloc(unsigned long,
-					    (unsigned) screen_lines(SP_PARM));
+					    (size_t) screen_lines(SP_PARM));
 	if (newhash(SP_PARM) == 0)
 	    newhash(SP_PARM) = typeCalloc(unsigned long,
-					    (unsigned) screen_lines(SP_PARM));
+					    (size_t) screen_lines(SP_PARM));
 	if (!oldhash(SP_PARM) || !newhash(SP_PARM))
 	    return;		/* malloc failure */
 	for (i = 0; i < screen_lines(SP_PARM); i++) {
@@ -328,7 +329,8 @@ NCURSES_SP_NAME(_nc_hash_map) (NCURSES_SP_DCL0)
      * Set up and count line-hash values.
      */
     memset(hashtab(SP_PARM), '\0',
-	   sizeof(*(hashtab(SP_PARM))) * (screen_lines(SP_PARM) + 1) * 2);
+	   sizeof(*(hashtab(SP_PARM)))
+	   * ((size_t) screen_lines(SP_PARM) + 1) * 2);
     for (i = 0; i < screen_lines(SP_PARM); i++) {
 	unsigned long hashval = oldhash(SP_PARM)[i];
 
@@ -433,7 +435,7 @@ NCURSES_SP_NAME(_nc_scroll_oldhash) (NCURSES_SP_DCLx int n, int top, int bot)
     if (!oldhash(SP_PARM))
 	return;
 
-    size = sizeof(*(oldhash(SP_PARM))) * (bot - top + 1 - abs(n));
+    size = sizeof(*(oldhash(SP_PARM))) * (size_t) (bot - top + 1 - abs(n));
     if (n > 0) {
 	memmove(oldhash(SP_PARM) + top, oldhash(SP_PARM) + top + n, size);
 	for (i = bot; i > bot - n; i--)

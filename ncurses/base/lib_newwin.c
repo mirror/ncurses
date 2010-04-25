@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.65 2009/11/14 01:12:48 Nicholas.Marriott Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.66 2010/04/24 23:31:18 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -244,7 +244,7 @@ subwin(WINDOW *w, int l, int c, int y, int x)
 static bool
 dimension_limit(int value)
 {
-    NCURSES_SIZE_T test = value;
+    NCURSES_SIZE_T test = (NCURSES_SIZE_T) value;
     return (test == value && value > 0);
 }
 
@@ -284,13 +284,13 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
 
     win->_curx = 0;
     win->_cury = 0;
-    win->_maxy = num_lines - 1;
-    win->_maxx = num_columns - 1;
-    win->_begy = begy;
-    win->_begx = begx;
+    win->_maxy = (NCURSES_SIZE_T) (num_lines - 1);
+    win->_maxx = (NCURSES_SIZE_T) (num_columns - 1);
+    win->_begy = (NCURSES_SIZE_T) begy;
+    win->_begx = (NCURSES_SIZE_T) begx;
     win->_yoffset = SP_PARM->_topstolen;
 
-    win->_flags = flags;
+    win->_flags = (short) flags;
     WINDOW_ATTRS(win) = A_NORMAL;
     SetChar(win->_nc_bkgd, BLANK_TEXT, BLANK_ATTR);
 
@@ -311,7 +311,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
     win->_parent = 0;
 
     win->_regtop = 0;
-    win->_regbottom = num_lines - 1;
+    win->_regbottom = (NCURSES_SIZE_T) (num_lines - 1);
 
     win->_pad._pad_y = -1;
     win->_pad._pad_x = -1;
@@ -341,7 +341,7 @@ NCURSES_SP_NAME(_nc_makenew) (NCURSES_SP_DCLx
 	 * So that's how we want ncurses to behave.
 	 */
 	win->_line[i].firstchar = 0;
-	win->_line[i].lastchar = num_columns - 1;
+	win->_line[i].lastchar = (NCURSES_SIZE_T) (num_columns - 1);
 
 	if_USE_SCROLL_HINTS(win->_line[i].oldindex = i);
     }

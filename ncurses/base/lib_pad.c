@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_pad.c,v 1.45 2009/10/24 22:07:03 tom Exp $")
+MODULE_ID("$Id: lib_pad.c,v 1.46 2010/04/24 23:50:45 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
 NCURSES_SP_NAME(newpad) (NCURSES_SP_DCLx int l, int c)
@@ -127,10 +127,10 @@ pnoutrefresh(WINDOW *win,
 	     int smaxrow,
 	     int smaxcol)
 {
-    NCURSES_SIZE_T i, j;
-    NCURSES_SIZE_T m, n;
-    NCURSES_SIZE_T pmaxrow;
-    NCURSES_SIZE_T pmaxcol;
+    int i, j;
+    int m, n;
+    int pmaxrow;
+    int pmaxcol;
     SCREEN *sp;
 
 #if USE_SCROLL_HINTS
@@ -279,8 +279,8 @@ pnoutrefresh(WINDOW *win,
 	win->_line[i].oldindex = _NEWINDEX;
 #endif
 
-    win->_begx = smincol;
-    win->_begy = sminrow;
+    win->_begx = (NCURSES_SIZE_T) smincol;
+    win->_begy = (NCURSES_SIZE_T) sminrow;
 
     if (win->_clear) {
 	win->_clear = FALSE;
@@ -296,8 +296,10 @@ pnoutrefresh(WINDOW *win,
 	&& win->_curx >= pmincol
 	&& win->_cury <= pmaxrow
 	&& win->_curx <= pmaxcol) {
-	NewScreen(sp)->_cury = win->_cury - pminrow + win->_begy + win->_yoffset;
-	NewScreen(sp)->_curx = win->_curx - pmincol + win->_begx;
+	NewScreen(sp)->_cury = (NCURSES_SIZE_T) (win->_cury - pminrow
+						 + win->_begy + win->_yoffset);
+	NewScreen(sp)->_curx = (NCURSES_SIZE_T) (win->_curx - pmincol
+						 + win->_begx);
     }
     NewScreen(sp)->_leaveok = win->_leaveok;
     win->_flags &= ~_HASMOVED;
@@ -307,12 +309,12 @@ pnoutrefresh(WINDOW *win,
      * We will use this on subsequent calls to this function to derive
      * values to stuff into 'oldindex[]' -- for scrolling optimization.
      */
-    win->_pad._pad_y = pminrow;
-    win->_pad._pad_x = pmincol;
-    win->_pad._pad_top = sminrow;
-    win->_pad._pad_left = smincol;
-    win->_pad._pad_bottom = smaxrow;
-    win->_pad._pad_right = smaxcol;
+    win->_pad._pad_y = (NCURSES_SIZE_T) pminrow;
+    win->_pad._pad_x = (NCURSES_SIZE_T) pmincol;
+    win->_pad._pad_top = (NCURSES_SIZE_T) sminrow;
+    win->_pad._pad_left = (NCURSES_SIZE_T) smincol;
+    win->_pad._pad_bottom = (NCURSES_SIZE_T) smaxrow;
+    win->_pad._pad_right = (NCURSES_SIZE_T) smaxcol;
 
     returnCode(OK);
 }

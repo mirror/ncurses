@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.135 2009/11/28 21:49:24 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.136 2010/04/24 23:09:24 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -380,9 +380,9 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     setmode(output, O_BINARY);
 #endif
     NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_ARGx output, TRUE);
-    sp->_lines = slines;
-    sp->_lines_avail = slines;
-    sp->_columns = scolumns;
+    sp->_lines = (NCURSES_SIZE_T) slines;
+    sp->_lines_avail = (NCURSES_SIZE_T) slines;
+    sp->_columns = (NCURSES_SIZE_T) scolumns;
     sp->_ofp = output;
     SP_PRE_INIT(sp);
     SetNoPadding(sp);
@@ -663,11 +663,12 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 		} else {
 		    ReturnScreenError();
 		}
-		if (rop->line < 0)
+		if (rop->line < 0) {
 		    bottom_stolen += count;
-		else
-		    sp->_topstolen += count;
-		sp->_lines_avail -= count;
+		} else {
+		    sp->_topstolen = (NCURSES_SIZE_T) (sp->_topstolen + count);
+		}
+		sp->_lines_avail = (NCURSES_SIZE_T) (sp->_lines_avail - count);
 	    }
 	}
 	/* reset the stack */
