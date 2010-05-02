@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.69 2010/03/31 23:38:02 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.70 2010/05/01 19:33:19 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -132,7 +132,7 @@ _traceattr2(int bufnum, chtype newmode)
 	for (n = 0; n < SIZEOF(names); n++) {
 	    if ((newmode & names[n].val) != 0) {
 		if (result[1] != '\0')
-		    result = _nc_trace_bufcat(bufnum, "|");
+		    (void) _nc_trace_bufcat(bufnum, "|");
 		result = _nc_trace_bufcat(bufnum, names[n].name);
 
 		if (names[n].val == A_COLOR) {
@@ -327,7 +327,7 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
 		    PUTC_ch = ch->chars[PUTC_i];
 		    if (PUTC_ch == L'\0') {
 			if (PUTC_i == 0)
-			    result = _nc_trace_bufcat(bufnum, "\\000");
+			    (void) _nc_trace_bufcat(bufnum, "\\000");
 			break;
 		    }
 		    PUTC_n = wcrtomb(PUTC_buf, ch->chars[PUTC_i], &PUT_st);

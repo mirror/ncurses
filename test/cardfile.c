@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.35 2008/08/05 00:42:24 tom Exp $
+ * $Id: cardfile.c,v 1.37 2010/05/01 22:19:02 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -262,7 +262,7 @@ next_card(CARD * now)
 	if (isVisible(tst))
 	    now = tst;
 	else
-	    tst = next_card(tst);
+	    (void) next_card(tst);
     }
     return now;
 }
@@ -523,14 +523,12 @@ cardfile(char *fname)
 #if NO_LEAKS
     while (all_cards != 0) {
 	FIELD **f;
-	int count;
 
 	p = all_cards;
 	all_cards = all_cards->link;
 
 	if (isVisible(p)) {
 	    f = form_fields(p->form);
-	    count = field_count(p->form);
 
 	    unpost_form(p->form);	/* ...so we can free it */
 	    free_form(p->form);	/* this also disconnects the fields */

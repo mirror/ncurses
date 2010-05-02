@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #define USE_TERMLIB 1
 #include <curses.priv.h>
 
-MODULE_ID("$Id: make_keys.c,v 1.16 2010/04/24 22:20:53 tom Exp $")
+MODULE_ID("$Id: make_keys.c,v 1.17 2010/05/01 19:17:28 tom Exp $")
 
 #include <names.c>
 
@@ -92,7 +92,7 @@ make_keys(FILE *ifp, FILE *ofp)
 		maxlen = (unsigned) strlen(from);
 	    fprintf(ofp, "\t{ %4d, %-*.*s },\t/* %s */\n",
 		    code,
-		    maxlen, maxlen,
+		    (int) maxlen, (int) maxlen,
 		    to,
 		    from);
 	}

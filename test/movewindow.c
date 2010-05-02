@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.22 2008/04/12 22:01:41 tom Exp $
+ * $Id: movewindow.c,v 1.23 2010/05/01 19:11:55 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -196,12 +196,12 @@ getwindow(WINDOW *parent, PAIR * ul, PAIR * lr)
     head_line("Use arrows to move cursor, anything else to mark corner 1");
     if ((tmp = selectcell(parent, min_line, min_col, max_line, max_col)) != 0) {
 	*ul = *tmp;
-	mvwaddch(parent, ul->y, ul->x, '*');
+	MvWAddCh(parent, ul->y, ul->x, '*');
 
 	head_line("Use arrows to move cursor, anything else to mark corner 2");
 	if ((tmp = selectcell(parent, ul->y, ul->x, max_line, max_col)) != 0) {
 	    *lr = *tmp;
-	    mvwaddch(parent, lr->y, lr->x, '*');
+	    MvWAddCh(parent, lr->y, lr->x, '*');
 	    wmove(parent, lr->y, lr->x);
 	    wsyncdown(parent);
 	    wrefresh(parent);
@@ -224,16 +224,16 @@ box_inside(WINDOW *win)
     getyx(win, y0, x0);
     getmaxyx(win, y1, x1);
 
-    mvwhline(win, 0, 0, ACS_HLINE, x1);
-    mvwhline(win, y1 - 1, 0, ACS_HLINE, x1);
+    MvWHLine(win, 0, 0, ACS_HLINE, x1);
+    MvWHLine(win, y1 - 1, 0, ACS_HLINE, x1);
 
-    mvwvline(win, 0, 0, ACS_VLINE, y1);
-    mvwvline(win, 0, x1 - 1, ACS_VLINE, y1);
+    MvWVLine(win, 0, 0, ACS_VLINE, y1);
+    MvWVLine(win, 0, x1 - 1, ACS_VLINE, y1);
 
-    mvwaddch(win, 0, 0, ACS_ULCORNER);
-    mvwaddch(win, y1 - 1, 0, ACS_LLCORNER);
-    mvwaddch(win, 0, x1 - 1, ACS_URCORNER);
-    mvwaddch(win, y1 - 1, x1 - 1, ACS_LRCORNER);
+    MvWAddCh(win, 0, 0, ACS_ULCORNER);
+    MvWAddCh(win, y1 - 1, 0, ACS_LLCORNER);
+    MvWAddCh(win, 0, x1 - 1, ACS_URCORNER);
+    MvWAddCh(win, y1 - 1, x1 - 1, ACS_LRCORNER);
 
     wsyncdown(win);
     wmove(win, y0, x0);
@@ -441,7 +441,7 @@ fill_window(WINDOW *win, chtype ch)
     getmaxyx(win, y1, x1);
     for (y = 0; y < y1; ++y) {
 	for (x = 0; x < x1; ++x) {
-	    mvwaddch(win, y, x, ch);
+	    MvWAddCh(win, y, x, ch);
 	}
     }
     wsyncdown(win);

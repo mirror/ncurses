@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2009,2010 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addchstr.c,v 1.5 2009/10/10 16:01:41 tom Exp $
+ * $Id: test_addchstr.c,v 1.6 2010/05/01 19:13:46 tom Exp $
  *
  * Demonstrate the waddchstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
@@ -36,18 +36,19 @@
 
 #include <linedata.h>
 
+#undef MvAddStr
+#undef MvWAddStr
+
 #define AddNStr    addchnstr
 #define AddStr     addchstr
-#define MvAddNStr  mvaddchnstr
-#define MvAddStr   mvaddchstr
-#define MvWAddNStr mvwaddchnstr
-#define MvWAddStr  mvwaddchstr
+#define MvAddNStr  (void) mvaddchnstr
+#define MvAddStr   (void) mvaddchstr
+#define MvWAddNStr (void) mvwaddchnstr
+#define MvWAddStr  (void) mvwaddchstr
 #define WAddNStr   waddchnstr
 #define WAddStr    waddchstr
 
 #define AddCh      addch
-#define MvAddCh    mvaddch
-#define MvWAddCh   mvwaddch
 #define WAddCh     waddch
 
 #define MY_TABSIZE 8
@@ -212,14 +213,14 @@ test_adds(int level)
     keypad(work, TRUE);
 
     for (col = margin + 1; col < COLS; col += MY_TABSIZE)
-	mvwvline(work, row, col, '.', limit - 2);
+	MvWVLine(work, row, col, '.', limit - 2);
 
-    mvwvline(work, row, margin, ACS_VLINE, limit - 2);
-    mvwvline(work, row, margin + 1, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin + 1, ACS_VLINE, limit - 2);
     limit /= 2;
 
-    mvwaddchstr(work, 1, 2, ChStr("String"));
-    mvwaddchstr(work, limit + 1, 2, ChStr("Chars"));
+    MvWAddChStr(work, 1, 2, ChStr("String"));
+    MvWAddChStr(work, limit + 1, 2, ChStr("Chars"));
     wnoutrefresh(work);
 
     buffer[length = 0] = '\0';

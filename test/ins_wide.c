@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.11 2009/09/12 23:02:26 tom Exp $
+ * $Id: ins_wide.c,v 1.12 2010/05/01 19:12:26 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -51,10 +51,10 @@
 /* definitions to make it simpler to compare with inserts.c */
 #define InsNStr    ins_nwstr
 #define InsStr     ins_wstr
-#define MvInsNStr  mvins_nwstr
-#define MvInsStr   mvins_wstr
-#define MvWInsNStr mvwins_nwstr
-#define MvWInsStr  mvwins_wstr
+#define MvInsNStr  (void) mvins_nwstr
+#define MvInsStr   (void) mvins_wstr
+#define MvWInsNStr (void) mvwins_nwstr
+#define MvWInsStr  (void) mvwins_wstr
 #define WInsNStr   wins_nwstr
 #define WInsStr    wins_wstr
 
@@ -258,14 +258,14 @@ test_inserts(int level)
     keypad(work, TRUE);
 
     for (col = margin + 1; col < COLS; col += MY_TABSIZE)
-	mvwvline(work, row, col, '.', limit - 2);
+	MvWVLine(work, row, col, '.', limit - 2);
 
-    mvwvline(work, row, margin, ACS_VLINE, limit - 2);
-    mvwvline(work, row, margin + 1, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin + 1, ACS_VLINE, limit - 2);
     limit /= 2;
 
-    mvwaddstr(work, 1, 2, "String");
-    mvwaddstr(work, limit + 1, 2, "Chars");
+    MvWAddStr(work, 1, 2, "String");
+    MvWAddStr(work, limit + 1, 2, "Chars");
     wnoutrefresh(work);
 
     buffer[length = 0] = '\0';

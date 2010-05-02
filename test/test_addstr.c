@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2009,2010 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addstr.c,v 1.3 2009/10/10 16:01:41 tom Exp $
+ * $Id: test_addstr.c,v 1.4 2010/05/01 19:13:46 tom Exp $
  *
  * Demonstrate the waddstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
@@ -38,16 +38,12 @@
 
 #define AddNStr    addnstr
 #define AddStr     addstr
-#define MvAddNStr  mvaddnstr
-#define MvAddStr   mvaddstr
-#define MvWAddNStr mvwaddnstr
-#define MvWAddStr  mvwaddstr
+#define MvAddNStr  (void) mvaddnstr
+#define MvWAddNStr (void) mvwaddnstr
 #define WAddNStr   waddnstr
 #define WAddStr    waddstr
 
 #define AddCh      addch
-#define MvAddCh    mvaddch
-#define MvWAddCh   mvwaddch
 #define WAddCh     waddch
 
 #define MY_TABSIZE 8
@@ -182,14 +178,14 @@ test_adds(int level)
     keypad(work, TRUE);
 
     for (col = margin + 1; col < COLS; col += MY_TABSIZE)
-	mvwvline(work, row, col, '.', limit - 2);
+	MvWVLine(work, row, col, '.', limit - 2);
 
-    mvwvline(work, row, margin, ACS_VLINE, limit - 2);
-    mvwvline(work, row, margin + 1, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin + 1, ACS_VLINE, limit - 2);
     limit /= 2;
 
-    mvwaddstr(work, 1, 2, "String");
-    mvwaddstr(work, limit + 1, 2, "Chars");
+    MvWAddStr(work, 1, 2, "String");
+    MvWAddStr(work, limit + 1, 2, "Chars");
     wnoutrefresh(work);
 
     buffer[length = 0] = '\0';

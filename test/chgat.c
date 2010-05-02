@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.10 2009/10/24 21:32:57 tom Exp $
+ * $Id: chgat.c,v 1.11 2010/05/01 19:12:26 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
@@ -221,7 +221,7 @@ show_help(WINDOW *win)
 
     getmaxyx(win, y_max, x_max);
     for (row = 0; row < (int) SIZEOF(table) && row < y_max; ++row) {
-	mvwprintw(win, row, 0, "%.*s", x_max, table[row]);
+	MvWPrintw(win, row, 0, "%.*s", x_max, table[row]);
     }
     while (wgetch(win) != 'q')
 	beep();

@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.136 2010/04/24 23:09:24 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.137 2010/05/01 19:47:51 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -117,7 +117,7 @@ delink_screen(SCREEN *sp)
     for (each_screen(temp)) {
 	if (temp == sp) {
 	    if (last)
-		last = sp->_next_screen;
+		last->_next_screen = sp->_next_screen;
 	    else
 		_nc_screen_chain = sp->_next_screen;
 	    result = TRUE;

@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.26 2009/08/29 18:47:26 tom Exp $ */
+/* $Id: tclock.c,v 1.27 2010/05/01 18:47:19 tom Exp $ */
 
 #include <test.priv.h>
 
@@ -53,7 +53,7 @@
 static void
 plot(int x, int y, char col)
 {
-    mvaddch(y, x, (chtype) col);
+    MvAddCh(y, x, (chtype) col);
 }
 
 /* Draw a diagonal(arbitrary) line using Bresenham's alogrithm. */
@@ -175,10 +175,10 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	sdy = A2Y(sangle, sradius);
 	sprintf(szChar, "%d", i + 1);
 
-	mvaddstr(cy - sdy, cx + sdx, szChar);
+	MvAddStr(cy - sdy, cx + sdx, szChar);
     }
 
-    mvaddstr(0, 0, "ASCII Clock by Howard Jones (ha.jones@ic.ac.uk),1994");
+    MvAddStr(0, 0, "ASCII Clock by Howard Jones (ha.jones@ic.ac.uk),1994");
 
     sradius = (4 * sradius) / 5;
     for (;;) {
@@ -222,7 +222,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    (void) attrset(COLOR_PAIR(0));
 
 	text = ctime(&tim);
-	mvprintw(2, 0, "%.*s", (int) (strlen(text) - 1), text);
+	MvPrintw(2, 0, "%.*s", (int) (strlen(text) - 1), text);
 	refresh();
 	if ((t->tm_sec % 5) == 0
 	    && t->tm_sec != lastbeep) {

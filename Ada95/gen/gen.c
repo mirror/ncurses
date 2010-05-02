@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.52 2010/02/20 21:59:56 tom Exp $
+    $Id: gen.c,v 1.53 2010/05/01 17:08:30 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -1495,7 +1495,7 @@ main(int argc, char *argv[])
 	      }
 	    printf("   subtype Eti_Error is C_Int range %d .. %d;\n\n",
 		   etimin, etimax);
-	    printf(buf);
+	    printf("%s", buf);
 	  }
 	  break;
 	default:

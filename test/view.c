@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.77 2010/01/09 16:34:06 tom Exp $
+ * $Id: view.c,v 1.79 2010/05/01 21:56:10 tom Exp $
  */
 
 #include <test.priv.h>
@@ -294,6 +294,8 @@ main(int argc, char *argv[])
     if ((vec_lines = typeCalloc(NCURSES_CH_T *, MAXLINES + 2)) == 0)
 	usage();
 
+    assert(vec_lines != 0);
+
     fname = argv[optind];
     if ((fp = fopen(fname, "r")) == 0) {
 	perror(fname);
@@ -365,7 +367,6 @@ main(int argc, char *argv[])
 	if (!got_number)
 	    show_all(my_label);
 
-	n = 0;
 	for (;;) {
 #if CAN_RESIZE
 	    if (interrupted) {
@@ -378,7 +379,7 @@ main(int argc, char *argv[])
 	    waiting = FALSE;
 	    if ((c < 127) && isdigit(c)) {
 		if (!got_number) {
-		    mvprintw(0, 0, "Count: ");
+		    MvPrintw(0, 0, "Count: ");
 		    clrtoeol();
 		}
 		addch(UChar(c));

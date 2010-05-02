@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slk.c,v 1.44 2009/10/31 19:51:40 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.45 2010/05/01 20:44:34 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels    InfoOf(SP_PARM).numlabels
@@ -140,7 +140,6 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
     int res = OK;
     unsigned max_length;
     SCREEN *sp;
-    TERMINAL *term;
     int numlab;
 
     T((T_CALLED("_nc_slk_initialize()")));
@@ -151,8 +150,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
     if (0 == sp)
 	returnCode(ERR);
 
-    term = TerminalOf(SP_PARM);
-    assert(term);
+    assert(TerminalOf(SP_PARM));
 
     numlab = NumLabels;
 

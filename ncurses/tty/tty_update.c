@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.262 2009/10/24 23:21:31 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.263 2010/05/01 20:44:34 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -1078,24 +1078,24 @@ ClrToEOL(NCURSES_SP_DCLx NCURSES_CH_T blank, bool needclear)
 {
     int j;
 
-    if (SP_PARM != 0 && CurScreen(SP_PARM) != 0
-	&& SP_PARM->_cursrow >= 0) {
-	for (j = SP_PARM->_curscol; j < screen_columns(SP_PARM); j++) {
-	    if (j >= 0) {
-		NCURSES_CH_T *cp =
-		&(CurScreen(SP_PARM)->_line[SP_PARM->_cursrow].text[j]);
+    if (SP_PARM != 0) {
+	if (CurScreen(SP_PARM) != 0
+	    && SP_PARM->_cursrow >= 0) {
+	    for (j = SP_PARM->_curscol; j < screen_columns(SP_PARM); j++) {
+		if (j >= 0) {
+		    NCURSES_CH_T *cp =
+		    &(CurScreen(SP_PARM)->_line[SP_PARM->_cursrow].text[j]);
 
-		if (!CharEq(*cp, blank)) {
-		    *cp = blank;
-		    needclear = TRUE;
+		    if (!CharEq(*cp, blank)) {
+			*cp = blank;
+			needclear = TRUE;
+		    }
 		}
 	    }
 	}
-    } else {
-	needclear = TRUE;
     }
 
-    if (needclear) {
+    if (needclear && (SP_PARM != 0)) {
 	UpdateAttrs(SP_PARM, blank);
 	TPUTS_TRACE("clr_eol");
 	if (clr_eol && SP_PARM->_el_cost <= (screen_columns(SP_PARM) - SP_PARM->_curscol)) {

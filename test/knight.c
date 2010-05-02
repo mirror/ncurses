@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.28 2008/08/03 23:04:26 tom Exp $
+ * $Id: knight.c,v 1.29 2010/05/01 19:11:55 tom Exp $
  */
 
 #include <test.priv.h>
@@ -155,7 +155,7 @@ help1(void)
     (void) waddstr(helpwin, "puzzle; also inform you when you run out\n");
     (void) waddstr(helpwin, "of legal moves.\n\n");
 
-    (void) mvwaddstr(helpwin, NOTIFYY - INSTRY, 0,
+    MvWAddStr(helpwin, NOTIFYY - INSTRY, 0,
 		     "Press `?' to go to keystroke help.");
 }
 
@@ -181,7 +181,7 @@ help2(void)
     (void) waddstr(helpwin, "square with spacebar, Enter, or the keypad\n");
     (void) waddstr(helpwin, "center key.  Use F/B to review the path.\n");
 
-    (void) mvwaddstr(helpwin, NOTIFYY - INSTRY, 0,
+    MvWAddStr(helpwin, NOTIFYY - INSTRY, 0,
 		     "Press `?' to go to game explanation");
 }
 
@@ -226,7 +226,7 @@ dosquares(void)
 {
     int i, j;
 
-    mvaddstr(0, 20, "KNIGHT'S MOVE -- a logical solitaire");
+    MvAddStr(0, 20, "KNIGHT'S MOVE -- a logical solitaire");
 
     move(BOARDY, BOARDX);
     waddch(boardwin, ACS_ULCORNER);

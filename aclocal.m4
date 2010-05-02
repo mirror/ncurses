@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.514 2010/04/24 15:44:15 tom Exp $
+dnl $Id: aclocal.m4,v 1.515 2010/05/01 19:16:13 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -956,7 +956,7 @@ fi
 test "$cf_cv_cpp_static_cast" = yes && AC_DEFINE(CPP_HAS_STATIC_CAST)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_C_INLINE version: 2 updated: 2007/08/11 14:09:50
+dnl CF_C_INLINE version: 3 updated: 2010/05/01 15:14:41
 dnl -----------
 dnl Check if the C compiler supports "inline".
 dnl $1 is the name of a shell variable to set if inline is supported
@@ -971,7 +971,7 @@ if test "$ac_cv_c_inline" != no ; then
     :
   elif test "$GCC" = yes
   then
-    AC_CACHE_CHECK(if gcc supports options to tune inlining,cf_cv_gcc_inline,[
+    AC_CACHE_CHECK(if $CC supports options to tune inlining,cf_cv_gcc_inline,[
       cf_save_CFLAGS=$CFLAGS
       CFLAGS="$CFLAGS --param max-inline-insns-single=$2"
       AC_TRY_COMPILE([inline int foo(void) { return 1; }],

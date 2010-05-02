@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.25 2009/10/24 22:12:21 tom Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.26 2010/05/01 19:17:28 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels    InfoOf(SP_PARM).numlabels
@@ -62,7 +62,7 @@ slk_paint_info(WINDOW *win)
     if (win && sp && (sp->slk_format == 4)) {
 	int i;
 
-	mvwhline(win, 0, 0, 0, getmaxx(win));
+	(void) mvwhline(win, 0, 0, 0, getmaxx(win));
 	wmove(win, 0, 0);
 
 	for (i = 0; i < sp->_slk->maxlab; i++) {

@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.86 2010/01/23 17:13:15 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.87 2010/05/01 19:56:35 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -479,7 +479,6 @@ _nc_get_token(bool silent)
 		if (OkToAdd()) {
 		    AddCh(ch);
 		} else {
-		    ch = EOF;
 		    break;
 		}
 	    }

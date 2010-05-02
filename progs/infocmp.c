@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.104 2009/12/05 21:10:31 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.105 2010/05/01 22:04:08 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -894,8 +894,6 @@ file_comparison(int argc, char *argv[])
 
     (void) printf("The following entries are equivalent:\n");
     for (qp = heads[0]; qp; qp = qp->next) {
-	rp = qp->crosslinks[0];
-
 	if (qp->ncrosslinks == 1) {
 	    rp = qp->crosslinks[0];
 
@@ -1536,7 +1534,6 @@ main(int argc, char *argv[])
 		status = _nc_read_entry(tname[termcount],
 					tfile[termcount],
 					&entries[termcount].tterm);
-		directory = TERMINFO;	/* for error message */
 	    }
 
 	    if (status <= 0) {

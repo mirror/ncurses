@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.34 2010/03/06 18:14:04 tom Exp $
+ * $Id: demo_panels.c,v 1.37 2010/05/01 22:19:02 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -117,10 +117,9 @@ get_position(NCURSES_CONST char *text,
     int result = 0;
     int x1, y1;
     char cmd;
-    WINDOW *win;
 
     getyx(stdscr, y1, x1);
-    win = statusline();
+    (void) statusline();
 
     show_position(text, also, which, y1, x1);
 
@@ -508,7 +507,7 @@ show_panels(PANEL * px[MAX_PANELS + 1])
 	keypad(win, TRUE);
 	if ((pan = new_panel(win)) != 0) {
 	    werase(win);
-	    mvwprintw(win, 0, 0, "Panels:\n");
+	    MvWPrintw(win, 0, 0, "Panels:\n");
 	    for (j = 1; j <= MAX_PANELS; ++j) {
 		if (table[j].valid) {
 		    wprintw(win, " %d:", j);

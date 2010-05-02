@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.20 2010/04/24 23:49:43 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.21 2010/05/01 19:32:33 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -347,7 +347,7 @@ adjust_cancels(TERMTYPE *to, TERMTYPE *from)
 	int j_str = to->num_Strings - first - to->ext_Strings;
 
 	if (to->Strings[j + j_str] == CANCELLED_STRING) {
-	    if ((k = _nc_find_ext_name(from, to->ext_Names[j], BOOLEAN)) >= 0) {
+	    if (_nc_find_ext_name(from, to->ext_Names[j], BOOLEAN) >= 0) {
 		if (_nc_del_ext_name(to, name, STRING)
 		    || _nc_del_ext_name(to, name, NUMBER)) {
 		    k = _nc_ins_ext_name(to, name, BOOLEAN);
@@ -355,8 +355,7 @@ adjust_cancels(TERMTYPE *to, TERMTYPE *from)
 		} else {
 		    j++;
 		}
-	    } else if ((k = _nc_find_ext_name(from, to->ext_Names[j],
-					      NUMBER)) >= 0) {
+	    } else if (_nc_find_ext_name(from, to->ext_Names[j], NUMBER) >= 0) {
 		if (_nc_del_ext_name(to, name, STRING)
 		    || _nc_del_ext_name(to, name, BOOLEAN)) {
 		    k = _nc_ins_ext_name(to, name, NUMBER);
@@ -364,8 +363,7 @@ adjust_cancels(TERMTYPE *to, TERMTYPE *from)
 		} else {
 		    j++;
 		}
-	    } else if ((k = _nc_find_ext_name(from, to->ext_Names[j],
-					      STRING)) >= 0) {
+	    } else if (_nc_find_ext_name(from, to->ext_Names[j], STRING) >= 0) {
 		if (_nc_del_ext_name(to, name, NUMBER)
 		    || _nc_del_ext_name(to, name, BOOLEAN)) {
 		    k = _nc_ins_ext_name(to, name, STRING);

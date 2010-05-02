@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.94 2010/03/28 19:51:16 tom Exp $ */
+/* $Id: test.priv.h,v 1.95 2010/05/01 19:03:04 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -643,6 +643,18 @@ typedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);
 #define Trace(p)		/* nothing */
 #define USE_TRACE 0
 #endif
+
+#define MvAddCh         (void) mvaddch
+#define MvWAddCh        (void) mvwaddch
+#define MvAddStr        (void) mvaddstr
+#define MvWAddStr       (void) mvwaddstr
+#define MvWAddChStr     (void) mvwaddchstr
+#define MvPrintw        (void) mvprintw
+#define MvWPrintw       (void) mvwprintw
+#define MvHLine         (void) mvhline
+#define MvWHLine        (void) mvwhline
+#define MvVLine         (void) mvvline
+#define MvWVLine        (void) mvwvline
 
 /*
  * Workaround for defective implementation of gcc attribute warn_unused_result

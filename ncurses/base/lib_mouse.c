@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.115 2010/04/24 23:01:13 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.116 2010/05/01 19:29:31 tom Exp $")
 
 #include <tic.h>
 
@@ -758,7 +758,7 @@ _nc_mouse_event(SCREEN *sp)
 		eventp->z = 0;
 
 		/* bump the next-free pointer into the circular list */
-		sp->_mouse_eventp = eventp = NEXT(eventp);
+		sp->_mouse_eventp = NEXT(eventp);
 		result = TRUE;
 		break;
 	    }

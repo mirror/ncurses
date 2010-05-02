@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.28 2010/01/23 21:20:11 tom Exp $")
+MODULE_ID("$Id: m_post.c,v 1.29 2010/05/01 19:18:27 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -171,7 +171,7 @@ _nc_Post_Item(const MENU * menu, const ITEM * item)
 		    waddch(menu->win, ' ');
 		}
 	      if ((cy + j) < getmaxy(menu->win))
-		mvwaddch(menu->win, cy + j, cx - 1, menu->pad);
+		(void)mvwaddch(menu->win, cy + j, cx - 1, menu->pad);
 	    }
 	  wmove(menu->win, ncy, ncx);
 	  if (!isback)

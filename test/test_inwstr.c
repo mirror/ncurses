@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2010 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_inwstr.c,v 1.3 2007/07/21 22:47:42 tom Exp $
+ * $Id: test_inwstr.c,v 1.4 2010/05/01 19:13:46 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -58,7 +58,7 @@ Quit(int ch)
 static void
 show_1st(WINDOW *win, int line, wchar_t *buffer)
 {
-    mvwaddwstr(win, line, 5, buffer);
+    (void) mvwaddwstr(win, line, 5, buffer);
 }
 
 static void
@@ -175,7 +175,7 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	    break;
 	}
 
-	mvwprintw(chrwin, 0, 0, "line:");
+	MvWPrintw(chrwin, 0, 0, "line:");
 	wclrtoeol(chrwin);
 
 	if (txtwin != stdscr) {
@@ -199,7 +199,7 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	}
 	wnoutrefresh(chrwin);
 
-	mvwprintw(strwin, 0, 0, "%4d:", limit);
+	MvWPrintw(strwin, 0, 0, "%4d:", limit);
 	wclrtobot(strwin);
 
 	if (txtwin != stdscr) {

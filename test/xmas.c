@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.25 2009/08/29 18:47:26 tom Exp $
+ * $Id: xmas.c,v 1.26 2010/05/01 18:29:50 tom Exp $
  */
 #include <test.priv.h>
 
@@ -249,203 +249,203 @@ main(int argc GCC_UNUSED, char **argv GCC_UNUSED)
 	ExitProgram(EXIT_FAILURE);
     }
 
-    mvwaddstr(w_del_msg, 0, 0, "Hit any key to quit");
+    MvWAddStr(w_del_msg, 0, 0, "Hit any key to quit");
 
-    mvwaddstr(w_holiday, 0, 0, "H A P P Y  H O L I D A Y S");
+    MvWAddStr(w_holiday, 0, 0, "H A P P Y  H O L I D A Y S");
 
     /* set up the windows for our various reindeer */
 
     /* lildeer1 */
-    mvwaddch(lildeer1, 0, 0, (chtype) 'V');
-    mvwaddch(lildeer1, 1, 0, (chtype) '@');
-    mvwaddch(lildeer1, 1, 1, (chtype) '<');
-    mvwaddch(lildeer1, 1, 2, (chtype) '>');
-    mvwaddch(lildeer1, 1, 3, (chtype) '~');
+    MvWAddCh(lildeer1, 0, 0, (chtype) 'V');
+    MvWAddCh(lildeer1, 1, 0, (chtype) '@');
+    MvWAddCh(lildeer1, 1, 1, (chtype) '<');
+    MvWAddCh(lildeer1, 1, 2, (chtype) '>');
+    MvWAddCh(lildeer1, 1, 3, (chtype) '~');
 
     /* lildeer2 */
-    mvwaddch(lildeer2, 0, 0, (chtype) 'V');
-    mvwaddch(lildeer2, 1, 0, (chtype) '@');
-    mvwaddch(lildeer2, 1, 1, (chtype) '|');
-    mvwaddch(lildeer2, 1, 2, (chtype) '|');
-    mvwaddch(lildeer2, 1, 3, (chtype) '~');
+    MvWAddCh(lildeer2, 0, 0, (chtype) 'V');
+    MvWAddCh(lildeer2, 1, 0, (chtype) '@');
+    MvWAddCh(lildeer2, 1, 1, (chtype) '|');
+    MvWAddCh(lildeer2, 1, 2, (chtype) '|');
+    MvWAddCh(lildeer2, 1, 3, (chtype) '~');
 
     /* lildeer3 */
-    mvwaddch(lildeer3, 0, 0, (chtype) 'V');
-    mvwaddch(lildeer3, 1, 0, (chtype) '@');
-    mvwaddch(lildeer3, 1, 1, (chtype) '>');
-    mvwaddch(lildeer3, 1, 2, (chtype) '<');
-    mvwaddch(lildeer2, 1, 3, (chtype) '~');
+    MvWAddCh(lildeer3, 0, 0, (chtype) 'V');
+    MvWAddCh(lildeer3, 1, 0, (chtype) '@');
+    MvWAddCh(lildeer3, 1, 1, (chtype) '>');
+    MvWAddCh(lildeer3, 1, 2, (chtype) '<');
+    MvWAddCh(lildeer2, 1, 3, (chtype) '~');
 
     /* middeer1 */
-    mvwaddch(middeer1, 0, 2, (chtype) 'y');
-    mvwaddch(middeer1, 0, 3, (chtype) 'y');
-    mvwaddch(middeer1, 1, 2, (chtype) '0');
-    mvwaddch(middeer1, 1, 3, (chtype) '(');
-    mvwaddch(middeer1, 1, 4, (chtype) '=');
-    mvwaddch(middeer1, 1, 5, (chtype) ')');
-    mvwaddch(middeer1, 1, 6, (chtype) '~');
-    mvwaddch(middeer1, 2, 3, (chtype) '\\');
-    mvwaddch(middeer1, 2, 4, (chtype) '/');
+    MvWAddCh(middeer1, 0, 2, (chtype) 'y');
+    MvWAddCh(middeer1, 0, 3, (chtype) 'y');
+    MvWAddCh(middeer1, 1, 2, (chtype) '0');
+    MvWAddCh(middeer1, 1, 3, (chtype) '(');
+    MvWAddCh(middeer1, 1, 4, (chtype) '=');
+    MvWAddCh(middeer1, 1, 5, (chtype) ')');
+    MvWAddCh(middeer1, 1, 6, (chtype) '~');
+    MvWAddCh(middeer1, 2, 3, (chtype) '\\');
+    MvWAddCh(middeer1, 2, 4, (chtype) '/');
 
     /* middeer2 */
-    mvwaddch(middeer2, 0, 2, (chtype) 'y');
-    mvwaddch(middeer2, 0, 3, (chtype) 'y');
-    mvwaddch(middeer2, 1, 2, (chtype) '0');
-    mvwaddch(middeer2, 1, 3, (chtype) '(');
-    mvwaddch(middeer2, 1, 4, (chtype) '=');
-    mvwaddch(middeer2, 1, 5, (chtype) ')');
-    mvwaddch(middeer2, 1, 6, (chtype) '~');
-    mvwaddch(middeer2, 2, 3, (chtype) '|');
-    mvwaddch(middeer2, 2, 5, (chtype) '|');
+    MvWAddCh(middeer2, 0, 2, (chtype) 'y');
+    MvWAddCh(middeer2, 0, 3, (chtype) 'y');
+    MvWAddCh(middeer2, 1, 2, (chtype) '0');
+    MvWAddCh(middeer2, 1, 3, (chtype) '(');
+    MvWAddCh(middeer2, 1, 4, (chtype) '=');
+    MvWAddCh(middeer2, 1, 5, (chtype) ')');
+    MvWAddCh(middeer2, 1, 6, (chtype) '~');
+    MvWAddCh(middeer2, 2, 3, (chtype) '|');
+    MvWAddCh(middeer2, 2, 5, (chtype) '|');
 
     /* middeer3 */
-    mvwaddch(middeer3, 0, 2, (chtype) 'y');
-    mvwaddch(middeer3, 0, 3, (chtype) 'y');
-    mvwaddch(middeer3, 1, 2, (chtype) '0');
-    mvwaddch(middeer3, 1, 3, (chtype) '(');
-    mvwaddch(middeer3, 1, 4, (chtype) '=');
-    mvwaddch(middeer3, 1, 5, (chtype) ')');
-    mvwaddch(middeer3, 1, 6, (chtype) '~');
-    mvwaddch(middeer3, 2, 2, (chtype) '/');
-    mvwaddch(middeer3, 2, 6, (chtype) '\\');
+    MvWAddCh(middeer3, 0, 2, (chtype) 'y');
+    MvWAddCh(middeer3, 0, 3, (chtype) 'y');
+    MvWAddCh(middeer3, 1, 2, (chtype) '0');
+    MvWAddCh(middeer3, 1, 3, (chtype) '(');
+    MvWAddCh(middeer3, 1, 4, (chtype) '=');
+    MvWAddCh(middeer3, 1, 5, (chtype) ')');
+    MvWAddCh(middeer3, 1, 6, (chtype) '~');
+    MvWAddCh(middeer3, 2, 2, (chtype) '/');
+    MvWAddCh(middeer3, 2, 6, (chtype) '\\');
 
     /* bigdeer1 */
-    mvwaddch(bigdeer1, 0, 17, (chtype) '\\');
-    mvwaddch(bigdeer1, 0, 18, (chtype) '/');
-    mvwaddch(bigdeer1, 0, 20, (chtype) '\\');
-    mvwaddch(bigdeer1, 0, 21, (chtype) '/');
-    mvwaddch(bigdeer1, 1, 18, (chtype) '\\');
-    mvwaddch(bigdeer1, 1, 20, (chtype) '/');
-    mvwaddch(bigdeer1, 2, 19, (chtype) '|');
-    mvwaddch(bigdeer1, 2, 20, (chtype) '_');
-    mvwaddch(bigdeer1, 3, 18, (chtype) '/');
-    mvwaddch(bigdeer1, 3, 19, (chtype) '^');
-    mvwaddch(bigdeer1, 3, 20, (chtype) '0');
-    mvwaddch(bigdeer1, 3, 21, (chtype) '\\');
-    mvwaddch(bigdeer1, 4, 17, (chtype) '/');
-    mvwaddch(bigdeer1, 4, 18, (chtype) '/');
-    mvwaddch(bigdeer1, 4, 19, (chtype) '\\');
-    mvwaddch(bigdeer1, 4, 22, (chtype) '\\');
-    mvwaddstr(bigdeer1, 5, 7, "^~~~~~~~~//  ~~U");
-    mvwaddstr(bigdeer1, 6, 7, "( \\_____( /");
-    mvwaddstr(bigdeer1, 7, 8, "( )    /");
-    mvwaddstr(bigdeer1, 8, 9, "\\\\   /");
-    mvwaddstr(bigdeer1, 9, 11, "\\>/>");
+    MvWAddCh(bigdeer1, 0, 17, (chtype) '\\');
+    MvWAddCh(bigdeer1, 0, 18, (chtype) '/');
+    MvWAddCh(bigdeer1, 0, 20, (chtype) '\\');
+    MvWAddCh(bigdeer1, 0, 21, (chtype) '/');
+    MvWAddCh(bigdeer1, 1, 18, (chtype) '\\');
+    MvWAddCh(bigdeer1, 1, 20, (chtype) '/');
+    MvWAddCh(bigdeer1, 2, 19, (chtype) '|');
+    MvWAddCh(bigdeer1, 2, 20, (chtype) '_');
+    MvWAddCh(bigdeer1, 3, 18, (chtype) '/');
+    MvWAddCh(bigdeer1, 3, 19, (chtype) '^');
+    MvWAddCh(bigdeer1, 3, 20, (chtype) '0');
+    MvWAddCh(bigdeer1, 3, 21, (chtype) '\\');
+    MvWAddCh(bigdeer1, 4, 17, (chtype) '/');
+    MvWAddCh(bigdeer1, 4, 18, (chtype) '/');
+    MvWAddCh(bigdeer1, 4, 19, (chtype) '\\');
+    MvWAddCh(bigdeer1, 4, 22, (chtype) '\\');
+    MvWAddStr(bigdeer1, 5, 7, "^~~~~~~~~//  ~~U");
+    MvWAddStr(bigdeer1, 6, 7, "( \\_____( /");
+    MvWAddStr(bigdeer1, 7, 8, "( )    /");
+    MvWAddStr(bigdeer1, 8, 9, "\\\\   /");
+    MvWAddStr(bigdeer1, 9, 11, "\\>/>");
 
     /* bigdeer2 */
-    mvwaddch(bigdeer2, 0, 17, (chtype) '\\');
-    mvwaddch(bigdeer2, 0, 18, (chtype) '/');
-    mvwaddch(bigdeer2, 0, 20, (chtype) '\\');
-    mvwaddch(bigdeer2, 0, 21, (chtype) '/');
-    mvwaddch(bigdeer2, 1, 18, (chtype) '\\');
-    mvwaddch(bigdeer2, 1, 20, (chtype) '/');
-    mvwaddch(bigdeer2, 2, 19, (chtype) '|');
-    mvwaddch(bigdeer2, 2, 20, (chtype) '_');
-    mvwaddch(bigdeer2, 3, 18, (chtype) '/');
-    mvwaddch(bigdeer2, 3, 19, (chtype) '^');
-    mvwaddch(bigdeer2, 3, 20, (chtype) '0');
-    mvwaddch(bigdeer2, 3, 21, (chtype) '\\');
-    mvwaddch(bigdeer2, 4, 17, (chtype) '/');
-    mvwaddch(bigdeer2, 4, 18, (chtype) '/');
-    mvwaddch(bigdeer2, 4, 19, (chtype) '\\');
-    mvwaddch(bigdeer2, 4, 22, (chtype) '\\');
-    mvwaddstr(bigdeer2, 5, 7, "^~~~~~~~~//  ~~U");
-    mvwaddstr(bigdeer2, 6, 7, "(( )____( /");
-    mvwaddstr(bigdeer2, 7, 7, "( /      |");
-    mvwaddstr(bigdeer2, 8, 8, "\\/      |");
-    mvwaddstr(bigdeer2, 9, 9, "|>     |>");
+    MvWAddCh(bigdeer2, 0, 17, (chtype) '\\');
+    MvWAddCh(bigdeer2, 0, 18, (chtype) '/');
+    MvWAddCh(bigdeer2, 0, 20, (chtype) '\\');
+    MvWAddCh(bigdeer2, 0, 21, (chtype) '/');
+    MvWAddCh(bigdeer2, 1, 18, (chtype) '\\');
+    MvWAddCh(bigdeer2, 1, 20, (chtype) '/');
+    MvWAddCh(bigdeer2, 2, 19, (chtype) '|');
+    MvWAddCh(bigdeer2, 2, 20, (chtype) '_');
+    MvWAddCh(bigdeer2, 3, 18, (chtype) '/');
+    MvWAddCh(bigdeer2, 3, 19, (chtype) '^');
+    MvWAddCh(bigdeer2, 3, 20, (chtype) '0');
+    MvWAddCh(bigdeer2, 3, 21, (chtype) '\\');
+    MvWAddCh(bigdeer2, 4, 17, (chtype) '/');
+    MvWAddCh(bigdeer2, 4, 18, (chtype) '/');
+    MvWAddCh(bigdeer2, 4, 19, (chtype) '\\');
+    MvWAddCh(bigdeer2, 4, 22, (chtype) '\\');
+    MvWAddStr(bigdeer2, 5, 7, "^~~~~~~~~//  ~~U");
+    MvWAddStr(bigdeer2, 6, 7, "(( )____( /");
+    MvWAddStr(bigdeer2, 7, 7, "( /      |");
+    MvWAddStr(bigdeer2, 8, 8, "\\/      |");
+    MvWAddStr(bigdeer2, 9, 9, "|>     |>");
 
     /* bigdeer3 */
-    mvwaddch(bigdeer3, 0, 17, (chtype) '\\');
-    mvwaddch(bigdeer3, 0, 18, (chtype) '/');
-    mvwaddch(bigdeer3, 0, 20, (chtype) '\\');
-    mvwaddch(bigdeer3, 0, 21, (chtype) '/');
-    mvwaddch(bigdeer3, 1, 18, (chtype) '\\');
-    mvwaddch(bigdeer3, 1, 20, (chtype) '/');
-    mvwaddch(bigdeer3, 2, 19, (chtype) '|');
-    mvwaddch(bigdeer3, 2, 20, (chtype) '_');
-    mvwaddch(bigdeer3, 3, 18, (chtype) '/');
-    mvwaddch(bigdeer3, 3, 19, (chtype) '^');
-    mvwaddch(bigdeer3, 3, 20, (chtype) '0');
-    mvwaddch(bigdeer3, 3, 21, (chtype) '\\');
-    mvwaddch(bigdeer3, 4, 17, (chtype) '/');
-    mvwaddch(bigdeer3, 4, 18, (chtype) '/');
-    mvwaddch(bigdeer3, 4, 19, (chtype) '\\');
-    mvwaddch(bigdeer3, 4, 22, (chtype) '\\');
-    mvwaddstr(bigdeer3, 5, 7, "^~~~~~~~~//  ~~U");
-    mvwaddstr(bigdeer3, 6, 6, "( ()_____( /");
-    mvwaddstr(bigdeer3, 7, 6, "/ /       /");
-    mvwaddstr(bigdeer3, 8, 5, "|/          \\");
-    mvwaddstr(bigdeer3, 9, 5, "/>           \\>");
+    MvWAddCh(bigdeer3, 0, 17, (chtype) '\\');
+    MvWAddCh(bigdeer3, 0, 18, (chtype) '/');
+    MvWAddCh(bigdeer3, 0, 20, (chtype) '\\');
+    MvWAddCh(bigdeer3, 0, 21, (chtype) '/');
+    MvWAddCh(bigdeer3, 1, 18, (chtype) '\\');
+    MvWAddCh(bigdeer3, 1, 20, (chtype) '/');
+    MvWAddCh(bigdeer3, 2, 19, (chtype) '|');
+    MvWAddCh(bigdeer3, 2, 20, (chtype) '_');
+    MvWAddCh(bigdeer3, 3, 18, (chtype) '/');
+    MvWAddCh(bigdeer3, 3, 19, (chtype) '^');
+    MvWAddCh(bigdeer3, 3, 20, (chtype) '0');
+    MvWAddCh(bigdeer3, 3, 21, (chtype) '\\');
+    MvWAddCh(bigdeer3, 4, 17, (chtype) '/');
+    MvWAddCh(bigdeer3, 4, 18, (chtype) '/');
+    MvWAddCh(bigdeer3, 4, 19, (chtype) '\\');
+    MvWAddCh(bigdeer3, 4, 22, (chtype) '\\');
+    MvWAddStr(bigdeer3, 5, 7, "^~~~~~~~~//  ~~U");
+    MvWAddStr(bigdeer3, 6, 6, "( ()_____( /");
+    MvWAddStr(bigdeer3, 7, 6, "/ /       /");
+    MvWAddStr(bigdeer3, 8, 5, "|/          \\");
+    MvWAddStr(bigdeer3, 9, 5, "/>           \\>");
 
     /* bigdeer4 */
-    mvwaddch(bigdeer4, 0, 17, (chtype) '\\');
-    mvwaddch(bigdeer4, 0, 18, (chtype) '/');
-    mvwaddch(bigdeer4, 0, 20, (chtype) '\\');
-    mvwaddch(bigdeer4, 0, 21, (chtype) '/');
-    mvwaddch(bigdeer4, 1, 18, (chtype) '\\');
-    mvwaddch(bigdeer4, 1, 20, (chtype) '/');
-    mvwaddch(bigdeer4, 2, 19, (chtype) '|');
-    mvwaddch(bigdeer4, 2, 20, (chtype) '_');
-    mvwaddch(bigdeer4, 3, 18, (chtype) '/');
-    mvwaddch(bigdeer4, 3, 19, (chtype) '^');
-    mvwaddch(bigdeer4, 3, 20, (chtype) '0');
-    mvwaddch(bigdeer4, 3, 21, (chtype) '\\');
-    mvwaddch(bigdeer4, 4, 17, (chtype) '/');
-    mvwaddch(bigdeer4, 4, 18, (chtype) '/');
-    mvwaddch(bigdeer4, 4, 19, (chtype) '\\');
-    mvwaddch(bigdeer4, 4, 22, (chtype) '\\');
-    mvwaddstr(bigdeer4, 5, 7, "^~~~~~~~~//  ~~U");
-    mvwaddstr(bigdeer4, 6, 6, "( )______( /");
-    mvwaddstr(bigdeer4, 7, 5, "(/          \\");
-    mvwaddstr(bigdeer4, 8, 0, "v___=             ----^");
+    MvWAddCh(bigdeer4, 0, 17, (chtype) '\\');
+    MvWAddCh(bigdeer4, 0, 18, (chtype) '/');
+    MvWAddCh(bigdeer4, 0, 20, (chtype) '\\');
+    MvWAddCh(bigdeer4, 0, 21, (chtype) '/');
+    MvWAddCh(bigdeer4, 1, 18, (chtype) '\\');
+    MvWAddCh(bigdeer4, 1, 20, (chtype) '/');
+    MvWAddCh(bigdeer4, 2, 19, (chtype) '|');
+    MvWAddCh(bigdeer4, 2, 20, (chtype) '_');
+    MvWAddCh(bigdeer4, 3, 18, (chtype) '/');
+    MvWAddCh(bigdeer4, 3, 19, (chtype) '^');
+    MvWAddCh(bigdeer4, 3, 20, (chtype) '0');
+    MvWAddCh(bigdeer4, 3, 21, (chtype) '\\');
+    MvWAddCh(bigdeer4, 4, 17, (chtype) '/');
+    MvWAddCh(bigdeer4, 4, 18, (chtype) '/');
+    MvWAddCh(bigdeer4, 4, 19, (chtype) '\\');
+    MvWAddCh(bigdeer4, 4, 22, (chtype) '\\');
+    MvWAddStr(bigdeer4, 5, 7, "^~~~~~~~~//  ~~U");
+    MvWAddStr(bigdeer4, 6, 6, "( )______( /");
+    MvWAddStr(bigdeer4, 7, 5, "(/          \\");
+    MvWAddStr(bigdeer4, 8, 0, "v___=             ----^");
 
     /* lookdeer1 */
-    mvwaddstr(lookdeer1, 0, 16, "\\/     \\/");
-    mvwaddstr(lookdeer1, 1, 17, "\\Y/ \\Y/");
-    mvwaddstr(lookdeer1, 2, 19, "\\=/");
-    mvwaddstr(lookdeer1, 3, 17, "^\\o o/^");
-    mvwaddstr(lookdeer1, 4, 17, "//( )");
-    mvwaddstr(lookdeer1, 5, 7, "^~~~~~~~~// \\O/");
-    mvwaddstr(lookdeer1, 6, 7, "( \\_____( /");
-    mvwaddstr(lookdeer1, 7, 8, "( )    /");
-    mvwaddstr(lookdeer1, 8, 9, "\\\\   /");
-    mvwaddstr(lookdeer1, 9, 11, "\\>/>");
+    MvWAddStr(lookdeer1, 0, 16, "\\/     \\/");
+    MvWAddStr(lookdeer1, 1, 17, "\\Y/ \\Y/");
+    MvWAddStr(lookdeer1, 2, 19, "\\=/");
+    MvWAddStr(lookdeer1, 3, 17, "^\\o o/^");
+    MvWAddStr(lookdeer1, 4, 17, "//( )");
+    MvWAddStr(lookdeer1, 5, 7, "^~~~~~~~~// \\O/");
+    MvWAddStr(lookdeer1, 6, 7, "( \\_____( /");
+    MvWAddStr(lookdeer1, 7, 8, "( )    /");
+    MvWAddStr(lookdeer1, 8, 9, "\\\\   /");
+    MvWAddStr(lookdeer1, 9, 11, "\\>/>");
 
     /* lookdeer2 */
-    mvwaddstr(lookdeer2, 0, 16, "\\/     \\/");
-    mvwaddstr(lookdeer2, 1, 17, "\\Y/ \\Y/");
-    mvwaddstr(lookdeer2, 2, 19, "\\=/");
-    mvwaddstr(lookdeer2, 3, 17, "^\\o o/^");
-    mvwaddstr(lookdeer2, 4, 17, "//( )");
-    mvwaddstr(lookdeer2, 5, 7, "^~~~~~~~~// \\O/");
-    mvwaddstr(lookdeer2, 6, 7, "(( )____( /");
-    mvwaddstr(lookdeer2, 7, 7, "( /      |");
-    mvwaddstr(lookdeer2, 8, 8, "\\/      |");
-    mvwaddstr(lookdeer2, 9, 9, "|>     |>");
+    MvWAddStr(lookdeer2, 0, 16, "\\/     \\/");
+    MvWAddStr(lookdeer2, 1, 17, "\\Y/ \\Y/");
+    MvWAddStr(lookdeer2, 2, 19, "\\=/");
+    MvWAddStr(lookdeer2, 3, 17, "^\\o o/^");
+    MvWAddStr(lookdeer2, 4, 17, "//( )");
+    MvWAddStr(lookdeer2, 5, 7, "^~~~~~~~~// \\O/");
+    MvWAddStr(lookdeer2, 6, 7, "(( )____( /");
+    MvWAddStr(lookdeer2, 7, 7, "( /      |");
+    MvWAddStr(lookdeer2, 8, 8, "\\/      |");
+    MvWAddStr(lookdeer2, 9, 9, "|>     |>");
 
     /* lookdeer3 */
-    mvwaddstr(lookdeer3, 0, 16, "\\/     \\/");
-    mvwaddstr(lookdeer3, 1, 17, "\\Y/ \\Y/");
-    mvwaddstr(lookdeer3, 2, 19, "\\=/");
-    mvwaddstr(lookdeer3, 3, 17, "^\\o o/^");
-    mvwaddstr(lookdeer3, 4, 17, "//( )");
-    mvwaddstr(lookdeer3, 5, 7, "^~~~~~~~~// \\O/");
-    mvwaddstr(lookdeer3, 6, 6, "( ()_____( /");
-    mvwaddstr(lookdeer3, 7, 6, "/ /       /");
-    mvwaddstr(lookdeer3, 8, 5, "|/          \\");
-    mvwaddstr(lookdeer3, 9, 5, "/>           \\>");
+    MvWAddStr(lookdeer3, 0, 16, "\\/     \\/");
+    MvWAddStr(lookdeer3, 1, 17, "\\Y/ \\Y/");
+    MvWAddStr(lookdeer3, 2, 19, "\\=/");
+    MvWAddStr(lookdeer3, 3, 17, "^\\o o/^");
+    MvWAddStr(lookdeer3, 4, 17, "//( )");
+    MvWAddStr(lookdeer3, 5, 7, "^~~~~~~~~// \\O/");
+    MvWAddStr(lookdeer3, 6, 6, "( ()_____( /");
+    MvWAddStr(lookdeer3, 7, 6, "/ /       /");
+    MvWAddStr(lookdeer3, 8, 5, "|/          \\");
+    MvWAddStr(lookdeer3, 9, 5, "/>           \\>");
 
     /* lookdeer4 */
-    mvwaddstr(lookdeer4, 0, 16, "\\/     \\/");
-    mvwaddstr(lookdeer4, 1, 17, "\\Y/ \\Y/");
-    mvwaddstr(lookdeer4, 2, 19, "\\=/");
-    mvwaddstr(lookdeer4, 3, 17, "^\\o o/^");
-    mvwaddstr(lookdeer4, 4, 17, "//( )");
-    mvwaddstr(lookdeer4, 5, 7, "^~~~~~~~~// \\O/");
-    mvwaddstr(lookdeer4, 6, 6, "( )______( /");
-    mvwaddstr(lookdeer4, 7, 5, "(/          \\");
-    mvwaddstr(lookdeer4, 8, 0, "v___=             ----^");
+    MvWAddStr(lookdeer4, 0, 16, "\\/     \\/");
+    MvWAddStr(lookdeer4, 1, 17, "\\Y/ \\Y/");
+    MvWAddStr(lookdeer4, 2, 19, "\\=/");
+    MvWAddStr(lookdeer4, 3, 17, "^\\o o/^");
+    MvWAddStr(lookdeer4, 4, 17, "//( )");
+    MvWAddStr(lookdeer4, 5, 7, "^~~~~~~~~// \\O/");
+    MvWAddStr(lookdeer4, 6, 6, "( )______( /");
+    MvWAddStr(lookdeer4, 7, 5, "(/          \\");
+    MvWAddStr(lookdeer4, 8, 0, "v___=             ----^");
 
 	/***********************************************/
     cbreak();
@@ -492,166 +492,166 @@ main(int argc GCC_UNUSED, char **argv GCC_UNUSED)
 	overlay(treescrn, treescrn3);
 
 	/*balls */
-	mvwaddch(treescrn3, 4, 18, ' ');
-	mvwaddch(treescrn3, 7, 6, ' ');
-	mvwaddch(treescrn3, 8, 19, ' ');
-	mvwaddch(treescrn3, 11, 22, ' ');
+	MvWAddCh(treescrn3, 4, 18, ' ');
+	MvWAddCh(treescrn3, 7, 6, ' ');
+	MvWAddCh(treescrn3, 8, 19, ' ');
+	MvWAddCh(treescrn3, 11, 22, ' ');
 
 	/*star */
-	mvwaddch(treescrn3, 0, 12, '*');
+	MvWAddCh(treescrn3, 0, 12, '*');
 
 	/*strng1 */
-	mvwaddch(treescrn3, 3, 11, ' ');
+	MvWAddCh(treescrn3, 3, 11, ' ');
 
 	/*strng2 */
-	mvwaddch(treescrn3, 5, 13, ' ');
-	mvwaddch(treescrn3, 6, 10, ' ');
+	MvWAddCh(treescrn3, 5, 13, ' ');
+	MvWAddCh(treescrn3, 6, 10, ' ');
 
 	/*strng3 */
-	mvwaddch(treescrn3, 7, 16, ' ');
-	mvwaddch(treescrn3, 7, 14, ' ');
+	MvWAddCh(treescrn3, 7, 16, ' ');
+	MvWAddCh(treescrn3, 7, 14, ' ');
 
 	/*strng4 */
-	mvwaddch(treescrn3, 10, 13, ' ');
-	mvwaddch(treescrn3, 10, 10, ' ');
-	mvwaddch(treescrn3, 11, 8, ' ');
+	MvWAddCh(treescrn3, 10, 13, ' ');
+	MvWAddCh(treescrn3, 10, 10, ' ');
+	MvWAddCh(treescrn3, 11, 8, ' ');
 
 	/*strng5 */
-	mvwaddch(treescrn3, 11, 18, ' ');
-	mvwaddch(treescrn3, 12, 13, ' ');
+	MvWAddCh(treescrn3, 11, 18, ' ');
+	MvWAddCh(treescrn3, 12, 13, ' ');
 
 	/* treescrn4 */
 
 	overlay(treescrn, treescrn4);
 
 	/*balls */
-	mvwaddch(treescrn4, 3, 9, ' ');
-	mvwaddch(treescrn4, 4, 16, ' ');
-	mvwaddch(treescrn4, 7, 6, ' ');
-	mvwaddch(treescrn4, 8, 19, ' ');
-	mvwaddch(treescrn4, 11, 2, ' ');
-	mvwaddch(treescrn4, 12, 23, ' ');
+	MvWAddCh(treescrn4, 3, 9, ' ');
+	MvWAddCh(treescrn4, 4, 16, ' ');
+	MvWAddCh(treescrn4, 7, 6, ' ');
+	MvWAddCh(treescrn4, 8, 19, ' ');
+	MvWAddCh(treescrn4, 11, 2, ' ');
+	MvWAddCh(treescrn4, 12, 23, ' ');
 
 	/*star */
 	(void) wstandout(treescrn4);
-	mvwaddch(treescrn4, 0, 12, '*');
+	MvWAddCh(treescrn4, 0, 12, '*');
 	(void) wstandend(treescrn4);
 
 	/*strng1 */
-	mvwaddch(treescrn4, 3, 13, ' ');
+	MvWAddCh(treescrn4, 3, 13, ' ');
 
 	/*strng2 */
 
 	/*strng3 */
-	mvwaddch(treescrn4, 7, 15, ' ');
-	mvwaddch(treescrn4, 8, 11, ' ');
+	MvWAddCh(treescrn4, 7, 15, ' ');
+	MvWAddCh(treescrn4, 8, 11, ' ');
 
 	/*strng4 */
-	mvwaddch(treescrn4, 9, 16, ' ');
-	mvwaddch(treescrn4, 10, 12, ' ');
-	mvwaddch(treescrn4, 11, 8, ' ');
+	MvWAddCh(treescrn4, 9, 16, ' ');
+	MvWAddCh(treescrn4, 10, 12, ' ');
+	MvWAddCh(treescrn4, 11, 8, ' ');
 
 	/*strng5 */
-	mvwaddch(treescrn4, 11, 18, ' ');
-	mvwaddch(treescrn4, 12, 14, ' ');
+	MvWAddCh(treescrn4, 11, 18, ' ');
+	MvWAddCh(treescrn4, 12, 14, ' ');
 
 	/* treescrn5 */
 
 	overlay(treescrn, treescrn5);
 
 	/*balls */
-	mvwaddch(treescrn5, 3, 15, ' ');
-	mvwaddch(treescrn5, 10, 20, ' ');
-	mvwaddch(treescrn5, 12, 1, ' ');
+	MvWAddCh(treescrn5, 3, 15, ' ');
+	MvWAddCh(treescrn5, 10, 20, ' ');
+	MvWAddCh(treescrn5, 12, 1, ' ');
 
 	/*star */
-	mvwaddch(treescrn5, 0, 12, '*');
+	MvWAddCh(treescrn5, 0, 12, '*');
 
 	/*strng1 */
-	mvwaddch(treescrn5, 3, 11, ' ');
+	MvWAddCh(treescrn5, 3, 11, ' ');
 
 	/*strng2 */
-	mvwaddch(treescrn5, 5, 12, ' ');
+	MvWAddCh(treescrn5, 5, 12, ' ');
 
 	/*strng3 */
-	mvwaddch(treescrn5, 7, 14, ' ');
-	mvwaddch(treescrn5, 8, 10, ' ');
+	MvWAddCh(treescrn5, 7, 14, ' ');
+	MvWAddCh(treescrn5, 8, 10, ' ');
 
 	/*strng4 */
-	mvwaddch(treescrn5, 9, 15, ' ');
-	mvwaddch(treescrn5, 10, 11, ' ');
-	mvwaddch(treescrn5, 11, 7, ' ');
+	MvWAddCh(treescrn5, 9, 15, ' ');
+	MvWAddCh(treescrn5, 10, 11, ' ');
+	MvWAddCh(treescrn5, 11, 7, ' ');
 
 	/*strng5 */
-	mvwaddch(treescrn5, 11, 17, ' ');
-	mvwaddch(treescrn5, 12, 13, ' ');
+	MvWAddCh(treescrn5, 11, 17, ' ');
+	MvWAddCh(treescrn5, 12, 13, ' ');
 
 	/* treescrn6 */
 
 	overlay(treescrn, treescrn6);
 
 	/*balls */
-	mvwaddch(treescrn6, 6, 7, ' ');
-	mvwaddch(treescrn6, 7, 18, ' ');
-	mvwaddch(treescrn6, 10, 4, ' ');
-	mvwaddch(treescrn6, 11, 23, ' ');
+	MvWAddCh(treescrn6, 6, 7, ' ');
+	MvWAddCh(treescrn6, 7, 18, ' ');
+	MvWAddCh(treescrn6, 10, 4, ' ');
+	MvWAddCh(treescrn6, 11, 23, ' ');
 
 	/*star */
 	(void) wstandout(treescrn6);
-	mvwaddch(treescrn6, 0, 12, '*');
+	MvWAddCh(treescrn6, 0, 12, '*');
 	(void) wstandend(treescrn6);
 
 	/*strng1 */
 
 	/*strng2 */
-	mvwaddch(treescrn6, 5, 11, ' ');
+	MvWAddCh(treescrn6, 5, 11, ' ');
 
 	/*strng3 */
-	mvwaddch(treescrn6, 7, 13, ' ');
-	mvwaddch(treescrn6, 8, 9, ' ');
+	MvWAddCh(treescrn6, 7, 13, ' ');
+	MvWAddCh(treescrn6, 8, 9, ' ');
 
 	/*strng4 */
-	mvwaddch(treescrn6, 9, 14, ' ');
-	mvwaddch(treescrn6, 10, 10, ' ');
-	mvwaddch(treescrn6, 11, 6, ' ');
+	MvWAddCh(treescrn6, 9, 14, ' ');
+	MvWAddCh(treescrn6, 10, 10, ' ');
+	MvWAddCh(treescrn6, 11, 6, ' ');
 
 	/*strng5 */
-	mvwaddch(treescrn6, 11, 16, ' ');
-	mvwaddch(treescrn6, 12, 12, ' ');
+	MvWAddCh(treescrn6, 11, 16, ' ');
+	MvWAddCh(treescrn6, 12, 12, ' ');
 
 	/* treescrn7 */
 
 	overlay(treescrn, treescrn7);
 
 	/*balls */
-	mvwaddch(treescrn7, 3, 15, ' ');
-	mvwaddch(treescrn7, 6, 7, ' ');
-	mvwaddch(treescrn7, 7, 18, ' ');
-	mvwaddch(treescrn7, 10, 4, ' ');
-	mvwaddch(treescrn7, 11, 22, ' ');
+	MvWAddCh(treescrn7, 3, 15, ' ');
+	MvWAddCh(treescrn7, 6, 7, ' ');
+	MvWAddCh(treescrn7, 7, 18, ' ');
+	MvWAddCh(treescrn7, 10, 4, ' ');
+	MvWAddCh(treescrn7, 11, 22, ' ');
 
 	/*star */
-	mvwaddch(treescrn7, 0, 12, '*');
+	MvWAddCh(treescrn7, 0, 12, '*');
 
 	/*strng1 */
-	mvwaddch(treescrn7, 3, 12, ' ');
+	MvWAddCh(treescrn7, 3, 12, ' ');
 
 	/*strng2 */
-	mvwaddch(treescrn7, 5, 13, ' ');
-	mvwaddch(treescrn7, 6, 9, ' ');
+	MvWAddCh(treescrn7, 5, 13, ' ');
+	MvWAddCh(treescrn7, 6, 9, ' ');
 
 	/*strng3 */
-	mvwaddch(treescrn7, 7, 15, ' ');
-	mvwaddch(treescrn7, 8, 11, ' ');
+	MvWAddCh(treescrn7, 7, 15, ' ');
+	MvWAddCh(treescrn7, 8, 11, ' ');
 
 	/*strng4 */
-	mvwaddch(treescrn7, 9, 16, ' ');
-	mvwaddch(treescrn7, 10, 12, ' ');
-	mvwaddch(treescrn7, 11, 8, ' ');
+	MvWAddCh(treescrn7, 9, 16, ' ');
+	MvWAddCh(treescrn7, 10, 12, ' ');
+	MvWAddCh(treescrn7, 11, 8, ' ');
 
 	/*strng5 */
-	mvwaddch(treescrn7, 11, 18, ' ');
-	mvwaddch(treescrn7, 12, 14, ' ');
+	MvWAddCh(treescrn7, 11, 18, ' ');
+	MvWAddCh(treescrn7, 12, 14, ' ');
 
 	look_out(150);
 	reindeer();
@@ -678,21 +678,21 @@ boxit(void)
     int x = 0;
 
     while (x < 20) {
-	mvaddch(x, 7, '|');
+	MvAddCh(x, 7, '|');
 	++x;
     }
 
     x = 8;
 
     while (x < 80) {
-	mvaddch(19, x, '_');
+	MvAddCh(19, x, '_');
 	++x;
     }
 
     x = 0;
 
     while (x < 80) {
-	mvaddch(22, x, '_');
+	MvAddCh(22, x, '_');
 	++x;
     }
 
@@ -702,14 +702,14 @@ boxit(void)
 static int
 seas(void)
 {
-    mvaddch(4, 1, 'S');
-    mvaddch(6, 1, 'E');
-    mvaddch(8, 1, 'A');
-    mvaddch(10, 1, 'S');
-    mvaddch(12, 1, 'O');
-    mvaddch(14, 1, 'N');
-    mvaddch(16, 1, '`');
-    mvaddch(18, 1, 'S');
+    MvAddCh(4, 1, 'S');
+    MvAddCh(6, 1, 'E');
+    MvAddCh(8, 1, 'A');
+    MvAddCh(10, 1, 'S');
+    MvAddCh(12, 1, 'O');
+    MvAddCh(14, 1, 'N');
+    MvAddCh(16, 1, '`');
+    MvAddCh(18, 1, 'S');
 
     return (0);
 }
@@ -717,15 +717,15 @@ seas(void)
 static int
 greet(void)
 {
-    mvaddch(3, 5, 'G');
-    mvaddch(5, 5, 'R');
-    mvaddch(7, 5, 'E');
-    mvaddch(9, 5, 'E');
-    mvaddch(11, 5, 'T');
-    mvaddch(13, 5, 'I');
-    mvaddch(15, 5, 'N');
-    mvaddch(17, 5, 'G');
-    mvaddch(19, 5, 'S');
+    MvAddCh(3, 5, 'G');
+    MvAddCh(5, 5, 'R');
+    MvAddCh(7, 5, 'E');
+    MvAddCh(9, 5, 'E');
+    MvAddCh(11, 5, 'T');
+    MvAddCh(13, 5, 'I');
+    MvAddCh(15, 5, 'N');
+    MvAddCh(17, 5, 'G');
+    MvAddCh(19, 5, 'S');
 
     return (0);
 }
@@ -733,7 +733,7 @@ greet(void)
 static int
 fromwho(void)
 {
-    mvaddstr(21, 13, FROMWHO);
+    MvAddStr(21, 13, FROMWHO);
     return (0);
 }
 
@@ -741,41 +741,41 @@ static int
 tree(void)
 {
     set_color(treescrn, COLOR_GREEN);
-    mvwaddch(treescrn, 1, 11, (chtype) '/');
-    mvwaddch(treescrn, 2, 11, (chtype) '/');
-    mvwaddch(treescrn, 3, 10, (chtype) '/');
-    mvwaddch(treescrn, 4, 9, (chtype) '/');
-    mvwaddch(treescrn, 5, 9, (chtype) '/');
-    mvwaddch(treescrn, 6, 8, (chtype) '/');
-    mvwaddch(treescrn, 7, 7, (chtype) '/');
-    mvwaddch(treescrn, 8, 6, (chtype) '/');
-    mvwaddch(treescrn, 9, 6, (chtype) '/');
-    mvwaddch(treescrn, 10, 5, (chtype) '/');
-    mvwaddch(treescrn, 11, 3, (chtype) '/');
-    mvwaddch(treescrn, 12, 2, (chtype) '/');
+    MvWAddCh(treescrn, 1, 11, (chtype) '/');
+    MvWAddCh(treescrn, 2, 11, (chtype) '/');
+    MvWAddCh(treescrn, 3, 10, (chtype) '/');
+    MvWAddCh(treescrn, 4, 9, (chtype) '/');
+    MvWAddCh(treescrn, 5, 9, (chtype) '/');
+    MvWAddCh(treescrn, 6, 8, (chtype) '/');
+    MvWAddCh(treescrn, 7, 7, (chtype) '/');
+    MvWAddCh(treescrn, 8, 6, (chtype) '/');
+    MvWAddCh(treescrn, 9, 6, (chtype) '/');
+    MvWAddCh(treescrn, 10, 5, (chtype) '/');
+    MvWAddCh(treescrn, 11, 3, (chtype) '/');
+    MvWAddCh(treescrn, 12, 2, (chtype) '/');
 
-    mvwaddch(treescrn, 1, 13, (chtype) '\\');
-    mvwaddch(treescrn, 2, 13, (chtype) '\\');
-    mvwaddch(treescrn, 3, 14, (chtype) '\\');
-    mvwaddch(treescrn, 4, 15, (chtype) '\\');
-    mvwaddch(treescrn, 5, 15, (chtype) '\\');
-    mvwaddch(treescrn, 6, 16, (chtype) '\\');
-    mvwaddch(treescrn, 7, 17, (chtype) '\\');
-    mvwaddch(treescrn, 8, 18, (chtype) '\\');
-    mvwaddch(treescrn, 9, 18, (chtype) '\\');
-    mvwaddch(treescrn, 10, 19, (chtype) '\\');
-    mvwaddch(treescrn, 11, 21, (chtype) '\\');
-    mvwaddch(treescrn, 12, 22, (chtype) '\\');
+    MvWAddCh(treescrn, 1, 13, (chtype) '\\');
+    MvWAddCh(treescrn, 2, 13, (chtype) '\\');
+    MvWAddCh(treescrn, 3, 14, (chtype) '\\');
+    MvWAddCh(treescrn, 4, 15, (chtype) '\\');
+    MvWAddCh(treescrn, 5, 15, (chtype) '\\');
+    MvWAddCh(treescrn, 6, 16, (chtype) '\\');
+    MvWAddCh(treescrn, 7, 17, (chtype) '\\');
+    MvWAddCh(treescrn, 8, 18, (chtype) '\\');
+    MvWAddCh(treescrn, 9, 18, (chtype) '\\');
+    MvWAddCh(treescrn, 10, 19, (chtype) '\\');
+    MvWAddCh(treescrn, 11, 21, (chtype) '\\');
+    MvWAddCh(treescrn, 12, 22, (chtype) '\\');
 
-    mvwaddch(treescrn, 4, 10, (chtype) '_');
-    mvwaddch(treescrn, 4, 14, (chtype) '_');
-    mvwaddch(treescrn, 8, 7, (chtype) '_');
-    mvwaddch(treescrn, 8, 17, (chtype) '_');
+    MvWAddCh(treescrn, 4, 10, (chtype) '_');
+    MvWAddCh(treescrn, 4, 14, (chtype) '_');
+    MvWAddCh(treescrn, 8, 7, (chtype) '_');
+    MvWAddCh(treescrn, 8, 17, (chtype) '_');
 
-    mvwaddstr(treescrn, 13, 0, "//////////// \\\\\\\\\\\\\\\\\\\\\\\\");
+    MvWAddStr(treescrn, 13, 0, "//////////// \\\\\\\\\\\\\\\\\\\\\\\\");
 
-    mvwaddstr(treescrn, 14, 11, "| |");
-    mvwaddstr(treescrn, 15, 11, "|_|");
+    MvWAddStr(treescrn, 14, 11, "| |");
+    MvWAddStr(treescrn, 15, 11, "|_|");
 
     unset_color(treescrn);
     wrefresh(treescrn);
@@ -790,22 +790,22 @@ balls(void)
     overlay(treescrn, treescrn2);
 
     set_color(treescrn2, COLOR_BLUE);
-    mvwaddch(treescrn2, 3, 9, (chtype) '@');
-    mvwaddch(treescrn2, 3, 15, (chtype) '@');
-    mvwaddch(treescrn2, 4, 8, (chtype) '@');
-    mvwaddch(treescrn2, 4, 16, (chtype) '@');
-    mvwaddch(treescrn2, 5, 7, (chtype) '@');
-    mvwaddch(treescrn2, 5, 17, (chtype) '@');
-    mvwaddch(treescrn2, 7, 6, (chtype) '@');
-    mvwaddch(treescrn2, 7, 18, (chtype) '@');
-    mvwaddch(treescrn2, 8, 5, (chtype) '@');
-    mvwaddch(treescrn2, 8, 19, (chtype) '@');
-    mvwaddch(treescrn2, 10, 4, (chtype) '@');
-    mvwaddch(treescrn2, 10, 20, (chtype) '@');
-    mvwaddch(treescrn2, 11, 2, (chtype) '@');
-    mvwaddch(treescrn2, 11, 22, (chtype) '@');
-    mvwaddch(treescrn2, 12, 1, (chtype) '@');
-    mvwaddch(treescrn2, 12, 23, (chtype) '@');
+    MvWAddCh(treescrn2, 3, 9, (chtype) '@');
+    MvWAddCh(treescrn2, 3, 15, (chtype) '@');
+    MvWAddCh(treescrn2, 4, 8, (chtype) '@');
+    MvWAddCh(treescrn2, 4, 16, (chtype) '@');
+    MvWAddCh(treescrn2, 5, 7, (chtype) '@');
+    MvWAddCh(treescrn2, 5, 17, (chtype) '@');
+    MvWAddCh(treescrn2, 7, 6, (chtype) '@');
+    MvWAddCh(treescrn2, 7, 18, (chtype) '@');
+    MvWAddCh(treescrn2, 8, 5, (chtype) '@');
+    MvWAddCh(treescrn2, 8, 19, (chtype) '@');
+    MvWAddCh(treescrn2, 10, 4, (chtype) '@');
+    MvWAddCh(treescrn2, 10, 20, (chtype) '@');
+    MvWAddCh(treescrn2, 11, 2, (chtype) '@');
+    MvWAddCh(treescrn2, 11, 22, (chtype) '@');
+    MvWAddCh(treescrn2, 12, 1, (chtype) '@');
+    MvWAddCh(treescrn2, 12, 23, (chtype) '@');
 
     unset_color(treescrn2);
     wrefresh(treescrn2);
@@ -819,7 +819,7 @@ star(void)
     (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_YELLOW);
 
-    mvwaddch(treescrn2, 0, 12, (chtype) '*');
+    MvWAddCh(treescrn2, 0, 12, (chtype) '*');
     (void) wstandend(treescrn2);
 
     unset_color(treescrn2);
@@ -834,9 +834,9 @@ strng1(void)
     (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
-    mvwaddch(treescrn2, 3, 13, (chtype) '\'');
-    mvwaddch(treescrn2, 3, 12, (chtype) ':');
-    mvwaddch(treescrn2, 3, 11, (chtype) '.');
+    MvWAddCh(treescrn2, 3, 13, (chtype) '\'');
+    MvWAddCh(treescrn2, 3, 12, (chtype) ':');
+    MvWAddCh(treescrn2, 3, 11, (chtype) '.');
 
     wattroff(treescrn2, A_BOLD | A_BLINK);
     unset_color(treescrn2);
@@ -852,12 +852,12 @@ strng2(void)
     (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
-    mvwaddch(treescrn2, 5, 14, (chtype) '\'');
-    mvwaddch(treescrn2, 5, 13, (chtype) ':');
-    mvwaddch(treescrn2, 5, 12, (chtype) '.');
-    mvwaddch(treescrn2, 5, 11, (chtype) ',');
-    mvwaddch(treescrn2, 6, 10, (chtype) '\'');
-    mvwaddch(treescrn2, 6, 9, (chtype) ':');
+    MvWAddCh(treescrn2, 5, 14, (chtype) '\'');
+    MvWAddCh(treescrn2, 5, 13, (chtype) ':');
+    MvWAddCh(treescrn2, 5, 12, (chtype) '.');
+    MvWAddCh(treescrn2, 5, 11, (chtype) ',');
+    MvWAddCh(treescrn2, 6, 10, (chtype) '\'');
+    MvWAddCh(treescrn2, 6, 9, (chtype) ':');
 
     wattroff(treescrn2, A_BOLD | A_BLINK);
     unset_color(treescrn2);
@@ -873,14 +873,14 @@ strng3(void)
     (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
-    mvwaddch(treescrn2, 7, 16, (chtype) '\'');
-    mvwaddch(treescrn2, 7, 15, (chtype) ':');
-    mvwaddch(treescrn2, 7, 14, (chtype) '.');
-    mvwaddch(treescrn2, 7, 13, (chtype) ',');
-    mvwaddch(treescrn2, 8, 12, (chtype) '\'');
-    mvwaddch(treescrn2, 8, 11, (chtype) ':');
-    mvwaddch(treescrn2, 8, 10, (chtype) '.');
-    mvwaddch(treescrn2, 8, 9, (chtype) ',');
+    MvWAddCh(treescrn2, 7, 16, (chtype) '\'');
+    MvWAddCh(treescrn2, 7, 15, (chtype) ':');
+    MvWAddCh(treescrn2, 7, 14, (chtype) '.');
+    MvWAddCh(treescrn2, 7, 13, (chtype) ',');
+    MvWAddCh(treescrn2, 8, 12, (chtype) '\'');
+    MvWAddCh(treescrn2, 8, 11, (chtype) ':');
+    MvWAddCh(treescrn2, 8, 10, (chtype) '.');
+    MvWAddCh(treescrn2, 8, 9, (chtype) ',');
 
     wattroff(treescrn2, A_BOLD | A_BLINK);
     unset_color(treescrn2);
@@ -896,19 +896,19 @@ strng4(void)
     (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
-    mvwaddch(treescrn2, 9, 17, (chtype) '\'');
-    mvwaddch(treescrn2, 9, 16, (chtype) ':');
-    mvwaddch(treescrn2, 9, 15, (chtype) '.');
-    mvwaddch(treescrn2, 9, 14, (chtype) ',');
-    mvwaddch(treescrn2, 10, 13, (chtype) '\'');
-    mvwaddch(treescrn2, 10, 12, (chtype) ':');
-    mvwaddch(treescrn2, 10, 11, (chtype) '.');
-    mvwaddch(treescrn2, 10, 10, (chtype) ',');
-    mvwaddch(treescrn2, 11, 9, (chtype) '\'');
-    mvwaddch(treescrn2, 11, 8, (chtype) ':');
-    mvwaddch(treescrn2, 11, 7, (chtype) '.');
-    mvwaddch(treescrn2, 11, 6, (chtype) ',');
-    mvwaddch(treescrn2, 12, 5, (chtype) '\'');
+    MvWAddCh(treescrn2, 9, 17, (chtype) '\'');
+    MvWAddCh(treescrn2, 9, 16, (chtype) ':');
+    MvWAddCh(treescrn2, 9, 15, (chtype) '.');
+    MvWAddCh(treescrn2, 9, 14, (chtype) ',');
+    MvWAddCh(treescrn2, 10, 13, (chtype) '\'');
+    MvWAddCh(treescrn2, 10, 12, (chtype) ':');
+    MvWAddCh(treescrn2, 10, 11, (chtype) '.');
+    MvWAddCh(treescrn2, 10, 10, (chtype) ',');
+    MvWAddCh(treescrn2, 11, 9, (chtype) '\'');
+    MvWAddCh(treescrn2, 11, 8, (chtype) ':');
+    MvWAddCh(treescrn2, 11, 7, (chtype) '.');
+    MvWAddCh(treescrn2, 11, 6, (chtype) ',');
+    MvWAddCh(treescrn2, 12, 5, (chtype) '\'');
 
     wattroff(treescrn2, A_BOLD | A_BLINK);
     unset_color(treescrn2);
@@ -924,14 +924,14 @@ strng5(void)
     (void) wattrset(treescrn2, A_BOLD | A_BLINK);
     set_color(treescrn2, COLOR_WHITE);
 
-    mvwaddch(treescrn2, 11, 19, (chtype) '\'');
-    mvwaddch(treescrn2, 11, 18, (chtype) ':');
-    mvwaddch(treescrn2, 11, 17, (chtype) '.');
-    mvwaddch(treescrn2, 11, 16, (chtype) ',');
-    mvwaddch(treescrn2, 12, 15, (chtype) '\'');
-    mvwaddch(treescrn2, 12, 14, (chtype) ':');
-    mvwaddch(treescrn2, 12, 13, (chtype) '.');
-    mvwaddch(treescrn2, 12, 12, (chtype) ',');
+    MvWAddCh(treescrn2, 11, 19, (chtype) '\'');
+    MvWAddCh(treescrn2, 11, 18, (chtype) ':');
+    MvWAddCh(treescrn2, 11, 17, (chtype) '.');
+    MvWAddCh(treescrn2, 11, 16, (chtype) ',');
+    MvWAddCh(treescrn2, 12, 15, (chtype) '\'');
+    MvWAddCh(treescrn2, 12, 14, (chtype) ':');
+    MvWAddCh(treescrn2, 12, 13, (chtype) '.');
+    MvWAddCh(treescrn2, 12, 12, (chtype) ',');
 
     wattroff(treescrn2, A_BOLD | A_BLINK);
     unset_color(treescrn2);
@@ -1014,7 +1014,7 @@ reindeer(void)
 	    y_pos = 1;
 	}
 	for (looper = 0; looper < 4; looper++) {
-	    mvwaddch(dotdeer0, y_pos, x_pos, (chtype) '.');
+	    MvWAddCh(dotdeer0, y_pos, x_pos, (chtype) '.');
 	    wrefresh(dotdeer0);
 	    wrefresh(w_del_msg);
 	    werase(dotdeer0);
@@ -1032,14 +1032,14 @@ reindeer(void)
 	    if (x_pos < 56) {
 		y_pos = 3;
 
-		mvwaddch(stardeer0, y_pos, x_pos, (chtype) '*');
+		MvWAddCh(stardeer0, y_pos, x_pos, (chtype) '*');
 		wrefresh(stardeer0);
 		wrefresh(w_del_msg);
 		werase(stardeer0);
 		wrefresh(stardeer0);
 		wrefresh(w_del_msg);
 	    } else {
-		mvwaddch(dotdeer0, y_pos, x_pos, (chtype) '*');
+		MvWAddCh(dotdeer0, y_pos, x_pos, (chtype) '*');
 		wrefresh(dotdeer0);
 		wrefresh(w_del_msg);
 		werase(dotdeer0);

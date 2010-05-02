@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.28 2009/08/29 19:02:25 tom Exp $
+ * $Id: hanoi.c,v 1.29 2010/05/01 19:12:26 tom Exp $
  */
 
 #include <test.priv.h>
@@ -165,14 +165,14 @@ main(int argc, char **argv)
 	    if (GetMove(&FromCol, &ToCol))
 		break;
 	    if (InvalidMove(FromCol, ToCol)) {
-		mvaddstr(STATUSLINE, 0, "Invalid Move !!");
+		MvAddStr(STATUSLINE, 0, "Invalid Move !!");
 		refresh();
 		beep();
 		continue;
 	    }
 	    MakeMove(FromCol, ToCol);
 	    if (Solved(NTiles)) {
-		mvprintw(STATUSLINE, 0,
+		MvPrintw(STATUSLINE, 0,
 			 "Well Done !! You did it in %d moves", NMoves);
 		refresh();
 		sleep(5);
@@ -226,21 +226,21 @@ DisplayTiles(void)
     char TileBuf[BUFSIZ];
 
     erase();
-    mvaddstr(1, 24, "T O W E R S   O F   H A N O I");
-    mvaddstr(3, 34, "SJR 1990");
-    mvprintw(19, 5, "Moves : %d", NMoves);
+    MvAddStr(1, 24, "T O W E R S   O F   H A N O I");
+    MvAddStr(3, 34, "SJR 1990");
+    MvPrintw(19, 5, "Moves : %d", NMoves);
     (void) attrset(A_REVERSE);
-    mvaddstr(BASELINE, 8,
+    MvAddStr(BASELINE, 8,
 	     "                                                               ");
 
     for (Line = TOPLINE; Line < BASELINE; Line++) {
-	mvaddch(Line, LEFTPEG, ' ');
-	mvaddch(Line, MIDPEG, ' ');
-	mvaddch(Line, RIGHTPEG, ' ');
+	MvAddCh(Line, LEFTPEG, ' ');
+	MvAddCh(Line, MIDPEG, ' ');
+	MvAddCh(Line, RIGHTPEG, ' ');
     }
-    mvaddch(BASELINE, LEFTPEG, '1');
-    mvaddch(BASELINE, MIDPEG, '2');
-    mvaddch(BASELINE, RIGHTPEG, '3');
+    MvAddCh(BASELINE, LEFTPEG, '1');
+    MvAddCh(BASELINE, MIDPEG, '2');
+    MvAddCh(BASELINE, RIGHTPEG, '3');
     (void) attrset(A_NORMAL);
 
     /* Draw tiles */
@@ -254,7 +254,7 @@ DisplayTiles(void)
 		    (void) attrset(COLOR_PAIR(LENTOIND(len)));
 		else
 		    (void) attrset(A_REVERSE);
-		mvaddstr(BASELINE - (SlotNo + 1),
+		MvAddStr(BASELINE - (SlotNo + 1),
 			 (int) (PegPos[peg] - len / 2),
 			 TileBuf);
 	    }
@@ -267,7 +267,7 @@ DisplayTiles(void)
 static int
 GetMove(int *From, int *To)
 {
-    mvaddstr(STATUSLINE, 0, "Next move ('q' to quit) from ");
+    MvAddStr(STATUSLINE, 0, "Next move ('q' to quit) from ");
     clrtoeol();
     refresh();
     if ((*From = getch()) == 'q')

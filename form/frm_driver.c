@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.96 2009/12/12 23:19:29 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.98 2010/05/01 21:11:43 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4417,7 +4417,9 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
 						     * field->cols))))
 	    RETURN(E_SYSTEM_ERROR);
 
+#if !USE_WIDEC_SUPPORT
 	  len = vlen;
+#endif
 	}
     }
 
@@ -4438,7 +4440,7 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
     }
   len = Buffer_Length(field);
   wclear(field->working);
-  mvwaddstr(field->working, 0, 0, value);
+  (void)mvwaddstr(field->working, 0, 0, value);
 
   if ((widevalue = typeCalloc(FIELD_CELL, len + 1)) == 0)
     {
@@ -4448,9 +4450,9 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
     {
       for (i = 0; i < (unsigned)field->drows; ++i)
 	{
-	  mvwin_wchnstr(field->working, 0, i * field->dcols,
-			widevalue + (i * field->dcols),
-			field->dcols);
+	  (void)mvwin_wchnstr(field->working, 0, i * field->dcols,
+			      widevalue + (i * field->dcols),
+			      field->dcols);
 	}
       for (i = 0; i < len; ++i)
 	{

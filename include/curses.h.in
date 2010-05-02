@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.214 2010/03/30 08:50:18 tom Exp $ */
+/* $Id: curses.h.in,v 1.215 2010/04/29 09:46:38 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -145,6 +145,11 @@ typedef unsigned @cf_cv_typeof_mmask_t@ mmask_t;
 #endif
 
 /*
+ * We need FILE, etc.  Include this before checking any feature symbols.
+ */
+#include <stdio.h>
+
+/*
  * With XPG4, you must define _XOPEN_SOURCE_EXTENDED, it is redundant (or
  * conflicting) when _XOPEN_SOURCE is 500 or greater.
  */
@@ -153,7 +158,6 @@ typedef unsigned @cf_cv_typeof_mmask_t@ mmask_t;
 #define NCURSES_WIDECHAR
 #endif
 
-#include <stdio.h>
 #include <stdarg.h>	/* we need va_list */
 #ifdef NCURSES_WIDECHAR
 #include <stddef.h>	/* we want wchar_t */

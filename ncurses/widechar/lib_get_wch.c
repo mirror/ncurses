@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_get_wch.c,v 1.20 2009/10/24 22:42:25 tom Exp $")
+MODULE_ID("$Id: lib_get_wch.c,v 1.21 2010/05/01 22:04:08 tom Exp $")
 
 NCURSES_EXPORT(int)
 wget_wch(WINDOW *win, wint_t *result)
@@ -50,7 +50,7 @@ wget_wch(WINDOW *win, wint_t *result)
     char buffer[(MB_LEN_MAX * 9) + 1];	/* allow some redundant shifts */
     int status;
     size_t count = 0;
-    unsigned long value;
+    unsigned long value = 0;
     wchar_t wch;
 #ifndef state_unused
     mbstate_t state;

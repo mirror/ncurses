@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.49 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.50 2010/05/01 19:55:48 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -64,8 +64,10 @@ _nc_init_entry(TERMTYPE *const tp)
     unsigned i;
 
 #if NO_LEAKS
-    if (tp == 0 && stringbuf != 0) {
-	FreeAndNull(stringbuf);
+    if (tp == 0) {
+	if (stringbuf != 0) {
+	    FreeAndNull(stringbuf);
+	}
 	return;
     }
 #endif

@@ -13335,8 +13335,8 @@ if test "$ac_cv_c_inline" != no ; then
     :
   elif test "$GCC" = yes
   then
-    echo "$as_me:13338: checking if gcc supports options to tune inlining" >&5
-echo $ECHO_N "checking if gcc supports options to tune inlining... $ECHO_C" >&6
+    echo "$as_me:13338: checking if $CC supports options to tune inlining" >&5
+echo $ECHO_N "checking if $CC supports options to tune inlining... $ECHO_C" >&6
 if test "${cf_cv_gcc_inline+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else

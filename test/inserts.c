@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inserts.c,v 1.20 2009/10/10 16:01:41 tom Exp $
+ * $Id: inserts.c,v 1.21 2010/05/01 19:12:26 tom Exp $
  *
  * Demonstrate the winsstr() and winsch functions.
  * Thomas Dickey - 2002/10/19
@@ -40,16 +40,16 @@
 
 #define InsNStr    insnstr
 #define InsStr     insstr
-#define MvInsNStr  mvinsnstr
-#define MvInsStr   mvinsstr
-#define MvWInsNStr mvwinsnstr
-#define MvWInsStr  mvwinsstr
+#define MvInsNStr  (void) mvinsnstr
+#define MvInsStr   (void) mvinsstr
+#define MvWInsNStr (void) mvwinsnstr
+#define MvWInsStr  (void) mvwinsstr
 #define WInsNStr   winsnstr
 #define WInsStr    winsstr
 
 #define InsCh      insch
-#define MvInsCh    mvinsch
-#define MvWInsCh   mvwinsch
+#define MvInsCh    (void) mvinsch
+#define MvWInsCh   (void) mvwinsch
 #define WInsCh     winsch
 
 #define MY_TABSIZE 8
@@ -184,14 +184,14 @@ test_inserts(int level)
     keypad(work, TRUE);
 
     for (col = margin + 1; col < COLS; col += MY_TABSIZE)
-	mvwvline(work, row, col, '.', limit - 2);
+	MvWVLine(work, row, col, '.', limit - 2);
 
-    mvwvline(work, row, margin, ACS_VLINE, limit - 2);
-    mvwvline(work, row, margin + 1, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin + 1, ACS_VLINE, limit - 2);
     limit /= 2;
 
-    mvwaddstr(work, 1, 2, "String");
-    mvwaddstr(work, limit + 1, 2, "Chars");
+    MvWAddStr(work, 1, 2, "String");
+    MvWAddStr(work, limit + 1, 2, "Chars");
     wnoutrefresh(work);
 
     buffer[length = 0] = '\0';

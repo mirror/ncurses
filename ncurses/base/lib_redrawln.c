@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_redrawln.c,v 1.15 2009/11/07 16:00:54 tom Exp $")
+MODULE_ID("$Id: lib_redrawln.c,v 1.16 2010/05/01 22:10:55 David.Benjamin Exp $")
 
 NCURSES_EXPORT(int)
 wredrawln(WINDOW *win, int beg, int num)
@@ -66,14 +66,14 @@ wredrawln(WINDOW *win, int beg, int num)
 	returnCode(ERR);
 
     end = beg + num;
-    if (end > CurScreen(sp)->_maxy + 1)
-	end = CurScreen(sp)->_maxy + 1;
+    if (end > CurScreen(sp)->_maxy + 1 - win->_begy)
+	end = CurScreen(sp)->_maxy + 1 - win->_begy;
     if (end > win->_maxy + 1)
 	end = win->_maxy + 1;
 
     len = (win->_maxx + 1);
-    if (len > (size_t) (CurScreen(sp)->_maxx + 1))
-	len = (size_t) (CurScreen(sp)->_maxx + 1);
+    if (len > (size_t) (CurScreen(sp)->_maxx + 1 - win->_begx))
+	len = (size_t) (CurScreen(sp)->_maxx + 1 - win->_begx);
     len *= sizeof(CurScreen(sp)->_line[0].text[0]);
 
     for (i = beg; i < end; i++) {

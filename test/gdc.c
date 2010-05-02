@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.32 2009/08/29 19:02:25 tom Exp $
+ * $Id: gdc.c,v 1.33 2010/05/01 19:12:26 tom Exp $
  */
 
 #include <test.priv.h>
@@ -80,20 +80,20 @@ drawbox(bool scrolling)
     if (hascolor)
 	(void) attrset(COLOR_PAIR(PAIR_FRAMES));
 
-    mvaddch(YBASE - 1, XBASE - 1, ACS_ULCORNER);
+    MvAddCh(YBASE - 1, XBASE - 1, ACS_ULCORNER);
     hline(ACS_HLINE, XLENGTH);
-    mvaddch(YBASE - 1, XBASE + XLENGTH, ACS_URCORNER);
+    MvAddCh(YBASE - 1, XBASE + XLENGTH, ACS_URCORNER);
 
-    mvaddch(YBASE + YDEPTH, XBASE - 1, ACS_LLCORNER);
+    MvAddCh(YBASE + YDEPTH, XBASE - 1, ACS_LLCORNER);
     if ((mvinchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH)) != ERR) {
 	for (n = 0; n < XLENGTH; n++) {
 	    if (!scrolling)
 		bottom[n] &= ~A_COLOR;
 	    bottom[n] = ACS_HLINE | (bottom[n] & (A_ATTRIBUTES | A_COLOR));
 	}
-	mvaddchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
+	(void) mvaddchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH);
     }
-    mvaddch(YBASE + YDEPTH, XBASE + XLENGTH, ACS_LRCORNER);
+    MvAddCh(YBASE + YDEPTH, XBASE + XLENGTH, ACS_LRCORNER);
 
     move(YBASE, XBASE - 1);
     vline(ACS_VLINE, YDEPTH);
@@ -295,7 +295,7 @@ main(int argc, char *argv[])
 	/* this depends on the detailed format of ctime(3) */
 	(void) strcpy(buf, ctime(&now));
 	(void) strcpy(buf + 10, buf + 19);
-	mvaddstr(16, 30, buf);
+	MvAddStr(16, 30, buf);
 
 	move(6, 0);
 	drawbox(FALSE);

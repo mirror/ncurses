@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2007,2010 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inch_wide.c,v 1.6 2007/07/21 18:37:38 tom Exp $
+ * $Id: inch_wide.c,v 1.7 2010/05/01 19:13:46 tom Exp $
  */
 /*
        int in_wch(cchar_t *wcval);
@@ -153,7 +153,7 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	    break;
 	}
 
-	mvwprintw(chrwin, 0, 0, "char:");
+	MvWPrintw(chrwin, 0, 0, "char:");
 	wclrtoeol(chrwin);
 
 	if (txtwin != stdscr) {
@@ -189,7 +189,7 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	}
 	wnoutrefresh(chrwin);
 
-	mvwprintw(strwin, 0, 0, "text:");
+	MvWPrintw(strwin, 0, 0, "text:");
 	wclrtobot(strwin);
 
 	limit = getmaxx(strwin) - 5;
@@ -197,38 +197,38 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	if (txtwin != stdscr) {
 	    wmove(txtwin, txt_y, txt_x);
 	    if (win_wchstr(txtwin, text) != ERR) {
-		mvwadd_wchstr(strwin, 0, 5, text);
+		(void) mvwadd_wchstr(strwin, 0, 5, text);
 	    }
 
 	    wmove(txtwin, txt_y, txt_x);
 	    if (win_wchnstr(txtwin, text, limit) != ERR) {
-		mvwadd_wchstr(strwin, 1, 5, text);
+		(void) mvwadd_wchstr(strwin, 1, 5, text);
 	    }
 
 	    if (mvwin_wchstr(txtwin, txt_y, txt_x, text) != ERR) {
-		mvwadd_wchstr(strwin, 2, 5, text);
+		(void) mvwadd_wchstr(strwin, 2, 5, text);
 	    }
 
 	    if (mvwin_wchnstr(txtwin, txt_y, txt_x, text, limit) != ERR) {
-		mvwadd_wchstr(strwin, 3, 5, text);
+		(void) mvwadd_wchstr(strwin, 3, 5, text);
 	    }
 	} else {
 	    move(txt_y, txt_x);
 	    if (in_wchstr(text) != ERR) {
-		mvwadd_wchstr(strwin, 0, 5, text);
+		(void) mvwadd_wchstr(strwin, 0, 5, text);
 	    }
 
 	    move(txt_y, txt_x);
 	    if (in_wchnstr(text, limit) != ERR) {
-		mvwadd_wchstr(strwin, 1, 5, text);
+		(void) mvwadd_wchstr(strwin, 1, 5, text);
 	    }
 
 	    if (mvin_wchstr(txt_y, txt_x, text) != ERR) {
-		mvwadd_wchstr(strwin, 2, 5, text);
+		(void) mvwadd_wchstr(strwin, 2, 5, text);
 	    }
 
 	    if (mvin_wchnstr(txt_y, txt_x, text, limit) != ERR) {
-		mvwadd_wchstr(strwin, 3, 5, text);
+		(void) mvwadd_wchstr(strwin, 3, 5, text);
 	    }
 	}
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * This can't be part of the ncurses test-program, because ncurses rips off the
  * bottom line to do labels.
  *
- * $Id: lrtest.c,v 1.21 2005/12/31 16:51:53 tom Exp $
+ * $Id: lrtest.c,v 1.22 2010/05/01 19:11:55 tom Exp $
  */
 
 #include <test.priv.h>
@@ -51,7 +51,7 @@ typedef struct {
 static void
 show(MARK *m)
 {
-    mvaddch(m->y, m->x, m->value);
+    MvAddCh(m->y, m->x, m->value);
     if (m->mode == 0) {		/* along the x-direction */
 	m->x += m->inc;
 	if (m->x >= COLS) {

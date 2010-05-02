@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.111 2010/04/10 19:08:59 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.116 2010/05/01 22:40:47 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -376,6 +376,7 @@ _nc_wgetch(WINDOW *win,
 {
     SCREEN *sp;
     int ch;
+    int rc = 0;
 #ifdef NCURSES_WGETCH_EVENTS
     long event_delay = -1;
 #endif
@@ -411,17 +412,18 @@ _nc_wgetch(WINDOW *win,
 	!sp->_cbreak &&
 	!sp->_called_wgetch) {
 	char buf[MAXCOLUMNS], *bufp;
-	int rc;
 
 	TR(TRACE_IEVENT, ("filling queue in cooked mode"));
 
-	rc = recur_wgetnstr(win, buf);
-
 	/* ungetch in reverse order */
 #ifdef NCURSES_WGETCH_EVENTS
+	rc = recur_wgetnstr(win, buf);
 	if (rc != KEY_EVENT)
-#endif
 	    safe_ungetch(sp, '\n');
+#else
+	(void) recur_wgetnstr(win, buf);
+	safe_ungetch(sp, '\n');
+#endif
 	for (bufp = buf + strlen(buf); bufp > buf; bufp--)
 	    safe_ungetch(sp, bufp[-1]);
 
@@ -443,7 +445,6 @@ _nc_wgetch(WINDOW *win,
     if (win->_notimeout || (win->_delay >= 0) || (sp->_cbreak > 1)) {
 	if (head == -1) {	/* fifo is empty */
 	    int delay;
-	    int rc;
 
 	    TR(TRACE_IEVENT, ("timed delay in wgetch()"));
 	    if (sp->_cbreak > 1)
@@ -486,7 +487,6 @@ _nc_wgetch(WINDOW *win,
 	 * increase the wait with mouseinterval().
 	 */
 	int runcount = 0;
-	int rc = 0;
 
 	do {
 	    ch = kgetch(sp EVENTLIST_2nd(evl));

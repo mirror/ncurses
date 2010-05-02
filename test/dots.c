@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.19 2009/10/10 16:22:24 tom Exp $
+ * $Id: dots.c,v 1.20 2010/05/01 22:04:08 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -58,7 +58,7 @@ outc(TPUTS_ARG c)
     } else {
 	rc = putc(c, stdout);
     }
-    return 0;
+    return rc;
 }
 
 static bool

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2009,2010 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.7 2009/09/13 00:00:28 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.8 2010/05/01 19:13:46 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -48,13 +48,18 @@
 #define WIDE_LINEDATA
 #include <linedata.h>
 
+#undef MvAddCh
+#undef MvAddStr
+#undef MvWAddCh
+#undef MvWAddStr
+
 /* definitions to make it simpler to compare with test_addstr.c */
 #define AddNStr    add_wchnstr
 #define AddStr     add_wchstr
-#define MvAddNStr  mvadd_wchnstr
-#define MvAddStr   mvadd_wchstr
-#define MvWAddNStr mvwadd_wchnstr
-#define MvWAddStr  mvwadd_wchstr
+#define MvAddNStr  (void) mvadd_wchnstr
+#define MvAddStr   (void) mvadd_wchstr
+#define MvWAddNStr (void) mvwadd_wchnstr
+#define MvWAddStr  (void) mvwadd_wchstr
 #define WAddNStr   wadd_wchnstr
 #define WAddStr    wadd_wchstr
 
@@ -296,14 +301,14 @@ test_add_wchstr(int level)
     keypad(work, TRUE);
 
     for (col = margin + 1; col < COLS; col += MY_TABSIZE)
-	mvwvline(work, row, col, '.', limit - 2);
+	MvWVLine(work, row, col, '.', limit - 2);
 
-    mvwvline(work, row, margin, ACS_VLINE, limit - 2);
-    mvwvline(work, row, margin + 1, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin, ACS_VLINE, limit - 2);
+    MvWVLine(work, row, margin + 1, ACS_VLINE, limit - 2);
     limit /= 2;
 
-    mvwadd_wchstr(work, 1, 2, ChStr("String"));
-    mvwadd_wchstr(work, limit + 1, 2, ChStr("Chars"));
+    (void) mvwadd_wchstr(work, 1, 2, ChStr("String"));
+    (void) mvwadd_wchstr(work, limit + 1, 2, ChStr("Chars"));
     wnoutrefresh(work);
 
     buffer[length = 0] = '\0';

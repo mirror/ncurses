@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.12 2009/10/10 16:01:41 tom Exp $
+ * $Id: demo_termcap.c,v 1.13 2010/05/01 22:04:08 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -125,7 +125,7 @@ dumpit(NCURSES_CONST char *cap)
     } else if ((num = tgetnum(cap)) >= 0) {
 	printf(FNAME(num), cap);
 	printf(" %d\n", num);
-    } else if ((num = tgetflag(cap)) > 0) {
+    } else if (tgetflag(cap) > 0) {
 	printf(FNAME(flg), cap);
 	printf("%s\n", "true");
     }

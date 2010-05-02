@@ -36,7 +36,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.39 2010/03/31 23:38:02 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.41 2010/05/01 22:16:21 tom Exp $")
 
 /*
  * Set the window's background information.
@@ -85,7 +85,7 @@ wbkgrndset(WINDOW *win, const ARG_CH_T ch)
 	    cchar_t wch;
 	    int tmp;
 
-	    wgetbkgrnd(win, &wch);
+	    (void) wgetbkgrnd(win, &wch);
 	    tmp = _nc_to_char((wint_t) CharOf(wch));
 
 	    win->_bkgd = (((tmp == EOF) ? ' ' : (chtype) tmp)

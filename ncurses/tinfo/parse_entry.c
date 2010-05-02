@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.74 2010/04/24 21:19:18 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.75 2010/05/01 19:35:09 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -773,7 +773,7 @@ postprocess_termcap(TERMTYPE *tp, bool has_base)
      * isn't from mytinfo...
      */
     if (PRESENT(other_non_function_keys)) {
-	char *base = other_non_function_keys;
+	char *base;
 	char *bp, *cp, *dp;
 	struct name_table_entry const *from_ptr;
 	struct name_table_entry const *to_ptr;
@@ -841,7 +841,7 @@ postprocess_termcap(TERMTYPE *tp, bool has_base)
 		} else
 		    *dp++ = *bp;
 	    }
-	    *dp++ = '\0';
+	    *dp = '\0';
 
 	    tp->Strings[to_ptr->nte_index] = _nc_save_str(buf2);
 	}

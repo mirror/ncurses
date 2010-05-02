@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.33 2009/08/29 18:47:26 tom Exp $
+ * $Id: demo_forms.c,v 1.35 2010/05/01 21:56:10 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -175,7 +175,7 @@ erase_form(FORM * f)
 static void
 show_insert_mode(bool insert_mode)
 {
-    mvaddstr(5, 57, (insert_mode
+    MvAddStr(5, 57, (insert_mode
 		     ? "form_status: insert "
 		     : "form_status: overlay"));
 }
@@ -351,7 +351,7 @@ demo_forms(void)
 
     help_edit_field();
 
-    mvaddstr(4, 57, "Forms Entry Test");
+    MvAddStr(4, 57, "Forms Entry Test");
     show_insert_mode(TRUE);
 
     refresh();
@@ -423,7 +423,7 @@ demo_forms(void)
 	set_field_buffer(f[n - 1], 1, "Hello\nWorld!");
     }
 
-    f[n++] = (FIELD *) 0;
+    f[n] = (FIELD *) 0;
 
     if ((form = new_form(f)) != 0) {
 

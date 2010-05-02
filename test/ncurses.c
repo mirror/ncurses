@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.356 2010/03/06 18:45:14 tom Exp $
+$Id: ncurses.c,v 1.359 2010/05/01 22:39:06 tom Exp $
 
 ***************************************************************************/
 
@@ -171,14 +171,14 @@ static void
 do_h_line(int y, int x, chtype c, int to)
 {
     if ((to) > (x))
-	mvhline(y, x, c, (to) - (x));
+	MvHLine(y, x, c, (to) - (x));
 }
 
 static void
 do_v_line(int y, int x, chtype c, int to)
 {
     if ((to) > (y))
-	mvvline(y, x, c, (to) - (y));
+	MvVLine(y, x, c, (to) - (y));
 }
 
 static void
@@ -666,7 +666,7 @@ wgetch_help(WINDOW *win, GetchFlags flags)
 		   && (flags[UChar(*help[n])] != FALSE));
 	if (flg)
 	    (void) standout();
-	mvprintw(row, col, "%s", help[n]);
+	MvPrintw(row, col, "%s", help[n]);
 	if (col == 0)
 	    clrtoeol();
 	if (flg)
@@ -1236,29 +1236,29 @@ attr_legend(WINDOW *helpwin)
     int row = 1;
     int col = 1;
 
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "ESC to exit.");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "^L repaints.");
     ++row;
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "Modify the test strings:");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "  A digit sets gaps on each side of displayed attributes");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "  </> shifts the text left/right. ");
     ++row;
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "Toggles:");
     if (use_colors) {
-	mvwprintw(helpwin, row++, col,
+	MvWPrintw(helpwin, row++, col,
 		  "  f/F/b/F toggle foreground/background background color");
-	mvwprintw(helpwin, row++, col,
+	MvWPrintw(helpwin, row++, col,
 		  "  t/T     toggle text/background color attribute");
     }
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "  a/A     toggle ACS (alternate character set) mapping");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row, col,
 	      "  v/V     toggle video attribute to combine with each line");
 }
 
@@ -1360,9 +1360,9 @@ show_attr(int row, int skip, bool arrow, chtype attr, const char *name)
     chtype test = attr & (chtype) (~A_ALTCHARSET);
 
     if (arrow)
-	mvprintw(row, 5, "-->");
-    mvprintw(row, 8, "%s mode:", name);
-    mvprintw(row, 24, "|");
+	MvPrintw(row, 5, "-->");
+    MvPrintw(row, 8, "%s mode:", name);
+    MvPrintw(row, 24, "|");
     if (skip)
 	printw("%*s", skip, " ");
     /*
@@ -1551,7 +1551,7 @@ attr_test(void)
 	erase();
 
 	box(stdscr, 0, 0);
-	mvaddstr(0, 20, "Character attribute test display");
+	MvAddStr(0, 20, "Character attribute test display");
 
 	for (j = 0; j < SIZEOF(attrs_to_test); ++j) {
 	    bool arrow = (j == k);
@@ -1562,10 +1562,10 @@ attr_test(void)
 			    attrs_to_test[j].name);
 	}
 
-	mvprintw(row, 8,
+	MvPrintw(row, 8,
 		 "This terminal does %shave the magic-cookie glitch",
 		 get_xmc() > -1 ? "" : "not ");
-	mvprintw(row + 1, 8, "Enter '?' for help.");
+	MvPrintw(row + 1, 8, "Enter '?' for help.");
 	show_color_attr(fg, bg, tx);
 	printw("  ACS (%d)", ac != 0);
 
@@ -1648,9 +1648,9 @@ wide_show_attr(int row, int skip, bool arrow, chtype attr, short pair, const cha
     chtype test = attr & ~WA_ALTCHARSET;
 
     if (arrow)
-	mvprintw(row, 5, "-->");
-    mvprintw(row, 8, "%s mode:", name);
-    mvprintw(row, 24, "|");
+	MvPrintw(row, 5, "-->");
+    MvPrintw(row, 8, "%s mode:", name);
+    MvPrintw(row, 24, "|");
     if (skip)
 	printw("%*s", skip, " ");
 
@@ -1674,10 +1674,10 @@ wide_show_attr(int row, int skip, bool arrow, chtype attr, short pair, const cha
 	attr_t old_attr;
 	short old_pair;
 
-	attr_get(&old_attr, &old_pair, 0);
-	attr_set(attr, pair, 0);
+	(void) attr_get(&old_attr, &old_pair, 0);
+	(void) attr_set(attr, pair, 0);
 	addwstr(wide_attr_test_string);
-	attr_set(old_attr, old_pair, 0);
+	(void) attr_set(old_attr, old_pair, 0);
     }
     if (skip)
 	printw("%*s", skip, " ");
@@ -1823,7 +1823,7 @@ wide_attr_test(void)
 	erase();
 
 	box_set(stdscr, 0, 0);
-	mvaddstr(0, 20, "Character attribute test display");
+	MvAddStr(0, 20, "Character attribute test display");
 
 	for (j = 0; j < SIZEOF(attrs_to_test); ++j) {
 	    row = wide_show_attr(row, n, j == k,
@@ -1834,10 +1834,10 @@ wide_attr_test(void)
 				 attrs_to_test[j].name);
 	}
 
-	mvprintw(row, 8,
+	MvPrintw(row, 8,
 		 "This terminal does %shave the magic-cookie glitch",
 		 get_xmc() > -1 ? "" : "not ");
-	mvprintw(row + 1, 8, "Enter '?' for help.");
+	MvPrintw(row + 1, 8, "Enter '?' for help.");
 	show_color_attr(fg, bg, tx);
 	printw("  ACS (%d)", ac != 0);
 
@@ -1903,35 +1903,35 @@ color_legend(WINDOW *helpwin, bool wide)
     int row = 1;
     int col = 1;
 
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "ESC to exit.");
     ++row;
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "Use up/down arrow to scroll through the display if it is");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "longer than one screen. Control/N and Control/P can be used");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "in place of up/down arrow.  Use pageup/pagedown to scroll a");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "full screen; control/B and control/F can be used here.");
     ++row;
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "Toggles:");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "  a/A     toggle altcharset off/on");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "  b/B     toggle bold off/on");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "  n/N     toggle text/number on/off");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "  r/R     toggle reverse on/off");
-    mvwprintw(helpwin, row++, col,
+    MvWPrintw(helpwin, row++, col,
 	      "  w/W     toggle width between 8/16 colors");
 #if USE_WIDEC_SUPPORT
     if (wide) {
-	mvwprintw(helpwin, row++, col,
+	MvWPrintw(helpwin, row++, col,
 		  "Wide characters:");
-	mvwprintw(helpwin, row++, col,
+	MvWPrintw(helpwin, row, col,
 		  "  x/X     toggle text between ASCII and wide-character");
     }
 #else
@@ -1995,11 +1995,11 @@ color_test(void)
 		      min_colors ? " besides 'default'" : "");
 
 	clrtobot();
-	(void) mvprintw(top + 1, 0,
-			"%dx%d matrix of foreground/background colors, bold *%s*\n",
-			row_limit,
-			per_row,
-			opt_bold ? "on" : "off");
+	MvPrintw(top + 1, 0,
+		 "%dx%d matrix of foreground/background colors, bold *%s*\n",
+		 row_limit,
+		 per_row,
+		 opt_bold ? "on" : "off");
 
 	/* show color names/numbers across the top */
 	for (i = 0; i < per_row; i++)
@@ -2138,7 +2138,6 @@ color_test(void)
 static void
 wide_color_test(void)
 {
-    int c;
     int i;
     int top = 0, width;
     int base_row = 0;
@@ -2199,11 +2198,11 @@ wide_color_test(void)
 		      min_colors ? " besides 'default'" : "");
 
 	clrtobot();
-	(void) mvprintw(top + 1, 0,
-			"%dx%d matrix of foreground/background colors, bold *%s*\n",
-			row_limit,
-			per_row,
-			opt_bold ? "on" : "off");
+	MvPrintw(top + 1, 0,
+		 "%dx%d matrix of foreground/background colors, bold *%s*\n",
+		 row_limit,
+		 per_row,
+		 opt_bold ? "on" : "off");
 
 	/* show color names/numbers across the top */
 	for (i = 0; i < per_row; i++)
@@ -2234,7 +2233,7 @@ wide_color_test(void)
 		    }
 		}
 		addnwstr(buffer, width);
-		attr_set(A_NORMAL, 0, NULL);
+		(void) attr_set(A_NORMAL, 0, NULL);
 
 		if ((i % per_row) == 0 && InxToFG(i) == min_colors) {
 		    show_color_name(row, 0, InxToBG(i), opt_wide);
@@ -2245,7 +2244,7 @@ wide_color_test(void)
 	    }
 	}
 
-	switch (c = wGetchar(stdscr)) {
+	switch (wGetchar(stdscr)) {
 	case 'a':
 	    opt_acsc = FALSE;
 	    break;
@@ -2397,13 +2396,13 @@ color_edit(void)
     for (i = 0; i < max_colors; i++)
 	init_pair((short) i, (short) COLOR_WHITE, (short) i);
 
-    mvprintw(LINES - 2, 0, "Number: %d", value);
+    MvPrintw(LINES - 2, 0, "Number: %d", value);
 
     do {
 	short red, green, blue;
 
 	attron(A_BOLD);
-	mvaddstr(0, 20, "Color RGB Value Editing");
+	MvAddStr(0, 20, "Color RGB Value Editing");
 	attroff(A_BOLD);
 
 	for (i = (short) top_color;
@@ -2412,7 +2411,7 @@ color_edit(void)
 	    char numeric[80];
 
 	    sprintf(numeric, "[%d]", i);
-	    mvprintw(2 + i - top_color, 0, "%c %-8s:",
+	    MvPrintw(2 + i - top_color, 0, "%c %-8s:",
 		     (i == current ? '>' : ' '),
 		     (i < (int) SIZEOF(the_color_names)
 		      ? the_color_names[i] : numeric));
@@ -2446,9 +2445,9 @@ color_edit(void)
 		   scaled_rgb(blue));
 	}
 
-	mvaddstr(LINES - 3, 0,
+	MvAddStr(LINES - 3, 0,
 		 "Use up/down to select a color, left/right to change fields.");
-	mvaddstr(LINES - 2, 0,
+	MvAddStr(LINES - 2, 0,
 		 "Modify field by typing nnn=, nnn-, or nnn+.  ? for help.");
 
 	move(2 + current - top_color, 0);
@@ -2561,7 +2560,7 @@ color_edit(void)
 	if (current - top_color >= page_size)
 	    top_color = current - (page_size - 1);
 
-	mvprintw(LINES - 1, 0, "Number: %d", value);
+	MvPrintw(LINES - 1, 0, "Number: %d", value);
 	clrtoeol();
     } while
 	(!isQuit(this_c));
@@ -2712,7 +2711,7 @@ call_slk_color(short fg, short bg)
 {
     init_pair(1, bg, fg);
     slk_color(1);
-    mvprintw(SLK_WORK, 0, "Colors %d/%d\n", fg, bg);
+    MvPrintw(SLK_WORK, 0, "Colors %d/%d\n", fg, bg);
     clrtoeol();
     slk_touch();
     slk_noutrefresh();
@@ -2748,7 +2747,7 @@ slk_test(void)
 	case CTRL('l'):
 	    erase();
 	    attron(A_BOLD);
-	    mvaddstr(0, 20, "Soft Key Exerciser");
+	    MvAddStr(0, 20, "Soft Key Exerciser");
 	    attroff(A_BOLD);
 
 	    slk_help();
@@ -2763,7 +2762,7 @@ slk_test(void)
 	    break;
 
 	case 's':
-	    mvprintw(SLK_WORK, 0, "Press Q to stop the scrolling-test: ");
+	    MvPrintw(SLK_WORK, 0, "Press Q to stop the scrolling-test: ");
 	    while ((c = Getchar()) != 'Q' && (c != ERR))
 		addch((chtype) c);
 	    break;
@@ -2792,7 +2791,7 @@ slk_test(void)
 	case '6':
 	case '7':
 	case '8':
-	    (void) mvaddstr(SLK_WORK, 0, "Please enter the label value: ");
+	    MvAddStr(SLK_WORK, 0, "Please enter the label value: ");
 	    strcpy(buf, "");
 	    if ((s = slk_label(c - '0')) != 0) {
 		strncpy(buf, s, 8);
@@ -2866,7 +2865,7 @@ wide_slk_test(void)
 	case CTRL('l'):
 	    erase();
 	    attr_on(WA_BOLD, NULL);
-	    mvaddstr(0, 20, "Soft Key Exerciser");
+	    MvAddStr(0, 20, "Soft Key Exerciser");
 	    attr_off(WA_BOLD, NULL);
 
 	    slk_help();
@@ -2881,7 +2880,7 @@ wide_slk_test(void)
 	    break;
 
 	case 's':
-	    mvprintw(SLK_WORK, 0, "Press Q to stop the scrolling-test: ");
+	    MvPrintw(SLK_WORK, 0, "Press Q to stop the scrolling-test: ");
 	    while ((c = Getchar()) != 'Q' && (c != ERR))
 		addch((chtype) c);
 	    break;
@@ -2910,7 +2909,7 @@ wide_slk_test(void)
 	case '6':
 	case '7':
 	case '8':
-	    (void) mvaddstr(SLK_WORK, 0, "Please enter the label value: ");
+	    MvAddStr(SLK_WORK, 0, "Please enter the label value: ");
 	    *buf = 0;
 	    if ((s = slk_label(c - '0')) != 0) {
 		char *temp = strdup(s);
@@ -3008,7 +3007,7 @@ show_upper_chars(unsigned first, int repeat, attr_t attr, short pair)
 
     erase();
     attron(A_BOLD);
-    mvprintw(0, 20, "Display of %s Character Codes %d to %d",
+    MvPrintw(0, 20, "Display of %s Character Codes %d to %d",
 	     C1 ? "C1" : "GR", first, last);
     attroff(A_BOLD);
     refresh();
@@ -3019,7 +3018,7 @@ show_upper_chars(unsigned first, int repeat, attr_t attr, short pair)
 	int col = ((int) (code - first) / 16) * COLS / 2;
 	char tmp[80];
 	sprintf(tmp, "%3u (0x%x)", code, code);
-	mvprintw(row, col, "%*s: ", COLS / 4, tmp);
+	MvPrintw(row, col, "%*s: ", COLS / 4, tmp);
 
 	do {
 	    if (C1)
@@ -3046,19 +3045,19 @@ show_pc_chars(int repeat, attr_t attr, short pair)
 
     erase();
     attron(A_BOLD);
-    mvprintw(0, 20, "Display of PC Character Codes");
+    MvPrintw(0, 20, "Display of PC Character Codes");
     attroff(A_BOLD);
     refresh();
 
     for (code = 0; code < 16; ++code) {
-	mvprintw(2, (int) code * PC_COLS + 8, "%X", code);
+	MvPrintw(2, (int) code * PC_COLS + 8, "%X", code);
     }
     for (code = 0; code < 256; code++) {
 	int count = repeat;
 	int row = 3 + (int) (code / 16) + (code >= 128);
 	int col = 8 + (int) (code % 16) * PC_COLS;
 	if ((code % 16) == 0)
-	    mvprintw(row, 0, "0x%02x:", code);
+	    MvPrintw(row, 0, "0x%02x:", code);
 	move(row, col);
 	do {
 	    switch (code) {
@@ -3088,7 +3087,7 @@ show_box_chars(int repeat, attr_t attr, short pair)
 
     erase();
     attron(A_BOLD);
-    mvaddstr(0, 20, "Display of the ACS Line-Drawing Set");
+    MvAddStr(0, 20, "Display of the ACS Line-Drawing Set");
     attroff(A_BOLD);
     refresh();
     /* *INDENT-OFF* */
@@ -3101,13 +3100,13 @@ show_box_chars(int repeat, attr_t attr, short pair)
 	    colored_chtype(ACS_URCORNER, attr, pair),
             colored_chtype(ACS_LLCORNER, attr, pair),
 	    colored_chtype(ACS_LRCORNER, attr, pair));
-    mvhline(LINES / 2, 0,        colored_chtype(ACS_HLINE, attr, pair), COLS);
-    mvvline(0,         COLS / 2, colored_chtype(ACS_VLINE, attr, pair), LINES);
-    mvaddch(0,         COLS / 2, colored_chtype(ACS_TTEE,  attr, pair));
-    mvaddch(LINES / 2, COLS / 2, colored_chtype(ACS_PLUS,  attr, pair));
-    mvaddch(LINES - 1, COLS / 2, colored_chtype(ACS_BTEE,  attr, pair));
-    mvaddch(LINES / 2, 0,        colored_chtype(ACS_LTEE,  attr, pair));
-    mvaddch(LINES / 2, COLS - 1, colored_chtype(ACS_RTEE,  attr, pair));
+    MvHLine(LINES / 2, 0,        colored_chtype(ACS_HLINE, attr, pair), COLS);
+    MvVLine(0,         COLS / 2, colored_chtype(ACS_VLINE, attr, pair), LINES);
+    MvAddCh(0,         COLS / 2, colored_chtype(ACS_TTEE,  attr, pair));
+    MvAddCh(LINES / 2, COLS / 2, colored_chtype(ACS_PLUS,  attr, pair));
+    MvAddCh(LINES - 1, COLS / 2, colored_chtype(ACS_BTEE,  attr, pair));
+    MvAddCh(LINES / 2, 0,        colored_chtype(ACS_LTEE,  attr, pair));
+    MvAddCh(LINES / 2, COLS - 1, colored_chtype(ACS_RTEE,  attr, pair));
     /* *INDENT-ON* */
 
 }
@@ -3119,7 +3118,7 @@ show_1_acs(int n, int repeat, const char *name, chtype code)
     int row = 2 + (n % height);
     int col = (n / height) * COLS / 2;
 
-    mvprintw(row, col, "%*s : ", COLS / 4, name);
+    MvPrintw(row, col, "%*s : ", COLS / 4, name);
     do {
 	addch(code);
     } while (--repeat > 0);
@@ -3136,7 +3135,7 @@ show_acs_chars(int repeat, attr_t attr, short pair)
 
     erase();
     attron(A_BOLD);
-    mvaddstr(0, 20, "Display of the ACS Character Set");
+    MvAddStr(0, 20, "Display of the ACS Character Set");
     attroff(A_BOLD);
     refresh();
 
@@ -3181,7 +3180,7 @@ show_acs_chars(int repeat, attr_t attr, short pair)
     n = show_1_acs(n, repeat, BOTH(ACS_S1));
     n = show_1_acs(n, repeat, BOTH(ACS_S3));
     n = show_1_acs(n, repeat, BOTH(ACS_S7));
-    n = show_1_acs(n, repeat, BOTH(ACS_S9));
+    (void) show_1_acs(n, repeat, BOTH(ACS_S9));
 #endif
 }
 
@@ -3264,18 +3263,18 @@ acs_display(void)
 	else
 	    show_upper_chars((unsigned) (digit * 32 + 128), repeat, attr, pair);
 
-	mvprintw(LINES - 3, 0,
+	MvPrintw(LINES - 3, 0,
 		 "Note: ANSI terminals may not display C1 characters.");
-	mvprintw(LINES - 2, 0,
+	MvPrintw(LINES - 2, 0,
 		 "Select: a=ACS, x=box, %s0=C1, 1-3,+/- non-ASCII, </> repeat, ESC=quit",
 		 pch_kludge);
 	if (use_colors) {
-	    mvprintw(LINES - 1, 0,
+	    MvPrintw(LINES - 1, 0,
 		     "v/V, f/F, b/B cycle through video attributes (%s) and color %d/%d.",
 		     attrs_to_cycle[at_code].name,
 		     fg, bg);
 	} else {
-	    mvprintw(LINES - 1, 0,
+	    MvPrintw(LINES - 1, 0,
 		     "v/V cycles through video attributes (%s).",
 		     attrs_to_cycle[at_code].name);
 	}
@@ -3315,7 +3314,7 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 
     erase();
     attron(A_BOLD);
-    mvprintw(0, 20, "Display of Character Codes %d to %d", first, last);
+    MvPrintw(0, 20, "Display of Character Codes %d to %d", first, last);
     attroff(A_BOLD);
 
     for (code = first; (int) code <= last; code++) {
@@ -3329,7 +3328,7 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 	memset(&codes, 0, sizeof(codes));
 	codes[0] = code;
 	sprintf(tmp, "%3ld (0x%lx)", (long) code, (long) code);
-	mvprintw(row, col, "%*s: ", COLS / 4, tmp);
+	MvPrintw(row, col, "%*s: ", COLS / 4, tmp);
 	setcchar(&temp, codes, attr, pair, 0);
 	do {
 	    /*
@@ -3364,7 +3363,7 @@ show_1_wacs(int n, int repeat, const char *name, const cchar_t *code)
     int row = 2 + (n % height);
     int col = (n / height) * COLS / 2;
 
-    mvprintw(row, col, "%*s : ", COLS / 4, name);
+    MvPrintw(row, col, "%*s : ", COLS / 4, name);
     while (--repeat >= 0) {
 	add_wch(code);
     }
@@ -3386,7 +3385,7 @@ show_wacs_chars(int repeat, attr_t attr, short pair)
 
     erase();
     attron(A_BOLD);
-    mvaddstr(0, 20, "Display of the Wide-ACS Character Set");
+    MvAddStr(0, 20, "Display of the Wide-ACS Character Set");
     attroff(A_BOLD);
     refresh();
 
@@ -3428,7 +3427,7 @@ show_wacs_chars(int repeat, attr_t attr, short pair)
     n = show_1_wacs(n, repeat, BOTH2(WACS_S1));
     n = show_1_wacs(n, repeat, BOTH2(WACS_S3));
     n = show_1_wacs(n, repeat, BOTH2(WACS_S7));
-    n = show_1_wacs(n, repeat, BOTH2(WACS_S9));
+    (void) show_1_wacs(n, repeat, BOTH2(WACS_S9));
 #endif
 }
 
@@ -3446,7 +3445,7 @@ show_wacs_chars_double(int repeat, attr_t attr, short pair)
 
     erase();
     attron(A_BOLD);
-    mvaddstr(0, 20, "Display of the Wide-ACS Character Set");
+    MvAddStr(0, 20, "Display of the Wide-ACS Character Set");
     attroff(A_BOLD);
     refresh();
 
@@ -3488,7 +3487,7 @@ show_wacs_chars_double(int repeat, attr_t attr, short pair)
     n = show_1_wacs(n, repeat, BOTH2(WACS_S1));
     n = show_1_wacs(n, repeat, BOTH2(WACS_S3));
     n = show_1_wacs(n, repeat, BOTH2(WACS_S7));
-    n = show_1_wacs(n, repeat, BOTH2(WACS_S9));
+    (void) show_1_wacs(n, repeat, BOTH2(WACS_S9));
 #endif
 }
 #endif
@@ -3507,7 +3506,7 @@ show_wacs_chars_thick(int repeat, attr_t attr, short pair)
 
     erase();
     attron(A_BOLD);
-    mvaddstr(0, 20, "Display of the Wide-ACS Character Set");
+    MvAddStr(0, 20, "Display of the Wide-ACS Character Set");
     attroff(A_BOLD);
     refresh();
 
@@ -3549,7 +3548,7 @@ show_wacs_chars_thick(int repeat, attr_t attr, short pair)
     n = show_1_wacs(n, repeat, BOTH2(WACS_S1));
     n = show_1_wacs(n, repeat, BOTH2(WACS_S3));
     n = show_1_wacs(n, repeat, BOTH2(WACS_S7));
-    n = show_1_wacs(n, repeat, BOTH2(WACS_S9));
+    (void) show_1_wacs(n, repeat, BOTH2(WACS_S9));
 #endif
 }
 #endif
@@ -3566,7 +3565,7 @@ show_wbox_chars(int repeat, attr_t attr, short pair)
     (void) repeat;
     erase();
     attron(A_BOLD);
-    mvaddstr(0, 20, "Display of the Wide-ACS Line-Drawing Set");
+    MvAddStr(0, 20, "Display of the Wide-ACS Line-Drawing Set");
     attroff(A_BOLD);
     refresh();
 
@@ -3580,13 +3579,13 @@ show_wbox_chars(int repeat, attr_t attr, short pair)
 		MERGE_ATTR(6, WACS_LLCORNER),
 		MERGE_ATTR(7, WACS_LRCORNER));
     /* *INDENT-OFF* */
-    mvhline_set(LINES / 2, 0,        MERGE_ATTR(0, WACS_HLINE), COLS);
-    mvvline_set(0,         COLS / 2, MERGE_ATTR(0, WACS_VLINE), LINES);
-    mvadd_wch(0,           COLS / 2, MERGE_ATTR(0, WACS_TTEE));
-    mvadd_wch(LINES / 2,   COLS / 2, MERGE_ATTR(0, WACS_PLUS));
-    mvadd_wch(LINES - 1,   COLS / 2, MERGE_ATTR(0, WACS_BTEE));
-    mvadd_wch(LINES / 2,   0,        MERGE_ATTR(0, WACS_LTEE));
-    mvadd_wch(LINES / 2,   COLS - 1, MERGE_ATTR(0, WACS_RTEE));
+    (void) mvhline_set(LINES / 2, 0,        MERGE_ATTR(0, WACS_HLINE), COLS);
+    (void) mvvline_set(0,         COLS / 2, MERGE_ATTR(0, WACS_VLINE), LINES);
+    (void) mvadd_wch(0,           COLS / 2, MERGE_ATTR(0, WACS_TTEE));
+    (void) mvadd_wch(LINES / 2,   COLS / 2, MERGE_ATTR(0, WACS_PLUS));
+    (void) mvadd_wch(LINES - 1,   COLS / 2, MERGE_ATTR(0, WACS_BTEE));
+    (void) mvadd_wch(LINES / 2,   0,        MERGE_ATTR(0, WACS_LTEE));
+    (void) mvadd_wch(LINES / 2,   COLS - 1, MERGE_ATTR(0, WACS_RTEE));
     /* *INDENT-ON* */
 
 }
@@ -3601,10 +3600,10 @@ show_2_wacs(int n, const char *name, const char *code, attr_t attr, short pair)
     int col = (n / height) * COLS / 2;
     char temp[80];
 
-    mvprintw(row, col, "%*s : ", COLS / 4, name);
-    attr_set(attr, pair, 0);
+    MvPrintw(row, col, "%*s : ", COLS / 4, name);
+    (void) attr_set(attr, pair, 0);
     addstr(strcpy(temp, code));
-    attr_set(A_NORMAL, 0, 0);
+    (void) attr_set(A_NORMAL, 0, 0);
     return n + 1;
 }
 
@@ -3618,7 +3617,7 @@ show_utf8_chars(int repeat, attr_t attr, short pair)
     (void) repeat;
     erase();
     attron(A_BOLD);
-    mvaddstr(0, 20, "Display of the Wide-ACS Character Set");
+    MvAddStr(0, 20, "Display of the Wide-ACS Character Set");
     attroff(A_BOLD);
     refresh();
     /* *INDENT-OFF* */
@@ -3658,7 +3657,7 @@ show_utf8_chars(int repeat, attr_t attr, short pair)
     n = SHOW_UTF8(n, "WACS_S1",		"\342\216\272");
     n = SHOW_UTF8(n, "WACS_S3",		"\342\216\273");
     n = SHOW_UTF8(n, "WACS_S7",		"\342\216\274");
-    n = SHOW_UTF8(n, "WACS_S9",		"\342\216\275");
+    (void) SHOW_UTF8(n, "WACS_S9",	"\342\216\275");
     /* *INDENT-ON* */
 
 }
@@ -3734,15 +3733,15 @@ wide_acs_display(void)
 	else
 	    show_upper_widechars(digit * 32 + 128, repeat, space, attr, pair);
 
-	mvprintw(LINES - 3, 0,
+	MvPrintw(LINES - 3, 0,
 		 "Select: a/d/t WACS, x box, u UTF-8, 0-9,+/- non-ASCII, </> repeat, ESC=quit");
 	if (use_colors) {
-	    mvprintw(LINES - 2, 0,
+	    MvPrintw(LINES - 2, 0,
 		     "v/V, f/F, b/B cycle through video attributes (%s) and color %d/%d.",
 		     attrs_to_cycle[at_code].name,
 		     fg, bg);
 	} else {
-	    mvprintw(LINES - 2, 0,
+	    MvPrintw(LINES - 2, 0,
 		     "v/V cycles through video attributes (%s).",
 		     attrs_to_cycle[at_code].name);
 	}
@@ -3774,58 +3773,58 @@ test_sgr_attributes(void)
 	}
 	bkgdset(normal);
 	erase();
-	mvprintw(1, 20, "Graphic rendition test pattern:");
+	MvPrintw(1, 20, "Graphic rendition test pattern:");
 
-	mvprintw(4, 1, "vanilla");
+	MvPrintw(4, 1, "vanilla");
 
 #define set_sgr(mask) bkgdset((normal^(mask)));
 	set_sgr(A_BOLD);
-	mvprintw(4, 40, "bold");
+	MvPrintw(4, 40, "bold");
 
 	set_sgr(A_UNDERLINE);
-	mvprintw(6, 6, "underline");
+	MvPrintw(6, 6, "underline");
 
 	set_sgr(A_BOLD | A_UNDERLINE);
-	mvprintw(6, 45, "bold underline");
+	MvPrintw(6, 45, "bold underline");
 
 	set_sgr(A_BLINK);
-	mvprintw(8, 1, "blink");
+	MvPrintw(8, 1, "blink");
 
 	set_sgr(A_BLINK | A_BOLD);
-	mvprintw(8, 40, "bold blink");
+	MvPrintw(8, 40, "bold blink");
 
 	set_sgr(A_UNDERLINE | A_BLINK);
-	mvprintw(10, 6, "underline blink");
+	MvPrintw(10, 6, "underline blink");
 
 	set_sgr(A_BOLD | A_UNDERLINE | A_BLINK);
-	mvprintw(10, 45, "bold underline blink");
+	MvPrintw(10, 45, "bold underline blink");
 
 	set_sgr(A_REVERSE);
-	mvprintw(12, 1, "negative");
+	MvPrintw(12, 1, "negative");
 
 	set_sgr(A_BOLD | A_REVERSE);
-	mvprintw(12, 40, "bold negative");
+	MvPrintw(12, 40, "bold negative");
 
 	set_sgr(A_UNDERLINE | A_REVERSE);
-	mvprintw(14, 6, "underline negative");
+	MvPrintw(14, 6, "underline negative");
 
 	set_sgr(A_BOLD | A_UNDERLINE | A_REVERSE);
-	mvprintw(14, 45, "bold underline negative");
+	MvPrintw(14, 45, "bold underline negative");
 
 	set_sgr(A_BLINK | A_REVERSE);
-	mvprintw(16, 1, "blink negative");
+	MvPrintw(16, 1, "blink negative");
 
 	set_sgr(A_BOLD | A_BLINK | A_REVERSE);
-	mvprintw(16, 40, "bold blink negative");
+	MvPrintw(16, 40, "bold blink negative");
 
 	set_sgr(A_UNDERLINE | A_BLINK | A_REVERSE);
-	mvprintw(18, 6, "underline blink negative");
+	MvPrintw(18, 6, "underline blink negative");
 
 	set_sgr(A_BOLD | A_UNDERLINE | A_BLINK | A_REVERSE);
-	mvprintw(18, 45, "bold underline blink negative");
+	MvPrintw(18, 45, "bold underline blink negative");
 
 	bkgdset(normal);
-	mvprintw(LINES - 2, 1, "%s background. ", pass == 0 ? "Dark" :
+	MvPrintw(LINES - 2, 1, "%s background. ", pass == 0 ? "Dark" :
 		 "Light");
 	clrtoeol();
 	Pause();
@@ -3973,7 +3972,7 @@ transient(FRAME * curp, NCURSES_CONST char *msg)
 {
     newwin_legend(curp);
     if (msg) {
-	mvaddstr(LINES - 1, 0, msg);
+	MvAddStr(LINES - 1, 0, msg);
 	refresh();
 	napms(1000);
     }
@@ -4063,10 +4062,10 @@ static void
 outerbox(pair ul, pair lr, bool onoff)
 /* draw or erase a box *outside* the given pair of corners */
 {
-    mvaddch(ul.y - 1, lr.x - 1, onoff ? ACS_ULCORNER : ' ');
-    mvaddch(ul.y - 1, lr.x + 1, onoff ? ACS_URCORNER : ' ');
-    mvaddch(lr.y + 1, lr.x + 1, onoff ? ACS_LRCORNER : ' ');
-    mvaddch(lr.y + 1, ul.x - 1, onoff ? ACS_LLCORNER : ' ');
+    MvAddCh(ul.y - 1, lr.x - 1, onoff ? ACS_ULCORNER : ' ');
+    MvAddCh(ul.y - 1, lr.x + 1, onoff ? ACS_URCORNER : ' ');
+    MvAddCh(lr.y + 1, lr.x + 1, onoff ? ACS_LRCORNER : ' ');
+    MvAddCh(lr.y + 1, ul.x - 1, onoff ? ACS_LLCORNER : ' ');
     move(ul.y - 1, ul.x);
     hline(onoff ? ACS_HLINE : ' ', lr.x - ul.x + 1);
     move(ul.y, ul.x - 1);
@@ -4091,7 +4090,7 @@ getwindow(void)
     if ((tmp = selectcell(2, 1, LINES - BOTLINES - 2, COLS - 2)) == (pair *) 0)
 	return ((WINDOW *) 0);
     memcpy(&ul, tmp, sizeof(pair));
-    mvaddch(ul.y - 1, ul.x - 1, ACS_ULCORNER);
+    MvAddCh(ul.y - 1, ul.x - 1, ACS_ULCORNER);
     move(0, 0);
     clrtoeol();
     addstr("Use arrows to move cursor, anything else to mark corner 2");
@@ -4160,7 +4159,7 @@ acs_and_scroll(void)
 {
     int c;
     FRAME *current = (FRAME *) 0, *neww;
-    WINDOW *usescr = stdscr;
+    WINDOW *usescr;
 #if HAVE_PUTWIN && HAVE_GETWIN
     FILE *fp;
 #endif
@@ -4360,7 +4359,7 @@ acs_and_scroll(void)
 			break;
 		    x = getmaxx(frame_win(current)) - 1;
 		}
-		mvwdelch(frame_win(current), y, x);
+		(void) mvwdelch(frame_win(current), y, x);
 	    }
 	    break;
 
@@ -5005,7 +5004,7 @@ panner(WINDOW *pad,
 	    break;
 	}
 
-	mvaddch(top_y - 1, top_x - 1, ACS_ULCORNER);
+	MvAddCh(top_y - 1, top_x - 1, ACS_ULCORNER);
 	do_v_line(top_y, top_x - 1, ACS_VLINE, porty);
 	do_h_line(top_y - 1, top_x, ACS_HLINE, portx);
 
@@ -5043,9 +5042,9 @@ panner(WINDOW *pad,
 	} else
 	    do_v_line(top_y, portx - 1, ACS_VLINE, porty);
 
-	mvaddch(top_y - 1, portx - 1, ACS_URCORNER);
-	mvaddch(porty - 1, top_x - 1, ACS_LLCORNER);
-	mvaddch(porty - 1, portx - 1, ACS_LRCORNER);
+	MvAddCh(top_y - 1, portx - 1, ACS_URCORNER);
+	MvAddCh(porty - 1, top_x - 1, ACS_LLCORNER);
+	MvAddCh(porty - 1, portx - 1, ACS_LRCORNER);
 
 	if (!pending_pan) {
 #if HAVE_GETTIMEOFDAY
@@ -5193,7 +5192,7 @@ Continue(WINDOW *win)
 {
     noecho();
     wmove(win, 10, 1);
-    mvwaddstr(win, 10, 1, " Press any key to continue");
+    MvWAddStr(win, 10, 1, " Press any key to continue");
     wrefresh(win);
     wGetchar(win);
 }
@@ -5222,7 +5221,7 @@ flushinp_test(WINDOW *win)
 #endif
     (void) wattrset(subWin, A_BOLD);
     box(subWin, ACS_VLINE, ACS_HLINE);
-    mvwaddstr(subWin, 2, 1, "This is a subwindow");
+    MvWAddStr(subWin, 2, 1, "This is a subwindow");
     wrefresh(win);
 
     /*
@@ -5233,15 +5232,15 @@ flushinp_test(WINDOW *win)
      * character to return without needing a newline. - T.Dickey 1997/10/11.
      */
     cbreak();
-    mvwaddstr(win, 0, 1, "This is a test of the flushinp() call.");
+    MvWAddStr(win, 0, 1, "This is a test of the flushinp() call.");
 
-    mvwaddstr(win, 2, 1, "Type random keys for 5 seconds.");
-    mvwaddstr(win, 3, 1,
+    MvWAddStr(win, 2, 1, "Type random keys for 5 seconds.");
+    MvWAddStr(win, 3, 1,
 	      "These should be discarded (not echoed) after the subwindow goes away.");
     wrefresh(win);
 
     for (i = 0; i < 5; i++) {
-	mvwprintw(subWin, 1, 1, "Time = %d", i);
+	MvWPrintw(subWin, 1, 1, "Time = %d", i);
 	wrefresh(subWin);
 	napms(1000);
 	flushinp();
@@ -5253,19 +5252,19 @@ flushinp_test(WINDOW *win)
     wrefresh(win);
     napms(1000);
 
-    mvwaddstr(win, 2, 1,
+    MvWAddStr(win, 2, 1,
 	      "If you were still typing when the window timer expired,");
-    mvwaddstr(win, 3, 1,
+    MvWAddStr(win, 3, 1,
 	      "or else you typed nothing at all while it was running,");
-    mvwaddstr(win, 4, 1,
+    MvWAddStr(win, 4, 1,
 	      "test was invalid.  You'll see garbage or nothing at all. ");
-    mvwaddstr(win, 6, 1, "Press a key");
+    MvWAddStr(win, 6, 1, "Press a key");
     wmove(win, 9, 10);
     wrefresh(win);
     echo();
     wGetchar(win);
     flushinp();
-    mvwaddstr(win, 12, 0,
+    MvWAddStr(win, 12, 0,
 	      "If you see any key other than what you typed, flushinp() is broken.");
     Continue(win);
 
@@ -5349,12 +5348,12 @@ menu_test(void)
 #ifdef NCURSES_MOUSE_VERSION
     mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
 #endif
-    mvaddstr(0, 0, "This is the menu test:");
-    mvaddstr(2, 0, "  Use up and down arrow to move the select bar.");
-    mvaddstr(3, 0, "  'n' and 'p' act like arrows.");
-    mvaddstr(4, 0,
+    MvAddStr(0, 0, "This is the menu test:");
+    MvAddStr(2, 0, "  Use up and down arrow to move the select bar.");
+    MvAddStr(3, 0, "  'n' and 'p' act like arrows.");
+    MvAddStr(4, 0,
 	     "  'b' and 'f' scroll up/down (page), 'u' and 'd' (line).");
-    mvaddstr(5, 0, "  Press return to exit.");
+    MvAddStr(5, 0, "  Press return to exit.");
     refresh();
 
     for (ap = animals; *ap; ap++) {
@@ -5385,8 +5384,8 @@ menu_test(void)
 	continue;
     }
 
-    (void) mvprintw(LINES - 2, 0,
-		    "You chose: %s\n", item_name(current_item(m)));
+    MvPrintw(LINES - 2, 0,
+	     "You chose: %s\n", item_name(current_item(m)));
     (void) addstr("Press any key to continue...");
     wGetchar(stdscr);
 
@@ -5507,11 +5506,11 @@ trace_set(void)
     int n;
     WINDOW *menuwin;
 
-    mvaddstr(0, 0, "Interactively set trace level:");
-    mvaddstr(2, 0, "  Press space bar to toggle a selection.");
-    mvaddstr(3, 0, "  Use up and down arrow to move the select bar.");
-    mvaddstr(4, 0, "  Press return to set the trace level.");
-    mvprintw(6, 0, "(Current trace level is %s)", tracetrace(_nc_tracing));
+    MvAddStr(0, 0, "Interactively set trace level:");
+    MvAddStr(2, 0, "  Press space bar to toggle a selection.");
+    MvAddStr(3, 0, "  Use up and down arrow to move the select bar.");
+    MvAddStr(4, 0, "  Press return to set the trace level.");
+    MvPrintw(6, 0, "(Current trace level is %s)", tracetrace(_nc_tracing));
 
     refresh();
 
@@ -5555,8 +5554,8 @@ trace_set(void)
     trace(newtrace);
     Trace(("trace level interactively set to %s", tracetrace(_nc_tracing)));
 
-    (void) mvprintw(LINES - 2, 0,
-		    "Trace level is %s\n", tracetrace(_nc_tracing));
+    MvPrintw(LINES - 2, 0,
+	     "Trace level is %s\n", tracetrace(_nc_tracing));
     (void) addstr("Press any key to continue...");
     wGetchar(stdscr);
 
@@ -5762,7 +5761,7 @@ form_virtualize(FORM * f, WINDOW *w)
 	    }
 	}
     }
-    mvprintw(0, COLS - 6, "(%s)", mode == REQ_INS_MODE ? "INS" : "OVL");
+    MvPrintw(0, COLS - 6, "(%s)", mode == REQ_INS_MODE ? "INS" : "OVL");
 
     /*
      * Force the field that the user is typing into to be in reverse video,
@@ -5914,7 +5913,7 @@ demo_forms(void)
     addstr("^K   -- clear to end of field  ^X  -- clear field\n");
     addstr("Arrow keys move within a field as you would expect. ^] toggles overlay mode.");
 
-    mvaddstr(4, 57, "Forms Entry Test");
+    MvAddStr(4, 57, "Forms Entry Test");
 
     refresh();
 
@@ -5941,7 +5940,7 @@ demo_forms(void)
     secure =
 	f[n++] = make_field(5, 30, 1, 9, TRUE);
     set_field_type(f[n - 1], fty_passwd);
-    f[n++] = (FIELD *) 0;
+    f[n] = (FIELD *) 0;
 
     if ((form = new_form(f)) != 0) {
 
@@ -5953,7 +5952,7 @@ demo_forms(void)
 	while (!finished) {
 	    switch (form_driver(form, c = form_virtualize(form, w))) {
 	    case E_OK:
-		mvaddstr(5, 57, field_buffer(secure, 1));
+		MvAddStr(5, 57, field_buffer(secure, 1));
 		clrtoeol();
 		refresh();
 		break;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.35 2009/08/29 19:02:25 tom Exp $
+ * $Id: rain.c,v 1.36 2010/05/01 19:12:26 tom Exp $
  */
 #include <test.priv.h>
 
@@ -113,47 +113,47 @@ next_j(int j)
 static void
 part1(DATA * drop)
 {
-    mvaddch(drop->y, drop->x, '.');
+    MvAddCh(drop->y, drop->x, '.');
 }
 
 static void
 part2(DATA * drop)
 {
-    mvaddch(drop->y, drop->x, 'o');
+    MvAddCh(drop->y, drop->x, 'o');
 }
 
 static void
 part3(DATA * drop)
 {
-    mvaddch(drop->y, drop->x, 'O');
+    MvAddCh(drop->y, drop->x, 'O');
 }
 
 static void
 part4(DATA * drop)
 {
-    mvaddch(drop->y - 1, drop->x, '-');
-    mvaddstr(drop->y, drop->x - 1, "|.|");
-    mvaddch(drop->y + 1, drop->x, '-');
+    MvAddCh(drop->y - 1, drop->x, '-');
+    MvAddStr(drop->y, drop->x - 1, "|.|");
+    MvAddCh(drop->y + 1, drop->x, '-');
 }
 
 static void
 part5(DATA * drop)
 {
-    mvaddch(drop->y - 2, drop->x, '-');
-    mvaddstr(drop->y - 1, drop->x - 1, "/ \\");
-    mvaddstr(drop->y, drop->x - 2, "| O |");
-    mvaddstr(drop->y + 1, drop->x - 1, "\\ /");
-    mvaddch(drop->y + 2, drop->x, '-');
+    MvAddCh(drop->y - 2, drop->x, '-');
+    MvAddStr(drop->y - 1, drop->x - 1, "/ \\");
+    MvAddStr(drop->y, drop->x - 2, "| O |");
+    MvAddStr(drop->y + 1, drop->x - 1, "\\ /");
+    MvAddCh(drop->y + 2, drop->x, '-');
 }
 
 static void
 part6(DATA * drop)
 {
-    mvaddch(drop->y - 2, drop->x, ' ');
-    mvaddstr(drop->y - 1, drop->x - 1, "   ");
-    mvaddstr(drop->y, drop->x - 2, "     ");
-    mvaddstr(drop->y + 1, drop->x - 1, "   ");
-    mvaddch(drop->y + 2, drop->x, ' ');
+    MvAddCh(drop->y - 2, drop->x, ' ');
+    MvAddStr(drop->y - 1, drop->x - 1, "   ");
+    MvAddStr(drop->y, drop->x - 2, "     ");
+    MvAddStr(drop->y + 1, drop->x - 1, "   ");
+    MvAddCh(drop->y + 2, drop->x, ' ');
 }
 
 #ifdef USE_PTHREADS

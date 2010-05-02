@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007,2009 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2007-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.11 2009/10/10 19:38:21 tom Exp $
+ * $Id: savescreen.c,v 1.12 2010/05/01 22:04:08 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -267,7 +267,7 @@ main(int argc, char *argv[])
 	getyx(stdscr, y, x);
 
 	while (!done) {
-	    switch (ch = get_command(which, last)) {
+	    switch (get_command(which, last)) {
 	    case 'n':
 		setup_next();
 		done = TRUE;
