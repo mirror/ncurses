@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.56 2010/04/03 15:23:13 tom Exp $
+# $Id: Makefile.in,v 1.57 2010/05/15 20:04:40 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -129,7 +129,7 @@ sources:	$(AUTO_SRC)
 
 $(DESTDIR)$(bindir) \
 $(DESTDIR)$(libdir) :
-	sh $(srcdir)/../mkdirs.sh $@
+	mkdir -p $@
 
 # make a copy to simplify include-paths while still keeping panel's include
 # file in this directory.

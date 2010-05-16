@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.52 2009/08/15 17:13:49 tom Exp $
+# $Id: Makefile.in,v 1.53 2010/05/15 20:25:20 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -126,7 +126,7 @@ $(DESTDIR)$(libdir) \
 $(DESTDIR)$(datadir) \
 $(DESTDIR)$(tabsetdir) \
 $(DESTDIR)$(PKG_CONFIG_LIBDIR) :
-	$(SHELL) $(top_srcdir)/mkdirs.sh $@
+	mkdir -p $@
 
 uninstall : uninstall.data uninstall.libs
 

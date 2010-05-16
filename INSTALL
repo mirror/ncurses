@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.143 2010/01/09 19:26:36 tom Exp $
+-- $Id: INSTALL,v 1.144 2010/05/15 22:21:58 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -100,12 +100,12 @@ INSTALLATION PROCEDURE:
 
     Do not use commands such as
 
-    	make install prefix=XXX
+	make install prefix=XXX
 
     to change the prefix after configuration, since the prefix value is used
     for some absolute pathnames such as TERMINFO.  Instead do this
 
-    	make install DESTDIR=XXX
+	make install DESTDIR=XXX
 
     See also the discussion of --with-install-prefix.
 
@@ -333,6 +333,17 @@ SUMMARY OF CONFIGURE OPTIONS:
     --disable-largefile
 	Disable compiler flags needed to use large-file interfaces.
 
+    --disable-libtool-version
+	when using --with-libtool, control how the major/minor version numbers
+	are used for constructing the library name.
+
+	The default uses the -version-number feature of libtool, which makes
+	the library names compatible (though not identical) with the standard
+	build using --with-shared.
+
+	Use --disable-libtool-version to use the libtool -version-info feature.
+	This corresponds to the setting used before patch 20100515.
+
     --disable-leaks
 	For testing, compile-in code that frees memory that normally would not
 	be freed, to simplify analysis of memory-leaks.
@@ -524,6 +535,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	If pkg-config is found (see --with-pkg-config), generate ".pc" files
 	for each of the libraries, and install them in pkg-config's library
 	directory.
+
+    --enable-pthreads-eintr
+	add logic in threaded configuration to ensure that a read(2) system
+	call can be interrupted for SIGWINCH.
 
     --enable-reentrant
 	Compile experimental configuration which improves reentrant use of the
@@ -723,7 +738,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 	use Alessandro Rubini's GPM library to provide mouse support on the
 	Linux console.  Prior to ncurses 5.5, this introduced a dependency on
 	the GPM library.
-	
+
 	Currently ncurses uses the dlsym() function to bind to the library at
 	runtime, so it is only necessary that the library be present when
 	ncurses is built, to obtain the filename (or soname) used in the
@@ -740,7 +755,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Use a hashed database for storing terminfo data rather than storing
 	each compiled entry in a separate binary file within a directory
 	tree.
-	
+
 	In particular, this uses the Berkeley database 1.8.5 interface, as
 	provided by that and its successors db 2, 3, and 4.  The actual
 	interface is slightly different in the successor versions of the
@@ -811,7 +826,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 
     --with-manpage-renames=XXX
 	Tell the configure script that you wish to rename the manpages while
-	installing.  Currently the only distribution which does this is Debian. 
+	installing.  Currently the only distribution which does this is Debian.
 	The option value specifies the name of a file that lists the renamed
 	files, e.g., $srcdir/man/man_db.renames
 
@@ -892,7 +907,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 	loads the system's copy of the ncurses shared libraries.  In that
 	case, using the misc/shlib script may be helpful, since it sets
 	$LD_LIBRARY_PATH to point to the build tree, e.g.,
-		./misc/shlib make install 	
+		./misc/shlib make install
 
     --with-shlib-version=XXX
 	Specify whether to use the release or ABI version for shared libraries.
@@ -1032,7 +1047,7 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
 	  of the ncurses library used for the tic program as well as some
 	  others such as tack.  There is no API change, but makefiles would be
 	  changed to use the tic-library built separately.
-	  
+
 	  tack, distributed separately from ncurses, uses some of the internal
 	  _nc_XXX functions, which are declared in the tic.h header file.
 
@@ -1179,7 +1194,7 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
 	  still used in this release to allow compiling with not-so-old
 	  compilers.
 
-	+ form and menu libraries now work with wide-character data. 
+	+ form and menu libraries now work with wide-character data.
 	  Applications which bypassed the form library and manipulated the
 	  FIELD.buf data directly will not work properly with libformw, since
 	  that no longer points to an array of char.  The set_field_buffer()
@@ -1517,7 +1532,7 @@ IF YOU ARE A SYSTEM INTEGRATOR:
 
     Configuration and Installation:
 
-    	On platforms where ncurses is assumed to be installed in /usr/lib,
+	On platforms where ncurses is assumed to be installed in /usr/lib,
 	the configure script uses "/usr" as a default:
 
 		GNU/Linux, FreeBSD, NetBSD, OpenBSD, Cygwin

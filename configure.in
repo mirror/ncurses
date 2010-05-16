@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.489 2010/04/17 16:06:06 tom Exp $
+dnl $Id: configure.in,v 1.491 2010/05/15 21:40:14 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.489 $)
+AC_REVISION($Revision: 1.491 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1078,10 +1078,20 @@ AC_SUBST(NCURSES_INTEROP_FUNCS)
 # the script-block --with-normal, etc.
 CF_WITH_PTHREAD
 
+AC_MSG_CHECKING(if you want to allow EINTR in wgetch with pthreads)
+AC_ARG_ENABLE(pthreads-eintr,
+    [  --enable-pthreads-eintr enable EINTR in wgetch with pthreads],
+    [use_pthreads_eintr=$enableval],
+    [use_pthreads_eintr=no])
+AC_MSG_RESULT($use_pthreads_eintr)
+if test $use_pthreads_eintr = yes ; then
+    AC_DEFINE(USE_PTHREADS_EINTR)
+fi
+
 AC_MSG_CHECKING(if you want to use weak-symbols for pthreads)
 AC_ARG_ENABLE(weak-symbols,
     [  --enable-weak-symbols   enable weak-symbols for pthreads],
-    [use_weak_symbols=$withval],
+    [use_weak_symbols=$enableval],
     [use_weak_symbols=no])
 AC_MSG_RESULT($use_weak_symbols)
 if test "$use_weak_symbols" = yes ; then
@@ -1944,6 +1954,7 @@ DFT_ARG_SUFFIX="$DFT_ARG_SUFFIX"
 DFT_LWR_MODEL="$DFT_LWR_MODEL"
 ECHO_LINK="$ECHO_LINK"
 LDCONFIG="$LDCONFIG"
+LIBTOOL_VERSION="$LIBTOOL_VERSION"
 LIB_NAME="$LIB_NAME"
 LIB_SUBSETS="$LIB_SUBSETS"
 LIB_SUFFIX="$LIB_SUFFIX"

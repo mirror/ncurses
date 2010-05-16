@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.9 2010/04/10 16:11:17 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.11 2010/05/15 21:31:12 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1204,7 +1204,14 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
     assert(buf);
     SetSP();
 
+# if USE_PTHREADS_EINTR
+    if ((pthread_self) && (pthread_kill) && (pthread_equal))
+	_nc_globals.read_thread = pthread_self();
+# endif
     n = read(sp->_ifd, &c2, 1);
+#if USE_PTHREADS_EINTR
+    _nc_globals.read_thread = 0;
+#endif
     *buf = (int) c2;
     return n;
 }

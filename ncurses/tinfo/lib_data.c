@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.58 2010/01/23 19:41:58 Miroslav.Lichvar Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.61 2010/05/15 22:06:56 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -192,6 +192,9 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tracef */
     0,				/* nested_tracef */
     0,				/* use_pthreads */
+#endif
+#if USE_PTHREADS_EINTR
+    0,				/* read_thread */
 #endif
 };
 
@@ -345,7 +348,9 @@ _nc_mutex_unlock(pthread_mutex_t * obj)
 	return 0;
     return pthread_mutex_unlock(obj);
 }
+#endif /* USE_PTHREADS */
 
+#if defined(USE_PTHREADS) || USE_PTHREADS_EINTR
 #if USE_WEAK_SYMBOLS
 /*
  * NB: sigprocmask(2) is global but pthread_sigmask(3p)

@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.116 2010/05/01 19:29:31 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.118 2010/05/15 21:31:12 tom Exp $")
 
 #include <tic.h>
 
@@ -866,6 +866,10 @@ _nc_mouse_inline(SCREEN *sp)
 	 * Wheel mice may return buttons 4 and 5 when the wheel is turned.
 	 * We encode those as button presses.
 	 */
+# if USE_PTHREADS_EINTR
+	if ((pthread_self) && (pthread_kill) && (pthread_equal))
+	    _nc_globals.read_thread = pthread_self();
+# endif
 	for (grabbed = 0; grabbed < 3; grabbed += (size_t) res) {
 
 	    /* For VIO mouse we add extra bit 64 to disambiguate button-up. */
@@ -877,6 +881,9 @@ _nc_mouse_inline(SCREEN *sp)
 	    if (res == -1)
 		break;
 	}
+#if USE_PTHREADS_EINTR
+	_nc_globals.read_thread = 0;
+#endif
 	kbuf[3] = '\0';
 
 	TR(TRACE_IEVENT,

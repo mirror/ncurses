@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.459 2010/04/24 23:21:58 tom Exp $
+ * $Id: curses.priv.h,v 1.462 2010/05/15 22:08:12 tom Exp $
  *
  *	curses.priv.h
  *
@@ -457,6 +457,19 @@ NCURSES_EXPORT(int *)        _nc_ptr_Escdelay (SCREEN *);
 	    data.__data.__nusers)
 #define TR_GLOBAL_MUTEX(name) TR_MUTEX(_nc_globals.mutex_##name)
 
+#if USE_WEAK_SYMBOLS
+#if defined(__GNUC__)
+#  if defined __USE_ISOC99
+#    define _cat_pragma(exp)	_Pragma(#exp)
+#    define _weak_pragma(exp)	_cat_pragma(weak name)
+#  else
+#    define _weak_pragma(exp)
+#  endif
+#  define _declare(name)	__extension__ extern __typeof__(name) name
+#  define weak_symbol(name)	_weak_pragma(name) _declare(name) __attribute__((weak))
+#endif
+#endif
+
 #ifdef USE_PTHREADS
 
 #if USE_REENTRANT
@@ -472,19 +485,6 @@ extern NCURSES_EXPORT(int) _nc_mutex_unlock(pthread_mutex_t *);
 
 #else
 #error POSIX threads requires --enable-reentrant option
-#endif
-
-#if USE_WEAK_SYMBOLS
-#if defined(__GNUC__)
-#  if defined __USE_ISOC99
-#    define _cat_pragma(exp)	_Pragma(#exp)
-#    define _weak_pragma(exp)	_cat_pragma(weak name)
-#  else
-#    define _weak_pragma(exp)
-#  endif
-#  define _declare(name)	__extension__ extern __typeof__(name) name
-#  define weak_symbol(name)	_weak_pragma(name) _declare(name) __attribute__((weak))
-#endif
 #endif
 
 #ifdef USE_PTHREADS
@@ -510,6 +510,19 @@ extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
 #endif
 
 #else /* !USE_PTHREADS */
+
+#if USE_PTHREADS_EINTR
+#  if USE_WEAK_SYMBOLS
+#include <pthread.h>
+weak_symbol(pthread_sigmask);
+weak_symbol(pthread_kill);
+weak_symbol(pthread_self);
+weak_symbol(pthread_equal);
+extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
+#    undef  sigprocmask
+#    define sigprocmask _nc_sigprocmask
+#  endif
+#endif /* USE_PTHREADS_EINTR */
 
 #define _nc_init_pthreads()	/* nothing */
 #define _nc_mutex_init(obj)	/* nothing */
@@ -837,6 +850,9 @@ typedef struct {
 	int		nested_tracef;
 	int		use_pthreads;
 #define _nc_use_pthreads	_nc_globals.use_pthreads
+#endif
+#if USE_PTHREADS_EINTR
+	pthread_t	read_thread;		/* The reading thread */
 #endif
 } NCURSES_GLOBALS;
 

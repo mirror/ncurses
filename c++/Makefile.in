@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.89 2010/04/03 15:23:13 tom Exp $
+# $Id: Makefile.in,v 1.91 2010/05/15 20:04:40 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -55,6 +55,7 @@ LIBTOOL_COMPILE	= @LIB_COMPILE@
 LIBTOOL_LINK	= @LIB_LINK@
 LIBTOOL_INSTALL	= @LIB_INSTALL@
 LIBTOOL_UNINSTALL = @LIB_UNINSTALL@
+LIBTOOL_VERSION = @LIBTOOL_VERSION@
 LT_UNDEF	= @LT_UNDEF@
 
 INSTALL		= @INSTALL@
@@ -165,7 +166,7 @@ LIB_OBJS = \
 	cd ../lib && $(LIBTOOL_LINK) $(CXX) $(CXXFLAGS) \
 		-o $(LIBNAME) $(LIB_OBJS:$o=.lo) \
 		-rpath $(INSTALL_PREFIX)$(libdir) \
-		-version-info $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(SHLIB_LIST)
+		$(LIBTOOL_VERSION) $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(SHLIB_LIST)
 
 OBJS_DEMO = $(MODEL)/demo$o
 
@@ -182,7 +183,7 @@ etip.h:	$(srcdir)/etip.h.in $(srcdir)/edit_cfg.sh
 	sh $(srcdir)/edit_cfg.sh ../include/ncurses_cfg.h $@
 
 $(DESTDIR)$(libdir) :
-	sh $(srcdir)/../mkdirs.sh $@
+	mkdir -p $@
 
 install \
 install.libs:: ../lib/$(LIBNAME) $(DESTDIR)$(libdir)

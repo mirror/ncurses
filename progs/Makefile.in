@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.83 2010/04/03 15:28:10 tom Exp $
+# $Id: Makefile.in,v 1.84 2010/05/15 20:04:40 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -217,7 +217,7 @@ uninstall.progs:
 	-@rm -f $(DESTDIR)$(bindir)/$(actual_reset)
 
 $(DESTDIR)$(bindir) :
-	sh $(srcdir)/../mkdirs.sh $@
+	mkdir -p $@
 
 #
 # Utilities normally built by make all start here

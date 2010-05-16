@@ -742,7 +742,6 @@
 ./mk-2nd.awk
 ./mk-dlls.sh
 ./mk-hdr.awk
-./mkdirs.sh
 ./ncurses/Makefile.in
 ./ncurses/README
 ./ncurses/README.IZ

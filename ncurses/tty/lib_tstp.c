@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -46,7 +46,7 @@
 #define _POSIX_SOURCE
 #endif
 
-MODULE_ID("$Id: lib_tstp.c,v 1.39 2009/05/09 15:46:20 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.41 2010/05/15 21:31:12 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -286,6 +286,13 @@ static void
 sigwinch(int sig GCC_UNUSED)
 {
     _nc_globals.have_sigwinch = 1;
+# if USE_PTHREADS_EINTR
+    if (_nc_globals.read_thread) {
+	if (!pthread_equal(pthread_self(), _nc_globals.read_thread))
+	    pthread_kill(_nc_globals.read_thread, SIGWINCH);
+	_nc_globals.read_thread = 0;
+    }
+# endif
 }
 #endif /* USE_SIGWINCH */
 

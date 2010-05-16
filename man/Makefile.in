@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.43 2010/03/13 20:28:21 tom Exp $
+# $Id: Makefile.in,v 1.44 2010/05/15 20:04:40 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -52,7 +52,7 @@ depend :
 tags :
 
 $(DESTDIR)$(mandir) :
-	sh $(srcdir)/../mkdirs.sh $@
+	mkdir -p $@
 
 EDITARGS = $(DESTDIR)$(mandir) $(srcdir) terminfo.5 *-config.1 $(srcdir)/*.[0-9]*
 

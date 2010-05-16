@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.116 2010/05/01 22:40:47 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.118 2010/05/15 21:31:12 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -264,7 +264,14 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 	ch = buf;
 #else
 	unsigned char c2 = 0;
+# if USE_PTHREADS_EINTR
+	if ((pthread_self) && (pthread_kill) && (pthread_equal))
+	    _nc_globals.read_thread = pthread_self();
+# endif
 	n = read(sp->_ifd, &c2, 1);
+#if USE_PTHREADS_EINTR
+	_nc_globals.read_thread = 0;
+#endif
 	ch = c2;
 #endif
     }
@@ -279,7 +286,11 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
      * We don't want this difference to show.  This piece of code
      * tries to make it look like we always have restarting signals.
      */
-    if (n <= 0 && errno == EINTR)
+    if (n <= 0 && errno == EINTR
+# if USE_PTHREADS_EINTR
+	&& (_nc_globals.have_sigwinch == 0)
+# endif
+	)
 	goto again;
 #endif
 

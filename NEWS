@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1536 2010/05/01 22:12:38 tom Exp $
+-- $Id: NEWS,v 1.1543 2010/05/15 21:46:31 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100515
+	+ add configure option --enable-pthreads-eintr to control whether the
+	  new EINTR feature is enabled.
+	+ modify logic in pthread configuration to allow EINTR to interrupt
+	  a read operation in wgetch() (Novell #540571, patch by Werner Fink).
+	+ drop mkdirs.sh, use "mkdir -p".
+	+ add configure option --disable-libtool-version, to use the
+	  "-version-number" feature which was added in libtool 1.5 (report by
+	  Peter Haering).  The default value for the option uses the newer
+	  feature, which makes libraries generated using libtool compatible
+	  with the standard builds of ncurses.
+	+ updated test/configure to match configure script macros.
+	+ fixes for configure script from lynx changes:
+	  + improve CF_FIND_LINKAGE logic for the case where a function is
+	    found in predefined libraries.
+	  + revert part of change to CF_HEADER (cf: 20100424)
 
 20100501
 	+ correct limit-check in wredrawln, accounting for begy/begx values

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.515 2010/05/01 19:16:13 tom Exp $
+dnl $Id: aclocal.m4,v 1.519 2010/05/15 20:06:22 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1036,6 +1036,30 @@ if test "$with_no_leaks" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_DISABLE_LIBTOOL_VERSION version: 1 updated: 2010/05/15 15:45:59
+dnl --------------------------
+dnl Check if we should use the libtool 1.5 feature "-version-number" instead of
+dnl the older "-version-info" feature.  The newer feature allows us to use
+dnl version numbering on shared libraries which make them compatible with
+dnl various systems.
+AC_DEFUN([CF_DISABLE_LIBTOOL_VERSION],
+[
+AC_MSG_CHECKING(if libtool -version-number should be used)
+CF_ARG_DISABLE(libtool-version,
+	[  --disable-libtool-version  enable to use libtool's incompatible naming scheme],
+	[cf_libtool_version=no],
+	[cf_libtool_version=yes])
+AC_MSG_RESULT($cf_libtool_version)
+
+if test "$cf_libtool_version" = yes ; then
+	LIBTOOL_VERSION="-version-number"
+else
+	LIBTOOL_VERSION="-version-info"
+fi
+
+AC_SUBST(LIBTOOL_VERSION)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_DISABLE_RPATH_HACK version: 1 updated: 2010/04/11 10:54:00
 dnl ---------------------
 dnl The rpath-hack makes it simpler to build programs, particularly with the
@@ -1107,7 +1131,7 @@ AC_MSG_RESULT($cf_result)
 CXXFLAGS="$cf_save_CXXFLAGS"
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_FIND_LINKAGE version: 16 updated: 2010/04/21 06:20:50
+dnl CF_FIND_LINKAGE version: 18 updated: 2010/05/05 20:27:55
 dnl ---------------
 dnl Find a library (specifically the linkage used in the code fragment),
 dnl searching for it if it is not already in the library path.
@@ -1136,18 +1160,23 @@ cf_cv_library_path_$3=
 
 CF_MSG_LOG([Starting [FIND_LINKAGE]($3,$6)])
 
+cf_save_LIBS="$LIBS"
+
 AC_TRY_LINK([$1],[$2],[
 	cf_cv_find_linkage_$3=yes
+	cf_cv_header_path_$3=/usr/include
+	cf_cv_library_path_$3=/usr/lib
 ],[
 
-cf_save_LIBS="$LIBS"
 LIBS="-l$3 $7 $cf_save_LIBS"
 
 AC_TRY_LINK([$1],[$2],[
 	cf_cv_find_linkage_$3=yes
+	cf_cv_header_path_$3=/usr/include
+	cf_cv_library_path_$3=/usr/lib
 	cf_cv_library_file_$3="-l$3"
 ],[
-    cf_cv_find_linkage_$3=no
+	cf_cv_find_linkage_$3=no
 	LIBS="$cf_save_LIBS"
 
     CF_VERBOSE(find linkage for $3 library)
@@ -1209,7 +1238,6 @@ AC_TRY_LINK([$1],[$2],[
                 ])
           fi
         done
-        LIBS="$cf_save_LIBS"
         CPPFLAGS="$cf_save_CPPFLAGS"
         LDFLAGS="$cf_save_LDFLAGS"
       fi
@@ -1219,6 +1247,8 @@ AC_TRY_LINK([$1],[$2],[
     fi
     ],$7)
 ])
+
+LIBS="$cf_save_LIBS"
 
 if test "$cf_cv_find_linkage_$3" = yes ; then
 ifelse([$4],,[
@@ -2131,7 +2161,7 @@ done
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HEADER_PATH version: 11 updated: 2010/04/21 06:20:50
+dnl CF_HEADER_PATH version: 12 updated: 2010/05/05 05:22:40
 dnl --------------
 dnl Construct a search-list of directories for a nonstandard header-file
 dnl
@@ -2150,7 +2180,8 @@ if test -n "${CFLAGS}${CPPFLAGS}" ; then
 		case $cf_header_path in #(vi
 		-I*)
 			cf_header_path=`echo ".$cf_header_path" |sed -e 's/^...//' -e 's,/include$,,'`
-			cf_header_path_list="$cf_header_path_list $cf_header_path"
+			CF_ADD_SUBDIR_PATH($1,$2,include,$cf_header_path,NONE)
+			cf_header_path_list="$cf_header_path_list [$]$1"
 			;;
 		esac
 	done
@@ -2450,7 +2481,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 55 updated: 2008/12/13 16:17:38
+dnl CF_LIB_RULES version: 56 updated: 2010/05/15 15:19:46
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -2655,6 +2686,7 @@ do
 				overwrite=$WITH_OVERWRITE \
 				depend="$cf_depend" \
 				host="$host" \
+				libtool_version="$LIBTOOL_VERSION" \
 				$srcdir/$cf_dir/modules >>$cf_dir/Makefile
 
 			cf_suffix="$old_cf_suffix"
@@ -3428,7 +3460,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 36 updated: 2010/03/13 13:41:01
+dnl CF_MAN_PAGES version: 37 updated: 2010/05/15 16:05:34
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -3494,8 +3526,6 @@ NCURSES_PATCH="$NCURSES_PATCH"
 NCURSES_OSPEED="$NCURSES_OSPEED"
 TERMINFO="$TERMINFO"
 
-MKDIRS="sh `cd $srcdir && pwd`/mkdirs.sh"
-
 INSTALL="$INSTALL"
 INSTALL_DATA="$INSTALL_DATA"
 
@@ -3539,7 +3569,7 @@ case \$i in #(vi
 	section=\`expr "\$i" : '.*\\.\\([[0-9]]\\)[[xm]]*'\`;
 	if test \$verb = installing ; then
 	if test ! -d \$cf_subdir\${section} ; then
-		\$MKDIRS \$cf_subdir\$section
+		mkdir -p \$cf_subdir\$section
 	fi
 	fi
 
@@ -5637,7 +5667,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 23 updated: 2009/03/28 14:26:27
+dnl CF_WITH_LIBTOOL version: 25 updated: 2010/05/15 15:45:59
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -5673,6 +5703,7 @@ dnl	autoconf-257 $*
 dnl
 AC_DEFUN([CF_WITH_LIBTOOL],
 [
+AC_REQUIRE([CF_DISABLE_LIBTOOL_VERSION])
 ifdef([AC_PROG_LIBTOOL],,[
 LIBTOOL=
 ])
@@ -5712,7 +5743,7 @@ ifdef([AC_PROG_LIBTOOL],[
 		AC_MSG_ERROR(Cannot find libtool)
 	fi
 ])dnl
-	LIB_CREATE='${LIBTOOL} --mode=link ${CC} -rpath ${DESTDIR}${libdir} -version-info `cut -f1 ${srcdir}/VERSION` ${LIBTOOL_OPTS} ${LT_UNDEF} -o'
+	LIB_CREATE='${LIBTOOL} --mode=link ${CC} -rpath ${DESTDIR}${libdir} ${LIBTOOL_VERSION} `cut -f1 ${srcdir}/VERSION` ${LIBTOOL_OPTS} ${LT_UNDEF} -o'
 	LIB_OBJECT='${OBJECTS:.o=.lo}'
 	LIB_SUFFIX=.la
 	LIB_CLEAN='${LIBTOOL} --mode=clean'
