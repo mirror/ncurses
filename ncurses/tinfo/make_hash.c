@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,14 +37,14 @@
  *
  */
 
-#include <curses.priv.h>
+#include <build.priv.h>
 
 #include <tic.h>
 #include <hashsize.h>
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.2 2009/08/08 17:42:41 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.3 2010/05/22 18:02:50 tom Exp $")
 
 /*
  *	_nc_make_hash_table()

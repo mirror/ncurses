@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.519 2010/05/15 20:06:22 tom Exp $
+dnl $Id: aclocal.m4,v 1.524 2010/05/22 18:45:10 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -388,7 +388,7 @@ ifelse($3,,[    :]dnl
 ])dnl
   ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_AR_FLAGS version: 4 updated: 2009/02/07 13:42:23
+dnl CF_AR_FLAGS version: 5 updated: 2010/05/20 20:24:29
 dnl -----------
 dnl Check for suitable "ar" (archiver) options for updating an archive.
 AC_DEFUN([CF_AR_FLAGS],[
@@ -398,6 +398,16 @@ AC_CACHE_CHECK(for options to update archives, cf_cv_ar_flags,[
 	cf_cv_ar_flags=unknown
 	for cf_ar_flags in -curv curv -crv crv -cqv cqv -rv rv
 	do
+
+		# check if $ARFLAGS already contains this choice
+		if test "x$ARFLAGS" != "x" ; then
+			cf_check_ar_flags=`echo "x$ARFLAGS" | sed -e "s/$cf_ar_flags\$//" -e "s/$cf_ar_flags / /"`
+			if test "x$ARFLAGS" != "$cf_check_ar_flags" ; then
+				cf_cv_ar_flags=
+				break
+			fi
+		fi
+
 		rm -f conftest.$ac_cv_objext
 		rm -f conftest.a
 
@@ -406,7 +416,8 @@ AC_CACHE_CHECK(for options to update archives, cf_cv_ar_flags,[
 int	testdata[[3]] = { 123, 456, 789 };
 EOF
 		if AC_TRY_EVAL(ac_compile) ; then
-			$AR $cf_ar_flags conftest.a conftest.$ac_cv_objext 2>&AC_FD_CC 1>/dev/null
+			echo "$AR $ARFLAGS $cf_ar_flags conftest.a conftest.$ac_cv_objext" >&AC_FD_CC
+			$AR $ARFLAGS $cf_ar_flags conftest.a conftest.$ac_cv_objext 2>&AC_FD_CC 1>/dev/null
 			if test -f conftest.a ; then
 				cf_cv_ar_flags=$cf_ar_flags
 				break
@@ -418,8 +429,16 @@ EOF
 	done
 	rm -f conftest.a conftest.$ac_ext conftest.$ac_cv_objext
 ])
-test -z "$ARFLAGS" && ARFLAGS=$cf_cv_ar_flags
-AC_SUBST(ARFLAGS,$cf_cv_ar_flags)
+
+if test -n "$ARFLAGS" ; then
+	if test -n "$cf_cv_ar_flags" ; then
+		ARFLAGS="$ARFLAGS $cf_cv_ar_flags"
+	fi
+else
+	ARFLAGS=$cf_cv_ar_flags
+fi
+
+AC_SUBST(ARFLAGS)
 ])
 dnl ---------------------------------------------------------------------------
 dnl CF_AWK_BIG_PRINTF version: 3 updated: 2008/12/27 12:30:03
@@ -3832,7 +3851,7 @@ fi
 test "$cf_cv_mixedcase" = yes && AC_DEFINE(MIXEDCASE_FILENAMES)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MKSTEMP version: 5 updated: 2006/12/16 12:33:30
+dnl CF_MKSTEMP version: 6 updated: 2010/05/22 14:44:30
 dnl ----------
 dnl Check for a working mkstemp.  This creates two files, checks that they are
 dnl successfully created and distinct (AmigaOS apparently fails on the last).
@@ -3877,7 +3896,7 @@ int main()
 ],[AC_CHECK_FUNC(mkstemp)
 ])
 ])
-if test "$cf_cv_func_mkstemp" = yes ; then
+if test "x$cf_cv_func_mkstemp" = xyes || test "x$ac_cv_func_mkstemp" = xyes ; then
 	AC_DEFINE(HAVE_MKSTEMP)
 fi
 ])dnl

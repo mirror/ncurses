@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.462 2010/05/15 22:08:12 tom Exp $
+ * $Id: curses.priv.h,v 1.463 2010/05/20 23:22:46 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1975,6 +1975,7 @@ extern NCURSES_EXPORT_VAR(int *) _nc_oldnums;
 #define _nc_alloc_screen_sp() typeCalloc(SCREEN, 1)
 
 #if BROKEN_LINKER
+#define SP _nc_screen()
 extern NCURSES_EXPORT(SCREEN *) _nc_screen (void);
 extern NCURSES_EXPORT(int)      _nc_alloc_screen (void);
 extern NCURSES_EXPORT(void)     _nc_set_screen (SCREEN *);

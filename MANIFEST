@@ -836,6 +836,7 @@
 ./ncurses/base/version.c
 ./ncurses/base/vsscanf.c
 ./ncurses/base/wresize.c
+./ncurses/build.priv.h
 ./ncurses/curses.priv.h
 ./ncurses/fifo_defs.h
 ./ncurses/llib-lncurses

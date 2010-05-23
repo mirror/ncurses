@@ -52,7 +52,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.85 2010/04/24 23:51:23 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.86 2010/05/20 23:25:18 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -242,7 +242,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 #ifdef USE_TERM_DRIVER
 	    TERMINAL_CONTROL_BLOCK *TCB;
 #elif !NCURSES_SP_FUNCS
-	    SP_PARM = CURRENT_SCREEN;
+	    _nc_set_screen(CURRENT_SCREEN);
 #endif
 	    assert(SP_PARM != 0);
 	    cols = *(ptrCols(SP_PARM));

@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.118 2010/05/15 21:31:12 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.119 2010/05/22 20:00:55 tom Exp $")
 
 #include <tic.h>
 
@@ -867,7 +867,9 @@ _nc_mouse_inline(SCREEN *sp)
 	 * We encode those as button presses.
 	 */
 # if USE_PTHREADS_EINTR
+#  if USE_WEAK_SYMBOLS
 	if ((pthread_self) && (pthread_kill) && (pthread_equal))
+#  endif
 	    _nc_globals.read_thread = pthread_self();
 # endif
 	for (grabbed = 0; grabbed < 3; grabbed += (size_t) res) {

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1543 2010/05/15 21:46:31 tom Exp $
+-- $Id: NEWS,v 1.1546 2010/05/22 18:46:54 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100522
+	+ correct cross-compiling configure check for CF_MKSTEMP macro, by
+	  adding a check cache variable set by AC_CHECK_FUNC (report by
+	  Pierre Labastie).
+	+ simplify include-dependencies of make_hash and make_keys, to reduce
+	  the need for setting BUILD_CPPFLAGS in cross-compiling when the
+	  build- and target-machines differ.
+	+ repair broken-linker configuration by restoring a definition of SP
+	  variable to curses.priv.h, and adjusting for cases where sp-funcs
+	  are used.
+	+ improve configure macro CF_AR_FLAGS, allowing ARFLAGS environment
+	  variable to override (prompted by report by Pablo Cazallas).
 
 20100515
 	+ add configure option --enable-pthreads-eintr to control whether the
