@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.524 2010/05/22 18:45:10 tom Exp $
+dnl $Id: aclocal.m4,v 1.530 2010/05/29 20:59:18 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -86,7 +86,7 @@ fi
 AC_SUBST(ACPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_CFLAGS version: 9 updated: 2010/01/09 11:05:50
+dnl CF_ADD_CFLAGS version: 10 updated: 2010/05/26 05:38:42
 dnl -------------
 dnl Copy non-preprocessor flags to $CFLAGS, preprocessor flags to $CPPFLAGS
 dnl The second parameter if given makes this macro verbose.
@@ -156,17 +156,17 @@ esac
 done
 
 if test -n "$cf_new_cflags" ; then
-	ifelse($2,,,[CF_VERBOSE(add to \$CFLAGS $cf_new_cflags)])
+	ifelse([$2],,,[CF_VERBOSE(add to \$CFLAGS $cf_new_cflags)])
 	CFLAGS="$CFLAGS $cf_new_cflags"
 fi
 
 if test -n "$cf_new_cppflags" ; then
-	ifelse($2,,,[CF_VERBOSE(add to \$CPPFLAGS $cf_new_cppflags)])
+	ifelse([$2],,,[CF_VERBOSE(add to \$CPPFLAGS $cf_new_cppflags)])
 	CPPFLAGS="$CPPFLAGS $cf_new_cppflags"
 fi
 
 if test -n "$cf_new_extra_cppflags" ; then
-	ifelse($2,,,[CF_VERBOSE(add to \$EXTRA_CPPFLAGS $cf_new_extra_cppflags)])
+	ifelse([$2],,,[CF_VERBOSE(add to \$EXTRA_CPPFLAGS $cf_new_extra_cppflags)])
 	EXTRA_CPPFLAGS="$cf_new_extra_cppflags $EXTRA_CPPFLAGS"
 fi
 
@@ -174,7 +174,7 @@ AC_SUBST(EXTRA_CPPFLAGS)
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_INCDIR version: 12 updated: 2009/01/18 10:00:47
+dnl CF_ADD_INCDIR version: 13 updated: 2010/05/26 16:44:57
 dnl -------------
 dnl Add an include-directory to $CPPFLAGS.  Don't add /usr/include, since it's
 dnl redundant.  We don't normally need to add -I/usr/local/include for gcc,
@@ -217,7 +217,7 @@ if test -n "$1" ; then
 
 		if test "$cf_have_incdir" = no ; then
 		  CF_VERBOSE(adding $cf_add_incdir to include-path)
-		  ifelse($2,,CPPFLAGS,$2)="$ifelse($2,,CPPFLAGS,$2) -I$cf_add_incdir"
+		  ifelse([$2],,CPPFLAGS,[$2])="$ifelse([$2],,CPPFLAGS,[$2]) -I$cf_add_incdir"
 
 		  cf_top_incdir=`echo $cf_add_incdir | sed -e 's%/include/.*$%/include%'`
 		  test "$cf_top_incdir" = "$cf_add_incdir" && break
@@ -231,7 +231,15 @@ if test -n "$1" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_LIBDIR version: 8 updated: 2009/01/18 10:01:08
+dnl CF_ADD_LIB version: 1 updated: 2010/05/29 16:02:10
+dnl ----------
+dnl Add a library, used to enforce consistency.
+dnl
+dnl $1 = library to add, without the "-l"
+dnl $2 = variable to update (default $LIBS)
+AC_DEFUN([CF_ADD_LIB],[ifelse($2,,LIBS,[$2])="-l$1 [$]ifelse($2,,LIBS,[$2])"])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ADD_LIBDIR version: 9 updated: 2010/05/26 16:44:57
 dnl -------------
 dnl	Adds to the library-path
 dnl
@@ -260,7 +268,7 @@ if test -n "$1" ; then
       fi
       if test "$cf_have_libdir" = no ; then
         CF_VERBOSE(adding $cf_add_libdir to library-path)
-        ifelse($2,,LDFLAGS,$2)="-L$cf_add_libdir $ifelse($2,,LDFLAGS,$2)"
+        ifelse([$2],,LDFLAGS,[$2])="-L$cf_add_libdir $ifelse([$2],,LDFLAGS,[$2])"
       fi
     fi
   done
@@ -365,7 +373,7 @@ dnl Allow user to disable a normally-on option.
 AC_DEFUN([CF_ARG_DISABLE],
 [CF_ARG_OPTION($1,[$2],[$3],[$4],yes)])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ARG_OPTION version: 3 updated: 1997/10/18 14:42:41
+dnl CF_ARG_OPTION version: 4 updated: 2010/05/26 05:38:42
 dnl -------------
 dnl Restricted form of AC_ARG_ENABLE that ensures user doesn't give bogus
 dnl values.
@@ -377,13 +385,13 @@ dnl $3 = action to perform if option is not default
 dnl $4 = action if perform if option is default
 dnl $5 = default option value (either 'yes' or 'no')
 AC_DEFUN([CF_ARG_OPTION],
-[AC_ARG_ENABLE($1,[$2],[test "$enableval" != ifelse($5,no,yes,no) && enableval=ifelse($5,no,no,yes)
+[AC_ARG_ENABLE([$1],[$2],[test "$enableval" != ifelse([$5],no,yes,no) && enableval=ifelse([$5],no,no,yes)
   if test "$enableval" != "$5" ; then
-ifelse($3,,[    :]dnl
-,[    $3]) ifelse($4,,,[
+ifelse([$3],,[    :]dnl
+,[    $3]) ifelse([$4],,,[
   else
     $4])
-  fi],[enableval=$5 ifelse($4,,,[
+  fi],[enableval=$5 ifelse([$4],,,[
   $4
 ])dnl
   ])])dnl
@@ -783,7 +791,7 @@ if test ".$system_name" != ".$cf_cv_system_name" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_ERRNO version: 10 updated: 2008/08/22 16:33:22
+dnl CF_CHECK_ERRNO version: 11 updated: 2010/05/26 05:38:42
 dnl --------------
 dnl Check for data that is usually declared in <stdio.h> or <errno.h>, e.g.,
 dnl the 'errno' variable.  Define a DECL_xxx symbol if we must declare it
@@ -801,7 +809,7 @@ AC_CACHE_CHECK(if external $1 is declared, cf_cv_dcl_$1,[
 #include <stdio.h>
 #include <sys/types.h>
 #include <errno.h> ],
-    ifelse($2,,int,$2) x = (ifelse($2,,int,$2)) $1,
+    ifelse([$2],,int,[$2]) x = (ifelse([$2],,int,[$2])) $1,
     [cf_cv_dcl_$1=yes],
     [cf_cv_dcl_$1=no])
 ])
@@ -812,7 +820,7 @@ if test "$cf_cv_dcl_$1" = no ; then
 fi
 
 # It's possible (for near-UNIX clones) that the data doesn't exist
-CF_CHECK_EXTERN_DATA($1,ifelse($2,,int,$2))
+CF_CHECK_EXTERN_DATA($1,ifelse([$2],,int,[$2]))
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CHECK_EXTERN_DATA version: 3 updated: 2001/12/30 18:03:23
@@ -1150,7 +1158,7 @@ AC_MSG_RESULT($cf_result)
 CXXFLAGS="$cf_save_CXXFLAGS"
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_FIND_LINKAGE version: 18 updated: 2010/05/05 20:27:55
+dnl CF_FIND_LINKAGE version: 19 updated: 2010/05/29 16:31:02
 dnl ---------------
 dnl Find a library (specifically the linkage used in the code fragment),
 dnl searching for it if it is not already in the library path.
@@ -1273,14 +1281,14 @@ if test "$cf_cv_find_linkage_$3" = yes ; then
 ifelse([$4],,[
 	CF_ADD_INCDIR($cf_cv_header_path_$3)
 	CF_ADD_LIBDIR($cf_cv_library_path_$3)
-	LIBS="-l$3 $LIBS"
+	CF_ADD_LIB($3)
 ],[$4])
 else
 ifelse([$5],,AC_MSG_WARN(Cannot find $3 library),[$5])
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_DLSYM version: 1 updated: 2004/06/16 20:52:45
+dnl CF_FUNC_DLSYM version: 2 updated: 2010/05/29 16:31:02
 dnl -------------
 dnl Test for dlsym() and related functions, as well as libdl.
 dnl
@@ -1297,7 +1305,7 @@ AC_CHECK_LIB(dl,dlsym,[
 	cf_have_libdl=yes])])
 
 if test "$cf_have_dlsym" = yes ; then
-	test "$cf_have_libdl" = yes && LIBS="-ldl $LIBS"
+	test "$cf_have_libdl" = yes && CF_ADD_LIB(dl)
 
 	AC_MSG_CHECKING(whether able to link to dl*() functions)
 	AC_TRY_LINK([#include <dlfcn.h>],[
@@ -1380,7 +1388,7 @@ int main() {
 test "$cf_cv_func_nanosleep" = "yes" && AC_DEFINE(HAVE_NANOSLEEP)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_OPENPTY version: 2 updated: 2008/04/12 19:49:01
+dnl CF_FUNC_OPENPTY version: 3 updated: 2010/05/29 16:31:02
 dnl ---------------
 dnl Check for openpty() function, along with <pty.h> header.  It may need the
 dnl "util" library as well.
@@ -1389,7 +1397,7 @@ AC_DEFUN([CF_FUNC_OPENPTY],
 AC_CHECK_LIB(util,openpty,cf_cv_lib_util=yes,cf_cv_lib_util=no)
 AC_CACHE_CHECK(for openpty header,cf_cv_func_openpty,[
     cf_save_LIBS="$LIBS"
-    test $cf_cv_lib_util = yes && LIBS="-lutil $LIBS"
+    test $cf_cv_lib_util = yes && CF_ADD_LIB(util)
     for cf_header in pty.h libutil.h util.h
     do
     AC_TRY_LINK([
@@ -1861,7 +1869,7 @@ make an error
 test "$cf_cv_gnu_source" = yes && CPPFLAGS="$CPPFLAGS -D_GNU_SOURCE"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GPP_LIBRARY version: 9 updated: 2009/12/19 13:46:49
+dnl CF_GPP_LIBRARY version: 10 updated: 2010/05/29 16:31:02
 dnl --------------
 dnl If we're trying to use g++, test if libg++ is installed (a rather common
 dnl problem :-).  If we have the compiler but no library, we'll be able to
@@ -1880,13 +1888,13 @@ esac
 if test "$GXX" = yes; then
 	AC_MSG_CHECKING([for lib$cf_gpp_libname])
 	cf_save="$LIBS"
-	LIBS="-l$cf_gpp_libname $LIBS"
+	CF_ADD_LIB($cf_gpp_libname)
 	AC_TRY_LINK([
 #include <$cf_gpp_libname/builtin.h>
 	],
 	[two_arg_error_handler_t foo2 = lib_error_handler],
 	[cf_cxx_library=yes
-	 CXXLIBS="$CXXLIBS -l$cf_gpp_libname"
+	 CF_ADD_LIB($cf_gpp_libname,CXXLIBS)
 	 if test "$cf_gpp_libname" = cpp ; then
 	    AC_DEFINE(HAVE_GPP_BUILTIN_H)
 	 else
@@ -1897,7 +1905,7 @@ if test "$GXX" = yes; then
 	],
 	[two_arg_error_handler_t foo2 = lib_error_handler],
 	[cf_cxx_library=yes
-	 CXXLIBS="$CXXLIBS -l$cf_gpp_libname"
+	 CF_ADD_LIB($cf_gpp_libname,CXXLIBS)
 	 AC_DEFINE(HAVE_BUILTIN_H)],
 	[cf_cxx_library=no])])
 	LIBS="$cf_save"
@@ -2035,7 +2043,7 @@ AC_LANG_RESTORE
 AC_SUBST(EXTRA_CXXFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HASHED_DB version: 3 updated: 2007/11/24 17:43:37
+dnl CF_HASHED_DB version: 4 updated: 2010/05/29 16:31:02
 dnl ------------
 dnl Look for an instance of the Berkeley hashed database.
 dnl
@@ -2062,7 +2070,7 @@ else
 	if test "$cf_cv_hashed_db_libs" = unknown ; then
 		AC_MSG_ERROR(Cannot determine library for db)
 	elif test "$cf_cv_hashed_db_libs" != default ; then
-		LIBS="-l$cf_cv_hashed_db_libs $LIBS"
+		CF_ADD_LIB($cf_cv_hashed_db_libs)
 	fi
 fi
 ],[
@@ -2070,7 +2078,7 @@ fi
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HASHED_DB_LIBS version: 8 updated: 2008/08/04 06:18:06
+dnl CF_HASHED_DB_LIBS version: 9 updated: 2010/05/29 16:31:02
 dnl -----------------
 dnl Given that we have the header and version for hashed database, find the
 dnl library information.
@@ -2082,7 +2090,7 @@ for cf_db_libs in "" db$cf_cv_hashed_db_version db-$cf_cv_hashed_db_version db '
 do
 	cf_save_libs="$LIBS"
 	if test -n "$cf_db_libs"; then
-		LIBS="-l$cf_db_libs $LIBS"
+		CF_ADD_LIB($cf_db_libs)
 	fi
 	CF_MSG_LOG(checking for library "$cf_db_libs")
 	AC_TRY_LINK([
@@ -2259,7 +2267,7 @@ fi
 AC_SUBST(CPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INTEL_COMPILER version: 3 updated: 2005/08/06 18:37:29
+dnl CF_INTEL_COMPILER version: 4 updated: 2010/05/26 05:38:42
 dnl -----------------
 dnl Check if the given compiler is really the Intel compiler for Linux.  It
 dnl tries to imitate gcc, but does not return an error when it finds a mismatch
@@ -2273,24 +2281,24 @@ dnl $1 = GCC (default) or GXX
 dnl $2 = INTEL_COMPILER (default) or INTEL_CPLUSPLUS
 dnl $3 = CFLAGS (default) or CXXFLAGS
 AC_DEFUN([CF_INTEL_COMPILER],[
-ifelse($2,,INTEL_COMPILER,[$2])=no
+ifelse([$2],,INTEL_COMPILER,[$2])=no
 
-if test "$ifelse($1,,[$1],GCC)" = yes ; then
+if test "$ifelse([$1],,[$1],GCC)" = yes ; then
 	case $host_os in
 	linux*|gnu*)
-		AC_MSG_CHECKING(if this is really Intel ifelse($1,GXX,C++,C) compiler)
-		cf_save_CFLAGS="$ifelse($3,,CFLAGS,[$3])"
-		ifelse($3,,CFLAGS,[$3])="$ifelse($3,,CFLAGS,[$3]) -no-gcc"
+		AC_MSG_CHECKING(if this is really Intel ifelse([$1],GXX,C++,C) compiler)
+		cf_save_CFLAGS="$ifelse([$3],,CFLAGS,[$3])"
+		ifelse([$3],,CFLAGS,[$3])="$ifelse([$3],,CFLAGS,[$3]) -no-gcc"
 		AC_TRY_COMPILE([],[
 #ifdef __INTEL_COMPILER
 #else
 make an error
 #endif
-],[ifelse($2,,INTEL_COMPILER,[$2])=yes
+],[ifelse([$2],,INTEL_COMPILER,[$2])=yes
 cf_save_CFLAGS="$cf_save_CFLAGS -we147 -no-gcc"
 ],[])
-		ifelse($3,,CFLAGS,[$3])="$cf_save_CFLAGS"
-		AC_MSG_RESULT($ifelse($2,,INTEL_COMPILER,[$2]))
+		ifelse([$3],,CFLAGS,[$3])="$cf_save_CFLAGS"
+		AC_MSG_RESULT($ifelse([$2],,INTEL_COMPILER,[$2]))
 		;;
 	esac
 fi
@@ -2938,7 +2946,7 @@ done
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SONAME version: 3 updated: 2006/12/16 15:55:46
+dnl CF_LIB_SONAME version: 4 updated: 2010/05/29 16:31:02
 dnl -------------
 dnl Find the and soname for the given shared library.  Set the cache variable
 dnl cf_cv_$3_soname to this, unless it is not found.  Then set the cache
@@ -2962,7 +2970,7 @@ $2
 }
 CF_EOF
 cf_save_LIBS="$LIBS"
-	LIBS="-l$3 $LIBS"
+	CF_ADD_LIB($3)
 	if AC_TRY_EVAL(ac_compile) ; then
 		if AC_TRY_EVAL(ac_link) ; then
 			cf_cv_$3_soname=`ldd conftest$ac_exeext 2>/dev/null | sed -e 's,^.*/,,' -e 's, .*$,,' | fgrep lib$3.`
@@ -3797,7 +3805,7 @@ chmod 755 $cf_edit_man
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MATH_LIB version: 6 updated: 2009/12/19 13:46:49
+dnl CF_MATH_LIB version: 8 updated: 2010/05/29 16:31:02
 dnl -----------
 dnl Checks for libraries.  At least one UNIX system, Apple Macintosh
 dnl Rhapsody 5.5, does not have -lm.  We cannot use the simpler
@@ -3810,13 +3818,13 @@ AC_CACHE_CHECK(if -lm needed for math functions,
 	#include <stdio.h>
 	#include <math.h>
 	],
-	[double x = rand(); printf("result = %g\n", ]ifelse($2,,sin(x),$2)[)],
+	[double x = rand(); printf("result = %g\n", ]ifelse([$2],,sin(x),$2)[)],
 	[cf_cv_need_libm=no],
 	[cf_cv_need_libm=yes])])
 if test "$cf_cv_need_libm" = yes
 then
 ifelse($1,,[
-	LIBS="-lm $LIBS"
+	CF_ADD_LIB(m)
 ],[$1=-lm])
 fi
 ])
@@ -3993,7 +4001,7 @@ AC_DEFUN([CF_OBJ_SUBDIR],
 	esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PATHSEP version: 4 updated: 2009/01/11 20:30:23
+dnl CF_PATHSEP version: 5 updated: 2010/05/26 05:38:42
 dnl ----------
 dnl Provide a value for the $PATH and similar separator
 AC_DEFUN([CF_PATHSEP],
@@ -4002,11 +4010,11 @@ AC_DEFUN([CF_PATHSEP],
 	os2*)	PATH_SEPARATOR=';'  ;;
 	*)	PATH_SEPARATOR=':'  ;;
 	esac
-ifelse($1,,,[$1=$PATH_SEPARATOR])
+ifelse([$1],,,[$1=$PATH_SEPARATOR])
 	AC_SUBST(PATH_SEPARATOR)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PATH_SYNTAX version: 12 updated: 2008/03/23 14:45:59
+dnl CF_PATH_SYNTAX version: 13 updated: 2010/05/26 05:38:42
 dnl --------------
 dnl Check the argument to see that it looks like a pathname.  Rewrite it if it
 dnl begins with one of the prefix/exec_prefix variables, and then again if the
@@ -4038,7 +4046,7 @@ case ".[$]$1" in #(vi
   $1=`echo [$]$1 | sed -e s%NONE%$cf_path_syntax%`
   ;;
 *)
-  ifelse($2,,[AC_MSG_ERROR([expected a pathname, not \"[$]$1\"])],$2)
+  ifelse([$2],,[AC_MSG_ERROR([expected a pathname, not \"[$]$1\"])],$2)
   ;;
 esac
 ])dnl
@@ -4075,7 +4083,7 @@ fi
 AC_SUBST(PKG_CONFIG)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_POSIX_C_SOURCE version: 7 updated: 2010/01/09 11:05:50
+dnl CF_POSIX_C_SOURCE version: 8 updated: 2010/05/26 05:38:42
 dnl -----------------
 dnl Define _POSIX_C_SOURCE to the given level, and _POSIX_SOURCE if needed.
 dnl
@@ -4091,7 +4099,7 @@ dnl Parameters:
 dnl	$1 is the nominal value for _POSIX_C_SOURCE
 AC_DEFUN([CF_POSIX_C_SOURCE],
 [
-cf_POSIX_C_SOURCE=ifelse($1,,199506L,$1)
+cf_POSIX_C_SOURCE=ifelse([$1],,199506L,[$1])
 
 cf_save_CFLAGS="$CFLAGS"
 cf_save_CPPFLAGS="$CPPFLAGS"
@@ -4148,7 +4156,7 @@ fi
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PREDEFINE version: 1 updated: 2003/07/26 17:53:56
+dnl CF_PREDEFINE version: 2 updated: 2010/05/26 16:44:57
 dnl ------------
 dnl Add definitions to CPPFLAGS to ensure they're predefined for all compiles.
 dnl
@@ -4165,7 +4173,7 @@ make an error
 AC_MSG_RESULT($cf_result)
 
 if test "$cf_result" = yes ; then
-	CPPFLAGS="$CPPFLAGS ifelse($2,,-D$1,[-D$1=$2])"
+	CPPFLAGS="$CPPFLAGS ifelse([$2],,-D$1,[-D$1=$2])"
 elif test "x$2" != "x" ; then
 	AC_MSG_CHECKING(checking for compatible value versus $2)
 	AC_TRY_COMPILE([#include <sys/types.h>
@@ -4371,7 +4379,7 @@ AC_CHECK_PROGS(LINT, tdlint lint alint splint lclint)
 AC_SUBST(LINT_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_REGEX version: 6 updated: 2010/03/27 13:41:56
+dnl CF_REGEX version: 7 updated: 2010/05/29 16:31:02
 dnl --------
 dnl Attempt to determine if we've got one of the flavors of regular-expression
 dnl code that we can support.
@@ -4384,7 +4392,7 @@ AC_CHECK_FUNC(regcomp,[cf_regex_func=regcomp],[
 	for cf_regex_lib in regex re
 	do
 		AC_CHECK_LIB($cf_regex_lib,regcomp,[
-				LIBS="-l$cf_regex_lib $LIBS"
+				CF_ADD_LIB($cf_regex_lib)
 				cf_regex_func=regcomp
 				break])
 	done
@@ -4393,7 +4401,7 @@ AC_CHECK_FUNC(regcomp,[cf_regex_func=regcomp],[
 if test "$cf_regex_func" = no ; then
 	AC_CHECK_FUNC(compile,[cf_regex_func=compile],[
 		AC_CHECK_LIB(gen,compile,[
-				LIBS="-lgen $LIBS"
+				CF_ADD_LIB(gen)
 				cf_regex_func=compile])])
 fi
 
@@ -5161,7 +5169,7 @@ if test -n "$ADA_SUBDIRS"; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_STDCPP_LIBRARY version: 6 updated: 2009/12/19 13:46:49
+dnl CF_STDCPP_LIBRARY version: 7 updated: 2010/05/29 16:31:02
 dnl -----------------
 dnl Check for -lstdc++, which is GNU's standard C++ library.
 AC_DEFUN([CF_STDCPP_LIBRARY],
@@ -5177,7 +5185,7 @@ os2*) #(vi
 esac
 AC_CACHE_CHECK(for library $cf_stdcpp_libname,cf_cv_libstdcpp,[
 	cf_save="$LIBS"
-	LIBS="-l$cf_stdcpp_libname $LIBS"
+	CF_ADD_LIB($cf_stdcpp_libname)
 AC_TRY_LINK([
 #include <strstream.h>],[
 char buf[80];
@@ -5187,7 +5195,7 @@ strstreambuf foo(buf, sizeof(buf))
 	[cf_cv_libstdcpp=no])
 	LIBS="$cf_save"
 ])
-test "$cf_cv_libstdcpp" = yes && CXXLIBS="$CXXLIBS -l$cf_stdcpp_libname"
+test "$cf_cv_libstdcpp" = yes && CF_ADD_LIB($cf_stdcpp_libname,CXXLIBS)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -5527,7 +5535,7 @@ AC_DEFUN([CF_VERBOSE],
 CF_MSG_LOG([$1])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WCHAR_TYPE version: 2 updated: 2004/01/17 19:18:20
+dnl CF_WCHAR_TYPE version: 3 updated: 2010/05/26 16:44:57
 dnl -------------
 dnl Check if type wide-character type $1 is declared, and if so, which header
 dnl file is needed.  The second parameter is used to set a shell variable when
@@ -5563,7 +5571,7 @@ if test "$cf_cv_$1" = yes ; then
 	NEED_WCHAR_H=1
 fi
 
-ifelse($2,,,[
+ifelse([$2],,,[
 # if we do not find $1 in either place, use substitution to provide a fallback.
 if test "$cf_cv_$1" = unknown ; then
 	$2=1
@@ -5827,7 +5835,7 @@ AC_SUBST(LIB_UNINSTALL)
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PATH version: 8 updated: 2007/05/13 13:16:35
+dnl CF_WITH_PATH version: 9 updated: 2010/05/26 05:38:42
 dnl ------------
 dnl Wrapper for AC_ARG_WITH to ensure that user supplies a pathname, not just
 dnl defaulting to yes/no.
@@ -5839,9 +5847,9 @@ dnl $4 = default value, shown in the help-message, must be a constant
 dnl $5 = default value, if it's an expression & cannot be in the help-message
 dnl
 AC_DEFUN([CF_WITH_PATH],
-[AC_ARG_WITH($1,[$2 ](default: ifelse($4,,empty,$4)),,
-ifelse($4,,[withval="${$3}"],[withval="${$3-ifelse($5,,$4,$5)}"]))dnl
-if ifelse($5,,true,[test -n "$5"]) ; then
+[AC_ARG_WITH($1,[$2 ](default: ifelse([$4],,empty,[$4])),,
+ifelse([$4],,[withval="${$3}"],[withval="${$3-ifelse([$5],,[$4],[$5])}"]))dnl
+if ifelse([$5],,true,[test -n "$5"]) ; then
 CF_PATH_SYNTAX(withval)
 fi
 $3="$withval"
@@ -5890,7 +5898,7 @@ AC_SUBST($3)dnl
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PTHREAD version: 2 updated: 2008/08/23 18:26:05
+dnl CF_WITH_PTHREAD version: 3 updated: 2010/05/29 16:31:02
 dnl ---------------
 dnl Check for POSIX thread library.
 AC_DEFUN([CF_WITH_PTHREAD],
@@ -5908,7 +5916,7 @@ if test "$with_pthread" != no ; then
 
         AC_MSG_CHECKING(if we can link with the pthread library)
         cf_save_LIBS="$LIBS"
-        LIBS="-lpthread $LIBS"
+        CF_ADD_LIB(pthread)
         AC_TRY_LINK([
 #include <pthread.h>
 ],[
@@ -5918,7 +5926,7 @@ if test "$with_pthread" != no ; then
         AC_MSG_RESULT($with_pthread)
 
         if test "$with_pthread" = yes ; then
-            LIBS="-lpthread $LIBS"
+            CF_ADD_LIB(pthread)
             AC_DEFINE(HAVE_LIBPTHREADS)
         else
             AC_MSG_ERROR(Cannot link with pthread library)
@@ -5990,7 +5998,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 33 updated: 2010/03/28 15:35:52
+dnl CF_XOPEN_SOURCE version: 34 updated: 2010/05/26 05:38:42
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -6001,8 +6009,8 @@ dnl	$1 is the nominal value for _XOPEN_SOURCE
 dnl	$2 is the nominal value for _POSIX_C_SOURCE
 AC_DEFUN([CF_XOPEN_SOURCE],[
 
-cf_XOPEN_SOURCE=ifelse($1,,500,$1)
-cf_POSIX_C_SOURCE=ifelse($2,,199506L,$2)
+cf_XOPEN_SOURCE=ifelse([$1],,500,[$1])
+cf_POSIX_C_SOURCE=ifelse([$2],,199506L,[$2])
 cf_xopen_source=
 
 case $host_os in #(vi

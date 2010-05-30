@@ -320,6 +320,7 @@
 ./doc/html/announce.html
 ./doc/html/hackguide.html
 ./doc/html/index.html
+./doc/html/man/adacurses-config.1.html
 ./doc/html/man/captoinfo.1m.html
 ./doc/html/man/clear.1.html
 ./doc/html/man/curs_add_wch.3x.html
@@ -437,6 +438,7 @@
 ./doc/html/man/mitem_value.3x.html
 ./doc/html/man/mitem_visible.3x.html
 ./doc/html/man/ncurses.3x.html
+./doc/html/man/ncurses5-config.1.html
 ./doc/html/man/panel.3x.html
 ./doc/html/man/resizeterm.3x.html
 ./doc/html/man/tabs.1.html

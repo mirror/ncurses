@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_outopts.3x,v 1.21 2007/06/02 20:40:07 tom Exp @
+  * @Id: curs_outopts.3x,v 1.22 2010/01/30 21:29:04 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -115,40 +115,40 @@
        leave  it.  It is useful for applications where the cursor
        is not used, since it reduces the need for cursor motions.
 
-       The  <STRONG>setscrreg</STRONG>  and <STRONG>wsetscrreg</STRONG> routines allow the applica-
-       tion programmer to set a software scrolling  region  in  a
-       window.   <EM>top</EM>  and <EM>bot</EM> are the line numbers of the top and
-       bottom margin of the scrolling region.  (Line 0 is the top
-       line  of the window.)  If this option and <STRONG>scrollok</STRONG> are en-
-       abled, an attempt to move off the bottom margin line caus-
-       es all lines in the scrolling region to scroll one line in
-       the direction of the first line.  Only  the  text  of  the
-       window  is  scrolled.   (Note  that this has nothing to do
-       with the use of a physical scrolling region capability  in
-       the terminal, like that in the VT100.  If <STRONG>idlok</STRONG> is enabled
-       and the terminal has either  a  scrolling  region  or  in-
-       sert/delete line capability, they will probably be used by
-       the output routines.)
+       The <STRONG>setscrreg</STRONG> and <STRONG>wsetscrreg</STRONG> routines allow  the  applica-
+       tion  programmer  to  set a software scrolling region in a
+       window.  The <EM>top</EM> and <EM>bot</EM> parameters are the  line  numbers
+       of  the  top  and  bottom  margin of the scrolling region.
+       (Line 0 is the top line of the window.)   If  this  option
+       and  <STRONG>scrollok</STRONG> are enabled, an attempt to move off the bot-
+       tom margin line causes all lines in the  scrolling  region
+       to  scroll  one  line  in the direction of the first line.
+       Only the text of the window is scrolled.  (Note that  this
+       has nothing to do with the use of a physical scrolling re-
+       gion capability in the terminal, like that in  the  VT100.
+       If  <STRONG>idlok</STRONG>  is  enabled  and  the  terminal  has  either  a
+       scrolling region or insert/delete  line  capability,  they
+       will probably be used by the output routines.)
 
-       The <STRONG>scrollok</STRONG> option controls what happens when the  cursor
-       of  a  window  is  moved  off  the  edge  of the window or
-       scrolling region, either as a result of a  newline  action
-       on  the  bottom  line, or typing the last character of the
+       The  <STRONG>scrollok</STRONG> option controls what happens when the cursor
+       of a window is  moved  off  the  edge  of  the  window  or
+       scrolling  region,  either as a result of a newline action
+       on the bottom line, or typing the last  character  of  the
        last line.  If disabled, (<EM>bf</EM> is <STRONG>FALSE</STRONG>), the cursor is left
-       on  the bottom line.  If enabled, (<EM>bf</EM> is <STRONG>TRUE</STRONG>), the window
-       is scrolled up one line (Note that  to  get  the  physical
-       scrolling  effect on the terminal, it is also necessary to
+       on the bottom line.  If enabled, (<EM>bf</EM> is <STRONG>TRUE</STRONG>), the  window
+       is  scrolled  up  one  line (Note that to get the physical
+       scrolling effect on the terminal, it is also necessary  to
        call <STRONG>idlok</STRONG>).
 
-       The <STRONG>nl</STRONG> and <STRONG>nonl</STRONG> routines control  whether  the  underlying
-       display  device  translates the return key into newline on
-       input, and whether it translates newline into  return  and
-       line-feed  on output (in either case, the call <STRONG>addch('\n')</STRONG>
+       The  <STRONG>nl</STRONG>  and  <STRONG>nonl</STRONG> routines control whether the underlying
+       display device translates the return key into  newline  on
+       input,  and  whether it translates newline into return and
+       line-feed on output (in either case, the call  <STRONG>addch('\n')</STRONG>
        does the equivalent of return and line feed on the virtual
-       screen).   Initially, these translations do occur.  If you
-       disable them using <STRONG>nonl</STRONG>, <STRONG>curses</STRONG> will be able to make  bet-
-       ter  use  of the line-feed capability, resulting in faster
-       cursor motion.  Also, <STRONG>curses</STRONG> will then be able  to  detect
+       screen).  Initially, these translations do occur.  If  you
+       disable  them using <STRONG>nonl</STRONG>, <STRONG>curses</STRONG> will be able to make bet-
+       ter use of the line-feed capability, resulting  in  faster
+       cursor  motion.   Also, <STRONG>curses</STRONG> will then be able to detect
        the return key.
 
 
@@ -161,19 +161,19 @@
        X/Open does not define any error conditions.
 
        In this implementation, those functions that have a window
-       pointer will return an error  if  the  window  pointer  is
+       pointer  will  return  an  error  if the window pointer is
        null.
 
               <STRONG>wclrtoeol</STRONG>
-                   returns  an  error  if  the cursor position is
+                   returns an error if  the  cursor  position  is
                    about to wrap.
 
               <STRONG>wsetscrreg</STRONG>
-                   returns an error if the scrolling region  lim-
+                   returns  an error if the scrolling region lim-
                    its extend outside the window.
 
-       X/Open  does not define any error conditions.  This imple-
-       mentation returns an error if the window pointer is  null.
+       X/Open does not define any error conditions.  This  imple-
+       mentation returns an error if the window pointer is null.
 
 
 </PRE>

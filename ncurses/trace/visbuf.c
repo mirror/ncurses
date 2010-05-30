@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.36 2010/05/01 20:44:34 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.37 2010/05/29 18:51:41 tom Exp $")
 
 #define NUM_VISBUFS 4
 
@@ -94,7 +94,7 @@ _nc_vischar(char *tp, unsigned c)
 static const char *
 _nc_visbuf2n(int bufnum, const char *buf, int len)
 {
-    const char *vbuf;
+    const char *vbuf = 0;
     char *tp;
     int c;
 

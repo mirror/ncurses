@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.35 2010/05/15 16:35:39 tom Exp $
+dnl $Id: aclocal.m4,v 1.39 2010/05/29 20:55:40 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -40,7 +40,7 @@ dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_CFLAGS version: 9 updated: 2010/01/09 11:05:50
+dnl CF_ADD_CFLAGS version: 10 updated: 2010/05/26 05:38:42
 dnl -------------
 dnl Copy non-preprocessor flags to $CFLAGS, preprocessor flags to $CPPFLAGS
 dnl The second parameter if given makes this macro verbose.
@@ -110,17 +110,17 @@ esac
 done
 
 if test -n "$cf_new_cflags" ; then
-	ifelse($2,,,[CF_VERBOSE(add to \$CFLAGS $cf_new_cflags)])
+	ifelse([$2],,,[CF_VERBOSE(add to \$CFLAGS $cf_new_cflags)])
 	CFLAGS="$CFLAGS $cf_new_cflags"
 fi
 
 if test -n "$cf_new_cppflags" ; then
-	ifelse($2,,,[CF_VERBOSE(add to \$CPPFLAGS $cf_new_cppflags)])
+	ifelse([$2],,,[CF_VERBOSE(add to \$CPPFLAGS $cf_new_cppflags)])
 	CPPFLAGS="$CPPFLAGS $cf_new_cppflags"
 fi
 
 if test -n "$cf_new_extra_cppflags" ; then
-	ifelse($2,,,[CF_VERBOSE(add to \$EXTRA_CPPFLAGS $cf_new_extra_cppflags)])
+	ifelse([$2],,,[CF_VERBOSE(add to \$EXTRA_CPPFLAGS $cf_new_extra_cppflags)])
 	EXTRA_CPPFLAGS="$cf_new_extra_cppflags $EXTRA_CPPFLAGS"
 fi
 
@@ -128,7 +128,7 @@ AC_SUBST(EXTRA_CPPFLAGS)
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_INCDIR version: 12 updated: 2009/01/18 10:00:47
+dnl CF_ADD_INCDIR version: 13 updated: 2010/05/26 16:44:57
 dnl -------------
 dnl Add an include-directory to $CPPFLAGS.  Don't add /usr/include, since it's
 dnl redundant.  We don't normally need to add -I/usr/local/include for gcc,
@@ -171,7 +171,7 @@ if test -n "$1" ; then
 
 		if test "$cf_have_incdir" = no ; then
 		  CF_VERBOSE(adding $cf_add_incdir to include-path)
-		  ifelse($2,,CPPFLAGS,$2)="$ifelse($2,,CPPFLAGS,$2) -I$cf_add_incdir"
+		  ifelse([$2],,CPPFLAGS,[$2])="$ifelse([$2],,CPPFLAGS,[$2]) -I$cf_add_incdir"
 
 		  cf_top_incdir=`echo $cf_add_incdir | sed -e 's%/include/.*$%/include%'`
 		  test "$cf_top_incdir" = "$cf_add_incdir" && break
@@ -185,7 +185,7 @@ if test -n "$1" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_LIBDIR version: 8 updated: 2009/01/18 10:01:08
+dnl CF_ADD_LIBDIR version: 9 updated: 2010/05/26 16:44:57
 dnl -------------
 dnl	Adds to the library-path
 dnl
@@ -214,7 +214,7 @@ if test -n "$1" ; then
       fi
       if test "$cf_have_libdir" = no ; then
         CF_VERBOSE(adding $cf_add_libdir to library-path)
-        ifelse($2,,LDFLAGS,$2)="-L$cf_add_libdir $ifelse($2,,LDFLAGS,$2)"
+        ifelse([$2],,LDFLAGS,[$2])="-L$cf_add_libdir $ifelse([$2],,LDFLAGS,[$2])"
       fi
     fi
   done
@@ -325,7 +325,7 @@ dnl Allow user to enable a normally-off option.
 AC_DEFUN([CF_ARG_ENABLE],
 [CF_ARG_OPTION($1,[$2],[$3],[$4],no)])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ARG_OPTION version: 3 updated: 1997/10/18 14:42:41
+dnl CF_ARG_OPTION version: 4 updated: 2010/05/26 05:38:42
 dnl -------------
 dnl Restricted form of AC_ARG_ENABLE that ensures user doesn't give bogus
 dnl values.
@@ -337,13 +337,13 @@ dnl $3 = action to perform if option is not default
 dnl $4 = action if perform if option is default
 dnl $5 = default option value (either 'yes' or 'no')
 AC_DEFUN([CF_ARG_OPTION],
-[AC_ARG_ENABLE($1,[$2],[test "$enableval" != ifelse($5,no,yes,no) && enableval=ifelse($5,no,no,yes)
+[AC_ARG_ENABLE([$1],[$2],[test "$enableval" != ifelse([$5],no,yes,no) && enableval=ifelse([$5],no,no,yes)
   if test "$enableval" != "$5" ; then
-ifelse($3,,[    :]dnl
-,[    $3]) ifelse($4,,,[
+ifelse([$3],,[    :]dnl
+,[    $3]) ifelse([$4],,,[
   else
     $4])
-  fi],[enableval=$5 ifelse($4,,,[
+  fi],[enableval=$5 ifelse([$4],,,[
   $4
 ])dnl
   ])])dnl
@@ -878,7 +878,7 @@ fi
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FIND_LINKAGE version: 18 updated: 2010/05/05 20:27:55
+dnl CF_FIND_LINKAGE version: 19 updated: 2010/05/29 16:31:02
 dnl ---------------
 dnl Find a library (specifically the linkage used in the code fragment),
 dnl searching for it if it is not already in the library path.
@@ -1001,7 +1001,7 @@ if test "$cf_cv_find_linkage_$3" = yes ; then
 ifelse([$4],,[
 	CF_ADD_INCDIR($cf_cv_header_path_$3)
 	CF_ADD_LIBDIR($cf_cv_library_path_$3)
-	LIBS="-l$3 $LIBS"
+	CF_ADD_LIB($3)
 ],[$4])
 else
 ifelse([$5],,AC_MSG_WARN(Cannot find $3 library),[$5])
@@ -1347,7 +1347,7 @@ AC_DEFUN([CF_INHERIT_SCRIPT],
 test -f $1 || ( test -f ../$1 && cp ../$1 ./ )
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INTEL_COMPILER version: 3 updated: 2005/08/06 18:37:29
+dnl CF_INTEL_COMPILER version: 4 updated: 2010/05/26 05:38:42
 dnl -----------------
 dnl Check if the given compiler is really the Intel compiler for Linux.  It
 dnl tries to imitate gcc, but does not return an error when it finds a mismatch
@@ -1361,24 +1361,24 @@ dnl $1 = GCC (default) or GXX
 dnl $2 = INTEL_COMPILER (default) or INTEL_CPLUSPLUS
 dnl $3 = CFLAGS (default) or CXXFLAGS
 AC_DEFUN([CF_INTEL_COMPILER],[
-ifelse($2,,INTEL_COMPILER,[$2])=no
+ifelse([$2],,INTEL_COMPILER,[$2])=no
 
-if test "$ifelse($1,,[$1],GCC)" = yes ; then
+if test "$ifelse([$1],,[$1],GCC)" = yes ; then
 	case $host_os in
 	linux*|gnu*)
-		AC_MSG_CHECKING(if this is really Intel ifelse($1,GXX,C++,C) compiler)
-		cf_save_CFLAGS="$ifelse($3,,CFLAGS,[$3])"
-		ifelse($3,,CFLAGS,[$3])="$ifelse($3,,CFLAGS,[$3]) -no-gcc"
+		AC_MSG_CHECKING(if this is really Intel ifelse([$1],GXX,C++,C) compiler)
+		cf_save_CFLAGS="$ifelse([$3],,CFLAGS,[$3])"
+		ifelse([$3],,CFLAGS,[$3])="$ifelse([$3],,CFLAGS,[$3]) -no-gcc"
 		AC_TRY_COMPILE([],[
 #ifdef __INTEL_COMPILER
 #else
 make an error
 #endif
-],[ifelse($2,,INTEL_COMPILER,[$2])=yes
+],[ifelse([$2],,INTEL_COMPILER,[$2])=yes
 cf_save_CFLAGS="$cf_save_CFLAGS -we147 -no-gcc"
 ],[])
-		ifelse($3,,CFLAGS,[$3])="$cf_save_CFLAGS"
-		AC_MSG_RESULT($ifelse($2,,INTEL_COMPILER,[$2]))
+		ifelse([$3],,CFLAGS,[$3])="$cf_save_CFLAGS"
+		AC_MSG_RESULT($ifelse([$2],,INTEL_COMPILER,[$2]))
 		;;
 	esac
 fi
@@ -1891,7 +1891,7 @@ AC_MSG_RESULT($NCURSES_WRAP_PREFIX)
 AC_SUBST(NCURSES_WRAP_PREFIX)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_PATH_SYNTAX version: 12 updated: 2008/03/23 14:45:59
+dnl CF_PATH_SYNTAX version: 13 updated: 2010/05/26 05:38:42
 dnl --------------
 dnl Check the argument to see that it looks like a pathname.  Rewrite it if it
 dnl begins with one of the prefix/exec_prefix variables, and then again if the
@@ -1923,7 +1923,7 @@ case ".[$]$1" in #(vi
   $1=`echo [$]$1 | sed -e s%NONE%$cf_path_syntax%`
   ;;
 *)
-  ifelse($2,,[AC_MSG_ERROR([expected a pathname, not \"[$]$1\"])],$2)
+  ifelse([$2],,[AC_MSG_ERROR([expected a pathname, not \"[$]$1\"])],$2)
   ;;
 esac
 ])dnl
@@ -1971,7 +1971,39 @@ else
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_POSIX_C_SOURCE version: 7 updated: 2010/01/09 11:05:50
+dnl CF_PKG_CONFIG version: 3 updated: 2009/01/25 10:55:09
+dnl -------------
+dnl Check for the package-config program, unless disabled by command-line.
+AC_DEFUN([CF_PKG_CONFIG],
+[
+AC_MSG_CHECKING(if you want to use pkg-config)
+AC_ARG_WITH(pkg-config,
+	[  --with-pkg-config{=path} enable/disable use of pkg-config],
+	[cf_pkg_config=$withval],
+	[cf_pkg_config=yes])
+AC_MSG_RESULT($cf_pkg_config)
+
+case $cf_pkg_config in #(vi
+no) #(vi
+	PKG_CONFIG=none
+	;;
+yes) #(vi
+	AC_PATH_PROG(PKG_CONFIG, pkg-config, none)
+	;;
+*)
+	PKG_CONFIG=$withval
+	;;
+esac
+
+test -z "$PKG_CONFIG" && PKG_CONFIG=none
+if test "$PKG_CONFIG" != none ; then
+	CF_PATH_SYNTAX(PKG_CONFIG)
+fi
+
+AC_SUBST(PKG_CONFIG)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_POSIX_C_SOURCE version: 8 updated: 2010/05/26 05:38:42
 dnl -----------------
 dnl Define _POSIX_C_SOURCE to the given level, and _POSIX_SOURCE if needed.
 dnl
@@ -1987,7 +2019,7 @@ dnl Parameters:
 dnl	$1 is the nominal value for _POSIX_C_SOURCE
 AC_DEFUN([CF_POSIX_C_SOURCE],
 [
-cf_POSIX_C_SOURCE=ifelse($1,,199506L,$1)
+cf_POSIX_C_SOURCE=ifelse([$1],,199506L,[$1])
 
 cf_save_CFLAGS="$CFLAGS"
 cf_save_CPPFLAGS="$CPPFLAGS"
@@ -2232,6 +2264,29 @@ ncursesw/term.h)
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_TRY_PKG_CONFIG version: 2 updated: 2010/05/26 05:38:42
+dnl -----------------
+dnl This is a simple wrapper to use for pkg-config, for libraries which may be
+dnl available in that form.
+dnl
+dnl $1 = package name
+dnl $2 = extra logic to use, if any, after updating CFLAGS and LIBS
+dnl $3 = logic to use if pkg-config does not have the package
+AC_DEFUN([CF_TRY_PKG_CONFIG],[
+AC_REQUIRE([CF_PKG_CONFIG])
+
+if test "$PKG_CONFIG" != none && "$PKG_CONFIG" --exists $1; then
+	CF_VERBOSE(found package $1)
+	cf_pkgconfig_incs="`$PKG_CONFIG --cflags $1 2>/dev/null`"
+	cf_pkgconfig_libs="`$PKG_CONFIG --libs   $1 2>/dev/null`"
+	CF_ADD_CFLAGS($cf_pkgconfig_incs)
+	LIBS="$cf_pkgconfig_libs $LIBS"
+	ifelse([$2],,:,[$2])
+else
+	ifelse([$3],,:,[$3])
+fi
+])
+dnl ---------------------------------------------------------------------------
 dnl CF_UPPER version: 5 updated: 2001/01/29 23:40:59
 dnl --------
 dnl Make an uppercase version of a variable
@@ -2275,7 +2330,7 @@ AC_DEFUN([CF_VERBOSE],
 CF_MSG_LOG([$1])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WCHAR_TYPE version: 2 updated: 2004/01/17 19:18:20
+dnl CF_WCHAR_TYPE version: 3 updated: 2010/05/26 16:44:57
 dnl -------------
 dnl Check if type wide-character type $1 is declared, and if so, which header
 dnl file is needed.  The second parameter is used to set a shell variable when
@@ -2311,7 +2366,7 @@ if test "$cf_cv_$1" = yes ; then
 	NEED_WCHAR_H=1
 fi
 
-ifelse($2,,,[
+ifelse([$2],,,[
 # if we do not find $1 in either place, use substitution to provide a fallback.
 if test "$cf_cv_$1" = unknown ; then
 	$2=1
@@ -2376,7 +2431,7 @@ if (NCURSES_VERSION_PATCH < 20100501) && (NCURSES_VERSION_PATCH >= 20100403)
 test $cf_cv_need_xopen_extension = yes && CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE_EXTENDED"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 33 updated: 2010/03/28 15:35:52
+dnl CF_XOPEN_SOURCE version: 34 updated: 2010/05/26 05:38:42
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -2387,8 +2442,8 @@ dnl	$1 is the nominal value for _XOPEN_SOURCE
 dnl	$2 is the nominal value for _POSIX_C_SOURCE
 AC_DEFUN([CF_XOPEN_SOURCE],[
 
-cf_XOPEN_SOURCE=ifelse($1,,500,$1)
-cf_POSIX_C_SOURCE=ifelse($2,,199506L,$2)
+cf_XOPEN_SOURCE=ifelse([$1],,500,[$1])
+cf_POSIX_C_SOURCE=ifelse([$2],,199506L,[$2])
 cf_xopen_source=
 
 case $host_os in #(vi
@@ -2478,13 +2533,13 @@ if test -n "$cf_xopen_source" ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_X_ATHENA version: 12 updated: 2004/06/15 21:14:41
+dnl CF_X_ATHENA version: 14 updated: 2010/05/26 19:19:58
 dnl -----------
 dnl Check for Xaw (Athena) libraries
 dnl
 dnl Sets $cf_x_athena according to the flavor of Xaw which is used.
 AC_DEFUN([CF_X_ATHENA],
-[AC_REQUIRE([CF_X_TOOLKIT])
+[
 cf_x_athena=${cf_x_athena-Xaw}
 
 AC_MSG_CHECKING(if you want to link with Xaw 3d library)
@@ -2520,23 +2575,48 @@ else
 	AC_MSG_RESULT(no)
 fi
 
-AC_CHECK_LIB(Xext,XextCreateExtension,
-	[LIBS="-lXext $LIBS"])
-
 cf_x_athena_lib=""
 
-CF_X_ATHENA_CPPFLAGS($cf_x_athena)
-CF_X_ATHENA_LIBS($cf_x_athena)
+if test "$PKG_CONFIG" != none ; then
+	cf_athena_list=
+	test "$cf_x_athena" = Xaw && cf_athena_list="xaw8 xaw7 xaw6"
+	for cf_athena_pkg in \
+		$cf_athena_list \
+		${cf_x_athena} \
+		${cf_x_athena}-devel \
+		lib${cf_x_athena} \
+		lib${cf_x_athena}-devel
+	do
+		if "$PKG_CONFIG" --exists $cf_athena_pkg; then
+			CF_VERBOSE(found package $cf_athena_pkg)
+			cf_x_athena_inc="`$PKG_CONFIG --cflags $cf_athena_pkg 2>/dev/null`"
+			cf_x_athena_lib="`$PKG_CONFIG --libs   $cf_athena_pkg 2>/dev/null`"
+			CF_ADD_CFLAGS($cf_x_athena_inc)
+			LIBS="$cf_x_athena_lib $LIBS"
+
+			CF_UPPER(cf_x_athena_LIBS,HAVE_LIB_$cf_x_athena)
+			AC_DEFINE_UNQUOTED($cf_x_athena_LIBS)
+			break
+		fi
+	done
+fi
+
+if test -z "$cf_x_athena_lib" ; then
+	CF_X_EXT
+	CF_X_TOOLKIT
+	CF_X_ATHENA_CPPFLAGS($cf_x_athena)
+	CF_X_ATHENA_LIBS($cf_x_athena)
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_X_ATHENA_CPPFLAGS version: 3 updated: 2009/01/11 15:33:39
+dnl CF_X_ATHENA_CPPFLAGS version: 5 updated: 2010/05/26 17:35:30
 dnl --------------------
 dnl Normally invoked by CF_X_ATHENA, with $1 set to the appropriate flavor of
 dnl the Athena widgets, e.g., Xaw, Xaw3d, neXtaw.
 AC_DEFUN([CF_X_ATHENA_CPPFLAGS],
 [
-cf_x_athena_root=ifelse($1,,Xaw,$1)
-cf_x_athena_include=""
+cf_x_athena_root=ifelse([$1],,Xaw,[$1])
+cf_x_athena_inc=""
 
 for cf_path in default \
 	/usr/contrib/X11R6 \
@@ -2544,7 +2624,7 @@ for cf_path in default \
 	/usr/lib/X11R5 \
 	/usr/local
 do
-	if test -z "$cf_x_athena_include" ; then
+	if test -z "$cf_x_athena_inc" ; then
 		cf_save="$CPPFLAGS"
 		cf_test=X11/$cf_x_athena_root/SimpleMenu.h
 		if test $cf_path != default ; then
@@ -2560,7 +2640,7 @@ do
 			[cf_result=no])
 		AC_MSG_RESULT($cf_result)
 		if test "$cf_result" = yes ; then
-			cf_x_athena_include=$cf_path
+			cf_x_athena_inc=$cf_path
 			break
 		else
 			CPPFLAGS="$cf_save"
@@ -2568,21 +2648,21 @@ do
 	fi
 done
 
-if test -z "$cf_x_athena_include" ; then
+if test -z "$cf_x_athena_inc" ; then
 	AC_MSG_WARN(
 [Unable to successfully find Athena header files with test program])
-elif test "$cf_x_athena_include" != default ; then
-	CPPFLAGS="$CPPFLAGS -I$cf_x_athena_include"
+elif test "$cf_x_athena_inc" != default ; then
+	CPPFLAGS="$CPPFLAGS -I$cf_x_athena_inc"
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_X_ATHENA_LIBS version: 7 updated: 2008/03/23 14:46:03
+dnl CF_X_ATHENA_LIBS version: 8 updated: 2010/05/26 05:38:42
 dnl ----------------
 dnl Normally invoked by CF_X_ATHENA, with $1 set to the appropriate flavor of
 dnl the Athena widgets, e.g., Xaw, Xaw3d, neXtaw.
 AC_DEFUN([CF_X_ATHENA_LIBS],
 [AC_REQUIRE([CF_X_TOOLKIT])
-cf_x_athena_root=ifelse($1,,Xaw,$1)
+cf_x_athena_root=ifelse([$1],,Xaw,[$1])
 cf_x_athena_lib=""
 
 for cf_path in default \
@@ -2628,7 +2708,15 @@ CF_UPPER(cf_x_athena_LIBS,HAVE_LIB_$cf_x_athena)
 AC_DEFINE_UNQUOTED($cf_x_athena_LIBS)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_X_TOOLKIT version: 12 updated: 2008/03/23 15:04:54
+dnl CF_X_EXT version: 2 updated: 2010/05/26 05:38:42
+dnl --------
+AC_DEFUN([CF_X_EXT],[
+CF_TRY_PKG_CONFIG(Xext,,[
+	AC_CHECK_LIB(Xext,XextCreateExtension,
+		[LIBS="-lXext $LIBS"])])
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_X_TOOLKIT version: 13 updated: 2010/05/26 05:45:44
 dnl ------------
 dnl Check for X Toolkit libraries
 dnl
@@ -2637,24 +2725,27 @@ AC_DEFUN([CF_X_TOOLKIT],
 AC_REQUIRE([AC_PATH_XTRA])
 AC_REQUIRE([CF_CHECK_CACHE])
 
-# SYSTEM_NAME=`echo "$cf_cv_system_name"|tr ' ' -`
-
 cf_have_X_LIBS=no
 
-LDFLAGS="$X_LIBS $LDFLAGS"
-CF_CHECK_CFLAGS($X_CFLAGS)
+CF_TRY_PKG_CONFIG(xt,[
+	cf_have_X_LIBS=yes
+],[
 
-AC_CHECK_FUNC(XOpenDisplay,,[
-AC_CHECK_LIB(X11,XOpenDisplay,
-	[LIBS="-lX11 $LIBS"],,
-	[$X_PRE_LIBS $LIBS $X_EXTRA_LIBS])])
+	LDFLAGS="$X_LIBS $LDFLAGS"
+	CF_CHECK_CFLAGS($X_CFLAGS)
 
-AC_CHECK_FUNC(XtAppInitialize,,[
-AC_CHECK_LIB(Xt, XtAppInitialize,
-	[AC_DEFINE(HAVE_LIBXT)
-	 cf_have_X_LIBS=Xt
-	 LIBS="-lXt $X_PRE_LIBS $LIBS $X_EXTRA_LIBS"],,
-	[$X_PRE_LIBS $LIBS $X_EXTRA_LIBS])])
+	AC_CHECK_FUNC(XOpenDisplay,,[
+	AC_CHECK_LIB(X11,XOpenDisplay,
+		[LIBS="-lX11 $LIBS"],,
+		[$X_PRE_LIBS $LIBS $X_EXTRA_LIBS])])
+
+	AC_CHECK_FUNC(XtAppInitialize,,[
+	AC_CHECK_LIB(Xt, XtAppInitialize,
+		[AC_DEFINE(HAVE_LIBXT)
+		 cf_have_X_LIBS=Xt
+		 LIBS="-lXt $X_PRE_LIBS $LIBS $X_EXTRA_LIBS"],,
+		[$X_PRE_LIBS $LIBS $X_EXTRA_LIBS])])
+])
 
 if test $cf_have_X_LIBS = no ; then
 	AC_MSG_WARN(

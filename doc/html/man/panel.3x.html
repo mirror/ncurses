@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: panel.3x,v 1.14 2007/05/12 20:45:20 tom Exp @
+  * @Id: panel.3x,v 1.15 2010/01/30 21:29:04 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -106,10 +106,10 @@
               refreshes the virtual screen to reflect  the  rela-
               tions between the panels in the stack, but does not
               call doupdate() to  refresh  the  physical  screen.
-              Use this function and not wrefresh or wnoutrefresh.
-              update_panels() may be called more than once before
-              a  call  to doupdate(), but doupdate() is the func-
-              tion responsible for updating the physical screen.
+              Use this function and not <STRONG>wrefresh</STRONG> or <STRONG>wnoutrefresh</STRONG>.
+              <STRONG>update_panels</STRONG> may be called more than once before a
+              call  to doupdate(), but doupdate() is the function
+              responsible for updating the physical screen.
 
        <STRONG>del_panel(pan)</STRONG>
               removes the given panel from the  stack and deallo-
@@ -218,7 +218,7 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100109).
+       This describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100529).
 
 
 </PRE>

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.491 2010/05/15 21:40:14 tom Exp $
+dnl $Id: configure.in,v 1.494 2010/05/29 21:06:19 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.491 $)
+AC_REVISION($Revision: 1.494 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -359,7 +359,7 @@ if test "$with_gpm" != no ; then
 		SHLIB_LIST="-ldl $SHLIB_LIST"
 	else
 		SHLIB_LIST="-lgpm $SHLIB_LIST"
-		TEST_LIBS="-lgpm $TEST_LIBS"
+		CF_ADD_LIB(gpm,TEST_LIBS)
 	fi
 	AC_DEFINE(HAVE_LIBGPM)
 	CF_CHECK_GPM_WGETCH
@@ -1131,9 +1131,10 @@ if test "$with_reentrant" = yes ; then
 	NCURSES_SIZE_T=int
 	if test $cf_cv_weak_symbols = yes ; then
 		CF_REMOVE_LIB(LIBS,$LIBS,pthread)
-	else
-		LIB_SUFFIX="t${LIB_SUFFIX}"
+		CF_ADD_LIB(pthread,TEST_LIBS)
+		CF_ADD_LIB(pthread,TEST_LIBS2)
 	fi
+	LIB_SUFFIX="t${LIB_SUFFIX}"
 	AC_DEFINE(USE_REENTRANT)
 	CF_NCURSES_ABI_6
 else
@@ -1293,7 +1294,7 @@ AC_CHECK_FUNC(gettimeofday,
 
 AC_CHECK_LIB(bsd, gettimeofday,
 	AC_DEFINE(HAVE_GETTIMEOFDAY)
-	LIBS="$LIBS -lbsd")])dnl CLIX: bzero, select, gettimeofday
+	CF_ADD_LIB(bsd))])dnl CLIX: bzero, select, gettimeofday
 	;;
 esac
 
@@ -1329,7 +1330,7 @@ wctype.h \
 # Note: even non-Posix ISC needs <sys/bsdtypes.h> to declare fd_set
 if test "$ISC" = yes ; then
 	AC_CHECK_LIB(cposix,main)
-	AC_CHECK_LIB(inet,bzero,LIBS="$LIBS -linet")dnl also 'select()'
+	AC_CHECK_LIB(inet,bzero,CF_ADD_LIB(inet))dnl also 'select()'
 fi
 
 CF_SYS_TIME_SELECT
@@ -1421,10 +1422,11 @@ if test "$cf_cv_func_openpty" != no ; then
     AC_DEFINE_UNQUOTED(USE_OPENPTY_HEADER,<$cf_cv_func_openpty>)
     AC_DEFINE(USE_XTERM_PTY)
     if test "$cf_cv_lib_util" = yes ; then
-        TEST_LIBS="-lutil $TEST_LIBS"
+        CF_ADD_LIB(util,TEST_LIBS)
     fi
 fi
 AC_SUBST(TEST_LIBS)
+AC_SUBST(TEST_LIBS2)
 
 if test "$with_hashed_db" != no ; then
 	AC_DEFINE(USE_HASHED_DB)
