@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.144 2010/05/15 22:21:58 tom Exp $
+-- $Id: INSTALL,v 1.145 2010/06/05 20:08:29 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -394,6 +394,12 @@ SUMMARY OF CONFIGURE OPTIONS:
 	are not available when running as root, or via a setuid/setgid
 	application.  These are (for example $TERMINFO) those that allow the
 	search path for the terminfo or termcap entry to be customized.
+
+    --disable-rpath-hack
+	Normally the configure script helps link libraries found in unusual
+	places by adding an rpath option to the link command.  If you are
+	building packages, this feature may be redundant.  Use this option
+	to suppress the feature.
 
     --disable-scroll-hints
 	Compile without scroll-hints code.  This option is ignored when

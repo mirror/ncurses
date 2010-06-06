@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.530 2010/05/29 20:59:18 tom Exp $
+dnl $Id: aclocal.m4,v 1.532 2010/06/05 21:11:54 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -231,13 +231,13 @@ if test -n "$1" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_LIB version: 1 updated: 2010/05/29 16:02:10
+dnl CF_ADD_LIB version: 2 updated: 2010/06/02 05:03:05
 dnl ----------
 dnl Add a library, used to enforce consistency.
 dnl
 dnl $1 = library to add, without the "-l"
 dnl $2 = variable to update (default $LIBS)
-AC_DEFUN([CF_ADD_LIB],[ifelse($2,,LIBS,[$2])="-l$1 [$]ifelse($2,,LIBS,[$2])"])dnl
+AC_DEFUN([CF_ADD_LIB],[CF_ADD_LIBS(-l$1,ifelse($2,,LIBS,[$2]))])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ADD_LIBDIR version: 9 updated: 2010/05/26 16:44:57
 dnl -------------
@@ -274,6 +274,14 @@ if test -n "$1" ; then
   done
 fi
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ADD_LIBS version: 1 updated: 2010/06/02 05:03:05
+dnl -----------
+dnl Add one or more libraries, used to enforce consistency.
+dnl
+dnl $1 = libraries to add, with the "-l", etc.
+dnl $2 = variable to update (default $LIBS)
+AC_DEFUN([CF_ADD_LIBS],[ifelse($2,,LIBS,[$2])="$1 [$]ifelse($2,,LIBS,[$2])"])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ADD_SUBDIR_PATH version: 2 updated: 2007/07/29 10:12:59
 dnl ------------------
@@ -2408,7 +2416,7 @@ AC_SUBST(LDFLAGS_STATIC)
 AC_SUBST(LDFLAGS_SHARED)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LD_RPATH_OPT version: 2 updated: 2010/03/27 19:27:54
+dnl CF_LD_RPATH_OPT version: 3 updated: 2010/06/02 05:03:05
 dnl ---------------
 dnl For the given system and compiler, find the compiler flags to pass to the
 dnl loader to use the "rpath" feature.
@@ -2453,7 +2461,7 @@ case "x$LD_RPATH_OPT" in #(vi
 x-R*)
 	AC_MSG_CHECKING(if we need a space after rpath option)
 	cf_save_LIBS="$LIBS"
-	LIBS="${LD_RPATH_OPT}$libdir $LIBS"
+	CF_ADD_LIBS(${LD_RPATH_OPT}$libdir)
 	AC_TRY_LINK(, , cf_rpath_space=no, cf_rpath_space=yes)
 	LIBS="$cf_save_LIBS"
 	AC_MSG_RESULT($cf_rpath_space)
@@ -4570,7 +4578,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 62 updated: 2010/03/28 16:12:30
+dnl CF_SHARED_OPTS version: 64 updated: 2010/06/05 16:51:16
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -4648,7 +4656,7 @@ AC_DEFUN([CF_SHARED_OPTS],
 	aix[[56]]*) #(vi
 		if test "$GCC" = yes; then
 			CC_SHARED_OPTS=
-			MK_SHARED_LIB="$(CC) -shared"
+			MK_SHARED_LIB='$(CC) -shared'
 		fi
 		;;
 	beos*) #(vi
@@ -4823,7 +4831,7 @@ CF_EOF
 		CF_SHARED_SONAME
 		if test "$GCC" != yes; then
 			cf_save_CFLAGS="$CFLAGS"
-			for cf_shared_opts in -xcode=pic13 -xcode=pic32 -Kpic -KPIC -O
+			for cf_shared_opts in -xcode=pic32 -xcode=pic13 -KPIC -Kpic -O
 			do
 				CFLAGS="$cf_shared_opts $cf_save_CFLAGS"
 				AC_TRY_COMPILE([#include <stdio.h>],[printf("Hello\n");],[break])

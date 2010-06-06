@@ -39,7 +39,7 @@
 #define USE_TERMLIB 1
 #include <build.priv.h>
 
-MODULE_ID("$Id: make_keys.c,v 1.18 2010/05/22 17:48:21 tom Exp $")
+MODULE_ID("$Id: make_keys.c,v 1.19 2010/06/05 22:08:00 tom Exp $")
 
 #include <names.c>
 
@@ -90,7 +90,7 @@ make_keys(FILE *ifp, FILE *ofp)
 		continue;
 	    if (strlen(from) > maxlen)
 		maxlen = (unsigned) strlen(from);
-	    fprintf(ofp, "\t{ %4d, %-*.*s },\t/* %s */\n",
+	    fprintf(ofp, "\t{ %4u, %-*.*s },\t/* %s */\n",
 		    code,
 		    (int) maxlen, (int) maxlen,
 		    to,

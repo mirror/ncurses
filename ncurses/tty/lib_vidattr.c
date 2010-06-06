@@ -69,7 +69,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.60 2010/03/31 23:38:02 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.61 2010/06/05 22:22:04 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -90,7 +90,9 @@ MODULE_ID("$Id: lib_vidattr.c,v 1.60 2010/03/31 23:38:02 tom Exp $")
 		 || (fix_pair0 && (pair == 0)) \
 		 || (reverse ^ ((old_attr & A_REVERSE) != 0))) { \
 		     NCURSES_SP_NAME(_nc_do_color)(NCURSES_SP_ARGx \
-				     old_pair, pair, reverse, outc); \
+				     (short) old_pair, \
+				     (short) pair, \
+				     reverse, outc); \
 		} \
 	}
 
@@ -185,7 +187,7 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 	 * A_ALTCHARSET (256) down 2 to line up.  We use the NCURSES_BITS
 	 * macro so this will work properly for the wide-character layout.
 	 */
-	unsigned value = no_color_video;
+	unsigned value = (unsigned) no_color_video;
 	attr_t mask = NCURSES_BITS((value & 63)
 				   | ((value & 192) << 1)
 				   | ((value & 256) >> 2), 8);

@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: wresize.c,v 1.33 2010/05/01 22:04:08 tom Exp $")
+MODULE_ID("$Id: wresize.c,v 1.34 2010/06/05 22:36:26 tom Exp $")
 
 static int
 cleanup_lines(struct ldat *data, int length)
@@ -71,9 +71,9 @@ repair_subwindows(WINDOW *cmp)
 		tst->_parx = cmp->_maxx;
 
 	    if (tst->_maxy + tst->_pary > cmp->_maxy)
-		tst->_maxy = cmp->_maxy - tst->_pary;
+		tst->_maxy = (NCURSES_SIZE_T) (cmp->_maxy - tst->_pary);
 	    if (tst->_maxx + tst->_parx > cmp->_maxx)
-		tst->_maxx = cmp->_maxx - tst->_parx;
+		tst->_maxx = (NCURSES_SIZE_T) (cmp->_maxx - tst->_parx);
 
 	    for (row = 0; row <= tst->_maxy; ++row) {
 		tst->_line[row].text = &pline[tst->_pary + row].text[tst->_parx];
@@ -157,7 +157,8 @@ wresize(WINDOW *win, int ToLines, int ToCols)
 	if (!(win->_flags & _SUBWIN)) {
 	    if (row <= size_y) {
 		if (ToCols != size_x) {
-		    if ((s = typeMalloc(NCURSES_CH_T, ToCols + 1)) == 0)
+		    s = typeMalloc(NCURSES_CH_T, (unsigned) ToCols + 1);
+		    if (s == 0)
 			returnCode(cleanup_lines(new_lines, row));
 		    for (col = 0; col <= ToCols; ++col) {
 			s[col] = (col <= size_x
@@ -168,7 +169,8 @@ wresize(WINDOW *win, int ToLines, int ToCols)
 		    s = win->_line[row].text;
 		}
 	    } else {
-		if ((s = typeMalloc(NCURSES_CH_T, ToCols + 1)) == 0)
+		s = typeMalloc(NCURSES_CH_T, (unsigned) ToCols + 1);
+		if (s == 0)
 		    returnCode(cleanup_lines(new_lines, row));
 		for (col = 0; col <= ToCols; ++col)
 		    s[col] = win->_nc_bkgd;
@@ -186,11 +188,11 @@ wresize(WINDOW *win, int ToLines, int ToCols)
 	if ((ToCols != size_x) || (row > size_y)) {
 	    if (end >= begin) {	/* growing */
 		if (new_lines[row].firstchar < begin)
-		    new_lines[row].firstchar = begin;
+		    new_lines[row].firstchar = (NCURSES_SIZE_T) begin;
 	    } else {		/* shrinking */
 		new_lines[row].firstchar = 0;
 	    }
-	    new_lines[row].lastchar = ToCols;
+	    new_lines[row].lastchar = (NCURSES_SIZE_T) ToCols;
 	}
 	new_lines[row].text = s;
     }
@@ -217,8 +219,8 @@ wresize(WINDOW *win, int ToLines, int ToCols)
      * Finally, adjust the parameters showing screen size and cursor
      * position:
      */
-    win->_maxx = ToCols;
-    win->_maxy = ToLines;
+    win->_maxx = (NCURSES_SIZE_T) ToCols;
+    win->_maxy = (NCURSES_SIZE_T) ToLines;
 
     if (win->_regtop > win->_maxy)
 	win->_regtop = win->_maxy;

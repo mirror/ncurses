@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.494 2010/05/29 21:06:19 tom Exp $
+dnl $Id: configure.in,v 1.495 2010/06/05 20:00:26 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.494 $)
+AC_REVISION($Revision: 1.495 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -411,6 +411,11 @@ if test "$CC_SHARED_OPTS" = "unknown"; then
 			AC_ERROR(Shared libraries are not supported in this version)
 		fi
 	done
+fi
+
+### If we're building with rpath, try to link non-standard libs that way too.
+if test "$DFT_LWR_MODEL" = "shared"; then
+	CF_DISABLE_RPATH_HACK
 fi
 
 ###############################################################################
@@ -1910,11 +1915,6 @@ AC_DEFINE_UNQUOTED(NCURSES_VERSION_STRING, "${NCURSES_MAJOR}.${NCURSES_MINOR}.${
 
 ### Now that we're done running tests, add the compiler-warnings, if any
 CF_ADD_CFLAGS($EXTRA_CFLAGS)
-
-### If we're building with rpath, try to link non-standard libs that way too.
-if test "$DFT_LWR_MODEL" = "shared"; then
-	CF_DISABLE_RPATH_HACK
-fi
 
 ### Define substitutions for header files to avoid name-pollution
 CF_SUBST_IF(["$cf_cv_have_tcgetattr" = yes], HAVE_TCGETATTR, 1, 0)

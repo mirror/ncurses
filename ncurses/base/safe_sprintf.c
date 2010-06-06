@@ -33,7 +33,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: safe_sprintf.c,v 1.23 2010/03/06 20:26:10 tom Exp $")
+MODULE_ID("$Id: safe_sprintf.c,v 1.24 2010/06/05 22:22:27 tom Exp $")
 
 #if USE_SAFE_SPRINTF
 
@@ -249,7 +249,7 @@ NCURSES_SP_NAME(_nc_printf_string) (NCURSES_SP_DCLx
 		MyRows = screen_lines(SP_PARM);
 	    if (screen_columns(SP_PARM) > MyCols)
 		MyCols = screen_columns(SP_PARM);
-	    my_length = (MyRows * (MyCols + 1)) + 1;
+	    my_length = (size_t) (MyRows * (MyCols + 1)) + 1;
 	    my_buffer = typeRealloc(char, my_length, my_buffer);
 	}
 
