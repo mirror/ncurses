@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.495 2010/06/05 20:00:26 tom Exp $
+dnl $Id: configure.in,v 1.496 2010/06/12 18:47:28 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.495 $)
+AC_REVISION($Revision: 1.496 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1647,8 +1647,8 @@ end conftest;],[cf_cv_pragma_unreferenced=yes],[cf_cv_pragma_unreferenced=no])
    CF_WITH_PATH(ada-include,
        [  --with-ada-include=DIR  Ada includes are in DIR],
        ADA_INCLUDE,
-       PREFIX/lib/ada/adainclude,
-       [$]prefix/lib/ada/adainclude)
+       PREFIX/share/ada/adainclude,
+       [$]prefix/share/ada/adainclude)
    AC_SUBST(ADA_INCLUDE)
 
    CF_WITH_PATH(ada-objects,

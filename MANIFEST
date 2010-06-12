@@ -117,6 +117,7 @@
 ./Ada95/samples/tour.adb
 ./Ada95/samples/tour.ads
 ./Ada95/src/Makefile.in
+./Ada95/src/library.gpr
 ./Ada95/src/terminal_interface-curses-aux.adb
 ./Ada95/src/terminal_interface-curses-forms-field_types-alpha.adb
 ./Ada95/src/terminal_interface-curses-forms-field_types-alpha.ads

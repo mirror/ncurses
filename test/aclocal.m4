@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.39 2010/05/29 20:55:40 tom Exp $
+dnl $Id: aclocal.m4,v 1.40 2010/06/12 12:31:55 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -185,6 +185,14 @@ if test -n "$1" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_ADD_LIB version: 2 updated: 2010/06/02 05:03:05
+dnl ----------
+dnl Add a library, used to enforce consistency.
+dnl
+dnl $1 = library to add, without the "-l"
+dnl $2 = variable to update (default $LIBS)
+AC_DEFUN([CF_ADD_LIB],[CF_ADD_LIBS(-l$1,ifelse($2,,LIBS,[$2]))])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_ADD_LIBDIR version: 9 updated: 2010/05/26 16:44:57
 dnl -------------
 dnl	Adds to the library-path
@@ -220,6 +228,14 @@ if test -n "$1" ; then
   done
 fi
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ADD_LIBS version: 1 updated: 2010/06/02 05:03:05
+dnl -----------
+dnl Add one or more libraries, used to enforce consistency.
+dnl
+dnl $1 = libraries to add, with the "-l", etc.
+dnl $2 = variable to update (default $LIBS)
+AC_DEFUN([CF_ADD_LIBS],[ifelse($2,,LIBS,[$2])="$1 [$]ifelse($2,,LIBS,[$2])"])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ADD_SUBDIR_PATH version: 2 updated: 2007/07/29 10:12:59
 dnl ------------------
@@ -2264,7 +2280,7 @@ ncursesw/term.h)
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_TRY_PKG_CONFIG version: 2 updated: 2010/05/26 05:38:42
+dnl CF_TRY_PKG_CONFIG version: 3 updated: 2010/06/02 05:03:05
 dnl -----------------
 dnl This is a simple wrapper to use for pkg-config, for libraries which may be
 dnl available in that form.
@@ -2280,7 +2296,7 @@ if test "$PKG_CONFIG" != none && "$PKG_CONFIG" --exists $1; then
 	cf_pkgconfig_incs="`$PKG_CONFIG --cflags $1 2>/dev/null`"
 	cf_pkgconfig_libs="`$PKG_CONFIG --libs   $1 2>/dev/null`"
 	CF_ADD_CFLAGS($cf_pkgconfig_incs)
-	LIBS="$cf_pkgconfig_libs $LIBS"
+	CF_ADD_LIBS($cf_pkgconfig_libs)
 	ifelse([$2],,:,[$2])
 else
 	ifelse([$3],,:,[$3])
@@ -2533,7 +2549,7 @@ if test -n "$cf_xopen_source" ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_X_ATHENA version: 14 updated: 2010/05/26 19:19:58
+dnl CF_X_ATHENA version: 15 updated: 2010/06/02 05:03:05
 dnl -----------
 dnl Check for Xaw (Athena) libraries
 dnl
@@ -2592,7 +2608,7 @@ if test "$PKG_CONFIG" != none ; then
 			cf_x_athena_inc="`$PKG_CONFIG --cflags $cf_athena_pkg 2>/dev/null`"
 			cf_x_athena_lib="`$PKG_CONFIG --libs   $cf_athena_pkg 2>/dev/null`"
 			CF_ADD_CFLAGS($cf_x_athena_inc)
-			LIBS="$cf_x_athena_lib $LIBS"
+			CF_ADD_LIBS($cf_x_athena_lib)
 
 			CF_UPPER(cf_x_athena_LIBS,HAVE_LIB_$cf_x_athena)
 			AC_DEFINE_UNQUOTED($cf_x_athena_LIBS)
@@ -2656,7 +2672,7 @@ elif test "$cf_x_athena_inc" != default ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_X_ATHENA_LIBS version: 8 updated: 2010/05/26 05:38:42
+dnl CF_X_ATHENA_LIBS version: 9 updated: 2010/06/02 05:03:05
 dnl ----------------
 dnl Normally invoked by CF_X_ATHENA, with $1 set to the appropriate flavor of
 dnl the Athena widgets, e.g., Xaw, Xaw3d, neXtaw.
@@ -2680,10 +2696,10 @@ do
 			cf_save="$LIBS"
 			cf_test=XawSimpleMenuAddGlobalActions
 			if test $cf_path != default ; then
-				LIBS="-L$cf_path/lib $cf_lib $LIBS"
+				CF_ADD_LIBS(-L$cf_path/lib $cf_lib)
 				AC_MSG_CHECKING(for $cf_lib in $cf_path)
 			else
-				LIBS="$cf_lib $LIBS"
+				CF_ADD_LIBS($cf_lib)
 				AC_MSG_CHECKING(for $cf_test in $cf_lib)
 			fi
 			AC_TRY_LINK([],[$cf_test()],
@@ -2708,15 +2724,15 @@ CF_UPPER(cf_x_athena_LIBS,HAVE_LIB_$cf_x_athena)
 AC_DEFINE_UNQUOTED($cf_x_athena_LIBS)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_X_EXT version: 2 updated: 2010/05/26 05:38:42
+dnl CF_X_EXT version: 3 updated: 2010/06/02 05:03:05
 dnl --------
 AC_DEFUN([CF_X_EXT],[
 CF_TRY_PKG_CONFIG(Xext,,[
 	AC_CHECK_LIB(Xext,XextCreateExtension,
-		[LIBS="-lXext $LIBS"])])
+		[CF_ADD_LIB(Xext)])])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_X_TOOLKIT version: 13 updated: 2010/05/26 05:45:44
+dnl CF_X_TOOLKIT version: 14 updated: 2010/06/02 05:03:05
 dnl ------------
 dnl Check for X Toolkit libraries
 dnl
@@ -2736,7 +2752,7 @@ CF_TRY_PKG_CONFIG(xt,[
 
 	AC_CHECK_FUNC(XOpenDisplay,,[
 	AC_CHECK_LIB(X11,XOpenDisplay,
-		[LIBS="-lX11 $LIBS"],,
+		[CF_ADD_LIB(X11)],,
 		[$X_PRE_LIBS $LIBS $X_EXTRA_LIBS])])
 
 	AC_CHECK_FUNC(XtAppInitialize,,[

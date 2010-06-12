@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.362 $
-#	$Date: 2010/03/20 20:10:08 $
+#	$Revision: 1.363 $
+#	$Date: 2010/06/12 14:39:51 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4009,6 +4009,9 @@ mlterm+pcfkeys|fragment for PC-style fkeys,
 	kRIT3=\EO1;3C, kRIT4=\EO1;4C, kRIT5=\EO1;5C,
 	kRIT6=\EO1;6C, kRIT7=\EO1;7C, kUP=\EO1;2A, kUP3=\EO1;3A,
 	kUP4=\EO1;4A, kUP5=\EO1;5A, kUP6=\EO1;6A, kUP7=\EO1;7A,
+
+mlterm-256color|mlterm 3.0 with xterm 256-colors,
+	use=xterm+256color, use=rxvt,
 
 # From: Thomas Dickey <dickey@clark.net> 04 Oct 1997
 # Updated: Oezguer Kesim <kesim@math.fu-berlin.de> 02 Nov 1997
@@ -22258,6 +22261,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2010-03-20
 #	* rename atari and st52 to atari-old, st52-old, use newer entries from
 #	  FreeMiNT by Guido Flohr (from patch/report by Alan Hourihane).
+#
+# 2010-06-12
+#	* add mlterm+256color entry -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

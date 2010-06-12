@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1552 2010/06/05 21:27:04 tom Exp $
+-- $Id: NEWS,v 1.1558 2010/06/12 18:52:13 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100612
+	+ start integrating changes to use gnatmake project files in Ada95 tree
+	  + add test_make / test_clean / test_install rules in Ada95/src
+	  + change install-path for adainclude directory to /usr/share/ada (was
+	    /usr/lib/ada).
+	+ update Ada95/configure.
+	+ add mlterm+256color entry, for mlterm 3.0.0 -TD
+	+ modify test/configure to use macros to ensure consistent order
+	  of updating LIBS variable.
 
 20100605
 	+ change search order of options for Solaris in CF_SHARED_OPTS, to

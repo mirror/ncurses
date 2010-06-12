@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.35 2010/02/27 19:54:38 tom Exp $
+#  $Id: Makefile.in,v 1.42 2010/06/12 19:44:58 tom Exp $
 #
 .SUFFIXES:
 
@@ -43,6 +43,7 @@ top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
+libdir		= ${exec_prefix}/lib
 
 ADA_INCLUDE	= $(DESTDIR)@ADA_INCLUDE@
 ADA_OBJECTS	= $(DESTDIR)@ADA_OBJECTS@
@@ -74,23 +75,57 @@ LINK		= $(CC)
 LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 RANLIB		= @RANLIB@
-TAR_COPY	= @NCURSES_COPY2@
 
 ################################################################################
 ADA             = @cf_ada_compiler@
 ADAPREP		= gnatprep
 ADAFLAGS        = @ADAFLAGS@ -I. -I$(srcdir)
 
+LIB_NAME	= AdaCurses
+SONAME		= lib$(LIB_NAME).so.1
+
+GNAT_PROJECT	= library.gpr
+
+# build/source are the Ada95 tree
+BUILD_DIR	= @srcdir@/..
+SOURCE_DIR	= @srcdir@/..
+
+BUILD_DIR_LIB	= $(BUILD_DIR)/lib
+SOURCE_DIR_SRC	= $(SOURCE_DIR)/src
+
 ADAMAKE         = @cf_ada_make@
-ADAMAKEFLAGS    =
+ADAMAKEFLAGS    = \
+	-p \
+	-P$(GNAT_PROJECT) \
+	-XBUILD_DIR=$(BUILD_DIR) \
+	-XSOURCE_DIR=$(SOURCE_DIR) \
+	-XLIB_NAME=$(LIB_NAME) \
+	-XSONAME=$(SONAME)
 
 CARGS           = -cargs $(ADAFLAGS)
 LARGS           =
 
-LIBRARY_FILE	= libAdaCurses.a
+MY_STATIC_LIB	= $(BUILD_DIR_LIB)/lib$(LIB_NAME).a
+MY_SHARED_LIB	= $(BUILD_DIR_LIB)/$(SONAME)
+
 ALIB            = @cf_ada_package@
 ABASE           = $(ALIB)-curses
-
+################################################################################
+GENERATED_SOURCES=$(ABASE).ads         			\
+		  $(ABASE).adb         			\
+	          $(ABASE)-aux.ads   			\
+	          $(ABASE)-trace.ads   			\
+	          $(ABASE)-menus.ads   			\
+	          $(ABASE)-forms.ads   			\
+	          $(ABASE)-mouse.ads 			\
+	          $(ABASE)-panels.ads			\
+	          $(ABASE)-menus-menu_user_data.ads	\
+	          $(ABASE)-menus-item_user_data.ads	\
+	          $(ABASE)-forms-form_user_data.ads	\
+	          $(ABASE)-forms-field_types.ads	\
+	          $(ABASE)-forms-field_user_data.ads	\
+	          $(ABASE)-panels-user_data.ads
+################################################################################
 LIBALIS=$(ALIB).ali              			\
 	$(ABASE)-aux.ali         			\
 	$(ABASE).ali             		        \
@@ -171,11 +206,13 @@ GENOBJS=$(ABASE)-menus-menu_user_data.o			\
 	$(ABASE)-text_io-modular_io.o			\
 	$(ABASE)-text_io-complex_io.o
 
-
-all ::  $(LIBRARY_FILE)
+all ::  $(MY_STATIC_LIB)
 	@echo done
 
-$(LIBRARY_FILE) :: $(LIBOBJS) @cf_generic_objects@
+$(BUILD_DIR_LIB) :
+	mkdir -p $@
+
+$(MY_STATIC_LIB) :: $(BUILD_DIR_LIB) $(LIBOBJS) @cf_generic_objects@
 	$(AR) $(ARFLAGS) $@ $(LIBOBJS) @cf_generic_objects@
 
 sources :
@@ -183,12 +220,12 @@ sources :
 
 libs \
 install \
-install.libs :: $(LIBRARY_FILE)
-	@echo made $(LIBRARY_FILE)
+install.libs :: $(MY_STATIC_LIB)
+	@echo made $(MY_STATIC_LIB)
 
 install \
-install.libs :: $(LIBRARY_FILE)
-	@$(TAR_COPY) $(LIBRARY_FILE) . $(ADA_OBJECTS)
+install.libs :: $(MY_STATIC_LIB)
+	@$(INSTALL_LIB) $(MY_STATIC_LIB) $(ADA_OBJECTS)
 	@echo made $@
 
 uninstall \
@@ -398,3 +435,42 @@ $(ABASE)-text_io-complex_io.o: \
 		$(srcdir)/$(ABASE)-text_io-complex_io.ads \
 		$(srcdir)/$(ABASE)-text_io-complex_io.adb $(BASEDEPS)
 	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-complex_io.adb
+
+# in-progress rewrite to use gnatmake library project files
+
+test_make: $(ABASE)-trace.adb
+	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
+#	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
+
+test_install:
+	install --directory $(ADA_INCLUDE)
+	$(INSTALL_LIB) \
+		$(SOURCE_DIR_SRC)/*.ad[sb] \
+		$(GENERATED_SOURCES) \
+		$(ADA_INCLUDE)
+	install --directory $(ADA_OBJECTS)
+#	$(INSTALL_LIB) \
+#		$(BUILD_DIR)/dynamic-ali/* \
+#		$(ADA_OBJECTS)
+	$(INSTALL_LIB) \
+		$(MY_STATIC_LIB) \
+		$(DESTDIR)/usr/lib
+#	$(INSTALL_LIB) \
+#		$(BUILD_DIR_LIB)/$(SONAME) \
+#		$(DESTDIR)/usr/lib
+#	cd $(DESTDIR)/usr/lib && ln -s $(SONAME) lib$(LIB_NAME).so
+
+test_uninstall:
+	rm -rf \
+		$(ADA_INCLUDE) \
+		$(ADA_OBJECTS) \
+	rm -f \
+		$(DESTDIR)/usr/lib/lib$(LIB_NAME).a
+#	rm -f \
+#		$(DESTDIR)/usr/lib/$(SONAME) \
+#		$(DESTDIR)/usr/lib/lib$(LIB_NAME).so
+
+test_clean:
+	rm -rf $(BUILD_DIR)/*-ali
+	rm -rf $(BUILD_DIR)/*-obj
+	rm -rf $(BUILD_DIR_LIB)

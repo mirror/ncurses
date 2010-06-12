@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.66 2010/02/27 19:54:38 tom Exp $
+#  $Id: Makefile.in,v 1.67 2010/06/12 16:32:02 tom Exp $
 #
 .SUFFIXES:
 
@@ -86,7 +86,9 @@ ADACURSES_CONFIG = adacurses@DFT_ARG_SUFFIX@-config
 
 WRAPPER		= @NCURSES_SHLIB2@
 TAR_COPY	= @NCURSES_COPY2@
-GENERATE	= ./gen$x '@DFT_ARG_SUFFIX@'
+
+PROG_GENERATE	= ./generate$x
+GENERATE	= $(PROG_GENERATE) '@DFT_ARG_SUFFIX@'
 DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
 
 GNATHTML	= `type -p gnathtml || type -p gnathtml.pl`
@@ -207,88 +209,88 @@ uninstall \
 uninstall.libs ::
 	-rm -f $(DESTDIR)$(bindir)/$(ADACURSES_CONFIG)
 
-gen$x:	gen.o
+$(PROG_GENERATE):  gen.o
 	@ECHO_LINK@ $(LINK) $(CFLAGS_NORMAL) gen.o $(LD_FLAGS) -o $@
 
 gen.o:	$(srcdir)/gen.c
 	$(HOST_CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/gen.c
 ################################################################################
-Character_Attribute_Set_Rep: gen$x
+Character_Attribute_Set_Rep: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B A" >$@
 
-Base_Defs: gen$x
+Base_Defs: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B B" >$@
 
-Color_Defs: gen$x
+Color_Defs: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B C" >$@
 
-Window_Offsets: gen$x
+Window_Offsets: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B D" >$@
 
-Key_Definitions: gen$x
+Key_Definitions: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B K" >$@
 
-Linker_Options: gen$x
+Linker_Options: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B L" >$@
 
-ACS_Map: gen$x
+ACS_Map: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B M" >$@
 
-Old_Keys: gen$x
+Old_Keys: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B O" >$@
 
-Public_Variables: gen$x
+Public_Variables: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B P" >$@
 
-AC_Rep: gen$x
+AC_Rep: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B R" >$@
 
-Version_Info: gen$x
+Version_Info: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B V" >$@
 
-Trace_Defs: gen$x
+Trace_Defs: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B T" >$@
 ################################################################################
-Menu_Opt_Rep: gen$x
+Menu_Opt_Rep: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) M R" >$@
 
-Menu_Base_Defs: gen$x
+Menu_Base_Defs: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) M B" >$@
 
-Menu_Linker_Options: gen$x
+Menu_Linker_Options: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) M L" >$@
 
-Item_Rep: gen$x
+Item_Rep: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) M I" >$@
 ################################################################################
-Form_Opt_Rep: gen$x
+Form_Opt_Rep: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) F R" >$@
 
-Form_Base_Defs: gen$x
+Form_Base_Defs: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) F B" >$@
 
-Form_Linker_Options: gen$x
+Form_Linker_Options: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) F L" >$@
 
-Field_Rep: gen$x
+Field_Rep: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) F I" >$@
 ################################################################################
-Mouse_Base_Defs: gen$x
+Mouse_Base_Defs: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) P B" >$@
 
-Mouse_Event_Rep: gen$x
+Mouse_Event_Rep: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) P M" >$@
 
-Mouse_Events: gen$x
+Mouse_Events: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) B E" >$@
 
-Panel_Linker_Options: gen$x
+Panel_Linker_Options: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) P L" >$@
 
-Chtype_Def: gen$x
+Chtype_Def: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) E C" >$@
 
-Eti_Defs: gen$x
+Eti_Defs: $(PROG_GENERATE)
 	$(WRAPPER) "$(GENERATE) E E" >$@
 ################################################################################
 $(ADA_SRCDIR)/$(ABASE).ads: 	$(srcdir)/$(ABASE).ads.m4 \
@@ -390,7 +392,7 @@ tags:
 @MAKE_UPPER_TAGS@	etags *.[ch]
 
 mostlyclean ::
-	-rm -f a.out core gen$x *.o
+	-rm -f a.out core $(PROG_GENERATE) *.o
 	-rm -f $(GEN_FILES1)
 	-rm -f $(GEN_FILES2)
 	-rm -f $(GEN_FILES3)

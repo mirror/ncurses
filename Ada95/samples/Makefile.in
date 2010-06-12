@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.37 2010/05/29 21:09:58 tom Exp $
+#  $Id: Makefile.in,v 1.38 2010/06/12 19:28:33 tom Exp $
 #
 .SUFFIXES:
 
@@ -87,7 +87,7 @@ ALIB         = @cf_ada_package@
 ABASE        = $(ALIB)-curses
 
 CARGS        =-cargs $(ADAFLAGS)
-LARGS        =-largs @TEST_ARG2@ $(LD_FLAGS) -lAdaCurses @TEST_LIBS2@
+LARGS        =-largs @TEST_ARG2@ $(LD_FLAGS) -L../lib -lAdaCurses @TEST_LIBS2@
 
 PROGS        = tour rain ncurses
 
