@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.42 2010/06/12 19:44:58 tom Exp $
+#  $Id: Makefile.in,v 1.43 2010/06/19 20:25:18 tom Exp $
 #
 .SUFFIXES:
 
@@ -82,7 +82,7 @@ ADAPREP		= gnatprep
 ADAFLAGS        = @ADAFLAGS@ -I. -I$(srcdir)
 
 LIB_NAME	= AdaCurses
-SONAME		= lib$(LIB_NAME).so.1
+SONAME		= @ADA_SHAREDLIB@
 
 GNAT_PROJECT	= library.gpr
 
@@ -440,7 +440,7 @@ $(ABASE)-text_io-complex_io.o: \
 
 test_make: $(ABASE)-trace.adb
 	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
-#	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
+@MAKE_ADA_SHAREDLIB@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
 
 test_install:
 	install --directory $(ADA_INCLUDE)
@@ -449,16 +449,16 @@ test_install:
 		$(GENERATED_SOURCES) \
 		$(ADA_INCLUDE)
 	install --directory $(ADA_OBJECTS)
-#	$(INSTALL_LIB) \
-#		$(BUILD_DIR)/dynamic-ali/* \
-#		$(ADA_OBJECTS)
+@MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
+@MAKE_ADA_SHAREDLIB@		$(BUILD_DIR)/dynamic-ali/* \
+@MAKE_ADA_SHAREDLIB@		$(ADA_OBJECTS)
 	$(INSTALL_LIB) \
 		$(MY_STATIC_LIB) \
 		$(DESTDIR)/usr/lib
-#	$(INSTALL_LIB) \
-#		$(BUILD_DIR_LIB)/$(SONAME) \
-#		$(DESTDIR)/usr/lib
-#	cd $(DESTDIR)/usr/lib && ln -s $(SONAME) lib$(LIB_NAME).so
+@MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
+@MAKE_ADA_SHAREDLIB@		$(BUILD_DIR_LIB)/$(SONAME) \
+@MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib
+@MAKE_ADA_SHAREDLIB@	cd $(DESTDIR)/usr/lib && ln -s $(SONAME) lib$(LIB_NAME).so
 
 test_uninstall:
 	rm -rf \
@@ -466,9 +466,9 @@ test_uninstall:
 		$(ADA_OBJECTS) \
 	rm -f \
 		$(DESTDIR)/usr/lib/lib$(LIB_NAME).a
-#	rm -f \
-#		$(DESTDIR)/usr/lib/$(SONAME) \
-#		$(DESTDIR)/usr/lib/lib$(LIB_NAME).so
+@MAKE_ADA_SHAREDLIB@	rm -f \
+@MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib/$(SONAME) \
+@MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib/lib$(LIB_NAME).so
 
 test_clean:
 	rm -rf $(BUILD_DIR)/*-ali
