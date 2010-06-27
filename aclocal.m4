@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.535 2010/06/19 23:30:31 tom Exp $
+dnl $Id: aclocal.m4,v 1.536 2010/06/26 21:38:51 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5552,7 +5552,7 @@ AC_DEFUN([CF_UPPER],
 $1=`echo "$2" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_UTF8_LIB version: 6 updated: 2010/04/21 06:20:50
+dnl CF_UTF8_LIB version: 7 updated: 2010/06/20 09:24:28
 dnl -----------
 dnl Check for multibyte support, and if not found, utf8 compatibility library
 AC_DEFUN([CF_UTF8_LIB],
@@ -5574,7 +5574,7 @@ if test "$cf_cv_utf8_lib" = "add-on" ; then
 	AC_DEFINE(HAVE_LIBUTF8_H)
 	CF_ADD_INCDIR($cf_cv_header_path_utf8)
 	CF_ADD_LIBDIR($cf_cv_library_path_utf8)
-	LIBS="$cf_cv_library_file_utf8 $LIBS"
+	CF_ADD_LIBS($cf_cv_library_file_utf8)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -5712,52 +5712,61 @@ $1_ABI=$cf_cv_abi_version
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_COMPILER version: 1 updated: 2010/06/19 15:22:18
+dnl CF_WITH_ADA_COMPILER version: 2 updated: 2010/06/26 17:35:58
 dnl --------------------
 dnl Command-line option to specify the Ada95 compiler.
 AC_DEFUN([CF_WITH_ADA_COMPILER],[
+AC_MSG_CHECKING(for ada-compiler)
 AC_ARG_WITH(ada-compiler,
 	[  --with-ada-compiler=CMD specify Ada95 compiler command (default gnatmake)],
 	[cf_ada_compiler=$withval],
 	[cf_ada_compiler=gnatmake])
 AC_SUBST(cf_ada_compiler)
+AC_MSG_RESULT($cf_ada_compiler)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_INCLUDE version: 1 updated: 2010/06/19 15:22:18
+dnl CF_WITH_ADA_INCLUDE version: 2 updated: 2010/06/26 17:35:58
 dnl -------------------
 dnl Command-line option to specify where Ada includes will install.
 AC_DEFUN([CF_WITH_ADA_INCLUDE],[
+AC_MSG_CHECKING(for ada-include)
 CF_WITH_PATH(ada-include,
    [  --with-ada-include=DIR  Ada includes are in DIR],
    ADA_INCLUDE,
    PREFIX/share/ada/adainclude,
    [$]prefix/share/ada/adainclude)
 AC_SUBST(ADA_INCLUDE)
+AC_MSG_RESULT($ADA_INCLUDE)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_OBJECTS version: 1 updated: 2010/06/19 15:22:18
+dnl CF_WITH_ADA_OBJECTS version: 2 updated: 2010/06/26 17:35:58
 dnl -------------------
 dnl Command-line option to specify where Ada objects will install.
 AC_DEFUN([CF_WITH_ADA_OBJECTS],[
+AC_MSG_CHECKING(for ada-objects)
 CF_WITH_PATH(ada-objects,
    [  --with-ada-objects=DIR  Ada objects are in DIR],
    ADA_OBJECTS,
    PREFIX/lib/ada/adalib,
    [$]prefix/lib/ada/adalib)
 AC_SUBST(ADA_OBJECTS)
+AC_MSG_RESULT($ADA_OBJECTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_SHAREDLIB version: 1 updated: 2010/06/19 16:12:21
+dnl CF_WITH_ADA_SHAREDLIB version: 2 updated: 2010/06/26 17:35:58
 dnl ---------------------
 dnl Command-line option to specify if an Ada95 shared-library should be built,
 dnl and optionally what its soname should be.
 AC_DEFUN([CF_WITH_ADA_SHAREDLIB],[
-AC_MSG_CHECKING(if you want to build Ada95 shared library)
+AC_MSG_CHECKING(if an Ada95 shared-library should be built)
 AC_ARG_WITH(ada-sharedlib,
 	[  --with-ada-sharedlib=XX build Ada95 shared-library],
 	[with_ada_sharedlib=$withval],
 	[with_ada_sharedlib=no])
 AC_MSG_RESULT($with_ada_sharedlib)
+
+ADA_SHAREDLIB='lib$(LIB_NAME).so.1'
+MAKE_ADA_SHAREDLIB="#"
 
 if test "x$with_ada_sharedlib" != xno
 then
@@ -5765,18 +5774,14 @@ then
 	if test "x$with_ada_sharedlib" != xyes
 	then
 		ADA_SHAREDLIB="$with_ada_sharedlib"
-	else
-		ADA_SHAREDLIB='lib$(LIB_NAME).so.1'
 	fi
-else
-	MAKE_ADA_SHAREDLIB="#"
 fi
 
 AC_SUBST(ADA_SHAREDLIB)
 AC_SUBST(MAKE_ADA_SHAREDLIB)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_DBMALLOC version: 6 updated: 2006/12/16 14:24:05
+dnl CF_WITH_DBMALLOC version: 7 updated: 2010/06/21 17:26:47
 dnl ----------------
 dnl Configure-option for dbmalloc.  The optional parameter is used to override
 dnl the updating of $LIBS, e.g., to avoid conflict with subsequent tests.
@@ -5787,11 +5792,11 @@ CF_NO_LEAKS_OPTION(dbmalloc,
 
 if test "$with_dbmalloc" = yes ; then
 	AC_CHECK_HEADER(dbmalloc.h,
-		[AC_CHECK_LIB(dbmalloc,[debug_malloc]ifelse($1,,[],[,$1]))])
+		[AC_CHECK_LIB(dbmalloc,[debug_malloc]ifelse([$1],,[],[,$1]))])
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_DMALLOC version: 6 updated: 2006/12/16 14:24:05
+dnl CF_WITH_DMALLOC version: 7 updated: 2010/06/21 17:26:47
 dnl ---------------
 dnl Configure-option for dmalloc.  The optional parameter is used to override
 dnl the updating of $LIBS, e.g., to avoid conflict with subsequent tests.
@@ -5802,7 +5807,7 @@ CF_NO_LEAKS_OPTION(dmalloc,
 
 if test "$with_dmalloc" = yes ; then
 	AC_CHECK_HEADER(dmalloc.h,
-		[AC_CHECK_LIB(dmalloc,[dmalloc_debug]ifelse($1,,[],[,$1]))])
+		[AC_CHECK_LIB(dmalloc,[dmalloc_debug]ifelse([$1],,[],[,$1]))])
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------

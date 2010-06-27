@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.43 2010/06/19 20:25:18 tom Exp $
+#  $Id: Makefile.in,v 1.46 2010/06/26 21:28:56 tom Exp $
 #
 .SUFFIXES:
 
@@ -95,7 +95,6 @@ SOURCE_DIR_SRC	= $(SOURCE_DIR)/src
 
 ADAMAKE         = @cf_ada_make@
 ADAMAKEFLAGS    = \
-	-p \
 	-P$(GNAT_PROJECT) \
 	-XBUILD_DIR=$(BUILD_DIR) \
 	-XSOURCE_DIR=$(SOURCE_DIR) \
@@ -126,46 +125,6 @@ GENERATED_SOURCES=$(ABASE).ads         			\
 	          $(ABASE)-forms-field_user_data.ads	\
 	          $(ABASE)-panels-user_data.ads
 ################################################################################
-LIBALIS=$(ALIB).ali              			\
-	$(ABASE)-aux.ali         			\
-	$(ABASE).ali             		        \
-	$(ABASE)-terminfo.ali				\
-	$(ABASE)-termcap.ali				\
-	$(ABASE)-putwin.ali				\
-	$(ABASE)-trace.ali				\
-	$(ABASE)-mouse.ali       			\
-	$(ABASE)-panels.ali      			\
-	$(ABASE)-menus.ali       			\
-	$(ABASE)-forms.ali       			\
-	$(ABASE)-forms-field_types.ali	        	\
-	$(ABASE)-forms-field_types-alpha.ali      	\
-	$(ABASE)-forms-field_types-alphanumeric.ali     \
-	$(ABASE)-forms-field_types-intfield.ali      	\
-	$(ABASE)-forms-field_types-numeric.ali      	\
-	$(ABASE)-forms-field_types-regexp.ali      	\
-	$(ABASE)-forms-field_types-enumeration.ali      \
-	$(ABASE)-forms-field_types-ipv4_address.ali     \
-	$(ABASE)-forms-field_types-user.ali	      	\
-	$(ABASE)-forms-field_types-user-choice.ali     	\
-	$(ABASE)-text_io.ali     			\
-	$(ABASE)-text_io-aux.ali
-
-# Ada Library files for generic packages. Since gnat 3.10 they are
-# also compiled
-GENALIS=$(ABASE)-menus-menu_user_data.ali		\
-	$(ABASE)-menus-item_user_data.ali		\
-	$(ABASE)-forms-form_user_data.ali		\
-	$(ABASE)-forms-field_user_data.ali		\
-	$(ABASE)-forms-field_types-enumeration-ada.ali	\
-	$(ABASE)-panels-user_data.ali			\
-	$(ABASE)-text_io-integer_io.ali			\
-	$(ABASE)-text_io-float_io.ali			\
-	$(ABASE)-text_io-fixed_io.ali			\
-	$(ABASE)-text_io-decimal_io.ali			\
-	$(ABASE)-text_io-enumeration_io.ali		\
-	$(ABASE)-text_io-modular_io.ali			\
-	$(ABASE)-text_io-complex_io.ali
-
 LIBOBJS=$(ALIB).o                			\
 	$(ABASE)-aux.o           			\
 	$(ABASE).o               			\
@@ -232,14 +191,11 @@ uninstall \
 uninstall.libs ::
 	@echo made $@
 
-generics: $(GENALIS)
-	@echo made $@
-
 mostlyclean ::
 	rm -f *.o *.ali b_t*.* *.s $(PROGS) a.out core b_*_test.c *.xr[bs] *.a
 
 clean :: mostlyclean
-	rm -f $(LIBALIS) $(GENALIS) $(LIBOBJS) $(GENOBJS) $(ABASE)-trace.adb
+	rm -f $(ABASE)-trace.adb
 
 distclean :: clean
 	rm -f Makefile
@@ -248,224 +204,63 @@ realclean :: distclean
 
 BASEDEPS=$(ABASE).ads $(ABASE)-aux.ads $(ABASE).adb
 
-$(ALIB).o: $(srcdir)/$(ALIB).ads
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ALIB).ads
-
-
-$(ABASE)-aux.o: $(srcdir)/$(ABASE)-aux.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-aux.adb
-
-
-$(ABASE).o: $(ABASE).adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(ABASE).adb
-
-
-$(ABASE)-terminfo.o: \
-		$(srcdir)/$(ABASE)-terminfo.ads \
-		$(srcdir)/$(ABASE)-terminfo.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-terminfo.adb
-
-
-$(ABASE)-termcap.o: \
-		$(srcdir)/$(ABASE)-termcap.ads \
-		$(srcdir)/$(ABASE)-termcap.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-termcap.adb
-
-
-$(ABASE)-putwin.o: \
-		$(srcdir)/$(ABASE)-putwin.ads \
-		$(srcdir)/$(ABASE)-putwin.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-putwin.adb
-
-
 $(ABASE)-trace.adb : $(srcdir)/$(ABASE)-trace.adb_p
 	rm -f $@
 	$(ADAPREP) -DADA_TRACE=@ADA_TRACE@ -DPRAGMA_UNREF=@PRAGMA_UNREF@ $(srcdir)/$(ABASE)-trace.adb_p $@
 
-$(ABASE)-trace.o: \
-		$(ABASE)-trace.ads \
-		$(ABASE)-trace.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(ABASE)-trace.adb
-
-
-$(ABASE)-mouse.o: \
-		$(ABASE)-mouse.ads \
-		$(srcdir)/$(ABASE)-mouse.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-mouse.adb
-
-
-$(ABASE)-panels.o: \
-		$(ABASE)-panels.ads \
-		$(srcdir)/$(ABASE)-panels.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-panels.adb
-
-
-$(ABASE)-menus.o: \
-		$(ABASE)-menus.ads \
-		$(srcdir)/$(ABASE)-menus.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-menus.adb
-
-
-$(ABASE)-forms.o: \
-		$(ABASE)-forms.ads \
-		$(srcdir)/$(ABASE)-forms.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms.adb
-
-$(ABASE)-forms-field_types.o: \
-		$(ABASE)-forms-field_types.ads \
-		$(srcdir)/$(ABASE)-forms-field_types.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types.adb
-
-$(ABASE)-forms-field_types-alpha.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-alpha.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-alpha.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-alpha.adb
-
-$(ABASE)-forms-field_types-alphanumeric.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-alphanumeric.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-alphanumeric.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-alphanumeric.adb
-
-$(ABASE)-forms-field_types-intfield.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-intfield.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-intfield.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-intfield.adb
-
-$(ABASE)-forms-field_types-numeric.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-numeric.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-numeric.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-numeric.adb
-
-$(ABASE)-forms-field_types-regexp.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-regexp.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-regexp.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-regexp.adb
-
-$(ABASE)-forms-field_types-enumeration.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-enumeration.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-enumeration.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-enumeration.adb
-
-$(ABASE)-forms-field_types-ipv4_address.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-ipv4_address.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-ipv4_address.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-ipv4_address.adb
-
-$(ABASE)-forms-field_types-user.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-user.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-user.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-user.adb
-
-$(ABASE)-forms-field_types-user-choice.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-user-choice.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-user-choice.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-user-choice.adb
-
-$(ABASE)-text_io.o: \
-		$(srcdir)/$(ABASE)-text_io.ads \
-		$(srcdir)/$(ABASE)-text_io.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io.adb
-
-$(ABASE)-text_io-aux.o: \
-		$(srcdir)/$(ABASE)-text_io-aux.ads \
-		$(srcdir)/$(ABASE)-text_io-aux.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-aux.adb
-
-$(ABASE)-menus-menu_user_data.o: \
-		$(ABASE)-menus-menu_user_data.ads \
-		$(srcdir)/$(ABASE)-menus-menu_user_data.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-menus-menu_user_data.adb
-
-$(ABASE)-menus-item_user_data.o: \
-		$(ABASE)-menus-item_user_data.ads \
-		$(srcdir)/$(ABASE)-menus-item_user_data.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-menus-item_user_data.adb
-
-$(ABASE)-forms-form_user_data.o: \
-		$(ABASE)-forms-form_user_data.ads \
-		$(srcdir)/$(ABASE)-forms-form_user_data.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-form_user_data.adb
-
-$(ABASE)-forms-field_user_data.o: \
-		$(ABASE)-forms-field_user_data.ads \
-		$(srcdir)/$(ABASE)-forms-field_user_data.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_user_data.adb
-
-$(ABASE)-forms-field_types-enumeration-ada.o: \
-		$(srcdir)/$(ABASE)-forms-field_types-enumeration-ada.ads \
-		$(srcdir)/$(ABASE)-forms-field_types-enumeration-ada.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-forms-field_types-enumeration-ada.adb
-
-$(ABASE)-panels-user_data.o: \
-		$(ABASE)-panels-user_data.ads \
-		$(srcdir)/$(ABASE)-panels-user_data.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-panels-user_data.adb
-
-$(ABASE)-text_io-integer_io.o: \
-		$(srcdir)/$(ABASE)-text_io-integer_io.ads \
-		$(srcdir)/$(ABASE)-text_io-integer_io.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-integer_io.adb
-
-$(ABASE)-text_io-float_io.o: \
-		$(srcdir)/$(ABASE)-text_io-float_io.ads \
-		$(srcdir)/$(ABASE)-text_io-float_io.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-float_io.adb
-
-$(ABASE)-text_io-fixed_io.o: \
-		$(srcdir)/$(ABASE)-text_io-fixed_io.ads \
-		$(srcdir)/$(ABASE)-text_io-fixed_io.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-fixed_io.adb
-
-$(ABASE)-text_io-decimal_io.o: \
-		$(srcdir)/$(ABASE)-text_io-decimal_io.ads \
-		$(srcdir)/$(ABASE)-text_io-decimal_io.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-decimal_io.adb
-
-$(ABASE)-text_io-enumeration_io.o: \
-		$(srcdir)/$(ABASE)-text_io-enumeration_io.ads \
-		$(srcdir)/$(ABASE)-text_io-enumeration_io.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-enumeration_io.adb
-
-$(ABASE)-text_io-modular_io.o: \
-		$(srcdir)/$(ABASE)-text_io-modular_io.ads \
-		$(srcdir)/$(ABASE)-text_io-modular_io.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-modular_io.adb
-
-$(ABASE)-text_io-complex_io.o: \
-		$(srcdir)/$(ABASE)-text_io-complex_io.ads \
-		$(srcdir)/$(ABASE)-text_io-complex_io.adb $(BASEDEPS)
-	$(ADA) $(ADAFLAGS) -c -o $@ $(srcdir)/$(ABASE)-text_io-complex_io.adb
-
+###############################################################################
 # in-progress rewrite to use gnatmake library project files
 
-test_make: $(ABASE)-trace.adb
+$(BUILD_DIR)/static-ali : ; mkdir -p $@
+$(BUILD_DIR)/static-obj : ; mkdir -p $@
+
+STATIC_DIRS = \
+	$(BUILD_DIR_LIB) \
+	$(BUILD_DIR)/static-ali \
+	$(BUILD_DIR)/static-obj
+
+test_make :: $(ABASE)-trace.adb $(STATIC_DIRS)
 	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
+
+$(BUILD_DIR)/dynamic-ali : ; mkdir -p $@
+$(BUILD_DIR)/dynamic-obj : ; mkdir -p $@
+
+SHARED_DIRS = \
+	$(BUILD_DIR_LIB) \
+	$(BUILD_DIR)/dynamic-ali \
+	$(BUILD_DIR)/dynamic-obj
+
+@MAKE_ADA_SHAREDLIB@test_make :: $(ABASE)-trace.adb $(SHARED_DIRS)
 @MAKE_ADA_SHAREDLIB@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
 
-test_install:
+test_install ::
 	install --directory $(ADA_INCLUDE)
 	$(INSTALL_LIB) \
 		$(SOURCE_DIR_SRC)/*.ad[sb] \
 		$(GENERATED_SOURCES) \
 		$(ADA_INCLUDE)
 	install --directory $(ADA_OBJECTS)
-@MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
-@MAKE_ADA_SHAREDLIB@		$(BUILD_DIR)/dynamic-ali/* \
-@MAKE_ADA_SHAREDLIB@		$(ADA_OBJECTS)
 	$(INSTALL_LIB) \
 		$(MY_STATIC_LIB) \
 		$(DESTDIR)/usr/lib
+
+@MAKE_ADA_SHAREDLIB@test_install ::
+@MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
+@MAKE_ADA_SHAREDLIB@		$(BUILD_DIR)/dynamic-ali/* \
+@MAKE_ADA_SHAREDLIB@		$(ADA_OBJECTS)
 @MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
 @MAKE_ADA_SHAREDLIB@		$(BUILD_DIR_LIB)/$(SONAME) \
 @MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib
 @MAKE_ADA_SHAREDLIB@	cd $(DESTDIR)/usr/lib && ln -s $(SONAME) lib$(LIB_NAME).so
 
-test_uninstall:
+test_uninstall ::
 	rm -rf \
 		$(ADA_INCLUDE) \
 		$(ADA_OBJECTS) \
 	rm -f \
 		$(DESTDIR)/usr/lib/lib$(LIB_NAME).a
+
+@MAKE_ADA_SHAREDLIB@test_uninstall ::
 @MAKE_ADA_SHAREDLIB@	rm -f \
 @MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib/$(SONAME) \
 @MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib/lib$(LIB_NAME).so

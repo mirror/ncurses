@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.498 2010/06/19 20:05:42 tom Exp $
+dnl $Id: configure.in,v 1.499 2010/06/26 21:33:51 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.498 $)
+AC_REVISION($Revision: 1.499 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1882,6 +1882,10 @@ AC_OUTPUT( \
 	Makefile,[
 CF_PRG_RULES([$srcdir/test/mk-test.awk ECHO_LINK="$ECHO_LINK"], test)
 CF_LIB_RULES($SRC_SUBDIRS)
+
+if test "x$cf_with_ada" != xno ; then
+	$AWK -f $srcdir/Ada95/mk-1st.awk <$srcdir/Ada95/src/modules >>Ada95/src/Makefile
+fi
 ],[
 ### Special initialization commands, used to pass information from the
 ### configuration-run into config.status
@@ -1927,6 +1931,7 @@ cf_cv_shared_soname='$cf_cv_shared_soname'
 cf_cv_shlib_version="$cf_cv_shlib_version"
 cf_cv_shlib_version_infix="$cf_cv_shlib_version_infix"
 cf_cv_system_name="$cf_cv_system_name"
+cf_with_ada="$cf_with_ada"
 cf_with_cxx_binding="$cf_with_cxx_binding"
 cf_with_manpages="$cf_with_manpages"
 host="$host"

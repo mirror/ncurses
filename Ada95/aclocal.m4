@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.11 2010/06/19 20:18:12 tom Exp $
+dnl $Id: aclocal.m4,v 1.14 2010/06/26 21:39:07 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1967,7 +1967,7 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 6 updated: 2010/04/28 06:02:16
+dnl CF_NCURSES_CONFIG version: 7 updated: 2010/06/20 09:24:28
 dnl -----------------
 dnl Tie together the configure-script macros for ncurses.
 dnl Prefer the "-config" script from ncurses 5.6, to simplify analysis.
@@ -1984,7 +1984,7 @@ AC_PATH_PROGS(NCURSES_CONFIG,${cf_ncuconfig_root}6-config ${cf_ncuconfig_root}5-
 if test "$NCURSES_CONFIG" != none ; then
 
 CPPFLAGS="$CPPFLAGS `$NCURSES_CONFIG --cflags`"
-LIBS="`$NCURSES_CONFIG --libs` $LIBS"
+CF_ADD_LIBS(`$NCURSES_CONFIG --libs`)
 
 # even with config script, some packages use no-override for curses.h
 CF_CURSES_HEADER(ifelse($1,,ncurses,$1))
@@ -2124,7 +2124,7 @@ esac
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_LIBS version: 13 updated: 2007/07/29 10:29:20
+dnl CF_NCURSES_LIBS version: 14 updated: 2010/06/20 09:24:28
 dnl ---------------
 dnl Look for the ncurses library.  This is a little complicated on Linux,
 dnl because it may be linked with the gpm (general purpose mouse) library.
@@ -2160,12 +2160,12 @@ freebsd*)
 	;;
 esac
 
-LIBS="$cf_ncurses_LIBS $LIBS"
+CF_ADD_LIBS($cf_ncurses_LIBS)
 
 if ( test -n "$cf_cv_curses_dir" && test "$cf_cv_curses_dir" != "no" )
 then
 	CF_ADD_LIBDIR($cf_cv_curses_dir/lib)
-	LIBS="-l$cf_nculib_root $LIBS"
+	CF_ADD_LIBS(-l$cf_nculib_root)
 else
 	CF_FIND_LIBRARY($cf_nculib_root,$cf_nculib_root,
 		[#include <${cf_cv_ncurses_header-curses.h}>],
@@ -3067,7 +3067,7 @@ AC_DEFUN([CF_UPPER],
 $1=`echo "$2" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_UTF8_LIB version: 6 updated: 2010/04/21 06:20:50
+dnl CF_UTF8_LIB version: 7 updated: 2010/06/20 09:24:28
 dnl -----------
 dnl Check for multibyte support, and if not found, utf8 compatibility library
 AC_DEFUN([CF_UTF8_LIB],
@@ -3089,7 +3089,7 @@ if test "$cf_cv_utf8_lib" = "add-on" ; then
 	AC_DEFINE(HAVE_LIBUTF8_H)
 	CF_ADD_INCDIR($cf_cv_header_path_utf8)
 	CF_ADD_LIBDIR($cf_cv_library_path_utf8)
-	LIBS="$cf_cv_library_file_utf8 $LIBS"
+	CF_ADD_LIBS($cf_cv_library_file_utf8)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -3127,51 +3127,61 @@ weak_symbol(fopen);
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_COMPILER version: 1 updated: 2010/06/19 15:22:18
+dnl CF_WITH_ADA_COMPILER version: 2 updated: 2010/06/26 17:35:58
 dnl --------------------
 dnl Command-line option to specify the Ada95 compiler.
 AC_DEFUN([CF_WITH_ADA_COMPILER],[
+AC_MSG_CHECKING(for ada-compiler)
 AC_ARG_WITH(ada-compiler,
 	[  --with-ada-compiler=CMD specify Ada95 compiler command (default gnatmake)],
 	[cf_ada_compiler=$withval],
 	[cf_ada_compiler=gnatmake])
 AC_SUBST(cf_ada_compiler)
+AC_MSG_RESULT($cf_ada_compiler)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_INCLUDE version: 1 updated: 2010/06/19 15:22:18
+dnl CF_WITH_ADA_INCLUDE version: 2 updated: 2010/06/26 17:35:58
 dnl -------------------
 dnl Command-line option to specify where Ada includes will install.
 AC_DEFUN([CF_WITH_ADA_INCLUDE],[
+AC_MSG_CHECKING(for ada-include)
 CF_WITH_PATH(ada-include,
    [  --with-ada-include=DIR  Ada includes are in DIR],
    ADA_INCLUDE,
    PREFIX/share/ada/adainclude,
    [$]prefix/share/ada/adainclude)
 AC_SUBST(ADA_INCLUDE)
+AC_MSG_RESULT($ADA_INCLUDE)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_OBJECTS version: 1 updated: 2010/06/19 15:22:18
+dnl CF_WITH_ADA_OBJECTS version: 2 updated: 2010/06/26 17:35:58
 dnl -------------------
 dnl Command-line option to specify where Ada objects will install.
 AC_DEFUN([CF_WITH_ADA_OBJECTS],[
+AC_MSG_CHECKING(for ada-objects)
 CF_WITH_PATH(ada-objects,
    [  --with-ada-objects=DIR  Ada objects are in DIR],
    ADA_OBJECTS,
    PREFIX/lib/ada/adalib,
    [$]prefix/lib/ada/adalib)
 AC_SUBST(ADA_OBJECTS)
+AC_MSG_RESULT($ADA_OBJECTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_SHAREDLIB version: 1 updated: 2010/06/19 16:12:21
+dnl CF_WITH_ADA_SHAREDLIB version: 2 updated: 2010/06/26 17:35:58
 dnl ---------------------
 dnl Command-line option to specify if an Ada95 shared-library should be built,
 dnl and optionally what its soname should be.
 AC_DEFUN([CF_WITH_ADA_SHAREDLIB],[
+AC_MSG_CHECKING(if an Ada95 shared-library should be built)
 AC_ARG_WITH(ada-sharedlib,
 	[  --with-ada-sharedlib=XX build Ada95 shared-library],
 	[with_ada_sharedlib=$withval],
 	[with_ada_sharedlib=no])
 AC_MSG_RESULT($with_ada_sharedlib)
+
+ADA_SHAREDLIB='lib$(LIB_NAME).so.1'
+MAKE_ADA_SHAREDLIB="#"
 
 if test "x$with_ada_sharedlib" != xno
 then
@@ -3179,11 +3189,7 @@ then
 	if test "x$with_ada_sharedlib" != xyes
 	then
 		ADA_SHAREDLIB="$with_ada_sharedlib"
-	else
-		ADA_SHAREDLIB='lib$(LIB_NAME).so.1'
 	fi
-else
-	MAKE_ADA_SHAREDLIB="#"
 fi
 
 AC_SUBST(ADA_SHAREDLIB)

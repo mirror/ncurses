@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.14 2010/06/19 20:05:56 tom Exp $
+dnl $Id: configure.in,v 1.15 2010/06/26 21:27:05 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.14 $)
+AC_REVISION($Revision: 1.15 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -594,7 +594,9 @@ AC_SUBST(EXTERNAL_TREE)
 
 AC_OUTPUT( \
 	$SUB_MAKEFILES \
-	Makefile,,[
+	Makefile,[
+$AWK -f $srcdir/mk-1st.awk <$srcdir/src/modules >>src/Makefile
+],[
 ### Special initialization commands, used to pass information from the
 ### configuration-run into config.status
 
