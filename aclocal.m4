@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.536 2010/06/26 21:38:51 tom Exp $
+dnl $Id: aclocal.m4,v 1.537 2010/07/03 21:15:56 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1873,6 +1873,7 @@ case $cf_gnat_version in
      cf_cv_prog_gnat_correct=no
      ;;
 esac
+
 case $cf_gnat_version in
   3.[[1-9]]*|[[4-9]].*)
       cf_compile_generics=generics
@@ -1883,8 +1884,22 @@ case $cf_gnat_version in
       ;;
 esac
 
+case $cf_gnat_version in
+  3.[[0-9]]*)
+    USE_OLD_MAKERULES=""
+    USE_GNAT_PROJECTS="#"
+    ;;
+  *)
+    USE_OLD_MAKERULES="#"
+    USE_GNAT_PROJECTS=""
+    ;;
+esac
+
 AC_SUBST(cf_compile_generics)
 AC_SUBST(cf_generic_objects)
+
+AC_SUBST(USE_OLD_MAKERULES)
+AC_SUBST(USE_GNAT_PROJECTS)
 ])
 dnl ---------------------------------------------------------------------------
 dnl CF_GNU_SOURCE version: 6 updated: 2005/07/09 13:23:07

@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.46 2010/06/26 21:28:56 tom Exp $
+#  $Id: Makefile.in,v 1.51 2010/07/03 22:59:03 tom Exp $
 #
 .SUFFIXES:
 
@@ -45,6 +45,7 @@ prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= ${exec_prefix}/lib
 
+LIBDIR		= $(DESTDIR)$(libdir)
 ADA_INCLUDE	= $(DESTDIR)@ADA_INCLUDE@
 ADA_OBJECTS	= $(DESTDIR)@ADA_OBJECTS@
 
@@ -104,8 +105,9 @@ ADAMAKEFLAGS    = \
 CARGS           = -cargs $(ADAFLAGS)
 LARGS           =
 
-MY_STATIC_LIB	= $(BUILD_DIR_LIB)/lib$(LIB_NAME).a
-MY_SHARED_LIB	= $(BUILD_DIR_LIB)/$(SONAME)
+STATIC_LIBNAME	= lib$(LIB_NAME).a
+SHARED_LIBNAME	= $(SONAME)
+SHARED_SYMLINK	= lib$(LIB_NAME).so
 
 ALIB            = @cf_ada_package@
 ABASE           = $(ALIB)-curses
@@ -165,31 +167,35 @@ GENOBJS=$(ABASE)-menus-menu_user_data.o			\
 	$(ABASE)-text_io-modular_io.o			\
 	$(ABASE)-text_io-complex_io.o
 
-all ::  $(MY_STATIC_LIB)
+all ::  $(BUILD_DIR_LIB)/$(STATIC_LIBNAME)
 	@echo done
 
+$(ADA_INCLUDE) \
+$(ADA_OBJECTS) \
+$(LIBDIR) \
 $(BUILD_DIR_LIB) :
 	mkdir -p $@
-
-$(MY_STATIC_LIB) :: $(BUILD_DIR_LIB) $(LIBOBJS) @cf_generic_objects@
-	$(AR) $(ARFLAGS) $@ $(LIBOBJS) @cf_generic_objects@
 
 sources :
 	@echo made $@
 
 libs \
 install \
-install.libs :: $(MY_STATIC_LIB)
-	@echo made $(MY_STATIC_LIB)
+install.libs :: \
+		$(BUILD_DIR_LIB)/$(STATIC_LIBNAME)
+	@echo made $(STATIC_LIBNAME)
 
 install \
-install.libs :: $(MY_STATIC_LIB)
-	@$(INSTALL_LIB) $(MY_STATIC_LIB) $(ADA_OBJECTS)
-	@echo made $@
+install.libs :: \
+		$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) \
+		$(ADA_OBJECTS)
+	@$(INSTALL_LIB) \
+		$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) \
+		$(ADA_OBJECTS)
 
 uninstall \
 uninstall.libs ::
-	@echo made $@
+	@rm -f $(ADA_OBJECTS)/$(STATIC_LIBNAME)
 
 mostlyclean ::
 	rm -f *.o *.ali b_t*.* *.s $(PROGS) a.out core b_*_test.c *.xr[bs] *.a
@@ -209,7 +215,11 @@ $(ABASE)-trace.adb : $(srcdir)/$(ABASE)-trace.adb_p
 	$(ADAPREP) -DADA_TRACE=@ADA_TRACE@ -DPRAGMA_UNREF=@PRAGMA_UNREF@ $(srcdir)/$(ABASE)-trace.adb_p $@
 
 ###############################################################################
-# in-progress rewrite to use gnatmake library project files
+
+@USE_OLD_MAKERULES@$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) :: \
+@USE_OLD_MAKERULES@		$(BUILD_DIR_LIB) \
+@USE_OLD_MAKERULES@		$(LIBOBJS) @cf_generic_objects@
+@USE_OLD_MAKERULES@	$(AR) $(ARFLAGS) $@ $(LIBOBJS) @cf_generic_objects@
 
 $(BUILD_DIR)/static-ali : ; mkdir -p $@
 $(BUILD_DIR)/static-obj : ; mkdir -p $@
@@ -219,8 +229,25 @@ STATIC_DIRS = \
 	$(BUILD_DIR)/static-ali \
 	$(BUILD_DIR)/static-obj
 
-test_make :: $(ABASE)-trace.adb $(STATIC_DIRS)
-	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
+@USE_GNAT_PROJECTS@$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) :: \
+@USE_GNAT_PROJECTS@		$(ABASE)-trace.adb \
+@USE_GNAT_PROJECTS@		$(STATIC_DIRS)
+@USE_GNAT_PROJECTS@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
+@USE_GNAT_PROJECTS@
+@USE_GNAT_PROJECTS@install \
+@USE_GNAT_PROJECTS@install.libs :: \
+@USE_GNAT_PROJECTS@		$(ADA_OBJECTS)
+@USE_GNAT_PROJECTS@	$(INSTALL_LIB) \
+@USE_GNAT_PROJECTS@		$(BUILD_DIR)/static-ali/*.ali \
+@USE_GNAT_PROJECTS@		$(ADA_OBJECTS)
+
+uninstall \
+uninstall.libs ::
+	@rm -f $(ADA_OBJECTS)/$(STATIC_LIBNAME)
+
+@USE_GNAT_PROJECTS@uninstall \
+@USE_GNAT_PROJECTS@uninstall.libs ::
+@USE_GNAT_PROJECTS@	@$(SHELL) -c 'for name in $(BUILD_DIR)/static-ali/*.ali ; do rm -f $(ADA_OBJECTS)/`basename $$name`; done'
 
 $(BUILD_DIR)/dynamic-ali : ; mkdir -p $@
 $(BUILD_DIR)/dynamic-obj : ; mkdir -p $@
@@ -230,42 +257,46 @@ SHARED_DIRS = \
 	$(BUILD_DIR)/dynamic-ali \
 	$(BUILD_DIR)/dynamic-obj
 
-@MAKE_ADA_SHAREDLIB@test_make :: $(ABASE)-trace.adb $(SHARED_DIRS)
+@MAKE_ADA_SHAREDLIB@all \
+@MAKE_ADA_SHAREDLIB@$(BUILD_DIR_LIB)/$(SHARED_LIBNAME) :: $(ABASE)-trace.adb $(SHARED_DIRS)
 @MAKE_ADA_SHAREDLIB@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
 
-test_install ::
-	install --directory $(ADA_INCLUDE)
+install \
+install.libs :: $(ADA_INCLUDE)
 	$(INSTALL_LIB) \
 		$(SOURCE_DIR_SRC)/*.ad[sb] \
+		$(ADA_INCLUDE)
+
+install \
+install.libs :: $(ADA_INCLUDE)
+	$(INSTALL_LIB) \
 		$(GENERATED_SOURCES) \
 		$(ADA_INCLUDE)
-	install --directory $(ADA_OBJECTS)
-	$(INSTALL_LIB) \
-		$(MY_STATIC_LIB) \
-		$(DESTDIR)/usr/lib
 
-@MAKE_ADA_SHAREDLIB@test_install ::
+uninstall \
+uninstall.libs ::
+	$(SHELL) -c 'for name in $(SOURCE_DIR_SRC)/*.ad[sb] $(GENERATED_SOURCES); do rm -f $(ADA_INCLUDE)/`basename $$name`; done'
+
+@MAKE_ADA_SHAREDLIB@install \
+@MAKE_ADA_SHAREDLIB@install.libs :: $(ADA_OBJECTS)
 @MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
 @MAKE_ADA_SHAREDLIB@		$(BUILD_DIR)/dynamic-ali/* \
 @MAKE_ADA_SHAREDLIB@		$(ADA_OBJECTS)
 @MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
-@MAKE_ADA_SHAREDLIB@		$(BUILD_DIR_LIB)/$(SONAME) \
-@MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib
-@MAKE_ADA_SHAREDLIB@	cd $(DESTDIR)/usr/lib && ln -s $(SONAME) lib$(LIB_NAME).so
+@MAKE_ADA_SHAREDLIB@		$(BUILD_DIR_LIB)/$(SHARED_LIBNAME) \
+@MAKE_ADA_SHAREDLIB@		$(LIBDIR)
+@MAKE_ADA_SHAREDLIB@	cd $(LIBDIR) && ln -s $(SHARED_LIBNAME) $(SHARED_SYMLINK)
+@MAKE_ADA_SHAREDLIB@
+@MAKE_ADA_SHAREDLIB@uninstall \
+@MAKE_ADA_SHAREDLIB@uninstall.libs ::
+@MAKE_ADA_SHAREDLIB@	$(SHELL) -c 'for name in $(BUILD_DIR)/dynamic-ali/* ; do rm -f $(ADA_OBJECTS)/`basename $$name`; done'
+@MAKE_ADA_SHAREDLIB@
+@MAKE_ADA_SHAREDLIB@uninstall \
+@MAKE_ADA_SHAREDLIB@uninstall.libs ::
+@MAKE_ADA_SHAREDLIB@	rm -f $(LIBDIR)/$(SHARED_SYMLINK)
+@MAKE_ADA_SHAREDLIB@	rm -f $(LIBDIR)/$(SHARED_LIBNAME)
 
-test_uninstall ::
-	rm -rf \
-		$(ADA_INCLUDE) \
-		$(ADA_OBJECTS) \
-	rm -f \
-		$(DESTDIR)/usr/lib/lib$(LIB_NAME).a
-
-@MAKE_ADA_SHAREDLIB@test_uninstall ::
-@MAKE_ADA_SHAREDLIB@	rm -f \
-@MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib/$(SONAME) \
-@MAKE_ADA_SHAREDLIB@		$(DESTDIR)/usr/lib/lib$(LIB_NAME).so
-
-test_clean:
+clean ::
 	rm -rf $(BUILD_DIR)/*-ali
 	rm -rf $(BUILD_DIR)/*-obj
 	rm -rf $(BUILD_DIR_LIB)

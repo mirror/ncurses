@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.38 2010/05/01 22:08:03 tom Exp $
+ * $Id: ditto.c,v 1.39 2010/07/03 19:41:04 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -50,10 +50,6 @@
 
 #ifdef USE_XTERM_PTY
 #include USE_OPENPTY_HEADER
-#endif
-
-#ifdef HAVE_VFORK_H
-#include <vfork.h>
 #endif
 
 #define MAX_FIFO 256
@@ -164,7 +160,7 @@ open_tty(char *path)
 	failed(slave_name);
     }
     sprintf(s_option, "-S%s/%d", slave_name, aslave);
-    if (vfork()) {
+    if (fork()) {
 	execlp("xterm", "xterm", s_option, "-title", path, (char *) 0);
 	_exit(0);
     }
