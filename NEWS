@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1564 2010/07/03 22:20:55 tom Exp $
+-- $Id: NEWS,v 1.1566 2010/07/17 23:00:18 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100717
+	* add hard-reset for rs2 to wsvt25 to help ensure that reset ends
+	  the alternate character set (patch by Nicholas Marriott)
+	+ remove tar-copy.sh and related configure/Makefile chunks, since the
+	  Ada95 binding is now installed using rules in Ada95/src.
 
 20100703
 	+ continue integrating changes to use gnatmake project files in Ada95

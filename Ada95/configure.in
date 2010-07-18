@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.16 2010/07/03 21:18:11 tom Exp $
+dnl $Id: configure.in,v 1.17 2010/07/17 19:56:25 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.16 $)
+AC_REVISION($Revision: 1.17 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -567,17 +567,6 @@ AC_SUBST(TEST_LIBS2)
 dnl for separate build, this is good enough for "sh $(top_srcdir)/misc/shlib"
 NCURSES_SHLIB2="sh -c"
 AC_SUBST(NCURSES_SHLIB2)
-
-dnl ditto for "$(top_srcdir)/tar-copy.sh"
-for cf_path in . .. ../..
-do
-	if test -f $cf_path/tar-copy.sh
-	then
-		NCURSES_COPY2=`echo 'sh $(top_srcdir)/'$cf_path'/tar-copy.sh' | sed -e 's,/./,/,'`
-		break
-	fi
-done
-AC_SUBST(NCURSES_COPY2)
 
 ADA_SUBDIRS="include gen src samples"
 for cf_dir in $ADA_SUBDIRS

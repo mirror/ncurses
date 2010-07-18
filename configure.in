@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.500 2010/07/03 21:17:32 tom Exp $
+dnl $Id: configure.in,v 1.501 2010/07/17 19:56:41 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.500 $)
+AC_REVISION($Revision: 1.501 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1839,9 +1839,6 @@ CF_DIRS_TO_MAKE
 # symbols that differ when compiling Ada95 by itself.
 NCURSES_SHLIB2='sh $(top_srcdir)/misc/shlib'
 AC_SUBST(NCURSES_SHLIB2)
-
-NCURSES_COPY2='sh $(top_srcdir)/tar-copy.sh'
-AC_SUBST(NCURSES_COPY2)
 
 # values to use as strings
 AC_DEFINE_UNQUOTED(NCURSES_PATHSEP,'$PATH_SEPARATOR')

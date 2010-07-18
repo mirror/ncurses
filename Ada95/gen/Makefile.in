@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.67 2010/06/12 16:32:02 tom Exp $
+#  $Id: Makefile.in,v 1.68 2010/07/17 19:56:15 tom Exp $
 #
 .SUFFIXES:
 
@@ -44,9 +44,6 @@ prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 bindir		= @bindir@
 includedir	= @includedir@
-
-ADA_INCLUDE	= $(DESTDIR)@ADA_INCLUDE@
-ADA_OBJECTS	= $(DESTDIR)@ADA_OBJECTS@
 
 INSTALL		= @INSTALL@
 INSTALL_PROG	= @INSTALL_PROGRAM@
@@ -85,7 +82,6 @@ M4FLAGS		= -DNCURSES_EXT_FUNCS=@NCURSES_EXT_FUNCS@
 ADACURSES_CONFIG = adacurses@DFT_ARG_SUFFIX@-config
 
 WRAPPER		= @NCURSES_SHLIB2@
-TAR_COPY	= @NCURSES_COPY2@
 
 PROG_GENERATE	= ./generate$x
 GENERATE	= $(PROG_GENERATE) '@DFT_ARG_SUFFIX@'
@@ -170,40 +166,12 @@ libs :	$(GEN_TARGETS)
 
 sources:
 
-$(DESTDIR)$(bindir) \
-$(ADA_INCLUDE) \
-$(ADA_OBJECTS) :
+$(DESTDIR)$(bindir) :
 	mkdir -p $@
-
-install \
-install.libs :: $(ADA_INCLUDE)
-	@echo installing package $(ALIB) in $(ADA_INCLUDE)
-	@$(TAR_COPY) '$(ALIB)*.ad?' $(ADA_SRCDIR) $(ADA_INCLUDE)
-	@$(TAR_COPY) '$(ALIB)[-.]*.ad?' $(ADA_SRCDIR) $(ADA_INCLUDE)
-	@test $(srcdir) != ./ && $(TAR_COPY) '$(ALIB)*.ad?' $(srcdir)/../src $(ADA_INCLUDE)
-	@test $(srcdir) != ./ && $(TAR_COPY) '$(ALIB)[-.]*.ad?' $(srcdir)/../src $(ADA_INCLUDE)
-
-install \
-install.libs :: $(ADA_OBJECTS)
-	@echo installing package $(ALIB) in $(ADA_OBJECTS)
-	@-chmod a-wx $(ADA_SRCDIR)/*.ali
-	@$(TAR_COPY) '$(ALIB)*.ali' $(ADA_SRCDIR) $(ADA_OBJECTS)
-	@$(TAR_COPY) '$(ALIB)[-.]*.ali' $(ADA_SRCDIR) $(ADA_OBJECTS)
-	@-chmod u+x $(ADA_SRCDIR)/*.ali
 
 install \
 install.libs :: $(DESTDIR)$(bindir) $(ADACURSES_CONFIG)
 	$(INSTALL_PROG) $(ADACURSES_CONFIG) $(DESTDIR)$(bindir)/$(ADACURSES_CONFIG)
-
-uninstall \
-uninstall.libs ::
-	@echo removing package $(ALIB) from $(ADA_INCLUDE)
-	-@cd $(ADA_INCLUDE) && rm -f $(ALIB)[-.]*
-
-uninstall \
-uninstall.libs ::
-	@echo removing package $(ALIB) from $(ADA_OBJECTS)
-	-@cd $(ADA_OBJECTS) && rm -f $(ALIB)[-.]*
 
 uninstall \
 uninstall.libs ::

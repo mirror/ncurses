@@ -989,7 +989,6 @@
 ./progs/tput.c
 ./progs/transform.c
 ./progs/tset.c
-./tar-copy.sh
 ./test/Makefile.in
 ./test/README
 ./test/aclocal.m4

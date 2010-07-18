@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.363 $
-#	$Date: 2010/06/12 14:39:51 $
+#	$Revision: 1.364 $
+#	$Date: 2010/07/17 22:55:06 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1817,8 +1817,8 @@ wsvt25|NetBSD wscons in 25 line DEC VT220 mode,
 	is2=\E[r\E[25;1H, kend=\E[8~, kf1=\E[11~, kf10=\E[21~,
 	kf11=\E[23~, kf12=\E[24~, kf2=\E[12~, kf3=\E[13~,
 	kf4=\E[14~, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~,
-	kf9=\E[20~, khome=\E[7~, op=\E[m, setab=\E[4%p1%dm,
-	setaf=\E[3%p1%dm, use=vt220,
+	kf9=\E[20~, khome=\E[7~, op=\E[m, rs1=\Ec,
+	setab=\E[4%p1%dm, setaf=\E[3%p1%dm, use=vt220,
 
 wsvt25m|NetBSD wscons in 25 line DEC VT220 mode with Meta,
 	km, use=wsvt25,
@@ -22264,6 +22264,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2010-06-12
 #	* add mlterm+256color entry -TD
+#
+# 2010-07-17
+#	* add hard-reset for rs2 to wsvt25 to help ensure that reset ends
+#	  the alternate character set (patch by Nicholas Marriott)
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
