@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.83 2010/05/15 19:14:44 tom Exp $
+# $Id: mk-1st.awk,v 1.84 2010/07/24 21:12:27 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -40,8 +40,9 @@
 #	subset		  ("none", "base", "base+ext_funcs" or "termlib", etc.)
 #	ShlibVer	  ("rel", "abi" or "auto", to augment DoLinks variable)
 #	ShlibVerInfix ("yes" or "no", determines location of version #)
-#   TermlibRoot   ("tinfo" or other root for libterm.so)
-#   TermlibSuffix (".so" or other suffix for libterm.so)
+#	SymLink		  ("ln -s", etc)
+#	TermlibRoot	  ("tinfo" or other root for libterm.so)
+#	TermlibSuffix (".so" or other suffix for libterm.so)
 #	ReLink		  ("yes", or "no", flag to rebuild shared libs on install)
 #	DoLinks		  ("yes", "reverse" or "no", flag to add symbolic links)
 #	rmSoLocs	  ("yes" or "no", flag to add extra clean target)
@@ -116,7 +117,9 @@ function end_name_of(a_name) {
 	}
 function symlink(src,dst) {
 		if ( src != dst ) {
-			printf "rm -f %s; ", dst
+			if ( SymLink !~ /.*-f.*/ ) {
+				printf "rm -f %s; ", dst
+			}
 			printf "$(LN_S) %s %s; ", src, dst
 		}
 	}
@@ -241,6 +244,7 @@ BEGIN	{
 					printf "#  subset:        %s\n", subset 
 					printf "#  ShlibVer:      %s\n", ShlibVer 
 					printf "#  ShlibVerInfix: %s\n", ShlibVerInfix 
+					printf "#  SymLink:       %s\n", SymLink 
 					printf "#  TermlibRoot:   %s\n", TermlibRoot 
 					printf "#  TermlibSuffix: %s\n", TermlibSuffix 
 					printf "#  ReLink:        %s\n", ReLink 
@@ -336,11 +340,15 @@ END	{
 					if ( ShlibVer == "cygdll" ) {
 						ovr_name = sprintf("libcurses%s.a", suffix)
 						printf "\t@echo linking %s to %s\n", imp_name, ovr_name
-						printf "\tcd $(DESTDIR)$(libdir) && (rm -f %s; $(LN_S) %s %s; )\n", ovr_name, imp_name, ovr_name
+						printf "\tcd $(DESTDIR)$(libdir) && ("
+						symlink(imp_name, ovr_name)
+						printf ")\n"
 					} else {
 						ovr_name = sprintf("libcurses%s", suffix)
 						printf "\t@echo linking %s to %s\n", end_name, ovr_name
-						printf "\tcd $(DESTDIR)$(libdir) && (rm -f %s; $(LN_S) %s %s; )\n", ovr_name, end_name, ovr_name
+						printf "\tcd $(DESTDIR)$(libdir) && ("
+						symlink(end_name, ovr_name)
+						printf ")\n"
 					}
 				}
 				if ( ldconfig != "" && ldconfig != ":" ) {
@@ -427,7 +435,9 @@ END	{
 				{
 					printf "\t@echo linking libcurses.a to libncurses.a\n"
 					printf "\t-@rm -f $(DESTDIR)$(libdir)/libcurses.a\n"
-					printf "\t(cd $(DESTDIR)$(libdir) && $(LN_S) libncurses.a libcurses.a)\n"
+					printf "\t(cd $(DESTDIR)$(libdir) && "
+					symlink("libncurses.a" "libcurses.a")
+					printf ")\n"
 				}
 				printf "\t$(RANLIB) $(DESTDIR)$(libdir)/%s\n", lib_name
 				if ( host == "vxworks" )

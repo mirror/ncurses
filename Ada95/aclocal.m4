@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.14 2010/06/26 21:39:07 tom Exp $
+dnl $Id: aclocal.m4,v 1.15 2010/07/24 21:33:12 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -268,7 +268,7 @@ dnl $1 = libraries to add, with the "-l", etc.
 dnl $2 = variable to update (default $LIBS)
 AC_DEFUN([CF_ADD_LIBS],[ifelse($2,,LIBS,[$2])="$1 [$]ifelse($2,,LIBS,[$2])"])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_SUBDIR_PATH version: 2 updated: 2007/07/29 10:12:59
+dnl CF_ADD_SUBDIR_PATH version: 3 updated: 2010/07/03 20:58:12
 dnl ------------------
 dnl Append to a search-list for a nonstandard header/lib-file
 dnl	$1 = the variable to return as result
@@ -280,7 +280,7 @@ AC_DEFUN([CF_ADD_SUBDIR_PATH],
 [
 test "$4" != "$5" && \
 test -d "$4" && \
-ifelse([$5],NONE,,[(test $5 = NONE || test -d $5) &&]) {
+ifelse([$5],NONE,,[(test $5 = NONE || test "$4" != "$5") &&]) {
 	test -n "$verbose" && echo "	... testing for $3-directories under $4"
 	test -d $4/$3 &&          $1="[$]$1 $4/$3"
 	test -d $4/$3/$2 &&       $1="[$]$1 $4/$3/$2"
@@ -1127,7 +1127,7 @@ fi
 rm -f conftest*
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_VERSION version: 13 updated: 2010/06/19 15:22:18
+dnl CF_GNAT_VERSION version: 14 updated: 2010/07/03 17:45:09
 dnl ---------------
 dnl Verify version of GNAT.
 AC_DEFUN([CF_GNAT_VERSION],
@@ -1145,6 +1145,7 @@ case $cf_gnat_version in
      cf_cv_prog_gnat_correct=no
      ;;
 esac
+
 case $cf_gnat_version in
   3.[[1-9]]*|[[4-9]].*)
       cf_compile_generics=generics
@@ -1155,8 +1156,22 @@ case $cf_gnat_version in
       ;;
 esac
 
+case $cf_gnat_version in
+  3.[[0-9]]*)
+    USE_OLD_MAKERULES=""
+    USE_GNAT_PROJECTS="#"
+    ;;
+  *)
+    USE_OLD_MAKERULES="#"
+    USE_GNAT_PROJECTS=""
+    ;;
+esac
+
 AC_SUBST(cf_compile_generics)
 AC_SUBST(cf_generic_objects)
+
+AC_SUBST(USE_OLD_MAKERULES)
+AC_SUBST(USE_GNAT_PROJECTS)
 ])
 dnl ---------------------------------------------------------------------------
 dnl CF_GNU_SOURCE version: 6 updated: 2005/07/09 13:23:07
@@ -1967,10 +1982,10 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 7 updated: 2010/06/20 09:24:28
+dnl CF_NCURSES_CONFIG version: 8 updated: 2010/07/08 05:17:30
 dnl -----------------
 dnl Tie together the configure-script macros for ncurses.
-dnl Prefer the "-config" script from ncurses 5.6, to simplify analysis.
+dnl Prefer the "-config" script from ncurses 6.x, to simplify analysis.
 dnl Allow that to be overridden using the $NCURSES_CONFIG environment variable.
 dnl
 dnl $1 is the root library name (default: "ncurses")
@@ -2604,6 +2619,28 @@ end conftest;],[cf_cv_prog_gnat_correct=yes],[cf_cv_prog_gnat_correct=no])
 fi
 
 AC_SUBST(cf_ada_make)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_PROG_LN_S version: 1 updated: 2010/07/24 17:12:40
+dnl ------------
+dnl Combine checks for "ln -s" and "ln -sf", updating $LN_S to include "-f"
+dnl option if it is supported.
+AC_DEFUN([CF_PROG_LN_S],[
+AC_PROG_LN_S
+AC_MSG_CHECKING(if $LN_S -f options work)
+
+rm -f conf$$.src conf$$dst
+echo >conf$$.dst
+echo first >conf$$.src
+if $LN_S -f conf$$.src conf$$.dst 2>/dev/null; then
+	cf_prog_ln_sf=yes
+else
+	cf_prog_ln_sf=no
+fi
+
+AC_MSG_RESULT($cf_prog_ln_sf)
+
+test "$cf_prog_ln_sf" = yes && LN_S="$LN_S -f"
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_REMOVE_DEFINE version: 3 updated: 2010/01/09 11:05:50

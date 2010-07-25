@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_unget_wch.c,v 1.13 2009/10/24 21:52:49 tom Exp $")
+MODULE_ID("$Id: lib_unget_wch.c,v 1.14 2010/07/24 11:35:21 tom Exp $")
 
 /*
  * Wrapper for wcrtomb() which obtains the length needed for the given
@@ -88,7 +88,7 @@ NCURSES_SP_NAME(unget_wch) (NCURSES_SP_DCLx const wchar_t wch)
 
 	    for (n = (int) (length - 1); n >= 0; --n) {
 		if (NCURSES_SP_NAME(ungetch) (NCURSES_SP_ARGx
-		    UChar(string[n])) !=OK) {
+					      UChar(string[n])) !=OK) {
 		    result = ERR;
 		    break;
 		}

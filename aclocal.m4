@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.537 2010/07/03 21:15:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.538 2010/07/24 21:20:39 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -291,7 +291,7 @@ dnl $1 = libraries to add, with the "-l", etc.
 dnl $2 = variable to update (default $LIBS)
 AC_DEFUN([CF_ADD_LIBS],[ifelse($2,,LIBS,[$2])="$1 [$]ifelse($2,,LIBS,[$2])"])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_SUBDIR_PATH version: 2 updated: 2007/07/29 10:12:59
+dnl CF_ADD_SUBDIR_PATH version: 3 updated: 2010/07/03 20:58:12
 dnl ------------------
 dnl Append to a search-list for a nonstandard header/lib-file
 dnl	$1 = the variable to return as result
@@ -303,7 +303,7 @@ AC_DEFUN([CF_ADD_SUBDIR_PATH],
 [
 test "$4" != "$5" && \
 test -d "$4" && \
-ifelse([$5],NONE,,[(test $5 = NONE || test -d $5) &&]) {
+ifelse([$5],NONE,,[(test $5 = NONE || test "$4" != "$5") &&]) {
 	test -n "$verbose" && echo "	... testing for $3-directories under $4"
 	test -d $4/$3 &&          $1="[$]$1 $4/$3"
 	test -d $4/$3/$2 &&       $1="[$]$1 $4/$3/$2"
@@ -1057,7 +1057,7 @@ done
 AC_SUBST(DIRS_TO_MAKE)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_DISABLE_LEAKS version: 5 updated: 2010/03/13 15:14:55
+dnl CF_DISABLE_LEAKS version: 6 updated: 2010/07/23 04:14:32
 dnl ----------------
 dnl Combine no-leak checks with the libraries or tools that are used for the
 dnl checks.
@@ -1076,6 +1076,7 @@ AC_MSG_RESULT($with_no_leaks)
 
 if test "$with_no_leaks" = yes ; then
 	AC_DEFINE(NO_LEAKS)
+	AC_DEFINE(YY_NO_LEAKS)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -1855,7 +1856,7 @@ fi
 rm -f conftest*
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_VERSION version: 13 updated: 2010/06/19 15:22:18
+dnl CF_GNAT_VERSION version: 14 updated: 2010/07/03 17:45:09
 dnl ---------------
 dnl Verify version of GNAT.
 AC_DEFUN([CF_GNAT_VERSION],
@@ -2571,7 +2572,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 56 updated: 2010/05/15 15:19:46
+dnl CF_LIB_RULES version: 57 updated: 2010/07/24 17:12:40
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -2765,6 +2766,7 @@ do
 				prefix=$cf_prefix \
 				suffix=$cf_suffix \
 				subset=$cf_subset \
+				SymLink="$LN_S" \
 				TermlibRoot=$TINFO_NAME \
 				TermlibSuffix=$TINFO_SUFFIX \
 				ShlibVer=$cf_cv_shlib_version \
@@ -3491,7 +3493,7 @@ AC_MSG_RESULT($MANPAGE_RENAMES)
 AC_SUBST(MANPAGE_RENAMES)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_SYMLINKS version: 4 updated: 2003/12/13 18:01:58
+dnl CF_MANPAGE_SYMLINKS version: 5 updated: 2010/07/24 17:12:40
 dnl -------------------
 dnl Some people expect each tool to make all aliases for manpages in the
 dnl man-directory.  This accommodates the older, less-capable implementations
@@ -3507,11 +3509,14 @@ AC_ARG_WITH(manpage-aliases,
 
 AC_MSG_RESULT($MANPAGE_ALIASES)
 
-if test "$LN_S" = "ln -s"; then
+case "x$LN_S" in #(vi
+xln*) #(vi
 	cf_use_symlinks=yes
-else
+	;;
+*)
 	cf_use_symlinks=no
-fi
+	;;
+esac
 
 MANPAGE_SYMLINKS=no
 if test "$MANPAGE_ALIASES" = yes ; then
@@ -3550,7 +3555,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 37 updated: 2010/05/15 16:05:34
+dnl CF_MAN_PAGES version: 38 updated: 2010/07/24 17:12:40
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -3593,7 +3598,7 @@ case "$MANPAGE_FORMAT" in #(vi
 	cf_so_strip="Z"
 	cf_compress=compress
   ;;
-*gzip*) #(vi
+*gzip*)
 	cf_so_strip="gz"
 	cf_compress=gzip
   ;;
@@ -3808,8 +3813,21 @@ cat >>$cf_edit_man <<CF_EOF
 							fi
 						fi
 						echo .. \$verb alias \$cf_alias\${suffix}
+CF_EOF
+case "x$LN_S" in #(vi
+*-f) #(vi
+cat >>$cf_edit_man <<CF_EOF
+						$LN_S \$cf_target \$cf_alias\${suffix}
+CF_EOF
+	;;
+*)
+cat >>$cf_edit_man <<CF_EOF
 						rm -f \$cf_alias\${suffix}
 						$LN_S \$cf_target \$cf_alias\${suffix}
+CF_EOF
+	;;
+esac
+cat >>$cf_edit_man <<CF_EOF
 					elif test "\$cf_target" != "\$cf_alias\${suffix}" ; then
 						echo ".so \$cf_source" >\$TMP
 CF_EOF
@@ -4473,6 +4491,28 @@ AC_DEFUN([CF_PROG_LINT],
 [
 AC_CHECK_PROGS(LINT, tdlint lint alint splint lclint)
 AC_SUBST(LINT_OPTS)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_PROG_LN_S version: 1 updated: 2010/07/24 17:12:40
+dnl ------------
+dnl Combine checks for "ln -s" and "ln -sf", updating $LN_S to include "-f"
+dnl option if it is supported.
+AC_DEFUN([CF_PROG_LN_S],[
+AC_PROG_LN_S
+AC_MSG_CHECKING(if $LN_S -f options work)
+
+rm -f conf$$.src conf$$dst
+echo >conf$$.dst
+echo first >conf$$.src
+if $LN_S -f conf$$.src conf$$.dst 2>/dev/null; then
+	cf_prog_ln_sf=yes
+else
+	cf_prog_ln_sf=no
+fi
+
+AC_MSG_RESULT($cf_prog_ln_sf)
+
+test "$cf_prog_ln_sf" = yes && LN_S="$LN_S -f"
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_REGEX version: 7 updated: 2010/05/29 16:31:02

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.359 2010/05/01 22:39:06 tom Exp $
+$Id: ncurses.c,v 1.360 2010/07/24 18:04:58 tom Exp $
 
 ***************************************************************************/
 
@@ -2540,6 +2540,8 @@ color_edit(void)
 	case 'm':
 	    endwin();
 	    main_menu(FALSE);
+	    for (i = 0; i < max_colors; i++)
+		init_pair((short) i, (short) COLOR_WHITE, (short) i);
 	    refresh();
 	    break;
 

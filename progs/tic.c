@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.141 2010/05/01 21:17:23 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.142 2010/07/24 22:09:28 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -1440,6 +1440,11 @@ check_termtype(TERMTYPE *tp, bool literal)
      */
     ANDMISSING(change_scroll_region, save_cursor);
     ANDMISSING(change_scroll_region, restore_cursor);
+
+    /*
+     * If we can clear tabs, we should be able to initialize them.
+     */
+    ANDMISSING(clear_all_tabs, set_tab);
 
     if (PRESENT(set_attributes)) {
 	char *zero = 0;
