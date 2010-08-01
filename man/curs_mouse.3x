@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.35 2010/01/30 20:58:50 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.36 2010/07/31 14:43:29 tom Exp $
 .TH curs_mouse 3X ""
 .na
 .hy 0
@@ -36,7 +36,7 @@
 \fBgetmouse\fR, \fBungetmouse\fR,
 \fBmousemask\fR, \fBwenclose\fR,
 \fBmouse_trafo\fR, \fBwmouse_trafo\fR,
-\fBmouseinterval\fR - mouse interface through curses
+\fBmouseinterval\fR \- mouse interface through curses
 .ad
 .hy
 .SH SYNOPSIS
@@ -200,7 +200,7 @@ second) that can elapse between press and release events for them to
 be recognized as a click.
 Use \fBmouseinterval(0)\fR to disable click resolution.
 This function returns the previous interval value.
-Use \fBmouseinterval(-1)\fR to obtain the interval without altering it.
+Use \fBmouseinterval(\-1)\fR to obtain the interval without altering it.
 The default is one sixth of a second.
 .PP
 The \fBhas_mouse\fP function returns TRUE if the mouse driver has been

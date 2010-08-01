@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2001,2005 Free Software Foundation, Inc.                        *
+  * Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.                        *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_kernel.3x,v 1.15 2005/05/15 16:18:13 tom Exp @
+  * @Id: curs_kernel.3x,v 1.16 2010/07/31 16:11:27 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -72,7 +72,7 @@
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
        The  following  routines  give low-level access to various
-       <STRONG>curses</STRONG> capabilities.  Theses routines typically  are  used
+       <STRONG>curses</STRONG> capabilities.  These routines  typically  are  used
        inside library routines.
 
        The  <STRONG>def_prog_mode</STRONG>  and  <STRONG>def_shell_mode</STRONG>  routines save the
@@ -149,42 +149,42 @@
 
               <STRONG>def_prog_mode</STRONG>, <STRONG>def_shell_mode</STRONG>, <STRONG>reset_prog_mode</STRONG>, <STRONG>re-</STRONG>
               <STRONG>set_shell_mode</STRONG>
-                   return an error if the terminal was  not  ini-
-                   tialized,  or  if  the  I/O call to obtain the
+                   return  an  error if the terminal was not ini-
+                   tialized, or if the I/O  call  to  obtain  the
                    terminal settings fails.
 
               <STRONG>ripoffline</STRONG>
-                   returns an error  if  the  maximum  number  of
-                   ripped-off  lines exceeds the maximum (NRIPS =
+                   returns  an  error  if  the  maximum number of
+                   ripped-off lines exceeds the maximum (NRIPS  =
                    5).
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       Note that <STRONG>getsyx</STRONG> is a macro, so <STRONG>&amp;</STRONG> is not necessary  before
+       Note  that <STRONG>getsyx</STRONG> is a macro, so <STRONG>&amp;</STRONG> is not necessary before
        the variables <EM>y</EM> and <EM>x</EM>.
 
-       Older  SVr4  man  pages  warn  that  the  return  value of
-       <STRONG>curs_set</STRONG> "is currently  incorrect".   This  implementation
-       gets  it  right, but it may be unwise to count on the cor-
+       Older SVr4  man  pages  warn  that  the  return  value  of
+       <STRONG>curs_set</STRONG>  "is  currently  incorrect".  This implementation
+       gets it right, but it may be unwise to count on  the  cor-
        rectness of the return value anywhere else.
 
-       Both ncurses and SVr4 will  call  <STRONG>curs_set</STRONG>  in  <STRONG>endwin</STRONG>  if
-       <STRONG>curs_set</STRONG>  has  been  called  to make the cursor other than
-       normal, i.e., either invisible or very visible.  There  is
-       no  way  for ncurses to determine the initial cursor state
+       Both  ncurses  and  SVr4  will  call <STRONG>curs_set</STRONG> in <STRONG>endwin</STRONG> if
+       <STRONG>curs_set</STRONG> has been called to make  the  cursor  other  than
+       normal,  i.e., either invisible or very visible.  There is
+       no way for ncurses to determine the initial  cursor  state
        to restore that.
 
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The functions <STRONG>setsyx</STRONG> and <STRONG>getsyx</STRONG> are not described  in  the
-       XSI  Curses standard, Issue 4.  All other functions are as
+       The  functions  <STRONG>setsyx</STRONG> and <STRONG>getsyx</STRONG> are not described in the
+       XSI Curses standard, Issue 4.  All other functions are  as
        described in XSI Curses.
 
        The SVr4 documentation describes <STRONG>setsyx</STRONG> and <STRONG>getsyx</STRONG> as hav-
-       ing  return  type  int.  This  is  misleading, as they are
-       macros with no documented semantics for the return  value.
+       ing return type int.  This  is  misleading,  as  they  are
+       macros with no documented semantics for the return value.
 
 
 </PRE>

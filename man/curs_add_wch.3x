@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2001-2002,2006 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2001-2006,2010 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_add_wch.3x,v 1.6 2006/12/24 15:22:22 tom Exp $
+.\" $Id: curs_add_wch.3x,v 1.7 2010/07/31 16:12:01 tom Exp $
 .TH curs_add_wch 3X ""
 .SH NAME
 \fBadd_wch\fP,
@@ -34,7 +34,7 @@
 \fBmvadd_wch\fP,
 \fBmvwadd_wch\fP,
 \fBecho_wchar\fP,
-\fBwecho_wchar\fP - add a complex character and rendition to a \fBcurses\fR window, then advance the cursor
+\fBwecho_wchar\fP \- add a complex character and rendition to a \fBcurses\fR window, then advance the cursor
 .SH SYNOPSIS
 .PP
 \fB#include <curses.h>\fP
@@ -64,7 +64,7 @@ which is then advanced.
 These functions perform
 wrapping and special-character processing as follows:
 .TP 5
--
+\-
 If \fIwch\fP refers to a spacing character,
 then any previous character at that location is removed.
 A new character specified by \fIwch\fP is
@@ -72,14 +72,14 @@ placed at that location with rendition specified by \fIwch\fP.
 The cursor then advances to
 the next spacing character on the screen.
 .TP 5
--
+\-
 If \fIwch\fP refers to a non-spacing character,
 all previous characters at that location are preserved.
 The non-spacing characters of \fIwch\fP
 are added to the spacing complex character,
 and the rendition specified by \fIwch\fP is ignored.
 .TP 5
--
+\-
 If the character part of \fIwch\fP is
 a tab, newline, backspace or other control character,
 the window is updated and the cursor moves as if \fBaddch\fR were called.

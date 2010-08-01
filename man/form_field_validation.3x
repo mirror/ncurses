@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2003,2006 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,10 +26,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_validation.3x,v 1.17 2008/12/14 19:22:16 juergen Exp $
+.\" $Id: form_field_validation.3x,v 1.18 2010/07/31 16:08:48 tom Exp $
 .TH form_field_validation 3X ""
 .SH NAME
-\fBform_field_validation\fR - data type validation for fields
+\fBform_field_validation\fR \- data type validation for fields
 .SH SYNOPSIS
 \fB#include <form.h>\fR
 .br
@@ -99,10 +99,10 @@ Regular expression data.  Requires a regular expression \fB(char *)\fR third arg
 the data is valid if the regular expression matches it.  Regular expressions
 are in the format of \fBregcomp\fR and \fBregexec\fR. Please notice
 that the regular expression must match the whole field. If you have for
-example an eight character wide field, a regular expression "^[0-9]*$" always
+example an eight character wide field, a regular expression "^[0\-9]*$" always
 means that you have to fill all eight positions with digits. If you want to
-allow fewer digits, you may use for example "^[0-9]* *$" which is good for
-trailing spaces (up to an empty field), or "^ *[0-9]* *$" which is good for
+allow fewer digits, you may use for example "^[0\-9]* *$" which is good for
+trailing spaces (up to an empty field), or "^ *[0\-9]* *$" which is good for
 leading and trailing spaces around the digits.
 .TP 5
 TYPE_IPV4

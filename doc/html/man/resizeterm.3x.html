@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1996-2005
-  * @Id: resizeterm.3x,v 1.11 2005/06/25 22:19:42 tom Exp @
+  * @Id: resizeterm.3x,v 1.12 2010/07/31 16:08:48 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -92,28 +92,28 @@
        Except  as  notes,  these  function return the integer <STRONG>ERR</STRONG>
        upon failure and <STRONG>OK</STRONG> on success.  They will fail if  either
        of the dimensions are less than or equal to zero, or if an
-       error occurs while (re)allocating memory for the  windows.
+       error occurs while (re)allocating memory for the windows.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
        While these functions are intended to be used to support a
-       signal handler (i.e., for SIGWINCH), care should be  taken
-       to  avoid invoking them in a context where <STRONG>malloc</STRONG> or <STRONG>real-</STRONG>
-       <STRONG>loc</STRONG> may have been interrupted, since it uses  those  func-
+       signal  handler (i.e., for SIGWINCH), care should be taken
+       to avoid invoking them in a context where <STRONG>malloc</STRONG> or  <STRONG>real-</STRONG>
+       <STRONG>loc</STRONG>  may  have been interrupted, since it uses those func-
        tions.
 
-       If  ncurses  is configured to supply its own SIGWINCH han-
+       If ncurses is configured to supply its own  SIGWINCH  han-
        dler, the <STRONG>resizeterm</STRONG> function ungetch's a <STRONG>KEY_RESIZE</STRONG> which
-       will  be  read on the next call to <STRONG>getch</STRONG>.  This is used to
+       will be read on the next call to <STRONG>getch</STRONG>.  This is  used  to
        alert an application that the screen size has changed, and
-       that  it should repaint special features such as pads that
+       that it should repaint special features such as pads  that
        cannot be done automatically.
 
-       If the environment variables <STRONG>LINES</STRONG>  or  <STRONG>COLUMNS</STRONG>  are  set,
-       this  overrides  the  library's  use  of  the  window size
-       obtained from the operating system.  Thus, even if a  SIG-
-       WINCH  is received, no screen size change may be recorded.
+       If  the  environment  variables  <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG> are set,
+       this overrides  the  library's  use  of  the  window  size
+       obtained  from the operating system.  Thus, even if a SIG-
+       WINCH is received, no screen size change may be  recorded.
        In that case, no <STRONG>KEY_RESIZE</STRONG> is queued for the next call to
        <STRONG>getch</STRONG>; an <STRONG>ERR</STRONG> will be returned instead.
 

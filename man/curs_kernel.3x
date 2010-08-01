@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2001,2005 Free Software Foundation, Inc.                        *
+.\" Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.                        *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_kernel.3x,v 1.15 2005/05/15 16:18:13 tom Exp $
+.\" $Id: curs_kernel.3x,v 1.16 2010/07/31 16:11:27 tom Exp $
 .TH curs_kernel 3X ""
 .na
 .hy 0
@@ -41,7 +41,7 @@
 \fBsetsyx\fR,
 \fBripoffline\fR,
 \fBcurs_set\fR,
-\fBnapms\fR - low-level \fBcurses\fR routines
+\fBnapms\fR \- low-level \fBcurses\fR routines
 .ad
 .hy
 .SH SYNOPSIS
@@ -71,7 +71,7 @@
 .br
 .SH DESCRIPTION
 The following routines give low-level access to various \fBcurses\fR
-capabilities.  Theses routines typically are used inside library
+capabilities.  These routines typically are used inside library
 routines.
 .PP
 The \fBdef_prog_mode\fR and \fBdef_shell_mode\fR routines save the
@@ -94,13 +94,13 @@ last call to \fBsavetty\fR.
 .PP
 The \fBgetsyx\fR routine returns the current coordinates of the virtual screen
 cursor in \fIy\fR and \fIx\fR.  If \fBleaveok\fR is currently \fBTRUE\fR, then
-\fB-1\fR,\fB-1\fR is returned.  If lines have been removed from the top of the
+\fB\-1\fR,\fB\-1\fR is returned.  If lines have been removed from the top of the
 screen, using \fBripoffline\fR, \fIy\fR and \fIx\fR include these lines;
 therefore, \fIy\fR and \fIx\fR should be used only as arguments for
 \fBsetsyx\fR.
 .PP
 The \fBsetsyx\fR routine sets the virtual screen cursor to
-\fIy\fR, \fIx\fR.  If \fIy\fR and \fIx\fR are both \fB-1\fR, then
+\fIy\fR, \fIx\fR.  If \fIy\fR and \fIx\fR are both \fB\-1\fR, then
 \fBleaveok\fR is set.  The two routines \fBgetsyx\fR and \fBsetsyx\fR
 are designed to be used by a library routine, which manipulates
 \fBcurses\fR windows but does not want to change the current position

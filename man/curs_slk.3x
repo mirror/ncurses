@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_slk.3x,v 1.17 2010/01/30 21:29:04 tom Exp $
+.\" $Id: curs_slk.3x,v 1.18 2010/07/31 14:43:29 tom Exp $
 .TH curs_slk 3X ""
 .na
 .hy 0
@@ -46,7 +46,7 @@
 \fBslk_attr_set\fR,
 \fBslk_attr_off\fR,
 \fBslk_attr\fR,
-\fBslk_color\fR - \fBcurses\fR soft label routines
+\fBslk_color\fR \- \fBcurses\fR soft label routines
 .ad
 .hy
 .SH SYNOPSIS
@@ -111,17 +111,17 @@ then \fIfmt\fR determines how the labels are arranged on the screen:
 .RS
 .TP 3
 .B 0
-indicates a 3-2-3 arrangement of
+indicates a 3\-2\-3 arrangement of
 the labels.
 .TP 3
 .B 1
-indicates a 4-4 arrangement
+indicates a 4\-4 arrangement
 .TP 3
 .B 2
-indicates the PC-like 4-4-4 mode.
+indicates the PC-like 4\-4\-4 mode.
 .TP 3
 .B 3
-is again the PC-like 4-4-4 mode,
+is again the PC-like 4\-4\-4 mode,
 but in addition an index line is generated, helping the user to
 identify the key numbers easily.
 .RE
@@ -198,13 +198,13 @@ if the terminal or the softkeys were not initialized.
 \fBslk_attr_set\fP
 returns an error
 if the terminal or the softkeys were not initialized, or
-the color pair is outside the range 0..COLOR_PAIRS-1,
+the color pair is outside the range 0..COLOR_PAIRS\-1,
 or opts is not null.
 .TP 5
 \fBslk_color\fP
 returns an error
 if the terminal or the softkeys were not initialized, or
-the color pair is outside the range 0..COLOR_PAIRS-1.
+the color pair is outside the range 0..COLOR_PAIRS\-1.
 .TP 5
 \fBslk_init\fR
 returns an error

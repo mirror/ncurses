@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.463 2010/05/20 23:22:46 tom Exp $
+ * $Id: curses.priv.h,v 1.464 2010/07/31 22:16:10 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1873,6 +1873,7 @@ extern NCURSES_EXPORT(int) _nc_putp(const char *, const char *);
 extern NCURSES_EXPORT(int) _nc_putp_flush(const char *, const char *);
 extern NCURSES_EXPORT(int) _nc_read_termcap_entry (const char *const, TERMTYPE *const);
 extern NCURSES_EXPORT(int) _nc_setupscreen (int, int, FILE *, bool, int);
+extern NCURSES_EXPORT(int) _nc_setup_tinfo(const char *, TERMTYPE *);
 extern NCURSES_EXPORT(int) _nc_timed_wait (SCREEN *, int, int, int * EVENTLIST_2nd(_nc_eventlist *));
 extern NCURSES_EXPORT(void) _nc_do_color (short, short, bool, NCURSES_OUTC);
 extern NCURSES_EXPORT(void) _nc_flush (void);

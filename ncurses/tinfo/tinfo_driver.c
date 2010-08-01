@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.11 2010/05/15 21:31:12 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.12 2010/07/31 22:16:38 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -122,38 +122,6 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 					    exit(EXIT_FAILURE);\
 					}
 
-#if USE_DATABASE || USE_TERMCAP
-/*
- * Return 1 if entry found, 0 if not found, -1 if database not accessible,
- * just like tgetent().
- */
-static int
-grab_entry(const char *const tn, TERMTYPE *const tp)
-{
-    char filename[PATH_MAX];
-    int status = _nc_read_entry(tn, filename, tp);
-
-    /*
-     * If we have an entry, force all of the cancelled strings to null
-     * pointers so we don't have to test them in the rest of the library.
-     * (The terminfo compiler bypasses this logic, since it must know if
-     * a string is cancelled, for merging entries).
-     */
-    if (status == TGETENT_YES) {
-	unsigned n;
-	for_each_boolean(n, tp) {
-	    if (!VALID_BOOLEAN(tp->Booleans[n]))
-		tp->Booleans[n] = FALSE;
-	}
-	for_each_string(n, tp) {
-	    if (tp->Strings[n] == CANCELLED_STRING)
-		tp->Strings[n] = ABSENT_STRING;
-	}
-    }
-    return (status);
-}
-#endif
-
 static bool
 drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 {
@@ -168,7 +136,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     TCB->magic = TCBMAGIC;
 
 #if (USE_DATABASE || USE_TERMCAP)
-    status = grab_entry(tname, &termp->type);
+    status = _nc_setup_tinfo(tname, &termp->type);
 #else
     status = TGETENT_NO;
 #endif

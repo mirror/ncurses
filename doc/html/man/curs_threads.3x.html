@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2008 Free Software Foundation, Inc.                        *
+  * Copyright (c) 2008,2010 Free Software Foundation, Inc.                   *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_threads.3x,v 1.12 2008/04/12 18:22:51 tom Exp @
+  * @Id: curs_threads.3x,v 1.13 2010/07/31 16:10:55 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
 -->
@@ -113,26 +113,26 @@
               -  global data, e.g., used in the low-level termin-
                  fo or termcap interfaces.
 
-              -  terminal  data,  e.g., associated with a call to
-                 <EM>set</EM><STRONG>_</STRONG><EM>curterm</EM>.  The terminal data are  initialized
+              -  terminal data, e.g., associated with a  call  to
+                 <EM>set</EM><STRONG>_</STRONG><EM>curterm</EM>.   The terminal data are initialized
                  when screens are created.
 
-              -  screen  data,  e.g.,  associated  with a call to
+              -  screen data, e.g., associated  with  a  call  to
                  <EM>newterm</EM> or <EM>initscr</EM>.
 
-              -  window data, e.g., associated  with  a  call  to
-                 <EM>newwin</EM>  or  <EM>subwin</EM>.  Windows are associated with
-                 screens.  Pads are  not  necessarily  associated
+              -  window  data,  e.g.,  associated  with a call to
+                 <EM>newwin</EM> or <EM>subwin</EM>.  Windows are  associated  with
+                 screens.   Pads  are  not necessarily associated
                  with a particular screen.
 
-                 Most  curses applications operate on one or more
+                 Most curses applications operate on one or  more
                  windows within a single screen.
 
               -  reentrant, i.e., it uses only the data passed as
                  parameters.
 
        This table lists the scope of data used for each symbol in
-       the ncurses library  when  it  is  configured  to  support
+       the  ncurses  library  when  it  is  configured to support
        threading:
 
       Symbol                  Scope

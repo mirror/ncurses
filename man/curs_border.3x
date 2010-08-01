@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_border.3x,v 1.19 2007/02/24 16:15:38 tom Exp $
+.\" $Id: curs_border.3x,v 1.20 2010/07/31 16:12:01 tom Exp $
 .TH curs_border 3X ""
 .na
 .hy 0
@@ -41,7 +41,7 @@
 \fBmvhline\fR,
 \fBmvwhline\fR,
 \fBmvvline\fR,
-\fBmvwvline\fR - create \fBcurses\fR borders, horizontal and vertical lines
+\fBmvwvline\fR \- create \fBcurses\fR borders, horizontal and vertical lines
 .ad
 .hy
 .SH SYNOPSIS
@@ -78,21 +78,21 @@ draw a box around the edges of a window.
 Other than the window, each argument is a character with attributes:
 .sp
 .RS
-\fIls\fR - left side,
+\fIls\fR \- left side,
 .br
-\fIrs\fR - right side,
+\fIrs\fR \- right side,
 .br
-\fIts\fR - top side,
+\fIts\fR \- top side,
 .br
-\fIbs\fR - bottom side,
+\fIbs\fR \- bottom side,
 .br
-\fItl\fR - top left-hand corner,
+\fItl\fR \- top left-hand corner,
 .br
-\fItr\fR - top right-hand corner,
+\fItr\fR \- top right-hand corner,
 .br
-\fIbl\fR - bottom left-hand corner, and
+\fIbl\fR \- bottom left-hand corner, and
 .br
-\fIbr\fR - bottom right-hand corner.
+\fIbr\fR \- bottom right-hand corner.
 .RE
 .PP
 If any of these arguments is zero, then the corresponding

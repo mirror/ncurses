@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addstr.3x,v 1.13 2005/05/15 16:17:14 tom Exp $
+.\" $Id: curs_addstr.3x,v 1.14 2010/07/31 16:12:01 tom Exp $
 .TH curs_addstr 3X ""
 .na
 .hy 0
@@ -38,7 +38,7 @@
 \fBmvaddstr\fR,
 \fBmvaddnstr\fR,
 \fBmvwaddstr\fR,
-\fBmvwaddnstr\fR - add a string of characters to a \fBcurses\fR window and advance cursor
+\fBmvwaddnstr\fR \- add a string of characters to a \fBcurses\fR window and advance cursor
 .ad
 .hy
 .SH SYNOPSIS
@@ -67,7 +67,7 @@ These routines write the characters of the (null-terminated) character string
 It is similar to calling \fBwaddch\fR once for each character in the string.
 The four routines with \fIn\fR as the last argument
 write at most \fIn\fR characters.
-If \fIn\fR is -1, then the entire string will be added,
+If \fIn\fR is \-1, then the entire string will be added,
 up to the maximum number of characters that will fit on the line,
 or until a terminating null is reached.
 .SH RETURN VALUE

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_overlay.3x,v 1.14 2006/02/25 21:49:19 tom Exp @
+  * @Id: curs_overlay.3x,v 1.15 2010/07/31 16:10:55 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -69,25 +69,25 @@
        of <EM>dstwin</EM>.  <EM>scrwin</EM> and <EM>dstwin</EM> are not required to  be  the
        same  size;  only  text  where  the two windows overlap is
        copied.  The difference is that <STRONG>overlay</STRONG> is non-destructive
-       (blanks  are not copied) whereas <STRONG>overwrite</STRONG> is destructive.
+       (blanks are not copied) whereas <STRONG>overwrite</STRONG> is destructive.
 
-       The <STRONG>copywin</STRONG> routine provides a finer granularity  of  con-
+       The  <STRONG>copywin</STRONG>  routine provides a finer granularity of con-
        trol over the <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> routines.  Like in the
        <STRONG>prefresh</STRONG> routine, a rectangle is specified in the destina-
-       tion  window,  (<EM>dminrow</EM>,  <EM>dmincol</EM>) and (<EM>dmaxrow</EM>, <EM>dmaxcol</EM>),
-       and the upper-left-corner coordinates of the  source  win-
+       tion window, (<EM>dminrow</EM>, <EM>dmincol</EM>)  and  (<EM>dmaxrow</EM>,  <EM>dmaxcol</EM>),
+       and  the  upper-left-corner coordinates of the source win-
        dow, (<EM>sminrow</EM>, <EM>smincol</EM>).  If the argument <EM>overlay</EM> is <STRONG>true</STRONG>,
        then copying is non-destructive, as in <STRONG>overlay</STRONG>.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       Routines that return an integer return <STRONG>ERR</STRONG>  upon  failure,
-       and  <STRONG>OK</STRONG>  (SVr4 only specifies "an integer value other than
+       Routines  that  return an integer return <STRONG>ERR</STRONG> upon failure,
+       and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value  other  than
        <STRONG>ERR</STRONG>") upon successful completion.
 
-       X/Open defines no error conditions.  In  this  implementa-
-       tion,  <STRONG>copywin</STRONG>,  <STRONG>overlay</STRONG>  and <STRONG>overwrite</STRONG> return an error if
+       X/Open  defines  no error conditions.  In this implementa-
+       tion, <STRONG>copywin</STRONG>, <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> return  an  error  if
        either of the window pointers are null, or if some part of
        the window would be placed off-screen.
 

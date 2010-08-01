@@ -37,8 +37,9 @@
  */
 
 #include <curses.priv.h>
+#define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.8 2010/04/10 19:42:47 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.9 2010/07/31 23:43:21 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -262,14 +263,41 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
 {
     bool code = FALSE;
 
-    T((T_CALLED("drv_CanHandle(%p)"), TCB));
+    T((T_CALLED("win32con::drv_CanHandle(%p)"), TCB));
 
     assert(TCB != 0);
     assert(tname != 0);
 
     TCB->magic = WINMAGIC;
-    if (*tname == 0 || *tname == 0 || strcmp(tname, "unknown") == 0) {
+    if (*tname == 0 || *tname == 0) {
 	code = TRUE;
+    } else {
+	TERMINAL my_term;
+	int status;
+
+	code = FALSE;
+#if (USE_DATABASE || USE_TERMCAP)
+	status = _nc_setup_tinfo(tname, &my_term.type);
+#else
+	status = TGETENT_NO;
+#endif
+	if (status != TGETENT_YES) {
+	    const TERMTYPE *fallback = _nc_fallback(tname);
+
+	    if (fallback) {
+		my_term.type = *fallback;
+		status = TGETENT_YES;
+	    } else if (!strcmp(tname, "unknown")) {
+		code = TRUE;
+	    }
+	}
+	if (status == TGETENT_YES) {
+	    if (generic_type || hard_copy)
+		code = TRUE;
+	}
+    }
+
+    if (code) {
 	if ((TCB->term.type.Booleans) == 0) {
 	    _nc_init_entry(&(TCB->term.type));
 	}
@@ -556,7 +584,7 @@ MapKey(TERMINAL_CONTROL_BLOCK * TCB, WORD vKey)
 static void
 drv_release(TERMINAL_CONTROL_BLOCK * TCB)
 {
-    T((T_CALLED("drv_release(%p)"), TCB));
+    T((T_CALLED("win32con::drv_release(%p)"), TCB));
 
     AssertTCB();
     if (TCB->prop)
@@ -570,7 +598,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 {
     DWORD num_buttons;
 
-    T((T_CALLED("drv_init(%p)"), TCB));
+    T((T_CALLED("win32con::drv_init(%p)"), TCB));
 
     AssertTCB();
 
@@ -1060,7 +1088,7 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 
     memset(&inp, 0, sizeof(inp));
 
-    T((T_CALLED("drv_read(%p)"), TCB));
+    T((T_CALLED("win32con::drv_read(%p)"), TCB));
     while ((b = ReadConsoleInput(TCB->inp, &inp, 1, &nRead))) {
 	if (b && nRead > 0) {
 	    if (inp.EventType == KEY_EVENT) {

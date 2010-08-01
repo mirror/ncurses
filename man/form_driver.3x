@@ -26,10 +26,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_driver.3x,v 1.17 2010/01/30 21:29:04 tom Exp $
+.\" $Id: form_driver.3x,v 1.18 2010/07/31 14:49:44 tom Exp $
 .TH form_driver 3X ""
 .SH NAME
-\fBform_driver\fR - command-processing loop of the form system
+\fBform_driver\fR \- command-processing loop of the form system
 .SH SYNOPSIS
 \fB#include <form.h>\fR
 .br
@@ -39,17 +39,17 @@ int form_driver(FORM *form, int c);
 Once a form has been posted (displayed), you should funnel input events to it
 through \fBform_driver\fR.  This routine has three major input cases:
 .TP 3
--
+\-
 The input is a form navigation request.
 Navigation request codes are constants defined in \fB<form.h>\fP,
 which are distinct from the key- and character codes returned by \fBwgetch\fP.
 .TP 3
--
+\-
 The input is a printable character.
 Printable characters (which must be positive, less than 256) are
 checked according to the program's locale settings.
 .TP 3
--
+\-
 The input is the KEY_MOUSE special key associated with an mouse event.
 .PP
 The form driver requests are as follows:
@@ -264,10 +264,10 @@ a REQ_LAST_FIELD is generated for a triple-click.
 If you click at an field inside the display area of the form:
 .RS
 .TP 3
--
+\-
 the form cursor is positioned to that field.
 .TP 3
--
+\-
 If you double-click a field,
 the form cursor is positioned to that field
 and \fBE_UNKNOWN_COMMAND\fR is returned.
@@ -277,7 +277,7 @@ be returned.
 It is exactly the purpose of this return value to signal that an
 application specific command should be executed.
 .TP 3
--
+\-
 If a translation
 into a request was done, \fBform_driver\fR returns the result of this request.
 .RE

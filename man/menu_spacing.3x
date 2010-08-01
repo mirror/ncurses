@@ -27,10 +27,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_spacing.3x,v 1.9 2010/01/30 21:29:04 tom Exp $
+.\" $Id: menu_spacing.3x,v 1.10 2010/07/31 15:45:16 tom Exp $
 .TH menu_spacing 3X ""
 .SH NAME
-\fBmenu_spacing\fR - Control spacing between menu items.
+\fBmenu_spacing\fR \- Control spacing between menu items.
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
 .br
@@ -45,7 +45,7 @@ int menu_spacing(const MENU *menu,
                  int* spc_columns);
 .br
 .SH DESCRIPTION
-The function \fBset_menu_spacing\fR sets the spacing informations for the menu.
+The function \fBset_menu_spacing\fR sets the spacing information for the menu.
 Its parameter \fBspc_description\fR controls the number of spaces between an item name and an item
 description.
 It must not be larger than \fBTABSIZE\fR.

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,12 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.27 2007/06/02 20:40:07 tom Exp $
+.\" $Id: curs_addch.3x,v 1.28 2010/07/31 16:12:01 tom Exp $
 .TH curs_addch 3X ""
 .SH NAME
 \fBaddch\fR, \fBwaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR,
 \fBechochar\fR,
-\fBwechochar\fR - add a character (with attributes) to a \fBcurses\fR window, then advance the cursor
+\fBwechochar\fR \- add a character (with attributes) to a \fBcurses\fR window, then advance the cursor
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .PP
@@ -105,7 +105,7 @@ ACS_DARROW	v	arrow pointing down
 ACS_DEGREE	'	degree symbol
 ACS_DIAMOND	+	diamond
 ACS_GEQUAL	>	greater-than-or-equal-to
-ACS_HLINE	-	horizontal line
+ACS_HLINE	\-	horizontal line
 ACS_LANTERN	#	lantern symbol
 ACS_LARROW	<	arrow pointing left
 ACS_LEQUAL	<	less-than-or-equal-to
@@ -118,9 +118,9 @@ ACS_PLMINUS	#	plus/minus
 ACS_PLUS	+	plus
 ACS_RARROW	>	arrow pointing right
 ACS_RTEE	+	right tee
-ACS_S1	-	scan line 1
-ACS_S3	-	scan line 3
-ACS_S7	-	scan line 7
+ACS_S1	\-	scan line 1
+ACS_S3	\-	scan line 3
+ACS_S7	\-	scan line 7
 ACS_S9	\&_	scan line 9
 ACS_STERLING	f	pound-sterling symbol
 ACS_TTEE	+	top tee

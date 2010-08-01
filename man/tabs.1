@@ -26,13 +26,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.4 2010/05/22 20:12:00 tom Exp $
+.\" $Id: tabs.1,v 1.7 2010/07/31 18:17:37 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
 .SH NAME
-\fBtabs\fR - set tabs on a terminal
+\fBtabs\fR \- set tabs on a terminal
 .SH SYNOPSIS
-\fBtabs\fR [\fB-v\fR[\fIn\fR]] [\fB-ahuUV\fR] \fIfile...\fR
+\fBtabs\fR [\fB\-v\fR[\fIn\fR]] [\fB\-ahuUV\fR] \fIfile...\fR
 .br
 .SH DESCRIPTION
 .PP
@@ -47,18 +47,18 @@ stty tab0
 .SH OPTIONS
 .SS General Options
 .TP 5
-.BI -T "name"
+.BI \-T "name"
 Tell \fBtabs\fP which terminal type to use.
 If this option is not given, \fBtabs\fP will use the \fB$TERM\fP
 environment variable.
 If that is not set, it will use the \fIansi+tabs\fP entry.
 .TP 5
-.B -d
+.B \-d
 The debugging option shows a ruler line, followed by two data lines.
 The first data line shows the expected tab-stops marked with asterisks.
 The second data line shows the actual tab-stops, marked with asterisks.
 .TP 5
-.B -n
+.B \-n
 This option tells \fBtabs\fP to check the options and run any debugging
 option, but not to modify the terminal settings.
 .PP
@@ -66,11 +66,15 @@ The \fBtabs\fP program processes a single list of tab stops.
 The last option to be processed which defines a list is the one that
 determines the list to be processed.
 .SS Implicit Lists
-Use a single number as an option, e.g., "\fB-5\fP" to set tabs at the given
+Use a single number as an option, e.g., "\fB\-5\fP" to set tabs at the given
 interval (in this case 1, 6, 11, 16, 21, etc.).  Tabs are repeated up to
 the right margin of the screen.
+.PP
+Use "\fB\-0\fP" to clear all tabs.
+.PP
+Use "\fB\-8\fP" to set tabs to the standard interval.
 .SS Explicit Lists
-An explicit list can be defined after the options (this does not use a "-").
+An explicit list can be defined after the options (this does not use a "\-").
 The values in the list must be in increasing numeric order, and greater than
 zero.  They are separated by a comma or a blank, for example,
 .sp
@@ -89,38 +93,38 @@ which is equivalent to the 1,6,11,16,21 example.
 .SS Predefined Tab-Stops
 X/Open defines several predefined lists of tab stops.
 .TP 5
-.B -a
+.B \-a
 Assembler, IBM S/370, first format
 .TP 5
-.B -a2
+.B \-a2
 Assembler, IBM S/370, second format
 .TP 5
-.B -c
+.B \-c
 COBOL, normal format
 .TP 5
-.B -c2
+.B \-c2
 COBOL compact format
 .TP 5
-.B -c3
+.B \-c3
 COBOL compact format extended
 .TP 5
-.B -f
+.B \-f
 FORTRAN
 .TP 5
-.B -p
+.B \-p
 PL/I
 .TP 5
-.B -s
+.B \-s
 SNOBOL
 .TP 5
-.B -u
+.B \-u
 UNIVAC 1100 Assembler
 .SH PORTABILITY
 .PP
 X/Open describes a \fB+m\fP option, to set a terminal's left-margin.
 Very few of the entries in the terminal database provide this capability.
 .PP
-The \fB-d\fP (debug) and \fB-n\fP (no-op) options are extensions not provided
+The \fB\-d\fP (debug) and \fB\-n\fP (no-op) options are extensions not provided
 by other implementations.
 .PP
 Documentation for other implementations states that there is a limit on the

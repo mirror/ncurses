@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2008 Free Software Foundation, Inc.                        *
+.\" Copyright (c) 2008,2010 Free Software Foundation, Inc.                   *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,13 +26,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_threads.3x,v 1.12 2008/04/12 18:22:51 tom Exp $
+.\" $Id: curs_threads.3x,v 1.13 2010/07/31 16:10:55 tom Exp $
 .TH curs_threads 3X ""
 .na
 .hy 0
 .SH NAME
 \fBuse_screen\fR,
-\fBuse_window\fR - \fBcurses\fR thread support
+\fBuse_window\fR \- \fBcurses\fR thread support
 .ad
 .hy
 .SH SYNOPSIS
@@ -102,24 +102,24 @@ In addition,
 they use data which is maintained within a hierarchy of scopes.
 .RS
 .TP 3
--
+\-
 global data, e.g., used in the low-level terminfo or termcap interfaces.
 .TP 3
--
+\-
 terminal data, e.g., associated with a call to \fIset_curterm\fP.
 The terminal data are initialized when screens are created.
 .TP 3
--
+\-
 screen data, e.g., associated with a call to \fInewterm\fP or \fIinitscr\fP.
 .TP 3
--
+\-
 window data, e.g., associated with a call to \fInewwin\fP or \fIsubwin\fP.
 Windows are associated with screens.
 Pads are not necessarily associated with a particular screen.
 .IP
 Most curses applications operate on one or more windows within a single screen.
 .TP 3
--
+\-
 reentrant, i.e., it uses only the data passed as parameters.
 .RE
 .PP

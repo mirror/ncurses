@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1570 2010/07/24 22:19:44 tom Exp $
+-- $Id: NEWS,v 1.1574 2010/07/31 23:42:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100731
+	+ modify initialization check for win32con driver to eliminate need for
+	  special case for TERM "unknown", using terminal database if available
+	  (prompted by discussion with Roumen Petrov).
+	+ for MinGW port, ensure that terminal driver is setup if tgetent()
+	  is called (patch by Roumen Petrov).
+	+ document tabs "-0" and "-8" options in manpage.
+	+ fix Debian "lintian" issues with manpages reported in
+	  http://lintian.debian.org/full/csmall@debian.org.html#ncurses
 
 20100724
 	+ add a check in tic for missing set_tab if clear_all_tabs given.

@@ -51,7 +51,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.128 2010/04/03 13:54:45 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.130 2010/07/31 22:16:26 tom Exp $")
 
 /****************************************************************************
  *
@@ -430,14 +430,13 @@ _nc_update_screensize(SCREEN *sp)
 					    exit(EXIT_FAILURE);\
 					}
 
-#ifndef USE_TERM_DRIVER
 #if USE_DATABASE || USE_TERMCAP
 /*
  * Return 1 if entry found, 0 if not found, -1 if database not accessible,
  * just like tgetent().
  */
-static int
-grab_entry(const char *const tn, TERMTYPE *const tp)
+int
+_nc_setup_tinfo(const char *const tn, TERMTYPE *const tp)
 {
     char filename[PATH_MAX];
     int status = _nc_read_entry(tn, filename, tp);
@@ -462,7 +461,6 @@ grab_entry(const char *const tn, TERMTYPE *const tp)
     return (status);
 }
 #endif
-#endif /* !USE_TERM_DRIVER */
 
 /*
 **	Take the real command character out of the CC environment variable
@@ -658,6 +656,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 		       "Not enough memory to create terminal structure.\n");
 	}
 #ifdef USE_TERM_DRIVER
+	INIT_TERM_DRIVER();
 	TCB = (TERMINAL_CONTROL_BLOCK *) termp;
 	code = _nc_globals.term_driver(TCB, tname, errret);
 	if (code == OK) {
@@ -669,7 +668,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	}
 #else
 #if USE_DATABASE || USE_TERMCAP
-	status = grab_entry(tname, &termp->type);
+	status = _nc_setup_tinfo(tname, &termp->type);
 #else
 	status = TGETENT_NO;
 #endif

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_initscr.3x,v 1.14 2005/05/15 16:18:01 tom Exp @
+  * @Id: curs_initscr.3x,v 1.15 2010/07/31 16:11:27 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -127,8 +127,8 @@
 
        Routines that return pointers always return <STRONG>NULL</STRONG> on error.
 
-       X/Open defines no error conditions.  In  this  implementa-
-       tion  <STRONG>endwin</STRONG> returns an error if the terminal was not ini-
+       X/Open  defines  no error conditions.  In this implementa-
+       tion <STRONG>endwin</STRONG> returns an error if the terminal was not  ini-
        tialized.
 
 
@@ -139,13 +139,13 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These functions are described in the XSI Curses  standard,
+       These  functions are described in the XSI Curses standard,
        Issue 4.  It specifies that portable applications must not
        call <STRONG>initscr</STRONG> more than once.
 
        Old versions of curses, e.g., BSD 4.4, may have returned a
-       null  pointer  from  <STRONG>initscr</STRONG>  when  an  error is detected,
-       rather than exiting.  It is safe but  redundant  to  check
+       null pointer from  <STRONG>initscr</STRONG>  when  an  error  is  detected,
+       rather  than  exiting.   It is safe but redundant to check
        the return value of <STRONG>initscr</STRONG> in XSI Curses.
 
 
