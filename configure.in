@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.502 2010/07/24 21:10:01 tom Exp $
+dnl $Id: configure.in,v 1.503 2010/08/07 20:00:17 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.502 $)
+AC_REVISION($Revision: 1.503 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1869,6 +1869,16 @@ fi
 AC_SUBST(MAKE_PC_FILES)
 AC_SUBST(cross_compiling)
 
+AC_PATH_PROG(TIC_PATH,tic,unknown,$PATH:/usr/local/ncurses/bin)
+if test -n "$FALLBACK_LIST"
+then
+	if test "$TIC_PATH" = unknown
+	then
+		AC_MSG_ERROR(no tic program found for fallbacks)
+	fi
+fi
+AC_SUBST(TIC_PATH)
+
 AC_OUTPUT( \
 	include/MKterm.h.awk \
 	include/curses.head:include/curses.h.in \
@@ -1910,6 +1920,7 @@ TERMINFO="$TERMINFO"
 TICS_ARG_SUFFIX="$TICS_ARG_SUFFIX"
 TICS_LIB_SUFFIX="$TICS_LIB_SUFFIX"
 TICS_NAME="$TICS_NAME"
+TIC_PATH="$TIC_PATH"
 TINFO_ARG_SUFFIX="$TINFO_ARG_SUFFIX"
 TINFO_LIB_SUFFIX="$TINFO_LIB_SUFFIX"
 TINFO_NAME="$TINFO_NAME"

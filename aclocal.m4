@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.538 2010/07/24 21:20:39 tom Exp $
+dnl $Id: aclocal.m4,v 1.539 2010/08/07 18:14:46 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4515,7 +4515,7 @@ AC_MSG_RESULT($cf_prog_ln_sf)
 test "$cf_prog_ln_sf" = yes && LN_S="$LN_S -f"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_REGEX version: 7 updated: 2010/05/29 16:31:02
+dnl CF_REGEX version: 8 updated: 2010/08/07 14:09:44
 dnl --------
 dnl Attempt to determine if we've got one of the flavors of regular-expression
 dnl code that we can support.
@@ -4524,8 +4524,15 @@ AC_DEFUN([CF_REGEX],
 
 cf_regex_func=no
 
+cf_regex_libs="regex re"
+case $host_os in #(vi
+mingw*)
+	cf_regex_libs="regex.dll $cf_regex_libs"
+	;;
+esac
+
 AC_CHECK_FUNC(regcomp,[cf_regex_func=regcomp],[
-	for cf_regex_lib in regex re
+	for cf_regex_lib in $cf_regex_libs
 	do
 		AC_CHECK_LIB($cf_regex_lib,regcomp,[
 				CF_ADD_LIB($cf_regex_lib)

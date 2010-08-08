@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2010 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -25,39 +25,26 @@
  * sale, use or other dealings in this Software without prior written       *
  * authorization.                                                           *
  ****************************************************************************/
+#include <curses.priv.h>
 
-/****************************************************************************
- * Author: Thomas Dickey, 2008-on                                           * 
- *                                                                          *
- ****************************************************************************/
+MODULE_ID("$Id: wcwidth.c,v 1.2 2010/08/07 20:52:43 tom Exp $")
 
-/* $Id: nc_mingw.h,v 1.2 2010/08/07 18:42:26 tom Exp $ */
+#if USE_WIDEC_SUPPORT
+#define mk_wcwidth(ucs)          _nc_wcwidth(ucs)
+#define mk_wcswidth(pwcs, n)     _nc_wcswidth(pwcs, n)
+#define mk_wcwidth_cjk(ucs)      _nc_wcwidth_cjk(ucs)
+#define mk_wcswidth_cjk(pwcs, n) _nc_wcswidth_cjk(pwcs, n)
 
-#ifndef NC_MINGW_H
-#define NC_MINGW_H 1
+extern int mk_wcwidth(wchar_t);
+extern int mk_wcswidth(const wchar_t *, size_t);
+extern int mk_wcwidth_cjk(wchar_t);
+extern int mk_wcswidth_cjk(const wchar_t *, size_t);
 
-#define WINVER 0x0501
-#include <windows.h>
-
-#undef sleep
-#define sleep(n) Sleep((n) * 1000)
-
-#undef gettimeofday
-#define gettimeofday(tv,tz) _nc_gettimeofday(tv,tz)
-
-#include <sys/time.h>	/* for struct timeval */
-
-extern int _nc_gettimeofday(struct timeval *, void *);
-
-#undef HAVE_GETTIMEOFDAY
-#define HAVE_GETTIMEOFDAY 1
-
-#define SIGHUP  1
-#define SIGKILL 9
-#define getlogin() "username"
-
-#undef wcwidth
-#define wcwidth(ucs) _nc_wcwidth(ucs)
-extern int _nc_wcwidth(wchar_t);
-
-#endif /* NC_MINGW_H */
+#include <wcwidth.h>
+#else
+void _nc_empty_wcwidth(void);
+void
+_nc_empty_wcwidth(void)
+{
+}
+#endif

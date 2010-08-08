@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.84 2010/07/24 21:12:27 tom Exp $
+# $Id: mk-1st.awk,v 1.85 2010/08/07 20:42:30 Gabriele.Balducci Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -436,7 +436,7 @@ END	{
 					printf "\t@echo linking libcurses.a to libncurses.a\n"
 					printf "\t-@rm -f $(DESTDIR)$(libdir)/libcurses.a\n"
 					printf "\t(cd $(DESTDIR)$(libdir) && "
-					symlink("libncurses.a" "libcurses.a")
+					symlink("libncurses.a", "libcurses.a")
 					printf ")\n"
 				}
 				printf "\t$(RANLIB) $(DESTDIR)$(libdir)/%s\n", lib_name

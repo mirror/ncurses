@@ -927,6 +927,7 @@
 ./ncurses/tty/tty_display.h
 ./ncurses/tty/tty_input.h
 ./ncurses/tty/tty_update.c
+./ncurses/wcwidth.h
 ./ncurses/widechar/charable.c
 ./ncurses/widechar/lib_add_wch.c
 ./ncurses/widechar/lib_box_set.c
@@ -948,6 +949,7 @@
 ./ncurses/widechar/lib_wacs.c
 ./ncurses/widechar/lib_wunctrl.c
 ./ncurses/win32con/gettimeofday.c
+./ncurses/win32con/wcwidth.c
 ./ncurses/win32con/win_driver.c
 ./panel/Makefile.in
 ./panel/headers

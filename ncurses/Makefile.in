@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.127 2010/05/15 20:04:40 tom Exp $
+# $Id: Makefile.in,v 1.128 2010/08/07 19:59:17 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -200,7 +200,7 @@ $(DESTDIR)$(libdir) :
 ../lib : ; mkdir $@
 
 ./fallback.c : $(tinfo)/MKfallback.sh
-	sh -e $(tinfo)/MKfallback.sh @TERMINFO@ @TERMINFO_SRC@ $(FALLBACK_LIST) >$@
+	sh -e $(tinfo)/MKfallback.sh @TERMINFO@ @TERMINFO_SRC@ @TIC_PATH@ $(FALLBACK_LIST) >$@
 
 ./lib_gen.c : $(base)/MKlib_gen.sh ../include/curses.h
 	sh -e $(base)/MKlib_gen.sh "$(CPP) $(CPPFLAGS)" "$(AWK)" generated <../include/curses.h >$@

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1574 2010/07/31 23:42:36 tom Exp $
+-- $Id: NEWS,v 1.1578 2010/08/07 20:44:25 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100807
+	+ correct a typo in mk-1st.awk (patch by Gabriele Balducci)
+	  (cf: 20100724)
+	+ improve configure checks for location of tic and infocmp programs
+	  used for installing database and for generating fallback data,
+	  e.g., for cross-compiling.
+	+ add Markus Kuhn's wcwidth function for compiling MinGW
+	+ add special case to CF_REGEX for cross-compiling to MinGW target.
 
 20100731
 	+ modify initialization check for win32con driver to eliminate need for
@@ -413,7 +422,7 @@ it is not possible to add this information.
 	+ move leak-checking for comp_captab.c into _nc_leaks_tinfo() since
 	  that module since 20090711 is in libtinfo.
 	+ add configure option --enable-term-driver, to allow compiling with
-	  terminal-driver.  That is used in mingw port, and (being somewhat
+	  terminal-driver.  That is used in MinGW port, and (being somewhat
 	  more complicated) is an experimental alternative to the conventional
 	  termlib internals.  Currently, it requires the sp-funcs feature to
 	  be enabled.
