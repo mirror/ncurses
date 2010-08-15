@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.31 2010/01/30 21:29:04 tom Exp $
+.\" $Id: curs_getch.3x,v 1.32 2010/08/14 23:29:16 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -245,6 +245,10 @@ returns an error
 if the window pointer is null, or
 if its timeout expires without having any data.
 .RE
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH NOTES
 Use of the escape key by a programmer for a single character function is
 discouraged, as it will cause a delay of up to one second while the

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_in_wch.3x,v 1.3 2010/07/31 16:10:55 tom Exp $
+.\" $Id: curs_in_wch.3x,v 1.4 2010/08/14 23:29:16 tom Exp $
 .TH curs_in_wch 3X ""
 .SH NAME
 \fBin_wch\fR,
@@ -53,6 +53,10 @@ This implementation checks for null pointers, returns ERR in that case.
 Also, the \fImv\fR routines check for error moving the cursor, returning ERR
 in that case.
 Otherwise they return OK
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH NOTES
 Note that all of these routines may be macros.
 .SH PORTABILITY

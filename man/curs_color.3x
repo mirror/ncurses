@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.30 2010/07/31 16:12:01 tom Exp $
+.\" $Id: curs_color.3x,v 1.31 2010/08/14 23:11:23 Tim.van.der.Molen Exp $
 .TH curs_color 3X ""
 .na
 .hy 0
@@ -193,8 +193,7 @@ this feature, e.g., if the \fIinitialize_color\fP capability is absent
 from the terminal description.
 .TP 5
 \fBstart_color\fP
-returns an error
-If the color table cannot be allocated.
+returns an error if the color table cannot be allocated.
 .RE
 .SH NOTES
 In the \fIncurses\fR implementation, there is a separate color activation flag,

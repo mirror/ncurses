@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scanw.3x,v 1.15 2010/07/31 16:10:55 tom Exp $
+.\" $Id: curs_scanw.3x,v 1.16 2010/08/14 23:29:16 tom Exp $
 .TH curs_scanw 3X ""
 .SH NAME
 \fBscanw\fR,
@@ -66,6 +66,10 @@ number of fields scanned on success.
 Applications may use the return value from the \fBscanw\fR, \fBwscanw\fR,
 \fBmvscanw\fR and \fBmvwscanw\fR routines to determine the number of fields
 which were mapped in the call.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH PORTABILITY
 The XSI Curses standard, Issue 4 describes these functions.  The function
 \fBvwscanw\fR is marked TO BE WITHDRAWN, and is to be replaced by a function

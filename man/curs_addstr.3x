@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addstr.3x,v 1.14 2010/07/31 16:12:01 tom Exp $
+.\" $Id: curs_addstr.3x,v 1.15 2010/08/14 23:29:16 tom Exp $
 .TH curs_addstr 3X ""
 .na
 .hy 0
@@ -80,6 +80,10 @@ This implementation returns an error
 if the window pointer is null or
 if the string pointer is null or
 if the corresponding calls to \fBwaddch\fP return an error.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH NOTES
 Note that all of these routines except \fBwaddstr\fR and \fBwaddnstr\fR may be
 macros.

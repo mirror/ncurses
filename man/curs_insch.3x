@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insch.3x,v 1.11 2010/07/31 16:11:27 tom Exp $
+.\" $Id: curs_insch.3x,v 1.12 2010/08/14 23:29:16 tom Exp $
 .TH curs_insch 3X ""
 .SH NAME
 \fBinsch\fR,
@@ -53,6 +53,10 @@ The insertion operation does not change the cursor position.
 All routines that return an integer return \fBERR\fR upon failure and OK (SVr4
 specifies only "an integer value other than \fBERR\fR") upon successful
 completion, unless otherwise noted in the preceding routine descriptions.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH NOTES
 These routines do not necessarily imply use of a hardware insert character
 feature.

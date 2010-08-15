@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inchstr.3x,v 1.13 2010/07/31 16:08:48 tom Exp $
+.\" $Id: curs_inchstr.3x,v 1.14 2010/08/14 23:29:16 tom Exp $
 .TH curs_inchstr 3X ""
 .na
 .hy 0
@@ -78,6 +78,10 @@ No error conditions are defined.
 If the \fIchstr\fP parameter is null,
 no data is returned,
 and the return value is zero.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH NOTES
 Note that all routines except \fBwinchnstr\fR may be macros.  SVr4 does not
 document whether the result string is zero-terminated; it does not document

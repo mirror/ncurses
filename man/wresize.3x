@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996
 .\"
-.\" $Id: wresize.3x,v 1.11 2010/07/31 15:30:32 tom Exp $
+.\" $Id: wresize.3x,v 1.12 2010/08/14 23:12:04 Tim.van.der.Molen Exp $
 .TH wresize 3X ""
 .SH NAME
 \fBwresize\fR \- resize a curses window
@@ -37,7 +37,8 @@
 .sp
 \fBint wresize(WINDOW *win, int lines, int columns);\fR
 .SH DESCRIPTION
-The \fBwresize\fR function reallocates storage for an \fBncurses\fR
+This is an extension to the curses library.                                    
+It reallocates storage for an \fBncurses\fR 
 window to adjust its dimensions to the specified values.
 If either dimension is larger than the current values, the
 window's data is filled with blanks that have the current background rendition

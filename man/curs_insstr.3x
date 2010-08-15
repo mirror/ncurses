@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insstr.3x,v 1.19 2010/07/31 16:11:27 tom Exp $
+.\" $Id: curs_insstr.3x,v 1.20 2010/08/14 23:29:16 tom Exp $
 .TH curs_insstr 3X ""
 .SH NAME
 \fBinsstr\fR,
@@ -78,6 +78,10 @@ X/Open defines no error conditions.
 In this implementation,
 if the window parameter is null or the str parameter is null,
 an error is returned.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH NOTES
 Note that all but \fBwinsnstr\fR may be macros.
 .SH PORTABILITY

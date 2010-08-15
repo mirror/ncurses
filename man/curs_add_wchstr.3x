@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_add_wchstr.3x,v 1.7 2010/07/31 16:12:01 tom Exp $
+.\" $Id: curs_add_wchstr.3x,v 1.8 2010/08/14 23:29:16 tom Exp $
 .TH curs_add_wchstr 3X ""
 .SH NAME
 \fBadd_wchstr\fR,
@@ -83,6 +83,10 @@ the remaining columns are filled with the background character and rendition.
 All functions except \fBwadd_wchnstr\fR may be macros.
 .SH RETURN VALUES
 All routines return the integer \fBERR\fR upon failure and \fBOK\fR on success.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH PORTABILITY
 All these entry points are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO

@@ -27,10 +27,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.28 2010/07/31 16:12:01 tom Exp $
+.\" $Id: curs_addch.3x,v 1.29 2010/08/14 23:29:16 tom Exp $
 .TH curs_addch 3X ""
 .SH NAME
-\fBaddch\fR, \fBwaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR,
+\fBaddch\fR,
+\fBwaddch\fR,
+\fBmvaddch\fR,
+\fBmvwaddch\fR,
 \fBechochar\fR,
 \fBwechochar\fR \- add a character (with attributes) to a \fBcurses\fR window, then advance the cursor
 .SH SYNOPSIS
@@ -134,6 +137,10 @@ All routines return the integer \fBERR\fR upon failure and \fBOK\fR on success
 (the SVr4 manuals specify only "an integer value other than \fBERR\fR") upon
 successful completion, unless otherwise noted in the preceding routine
 descriptions.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH NOTES
 Note that \fBaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR, and
 \fBechochar\fR may be macros.

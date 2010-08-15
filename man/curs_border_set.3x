@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_border_set.3x,v 1.7 2010/07/31 16:12:01 tom Exp $
+.\" $Id: curs_border_set.3x,v 1.8 2010/08/14 23:29:16 tom Exp $
 .TH curs_border_set 3X ""
 .na
 .hy 0
@@ -195,6 +195,10 @@ Otherwise, they return
 \fBERR\fR.
 .PP
 Functions using a window parameter return an error if it is null.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH SEE ALSO
 \fBncurses\fR(3X),
 \fBcurs_border\fR(3X),

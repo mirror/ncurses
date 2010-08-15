@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_printw.3x,v 1.18 2010/07/31 16:10:55 tom Exp $
+.\" $Id: curs_printw.3x,v 1.19 2010/08/14 23:29:16 tom Exp $
 .TH curs_printw 3X ""
 .na
 .hy 0
@@ -74,6 +74,10 @@ In this implementation,
 an error may be returned if it cannot allocate enough memory for the
 buffer used to format the results.
 It will return an error if the window pointer is null.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH PORTABILITY
 The XSI Curses standard, Issue 4 describes these functions.  The function
 \fBvwprintw\fR is marked TO BE WITHDRAWN, and is to be replaced by a function

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getstr.3x,v 1.16 2010/07/31 16:12:01 tom Exp $
+.\" $Id: curs_getstr.3x,v 1.17 2010/08/14 23:29:16 tom Exp $
 .TH curs_getstr 3X ""
 .na
 .hy 0
@@ -94,6 +94,10 @@ if its timeout expires without having any data.
 This implementation provides an extension as well.
 If a SIGWINCH interrupts the function, it will return \fBKEY_RESIZE\fP
 rather than \fBOK\fP or \fBERR\fP.
+.PP
+Functions with a "mv" prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
 .SH NOTES
 Note that \fBgetstr\fR, \fBmvgetstr\fR, and \fBmvwgetstr\fR may be macros.
 .SH PORTABILITY
