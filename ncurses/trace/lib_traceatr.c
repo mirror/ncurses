@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.70 2010/05/01 19:33:19 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.71 2010/08/28 21:05:25 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -136,7 +136,7 @@ _traceattr2(int bufnum, chtype newmode)
 		result = _nc_trace_bufcat(bufnum, names[n].name);
 
 		if (names[n].val == A_COLOR) {
-		    short pairnum = PairNumber(newmode);
+		    short pairnum = (short) PairNumber(newmode);
 #ifdef USE_TERMLIB
 		    /* pair_content lives in libncurses */
 		    (void) sprintf(temp, "{%d}", pairnum);

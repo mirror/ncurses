@@ -53,7 +53,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.76 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.77 2010/08/28 21:04:05 tom Exp $")
 
 static int total_written;
 
@@ -577,7 +577,7 @@ extended_Strings(TERMTYPE *tp)
 
     for (i = 0; i < tp->ext_Strings; ++i) {
 	if (tp->Strings[STRCOUNT + i] != ABSENT_STRING)
-	    result = (i + 1);
+	    result = (unsigned short) (i + 1);
     }
     return result;
 }

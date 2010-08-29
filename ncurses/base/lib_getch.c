@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.119 2010/05/22 20:00:35 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.120 2010/08/28 20:58:29 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -383,7 +383,7 @@ recur_wgetnstr(WINDOW *win, char *buf)
 
 NCURSES_EXPORT(int)
 _nc_wgetch(WINDOW *win,
-	   unsigned long *result,
+	   int *result,
 	   int use_meta
 	   EVENTLIST_2nd(_nc_eventlist * evl))
 {
@@ -581,7 +581,7 @@ _nc_wgetch(WINDOW *win,
      * cursor to the left.
      */
     if (sp->_echo && !(win->_flags & _ISPAD)) {
-	chtype backup = (ch == KEY_BACKSPACE) ? '\b' : ch;
+	chtype backup = (chtype) ((ch == KEY_BACKSPACE) ? '\b' : ch);
 	if (backup < KEY_MIN)
 	    wechochar(win, backup);
     }
@@ -612,7 +612,7 @@ NCURSES_EXPORT(int)
 wgetch_events(WINDOW *win, _nc_eventlist * evl)
 {
     int code;
-    unsigned long value;
+    int value;
 
     T((T_CALLED("wgetch_events(%p,%p)"), win, evl));
     code = _nc_wgetch(win,
@@ -629,7 +629,7 @@ NCURSES_EXPORT(int)
 wgetch(WINDOW *win)
 {
     int code;
-    unsigned long value;
+    int value;
 
     T((T_CALLED("wgetch(%p)"), (void *) win));
     code = _nc_wgetch(win,

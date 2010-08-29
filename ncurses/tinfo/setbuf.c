@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: setbuf.c,v 1.15 2009/05/23 22:13:44 tom Exp $")
+MODULE_ID("$Id: setbuf.c,v 1.16 2010/08/28 21:08:31 tom Exp $")
 
 /*
  * If the output file descriptor is connected to a tty (the typical case) it
@@ -125,7 +125,7 @@ NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_DCLx FILE *ofp, bool buffered)
 	setmode(ofp, O_BINARY);
 #endif
 	if (buffered != 0) {
-	    buf_len = min(Lines * (Cols + 6), 2800);
+	    buf_len = (unsigned) min(Lines * (Cols + 6), 2800);
 	    if ((buf_ptr = SP_PARM->_setbuf) == 0) {
 		if ((buf_ptr = typeMalloc(char, buf_len)) == NULL)
 		      return;

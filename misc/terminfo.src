@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.364 $
-#	$Date: 2010/07/17 22:55:06 $
+#	$Revision: 1.367 $
+#	$Date: 2010/08/28 20:43:25 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2061,7 +2061,7 @@ bsdos-ppc|PowerPC BSD/OS Console,
 vt52|dec vt52,
 	OTbs,
 	cols#80, it#8, lines#24,
-	acsc=ffgghhompoqqss.k, bel=^G, clear=\EH\EJ, cr=^M,
+	acsc=ffggolpnqprrss+h.k0a, bel=^G, clear=\EH\EJ, cr=^M,
 	cub1=\ED, cud1=\EB, cuf1=\EC,
 	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, ed=\EJ,
 	el=\EK, home=\EH, ht=^I, ind=^J, kbs=^H, kcub1=\ED, kcud1=\EB,
@@ -16341,7 +16341,7 @@ tek4115|newer tektronix 4115 entry with more ANSI capabilities,
 	kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, khome=\E[H,
 	rep=%p1%c\E[%p2%{1}%-%db, rev=\E[7m, rmam=\E[?7l,
 	rmso=\E[m, rmul=\E[m,
-	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;m,
+	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;%?%p7%t8;%;m,
 	sgr0=\E[m, smam=\E[?7h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 	vpa=\E[%p1%{1}%+%dd,
 # The tek4125 emulates a vt100 incorrectly - the scrolling region
@@ -17047,20 +17047,20 @@ nsterm+7|AppKit Terminal.app v41+ basic capabilities w/ASCII charset,
 	rmam=\E[?7l, rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m,
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
-	sgr0=\E[m\017, smam=\E[?7h, smkx=\E[?1h\E=, smso=\E[7m,
+	sgr0=\E[m, smam=\E[?7h, smkx=\E[?1h\E=, smso=\E[7m,
 	smul=\E[4m, tbc=\E[3g, use=vt100+enq, use=vt100+pfkeys,
 
 nsterm+acs|AppKit Terminal.app v41+ basic capabilities w/VT100 alternate-charset,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	enacs=\E(B\E)0, rmacs=^O,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
-	smacs=^N, use=nsterm+7,
+	sgr0=\E[m\017, smacs=^N, use=nsterm+7,
 
 nsterm+mac|AppKit Terminal.app v41+ basic capabilities w/MacRoman alternate-charset,
 	acsc=0#`\327a\:f\241g\261h#i\360jjkkllmmnno\370p\370q\321rrssttuuvvwwxxy\262z\263{\271|\255}\243~\245+\335-\366\,\334.\377,
 	enacs=\E(B\E)0, rmacs=^O,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
-	smacs=^N, use=nsterm+7,
+	sgr0=\E[m\017, smacs=^N, use=nsterm+7,
 
 nsterm+s|AppKit Terminal.app v41+ status-line (window titlebar) support,
 	hs,
@@ -17302,7 +17302,7 @@ xnuppc+basic|Darwin PowerPC Console basic capabilities,
 	rmul=\E[m, rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h,
 	sc=\E7,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m,
-	sgr0=\E[m\017, smam=\E[?7h, smkx=\E[?1h\E=, smso=\E[7m,
+	sgr0=\E[m, smam=\E[?7h, smkx=\E[?1h\E=, smso=\E[7m,
 	smul=\E[4m, tbc=\E[3g, use=vt100+keypad,
 
 xnuppc+c|Darwin PowerPC Console ANSI color support,
@@ -22268,6 +22268,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2010-07-17
 #	* add hard-reset for rs2 to wsvt25 to help ensure that reset ends
 #	  the alternate character set (patch by Nicholas Marriott)
+#
+# 2010-08-28
+#	* improve acsc for vt52 (Benjamin Sittler)
+#	* modify nsterm entries for consistent sgr/sgr0 -TD
+#	* modify xnuppc entries for consistent sgr/sgr0 -TD
+#	* add invis to tek4115 sgr -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

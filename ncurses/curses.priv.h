@@ -35,7 +35,7 @@
 
 
 /*
- * $Id: curses.priv.h,v 1.464 2010/07/31 22:16:10 tom Exp $
+ * $Id: curses.priv.h,v 1.465 2010/08/28 20:56:48 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1778,7 +1778,7 @@ extern NCURSES_EXPORT(int) _nc_wchstrlen(const cchar_t *);
 extern NCURSES_EXPORT(bool) _nc_reset_colors(void);
 
 /* lib_getch.c */
-extern NCURSES_EXPORT(int) _nc_wgetch(WINDOW *, unsigned long *, int EVENTLIST_2nd(_nc_eventlist *));
+extern NCURSES_EXPORT(int) _nc_wgetch(WINDOW *, int *, int EVENTLIST_2nd(_nc_eventlist *));
 
 /* lib_insch.c */
 extern NCURSES_EXPORT(int) _nc_insert_ch(SCREEN *, WINDOW *, chtype);

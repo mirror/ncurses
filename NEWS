@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1581 2010/08/14 23:32:54 tom Exp $
+-- $Id: NEWS,v 1.1585 2010/08/28 20:52:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20100828
+	+ modify nsterm, xnuppc and tek4115 to make sgr/sgr0 consistent -TD
+	+ add check in terminfo source-reader to provide more informative
+	  message when someone attempts to run tic on a compiled terminal
+	  description (prompted by Debian #593920).
+	+ note in infotocap and captoinfo manpages that they read terminal
+	  descriptions from text-files (Debian #593920).
+	+ improve acsc string for vt52, show arrow keys (patch by Benjamin
+	  Sittler).
 
 20100814
 	+ document in manpages that "mv" functions first use wmove() to check

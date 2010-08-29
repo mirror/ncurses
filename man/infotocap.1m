@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infotocap.1m,v 1.9 2010/07/31 16:08:48 tom Exp $
+.\" $Id: infotocap.1m,v 1.10 2010/08/28 19:40:02 tom Exp $
 .TH @INFOTOCAP@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -36,9 +36,11 @@
 .SH SYNOPSIS
 \fB@INFOTOCAP@\fR [\fB\-v\fR\fIn\fR \fIwidth\fR]  [\fB\-V\fR] [\fB\-1\fR] [\fB\-w\fR \fIwidth\fR] \fIfile\fR . . .
 .SH DESCRIPTION
-\fB@INFOTOCAP@\fR looks in \fIfile\fR for \fBterminfo\fR descriptions.  For each
-one found, an equivalent \fBtermcap\fR description is written to standard
-output.  Terminfo \fBuse\fR capabilities are translated directly to termcap
+\fB@INFOTOCAP@\fR looks in each given text
+\fIfile\fR for \fBterminfo\fR descriptions.
+For each terminfo description found,
+an equivalent \fBtermcap\fR description is written to standard output.
+Terminfo \fBuse\fR capabilities are translated directly to termcap
 \fBtc\fR capabilities.
 .TP 5
 \fB\-v\fR
@@ -48,9 +50,9 @@ print out tracing information on standard error as the program runs.
 print out the version of the program in use on standard error and exit.
 .TP 5
 \fB\-1\fR
-cause the fields to print out one to a line.  Otherwise, the fields
-will be printed several to a line to a maximum width of 60
-characters.
+cause the fields to print out one to a line.
+Otherwise, the fields
+will be printed several to a line to a maximum width of 60 characters.
 .TP 5
 \fB\-w\fR
 change the output to \fIwidth\fR characters.
@@ -69,6 +71,11 @@ You can use other \fI@TIC@\fR options such as \fB\-f\fR and  \fB\-x\fR.
 .PP
 This describes \fBncurses\fR
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
+.SH AUTHOR
+Eric S. Raymond <esr@snark.thyrsus.com>
+and
+.br
+Thomas E. Dickey <dickey@invisible-island.net>
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:
