@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.503 2010/08/07 20:00:17 tom Exp $
+dnl $Id: configure.in,v 1.506 2010/09/04 21:49:28 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.503 $)
+AC_REVISION($Revision: 1.506 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -135,6 +135,13 @@ AC_ARG_WITH(progs,
 	[cf_with_progs=$withval],
 	[cf_with_progs=yes])
 AC_MSG_RESULT($cf_with_progs)
+
+AC_MSG_CHECKING(if you want to build test-programs)
+AC_ARG_WITH(tests,
+	[  --without-tests         suppress build with test-programs],
+	[cf_with_tests=$withval],
+	[cf_with_tests=yes])
+AC_MSG_RESULT($cf_with_tests)
 
 AC_MSG_CHECKING(if you wish to install curses.h)
 AC_ARG_WITH(curses-h,
@@ -1879,6 +1886,13 @@ then
 fi
 AC_SUBST(TIC_PATH)
 
+if test "x$cf_with_tests" != xno ; then
+	MAKE_TESTS=
+else
+	MAKE_TESTS="#"
+fi
+AC_SUBST(MAKE_TESTS)
+
 AC_OUTPUT( \
 	include/MKterm.h.awk \
 	include/curses.head:include/curses.h.in \
@@ -1887,7 +1901,9 @@ AC_OUTPUT( \
 	include/unctrl.h \
 	$SUB_MAKEFILES \
 	Makefile,[
-CF_PRG_RULES([$srcdir/test/mk-test.awk ECHO_LINK="$ECHO_LINK"], test)
+if test "x$cf_with_tests" != xno ; then
+	CF_PRG_RULES([$srcdir/test/mk-test.awk ECHO_LINK="$ECHO_LINK"], test)
+fi
 CF_LIB_RULES($SRC_SUBDIRS)
 
 if test "x$cf_with_ada" != xno ; then
@@ -1946,6 +1962,7 @@ cf_cv_system_name="$cf_cv_system_name"
 cf_with_ada="$cf_with_ada"
 cf_with_cxx_binding="$cf_with_cxx_binding"
 cf_with_manpages="$cf_with_manpages"
+cf_with_tests="$cf_with_tests"
 host="$host"
 target="$target"
 

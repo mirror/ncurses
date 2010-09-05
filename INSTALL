@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.146 2010/07/03 22:50:50 tom Exp $
+-- $Id: INSTALL,v 1.147 2010/09/04 20:57:46 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1024,6 +1024,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Tell the configure script to suppress the build of ncurses' application
 	programs (e.g., tic).  The test applications will still be built if you
 	type "make", though not if you simply do "make install".
+
+    --without-tests
+	Tell the configure script to suppress the build of ncurses' test
+	programs.
 
     --without-xterm-new
 	Tell the configure script to use "xterm-old" for the entry used in

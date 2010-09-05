@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.542 2010/08/14 23:37:19 tom Exp $
+dnl $Id: aclocal.m4,v 1.544 2010/09/04 23:25:24 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2572,7 +2572,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 58 updated: 2010/08/14 19:00:32
+dnl CF_LIB_RULES version: 59 updated: 2010/09/04 19:24:20
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -2606,7 +2606,7 @@ if test -n "$TINFO_SUFFIX" ; then
 		TINFO_SUFFIX=`echo $TINFO_SUFFIX | sed 's/^t//'`
 		;;
 	w*)
-		TINFO_NAME="${TINFO_NAME}/w"
+		TINFO_NAME="${TINFO_NAME}w"
 		TINFO_SUFFIX=`echo $TINFO_SUFFIX | sed 's/^w//'`
 		;;
 	esac
@@ -5246,7 +5246,7 @@ if test "$cf_cv_sizechange" != no ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SRC_MODULES version: 20 updated: 2008/12/27 12:30:03
+dnl CF_SRC_MODULES version: 21 updated: 2010/09/04 17:37:40
 dnl --------------
 dnl For each parameter, test if the source-directory exists, and if it contains
 dnl a 'modules' file.  If so, add to the list $cf_cv_src_modules which we'll
@@ -5330,14 +5330,19 @@ for cf_dir in $cf_cv_src_modules
 do
 	SRC_SUBDIRS="$SRC_SUBDIRS $cf_dir"
 done
-SRC_SUBDIRS="$SRC_SUBDIRS test"
+if test "x$cf_with_tests" != "xno" ; then
+	SRC_SUBDIRS="$SRC_SUBDIRS test"
+fi
 test -z "$MAKE_TERMINFO" && SRC_SUBDIRS="$SRC_SUBDIRS misc"
 test "$cf_with_cxx_binding" != no && SRC_SUBDIRS="$SRC_SUBDIRS c++"
 
 ADA_SUBDIRS=
 if test "$cf_cv_prog_gnat_correct" = yes && test -f $srcdir/Ada95/Makefile.in; then
 	SRC_SUBDIRS="$SRC_SUBDIRS Ada95"
-	ADA_SUBDIRS="gen src samples"
+	ADA_SUBDIRS="gen src"
+	if test "x$cf_with_tests" != "xno" ; then
+		ADA_SUBDIRS="$ADA_SUBDIRS samples"
+	fi
 fi
 
 SUB_MAKEFILES=

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.18 2010/07/24 20:46:50 tom Exp $
+dnl $Id: configure.in,v 1.19 2010/09/04 21:43:36 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.18 $)
+AC_REVISION($Revision: 1.19 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -97,6 +97,13 @@ if test "$PKG_CONFIG" != no ; then
 	fi
 fi
 AC_SUBST(PKG_CONFIG_LIBDIR)
+
+AC_MSG_CHECKING(if you want to build test-programs)
+AC_ARG_WITH(tests,
+	[  --without-tests         suppress build with test-programs],
+	[cf_with_tests=$withval],
+	[cf_with_tests=yes])
+AC_MSG_RESULT($cf_with_tests)
 
 AC_MSG_CHECKING(if we should assume mixed-case filenames)
 AC_ARG_ENABLE(mixed-case,
@@ -568,7 +575,10 @@ dnl for separate build, this is good enough for "sh $(top_srcdir)/misc/shlib"
 NCURSES_SHLIB2="sh -c"
 AC_SUBST(NCURSES_SHLIB2)
 
-ADA_SUBDIRS="include gen src samples"
+ADA_SUBDIRS="gen src"
+if test "x$cf_with_tests" != "xno" ; then
+	ADA_SUBDIRS="$ADA_SUBDIRS samples"
+fi
 for cf_dir in $ADA_SUBDIRS
 do
 	SUB_MAKEFILES="$SUB_MAKEFILES $cf_dir/Makefile"

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2009,2010 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include <transform.h>
 
-MODULE_ID("$Id: transform.c,v 1.1 2009/03/14 19:08:28 tom Exp $")
+MODULE_ID("$Id: transform.c,v 1.2 2010/09/04 21:16:17 tom Exp $")
 
 #ifdef SUFFIX_IGNORED
 static void
@@ -51,7 +51,7 @@ trim_suffix(const char *a, unsigned *len)
 	    unsigned n;
 	    trim = TRUE;
 	    for (n = first; n < *len; ++n) {
-		if (tolower(a[n]) != tolower(ignore[n - first])) {
+		if (tolower(UChar(a[n])) != tolower(UChar(ignore[n - first]))) {
 		    trim = FALSE;
 		    break;
 		}
@@ -63,7 +63,7 @@ trim_suffix(const char *a, unsigned *len)
     }
 }
 #else
-#define trim_suffix(a, len) /* nothing */
+#define trim_suffix(a, len)	/* nothing */
 #endif
 
 bool

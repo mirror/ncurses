@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.53 2010/05/01 17:08:30 tom Exp $
+    $Id: gen.c,v 1.54 2010/09/04 21:19:50 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -57,6 +57,7 @@
 #include <menu.h>
 #include <form.h>
 
+#define UChar(c)	((unsigned char)(c))
 #define RES_NAME "Reserved"
 
 static const char *model = "";
@@ -445,13 +446,14 @@ keydef(const char *name, const char *old_name, int value, int mode)
   if (mode == 0)		/* Generate the new name */
     printf("   %-30s : constant Special_Key_Code := 8#%3o#;\n", name, value);
   else
-    {				/* generate the old name, but only if it doesn't conflict with the old
-				 * name (Ada95 isn't case sensitive!)
-				 */
+    {
       const char *s = old_name;
       const char *t = name;
 
-      while (*s && *t && (toupper(*s++) == toupper(*t++)));
+      /* generate the old name, but only if it doesn't conflict with the old
+       * name (Ada95 isn't case sensitive!)
+       */
+      while (*s && *t && (toupper(UChar(*s++)) == toupper(UChar(*t++))));
       if (*s || *t)
 	printf("   %-16s : Special_Key_Code renames %s;\n", old_name, name);
     }
@@ -771,7 +773,7 @@ acs_def(const char *name, chtype *a)
   int c = a - &acs_map[0];
 
   printf("   %-24s : constant Character := ", name);
-  if (isprint(c) && (c != '`'))
+  if (isprint(UChar(c)) && (c != '`'))
     printf("'%c';\n", c);
   else
     printf("Character'Val (%d);\n", c);

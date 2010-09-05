@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.15 2010/07/24 21:33:12 tom Exp $
+dnl $Id: aclocal.m4,v 1.16 2010/09/04 21:41:53 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -931,7 +931,7 @@ if test "$GCC" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 25 updated: 2010/04/24 11:03:31
+dnl CF_GCC_WARNINGS version: 26 updated: 2010/08/14 18:25:37
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -1035,7 +1035,7 @@ then
 	done
 	CFLAGS="$cf_save_CFLAGS"
 fi
-rm -f conftest*
+rm -rf conftest*
 
 AC_SUBST(EXTRA_CFLAGS)
 ])dnl
@@ -1069,7 +1069,7 @@ fi
 AC_SUBST(PRAGMA_UNREF)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_TRY_LINK version: 1 updated: 2004/08/21 19:02:08
+dnl CF_GNAT_TRY_LINK version: 2 updated: 2010/08/14 18:25:37
 dnl ----------------
 dnl Verify that a test program compiles/links with GNAT.
 dnl $cf_ada_make is set to the program that compiles/links
@@ -1081,7 +1081,7 @@ dnl $3 is the shell command to execute if successful
 dnl $4 is the shell command to execute if not successful
 AC_DEFUN([CF_GNAT_TRY_LINK],
 [
-rm -f conftest*
+rm -rf conftest*
 cat >>conftest.ads <<CF_EOF
 $1
 CF_EOF
@@ -1093,10 +1093,10 @@ ifelse($3,,      :,[      $3])
 ifelse($4,,,[else
    $4])
 fi
-rm -f conftest*
+rm -rf conftest*
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_TRY_RUN version: 3 updated: 2004/08/21 19:02:08
+dnl CF_GNAT_TRY_RUN version: 4 updated: 2010/08/14 18:25:37
 dnl ---------------
 dnl Verify that a test program compiles and runs with GNAT
 dnl $cf_ada_make is set to the program that compiles/links
@@ -1108,7 +1108,7 @@ dnl $3 is the shell command to execute if successful
 dnl $4 is the shell command to execute if not successful
 AC_DEFUN([CF_GNAT_TRY_RUN],
 [
-rm -f conftest*
+rm -rf conftest*
 cat >>conftest.ads <<CF_EOF
 $1
 CF_EOF
@@ -1124,7 +1124,7 @@ ifelse($4,,,[   else
 ifelse($4,,,[else
    $4])
 fi
-rm -f conftest*
+rm -rf conftest*
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_VERSION version: 14 updated: 2010/07/03 17:45:09
@@ -1459,7 +1459,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SONAME version: 4 updated: 2010/05/29 16:31:02
+dnl CF_LIB_SONAME version: 5 updated: 2010/08/14 18:25:37
 dnl -------------
 dnl Find the and soname for the given shared library.  Set the cache variable
 dnl cf_cv_$3_soname to this, unless it is not found.  Then set the cache
@@ -1490,7 +1490,7 @@ cf_save_LIBS="$LIBS"
 			test -z "$cf_cv_$3_soname" && cf_cv_$3_soname=unknown
 		fi
 	fi
-rm -f conftest*
+rm -rf conftest*
 LIBS="$cf_save_LIBS"
 fi
 ])
@@ -1815,13 +1815,13 @@ fi
 test "$cf_cv_mixedcase" = yes && AC_DEFINE(MIXEDCASE_FILENAMES)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MKSTEMP version: 6 updated: 2010/05/22 14:44:30
+dnl CF_MKSTEMP version: 7 updated: 2010/08/14 18:25:37
 dnl ----------
 dnl Check for a working mkstemp.  This creates two files, checks that they are
 dnl successfully created and distinct (AmigaOS apparently fails on the last).
 AC_DEFUN([CF_MKSTEMP],[
 AC_CACHE_CHECK(for working mkstemp, cf_cv_func_mkstemp,[
-rm -f conftest*
+rm -rf conftest*
 AC_TRY_RUN([
 #include <sys/types.h>
 #include <stdlib.h>
@@ -2509,7 +2509,7 @@ AC_PROG_AWK
 test -z "$AWK" && AC_MSG_ERROR(No awk program found)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_CC_C_O version: 2 updated: 2006/12/16 15:55:46
+dnl CF_PROG_CC_C_O version: 3 updated: 2010/08/14 18:25:37
 dnl --------------
 dnl Analogous to AC_PROG_CC_C_O, but more useful: tests only $CC, ensures that
 dnl the output file can be renamed, and allows for a shell variable that can
@@ -2539,7 +2539,7 @@ then
 else
   eval cf_cv_prog_$1_c_o=no
 fi
-rm -f conftest*
+rm -rf conftest*
 ])dnl
 if test $cf_cv_prog_$1_c_o = yes; then
   AC_MSG_RESULT([yes])
@@ -2621,7 +2621,7 @@ fi
 AC_SUBST(cf_ada_make)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_LN_S version: 1 updated: 2010/07/24 17:12:40
+dnl CF_PROG_LN_S version: 2 updated: 2010/08/14 18:25:37
 dnl ------------
 dnl Combine checks for "ln -s" and "ln -sf", updating $LN_S to include "-f"
 dnl option if it is supported.
@@ -2637,7 +2637,7 @@ if $LN_S -f conf$$.src conf$$.dst 2>/dev/null; then
 else
 	cf_prog_ln_sf=no
 fi
-
+rm -f conf$$.dst conf$$src
 AC_MSG_RESULT($cf_prog_ln_sf)
 
 test "$cf_prog_ln_sf" = yes && LN_S="$LN_S -f"
