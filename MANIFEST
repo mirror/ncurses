@@ -602,6 +602,7 @@
 ./man/curs_touch.3x
 ./man/curs_trace.3x
 ./man/curs_util.3x
+./man/curs_variables.3x
 ./man/curs_window.3x
 ./man/default_colors.3x
 ./man/define_key.3x
@@ -627,6 +628,7 @@
 ./man/form_post.3x
 ./man/form_requestname.3x
 ./man/form_userptr.3x
+./man/form_variables.3x
 ./man/form_win.3x
 ./man/infocmp.1m
 ./man/infotocap.1m
@@ -666,6 +668,7 @@
 ./man/tabs.1
 ./man/term.5
 ./man/term.7
+./man/term_variables.3x
 ./man/terminfo.head
 ./man/terminfo.tail
 ./man/tic.1m

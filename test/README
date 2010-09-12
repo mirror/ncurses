@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.41 2009/09/12 23:17:29 tom Exp $
+-- $Id: README,v 1.42 2010/09/11 22:00:58 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are designed to test your newest toy :-)
@@ -218,7 +218,7 @@ ESCDELAY			test: test_opaque
 LINES				test: cardfile demo_defkey demo_keyok demo_menus demo_panels ditto echochar edit_field firework hanoi hashtest inch_wide inchs ins_wide inserts lrtest movewindow ncurses newdemo rain savescreen tclock test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque testcurs view worm xmas
 PAIR_NUMBER			test: ncurses
 PC				lib: ncurses
-SP				lib: menu
+SP				lib: form
 TABSIZE				test: test_opaque
 UP				-
 acs_map				test: gdc ins_wide inserts knight movewindow ncurses newdemo test_add_wchstr test_addchstr test_addstr test_addwstr testcurs
@@ -516,19 +516,19 @@ setupterm			test: demo_termcap demo_terminfo dots progs: clear tabs tput tset
 slk_attr			-
 slk_attr_off			-
 slk_attr_on			-
-slk_attr_set			-
+slk_attr_set			test: ncurses
 slk_attroff			lib: ncurses
 slk_attron			lib: ncurses
-slk_attrset			-
+slk_attrset			test: ncurses
 slk_clear			test: ncurses
 slk_color			test: ncurses
 slk_init			test: ncurses
 slk_label			test: ncurses
-slk_noutrefresh			-
+slk_noutrefresh			test: ncurses
 slk_refresh			test: ncurses
 slk_restore			test: ncurses
 slk_set				test: ncurses
-slk_touch			lib: ncurses
+slk_touch			test: ncurses
 slk_wset			test: ncurses
 standend			test: blue gdc ncurses
 standout			test: blue ncurses
@@ -552,6 +552,7 @@ tigetflag			test: demo_terminfo progs: tput
 tigetnum			test: demo_terminfo ncurses progs: tput
 tigetstr			test: blue demo_defkey demo_terminfo foldkeys testcurs progs: tput
 timeout				test: rain savescreen
+tiparm				-
 touchline			test: chgat clip_printw insdelln
 touchwin			test: chgat clip_printw demo_menus edit_field filter firstlast inch_wide inchs ins_wide insdelln inserts movewindow ncurses redraw test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque xmas
 tparm				test: dots dots_mvcur progs: tabs tic tput
@@ -613,7 +614,7 @@ wdelch				test: ncurses testcurs
 wdeleteln			test: insdelln testcurs
 wecho_wchar			lib: ncurses
 wechochar			lib: ncurses
-wenclose			lib: form
+wenclose			test: ncurses
 werase				test: cardfile demo_forms demo_menus demo_panels edit_field firstlast knight ncurses newdemo test_get_wstr test_getstr test_opaque testcurs xmas
 wget_wch			test: ins_wide ncurses test_add_wchstr test_addwstr
 wget_wstr			test: test_get_wstr
@@ -644,7 +645,7 @@ winsnstr			test: inserts
 winsstr				test: inserts
 winstr				test: test_instr
 winwstr				test: test_inwstr
-wmouse_trafo			lib: form
+wmouse_trafo			test: ncurses
 wmove				test: chgat clip_printw demo_altkeys demo_defkey demo_keyok demo_menus demo_panels firstlast foldkeys inch_wide inchs ins_wide insdelln inserts knight movewindow ncurses newdemo redraw test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque testcurs worm
 wnoutrefresh			test: demo_menus ditto edit_field inch_wide inchs ins_wide inserts knight movewindow ncurses redraw test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque
 wprintw				test: chgat clip_printw demo_defkey demo_forms demo_keyok demo_menus demo_panels edit_field inch_wide inchs ins_wide insdelln inserts knight movewindow ncurses test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque testcurs
@@ -654,8 +655,8 @@ wresize				test: cardfile ncurses
 wscanw				test: testcurs
 wscrl				test: ncurses testcurs
 wsetscrreg			test: ncurses testcurs
-wstandend			test: test_opaque xmas
-wstandout			test: test_opaque xmas
+wstandend			test: ncurses test_opaque xmas
+wstandout			test: ncurses test_opaque xmas
 wsyncdown			test: movewindow
 wsyncup				lib: form
 wtimeout			test: ncurses

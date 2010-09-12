@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: man_db.renames,v 1.45 2010/03/06 22:21:42 tom Exp $
+# $Id: man_db.renames,v 1.46 2010/09/11 18:47:13 tom Exp $
 # Manual-page renamings for the man_db program
 #
 # Files:
@@ -89,6 +89,7 @@ curs_threads.3x			threads.3ncurses
 curs_touch.3x			touch.3ncurses
 curs_trace.3x			trace.3ncurses
 curs_util.3x			util.3ncurses
+curs_variables.3x		curses_variables.3ncurses
 curs_window.3x			window.3ncurses
 curses.3x			ncurses.3ncurses
 default_colors.3x		default_colors.3ncurses
@@ -115,6 +116,7 @@ form_page.3x			page.3form
 form_post.3x			post.3form
 form_requestname.3x		requestname.3form
 form_userptr.3x			userptr.3form
+form_variables.3x		form_variables.3form
 form_win.3x			win.3form
 infocmp.1m			infocmp.1
 infotocap.1m			infotocap.1
@@ -155,6 +157,7 @@ system.3s			system.3
 tabs.1				tabs.1
 term.5				term.5
 term.7				term.7
+term_variables.3x		terminfo_variables.3ncurses
 terminfo.5			terminfo.5
 terminfo.\\\*n			terminfo.5
 tic.1m				tic.1

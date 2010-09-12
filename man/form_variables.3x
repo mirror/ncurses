@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2007,2010 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 2010 Free Software Foundation, Inc.                        *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,60 +26,60 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_legacy.3x,v 1.3 2010/09/11 22:21:52 tom Exp $
-.TH curs_legacy 3X ""
+.\" $Id: form_variables.3x,v 1.1 2010/09/11 21:39:48 tom Exp $
+.TH form_variables 3X ""
+.ds n 5
+.na
+.hy 0
 .SH NAME
-get \fBcurses\fR cursor and window coordinates, attributes
+TYPE_ALNUM
+TYPE_ALPHA
+TYPE_ENUM
+TYPE_INTEGER
+TYPE_IPV4
+TYPE_NUMERIC
+TYPE_REGEXP
+\- form system global variables
+.ad
+.hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
-.sp
-\fBint getattrs(WINDOW *win);\fR
+.nf
+\fB#include <form.h>\fR
 .br
-\fBint getbegx(WINDOW *win);\fR
+.PP
+\fBFIELDTYPE * TYPE_ALNUM;\fR
+\fBFIELDTYPE * TYPE_ALPHA;\fR
+\fBFIELDTYPE * TYPE_ENUM;\fR
+\fBFIELDTYPE * TYPE_INTEGER;\fR
+\fBFIELDTYPE * TYPE_IPV4;\fR
+\fBFIELDTYPE * TYPE_NUMERIC;\fR
+\fBFIELDTYPE * TYPE_REGEXP;\fR
 .br
-\fBint getbegy(WINDOW *win);\fR
-.br
-\fBint getcurx(WINDOW *win);\fR
-.br
-\fBint getcury(WINDOW *win);\fR
-.br
-\fBint getmaxx(WINDOW *win);\fR
-.br
-\fBint getmaxy(WINDOW *win);\fR
-.br
-\fBint getparx(WINDOW *win);\fR
-.br
-\fBint getpary(WINDOW *win);\fR
-.br
+.fi
 .SH DESCRIPTION
-The \fBgetbegy\fR and \fBgetbegx\fR functions return the same
-data as \fBgetbegyx\fR.
-.PP
-The \fBgetcury\fR and \fBgetcurx\fR functions return the same
-data as \fBgetyx\fR.
-.PP
-The \fBgetmaxy\fR and \fBgetmaxx\fR functions return the same
-data as \fBgetmaxyx\fR.
-.PP
-The \fBgetpary\fR and \fBgetparx\fR functions return the same
-data as \fBgetparyx\fR.
-.SH RETURN VALUE
-These functions return an integer,
-or ERR if the window parameter is null.
-.SH NOTES
-All of these interfaces are provided as macros and functions.
-The macros are suppressed (and only the functions provided)
-when \fBNCURSES_OPAQUE\fR is defined.
-The standard forms such as \fBgetyx\fP must be implemented as macros,
-and (in this implementation) are defined in terms of the functions
-described here,
-to avoid reliance on internal details of the WINDOW structure.
+These are building blocks for the form library,
+defining fields that can be created using \fBset_fieldtype\fP(3X).
+Each provides functions for field- and character-validation,
+according to the given datatype.
+.SS TYPE_ALNUM
+This holds alphanumeric data.
+.SS TYPE_ALPHA
+This holds alphabetic data.
+.SS TYPE_ENUM
+This holds an enumerated type.
+.SS TYPE_INTEGER
+This holds a decimal integer.
+.SS TYPE_IPV4
+This holds an IPv4 internet address, e.g., "127.0.0.1".
+.SS TYPE_NUMERIC
+This holds a decimal number, with optional sign and decimal point.
+.SS TYPE_REGEXP
+This holds a regular expression.
 .SH PORTABILITY
-These functions were supported on Version 7, BSD or System V implementations.
+The \fBTYPE_IPV4\fP variable is an extension not provided by older
+implementations of the form library.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_getyx\fR(3X),
-\fBcurs_opaque\fR(3X)
+\fBform\fR(3X).
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:

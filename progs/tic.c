@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.142 2010/07/24 22:09:28 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.143 2010/09/11 17:56:42 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -764,6 +764,7 @@ main(int argc, char *argv[])
 			    put_translate(fgetc(tmp_fp));
 		    }
 
+		    repair_acsc(&qp->tterm);
 		    dump_entry(&qp->tterm, suppress_untranslatable,
 			       limited, numbers, NULL);
 		    for (j = 0; j < (int) qp->nuses; j++)

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_threads.3x,v 1.13 2010/07/31 16:10:55 tom Exp $
+.\" $Id: curs_threads.3x,v 1.15 2010/09/11 22:17:11 tom Exp $
 .TH curs_threads 3X ""
 .na
 .hy 0
@@ -39,7 +39,10 @@
 \fB#include <curses.h>\fR
 .sp
 \fBtypedef int (*NCURSES_WINDOW_CB)(WINDOW *, void *);\fR
+.br
 \fBtypedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);\fR
+.br
+\fBint get_escdelay(void);\fR
 .br
 \fBint set_escdelay(int size);\fR
 .br
@@ -88,6 +91,8 @@ The ESCDELAY and TABSIZE global variables are modified by some applications.
 To modify them in any configuration,
 use the \fBset_escdelay\fP or \fBset_tabsize\fP functions.
 Other global variables are not modifiable.
+.PP
+The \fBget_escdelay\fP function returns the value for ESCDELAY.
 .PP
 The \fBuse_window\fP and \fBuse_screen\fP functions provide coarse
 granularity mutexes for their respective \fBWINDOW\fP and \fBSCREEN\fP

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_buffer.3x,v 1.16 2010/07/31 16:09:36 tom Exp $
+.\" $Id: form_field_buffer.3x,v 1.17 2010/09/11 18:13:24 Jason.McIntyre Exp $
 .TH form_field_buffer 3X ""
 .SH NAME
 \fBform_field_buffer\fR \- field buffer control
@@ -122,7 +122,7 @@ descriptions of the entry points.
 .SH NOTES
 The header file \fB<form.h>\fR automatically includes the header file
 .PP
-When configured for wide-characters, \fBfield_buffer\fP returns a pointer
+When configured for wide characters, \fBfield_buffer\fP returns a pointer
 to temporary storage (allocated and freed by the library).
 The application should not attempt to modify the data.
 It will be freed on the next call to \fBfield_buffer\fP to return the
