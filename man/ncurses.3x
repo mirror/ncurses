@@ -27,9 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.97 2010/09/11 20:54:13 tom Exp $
+.\" $Id: ncurses.3x,v 1.98 2010/09/18 20:17:20 tom Exp $
 .hy 0
 .TH ncurses 3X ""
+.de bP
+.IP \(bu 4
+..
 .ds n 5
 .ds d @TERMINFO@
 .SH NAME
@@ -960,20 +963,15 @@ description.
 This is the simplest, but not the only way to change the list of directories.
 The complete list of directories in order follows:
 .RS
-.TP 3
-\-
+.bP
 the last directory to which \fBncurses\fR wrote, if any, is searched first
-.TP 3
-\-
+.bP
 the directory specified by the TERMINFO symbol
-.TP 3
-\-
+.bP
 $HOME/.terminfo
-.TP 3
-\-
+.bP
 directories listed in the TERMINFO_DIRS symbol
-.TP 3
-\-
+.bP
 one or more directories whose names are configured and compiled into the
 ncurses library, e.g.,
 @TERMINFO@

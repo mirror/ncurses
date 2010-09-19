@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infotocap.1m,v 1.9 2010/07/31 16:08:48 tom Exp @
+  * @Id: infotocap.1m,v 1.10 2010/08/28 19:40:02 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -59,18 +59,19 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       <STRONG>infotocap</STRONG> looks in <EM>file</EM> for  <STRONG>terminfo</STRONG>  descriptions.   For
-       each one found, an equivalent <STRONG>termcap</STRONG> description is writ-
-       ten to standard output.   Terminfo  <STRONG>use</STRONG>  capabilities  are
-       translated directly to termcap <STRONG>tc</STRONG> capabilities.
+       <STRONG>infotocap</STRONG> looks in  each  given  text  <EM>file</EM>  for  <STRONG>terminfo</STRONG>
+       descriptions.   For  each  terminfo  description found, an
+       equivalent <STRONG>termcap</STRONG> description is written to standard out-
+       put.  Terminfo <STRONG>use</STRONG> capabilities are translated directly to
+       termcap <STRONG>tc</STRONG> capabilities.
 
-       <STRONG>-v</STRONG>   print  out  tracing  information on standard error as
+       <STRONG>-v</STRONG>   print out tracing information on  standard  error  as
             the program runs.
 
-       <STRONG>-V</STRONG>   print out the version of the program in use on  stan-
+       <STRONG>-V</STRONG>   print  out the version of the program in use on stan-
             dard error and exit.
 
-       <STRONG>-1</STRONG>   cause  the fields to print out one to a line.  Other-
+       <STRONG>-1</STRONG>   cause the fields to print out one to a line.   Other-
             wise, the fields will be printed several to a line to
             a maximum width of 60 characters.
 
@@ -85,7 +86,7 @@
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       This utility is actually a link  to  <EM>tic</EM>,  running  in  <EM>-C</EM>
+       This  utility  is  actually  a  link to <EM>tic</EM>, running in <EM>-C</EM>
        mode.  You can use other <EM>tic</EM> options such as <STRONG>-f</STRONG> and  <STRONG>-x</STRONG>.
 
 
@@ -93,7 +94,13 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100731).
+       This describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100918).
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       Eric S. Raymond &lt;esr@snark.thyrsus.com&gt; and
+       Thomas E. Dickey &lt;dickey@invisible-island.net&gt;
 
 
 

@@ -26,8 +26,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_threads.3x,v 1.15 2010/09/11 22:17:11 tom Exp $
+.\" $Id: curs_threads.3x,v 1.16 2010/09/18 20:25:32 tom Exp $
 .TH curs_threads 3X ""
+.de bP
+.IP \(bu 4
+..
 .na
 .hy 0
 .SH NAME
@@ -105,26 +108,21 @@ All of the ncurses library functions assume that the locale is not
 altered during operation.
 In addition,
 they use data which is maintained within a hierarchy of scopes.
-.RS
-.TP 3
-\-
+.RS 3
+.bP
 global data, e.g., used in the low-level terminfo or termcap interfaces.
-.TP 3
-\-
+.bP
 terminal data, e.g., associated with a call to \fIset_curterm\fP.
 The terminal data are initialized when screens are created.
-.TP 3
-\-
+.bP
 screen data, e.g., associated with a call to \fInewterm\fP or \fIinitscr\fP.
-.TP 3
-\-
+.bP
 window data, e.g., associated with a call to \fInewwin\fP or \fIsubwin\fP.
 Windows are associated with screens.
 Pads are not necessarily associated with a particular screen.
 .IP
 Most curses applications operate on one or more windows within a single screen.
-.TP 3
-\-
+.bP
 reentrant, i.e., it uses only the data passed as parameters.
 .RE
 .PP

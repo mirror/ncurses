@@ -26,8 +26,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_add_wch.3x,v 1.8 2010/08/14 23:29:16 tom Exp $
+.\" $Id: curs_add_wch.3x,v 1.9 2010/09/18 20:18:34 tom Exp $
 .TH curs_add_wch 3X ""
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fBadd_wch\fP,
 \fBwadd_wch\fP,
@@ -63,23 +66,20 @@ window at its current position,
 which is then advanced.
 These functions perform
 wrapping and special-character processing as follows:
-.TP 5
-\-
+.bP
 If \fIwch\fP refers to a spacing character,
 then any previous character at that location is removed.
 A new character specified by \fIwch\fP is
 placed at that location with rendition specified by \fIwch\fP.
 The cursor then advances to
 the next spacing character on the screen.
-.TP 5
-\-
+.bP
 If \fIwch\fP refers to a non-spacing character,
 all previous characters at that location are preserved.
 The non-spacing characters of \fIwch\fP
 are added to the spacing complex character,
 and the rendition specified by \fIwch\fP is ignored.
-.TP 5
-\-
+.bP
 If the character part of \fIwch\fP is
 a tab, newline, backspace or other control character,
 the window is updated and the cursor moves as if \fBaddch\fR were called.

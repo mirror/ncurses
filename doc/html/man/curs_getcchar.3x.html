@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getcchar.3x,v 1.13 2010/07/31 16:12:01 tom Exp @
+  * @Id: curs_getcchar.3x,v 1.14 2010/09/18 20:26:21 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -77,43 +77,43 @@
        rendition from a <STRONG>cchar_t</STRONG> argument.  When <EM>wch</EM> is not a null
        pointer, the <STRONG>getcchar</STRONG> function does the following:
 
-       -    Extracts information from a <STRONG>cchar_t</STRONG> value <EM>wcval</EM>
+       <STRONG>o</STRONG>   Extracts information from a <STRONG>cchar_t</STRONG> value <EM>wcval</EM>
 
-       -    Stores  the  character  attributes  in  the  location
-            pointed to by <EM>attrs</EM>
+       <STRONG>o</STRONG>   Stores   the  character  attributes  in  the  location
+           pointed to by <EM>attrs</EM>
 
-       -    Stores the color-pair in the location pointed  to  by
-            <EM>color</EM><STRONG>_</STRONG><EM>pair</EM>
+       <STRONG>o</STRONG>   Stores the color-pair in the location  pointed  to  by
+           <EM>color</EM><STRONG>_</STRONG><EM>pair</EM>
 
-       -    Stores  the  wide-character string, characters refer-
-            enced by <EM>wcval</EM>, into the array pointed to by <EM>wch</EM>.
+       <STRONG>o</STRONG>   Stores  the  wide-character  string, characters refer-
+           enced by <EM>wcval</EM>, into the array pointed to by <EM>wch</EM>.
 
        When <EM>wch</EM> is a null pointer, the <STRONG>getcchar</STRONG> function does the
        following:
 
-       -    Obtains  the  number of wide characters pointed to by
-            <EM>wcval</EM>
+       <STRONG>o</STRONG>   Obtains  the  number  of wide characters pointed to by
+           <EM>wcval</EM>
 
-       -    Does not change  the  data  referenced  by  <EM>attrs</EM>  or
-            <EM>color</EM><STRONG>_</STRONG><EM>pair</EM>
+       <STRONG>o</STRONG>   Does not  change  the  data  referenced  by  <EM>attrs</EM>  or
+           <EM>color</EM><STRONG>_</STRONG><EM>pair</EM>
 
        The  <STRONG>setcchar</STRONG> function initializes the location pointed to
        by <EM>wcval</EM> by using:
 
-       -    The character attributes in <EM>attrs</EM>
+       <STRONG>o</STRONG>   The character attributes in <EM>attrs</EM>
 
-       -    The color pair in <EM>color</EM><STRONG>_</STRONG><EM>pair</EM>
+       <STRONG>o</STRONG>   The color pair in <EM>color</EM><STRONG>_</STRONG><EM>pair</EM>
 
-       -    The wide-character string pointed  to  by  <EM>wch</EM>.   The
-            string  must be L'\0' terminated, contain at most one
-            spacing character, which must be the first.
+       <STRONG>o</STRONG>   The wide-character string  pointed  to  by  <EM>wch</EM>.   The
+           string  must  be L'\0' terminated, contain at most one
+           spacing character, which must be the first.
 
-            Up to <STRONG>CCHARW_MAX</STRONG>-1 nonspacing characters may  follow.
-            Additional nonspacing characters are ignored.
+           Up to <STRONG>CCHARW_MAX</STRONG>-1 nonspacing characters  may  follow.
+           Additional nonspacing characters are ignored.
 
-            The  string  may  contain  a single control character
-            instead.  In that case, no nonspacing characters  are
-            allowed.
+           The  string  may  contain  a  single control character
+           instead.  In that case, no nonspacing  characters  are
+           allowed.
 
 
 </PRE>

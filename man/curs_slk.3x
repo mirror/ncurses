@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_slk.3x,v 1.19 2010/09/11 22:35:11 tom Exp $
+.\" $Id: curs_slk.3x,v 1.20 2010/09/18 22:38:29 tom Exp $
 .TH curs_slk 3X ""
 .na
 .hy 0
@@ -79,15 +79,13 @@
 .br
 \fBint slk_attr_off(const attr_t attrs, void * opts);\fR
 .br
-\fBint slk_attr_set(const attr_t attrs,\fR
-.br
-	\fBshort color_pair_number, void* opts);\fR
+\fBint slk_attr_set(const attr_t attrs, short color_pair, void* opts);\fR
 .br
 \fBattr_t slk_attr(void);\fR
 .br
-\fBint slk_color(short color_pair_number);\fR
+\fBint slk_color(short color_pair);\fR
 .br
-\fBint slk_wset (int labnum, const wchar_t *label, int fmt);\fR
+\fBint slk_wset(int labnum, const wchar_t *label, int fmt);\fR
 .br
 .SH DESCRIPTION
 The slk* functions manipulate the set of soft function-key labels that exist on

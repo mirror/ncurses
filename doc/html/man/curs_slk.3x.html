@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_slk.3x,v 1.18 2010/07/31 14:43:29 tom Exp @
+  * @Id: curs_slk.3x,v 1.19 2010/09/11 22:35:11 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -47,7 +47,7 @@
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>slk_init</STRONG>, <STRONG>slk_set</STRONG>, <STRONG>slk_refresh</STRONG>, <STRONG>slk_noutrefresh</STRONG>,
+       <STRONG>slk_init</STRONG>, <STRONG>slk_set</STRONG>, <STRONG>slk_wset</STRONG>, <STRONG>slk_refresh</STRONG>, <STRONG>slk_noutrefresh</STRONG>,
        <STRONG>slk_label</STRONG>, <STRONG>slk_clear</STRONG>, <STRONG>slk_restore</STRONG>, <STRONG>slk_touch</STRONG>, <STRONG>slk_attron</STRONG>,
        <STRONG>slk_attrset</STRONG>, <STRONG>slk_attroff</STRONG>, <STRONG>slk_attr_on</STRONG>, <STRONG>slk_attr_set</STRONG>,
        <STRONG>slk_attr_off</STRONG>, <STRONG>slk_attr</STRONG>, <STRONG>slk_color</STRONG> - <STRONG>curses</STRONG> soft label
@@ -75,6 +75,7 @@
             <STRONG>short</STRONG> <STRONG>color_pair_number,</STRONG> <STRONG>void*</STRONG> <STRONG>opts);</STRONG>
        <STRONG>attr_t</STRONG> <STRONG>slk_attr(void);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_color(short</STRONG> <STRONG>color_pair_number);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_wset</STRONG> <STRONG>(int</STRONG> <STRONG>labnum,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*label,</STRONG> <STRONG>int</STRONG> <STRONG>fmt);</STRONG>
 
 
 </PRE>
@@ -107,47 +108,48 @@
                  an index line is generated, helping the user  to
                  identify the key numbers easily.
 
-       The <STRONG>slk_set</STRONG> routine has three parameters:
+       The  <STRONG>slk_set</STRONG>  routine  (and  the  <STRONG>slk_wset</STRONG> routine for the
+       wide-character library) has three parameters:
 
               <EM>labnum</EM>
-                   is  the  label number, from <STRONG>1</STRONG> to <STRONG>8</STRONG> (12 for <EM>fmt</EM>
+                   is the label number, from <STRONG>1</STRONG> to <STRONG>8</STRONG> (12  for  <EM>fmt</EM>
                    in <STRONG>slk_init</STRONG> is <STRONG>2</STRONG> or <STRONG>3</STRONG>);
 
               <EM>label</EM>
-                   is be the string to put on the  label,  up  to
-                   eight  (five  for  <EM>fmt</EM>  in <STRONG>slk_init</STRONG> is <STRONG>2</STRONG> or <STRONG>3</STRONG>)
+                   is  be  the  string to put on the label, up to
+                   eight (five for <EM>fmt</EM> in <STRONG>slk_init</STRONG>  is  <STRONG>2</STRONG>  or  <STRONG>3</STRONG>)
                    characters in length.  A null string or a null
                    pointer sets up a blank label.
 
-              <EM>fmt</EM>  is  either  <STRONG>0</STRONG>, <STRONG>1</STRONG>, or <STRONG>2</STRONG>, indicating whether the
-                   label is to be  left-justified,  centered,  or
-                   right-justified,  respectively, within the la-
+              <EM>fmt</EM>  is either <STRONG>0</STRONG>, <STRONG>1</STRONG>, or <STRONG>2</STRONG>, indicating  whether  the
+                   label  is  to  be left-justified, centered, or
+                   right-justified, respectively, within the  la-
                    bel.
 
        The <STRONG>slk_refresh</STRONG> and <STRONG>slk_noutrefresh</STRONG> routines correspond to
        the <STRONG>wrefresh</STRONG> and <STRONG>wnoutrefresh</STRONG> routines.
 
-       The  <STRONG>slk_label</STRONG> routine returns the current label for label
+       The <STRONG>slk_label</STRONG> routine returns the current label for  label
        number <EM>labnum</EM>, with leading and trailing blanks stripped.
 
-       The <STRONG>slk_clear</STRONG> routine clears  the  soft  labels  from  the
+       The  <STRONG>slk_clear</STRONG>  routine  clears  the  soft labels from the
        screen.
 
-       The  <STRONG>slk_restore</STRONG>  routine  restores the soft labels to the
+       The <STRONG>slk_restore</STRONG> routine restores the soft  labels  to  the
        screen after a <STRONG>slk_clear</STRONG> has been performed.
 
-       The <STRONG>slk_touch</STRONG> routine forces all the  soft  labels  to  be
+       The  <STRONG>slk_touch</STRONG>  routine  forces  all the soft labels to be
        output the next time a <STRONG>slk_noutrefresh</STRONG> is performed.
 
        The <STRONG>slk_attron</STRONG>, <STRONG>slk_attrset</STRONG>, <STRONG>slk_attroff</STRONG> and <STRONG>slk_attr</STRONG> rou-
        tines correspond to <STRONG>attron</STRONG>, <STRONG>attrset</STRONG>, <STRONG>attroff</STRONG> and <STRONG>attr_get</STRONG>.
-       They  have  an effect only if soft labels are simulated on
-       the bottom line of the screen.  The default highlight  for
+       They have an effect only if soft labels are  simulated  on
+       the  bottom line of the screen.  The default highlight for
        soft keys is A_STANDOUT (as in System V curses, which does
        not document this fact).
 
        The <STRONG>slk_color</STRONG> routine corresponds to <STRONG>color_set</STRONG>.  It has an
-       effect  only  if  soft  labels are simulated on the bottom
+       effect only if soft labels are  simulated  on  the  bottom
        line of the screen.
 
 
@@ -157,7 +159,7 @@
        fies only "an integer value other than <STRONG>ERR</STRONG>") upon success-
        ful completion.
 
-       X/Open defines no error conditions.  In  this  implementa-
+       X/Open  defines  no error conditions.  In this implementa-
        tion
 
               <STRONG>slk_attr</STRONG>
@@ -165,36 +167,36 @@
 
               <STRONG>slk_attroff</STRONG>, <STRONG>slk_attron</STRONG>, <STRONG>slk_clear</STRONG>,
               <STRONG>slk_noutrefresh</STRONG>, <STRONG>slk_refresh</STRONG>, <STRONG>slk_touch</STRONG>
-                   return an error if the terminal or  the  soft-
+                   return  an  error if the terminal or the soft-
                    keys were not initialized.
 
               <STRONG>slk_attrset</STRONG>
-                   returns  an error if the terminal or the soft-
+                   returns an error if the terminal or the  soft-
                    keys were not initialized.
 
               <STRONG>slk_attr_set</STRONG>
-                   returns an error if the terminal or the  soft-
-                   keys  were  not initialized, or the color pair
+                   returns  an error if the terminal or the soft-
+                   keys were not initialized, or the  color  pair
                    is outside the range 0..COLOR_PAIRS-1, or opts
                    is not null.
 
               <STRONG>slk_color</STRONG>
-                   returns  an error if the terminal or the soft-
-                   keys were not initialized, or the  color  pair
+                   returns an error if the terminal or the  soft-
+                   keys  were  not initialized, or the color pair
                    is outside the range 0..COLOR_PAIRS-1.
 
               <STRONG>slk_init</STRONG>
-                   returns  an  error  if the format parameter is
+                   returns an error if the  format  parameter  is
                    outside the range 0..3.
 
               <STRONG>slk_label</STRONG>
                    returns <STRONG>NULL</STRONG> on error.
 
               <STRONG>slk_set</STRONG>
-                   returns an error if the terminal or the  soft-
-                   keys  were  not initialized, or the <EM>labnum</EM> pa-
-                   rameter is outside the range of label  counts,
-                   or  if  the  format  parameter  is outside the
+                   returns  an error if the terminal or the soft-
+                   keys were not initialized, or the  <EM>labnum</EM>  pa-
+                   rameter  is outside the range of label counts,
+                   or if the  format  parameter  is  outside  the
                    range 0..2, or if memory for the labels cannot
                    be allocated.
 
@@ -207,17 +209,17 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The XSI Curses standard, Issue 4,  describes  these  func-
-       tions.   It changes the argument type of the attribute-ma-
-       nipulation functions <STRONG>slk_attron</STRONG>, <STRONG>slk_attroff</STRONG>,  <STRONG>slk_attrset</STRONG>
+       The  XSI  Curses  standard, Issue 4, describes these func-
+       tions.  It changes the argument type of the  attribute-ma-
+       nipulation  functions <STRONG>slk_attron</STRONG>, <STRONG>slk_attroff</STRONG>, <STRONG>slk_attrset</STRONG>
        to be <STRONG>attr_t</STRONG>, and adds <STRONG>const</STRONG> qualifiers.  The format codes
-       <STRONG>2</STRONG> and <STRONG>3</STRONG> for <STRONG>slk_init()</STRONG> and the function <STRONG>slk_attr</STRONG> are  spe-
+       <STRONG>2</STRONG>  and <STRONG>3</STRONG> for <STRONG>slk_init()</STRONG> and the function <STRONG>slk_attr</STRONG> are spe-
        cific to ncurses.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,   <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,   <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,  <STRONG>curs_re-</STRONG>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,   <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,   <STRONG>curs_re-</STRONG>
        <STRONG><A HREF="curs_refresh.3x.html">fresh(3x)</A></STRONG>
 
 

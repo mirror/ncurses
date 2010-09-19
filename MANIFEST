@@ -377,6 +377,7 @@
 ./doc/html/man/curs_scr_dump.3x.html
 ./doc/html/man/curs_scroll.3x.html
 ./doc/html/man/curs_slk.3x.html
+./doc/html/man/curs_sp_funcs.3x.html
 ./doc/html/man/curs_termattrs.3x.html
 ./doc/html/man/curs_termcap.3x.html
 ./doc/html/man/curs_terminfo.3x.html
@@ -384,6 +385,7 @@
 ./doc/html/man/curs_touch.3x.html
 ./doc/html/man/curs_trace.3x.html
 ./doc/html/man/curs_util.3x.html
+./doc/html/man/curs_variables.3x.html
 ./doc/html/man/curs_window.3x.html
 ./doc/html/man/default_colors.3x.html
 ./doc/html/man/define_key.3x.html
@@ -409,6 +411,7 @@
 ./doc/html/man/form_post.3x.html
 ./doc/html/man/form_requestname.3x.html
 ./doc/html/man/form_userptr.3x.html
+./doc/html/man/form_variables.3x.html
 ./doc/html/man/form_win.3x.html
 ./doc/html/man/index.html
 ./doc/html/man/infocmp.1m.html
@@ -447,6 +450,7 @@
 ./doc/html/man/tabs.1.html
 ./doc/html/man/term.5.html
 ./doc/html/man/term.7.html
+./doc/html/man/term_variables.3x.html
 ./doc/html/man/terminfo.5.html
 ./doc/html/man/tic.1m.html
 ./doc/html/man/toe.1m.html
@@ -595,6 +599,7 @@
 ./man/curs_scr_dump.3x
 ./man/curs_scroll.3x
 ./man/curs_slk.3x
+./man/curs_sp_funcs.3x
 ./man/curs_termattrs.3x
 ./man/curs_termcap.3x
 ./man/curs_terminfo.3x

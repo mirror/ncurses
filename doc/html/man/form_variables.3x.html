@@ -27,102 +27,86 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: MKncu_config.in,v 1.3 2010/03/06 22:29:17 tom Exp @
+  * @Id: form_variables.3x,v 1.1 2010/09/11 21:39:48 tom Exp @
 -->
 <HTML>
 <HEAD>
-<TITLE>ncurses5-config 1</TITLE>
+<TITLE>form_variables 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1>ncurses5-config 1</H1>
+<H1>form_variables 3x</H1>
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>                                   <STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>
+<STRONG><A HREF="form_variables.3x.html">form_variables(3x)</A></STRONG>                                   <STRONG><A HREF="form_variables.3x.html">form_variables(3x)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       ncurses5-config - helper script for ncurses libraries
+       TYPE_ALNUM TYPE_ALPHA TYPE_ENUM TYPE_INTEGER TYPE_IPV4
+       TYPE_NUMERIC TYPE_REGEXP - form system global variables
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <STRONG>ncurses5-config</STRONG> [<EM>options</EM>]
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG> <STRONG>TYPE_ALNUM;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG> <STRONG>TYPE_ALPHA;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG> <STRONG>TYPE_ENUM;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG> <STRONG>TYPE_INTEGER;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG> <STRONG>TYPE_IPV4;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG> <STRONG>TYPE_NUMERIC;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG> <STRONG>TYPE_REGEXP;</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       This is a shell script which simplifies configuring appli-
-       cations against a particular set of ncurses libraries.
+       These are building blocks for the form  library,  defining
+       fields  that can be created using <STRONG><A HREF="set_fieldtype.3x.html">set_fieldtype(3x)</A></STRONG>.  Each
+       provides functions for  field-  and  character-validation,
+       according to the given datatype.
+
+   <STRONG>TYPE_ALNUM</STRONG>
+       This holds alphanumeric data.
+
+   <STRONG>TYPE_ALPHA</STRONG>
+       This holds alphabetic data.
+
+   <STRONG>TYPE_ENUM</STRONG>
+       This holds an enumerated type.
+
+   <STRONG>TYPE_INTEGER</STRONG>
+       This holds a decimal integer.
+
+   <STRONG>TYPE_IPV4</STRONG>
+       This holds an IPv4 internet address, e.g., "127.0.0.1".
+
+   <STRONG>TYPE_NUMERIC</STRONG>
+       This  holds a decimal number, with optional sign and deci-
+       mal point.
+
+   <STRONG>TYPE_REGEXP</STRONG>
+       This holds a regular expression.
 
 
 </PRE>
-<H2>OPTIONS</H2><PRE>
-       <STRONG>--prefix</STRONG>
-              echos the package-prefix of ncurses
-
-       <STRONG>--exec-prefix</STRONG>
-              echos the executable-prefix of ncurses
-
-       <STRONG>--cflags</STRONG>
-              echos the C compiler flags needed to  compile  with
-              ncurses
-
-       <STRONG>--libs</STRONG> echos the libraries needed to link with ncurses
-
-       <STRONG>--version</STRONG>
-              echos the release+patchdate version of ncurses
-
-       <STRONG>--abi-version</STRONG>
-              echos the ABI version of ncurses
-
-       <STRONG>--mouse-version</STRONG>
-              echos the mouse-interface version of ncurses
-
-       <STRONG>--bindir</STRONG>
-              echos the directory containing ncurses programs
-
-       <STRONG>--datadir</STRONG>
-              echos the directory containing ncurses data
-
-       <STRONG>--includedir</STRONG>
-              echos the directory containing ncurses header files
-
-       <STRONG>--libdir</STRONG>
-              echos the directory containing ncurses libraries
-
-       <STRONG>--mandir</STRONG>
-              echos the directory containing ncurses manpages
-
-       <STRONG>--terminfo</STRONG>
-              echos the $TERMINFO terminfo database path, e.g.,
-              /usr/share/terminfo
-
-       <STRONG>--terminfo-dirs</STRONG>
-              echos the $TERMINFO_DIRS directory list, e.g.,
-              /usr/local/ncurses/lib/terminfo:/usr/share/terminfo
-
-       <STRONG>--termpath</STRONG>
-              echos  the  $TERMPATH  termcap list, if support for
-              termcap is configured.
-
-       <STRONG>--help</STRONG> prints this message
+<H2>PORTABILITY</H2><PRE>
+       The <STRONG>TYPE_IPV4</STRONG> variable is an  extension  not  provided  by
+       older implementations of the form library.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
-
-       This describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100918).
+       <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.
 
 
 
-                                                     <STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>
+                                                     <STRONG><A HREF="form_variables.3x.html">form_variables(3x)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

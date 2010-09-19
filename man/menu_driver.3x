@@ -26,8 +26,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_driver.3x,v 1.17 2010/07/31 15:16:18 tom Exp $
+.\" $Id: menu_driver.3x,v 1.18 2010/09/18 20:20:39 tom Exp $
 .TH menu_driver 3X ""
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fBmenu_driver\fR \- command-processing loop of the menu system
 .SH SYNOPSIS
@@ -38,18 +41,15 @@ int menu_driver(MENU *menu, int c);
 .SH DESCRIPTION
 Once a menu has been posted (displayed), you should funnel input events to it
 through \fBmenu_driver\fR.  This routine has three major input cases:
-.TP 3
-\-
+.bP
 The input is a form navigation request.
 Navigation request codes are constants defined in \fB<form.h>\fP,
 which are distinct from the key- and character codes returned by \fBwgetch\fP.
-.TP 3
-\-
+.bP
 The input is a printable character.
 Printable characters (which must be positive, less than 256) are
 checked according to the program's locale settings.
-.TP 3
-\-
+.bP
 The input is the KEY_MOUSE special key associated with an mouse event.
 .PP
 The menu driver requests are as follows:
@@ -120,32 +120,25 @@ Currently only clicks in the user window (e.g., inside the menu display
 area or the decoration window) are handled.
 .PP
 If you click above the display region of the menu:
-.RS
-.TP
+.bP
 a REQ_SCR_ULINE is generated for a single click,
-.TP
+.bP
 a REQ_SCR_UPAGE is generated for a double-click and
-.TP
+.bP
 a REQ_FIRST_ITEM is generated for a triple-click.
-.RE
 .PP
 If you click below the display region of the menu:
-.RS
-.TP
+.bP
 a REQ_SCR_DLINE is generated for a single click,
-.TP
+.bP
 a REQ_SCR_DPAGE is generated for a double-click and
-.TP
+.bP
 a REQ_LAST_ITEM is generated for a triple-click.
-.RE
 .PP
 If you click at an item inside the display area of the menu:
-.RS
-.TP 3
-\-
+.bP
 the menu cursor is positioned to that item.
-.TP 3
-\-
+.bP
 If you double-click an item a REQ_TOGGLE_ITEM
 is generated and \fBE_UNKNOWN_COMMAND\fR is returned.
 This return value makes sense,
@@ -153,11 +146,9 @@ because a double click usually means that an item-specific action should
 be returned.
 It is exactly the purpose of this return value to signal that an
 application specific command should be executed.
-.TP 3
-\-
+.bP
 If a translation
 into a request was done, \fBmenu_driver\fR returns the result of this request.
-.RE
 .PP
 If you clicked outside the user window or the mouse event could not be translated
 into a menu request an \fBE_REQUEST_DENIED\fR is returned.

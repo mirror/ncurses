@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getstr.3x,v 1.16 2010/07/31 16:12:01 tom Exp @
+  * @Id: curs_getstr.3x,v 1.17 2010/08/14 23:29:16 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -106,6 +106,10 @@
        This  implementation  provides an extension as well.  If a
        SIGWINCH interrupts the function, it will  return  <STRONG>KEY_RE-</STRONG>
        <STRONG>SIZE</STRONG> rather than <STRONG>OK</STRONG> or <STRONG>ERR</STRONG>.
+
+       Functions  with a "mv" prefix first perform a cursor move-
+       ment using <STRONG>wmove</STRONG>, and return an error if the  position  is
+       outside the window, or if the window pointer is null.
 
 
 </PRE>

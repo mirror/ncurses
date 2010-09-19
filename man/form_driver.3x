@@ -26,8 +26,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_driver.3x,v 1.18 2010/07/31 14:49:44 tom Exp $
+.\" $Id: form_driver.3x,v 1.19 2010/09/18 20:23:02 tom Exp $
 .TH form_driver 3X ""
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fBform_driver\fR \- command-processing loop of the form system
 .SH SYNOPSIS
@@ -38,18 +41,15 @@ int form_driver(FORM *form, int c);
 .SH DESCRIPTION
 Once a form has been posted (displayed), you should funnel input events to it
 through \fBform_driver\fR.  This routine has three major input cases:
-.TP 3
-\-
+.bP
 The input is a form navigation request.
 Navigation request codes are constants defined in \fB<form.h>\fP,
 which are distinct from the key- and character codes returned by \fBwgetch\fP.
-.TP 3
-\-
+.bP
 The input is a printable character.
 Printable characters (which must be positive, less than 256) are
 checked according to the program's locale settings.
-.TP 3
-\-
+.bP
 The input is the KEY_MOUSE special key associated with an mouse event.
 .PP
 The form driver requests are as follows:
@@ -242,7 +242,7 @@ Currently only clicks in the user window (e.g., inside the form display
 area or the decoration window) are handled.
 .PP
 If you click above the display region of the form:
-.RS
+.RS 3
 .TP
 a REQ_PREV_FIELD is generated for a single click,
 .TP
@@ -252,7 +252,7 @@ a REQ_FIRST_FIELD is generated for a triple-click.
 .RE
 .PP
 If you click below the display region of the form:
-.RS
+.RS 3
 .TP
 a REQ_NEXT_FIELD is generated for a single click,
 .TP
@@ -262,12 +262,10 @@ a REQ_LAST_FIELD is generated for a triple-click.
 .RE
 .PP
 If you click at an field inside the display area of the form:
-.RS
-.TP 3
-\-
+.RS 3
+.bP
 the form cursor is positioned to that field.
-.TP 3
-\-
+.bP
 If you double-click a field,
 the form cursor is positioned to that field
 and \fBE_UNKNOWN_COMMAND\fR is returned.
@@ -276,8 +274,7 @@ because a double click usually means that an field-specific action should
 be returned.
 It is exactly the purpose of this return value to signal that an
 application specific command should be executed.
-.TP 3
-\-
+.bP
 If a translation
 into a request was done, \fBform_driver\fR returns the result of this request.
 .RE

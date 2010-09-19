@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_threads.3x,v 1.13 2010/07/31 16:10:55 tom Exp @
+  * @Id: curs_threads.3x,v 1.16 2010/09/18 20:25:32 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
 -->
@@ -56,83 +56,86 @@
 <H2>SYNOPSIS</H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>typedef</STRONG>  <STRONG>int</STRONG> <STRONG>(*NCURSES_WINDOW_CB)(WINDOW</STRONG> <STRONG>*,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG> <STRONG>type-</STRONG>
-       <STRONG>def</STRONG> <STRONG>int</STRONG> <STRONG>(*NCURSES_SCREEN_CB)(SCREEN</STRONG> <STRONG>*,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
+       <STRONG>typedef</STRONG> <STRONG>int</STRONG> <STRONG>(*NCURSES_WINDOW_CB)(WINDOW</STRONG> <STRONG>*,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
+       <STRONG>typedef</STRONG> <STRONG>int</STRONG> <STRONG>(*NCURSES_SCREEN_CB)(SCREEN</STRONG> <STRONG>*,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>get_escdelay(void);</STRONG>
        <STRONG>int</STRONG> <STRONG>set_escdelay(int</STRONG> <STRONG>size);</STRONG>
        <STRONG>int</STRONG> <STRONG>set_tabsize(int</STRONG> <STRONG>size);</STRONG>
-       <STRONG>int</STRONG> <STRONG>use_screen(SCREEN</STRONG> <STRONG>*scr,</STRONG> <STRONG>NCURSES_WINDOW_CB</STRONG>  <STRONG>func,</STRONG>  <STRONG>void</STRONG>
+       <STRONG>int</STRONG>  <STRONG>use_screen(SCREEN</STRONG>  <STRONG>*scr,</STRONG> <STRONG>NCURSES_WINDOW_CB</STRONG> <STRONG>func,</STRONG> <STRONG>void</STRONG>
        <STRONG>*data);</STRONG>
-       <STRONG>int</STRONG>  <STRONG>use_window(WINDOW</STRONG>  <STRONG>*win,</STRONG> <STRONG>NCURSES_SCREEN_CB</STRONG> <STRONG>func,</STRONG> <STRONG>void</STRONG>
+       <STRONG>int</STRONG> <STRONG>use_window(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>NCURSES_SCREEN_CB</STRONG>  <STRONG>func,</STRONG>  <STRONG>void</STRONG>
        <STRONG>*data);</STRONG>
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       This implementation can be configured to provide  rudimen-
-       tary  support for multi-threaded applications.  This makes
-       a different set of libraries, e.g., <EM>libncursest</EM> since  the
+       This  implementation can be configured to provide rudimen-
+       tary support for multi-threaded applications.  This  makes
+       a  different set of libraries, e.g., <EM>libncursest</EM> since the
        binary interfaces are different.
 
-       Rather  than modify the interfaces to pass a thread speci-
-       fier to each function, it adds a few functions  which  can
+       Rather than modify the interfaces to pass a thread  speci-
+       fier  to  each function, it adds a few functions which can
        be used in any configuration which hide the mutex's needed
-       to prevent concurrent use of  the  global  variables  when
+       to  prevent  concurrent  use  of the global variables when
        configured for threading.
 
-       In  addition  to  forcing  access to members of the <STRONG>WINDOW</STRONG>
-       structure to be via functions  (see  <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>),  it
+       In addition to forcing access to  members  of  the  <STRONG>WINDOW</STRONG>
+       structure  to  be  via functions (see <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>), it
        makes functions of the common global variables, e.g., COL-
-       ORS, COLOR_PAIRS, COLS, ESCDELAY, LINES,  TABSIZE  curscr,
-       newscr  and  ttytype.   Those  variables are maintained as
+       ORS,  COLOR_PAIRS,  COLS, ESCDELAY, LINES, TABSIZE curscr,
+       newscr and ttytype.  Those  variables  are  maintained  as
        read-only values, stored in the <STRONG>SCREEN</STRONG> structure.
 
-       Even this is not enough to make a thread-safe  application
-       using  curses.   A multi-threaded application would be ex-
-       pected to have threads updating separate  windows  (within
+       Even  this is not enough to make a thread-safe application
+       using curses.  A multi-threaded application would  be  ex-
+       pected  to  have threads updating separate windows (within
        the same device), or updating on separate screens (on dif-
-       ferent devices).  Also, a few of the global variables  are
-       considered  writable  by some applications.  The functions
+       ferent  devices).  Also, a few of the global variables are
+       considered writable by some applications.   The  functions
        described here address these special situations.
 
-       The ESCDELAY and TABSIZE global variables are modified  by
-       some  applications.   To modify them in any configuration,
-       use the  <STRONG>set_escdelay</STRONG>  or  <STRONG>set_tabsize</STRONG>  functions.   Other
+       The  ESCDELAY and TABSIZE global variables are modified by
+       some applications.  To modify them in  any  configuration,
+       use  the  <STRONG>set_escdelay</STRONG>  or  <STRONG>set_tabsize</STRONG>  functions.  Other
        global variables are not modifiable.
 
-       The  <STRONG>use_window</STRONG>  and  <STRONG>use_screen</STRONG>  functions provide coarse
+       The <STRONG>get_escdelay</STRONG> function returns the value for ESCDELAY.
+
+       The <STRONG>use_window</STRONG> and  <STRONG>use_screen</STRONG>  functions  provide  coarse
        granularity mutexes for their respective <STRONG>WINDOW</STRONG> and <STRONG>SCREEN</STRONG>
-       parameters,  and call a user-supplied function, passing it
-       a <EM>data</EM> parameter, and returning the value from  the  user-
+       parameters, and call a user-supplied function, passing  it
+       a  <EM>data</EM>  parameter, and returning the value from the user-
        supplied function to the application.
 
    <STRONG>USAGE</STRONG>
-       All  of  the ncurses library functions assume that the lo-
-       cale is not altered during operation.  In  addition,  they
+       All of the ncurses library functions assume that  the  lo-
+       cale  is  not altered during operation.  In addition, they
        use data which is maintained within a hierarchy of scopes.
 
-              -  global data, e.g., used in the low-level termin-
-                 fo or termcap interfaces.
+          <STRONG>o</STRONG>   global data, e.g., used in the  low-level  terminfo
+              or termcap interfaces.
 
-              -  terminal data, e.g., associated with a  call  to
-                 <EM>set</EM><STRONG>_</STRONG><EM>curterm</EM>.   The terminal data are initialized
-                 when screens are created.
+          <STRONG>o</STRONG>   terminal  data,  e.g.,  associated  with  a call to
+              <EM>set</EM><STRONG>_</STRONG><EM>curterm</EM>.  The  terminal  data  are  initialized
+              when screens are created.
 
-              -  screen data, e.g., associated  with  a  call  to
-                 <EM>newterm</EM> or <EM>initscr</EM>.
+          <STRONG>o</STRONG>   screen  data,  e.g.,  associated  with  a  call  to
+              <EM>newterm</EM> or <EM>initscr</EM>.
 
-              -  window  data,  e.g.,  associated  with a call to
-                 <EM>newwin</EM> or <EM>subwin</EM>.  Windows are  associated  with
-                 screens.   Pads  are  not necessarily associated
-                 with a particular screen.
+          <STRONG>o</STRONG>   window data, e.g., associated with a call to <EM>newwin</EM>
+              or  <EM>subwin</EM>.   Windows  are associated with screens.
+              Pads are not necessarily associated with a particu-
+              lar screen.
 
-                 Most curses applications operate on one or  more
-                 windows within a single screen.
+              Most  curses  applications  operate  on one or more
+              windows within a single screen.
 
-              -  reentrant, i.e., it uses only the data passed as
-                 parameters.
+          <STRONG>o</STRONG>   reentrant, i.e., it uses only the  data  passed  as
+              parameters.
 
        This table lists the scope of data used for each symbol in
-       the  ncurses  library  when  it  is  configured to support
+       the ncurses library  when  it  is  configured  to  support
        threading:
 
       Symbol                  Scope
@@ -178,10 +181,10 @@
       boolfnames              global (readonly)
       boolnames               global (readonly)
       border                  window (stdscr)
+
       border_set              window (stdscr)
       box                     window (stdscr)
       box_set                 window (stdscr)
-
       can_change_color        terminal
       cbreak                  screen
       chgat                   window (stdscr)
@@ -245,10 +248,10 @@
       has_key                 screen
       hline                   window (stdscr)
       hline_set               window (stdscr)
+
       idcok                   window
       idlok                   window
       immedok                 window
-
       in_wch                  window (stdscr)
       in_wchnstr              window (stdscr)
       in_wchstr               window (stdscr)
@@ -312,10 +315,10 @@
       mvaddstr                window (stdscr)
       mvaddwstr               window (stdscr)
       mvchgat                 window (stdscr)
+
       mvcur                   screen
       mvdelch                 window (stdscr)
       mvderwin                window (stdscr)
-
       mvget_wch               screen (input-operation)
       mvget_wstr              screen (input-operation)
       mvgetch                 screen (input-operation)
@@ -379,10 +382,10 @@
       mvwinsch                window
       mvwinsnstr              window
       mvwinsstr               window
+
       mvwinstr                window
       mvwinwstr               window
       mvwprintw               window
-
       mvwscanw                screen
       mvwvline                window
       mvwvline_set            window
@@ -446,10 +449,10 @@
       slk_attr_on             screen
       slk_attr_set            screen
       slk_attroff             screen
+
       slk_attron              screen
       slk_attrset             screen
       slk_clear               screen
-
       slk_color               screen
       slk_init                screen
       slk_label               screen
@@ -513,10 +516,10 @@
       wadd_wchnstr            window
       wadd_wchstr             window
       waddch                  window
+
       waddchnstr              window
       waddchstr               window
       waddnstr                window
-
       waddnwstr               window
       waddstr                 window
       waddwstr                window
@@ -580,10 +583,10 @@
       wprintw                 window
       wredrawln               window
       wrefresh                screen
+
       wresize                 window locks(windowlist)
       wscanw                  screen
       wscrl                   window
-
       wsetscrreg              window
       wstandend               window
       wstandout               window
@@ -608,9 +611,9 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These routines are specific to  ncurses.   They  were  not
-       supported  on  Version 7, BSD or System V implementations.
-       It is recommended that any code depending on  ncurses  ex-
+       These  routines  are  specific  to ncurses.  They were not
+       supported on Version 7, BSD or System  V  implementations.
+       It  is  recommended that any code depending on ncurses ex-
        tensions be conditioned using NCURSES_VERSION.
 
 

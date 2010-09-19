@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_kernel.3x,v 1.16 2010/07/31 16:11:27 tom Exp @
+  * @Id: curs_kernel.3x,v 1.17 2010/08/14 23:12:36 Tim.van.der.Molen Exp @
 -->
 <HTML>
 <HEAD>
@@ -128,11 +128,11 @@
        <STRONG>ripoffline</STRONG>  can  be called up to five times before calling
        <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.
 
-       The <STRONG>curs_set</STRONG> routine sets the cursor state is set  to  in-
-       visible,  normal,  or very visible for <STRONG>visibility</STRONG> equal to
-       <STRONG>0</STRONG>, <STRONG>1</STRONG>, or <STRONG>2</STRONG> respectively.  If  the  terminal  supports  the
-       <EM>visibility</EM>  requested,  the  previous  <EM>cursor</EM> state is re-
-       turned; otherwise, <STRONG>ERR</STRONG> is returned.
+       The <STRONG>curs_set</STRONG> routine sets the cursor state  to  invisible,
+       normal, or very visible for <STRONG>visibility</STRONG> equal to <STRONG>0</STRONG>, <STRONG>1</STRONG>, or <STRONG>2</STRONG>
+       respectively.  If the terminal supports the <EM>visibility</EM> re-
+       quested, the previous <EM>cursor</EM> state is returned; otherwise,
+       <STRONG>ERR</STRONG> is returned.
 
        The <STRONG>napms</STRONG> routine is used to sleep for <EM>ms</EM> milliseconds.
 

@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wchstr.3x,v 1.7 2010/07/31 16:12:01 tom Exp @
+  * @Id: curs_add_wchstr.3x,v 1.8 2010/08/14 23:29:16 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -102,6 +102,10 @@
 <H2>RETURN VALUES</H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on
        success.
+
+       Functions with a "mv" prefix first perform a cursor  move-
+       ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
+       outside the window, or if the window pointer is null.
 
 
 </PRE>

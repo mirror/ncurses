@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 2003,2006 Free Software Foundation, Inc.                     #
+# Copyright (c) 2003-2006,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -26,12 +26,13 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: listused.sh,v 1.7 2006/06/03 16:39:37 tom Exp $
-# A very simple script to list entrypoints that are used by either a test
+# $Id: listused.sh,v 1.8 2010/09/18 15:15:15 tom Exp $
+# A very simple script to list all entrypoints that are used by either a test
 # program, or within the libraries.  This relies on the output format of 'nm',
 # and assumes that the libraries are configured with TRACE defined, and using
 # these options:
 #	--disable-macros
+#	--enable-sp-funcs
 #	--enable-widec
 # Static libraries are used, to provide some filtering based on internal usage
 # of the different symbols.

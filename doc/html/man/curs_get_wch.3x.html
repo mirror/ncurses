@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2002-2003,2006 Free Software Foundation, Inc.              *
+  * Copyright (c) 2002-2006,2010 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_get_wch.3x,v 1.6 2006/02/25 21:47:06 tom Exp @
+  * @Id: curs_get_wch.3x,v 1.7 2010/08/14 23:31:42 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -123,19 +123,23 @@
 
 </PRE>
 <H2>RETURN VALUES</H2><PRE>
-       When <STRONG>get_wch</STRONG>, <STRONG>wget_wch</STRONG>, <STRONG>mvget_wch</STRONG>,  and  <STRONG>mvwget_wch</STRONG>  func-
-       tions  successfully report the pressing of a function key,
+       When  <STRONG>get_wch</STRONG>,  <STRONG>wget_wch</STRONG>,  <STRONG>mvget_wch</STRONG>, and <STRONG>mvwget_wch</STRONG> func-
+       tions successfully report the pressing of a function  key,
        they return <STRONG>KEY_CODE_YES</STRONG>.  When they successfully report a
-       wide  character,  they  return <STRONG>OK</STRONG>.  Otherwise, they return
+       wide character, they return <STRONG>OK</STRONG>.   Otherwise,  they  return
        <STRONG>ERR</STRONG>.
 
-       Upon successful completion, <STRONG>unget_wch</STRONG> returns <STRONG>OK</STRONG>.   Other-
+       Upon  successful completion, <STRONG>unget_wch</STRONG> returns <STRONG>OK</STRONG>.  Other-
        wise, the function returns <STRONG>ERR</STRONG>.
+
+       Functions with a "mv" prefix first perform a cursor  move-
+       ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
+       outside the window, or if the window pointer is null.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,        <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>,       <STRONG><A HREF="curs_ins_wch.3x.html">curs_ins_wch(3x)</A></STRONG>,
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>,        <STRONG><A HREF="curs_ins_wch.3x.html">curs_ins_wch(3x)</A></STRONG>,
        <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>, <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>
 
 

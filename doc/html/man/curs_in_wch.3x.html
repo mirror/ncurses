@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_in_wch.3x,v 1.3 2010/07/31 16:10:55 tom Exp @
+  * @Id: curs_in_wch.3x,v 1.4 2010/08/14 23:29:16 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -75,6 +75,10 @@
        that case.  Also, the <EM>mv</EM> routines check for  error  moving
        the  cursor,  returning  ERR in that case.  Otherwise they
        return OK
+
+       Functions with a "mv" prefix first perform a cursor  move-
+       ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
+       outside the window, or if the window pointer is null.
 
 
 </PRE>

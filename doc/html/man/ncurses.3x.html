@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.96 2010/07/31 15:55:04 tom Exp @
+  * @Id: ncurses.3x,v 1.98 2010/09/18 20:17:20 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -63,7 +63,7 @@
        sonable   optimization.    This  implementation  is  ``new
        curses'' (ncurses) and is  the  approved  replacement  for
        4.4BSD  classic curses, which has been discontinued.  This
-       describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100731).
+       describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100918).
 
        The <STRONG>ncurses</STRONG> library emulates the curses library of  System
        V  Release  4  UNIX,  and  XPG4 (X/Open Portability Guide)
@@ -262,7 +262,7 @@
 
               ncursesw
                    the  so-called  "wide"  library, which handles
-                   multibyte  characters  (See  the  section   on
+                   multibyte  characters  (see  the  section   on
                    <STRONG>ALTERNATE</STRONG> <STRONG>CONFIGURATIONS</STRONG>).  The "wide" library
                    includes all of the calls  from  the  "normal"
                    library.   It  adds about one third more calls
@@ -1001,18 +1001,18 @@
             not the only way to change the list  of  directories.
             The complete list of directories in order follows:
 
-            -  the last directory to which <STRONG>ncurses</STRONG> wrote, if any,
-               is searched first
+            <STRONG>o</STRONG>   the  last  directory  to  which <STRONG>ncurses</STRONG> wrote, if
+                any, is searched first
 
-            -  the directory specified by the TERMINFO symbol
+            <STRONG>o</STRONG>   the directory specified by the TERMINFO symbol
 
-            -  $HOME/.terminfo
+            <STRONG>o</STRONG>   $HOME/.terminfo
 
-            -  directories listed in the TERMINFO_DIRS symbol
+            <STRONG>o</STRONG>   directories listed in the TERMINFO_DIRS symbol
 
-            -  one or more directories whose names are configured
-               and  compiled  into  the  ncurses  library,  e.g.,
-               /usr/share/terminfo
+            <STRONG>o</STRONG>   one or more directories whose names  are  config-
+                ured and compiled into the ncurses library, e.g.,
+                /usr/share/terminfo
 
        TERMINFO_DIRS
             Specifies a list of directories to search for  termi-

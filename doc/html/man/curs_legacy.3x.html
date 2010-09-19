@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_legacy.3x,v 1.2 2010/07/31 16:11:27 tom Exp @
+  * @Id: curs_legacy.3x,v 1.3 2010/09/11 22:21:52 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -47,14 +47,14 @@
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>getbegx</STRONG>, <STRONG>getbegy</STRONG>, <STRONG>getcurx</STRONG>, <STRONG>getcury</STRONG>, <STRONG>getmaxx</STRONG>, <STRONG>getmaxy</STRONG>, <STRONG>get-</STRONG>
-       <STRONG>parx</STRONG>, <STRONG>getpary</STRONG> - get <STRONG>curses</STRONG> cursor and window coordinates
+       get <STRONG>curses</STRONG> cursor and window coordinates, attributes
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
+       <STRONG>int</STRONG> <STRONG>getattrs(WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>int</STRONG> <STRONG>getbegx(WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>int</STRONG> <STRONG>getbegy(WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>int</STRONG> <STRONG>getcurx(WINDOW</STRONG> <STRONG>*win);</STRONG>
@@ -67,33 +67,33 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       The <STRONG>getbegy</STRONG> and <STRONG>getbegx</STRONG> functions return the same data  as
+       The  <STRONG>getbegy</STRONG> and <STRONG>getbegx</STRONG> functions return the same data as
        <STRONG>getbegyx</STRONG>.
 
-       The  <STRONG>getcury</STRONG> and <STRONG>getcurx</STRONG> functions return the same data as
+       The <STRONG>getcury</STRONG> and <STRONG>getcurx</STRONG> functions return the same data  as
        <STRONG>getyx</STRONG>.
 
-       The <STRONG>getmaxy</STRONG> and <STRONG>getmaxx</STRONG> functions return the same data  as
+       The  <STRONG>getmaxy</STRONG> and <STRONG>getmaxx</STRONG> functions return the same data as
        <STRONG>getmaxyx</STRONG>.
 
-       The  <STRONG>getpary</STRONG> and <STRONG>getparx</STRONG> functions return the same data as
+       The <STRONG>getpary</STRONG> and <STRONG>getparx</STRONG> functions return the same data  as
        <STRONG>getparyx</STRONG>.
 
 
 </PRE>
 <H2>RETURN VALUE</H2><PRE>
-       These functions return an integer, or ERR  if  the  window
+       These  functions  return  an integer, or ERR if the window
        parameter is null.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       All  of  these interfaces are provided as macros and func-
-       tions.  The macros are suppressed (and only the  functions
-       provided)  when  <STRONG>NCURSES_OPAQUE</STRONG>  is defined.  The standard
+       All of these interfaces are provided as macros  and  func-
+       tions.   The macros are suppressed (and only the functions
+       provided) when <STRONG>NCURSES_OPAQUE</STRONG> is  defined.   The  standard
        forms such as <STRONG>getyx</STRONG> must be implemented as macros, and (in
        this implementation) are defined in terms of the functions
-       described here, to avoid reliance on internal  details  of
+       described  here,  to avoid reliance on internal details of
        the WINDOW structure.
 
 
