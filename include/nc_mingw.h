@@ -31,12 +31,18 @@
  *                                                                          *
  ****************************************************************************/
 
-/* $Id: nc_mingw.h,v 1.2 2010/08/07 18:42:26 tom Exp $ */
+/* $Id: nc_mingw.h,v 1.3 2010/09/25 22:16:12 juergen Exp $ */
 
 #ifndef NC_MINGW_H
 #define NC_MINGW_H 1
 
-#define WINVER 0x0501
+#ifdef WINVER
+#  if WINVER < 0x0501
+#    error WINVER must at least be 0x0501
+#  endif  
+#else
+#  define WINVER 0x0501
+#endif
 #include <windows.h>
 
 #undef sleep

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.368 $
-#	$Date: 2010/09/12 00:55:01 $
+#	$Revision: 1.369 $
+#	$Date: 2010/09/25 18:02:29 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2883,7 +2883,7 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 # the default behavior -TD
 
 putty|PuTTY terminal emulator,
-	am, bce, bw, ccc, hs, mir, msgr, xenl, xon,
+	am, bce, bw, ccc, hs, mir, msgr, xenl, xon, XT,
 	colors#8, it#8, ncv#22, pairs#64,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
@@ -3653,7 +3653,7 @@ xterm-bold|xterm terminal emulator (X11R6 Window System) standout w/bold,
 #  -- MATSUMOTO Shoji)
 # kterm implements acsc via built-in table of X Drawable's
 kterm|kterm kanji terminal emulator (X window system),
-	eslok, hs,
+	eslok, hs, XT,
 	ncv@,
 	acsc=``aajjkkllmmnnooppqqrrssttuuvvwwxx~~,
 	csr=\E[%i%p1%d;%p2%dr, dsl=\E[?H, enacs=, fsl=\E[?F,
@@ -3677,7 +3677,7 @@ xterm1|xterm terminal emulator ignoring the alternate screen buffer,
 # The README's with the distribution also say that it supports SGR 21, 24, 25
 # and 27, but they are not present in the terminfo or termcap.
 color_xterm|cx|cx100|color_xterm color terminal emulator for X,
-	OTbs, am, km, mir, msgr, xenl,
+	OTbs, am, km, mir, msgr, xenl, XT,
 	cols#80, it#8, lines#65, ncv@,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, bold=\E[1m, clear=\E[H\E[2J, cr=^M,
@@ -3895,7 +3895,7 @@ kvt|KDE terminal,
 # different from xterm (and vt100's).  They have the same behavior in this
 # detail, but it is unclear which copies the other.
 konsole-base|KDE console window,
-	bce, km@, npc,
+	bce, km@, npc, XT,
 	bel@, blink=\E[5m, civis=\E[?25l, cnorm=\E[?25h,
 	ech=\E[%p1%dX, flash=\E[?5h$<100/>\E[?5l,
 	hpa=\E[%i%p1%dG, indn=\E[%p1%dS, kbs=\177, kdch1@,
@@ -3968,7 +3968,7 @@ konsole-256color|KDE console window with xterm 256-colors,
 #	control/shift/alt	kf1 to kf12	\E[11;8~ to \E[24;8~
 #
 mlterm|multi lingual terminal emulator,
-	am, eslok, km, mc5i, mir, msgr, npc, xenl,
+	am, eslok, km, mc5i, mir, msgr, npc, xenl, XT,
 	colors#8, cols#80, it#8, lines#24, pairs#64,
 	acsc=00``aaffgghhjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
@@ -4035,7 +4035,7 @@ mlterm-256color|mlterm 3.0 with xterm 256-colors,
 # removed dch/dch1 because they are inconsistent with bce/ech -TD
 # remove km as per tack test -TD
 rxvt-basic|rxvt terminal base (X Window System),
-	OTbs, am, bce, eo, mir, msgr, xenl, xon,
+	OTbs, am, bce, eo, mir, msgr, xenl, xon, XT,
 	cols#80, it#8, lines#24,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
@@ -4189,6 +4189,7 @@ rxvt-16color|xterm with 16 colors like aixterm,
 # mrxvt is based on rxvt 2.7.11, but has by default XTERM_FKEYS defined, which
 # makes its function-keys different from other flavors of rxvt -TD
 mrxvt|multitabbed rxvt,
+	XT,
 	kEND=\E[8;2~, kHOM=\E[7;2~, kcub1=\E[D, kcud1=\E[B,
 	kcuf1=\E[C, kcuu1=\E[A, kend=\E[8~, khome=\E[7~,
 	kEND3=\E[8;3~, kEND4=\E[8;4~, kEND5=\E[8;5~,
@@ -4211,7 +4212,7 @@ mrxvt-256color|multitabbed rxvt with 256 colors,
 # remove nonworking flash -TD
 # remove km as per tack test -TD
 Eterm|Eterm-color|Eterm with xterm-style color support (X Window System),
-	am, bce, bw, eo, mc5i, mir, msgr, xenl, xon,
+	am, bce, bw, eo, mc5i, mir, msgr, xenl, xon, XT,
 	btns#5, cols#80, it#8, lines#24, lm#0, ncv@,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
@@ -4247,6 +4248,7 @@ Eterm-88color|Eterm with 88 colors,
 
 # Based on rxvt 2.4.8, it has a few differences in key bindings
 aterm|AfterStep terminal,
+	XT,
 	kbs=\177, kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, use=rxvt,
 
 # xiterm  0.5-5.2
@@ -4766,7 +4768,7 @@ screen.teraterm|disable ncv in teraterm,
 	use=screen+fkeys, use=screen,
 # Other terminals
 screen.rxvt|screen in rxvt,
-	bw,
+	bw, XT,
 	cvvis@, flash@, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
 	kcuu1=\EOA, use=screen+fkeys, use=vt100+enq,
 	use=rxvt+pcfkeys, use=vt220+keypad, use=screen,
@@ -22277,6 +22279,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2010-09-11
 #	* reformat acsc strings to canonical format -TD
+#
+# 2010-09-25
+#	* add "XT" capability to entries for terminals that support both
+#	  xterm-style mouse- and title-controls, for "screen" which
+#	  special-cases TERM beginning with "xterm" or "rxvt" -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

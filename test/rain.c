@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.36 2010/05/01 19:12:26 tom Exp $
+ * $Id: rain.c,v 1.37 2010/09/25 22:16:12 juergen Exp $
  */
 #include <test.priv.h>
 
@@ -222,7 +222,11 @@ draw_drop(void *arg)
      * Find myself in the list of threads so we can count the number of loops.
      */
     for (mystats = 0; mystats < MAX_THREADS; ++mystats) {
+#ifdef __MINGW32__
+	if (drop_threads[mystats].myself.p == pthread_self().p)
+#else
 	if (drop_threads[mystats].myself == pthread_self())
+#endif
 	    break;
     }
 

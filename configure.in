@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.507 2010/09/11 16:50:32 tom Exp $
+dnl $Id: configure.in,v 1.509 2010/09/25 22:32:53 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.507 $)
+AC_REVISION($Revision: 1.509 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1896,12 +1896,20 @@ else
 fi
 AC_SUBST(MAKE_TESTS)
 
+SUB_SCRIPTS=
+case $cf_cv_system_name in #(vi
+*mingw32*) #(vi
+	SUB_SCRIPTS="mk-dlls.sh"
+	;;
+esac
+
 AC_OUTPUT( \
 	include/MKterm.h.awk \
 	include/curses.head:include/curses.h.in \
 	include/ncurses_dll.h \
 	include/termcap.h \
 	include/unctrl.h \
+	$SUB_SCRIPTS \
 	$SUB_MAKEFILES \
 	Makefile,[
 if test "x$cf_with_tests" != xno ; then
