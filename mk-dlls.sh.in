@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: mk-dlls.sh.in,v 1.1 2010/09/25 22:29:49 juergen Exp $
+# $Id: mk-dlls.sh.in,v 1.2 2010/10/02 16:34:01 juergen Exp $
 ##############################################################################
 # Copyright (c) 2008,2010 Free Software Foundation, Inc.                     #
 #                                                                            #
@@ -32,10 +32,28 @@
 #
 # Build DLLs on MinGW
 #
-LANG=en_US @CC@ -v 2>&1 | grep Target | grep mingw
+LC_ALL=C @CC@ -v 2>&1 | grep Target | grep mingw
 if [ $? -eq 1 ]; then
   echo "$0 requires a mingw environment" >&2
 else
+  mkdir "$TEMP/tmp-dll"
+  cat > "$TEMP/tmp-dll/arch.c" <<EOF
+#include <stdio.h>
+int main()
+{
+    printf("%d",8*sizeof(void*));
+    return(0);
+}
+EOF
+  pushd "$TEMP/tmp-dll"
+    @CC@ -o arch arch.c
+    ARCH=`./arch`
+    cd ..
+    rm -rf tmp-dll
+  popd
+  echo $ARCH > mingw_arch
+  echo Building DLLs and Import Librarie for Win${ARCH}
+
   if [ -d lib ]; then
     cf="-shared"
     lf="--enable-auto-import"
@@ -46,41 +64,43 @@ else
         do
           if [ -f libncurses${t}${m}.a ]; then
             f=libncurses${t}${m}.a
-            g=`basename $f .a | cut -c 4-`
+            g=ncurses${t}${m}
             gi=libw${g}.dll.a
-            td=tmp-${g}
+            td=$TEMP/tmp-${g}
+            bd=`pwd`
             rm -rf "${td}"
             mkdir "${td}"
-            cd "${td}"
-              ar x ../${f} `ar t ../${f}`
-              @CC@ $cf -o w${g}.dll -Wl,--out-implib,${gi} -Wl,--output-def,w${g}.def -Wl,$lf `ar t ../$f` @LIBS@
+            pushd "${td}"
+              ar x "${bd}/${f}" `ar t "${bd}/${f}"`
+              @CC@ $cf -o w${g}.dll -Wl,--out-implib,${gi} -Wl,--output-def,w${g}.def -Wl,$lf `ar t "${bd}/$f"` @LIBS@
               lib //NOLOGO /MACHINE:i386 /DEF:w${g}.def
-              rm -f `ar t ../$f`
-              mv w${g}.dll ..
-              mv w${g}.lib ..
-              mv ${gi} ..
-            cd ..
+              rm -f `ar t "${bd}/$f"`
+              mv w${g}.dll "${bd}"
+              mv w${g}.lib "${bd}"
+              mv ${gi} "${bd}"
+            popd
             rm -rf "${td}"
 
             for l in panel menu form
             do
               for f in lib${l}${t}${m}.a
               do
-                g=`basename $f .a | cut -c 4-`
-                td=tmp-${g}
+                g=${l}${t}${m}
+                td=$TEMP/tmp-${g}
                 gi2=libw${g}.dll.a
+                bd=`pwd`
                 rm -rf "${td}"
                 mkdir "${td}"
                 echo $g
-                cd "${td}"
-                  ar x ../$f `ar t ../$f`
-                  @CC@ $cf -o w${g}.dll -Wl,--out-implib,${gi2} -Wl,--output-def,w${g}.def -Wl,$lf `ar t ../$f` ../${gi} @LIBS@
+                pushd "${td}"
+                  ar x "${bd}/$f" `ar t "${bd}/$f"`
+                  @CC@ $cf -o w${g}.dll -Wl,--out-implib,${gi2} -Wl,--output-def,w${g}.def -Wl,$lf `ar t "${bd}/$f"` "${bd}/${gi}" @LIBS@
                   lib //NOLOGO /MACHINE:i386 /DEF:w${g}.def
-                  rm -f `ar t ../$f`
-                  mv w${g}.dll ..
-                  mv w${g}.lib ..
-                  mv ${gi2} ..
-                cd ..
+                  rm -f `ar t "${bd}/$f"`
+                  mv w${g}.dll "${bd}"
+                  mv w${g}.lib "${bd}"
+                  mv ${gi2} "${bd}"
+                popd
                 rm -rf "${td}"
               done
             done

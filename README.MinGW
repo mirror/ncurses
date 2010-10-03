@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README.MinGW,v 1.2 2010/09/25 22:16:12 juergen Exp $
+-- $Id: README.MinGW,v 1.3 2010/10/02 16:32:41 juergen Exp $
 -- Author: Juergen Pfeifer
 -------------------------------------------------------------------------------
 
@@ -93,6 +93,11 @@ This is the configuration commandline as I'm using it at the moment:
 
 ./configure --prefix=/mingw --without-cxx-binding --without-ada --enable-warnings --enable-assertions --enable-reentrant --with-debug --with-normal --disable-home-terminfo --enable-sp-funcs --enable-term-driver --enable-interop --with-pthread
 
+If you are on a 64-Bit Windows system and want to build a 32-Bit version
+of ncurses, you may use this commandline for configuration (when using
+the TDM toolchain):
+
+CC="gcc -m32" LD="ld -m32" ./configure --prefix=/mingw --without-cxx-binding --without-ada --enable-warnings --enable-assertions --enable-reentrant --with-debug --with-normal --disable-home-terminfo --enable-sp-funcs --enable-term-driver --enable-interop --with-pthread
 
 All the options above are - like the whole Windows support -
 experimental.

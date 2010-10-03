@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_variables.3x,v 1.1 2010/09/11 21:39:48 tom Exp @
+  * @Id: form_variables.3x,v 1.2 2010/10/02 23:45:15 Sven.Joachim Exp @
 -->
 <HTML>
 <HEAD>
@@ -47,8 +47,9 @@
 
 </PRE>
 <H2>NAME</H2><PRE>
-       TYPE_ALNUM TYPE_ALPHA TYPE_ENUM TYPE_INTEGER TYPE_IPV4
-       TYPE_NUMERIC TYPE_REGEXP - form system global variables
+       <STRONG>TYPE_ALNUM</STRONG>, <STRONG>TYPE_ALPHA</STRONG>, <STRONG>TYPE_ENUM</STRONG>, <STRONG>TYPE_INTEGER</STRONG>,
+       <STRONG>TYPE_IPV4</STRONG>, <STRONG>TYPE_NUMERIC</STRONG>, <STRONG>TYPE_REGEXP</STRONG> - form system global
+       variables
 
 
 </PRE>
@@ -66,9 +67,9 @@
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       These are building blocks for the form  library,  defining
-       fields  that can be created using <STRONG><A HREF="set_fieldtype.3x.html">set_fieldtype(3x)</A></STRONG>.  Each
-       provides functions for  field-  and  character-validation,
+       These  are  building blocks for the form library, defining
+       fields that can be created using <STRONG><A HREF="set_fieldtype.3x.html">set_fieldtype(3x)</A></STRONG>.   Each
+       provides  functions  for  field- and character-validation,
        according to the given datatype.
 
    <STRONG>TYPE_ALNUM</STRONG>
@@ -87,7 +88,7 @@
        This holds an IPv4 internet address, e.g., "127.0.0.1".
 
    <STRONG>TYPE_NUMERIC</STRONG>
-       This  holds a decimal number, with optional sign and deci-
+       This holds a decimal number, with optional sign and  deci-
        mal point.
 
    <STRONG>TYPE_REGEXP</STRONG>
@@ -96,7 +97,7 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       The <STRONG>TYPE_IPV4</STRONG> variable is an  extension  not  provided  by
+       The  <STRONG>TYPE_IPV4</STRONG>  variable  is  an extension not provided by
        older implementations of the form library.
 
 

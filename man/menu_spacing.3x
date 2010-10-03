@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_spacing.3x,v 1.10 2010/07/31 15:45:16 tom Exp $
+.\" $Id: menu_spacing.3x,v 1.11 2010/10/02 23:22:15 tom Exp $
 .TH menu_spacing 3X ""
 .SH NAME
 \fBmenu_spacing\fR \- Control spacing between menu items.
@@ -71,7 +71,9 @@ Both routines return \fBE_OK\fR on success.
 \fBE_POSTED\fR if the menu is posted, or \fBE_BAD_ARGUMENT\fR if one of the
 spacing values is out of range.
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBmenu\fR(3X).
+\fBcurses\fR(3X),
+\fBcurs_variables\fR(3X),
+\fBmenu\fR(3X).
 .SH NOTES
 The header file \fB<menu.h>\fR automatically includes the header file
 \fB<curses.h>\fR.

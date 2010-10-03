@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.98 2010/09/18 20:17:20 tom Exp @
+  * @Id: ncurses.3x,v 1.100 2010/10/02 23:30:31 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -63,7 +63,7 @@
        sonable   optimization.    This  implementation  is  ``new
        curses'' (ncurses) and is  the  approved  replacement  for
        4.4BSD  classic curses, which has been discontinued.  This
-       describes <STRONG>ncurses</STRONG> version 5.7 (patch 20100918).
+       describes <STRONG>ncurses</STRONG> version 5.7 (patch 20101002).
 
        The <STRONG>ncurses</STRONG> library emulates the curses library of  System
        V  Release  4  UNIX,  and  XPG4 (X/Open Portability Guide)
@@ -1120,6 +1120,7 @@
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> and related pages whose  names  begin  "curs_"
        for detailed routine descriptions.
+       <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>
 
 
 </PRE>
@@ -1175,55 +1176,62 @@
 
        This implementation also contains several extensions:
 
-            The  routine  <STRONG>has_key</STRONG>  is not part of XPG4, nor is it
-            present in SVr4.  See the <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG> manual  page
-            for details.
+       <STRONG>o</STRONG>   The  routine  <STRONG>has_key</STRONG>  is  not part of XPG4, nor is it
+           present in SVr4.  See the <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>  manual  page
+           for details.
 
-            The  routine  <STRONG>slk_attr</STRONG> is not part of XPG4, nor is it
-            present in SVr4.  See the  <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>  manual  page
-            for details.
+       <STRONG>o</STRONG>   The  routine  <STRONG>slk_attr</STRONG>  is not part of XPG4, nor is it
+           present in SVr4.  See the <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG> manual page for
+           details.
 
-            The  routines  <STRONG>getmouse</STRONG>,  <STRONG>mousemask</STRONG>, <STRONG>ungetmouse</STRONG>, <STRONG>mou-</STRONG>
-            <STRONG>seinterval</STRONG>, and <STRONG>wenclose</STRONG> relating to mouse  interfac-
-            ing  are  not  part  of XPG4, nor are they present in
-            SVr4.   See  the  <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>  manual   page   for
-            details.
+       <STRONG>o</STRONG>   The routines <STRONG>getmouse</STRONG>, <STRONG>mousemask</STRONG>, <STRONG>ungetmouse</STRONG>, <STRONG>mousein-</STRONG>
+           <STRONG>terval</STRONG>, and <STRONG>wenclose</STRONG> relating to mouse interfacing are
+           not  part  of XPG4, nor are they present in SVr4.  See
+           the <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> manual page for details.
 
-            The  routine  <STRONG>mcprint</STRONG> was not present in any previous
-            curses implementation.  See the <STRONG><A HREF="curs_print.3x.html">curs_print(3x)</A></STRONG> manual
-            page for details.
+       <STRONG>o</STRONG>   The routine <STRONG>mcprint</STRONG> was not present  in  any  previous
+           curses  implementation.  See the <STRONG><A HREF="curs_print.3x.html">curs_print(3x)</A></STRONG> manual
+           page for details.
 
-            The  routine  <STRONG>wresize</STRONG>  is not part of XPG4, nor is it
-            present in SVr4.  See the <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG> manual page for
-            details.
+       <STRONG>o</STRONG>   The routine <STRONG>wresize</STRONG> is not part of  XPG4,  nor  is  it
+           present  in SVr4.  See the <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG> manual page for
+           details.
 
-            The WINDOW structure's internal details can be hidden
-            from application programs.  See  <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>  for
-            the discussion of <STRONG>is_scrollok</STRONG>, etc.
+       <STRONG>o</STRONG>   The WINDOW structure's internal details can be  hidden
+           from  application  programs.   See <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG> for
+           the discussion of <STRONG>is_scrollok</STRONG>, etc.
 
-       In  historic curses versions, delays embedded in the capa-
+       <STRONG>o</STRONG>   This implementation can be configured to provide rudi-
+           mentary  support for multi-threaded applications.  See
+           <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG> for details.
+
+       <STRONG>o</STRONG>   This implementation can also be configured to  provide
+           a set of functions which improve the ability to manage
+           multiple screens.  See <STRONG><A HREF="curs_sp_funcs.3x.html">curs_sp_funcs(3x)</A></STRONG> for details.
+
+       In historic curses versions, delays embedded in the  capa-
        bilities <STRONG>cr</STRONG>, <STRONG>ind</STRONG>, <STRONG>cub1</STRONG>, <STRONG>ff</STRONG> and <STRONG>tab</STRONG> activated corresponding
-       delay  bits  in  the UNIX tty driver.  In this implementa-
-       tion, all padding is done  by  sending  NUL  bytes.   This
-       method  is slightly more expensive, but narrows the inter-
-       face to the UNIX kernel significantly  and  increases  the
+       delay bits in the UNIX tty driver.   In  this  implementa-
+       tion,  all  padding  is  done  by sending NUL bytes.  This
+       method is slightly more expensive, but narrows the  inter-
+       face  to  the  UNIX kernel significantly and increases the
        package's portability correspondingly.
 
 
 </PRE>
 <H2>NOTES</H2><PRE>
-       The  header  file  <STRONG>&lt;curses.h&gt;</STRONG>  automatically  includes the
+       The header  file  <STRONG>&lt;curses.h&gt;</STRONG>  automatically  includes  the
        header files <STRONG>&lt;stdio.h&gt;</STRONG> and <STRONG>&lt;unctrl.h&gt;</STRONG>.
 
-       If standard output from a <STRONG>ncurses</STRONG> program  is  re-directed
-       to  something  which  is not a tty, screen updates will be
+       If  standard  output from a <STRONG>ncurses</STRONG> program is re-directed
+       to something which is not a tty, screen  updates  will  be
        directed to standard error.  This was an undocumented fea-
        ture of AT&amp;T System V Release 3 curses.
 
 
 </PRE>
 <H2>AUTHORS</H2><PRE>
-       Zeyd  M.  Ben-Halim,  Eric  S.  Raymond, Thomas E. Dickey.
+       Zeyd M. Ben-Halim, Eric  S.  Raymond,  Thomas  E.  Dickey.
        Based on pcurses by Pavel Curtis.
 
 

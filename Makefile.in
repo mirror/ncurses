@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.28 2010/09/25 22:35:37 tom Exp $
+# $Id: Makefile.in,v 1.29 2010/10/02 16:32:41 juergen Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -91,7 +91,7 @@ dlls:	libs
 
 distclean \
 realclean ::
-	-rm -f mk-dlls.sh
+	-rm -f mk-dlls.sh mingw_arch
 
 # Put the common rules here so that we can easily construct the list of
 # directories to visit.

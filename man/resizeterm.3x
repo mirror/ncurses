@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-2005
 .\"
-.\" $Id: resizeterm.3x,v 1.12 2010/07/31 16:08:48 tom Exp $
+.\" $Id: resizeterm.3x,v 1.13 2010/10/02 23:23:03 tom Exp $
 .TH resizeterm 3X ""
 .SH NAME
 \fBis_term_resized\fR,
@@ -89,6 +89,7 @@ no screen size change may be recorded.
 In that case, no \fBKEY_RESIZE\fP is queued for the next call to \fBgetch\fP;
 an \fBERR\fP will be returned instead.
 .SH SEE ALSO
+\fBcurs_variables\fR(3X),
 \fBwresize\fR(3X).
 .SH AUTHOR
 Thomas Dickey (from an equivalent function written in 1988 for BSD curses).

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1595 2010/09/25 22:25:20 tom Exp $
+-- $Id: NEWS,v 1.1597 2010/10/02 23:50:33 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,27 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20101002
+	+ improve linkages in html manpages, adding references to the newer
+	  pages, e.g., *_variables, curs_sp_funcs, curs_threads.
+	+ add checks in tic for inconsistent cursor-movement controls, and for
+	  inconsistent printer-controls.
+	+ fill in no-parameter forms of cursor-movement where a parameterized
+	  form is available -TD
+	+ fill in missing cursor controls where the form of the controls is
+	  ANSI -TD
+	+ fix inconsistent punctuation in form_variables manpage (patch by
+	  Sven Joachim).
+	+ add parameterized cursor-controls to linux-basic (report by Dae) -TD
+	> patch by Juergen Pfeifer:
+	+ document how to build 32-bit libraries in README.MinGW 
+	+ fixes to filename computation in mk-dlls.sh.in 
+	+ use POSIX locale in mk-dlls.sh.in rather than en_US (report by Sven
+	  Joachim).
+	+ add a check in mk-dlls.sh.in to obtain the size of a pointer to
+	  distinguish between 32-bit and 64-bit hosts.  The result is stored
+	  in mingw_arch
 
 20100925
 	+ add "XT" capability to entries for terminals that support both

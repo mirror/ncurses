@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.98 2010/09/18 20:17:20 tom Exp $
+.\" $Id: ncurses.3x,v 1.100 2010/10/02 23:30:31 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .de bP
@@ -1073,6 +1073,8 @@ terminal capability database
 .SH SEE ALSO
 \fBterminfo\fR(\*n) and related pages whose names begin "curs_" for detailed routine
 descriptions.
+.br
+\fBcurs_variables\fR(3X) 
 .SH EXTENSIONS
 The \fBncurses\fR library can be compiled with an option (\fB\-DUSE_GETCAP\fR)
 that falls back to the old-style /etc/termcap file if the terminal setup code
@@ -1121,29 +1123,35 @@ the XSI Curses and \fBncurses\fR calls) are described in \fBPORTABILITY\fR
 sections of the library man pages.
 .PP
 This implementation also contains several extensions:
-.RS 5
-.PP
+.bP
 The routine \fBhas_key\fR is not part of XPG4, nor is it present in SVr4.
 See the \fBcurs_getch\fR(3X) manual page for details.
-.PP
+.bP
 The routine \fBslk_attr\fR is not part of XPG4, nor is it present in SVr4.
 See the \fBcurs_slk\fR(3X) manual page for details.
-.PP
+.bP
 The routines \fBgetmouse\fR, \fBmousemask\fR, \fBungetmouse\fR,
 \fBmouseinterval\fR, and \fBwenclose\fR relating to mouse interfacing are not
 part of XPG4, nor are they present in SVr4.
 See the \fBcurs_mouse\fR(3X) manual page for details.
-.PP
+.bP
 The routine \fBmcprint\fR was not present in any previous curses implementation.
 See the \fBcurs_print\fR(3X) manual page for details.
-.PP
+.bP
 The routine \fBwresize\fR is not part of XPG4, nor is it present in SVr4.
 See the \fBwresize\fR(3X) manual page for details.
-.PP
+.bP
 The WINDOW structure's internal details can be hidden from application
 programs.
 See \fBcurs_opaque\fR(3X) for the discussion of \fBis_scrollok\fR, etc.
-.RE
+.bP
+This implementation can be configured to provide rudimentary support
+for multi-threaded applications.
+See \fBcurs_threads\fR(3X) for details.
+.bP
+This implementation can also be configured to provide a set of functions which
+improve the ability to manage multiple screens.
+See \fBcurs_sp_funcs\fR(3X) for details.
 .PP
 In historic curses versions, delays embedded in the capabilities \fBcr\fR,
 \fBind\fR, \fBcub1\fR, \fBff\fR and \fBtab\fR activated corresponding delay

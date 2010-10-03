@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.143 2010/09/11 17:56:42 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.146 2010/10/02 22:45:40 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -931,6 +931,156 @@ keypad_index(const char *string)
     return result;
 }
 
+/*
+ * list[] is down, up, left, right
+ * "left" may be ^H rather than \E[D
+ * "down" may be ^J rather than \E[B
+ * But up/right are generally consistently escape sequences for ANSI terminals.
+ */
+static void
+check_ansi_cursor(char *list[4])
+{
+    int j, k;
+    int want;
+    size_t prefix = 0;
+    size_t suffix;
+    bool skip[4];
+    bool repeated = FALSE;
+
+    for (j = 0; j < 4; ++j) {
+	skip[j] = FALSE;
+	for (k = 0; k < j; ++k) {
+	    if (j != k
+		&& !strcmp(list[j], list[k])) {
+		char *value = _nc_tic_expand(list[k], TRUE, 0);
+		_nc_warning("repeated cursor control %s\n", value);
+		repeated = TRUE;
+	    }
+	}
+    }
+    if (!repeated) {
+	char *up = list[1];
+
+	if (UChar(up[0]) == '\033') {
+	    if (up[1] == '[') {
+		prefix = 2;
+	    } else {
+		prefix = 1;
+	    }
+	} else if (UChar(up[0]) == UChar('\233')) {
+	    prefix = 1;
+	}
+	if (prefix) {
+	    suffix = prefix;
+	    while (up[suffix] && isdigit(UChar(up[suffix])))
+		++suffix;
+	}
+	if (prefix && up[suffix] == 'A') {
+	    skip[1] = TRUE;
+	    if (!strcmp(list[0], "\n"))
+		skip[0] = TRUE;
+	    if (!strcmp(list[2], "\b"))
+		skip[2] = TRUE;
+
+	    for (j = 0; j < 4; ++j) {
+		if (skip[j] || strlen(list[j]) == 1)
+		    continue;
+		if (memcmp(list[j], up, prefix)) {
+		    char *value = _nc_tic_expand(list[j], TRUE, 0);
+		    _nc_warning("inconsistent prefix for %s\n", value);
+		    continue;
+		}
+		if (strlen(list[j]) < suffix) {
+		    char *value = _nc_tic_expand(list[j], TRUE, 0);
+		    _nc_warning("inconsistent length for %s, expected %d\n",
+				value, (int) suffix + 1);
+		    continue;
+		}
+		want = "BADC"[j];
+		if (list[j][suffix] != want) {
+		    char *value = _nc_tic_expand(list[j], TRUE, 0);
+		    _nc_warning("inconsistent suffix for %s, expected %c, have %c\n",
+				value, want, list[j][suffix]);
+		}
+	    }
+	}
+    }
+}
+
+#define EXPECTED(name) if (!PRESENT(name)) _nc_warning("expected " #name)
+
+static void
+check_cursor(TERMTYPE *tp)
+{
+    int count;
+    char *list[4];
+
+    /* if we have a parameterized form, then the non-parameterized is easy */
+    ANDMISSING(parm_down_cursor, cursor_down);
+    ANDMISSING(parm_up_cursor, cursor_up);
+    ANDMISSING(parm_left_cursor, cursor_left);
+    ANDMISSING(parm_right_cursor, cursor_right);
+
+    /* Given any of a set of cursor movement, the whole set should be present. 
+     * Technically this is not true (we could use cursor_address to fill in
+     * unsupported controls), but it is likely.
+     */
+    count = 0;
+    if (PRESENT(parm_down_cursor)) {
+	list[count++] = parm_down_cursor;
+    }
+    if (PRESENT(parm_up_cursor)) {
+	list[count++] = parm_up_cursor;
+    }
+    if (PRESENT(parm_left_cursor)) {
+	list[count++] = parm_left_cursor;
+    }
+    if (PRESENT(parm_right_cursor)) {
+	list[count++] = parm_right_cursor;
+    }
+    if (count == 4) {
+	check_ansi_cursor(list);
+    } else if (count != 0) {
+	EXPECTED(parm_down_cursor);
+	EXPECTED(parm_up_cursor);
+	EXPECTED(parm_left_cursor);
+	EXPECTED(parm_right_cursor);
+    }
+
+    count = 0;
+    if (PRESENT(cursor_down)) {
+	list[count++] = cursor_down;
+    }
+    if (PRESENT(cursor_up)) {
+	list[count++] = cursor_up;
+    }
+    if (PRESENT(cursor_left)) {
+	list[count++] = cursor_left;
+    }
+    if (PRESENT(cursor_right)) {
+	list[count++] = cursor_right;
+    }
+    if (count == 4) {
+	check_ansi_cursor(list);
+    } else if (count != 0) {
+	count = 0;
+	if (PRESENT(cursor_down) && strcmp(cursor_down, "\n"))
+	    ++count;
+	if (PRESENT(cursor_left) && strcmp(cursor_left, "\b"))
+	    ++count;
+	if (PRESENT(cursor_up) && strlen(cursor_up) > 1)
+	    ++count;
+	if (PRESENT(cursor_right) && strlen(cursor_right) > 1)
+	    ++count;
+	if (count) {
+	    EXPECTED(cursor_down);
+	    EXPECTED(cursor_up);
+	    EXPECTED(cursor_left);
+	    EXPECTED(cursor_right);
+	}
+    }
+}
+
 #define MAX_KP 5
 /*
  * Do a quick sanity-check for vt100-style keypads to see if the 5-key keypad
@@ -1038,6 +1188,32 @@ check_keypad(TERMTYPE *tp)
 	if (*show != '\0')
 	    _nc_warning("vt100 keypad map incomplete:%s", show);
     }
+}
+
+static void
+check_printer(TERMTYPE *tp)
+{
+    PAIRED(enter_doublewide_mode, exit_doublewide_mode);
+    PAIRED(enter_italics_mode, exit_italics_mode);
+    PAIRED(enter_leftward_mode, exit_leftward_mode);
+    PAIRED(enter_micro_mode, exit_micro_mode);
+    PAIRED(enter_shadow_mode, exit_shadow_mode);
+    PAIRED(enter_subscript_mode, exit_subscript_mode);
+    PAIRED(enter_superscript_mode, exit_superscript_mode);
+    PAIRED(enter_upward_mode, exit_upward_mode);
+
+    ANDMISSING(start_char_set_def, stop_char_set_def);
+
+    /* if we have a parameterized form, then the non-parameterized is easy */
+    ANDMISSING(set_bottom_margin_parm, set_bottom_margin);
+    ANDMISSING(set_left_margin_parm, set_left_margin);
+    ANDMISSING(set_right_margin_parm, set_right_margin);
+    ANDMISSING(set_top_margin_parm, set_top_margin);
+
+    ANDMISSING(parm_down_micro, micro_down);
+    ANDMISSING(parm_left_micro, micro_left);
+    ANDMISSING(parm_right_micro, micro_right);
+    ANDMISSING(parm_up_micro, micro_up);
 }
 
 /*
@@ -1421,7 +1597,9 @@ check_termtype(TERMTYPE *tp, bool literal)
 
     check_acs(tp);
     check_colors(tp);
+    check_cursor(tp);
     check_keypad(tp);
+    check_printer(tp);
 
     /*
      * These may be mismatched because the terminal description relies on

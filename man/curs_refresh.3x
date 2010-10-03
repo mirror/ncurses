@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_refresh.3x,v 1.13 2010/07/31 16:10:55 tom Exp $
+.\" $Id: curs_refresh.3x,v 1.14 2010/10/02 23:20:50 tom Exp $
 .TH curs_refresh 3X ""
 .na
 .hy 0
@@ -135,7 +135,9 @@ implementations.
 Instead, you can do an explicit \fBtouchwin()\fR before the
 \fBwnoutrefresh()\fR call to guarantee an entire-contents copy anywhere.
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBcurs_outopts\fR(3X)
+\fBcurses\fR(3X),
+\fBcurs_outopts\fR(3X)
+\fBcurs_variables\fR(3X).
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:
