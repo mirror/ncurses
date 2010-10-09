@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.373 $
-#	$Date: 2010/10/02 22:44:14 $
+#	$Revision: 1.375 $
+#	$Date: 2010/10/09 19:13:51 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -999,8 +999,8 @@ kon|kon2|jfbterm|Kanji ON Linux console,
 # foreground colors and blink for bright background colors.
 linux-16color|linux console with 16 colors,
 	colors#16, ncv#54, pairs#256,
-	setab=\E[4%p1%{7}%m%d%?%p1%{7}%>%t;5%e;25%;m,
-	setaf=\E[3%p1%{7}%m%d%?%p1%{7}%>%t;1%e;21%;m,
+	setab=\E[4%p1%{8}%m%d%?%p1%{8}%>%t;5%e%p1%{8}%=%t;2%e;25%;m,
+	setaf=\E[3%p1%{8}%m%d%?%p1%{8}%>%t;1%e%p1%{8}%=%t;2%e;21%;m,
 	use=linux,
 
 # bterm (bogl 0.1.18)
@@ -22300,6 +22300,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* fill in missing cursor controls where the form of the controls is
 #	  ANSI -TD
 #	* add parameterized cursor-controls to linux-basic (report by Dae) -TD
+#
+# 2010-10-09
+#	* correct comparison used for setting 16-colors in linux-16color
+#	  entry (Novell #644831) -TD
+#	* improve linux-16color entry, using "dim" for color-8 which makes it
+#	  gray rather than black like color-0 -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

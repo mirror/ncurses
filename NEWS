@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1597 2010/10/02 23:50:33 tom Exp $
+-- $Id: NEWS,v 1.1599 2010/10/09 20:20:06 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20101009
+	+ correct comparison used for setting 16-colors in linux-16color
+	  entry (Novell #644831) -TD
+	+ improve linux-16color entry, using "dim" for color-8 which makes it
+	  gray rather than black like color-0 -TD
+	+ drop misc/ncu-indent and misc/jpf-indent; they are provided by an
+	  external package "cindent".
 
 20101002
 	+ improve linkages in html manpages, adding references to the newer
