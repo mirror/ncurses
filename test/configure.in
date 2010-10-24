@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.78 2010/04/03 15:43:44 tom Exp $
+dnl $Id: configure.in,v 1.79 2010/10/23 20:26:07 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -226,7 +226,7 @@ CF_NCURSES_EXT_FUNCS
 
 AC_CACHE_CHECK(for wide-character functions,cf_cv_widechar_funcs,[
 AC_TRY_LINK([
-#include <${cf_cv_ncurses_header-curses.h}>],
+#include <${cf_cv_ncurses_header:-curses.h}>],
 [
 	static wchar_t src_wchar[2];
 	static cchar_t dst_cchar;

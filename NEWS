@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1599 2010/10/09 20:20:06 tom Exp $
+-- $Id: NEWS,v 1.1605 2010/10/23 21:50:05 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20101023
+	+ correct parsing of relative tab-stops in tabs program (report by
+	  Philip Ganchev).
+	+ adjust configure script so that "t" is not added to library suffix
+	  when weak-symbols are used, allowing the pthread configuration to
+	  more closely match the non-thread naming (report by Werner Fink).
+	+ modify configure check for tic program, used for fallbacks, to a
+	  warning if not found.  This makes it simpler to use additonal
+	  scripts to bootstrap the fallbacks code using tic from the build
+	  tree (report by Werner Fink).
+	+ fix several places in configure script using ${variable-value} form.
+	+ modify configure macro CF_LDFLAGS_STATIC to accommodate some loaders
+	  which do not support selectively linking against static libraries
+	  (report by John P. Hartmann)
+	+ fix an unescaped dash in man/tset.1 (report by Sven Joachim).
 
 20101009
 	+ correct comparison used for setting 16-colors in linux-16color

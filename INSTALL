@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.147 2010/09/04 20:57:46 tom Exp $
+-- $Id: INSTALL,v 1.148 2010/10/23 22:41:32 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -525,6 +525,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	may not be accurate, or that your stty settings have disabled the use
 	of tabs.
 
+    --enable-interop
+	Compile-in experimental interop bindings.  These provide generic types
+	for the form-library.
+
     --enable-mixed-case
 	Controls whether the filesystem on which the terminfo database resides
 	supports mixed-case filenames (normal for UNIX, but not on other
@@ -586,6 +590,11 @@ SUMMARY OF CONFIGURE OPTIONS:
 	is not strictly compatible.  This option allows one to implement this
 	alteration without patching the source code.
 
+    --enable-sp-funcs
+	Compile-in support for extended functions which accept a SCREEN pointer,
+	reducing the need for juggling the global SP value with set_term() and
+	delscreen().
+
     --enable-symlinks
 	If your system supports symbolic links, make tic use symbolic links
 	rather than hard links to save diskspace when writing aliases in the
@@ -596,6 +605,11 @@ SUMMARY OF CONFIGURE OPTIONS:
 	-x option of tic and infocmp to treat unrecognized terminal
 	capabilities as user-defined strings.  This option is the default,
 	unless you have disabled the extended functions.
+
+    --enable-term-driver
+	Enable experimental terminal-driver.  This is currently used for the
+	MinGW port, by providing a way to substitute the low-level terminfo
+	library with different terminal drivers.
 
     --enable-termcap
 	Compile in support for reading terminal descriptions from termcap if no
@@ -659,6 +673,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	declared in curses.h (normally the type is automatically chosen to
 	correspond with that in <stdbool.h>, or defaults to platform-specific
 	sizes).
+
+    --with-build-cpp=XXX
+	This option is provided by the same macro used for $BUILD_CC, etc.,
+	but is not directly used by ncurses.
 
     --with-build-cc=XXX
 	If cross-compiling, specify a host C compiler, which is needed to
