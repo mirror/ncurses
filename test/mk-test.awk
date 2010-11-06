@@ -1,4 +1,4 @@
-# $Id: mk-test.awk,v 1.6 2010/04/03 15:32:15 tom Exp $
+# $Id: mk-test.awk,v 1.12 2010/11/06 23:06:48 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2007,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -75,29 +75,50 @@ END	{
 	print	"tags:"
 	print	"	$(CTAGS) *.[ch]"
 	print	""
+	print	"# no libraries here"
 	print	"libs \\"
-	print	"install \\"
 	print	"install.libs \\"
-	print	"install.test:"
-	print	""
-	print	"uninstall:"
 	print	"uninstall.libs:"
-	print	"uninstall.test:"
+	print	""
+	if (INSTALL == "yes") {
+		print	"# we might install the test-programs"
+		print	"install \\"
+		print	"install.test: $(BINDIR) $(TESTS)"
+		print	"	$(SHELL) -c 'for src in $(TESTS); do \\"
+		print	"	dst=`echo $$src | $(TRANSFORM)`; \\"
+		print	"	$(INSTALL_PROG) $$src $(BINDIR)/$$dst; \\"
+		print	"	done'"
+		print	""
+		print	"uninstall \\"
+		print	"uninstall.test:"
+		print	"	$(SHELL) -c 'for src in $(TESTS); do \\"
+		print	"	dst=`echo $$src | $(TRANSFORM)`; \\"
+		print	"	rm -f $(BINDIR)/$$dst; \\"
+		print	"	done'"
+	} else {
+		print	"install \\"
+		print	"install.test \\"
+		print	"uninstall \\"
+		print	"uninstall.test:"
+	}
 	print	""
 	print	"mostlyclean ::"
 	print	"	-rm -f core tags TAGS *~ *.bak *.i *.ln *.atac trace"
 	print	""
 	print	"clean :: mostlyclean"
-	print	"	-sh -c \"if test -n '$x' ; then $(MAKE) clean x=''; fi\""
+	print	"	-$(SHELL) -c \"if test -n '$x' ; then $(MAKE) clean x=''; fi\""
 	print	"	-rm -rf *$o screendump *.lis $(TESTS) .libs"
 	print	""
 	print	"distclean :: clean"
-	print	"	-rm -f Makefile ncurses_cfg.h config.*"
+	print	"	-rm -f Makefile ncurses_cfg.h config.status config.log"
 	print	""
 	print	"realclean :: distclean"
 	print	""
 	print	"lint:"
-	print	"	sh -c 'for N in $(TESTS); do echo LINT:$$N; $(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/$$N.c $(LINT_LIBS); done'"
+	print	"	$(SHELL) -c 'for N in $(TESTS); do echo LINT:$$N; $(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/$$N.c $(LINT_LIBS); done'"
+	print	"$(BINDIR) :"
+	print	"	mkdir -p $@"
+
 
 	if (ECHO_LINK != "") {
 		ECHO_LINK="@ echo linking $@ ... ;"

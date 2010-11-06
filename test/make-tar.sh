@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.1 2010/02/20 23:42:40 tom Exp $
+# $Id: make-tar.sh,v 1.4 2010/11/06 18:31:46 tom Exp $
 ##############################################################################
 # Copyright (c) 2010 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -31,11 +31,11 @@
 # scripts.  The reason for doing that is to simplify distributing the test
 # programs as a separate package.
 
-ROOTNAME=ncurses-test
-
 TARGET=`pwd`
 
-: ${TMPDIR=/tmp}
+: ${ROOTNAME:=ncurses-test}
+: ${DESTDIR:=$TARGET}
+: ${TMPDIR:=/tmp}
 
 # This can be run from either the test subdirectory, or from the top-level
 # source directory.  We will put the tar file in the original directory.
@@ -58,7 +58,7 @@ cp -p -r * $BUILD/$ROOTNAME/ || exit
 # Add the config.* utility scripts from the top-level directory.
 for i in . ..
 do
-	for j in config.guess config.sub
+	for j in config.guess config.sub install-sh tar-copy.sh
 	do
 		test -f $i/$j && cp -p $i/$j $BUILD/$ROOTNAME/
 	done
@@ -76,8 +76,8 @@ find . -name "*.gz" -exec rm -rf {} \;
 # Make the files writable...
 chmod -R u+w .
 
-tar cf - $ROOTNAME | gzip >$TARGET/$ROOTNAME.tar.gz
-cd $TARGET
+tar cf - $ROOTNAME | gzip >$DESTDIR/$ROOTNAME.tar.gz
+cd $DESTDIR
 
 pwd
 ls -l $ROOTNAME.tar.gz

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.20 2010/10/23 20:24:58 tom Exp $
+dnl $Id: configure.in,v 1.21 2010/11/06 22:11:21 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.20 $)
+AC_REVISION($Revision: 1.21 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -575,7 +575,7 @@ dnl for separate build, this is good enough for "sh $(top_srcdir)/misc/shlib"
 NCURSES_SHLIB2="sh -c"
 AC_SUBST(NCURSES_SHLIB2)
 
-ADA_SUBDIRS="gen src"
+ADA_SUBDIRS="include gen src"
 if test "x$cf_with_tests" != "xno" ; then
 	ADA_SUBDIRS="$ADA_SUBDIRS samples"
 fi

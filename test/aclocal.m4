@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.41 2010/10/23 20:21:12 tom Exp $
+dnl $Id: aclocal.m4,v 1.42 2010/11/06 19:25:57 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -1466,6 +1466,30 @@ AC_SUBST(MAKE_UPPER_TAGS)
 AC_SUBST(MAKE_LOWER_TAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_MATH_LIB version: 8 updated: 2010/05/29 16:31:02
+dnl -----------
+dnl Checks for libraries.  At least one UNIX system, Apple Macintosh
+dnl Rhapsody 5.5, does not have -lm.  We cannot use the simpler
+dnl AC_CHECK_LIB(m,sin), because that fails for C++.
+AC_DEFUN([CF_MATH_LIB],
+[
+AC_CACHE_CHECK(if -lm needed for math functions,
+	cf_cv_need_libm,[
+	AC_TRY_LINK([
+	#include <stdio.h>
+	#include <math.h>
+	],
+	[double x = rand(); printf("result = %g\n", ]ifelse([$2],,sin(x),$2)[)],
+	[cf_cv_need_libm=no],
+	[cf_cv_need_libm=yes])])
+if test "$cf_cv_need_libm" = yes
+then
+ifelse($1,,[
+	CF_ADD_LIB(m)
+],[$1=-lm])
+fi
+])
+dnl ---------------------------------------------------------------------------
 dnl CF_MIN_GETCCHAR version: 3 updated: 2010/10/23 15:54:49
 dnl ---------------
 dnl CF_MIN_GETCCHAR
@@ -2139,6 +2163,32 @@ make a defined-error
 	cf_cv_cc_u_d_options=no])
 	CPPFLAGS="$cf_save_CPPFLAGS"
 ])
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_PROG_INSTALL version: 5 updated: 2002/12/21 22:46:07
+dnl ---------------
+dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
+dnl misc/tabset install won't work properly.  Usually this happens only when
+dnl using the fallback mkinstalldirs script
+AC_DEFUN([CF_PROG_INSTALL],
+[AC_PROG_INSTALL
+case $INSTALL in
+/*)
+  ;;
+*)
+  CF_DIRNAME(cf_dir,$INSTALL)
+  test -z "$cf_dir" && cf_dir=.
+  INSTALL=`cd $cf_dir && pwd`/`echo $INSTALL | sed -e 's%^.*/%%'`
+  ;;
+esac
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_PROG_LINT version: 2 updated: 2009/08/12 04:43:14
+dnl ------------
+AC_DEFUN([CF_PROG_LINT],
+[
+AC_CHECK_PROGS(LINT, tdlint lint alint splint lclint)
+AC_SUBST(LINT_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_REMOVE_DEFINE version: 3 updated: 2010/01/09 11:05:50

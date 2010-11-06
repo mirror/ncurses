@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.4 2010/02/27 23:57:56 tom Exp $
+# $Id: make-tar.sh,v 1.6 2010/11/06 19:59:07 tom Exp $
 ##############################################################################
 # Copyright (c) 2010 Free Software Foundation, Inc.                          #
 #                                                                            #
@@ -31,11 +31,11 @@
 # documentation.  The reason for doing that is to simplify distributing the
 # ada binding as a separate package.
 
-ROOTNAME=ncurses-Ada95
-
 TARGET=`pwd`
 
-: ${TMPDIR=/tmp}
+: ${ROOTNAME:=ncurses-Ada95}
+: ${DESTDIR:=$TARGET}
+: ${TMPDIR:=/tmp}
 
 # This can be run from either the Ada95 subdirectory, or from the top-level
 # source directory.  We will put the tar file in the original directory.
@@ -83,8 +83,8 @@ find . -name "*.gz" -exec rm -rf {} \;
 # Make the files writable...
 chmod -R u+w .
 
-tar cf - $ROOTNAME | gzip >$TARGET/$ROOTNAME.tar.gz
-cd $TARGET
+tar cf - $ROOTNAME | gzip >$DESTDIR/$ROOTNAME.tar.gz
+cd $DESTDIR
 
 pwd
 ls -l $ROOTNAME.tar.gz

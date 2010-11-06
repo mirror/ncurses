@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.79 2010/10/23 20:26:07 tom Exp $
+dnl $Id: configure.in,v 1.82 2010/11/06 23:05:15 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -46,11 +46,18 @@ CF_INHERIT_SCRIPT(config.guess)
 CF_INHERIT_SCRIPT(config.sub)
 CF_CHECK_CACHE
 
+AC_ARG_PROGRAM
+
 AC_PROG_MAKE_SET
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_AWK
+CF_PROG_INSTALL
+CF_PROG_LINT
 CF_MAKE_TAGS
+
+CF_MATH_LIB(MATH_LIB,sin(x))
+AC_SUBST(MATH_LIB)
 
 dnl Things that we don't need (or must override) if we're not building ncurses
 CC_G_OPT="-g"					AC_SUBST(CC_G_OPT)
@@ -69,10 +76,7 @@ LIB_CLEAN=""					AC_SUBST(LIB_CLEAN)
 LIB_COMPILE=""					AC_SUBST(LIB_COMPILE)
 LIB_LINK='${CC}'				AC_SUBST(LIB_LINK)
 LINK_TESTS=""					AC_SUBST(LINK_TESTS)
-LINT=lint						AC_SUBST(LINT)
-LINT_OPTS=""					AC_SUBST(LINT_OPTS)
 LOCAL_LDFLAGS=""				AC_SUBST(LOCAL_LDFLAGS)
-MATH_LIB="-lm"					AC_SUBST(MATH_LIB)
 PTHREAD="-lm"					AC_SUBST(PTHREAD)
 TEST_ARGS=""					AC_SUBST(TEST_ARGS)
 TEST_DEPS=""					AC_SUBST(TEST_DEPS)
@@ -274,13 +278,14 @@ LIBS=
 dnl ---------------------------------------------------------------------------
 
 AC_OUTPUT(Makefile,[
-CF_PRG_RULES([$srcdir/mk-test.awk ECHO_LINK="$ECHO_LD"], .)
+CF_PRG_RULES([$srcdir/mk-test.awk INSTALL=yes ECHO_LINK="$ECHO_LD"], .)
 	cat >>Makefile <<TEST_EOF
 
 # These rules are generated so we do not rely on suffix rules, which do not
 # work consistently for different make-programs (the '\$(MODEL)/' confuses
 # some, and the '\$x' confuses others).
 TEST_EOF
+
 LIST=`sed -e 's/[[ 	]].*//' -e '/^[[#@]]/d' $srcdir/modules`
 for N in $LIST
 do
@@ -292,6 +297,16 @@ do
 	@echo compiling $N; \$(CC) -c \$(CFLAGS_DEFAULT) $N.c
 TEST_EOF
 done
+
+if test -f ../config.guess && test -f ../config.sub
+then
+	cat >>Makefile <<TEST_EOF
+
+# if we used CF_INHERIT for getting these files, we can remove them
+distclean::
+	rm -f config.guess config.sub
+TEST_EOF
+fi
 ],[
 AWK="$AWK"
 ECHO_LD="$ECHO_LD"

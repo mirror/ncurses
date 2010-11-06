@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.103 2010/04/03 15:31:40 tom Exp $
+# $Id: Makefile.in,v 1.106 2010/11/06 19:33:08 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -46,13 +46,23 @@ MODEL		= ../@DFT_OBJ_SUBDIR@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
+bindir		= @bindir@
 libdir		= @libdir@
 includedir	= @includedir@
+
+BINDIR		= $(DESTDIR)$(bindir)
+LIBDIR		= $(DESTDIR)$(libdir)
+INCLUDEDIR	= $(DESTDIR)$(includedir)
 
 LIBTOOL		= @LIBTOOL@
 LIBTOOL_CLEAN	= @LIB_CLEAN@
 LIBTOOL_COMPILE	= @LIB_COMPILE@
 LIBTOOL_LINK	= @LIB_LINK@
+
+INSTALL		= @INSTALL@
+INSTALL_PROG	= @INSTALL_PROGRAM@
+transform	= @program_transform_name@
+TRANSFORM	= sed 's/$x$$//'|sed '$(transform)'|sed 's/$$/$x/'
 
 CTAGS		= @CTAGS@
 ETAGS		= @ETAGS@
