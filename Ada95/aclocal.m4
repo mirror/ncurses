@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.17 2010/10/23 20:21:59 tom Exp $
+dnl $Id: aclocal.m4,v 1.18 2010/11/13 19:19:59 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1040,6 +1040,34 @@ rm -rf conftest*
 AC_SUBST(EXTRA_CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_GNAT_GENERICS version: 1 updated: 2010/11/13 14:15:18
+dnl ----------------
+AC_DEFUN([CF_GNAT_GENERICS],
+[
+AC_MSG_CHECKING(if GNAT supports generics)
+case $cf_gnat_version in #(vi
+3.[[1-9]]*|[[4-9]].*) #(vi
+	cf_gnat_generics=yes
+	;;
+*)
+	cf_gnat_generics=no
+	;;
+esac
+AC_MSG_RESULT($cf_gnat_generics)
+
+if test "$cf_gnat_generics" = yes
+then
+	cf_compile_generics=generics
+	cf_generic_objects="\${GENOBJS}"
+else
+	cf_compile_generics=
+	cf_generic_objects=
+fi
+
+AC_SUBST(cf_compile_generics)
+AC_SUBST(cf_generic_objects)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_PRAGMA_UNREF version: 1 updated: 2010/06/19 15:22:18
 dnl --------------------
 dnl Check if the gnat pragma "Unreferenced" works.
@@ -1067,6 +1095,41 @@ else
 	PRAGMA_UNREF=FALSE
 fi
 AC_SUBST(PRAGMA_UNREF)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_GNAT_PROJECTS version: 1 updated: 2010/11/13 14:15:18
+dnl ----------------
+AC_DEFUN([CF_GNAT_PROJECTS],
+[
+AC_MSG_CHECKING(if GNAT supports project files)
+case $cf_gnat_version in #(vi
+3.[[0-9]]*) #(vi
+	cf_gnat_projects=no
+	;;
+*)
+	case $cf_cv_system_name in #(vi
+	cygwin*) #(vi
+		cf_gnat_projects=no
+		;;
+	*)
+		cf_gnat_projects=yes
+		;;
+	esac
+	;;
+esac
+AC_MSG_RESULT($cf_gnat_projects)
+
+if test "$cf_gnat_projects" = yes
+then
+	USE_OLD_MAKERULES="#"
+	USE_GNAT_PROJECTS=""
+else
+	USE_OLD_MAKERULES=""
+	USE_GNAT_PROJECTS="#"
+fi
+
+AC_SUBST(USE_OLD_MAKERULES)
+AC_SUBST(USE_GNAT_PROJECTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_TRY_LINK version: 2 updated: 2010/08/14 18:25:37
@@ -1127,51 +1190,29 @@ fi
 rm -rf conftest*
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_VERSION version: 15 updated: 2010/10/23 15:52:32
+dnl CF_GNAT_VERSION version: 16 updated: 2010/11/13 14:15:18
 dnl ---------------
 dnl Verify version of GNAT.
 AC_DEFUN([CF_GNAT_VERSION],
 [
 AC_MSG_CHECKING(for gnat version)
-cf_gnat_version=`${cf_ada_make:-gnatmake} -v 2>&1 | grep '[[0-9]].[[0-9]][[0-9]]*' |\
-  sed -e '2,$d' -e 's/[[^0-9 \.]]//g' -e 's/^[[ ]]*//' -e 's/ .*//'`
+cf_gnat_version=`${cf_ada_make:-gnatmake} -v 2>&1 | \
+	grep '[[0-9]].[[0-9]][[0-9]]*' |\
+    sed -e '2,$d' -e 's/[[^0-9 \.]]//g' -e 's/^[[ ]]*//' -e 's/ .*//'`
 AC_MSG_RESULT($cf_gnat_version)
 
-case $cf_gnat_version in
-  3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*)
-    cf_cv_prog_gnat_correct=yes
-    ;;
-  *) echo Unsupported GNAT version $cf_gnat_version. Required is 3.11 or better. Disabling Ada95 binding.
-     cf_cv_prog_gnat_correct=no
-     ;;
+case $cf_gnat_version in #(vi
+3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*) #(vi
+	cf_cv_prog_gnat_correct=yes
+	;;
+*)
+	AC_MSG_WARN(Unsupported GNAT version $cf_gnat_version. We require 3.11 or better. Disabling Ada95 binding.)
+	cf_cv_prog_gnat_correct=no
+	;;
 esac
 
-case $cf_gnat_version in
-  3.[[1-9]]*|[[4-9]].*)
-      cf_compile_generics=generics
-      cf_generic_objects="\${GENOBJS}"
-      ;;
-  *)  cf_compile_generics=
-      cf_generic_objects=
-      ;;
-esac
-
-case $cf_gnat_version in
-  3.[[0-9]]*)
-    USE_OLD_MAKERULES=""
-    USE_GNAT_PROJECTS="#"
-    ;;
-  *)
-    USE_OLD_MAKERULES="#"
-    USE_GNAT_PROJECTS=""
-    ;;
-esac
-
-AC_SUBST(cf_compile_generics)
-AC_SUBST(cf_generic_objects)
-
-AC_SUBST(USE_OLD_MAKERULES)
-AC_SUBST(USE_GNAT_PROJECTS)
+CF_GNAT_GENERICS
+CF_GNAT_PROJECTS
 ])
 dnl ---------------------------------------------------------------------------
 dnl CF_GNU_SOURCE version: 6 updated: 2005/07/09 13:23:07

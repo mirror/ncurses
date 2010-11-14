@@ -1,5 +1,4 @@
 /*
- *
  * This is a test program for the PDCurses screen package for IBM PC type
  * machines.
  *
@@ -7,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.42 2010/05/01 19:23:19 tom Exp $
+ * $Id: testcurs.c,v 1.43 2010/11/13 21:02:28 tom Exp $
  */
 
 #include <test.priv.h>
@@ -416,7 +415,7 @@ inputTest(WINDOW *win)
 	    "%d %[][a-zA-Z]s",
 	    "%d %[^0-9]"
 	};
-	const char *format = fmt[repeat % SIZEOF(fmt)];
+	const char *format = fmt[(unsigned) repeat % SIZEOF(fmt)];
 
 	wclear(win);
 	MvWAddStr(win, 3, 2, "The window should have moved");

@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.51 2010/05/01 19:12:26 tom Exp $
+ * $Id: bs.c,v 1.52 2010/11/13 20:07:52 tom Exp $
  */
 
 #include <test.priv.h>
@@ -401,17 +401,17 @@ initgame(void)
     MvAddStr(CYBASE + BDEPTH, CXBASE - 3, numbers);
 
     MvPrintw(HYBASE, HXBASE,
-		    "To position your ships: move the cursor to a spot, then");
+	     "To position your ships: move the cursor to a spot, then");
     MvPrintw(HYBASE + 1, HXBASE,
-		    "type the first letter of a ship type to select it, then");
+	     "type the first letter of a ship type to select it, then");
     MvPrintw(HYBASE + 2, HXBASE,
-		    "type a direction ([hjkl] or [4862]), indicating how the");
+	     "type a direction ([hjkl] or [4862]), indicating how the");
     MvPrintw(HYBASE + 3, HXBASE,
-		    "ship should be pointed. You may also type a ship letter");
+	     "ship should be pointed. You may also type a ship letter");
     MvPrintw(HYBASE + 4, HXBASE,
-		    "followed by `r' to position it randomly, or type `R' to");
+	     "followed by `r' to position it randomly, or type `R' to");
     MvPrintw(HYBASE + 5, HXBASE,
-		    "place all remaining ships randomly.");
+	     "place all remaining ships randomly.");
 
     MvAddStr(MYBASE, MXBASE, "Aiming keys:");
     MvAddStr(SYBASE, SXBASE, "y k u    7 8 9");
@@ -519,17 +519,17 @@ initgame(void)
     turn = rnd(2);
 
     MvPrintw(HYBASE, HXBASE,
-		    "To fire, move the cursor to your chosen aiming point   ");
+	     "To fire, move the cursor to your chosen aiming point   ");
     MvPrintw(HYBASE + 1, HXBASE,
-		    "and strike any key other than a motion key.            ");
+	     "and strike any key other than a motion key.            ");
     MvPrintw(HYBASE + 2, HXBASE,
-		    "                                                       ");
+	     "                                                       ");
     MvPrintw(HYBASE + 3, HXBASE,
-		    "                                                       ");
+	     "                                                       ");
     MvPrintw(HYBASE + 4, HXBASE,
-		    "                                                       ");
+	     "                                                       ");
     MvPrintw(HYBASE + 5, HXBASE,
-		    "                                                       ");
+	     "                                                       ");
 
     (void) prompt(0, "Press any key to start...", "");
     (void) getch();
@@ -548,11 +548,11 @@ getcoord(int atcpu)
     for (;;) {
 	if (atcpu) {
 	    MvPrintw(CYBASE + BDEPTH + 1, CXBASE + 11, "(%d, %c)",
-			    curx, 'A' + cury);
+		     curx, 'A' + cury);
 	    cgoto(cury, curx);
 	} else {
 	    MvPrintw(PYBASE + BDEPTH + 1, PXBASE + 11, "(%d, %c)",
-			    curx, 'A' + cury);
+		     curx, 'A' + cury);
 	    pgoto(cury, curx);
 	}
 
@@ -955,8 +955,8 @@ cpufire(int x, int y)
     hit = board[PLAYER][x][y] ? MARK_HIT : MARK_MISS;
     hits[COMPUTER][x][y] = (char) hit;
     MvPrintw(PROMPTLINE, 0,
-		    "I shoot at %c%d. I %s!", y + 'A', x, hit ? "hit" :
-		    "miss");
+	     "I shoot at %c%d. I %s!", y + 'A', x, hit ? "hit" :
+	     "miss");
     if ((sunk = (hit && (ss = hitship(x, y)))) != 0)
 	(void) printw(" I've sunk your %s", ss->name);
     (void) clrtoeol();
@@ -1108,8 +1108,8 @@ cputurn(void)
     }
 #ifdef DEBUG
     MvPrintw(PROMPTLINE + 2, 0,
-		    "New state %d, x=%d, y=%d, d=%d",
-		    next, x, y, d);
+	     "New state %d, x=%d, y=%d, d=%d",
+	     next, x, y, d);
 #endif /* DEBUG */
     return ((hit) ? TRUE : FALSE);
 }
@@ -1136,7 +1136,7 @@ playagain(void)
     if (cpuwon >= 10)
 	++j;
     MvPrintw(1, (COLWIDTH - j) / 2,
-		    "%s: %d     Computer: %d", name, plywon, cpuwon);
+	     "%s: %d     Computer: %d", name, plywon, cpuwon);
 
     prompt(2, (awinna())? "Want to be humiliated again, %s [yn]? "
 	   : "Going to give me a chance for revenge, %s [yn]? ", name);

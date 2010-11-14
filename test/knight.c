@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.29 2010/05/01 19:11:55 tom Exp $
+ * $Id: knight.c,v 1.31 2010/11/13 20:44:21 tom Exp $
  */
 
 #include <test.priv.h>
@@ -119,9 +119,9 @@ init_program(void)
 	    bg = -1;
 #endif
 
-	(void) init_pair(TRAIL_COLOR, COLOR_CYAN, bg);
-	(void) init_pair(PLUS_COLOR, COLOR_RED, bg);
-	(void) init_pair(MINUS_COLOR, COLOR_GREEN, bg);
+	(void) init_pair(TRAIL_COLOR, (short) COLOR_CYAN, (short) bg);
+	(void) init_pair(PLUS_COLOR, (short) COLOR_RED, (short) bg);
+	(void) init_pair(MINUS_COLOR, (short) COLOR_GREEN, (short) bg);
 
 	trail |= COLOR_PAIR(TRAIL_COLOR);
 	plus |= COLOR_PAIR(PLUS_COLOR);
@@ -156,7 +156,7 @@ help1(void)
     (void) waddstr(helpwin, "of legal moves.\n\n");
 
     MvWAddStr(helpwin, NOTIFYY - INSTRY, 0,
-		     "Press `?' to go to keystroke help.");
+	      "Press `?' to go to keystroke help.");
 }
 
 static void
@@ -182,7 +182,7 @@ help2(void)
     (void) waddstr(helpwin, "center key.  Use F/B to review the path.\n");
 
     MvWAddStr(helpwin, NOTIFYY - INSTRY, 0,
-		     "Press `?' to go to game explanation");
+	      "Press `?' to go to game explanation");
 }
 
 static void
@@ -319,12 +319,12 @@ find_next_move(int *y, int *x)
 	    newx = oldx + offsets[k].x;
 	    if (chksqr(newy, newx)) {
 		if (first < 0)
-		    first = k;
+		    first = (int) k;
 		if (newy == *y
 		    && newx == *x) {
-		    found = k;
+		    found = (int) k;
 		} else if (found >= 0) {
-		    next = k;
+		    next = (int) k;
 		    break;
 		}
 	    }
@@ -586,8 +586,8 @@ play(void)
 			     history[movecount - 1].y,
 			     history[movecount - 1].x,
 			     rw, col);
-		    history[movecount].y = rw;
-		    history[movecount].x = col;
+		    history[movecount].y = (short) rw;
+		    history[movecount].x = (short) col;
 		    movecount++;
 		    trialcount++;
 

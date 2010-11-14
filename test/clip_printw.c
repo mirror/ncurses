@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.6 2010/05/01 19:13:46 tom Exp $
+ * $Id: clip_printw.c,v 1.7 2010/11/13 20:48:48 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
@@ -43,7 +43,7 @@ typedef struct {
     unsigned v;
     int status;
     int pair;
-    unsigned attr;
+    attr_t attr;
     int count;
     int ch;
     const char *c_msg;
@@ -111,7 +111,9 @@ color_params(unsigned state, int *pair)
 
 	    start_color();
 	    for (n = 0; n < SIZEOF(table); ++n) {
-		init_pair(table[n].pair, table[n].fg, table[n].bg);
+		init_pair((short) table[n].pair,
+			  (short) table[n].fg,
+			  (short) table[n].bg);
 	    }
 	}
 	if (state < SIZEOF(table)) {
@@ -123,11 +125,11 @@ color_params(unsigned state, int *pair)
 }
 
 static const char *
-video_params(unsigned state, unsigned *attr)
+video_params(unsigned state, attr_t *attr)
 {
     /* *INDENT-OFF* */
     static struct {
-	unsigned attr;
+	attr_t attr;
 	const char *msg;
     } table[] = {
 	{ A_NORMAL,	"normal" },
@@ -327,12 +329,12 @@ test_clipping(WINDOW *win)
     do {
 	switch (st.ch) {
 	case '.':		/* change from current position */
-	    (void) wattrset(win, st.attr | COLOR_PAIR(st.pair));
+	    (void) wattrset(win, st.attr | (chtype) COLOR_PAIR(st.pair));
 	    if (st.count > 0) {
-		need = st.count + 1;
+		need = (unsigned) st.count + 1;
 		sprintf(fmt, "%%c%%%ds%%c", st.count);
 	    } else {
-		need = getmaxx(win) - 1;
+		need = (unsigned) getmaxx(win) - 1;
 		strcpy(fmt, "%c%s%c");
 	    }
 	    if ((buffer = typeMalloc(char, need)) != 0) {

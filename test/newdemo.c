@@ -2,7 +2,7 @@
  *  newdemo.c	-	A demo program using PDCurses. The program illustrate
  *  	 		the use of colours for text output.
  *
- * $Id: newdemo.c,v 1.33 2010/05/01 19:07:34 tom Exp $
+ * $Id: newdemo.c,v 1.34 2010/11/13 23:33:42 tom Exp $
  */
 
 #include <test.priv.h>
@@ -66,7 +66,7 @@ WaitForUser(WINDOW *win)
     nodelay(win, TRUE);
     t = time((time_t *) 0);
     while (1) {
-	if ((int) (key = wgetch(win)) != ERR) {
+	if ((int) (key = (chtype) wgetch(win)) != ERR) {
 	    if (key == 'q' || key == 'Q')
 		return 1;
 	    else
@@ -83,8 +83,8 @@ set_colors(WINDOW *win, int pair, int foreground, int background)
     if (has_colors()) {
 	if (pair > COLOR_PAIRS)
 	    pair = COLOR_PAIRS;
-	init_pair(pair, foreground, background);
-	(void) wattrset(win, COLOR_PAIR(pair));
+	init_pair((short) pair, (short) foreground, (short) background);
+	(void) wattrset(win, (attr_t) COLOR_PAIR(pair));
     }
 }
 
@@ -94,7 +94,7 @@ use_colors(WINDOW *win, int pair, chtype attrs)
     if (has_colors()) {
 	if (pair > COLOR_PAIRS)
 	    pair = COLOR_PAIRS;
-	attrs |= COLOR_PAIR(pair);
+	attrs |= (chtype) COLOR_PAIR(pair);
     }
     (void) wattrset(win, attrs);
     return attrs;
@@ -321,10 +321,10 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	set_colors(win, 7, COLOR_RED, COLOR_GREEN);
 	memset(save, ' ', sizeof(save));
 	for (i = 2; i < width - 4; ++i) {
-	    k = mvwinch(win, 4, i);
+	    k = (int) mvwinch(win, 4, i);
 	    if (k == ERR)
 		break;
-	    save[j++] = c = k;
+	    save[j++] = c = (chtype) k;
 	    c &= A_CHARTEXT;
 	    MvWAddCh(win, 4, i, c);
 	}

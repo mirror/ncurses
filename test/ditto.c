@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.39 2010/07/03 19:41:04 tom Exp $
+ * $Id: ditto.c,v 1.40 2010/11/14 01:06:47 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -326,6 +326,7 @@ show_ditto(DITTO * data, int count, DDATA * ddata)
 {
     int n;
 
+    (void) data;
     for (n = 0; n < count; n++) {
 	ddata->target = n;
 	USING_SCREEN(data[n].screen, write_screen, (void *) ddata);

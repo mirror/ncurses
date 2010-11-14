@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.23 2010/05/01 19:11:55 tom Exp $
+ * $Id: movewindow.c,v 1.24 2010/11/13 23:34:55 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -311,7 +311,7 @@ next_window(WINDOW *win)
     int n = window2num(win);
 
     if (n++ >= 0) {
-	result = all_windows[n % num_windows].child;
+	result = all_windows[(unsigned) n % num_windows].child;
 	wmove(result, 0, 0);
 	wrefresh(result);
     }
@@ -326,8 +326,8 @@ prev_window(WINDOW *win)
 
     if (n-- >= 0) {
 	if (n < 0)
-	    n = num_windows - 1;
-	result = all_windows[n % num_windows].child;
+	    n = (int) (num_windows - 1);
+	result = all_windows[(unsigned) n % num_windows].child;
 	wmove(result, 0, 0);
 	wrefresh(result);
     }

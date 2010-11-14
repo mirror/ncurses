@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.6 2008/04/12 22:06:04 tom Exp $
+ * $Id: echochar.c,v 1.8 2010/11/14 01:00:44 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -49,7 +49,7 @@ cleanup(void)
 
     printf("\n\n%ld total chars, rate %.2f/sec\n",
 	   total_chars,
-	   ((double) (total_chars) / (time((time_t *) 0) - started)));
+	   ((double) (total_chars) / (double) (time((time_t *) 0) - started)));
 }
 
 static void
@@ -58,11 +58,11 @@ onsig(int n GCC_UNUSED)
     interrupted = TRUE;
 }
 
-static float
+static double
 ranf(void)
 {
     long r = (rand() & 077777);
-    return ((float) r / 32768.);
+    return ((double) r / 32768.);
 }
 
 static void
@@ -70,19 +70,20 @@ set_color(char *my_pairs, int fg, int bg)
 {
     int pair = (fg * COLORS) + bg;
     if (!my_pairs[pair]) {
-	init_pair(pair, fg, bg);
+	init_pair((short) pair,
+		  (short) fg,
+		  (short) bg);
     }
     attron(COLOR_PAIR(pair));
 }
 
 int
-main(
-	int argc GCC_UNUSED,
-	char *argv[]GCC_UNUSED)
+main(int argc GCC_UNUSED,
+     char *argv[]GCC_UNUSED)
 {
     int ch, x, y, z, p;
-    float r;
-    float c;
+    double r;
+    double c;
     bool use_colors;
     bool opt_r = FALSE;
     char *my_pairs = 0;
@@ -107,7 +108,7 @@ main(
     if (use_colors) {
 	start_color();
 	if (COLOR_PAIRS > 0) {
-	    my_pairs = typeCalloc(char, COLOR_PAIRS);
+	    my_pairs = typeCalloc(char, (size_t) COLOR_PAIRS);
 	}
 	use_colors = (my_pairs != 0);
     }
@@ -116,8 +117,8 @@ main(
 
     curs_set(0);
 
-    r = (float) (LINES - 4);
-    c = (float) (COLS - 4);
+    r = (double) (LINES - 4);
+    c = (double) (COLS - 4);
     started = time((time_t *) 0);
 
     while (!interrupted) {

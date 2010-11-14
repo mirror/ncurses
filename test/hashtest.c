@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *
  * Generate timing statistics for vertical-motion optimization.
  *
- * $Id: hashtest.c,v 1.30 2009/10/10 16:14:53 tom Exp $
+ * $Id: hashtest.c,v 1.31 2010/11/13 23:43:15 tom Exp $
  */
 
 #include <test.priv.h>
@@ -86,7 +86,8 @@ genlines(int base)
 
     move(head_lines, 0);
     for (i = head_lines; i < LINES - foot_lines; i++) {
-	chtype c = (base - LO_CHAR + i) % (HI_CHAR - LO_CHAR + 1) + LO_CHAR;
+	chtype c = (chtype) ((base - LO_CHAR + i) % (HI_CHAR - LO_CHAR + 1)
+			     + LO_CHAR);
 	int hi = (extend_corner || (i < LINES - 1)) ? COLS : COLS - 1;
 	for (j = 0; j < hi; j++)
 	    addch(c);

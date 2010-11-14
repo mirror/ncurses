@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.30 2010/05/01 19:12:26 tom Exp $
+ * $Id: demo_menus.c,v 1.31 2010/11/13 20:06:46 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -547,7 +547,7 @@ perform_trace_menu(int cmd)
 	    Trace(("trace level interactively set to %s", tracetrace(_nc_tracing)));
 
 	    MvPrintw(LINES - 2, 0,
-			    "Trace level is %s\n", tracetrace(_nc_tracing));
+		     "Trace level is %s\n", tracetrace(_nc_tracing));
 	    refresh();
 	}
     }

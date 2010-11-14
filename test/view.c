@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.79 2010/05/01 21:56:10 tom Exp $
+ * $Id: view.c,v 1.81 2010/11/14 01:06:02 tom Exp $
  */
 
 #include <test.priv.h>
@@ -178,7 +178,7 @@ ch_len(NCURSES_CH_T * src)
 static NCURSES_CH_T *
 ch_dup(char *src)
 {
-    unsigned len = strlen(src);
+    unsigned len = (unsigned) strlen(src);
     NCURSES_CH_T *dst = typeMalloc(NCURSES_CH_T, len + 1);
     unsigned j, k;
 #if USE_WIDEC_SUPPORT
@@ -197,7 +197,7 @@ ch_dup(char *src)
 #endif
     for (j = k = 0; j < len; j++) {
 #if USE_WIDEC_SUPPORT
-	rc = check_mbytes(wch, src + j, len - j, state);
+	rc = (size_t) check_mbytes(wch, src + j, len - j, state);
 	if (rc == (size_t) -1 || rc == (size_t) -2)
 	    break;
 	j += rc - 1;
@@ -214,7 +214,7 @@ ch_dup(char *src)
 	    wstr[l++] = L' ';
 	wstr[l++] = wch;
 #else
-	dst[k++] = src[j];
+	dst[k++] = (chtype) UChar(src[j]);
 #endif
     }
 #if USE_WIDEC_SUPPORT
@@ -291,7 +291,7 @@ main(int argc, char *argv[])
     if (optind + 1 != argc)
 	usage();
 
-    if ((vec_lines = typeCalloc(NCURSES_CH_T *, MAXLINES + 2)) == 0)
+    if ((vec_lines = typeCalloc(NCURSES_CH_T *, (size_t) MAXLINES + 2)) == 0)
 	usage();
 
     assert(vec_lines != 0);
@@ -333,14 +333,14 @@ main(int argc, char *argv[])
 	    } else {
 		sprintf(d, "\\%03o", UChar(*s));
 		d += strlen(d);
-		col = (d - temp);
+		col = (int) (d - temp);
 	    }
 #endif
 	}
 	*lptr = ch_dup(temp);
     }
     (void) fclose(fp);
-    num_lines = lptr - vec_lines;
+    num_lines = (int) (lptr - vec_lines);
 
     (void) initscr();		/* initialize the curses library */
     keypad(stdscr, TRUE);	/* enable keyboard mapping */
@@ -405,7 +405,7 @@ main(int argc, char *argv[])
 		    lptr++;
 		else
 		    break;
-	    scrl(lptr - olptr);
+	    scrl((int) (lptr - olptr));
 	    break;
 
 	case KEY_UP:
@@ -416,7 +416,7 @@ main(int argc, char *argv[])
 		    lptr--;
 		else
 		    break;
-	    scrl(lptr - olptr);
+	    scrl((int) (lptr - olptr));
 	    break;
 
 	case 'h':
@@ -539,9 +539,12 @@ show_all(const char *tag)
 
 #if CAN_RESIZE
     sprintf(temp, "%.20s (%3dx%3d) col %d ", tag, LINES, COLS, shift);
-    i = strlen(temp);
-    if ((i + 7) < (int) sizeof(temp))
-	sprintf(temp + i, "view %.*s", (int) (sizeof(temp) - 7 - i), fname);
+    i = (int) strlen(temp);
+    if ((i + 7) < (int) sizeof(temp)) {
+	sprintf(temp + i, "view %.*s",
+		(int) (sizeof(temp) - 7 - (size_t) i),
+		fname);
+    }
 #else
     (void) tag;
     sprintf(temp, "view %.*s", (int) sizeof(temp) - 7, fname);
@@ -551,7 +554,7 @@ show_all(const char *tag)
     clrtoeol();
     this_time = time((time_t *) 0);
     strcpy(temp, ctime(&this_time));
-    if ((i = strlen(temp)) != 0) {
+    if ((i = (int) strlen(temp)) != 0) {
 	temp[--i] = 0;
 	if (move(0, COLS - i - 2) != ERR)
 	    printw("  %s", temp);

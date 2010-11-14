@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.4 2009/10/10 16:14:24 tom Exp $
+ * $Id: dots_mvcur.c,v 1.6 2010/11/14 01:00:44 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -83,7 +83,7 @@ cleanup(void)
 
     printf("\n\n%ld total chars, rate %.2f/sec\n",
 	   total_chars,
-	   ((double) (total_chars) / (time((time_t *) 0) - started)));
+	   ((double) (total_chars) / (double) (time((time_t *) 0) - started)));
 }
 
 static void
@@ -92,22 +92,21 @@ onsig(int n GCC_UNUSED)
     interrupted = TRUE;
 }
 
-static float
+static double
 ranf(void)
 {
     long r = (rand() & 077777);
-    return ((float) r / 32768.);
+    return ((double) r / 32768.);
 }
 
 int
-main(
-	int argc GCC_UNUSED,
-	char *argv[]GCC_UNUSED)
+main(int argc GCC_UNUSED,
+     char *argv[]GCC_UNUSED)
 {
     int x0 = 1, y0 = 1;
     int x, y, z, p;
-    float r;
-    float c;
+    double r;
+    double c;
     SCREEN *sp;
 
     CATCHALL(onsig);
@@ -124,8 +123,8 @@ main(
 	    max_colors = -1;
     }
 
-    r = (float) (lines - 4);
-    c = (float) (columns - 4);
+    r = (double) (lines - 4);
+    c = (double) (columns - 4);
     started = time((time_t *) 0);
 
     while (!interrupted) {

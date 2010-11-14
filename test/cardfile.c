@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.37 2010/05/01 22:19:02 tom Exp $
+ * $Id: cardfile.c,v 1.38 2010/11/14 00:58:45 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -91,7 +91,7 @@ skip(const char *buffer)
 static void
 trim(char *buffer)
 {
-    unsigned n = strlen(buffer);
+    size_t n = strlen(buffer);
     while (n-- && isspace(UChar(buffer[n])))
 	buffer[n] = 0;
 }
@@ -129,7 +129,7 @@ add_title(const char *title)
 static void
 add_content(CARD * card, const char *content)
 {
-    unsigned total, offset;
+    size_t total, offset;
 
     content = skip(content);
     if ((total = strlen(content)) != 0) {

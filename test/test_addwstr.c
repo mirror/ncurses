@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addwstr.c,v 1.3 2010/05/01 19:13:46 tom Exp $
+ * $Id: test_addwstr.c,v 1.4 2010/11/13 21:13:53 tom Exp $
  *
  * Demonstrate the waddwstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -151,7 +151,7 @@ ConvertCh(chtype source, cchar_t *target)
 {
     wchar_t tmp_wchar[2];
 
-    tmp_wchar[0] = source;
+    tmp_wchar[0] = (wchar_t) source;
     tmp_wchar[1] = 0;
     if (setcchar(target, tmp_wchar, A_NORMAL, 0, (void *) 0) == ERR) {
 	beep();
@@ -420,19 +420,19 @@ test_inserts(int level)
 	    switch (option) {
 	    case oDefault:
 		if (move(limit + row, col) != ERR) {
-		    AddCh(ch);
+		    AddCh((chtype) ch);
 		}
 		break;
 	    case oMove:
-		MvAddCh(limit + row, col, ch);
+		MvAddCh(limit + row, col, (chtype) ch);
 		break;
 	    case oWindow:
 		if (wmove(work, limit + row, col) != ERR) {
-		    WAddCh(work, ch);
+		    WAddCh(work, (chtype) ch);
 		}
 		break;
 	    case oMoveWindow:
-		MvWAddCh(work, limit + row, col, ch);
+		MvWAddCh(work, limit + row, col, (chtype) ch);
 		break;
 	    }
 

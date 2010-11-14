@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.360 2010/07/24 18:04:58 tom Exp $
+$Id: ncurses.c,v 1.362 2010/11/14 01:04:13 tom Exp $
 
 ***************************************************************************/
 
@@ -1534,7 +1534,7 @@ attr_test(void)
 		if (init_pair(pair, fg, bg) == ERR) {
 		    beep();
 		} else {
-		    normal |= COLOR_PAIR(pair);
+		    normal |= (chtype) COLOR_PAIR(pair);
 		}
 	    }
 	    if (tx >= 0) {
@@ -1542,7 +1542,7 @@ attr_test(void)
 		if (init_pair(pair, tx, bg) == ERR) {
 		    beep();
 		} else {
-		    extras |= COLOR_PAIR(pair);
+		    extras |= (chtype) COLOR_PAIR(pair);
 		}
 	    }
 	}
@@ -1827,9 +1827,9 @@ wide_attr_test(void)
 
 	for (j = 0; j < SIZEOF(attrs_to_test); ++j) {
 	    row = wide_show_attr(row, n, j == k,
-				 ac |
-				 attrs_to_test[j].attr |
-				 attrs_to_test[k].attr,
+				 ((attr_t) ac |
+				  attrs_to_test[j].attr |
+				  attrs_to_test[k].attr),
 				 extras,
 				 attrs_to_test[j].name);
 	}
@@ -2415,7 +2415,7 @@ color_edit(void)
 		     (i == current ? '>' : ' '),
 		     (i < (int) SIZEOF(the_color_names)
 		      ? the_color_names[i] : numeric));
-	    (void) attrset(COLOR_PAIR(i));
+	    (void) attrset((attr_t) COLOR_PAIR(i));
 	    addstr("        ");
 	    (void) attrset(A_NORMAL);
 
@@ -2709,9 +2709,9 @@ cycle_colors(int ch, int *fg, int *bg, short *pair)
 
 #if HAVE_SLK_COLOR
 static void
-call_slk_color(short fg, short bg)
+call_slk_color(int fg, int bg)
 {
-    init_pair(1, bg, fg);
+    init_pair(1, (short) bg, (short) fg);
     slk_color(1);
     MvPrintw(SLK_WORK, 0, "Colors %d/%d\n", fg, bg);
     clrtoeol();
@@ -3085,7 +3085,8 @@ static void
 show_box_chars(int repeat, attr_t attr, short pair)
 {
     (void) repeat;
-    attr |= COLOR_PAIR(pair);
+
+    attr |= (attr_t) COLOR_PAIR(pair);
 
     erase();
     attron(A_BOLD);
@@ -3133,7 +3134,7 @@ show_acs_chars(int repeat, attr_t attr, short pair)
 {
     int n;
 
-#define BOTH(name) #name, colored_chtype(name, attr, pair)
+#define BOTH(name) #name, colored_chtype(name, attr, (chtype) pair)
 
     erase();
     attron(A_BOLD);
@@ -3339,8 +3340,11 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 	     * Mark them with reverse-video to make them simpler to find on
 	     * the display.
 	     */
-	    if (wcwidth(code) == 0)
-		addch(space | (A_REVERSE ^ attr) | COLOR_PAIR(pair));
+	    if (wcwidth(code) == 0) {
+		addch((chtype) space |
+		      (A_REVERSE ^ attr) |
+		      (attr_t) COLOR_PAIR(pair));
+	    }
 	    /*
 	     * This could use add_wch(), but is done for comparison with the
 	     * normal 'f' test (and to make a test-case for echo_wchar()).
@@ -4468,7 +4472,7 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 	    short bg = color;
 
 	    init_pair(color, fg, bg);
-	    wbkgdset(win, (chtype) (COLOR_PAIR(color) | ' '));
+	    wbkgdset(win, (attr_t) (COLOR_PAIR(color) | ' '));
 	} else {
 	    wbkgdset(win, A_BOLD | ' ');
 	}
@@ -5062,11 +5066,11 @@ panner(WINDOW *pad,
 
 	    doupdate();
 #if HAVE_GETTIMEOFDAY
+#define TIMEVAL2S(data) ((double) data.tv_sec + ((double) data.tv_usec / 1.0e6))
 	    if (timing) {
 		double elapsed;
 		gettimeofday(&after, 0);
-		elapsed = (after.tv_sec + after.tv_usec / 1.0e6)
-		    - (before.tv_sec + before.tv_usec / 1.0e6);
+		elapsed = (TIMEVAL2S(after) - TIMEVAL2S(before));
 		move(LINES - 1, COLS - 12);
 		printw("Secs: %2.03f", elapsed);
 		refresh();
@@ -5584,7 +5588,7 @@ make_label(int frow, int fcol, NCURSES_CONST char *label)
 
     if (f) {
 	set_field_buffer(f, 0, label);
-	set_field_opts(f, (int) (field_opts(f) & ~O_ACTIVE));
+	set_field_opts(f, (int) ((unsigned) field_opts(f) & ~O_ACTIVE));
     }
     return (f);
 }
@@ -6048,11 +6052,11 @@ overlap_test_1_attr(WINDOW *win, int flavor, int col)
 	break;
     case 2:
 	init_pair(cpair, COLOR_BLUE, COLOR_WHITE);
-	(void) wattrset(win, COLOR_PAIR(cpair) | A_NORMAL);
+	(void) wattrset(win, (attr_t) COLOR_PAIR(cpair) | A_NORMAL);
 	break;
     case 3:
 	init_pair(cpair, COLOR_WHITE, COLOR_BLUE);
-	(void) wattrset(win, COLOR_PAIR(cpair) | A_BOLD);
+	(void) wattrset(win, (attr_t) COLOR_PAIR(cpair) | A_BOLD);
 	break;
     }
 }
@@ -6709,7 +6713,7 @@ main(int argc, char *argv[])
 	    break;
 #if USE_LIBPANEL
 	case 's':
-	    nap_msec = atol(optarg);
+	    nap_msec = (int) atol(optarg);
 	    break;
 #endif
 #ifdef TRACE

@@ -26,13 +26,13 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: firework.c,v 1.26 2010/05/01 19:12:26 tom Exp $
+ * $Id: firework.c,v 1.27 2010/11/13 20:58:25 tom Exp $
  */
 #include <test.priv.h>
 
 #include <time.h>
 
-static int my_bg = COLOR_BLACK;
+static short my_bg = COLOR_BLACK;
 
 static void
 cleanup(void)
@@ -70,7 +70,7 @@ showit(void)
     }
 }
 
-static int
+static short
 get_colour(chtype *bold)
 {
     int attr;
@@ -81,7 +81,7 @@ get_colour(chtype *bold)
 	*bold = A_BOLD;
 	attr &= 7;
     }
-    return (attr);
+    return (short) (attr);
 }
 
 static
@@ -162,7 +162,7 @@ main(
     }
     curs_set(0);
 
-    seed = time((time_t *) 0);
+    seed = (unsigned) time((time_t *) 0);
     srand(seed);
     for (;;) {
 	do {
@@ -187,7 +187,7 @@ main(
 	    showit();
 	    flag = 0;
 	}
-	seed = time((time_t *) 0);
+	seed = (unsigned) time((time_t *) 0);
 	srand(seed);
 	explode(LINES - row, start + (diff * direction));
 	erase();

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: filter.c,v 1.12 2008/12/06 21:59:27 tom Exp $
+ * $Id: filter.c,v 1.13 2010/11/13 20:55:54 tom Exp $
  */
 #include <test.priv.h>
 
@@ -132,7 +132,7 @@ main(int argc, char *argv[])
 	if (use_default_colors() != ERR)
 	    background = -1;
 #endif
-	init_pair(1, COLOR_CYAN, background);
+	init_pair(1, COLOR_CYAN, (short) background);
 	underline = COLOR_PAIR(1);
     } else {
 	underline = A_UNDERLINE;

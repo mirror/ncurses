@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: insdelln.c,v 1.4 2010/05/01 19:11:55 tom Exp $
+ * $Id: insdelln.c,v 1.5 2010/11/13 23:39:38 tom Exp $
  *
  * test-driver for deleteln, wdeleteln, insdelln, winsdelln, insertln, winsertln
  */
@@ -56,8 +56,8 @@ color_params(unsigned state, int *pair)
 {
     /* *INDENT-OFF* */
     static struct {
-	int pair;
-	int fg, bg;
+	short pair;
+	short fg, bg;
 	const char *msg;
     } table[] = {
 	{ 0, COLOR_DEFAULT, COLOR_DEFAULT, "default" },
@@ -300,7 +300,7 @@ test_winsdelln(WINDOW *win)
     init_status(win, &st);
 
     do {
-	(void) wattrset(win, st.attr | COLOR_PAIR(st.pair));
+	(void) wattrset(win, st.attr | (attr_t) COLOR_PAIR(st.pair));
 	switch (st.ch) {
 	case 'i':
 	    for (n = 0; n < st.count; ++n)
@@ -341,7 +341,7 @@ test_insdelln(void)
     init_status(stdscr, &st);
 
     do {
-	(void) attrset(st.attr | COLOR_PAIR(st.pair));
+	(void) attrset(st.attr | (attr_t) COLOR_PAIR(st.pair));
 	switch (st.ch) {
 	case 'i':
 	    for (n = 0; n < st.count; ++n)

@@ -17983,44 +17983,77 @@ else
 
 echo "$as_me:17984: checking for gnat version" >&5
 echo $ECHO_N "checking for gnat version... $ECHO_C" >&6
-cf_gnat_version=`${cf_ada_make:-gnatmake} -v 2>&1 | grep '[0-9].[0-9][0-9]*' |\
-  sed -e '2,$d' -e 's/[^0-9 \.]//g' -e 's/^[ ]*//' -e 's/ .*//'`
-echo "$as_me:17988: result: $cf_gnat_version" >&5
+cf_gnat_version=`${cf_ada_make:-gnatmake} -v 2>&1 | \
+	grep '[0-9].[0-9][0-9]*' |\
+    sed -e '2,$d' -e 's/[^0-9 \.]//g' -e 's/^[ ]*//' -e 's/ .*//'`
+echo "$as_me:17989: result: $cf_gnat_version" >&5
 echo "${ECHO_T}$cf_gnat_version" >&6
 
-case $cf_gnat_version in
-  3.1[1-9]*|3.[2-9]*|[4-9].*)
-    cf_cv_prog_gnat_correct=yes
-    ;;
-  *) echo Unsupported GNAT version $cf_gnat_version. Required is 3.11 or better. Disabling Ada95 binding.
-     cf_cv_prog_gnat_correct=no
-     ;;
+case $cf_gnat_version in #(vi
+3.1[1-9]*|3.[2-9]*|[4-9].*) #(vi
+	cf_cv_prog_gnat_correct=yes
+	;;
+*)
+	{ echo "$as_me:17997: WARNING: Unsupported GNAT version $cf_gnat_version. We require 3.11 or better. Disabling Ada95 binding." >&5
+echo "$as_me: WARNING: Unsupported GNAT version $cf_gnat_version. We require 3.11 or better. Disabling Ada95 binding." >&2;}
+	cf_cv_prog_gnat_correct=no
+	;;
 esac
 
-case $cf_gnat_version in
-  3.[1-9]*|[4-9].*)
-      cf_compile_generics=generics
-      cf_generic_objects="\${GENOBJS}"
-      ;;
-  *)  cf_compile_generics=
-      cf_generic_objects=
-      ;;
+echo "$as_me:18003: checking if GNAT supports generics" >&5
+echo $ECHO_N "checking if GNAT supports generics... $ECHO_C" >&6
+case $cf_gnat_version in #(vi
+3.[1-9]*|[4-9].*) #(vi
+	cf_gnat_generics=yes
+	;;
+*)
+	cf_gnat_generics=no
+	;;
 esac
+echo "$as_me:18013: result: $cf_gnat_generics" >&5
+echo "${ECHO_T}$cf_gnat_generics" >&6
 
-case $cf_gnat_version in
-  3.[0-9]*)
-    USE_OLD_MAKERULES=""
-    USE_GNAT_PROJECTS="#"
-    ;;
-  *)
-    USE_OLD_MAKERULES="#"
-    USE_GNAT_PROJECTS=""
-    ;;
+if test "$cf_gnat_generics" = yes
+then
+	cf_compile_generics=generics
+	cf_generic_objects="\${GENOBJS}"
+else
+	cf_compile_generics=
+	cf_generic_objects=
+fi
+
+echo "$as_me:18025: checking if GNAT supports project files" >&5
+echo $ECHO_N "checking if GNAT supports project files... $ECHO_C" >&6
+case $cf_gnat_version in #(vi
+3.[0-9]*) #(vi
+	cf_gnat_projects=no
+	;;
+*)
+	case $cf_cv_system_name in #(vi
+	cygwin*) #(vi
+		cf_gnat_projects=no
+		;;
+	*)
+		cf_gnat_projects=yes
+		;;
+	esac
+	;;
 esac
+echo "$as_me:18042: result: $cf_gnat_projects" >&5
+echo "${ECHO_T}$cf_gnat_projects" >&6
+
+if test "$cf_gnat_projects" = yes
+then
+	USE_OLD_MAKERULES="#"
+	USE_GNAT_PROJECTS=""
+else
+	USE_OLD_MAKERULES=""
+	USE_GNAT_PROJECTS="#"
+fi
 
    # Extract the first word of "m4", so it can be a program name with args.
 set dummy m4; ac_word=$2
-echo "$as_me:18023: checking for $ac_word" >&5
+echo "$as_me:18056: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
 if test "${ac_cv_prog_M4_exists+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -18035,7 +18068,7 @@ for ac_dir in $ac_dummy; do
   test -z "$ac_dir" && ac_dir=.
   $as_executable_p "$ac_dir/$ac_word" || continue
 ac_cv_prog_M4_exists="yes"
-echo "$as_me:18038: found $ac_dir/$ac_word" >&5
+echo "$as_me:18071: found $ac_dir/$ac_word" >&5
 break
 done
 
@@ -18044,10 +18077,10 @@ fi
 fi
 M4_exists=$ac_cv_prog_M4_exists
 if test -n "$M4_exists"; then
-  echo "$as_me:18047: result: $M4_exists" >&5
+  echo "$as_me:18080: result: $M4_exists" >&5
 echo "${ECHO_T}$M4_exists" >&6
 else
-  echo "$as_me:18050: result: no" >&5
+  echo "$as_me:18083: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -18056,7 +18089,7 @@ fi
       echo Ada95 binding required program m4 not found. Ada95 binding disabled.
    fi
    if test "$cf_cv_prog_gnat_correct" = yes; then
-      echo "$as_me:18059: checking if GNAT works" >&5
+      echo "$as_me:18092: checking if GNAT works" >&5
 echo $ECHO_N "checking if GNAT works... $ECHO_C" >&6
 
 rm -rf conftest*
@@ -18084,7 +18117,7 @@ else
 fi
 rm -rf conftest*
 
-      echo "$as_me:18087: result: $cf_cv_prog_gnat_correct" >&5
+      echo "$as_me:18120: result: $cf_cv_prog_gnat_correct" >&5
 echo "${ECHO_T}$cf_cv_prog_gnat_correct" >&6
    fi
 fi
@@ -18093,7 +18126,7 @@ fi
 
  	ADAFLAGS="$ADAFLAGS -O3 -gnatpn"
 
-echo "$as_me:18096: checking if GNAT pragma Unreferenced works" >&5
+echo "$as_me:18129: checking if GNAT pragma Unreferenced works" >&5
 echo $ECHO_N "checking if GNAT pragma Unreferenced works... $ECHO_C" >&6
 if test "${cf_cv_pragma_unreferenced+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -18124,7 +18157,7 @@ fi
 rm -rf conftest*
 
 fi
-echo "$as_me:18127: result: $cf_cv_pragma_unreferenced" >&5
+echo "$as_me:18160: result: $cf_cv_pragma_unreferenced" >&5
 echo "${ECHO_T}$cf_cv_pragma_unreferenced" >&6
 
 # if the pragma is supported, use it (needed in the Trace code).
@@ -18134,7 +18167,7 @@ else
 	PRAGMA_UNREF=FALSE
 fi
 
-echo "$as_me:18137: checking for ada-compiler" >&5
+echo "$as_me:18170: checking for ada-compiler" >&5
 echo $ECHO_N "checking for ada-compiler... $ECHO_C" >&6
 
 # Check whether --with-ada-compiler or --without-ada-compiler was given.
@@ -18145,12 +18178,12 @@ else
   cf_ada_compiler=gnatmake
 fi;
 
-echo "$as_me:18148: result: $cf_ada_compiler" >&5
+echo "$as_me:18181: result: $cf_ada_compiler" >&5
 echo "${ECHO_T}$cf_ada_compiler" >&6
 
 			cf_ada_package=terminal_interface
 
-echo "$as_me:18153: checking for ada-include" >&5
+echo "$as_me:18186: checking for ada-include" >&5
 echo $ECHO_N "checking for ada-include... $ECHO_C" >&6
 
 # Check whether --with-ada-include or --without-ada-include was given.
@@ -18186,7 +18219,7 @@ case ".$withval" in #(vi
   withval=`echo $withval | sed -e s%NONE%$cf_path_syntax%`
   ;;
 *)
-  { { echo "$as_me:18189: error: expected a pathname, not \"$withval\"" >&5
+  { { echo "$as_me:18222: error: expected a pathname, not \"$withval\"" >&5
 echo "$as_me: error: expected a pathname, not \"$withval\"" >&2;}
    { (exit 1); exit 1; }; }
   ;;
@@ -18195,10 +18228,10 @@ esac
 fi
 ADA_INCLUDE="$withval"
 
-echo "$as_me:18198: result: $ADA_INCLUDE" >&5
+echo "$as_me:18231: result: $ADA_INCLUDE" >&5
 echo "${ECHO_T}$ADA_INCLUDE" >&6
 
-echo "$as_me:18201: checking for ada-objects" >&5
+echo "$as_me:18234: checking for ada-objects" >&5
 echo $ECHO_N "checking for ada-objects... $ECHO_C" >&6
 
 # Check whether --with-ada-objects or --without-ada-objects was given.
@@ -18234,7 +18267,7 @@ case ".$withval" in #(vi
   withval=`echo $withval | sed -e s%NONE%$cf_path_syntax%`
   ;;
 *)
-  { { echo "$as_me:18237: error: expected a pathname, not \"$withval\"" >&5
+  { { echo "$as_me:18270: error: expected a pathname, not \"$withval\"" >&5
 echo "$as_me: error: expected a pathname, not \"$withval\"" >&2;}
    { (exit 1); exit 1; }; }
   ;;
@@ -18243,10 +18276,10 @@ esac
 fi
 ADA_OBJECTS="$withval"
 
-echo "$as_me:18246: result: $ADA_OBJECTS" >&5
+echo "$as_me:18279: result: $ADA_OBJECTS" >&5
 echo "${ECHO_T}$ADA_OBJECTS" >&6
 
-echo "$as_me:18249: checking if an Ada95 shared-library should be built" >&5
+echo "$as_me:18282: checking if an Ada95 shared-library should be built" >&5
 echo $ECHO_N "checking if an Ada95 shared-library should be built... $ECHO_C" >&6
 
 # Check whether --with-ada-sharedlib or --without-ada-sharedlib was given.
@@ -18256,7 +18289,7 @@ if test "${with_ada_sharedlib+set}" = set; then
 else
   with_ada_sharedlib=no
 fi;
-echo "$as_me:18259: result: $with_ada_sharedlib" >&5
+echo "$as_me:18292: result: $with_ada_sharedlib" >&5
 echo "${ECHO_T}$with_ada_sharedlib" >&6
 
 ADA_SHAREDLIB='lib$(LIB_NAME).so.1'
@@ -18287,7 +18320,7 @@ fi
 ### chooses to split module lists into libraries.
 ###
 ### (see CF_LIB_RULES).
-echo "$as_me:18290: checking for library subsets" >&5
+echo "$as_me:18323: checking for library subsets" >&5
 echo $ECHO_N "checking for library subsets... $ECHO_C" >&6
 LIB_SUBSETS=
 
@@ -18328,7 +18361,7 @@ fi
 test "$with_widec"     = yes && LIB_SUBSETS="${LIB_SUBSETS}+widechar"
 test "$with_ext_funcs" = yes && LIB_SUBSETS="${LIB_SUBSETS}+ext_funcs"
 
-echo "$as_me:18331: result: $LIB_SUBSETS" >&5
+echo "$as_me:18364: result: $LIB_SUBSETS" >&5
 echo "${ECHO_T}$LIB_SUBSETS" >&6
 
 ### Construct the list of include-directories to be generated
@@ -18366,7 +18399,7 @@ elif test "$includedir" != "/usr/include"; then
 fi
 
 ### Build up pieces for makefile rules
-echo "$as_me:18369: checking default library suffix" >&5
+echo "$as_me:18402: checking default library suffix" >&5
 echo $ECHO_N "checking default library suffix... $ECHO_C" >&6
 
 	case $DFT_LWR_MODEL in
@@ -18377,10 +18410,10 @@ echo $ECHO_N "checking default library suffix... $ECHO_C" >&6
 	shared)  DFT_ARG_SUFFIX=''   ;;
 	esac
 	test -n "$LIB_SUFFIX" && DFT_ARG_SUFFIX="${LIB_SUFFIX}${DFT_ARG_SUFFIX}"
-echo "$as_me:18380: result: $DFT_ARG_SUFFIX" >&5
+echo "$as_me:18413: result: $DFT_ARG_SUFFIX" >&5
 echo "${ECHO_T}$DFT_ARG_SUFFIX" >&6
 
-echo "$as_me:18383: checking default library-dependency suffix" >&5
+echo "$as_me:18416: checking default library-dependency suffix" >&5
 echo $ECHO_N "checking default library-dependency suffix... $ECHO_C" >&6
 
 	case $DFT_LWR_MODEL in #(vi
@@ -18433,10 +18466,10 @@ echo $ECHO_N "checking default library-dependency suffix... $ECHO_C" >&6
 	esac
 	test -n "$LIB_SUFFIX" && DFT_LIB_SUFFIX="${LIB_SUFFIX}${DFT_LIB_SUFFIX}"
 	test -n "$LIB_SUFFIX" && DFT_DEP_SUFFIX="${LIB_SUFFIX}${DFT_DEP_SUFFIX}"
-echo "$as_me:18436: result: $DFT_DEP_SUFFIX" >&5
+echo "$as_me:18469: result: $DFT_DEP_SUFFIX" >&5
 echo "${ECHO_T}$DFT_DEP_SUFFIX" >&6
 
-echo "$as_me:18439: checking default object directory" >&5
+echo "$as_me:18472: checking default object directory" >&5
 echo $ECHO_N "checking default object directory... $ECHO_C" >&6
 
 	case $DFT_LWR_MODEL in
@@ -18452,12 +18485,12 @@ echo $ECHO_N "checking default object directory... $ECHO_C" >&6
 			DFT_OBJ_SUBDIR='obj_s' ;;
 		esac
 	esac
-echo "$as_me:18455: result: $DFT_OBJ_SUBDIR" >&5
+echo "$as_me:18488: result: $DFT_OBJ_SUBDIR" >&5
 echo "${ECHO_T}$DFT_OBJ_SUBDIR" >&6
 
 # libtool thinks it can make c++ shared libraries (perhaps only g++)
 if test "$cf_with_cxx" = yes ; then
-echo "$as_me:18460: checking c++ library-dependency suffix" >&5
+echo "$as_me:18493: checking c++ library-dependency suffix" >&5
 echo $ECHO_N "checking c++ library-dependency suffix... $ECHO_C" >&6
 if test "$with_libtool" != "no"; then
 	CXX_LIB_SUFFIX=$DFT_DEP_SUFFIX
@@ -18514,7 +18547,7 @@ else
 	test -n "$LIB_SUFFIX" && CXX_LIB_SUFFIX="${LIB_SUFFIX}${CXX_LIB_SUFFIX}"
 	test -n "$LIB_SUFFIX" && CXX_DEP_SUFFIX="${LIB_SUFFIX}${CXX_DEP_SUFFIX}"
 fi
-echo "$as_me:18517: result: $CXX_LIB_SUFFIX" >&5
+echo "$as_me:18550: result: $CXX_LIB_SUFFIX" >&5
 echo "${ECHO_T}$CXX_LIB_SUFFIX" >&6
 
 fi
@@ -18668,19 +18701,19 @@ fi
 
 if test -n "$LDFLAGS_STATIC" && test -n "$LDFLAGS_SHARED"
 then
-	echo "$as_me:18671: checking if linker supports switching between static/dynamic" >&5
+	echo "$as_me:18704: checking if linker supports switching between static/dynamic" >&5
 echo $ECHO_N "checking if linker supports switching between static/dynamic... $ECHO_C" >&6
 
 	rm -f libconftest.a
 	cat >conftest.$ac_ext <<EOF
-#line 18676 "configure"
+#line 18709 "configure"
 #include <stdio.h>
 int cf_ldflags_static(FILE *fp) { return fflush(fp); }
 EOF
-	if { (eval echo "$as_me:18680: \"$ac_compile\"") >&5
+	if { (eval echo "$as_me:18713: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:18683: \$? = $ac_status" >&5
+  echo "$as_me:18716: \$? = $ac_status" >&5
   (exit $ac_status); } ; then
 		( $AR $ARFLAGS libconftest.a conftest.o ) 2>&5 1>/dev/null
 		( eval $RANLIB libconftest.a ) 2>&5 >/dev/null
@@ -18691,10 +18724,10 @@ EOF
 
 	LIBS="$LDFLAGS_STATIC -L`pwd` -lconftest $LDFLAGS_DYNAMIC $LIBS"
 	cat >conftest.$ac_ext <<_ACEOF
-#line 18694 "configure"
+#line 18727 "configure"
 #include "confdefs.h"
 
-#line 18697 "configure"
+#line 18730 "configure"
 #include <stdio.h>
 int cf_ldflags_static(FILE *fp);
 
@@ -18709,16 +18742,16 @@ main ()
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:18712: \"$ac_link\"") >&5
+if { (eval echo "$as_me:18745: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:18715: \$? = $ac_status" >&5
+  echo "$as_me:18748: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:18718: \"$ac_try\"") >&5
+  { (eval echo "$as_me:18751: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:18721: \$? = $ac_status" >&5
+  echo "$as_me:18754: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   cf_ldflags_static=yes
 else
@@ -18731,7 +18764,7 @@ rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 	rm -f libconftest.*
 	LIBS="$cf_save_LIBS"
 
-	echo "$as_me:18734: result: $cf_ldflags_static" >&5
+	echo "$as_me:18767: result: $cf_ldflags_static" >&5
 echo "${ECHO_T}$cf_ldflags_static" >&6
 
 	if test $cf_ldflags_static != yes
@@ -18747,12 +18780,12 @@ fi
 	;;
 esac
 
-echo "$as_me:18750: checking where we will install curses.h" >&5
+echo "$as_me:18783: checking where we will install curses.h" >&5
 echo $ECHO_N "checking where we will install curses.h... $ECHO_C" >&6
 test "$with_overwrite" = no && \
 test "x$includedir" = 'x${prefix}/include' && \
 	includedir='${prefix}/include/ncurses'${LIB_SUFFIX}
-echo "$as_me:18755: result: $includedir" >&5
+echo "$as_me:18788: result: $includedir" >&5
 echo "${ECHO_T}$includedir" >&6
 
 ### Resolve a conflict between normal and wide-curses by forcing applications
@@ -18760,7 +18793,7 @@ echo "${ECHO_T}$includedir" >&6
 if test "$with_overwrite" != no ; then
 if test "$NCURSES_LIBUTF8" = 1 ; then
 	NCURSES_LIBUTF8='defined(HAVE_LIBUTF8_H)'
-	{ echo "$as_me:18763: WARNING: Wide-character applications must define HAVE_LIBUTF8_H to include curses.h" >&5
+	{ echo "$as_me:18796: WARNING: Wide-character applications must define HAVE_LIBUTF8_H to include curses.h" >&5
 echo "$as_me: WARNING: Wide-character applications must define HAVE_LIBUTF8_H to include curses.h" >&2;}
 fi
 fi
@@ -18777,7 +18810,7 @@ EOF
 ### Construct the list of subdirectories for which we'll customize makefiles
 ### with the appropriate compile-rules.
 
-echo "$as_me:18780: checking for src modules" >&5
+echo "$as_me:18813: checking for src modules" >&5
 echo $ECHO_N "checking for src modules... $ECHO_C" >&6
 
 # dependencies and linker-arguments for test-programs
@@ -18840,7 +18873,7 @@ EOF
 		fi
 	fi
 done
-echo "$as_me:18843: result: $cf_cv_src_modules" >&5
+echo "$as_me:18876: result: $cf_cv_src_modules" >&5
 echo "${ECHO_T}$cf_cv_src_modules" >&6
 
 TEST_ARGS="-L${LIB_DIR} $TEST_ARGS"
@@ -19046,7 +19079,7 @@ fi
 
 # Extract the first word of "tic", so it can be a program name with args.
 set dummy tic; ac_word=$2
-echo "$as_me:19049: checking for $ac_word" >&5
+echo "$as_me:19082: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
 if test "${ac_cv_path_TIC_PATH+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -19063,7 +19096,7 @@ for ac_dir in $ac_dummy; do
   test -z "$ac_dir" && ac_dir=.
   if $as_executable_p "$ac_dir/$ac_word"; then
    ac_cv_path_TIC_PATH="$ac_dir/$ac_word"
-   echo "$as_me:19066: found $ac_dir/$ac_word" >&5
+   echo "$as_me:19099: found $ac_dir/$ac_word" >&5
    break
 fi
 done
@@ -19075,10 +19108,10 @@ fi
 TIC_PATH=$ac_cv_path_TIC_PATH
 
 if test -n "$TIC_PATH"; then
-  echo "$as_me:19078: result: $TIC_PATH" >&5
+  echo "$as_me:19111: result: $TIC_PATH" >&5
 echo "${ECHO_T}$TIC_PATH" >&6
 else
-  echo "$as_me:19081: result: no" >&5
+  echo "$as_me:19114: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -19086,7 +19119,7 @@ if test -n "$FALLBACK_LIST"
 then
 	if test "$TIC_PATH" = unknown
 	then
-		{ echo "$as_me:19089: WARNING: no tic program found for fallbacks" >&5
+		{ echo "$as_me:19122: WARNING: no tic program found for fallbacks" >&5
 echo "$as_me: WARNING: no tic program found for fallbacks" >&2;}
 	fi
 fi
@@ -19185,7 +19218,7 @@ DEFS=-DHAVE_CONFIG_H
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:19188: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:19221: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -19361,7 +19394,7 @@ cat >>$CONFIG_STATUS <<\EOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:19364: error: ambiguous option: $1
+    { { echo "$as_me:19397: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -19380,7 +19413,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:19383: error: unrecognized option: $1
+  -*) { { echo "$as_me:19416: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -19486,7 +19519,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "default" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
   "include/ncurses_cfg.h" ) CONFIG_HEADERS="$CONFIG_HEADERS include/ncurses_cfg.h:include/ncurses_cfg.hin" ;;
-  *) { { echo "$as_me:19489: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:19522: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -19892,7 +19925,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:19895: creating $ac_file" >&5
+    { echo "$as_me:19928: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -19910,7 +19943,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:19913: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:19946: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -19923,7 +19956,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:19926: error: cannot find input file: $f" >&5
+           { { echo "$as_me:19959: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -19989,7 +20022,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:19992: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:20025: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -20000,7 +20033,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:20003: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:20036: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -20013,7 +20046,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:20016: error: cannot find input file: $f" >&5
+           { { echo "$as_me:20049: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -20071,7 +20104,7 @@ cat >>$CONFIG_STATUS <<\EOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:20074: $ac_file is unchanged" >&5
+      { echo "$as_me:20107: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \

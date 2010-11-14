@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inchs.c,v 1.10 2010/05/01 19:13:46 tom Exp $
+ * $Id: inchs.c,v 1.11 2010/11/13 23:41:23 tom Exp $
  *
  * Author: Thomas E Dickey
  */
@@ -158,10 +158,10 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	if (txtwin != stdscr) {
 	    wmove(txtwin, txt_y, txt_x);
 
-	    if ((ch = winch(txtwin)) != ERR) {
+	    if ((ch = (int) winch(txtwin)) != ERR) {
 		if (waddch(chrwin, (chtype) ch) != ERR) {
 		    for (j = txt_x + 1; j < getmaxx(txtwin); ++j) {
-			if ((ch = mvwinch(txtwin, txt_y, j)) != ERR) {
+			if ((ch = (int) mvwinch(txtwin, txt_y, j)) != ERR) {
 			    if (waddch(chrwin, (chtype) ch) == ERR) {
 				break;
 			    }
@@ -174,10 +174,10 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	} else {
 	    move(txt_y, txt_x);
 
-	    if ((ch = inch()) != ERR) {
+	    if ((ch = (int) inch()) != ERR) {
 		if (waddch(chrwin, (chtype) ch) != ERR) {
 		    for (j = txt_x + 1; j < getmaxx(txtwin); ++j) {
-			if ((ch = mvinch(txt_y, j)) != ERR) {
+			if ((ch = (int) mvinch(txt_y, j)) != ERR) {
 			    if (waddch(chrwin, (chtype) ch) == ERR) {
 				break;
 			    }

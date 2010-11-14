@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.35 2010/05/01 21:56:10 tom Exp $
+ * $Id: demo_forms.c,v 1.36 2010/11/13 20:49:50 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -83,7 +83,7 @@ make_label(int frow, int fcol, NCURSES_CONST char *label)
 
     if (f) {
 	set_field_buffer(f, 0, label);
-	set_field_opts(f, (int) (field_opts(f) & ~O_ACTIVE));
+	set_field_opts(f, (int) ((unsigned) field_opts(f) & ~O_ACTIVE));
     }
     return (f);
 }
@@ -216,7 +216,7 @@ my_form_driver(FORM * form, int c)
     case MY_EDT_MODE:
 	if ((field = current_field(form)) != 0) {
 	    set_current_field(form, another_field(form, field));
-	    if (field_opts(field) & O_EDIT) {
+	    if ((unsigned) field_opts(field) & O_EDIT) {
 		field_opts_off(field, O_EDIT);
 		set_field_status(field, 0);
 	    } else {
@@ -292,7 +292,7 @@ show_current_field(WINDOW *win, FORM * form)
 		waddstr(win, "other");
 	}
 
-	if (field_opts(field) & O_EDIT)
+	if ((unsigned) field_opts(field) & O_EDIT)
 	    waddstr(win, " editable");
 	else
 	    waddstr(win, " readonly");

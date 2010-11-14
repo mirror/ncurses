@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.27 2010/05/01 18:47:19 tom Exp $ */
+/* $Id: tclock.c,v 1.29 2010/11/14 01:04:52 tom Exp $ */
 
 #include <test.priv.h>
 
@@ -67,7 +67,7 @@ dline(int pair, int from_x, int from_y, int x2, int y2, char ch)
     int d;
 
     if (has_colors())
-	(void) attrset(COLOR_PAIR(pair));
+	(void) attrset((attr_t) COLOR_PAIR(pair));
 
     dx = x2 - from_x;
     dy = y2 - from_y;
@@ -130,7 +130,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     struct tm *t;
     char szChar[10];
     char *text;
-    int my_bg = COLOR_BLACK;
+    short my_bg = COLOR_BLACK;
 #if HAVE_GETTIMEOFDAY
     struct timeval current;
     double fraction = 0.0;
@@ -201,7 +201,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
 #if HAVE_GETTIMEOFDAY
 	gettimeofday(&current, 0);
-	fraction = (current.tv_usec / 1.0e6);
+	fraction = ((double) current.tv_usec / 1.0e6);
 #endif
 	sangle = ((t->tm_sec + fraction) * (2.0 * PI) / 60.0);
 	sdx = A2X(sangle, sradius);

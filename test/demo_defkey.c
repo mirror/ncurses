@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.19 2008/08/04 16:24:47 tom Exp $
+ * $Id: demo_defkey.c,v 1.20 2010/11/14 00:59:35 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -98,7 +98,7 @@ static char *
 visible(const char *string)
 {
     char *result = 0;
-    unsigned need = 1;
+    size_t need = 1;
     int pass;
     int n;
 

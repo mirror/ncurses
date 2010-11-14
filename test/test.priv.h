@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.95 2010/05/01 19:03:04 tom Exp $ */
+/* $Id: test.priv.h,v 1.97 2010/11/13 20:33:36 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -186,10 +186,6 @@
 #define HAVE_TYPEAHEAD 0
 #endif
 
-#ifndef HAVE_TIGETSTR
-#define HAVE_TIGETSTR 0
-#endif
-
 #ifndef HAVE_WINSSTR
 #define HAVE_WINSSTR 0
 #endif
@@ -228,7 +224,7 @@
 #include <unistd.h>
 #endif
 
-#include <signal.h>	/* include before curses.h to work around glibc bug */
+#include <signal.h>		/* include before curses.h to work around glibc bug */
 
 #if NEED_WCHAR_H
 #include <wchar.h>
@@ -290,20 +286,20 @@ extern int optind;
 #if HAVE_LOCALE_H
 #include <locale.h>
 #else
-#define setlocale(name,string) /* nothing */
+#define setlocale(name,string)	/* nothing */
 #endif
 
 #include <assert.h>
 #include <ctype.h>
 
 #ifndef GCC_NORETURN
-#define GCC_NORETURN /* nothing */
+#define GCC_NORETURN		/* nothing */
 #endif
 #ifndef GCC_PRINTFLIKE
-#define GCC_PRINTFLIKE(a,b) /* nothing */
+#define GCC_PRINTFLIKE(a,b)	/* nothing */
 #endif
 #ifndef GCC_UNUSED
-#define GCC_UNUSED /* nothing */
+#define GCC_UNUSED		/* nothing */
 #endif
 
 #ifndef HAVE_GETNSTR
@@ -372,17 +368,17 @@ extern int optind;
 #define ESCAPE		CTRL('[')
 
 #ifndef KEY_MIN
-#define KEY_MIN 256	/* not defined in Solaris 8 */
+#define KEY_MIN 256		/* not defined in Solaris 8 */
 #endif
 
 #ifdef DECL_CURSES_DATA_BOOLNAMES
-extern char	*boolnames[], *boolcodes[], *boolfnames[],
-		*numnames[], *numcodes[], *numfnames[],
-		*strnames[], *strcodes[], *strfnames[];
+extern char *boolnames[], *boolcodes[], *boolfnames[];
+extern char *numnames[], *numcodes[], *numfnames[];
+extern char *strnames[], *strcodes[], *strfnames[];
 #endif
 
 #define colored_chtype(ch, attr, pair) \
-	((ch) | (attr) | COLOR_PAIR(pair))
+	((chtype) (ch) | (chtype) (attr) | (chtype) COLOR_PAIR(pair))
 
 /*
  * Workaround for HPUX
@@ -521,7 +517,7 @@ extern char	*boolnames[], *boolcodes[], *boolfnames[],
  * that XSI shows.
  */
 #ifndef NCURSES_CONST
-#define NCURSES_CONST /* nothing */
+#define NCURSES_CONST		/* nothing */
 #endif
 
 /* out-of-band values for representing absent capabilities */
@@ -534,7 +530,7 @@ extern char	*boolnames[], *boolcodes[], *boolfnames[],
 #define CANCELLED_NUMERIC	(-2)
 #define CANCELLED_STRING	(char *)(-1)
 
-#define VALID_BOOLEAN(s) ((unsigned char)(s) <= 1) /* reject "-1" */
+#define VALID_BOOLEAN(s) ((unsigned char)(s) <= 1)	/* reject "-1" */
 #define VALID_NUMERIC(s) ((s) >= 0)
 #define VALID_STRING(s)  ((s) != CANCELLED_STRING && (s) != ABSENT_STRING)
 
@@ -598,7 +594,7 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #ifdef NCURSES_VERSION
 #define CONST_MENUS const
 #else
-#define CONST_MENUS /* nothing */
+#define CONST_MENUS		/* nothing */
 #endif
 
 #ifndef HAVE_USE_WINDOW
@@ -614,8 +610,8 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
  */
 
 #if !HAVE_USE_WINDOW
-typedef int (*NCURSES_WINDOW_CB)(WINDOW *, void *);
-typedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);
+typedef int (*NCURSES_WINDOW_CB) (WINDOW *, void *);
+typedef int (*NCURSES_SCREEN_CB) (SCREEN *, void *);
 #endif
 
 #if HAVE_USE_WINDOW

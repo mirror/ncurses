@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_altkeys.c,v 1.8 2008/04/12 22:06:22 tom Exp $
+ * $Id: demo_altkeys.c,v 1.9 2010/11/14 00:59:26 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2005/10/22
@@ -128,8 +128,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
 #if HAVE_GETTIMEOFDAY
 	gettimeofday(&current, 0);
-	secs = current.tv_sec - previous.tv_sec;
-	msecs = (current.tv_usec - previous.tv_usec) / 1000;
+	secs = (int) (current.tv_sec - previous.tv_sec);
+	msecs = (int) ((current.tv_usec - previous.tv_usec) / 1000);
 	if (msecs < 0) {
 	    msecs += 1000;
 	    --secs;

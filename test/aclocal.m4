@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.42 2010/11/06 19:25:57 tom Exp $
+dnl $Id: aclocal.m4,v 1.44 2010/11/14 00:44:52 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -236,6 +236,19 @@ dnl
 dnl $1 = libraries to add, with the "-l", etc.
 dnl $2 = variable to update (default $LIBS)
 AC_DEFUN([CF_ADD_LIBS],[ifelse($2,,LIBS,[$2])="$1 [$]ifelse($2,,LIBS,[$2])"])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ADD_LIB_AFTER version: 2 updated: 2010/11/08 20:33:46
+dnl ----------------
+dnl Add a given library after another, e.g., following the one it satisfies a
+dnl dependency for.
+dnl
+dnl $1 = the first library
+dnl $2 = its dependency
+AC_DEFUN([CF_ADD_LIB_AFTER],[
+CF_VERBOSE(...before $LIBS)
+LIBS=`echo "$LIBS" | sed -e "s/[[ 	]][[ 	]]*/ /g" -e "s,$1 ,$1 $2 ," -e 's/  / /g'`
+CF_VERBOSE(...after  $LIBS)
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ADD_SUBDIR_PATH version: 3 updated: 2010/07/03 20:58:12
 dnl ------------------
@@ -1683,7 +1696,7 @@ AC_DEFINE(NCURSES)
 CF_NCURSES_VERSION
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_EXT_FUNCS version: 2 updated: 2010/10/23 15:54:49
+dnl CF_NCURSES_EXT_FUNCS version: 3 updated: 2010/11/13 19:43:23
 dnl --------------------
 dnl Since 2007/11/17, ncurses has defined NCURSES_EXT_FUNCS; earlier versions
 dnl may provide these functions.  Define the symbol if it is not defined, and
@@ -1715,7 +1728,7 @@ AC_TRY_LINK([
 	[cf_cv_ncurses_ext_funcs=no])
 ])
 ])
-test "$cf_cv_ncurses_ext_funcs" == yes && AC_DEFINE(NCURSES_EXT_FUNCS)
+test "$cf_cv_ncurses_ext_funcs" = yes && AC_DEFINE(NCURSES_EXT_FUNCS)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_NCURSES_HEADER version: 2 updated: 2008/03/23 14:48:54
@@ -2601,7 +2614,7 @@ if test -n "$cf_xopen_source" ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_X_ATHENA version: 17 updated: 2010/10/23 15:52:32
+dnl CF_X_ATHENA version: 20 updated: 2010/11/09 05:18:02
 dnl -----------
 dnl Check for Xaw (Athena) libraries
 dnl
@@ -2659,6 +2672,27 @@ if test "$PKG_CONFIG" != none ; then
 			cf_x_athena_lib="$cf_pkgconfig_libs"
 			CF_UPPER(cf_x_athena_LIBS,HAVE_LIB_$cf_x_athena)
 			AC_DEFINE_UNQUOTED($cf_x_athena_LIBS)
+
+AC_CACHE_CHECK(for usable $cf_x_athena/Xmu package,cf_cv_xaw_compat,[
+AC_TRY_LINK([
+#include <X11/Xmu/CharSet.h>
+],[
+int check = XmuCompareISOLatin1("big", "small")
+],[cf_cv_xaw_compat=yes],[cf_cv_xaw_compat=no])])
+
+			if test "$cf_cv_xaw_compat" = no
+			then
+				# workaround for broken ".pc" files...
+				case "$cf_x_athena_lib" in #(vi
+				*-lXmu*) #(vi
+					;;
+				*)
+					CF_VERBOSE(work around broken package)
+					CF_TRY_PKG_CONFIG(xmu,,[CF_ADD_LIB_AFTER(-lXt,-lXmu)])
+					;;
+				esac
+			fi
+
 			break])
 	done
 fi
@@ -2778,7 +2812,7 @@ CF_TRY_PKG_CONFIG(Xext,,[
 		[CF_ADD_LIB(Xext)])])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_X_TOOLKIT version: 15 updated: 2010/06/14 17:42:30
+dnl CF_X_TOOLKIT version: 19 updated: 2010/11/09 05:18:02
 dnl ------------
 dnl Check for X Toolkit libraries
 dnl
@@ -2791,21 +2825,30 @@ cf_have_X_LIBS=no
 
 CF_TRY_PKG_CONFIG(xt,[
 
-	# workaround for broken ".pc" files used for X Toolkit.
-	case "x$X_PRE_LIBS" in #(vi
-	*-lICE*)
-		case "x$LIBS" in #(vi
-		*-lICE*) #(vi
-			;;
-		*)
-			CF_VERBOSE(work around broken package)
-			CF_VERBOSE(...before $LIBS)
-			LIBS=`echo "$LIBS" | sed -e "s/[[ 	]][[ 	]]*/ /g" -e "s,-lXt ,-lXt $X_PRE_LIBS ," -e 's/  / /g'`
-			CF_VERBOSE(...after  $LIBS)
+AC_CACHE_CHECK(for usable X Toolkit package,cf_cv_xt_compat,[
+AC_TRY_LINK([
+#include <X11/Shell.h>
+],[int num = IceConnectionNumber(0)
+],[cf_cv_xt_compat=no],[cf_cv_xt_compat=no])])
+
+	if test "$cf_cv_xt_compat" = no
+	then
+		# workaround for broken ".pc" files used for X Toolkit.
+		case "x$X_PRE_LIBS" in #(vi
+		*-lICE*)
+			case "x$LIBS" in #(vi
+			*-lICE*) #(vi
+				;;
+			*)
+				CF_VERBOSE(work around broken package)
+				CF_TRY_PKG_CONFIG(ice,
+					[CF_TRY_PKG_CONFIG(sm)],
+					[CF_ADD_LIB_AFTER(-lXt,$X_PRE_LIBS)])
+				;;
+			esac
 			;;
 		esac
-		;;
-	esac
+	fi
 
 	cf_have_X_LIBS=yes
 ],[

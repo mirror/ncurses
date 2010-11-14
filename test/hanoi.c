@@ -41,7 +41,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.29 2010/05/01 19:12:26 tom Exp $
+ * $Id: hanoi.c,v 1.31 2010/11/14 01:01:07 tom Exp $
  */
 
 #include <test.priv.h>
@@ -67,8 +67,12 @@ struct Peg {
 
 static struct Peg Pegs[NPEGS];
 static int PegPos[] =
-{LEFTPEG, MIDPEG, RIGHTPEG};
-static int TileColour[] =
+{
+    LEFTPEG,
+    MIDPEG,
+    RIGHTPEG
+};
+static short TileColour[] =
 {
     COLOR_GREEN,		/* Length 3 */
     COLOR_MAGENTA,		/* Length 5 */
@@ -132,14 +136,14 @@ main(int argc, char **argv)
     initscr();
     if (has_colors()) {
 	int i;
-	int bg = COLOR_BLACK;
+	short bg = COLOR_BLACK;
 	start_color();
 #if HAVE_USE_DEFAULT_COLORS
 	if (use_default_colors() == OK)
 	    bg = -1;
 #endif
 	for (i = 0; i < 9; i++)
-	    init_pair(i + 1, bg, TileColour[i]);
+	    init_pair((short) (i + 1), bg, TileColour[i]);
     }
     cbreak();
     if (LINES < 24) {
@@ -212,7 +216,7 @@ InitTiles(int NTiles)
     int Size, SlotNo;
 
     for (Size = NTiles * 2 + 1, SlotNo = 0; Size >= 3; Size -= 2)
-	Pegs[0].Length[SlotNo++] = Size;
+	Pegs[0].Length[SlotNo++] = (size_t) Size;
 
     Pegs[0].Count = NTiles;
     Pegs[1].Count = 0;
@@ -246,8 +250,8 @@ DisplayTiles(void)
     /* Draw tiles */
     for (peg = 0; peg < NPEGS; peg++) {
 	for (SlotNo = 0; SlotNo < Pegs[peg].Count; SlotNo++) {
-	    unsigned len = Pegs[peg].Length[SlotNo];
-	    if (len < sizeof(TileBuf) - 1 && len < (unsigned) PegPos[peg]) {
+	    size_t len = Pegs[peg].Length[SlotNo];
+	    if (len < sizeof(TileBuf) - 1 && len < (size_t) PegPos[peg]) {
 		memset(TileBuf, ' ', len);
 		TileBuf[len] = '\0';
 		if (has_colors())
@@ -255,7 +259,7 @@ DisplayTiles(void)
 		else
 		    (void) attrset(A_REVERSE);
 		MvAddStr(BASELINE - (SlotNo + 1),
-			 (int) (PegPos[peg] - len / 2),
+			 (PegPos[peg] - (int) len / 2),
 			 TileBuf);
 	    }
 	}

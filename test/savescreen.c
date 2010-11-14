@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.12 2010/05/01 22:04:08 tom Exp $
+ * $Id: savescreen.c,v 1.13 2010/11/13 21:18:00 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -189,8 +189,8 @@ main(int argc, char *argv[])
     if (has_colors()) {
 	start_color();
 	for (ch = 0; ch < COLOR_PAIRS; ++ch) {
-	    short pair = ch % COLOR_PAIRS;
-	    init_pair(pair, COLOR_WHITE, ch % COLORS);
+	    short pair = (short) (ch % COLOR_PAIRS);
+	    init_pair(pair, COLOR_WHITE, (short) (ch % COLORS));
 	}
     }
 
@@ -289,8 +289,8 @@ main(int argc, char *argv[])
 		    }
 		    ++which;
 		    if (has_colors()) {
-			short pair = which % COLOR_PAIRS;
-			bkgd(COLOR_PAIR(pair));
+			short pair = (short) (which % COLOR_PAIRS);
+			bkgd((chtype) COLOR_PAIR(pair));
 		    }
 		} else {
 		    beep();

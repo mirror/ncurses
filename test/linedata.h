@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2009,2010 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -86,7 +86,7 @@ read_linedata(WINDOW *work)
 		    continue;
 		}
 	    } else if (code != ERR) {
-		result = ch;
+		result = (int) ch;
 		break;
 	    } else {
 		break;

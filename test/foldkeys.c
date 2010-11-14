@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey, 2006
  *
- * $Id: foldkeys.c,v 1.3 2006/12/09 16:54:07 tom Exp $
+ * $Id: foldkeys.c,v 1.4 2010/11/14 01:00:53 tom Exp $
  *
  * Demonstrate a method for altering key definitions at runtime.
  *
@@ -229,8 +229,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
 #if HAVE_GETTIMEOFDAY
 	gettimeofday(&current, 0);
-	secs = current.tv_sec - previous.tv_sec;
-	msecs = (current.tv_usec - previous.tv_usec) / 1000;
+	secs = (int) (current.tv_sec - previous.tv_sec);
+	msecs = (int) ((current.tv_usec - previous.tv_usec) / 1000);
 	if (msecs < 0) {
 	    msecs += 1000;
 	    --secs;
