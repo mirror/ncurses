@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.44 2010/11/14 00:44:52 tom Exp $
+dnl $Id: aclocal.m4,v 1.45 2010/11/20 22:07:06 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -837,6 +837,29 @@ AC_SUBST(SHOW_CC)
 AC_SUBST(ECHO_CC)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_DISABLE_LEAKS version: 6 updated: 2010/07/23 04:14:32
+dnl ----------------
+dnl Combine no-leak checks with the libraries or tools that are used for the
+dnl checks.
+AC_DEFUN([CF_DISABLE_LEAKS],[
+
+AC_REQUIRE([CF_WITH_DMALLOC])
+AC_REQUIRE([CF_WITH_DBMALLOC])
+AC_REQUIRE([CF_WITH_VALGRIND])
+
+AC_MSG_CHECKING(if you want to perform memory-leak testing)
+AC_ARG_ENABLE(leaks,
+	[  --disable-leaks         test: free permanent memory, analyze leaks],
+	[if test "x$enableval" = xno; then with_no_leaks=yes; else with_no_leaks=no; fi],
+	: ${with_no_leaks:=no})
+AC_MSG_RESULT($with_no_leaks)
+
+if test "$with_no_leaks" = yes ; then
+	AC_DEFINE(NO_LEAKS)
+	AC_DEFINE(YY_NO_LEAKS)
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_ENABLE_WARNINGS version: 4 updated: 2009/07/26 17:53:03
 dnl ------------------
 dnl Configure-option to enable gcc warnings
@@ -1645,7 +1668,7 @@ CF_NCURSES_LIBS(ifelse($1,,ncurses,$1))
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CPPFLAGS version: 19 updated: 2007/07/29 13:35:20
+dnl CF_NCURSES_CPPFLAGS version: 20 updated: 2010/11/20 17:02:38
 dnl -------------------
 dnl Look for the SVr4 curses clone 'ncurses' in the standard places, adjusting
 dnl the CPPFLAGS variable so we can include its header.
@@ -1674,7 +1697,7 @@ cf_ncuhdr_root=ifelse($1,,ncurses,$1)
 
 test -n "$cf_cv_curses_dir" && \
 test "$cf_cv_curses_dir" != "no" && { \
-  CF_ADD_INCDIR($cf_cv_curses_dir/include $cf_cv_curses_dir/include/$cf_ncuhdr_root)
+  CF_ADD_INCDIR($cf_cv_curses_dir/include/$cf_ncuhdr_root)
 }
 
 AC_CACHE_CHECK(for $cf_ncuhdr_root header in include-path, cf_cv_ncurses_h,[
@@ -1797,7 +1820,7 @@ esac
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_LIBS version: 15 updated: 2010/10/23 15:54:49
+dnl CF_NCURSES_LIBS version: 16 updated: 2010/11/20 17:02:38
 dnl ---------------
 dnl Look for the ncurses library.  This is a little complicated on Linux,
 dnl because it may be linked with the gpm (general purpose mouse) library.
@@ -1837,7 +1860,6 @@ CF_ADD_LIBS($cf_ncurses_LIBS)
 
 if ( test -n "$cf_cv_curses_dir" && test "$cf_cv_curses_dir" != "no" )
 then
-	CF_ADD_LIBDIR($cf_cv_curses_dir/lib)
 	CF_ADD_LIBS(-l$cf_nculib_root)
 else
 	CF_FIND_LIBRARY($cf_nculib_root,$cf_nculib_root,
@@ -1943,6 +1965,35 @@ AC_MSG_RESULT($NCURSES_WRAP_PREFIX)
 
 AC_SUBST(NCURSES_WRAP_PREFIX)
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_NO_LEAKS_OPTION version: 4 updated: 2006/12/16 14:24:05
+dnl ------------------
+dnl see CF_WITH_NO_LEAKS
+AC_DEFUN([CF_NO_LEAKS_OPTION],[
+AC_MSG_CHECKING(if you want to use $1 for testing)
+AC_ARG_WITH($1,
+	[$2],
+	[AC_DEFINE($3)ifelse([$4],,[
+	 $4
+])
+	: ${with_cflags:=-g}
+	: ${with_no_leaks:=yes}
+	 with_$1=yes],
+	[with_$1=])
+AC_MSG_RESULT(${with_$1:-no})
+
+case .$with_cflags in #(vi
+.*-g*)
+	case .$CFLAGS in #(vi
+	.*-g*) #(vi
+		;;
+	*)
+		CF_ADD_CFLAGS([-g])
+		;;
+	esac
+	;;
+esac
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_PATH_SYNTAX version: 13 updated: 2010/05/26 05:38:42
 dnl --------------
@@ -2461,16 +2512,66 @@ fi
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_CURSES_DIR version: 2 updated: 2002/11/10 14:46:59
+dnl CF_WITH_CURSES_DIR version: 3 updated: 2010/11/20 17:02:38
 dnl ------------------
 dnl Wrapper for AC_ARG_WITH to specify directory under which to look for curses
 dnl libraries.
 AC_DEFUN([CF_WITH_CURSES_DIR],[
+
+AC_MSG_CHECKING(for specific curses-directory)
 AC_ARG_WITH(curses-dir,
 	[  --with-curses-dir=DIR   directory in which (n)curses is installed],
-	[CF_PATH_SYNTAX(withval)
-	 cf_cv_curses_dir=$withval],
+	[cf_cv_curses_dir=$withval],
 	[cf_cv_curses_dir=no])
+AC_MSG_RESULT($cf_cv_curses_dir)
+
+if ( test -n "$cf_cv_curses_dir" && test "$cf_cv_curses_dir" != "no" )
+then
+	CF_PATH_SYNTAX(withval)
+	if test -d "$cf_cv_curses_dir"
+	then
+		CF_ADD_INCDIR($cf_cv_curses_dir/include)
+		CF_ADD_LIBDIR($cf_cv_curses_dir/lib)
+	fi
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_DBMALLOC version: 7 updated: 2010/06/21 17:26:47
+dnl ----------------
+dnl Configure-option for dbmalloc.  The optional parameter is used to override
+dnl the updating of $LIBS, e.g., to avoid conflict with subsequent tests.
+AC_DEFUN([CF_WITH_DBMALLOC],[
+CF_NO_LEAKS_OPTION(dbmalloc,
+	[  --with-dbmalloc         test: use Conor Cahill's dbmalloc library],
+	[USE_DBMALLOC])
+
+if test "$with_dbmalloc" = yes ; then
+	AC_CHECK_HEADER(dbmalloc.h,
+		[AC_CHECK_LIB(dbmalloc,[debug_malloc]ifelse([$1],,[],[,$1]))])
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_DMALLOC version: 7 updated: 2010/06/21 17:26:47
+dnl ---------------
+dnl Configure-option for dmalloc.  The optional parameter is used to override
+dnl the updating of $LIBS, e.g., to avoid conflict with subsequent tests.
+AC_DEFUN([CF_WITH_DMALLOC],[
+CF_NO_LEAKS_OPTION(dmalloc,
+	[  --with-dmalloc          test: use Gray Watson's dmalloc library],
+	[USE_DMALLOC])
+
+if test "$with_dmalloc" = yes ; then
+	AC_CHECK_HEADER(dmalloc.h,
+		[AC_CHECK_LIB(dmalloc,[dmalloc_debug]ifelse([$1],,[],[,$1]))])
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_VALGRIND version: 1 updated: 2006/12/14 18:00:21
+dnl ----------------
+AC_DEFUN([CF_WITH_VALGRIND],[
+CF_NO_LEAKS_OPTION(valgrind,
+	[  --with-valgrind         test: use valgrind],
+	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_XOPEN_CURSES version: 10 updated: 2010/10/23 15:54:49
@@ -2812,7 +2913,7 @@ CF_TRY_PKG_CONFIG(Xext,,[
 		[CF_ADD_LIB(Xext)])])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_X_TOOLKIT version: 19 updated: 2010/11/09 05:18:02
+dnl CF_X_TOOLKIT version: 20 updated: 2010/11/19 05:43:04
 dnl ------------
 dnl Check for X Toolkit libraries
 dnl
@@ -2825,13 +2926,36 @@ cf_have_X_LIBS=no
 
 CF_TRY_PKG_CONFIG(xt,[
 
-AC_CACHE_CHECK(for usable X Toolkit package,cf_cv_xt_compat,[
+	case "x$LIBS" in #(vi
+	*-lX11*) #(vi
+		;;
+	*)
+# we have an "xt" package, but it may omit Xt's dependency on X11
+AC_CACHE_CHECK(for usable X dependency,cf_cv_xt_x11_compat,[
+AC_TRY_LINK([
+#include <X11/Xlib.h>
+],[
+	int rc1 = XDrawLine((Display*) 0, (Drawable) 0, (GC) 0, 0, 0, 0, 0);
+	int rc2 = XClearWindow((Display*) 0, (Window) 0);
+	int rc3 = XMoveWindow((Display*) 0, (Window) 0, 0, 0);
+	int rc4 = XMoveResizeWindow((Display*)0, (Window)0, 0, 0, 0, 0);
+],[cf_cv_xt_x11_compat=yes],[cf_cv_xt_x11_compat=no])])
+		if test "$cf_cv_xt_x11_compat" = no
+		then
+			CF_VERBOSE(work around broken X11 dependency)
+			# 2010/11/19 - good enough until a working Xt on Xcb is delivered.
+			CF_TRY_PKG_CONFIG(x11,,[CF_ADD_LIB_AFTER(-lXt,-lX11)])
+		fi
+		;;
+	esac
+
+AC_CACHE_CHECK(for usable X Toolkit package,cf_cv_xt_ice_compat,[
 AC_TRY_LINK([
 #include <X11/Shell.h>
 ],[int num = IceConnectionNumber(0)
-],[cf_cv_xt_compat=no],[cf_cv_xt_compat=no])])
+],[cf_cv_xt_ice_compat=yes],[cf_cv_xt_ice_compat=no])])
 
-	if test "$cf_cv_xt_compat" = no
+	if test "$cf_cv_xt_ice_compat" = no
 	then
 		# workaround for broken ".pc" files used for X Toolkit.
 		case "x$X_PRE_LIBS" in #(vi
@@ -2840,7 +2964,7 @@ AC_TRY_LINK([
 			*-lICE*) #(vi
 				;;
 			*)
-				CF_VERBOSE(work around broken package)
+				CF_VERBOSE(work around broken ICE dependency)
 				CF_TRY_PKG_CONFIG(ice,
 					[CF_TRY_PKG_CONFIG(sm)],
 					[CF_ADD_LIB_AFTER(-lXt,$X_PRE_LIBS)])

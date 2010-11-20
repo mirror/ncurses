@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.375 $
-#	$Date: 2010/10/09 19:13:51 $
+#	$Revision: 1.377 $
+#	$Date: 2010/11/20 20:10:14 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3796,8 +3796,10 @@ gnome-fc5|GNOME Terminal,
 # of the keys (which more/less correspond to the termcap values), and will
 # interpret those according to the $TERM value, but others not in the
 # terminfo according to some constantly changing set of hacker guidelines -TD
-gnome-2007|GNOME Terminal snapshot 2.18.1,
+vte-2007|VTE in GNOME Terminal snapshot 2.18.1,
 	use=xterm+pcc2, use=gnome-fc5,
+gnome-2007|GNOME Terminal snapshot 2.18.1,
+	use=vte-2007,
 
 # GNOME Terminal 2.22.3 (2008 snapshot)
 #
@@ -3806,8 +3808,10 @@ gnome-2007|GNOME Terminal snapshot 2.18.1,
 # vt220's behavior, which will make it less usable on a VMS system (unclear
 # what the intent of the developer is, since the NRC feature exposed in vttest
 # by this change does not work).
+vte-2008|VTE in GNOME Terminal snapshot 2.22.3,
+	use=vte+pcfkeys, use=vte-2007,
 gnome-2008|GNOME Terminal snapshot 2.22.3,
-	use=gnome+pcfkeys, use=gnome-2007,
+	use=vte-2008,
 
 # GNOME terminal may automatically use the contents of the "xterm" terminfo to
 # supply key information which is not built into the program.  With 2.22.3,
@@ -3825,7 +3829,7 @@ gnome-2008|GNOME Terminal snapshot 2.22.3,
 #
 # The parameters with \EO (SS3) are technically an error, since SS3 should have
 # no parameters.  This appears to be rote copying based on xterm+pcc0.
-gnome+pcfkeys|gnome variation on xterm+pcfkeys,
+vte+pcfkeys|VTE's variation on xterm+pcfkeys,
 	kf1=\EOP, kf13=\EO1;2P, kf14=\EO1;2Q, kf15=\EO1;2R,
 	kf16=\EO1;2S, kf2=\EOQ, kf25=\EO1;5P, kf26=\EO1;5Q,
 	kf27=\EO1;5R, kf28=\EO1;5S, kf3=\EOR, kf37=\EO1;6P,
@@ -3833,13 +3837,19 @@ gnome+pcfkeys|gnome variation on xterm+pcfkeys,
 	kf49=\EO1;3P, kf50=\EO1;3Q, kf51=\EO1;3R, kf52=\EO1;3S,
 	kf61=\EO1;4P, kf62=\EO1;4Q, kf63=\EO1;4R,
 	use=xterm+pcfkeys,
+gnome+pcfkeys|VTE's variation on xterm+pcfkeys,
+	use=vte+pcfkeys,
 
+vte|VTE aka GNOME Terminal,
+	use=vte-2008,
 gnome|GNOME Terminal,
-	use=gnome-2008,
+	use=vte,
 
 # palette is hardcoded...
+vte-256color|VTE with xterm 256-colors,
+	initc@, use=xterm+256color, use=vte,
 gnome-256color|GNOME Terminal with xterm 256-colors,
-	initc@, use=xterm+256color, use=gnome,
+	use=vte-256color,
 
 # XFCE Terminal 0.2.5.4beta2
 #
@@ -3848,7 +3858,7 @@ gnome-256color|GNOME Terminal with xterm 256-colors,
 # Since most of the terminfo-related behavior is due to the VTE library,
 # the terminfo is the same as gnome-terminal.
 xfce|Xfce Terminal,
-	use=gnome,
+	use=vte,
 
 # Multi-Gnome-Terminal 1.6.2
 #
@@ -4783,6 +4793,8 @@ screen.Eterm|screen in Eterm,
 	use=screen+fkeys, use=Eterm,
 screen.mrxvt|screen in mrxvt,
 	use=screen+fkeys, use=mrxvt,
+screen.vte|screen in any VTE-based terminal,
+	use=screen+fkeys, use=vte,
 screen.gnome|screen in GNOME Terminal,
 	use=screen+fkeys, use=gnome,
 screen.konsole|screen in KDE console window,
@@ -22306,6 +22318,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  entry (Novell #644831) -TD
 #	* improve linux-16color entry, using "dim" for color-8 which makes it
 #	  gray rather than black like color-0 -TD
+#
+# 2010-11-20
+#	* make "vte" the principal entry defining "gnome", since GNOME terminal
+#	  is merely one of several terminals whose behavior is provided by this
+#	  library -TD
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
