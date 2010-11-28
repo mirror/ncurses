@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.83 2010/11/20 21:51:03 tom Exp $
+dnl $Id: configure.in,v 1.84 2010/11/28 00:16:57 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -162,6 +162,7 @@ pdcurses) #(vi
 		form.h \
 		menu.h \
 		panel.h \
+		term_entry.h \
 		)
 	;;
 esac

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.513 2010/11/06 23:05:04 tom Exp $
+dnl $Id: configure.in,v 1.514 2010/11/28 00:12:45 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.513 $)
+AC_REVISION($Revision: 1.514 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -887,6 +887,7 @@ if test "$with_ext_funcs" = yes ; then
 	AC_DEFINE(HAVE_HAS_KEY)
 	AC_DEFINE(HAVE_RESIZETERM)
 	AC_DEFINE(HAVE_RESIZE_TERM)
+	AC_DEFINE(HAVE_TERM_ENTRY_H)
 	AC_DEFINE(HAVE_USE_DEFAULT_COLORS)
 	AC_DEFINE(HAVE_WRESIZE)
 	AC_DEFINE(NCURSES_EXT_FUNCS)

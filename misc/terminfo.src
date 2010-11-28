@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.377 $
-#	$Date: 2010/11/20 20:10:14 $
+#	$Revision: 1.379 $
+#	$Date: 2010/11/27 21:06:47 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -16251,6 +16251,15 @@ tek4106brl|tek4107brl|tek4109brl|Tektronix 4106 4107 or 4109,
 	sc=\E7, sgr0=\E[m, smacs=^N, smcup=\E[?6l, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[7;42m, smul=\E[4m, tbc=\E[3g,
 
+# Tektronix 4107/4109 interpret 4 modes using "\E%!" followed by a code:
+# 0 selects Tek mode, i.e., \E%!0
+# 1 selects ANSI mode
+# 2 selects ANSI edit-mode
+# 3 selects VT52 mode
+#
+# One odd thing about the description (which has been unchanged since the 90s)
+# is that the cursor addressing is using VT52 mode, and a few others use the
+# VT52's non-CSI versions of ANSI, e.g., \EJ.
 tek4107|tek4109|tektronix terminals 4107 4109,
 	OTbs, am, mir, msgr, ul, xenl, xt,
 	cols#79, it#8, lines#29,
@@ -16260,7 +16269,7 @@ tek4107|tek4109|tektronix terminals 4107 4109,
 	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, cvvis=\E%!3,
 	dim=\E%!1\E[<0m$<2>\E%!0, ed=\EJ, el=\EK, ht=^I, ind=^J,
 	kbs=^H, kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA,
-	rev=\E%!1\E[7m$<2>\E%0, ri=\EI,
+	rev=\E%!1\E[7m$<2>\E%!0, ri=\EI,
 	rmso=\E%!1\E[m$<2>\E%!0, rmul=\E%!1\E[m$<2>\E%!0,
 	sgr=\E%%!1\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m$<2>\E%%!0,
 	sgr0=\E%!1\E[m$<2>\E%!0, smso=\E%!1\E[7;5m$<2>\E%!0,
@@ -22323,6 +22332,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* make "vte" the principal entry defining "gnome", since GNOME terminal
 #	  is merely one of several terminals whose behavior is provided by this
 #	  library -TD
+#
+# 2010-11-27
+#	* fix typo in rmso for tek4106 -Goran Weinholt
 #
 # The following sets edit modes for GNU EMACS.
 # Local Variables:

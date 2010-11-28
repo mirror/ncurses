@@ -28,11 +28,12 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.51 2010/07/03 22:59:03 tom Exp $
+#  $Id: Makefile.in,v 1.53 2010/11/27 22:14:16 tom Exp $
 #
 .SUFFIXES:
 
 SHELL		= /bin/sh
+VPATH		= @srcdir@
 THIS		= Makefile
 
 MODEL		= ../../@DFT_OBJ_SUBDIR@
@@ -85,11 +86,11 @@ ADAFLAGS        = @ADAFLAGS@ -I. -I$(srcdir)
 LIB_NAME	= AdaCurses
 SONAME		= @ADA_SHAREDLIB@
 
-GNAT_PROJECT	= library.gpr
+GNAT_PROJECT	= $(srcdir)/library.gpr
 
 # build/source are the Ada95 tree
-BUILD_DIR	= @srcdir@/..
-SOURCE_DIR	= @srcdir@/..
+BUILD_DIR	= ..
+SOURCE_DIR	= ..
 
 BUILD_DIR_LIB	= $(BUILD_DIR)/lib
 SOURCE_DIR_SRC	= $(SOURCE_DIR)/src
@@ -97,8 +98,9 @@ SOURCE_DIR_SRC	= $(SOURCE_DIR)/src
 ADAMAKE         = @cf_ada_make@
 ADAMAKEFLAGS    = \
 	-P$(GNAT_PROJECT) \
-	-XBUILD_DIR=$(BUILD_DIR) \
-	-XSOURCE_DIR=$(SOURCE_DIR) \
+	-XBUILD_DIR=`cd $(BUILD_DIR);pwd` \
+	-XSOURCE_DIR=`cd $(SOURCE_DIR);pwd` \
+	-XSOURCE_DIR2=`cd $(srcdir);pwd` \
 	-XLIB_NAME=$(LIB_NAME) \
 	-XSONAME=$(SONAME)
 

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.129 2010/10/23 20:53:01 tom Exp $
+# $Id: Makefile.in,v 1.130 2010/11/27 21:45:27 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -46,6 +46,7 @@
 .SUFFIXES:
 
 SHELL		= /bin/sh
+VPATH		= @srcdir@
 THIS		= Makefile
 
 CF_MFLAGS 	= @cf_cv_makeflags@

@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.43 2010/05/15 21:22:29 tom Exp $
+# $Id: ncurses_defs,v 1.44 2010/11/28 00:13:09 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2008,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -141,6 +141,7 @@ HAVE_TERMIOS_H
 HAVE_TERMIO_H
 HAVE_TERMNAME	1
 HAVE_TERM_H	1
+HAVE_TERM_ENTRY_H	1
 HAVE_TGETENT	1
 HAVE_TIGETNUM	1
 HAVE_TIGETSTR	1

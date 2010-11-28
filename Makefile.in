@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.29 2010/10/02 16:32:41 juergen Exp $
+# $Id: Makefile.in,v 1.30 2010/11/27 21:45:27 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -32,6 +32,7 @@
 # Master Makefile for ncurses library.
 
 SHELL = /bin/sh
+VPATH		= @srcdir@
 
 DESTDIR=@DESTDIR@
 CF_MFLAGS = @cf_cv_makeflags@ DESTDIR="$(DESTDIR)"
