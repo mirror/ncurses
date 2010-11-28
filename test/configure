@@ -15477,10 +15477,10 @@ for N in $LIST
 do
 	cat >>Makefile <<TEST_EOF
 
-\$(MODEL)/$N.o : $N.c \\
-	test.priv.h \\
+\$(MODEL)/$N.o : \$(srcdir)/$N.c \\
+	\$(srcdir)/test.priv.h \\
 	ncurses_cfg.h
-	@echo compiling $N; \$(CC) -c \$(CFLAGS_DEFAULT) $N.c
+	@echo compiling $N; \$(CC) -c \$(CFLAGS_DEFAULT) \$(srcdir)/$N.c
 TEST_EOF
 done
 
