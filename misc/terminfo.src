@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.379 $
-#	$Date: 2010/11/27 21:06:47 $
+#	$Revision: 1.380 $
+#	$Date: 2010/12/04 18:38:55 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -22336,13 +22336,4 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2010-11-27
 #	* fix typo in rmso for tek4106 -Goran Weinholt
 #
-# The following sets edit modes for GNU EMACS.
-# Local Variables:
-# fill-prefix:"\t"
-# fill-column:75
-# comment-column:0
-# comment-start-skip:"^#+"
-# comment-start:"# "
-# compile-command:"tic -c terminfo.master"
-# End:
 ######## SHANTIH!  SHANTIH!  SHANTIH!

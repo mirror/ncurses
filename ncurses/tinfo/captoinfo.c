@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.57 2010/04/18 00:14:49 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.58 2010/12/04 20:08:19 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -643,6 +643,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
     int seenone = 0, seentwo = 0, saw_m = 0, saw_n = 0;
     const char *padding;
     const char *trimmed = 0;
+    int in0, in1, in2;
     char ch1 = 0, ch2 = 0;
     char *bufptr = init_string();
     int len;
@@ -696,6 +697,19 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 		   || *str == '>')
 		str++;
 	    --str;
+	} else if (sscanf(str,
+			  "[%%?%%p1%%{8}%%<%%t%d%%p1%%d%%e%%p1%%{16}%%<%%t%d%%p1%%{8}%%-%%d%%e%d;5;%%p1%%d%%;m",
+			  &in0, &in1, &in2) == 3
+		   && ((in0 == 4 && in1 == 10 && in2 == 48)
+		       || (in0 == 3 && in1 == 9 && in2 == 38))) {
+	    /* dumb-down an optimized case from xterm-256color for termcap */
+	    str = strstr(str, ";m");
+	    ++str;
+	    if (in2 == 48) {
+		bufptr = save_string(bufptr, "[48;5;%dm");
+	    } else {
+		bufptr = save_string(bufptr, "[38;5;%dm");
+	    }
 	} else if (str[0] == '%' && str[1] == '%') {	/* escaped '%' */
 	    bufptr = save_string(bufptr, "%%");
 	    ++str;

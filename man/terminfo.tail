@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.52 2010/10/02 23:40:29 tom Exp $
+.\" $Id: terminfo.tail,v 1.53 2010/12/04 18:38:55 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -1696,9 +1696,3 @@ files containing terminal descriptions
 .SH AUTHORS
 Zeyd M. Ben-Halim, Eric S. Raymond, Thomas E. Dickey.
 Based on pcurses by Pavel Curtis.
-.\"#
-.\"# The following sets edit modes for GNU EMACS
-.\"# Local Variables:
-.\"# mode:nroff
-.\"# fill-column:79
-.\"# End:
