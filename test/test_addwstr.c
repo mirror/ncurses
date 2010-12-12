@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addwstr.c,v 1.4 2010/11/13 21:13:53 tom Exp $
+ * $Id: test_addwstr.c,v 1.6 2010/12/12 00:18:00 tom Exp $
  *
  * Demonstrate the waddwstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -79,7 +79,7 @@ static int n_opt = -1;
 static void
 legend(WINDOW *win, int level, Options state, wchar_t *buffer, int length)
 {
-    NCURSES_CONST char *showstate;
+    const char *showstate;
 
     switch (state) {
     default:
@@ -101,7 +101,7 @@ legend(WINDOW *win, int level, Options state, wchar_t *buffer, int length)
     wprintw(win,
 	    "The Strings/Chars displays should match.  Enter any characters, except:\n");
     wprintw(win,
-	    "down-arrow or ^N to repeat on next line, 'w' for inner window, 'q' to exit.\n");
+	    "down-arrow or ^N to repeat on next line, ^W for inner window, ESC to exit.\n");
     wclrtoeol(win);
     wprintw(win, "Level %d,%s inserted %d characters <", level,
 	    showstate, length);

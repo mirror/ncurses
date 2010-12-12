@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.380 $
-#	$Date: 2010/12/04 18:38:55 $
+#	$Revision: 1.381 $
+#	$Date: 2010/12/11 23:39:36 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3912,6 +3912,7 @@ kvt|KDE terminal,
 # detail, but it is unclear which copies the other.
 konsole-base|KDE console window,
 	bce, km@, npc, XT,
+	ncv@,
 	bel@, blink=\E[5m, civis=\E[?25l, cnorm=\E[?25h,
 	ech=\E[%p1%dX, flash=\E[?5h$<100/>\E[?5l,
 	hpa=\E[%i%p1%dG, indn=\E[%p1%dS, kbs=\177, kdch1@,
@@ -4665,7 +4666,7 @@ eterm-color|Emacs term.el terminal emulator term-protocol-version 0.96,
 # tested with screen 3.09.08
 screen|VT 100/ANSI X3.64 virtual terminal,
 	OTbs, OTpt, am, km, mir, msgr, xenl, G0,
-	colors#8, cols#80, it#8, lines#24, pairs#64,
+	colors#8, cols#80, it#8, lines#24, ncv@, pairs#64,
 	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
 	clear=\E[H\E[J, cnorm=\E[34h\E[?25h, cr=^M,
@@ -22335,5 +22336,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2010-11-27
 #	* fix typo in rmso for tek4106 -Goran Weinholt
+#
+# 2010-12-11
+#	* suppress ncv in screen entry, allowing underline -Alejandro R. Sedeno
+#	* also suppress ncv in konsole-base -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2005,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ins_wch.c,v 1.11 2009/10/24 22:43:14 tom Exp $")
+MODULE_ID("$Id: lib_ins_wch.c,v 1.15 2010/12/11 19:58:39 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -50,28 +50,33 @@ _nc_insert_wch(WINDOW *win, const cchar_t *wch)
 {
     int cells = wcwidth(CharOf(CHDEREF(wch)));
     int cell;
+    int code = OK;
 
-    if (cells <= 0)
-	cells = 1;
+    if (cells < 0) {
+	code = winsch(win, CharOf(CHDEREF(wch)));
+    } else {
+	if (cells == 0)
+	    cells = 1;
 
-    if (win->_curx <= win->_maxx) {
-	struct ldat *line = &(win->_line[win->_cury]);
-	NCURSES_CH_T *end = &(line->text[win->_curx]);
-	NCURSES_CH_T *temp1 = &(line->text[win->_maxx]);
-	NCURSES_CH_T *temp2 = temp1 - cells;
+	if (win->_curx <= win->_maxx) {
+	    struct ldat *line = &(win->_line[win->_cury]);
+	    NCURSES_CH_T *end = &(line->text[win->_curx]);
+	    NCURSES_CH_T *temp1 = &(line->text[win->_maxx]);
+	    NCURSES_CH_T *temp2 = temp1 - cells;
 
-	CHANGED_TO_EOL(line, win->_curx, win->_maxx);
-	while (temp1 > end)
-	    *temp1-- = *temp2--;
+	    CHANGED_TO_EOL(line, win->_curx, win->_maxx);
+	    while (temp1 > end)
+		*temp1-- = *temp2--;
 
-	*temp1 = _nc_render(win, *wch);
-	for (cell = 1; cell < cells; ++cell) {
-	    SetWidecExt(temp1[cell], cell);
+	    *temp1 = _nc_render(win, *wch);
+	    for (cell = 1; cell < cells; ++cell) {
+		SetWidecExt(temp1[cell], cell);
+	    }
+
+	    win->_curx++;
 	}
-
-	win->_curx++;
     }
-    return OK;
+    return code;
 }
 
 NCURSES_EXPORT(int)
@@ -120,7 +125,7 @@ wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
 	    for (cp = wstr; *cp && ((cp - wstr) < n); cp++) {
 		int len = wcwidth(*cp);
 
-		if (len != 1 || !is8bits(*cp)) {
+		if ((len >= 0 && len != 1) || !is7bits(*cp)) {
 		    cchar_t tmp_cchar;
 		    wchar_t tmp_wchar = *cp;
 		    memset(&tmp_cchar, 0, sizeof(tmp_cchar));

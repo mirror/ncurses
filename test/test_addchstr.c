@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addchstr.c,v 1.6 2010/05/01 19:13:46 tom Exp $
+ * $Id: test_addchstr.c,v 1.13 2010/12/12 01:28:24 tom Exp $
  *
  * Demonstrate the waddchstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
@@ -61,31 +61,59 @@ typedef enum {
 } Options;
 
 static bool m_opt = FALSE;
+static bool pass_ctls = FALSE;
 static bool w_opt = FALSE;
 static int n_opt = -1;
 
+static attr_t show_attr;
 static chtype *temp_buffer;
 static size_t temp_length;
 
 #define TempBuffer(source_cast)
 
+static size_t
+ChLen(const char *source)
+{
+    size_t result = strlen(source);
+
+    if (!pass_ctls) {
+	size_t adjust = 0;
+	size_t n;
+
+	for (n = 0; n < result; ++n) {
+	    const char *s = unctrl(UChar(source[n]));
+	    if (s != 0) {
+		adjust += (strlen(s) - 1);
+	    }
+	}
+	result += adjust;
+    }
+    return result;
+}
+
 static chtype *
 ChStr(const char *source)
 {
     if (source != 0) {
-	size_t need = strlen(source) + 1;
-	wchar_t have[2];
+	size_t need = ChLen(source) + 1;
 	int n = 0;
 
 	if (need > temp_length) {
 	    temp_length = need * 2;
 	    temp_buffer = typeRealloc(chtype, temp_length, temp_buffer);
 	}
-	have[0] = 0;
-	have[1] = 0;
 	do {
-	    temp_buffer[n++] = UChar(*source++);
-	} while (have[0] != 0);
+	    const char *s;
+	    chtype ch = UChar(*source++);
+	    if (!pass_ctls && (s = unctrl(ch)) != 0) {
+		while (*s != '\0') {
+		    temp_buffer[n++] = UChar(*s++);
+		}
+	    } else {
+		temp_buffer[n++] = ch;
+	    }
+	} while (source[0] != 0);
+	temp_buffer[n] = 0;
     } else if (temp_buffer != 0) {
 	free(temp_buffer);
 	temp_buffer = 0;
@@ -94,10 +122,23 @@ ChStr(const char *source)
     return temp_buffer;
 }
 
+/* color the strings drawn in the workspace */
+static chtype *
+ChStr2(const char *source)
+{
+    size_t len = ChLen(source);
+    size_t n;
+    chtype *result = ChStr(source);
+    for (n = 0; n < len; ++n) {
+	result[n] |= show_attr;
+    }
+    return result;
+}
+
 static void
 legend(WINDOW *win, int level, Options state, char *buffer, int length)
 {
-    NCURSES_CONST char *showstate;
+    const char *showstate;
 
     switch (state) {
     default:
@@ -119,7 +160,7 @@ legend(WINDOW *win, int level, Options state, char *buffer, int length)
     wprintw(win,
 	    "The Strings/Chars displays should match.  Enter any characters, except:\n");
     wprintw(win,
-	    "down-arrow or ^N to repeat on next line, 'w' for inner window, 'q' to exit.\n");
+	    "down-arrow or ^N to repeat on next line, ^W for inner window, ESC to exit.\n");
     wclrtoeol(win);
     wprintw(win, "Level %d,%s added %d characters <%s>", level,
 	    showstate, length, buffer);
@@ -236,7 +277,10 @@ test_adds(int level)
     if (has_colors()) {
 	start_color();
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);
-	wbkgdset(work, COLOR_PAIR(1) | ' ');
+	show_attr = COLOR_PAIR(1);
+	wbkgdset(work, show_attr | ' ');
+    } else {
+	show_attr = A_STANDOUT;
     }
 
     while ((ch = read_linedata(work)) != ERR && !isQUIT(ch)) {
@@ -266,12 +310,12 @@ test_adds(int level)
 			for (col = 0; col < length; col += n_opt) {
 			    col2 = ColOf(buffer, col, margin);
 			    if (move(row, col2) != ERR) {
-				AddNStr(ChStr(buffer + col), LEN(col));
+				AddNStr(ChStr2(buffer + col), LEN(col));
 			    }
 			}
 		    } else {
 			if (move(row, col2) != ERR) {
-			    AddStr(ChStr(buffer));
+			    AddStr(ChStr2(buffer));
 			}
 		    }
 		    break;
@@ -279,10 +323,10 @@ test_adds(int level)
 		    if (n_opt > 1) {
 			for (col = 0; col < length; col += n_opt) {
 			    col2 = ColOf(buffer, col, margin);
-			    MvAddNStr(row, col2, ChStr(buffer + col), LEN(col));
+			    MvAddNStr(row, col2, ChStr2(buffer + col), LEN(col));
 			}
 		    } else {
-			MvAddStr(row, col2, ChStr(buffer));
+			MvAddStr(row, col2, ChStr2(buffer));
 		    }
 		    break;
 		case oWindow:
@@ -290,12 +334,12 @@ test_adds(int level)
 			for (col = 0; col < length; col += n_opt) {
 			    col2 = ColOf(buffer, col, margin);
 			    if (wmove(work, row, col2) != ERR) {
-				WAddNStr(work, ChStr(buffer + col), LEN(col));
+				WAddNStr(work, ChStr2(buffer + col), LEN(col));
 			    }
 			}
 		    } else {
 			if (wmove(work, row, col2) != ERR) {
-			    WAddStr(work, ChStr(buffer));
+			    WAddStr(work, ChStr2(buffer));
 			}
 		    }
 		    break;
@@ -303,11 +347,11 @@ test_adds(int level)
 		    if (n_opt > 1) {
 			for (col = 0; col < length; col += n_opt) {
 			    col2 = ColOf(buffer, col, margin);
-			    MvWAddNStr(work, row, col2, ChStr(buffer + col),
+			    MvWAddNStr(work, row, col2, ChStr2(buffer + col),
 				       LEN(col));
 			}
 		    } else {
-			MvWAddStr(work, row, col2, ChStr(buffer));
+			MvWAddStr(work, row, col2, ChStr2(buffer));
 		    }
 		    break;
 		}
@@ -355,19 +399,19 @@ test_adds(int level)
 	    switch (option) {
 	    case oDefault:
 		if (move(row, col) != ERR) {
-		    AddStr(ChStr(buffer + length - 1));
+		    AddStr(ChStr2(buffer + length - 1));
 		}
 		break;
 	    case oMove:
-		MvAddStr(row, col, ChStr(buffer + length - 1));
+		MvAddStr(row, col, ChStr2(buffer + length - 1));
 		break;
 	    case oWindow:
 		if (wmove(work, row, col) != ERR) {
-		    WAddStr(work, ChStr(buffer + length - 1));
+		    WAddStr(work, ChStr2(buffer + length - 1));
 		}
 		break;
 	    case oMoveWindow:
-		MvWAddStr(work, row, col, ChStr(buffer + length - 1));
+		MvWAddStr(work, row, col, ChStr2(buffer + length - 1));
 		break;
 	    }
 
@@ -418,6 +462,7 @@ usage(void)
 	,"  -f FILE read data from given file"
 	,"  -n NUM  limit string-adds to NUM bytes on ^N replay"
 	,"  -m      perform wmove/move separately from add-functions"
+	,"  -p      pass-thru control characters without using unctrl()"
 	,"  -w      use window-parameter even when stdscr would be implied"
     };
     unsigned n;
@@ -433,7 +478,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "f:mn:w")) != -1) {
+    while ((ch = getopt(argc, argv, "f:mn:pw")) != -1) {
 	switch (ch) {
 	case 'f':
 	    init_linedata(optarg);
@@ -445,6 +490,9 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    n_opt = atoi(optarg);
 	    if (n_opt == 0)
 		n_opt = -1;
+	    break;
+	case 'p':
+	    pass_ctls = TRUE;
 	    break;
 	case 'w':
 	    w_opt = TRUE;

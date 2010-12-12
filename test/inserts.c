@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inserts.c,v 1.21 2010/05/01 19:12:26 tom Exp $
+ * $Id: inserts.c,v 1.23 2010/12/12 00:19:55 tom Exp $
  *
  * Demonstrate the winsstr() and winsch functions.
  * Thomas Dickey - 2002/10/19
@@ -68,7 +68,7 @@ static int n_opt = -1;
 static void
 legend(WINDOW *win, int level, Options state, char *buffer, int length)
 {
-    NCURSES_CONST char *showstate;
+    const char *showstate;
 
     switch (state) {
     default:
@@ -90,7 +90,7 @@ legend(WINDOW *win, int level, Options state, char *buffer, int length)
     wprintw(win,
 	    "The Strings/Chars displays should match.  Enter any characters, except:\n");
     wprintw(win,
-	    "down-arrow or ^N to repeat on next line, 'w' for inner window, 'q' to exit.\n");
+	    "down-arrow or ^N to repeat on next line, ^W for inner window, ESC to exit.\n");
     wclrtoeol(win);
     wprintw(win, "Level %d,%s inserted %d characters <%s>", level,
 	    showstate, length, buffer);
