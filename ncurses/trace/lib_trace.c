@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.75 2010/09/25 22:16:12 juergen Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.76 2010/12/19 01:21:19 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -96,7 +96,7 @@ trace(const unsigned int tracelevel)
 	const char *mode = _nc_globals.init_trace ? "ab" : "wb";
 
 	if (TracePath[0] == '\0') {
-	    int size = sizeof(TracePath) - 12;
+	    size_t size = sizeof(TracePath) - 12;
 	    if (getcwd(TracePath, size) == 0) {
 		perror("curses: Can't get working directory");
 		exit(EXIT_FAILURE);
@@ -122,7 +122,7 @@ trace(const unsigned int tracelevel)
 	 */
 #if HAVE_SETVBUF		/* ANSI */
 	(void) setvbuf(TraceFP, (char *) 0, _IOLBF, 0);
-#elif HAVE_SETBUF		/* POSIX */
+#elif HAVE_SETBUF /* POSIX */
 	(void) setbuffer(TraceFP, (char *) 0);
 #endif
 	_tracef("TRACING NCURSES version %s.%d (tracelevel=%#x)",

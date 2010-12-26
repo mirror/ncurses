@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_longname.c,v 1.11 2009/02/21 17:18:02 tom Exp $")
+MODULE_ID("$Id: lib_longname.c,v 1.12 2010/12/20 00:31:26 tom Exp $")
 
 #if USE_REENTRANT
 NCURSES_EXPORT(char *)
@@ -52,7 +52,7 @@ NCURSES_SP_NAME(longname) (NCURSES_SP_DCL0)
     {'\0'};
     char *ptr;
 
-    T((T_CALLED("longname(%p)"), SP_PARM));
+    T((T_CALLED("longname(%p)"), (void *) SP_PARM));
 
     if (SP_PARM) {
 	for (ptr = SP_PARM->_ttytype + strlen(SP_PARM->_ttytype);

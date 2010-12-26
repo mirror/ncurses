@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.137 2010/05/01 19:47:51 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.138 2010/12/20 00:42:20 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -314,7 +314,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	ReturnScreenError();
     }
 
-    T(("created SP %p", sp));
+    T(("created SP %p", (void *) sp));
     sp->_next_screen = _nc_screen_chain;
     _nc_screen_chain = sp;
 
@@ -723,7 +723,7 @@ NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_DCLx
     int code = ERR;
 
     START_TRACE();
-    T((T_CALLED("ripoffline(%p,%d,%p)"), (void *) SP_PARM, line, (void *) init));
+    T((T_CALLED("ripoffline(%p,%d,%p)"), (void *) SP_PARM, line, init));
 
 #if NCURSES_SP_FUNCS
     if (SP_PARM != 0 && SP_PARM->_prescreen)

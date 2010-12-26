@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.21 2010/05/01 19:32:33 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.22 2010/12/19 00:24:09 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -90,6 +90,9 @@ find_name(char **table, int length, char *name)
     return FALSE;
 }
 
+#define EXTEND_NUM(num, ext) \
+	to->num = (unsigned short) (to->num + (ext - to->ext))
+
 static void
 realign_data(TERMTYPE *to, char **ext_Names,
 	     int ext_Booleans,
@@ -100,7 +103,7 @@ realign_data(TERMTYPE *to, char **ext_Names,
     int limit = (to->ext_Booleans + to->ext_Numbers + to->ext_Strings);
 
     if (to->ext_Booleans != ext_Booleans) {
-	to->num_Booleans += (ext_Booleans - to->ext_Booleans);
+	EXTEND_NUM(num_Booleans, ext_Booleans);
 	to->Booleans = typeRealloc(NCURSES_SBOOL, to->num_Booleans, to->Booleans);
 	for (n = to->ext_Booleans - 1,
 	     m = ext_Booleans - 1,
@@ -114,7 +117,7 @@ realign_data(TERMTYPE *to, char **ext_Names,
 	to->ext_Booleans = UShort(ext_Booleans);
     }
     if (to->ext_Numbers != ext_Numbers) {
-	to->num_Numbers += (ext_Numbers - to->ext_Numbers);
+	EXTEND_NUM(num_Numbers, ext_Numbers);
 	to->Numbers = typeRealloc(short, to->num_Numbers, to->Numbers);
 	for (n = to->ext_Numbers - 1,
 	     m = ext_Numbers - 1,
@@ -128,7 +131,7 @@ realign_data(TERMTYPE *to, char **ext_Names,
 	to->ext_Numbers = UShort(ext_Numbers);
     }
     if (to->ext_Strings != ext_Strings) {
-	to->num_Strings += (ext_Strings - to->ext_Strings);
+	EXTEND_NUM(num_Strings, ext_Strings);
 	to->Strings = typeRealloc(char *, to->num_Strings, to->Strings);
 	for (n = to->ext_Strings - 1,
 	     m = ext_Strings - 1,

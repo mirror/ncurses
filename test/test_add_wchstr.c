@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.12 2010/12/12 00:17:13 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.13 2010/12/25 22:49:28 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -123,7 +123,7 @@ ChWLen(const wchar_t *source)
     if (!pass_ctls) {
 	size_t adjust = 0;
 	size_t n;
-	char *s;
+	NCURSES_CONST char *s;
 
 	for (n = 0; n < result; ++n) {
 	    if (source[n] < 256 && (s = unctrl((chtype) source[n])) != 0) {

@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 2007,2009 Free Software Foundation, Inc.                     #
+# Copyright (c) 2007-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKcaptab.sh,v 1.12 2009/11/14 22:09:55 tom Exp $
+# $Id: MKcaptab.sh,v 1.13 2010/12/25 23:43:58 tom Exp $
 AWK=${1-awk}
 OPT1=${2-0}
 OPT2=${3-tinfo/MKcaptab.awk}
@@ -65,7 +65,7 @@ cat <<EOF
 static void
 next_string(const char *strings, unsigned *offset)
 {
-    *offset += strlen(strings + *offset) + 1;
+    *offset += (unsigned) strlen(strings + *offset) + 1;
 }
 
 static const struct name_table_entry *

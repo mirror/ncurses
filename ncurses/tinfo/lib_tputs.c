@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.80 2009/11/21 23:09:31 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.81 2010/12/20 00:42:50 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -218,7 +218,7 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
 	if (outc == NCURSES_SP_NAME(_nc_outch))
 	    (void) strcpy(addrbuf, "_nc_outch");
 	else
-	    (void) sprintf(addrbuf, "%p", (void *) outc);
+	    (void) sprintf(addrbuf, "%p", outc);
 	if (_nc_tputs_trace) {
 	    _tracef("tputs(%s = %s, %d, %s) called", _nc_tputs_trace,
 		    _nc_visbuf(string), affcnt, addrbuf);

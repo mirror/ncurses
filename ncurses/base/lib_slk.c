@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slk.c,v 1.46 2010/06/05 22:37:05 tom Exp $")
+MODULE_ID("$Id: lib_slk.c,v 1.47 2010/12/25 22:58:58 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels    InfoOf(SP_PARM).numlabels
@@ -185,7 +185,7 @@ _nc_slk_initialize(WINDOW *stwin, int cols)
     if (SP_PARM->_slk->maxlen <= 0
 	|| SP_PARM->_slk->labcnt <= 0
 	|| (SP_PARM->_slk->ent = typeCalloc(slk_ent,
-					    (unsigned) SP_PARM->_slk->labcnt))
+					    (size_t) SP_PARM->_slk->labcnt))
 	== NULL)
 	returnCode(slk_failed(NCURSES_SP_ARG));
 

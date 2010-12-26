@@ -39,7 +39,7 @@
 #include <wctype.h>
 #endif
 
-MODULE_ID("$Id: lib_add_wch.c,v 1.10 2010/03/31 23:38:02 tom Exp $")
+MODULE_ID("$Id: lib_add_wch.c,v 1.11 2010/12/19 01:32:55 tom Exp $")
 
 /* clone/adapt lib_addch.c */
 static const cchar_t blankchar = NewChar(BLANK_TEXT);
@@ -122,7 +122,7 @@ newline_forces_scroll(WINDOW *win, NCURSES_SIZE_T * ypos)
 	*ypos = win->_regbottom;
 	result = TRUE;
     } else {
-	*ypos += 1;
+	*ypos = (NCURSES_SIZE_T) (*ypos + 1);
     }
     return result;
 }
@@ -166,8 +166,8 @@ fill_cells(WINDOW *win, int count)
 	if (wadd_wch_literal(win, blank) == ERR)
 	    break;
     }
-    win->_curx = save_x;
-    win->_cury = save_y;
+    win->_curx = (NCURSES_SIZE_T) save_x;
+    win->_cury = (NCURSES_SIZE_T) save_y;
 }
 
 static int
@@ -291,7 +291,7 @@ wadd_wch_literal(WINDOW *win, cchar_t ch)
     if (x > win->_maxx) {
 	return wrap_to_next_line(win);
     }
-    win->_curx = x;
+    win->_curx = (NCURSES_SIZE_T) x;
     return OK;
 }
 
@@ -312,7 +312,7 @@ wadd_wch_nosync(WINDOW *win, cchar_t ch)
      * way.
      */
     if ((AttrOf(ch) & A_ALTCHARSET)
-	|| iswprint(CharOf(ch)))
+	|| iswprint((wint_t) CharOf(ch)))
 	return wadd_wch_literal(win, ch);
 
     /*
@@ -329,7 +329,7 @@ wadd_wch_nosync(WINDOW *win, cchar_t ch)
 #else
 	tabsize = TABSIZE;
 #endif
-	x += (tabsize - (x % tabsize));
+	x = (NCURSES_SIZE_T) (x + (tabsize - (x % tabsize)));
 	/*
 	 * Space-fill the tab on the bottom line so that we'll get the
 	 * "correct" cursor position.

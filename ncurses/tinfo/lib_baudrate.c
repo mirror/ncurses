@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -79,7 +79,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.30 2009/10/24 22:15:00 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.31 2010/12/19 01:50:50 tom Exp $")
 
 /*
  *	int
@@ -212,7 +212,7 @@ NCURSES_SP_NAME(baudrate) (NCURSES_SP_DCL0)
 	int ret;
 	if ((ret = _nc_getenv_num("BAUDRATE")) <= 0)
 	    ret = 9600;
-	ospeed = _nc_ospeed(ret);
+	ospeed = (NCURSES_OSPEED) _nc_ospeed(ret);
 	returnCode(ret);
     }
 #endif
@@ -223,9 +223,9 @@ NCURSES_SP_NAME(baudrate) (NCURSES_SP_DCL0)
 	ospeed = _nc_ospeed(result);
 #else /* !USE_OLD_TTY */
 #ifdef TERMIOS
-	ospeed = cfgetospeed(&(TerminalOf(SP_PARM)->Nttyb));
+	ospeed = (NCURSES_OSPEED) cfgetospeed(&(TerminalOf(SP_PARM)->Nttyb));
 #else
-	ospeed = TerminalOf(SP_PARM)->Nttyb.sg_ospeed;
+	ospeed = (NCURSES_OSPEED) TerminalOf(SP_PARM)->Nttyb.sg_ospeed;
 #endif
 	result = _nc_baudrate(ospeed);
 #endif

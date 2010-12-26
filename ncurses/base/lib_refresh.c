@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_refresh.c,v 1.43 2009/10/24 22:08:32 tom Exp $")
+MODULE_ID("$Id: lib_refresh.c,v 1.44 2010/12/19 01:22:58 tom Exp $")
 
 NCURSES_EXPORT(int)
 wrefresh(WINDOW *win)
@@ -77,11 +77,11 @@ wrefresh(WINDOW *win)
 NCURSES_EXPORT(int)
 wnoutrefresh(WINDOW *win)
 {
-    NCURSES_SIZE_T limit_x;
-    NCURSES_SIZE_T src_row, src_col;
-    NCURSES_SIZE_T begx;
-    NCURSES_SIZE_T begy;
-    NCURSES_SIZE_T dst_row, dst_col;
+    int limit_x;
+    int src_row, src_col;
+    int begx;
+    int begy;
+    int dst_row, dst_col;
 #if USE_SCROLL_HINTS
     bool wide;
 #endif
@@ -150,8 +150,8 @@ wnoutrefresh(WINDOW *win)
     for (src_row = 0, dst_row = begy + win->_yoffset;
 	 src_row <= win->_maxy && dst_row <= NewScreen(SP_PARM)->_maxy;
 	 src_row++, dst_row++) {
-	register struct ldat *nline = &(NewScreen(SP_PARM)->_line[dst_row]);
-	register struct ldat *oline = &win->_line[src_row];
+	struct ldat *nline = &(NewScreen(SP_PARM)->_line[dst_row]);
+	struct ldat *oline = &win->_line[src_row];
 
 	if (oline->firstchar != _NOCHANGE) {
 	    int last_src = oline->lastchar;
@@ -163,7 +163,7 @@ wnoutrefresh(WINDOW *win)
 	    dst_col = src_col + begx;
 
 	    if_WIDEC({
-		register int j;
+		int j;
 
 		/*
 		 * Ensure that we will copy complete multi-column characters
@@ -204,7 +204,7 @@ wnoutrefresh(WINDOW *win)
 				       : win->_maxx);
 		int fix_left = dst_col;
 		int fix_right = last_dst;
-		register int j;
+		int j;
 
 		/*
 		 * Check for boundary cases where we may overwrite part of a
@@ -281,8 +281,9 @@ wnoutrefresh(WINDOW *win)
     }
 
     if (!win->_leaveok) {
-	NewScreen(SP_PARM)->_cury = win->_cury + win->_begy + win->_yoffset;
-	NewScreen(SP_PARM)->_curx = win->_curx + win->_begx;
+	NewScreen(SP_PARM)->_cury = (NCURSES_SIZE_T) (win->_cury +
+						      win->_begy + win->_yoffset);
+	NewScreen(SP_PARM)->_curx = (NCURSES_SIZE_T) (win->_curx + win->_begx);
     }
     NewScreen(SP_PARM)->_leaveok = win->_leaveok;
 

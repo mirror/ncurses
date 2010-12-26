@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 2008           Free Software Foundation, Inc.               --
+-- Copyright (c) 2008,2010 Free Software Foundation, Inc.                    --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,28 +25,28 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README.MinGW,v 1.3 2010/10/02 16:32:41 juergen Exp $
+-- $Id: README.MinGW,v 1.4 2010/12/18 21:07:03 tom Exp $
 -- Author: Juergen Pfeifer
 -------------------------------------------------------------------------------
 
 This is work in progress, but it's in an state where one can see it
 works at least on the Windows Console.
 
-You should install the MSYS package, so that you've a shell environment
-that allows you to run the scripts, especially configure etc. You can get
-that from http://www.mingw.org
+You should install the MSYS package, so that you've a shell environment that
+allows you to run the scripts, especially configure etc.  You can get that
+from http://www.mingw.org
 
-To build ncurses for native Windows, you need the MinGW toolchain. The
-original MinGW toolchain from above site is only for 32-Bit Windows. As
-Windows Server - and even more and more regular workstations - are moving
-to 64-Bit, it seems to be reasonable to have a toolchain that supports
-both architectures. I recommend to use the TDM gcc toolchain which you
-can find at http://tdm-gcc.tdragon.net/download. Go to the download section
-and select the bundle installer for tdm64 (MinGW-w64). This installs a
-multilib version of the gcc toolchain that can compile for native 32- and
-64-Bit Windows versions. It also comes with a working pthread implementation.
+To build ncurses for native Windows, you need the MinGW toolchain.  The
+original MinGW toolchain from the above site is only for 32-Bit Windows.  As
+Windows Server - and also regular workstations - are moving to 64-Bit, it
+seems to be reasonable to have a toolchain that supports both architectures. 
+I recommend to use the TDM gcc toolchain which you can find at
+http://tdm-gcc.tdragon.net/download.  Go to the download section and select
+the bundle installer for tdm64 (MinGW-w64).  This installs a multilib version
+of the gcc toolchain that can compile for native 32- and 64-Bit Windows
+versions.  It also comes with a working pthread implementation.
 
-The latest config and build scripts we use for MinGW have only be tested
+The latest config and build scripts we use for MinGW have only been tested
 for the gcc-4.4 compiler toolchain (or better).
 
 Using MinGW is a pragmatic decision, it's the easiest way to port this
@@ -65,8 +65,8 @@ It contains the LIB.EXE tool. You may also use this compiler to test
 writing native Windows programs using the ncurses DLLs without using 
 MinGW then for writing apps.
 
-Please unset the TERM environment variable, so that the Console driver
-gets activated.
+It is necessary to unset the TERM environment variable, to activate the
+Windows console-driver.
 
 Please also make sure that MSYS links to the correct directory containing
 your MinGW toolchain. For TDM this is usually C:\MinGW64. In your Windows
@@ -91,13 +91,39 @@ recommend to use these options with configure
 
 This is the configuration commandline as I'm using it at the moment:
 
-./configure --prefix=/mingw --without-cxx-binding --without-ada --enable-warnings --enable-assertions --enable-reentrant --with-debug --with-normal --disable-home-terminfo --enable-sp-funcs --enable-term-driver --enable-interop --with-pthread
+./configure \
+	--prefix=/mingw \
+	--without-cxx-binding \
+	--without-ada \
+	--enable-warnings \
+	--enable-assertions \
+	--enable-reentrant \
+	--with-debug \
+	--with-normal \
+	--disable-home-terminfo \
+	--enable-sp-funcs \
+	--enable-term-driver \
+	--enable-interop \
+	--with-pthread
 
 If you are on a 64-Bit Windows system and want to build a 32-Bit version
 of ncurses, you may use this commandline for configuration (when using
 the TDM toolchain):
 
-CC="gcc -m32" LD="ld -m32" ./configure --prefix=/mingw --without-cxx-binding --without-ada --enable-warnings --enable-assertions --enable-reentrant --with-debug --with-normal --disable-home-terminfo --enable-sp-funcs --enable-term-driver --enable-interop --with-pthread
+CC="gcc -m32" LD="ld -m32" ./configure \
+	--prefix=/mingw \
+	--without-cxx-binding \
+	--without-ada \
+	--enable-warnings \
+	--enable-assertions \
+	--enable-reentrant \
+	--with-debug \
+	--with-normal \
+	--disable-home-terminfo \
+	--enable-sp-funcs \
+	--enable-term-driver \
+	--enable-interop \
+	--with-pthread
 
 All the options above are - like the whole Windows support -
 experimental.
@@ -106,10 +132,8 @@ In order to build the DLLs, after your regular make you must call
 
    make dlls
 
-
 A lot is still TODO, e.g.:
 
-  - Mouse support for the Console
   - Wide Character support
     The Win32Con driver should actually only use Unicode in the
     future.

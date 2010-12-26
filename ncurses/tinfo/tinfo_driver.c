@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.12 2010/07/31 22:16:38 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.13 2010/12/20 01:47:09 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -515,9 +515,9 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, bool progFlag, bool defFlag)
 	     */
 	    if ((drv_sgmode(TCB, FALSE, &(_term->Nttyb)) == OK)) {
 #ifdef TERMIOS
-		_term->Nttyb.c_oflag &= ~OFLAGS_TABS;
+		_term->Nttyb.c_oflag &= (unsigned) ~OFLAGS_TABS;
 #else
-		_term->Nttyb.sg_flags &= ~XTABS;
+		_term->Nttyb.sg_flags &= (unsigned) ~XTABS;
 #endif
 		code = OK;
 	    }

@@ -53,7 +53,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.77 2010/08/28 21:04:05 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.78 2010/12/25 23:23:08 tom Exp $")
 
 static int total_written;
 
@@ -469,22 +469,22 @@ _nc_write_entry(TERMTYPE *const tp)
 #endif /* USE_HASHED_DB */
 }
 
-static unsigned
+static size_t
 fake_write(char *dst,
 	   unsigned *offset,
-	   unsigned limit,
+	   size_t limit,
 	   char *src,
-	   unsigned want,
-	   unsigned size)
+	   size_t want,
+	   size_t size)
 {
-    unsigned have = (limit - *offset);
+    size_t have = (limit - *offset);
 
     want *= size;
     if (have > 0) {
 	if (want > have)
 	    want = have;
 	memcpy(dst + *offset, src, want);
-	*offset += want;
+	*offset += (unsigned) want;
     } else {
 	want = 0;
     }
@@ -502,10 +502,10 @@ fake_write(char *dst,
 #define WRITE_STRING(str) (Write(str, sizeof(char), strlen(str) + 1) == strlen(str) + 1)
 
 static int
-compute_offsets(char **Strings, unsigned strmax, short *offsets)
+compute_offsets(char **Strings, size_t strmax, short *offsets)
 {
     int nextfree = 0;
-    unsigned i;
+    size_t i;
 
     for (i = 0; i < strmax; i++) {
 	if (Strings[i] == ABSENT_STRING) {
@@ -523,9 +523,9 @@ compute_offsets(char **Strings, unsigned strmax, short *offsets)
 }
 
 static void
-convert_shorts(unsigned char *buf, short *Numbers, unsigned count)
+convert_shorts(unsigned char *buf, short *Numbers, size_t count)
 {
-    unsigned i;
+    size_t i;
     for (i = 0; i < count; i++) {
 	if (Numbers[i] == ABSENT_NUMERIC) {	/* HI/LO won't work */
 	    buf[2 * i] = buf[2 * i + 1] = 0377;
@@ -534,7 +534,7 @@ convert_shorts(unsigned char *buf, short *Numbers, unsigned count)
 	    buf[2 * i + 1] = 0377;
 	} else {
 	    LITTLE_ENDIAN(buf + 2 * i, Numbers[i]);
-	    TRACE_OUT(("put Numbers[%d]=%d", i, Numbers[i]));
+	    TRACE_OUT(("put Numbers[%u]=%d", (unsigned) i, Numbers[i]));
 	}
     }
 }

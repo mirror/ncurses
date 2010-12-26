@@ -52,7 +52,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.72 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.73 2010/12/25 23:06:37 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -274,7 +274,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		unresolved++;
 		total_unresolved++;
 
-		_nc_curr_line = lookline;
+		_nc_curr_line = (int) lookline;
 		_nc_warning("resolution of use=%s failed", lookfor);
 		qp->uses[i].link = 0;
 	    }
@@ -376,7 +376,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 	if (_nc_check_termtype != 0) {
 	    _nc_curr_col = -1;
 	    for_entry_list(qp) {
-		_nc_curr_line = qp->startline;
+		_nc_curr_line = (int) qp->startline;
 		_nc_set_type(_nc_first_name(qp->tterm.term_names));
 		_nc_check_termtype2(&qp->tterm, literal);
 	    }

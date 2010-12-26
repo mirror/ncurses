@@ -48,7 +48,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_kernel.c,v 1.30 2010/04/24 23:12:25 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.31 2010/12/19 01:21:19 tom Exp $")
 
 static int
 _nc_vdisable(void)
@@ -95,7 +95,7 @@ NCURSES_SP_NAME(erasechar) (NCURSES_SP_DCL0)
 	result = termp->Ottyb.sg_erase;
 #endif
     }
-    returnChar(result);
+    returnChar((char) result);
 }
 
 #if NCURSES_SP_FUNCS
@@ -130,7 +130,7 @@ NCURSES_SP_NAME(killchar) (NCURSES_SP_DCL0)
 	result = termp->Ottyb.sg_kill;
 #endif
     }
-    returnChar(result);
+    returnChar((char) result);
 }
 
 #if NCURSES_SP_FUNCS

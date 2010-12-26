@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002,2009 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,14 +39,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_hline_set.c,v 1.3 2009/10/24 22:42:50 tom Exp $")
+MODULE_ID("$Id: lib_hline_set.c,v 1.4 2010/12/19 01:45:03 tom Exp $")
 
 NCURSES_EXPORT(int)
 whline_set(WINDOW *win, const cchar_t *ch, int n)
 {
     int code = ERR;
-    NCURSES_SIZE_T start;
-    NCURSES_SIZE_T end;
+    int start;
+    int end;
 
     T((T_CALLED("whline_set(%p,%s,%d)"), (void *) win, _tracecchar_t(ch), n));
 

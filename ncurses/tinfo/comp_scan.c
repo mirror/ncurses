@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.88 2010/08/28 19:26:09 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.89 2010/12/25 23:06:37 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -612,7 +612,7 @@ _nc_get_token(bool silent)
 			_nc_warning("Missing separator");
 		}
 		_nc_curr_token.tk_name = tok_buf;
-		_nc_curr_token.tk_valnumber = number;
+		_nc_curr_token.tk_valnumber = (int) number;
 		type = NUMBER;
 		break;
 

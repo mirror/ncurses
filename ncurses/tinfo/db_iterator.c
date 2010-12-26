@@ -38,7 +38,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: db_iterator.c,v 1.8 2010/06/05 22:20:04 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.9 2010/12/25 23:00:25 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -121,7 +121,7 @@ next_list_item(const char *source, int *offset)
 	    *offset += (int) strlen(result);
 	} else {
 	    *marker++ = 0;
-	    *offset = marker - ThisDbList;
+	    *offset = (int) (marker - ThisDbList);
 	}
 	if (*result == 0 && result != (ThisDbList + ThisDbSize))
 	    result = system_db;

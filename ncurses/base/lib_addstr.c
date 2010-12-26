@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_addstr.c,v 1.50 2009/10/24 23:24:03 tom Exp $")
+MODULE_ID("$Id: lib_addstr.c,v 1.51 2010/12/19 01:22:58 tom Exp $")
 
 NCURSES_EXPORT(int)
 waddnstr(WINDOW *win, const char *astr, int n)
@@ -107,7 +107,7 @@ waddchnstr(WINDOW *win, const chtype *astr, int n)
     for (i = 0; i < n && ChCharOf(astr[i]) != '\0'; ++i) {
 	SetChar2(line->text[i + x], astr[i]);
     }
-    CHANGED_RANGE(line, x, x + n - 1);
+    CHANGED_RANGE(line, x, (NCURSES_SIZE_T) (x + n - 1));
 
     _nc_synchook(win);
     returnCode(code);
@@ -193,7 +193,7 @@ wadd_wchnstr(WINDOW *win, const cchar_t *astr, int n)
 		    SetWidecExt(line->text[x + j], j);
 		}
 	    }
-	    x += len;
+	    x = (NCURSES_SIZE_T) (x + len);
 	    end += len - 1;
 	} else {
 	    break;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.123 2009/11/07 16:07:55 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.124 2010/12/19 01:22:58 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -231,11 +231,11 @@ NCURSES_SP_NAME(_nc_msec_cost) (NCURSES_SP_DCLx const char *const cap, int affcn
 
 		for (cp += 2; *cp != '>'; cp++) {
 		    if (isdigit(UChar(*cp)))
-			number = number * 10 + (*cp - '0');
+			number = number * 10 + (float) (*cp - '0');
 		    else if (*cp == '*')
-			number *= affcnt;
+			number *= (float) affcnt;
 		    else if (*cp == '.' && (*++cp != '>') && isdigit(UChar(*cp)))
-			number += (*cp - '0') / 10.0;
+			number += (float) ((*cp - '0') / 10.0);
 		}
 
 #if NCURSES_NO_PADDING
@@ -243,7 +243,7 @@ NCURSES_SP_NAME(_nc_msec_cost) (NCURSES_SP_DCLx const char *const cap, int affcn
 #endif
 		    cum_cost += number * 10;
 	    } else
-		cum_cost += SP_PARM->_char_padding;
+		cum_cost += (float) SP_PARM->_char_padding;
 	}
 
 	return ((int) cum_cost);
@@ -515,7 +515,7 @@ _nc_mvcur_wrap(void)
 static NCURSES_INLINE int
 repeated_append(string_desc * target, int total, int num, int repeat, const char *src)
 {
-    size_t need = repeat * strlen(src);
+    size_t need = (size_t) repeat * strlen(src);
 
     if (need < target->s_size) {
 	while (repeat-- > 0) {
@@ -695,7 +695,7 @@ relative_move(NCURSES_SP_DCLx
 			*check.s_tail++ = (char) CharOf(WANT_CHAR(SP_PARM, to_y,
 								  from_x + i));
 		    *check.s_tail = '\0';
-		    check.s_size -= n;
+		    check.s_size -= (size_t) n;
 		    lhcost += n * SP_PARM->_char_padding;
 		} else {
 		    lhcost = repeated_append(&check, lhcost, SP_PARM->_cuf1_cost,

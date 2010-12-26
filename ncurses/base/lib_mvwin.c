@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_mvwin.c,v 1.17 2009/10/24 22:05:03 tom Exp $")
+MODULE_ID("$Id: lib_mvwin.c,v 1.18 2010/12/19 01:22:58 tom Exp $")
 
 NCURSES_EXPORT(int)
 mvwin(WINDOW *win, int by, int bx)
@@ -114,7 +114,7 @@ mvwin(WINDOW *win, int by, int bx)
      * new location.  This ensures that if the caller has refreshed another
      * window at the same location, that this one will be displayed.
      */
-    win->_begy = by;
-    win->_begx = bx;
+    win->_begy = (NCURSES_SIZE_T) by;
+    win->_begx = (NCURSES_SIZE_T) bx;
     returnCode(touchwin(win));
 }

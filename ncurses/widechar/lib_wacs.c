@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_wacs.c,v 1.9 2009/10/03 20:18:21 tom Exp $")
+MODULE_ID("$Id: lib_wacs.c,v 1.10 2010/12/19 01:43:19 tom Exp $")
 
 NCURSES_EXPORT_VAR(cchar_t) * _nc_wacs = 0;
 
@@ -41,7 +41,7 @@ _nc_init_wacs(void)
 {
     /* *INDENT-OFF* */
     static const struct {
-	int	map;
+	unsigned map;
 	int	value[2];
     } table[] = {
 	/* VT100 symbols */

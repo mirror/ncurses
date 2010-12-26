@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.72 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.73 2010/12/25 19:27:12 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -81,7 +81,7 @@ NCURSES_EXPORT_VAR(char *) BC = 0;
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 {
-    int errcode = ERR;
+    int rc = ERR;
     int n;
     bool found_cache = FALSE;
 #ifdef USE_TERM_DRIVER
@@ -92,12 +92,12 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
     T((T_CALLED("tgetent()")));
 
     TINFO_SETUP_TERM(&termp, (NCURSES_CONST char *) name,
-		     STDOUT_FILENO, &errcode, TRUE);
+		     STDOUT_FILENO, &rc, TRUE);
 
 #ifdef USE_TERM_DRIVER
     if (termp == 0 ||
 	!((TERMINAL_CONTROL_BLOCK *) termp)->drv->isTerminfo)
-	return (errcode);
+	return (rc);
 #endif
 
     /*
@@ -152,7 +152,7 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
     BC = 0;
     FIX_SGR0 = 0;		/* don't free it - application may still use */
 
-    if (errcode == 1) {
+    if (rc == 1) {
 
 	if (cursor_left)
 	    if ((backspaces_with_bs = (char) !strcmp(cursor_left, "\b")) == 0)
@@ -187,7 +187,7 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 #endif*/
 
     }
-    returnCode(errcode);
+    returnCode(rc);
 }
 
 #if NCURSES_SP_FUNCS

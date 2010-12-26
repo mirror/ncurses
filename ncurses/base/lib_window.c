@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_window.c,v 1.28 2009/12/19 22:01:07 tom Exp $")
+MODULE_ID("$Id: lib_window.c,v 1.29 2010/12/19 01:47:22 tom Exp $")
 
 NCURSES_EXPORT(void)
 _nc_synchook(WINDOW *win)
@@ -239,7 +239,7 @@ dupwin(WINDOW *win)
 	    if (win->_flags & _ISPAD)
 		nwin->_pad = win->_pad;
 
-	    linesize = (win->_maxx + 1) * sizeof(NCURSES_CH_T);
+	    linesize = (unsigned) (win->_maxx + 1) * sizeof(NCURSES_CH_T);
 	    for (i = 0; i <= nwin->_maxy; i++) {
 		memcpy(nwin->_line[i].text, win->_line[i].text, linesize);
 		nwin->_line[i].firstchar = win->_line[i].firstchar;

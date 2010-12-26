@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2006,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,14 +40,14 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_hline.c,v 1.12 2009/10/24 22:31:53 tom Exp $")
+MODULE_ID("$Id: lib_hline.c,v 1.13 2010/12/19 01:48:39 tom Exp $")
 
 NCURSES_EXPORT(int)
 whline(WINDOW *win, chtype ch, int n)
 {
     int code = ERR;
-    NCURSES_SIZE_T start;
-    NCURSES_SIZE_T end;
+    int start;
+    int end;
 
     T((T_CALLED("whline(%p,%s,%d)"), (void *) win, _tracechtype(ch), n));
 

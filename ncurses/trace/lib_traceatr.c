@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.71 2010/08/28 21:05:25 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.72 2010/12/19 00:51:35 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -241,14 +241,14 @@ _nc_altcharset_name(attr_t attr, chtype ch)
 	const ALT_NAMES *strp;
 
 	for (cp = acs_chars; cp[0] && cp[1]; cp += 2) {
-	    if (ChCharOf(cp[1]) == ChCharOf(ch)) {
+	    if (ChCharOf(UChar(cp[1])) == ChCharOf(ch)) {
 		found = cp;
 		/* don't exit from loop - there may be redefinitions */
 	    }
 	}
 
 	if (found != 0) {
-	    ch = ChCharOf(*found);
+	    ch = ChCharOf(UChar(*found));
 	    for (strp = names; strp->val; strp++)
 		if (strp->val == ch) {
 		    result = strp->name;
@@ -330,7 +330,7 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
 			    (void) _nc_trace_bufcat(bufnum, "\\000");
 			break;
 		    }
-		    PUTC_n = wcrtomb(PUTC_buf, ch->chars[PUTC_i], &PUT_st);
+		    PUTC_n = (int) wcrtomb(PUTC_buf, ch->chars[PUTC_i], &PUT_st);
 		    if (PUTC_n <= 0) {
 			if (PUTC_ch != L'\0') {
 			    /* it could not be a multibyte sequence */

@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.79 2010/01/16 16:47:46 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.80 2010/12/25 23:01:29 tom Exp $")
 
 /*
  *	char *
@@ -509,7 +509,7 @@ tparam_internal(bool use_TPARM_ARG, const char *string, va_list ap)
 	    if (p_is_s[i])
 		spush(p_is_s[i]);
 	    else
-		npush(param[i]);
+		npush((int) param[i]);
 	}
     }
 #ifdef TRACE
@@ -518,7 +518,7 @@ tparam_internal(bool use_TPARM_ARG, const char *string, va_list ap)
 	    if (p_is_s[i] != 0)
 		save_text(", %s", _nc_visbuf(p_is_s[i]), 0);
 	    else
-		save_number(", %d", param[i], 0);
+		save_number(", %d", (int) param[i], 0);
 	}
 	_tracef(T_CALLED("%s(%s%s)"), TPS(tname), _nc_visbuf(cp), TPS(out_buff));
 	TPS(out_used) = 0;
@@ -565,7 +565,7 @@ tparam_internal(bool use_TPARM_ARG, const char *string, va_list ap)
 		    if (p_is_s[i])
 			spush(p_is_s[i]);
 		    else
-			npush(param[i]);
+			npush((int) param[i]);
 		}
 		break;
 

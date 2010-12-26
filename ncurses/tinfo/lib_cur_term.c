@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.29 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.30 2010/12/19 01:38:45 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.
@@ -95,13 +95,13 @@ NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
 	TERMINAL_CONTROL_BLOCK *TCB = (TERMINAL_CONTROL_BLOCK *) termp;
-	ospeed = _nc_ospeed(termp->_baudrate);
+	ospeed = (NCURSES_OSPEED) _nc_ospeed(termp->_baudrate);
 	if (TCB->drv->isTerminfo && termp->type.Strings) {
 	    PC = (char) ((pad_char != NULL) ? pad_char[0] : 0);
 	}
 	TCB->csp = SP_PARM;
 #else
-	ospeed = _nc_ospeed(termp->_baudrate);
+	ospeed = (NCURSES_OSPEED) _nc_ospeed(termp->_baudrate);
 	if (termp->type.Strings) {
 	    PC = (char) ((pad_char != NULL) ? pad_char[0] : 0);
 	}

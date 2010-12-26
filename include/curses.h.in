@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.215 2010/04/29 09:46:38 tom Exp $ */
+/* $Id: curses.h.in,v 1.218 2010/12/25 23:39:07 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -1097,7 +1097,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 
 /* It seems older SYSV curses versions define these */
 #if !NCURSES_OPAQUE
-#define getattrs(win)		((win) ? (win)->_attrs : A_NORMAL)
+#define getattrs(win)		NCURSES_CAST(int, (win) ? (win)->_attrs : A_NORMAL)
 #define getcurx(win)		((win) ? (win)->_curx : ERR)
 #define getcury(win)		((win) ? (win)->_cury : ERR)
 #define getbegx(win)		((win) ? (win)->_begx : ERR)
@@ -1118,12 +1118,12 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #if defined(NCURSES_WIDECHAR) && @NCURSES_EXT_COLORS@
 #define wattrset(win,at)	((win) \
 				  ? ((win)->_color = PAIR_NUMBER(at), \
-                                     (win)->_attrs = (at), \
+                                     (win)->_attrs = NCURSES_CAST(attr_t, at), \
                                      OK) \
 				  : ERR)
 #else
 #define wattrset(win,at)        ((win) \
-				  ? ((win)->_attrs = (at), \
+				  ? ((win)->_attrs = NCURSES_CAST(attr_t, at), \
 				     OK) \
 				  : ERR)
 #endif
@@ -1155,7 +1155,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
  * These apply to the first 256 color pairs.
  */
 #define COLOR_PAIR(n)	NCURSES_BITS(n, 0)
-#define PAIR_NUMBER(a)	(NCURSES_CAST(int,(((a) & A_COLOR) >> NCURSES_ATTR_SHIFT)))
+#define PAIR_NUMBER(a)	(NCURSES_CAST(int,((NCURSES_CAST(unsigned long,a) & A_COLOR) >> NCURSES_ATTR_SHIFT)))
 
 /*
  * pseudo functions for standard screen

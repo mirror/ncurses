@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.40 2010/03/30 22:42:16 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.41 2010/12/19 00:39:24 tom Exp $)
 #
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
@@ -264,22 +264,23 @@ $0 !~ /^P_/ {
 	argtype = ""
 	for (i = myfunc; i <= NF; i++) {
 		ch = $i;
-		if ( ch == "*" )
+		if ( ch == "*" ) {
 			pointer = 1;
-		else if ( ch == "va_list" )
+		} else if ( ch == "va_list" ) {
 			va_list = 1;
-		else if ( ch == "..." )
+		} else if ( ch == "..." ) {
 			varargs = 1;
-		else if ( ch == "char" )
+		} else if ( ch == "char" ) {
 			argtype = "char";
-		else if ( ch == "int" )
+		} else if ( ch == "int" ) {
 			argtype = "int";
-		else if ( ch == "short" )
+		} else if ( ch == "short" ) {
 			argtype = "short";
-		else if ( ch == "chtype" )
+		} else if ( ch == "chtype" ) {
 			argtype = "chtype";
-		else if ( ch == "attr_t" || ch == "NCURSES_ATTR_T" )
+		} else if ( ch == "attr_t" || ch == "NCURSES_ATTR_T" ) {
 			argtype = "attr";
+		}
 
 		if ( ch == "," || ch == ")" ) {
 			if (va_list) {

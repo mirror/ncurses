@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.9 2010/07/31 23:43:21 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.10 2010/12/25 19:28:21 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -929,7 +929,7 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
 	  EVENTLIST_2nd(_nc_eventlist * evl))
 {
     SCREEN *sp;
-    INPUT_RECORD inp;
+    INPUT_RECORD inp_rec;
     BOOL b;
     DWORD nRead = 0, rc = -1;
     int code = 0;
@@ -938,7 +938,7 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
     int diff;
     bool isImmed = (milliseconds == 0);
 
-#define CONSUME() ReadConsoleInput(TCB->inp,&inp,1,&nRead)
+#define CONSUME() ReadConsoleInput(TCB->inp,&inp_rec,1,&nRead)
 
     AssertTCB();
     SetSP();
@@ -949,7 +949,7 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
     if (milliseconds < 0)
 	milliseconds = INFINITY;
 
-    memset(&inp, 0, sizeof(inp));
+    memset(&inp_rec, 0, sizeof(inp_rec));
 
     while (true) {
 	GetSystemTimeAsFileTime(&fstart);
@@ -965,15 +965,15 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
 	    if (mode) {
 		b = GetNumberOfConsoleInputEvents(TCB->inp, &nRead);
 		if (b && nRead > 0) {
-		    b = PeekConsoleInput(TCB->inp, &inp, 1, &nRead);
+		    b = PeekConsoleInput(TCB->inp, &inp_rec, 1, &nRead);
 		    if (b && nRead > 0) {
-			switch (inp.EventType) {
+			switch (inp_rec.EventType) {
 			case KEY_EVENT:
 			    if (mode & TW_INPUT) {
-				WORD vk = inp.Event.KeyEvent.wVirtualKeyCode;
-				char ch = inp.Event.KeyEvent.uChar.AsciiChar;
+				WORD vk = inp_rec.Event.KeyEvent.wVirtualKeyCode;
+				char ch = inp_rec.Event.KeyEvent.uChar.AsciiChar;
 
-				if (inp.Event.KeyEvent.bKeyDown) {
+				if (inp_rec.Event.KeyEvent.bKeyDown) {
 				    if (0 == ch) {
 					int nKey = MapKey(TCB, vk);
 					if ((nKey < 0) || FALSE == sp->_keypad_on) {
@@ -990,7 +990,7 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
 			    continue;
 			case MOUSE_EVENT:
 			    if (decode_mouse(TCB,
-					     (inp.Event.MouseEvent.dwButtonState
+					     (inp_rec.Event.MouseEvent.dwButtonState
 					      & BUTTON_MASK)) == 0) {
 				CONSUME();
 			    } else if (mode & TW_MOUSE) {
@@ -1076,7 +1076,7 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 {
     SCREEN *sp;
     int n = 1;
-    INPUT_RECORD inp;
+    INPUT_RECORD inp_rec;
     BOOL b;
     DWORD nRead;
     WORD vk;
@@ -1086,17 +1086,17 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
     assert(buf);
     SetSP();
 
-    memset(&inp, 0, sizeof(inp));
+    memset(&inp_rec, 0, sizeof(inp_rec));
 
     T((T_CALLED("win32con::drv_read(%p)"), TCB));
-    while ((b = ReadConsoleInput(TCB->inp, &inp, 1, &nRead))) {
+    while ((b = ReadConsoleInput(TCB->inp, &inp_rec, 1, &nRead))) {
 	if (b && nRead > 0) {
-	    if (inp.EventType == KEY_EVENT) {
-		if (!inp.Event.KeyEvent.bKeyDown)
+	    if (inp_rec.EventType == KEY_EVENT) {
+		if (!inp_rec.Event.KeyEvent.bKeyDown)
 		    continue;
-		*buf = (int) inp.Event.KeyEvent.uChar.AsciiChar;
-		vk = inp.Event.KeyEvent.wVirtualKeyCode;
-		sc = inp.Event.KeyEvent.wVirtualScanCode;
+		*buf = (int) inp_rec.Event.KeyEvent.uChar.AsciiChar;
+		vk = inp_rec.Event.KeyEvent.wVirtualKeyCode;
+		sc = inp_rec.Event.KeyEvent.wVirtualScanCode;
 		if (*buf == 0) {
 		    if (sp->_keypad_on) {
 			*buf = MapKey(TCB, vk);
@@ -1109,8 +1109,8 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 		} else {	/* *buf != 0 */
 		    break;
 		}
-	    } else if (inp.EventType == MOUSE_EVENT) {
-		if (handle_mouse(TCB, inp.Event.MouseEvent)) {
+	    } else if (inp_rec.EventType == MOUSE_EVENT) {
+		if (handle_mouse(TCB, inp_rec.Event.MouseEvent)) {
 		    *buf = KEY_MOUSE;
 		    break;
 		}

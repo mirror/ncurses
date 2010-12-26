@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_driver.c,v 1.2 2010/01/16 21:26:09 tom Exp $")
+MODULE_ID("$Id: lib_driver.c,v 1.3 2010/12/20 00:29:17 tom Exp $")
 
 typedef struct DriverEntry {
     const char *name;
@@ -56,7 +56,8 @@ _nc_get_driver(TERMINAL_CONTROL_BLOCK * TCB, const char *name, int *errret)
     TERM_DRIVER *res = (TERM_DRIVER *) 0;
     TERM_DRIVER *use = 0;
 
-    T((T_CALLED("_nc_get_driver(%p, %s, %p)"), TCB, NonNull(name), errret));
+    T((T_CALLED("_nc_get_driver(%p, %s, %p)"),
+       (void *) TCB, NonNull(name), (void *) errret));
 
     assert(TCB != 0);
 
@@ -77,7 +78,7 @@ _nc_get_driver(TERMINAL_CONTROL_BLOCK * TCB, const char *name, int *errret)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(has_key) (SCREEN *sp, int keycode)
 {
-    T((T_CALLED("has_key(%p, %d)"), sp, keycode));
+    T((T_CALLED("has_key(%p, %d)"), (void *) sp, keycode));
     returnCode(IsValidTIScreen(sp) ? CallDriver_1(sp, kyExist, keycode) : FALSE);
 }
 
@@ -108,7 +109,7 @@ NCURSES_SP_NAME(doupdate) (SCREEN *sp)
 {
     int code = ERR;
 
-    T((T_CALLED("doupdate(%p)"), sp));
+    T((T_CALLED("doupdate(%p)"), (void *) sp));
 
     if (IsValidScreen(sp))
 	code = CallDriver(sp, update);
@@ -127,7 +128,7 @@ NCURSES_SP_NAME(mvcur) (SCREEN *sp, int yold, int xold, int ynew, int xnew)
 {
     int code = ERR;
     TR(TRACE_CALLS | TRACE_MOVE, (T_CALLED("mvcur(%p,%d,%d,%d,%d)"),
-				  sp, yold, xold, ynew, xnew));
+				  (void *) sp, yold, xold, ynew, xnew));
     if (HasTerminal(sp)) {
 	code = CallDriver_4(sp, hwcur, yold, xold, ynew, xnew);
     }

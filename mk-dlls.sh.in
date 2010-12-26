@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: mk-dlls.sh.in,v 1.2 2010/10/02 16:34:01 juergen Exp $
+# $Id: mk-dlls.sh.in,v 1.3 2010/12/25 22:25:41 tom Exp $
 ##############################################################################
 # Copyright (c) 2008,2010 Free Software Foundation, Inc.                     #
 #                                                                            #
@@ -52,7 +52,7 @@ EOF
     rm -rf tmp-dll
   popd
   echo $ARCH > mingw_arch
-  echo Building DLLs and Import Librarie for Win${ARCH}
+  echo Building DLLs and Import Libraries for Win${ARCH}
 
   if [ -d lib ]; then
     cf="-shared"

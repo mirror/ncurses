@@ -36,7 +36,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.13 2010/03/31 23:22:35 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.14 2010/12/19 01:44:24 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); NCURSES_SP_NAME(tputs)(NCURSES_SP_ARGx mode, 1, outc)
 
@@ -59,7 +59,9 @@ MODULE_ID("$Id: lib_vid_attr.c,v 1.13 2010/03/31 23:22:35 tom Exp $")
 		} \
 	}
 
-#define set_color(mode, pair) mode &= ALL_BUT_COLOR; mode |= ColorPair(pair)
+#define set_color(mode, pair) \
+	mode &= ALL_BUT_COLOR; \
+	mode |= (attr_t) ColorPair(pair)
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(vid_puts) (NCURSES_SP_DCLx

@@ -36,7 +36,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: trim_sgr0.c,v 1.11 2010/05/01 19:33:31 tom Exp $")
+MODULE_ID("$Id: trim_sgr0.c,v 1.12 2010/12/25 23:03:57 tom Exp $")
 
 #undef CUR
 #define CUR tp->
@@ -99,8 +99,8 @@ rewrite_sgr(char *s, char *attr)
 {
     if (PRESENT(s)) {
 	if (PRESENT(attr)) {
-	    unsigned len_s = strlen(s);
-	    unsigned len_a = strlen(attr);
+	    size_t len_s = strlen(s);
+	    size_t len_a = strlen(attr);
 
 	    if (len_s > len_a && !strncmp(attr, s, len_a)) {
 		unsigned n;
@@ -123,8 +123,8 @@ similar_sgr(char *a, char *b)
     bool result = FALSE;
     int csi_a = is_csi(a);
     int csi_b = is_csi(b);
-    unsigned len_a;
-    unsigned len_b;
+    size_t len_a;
+    size_t len_b;
 
     TR(TRACE_DATABASE, ("similar_sgr:\n\t%s\n\t%s",
 			_nc_visbuf2(1, a),
@@ -264,7 +264,7 @@ _nc_trim_sgr0(TERMTYPE *tp)
 						   off + i);
 			if (k2 != 0) {
 			    found = TRUE;
-			    chop_out(off, i, i + k2);
+			    chop_out(off, (unsigned) i, (unsigned) (i + k2));
 			    break;
 			}
 		    }
@@ -285,7 +285,7 @@ _nc_trim_sgr0(TERMTYPE *tp)
 			if (off[i - 1] == ';')
 			    i--;
 			j = (size_t) (skip_zero(tmp + 1) - off);
-			(void) chop_out(off, i, j);
+			(void) chop_out(off, (unsigned) i, (unsigned) j);
 			found = TRUE;
 		    }
 		}
@@ -296,7 +296,7 @@ _nc_trim_sgr0(TERMTYPE *tp)
 		i = (size_t) (tmp - end);
 		j = strlen(off);
 		tmp = strdup(end);
-		chop_out(tmp, i, j);
+		chop_out(tmp, (unsigned) i, (unsigned) j);
 		free(off);
 		result = tmp;
 	    }

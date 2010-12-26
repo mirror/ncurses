@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.120 2010/08/28 20:58:29 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.121 2010/12/25 23:24:04 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -270,7 +270,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 #  endif
 	    _nc_globals.read_thread = pthread_self();
 # endif
-	n = read(sp->_ifd, &c2, 1);
+	n = (int) read(sp->_ifd, &c2, 1);
 #if USE_PTHREADS_EINTR
 	_nc_globals.read_thread = 0;
 #endif

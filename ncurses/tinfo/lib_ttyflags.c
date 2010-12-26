@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.26 2009/10/24 22:15:47 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.27 2010/12/25 23:43:58 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
@@ -186,9 +186,9 @@ NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_DCL0)
 	 */
 	if (_nc_get_tty_mode(&termp->Nttyb) == OK) {
 #ifdef TERMIOS
-	    termp->Nttyb.c_oflag &= ~OFLAGS_TABS;
+	    termp->Nttyb.c_oflag &= (unsigned) (~OFLAGS_TABS);
 #else
-	    termp->Nttyb.sg_flags &= ~XTABS;
+	    termp->Nttyb.sg_flags &= (unsigned) (~XTABS);
 #endif
 	    rc = OK;
 	}

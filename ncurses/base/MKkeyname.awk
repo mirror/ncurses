@@ -1,4 +1,4 @@
-# $Id: MKkeyname.awk,v 1.44 2010/01/23 17:57:43 tom Exp $
+# $Id: MKkeyname.awk,v 1.45 2010/12/19 01:36:14 tom Exp $
 ##############################################################################
 # Copyright (c) 1999-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -120,7 +120,7 @@ END {
 	print "			int j, k;"
 	print "			char * bound;"
 	print "			TERMTYPE *tp = &(TerminalOf(sp)->type);"
-	print "			int save_trace = _nc_tracing;"
+	print "			unsigned save_trace = _nc_tracing;"
 	print ""
 	print "			_nc_tracing = 0;	/* prevent recursion via keybound() */"
 	print "			for (j = 0; (bound = NCURSES_SP_NAME(keybound)(NCURSES_SP_ARGx c, j)) != 0; ++j) {"

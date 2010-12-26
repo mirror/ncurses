@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_slkset.c,v 1.20 2009/10/24 22:12:21 tom Exp $")
+MODULE_ID("$Id: lib_slkset.c,v 1.21 2010/12/25 23:43:58 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_set) (NCURSES_SP_DCLx int i, const char *astr, int format)
@@ -94,12 +94,12 @@ NCURSES_SP_NAME(slk_set) (NCURSES_SP_DCLx int i, const char *astr, int format)
 	numcols += wcwidth(wc);
 	p += need;
     }
-    numchrs = (p - str);
+    numchrs = (int) (p - str);
 #else
     while (isprint(UChar(*p)))
 	p++;			/* The first non-print stops */
 
-    numcols = (p - str);
+    numcols = (int) (p - str);
     if (numcols > limit)
 	numcols = limit;
     numchrs = numcols;

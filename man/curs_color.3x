@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.34 2010/12/04 18:36:44 tom Exp $
+.\" $Id: curs_color.3x,v 1.35 2010/12/20 00:50:58 tom Exp $
 .TH curs_color 3X ""
 .de bP
 .IP \(bu 4
@@ -180,7 +180,7 @@ X/Open defines no error conditions.
 This implementation will return \fBERR\fR on attempts to
 use color values outside the range 0 to COLORS\-1
 (except for the default colors extension),
-or use color pairs outside the range 0 to COLOR_PAIR\-1.
+or use color pairs outside the range 0 to COLOR_PAIRS\-1.
 Color values used in \fBinit_color\fP must be in the range 0 to 1000.
 An error is returned from all functions
 if the terminal has not been initialized.

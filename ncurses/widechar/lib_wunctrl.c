@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2009,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_wunctrl.c,v 1.13 2009/04/18 19:06:55 tom Exp $")
+MODULE_ID("$Id: lib_wunctrl.c,v 1.14 2010/12/19 01:42:15 tom Exp $")
 
 NCURSES_EXPORT(wchar_t *)
 NCURSES_SP_NAME(wunctrl) (NCURSES_SP_DCLx cchar_t *wc)
@@ -48,7 +48,7 @@ NCURSES_SP_NAME(wunctrl) (NCURSES_SP_DCLx cchar_t *wc)
 				 (unsigned) _nc_to_char((wint_t)CharOf(*wc)));
 
 	for (wsp = str; *p; ++p) {
-	    *wsp++ = _nc_to_widechar(*p);
+	    *wsp++ = (wchar_t) _nc_to_widechar(*p);
 	}
 	*wsp = 0;
 	return str;
