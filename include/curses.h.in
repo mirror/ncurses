@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.218 2010/12/25 23:39:07 tom Exp $ */
+/* $Id: curses.h.in,v 1.219 2011/01/01 21:52:45 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -1268,12 +1268,12 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 					 (win)->_color = (p), \
 					 OK)
 #define wattr_get(win,a,p,opts)		((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
-					 (void)((p) != (void *)0 && (*(p) = (win)->_color)), \
+					 (void)((p) != (void *)0 && (*(p) = (short)(win)->_color)), \
 					 OK)
 #else
-#define wattr_set(win,a,p,opts)		((win)->_attrs = (((a) & ~A_COLOR) | COLOR_PAIR(p)), OK)
+#define wattr_set(win,a,p,opts)		((win)->_attrs = (((a) & ~A_COLOR) | (attr_t)COLOR_PAIR(p)), OK)
 #define wattr_get(win,a,p,opts)		((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
-					 (void)((p) != (void *)0 && (*(p) = PAIR_NUMBER((win)->_attrs))), \
+					 (void)((p) != (void *)0 && (*(p) = (short)PAIR_NUMBER((win)->_attrs))), \
 					 OK)
 #endif
 #endif /* NCURSES_OPAQUE */

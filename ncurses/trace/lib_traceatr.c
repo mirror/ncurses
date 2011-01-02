@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.72 2010/12/19 00:51:35 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.73 2011/01/01 22:01:11 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -176,6 +176,14 @@ _traceattr(attr_t newmode)
 }
 
 /* Trace 'int' return-values */
+NCURSES_EXPORT(int)
+_nc_retrace_int_attr_t(attr_t code)
+{
+    T((T_RETURN("%s"), _traceattr(code)));
+    return (int) code;
+}
+
+/* Trace 'attr_t' return-values */
 NCURSES_EXPORT(attr_t)
 _nc_retrace_attr_t(attr_t code)
 {

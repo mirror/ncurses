@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.470 2010/12/25 23:45:09 tom Exp $
+ * $Id: curses.priv.h,v 1.472 2011/01/01 23:01:40 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1505,7 +1505,9 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 
 #define TR(n, a)	if (USE_TRACEF(n)) _nc_locked_tracef a
 #define T(a)		TR(TRACE_CALLS, a)
-#define TRACE_RETURN(value,type) return _nc_retrace_##type(value)
+#define TRACE_RETURN(value,type)     return _nc_retrace_##type(value)
+#define TRACE_RETURN2(value,dst,src) return _nc_retrace_##dst##_##src(value)
+#define TRACE_RETURN_SP(value,type)  return _nc_retrace_##type(SP_PARM, value)
 
 #define NonNull(s)	((s) != 0 ? s : "<null>")
 
@@ -1517,6 +1519,8 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 #define returnChar(code)	TRACE_RETURN(code,char)
 #define returnChtype(code)	TRACE_RETURN(code,chtype)
 #define returnCode(code)	TRACE_RETURN(code,int)
+#define returnIntAttr(code)	TRACE_RETURN2(code,int,attr_t)
+#define returnMMask(code)	TRACE_RETURN_SP(code,mmask_t)
 #define returnPtr(code)		TRACE_RETURN(code,ptr)
 #define returnSP(code)		TRACE_RETURN(code,sp)
 #define returnVoid		T((T_RETURN(""))); return
@@ -1536,6 +1540,8 @@ extern NCURSES_EXPORT(const char *)     _nc_altcharset_name(attr_t, chtype);
 extern NCURSES_EXPORT(const char *)     _nc_retrace_cptr (const char *);
 extern NCURSES_EXPORT(char)             _nc_retrace_char (char);
 extern NCURSES_EXPORT(int)              _nc_retrace_int (int);
+extern NCURSES_EXPORT(int)              _nc_retrace_int_attr_t (attr_t);
+extern NCURSES_EXPORT(mmask_t)          _nc_retrace_mmask_t (SCREEN *, mmask_t);
 extern NCURSES_EXPORT(unsigned)         _nc_retrace_unsigned (unsigned);
 extern NCURSES_EXPORT(void *)           _nc_retrace_void_ptr (void *);
 extern NCURSES_EXPORT(void)             _nc_fifo_dump (SCREEN *);
@@ -1578,6 +1584,8 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 #define returnChar(code)	return ((char) code)
 #define returnChtype(code)	return code
 #define returnCode(code)	return code
+#define returnIntAttr(code)	return code
+#define returnMMask(code)	return code
 #define returnPtr(code)		return code
 #define returnSP(code)		return code
 #define returnVoid		return

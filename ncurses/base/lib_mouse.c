@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.119 2010/05/22 20:00:55 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.120 2011/01/01 22:25:49 tom Exp $")
 
 #include <tic.h>
 
@@ -1450,7 +1450,7 @@ NCURSES_SP_NAME(mousemask) (NCURSES_SP_DCLx mmask_t newmask, mmask_t * oldmask)
 	    }
 	}
     }
-    returnBits(result);
+    returnMMask(result);
 }
 
 #if NCURSES_SP_FUNCS
