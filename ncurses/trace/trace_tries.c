@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1999                        *
+ *  Author: Thomas E. Dickey 1999                                           *
  ****************************************************************************/
 /*
  *	trace_tries.c - Tracing/Debugging buffers (keycode tries-trees)
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_tries.c,v 1.15 2009/10/24 22:15:47 tom Exp $")
+MODULE_ID("$Id: trace_tries.c,v 1.16 2011/01/09 00:23:27 tom Exp $")
 
 #ifdef TRACE
 #define my_buffer _nc_globals.tracetry_buf
@@ -74,5 +74,5 @@ _nc_trace_tries(TRIES * tree)
 }
 
 #else
-EMPTY_MODULE(_nc_trace_tries)
+EMPTY_MODULE(_nc_empty_trace_tries)
 #endif

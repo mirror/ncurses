@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 1996-2009,2010                                 *
+ *  Author: Thomas E. Dickey 1996-2010,2011                                 *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -1285,7 +1285,7 @@ int	get_escdelay(void)
 #undef _nc_wgetch
 int	_nc_wgetch(
 		WINDOW	*win, 
-		unsigned long *result, 
+		int	*result, 
 		int	use_meta)
 		{ return(*(int *)0); }
 
@@ -2250,6 +2250,12 @@ char	*_nc_tracemouse(
 		MEVENT const *ep)
 		{ return(*(char **)0); }
 
+#undef _nc_retrace_mmask_t
+mmask_t	_nc_retrace_mmask_t(
+		SCREEN	*sp, 
+		mmask_t	code)
+		{ return(*(mmask_t *)0); }
+
 #undef _tracemouse
 char	*_tracemouse(
 		MEVENT const *ep)
@@ -2512,8 +2518,6 @@ void	_nc_vsscanf(void)
 
 /* ./base/lib_freeall.c */
 
-#include <term_entry.h>
-
 #undef _nc_freeall
 void	_nc_freeall(void)
 		{ /* void */ }
@@ -2530,8 +2534,6 @@ void	_nc_free_and_exit(
 		{ /* void */ }
 
 /* ./expanded.c */
-
-#include <term.h>
 
 #undef _nc_toggle_attr_on
 void	_nc_toggle_attr_on(
@@ -2706,9 +2708,6 @@ int	wresize(
 		{ return(*(int *)0); }
 
 /* ./tinfo/access.c */
-
-#include <sys/stat.h>
-#include <nc_alloc.h>
 
 #undef _nc_rootname
 char	*_nc_rootname(
@@ -3382,6 +3381,12 @@ void	_nc_update_screensize(
 		SCREEN	*sp)
 		{ /* void */ }
 
+#undef _nc_setup_tinfo
+int	_nc_setup_tinfo(
+		const char *const tn, 
+		TERMTYPE *const tp)
+		{ return(*(int *)0); }
+
 #undef _nc_tinfo_cmdch
 void	_nc_tinfo_cmdch(
 		TERMINAL *termp, 
@@ -3676,6 +3681,11 @@ NCURSES_BOOL _nc_retrace_bool(
 		NCURSES_BOOL code)
 		{ return(*(NCURSES_BOOL *)0); }
 
+#undef _nc_retrace_char
+char	_nc_retrace_char(
+		char	code)
+		{ return(*(char *)0); }
+
 #undef _nc_retrace_int
 int	_nc_retrace_int(
 		int	code)
@@ -3728,6 +3738,11 @@ char	*_traceattr2(
 char	*_traceattr(
 		attr_t	newmode)
 		{ return(*(char **)0); }
+
+#undef _nc_retrace_int_attr_t
+int	_nc_retrace_int_attr_t(
+		attr_t	code)
+		{ return(*(int *)0); }
 
 #undef _nc_retrace_attr_t
 attr_t	_nc_retrace_attr_t(

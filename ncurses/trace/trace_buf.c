@@ -35,7 +35,9 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_buf.c,v 1.15 2010/08/28 21:08:42 tom Exp $")
+MODULE_ID("$Id: trace_buf.c,v 1.16 2011/01/09 00:08:31 tom Exp $")
+
+#ifdef TRACE
 
 #define MyList _nc_globals.tracebuf_ptr
 #define MySize _nc_globals.tracebuf_used
@@ -112,3 +114,6 @@ _nc_trace_bufcat(int bufnum, const char *value)
     }
     return buffer;
 }
+#else
+EMPTY_MODULE(_nc_empty_trace_buf)
+#endif /* TRACE */

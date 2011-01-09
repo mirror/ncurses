@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_tracebits.c,v 1.18 2008/11/16 00:19:59 juergen Exp $")
+MODULE_ID("$Id: lib_tracebits.c,v 1.19 2011/01/09 00:23:03 tom Exp $")
 
 #if SVR4_TERMIO && !defined(_POSIX_SOURCE)
 #define _POSIX_SOURCE
@@ -261,5 +261,5 @@ _nc_tracebits(void)
     return _nc_trace_ttymode(&(cur_term->Nttyb));
 }
 #else
-EMPTY_MODULE(_nc_tracebits)
+EMPTY_MODULE(_nc_empty_lib_tracebits)
 #endif /* TRACE */

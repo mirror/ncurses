@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_color.3x,v 1.33 2010/10/02 23:19:27 tom Exp @
+  * @Id: curs_color.3x,v 1.35 2010/12/20 00:50:58 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -200,10 +200,10 @@
        will return <STRONG>ERR</STRONG> on attempts to use  color  values  outside
        the range 0 to COLORS-1 (except for the default colors ex-
        tension), or use color pairs outside the range 0  to  COL-
-       OR_PAIR-1.  Color values used in <STRONG>init_color</STRONG> must be in the
-       range 0 to 1000.  An error is returned from all  functions
-       if the terminal has not been initialized.  An error is re-
-       turned from  secondary  functions  such  as  <STRONG>init_pair</STRONG>  if
+       OR_PAIRS-1.   Color  values  used in <STRONG>init_color</STRONG> must be in
+       the range 0 to 1000.  An error is returned from all  func-
+       tions  if the terminal has not been initialized.  An error
+       is returned from secondary functions such as <STRONG>init_pair</STRONG>  if
        <STRONG>start_color</STRONG> was not called.
 
           <STRONG>init_color</STRONG>
