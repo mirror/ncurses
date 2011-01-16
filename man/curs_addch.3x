@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.31 2010/12/04 18:36:44 tom Exp $
+.\" $Id: curs_addch.3x,v 1.32 2011/01/15 14:15:10 tom Exp $
 .TH curs_addch 3X ""
 .SH NAME
 \fBaddch\fR,
@@ -147,6 +147,10 @@ Note that \fBaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR, and
 .SH PORTABILITY
 All these functions are described in the XSI Curses standard, Issue 4.
 The defaults specified for forms-drawing characters apply in the POSIX locale.
+.LP
+X/Open Curses states that the \fIACS_\fP definitions are \fBchar\fP constants.
+For the wide-character implementation (see \fBcurs_add_wch\fP),
+there are analogous \fIWACS_\fP definitions which are \fBcchar_t\fP constants.
 .LP
 Some ACS symbols
 (ACS_S3,

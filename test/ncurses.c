@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.362 2010/11/14 01:04:13 tom Exp $
+$Id: ncurses.c,v 1.364 2011/01/15 23:45:49 tom Exp $
 
 ***************************************************************************/
 
@@ -106,6 +106,7 @@ extern unsigned _nc_tracing;
 #endif
 #endif /* ACS_S3 */
 
+#ifndef WACS_S3
 #ifdef CURSES_WACS_ARRAY
 #define WACS_S3         (&(CURSES_WACS_ARRAY['p']))	/* scan line 3 */
 #define WACS_S7         (&(CURSES_WACS_ARRAY['r']))	/* scan line 7 */
@@ -114,6 +115,7 @@ extern unsigned _nc_tracing;
 #define WACS_PI         (&(CURSES_WACS_ARRAY['{']))	/* Pi */
 #define WACS_NEQUAL     (&(CURSES_WACS_ARRAY['|']))	/* not equal */
 #define WACS_STERLING   (&(CURSES_WACS_ARRAY['}']))	/* UK pound sign */
+#endif
 #endif
 
 #endif
@@ -688,7 +690,7 @@ wgetch_wrap(WINDOW *win, int first_y)
     wclrtoeol(win);
 }
 
-#if defined(NCURSES_VERSION) && defined(KEY_RESIZE) && HAVE_WRESIZE
+#if defined(KEY_RESIZE) && HAVE_WRESIZE
 typedef struct {
     WINDOW *text;
     WINDOW *frame;
@@ -725,7 +727,7 @@ remember_boxes(unsigned level, WINDOW *txt_win, WINDOW *box_win)
     winstack[level].frame = box_win;
 }
 
-#if USE_SOFTKEYS && (NCURSES_VERSION_PATCH < 20071229) && NCURSES_EXT_FUNCS
+#if USE_SOFTKEYS && (defined(NCURSES_VERSION_PATCH) && NCURSES_VERSION_PATCH < 20071229) && NCURSES_EXT_FUNCS
 static void
 slk_repaint(void)
 {
@@ -739,6 +741,7 @@ slk_repaint(void)
 #define slk_repaint()		/* nothing */
 #endif
 
+#if defined(NCURSES_VERSION) && defined(KEY_RESIZE) && HAVE_WRESIZE
 /*
  * For wgetch_test(), we create pairs of windows - one for a box, one for text.
  * Resize both and paint the box in the parent.
@@ -774,6 +777,7 @@ resize_boxes(unsigned level, WINDOW *win)
     }
     doupdate();
 }
+#endif	/* resize_boxes */
 #else
 #define forget_boxes()		/* nothing */
 #define remember_boxes(level,text,frame)	/* nothing */
@@ -2579,52 +2583,6 @@ color_edit(void)
 
 /****************************************************************************
  *
- * Soft-key label test
- *
- ****************************************************************************/
-
-#if USE_SOFTKEYS
-
-#define SLK_HELP 17
-#define SLK_WORK (SLK_HELP + 3)
-
-static void
-slk_help(void)
-{
-    static const char *table[] =
-    {
-	"Available commands are:"
-	,""
-	,"^L         -- repaint this message and activate soft keys"
-	,"a/d        -- activate/disable soft keys"
-	,"c          -- set centered format for labels"
-	,"l          -- set left-justified format for labels"
-	,"r          -- set right-justified format for labels"
-	,"[12345678] -- set label; labels are numbered 1 through 8"
-	,"e          -- erase stdscr (should not erase labels)"
-	,"s          -- test scrolling of shortened screen"
-	,"v/V        -- cycle through video attributes"
-#if HAVE_SLK_COLOR
-	,"F/f/B/b    -- cycle through foreground/background colors"
-#endif
-	,"ESC        -- return to main menu"
-	,""
-	,"Note: if activating the soft keys causes your terminal to scroll up"
-	,"one line, your terminal auto-scrolls when anything is written to the"
-	,"last screen position.  The ncurses code does not yet handle this"
-	,"gracefully."
-    };
-    unsigned j;
-
-    move(2, 0);
-    for (j = 0; j < SIZEOF(table); ++j) {
-	P(table[j]);
-    }
-    refresh();
-}
-
-/****************************************************************************
- *
  * Alternate character-set stuff
  *
  ****************************************************************************/
@@ -2705,6 +2663,52 @@ cycle_colors(int ch, int *fg, int *bg, short *pair)
 	}
     }
     return result;
+}
+
+/****************************************************************************
+ *
+ * Soft-key label test
+ *
+ ****************************************************************************/
+
+#if USE_SOFTKEYS
+
+#define SLK_HELP 17
+#define SLK_WORK (SLK_HELP + 3)
+
+static void
+slk_help(void)
+{
+    static const char *table[] =
+    {
+	"Available commands are:"
+	,""
+	,"^L         -- repaint this message and activate soft keys"
+	,"a/d        -- activate/disable soft keys"
+	,"c          -- set centered format for labels"
+	,"l          -- set left-justified format for labels"
+	,"r          -- set right-justified format for labels"
+	,"[12345678] -- set label; labels are numbered 1 through 8"
+	,"e          -- erase stdscr (should not erase labels)"
+	,"s          -- test scrolling of shortened screen"
+	,"v/V        -- cycle through video attributes"
+#if HAVE_SLK_COLOR
+	,"F/f/B/b    -- cycle through foreground/background colors"
+#endif
+	,"ESC        -- return to main menu"
+	,""
+	,"Note: if activating the soft keys causes your terminal to scroll up"
+	,"one line, your terminal auto-scrolls when anything is written to the"
+	,"last screen position.  The ncurses code does not yet handle this"
+	,"gracefully."
+    };
+    unsigned j;
+
+    move(2, 0);
+    for (j = 0; j < SIZEOF(table); ++j) {
+	P(table[j]);
+    }
+    refresh();
 }
 
 #if HAVE_SLK_COLOR
@@ -6389,13 +6393,14 @@ do_single_test(const char c)
     case 'e':
 	slk_test();
 	break;
-#endif
 
 #if USE_WIDEC_SUPPORT
     case 'E':
 	wide_slk_test();
 	break;
 #endif
+#endif
+
     case 'f':
 	acs_display();
 	break;

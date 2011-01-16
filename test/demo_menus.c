@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.31 2010/11/13 20:06:46 tom Exp $
+ * $Id: demo_menus.c,v 1.32 2011/01/15 20:02:47 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -202,7 +202,7 @@ menu_offset(MenuNo number)
 #endif
 
 	/* FIXME: MENU.itemlen seems the only way to get actual width of items */
-	result = (number - (eBanner + 1)) * (mpBanner->itemlen + spc_rows);
+	result = (number - (eBanner + 1)) * (menu_itemwidth(mpBanner) + spc_rows);
     }
     return result;
 }

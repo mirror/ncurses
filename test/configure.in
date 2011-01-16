@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.85 2010/11/28 16:38:04 tom Exp $
+dnl $Id: configure.in,v 1.89 2011/01/15 19:41:30 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -127,6 +127,8 @@ AC_ARG_WITH(pdcurses,
 case $cf_cv_screen in
 curses)
 	CF_CURSES_CONFIG
+	CF_NETBSD_FORM_H
+	CF_NETBSD_MENU_H
 	;;
 ncurses)
 	CF_NCURSES_CONFIG
@@ -212,6 +214,7 @@ putwin \
 resize_term \
 resizeterm \
 ripoffline \
+scr_dump \
 setupterm \
 slk_color \
 slk_init \
@@ -226,6 +229,7 @@ vsscanf \
 wchgat \
 winsstr \
 wresize \
+wsyncdown \
 )
 
 CF_NCURSES_EXT_FUNCS
@@ -252,6 +256,7 @@ CF_SYS_TIME_SELECT
 CF_FUNC_CURSES_VERSION
 CF_CURSES_ACS_MAP
 CF_CURSES_WACS_MAP
+CF_CURSES_WACS_SYMBOLS
 
 CF_CURSES_CHECK_TYPE(attr_t,long)
 

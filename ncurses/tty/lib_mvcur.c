@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.124 2010/12/19 01:22:58 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.125 2011/01/09 21:06:08 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -242,8 +242,9 @@ NCURSES_SP_NAME(_nc_msec_cost) (NCURSES_SP_DCLx const char *const cap, int affcn
 		if (!GetNoPadding(SP_PARM))
 #endif
 		    cum_cost += number * 10;
-	    } else
+	    } else if (SP_PARM) {
 		cum_cost += (float) SP_PARM->_char_padding;
+	    }
 	}
 
 	return ((int) cum_cost);
@@ -469,7 +470,7 @@ NCURSES_SP_NAME(_nc_mvcur_wrap) (NCURSES_SP_DCL0)
     /* leave cursor at screen bottom */
     TINFO_MVCUR(NCURSES_SP_ARGx -1, -1, screen_lines(SP_PARM) - 1, 0);
 
-    if (SP_PARM && !IsTermInfo(SP_PARM))
+    if (!SP_PARM || !IsTermInfo(SP_PARM))
 	return;
 
     /* set cursor to normal mode */

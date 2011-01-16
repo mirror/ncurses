@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.97 2010/11/13 20:33:36 tom Exp $ */
+/* $Id: test.priv.h,v 1.102 2011/01/15 23:50:33 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -182,6 +182,10 @@
 #define HAVE_TIGETNUM 0
 #endif
 
+#ifndef HAVE_TIGETSTR
+#define HAVE_TIGETSTR 0
+#endif
+
 #ifndef HAVE_TYPEAHEAD
 #define HAVE_TYPEAHEAD 0
 #endif
@@ -243,7 +247,7 @@
 #include <curses.h>
 #endif
 
-#if defined(HAVE_XCURSES)
+#if defined(HAVE_XCURSES) || defined(PDCURSES)
 /* no other headers */
 #undef  HAVE_SETUPTERM		/* nonfunctional */
 #define HAVE_SETUPTERM 0
@@ -314,6 +318,16 @@ extern int optind;
 #endif
 #endif
 
+#if !USE_SOFTKEYS
+#define slk_init() /* nothing */
+#define slk_restore() /* nothing */
+#define slk_clear() /* nothing */
+#endif
+
+#ifndef HAVE_WSYNCDOWN
+#define wsyncdown(win) /* nothing */
+#endif
+
 #ifndef USE_WIDEC_SUPPORT
 #if (defined(_XOPEN_SOURCE_EXTENDED) || defined(_XPG5)) && defined(WACS_ULCORNER)
 #define USE_WIDEC_SUPPORT 1
@@ -340,6 +354,20 @@ extern int optind;
 #define USE_LIBFORM 0
 #endif
 
+/* workaround, to build against NetBSD's variant of the form library */
+#ifdef HAVE_NETBSD_FORM_H
+#define form_getyx(form, y, x) y = current_field(form)->cursor_ypos, x = current_field(form)->cursor_xpos
+#else
+#define form_getyx(form, y, x) y = (form)->currow, x = (form)->curcol
+#endif
+
+/* workaround, to build against NetBSD's variant of the form library */
+#ifdef HAVE_NETBSD_MENU_H
+#define menu_itemwidth(menu) (menu)->max_item_width
+#else
+#define menu_itemwidth(menu) (menu)->itemlen
+#endif
+
 #ifndef HAVE_TYPE_ATTR_T
 #if !USE_WIDEC_SUPPORT && !defined(attr_t)
 #define attr_t chtype
@@ -359,6 +387,79 @@ extern int optind;
 
 #ifndef CCHARW_MAX
 #define CCHARW_MAX 5
+#endif
+
+#if defined(NCURSES_VERSION) && defined(CURSES_WACS_ARRAY) && !defined(CURSES_WACS_SYMBOLS)
+#define CURSES_WACS_SYMBOLS
+#endif
+
+#if defined(CURSES_WACS_ARRAY) && !defined(CURSES_WACS_SYMBOLS)
+/* NetBSD 5.1 defines these incorrectly */
+#undef	WACS_RARROW
+#undef	WACS_LARROW
+#undef	WACS_UARROW
+#undef	WACS_DARROW
+#undef	WACS_BLOCK
+#undef	WACS_DIAMOND
+#undef	WACS_CKBOARD
+#undef	WACS_DEGREE
+#undef	WACS_PLMINUS
+#undef	WACS_BOARD
+#undef	WACS_LANTERN
+#undef	WACS_LRCORNER
+#undef	WACS_URCORNER
+#undef	WACS_ULCORNER
+#undef	WACS_LLCORNER
+#undef	WACS_PLUS
+#undef	WACS_HLINE
+#undef	WACS_S1
+#undef	WACS_S9
+#undef	WACS_LTEE
+#undef	WACS_RTEE
+#undef	WACS_BTEE
+#undef	WACS_TTEE
+#undef	WACS_VLINE
+#undef	WACS_BULLET
+#undef	WACS_S3
+#undef	WACS_S7
+#undef	WACS_LEQUAL
+#undef	WACS_GEQUAL
+#undef	WACS_PI
+#undef	WACS_NEQUAL
+#undef	WACS_STERLING
+
+#define	WACS_RARROW     &(CURSES_WACS_ARRAY['+'])
+#define	WACS_LARROW     &(CURSES_WACS_ARRAY[','])
+#define	WACS_UARROW     &(CURSES_WACS_ARRAY['-'])
+#define	WACS_DARROW     &(CURSES_WACS_ARRAY['.'])
+#define	WACS_BLOCK      &(CURSES_WACS_ARRAY['0'])
+#define	WACS_DIAMOND    &(CURSES_WACS_ARRAY['`'])
+#define	WACS_CKBOARD    &(CURSES_WACS_ARRAY['a'])
+#define	WACS_DEGREE     &(CURSES_WACS_ARRAY['f'])
+#define	WACS_PLMINUS    &(CURSES_WACS_ARRAY['g'])
+#define	WACS_BOARD      &(CURSES_WACS_ARRAY['h'])
+#define	WACS_LANTERN    &(CURSES_WACS_ARRAY['i'])
+#define	WACS_LRCORNER   &(CURSES_WACS_ARRAY['j'])
+#define	WACS_URCORNER   &(CURSES_WACS_ARRAY['k'])
+#define	WACS_ULCORNER   &(CURSES_WACS_ARRAY['l'])
+#define	WACS_LLCORNER   &(CURSES_WACS_ARRAY['m'])
+#define	WACS_PLUS       &(CURSES_WACS_ARRAY['n'])
+#define	WACS_HLINE      &(CURSES_WACS_ARRAY['q'])
+#define	WACS_S1         &(CURSES_WACS_ARRAY['o'])
+#define	WACS_S9         &(CURSES_WACS_ARRAY['s'])
+#define	WACS_LTEE       &(CURSES_WACS_ARRAY['t'])
+#define	WACS_RTEE       &(CURSES_WACS_ARRAY['u'])
+#define	WACS_BTEE       &(CURSES_WACS_ARRAY['v'])
+#define	WACS_TTEE       &(CURSES_WACS_ARRAY['w'])
+#define	WACS_VLINE      &(CURSES_WACS_ARRAY['x'])
+#define	WACS_BULLET     &(CURSES_WACS_ARRAY['~'])
+#define	WACS_S3		&(CURSES_WACS_ARRAY['p'])
+#define	WACS_S7		&(CURSES_WACS_ARRAY['r'])
+#define	WACS_LEQUAL	&(CURSES_WACS_ARRAY['y'])
+#define	WACS_GEQUAL	&(CURSES_WACS_ARRAY['z'])
+#define	WACS_PI		&(CURSES_WACS_ARRAY['{'])
+#define	WACS_NEQUAL	&(CURSES_WACS_ARRAY['|'])
+#define	WACS_STERLING	&(CURSES_WACS_ARRAY['}'])
 #endif
 
 #undef CTRL

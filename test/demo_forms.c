@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.36 2010/11/13 20:49:50 tom Exp $
+ * $Id: demo_forms.c,v 1.38 2011/01/15 18:15:11 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -254,12 +254,14 @@ show_current_field(WINDOW *win, FORM * form)
     char *buffer;
     int nbuf;
     int field_rows, field_cols, field_max;
+    int currow, curcol;
 
     if (has_colors()) {
 	wbkgd(win, COLOR_PAIR(1));
     }
     werase(win);
-    wprintw(win, "Cursor: %d,%d", form->currow, form->curcol);
+    form_getyx(form, currow, curcol);
+    wprintw(win, "Cursor: %d,%d", currow, curcol);
     if (data_ahead(form))
 	waddstr(win, " ahead");
     if (data_behind(form))

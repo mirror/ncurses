@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1629 2011/01/09 01:07:03 tom Exp $
+-- $Id: NEWS,v 1.1634 2011/01/15 21:50:45 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110115
+	+ modify Ada95/configure script to make the --with-curses-dir option
+	  work without requiring the --with-ncurses option.
+	+ modify test programs to allow them to be built with NetBSD curses.
+	+ document thick- and double-line symbols in curs_add_wch.3x manpage.
+	+ document WACS_xxx constants in curs_add_wch.3x manpage.
+	+ fix some warnings for clang 2.6 "--analyze"
+	+ modify Ada95 makefiles to make html-documentation with the project
+	  file configuration if that is used.
+	+ update config.guess, config.sub
 
 20110108
 	+ regenerated html manpages.

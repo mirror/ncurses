@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.44 2010/11/28 00:13:09 tom Exp $
+# $Id: ncurses_defs,v 1.45 2011/01/15 18:19:51 tom Exp $
 ##############################################################################
-# Copyright (c) 2000-2008,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 2000-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -110,6 +110,7 @@ HAVE_REMOVE
 HAVE_RESIZETERM
 HAVE_RESIZE_TERM
 HAVE_RIPOFFLINE	1
+HAVE_SCR_DUMP 1
 HAVE_SELECT
 HAVE_SETBUF
 HAVE_SETBUFFER
@@ -163,6 +164,7 @@ HAVE_WCTOB
 HAVE_WCTOMB
 HAVE_WCTYPE_H
 HAVE_WINSSTR	1
+HAVE_WSYNCDOWN	1
 HAVE_WORKING_POLL
 HAVE_WRESIZE
 HAVE__DOSCAN

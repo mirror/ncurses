@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2008,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: edit_field.c,v 1.15 2008/12/20 19:23:01 tom Exp $
+ * $Id: edit_field.c,v 1.17 2011/01/15 18:15:11 tom Exp $
  *
  * A wrapper for form_driver() which keeps track of the user's editing changes
  * for each field, and makes the result available as a null-terminated string
@@ -288,7 +288,10 @@ static int
 offset_in_field(FORM * form)
 {
     FIELD *field = current_field(form);
-    return form->curcol + form->currow * field->dcols;
+    int currow, curcol;
+
+    form_getyx(form, currow, curcol);
+    return curcol + currow * field->dcols;
 }
 
 static void
@@ -308,10 +311,11 @@ edit_field(FORM * form, int *result)
     char lengths[80];
     int length;
     char *buffer;
-    int before_row = form->currow;
-    int before_col = form->curcol;
+    int before_row;
+    int before_col;
     int before_off = offset_in_field(form);
 
+    form_getyx(form, before_row, before_col);
     before = current_field(form);
     set_field_back(before, A_NORMAL);
     if (ch <= KEY_MAX) {

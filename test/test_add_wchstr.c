@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009,2010 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2009,2010,2011 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.13 2010/12/25 22:49:28 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.15 2011/01/15 18:15:11 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -123,7 +123,7 @@ ChWLen(const wchar_t *source)
     if (!pass_ctls) {
 	size_t adjust = 0;
 	size_t n;
-	NCURSES_CONST char *s;
+	const char *s;
 
 	for (n = 0; n < result; ++n) {
 	    if (source[n] < 256 && (s = unctrl((chtype) source[n])) != 0) {

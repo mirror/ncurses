@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2003-2009,2010 Free Software Foundation, Inc.              *
+dnl Copyright (c) 2003-2010,2011 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.45 2010/11/20 22:07:06 tom Exp $
+dnl $Id: aclocal.m4,v 1.49 2011/01/15 23:47:10 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -455,22 +455,34 @@ done
 test "$cf_cv_curses_acs_map" != unknown && AC_DEFINE_UNQUOTED(CURSES_ACS_ARRAY,$cf_cv_curses_acs_map)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_CHECK_DATA version: 3 updated: 2010/10/23 15:54:49
+dnl CF_CURSES_CHECK_DATA version: 4 updated: 2011/01/15 16:39:24
 dnl --------------------
 dnl Check if curses.h defines the given data/variable.
 dnl Use this after CF_NCURSES_CONFIG or CF_CURSES_CONFIG.
 AC_DEFUN([CF_CURSES_CHECK_DATA],
 [
 AC_MSG_CHECKING(for data $1 declaration in ${cf_cv_ncurses_header:-curses.h})
+
 AC_TRY_COMPILE(CF__CURSES_HEAD,[
 void *foo = &($1)
 ],cf_result=yes,cf_result=no)
 AC_MSG_RESULT($cf_result)
+
 if test $cf_result = yes ; then
 	CF_UPPER(cf_result,have_curses_data_$1)
 	AC_DEFINE_UNQUOTED($cf_result)
 else
 	AC_MSG_CHECKING(for data $1 in library)
+	# BSD linkers insist on making weak linkage, but resolve at runtime.
+	AC_TRY_RUN(CF__CURSES_HEAD
+[
+extern char $1;
+int main(void)
+{
+	void *foo = &($1);
+	${cf_cv_main_return:-return}(foo == 0);
+}],[cf_result=yes],[cf_result=no],[
+	# cross-compiling
 	AC_TRY_LINK(CF__CURSES_HEAD
 [extern char $1;],[
 	do {
@@ -478,6 +490,7 @@ else
 		${cf_cv_main_return:-return}(foo == 0);
 	} while (0)
 ],[cf_result=yes],[cf_result=no])
+])
 	AC_MSG_RESULT($cf_result)
 	if test $cf_result = yes ; then
 		CF_UPPER(cf_result,decl_curses_data_$1)
@@ -775,25 +788,62 @@ ncursesw/term.h)
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_WACS_MAP version: 4 updated: 2010/10/23 15:54:49
+dnl CF_CURSES_WACS_MAP version: 5 updated: 2011/01/15 11:28:59
 dnl ------------------
-dnl Check for likely values of wacs_map[]:
+dnl Check for likely values of wacs_map[].
 AC_DEFUN([CF_CURSES_WACS_MAP],
 [
 AC_CACHE_CHECK(for wide alternate character set array, cf_cv_curses_wacs_map,[
 	cf_cv_curses_wacs_map=unknown
-	for name in wacs_map _wacs_map __wacs_map _nc_wacs
+	for name in wacs_map _wacs_map __wacs_map _nc_wacs _wacs_char
 	do
 	AC_TRY_LINK([
 #ifndef _XOPEN_SOURCE_EXTENDED
 #define _XOPEN_SOURCE_EXTENDED
 #endif
 #include <${cf_cv_ncurses_header:-curses.h}>],
-	[$name['k'] = *WACS_PLUS],
+	[void *foo = &($name['k'])],
 	[cf_cv_curses_wacs_map=$name
 	 break])
 	done])
+
+test "$cf_cv_curses_wacs_map" != unknown && AC_DEFINE_UNQUOTED(CURSES_WACS_ARRAY,$cf_cv_curses_wacs_map)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CURSES_WACS_SYMBOLS version: 1 updated: 2011/01/15 11:28:59
+dnl ----------------------
+dnl Do a check to see if the WACS_xxx constants are defined compatibly with
+dnl X/Open Curses.  In particular, NetBSD's implementation of the WACS_xxx
+dnl constants is broken since those constants do not point to cchar_t's.
+AC_DEFUN([CF_CURSES_WACS_SYMBOLS],
+[
+AC_REQUIRE([CF_CURSES_WACS_MAP])
+
+AC_CACHE_CHECK(for wide alternate character constants, cf_cv_curses_wacs_symbols,[
+cf_cv_curses_wacs_symbols=no
+if test "$cf_cv_curses_wacs_map" != unknown
+then
+	AC_TRY_LINK([
+#ifndef _XOPEN_SOURCE_EXTENDED
+#define _XOPEN_SOURCE_EXTENDED
+#endif
+#include <${cf_cv_ncurses_header:-curses.h}>],
+	[cchar_t *foo = WACS_PLUS;
+	 $cf_cv_curses_wacs_map['k'] = *WACS_PLUS],
+	[cf_cv_curses_wacs_symbols=yes])
+else
+	AC_TRY_LINK([
+#ifndef _XOPEN_SOURCE_EXTENDED
+#define _XOPEN_SOURCE_EXTENDED
+#endif
+#include <${cf_cv_ncurses_header:-curses.h}>],
+	[cchar_t *foo = WACS_PLUS],
+	[cf_cv_curses_wacs_symbols=yes])
+fi
 ])
+
+test "$cf_cv_curses_wacs_symbols" != no && AC_DEFINE(CURSES_WACS_SYMBOLS)
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_DIRNAME version: 4 updated: 2002/12/21 19:25:52
 dnl ----------
@@ -1966,6 +2016,45 @@ AC_MSG_RESULT($NCURSES_WRAP_PREFIX)
 AC_SUBST(NCURSES_WRAP_PREFIX)
 ])
 dnl ---------------------------------------------------------------------------
+dnl CF_NETBSD_FORM_H version: 1 updated: 2011/01/15 14:59:18
+dnl ----------------
+dnl Check for NetBSD's form.h, which is incompatible with SVr4 and ncurses.
+dnl Some workarounds are needed in client programs to allow them to compile.
+AC_DEFUN([CF_NETBSD_FORM_H],[
+AC_CACHE_CHECK(for NetBSD form.h,cf_cv_netbsd_form_h,[
+AC_TRY_COMPILE([
+#include <${cf_cv_ncurses_header:-curses.h}>
+#include <form.h>
+],[
+	FORM *form;
+	int y = current_field(form)->cursor_ypos;
+	int x = current_field(form)->cursor_xpos;
+],[cf_cv_netbsd_form_h=yes
+],[cf_cv_netbsd_form_h=no])
+])
+
+test "$cf_cv_netbsd_form_h" = yes && AC_DEFINE(HAVE_NETBSD_FORM_H)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_NETBSD_MENU_H version: 1 updated: 2011/01/15 14:59:18
+dnl ----------------
+dnl Check for NetBSD's menu.h, which is incompatible with SVr4 and ncurses.
+dnl Some workarounds are needed in client programs to allow them to compile.
+AC_DEFUN([CF_NETBSD_MENU_H],[
+AC_CACHE_CHECK(for NetBSD menu.h,cf_cv_netbsd_menu_h,[
+AC_TRY_COMPILE([
+#include <${cf_cv_ncurses_header:-curses.h}>
+#include <menu.h>
+],[
+	MENU *menu;
+	int y = menu->max_item_width;
+],[cf_cv_netbsd_menu_h=yes
+],[cf_cv_netbsd_menu_h=no])
+])
+
+test "$cf_cv_netbsd_menu_h" = yes && AC_DEFINE(HAVE_NETBSD_MENU_H)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_NO_LEAKS_OPTION version: 4 updated: 2006/12/16 14:24:05
 dnl ------------------
 dnl see CF_WITH_NO_LEAKS
@@ -2032,7 +2121,7 @@ case ".[$]$1" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PDCURSES_X11 version: 10 updated: 2010/06/20 09:24:28
+dnl CF_PDCURSES_X11 version: 11 updated: 2011/01/15 18:45:38
 dnl ---------------
 dnl Configure for PDCurses' X11 library
 AC_DEFUN([CF_PDCURSES_X11],[
@@ -2069,7 +2158,7 @@ fi
 if test $cf_cv_lib_XCurses = yes ; then
 	AC_DEFINE(UNIX)
 	AC_DEFINE(XCURSES)
-	AC_DEFINE(HAVE_XCURSES)
+	AC_CHECK_HEADER(xcurses.h, AC_DEFINE(HAVE_XCURSES))
 else
 	AC_MSG_ERROR(Cannot link with XCurses)
 fi

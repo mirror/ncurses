@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.13 2010/05/01 22:04:08 tom Exp $
+ * $Id: demo_termcap.c,v 1.14 2011/01/15 21:41:27 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -165,7 +165,11 @@ demo_terminfo(NCURSES_CONST char *name)
     NCURSES_CONST char *cap;
 
     printf("Terminal type \"%s\"\n", name);
+#if HAVE_SETUPTERM
     setupterm(name, 1, (int *) 0);
+#else
+    setterm(name);
+#endif
 
     if (b_opt) {
 	for (n = 0;; ++n) {

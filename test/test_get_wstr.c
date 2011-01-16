@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007,2009 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2007-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_get_wstr.c,v 1.6 2009/08/29 19:02:25 tom Exp $
+ * $Id: test_get_wstr.c,v 1.8 2011/01/15 18:15:11 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -43,6 +43,9 @@
  */
 
 #include <test.priv.h>
+
+#if HAVE_CHGAT
+/* NetBSD curses wchgat */
 
 #if USE_WIDEC_SUPPORT
 
@@ -356,6 +359,14 @@ int
 main(void)
 {
     printf("This program requires the wide-ncurses library\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif
+#else
+int
+main(void)
+{
+    printf("This program requires the curses chgat function\n");
     ExitProgram(EXIT_FAILURE);
 }
 #endif

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: resizeterm.c,v 1.42 2009/10/24 20:38:43 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.43 2011/01/10 01:34:49 tom Exp $")
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
@@ -451,7 +451,7 @@ NCURSES_SP_NAME(resizeterm) (NCURSES_SP_DCLx int ToLines, int ToCols)
     T((T_CALLED("resizeterm(%p, %d,%d) old(%d,%d)"),
        (void *) SP_PARM, ToLines, ToCols,
        (SP_PARM == 0) ? -1 : screen_lines(SP_PARM),
-       screen_columns(SP_PARM)));
+       (SP_PARM == 0) ? -1 : screen_columns(SP_PARM)));
 
     if (SP_PARM != 0) {
 	result = OK;

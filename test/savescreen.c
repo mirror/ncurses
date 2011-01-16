@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,13 +26,15 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.13 2010/11/13 21:18:00 tom Exp $
+ * $Id: savescreen.c,v 1.15 2011/01/15 18:15:11 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
  */
 
 #include <test.priv.h>
+
+#if HAVE_SCR_DUMP
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -330,3 +332,11 @@ main(int argc, char *argv[])
     }
     ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(int argc, char *argv[])
+{
+    printf("This program requires the screen-dump functions\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif
