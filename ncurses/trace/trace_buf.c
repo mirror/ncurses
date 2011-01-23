@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_buf.c,v 1.16 2011/01/09 00:08:31 tom Exp $")
+MODULE_ID("$Id: trace_buf.c,v 1.17 2011/01/22 19:48:16 tom Exp $")
 
 #ifdef TRACE
 

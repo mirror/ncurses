@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.472 2011/01/01 23:01:40 tom Exp $
+ * $Id: curses.priv.h,v 1.475 2011/01/22 21:10:19 tom Exp $
  *
  *	curses.priv.h
  *
@@ -490,6 +490,7 @@ extern NCURSES_EXPORT(int) _nc_mutex_unlock(pthread_mutex_t *);
 #ifdef USE_PTHREADS
 #  if USE_WEAK_SYMBOLS
 weak_symbol(pthread_sigmask);
+weak_symbol(pthread_kill);
 weak_symbol(pthread_self);
 weak_symbol(pthread_equal);
 weak_symbol(pthread_mutex_init);
@@ -1710,7 +1711,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(_nc_InsCharCost) (NCURSES_SP_DCLx int
 #undef  UpdateAttrs
 #define UpdateAttrs(sp,c) NCURSES_SP_NAME(_nc_UpdateAttrs)(NCURSES_SP_ARGx CHREF(c))
 
-#if defined(NEED_NCURSES_CH_T)
+#if USE_WIDEC_SUPPORT || defined(NEED_NCURSES_CH_T)
 extern NCURSES_EXPORT(void) NCURSES_SP_NAME(_nc_UpdateAttrs) (NCURSES_SP_DCLx CARG_CH_T _c);
 #else
 extern NCURSES_EXPORT(void) NCURSES_SP_NAME(_nc_UpdateAttrs) (NCURSES_SP_DCLx chtype c);

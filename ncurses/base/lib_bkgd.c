@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.42 2011/01/01 17:18:52 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.43 2011/01/22 19:47:37 tom Exp $")
 
 /*
  * Set the window's background information.

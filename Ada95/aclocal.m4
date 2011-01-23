@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010 Free Software Foundation, Inc.                        *
+dnl Copyright (c) 2010,2011 Free Software Foundation, Inc.                   *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.19 2011/01/15 21:51:05 tom Exp $
+dnl $Id: aclocal.m4,v 1.20 2011/01/22 19:46:50 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on

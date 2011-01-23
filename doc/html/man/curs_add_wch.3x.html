@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2001-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 2001-2010,2011 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wch.3x,v 1.10 2010/12/04 18:36:44 tom Exp @
+  * @Id: curs_add_wch.3x,v 1.14 2011/01/15 15:27:43 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -98,6 +98,76 @@
        able performance gain might be seen by  using  the  *<STRONG>echo</STRONG>*
        functions instead of their equivalents.
 
+   <STRONG>Line</STRONG> <STRONG>Graphics</STRONG>
+       Like  <STRONG><A HREF="addch.3x.html">addch(3x)</A></STRONG>,  <STRONG>addch_wch</STRONG>  accepts symbols which make it
+       simple to draw lines and  other  frequently  used  special
+       characters.   These  symbols  correspond to the same VT100
+       line-drawing set as <STRONG><A HREF="addch.3x.html">addch(3x)</A></STRONG>.
+
+       <EM>Name</EM>              <EM>Unicode</EM>    <EM>Default</EM>   <EM>Description</EM>
+       ----------------------------------------------------------------
+       WACS_BLOCK        0x25ae     #         solid square block
+       WACS_BOARD        0x2592     #         board of squares
+       WACS_BTEE         0x2534     +         bottom tee
+       WACS_BULLET       0x00b7     o         bullet
+       WACS_CKBOARD      0x2592     :         checker board (stipple)
+
+       WACS_DARROW       0x2193     v         arrow pointing down
+       WACS_DEGREE       0x00b0     '         degree symbol
+       WACS_DIAMOND      0x25c6     +         diamond
+       WACS_GEQUAL       0x2265     &gt;         greater-than-or-equal-to
+       WACS_HLINE        0x2500     -         horizontal line
+       WACS_LANTERN      0x2603     #         lantern symbol
+       WACS_LARROW       0x2190     &lt;         arrow pointing left
+       WACS_LEQUAL       0x2264     &lt;         less-than-or-equal-to
+       WACS_LLCORNER     0x2514     +         lower left-hand corner
+       WACS_LRCORNER     0x2518     +         lower right-hand corner
+       WACS_LTEE         0x2524     +         left tee
+       WACS_NEQUAL       0x2260     !         not-equal
+       WACS_PI           0x03c0     *         greek pi
+       WACS_PLMINUS      0x00b1     #         plus/minus
+       WACS_PLUS         0x253c     +         plus
+       WACS_RARROW       0x2192     &gt;         arrow pointing right
+       WACS_RTEE         0x251c     +         right tee
+       WACS_S1           0x23ba     -         scan line 1
+       WACS_S3           0x23bb     -         scan line 3
+       WACS_S7           0x23bc     -         scan line 7
+       WACS_S9           0x23bd     _         scan line 9
+       WACS_STERLING     0x00a3     f         pound-sterling symbol
+       WACS_TTEE         0x252c     +         top tee
+       WACS_UARROW       0x2191     ^         arrow pointing up
+       WACS_ULCORNER     0x250c     +         upper left-hand corner
+       WACS_URCORNER     0x2510     +         upper right-hand corner
+       WACS_VLINE        0x2502     |         vertical line
+
+       The wide-character configuration of ncurses  also  defines
+       symbols for thick- and double-lines:
+
+       <EM>Name</EM>              <EM>Unicode</EM>   <EM>Default</EM>   <EM>Description</EM>
+       ---------------------------------------------------------------------
+       WACS_T_ULCORNER   0x250f    +         thick upper left corner
+       WACS_T_LLCORNER   0x2517    +         thick lower left corner
+       WACS_T_URCORNER   0x2513    +         thick upper right corner
+       WACS_T_LRCORNER   0x251b    +         thick lower right corner
+       WACS_T_LTEE       0x252b    +         thick tee pointing right
+       WACS_T_RTEE       0x2523    +         thick tee pointing left
+       WACS_T_BTEE       0x253b    +         thick tee pointing up
+       WACS_T_TTEE       0x2533    +         thick tee pointing down
+       WACS_T_HLINE      0x2501    -         thick horizontal line
+       WACS_T_VLINE      0x2503    |         thick vertical line
+       WACS_T_PLUS       0x254b    +         thick large plus or crossover
+       WACS_D_ULCORNER   0x2554    +         double upper left corner
+       WACS_D_LLCORNER   0x255a    +         double lower left corner
+       WACS_D_URCORNER   0x2557    +         double upper right corner
+       WACS_D_LRCORNER   0x255d    +         double lower right corner
+       WACS_D_RTEE       0x2563    +         double tee pointing left
+       WACS_D_LTEE       0x2560    +         double tee pointing right
+       WACS_D_BTEE       0x2569    +         double tee pointing up
+       WACS_D_TTEE       0x2566    +         double tee pointing down
+       WACS_D_HLINE      0x2550    -         double horizontal line
+       WACS_D_VLINE      0x2551    |         double vertical line
+       WACS_D_PLUS       0x256c    +         double large plus or crossover
+
 
 </PRE>
 <H2>RETURN VALUES</H2><PRE>
@@ -117,13 +187,29 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       All  these functions are described in the XSI Curses stan-
-       dard, Issue 4.  The defaults specified  for  forms-drawing
-       characters apply in the POSIX locale.
+       All  of  these  functions  are described in the XSI Curses
+       standard, Issue 4.  The defaults specified for  line-draw-
+       ing characters apply in the POSIX locale.
 
-       XSI  documents  constants  beginning  with <STRONG>WACS_</STRONG> which are
-       used for line-drawing.  Those  are  not  currently  imple-
-       mented in <STRONG>ncurses</STRONG>.
+       X/Open Curses makes it clear that the WACS_ symbols should
+       be defined as a pointer to <STRONG>cchar_t</STRONG> data, e.g., in the dis-
+       cussion of <STRONG>border_set</STRONG>.  A few implementations are problem-
+       atic:
+
+       <STRONG>o</STRONG>   NetBSD curses defines the symbols as a <STRONG>wchar_t</STRONG>  within
+           a <STRONG>cchar_t</STRONG>.
+
+       <STRONG>o</STRONG>   HPUX  curses  equates  some of the <EM>ACS</EM><STRONG>_</STRONG> symbols to the
+           analogous <EM>WACS</EM><STRONG>_</STRONG> symbols as if the  <EM>ACS</EM><STRONG>_</STRONG>  symbols  were
+           wide  characters.   The  misdefined  symbols  are  the
+           arrows and other symbols which are not used for  line-
+           drawing.
+
+       X/Open  Curses  does not define symbols for thick- or dou-
+       ble-lines.   SVr4  curses  implementations  defined  their
+       line-drawing  symbols  in  terms  of intermediate symbols.
+       This implementation extends those symbols,  providing  new
+       definitions which are not in the SVr4 implementations.
 
 
 </PRE>

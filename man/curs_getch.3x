@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,10 +27,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.33 2010/12/04 18:36:44 tom Exp $
+.\" $Id: curs_getch.3x,v 1.36 2011/01/22 19:38:51 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fBgetch\fR,
 \fBwgetch\fR,
@@ -264,6 +267,20 @@ If it says that \fBKEY_ENTER\fP is control/M,
 \fBgetch\fR will return \fBKEY_ENTER\fP
 when you press control/M.
 .PP
+Generally, \fBKEY_ENTER\fP denotes the character(s) sent by the \fIEnter\fP
+key on the numeric keypad:
+.bP
+the terminal description lists the most useful keys,
+.bP
+the \fIEnter\fP key on the regular keyboard is already handled by
+the standard ASCII characters for carriage-return and line-feed,
+.bP
+depending on whether \fBnl\fP or \fBnonl\fP was called,
+pressing "Enter" on the regular keyboard may return either a carriage-return
+or line-feed, and finally
+.bP
+"Enter or send" is the standard description for this key.
+.PP
 When using \fBgetch\fR, \fBwgetch\fR, \fBmvgetch\fR, or
 \fBmvwgetch\fR, nocbreak mode (\fBnocbreak\fR) and echo mode
 (\fBecho\fR) should not be used at the same time.
@@ -316,6 +333,7 @@ any code using it be conditionalized on the \fBNCURSES_VERSION\fR feature macro.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_inopts\fR(3X),
+\fBcurs_outopts\fR(3X),
 \fBcurs_mouse\fR(3X),
 \fBcurs_move\fR(3X),
 \fBcurs_refresh\fR(3X),

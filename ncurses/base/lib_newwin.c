@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.66 2010/04/24 23:31:18 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.68 2011/01/22 20:34:15 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -141,7 +141,7 @@ NCURSES_SP_NAME(newwin) (NCURSES_SP_DCLx
     T((T_CALLED("newwin(%p, %d,%d,%d,%d)"), (void *) SP_PARM, num_lines, num_columns,
        begy, begx));
 
-    if (begy < 0 || begx < 0 || num_lines < 0 || num_columns < 0)
+    if (begy < 0 || begx < 0 || num_lines <= 0 || num_columns <= 0)
 	returnWin(0);
 
     if (num_lines == 0)
@@ -198,7 +198,7 @@ derwin(WINDOW *orig, int num_lines, int num_columns, int begy, int begx)
     /*
      * make sure window fits inside the original one
      */
-    if (begy < 0 || begx < 0 || orig == 0 || num_lines < 0 || num_columns < 0)
+    if (begy < 0 || begx < 0 || orig == 0 || num_lines <= 0 || num_columns <= 0)
 	returnWin(0);
     if (begy + num_lines > orig->_maxy + 1
 	|| begx + num_columns > orig->_maxx + 1)

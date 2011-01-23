@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.148 2010/10/23 22:41:32 tom Exp $
+-- $Id: INSTALL,v 1.151 2011/01/23 00:06:15 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1067,6 +1067,60 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
     Here are some of the major interface changes, and related problems which
     you may encounter when building a system with different versions of
     ncurses:
+
+    5.8 (??? ?, 2011)
+	Interface changes:
+
+	+ add an alternate library configuration, i.e., "terminal driver" to
+	  support port to Windows, built with MinGW.  There are two drivers
+	  (terminfo and Windows console).  The terminfo driver works on other
+	  platforms.
+
+	+ add a new set of functions which accept a SCREEN* parameter, in
+	  contrast with the original set which use the global value "sp".
+	  By default, these names end with "_sp", and are otherwise
+	  functionally identical with the originals.
+
+	  In addition to the "_sp" functions, there are a few new functions
+	  associated with this feature:  ceiling_panel, ground_panel,
+	  new_prescr.
+
+	  If the library is not built with the sp-funcs extension, there
+	  are no related interface changes.
+
+	+ add tiparm function based on review of X/Open Curses Issue 7.
+
+	+ change internal _nc_has_mouse function to public has_mouse function
+
+	Added extensions:
+
+	+ add a few more functions to support the NCURSES_OPAQUE feature:
+	  get_escdelay, is_pad, is_subwin
+
+	Added internal functions (other than "_sp" variants):
+		_nc_curscr_of
+		_nc_format_slks
+		_nc_get_alias_table
+		_nc_get_hash_info
+		_nc_insert_wch
+		_nc_newscr_of
+		_nc_outc_wrapper
+		_nc_retrace_char
+		_nc_retrace_int_attr_t
+		_nc_retrace_mmask_t
+		_nc_setup_tinfo
+		_nc_stdscr_of
+		_nc_tinfo_cmdch
+
+	Removed internal functions:
+		_nc_makenew (some configurations replace by _nc_makenew_sp)
+
+	Modified internal functions:
+		_nc_UpdateAttrs
+		_nc_get_hash_table
+		_nc_has_mouse
+		_nc_insert_ch
+		_nc_wgetch
 
     5.7 (November 2, 2008)
 	Interface changes:

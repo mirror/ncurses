@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.125 2011/01/09 21:06:08 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.126 2011/01/22 19:48:21 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 

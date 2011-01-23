@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.42 2011/01/01 22:06:52 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.43 2011/01/22 19:47:29 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
