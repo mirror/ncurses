@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2006,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: free_ttype.c,v 1.14 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: free_ttype.c,v 1.15 2011/02/06 01:08:31 tom Exp $")
 
 NCURSES_EXPORT(void)
 _nc_free_termtype(TERMTYPE *ptr)
@@ -69,6 +69,7 @@ use_extended_names(bool flag)
 {
     int oldflag = _nc_user_definable;
 
+    START_TRACE();
     T((T_CALLED("use_extended_names(%d)"), flag));
     _nc_user_definable = flag;
     returnBool(oldflag);

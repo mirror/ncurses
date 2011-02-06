@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.101 2010/12/04 18:38:55 tom Exp $
+.\" $Id: ncurses.3x,v 1.103 2011/02/05 23:21:29 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .de bP
@@ -930,6 +930,28 @@ and is likely to work for terminal emulators.
 When setting this variable, you should set it to a nonzero value.
 Setting it to zero (or to a nonnumber)
 disables the special check for "linux" and "screen".
+.IP
+As an alternative to the environment variable,
+ncurses checks for an extended terminfo capability \fBU8\fP.
+This is a numeric capability which can be compiled using \fBtic\ \-x\fP.
+For example
+.RS 5
+.sp
+.nf
+# linux console, if patched to provide working
+# VT100 shift-in/shift-out, with corresponding font.
+linux-vt100|linux console with VT100 line-graphics,
+	U8#0, use=linux,
+.sp
+# uxterm with vt100Graphics resource set to false
+xterm-utf8|xterm relying on UTF-8 line-graphics,
+	U8#1, use=xterm,
+.fi
+.RE
+.IP
+The name "U8" is chosen to be two characters,
+to permit it to be used by applications that use ncurses'
+termcap interface.
 .TP 5
 NCURSES_TRACE
 During initialization, the \fBncurses\fR debugging library

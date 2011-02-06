@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.381 $
-#	$Date: 2010/12/11 23:39:36 $
+#	$Revision: 1.382 $
+#	$Date: 2011/02/05 23:41:18 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -890,7 +890,7 @@ beterm|BeOS Terminal,
 #
 linux-basic|linux console,
 	am, bce, eo, mir, msgr, xenl, xon,
-	it#8, ncv#18,
+	it#8, ncv#18, U8#1,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
 	bel=^G, clear=\E[H\E[J, cr=^M, csr=\E[%i%p1%d;%p2%dr,
 	cub=\E[%p1%dD, cub1=^H, cud=\E[%p1%dB, cud1=^J,
@@ -2886,7 +2886,7 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 
 putty|PuTTY terminal emulator,
 	am, bce, bw, ccc, hs, mir, msgr, xenl, xon, XT,
-	colors#8, it#8, ncv#22, pairs#64,
+	colors#8, it#8, ncv#22, pairs#64, U8#1,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
 	clear=\E[H\E[J, cnorm=\E[?25h, cr=^M,
@@ -3632,6 +3632,11 @@ xterm-24|vs100|xterms|xterm terminal emulator (X Window System),
 # This is xterm for ncurses.
 xterm|xterm terminal emulator (X Window System),
 	use=xterm-new,
+
+# This entry assumes that xterm's handling of VT100 SI/SO is disabled by
+# setting the vt100Graphics resource to false.
+xterm-utf8|xterm with no VT100 line-drawing in UTF-8 mode,
+	U8#1, use=xterm,
 
 # These entries allow access to the X titlebar and icon name as a status line.
 # Note that twm (and possibly window managers descended from it such as tvtwm,
@@ -4666,7 +4671,7 @@ eterm-color|Emacs term.el terminal emulator term-protocol-version 0.96,
 # tested with screen 3.09.08
 screen|VT 100/ANSI X3.64 virtual terminal,
 	OTbs, OTpt, am, km, mir, msgr, xenl, G0,
-	colors#8, cols#80, it#8, lines#24, ncv@, pairs#64,
+	colors#8, cols#80, it#8, lines#24, ncv@, pairs#64, U8#1,
 	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
 	clear=\E[H\E[J, cnorm=\E[34h\E[?25h, cr=^M,
@@ -22340,5 +22345,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2010-12-11
 #	* suppress ncv in screen entry, allowing underline -Alejandro R. Sedeno
 #	* also suppress ncv in konsole-base -TD
+#
+# 2011-02-05
+#	* add U8 feature to denote entries for terminal emulators which do not
+#	  support VT100 SI/SO when processing UTF-8 encoding -TD
+#	* add xterm-utf8 as a demo of the U8 feature -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
