@@ -1,8 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
-  * t
   ****************************************************************************
-  * Copyright (c) 1999-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 2010 Free Software Foundation, Inc.                        *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,83 +27,102 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infotocap.1m,v 1.11 2010/12/04 18:38:55 tom Exp @
+  * @Id: MKncu_config.in,v 1.3 2010/03/06 22:29:17 tom Exp @
 -->
 <HTML>
 <HEAD>
-<TITLE>infotocap 1m</TITLE>
+<TITLE>ncurses5-config 1</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1>infotocap 1m</H1>
+<H1>ncurses5-config 1</H1>
 <HR>
 <PRE>
 <!-- Manpage converted by man2html 3.0.1 -->
-<STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>                                             <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>
+<STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>                                   <STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>
 
 
 
 
 </PRE>
 <H2>NAME</H2><PRE>
-       <STRONG>infotocap</STRONG>  - convert a <EM>terminfo</EM> description into a <EM>termcap</EM>
-       description
+       ncurses5-config - helper script for ncurses libraries
 
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <STRONG>infotocap</STRONG> [<STRONG>-v</STRONG><EM>n</EM> <EM>width</EM>]  [<STRONG>-V</STRONG>] [<STRONG>-1</STRONG>] [<STRONG>-w</STRONG> <EM>width</EM>] <EM>file</EM> . . .
+       <STRONG>ncurses5-config</STRONG> [<EM>options</EM>]
 
 
 </PRE>
 <H2>DESCRIPTION</H2><PRE>
-       <STRONG>infotocap</STRONG> looks in  each  given  text  <EM>file</EM>  for  <STRONG>terminfo</STRONG>
-       descriptions.   For  each  terminfo  description found, an
-       equivalent <STRONG>termcap</STRONG> description is written to standard out-
-       put.  Terminfo <STRONG>use</STRONG> capabilities are translated directly to
-       termcap <STRONG>tc</STRONG> capabilities.
-
-       <STRONG>-v</STRONG>   print out tracing information on  standard  error  as
-            the program runs.
-
-       <STRONG>-V</STRONG>   print  out the version of the program in use on stan-
-            dard error and exit.
-
-       <STRONG>-1</STRONG>   cause the fields to print out one to a line.   Other-
-            wise, the fields will be printed several to a line to
-            a maximum width of 60 characters.
-
-       <STRONG>-w</STRONG>   change the output to <EM>width</EM> characters.
+       This is a shell script which simplifies configuring appli-
+       cations against a particular set of ncurses libraries.
 
 
 </PRE>
-<H2>FILES</H2><PRE>
-       /usr/share/terminfo Compiled  terminal  description  data-
-                           base.
+<H2>OPTIONS</H2><PRE>
+       <STRONG>--prefix</STRONG>
+              echos the package-prefix of ncurses
 
+       <STRONG>--exec-prefix</STRONG>
+              echos the executable-prefix of ncurses
 
-</PRE>
-<H2>NOTES</H2><PRE>
-       This  utility  is  actually  a  link to <EM>tic</EM>, running in <EM>-C</EM>
-       mode.  You can use other <EM>tic</EM> options such as <STRONG>-f</STRONG> and  <STRONG>-x</STRONG>.
+       <STRONG>--cflags</STRONG>
+              echos the C compiler flags needed to  compile  with
+              ncurses
+
+       <STRONG>--libs</STRONG> echos the libraries needed to link with ncurses
+
+       <STRONG>--version</STRONG>
+              echos the release+patchdate version of ncurses
+
+       <STRONG>--abi-version</STRONG>
+              echos the ABI version of ncurses
+
+       <STRONG>--mouse-version</STRONG>
+              echos the mouse-interface version of ncurses
+
+       <STRONG>--bindir</STRONG>
+              echos the directory containing ncurses programs
+
+       <STRONG>--datadir</STRONG>
+              echos the directory containing ncurses data
+
+       <STRONG>--includedir</STRONG>
+              echos the directory containing ncurses header files
+
+       <STRONG>--libdir</STRONG>
+              echos the directory containing ncurses libraries
+
+       <STRONG>--mandir</STRONG>
+              echos the directory containing ncurses manpages
+
+       <STRONG>--terminfo</STRONG>
+              echos the $TERMINFO terminfo database path, e.g.,
+              /usr/share/terminfo
+
+       <STRONG>--terminfo-dirs</STRONG>
+              echos the $TERMINFO_DIRS directory list, e.g.,
+              /usr/share/terminfo
+
+       <STRONG>--termpath</STRONG>
+              echos  the  $TERMPATH  termcap list, if support for
+              termcap is configured.
+
+       <STRONG>--help</STRONG> prints this message
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
        This describes <STRONG>ncurses</STRONG> version 5.7 (patch 20110212).
 
 
-</PRE>
-<H2>AUTHOR</H2><PRE>
-       Eric S. Raymond &lt;esr@snark.thyrsus.com&gt; and
-       Thomas E. Dickey &lt;dickey@invisible-island.net&gt;
 
-
-
-                                                          <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>
+                                                     <STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>
 </PRE>
 <HR>
 <ADDRESS>

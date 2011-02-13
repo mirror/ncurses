@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.146 2010/10/02 22:45:40 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.147 2011/02/12 18:39:08 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -1529,7 +1529,7 @@ show_where(unsigned level)
     if (_nc_tracing >= DEBUG_LEVEL(level)) {
 	char my_name[256];
 	_nc_get_type(my_name);
-	fprintf(stderr, "\"%s\", line %d, '%s' ",
+	_tracef("\"%s\", line %d, '%s'",
 		_nc_get_source(),
 		_nc_curr_line, my_name);
     }
