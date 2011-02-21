@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1643 2011/02/13 01:16:09 tom Exp $
+-- $Id: NEWS,v 1.1645 2011/02/21 01:42:08 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110220
+	+ configure script rpath fixes from xterm #269.
+	+ workaround for cygwin's non-functional features.h, to force ncurses'
+	  configure script to define _XOPEN_SOURCE_EXTENDED when building
+	  wide-character configuration.
+	+ build-fix in run_tic.sh for OS/2 EMX install
+	+ add cons25-debian entry (patch by Brian M Carlson, Debina #607662).
 
 20110212
 	+ regenerated html manpages.

@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.54 2010/11/27 21:45:27 tom Exp $
+# $Id: Makefile.in,v 1.56 2011/02/21 01:09:31 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -64,7 +64,8 @@ ticfile		= $(ticdir).db
 source		= @TERMINFO_SRC@
 
 INSTALL		= @INSTALL@
-INSTALL_PROG	= @INSTALL_SCRIPT@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_SCRIPT	= @INSTALL_SCRIPT@
 INSTALL_DATA	= @INSTALL_DATA@
 
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
@@ -103,7 +104,7 @@ install.data :	terminfo.tmp \
 NCURSES_CONFIG	= ncurses@DFT_ARG_SUFFIX@@cf_cv_abi_version@-config
 
 install.libs :: $(DESTDIR)$(bindir) ncurses-config
-	$(INSTALL_PROG) ncurses-config $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
+	$(INSTALL_SCRIPT) ncurses-config $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
 
 @MAKE_PC_FILES@install.libs :: pc-files $(DESTDIR)$(PKG_CONFIG_LIBDIR)
 @MAKE_PC_FILES@	$(SHELL) -c 'for name in *.pc; do $(INSTALL_DATA) $$name $(DESTDIR)$(PKG_CONFIG_LIBDIR)/$$name; done'

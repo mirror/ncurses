@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.382 $
-#	$Date: 2011/02/05 23:41:18 $
+#	$Revision: 1.383 $
+#	$Date: 2011/02/20 20:46:53 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1919,6 +1919,8 @@ cons25w|ansiw|ansi80x25-raw|freebsd console (25-line raw mode),
 cons25|ansis|ansi80x25|freebsd console (25-line ansi mode),
 	acsc=-\030.^Y0\333`\004a\260f\370g\361h\261i\025j\331k\277l\332m\300n\305q\304t\303u\264v\301w\302x\263y\363z\362~\371,
 	use=cons25w,
+cons25-debian|freebsd console with debian backspace (25-line ansi mode),
+	kbs=\177, kdch1=\E[3~, use=cons25,
 cons25-m|ansis-mono|ansi80x25-mono|freebsd console (25-line mono ansi mode),
 	colors@, pairs@,
 	bold@, dim@, op@, rmul=\E[m, setab@, setaf@,
@@ -22350,5 +22352,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* add U8 feature to denote entries for terminal emulators which do not
 #	  support VT100 SI/SO when processing UTF-8 encoding -TD
 #	* add xterm-utf8 as a demo of the U8 feature -TD
+#
+# 2011-02-20
+#	* add cons25-debian entry (Brian M Carlson, Debina #607662).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
