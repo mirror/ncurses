@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.107 2010/04/24 23:47:42 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.108 2011/02/26 15:36:06 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -364,16 +364,18 @@ NCURSES_EXPORT(int)
 _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
 /* return 1 if read, 0 if not found or garbled */
 {
-    int code, fd = -1;
+    FILE *fp = 0;
+    int code;
     int limit;
     char buffer[MAX_ENTRY_SIZE + 1];
 
     if (_nc_access(filename, R_OK) < 0
-	|| (fd = open(filename, O_RDONLY | O_BINARY)) < 0) {
+	|| (fp = fopen(filename, "rb")) == 0) {
 	T(("cannot open terminfo %s (errno=%d)", filename, errno));
 	code = TGETENT_NO;
     } else {
-	if ((limit = (int) read(fd, buffer, sizeof(buffer))) > 0) {
+	if ((limit = (int) fread(buffer, sizeof(char), sizeof(buffer), fp))
+	    > 0) {
 
 	    T(("read terminfo %s", filename));
 	    if ((code = _nc_read_termtype(ptr, buffer, limit)) == TGETENT_NO) {
@@ -382,7 +384,7 @@ _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
 	} else {
 	    code = TGETENT_NO;
 	}
-	close(fd);
+	fclose(fp);
     }
 
     return (code);

@@ -47,9 +47,9 @@
 <b>with</b> Ada.Unchecked_Deallocation;
 <b>with</b> Ada.Unchecked_Conversion;
 
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C; <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C;
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings; <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings;
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Pointers;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C; <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings; <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Pointers;
 
 <b>with</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>;
 
@@ -59,7 +59,7 @@
 
    <b>type</b> C_Field_Array <b>is</b> <b>array</b> (Natural <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>;
    <b>package</b> F_Array <b>is</b> <b>new</b>
-     <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Pointers (Natural, <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>, C_Field_Array, <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A>);
+     <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Pointers (Natural, <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>, C_Field_Array, <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A>);
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
    <FONT COLOR=green><EM>--  |</EM></FONT>
@@ -232,7 +232,7 @@
       <FONT COLOR=red><A NAME="ref_227_7" HREF="terminal_interface-curses-forms__ads.htm#ref_356_7">Buffer</A></FONT> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_129_9">Buffer_Number</A> := <A HREF="terminal_interface-curses-forms__ads.htm#ref_129_9">Buffer_Number</A>'First;
       <FONT COLOR=red><A NAME="ref_228_7" HREF="terminal_interface-curses-forms__ads.htm#ref_357_7">Str</A></FONT>    : String)
    <b>is</b>
-      <b>type</b> <FONT COLOR=red><A NAME="ref_230_12">Char_Ptr</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.char;
+      <b>type</b> <FONT COLOR=red><A NAME="ref_230_12">Char_Ptr</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.char;
       <b>function</b> <FONT COLOR=red><A NAME="ref_231_16">Set_Fld_Buffer</A></FONT> (<FONT COLOR=red><A NAME="ref_231_32" HREF="terminal_interface-curses-forms__adb.htm#ref_231_16">Fld</A></FONT>    : <A HREF="terminal_interface-curses-forms__ads.htm#ref_56_9">Field</A>;
                                  <FONT COLOR=red><A NAME="ref_232_34" HREF="terminal_interface-curses-forms__adb.htm#ref_231_16">Bufnum</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
                                  <FONT COLOR=red><A NAME="ref_233_34" HREF="terminal_interface-curses-forms__adb.htm#ref_231_16">S</A></FONT>      : <A HREF="terminal_interface-curses-forms__adb.htm#ref_230_12">Char_Ptr</A>)

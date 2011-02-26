@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 2008,2010 Free Software Foundation, Inc.                    --
+-- Copyright (c) 2008-2010,2011 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README.MinGW,v 1.4 2010/12/18 21:07:03 tom Exp $
+-- $Id: README.MinGW,v 1.5 2011/02/26 16:57:17 tom Exp $
 -- Author: Juergen Pfeifer
 -------------------------------------------------------------------------------
 
@@ -142,6 +142,8 @@ A lot is still TODO, e.g.:
   - A GUI console driver
   - Support for Terminals attached via a serial port (via terminfo)
   - Support for networked Terminal connections (via terminfo)
+  - Workarounds for MinGW's filesystem access are necessary to make infocmp
+    work (though tic works).
 
 To support terminfo, we need to have an ioctl() simulation for the
 serial and networked Terminals.

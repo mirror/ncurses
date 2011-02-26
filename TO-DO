@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: TO-DO,v 1.54 2010/01/09 16:48:05 tom Exp $
+-- $Id: TO-DO,v 1.56 2011/02/26 16:58:53 tom Exp $
 -------------------------------------------------------------------------------
 
 SHORT-TERM TO-DO ITEMS:
@@ -66,9 +66,9 @@ Known Problems:
 + the --with-pthread configuration builds for Cygwin, but does not work
   properly (test/worm.c shows all of the worms in the same location).
 
-+ the Ada95 tree requires a small fix to build on Cygwin, since the GNAT port
-  to that platform provides an incomplete Interrupts.Names package.  For
-  instance (your gcc version may be different):
++ the Ada95 tree may require a small fix to build on Cygwin, since the GNAT
+  port to that platform for 3.4.4 provides an incomplete Interrupts.Names
+  package.  For instance (your gcc version may be different):
         /usr/lib/gcc/i686-pc-cygwin/3.4.4/adainclude/a-intnam.ads
 
   cut here...
@@ -89,6 +89,8 @@ Known Problems:
   produce libraries that can be run without setting environment variables.
   Building those with libtool does not work either.  (This is a problem with
   the BSD platforms).
+
++ more work is needed to make the MinGW port support ordinary terminals.
 
 Portability (or lack thereof):
 

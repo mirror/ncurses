@@ -49,15 +49,15 @@
 <FONT COLOR=green><EM>--  Run the generator instead.</EM></FONT>
 <FONT COLOR=green><EM>--  |</EM></FONT>
 <b>with</b> System.Storage_Elements;
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C;   <FONT COLOR=green><EM>--  We need this for some assertions.</EM></FONT>
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;   <FONT COLOR=green><EM>--  We need this for some assertions.</EM></FONT>
 
 <b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<FONT COLOR=red><A NAME="ref_49_28" HREF="terminal_interface-curses__adb.htm#ref_50_33">Curses</A></FONT> <b>is</b>
    <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>);
    <b>pragma</b> Linker_Options ("-lncurses");
 
    <FONT COLOR=red><A NAME="ref_53_4">NC_Major_Version</A></FONT> : <b>constant</b> := 5; <FONT COLOR=green><EM>--  Major version of the library</EM></FONT>
-   <FONT COLOR=red><A NAME="ref_54_4">NC_Minor_Version</A></FONT> : <b>constant</b> := 7; <FONT COLOR=green><EM>--  Minor version of the library</EM></FONT>
-   <FONT COLOR=red><A NAME="ref_55_4">NC_Version</A></FONT> : <b>constant</b> String := "5.7";  <FONT COLOR=green><EM>--  Version of library</EM></FONT>
+   <FONT COLOR=red><A NAME="ref_54_4">NC_Minor_Version</A></FONT> : <b>constant</b> := 8; <FONT COLOR=green><EM>--  Minor version of the library</EM></FONT>
+   <FONT COLOR=red><A NAME="ref_55_4">NC_Version</A></FONT> : <b>constant</b> String := "5.8";  <FONT COLOR=green><EM>--  Version of library</EM></FONT>
 
    <b>type</b> <FONT COLOR=red><A NAME="ref_57_9">Window</A></FONT> <b>is</b> <b>private</b>;
    <FONT COLOR=red><A NAME="ref_58_4">Null_Window</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#ref_57_9">Window</A>;
@@ -280,8 +280,8 @@
 
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_278_9">Color_Number</A></FONT> <b>is</b> <b>range</b> -1 .. Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'Last);
-   <b>for</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>'Size <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'Size;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_278_9">Color_Number</A></FONT> <b>is</b> <b>range</b> -1 .. Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short'Last);
+   <b>for</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A>'Size <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short'Size;
    <FONT COLOR=green><EM>--  (n)curses uses a short for the color index</EM></FONT>
    <FONT COLOR=green><EM>--  The model is, that a Color_Number is an index into an array of</EM></FONT>
    <FONT COLOR=green><EM>--  (potentially) definable colors. Some of those indices are</EM></FONT>
@@ -297,8 +297,8 @@
    <FONT COLOR=red><A NAME="ref_292_4">Cyan</A></FONT>             : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := 6;
    <FONT COLOR=red><A NAME="ref_293_4">White</A></FONT>            : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#ref_278_9">Color_Number</A> := 7;
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_295_9">RGB_Value</A></FONT> <b>is</b> <b>range</b> 0 .. Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'Last);
-   <b>for</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>'Size <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'Size;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_295_9">RGB_Value</A></FONT> <b>is</b> <b>range</b> 0 .. Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short'Last);
+   <b>for</b> <A HREF="terminal_interface-curses__ads.htm#ref_295_9">RGB_Value</A>'Size <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short'Size;
    <FONT COLOR=green><EM>--  Some system may allow to redefine a color by setting RGB values.</EM></FONT>
 
    <b>type</b> <FONT COLOR=red><A NAME="ref_299_9">Color_Pair</A></FONT> <b>is</b> <b>range</b> 0 .. 255;
@@ -1928,7 +1928,7 @@
    <FONT COLOR=red><A NAME="ref_1923_4">Sizeof_bool</A></FONT>        : <b>constant</b> Natural :=  1; <FONT COLOR=green><EM>--  bool</EM></FONT>
    <FONT COLOR=red><A NAME="ref_1924_4">Offset_XY</A></FONT>          : <b>constant</b> Natural :=  1; <FONT COLOR=green><EM>--  int</EM></FONT>
 
-   <b>type</b> <FONT COLOR=red><A NAME="ref_1926_9">Curses_Bool</A></FONT> <b>is</b> <b>mod</b> 2 ** <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.char'Size;
+   <b>type</b> <FONT COLOR=red><A NAME="ref_1926_9">Curses_Bool</A></FONT> <b>is</b> <b>mod</b> 2 ** <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.char'Size;
    <FONT COLOR=red><A NAME="ref_1927_4">Curses_Bool_False</A></FONT> : <b>constant</b> <A HREF="terminal_interface-curses__ads.htm#ref_1926_9">Curses_Bool</A> := 0;
 
 <b>end</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>;

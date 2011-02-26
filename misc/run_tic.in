@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: run_tic.in,v 1.30 2011/02/21 01:05:37 tom Exp $
+# $Id: run_tic.in,v 1.32 2011/02/23 23:30:15 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -109,6 +109,14 @@ umask 022
 
 # Construct the name of the old (obsolete) pathname, e.g., /usr/lib/terminfo.
 TICDIR=`echo $TERMINFO | sed -e 's%/share/\([^/]*\)$%/lib/\1%'`
+
+# Parent directory may not exist, which would confuse the install for hashed
+# database.  Fix.
+PARENT=`echo "$TERMINFO" | sed -e 's%/[^/]*$%%'`
+if test -n "$PARENT"
+then
+	test -d $PARENT || mkdir -p $PARENT
+fi
 
 # Remove the old terminfo stuff; we don't care if it existed before, and it
 # would generate a lot of confusing error messages if we tried to overwrite it.

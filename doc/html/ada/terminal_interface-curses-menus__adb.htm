@@ -47,9 +47,9 @@
 <b>with</b> Ada.Unchecked_Deallocation;
 <b>with</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>; <b>use</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>;
 
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C; <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C;
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings; <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings;
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Pointers;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C; <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings; <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Pointers;
 
 <b>with</b> Ada.Unchecked_Conversion;
 
@@ -57,10 +57,10 @@
 
    <b>type</b> C_Item_Array <b>is</b> <b>array</b> (Natural <b>range</b> &lt;&gt;) <b>of</b> <b>aliased</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
    <b>package</b> I_Array <b>is</b> <b>new</b>
-     <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Pointers (Natural, <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>, C_Item_Array, <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A>);
+     <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Pointers (Natural, <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>, C_Item_Array, <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A>);
 
    <b>use</b> <b>type</b> System.Bit_Order;
-   <b>subtype</b> <FONT COLOR=red><A NAME="ref_58_12">chars_ptr</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings.chars_ptr;
+   <b>subtype</b> <FONT COLOR=red><A NAME="ref_58_12">chars_ptr</A></FONT> <b>is</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings.chars_ptr;
 
    <b>function</b> MOS_2_CInt <b>is</b> <b>new</b>
      Ada.Unchecked_Conversion (<A HREF="terminal_interface-curses-menus__ads.htm#ref_121_9">Menu_Option_Set</A>,
@@ -99,7 +99,7 @@
    <b>function</b> <FONT COLOR=red><A NAME="ref_94_13" HREF="terminal_interface-curses-menus__ads.htm#ref_191_13">Create</A></FONT> (<FONT COLOR=red><A NAME="ref_94_21" HREF="terminal_interface-curses-menus__ads.htm#ref_191_21">Name</A></FONT>        : String;
                     <FONT COLOR=red><A NAME="ref_95_21" HREF="terminal_interface-curses-menus__ads.htm#ref_192_21">Description</A></FONT> : String := "") <b>return</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>
    <b>is</b>
-      <b>type</b> <FONT COLOR=red><A NAME="ref_97_12">Char_Ptr</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.char;
+      <b>type</b> <FONT COLOR=red><A NAME="ref_97_12">Char_Ptr</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.char;
       <b>function</b> <FONT COLOR=red><A NAME="ref_98_16">Newitem</A></FONT> (<FONT COLOR=red><A NAME="ref_98_25" HREF="terminal_interface-curses-menus__adb.htm#ref_98_16">Name</A></FONT>, <FONT COLOR=red><A NAME="ref_98_31" HREF="terminal_interface-curses-menus__adb.htm#ref_98_16">Desc</A></FONT> : <A HREF="terminal_interface-curses-menus__adb.htm#ref_97_12">Char_Ptr</A>) <b>return</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_56_9">Item</A>;
       <b>pragma</b> Import (C, Newitem, "new_item");
 
@@ -141,11 +141,11 @@
    <b>begin</b>
       <A HREF="terminal_interface-curses-menus__adb.htm#ref_135_7">Ptr</A> := <A HREF="terminal_interface-curses-menus__adb.htm#ref_126_16">Descname</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_203_22">Itm</A>);
       <b>if</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_135_7">Ptr</A> /= Null_Ptr <b>then</b>
-         <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings.Free (<A HREF="terminal_interface-curses-menus__adb.htm#ref_135_7">Ptr</A>);
+         <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings.Free (<A HREF="terminal_interface-curses-menus__adb.htm#ref_135_7">Ptr</A>);
       <b>end</b> <b>if</b>;
       <A HREF="terminal_interface-curses-menus__adb.htm#ref_135_7">Ptr</A> := <A HREF="terminal_interface-curses-menus__adb.htm#ref_128_16">Itemname</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_203_22">Itm</A>);
       <b>if</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_135_7">Ptr</A> /= Null_Ptr <b>then</b>
-         <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings.Free (<A HREF="terminal_interface-curses-menus__adb.htm#ref_135_7">Ptr</A>);
+         <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings.Free (<A HREF="terminal_interface-curses-menus__adb.htm#ref_135_7">Ptr</A>);
       <b>end</b> <b>if</b>;
       <A HREF="terminal_interface-curses-menus__adb.htm#ref_134_7">Res</A> := <A HREF="terminal_interface-curses-menus__adb.htm#ref_131_16">Freeitem</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_203_22">Itm</A>);
       <b>if</b> <A HREF="terminal_interface-curses-menus__adb.htm#ref_134_7">Res</A> /= <A HREF="terminal_interface-curses-aux__ads.htm#ref_80_4">E_Ok</A> <b>then</b>
@@ -515,7 +515,7 @@
    <b>procedure</b> <FONT COLOR=red><A NAME="ref_510_14" HREF="terminal_interface-curses-menus__ads.htm#ref_403_14">Set_Mark</A></FONT> (<FONT COLOR=red><A NAME="ref_510_24" HREF="terminal_interface-curses-menus__ads.htm#ref_403_24">Men</A></FONT>  : <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>;
                        <FONT COLOR=red><A NAME="ref_511_24" HREF="terminal_interface-curses-menus__ads.htm#ref_404_24">Mark</A></FONT> : String)
    <b>is</b>
-      <b>type</b> <FONT COLOR=red><A NAME="ref_513_12">Char_Ptr</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.char;
+      <b>type</b> <FONT COLOR=red><A NAME="ref_513_12">Char_Ptr</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.char;
       <b>function</b> <FONT COLOR=red><A NAME="ref_514_16">Set_Mark</A></FONT> (<FONT COLOR=red><A NAME="ref_514_26" HREF="terminal_interface-curses-menus__adb.htm#ref_514_16">Men</A></FONT>  : <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>;
                          <FONT COLOR=red><A NAME="ref_515_26" HREF="terminal_interface-curses-menus__adb.htm#ref_514_16">Mark</A></FONT> : <A HREF="terminal_interface-curses-menus__adb.htm#ref_513_12">Char_Ptr</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Set_Mark, "set_menu_mark");
@@ -737,7 +737,7 @@
    <b>function</b> <FONT COLOR=red><A NAME="ref_732_13" HREF="terminal_interface-curses-menus__ads.htm#ref_520_13">Set_Pattern</A></FONT> (<FONT COLOR=red><A NAME="ref_732_26" HREF="terminal_interface-curses-menus__ads.htm#ref_520_26">Men</A></FONT>  : <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>;
                          <FONT COLOR=red><A NAME="ref_733_26" HREF="terminal_interface-curses-menus__ads.htm#ref_521_26">Text</A></FONT> : String) <b>return</b> Boolean
    <b>is</b>
-      <b>type</b> <FONT COLOR=red><A NAME="ref_735_12">Char_Ptr</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.char;
+      <b>type</b> <FONT COLOR=red><A NAME="ref_735_12">Char_Ptr</A></FONT> <b>is</b> <b>access</b> <b>all</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.char;
       <b>function</b> <FONT COLOR=red><A NAME="ref_736_16">Set_Pattern</A></FONT> (<FONT COLOR=red><A NAME="ref_736_29" HREF="terminal_interface-curses-menus__adb.htm#ref_736_16">Men</A></FONT>     : <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>;
                             <FONT COLOR=red><A NAME="ref_737_29" HREF="terminal_interface-curses-menus__adb.htm#ref_736_16">Pattern</A></FONT> : <A HREF="terminal_interface-curses-menus__adb.htm#ref_735_12">Char_Ptr</A>) <b>return</b> <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A>;
       <b>pragma</b> Import (C, Set_Pattern, "set_menu_pattern");

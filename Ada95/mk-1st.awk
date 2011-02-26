@@ -1,6 +1,6 @@
-# $Id: mk-1st.awk,v 1.3 2010/06/26 23:37:46 tom Exp $
+# $Id: mk-1st.awk,v 1.4 2011/02/22 09:40:01 tom Exp $
 ##############################################################################
-# Copyright (c) 2010 Free Software Foundation, Inc.                          #
+# Copyright (c) 2010,2011 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -51,7 +51,7 @@ BEGIN	{
 	}
 	{
 		printf "\n";
-		printf "%s.o :", $1.o
+		printf "%s.o :", $1;
 
 		if ( $2 == "none" ) {
 			pre_spec = "";

@@ -47,8 +47,8 @@
 <b>with</b> System;
 
 <b>with</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_49_28">Curses</A>.<A HREF="terminal_interface-curses-aux__ads.htm#ref_50_35">Aux</A>;
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C;                  <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C;
-<b>with</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings;          <b>use</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.Strings;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;                  <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C;
+<b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings;          <b>use</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings;
 <b>with</b> Ada.Characters.Handling;       <b>use</b> Ada.Characters.Handling;
 <b>with</b> Ada.Strings.Fixed;
 
@@ -1706,7 +1706,7 @@
       <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_1694_7">N</A> &gt; <A HREF="terminal_interface-curses__ads.htm#ref_1415_20">Str</A>'Length <b>then</b>
          <b>raise</b> Constraint_Error;
       <b>end</b> <b>if</b>;
-      <A HREF="terminal_interface-curses__adb.htm#ref_1695_7">Txt</A> (0) := <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.char'First;
+      <A HREF="terminal_interface-curses__adb.htm#ref_1695_7">Txt</A> (0) := <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.char'First;
       <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_1689_16">Winnstr</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1414_20">Win</A>, <A HREF="terminal_interface-curses__adb.htm#ref_1695_7">Txt</A>, <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__adb.htm#ref_1694_7">N</A>)) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;
@@ -1796,7 +1796,7 @@
       <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_1784_7">N</A> &gt; <A HREF="terminal_interface-curses__ads.htm#ref_1464_19">Str</A>'Length <b>then</b>
          <b>raise</b> Constraint_Error;
       <b>end</b> <b>if</b>;
-      <A HREF="terminal_interface-curses__adb.htm#ref_1785_7">Txt</A> (0) := <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.char'First;
+      <A HREF="terminal_interface-curses__adb.htm#ref_1785_7">Txt</A> (0) := <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.char'First;
       <b>if</b> <A HREF="terminal_interface-curses__adb.htm#ref_1779_16">Wgetnstr</A> (<A HREF="terminal_interface-curses__ads.htm#ref_1463_19">Win</A>, <A HREF="terminal_interface-curses__adb.htm#ref_1785_7">Txt</A>, <A HREF="terminal_interface-curses-aux__ads.htm#ref_55_12">C_Int</A> (<A HREF="terminal_interface-curses__adb.htm#ref_1784_7">N</A>)) = <A HREF="terminal_interface-curses-aux__ads.htm#ref_72_4">Curses_Err</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses__ads.htm#ref_383_4">Curses_Exception</A>;
       <b>end</b> <b>if</b>;

@@ -168,14 +168,14 @@
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_161_13">Mouse_Interval</A>);
 
 <b>private</b>
-   <b>type</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> <b>is</b> <b>new</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.unsigned_long;
+   <b>type</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A> <b>is</b> <b>new</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.unsigned_long;
 
    <b>type</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A> <b>is</b>
       <b>record</b>
-         <FONT COLOR=red><A NAME="ref_170_10">Id</A></FONT>      : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'First) ..
-                                 Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'Last);
-         <FONT COLOR=red><A NAME="ref_172_10">X</A></FONT>, <FONT COLOR=red><A NAME="ref_172_13">Y</A></FONT>, <FONT COLOR=red><A NAME="ref_172_16">Z</A></FONT> : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int'First) ..
-                                 Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int'Last);
+         <FONT COLOR=red><A NAME="ref_170_10">Id</A></FONT>      : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short'First) ..
+                                 Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.short'Last);
+         <FONT COLOR=red><A NAME="ref_172_10">X</A></FONT>, <FONT COLOR=red><A NAME="ref_172_13">Y</A></FONT>, <FONT COLOR=red><A NAME="ref_172_16">Z</A></FONT> : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int'First) ..
+                                 Integer (<A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.int'Last);
          <FONT COLOR=red><A NAME="ref_174_10">Bstate</A></FONT>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_64_9">Event_Mask</A>;
       <b>end</b> <b>record</b>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-mouse__ads.htm#ref_92_9">Mouse_Event</A>);

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1645 2011/02/21 01:42:08 tom Exp $
+-- $Id: NEWS,v 1.1651 2011/02/26 16:54:31 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,13 +45,24 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20110226 5.8 release for upload to ftp.gnu.org
+
+20110226
+	+ update release notes, for 5.8.
+	+ regenerated html manpages.
+	+ change open() in _nc_read_file_entry() to fopen() for consistency
+	  with write_file().
+	+ modify misc/run_tic.in to create parent directory, in case this is
+	  a new install of hashed database.
+	+ fix typo in Ada95/mk-1st.awk which causes error with original awk.
+
 20110220
 	+ configure script rpath fixes from xterm #269.
 	+ workaround for cygwin's non-functional features.h, to force ncurses'
 	  configure script to define _XOPEN_SOURCE_EXTENDED when building
 	  wide-character configuration.
 	+ build-fix in run_tic.sh for OS/2 EMX install
-	+ add cons25-debian entry (patch by Brian M Carlson, Debina #607662).
+	+ add cons25-debian entry (patch by Brian M Carlson, Debian #607662).
 
 20110212
 	+ regenerated html manpages.
@@ -3755,7 +3766,7 @@ it is not possible to add this information.
 
 20030208
 	+ add checking in tic for incomplete line-drawing character mapping.
-	+ update configure script to reflect fix for AC_PROG_GCC_TRADITIONAL,
+	+ updated configure script to reflect fix for AC_PROG_GCC_TRADITIONAL,
 	  which is broken in autoconf 2.5x for Mac OS X 10.2.3 (report by
 	  Gerben Wierda <Sherlock@rna.nl>).
 	+ make return value from _nc_printf_string() consistent.  Before,
@@ -4474,7 +4485,7 @@ it is not possible to add this information.
 	+ restore special case from 20010922 changes to omit SA_RESTART when
 	  setting up SIGWINCH handler, which is needed to allow wgetch() to be
 	  interrupted by that signal.
-	+ update configure macro CF_WITH_PATHLIST, to omit some double quotes
+	+ updated configure macro CF_WITH_PATHLIST, to omit some double quotes
 	  not needed with autoconf 2.52
 	+ revert configure script to autoconf 2.13 patched with
 		autoconf-2.13-19990117.patch.gz (or later)
