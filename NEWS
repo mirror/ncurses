@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1651 2011/02/26 16:54:31 tom Exp $
+-- $Id: NEWS,v 1.1654 2011/03/06 01:25:25 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110305
+	+ improve makefiles for Ada95 tree (patch by Nicolas Boulenguez).
+	+ fix an off-by-one error in _nc_slk_initialize() from 20100605 fixes
+	  for compiler warnings (report by Nicolas Boulenguez).
+	+ modify Ada95/gen/gen.c to declare unused bits in generated layouts,
+	  needed to compile when chtype is 64-bits using gnat 4.4.5
 
 20110226 5.8 release for upload to ftp.gnu.org
 

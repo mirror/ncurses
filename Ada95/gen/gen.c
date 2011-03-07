@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998,2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998,2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.54 2010/09/04 21:19:50 tom Exp $
+    $Id: gen.c,v 1.55 2011/03/05 20:24:22 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -124,7 +124,10 @@ gen_reps(
 	  int len,		/* size of the record in bytes          */
 	  int bias)
 {
-  int i, n, l, cnt = 0, low, high;
+  const char *unused_name = "Unused";
+  int long_bits = (8 * (int)sizeof(unsigned long));
+  int len_bits = (8 * len);
+  int i, j, n, l, cnt = 0, low, high;
   int width = strlen(RES_NAME) + 3;
   unsigned long a;
   unsigned long mask = 0;
@@ -144,7 +147,31 @@ gen_reps(
   printf("      record\n");
   for (i = 0; nap[i].name != (char *)0; i++)
     {
+      mask |= nap[i].attr;
       printf("         %-*s : Boolean;\n", width, nap[i].name);
+    }
+
+  /*
+   * Compute a mask for the unused bits in this target.
+   */
+  mask = ~mask;
+  /*
+   * Bits in the biased area are unused by the target.
+   */
+  for (j = 0; j < bias; ++j)
+    {
+      mask &= (unsigned long)(~(1L << j));
+    }
+  /*
+   * Bits past the target's size are really unused.
+   */
+  for (j = len_bits + bias; j < long_bits; ++j)
+    {
+      mask &= (unsigned long)(~(1L << j));
+    }
+  if (mask != 0)
+    {
+      printf("         %-*s : Boolean;\n", width, unused_name);
     }
   printf("      end record;\n");
   printf("   pragma Convention (C, %s);\n\n", name);
@@ -155,16 +182,22 @@ gen_reps(
   for (i = 0; nap[i].name != (char *)0; i++)
     {
       a = nap[i].attr;
-      mask |= a;
       l = find_pos((char *)&a, sizeof(a), &low, &high);
       if (l >= 0)
 	printf("         %-*s at 0 range %2d .. %2d;\n", width, nap[i].name,
 	       low - bias, high - bias);
     }
+  if (mask != 0)
+    {
+      l = find_pos((char *)&mask, sizeof(mask), &low, &high);
+      if (l >= 0)
+	printf("         %-*s at 0 range %2d .. %2d;\n", width, unused_name,
+	       low - bias, high - bias);
+    }
   i = 1;
   n = cnt;
   printf("      end record;\n");
-  printf("   for %s'Size use %d;\n", name, 8 * len);
+  printf("   for %s'Size use %d;\n", name, len_bits);
   printf("   --  Please note: this rep. clause is generated and may be\n");
   printf("   --               different on your system.");
 }
