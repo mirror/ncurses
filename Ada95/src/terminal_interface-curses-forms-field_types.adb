@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.21 $
---  $Date: 2009/12/26 17:38:58 $
+--  $Revision: 1.22 $
+--  $Date: 2011/03/08 01:16:49 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
@@ -177,7 +177,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    end Wrap_Builtin;
 
    function Field_Check_Router (Fld : Field;
-                                Usr : System.Address) return C_Int
+                                Usr : System.Address) return Curses_Bool
    is
       Arg  : constant Argument_Access := To_Argument_Access (Usr);
    begin
@@ -191,7 +191,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    end Field_Check_Router;
 
    function Char_Check_Router (Ch  : C_Int;
-                               Usr : System.Address) return C_Int
+                               Usr : System.Address) return Curses_Bool
    is
       Arg  : constant Argument_Access := To_Argument_Access (Usr);
    begin
@@ -205,7 +205,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    end Char_Check_Router;
 
    function Next_Router (Fld : Field;
-                         Usr : System.Address) return C_Int
+                         Usr : System.Address) return Curses_Bool
    is
       Arg  : constant Argument_Access := To_Argument_Access (Usr);
    begin
@@ -219,7 +219,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    end Next_Router;
 
    function Prev_Router (Fld : Field;
-                         Usr : System.Address) return C_Int
+                         Usr : System.Address) return Curses_Bool
    is
       Arg  : constant Argument_Access := To_Argument_Access (Usr);
    begin

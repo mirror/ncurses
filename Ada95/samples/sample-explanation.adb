@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.22 $
---  $Date: 2011/03/06 01:22:23 $
+--  $Revision: 1.23 $
+--  $Date: 2011/03/08 00:44:36 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and
@@ -405,4 +405,10 @@ package body Sample.Explanation is
 
 begin
    Open (F, In_File, File_Name);
+exception
+   when Name_Error =>
+      Put_Line (Standard_Error,
+                "The file explain.txt was not found in the current directory."
+                );
+      raise;
 end Sample.Explanation;

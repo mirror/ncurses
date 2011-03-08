@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1654 2011/03/06 01:25:25 tom Exp $
+-- $Id: NEWS,v 1.1656 2011/03/08 01:14:45 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110307
+	+ revert changes to limit-checks from 20110122 (Debian #616711).
+	> minor type-cleanup of Ada95 binding (Nicolas Boulenguez):
+	+ corrected a minor sign error in a field of Low_Level_Field_Type, to
+	  conform to form.h.
+	+ replaced C_Int by Curses_Bool as return type for some callbacks, see
+	  fieldtype(3FORM).
+	+ modify samples/sample-explain.adb to provide explicit message when
+	  explain.txt is not found.
 
 20110305
 	+ improve makefiles for Ada95 tree (patch by Nicolas Boulenguez).
