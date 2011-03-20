@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.8 $
+--  $Revision: 1.9 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -91,15 +91,11 @@ package body Terminal_Interface.Curses.Forms.Field_Types.Enumeration is
    procedure Set_Field_Type (Fld : Field;
                              Typ : Enumeration_Field)
    is
-      C_Enum_Type : C_Field_Type;
-      pragma Import (C, C_Enum_Type, "TYPE_ENUM");
-
       function Set_Fld_Type (F    : Field := Fld;
-                             Cft  : C_Field_Type := C_Enum_Type;
                              Arg1 : chars_ptr_array;
                              Arg2 : C_Int;
                              Arg3 : C_Int) return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
+      pragma Import (C, Set_Fld_Type, "set_field_type_enum");
 
       Res : Eti_Error;
    begin

@@ -118,6 +118,8 @@
 ./Ada95/samples/tour.adb
 ./Ada95/samples/tour.ads
 ./Ada95/src/Makefile.in
+./Ada95/src/c_varargs_to_ada.c
+./Ada95/src/c_varargs_to_ada.h
 ./Ada95/src/library.gpr
 ./Ada95/src/modules
 ./Ada95/src/terminal_interface-curses-aux.adb

@@ -54,7 +54,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types.User is
                              Cft  : C_Field_Type := C_Generic_Type;
                              Arg1 : Argument_Access)
                              return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
+      pragma Import (C, Set_Fld_Type, "set_field_type_user");
 
       Res : Eti_Error;
 

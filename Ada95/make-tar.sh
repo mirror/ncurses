@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.6 2010/11/06 19:59:07 tom Exp $
+# $Id: make-tar.sh,v 1.7 2011/03/19 19:27:36 tom Exp $
 ##############################################################################
-# Copyright (c) 2010 Free Software Foundation, Inc.                          #
+# Copyright (c) 2010,2011 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -31,6 +31,9 @@
 # documentation.  The reason for doing that is to simplify distributing the
 # ada binding as a separate package.
 
+CDPATH=:
+export CDPATH
+
 TARGET=`pwd`
 
 : ${ROOTNAME:=ncurses-Ada95}
@@ -40,6 +43,7 @@ TARGET=`pwd`
 # This can be run from either the Ada95 subdirectory, or from the top-level
 # source directory.  We will put the tar file in the original directory.
 test -d ./Ada95 && cd ./Ada95
+SOURCE=`cd ..;pwd`
 
 BUILD=$TMPDIR/make-tar$$
 trap "cd /; rm -rf $BUILD; exit 0" 0 1 2 5 15
@@ -70,6 +74,11 @@ cd ../doc/html || exit
 
 cp -p -r Ada* $BUILD/$ROOTNAME/doc/
 cp -p -r ada $BUILD/$ROOTNAME/doc/
+
+cp -p $SOURCE/NEWS $BUILD/$ROOTNAME
+
+touch $BUILD/$ROOTNAME/MANIFEST 
+( cd $BUILD/$ROOTNAME && find . -type f -print |$SOURCE/misc/csort >MANIFEST )
 
 cd $BUILD || exit 
 

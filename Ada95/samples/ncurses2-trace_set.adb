@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2006,2008 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2008,2011 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.3 $
---  $Date: 2008/07/26 18:46:18 $
+--  $Revision: 1.4 $
+--  $Date: 2011/03/08 10:54:26 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -50,14 +50,14 @@ with Ada.Strings.Bounded;
 
 procedure ncurses2.trace_set is
 
-   function menu_virtualize (c : Key_Code) return Menu_Request_Code;
+   function menu_virtualize (c : Key_Code) return Key_Code;
    function subset (super, sub : Trace_Attribute_Set) return Boolean;
    function trace_or (a, b : Trace_Attribute_Set) return Trace_Attribute_Set;
    function trace_num (tlevel : Trace_Attribute_Set) return String;
    function tracetrace (tlevel : Trace_Attribute_Set) return String;
    function run_trace_menu (m : Menu; count : Integer) return Boolean;
 
-   function menu_virtualize (c : Key_Code) return Menu_Request_Code is
+   function menu_virtualize (c : Key_Code) return Key_Code is
    begin
       case c is
          when Character'Pos (newl) | Key_Exit =>

@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.4 2010/11/06 18:31:46 tom Exp $
+# $Id: make-tar.sh,v 1.5 2011/03/19 19:29:44 tom Exp $
 ##############################################################################
-# Copyright (c) 2010 Free Software Foundation, Inc.                          #
+# Copyright (c) 2010,2011 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -31,6 +31,9 @@
 # scripts.  The reason for doing that is to simplify distributing the test
 # programs as a separate package.
 
+CDPATH=:
+export CDPATH
+
 TARGET=`pwd`
 
 : ${ROOTNAME:=ncurses-test}
@@ -40,6 +43,7 @@ TARGET=`pwd`
 # This can be run from either the test subdirectory, or from the top-level
 # source directory.  We will put the tar file in the original directory.
 test -d ./test && cd ./test
+SOURCE=`cd ..;pwd`
 
 BUILD=$TMPDIR/make-tar$$
 trap "cd /; rm -rf $BUILD; exit 0" 0 1 2 5 15
@@ -63,6 +67,11 @@ do
 		test -f $i/$j && cp -p $i/$j $BUILD/$ROOTNAME/
 	done
 done
+
+cp -p $SOURCE/NEWS $BUILD/$ROOTNAME
+
+touch $BUILD/$ROOTNAME/MANIFEST 
+( cd $BUILD/$ROOTNAME && find . -type f -print |$SOURCE/misc/csort >MANIFEST )
 
 cd $BUILD || exit 
 

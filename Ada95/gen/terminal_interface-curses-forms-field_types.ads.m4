@@ -159,7 +159,7 @@ private
    --  Any other value will raise a Form_Exception.
 
    function Make_Arg (Args : System.Address) return System.Address;
-   pragma Convention (C, Make_Arg);
+   pragma Import (C, Make_Arg, "void_star_make_arg");
    --  This is the Makearg_Function for the internal low-level types
    --  introduced by this binding.
 

@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2008,2009 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2009,2011 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.9 $
---  $Date: 2009/12/26 17:38:58 $
+--  $Revision: 1.10 $
+--  $Date: 2011/03/19 12:16:44 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Windows and scrolling tester.
@@ -345,7 +345,7 @@ procedure ncurses2.acs_and_scroll is
                return;
             when KEY_UP =>
                i := i + si - 1;
-               --  same as  i := i - 1 because of Modulus arithetic,
+               --  same as  i := i - 1 because of Modulus arithmetic,
                --  on Line_Position, which is a Natural
                --  the C version uses this form too, interestingly.
             when KEY_DOWN =>

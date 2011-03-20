@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.55 2011/03/05 20:24:22 tom Exp $
+    $Id: gen.c,v 1.57 2011/03/19 19:09:38 Nicolas.Boulenguez Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -365,6 +365,7 @@ gen_trace(const char *name)
     {"Internal_Calls", TRACE_ICALLS},
     {"Character_Calls", TRACE_CCALLS},
     {"Termcap_TermInfo", TRACE_DATABASE},
+    {"Attributes_And_Colors", TRACE_ATTRS},
     {(char *)0, 0}
   };
   gen_reps(nap, name, sizeof(int), 0);
@@ -1311,12 +1312,6 @@ gen_offsets(void)
   printf("   Sizeof%-*s : constant Natural := %2ld; --  %s\n",
 	 12, "_bool", (long)sizeof(bool), "bool");
 
-  /* In ncurses _maxy and _maxx needs an offset for the "public"
-   * value
-   */
-  printf("   Offset%-*s : constant Natural := %2d; --  %s\n",
-	 12, "_XY", 1, "int");
-  printf("\n");
   printf("   type Curses_Bool is mod 2 ** Interfaces.C.%s'Size;\n", s_bool);
 }
 

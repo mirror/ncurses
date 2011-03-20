@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1656 2011/03/08 01:14:45 tom Exp $
+-- $Id: NEWS,v 1.1665 2011/03/19 23:25:18 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,31 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110319
+	+ regen Ada html documentation.
+	+ change order of -I options from ncurses*-config script when the
+	  --disable-overwrite option was used, so that the subdirectory include
+	  is listed first.
+	+ modify the make-tar.sh scripts to add a MANIFEST and NEWS file.
+	+ modify configure script to provide value for HTML_DIR in
+	  Ada95/gen/Makefile.in, which depends on whether the Ada95 binding is
+	  distributed separately (report by Nicolas Boulenguez).
+	+ modify configure script to add -g and/or -O3 to ADAFLAGS if the
+	  CFLAGS for the build has these options.
+	+ amend change from 20070324, to not add 1 to the result of getmaxx
+	  and getmaxy in the Ada binding (report by Nicolas Boulenguez for
+	  thread in comp.lang.ada).
+	+ build-fix Ada95/samples for gnat 4.5
+	+ spelling fixes for Ada95/samples/explain.txt
+	> fixes for Ada95 binding (Nicolas Boulenguez):
+	+ add item in Trace_Attribute_Set corresponding to TRACE_ATTRS.
+	+ add workaround for binding to set_field_type(), which uses varargs.
+	  The original binding from 990220 relied on the prevalent
+	  implementation of varargs which did not support or need va_copy().
+	+ add dependency on gen/Makefile.in needed for *-panels.ads
+	+ add Library_Options to library.gpr
+	+ add Languages to library.gpr, for gprbuild
 
 20110307
 	+ revert changes to limit-checks from 20110122 (Debian #616711).

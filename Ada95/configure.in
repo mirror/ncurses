@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010 Free Software Foundation, Inc.                        *
+dnl Copyright (c) 2010,2011 Free Software Foundation, Inc.                   *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.21 2010/11/06 22:11:21 tom Exp $
+dnl $Id: configure.in,v 1.23 2011/03/19 17:47:55 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.21 $)
+AC_REVISION($Revision: 1.23 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -386,7 +386,7 @@ AC_ARG_ENABLE(warnings,
 AC_MSG_RESULT($with_warnings)
 
 if test "x$with_warnings" = "xyes"; then
- 	ADAFLAGS="$ADAFLAGS -gnatg"
+ 	CF_ADD_ADAFLAGS(-gnatg)
 	CF_GCC_WARNINGS(Wdeclaration-after-statement Wextra Wno-unknown-pragmas Wswitch-enum)
 fi
 CF_GCC_ATTRIBUTES
@@ -405,7 +405,7 @@ then
 		AC_DEFINE(NDEBUG)
 		CPPFLAGS="$CPPFLAGS -DNDEBUG"
 	else
-		ADAFLAGS="$ADAFLAGS -gnata"
+		CF_ADD_ADAFLAGS(-gnata)
 	fi
 fi
 
@@ -491,7 +491,18 @@ dnl At the moment we support no other Ada95 compiler.
 if test "$cf_with_ada" != "no" ; then
 	CF_PROG_GNAT
 	if test	"$cf_cv_prog_gnat_correct" = yes; then
-		CF_ADD_ADAFLAGS(-O3 -gnatpn)
+
+		# make ADAFLAGS consistent with CFLAGS
+		case "$CFLAGS" in
+		*-g*)
+			CF_ADD_ADAFLAGS(-g)
+			;;
+		esac
+		case "$CFLAGS" in
+		*-O*)
+			CF_ADD_ADAFLAGS(-O3)
+			;;
+		esac
 
 		CF_GNAT_PRAGMA_UNREF
 
@@ -590,6 +601,10 @@ AC_SUBST(NCURSES_TREE)
 
 EXTERNAL_TREE=
 AC_SUBST(EXTERNAL_TREE)
+
+# match layout used by make-tar.sh
+ADAHTML_DIR=../doc/ada
+AC_SUBST(ADAHTML_DIR)
 
 AC_OUTPUT( \
 	$SUB_MAKEFILES \

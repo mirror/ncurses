@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.53 2010/11/27 22:14:16 tom Exp $
+#  $Id: Makefile.in,v 1.55 2011/03/19 19:02:35 tom Exp $
 #
 .SUFFIXES:
 
@@ -61,7 +61,7 @@ LN_S		= @LN_S@
 CC		= @CC@
 CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= @ACPPFLAGS@ \
+CPPFLAGS	= @ACPPFLAGS@ @CPPFLAGS@ \
 		  -DHAVE_CONFIG_H -I$(srcdir)
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
@@ -217,11 +217,19 @@ $(ABASE)-trace.adb : $(srcdir)/$(ABASE)-trace.adb_p
 	$(ADAPREP) -DADA_TRACE=@ADA_TRACE@ -DPRAGMA_UNREF=@PRAGMA_UNREF@ $(srcdir)/$(ABASE)-trace.adb_p $@
 
 ###############################################################################
+C_OBJS	= c_varargs_to_ada.o
+
+c_varargs_to_ada.o :	$(srcdir)/c_varargs_to_ada.c
+	$(CC) $(CFLAGS_DEFAULT) -c -o $@ $(srcdir)/c_varargs_to_ada.c
+
+###############################################################################
+
+@USE_OLD_MAKERULES@MIXED_OBJS = $(C_OBJS) $(LIBOBJS) @cf_generic_objects@
 
 @USE_OLD_MAKERULES@$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) :: \
 @USE_OLD_MAKERULES@		$(BUILD_DIR_LIB) \
-@USE_OLD_MAKERULES@		$(LIBOBJS) @cf_generic_objects@
-@USE_OLD_MAKERULES@	$(AR) $(ARFLAGS) $@ $(LIBOBJS) @cf_generic_objects@
+@USE_OLD_MAKERULES@		$(MIXED_OBJS)
+@USE_OLD_MAKERULES@	$(AR) $(ARFLAGS) $@ $(MIXED_OBJS)
 
 $(BUILD_DIR)/static-ali : ; mkdir -p $@
 $(BUILD_DIR)/static-obj : ; mkdir -p $@
@@ -233,8 +241,10 @@ STATIC_DIRS = \
 
 @USE_GNAT_PROJECTS@$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) :: \
 @USE_GNAT_PROJECTS@		$(ABASE)-trace.adb \
+@USE_GNAT_PROJECTS@		$(C_OBJS) \
 @USE_GNAT_PROJECTS@		$(STATIC_DIRS)
 @USE_GNAT_PROJECTS@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
+@USE_GNAT_PROJECTS@	$(AR) $(ARFLAGS) $@ $(C_OBJS)
 @USE_GNAT_PROJECTS@
 @USE_GNAT_PROJECTS@install \
 @USE_GNAT_PROJECTS@install.libs :: \
@@ -262,6 +272,7 @@ SHARED_DIRS = \
 @MAKE_ADA_SHAREDLIB@all \
 @MAKE_ADA_SHAREDLIB@$(BUILD_DIR_LIB)/$(SHARED_LIBNAME) :: $(ABASE)-trace.adb $(SHARED_DIRS)
 @MAKE_ADA_SHAREDLIB@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
+@MAKE_ADA_SHAREDLIB@	$(AR) $(ARFLAGS) $@ $(MIXED_OBJS)
 
 install \
 install.libs :: $(ADA_INCLUDE)

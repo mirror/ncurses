@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.23 $
---  $Date: 2011/03/08 00:44:36 $
+--  $Revision: 1.24 $
+--  $Date: 2011/03/19 12:18:35 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and
@@ -126,7 +126,7 @@ package body Sample.Explanation is
          Add (W, Key);
          Add (W, " not found.");
          Add (W, Character'Val (10));
-         Add (W, "Press the Function key labelled 'Quit' key to continue.");
+         Add (W, "Press the Function key labeled 'Quit' key to continue.");
       end Unknown_Key;
 
       procedure Redo

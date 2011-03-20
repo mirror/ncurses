@@ -92,24 +92,6 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
       end if;
    end Get_Type;
 
-   function Make_Arg (Args : System.Address) return System.Address
-   is
-      --  Actually args is a double indirected pointer to the arguments
-      --  of a C variable argument list. In theory it is now quite
-      --  complicated to write portable routine that reads the arguments,
-      --  because one has to know the growth direction of the stack and
-      --  the sizes of the individual arguments.
-      --  Fortunately we are only interested in the first argument (#0),
-      --  we know its size and for the first arg we don't care about
-      --  into which stack direction we have to proceed. We simply
-      --  resolve the double indirection and thats it.
-      type V is access all System.Address;
-      function To_Access is new Ada.Unchecked_Conversion (System.Address,
-                                                          V);
-   begin
-      return To_Access (To_Access (Args).all).all;
-   end Make_Arg;
-
    function Copy_Arg (Usr : System.Address) return System.Address
    is
    begin
@@ -151,7 +133,7 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
       function Set_Fld_Type (F    : Field := Fld;
                              Cf   : C_Field_Type := Cft;
                              Arg1 : Argument_Access) return C_Int;
-      pragma Import (C, Set_Fld_Type, "set_field_type");
+      pragma Import (C, Set_Fld_Type, "set_field_type_user");
 
    begin
       pragma Assert (Low_Level /= Null_Field_Type);

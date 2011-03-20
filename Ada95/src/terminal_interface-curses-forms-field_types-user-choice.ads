@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.13 $
---  $Date: 2011/03/08 01:16:49 $
+--  $Revision: 1.14 $
+--  $Date: 2011/03/19 12:27:47 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C;
@@ -81,14 +81,14 @@ private
                           Usr : System.Address) return Curses_Bool;
    pragma Convention (C, Generic_Next);
    --  This is the generic next Choice_Function for the low-level fieldtype
-   --  representing all the User_Defined_Field_Type derivates. It routes
+   --  representing all the User_Defined_Field_Type derivatives. It routes
    --  the call to the Next implementation for the type.
 
    function Generic_Prev (Fld : Field;
                           Usr : System.Address) return Curses_Bool;
    pragma Convention (C, Generic_Prev);
    --  This is the generic prev Choice_Function for the low-level fieldtype
-   --  representing all the User_Defined_Field_Type derivates. It routes
+   --  representing all the User_Defined_Field_Type derivatives. It routes
    --  the call to the Previous implementation for the type.
 
 end Terminal_Interface.Curses.Forms.Field_Types.User.Choice;
