@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.57 2011/03/19 19:09:38 Nicolas.Boulenguez Exp $
+    $Id: gen.c,v 1.58 2011/03/25 23:55:30 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -274,7 +274,10 @@ static void
 gen_attr_set(const char *name)
 {
   /* All of the A_xxx symbols are defined in ncurses, but not all are nonzero
-   * if "configure --enable-widec" is specified.
+   * if "configure --enable-widec" is not specified.  Originally (in
+   * 1999-2000), the ifdef's also were needed since the proposed bit-layout
+   * for wide characters allocated 16-bits for A_CHARTEXT, leaving too few
+   * bits for a few of the A_xxx symbols.
    */
   static const name_attribute_pair nap[] =
   {

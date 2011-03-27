@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.7 $
---  $Date: 2011/03/08 10:54:17 $
+--  $Revision: 1.8 $
+--  $Date: 2011/03/23 00:39:28 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -121,9 +121,9 @@ begin
    Refresh;
 
    for i in animals'Range loop
-      items_a (i) := New_Item (animals (i).all);
+      items_a.all (i) := New_Item (animals (i).all);
    end loop;
-   items_a (animals'Last + 1) := Null_Item;
+   items_a.all (animals'Last + 1) := Null_Item;
 
    m := New_Menu (items_a);
 

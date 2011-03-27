@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.517 2011/03/19 17:49:19 tom Exp $
+dnl $Id: configure.in,v 1.519 2011/03/24 00:36:08 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.517 $)
+AC_REVISION($Revision: 1.519 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1330,6 +1330,7 @@ fcntl.h \
 getopt.h \
 limits.h \
 locale.h \
+math.h \
 poll.h \
 sys/bsdtypes.h \
 sys/ioctl.h \
@@ -1607,7 +1608,9 @@ dnl At the moment we support no other Ada95 compiler.
 				;;
 			esac
 
+			CF_GNAT_GENERICS
 			CF_GNAT_PRAGMA_UNREF
+			CF_GNAT_PROJECTS
 
 			CF_WITH_ADA_COMPILER
 

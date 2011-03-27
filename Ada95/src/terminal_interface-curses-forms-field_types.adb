@@ -35,13 +35,14 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.22 $
---  $Date: 2011/03/08 01:16:49 $
+--  $Revision: 1.25 $
+--  $Date: 2011/03/22 23:22:27 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
 with Ada.Unchecked_Deallocation;
-with Ada.Unchecked_Conversion;
+with System.Address_To_Access_Conversions;
+
 --  |
 --  |=====================================================================
 --  | man page form_fieldtype.3x
@@ -51,10 +52,8 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
 
    use type System.Address;
 
-   pragma Warnings (Off);
-   function To_Argument_Access is new Ada.Unchecked_Conversion
-     (System.Address, Argument_Access);
-   pragma Warnings (On);
+   package Argument_Conversions is
+      new System.Address_To_Access_Conversions (Argument);
 
    function Get_Fieldtype (F : Field) return C_Field_Type;
    pragma Import (C, Get_Fieldtype, "field_type");
@@ -80,11 +79,12 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
            Low_Level = M_Generic_Type or else
            Low_Level = M_Choice_Router or else
            Low_Level = M_Generic_Choice then
-            Arg := To_Argument_Access (Get_Arg (Fld));
+            Arg := Argument_Access
+         (Argument_Conversions.To_Pointer (Get_Arg (Fld)));
             if Arg = null then
                raise Form_Exception;
             else
-               return Arg.Typ;
+               return Arg.all.Typ;
             end if;
          else
             raise Form_Exception;
@@ -105,18 +105,19 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
       procedure Freeargs is new Ada.Unchecked_Deallocation
         (Argument, Argument_Access);
 
-      To_Be_Free : Argument_Access := To_Argument_Access (Usr);
+      To_Be_Free : Argument_Access
+   := Argument_Access (Argument_Conversions.To_Pointer (Usr));
       Low_Level  : C_Field_Type;
    begin
       if To_Be_Free /= null then
-         if To_Be_Free.Usr /= System.Null_Address then
-            Low_Level := To_Be_Free.Cft;
-            if Low_Level.Freearg /= null then
-               Low_Level.Freearg (To_Be_Free.Usr);
+         if To_Be_Free.all.Usr /= System.Null_Address then
+            Low_Level := To_Be_Free.all.Cft;
+            if Low_Level.all.Freearg /= null then
+               Low_Level.all.Freearg (To_Be_Free.all.Usr);
             end if;
          end if;
-         if To_Be_Free.Typ /= null then
-            Free_Type (To_Be_Free.Typ);
+         if To_Be_Free.all.Typ /= null then
+            Free_Type (To_Be_Free.all.Typ);
          end if;
          Freeargs (To_Be_Free);
       end if;
@@ -144,10 +145,10 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
                               Typ => new Field_Type'Class'(Typ),
                               Cft => Get_Fieldtype (Fld));
          if Usr_Arg /= System.Null_Address then
-            if Low_Level.Copyarg /= null then
-               Arg.Usr := Low_Level.Copyarg (Usr_Arg);
+            if Low_Level.all.Copyarg /= null then
+               Arg.all.Usr := Low_Level.all.Copyarg (Usr_Arg);
             else
-               Arg.Usr := Usr_Arg;
+               Arg.all.Usr := Usr_Arg;
             end if;
          end if;
 
@@ -161,12 +162,13 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    function Field_Check_Router (Fld : Field;
                                 Usr : System.Address) return Curses_Bool
    is
-      Arg  : constant Argument_Access := To_Argument_Access (Usr);
+      Arg  : constant Argument_Access
+   := Argument_Access (Argument_Conversions.To_Pointer (Usr));
    begin
-      pragma Assert (Arg /= null and then Arg.Cft /= Null_Field_Type
-                     and then Arg.Typ /= null);
-      if Arg.Cft.Fcheck /= null then
-         return Arg.Cft.Fcheck (Fld, Arg.Usr);
+      pragma Assert (Arg /= null and then Arg.all.Cft /= Null_Field_Type
+                     and then Arg.all.Typ /= null);
+      if Arg.all.Cft.all.Fcheck /= null then
+         return Arg.all.Cft.all.Fcheck (Fld, Arg.all.Usr);
       else
          return 1;
       end if;
@@ -175,12 +177,13 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    function Char_Check_Router (Ch  : C_Int;
                                Usr : System.Address) return Curses_Bool
    is
-      Arg  : constant Argument_Access := To_Argument_Access (Usr);
+      Arg  : constant Argument_Access
+   := Argument_Access (Argument_Conversions.To_Pointer (Usr));
    begin
-      pragma Assert (Arg /= null and then Arg.Cft /= Null_Field_Type
-                     and then Arg.Typ /= null);
-      if Arg.Cft.Ccheck /= null then
-         return Arg.Cft.Ccheck (Ch, Arg.Usr);
+      pragma Assert (Arg /= null and then Arg.all.Cft /= Null_Field_Type
+                     and then Arg.all.Typ /= null);
+      if Arg.all.Cft.all.Ccheck /= null then
+         return Arg.all.Cft.all.Ccheck (Ch, Arg.all.Usr);
       else
          return 1;
       end if;
@@ -189,12 +192,13 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    function Next_Router (Fld : Field;
                          Usr : System.Address) return Curses_Bool
    is
-      Arg  : constant Argument_Access := To_Argument_Access (Usr);
+      Arg  : constant Argument_Access
+   := Argument_Access (Argument_Conversions.To_Pointer (Usr));
    begin
-      pragma Assert (Arg /= null and then Arg.Cft /= Null_Field_Type
-                     and then Arg.Typ /= null);
-      if Arg.Cft.Next /= null then
-         return Arg.Cft.Next (Fld, Arg.Usr);
+      pragma Assert (Arg /= null and then Arg.all.Cft /= Null_Field_Type
+                     and then Arg.all.Typ /= null);
+      if Arg.all.Cft.all.Next /= null then
+         return Arg.all.Cft.all.Next (Fld, Arg.all.Usr);
       else
          return 1;
       end if;
@@ -203,12 +207,13 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
    function Prev_Router (Fld : Field;
                          Usr : System.Address) return Curses_Bool
    is
-      Arg  : constant Argument_Access := To_Argument_Access (Usr);
+      Arg  : constant Argument_Access :=
+               Argument_Access (Argument_Conversions.To_Pointer (Usr));
    begin
-      pragma Assert (Arg /= null and then Arg.Cft /= Null_Field_Type
-                     and then Arg.Typ /= null);
-      if Arg.Cft.Prev /= null then
-         return Arg.Cft.Prev (Fld, Arg.Usr);
+      pragma Assert (Arg /= null and then Arg.all.Cft /= Null_Field_Type
+                     and then Arg.all.Typ /= null);
+      if Arg.all.Cft.all.Prev /= null then
+         return Arg.all.Cft.all.Prev (Fld, Arg.all.Usr);
       else
          return 1;
       end if;

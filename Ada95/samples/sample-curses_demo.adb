@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.16 $
---  $Date: 2011/03/19 12:06:32 $
+--  $Revision: 1.17 $
+--  $Date: 2011/03/23 00:29:04 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses; use Terminal_Interface.Curses;
@@ -122,9 +122,9 @@ package body Sample.Curses_Demo is
          declare
             O : Item_Option_Set;
          begin
-            Get_Options (Itm (2), O);
+            Get_Options (Itm.all (2), O);
             O.Selectable := False;
-            Set_Options (Itm (2), O);
+            Set_Options (Itm.all (2), O);
          end;
       end if;
 

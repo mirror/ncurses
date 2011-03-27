@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.23 2011/03/19 17:47:55 tom Exp $
+dnl $Id: configure.in,v 1.26 2011/03/26 23:54:05 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.23 $)
+AC_REVISION($Revision: 1.26 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -324,6 +324,9 @@ if test "$with_pthread" = "yes" ; then
 fi
 AC_SUBST(PTHREAD)
 
+# OpenSUSE is installing ncurses6, using reentrant option.
+AC_CHECK_FUNC(_nc_TABSIZE,[assume_reentrant=yes], [assume_reentrant=no])
+
 # Reentrant code has to be opaque; there's little advantage to making ncurses
 # opaque outside of that, so there is no --enable-opaque option.  We can use
 # this option without --with-pthreads, but this will be always set for
@@ -332,13 +335,13 @@ AC_MSG_CHECKING(if you want experimental reentrant code)
 AC_ARG_ENABLE(reentrant,
 	[  --enable-reentrant      compile with experimental reentrant code],
 	[with_reentrant=$enableval],
-	[with_reentrant=no])
+	[with_reentrant=$assume_reentrant])
 AC_MSG_RESULT($with_reentrant)
 if test "$with_reentrant" = yes ; then
 	cf_cv_enable_reentrant=1
 	if test $cf_cv_weak_symbols = yes ; then
 		CF_REMOVE_LIB(LIBS,$LIBS,pthread)
-	else
+	elif test "$assume_reentrant" = no ; then
 		LIB_SUFFIX="t${LIB_SUFFIX}"
 	fi
 	AC_DEFINE(USE_REENTRANT)
@@ -504,7 +507,9 @@ if test "$cf_with_ada" != "no" ; then
 			;;
 		esac
 
+		CF_GNAT_GENERICS
 		CF_GNAT_PRAGMA_UNREF
+		CF_GNAT_PROJECTS
 
 		CF_WITH_ADA_COMPILER
 
@@ -514,7 +519,11 @@ if test "$cf_with_ada" != "no" ; then
 		CF_WITH_ADA_INCLUDE
 		CF_WITH_ADA_OBJECTS
 		CF_WITH_ADA_SHAREDLIB
+	else
+		AC_MSG_ERROR(No usable Ada compiler found)
 	fi
+else
+	AC_MSG_ERROR(The Ada compiler is needed for this package)
 fi
 
 ################################################################################
@@ -586,7 +595,7 @@ dnl for separate build, this is good enough for "sh $(top_srcdir)/misc/shlib"
 NCURSES_SHLIB2="sh -c"
 AC_SUBST(NCURSES_SHLIB2)
 
-ADA_SUBDIRS="include gen src"
+ADA_SUBDIRS="include gen src doc"
 if test "x$cf_with_tests" != "xno" ; then
 	ADA_SUBDIRS="$ADA_SUBDIRS samples"
 fi
@@ -608,6 +617,7 @@ AC_SUBST(ADAHTML_DIR)
 
 AC_OUTPUT( \
 	$SUB_MAKEFILES \
+	doc/adacurses${DFT_ARG_SUFFIX}-config.1:doc/MKada_config.in \
 	Makefile,[
 if test -z "$USE_OLD_MAKERULES" ; then
 	$AWK -f $srcdir/mk-1st.awk <$srcdir/src/modules >>src/Makefile

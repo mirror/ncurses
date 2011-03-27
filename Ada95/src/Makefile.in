@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.55 2011/03/19 19:02:35 tom Exp $
+#  $Id: Makefile.in,v 1.58 2011/03/27 00:14:06 tom Exp $
 #
 .SUFFIXES:
 
@@ -44,6 +44,7 @@ top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
+includedir	= @includedir@
 libdir		= ${exec_prefix}/lib
 
 LIBDIR		= $(DESTDIR)$(libdir)
@@ -224,7 +225,7 @@ c_varargs_to_ada.o :	$(srcdir)/c_varargs_to_ada.c
 
 ###############################################################################
 
-@USE_OLD_MAKERULES@MIXED_OBJS = $(C_OBJS) $(LIBOBJS) @cf_generic_objects@
+MIXED_OBJS = $(C_OBJS) @USE_OLD_MAKERULES@$(LIBOBJS) @cf_generic_objects@
 
 @USE_OLD_MAKERULES@$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) :: \
 @USE_OLD_MAKERULES@		$(BUILD_DIR_LIB) \
@@ -246,20 +247,20 @@ STATIC_DIRS = \
 @USE_GNAT_PROJECTS@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
 @USE_GNAT_PROJECTS@	$(AR) $(ARFLAGS) $@ $(C_OBJS)
 @USE_GNAT_PROJECTS@
-@USE_GNAT_PROJECTS@install \
-@USE_GNAT_PROJECTS@install.libs :: \
-@USE_GNAT_PROJECTS@		$(ADA_OBJECTS)
-@USE_GNAT_PROJECTS@	$(INSTALL_LIB) \
-@USE_GNAT_PROJECTS@		$(BUILD_DIR)/static-ali/*.ali \
-@USE_GNAT_PROJECTS@		$(ADA_OBJECTS)
+@USE_GNAT_LIBRARIES@install \
+@USE_GNAT_LIBRARIES@install.libs :: \
+@USE_GNAT_LIBRARIES@		$(ADA_OBJECTS)
+@USE_GNAT_LIBRARIES@	$(INSTALL_LIB) \
+@USE_GNAT_LIBRARIES@		$(BUILD_DIR)/static-ali/*.ali \
+@USE_GNAT_LIBRARIES@		$(ADA_OBJECTS)
 
 uninstall \
 uninstall.libs ::
 	@rm -f $(ADA_OBJECTS)/$(STATIC_LIBNAME)
 
-@USE_GNAT_PROJECTS@uninstall \
-@USE_GNAT_PROJECTS@uninstall.libs ::
-@USE_GNAT_PROJECTS@	@$(SHELL) -c 'for name in $(BUILD_DIR)/static-ali/*.ali ; do rm -f $(ADA_OBJECTS)/`basename $$name`; done'
+@USE_GNAT_LIBRARIES@uninstall \
+@USE_GNAT_LIBRARIES@uninstall.libs ::
+@USE_GNAT_LIBRARIES@	@$(SHELL) -c 'for name in $(BUILD_DIR)/static-ali/*.ali ; do rm -f $(ADA_OBJECTS)/`basename $$name`; done'
 
 $(BUILD_DIR)/dynamic-ali : ; mkdir -p $@
 $(BUILD_DIR)/dynamic-obj : ; mkdir -p $@
@@ -269,10 +270,10 @@ SHARED_DIRS = \
 	$(BUILD_DIR)/dynamic-ali \
 	$(BUILD_DIR)/dynamic-obj
 
-@MAKE_ADA_SHAREDLIB@all \
+@MAKE_ADA_SHAREDLIB@all :: $(BUILD_DIR_LIB)/$(SHARED_LIBNAME)
 @MAKE_ADA_SHAREDLIB@$(BUILD_DIR_LIB)/$(SHARED_LIBNAME) :: $(ABASE)-trace.adb $(SHARED_DIRS)
+@MAKE_ADA_SHAREDLIB@	cp $(MIXED_OBJS) $(BUILD_DIR)/dynamic-obj/
 @MAKE_ADA_SHAREDLIB@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
-@MAKE_ADA_SHAREDLIB@	$(AR) $(ARFLAGS) $@ $(MIXED_OBJS)
 
 install \
 install.libs :: $(ADA_INCLUDE)

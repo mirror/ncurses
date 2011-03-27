@@ -35,13 +35,15 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.18 $
---  $Date: 2011/03/19 12:13:56 $
+--  $Revision: 1.19 $
+--  $Date: 2011/03/22 23:54:38 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Calendar; use Ada.Calendar;
 with Terminal_Interface.Curses.Text_IO.Integer_IO;
 with Sample.Manifest; use Sample.Manifest;
+
+pragma Elaborate_All (Terminal_Interface.Curses.Text_Io.Integer_IO);
 
 --  This package handles the painting of the header line of the screen.
 --

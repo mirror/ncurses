@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.5 2011/03/19 19:29:44 tom Exp $
+# $Id: make-tar.sh,v 1.10 2011/03/26 20:46:51 tom Exp $
 ##############################################################################
 # Copyright (c) 2010,2011 Free Software Foundation, Inc.                     #
 #                                                                            #
@@ -36,11 +36,45 @@ export CDPATH
 
 TARGET=`pwd`
 
+: ${PKG_NAME:=ncurses-examples}
 : ${ROOTNAME:=ncurses-test}
 : ${DESTDIR:=$TARGET}
 : ${TMPDIR:=/tmp}
 
-# This can be run from either the test subdirectory, or from the top-level
+grep_assign() {
+	grep_assign=`egrep "^$2\>" "$1" | sed -e "s/^$2[ 	]*=[ 	]*//" -e 's/"//g'`
+	eval $2=\"$grep_assign\"
+}
+
+grep_patchdate() {
+	grep_assign ../dist.mk NCURSES_MAJOR
+	grep_assign ../dist.mk NCURSES_MINOR
+	grep_assign ../dist.mk NCURSES_PATCH
+}
+
+# The rpm spec-file in the ncurses tree is a template.  Fill in the version
+# information from dist.mk
+edit_specfile() {
+	sed \
+		-e "s/\\<MAJOR\\>/$NCURSES_MAJOR/g" \
+		-e "s/\\<MINOR\\>/$NCURSES_MINOR/g" \
+		-e "s/\\<YYYYMMDD\\>/$NCURSES_PATCH/g" $1 >$1.new
+	chmod u+w $1
+	mv $1.new $1
+}
+
+make_changelog() {
+	test -f $1 && chmod u+w $1
+	cat >$1 <<EOF
+`echo $PKG_NAME|tr '[A-Z]' '[a-z]'` ($NCURSES_PATCH) unstable; urgency=low
+
+  * snapshot of ncurses subpackage for $PKG_NAME.
+
+ -- `head -1 $HOME/.signature`  `date -R`
+EOF
+}
+
+# This can be run from either the subdirectory, or from the top-level
 # source directory.  We will put the tar file in the original directory.
 test -d ./test && cd ./test
 SOURCE=`cd ..;pwd`
@@ -68,18 +102,33 @@ do
 	done
 done
 
+# Make rpm and dpkg scripts for test-builds
+grep_patchdate
+for spec in $BUILD/$ROOTNAME/package/*.spec
+do
+	edit_specfile $spec
+done
+make_changelog $BUILD/$ROOTNAME/package/debian/changelog
+
 cp -p $SOURCE/NEWS $BUILD/$ROOTNAME
+
+# cleanup empty directories (an artifact of ncurses source archives)
 
 touch $BUILD/$ROOTNAME/MANIFEST 
 ( cd $BUILD/$ROOTNAME && find . -type f -print |$SOURCE/misc/csort >MANIFEST )
 
 cd $BUILD || exit 
 
+# Remove build-artifacts.
+find . -name RCS -exec rm -rf {} \;
+find $BUILD/$ROOTNAME -type d -exec rmdir {} \; 2>/dev/null
+find $BUILD/$ROOTNAME -type d -exec rmdir {} \; 2>/dev/null
+find $BUILD/$ROOTNAME -type d -exec rmdir {} \; 2>/dev/null
+
 # There is no need for this script in the tar file.
 rm -f $ROOTNAME/make-tar.sh
 
 # Remove build-artifacts.
-find . -name RCS -exec rm -rf {} \;
 find . -name "*.gz" -exec rm -rf {} \;
 
 # Make the files writable...
@@ -90,3 +139,5 @@ cd $DESTDIR
 
 pwd
 ls -l $ROOTNAME.tar.gz
+
+# vi:ts=4 sw=4

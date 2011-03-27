@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.9 $
+--  $Revision: 1.10 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -63,13 +63,13 @@ package body Terminal_Interface.Curses.Forms.Field_Types.Enumeration is
          if Info.Names (I) = null then
             raise Form_Exception;
          end if;
-         E.Arr (size_t (I)) := New_String (Info.Names (I).all);
+         E.Arr.all (size_t (I)) := New_String (Info.Names (I).all);
          if Auto_Release_Names then
             S := Info.Names (I);
             Release_String (S);
          end if;
       end loop;
-      E.Arr (L) := Null_Ptr;
+      E.Arr.all (L) := Null_Ptr;
       return E;
    end Create;
 
@@ -79,10 +79,10 @@ package body Terminal_Interface.Curses.Forms.Field_Types.Enumeration is
       P : chars_ptr;
    begin
       loop
-         P := Enum.Arr (I);
+         P := Enum.Arr.all (I);
          exit when P = Null_Ptr;
          Free (P);
-         Enum.Arr (I) := Null_Ptr;
+         Enum.Arr.all (I) := Null_Ptr;
          I := I + 1;
       end loop;
       Enum.Arr := null;

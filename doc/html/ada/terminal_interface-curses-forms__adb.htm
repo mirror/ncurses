@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,8 +40,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.27 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2009/12/26 17:38:58 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.28 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2011/03/22 23:37:32 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> Ada.Unchecked_Deallocation;
@@ -741,11 +741,11 @@
 
       <FONT COLOR=red><A NAME="ref_737_7">Res</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_78_12">Eti_Error</A>;
    <b>begin</b>
-      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>'Last) = <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>'Last) /= <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A> <b>then</b>
+      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>.<b>all</b> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>'Last) = <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A>);
+      <b>if</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>.<b>all</b> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>'Last) /= <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_290_4">Form_Exception</A>;
       <b>else</b>
-         <A HREF="terminal_interface-curses-forms__adb.htm#ref_737_7">Res</A> := <A HREF="terminal_interface-curses-forms__adb.htm#ref_733_16">Set_Frm_Fields</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_593_24">Frm</A>, <A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>'First)'Address);
+         <A HREF="terminal_interface-curses-forms__adb.htm#ref_737_7">Res</A> := <A HREF="terminal_interface-curses-forms__adb.htm#ref_733_16">Set_Frm_Fields</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_593_24">Frm</A>, <A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>.<b>all</b> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_594_24">Flds</A>'First)'Address);
          <b>if</b>  <A HREF="terminal_interface-curses-forms__adb.htm#ref_737_7">Res</A> /= <A HREF="terminal_interface-curses-aux__ads.htm#ref_80_4">E_Ok</A> <b>then</b>
             <A HREF="terminal_interface-curses-aux__ads.htm#ref_96_14">Eti_Exception</A> (<A HREF="terminal_interface-curses-forms__adb.htm#ref_737_7">Res</A>);
          <b>end</b> <b>if</b>;
@@ -811,11 +811,11 @@
 
       <FONT COLOR=red><A NAME="ref_807_7">M</A></FONT>   : <A HREF="terminal_interface-curses-forms__ads.htm#ref_57_9">Form</A>;
    <b>begin</b>
-      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>'Last) = <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>'Last) /= <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A> <b>then</b>
+      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>.<b>all</b> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>'Last) = <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A>);
+      <b>if</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>.<b>all</b> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>'Last) /= <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_290_4">Form_Exception</A>;
       <b>else</b>
-         <A HREF="terminal_interface-curses-forms__adb.htm#ref_807_7">M</A> := <A HREF="terminal_interface-curses-forms__adb.htm#ref_804_16">NewForm</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>'First)'Address);
+         <A HREF="terminal_interface-curses-forms__adb.htm#ref_807_7">M</A> := <A HREF="terminal_interface-curses-forms__adb.htm#ref_804_16">NewForm</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>.<b>all</b> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_627_21">Fields</A>'First)'Address);
          <b>if</b> <A HREF="terminal_interface-curses-forms__adb.htm#ref_807_7">M</A> = <A HREF="terminal_interface-curses-forms__ads.htm#ref_60_4">Null_Form</A> <b>then</b>
             <b>raise</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_290_4">Form_Exception</A>;
          <b>end</b> <b>if</b>;
@@ -1141,8 +1141,8 @@
    <b>begin</b>
       <b>if</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_140_20">FA</A> /= <b>null</b> <b>and</b> <b>then</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_141_20">Free_Fields</A> <b>then</b>
          <b>for</b> <FONT COLOR=red><A NAME="ref_1138_14">I</A></FONT> <b>in</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_140_20">FA</A>'First .. (<A HREF="terminal_interface-curses-forms__ads.htm#ref_140_20">FA</A>'Last - 1) <b>loop</b>
-            <b>if</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_140_20">FA</A> (<A HREF="terminal_interface-curses-forms__adb.htm#ref_1138_14">I</A>) /= <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A> <b>then</b>
-               <A HREF="terminal_interface-curses-forms__ads.htm#ref_319_14">Delete</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_140_20">FA</A> (<A HREF="terminal_interface-curses-forms__adb.htm#ref_1138_14">I</A>));
+            <b>if</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_140_20">FA</A>.<b>all</b> (<A HREF="terminal_interface-curses-forms__adb.htm#ref_1138_14">I</A>) /= <A HREF="terminal_interface-curses-forms__ads.htm#ref_59_4">Null_Field</A> <b>then</b>
+               <A HREF="terminal_interface-curses-forms__ads.htm#ref_319_14">Delete</A> (<A HREF="terminal_interface-curses-forms__ads.htm#ref_140_20">FA</A>.<b>all</b> (<A HREF="terminal_interface-curses-forms__adb.htm#ref_1138_14">I</A>));
             <b>end</b> <b>if</b>;
          <b>end</b> <b>loop</b>;
       <b>end</b> <b>if</b>;

@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.4 $
---  $Date: 2011/03/08 10:54:26 $
+--  $Revision: 1.5 $
+--  $Date: 2011/03/23 00:40:33 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -416,9 +416,9 @@ begin
    Refresh;
 
    for n in t_tbl'Range loop
-      items_a (n) := New_Item (t_tbl (n).name.all);
+      items_a.all (n) := New_Item (t_tbl (n).name.all);
    end loop;
-   items_a (t_tbl'Last + 1) := Null_Item;
+   items_a.all (t_tbl'Last + 1) := Null_Item;
 
    m := New_Menu (items_a);
 

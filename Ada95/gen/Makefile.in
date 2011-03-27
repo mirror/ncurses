@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.73 2011/03/19 18:02:39 tom Exp $
+#  $Id: Makefile.in,v 1.74 2011/03/26 23:36:30 tom Exp $
 #
 .SUFFIXES:
 
@@ -57,7 +57,7 @@ CC		= @CC@
 HOST_CC		= @BUILD_CC@
 CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= @ACPPFLAGS@ \
+CPPFLAGS	= @ACPPFLAGS@ @CPPFLAGS@ \
 		  -DHAVE_CONFIG_H -I$(srcdir)
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)

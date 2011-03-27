@@ -12,7 +12,7 @@
 <FONT COLOR=green><EM>--                                 B O D Y                                  --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
-<FONT COLOR=green><EM>-- Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              --</EM></FONT>
+<FONT COLOR=green><EM>-- Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              --</EM></FONT>
 <FONT COLOR=green><EM>--                                                                          --</EM></FONT>
 <FONT COLOR=green><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></FONT>
 <FONT COLOR=green><EM>-- copy of this software and associated documentation files (the            --</EM></FONT>
@@ -40,8 +40,8 @@
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <FONT COLOR=green><EM>--  Author:  Juergen Pfeifer, 1996</EM></FONT>
 <FONT COLOR=green><EM>--  Version Control:</EM></FONT>
-<FONT COLOR=green><EM>--  @Revision: 1.27 @</EM></FONT>
-<FONT COLOR=green><EM>--  @Date: 2009/12/26 17:38:58 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Revision: 1.28 @</EM></FONT>
+<FONT COLOR=green><EM>--  @Date: 2011/03/22 23:38:12 @</EM></FONT>
 <FONT COLOR=green><EM>--  Binding Version 01.00</EM></FONT>
 <FONT COLOR=green><EM>------------------------------------------------------------------------------</EM></FONT>
 <b>with</b> Ada.Unchecked_Deallocation;
@@ -901,8 +901,8 @@
 
       <FONT COLOR=red><A NAME="ref_897_7">Res</A></FONT> : <A HREF="terminal_interface-curses-aux__ads.htm#ref_78_12">Eti_Error</A>;
    <b>begin</b>
-      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A>'Last) = <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A>'Last) /= <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A> <b>then</b>
+      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A>.<b>all</b> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A>'Last) = <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A>);
+      <b>if</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A>.<b>all</b> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A>'Last) /= <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_116_4">Menu_Exception</A>;
       <b>else</b>
          <A HREF="terminal_interface-curses-menus__adb.htm#ref_897_7">Res</A> := <A HREF="terminal_interface-curses-menus__adb.htm#ref_893_16">Set_Items</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_617_24">Men</A>, <A HREF="terminal_interface-curses-menus__ads.htm#ref_618_24">Items</A>.<b>all</b>'Address);
@@ -946,8 +946,8 @@
 
       <FONT COLOR=red><A NAME="ref_942_7">M</A></FONT>   : <A HREF="terminal_interface-curses-menus__ads.htm#ref_57_9">Menu</A>;
    <b>begin</b>
-      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A>'Last) = <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A>);
-      <b>if</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A>'Last) /= <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A> <b>then</b>
+      <b>pragma</b> Assert (<A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A>.<b>all</b> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A>'Last) = <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A>);
+      <b>if</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A>.<b>all</b> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A>'Last) /= <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A> <b>then</b>
          <b>raise</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_116_4">Menu_Exception</A>;
       <b>else</b>
          <A HREF="terminal_interface-curses-menus__adb.htm#ref_942_7">M</A> := <A HREF="terminal_interface-curses-menus__adb.htm#ref_939_16">Newmenu</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_642_21">Items</A>.<b>all</b>'Address);
@@ -1002,8 +1002,8 @@
    <b>begin</b>
       <b>if</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_184_20">IA</A> /= <b>null</b> <b>and</b> <b>then</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_185_20">Free_Items</A> <b>then</b>
          <b>for</b> <FONT COLOR=red><A NAME="ref_999_14">I</A></FONT> <b>in</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_184_20">IA</A>'First .. (<A HREF="terminal_interface-curses-menus__ads.htm#ref_184_20">IA</A>'Last - 1) <b>loop</b>
-            <b>if</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_184_20">IA</A> (<A HREF="terminal_interface-curses-menus__adb.htm#ref_999_14">I</A>) /= <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A> <b>then</b>
-               <A HREF="terminal_interface-curses-menus__ads.htm#ref_207_14">Delete</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_184_20">IA</A> (<A HREF="terminal_interface-curses-menus__adb.htm#ref_999_14">I</A>));
+            <b>if</b> <A HREF="terminal_interface-curses-menus__ads.htm#ref_184_20">IA</A>.<b>all</b> (<A HREF="terminal_interface-curses-menus__adb.htm#ref_999_14">I</A>) /= <A HREF="terminal_interface-curses-menus__ads.htm#ref_62_4">Null_Item</A> <b>then</b>
+               <A HREF="terminal_interface-curses-menus__ads.htm#ref_207_14">Delete</A> (<A HREF="terminal_interface-curses-menus__ads.htm#ref_184_20">IA</A>.<b>all</b> (<A HREF="terminal_interface-curses-menus__adb.htm#ref_999_14">I</A>));
             <b>end</b> <b>if</b>;
          <b>end</b> <b>loop</b>;
       <b>end</b> <b>if</b>;

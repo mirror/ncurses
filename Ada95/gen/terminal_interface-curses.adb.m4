@@ -37,8 +37,8 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.7 $
---  $Date: 2011/03/19 16:17:19 $
+--  $Revision: 1.8 $
+--  $Date: 2011/03/22 23:02:14 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -1208,6 +1208,7 @@ package body Terminal_Interface.Curses is
       X : Column_Position;
    begin
       Get_Size (Win, Y, X);
+      pragma Unreferenced (X);
       Change_Lines_Status (Win, 0, Positive (Y), True);
    end Touch;
 
@@ -1217,6 +1218,7 @@ package body Terminal_Interface.Curses is
       X : Column_Position;
    begin
       Get_Size (Win, Y, X);
+      pragma Unreferenced (X);
       Change_Lines_Status (Win, 0, Positive (Y), False);
    end Untouch;
 

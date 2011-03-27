@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.550 2011/03/19 18:48:42 tom Exp $
+dnl $Id: aclocal.m4,v 1.551 2011/03/24 00:35:20 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1769,10 +1769,12 @@ rm -rf conftest*
 AC_SUBST(EXTRA_CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_GENERICS version: 1 updated: 2010/11/13 14:15:18
+dnl CF_GNAT_GENERICS version: 2 updated: 2011/03/23 20:24:41
 dnl ----------------
 AC_DEFUN([CF_GNAT_GENERICS],
 [
+AC_REQUIRE([CF_GNAT_VERSION])
+
 AC_MSG_CHECKING(if GNAT supports generics)
 case $cf_gnat_version in #(vi
 3.[[1-9]]*|[[4-9]].*) #(vi
@@ -1826,27 +1828,91 @@ fi
 AC_SUBST(PRAGMA_UNREF)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_PROJECTS version: 1 updated: 2010/11/13 14:15:18
+dnl CF_GNAT_PROJECTS version: 2 updated: 2011/03/23 20:24:41
 dnl ----------------
+dnl GNAT projects are configured with ".gpr" project files.
+dnl GNAT libraries are a further development, using the project feature.
 AC_DEFUN([CF_GNAT_PROJECTS],
 [
+AC_REQUIRE([CF_GNAT_VERSION])
+
+cf_gnat_libraries=no
+cf_gnat_projects=no
+
 AC_MSG_CHECKING(if GNAT supports project files)
 case $cf_gnat_version in #(vi
 3.[[0-9]]*) #(vi
-	cf_gnat_projects=no
 	;;
 *)
 	case $cf_cv_system_name in #(vi
 	cygwin*) #(vi
-		cf_gnat_projects=no
 		;;
 	*)
-		cf_gnat_projects=yes
+		mkdir conftest.src conftest.bin conftest.lib
+		cd conftest.src
+		rm -rf conftest* *~conftest*
+		cat >>library.gpr <<CF_EOF
+project Library is
+  Kind := External ("LIB_KIND");
+  for Library_Name use "ConfTest";
+  for Object_Dir use ".";
+  for Library_ALI_Dir use External("LIBRARY_DIR");
+  for Library_Version use External ("SONAME");
+  for Library_Kind use Kind;
+  for Library_Dir use External("BUILD_DIR");
+  Source_Dir := External ("SOURCE_DIR");
+  for Source_Dirs use (Source_Dir);
+  package Compiler is
+     for Default_Switches ("Ada") use
+       ("-g",
+        "-O2",
+        "-gnatafno",
+        "-gnatVa",   -- All validity checks
+        "-gnatwa");  -- Activate all optional errors
+  end Compiler;
+end Library;
+CF_EOF
+		cat >>confpackage.ads <<CF_EOF
+package ConfPackage is
+   procedure conftest;
+end ConfPackage;
+CF_EOF
+		cat >>confpackage.adb <<CF_EOF
+with Text_IO;
+package body ConfPackage is
+   procedure conftest is
+   begin
+      Text_IO.Put ("Hello World");
+      Text_IO.New_Line;
+   end conftest;
+end ConfPackage;
+CF_EOF
+		if ( $cf_ada_make $ADAFLAGS \
+				-Plibrary.gpr \
+				-XBUILD_DIR=`cd ../conftest.bin;pwd` \
+				-XLIBRARY_DIR=`cd ../conftest.lib;pwd` \
+				-XSOURCE_DIR=`pwd` \
+				-XSONAME=libConfTest.so.1 \
+				-XLIB_KIND=static 1>&AC_FD_CC 2>&1 ) ; then
+			cf_gnat_projects=yes
+		fi
+		cd ..
+		if test -f conftest.lib/confpackage.ali
+		then
+			cf_gnat_libraries=yes
+		fi
+		rm -rf conftest* *~conftest*
 		;;
 	esac
 	;;
 esac
 AC_MSG_RESULT($cf_gnat_projects)
+
+if test $cf_gnat_projects = yes
+then
+	AC_MSG_CHECKING(if GNAT supports libraries)
+	AC_MSG_RESULT($cf_gnat_libraries)
+fi
 
 if test "$cf_gnat_projects" = yes
 then
@@ -1857,8 +1923,16 @@ else
 	USE_GNAT_PROJECTS="#"
 fi
 
+if test "$cf_gnat_libraries" = yes
+then
+	USE_GNAT_LIBRARIES=""
+else
+	USE_GNAT_LIBRARIES="#"
+fi
+
 AC_SUBST(USE_OLD_MAKERULES)
 AC_SUBST(USE_GNAT_PROJECTS)
+AC_SUBST(USE_GNAT_LIBRARIES)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_TRY_LINK version: 3 updated: 2011/03/19 14:47:45
@@ -1919,7 +1993,7 @@ fi
 rm -rf conftest* *~conftest*
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_VERSION version: 16 updated: 2010/11/13 14:15:18
+dnl CF_GNAT_VERSION version: 17 updated: 2011/03/23 20:24:41
 dnl ---------------
 dnl Verify version of GNAT.
 AC_DEFUN([CF_GNAT_VERSION],
@@ -1939,9 +2013,6 @@ case $cf_gnat_version in #(vi
 	cf_cv_prog_gnat_correct=no
 	;;
 esac
-
-CF_GNAT_GENERICS
-CF_GNAT_PROJECTS
 ])
 dnl ---------------------------------------------------------------------------
 dnl CF_GNU_SOURCE version: 6 updated: 2005/07/09 13:23:07

@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.15 $
---  $Date: 2011/03/19 12:09:02 $
+--  $Revision: 1.16 $
+--  $Date: 2011/03/23 00:34:24 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Strings; use Ada.Strings;
@@ -111,7 +111,7 @@ package body Sample.Keyboard_Handler is
                         Buffer : String (1 .. Positive (Columns - 11));
                         Cmdc : String (1 .. 8);
                      begin
-                        Get_Buffer (Fld => FA (2), Str => Buffer);
+                        Get_Buffer (Fld => FA.all (2), Str => Buffer);
                         Trim (Buffer, Left);
                         if Buffer (1) /= ' ' then
                            Cmdc := To_Upper (Buffer (Cmdc'Range));
@@ -157,8 +157,8 @@ package body Sample.Keyboard_Handler is
                   end if;
                end loop;
                Enum_Field := Create (Enum_Info, True);
-               Set_Field_Type (FA (2), Enum_Field);
-               Set_Background (FA (2), Normal_Video);
+               Set_Field_Type (FA.all (2), Enum_Field);
+               Set_Background (FA.all (2), Normal_Video);
 
                Fh.Drive_Me (Frm, Lines - 3, 0);
                Delete (Frm);

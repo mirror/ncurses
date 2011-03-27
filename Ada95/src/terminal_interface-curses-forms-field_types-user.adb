@@ -35,11 +35,11 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.17 $
---  $Date: 2011/03/08 01:16:49 $
+--  $Revision: 1.21 $
+--  $Date: 2011/03/23 00:44:58 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
-with Ada.Unchecked_Conversion;
+with System.Address_To_Access_Conversions;
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
 
 package body Terminal_Interface.Curses.Forms.Field_Types.User is
@@ -76,17 +76,16 @@ package body Terminal_Interface.Curses.Forms.Field_Types.User is
       end if;
    end Set_Field_Type;
 
-   pragma Warnings (Off);
-   function To_Argument_Access is new Ada.Unchecked_Conversion
-     (System.Address, Argument_Access);
-   pragma Warnings (On);
+   package Argument_Conversions is
+      new System.Address_To_Access_Conversions (Argument);
 
    function Generic_Field_Check (Fld : Field;
                                  Usr : System.Address) return Curses_Bool
    is
       Result : Boolean;
       Udf    : constant User_Defined_Field_Type_Access :=
-        User_Defined_Field_Type_Access (To_Argument_Access (Usr).Typ);
+        User_Defined_Field_Type_Access
+          (Argument_Access (Argument_Conversions.To_Pointer (Usr)).all.Typ);
    begin
       Result := Field_Check (Fld, Udf.all);
       return Curses_Bool (Boolean'Pos (Result));
@@ -97,7 +96,8 @@ package body Terminal_Interface.Curses.Forms.Field_Types.User is
    is
       Result : Boolean;
       Udf    : constant User_Defined_Field_Type_Access :=
-        User_Defined_Field_Type_Access (To_Argument_Access (Usr).Typ);
+        User_Defined_Field_Type_Access
+          (Argument_Access (Argument_Conversions.To_Pointer (Usr)).all.Typ);
    begin
       Result := Character_Check (Character'Val (Ch), Udf.all);
       return Curses_Bool (Boolean'Pos (Result));

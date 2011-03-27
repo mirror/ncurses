@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.41 2011/03/06 01:22:23 Nicolas.Boulenguez Exp $
+#  $Id: Makefile.in,v 1.44 2011/03/26 22:59:04 tom Exp $
 #
 .SUFFIXES:
 
@@ -41,6 +41,8 @@ x		= @PROG_EXT@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+datadir		= @datadir@
 libdir		= @libdir@
 includedir	= @includedir@
 
@@ -74,6 +76,13 @@ LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
 
 RANLIB		= @RANLIB@
 ################################################################################
+BINDIR		= $(DESTDIR)$(bindir)
+DATADIR		= $(DESTDIR)$(datadir)
+LIBDIR		= $(DESTDIR)$(libdir)
+
+MY_DATADIR	= $(DATADIR)/AdaCurses
+
+################################################################################
 ada_srcdir=../src
 
 LD_FLAGS     = @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS)
@@ -90,9 +99,9 @@ ABASE        = $(ALIB)-curses
 CARGS        =-cargs $(ADAFLAGS)
 LARGS        =-largs @TEST_ARG2@ $(LD_FLAGS) -L../lib -lAdaCurses @TEST_LIBS2@
 
-PROGS        = tour rain ncurses
+PROGS        = tour$x rain$x ncurses$x
 
-all ::  tour$x rain$x ncurses$x
+all ::  $(PROGS)
 	@echo made $@
 
 sources :
@@ -106,6 +115,22 @@ install.libs ::
 uninstall \
 uninstall.libs ::
 	@echo made $@
+
+install.examples :: $(BINDIR) $(PROGS)
+	$(INSTALL) $(PROGS) $(BINDIR)
+
+install.examples :: $(MY_DATADIR)
+	$(INSTALL_DATA) explain.txt $(MY_DATADIR)
+
+uninstall.examples ::
+	-cd $(BINDIR) && rm -f $(PROGS)
+	-rmdir $(BINDIR)
+	-rm -f $(MY_DATADIR)/explain.txt
+	-rmdir $(MY_DATADIR)
+
+$(BINDIR) \
+$(MY_DATADIR) :
+	mkdir -p $@
 
 ncurses$x :
 	$(ADAMAKE) $(ADAMAKEFLAGS) ncurses $(CARGS) $(LARGS)

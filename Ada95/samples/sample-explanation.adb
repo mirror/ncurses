@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.24 $
---  $Date: 2011/03/19 12:18:35 $
+--  $Revision: 1.26 $
+--  $Date: 2011/03/26 22:33:29 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and
@@ -85,6 +85,8 @@ package body Sample.Explanation is
 
    function Search (Key : String) return Help_Line_Access;
    procedure Release_Help (Root : in out Help_Line_Access);
+
+   function Check_File (Name : String) return Boolean;
 
    procedure Explain (Key : String)
    is
@@ -135,9 +137,9 @@ package body Sample.Explanation is
       begin
          if Top_Line /= null then
             for L in 0 .. (Height - 1) loop
-               Add (W, L, 0, H.Line.all);
-               exit when H.Next = null;
-               H := H.Next;
+               Add (W, L, 0, H.all.Line.all);
+               exit when H.all.Next = null;
+               H := H.all.Next;
             end loop;
          else
             Unknown_Key;
@@ -181,12 +183,12 @@ package body Sample.Explanation is
          L : Line_Position := 0;
       begin
          loop
-            Add (W, L, 0, C.Line.all);
+            Add (W, L, 0, C.all.Line.all);
             L := L + 1;
-            exit when C.Next = null or else L = Height;
-            C := C.Next;
+            exit when C.all.Next = null or else L = Height;
+            C := C.all.Next;
          end loop;
-         if C.Next /= null then
+         if C.all.Next /= null then
             pragma Assert (L = Height);
             More := True;
          else
@@ -248,20 +250,20 @@ package body Sample.Explanation is
                if K in Special_Key_Code'Range then
                   case K is
                      when Key_Cursor_Down =>
-                        if Current.Next /= null then
+                        if Current.all.Next /= null then
                            Move_Cursor (W, Height - 1, 0);
                            Scroll (W, 1);
-                           Current := Current.Next;
-                           Top_Line := Top_Line.Next;
-                           Add (W, Current.Line.all);
+                           Current := Current.all.Next;
+                           Top_Line := Top_Line.all.Next;
+                           Add (W, Current.all.Line.all);
                         end if;
                      when Key_Cursor_Up =>
-                        if Top_Line.Prev /= null then
+                        if Top_Line.all.Prev /= null then
                            Move_Cursor (W, 0, 0);
                            Scroll (W, -1);
-                           Top_Line := Top_Line.Prev;
-                           Current := Current.Prev;
-                           Add (W, Top_Line.Line.all);
+                           Top_Line := Top_Line.all.Prev;
+                           Current := Current.all.Prev;
+                           Add (W, Top_Line.all.Line.all);
                         end if;
                      when QUIT_CODE => exit;
                         when others => null;
@@ -330,8 +332,8 @@ package body Sample.Explanation is
                   Release_Help (Root);
                   Root := Current;
                else
-                  Tail.Next := Current;
-                  Current.Prev := Tail;
+                  Tail.all.Next := Current;
+                  Current.all.Prev := Tail;
                end if;
                Tail := Current;
             end loop;
@@ -347,8 +349,8 @@ package body Sample.Explanation is
    begin
       loop
          exit when Root = null;
-         Next := Root.Next;
-         Release_String (Root.Line);
+         Next := Root.all.Next;
+         Release_String (Root.all.Line);
          Release_Help_Line (Root);
          Root := Next;
       end loop;
@@ -371,7 +373,7 @@ package body Sample.Explanation is
    begin
       if H /= null then
          loop
-            T := T.Next;
+            T := T.all.Next;
             exit when T = null;
             N := N + 1;
          end loop;
@@ -391,9 +393,9 @@ package body Sample.Explanation is
          P := New_Panel (W);
          T := H;
          loop
-            Add (W, L + 1, 1, T.Line.all, Integer (Columns - 2));
+            Add (W, L + 1, 1, T.all.Line.all, Integer (Columns - 2));
             L := L + 1;
-            T := T.Next;
+            T := T.all.Next;
             exit when T = null;
          end loop;
          T := H;
@@ -403,12 +405,26 @@ package body Sample.Explanation is
       end if;
    end Notepad;
 
+   function Check_File (Name : String) return Boolean is
+      The_File : File_Type;
+   begin
+      Open (The_File, In_File, Name);
+      Close (The_File);
+      return True;
+   exception
+      when Name_Error =>
+         return False;
+   end Check_File;
+
 begin
-   Open (F, In_File, File_Name);
-exception
-   when Name_Error =>
+   if Check_File ("/usr/share/AdaCurses/" & File_Name) then
+      Open (F, In_File, "/usr/share/AdaCurses/" & File_Name);
+   elsif Check_File (File_Name) then
+      Open (F, In_File, File_Name);
+   else
       Put_Line (Standard_Error,
                 "The file explain.txt was not found in the current directory."
                 );
-      raise;
+      raise Name_Error;
+   end if;
 end Sample.Explanation;
