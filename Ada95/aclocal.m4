@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.22 2011/03/24 00:31:33 tom Exp $
+dnl $Id: aclocal.m4,v 1.23 2011/03/28 00:08:52 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1070,6 +1070,53 @@ AC_SUBST(cf_compile_generics)
 AC_SUBST(cf_generic_objects)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_GNAT_SIGINT version: 1 updated: 2011/03/27 20:07:59
+dnl --------------
+dnl Check if gnat supports SIGINT, and presumably tasking.  For the latter, it
+dnl is noted that gnat may compile a tasking unit even for configurations which
+dnl fail at runtime.
+AC_DEFUN([CF_GNAT_SIGINT],[
+AC_CACHE_CHECK(if GNAT supports SIGINT,cf_cv_gnat_sigint,[
+CF_GNAT_TRY_LINK([with Ada.Interrupts.Names;
+
+package ConfTest is
+
+   pragma Warnings (Off);  --  the next pragma exists since 3.11p
+   pragma Unreserve_All_Interrupts;
+   pragma Warnings (On);
+
+   protected Process is
+      procedure Stop;
+      function Continue return Boolean;
+      pragma Attach_Handler (Stop, Ada.Interrupts.Names.SIGINT);
+   private
+      Done : Boolean := False;
+   end Process;
+
+end ConfTest;],
+[package body ConfTest is
+   protected body Process is
+      procedure Stop is
+      begin
+         Done := True;
+      end Stop;
+      function Continue return Boolean is
+      begin
+         return not Done;
+      end Continue;
+   end Process;
+end ConfTest;],
+	[cf_cv_gnat_sigint=yes],
+	[cf_cv_gnat_sigint=no])])
+
+if test $cf_cv_gnat_sigint = yes ; then
+	USE_GNAT_SIGINT=""
+else
+	USE_GNAT_SIGINT="#"
+fi
+AC_SUBST(USE_GNAT_SIGINT)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_PRAGMA_UNREF version: 1 updated: 2010/06/19 15:22:18
 dnl --------------------
 dnl Check if the gnat pragma "Unreferenced" works.
@@ -1985,7 +2032,7 @@ AC_DEFUN([CF_MSG_LOG],[
 echo "${as_me:-configure}:__oline__: testing $* ..." 1>&AC_FD_CC
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_ADDON version: 3 updated: 2010/10/23 15:54:49
+dnl CF_NCURSES_ADDON version: 4 updated: 2011/03/27 17:10:13
 dnl ----------------
 dnl Configure an ncurses add-on, built outside the ncurses tree.
 AC_DEFUN([CF_NCURSES_ADDON],[
@@ -2010,8 +2057,8 @@ if test "$NCURSES_CONFIG" != none ; then
 cf_version=`$NCURSES_CONFIG --version`
 
 NCURSES_MAJOR=`echo "$cf_version" | sed -e 's/\..*//'`
-NCURSES_MINOR=`echo "$cf_version" | sed -e 's/^[[0-9]]\+\.//' -e 's/\..*//'`
-NCURSES_PATCH=`echo "$cf_version" | sed -e 's/^[[0-9]]\+\.[[0-9]]\+\.//'`
+NCURSES_MINOR=`echo "$cf_version" | sed -e 's/^[[0-9]][[0-9]]*\.//' -e 's/\..*//'`
+NCURSES_PATCH=`echo "$cf_version" | sed -e 's/^[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\.//'`
 
 # ABI version is not available from headers
 cf_cv_abi_version=`$NCURSES_CONFIG --abi-version`
@@ -2027,10 +2074,10 @@ CF_EOF
 	cf_try="$ac_cpp conftest.$ac_ext 2>&5 | fgrep AUTOCONF_$cf_name >conftest.out"
 	AC_TRY_EVAL(cf_try)
 	if test -f conftest.out ; then
-		cf_result=`cat conftest.out | sed -e "s/^.*AUTOCONF_$cf_name[[ 	]]\+//"`
-		eval NCURSES_$cf_name=$cf_result
-		cat conftest.$ac_ext
-		cat conftest.out
+		cf_result=`cat conftest.out | sed -e "s/^.*AUTOCONF_$cf_name[[ 	]][[ 	]]*//"`
+		eval NCURSES_$cf_name=\"$cf_result\"
+		# cat conftest.$ac_ext
+		# cat conftest.out
 	fi
 done
 

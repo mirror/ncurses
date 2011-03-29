@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.551 2011/03/24 00:35:20 tom Exp $
+dnl $Id: aclocal.m4,v 1.552 2011/03/28 00:21:01 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1933,6 +1933,53 @@ fi
 AC_SUBST(USE_OLD_MAKERULES)
 AC_SUBST(USE_GNAT_PROJECTS)
 AC_SUBST(USE_GNAT_LIBRARIES)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_GNAT_SIGINT version: 1 updated: 2011/03/27 20:07:59
+dnl --------------
+dnl Check if gnat supports SIGINT, and presumably tasking.  For the latter, it
+dnl is noted that gnat may compile a tasking unit even for configurations which
+dnl fail at runtime.
+AC_DEFUN([CF_GNAT_SIGINT],[
+AC_CACHE_CHECK(if GNAT supports SIGINT,cf_cv_gnat_sigint,[
+CF_GNAT_TRY_LINK([with Ada.Interrupts.Names;
+
+package ConfTest is
+
+   pragma Warnings (Off);  --  the next pragma exists since 3.11p
+   pragma Unreserve_All_Interrupts;
+   pragma Warnings (On);
+
+   protected Process is
+      procedure Stop;
+      function Continue return Boolean;
+      pragma Attach_Handler (Stop, Ada.Interrupts.Names.SIGINT);
+   private
+      Done : Boolean := False;
+   end Process;
+
+end ConfTest;],
+[package body ConfTest is
+   protected body Process is
+      procedure Stop is
+      begin
+         Done := True;
+      end Stop;
+      function Continue return Boolean is
+      begin
+         return not Done;
+      end Continue;
+   end Process;
+end ConfTest;],
+	[cf_cv_gnat_sigint=yes],
+	[cf_cv_gnat_sigint=no])])
+
+if test $cf_cv_gnat_sigint = yes ; then
+	USE_GNAT_SIGINT=""
+else
+	USE_GNAT_SIGINT="#"
+fi
+AC_SUBST(USE_GNAT_SIGINT)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_TRY_LINK version: 3 updated: 2011/03/19 14:47:45

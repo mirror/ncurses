@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.44 2011/03/26 22:59:04 tom Exp $
+#  $Id: Makefile.in,v 1.46 2011/03/28 23:45:08 tom Exp $
 #
 .SUFFIXES:
 
@@ -97,9 +97,9 @@ ALIB         = @cf_ada_package@
 ABASE        = $(ALIB)-curses
 
 CARGS        =-cargs $(ADAFLAGS)
-LARGS        =-largs @TEST_ARG2@ $(LD_FLAGS) -L../lib -lAdaCurses @TEST_LIBS2@
+LARGS        =-largs -L../lib -lAdaCurses @TEST_ARG2@ $(LD_FLAGS) @TEST_LIBS2@
 
-PROGS        = tour$x rain$x ncurses$x
+PROGS        = tour$x ncurses$x @USE_GNAT_SIGINT@ rain$x 
 
 all ::  $(PROGS)
 	@echo made $@

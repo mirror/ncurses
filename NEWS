@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1673 2011/03/26 23:57:13 tom Exp $
+-- $Id: NEWS,v 1.1676 2011/03/29 09:42:32 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110329
+	> portability fixes for Ada95 binding:
+	+ add configure check to ensure that SIGINT works with gnat.  This is
+	  needed for the "rain" sample program.  If SIGINT does not work, omit
+	  that sample program.
+	+ correct typo in check of $PKG_CONFIG variable in Ada95/configure
+	+ add ncurses_compat.c, to supply functions used in the Ada95 binding
+	  which were added in 5.7 and later.
+	+ modify sed expression in CF_NCURSES_ADDON to eliminate a dependency
+	  upon GNU sed.
 
 20110326
 	+ add special check in Ada95/configure script for ncurses6 reentrant

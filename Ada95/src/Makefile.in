@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.58 2011/03/27 00:14:06 tom Exp $
+#  $Id: Makefile.in,v 1.59 2011/03/27 20:50:48 tom Exp $
 #
 .SUFFIXES:
 
@@ -218,10 +218,13 @@ $(ABASE)-trace.adb : $(srcdir)/$(ABASE)-trace.adb_p
 	$(ADAPREP) -DADA_TRACE=@ADA_TRACE@ -DPRAGMA_UNREF=@PRAGMA_UNREF@ $(srcdir)/$(ABASE)-trace.adb_p $@
 
 ###############################################################################
-C_OBJS	= c_varargs_to_ada.o
+C_OBJS	= c_varargs_to_ada.o ncurses_compat.o
 
 c_varargs_to_ada.o :	$(srcdir)/c_varargs_to_ada.c
 	$(CC) $(CFLAGS_DEFAULT) -c -o $@ $(srcdir)/c_varargs_to_ada.c
+
+ncurses_compat.o :	$(srcdir)/ncurses_compat.c
+	$(CC) $(CFLAGS_DEFAULT) -c -o $@ $(srcdir)/ncurses_compat.c
 
 ###############################################################################
 
