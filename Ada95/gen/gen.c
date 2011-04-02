@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.58 2011/03/25 23:55:30 tom Exp $
+    $Id: gen.c,v 1.59 2011/03/31 23:50:24 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -807,7 +807,7 @@ gen_keydefs(int mode)
 static void
 acs_def(const char *name, chtype *a)
 {
-  int c = a - &acs_map[0];
+  int c = (int)(a - &acs_map[0]);
 
   printf("   %-24s : constant Character := ", name);
   if (isprint(UChar(c)) && (c != '`'))

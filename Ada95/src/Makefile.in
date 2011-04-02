@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.59 2011/03/27 20:50:48 tom Exp $
+#  $Id: Makefile.in,v 1.60 2011/03/31 09:46:16 tom Exp $
 #
 .SUFFIXES:
 
@@ -45,7 +45,7 @@ srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 includedir	= @includedir@
-libdir		= ${exec_prefix}/lib
+libdir		= @libdir@
 
 LIBDIR		= $(DESTDIR)$(libdir)
 ADA_INCLUDE	= $(DESTDIR)@ADA_INCLUDE@
@@ -295,14 +295,14 @@ uninstall.libs ::
 	$(SHELL) -c 'for name in $(SOURCE_DIR_SRC)/*.ad[sb] $(GENERATED_SOURCES); do rm -f $(ADA_INCLUDE)/`basename $$name`; done'
 
 @MAKE_ADA_SHAREDLIB@install \
-@MAKE_ADA_SHAREDLIB@install.libs :: $(ADA_OBJECTS)
+@MAKE_ADA_SHAREDLIB@install.libs :: $(ADA_OBJECTS) $(LIBDIR)
 @MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
 @MAKE_ADA_SHAREDLIB@		$(BUILD_DIR)/dynamic-ali/* \
 @MAKE_ADA_SHAREDLIB@		$(ADA_OBJECTS)
 @MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
 @MAKE_ADA_SHAREDLIB@		$(BUILD_DIR_LIB)/$(SHARED_LIBNAME) \
 @MAKE_ADA_SHAREDLIB@		$(LIBDIR)
-@MAKE_ADA_SHAREDLIB@	cd $(LIBDIR) && ln -s $(SHARED_LIBNAME) $(SHARED_SYMLINK)
+@MAKE_ADA_SHAREDLIB@	cd $(LIBDIR) && $(LN_S) $(SHARED_LIBNAME) $(SHARED_SYMLINK)
 @MAKE_ADA_SHAREDLIB@
 @MAKE_ADA_SHAREDLIB@uninstall \
 @MAKE_ADA_SHAREDLIB@uninstall.libs ::

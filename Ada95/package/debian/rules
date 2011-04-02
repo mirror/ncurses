@@ -34,6 +34,8 @@ configure-stamp:
 		--host=$(DEB_HOST_GNU_TYPE) \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr \
+		--disable-rpath-link \
+		--with-shared \
 		--with-ada-sharedlib
 
 	touch configure-stamp
@@ -66,7 +68,7 @@ install-stamp: build-stamp
 	$(MAKE) install DESTDIR=$(TARGET_DIR)
 	
 	# FIXME: it would be nice to make these into separate packages
-	( cd samples && $(MAKE) install.examples DESTDIR=$(TARGET_DIR) )
+	( cd samples && $(MAKE) install.examples DESTDIR=$(TARGET_DIR) BINDIR=$(SAMPLE_DIR) )
 	( cd doc && $(MAKE) install.html DESTDIR=$(TARGET_DIR) )
 
 	touch install-stamp

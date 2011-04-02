@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1676 2011/03/29 09:42:32 tom Exp $
+-- $Id: NEWS,v 1.1680 2011/03/31 22:44:04 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110402
+	+ various build-fixes for the rpm/dpkg scripts.
+	+ add "--enable-rpath-link" option to Ada95/configure, to allow
+	  packages to suppress the rpath feature which is normally used for
+	  the in-tree build of sample programs.
+	+ corrected definition of libdir variable in Ada95/src/Makefile.in,
+	  needed for rpm script.
+	+ add "--with-shared" option to Ada95/configure script, to allow
+	  making the C-language parts of the binding use appropriate compiler
+	  options if building a shared library with gnat.
 
 20110329
 	> portability fixes for Ada95 binding:
