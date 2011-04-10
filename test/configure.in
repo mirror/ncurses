@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.90 2011/03/22 09:15:08 tom Exp $
+dnl $Id: configure.in,v 1.93 2011/04/09 20:11:47 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -101,16 +101,21 @@ CF_DISABLE_ECHO
 CF_ENABLE_WARNINGS
 
 CF_DISABLE_LEAKS
-CF_WITH_CURSES_DIR
 
-dnl SunOS 4.x
-AC_ARG_WITH(5lib,
-	[  --with-5lib             use SunOS sysv-libraries],
-	[LIBS="-L/usr/5lib $LIBS"
-	 CPPFLAGS="$CPPFLAGS -I/usr/5include"])
+dnl ---------------------------------------------------------------------------
+AC_MSG_CHECKING(if you want to check for wide-character functions)
+CF_ARG_DISABLE(widec,
+	[--disable-widec           disable checks for wide-character functions],
+	cf_enable_widec=no,
+	cf_enable_widec=yes,
+	yes)
+AC_MSG_RESULT($cf_enable_widec)
+
+CF_WITH_CURSES_DIR
 
 dnl ---------------------------------------------------------------------------
 dnl NcursesW, installed in conventional location
+AC_MSG_CHECKING(for specified curses library type)
 AC_ARG_WITH(ncursesw,
 	[  --with-ncursesw         use wide ncurses-libraries (installed)],
 	[cf_cv_screen=ncursesw],[
@@ -122,10 +127,20 @@ AC_ARG_WITH(ncurses,
 
 AC_ARG_WITH(pdcurses,
 	[  --with-pdcurses         compile/link with pdcurses X11 library],
-	[cf_cv_screen=pdcurses])])])
+	[cf_cv_screen=pdcurses],[
+
+AC_ARG_WITH(curses-colr,
+	[  --with-curses-colr      compile/link with HPUX 10.x color-curses],
+	[cf_cv_screen=curses_colr],[
+
+AC_ARG_WITH(curses-5lib,
+	[  --with-curses-5lib      compile/link with SunOS 5lib curses],
+	[cf_cv_screen=curses_5lib])])])])])
+
+AC_MSG_RESULT($cf_cv_screen)
 
 case $cf_cv_screen in
-curses)
+curses|curses_*)
 	CF_CURSES_CONFIG
 	CF_NETBSD_FORM_H
 	CF_NETBSD_MENU_H
@@ -187,16 +202,21 @@ unistd.h \
 
 AC_CHECK_FUNCS( \
 gettimeofday \
+strdup \
+)
+
+if test "$cf_enable_widec" = yes; then
+AC_CHECK_FUNCS( \
 mblen \
 mbrlen \
 mbrtowc \
 mbsrtowcs \
 mbstowcs \
 mbtowc \
-strdup \
 wcsrtombs \
 wcstombs \
 )
+fi
 
 CF_CURSES_FUNCS( \
 chgat \
@@ -235,46 +255,55 @@ wsyncdown \
 
 CF_NCURSES_EXT_FUNCS
 
-AC_CACHE_CHECK(for wide-character functions,cf_cv_widechar_funcs,[
-AC_TRY_LINK([
+if test "$cf_enable_widec" = yes
+then
+	AC_CACHE_CHECK(for wide-character functions,cf_cv_widechar_funcs,[
+	AC_TRY_LINK([
 #include <${cf_cv_ncurses_header:-curses.h}>],
-[
-	static wchar_t src_wchar[2];
-	static cchar_t dst_cchar;
-	setcchar(&dst_cchar, src_wchar, A_NORMAL, 0, (void *) 0);
-	],
-	[cf_cv_widechar_funcs=yes],
-	[cf_cv_widechar_funcs=no])
-])
-if test "$cf_cv_widechar_funcs" != no ; then
-	AC_DEFINE(USE_WIDEC_SUPPORT,1)
+	[
+		static wchar_t src_wchar[2];
+		static cchar_t dst_cchar;
+		setcchar(&dst_cchar, src_wchar, A_NORMAL, 0, (void *) 0);
+		],
+		[cf_cv_widechar_funcs=yes],
+		[cf_cv_widechar_funcs=no])
+	])
+	if test "$cf_cv_widechar_funcs" != no ; then
+		AC_DEFINE(USE_WIDEC_SUPPORT,1)
+	else
+		AC_DEFINE(USE_WIDEC_SUPPORT,0)
+	fi
 else
 	AC_DEFINE(USE_WIDEC_SUPPORT,0)
 fi
 
-AC_FUNC_VFORK
 CF_SYS_TIME_SELECT
 CF_FUNC_CURSES_VERSION
 CF_CURSES_ACS_MAP
-CF_CURSES_WACS_MAP
-CF_CURSES_WACS_SYMBOLS
+
+if test "$cf_enable_widec" = yes; then
+	CF_CURSES_WACS_MAP
+	CF_CURSES_WACS_SYMBOLS
+fi
 
 CF_CURSES_CHECK_TYPE(attr_t,long)
 
-CF_WCHAR_TYPE(mbstate_t, NCURSES_MBSTATE_T, NCURSES_OK_MBSTATE_T)
-CF_WCHAR_TYPE(wchar_t,   NCURSES_WCHAR_T,   NCURSES_OK_WCHAR_T)
-CF_WCHAR_TYPE(wint_t,    NCURSES_WINT_T,    NCURSES_OK_WINT_T)
+if test "$cf_enable_widec" = yes; then
+	CF_WCHAR_TYPE(mbstate_t, NCURSES_MBSTATE_T, NCURSES_OK_MBSTATE_T)
+	CF_WCHAR_TYPE(wchar_t,   NCURSES_WCHAR_T,   NCURSES_OK_WCHAR_T)
+	CF_WCHAR_TYPE(wint_t,    NCURSES_WINT_T,    NCURSES_OK_WINT_T)
 
-if test "$NCURSES_OK_MBSTATE_T" = 0 ; then
-	CF_CURSES_CHECK_TYPE(mbstate_t,long)
-fi
+	if test "$NCURSES_OK_MBSTATE_T" = 0 ; then
+		CF_CURSES_CHECK_TYPE(mbstate_t,long)
+	fi
 
-if test "$NCURSES_OK_WCHAR_T" = 0 ; then
-	CF_CURSES_CHECK_TYPE(wchar_t,long)
-fi
+	if test "$NCURSES_OK_WCHAR_T" = 0 ; then
+		CF_CURSES_CHECK_TYPE(wchar_t,long)
+	fi
 
-if test "$NCURSES_OK_WINT_T" = 0 ; then
-	CF_CURSES_CHECK_TYPE(wint_t,long)
+	if test "$NCURSES_OK_WINT_T" = 0 ; then
+		CF_CURSES_CHECK_TYPE(wint_t,long)
+	fi
 fi
 
 CF_CURSES_CHECK_DATA(boolnames)

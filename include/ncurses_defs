@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.46 2011/03/22 09:17:59 tom Exp $
+# $Id: ncurses_defs,v 1.47 2011/04/09 20:40:48 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -153,6 +153,7 @@ HAVE_TYPEAHEAD	1
 HAVE_TYPEINFO
 HAVE_TYPE_ATTR_T
 HAVE_TYPE_SIGACTION
+HAVE_UNCTRL_H	1
 HAVE_UNISTD_H
 HAVE_UNLINK
 HAVE_USE_DEFAULT_COLORS

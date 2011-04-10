@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2005,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesf.h,v 1.28 2005/08/13 18:08:24 tom Exp $
+// $Id: cursesf.h,v 1.29 2011/04/09 18:07:01 Alexander.Kolesen Exp $
 
 #ifndef NCURSES_CURSESF_H_incl
 #define NCURSES_CURSESF_H_incl 1
@@ -681,7 +681,7 @@ public:
 		   const T* p_UserData = STATIC_CAST(T*)(0),
 		   bool with_frame=FALSE,
 		   bool autoDelete_Fields=FALSE)
-    : NCursesForm (Fields, with_frame, autoDelete_Fields) {
+    : NCursesForm (&Fields, with_frame, autoDelete_Fields) {
       if (form)
 	set_user (const_cast<void *>(p_UserData));
   };
@@ -694,7 +694,7 @@ public:
 		   const T* p_UserData = STATIC_CAST(T*)(0),
 		   bool with_frame=FALSE,
 		   bool autoDelete_Fields=FALSE)
-    : NCursesForm (Fields, nlines, ncols, begin_y, begin_x,
+    : NCursesForm (&Fields, nlines, ncols, begin_y, begin_x,
 		   with_frame, autoDelete_Fields) {
       if (form)
 	set_user (const_cast<void *>(p_UserData));

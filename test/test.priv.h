@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.103 2011/03/22 09:15:45 tom Exp $ */
+/* $Id: test.priv.h,v 1.105 2011/04/09 20:41:51 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -222,6 +222,13 @@
 #define NO_LEAKS 0
 #endif
 
+/*
+ * Workaround for HPUX
+ */
+#if defined(__hpux) && !defined(NCURSES_VERSION)
+#define _ACS_COMPAT_CODE	/* needed for acs_map vs __acs_map */
+#endif
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -269,16 +276,13 @@
 
 /*
  * Not all curses.h implementations include unctrl.h,
- * Solaris 10 xpg4 for example.
  */
-#if defined(NCURSES_VERSION) || defined(_XOPEN_CURSES)
-#if defined(HAVE_NCURSESW_NCURSES_H)
+#if defined(HAVE_NCURSESW_UNCTRL_H)
 #include <ncursesw/unctrl.h>
-#elif defined(HAVE_NCURSES_NCURSES_H)
+#elif defined(HAVE_NCURSES_UNCTRL_H)
 #include <ncurses/unctrl.h>
-#else
+#elif defined(HAVE_UNCTRL_H)
 #include <unctrl.h>
-#endif
 #endif
 
 #if HAVE_GETOPT_H

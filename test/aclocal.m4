@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.50 2011/03/24 08:28:07 tom Exp $
+dnl $Id: aclocal.m4,v 1.52 2011/04/09 22:22:11 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -533,7 +533,7 @@ CF_NCURSES_VERSION
 CF_CURSES_LIBS
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_CPPFLAGS version: 10 updated: 2009/01/06 19:34:11
+dnl CF_CURSES_CPPFLAGS version: 11 updated: 2011/04/09 14:51:08
 dnl ------------------
 dnl Look for the curses headers.
 AC_DEFUN([CF_CURSES_CPPFLAGS],[
@@ -542,13 +542,19 @@ AC_CACHE_CHECK(for extra include directories,cf_cv_curses_incdir,[
 cf_cv_curses_incdir=no
 case $host_os in #(vi
 hpux10.*) #(vi
-	test -d /usr/include/curses_colr && \
-	cf_cv_curses_incdir="-I/usr/include/curses_colr"
+	if test "x$cf_cv_screen" = "xcurses_colr"
+	then
+		test -d /usr/include/curses_colr && \
+		cf_cv_curses_incdir="-I/usr/include/curses_colr"
+	fi
 	;;
 sunos3*|sunos4*)
-	test -d /usr/5lib && \
-	test -d /usr/5include && \
-	cf_cv_curses_incdir="-I/usr/5include"
+	if test "x$cf_cv_screen" = "xcurses_5lib"
+	then
+		test -d /usr/5lib && \
+		test -d /usr/5include && \
+		cf_cv_curses_incdir="-I/usr/5include"
+	fi
 	;;
 esac
 ])
@@ -558,7 +564,7 @@ CF_CURSES_HEADER
 CF_TERM_HEADER
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_FUNCS version: 15 updated: 2010/10/23 15:52:32
+dnl CF_CURSES_FUNCS version: 16 updated: 2011/04/09 18:19:55
 dnl ---------------
 dnl Curses-functions are a little complicated, since a lot of them are macros.
 AC_DEFUN([CF_CURSES_FUNCS],
@@ -566,6 +572,7 @@ AC_DEFUN([CF_CURSES_FUNCS],
 AC_REQUIRE([CF_CURSES_CPPFLAGS])dnl
 AC_REQUIRE([CF_XOPEN_CURSES])
 AC_REQUIRE([CF_CURSES_TERM_H])
+AC_REQUIRE([CF_CURSES_UNCTRL_H])
 for cf_func in $1
 do
 	CF_UPPER(cf_tr_func,$cf_func)
@@ -624,7 +631,7 @@ fi
 AC_CHECK_HEADERS($cf_cv_ncurses_header)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_LIBS version: 33 updated: 2011/03/06 12:37:18
+dnl CF_CURSES_LIBS version: 34 updated: 2011/04/09 14:51:08
 dnl --------------
 dnl Look for the curses libraries.  Older curses implementations may require
 dnl termcap/termlib to be linked as well.  Call CF_CURSES_CPPFLAGS first.
@@ -644,16 +651,23 @@ freebsd*) #(vi
     AC_CHECK_LIB(mytinfo,tgoto,[CF_ADD_LIBS(-lmytinfo)])
     ;;
 hpux10.*) #(vi
-    AC_CHECK_LIB(cur_colr,initscr,[
-        CF_ADD_LIBS(-lcur_colr)
-        ac_cv_func_initscr=yes
-        ],[
-    AC_CHECK_LIB(Hcurses,initscr,[
-        # HP's header uses __HP_CURSES, but user claims _HP_CURSES.
-        CF_ADD_LIBS(-lHcurses)
-        CPPFLAGS="$CPPFLAGS -D__HP_CURSES -D_HP_CURSES"
-        ac_cv_func_initscr=yes
-        ])])
+	# Looking at HPUX 10.20, the Hcurses library is the oldest (1997), cur_colr
+	# next (1998), and xcurses "newer" (2000).  There is no header file for
+	# Hcurses; the subdirectory curses_colr has the headers (curses.h and
+	# term.h) for cur_colr
+	if test "x$cf_cv_screen" = "xcurses_colr"
+	then
+		AC_CHECK_LIB(cur_colr,initscr,[
+			CF_ADD_LIBS(-lcur_colr)
+			ac_cv_func_initscr=yes
+			],[
+		AC_CHECK_LIB(Hcurses,initscr,[
+			# HP's header uses __HP_CURSES, but user claims _HP_CURSES.
+			CF_ADD_LIBS(-lHcurses)
+			CPPFLAGS="$CPPFLAGS -D__HP_CURSES -D_HP_CURSES"
+			ac_cv_func_initscr=yes
+			])])
+	fi
     ;;
 linux*)
 	case `arch 2>/dev/null` in
@@ -671,9 +685,12 @@ linux*)
 	esac
     ;;
 sunos3*|sunos4*)
-    if test -d /usr/5lib ; then
-      CF_ADD_LIBDIR(/usr/5lib)
-      CF_ADD_LIBS(-lcurses -ltermcap)
+	if test "x$cf_cv_screen" = "xcurses_5lib"
+	then
+		if test -d /usr/5lib ; then
+			CF_ADD_LIBDIR(/usr/5lib)
+			CF_ADD_LIBS(-lcurses -ltermcap)
+		fi
     fi
     ac_cv_func_initscr=yes
     ;;
@@ -738,7 +755,7 @@ fi
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_TERM_H version: 8 updated: 2010/10/23 15:54:49
+dnl CF_CURSES_TERM_H version: 9 updated: 2011/04/09 18:19:55
 dnl ----------------
 dnl SVr4 curses should have term.h as well (where it puts the definitions of
 dnl the low-level interface).  This may not be true in old/broken implementations,
@@ -752,9 +769,17 @@ AC_CACHE_CHECK(for term.h, cf_cv_term_header,[
 
 # If we found <ncurses/curses.h>, look for <ncurses/term.h>, but always look
 # for <term.h> if we do not find the variant.
-for cf_header in \
-	`echo ${cf_cv_ncurses_header:-curses.h} | sed -e 's%/.*%/%'`term.h \
-	term.h
+
+cf_header_list="term.h ncurses/term.h ncursesw/term.h"
+
+case ${cf_cv_ncurses_header:-curses.h} in #(vi
+*/*)
+	cf_header_item=`echo ${cf_cv_ncurses_header:-curses.h} | sed -e 's%\..*%%' -e 's%/.*%/%'`term.h
+	cf_header_list="$cf_header_item $cf_header_list"
+	;;
+esac
+
+for cf_header in $cf_header_list
 do
 	AC_TRY_COMPILE([
 #include <${cf_cv_ncurses_header:-curses.h}>
@@ -796,6 +821,61 @@ ncurses/term.h) #(vi
 	;;
 ncursesw/term.h)
 	AC_DEFINE(HAVE_NCURSESW_TERM_H)
+	;;
+esac
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CURSES_UNCTRL_H version: 1 updated: 2011/04/09 18:19:55
+dnl ------------------
+dnl Any X/Open curses implementation must have unctrl.h, but ncurses packages
+dnl may put it in a subdirectory (along with ncurses' other headers, of
+dnl course).  Packages which put the headers in inconsistent locations are
+dnl broken).
+AC_DEFUN([CF_CURSES_UNCTRL_H],
+[
+AC_REQUIRE([CF_CURSES_CPPFLAGS])dnl
+
+AC_CACHE_CHECK(for unctrl.h, cf_cv_unctrl_header,[
+
+# If we found <ncurses/curses.h>, look for <ncurses/unctrl.h>, but always look
+# for <unctrl.h> if we do not find the variant.
+
+cf_header_list="unctrl.h ncurses/unctrl.h ncursesw/unctrl.h"
+
+case ${cf_cv_ncurses_header:-curses.h} in #(vi
+*/*)
+	cf_header_item=`echo ${cf_cv_ncurses_header:-curses.h} | sed -e 's%\..*%%' -e 's%/.*%/%'`unctrl.h
+	cf_header_list="$cf_header_item $cf_header_list"
+	;;
+esac
+
+for cf_header in $cf_header_list
+do
+	AC_TRY_COMPILE([
+#include <${cf_cv_ncurses_header:-curses.h}>
+#include <${cf_header}>],
+	[WINDOW *x],
+	[cf_cv_unctrl_header=$cf_header
+	 break],
+	[cf_cv_unctrl_header=no])
+done
+
+case $cf_cv_unctrl_header in #(vi
+no)
+	AC_MSG_WARN(unctrl.h header not found)
+	;;
+esac
+])
+
+case $cf_cv_unctrl_header in #(vi
+unctrl.h) #(vi
+	AC_DEFINE(HAVE_UNCTRL_H)
+	;;
+ncurses/unctrl.h) #(vi
+	AC_DEFINE(HAVE_NCURSES_UNCTRL_H)
+	;;
+ncursesw/unctrl.h)
+	AC_DEFINE(HAVE_NCURSESW_UNCTRL_H)
 	;;
 esac
 ])dnl
