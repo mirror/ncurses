@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.553 2011/03/31 23:35:38 tom Exp $
+dnl $Id: aclocal.m4,v 1.554 2011/04/16 16:37:26 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5624,13 +5624,13 @@ dnl	Remove "-g" option from the compiler options
 AC_DEFUN([CF_STRIP_G_OPT],
 [$1=`echo ${$1} | sed -e 's%-g %%' -e 's%-g$%%'`])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_STRUCT_SIGACTION version: 3 updated: 2000/08/12 23:18:52
+dnl CF_STRUCT_SIGACTION version: 4 updated: 2011/04/16 11:52:53
 dnl -------------------
 dnl Check if we need _POSIX_SOURCE defined to use struct sigaction.  We'll only
 dnl do this if we've found the sigaction function.
-dnl
-dnl If needed, define SVR4_ACTION.
 AC_DEFUN([CF_STRUCT_SIGACTION],[
+AC_REQUIRE([CF_XOPEN_SOURCE])
+
 if test "$ac_cv_func_sigaction" = yes; then
 AC_MSG_CHECKING(whether sigaction needs _POSIX_SOURCE)
 AC_TRY_COMPILE([
@@ -5645,22 +5645,24 @@ AC_TRY_COMPILE([
 #include <signal.h>],
 	[struct sigaction act],
 	[sigact_bad=yes
-	 AC_DEFINE(SVR4_ACTION)],
+	 AC_DEFINE(_POSIX_SOURCE)],
 	 [sigact_bad=unknown])])
 AC_MSG_RESULT($sigact_bad)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_STRUCT_TERMIOS version: 5 updated: 2000/11/04 12:22:46
+dnl CF_STRUCT_TERMIOS version: 6 updated: 2011/04/16 11:52:53
 dnl -----------------
 dnl Some machines require _POSIX_SOURCE to completely define struct termios.
-dnl If so, define SVR4_TERMIO
 AC_DEFUN([CF_STRUCT_TERMIOS],[
+AC_REQUIRE([CF_XOPEN_SOURCE])
+
 AC_CHECK_HEADERS( \
 termio.h \
 termios.h \
 unistd.h \
 )
+
 if test "$ISC" = yes ; then
 	AC_CHECK_HEADERS( sys/termio.h )
 fi
@@ -5680,7 +5682,7 @@ if test "$ac_cv_header_termios_h" = yes ; then
 #include <termios.h>],
 			[struct termios foo; int x = foo.c_iflag],
 			termios_bad=unknown,
-			termios_bad=yes AC_DEFINE(SVR4_TERMIO))
+			termios_bad=yes AC_DEFINE(_POSIX_SOURCE))
 			])
 	AC_MSG_RESULT($termios_bad)
 	fi

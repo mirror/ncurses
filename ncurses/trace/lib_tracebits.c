@@ -34,11 +34,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_tracebits.c,v 1.19 2011/01/09 00:23:03 tom Exp $")
-
-#if SVR4_TERMIO && !defined(_POSIX_SOURCE)
-#define _POSIX_SOURCE
-#endif
+MODULE_ID("$Id: lib_tracebits.c,v 1.20 2011/04/16 15:32:45 tom Exp $")
 
 #if HAVE_SYS_TERMIO_H
 #include <sys/termio.h>		/* needed for ISC */

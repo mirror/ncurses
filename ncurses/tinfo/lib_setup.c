@@ -43,15 +43,11 @@
 #include <curses.priv.h>
 #include <tic.h>		/* for MAX_NAME_SIZE */
 
-#if SVR4_TERMIO && !defined(_POSIX_SOURCE)
-#define _POSIX_SOURCE
-#endif
-
 #if HAVE_LOCALE_H
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.135 2011/02/06 01:04:21 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.136 2011/04/16 15:32:45 tom Exp $")
 
 /****************************************************************************
  *

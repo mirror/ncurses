@@ -14647,7 +14647,7 @@ if { (eval echo "$as_me:14637: \"$ac_compile\"") >&5
   (exit $ac_status); }; }; then
   sigact_bad=yes
 	 cat >>confdefs.h <<\EOF
-#define SVR4_ACTION 1
+#define _POSIX_SOURCE 1
 EOF
 
 else
@@ -14896,7 +14896,7 @@ else
   echo "$as_me: failed program was:" >&5
 cat conftest.$ac_ext >&5
 termios_bad=yes cat >>confdefs.h <<\EOF
-#define SVR4_TERMIO 1
+#define _POSIX_SOURCE 1
 EOF
 
 fi

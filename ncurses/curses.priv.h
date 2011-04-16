@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.475 2011/01/22 21:10:19 tom Exp $
+ * $Id: curses.priv.h,v 1.476 2011/04/16 15:31:02 tom Exp $
  *
  *	curses.priv.h
  *
@@ -59,6 +59,10 @@ extern "C" {
 #define MODULE_ID(id) static const char Ident[] = id;
 #else
 #define MODULE_ID(id) /*nothing*/
+#endif
+
+#if !(defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE) || defined(_XOPEN_SOURCE))
+#define _POSIX_SOURCE
 #endif
 
 #include <stddef.h>		/* for offsetof */

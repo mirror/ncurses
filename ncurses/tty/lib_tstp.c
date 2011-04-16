@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,11 +42,7 @@
 
 #include <SigAction.h>
 
-#if SVR4_ACTION && !defined(_POSIX_SOURCE)
-#define _POSIX_SOURCE
-#endif
-
-MODULE_ID("$Id: lib_tstp.c,v 1.41 2010/05/15 21:31:12 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.42 2011/04/16 16:42:10 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1

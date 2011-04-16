@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,17 +42,13 @@
 
 #include <curses.priv.h>
 
-#if SVR4_TERMIO && !defined(_POSIX_SOURCE)
-#define _POSIX_SOURCE
-#endif
-
 #ifndef CUR
 #define CUR SP_TERMTYPE
 #endif
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.86 2010/05/20 23:25:18 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.87 2011/04/16 16:42:10 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
