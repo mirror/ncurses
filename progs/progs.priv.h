@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.34 2008/08/03 17:43:05 tom Exp $
+ * $Id: progs.priv.h,v 1.35 2011/04/23 22:33:09 tom Exp $
  *
  *	progs.priv.h
  *
@@ -99,7 +99,7 @@ extern int errno;
 
 #if HAVE_GETOPT_H
 #include <getopt.h>
-#else
+#elif !defined(HAVE_GETOPT_HEADER)
 /* 'getopt()' may be prototyped in <stdlib.h>, but declaring its
  * variables doesn't hurt.
  */

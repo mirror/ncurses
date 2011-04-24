@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.93 2011/04/09 20:11:47 tom Exp $
+dnl $Id: configure.in,v 1.97 2011/04/23 22:10:32 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -200,6 +200,8 @@ termios.h \
 unistd.h \
 )
 
+CF_GETOPT_HEADER
+
 AC_CHECK_FUNCS( \
 gettimeofday \
 strdup \
@@ -219,6 +221,7 @@ wcstombs \
 fi
 
 CF_CURSES_FUNCS( \
+assume_default_colors \
 chgat \
 color_set \
 filter \
@@ -245,14 +248,17 @@ tigetnum \
 tigetstr \
 typeahead \
 use_default_colors \
-vw_printw \
+use_screen \
+use_window \
 vsscanf \
+vw_printw \
 wchgat \
 winsstr \
 wresize \
 wsyncdown \
 )
 
+CF_TPUTS_PROTO
 CF_NCURSES_EXT_FUNCS
 
 if test "$cf_enable_widec" = yes

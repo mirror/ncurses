@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.365 2011/01/22 19:48:33 tom Exp $
+$Id: ncurses.c,v 1.367 2011/04/23 21:16:43 tom Exp $
 
 ***************************************************************************/
 
@@ -490,7 +490,7 @@ ShellOut(bool message)
 #ifdef __MINGW32__
     system("cmd.exe");
 #else
-    system("sh");
+    IGNORE_RC(system("sh"));
 #endif
     if (message)
 	addstr("returned from shellout.\n");
@@ -777,7 +777,7 @@ resize_boxes(unsigned level, WINDOW *win)
     }
     doupdate();
 }
-#endif	/* resize_boxes */
+#endif /* resize_boxes */
 #else
 #define forget_boxes()		/* nothing */
 #define remember_boxes(level,text,frame)	/* nothing */
@@ -6772,7 +6772,7 @@ main(int argc, char *argv[])
 	    use_default_colors();
 	    min_colors = -1;
 	}
-#if NCURSES_VERSION_PATCH >= 20000708
+#if HAVE_ASSUME_DEFAULT_COLORS
 	if (assumed_colors)
 	    assume_default_colors(default_fg, default_bg);
 #endif

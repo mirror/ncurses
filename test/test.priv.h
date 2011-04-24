@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.105 2011/04/09 20:41:51 tom Exp $ */
+/* $Id: test.priv.h,v 1.112 2011/04/23 23:32:07 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -58,6 +58,10 @@
 /*
  * Fallback definitions to accommodate broken compilers.
  */
+#ifndef HAVE_ASSUME_DEFAULT_COLORS
+#define HAVE_ASSUME_DEFAULT_COLORS 0
+#endif
+
 #ifndef HAVE_CURSES_VERSION
 #define HAVE_CURSES_VERSION 0
 #endif
@@ -202,6 +206,14 @@
 #define HAVE_USE_DEFAULT_COLORS 0
 #endif
 
+#ifndef HAVE_USE_SCREEN
+#define HAVE_USE_SCREEN 0
+#endif
+
+#ifndef HAVE_USE_WINDOW
+#define HAVE_USE_WINDOW 0
+#endif
+
 #ifndef HAVE_WRESIZE
 #define HAVE_WRESIZE 0
 #endif
@@ -287,7 +299,7 @@
 
 #if HAVE_GETOPT_H
 #include <getopt.h>
-#else
+#elif !defined(HAVE_GETOPT_HEADER)
 /* 'getopt()' may be prototyped in <stdlib.h>, but declaring its variables
  * doesn't hurt.
  */
@@ -327,13 +339,13 @@ extern int optind;
 #endif
 
 #if !USE_SOFTKEYS
-#define slk_init() /* nothing */
-#define slk_restore() /* nothing */
-#define slk_clear() /* nothing */
+#define slk_init()		/* nothing */
+#define slk_restore()		/* nothing */
+#define slk_clear()		/* nothing */
 #endif
 
 #ifndef HAVE_WSYNCDOWN
-#define wsyncdown(win) /* nothing */
+#define wsyncdown(win)		/* nothing */
 #endif
 
 #ifndef USE_WIDEC_SUPPORT
@@ -657,24 +669,31 @@ extern char *strnames[], *strcodes[], *strfnames[];
  * The same would be needed for HPUX 10.20
  */
 #ifndef TPUTS_ARG
-#if defined(sun) && !defined(_XOPEN_CURSES) && !defined(NCURSES_VERSION_PATCH)
-#define TPUTS_ARG char
-extern char *tgoto(char *, int, int);	/* available, but not prototyped */
-#else
 #define TPUTS_ARG int
 #endif
+
+#if defined(sun) && !defined(_XOPEN_CURSES) && !defined(NCURSES_VERSION_PATCH)
+#undef TPUTS_ARG
+#define TPUTS_ARG char
+extern char *tgoto(char *, int, int);	/* available, but not prototyped */
+#endif
+
+#ifndef TPUTS_PROTO
+#define TPUTS_PROTO(func,value) int func(TPUTS_ARG value)
+#endif
+
+#ifndef TPUTS_RETURN
+#define TPUTS_RETURN(value) return value
 #endif
 
 /*
  * Workarounds for Solaris's X/Open curses
  */
-#if defined(sun) && defined(_XOPEN_CURSES) && !defined(NCURSES_VERSION_PATCH)
 #if !defined(KEY_MIN) && defined(__KEY_MIN)
 #define KEY_MIN __KEY_MIN
 #endif
 #if !defined(KEY_MAX) && defined(__KEY_MIN)
 #define KEY_MAX __KEY_MAX
-#endif
 #endif
 
 /*
@@ -706,22 +725,9 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #define CONST_MENUS		/* nothing */
 #endif
 
-#ifndef HAVE_USE_WINDOW
-#if !defined(NCURSES_VERSION_PATCH) || (NCURSES_VERSION_PATCH < 20070915) || !NCURSES_EXT_FUNCS
-#define HAVE_USE_WINDOW 0
-#else
-#define HAVE_USE_WINDOW 1
-#endif
-#endif
-
 /*
  * Simplify setting up demo of threading with these macros.
  */
-
-#if !HAVE_USE_WINDOW
-typedef int (*NCURSES_WINDOW_CB) (WINDOW *, void *);
-typedef int (*NCURSES_SCREEN_CB) (SCREEN *, void *);
-#endif
 
 #if HAVE_USE_WINDOW
 #define USING_WINDOW(w,func) use_window(w, (NCURSES_WINDOW_CB) func, w)

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.22 2010/11/14 01:00:02 tom Exp $
+ * $Id: dots.c,v 1.23 2011/04/23 19:15:04 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -46,8 +46,8 @@ static bool interrupted = FALSE;
 static long total_chars = 0;
 static time_t started;
 
-static int
-outc(TPUTS_ARG c)
+static
+TPUTS_PROTO(outc, c)
 {
     int rc = c;
 
@@ -58,7 +58,7 @@ outc(TPUTS_ARG c)
     } else {
 	rc = putc(c, stdout);
     }
-    return rc;
+    TPUTS_RETURN(rc);
 }
 
 static bool

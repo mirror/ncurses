@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.476 2011/04/16 15:31:02 tom Exp $
+ * $Id: curses.priv.h,v 1.477 2011/04/23 18:05:15 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1019,6 +1019,7 @@ struct screen {
 	int		_pair_count;	/* count of color pairs		     */
 	int		_pair_limit;	/* actual limit of color-pairs       */
 #if NCURSES_EXT_FUNCS
+	bool		_assumed_color; /* use assumed colors		     */
 	bool		_default_color; /* use default colors		     */
 	bool		_has_sgr_39_49; /* has ECMA default color support    */
 	int		_default_fg;	/* assumed default foreground	     */

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.6 2010/11/14 01:00:44 tom Exp $
+ * $Id: dots_mvcur.c,v 1.7 2011/04/23 19:17:20 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -46,8 +46,8 @@ static bool interrupted = FALSE;
 static long total_chars = 0;
 static time_t started;
 
-static int
-outc(TPUTS_ARG c)
+static
+TPUTS_PROTO(outc, c)
 {
     int rc = c;
 
@@ -59,7 +59,7 @@ outc(TPUTS_ARG c)
 	if (putc(c, stdout) == EOF)
 	    rc = EOF;
     }
-    return rc;
+    TPUTS_RETURN(rc);
 }
 
 static bool

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.98 2010/04/24 22:57:53 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.99 2011/04/23 18:22:22 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -439,7 +439,7 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx short pair, short f, short b)
 
     previous = SP_PARM->_color_pairs[pair];
 #if NCURSES_EXT_FUNCS
-    if (SP_PARM->_default_color) {
+    if (SP_PARM->_default_color || SP_PARM->_assumed_color) {
 	bool isDefault = FALSE;
 	bool wasDefault = FALSE;
 	int default_pairs = SP_PARM->_default_pairs;
@@ -498,8 +498,9 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx short pair, short f, short b)
     {
 	if ((f < 0) || !OkColorHi(f)
 	    || (b < 0) || !OkColorHi(b)
-	    || (pair < 1))
+	    || (pair < 1)) {
 	    returnCode(ERR);
+	}
     }
 
     /*

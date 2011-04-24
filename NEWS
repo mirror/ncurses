@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1688 2011/04/16 16:38:35 tom Exp $
+-- $Id: NEWS,v 1.1693 2011/04/23 22:28:43 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110423
+	+ add check in test/configure for use_window, use_screen.
+	+ add configure-checks for getopt's variables, which may be declared
+	  as different types on some Unix systems.
+	+ add check in test/configure for some legacy curses types of the
+	  function pointer passed to tputs().
+	+ modify init_pair() to accept -1's for color value after
+	  assume_default_colors() has been called (Debian #337905).
+	+ modify test/background.c, adding commmand-line options to demonstrate
+	  assume_default_colors() and use_default_colors().
 
 20110416
 	+ modify configure script/source-code to only define _POSIX_SOURCE if

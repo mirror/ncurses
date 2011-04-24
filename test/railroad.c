@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2000
  *
- * $Id: railroad.c,v 1.19 2009/10/24 21:37:56 tom Exp $
+ * $Id: railroad.c,v 1.20 2011/04/23 19:15:04 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -55,8 +55,8 @@ static char *backup;
 
 static bool interrupted = FALSE;
 
-static int
-outc(TPUTS_ARG c)
+static
+TPUTS_PROTO(outc, c)
 {
     int rc = OK;
 
@@ -68,7 +68,7 @@ outc(TPUTS_ARG c)
 	if (putc(c, stdout) == EOF)
 	    rc = ERR;
     }
-    return rc;
+    TPUTS_RETURN(rc);
 }
 
 static void

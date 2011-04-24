@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: filter.c,v 1.13 2010/11/13 20:55:54 tom Exp $
+ * $Id: filter.c,v 1.14 2011/04/23 20:13:32 tom Exp $
  */
 #include <test.priv.h>
 
@@ -143,7 +143,7 @@ main(int argc, char *argv[])
 	reset_shell_mode();
 	printf("\n");
 	fflush(stdout);
-	system(buffer);
+	IGNORE_RC(system(buffer));
 	reset_prog_mode();
 	touchwin(stdscr);
 	erase();

@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.47 2011/04/09 20:40:48 tom Exp $
+# $Id: ncurses_defs,v 1.49 2011/04/23 22:09:35 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -41,6 +41,7 @@ DECL_ERRNO
 ETIP_NEEDS_MATH_H
 GCC_NORETURN	/* nothing */
 GCC_UNUSED	/* nothing */
+HAVE_ASSUME_DEFAULT_COLORS
 HAVE_BIG_CORE
 HAVE_BSD_CGETENT
 HAVE_BSD_SIGNAL_H
@@ -157,6 +158,8 @@ HAVE_UNCTRL_H	1
 HAVE_UNISTD_H
 HAVE_UNLINK
 HAVE_USE_DEFAULT_COLORS
+HAVE_USE_SCREEN
+HAVE_USE_WINDOW
 HAVE_VFSCANF
 HAVE_VSNPRINTF
 HAVE_VSSCANF

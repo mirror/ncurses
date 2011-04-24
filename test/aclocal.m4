@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.52 2011/04/09 22:22:11 tom Exp $
+dnl $Id: aclocal.m4,v 1.59 2011/04/23 23:26:44 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -1457,6 +1457,29 @@ rm -rf conftest*
 AC_SUBST(EXTRA_CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_GETOPT_HEADER version: 4 updated: 2009/08/31 20:07:52
+dnl ----------------
+dnl Check for getopt's variables which are commonly defined in stdlib.h,
+dnl unistd.h or (nonstandard) in getopt.h
+AC_DEFUN([CF_GETOPT_HEADER],
+[
+AC_HAVE_HEADERS(unistd.h getopt.h)
+AC_CACHE_CHECK(for header declaring getopt variables,cf_cv_getopt_header,[
+cf_cv_getopt_header=none
+for cf_header in stdio.h stdlib.h unistd.h getopt.h
+do
+AC_TRY_COMPILE([
+#include <$cf_header>],
+[int x = optind; char *y = optarg],
+[cf_cv_getopt_header=$cf_header
+ break])
+done
+])
+if test $cf_cv_getopt_header != none ; then
+	AC_DEFINE(HAVE_GETOPT_HEADER)
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_GNU_SOURCE version: 6 updated: 2005/07/09 13:23:07
 dnl -------------
 dnl Check if we must define _GNU_SOURCE to get a reasonable value for
@@ -2256,7 +2279,7 @@ else
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 4 updated: 2011/02/18 20:26:24
+dnl CF_PKG_CONFIG version: 6 updated: 2011/04/17 06:36:21
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
 AC_DEFUN([CF_PKG_CONFIG],
@@ -2573,6 +2596,50 @@ ncursesw/term.h)
 	AC_DEFINE(HAVE_NCURSESW_TERM_H)
 	;;
 esac
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_TPUTS_PROTO version: 2 updated: 2011/04/23 19:25:50
+dnl --------------
+dnl Check for type of function-pointer passed to tputs.  Some old
+dnl implementations used functions that had different prototypes, making it
+dnl hard to compile portable programs using tputs.
+AC_DEFUN([CF_TPUTS_PROTO],[
+CF_CURSES_FUNCS(tputs)
+if test x$cf_cv_func_tputs = xyes
+then
+	cf_done=no
+	for cf_arg in int char
+	do
+		for cf_ret in int void
+		do
+			if test $cf_ret = void
+			then
+				cf_return="/* nothing */"
+			else
+				cf_return="return value"
+			fi
+			AC_TRY_COMPILE([
+#include <${cf_cv_ncurses_header:-curses.h}>
+#include <$cf_cv_term_header>
+
+static $cf_ret outc($cf_arg value) { $cf_return; }
+],[
+	tputs("hello", 0, outc); 
+	${cf_cv_main_return:-return}(0);
+],[
+		CF_VERBOSE([prototype $cf_ret func($cf_arg value)])
+		cat >>confdefs.h <<EOF
+#define TPUTS_ARG               $cf_arg
+#define TPUTS_PROTO(func,value) $cf_ret func(TPUTS_ARG value)
+#define TPUTS_RETURN(value)     $cf_return
+EOF
+		cf_done=yes
+		break
+])
+		done
+		test $cf_done = yes && break
+	done
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_TRY_PKG_CONFIG version: 4 updated: 2010/06/14 17:42:30

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2011 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,63 +26,78 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * This is an example written by Alexander V. Lukyanov <lav@yars.free.net>,
- * to demonstrate an inconsistency between ncurses and SVr4 curses.
- *
- * $Id: testaddch.c,v 1.8 2011/04/23 20:13:12 tom Exp $
+ * $Id: color_name.h,v 1.2 2011/04/23 17:15:01 tom Exp $
  */
+
+#ifndef __COLORNAME_H
+#define __COLORNAME_H 1
+
+#ifndef __TEST_PRIV_H
 #include <test.priv.h>
+#endif
 
-static void
-attr_addstr(const char *s, chtype a)
+static NCURSES_CONST char *the_color_names[] =
 {
-    while (*s)
-	addch(((unsigned char) (*s++)) | a);
-}
+    "black",
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+    "BLACK",
+    "RED",
+    "GREEN",
+    "YELLOW",
+    "BLUE",
+    "MAGENTA",
+    "CYAN",
+    "WHITE"
+};
 
-int
-main(
-	int argc GCC_UNUSED,
-	char *argv[]GCC_UNUSED)
+#ifdef NEED_COLOR_CODE
+static int
+color_code(const char *color)
 {
-    unsigned i;
-    chtype back, set, attr;
+    int result = 0;
+    char *endp = 0;
+    size_t n;
 
-    setlocale(LC_ALL, "");
-
-    initscr();
-    start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLUE);
-    init_pair(2, COLOR_WHITE, COLOR_RED);
-    init_pair(3, COLOR_BLACK, COLOR_MAGENTA);
-    init_pair(4, COLOR_BLACK, COLOR_GREEN);
-    init_pair(5, COLOR_BLACK, COLOR_CYAN);
-    init_pair(6, COLOR_BLACK, COLOR_YELLOW);
-    init_pair(7, COLOR_BLACK, COLOR_WHITE);
-
-    for (i = 0; i < 8; i++) {
-	back = (i & 1) ? A_BOLD | 'B' : ' ';
-	set = (i & 2) ? A_REVERSE : 0;
-	attr = (chtype) ((i & 4) ? COLOR_PAIR(4) : 0);
-
-	bkgdset(back);
-	(void) attrset(set);
-
-	attr_addstr("Test string with spaces ->   <-\n", attr);
+    if ((result = strtol(color, &endp, 0)) >= 0
+	&& (endp == 0 || *endp == 0)) {
+	;
+    } else if (!strcmp(color, "default")) {
+	result = -1;
+    } else {
+	for (n = 0; n < SIZEOF(the_color_names); ++n) {
+	    if (!strcmp(the_color_names[n], color)) {
+		result = (int) n;
+		break;
+	    }
+	}
     }
-    addch('\n');
-    for (i = 0; i < 8; i++) {
-	back = (i & 1) ? A_BOLD | 'B' | COLOR_PAIR(1) : ' ';
-	set = (i & 2) ? A_REVERSE | COLOR_PAIR(2) : 0;
-	attr = (chtype) ((i & 4) ? COLOR_PAIR(4) : 0);
-
-	bkgdset(back);
-	(void) attrset(set);
-
-	attr_addstr("Test string with spaces ->   <-\n", attr);
-    }
-
-    getch();
-    endwin();
-    ExitProgram(EXIT_SUCCESS);
+    return result;
 }
+#endif /* NEED_COLOR_NAME */
+
+#ifdef NEED_COLOR_NAME
+static const char *
+color_name(int color)
+{
+    static char temp[20];
+    const char *result = 0;
+
+    if (color > (int) SIZEOF(the_color_names)) {
+	sprintf(temp, "%d", color);
+	result = temp;
+    } else if (color < 0) {
+	result = "default";
+    } else {
+	result = the_color_names[color];
+    }
+    return result;
+}
+#endif /* NEED_COLOR_NAME */
+
+#endif /* __COLORNAME_H */
