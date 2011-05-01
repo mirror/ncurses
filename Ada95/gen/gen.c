@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.59 2011/03/31 23:50:24 tom Exp $
+    $Id: gen.c,v 1.60 2011/04/30 19:47:19 Nicolas.Boulenguez Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -124,19 +124,15 @@ gen_reps(
 	  int len,		/* size of the record in bytes          */
 	  int bias)
 {
-  const char *unused_name = "Unused";
-  int long_bits = (8 * (int)sizeof(unsigned long));
-  int len_bits = (8 * len);
-  int i, j, n, l, cnt = 0, low, high;
+  const int len_bits = (8 * len);
+  int i, l, low, high;
   int width = strlen(RES_NAME) + 3;
   unsigned long a;
-  unsigned long mask = 0;
 
   assert(nap != NULL);
 
   for (i = 0; nap[i].name != (char *)0; i++)
     {
-      cnt++;
       l = (int)strlen(nap[i].name);
       if (l > width)
 	width = l;
@@ -147,31 +143,7 @@ gen_reps(
   printf("      record\n");
   for (i = 0; nap[i].name != (char *)0; i++)
     {
-      mask |= nap[i].attr;
       printf("         %-*s : Boolean;\n", width, nap[i].name);
-    }
-
-  /*
-   * Compute a mask for the unused bits in this target.
-   */
-  mask = ~mask;
-  /*
-   * Bits in the biased area are unused by the target.
-   */
-  for (j = 0; j < bias; ++j)
-    {
-      mask &= (unsigned long)(~(1L << j));
-    }
-  /*
-   * Bits past the target's size are really unused.
-   */
-  for (j = len_bits + bias; j < long_bits; ++j)
-    {
-      mask &= (unsigned long)(~(1L << j));
-    }
-  if (mask != 0)
-    {
-      printf("         %-*s : Boolean;\n", width, unused_name);
     }
   printf("      end record;\n");
   printf("   pragma Convention (C, %s);\n\n", name);
@@ -187,17 +159,10 @@ gen_reps(
 	printf("         %-*s at 0 range %2d .. %2d;\n", width, nap[i].name,
 	       low - bias, high - bias);
     }
-  if (mask != 0)
-    {
-      l = find_pos((char *)&mask, sizeof(mask), &low, &high);
-      if (l >= 0)
-	printf("         %-*s at 0 range %2d .. %2d;\n", width, unused_name,
-	       low - bias, high - bias);
-    }
-  i = 1;
-  n = cnt;
   printf("      end record;\n");
+  printf("   pragma Warnings (Off);");
   printf("   for %s'Size use %d;\n", name, len_bits);
+  printf("   pragma Warnings (On);\n");
   printf("   --  Please note: this rep. clause is generated and may be\n");
   printf("   --               different on your system.");
 }
