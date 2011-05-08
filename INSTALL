@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.155 2011/03/31 08:27:24 tom Exp $
+-- $Id: INSTALL,v 1.156 2011/05/07 19:39:37 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1726,20 +1726,37 @@ CONFIGURING FALLBACK ENTRIES:
 	By default, there are no entries on the fallback list.  After you have
 	built the ncurses suite for the first time, you can change the list
 	(the process needs infocmp(1)).  To do so, use the script
-	ncurses/tinfo/MKfallback.sh.  A configure script option
+	ncurses/tinfo/MKfallback.sh.  The configure script option
 	--with-fallbacks does this (it accepts a comma-separated list of the
 	names you wish, and does not require a rebuild).
 
 	If you wanted (say) to have linux, vt100, and xterm fallbacks, you
-	would use the commands
+	might use the commands
 
 		cd ncurses;
-		tinfo/MKfallback.sh linux vt100 xterm >fallback.c
+		tinfo/MKfallback.sh \
+			$TERMINFO \
+			../misc/terminfo.src \
+			`which tic` \
+			linux vt100 xterm >fallback.c
+
+	The first three parameters of the script are normally supplied by
+	the configured makefiles via the "--with-fallbacks" option.  They
+	are
+
+		1) the location of the terminfo database
+		2) the source for the terminfo entries
+		3) the location of the tic program, used to create a terminfo
+		   database.
 
 	Then just rebuild and reinstall the library as you would normally.
 	You can restore the default empty fallback list with
 
-		tinfo/MKfallback.sh >fallback.c
+		tinfo/MKfallback.sh \
+			$TERMINFO \
+			../misc/terminfo.src \
+			`which tic` \
+			>fallback.c
 
 	The overhead for an empty fallback list is one trivial stub function.
 	Any non-empty fallback list is const-ed and therefore lives in sharable

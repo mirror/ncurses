@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1695 2011/04/30 21:58:29 tom Exp $
+-- $Id: NEWS,v 1.1699 2011/05/07 19:51:09 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,19 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20110507
+	+ update discussion of MKfallback.sh script in INSTALL; normally the
+	  script is used automatically via the configured makefiles.  However
+	  there are still occasions when it might be used directly by packagers
+	  (report by Gunter Schaffler).
+	+ modify misc/ncurses-config.in to omit the "-L" option from the
+	  "--libs" output if the library directory is /usr/lib.
+	+ change order of tests for curses.h versus ncurses.h headers in the
+	  configure scripts for Ada95 and test-directories, to look for
+	  ncurses.h, from fixes to tin -TD
+	+ modify ncurses/tinfo/access.c to account for Tandem's root uid
+	  (report by Joachim Schmitz).
+
 20110430
 	+ modify rules in Ada95/src/Makefile.in to ensure that the PIC option
 	  is not used when building a static library (report by Nicolas
@@ -61,7 +74,7 @@ it is not possible to add this information.
 	+ add check in test/configure for some legacy curses types of the
 	  function pointer passed to tputs().
 	+ modify init_pair() to accept -1's for color value after
-	  assume_default_colors() has been called (Debian #337905).
+	  assume_default_colors() has been called (Debian #337095).
 	+ modify test/background.c, adding commmand-line options to demonstrate
 	  assume_default_colors() and use_default_colors().
 

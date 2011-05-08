@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,15 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: access.c,v 1.16 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.17 2011/05/07 15:02:03 tom Exp $")
+
+#ifdef __TANDEM
+#define ROOT_UID 65535
+#endif
+
+#ifndef ROOT_UID
+#define ROOT_UID 0
+#endif
 
 #define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
 
@@ -170,6 +178,7 @@ _nc_env_access(void)
 	|| getgid() != getegid())
 	return FALSE;
 #endif
-    return getuid() != 0 && geteuid() != 0;	/* ...finally, disallow root */
+    /* ...finally, disallow root */
+    return (getuid() != ROOT_UID) && (geteuid() != ROOT_UID);
 }
 #endif

@@ -4519,10 +4519,10 @@ else
 
 cf_cv_ncurses_header=none
 for cf_header in  \
-    ncursesw/curses.h \
-	ncursesw/ncurses.h \
-	curses.h \
-	ncurses.h
+    ncursesw/ncurses.h \
+	ncursesw/curses.h \
+	ncurses.h \
+	curses.h
 do
 cat >conftest.$ac_ext <<_ACEOF
 #line 4528 "configure"
@@ -5889,10 +5889,10 @@ else
 
 cf_cv_ncurses_header=none
 for cf_header in  \
-    ncurses/curses.h \
-	ncurses/ncurses.h \
-	curses.h \
-	ncurses.h
+    ncurses/ncurses.h \
+	ncurses/curses.h \
+	ncurses.h \
+	curses.h
 do
 cat >conftest.$ac_ext <<_ACEOF
 #line 5898 "configure"

@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.25 2011/03/19 22:43:38 tom Exp $
+# $Id: ncurses-config.in,v 1.26 2011/05/07 19:23:01 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -83,13 +83,19 @@ while test $# -gt 0; do
 ENDECHO
 		;;
 	--libs)
+		if test "$libdir" = /usr/lib
+		then
+			LIBDIR=
+		else
+			LIBDIR=-L$libdir
+		fi
 		if test @TINFO_NAME@ = @LIB_NAME@ ; then
 		sed -e 's,^[ ]*,,' -e 's, [ ]*, ,g' -e 's,[ ]*$,,' <<-ENDECHO
-			-L$libdir @EXTRA_LDFLAGS@ -l${THIS} @LIBS@
+			$LIBDIR @EXTRA_LDFLAGS@ -l${THIS} @LIBS@
 ENDECHO
 		else
 		sed -e 's,^[ ]*,,' -e 's, [ ]*, ,g' -e 's,[ ]*$,,' <<-ENDECHO
-			-L$libdir @EXTRA_LDFLAGS@ -l${THIS} -l${TINFO_LIB} @LIBS@
+			$LIBDIR @EXTRA_LDFLAGS@ -l${THIS} -l${TINFO_LIB} @LIBS@
 ENDECHO
 		fi
 		;;
@@ -163,4 +169,5 @@ ENDHELP
 	esac
 	shift
 done
+# vi:ts=4 sw=4
 # vile:shmode
