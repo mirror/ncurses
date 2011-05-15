@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.89 2010/05/01 22:04:08 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.91 2011/05/14 22:39:21 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -172,7 +172,11 @@ nametrans(const char *name)
 }
 
 void
-dump_init(const char *version, int mode, int sort, int twidth, int traceval,
+dump_init(const char *version,
+	  int mode,
+	  int sort,
+	  int twidth,
+	  unsigned traceval,
 	  bool formatted)
 /* set up for entry display */
 {
@@ -393,8 +397,8 @@ force_wrap(void)
 static void
 wrap_concat(const char *src)
 {
-    unsigned need = strlen(src);
-    unsigned want = strlen(separator) + need;
+    size_t need = strlen(src);
+    size_t want = strlen(separator) + need;
 
     if (column > INDENT
 	&& column + (int) want > width) {
@@ -600,7 +604,7 @@ fmt_entry(TERMTYPE *tterm,
 
     for_each_boolean(j, tterm) {
 	i = BoolIndirect(j);
-	name = ExtBoolname(tterm, i, bool_names);
+	name = ExtBoolname(tterm, (int) i, bool_names);
 	assert(strlen(name) < sizeof(buffer) - EXTRA_CAP);
 
 	if (!version_filter(BOOLEAN, i))
@@ -624,7 +628,7 @@ fmt_entry(TERMTYPE *tterm,
 
     for_each_number(j, tterm) {
 	i = NumIndirect(j);
-	name = ExtNumname(tterm, i, num_names);
+	name = ExtNumname(tterm, (int) i, num_names);
 	assert(strlen(name) < sizeof(buffer) - EXTRA_CAP);
 
 	if (!version_filter(NUMBER, i))
@@ -670,7 +674,7 @@ fmt_entry(TERMTYPE *tterm,
 
     for_each_string(j, tterm) {
 	i = StrIndirect(j);
-	name = ExtStrname(tterm, i, str_names);
+	name = ExtStrname(tterm, (int) i, str_names);
 	assert(strlen(name) < sizeof(buffer) - EXTRA_CAP);
 
 	capability = tterm->Strings[i];
@@ -846,7 +850,7 @@ fmt_entry(TERMTYPE *tterm,
      */
     if (outcount) {
 	bool trimmed = FALSE;
-	j = outbuf.used;
+	j = (PredIdx) outbuf.used;
 	if (j >= 2
 	    && outbuf.text[j - 1] == '\t'
 	    && outbuf.text[j - 2] == '\n') {
@@ -1064,7 +1068,7 @@ dump_entry(TERMTYPE *tterm,
 	     */
 	    unsigned n;
 	    for (n = STRCOUNT; n < NUM_STRINGS(tterm); n++) {
-		const char *name = ExtStrname(tterm, n, strnames);
+		const char *name = ExtStrname(tterm, (int) n, strnames);
 
 		if (VALID_STRING(tterm->Strings[n])) {
 		    set_attributes = ABSENT_STRING;
@@ -1158,7 +1162,7 @@ show_entry(void)
 }
 
 void
-compare_entry(void (*hook) (PredType t, PredIdx i, const char *name),
+compare_entry(PredHook hook,
 	      TERMTYPE *tp GCC_UNUSED,
 	      bool quiet)
 /* compare two entries */
@@ -1170,7 +1174,7 @@ compare_entry(void (*hook) (PredType t, PredIdx i, const char *name),
 	fputs("    comparing booleans.\n", stdout);
     for_each_boolean(j, tp) {
 	i = BoolIndirect(j);
-	name = ExtBoolname(tp, i, bool_names);
+	name = ExtBoolname(tp, (int) i, bool_names);
 
 	if (isObsolete(outform, name))
 	    continue;
@@ -1182,7 +1186,7 @@ compare_entry(void (*hook) (PredType t, PredIdx i, const char *name),
 	fputs("    comparing numbers.\n", stdout);
     for_each_number(j, tp) {
 	i = NumIndirect(j);
-	name = ExtNumname(tp, i, num_names);
+	name = ExtNumname(tp, (int) i, num_names);
 
 	if (isObsolete(outform, name))
 	    continue;
@@ -1194,7 +1198,7 @@ compare_entry(void (*hook) (PredType t, PredIdx i, const char *name),
 	fputs("    comparing strings.\n", stdout);
     for_each_string(j, tp) {
 	i = StrIndirect(j);
-	name = ExtStrname(tp, i, str_names);
+	name = ExtStrname(tp, (int) i, str_names);
 
 	if (isObsolete(outform, name))
 	    continue;

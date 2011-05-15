@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.26 2011/05/07 15:35:16 tom Exp $
+dnl $Id: aclocal.m4,v 1.27 2011/05/14 20:55:38 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -38,6 +38,31 @@ dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
+dnl CF_ACVERSION_CHECK version: 2 updated: 2011/05/08 11:22:03
+dnl ------------------
+dnl Conditionally generate script according to whether we're using a given autoconf.
+dnl
+dnl $1 = version to compare against
+dnl $2 = code to use if AC_ACVERSION is at least as high as $1.
+dnl $3 = code to use if AC_ACVERSION is older than $1.
+define(CF_ACVERSION_CHECK,
+[
+ifdef([m4_version_compare],
+[m4_if(m4_version_compare(m4_defn([AC_ACVERSION]), [$1]), -1, [$3], [$2])],
+[CF_ACVERSION_COMPARE(
+AC_PREREQ_CANON(AC_PREREQ_SPLIT([$1])),
+AC_PREREQ_CANON(AC_PREREQ_SPLIT(AC_ACVERSION)), AC_ACVERSION, [$2], [$3])])])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ACVERSION_COMPARE version: 2 updated: 2011/04/14 20:56:50
+dnl --------------------
+dnl CF_ACVERSION_COMPARE(MAJOR1, MINOR1, TERNARY1,
+dnl                      MAJOR2, MINOR2, TERNARY2,
+dnl                      PRINTABLE2, not FOUND, FOUND)
+define(CF_ACVERSION_COMPARE,
+[ifelse(builtin([eval], [$2 < $5]), 1,
+[ifelse([$8], , ,[$8])],
+[ifelse([$9], , ,[$9])])])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ADA_INCLUDE_DIRS version: 6 updated: 2010/02/26 19:52:07
 dnl -------------------
@@ -1070,53 +1095,6 @@ AC_SUBST(cf_compile_generics)
 AC_SUBST(cf_generic_objects)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_SIGINT version: 1 updated: 2011/03/27 20:07:59
-dnl --------------
-dnl Check if gnat supports SIGINT, and presumably tasking.  For the latter, it
-dnl is noted that gnat may compile a tasking unit even for configurations which
-dnl fail at runtime.
-AC_DEFUN([CF_GNAT_SIGINT],[
-AC_CACHE_CHECK(if GNAT supports SIGINT,cf_cv_gnat_sigint,[
-CF_GNAT_TRY_LINK([with Ada.Interrupts.Names;
-
-package ConfTest is
-
-   pragma Warnings (Off);  --  the next pragma exists since 3.11p
-   pragma Unreserve_All_Interrupts;
-   pragma Warnings (On);
-
-   protected Process is
-      procedure Stop;
-      function Continue return Boolean;
-      pragma Attach_Handler (Stop, Ada.Interrupts.Names.SIGINT);
-   private
-      Done : Boolean := False;
-   end Process;
-
-end ConfTest;],
-[package body ConfTest is
-   protected body Process is
-      procedure Stop is
-      begin
-         Done := True;
-      end Stop;
-      function Continue return Boolean is
-      begin
-         return not Done;
-      end Continue;
-   end Process;
-end ConfTest;],
-	[cf_cv_gnat_sigint=yes],
-	[cf_cv_gnat_sigint=no])])
-
-if test $cf_cv_gnat_sigint = yes ; then
-	USE_GNAT_SIGINT=""
-else
-	USE_GNAT_SIGINT="#"
-fi
-AC_SUBST(USE_GNAT_SIGINT)
-])dnl
-dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_PRAGMA_UNREF version: 1 updated: 2010/06/19 15:22:18
 dnl --------------------
 dnl Check if the gnat pragma "Unreferenced" works.
@@ -1251,6 +1229,53 @@ fi
 AC_SUBST(USE_OLD_MAKERULES)
 AC_SUBST(USE_GNAT_PROJECTS)
 AC_SUBST(USE_GNAT_LIBRARIES)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_GNAT_SIGINT version: 1 updated: 2011/03/27 20:07:59
+dnl --------------
+dnl Check if gnat supports SIGINT, and presumably tasking.  For the latter, it
+dnl is noted that gnat may compile a tasking unit even for configurations which
+dnl fail at runtime.
+AC_DEFUN([CF_GNAT_SIGINT],[
+AC_CACHE_CHECK(if GNAT supports SIGINT,cf_cv_gnat_sigint,[
+CF_GNAT_TRY_LINK([with Ada.Interrupts.Names;
+
+package ConfTest is
+
+   pragma Warnings (Off);  --  the next pragma exists since 3.11p
+   pragma Unreserve_All_Interrupts;
+   pragma Warnings (On);
+
+   protected Process is
+      procedure Stop;
+      function Continue return Boolean;
+      pragma Attach_Handler (Stop, Ada.Interrupts.Names.SIGINT);
+   private
+      Done : Boolean := False;
+   end Process;
+
+end ConfTest;],
+[package body ConfTest is
+   protected body Process is
+      procedure Stop is
+      begin
+         Done := True;
+      end Stop;
+      function Continue return Boolean is
+      begin
+         return not Done;
+      end Continue;
+   end Process;
+end ConfTest;],
+	[cf_cv_gnat_sigint=yes],
+	[cf_cv_gnat_sigint=no])])
+
+if test $cf_cv_gnat_sigint = yes ; then
+	USE_GNAT_SIGINT=""
+else
+	USE_GNAT_SIGINT="#"
+fi
+AC_SUBST(USE_GNAT_SIGINT)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_TRY_LINK version: 3 updated: 2011/03/19 14:47:45
@@ -2546,7 +2571,7 @@ case ".[$]$1" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 6 updated: 2011/04/17 06:36:21
+dnl CF_PKG_CONFIG version: 7 updated: 2011/04/29 04:53:22
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
 AC_DEFUN([CF_PKG_CONFIG],
@@ -2563,7 +2588,9 @@ no) #(vi
 	PKG_CONFIG=none
 	;;
 yes) #(vi
-	AC_PATH_TOOL(PKG_CONFIG, pkg-config, none)
+	CF_ACVERSION_CHECK(2.52,
+		[AC_PATH_TOOL(PKG_CONFIG, pkg-config, none)],
+		[AC_PATH_PROG(PKG_CONFIG, pkg-config, none)])
 	;;
 *)
 	PKG_CONFIG=$withval

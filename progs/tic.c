@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.147 2011/02/12 18:39:08 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.149 2011/05/14 23:24:57 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -221,7 +221,7 @@ write_it(ENTRY * ep)
     }
 
     _nc_set_type(_nc_first_name(ep->tterm.term_names));
-    _nc_curr_line = ep->startline;
+    _nc_curr_line = (int) ep->startline;
     _nc_write_entry(&ep->tterm);
 }
 
@@ -475,7 +475,8 @@ int
 main(int argc, char *argv[])
 {
     char my_tmpname[PATH_MAX];
-    int v_opt = -1, debug_level;
+    int v_opt = -1;
+    unsigned debug_level;
     int smart_defaults = TRUE;
     char *termcap;
     ENTRY *qp;
@@ -618,7 +619,7 @@ main(int argc, char *argv[])
 	last_opt = this_opt;
     }
 
-    debug_level = (v_opt > 0) ? v_opt : (v_opt == 0);
+    debug_level = (unsigned) ((v_opt > 0) ? v_opt : (v_opt == 0));
     set_trace_level(debug_level);
 
     if (_nc_tracing) {
@@ -750,7 +751,7 @@ main(int argc, char *argv[])
 
 	    for_entry_list(qp) {
 		if (matches(namelst, qp->tterm.term_names)) {
-		    int j = qp->cend - qp->cstart;
+		    long j = qp->cend - qp->cstart;
 		    int len = 0;
 
 		    /* this is in case infotocap() generates warnings */
@@ -767,7 +768,7 @@ main(int argc, char *argv[])
 		    repair_acsc(&qp->tterm);
 		    dump_entry(&qp->tterm, suppress_untranslatable,
 			       limited, numbers, NULL);
-		    for (j = 0; j < (int) qp->nuses; j++)
+		    for (j = 0; j < (long) qp->nuses; j++)
 			dump_uses(qp->uses[j].name, !capdump);
 		    len = show_entry();
 		    if (debug_level != 0 && !limited)
@@ -915,18 +916,18 @@ keypad_final(const char *string)
     return result;
 }
 
-static int
+static long
 keypad_index(const char *string)
 {
     char *test;
     const char *list = "PQRSwxymtuvlqrsPpn";	/* app-keypad except "Enter" */
     int ch;
-    int result = -1;
+    long result = -1;
 
     if ((ch = keypad_final(string)) != '\0') {
 	test = strchr(list, ch);
 	if (test != 0)
-	    result = (test - list);
+	    result = (long) (test - list);
     }
     return result;
 }
@@ -1097,11 +1098,11 @@ check_keypad(TERMTYPE *tp)
 	VALID_STRING(key_c1) &&
 	VALID_STRING(key_c3)) {
 	char final[MAX_KP + 1];
-	int list[MAX_KP];
+	long list[MAX_KP];
 	int increase = 0;
 	int j, k, kk;
-	int last;
-	int test;
+	long last;
+	long test;
 
 	final[0] = keypad_final(key_a1);
 	final[1] = keypad_final(key_a3);
@@ -1592,7 +1593,7 @@ check_termtype(TERMTYPE *tp, bool literal)
     for (j = 0; j < NUM_STRINGS(tp); j++) {
 	char *a = tp->Strings[j];
 	if (VALID_STRING(a))
-	    check_params(tp, ExtStrname(tp, j, strnames), a);
+	    check_params(tp, ExtStrname(tp, (int) j, strnames), a);
     }
 
     check_acs(tp);

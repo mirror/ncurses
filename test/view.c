@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.81 2010/11/14 01:06:02 tom Exp $
+ * $Id: view.c,v 1.82 2011/05/14 17:43:12 tom Exp $
  */
 
 #include <test.priv.h>
@@ -180,7 +180,7 @@ ch_dup(char *src)
 {
     unsigned len = (unsigned) strlen(src);
     NCURSES_CH_T *dst = typeMalloc(NCURSES_CH_T, len + 1);
-    unsigned j, k;
+    size_t j, k;
 #if USE_WIDEC_SUPPORT
     wchar_t wstr[CCHARW_MAX + 1];
     wchar_t wch;

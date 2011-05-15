@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.52 2010/05/01 22:04:08 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.53 2011/05/14 22:35:49 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -340,7 +340,7 @@ main(int argc, char *argv[])
     unsigned i;
     int code;
     int this_opt, last_opt = '?';
-    int v_opt = 0;
+    unsigned v_opt = 0;
 
     _nc_progname = _nc_rootname(argv[0]);
 
@@ -349,14 +349,14 @@ main(int argc, char *argv[])
 	if (isdigit(this_opt)) {
 	    switch (last_opt) {
 	    case 'v':
-		v_opt = (this_opt - '0');
+		v_opt = (unsigned) (this_opt - '0');
 		break;
 	    default:
 		if (isdigit(last_opt))
 		    v_opt *= 10;
 		else
 		    v_opt = 0;
-		v_opt += (this_opt - '0');
+		v_opt += (unsigned) (this_opt - '0');
 		last_opt = this_opt;
 	    }
 	    continue;

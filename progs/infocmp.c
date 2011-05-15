@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.105 2010/05/01 22:04:08 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.106 2011/05/14 22:51:04 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -70,7 +70,7 @@ static const char *bool_sep = ":";
 static const char *s_absent = "NULL";
 static const char *s_cancel = "NULL";
 static const char *tversion;	/* terminfo version selected */
-static int itrace;		/* trace flag for debugging */
+static unsigned itrace;		/* trace flag for debugging */
 static int mwidth = 60;
 static int numbers = 0;		/* format "%'char'" to/from "%{number}" */
 static int outform = F_TERMINFO;	/* output format */
@@ -556,7 +556,7 @@ skip_csi(const char *cap)
 }
 
 static bool
-same_param(const char *table, const char *param, unsigned length)
+same_param(const char *table, const char *param, size_t length)
 {
     bool result = FALSE;
     if (strncmp(table, param, length) == 0) {
@@ -1090,7 +1090,8 @@ dump_initializers(TERMTYPE *term)
 	    *tp++ = '"';
 	    *tp = '\0';
 	    (void) printf("static char %-20s[] = %s;\n",
-			  string_variable(ExtStrname(term, n, strnames)), buf);
+			  string_variable(ExtStrname(term, (int) n, strnames)),
+			  buf);
 	}
     }
     printf("\n");
@@ -1116,7 +1117,7 @@ dump_initializers(TERMTYPE *term)
 	    break;
 	}
 	(void) printf("\t/* %3u: %-8s */\t%s,\n",
-		      n, ExtBoolname(term, n, boolnames), str);
+		      n, ExtBoolname(term, (int) n, boolnames), str);
     }
     (void) printf("%s;\n", R_CURL);
 
@@ -1137,7 +1138,7 @@ dump_initializers(TERMTYPE *term)
 	    break;
 	}
 	(void) printf("\t/* %3u: %-8s */\t%s,\n", n,
-		      ExtNumname(term, n, numnames), str);
+		      ExtNumname(term, (int) n, numnames), str);
     }
     (void) printf("%s;\n", R_CURL);
 
@@ -1150,10 +1151,10 @@ dump_initializers(TERMTYPE *term)
 	else if (term->Strings[n] == CANCELLED_STRING)
 	    str = "CANCELLED_STRING";
 	else {
-	    str = string_variable(ExtStrname(term, n, strnames));
+	    str = string_variable(ExtStrname(term, (int) n, strnames));
 	}
 	(void) printf("\t/* %3u: %-8s */\t%s,\n", n,
-		      ExtStrname(term, n, strnames), str);
+		      ExtStrname(term, (int) n, strnames), str);
     }
     (void) printf("%s;\n", R_CURL);
 
@@ -1165,15 +1166,15 @@ dump_initializers(TERMTYPE *term)
 		      name_initializer("string_ext"), L_CURL);
 	for (n = BOOLCOUNT; n < NUM_BOOLEANS(term); ++n) {
 	    (void) printf("\t/* %3u: bool */\t\"%s\",\n",
-			  n, ExtBoolname(term, n, boolnames));
+			  n, ExtBoolname(term, (int) n, boolnames));
 	}
 	for (n = NUMCOUNT; n < NUM_NUMBERS(term); ++n) {
 	    (void) printf("\t/* %3u: num */\t\"%s\",\n",
-			  n, ExtNumname(term, n, numnames));
+			  n, ExtNumname(term, (int) n, numnames));
 	}
 	for (n = STRCOUNT; n < NUM_STRINGS(term); ++n) {
 	    (void) printf("\t/* %3u: str */\t\"%s\",\n",
-			  n, ExtStrname(term, n, strnames));
+			  n, ExtStrname(term, (int) n, strnames));
 	}
 	(void) printf("%s;\n", R_CURL);
     }
@@ -1269,7 +1270,7 @@ main(int argc, char *argv[])
     /* Also avoid overflowing smaller stacks on systems like AmigaOS */
     path *tfile = 0;
     char **tname = 0;
-    int maxterms;
+    size_t maxterms;
 
     char **myargv;
 
@@ -1441,7 +1442,7 @@ main(int argc, char *argv[])
 	    ExitProgram(EXIT_SUCCESS);
 
 	case 'v':
-	    itrace = optarg_to_number();
+	    itrace = (unsigned) optarg_to_number();
 	    set_trace_level(itrace);
 	    break;
 
@@ -1460,7 +1461,7 @@ main(int argc, char *argv[])
 	}
     }
 
-    maxterms = (argc + 2 - optind);
+    maxterms = (size_t) (argc + 2 - optind);
     tfile = typeMalloc(path, maxterms);
     tname = typeCalloc(char *, maxterms);
     entries = typeCalloc(ENTRY, maxterms);

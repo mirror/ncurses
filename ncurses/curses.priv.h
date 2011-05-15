@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.477 2011/04/23 18:05:15 tom Exp $
+ * $Id: curses.priv.h,v 1.478 2011/05/14 17:36:15 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1417,25 +1417,25 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 #define CHANGED_CELL(line,col) \
 	if (line->firstchar == _NOCHANGE) \
-		line->firstchar = line->lastchar = (NCURSES_SIZE_T) col; \
+		line->firstchar = line->lastchar = (NCURSES_SIZE_T) (col); \
 	else if ((col) < line->firstchar) \
-		line->firstchar = (NCURSES_SIZE_T) col; \
+		line->firstchar = (NCURSES_SIZE_T) (col); \
 	else if ((col) > line->lastchar) \
-		line->lastchar = (NCURSES_SIZE_T) col
+		line->lastchar = (NCURSES_SIZE_T) (col)
 
 #define CHANGED_RANGE(line,start,end) \
 	if (line->firstchar == _NOCHANGE \
 	 || line->firstchar > (start)) \
-		line->firstchar = (NCURSES_SIZE_T) start; \
+		line->firstchar = (NCURSES_SIZE_T) (start); \
 	if (line->lastchar == _NOCHANGE \
 	 || line->lastchar < (end)) \
-		line->lastchar = (NCURSES_SIZE_T) end
+		line->lastchar = (NCURSES_SIZE_T) (end)
 
 #define CHANGED_TO_EOL(line,start,end) \
 	if (line->firstchar == _NOCHANGE \
 	 || line->firstchar > (start)) \
-		line->firstchar = (NCURSES_SIZE_T) start; \
-	line->lastchar = (NCURSES_SIZE_T) end
+		line->firstchar = (NCURSES_SIZE_T) (start); \
+	line->lastchar = (NCURSES_SIZE_T) (end)
 
 #define SIZEOF(v) (sizeof(v)/sizeof(v[0]))
 

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_name.h,v 1.2 2011/04/23 17:15:01 tom Exp $
+ * $Id: color_name.h,v 1.3 2011/05/14 17:41:17 tom Exp $
  */
 
 #ifndef __COLORNAME_H
@@ -64,7 +64,7 @@ color_code(const char *color)
     char *endp = 0;
     size_t n;
 
-    if ((result = strtol(color, &endp, 0)) >= 0
+    if ((result = (int) strtol(color, &endp, 0)) >= 0
 	&& (endp == 0 || *endp == 0)) {
 	;
     } else if (!strcmp(color, "default")) {

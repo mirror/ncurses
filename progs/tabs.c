@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 #define USE_LIBTINFO
 #include <progs.priv.h>
 
-MODULE_ID("$Id: tabs.c,v 1.19 2010/10/23 22:26:01 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.20 2011/05/14 22:34:36 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
@@ -227,7 +227,7 @@ comma_is_needed(const char *source)
     bool result = FALSE;
 
     if (source != 0) {
-	unsigned len = strlen(source);
+	size_t len = strlen(source);
 	if (len != 0)
 	    result = (source[len - 1] != ',');
     } else {
@@ -251,7 +251,7 @@ add_to_tab_list(char **append, const char *value)
 
     if (copied != 0 && *copied != '\0') {
 	const char *comma = ",";
-	unsigned need = 1 + strlen(copied);
+	size_t need = 1 + strlen(copied);
 
 	if (*copied == ',')
 	    comma = "";
