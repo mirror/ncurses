@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.367 2011/04/23 21:16:43 tom Exp $
+$Id: ncurses.c,v 1.368 2011/05/21 18:50:56 tom Exp $
 
 ***************************************************************************/
 
@@ -1394,7 +1394,7 @@ show_attr(int row, int skip, bool arrow, chtype attr, const char *name)
 	if (!(termattrs() & test)) {
 	    printw(" (N/A)");
 	} else {
-	    if (ncv > 0 && (getbkgd(stdscr) & A_COLOR)) {
+	    if (ncv > 0 && stdscr && (getbkgd(stdscr) & A_COLOR)) {
 		static const chtype table[] =
 		{
 		    A_STANDOUT,
@@ -4269,8 +4269,10 @@ acs_and_scroll(void)
 
 		    neww->next = current ? current->next : 0;
 		    neww->last = current;
-		    neww->last->next = neww;
-		    neww->next->last = neww;
+		    if (neww->last != 0)
+			neww->last->next = neww;
+		    if (neww->next != 0)
+			neww->next->last = neww;
 
 		    neww->wind = getwin(fp);
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.40 2010/11/14 01:06:47 tom Exp $
+ * $Id: ditto.c,v 1.41 2011/05/21 18:55:07 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -97,6 +97,9 @@ typedef struct {
     int target;			/* which screen is character going to */
     DITTO *ditto;		/* data for all screens */
 } DDATA;
+
+static void failed(const char *) GCC_NORETURN;
+static void usage(void) GCC_NORETURN;
 
 static void
 failed(const char *s)

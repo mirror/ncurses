@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.149 2011/05/14 23:24:57 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.150 2011/05/21 18:15:45 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -339,23 +339,23 @@ put_translate(int c)
 static char *
 stripped(char *src)
 {
+    char *dst = 0;
+
     while (isspace(UChar(*src)))
 	src++;
+
     if (*src != '\0') {
-	char *dst;
 	size_t len;
 
-	if ((dst = strdup(src)) == NULL)
+	if ((dst = strdup(src)) == NULL) {
 	    failed("strdup");
-
-	assert(dst != 0);
-
-	len = strlen(dst);
-	while (--len != 0 && isspace(UChar(dst[len])))
-	    dst[len] = '\0';
-	return dst;
+	} else {
+	    len = strlen(dst);
+	    while (--len != 0 && isspace(UChar(dst[len])))
+		dst[len] = '\0';
+	}
     }
-    return 0;
+    return dst;
 }
 
 static FILE *

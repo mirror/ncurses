@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.82 2011/01/15 22:19:12 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.83 2011/05/21 18:11:56 tom Exp $")
 
 /*
  *	char *
@@ -522,7 +522,7 @@ tparam_internal(bool use_TPARM_ARG, const char *string, va_list ap)
     }
 #ifdef TRACE
     if (USE_TRACEF(TRACE_CALLS)) {
-	for (i = 0; i < popcount; i++) {
+	for (i = 0; i < num_args; i++) {
 	    if (p_is_s[i] != 0)
 		save_text(", %s", _nc_visbuf(p_is_s[i]), 0);
 	    else

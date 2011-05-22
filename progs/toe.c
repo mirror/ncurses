@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.53 2011/05/14 22:35:49 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.54 2011/05/21 18:32:13 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -60,6 +60,8 @@ ExitProgram(int code)
     _nc_free_tic(code);
 }
 #endif
+
+static void failed(const char *) GCC_NORETURN;
 
 static void
 failed(const char *msg)

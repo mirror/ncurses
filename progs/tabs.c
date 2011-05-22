@@ -37,7 +37,7 @@
 #define USE_LIBTINFO
 #include <progs.priv.h>
 
-MODULE_ID("$Id: tabs.c,v 1.20 2011/05/14 22:34:36 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.21 2011/05/21 18:31:21 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
@@ -353,7 +353,6 @@ main(int argc, char *argv[])
     bool no_op = FALSE;
     int n, ch;
     NCURSES_CONST char *term_name = 0;
-    const char *mar_list = 0;	/* ignored */
     char *append = 0;
     const char *tab_list = 0;
 
@@ -446,7 +445,11 @@ main(int argc, char *argv[])
 	    while ((ch = *++option) != '\0') {
 		switch (ch) {
 		case 'm':
-		    mar_list = option;
+		    /*
+		     * The "+mXXX" option is unimplemented because only the long-obsolete
+		     * att510d implements smgl, which is needed to support
+		     * this option.
+		     */
 		    break;
 		default:
 		    /* special case of relative stops separated by spaces? */

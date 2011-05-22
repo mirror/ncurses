@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: redraw.c,v 1.6 2011/04/23 20:13:21 tom Exp $
+ * $Id: redraw.c,v 1.7 2011/05/21 18:38:35 tom Exp $
  *
  * Demonstrate the redrawwin() and wredrawln() functions.
  * Thomas Dickey - 2006/11/4
@@ -71,7 +71,7 @@ test_redraw(WINDOW *win)
     keypad(win, TRUE);
     getmaxyx(win, max_y, max_x);
     getbegyx(win, beg_y, beg_x);
-    while (!done) {
+    while (!done && win != 0) {
 	ch = wgetch(win);
 	getyx(win, y, x);
 	switch (ch) {

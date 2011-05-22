@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.83 2011/05/14 22:50:45 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.84 2011/05/21 18:55:32 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -147,6 +147,10 @@ extern char **environ;
 
 #undef CTRL
 #define CTRL(x)	((x) & 0x1f)
+
+static void failed(const char *) GCC_NORETURN;
+static void exit_error(void) GCC_NORETURN;
+static void err(const char *,...) GCC_NORETURN;
 
 const char *_nc_progname = "tset";
 

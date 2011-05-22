@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_expand.c,v 1.21 2010/01/16 17:11:23 tom Exp $")
+MODULE_ID("$Id: comp_expand.c,v 1.22 2011/05/21 18:55:07 tom Exp $")
 
 static int
 trailing_spaces(const char *src)
@@ -61,15 +61,15 @@ _nc_tic_expand(const char *srcp, bool tic_format, int numbers)
     size_t need = (2 + strlen(str)) * 4;
     int ch;
 
-#if NO_LEAKS
     if (srcp == 0) {
+#if NO_LEAKS
 	if (buffer != 0) {
 	    FreeAndNull(buffer);
 	    length = 0;
 	}
+#endif
 	return 0;
     }
-#endif
     if (buffer == 0 || need > length) {
 	if ((buffer = typeRealloc(char, length = need, buffer)) == 0)
 	      return 0;

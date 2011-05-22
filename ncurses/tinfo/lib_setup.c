@@ -47,7 +47,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.136 2011/04/16 15:32:45 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.137 2011/05/21 17:35:14 tom Exp $")
 
 /****************************************************************************
  *
@@ -547,7 +547,7 @@ _nc_locale_breaks_acs(TERMINAL * termp)
     int value;
     int result = 0;
 
-    if ((env = getenv(env_name)) != 0) {
+    if (getenv(env_name) != 0) {
 	result = _nc_getenv_num(env_name);
     } else if ((value = tigetnum("U8")) >= 0) {
 	result = value;		/* use extension feature */

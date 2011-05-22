@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.82 2011/05/14 17:43:12 tom Exp $
+ * $Id: view.c,v 1.83 2011/05/21 18:40:49 tom Exp $
  */
 
 #include <test.priv.h>
@@ -120,6 +120,8 @@ static char *fname;
 static NCURSES_CH_T **vec_lines;
 static NCURSES_CH_T **lptr;
 static int num_lines;
+
+static void usage(void) GCC_NORETURN;
 
 static void
 usage(void)
