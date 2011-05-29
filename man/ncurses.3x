@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.103 2011/02/05 23:21:29 tom Exp $
+.\" $Id: ncurses.3x,v 1.104 2011/05/28 23:19:36 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .de bP
@@ -734,6 +734,9 @@ Routines that return an integer return \fBERR\fR upon failure and an
 integer value other than \fBERR\fR upon successful completion, unless
 otherwise noted in the routine descriptions.
 .PP
+As a general rule, routines check for null pointers passed as parameters,
+and handle this as an error.
+.PP
 All macros return the value of the \fBw\fR version, except \fBsetscrreg\fR,
 \fBwsetscrreg\fR, \fBgetyx\fR, \fBgetbegyx\fR, and \fBgetmaxyx\fR.
 The return values of \fBsetscrreg\fR, \fBwsetscrreg\fR, \fBgetyx\fR, \fBgetbegyx\fR, and
@@ -1143,6 +1146,15 @@ The EXTENDED XSI Curses functionality
 A small number of local differences (that is, individual differences between
 the XSI Curses and \fBncurses\fR calls) are described in \fBPORTABILITY\fR
 sections of the library man pages.
+.PP
+Unlike other implementations, this one checks parameters such as pointers
+to WINDOW structures to ensure they are not null.
+The main reason for providing this behavior is to guard against programmer
+error.
+The standard interface does not provide a way for the library
+to tell an application which of several possible errors were detected.
+Relying on this (or some other) extension will adversely affect the
+portability of curses applications.
 .PP
 This implementation also contains several extensions:
 .bP

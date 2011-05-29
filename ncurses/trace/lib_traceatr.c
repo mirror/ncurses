@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.74 2011/01/22 19:48:01 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.75 2011/05/28 22:56:56 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -243,7 +243,7 @@ _nc_altcharset_name(attr_t attr, chtype ch)
 #if NCURSES_SP_FUNCS
     (void) sp;
 #endif
-    if ((attr & A_ALTCHARSET) && (acs_chars != 0)) {
+    if (SP_PARM != 0 && (attr & A_ALTCHARSET) && (acs_chars != 0)) {
 	char *cp;
 	char *found = 0;
 	const ALT_NAMES *strp;

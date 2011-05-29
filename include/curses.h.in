@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.220 2011/01/22 19:47:20 tom Exp $ */
+/* $Id: curses.h.in,v 1.223 2011/05/28 21:38:30 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -1145,7 +1145,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #define winsstr(w, s)		winsnstr(w, s, -1)
 
 #if !NCURSES_OPAQUE
-#define redrawwin(win)		wredrawln(win, 0, (win)->_maxy+1)
+#define redrawwin(win)		wredrawln(win, 0, ((win) ? (win)->_maxy+1 : -1))
 #endif /* NCURSES_OPAQUE */
 
 #define waddstr(win,str)	waddnstr(win,str,-1)
@@ -1256,7 +1256,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
  * Some wide-character functions can be implemented without the extensions.
  */
 #if !NCURSES_OPAQUE
-#define getbkgd(win)                    ((win)->_bkgd)
+#define getbkgd(win)                    ((win) ? ((win)->_bkgd) : 0)
 #endif /* NCURSES_OPAQUE */
 
 #define slk_attr_off(a,v)		((v) ? ERR : slk_attroff(a))
@@ -1264,16 +1264,25 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 
 #if !NCURSES_OPAQUE
 #if defined(NCURSES_WIDECHAR) && @NCURSES_EXT_COLORS@
-#define wattr_set(win,a,p,opts)		((win)->_attrs = ((a) & ~A_COLOR), \
-					 (win)->_color = (p), \
+#define wattr_set(win,a,p,opts)		(((win) \
+					  ? ((win)->_attrs = ((a) & ~A_COLOR), \
+					     (win)->_color = (p)) \
+					  : OK), \
 					 OK)
-#define wattr_get(win,a,p,opts)		((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
-					 (void)((p) != (void *)0 && (*(p) = (short)(win)->_color)), \
+#define wattr_get(win,a,p,opts)		(((win) \
+					  ? ((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
+					     (void)((p) != (void *)0 && (*(p) = (short)(win)->_color))) \
+					  : OK), \
 					 OK)
 #else
-#define wattr_set(win,a,p,opts)		((win)->_attrs = (((a) & ~A_COLOR) | (attr_t)COLOR_PAIR(p)), OK)
-#define wattr_get(win,a,p,opts)		((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
-					 (void)((p) != (void *)0 && (*(p) = (short)PAIR_NUMBER((win)->_attrs))), \
+#define wattr_set(win,a,p,opts)		(((win) \
+					  ? ((win)->_attrs = (((a) & ~A_COLOR) | (attr_t)COLOR_PAIR(p))) \
+					  : OK), \
+					 OK)
+#define wattr_get(win,a,p,opts)		(((win) \
+					  ? ((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
+					     (void)((p) != (void *)0 && (*(p) = (short)PAIR_NUMBER((win)->_attrs)))) \
+					  : OK), \
 					 OK)
 #endif
 #endif /* NCURSES_OPAQUE */

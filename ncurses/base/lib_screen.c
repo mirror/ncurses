@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.38 2009/10/24 22:08:55 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.40 2011/05/28 23:03:44 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -51,6 +51,9 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 
     T((T_CALLED("getwin(%p)"), (void *) filep));
 
+    if (filep == 0) {
+	returnWin(0);
+    }
     clearerr(filep);
     if (fread(&tmp, 1, sizeof(WINDOW), filep) < sizeof(WINDOW)
 	|| ferror(filep)
@@ -189,18 +192,20 @@ scr_restore(const char *file)
 NCURSES_EXPORT(int)
 scr_dump(const char *file)
 {
+    int result;
     FILE *fp = 0;
 
     T((T_CALLED("scr_dump(%s)"), _nc_visbuf(file)));
 
     if (_nc_access(file, W_OK) < 0
 	|| (fp = fopen(file, "wb")) == 0) {
-	returnCode(ERR);
+	result = ERR;
     } else {
 	(void) putwin(newscr, fp);
 	(void) fclose(fp);
-	returnCode(OK);
+	result = OK;
     }
+    returnCode(result);
 }
 
 NCURSES_EXPORT(int)

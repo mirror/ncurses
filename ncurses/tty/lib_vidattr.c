@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -69,7 +69,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.61 2010/06/05 22:22:04 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.62 2011/05/28 21:22:04 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -341,42 +341,44 @@ NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
     chtype attrs = A_NORMAL;
 
     T((T_CALLED("termattrs(%p)"), (void *) SP_PARM));
+
+    if (HasTerminal(SP_PARM)) {
 #ifdef USE_TERM_DRIVER
-    if (HasTerminal(SP_PARM))
 	attrs = CallDriver(SP_PARM, conattr);
 #else
 
-    if (enter_alt_charset_mode)
-	attrs |= A_ALTCHARSET;
+	if (enter_alt_charset_mode)
+	    attrs |= A_ALTCHARSET;
 
-    if (enter_blink_mode)
-	attrs |= A_BLINK;
+	if (enter_blink_mode)
+	    attrs |= A_BLINK;
 
-    if (enter_bold_mode)
-	attrs |= A_BOLD;
+	if (enter_bold_mode)
+	    attrs |= A_BOLD;
 
-    if (enter_dim_mode)
-	attrs |= A_DIM;
+	if (enter_dim_mode)
+	    attrs |= A_DIM;
 
-    if (enter_reverse_mode)
-	attrs |= A_REVERSE;
+	if (enter_reverse_mode)
+	    attrs |= A_REVERSE;
 
-    if (enter_standout_mode)
-	attrs |= A_STANDOUT;
+	if (enter_standout_mode)
+	    attrs |= A_STANDOUT;
 
-    if (enter_protected_mode)
-	attrs |= A_PROTECT;
+	if (enter_protected_mode)
+	    attrs |= A_PROTECT;
 
-    if (enter_secure_mode)
-	attrs |= A_INVIS;
+	if (enter_secure_mode)
+	    attrs |= A_INVIS;
 
-    if (enter_underline_mode)
-	attrs |= A_UNDERLINE;
+	if (enter_underline_mode)
+	    attrs |= A_UNDERLINE;
 
-    if (SP_PARM->_coloron)
-	attrs |= A_COLOR;
+	if (SP_PARM->_coloron)
+	    attrs |= A_COLOR;
 
 #endif
+    }
     returnChtype(attrs);
 }
 

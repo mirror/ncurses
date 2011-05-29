@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.264 2010/12/19 01:21:02 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.265 2011/05/28 21:51:20 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -676,6 +676,9 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
 #endif /* USE_TRACE_TIMES */
 
     T((T_CALLED("_nc_tinfo:doupdate(%p)"), (void *) SP_PARM));
+
+    if (SP_PARM == 0)
+	returnCode(ERR);
 
 #if !USE_REENTRANT
     /*

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1704 2011/05/21 19:01:38 tom Exp $
+-- $Id: NEWS,v 1.1707 2011/05/28 23:45:28 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110528
+	+ add case to CF_SHARED_OPTS for Interix (patch by Markus Duft).
+	+ used ncurses/link_test to check for behavior when the terminal has
+	  not been initialized and when an application passes null pointers
+	  to the library.  Added checks to cover this (prompted by Redhat
+	  #707344).
+	+ modify MKlib_gen.sh to make its main() function call each function
+	  with zero parameters, to help find inconsistent checking for null
+	  pointers, etc.
 
 20110521
 	+ fix warnings from clang 2.7 "--analyze"

@@ -37,7 +37,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: access.c,v 1.17 2011/05/07 15:02:03 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.18 2011/05/28 23:05:12 tom Exp $")
 
 #ifdef __TANDEM
 #define ROOT_UID 65535
@@ -116,7 +116,11 @@ _nc_basename(char *path)
 NCURSES_EXPORT(int)
 _nc_access(const char *path, int mode)
 {
-    if (access(path, mode) < 0) {
+    int result;
+
+    if (path == 0) {
+	result = -1;
+    } else if (access(path, mode) < 0) {
 	if ((mode & W_OK) != 0
 	    && errno == ENOENT
 	    && strlen(path) < PATH_MAX) {
@@ -129,11 +133,14 @@ _nc_access(const char *path, int mode)
 	    if (head == leaf)
 		(void) strcpy(head, ".");
 
-	    return access(head, R_OK | W_OK | X_OK);
+	    result = access(head, R_OK | W_OK | X_OK);
+	} else {
+	    result = -1;
 	}
-	return -1;
+    } else {
+	result = 0;
     }
-    return 0;
+    return result;
 }
 
 NCURSES_EXPORT(bool)

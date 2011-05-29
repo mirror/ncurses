@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.99 2011/04/23 18:22:22 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.101 2011/05/28 21:57:59 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -629,8 +629,15 @@ init_color(short color, short r, short g, short b)
 NCURSES_EXPORT(bool)
 NCURSES_SP_NAME(can_change_color) (NCURSES_SP_DCL)
 {
+    int result = FALSE;
+
     T((T_CALLED("can_change_color(%p)"), (void *) SP_PARM));
-    returnCode((CanChange != 0) ? TRUE : FALSE);
+
+    if (HasTerminal(SP_PARM) && (CanChange != 0)) {
+	result = TRUE;
+    }
+
+    returnCode(result);
 }
 
 #if NCURSES_SP_FUNCS
@@ -644,20 +651,22 @@ can_change_color(void)
 NCURSES_EXPORT(bool)
 NCURSES_SP_NAME(has_colors) (NCURSES_SP_DCL0)
 {
-    int code;
+    int code = FALSE;
 
     (void) SP_PARM;
     T((T_CALLED("has_colors()")));
+    if (HasTerminal(SP_PARM)) {
 #ifdef USE_TERM_DRIVER
-    code = HasColor;
+	code = HasColor;
 #else
-    code = ((VALID_NUMERIC(max_colors) && VALID_NUMERIC(max_pairs)
-	     && (((set_foreground != NULL)
-		  && (set_background != NULL))
-		 || ((set_a_foreground != NULL)
-		     && (set_a_background != NULL))
-		 || set_color_pair)) ? TRUE : FALSE);
+	code = ((VALID_NUMERIC(max_colors) && VALID_NUMERIC(max_pairs)
+		 && (((set_foreground != NULL)
+		      && (set_background != NULL))
+		     || ((set_a_foreground != NULL)
+			 && (set_a_background != NULL))
+		     || set_color_pair)) ? TRUE : FALSE);
 #endif
+    }
     returnCode(code);
 }
 

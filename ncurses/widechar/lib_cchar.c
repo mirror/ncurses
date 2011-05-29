@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.20 2010/12/25 23:46:26 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.22 2011/05/28 21:15:43 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch
@@ -58,9 +58,9 @@ setcchar(cchar_t *wcval,
 		      (void *) wcval, _nc_viswbuf(wch),
 		      (unsigned long) attrs, color_pair, opts));
 
-    len = (unsigned) wcslen(wch);
     if (opts != NULL
-	|| (len > 1 && wcwidth(wch[0]) < 0)) {
+	|| wch == NULL
+	|| ((len = wcslen(wch)) > 1 && wcwidth(wch[0]) < 0)) {
 	code = ERR;
     } else {
 	if (len > CCHARW_MAX)
@@ -110,7 +110,7 @@ getcchar(const cchar_t *wcval,
 		      (void *) color_pair,
 		      opts));
 
-    if (opts == NULL) {
+    if (opts == NULL && wcval != NULL) {
 	len = ((wp = wmemchr(wcval->chars, L'\0', CCHARW_MAX))
 	       ? (int) (wp - wcval->chars)
 	       : CCHARW_MAX);

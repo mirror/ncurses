@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2000,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -46,7 +46,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_flash.c,v 1.11 2009/10/24 22:02:14 tom Exp $")
+MODULE_ID("$Id: lib_flash.c,v 1.12 2011/05/28 21:53:45 tom Exp $")
 
 /*
  *	flash()
@@ -66,15 +66,17 @@ NCURSES_SP_NAME(flash) (NCURSES_SP_DCL0)
     if (SP_PARM != 0)
 	res = CallDriver_1(SP_PARM, doBeepOrFlash, FALSE);
 #else
-    /* FIXME: should make sure that we are not in altchar mode */
-    if (flash_screen) {
-	TPUTS_TRACE("flash_screen");
-	res = putp(flash_screen);
-	_nc_flush();
-    } else if (bell) {
-	TPUTS_TRACE("bell");
-	res = putp(bell);
-	_nc_flush();
+    if (HasTerminal(SP_PARM)) {
+	/* FIXME: should make sure that we are not in altchar mode */
+	if (flash_screen) {
+	    TPUTS_TRACE("flash_screen");
+	    res = putp(flash_screen);
+	    _nc_flush();
+	} else if (bell) {
+	    TPUTS_TRACE("bell");
+	    res = putp(bell);
+	    _nc_flush();
+	}
     }
 #endif
     returnCode(res);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ungetch.c,v 1.14 2009/10/24 22:12:21 tom Exp $")
+MODULE_ID("$Id: lib_ungetch.c,v 1.15 2011/05/28 22:52:06 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -64,7 +64,7 @@ safe_ungetch(SCREEN *sp, int ch)
 
     T((T_CALLED("ungetch(%p,%s)"), (void *) sp, _nc_tracechar(sp, ch)));
 
-    if (tail != -1) {
+    if (sp != 0 && tail != -1) {
 	if (head == -1) {
 	    head = 0;
 	    t_inc();

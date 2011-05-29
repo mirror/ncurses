@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.14 2010/12/19 01:44:24 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.15 2011/05/28 21:25:07 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); NCURSES_SP_NAME(tputs)(NCURSES_SP_ARGx mode, 1, outc)
 
@@ -296,24 +296,26 @@ vid_attr(attr_t newmode, short pair, void *opts)
 NCURSES_EXPORT(attr_t)
 NCURSES_SP_NAME(term_attrs) (NCURSES_SP_DCL0)
 {
-    attr_t attrs;
+    attr_t attrs = 0;
 
     T((T_CALLED("term_attrs()")));
-    attrs = SP_PARM ? NCURSES_SP_NAME(termattrs) (NCURSES_SP_ARG) : 0;
+    if (SP_PARM) {
+	attrs = NCURSES_SP_NAME(termattrs) (NCURSES_SP_ARG);
 
-    /* these are only supported for wide-character mode */
-    if (enter_horizontal_hl_mode)
-	attrs |= WA_HORIZONTAL;
-    if (enter_left_hl_mode)
-	attrs |= WA_LEFT;
-    if (enter_low_hl_mode)
-	attrs |= WA_LOW;
-    if (enter_right_hl_mode)
-	attrs |= WA_RIGHT;
-    if (enter_top_hl_mode)
-	attrs |= WA_TOP;
-    if (enter_vertical_hl_mode)
-	attrs |= WA_VERTICAL;
+	/* these are only supported for wide-character mode */
+	if (enter_horizontal_hl_mode)
+	    attrs |= WA_HORIZONTAL;
+	if (enter_left_hl_mode)
+	    attrs |= WA_LEFT;
+	if (enter_low_hl_mode)
+	    attrs |= WA_LOW;
+	if (enter_right_hl_mode)
+	    attrs |= WA_RIGHT;
+	if (enter_top_hl_mode)
+	    attrs |= WA_TOP;
+	if (enter_vertical_hl_mode)
+	    attrs |= WA_VERTICAL;
+    }
 
     returnAttr(attrs);
 }

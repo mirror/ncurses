@@ -1,4 +1,4 @@
-/* $Id: curses.wide,v 1.42 2010/03/30 00:39:41 tom Exp $ */
+/* $Id: curses.wide,v 1.43 2011/05/28 21:02:43 tom Exp $ */
 /*
  * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
@@ -261,7 +261,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(vid_puts) (SCREEN*, attr_t, short, vo
 #define wins_wstr(w,t)			wins_nwstr(w,t,-1)
 
 #if !NCURSES_OPAQUE
-#define wgetbkgrnd(win,wch)		(*wch = win->_bkgrnd, OK)
+#define wgetbkgrnd(win,wch)		((win) ? (*(wch) = (win)->_bkgrnd) : *(wch), OK)
 #endif
 
 #define mvadd_wch(y,x,c)		mvwadd_wch(stdscr,y,x,c)
