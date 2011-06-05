@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.478 2011/05/14 17:36:15 tom Exp $
+ * $Id: curses.priv.h,v 1.479 2011/06/04 23:14:09 tom Exp $
  *
  *	curses.priv.h
  *
@@ -69,6 +69,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -193,6 +194,18 @@ extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
 #else
 #define begin_va_copy(dst,src) (dst) = (src)
 #define end_va_copy(dst)	/* nothing */
+#endif
+
+/*
+ * Either/both S_ISxxx and/or S_IFxxx are defined in sys/types.h; some systems
+ * lack one or the other.
+ */
+#ifndef S_ISDIR
+#define S_ISDIR(mode) ((mode & S_IFMT) == S_IFDIR)
+#endif
+
+#ifndef S_ISREG
+#define S_ISREG(mode) ((mode & S_IFMT) == S_IFREG)
 #endif
 
 /*

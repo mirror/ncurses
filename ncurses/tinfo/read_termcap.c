@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -54,10 +54,9 @@
 
 #include <ctype.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.74 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.76 2011/06/05 00:48:00 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -1063,7 +1062,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
     for (j = 0; j < filecount; j++) {
 	bool omit = FALSE;
 	if (stat(termpaths[j], &test_stat[j]) != 0
-	    || (test_stat[j].st_mode & S_IFMT) != S_IFREG) {
+	    || !S_ISREG(test_stat[j].st_mode)) {
 	    omit = TRUE;
 	} else {
 	    for (k = 0; k < j; k++) {

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.557 2011/05/29 00:00:21 tom Exp $
+dnl $Id: aclocal.m4,v 1.558 2011/06/05 00:13:55 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -720,7 +720,7 @@ AC_SUBST(BUILD_EXEEXT)
 AC_SUBST(BUILD_OBJEXT)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CFG_DEFAULTS version: 7 updated: 2005/09/24 16:15:00
+dnl CF_CFG_DEFAULTS version: 8 updated: 2011/06/04 20:09:13
 dnl ---------------
 dnl Determine the default configuration into which we'll install ncurses.  This
 dnl can be overridden by the user's command-line options.  There's two items to
@@ -738,7 +738,7 @@ AC_MSG_CHECKING(for prefix)
 if test "x$prefix" = "xNONE" ; then
 	case "$cf_cv_system_name" in
 		# non-vendor systems don't have a conflict
-	openbsd*|freebsd*|linux*|cygwin*|k*bsd*-gnu)
+	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|k*bsd*-gnu)
 		prefix=/usr
 		;;
 	*)	prefix=$ac_default_prefix
@@ -2721,7 +2721,7 @@ AC_SUBST(LDFLAGS_STATIC)
 AC_SUBST(LDFLAGS_SHARED)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LD_RPATH_OPT version: 3 updated: 2010/06/02 05:03:05
+dnl CF_LD_RPATH_OPT version: 4 updated: 2011/06/04 20:09:13
 dnl ---------------
 dnl For the given system and compiler, find the compiler flags to pass to the
 dnl loader to use the "rpath" feature.
@@ -2742,7 +2742,7 @@ irix*) #(vi
 linux*|gnu*|k*bsd*-gnu) #(vi
 	LD_RPATH_OPT="-Wl,-rpath,"
 	;;
-openbsd[[2-9]].*) #(vi
+openbsd[[2-9]].*|mirbsd*) #(vi
 	LD_RPATH_OPT="-Wl,-rpath,"
 	;;
 freebsd*) #(vi
@@ -4759,7 +4759,7 @@ case $INSTALL in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_LDCONFIG version: 2 updated: 2008/12/13 14:08:40
+dnl CF_PROG_LDCONFIG version: 3 updated: 2011/06/04 20:09:13
 dnl ----------------
 dnl Check for ldconfig, needed to fixup shared libraries that would be built
 dnl and then used in the install.
@@ -4768,7 +4768,7 @@ if test "$cross_compiling" = yes ; then
   LDCONFIG=:
 else
 case "$cf_cv_system_name" in #(vi
-dragonfly*|freebsd*) #(vi
+dragonfly*|mirbsd*|freebsd*) #(vi
   test -z "$LDCONFIG" && LDCONFIG="/sbin/ldconfig -R"
   ;;
 *) LDPATH=$PATH:/sbin:/usr/sbin
@@ -5034,7 +5034,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 65 updated: 2011/05/28 19:39:44
+dnl CF_SHARED_OPTS version: 66 updated: 2011/06/04 20:09:13
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5199,7 +5199,7 @@ CF_EOF
 		CF_SHARED_SONAME
 		MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
 		;;
-	openbsd[[2-9]].*) #(vi
+	openbsd[[2-9]].*|mirbsd*) #(vi
 		if test "$DFT_LWR_MODEL" = "shared" ; then
 			LOCAL_LDFLAGS="${LD_RPATH_OPT}\$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"

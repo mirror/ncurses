@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.45 2011/05/28 20:28:25 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.46 2011/06/04 19:14:08 tom Exp $)
 #
 ##############################################################################
 # Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
@@ -437,7 +437,7 @@ END		{
 					sub(/^\* /,"",value);
 					gsub(/[[:alnum:]_]+ \* /,"",value);
 					gsub(/ (const) /," ",value);
-					gsub(/ (int|short|attr_t|chtype|wchar_t|NCURSES_BOOL|NCURSES_OUTC|va_list) /," ",value);
+					gsub(/ (int|short|attr_t|chtype|wchar_t|NCURSES_BOOL|NCURSES_OUTC|NCURSES_OUTC_sp|va_list) /," ",value);
 					gsub(/ void /,"",value);
 					sub(/^/,"call_",value);
 					gsub(/ (a[[:digit:]]|z) /, " 0 ", value);
@@ -457,6 +457,8 @@ cat >$TMP <<EOF
 #include <ncurses_cfg.h>
 #undef NCURSES_NOMACROS
 #include <curses.h>
+#include <term.h>
+#include <unctrl.h>
 
 DECLARATIONS
 

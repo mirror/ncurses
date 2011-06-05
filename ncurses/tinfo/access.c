@@ -33,11 +33,10 @@
 #include <curses.priv.h>
 
 #include <ctype.h>
-#include <sys/stat.h>
 
 #include <tic.h>
 
-MODULE_ID("$Id: access.c,v 1.18 2011/05/28 23:05:12 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.20 2011/06/05 00:48:00 tom Exp $")
 
 #ifdef __TANDEM
 #define ROOT_UID 65535
@@ -150,7 +149,7 @@ _nc_is_dir_path(const char *path)
     struct stat sb;
 
     if (stat(path, &sb) == 0
-	&& (sb.st_mode & S_IFMT) == S_IFDIR) {
+	&& S_ISDIR(sb.st_mode)) {
 	result = TRUE;
     }
     return result;
@@ -163,7 +162,7 @@ _nc_is_file_path(const char *path)
     struct stat sb;
 
     if (stat(path, &sb) == 0
-	&& (sb.st_mode & S_IFMT) == S_IFREG) {
+	&& S_ISREG(sb.st_mode)) {
 	result = TRUE;
     }
     return result;

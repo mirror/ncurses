@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,32 +51,33 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_napms.c,v 1.20 2009/11/07 20:37:30 tom Exp $")
+MODULE_ID("$Id: lib_napms.c,v 1.21 2011/06/04 19:24:16 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(napms) (NCURSES_SP_DCLx int ms)
 {
-    (void) SP_PARM;
     T((T_CALLED("napms(%d)"), ms));
 
+    if (HasTerminal(SP_PARM)) {
 #ifdef USE_TERM_DRIVER
-    CallDriver_1(SP_PARM, nap, ms);
+	CallDriver_1(SP_PARM, nap, ms);
 #else /* !USE_TERM_DRIVER */
 #if HAVE_NANOSLEEP
-    {
-	struct timespec request, remaining;
-	request.tv_sec = ms / 1000;
-	request.tv_nsec = (ms % 1000) * 1000000;
-	while (nanosleep(&request, &remaining) == -1
-	       && errno == EINTR) {
-	    request = remaining;
+	{
+	    struct timespec request, remaining;
+	    request.tv_sec = ms / 1000;
+	    request.tv_nsec = (ms % 1000) * 1000000;
+	    while (nanosleep(&request, &remaining) == -1
+		   && errno == EINTR) {
+		request = remaining;
+	    }
 	}
-    }
 #else
-    _nc_timed_wait(0, 0, ms, (int *) 0 EVENTLIST_2nd(0));
+	_nc_timed_wait(0, 0, ms, (int *) 0 EVENTLIST_2nd(0));
 #endif
 #endif /* !USE_TERM_DRIVER */
 
+    }
     returnCode(OK);
 }
 
