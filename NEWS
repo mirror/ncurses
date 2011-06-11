@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1709 2011/06/05 00:19:16 tom Exp $
+-- $Id: NEWS,v 1.1711 2011/06/11 18:40:59 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110611
+	+ update minix entry to minix 3.2 (Thomas Cort).
+	+ fix a strict compiler warning in change to wattr_get (cf: 20110528).
 
 20110604
 	+ fixes for MirBSD port:

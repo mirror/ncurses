@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.223 2011/05/28 21:38:30 tom Exp $ */
+/* $Id: curses.h.in,v 1.224 2011/06/06 08:44:06 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -1271,7 +1271,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 					 OK)
 #define wattr_get(win,a,p,opts)		(((win) \
 					  ? ((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
-					     (void)((p) != (void *)0 && (*(p) = (short)(win)->_color))) \
+					     (void)((p) != (void *)0 && (*(p) = (short)(win)->_color)),OK) \
 					  : OK), \
 					 OK)
 #else
@@ -1281,7 +1281,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 					 OK)
 #define wattr_get(win,a,p,opts)		(((win) \
 					  ? ((void)((a) != (void *)0 && (*(a) = (win)->_attrs)), \
-					     (void)((p) != (void *)0 && (*(p) = (short)PAIR_NUMBER((win)->_attrs)))) \
+					     (void)((p) != (void *)0 && (*(p) = (short)PAIR_NUMBER((win)->_attrs))),OK) \
 					  : OK), \
 					 OK)
 #endif
