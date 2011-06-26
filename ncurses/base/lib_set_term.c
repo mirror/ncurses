@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.138 2010/12/20 00:42:20 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.139 2011/06/14 22:50:58 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -759,6 +759,7 @@ NCURSES_SP_NAME(ripoffline) (NCURSES_SP_DCLx
 			     int line,
 			     int (*init) (WINDOW *, int))
 {
+    START_TRACE();
     return NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_ARGx
 					    (line < 0) ? -1 : 1,
 					    init);

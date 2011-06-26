@@ -47,7 +47,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.137 2011/05/21 17:35:14 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.138 2011/06/14 22:36:29 tom Exp $")
 
 /****************************************************************************
  *
@@ -221,6 +221,7 @@ NCURSES_SP_NAME(use_env) (NCURSES_SP_DCLx bool f)
 {
     T((T_CALLED("use_env(%p,%d)"), (void *) SP_PARM, (int) f));
 #if NCURSES_SP_FUNCS
+    START_TRACE();
     if (IsPreScreen(SP_PARM)) {
 	SP_PARM->_use_env = f;
     }
@@ -235,6 +236,7 @@ NCURSES_EXPORT(void)
 use_env(bool f)
 {
     T((T_CALLED("use_env(%d)"), (int) f));
+    START_TRACE();
     _nc_prescreen.use_env = f;
     returnVoid;
 }

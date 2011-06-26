@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.37 2009/07/11 16:52:29 tom Exp $ */
+/* $Id: term_entry.h,v 1.38 2011/06/25 20:51:00 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -46,6 +46,7 @@ extern "C" {
 #endif
 
 #include <term.h>
+#include <nc_termios.h>
 
 #define MAX_USES	32
 #define MAX_CROSSLINKS	16

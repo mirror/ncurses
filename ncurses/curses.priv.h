@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.479 2011/06/04 23:14:09 tom Exp $
+ * $Id: curses.priv.h,v 1.480 2011/06/25 20:36:52 tom Exp $
  *
  *	curses.priv.h
  *
@@ -342,6 +342,7 @@ color_t;
 #endif
 
 #include <term.h>
+#include <nc_termios.h>
 
 /*
  * Reduce dependency on cur_term global by using terminfo data from SCREEN's

@@ -21132,7 +21132,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* Replaced HP entries up to hpsub with purpose-built ones.
 #	* Blank rmir/smir/rmdc/smdc capabilities removed.
 #	* Small fixes merged in from SCO entries for lpr, fos, tvi910+, tvi924.
-# 9.4.8 (Fri Apr  7 09:36:34 EDT 199):
+# 9.4.8 (Fri Apr  7 09:36:34 EDT 1995):
 #	* Replaced the Ann Arbor entries with SCO's, the init strings are
 #	  more efficient (but the entries otherwise identical).
 #	* Added dg211 from Shuford archive.

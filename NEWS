@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1711 2011/06/11 18:40:59 tom Exp $
+-- $Id: NEWS,v 1.1726 2011/06/25 21:20:22 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110625
+	+ improve cleanup() function in lib_tstp.c, using _exit() rather than
+	  exit() and checking for SIGTERM rather than SIGQUIT (prompted by
+	  comments forwarded by Nicholas Marriott).
+	+ reduce name pollution from term.h, moving fallback #define's for
+	  tcgetattr(), etc., to new private header nc_termios.h (report by
+	  Sergio NNX).
+	+ two minor fixes for tracing (patch by Vassili Courzakis).
+	+ improve trace initialization by starting it in use_env() and
+	  ripoffline().
+	+ review old email, add details for some changelog entries.
 
 20110611
 	+ update minix entry to minix 3.2 (Thomas Cort).
@@ -9062,15 +9074,18 @@ it is not possible to add this information.
 	+ correction to #317.
 	> patch 317 (ESR):
 	+ re-add _nc_hash_map
-	+ modify EmitRange to maintain position as per original design.
-	+ add hashtest.c, program to time the hashmap optimization.
+	+ modify EmitRange to maintain position as per original design
+	  (patch by A. Lukyanov).
+	+ modify test/ncurses.c and tputs, etc., to allow trace counting
+	  output characters.
+	+ add hashtest.c program to time the hashmap optimization.
 	> patch 316 (ESR):
 	+ add logic to deal with magic-cookie (how was this tested?)
 	  (lib_doupdate.c).
 	+ add ncurses.c driver for magic-cookie, some fixes to ncurses.c
 	> patch 315 (ESR):
-	+ merged Alexander V Lukyanov's patch to use ech and rep - untested
-	  (lib_doupdate.c).
+	+ merge changes to lib_doupdate.c to use ech and rep - untested
+	  (patch by Alexander V Lukyanov).
 	+ modified handling of interrupted system calls - untested
 	  (lib_getch.c, lib_twait.c).
 	+ new function _nc_mvcur_resume()
@@ -9142,7 +9157,7 @@ it is not possible to add this information.
 	+ corrected typo in dtterm description.
 	> patch 313 (ESR):
 	+ add dtterm description
-	+ clarify ncurses 'i' test (drop vscanf subtest)
+	+ clarify ncurses 'i' test (drop mvwscanw subtest)
 
 960810	- snapshot
 	+ correct nl()/nonl() to work as per SVr4 & XSI.
@@ -9156,7 +9171,8 @@ it is not possible to add this information.
 	> patch 312 (ESR):
 	  correct terminfo.src corrupted by #310
 	> patch 311 (ESR):
-	+ fix idlok() and idcok() and the default of the idlok switch.
+	+ fix idlok() and idcok() and the default of the idlok switch (report
+	  by Ville Sulko).
 
 960803	- snapshot
 	+ corrected tparm to handle capability strings without explicit pop
@@ -9166,7 +9182,7 @@ it is not possible to add this information.
 	> patch 310 (ESR):
 	+ documentation and prototyping errors for has_color, immedok and idcok
 	  (reported by William P Setzer <wsetzer@pams.ncsu.edu>)
-	+ updated qnx terminfo entry (by Michael Hunter)
+	+ updated qnx terminfo entry (patch by Michael Hunter)
 
 960730
 	+ eliminate quoted includes in ncurses subdirectory, ensure config.h
@@ -9178,7 +9194,7 @@ it is not possible to add this information.
 	+ call cbreak() in initscr(), as per XSI & SVr4.
 	+ turn off hardware echo in initscr() as per XSI & SVr4
 	> patch 309 (ESR):
-	+ terminfo changes (9.3.10), from BRL
+	+ terminfo changes (9.3.9), from BRL
 	+ add more checks to terminfo parser.
 	+ add more symbols to infocmp.
 
@@ -9197,6 +9213,7 @@ it is not possible to add this information.
 	> patch 308 (ESR):
 	+ terminfo changes (9.3.8)
 	+ modified logic of error-reporting in terminfo parser
+	+ fix option-processing bug in toe.
 
 960713	- snapshot
 	+ always check for <sys/bsdtypes.h> since ISC needs it to declare
@@ -9205,9 +9222,19 @@ it is not possible to add this information.
 	  by Juergen Pfeifer, Mike Long)
 	+ add LOCAL_LDFLAGS2 symbol (Juergen Pfeifer)
 	+ corrected prototype for delay_output() -- bump ABI to 3.2
-	+ terminfo patches #306/307 (ESR).
+	+ patch 307 (ESR):
+	+ enable more translations of nonstandard caps, and document them.
+	+ misc/terminfo.src update to 9.13.8
+	+ patch 306 (ESR):
 	+ moved logic that filters out rmul and rmso from setupterm to newterm
 	  where it is less likely to interfere with termcap applications.
+	+ cosmetic fixes to test/ncurses.c
+	+ modify open() call in ncurses/read_entry.c to use O_RDONLY symbol
+	  rather than constant (report by mib).
+	+ misc/terminfo.src sgr0 and acsc changes (report by Philippe De
+	  Muyter).
+	+ modify ncurses/comp_parse.c so that entries containing a "+" can
+	  have missing rmcup vs smcup.
 
 960707
 	+ rollback ESR's #305 change to terminfo.src (it breaks existing
@@ -9222,7 +9249,6 @@ it is not possible to add this information.
 	+ make lib_vidattr.c more readable using macros.
 	+ filter out rmul, rmso that conflict with sgr0 when reading terminal
 	  descriptions.
-	+ added sanity-checking of various paired string attributes (ESR).
 	+ work around autoconf bug, force $INSTALL to absolute path
 	  (reported by Zeyd).
 	+ modify man-page install for BSDI to install preformatted .0 files
@@ -9235,6 +9261,12 @@ it is not possible to add this information.
 	+ disable scrollok during the ncurses 'p' test; if it is enabled the
 	  stdscr will scroll when putting the box-corners in the lower-right
 	  of the screen.
+	> patch 305 (ESR):
+	+ added sanity-checking of various paired string attributes.
+	+ misc/terminfo.src update to 9.13.7 (report by A. Lukyanov).
+	+ modify man/Makefile.in to make terminfo.5 during normal build.
+	> patch 304 (ESR):
+	+ corrected allocation-length for $HOME/.terminfo path.
 
 960629	- snapshot
 	+ check return code of _nc_mvcur_scrolln() in _nc_scroll_optimize() for
@@ -9317,6 +9349,7 @@ it is not possible to add this information.
 	+ better fix for nvi refresh-bug (Rick Marshall)
 	+ fix for bug in handling of interrupted keystroke waits,
 	  (Werner Fleck).
+	+ misc/ncurses-intro.html syntax fix (Kajiyama Tamito).
 
 960601	- snapshot
 	+ auto-configure man-page compression-format and renames for Debian.
@@ -9346,6 +9379,9 @@ it is not possible to add this information.
 	+ include sys/types.h in case stdlib.h does not declare size_t.
 	+ fixes for makefile (Tim Mooney)
 	+ fixes for menus & forms (Juergen Pfeifer)
+	> patch 302 (ESR):
+	+ improve hash function (suggested by Alexander V Lukyanov).
+	+ 9.13.4 update for terminfo.src
 
 960518	- snapshot
 	+ revised ncurses.c panner test, let pad abut all 4 sides of screen.
@@ -9358,6 +9394,8 @@ it is not possible to add this information.
 	  confusion, and made this check for the /usr/lib/terminfo pre-existing
 	  directory.
 	> patches 299-301 (ESR):
+	+ html fixes (Phillippe de Muyter).
+	+ fix typo in ncurses-intro.html (report by Fabrizio Polacco).
 	+ added hashmap.c
 	+ mods to tracing, especially for ACS chars.
 	+ corrected off-by-one in IDCtransform.
@@ -9377,13 +9415,21 @@ it is not possible to add this information.
 	> patches 297, 298 (ESR):
 	+ implement TERMINFO_DIRS, and -o option of tic
 	+ added TRACE_IEVENT
-	+ removed boolean version of 'getm'
-	+ added lib_print.c (for Rick Marshall)
-	+ added has_key()
+	+ fix REQ_TOGGLE_ITEM in menu/menu_driver.c; it could select but not
+	  deselect.
+	+ added lib_print.c (request by Rick Marshall).
+	+ added has_key() (request by Juergen Pfeifer).
+	+ do not issue clrtoeol or clrtobot if the relevant portion of the line
+	  is already blank (analysis by Keith Bostic).
+	+ add parentheses for parameters of COLOR_PAIR and PAIR_NUMBER macros
+	  (analysis by Jurgen Eidt).
+	+ update screen's notion of cursor position in endwin() (analysis by
+	  Alexander Lukyanov).
 	+ added 't' to ncurses.c test.
 	+ moved delay_output() to lib_tputs.c
 	+ removed tparam() (was added in 1.9.9, but conflicts with emacs and
 	  is not part of X/Open Curses).
+	+ removed boolean version of 'getm'.
 	+ misc cursor & optimization fixes.
 
 960504	- snapshot
@@ -9409,11 +9455,20 @@ it is not possible to add this information.
 	+ make TIOCGWINSZ configure test less stringent, in case user
 	  configures via terminal that cannot get screen size.
 	> patches 295, 296 (ESR):
-	+ new "-e" option of tic.
-	+ fix for "infocmp -e".
-	+ restore working-directory in read_termcap.c
 	+ split lib_kernel.c, lib_setup.c and names.c in order to reduce
 	  overhead for programs that use only termcap features.
+	+ new "-e" and "-h" options of tic (request by Tony Nugent).
+	+ fix bug in mandatory-delay logic in lib_tputs.c (report by Sven
+	  Verdoolaege).
+	+ fix for "infocmp -e" to emit correct initializers (reported by Manual
+	  J Novoa III).
+	+ restore working-directory in read_termcap.c (report by Kayvan
+	  Sylvan).
+	+ use "-h" option on Solaris when generating shared libraries on
+	  Solaris 2.5 to record the library name in the file, for assisting
+	  the loader (patch by Scott Kramer).
+	+ undo patch #294 changes to form and menu libraries (request by
+	  Juergen Pfeifer).
 
 960418	- snapshot
 	+ use autoconf 2.9
@@ -9421,10 +9476,22 @@ it is not possible to add this information.
 	  definitions via <termios.h>, modified macros in lib_raw.c to avoid
 	  K&R-style substitution)
 	> patches 293, 294 (ESR):
-	+ mods to wgetch() in cooked mode
-	+ corrected askuser() logic in tset
-	+ correct interaction of endwin() with mouse processing
+	+ rewrite wsyncup(), wsyncdown(), as well as small fixes to form and
+	  menu libraries to fix echo-breakage introduced by 1.8.9, 1.9.9e
+	  changes (patches by Juergen Pfeifer).
+	+ fix compile under QNX 4.2 by defining ONLCR in lib_raw.c when
+	  __QNX__ is defined (patch by Michael Hunter).
+	+ modify setupterm() to match documentation for its return value, fix
+	  newterm to work with this change (report by Emmet Lazich).
+	+ add checks in getch() for error, return ERR as appropriate (report by
+	  Emmet Lazich).
+	+ mods to wgetch() in cooked mode (report by Pete Seebach).
+	+ corrected askuser() logic in tset (patch by Remco Treffkorn).
+	+ correct interaction of endwin() with mouse processing (report by
+	  Michael Elkins).
 	+ added trace support for TTY flags
+	+ update terminfo.src to 9.13.1
+	+ FreeBSD console entries (patch by Andrew Chernov).
 
 960406
 	+ fixes for NeXT, ISC and HPUX auto-configure
