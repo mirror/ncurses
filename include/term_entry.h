@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.38 2011/06/25 20:51:00 tom Exp $ */
+/* $Id: term_entry.h,v 1.39 2011/06/26 09:31:32 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -46,7 +46,6 @@ extern "C" {
 #endif
 
 #include <term.h>
-#include <nc_termios.h>
 
 #define MAX_USES	32
 #define MAX_CROSSLINKS	16

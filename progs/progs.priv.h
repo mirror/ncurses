@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.35 2011/04/23 22:33:09 tom Exp $
+ * $Id: progs.priv.h,v 1.36 2011/06/26 09:31:22 tom Exp $
  *
  *	progs.priv.h
  *
@@ -109,6 +109,7 @@ extern int optind;
 
 #include <curses.h>
 #include <term_entry.h>
+#include <nc_termios.h>
 #include <tic.h>
 #include <nc_tparm.h>
 
