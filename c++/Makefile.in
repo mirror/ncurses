@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.93 2010/11/27 21:45:27 tom Exp $
+# $Id: Makefile.in,v 1.94 2011/07/02 18:04:05 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -169,7 +169,7 @@ LIB_OBJS = \
 	cd ../lib && $(LIBTOOL_LINK) $(CXX) $(CXXFLAGS) \
 		-o $(LIBNAME) $(LIB_OBJS:$o=.lo) \
 		-rpath $(INSTALL_PREFIX)$(libdir) \
-		$(LIBTOOL_VERSION) $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(SHLIB_LIST)
+		$(LIBTOOL_VERSION) $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(LDFLAGS_LIBTOOL) $(SHLIB_LIST)
 
 OBJS_DEMO = $(MODEL)/demo$o
 

@@ -1,6 +1,6 @@
-# $Id: mk-1st.awk,v 1.85 2010/08/07 20:42:30 Gabriele.Balducci Exp $
+# $Id: mk-1st.awk,v 1.86 2011/07/02 18:04:15 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -396,12 +396,13 @@ END	{
 				end_name = lib_name;
 				printf "../lib/%s : $(%s_OBJS)\n", lib_name, OBJS
 				if ( is_ticlib() ) {
-					printf "\tcd ../lib && $(LIBTOOL_LINK) $(%s) -o %s $(%s_OBJS:$o=.lo) -rpath $(DESTDIR)$(libdir) %s $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(TICS_LIST)\n", compile, lib_name, OBJS, libtool_version
+					which_list = "TICS_LIST";
 				} else if ( is_termlib() ) {
-					printf "\tcd ../lib && $(LIBTOOL_LINK) $(%s) -o %s $(%s_OBJS:$o=.lo) -rpath $(DESTDIR)$(libdir) %s $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(TINFO_LIST)\n", compile, lib_name, OBJS, libtool_version
+					which_list = "TINFO_LIST";
 				} else {
-					printf "\tcd ../lib && $(LIBTOOL_LINK) $(%s) -o %s $(%s_OBJS:$o=.lo) -rpath $(DESTDIR)$(libdir) %s $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(SHLIB_LIST)\n", compile, lib_name, OBJS, libtool_version
+					which_list = "SHLIB_LIST";
 				}
+				printf "\tcd ../lib && $(LIBTOOL_LINK) $(%s) -o %s $(%s_OBJS:$o=.lo) -rpath $(DESTDIR)$(libdir) %s $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(%s) $(LDFLAGS)\n", compile, lib_name, OBJS, libtool_version, which_list
 				print  ""
 				print  "install \\"
 				print  "install.libs \\"

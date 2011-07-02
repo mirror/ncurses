@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1727 2011/06/26 10:37:58 tom Exp $
+-- $Id: NEWS,v 1.1731 2011/07/02 21:05:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110702
+	+ add workaround from xterm #271 changes to ensure that compiler flags
+	  are not used in the $CC variable.
+	+ improve support for shared libraries, tested with AIX 5.3, 6.1 and
+	  7.1 with both gcc 4.2.4 and cc.
+	+ modify configure checks for AIX to include release 7.x
+	+ add loader flags/libraries to libtool options so that dynamic loading
+	  works properly, adapted from ncurses-5.7-ldflags-with-libtool.patch
+	  at gentoo prefix repository (patch by Michael Haubenwallner).
 
 20110626
 	+ move include of nc_termios.h out of term_entry.h, since the latter

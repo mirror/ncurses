@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.29 2011/06/05 00:44:26 tom Exp $
+dnl $Id: aclocal.m4,v 1.30 2011/07/02 19:51:20 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -315,12 +315,33 @@ ifelse([$5],NONE,,[(test $5 = NONE || test "$4" != "$5") &&]) {
 }
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ANSI_CC_CHECK version: 10 updated: 2010/10/23 15:52:32
+dnl CF_ANSI_CC_CHECK version: 11 updated: 2011/07/01 19:47:45
 dnl ----------------
-dnl This is adapted from the macros 'fp_PROG_CC_STDC' and 'fp_C_PROTOTYPES'
-dnl in the sharutils 4.2 distribution.
+dnl This was originally adapted from the macros 'fp_PROG_CC_STDC' and
+dnl 'fp_C_PROTOTYPES' in the sharutils 4.2 distribution.
 AC_DEFUN([CF_ANSI_CC_CHECK],
 [
+# This should have been defined by AC_PROG_CC
+: ${CC:=cc}
+
+# Check for user's environment-breakage by stuffing CFLAGS/CPPFLAGS content
+# into CC.  This will not help with broken scripts that wrap the compiler with
+# options, but eliminates a more common category of user confusion.
+AC_MSG_CHECKING(\$CC variable)
+case "$CC" in #(vi
+*[[\ \	]]-[[IUD]]*)
+	AC_MSG_RESULT(broken)
+	AC_MSG_WARN(your environment misuses the CC variable to hold CFLAGS/CPPFLAGS options)
+	# humor him...
+	cf_flags=`echo "$CC" | sed -e 's/^[[^ 	]]*[[ 	]]//'`
+	CC=`echo "$CC" | sed -e 's/[[ 	]].*//'`
+	CF_ADD_CFLAGS($cf_flags)
+	;;
+*)
+	AC_MSG_RESULT(ok)
+	;;
+esac
+
 AC_CACHE_CHECK(for ${CC:-cc} option to accept ANSI C, cf_cv_ansi_cc,[
 cf_cv_ansi_cc=no
 cf_save_CFLAGS="$CFLAGS"
@@ -1680,7 +1701,7 @@ fi
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SUFFIX version: 16 updated: 2008/12/27 12:30:03
+dnl CF_LIB_SUFFIX version: 17 updated: 2011/07/02 15:36:04
 dnl -------------
 dnl Compute the library file-suffix from the given model name
 dnl $1 = model name
@@ -1709,7 +1730,7 @@ AC_DEFUN([CF_LIB_SUFFIX],
 		;;
 	shared) #(vi
 		case $cf_cv_system_name in
-		aix[[56]]*) #(vi
+		aix[[5-7]]*) #(vi
 			$2='.a'
 			$3=[$]$2
 			;;
@@ -2858,7 +2879,7 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 66 updated: 2011/06/04 20:09:13
+dnl CF_SHARED_OPTS version: 67 updated: 2011/07/02 15:36:04
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -2933,10 +2954,14 @@ AC_DEFUN([CF_SHARED_OPTS],
 	cf_cv_shlib_version_infix=no
 
 	case $cf_cv_system_name in #(vi
-	aix[[56]]*) #(vi
+	aix4.[3-9]*|aix[[5-7]]*) #(vi
 		if test "$GCC" = yes; then
 			CC_SHARED_OPTS=
-			MK_SHARED_LIB='$(CC) -shared'
+			MK_SHARED_LIB='${CC} -shared -Wl,-brtl -Wl,-blibpath:${libdir}:/usr/lib -o [$]@'
+		else
+			# CC_SHARED_OPTS='-qpic=large -G'
+			# perhaps "-bM:SRE -bnoentry -bexpall"
+			MK_SHARED_LIB='${CC} -G -Wl,-brtl -Wl,-blibpath:${libdir}:/usr/lib -o [$]@'
 		fi
 		;;
 	beos*) #(vi
@@ -3510,7 +3535,7 @@ if test "$with_pthread" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 35 updated: 2011/02/20 20:37:37
+dnl CF_XOPEN_SOURCE version: 36 updated: 2011/07/02 15:36:04
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -3526,7 +3551,7 @@ cf_POSIX_C_SOURCE=ifelse([$2],,199506L,[$2])
 cf_xopen_source=
 
 case $host_os in #(vi
-aix[[456]]*) #(vi
+aix[[4-7]]*) #(vi
 	cf_xopen_source="-D_ALL_SOURCE"
 	;;
 cygwin) #(vi
