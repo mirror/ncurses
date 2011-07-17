@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1731 2011/07/02 21:05:53 tom Exp $
+-- $Id: NEWS,v 1.1734 2011/07/16 22:24:30 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110716
+	+ replace an assert() in _nc_Free_Argument() with a regular null
+	  pointer check (report/analysis by Franjo Ivancic).
+	+ modify configure --enable-pc-files option to take into account the
+	  PKG_CONFIG_PATH variable (report by Frederic L W Meunier).
+	+ add/use xterm+tmux chunk from xterm #271 -TD
+	+ resync xterm-new entry from xterm #271 -TD
+	+ add E3 extended capability to linux-basic (Miroslav Lichvar)
+	+ add linux2.2, linux2.6, linux3.0 entries to give context for E3 -TD
+	+ add SI/SO change to linux2.6 entry (Debian #515609) -TD
+	+ fix inconsistent tabset path in pcmw (Todd C. Miller).
+	+ remove a backslash which continued comment, obscuring altos3
+	  definition with OpenBSD toolset (Nicholas Marriott).
 
 20110702
 	+ add workaround from xterm #271 changes to ensure that compiler flags

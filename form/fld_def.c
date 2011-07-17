@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_def.c,v 1.38 2010/01/23 21:14:35 tom Exp $")
+MODULE_ID("$Id: fld_def.c,v 1.39 2011/07/16 22:26:11 tom Exp $")
 
 /* this can't be readonly */
 static FIELD default_field =
@@ -65,8 +65,7 @@ static FIELD default_field =
   NCURSES_FIELD_EXTENSION
 };
 
-NCURSES_EXPORT_VAR(FIELD *)
-_nc_Default_Field = &default_field;
+NCURSES_EXPORT_VAR(FIELD *) _nc_Default_Field = &default_field;
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
@@ -186,10 +185,12 @@ _nc_Free_Argument(const FIELDTYPE *typ, TypeArgument *argp)
     {
       if ((typ->status & _LINKED_TYPE) != 0)
 	{
-	  assert(argp != 0);
-	  _nc_Free_Argument(typ->left, argp->left);
-	  _nc_Free_Argument(typ->right, argp->right);
-	  free(argp);
+	  if (argp != 0)
+	    {
+	      _nc_Free_Argument(typ->left, argp->left);
+	      _nc_Free_Argument(typ->right, argp->right);
+	      free(argp);
+	    }
 	}
       else
 	{

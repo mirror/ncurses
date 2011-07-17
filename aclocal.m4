@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.559 2011/07/02 19:42:50 tom Exp $
+dnl $Id: aclocal.m4,v 1.562 2011/07/17 00:38:58 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1168,6 +1168,69 @@ if test "$cf_disable_rpath_hack" = no ; then
 	CF_RPATH_HACK
 fi
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_ENABLE_PC_FILES version: 3 updated: 2011/07/16 20:37:23
+dnl ------------------
+dnl This is the "--enable-pc-files" option, which is available if there is a
+dnl pkg-config configuration on the local machine.
+dnl
+dnl It sets/updates PKG_CONFIG_LIBDIR, which is used by pkg-config as a
+dnl special case: overriding PKG_CONFIG_PATH (preferred).
+AC_DEFUN([CF_ENABLE_PC_FILES],[
+AC_REQUIRE([CF_PATHSEP])
+AC_REQUIRE([CF_PKG_CONFIG])
+
+if test "$PKG_CONFIG" != no ; then
+	AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
+
+	# Leave this as something that can be overridden in the environment.
+	if test -z "$PKG_CONFIG_LIBDIR" ; then
+		if test -n "$PKG_CONFIG_PATH" ; then
+			for cf_config in `echo "$PKG_CONFIG_PATH" | sed -e 's/'$PATH_SEPARATOR'/ /g'`
+			do
+				if test -n "$cf_config" && test -d "$cf_config"
+				then
+					PKG_CONFIG_LIBDIR=$cf_config
+					break
+				fi
+			done
+		fi
+		if test -z "$PKG_CONFIG_LIBDIR" ; then
+			cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`
+			case x`arch 2>/dev/null` in #(vi
+			*64) #(vi
+				for cf_config in $cf_path/lib64 $cf_path/lib32 $cf_path/lib
+				do
+					if test -d $cf_config/pkgconfig
+					then
+						PKG_CONFIG_LIBDIR=$cf_config/pkgconfig
+						break
+					fi
+				done
+				;;
+			*)
+				PKG_CONFIG_LIBDIR=$cf_path/lib/pkgconfig
+				;;
+			esac
+		fi
+	else
+		PKG_CONFIG_LIBDIR=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/^://' -e 's/:.*//'`
+	fi
+	if test -n "$PKG_CONFIG_LIBDIR" && test -d "$PKG_CONFIG_LIBDIR" ; then
+		AC_ARG_ENABLE(pc-files,
+			[  --enable-pc-files       generate and install .pc files for pkg-config],
+			[enable_pc_files=$enableval],
+			[enable_pc_files=no])
+		AC_MSG_RESULT($enable_pc_files)
+		CF_VERBOSE(found library $PKG_CONFIG_LIBDIR)
+	else
+		AC_MSG_RESULT(no)
+		AC_MSG_WARN(did not find library $PKG_CONFIG_LIBDIR)
+		enable_pc_files=no
+	fi
+fi
+AC_SUBST(PKG_CONFIG_LIBDIR)
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ENABLE_RPATH version: 2 updated: 2010/03/27 18:39:42
 dnl ---------------

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.30 2011/03/31 22:49:22 tom Exp $
+dnl $Id: configure.in,v 1.32 2011/07/16 21:53:28 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.30 $)
+AC_REVISION($Revision: 1.32 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -75,28 +75,7 @@ AC_SYS_LONG_FILE_NAMES
 
 # if we find pkg-config, check if we should install the ".pc" files.
 CF_PKG_CONFIG
-
-if test "$PKG_CONFIG" != none ; then
-	AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
-
-	# Leave this as something that can be overridden in the environment.
-	if test -z "$PKG_CONFIG_LIBDIR" ; then
-		PKG_CONFIG_LIBDIR=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`/lib/pkgconfig
-	fi
-	PKG_CONFIG_LIBDIR=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/^://' -e 's/:.*//'`
-	if test -n "$PKG_CONFIG_LIBDIR" && test -d "$PKG_CONFIG_LIBDIR" ; then
-		AC_ARG_ENABLE(pc-files,
-			[  --enable-pc-files       generate and install .pc files for pkg-config],
-			[enable_pc_files=$enableval],
-			[enable_pc_files=no])
-		AC_MSG_RESULT($enable_pc_files)
-	else
-		AC_MSG_RESULT(no)
-		AC_MSG_WARN(did not find library $PKG_CONFIG_LIBDIR)
-		enable_pc_files=no
-	fi
-fi
-AC_SUBST(PKG_CONFIG_LIBDIR)
+CF_ENABLE_PC_FILES
 
 AC_MSG_CHECKING(if you want to build test-programs)
 AC_ARG_WITH(tests,
@@ -234,8 +213,6 @@ fi
 
 ###############################################################################
 CF_HELP_MESSAGE(Fine-Tuning Your Configuration:)
-
-CF_PATHSEP
 
 ###   use option --enable-broken-linker to force on use of broken-linker support
 AC_MSG_CHECKING(if you want broken-linker support code)
