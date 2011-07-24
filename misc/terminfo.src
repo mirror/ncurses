@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.392 $
-#	$Date: 2011/07/16 20:24:43 $
+#	$Revision: 1.393 $
+#	$Date: 2011/07/21 09:29:09 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5099,10 +5099,10 @@ sun-il|Sun Microsystems console with working insert-line,
 	kf10=\E[233z, kf11=\E[234z, kf12=\E[235z, kf2=\E[225z,
 	kf3=\E[226z, kf4=\E[227z, kf5=\E[228z, kf6=\E[229z,
 	kf7=\E[230z, kf8=\E[231z, kf9=\E[232z, khome=\E[214z,
-	knp=\E[222z, kopt=\E[194z, kpp=\E[216z, kres=\E[193z,
-	kund=\E[195z, rev=\E[7m, rmso=\E[m, rmul@, rs2=\E[s,
-	sgr=\E[0%?%p1%p3%|%t;7%;m, sgr0=\E[m, smso=\E[7m,
-	u8=\E[1t, u9=\E[11t,
+	kich1=\E[247z, knp=\E[222z, kopt=\E[194z, kpp=\E[216z,
+	kres=\E[193z, kund=\E[195z, rev=\E[7m, rmso=\E[m, rmul@,
+	rs2=\E[s, sgr=\E[0%?%p1%p3%|%t;7%;m, sgr0=\E[m,
+	smso=\E[7m, u8=\E[1t, u9=\E[11t,
 # On some versions of CGSIX framebuffer firmware (SparcStation 5), <il1>/<il>
 # flake out on the last line.  Unfortunately, without them the terminal has no
 # way to scroll.
@@ -5170,7 +5170,7 @@ sun-color|Sun Microsystems Workstation console with color support (IA systems),
 	setaf=\E[3%p1%dm,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
-	use=sun,
+	smso=\E[1m, use=sun,
 
 #### Iris consoles
 #
@@ -22422,5 +22422,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* add E3 extended capability to linux-basic (Miroslav Lichvar)
 #	* add linux2.2, linux2.6, linux3.0 entries to give context for E3 -TD
 #	* add SI/SO change to linux2.6 entry (Debian #515609) -TD
+#
+# 2011-07-21
+#	* add kich1 to sun (Yuri Pankov)
+#	* use bold rather than reverse for smso in sun-color (Yuri Pankov).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

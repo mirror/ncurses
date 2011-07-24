@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1734 2011/07/16 22:24:30 tom Exp $
+-- $Id: NEWS,v 1.1743 2011/07/23 22:02:25 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110723
+	+ add a check in start_color() to limit color-pairs to 256 when
+	  extended colors are not supported (patch by David Benjamin).
+	+ modify setcchar to omit no-longer-needed OR'ing of color pair in
+	  the SetAttr() macro (patch by David Benjamin).
+	+ add kich1 to sun terminfo entry (Yuri Pankov)
+	+ use bold rather than reverse for smso in sun-color terminfo entry
+	  (Yuri Pankov).
+	+ improve generation of termcap using tic/infocmp -C option, e.g.,
+	  to correspond with 4.2BSD (prompted by discussion with Yuri Pankov
+	  regarding Schilling's test program):
+	  + translate %02 and %03 to %2 and %3 respectively.
+	  + suppress string capabilities which use %s, not supported by tgoto
+	  + use \040 rather than \s
+	  + expand null characters as \200 rather than \0
+	+ modify configure script to support shared libraries for DragonFlyBSD.
 
 20110716
 	+ replace an assert() in _nc_Free_Argument() with a regular null

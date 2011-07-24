@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.33 2011/07/17 00:39:55 tom Exp $
+dnl $Id: aclocal.m4,v 1.34 2011/07/17 18:54:59 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1627,7 +1627,7 @@ ifdef([AC_FUNC_FSEEKO],[
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LD_RPATH_OPT version: 4 updated: 2011/06/04 20:09:13
+dnl CF_LD_RPATH_OPT version: 5 updated: 2011/07/17 14:48:41
 dnl ---------------
 dnl For the given system and compiler, find the compiler flags to pass to the
 dnl loader to use the "rpath" feature.
@@ -1651,7 +1651,7 @@ linux*|gnu*|k*bsd*-gnu) #(vi
 openbsd[[2-9]].*|mirbsd*) #(vi
 	LD_RPATH_OPT="-Wl,-rpath,"
 	;;
-freebsd*) #(vi
+dragonfly*|freebsd*) #(vi
 	LD_RPATH_OPT="-rpath "
 	;;
 netbsd*) #(vi
@@ -2942,7 +2942,7 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 67 updated: 2011/07/02 15:36:04
+dnl CF_SHARED_OPTS version: 68 updated: 2011/07/17 14:48:41
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -3128,7 +3128,7 @@ CF_EOF
 		MK_SHARED_LIB='${LD} -Bshareable -o $[@]'
 		test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=rel
 		;;
-	freebsd*) #(vi
+	dragonfly*|freebsd*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_enable_rpath" = yes ; then
 			LOCAL_LDFLAGS="${cf_ld_rpath_opt}\$(LOCAL_LIBDIR)"

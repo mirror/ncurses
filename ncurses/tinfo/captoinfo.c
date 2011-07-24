@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.58 2010/12/04 20:08:19 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.64 2011/07/23 20:36:28 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -469,73 +469,9 @@ _nc_captoinfo(const char *cap, const char *s, int const parameterized)
 		break;
 	    }
 	    break;
-#ifdef REVISIBILIZE
-	case '\\':
-	    dp = save_char(dp, *s++);
-	    dp = save_char(dp, *s++);
-	    break;
-	case '\n':
-	    dp = save_string(dp, "\\n");
-	    s++;
-	    break;
-	case '\t':
-	    dp = save_string(dp, "\\t");
-	    s++;
-	    break;
-	case '\r':
-	    dp = save_string(dp, "\\r");
-	    s++;
-	    break;
-	case '\200':
-	    dp = save_string(dp, "\\0");
-	    s++;
-	    break;
-	case '\f':
-	    dp = save_string(dp, "\\f");
-	    s++;
-	    break;
-	case '\b':
-	    dp = save_string(dp, "\\b");
-	    s++;
-	    break;
-	case ' ':
-	    dp = save_string(dp, "\\s");
-	    s++;
-	    break;
-	case '^':
-	    dp = save_string(dp, "\\^");
-	    s++;
-	    break;
-	case ':':
-	    dp = save_string(dp, "\\:");
-	    s++;
-	    break;
-	case ',':
-	    dp = save_string(dp, "\\,");
-	    s++;
-	    break;
-	default:
-	    if (*s == '\033') {
-		dp = save_string(dp, "\\E");
-		s++;
-	    } else if (*s > 0 && *s < 32) {
-		dp = save_char(dp, '^');
-		dp = save_char(dp, *s + '@');
-		s++;
-	    } else if (*s <= 0 || *s >= 127) {
-		dp = save_char(dp, '\\');
-		dp = save_char(dp, ((*s & 0300) >> 6) + '0');
-		dp = save_char(dp, ((*s & 0070) >> 3) + '0');
-		dp = save_char(dp, (*s & 0007) + '0');
-		s++;
-	    } else
-		dp = save_char(dp, *s++);
-	    break;
-#else
 	default:
 	    dp = save_char(dp, *s++);
 	    break;
-#endif
 	}
     }
 
@@ -640,12 +576,14 @@ save_tc_inequality(char *bufptr, int c1, int c2)
 NCURSES_EXPORT(char *)
 _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameterized)
 {
+    int strict_bsd = 1;		/* FIXME - consider making this an option */
     int seenone = 0, seentwo = 0, saw_m = 0, saw_n = 0;
     const char *padding;
     const char *trimmed = 0;
     int in0, in1, in2;
     char ch1 = 0, ch2 = 0;
     char *bufptr = init_string();
+    char octal[4];
     int len;
     bool syntax_error = FALSE;
 
@@ -685,8 +623,61 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	    } else if (str[1] == ',') {
 		bufptr = save_char(bufptr, *++str);
 	    } else {
+		int xx1, xx2;
+
 		bufptr = save_char(bufptr, *str++);
-		bufptr = save_char(bufptr, *str);
+		xx1 = *str;
+		if (strict_bsd) {
+		    if (isdigit(UChar(xx1))) {
+			int pad = 0;
+
+			if (!isdigit(UChar(str[1])))
+			    pad = 2;
+			else if (str[1] && !isdigit(UChar(str[2])))
+			    pad = 1;
+
+			/*
+			 * Test for "\0", "\00" or "\000" and transform those
+			 * into "\200".
+			 */
+			if (xx1 == '0'
+			    && ((pad == 2) || (str[1] == '0'))
+			    && ((pad >= 1) || (str[2] == '0'))) {
+			    xx2 = '2';
+			} else {
+			    xx2 = '0';
+			    pad = 0;	/* FIXME - optionally pad to 3 digits */
+			}
+			while (pad-- > 0) {
+			    bufptr = save_char(bufptr, xx2);
+			    xx2 = '0';
+			}
+		    } else if (strchr("E\\:nrtbf", xx1) == 0) {
+			/*
+			 * Note: termcap documentation claims that ":" must be
+			 * escaped as "\072", however the documentation is
+			 * incorrect - read the code.
+			 */
+			switch (xx1) {
+			case 'l':
+			    xx1 = 'n';
+			    break;
+			case 's':
+			    bufptr = save_char(bufptr, '0');
+			    bufptr = save_char(bufptr, '4');
+			    xx1 = '0';
+			    break;
+			default:
+			    /* should not happen, but handle this anyway */
+			    sprintf(octal, "%03o", UChar(xx1));
+			    bufptr = save_char(bufptr, octal[0]);
+			    bufptr = save_char(bufptr, octal[1]);
+			    xx1 = octal[2];
+			    continue;
+			}
+		    }
+		}
+		bufptr = save_char(bufptr, xx1);
 	    }
 	} else if (str[0] == '$' && str[1] == '<') {	/* discard padding */
 	    str += 2;
@@ -772,8 +763,25 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	    case '8':
 	    case '9':
 		bufptr = save_char(bufptr, '%');
-		while (isdigit(UChar(*str)))
-		    bufptr = save_char(bufptr, *str++);
+		ch1 = 0;
+		ch2 = 0;
+		while (isdigit(UChar(*str))) {
+		    ch2 = ch1;
+		    ch1 = *str++;
+		    if (strict_bsd) {
+			if (ch1 > '3')
+			    return 0;
+		    } else {
+			bufptr = save_char(bufptr, ch1);
+		    }
+		}
+		if (strict_bsd) {
+		    if (ch2 != 0 && ch2 != '0')
+			return 0;
+		    if (ch1 < '2')
+			ch1 = 'd';
+		    bufptr = save_char(bufptr, ch1);
+		}
 		if (strchr("doxX.", *str)) {
 		    if (*str != 'd')	/* termcap doesn't have octal, hex */
 			return 0;
@@ -794,6 +802,8 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 		 * termcap notation.
 		 */
 	    case 's':
+		if (strict_bsd)
+		    return 0;
 		bufptr = save_string(bufptr, "%s");
 		break;
 

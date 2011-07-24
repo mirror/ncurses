@@ -5547,7 +5547,7 @@ linux*|gnu*|k*bsd*-gnu) #(vi
 openbsd[2-9].*|mirbsd*) #(vi
 	LD_RPATH_OPT="-Wl,-rpath,"
 	;;
-freebsd*) #(vi
+dragonfly*|freebsd*) #(vi
 	LD_RPATH_OPT="-rpath "
 	;;
 netbsd*) #(vi
@@ -5859,7 +5859,7 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 		MK_SHARED_LIB='${LD} -Bshareable -o $@'
 		test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=rel
 		;;
-	freebsd*) #(vi
+	dragonfly*|freebsd*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_enable_rpath" = yes ; then
 			LOCAL_LDFLAGS="${cf_ld_rpath_opt}\$(LOCAL_LIBDIR)"

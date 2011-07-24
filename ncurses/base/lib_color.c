@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.101 2011/05/28 21:57:59 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.103 2011/07/23 22:00:34 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -331,6 +331,13 @@ NCURSES_SP_NAME(start_color) (NCURSES_SP_DCL0)
 				 default_bg(NCURSES_SP_ARG),
 				 NCURSES_SP_NAME(_nc_outch));
 	}
+#if !NCURSES_EXT_COLORS
+	/*
+	 * Without ext-colors, we cannot represent more than 256 color pairs.
+	 */
+	if (maxpairs > 256)
+	    maxpairs = 256;
+#endif
 
 	if (maxpairs > 0 && maxcolors > 0) {
 	    SP_PARM->_pair_limit = maxpairs;
