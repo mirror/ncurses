@@ -5699,11 +5699,11 @@ echo "${ECHO_T}$CC_SHARED_OPTS" >&6
 	aix4.3-9*|aix[5-7]*) #(vi
 		if test "$GCC" = yes; then
 			CC_SHARED_OPTS=
-			MK_SHARED_LIB='${CC} -shared -Wl,-brtl -Wl,-blibpath:${libdir}:/usr/lib -o $@'
+			MK_SHARED_LIB='${CC} -shared -Wl,-brtl -Wl,-blibpath:${RPATH_LIST}:/usr/lib -o $@'
 		else
 			# CC_SHARED_OPTS='-qpic=large -G'
 			# perhaps "-bM:SRE -bnoentry -bexpall"
-			MK_SHARED_LIB='${CC} -G -Wl,-brtl -Wl,-blibpath:${libdir}:/usr/lib -o $@'
+			MK_SHARED_LIB='${CC} -G -Wl,-brtl -Wl,-blibpath:${RPATH_LIST}:/usr/lib -o $@'
 		fi
 		;;
 	beos*) #(vi
@@ -5802,11 +5802,11 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 			cf_shared_soname='`basename `'
 		fi
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='${CC} -shared -Wl,-rpath,${libdir} -Wl,-h,'$cf_shared_soname' -o '
+		MK_SHARED_LIB='${CC} -shared -Wl,-rpath,${RPATH_LIST} -Wl,-h,'$cf_shared_soname' -o '
 		;;
 	irix*) #(vi
 		if test "$cf_cv_enable_rpath" = yes ; then
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		# tested with IRIX 5.2 and 'cc'.
 		if test "$GCC" != yes; then
@@ -5823,7 +5823,7 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_enable_rpath" = yes ; then
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 
 	test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=rel
@@ -5841,7 +5841,7 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_enable_rpath" = yes ; then
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 
@@ -5863,8 +5863,8 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_enable_rpath" = yes ; then
 			LOCAL_LDFLAGS="${cf_ld_rpath_opt}\$(LOCAL_LIBDIR)"
-			LOCAL_LDFLAGS2="${cf_ld_rpath_opt}\${libdir} $LOCAL_LDFLAGS"
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			LOCAL_LDFLAGS2="${cf_ld_rpath_opt}\${RPATH_LIST} $LOCAL_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 
 	test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=rel
@@ -5881,7 +5881,7 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_enable_rpath" = yes ; then
 			LOCAL_LDFLAGS="${cf_ld_rpath_opt}\$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 			if test "$cf_cv_shlib_version" = auto; then
 			if test -f /usr/libexec/ld.elf_so; then
 				cf_cv_shlib_version=abi
@@ -6030,9 +6030,9 @@ echo "$as_me: WARNING: ignored --with-shlib-version" >&2;}
 		;;
 	esac
 
-	if test -n "$cf_ld_rpath_opt" ; then
-		MK_SHARED_LIB="$MK_SHARED_LIB $cf_ld_rpath_opt\${libdir}"
-	fi
+	# RPATH_LIST is a colon-separated list of directories
+	test -n "$cf_ld_rpath_opt" && MK_SHARED_LIB="$MK_SHARED_LIB $cf_ld_rpath_opt\${RPATH_LIST}"
+	test -z "$RPATH_LIST" && RPATH_LIST="\${libdir}"
 
 if test "$CC_SHARED_OPTS" = "unknown"; then
 	for model in $cf_list_models; do
@@ -20194,6 +20194,7 @@ s,@EXTRA_LDFLAGS@,$EXTRA_LDFLAGS,;t t
 s,@LOCAL_LDFLAGS@,$LOCAL_LDFLAGS,;t t
 s,@LOCAL_LDFLAGS2@,$LOCAL_LDFLAGS2,;t t
 s,@INSTALL_LIB@,$INSTALL_LIB,;t t
+s,@RPATH_LIST@,$RPATH_LIST,;t t
 s,@cf_ldd_prog@,$cf_ldd_prog,;t t
 s,@TERMINFO_SRC@,$TERMINFO_SRC,;t t
 s,@FALLBACK_LIST@,$FALLBACK_LIST,;t t
@@ -20420,7 +20421,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:20423: creating $ac_file" >&5
+    { echo "$as_me:20424: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -20438,7 +20439,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:20441: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:20442: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -20451,7 +20452,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:20454: error: cannot find input file: $f" >&5
+           { { echo "$as_me:20455: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -20517,7 +20518,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:20520: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:20521: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -20528,7 +20529,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:20531: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:20532: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -20541,7 +20542,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:20544: error: cannot find input file: $f" >&5
+           { { echo "$as_me:20545: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -20599,7 +20600,7 @@ cat >>$CONFIG_STATUS <<\EOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:20602: $ac_file is unchanged" >&5
+      { echo "$as_me:20603: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \

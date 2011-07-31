@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.47 2010/12/04 18:38:55 tom Exp $
+.\" $Id: tic.1m,v 1.48 2011/07/30 21:58:54 tom Exp $
 .TH @TIC@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -39,6 +39,7 @@
 C\
 G\
 I\
+K\
 L\
 N\
 T\
@@ -101,6 +102,9 @@ names, but also translates terminfo strings to termcap format.
 Capabilities
 that are not translatable are left in the entry under their terminfo names
 but commented out with two preceding dots.
+The actual format used incorporates some improvements for escaped characters
+from terminfo format.
+For a stricter BSD-compatible translation, use the \fB\-K\fR option.
 .TP
 \fB\-c\fR
 tells \fBtic\fP to only check \fIfile\fR for errors, including syntax problems and

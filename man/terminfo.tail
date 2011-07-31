@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.53 2010/12/04 18:38:55 tom Exp $
+.\" $Id: terminfo.tail,v 1.54 2011/07/30 23:39:52 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -125,8 +125,8 @@ will instead look in the directory \fB$HOME/.terminfo\fR
 for a compiled description.
 If it fails to find one there, and the environment variable TERMINFO_DIRS is
 set, it will interpret the contents of that variable as a list of colon-
-separated directories to be searched (an empty entry is interpreted as a
-command to search \fI\*d\fR).
+separated directories (or database files) to be searched
+(an empty entry is interpreted as a command to search \fI\*d\fR).
 If no description is found in any of the
 TERMINFO_DIRS directories, the fetch fails.
 .PP

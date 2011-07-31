@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.64 2011/07/23 20:36:28 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.69 2011/07/30 21:33:42 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -240,6 +240,12 @@ getparm(int parm, int n)
 	else if (parm == 2)
 	    parm = 1;
     }
+
+    while (n--) {
+	dp = save_string(dp, "%p");
+	dp = save_char(dp, '0' + parm);
+    }
+
     if (onstack == parm) {
 	if (n > 1) {
 	    _nc_warning("string may not be optimal");
@@ -254,11 +260,6 @@ getparm(int parm, int n)
 	push();
 
     onstack = parm;
-
-    while (n--) {
-	dp = save_string(dp, "%p");
-	dp = save_char(dp, '0' + parm);
-    }
 
     if (seenn && parm < 3) {
 	dp = save_string(dp, "%{96}%^");
@@ -576,7 +577,6 @@ save_tc_inequality(char *bufptr, int c1, int c2)
 NCURSES_EXPORT(char *)
 _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameterized)
 {
-    int strict_bsd = 1;		/* FIXME - consider making this an option */
     int seenone = 0, seentwo = 0, saw_m = 0, saw_n = 0;
     const char *padding;
     const char *trimmed = 0;
@@ -589,8 +589,9 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 
     /* we may have to move some trailing mandatory padding up front */
     padding = str + strlen(str) - 1;
-    if (padding > str && *padding == '>' && *--padding == '/') {
-	--padding;
+    if (padding > str && *padding == '>') {
+	if (*--padding == '/')
+	    --padding;
 	while (isdigit(UChar(*padding)) || *padding == '.' || *padding == '*')
 	    padding--;
 	if (padding > str && *padding == '<' && *--padding == '$')
@@ -601,7 +602,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	    bufptr = save_char(bufptr, *padding++);
     }
 
-    for (; *str && str != trimmed; str++) {
+    for (; *str && ((trimmed == 0) || (str < trimmed)); str++) {
 	int c1, c2;
 	char *cp = 0;
 
@@ -627,7 +628,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 
 		bufptr = save_char(bufptr, *str++);
 		xx1 = *str;
-		if (strict_bsd) {
+		if (_nc_strict_bsd) {
 		    if (isdigit(UChar(xx1))) {
 			int pad = 0;
 
@@ -652,13 +653,11 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 			    bufptr = save_char(bufptr, xx2);
 			    xx2 = '0';
 			}
-		    } else if (strchr("E\\:nrtbf", xx1) == 0) {
-			/*
-			 * Note: termcap documentation claims that ":" must be
-			 * escaped as "\072", however the documentation is
-			 * incorrect - read the code.
-			 */
+		    } else if (strchr("E\\nrtbf", xx1) == 0) {
 			switch (xx1) {
+			case 'e':
+			    xx1 = 'E';
+			    break;
 			case 'l':
 			    xx1 = 'n';
 			    break;
@@ -667,13 +666,25 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 			    bufptr = save_char(bufptr, '4');
 			    xx1 = '0';
 			    break;
+			case ':':
+			    /*
+			     * Note: termcap documentation claims that ":"
+			     * must be escaped as "\072", however the
+			     * documentation is incorrect - read the code.
+			     * The replacement does not work reliably,
+			     * so the advice is not helpful.
+			     */
+			    bufptr = save_char(bufptr, '0');
+			    bufptr = save_char(bufptr, '7');
+			    xx1 = '2';
+			    break;
 			default:
 			    /* should not happen, but handle this anyway */
 			    sprintf(octal, "%03o", UChar(xx1));
 			    bufptr = save_char(bufptr, octal[0]);
 			    bufptr = save_char(bufptr, octal[1]);
 			    xx1 = octal[2];
-			    continue;
+			    break;
 			}
 		    }
 		}
@@ -711,13 +722,13 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	    bufptr = save_tc_inequality(bufptr, c1, c2);
 	} else if (sscanf(str, "%%?%%{%d}%%>%%t%%'%c'%%+%%;", &c1, &ch2) == 2) {
 	    str = strchr(str, ';');
-	    bufptr = save_tc_inequality(bufptr, c1, c2);
+	    bufptr = save_tc_inequality(bufptr, c1, ch2);
 	} else if (sscanf(str, "%%?%%'%c'%%>%%t%%{%d}%%+%%;", &ch1, &c2) == 2) {
 	    str = strchr(str, ';');
-	    bufptr = save_tc_inequality(bufptr, c1, c2);
+	    bufptr = save_tc_inequality(bufptr, ch1, c2);
 	} else if (sscanf(str, "%%?%%'%c'%%>%%t%%'%c'%%+%%;", &ch1, &ch2) == 2) {
 	    str = strchr(str, ';');
-	    bufptr = save_tc_inequality(bufptr, c1, c2);
+	    bufptr = save_tc_inequality(bufptr, ch1, ch2);
 	} else if ((len = bcd_expression(str)) != 0) {
 	    str += len;
 	    bufptr = save_string(bufptr, "%B");
@@ -768,14 +779,14 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 		while (isdigit(UChar(*str))) {
 		    ch2 = ch1;
 		    ch1 = *str++;
-		    if (strict_bsd) {
+		    if (_nc_strict_bsd) {
 			if (ch1 > '3')
 			    return 0;
 		    } else {
 			bufptr = save_char(bufptr, ch1);
 		    }
 		}
-		if (strict_bsd) {
+		if (_nc_strict_bsd) {
 		    if (ch2 != 0 && ch2 != '0')
 			return 0;
 		    if (ch1 < '2')
@@ -802,7 +813,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 		 * termcap notation.
 		 */
 	    case 's':
-		if (strict_bsd)
+		if (_nc_strict_bsd)
 		    return 0;
 		bufptr = save_string(bufptr, "%s");
 		break;

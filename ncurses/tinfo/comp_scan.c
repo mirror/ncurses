@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.89 2010/12/25 23:06:37 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.92 2011/07/30 21:36:33 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -61,6 +61,7 @@ MODULE_ID("$Id: comp_scan.c,v 1.89 2010/12/25 23:06:37 tom Exp $")
 #define iswhite(ch)	(ch == ' '  ||  ch == '\t')
 
 NCURSES_EXPORT_VAR (int) _nc_syntax = 0;         /* termcap or terminfo? */
+NCURSES_EXPORT_VAR (int) _nc_strict_bsd = 1;  /* ncurses extended termcap? */
 NCURSES_EXPORT_VAR (long) _nc_curr_file_pos = 0; /* file offset of current line */
 NCURSES_EXPORT_VAR (long) _nc_comment_start = 0; /* start of comment range before name */
 NCURSES_EXPORT_VAR (long) _nc_comment_end = 0;   /* end of comment range before name */
@@ -299,6 +300,8 @@ eat_escaped_newline(int ch)
 	*tok_ptr++ = (char) ch; \
 	*tok_ptr = '\0'
 
+static char *tok_buf;
+
 /*
  *	int
  *	get_token()
@@ -336,7 +339,6 @@ NCURSES_EXPORT(int)
 _nc_get_token(bool silent)
 {
     static const char terminfo_punct[] = "@%&*!#";
-    static char *tok_buf;
 
     char *after_list;
     char *after_name;
@@ -376,7 +378,6 @@ _nc_get_token(bool silent)
 	if (tok_buf != 0) {
 	    if (_nc_curr_token.tk_name == tok_buf)
 		_nc_curr_token.tk_name = 0;
-	    FreeAndNull(tok_buf);
 	}
 	return (EOF);
     }
@@ -390,6 +391,7 @@ _nc_get_token(bool silent)
     }
 
     ch = eat_escaped_newline(ch);
+    _nc_curr_token.tk_valstring = 0;
 
 #ifdef TRACE
     old_line = _nc_curr_line;
@@ -758,21 +760,27 @@ _nc_trans_string(char *ptr, char *last)
 		*(ptr++) = (char) (c);
 	    }
 	} else if (c == '\\') {
+	    bool strict_bsd = ((_nc_syntax == SYN_TERMCAP) && _nc_strict_bsd);
+
 	    c = next_char();
 	    if (c == EOF)
 		_nc_err_abort(MSG_NO_INPUTS);
 
-	    if (c >= '0' && c <= '7') {
+#define isoctal(c) ((c) >= '0' && (c) <= '7')
+
+	    if (isoctal(c) || (strict_bsd && isdigit(c))) {
 		number = c - '0';
 		for (i = 0; i < 2; i++) {
 		    c = next_char();
 		    if (c == EOF)
 			_nc_err_abort(MSG_NO_INPUTS);
 
-		    if (c < '0' || c > '7') {
+		    if (!isoctal(c)) {
 			if (isdigit(c)) {
-			    _nc_warning("Non-octal digit `%c' in \\ sequence", c);
-			    /* allow the digit; it'll do less harm */
+			    if (!strict_bsd) {
+				_nc_warning("Non-octal digit `%c' in \\ sequence", c);
+				/* allow the digit; it'll do less harm */
+			    }
 			} else {
 			    push_back((char) c);
 			    break;
@@ -782,21 +790,16 @@ _nc_trans_string(char *ptr, char *last)
 		    number = number * 8 + c - '0';
 		}
 
-		if (number == 0)
+		number = UChar(number);
+		if (number == 0 && !strict_bsd)
 		    number = 0200;
 		*(ptr++) = (char) number;
 	    } else {
 		switch (c) {
 		case 'E':
-		case 'e':
 		    *(ptr++) = '\033';
 		    break;
 
-		case 'a':
-		    *(ptr++) = '\007';
-		    break;
-
-		case 'l':
 		case 'n':
 		    *(ptr++) = '\n';
 		    break;
@@ -807,10 +810,6 @@ _nc_trans_string(char *ptr, char *last)
 
 		case 'b':
 		    *(ptr++) = '\010';
-		    break;
-
-		case 's':
-		    *(ptr++) = ' ';
 		    break;
 
 		case 'f':
@@ -833,16 +832,33 @@ _nc_trans_string(char *ptr, char *last)
 		    *(ptr++) = ',';
 		    break;
 
-		case ':':
-		    *(ptr++) = ':';
-		    break;
-
 		case '\n':
 		    continue;
 
 		default:
-		    _nc_warning("Illegal character '%s' in \\ sequence",
-				unctrl(UChar(c)));
+		    if ((_nc_syntax == SYN_TERMINFO) || !_nc_strict_bsd) {
+			switch (c) {
+			case 'a':
+			    c = '\007';
+			    break;
+			case 'e':
+			    c = '\033';
+			    break;
+			case 'l':
+			    c = '\n';
+			    break;
+			case 's':
+			    c = ' ';
+			    break;
+			case ':':
+			    c = ':';
+			    break;
+			default:
+			    _nc_warning("Illegal character '%s' in \\ sequence",
+					unctrl(UChar(c)));
+			    break;
+			}
+		    }
 		    /* FALLTHRU */
 		case '|':
 		    *(ptr++) = (char) c;
@@ -933,6 +949,9 @@ _nc_comp_scan_leaks(void)
 {
     if (pushname != 0) {
 	FreeAndNull(pushname);
+    }
+    if (tok_buf != 0) {
+	FreeAndNull(tok_buf);
     }
 }
 #endif

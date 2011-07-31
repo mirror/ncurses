@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.480 2011/06/25 20:36:52 tom Exp $
+ * $Id: curses.priv.h,v 1.481 2011/07/28 22:47:09 tom Exp $
  *
  *	curses.priv.h
  *
@@ -794,7 +794,7 @@ typedef struct {
 	bool		init_signals;
 	bool		init_screen;
 
-	const char	*comp_sourcename;
+	char		*comp_sourcename;
 	char		*comp_termtype;
 
 	bool		have_tic_directory;

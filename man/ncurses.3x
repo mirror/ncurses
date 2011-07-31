@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.104 2011/05/28 23:19:36 tom Exp $
+.\" $Id: ncurses.3x,v 1.105 2011/07/30 23:38:59 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .de bP
@@ -1007,6 +1007,13 @@ Specifies a list of directories to search for terminal descriptions.
 The list is separated by colons (i.e., ":") on Unix, semicolons on OS/2 EMX.
 All of the terminal descriptions are in terminfo form, which makes
 a subdirectory named for the first letter of the terminal names therein.
+.IP
+If \fBncurses\fP is built with a hashed database,
+then each entry in this list can also be the path of the corresponding
+database file.
+.IP
+If \fBncurses\fP is built with a support for reading termcap files
+directly, then an entry in this list may be the path of a termcap file.
 .TP 5
 TERMPATH
 If TERMCAP does not hold a file name then \fBncurses\fR checks

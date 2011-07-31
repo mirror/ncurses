@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.85 2010/11/27 21:45:27 tom Exp $
+# $Id: Makefile.in,v 1.86 2011/07/30 22:51:50 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -104,6 +104,7 @@ LOCAL_LIBDIR	= @top_builddir@/lib
 LD		= @LD@
 LINK		= @LINK_PROGS@ $(LIBTOOL_LINK)
 LDFLAGS		= @EXTRA_LDFLAGS@ @LDFLAGS@
+RPATH_LIST	= @RPATH_LIST@
 
 LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
 LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)

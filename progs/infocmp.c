@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.106 2011/05/14 22:51:04 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.107 2011/07/30 21:51:01 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -975,6 +975,7 @@ usage(void)
 	,""
 	,"Options:"
 	,"  -1    print single-column"
+	,"  -K    use termcap-names and BSD syntax"
 	,"  -C    use termcap-names"
 	,"  -F    compare terminfo-files"
 	,"  -I    use terminfo-names"
@@ -1288,6 +1289,7 @@ main(int argc, char *argv[])
 #if NCURSES_XNAMES
     use_extended_names(FALSE);
 #endif
+    _nc_strict_bsd = 0;
 
     _nc_progname = _nc_rootname(argv[0]);
 
@@ -1298,7 +1300,7 @@ main(int argc, char *argv[])
 
     while ((c = getopt(argc,
 		       argv,
-		       "1A:aB:CcdEeFfGgIiLlnpqR:rs:TtUuVv:w:x")) != -1) {
+		       "1A:aB:CcdEeFfGgIiKLlnpqR:rs:TtUuVv:w:x")) != -1) {
 	switch (c) {
 	case '1':
 	    mwidth = 0;
@@ -1318,6 +1320,9 @@ main(int argc, char *argv[])
 	    restdir = optarg;
 	    break;
 
+	case 'K':
+	    _nc_strict_bsd = 1;
+	    /* FALLTHRU */
 	case 'C':
 	    outform = F_TERMCAP;
 	    tversion = "BSD";

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.563 2011/07/17 18:55:21 tom Exp $
+dnl $Id: aclocal.m4,v 1.564 2011/07/30 23:32:32 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5118,7 +5118,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 68 updated: 2011/07/17 14:48:41
+dnl CF_SHARED_OPTS version: 69 updated: 2011/07/30 19:31:39
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5196,11 +5196,11 @@ AC_DEFUN([CF_SHARED_OPTS],
 	aix4.[3-9]*|aix[[5-7]]*) #(vi
 		if test "$GCC" = yes; then
 			CC_SHARED_OPTS=
-			MK_SHARED_LIB='${CC} -shared -Wl,-brtl -Wl,-blibpath:${libdir}:/usr/lib -o [$]@'
+			MK_SHARED_LIB='${CC} -shared -Wl,-brtl -Wl,-blibpath:${RPATH_LIST}:/usr/lib -o [$]@'
 		else
 			# CC_SHARED_OPTS='-qpic=large -G'
 			# perhaps "-bM:SRE -bnoentry -bexpall"
-			MK_SHARED_LIB='${CC} -G -Wl,-brtl -Wl,-blibpath:${libdir}:/usr/lib -o [$]@'
+			MK_SHARED_LIB='${CC} -G -Wl,-brtl -Wl,-blibpath:${RPATH_LIST}:/usr/lib -o [$]@'
 		fi
 		;;
 	beos*) #(vi
@@ -5261,11 +5261,11 @@ CF_EOF
 			cf_shared_soname='`basename $@`'
 		fi
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='${CC} -shared -Wl,-rpath,${libdir} -Wl,-h,'$cf_shared_soname' -o $@'
+		MK_SHARED_LIB='${CC} -shared -Wl,-rpath,${RPATH_LIST} -Wl,-h,'$cf_shared_soname' -o $@'
 		;;
 	irix*) #(vi
 		if test "$cf_cv_enable_rpath" = yes ; then
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		# tested with IRIX 5.2 and 'cc'.
 		if test "$GCC" != yes; then
@@ -5282,7 +5282,7 @@ CF_EOF
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_enable_rpath" = yes ; then
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
 		MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
@@ -5293,7 +5293,7 @@ CF_EOF
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
 		fi
 		if test "$cf_cv_enable_rpath" = yes ; then
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 		CF_SHARED_SONAME
@@ -5308,8 +5308,8 @@ CF_EOF
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
 		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_enable_rpath" = yes ; then
 			LOCAL_LDFLAGS="${cf_ld_rpath_opt}\$(LOCAL_LIBDIR)"
-			LOCAL_LDFLAGS2="${cf_ld_rpath_opt}\${libdir} $LOCAL_LDFLAGS"
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			LOCAL_LDFLAGS2="${cf_ld_rpath_opt}\${RPATH_LIST} $LOCAL_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
 		MK_SHARED_LIB='${LD} -shared -Bshareable -soname=`basename $[@]` -o $[@]'
@@ -5319,7 +5319,7 @@ CF_EOF
 		if test "$DFT_LWR_MODEL" = "shared" && test "$cf_cv_enable_rpath" = yes ; then
 			LOCAL_LDFLAGS="${cf_ld_rpath_opt}\$(LOCAL_LIBDIR)"
 			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
-			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${libdir} $EXTRA_LDFLAGS"
+			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 			if test "$cf_cv_shlib_version" = auto; then
 			if test -f /usr/libexec/ld.elf_so; then
 				cf_cv_shlib_version=abi
@@ -5424,9 +5424,9 @@ CF_EOF
 		;;
 	esac
 
-	if test -n "$cf_ld_rpath_opt" ; then
-		MK_SHARED_LIB="$MK_SHARED_LIB $cf_ld_rpath_opt\${libdir}"
-	fi
+	# RPATH_LIST is a colon-separated list of directories
+	test -n "$cf_ld_rpath_opt" && MK_SHARED_LIB="$MK_SHARED_LIB $cf_ld_rpath_opt\${RPATH_LIST}"
+	test -z "$RPATH_LIST" && RPATH_LIST="\${libdir}"
 
 	AC_SUBST(CC_SHARED_OPTS)
 	AC_SUBST(LD_RPATH_OPT)
@@ -5438,6 +5438,7 @@ CF_EOF
 	AC_SUBST(LOCAL_LDFLAGS)
 	AC_SUBST(LOCAL_LDFLAGS2)
 	AC_SUBST(INSTALL_LIB)
+	AC_SUBST(RPATH_LIST)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_SHARED_SONAME version: 3 updated: 2008/09/08 18:34:43

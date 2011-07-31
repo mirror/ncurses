@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.76 2011/06/05 00:48:00 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.79 2011/07/29 00:25:02 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -441,8 +441,10 @@ _nc_getent(
 		break;
 	}
 
-	if (!foundit)
+	if (!foundit) {
+	    free(record);
 	    return (TC_NOT_FOUND);
+	}
     }
 
     /*
@@ -454,7 +456,7 @@ _nc_getent(
 	register int newilen;
 	unsigned ilen;
 	int diff, iret, tclen, oline;
-	char *icap, *scan, *tc, *tcstart, *tcend;
+	char *icap = 0, *scan, *tc, *tcstart, *tcend;
 
 	/*
 	 * Loop invariants:
@@ -467,8 +469,9 @@ _nc_getent(
 	scan = record;
 	tc_not_resolved = FALSE;
 	for (;;) {
-	    if ((tc = _nc_cgetcap(scan, "tc", '=')) == 0)
+	    if ((tc = _nc_cgetcap(scan, "tc", '=')) == 0) {
 		break;
+	    }
 
 	    /*
 	     * Find end of tc=name and stomp on the trailing `:'
@@ -485,6 +488,7 @@ _nc_getent(
 	    tclen = s - tcstart;
 	    tcend = s;
 
+	    icap = 0;
 	    iret = _nc_getent(&icap, &ilen, &oline, current, db_array, fd,
 			      tc, depth + 1, 0);
 	    newicap = icap;	/* Put into a register. */
@@ -495,12 +499,13 @@ _nc_getent(
 		    if (myfd)
 			(void) close(fd);
 		    free(record);
+		    FreeIfNeeded(icap);
 		    return (iret);
 		}
-		if (iret == TC_UNRESOLVED)
+		if (iret == TC_UNRESOLVED) {
 		    tc_not_resolved = TRUE;
-		/* couldn't resolve tc */
-		if (iret == TC_NOT_FOUND) {
+		    /* couldn't resolve tc */
+		} else if (iret == TC_NOT_FOUND) {
 		    *(s - 1) = ':';
 		    scan = s - 1;
 		    tc_not_resolved = TRUE;
@@ -580,8 +585,9 @@ _nc_getent(
     }
 
     *cap = record;
-    if (tc_not_resolved)
+    if (tc_not_resolved) {
 	return (TC_UNRESOLVED);
+    }
     return (current);
 }
 
@@ -840,6 +846,9 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
 	}
     }
     *fname = 0;			/* mark end of vector */
+#if !HAVE_BSD_CGETENT
+    (void) _nc_cgetset(0);
+#endif
     if (_nc_is_abs_path(cp)) {
 	if (_nc_cgetset(cp) < 0) {
 	    return (TC_SYS_ERR);
@@ -979,7 +988,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
 	_nc_curr_line = lineno;
 	_nc_set_source(source);
     }
-    _nc_read_entry_source((FILE *) 0, tc, FALSE, FALSE, NULLHOOK);
+    _nc_read_entry_source((FILE *) 0, tc, FALSE, TRUE, NULLHOOK);
 #else
     /*
      * Here is what the 4.4BSD termcap(3) page prescribes:

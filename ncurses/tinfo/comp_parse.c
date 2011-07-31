@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,15 +35,10 @@
 /*
  *	comp_parse.c -- parser driver loop and use handling.
  *
- *	_nc_read_entry_source(FILE *, literal, bool, bool (*hook)())
- *	_nc_resolve_uses2(void)
- *	_nc_free_entries(void)
- *
  *	Use this code by calling _nc_read_entry_source() on as many source
  *	files as you like (either terminfo or termcap syntax).  If you
  *	want use-resolution, call _nc_resolve_uses2().  To free the list
  *	storage, do _nc_free_entries().
- *
  */
 
 #include <curses.priv.h>
@@ -52,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.73 2010/12/25 23:06:37 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.74 2011/07/25 22:46:47 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -60,6 +55,8 @@ NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanit
 /* obsolete: 20040705 */
 static void sanity_check(TERMTYPE *);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype) (TERMTYPE *) = sanity_check;
+
+static void fixup_acsc(TERMTYPE *, bool);
 
 static void
 enqueue(ENTRY * ep)
@@ -378,7 +375,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 	    for_entry_list(qp) {
 		_nc_curr_line = (int) qp->startline;
 		_nc_set_type(_nc_first_name(qp->tterm.term_names));
-		_nc_check_termtype2(&qp->tterm, literal);
+		fixup_acsc(&qp->tterm, literal);
 	    }
 	    DEBUG(2, ("SANITY CHECK FINISHED"));
 	}
@@ -401,6 +398,17 @@ _nc_resolve_uses(bool fullresolve)
 
 #undef CUR
 #define CUR tp->
+
+static void
+fixup_acsc(TERMTYPE *tp, bool literal)
+{
+    if (!literal) {
+	if (acs_chars == 0
+	    && enter_alt_charset_mode != 0
+	    && exit_alt_charset_mode != 0)
+	    acs_chars = strdup(VT_ACSC);
+    }
+}
 
 static void
 sanity_check2(TERMTYPE *tp, bool literal)
@@ -428,10 +436,7 @@ sanity_check2(TERMTYPE *tp, bool literal)
      * prefer to bypass it...
      */
     if (!literal) {
-	if (acs_chars == 0
-	    && enter_alt_charset_mode != 0
-	    && exit_alt_charset_mode != 0)
-	    acs_chars = strdup(VT_ACSC);
+	fixup_acsc(tp, literal);
 	ANDMISSING(enter_alt_charset_mode, acs_chars);
 	ANDMISSING(exit_alt_charset_mode, acs_chars);
     }

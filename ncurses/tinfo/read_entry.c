@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.108 2011/02/26 15:36:06 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.109 2011/07/25 22:21:34 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -401,7 +401,7 @@ _nc_read_tic_entry(char *filename,
 		   const char *name,
 		   TERMTYPE *const tp)
 {
-    int result = TGETENT_NO;
+    int code = TGETENT_NO;
 
     /*
      * If we are looking in a directory, assume the entry is a file under that,
@@ -412,9 +412,9 @@ _nc_read_tic_entry(char *filename,
 	(void) sprintf(filename, "%s/" LEAF_FMT "/%s", path, *name, name);
 
     if (_nc_is_dir_path(path))
-	result = _nc_read_file_entry(filename, tp);
-#if USE_HASHED_DB
+	code = _nc_read_file_entry(filename, tp);
     else {
+#if USE_HASHED_DB
 	static const char suffix[] = DBM_SUFFIX;
 	DB *capdbp;
 	unsigned lens = sizeof(suffix) - 1;
@@ -467,8 +467,8 @@ _nc_read_tic_entry(char *filename,
 		    if (*have++ == 0) {
 			if (data.size > key.size
 			    && IS_TIC_MAGIC(have)) {
-			    result = _nc_read_termtype(tp, have, used);
-			    if (result == TGETENT_NO) {
+			    code = _nc_read_termtype(tp, have, used);
+			    if (code == TGETENT_NO) {
 				_nc_free_termtype(tp);
 			    }
 			}
@@ -493,9 +493,15 @@ _nc_read_tic_entry(char *filename,
 		free(save);
 	    }
 	}
-    }
 #endif
-    return result;
+#if USE_TERMCAP
+	if (code != TGETENT_YES) {
+	    code = _nc_read_termcap_entry(name, tp);
+	    sprintf(filename, "%.*s", PATH_MAX - 1, _nc_get_source());
+	}
+#endif
+    }
+    return code;
 }
 #endif /* USE_DATABASE */
 
@@ -533,8 +539,7 @@ _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
 		break;
 	    }
 	}
-#endif
-#if USE_TERMCAP
+#elif USE_TERMCAP
 	if (code != TGETENT_YES) {
 	    code = _nc_read_termcap_entry(name, tp);
 	    sprintf(filename, "%.*s", PATH_MAX - 1, _nc_get_source());

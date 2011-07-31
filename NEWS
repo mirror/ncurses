@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1743 2011/07/23 22:02:25 tom Exp $
+-- $Id: NEWS,v 1.1755 2011/07/30 22:57:54 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,39 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110730
+	+ modify configure script and makefiles in c++ and progs to allow the
+	  directory used for rpath option to be overridden, e.g., to work
+	  around updates to the variables used by tic during an install.
+	+ add -K option to tic/infocmp, to provide stricter BSD-compatibility
+	  for termcap output.
+	+ add _nc_strict_bsd variable in tic library which controls the
+	  "strict" BSD termcap compatibility from 20110723, plus these
+	  features:
+	  + allow escapes such as "\8" and "\9" when reading termcap
+	  + disallow "\a", "\e", "\l", "\s" and "\:" escapes when reading
+	    termcap files, passing through "a", "e", etc.
+	  + expand "\:" as "\072" on output.
+	+ modify _nc_get_token() to reset the token's string value in case
+	  there is a string-typed token lacking the "=" marker.
+	+ fix a few memory leaks in _nc_tgetent.
+	+ fix a few places where reading from a termcap file could refer to
+	  freed memory.
+	+ add an overflow check when converting terminfo/termcap numeric
+	  values, since terminfo stores those in a short, and they must be
+	  positive.
+	+ correct internal variables used for translating to termcap "%>"
+	  feature, and translating from termcap %B to terminfo, needed by
+	  tctest (cf: 19991211).
+	+ amend a minor fix to acsc when loading a termcap file to separate it
+	  from warnings needed for tic (cf: 20040710)
+	+ modify logic in _nc_read_entry() and _nc_read_tic_entry() to allow
+	  a termcap file to be handled via TERMINFO_DIRS.
+	+ modify _nc_infotocap() to include non-mandatory padding when
+	  translating to termcap.
+	+ modify _nc_read_termcap_entry(), passing a flag in the case where
+	  getcap is used, to reduce interactive warning messages.
 
 20110723
 	+ add a check in start_color() to limit color-pairs to 256 when

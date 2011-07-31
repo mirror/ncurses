@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.150 2011/05/21 18:15:45 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.151 2011/07/30 21:49:32 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -74,6 +74,7 @@ f\
 G\
 g\
 I\
+K\
 L\
 N\
 r\
@@ -133,6 +134,7 @@ usage(void)
 #if NCURSES_XNAMES
 	"  -a         retain commented-out capabilities (sets -x also)",
 #endif
+	"  -K         translate entries to termcap source form with BSD syntax",
 	"  -C         translate entries to termcap source form",
 	"  -c         check only, validate input without compiling or translating",
 	"  -e<names>  translate/compile only entries named by comma-separated list",
@@ -514,6 +516,7 @@ main(int argc, char *argv[])
 #if NCURSES_XNAMES
     use_extended_names(FALSE);
 #endif
+    _nc_strict_bsd = 0;
 
     /*
      * Processing arguments is a little complicated, since someone made a
@@ -521,7 +524,7 @@ main(int argc, char *argv[])
      * be optional.
      */
     while ((this_opt = getopt(argc, argv,
-			      "0123456789CILNR:TUVace:fGgo:rstvwx")) != -1) {
+			      "0123456789CIKLNR:TUVace:fGgo:rstvwx")) != -1) {
 	if (isdigit(this_opt)) {
 	    switch (last_opt) {
 	    case 'v':
@@ -539,6 +542,9 @@ main(int argc, char *argv[])
 	    continue;
 	}
 	switch (this_opt) {
+	case 'K':
+	    _nc_strict_bsd = 1;
+	    /* FALLTHRU */
 	case 'C':
 	    capdump = TRUE;
 	    outform = F_TERMCAP;

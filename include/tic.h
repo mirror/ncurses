@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.65 2009/08/08 17:52:46 tom Exp $
+ * $Id: tic.h,v 1.66 2011/07/30 21:28:43 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -270,6 +270,7 @@ extern NCURSES_EXPORT(void) _nc_reset_input (FILE *, char *);
 extern NCURSES_EXPORT_VAR(int) _nc_curr_col;
 extern NCURSES_EXPORT_VAR(int) _nc_curr_line;
 extern NCURSES_EXPORT_VAR(int) _nc_syntax;
+extern NCURSES_EXPORT_VAR(int) _nc_strict_bsd;
 extern NCURSES_EXPORT_VAR(long) _nc_comment_end;
 extern NCURSES_EXPORT_VAR(long) _nc_comment_start;
 extern NCURSES_EXPORT_VAR(long) _nc_curr_file_pos;

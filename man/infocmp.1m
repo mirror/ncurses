@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.46 2010/12/04 18:40:45 tom Exp $
+.\" $Id: infocmp.1m,v 1.48 2011/07/30 22:06:07 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -41,6 +41,7 @@ E\
 F\
 G\
 I\
+K\
 L\
 T\
 U\
@@ -107,6 +108,7 @@ l l .
 \fB\-L\fR/use the long C variable name listed in <\fBterm.h\fR>
 \fB\-C\fR/use the \fBtermcap\fR names
 \fB\-r\fR/when using \fB\-C\fR, put out all capabilities in \fBtermcap\fR form
+\fB\-K\fR/modifies the \fB\-C\fP option, improving BSD-compatibility.
 .TE
 .PP
 If no \fItermnames\fR are given, the environment variable \fBTERM\fR will be
@@ -128,6 +130,11 @@ are derivable from other \fBterminfo\fR variables, will be output.  Not all
 part of \fBtermcap\fR will normally be output.  Specifying the \fB\-r\fR option
 will take off this restriction, allowing all capabilities to be output in
 \fItermcap\fR form.
+Normally you would use both the \fB\-C\fP and \fB\-r\fP options.
+The actual format used incorporates some improvements for escaped characters
+from terminfo format.
+For a stricter BSD-compatible translation, use the \fB\-K\fR option
+rather than \fB\-C\fP.
 .PP
 Note that because padding is collected to the beginning of the capability, not
 all capabilities are output.  Mandatory padding is not supported.  Because

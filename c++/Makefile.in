@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.94 2011/07/02 18:04:05 tom Exp $
+# $Id: Makefile.in,v 1.95 2011/07/30 22:52:07 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -112,6 +112,7 @@ LIBNAME		= @LIB_PREFIX@$(LIBROOT)@CXX_LIB_SUFFIX@
 MY_LIBRARY	= ../lib/$(LIBNAME)
 
 LINK_FLAGS	= @EXTRA_LDFLAGS@ -L../lib -l$(LIBROOT)@LIB_SUFFIX@
+RPATH_LIST	= @RPATH_LIST@
 
 LINK_LIBTOOL	= @EXTRA_LDFLAGS@ -L../lib $(MY_LIBRARY)
 LINK_NORMAL	= $(LINK_FLAGS)

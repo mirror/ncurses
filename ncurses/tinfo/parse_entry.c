@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.75 2010/05/01 19:35:09 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.76 2011/07/27 01:14:47 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -202,6 +202,8 @@ _nc_extend_names(ENTRY * entryp, char *name, int token_type)
 #define BAD_TC_USAGE if (!bad_tc_usage) \
  	{ bad_tc_usage = TRUE; \
 	 _nc_warning("Legacy termcap allows only a trailing tc= clause"); }
+
+#define MAX_NUMBER 0x7fff	/* positive shorts only */
 
 NCURSES_EXPORT(int)
 _nc_parse_entry(struct entry *entryp, int literal, bool silent)
@@ -444,8 +446,12 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 		break;
 
 	    case NUMBER:
-		entryp->tterm.Numbers[entry_ptr->nte_index] =
-		    (short) _nc_curr_token.tk_valnumber;
+		if (_nc_curr_token.tk_valnumber > MAX_NUMBER) {
+		    entryp->tterm.Numbers[entry_ptr->nte_index] = MAX_NUMBER;
+		} else {
+		    entryp->tterm.Numbers[entry_ptr->nte_index] =
+			(short) _nc_curr_token.tk_valnumber;
+		}
 		break;
 
 	    case STRING:
