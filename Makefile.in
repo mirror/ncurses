@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.30 2010/11/27 21:45:27 tom Exp $
+# $Id: Makefile.in,v 1.31 2011/08/07 15:36:52 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -35,7 +35,8 @@ SHELL = /bin/sh
 VPATH		= @srcdir@
 
 DESTDIR=@DESTDIR@
-CF_MFLAGS = @cf_cv_makeflags@ DESTDIR="$(DESTDIR)"
+RPATH_LIST=@RPATH_LIST@
+CF_MFLAGS = @cf_cv_makeflags@ DESTDIR="$(DESTDIR)" RPATH_LIST="$(RPATH_LIST)"
 
 @SET_MAKE@
 

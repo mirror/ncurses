@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.48 2011/07/30 22:06:07 tom Exp $
+.\" $Id: infocmp.1m,v 1.49 2011/08/06 17:46:28 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -208,6 +208,9 @@ compare descriptions for a terminal with the same name located in two different
 databases.  This is useful for comparing descriptions for the same terminal
 created by different people.
 .SS Other Options
+.TP 5
+\fB\-0\fR
+causes the fields to be printed on one line, without wrapping.
 .TP 5
 \fB\-1\fR
 causes the fields to be printed out one to a line.  Otherwise,
@@ -399,6 +402,8 @@ using the \fB\-x\fR option of \fBtic\fP.
 Compiled terminal description database.
 .SH EXTENSIONS
 The
+\fB\-0\fR,
+\fB\-1\fR,
 \fB\-E\fR,
 \fB\-F\fR,
 \fB\-G\fR,

@@ -47,7 +47,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.138 2011/06/14 22:36:29 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.139 2011/08/05 21:56:40 tom Exp $")
 
 /****************************************************************************
  *
@@ -479,7 +479,7 @@ _nc_tinfo_cmdch(TERMINAL * termp, char proto)
     if ((tmp = getenv("CC")) != 0 && strlen(tmp) == 1) {
 	CC = *tmp;
 	for_each_string(i, &(termp->type)) {
-	    for (tmp = termp->type.Strings[i]; *tmp; tmp++) {
+	    for (tmp = termp->type.Strings[i]; tmp && *tmp; tmp++) {
 		if (*tmp == proto)
 		    *tmp = CC;
 	    }

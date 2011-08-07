@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.564 2011/07/30 23:32:32 tom Exp $
+dnl $Id: aclocal.m4,v 1.566 2011/08/07 18:55:48 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -795,27 +795,48 @@ AC_MSG_RESULT($includedir)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CGETENT version: 3 updated: 2000/08/12 23:18:52
+dnl CF_CGETENT version: 4 updated: 2011/08/07 14:54:41
 dnl ----------
 dnl Check if the terminal-capability database functions are available.  If not,
 dnl ncurses has a much-reduced version.
 AC_DEFUN([CF_CGETENT],[
-AC_MSG_CHECKING(for terminal-capability database functions)
-AC_CACHE_VAL(cf_cv_cgetent,[
+AC_CACHE_CHECK(for terminal-capability database functions,cf_cv_cgetent,[
 AC_TRY_LINK([
 #include <stdlib.h>],[
 	char temp[128];
 	char *buf = temp;
 	char *db_array = temp;
-	cgetent(&buf, /* int *, */ &db_array, "vt100");
+	cgetent(&buf, &db_array, "vt100");
 	cgetcap(buf, "tc", '=');
 	cgetmatch(buf, "tc");
 	],
 	[cf_cv_cgetent=yes],
 	[cf_cv_cgetent=no])
 ])
-AC_MSG_RESULT($cf_cv_cgetent)
-test "$cf_cv_cgetent" = yes && AC_DEFINE(HAVE_BSD_CGETENT)
+
+if test "$cf_cv_cgetent" = yes
+then
+	AC_DEFINE(HAVE_BSD_CGETENT)
+AC_CACHE_CHECK(if cgetent uses const parameter,cf_cv_cgetent_const,[
+AC_TRY_LINK([
+#include <stdlib.h>],[
+	char temp[128];
+	char *buf = temp;
+#ifndef _NETBSD_SOURCE			/* given, since April 2004 in stdlib.h */
+	const char *db_array = temp;
+	cgetent(&buf, &db_array, "vt100");
+#endif
+	cgetcap(buf, "tc", '=');
+	cgetmatch(buf, "tc");
+	],
+	[cf_cv_cgetent_const=yes],
+	[cf_cv_cgetent_const=no])
+])
+	if test "$cf_cv_cgetent_const" = yes
+	then
+		AC_DEFINE_UNQUOTED(CGETENT_CONST,const)
+	fi
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CHECK_CACHE version: 11 updated: 2008/03/23 14:45:59
@@ -1169,7 +1190,7 @@ if test "$cf_disable_rpath_hack" = no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 3 updated: 2011/07/16 20:37:23
+dnl CF_ENABLE_PC_FILES version: 4 updated: 2011/08/06 20:32:05
 dnl ------------------
 dnl This is the "--enable-pc-files" option, which is available if there is a
 dnl pkg-config configuration on the local machine.
@@ -1197,7 +1218,7 @@ if test "$PKG_CONFIG" != no ; then
 		fi
 		if test -z "$PKG_CONFIG_LIBDIR" ; then
 			cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`
-			case x`arch 2>/dev/null` in #(vi
+			case x`(arch) 2>/dev/null` in #(vi
 			*64) #(vi
 				for cf_config in $cf_path/lib64 $cf_path/lib32 $cf_path/lib
 				do
@@ -6637,7 +6658,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 36 updated: 2011/07/02 15:36:04
+dnl CF_XOPEN_SOURCE version: 37 updated: 2011/08/06 20:32:05
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -6689,7 +6710,7 @@ mirbsd*) #(vi
 	# setting _XOPEN_SOURCE or _POSIX_SOURCE breaks <arpa/inet.h>
 	;;
 netbsd*) #(vi
-	# setting _XOPEN_SOURCE breaks IPv6 for lynx on NetBSD 1.6, breaks xterm, is not needed for ncursesw
+	cf_xopen_source="-D_NETBSD_SOURCE" # setting _XOPEN_SOURCE breaks IPv6 for lynx on NetBSD 1.6, breaks xterm, is not needed for ncursesw
 	;;
 openbsd*) #(vi
 	# setting _XOPEN_SOURCE breaks xterm on OpenBSD 2.8, is not needed for ncursesw

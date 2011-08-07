@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.151 2011/07/30 21:49:32 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.152 2011/08/06 17:41:36 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -489,6 +489,7 @@ main(int argc, char *argv[])
     int sortmode = S_TERMINFO;	/* sort_mode */
 
     int width = 60;
+    int height = 65535;
     bool formatted = FALSE;	/* reformat complex strings? */
     bool literal = FALSE;	/* suppress post-processing? */
     int numbers = 0;		/* format "%'char'" to/from "%{number}" */
@@ -534,10 +535,19 @@ main(int argc, char *argv[])
 		width = (width * 10) + (this_opt - '0');
 		break;
 	    default:
-		if (this_opt != '1')
+		switch (this_opt) {
+		case '0':
+		    last_opt = this_opt;
+		    width = 65535;
+		    height = 1;
+		    break;
+		case '1':
+		    last_opt = this_opt;
+		    width = 0;
+		    break;
+		default:
 		    usage();
-		last_opt = this_opt;
-		width = 0;
+		}
 	    }
 	    continue;
 	}
@@ -702,11 +712,11 @@ main(int argc, char *argv[])
 		  smart_defaults
 		  ? outform
 		  : F_LITERAL,
-		  sortmode, width, debug_level, formatted);
+		  sortmode, width, height, debug_level, formatted);
     else if (capdump)
 	dump_init(tversion,
 		  outform,
-		  sortmode, width, debug_level, FALSE);
+		  sortmode, width, height, debug_level, FALSE);
 
     /* parse entries out of the source file */
     _nc_set_source(source_file);

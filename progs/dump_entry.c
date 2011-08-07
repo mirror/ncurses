@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.91 2011/05/14 22:39:21 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.95 2011/08/07 22:10:17 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -57,6 +57,7 @@ static int tversion;		/* terminfo version */
 static int outform;		/* output format to use */
 static int sortmode;		/* sort mode to use */
 static int width = 60;		/* max line width for listings */
+static int height = 65535;	/* max number of lines for listings */
 static int column;		/* current column, limited by 'width' */
 static int oldcol;		/* last value of column before wrap */
 static bool pretty;		/* true if we format if-then-else strings */
@@ -176,11 +177,13 @@ dump_init(const char *version,
 	  int mode,
 	  int sort,
 	  int twidth,
+	  int theight,
 	  unsigned traceval,
 	  bool formatted)
 /* set up for entry display */
 {
     width = twidth;
+    height = theight;
     pretty = formatted;
 
     /* versions */
@@ -205,7 +208,7 @@ dump_init(const char *version,
 	bool_names = boolnames;
 	num_names = numnames;
 	str_names = strnames;
-	separator = twidth ? ", " : ",";
+	separator = (twidth > 0 && theight > 1) ? ", " : ",";
 	trailer = "\n\t";
 	break;
 
@@ -213,7 +216,7 @@ dump_init(const char *version,
 	bool_names = boolfnames;
 	num_names = numfnames;
 	str_names = strfnames;
-	separator = twidth ? ", " : ",";
+	separator = (twidth > 0 && theight > 1) ? ", " : ",";
 	trailer = "\n\t";
 	break;
 
@@ -597,9 +600,23 @@ fmt_entry(TERMTYPE *tterm,
 	column = INDENT;	/* FIXME: workaround to prevent empty lines */
     } else {
 	strcpy_DYN(&outbuf, tterm->term_names);
+
+	/*
+	 * Colon is legal in terminfo descriptions, but not in termcap.
+	 */
+	if (!infodump) {
+	    char *p = outbuf.text;
+	    while (*p) {
+		if (*p == ':') {
+		    *p = '=';
+		}
+		++p;
+	    }
+	}
 	strcpy_DYN(&outbuf, separator);
 	column = (int) outbuf.used;
-	force_wrap();
+	if (height > 1)
+	    force_wrap();
     }
 
     for_each_boolean(j, tterm) {
@@ -623,7 +640,7 @@ fmt_entry(TERMTYPE *tterm,
 	}
     }
 
-    if (column != INDENT)
+    if (column != INDENT && height > 1)
 	force_wrap();
 
     for_each_number(j, tterm) {
@@ -649,7 +666,7 @@ fmt_entry(TERMTYPE *tterm,
 	}
     }
 
-    if (column != INDENT)
+    if (column != INDENT && height > 1)
 	force_wrap();
 
     len += (int) (num_bools
@@ -1155,7 +1172,30 @@ dump_uses(const char *name, bool infodump)
 int
 show_entry(void)
 {
-    trim_trailing();
+    /*
+     * Trim any remaining whitespace.
+     */
+    if (outbuf.used != 0) {
+	bool infodump = (outform != F_TERMCAP && outform != F_TCONVERR);
+	char delim = infodump ? ',' : ':';
+	int j;
+
+	for (j = (int) outbuf.used - 1; j > 0; --j) {
+	    char ch = outbuf.text[j];
+	    if (ch == '\n') {
+		;
+	    } else if (isspace(UChar(ch))) {
+		outbuf.used = j;
+	    } else if (!infodump && ch == '\\') {
+		outbuf.used = j;
+	    } else if (ch == delim && (j == 0 || outbuf.text[j - 1] != '\\')) {
+		outbuf.used = (j + 1);
+	    } else {
+		break;
+	    }
+	}
+	outbuf.text[outbuf.used] = '\0';
+    }
     (void) fputs(outbuf.text, stdout);
     putchar('\n');
     return (int) outbuf.used;

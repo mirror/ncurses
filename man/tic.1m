@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.48 2011/07/30 21:58:54 tom Exp $
+.\" $Id: tic.1m,v 1.49 2011/08/06 17:49:46 tom Exp $
 .TH @TIC@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -35,6 +35,7 @@
 .SH SYNOPSIS
 \fBtic\fR
 [\fB\-\
+0\
 1\
 C\
 G\
@@ -82,6 +83,9 @@ Libraries that read terminfo entries are expected to check for a TERMINFO
 directory first, look at \fI$HOME/.terminfo\fR if TERMINFO is not set, and
 finally look in \fI\*d\fR.
 .TP
+\fB\-0\fR
+restricts the output to a single line
+.TP
 \fB\-1\fR
 restricts the output to a single column
 .TP
@@ -112,9 +116,11 @@ bad use links.
 If you specify \fB\-C\fR (\fB\-I\fR) with this option, the code
 will print warnings about entries which, after use resolution, are more than
 1023 (4096) bytes long.
-Due to a fixed buffer length in older termcap
-libraries (and a documented limit in terminfo), these entries may cause core
-dumps.
+Due to a fixed buffer length in older termcap libraries,
+as well as buggy checking for the buffer length
+(and a documented limit in terminfo),
+these entries may cause core
+dumps with other implementations.
 .TP
 \fB\-e \fR\fInames\fR
 Limit writes and translations to the following comma-separated list of
@@ -312,6 +318,8 @@ The error messages from this \fBtic\fR have the same format as GNU C
 error messages, and can be parsed by GNU Emacs's compile facility.
 .PP
 The
+\fB\-0\fR,
+\fB\-1\fR,
 \fB\-C\fR,
 \fB\-G\fR,
 \fB\-I\fR,

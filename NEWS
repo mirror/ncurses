@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1755 2011/07/30 22:57:54 tom Exp $
+-- $Id: NEWS,v 1.1762 2011/08/07 15:45:26 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110807
+	+ improve rpath fix from 20110730 by ensuring that the new $RPATH_LIST
+	  variable is defined in the makefiles which use it.
+	+ build-fix for DragonFlyBSD's pkgsrc in test/configure script.
+	+ build-fixes for NetBSD 5.1 with termcap support enabled.
+	+ corrected k9 in dg460-ansi, add other features based on manuals -TD
+	+ improve trimming of whitespace at the end of terminfo/termcap output
+	  from tic/infocmp.
+	+ when writing termcap source, ensure that colons in the description
+	  field are translated to a non-delimiter, i.e., "=".
+	+ add "-0" option to tic/infocmp, to make the termcap/terminfo source
+	  use a single line.
+	+ add a null-pointer check when handling the $CC variable.
 
 20110730
 	+ modify configure script and makefiles in c++ and progs to allow the

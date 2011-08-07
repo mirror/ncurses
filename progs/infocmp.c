@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.107 2011/07/30 21:51:01 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.108 2011/08/06 16:36:06 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -72,6 +72,7 @@ static const char *s_cancel = "NULL";
 static const char *tversion;	/* terminfo version selected */
 static unsigned itrace;		/* trace flag for debugging */
 static int mwidth = 60;
+static int mheight = 65535;
 static int numbers = 0;		/* format "%'char'" to/from "%{number}" */
 static int outform = F_TERMINFO;	/* output format */
 static int sortmode;		/* sort_mode */
@@ -795,7 +796,7 @@ file_comparison(int argc, char *argv[])
     int i, n;
 
     memset(heads, 0, sizeof(heads));
-    dump_init((char *) 0, F_LITERAL, S_TERMINFO, 0, itrace, FALSE);
+    dump_init((char *) 0, F_LITERAL, S_TERMINFO, 0, 65535, itrace, FALSE);
 
     for (n = 0; n < argc && n < MAXCOMPARE; n++) {
 	if (freopen(argv[n], "r", stdin) == 0)
@@ -974,6 +975,7 @@ usage(void)
 	"Usage: infocmp [options] [-A directory] [-B directory] [termname...]"
 	,""
 	,"Options:"
+	,"  -0    print single-row"
 	,"  -1    print single-column"
 	,"  -K    use termcap-names and BSD syntax"
 	,"  -C    use termcap-names"
@@ -1300,8 +1302,13 @@ main(int argc, char *argv[])
 
     while ((c = getopt(argc,
 		       argv,
-		       "1A:aB:CcdEeFfGgIiKLlnpqR:rs:TtUuVv:w:x")) != -1) {
+		       "01A:aB:CcdEeFfGgIiKLlnpqR:rs:TtUuVv:w:x")) != -1) {
 	switch (c) {
+	case '0':
+	    mwidth = 65535;
+	    mheight = 1;
+	    break;
+
 	case '1':
 	    mwidth = 0;
 	    break;
@@ -1483,7 +1490,7 @@ main(int argc, char *argv[])
 	sortmode = S_TERMINFO;
 
     /* set up for display */
-    dump_init(tversion, outform, sortmode, mwidth, itrace, formatted);
+    dump_init(tversion, outform, sortmode, mwidth, mheight, itrace, formatted);
 
     /* make sure we have at least one terminal name to work with */
     if (optind >= argc)

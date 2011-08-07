@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.393 $
-#	$Date: 2011/07/21 09:29:09 $
+#	$Revision: 1.395 $
+#	$Date: 2011/08/06 19:48:29 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -12798,7 +12798,6 @@ dg450|dg6134|data general 6134,
 # backspace on all terminals.  This is not so in DG mode.
 # (dg460-ansi: removed obsolete ":kn#6:"; also removed ":mu=\EW:", on the
 # grounds that there is no matching ":ml:"
-# fixed garbled ":k9=\E[00\:z:" capability -- esr)
 dg460-ansi|Data General Dasher 460 in ANSI-mode,
 	OTbs, am, msgr, ul,
 	cols#80, it#8, lines#24,
@@ -12809,10 +12808,12 @@ dg460-ansi|Data General Dasher 460 in ANSI-mode,
 	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	kf0=\E[001z, kf1=\E[002z, kf2=\E[003z, kf3=\E[004z,
 	kf4=\E[005z, kf5=\E[006z, kf6=\E[007z, kf7=\E[008z,
-	kf8=\E[009z, kf9=\E[010z, khome=\E[H, lf0=f1, lf1=f2, lf2=f3,
-	lf3=f4, lf4=f5, lf5=f6, lf6=f7, lf7=f8, lf9=f10, rev=\E[7m,
-	ri=\E[T, rmso=\E[m, rmul=\E[05, sgr0=\E[m, smso=\E[7m,
-	smul=\E[4m,
+	kf8=\E[009z, kf9=\E[00\:z, khome=\E[H, lf0=f1, lf1=f2,
+	lf2=f3, lf3=f4, lf4=f5, lf5=f6, lf6=f7, lf7=f8, lf9=f10,
+	mc0=\E[i, rev=\E[7m, ri=\E[T, rmso=\E[m, rmul=\E[05,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p5%t;2%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m,
+	sgr0=\E(B\E[m, smso=\E[7m, smul=\E[4m, u6=\E[%d;%dR,
+	u7=\E[6n, u8=\E[5n, u9=\E[0n,
 # From: Wayne Throop <mcnc!rti-sel!rtp47!throopw> (not official)
 # Data General 605x
 # Ought to work for a Model 6242, Type D210 as well as a 605x.
@@ -22426,5 +22427,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2011-07-21
 #	* add kich1 to sun (Yuri Pankov)
 #	* use bold rather than reverse for smso in sun-color (Yuri Pankov).
+#
+# 2011-08-06
+#	* corrected k9 in dg460-ansi, add other features based on manuals -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

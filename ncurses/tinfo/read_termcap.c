@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.79 2011/07/29 00:25:02 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.81 2011/08/07 18:56:35 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -781,15 +781,16 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
     register char *p;
     register char *cp;
     char *dummy = NULL;
-    char **fname;
+    const char **fname;
     char *home;
     int i;
     char pathbuf[PBUFSIZ];	/* holds raw path of filenames */
-    char *pathvec[PVECSIZ];	/* to point to names in pathbuf */
-    char **pvec;		/* holds usable tail of path vector */
+    CGETENT_CONST char *pathvec[PVECSIZ];	/* point to names in pathbuf */
+    CGETENT_CONST char **pvec;	/* holds usable tail of path vector */
     NCURSES_CONST char *termpath;
     string_desc desc;
 
+    *lineno = 1;
     fname = pathvec;
     pvec = pathvec;
     tbuf = bp;

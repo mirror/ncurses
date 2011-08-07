@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.54 2011/05/21 18:32:13 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.58 2011/08/07 18:36:31 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -181,8 +181,10 @@ typelist(int eargc, char *eargv[],
 		(void) fprintf(stderr,
 			       "%s: can't open terminfo directory %s\n",
 			       _nc_progname, eargv[i]);
-		return (EXIT_FAILURE);
-	    } else if (verbosity)
+		continue;
+	    }
+
+	    if (verbosity)
 		(void) printf("#\n#%s:\n#\n", eargv[i]);
 
 	    while ((subdir = readdir(termdir)) != 0) {
@@ -244,11 +246,15 @@ typelist(int eargc, char *eargv[],
 	    closedir(termdir);
 	    if (cwd_buf != 0)
 		free(cwd_buf);
+	    continue;
 	}
 #if USE_HASHED_DB
 	else {
 	    DB *capdbp;
 	    char filename[PATH_MAX];
+
+	    if (verbosity)
+		(void) printf("#\n#%s:\n#\n", eargv[i]);
 
 	    if (make_db_name(filename, eargv[i], sizeof(filename))) {
 		if ((capdbp = _nc_db_open(filename, FALSE)) != 0) {
@@ -275,6 +281,7 @@ typelist(int eargc, char *eargv[],
 		    }
 
 		    _nc_db_close(capdbp);
+		    continue;
 		}
 	    }
 	}
@@ -282,29 +289,35 @@ typelist(int eargc, char *eargv[],
 #endif
 #if USE_TERMCAP
 #if HAVE_BSD_CGETENT
-	char *db_array[2];
-	char *buffer = 0;
+	{
+	    CGETENT_CONST char *db_array[2];
+	    char *buffer = 0;
 
-	if (verbosity)
-	    (void) printf("#\n#%s:\n#\n", eargv[i]);
+	    if (verbosity)
+		(void) printf("#\n#%s:\n#\n", eargv[i]);
 
-	db_array[0] = eargv[i];
-	db_array[1] = 0;
+	    db_array[0] = eargv[i];
+	    db_array[1] = 0;
 
-	if (cgetfirst(&buffer, db_array)) {
-	    show_termcap(buffer, hook);
-	    free(buffer);
-	    while (cgetnext(&buffer, db_array)) {
+	    if (cgetfirst(&buffer, db_array) > 0) {
 		show_termcap(buffer, hook);
 		free(buffer);
+		while (cgetnext(&buffer, db_array) > 0) {
+		    show_termcap(buffer, hook);
+		    free(buffer);
+		}
+		cgetclose();
+		continue;
 	    }
 	}
-	cgetclose();
 #else
 	/* scan termcap text-file only */
 	if (_nc_is_file_path(eargv[i])) {
 	    char buffer[2048];
 	    FILE *fp;
+
+	    if (verbosity)
+		(void) printf("#\n#%s:\n#\n", eargv[i]);
 
 	    if ((fp = fopen(eargv[i], "r")) != 0) {
 		while (fgets(buffer, sizeof(buffer), fp) != 0) {

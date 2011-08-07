@@ -2962,7 +2962,7 @@ echo $ECHO_N "checking if we should install .pc files for $PKG_CONFIG... $ECHO_C
 		fi
 		if test -z "$PKG_CONFIG_LIBDIR" ; then
 			cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[^/]*/[^/]*$,,'`
-			case x`arch 2>/dev/null` in #(vi
+			case x`(arch) 2>/dev/null` in #(vi
 			*64) #(vi
 				for cf_config in $cf_path/lib64 $cf_path/lib32 $cf_path/lib
 				do
@@ -8098,7 +8098,7 @@ mirbsd*) #(vi
 	# setting _XOPEN_SOURCE or _POSIX_SOURCE breaks <arpa/inet.h>
 	;;
 netbsd*) #(vi
-	# setting _XOPEN_SOURCE breaks IPv6 for lynx on NetBSD 1.6, breaks xterm, is not needed for ncursesw
+	cf_xopen_source="-D_NETBSD_SOURCE" # setting _XOPEN_SOURCE breaks IPv6 for lynx on NetBSD 1.6, breaks xterm, is not needed for ncursesw
 	;;
 openbsd*) #(vi
 	# setting _XOPEN_SOURCE breaks xterm on OpenBSD 2.8, is not needed for ncursesw

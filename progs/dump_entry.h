@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: dump_entry.h,v 1.31 2011/05/14 18:00:09 tom Exp $
+ * $Id: dump_entry.h,v 1.32 2011/08/06 16:33:05 tom Exp $
  *
  * Dump control definitions and variables
  */
@@ -71,7 +71,7 @@ extern int fmt_entry(TERMTYPE *, PredFunc, bool, bool, bool, int);
 extern int show_entry(void);
 extern void compare_entry(PredHook, TERMTYPE *, bool);
 extern void dump_entry(TERMTYPE *, bool, bool, int, PredFunc);
-extern void dump_init(const char *, int, int, int, unsigned, bool);
+extern void dump_init(const char *, int, int, int, int, unsigned, bool);
 extern void dump_uses(const char *, bool);
 extern void repair_acsc(TERMTYPE *tp);
 
