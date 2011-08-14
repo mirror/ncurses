@@ -47,7 +47,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.139 2011/08/05 21:56:40 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.141 2011/08/13 16:07:22 tom Exp $")
 
 /****************************************************************************
  *
@@ -412,22 +412,6 @@ _nc_update_screensize(SCREEN *sp)
  *
  ****************************************************************************/
 
-#define ret_error(code, fmt, arg)	if (errret) {\
-					    *errret = code;\
-					    returnCode(ERR);\
-					} else {\
-					    fprintf(stderr, fmt, arg);\
-					    exit(EXIT_FAILURE);\
-					}
-
-#define ret_error0(code, msg)		if (errret) {\
-					    *errret = code;\
-					    returnCode(ERR);\
-					} else {\
-					    fprintf(stderr, msg);\
-					    exit(EXIT_FAILURE);\
-					}
-
 #if USE_DATABASE || USE_TERMCAP
 /*
  * Return 1 if entry found, 0 if not found, -1 if database not accessible,
@@ -692,7 +676,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	    if (status == TGETENT_ERR) {
 		ret_error0(status, "terminals database is inaccessible\n");
 	    } else if (status == TGETENT_NO) {
-		ret_error(status, "'%s': unknown terminal type.\n", tname);
+		ret_error1(status, "unknown terminal type.\n", tname);
 	    }
 	}
 #if !USE_REENTRANT
@@ -740,10 +724,19 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 
 #ifndef USE_TERM_DRIVER
     if (generic_type) {
-	ret_error(TGETENT_NO, "'%s': I need something more specific.\n", tname);
-    }
-    if (hard_copy) {
-	ret_error(TGETENT_YES, "'%s': I can't handle hardcopy terminals.\n", tname);
+	/*
+	 * BSD 4.3's termcap contains mis-typed "gn" for wy99.  Do a sanity
+	 * check before giving up.
+	 */
+	if ((VALID_STRING(cursor_address)
+	     || (VALID_STRING(cursor_down) && VALID_STRING(cursor_home)))
+	    && VALID_STRING(clear_screen)) {
+	    ret_error1(TGETENT_YES, "terminal is not really generic.\n", tname);
+	} else {
+	    ret_error1(TGETENT_NO, "I need something more specific.\n", tname);
+	}
+    } else if (hard_copy) {
+	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", tname);
     }
 #endif
     returnCode(code);

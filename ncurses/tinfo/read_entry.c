@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.109 2011/07/25 22:21:34 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.110 2011/08/13 21:10:03 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -428,12 +428,6 @@ _nc_read_tic_entry(char *filename,
 	    else
 		(void) sprintf(filename, "%s%s", path, suffix);
 
-	    /*
-	     * It would be nice to optimize the dbopen/close activity, as
-	     * done in the cgetent implementation for tc= clauses.  However,
-	     * since we support multiple database locations, we cannot do
-	     * that.
-	     */
 	    if ((capdbp = _nc_db_open(filename, FALSE)) != 0) {
 		DBT key, data;
 		int reccnt = 0;
@@ -489,7 +483,6 @@ _nc_read_tic_entry(char *filename,
 		    key.size = used;
 		}
 
-		_nc_db_close(capdbp);
 		free(save);
 	    }
 	}

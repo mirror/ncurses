@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1762 2011/08/07 15:45:26 tom Exp $
+-- $Id: NEWS,v 1.1768 2011/08/14 00:26:46 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110813
+	+ add substitution for $RPATH_LIST to misc/ncurses-config.in
+	+ improve performance of tic with hashed-database by caching the
+	  database connection, using atexit() to cleanup.
+	+ modify treatment of 2-character aliases at the beginning of termcap
+	  entries so they are not counted in use-resolution, since these are
+	  guaranteed to be unique.  Also ignore these aliases when reporting
+	  the primary name of the entry (cf: 20040501)
+	+ double-check gn (generic) flag in terminal descriptions to
+	  accommodate old/buggy termcap databases which misused that feature.
+	+ minor fixes to _nc_tgetent(), ensure buffer is initialized even on
+	  error-return.
 
 20110807
 	+ improve rpath fix from 20110730 by ensuring that the new $RPATH_LIST

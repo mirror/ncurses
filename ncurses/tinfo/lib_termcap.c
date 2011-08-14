@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.73 2010/12/25 19:27:12 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.74 2011/08/13 14:34:56 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -97,7 +97,7 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 #ifdef USE_TERM_DRIVER
     if (termp == 0 ||
 	!((TERMINAL_CONTROL_BLOCK *) termp)->drv->isTerminfo)
-	return (rc);
+	returnCode(rc);
 #endif
 
     /*

@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.74 2011/07/25 22:46:47 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.75 2011/08/13 19:37:17 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -90,6 +90,19 @@ force_bar(char *dst, char *src)
 }
 #define ForceBar(dst, src) ((strchr(src, '|') == 0) ? force_bar(dst, src) : src)
 
+#if USE_TERMCAP && NCURSES_XNAMES
+static char *
+skip_index(char *name)
+{
+    char *bar = strchr(name, '|');
+
+    if (bar != 0 && (bar - name) == 2)
+	name = bar + 1;
+
+    return name;
+}
+#endif
+
 NCURSES_EXPORT(bool)
 _nc_entry_match(char *n1, char *n2)
 /* do any of the aliases in a pair of terminal names match? */
@@ -100,6 +113,13 @@ _nc_entry_match(char *n1, char *n2)
 
     n1 = ForceBar(nc1, n1);
     n2 = ForceBar(nc2, n2);
+
+#if USE_TERMCAP && NCURSES_XNAMES
+    if ((_nc_syntax == SYN_TERMCAP) && _nc_user_definable) {
+	n1 = skip_index(n1);
+	n2 = skip_index(n2);
+    }
+#endif
 
     for (pstart = n1; (pend = strchr(pstart, '|')); pstart = pend + 1)
 	for (qstart = n2; (qend = strchr(qstart, '|')); qstart = qend + 1)

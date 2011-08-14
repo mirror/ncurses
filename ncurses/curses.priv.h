@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.481 2011/07/28 22:47:09 tom Exp $
+ * $Id: curses.priv.h,v 1.482 2011/08/13 14:28:05 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1840,6 +1840,25 @@ extern NCURSES_EXPORT(void)   _nc_tinfo_cmdch(TERMINAL *, char);
 
 /* lib_set_term.c */
 extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
+
+/* lib_setup.c */
+#define ret_error(code, fmt, arg)	if (errret) {\
+					    *errret = code;\
+					    returnCode(ERR);\
+					} else {\
+					    fprintf(stderr, fmt, arg);\
+					    exit(EXIT_FAILURE);\
+					}
+
+#define ret_error1(code, fmt, arg)	ret_error(code, "'%s': " fmt, arg)
+
+#define ret_error0(code, msg)		if (errret) {\
+					    *errret = code;\
+					    returnCode(ERR);\
+					} else {\
+					    fprintf(stderr, msg);\
+					    exit(EXIT_FAILURE);\
+					}
 
 /* lib_tstp.c */
 #if USE_SIGWINCH

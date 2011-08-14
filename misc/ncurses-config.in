@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.26 2011/05/07 19:23:01 tom Exp $
+# $Id: ncurses-config.in,v 1.27 2011/08/13 22:11:20 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -41,6 +41,7 @@ mandir="@mandir@"
 
 THIS="@LIB_NAME@@DFT_ARG_SUFFIX@"
 TINFO_LIB="@TINFO_ARG_SUFFIX@"
+RPATH_LIST="@RPATH_LIST@"
 
 LANG=C;		export LANG
 LANGUAGE=C;	export LANGUAGE

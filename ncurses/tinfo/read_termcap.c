@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.81 2011/08/07 18:56:35 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.82 2011/08/13 00:20:03 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -702,8 +702,6 @@ _nc_nfcmp(const char *nf, char *rec)
 #define	PVECSIZ		32	/* max number of names in path */
 #define TBUFSIZ (2048*2)
 
-static char *tbuf;
-
 /*
  * On entry, srcp points to a non ':' character which is the beginning of the
  * token, if any.  We'll try to return a string that doesn't end with a ':'.
@@ -781,7 +779,7 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
     register char *p;
     register char *cp;
     char *dummy = NULL;
-    const char **fname;
+    CGETENT_CONST char **fname;
     char *home;
     int i;
     char pathbuf[PBUFSIZ];	/* holds raw path of filenames */
@@ -793,7 +791,6 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
     *lineno = 1;
     fname = pathvec;
     pvec = pathvec;
-    tbuf = bp;
     p = pathbuf;
     cp = use_terminfo_vars()? getenv("TERMCAP") : NULL;
 
@@ -862,6 +859,7 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
      * empty fields, and mistakenly use the last valid cap entry instead of
      * the first (breaks tc= includes)
      */
+    *bp = '\0';
     if (i >= 0) {
 	char *pd, *ps, *tok;
 	int endflag = FALSE;

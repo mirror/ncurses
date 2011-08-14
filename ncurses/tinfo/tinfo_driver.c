@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.13 2010/12/20 01:47:09 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.15 2011/08/13 16:11:15 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -106,22 +106,6 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
     return TINFO_DOUPDATE(TCB->csp);
 }
 
-#define ret_error(code, fmt, arg)	if (errret) {\
-					    *errret = code;\
-					    return(FALSE); \
-					} else {\
-					    fprintf(stderr, fmt, arg);\
-					    exit(EXIT_FAILURE);\
-					}
-
-#define ret_error0(code, msg)		if (errret) {\
-					    *errret = code;\
-					    return(FALSE);\
-					} else {\
-					    fprintf(stderr, msg);\
-					    exit(EXIT_FAILURE);\
-					}
-
 static bool
 drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 {
@@ -156,7 +140,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	if (status == TGETENT_ERR) {
 	    ret_error0(status, "terminals database is inaccessible\n");
 	} else if (status == TGETENT_NO) {
-	    ret_error(status, "'%s': unknown terminal type.\n", tname);
+	    ret_error1(status, "unknown terminal type.\n", tname);
 	}
     }
     result = TRUE;
@@ -169,10 +153,20 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	_nc_tinfo_cmdch(termp, *command_character);
 
     if (generic_type) {
-	ret_error(TGETENT_NO, "'%s': I need something more specific.\n", tname);
+	/*
+	 * BSD 4.3's termcap contains mis-typed "gn" for wy99.  Do a sanity
+	 * check before giving up.
+	 */
+	if ((VALID_STRING(cursor_address)
+	     || (VALID_STRING(cursor_down) && VALID_STRING(cursor_home)))
+	    && VALID_STRING(clear_screen)) {
+	    ret_error1(TGETENT_YES, "terminal is not really generic.\n", tname);
+	} else {
+	    ret_error1(TGETENT_NO, "I need something more specific.\n", tname);
+	}
     }
     if (hard_copy) {
-	ret_error(TGETENT_YES, "'%s': I can't handle hardcopy terminals.\n", tname);
+	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", tname);
     }
 
     return result;

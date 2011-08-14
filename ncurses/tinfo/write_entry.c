@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.79 2011/06/05 00:46:26 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.80 2011/08/13 20:52:40 tom Exp $")
 
 static int total_written;
 
@@ -349,7 +349,6 @@ _nc_write_entry(TERMTYPE *const tp)
 
 		_nc_db_put(capdb, &key, &data);
 	    }
-	    _nc_db_close(capdb);
 	}
     }
 #else /* !USE_HASHED_DB */
