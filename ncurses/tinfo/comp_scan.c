@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.92 2011/07/30 21:36:33 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.93 2011/08/20 21:19:40 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -750,7 +750,7 @@ _nc_trans_string(char *ptr, char *last)
 	    if (!(is7bits(c) && isprint(c))) {
 		_nc_warning("Illegal ^ character - '%s'", unctrl(UChar(c)));
 	    }
-	    if (c == '?') {
+	    if (c == '?' && (_nc_syntax != SYN_TERMCAP)) {
 		*(ptr++) = '\177';
 		if (_nc_tracing)
 		    _nc_warning("Allow ^? as synonym for \\177");

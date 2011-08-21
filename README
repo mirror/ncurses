@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2006,2011 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.23 2006/04/22 22:19:37 tom Exp $
+-- $Id: README,v 1.24 2011/08/20 16:47:16 tom Exp $
 -------------------------------------------------------------------------------
 		README file for the ncurses package
 
@@ -153,8 +153,10 @@ Thomas Dickey (maintainer for 1.9.9g through 4.1, resuming with FSF's 5.0):
 	configuration scripts, porting, mods to adhere to XSI Curses in the
 	areas of background color, terminal modes.  Also memory leak testing,
 	the wresize, default colors and key definition extensions and numerous
-	bug fixes (more than half of those enumerated in NEWS beginning with
-	the internal release 1.8.9).
+	bug fixes -- more than half of those enumerated in NEWS beginning with
+	the internal release 1.8.9, see
+
+		http://invisible-island.net/personal/changelogs.html
 
 Florian La Roche (official maintainer for FSF's ncurses 4.2)
 	Beginning with release 4.2, ncurses is distributed under an MIT-style

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.368 2011/05/21 18:50:56 tom Exp $
+$Id: ncurses.c,v 1.369 2011/08/20 15:49:08 tom Exp $
 
 ***************************************************************************/
 
@@ -1675,8 +1675,8 @@ wide_show_attr(int row, int skip, bool arrow, chtype attr, short pair, const cha
 	    add_wch(&ch);
 	}
     } else {
-	attr_t old_attr;
-	short old_pair;
+	attr_t old_attr = 0;
+	short old_pair = 0;
 
 	(void) attr_get(&old_attr, &old_pair, 0);
 	(void) attr_set(attr, pair, 0);

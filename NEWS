@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1768 2011/08/14 00:26:46 tom Exp $
+-- $Id: NEWS,v 1.1771 2011/08/20 21:36:44 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110820
+	+ add a check to ensure that termcap files which might have "^?" do
+	  not use the terminfo interpretation as "\177".
+	+ minor cleanup of X-terminal emulator section of terminfo.src -TD
+	+ add terminator entry -TD
+	+ add simpleterm entry -TD
+	+ improve wattr_get macros by ensuring that if the window pointer is
+	  null, then the attribute and color values returned will be zero
+	  (cf: 20110528).
 
 20110813
 	+ add substitution for $RPATH_LIST to misc/ncurses-config.in
