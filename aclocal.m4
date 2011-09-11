@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.566 2011/08/07 18:55:48 tom Exp $
+dnl $Id: aclocal.m4,v 1.574 2011/09/10 20:31:55 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1190,67 +1190,29 @@ if test "$cf_disable_rpath_hack" = no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 4 updated: 2011/08/06 20:32:05
+dnl CF_ENABLE_PC_FILES version: 6 updated: 2011/09/10 16:31:04
 dnl ------------------
 dnl This is the "--enable-pc-files" option, which is available if there is a
 dnl pkg-config configuration on the local machine.
-dnl
-dnl It sets/updates PKG_CONFIG_LIBDIR, which is used by pkg-config as a
-dnl special case: overriding PKG_CONFIG_PATH (preferred).
 AC_DEFUN([CF_ENABLE_PC_FILES],[
-AC_REQUIRE([CF_PATHSEP])
 AC_REQUIRE([CF_PKG_CONFIG])
+AC_REQUIRE([CF_WITH_PKG_CONFIG_LIBDIR])
 
 if test "$PKG_CONFIG" != no ; then
-	AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
-
-	# Leave this as something that can be overridden in the environment.
-	if test -z "$PKG_CONFIG_LIBDIR" ; then
-		if test -n "$PKG_CONFIG_PATH" ; then
-			for cf_config in `echo "$PKG_CONFIG_PATH" | sed -e 's/'$PATH_SEPARATOR'/ /g'`
-			do
-				if test -n "$cf_config" && test -d "$cf_config"
-				then
-					PKG_CONFIG_LIBDIR=$cf_config
-					break
-				fi
-			done
-		fi
-		if test -z "$PKG_CONFIG_LIBDIR" ; then
-			cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`
-			case x`(arch) 2>/dev/null` in #(vi
-			*64) #(vi
-				for cf_config in $cf_path/lib64 $cf_path/lib32 $cf_path/lib
-				do
-					if test -d $cf_config/pkgconfig
-					then
-						PKG_CONFIG_LIBDIR=$cf_config/pkgconfig
-						break
-					fi
-				done
-				;;
-			*)
-				PKG_CONFIG_LIBDIR=$cf_path/lib/pkgconfig
-				;;
-			esac
-		fi
-	else
-		PKG_CONFIG_LIBDIR=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/^://' -e 's/:.*//'`
-	fi
 	if test -n "$PKG_CONFIG_LIBDIR" && test -d "$PKG_CONFIG_LIBDIR" ; then
+		AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
 		AC_ARG_ENABLE(pc-files,
 			[  --enable-pc-files       generate and install .pc files for pkg-config],
 			[enable_pc_files=$enableval],
 			[enable_pc_files=no])
 		AC_MSG_RESULT($enable_pc_files)
-		CF_VERBOSE(found library $PKG_CONFIG_LIBDIR)
-	else
-		AC_MSG_RESULT(no)
-		AC_MSG_WARN(did not find library $PKG_CONFIG_LIBDIR)
+	elif test -z "$PKG_CONFIG_LIBDIR" || test "$PKG_CONFIG_LIBDIR" != no; then
 		enable_pc_files=no
+		AC_MSG_WARN(did not find $PKG_CONFIG library)
 	fi
+else
+	enable_pc_files=no
 fi
-AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ENABLE_RPATH version: 2 updated: 2010/03/27 18:39:42
@@ -3952,7 +3914,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 39 updated: 2010/10/23 15:44:18
+dnl CF_MAN_PAGES version: 40 updated: 2011/09/10 16:20:21
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -4102,7 +4064,9 @@ CF_EOF
 
 if test "$MANPAGE_ALIASES" != no ; then
 cat >>$cf_edit_man <<CF_EOF
-	aliases=\`sed -f \$top_srcdir/man/manlinks.sed \$inalias |sed -f $cf_man_alias | sort -u\`
+	nCurses=ignore.3x
+	test $with_curses_h = yes && nCurses=ncurses.3x
+	aliases=\`sed -f \$top_srcdir/man/manlinks.sed \$inalias |sed -f $cf_man_alias | sort -u; test \$inalias = \$nCurses && echo curses\`
 CF_EOF
 fi
 
@@ -4147,6 +4111,13 @@ if test \$cf_tables = yes ; then
 	mv \$TMP.out \$TMP
 fi
 CF_EOF
+
+if test $with_overwrite != yes ; then
+cat >>$cf_edit_man <<CF_EOF
+	sed -e "/\#[    ]*include/s,<curses.h,<ncurses$LIB_SUFFIX/curses.h," < \$TMP >\$TMP.out
+	mv \$TMP.out \$TMP
+CF_EOF
+fi
 
 if test $with_curses_h != yes ; then
 cat >>$cf_edit_man <<CF_EOF
@@ -6556,6 +6527,49 @@ cf_dst_path=`echo "$cf_dst_path" | sed -e 's/\\\\/\\\\\\\\/g'`
 eval '$3="$cf_dst_path"'
 AC_SUBST($3)dnl
 
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 1 updated: 2011/09/10 16:20:21
+dnl -------------------------
+dnl Allow the choice of the pkg-config library directory to be overridden.
+AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
+if test "$PKG_CONFIG" != no ; then
+	AC_MSG_CHECKING(for $PKG_CONFIG library directory)
+	AC_ARG_WITH(pkg-config-libdir,
+		[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
+		[PKG_CONFIG_LIBDIR=$withval],
+		[PKG_CONFIG_LIBDIR=yes])
+
+	case x$PKG_CONFIG_LIBDIR in #(vi
+	x/*) #(vi
+		;;
+	xyes) #(vi
+		# look for the library directory using the same prefix as the executable
+		cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`
+		case x`(arch) 2>/dev/null` in #(vi
+		*64) #(vi
+			for cf_config in $cf_path/share $cf_path/lib64 $cf_path/lib32 $cf_path/lib
+			do
+				if test -d $cf_config/pkgconfig
+				then
+					PKG_CONFIG_LIBDIR=$cf_config/pkgconfig
+					break
+				fi
+			done
+			;;
+		*)
+			PKG_CONFIG_LIBDIR=$cf_path/lib/pkgconfig
+			;;
+		esac
+		;;
+	*)
+		;;
+	esac
+
+	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+fi
+
+AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_WITH_PTHREAD version: 3 updated: 2010/05/29 16:31:02

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <!--
-  $Id: announce.html.in,v 1.85 2011/04/04 00:05:34 tom Exp $
+  $Id: announce.html.in,v 1.86 2011/09/10 18:11:12 tom Exp $
   ****************************************************************************
   * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
   *                                                                          *
@@ -77,30 +77,38 @@
   compatible from ncurses 5.0 through 5.8; very few applications
   will require recompilation, depending on the platform. These are
   the highlights from the change-log since ncurses 5.8 release.
-  <p>
-  This is a bug-fix release, correcting a small number of urgent problems
-  in the ncurses library from the 5.8 release.
-  <p>
-  It also improves the Ada95 binding:
+
+  <p>This is a bug-fix release, correcting a small number of urgent
+  problems in the ncurses library from the 5.8 release.</p>
+
+  <p>It also improves the Ada95 binding:</p>
+
   <ul>
-  <li>fixes a longstanding portability problem with its use of the
-      <a href="http://invisible-island.net/ncurses/man/form_fieldtype.3x">set_field_type</a>
-      function.  Because that function uses variable-length argument lists,
-      its interface with gnat does not work with certain platforms.
-  <li>improves configurability and portability, particularly when built
-      separately from the main ncurses tree.  The 5.8 release introduced
-      scripts which can be used to construct separate tarballs for the
-      Ada95 and ncurses examples.
-      <p>Those were a proof of concept.  For the 5.9 release, those
-      scripts are augmented with rpm- and dpkg-scripts used in test builds
-      against a variety of gnat- and system ncurses versions as old as
-      gnat 3.15 and ncurses 5.4 (see snapshots and systems tested
-      <a href="http://invisible-island.net/ncurses/ncurses-Ada95.html">here</a>.
-  <li>additional improvements were made for portability of the
-      ncurses examples, adding rpm- and dpkg-scripts for test-builds.
-      See 
-      <a href="http://invisible-island.net/ncurses/ncurses-examples.html">this page</a>
-      for snapshots and other information.
+    <li>fixes a longstanding portability problem with its use of
+    the <a href=
+    "http://invisible-island.net/ncurses/man/form_fieldtype.3x">set_field_type</a>
+    function. Because that function uses variable-length argument
+    lists, its interface with gnat does not work with certain
+    platforms.</li>
+
+    <li>improves configurability and portability, particularly when
+    built separately from the main ncurses tree. The 5.8 release
+    introduced scripts which can be used to construct separate
+    tarballs for the Ada95 and ncurses examples.
+
+      <p>Those were a proof of concept. For the 5.9 release, those
+      scripts are augmented with rpm- and dpkg-scripts used in test
+      builds against a variety of gnat- and system ncurses versions
+      as old as gnat 3.15 and ncurses 5.4 (see snapshots and
+      systems tested <a href=
+      "http://invisible-island.net/ncurses/ncurses-Ada95.html">here</a>.</p>
+    </li>
+
+    <li>additional improvements were made for portability of the
+    ncurses examples, adding rpm- and dpkg-scripts for test-builds.
+    See <a href=
+    "http://invisible-island.net/ncurses/ncurses-examples.html">this
+    page</a> for snapshots and other information.</li>
   </ul>
 
   <h1>Features of Ncurses</h1>The ncurses package is fully
@@ -363,6 +371,13 @@
   <p>Beta versions of ncurses and patches to the current release
   are made available at <a href=
   "ftp://invisible-island.net/ncurses/">ftp://invisible-island.net/ncurses/</a>&nbsp;.</p>
+
+  <p>There is an archive of the mailing list here:</p>
+
+  <p><a href=
+  "http://lists.gnu.org/archive/html/bug-ncurses">http://lists.gnu.org/archive/html/bug-ncurses</a>
+  (also <a href=
+  "https://lists.gnu.org/archive/html/bug-ncurses">https</a>)</p>
 
   <h2>Future Plans</h2>
 

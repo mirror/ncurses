@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.36 2011/08/07 00:41:53 tom Exp $
+dnl $Id: aclocal.m4,v 1.37 2011/09/10 21:36:41 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -673,67 +673,29 @@ dnl ----------
 dnl "dirname" is not portable, so we fake it with a shell script.
 AC_DEFUN([CF_DIRNAME],[$1=`echo $2 | sed -e 's%/[[^/]]*$%%'`])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 4 updated: 2011/08/06 20:32:05
+dnl CF_ENABLE_PC_FILES version: 6 updated: 2011/09/10 16:31:04
 dnl ------------------
 dnl This is the "--enable-pc-files" option, which is available if there is a
 dnl pkg-config configuration on the local machine.
-dnl
-dnl It sets/updates PKG_CONFIG_LIBDIR, which is used by pkg-config as a
-dnl special case: overriding PKG_CONFIG_PATH (preferred).
 AC_DEFUN([CF_ENABLE_PC_FILES],[
-AC_REQUIRE([CF_PATHSEP])
 AC_REQUIRE([CF_PKG_CONFIG])
+AC_REQUIRE([CF_WITH_PKG_CONFIG_LIBDIR])
 
 if test "$PKG_CONFIG" != no ; then
-	AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
-
-	# Leave this as something that can be overridden in the environment.
-	if test -z "$PKG_CONFIG_LIBDIR" ; then
-		if test -n "$PKG_CONFIG_PATH" ; then
-			for cf_config in `echo "$PKG_CONFIG_PATH" | sed -e 's/'$PATH_SEPARATOR'/ /g'`
-			do
-				if test -n "$cf_config" && test -d "$cf_config"
-				then
-					PKG_CONFIG_LIBDIR=$cf_config
-					break
-				fi
-			done
-		fi
-		if test -z "$PKG_CONFIG_LIBDIR" ; then
-			cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`
-			case x`(arch) 2>/dev/null` in #(vi
-			*64) #(vi
-				for cf_config in $cf_path/lib64 $cf_path/lib32 $cf_path/lib
-				do
-					if test -d $cf_config/pkgconfig
-					then
-						PKG_CONFIG_LIBDIR=$cf_config/pkgconfig
-						break
-					fi
-				done
-				;;
-			*)
-				PKG_CONFIG_LIBDIR=$cf_path/lib/pkgconfig
-				;;
-			esac
-		fi
-	else
-		PKG_CONFIG_LIBDIR=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/^://' -e 's/:.*//'`
-	fi
 	if test -n "$PKG_CONFIG_LIBDIR" && test -d "$PKG_CONFIG_LIBDIR" ; then
+		AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
 		AC_ARG_ENABLE(pc-files,
 			[  --enable-pc-files       generate and install .pc files for pkg-config],
 			[enable_pc_files=$enableval],
 			[enable_pc_files=no])
 		AC_MSG_RESULT($enable_pc_files)
-		CF_VERBOSE(found library $PKG_CONFIG_LIBDIR)
-	else
-		AC_MSG_RESULT(no)
-		AC_MSG_WARN(did not find library $PKG_CONFIG_LIBDIR)
+	elif test -z "$PKG_CONFIG_LIBDIR" || test "$PKG_CONFIG_LIBDIR" != no; then
 		enable_pc_files=no
+		AC_MSG_WARN(did not find $PKG_CONFIG library)
 	fi
+else
+	enable_pc_files=no
 fi
-AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FIND_LIBRARY version: 9 updated: 2008/03/23 14:48:54
@@ -3560,6 +3522,49 @@ CF_PATH_SYNTAX(withval)
 fi
 $3="$withval"
 AC_SUBST($3)dnl
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 1 updated: 2011/09/10 16:20:21
+dnl -------------------------
+dnl Allow the choice of the pkg-config library directory to be overridden.
+AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
+if test "$PKG_CONFIG" != no ; then
+	AC_MSG_CHECKING(for $PKG_CONFIG library directory)
+	AC_ARG_WITH(pkg-config-libdir,
+		[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
+		[PKG_CONFIG_LIBDIR=$withval],
+		[PKG_CONFIG_LIBDIR=yes])
+
+	case x$PKG_CONFIG_LIBDIR in #(vi
+	x/*) #(vi
+		;;
+	xyes) #(vi
+		# look for the library directory using the same prefix as the executable
+		cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`
+		case x`(arch) 2>/dev/null` in #(vi
+		*64) #(vi
+			for cf_config in $cf_path/share $cf_path/lib64 $cf_path/lib32 $cf_path/lib
+			do
+				if test -d $cf_config/pkgconfig
+				then
+					PKG_CONFIG_LIBDIR=$cf_config/pkgconfig
+					break
+				fi
+			done
+			;;
+		*)
+			PKG_CONFIG_LIBDIR=$cf_path/lib/pkgconfig
+			;;
+		esac
+		;;
+	*)
+		;;
+	esac
+
+	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+fi
+
+AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_WITH_PTHREAD version: 3 updated: 2010/05/29 16:31:02

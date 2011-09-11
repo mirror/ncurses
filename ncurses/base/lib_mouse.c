@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.121 2011/01/22 19:47:47 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.122 2011/09/10 22:23:38 tom Exp $")
 
 #include <tic.h>
 
@@ -1359,6 +1359,17 @@ NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 	/* compute the current-event pointer */
 	MEVENT *prev = PREV(eventp);
 
+#if 1
+	/* copy the event we find there */
+	*aevent = *prev;
+
+	TR(TRACE_IEVENT, ("getmouse: returning event %s from slot %ld",
+			  _nc_tracemouse(SP_PARM, prev),
+			  (long) IndexEV(SP_PARM, prev)));
+
+	prev->id = INVALID_EVENT;	/* so the queue slot becomes free */
+	result = OK;
+#else /* 20100102 change prevented "release" events from returning to caller */
 	if (prev->id != INVALID_EVENT) {
 	    /* copy the event we find there */
 	    *aevent = *prev;
@@ -1371,6 +1382,7 @@ NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 	    SP_PARM->_mouse_eventp = PREV(prev);
 	    result = OK;
 	}
+#endif
     }
     returnCode(result);
 }

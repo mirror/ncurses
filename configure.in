@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.523 2011/07/16 21:54:34 tom Exp $
+dnl $Id: configure.in,v 1.525 2011/09/10 19:53:50 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.523 $)
+AC_REVISION($Revision: 1.525 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -168,6 +168,7 @@ AC_SYS_LONG_FILE_NAMES
 
 # if we find pkg-config, check if we should install the ".pc" files.
 CF_PKG_CONFIG
+CF_WITH_PKG_CONFIG_LIBDIR
 CF_ENABLE_PC_FILES
 
 AC_MSG_CHECKING(if we should assume mixed-case filenames)

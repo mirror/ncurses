@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 2004 Free Software Foundation, Inc.                          #
+# Copyright (c) 2004,2011 Free Software Foundation, Inc.                     #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey
 #
-# $Id: gen_edit.sh,v 1.1 2004/07/11 15:01:29 tom Exp $
+# $Id: gen_edit.sh,v 1.2 2011/09/11 00:47:26 tom Exp $
 # Generate a sed-script for converting the terminfo.src to the form which will
 # be installed.
 #
@@ -55,4 +55,28 @@ cat <<EOF
 	s/use=xterm-new,/use=$WHICH_XTERM,/
 }
 EOF
+fi
+
+# Work around incompatibities built into Linux console.  The 2.6 series added
+# a patch to fixup the SI/SO behavior, which is closer to vt100, but the older
+# kernels do not recognize those controls.
+system=`uname -s 2>/dev/null`
+if test "x$system" = xLinux
+then
+	case x`uname -r` in
+	x1.*)
+cat <<EOF
+/^# This is Linux console for ncurses/,/^$/{
+	s/use=linux3.0,/use=linux-c,/
+}
+EOF
+		;;
+	x2.[0-4]*)
+cat <<EOF
+/^# This is Linux console for ncurses/,/^$/{
+	s/use=linux3.0,/use=linux2.2,/
+}
+EOF
+		;;
+	esac
 fi

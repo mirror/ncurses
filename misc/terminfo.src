@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.399 $
-#	$Date: 2011/08/20 20:52:51 $
+#	$Revision: 1.401 $
+#	$Date: 2011/09/11 00:34:21 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -951,6 +951,7 @@ linux2.6|linux 2.6.x console,
 linux3.0|linux 3.0 kernels,
 	E3=\E[3;J, use=linux2.6,
 
+# This is Linux console for ncurses.
 linux|linux console,
 	use=linux3.0,
 
@@ -3292,6 +3293,11 @@ xterm-new|modern xterm terminal emulator,
 	indn=\E[%p1%dS, kb2=\EOE, kcbt=\E[Z, kent=\EOM,
 	rin=\E[%p1%dT, use=xterm+pcfkeys, use=xterm+tmux,
 	use=xterm-basic,
+
+# This fragment is for people who cannot agree on what the backspace key
+# should send.
+xterm+kbs|fragment for backspace key,
+	kbs=^H,
 #
 # This fragment describes as much of XFree86 xterm's "pc-style" function
 # keys as will fit into terminfo's 60 function keys.
@@ -3469,7 +3475,7 @@ xterm-basic|modern xterm terminal emulator - common,
 	dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K,
 	flash=\E[?5h$<100/>\E[?5l, home=\E[H, hpa=\E[%i%p1%dG,
 	ht=^I, hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L,
-	ind=^J, invis=\E[8m, is2=\E[!p\E[?3;4l\E[4l\E>, kbs=^H,
+	ind=^J, invis=\E[8m, is2=\E[!p\E[?3;4l\E[4l\E>,
 	kmous=\E[M, mc0=\E[i, mc4=\E[4i, mc5=\E[5i, meml=\El,
 	memu=\Em, op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM,
 	rmacs=\E(B, rmam=\E[?7l, rmcup=\E[?1049l, rmir=\E[4l,
@@ -3481,7 +3487,8 @@ xterm-basic|modern xterm terminal emulator - common,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
 	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smcup=\E[?1049h,
 	smir=\E[4h, smkx=\E[?1h\E=, smm=\E[?1034h, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, use=vt100+enq,
+	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, use=xterm+kbs,
+	use=vt100+enq,
 
 # From: David J. MacKenzie <djm@va.pubnix.com>, 14 Nov 1997
 # In retrospect, something like xterm-r6 was intended here -TD
@@ -3586,8 +3593,8 @@ xterm-8bit|xterm terminal emulator 8-bit controls (X Window System),
 	hpa=\233%i%p1%dG, ht=^I, hts=\210, ich=\233%p1%d@,
 	il=\233%p1%dL, il1=\233L, ind=^J, invis=\2338m,
 	is2=\E[62"p\E G\233m\233?7h\E>\E7\233?1;3;4;6l\2334l\233r\E8,
-	ka1=\217w, ka3=\217u, kb2=\217y, kbeg=\217E, kbs=^H,
-	kc1=\217q, kc3=\217s, kcbt=\233Z, kcub1=\217D, kcud1=\217B,
+	ka1=\217w, ka3=\217u, kb2=\217y, kbeg=\217E, kc1=\217q,
+	kc3=\217s, kcbt=\233Z, kcub1=\217D, kcud1=\217B,
 	kcuf1=\217C, kcuu1=\217A, kdch1=\2333~, kend=\2334~,
 	kent=\217M, kf1=\23311~, kf10=\23321~, kf11=\23323~,
 	kf12=\23324~, kf13=\23325~, kf14=\23326~, kf15=\23328~,
@@ -3609,6 +3616,7 @@ xterm-8bit|xterm terminal emulator 8-bit controls (X Window System),
 	smcup=\233?1049h, smir=\2334h, smkx=\233?1h\E=,
 	smso=\2337m, smul=\2334m, tbc=\2333g, u6=\233[%i%d;%dR,
 	u7=\E[6n, u8=\233[?1;2c, u9=\E[c, vpa=\233%i%p1%dd,
+	use=xterm+kbs,
 
 xterm-hp|xterm with hpterm function keys,
 	kclr=\EJ, kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA,
@@ -3655,8 +3663,9 @@ xterm-vt52|xterm emulating dec vt52,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, clear=\EH\EJ, cr=^M, cub1=\ED, cud1=\EB, cuf1=\EC,
 	cup=\EY%p1%' '%+%c%p2%' '%+%c, cuu1=\EA, ed=\EJ, el=\EK,
-	home=\EH, ht=^I, ind=^J, kbs=^H, kcub1=\ED, kcud1=\EB,
-	kcuf1=\EC, kcuu1=\EA, nel=^M^J, ri=\EI, rmacs=\EG, smacs=\EF,
+	home=\EH, ht=^I, ind=^J, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
+	kcuu1=\EA, nel=^M^J, ri=\EI, rmacs=\EG, smacs=\EF,
+	use=xterm+kbs,
 
 xterm-noapp|xterm with cursor keys in normal mode,
 	rmcup@, rmkx=\E>, smcup@, smkx=\E=, use=xterm+noapp,
@@ -22569,5 +22578,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* minor cleanup of X-terminal emulator section -TD
 #	* add terminator entry -TD
 #	* add simpleterm entry -TD
+#
+# 2011-09-10
+#	* add xterm+kbs fragment from xterm #272 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

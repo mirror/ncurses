@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.157 2011/07/24 13:43:43 tom Exp $
+-- $Id: INSTALL,v 1.159 2011/09/10 20:19:24 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -910,6 +910,10 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-pkg-config=[DIR]
 	Check for pkg-config, optionally specifying its path.
 
+    --with-pkg-config-libdir=[DIR]
+	If pkg-config was found, override the automatic check for its library
+	path.
+
     --with-profile
 	Generate profile-libraries These are named by adding "_p" to the root,
 	e.g., libncurses_p.a
@@ -1029,6 +1033,8 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Don't install the ncurses header with the name "curses.h".  Rather,
 	install as "ncurses.h" and modify the installed headers and manpages
 	accordingly.
+
+	Likewise, do not install an alias "curses" for the ncurses manpage.
 
     --without-cxx
 	XSI curses declares "bool" as part of the interface.  C++ also declares

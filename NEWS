@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1773 2011/09/03 18:39:32 tom Exp $
+-- $Id: NEWS,v 1.1781 2011/09/11 00:50:29 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,26 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110910
+	+ modify misc/gen_edit.sh to select a "linux" entry which works with
+	  the current kernel rather than assuming it is always "linux3.0"
+	  (cf: 20110716).
+	+ revert a change to getmouse() which had the undesirable side-effect
+	  of suppressing button-release events (report by Damien Guibouret,
+	  cf: 20100102).
+	+ add xterm+kbs fragment from xterm #272 -TD
+	+ add configure option --with-pkg-config-libdir to provide control over
+	  the actual directory into which pc-files are installed, do not use
+	  the pkg-config environment variables (discussion with Frederic L W
+	  Meunier).
+	+ add link to mailing-list archive in announce.html.in, as done in
+	  FAQ (prompted by question by Andrius Bentkus).
+	+ improve manpage install by adjusting the "#include" examples to
+	  show the ncurses-subdirectory used when --disable-overwrite option
+	  is used.
+	+ install an alias for "curses" to the ncurses manpage, tied to the
+	  --with-curses-h configure option (suggested by Reuben Thomas).
 
 20110903
 	+ propagate error-returns from wresize, i.e., the internal
