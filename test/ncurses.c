@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.369 2011/08/20 15:49:08 tom Exp $
+$Id: ncurses.c,v 1.370 2011/09/17 21:57:49 tom Exp $
 
 ***************************************************************************/
 
@@ -3360,6 +3360,7 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 	     * The repeat-count may make text wrap - avoid that.
 	     */
 	    getyx(stdscr, y, x);
+	    (void) y;
 	    if (x >= col + (COLS / 2) - 2)
 		break;
 	} while (--count > 0);

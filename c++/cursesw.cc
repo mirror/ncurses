@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 2007-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include "internal.h"
 #include "cursesw.h"
 
-MODULE_ID("$Id: cursesw.cc,v 1.51 2009/03/28 21:31:37 tom Exp $")
+MODULE_ID("$Id: cursesw.cc,v 1.52 2011/09/17 22:12:10 tom Exp $")
 
 #define COLORS_NEED_INITIALIZATION  -1
 #define COLORS_NOT_INITIALIZED       0
@@ -285,12 +285,14 @@ static RIPOFFINIT* prip = R_INIT;
 NCursesWindow::NCursesWindow(WINDOW *win, int ncols)
   : w(0), alloced(FALSE), par(0), subwins(0), sib(0)
 {
+    (void) ncols;
     initialize();
     w = win;
 }
 
 int _nc_xx_ripoff_init(WINDOW *w, int ncols)
 {
+    (void) ncols;
     int res = ERR;
 
     RIPOFFINIT init = *prip++;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.98 2010/05/01 21:11:43 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.99 2011/09/17 22:12:10 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -1326,7 +1326,7 @@ _nc_Synchronize_Options(FIELD *field, Field_Options newopts)
 	      field->opts = oldopts;
 	      returnCode(E_CURRENT);
 	    }
-	  if ((form->curpage == field->page))
+	  if (form->curpage == field->page)
 	    {
 	      if (changed_opts & O_VISIBLE)
 		{

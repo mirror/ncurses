@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.122 2011/09/10 22:23:38 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.129 2011/09/17 21:52:30 tom Exp $")
 
 #include <tic.h>
 
@@ -750,6 +750,7 @@ _nc_mouse_event(SCREEN *sp)
 			eventp->bstate |= BUTTON3_RELEASED;
 		    break;
 		default:
+		    eventp->bstate |= REPORT_MOUSE_POSITION;
 		    break;
 		}
 
@@ -830,7 +831,6 @@ _nc_mouse_inline(SCREEN *sp)
 
     if (sp->_mouse_type == M_XTERM) {
 	unsigned char kbuf[4];
-	mmask_t prev;
 	size_t grabbed;
 	int res;
 
@@ -896,35 +896,51 @@ _nc_mouse_inline(SCREEN *sp)
 
 	/* processing code goes here */
 	eventp->bstate = 0;
-	prev = PREV(eventp)->bstate;
 
 #if USE_EMX_MOUSE
 #define PRESS_POSITION(n) \
-	eventp->bstate = MASK_PRESS(n); \
-	if (kbuf[0] & 0x40) \
-	    eventp->bstate = MASK_RELEASE(n)
+	do { \
+		eventp->bstate = MASK_PRESS(n); \
+		sp->_mouse_bstate |= MASK_PRESS(n); \
+		if (kbuf[0] & 0x40) { \
+			eventp->bstate = MASK_RELEASE(n); \
+			sp->_mouse_bstate &= ~MASK_PRESS(n); \
+		} \
+	} while (0)
 #else
 #define PRESS_POSITION(n) \
-	eventp->bstate = (mmask_t) (prev & MASK_PRESS(n) \
-				    ? REPORT_MOUSE_POSITION \
-				    : MASK_PRESS(n))
+	do { \
+		eventp->bstate = (mmask_t) (sp->_mouse_bstate & MASK_PRESS(n) \
+					? REPORT_MOUSE_POSITION \
+					: MASK_PRESS(n)); \
+		sp->_mouse_bstate |= MASK_PRESS(n); \
+	} while (0)
 #endif
 
 	switch (kbuf[0] & 0x3) {
 	case 0x0:
-	    if (kbuf[0] & 64)
+	    if ((kbuf[0] & 96) == 96) {
 		eventp->bstate = MASK_PRESS(4);
-	    else
+		/* Do not record in sp->_mouse_bstate; there will be no
+		 * corresponding release event.
+		 */
+	    } else {
 		PRESS_POSITION(1);
+	    }
 	    break;
 
 	case 0x1:
+	    if ((kbuf[0] & 96) == 96) {
 #if NCURSES_MOUSE_VERSION == 2
-	    if (kbuf[0] & 64)
 		eventp->bstate = MASK_PRESS(5);
-	    else
+		/* See comment above for button 4 */
+#else
+		/* Ignore this event as it is not a true press of the button */
+		eventp->bstate = REPORT_MOUSE_POSITION;
 #endif
+	    } else {
 		PRESS_POSITION(2);
+	    }
 	    break;
 
 	case 0x2:
@@ -939,12 +955,13 @@ _nc_mouse_inline(SCREEN *sp)
 	     * release, we can infer the button actually released by looking at
 	     * the previous event.
 	     */
-	    if (prev & (BUTTON_PRESSED | BUTTON_RELEASED)) {
+	    if (sp->_mouse_bstate & BUTTON_PRESSED) {
 		eventp->bstate = BUTTON_RELEASED;
 		for (b = 1; b <= MAX_BUTTONS; ++b) {
-		    if (!(prev & MASK_PRESS(b)))
+		    if (!(sp->_mouse_bstate & MASK_PRESS(b)))
 			eventp->bstate &= ~MASK_RELEASE(b);
 		}
+		sp->_mouse_bstate = 0;
 	    } else {
 		/*
 		 * XFree86 xterm will return a stream of release-events to
@@ -994,7 +1011,7 @@ mouse_activate(SCREEN *sp, bool on)
 	return;
 
     if (on) {
-
+	sp->_mouse_bstate = 0;
 	switch (sp->_mouse_type) {
 	case M_XTERM:
 #if NCURSES_EXT_FUNCS
@@ -1074,10 +1091,13 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 /* parse a run of atomic mouse events into a gesture */
 {
     MEVENT *eventp = sp->_mouse_eventp;
-    MEVENT *ep, *runp, *next, *prev = PREV(eventp);
+    MEVENT *next, *ep;
+    MEVENT *first_valid = NULL;
+    MEVENT *first_invalid = NULL;
     int n;
     int b;
     bool merge;
+    bool endLoop;
 
     TR(MY_TRACE, ("_nc_mouse_parse(%d) called", runcount));
 
@@ -1094,7 +1114,8 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
      *
      * It's possible that the run may not resolve to a single event (for
      * example, if the user quadruple-clicks).  If so, leading events
-     * in the run are ignored.
+     * in the run are ignored if user does not call getmouse in a loop (getting
+     * them from newest to older).
      *
      * Note that this routine is independent of the format of the specific
      * format of the pointing-device's reports.  We can use it to parse
@@ -1102,79 +1123,109 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
      * button basis, as long as the device-dependent mouse code puts stuff
      * on the queue in MEVENT format.
      */
-    if (runcount == 1) {
-	TR(MY_TRACE,
-	   ("_nc_mouse_parse: returning simple mouse event %s at slot %ld",
-	    _nc_tracemouse(sp, prev),
-	    (long) IndexEV(sp, prev)));
-	return (prev->id >= NORMAL_EVENT)
-	    ? ((prev->bstate & sp->_mouse_mask) ? TRUE : FALSE)
-	    : FALSE;
-    }
 
-    /* find the start of the run */
-    runp = eventp;
-    for (n = runcount; n > 0; n--) {
-	runp = PREV(runp);
+    /*
+     * Reset all events that were not set, in case the user sometimes calls
+     * getmouse only once and other times until there are no more events in
+     * queue.
+     *
+     * This also allows reaching the beginning of the run.
+     */
+    ep = eventp;
+    for (n = runcount; n < EV_MAX; n++) {
+	ep->id = INVALID_EVENT;
+	ep = NEXT(ep);
     }
 
 #ifdef TRACE
     if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot(sp, "before mouse press/release merge:");
 	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
-		RunParams(sp, eventp, runp),
+		RunParams(sp, eventp, ep),
 		runcount);
 	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
 
     /* first pass; merge press/release pairs */
-    do {
-	merge = FALSE;
-	for (ep = runp; (next = NEXT(ep)) != eventp; ep = next) {
+    endLoop = FALSE;
+    while (!endLoop) {
+	next = NEXT(ep);
+	if (next == eventp) {
+	    /* Will end the loop, but compact before */
+	    endLoop = TRUE;
+	} else {
 
 #define MASK_CHANGED(x) (!(ep->bstate & MASK_PRESS(x)) \
 		      == !(next->bstate & MASK_RELEASE(x)))
 
-	    if (ep->x == next->x && ep->y == next->y
+	    if (ep->id != INVALID_EVENT && next->id != INVALID_EVENT
+		&& ep->x == next->x && ep->y == next->y
 		&& (ep->bstate & BUTTON_PRESSED)
-		&& MASK_CHANGED(1)
-		&& MASK_CHANGED(2)
-		&& MASK_CHANGED(3)
-		&& MASK_CHANGED(4)
-#if NCURSES_MOUSE_VERSION == 2
-		&& MASK_CHANGED(5)
-#endif
-		) {
+		&& (!(next->bstate & BUTTON_PRESSED))) {
+		bool changed = TRUE;
+
 		for (b = 1; b <= MAX_BUTTONS; ++b) {
-		    if ((sp->_mouse_mask & MASK_CLICK(b))
-			&& (ep->bstate & MASK_PRESS(b))) {
-			ep->bstate &= ~MASK_PRESS(b);
-			ep->bstate |= MASK_CLICK(b);
-			merge = TRUE;
+		    if (!MASK_CHANGED(b)) {
+			changed = FALSE;
+			break;
 		    }
 		}
-		if (merge)
-		    next->id = INVALID_EVENT;
+
+		if (changed) {
+		    merge = FALSE;
+		    for (b = 1; b <= MAX_BUTTONS; ++b) {
+			if ((sp->_mouse_mask & MASK_CLICK(b))
+			    && (ep->bstate & MASK_PRESS(b))) {
+			    next->bstate &= ~MASK_RELEASE(b);
+			    next->bstate |= MASK_CLICK(b);
+			    merge = TRUE;
+			}
+		    }
+		    if (merge)
+			ep->id = INVALID_EVENT;
+		}
 	    }
 	}
-    } while
-	(merge);
 
+	/* Compact valid events */
+	if (ep->id == INVALID_EVENT) {
+	    if ((first_valid != NULL) && (first_invalid == NULL)) {
+		first_invalid = ep;
+	    }
+	} else {
+	    if (first_valid == NULL) {
+		first_valid = ep;
+	    } else if (first_invalid != NULL) {
+		*first_invalid = *ep;
+		ep->id = INVALID_EVENT;
+		first_invalid = NEXT(first_invalid);
+	    }
+	}
+
+	ep = next;
+    }
+
+    if (first_invalid != NULL) {
+	eventp = first_invalid;
+    }
 #ifdef TRACE
     if (USE_TRACEF(TRACE_IEVENT)) {
 	_trace_slot(sp, "before mouse click merge:");
-	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
-		RunParams(sp, eventp, runp),
-		runcount);
-	_nc_unlock_global(tracef);
+	if (first_valid == NULL) {
+	    _tracef("_nc_mouse_parse: no valid event");
+	} else {
+	    _tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
+		    RunParams(sp, eventp, first_valid),
+		    runcount);
+	    _nc_unlock_global(tracef);
+	}
     }
 #endif /* TRACE */
 
     /*
-     * Second pass; merge click runs.  At this point, click events are
-     * each followed by one invalid event. We merge click events
-     * forward in the queue.
+     * Second pass; merge click runs.  We merge click events forward in the
+     * queue.  For example, double click can be changed to triple click.
      *
      * NOTE: There is a problem with this design!  If the application
      * allows enough click events to pile up in the circular queue so
@@ -1187,87 +1238,98 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
      * but the timer element would have to have sub-second resolution,
      * which would get us into portability trouble.
      */
-    do {
-	MEVENT *follower;
+    first_invalid = NULL;
+    endLoop = (first_valid == NULL);
+    ep = first_valid;
+    while (!endLoop) {
+	next = NEXT(ep);
 
-	merge = FALSE;
-	for (ep = runp; (next = NEXT(ep)) != eventp; ep = next)
-	    if (ep->id != INVALID_EVENT) {
-		if (next->id != INVALID_EVENT)
-		    continue;
-		follower = NEXT(next);
-		if (follower->id == INVALID_EVENT)
-		    continue;
-
-		/* merge click events forward */
-		if ((ep->bstate & BUTTON_CLICKED)
-		    && (follower->bstate & BUTTON_CLICKED)) {
-		    for (b = 1; b <= MAX_BUTTONS; ++b) {
-			if ((sp->_mouse_mask & MASK_DOUBLE_CLICK(b))
-			    && (follower->bstate & MASK_CLICK(b))) {
-			    follower->bstate &= ~MASK_CLICK(b);
-			    follower->bstate |= MASK_DOUBLE_CLICK(b);
-			    merge = TRUE;
-			}
+	if (next == eventp) {
+	    /* Will end the loop, but check event type and compact before */
+	    endLoop = true;
+	} else {
+	    /* merge click events forward */
+	    if ((ep->bstate & BUTTON_CLICKED)
+		&& (next->bstate & BUTTON_CLICKED)) {
+		merge = FALSE;
+		for (b = 1; b <= MAX_BUTTONS; ++b) {
+		    if ((sp->_mouse_mask & MASK_DOUBLE_CLICK(b))
+			&& (ep->bstate & MASK_CLICK(b))
+			&& (next->bstate & MASK_CLICK(b))) {
+			next->bstate &= ~MASK_CLICK(b);
+			next->bstate |= MASK_DOUBLE_CLICK(b);
+			merge = TRUE;
 		    }
-		    if (merge)
-			ep->id = INVALID_EVENT;
 		}
-
-		/* merge double-click events forward */
-		if ((ep->bstate & BUTTON_DOUBLE_CLICKED)
-		    && (follower->bstate & BUTTON_CLICKED)) {
-		    for (b = 1; b <= MAX_BUTTONS; ++b) {
-			if ((sp->_mouse_mask & MASK_TRIPLE_CLICK(b))
-			    && (follower->bstate & MASK_CLICK(b))) {
-			    follower->bstate &= ~MASK_CLICK(b);
-			    follower->bstate |= MASK_TRIPLE_CLICK(b);
-			    merge = TRUE;
-			}
-		    }
-		    if (merge)
-			ep->id = INVALID_EVENT;
-		}
+		if (merge)
+		    ep->id = INVALID_EVENT;
 	    }
-    } while
-	(merge);
 
-#ifdef TRACE
-    if (USE_TRACEF(TRACE_IEVENT)) {
-	_trace_slot(sp, "before mouse event queue compaction:");
-	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
-		RunParams(sp, eventp, runp),
-		runcount);
-	_nc_unlock_global(tracef);
-    }
-#endif /* TRACE */
-
-    /*
-     * Now try to throw away trailing events flagged invalid, or that
-     * don't match the current event mask.
-     */
-    for (; runcount; prev = PREV(eventp), runcount--)
-	if (prev->id == INVALID_EVENT || !(prev->bstate & sp->_mouse_mask)) {
-	    sp->_mouse_eventp = eventp = prev;
+	    /* merge double-click events forward */
+	    if ((ep->bstate & BUTTON_DOUBLE_CLICKED)
+		&& (next->bstate & BUTTON_CLICKED)) {
+		merge = FALSE;
+		for (b = 1; b <= MAX_BUTTONS; ++b) {
+		    if ((sp->_mouse_mask & MASK_TRIPLE_CLICK(b))
+			&& (ep->bstate & MASK_DOUBLE_CLICK(b))
+			&& (next->bstate & MASK_CLICK(b))) {
+			next->bstate &= ~MASK_CLICK(b);
+			next->bstate |= MASK_TRIPLE_CLICK(b);
+			merge = TRUE;
+		    }
+		}
+		if (merge)
+		    ep->id = INVALID_EVENT;
+	    }
 	}
-#ifdef TRACE
-    if (USE_TRACEF(TRACE_IEVENT)) {
-	_trace_slot(sp, "after mouse event queue compaction:");
-	_tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
-		RunParams(sp, eventp, runp),
-		runcount);
-	_nc_unlock_global(tracef);
+
+	/* Discard event if it does not match event mask */
+	if (!(ep->bstate & sp->_mouse_mask)) {
+	    ep->id = INVALID_EVENT;
+	}
+
+	/* Compact valid events */
+	if (ep->id == INVALID_EVENT) {
+	    if (ep == first_valid) {
+		first_valid = next;
+	    } else if (first_invalid == NULL) {
+		first_invalid = ep;
+	    }
+	} else if (first_invalid != NULL) {
+	    *first_invalid = *ep;
+	    ep->id = INVALID_EVENT;
+	    first_invalid = NEXT(first_invalid);
+	}
+
+	ep = next;
     }
-    for (ep = runp; ep != eventp; ep = NEXT(ep))
-	if (ep->id != INVALID_EVENT)
-	    TR(MY_TRACE,
-	       ("_nc_mouse_parse: returning composite mouse event %s at slot %ld",
-		_nc_tracemouse(sp, ep),
-		(long) IndexEV(sp, ep)));
+
+    if (first_invalid == NULL) {
+	first_invalid = eventp;
+    }
+    sp->_mouse_eventp = first_invalid;
+
+#ifdef TRACE
+    if (first_valid != NULL) {
+	if (USE_TRACEF(TRACE_IEVENT)) {
+	    _trace_slot(sp, "after mouse event queue compaction:");
+	    _tracef("_nc_mouse_parse: run starts at %ld, ends at %ld, count %d",
+		    RunParams(sp, first_invalid, first_valid),
+		    runcount);
+	    _nc_unlock_global(tracef);
+	}
+	for (ep = first_valid; ep != first_invalid; ep = NEXT(ep)) {
+	    if (ep->id != INVALID_EVENT)
+		TR(MY_TRACE,
+		   ("_nc_mouse_parse: returning composite mouse event %s at slot %ld",
+		    _nc_tracemouse(sp, ep),
+		    (long) IndexEV(sp, ep)));
+	}
+    }
 #endif /* TRACE */
 
     /* after all this, do we have a valid event? */
-    return (PREV(eventp)->id != INVALID_EVENT);
+    return (PREV(first_invalid)->id != INVALID_EVENT);
 }
 
 static void
@@ -1359,17 +1421,15 @@ NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 	/* compute the current-event pointer */
 	MEVENT *prev = PREV(eventp);
 
-#if 1
-	/* copy the event we find there */
-	*aevent = *prev;
-
-	TR(TRACE_IEVENT, ("getmouse: returning event %s from slot %ld",
-			  _nc_tracemouse(SP_PARM, prev),
-			  (long) IndexEV(SP_PARM, prev)));
-
-	prev->id = INVALID_EVENT;	/* so the queue slot becomes free */
-	result = OK;
-#else /* 20100102 change prevented "release" events from returning to caller */
+	/*
+	 * Discard events not matching mask (there could be still some if
+	 * _nc_mouse_parse was not called, e.g., when _nc_mouse_inline returns
+	 * false).
+	 */
+	while ((prev->id != INVALID_EVENT) && (!(prev->bstate & SP_PARM->_mouse_mask))) {
+	    prev->id = INVALID_EVENT;
+	    prev = PREV(prev);
+	}
 	if (prev->id != INVALID_EVENT) {
 	    /* copy the event we find there */
 	    *aevent = *prev;
@@ -1379,10 +1439,16 @@ NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 			      (long) IndexEV(SP_PARM, prev)));
 
 	    prev->id = INVALID_EVENT;	/* so the queue slot becomes free */
-	    SP_PARM->_mouse_eventp = PREV(prev);
+	    SP_PARM->_mouse_eventp = prev;
 	    result = OK;
+	} else {
+	    /* Reset the provided event */
+	    aevent->bstate = 0;
+	    aevent->id = INVALID_EVENT;
+	    aevent->x = 0;
+	    aevent->y = 0;
+	    aevent->z = 0;
 	}
-#endif
     }
     returnCode(result);
 }

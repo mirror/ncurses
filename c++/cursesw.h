@@ -1,7 +1,7 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 // vile:cppmode
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.48 2008/01/19 21:09:10 tom Exp $
+// $Id: cursesw.h,v 1.49 2011/09/17 22:12:10 tom Exp $
 
 #include <etip.h>
 
@@ -1438,16 +1438,19 @@ protected:
   // The driver translates the keystroke c into an Pad_Request
 
   virtual void OnUnknownOperation(int pad_req) {
+    (void) pad_req;
     ::beep();
   }
   // This is called if the driver returns an unknown op-code
 
   virtual void OnNavigationError(int pad_req) {
+    (void) pad_req;
     ::beep();
   }
   // This is called if a navigation request couldn't be satisfied
 
   virtual void OnOperation(int pad_req) {
+    (void) pad_req;
   };
   // OnOperation is called if a Pad_Operation was executed and just before
   // the refresh() operation is done.
@@ -1542,11 +1545,15 @@ public:
   }
 
   void setWindow(NCursesWindow& view, int v_grid = 1, int h_grid = 1) {
+    (void) view;
+    (void) v_grid;
+    (void) h_grid;
     err_handler("Operation not allowed");
   }
   // Disable this call; the viewport is already defined
 
   void setSubWindow(NCursesWindow& sub) {
+    (void) sub;
     err_handler("Operation not allowed");
   }
   // Disable this call; the viewport subwindow is already defined

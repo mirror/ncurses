@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.482 2011/08/13 14:28:05 tom Exp $
+ * $Id: curses.priv.h,v 1.483 2011/09/17 19:08:20 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1075,6 +1075,7 @@ struct screen {
 	int		_mouse_fd;	/* file-descriptor, if any */
 	bool		_mouse_active;	/* true if initialized */
 	mmask_t		_mouse_mask;
+	mmask_t		_mouse_bstate;
 	NCURSES_CONST char *_mouse_xtermcap; /* string to enable/disable mouse */
 	MEVENT		_mouse_events[EV_MAX];	/* hold the last mouse event seen */
 	MEVENT		*_mouse_eventp;	/* next free slot in event queue */

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1781 2011/09/11 00:50:29 tom Exp $
+-- $Id: NEWS,v 1.1784 2011/09/17 22:05:18 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110917
+	+ fix compiler warning for clang 2.9
+	+ improve merging of mouse events (integrated patch by Damien
+	  Guibouret).
+	+ correct mask-check used in lib_mouse for wheel mouse buttons 4/5
+	  (patch by Damien Guibouret).
 
 20110910
 	+ modify misc/gen_edit.sh to select a "linux" entry which works with

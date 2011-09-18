@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesm.h,v 1.26 2011/04/09 18:07:08 Alexander.Kolesen Exp $
+// $Id: cursesm.h,v 1.27 2011/09/17 21:37:01 tom Exp $
 
 #ifndef NCURSES_CURSESM_H_incl
 #define NCURSES_CURSESM_H_incl 1
@@ -82,6 +82,7 @@ public:
   NCursesMenuItem(const NCursesMenuItem& rhs)
     : item(0)
   {
+    (void) rhs;
   }
 
   virtual ~NCursesMenuItem ();

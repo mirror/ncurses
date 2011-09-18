@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.39 2008/12/07 02:07:34 juergen Exp $
+ * $Id: demo.cc,v 1.40 2011/09/17 22:12:10 tom Exp $
  */
 
 #include "internal.h"
@@ -220,6 +220,7 @@ private:
   int chk;
 protected:
   bool field_check(NCursesFormField& f) {
+    (void) f;
     return TRUE;
   }
   bool char_check(int c) {
