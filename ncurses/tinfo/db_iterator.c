@@ -38,7 +38,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: db_iterator.c,v 1.9 2010/12/25 23:00:25 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.10 2011/09/24 23:44:58 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -210,6 +210,7 @@ _nc_next_db(DBDIRS * state, int *offset)
 	    _nc_last_db();
 	}
 	if (result != 0) {
+	    T(("_nc_next_db %d %s", *state, result));
 	    return result;
 	}
     }

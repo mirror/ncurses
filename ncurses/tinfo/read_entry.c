@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.111 2011/09/24 20:15:12 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.112 2011/09/24 23:47:45 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -515,7 +515,7 @@ _nc_read_tic_entry(char *filename,
 	code = _nc_read_file_entry(filename, tp);
     }
 #if USE_TERMCAP
-    if (code != TGETENT_YES) {
+    else if (code != TGETENT_YES) {
 	code = _nc_read_termcap_entry(name, tp);
 	sprintf(filename, "%.*s", PATH_MAX - 1, _nc_get_source());
     }
