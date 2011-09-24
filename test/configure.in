@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.97 2011/04/23 22:10:32 tom Exp $
+dnl $Id: configure.in,v 1.99 2011/09/24 15:42:11 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -60,6 +60,7 @@ CF_MATH_LIB(MATH_LIB,sin(x))
 AC_SUBST(MATH_LIB)
 
 dnl Things that we don't need (or must override) if we're not building ncurses
+CF_TOP_BUILDDIR
 CC_G_OPT="-g"					AC_SUBST(CC_G_OPT)
 CC_SHARED_OPTS=unknown			AC_SUBST(CC_SHARED_OPTS)
 CPPFLAGS="$CPPFLAGS"			AC_SUBST(CPPFLAGS)
@@ -81,7 +82,8 @@ PTHREAD="-lm"					AC_SUBST(PTHREAD)
 TEST_ARGS=""					AC_SUBST(TEST_ARGS)
 TEST_DEPS=""					AC_SUBST(TEST_DEPS)
 TEST_LIBS=""					AC_SUBST(TEST_LIBS)
-TINFO_ARGS='$(LIBS_CURSES)'		AC_SUBST(TINFO_ARGS)
+TINFO_LDFLAGS=''				AC_SUBST(TINFO_LDFLAGS)
+TINFO_LIBS='$(LIBS_CURSES)'		AC_SUBST(TINFO_LIBS)
 cf_cv_abi_version=""			AC_SUBST(cf_cv_abi_version)
 cf_cv_rel_version=""			AC_SUBST(cf_cv_rel_version)
 

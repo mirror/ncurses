@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.129 2011/09/17 21:52:30 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.130 2011/09/24 00:42:25 tom Exp $")
 
 #include <tic.h>
 
@@ -1246,7 +1246,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 
 	if (next == eventp) {
 	    /* Will end the loop, but check event type and compact before */
-	    endLoop = true;
+	    endLoop = TRUE;
 	} else {
 	    /* merge click events forward */
 	    if ((ep->bstate & BUTTON_CLICKED)

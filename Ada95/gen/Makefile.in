@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.74 2011/03/26 23:36:30 tom Exp $
+#  $Id: Makefile.in,v 1.75 2011/09/24 14:41:24 nix Exp $
 #
 .SUFFIXES:
 
@@ -73,7 +73,7 @@ ABI_VERSION	= @cf_cv_abi_version@
 LOCAL_LIBDIR	= @top_builddir@/lib
 
 LINK		= $(HOST_CC)
-LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS) @TINFO_ARGS2@
+LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @TINFO_LDFLAGS2@ @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS) @TINFO_LIBS@
 
 RANLIB		= @RANLIB@
 
@@ -411,7 +411,7 @@ adahtml:
 	@mkdir -p $(HTML_DIR)
 	cp -p ../src/*.ad[sb] . && chmod +w *.ad[sb]
 @USE_OLD_MAKERULES@	ln -sf ../src/*.ali .
-@USE_GNAT_PROJECTS@	ln -sf ../static-ali/*.ali .	
+@USE_GNAT_PROJECTS@	ln -sf ../static-ali/*.ali .
 	@echo "Filtering generated files"
 	@for f in $(GEN_SRC); do \
 	   h=`basename $$f` ;\

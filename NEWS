@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1784 2011/09/17 22:05:18 tom Exp $
+-- $Id: NEWS,v 1.1788 2011/09/24 20:18:22 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20110924
+	+ modify _nc_read_tic_entry() so that hashed-database is checked before
+	  filesystem.
+	+ updated CF_CURSES_LIBS check in test/configure script.
+	+ modify configure script and makefiles to split TIC_ARGS and
+	  TINFO_ARGS into pieces corresponding to LDFLAGS and LIBS variables,
+	  to help separate searches for tic- and tinfo-libraries (patch by Nick
+	  Alcock aka "Nix").
+	+ build-fix for lib_mouse.c changes (ch: 20110917).
 
 20110917
 	+ fix compiler warning for clang 2.9

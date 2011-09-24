@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.64 2011/08/07 00:40:42 tom Exp $
+dnl $Id: aclocal.m4,v 1.66 2011/09/24 16:54:41 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -678,7 +678,7 @@ fi
 AC_CHECK_HEADERS($cf_cv_ncurses_header)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_LIBS version: 34 updated: 2011/04/09 14:51:08
+dnl CF_CURSES_LIBS version: 35 updated: 2011/08/09 21:06:37
 dnl --------------
 dnl Look for the curses libraries.  Older curses implementations may require
 dnl termcap/termlib to be linked as well.  Call CF_CURSES_CPPFLAGS first.
@@ -758,7 +758,7 @@ if test ".$ac_cv_func_initscr" != .yes ; then
     # Check for library containing tgoto.  Do this before curses library
     # because it may be needed to link the test-case for initscr.
     AC_CHECK_FUNC(tgoto,[cf_term_lib=predefined],[
-        for cf_term_lib in $cf_check_list termcap termlib unknown
+        for cf_term_lib in $cf_check_list otermcap termcap termlib unknown
         do
             AC_CHECK_LIB($cf_term_lib,tgoto,[break])
         done
@@ -2645,6 +2645,15 @@ ncursesw/term.h)
 	AC_DEFINE(HAVE_NCURSESW_TERM_H)
 	;;
 esac
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_TOP_BUILDDIR version: 1 updated: 2006/10/15 16:33:23
+dnl ---------------
+dnl Define a top_builddir symbol, for applications that need an absolute path.
+AC_DEFUN([CF_TOP_BUILDDIR],
+[
+top_builddir=`pwd`
+AC_SUBST(top_builddir)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_TPUTS_PROTO version: 2 updated: 2011/04/23 19:25:50

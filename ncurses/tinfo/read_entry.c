@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.110 2011/08/13 21:10:03 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.111 2011/09/24 20:15:12 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -115,9 +115,11 @@ fake_read(char *src, int *offset, int limit, char *dst, unsigned want)
 #define even_boundary(value) \
     if ((value) % 2 != 0) Read(buf, 1)
 
+/*
+ * Return TGETENT_YES if read, TGETENT_NO if not found or garbled.
+ */
 NCURSES_EXPORT(int)
 _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
-/* return 1 if read, 0 if not found or garbled */
 {
     int offset = 0;
     int name_size, bool_count, num_count, str_count, str_size;
@@ -390,6 +392,51 @@ _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
     return (code);
 }
 
+#if USE_HASHED_DB
+/*
+ * Return if if we can build the filename of a ".db" file.
+ */
+static bool
+make_db_filename(char *filename, unsigned limit, const char *const path)
+{
+    static const char suffix[] = DBM_SUFFIX;
+
+    unsigned lens = sizeof(suffix) - 1;
+    unsigned size = strlen(path);
+    unsigned test = lens + size;
+    bool result = FALSE;
+
+    if (test < limit) {
+	if (size >= lens
+	    && !strcmp(path + size - lens, suffix))
+	    (void) strcpy(filename, path);
+	else
+	    (void) sprintf(filename, "%s%s", path, suffix);
+	result = TRUE;
+    }
+    return result;
+}
+#endif
+
+/*
+ * Return true if we can build the name of a filesystem entry.
+ */
+static bool
+make_dir_filename(char *filename,
+		  unsigned limit,
+		  const char *const path,
+		  const char *name)
+{
+    unsigned need = (unsigned) (LEAF_LEN + 3 + strlen(path) + strlen(name));
+    bool result = FALSE;
+
+    if (need <= limit) {
+	(void) sprintf(filename, "%s/" LEAF_FMT "/%s", path, *name, name);
+	result = TRUE;
+    }
+    return result;
+}
+
 /*
  * Build a terminfo pathname and try to read the data.  Returns TGETENT_YES on
  * success, TGETENT_NO on failure.
@@ -403,97 +450,76 @@ _nc_read_tic_entry(char *filename,
 {
     int code = TGETENT_NO;
 
-    /*
-     * If we are looking in a directory, assume the entry is a file under that,
-     * according to the normal rules.
-     */
-    unsigned need = (unsigned) (LEAF_LEN + 3 + strlen(path) + strlen(name));
-    if (need <= limit)
-	(void) sprintf(filename, "%s/" LEAF_FMT "/%s", path, *name, name);
-
-    if (_nc_is_dir_path(path))
-	code = _nc_read_file_entry(filename, tp);
-    else {
 #if USE_HASHED_DB
-	static const char suffix[] = DBM_SUFFIX;
-	DB *capdbp;
-	unsigned lens = sizeof(suffix) - 1;
-	unsigned size = strlen(path);
-	unsigned test = lens + size;
+    DB *capdbp;
 
-	if (test < limit) {
-	    if (size >= lens
-		&& !strcmp(path + size - lens, suffix))
-		(void) strcpy(filename, path);
-	    else
-		(void) sprintf(filename, "%s%s", path, suffix);
+    if (make_db_filename(filename, limit, path)
+	&& (capdbp = _nc_db_open(filename, FALSE)) != 0) {
 
-	    if ((capdbp = _nc_db_open(filename, FALSE)) != 0) {
-		DBT key, data;
-		int reccnt = 0;
-		char *save = strdup(name);
+	DBT key, data;
+	int reccnt = 0;
+	char *save = strdup(name);
 
-		memset(&key, 0, sizeof(key));
-		key.data = save;
-		key.size = strlen(save);
+	memset(&key, 0, sizeof(key));
+	key.data = save;
+	key.size = strlen(save);
 
-		/*
-		 * This lookup could return termcap data, which we do not want. 
-		 * We are looking for compiled (binary) terminfo data.
-		 *
-		 * cgetent uses a two-level lookup.  On the first it uses the
-		 * given name to return a record containing only the aliases
-		 * for an entry.  On the second (using that list of aliases as
-		 * a key), it returns the content of the terminal description. 
-		 * We expect second lookup to return data beginning with the
-		 * same set of aliases.
-		 *
-		 * For compiled terminfo, the list of aliases in the second
-		 * case will be null-terminated.  A termcap entry will not be,
-		 * and will run on into the description.  So we can easily
-		 * distinguish between the two (source/binary) by checking the
-		 * lengths.
-		 */
-		while (_nc_db_get(capdbp, &key, &data) == 0) {
-		    int used = data.size - 1;
-		    char *have = (char *) data.data;
+	/*
+	 * This lookup could return termcap data, which we do not want.  We are
+	 * looking for compiled (binary) terminfo data.
+	 *
+	 * cgetent uses a two-level lookup.  On the first it uses the given
+	 * name to return a record containing only the aliases for an entry. 
+	 * On the second (using that list of aliases as a key), it returns the
+	 * content of the terminal description.  We expect second lookup to
+	 * return data beginning with the same set of aliases.
+	 *
+	 * For compiled terminfo, the list of aliases in the second case will
+	 * be null-terminated.  A termcap entry will not be, and will run on
+	 * into the description.  So we can easily distinguish between the two
+	 * (source/binary) by checking the lengths.
+	 */
+	while (_nc_db_get(capdbp, &key, &data) == 0) {
+	    int used = data.size - 1;
+	    char *have = (char *) data.data;
 
-		    if (*have++ == 0) {
-			if (data.size > key.size
-			    && IS_TIC_MAGIC(have)) {
-			    code = _nc_read_termtype(tp, have, used);
-			    if (code == TGETENT_NO) {
-				_nc_free_termtype(tp);
-			    }
-			}
-			break;
+	    if (*have++ == 0) {
+		if (data.size > key.size
+		    && IS_TIC_MAGIC(have)) {
+		    code = _nc_read_termtype(tp, have, used);
+		    if (code == TGETENT_NO) {
+			_nc_free_termtype(tp);
 		    }
-
-		    /*
-		     * Just in case we have a corrupt database, do not waste
-		     * time with it.
-		     */
-		    if (++reccnt >= 3)
-			break;
-
-		    /*
-		     * Prepare for the second level.
-		     */
-		    key.data = have;
-		    key.size = used;
 		}
-
-		free(save);
+		break;
 	    }
+
+	    /*
+	     * Just in case we have a corrupt database, do not waste time with
+	     * it.
+	     */
+	    if (++reccnt >= 3)
+		break;
+
+	    /*
+	     * Prepare for the second level.
+	     */
+	    key.data = have;
+	    key.size = used;
 	}
+
+	free(save);
+    } else			/* may be either filesystem or flat file */
 #endif
-#if USE_TERMCAP
-	if (code != TGETENT_YES) {
-	    code = _nc_read_termcap_entry(name, tp);
-	    sprintf(filename, "%.*s", PATH_MAX - 1, _nc_get_source());
-	}
-#endif
+    if (make_dir_filename(filename, limit, path, name)) {
+	code = _nc_read_file_entry(filename, tp);
     }
+#if USE_TERMCAP
+    if (code != TGETENT_YES) {
+	code = _nc_read_termcap_entry(name, tp);
+	sprintf(filename, "%.*s", PATH_MAX - 1, _nc_get_source());
+    }
+#endif
     return code;
 }
 #endif /* USE_DATABASE */

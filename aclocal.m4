@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.574 2011/09/10 20:31:55 tom Exp $
+dnl $Id: aclocal.m4,v 1.575 2011/09/24 16:55:29 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2696,7 +2696,7 @@ ifdef([AC_FUNC_FSEEKO],[
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LDFLAGS_STATIC version: 9 updated: 2011/07/02 15:36:04
+dnl CF_LDFLAGS_STATIC version: 10 updated: 2011/09/24 12:51:48
 dnl -----------------
 dnl Check for compiler/linker flags used to temporarily force usage of static
 dnl libraries.  This depends on the compiler and platform.  Use this to help
@@ -2767,7 +2767,17 @@ EOF
 int cf_ldflags_static(FILE *fp);
 ],[
 	return cf_ldflags_static(stdin);
-],[cf_ldflags_static=yes],[cf_ldflags_static=no])
+],[
+	# some linkers simply ignore the -dynamic
+	case x`file conftest$ac_exeext 2>/dev/null` in #(vi
+	*static*) # (vi
+		cf_ldflags_static=no
+		;;
+	*)
+		cf_ldflags_static=yes
+		;;
+	esac
+],[cf_ldflags_static=no])
 
 	rm -f libconftest.*
 	LIBS="$cf_save_LIBS"

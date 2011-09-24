@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.525 2011/09/10 19:53:50 tom Exp $
+dnl $Id: configure.in,v 1.526 2011/09/24 14:40:59 nix Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.525 $)
+AC_REVISION($Revision: 1.526 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1723,14 +1723,17 @@ if test "$with_ticlib" != no ; then
 		TICS_DEP_SUFFIX="${TICS_NAME}${DFT_DEP_SUFFIX}"
 		TICS_LIB_SUFFIX="${TICS_NAME}${LIB_SUFFIX}"
 	fi
-	TICS_ARGS="-L${LIB_DIR} -l${TICS_LIB_SUFFIX}"
+	TICS_LDFLAGS="-L${LIB_DIR}"
+	TICS_LIBS="-l${TICS_LIB_SUFFIX}"
 else
-	TICS_ARGS="-L${LIB_DIR} -l${LIB_NAME}${DFT_ARG_SUFFIX}"
+	TICS_LDFLAGS="-L${LIB_DIR}"
+	TICS_LIBS="-l${LIB_NAME}${DFT_ARG_SUFFIX}"
 fi
 AC_SUBST(TICS_ARG_SUFFIX)
 AC_SUBST(TICS_DEP_SUFFIX)
 AC_SUBST(TICS_LIB_SUFFIX)
-AC_SUBST(TICS_ARGS)
+AC_SUBST(TICS_LDFLAGS)
+AC_SUBST(TICS_LIBS)
 
 if test "$with_termlib" != no ; then
 
@@ -1752,14 +1755,16 @@ if test "$with_termlib" != no ; then
 	if test "$DFT_LWR_MODEL" = "libtool"; then
 		TEST_ARGS="${TEST_DEPS}"
 		TEST_ARG2="${TEST_DEP2}"
-		TINFO_ARGS="-L${LIB_DIR} $TEST_ARGS"
+		TINFO_LDFLAGS="-L${LIB_DIR}"
+		TINFO_LIBS="$TEST_ARGS"
 		TICS_LIST="$SHLIB_LIST $TEST_ARGS"
 		SHLIB_LIST="${SHLIB_LIST} $TEST_ARGS"
 	else
 		TEST_ARGS="-l${TINFO_ARG_SUFFIX}"
 		TEST_ARG2="-l${TINFO_ARG_SUFFIX}"
 		TICS_LIST="$SHLIB_LIST -l${TINFO_LIB_SUFFIX}"
-		TINFO_ARGS="-L${LIB_DIR} $TEST_ARGS"
+		TINFO_LDFLAGS="-L${LIB_DIR}"
+		TINFO_LIBS="$TEST_ARGS"
 		SHLIB_LIST="$SHLIB_LIST -l${TINFO_LIB_SUFFIX}"
 	fi
 else
@@ -1773,7 +1778,8 @@ else
 		TICS_LIST="$SHLIB_LIST"
 	fi
 
-	TINFO_ARGS="-L${LIB_DIR} -l${LIB_NAME}${DFT_ARG_SUFFIX}"
+	TINFO_LDFLAGS="-L${LIB_DIR}"
+	TINFO_LIBS="-l${LIB_NAME}${DFT_ARG_SUFFIX}"
 fi
 
 if test "$DFT_LWR_MODEL" = shared ; then
@@ -1788,7 +1794,8 @@ fi
 AC_SUBST(TINFO_ARG_SUFFIX)
 AC_SUBST(TINFO_DEP_SUFFIX)
 AC_SUBST(TINFO_LIB_SUFFIX)
-AC_SUBST(TINFO_ARGS)
+AC_SUBST(TINFO_LDFLAGS)
+AC_SUBST(TINFO_LIBS)
 
 if test "$with_dlsym" = yes ; then
 	CF_REMOVE_LIB(TICS_LIST,$TICS_LIST,dl)
@@ -1799,8 +1806,8 @@ if test "$DFT_LWR_MODEL" = "libtool"; then
 fi
 
 # needed for Ada95
-TINFO_ARGS2=`echo "$TINFO_ARGS" | sed -e 's,-L\.\./,-L../../,'`
-AC_SUBST(TINFO_ARGS2)
+TINFO_LDFLAGS2=`echo "$TINFO_LDFLAGS" | sed -e 's,-L\.\./,-L../../,'`
+AC_SUBST(TINFO_LDFLAGS2)
 
 case $DFT_LWR_MODEL in
 normal|debug|profile)
