@@ -44,7 +44,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.152 2011/08/06 17:41:36 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.153 2011/09/26 23:50:46 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -554,7 +554,10 @@ main(int argc, char *argv[])
 	switch (this_opt) {
 	case 'K':
 	    _nc_strict_bsd = 1;
-	    /* FALLTHRU */
+	    /* the initial version of -K in 20110730 fell-thru here, but the
+	     * same flag is useful when reading sources -TD
+	     */
+	    break;
 	case 'C':
 	    capdump = TRUE;
 	    outform = F_TERMCAP;

@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.82 2011/08/13 00:20:03 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.84 2011/09/26 22:52:50 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -73,7 +73,7 @@ get_termpath(void)
 
     if (!use_terminfo_vars() || (result = getenv("TERMPATH")) == 0)
 	result = TERMPATH;
-    T(("TERMPATH is %s", result));
+    TR(TRACE_DATABASE, ("TERMPATH is %s", result));
     return result;
 }
 
@@ -383,7 +383,14 @@ _nc_getent(
 			c = *bp++;
 			if (c == '\n') {
 			    lineno++;
-			    if (rp == record || *(rp - 1) != '\\')
+			    /*
+			     * Unlike BSD 4.3, this ignores a backslash at the
+			     * end of a comment-line.  That makes it consistent
+			     * with the rest of ncurses -TD
+			     */
+			    if (rp == record
+				|| *record == '#'
+				|| *(rp - 1) != '\\')
 				break;
 			}
 			*rp++ = c;
@@ -939,7 +946,7 @@ add_tc(char *termpaths[], char *path, int count)
     if (count < MAXPATHS
 	&& _nc_access(path, R_OK) == 0) {
 	termpaths[count++] = path;
-	T(("Adding termpath %s", path));
+	TR(TRACE_DATABASE, ("Adding termpath %s", path));
     }
     termpaths[count] = 0;
     if (save != 0)
@@ -963,13 +970,13 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
     static char *source;
     static int lineno;
 
-    T(("read termcap entry for %s", tn));
+    TR(TRACE_DATABASE, ("read termcap entry for %s", tn));
 
     if (strlen(tn) == 0
 	|| strcmp(tn, ".") == 0
 	|| strcmp(tn, "..") == 0
 	|| _nc_pathlast(tn) != 0) {
-	T(("illegal or missing entry name '%s'", tn));
+	TR(TRACE_DATABASE, ("illegal or missing entry name '%s'", tn));
 	return TGETENT_NO;
     }
 
@@ -1082,7 +1089,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
 	    }
 	}
 	if (omit) {
-	    T(("Path %s is a duplicate", termpaths[j]));
+	    TR(TRACE_DATABASE, ("Path %s is a duplicate", termpaths[j]));
 	    for (k = j + 1; k < filecount; k++) {
 		termpaths[k - 1] = termpaths[k];
 		test_stat[k - 1] = test_stat[k];
@@ -1107,7 +1114,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
 
 	for (i = 0; i < filecount; i++) {
 
-	    T(("Looking for %s in %s", tn, termpaths[i]));
+	    TR(TRACE_DATABASE, ("Looking for %s in %s", tn, termpaths[i]));
 	    if (_nc_access(termpaths[i], R_OK) == 0
 		&& (fp = fopen(termpaths[i], "r")) != (FILE *) 0) {
 		_nc_set_source(termpaths[i]);

@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.75 2011/08/13 19:37:17 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.77 2011/10/01 22:43:51 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -103,9 +103,8 @@ skip_index(char *name)
 }
 #endif
 
-NCURSES_EXPORT(bool)
-_nc_entry_match(char *n1, char *n2)
-/* do any of the aliases in a pair of terminal names match? */
+static bool
+check_collisions(char *n1, char *n2, int counter)
 {
     char *pstart, *qstart, *pend, *qend;
     char nc1[MAX_NAME_SIZE + 2];
@@ -121,13 +120,89 @@ _nc_entry_match(char *n1, char *n2)
     }
 #endif
 
-    for (pstart = n1; (pend = strchr(pstart, '|')); pstart = pend + 1)
-	for (qstart = n2; (qend = strchr(qstart, '|')); qstart = qend + 1)
+    for (pstart = n1; (pend = strchr(pstart, '|')); pstart = pend + 1) {
+	for (qstart = n2; (qend = strchr(qstart, '|')); qstart = qend + 1) {
 	    if ((pend - pstart == qend - qstart)
-		&& memcmp(pstart, qstart, (size_t) (pend - pstart)) == 0)
+		&& memcmp(pstart, qstart, (size_t) (pend - pstart)) == 0) {
+		if (counter > 0)
+		    (void) fprintf(stderr, "Name collision '%.*s' between\n",
+				   (int) (pend - pstart), pstart);
 		return (TRUE);
+	    }
+	}
+    }
 
     return (FALSE);
+}
+
+static char *
+next_name(char *name)
+{
+    if (*name != '\0')
+	++name;
+    return name;
+}
+
+static char *
+name_ending(char *name)
+{
+    if (*name == '\0') {
+	name = 0;
+    } else {
+	while (*name != '\0' && *name != '|')
+	    ++name;
+    }
+    return name;
+}
+
+/*
+ * Essentially, find the conflict reported in check_collisions() and remove
+ * it from the second name, unless that happens to be the last alias.
+ */
+static bool
+remove_collision(char *n1, char *n2)
+{
+    char *p1 = n1;
+    char *p2 = n2;
+    char *pstart, *qstart, *pend, *qend;
+    bool removed = FALSE;
+
+#if USE_TERMCAP && NCURSES_XNAMES
+    if ((_nc_syntax == SYN_TERMCAP) && _nc_user_definable) {
+	p1 = n1 = skip_index(n1);
+	p2 = n2 = skip_index(n2);
+    }
+#else
+    (void) p1;
+#endif
+
+    for (pstart = n1; (pend = name_ending(pstart)); pstart = next_name(pend)) {
+	for (qstart = n2; (qend = name_ending(qstart)); qstart = next_name(qend)) {
+	    if ((pend - pstart == qend - qstart)
+		&& memcmp(pstart, qstart, (size_t) (pend - pstart)) == 0) {
+		if (qstart != p2 || *qend == '|') {
+		    if (*qend == '|')
+			++qend;
+		    while ((*qstart++ = *qend++) != '\0') ;
+		    fprintf(stderr, "...now\t%s\n", p2);
+		} else {
+		    fprintf(stderr, "Cannot remove alias '%.*s'\n",
+			    (int) (qend - qstart), qstart);
+		}
+		removed = TRUE;
+		break;
+	    }
+	}
+    }
+
+    return removed;
+}
+
+/* do any of the aliases in a pair of terminal names match? */
+NCURSES_EXPORT(bool)
+_nc_entry_match(char *n1, char *n2)
+{
+    return check_collisions(n1, n2, 0);
 }
 
 /****************************************************************************
@@ -215,19 +290,19 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 
 	for_entry_list(rp) {
 	    if (qp > rp
-		&& _nc_entry_match(qp->tterm.term_names, rp->tterm.term_names)) {
-		matchcount++;
-		if (matchcount == 1) {
-		    (void) fprintf(stderr, "Name collision between %s",
-				   _nc_first_name(qp->tterm.term_names));
-		    multiples++;
+		&& check_collisions(qp->tterm.term_names,
+				    rp->tterm.term_names,
+				    matchcount + 1)) {
+		if (!matchcount++) {
+		    (void) fprintf(stderr, "\t%s\n", rp->tterm.term_names);
 		}
-		if (matchcount >= 1)
-		    (void) fprintf(stderr, " %s", _nc_first_name(rp->tterm.term_names));
+		(void) fprintf(stderr, "and\t%s\n", qp->tterm.term_names);
+		if (!remove_collision(rp->tterm.term_names,
+				      qp->tterm.term_names)) {
+		    ++multiples;
+		}
 	    }
 	}
-	if (matchcount >= 1)
-	    (void) putc('\n', stderr);
     }
     if (multiples > 0)
 	return (FALSE);

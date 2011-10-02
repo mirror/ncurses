@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.74 2011/08/13 14:34:56 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.75 2011/09/26 22:44:30 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -351,7 +351,7 @@ NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 #endif
 	if (j >= 0) {
 	    result = tp->Strings[j];
-	    TR(TRACE_DATABASE, ("found match : %s", _nc_visbuf(result)));
+	    TR(TRACE_DATABASE, ("found match %d: %s", j, _nc_visbuf(result)));
 	    /* setupterm forces canceled strings to null */
 	    if (VALID_STRING(result)) {
 		if (result == exit_attribute_mode

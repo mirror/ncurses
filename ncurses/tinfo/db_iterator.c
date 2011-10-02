@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2007,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,13 +36,142 @@
 
 #include <curses.priv.h>
 
+#include <time.h>
 #include <tic.h>
 
-MODULE_ID("$Id: db_iterator.c,v 1.10 2011/09/24 23:44:58 tom Exp $")
+#if USE_HASHED_DB
+#include <hashed_db.h>
+#endif
+
+MODULE_ID("$Id: db_iterator.c,v 1.18 2011/09/26 09:52:00 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
 #define TicDirectory     _nc_globals.tic_directory
+
+/*
+ * FIXME: need a no-leaks entrypoint.
+ */
+static char *my_blob;		/* string-heap for my_list[] */
+static char **my_list;		/* distinct places to look for data */
+static int my_size;		/* length of my_list[] */
+static time_t my_time;		/* cache last updated */
+static struct {
+    const char *name;
+    char *value;
+} my_vars[dbdLAST];
+
+static void
+add_to_blob(const char *text)
+{
+    if (*text != '\0') {
+	char *last = my_blob + strlen(my_blob);
+	if (last != my_blob)
+	    *last++ = ':';
+	strcpy(last, text);
+    }
+}
+
+static bool
+check_existence(const char *name, struct stat *sb)
+{
+    bool result = FALSE;
+
+    if (stat(name, sb) == 0 && sb->st_size) {
+	result = TRUE;
+    }
+#if USE_HASHED_DB
+    else if (strlen(name) < PATH_MAX - sizeof(DBM_SUFFIX)) {
+	char temp[PATH_MAX];
+	sprintf(temp, "%s%s", name, DBM_SUFFIX);
+	if (stat(temp, sb) == 0 && sb->st_size) {
+	    result = TRUE;
+	}
+    }
+#endif
+
+    return result;
+}
+
+/*
+ * Store the latest value of an environment variable in my_vars[] so we can
+ * detect if one changes, invalidating the cached search-list.
+ */
+static bool
+update_getenv(const char *name, DBDIRS which)
+{
+    bool result = FALSE;
+    char *value = getenv(name);
+
+    if (which < dbdLAST) {
+	if (my_vars[which].name == 0 || strcmp(my_vars[which].name, name)) {
+	    FreeIfNeeded(my_vars[which].value);
+	    my_vars[which].name = name;
+	    my_vars[which].value = value;
+	    result = TRUE;
+	} else if ((my_vars[which].value != 0) ^ (value != 0)) {
+	    FreeIfNeeded(my_vars[which].value);
+	    my_vars[which].value = value;
+	    result = TRUE;
+	} else if (value != 0 && strcmp(value, my_vars[which].value)) {
+	    FreeIfNeeded(my_vars[which].value);
+	    my_vars[which].value = value;
+	    result = TRUE;
+	}
+    }
+    return result;
+}
+
+static char *
+cache_getenv(const char *name, DBDIRS which)
+{
+    char *result = 0;
+
+    (void) update_getenv(name, which);
+    if (which < dbdLAST) {
+	result = my_vars[which].value;
+    }
+    return result;
+}
+
+/*
+ * The cache expires if at least a second has passed since the initial lookup,
+ * or if one of the environment variables changed.
+ *
+ * Only a few applications use multiple lookups of terminal entries, seems that
+ * aside from bulk I/O such as tic and toe, that leaves interactive programs
+ * which should not be modifying the terminal databases in a way that would
+ * invalidate the search-list.
+ *
+ * The "1-second" is to allow for user-directed changes outside the program.
+ */
+static bool
+cache_expired(void)
+{
+    bool result = FALSE;
+    time_t now = time((time_t *) 0);
+
+    if (now > my_time) {
+	result = TRUE;
+    } else {
+	DBDIRS n;
+	for (n = 0; n < dbdLAST; ++n) {
+	    if (my_vars[n].name != 0
+		&& update_getenv(my_vars[n].name, n)) {
+		result = TRUE;
+		break;
+	    }
+	}
+    }
+    return result;
+}
+
+static void
+free_cache(void)
+{
+    FreeAndNull(my_blob);
+    FreeAndNull(my_list);
+}
 
 /*
  * Record the "official" location of the terminfo directory, according to
@@ -51,6 +180,7 @@ MODULE_ID("$Id: db_iterator.c,v 1.10 2011/09/24 23:44:58 tom Exp $")
 NCURSES_EXPORT(const char *)
 _nc_tic_dir(const char *path)
 {
+    T(("_nc_tic_dir %s", NonNull(path)));
     if (!KeepTicDirectory) {
 	if (path != 0) {
 	    TicDirectory = path;
@@ -77,60 +207,15 @@ _nc_keep_tic_dir(const char *path)
 }
 
 /*
- * Process the list of :-separated directories, looking for the terminal type.
- * We don't use strtok because it does not show us empty tokens.
- */
-#define ThisDbList	_nc_globals.dbi_list
-#define ThisDbSize	_nc_globals.dbi_size
-
-/*
  * Cleanup.
  */
 NCURSES_EXPORT(void)
 _nc_last_db(void)
 {
-    if (ThisDbList != 0) {
-	FreeAndNull(ThisDbList);
+    if (my_blob != 0 && cache_expired()) {
+	free_cache();
     }
-    ThisDbSize = 0;
 }
-
-/* The TERMINFO_DIRS value, if defined by the configure script, begins with a
- * ":", which will be interpreted as TERMINFO.
- */
-static const char *
-next_list_item(const char *source, int *offset)
-{
-    if (source != 0) {
-	FreeIfNeeded(ThisDbList);
-	ThisDbList = strdup(source);
-	ThisDbSize = (int) strlen(source);
-    }
-
-    if (ThisDbList != 0 && ThisDbSize && *offset < ThisDbSize) {
-	static char system_db[] = TERMINFO;
-	char *result = ThisDbList + *offset;
-	char *marker = strchr(result, NCURSES_PATHSEP);
-
-	/*
-	 * Put a null on the marker if a separator was found.  Set the offset
-	 * to the next position after the marker so we can call this function
-	 * again, using the data at the offset.
-	 */
-	if (marker == 0) {
-	    *offset += (int) strlen(result);
-	} else {
-	    *marker++ = 0;
-	    *offset = (int) (marker - ThisDbList);
-	}
-	if (*result == 0 && result != (ThisDbList + ThisDbSize))
-	    result = system_db;
-	return result;
-    }
-    return 0;
-}
-
-#define NEXT_DBD(var, offset) next_list_item((*offset == 0) ? var : 0, offset)
 
 /*
  * This is a simple iterator which allows the caller to step through the
@@ -141,80 +226,20 @@ NCURSES_EXPORT(const char *)
 _nc_next_db(DBDIRS * state, int *offset)
 {
     const char *result;
-    char *envp;
 
-    while (*state < dbdLAST) {
-	DBDIRS next = (DBDIRS) ((int) (*state) + 1);
-
+    (void) offset;
+    if ((int) *state < my_size
+	&& my_list != 0
+	&& my_list[*state] != 0) {
+	result = my_list[*state];
+	(*state)++;
+    } else {
 	result = 0;
-
-	switch (*state) {
-	case dbdTIC:
-	    if (HaveTicDirectory)
-		result = _nc_tic_dir(0);
-	    break;
-#if USE_DATABASE
-	case dbdEnvOnce:
-	    if (use_terminfo_vars()) {
-		if ((envp = getenv("TERMINFO")) != 0)
-		    result = _nc_tic_dir(envp);
-	    }
-	    break;
-	case dbdHome:
-	    if (use_terminfo_vars()) {
-		result = _nc_home_terminfo();
-	    }
-	    break;
-	case dbdEnvList:
-	    if (use_terminfo_vars()) {
-		if ((result = NEXT_DBD(getenv("TERMINFO_DIRS"), offset)) != 0)
-		    next = *state;
-	    }
-	    break;
-	case dbdCfgList:
-#ifdef TERMINFO_DIRS
-	    if ((result = NEXT_DBD(TERMINFO_DIRS, offset)) != 0)
-		next = *state;
-#endif
-	    break;
-	case dbdCfgOnce:
-#ifndef TERMINFO_DIRS
-	    result = TERMINFO;
-#endif
-	    break;
-#endif /* USE_DATABASE */
-#if USE_TERMCAP
-	case dbdEnvOnce2:
-	    if (use_terminfo_vars()) {
-		if ((envp = getenv("TERMCAP")) != 0)
-		    result = _nc_tic_dir(envp);
-	    }
-	    break;
-	case dbdEnvList2:
-	    if (use_terminfo_vars()) {
-		if ((result = NEXT_DBD(getenv("TERMPATH"), offset)) != 0)
-		    next = *state;
-	    }
-	    break;
-	case dbdCfgList2:
-	    if ((result = NEXT_DBD(TERMPATH, offset)) != 0)
-		next = *state;
-	    break;
-#endif /* USE_TERMCAP */
-	case dbdLAST:
-	    break;
-	}
-	if (*state != next) {
-	    *state = next;
-	    *offset = 0;
-	    _nc_last_db();
-	}
-	if (result != 0) {
-	    T(("_nc_next_db %d %s", *state, result));
-	    return result;
-	}
     }
-    return 0;
+    if (result != 0) {
+	T(("_nc_next_db %d %s", *state, result));
+    }
+    return result;
 }
 
 NCURSES_EXPORT(void)
@@ -222,4 +247,136 @@ _nc_first_db(DBDIRS * state, int *offset)
 {
     *state = dbdTIC;
     *offset = 0;
+
+    T(("_nc_first_db"));
+
+    /* build a blob containing all of the strings we will use for a lookup
+     * table.
+     */
+    if (my_blob == 0) {
+	size_t blobsize = 0;
+	const char *values[dbdLAST];
+	struct stat *my_stat;
+	int j, k;
+
+	for (j = 0; j < dbdLAST; ++j)
+	    values[j] = 0;
+
+	/*
+	 * This is the first item in the list, and is used only when tic is
+	 * writing to the database, as a performance improvement.
+	 */
+	values[dbdTIC] = TicDirectory;
+
+#if USE_DATABASE
+#ifdef TERMINFO_DIRS
+	values[dbdCfgList] = TERMINFO_DIRS;
+#endif
+#ifdef TERMINFO
+	values[dbdCfgOnce] = TERMINFO;
+#endif
+#endif
+
+#if USE_TERMCAP
+	values[dbdCfgList2] = TERMPATH;
+#endif
+
+	if (use_terminfo_vars()) {
+#if USE_DATABASE
+	    values[dbdEnvOnce] = cache_getenv("TERMINFO", dbdEnvOnce);
+	    values[dbdHome] = _nc_home_terminfo();
+	    (void) cache_getenv("HOME", dbdHome);
+	    values[dbdEnvList] = cache_getenv("TERMINFO_DIRS", dbdEnvList);
+#endif
+#if USE_TERMCAP
+	    values[dbdEnvOnce2] = cache_getenv("TERMCAP", dbdEnvOnce2);
+	    values[dbdEnvList2] = cache_getenv("TERMPATH", dbdEnvList2);
+#endif /* USE_TERMCAP */
+	}
+
+	for (j = 0; j < dbdLAST; ++j) {
+	    if (values[j] == 0)
+		values[j] = "";
+	    blobsize += 2 + strlen(values[j]);
+	}
+
+	my_blob = malloc(blobsize);
+	if (my_blob != 0) {
+	    *my_blob = '\0';
+	    for (j = 0; j < dbdLAST; ++j) {
+		add_to_blob(values[j]);
+	    }
+
+	    /* Now, build an array which will be pointers to the distinct
+	     * strings in the blob.
+	     */
+	    blobsize = 2;
+	    for (j = 0; my_blob[j] != '\0'; ++j) {
+		if (my_blob[j] == ':')
+		    ++blobsize;
+	    }
+	    my_list = typeCalloc(char *, blobsize);
+	    my_stat = typeCalloc(struct stat, blobsize);
+	    if (my_list != 0 && my_stat != 0) {
+		k = 0;
+		my_list[k++] = my_blob;
+		for (j = 0; my_blob[j] != '\0'; ++j) {
+		    if (my_blob[j] == ':') {
+			my_blob[j] = '\0';
+			my_list[k++] = &my_blob[j + 1];
+		    }
+		}
+
+		/*
+		 * Eliminate duplicates from the list.
+		 */
+		for (j = 0; my_list[j] != 0; ++j) {
+#ifdef TERMINFO
+		    if (*my_list[j] == '\0')
+			my_list[j] = TERMINFO;
+#endif
+		    for (k = 0; k < j; ++k) {
+			if (!strcmp(my_list[j], my_list[k])) {
+			    k = --j;
+			    while ((my_list[j] = my_list[j + 1]) != 0) {
+				++j;
+			    }
+			    j = k;
+			    break;
+			}
+		    }
+		}
+
+		/*
+		 * Eliminate non-existent databases, and those that happen to
+		 * be symlinked to another location.
+		 */
+		for (j = 0; my_list[j] != 0; ++j) {
+		    bool found = check_existence(my_list[j], &my_stat[j]);
+#if HAVE_LINK
+		    if (found) {
+			for (k = 0; k < j; ++k) {
+			    if (my_stat[j].st_dev == my_stat[k].st_dev
+				&& my_stat[j].st_ino == my_stat[k].st_ino) {
+				found = FALSE;
+				break;
+			    }
+			}
+		    }
+#endif
+		    if (!found) {
+			k = j;
+			while ((my_list[k] = my_list[k + 1]) != 0) {
+			    ++k;
+			}
+			--j;
+		    }
+		}
+		my_size = j;
+		my_time = time((time_t *) 0);
+	    } else {
+		FreeAndNull(my_blob);
+	    }
+	}
+    }
 }

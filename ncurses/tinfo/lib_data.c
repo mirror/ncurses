@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.61 2010/05/15 22:06:56 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.62 2011/09/26 09:48:08 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -125,7 +125,7 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
 
     FALSE,			/* have_tic_directory */
     FALSE,			/* keep_tic_directory */
-    TERMINFO,			/* tic_directory */
+    0,				/* tic_directory */
 
     NULL,			/* dbi_list */
     0,				/* dbi_size */

@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.112 2011/09/24 23:47:45 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.116 2011/09/27 00:35:20 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -328,17 +328,18 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 			    ext_str_limit, ptr->ext_str_table + base);
 	}
 
-	T(("...done reading terminfo bool %d(%d) num %d(%d) str %d(%d)",
-	   ptr->num_Booleans, ptr->ext_Booleans,
-	   ptr->num_Numbers, ptr->ext_Numbers,
-	   ptr->num_Strings, ptr->ext_Strings));
+	TR(TRACE_DATABASE,
+	   ("...done reading terminfo bool %d(%d) num %d(%d) str %d(%d)",
+	    ptr->num_Booleans, ptr->ext_Booleans,
+	    ptr->num_Numbers, ptr->ext_Numbers,
+	    ptr->num_Strings, ptr->ext_Strings));
 
 	TR(TRACE_DATABASE, ("extend: num_Booleans:%d", ptr->num_Booleans));
     } else
 #endif /* NCURSES_XNAMES */
     {
-	T(("...done reading terminfo bool %d num %d str %d",
-	   bool_count, num_count, str_count));
+	TR(TRACE_DATABASE, ("...done reading terminfo bool %d num %d str %d",
+			    bool_count, num_count, str_count));
 #if NCURSES_XNAMES
 	TR(TRACE_DATABASE, ("normal: num_Booleans:%d", ptr->num_Booleans));
 #endif
@@ -373,13 +374,13 @@ _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
 
     if (_nc_access(filename, R_OK) < 0
 	|| (fp = fopen(filename, "rb")) == 0) {
-	T(("cannot open terminfo %s (errno=%d)", filename, errno));
+	TR(TRACE_DATABASE, ("cannot open terminfo %s (errno=%d)", filename, errno));
 	code = TGETENT_NO;
     } else {
 	if ((limit = (int) fread(buffer, sizeof(char), sizeof(buffer), fp))
 	    > 0) {
 
-	    T(("read terminfo %s", filename));
+	    TR(TRACE_DATABASE, ("read terminfo %s", filename));
 	    if ((code = _nc_read_termtype(ptr, buffer, limit)) == TGETENT_NO) {
 		_nc_free_termtype(ptr);
 	    }
@@ -427,12 +428,18 @@ make_dir_filename(char *filename,
 		  const char *const path,
 		  const char *name)
 {
-    unsigned need = (unsigned) (LEAF_LEN + 3 + strlen(path) + strlen(name));
     bool result = FALSE;
 
-    if (need <= limit) {
-	(void) sprintf(filename, "%s/" LEAF_FMT "/%s", path, *name, name);
-	result = TRUE;
+#if USE_TERMCAP
+    if (_nc_is_dir_path(path))
+#endif
+    {
+	unsigned need = (unsigned) (LEAF_LEN + 3 + strlen(path) + strlen(name));
+
+	if (need <= limit) {
+	    (void) sprintf(filename, "%s/" LEAF_FMT "/%s", path, *name, name);
+	    result = TRUE;
+	}
     }
     return result;
 }
@@ -544,14 +551,16 @@ _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
 	|| strcmp(name, "..") == 0
 	|| _nc_pathlast(name) != 0
 	|| strchr(name, NCURSES_PATHSEP) != 0) {
-	T(("illegal or missing entry name '%s'", name));
+	TR(TRACE_DATABASE, ("illegal or missing entry name '%s'", name));
     } else {
 #if USE_DATABASE
-	DBDIRS state = dbdTIC;
-	int offset = 0;
+	DBDIRS state;
+	int offset;
 	const char *path;
 
+	_nc_first_db(&state, &offset);
 	while ((path = _nc_next_db(&state, &offset)) != 0) {
+	    TR(TRACE_DATABASE, ("_nc_read_tic_entry path=%s, name=%s", path, name));
 	    code = _nc_read_tic_entry(filename, PATH_MAX, path, name, tp);
 	    if (code == TGETENT_YES) {
 		_nc_last_db();
