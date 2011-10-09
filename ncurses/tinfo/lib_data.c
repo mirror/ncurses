@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.62 2011/09/26 09:48:08 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.63 2011/10/08 21:03:29 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -141,6 +141,12 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
     TGETENT_0s,			/* tgetent_cache */
     0,				/* tgetent_index */
     0,				/* tgetent_sequence */
+
+    0,				/* dbd_blob */
+    0,				/* dbd_list */
+    0,				/* dbd_size */
+    0,				/* dbd_time */
+    { { 0, 0 } },		/* dbd_vars */
 
 #ifndef USE_SP_WINDOWLIST
     0,				/* _nc_windowlist */

@@ -37,7 +37,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.17 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.18 2011/10/08 20:32:26 tom Exp $")
 
 /****************************************************************************
  *
@@ -128,6 +128,7 @@ _nc_leaks_tinfo(void)
     _nc_free_entries(_nc_head);
     _nc_get_type(0);
     _nc_first_name(0);
+    _nc_db_iterator_leaks();
     _nc_keyname_leaks();
 #if BROKEN_LINKER || USE_REENTRANT
     _nc_names_leaks();

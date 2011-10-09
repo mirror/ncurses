@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1795 2011/09/26 23:48:17 tom Exp $
+-- $Id: NEWS,v 1.1798 2011/10/08 21:06:49 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20111008
+	+ moved static data from db_iterator.c to lib_data.c
+	+ modify db_iterator.c for memory-leak checking, fix one leak.
+	+ modify misc/gen-pkgconfig.in to use Requires.private for the parts
+	  of ncurses rather than Requires, as well as Libs.private for the
+	  other library dependencies (prompted by Debian #644728).
 
 20111001
 	+ modify tic "-K" option to only set the strict-flag rather than force

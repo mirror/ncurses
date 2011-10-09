@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.39 2011/06/26 09:31:32 tom Exp $ */
+/* $Id: term_entry.h,v 1.40 2011/10/08 21:00:41 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -46,6 +46,24 @@ extern "C" {
 #endif
 
 #include <term.h>
+
+/* db_iterator.c */
+typedef enum {
+    dbdTIC = 0,
+#if USE_DATABASE
+    dbdEnvOnce,
+    dbdHome,
+    dbdEnvList,
+    dbdCfgList,
+    dbdCfgOnce,
+#endif
+#if USE_TERMCAP
+    dbdEnvOnce2,
+    dbdEnvList2,
+    dbdCfgList2,
+#endif
+    dbdLAST
+} DBDIRS;
 
 #define MAX_USES	32
 #define MAX_CROSSLINKS	16

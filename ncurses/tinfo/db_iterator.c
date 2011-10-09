@@ -43,23 +43,16 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.18 2011/09/26 09:52:00 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.20 2011/10/08 20:55:38 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
 #define TicDirectory     _nc_globals.tic_directory
-
-/*
- * FIXME: need a no-leaks entrypoint.
- */
-static char *my_blob;		/* string-heap for my_list[] */
-static char **my_list;		/* distinct places to look for data */
-static int my_size;		/* length of my_list[] */
-static time_t my_time;		/* cache last updated */
-static struct {
-    const char *name;
-    char *value;
-} my_vars[dbdLAST];
+#define my_blob          _nc_globals.dbd_blob
+#define my_list          _nc_globals.dbd_list
+#define my_size          _nc_globals.dbd_size
+#define my_time          _nc_globals.dbd_time
+#define my_vars          _nc_globals.dbd_vars
 
 static void
 add_to_blob(const char *text)
@@ -377,6 +370,18 @@ _nc_first_db(DBDIRS * state, int *offset)
 	    } else {
 		FreeAndNull(my_blob);
 	    }
+	    free(my_stat);
 	}
     }
 }
+
+#if NO_LEAKS
+void
+_nc_db_iterator_leaks(void)
+{
+    if (my_blob != 0)
+	FreeAndNull(my_blob);
+    if (my_list != 0)
+	FreeAndNull(my_list);
+}
+#endif

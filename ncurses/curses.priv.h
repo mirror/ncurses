@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.483 2011/09/17 19:08:20 tom Exp $
+ * $Id: curses.priv.h,v 1.485 2011/10/08 21:00:56 tom Exp $
  *
  *	curses.priv.h
  *
@@ -784,6 +784,11 @@ struct DriverTCB; /* Terminal Control Block forward declaration */
 #define INIT_TERM_DRIVER()	/* nothing */
 #endif
 
+typedef struct {
+    const char *name;
+    char *value;
+} ITERATOR_VARS;
+
 /*
  * Global data which is not specific to a screen.
  */
@@ -815,6 +820,12 @@ typedef struct {
 	TGETENT_CACHE	tgetent_cache[TGETENT_MAX];
 	int		tgetent_index;
 	long		tgetent_sequence;
+
+	char		*dbd_blob;	/* string-heap for dbd_list[] */
+	char		**dbd_list;	/* distinct places to look for data */
+	int		dbd_size;	/* length of dbd_list[] */
+	time_t		dbd_time;	/* cache last updated */
+	ITERATOR_VARS	dbd_vars[dbdLAST];
 
 #ifndef USE_SP_WINDOWLIST
 	WINDOWLIST	*_nc_windowlist;
@@ -1945,6 +1956,7 @@ extern NCURSES_EXPORT(void) _nc_captoinfo_leaks(void);
 extern NCURSES_EXPORT(void) _nc_codes_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_captab_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_scan_leaks(void);
+extern NCURSES_EXPORT(void) _nc_db_iterator_leaks(void);
 extern NCURSES_EXPORT(void) _nc_keyname_leaks(void);
 extern NCURSES_EXPORT(void) _nc_names_leaks(void);
 extern NCURSES_EXPORT(void) _nc_tgetent_leaks(void);
