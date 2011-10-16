@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.26 2010/12/04 18:38:55 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.27 2011/10/15 21:11:24 tom Exp $
 .TH curs_termcap 3X ""
 .na
 .hy 0
@@ -77,9 +77,37 @@ can only be used to query the capabilities of entries for which a
 terminfo entry has been compiled.
 .PP
 The \fBtgetent\fR routine loads the entry for \fIname\fR.
-It returns 1 on success, 0 if there is no such entry, and \-1 if the
-terminfo database could not be found.
+It returns:
+.RS 3
+.TP 3
+1
+on success,
+.TP 3
+0
+if there is no such entry
+(or that it is a generic type, having too little information for curses
+applications to run), and
+.TP 3
+\-1
+if the terminfo database could not be found.
+.RE
+.PP
+This differs from the \fItermcap\fP library in two ways:
+.RS 3
+.TP 3
+-
 The emulation ignores the buffer pointer \fIbp\fR.
+The \fItermcap\fP library would store a copy of the terminal
+description in the area referenced by this pointer.
+However, ncurses stores its terminal descriptions in compiled
+binary form, which is not the same thing.
+.TP 3
+-
+There is a difference in return codes.
+The \fItermcap\fP library does not check if the terminal
+description is marked with the \fIgeneric\fP capability,
+or if the terminal description has cursor-addressing.
+.RE
 .PP
 The \fBtgetflag\fR routine gets the boolean entry for \fIid\fR,
 or zero if it is not available.

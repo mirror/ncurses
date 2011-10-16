@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.159 2011/09/10 20:19:24 tom Exp $
+-- $Id: INSTALL,v 1.160 2011/10/15 23:32:49 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -407,13 +407,14 @@ SUMMARY OF CONFIGURE OPTIONS:
 
     --disable-tic-depends
 	When building shared libraries, normally the tic library is linked to
-	depend upon the ncurses library (and in turn, on the term-library if
-	the --with-termlib option was given).  The tic- and term-libraries
-	ABI does not depend on the --enable-widec option. Some packagers have
-	used this to reduce the number of library files which are packaged
-	by using only one copy of those libraries.  To make this work properly,
+	depend upon the ncurses library (or equivalently, on the tinfo-library
+	if the --with-termlib option was given).  The tic- and tinfo-library
+	ABIs do not depend on the --enable-widec option.  Some packagers have
+	used this to reduce the number of library files which are packaged by
+	using only one copy of those libraries.  To make this work properly,
 	the tic library must be built without an explicit dependency on the
-	ncurses (or ncursesw) library.  Use this configure option to do that.
+	underlying library (ncurses vs ncursesw, tinfo vs tinfow).  Use this
+	configure option to do that.
 	For example
 		configure --with-ticlib --with-shared --disable-tic-depends
 
