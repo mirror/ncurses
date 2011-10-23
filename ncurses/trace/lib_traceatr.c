@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.75 2011/05/28 22:56:56 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.76 2011/10/22 15:39:21 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -120,7 +120,7 @@ _traceattr2(int bufnum, chtype newmode)
     ;
     size_t n;
     char temp[80];
-    char *result = _nc_trace_buf(bufnum, BUFSIZ);
+    char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
 
     if (result != 0) {
 	unsigned save_nc_tracing = _nc_tracing;
@@ -271,7 +271,7 @@ NCURSES_EXPORT(char *)
 _tracechtype2(int bufnum, chtype ch)
 {
     const char *found;
-    char *result = _nc_trace_buf(bufnum, BUFSIZ);
+    char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
 
     if (result != 0) {
 	strcpy(result, l_brace);
@@ -311,7 +311,7 @@ _nc_retrace_chtype(chtype code)
 NCURSES_EXPORT(char *)
 _tracecchar_t2(int bufnum, const cchar_t *ch)
 {
-    char *result = _nc_trace_buf(bufnum, BUFSIZ);
+    char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
     attr_t attr;
     const char *found;
 

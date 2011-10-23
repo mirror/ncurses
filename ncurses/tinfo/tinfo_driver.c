@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.15 2011/08/13 16:11:15 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.16 2011/10/22 17:50:33 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -145,7 +145,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     }
     result = TRUE;
 #if !USE_REENTRANT
-    strncpy(ttytype, termp->type.term_names, NAMESIZE - 1);
+    strncpy(ttytype, termp->type.term_names, (size_t) NAMESIZE - 1);
     ttytype[NAMESIZE - 1] = '\0';
 #endif
 
@@ -173,7 +173,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 }
 
 static int
-drv_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB, bool beepFlag)
+drv_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB, int beepFlag)
 {
     SCREEN *sp;
     int res = ERR;
@@ -271,7 +271,7 @@ drv_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB, int fg, int bg)
 
 static void
 drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
-	     bool fore,
+	     int fore,
 	     int color,
 	     NCURSES_SP_OUTC outc)
 {
@@ -457,7 +457,7 @@ drv_setsize(TERMINAL_CONTROL_BLOCK * TCB, int l, int c)
 }
 
 static int
-drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, bool setFlag, TTY * buf)
+drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 {
     SCREEN *sp = TCB->csp;
     TERMINAL *_term = (TERMINAL *) TCB;
@@ -491,7 +491,7 @@ drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, bool setFlag, TTY * buf)
 }
 
 static int
-drv_mode(TERMINAL_CONTROL_BLOCK * TCB, bool progFlag, bool defFlag)
+drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 {
     SCREEN *sp;
     TERMINAL *_term = (TERMINAL *) TCB;
@@ -622,7 +622,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
     trm = (TERMINAL *) TCB;
     sp = TCB->csp;
 
-    TCB->info.initcolor = initialize_color;
+    TCB->info.initcolor = VALID_STRING(initialize_color);
     TCB->info.canchange = can_change;
     TCB->info.hascolor = ((VALID_NUMERIC(max_colors) && VALID_NUMERIC(max_pairs)
 			   && (((set_foreground != NULL)
@@ -659,7 +659,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 #define InPalette(n)	((n) >= 0 && (n) < MAX_PALETTE)
 
 static void
-drv_initpair(TERMINAL_CONTROL_BLOCK * TCB, short pair, short f, short b)
+drv_initpair(TERMINAL_CONTROL_BLOCK * TCB, int pair, int f, int b)
 {
     SCREEN *sp;
 
@@ -706,7 +706,7 @@ default_bg(SCREEN *sp)
 
 static void
 drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
-	      short color, short r, short g, short b)
+	      int color, int r, int g, int b)
 {
     SCREEN *sp = TCB->csp;
 
@@ -720,9 +720,9 @@ drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
 
 static void
 drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
-	     short old_pair,
-	     short pair,
-	     bool reverse,
+	     int old_pair,
+	     int pair,
+	     int reverse,
 	     NCURSES_SP_OUTC outc)
 {
     SCREEN *sp = TCB->csp;
@@ -893,7 +893,7 @@ drv_hwlabel(TERMINAL_CONTROL_BLOCK * TCB, int labnum, char *text)
 }
 
 static void
-drv_hwlabelOnOff(TERMINAL_CONTROL_BLOCK * TCB, bool OnFlag)
+drv_hwlabelOnOff(TERMINAL_CONTROL_BLOCK * TCB, int OnFlag)
 {
     SCREEN *sp = TCB->csp;
 
@@ -1170,7 +1170,7 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
     if ((pthread_self) && (pthread_kill) && (pthread_equal))
 	_nc_globals.read_thread = pthread_self();
 # endif
-    n = read(sp->_ifd, &c2, 1);
+    n = read(sp->_ifd, &c2, (size_t) 1);
 #if USE_PTHREADS_EINTR
     _nc_globals.read_thread = 0;
 #endif
@@ -1219,7 +1219,7 @@ __nc_putp_flush(SCREEN *sp, const char *name, const char *value)
 }
 
 static int
-drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, bool flag)
+drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, int flag)
 {
     int ret = ERR;
     SCREEN *sp;
@@ -1245,7 +1245,7 @@ drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, bool flag)
 }
 
 static int
-drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int c, bool flag)
+drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int c, int flag)
 {
     SCREEN *sp;
     int code = ERR;
@@ -1258,7 +1258,8 @@ drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int c, bool flag)
     if (c >= 0) {
 	unsigned ch = (unsigned) c;
 	if (flag) {
-	    while ((s = _nc_expand_try(sp->_key_ok, ch, &count, 0)) != 0
+	    while ((s = _nc_expand_try(sp->_key_ok,
+				       ch, &count, (size_t) 0)) != 0
 		   && _nc_remove_key(&(sp->_key_ok), ch)) {
 		code = _nc_add_to_try(&(sp->_keytry), s, ch);
 		free(s);
@@ -1267,7 +1268,8 @@ drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int c, bool flag)
 		    break;
 	    }
 	} else {
-	    while ((s = _nc_expand_try(sp->_keytry, ch, &count, 0)) != 0
+	    while ((s = _nc_expand_try(sp->_keytry,
+				       ch, &count, (size_t) 0)) != 0
 		   && _nc_remove_key(&(sp->_keytry), ch)) {
 		code = _nc_add_to_try(&(sp->_key_ok), s, ch);
 		free(s);

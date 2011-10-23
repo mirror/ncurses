@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: keyok.c,v 1.11 2011/06/04 19:24:16 tom Exp $")
+MODULE_ID("$Id: keyok.c,v 1.12 2011/10/22 17:03:22 tom Exp $")
 
 /*
  * Enable (or disable) ncurses' interpretation of a keycode by adding (or
@@ -62,8 +62,8 @@ NCURSES_SP_NAME(keyok) (NCURSES_SP_DCLx int c, bool flag)
 	    unsigned ch = (unsigned) c;
 
 	    if (flag) {
-		while ((s = _nc_expand_try(SP_PARM->_key_ok, ch, &count, 0))
-		       != 0
+		while ((s = _nc_expand_try(SP_PARM->_key_ok,
+					   ch, &count, (size_t) 0)) != 0
 		       && _nc_remove_key(&(SP_PARM->_key_ok), ch)) {
 		    code = _nc_add_to_try(&(SP_PARM->_keytry), s, ch);
 		    free(s);
@@ -72,8 +72,8 @@ NCURSES_SP_NAME(keyok) (NCURSES_SP_DCLx int c, bool flag)
 			break;
 		}
 	    } else {
-		while ((s = _nc_expand_try(SP_PARM->_keytry, ch, &count, 0))
-		       != 0
+		while ((s = _nc_expand_try(SP_PARM->_keytry,
+					   ch, &count, (size_t) 0)) != 0
 		       && _nc_remove_key(&(SP_PARM->_keytry), ch)) {
 		    code = _nc_add_to_try(&(SP_PARM->_key_ok), s, ch);
 		    free(s);

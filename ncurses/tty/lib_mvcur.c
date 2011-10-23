@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.126 2011/01/22 19:48:21 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.127 2011/10/22 16:09:52 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -549,7 +549,7 @@ relative_move(NCURSES_SP_DCLx
 	      int from_x,
 	      int to_y,
 	      int to_x,
-	      bool ovw)
+	      int ovw)
 /* move via local motions (cuu/cuu1/cud/cud1/cub1/cub/cuf1/cuf/vpa/hpa) */
 {
     string_desc save;
@@ -770,7 +770,7 @@ relative_move(NCURSES_SP_DCLx
  */
 
 static NCURSES_INLINE int
-onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, bool ovw)
+onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, int ovw)
 /* onscreen move from (yold, xold) to (ynew, xnew) */
 {
     string_desc result;

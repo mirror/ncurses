@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.75 2011/09/26 22:44:30 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.76 2011/10/22 17:12:41 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -203,10 +203,11 @@ static bool
 same_tcname(const char *a, const char *b)
 {
     fprintf(stderr, "compare(%s,%s)\n", a, b);
-    return !strncmp(a, b, 2);
+    return !strncmp(a, b, (size_t) 2);
 }
+
 #else
-#define same_tcname(a,b) !strncmp(a,b,2)
+#define same_tcname(a,b) !strncmp(a, b, (size_t) 2)
 #endif
 
 /***************************************************************************

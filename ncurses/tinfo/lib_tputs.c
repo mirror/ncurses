@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.81 2010/12/20 00:42:50 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.82 2011/10/22 16:34:50 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -145,7 +145,7 @@ NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_DCLx int ch)
 	 * POSIX says write() is safe in a signal handler, but the
 	 * buffered I/O is not.
 	 */
-	if (write(fileno(NC_OUTPUT(SP_PARM)), &tmp, 1) == -1)
+	if (write(fileno(NC_OUTPUT(SP_PARM)), &tmp, (size_t) 1) == -1)
 	    rc = ERR;
     } else {
 	if (putc(ch, NC_OUTPUT(SP_PARM)) == EOF)

@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.93 2011/08/20 21:19:40 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.94 2011/10/22 15:46:43 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -257,12 +257,12 @@ next_char(void)
 }
 
 static void
-push_back(char c)
+push_back(int c)
 /* push a character back onto the input stream */
 {
     if (bufptr == bufstart)
 	_nc_syserr_abort("Can't backspace off beginning of line");
-    *--bufptr = c;
+    *--bufptr = (char) c;
     _nc_curr_col--;
 }
 
@@ -782,7 +782,7 @@ _nc_trans_string(char *ptr, char *last)
 				/* allow the digit; it'll do less harm */
 			    }
 			} else {
-			    push_back((char) c);
+			    push_back(c);
 			    break;
 			}
 		    }
@@ -878,7 +878,7 @@ _nc_trans_string(char *ptr, char *last)
 
 	if (!ignored) {
 	    if (_nc_curr_col <= 1) {
-		push_back((char) c);
+		push_back(c);
 		c = '\n';
 		break;
 	    }

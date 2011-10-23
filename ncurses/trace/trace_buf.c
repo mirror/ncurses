@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_buf.c,v 1.17 2011/01/22 19:48:16 tom Exp $")
+MODULE_ID("$Id: trace_buf.c,v 1.18 2011/10/22 15:46:06 tom Exp $")
 
 #ifdef TRACE
 
@@ -103,7 +103,7 @@ _nc_trace_buf(int bufnum, size_t want)
 NCURSES_EXPORT(char *)
 _nc_trace_bufcat(int bufnum, const char *value)
 {
-    char *buffer = _nc_trace_alloc(bufnum, 0);
+    char *buffer = _nc_trace_alloc(bufnum, (size_t) 0);
     if (buffer != 0) {
 	size_t have = strlen(buffer);
 

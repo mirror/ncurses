@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.76 2010/12/19 01:21:19 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.77 2011/10/22 16:34:50 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -121,7 +121,7 @@ trace(const unsigned int tracelevel)
 	 * end of each line.  This is useful in case the program dies. 
 	 */
 #if HAVE_SETVBUF		/* ANSI */
-	(void) setvbuf(TraceFP, (char *) 0, _IOLBF, 0);
+	(void) setvbuf(TraceFP, (char *) 0, _IOLBF, (size_t) 0);
 #elif HAVE_SETBUF /* POSIX */
 	(void) setbuffer(TraceFP, (char *) 0);
 #endif
@@ -218,7 +218,7 @@ _tracef(const char *fmt,...)
 
 /* Trace 'bool' return-values */
 NCURSES_EXPORT(NCURSES_BOOL)
-_nc_retrace_bool(NCURSES_BOOL code)
+_nc_retrace_bool(int code)
 {
     T((T_RETURN("%s"), code ? "TRUE" : "FALSE"));
     return code;
@@ -226,7 +226,7 @@ _nc_retrace_bool(NCURSES_BOOL code)
 
 /* Trace 'char' return-values */
 NCURSES_EXPORT(char)
-_nc_retrace_char(char code)
+_nc_retrace_char(int code)
 {
     T((T_RETURN("%c"), code));
     return code;

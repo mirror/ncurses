@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: setbuf.c,v 1.16 2010/08/28 21:08:31 tom Exp $")
+MODULE_ID("$Id: setbuf.c,v 1.17 2011/10/22 16:34:50 tom Exp $")
 
 /*
  * If the output file descriptor is connected to a tty (the typical case) it
@@ -100,7 +100,7 @@ MODULE_ID("$Id: setbuf.c,v 1.16 2010/08/28 21:08:31 tom Exp $")
  * buffer.  So we disable this by default (there may yet be a workaround).
  */
 NCURSES_EXPORT(void)
-NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_DCLx FILE *ofp, bool buffered)
+NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_DCLx FILE *ofp, int buffered)
 {
     int Cols;
     int Lines;
@@ -149,7 +149,7 @@ NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_DCLx FILE *ofp, bool buffered)
 #ifdef SETVBUF_REVERSED		/* pre-svr3? */
 	(void) setvbuf(ofp, buf_ptr, buf_len, buf_len ? _IOFBF : _IOLBF);
 #else
-	(void) setvbuf(ofp, buf_ptr, buf_len ? _IOFBF : _IOLBF, buf_len);
+	(void) setvbuf(ofp, buf_ptr, buf_len ? _IOFBF : _IOLBF, (size_t) buf_len);
 #endif
 #elif HAVE_SETBUFFER
 	(void) setbuffer(ofp, buf_ptr, (int) buf_len);
@@ -162,7 +162,7 @@ NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_DCLx FILE *ofp, bool buffered)
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(void)
-_nc_set_buffer(FILE *ofp, bool buffered)
+_nc_set_buffer(FILE *ofp, int buffered)
 {
     NCURSES_SP_NAME(_nc_set_buffer) (CURRENT_SCREEN, ofp, buffered);
 }

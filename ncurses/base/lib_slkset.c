@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_slkset.c,v 1.21 2010/12/25 23:43:58 tom Exp $")
+MODULE_ID("$Id: lib_slkset.c,v 1.22 2011/10/22 16:58:26 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(slk_set) (NCURSES_SP_DCLx int i, const char *astr, int format)
@@ -111,8 +111,8 @@ NCURSES_SP_NAME(slk_set) (NCURSES_SP_DCLx int i, const char *astr, int format)
     slk->ent[i].ent_text[numchrs] = '\0';
 
     if ((slk->ent[i].form_text = (char *) _nc_doalloc(slk->ent[i].form_text,
-						      (unsigned) (limit +
-								  numchrs + 1))
+						      (size_t) (limit +
+								numchrs + 1))
 	) == 0)
 	returnCode(ERR);
 
@@ -131,16 +131,16 @@ NCURSES_SP_NAME(slk_set) (NCURSES_SP_DCLx int i, const char *astr, int format)
     if (offset <= 0)
 	offset = 0;
     else
-	memset(slk->ent[i].form_text, ' ', (unsigned) offset);
+	memset(slk->ent[i].form_text, ' ', (size_t) offset);
 
     memcpy(slk->ent[i].form_text + offset,
 	   slk->ent[i].ent_text,
-	   (unsigned) numchrs);
+	   (size_t) numchrs);
 
     if (offset < limit) {
 	memset(slk->ent[i].form_text + offset + numchrs,
 	       ' ',
-	       (unsigned) (limit - (offset + numcols)));
+	       (size_t) (limit - (offset + numcols)));
     }
 
     slk->ent[i].form_text[numchrs - numcols + limit] = 0;

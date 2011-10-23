@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.18 2011/10/08 20:32:26 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.19 2011/10/22 16:34:50 tom Exp $")
 
 /****************************************************************************
  *
@@ -141,7 +141,7 @@ _nc_leaks_tinfo(void)
 
 #ifdef TRACE
     trace(0);
-    _nc_trace_buf(-1, 0);
+    _nc_trace_buf(-1, (size_t) 0);
 #endif
 
 #endif /* NO_LEAKS */

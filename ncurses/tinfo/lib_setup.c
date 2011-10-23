@@ -47,7 +47,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.141 2011/08/13 16:07:22 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.142 2011/10/22 16:13:06 tom Exp $")
 
 /****************************************************************************
  *
@@ -449,7 +449,7 @@ _nc_setup_tinfo(const char *const tn, TERMTYPE *const tp)
 **	and substitute it in for the prototype given in 'command_character'.
 */
 void
-_nc_tinfo_cmdch(TERMINAL * termp, char proto)
+_nc_tinfo_cmdch(TERMINAL * termp, int proto)
 {
     unsigned i;
     char CC;
@@ -464,7 +464,7 @@ _nc_tinfo_cmdch(TERMINAL * termp, char proto)
 	CC = *tmp;
 	for_each_string(i, &(termp->type)) {
 	    for (tmp = termp->type.Strings[i]; tmp && *tmp; tmp++) {
-		if (*tmp == proto)
+		if (UChar(*tmp) == proto)
 		    *tmp = CC;
 	    }
 	}
@@ -560,7 +560,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 		 NCURSES_CONST char *tname,
 		 int Filedes,
 		 int *errret,
-		 bool reuse)
+		 int reuse)
 {
 #ifdef USE_TERM_DRIVER
     TERMINAL_CONTROL_BLOCK *TCB = 0;
@@ -680,7 +680,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	    }
 	}
 #if !USE_REENTRANT
-	strncpy(ttytype, termp->type.term_names, NAMESIZE - 1);
+	strncpy(ttytype, termp->type.term_names, (size_t) (NAMESIZE - 1));
 	ttytype[NAMESIZE - 1] = '\0';
 #endif
 
@@ -690,7 +690,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	set_curterm(termp);
 
 	if (command_character)
-	    _nc_tinfo_cmdch(termp, *command_character);
+	    _nc_tinfo_cmdch(termp, UChar(*command_character));
 
 	/*
 	 * If an application calls setupterm() rather than initscr() or
@@ -789,7 +789,7 @@ NCURSES_EXPORT(int)
 _nc_setupterm(NCURSES_CONST char *tname,
 	      int Filedes,
 	      int *errret,
-	      bool reuse)
+	      int reuse)
 {
     int res;
     TERMINAL *termp;

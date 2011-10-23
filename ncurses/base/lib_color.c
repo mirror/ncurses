@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.103 2011/07/23 22:00:34 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.104 2011/10/22 15:53:42 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -390,10 +390,10 @@ start_color(void)
 
 /* This function was originally written by Daniel Weaver <danw@znyx.com> */
 static void
-rgb2hls(short r, short g, short b, short *h, short *l, short *s)
+rgb2hls(int r, int g, int b, short *h, short *l, short *s)
 /* convert RGB to HLS system */
 {
-    short min, max, t;
+    int min, max, t;
 
     if ((min = g < r ? g : r) > b)
 	min = b;
@@ -423,7 +423,7 @@ rgb2hls(short r, short g, short b, short *h, short *l, short *s)
     else
 	t = (short) (360 + ((r - g) * 60) / (max - min));
 
-    *h = t % 360;
+    *h = (short) (t % 360);
 }
 
 /*
@@ -782,9 +782,9 @@ pair_content(short pair, short *f, short *b)
 
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
-			       short old_pair,
-			       short pair,
-			       bool reverse,
+			       int old_pair,
+			       int pair,
+			       int reverse,
 			       NCURSES_SP_OUTC outc)
 {
 #ifdef USE_TERM_DRIVER
@@ -864,7 +864,7 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(void)
-_nc_do_color(short old_pair, short pair, bool reverse, NCURSES_OUTC outc)
+_nc_do_color(int old_pair, int pair, int reverse, NCURSES_OUTC outc)
 {
     SetSafeOutcWrapper(outc);
     NCURSES_SP_NAME(_nc_do_color) (CURRENT_SCREEN,

@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.265 2011/05/28 21:51:20 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.267 2011/10/22 17:30:14 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -342,7 +342,7 @@ check_pending(NCURSES_SP_DCL0)
 	struct pollfd fds[1];
 	fds[0].fd = SP_PARM->_checkfd;
 	fds[0].events = POLLIN;
-	if (poll(fds, 1, 0) > 0) {
+	if (poll(fds, (size_t) 1, 0) > 0) {
 	    have_pending = TRUE;
 	}
 #elif defined(__BEOS__)
@@ -1079,7 +1079,7 @@ ClrUpdate(NCURSES_SP_DCL0)
 */
 
 static void
-ClrToEOL(NCURSES_SP_DCLx NCURSES_CH_T blank, bool needclear)
+ClrToEOL(NCURSES_SP_DCLx NCURSES_CH_T blank, int needclear)
 {
     int j;
 

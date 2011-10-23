@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.124 2010/04/24 22:41:05 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.125 2011/10/22 16:51:31 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -209,7 +209,8 @@ _nc_build_wch(WINDOW *win, ARG_CH_T ch)
     buffer[WINDOW_EXT(win, addch_used)] = '\0';
     if ((len = (int) mbrtowc(&result,
 			     buffer,
-			     WINDOW_EXT(win, addch_used), &state)) > 0) {
+			     (size_t) WINDOW_EXT(win, addch_used),
+			     &state)) > 0) {
 	attr_t attrs = AttrOf(CHDEREF(ch));
 	if_EXT_COLORS(int pair = GetPair(CHDEREF(ch)));
 	SetChar(CHDEREF(ch), result, attrs);

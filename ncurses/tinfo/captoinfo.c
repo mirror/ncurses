@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.69 2011/07/30 21:33:42 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.70 2011/10/22 14:59:34 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -743,15 +743,15 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	    bufptr = save_tc_char(bufptr, c1);
 	}
 	/* FIXME: this "works" for 'delta' */
-	else if (strncmp(str, "%{2}%*%-", 8) == 0) {
+	else if (strncmp(str, "%{2}%*%-", (size_t) 8) == 0) {
 	    str += 7;
 	    bufptr = save_string(bufptr, "%D");
-	} else if (strncmp(str, "%{96}%^", 7) == 0) {
+	} else if (strncmp(str, "%{96}%^", (size_t) 7) == 0) {
 	    str += 6;
 	    if (saw_m++ == 0) {
 		bufptr = save_string(bufptr, "%n");
 	    }
-	} else if (strncmp(str, "%{127}%^", 8) == 0) {
+	} else if (strncmp(str, "%{127}%^", (size_t) 8) == 0) {
 	    str += 7;
 	    if (saw_n++ == 0) {
 		bufptr = save_string(bufptr, "%m");

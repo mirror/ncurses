@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.116 2011/09/27 00:35:20 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.117 2011/10/22 15:30:24 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -99,7 +99,7 @@ fake_read(char *src, int *offset, int limit, char *dst, unsigned want)
     if (have > 0) {
 	if ((int) want > have)
 	    want = (unsigned) have;
-	memcpy(dst, src + *offset, want);
+	memcpy(dst, src + *offset, (size_t) want);
 	*offset += (int) want;
     } else {
 	want = 0;
@@ -107,10 +107,10 @@ fake_read(char *src, int *offset, int limit, char *dst, unsigned want)
     return (int) want;
 }
 
-#define Read(buf, count) fake_read(buffer, &offset, limit, buf, count)
+#define Read(buf, count) fake_read(buffer, &offset, limit, buf, (unsigned) count)
 
 #define read_shorts(buf, count) \
-	(Read(buf, (unsigned) (count)*2) == (int) (count)*2)
+	(Read(buf, (count)*2) == (int) (count)*2)
 
 #define even_boundary(value) \
     if ((value) % 2 != 0) Read(buf, 1)
@@ -175,7 +175,7 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
     ptr->str_table = string_table;
     ptr->term_names = string_table;
     if ((have = (unsigned) Read(ptr->term_names, want)) != want) {
-	memset(ptr->term_names + have, 0, want - have);
+	memset(ptr->term_names + have, 0, (size_t) (want - have));
     }
     ptr->term_names[want] = '\0';
     string_table += (want + 1);

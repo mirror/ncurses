@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.51 2010/12/25 23:06:01 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.52 2011/10/22 16:34:50 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -73,7 +73,7 @@ _nc_init_entry(TERMTYPE *const tp)
 #endif
 
     if (stringbuf == 0)
-	stringbuf = (char *) malloc(MAX_STRTAB);
+	stringbuf = (char *) malloc((size_t) MAX_STRTAB);
 
 #if NCURSES_XNAMES
     tp->num_Booleans = BOOLCOUNT;

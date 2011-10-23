@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.37 2010/05/29 18:51:41 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.38 2011/10/22 16:34:50 tom Exp $")
 
 #define NUM_VISBUFS 4
 
@@ -261,7 +261,7 @@ _nc_viswibuf(const wint_t *buf)
 NCURSES_EXPORT(const char *)
 _nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 {
-    char *result = _nc_trace_buf(bufnum, BUFSIZ);
+    char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
     int first;
     const char *found;
 

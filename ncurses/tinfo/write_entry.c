@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.80 2011/08/13 20:52:40 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.81 2011/10/22 15:33:37 tom Exp $")
 
 static int total_written;
 
@@ -70,7 +70,7 @@ write_file(char *filename, TERMTYPE *tp)
     DEBUG(1, ("Created %s", filename));
 
     if (write_object(tp, buffer, &offset, limit) == ERR
-	|| fwrite(buffer, sizeof(char), offset, fp) != offset) {
+	|| fwrite(buffer, sizeof(char), (size_t) offset, fp) != offset) {
 	_nc_syserr_abort("error writing %s/%s", _nc_tic_dir(0), filename);
     }
 
@@ -109,7 +109,7 @@ check_writeable(int code)
 #endif /* !USE_HASHED_DB */
 
 static int
-make_db_path(char *dst, const char *src, unsigned limit)
+make_db_path(char *dst, const char *src, size_t limit)
 {
     int rc = -1;
     const char *top = _nc_tic_dir(0);
@@ -131,9 +131,9 @@ make_db_path(char *dst, const char *src, unsigned limit)
 	    rc = -1;
 	} else {
 	    static const char suffix[] = DBM_SUFFIX;
-	    unsigned have = strlen(dst);
-	    unsigned need = strlen(suffix);
-	    if (have > need && strcmp(dst + have - need, suffix)) {
+	    size_t have = strlen(dst);
+	    size_t need = strlen(suffix);
+	    if (have > need && strcmp(dst + (int) (have - need), suffix)) {
 		if (have + need <= limit)
 		    strcat(dst, suffix);
 		else
@@ -484,7 +484,7 @@ fake_write(char *dst,
     return (want / size);
 }
 
-#define Write(buf, size, count) fake_write(buffer, offset, limit, (char *) buf, count, size)
+#define Write(buf, size, count) fake_write(buffer, offset, (size_t) limit, (char *) buf, (size_t) count, (size_t) size)
 
 #undef LITTLE_ENDIAN		/* BSD/OS defines this as a feature macro */
 #define HI(x)			((x) / 256)
@@ -699,7 +699,7 @@ write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 	    return (ERR);
 
 	nextfree = compute_offsets(tp->Strings + STRCOUNT,
-				   tp->ext_Strings,
+				   (size_t) tp->ext_Strings,
 				   offsets);
 	TRACE_OUT(("after extended string capabilities, nextfree=%d", nextfree));
 
@@ -707,7 +707,7 @@ write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 	    return (ERR);
 
 	nextfree += compute_offsets(tp->ext_Names,
-				    extcnt,
+				    (size_t) extcnt,
 				    offsets + tp->ext_Strings);
 	TRACE_OUT(("after extended capnames, nextfree=%d", nextfree));
 	strmax = tp->ext_Strings + extcnt;
@@ -735,7 +735,7 @@ write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 
 	TRACE_OUT(("WRITE %d numbers @%d", tp->ext_Numbers, *offset));
 	if (tp->ext_Numbers) {
-	    convert_shorts(buf, tp->Numbers + NUMCOUNT, tp->ext_Numbers);
+	    convert_shorts(buf, tp->Numbers + NUMCOUNT, (size_t) tp->ext_Numbers);
 	    if (Write(buf, 2, tp->ext_Numbers) != tp->ext_Numbers)
 		return (ERR);
 	}

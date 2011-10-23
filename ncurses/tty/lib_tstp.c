@@ -42,7 +42,7 @@
 
 #include <SigAction.h>
 
-MODULE_ID("$Id: lib_tstp.c,v 1.44 2011/06/25 21:22:16 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.45 2011/10/22 15:37:42 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -363,7 +363,7 @@ CatchIfDefault(int sig, RETSIGTYPE (*handler) (int))
  * the caller later changes its mind, but that doesn't seem correct.
  */
 NCURSES_EXPORT(void)
-_nc_signal_handler(bool enable)
+_nc_signal_handler(int enable)
 {
     T((T_CALLED("_nc_signal_handler(%d)"), enable));
 #if USE_SIGTSTP			/* Xenix 2.x doesn't have SIGTSTP, for example */

@@ -39,7 +39,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.40 2011/05/28 23:03:44 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.41 2011/10/22 15:03:11 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -55,7 +55,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 	returnWin(0);
     }
     clearerr(filep);
-    if (fread(&tmp, 1, sizeof(WINDOW), filep) < sizeof(WINDOW)
+    if (fread(&tmp, (size_t) 1, sizeof(WINDOW), filep) < sizeof(WINDOW)
 	|| ferror(filep)
 	|| tmp._maxy == 0
 	|| tmp._maxy > MAX_SIZE
@@ -113,7 +113,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 
 	for (n = 0; n <= nwin->_maxy; n++) {
 	    clearerr(filep);
-	    if (fread(nwin->_line[n].text, 1, linesize, filep) < linesize
+	    if (fread(nwin->_line[n].text, (size_t) 1, linesize, filep) < linesize
 		|| ferror(filep)) {
 		delwin(nwin);
 		returnWin(0);
@@ -144,7 +144,7 @@ putwin(WINDOW *win, FILE *filep)
 	size_t len = (size_t) (win->_maxx + 1);
 
 	clearerr(filep);
-	if (fwrite(win, sizeof(WINDOW), 1, filep) != 1
+	if (fwrite(win, sizeof(WINDOW), (size_t) 1, filep) != 1
 	    || ferror(filep))
 	      returnCode(code);
 

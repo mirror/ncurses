@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.37 2011/09/10 21:36:41 tom Exp $
+dnl $Id: aclocal.m4,v 1.38 2011/10/22 19:04:02 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2819,7 +2819,7 @@ AC_SUBST(PROG_EXT)
 test -n "$PROG_EXT" && AC_DEFINE_UNQUOTED(PROG_EXT,"$PROG_EXT")
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_GNAT version: 1 updated: 2010/06/19 15:22:18
+dnl CF_PROG_GNAT version: 2 updated: 2011/10/22 14:01:47
 dnl ------------
 dnl Check for gnatmake, ensure that it is complete.
 AC_DEFUN([CF_PROG_GNAT],[
@@ -2827,6 +2827,7 @@ cf_ada_make=gnatmake
 AC_CHECK_PROG(gnat_exists, $cf_ada_make, yes, no)
 if test "$ac_cv_prog_gnat_exists" = no; then
    cf_ada_make=
+   cf_cv_prog_gnat_correct=no
 else
    CF_GNAT_VERSION
    AC_CHECK_PROG(M4_exists, m4, yes, no)

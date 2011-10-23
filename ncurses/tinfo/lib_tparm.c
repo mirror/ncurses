@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.83 2011/05/21 18:11:56 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.84 2011/10/22 15:48:47 tom Exp $")
 
 /*
  *	char *
@@ -153,7 +153,7 @@ save_number(const char *fmt, int number, int len)
     if (len < 30)
 	len = 30;		/* actually log10(MAX_INT)+1 */
 
-    get_space((unsigned) len + 1);
+    get_space((size_t) len + 1);
 
     (void) sprintf(TPS(out_buff) + TPS(out_used), fmt, number);
     TPS(out_used) += strlen(TPS(out_buff) + TPS(out_used));
@@ -164,7 +164,7 @@ save_char(int c)
 {
     if (c == 0)
 	c = 0200;
-    get_space(1);
+    get_space((size_t) 1);
     TPS(out_buff)[TPS(out_used)++] = (char) c;
 }
 
@@ -450,7 +450,7 @@ _nc_tparm_analyze(const char *string, char *p_is_s[NUM_PARM], int *popcount)
 }
 
 static NCURSES_INLINE char *
-tparam_internal(bool use_TPARM_ARG, const char *string, va_list ap)
+tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
 {
     char *p_is_s[NUM_PARM];
     TPARM_ARG param[NUM_PARM];
@@ -757,7 +757,7 @@ tparam_internal(bool use_TPARM_ARG, const char *string, va_list ap)
 	cp++;
     }				/* endwhile (*cp) */
 
-    get_space(1);
+    get_space((size_t) 1);
     TPS(out_buff)[TPS(out_used)] = '\0';
 
     T((T_RETURN("%s"), _nc_visbuf(TPS(out_buff))));

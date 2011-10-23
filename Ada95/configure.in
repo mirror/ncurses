@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.35 2011/09/24 15:32:32 tom Exp $
+dnl $Id: configure.in,v 1.36 2011/10/22 19:02:53 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.35 $)
+AC_REVISION($Revision: 1.36 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -492,7 +492,7 @@ if test -z "$cf_user_CFLAGS" && test "$with_no_leaks" = no ; then
 fi
 
 CF_HELP_MESSAGE(Ada95 Binding Options:)
-
+cf_with_ada=yes
 dnl Check for availability of GNU Ada Translator (GNAT).
 dnl At the moment we support no other Ada95 compiler.
 if test "$cf_with_ada" != "no" ; then

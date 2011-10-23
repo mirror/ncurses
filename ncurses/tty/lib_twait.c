@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -70,10 +70,10 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.61 2010/12/25 23:43:58 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.62 2011/10/22 16:34:50 tom Exp $")
 
 static long
-_nc_gettime(TimeType * t0, bool first)
+_nc_gettime(TimeType * t0, int first)
 {
     long res;
 
@@ -247,7 +247,7 @@ _nc_timed_wait(SCREEN *sp MAYBE_UNUSED,
     }
 #endif
 
-    result = poll(fds, (unsigned) count, milliseconds);
+    result = poll(fds, (size_t) count, milliseconds);
 
 #ifdef NCURSES_WGETCH_EVENTS
     if ((mode & TW_EVENT) && evl) {

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.59 2010/01/23 17:57:43 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.60 2011/10/22 16:34:50 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -100,7 +100,7 @@ NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 
     (void) _nc_printf_string(0, empty_va);
 #ifdef TRACE
-    (void) _nc_trace_buf(-1, 0);
+    (void) _nc_trace_buf(-1, (size_t) 0);
 #endif
 #if USE_WIDEC_SUPPORT
     FreeIfNeeded(_nc_wacs);

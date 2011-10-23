@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.77 2011/10/01 22:43:51 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.78 2011/10/22 16:19:19 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -56,7 +56,7 @@ NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanit
 static void sanity_check(TERMTYPE *);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype) (TERMTYPE *) = sanity_check;
 
-static void fixup_acsc(TERMTYPE *, bool);
+static void fixup_acsc(TERMTYPE *, int);
 
 static void
 enqueue(ENTRY * ep)
@@ -495,7 +495,7 @@ _nc_resolve_uses(bool fullresolve)
 #define CUR tp->
 
 static void
-fixup_acsc(TERMTYPE *tp, bool literal)
+fixup_acsc(TERMTYPE *tp, int literal)
 {
     if (!literal) {
 	if (acs_chars == 0

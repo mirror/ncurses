@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_print.c,v 1.20 2010/06/05 22:18:35 tom Exp $")
+MODULE_ID("$Id: lib_print.c,v 1.21 2011/10/22 16:34:50 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(mcprint) (NCURSES_SP_DCLx char *data, int len)
@@ -77,7 +77,7 @@ NCURSES_SP_NAME(mcprint) (NCURSES_SP_DCLx char *data, int len)
     }
 
     (void) strcpy(mybuf, switchon);
-    memcpy(mybuf + onsize, data, (unsigned) len);
+    memcpy(mybuf + onsize, data, (size_t) len);
     if (offsize)
 	(void) strcpy(mybuf + onsize + len, prtr_off);
 

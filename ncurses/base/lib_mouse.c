@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.130 2011/09/24 00:42:25 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.133 2011/10/22 23:01:26 tom Exp $")
 
 #include <tic.h>
 
@@ -147,6 +147,9 @@ make an error
 
 #define INVALID_EVENT	-1
 #define NORMAL_EVENT	0
+
+#define ValidEvent(ep) ((ep)->id != INVALID_EVENT)
+#define Invalidate(ep) (ep)->id = INVALID_EVENT
 
 #if USE_GPM_SUPPORT
 
@@ -673,7 +676,7 @@ _nc_mouse_init(SCREEN *sp)
 
 	    sp->_mouse_eventp = FirstEV(sp);
 	    for (i = 0; i < EV_MAX; i++)
-		sp->_mouse_events[i].id = INVALID_EVENT;
+		Invalidate(sp->_mouse_events + i);
 
 	    initialize_mousetype(sp);
 
@@ -1002,7 +1005,7 @@ _nc_mouse_inline(SCREEN *sp)
 }
 
 static void
-mouse_activate(SCREEN *sp, bool on)
+mouse_activate(SCREEN *sp, int on)
 {
     if (!on && !sp->_mouse_initialized)
 	return;
@@ -1133,7 +1136,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
      */
     ep = eventp;
     for (n = runcount; n < EV_MAX; n++) {
-	ep->id = INVALID_EVENT;
+	Invalidate(ep);
 	ep = NEXT(ep);
     }
 
@@ -1159,7 +1162,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 #define MASK_CHANGED(x) (!(ep->bstate & MASK_PRESS(x)) \
 		      == !(next->bstate & MASK_RELEASE(x)))
 
-	    if (ep->id != INVALID_EVENT && next->id != INVALID_EVENT
+	    if (ValidEvent(ep) && ValidEvent(next)
 		&& ep->x == next->x && ep->y == next->y
 		&& (ep->bstate & BUTTON_PRESSED)
 		&& (!(next->bstate & BUTTON_PRESSED))) {
@@ -1182,14 +1185,15 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 			    merge = TRUE;
 			}
 		    }
-		    if (merge)
-			ep->id = INVALID_EVENT;
+		    if (merge) {
+			Invalidate(ep);
+		    }
 		}
 	    }
 	}
 
 	/* Compact valid events */
-	if (ep->id == INVALID_EVENT) {
+	if (!ValidEvent(ep)) {
 	    if ((first_valid != NULL) && (first_invalid == NULL)) {
 		first_invalid = ep;
 	    }
@@ -1198,7 +1202,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 		first_valid = ep;
 	    } else if (first_invalid != NULL) {
 		*first_invalid = *ep;
-		ep->id = INVALID_EVENT;
+		Invalidate(ep);
 		first_invalid = NEXT(first_invalid);
 	    }
 	}
@@ -1247,6 +1251,8 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 	if (next == eventp) {
 	    /* Will end the loop, but check event type and compact before */
 	    endLoop = TRUE;
+	} else if (!ValidEvent(next)) {
+	    continue;
 	} else {
 	    /* merge click events forward */
 	    if ((ep->bstate & BUTTON_CLICKED)
@@ -1261,8 +1267,9 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 			merge = TRUE;
 		    }
 		}
-		if (merge)
-		    ep->id = INVALID_EVENT;
+		if (merge) {
+		    Invalidate(ep);
+		}
 	    }
 
 	    /* merge double-click events forward */
@@ -1278,18 +1285,19 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 			merge = TRUE;
 		    }
 		}
-		if (merge)
-		    ep->id = INVALID_EVENT;
+		if (merge) {
+		    Invalidate(ep);
+		}
 	    }
 	}
 
 	/* Discard event if it does not match event mask */
-	if (!(ep->bstate & sp->_mouse_mask)) {
-	    ep->id = INVALID_EVENT;
+	if (!(ep->bstate & sp->_mouse_mask2)) {
+	    Invalidate(ep);
 	}
 
 	/* Compact valid events */
-	if (ep->id == INVALID_EVENT) {
+	if (!ValidEvent(ep)) {
 	    if (ep == first_valid) {
 		first_valid = next;
 	    } else if (first_invalid == NULL) {
@@ -1297,7 +1305,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 	    }
 	} else if (first_invalid != NULL) {
 	    *first_invalid = *ep;
-	    ep->id = INVALID_EVENT;
+	    Invalidate(ep);
 	    first_invalid = NEXT(first_invalid);
 	}
 
@@ -1319,7 +1327,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 	    _nc_unlock_global(tracef);
 	}
 	for (ep = first_valid; ep != first_invalid; ep = NEXT(ep)) {
-	    if (ep->id != INVALID_EVENT)
+	    if (ValidEvent(ep))
 		TR(MY_TRACE,
 		   ("_nc_mouse_parse: returning composite mouse event %s at slot %ld",
 		    _nc_tracemouse(sp, ep),
@@ -1329,7 +1337,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 #endif /* TRACE */
 
     /* after all this, do we have a valid event? */
-    return (PREV(first_invalid)->id != INVALID_EVENT);
+    return ValidEvent(PREV(first_invalid));
 }
 
 static void
@@ -1426,11 +1434,11 @@ NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 	 * _nc_mouse_parse was not called, e.g., when _nc_mouse_inline returns
 	 * false).
 	 */
-	while ((prev->id != INVALID_EVENT) && (!(prev->bstate & SP_PARM->_mouse_mask))) {
-	    prev->id = INVALID_EVENT;
+	while (ValidEvent(prev) && (!(prev->bstate & SP_PARM->_mouse_mask2))) {
+	    Invalidate(prev);
 	    prev = PREV(prev);
 	}
-	if (prev->id != INVALID_EVENT) {
+	if (ValidEvent(prev)) {
 	    /* copy the event we find there */
 	    *aevent = *prev;
 
@@ -1438,13 +1446,13 @@ NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 			      _nc_tracemouse(SP_PARM, prev),
 			      (long) IndexEV(SP_PARM, prev)));
 
-	    prev->id = INVALID_EVENT;	/* so the queue slot becomes free */
+	    Invalidate(prev);	/* so the queue slot becomes free */
 	    SP_PARM->_mouse_eventp = prev;
 	    result = OK;
 	} else {
 	    /* Reset the provided event */
 	    aevent->bstate = 0;
-	    aevent->id = INVALID_EVENT;
+	    Invalidate(aevent);
 	    aevent->x = 0;
 	    aevent->y = 0;
 	    aevent->z = 0;
@@ -1498,6 +1506,7 @@ NCURSES_SP_NAME(mousemask) (NCURSES_SP_DCLx mmask_t newmask, mmask_t * oldmask)
 /* set the mouse event mask */
 {
     mmask_t result = 0;
+    int b;
 
     T((T_CALLED("mousemask(%p,%#lx,%p)"),
        (void *) SP_PARM,
@@ -1525,6 +1534,22 @@ NCURSES_SP_NAME(mousemask) (NCURSES_SP_DCLx mmask_t newmask, mmask_t * oldmask)
 		mouse_activate(SP_PARM, (bool) (result != 0));
 
 		SP_PARM->_mouse_mask = result;
+		SP_PARM->_mouse_mask2 = result;
+
+		/*
+		 * Make a mask corresponding to the states we will need to
+		 * retain (temporarily) while building up the state that the
+		 * user asked for.
+		 */
+		for (b = 1; b <= MAX_BUTTONS; ++b) {
+		    if (SP_PARM->_mouse_mask2 & MASK_TRIPLE_CLICK(b))
+			SP_PARM->_mouse_mask2 |= MASK_DOUBLE_CLICK(b);
+		    if (SP_PARM->_mouse_mask2 & MASK_DOUBLE_CLICK(b))
+			SP_PARM->_mouse_mask2 |= MASK_CLICK(b);
+		    if (SP_PARM->_mouse_mask2 & MASK_CLICK(b))
+			SP_PARM->_mouse_mask2 |= (MASK_PRESS(b) |
+						  MASK_RELEASE(b));
+		}
 	    }
 	}
     }

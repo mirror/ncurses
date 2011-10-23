@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.121 2010/12/25 23:24:04 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.122 2011/10/22 16:34:50 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -270,7 +270,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 #  endif
 	    _nc_globals.read_thread = pthread_self();
 # endif
-	n = (int) read(sp->_ifd, &c2, 1);
+	n = (int) read(sp->_ifd, &c2, (size_t) 1);
 #if USE_PTHREADS_EINTR
 	_nc_globals.read_thread = 0;
 #endif

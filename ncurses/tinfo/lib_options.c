@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -46,7 +46,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_options.c,v 1.71 2009/10/24 21:56:15 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.72 2011/10/22 16:31:35 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
@@ -324,7 +324,7 @@ _nc_putp_flush(const char *name, const char *value)
  * the terminal state _before_ switching modes.
  */
 NCURSES_EXPORT(int)
-_nc_keypad(SCREEN *sp, bool flag)
+_nc_keypad(SCREEN *sp, int flag)
 {
     int rc = ERR;
 
