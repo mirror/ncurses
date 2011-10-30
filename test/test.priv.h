@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.112 2011/04/23 23:32:07 tom Exp $ */
+/* $Id: test.priv.h,v 1.114 2011/10/29 19:59:55 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -349,7 +349,10 @@ extern int optind;
 #endif
 
 #ifndef USE_WIDEC_SUPPORT
-#if (defined(_XOPEN_SOURCE_EXTENDED) || defined(_XPG5)) && defined(WACS_ULCORNER)
+#if (defined(_XOPEN_SOURCE_EXTENDED) \
+  || (defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE - 0 >= 500)) \
+  || (defined(NCURSES_WIDECHAR) && (NCURSES_WIDECHAR - 0 < 1))) \
+  && defined(WACS_ULCORNER)
 #define USE_WIDEC_SUPPORT 1
 #else
 #define USE_WIDEC_SUPPORT 0

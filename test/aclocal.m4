@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.66 2011/09/24 16:54:41 tom Exp $
+dnl $Id: aclocal.m4,v 1.70 2011/10/30 23:26:32 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -1049,6 +1049,25 @@ if test "$with_no_leaks" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_DISABLE_RPATH_HACK version: 2 updated: 2011/02/13 13:31:33
+dnl ---------------------
+dnl The rpath-hack makes it simpler to build programs, particularly with the
+dnl *BSD ports which may have essential libraries in unusual places.  But it
+dnl can interfere with building an executable for the base system.  Use this
+dnl option in that case.
+AC_DEFUN([CF_DISABLE_RPATH_HACK],
+[
+AC_MSG_CHECKING(if rpath-hack should be disabled)
+CF_ARG_DISABLE(rpath-hack,
+	[  --disable-rpath-hack    don't add rpath options for additional libraries],
+	[cf_disable_rpath_hack=yes],
+	[cf_disable_rpath_hack=no])
+AC_MSG_RESULT($cf_disable_rpath_hack)
+if test "$cf_disable_rpath_hack" = no ; then
+	CF_RPATH_HACK
+fi
+])
+dnl ---------------------------------------------------------------------------
 dnl CF_ENABLE_WARNINGS version: 4 updated: 2009/07/26 17:53:03
 dnl ------------------
 dnl Configure-option to enable gcc warnings
@@ -1646,6 +1665,60 @@ cf_save_CFLAGS="$cf_save_CFLAGS -we147 -no-gcc"
 		;;
 	esac
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_LD_RPATH_OPT version: 5 updated: 2011/07/17 14:48:41
+dnl ---------------
+dnl For the given system and compiler, find the compiler flags to pass to the
+dnl loader to use the "rpath" feature.
+AC_DEFUN([CF_LD_RPATH_OPT],
+[
+AC_REQUIRE([CF_CHECK_CACHE])
+
+LD_RPATH_OPT=
+AC_MSG_CHECKING(for an rpath option)
+case $cf_cv_system_name in #(vi
+irix*) #(vi
+	if test "$GCC" = yes; then
+		LD_RPATH_OPT="-Wl,-rpath,"
+	else
+		LD_RPATH_OPT="-rpath "
+	fi
+	;;
+linux*|gnu*|k*bsd*-gnu) #(vi
+	LD_RPATH_OPT="-Wl,-rpath,"
+	;;
+openbsd[[2-9]].*|mirbsd*) #(vi
+	LD_RPATH_OPT="-Wl,-rpath,"
+	;;
+dragonfly*|freebsd*) #(vi
+	LD_RPATH_OPT="-rpath "
+	;;
+netbsd*) #(vi
+	LD_RPATH_OPT="-Wl,-rpath,"
+	;;
+osf*|mls+*) #(vi
+	LD_RPATH_OPT="-rpath "
+	;;
+solaris2*) #(vi
+	LD_RPATH_OPT="-R"
+	;;
+*)
+	;;
+esac
+AC_MSG_RESULT($LD_RPATH_OPT)
+
+case "x$LD_RPATH_OPT" in #(vi
+x-R*)
+	AC_MSG_CHECKING(if we need a space after rpath option)
+	cf_save_LIBS="$LIBS"
+	CF_ADD_LIBS(${LD_RPATH_OPT}$libdir)
+	AC_TRY_LINK(, , cf_rpath_space=no, cf_rpath_space=yes)
+	LIBS="$cf_save_LIBS"
+	AC_MSG_RESULT($cf_rpath_space)
+	test "$cf_rpath_space" = yes && LD_RPATH_OPT="$LD_RPATH_OPT "
+	;;
+esac
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_LIBRARY_PATH version: 9 updated: 2010/03/28 12:52:50
@@ -2525,6 +2598,121 @@ $1=`echo "$2" | \
 		-e 's/-[[UD]]'"$3"'\(=[[^ 	]]*\)\?[$]//g'`
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_RPATH_HACK version: 9 updated: 2011/02/13 13:31:33
+dnl -------------
+AC_DEFUN([CF_RPATH_HACK],
+[
+AC_REQUIRE([CF_LD_RPATH_OPT])
+AC_MSG_CHECKING(for updated LDFLAGS)
+if test -n "$LD_RPATH_OPT" ; then
+	AC_MSG_RESULT(maybe)
+
+	AC_CHECK_PROGS(cf_ldd_prog,ldd,no)
+	cf_rpath_list="/usr/lib /lib"
+	if test "$cf_ldd_prog" != no
+	then
+		cf_rpath_oops=
+
+AC_TRY_LINK([#include <stdio.h>],
+		[printf("Hello");],
+		[cf_rpath_oops=`$cf_ldd_prog conftest$ac_exeext | fgrep ' not found' | sed -e 's% =>.*$%%' |sort -u`
+		 cf_rpath_list=`$cf_ldd_prog conftest$ac_exeext | fgrep / | sed -e 's%^.*[[ 	]]/%/%' -e 's%/[[^/]][[^/]]*$%%' |sort -u`])
+
+		# If we passed the link-test, but get a "not found" on a given library,
+		# this could be due to inept reconfiguration of gcc to make it only
+		# partly honor /usr/local/lib (or whatever).  Sometimes this behavior
+		# is intentional, e.g., installing gcc in /usr/bin and suppressing the
+		# /usr/local libraries.
+		if test -n "$cf_rpath_oops"
+		then
+			for cf_rpath_src in $cf_rpath_oops
+			do
+				for cf_rpath_dir in \
+					/usr/local \
+					/usr/pkg \
+					/opt/sfw
+				do
+					if test -f $cf_rpath_dir/lib/$cf_rpath_src
+					then
+						CF_VERBOSE(...adding -L$cf_rpath_dir/lib to LDFLAGS for $cf_rpath_src)
+						LDFLAGS="$LDFLAGS -L$cf_rpath_dir/lib"
+						break
+					fi
+				done
+			done
+		fi
+	fi
+
+	CF_VERBOSE(...checking EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+
+	CF_RPATH_HACK_2(LDFLAGS)
+	CF_RPATH_HACK_2(LIBS)
+
+	CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+fi
+AC_SUBST(EXTRA_LDFLAGS)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_RPATH_HACK_2 version: 6 updated: 2010/04/17 16:31:24
+dnl ---------------
+dnl Do one set of substitutions for CF_RPATH_HACK, adding an rpath option to
+dnl EXTRA_LDFLAGS for each -L option found.
+dnl
+dnl $cf_rpath_list contains a list of directories to ignore.
+dnl
+dnl $1 = variable name to update.  The LDFLAGS variable should be the only one,
+dnl      but LIBS often has misplaced -L options.
+AC_DEFUN([CF_RPATH_HACK_2],
+[
+CF_VERBOSE(...checking $1 [$]$1)
+
+cf_rpath_dst=
+for cf_rpath_src in [$]$1
+do
+	case $cf_rpath_src in #(vi
+	-L*) #(vi
+
+		# check if this refers to a directory which we will ignore
+		cf_rpath_skip=no
+		if test -n "$cf_rpath_list"
+		then
+			for cf_rpath_item in $cf_rpath_list
+			do
+				if test "x$cf_rpath_src" = "x-L$cf_rpath_item"
+				then
+					cf_rpath_skip=yes
+					break
+				fi
+			done
+		fi
+
+		if test "$cf_rpath_skip" = no
+		then
+			# transform the option
+			if test "$LD_RPATH_OPT" = "-R " ; then
+				cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e "s%-L%-R %"`
+			else
+				cf_rpath_tmp=`echo "$cf_rpath_src" |sed -e "s%-L%$LD_RPATH_OPT%"`
+			fi
+
+			# if we have not already added this, add it now
+			cf_rpath_tst=`echo "$EXTRA_LDFLAGS" | sed -e "s%$cf_rpath_tmp %%"`
+			if test "x$cf_rpath_tst" = "x$EXTRA_LDFLAGS"
+			then
+				CF_VERBOSE(...Filter $cf_rpath_src ->$cf_rpath_tmp)
+				EXTRA_LDFLAGS="$cf_rpath_tmp $EXTRA_LDFLAGS"
+			fi
+		fi
+		;;
+	esac
+	cf_rpath_dst="$cf_rpath_dst $cf_rpath_src"
+done
+$1=$cf_rpath_dst
+
+CF_VERBOSE(...checked $1 [$]$1)
+AC_SUBST(EXTRA_LDFLAGS)
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_SIG_ATOMIC_T version: 2 updated: 2005/09/18 17:27:12
 dnl ---------------
 dnl signal handler, but there are some gcc depedencies in that recommendation.
@@ -2725,6 +2913,45 @@ else
 fi
 ])
 dnl ---------------------------------------------------------------------------
+dnl CF_TRY_XOPEN_SOURCE version: 1 updated: 2011/10/30 17:09:50
+dnl -------------------
+dnl If _XOPEN_SOURCE is not defined in the compile environment, check if we
+dnl can define it successfully.
+AC_DEFUN([CF_TRY_XOPEN_SOURCE],[
+AC_CACHE_CHECK(if we should define _XOPEN_SOURCE,cf_cv_xopen_source,[
+	AC_TRY_COMPILE([
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+],[
+#ifndef _XOPEN_SOURCE
+make an error
+#endif],
+	[cf_cv_xopen_source=no],
+	[cf_save="$CPPFLAGS"
+	 CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE=$cf_XOPEN_SOURCE"
+	 AC_TRY_COMPILE([
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+],[
+#ifdef _XOPEN_SOURCE
+make an error
+#endif],
+	[cf_cv_xopen_source=no],
+	[cf_cv_xopen_source=$cf_XOPEN_SOURCE])
+	CPPFLAGS="$cf_save"
+	])
+])
+
+if test "$cf_cv_xopen_source" != no ; then
+	CF_REMOVE_DEFINE(CFLAGS,$CFLAGS,_XOPEN_SOURCE)
+	CF_REMOVE_DEFINE(CPPFLAGS,$CPPFLAGS,_XOPEN_SOURCE)
+	cf_temp_xopen_source="-D_XOPEN_SOURCE=$cf_cv_xopen_source"
+	CF_ADD_CFLAGS($cf_temp_xopen_source)
+fi
+])
+dnl ---------------------------------------------------------------------------
 dnl CF_UPPER version: 5 updated: 2001/01/29 23:40:59
 dnl --------
 dnl Make an uppercase version of a variable
@@ -2919,7 +3146,7 @@ AC_TRY_LINK([
 test $cf_cv_need_xopen_extension = yes && CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE_EXTENDED"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 37 updated: 2011/08/06 20:32:05
+dnl CF_XOPEN_SOURCE version: 39 updated: 2011/10/30 17:09:50
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -2985,42 +3212,46 @@ nto-qnx*) #(vi
 sco*) #(vi
 	# setting _XOPEN_SOURCE breaks Lynx on SCO Unix / OpenServer
 	;;
-solaris2.1[[0-9]]) #(vi
-	cf_xopen_source="-D__EXTENSIONS__ -D_XOPEN_SOURCE=$cf_XOPEN_SOURCE"
-	;;
-solaris2.[[1-9]]) #(vi
+solaris2.*) #(vi
 	cf_xopen_source="-D__EXTENSIONS__"
 	;;
 *)
-	AC_CACHE_CHECK(if we should define _XOPEN_SOURCE,cf_cv_xopen_source,[
-	AC_TRY_COMPILE([#include <sys/types.h>],[
-#ifndef _XOPEN_SOURCE
-make an error
-#endif],
-	[cf_cv_xopen_source=no],
-	[cf_save="$CPPFLAGS"
-	 CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE=$cf_XOPEN_SOURCE"
-	 AC_TRY_COMPILE([#include <sys/types.h>],[
-#ifdef _XOPEN_SOURCE
-make an error
-#endif],
-	[cf_cv_xopen_source=no],
-	[cf_cv_xopen_source=$cf_XOPEN_SOURCE])
-	CPPFLAGS="$cf_save"
-	])
-])
-	if test "$cf_cv_xopen_source" != no ; then
-		CF_REMOVE_DEFINE(CFLAGS,$CFLAGS,_XOPEN_SOURCE)
-		CF_REMOVE_DEFINE(CPPFLAGS,$CPPFLAGS,_XOPEN_SOURCE)
-		cf_temp_xopen_source="-D_XOPEN_SOURCE=$cf_cv_xopen_source"
-		CF_ADD_CFLAGS($cf_temp_xopen_source)
-	fi
+	CF_TRY_XOPEN_SOURCE
 	CF_POSIX_C_SOURCE($cf_POSIX_C_SOURCE)
 	;;
 esac
 
 if test -n "$cf_xopen_source" ; then
 	CF_ADD_CFLAGS($cf_xopen_source)
+fi
+
+dnl In anything but the default case, we may have system-specific setting
+dnl which is still not guaranteed to provide all of the entrypoints that
+dnl _XOPEN_SOURCE would yield.
+if test -n "$cf_XOPEN_SOURCE" && test -z "$cf_cv_xopen_source" ; then
+	AC_MSG_CHECKING(if _XOPEN_SOURCE really is set)
+	AC_TRY_COMPILE([#include <stdlib.h>],[
+#ifndef _XOPEN_SOURCE
+make an error
+#endif],
+	[cf_XOPEN_SOURCE_set=yes],
+	[cf_XOPEN_SOURCE_set=no])
+	AC_MSG_RESULT($cf_XOPEN_SOURCE_set)
+	if test $cf_XOPEN_SOURCE_set = yes
+	then
+		AC_TRY_COMPILE([#include <stdlib.h>],[
+#if (_XOPEN_SOURCE - 0) < $cf_XOPEN_SOURCE
+make an error
+#endif],
+		[cf_XOPEN_SOURCE_set_ok=yes],
+		[cf_XOPEN_SOURCE_set_ok=no])
+		if test $cf_XOPEN_SOURCE_set_ok = no
+		then
+			AC_MSG_WARN(_XOPEN_SOURCE is lower than requested)
+		fi
+	else
+		CF_TRY_XOPEN_SOURCE
+	fi
 fi
 ])
 dnl ---------------------------------------------------------------------------

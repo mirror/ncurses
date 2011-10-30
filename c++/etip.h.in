@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2011 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: etip.h.in,v 1.37 2008/08/30 19:27:32 tom Exp $
+// $Id: etip.h.in,v 1.38 2011/10/29 14:01:50 tom Exp $
 
 #ifndef NCURSES_ETIP_H_incl
 #define NCURSES_ETIP_H_incl 1
@@ -184,7 +184,7 @@ public:
 
   NCursesPanelException (const char *msg, int err) :
     NCursesException (msg, err),
-    p (NULL)
+    p (0)
     {};
 
   NCursesPanelException (const NCursesPanel* panel,
@@ -196,7 +196,7 @@ public:
 
   NCursesPanelException (int err) :
     NCursesException ("panel library error", err),
-    p (NULL)
+    p (0)
     {};
 
   NCursesPanelException (const NCursesPanel* panel,
@@ -235,7 +235,7 @@ public:
 
   NCursesMenuException (const char *msg, int err) :
     NCursesException (msg, err),
-    m (NULL)
+    m (0)
     {};
 
   NCursesMenuException (const NCursesMenu* menu,
@@ -247,7 +247,7 @@ public:
 
   NCursesMenuException (int err) :
     NCursesException ("menu library error", err),
-    m (NULL)
+    m (0)
     {};
 
   NCursesMenuException (const NCursesMenu* menu,
@@ -286,7 +286,7 @@ public:
 
   NCursesFormException (const char *msg, int err) :
     NCursesException (msg, err),
-    f (NULL)
+    f (0)
     {};
 
   NCursesFormException (const NCursesForm* form,
@@ -298,7 +298,7 @@ public:
 
   NCursesFormException (int err) :
     NCursesException ("form library error", err),
-    f (NULL)
+    f (0)
     {};
 
   NCursesFormException (const NCursesForm* form,

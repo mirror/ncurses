@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1804 2011/10/22 23:06:29 tom Exp $
+-- $Id: NEWS,v 1.1812 2011/10/30 14:36:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,25 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20111030
+	+ modify make_db_path() to allow creating "terminfo.db" in the same
+	  directory as an existing "terminfo" directory.  This fixes a case
+	  where switching between hashed/filesystem databases would cause the
+	  new hashed database to be installed in the next best location -
+	  root's home directory.
+	+ add variable cf_cv_prog_gnat_correct to those passed to
+	  config.status, fixing a problem with Ada95 builds (cf: 20111022).
+	+ change feature test from _XPG5 to _XOPEN_SOURCE in two places, to
+	  accommodate broken implementations for _XPG6.
+	+ eliminate usage of NULL symbol from etip.h, to reduce header
+	  interdependencies.
+	+ add configure check to decide when to add _XOPEN_SOURCE define to
+	  compiler options, i.e., for Solaris 10 and later (cf: 20100403).
+	  This is a workaround for gcc 4.6, which fails to build the c++
+	  binding if that symbol is defined by the application, due to
+	  incorrectly combining the corresponding feature test macros
+	  (report by Peter Kruse).
 
 20111022
 	+ correct logic for discarding mouse events, retaining the partial

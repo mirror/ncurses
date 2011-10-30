@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.225 2011/08/20 16:09:38 tom Exp $ */
+/* $Id: curses.h.in,v 1.227 2011/10/29 20:01:35 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -151,15 +151,21 @@ typedef unsigned @cf_cv_typeof_mmask_t@ mmask_t;
 
 /*
  * With XPG4, you must define _XOPEN_SOURCE_EXTENDED, it is redundant (or
- * conflicting) when _XOPEN_SOURCE is 500 or greater.
+ * conflicting) when _XOPEN_SOURCE is 500 or greater.  If NCURSES_WIDECHAR is
+ * not already defined, e.g., if the platform relies upon nonstandard feature
+ * test macros, define it at this point if the standard feature test macros
+ * indicate that it should be defined.
  */
-#undef NCURSES_WIDECHAR
-#if defined(_XOPEN_SOURCE_EXTENDED) || defined(_XPG5)
-#define NCURSES_WIDECHAR
+#ifndef NCURSES_WIDECHAR
+#if defined(_XOPEN_SOURCE_EXTENDED) || (defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE - 0 >= 500))
+#define NCURSES_WIDECHAR 1
+#else
+#define NCURSES_WIDECHAR 0
 #endif
+#endif /* NCURSES_WIDECHAR */
 
 #include <stdarg.h>	/* we need va_list */
-#ifdef NCURSES_WIDECHAR
+#if NCURSES_WIDECHAR
 #include <stddef.h>	/* we want wchar_t */
 #endif
 
@@ -342,7 +348,7 @@ typedef struct _win_st WINDOW;
 
 typedef	chtype	attr_t;		/* ...must be at least as wide as chtype */
 
-#ifdef NCURSES_WIDECHAR
+#if NCURSES_WIDECHAR
 
 #if @NCURSES_LIBUTF8@
 #ifdef mblen			/* libutf8.h defines it w/o undefining first */
@@ -366,7 +372,7 @@ typedef unsigned int wint_t@NCURSES_OK_WCHAR_T@;
 /*
  * cchar_t stores an array of CCHARW_MAX wide characters.  The first is
  * normally a spacing character.  The others are non-spacing.  If those
- * (spacing and nonspacing) do not fill the array, a null L'\0' follows. 
+ * (spacing and nonspacing) do not fill the array, a null L'\0' follows.
  * Otherwise, a null is assumed to follow when extracting via getcchar().
  */
 #define CCHARW_MAX	@NCURSES_CCHARW_MAX@
@@ -434,7 +440,7 @@ struct _win_st
 
 	NCURSES_SIZE_T _yoffset; /* real begy is _begy + _yoffset */
 
-#ifdef NCURSES_WIDECHAR
+#if NCURSES_WIDECHAR
 	cchar_t  _bkgrnd;	/* current background char/attribute pair */
 #if @NCURSES_EXT_COLORS@
 	int	_color;		/* current color-pair for non-space character */
@@ -854,7 +860,7 @@ extern NCURSES_EXPORT(int) getpary (const WINDOW *);			/* generated */
 /*
  * vid_attr() was implemented originally based on a draft of X/Open curses.
  */
-#ifndef NCURSES_WIDECHAR
+#if !NCURSES_WIDECHAR
 #define vid_attr(a,pair,opts) vidattr(a)
 #endif
 
@@ -1115,7 +1121,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #define wattroff(win,at)	wattr_off(win, NCURSES_CAST(attr_t, at), NULL)
 
 #if !NCURSES_OPAQUE
-#if defined(NCURSES_WIDECHAR) && @NCURSES_EXT_COLORS@
+#if NCURSES_WIDECHAR && @NCURSES_EXT_COLORS@
 #define wattrset(win,at)	((win) \
 				  ? ((win)->_color = PAIR_NUMBER(at), \
                                      (win)->_attrs = NCURSES_CAST(attr_t, at), \
@@ -1263,7 +1269,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #define slk_attr_on(a,v)		((v) ? ERR : slk_attron(a))
 
 #if !NCURSES_OPAQUE
-#if defined(NCURSES_WIDECHAR) && @NCURSES_EXT_COLORS@
+#if NCURSES_WIDECHAR && @NCURSES_EXT_COLORS@
 #define wattr_set(win,a,p,opts)		(((win) \
 					  ? ((win)->_attrs = ((a) & ~A_COLOR), \
 					     (win)->_color = (p)) \

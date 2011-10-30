@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.488 2011/10/22 22:41:12 tom Exp $
+ * $Id: curses.priv.h,v 1.489 2011/10/29 19:58:15 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1200,7 +1200,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 	WINDOWLIST *next;
 	SCREEN *screen;		/* screen containing the window */
 	WINDOW	win;		/* WINDOW_EXT() needs to account for offset */
-#ifdef NCURSES_WIDECHAR
+#if NCURSES_WIDECHAR
 	char addch_work[(MB_LEN_MAX * 9) + 1];
 	unsigned addch_used;	/* number of bytes in addch_work[] */
 	int addch_x;		/* x-position for addch_work[] */

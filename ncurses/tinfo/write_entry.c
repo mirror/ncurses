@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.81 2011/10/22 15:33:37 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.82 2011/10/30 14:33:13 tom Exp $")
 
 static int total_written;
 
@@ -127,18 +127,17 @@ make_db_path(char *dst, const char *src, size_t limit)
     }
 #if USE_HASHED_DB
     if (rc == 0) {
-	if (_nc_is_dir_path(dst)) {
-	    rc = -1;
-	} else {
-	    static const char suffix[] = DBM_SUFFIX;
-	    size_t have = strlen(dst);
-	    size_t need = strlen(suffix);
-	    if (have > need && strcmp(dst + (int) (have - need), suffix)) {
-		if (have + need <= limit)
-		    strcat(dst, suffix);
-		else
-		    rc = -1;
+	static const char suffix[] = DBM_SUFFIX;
+	size_t have = strlen(dst);
+	size_t need = strlen(suffix);
+	if (have > need && strcmp(dst + (int) (have - need), suffix)) {
+	    if (have + need <= limit) {
+		strcat(dst, suffix);
+	    } else {
+		rc = -1;
 	    }
+	} else if (_nc_is_dir_path(dst)) {
+	    rc = -1;
 	}
     }
 #endif
@@ -158,10 +157,11 @@ make_db_root(const char *path)
 #if USE_HASHED_DB
 	DB *capdbp;
 
-	if ((capdbp = _nc_db_open(fullpath, TRUE)) == NULL)
+	if ((capdbp = _nc_db_open(fullpath, TRUE)) == NULL) {
 	    rc = -1;
-	else if (_nc_db_close(capdbp) < 0)
+	} else if (_nc_db_close(capdbp) < 0) {
 	    rc = -1;
+	}
 #else
 	struct stat statbuf;
 

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.99 2011/09/24 15:42:11 tom Exp $
+dnl $Id: configure.in,v 1.101 2011/10/29 21:17:36 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -107,7 +107,7 @@ CF_DISABLE_LEAKS
 dnl ---------------------------------------------------------------------------
 AC_MSG_CHECKING(if you want to check for wide-character functions)
 CF_ARG_DISABLE(widec,
-	[--disable-widec           disable checks for wide-character functions],
+	[  --disable-widec           disable checks for wide-character functions],
 	cf_enable_widec=no,
 	cf_enable_widec=yes,
 	yes)
@@ -265,6 +265,31 @@ CF_NCURSES_EXT_FUNCS
 
 if test "$cf_enable_widec" = yes
 then
+	# workaround for systems with ncurses before 20111029, due to change of
+	# feature test macro from _XPG5 to _XOPEN_SOURCE
+	if test -n "$cf_cv_ncurses_version" && test "x$cf_cv_ncurses_version" != xno
+	then
+		cf_define_xpg5=no
+		AC_MSG_CHECKING(if _XPG5 should be defined to enable wide-characters)
+
+		AC_TRY_COMPILE([
+#include <${cf_cv_ncurses_header:-curses.h}>],
+			[int x = _XPG5],,
+			[cf_save_cppflags="$CPPFLAGS"
+			 CPPFLAGS="$CPPFLAGS -D_XPG5"
+			 AC_TRY_COMPILE([
+#include <${cf_cv_ncurses_header:-curses.h}>],
+				[int x = _XPG5],
+				[cf_define_xpg5=yes])
+			 CPPFLAGS="$cf_save_cppflags"])
+		AC_MSG_RESULT($cf_define_xpg5)
+
+		if test "$cf_define_xpg5" = yes
+		then
+			CPPFLAGS="$CPPFLAGS -D_XPG5"
+		fi
+	fi
+
 	AC_CACHE_CHECK(for wide-character functions,cf_cv_widechar_funcs,[
 	AC_TRY_LINK([
 #include <${cf_cv_ncurses_header:-curses.h}>],
@@ -316,6 +341,8 @@ fi
 
 CF_CURSES_CHECK_DATA(boolnames)
 CF_CURSES_CHECK_DATA(boolfnames)
+
+CF_DISABLE_RPATH_HACK
 
 TEST_ARGS="$LIBS"
 LIBS=

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.577 2011/10/22 18:58:44 tom Exp $
+dnl $Id: aclocal.m4,v 1.581 2011/10/30 21:13:25 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -511,7 +511,7 @@ fi
 AC_SUBST(ARFLAGS)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_AWK_BIG_PRINTF version: 3 updated: 2008/12/27 12:30:03
+dnl CF_AWK_BIG_PRINTF version: 4 updated: 2011/10/30 17:09:50
 dnl -----------------
 dnl Check if awk can handle big strings using printf.  Some older versions of
 dnl awk choke on large strings passed via "%s".
@@ -525,8 +525,8 @@ AC_DEFUN([CF_AWK_BIG_PRINTF],
 		eval $2=no
 		;;
 	*) #(vi
-		if ( ${AWK} 'BEGIN { xx = "x"; while (length(xx) < $1) { xx = xx "x"; }; printf("%s\n", xx); }' \
-			| $AWK '{ printf "%d\n", length([$]0); }' | $AWK 'BEGIN { eqls=0; recs=0; } { recs++; if ([$]0 == 12000) eqls++; } END { if (recs != 1 || eqls != 1) exit 1; }' 2>/dev/null >/dev/null ) ; then
+		if ( ${AWK} 'BEGIN { xx = "x"; while (length(xx) < $1) { xx = xx "x"; }; printf("%s\n", xx); }' 2>/dev/null \
+			| $AWK '{ printf "%d\n", length([$]0); }' 2>/dev/null | $AWK 'BEGIN { eqls=0; recs=0; } { recs++; if ([$]0 == 12000) eqls++; } END { if (recs != 1 || eqls != 1) exit 1; }' 2>/dev/null >/dev/null ) ; then
 			eval $2=yes
 		else
 			eval $2=no
@@ -975,6 +975,27 @@ if test "$cf_cv_check_gpm_wgetch" != yes ; then
 fi
 ])])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_WCHAR_H version: 1 updated: 2011/10/29 15:01:05
+dnl ----------------
+dnl Check if wchar.h can be used, i.e., without defining _XOPEN_SOURCE_EXTENDED
+AC_DEFUN([CF_CHECK_WCHAR_H],[
+AC_CACHE_CHECK(if wchar.h can be used as is,cf_cv_wchar_h_okay,[
+AC_TRY_COMPILE(
+[
+#include <stdlib.h>
+#include <wchar.h>
+],[
+	wint_t foo = 0;
+	int bar = iswpunct(foo)],
+	[cf_cv_wchar_h_okay=yes],
+	[cf_cv_wchar_h_okay=no])])
+
+if test $cf_cv_wchar_h_okay = no
+then
+	CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_CPP_PARAM_INIT version: 4 updated: 2001/04/07 22:31:18
 dnl -----------------
 dnl Check if the C++ compiler accepts duplicate parameter initialization.  This
@@ -1064,6 +1085,54 @@ public:
 fi
 
 test "$cf_cv_cpp_static_cast" = yes && AC_DEFINE(CPP_HAS_STATIC_CAST)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CXX_AR_FLAGS version: 1 updated: 2011/10/29 08:35:34
+dnl ---------------
+dnl Setup special archiver flags for given compilers.
+AC_DEFUN([CF_CXX_AR_FLAGS],[
+	CXX_AR='$(AR)'
+	CXX_ARFLAGS='$(ARFLAGS)'
+	case $cf_cv_system_name in #(vi
+	irix*) #(vi
+	    if test "$GXX" != yes ; then
+		CXX_AR='$(CXX)'
+		CXX_ARFLAGS='-ar -o'
+	    fi
+	    ;;
+	sco3.2v5*) #(vi
+	    CXXLDFLAGS="-u main"
+	    ;;
+	solaris2*)
+	    if test "$GXX" != yes ; then
+		CXX_AR='$(CXX)'
+		CXX_ARFLAGS='-xar -o'
+	    fi
+	    ;;
+	esac
+	AC_SUBST(CXXLDFLAGS)
+	AC_SUBST(CXX_AR)
+	AC_SUBST(CXX_ARFLAGS)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CXX_IOSTREAM_NAMESPACE version: 1 updated: 2011/10/29 08:35:34
+dnl -------------------------
+dnl For c++, check if iostream uses "std::" namespace.
+AC_DEFUN([CF_CXX_IOSTREAM_NAMESPACE],[
+AC_CHECK_HEADERS(iostream)
+if test x"$ac_cv_header_iostream" = xyes ; then
+	AC_MSG_CHECKING(if iostream uses std-namespace)
+	AC_TRY_COMPILE([
+#include <iostream>
+using std::endl;
+using std::cerr;],[
+cerr << "testing" << endl;
+],[cf_iostream_namespace=yes],[cf_iostream_namespace=no])
+	AC_MSG_RESULT($cf_iostream_namespace)
+	if test "$cf_iostream_namespace" = yes ; then
+		AC_DEFINE(IOSTREAM_NAMESPACE)
+	fi
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_C_INLINE version: 3 updated: 2010/05/01 15:14:41
@@ -5952,6 +6021,45 @@ top_builddir=`pwd`
 AC_SUBST(top_builddir)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_TRY_XOPEN_SOURCE version: 1 updated: 2011/10/30 17:09:50
+dnl -------------------
+dnl If _XOPEN_SOURCE is not defined in the compile environment, check if we
+dnl can define it successfully.
+AC_DEFUN([CF_TRY_XOPEN_SOURCE],[
+AC_CACHE_CHECK(if we should define _XOPEN_SOURCE,cf_cv_xopen_source,[
+	AC_TRY_COMPILE([
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+],[
+#ifndef _XOPEN_SOURCE
+make an error
+#endif],
+	[cf_cv_xopen_source=no],
+	[cf_save="$CPPFLAGS"
+	 CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE=$cf_XOPEN_SOURCE"
+	 AC_TRY_COMPILE([
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+],[
+#ifdef _XOPEN_SOURCE
+make an error
+#endif],
+	[cf_cv_xopen_source=no],
+	[cf_cv_xopen_source=$cf_XOPEN_SOURCE])
+	CPPFLAGS="$cf_save"
+	])
+])
+
+if test "$cf_cv_xopen_source" != no ; then
+	CF_REMOVE_DEFINE(CFLAGS,$CFLAGS,_XOPEN_SOURCE)
+	CF_REMOVE_DEFINE(CPPFLAGS,$CPPFLAGS,_XOPEN_SOURCE)
+	cf_temp_xopen_source="-D_XOPEN_SOURCE=$cf_cv_xopen_source"
+	CF_ADD_CFLAGS($cf_temp_xopen_source)
+fi
+])
+dnl ---------------------------------------------------------------------------
 dnl CF_TYPEOF_CHTYPE version: 8 updated: 2006/12/16 12:33:30
 dnl ----------------
 dnl Determine the type we should use for chtype (and attr_t, which is treated
@@ -6683,7 +6791,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 37 updated: 2011/08/06 20:32:05
+dnl CF_XOPEN_SOURCE version: 39 updated: 2011/10/30 17:09:50
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -6749,41 +6857,45 @@ nto-qnx*) #(vi
 sco*) #(vi
 	# setting _XOPEN_SOURCE breaks Lynx on SCO Unix / OpenServer
 	;;
-solaris2.1[[0-9]]) #(vi
-	cf_xopen_source="-D__EXTENSIONS__ -D_XOPEN_SOURCE=$cf_XOPEN_SOURCE"
-	;;
-solaris2.[[1-9]]) #(vi
+solaris2.*) #(vi
 	cf_xopen_source="-D__EXTENSIONS__"
 	;;
 *)
-	AC_CACHE_CHECK(if we should define _XOPEN_SOURCE,cf_cv_xopen_source,[
-	AC_TRY_COMPILE([#include <sys/types.h>],[
-#ifndef _XOPEN_SOURCE
-make an error
-#endif],
-	[cf_cv_xopen_source=no],
-	[cf_save="$CPPFLAGS"
-	 CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE=$cf_XOPEN_SOURCE"
-	 AC_TRY_COMPILE([#include <sys/types.h>],[
-#ifdef _XOPEN_SOURCE
-make an error
-#endif],
-	[cf_cv_xopen_source=no],
-	[cf_cv_xopen_source=$cf_XOPEN_SOURCE])
-	CPPFLAGS="$cf_save"
-	])
-])
-	if test "$cf_cv_xopen_source" != no ; then
-		CF_REMOVE_DEFINE(CFLAGS,$CFLAGS,_XOPEN_SOURCE)
-		CF_REMOVE_DEFINE(CPPFLAGS,$CPPFLAGS,_XOPEN_SOURCE)
-		cf_temp_xopen_source="-D_XOPEN_SOURCE=$cf_cv_xopen_source"
-		CF_ADD_CFLAGS($cf_temp_xopen_source)
-	fi
+	CF_TRY_XOPEN_SOURCE
 	CF_POSIX_C_SOURCE($cf_POSIX_C_SOURCE)
 	;;
 esac
 
 if test -n "$cf_xopen_source" ; then
 	CF_ADD_CFLAGS($cf_xopen_source)
+fi
+
+dnl In anything but the default case, we may have system-specific setting
+dnl which is still not guaranteed to provide all of the entrypoints that
+dnl _XOPEN_SOURCE would yield.
+if test -n "$cf_XOPEN_SOURCE" && test -z "$cf_cv_xopen_source" ; then
+	AC_MSG_CHECKING(if _XOPEN_SOURCE really is set)
+	AC_TRY_COMPILE([#include <stdlib.h>],[
+#ifndef _XOPEN_SOURCE
+make an error
+#endif],
+	[cf_XOPEN_SOURCE_set=yes],
+	[cf_XOPEN_SOURCE_set=no])
+	AC_MSG_RESULT($cf_XOPEN_SOURCE_set)
+	if test $cf_XOPEN_SOURCE_set = yes
+	then
+		AC_TRY_COMPILE([#include <stdlib.h>],[
+#if (_XOPEN_SOURCE - 0) < $cf_XOPEN_SOURCE
+make an error
+#endif],
+		[cf_XOPEN_SOURCE_set_ok=yes],
+		[cf_XOPEN_SOURCE_set_ok=no])
+		if test $cf_XOPEN_SOURCE_set_ok = no
+		then
+			AC_MSG_WARN(_XOPEN_SOURCE is lower than requested)
+		fi
+	else
+		CF_TRY_XOPEN_SOURCE
+	fi
 fi
 ])

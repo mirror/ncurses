@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.527 2011/10/22 18:56:06 tom Exp $
+dnl $Id: configure.in,v 1.531 2011/10/30 01:00:05 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.527 $)
+AC_REVISION($Revision: 1.531 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -700,14 +700,9 @@ AC_MSG_RESULT($with_widec)
 if test "$with_widec" = yes ; then
 	LIB_SUFFIX="w${LIB_SUFFIX}"
 	AC_DEFINE(USE_WIDEC_SUPPORT)
+	AC_DEFINE(NCURSES_WIDECHAR)
 
-	case "$CFLAGS $CPPFLAGS" in #(vi
-	*-D_XOPEN_SOURCE=500) #(vi
-		;;
-	*)
-		CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
-		;;
-	esac
+	CF_CHECK_WCHAR_H
 
 	# with_overwrite=no
 	NCURSES_CH_T=cchar_t
@@ -1462,50 +1457,14 @@ if test -n "$CXX" ; then
 		;;
 	esac
 
-	AC_CHECK_HEADERS(iostream typeinfo)
-
-    if test x"$ac_cv_header_iostream" = xyes ; then
-        AC_MSG_CHECKING(if iostream uses std-namespace)
-        AC_TRY_COMPILE([
-#include <iostream>
-using std::endl;
-using std::cerr;],[
-cerr << "testing" << endl;
-],[cf_iostream_namespace=yes],[cf_iostream_namespace=no])
-        AC_MSG_RESULT($cf_iostream_namespace)
-        if test "$cf_iostream_namespace" = yes ; then
-            AC_DEFINE(IOSTREAM_NAMESPACE)
-        fi
-    fi
-
+	AC_CHECK_HEADERS(typeinfo)
+	CF_CXX_IOSTREAM_NAMESPACE
 	CF_BOOL_DECL
 	CF_BOOL_SIZE
 	CF_ETIP_DEFINES
 	CF_CPP_PARAM_INIT
 	CF_CPP_STATIC_CAST
-
-	CXX_AR='$(AR)'
-	CXX_ARFLAGS='$(ARFLAGS)'
-	case $cf_cv_system_name in #(vi
-	irix*) #(vi
-	    if test "$GXX" != yes ; then
-		CXX_AR='$(CXX)'
-		CXX_ARFLAGS='-ar -o'
-	    fi
-	    ;;
-	sco3.2v5*) #(vi
-	    CXXLDFLAGS="-u main"
-	    ;;
-	solaris2*)
-	    if test "$GXX" != yes ; then
-		CXX_AR='$(CXX)'
-		CXX_ARFLAGS='-xar -o'
-	    fi
-	    ;;
-	esac
-	AC_SUBST(CXXLDFLAGS)
-	AC_SUBST(CXX_AR)
-	AC_SUBST(CXX_ARFLAGS)
+	CF_CXX_AR_FLAGS
 else
 	cf_cxx_library=no
 	cf_cv_builtin_bool=1
@@ -1976,6 +1935,7 @@ cf_cv_enable_lp64="$cf_cv_enable_lp64"
 cf_cv_enable_opaque="$cf_cv_enable_opaque"
 cf_cv_prog_CC_c_o=$cf_cv_prog_CC_c_o
 cf_cv_prog_CXX_c_o=$cf_cv_prog_CXX_c_o
+cf_cv_prog_gnat_correct=$cf_cv_prog_gnat_correct
 cf_cv_rel_version="$cf_cv_rel_version"
 cf_cv_rm_so_locs="$cf_cv_rm_so_locs"
 cf_cv_shared_soname='$cf_cv_shared_soname'
