@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.56 2011/02/21 01:09:31 tom Exp $
+# $Id: Makefile.in,v 1.57 2011/11/11 18:05:45 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -139,7 +139,7 @@ uninstall.data :
 
 uninstall.libs :
 	-rm -f $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
-@MAKE_PC_FILES@	$(SHELL) 'for name in *.pc; do rm -f $(DESTDIR)$(PKG_CONFIG_LIBDIR)/$$name; done'
+@MAKE_PC_FILES@	$(SHELL) -c 'for name in *.pc; do rm -f $(DESTDIR)$(PKG_CONFIG_LIBDIR)/$$name; done'
 
 tags :
 

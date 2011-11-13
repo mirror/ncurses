@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.39 2011/10/30 23:24:00 tom Exp $
+dnl $Id: aclocal.m4,v 1.40 2011/11/13 02:11:11 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3607,7 +3607,7 @@ fi
 AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PTHREAD version: 3 updated: 2010/05/29 16:31:02
+dnl CF_WITH_PTHREAD version: 4 updated: 2011/11/12 21:08:44
 dnl ---------------
 dnl Check for POSIX thread library.
 AC_DEFUN([CF_WITH_PTHREAD],
@@ -3623,28 +3623,32 @@ if test "$with_pthread" != no ; then
     AC_CHECK_HEADER(pthread.h,[
         AC_DEFINE(HAVE_PTHREADS_H)
 
-        AC_MSG_CHECKING(if we can link with the pthread library)
-        cf_save_LIBS="$LIBS"
-        CF_ADD_LIB(pthread)
-        AC_TRY_LINK([
+	for cf_lib_pthread in pthread c_r
+	do
+	    AC_MSG_CHECKING(if we can link with the $cf_lib_pthread library)
+	    cf_save_LIBS="$LIBS"
+	    CF_ADD_LIB($cf_lib_pthread)
+	    AC_TRY_LINK([
 #include <pthread.h>
 ],[
-        int rc = pthread_create(0,0,0,0);
+	    int rc = pthread_create(0,0,0,0);
 ],[with_pthread=yes],[with_pthread=no])
-        LIBS="$cf_save_LIBS"
-        AC_MSG_RESULT($with_pthread)
+	    LIBS="$cf_save_LIBS"
+	    AC_MSG_RESULT($with_pthread)
+	    test "$with_pthread" = yes && break
+	done
 
-        if test "$with_pthread" = yes ; then
-            CF_ADD_LIB(pthread)
-            AC_DEFINE(HAVE_LIBPTHREADS)
-        else
-            AC_MSG_ERROR(Cannot link with pthread library)
-        fi
+	if test "$with_pthread" = yes ; then
+	    CF_ADD_LIB($cf_lib_pthread)
+	    AC_DEFINE(HAVE_LIBPTHREADS)
+	else
+	    AC_MSG_ERROR(Cannot link with pthread library)
+	fi
     ])
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 39 updated: 2011/10/30 17:09:50
+dnl CF_XOPEN_SOURCE version: 40 updated: 2011/11/12 21:08:44
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -3693,10 +3697,16 @@ linux*|gnu*|mint*|k*bsd*-gnu) #(vi
 	CF_GNU_SOURCE
 	;;
 mirbsd*) #(vi
-	# setting _XOPEN_SOURCE or _POSIX_SOURCE breaks <arpa/inet.h>
+	# setting _XOPEN_SOURCE or _POSIX_SOURCE breaks <sys/select.h> and other headers which use u_int / u_short types
+	cf_XOPEN_SOURCE=
+	CF_POSIX_C_SOURCE($cf_POSIX_C_SOURCE)
 	;;
 netbsd*) #(vi
 	cf_xopen_source="-D_NETBSD_SOURCE" # setting _XOPEN_SOURCE breaks IPv6 for lynx on NetBSD 1.6, breaks xterm, is not needed for ncursesw
+	;;
+openbsd[[4-9]]*) #(vi
+	# setting _XOPEN_SOURCE lower than 500 breaks g++ compile with wchar.h, needed for ncursesw
+	cf_XOPEN_SOURCE=600
 	;;
 openbsd*) #(vi
 	# setting _XOPEN_SOURCE breaks xterm on OpenBSD 2.8, is not needed for ncursesw

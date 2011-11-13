@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1812 2011/10/30 14:36:41 tom Exp $
+-- $Id: NEWS,v 1.1818 2011/11/13 02:07:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20111112
+	+ add pccon entries for OpenBSD console (Alexei Malinin).
+	+ build-fix for OpenBSD 4.9 with gcc 4.2.1, setting _XOPEN_SOURCE to
+	  600 to work around inconsistent ifdef'ing of wcstof between C and
+	  C++ header files.
+	+ modify capconvert script to accept more than exact match on "xterm",
+	  e.g., the "xterm-*" variants, to exclude from the conversion (patch
+	  by Robert Millan).
+	+ add -lc_r as alternative for -lpthread, allows build of threaded code
+	  in older FreeBSD machines.
+	+ build-fix for MirBSD, which fails when either _XOPEN_SOURCE or
+	  _POSIX_SOURCE are defined.
+	+ fix a typo misc/Makefile.in, used in uninstalling pc-files.
 
 20111030
 	+ modify make_db_path() to allow creating "terminfo.db" in the same
@@ -470,7 +484,7 @@ it is not possible to add this information.
 20110212
 	+ regenerated html manpages.
 	+ use _tracef() in show_where() function of tic, to work correctly with
-	  special case of trace configuration. 
+	  special case of trace configuration.
 
 20110205
 	+ add xterm-utf8 entry as a demo of the U8 feature -TD
@@ -534,7 +548,7 @@ it is not possible to add this information.
 	  version which works with termcap.
 	+ remove obsolete emacs "Local Variables" section from documentation
 	  (request by Sven Joachim).
-	+ update doc/html/index.html to include NCURSES-Programming-HOWTO.html 
+	+ update doc/html/index.html to include NCURSES-Programming-HOWTO.html
 	  (report by Sven Joachim).
 
 20101128
@@ -609,8 +623,8 @@ it is not possible to add this information.
 	  Sven Joachim).
 	+ add parameterized cursor-controls to linux-basic (report by Dae) -TD
 	> patch by Juergen Pfeifer:
-	+ document how to build 32-bit libraries in README.MinGW 
-	+ fixes to filename computation in mk-dlls.sh.in 
+	+ document how to build 32-bit libraries in README.MinGW
+	+ fixes to filename computation in mk-dlls.sh.in
 	+ use POSIX locale in mk-dlls.sh.in rather than en_US (report by Sven
 	  Joachim).
 	+ add a check in mk-dlls.sh.in to obtain the size of a pointer to
@@ -793,7 +807,7 @@ it is not possible to add this information.
 20100417
 	+ modify _nc_capcmp() to work with cancelled strings.
 	+ correct translation of "^" in _nc_infotocap(), used to transform
-	  terminfo to termcap strings 
+	  terminfo to termcap strings
 	+ add configure --disable-rpath-hack, to allow disabling the feature
 	  which adds rpath options for libraries in unusual places.
 	+ improve CF_RPATH_HACK_2 by checking if the rpath option for a given
