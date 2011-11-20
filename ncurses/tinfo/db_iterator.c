@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.20 2011/10/08 20:55:38 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.21 2011/11/19 18:13:34 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -184,7 +184,7 @@ _nc_tic_dir(const char *path)
 		return _nc_tic_dir(envp);
 	}
     }
-    return TicDirectory;
+    return TicDirectory ? TicDirectory : TERMINFO;
 }
 
 /*
