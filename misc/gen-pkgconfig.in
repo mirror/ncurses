@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.10 2011/10/08 19:20:15 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.11 2011/11/26 20:55:38 Mike.Frysinger Exp $
 ##############################################################################
 # Copyright (c) 2009-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -80,22 +80,9 @@ else
 	LDFLAGS="-L\${libdir}"
 fi
 
-for lib in ../lib/*
+for name in @PC_MODULES_TO_MAKE@
 do
-	name=`basename $lib`
-	if test "$name" = "*" ; then
-		break
-	fi
-
-	root=`basename $name "$DFT_DEP_SUFFIX"`
-	if test "$name" = "$root" ; then
-		root=`basename $name "$CXX_LIB_SUFFIX"`
-		if test "$name" = "$root" ; then
-			continue
-		fi
-	fi
-
-	name=`echo "$name" | sed -e 's/^lib//' -e 's/\..*$//'`
+	name="${name}@DFT_ARG_SUFFIX@"
 
 	desc="ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@"
 	reqs=

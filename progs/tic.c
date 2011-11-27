@@ -35,6 +35,7 @@
 /*
  *	tic.c --- Main program for terminfo compiler
  *			by Eric S. Raymond
+ *			and Thomas E Dickey
  *
  */
 
@@ -44,7 +45,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.153 2011/09/26 23:50:46 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.156 2011/11/27 01:32:06 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -69,6 +70,7 @@ static const char usage_string[] = "\
 1\
 a\
 C\
+D\
 c\
 f\
 G\
@@ -136,6 +138,7 @@ usage(void)
 #endif
 	"  -K         translate entries to termcap source form with BSD syntax",
 	"  -C         translate entries to termcap source form",
+	"  -D         print list of tic's database locations (first must be writable)",
 	"  -c         check only, validate input without compiling or translating",
 	"  -e<names>  translate/compile only entries named by comma-separated list",
 	"  -f         format complex strings for readability",
@@ -473,6 +476,25 @@ open_tempfile(char *name)
     return result;
 }
 
+/*
+ * Show the databases that tic knows about.  The location to which it writes is
+ * always the first one.  If that is not writable, then tic errors out before
+ * reaching this function.
+ */
+static void
+show_databases(void)
+{
+    DBDIRS state;
+    int offset;
+    const char *path;
+
+    _nc_first_db(&state, &offset);
+    while ((path = _nc_next_db(&state, &offset)) != 0) {
+	printf("%s\n", path);
+    }
+    _nc_last_db();
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -525,7 +547,7 @@ main(int argc, char *argv[])
      * be optional.
      */
     while ((this_opt = getopt(argc, argv,
-			      "0123456789CIKLNR:TUVace:fGgo:rstvwx")) != -1) {
+			      "0123456789CDIKLNR:TUVace:fGgo:rstvwx")) != -1) {
 	if (isdigit(this_opt)) {
 	    switch (last_opt) {
 	    case 'v':
@@ -562,6 +584,11 @@ main(int argc, char *argv[])
 	    capdump = TRUE;
 	    outform = F_TERMCAP;
 	    sortmode = S_TERMCAP;
+	    break;
+	case 'D':
+	    _nc_set_writedir(outdir);
+	    show_databases();
+	    ExitProgram(EXIT_SUCCESS);
 	    break;
 	case 'I':
 	    infodump = TRUE;

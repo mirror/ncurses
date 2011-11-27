@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.21 2011/11/19 18:13:34 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.22 2011/11/27 01:32:34 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -283,6 +283,11 @@ _nc_first_db(DBDIRS * state, int *offset)
 #endif
 #if USE_TERMCAP
 	    values[dbdEnvOnce2] = cache_getenv("TERMCAP", dbdEnvOnce2);
+	    /* only use $TERMCAP if it is an absolute path */
+	    if (values[dbdEnvOnce2] != 0
+		&& *values[dbdEnvOnce2] != '/') {
+		values[dbdEnvOnce2] = 0;
+	    }
 	    values[dbdEnvList2] = cache_getenv("TERMPATH", dbdEnvList2);
 #endif /* USE_TERMCAP */
 	}
@@ -330,7 +335,7 @@ _nc_first_db(DBDIRS * state, int *offset)
 #endif
 		    for (k = 0; k < j; ++k) {
 			if (!strcmp(my_list[j], my_list[k])) {
-			    k = --j;
+			    k = j - 1;
 			    while ((my_list[j] = my_list[j + 1]) != 0) {
 				++j;
 			    }

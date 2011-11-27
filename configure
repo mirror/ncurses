@@ -20021,6 +20021,7 @@ else
 	TEST_ARG2="-l${LIB_NAME}${DFT_ARG_SUFFIX} $TEST_ARG2"
 fi
 
+PC_MODULES_TO_MAKE="ncurses"
 cf_cv_src_modules=
 for cf_dir in $modules_to_build
 do
@@ -20067,10 +20068,11 @@ EOF
 				TEST_ARGS="-l${cf_dir}${DFT_ARG_SUFFIX} $TEST_ARGS"
 				TEST_ARG2="-l${cf_dir}${DFT_ARG_SUFFIX} $TEST_ARG2"
 			fi
+			PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ${cf_dir}"
 		fi
 	fi
 done
-echo "$as_me:20073: result: $cf_cv_src_modules" >&5
+echo "$as_me:20075: result: $cf_cv_src_modules" >&5
 echo "${ECHO_T}$cf_cv_src_modules" >&6
 
 TEST_ARGS="-L${LIB_DIR} $TEST_ARGS"
@@ -20089,7 +20091,10 @@ if test "x$cf_with_tests" != "xno" ; then
 	SRC_SUBDIRS="$SRC_SUBDIRS test"
 fi
 test -z "$MAKE_TERMINFO" && SRC_SUBDIRS="$SRC_SUBDIRS misc"
-test "$cf_with_cxx_binding" != no && SRC_SUBDIRS="$SRC_SUBDIRS c++"
+if test "$cf_with_cxx_binding" != no; then
+	PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ncurses++"
+	SRC_SUBDIRS="$SRC_SUBDIRS c++"
+fi
 
 ADA_SUBDIRS=
 if test "x$cf_with_ada" = "xyes" && test "x$cf_cv_prog_gnat_correct" = xyes && test -f $srcdir/Ada95/Makefile.in; then
@@ -20276,7 +20281,7 @@ fi
 
 # Extract the first word of "tic", so it can be a program name with args.
 set dummy tic; ac_word=$2
-echo "$as_me:20279: checking for $ac_word" >&5
+echo "$as_me:20284: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
 if test "${ac_cv_path_TIC_PATH+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -20293,7 +20298,7 @@ for ac_dir in $ac_dummy; do
   test -z "$ac_dir" && ac_dir=.
   if $as_executable_p "$ac_dir/$ac_word"; then
    ac_cv_path_TIC_PATH="$ac_dir/$ac_word"
-   echo "$as_me:20296: found $ac_dir/$ac_word" >&5
+   echo "$as_me:20301: found $ac_dir/$ac_word" >&5
    break
 fi
 done
@@ -20305,10 +20310,10 @@ fi
 TIC_PATH=$ac_cv_path_TIC_PATH
 
 if test -n "$TIC_PATH"; then
-  echo "$as_me:20308: result: $TIC_PATH" >&5
+  echo "$as_me:20313: result: $TIC_PATH" >&5
 echo "${ECHO_T}$TIC_PATH" >&6
 else
-  echo "$as_me:20311: result: no" >&5
+  echo "$as_me:20316: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -20316,7 +20321,7 @@ if test -n "$FALLBACK_LIST"
 then
 	if test "$TIC_PATH" = unknown
 	then
-		{ echo "$as_me:20319: WARNING: no tic program found for fallbacks" >&5
+		{ echo "$as_me:20324: WARNING: no tic program found for fallbacks" >&5
 echo "$as_me: WARNING: no tic program found for fallbacks" >&2;}
 	fi
 fi
@@ -20417,7 +20422,7 @@ DEFS=-DHAVE_CONFIG_H
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:20420: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:20425: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -20593,7 +20598,7 @@ cat >>$CONFIG_STATUS <<\EOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:20596: error: ambiguous option: $1
+    { { echo "$as_me:20601: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -20612,7 +20617,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:20615: error: unrecognized option: $1
+  -*) { { echo "$as_me:20620: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -20719,7 +20724,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "default" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
   "include/ncurses_cfg.h" ) CONFIG_HEADERS="$CONFIG_HEADERS include/ncurses_cfg.h:include/ncurses_cfg.hin" ;;
-  *) { { echo "$as_me:20722: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:20727: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -21007,6 +21012,7 @@ s,@TEST_ARGS@,$TEST_ARGS,;t t
 s,@TEST_DEPS@,$TEST_DEPS,;t t
 s,@TEST_ARG2@,$TEST_ARG2,;t t
 s,@TEST_DEP2@,$TEST_DEP2,;t t
+s,@PC_MODULES_TO_MAKE@,$PC_MODULES_TO_MAKE,;t t
 s,@ADA_SUBDIRS@,$ADA_SUBDIRS,;t t
 s,@DIRS_TO_MAKE@,$DIRS_TO_MAKE,;t t
 s,@NCURSES_SHLIB2@,$NCURSES_SHLIB2,;t t
@@ -21132,7 +21138,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:21135: creating $ac_file" >&5
+    { echo "$as_me:21141: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -21150,7 +21156,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:21153: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:21159: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -21163,7 +21169,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:21166: error: cannot find input file: $f" >&5
+           { { echo "$as_me:21172: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -21229,7 +21235,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:21232: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:21238: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -21240,7 +21246,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:21243: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:21249: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -21253,7 +21259,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:21256: error: cannot find input file: $f" >&5
+           { { echo "$as_me:21262: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -21311,7 +21317,7 @@ cat >>$CONFIG_STATUS <<\EOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:21314: $ac_file is unchanged" >&5
+      { echo "$as_me:21320: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \

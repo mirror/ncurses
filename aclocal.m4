@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.586 2011/11/13 02:10:04 tom Exp $
+dnl $Id: aclocal.m4,v 1.588 2011/11/26 21:41:37 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5695,7 +5695,7 @@ if test "$cf_cv_sizechange" != no ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SRC_MODULES version: 22 updated: 2011/10/22 14:58:07
+dnl CF_SRC_MODULES version: 23 updated: 2011/11/26 16:35:15
 dnl --------------
 dnl For each parameter, test if the source-directory exists, and if it contains
 dnl a 'modules' file.  If so, add to the list $cf_cv_src_modules which we'll
@@ -5718,6 +5718,7 @@ else
 	TEST_ARG2="-l${LIB_NAME}${DFT_ARG_SUFFIX} $TEST_ARG2"
 fi
 
+PC_MODULES_TO_MAKE="ncurses"
 cf_cv_src_modules=
 for cf_dir in $1
 do
@@ -5756,6 +5757,7 @@ do
 				TEST_ARGS="-l${cf_dir}${DFT_ARG_SUFFIX} $TEST_ARGS"
 				TEST_ARG2="-l${cf_dir}${DFT_ARG_SUFFIX} $TEST_ARG2"
 			fi
+			PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ${cf_dir}"
 		fi
 	fi
 done
@@ -5783,7 +5785,12 @@ if test "x$cf_with_tests" != "xno" ; then
 	SRC_SUBDIRS="$SRC_SUBDIRS test"
 fi
 test -z "$MAKE_TERMINFO" && SRC_SUBDIRS="$SRC_SUBDIRS misc"
-test "$cf_with_cxx_binding" != no && SRC_SUBDIRS="$SRC_SUBDIRS c++"
+if test "$cf_with_cxx_binding" != no; then
+	PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ncurses++"
+	SRC_SUBDIRS="$SRC_SUBDIRS c++"
+fi
+
+AC_SUBST(PC_MODULES_TO_MAKE)
 
 ADA_SUBDIRS=
 if test "x$cf_with_ada" = "xyes" && test "x$cf_cv_prog_gnat_correct" = xyes && test -f $srcdir/Ada95/Makefile.in; then

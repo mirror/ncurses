@@ -26,10 +26,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.50 2011/09/26 23:59:40 tom Exp $
+.\" $Id: tic.1m,v 1.52 2011/11/27 01:13:07 tom Exp $
 .TH @TIC@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fBtic\fR \- the \fIterminfo\fR entry-description compiler
 .SH SYNOPSIS
@@ -38,6 +41,7 @@
 0\
 1\
 C\
+D\
 G\
 I\
 K\
@@ -63,24 +67,44 @@ x\
 \fIfile\fR
 .br
 .SH DESCRIPTION
-The command \fBtic\fR translates a \fBterminfo\fR file from source
+The \fBtic\fR command translates a \fBterminfo\fR file from source
 format into compiled format.
 The compiled format is necessary for use with
 the library routines in \fBncurses\fR(3X).
 .PP
-The results are normally placed in the system terminfo
-directory \fB\*d\fR.
-There are two ways to change this behavior.
+As described in \fBterm\fR(\*n), the database may be either a directory
+tree (one file per terminal entry) or a hashed database (one record per entry).
+The \fBtic\fR writes only one type of entry, depending on how it was built:
+.bP
+For directory trees, the top-level directory, e.g., /usr/share/terminfo,
+specifies the location of the database.
+.bP
+For hashed databases, a filename is needed.
+If the given file is not found by that name,
+but can be found by adding the suffix ".db",
+then that is used.
+.IP
+The default name for the hashed database is the same as the
+default directory name (only adding a ".db" suffix).
 .PP
+The results are normally placed in the system terminfo database \fB\*d\fR.
+The compiled terminal description can be placed in a different terminfo database.
+There are two ways to achieve this:
+.bP
 First, you may override the system default by setting the variable
-\fBTERMINFO\fR in your shell environment to a valid (existing) directory name.
+\fBTERMINFO\fR in your shell environment to a valid database
+location, e.g., an existing directory (for directory trees) or
+valid location for a hashed database.
+.bP
+Secondly, if \fBtic\fR cannot write in \fI\*d\fR
+or the location specified using your TERMINFO variable,
+it looks for the directory \fI$HOME/.terminfo\fR
+(or hashed database \fI$HOME/.terminfo.db)\fR;
+if that location exists, the entry is placed there.
 .PP
-Secondly, if \fBtic\fR cannot get access to \fI\*d\fR or your TERMINFO
-directory, it looks for the directory \fI$HOME/.terminfo\fR; if that directory
-exists, the entry is placed there.
-.PP
-Libraries that read terminfo entries are expected to check for a TERMINFO
-directory first, look at \fI$HOME/.terminfo\fR if TERMINFO is not set, and
+Libraries that read terminfo entries are expected to check for
+a location specified with the TERMINFO variable first,
+look at \fI$HOME/.terminfo\fR if TERMINFO is not set, and
 finally look in \fI\*d\fR.
 .TP
 \fB\-0\fR
@@ -121,6 +145,15 @@ as well as buggy checking for the buffer length
 (and a documented limit in terminfo),
 these entries may cause core
 dumps with other implementations.
+.TP
+\fB\-D\fR
+tells \fBtic\fP to print the database locations that it knows about, and exit.
+The first location shown is the one to which it would write compiled
+terminal descriptions.
+If \fBtic\fP is not able to find a writable database location
+according to the rules summarized above,
+it will print a diagnostic and exit with an error rather than
+printing a list of database locations.
 .TP
 \fB\-e \fR\fInames\fR
 Limit writes and translations to the following comma-separated list of
@@ -169,9 +202,8 @@ This option forces a more literal translation that also preserves the
 obsolete capabilities.
 .TP
 \fB\-o\fR\fIdir\fR
-Write compiled entries to given directory.
-Overrides the TERMINFO environment
-variable.
+Write compiled entries to given database location.
+Overrides the TERMINFO environment variable.
 .TP
 \fB\-R\fR\fIsubset\fR
 Restrict output to a given subset.
@@ -191,7 +223,7 @@ version 1.3 or BSD termcap through 4.3BSD) that does not handle multiple
 tc capabilities per entry.
 .TP
 \fB\-s\fR
-Summarize the compile by showing the directory into which entries
+Summarize the compile by showing the database location into which entries
 are written, and the number of entries which are compiled.
 .TP
 \fB\-T\fR
@@ -275,7 +307,7 @@ from \fB\*d\fR to complete the entry.
 (Entries created from
 \fIfile\fR will be used first.
 If the environment variable
-\fBTERMINFO\fR is set, that directory is searched instead of
+\fBTERMINFO\fR is set, that database location is searched instead of
 \fB\*d\fR.)  \fBtic\fR duplicates the capabilities in
 \fIentry\fR\-\fIname\fR for the current entry, with the exception of
 those capabilities that explicitly are defined in the current entry.
@@ -314,8 +346,10 @@ The SVr4 manual pages are not clear on the resolution rules for \fBuse\fR
 capabilities.
 This implementation of \fBtic\fR will find \fBuse\fR targets anywhere
 in the source file, or anywhere in the file tree rooted at \fBTERMINFO\fR (if
-\fBTERMINFO\fR is defined), or in the user's \fI$HOME/.terminfo\fR directory
-(if it exists), or (finally) anywhere in the system's file tree of
+\fBTERMINFO\fR is defined),
+or in the user's \fI$HOME/.terminfo\fR database
+(if it exists),
+or (finally) anywhere in the system's file tree of
 compiled entries.
 .PP
 The error messages from this \fBtic\fR have the same format as GNU C
@@ -345,7 +379,7 @@ are not supported under SVr4.
 The SVr4 \fB\-c\fR mode does not report bad use links.
 .PP
 System V does not compile entries to or read entries from your
-\fI$HOME/.terminfo\fR directory unless TERMINFO is explicitly set to it.
+\fI$HOME/.terminfo\fR database unless TERMINFO is explicitly set to it.
 .SH FILES
 .TP 5
 \fB\*d/?/*\fR
@@ -356,6 +390,7 @@ Compiled terminal description database.
 \fB@INFOTOCAP@\fR(1M),
 \fB@TOE@\fR(1M),
 \fBcurses\fR(3X),
+\fBterm\fR(\*n).
 \fBterminfo\fR(\*n).
 .PP
 This describes \fBncurses\fR
