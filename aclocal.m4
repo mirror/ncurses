@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.588 2011/11/26 21:41:37 tom Exp $
+dnl $Id: aclocal.m4,v 1.589 2011/12/03 21:59:31 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -996,7 +996,7 @@ then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CPP_PARAM_INIT version: 4 updated: 2001/04/07 22:31:18
+dnl CF_CPP_PARAM_INIT version: 5 updated: 2011/12/03 16:54:03
 dnl -----------------
 dnl Check if the C++ compiler accepts duplicate parameter initialization.  This
 dnl is a late feature for the standard and is not in some recent compilers
@@ -1020,7 +1020,7 @@ TEST::TEST(int x = 1)	// some compilers do not like second initializer
 {
 	value = x;
 }
-void main() { }
+int main() { }
 ],
 	[cf_cv_cpp_param_init=yes],
 	[cf_cv_cpp_param_init=no],
@@ -1306,7 +1306,7 @@ AC_DEFUN([CF_ERRNO],
 CF_CHECK_ERRNO(errno)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ETIP_DEFINES version: 3 updated: 2003/03/22 19:13:43
+dnl CF_ETIP_DEFINES version: 4 updated: 2011/12/03 16:54:03
 dnl ---------------
 dnl Test for conflicting definitions of exception in gcc 2.8.0, etc., between
 dnl math.h and builtin.h, only for ncurses
@@ -1315,11 +1315,17 @@ AC_DEFUN([CF_ETIP_DEFINES],
 AC_MSG_CHECKING(for special defines needed for etip.h)
 cf_save_CXXFLAGS="$CXXFLAGS"
 cf_result="none"
+
+# etip.h includes ncurses.h which includes ncurses_dll.h
+# But ncurses_dll.h is generated - fix here.
+test -d include || mkdir include
+test -f include/ncurses_dll.h || sed -e 's/@NCURSES_WRAP_PREFIX@/'$NCURSES_WRAP_PREFIX'/g' ${srcdir}/include/ncurses_dll.h.in >include/ncurses_dll.h
+
 for cf_math in "" MATH_H
 do
 for cf_excp in "" MATH_EXCEPTION
 do
-	CXXFLAGS="$cf_save_CXXFLAGS -I${srcdir}/c++ -I${srcdir}/menu -I${srcdir}/include"
+	CXXFLAGS="$cf_save_CXXFLAGS -I${srcdir}/c++ -I${srcdir}/menu -Iinclude -I${srcdir}/include"
 	test -n "$cf_math" && CXXFLAGS="$CXXFLAGS -DETIP_NEEDS_${cf_math}"
 	test -n "$cf_excp" && CXXFLAGS="$CXXFLAGS -DETIP_NEEDS_${cf_excp}"
 AC_TRY_COMPILE([
