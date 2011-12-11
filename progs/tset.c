@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.84 2011/05/21 18:55:32 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.85 2011/12/10 15:41:34 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -164,7 +164,10 @@ static bool isreset = FALSE;	/* invoked as reset */
 static int terasechar = -1;	/* new erase character */
 static int intrchar = -1;	/* new interrupt character */
 static int tkillchar = -1;	/* new kill character */
+
+#if HAVE_SIZECHANGE
 static int tlines, tcolumns;	/* window size */
+#endif
 
 #define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
 
@@ -1277,10 +1280,10 @@ main(int argc, char **argv)
     (void) get_termcap_entry(*argv);
 
     if (!noset) {
+#if HAVE_SIZECHANGE
 	tcolumns = columns;
 	tlines = lines;
 
-#if HAVE_SIZECHANGE
 	if (opt_w) {
 	    STRUCT_WINSIZE win;
 	    /* Set window size if not set already */

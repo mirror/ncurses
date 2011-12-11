@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.83 2011/05/21 18:40:49 tom Exp $
+ * $Id: view.c,v 1.84 2011/12/10 15:42:34 tom Exp $
  */
 
 #include <test.priv.h>
@@ -110,9 +110,9 @@ static void show_all(const char *tag);
 #if CAN_RESIZE
 static RETSIGTYPE adjust(int sig);
 static int interrupted;
+static bool waiting = FALSE;
 #endif
 
-static bool waiting = FALSE;
 static int shift = 0;
 static bool try_color = FALSE;
 
@@ -375,10 +375,12 @@ main(int argc, char *argv[])
 		adjust(0);
 		my_label = "interrupt";
 	    }
-#endif
 	    waiting = TRUE;
 	    c = getch();
 	    waiting = FALSE;
+#else
+	    c = getch();
+#endif
 	    if ((c < 127) && isdigit(c)) {
 		if (!got_number) {
 		    MvPrintw(0, 0, "Count: ");

@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.72 2011/11/26 19:45:20 tom Exp $
+dnl $Id: aclocal.m4,v 1.73 2011/12/11 00:06:02 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -1913,7 +1913,7 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 8 updated: 2010/07/08 05:17:30
+dnl CF_NCURSES_CONFIG version: 9 updated: 2011/11/26 15:42:05
 dnl -----------------
 dnl Tie together the configure-script macros for ncurses.
 dnl Prefer the "-config" script from ncurses 6.x, to simplify analysis.
@@ -2359,7 +2359,7 @@ case ".[$]$1" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PDCURSES_X11 version: 11 updated: 2011/01/15 18:45:38
+dnl CF_PDCURSES_X11 version: 12 updated: 2011/11/26 15:42:05
 dnl ---------------
 dnl Configure for PDCurses' X11 library
 AC_DEFUN([CF_PDCURSES_X11],[
@@ -3151,7 +3151,7 @@ AC_TRY_LINK([
 test $cf_cv_need_xopen_extension = yes && CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE_EXTENDED"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 40 updated: 2011/11/12 21:08:44
+dnl CF_XOPEN_SOURCE version: 41 updated: 2011/12/10 18:58:47
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -3195,6 +3195,7 @@ hpux*) #(vi
 	;;
 irix[[56]].*) #(vi
 	cf_xopen_source="-D_SGI_SOURCE"
+	cf_XOPEN_SOURCE=
 	;;
 linux*|gnu*|mint*|k*bsd*-gnu) #(vi
 	CF_GNU_SOURCE

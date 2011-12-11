@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.589 2011/12/03 21:59:31 tom Exp $
+dnl $Id: aclocal.m4,v 1.594 2011/12/11 00:03:00 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1259,7 +1259,7 @@ if test "$cf_disable_rpath_hack" = no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 6 updated: 2011/09/10 16:31:04
+dnl CF_ENABLE_PC_FILES version: 7 updated: 2011/12/10 18:58:47
 dnl ------------------
 dnl This is the "--enable-pc-files" option, which is available if there is a
 dnl pkg-config configuration on the local machine.
@@ -1267,7 +1267,7 @@ AC_DEFUN([CF_ENABLE_PC_FILES],[
 AC_REQUIRE([CF_PKG_CONFIG])
 AC_REQUIRE([CF_WITH_PKG_CONFIG_LIBDIR])
 
-if test "$PKG_CONFIG" != no ; then
+if test "$PKG_CONFIG" != none ; then
 	if test -n "$PKG_CONFIG_LIBDIR" && test -d "$PKG_CONFIG_LIBDIR" ; then
 		AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
 		AC_ARG_ENABLE(pc-files,
@@ -5701,7 +5701,7 @@ if test "$cf_cv_sizechange" != no ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SRC_MODULES version: 23 updated: 2011/11/26 16:35:15
+dnl CF_SRC_MODULES version: 24 updated: 2011/12/10 18:58:47
 dnl --------------
 dnl For each parameter, test if the source-directory exists, and if it contains
 dnl a 'modules' file.  If so, add to the list $cf_cv_src_modules which we'll
@@ -5795,6 +5795,9 @@ if test "$cf_with_cxx_binding" != no; then
 	PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ncurses++"
 	SRC_SUBDIRS="$SRC_SUBDIRS c++"
 fi
+
+test "x$with_termlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE $TINFO_NAME"
+test "x$with_ticlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE tic"
 
 AC_SUBST(PC_MODULES_TO_MAKE)
 
@@ -6661,11 +6664,11 @@ AC_SUBST($3)dnl
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 1 updated: 2011/09/10 16:20:21
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 2 updated: 2011/12/10 18:58:47
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
-if test "$PKG_CONFIG" != no ; then
+if test "$PKG_CONFIG" != none ; then
 	AC_MSG_CHECKING(for $PKG_CONFIG library directory)
 	AC_ARG_WITH(pkg-config-libdir,
 		[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
@@ -6704,7 +6707,7 @@ fi
 AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PTHREAD version: 4 updated: 2011/11/12 21:08:44
+dnl CF_WITH_PTHREAD version: 5 updated: 2011/12/10 19:01:56
 dnl ---------------
 dnl Check for POSIX thread library.
 AC_DEFUN([CF_WITH_PTHREAD],
@@ -6728,7 +6731,8 @@ if test "$with_pthread" != no ; then
 	    AC_TRY_LINK([
 #include <pthread.h>
 ],[
-	    int rc = pthread_create(0,0,0,0);
+		int rc = pthread_create(0,0,0,0);
+		int r2 = pthread_mutexattr_settype(0, 0);
 ],[with_pthread=yes],[with_pthread=no])
 	    LIBS="$cf_save_LIBS"
 	    AC_MSG_RESULT($with_pthread)
@@ -6808,7 +6812,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 40 updated: 2011/11/12 21:08:44
+dnl CF_XOPEN_SOURCE version: 41 updated: 2011/12/10 18:58:47
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -6852,6 +6856,7 @@ hpux*) #(vi
 	;;
 irix[[56]].*) #(vi
 	cf_xopen_source="-D_SGI_SOURCE"
+	cf_XOPEN_SOURCE=
 	;;
 linux*|gnu*|mint*|k*bsd*-gnu) #(vi
 	CF_GNU_SOURCE

@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.11 2011/11/26 20:55:38 Mike.Frysinger Exp $
+# $Id: gen-pkgconfig.in,v 1.12 2011/12/10 18:39:20 tom Exp $
 ##############################################################################
 # Copyright (c) 2009-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -62,11 +62,6 @@ SUB_LIBRARY="${TINFO_ARG_SUFFIX}"
 PANEL_LIBRARY="${PANEL_NAME}@DFT_ARG_SUFFIX@"
 MENU_LIBRARY="${MENU_NAME}@DFT_ARG_SUFFIX@"
 FORM_LIBRARY="${FORM_NAME}@DFT_ARG_SUFFIX@"
-
-SUB_LIBRARY_REQ=${SUB_LIBRARY}
-if test $TINFO_NAME = $LIB_NAME ; then
-	SUB_LIBRARY_REQ=
-fi
 
 if test "$includedir" = "/usr/include" ; then
 	CFLAGS=

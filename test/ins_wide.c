@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.15 2010/12/12 00:20:14 tom Exp $
+ * $Id: ins_wide.c,v 1.16 2011/12/10 19:54:43 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -228,8 +228,9 @@ test_inserts(int level)
     WINDOW *work = 0;
     WINDOW *show = 0;
     int margin = (2 * MY_TABSIZE) - 1;
-    Options option = ((m_opt ? oMove : oDefault)
-		      | ((w_opt || (level > 0)) ? oWindow : oDefault));
+    Options option = (Options) ((int) (m_opt ? oMove : oDefault)
+				| (int) ((w_opt || (level > 0))
+					 ? oWindow : oDefault));
 
     if (first) {
 	static char cmd[80];
