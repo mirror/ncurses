@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.86 2011/07/02 18:04:15 tom Exp $
+# $Id: mk-1st.awk,v 1.87 2011/12/17 20:27:27 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -38,6 +38,7 @@
 #	prefix		  (e.g., "lib", for Unix-style libraries)
 #	suffix		  (e.g., "_g.a", for debug libraries)
 #	subset		  ("none", "base", "base+ext_funcs" or "termlib", etc.)
+#	driver		  ("yes" or "no", depends on --enable-term-driver)
 #	ShlibVer	  ("rel", "abi" or "auto", to augment DoLinks variable)
 #	ShlibVerInfix ("yes" or "no", determines location of version #)
 #	SymLink		  ("ln -s", etc)
@@ -181,6 +182,11 @@ function shlib_build(directory) {
 		dst_libs = sprintf("%s/%s", directory, end_name);
 		printf "%s : \\\n", dst_libs
 		printf "\t\t%s \\\n", directory
+		if (subset == "ticlib" && driver == "yes" ) {
+			base = name;
+			sub(/^tic/, "ncurses", base); # workaround for "w"
+			printf "\t\t%s/%s \\\n", directory, end_name_of(base);
+		}
 		if (subset ~ /^base/ || subset == "ticlib" ) {
 			save_suffix = suffix
 			sub(/^[^.]\./,".",suffix)
@@ -242,6 +248,7 @@ BEGIN	{
 					printf "#  prefix:        %s\n", prefix 
 					printf "#  suffix:        %s\n", suffix 
 					printf "#  subset:        %s\n", subset 
+					printf "#  driver:        %s\n", driver 
 					printf "#  ShlibVer:      %s\n", ShlibVer 
 					printf "#  ShlibVerInfix: %s\n", ShlibVerInfix 
 					printf "#  SymLink:       %s\n", SymLink 

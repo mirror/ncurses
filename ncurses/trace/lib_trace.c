@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.77 2011/10/22 16:34:50 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.78 2011/12/17 18:41:48 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -185,9 +185,9 @@ _nc_va_tracef(const char *fmt, va_list ap)
 	if ((pthread_self))
 # endif
 #ifdef __MINGW32__
-	    fprintf(TraceFP, "%#lx:", (long) (void *) pthread_self().p);
+	    fprintf(TraceFP, "%#lx:", (long) (intptr_t) pthread_self().p);
 #else
-	    fprintf(TraceFP, "%#lx:", (long) (void *) pthread_self());
+	    fprintf(TraceFP, "%#lx:", (long) (intptr_t) pthread_self());
 #endif
 #endif
 	if (before || after) {

@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.51 2011/10/29 18:48:53 tom Exp $
+# $Id: ncurses_defs,v 1.52 2011/12/17 18:14:30 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -125,6 +125,7 @@ HAVE_SIGVEC
 HAVE_SIZECHANGE
 HAVE_SLK_COLOR
 HAVE_SLK_INIT	1
+HAVE_STDINT_H
 HAVE_STRDUP
 HAVE_STRSTR
 HAVE_SYMLINK

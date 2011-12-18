@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.105 2011/07/30 23:38:59 tom Exp $
+.\" $Id: ncurses.3x,v 1.106 2011/12/17 23:19:59 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .de bP
@@ -108,9 +108,9 @@ Most programs would additionally use the sequence:
 .sp
 Before a \fBcurses\fR program is run, the tab stops of the terminal
 should be set and its initialization strings, if defined, must be output.
-This can be done by executing the \fBtput init\fR command
+This can be done by executing the \fB@TPUT@ init\fR command
 after the shell environment variable \fBTERM\fR has been exported.
-\fBtset(1)\fR is usually responsible for doing this.
+\fB@TSET@(1)\fR is usually responsible for doing this.
 [See \fBterminfo\fR(\*n) for further details.]
 .PP
 The \fBncurses\fR library permits manipulation of data structures,
@@ -936,7 +936,7 @@ disables the special check for "linux" and "screen".
 .IP
 As an alternative to the environment variable,
 ncurses checks for an extended terminfo capability \fBU8\fP.
-This is a numeric capability which can be compiled using \fBtic\ \-x\fP.
+This is a numeric capability which can be compiled using \fB@TIC@\ \-x\fP.
 For example
 .RS 5
 .sp

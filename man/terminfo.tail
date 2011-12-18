@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.54 2011/07/30 23:39:52 tom Exp $
+.\" $Id: terminfo.tail,v 1.55 2011/12/17 23:19:59 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -397,7 +397,7 @@ It is possible to form else-if's a la Algol 68:
 .IP
 where c\di\u are conditions, b\di\u are bodies.
 .IP
-Use the \fB\-f\fP option of \fBtic\fP or \fB@INFOCMP@\fP to see
+Use the \fB\-f\fP option of \fB@TIC@\fP or \fB@INFOCMP@\fP to see
 the structure of if-then-else's.
 Some strings, e.g., \fBsgr\fP can be very complicated when written
 on one line.
@@ -974,7 +974,7 @@ the numeric parameter
 .B it
 is given, showing the number of spaces the tabs are set to.
 This is normally used by the
-.IR tset
+.IR @TSET@
 command to determine whether to set the mode for hardware tab expansion,
 and whether to set the tab stops.
 If the terminal has tab stops that can be saved in non-volatile memory,

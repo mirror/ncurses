@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.531 2011/10/30 01:00:05 tom Exp $
+dnl $Id: configure.in,v 1.534 2011/12/17 21:12:37 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.531 $)
+AC_REVISION($Revision: 1.534 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1406,6 +1406,7 @@ else
 	AC_FUNC_SETVBUF_REVERSED
 fi
 AC_TYPE_SIGNAL
+AC_CHECK_TYPE(intptr_t, long)
 CF_TYPE_SIGACTION
 CF_SIZECHANGE
 CF_FUNC_MEMMOVE
@@ -1721,9 +1722,15 @@ if test "$with_termlib" != no ; then
 	else
 		TEST_ARGS="-l${TINFO_ARG_SUFFIX}"
 		TEST_ARG2="-l${TINFO_ARG_SUFFIX}"
-		TICS_LIST="$SHLIB_LIST -l${TINFO_LIB_SUFFIX}"
+		if test "x$with_term_driver" != xno ; then
+			TICS_LIST="$SHLIB_LIST -l${LIB_NAME}${DFT_ARG_SUFFIX}"
+			TICS_LIBS="$TICS_LIBS -l${LIB_NAME}${DFT_ARG_SUFFIX}"
+			TINFO_LIBS="-l${LIB_NAME}${DFT_ARG_SUFFIX} $TEST_ARGS"
+		else
+			TICS_LIST="$SHLIB_LIST -l${TINFO_LIB_SUFFIX}"
+			TINFO_LIBS="$TEST_ARGS"
+		fi
 		TINFO_LDFLAGS="-L${LIB_DIR}"
-		TINFO_LIBS="$TEST_ARGS"
 		SHLIB_LIST="$SHLIB_LIST -l${TINFO_LIB_SUFFIX}"
 	fi
 else
@@ -1942,6 +1949,7 @@ cf_cv_shared_soname='$cf_cv_shared_soname'
 cf_cv_shlib_version="$cf_cv_shlib_version"
 cf_cv_shlib_version_infix="$cf_cv_shlib_version_infix"
 cf_cv_system_name="$cf_cv_system_name"
+cf_cv_term_driver="$with_term_driver"
 cf_with_ada="$cf_with_ada"
 cf_with_cxx_binding="$cf_with_cxx_binding"
 cf_with_manpages="$cf_with_manpages"

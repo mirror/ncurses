@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.404 $
-#	$Date: 2011/11/13 01:54:10 $
+#	$Revision: 1.405 $
+#	$Date: 2011/12/17 17:26:46 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -21260,8 +21260,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 ######## CHANGE HISTORY
 #
 # The last /etc/termcap version maintained by John Kunze was 8.3, dated 8/5/94.
-# Releases 9 and up are maintained by Eric S. Raymond as part of the ncurses
-# project.
+# Releases 9 and 10 (up until the release of ncurses 4.2 in 1998) were
+# maintained by Eric S. Raymond as part of the ncurses project.
 #
 # This file contains all the capability information present in John Kunze's
 # last version of the termcap master file, except as noted in the change
@@ -21361,7 +21361,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* Replaced HP entries up to hpsub with purpose-built ones.
 #	* Blank rmir/smir/rmdc/smdc capabilities removed.
 #	* Small fixes merged in from SCO entries for lpr, fos, tvi910+, tvi924.
-# 9.4.8 (Fri Apr  7 09:36:34 EDT 199):
+# 9.4.8 (Fri Apr  7 09:36:34 EDT 1995):
 #	* Replaced the Ann Arbor entries with SCO's, the init strings are
 #	  more efficient (but the entries otherwise identical).
 #	* Added dg211 from Shuford archive.
@@ -22634,5 +22634,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2011-11-12
 #	* add pccon entries for OpenBSD console (Alexei Malinin)
+#
+# 2011-12-17
+#	* corrected old changelog comments -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

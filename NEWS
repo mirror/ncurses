@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1829 2011/12/10 20:04:44 tom Exp $
+-- $Id: NEWS,v 1.1833 2011/12/17 23:30:24 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20111217
+	+ review/fix places in manpages where --program-prefix configure option
+	  was not being used.
+	+ add -D option to infocmp, to show the database locations that it
+	  could use.
+	+ fix build for the special case where term-driver, ticlib and termlib
+	  are all enabled.  The terminal driver depends on a few features in
+	  the base ncurses library, so tic's dependencies include both ncurses
+	  and termlib.
+	+ fix build work for term-driver when --enable-wgetch-events option is
+	  enabled.
+	+ use <stdint.h> types to fix some questionable casts to void*.
 
 20111210
 	+ modify configure script to check if thread library provides

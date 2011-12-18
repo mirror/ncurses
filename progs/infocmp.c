@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.108 2011/08/06 16:36:06 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.110 2011/12/17 23:59:50 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1251,6 +1251,23 @@ terminal_env(void)
     return terminal;
 }
 
+/*
+ * Show the databases that infocmp knows about.  The location to which it writes is
+ */
+static void
+show_databases(void)
+{
+    DBDIRS state;
+    int offset;
+    const char *path2;
+
+    _nc_first_db(&state, &offset);
+    while ((path2 = _nc_next_db(&state, &offset)) != 0) {
+	printf("%s\n", path2);
+    }
+    _nc_last_db();
+}
+
 /***************************************************************************
  *
  * Main sequence
@@ -1302,7 +1319,7 @@ main(int argc, char *argv[])
 
     while ((c = getopt(argc,
 		       argv,
-		       "01A:aB:CcdEeFfGgIiKLlnpqR:rs:TtUuVv:w:x")) != -1) {
+		       "01A:aB:CcDdEeFfGgIiKLlnpqR:rs:TtUuVv:w:x")) != -1) {
 	switch (c) {
 	case '0':
 	    mwidth = 65535;
@@ -1335,6 +1352,11 @@ main(int argc, char *argv[])
 	    tversion = "BSD";
 	    if (sortmode == S_DEFAULT)
 		sortmode = S_TERMCAP;
+	    break;
+
+	case 'D':
+	    show_databases();
+	    ExitProgram(EXIT_SUCCESS);
 	    break;
 
 	case 'c':

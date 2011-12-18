@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.49 2011/08/06 17:46:28 tom Exp $
+.\" $Id: infocmp.1m,v 1.50 2011/12/17 23:15:19 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -37,6 +37,7 @@
 \fB@INFOCMP@\fR [\fB\-\
 1\
 C\
+D\
 E\
 F\
 G\
@@ -180,7 +181,7 @@ the first of the other \fItermname\fR entries that has this capability gives a
 different value for the capability than that in the first \fItermname\fR.
 .PP
 The order of the other \fItermname\fR entries is significant.  Since the
-terminfo compiler \fBtic\fR does a left-to-right scan of the capabilities,
+terminfo compiler \fB@TIC@\fR does a left-to-right scan of the capabilities,
 specifying two \fBuse=\fR entries that contain differing entries for the same
 capabilities will produce different results depending on the order that the
 entries are given in.  \fB@INFOCMP@\fR will flag any such inconsistencies between
@@ -220,6 +221,9 @@ of 60 characters.
 \fB\-a\fR
 tells \fB@INFOCMP@\fP to retain commented-out capabilities rather than discarding
 them.  Capabilities are commented by prefixing them with a period.
+.TP
+\fB\-D\fR
+tells \fB@INFOCMP@\fP to print the database locations that it knows about, and exit.
 .TP 5
 \fB\-E\fR
 Dump the capabilities of the given terminal as tables, needed in
@@ -372,7 +376,7 @@ This is mainly useful for testing and analysis, since the compiled
 descriptions are limited (e.g., 1023 for termcap, 4096 for terminfo).
 .TP
 \fB\-t\fR
-tells \fBtic\fP to discard commented-out capabilities.
+tells \fB@TIC@\fP to discard commented-out capabilities.
 Normally when translating from terminfo to termcap,
 untranslatable capabilities are commented-out.
 .TP 5
@@ -395,7 +399,7 @@ changes the output to \fIwidth\fR characters.
 \fB\-x\fR
 print information for user-defined capabilities.
 These are extensions to the terminfo repertoire which can be loaded
-using the \fB\-x\fR option of \fBtic\fP.
+using the \fB\-x\fR option of \fB@TIC@\fP.
 .SH FILES
 .TP 20
 \*d

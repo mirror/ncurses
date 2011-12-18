@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2010 Free Software Foundation, Inc.                        *
+.\" Copyright (c) 2010,2011 Free Software Foundation, Inc.                   *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term_variables.3x,v 1.2 2010/12/04 18:38:55 tom Exp $
+.\" $Id: term_variables.3x,v 1.3 2011/12/17 23:31:50 tom Exp $
 .TH term_variables 3X ""
 .ds n 5
 .na
@@ -110,7 +110,7 @@ use as a parameter to \fBset_term\fP, for switching between screens.
 Alternatively, one can save the return value from \fBnewterm\fP
 or \fBsetupterm\fP to reuse in \fBset_term\fP.
 .SS Terminfo Names
-The \fBtic\fP(1) and \fBinfocmp\fP(1) programs use lookup tables for
+The \fB@TIC@\fP(1) and \fB@INFOCMP@\fP(1) programs use lookup tables for
 the long and short names of terminfo capabilities,
 as well as the corresponding names for termcap capabilities.
 These are available to other applications,

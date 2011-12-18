@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.490 2011/11/19 21:56:10 tom Exp $
+ * $Id: curses.priv.h,v 1.491 2011/12/17 18:52:21 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2148,7 +2148,7 @@ typedef struct term_driver {
     void   (*initcolor)(struct DriverTCB*, int, int, int, int);
     void   (*docolor)(struct DriverTCB*, int, int, int, int(*)(SCREEN*, int));
     void   (*initmouse)(struct DriverTCB*);
-    int    (*testmouse)(struct DriverTCB*, int);
+    int    (*testmouse)(struct DriverTCB*, int EVENTLIST_2nd(_nc_eventlist*));
     void   (*setfilter)(struct DriverTCB*);
     void   (*hwlabel)(struct DriverTCB*, int, char*);
     void   (*hwlabelOnOff)(struct DriverTCB*, int);

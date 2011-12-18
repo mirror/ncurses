@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.122 2011/10/22 16:34:50 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.123 2011/12/17 18:50:11 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -133,7 +133,7 @@ check_mouse_activity(SCREEN *sp, int delay EVENTLIST_2nd(_nc_eventlist * evl))
     int rc;
 
 #ifdef USE_TERM_DRIVER
-    rc = TCBOf(sp)->drv->testmouse(TCBOf(sp), delay);
+    rc = TCBOf(sp)->drv->testmouse(TCBOf(sp), delay EVENTLIST_2nd(evl));
 #else
 #if USE_SYSMOUSE
     if ((sp->_mouse_type == M_SYSMOUSE)

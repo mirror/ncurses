@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.16 2011/10/22 17:50:33 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.17 2011/12/17 20:40:33 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -839,7 +839,9 @@ drv_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static int
-drv_testmouse(TERMINAL_CONTROL_BLOCK * TCB, int delay)
+drv_testmouse(TERMINAL_CONTROL_BLOCK * TCB,
+	      int delay
+	      EVENTLIST_2nd(_nc_eventlist * evl))
 {
     int rc = 0;
     SCREEN *sp;
