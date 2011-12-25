@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.30 2011/12/17 23:32:08 tom Exp $
+.\" $Id: tput.1,v 1.31 2011/12/25 01:37:53 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -307,13 +307,25 @@ Other implementations of \fB@TPUT@\fP on
 SVr4-based systems such as Solaris, IRIX64 and HPUX
 as well as others such as AIX and Tru64
 provide support for \fIcapname\fR operands.
+.PP
 A few platforms such as FreeBSD and NetBSD recognize termcap names rather
 than terminfo capability names in their respective \fB@TPUT@\fP commands.
+.PP
+Most implementations which provide support for \fIcapname\fR operands
+use the \fItparm\fP function to expand parameters in it.
+That function expects a mixture of numeric and string parameters,
+requiring \fB@TPUT@\fP to know which type to use.
+This implementation uses a table to determine that for
+the standard \fIcapname\fR operands, and an internal library
+function to analyze nonstandard \fIcapname\fR operands.
+Other implementations may simply guess that an operand containing only digits
+is intended to be a number.
 .SH SEE ALSO
 \fB@CLEAR@\fR(1),
 \fBstty\fR(1),
 \fBtabs\fR(\*n),
-\fBterminfo\fR(5).
+\fBterminfo\fR(5),
+\fBcurs_termcap\fR(3X).
 .PP
 This describes \fBncurses\fR
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
