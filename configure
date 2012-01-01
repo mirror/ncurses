@@ -20087,7 +20087,7 @@ else
 	TEST_ARG2="-l${LIB_NAME}${DFT_ARG_SUFFIX} $TEST_ARG2"
 fi
 
-PC_MODULES_TO_MAKE="ncurses"
+PC_MODULES_TO_MAKE="ncurses${DFT_ARG_SUFFIX}"
 cf_cv_src_modules=
 for cf_dir in $modules_to_build
 do
@@ -20134,7 +20134,7 @@ EOF
 				TEST_ARGS="-l${cf_dir}${DFT_ARG_SUFFIX} $TEST_ARGS"
 				TEST_ARG2="-l${cf_dir}${DFT_ARG_SUFFIX} $TEST_ARG2"
 			fi
-			PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ${cf_dir}"
+			PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ${cf_dir}${DFT_ARG_SUFFIX}"
 		fi
 	fi
 done
@@ -20158,12 +20158,12 @@ if test "x$cf_with_tests" != "xno" ; then
 fi
 test -z "$MAKE_TERMINFO" && SRC_SUBDIRS="$SRC_SUBDIRS misc"
 if test "$cf_with_cxx_binding" != no; then
-	PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ncurses++"
+	PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ncurses++${DFT_ARG_SUFFIX}"
 	SRC_SUBDIRS="$SRC_SUBDIRS c++"
 fi
 
-test "x$with_termlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE $TINFO_NAME"
-test "x$with_ticlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE tic"
+test "x$with_termlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE $TINFO_ARG_SUFFIX"
+test "x$with_ticlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE $TICS_ARG_SUFFIX"
 
 ADA_SUBDIRS=
 if test "x$cf_with_ada" = "xyes" && test "x$cf_cv_prog_gnat_correct" = xyes && test -f $srcdir/Ada95/Makefile.in; then

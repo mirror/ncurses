@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.596 2011/12/17 21:19:09 tom Exp $
+dnl $Id: aclocal.m4,v 1.599 2012/01/01 01:55:05 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5702,7 +5702,7 @@ if test "$cf_cv_sizechange" != no ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SRC_MODULES version: 24 updated: 2011/12/10 18:58:47
+dnl CF_SRC_MODULES version: 25 updated: 2011/12/31 15:32:02
 dnl --------------
 dnl For each parameter, test if the source-directory exists, and if it contains
 dnl a 'modules' file.  If so, add to the list $cf_cv_src_modules which we'll
@@ -5725,7 +5725,7 @@ else
 	TEST_ARG2="-l${LIB_NAME}${DFT_ARG_SUFFIX} $TEST_ARG2"
 fi
 
-PC_MODULES_TO_MAKE="ncurses"
+PC_MODULES_TO_MAKE="ncurses${DFT_ARG_SUFFIX}"
 cf_cv_src_modules=
 for cf_dir in $1
 do
@@ -5764,7 +5764,7 @@ do
 				TEST_ARGS="-l${cf_dir}${DFT_ARG_SUFFIX} $TEST_ARGS"
 				TEST_ARG2="-l${cf_dir}${DFT_ARG_SUFFIX} $TEST_ARG2"
 			fi
-			PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ${cf_dir}"
+			PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ${cf_dir}${DFT_ARG_SUFFIX}"
 		fi
 	fi
 done
@@ -5793,12 +5793,12 @@ if test "x$cf_with_tests" != "xno" ; then
 fi
 test -z "$MAKE_TERMINFO" && SRC_SUBDIRS="$SRC_SUBDIRS misc"
 if test "$cf_with_cxx_binding" != no; then
-	PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ncurses++"
+	PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ncurses++${DFT_ARG_SUFFIX}"
 	SRC_SUBDIRS="$SRC_SUBDIRS c++"
 fi
 
-test "x$with_termlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE $TINFO_NAME"
-test "x$with_ticlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE tic"
+test "x$with_termlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE $TINFO_ARG_SUFFIX"
+test "x$with_ticlib" != xno && PC_MODULES_TO_MAKE="$PC_MODULES_TO_MAKE $TICS_ARG_SUFFIX"
 
 AC_SUBST(PC_MODULES_TO_MAKE)
 

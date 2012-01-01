@@ -45,7 +45,7 @@
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.156 2011/11/27 01:32:06 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.157 2011/12/31 21:11:59 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -178,7 +178,7 @@ usage(void)
 
 #define L_BRACE '{'
 #define R_BRACE '}'
-#define S_QUOTE '\'';
+#define S_QUOTE '\''
 
 static void
 write_it(ENTRY * ep)
