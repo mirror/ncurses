@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.44 2011/02/26 00:09:25 tom Exp $
+-- $Id: README,v 1.45 2012/01/07 21:19:28 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are designed to test your newest toy :-)
@@ -234,7 +234,7 @@ addnstr				test: test_addstr
 addnwstr			test: ncurses test_addwstr
 addstr				test: blue bs cardfile gdc hanoi lrtest ncurses savescreen test_addstr
 addwstr				test: ncurses test_addwstr
-assume_default_colors		test: ncurses
+assume_default_colors		test: background ncurses
 assume_default_colors_sp	-
 attr_get			test: ncurses
 attr_off			test: ncurses
@@ -670,7 +670,7 @@ ungetch_sp			lib: ncurses
 ungetmouse			-
 ungetmouse_sp			-
 untouchwin			lib: form
-use_default_colors		test: filter firework gdc hanoi knight ncurses rain tclock worm xmas
+use_default_colors		test: background filter firework gdc hanoi knight ncurses rain tclock worm xmas
 use_default_colors_sp		-
 use_env				progs: tput
 use_env_sp			-

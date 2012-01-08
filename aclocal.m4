@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.599 2012/01/01 01:55:05 tom Exp $
+dnl $Id: aclocal.m4,v 1.600 2012/01/07 20:08:24 juergen Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4984,7 +4984,7 @@ cf_regex_func=no
 cf_regex_libs="regex re"
 case $host_os in #(vi
 mingw*)
-	cf_regex_libs="regex.dll $cf_regex_libs"
+	cf_regex_libs="gnurx $cf_regex_libs"
 	;;
 esac
 

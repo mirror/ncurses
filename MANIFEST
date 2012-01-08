@@ -765,7 +765,6 @@
 ./mk-0th.awk
 ./mk-1st.awk
 ./mk-2nd.awk
-./mk-dlls.sh.in
 ./mk-hdr.awk
 ./ncurses/Makefile.in
 ./ncurses/README

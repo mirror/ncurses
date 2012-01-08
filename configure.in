@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.534 2011/12/17 21:12:37 tom Exp $
+dnl $Id: configure.in,v 1.535 2012/01/07 20:08:24 juergen Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.534 $)
+AC_REVISION($Revision: 1.535 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1875,11 +1875,6 @@ ADAHTML_DIR=../../doc/html/ada
 AC_SUBST(ADAHTML_DIR)
 
 SUB_SCRIPTS=
-case $cf_cv_system_name in #(vi
-*mingw32*) #(vi
-	SUB_SCRIPTS="mk-dlls.sh"
-	;;
-esac
 
 AC_OUTPUT( \
 	include/MKterm.h.awk \

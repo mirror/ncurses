@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.25 2011/12/17 21:30:20 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.26 2012/01/07 20:09:36 juergen Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -60,7 +60,7 @@ add_to_blob(const char *text)
     if (*text != '\0') {
 	char *last = my_blob + strlen(my_blob);
 	if (last != my_blob)
-	    *last++ = ':';
+	    *last++ = NCURSES_PATHSEP;
 	strcpy(last, text);
     }
 }
@@ -69,20 +69,26 @@ static bool
 check_existence(const char *name, struct stat *sb)
 {
     bool result = FALSE;
-
-    if (stat(name, sb) == 0 && sb->st_size) {
+    if (stat(name, sb) == 0
+#ifndef __MINGW32__
+	&& sb->st_size
+#endif
+	) {
 	result = TRUE;
     }
 #if USE_HASHED_DB
     else if (strlen(name) < PATH_MAX - sizeof(DBM_SUFFIX)) {
 	char temp[PATH_MAX];
 	sprintf(temp, "%s%s", name, DBM_SUFFIX);
-	if (stat(temp, sb) == 0 && sb->st_size) {
+	if (stat(temp, sb) == 0
+#ifndef __MINGW32__
+	    && sb->st_size
+#endif
+	    ) {
 	    result = TRUE;
 	}
     }
 #endif
-
     return result;
 }
 
@@ -280,6 +286,7 @@ _nc_first_db(DBDIRS * state, int *offset)
 	    values[dbdHome] = _nc_home_terminfo();
 	    (void) cache_getenv("HOME", dbdHome);
 	    values[dbdEnvList] = cache_getenv("TERMINFO_DIRS", dbdEnvList);
+
 #endif
 #if USE_TERMCAP
 	    values[dbdEnvOnce2] = cache_getenv("TERMCAP", dbdEnvOnce2);
@@ -310,7 +317,7 @@ _nc_first_db(DBDIRS * state, int *offset)
 	     */
 	    blobsize = 2;
 	    for (j = 0; my_blob[j] != '\0'; ++j) {
-		if (my_blob[j] == ':')
+		if (my_blob[j] == NCURSES_PATHSEP)
 		    ++blobsize;
 	    }
 	    my_list = typeCalloc(char *, blobsize);
@@ -319,7 +326,7 @@ _nc_first_db(DBDIRS * state, int *offset)
 		k = 0;
 		my_list[k++] = my_blob;
 		for (j = 0; my_blob[j] != '\0'; ++j) {
-		    if (my_blob[j] == ':') {
+		    if (my_blob[j] == NCURSES_PATHSEP) {
 			my_blob[j] = '\0';
 			my_list[k++] = &my_blob[j + 1];
 		    }

@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.85 2011/12/10 15:41:34 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.86 2012/01/07 20:23:20 juergen Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1050,11 +1050,18 @@ set_tabs(void)
 {
     if (set_tab && clear_all_tabs) {
 	int c;
+	int lim =
+#if HAVE_SIZECHANGE
+	tcolumns
+#else
+	columns
+#endif
+	 ;
 
 	(void) putc('\r', stderr);	/* Force to left margin. */
 	tputs(clear_all_tabs, 0, outc);
 
-	for (c = 8; c < tcolumns; c += 8) {
+	for (c = 8; c < lim; c += 8) {
 	    /* Get to the right column.  In BSD tset, this
 	     * used to try a bunch of half-clever things
 	     * with cup and hpa, for an average saving of
