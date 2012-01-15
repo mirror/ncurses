@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,18 +26,22 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.24 2010/11/13 23:34:55 tom Exp $
+ * $Id: movewindow.c,v 1.33 2012/01/15 00:30:35 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
  *
- * Thomas Dickey - 2006/2/11
+ * Author: Thomas E. Dickey
  */
 /*
 derwin
 mvderwin
 subwin
 mvwin
+
+TODO:
+    add command to reset subwindow's origin to coincide with parent.
+    add command to delete subwindow (check if it has subwindows though)
  */
 
 #include <test.priv.h>
@@ -122,7 +126,12 @@ tail_line(CONST_FMT char *fmt,...)
  * Arrow keys move cursor, return location at current on non-arrow key.
  */
 static PAIR *
-selectcell(WINDOW *parent, int uli, int ulj, int lri, int lrj)
+selectcell(WINDOW *parent,
+	   WINDOW *child,
+	   int uli, int ulj,
+	   int lri, int lrj,
+	   bool relative,
+	   bool * more)
 {
     static PAIR res;		/* result cell */
     int si = lri - uli + 1;	/* depth of the select area */
@@ -131,25 +140,46 @@ selectcell(WINDOW *parent, int uli, int ulj, int lri, int lrj)
 
     res.y = uli;
     res.x = ulj;
+
+    if (child != 0) {
+	if (relative) {
+	    getparyx(child, i, j);
+	} else {
+	    getbegyx(child, i, j);
+	    i -= uli + getbegy(parent);
+	    j -= ulj + getbegx(parent);
+	}
+    }
+
+    if (more)
+	*more = FALSE;
+
     for (;;) {
-	tail_line("Upper left [%2d,%2d] Lower right [%2d,%2d] -> %d,%d",
+	bool moved = FALSE;
+
+	tail_line("Upper left [%2d,%2d] Lower right [%2d,%2d] -> %d,%d -> %d,%d",
 		  uli, ulj,
 		  lri, lrj,
+		  i, j,
 		  uli + i, ulj + j);
 	wmove(parent, uli + i, ulj + j);
 
 	switch (wgetch(parent)) {
 	case KEY_UP:
 	    i += si - 1;
+	    moved = TRUE;
 	    break;
 	case KEY_DOWN:
 	    i++;
+	    moved = TRUE;
 	    break;
 	case KEY_LEFT:
 	    j += sj - 1;
+	    moved = TRUE;
 	    break;
 	case KEY_RIGHT:
 	    j++;
+	    moved = TRUE;
 	    break;
 	case QUIT:
 	case ESCAPE:
@@ -161,8 +191,14 @@ selectcell(WINDOW *parent, int uli, int ulj, int lri, int lrj)
 
 		getmouse(&event);
 		if (event.y > uli && event.x > ulj) {
-		    i = event.y - uli;
-		    j = event.x - ulj;
+		    if (parent != stdscr) {
+			i = event.y - getbegy(parent) - uli;
+			j = event.x - getbegx(parent) - ulj;
+		    } else {
+			i = event.y - uli;
+			j = event.x - ulj;
+		    }
+		    moved = TRUE;
 		} else {
 		    beep();
 		    break;
@@ -177,6 +213,16 @@ selectcell(WINDOW *parent, int uli, int ulj, int lri, int lrj)
 	}
 	i %= si;
 	j %= sj;
+
+	/*
+	 * If the caller can handle continuous movement, return the result.
+	 */
+	if (moved && more) {
+	    *more = TRUE;
+	    res.y = uli + i;
+	    res.x = ulj + j;
+	    return (&res);
+	}
     }
 }
 
@@ -194,12 +240,20 @@ getwindow(WINDOW *parent, PAIR * ul, PAIR * lr)
     bool result = FALSE;
 
     head_line("Use arrows to move cursor, anything else to mark corner 1");
-    if ((tmp = selectcell(parent, min_line, min_col, max_line, max_col)) != 0) {
+    if ((tmp = selectcell(parent, 0,
+			  min_line, min_col,
+			  max_line, max_col,
+			  FALSE,
+			  (bool *) 0)) != 0) {
 	*ul = *tmp;
 	MvWAddCh(parent, ul->y, ul->x, '*');
 
 	head_line("Use arrows to move cursor, anything else to mark corner 2");
-	if ((tmp = selectcell(parent, ul->y, ul->x, max_line, max_col)) != 0) {
+	if ((tmp = selectcell(parent, 0,
+			      ul->y, ul->x,
+			      max_line, max_col,
+			      FALSE,
+			      (bool *) 0)) != 0) {
 	    *lr = *tmp;
 	    MvWAddCh(parent, lr->y, lr->x, '*');
 	    wmove(parent, lr->y, lr->x);
@@ -341,10 +395,7 @@ recur_move_window(WINDOW *parent, int dy, int dx)
 
     for (n = 0; n < num_windows; ++n) {
 	if (all_windows[n].parent == parent) {
-	    int y0, x0;
-
-	    getbegyx(all_windows[n].child, y0, x0);
-	    mvwin(all_windows[n].child, y0 + dy, x0 + dx);
+	    mvwin(all_windows[n].child, dy, dx);
 	    recur_move_window(all_windows[n].child, dy, dx);
 	}
     }
@@ -366,20 +417,24 @@ move_window(WINDOW *win, bool recur)
 	int min_line = top ? LINE_MIN : 0;
 	int max_line = top ? LINE_MAX : getmaxy(parent);
 	PAIR *tmp;
+	bool more;
 
 	head_line("Select new position for %swindow", top ? "" : "sub");
 
-	if ((tmp = selectcell(parent,
-			      min_line, min_col,
-			      max_line, max_col)) != 0) {
+	while ((tmp = selectcell(parent,
+				 win,
+				 min_line, min_col,
+				 max_line, max_col,
+				 FALSE,
+				 &more)) != 0) {
 	    int y0, x0;
 	    getbegyx(parent, y0, x0);
 	    /*
-	     * Note:  Moving a subwindow has the effect of moving a viewport
-	     * around the screen.  The parent window retains the contents of
-	     * the subwindow in the original location, but the viewport will
-	     * show the contents (again) at the new location.  So it will look
-	     * odd when testing.
+	     * Moving a subwindow has the effect of moving a viewport around
+	     * the screen.  The parent window retains the contents of the
+	     * subwindow in the original location, but the viewport will show
+	     * the contents (again) at the new location.  So it will look odd
+	     * when testing.
 	     */
 	    if (mvwin(win, y0 + tmp->y, x0 + tmp->x) != ERR) {
 		if (recur) {
@@ -388,17 +443,34 @@ move_window(WINDOW *win, bool recur)
 		refresh_all(win);
 		doupdate();
 		result = TRUE;
+	    } else {
+		result = FALSE;
 	    }
+	    if (!more)
+		break;
 	}
     }
+    head_line("done");
     return result;
+}
+
+static void
+show_derwin(WINDOW *win)
+{
+    int pary, parx, maxy, maxx;
+
+    getmaxyx(win, maxy, maxx);
+    getparyx(win, pary, parx);
+
+    head_line("Select new position for derived window at %d,%d (%d,%d)",
+	      pary, parx, maxy, maxx);
 }
 
 /*
  * test mvderwin().
  */
 static bool
-move_subwin(WINDOW *win)
+move_derwin(WINDOW *win)
 {
     WINDOW *parent = parent_of(win);
     bool result = FALSE;
@@ -411,22 +483,34 @@ move_subwin(WINDOW *win)
 	    int min_line = top ? LINE_MIN : 0;
 	    int max_line = top ? LINE_MAX : getmaxy(parent);
 	    PAIR *tmp;
+	    bool more;
 
-	    head_line("Select new position for subwindow");
-
-	    if ((tmp = selectcell(parent,
-				  min_line, min_col,
-				  max_line, max_col)) != 0) {
+	    show_derwin(win);
+	    while ((tmp = selectcell(parent,
+				     win,
+				     min_line, min_col,
+				     max_line, max_col,
+				     TRUE,
+				     &more)) != 0) {
 		int y0, x0;
+
 		getbegyx(parent, y0, x0);
-		if (mvderwin(win, y0 + tmp->y, x0 + tmp->x) != ERR) {
+		if (mvderwin(win, tmp->y, tmp->x) != ERR) {
 		    refresh_all(win);
 		    doupdate();
+		    repaint_one(win);
+		    doupdate();
 		    result = TRUE;
+		    show_derwin(win);
+		} else {
+		    flash();
 		}
+		if (!more)
+		    break;
 	    }
 	}
     }
+    head_line("done");
     return result;
 }
 
@@ -442,6 +526,28 @@ fill_window(WINDOW *win, chtype ch)
     for (y = 0; y < y1; ++y) {
 	for (x = 0; x < x1; ++x) {
 	    MvWAddCh(win, y, x, ch);
+	}
+    }
+    wsyncdown(win);
+    wmove(win, y0, x0);
+    wrefresh(win);
+}
+
+static void
+fill_with_pattern(WINDOW *win)
+{
+    int y, x;
+    int y0, x0;
+    int y1, x1;
+    int ch = 'a';
+
+    getyx(win, y0, x0);
+    getmaxyx(win, y1, x1);
+    for (y = 0; y < y1; ++y) {
+	for (x = 0; x < x1; ++x) {
+	    MvWAddCh(win, y, x, ch);
+	    if (++ch > 'z')
+		ch = 'a';
 	}
     }
     wsyncdown(win);
@@ -523,12 +629,13 @@ show_help(WINDOW *current)
 	{ 'b',		"Draw a box inside the current window" },
 	{ 'c',		"Create a new window" },
 	{ 'd',		"Create a new derived window" },
+	{ 'D',		"Move derived window (moves viewport)" },
 	{ 'f',		"Fill the current window with the next character" },
+	{ 'F',		"Fill the current window with a pattern" },
 	{ 'm',		"Move the current window" },
 	{ 'M',		"Move the current window (and its children)" },
 	{ 'q',		"Quit" },
 	{ 's',		"Create a new subwindow" },
-	{ 't',		"Move the current subwindow (moves content)" },
 	{ CTRL('L'),	"Repaint all windows, doing current one last" },
 	{ CTRL('N'),	"Cursor to next window" },
 	{ CTRL('P'),	"Cursor to previous window" },
@@ -571,6 +678,10 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 #endif /* NCURSES_MOUSE_VERSION */
 
     while (!done && (ch = wgetch(current_win)) != ERR) {
+	int y, x;
+
+	getyx(current_win, y, x);
+
 	switch (ch) {
 	case '?':
 	    show_help(current_win);
@@ -584,8 +695,17 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	case 'd':
 	    current_win = create_my_derwin(current_win);
 	    break;
+	case 'D':
+	    if (!move_derwin(current_win)) {
+		tail_line("error");
+		continue;
+	    }
+	    break;
 	case 'f':
 	    fill_window(current_win, (chtype) wgetch(current_win));
+	    break;
+	case 'F':
+	    fill_with_pattern(current_win);
 	    break;
 	case 'm':
 	case 'M':
@@ -599,12 +719,6 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    break;
 	case 's':
 	    current_win = create_my_subwin(current_win);
-	    break;
-	case 't':
-	    if (!move_subwin(current_win)) {
-		tail_line("error");
-		continue;
-	    }
 	    break;
 	case CTRL('L'):
 	    refresh_all(current_win);
@@ -621,6 +735,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    /* want to allow deleting a window also */
 #endif
 	default:
+	    wmove(current_win, y, x);
 	    tail_line("unrecognized key (use '?' for help)");
 	    beep();
 	    continue;

@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.46 2010/12/04 18:40:45 tom Exp @
+  * @Id: infocmp.1m,v 1.50 2011/12/17 23:15:19 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -53,7 +53,7 @@
 
 </PRE>
 <H2>SYNOPSIS</H2><PRE>
-       <STRONG>infocmp</STRONG> [<STRONG>-1CEFGILTUVcdegilnpqrtux</STRONG>]
+       <STRONG>infocmp</STRONG> [<STRONG>-1CDEFGIKLTUVcdegilnpqrtux</STRONG>]
              [<STRONG>-v</STRONG> <EM>n</EM>] [<STRONG>-s</STRONG> <STRONG>d</STRONG>| <STRONG>i</STRONG>| <STRONG>l</STRONG>| <STRONG>c</STRONG>] [<STRONG>-R</STRONG> <STRONG>subset</STRONG>]
              [<STRONG>-w</STRONG> <EM>width</EM>] [<STRONG>-A</STRONG> <EM>directory</EM>] [<STRONG>-B</STRONG> <EM>directory</EM>]
              [<EM>termname</EM>...]
@@ -107,6 +107,7 @@
       <STRONG>-L</STRONG>   use the long C variable name listed in &lt;<STRONG>term.h</STRONG>&gt;
       <STRONG>-C</STRONG>   use the <STRONG>termcap</STRONG> names
       <STRONG>-r</STRONG>   when using <STRONG>-C</STRONG>, put out all capabilities in <STRONG>termcap</STRONG> form
+      <STRONG>-K</STRONG>   modifies the <STRONG>-C</STRONG> option, improving BSD-compatibility.
 
        If  no  <EM>termnames</EM> are given, the environment variable <STRONG>TERM</STRONG>
        will be used for the terminal name.
@@ -129,7 +130,11 @@
        only  those variables which were part of <STRONG>termcap</STRONG> will nor-
        mally be output.  Specifying the <STRONG>-r</STRONG> option will  take  off
        this  restriction,  allowing all capabilities to be output
-       in <EM>termcap</EM> form.
+       in <EM>termcap</EM> form.  Normally you would use both the  <STRONG>-C</STRONG>  and
+       <STRONG>-r</STRONG>  options.   The  actual  format  used incorporates some
+       improvements for escaped characters from terminfo  format.
+       For  a  stricter  BSD-compatible  translation,  use the <STRONG>-K</STRONG>
+       option rather than <STRONG>-C</STRONG>.
 
        Note that because padding is collected to the beginning of
        the  capability,  not all capabilities are output.  Manda-
@@ -173,9 +178,9 @@
        <EM>termname</EM>  entries contains a value for it.  A capability's
        value gets printed if the value in the first  <EM>termname</EM>  is
        not  found in any of the other <EM>termname</EM> entries, or if the
-       first of the other <EM>termname</EM> entries that has this capabil-
-       ity  gives  a different value for the capability than that
-       in the first <EM>termname</EM>.
+       first  of  the  other  <EM>termname</EM>  entries  that  has   this
+       capability gives a different value for the capability than
+       that in the first <EM>termname</EM>.
 
        The order of the other <EM>termname</EM>  entries  is  significant.
        Since  the terminfo compiler <STRONG>tic</STRONG> does a left-to-right scan
@@ -214,13 +219,19 @@
        different people.
 
    <STRONG>Other</STRONG> <STRONG>Options</STRONG>
-       <STRONG>-1</STRONG>   causes  the  fields  to be printed out one to a line.
-            Otherwise, the fields will be printed  several  to  a
+       <STRONG>-0</STRONG>   causes  the fields to be printed on one line, without
+            wrapping.
+
+       <STRONG>-1</STRONG>   causes the fields to be printed out one  to  a  line.
+            Otherwise,  the  fields  will be printed several to a
             line to a maximum width of 60 characters.
 
-       <STRONG>-a</STRONG>   tells  <STRONG>infocmp</STRONG>  to  retain commented-out capabilities
-            rather than discarding them.  Capabilities  are  com-
+       <STRONG>-a</STRONG>   tells <STRONG>infocmp</STRONG> to  retain  commented-out  capabilities
+            rather  than  discarding them.  Capabilities are com-
             mented by prefixing them with a period.
+
+       <STRONG>-D</STRONG>   tells <STRONG>infocmp</STRONG> to print the database locations that it
+            knows about, and exit.
 
        <STRONG>-E</STRONG>   Dump  the  capabilities  of  the  given  terminal  as
             tables, needed in the C initializer  for  a  TERMTYPE
@@ -233,8 +244,8 @@
 
             Before ncurses 5.0, the split between the <STRONG>-e</STRONG>  and  <STRONG>-E</STRONG>
             options  was  not  needed;  but  support for extended
-            names required making the arrays of terminal capabil-
-            ities separate from the TERMTYPE structure.
+            names  required  making  the   arrays   of   terminal
+            capabilities separate from the TERMTYPE structure.
 
        <STRONG>-e</STRONG>   Dump  the  capabilities  of the given terminal as a C
             initializer for a TERMTYPE  structure  (the  terminal
@@ -299,6 +310,7 @@
                   ISO US G1     enable US chars for G1
                   -----------------------------------------
                   DECPAM        application keypad mode
+
                   DECPNM        normal keypad mode
                   DECANSI       enter ANSI mode
                   -----------------------------------------
@@ -310,7 +322,6 @@
                   DEC[+-]CKM    application cursor keys
                   DEC[+-]ANM    set VT52 mode
                   DEC[+-]COLM   132-column mode
-
                   DEC[+-]SCLM   smooth scroll
                   DEC[+-]SCNM   reverse video mode
                   DEC[+-]OM     origin mode
@@ -404,12 +415,13 @@
 
 </PRE>
 <H2>EXTENSIONS</H2><PRE>
-       The <STRONG>-E</STRONG>, <STRONG>-F</STRONG>, <STRONG>-G</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>, <STRONG>-i</STRONG>, <STRONG>-l</STRONG>, <STRONG>-p</STRONG>, <STRONG>-q</STRONG>
-       and <STRONG>-t</STRONG> options are not supported in SVr4 curses.
+       The <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-E</STRONG>, <STRONG>-F</STRONG>, <STRONG>-G</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>,  <STRONG>-f</STRONG>,  <STRONG>-g</STRONG>,  <STRONG>-i</STRONG>,
+       <STRONG>-l</STRONG>,  <STRONG>-p</STRONG>,  <STRONG>-q</STRONG>  and  <STRONG>-t</STRONG>  options  are  not supported in SVr4
+       curses.
 
        The <STRONG>-r</STRONG> option's notion of `termcap' capabilities is System
-       V Release 4's.  Actual BSD curses  versions  will  have  a
-       more  restricted  set.  To see only the 4.4BSD set, use <STRONG>-r</STRONG>
+       V  Release  4's.   Actual  BSD curses versions will have a
+       more restricted set.  To see only the 4.4BSD set,  use  <STRONG>-r</STRONG>
        <STRONG>-RBSD</STRONG>.
 
 
@@ -420,10 +432,10 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,    <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,     <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,     <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
+       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,     <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,     <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20110404).
+       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20120107).
 
 
 </PRE>

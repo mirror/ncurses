@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.32 2011/01/15 20:02:47 tom Exp $
+ * $Id: demo_menus.c,v 1.33 2012/01/14 17:20:39 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -831,7 +831,7 @@ usage(void)
 {
     static const char *const tbl[] =
     {
-	"Usage: demo_menus [options]"
+	"Usage: demo_menus [options] [menu-file]"
 	,""
 	,"Options:"
 #if HAVE_RIPOFFLINE

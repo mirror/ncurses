@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.29 2010/12/04 18:41:07 tom Exp @
+  * @Id: tput.1,v 1.31 2011/12/25 01:37:53 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -319,16 +319,28 @@
        <EM>name</EM> support.  Other implementations of <STRONG>tput</STRONG> on SVr4-based
        systems such as Solaris, IRIX64 and HPUX as well as others
        such  as  AIX  and  Tru64  provide  support  for   <EM>capname</EM>
-       operands.  A few platforms such as FreeBSD and NetBSD rec-
-       ognize termcap names rather than terminfo capability names
-       in their respective <STRONG>tput</STRONG> commands.
+       operands.
+
+       A few platforms such as FreeBSD and NetBSD recognize term-
+       cap names rather than terminfo capability names  in  their
+       respective <STRONG>tput</STRONG> commands.
+
+       Most  implementations  which  provide  support for <EM>capname</EM>
+       operands use the <EM>tparm</EM> function to  expand  parameters  in
+       it.  That function expects a mixture of numeric and string
+       parameters, requiring <STRONG>tput</STRONG> to  know  which  type  to  use.
+       This implementation uses a table to determine that for the
+       standard <EM>capname</EM> operands, and an internal  library  func-
+       tion  to  analyze  nonstandard  <EM>capname</EM>  operands.   Other
+       implementations may simply guess that an operand  contain-
+       ing only digits is intended to be a number.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG><A HREF="stty.1.html">stty(1)</A></STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
+       <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG><A HREF="stty.1.html">stty(1)</A></STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20110404).
+       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20120107).
 
 
 

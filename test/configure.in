@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.101 2011/10/29 21:17:36 tom Exp $
+dnl $Id: configure.in,v 1.102 2012/01/13 14:53:14 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -113,50 +113,17 @@ CF_ARG_DISABLE(widec,
 	yes)
 AC_MSG_RESULT($cf_enable_widec)
 
-CF_WITH_CURSES_DIR
 
 dnl ---------------------------------------------------------------------------
-dnl NcursesW, installed in conventional location
-AC_MSG_CHECKING(for specified curses library type)
-AC_ARG_WITH(ncursesw,
-	[  --with-ncursesw         use wide ncurses-libraries (installed)],
-	[cf_cv_screen=ncursesw],[
-
-dnl Ncurses, installed in conventional location
-AC_ARG_WITH(ncurses,
-	[  --with-ncurses          use ncurses-libraries (installed)],
-	[cf_cv_screen=ncurses],[
-
-AC_ARG_WITH(pdcurses,
-	[  --with-pdcurses         compile/link with pdcurses X11 library],
-	[cf_cv_screen=pdcurses],[
-
-AC_ARG_WITH(curses-colr,
-	[  --with-curses-colr      compile/link with HPUX 10.x color-curses],
-	[cf_cv_screen=curses_colr],[
-
-AC_ARG_WITH(curses-5lib,
-	[  --with-curses-5lib      compile/link with SunOS 5lib curses],
-	[cf_cv_screen=curses_5lib])])])])])
-
-AC_MSG_RESULT($cf_cv_screen)
+CF_WITH_NCURSES_ETC
 
 case $cf_cv_screen in
 curses|curses_*)
-	CF_CURSES_CONFIG
 	CF_NETBSD_FORM_H
 	CF_NETBSD_MENU_H
 	;;
-ncurses)
-	CF_NCURSES_CONFIG
-	;;
 ncursesw)
 	cf_cv_libtype=w
-	CF_UTF8_LIB
-	CF_NCURSES_CONFIG(ncursesw)
-	;;
-pdcurses) #(vi
-	CF_PDCURSES_X11
 	;;
 esac
 
