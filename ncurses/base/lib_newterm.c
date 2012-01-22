@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.87 2011/04/16 16:42:10 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.88 2012/01/21 19:21:29 KO.Myung-Hun Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -279,7 +279,8 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	    NCURSES_SP_NAME(typeahead) (NCURSES_SP_ARGx fileno(_ifp));
 #ifdef TERMIOS
 	    SP_PARM->_use_meta = ((new_term->Ottyb.c_cflag & CSIZE) == CS8 &&
-				  !(new_term->Ottyb.c_iflag & ISTRIP));
+				  !(new_term->Ottyb.c_iflag & ISTRIP)) ||
+		USE_KLIBC_KBD;
 #else
 	    SP_PARM->_use_meta = FALSE;
 #endif

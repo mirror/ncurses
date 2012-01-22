@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.133 2011/10/22 23:01:26 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.134 2012/01/21 19:21:29 KO.Myung-Hun Exp $")
 
 #include <tic.h>
 
@@ -119,6 +119,17 @@ make an error
 #include <machine/console.h>
 #endif
 #endif				/* use_SYSMOUSE */
+
+#if USE_KLIBC_MOUSE
+#include <sys/socket.h>
+#define pipe(handles) socketpair(AF_LOCAL, SOCK_STREAM, 0, handles)
+#define DosWrite(hfile, pbuffer, cbwrite, pcbactual) \
+		write(hfile, pbuffer, cbwrite)
+#define DosExit(action, result )	/* do nothing */
+#define DosCreateThread(ptid, pfn, param, flag, cbStack) \
+		(*(ptid) = _beginthread(pfn, NULL, cbStack, \
+					(void *)param), (*(ptid) == -1))
+#endif
 
 #define MY_TRACE TRACE_ICALLS|TRACE_IEVENT
 
@@ -222,7 +233,11 @@ write_event(SCREEN *sp, int down, int button, int x, int y)
 }
 
 static void
+#if USE_KLIBC_MOUSE
+mouse_server(void *param)
+#else
 mouse_server(unsigned long param)
+#endif
 {
     SCREEN *sp = (SCREEN *) param;
     unsigned short fWait = MOU_WAIT;

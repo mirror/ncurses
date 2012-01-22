@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1844 2012/01/15 00:44:31 tom Exp $
+-- $Id: NEWS,v 1.1849 2012/01/22 01:00:15 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120121
+	+ add --with-lib-prefix option to allow configuring for old/new flavors
+	  of OS/2 EMX.
+	+ modify check for gnat version to allow for year, as used in FreeBSD
+	  port.
+	+ modify check_existence() in db_iterator.c to simply check if the
+	  path is a directory or file, according to the need.  Checking for
+	  directory size also gives no usable result with OS/2 (cf: 20120107).
+	+ support OS/2 kLIBC (patch by KO Myung-Han).
 
 20120114
 	+ several improvements to test/movewindow.c (prompted by discussion on

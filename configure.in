@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.535 2012/01/07 20:08:24 juergen Exp $
+dnl $Id: configure.in,v 1.539 2012/01/22 01:08:15 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.535 $)
+AC_REVISION($Revision: 1.539 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -301,9 +301,7 @@ AC_SUBST(LIB_NAME)
 LIB_DIR=../lib
 LIB_2ND=../../lib
 
-CF_LIB_PREFIX(cf_prefix)
-LIB_PREFIX=$cf_prefix
-AC_SUBST(LIB_PREFIX)
+CF_WITH_LIB_PREFIX(cf_prefix)
 
 LIB_SUFFIX=
 AC_SUBST(LIB_SUFFIX)
@@ -1906,6 +1904,7 @@ ECHO_LINK="$ECHO_LINK"
 LDCONFIG="$LDCONFIG"
 LIBTOOL_VERSION="$LIBTOOL_VERSION"
 LIB_NAME="$LIB_NAME"
+LIB_PREFIX="$LIB_PREFIX"
 LIB_SUBSETS="$LIB_SUBSETS"
 LIB_SUFFIX="$LIB_SUFFIX"
 LIB_TRACING="$LIB_TRACING"

@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010,2011 Free Software Foundation, Inc.                   *
+dnl Copyright (c) 2010-2011,2012 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.36 2011/10/22 19:02:53 tom Exp $
+dnl $Id: configure.in,v 1.38 2012/01/22 00:50:42 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.36 $)
+AC_REVISION($Revision: 1.38 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -166,9 +166,7 @@ AC_SUBST(DFT_UPR_MODEL)dnl	the default model ("NORMAL")
 
 CF_NCURSES_ADDON
 
-CF_LIB_PREFIX(cf_prefix)
-LIB_PREFIX=$cf_prefix
-AC_SUBST(LIB_PREFIX)
+CF_WITH_LIB_PREFIX(cf_prefix)
 
 LIB_SUFFIX=
 AC_SUBST(LIB_SUFFIX)
@@ -638,6 +636,7 @@ DFT_ARG_SUFFIX="$DFT_ARG_SUFFIX"
 DFT_LWR_MODEL="$DFT_LWR_MODEL"
 ECHO_LINK="$ECHO_LINK"
 LIB_NAME="$LIB_NAME"
+LIB_PREFIX="$LIB_PREFIX"
 LIB_SUFFIX="$LIB_SUFFIX"
 LN_S="$LN_S"
 NCURSES_MAJOR="$NCURSES_MAJOR"

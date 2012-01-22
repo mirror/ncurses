@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.26 2012/01/07 20:09:36 juergen Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.28 2012/01/21 23:56:17 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -69,22 +69,16 @@ static bool
 check_existence(const char *name, struct stat *sb)
 {
     bool result = FALSE;
+
     if (stat(name, sb) == 0
-#ifndef __MINGW32__
-	&& sb->st_size
-#endif
-	) {
+	&& (S_ISDIR(sb->st_mode) || S_ISREG(sb->st_mode))) {
 	result = TRUE;
     }
 #if USE_HASHED_DB
     else if (strlen(name) < PATH_MAX - sizeof(DBM_SUFFIX)) {
 	char temp[PATH_MAX];
 	sprintf(temp, "%s%s", name, DBM_SUFFIX);
-	if (stat(temp, sb) == 0
-#ifndef __MINGW32__
-	    && sb->st_size
-#endif
-	    ) {
+	if (stat(temp, sb) == 0 && S_ISREG(sb->st_mode)) {
 	    result = TRUE;
 	}
     }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.491 2011/12/17 18:52:21 tom Exp $
+ * $Id: curses.priv.h,v 1.492 2012/01/21 19:21:29 KO.Myung-Hun Exp $
  *
  *	curses.priv.h
  *
@@ -134,6 +134,15 @@ extern int errno;
 #define USE_EMX_MOUSE 1
 #else
 #define USE_EMX_MOUSE 0
+#endif
+
+/* kLIBC keyboard/mouse support */
+#if defined(__OS2__) && defined(__KLIBC__)
+#define USE_KLIBC_KBD   1
+#define USE_KLIBC_MOUSE 1
+#else
+#define USE_KLIBC_KBD   0
+#define USE_KLIBC_MOUSE 0
 #endif
 
 #define DEFAULT_MAXCLICK 166
@@ -1057,6 +1066,10 @@ struct screen {
 	/* used in lib_vidattr.c */
 	bool		_use_rmso;	/* true if we may use 'rmso'	     */
 	bool		_use_rmul;	/* true if we may use 'rmul'	     */
+
+#if USE_KLIBC_KBD
+	bool		_extended_key;	/* true if an extended key	     */
+#endif
 
 	/*
 	 * These data correspond to the state of the idcok() and idlok()

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.160 2011/10/15 23:32:49 tom Exp $
+-- $Id: INSTALL,v 1.162 2012/01/22 00:27:58 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -831,7 +831,17 @@ SUMMARY OF CONFIGURE OPTIONS:
 	NOTE: a few systems build shared libraries with fixed pathnames; this
 	option probably will not work for those configurations.
 
-     --with-libtool[=XXX]
+    --with-lib-prefix=XXX
+	OS/2 EMX used a different naming convention from most Unix-like
+	platforms.  It required that the "lib" part of a library name was
+	omitted.  Newer EMX as part of eComStation does not follow that
+	convention.  Use this option to override the configure script's
+	assumptions about the library-prefix.  If this option is omitted, it
+	uses the original OS/2 EMX convention for that platform.  Use
+	"--with-lib-prefix=lib" for the newer EMX in eComStation.  Use
+	"--without-lib-prefix" to suppress it for other odd platforms.
+
+    --with-libtool[=XXX]
 	Generate libraries with libtool.  If this option is selected, then it
 	overrides all other library model specifications.  Note that libtool
 	must already be installed, uses makefile rules dependent on GNU make,

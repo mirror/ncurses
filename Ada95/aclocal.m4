@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.43 2012/01/14 17:53:34 tom Exp $
+dnl $Id: aclocal.m4,v 1.44 2012/01/22 00:33:42 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1382,7 +1382,7 @@ fi
 rm -rf conftest* *~conftest*
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_VERSION version: 17 updated: 2011/03/23 20:24:41
+dnl CF_GNAT_VERSION version: 18 updated: 2012/01/21 19:28:10
 dnl ---------------
 dnl Verify version of GNAT.
 AC_DEFUN([CF_GNAT_VERSION],
@@ -1394,7 +1394,7 @@ cf_gnat_version=`${cf_ada_make:-gnatmake} -v 2>&1 | \
 AC_MSG_RESULT($cf_gnat_version)
 
 case $cf_gnat_version in #(vi
-3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*) #(vi
+3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*|20[[0-9]][[0-9]]) #(vi
 	cf_cv_prog_gnat_correct=yes
 	;;
 *)
@@ -1672,11 +1672,11 @@ CF_SUBDIR_PATH($1,$2,lib)
 $1="$cf_library_path_list [$]$1"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_PREFIX version: 8 updated: 2008/09/13 11:34:16
+dnl CF_LIB_PREFIX version: 9 updated: 2012/01/21 19:28:10
 dnl -------------
 dnl Compute the library-prefix for the given host system
 dnl $1 = variable to set
-AC_DEFUN([CF_LIB_PREFIX],
+define([CF_LIB_PREFIX],
 [
 	case $cf_cv_system_name in #(vi
 	OS/2*|os2*) #(vi
@@ -3543,6 +3543,32 @@ then
 		CF_ADD_INCDIR($cf_cv_curses_dir/include)
 		CF_ADD_LIBDIR($cf_cv_curses_dir/lib)
 	fi
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_LIB_PREFIX version: 1 updated: 2012/01/21 19:28:10
+dnl ------------------
+dnl Allow the library-prefix to be overridden.  OS/2 EMX originally had no
+dnl "lib" prefix, e.g., because it used the dll naming convention.
+dnl
+dnl $1 = variable to set
+AC_DEFUN([CF_WITH_LIB_PREFIX],
+[
+AC_MSG_CHECKING(if you want to have a library-prefix)
+AC_ARG_WITH(lib-prefix,
+	[  --with-lib-prefix       override library-prefix],
+	[with_lib_prefix=$withval],
+	[with_lib_prefix=auto])
+AC_MSG_RESULT($with_lib_prefix)
+
+if test $with_lib_prefix = auto
+then
+	CF_LIB_PREFIX($1)
+elif test $with_lib_prefix = no
+then
+	LIB_PREFIX=
+else
+	LIB_PREFIX=$with_lib_prefix
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -53,6 +53,11 @@
 #include <OS.h>
 #endif
 
+#if USE_KLIBC_KBD
+#define INCL_KBD
+#include <os2.h>
+#endif
+
 #if USE_FUNC_POLL
 # if HAVE_SYS_TIME_H
 #  include <sys/time.h>
@@ -70,7 +75,7 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.62 2011/10/22 16:34:50 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.63 2012/01/21 19:21:29 KO.Myung-Hun Exp $")
 
 static long
 _nc_gettime(TimeType * t0, int first)
@@ -182,6 +187,12 @@ _nc_timed_wait(SCREEN *sp MAYBE_UNUSED,
 #elif defined(__BEOS__)
 #elif HAVE_SELECT
     fd_set set;
+#endif
+
+#if USE_KLIBC_KBD
+    fd_set saved_set;
+    KBDKEYINFO ki;
+    struct timeval tv;
 #endif
 
     long starttime, returntime;
@@ -329,10 +340,12 @@ _nc_timed_wait(SCREEN *sp MAYBE_UNUSED,
      */
     FD_ZERO(&set);
 
+#if !USE_KLIBC_KBD
     if (mode & TW_INPUT) {
 	FD_SET(sp->_ifd, &set);
 	count = sp->_ifd + 1;
     }
+#endif
     if ((mode & TW_MOUSE)
 	&& (fd = sp->_mouse_fd) >= 0) {
 	FD_SET(fd, &set);
@@ -352,6 +365,31 @@ _nc_timed_wait(SCREEN *sp MAYBE_UNUSED,
     }
 #endif
 
+#if USE_KLIBC_KBD
+    for (saved_set = set;; set = saved_set) {
+	if ((mode & TW_INPUT)
+	    && (sp->_extended_key
+		|| (KbdPeek(&ki, 0) == 0
+		    && (ki.fbStatus & KBDTRF_FINAL_CHAR_IN)))) {
+	    FD_ZERO(&set);
+	    FD_SET(sp->_ifd, &set);
+	    result = 1;
+	    break;
+	}
+
+	tv.tv_sec = 0;
+	tv.tv_usec = (milliseconds == 0) ? 0 : (10 * 1000);
+
+	if ((result = select(count, &set, NULL, NULL, &tv)) != 0)
+	    break;
+
+	/* Time out ? */
+	if (milliseconds >= 0 && _nc_gettime(&t0, FALSE) >= milliseconds) {
+	    result = 0;
+	    break;
+	}
+    }
+#else
     if (milliseconds >= 0) {
 	struct timeval ntimeout;
 	ntimeout.tv_sec = milliseconds / 1000;
@@ -360,6 +398,7 @@ _nc_timed_wait(SCREEN *sp MAYBE_UNUSED,
     } else {
 	result = select(count, &set, NULL, NULL, NULL);
     }
+#endif
 
 #ifdef NCURSES_WGETCH_EVENTS
     if ((mode & TW_EVENT) && evl) {
