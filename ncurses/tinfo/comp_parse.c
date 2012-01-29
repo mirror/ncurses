@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.78 2011/10/22 16:19:19 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.79 2012/01/28 21:49:23 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -470,7 +470,15 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 	    for_entry_list(qp) {
 		_nc_curr_line = (int) qp->startline;
 		_nc_set_type(_nc_first_name(qp->tterm.term_names));
-		fixup_acsc(&qp->tterm, literal);
+		/*
+		 * tic overrides this function pointer to provide more verbose
+		 * checking.
+		 */
+		if (_nc_check_termtype2 != sanity_check2) {
+		    _nc_check_termtype2(&qp->tterm, literal);
+		} else {
+		    fixup_acsc(&qp->tterm, literal);
+		}
 	    }
 	    DEBUG(2, ("SANITY CHECK FINISHED"));
 	}

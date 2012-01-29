@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 2004,2011 Free Software Foundation, Inc.                     #
+# Copyright (c) 2004-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey
 #
-# $Id: gen_edit.sh,v 1.2 2011/09/11 00:47:26 tom Exp $
+# $Id: gen_edit.sh,v 1.3 2012/01/22 19:58:06 Sven.Joachim Exp $
 # Generate a sed-script for converting the terminfo.src to the form which will
 # be installed.
 #
@@ -37,12 +37,12 @@
 #	The leaf directory names (lib, tabset, terminfo)
 #
 
-: ${ticdir=@TERMINFO@}
+: ${datadir=@datadir@}
 : ${xterm_new=@WHICH_XTERM@}
 
 # If we're not installing into /usr/share/, we'll have to adjust the location
 # of the tabset files in terminfo.src (which are in a parallel directory).
-TABSET=`echo $ticdir | sed -e 's%/terminfo$%/tabset%'`
+TABSET=${datadir}/tabset
 if test "x$TABSET" != "x/usr/share/tabset" ; then
 cat <<EOF
 s%/usr/share/tabset%$TABSET%g

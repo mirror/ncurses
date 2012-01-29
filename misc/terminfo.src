@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.406 $
-#	$Date: 2011/12/24 22:16:12 $
+#	$Revision: 1.418 $
+#	$Date: 2012/01/29 01:44:44 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1068,6 +1068,24 @@ mach-color|Mach Console with ANSI color,
 	dim=\E[2m, invis=\E[8m, op=\E[37;40m, rmso=\E[27m,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm, use=mach,
 
+# From: Samuel Thibault
+# Source: git://git.sv.gnu.org/hurd/gnumach.git
+# Files: i386/i386at/kd.c
+#
+# Added nel, hpa, sgr and removed rmacs, smacs based on source -TD
+mach-gnu|GNU Mach,
+	acsc=+>\,<-\^.v0\333`+a\261f\370g\361h\260i#j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
+	dch=\E[%p1%dP, dch1=\E[P, dim=\E[2m, ech=\E[%p1%dX,
+	el1=\E[1K, hpa=\E[%i%p1%dG, ich=\E[%p1%d@, ich1=\E[@,
+	indn=\E[%p1%dS, invis=\E[8m, nel=\EE, rin=\E[%p1%dT,
+	sgr=\E[0%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p6%t;1%;%?%p7%t;8%;m,
+	use=mach,
+
+mach-gnu-color|Mach Console with ANSI color,
+	colors#8, pairs#64,
+	op=\E[37;40m, rmso=\E[27m, setab=\E[4%p1%dm,
+	setaf=\E[3%p1%dm, use=mach-gnu,
+
 # From: Marcus Brinkmann
 # http://savannah.gnu.org/cgi-bin/viewcvs/*checkout*/hurd/hurd/console/
 #
@@ -1851,7 +1869,7 @@ x68k|x68k-ite|NetBSD/x68k ITE,
 ofcons|DNARD OpenFirmware console,
 	bw,
 	cols#80, lines#30,
-	bel=^G, blink=\2337;2m, bold=\2331m, clear=^L, cr=^M,
+	bel=^G, blink=\2335m, bold=\2331m, clear=^L, cr=^M,
 	cub=\233%p1%dD, cub1=\233D, cud=\233%p1%dB, cud1=\233B,
 	cuf=\233%p1%dC, cuf1=\233C, cup=\233%i%p1%d;%p2%dH,
 	cuu=\233%p1%dA, cuu1=\233A, dch=\233%p1%dP, dch1=\233P,
@@ -1863,8 +1881,8 @@ ofcons|DNARD OpenFirmware console,
 	kf4=\2330x, kf5=\2330t, kf6=\2330u, kf7=\2330q, kf8=\2330r,
 	kf9=\2330p, knp=\233/, kpp=\233?, nel=^M^J, rev=\2337m,
 	rmso=\2330m, rmul=\2330m,
-	sgr=\2330%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m,
-	sgr0=\2330m,
+	sgr=\2330%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p5%t2%;%?%p7%t8%;%?%p1%p3%|%t;7%;m,
+	sgr0=\2330m, smso=\2337m, smul=\2334m,
 
 # NetBSD "wscons" emulator in vt220 mode.
 # This entry is based on the NetBSD termcap entry, correcting the ncv value.
@@ -5381,11 +5399,12 @@ sun-type4|Sun Workstation console with type 4 keyboard,
 sun-color|Sun Microsystems Workstation console with color support (IA systems),
 	colors#8, ncv#3, pairs#64,
 	cub=\E[%p1%dD, cud=\E[%p1%dB, cuf=\E[%p1%dC,
-	cuu=\E[%p1%dA, home=\E[H, op=\E[0m, setab=\E[4%p1%dm,
-	setaf=\E[3%p1%dm,
+	cuu=\E[%p1%dA, home=\E[H, op=\E[0m, rs2=\E[s,
+	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
-	smso=\E[1m, use=sun,
+	sgr=\E[0%?%p1;1%;%?%p3%;7%;m, sgr0=\E[m, smso=\E[1m,
+	use=sun,
 
 #### Iris consoles
 #
@@ -10230,7 +10249,7 @@ att5410v1|att4410v1|tty5410v1|AT&T 4410/5410 80 columns - version 1,
 	pln=\E[%p1%d;00q%p2%:-16s, rc=\E8, rev=\E[7m, ri=\EM,
 	rmacs=^O, rmso=\E[m, rmul=\E[m, rs2=\Ec\E[?3l\E[2;0y,
 	sc=\E7,
-	sgr=\E[0%?%p1%p5%|%t;2%;%?%p2%p6%|%t;4%;%?%p4%t;5%;%?%p3%p1%|%p6%|%t;7%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p1%p5%|%p6%|%t;2%;%?%p2%t;4%;%?%p4%t;5%;%?%p3%p1%|%p6%|%t;7%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smso=\E[7m, smul=\E[4m,
 	tsl=\E7\E[25;%p1%{1}%+%dH,
 
@@ -10328,7 +10347,7 @@ att4415|tty5420|att5420|AT&T 4415/5420 80 cols,
 	pln=\E[%p1%d;0;0;0q%p2%:-16.16s, prot=\EV,
 	rin=\E[%p1%dF, rmam=\E[?7l, rmir=\E[4l,
 	rmkx=\E[19;0j\E[21;1j\212, rmln=\E|,
-	sgr=\E[0%?%p1%p5%|%t;2%;%?%p2%p6%|%t;4%;%?%p4%t;5%;%?%p3%p1%|%p6%|%t;7%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p1%p5%|%p6%|%t;2%;%?%p2%t;4%;%?%p4%t;5%;%?%p3%p1%|%p6%|%t;7%;%?%p7%t;8%;m%?%p8%t\EV%;%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smam=\E[?7h, smir=\E[4h,
 	smkx=\E[19;1j\E[21;4j\Eent, smln=\E~, tbc=\E[3g,
 	tsl=\E7\E[25;%p1%{8}%+%dH, vpa=\E[%p1%{1}%+%dd,
@@ -10931,7 +10950,7 @@ att620|AT&T 620; 80 column; 98key keyboard,
 	ri=\EM, rin=\E[%p1%dT, rmacs=\E(B\017, rmam=\E[?7l,
 	rmir=\E[4l, rmln=\E[2p, rmso=\E[m, rmul=\E[m,
 	rs2=\Ec\E[?3l, sc=\E7,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p3%p1%|%t;7%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;%?%p4%t;5%;%?%p3%p1%|%t;7%;%?%p7%t;8%;m%?%p9%t\E)0\016%e\E(B\017%;,
 	sgr0=\E[m\E(B\017, smacs=\E)0\016, smam=\E[?7h,
 	smir=\E[4h, smln=\E[p, smso=\E[7m, smul=\E[4m,
 	tsl=\E7\E[25;%i%p1%dx,
@@ -11641,7 +11660,7 @@ aaa+unk|aaa-unk|ann arbor ambassador (internal - don't use this directly),
 	rep=%p1%c\E[%p2%{1}%-%db, rev=\E[7m,
 	rmkx=\EP`>y~[[J`8xy~[[A`4xy~[[D`6xy~[[C`2xy~[[B\E\\,
 	rmm=\E[>52l, rmso=\E[m, rmul=\E[m, sc=\E7,
-	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;m,
+	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;%?%p7%t8;%;m,
 	sgr0=\E[m,
 	smkx=\EP`>z~[[J`8xz~[[A`4xz~[[D`6xz~[[C`2xz~[[B\E\\,
 	smm=\E[>52h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
@@ -11651,7 +11670,7 @@ aaa+rv|ann arbor ambassador in reverse video,
 	blink=\E[5;7m, bold=\E[1;7m, invis=\E[7;8m,
 	is1=\E[7m\E7\E[H\E9\E8, rev=\E[m, rmso=\E[7m, rmul=\E[7m,
 	rs1=\E[H\E[7m\E[J$<156>,
-	sgr=\E[%?%p1%p3%|%!%t7;%;%?%p2%t4;%;%?%p4%t5;%;%?%p6%t1;%;%?%p7%t8;%;m,
+	sgr=\E[%?%p2%t4;%;%?%p4%t5;%;%?%p6%t1;%;%?%p1%p2%|%p3%!%t7;%;%?%p7%t8;%;m\016,
 	sgr0=\E[7m\016, smso=\E[m, smul=\E[4;7m,
 # Ambassador with the DEC option, for partial vt100 compatibility.
 aaa+dec|ann arbor ambassador in dec vt100 mode,
@@ -12728,10 +12747,11 @@ avt-ns|concept avt no status line,
 	ri=\EM$<4>, rmacs=\016$<1>, rmcup=\E[w\E2\r\n,
 	rmir=\E[4l, rmkx=\E[!z\E[0;2u, rmso=\E[7!{, rmul=\E[4!{,
 	sc=\E7,
-	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;m,
-	sgr0=\E[m, smacs=\017$<1>, smcup=\E[=4l\E[1;24w\E2\r,
-	smir=\E[4h, smkx=\E[1!z\E[0;3u, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, vpa=\E[%p1%{1}%+%dd,
+	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;%?%p7%t8;%;%?%p8%t99;%;m%?%p5%t\E[1!{%;%?%p9%t\017%e\016%;$<1>,
+	sgr0=\E[m\016$<1>, smacs=\017$<1>,
+	smcup=\E[=4l\E[1;24w\E2\r, smir=\E[4h,
+	smkx=\E[1!z\E[0;3u, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
+	vpa=\E[%p1%{1}%+%dd,
 avt-rv-ns|concept avt in reverse video mode/no status line,
 	flash=\E[=205l$<200>\E[=205h, is1=\E[=103l\E[=205h,
 	use=avt-ns,
@@ -14829,7 +14849,7 @@ icl6404|kds7372|icl6402|kds6402|ICL 6404 aka Kokusai Display Systems 7372,
 	is1=\EC\E.3\EDF\EV1\Eg\E[0ZZ, nel=^_, rev=\E[4ZZ,
 	rmir=\Er, rmso=\E[%gh%{4}%^%Ph%gh%dZZ,
 	rmul=\E[%gh%{8}%^%Ph%gh%dZZ, rs2=\Eo1,
-	sgr=\E[%{0}%?%p1%t%{4}%|%;%?%p2%t%{8}%|%;%?%p3%t%{4}%|%;%?%p4%t%{2}%|%;%?%p7%t%{1}%|%;ZZ,
+	sgr=\E[%'0'%?%p1%t%'8'%|%;%?%p2%t%'8'%|%;%?%p3%t%'4'%|%;%?%p4%t%'2'%|%;%?%p7%t%'1'%|%;%cZZ,
 	sgr0=\E[0ZZ, smir=\Eq, smso=\E[8ZZ, smul=\E[8ZZ, tbc=\E3,
 icl6404-w|kds7372-w|ICL 6404 aka Kokusai Display Systems 7372 132 cols,
 	rs2=\Eo1, use=icl6404,
@@ -15167,7 +15187,7 @@ prism9|p9|P9|MDC Prism-9 in ANSII mode,
 	ri=\E[L, rmir=\E[4l, rmso=\E[27m, rmul=\E[24m,
 	rs2=\E[&p\E[<12l\E F\E[3g\E[9;17;25;33;41;49;57;65;73 N,
 	sc=\E[%y,
-	sgr=\E[%{0}%?%p1%p3%|%t%{7}%+%;%?%p2%t%{2}%+%;%?%p4%t%{5}%+%;%?%p6%t%{1}%+%;m%?%p8%t\E[%{32}%+%d%%{%;%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p1%p3%|%t;7%;%?%p2%t;4%;%?%p4%t;5%;%?%p6%t;1%;m%?%p8%t\E[32%%{%;%?%p9%t\016%e\017%;,
 	sgr0=\E[0m\017, smir=\E[4h, smso=\E[7m, smul=\E[4m,
 	tbc=\E[3g, tsl=\E[%i%p1%d%%}, vpa=\E[%i%p1%dd,
 
@@ -22662,5 +22682,16 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2011-11-24
 #	* add putty-sco -TD
+#
+# 2012-01-28
+#	* add mach-gnu (Samuel Thibault)
+#	* add mach-gnu-color, tweaks to mach-gnu -TD
+#	* make sgr for sun-color agree with smso -TD
+#	* make sgr for prism9 agree with other caps -TD
+#	* make sgr for icl6404 agree with other caps -TD
+#	* make sgr for ofcons agree with other caps -TD
+#	* make sgr for att5410v1, att4415, att620 agree with other caps -TD
+#	* make sgr for aaa-unk, aaa-rv agree with other caps -TD
+#	* make sgr for avt-ns agree with other caps -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

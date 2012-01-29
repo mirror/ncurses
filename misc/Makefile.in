@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.57 2011/11/11 18:05:45 tom Exp $
+# $Id: Makefile.in,v 1.58 2012/01/22 19:58:06 Sven.Joachim Exp $
 ##############################################################################
-# Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -120,7 +120,7 @@ terminfo.tmp : run_tic.sed $(source)
 
 run_tic.sed :
 	WHICH_XTERM=@WHICH_XTERM@ \
-	ticdir=${ticdir} \
+	datadir=${datadir} \
 	$(SHELL) $(srcdir)/gen_edit.sh >$@
 
 $(DESTDIR)$(bindir) \
