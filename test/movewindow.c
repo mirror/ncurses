@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.33 2012/01/15 00:30:35 tom Exp $
+ * $Id: movewindow.c,v 1.34 2012/02/05 01:16:47 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -492,9 +492,6 @@ move_derwin(WINDOW *win)
 				     max_line, max_col,
 				     TRUE,
 				     &more)) != 0) {
-		int y0, x0;
-
-		getbegyx(parent, y0, x0);
 		if (mvderwin(win, tmp->y, tmp->x) != ERR) {
 		    refresh_all(win);
 		    doupdate();

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1853 2012/01/29 01:47:05 tom Exp $
+-- $Id: NEWS,v 1.1854 2012/02/04 22:25:57 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,10 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20120204
+	+ improved tic -D option, avoid making target directory and provide
+	  better diagnostics.
+
 20120128
 	+ add mach-gnu (Debian #614316, patch by Samuel Thibault)
 	+ add mach-gnu-color, tweaks to mach-gnu terminfo -TD
@@ -58,7 +62,7 @@ it is not possible to add this information.
 	+ amend fix intended to separate fixups for acsc to allow "tic -cv" to
 	  give verbose warnings (cf:  20110730). 
 	+ modify misc/gen-edit.sh to make the location of the tabset directory
-	  consistent with misc/Makefile.in, i.., using ${datadir}/tabset
+	  consistent with misc/Makefile.in, i.e., using ${datadir}/tabset
 	  (Debian #653435, patch by Sven Joachim).
 
 20120121

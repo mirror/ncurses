@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,9 +43,10 @@
 #include <sys/stat.h>
 
 #include <dump_entry.h>
+#include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.157 2011/12/31 21:11:59 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.160 2012/02/05 01:39:39 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -476,24 +477,106 @@ open_tempfile(char *name)
     return result;
 }
 
+static const char *
+valid_db_path(const char *nominal)
+{
+    struct stat sb;
+#if USE_HASHED_DB
+    char suffix[] = DBM_SUFFIX;
+    size_t need = strlen(nominal) + sizeof(suffix);
+    char *result = malloc(need);
+
+    strcpy(result, nominal);
+    if (strcmp(result + need - sizeof(suffix), suffix)) {
+	strcat(result, suffix);
+    }
+#else
+    char *result = strdup(nominal);
+#endif
+
+    DEBUG(1, ("** stat(%s)", result));
+    if (stat(result, &sb) >= 0) {
+#if USE_HASHED_DB
+	if (!S_ISREG(sb.st_mode)
+	    || access(result, R_OK | W_OK) != 0) {
+	    DEBUG(1, ("...not a writable file"));
+	    free(result);
+	    result = 0;
+	}
+#else
+	if (!S_ISDIR(sb.st_mode)
+	    || access(result, R_OK | W_OK | X_OK) != 0) {
+	    DEBUG(1, ("...not a writable directory"));
+	    free(result);
+	    result = 0;
+	}
+#endif
+    } else {
+	/* check if parent is directory and is writable */
+	unsigned leaf = _nc_pathlast(result);
+
+	DEBUG(1, ("...not found"));
+	if (leaf) {
+	    char save = result[leaf];
+	    result[leaf] = 0;
+	    if (stat(result, &sb) >= 0
+		&& S_ISDIR(sb.st_mode)
+		&& access(result, R_OK | W_OK | X_OK) == 0) {
+		result[leaf] = save;
+	    } else {
+		DEBUG(1, ("...parent directory %s is not writable", result));
+		free(result);
+		result = 0;
+	    }
+	} else {
+	    DEBUG(1, ("... no parent directory"));
+	    free(result);
+	    result = 0;
+	}
+    }
+    return result;
+}
+
 /*
- * Show the databases that tic knows about.  The location to which it writes is
- * always the first one.  If that is not writable, then tic errors out before
- * reaching this function.
+ * Show the databases to which tic could write.  The location to which it
+ * writes is always the first one.  If none are writable, print an error
+ * message.
  */
 static void
-show_databases(void)
+show_databases(const char *outdir)
 {
-    DBDIRS state;
-    int offset;
-    const char *path;
+    bool specific = (outdir != 0) || getenv("TERMINFO") != 0;
+    const char *result;
+    const char *tried = 0;
 
-    _nc_first_db(&state, &offset);
-    while ((path = _nc_next_db(&state, &offset)) != 0) {
-	printf("%s\n", path);
+    if (outdir == 0) {
+	outdir = _nc_tic_dir(0);
     }
-    _nc_last_db();
+    if ((result = valid_db_path(outdir)) != 0) {
+	printf("%s\n", result);
+    } else {
+	tried = outdir;
+    }
+
+    if ((outdir = _nc_home_terminfo())) {
+	if ((result = valid_db_path(outdir)) != 0) {
+	    printf("%s\n", result);
+	} else if (!specific) {
+	    tried = outdir;
+	}
+    }
+
+    /*
+     * If we can write in neither location, give an error message.
+     */
+    if (tried) {
+	fflush(stdout);
+	fprintf(stderr, "%s: %s (no permission)\n", _nc_progname, tried);
+	ExitProgram(EXIT_FAILURE);
+    }
 }
+
+#define VtoTrace(opt) (unsigned) ((opt > 0) ? opt : (opt == 0))
 
 int
 main(int argc, char *argv[])
@@ -586,8 +669,9 @@ main(int argc, char *argv[])
 	    sortmode = S_TERMCAP;
 	    break;
 	case 'D':
-	    _nc_set_writedir(outdir);
-	    show_databases();
+	    debug_level = VtoTrace(v_opt);
+	    set_trace_level(debug_level);
+	    show_databases(outdir);
 	    ExitProgram(EXIT_SUCCESS);
 	    break;
 	case 'I':
@@ -665,7 +749,7 @@ main(int argc, char *argv[])
 	last_opt = this_opt;
     }
 
-    debug_level = (unsigned) ((v_opt > 0) ? v_opt : (v_opt == 0));
+    debug_level = VtoTrace(v_opt);
     set_trace_level(debug_level);
 
     if (_nc_tracing) {
@@ -685,7 +769,8 @@ main(int argc, char *argv[])
      */
     if (namelst && (!infodump && !capdump)) {
 	(void) fprintf(stderr,
-		       "Sorry, -e can't be used without -I or -C\n");
+		       "%s: Sorry, -e can't be used without -I or -C\n",
+		       _nc_progname);
 	cleanup(namelst);
 	ExitProgram(EXIT_FAILURE);
     }

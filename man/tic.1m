@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.53 2011/12/17 23:13:19 tom Exp $
+.\" $Id: tic.1m,v 1.54 2012/02/04 23:09:43 tom Exp $
 .TH @TIC@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -74,7 +74,8 @@ the library routines in \fBncurses\fR(3X).
 .PP
 As described in \fBterm\fR(\*n), the database may be either a directory
 tree (one file per terminal entry) or a hashed database (one record per entry).
-The \fB@TIC@\fR writes only one type of entry, depending on how it was built:
+The \fB@TIC@\fR command writes only one type of entry,
+depending on how it was built:
 .bP
 For directory trees, the top-level directory, e.g., /usr/share/terminfo,
 specifies the location of the database.
@@ -87,14 +88,20 @@ then that is used.
 The default name for the hashed database is the same as the
 default directory name (only adding a ".db" suffix).
 .PP
+In either case (directory or hashed database),
+\fB@TIC@\fP will create the container if it does not exist.
+For a directory, this would be the "terminfo" leaf,
+versus a "terminfo.db" file.
+.PP
 The results are normally placed in the system terminfo database \fB\*d\fR.
-The compiled terminal description can be placed in a different terminfo database.
+The compiled terminal description can be placed
+in a different terminfo database.
 There are two ways to achieve this:
 .bP
-First, you may override the system default by setting the variable
-\fBTERMINFO\fR in your shell environment to a valid database
-location, e.g., an existing directory (for directory trees) or
-valid location for a hashed database.
+First, you may override the system default either by
+using the \fB\-o\fP option,
+or by setting the variable \fBTERMINFO\fR
+in your shell environment to a valid database location.
 .bP
 Secondly, if \fB@TIC@\fR cannot write in \fI\*d\fR
 or the location specified using your TERMINFO variable,
@@ -103,9 +110,15 @@ it looks for the directory \fI$HOME/.terminfo\fR
 if that location exists, the entry is placed there.
 .PP
 Libraries that read terminfo entries are expected to check for
+.bP
 a location specified with the TERMINFO variable first,
-look at \fI$HOME/.terminfo\fR if TERMINFO is not set, and
-finally look in \fI\*d\fR.
+.bP
+look in \fI$HOME/.terminfo\fR if TERMINFO is not set, next
+.bP
+directories listed in the TERMINFO_DIRS symbol, and
+.bP
+finally look in the system terminfo database (\fI\*d\fR).
+.SS OPTIONS
 .TP
 \fB\-0\fR
 restricts the output to a single line
@@ -265,6 +278,7 @@ it will infer its type (boolean, number or string) from the syntax and
 make an extended table entry for that.
 User-defined capability strings
 whose name begins with ``k'' are treated as function keys.
+.SS PARAMETERS
 .TP
 \fIfile\fR
 contains one or more \fBterminfo\fR terminal descriptions in source
@@ -296,6 +310,7 @@ List of tokens encountered by scanner
 All values computed in construction of the hash table
 .LP
 If the debug level \fIn\fR is not given, it is taken to be one.
+.SS PROCESSING
 .PP
 All but one of the capabilities recognized by \fB@TIC@\fR are documented
 in \fBterminfo\fR(\*n).
@@ -317,9 +332,6 @@ When an entry, e.g., \fBentry_name_1\fR, contains a
 capabilities in \fIentry\fR_\fIname\fR_\fI2\fR must also appear in
 \fBentry_name_1\fR before \fBuse=\fR for these capabilities to be
 canceled in \fBentry_name_1\fR.
-.PP
-If the environment variable \fBTERMINFO\fR is set, the compiled
-results are placed there instead of \fB\*d\fR.
 .PP
 Total compiled entries cannot exceed 4096 bytes.
 The name field cannot
