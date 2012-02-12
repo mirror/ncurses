@@ -29,7 +29,7 @@
 #
 # Author: Thomas E. Dickey
 #
-# $Id: gen_edit.sh,v 1.3 2012/01/22 19:58:06 Sven.Joachim Exp $
+# $Id: gen_edit.sh,v 1.4 2012/02/11 16:30:03 tom Exp $
 # Generate a sed-script for converting the terminfo.src to the form which will
 # be installed.
 #
@@ -39,6 +39,7 @@
 
 : ${datadir=@datadir@}
 : ${xterm_new=@WHICH_XTERM@}
+: ${xterm_kbs=@XTERM_KBS@}
 
 # If we're not installing into /usr/share/, we'll have to adjust the location
 # of the tabset files in terminfo.src (which are in a parallel directory).
@@ -53,6 +54,14 @@ if test "$xterm_new" != "xterm-new" ; then
 cat <<EOF
 /^# This is xterm for ncurses/,/^$/{
 	s/use=xterm-new,/use=$WHICH_XTERM,/
+}
+EOF
+fi
+
+if test "$xterm_kbs" != "BS" ; then
+cat <<EOF
+/^xterm+kbs|fragment for backspace key/,/^#/{
+	s/kbs=^H,/kbs=^?,/
 }
 EOF
 fi

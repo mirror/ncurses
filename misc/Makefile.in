@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.58 2012/01/22 19:58:06 Sven.Joachim Exp $
+# $Id: Makefile.in,v 1.59 2012/02/11 16:22:49 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -120,6 +120,7 @@ terminfo.tmp : run_tic.sed $(source)
 
 run_tic.sed :
 	WHICH_XTERM=@WHICH_XTERM@ \
+	XTERM_KBS=@XTERM_KBS@ \
 	datadir=${datadir} \
 	$(SHELL) $(srcdir)/gen_edit.sh >$@
 

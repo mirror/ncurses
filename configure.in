@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.539 2012/01/22 01:08:15 tom Exp $
+dnl $Id: configure.in,v 1.541 2012/02/11 20:24:11 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.539 $)
+AC_REVISION($Revision: 1.541 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -470,6 +470,26 @@ esac
 AC_MSG_RESULT($with_xterm_new)
 WHICH_XTERM=$with_xterm_new
 AC_SUBST(WHICH_XTERM)
+
+AC_MSG_CHECKING(if xterm backspace sends BS or DEL)
+AC_ARG_WITH(xterm-kbs,
+	[  --with-xterm-kbs=XXX     specify if xterm backspace sends BS or DEL],
+	[with_xterm_kbs=$withval],
+	[with_xterm_kbs=BS])
+case x$with_xterm_kbs in
+xyes|xno|xBS|xbs|x8)
+	with_xterm_kbs=BS
+	;;
+xDEL|xdel|x127)
+	with_xterm_kbs=DEL
+	;;
+*)
+	with_xterm_kbs=$withval
+	;;
+esac
+AC_MSG_RESULT($with_xterm_kbs)
+XTERM_KBS=$with_xterm_kbs
+AC_SUBST(XTERM_KBS)
 
 MAKE_TERMINFO=
 if test "$use_database" = no ; then
