@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.17 2011/12/17 20:40:33 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.18 2012/02/18 20:34:55 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -93,7 +93,7 @@ NCURSES_EXPORT_VAR(int) COLORS = 0;
 
 #define TCBMAGIC NCDRV_MAGIC(NCDRV_TINFO)
 #define AssertTCB() assert(TCB!=0 && TCB->magic==TCBMAGIC)
-#define SetSP() assert(TCB->csp!=0); sp = TCB->csp
+#define SetSP() assert(TCB->csp!=0); sp = TCB->csp; (void) sp
 
 /*
  * This routine needs to do all the work to make curscr look

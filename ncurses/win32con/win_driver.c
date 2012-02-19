@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,7 +28,6 @@
 
 /****************************************************************************
  *  Author: Juergen Pfeifer                                                 *
- *                                                                          *
  ****************************************************************************/
 
 /*
@@ -39,12 +38,12 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.10 2010/12/25 19:28:21 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.11 2012/02/18 20:28:25 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
 #define AssertTCB() assert(TCB!=0 && TCB->magic==WINMAGIC)
-#define SetSP() assert(TCB->csp!=0); sp = TCB->csp
+#define SetSP() assert(TCB->csp!=0); sp = TCB->csp; (void) sp
 
 #define GenMap(vKey,key) MAKELONG(key, vKey)
 
@@ -308,7 +307,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
 
 static int
 drv_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB,
-		bool beepFlag GCC_UNUSED)
+		int beepFlag GCC_UNUSED)
 {
     SCREEN *sp;
     int res = ERR;
@@ -348,7 +347,7 @@ drv_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB,
 
 static void
 drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
-	     bool fore,
+	     int fore,
 	     int color,
 	     int (*outc) (SCREEN *, int) GCC_UNUSED)
 {
@@ -412,7 +411,7 @@ drv_setsize(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED,
 }
 
 static int
-drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, bool setFlag, TTY * buf)
+drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 {
     DWORD dwFlag = 0;
     tcflag_t iflag;
@@ -479,7 +478,7 @@ drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, bool setFlag, TTY * buf)
 }
 
 static int
-drv_mode(TERMINAL_CONTROL_BLOCK * TCB, bool progFlag, bool defFlag)
+drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 {
     SCREEN *sp;
     TERMINAL *_term = (TERMINAL *) TCB;
@@ -674,9 +673,9 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 
 static void
 drv_initpair(TERMINAL_CONTROL_BLOCK * TCB,
-	     short pair,
-	     short f,
-	     short b)
+	     int pair,
+	     int f,
+	     int b)
 {
     SCREEN *sp;
 
@@ -691,10 +690,10 @@ drv_initpair(TERMINAL_CONTROL_BLOCK * TCB,
 
 static void
 drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
-	      short color GCC_UNUSED,
-	      short r GCC_UNUSED,
-	      short g GCC_UNUSED,
-	      short b GCC_UNUSED)
+	      int color GCC_UNUSED,
+	      int r GCC_UNUSED,
+	      int g GCC_UNUSED,
+	      int b GCC_UNUSED)
 {
     SCREEN *sp;
 
@@ -704,9 +703,9 @@ drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
 
 static void
 drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
-	     short old_pair GCC_UNUSED,
-	     short pair GCC_UNUSED,
-	     bool reverse GCC_UNUSED,
+	     int old_pair GCC_UNUSED,
+	     int pair GCC_UNUSED,
+	     int reverse GCC_UNUSED,
 	     int (*outc) (SCREEN *, int) GCC_UNUSED
 )
 {
@@ -778,7 +777,7 @@ drv_hwlabel(TERMINAL_CONTROL_BLOCK * TCB,
 
 static void
 drv_hwlabelOnOff(TERMINAL_CONTROL_BLOCK * TCB,
-		 bool OnFlag GCC_UNUSED)
+		 int OnFlag GCC_UNUSED)
 {
     SCREEN *sp;
 
@@ -1080,7 +1079,6 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
     BOOL b;
     DWORD nRead;
     WORD vk;
-    WORD sc;
 
     AssertTCB();
     assert(buf);
@@ -1096,7 +1094,6 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 		    continue;
 		*buf = (int) inp_rec.Event.KeyEvent.uChar.AsciiChar;
 		vk = inp_rec.Event.KeyEvent.wVirtualKeyCode;
-		sc = inp_rec.Event.KeyEvent.wVirtualScanCode;
 		if (*buf == 0) {
 		    if (sp->_keypad_on) {
 			*buf = MapKey(TCB, vk);
@@ -1157,7 +1154,7 @@ drv_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int keycode)
 }
 
 static int
-drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, bool flag GCC_UNUSED)
+drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, int flag GCC_UNUSED)
 {
     SCREEN *sp;
     int code = ERR;
@@ -1172,7 +1169,7 @@ drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, bool flag GCC_UNUSED)
 }
 
 static int
-drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, bool flag)
+drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, int flag)
 {
     int code = ERR;
     SCREEN *sp;

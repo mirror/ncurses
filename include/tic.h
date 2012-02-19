@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,14 +33,14 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.67 2011/10/08 21:00:50 tom Exp $
+ * $Id: tic.h,v 1.68 2012/02/18 20:09:19 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
 
 #ifndef __TIC_H
 #define __TIC_H
-
+/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -248,6 +248,8 @@ extern NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool);
 #define TERMINFO "/usr/share/terminfo"
 #endif
 
+#ifdef NCURSES_TERM_ENTRY_H_incl
+
 /* access.c */
 extern NCURSES_EXPORT(unsigned) _nc_pathlast (const char *);
 extern NCURSES_EXPORT(bool) _nc_is_abs_path (const char *);
@@ -323,8 +325,11 @@ extern NCURSES_EXPORT(void) _nc_last_db(void);
 /* write_entry.c */
 extern NCURSES_EXPORT(int) _nc_tic_written (void);
 
+#endif /* NCURSES_TERM_ENTRY_H_incl */
+
 #ifdef __cplusplus
 }
 #endif
 
+/* *INDENT-ON* */
 #endif /* __TIC_H */

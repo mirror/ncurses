@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.163 2012/02/11 16:20:42 tom Exp $
+-- $Id: INSTALL,v 1.164 2012/02/18 21:27:33 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1016,6 +1016,15 @@ SUMMARY OF CONFIGURE OPTIONS:
 	not doing that, renaming the tic library can result in conflicting
 	library dependencies for tic and other programs built with the tic
 	library.
+
+    --with-tparm-arg[=XXX]
+	Override the type used for tparm() arguments, which normally is a
+	"long".  However the function must assume that its arguments can hold a
+	pointer to char's which is not always workable for 64-bit platforms.  A
+	better choice would be intptr_t, which was not available at the time
+	tparm's interface was defined.
+
+	If the option is not given, this defaults to "long".
 
     --with-trace
 	Configure the trace() function as part of the all models of the ncurses

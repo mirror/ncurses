@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.44 2012/01/22 00:33:42 tom Exp $
+dnl $Id: aclocal.m4,v 1.45 2012/02/18 23:21:42 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2045,7 +2045,7 @@ fi
 test "$cf_cv_mixedcase" = yes && AC_DEFINE(MIXEDCASE_FILENAMES)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MKSTEMP version: 7 updated: 2010/08/14 18:25:37
+dnl CF_MKSTEMP version: 8 updated: 2012/02/13 20:34:56
 dnl ----------
 dnl Check for a working mkstemp.  This creates two files, checks that they are
 dnl successfully created and distinct (AmigaOS apparently fails on the last).
@@ -2087,9 +2087,11 @@ int main()
 }
 ],[cf_cv_func_mkstemp=yes
 ],[cf_cv_func_mkstemp=no
-],[AC_CHECK_FUNC(mkstemp)
+],[cf_cv_func_mkstemp=maybe])
 ])
-])
+if test "x$cf_cv_func_mkstemp" = xmaybe ; then
+	AC_CHECK_FUNC(mkstemp)
+fi
 if test "x$cf_cv_func_mkstemp" = xyes || test "x$ac_cv_func_mkstemp" = xyes ; then
 	AC_DEFINE(HAVE_MKSTEMP)
 fi

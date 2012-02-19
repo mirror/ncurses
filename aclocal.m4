@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.604 2012/01/22 00:30:35 tom Exp $
+dnl $Id: aclocal.m4,v 1.605 2012/02/18 23:06:14 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1306,7 +1306,7 @@ AC_DEFUN([CF_ERRNO],
 CF_CHECK_ERRNO(errno)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ETIP_DEFINES version: 4 updated: 2011/12/03 16:54:03
+dnl CF_ETIP_DEFINES version: 5 updated: 2012/02/18 17:51:07
 dnl ---------------
 dnl Test for conflicting definitions of exception in gcc 2.8.0, etc., between
 dnl math.h and builtin.h, only for ncurses
@@ -1334,7 +1334,7 @@ AC_TRY_COMPILE([
 	test -n "$cf_math" && AC_DEFINE_UNQUOTED(ETIP_NEEDS_${cf_math})
 	test -n "$cf_excp" && AC_DEFINE_UNQUOTED(ETIP_NEEDS_${cf_excp})
 	cf_result="$cf_math $cf_excp"
-	break
+	break 2
 ],[])
 done
 done
@@ -1600,7 +1600,7 @@ AC_CACHE_CHECK(for openpty header,cf_cv_func_openpty,[
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_POLL version: 4 updated: 2006/12/16 12:33:30
+dnl CF_FUNC_POLL version: 5 updated: 2012/01/25 17:55:38
 dnl ------------
 dnl See if the poll function really works.  Some platforms have poll(), but
 dnl it does not work for terminals or files.
@@ -1617,10 +1617,29 @@ int main() {
 	struct pollfd myfds;
 	int ret;
 
-	myfds.fd = 0;
+	/* check for Darwin bug with respect to "devices" */
+	myfds.fd = open("/dev/null", 1);
+	if (myfds.fd < 0)
+		myfds.fd = 0;
 	myfds.events = POLLIN;
+	myfds.revents = 0;
 
 	ret = poll(&myfds, 1, 100);
+
+	if (ret < 0 || (myfds.revents & POLLNVAL)) {
+		ret = -1;
+	} else {
+
+		/* also check with standard input */
+		myfds.fd = 0;
+		myfds.events = POLLIN;
+		myfds.revents = 0;
+
+		ret = poll(&myfds, 1, 100);
+		if (ret < 0) {
+			ret = 0;
+		}
+	}
 	${cf_cv_main_return:-return}(ret != 0);
 }],
 	[cf_cv_working_poll=yes],
@@ -4394,7 +4413,7 @@ fi
 test "$cf_cv_mixedcase" = yes && AC_DEFINE(MIXEDCASE_FILENAMES)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MKSTEMP version: 7 updated: 2010/08/14 18:25:37
+dnl CF_MKSTEMP version: 8 updated: 2012/02/13 20:34:56
 dnl ----------
 dnl Check for a working mkstemp.  This creates two files, checks that they are
 dnl successfully created and distinct (AmigaOS apparently fails on the last).
@@ -4436,9 +4455,11 @@ int main()
 }
 ],[cf_cv_func_mkstemp=yes
 ],[cf_cv_func_mkstemp=no
-],[AC_CHECK_FUNC(mkstemp)
+],[cf_cv_func_mkstemp=maybe])
 ])
-])
+if test "x$cf_cv_func_mkstemp" = xmaybe ; then
+	AC_CHECK_FUNC(mkstemp)
+fi
 if test "x$cf_cv_func_mkstemp" = xyes || test "x$ac_cv_func_mkstemp" = xyes ; then
 	AC_DEFINE(HAVE_MKSTEMP)
 fi

@@ -75,7 +75,7 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.63 2012/01/21 19:21:29 KO.Myung-Hun Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.64 2012/02/18 20:32:55 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, int first)
@@ -218,6 +218,7 @@ _nc_timed_wait(SCREEN *sp MAYBE_UNUSED,
     starttime = _nc_gettime(&t0, TRUE);
 
     count = 0;
+    (void) count;
 
 #ifdef NCURSES_WGETCH_EVENTS
     if ((mode & TW_EVENT) && evl)

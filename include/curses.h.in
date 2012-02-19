@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.227 2011/10/29 20:01:35 tom Exp $ */
+/* $Id: curses.h.in,v 1.228 2012/02/18 21:34:30 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -127,6 +127,13 @@
  */
 #undef NCURSES_TPARM_VARARGS
 #define NCURSES_TPARM_VARARGS @NCURSES_TPARM_VARARGS@
+
+/*
+ * Control type used for tparm's arguments.  While X/Open equates long and
+ * char* values, this is not always workable for 64-bit platforms.
+ */
+#undef NCURSES_TPARM_ARG
+#define NCURSES_TPARM_ARG @NCURSES_TPARM_ARG@
 
 /*
  * NCURSES_CH_T is used in building the library, but not used otherwise in
@@ -838,7 +845,7 @@ extern NCURSES_EXPORT(int) putp (const char *);				/* implemented */
 #if NCURSES_TPARM_VARARGS
 extern NCURSES_EXPORT(char *) tparm (NCURSES_CONST char *, ...);	/* special */
 #else
-extern NCURSES_EXPORT(char *) tparm (NCURSES_CONST char *, long,long,long,long,long,long,long,long,long);	/* special */
+extern NCURSES_EXPORT(char *) tparm (NCURSES_CONST char *, NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG);	/* special */
 extern NCURSES_EXPORT(char *) tparm_varargs (NCURSES_CONST char *, ...);	/* special */
 #endif
 
