@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_error.c,v 1.33 2011/10/22 16:34:50 tom Exp $")
+MODULE_ID("$Id: comp_error.c,v 1.36 2012/02/22 22:34:31 tom Exp $")
 
 NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings = FALSE;
 NCURSES_EXPORT_VAR(int) _nc_curr_line = 0; /* current line # in input */
@@ -85,7 +85,7 @@ _nc_get_type(char *name)
     }
 #endif
     if (name != 0)
-	strcpy(name, TermType != 0 ? TermType : "");
+	_nc_STRCPY(name, TermType != 0 ? TermType : "", MAX_NAME_SIZE);
 }
 
 static NCURSES_INLINE void
@@ -152,3 +152,12 @@ _nc_syserr_abort(const char *const fmt,...)
     exit(EXIT_FAILURE);
 #endif
 }
+
+#if NO_LEAKS
+NCURSES_EXPORT(void)
+_nc_comp_error_leaks(void)
+{
+    FreeAndNull(SourceName);
+    FreeAndNull(TermType);
+}
+#endif

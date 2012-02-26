@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: m_item_new.c,v 1.30 2010/01/23 21:20:11 tom Exp $")
+MODULE_ID("$Id: m_item_new.c,v 1.31 2012/02/23 10:02:15 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -222,7 +222,6 @@ set_menu_mark(MENU * menu, const char *mark)
 	  menu->mark = strdup(mark);
 	  if (menu->mark)
 	    {
-	      strcpy(menu->mark, mark);
 	      if (menu != &_nc_Default_Menu)
 		menu->status |= _MARK_ALLOCATED;
 	    }

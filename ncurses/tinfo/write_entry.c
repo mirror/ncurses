@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.82 2011/10/30 14:33:13 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.84 2012/02/22 22:40:24 tom Exp $")
 
 static int total_written;
 
@@ -99,7 +99,7 @@ check_writeable(int code)
     if (verified[s - dirnames])
 	return;
 
-    sprintf(dir, LEAF_FMT, code);
+    _nc_SPRINTF(dir, _nc_SLIMIT(sizeof(dir)) LEAF_FMT, code);
     if (make_db_root(dir) < 0) {
 	_nc_err_abort("%s/%s: permission denied", _nc_tic_dir(0), dir);
     }
@@ -116,12 +116,12 @@ make_db_path(char *dst, const char *src, size_t limit)
 
     if (src == top || _nc_is_abs_path(src)) {
 	if (strlen(src) + 1 <= limit) {
-	    (void) strcpy(dst, src);
+	    _nc_STRCPY(dst, src, limit);
 	    rc = 0;
 	}
     } else {
 	if (strlen(top) + strlen(src) + 2 <= limit) {
-	    (void) sprintf(dst, "%s/%s", top, src);
+	    _nc_SPRINTF(dst, _nc_SLIMIT(limit) "%s/%s", top, src);
 	    rc = 0;
 	}
     }
@@ -132,7 +132,7 @@ make_db_path(char *dst, const char *src, size_t limit)
 	size_t need = strlen(suffix);
 	if (have > need && strcmp(dst + (int) (have - need), suffix)) {
 	    if (have + need <= limit) {
-		strcat(dst, suffix);
+		_nc_STRCAT(dst, suffix, limit);
 	    } else {
 		rc = -1;
 	    }
@@ -277,7 +277,7 @@ _nc_write_entry(TERMTYPE *const tp)
     assert(strlen(tp->term_names) != 0);
     assert(strlen(tp->term_names) < sizeof(name_list));
 
-    (void) strcpy(name_list, tp->term_names);
+    _nc_STRCPY(name_list, tp->term_names, sizeof(name_list));
     DEBUG(7, ("Name list = '%s'", name_list));
 
     first_name = name_list;
@@ -330,7 +330,9 @@ _nc_write_entry(TERMTYPE *const tp)
 	    key.data = name_list;
 	    key.size = strlen(name_list);
 
-	    strcpy(buffer + 1, tp->term_names);
+	    _nc_STRCPY(buffer + 1,
+		       tp->term_names,
+		       sizeof(buffer) - 1);
 	    data.size = strlen(tp->term_names) + 1;
 
 	    _nc_db_put(capdb, &key, &data);
@@ -359,7 +361,8 @@ _nc_write_entry(TERMTYPE *const tp)
     if (strlen(first_name) >= sizeof(filename) - (2 + LEAF_LEN))
 	_nc_warning("terminal name too long.");
 
-    sprintf(filename, LEAF_FMT "/%s", first_name[0], first_name);
+    _nc_SPRINTF(filename, _nc_SLIMIT(sizeof(filename))
+		LEAF_FMT "/%s", first_name[0], first_name);
 
     /*
      * Has this primary name been written since the first call to
@@ -400,7 +403,8 @@ _nc_write_entry(TERMTYPE *const tp)
 	}
 
 	check_writeable(ptr[0]);
-	sprintf(linkname, LEAF_FMT "/%s", ptr[0], ptr);
+	_nc_SPRINTF(linkname, _nc_SLIMIT(sizeof(linkname))
+		    LEAF_FMT "/%s", ptr[0], ptr);
 
 	if (strcmp(filename, linkname) == 0) {
 	    _nc_warning("self-synonym ignored");
@@ -415,7 +419,7 @@ _nc_write_entry(TERMTYPE *const tp)
 	    if (first_name[0] == linkname[0])
 		strncpy(symlinkname, first_name, sizeof(symlinkname) - 1);
 	    else {
-		strcpy(symlinkname, "../");
+		_nc_STRCPY(symlinkname, "../", sizeof(suymlinkname));
 		strncat(symlinkname, filename, sizeof(symlinkname) - 4);
 	    }
 	    symlinkname[sizeof(symlinkname) - 1] = '\0';

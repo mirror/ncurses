@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.87 2012/01/21 23:55:05 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.89 2012/02/22 22:50:47 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -213,10 +213,10 @@ failed(const char *msg)
     size_t len = strlen(_nc_progname) + 2;
 
     if ((int) len < (int) sizeof(temp) - 12) {
-	strcpy(temp, _nc_progname);
-	strcat(temp, ": ");
+	_nc_STRCPY(temp, _nc_progname, sizeof(temp));
+	_nc_STRCAT(temp, ": ", sizeof(temp));
     } else {
-	strcpy(temp, "tset: ");
+	_nc_STRCPY(temp, "tset: ", sizeof(temp));
     }
     perror(strncat(temp, msg, sizeof(temp) - strlen(temp) - 2));
     exit_error();

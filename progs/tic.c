@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.160 2012/02/05 01:39:39 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.162 2012/02/22 23:59:45 tom Exp $")
 
 const char *_nc_progname = "tic";
 
@@ -222,7 +222,7 @@ write_it(ENTRY * ep)
 	    }
 	    *d = 0;
 	    if (strlen(result) < strlen(s))
-		strcpy(s, result);
+		_nc_STRCPY(s, result, strlen(s) + 1);
 	}
     }
 
@@ -314,7 +314,7 @@ put_translate(int c)
 	    if ((up = strchr(namebuf, '#')) != 0
 		|| (up = strchr(namebuf, '=')) != 0
 		|| ((up = strchr(namebuf, '@')) != 0 && up[1] == '>')) {
-		(void) strcpy(suffix, up);
+		_nc_STRCPY(suffix, up, have);
 		*up = '\0';
 	    }
 
@@ -486,9 +486,9 @@ valid_db_path(const char *nominal)
     size_t need = strlen(nominal) + sizeof(suffix);
     char *result = malloc(need);
 
-    strcpy(result, nominal);
+    _nc_STRCPY(result, nominal, need);
     if (strcmp(result + need - sizeof(suffix), suffix)) {
-	strcat(result, suffix);
+	_nc_STRCAT(result, suffix, need);
     }
 #else
     char *result = strdup(nominal);
@@ -795,16 +795,19 @@ main(int argc, char *argv[])
 		if (access(termcap, F_OK) == 0) {
 		    /* file exists */
 		    source_file = termcap;
-		} else if ((tmp_fp = open_tempfile(strcpy(my_tmpname,
-							  "/tmp/XXXXXX")))
-			   != 0) {
-		    source_file = my_tmpname;
-		    fprintf(tmp_fp, "%s\n", termcap);
-		    fclose(tmp_fp);
-		    tmp_fp = open_input(source_file);
-		    to_remove = source_file;
 		} else {
-		    failed("tmpnam");
+		    _nc_STRCPY(my_tmpname,
+			       "/tmp/XXXXXX",
+			       sizeof(my_tmpname));
+		    if ((tmp_fp = open_tempfile(my_tmpname)) != 0) {
+			source_file = my_tmpname;
+			fprintf(tmp_fp, "%s\n", termcap);
+			fclose(tmp_fp);
+			tmp_fp = open_input(source_file);
+			to_remove = source_file;
+		    } else {
+			failed("tmpnam");
+		    }
 		}
 	    }
 	} else {
@@ -1281,19 +1284,19 @@ check_keypad(TERMTYPE *tp)
 		assert(strlen(show) < (MAX_KP * 4));
 		switch (kk) {
 		case 0:
-		    strcat(show, " ka1");
+		    _nc_STRCAT(show, " ka1", sizeof(show));
 		    break;
 		case 1:
-		    strcat(show, " ka3");
+		    _nc_STRCAT(show, " ka3", sizeof(show));
 		    break;
 		case 2:
-		    strcat(show, " kb2");
+		    _nc_STRCAT(show, " kb2", sizeof(show));
 		    break;
 		case 3:
-		    strcat(show, " kc1");
+		    _nc_STRCAT(show, " kc1", sizeof(show));
 		    break;
 		case 4:
-		    strcat(show, " kc3");
+		    _nc_STRCAT(show, " kc3", sizeof(show));
 		    break;
 		}
 	    }
@@ -1308,15 +1311,15 @@ check_keypad(TERMTYPE *tp)
 	       VALID_STRING(key_c3)) {
 	show[0] = '\0';
 	if (keypad_index(key_a1) >= 0)
-	    strcat(show, " ka1");
+	    _nc_STRCAT(show, " ka1", sizeof(show));
 	if (keypad_index(key_a3) >= 0)
-	    strcat(show, " ka3");
+	    _nc_STRCAT(show, " ka3", sizeof(show));
 	if (keypad_index(key_b2) >= 0)
-	    strcat(show, " kb2");
+	    _nc_STRCAT(show, " kb2", sizeof(show));
 	if (keypad_index(key_c1) >= 0)
-	    strcat(show, " kc1");
+	    _nc_STRCAT(show, " kc1", sizeof(show));
 	if (keypad_index(key_c3) >= 0)
-	    strcat(show, " kc3");
+	    _nc_STRCAT(show, " kc3", sizeof(show));
 	if (*show != '\0')
 	    _nc_warning("vt100 keypad map incomplete:%s", show);
     }

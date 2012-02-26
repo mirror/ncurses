@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.134 2012/01/21 19:21:29 KO.Myung-Hun Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.136 2012/02/22 22:40:24 tom Exp $")
 
 #include <tic.h>
 
@@ -263,7 +263,8 @@ mouse_server(unsigned long param)
 		/* sit and wait on the event queue */
 		rc = MouReadEventQue(&mouev, &fWait, hmou);
 		if (rc) {
-		    sprintf(err, "Error reading mouse queue, rc=%lu.\r\n", rc);
+		    _nc_SPRINTF(err, _nc_SLIMIT(sizeof(err))
+				"Error reading mouse queue, rc=%lu.\r\n", rc);
 		    break;
 		}
 		if (!sp->_emxmouse_activated)
@@ -289,9 +290,11 @@ mouse_server(unsigned long param)
 	      finish:
 		oldstate = mouev.fs;
 	    }
-	} else
-	    sprintf(err, "Error setting event mask, buttons=%d, rc=%lu.\r\n",
-		    nbuttons, rc);
+	} else {
+	    _nc_SPRINTF(err, _nc_SLIMIT(sizeof(err))
+			"Error setting event mask, buttons=%d, rc=%lu.\r\n",
+			nbuttons, rc);
+	}
 
 	DosWrite(2, err, strlen(err), &rc);
 	MouClose(hmou);

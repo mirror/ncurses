@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.64 2012/01/01 02:56:17 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.66 2012/02/22 23:57:44 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -236,10 +236,11 @@ make_db_name(char *dst, const char *src, unsigned limit)
 
     if (need <= limit) {
 	if (size >= lens
-	    && !strcmp(src + size - lens, suffix))
-	    (void) strcpy(dst, src);
-	else
-	    (void) sprintf(dst, "%s%s", src, suffix);
+	    && !strcmp(src + size - lens, suffix)) {
+	    _nc_STRCPY(dst, src, PATH_MAX);
+	} else {
+	    _nc_SPRINTF(dst, _nc_SLIMIT(PATH_MAX) "%s%s", src, suffix);
+	}
 	result = TRUE;
     }
     return result;
@@ -387,7 +388,8 @@ typelist(int eargc, char *eargv[],
 		if (isDotname(name_1))
 		    continue;
 
-		(void) sprintf(cwd_buf, "%s/%.*s/", eargv[i], (int) len, name_1);
+		_nc_SPRINTF(cwd_buf, _nc_SLIMIT(cwd_len)
+			    "%s/%.*s/", eargv[i], (int) len, name_1);
 		if (chdir(cwd_buf) != 0)
 		    continue;
 

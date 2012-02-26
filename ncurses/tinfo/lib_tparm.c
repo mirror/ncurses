@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.84 2011/10/22 15:48:47 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.86 2012/02/22 22:40:24 tom Exp $")
 
 /*
  *	char *
@@ -143,7 +143,9 @@ save_text(const char *fmt, const char *s, int len)
 
     get_space(s_len + 1);
 
-    (void) sprintf(TPS(out_buff) + TPS(out_used), fmt, s);
+    _nc_SPRINTF(TPS(out_buff) + TPS(out_used),
+		_nc_SLIMIT(TPS(out_size) - TPS(out_used))
+		fmt, s);
     TPS(out_used) += strlen(TPS(out_buff) + TPS(out_used));
 }
 
@@ -155,7 +157,9 @@ save_number(const char *fmt, int number, int len)
 
     get_space((size_t) len + 1);
 
-    (void) sprintf(TPS(out_buff) + TPS(out_used), fmt, number);
+    _nc_SPRINTF(TPS(out_buff) + TPS(out_used),
+		_nc_SLIMIT(TPS(out_size) - TPS(out_used))
+		fmt, number);
     TPS(out_used) += strlen(TPS(out_buff) + TPS(out_used));
 }
 

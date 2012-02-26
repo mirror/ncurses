@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2007,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: trim_sgr0.c,v 1.12 2010/12/25 23:03:57 tom Exp $")
+MODULE_ID("$Id: trim_sgr0.c,v 1.14 2012/02/22 22:34:31 tom Exp $")
 
 #undef CUR
 #define CUR tp->
@@ -108,7 +108,7 @@ rewrite_sgr(char *s, char *attr)
 		for (n = 0; n < len_s - len_a; ++n) {
 		    s[n] = s[n + len_a];
 		}
-		strcpy(s + n, attr);
+		_nc_STRCPY(s + n, attr, strlen(s) + 1);
 		TR(TRACE_DATABASE, ("to:\n\t%s", s));
 	    }
 	}

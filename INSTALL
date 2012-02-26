@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.164 2012/02/18 21:27:33 tom Exp $
+-- $Id: INSTALL,v 1.165 2012/02/19 21:24:52 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -595,6 +595,14 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Compile-in support for extended functions which accept a SCREEN pointer,
 	reducing the need for juggling the global SP value with set_term() and
 	delscreen().
+
+    --enable-string-hacks
+	Controls whether strlcat and strlcpy may be used.  The same issue
+	applies to OpenBSD's warnings about snprintf, noting that this function
+	is weakly standardized.
+
+	Aside from stifling these warnings, there is no functional improvement
+	in ncurses.
 
     --enable-symlinks
 	If your system supports symbolic links, make tic use symbolic links

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.543 2012/02/18 21:31:19 tom Exp $
+dnl $Id: configure.in,v 1.545 2012/02/25 11:32:40 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.543 $)
+AC_REVISION($Revision: 1.545 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1245,6 +1245,7 @@ if test "x$with_warnings" = "xyes"; then
 	fi
 fi
 CF_GCC_ATTRIBUTES
+CF_ENABLE_STRING_HACKS
 
 ###	use option --enable-assertions to turn on generation of assertion code
 AC_MSG_CHECKING(if you want to enable runtime assertions)

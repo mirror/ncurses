@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_tracebits.c,v 1.20 2011/04/16 15:32:45 tom Exp $")
+MODULE_ID("$Id: lib_tracebits.c,v 1.22 2012/02/22 22:26:58 tom Exp $")
 
 #if HAVE_SYS_TERMIO_H
 #include <sys/termio.h>		/* needed for ISC */
@@ -76,22 +76,24 @@ typedef struct {
     const char *name;
 } BITNAMES;
 
+#define TRACE_BUF_SIZE(num) (_nc_globals.tracebuf_ptr[num].size)
+
 static void
 lookup_bits(char *buf, const BITNAMES * table, const char *label, unsigned int val)
 {
     const BITNAMES *sp;
 
-    (void) strcat(buf, label);
-    (void) strcat(buf, ": {");
+    _nc_STRCAT(buf, label, TRACE_BUF_SIZE(0));
+    _nc_STRCAT(buf, ": {", TRACE_BUF_SIZE(0));
     for (sp = table; sp->name; sp++)
 	if (sp->val != 0
 	    && (val & sp->val) == sp->val) {
-	    (void) strcat(buf, sp->name);
-	    (void) strcat(buf, ", ");
+	    _nc_STRCAT(buf, sp->name, TRACE_BUF_SIZE(0));
+	    _nc_STRCAT(buf, ", ", TRACE_BUF_SIZE(0));
 	}
     if (buf[strlen(buf) - 2] == ',')
 	buf[strlen(buf) - 2] = '\0';
-    (void) strcat(buf, "} ");
+    _nc_STRCAT(buf, "} ", TRACE_BUF_SIZE(0));
 }
 
 NCURSES_EXPORT(char *)
@@ -199,7 +201,7 @@ _nc_trace_ttymode(TTY * tty)
 		    }
 		}
 	    }
-	    strcat(buf, result);
+	    _nc_STRCAT(buf, result, TRACE_BUF_SIZE(0));
 	}
 #endif
 

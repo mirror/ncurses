@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.84 2011/09/26 22:52:50 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.86 2012/02/22 22:40:24 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -161,7 +161,7 @@ _nc_cgetset(const char *ent)
 	return (-1);
     }
     gottoprec = 0;
-    (void) strcpy(toprec, ent);
+    _nc_STRCPY(toprec, ent, topreclen);
     return (0);
 }
 
@@ -294,7 +294,7 @@ _nc_getent(
 	    errno = ENOMEM;
 	    return (TC_SYS_ERR);
 	}
-	(void) strcpy(record, toprec);
+	_nc_STRCPY(record, toprec, topreclen + BFRAG);
 	rp = record + topreclen + 1;
 	r_end = rp + BFRAG;
 	current = in_array;
@@ -822,10 +822,11 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
 	    if ((home = getenv("HOME")) != 0 && *home != '\0'
 		&& strchr(home, ' ') == 0
 		&& strlen(home) < sizeof(temp) - 10) {	/* setup path */
-		sprintf(temp, "%s/", home);	/* $HOME first */
+		_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+			    "%s/", home);	/* $HOME first */
 	    }
 	    /* if no $HOME look in current directory */
-	    strcat(temp, ".termcap");
+	    _nc_STRCAT(temp, ".termcap", sizeof(temp));
 	    _nc_safe_strcat(&desc, temp);
 	    _nc_safe_strcat(&desc, " ");
 	    _nc_safe_strcat(&desc, get_termpath());
@@ -1041,7 +1042,9 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
 	    normal = FALSE;
 	} else if (_nc_name_match(tc, tn, "|:")) {	/* treat as a capability file */
 	    use_buffer = TRUE;
-	    (void) sprintf(tc_buf, "%.*s\n", (int) sizeof(tc_buf) - 2, tc);
+	    _nc_SPRINTF(tc_buf,
+			_nc_SLIMIT(sizeof(tc_buf))
+			"%.*s\n", (int) sizeof(tc_buf) - 2, tc);
 	    normal = FALSE;
 	}
     }
@@ -1063,8 +1066,9 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
 	if (use_terminfo_vars() && (h = getenv("HOME")) != NULL && *h != '\0'
 	    && (strlen(h) + sizeof(PRIVATE_CAP)) < PATH_MAX) {
 	    /* user's .termcap, if any, should override it */
-	    (void) strcpy(envhome, h);
-	    (void) sprintf(pathbuf, PRIVATE_CAP, envhome);
+	    _nc_STRCPY(envhome, h, sizeof(envhome));
+	    _nc_SPRINTF(pathbuf, _nc_SLIMIT(sizeof(pathbuf))
+			PRIVATE_CAP, envhome);
 	    ADD_TC(pathbuf, filecount);
 	}
     }

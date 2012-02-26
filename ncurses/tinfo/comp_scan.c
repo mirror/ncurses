@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.94 2011/10/22 15:46:43 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.96 2012/02/22 22:26:58 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -213,7 +213,7 @@ next_char(void)
 		    }
 		} else {
 		    if (used != 0)
-			strcat(result, "\n");
+			_nc_STRCAT(result, "\n", allocated);
 		}
 		if ((bufptr = bufstart) != 0) {
 		    used = strlen(bufptr);

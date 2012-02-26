@@ -44,7 +44,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.6 2012/02/18 20:04:39 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.8 2012/02/22 22:40:24 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -261,8 +261,8 @@ main(int argc, char **argv)
 	       root_name);
 	printf("{\n");
 	for (n = 0; n < CAPTABSIZE; n++) {
-	    sprintf(buffer, "\"%s\"",
-		    name_table[n].nte_name);
+	    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer)) "\"%s\"",
+			name_table[n].nte_name);
 	    printf("\t{ %15s,\t%10s,\t%3d, %3d }%c\n",
 		   buffer,
 		   typenames[name_table[n].nte_type],

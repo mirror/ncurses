@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1861 2012/02/18 23:11:09 tom Exp $
+-- $Id: NEWS,v 1.1866 2012/02/25 20:47:05 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120225
+	+ modify configure script to allow creating dll's for MinGW when
+	  cross-compiling.
+	+ add --enable-string-hacks option to control whether strlcat and
+	  strlcpy may be used.  The same issue applies to OpenBSD's warnings
+	  about snprintf, noting that this function is weakly standardized.
+	+ add configure checks for strlcat, strlcpy and snprintf, to help
+	  reduce bogus warnings with OpenBSD builds.
+	+ build-fix for OpenBSD 4.9 to supply consistent intptr_t declaration
+	  (cf:20111231)
+	+ update config.guess, config.sub
 
 20120218
 	+ correct CF_ETIP_DEFINES configure macro, making it exit properly on

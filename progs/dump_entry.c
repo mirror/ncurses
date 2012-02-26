@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.95 2011/08/07 22:10:17 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.97 2012/02/23 00:00:08 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -631,9 +631,9 @@ fmt_entry(TERMTYPE *tterm,
 
 	predval = pred(BOOLEAN, i);
 	if (predval != FAIL) {
-	    (void) strcpy(buffer, name);
+	    _nc_STRCAT(buffer, name, sizeof(buffer));
 	    if (predval <= 0)
-		(void) strcat(buffer, "@");
+		_nc_STRCAT(buffer, "@", sizeof(buffer));
 	    else if (i + 1 > num_bools)
 		num_bools = i + 1;
 	    WRAP_CONCAT;
@@ -656,9 +656,11 @@ fmt_entry(TERMTYPE *tterm,
 	predval = pred(NUMBER, i);
 	if (predval != FAIL) {
 	    if (tterm->Numbers[i] < 0) {
-		sprintf(buffer, "%s@", name);
+		_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+			    "%s@", name);
 	    } else {
-		sprintf(buffer, "%s#%d", name, tterm->Numbers[i]);
+		_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+			    "%s#%d", name, tterm->Numbers[i]);
 		if (i + 1 > num_values)
 		    num_values = i + 1;
 	    }
@@ -719,14 +721,14 @@ fmt_entry(TERMTYPE *tterm,
 	    if (PRESENT(insert_character) || PRESENT(parm_ich)) {
 		if (SAME_CAP(i, enter_insert_mode)
 		    && enter_insert_mode == ABSENT_STRING) {
-		    (void) strcpy(buffer, "im=");
+		    _nc_STRCAT(buffer, "im=", sizeof(buffer));
 		    WRAP_CONCAT;
 		    continue;
 		}
 
 		if (SAME_CAP(i, exit_insert_mode)
 		    && exit_insert_mode == ABSENT_STRING) {
-		    (void) strcpy(buffer, "ei=");
+		    _nc_STRCAT(buffer, "ei=", sizeof(buffer));
 		    WRAP_CONCAT;
 		    continue;
 		}
@@ -760,7 +762,8 @@ fmt_entry(TERMTYPE *tterm,
 		num_strings = i + 1;
 
 	    if (!VALID_STRING(capability)) {
-		sprintf(buffer, "%s@", name);
+		_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+			    "%s@", name);
 		WRAP_CONCAT;
 	    } else if (outform == F_TERMCAP || outform == F_TCONVERR) {
 		int params = ((i < (int) SIZEOF(parametrized))
@@ -771,13 +774,14 @@ fmt_entry(TERMTYPE *tterm,
 
 		if (cv == 0) {
 		    if (outform == F_TCONVERR) {
-			sprintf(buffer, "%s=!!! %s WILL NOT CONVERT !!!",
-				name, srccap);
+			_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+				    "%s=!!! %s WILL NOT CONVERT !!!",
+				    name, srccap);
 		    } else if (suppress_untranslatable) {
 			continue;
 		    } else {
 			char *s = srccap, *d = buffer;
-			sprintf(d, "..%s=", name);
+			_nc_SPRINTF(d, _nc_SLIMIT(sizeof(buffer)) "..%s=", name);
 			d += strlen(d);
 			while ((*d = *s++) != 0) {
 			    if (*d == ':') {
@@ -790,7 +794,8 @@ fmt_entry(TERMTYPE *tterm,
 			}
 		    }
 		} else {
-		    sprintf(buffer, "%s=%s", name, cv);
+		    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+				"%s=%s", name, cv);
 		}
 		len += (int) strlen(capability) + 1;
 		WRAP_CONCAT;
@@ -826,11 +831,13 @@ fmt_entry(TERMTYPE *tterm,
      */
     if (tversion == V_HPUX) {
 	if (VALID_STRING(memory_lock)) {
-	    (void) sprintf(buffer, "meml=%s", memory_lock);
+	    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+			"meml=%s", memory_lock);
 	    WRAP_CONCAT;
 	}
 	if (VALID_STRING(memory_unlock)) {
-	    (void) sprintf(buffer, "memu=%s", memory_unlock);
+	    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+			"memu=%s", memory_unlock);
 	    WRAP_CONCAT;
 	}
     } else if (tversion == V_AIX) {
@@ -853,9 +860,11 @@ fmt_entry(TERMTYPE *tterm,
 	    tp[0] = '\0';
 
 	    if (box_ok) {
-		(void) strcpy(buffer, "box1=");
-		(void) strcat(buffer, _nc_tic_expand(boxchars,
-						     outform == F_TERMINFO, numbers));
+		_nc_STRCAT(buffer, "box1=", sizeof(buffer));
+		_nc_STRCAT(buffer,
+			   _nc_tic_expand(boxchars,
+					  outform == F_TERMINFO, numbers),
+			   sizeof(buffer));
 		WRAP_CONCAT;
 	    }
 	}
@@ -947,7 +956,7 @@ kill_labels(TERMTYPE *tterm, int target)
     char name[10];
 
     for (n = 0; n <= 10; ++n) {
-	sprintf(name, "lf%d", n);
+	_nc_SPRINTF(name, _nc_SLIMIT(sizeof(name)) "lf%d", n);
 	if ((cap = find_string(tterm, name)) != ABSENT_STRING
 	    && kill_string(tterm, cap)) {
 	    target -= (int) (strlen(cap) + 5);
@@ -972,7 +981,7 @@ kill_fkeys(TERMTYPE *tterm, int target)
     char name[10];
 
     for (n = 60; n >= 0; --n) {
-	sprintf(name, "kf%d", n);
+	_nc_SPRINTF(name, _nc_SLIMIT(sizeof(name)) "kf%d", n);
 	if ((cap = find_string(tterm, name)) != ABSENT_STRING
 	    && kill_string(tterm, cap)) {
 	    target -= (int) (strlen(cap) + 5);
@@ -1165,7 +1174,8 @@ dump_uses(const char *name, bool infodump)
 
     if (outform == F_TERMCAP || outform == F_TCONVERR)
 	trim_trailing();
-    (void) sprintf(buffer, "%s%s", infodump ? "use=" : "tc=", name);
+    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+		"%s%s", infodump ? "use=" : "tc=", name);
     wrap_concat(buffer);
 }
 

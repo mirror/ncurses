@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 #define USE_LIBTINFO
 #include <progs.priv.h>
 
-MODULE_ID("$Id: tabs.c,v 1.21 2011/05/21 18:31:21 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.23 2012/02/22 23:57:44 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
@@ -140,10 +140,11 @@ print_ruler(int *tab_list)
     for (n = 0; n < max_cols; n += 10) {
 	int ch = 1 + (n / 10);
 	char buffer[20];
-	sprintf(buffer, "----+----%c",
-		((ch < 10)
-		 ? (ch + '0')
-		 : (ch + 'A' - 10)));
+	_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+		    "----+----%c",
+		    ((ch < 10)
+		     ? (ch + '0')
+		     : (ch + 'A' - 10)));
 	printf("%.*s", ((max_cols - n) > 10) ? 10 : (max_cols - n), buffer);
     }
     putchar('\n');
@@ -266,11 +267,11 @@ add_to_tab_list(char **append, const char *value)
 	if (result != 0) {
 	    *result = '\0';
 	    if (*append != 0) {
-		strcpy(result, *append);
+		_nc_STRCPY(result, *append, need);
 		free(*append);
 	    }
-	    strcat(result, comma);
-	    strcat(result, copied);
+	    _nc_STRCAT(result, comma, need);
+	    _nc_STRCAT(result, copied, need);
 	}
 
 	*append = result;

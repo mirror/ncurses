@@ -1,6 +1,6 @@
-# $Id: MKkeyname.awk,v 1.45 2010/12/19 01:36:14 tom Exp $
+# $Id: MKkeyname.awk,v 1.47 2012/02/22 22:35:41 tom Exp $
 ##############################################################################
-# Copyright (c) 1999-2009,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 1999-2010,2012 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -100,17 +100,18 @@ END {
 	print "				if (MyTable[c] == 0) {"
 	print "					int cc = c;"
 	print "					p = name;"
+	print "#define P_LIMIT (sizeof(name) - (size_t) (p - name))"
 	print "					if (cc >= 128 && (sp == 0 || sp->_use_meta)) {"
-	print "						strcpy(p, \"M-\");"
+	print "						_nc_STRCPY(p, \"M-\", P_LIMIT);"
 	print "						p += 2;"
 	print "						cc -= 128;"
 	print "					}"
 	print "					if (cc < 32)"
-	print "						sprintf(p, \"^%c\", cc + '@');"
+	print "						_nc_SPRINTF(p, _nc_SLIMIT(P_LIMIT) \"^%c\", cc + '@');"
 	print "					else if (cc == 127)"
-	print "						strcpy(p, \"^?\");"
+	print "						_nc_STRCPY(p, \"^?\", P_LIMIT);"
 	print "					else"
-	print "						sprintf(p, \"%c\", cc);"
+	print "						_nc_SPRINTF(p, _nc_SLIMIT(P_LIMIT) \"%c\", cc);"
 	print "					MyTable[c] = strdup(name);"
 	print "				}"
 	print "				result = MyTable[c];"

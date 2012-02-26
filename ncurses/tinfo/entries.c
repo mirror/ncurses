@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.19 2011/10/22 16:34:50 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.20 2012/02/22 09:37:02 tom Exp $")
 
 /****************************************************************************
  *
@@ -135,6 +135,7 @@ _nc_leaks_tinfo(void)
     _nc_codes_leaks();
     FreeIfNeeded(_nc_prescreen.real_acs_map);
 #endif
+    _nc_comp_error_leaks();
 
     if ((s = _nc_home_terminfo()) != 0)
 	free(s);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.110 2011/12/17 23:59:50 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.112 2012/02/22 23:59:53 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -107,7 +107,7 @@ canonical_name(char *ptr, char *buf)
 {
     char *bp;
 
-    (void) strcpy(buf, ptr);
+    _nc_STRCPY(buf, ptr, NAMESIZE);
     if ((bp = strchr(buf, '|')) != 0)
 	*bp = '\0';
 
@@ -308,13 +308,13 @@ dump_numeric(int val, char *buf)
 {
     switch (val) {
     case ABSENT_NUMERIC:
-	strcpy(buf, s_absent);
+	_nc_STRCPY(buf, s_absent, MAX_STRING);
 	break;
     case CANCELLED_NUMERIC:
-	strcpy(buf, s_cancel);
+	_nc_STRCPY(buf, s_cancel, MAX_STRING);
 	break;
     default:
-	sprintf(buf, "%d", val);
+	_nc_SPRINTF(buf, _nc_SLIMIT(MAX_STRING) "%d", val);
 	break;
     }
 }
@@ -324,11 +324,12 @@ dump_string(char *val, char *buf)
 /* display the value of a string capability */
 {
     if (val == ABSENT_STRING)
-	strcpy(buf, s_absent);
+	_nc_STRCPY(buf, s_absent, MAX_STRING);
     else if (val == CANCELLED_STRING)
-	strcpy(buf, s_cancel);
+	_nc_STRCPY(buf, s_cancel, MAX_STRING);
     else {
-	sprintf(buf, "'%.*s'", MAX_STRING - 3, TIC_EXPAND(val));
+	_nc_SPRINTF(buf, _nc_SLIMIT(MAX_STRING)
+		    "'%.*s'", MAX_STRING - 3, TIC_EXPAND(val));
     }
 }
 
@@ -582,15 +583,15 @@ lookup_params(const assoc * table, char *dst, char *src)
 		size_t tlen = strlen(ap->from);
 
 		if (same_param(ap->from, ep, tlen)) {
-		    (void) strcat(dst, ap->to);
+		    _nc_STRCAT(dst, ap->to, MAX_TERMINFO_LENGTH);
 		    found = TRUE;
 		    break;
 		}
 	    }
 
 	    if (!found)
-		(void) strcat(dst, ep);
-	    (void) strcat(dst, ";");
+		_nc_STRCAT(dst, ep, MAX_TERMINFO_LENGTH);
+	    _nc_STRCAT(dst, ";", MAX_TERMINFO_LENGTH);
 	} while
 	    ((ep = strtok((char *) 0, ";")));
 
@@ -683,7 +684,11 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	    && (next = (size_t) csi + len)
 	    && ((sp[next] == 'h') || (sp[next] == 'l'))) {
 
-	    (void) strcpy(buf2, (sp[next] == 'h') ? "ECMA+" : "ECMA-");
+	    _nc_STRCPY(buf2,
+		       ((sp[next] == 'h')
+			? "ECMA+"
+			: "ECMA-"),
+		       sizeof(buf2));
 	    (void) strncpy(buf3, sp + csi, len);
 	    buf3[len] = '\0';
 	    len += (size_t) csi + 1;
@@ -700,7 +705,11 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	    && (next = (size_t) csi + 1 + len)
 	    && ((sp[next] == 'h') || (sp[next] == 'l'))) {
 
-	    (void) strcpy(buf2, (sp[next] == 'h') ? "DEC+" : "DEC-");
+	    _nc_STRCPY(buf2,
+		       ((sp[next] == 'h')
+			? "DEC+"
+			: "DEC-"),
+		       sizeof(buf2));
 	    (void) strncpy(buf3, sp + csi + 1, len);
 	    buf3[len] = '\0';
 	    len += (size_t) csi + 2;
@@ -716,7 +725,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	    && (next = (size_t) csi + len)
 	    && sp[next] == 'm') {
 
-	    (void) strcpy(buf2, "SGR:");
+	    _nc_STRCPY(buf2, "SGR:", sizeof(buf2));
 	    (void) strncpy(buf3, sp + csi, len);
 	    buf3[len] = '\0';
 	    len += (size_t) csi + 1;
@@ -728,8 +737,8 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	    && (csi = skip_csi(sp)) != 0
 	    && sp[csi] == 'm') {
 	    len = (size_t) csi + 1;
-	    (void) strcpy(buf2, "SGR:");
-	    strcat(buf2, ecma_highlights[0].to);
+	    _nc_STRCPY(buf2, "SGR:", sizeof(buf2));
+	    _nc_STRCAT(buf2, ecma_highlights[0].to, sizeof(buf2));
 	    expansion = buf2;
 	}
 
@@ -740,7 +749,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 		expansion = "RSR";
 		len = 1;
 	    } else {
-		(void) sprintf(buf2, "1;%dr", tp_lines);
+		_nc_SPRINTF(buf2, _nc_SLIMIT(sizeof(buf2)) "1;%dr", tp_lines);
 		len = strlen(buf2);
 		if (strncmp(buf2, sp + csi, len) == 0)
 		    expansion = "RSR";
@@ -751,12 +760,12 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	/* now check for home-down */
 	if (!expansion
 	    && (csi = skip_csi(sp)) != 0) {
-	    (void) sprintf(buf2, "%d;1H", tp_lines);
+	    _nc_SPRINTF(buf2, _nc_SLIMIT(sizeof(buf2)) "%d;1H", tp_lines);
 	    len = strlen(buf2);
 	    if (strncmp(buf2, sp + csi, len) == 0) {
 		expansion = "LL";
 	    } else {
-		(void) sprintf(buf2, "%dH", tp_lines);
+		_nc_SPRINTF(buf2, _nc_SLIMIT(sizeof(buf2)) "%dH", tp_lines);
 		len = strlen(buf2);
 		if (strncmp(buf2, sp + csi, len) == 0) {
 		    expansion = "LL";
@@ -1033,19 +1042,23 @@ static char *
 any_initializer(const char *fmt, const char *type)
 {
     static char *initializer;
+    static size_t need;
     char *s;
 
-    if (initializer == 0)
-	initializer = (char *) malloc(strlen(entries->tterm.term_names) +
-				      strlen(type) + strlen(fmt));
+    if (initializer == 0) {
+	need = (strlen(entries->tterm.term_names)
+		+ strlen(type)
+		+ strlen(fmt));
+	initializer = (char *) malloc(need);
+    }
 
-    (void) strcpy(initializer, entries->tterm.term_names);
+    _nc_STRCPY(initializer, entries->tterm.term_names, need);
     for (s = initializer; *s != 0 && *s != '|'; s++) {
 	if (!isalnum(UChar(*s)))
 	    *s = '_';
     }
     *s = 0;
-    (void) sprintf(s, fmt, type);
+    _nc_SPRINTF(s, _nc_SLIMIT(need) fmt, type);
     return initializer;
 }
 
@@ -1086,7 +1099,7 @@ dump_initializers(TERMTYPE *term)
 		    && *sp != '"')
 		    *tp++ = *sp;
 		else {
-		    (void) sprintf(tp, "\\%03o", UChar(*sp));
+		    _nc_SPRINTF(tp, _nc_SLIMIT(MAX_STRING) "\\%03o", UChar(*sp));
 		    tp += 4;
 		}
 	    }
@@ -1136,7 +1149,7 @@ dump_initializers(TERMTYPE *term)
 	    str = "CANCELLED_NUMERIC";
 	    break;
 	default:
-	    sprintf(buf, "%d", term->Numbers[n]);
+	    _nc_SPRINTF(buf, _nc_SLIMIT(sizeof(buf)) "%d", term->Numbers[n]);
 	    str = buf;
 	    break;
 	}
@@ -1542,9 +1555,11 @@ main(int argc, char *argv[])
 #else
 #define LEAF_FMT "%02x"
 #endif
-		(void) sprintf(tfile[termcount], "%s/" LEAF_FMT "/%s",
-			       directory,
-			       UChar(*argv[optind]), argv[optind]);
+		_nc_SPRINTF(tfile[termcount],
+			    _nc_SLIMIT(sizeof(path))
+			    "%s/" LEAF_FMT "/%s",
+			    directory,
+			    UChar(*argv[optind]), argv[optind]);
 		if (itrace)
 		    (void) fprintf(stderr,
 				   "%s: reading entry %s from file %s\n",

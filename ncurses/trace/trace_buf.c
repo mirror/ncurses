@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: trace_buf.c,v 1.18 2011/10/22 15:46:06 tom Exp $")
+MODULE_ID("$Id: trace_buf.c,v 1.20 2012/02/22 22:34:31 tom Exp $")
 
 #ifdef TRACE
 
@@ -106,10 +106,11 @@ _nc_trace_bufcat(int bufnum, const char *value)
     char *buffer = _nc_trace_alloc(bufnum, (size_t) 0);
     if (buffer != 0) {
 	size_t have = strlen(buffer);
+	size_t need = strlen(value) + have;
 
-	buffer = _nc_trace_alloc(bufnum, 1 + have + strlen(value));
+	buffer = _nc_trace_alloc(bufnum, 1 + need);
 	if (buffer != 0)
-	    (void) strcpy(buffer + have, value);
+	    _nc_STRCPY(buffer + have, value, need);
 
     }
     return buffer;

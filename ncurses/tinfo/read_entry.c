@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.117 2011/10/22 15:30:24 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.119 2012/02/22 22:40:24 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -410,9 +410,9 @@ make_db_filename(char *filename, unsigned limit, const char *const path)
     if (test < limit) {
 	if (size >= lens
 	    && !strcmp(path + size - lens, suffix))
-	    (void) strcpy(filename, path);
+	    _nc_STRCPY(filename, path, limit);
 	else
-	    (void) sprintf(filename, "%s%s", path, suffix);
+	    _nc_SPRINTF(filename, _nc_SLIMIT(limit) "%s%s", path, suffix);
 	result = TRUE;
     }
     return result;
@@ -437,7 +437,8 @@ make_dir_filename(char *filename,
 	unsigned need = (unsigned) (LEAF_LEN + 3 + strlen(path) + strlen(name));
 
 	if (need <= limit) {
-	    (void) sprintf(filename, "%s/" LEAF_FMT "/%s", path, *name, name);
+	    _nc_SPRINTF(filename, _nc_SLIMIT(limit)
+			"%s/" LEAF_FMT "/%s", path, *name, name);
 	    result = TRUE;
 	}
     }
@@ -524,7 +525,8 @@ _nc_read_tic_entry(char *filename,
 #if USE_TERMCAP
     else if (code != TGETENT_YES) {
 	code = _nc_read_termcap_entry(name, tp);
-	sprintf(filename, "%.*s", PATH_MAX - 1, _nc_get_source());
+	_nc_SPRINTF(filename, _nc_SLIMIT(PATH_MAX)
+		    "%.*s", PATH_MAX - 1, _nc_get_source());
     }
 #endif
     return code;
@@ -545,7 +547,9 @@ _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
 {
     int code = TGETENT_NO;
 
-    sprintf(filename, "%.*s", PATH_MAX - 1, name);
+    _nc_SPRINTF(filename, _nc_SLIMIT(PATH_MAX)
+		"%.*s", PATH_MAX - 1, name);
+
     if (strlen(name) == 0
 	|| strcmp(name, ".") == 0
 	|| strcmp(name, "..") == 0
@@ -570,7 +574,8 @@ _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
 #elif USE_TERMCAP
 	if (code != TGETENT_YES) {
 	    code = _nc_read_termcap_entry(name, tp);
-	    sprintf(filename, "%.*s", PATH_MAX - 1, _nc_get_source());
+	    _nc_SPRINTF(filename, _nc_SLIMIT(PATH_MAX)
+			"%.*s", PATH_MAX - 1, _nc_get_source());
 	}
 #endif
     }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2010,2012 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2012 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,82 +27,51 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey                        2010                    *
+ *  Author: Thomas E. Dickey                        2012                    *
  ****************************************************************************/
 
-/*
- * $Id: build.priv.h,v 1.9 2012/02/22 22:17:02 tom Exp $
- *
- *	build.priv.h
- *
- *	This is a reduced version of curses.priv.h, for build-time utilties.
- *	Because it has fewer dependencies, this simplifies cross-compiling.
- *
- */
-
-#ifndef CURSES_PRIV_H
-#define CURSES_PRIV_H 1
-
-#include <ncurses_dll.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef STRING_HACKS_H
+#define STRING_HACKS_H 1
 
 #include <ncurses_cfg.h>
 
-#if USE_RCS_IDS
-#define MODULE_ID(id) static const char Ident[] = id;
-#else
-#define MODULE_ID(id) /*nothing*/
-#endif
-
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-
-#include <assert.h>
-#include <stdio.h>
-
-#include <errno.h>
-
-#include <curses.h>	/* we'll use -Ipath directive to get the right one! */
-
-/* usually in <unistd.h> */
-#ifndef EXIT_SUCCESS
-#define EXIT_SUCCESS 0
-#endif
-
-#ifndef EXIT_FAILURE
-#define EXIT_FAILURE 1
-#endif
-
-#define FreeAndNull(p)   free(p); p = 0
-#define UChar(c)         ((unsigned char)(c))
-#define SIZEOF(v)        (sizeof(v) / sizeof(v[0]))
-
-#include <nc_alloc.h>
-#include <nc_string.h>
-
-/* declare these, to avoid needing term.h */
-#if BROKEN_LINKER || USE_REENTRANT
-#define NCURSES_ARRAY(name) \
-	NCURSES_WRAPPED_VAR(NCURSES_CONST char * const *, name)
-
-NCURSES_ARRAY(boolnames);
-NCURSES_ARRAY(boolfnames);
-NCURSES_ARRAY(numnames);
-NCURSES_ARRAY(numfnames);
-NCURSES_ARRAY(strnames);
-NCURSES_ARRAY(strfnames);
-#endif
-
-#if NO_LEAKS
-NCURSES_EXPORT(void) _nc_names_leaks(void);
-#endif
+/*
+ * $Id: nc_string.h,v 1.3 2012/02/23 10:21:17 tom Exp $
+ *
+ * String-hacks.  Use these macros to stifle warnings on (presumably) correct
+ * uses of strcat, strcpy and sprintf.
+ *
+ * By the way -
+ * A fundamental limitation of the interfaces (and frequent issue in bug
+ * reports using these functions) is that sizes are passed as unsigned values
+ * (with associated sign-extension problems), limiting their effectiveness
+ * when checking for buffer overflow.
+ */
 
 #ifdef __cplusplus
-}
+#define NCURSES_VOID /* nothing */
+#else
+#define NCURSES_VOID (void)
 #endif
 
-#endif /* CURSES_PRIV_H */
+#if USE_STRING_HACKS && HAVE_STRLCAT
+#define _nc_STRCAT(d,s,n)	NCURSES_VOID strlcat((d),(s),(n))
+#else
+#define _nc_STRCAT(d,s,n)	NCURSES_VOID strcat((d),(s))
+#endif
+
+#if USE_STRING_HACKS && HAVE_STRLCPY
+#define _nc_STRCPY(d,s,n)	NCURSES_VOID strlcpy((d),(s),(n))
+#else
+#define _nc_STRCPY(d,s,n)	NCURSES_VOID strcpy((d),(s))
+#endif
+
+#if USE_STRING_HACKS && HAVE_SNPRINTF
+#define _nc_SPRINTF             NCURSES_VOID snprintf
+#define _nc_SLIMIT(n)           (n),
+#else
+#define _nc_SPRINTF             NCURSES_VOID sprintf
+#define _nc_SLIMIT(n)		/* nothing */
+#endif
+
+#endif /* STRING_HACKS_H */

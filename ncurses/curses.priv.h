@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.492 2012/01/21 19:21:29 KO.Myung-Hun Exp $
+ * $Id: curses.priv.h,v 1.496 2012/02/22 22:10:37 tom Exp $
  *
  *	curses.priv.h
  *
@@ -110,6 +110,14 @@ extern int errno;
 #endif
 #else
 #define USE_FUNC_POLL 0
+#endif
+
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#else
+# if HAVE_STDINT_H
+#  include <stdint.h>
+# endif
 #endif
 
 /* include signal.h before curses.h to work-around defect in glibc 2.1.3 */
@@ -229,6 +237,8 @@ extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
 #else
 #define if_USE_SCROLL_HINTS(stmt) /*nothing*/
 #endif
+
+#include <nc_string.h>
 
 /*
  * Options for terminal drivers, etc...
@@ -1965,6 +1975,7 @@ extern NCURSES_EXPORT(void) _nc_alloc_entry_leaks(void);
 extern NCURSES_EXPORT(void) _nc_captoinfo_leaks(void);
 extern NCURSES_EXPORT(void) _nc_codes_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_captab_leaks(void);
+extern NCURSES_EXPORT(void) _nc_comp_error_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_scan_leaks(void);
 extern NCURSES_EXPORT(void) _nc_db_iterator_leaks(void);
 extern NCURSES_EXPORT(void) _nc_keyname_leaks(void);

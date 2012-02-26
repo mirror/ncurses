@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.28 2012/01/21 23:56:17 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.31 2012/02/22 22:40:24 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -55,13 +55,15 @@ MODULE_ID("$Id: db_iterator.c,v 1.28 2012/01/21 23:56:17 tom Exp $")
 #define my_vars          _nc_globals.dbd_vars
 
 static void
-add_to_blob(const char *text)
+add_to_blob(const char *text, size_t limit)
 {
+    (void) limit;
+
     if (*text != '\0') {
 	char *last = my_blob + strlen(my_blob);
 	if (last != my_blob)
 	    *last++ = NCURSES_PATHSEP;
-	strcpy(last, text);
+	_nc_STRCPY(last, text, limit);
     }
 }
 
@@ -77,7 +79,7 @@ check_existence(const char *name, struct stat *sb)
 #if USE_HASHED_DB
     else if (strlen(name) < PATH_MAX - sizeof(DBM_SUFFIX)) {
 	char temp[PATH_MAX];
-	sprintf(temp, "%s%s", name, DBM_SUFFIX);
+	_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp)) "%s%s", name, DBM_SUFFIX);
 	if (stat(temp, sb) == 0 && S_ISREG(sb->st_mode)) {
 	    result = TRUE;
 	}
@@ -303,7 +305,7 @@ _nc_first_db(DBDIRS * state, int *offset)
 	if (my_blob != 0) {
 	    *my_blob = '\0';
 	    for (j = 0; j < dbdLAST; ++j) {
-		add_to_blob(values[j]);
+		add_to_blob(values[j], blobsize);
 	    }
 
 	    /* Now, build an array which will be pointers to the distinct

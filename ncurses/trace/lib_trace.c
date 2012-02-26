@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.78 2011/12/17 18:41:48 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.80 2012/02/22 22:26:58 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -103,9 +103,9 @@ trace(const unsigned int tracelevel)
 	    }
 	    TracePath[size] = '\0';
 	    assert(strlen(TracePath) <= size);
-	    strcat(TracePath, "/trace");
+	    _nc_STRCAT(TracePath, "/trace", sizeof(TracePath));
 	    if (_nc_is_dir_path(TracePath)) {
-		strcat(TracePath, ".log");
+		_nc_STRCAT(TracePath, ".log", sizeof(TracePath));
 	    }
 	}
 

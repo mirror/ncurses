@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -147,7 +147,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.47 2010/04/24 23:46:47 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.49 2012/02/22 22:40:24 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -173,9 +173,9 @@ NCURSES_EXPORT_VAR (int *)
 # if USE_HASHMAP
 #  define oldnums(sp)   (sp)->_oldnum_list
 #  define OLDNUM(sp,n)	oldnums(sp)[n]
-# else				/* !USE_HASHMAP */
+# else /* !USE_HASHMAP */
 #  define OLDNUM(sp,n)	NewScreen(sp)->_line[n].oldindex
-# endif				/* !USE_HASHMAP */
+# endif	/* !USE_HASHMAP */
 
 #define OLDNUM_SIZE(sp) (sp)->_oldnum_size
 
@@ -302,7 +302,9 @@ NCURSES_SP_NAME(_nc_linedump) (NCURSES_SP_DCL0)
 
 	*buf = '\0';
 	for (n = 0; n < screen_lines(SP_PARM); n++)
-	    (void) sprintf(buf + strlen(buf), " %02d", OLDNUM(SP_PARM, n));
+	    _nc_SPRINTF(buf + strlen(buf),
+			_nc_SLIMIT(want - strlen(buf))
+			" %02d", OLDNUM(SP_PARM, n));
 	TR(TRACE_UPDATE | TRACE_MOVE, ("virt %s", buf));
 	free(buf);
     }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.70 2011/10/22 14:59:34 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.72 2012/02/22 22:40:24 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -133,7 +133,7 @@ save_string(char *d, const char *const s)
 	    _nc_err_abort(MSG_NO_MEMORY);
 	d = my_string + have;
     }
-    (void) strcpy(d, s);
+    _nc_STRCPY(d, s, my_length - have);
     return d + strlen(d);
 }
 
@@ -515,7 +515,7 @@ bcd_expression(const char *str)
 	{
 	    char buffer[80];
 	    int tst;
-	    sprintf(buffer, fmt, ch1, ch2);
+	    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer)) fmt, ch1, ch2);
 	    tst = strlen(buffer) - 1;
 	    assert(len == tst);
 	}
@@ -535,9 +535,9 @@ save_tc_char(char *bufptr, int c1)
 	bufptr = save_char(bufptr, c1);
     } else {
 	if (c1 == (c1 & 0x1f))	/* iscntrl() returns T on 255 */
-	    (void) strcpy(temp, unctrl((chtype) c1));
+	    _nc_STRCPY(temp, unctrl((chtype) c1), sizeof(temp));
 	else
-	    (void) sprintf(temp, "\\%03o", c1);
+	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp)) "\\%03o", c1);
 	bufptr = save_string(bufptr, temp);
     }
     return bufptr;
@@ -680,7 +680,8 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 			    break;
 			default:
 			    /* should not happen, but handle this anyway */
-			    sprintf(octal, "%03o", UChar(xx1));
+			    _nc_SPRINTF(octal, _nc_SLIMIT(sizeof(octal))
+					"%03o", UChar(xx1));
 			    bufptr = save_char(bufptr, octal[0]);
 			    bufptr = save_char(bufptr, octal[1]);
 			    xx1 = octal[2];

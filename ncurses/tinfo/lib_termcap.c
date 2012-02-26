@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.76 2011/10/22 17:12:41 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.78 2012/02/22 22:34:31 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -362,7 +362,7 @@ NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 		}
 		if (area != 0
 		    && *area != 0) {
-		    (void) strcpy(*area, result);
+		    _nc_STRCPY(*area, result, 1024);
 		    result = *area;
 		    *area += strlen(*area) + 1;
 		}

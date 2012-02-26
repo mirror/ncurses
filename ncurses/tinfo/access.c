@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: access.c,v 1.20 2011/06/05 00:48:00 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.22 2012/02/22 22:34:31 tom Exp $")
 
 #ifdef __TANDEM
 #define ROOT_UID 65535
@@ -124,13 +124,15 @@ _nc_access(const char *path, int mode)
 	    && errno == ENOENT
 	    && strlen(path) < PATH_MAX) {
 	    char head[PATH_MAX];
-	    char *leaf = _nc_basename(strcpy(head, path));
+	    char *leaf;
 
+	    _nc_STRCPY(head, path, sizeof(head));
+	    leaf = _nc_basename(head);
 	    if (leaf == 0)
 		leaf = head;
 	    *leaf = '\0';
 	    if (head == leaf)
-		(void) strcpy(head, ".");
+		_nc_STRCPY(head, ".", sizeof(head));
 
 	    result = access(head, R_OK | W_OK | X_OK);
 	} else {

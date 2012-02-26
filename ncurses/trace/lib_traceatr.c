@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,9 +43,12 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.76 2011/10/22 15:39:21 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.79 2012/02/22 22:40:24 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
+
+#define TRACE_BUF_SIZE(num) (_nc_globals.tracebuf_ptr[num].size)
+#define COLOR_BUF_SIZE(num) (sizeof(my_buffer[num]))
 
 #ifdef TRACE
 
@@ -65,9 +68,12 @@ color_of(int c)
 	my_cached = c;
 	my_select = !my_select;
 	if (c == COLOR_DEFAULT)
-	    strcpy(my_buffer[my_select], "default");
+	    _nc_STRCPY(my_buffer[my_select], "default",
+		       COLOR_BUF_SIZE(my_select));
 	else
-	    sprintf(my_buffer[my_select], "color%d", c);
+	    _nc_SPRINTF(my_buffer[my_select],
+			_nc_SLIMIT(COLOR_BUF_SIZE(my_select))
+			"color%d", c);
     }
     return my_buffer[my_select];
 }
@@ -127,7 +133,7 @@ _traceattr2(int bufnum, chtype newmode)
 
 	_nc_tracing = 0;
 
-	strcpy(result, l_brace);
+	_nc_STRCPY(result, l_brace, TRACE_BUF_SIZE(bufnum));
 
 	for (n = 0; n < SIZEOF(names); n++) {
 	    if ((newmode & names[n].val) != 0) {
@@ -139,18 +145,20 @@ _traceattr2(int bufnum, chtype newmode)
 		    short pairnum = (short) PairNumber(newmode);
 #ifdef USE_TERMLIB
 		    /* pair_content lives in libncurses */
-		    (void) sprintf(temp, "{%d}", pairnum);
+		    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+				"{%d}", pairnum);
 #else
 		    short fg, bg;
 
 		    if (pair_content(pairnum, &fg, &bg) == OK) {
-			(void) sprintf(temp,
-				       "{%d = {%s, %s}}",
-				       pairnum,
-				       COLOR_OF(fg),
-				       COLOR_OF(bg));
+			_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+				    "{%d = {%s, %s}}",
+				    pairnum,
+				    COLOR_OF(fg),
+				    COLOR_OF(bg));
 		    } else {
-			(void) sprintf(temp, "{%d}", pairnum);
+			_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+				    "{%d}", pairnum);
 		    }
 #endif
 		    result = _nc_trace_bufcat(bufnum, temp);
@@ -274,7 +282,7 @@ _tracechtype2(int bufnum, chtype ch)
     char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
 
     if (result != 0) {
-	strcpy(result, l_brace);
+	_nc_STRCPY(result, l_brace, TRACE_BUF_SIZE(bufnum));
 	if ((found = _nc_altcharset_name(ChAttrOf(ch), ch)) != 0) {
 	    (void) _nc_trace_bufcat(bufnum, found);
 	} else
@@ -316,7 +324,7 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
     const char *found;
 
     if (result != 0) {
-	strcpy(result, l_brace);
+	_nc_STRCPY(result, l_brace, TRACE_BUF_SIZE(bufnum));
 	if (ch != 0) {
 	    attr = AttrOfD(ch);
 	    if ((found = _nc_altcharset_name(attr, (chtype) CharOfD(ch))) != 0) {

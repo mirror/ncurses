@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.79 2012/01/28 21:49:23 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.81 2012/02/22 22:34:31 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -83,7 +83,7 @@ force_bar(char *dst, char *src)
 	if (len > MAX_NAME_SIZE)
 	    len = MAX_NAME_SIZE;
 	(void) strncpy(dst, src, len);
-	(void) strcpy(dst + len, "|");
+	_nc_STRCPY(dst + len, "|", MAX_NAME_SIZE);
 	src = dst;
     }
     return src;
