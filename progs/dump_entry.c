@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.97 2012/02/23 00:00:08 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.98 2012/02/29 01:04:17 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -631,7 +631,7 @@ fmt_entry(TERMTYPE *tterm,
 
 	predval = pred(BOOLEAN, i);
 	if (predval != FAIL) {
-	    _nc_STRCAT(buffer, name, sizeof(buffer));
+	    _nc_STRCPY(buffer, name, sizeof(buffer));
 	    if (predval <= 0)
 		_nc_STRCAT(buffer, "@", sizeof(buffer));
 	    else if (i + 1 > num_bools)
@@ -721,14 +721,14 @@ fmt_entry(TERMTYPE *tterm,
 	    if (PRESENT(insert_character) || PRESENT(parm_ich)) {
 		if (SAME_CAP(i, enter_insert_mode)
 		    && enter_insert_mode == ABSENT_STRING) {
-		    _nc_STRCAT(buffer, "im=", sizeof(buffer));
+		    _nc_STRCPY(buffer, "im=", sizeof(buffer));
 		    WRAP_CONCAT;
 		    continue;
 		}
 
 		if (SAME_CAP(i, exit_insert_mode)
 		    && exit_insert_mode == ABSENT_STRING) {
-		    _nc_STRCAT(buffer, "ei=", sizeof(buffer));
+		    _nc_STRCPY(buffer, "ei=", sizeof(buffer));
 		    WRAP_CONCAT;
 		    continue;
 		}
@@ -860,7 +860,7 @@ fmt_entry(TERMTYPE *tterm,
 	    tp[0] = '\0';
 
 	    if (box_ok) {
-		_nc_STRCAT(buffer, "box1=", sizeof(buffer));
+		_nc_STRCPY(buffer, "box1=", sizeof(buffer));
 		_nc_STRCAT(buffer,
 			   _nc_tic_expand(boxchars,
 					  outform == F_TERMINFO, numbers),
