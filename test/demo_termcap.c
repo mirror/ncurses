@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.14 2011/01/15 21:41:27 tom Exp $
+ * $Id: demo_termcap.c,v 1.17 2012/03/01 01:09:30 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -54,6 +54,28 @@ static bool s_opt = FALSE;
 #endif
 
 #define isCapName(c) (isgraph(c) && strchr("^#=:\\", c) == 0)
+
+#if NO_LEAKS && USE_CODE_LISTS
+
+#define MYSCR struct _myscr
+MYSCR {
+    MYSCR *next;
+    TERMINAL *term;
+};
+
+static MYSCR *my_screens;
+
+static void
+save_screen(void)
+{
+    MYSCR *obj = malloc(sizeof(MYSCR));
+    obj->next = my_screens;
+    obj->term = cur_term;
+    my_screens = obj;
+}
+#else
+#define save_screen()		/* nothing */
+#endif
 
 static void
 dumpit(NCURSES_CONST char *cap)
@@ -159,7 +181,7 @@ brute_force(const char *name)
 
 #if USE_CODE_LISTS
 static void
-demo_terminfo(NCURSES_CONST char *name)
+demo_termcap(NCURSES_CONST char *name)
 {
     unsigned n;
     NCURSES_CONST char *cap;
@@ -170,6 +192,7 @@ demo_terminfo(NCURSES_CONST char *name)
 #else
     setterm(name);
 #endif
+    save_screen();
 
     if (b_opt) {
 	for (n = 0;; ++n) {
@@ -204,7 +227,7 @@ usage(void)
 {
     static const char *msg[] =
     {
-	"Usage: demo_terminfo [options] [terminal]",
+	"Usage: demo_termcap [options] [terminal]",
 	"",
 	"If no options are given, print all (boolean, numeric, string)",
 	"capabilities for the given terminal, using short names.",
@@ -285,17 +308,31 @@ main(int argc, char *argv[])
 	for (repeat = 0; repeat < r_opt; ++repeat) {
 	    if (optind < argc) {
 		for (n = optind; n < argc; ++n) {
-		    demo_terminfo(argv[n]);
+		    demo_termcap(argv[n]);
 		}
 	    } else if ((name = getenv("TERM")) != 0) {
-		demo_terminfo(name);
+		demo_termcap(name);
 	    } else {
 		static char dumb[] = "dumb";
-		demo_terminfo(dumb);
+		demo_termcap(dumb);
 	    }
 	}
-    }
+#if NO_LEAKS
+	/*
+	 * ncurses' tgetent() interface caches some entries and its no-leaks
+	 * code discards those.  The calls to setupterm() on the other hand
+	 * are not cached, and each call allocates a chunk of memory, even
+	 * if the same terminal type is requested repeatedly.
+	 */
+	while (my_screens != 0) {
+	    MYSCR *next = my_screens->next;
+	    del_curterm(my_screens->term);
+	    free(my_screens);
+	    my_screens = next;
+	}
 #endif
+    }
+#endif /* USE_CODE_LISTS */
 
     ExitProgram(EXIT_SUCCESS);
 }

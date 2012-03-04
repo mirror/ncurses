@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.142 2011/10/22 16:13:06 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.143 2012/02/29 11:50:19 Werner.Fink Exp $")
 
 /****************************************************************************
  *
@@ -666,7 +666,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	    const TERMTYPE *fallback = _nc_fallback(tname);
 
 	    if (fallback) {
-		termp->type = *fallback;
+		_nc_copy_termtype(&(termp->type),fallback);
 		status = TGETENT_YES;
 	    }
 	}

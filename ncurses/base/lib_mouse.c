@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.136 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.138 2012/02/29 10:38:46 tom Exp $")
 
 #include <tic.h>
 
@@ -397,11 +397,19 @@ enable_xterm_mouse(SCREEN *sp, int enable)
 
 #if USE_GPM_SUPPORT
 static bool
-allow_gpm_mouse(void)
+allow_gpm_mouse(SCREEN *sp)
 {
     bool result = FALSE;
 
-    /* GPM does printf's without checking if stdout is a terminal */
+#if USE_WEAK_SYMBOLS
+    /* Danger Robinson: do not use dlopen for libgpm if already loaded */
+    if ((Gpm_Wgetch)) {
+	if (!sp->_mouse_gpm_loaded) {
+	    T(("GPM library was already dlopen'd, not by us"));
+	}
+    } else
+#endif
+	/* GPM does printf's without checking if stdout is a terminal */
     if (isatty(fileno(stdout))) {
 	char *list = getenv("NCURSES_GPM_TERMS");
 	char *env = getenv("TERM");
@@ -527,7 +535,7 @@ initialize_mousetype(SCREEN *sp)
 
     /* Try gpm first, because gpm may be configured to run in xterm */
 #if USE_GPM_SUPPORT
-    if (allow_gpm_mouse()) {
+    if (allow_gpm_mouse(sp)) {
 	if (!sp->_mouse_gpm_loaded) {
 #ifdef HAVE_LIBDL
 	    load_gpm_library(sp);

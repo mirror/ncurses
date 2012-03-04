@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.496 2012/02/22 22:10:37 tom Exp $
+ * $Id: curses.priv.h,v 1.498 2012/02/29 10:38:18 tom Exp $
  *
  *	curses.priv.h
  *
@@ -500,6 +500,9 @@ NCURSES_EXPORT(int *)        _nc_ptr_Escdelay (SCREEN *);
 #  endif
 #  define _declare(name)	__extension__ extern __typeof__(name) name
 #  define weak_symbol(name)	_weak_pragma(name) _declare(name) __attribute__((weak))
+#else
+#  undef USE_WEAK_SYMBOLS
+#  define USE_WEAK_SYMBOLS 0
 #endif
 #endif
 
@@ -698,6 +701,9 @@ typedef	struct {
 #if USE_GPM_SUPPORT
 #undef buttons			/* term.h defines this, and gpm uses it! */
 #include <gpm.h>
+#if USE_WEAK_SYMBOLS
+weak_symbol(Gpm_Wgetch);
+#endif
 
 #ifdef HAVE_LIBDL
 /* link dynamically to GPM */

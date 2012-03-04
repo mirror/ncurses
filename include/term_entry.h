@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.40 2011/10/08 21:00:41 tom Exp $ */
+/* $Id: term_entry.h,v 1.41 2012/02/29 11:57:03 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -150,7 +150,7 @@ extern NCURSES_EXPORT(void) _nc_wrap_entry (ENTRY *const, bool);
 
 /* alloc_ttype.c: elementary allocation code */
 extern NCURSES_EXPORT(void) _nc_align_termtype (TERMTYPE *, TERMTYPE *);
-extern NCURSES_EXPORT(void) _nc_copy_termtype (TERMTYPE *, TERMTYPE *);
+extern NCURSES_EXPORT(void) _nc_copy_termtype (TERMTYPE *, const TERMTYPE *);
 
 /* free_ttype.c: elementary allocation code */
 extern NCURSES_EXPORT(void) _nc_free_termtype (TERMTYPE *);

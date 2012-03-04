@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1867 2012/02/29 01:10:25 tom Exp $
+-- $Id: NEWS,v 1.1873 2012/03/01 09:53:21 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120303
+	+ minor tidying of terminfo.tail, clarify reason for limitation
+	  regarding mapping of \0 to \200
+	+ minor improvement to _nc_copy_termtype(), using memcpy to replace
+	  loops.
+	+ fix no-leaks checking in test/demo_termcap.c to account for multiple
+	  calls to setupterm().
+	+ modified the libgpm change to show previous load as a problem in the
+	  debug-trace.
+	> merge some patches from OpenSUSE rpm (Werner Fink):
+	+ ncurses-5.7-printw.dif, fixes for varargs handling in lib_printw.c
+	+ ncurses-5.7-gpm.dif, do not dlopen libgpm if already loaded by
+	  runtime linker
+	+ ncurses-5.6-fallback.dif, do not free arrays and strings from static
+	  fallback entries
 
 20120228
 	+ fix breakage in tic/infocmp from 20120225 (report by Werner Fink).

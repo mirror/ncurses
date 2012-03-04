@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.22 2010/12/19 00:24:09 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.24 2012/03/01 01:21:56 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -473,7 +473,7 @@ _nc_align_termtype(TERMTYPE *to, TERMTYPE *from)
 #endif
 
 NCURSES_EXPORT(void)
-_nc_copy_termtype(TERMTYPE *dst, TERMTYPE *src)
+_nc_copy_termtype(TERMTYPE *dst, const TERMTYPE *src)
 {
     unsigned i;
 
@@ -482,13 +482,15 @@ _nc_copy_termtype(TERMTYPE *dst, TERMTYPE *src)
     dst->Numbers = typeMalloc(short, NUM_NUMBERS(dst));
     dst->Strings = typeMalloc(char *, NUM_STRINGS(dst));
 
-    /* FIXME: use memcpy for these and similar loops */
-    for_each_boolean(i, dst)
-	dst->Booleans[i] = src->Booleans[i];
-    for_each_number(i, dst)
-	dst->Numbers[i] = src->Numbers[i];
-    for_each_string(i, dst)
-	dst->Strings[i] = src->Strings[i];
+    memcpy(dst->Booleans,
+	   src->Booleans,
+	   NUM_BOOLEANS(dst) * sizeof(dst->Booleans[0]));
+    memcpy(dst->Numbers,
+	   src->Numbers,
+	   NUM_NUMBERS(dst) * sizeof(dst->Numbers[0]));
+    memcpy(dst->Strings,
+	   src->Strings,
+	   NUM_STRINGS(dst) * sizeof(dst->Strings[0]));
 
     /* FIXME: we probably should also copy str_table and ext_str_table,
      * but tic and infocmp are not written to exploit that (yet).

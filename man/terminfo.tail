@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.55 2011/12/17 23:19:59 tom Exp $
+.\" $Id: terminfo.tail,v 1.57 2012/03/01 12:02:54 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -75,14 +75,29 @@ map to an \s-1ESCAPE\s0 character,
 \fB^x\fR maps to a control-x for any appropriate x, and the sequences
 \fB\en \el \er \et \eb \ef \es\fR give
 a newline, line-feed, return, tab, backspace, form-feed, and space.
-Other escapes include \fB\e^\fR for \fB^\fR,
+Other escapes include
+.bP
+\fB\e^\fR for \fB^\fR,
+.bP
 \fB\e\e\fR for \fB\e\fR,
+.bP
 \fB\e\fR, for comma,
+.bP
 \fB\e:\fR for \fB:\fR,
+.bP
 and \fB\e0\fR for null.
-(\fB\e0\fR will produce \e200, which does not terminate a string but behaves
+.IP
+\fB\e0\fR will produce \e200, which does not terminate a string but behaves
 as a null character on most terminals, providing CS7 is specified.
-See stty(1).)
+See stty(1).
+.IP
+The reason for this quirk is to maintain binary compatibility of the
+compiled terminfo files with other implementations,
+e.g., the SVr4 systems, which document this.
+Compiled terminfo files use null-terminated strings, with no lengths.
+Modifying this would require a new binary format, 
+which would not work with other implementations.
+.PP
 Finally, characters may be given as three octal digits after a \fB\e\fR.
 .PP
 A delay in milliseconds may appear anywhere in a string capability, enclosed in
@@ -593,6 +608,7 @@ Other terminals, such as the Concept 100 and the Perkin Elmer Owl, make
 a distinction between typed and untyped blanks on the screen, shifting
 upon an insert or delete only to an untyped blank on the screen which is
 either eliminated, or expanded to two untyped blanks.
+.PP
 You can determine the
 kind of terminal you have by clearing the screen and then typing
 text separated by cursor motions.
@@ -608,6 +624,7 @@ shifts over to the \*(lqdef\*(rq which then move together around the end of the
 current line and onto the next as you insert, you have the second type of
 terminal, and should give the capability \fBin\fR, which stands for
 \*(lqinsert null\*(rq.
+.PP
 While these are two logically separate attributes (one line versus multi-line
 insert mode, and special treatment of untyped spaces) we have seen no
 terminals whose insert mode cannot be described with the single attribute.
@@ -1570,19 +1587,15 @@ length of the entry as it exists in /etc/termcap, minus the
 backslash-newline pairs, which \fBtgetent()\fP strips out while reading it.
 Some termcap libraries strip off the final newline, too (GNU termcap does not).
 Now suppose:
-.TP 5
-*
+.bP
 a termcap entry before expansion is more than 1023 bytes long,
-.TP 5
-*
+.bP
 and the application has only allocated a 1k buffer,
-.TP 5
-*
+.bP
 and the termcap library (like the one in BSD/OS 1.1 and GNU) reads
 the whole entry into the buffer, no matter what its length, to see
 if it is the entry it wants,
-.TP 5
-*
+.bP
 and \fBtgetent()\fP is searching for a terminal type that either is the
 long entry, appears in the termcap file after the long entry, or
 does not appear in the file at all (so that \fBtgetent()\fP has to search
