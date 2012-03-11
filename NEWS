@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1873 2012/03/01 09:53:21 tom Exp $
+-- $Id: NEWS,v 1.1876 2012/03/11 00:35:40 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120310
+	+ fix some strict compiler warnings for abi6 and 64-bits.
+	+ use begin_va_copy/end_va_copy macros in lib_printw.c (cf: 20120303).
+	+ improve a limit-check in infocmp.c (Werner Fink):
 
 20120303
 	+ minor tidying of terminfo.tail, clarify reason for limitation

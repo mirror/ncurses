@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.66 2012/02/22 23:57:44 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.67 2012/03/10 23:22:21 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -295,10 +295,10 @@ checksum_of(TERMTYPE *tp)
     unsigned i;
 
     for (i = 0; i < NUM_BOOLEANS(tp); i++) {
-	result += (tp->Booleans[i]);
+	result += (unsigned long) (tp->Booleans[i]);
     }
     for (i = 0; i < NUM_NUMBERS(tp); i++) {
-	result += (tp->Numbers[i]);
+	result += (unsigned long) (tp->Numbers[i]);
     }
     for (i = 0; i < NUM_STRINGS(tp); i++) {
 	result += string_sum(tp->Strings[i]);

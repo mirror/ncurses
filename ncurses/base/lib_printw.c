@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_printw.c,v 1.21 2012/02/29 10:11:53 Werner.Fink Exp $")
+MODULE_ID("$Id: lib_printw.c,v 1.22 2012/03/10 20:47:33 tom Exp $")
 
 NCURSES_EXPORT(int)
 printw(const char *fmt,...)
@@ -49,11 +49,11 @@ printw(const char *fmt,...)
 
 #ifdef TRACE
     va_list argq;
-    va_copy(argq, argp);
+    begin_va_copy(argq, argp);
     va_start(argq, fmt);
     T((T_CALLED("printw(%s%s)"),
        _nc_visbuf(fmt), _nc_varargs(fmt, argq)));
-    va_end(argq);
+    end_va_copy(argq);
 #endif
 
     va_start(argp, fmt);
@@ -71,11 +71,11 @@ wprintw(WINDOW *win, const char *fmt,...)
 
 #ifdef TRACE
     va_list argq;
-    va_copy(argq, argp);
+    begin_va_copy(argq, argp);
     va_start(argq, fmt);
     T((T_CALLED("wprintw(%p,%s%s)"),
        (void *) win, _nc_visbuf(fmt), _nc_varargs(fmt, argq)));
-    va_end(argq);
+    end_va_copy(argq);
 #endif
 
     va_start(argp, fmt);
@@ -93,11 +93,11 @@ mvprintw(int y, int x, const char *fmt,...)
 
 #ifdef TRACE
     va_list argq;
-    va_copy(argq, argp);
+    begin_va_copy(argq, argp);
     va_start(argq, fmt);
     T((T_CALLED("mvprintw(%d,%d,%s%s)"),
        y, x, _nc_visbuf(fmt), _nc_varargs(fmt, argq)));
-    va_end(argq);
+    end_va_copy(argq);
 #endif
 
     if ((code = move(y, x)) != ERR) {
@@ -116,11 +116,11 @@ mvwprintw(WINDOW *win, int y, int x, const char *fmt,...)
 
 #ifdef TRACE
     va_list argq;
-    va_copy(argq, argp);
+    begin_va_copy(argq, argp);
     va_start(argq, fmt);
     T((T_CALLED("mvwprintw(%d,%d,%p,%s%s)"),
        y, x, (void *) win, _nc_visbuf(fmt), _nc_varargs(fmt, argq)));
-    va_end(argq);
+    end_va_copy(argq);
 #endif
 
     if ((code = wmove(win, y, x)) != ERR) {

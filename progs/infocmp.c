@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.112 2012/02/22 23:59:53 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.114 2012/03/11 00:10:57 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1089,9 +1089,10 @@ dump_initializers(TERMTYPE *term)
 
 	if (VALID_STRING(term->Strings[n])) {
 	    tp = buf;
+#define TP_LIMIT	((MAX_STRING - 5) - (size_t)(tp - buf))
 	    *tp++ = '"';
 	    for (sp = term->Strings[n];
-		 *sp != 0 && (tp - buf) < MAX_STRING - 6;
+		 *sp != 0 && TP_LIMIT > 2;
 		 sp++) {
 		if (isascii(UChar(*sp))
 		    && isprint(UChar(*sp))
@@ -1099,7 +1100,7 @@ dump_initializers(TERMTYPE *term)
 		    && *sp != '"')
 		    *tp++ = *sp;
 		else {
-		    _nc_SPRINTF(tp, _nc_SLIMIT(MAX_STRING) "\\%03o", UChar(*sp));
+		    _nc_SPRINTF(tp, _nc_SLIMIT(TP_LIMIT) "\\%03o", UChar(*sp));
 		    tp += 4;
 		}
 	    }

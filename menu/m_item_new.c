@@ -44,7 +44,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: m_item_new.c,v 1.31 2012/02/23 10:02:15 tom Exp $")
+MODULE_ID("$Id: m_item_new.c,v 1.32 2012/03/10 23:41:36 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -62,7 +62,7 @@ Is_Printable_String(const char *s)
   int result = TRUE;
 
 #if USE_WIDEC_SUPPORT
-  int count = mbstowcs(0, s, 0);
+  int count = (int)mbstowcs(0, s, 0);
   wchar_t *temp = 0;
 
   assert(s);
@@ -127,13 +127,13 @@ new_item(const char *name, const char *description)
 	{
 	  *item = _nc_Default_Item;	/* hope we have struct assignment */
 
-	  item->name.length = strlen(name);
+	  item->name.length = (unsigned short)strlen(name);
 	  item->name.str = name;
 
 	  if (description && (*description != '\0') &&
 	      Is_Printable_String(description))
 	    {
-	      item->description.length = strlen(description);
+	      item->description.length = (unsigned short)strlen(description);
 	      item->description.str = description;
 	    }
 	  else
@@ -195,12 +195,12 @@ free_item(ITEM * item)
 NCURSES_EXPORT(int)
 set_menu_mark(MENU * menu, const char *mark)
 {
-  unsigned l;
+  short l;
 
   T((T_CALLED("set_menu_mark(%p,%s)"), (void *)menu, _nc_visbuf(mark)));
 
   if (mark && (*mark != '\0') && Is_Printable_String(mark))
-    l = strlen(mark);
+    l = (short)strlen(mark);
   else
     l = 0;
 
@@ -213,7 +213,7 @@ set_menu_mark(MENU * menu, const char *mark)
 	{
 	  /* If the menu is already posted, the geometry is fixed. Then
 	     we can only accept a mark with exactly the same length */
-	  if (menu->marklen != (int)l)
+	  if (menu->marklen != l)
 	    RETURN(E_BAD_ARGUMENT);
 	}
       menu->marklen = l;
@@ -228,7 +228,7 @@ set_menu_mark(MENU * menu, const char *mark)
 	  else
 	    {
 	      menu->mark = old_mark;
-	      menu->marklen = (old_mark != 0) ? strlen(old_mark) : 0;
+	      menu->marklen = (short)((old_mark != 0) ? strlen(old_mark) : 0);
 	      RETURN(E_SYSTEM_ERROR);
 	    }
 	}

@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.498 2012/02/29 10:38:18 tom Exp $
+ * $Id: curses.priv.h,v 1.499 2012/03/10 21:16:32 tom Exp $
  *
  *	curses.priv.h
  *
@@ -398,7 +398,7 @@ color_t;
 #define if_EXT_COLORS(stmt)	stmt
 #define SetPair(value,p)	SetPair2((value).ext_color, AttrOf(value), p)
 #define SetPair2(c,a,p)		c = (p), \
-				a = (unColor2(a) | (A_COLOR & ColorPair(oldColor(c))))
+				a = (unColor2(a) | (A_COLOR & (unsigned) ColorPair(oldColor(c))))
 #define GetPair(value)		GetPair2((value).ext_color, AttrOf(value))
 #define GetPair2(c,a)		((c) ? (c) : PairNumber(a))
 #define oldColor(p)		(((p) > 255) ? 255 : (p))
@@ -407,9 +407,9 @@ color_t;
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b) && GetPair(a) == GetPair(b))
 
 #if NCURSES_SP_FUNCS
-#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vid_attr)(sp, attr, pair, 0)
+#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vid_attr)(sp, attr, (short) pair, 0)
 #else
-#define VIDATTR(sp,attr,pair)	vid_attr(attr, pair, 0)
+#define VIDATTR(sp,attr,pair)	vid_attr(attr, (short) pair, 0)
 #endif
 
 #else /* !NCURSES_EXT_COLORS */

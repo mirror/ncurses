@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.98 2012/02/29 01:04:17 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.99 2012/03/10 23:20:35 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -1195,11 +1195,11 @@ show_entry(void)
 	    if (ch == '\n') {
 		;
 	    } else if (isspace(UChar(ch))) {
-		outbuf.used = j;
+		outbuf.used = (size_t) j;
 	    } else if (!infodump && ch == '\\') {
-		outbuf.used = j;
+		outbuf.used = (size_t) j;
 	    } else if (ch == delim && (j == 0 || outbuf.text[j - 1] != '\\')) {
-		outbuf.used = (j + 1);
+		outbuf.used = (size_t) (j + 1);
 	    } else {
 		break;
 	    }
