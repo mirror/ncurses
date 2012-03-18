@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.68 2012/02/18 20:09:19 tom Exp $
+ * $Id: tic.h,v 1.69 2012/03/17 18:22:10 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -223,6 +223,12 @@ extern NCURSES_EXPORT(const HashValue *) _nc_get_hash_table (bool);
 extern NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool);
 
 #define NOTFOUND	((struct name_table_entry *) 0)
+
+/*
+ * The casts are required for correct sign-propagation with systems such as
+ * AIX, IRIX64, Solaris which default to unsigned characters.  The C standard
+ * leaves this detail unspecified.
+ */
 
 /* out-of-band values for representing absent capabilities */
 #define ABSENT_BOOLEAN		((signed char)-1)	/* 255 */

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.103 2012/01/21 23:55:49 tom Exp $
+dnl $Id: configure.in,v 1.104 2012/03/17 17:29:03 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -333,7 +333,8 @@ do
 \$(MODEL)/$N.o : \$(srcdir)/$N.c \\
 	\$(srcdir)/test.priv.h \\
 	ncurses_cfg.h
-	@echo compiling $N; \$(CC) -c \$(CFLAGS_DEFAULT) \$(srcdir)/$N.c
+	$SHOW_CC
+	$ECHO_CC\$(CC) -c \$(CFLAGS_DEFAULT) \$(srcdir)/$N.c
 TEST_EOF
 done
 
@@ -348,5 +349,7 @@ TEST_EOF
 fi
 ],[
 AWK="$AWK"
+ECHO_CC="$ECHO_CC"
 ECHO_LD="$ECHO_LD"
+SHOW_CC="$SHOW_LD"
 ],cat)

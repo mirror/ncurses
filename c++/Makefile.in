@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.95 2011/07/30 22:52:07 tom Exp $
+# $Id: Makefile.in,v 1.96 2012/03/17 16:45:38 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -180,7 +180,7 @@ $(MODEL)/demo$o : $(srcdir)/demo.cc \
 demo$x:	$(OBJS_DEMO) \
 	$(MY_LIBRARY)  \
 	@TEST_DEPS@
-	@ECHO_LINK@ $(LINK) -o $@ $(OBJS_DEMO) $(LDFLAGS_DEFAULT)
+	@ECHO_LD@ $(LINK) -o $@ $(OBJS_DEMO) $(LDFLAGS_DEFAULT)
 
 etip.h:	$(srcdir)/etip.h.in $(srcdir)/edit_cfg.sh
 	cp $(srcdir)/etip.h.in $@

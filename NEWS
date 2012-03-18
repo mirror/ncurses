@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1876 2012/03/11 00:35:40 tom Exp $
+-- $Id: NEWS,v 1.1880 2012/03/17 21:16:50 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120317
+	+ correct a check made in lib_napms.c, so that terminfo applications
+	  can again use napms() (cf: 20110604).
+	+ add a note in tic.h regarding required casts for ABSENT_BOOLEAN
+	  (cf: 20040327).
+	+ correct scripting for --disable-echo option in test/configure.
+	+ amend check for missing c++ compiler to work when no error is
+	  reported, and no variables set (cf: 20021206).
+	+ add/use configure macro CF_DISABLE_ECHO.
 
 20120310
 	+ fix some strict compiler warnings for abi6 and 64-bits.
