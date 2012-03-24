@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_expand.c,v 1.24 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: comp_expand.c,v 1.25 2012/03/24 18:37:17 tom Exp $")
 
 static int
 trailing_spaces(const char *src)

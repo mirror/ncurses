@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.25 2012/03/10 20:52:21 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.26 2012/03/24 18:37:17 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch

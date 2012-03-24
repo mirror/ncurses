@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.96 2012/02/22 22:26:58 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.97 2012/03/24 22:24:19 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -196,7 +196,8 @@ next_char(void)
 		    result = typeRealloc(char, allocated, result);
 		    if (result == 0)
 			return (EOF);
-		    bufstart = result;
+		    if (bufstart)
+			bufstart = result;
 		}
 		if (used == 0)
 		    _nc_curr_file_pos = ftell(yyin);

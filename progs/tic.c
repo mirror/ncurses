@@ -46,7 +46,9 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.162 2012/02/22 23:59:45 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.165 2012/03/24 22:07:10 tom Exp $")
+
+#define STDIN_NAME "<stdin>"
 
 const char *_nc_progname = "tic";
 
@@ -365,19 +367,96 @@ stripped(char *src)
 }
 
 static FILE *
-open_input(const char *filename)
+open_tempfile(char *filename)
 {
-    FILE *fp = fopen(filename, "r");
-    struct stat sb;
+    FILE *result = 0;
 
-    if (fp == 0) {
-	fprintf(stderr, "%s: Can't open %s\n", _nc_progname, filename);
-	ExitProgram(EXIT_FAILURE);
+    _nc_STRCPY(filename, "/tmp/XXXXXX", PATH_MAX);
+#if HAVE_MKSTEMP
+    {
+	int fd = mkstemp(filename);
+	if (fd >= 0)
+	    result = fdopen(fd, "w");
     }
-    if (fstat(fileno(fp), &sb) < 0
-	|| (sb.st_mode & S_IFMT) != S_IFREG) {
+#else
+    if (tmpnam(filename) != 0)
+	result = fopen(filename, "w");
+#endif
+    return result;
+}
+
+static FILE *
+copy_input(FILE *source, const char *filename, char *alt_file)
+{
+    FILE *result = 0;
+    FILE *target = open_tempfile(alt_file);
+    int ch;
+
+    if (source == 0) {
+	failed("copy_input (source)");
+    } else if (target == 0) {
+	failed("copy_input (target)");
+    } else {
+	clearerr(source);
+	for (;;) {
+	    ch = fgetc(source);
+	    if (feof(source)) {
+		break;
+	    } else if (ferror(source)) {
+		failed(filename);
+	    } else if (ch == 0) {
+		/* don't loop in case someone wants to convert /dev/zero */
+		fprintf(stderr, "%s: %s is not a text-file\n", _nc_progname, filename);
+		ExitProgram(EXIT_FAILURE);
+	    }
+	    fputc(ch, target);
+	}
+	fclose(source);
+	/*
+	 * rewind() does not force the target file's data to disk (not does
+	 * fflush()...).  So open a second stream on the data and then close
+	 * the one that we were writing on before starting to read from the
+	 * second stream.
+	 */
+	result = fopen(alt_file, "r+");
+	fclose(target);
+	to_remove = alt_file;
+    }
+    return result;
+}
+
+static FILE *
+open_input(const char *filename, char *alt_file)
+{
+    FILE *fp;
+    struct stat sb;
+    int mode;
+
+    if (!strcmp(filename, "-")) {
+	fp = copy_input(stdin, STDIN_NAME, alt_file);
+    } else if (stat(filename, &sb) < 0) {
+	fprintf(stderr, "%s: %s %s\n", _nc_progname, filename, strerror(errno));
+	ExitProgram(EXIT_FAILURE);
+    } else if ((mode = (sb.st_mode & S_IFMT)) == S_IFDIR
+	       || (mode != S_IFREG && mode != S_IFCHR)) {
 	fprintf(stderr, "%s: %s is not a file\n", _nc_progname, filename);
 	ExitProgram(EXIT_FAILURE);
+    } else {
+	fp = fopen(filename, "r");
+
+	if (fp == 0) {
+	    fprintf(stderr, "%s: Can't open %s\n", _nc_progname, filename);
+	    ExitProgram(EXIT_FAILURE);
+	}
+	if (mode != S_IFREG) {
+	    if (alt_file != 0) {
+		FILE *fp2 = copy_input(fp, filename, alt_file);
+		fp = fp2;
+	    } else {
+		fprintf(stderr, "%s: %s is not a file\n", _nc_progname, filename);
+		ExitProgram(EXIT_FAILURE);
+	    }
+	}
     }
     return fp;
 }
@@ -395,7 +474,7 @@ make_namelist(char *src)
     if (src == 0) {
 	/* EMPTY */ ;
     } else if (strchr(src, '/') != 0) {		/* a filename */
-	FILE *fp = open_input(src);
+	FILE *fp = open_input(src, (char *) 0);
 
 	for (pass = 1; pass <= 2; pass++) {
 	    nn = 0;
@@ -460,21 +539,6 @@ matches(char **needle, const char *haystack)
     } else
 	code = TRUE;
     return (code);
-}
-
-static FILE *
-open_tempfile(char *name)
-{
-    FILE *result = 0;
-#if HAVE_MKSTEMP
-    int fd = mkstemp(name);
-    if (fd >= 0)
-	result = fdopen(fd, "w");
-#else
-    if (tmpnam(name) != 0)
-	result = fopen(name, "w");
-#endif
-    return result;
 }
 
 static const char *
@@ -582,6 +646,7 @@ int
 main(int argc, char *argv[])
 {
     char my_tmpname[PATH_MAX];
+    char my_altfile[PATH_MAX];
     int v_opt = -1;
     unsigned debug_level;
     int smart_defaults = TRUE;
@@ -796,14 +861,11 @@ main(int argc, char *argv[])
 		    /* file exists */
 		    source_file = termcap;
 		} else {
-		    _nc_STRCPY(my_tmpname,
-			       "/tmp/XXXXXX",
-			       sizeof(my_tmpname));
 		    if ((tmp_fp = open_tempfile(my_tmpname)) != 0) {
 			source_file = my_tmpname;
 			fprintf(tmp_fp, "%s\n", termcap);
 			fclose(tmp_fp);
-			tmp_fp = open_input(source_file);
+			tmp_fp = open_input(source_file, (char *) 0);
 			to_remove = source_file;
 		    } else {
 			failed("tmpnam");
@@ -822,19 +884,24 @@ main(int argc, char *argv[])
 	}
     }
 
-    if (tmp_fp == 0)
-	tmp_fp = open_input(source_file);
+    if (tmp_fp == 0) {
+	tmp_fp = open_input(source_file, my_altfile);
+	if (!strcmp(source_file, "-")) {
+	    source_file = STDIN_NAME;
+	}
+    }
 
-    if (infodump)
+    if (infodump) {
 	dump_init(tversion,
 		  smart_defaults
 		  ? outform
 		  : F_LITERAL,
 		  sortmode, width, height, debug_level, formatted);
-    else if (capdump)
+    } else if (capdump) {
 	dump_init(tversion,
 		  outform,
 		  sortmode, width, height, debug_level, FALSE);
+    }
 
     /* parse entries out of the source file */
     _nc_set_source(source_file);

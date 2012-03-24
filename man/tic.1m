@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.54 2012/02/04 23:09:43 tom Exp $
+.\" $Id: tic.1m,v 1.55 2012/03/24 21:21:05 tom Exp $
 .TH @TIC@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -265,26 +265,7 @@ indicating the desired level of detail of information.
 If \fIn\fR is omitted, the default level is 1.
 If \fIn\fR is specified and greater than 1, the level of
 detail is increased.
-.TP
-\fB\-w\fR\fIn\fR
-specifies the width of the output.
-The parameter is optional.
-If it is omitted, it defaults to 60.
-.TP
-\fB\-x\fR
-Treat unknown capabilities as user-defined.
-That is, if you supply a capability name which \fB@TIC@\fP does not recognize,
-it will infer its type (boolean, number or string) from the syntax and
-make an extended table entry for that.
-User-defined capability strings
-whose name begins with ``k'' are treated as function keys.
-.SS PARAMETERS
-.TP
-\fIfile\fR
-contains one or more \fBterminfo\fR terminal descriptions in source
-format [see \fBterminfo\fR(\*n)].
-Each description in the file
-describes the capabilities of a particular terminal.
+.RS
 .PP
 The debug flag levels are as follows:
 .TP
@@ -310,6 +291,30 @@ List of tokens encountered by scanner
 All values computed in construction of the hash table
 .LP
 If the debug level \fIn\fR is not given, it is taken to be one.
+.RE
+.TP
+\fB\-w\fR\fIn\fR
+specifies the width of the output.
+The parameter is optional.
+If it is omitted, it defaults to 60.
+.TP
+\fB\-x\fR
+Treat unknown capabilities as user-defined.
+That is, if you supply a capability name which \fB@TIC@\fP does not recognize,
+it will infer its type (boolean, number or string) from the syntax and
+make an extended table entry for that.
+User-defined capability strings
+whose name begins with ``k'' are treated as function keys.
+.SS PARAMETERS
+.TP
+\fIfile\fR
+contains one or more \fBterminfo\fR terminal descriptions in source
+format [see \fBterminfo\fR(\*n)].
+Each description in the file
+describes the capabilities of a particular terminal.
+.IP
+If \fIfile\fR is ``-'', then the data is read from the standard input.
+The \fIfile\fR parameter may also be the path of a character-device.
 .SS PROCESSING
 .PP
 All but one of the capabilities recognized by \fB@TIC@\fR are documented
