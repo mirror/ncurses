@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1883 2012/03/24 22:27:20 tom Exp $
+-- $Id: NEWS,v 1.1885 2012/03/31 23:10:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120331
+	+ update Ada95/configure to use CF_DISABLE_ECHO (cf: 20120317).
+	+ correct order of use-clauses in st-256color -TD
+	+ modify configure script to look for gnatgcc if the Ada95 binding
+	  is built, in preference to the default gcc/cc (suggested by
+	  Nicolas Boulenguez).
+	+ modify configure script to ensure that the same -On option used for
+	  the C compiler in CFLAGS is used for ADAFLAGS rather than simply
+	  using -O3 (suggested by Nicolas Boulenguez)
 
 20120324
 	+ amend an old fix so that next_char() exits properly for empty files,

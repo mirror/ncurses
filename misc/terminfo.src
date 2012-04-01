@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.426 $
-#	$Date: 2012/02/11 23:38:27 $
+#	$Revision: 1.427 $
+#	$Date: 2012/03/27 09:57:34 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4796,7 +4796,7 @@ st-16color|simpleterm with 16-colors,
 # shown in the titlebar.
 st-256color|simpleterm with 256 colors,
 	ccc@,
-	initc@, use=simpleterm, use=xterm+256color,
+	initc@, use=xterm+256color, use=simpleterm,
 
 ### TERMINATOR
 # http://software.jessies.org/terminator/
@@ -22706,5 +22706,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* make sgr for ncr260vt300an agree with other caps -TD
 #	* make sgr for aaa-60-dec-rv, aaa+dec agree with other caps -TD
 #	* make sgr for cygwin, cygwinDBG agree with other caps -TD
+#
+# 2012-03-31
+#	* correct order of use-clauses in st-256color -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.547 2012/03/17 17:08:08 tom Exp $
+dnl $Id: configure.in,v 1.549 2012/04/01 00:09:52 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.547 $)
+AC_REVISION($Revision: 1.549 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -58,7 +58,18 @@ cf_user_CFLAGS="$CFLAGS"
 CF_CFG_DEFAULTS
 
 ###	Checks for programs.
-AC_PROG_CC
+AC_ARG_WITH(ada,
+	[  --without-ada           suppress check for Ada95, don't build demo],
+	[cf_with_ada=$withval],
+	[cf_with_ada=yes])
+if test x"$cf_with_ada" = xyes
+then
+	cf_PROG_CC="gnatgcc gcc cc"
+else
+	cf_PROG_CC="gcc cc"
+fi
+
+AC_PROG_CC($cf_PROG_CC)
 CF_GCC_VERSION
 
 AC_PROG_CPP
@@ -118,10 +129,6 @@ AC_ARG_WITH(cxx-binding,
 AC_MSG_RESULT($cf_with_cxx_binding)
 
 AC_MSG_CHECKING(if you want to build with Ada95)
-AC_ARG_WITH(ada,
-	[  --without-ada           suppress check for Ada95, don't build demo],
-	[cf_with_ada=$withval],
-	[cf_with_ada=yes])
 AC_MSG_RESULT($cf_with_ada)
 
 AC_MSG_CHECKING(if you want to install manpages)
@@ -1564,18 +1571,7 @@ dnl At the moment we support no other Ada95 compiler.
 		CF_PROG_GNAT
 		if test	"$cf_cv_prog_gnat_correct" = yes; then
 			CF_ADD_ADAFLAGS(-gnatpn)
-
-			# make ADAFLAGS consistent with CFLAGS
-			case "$CFLAGS" in
-			*-g*)
-				CF_ADD_ADAFLAGS(-g)
-				;;
-			esac
-			case "$CFLAGS" in
-			*-O*)
-				CF_ADD_ADAFLAGS(-O3)
-				;;
-			esac
+			CF_FIXUP_ADAFLAGS
 
 			CF_GNAT_GENERICS
 			CF_GNAT_SIGINT
