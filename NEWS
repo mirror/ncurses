@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1885 2012/03/31 23:10:23 tom Exp $
+-- $Id: NEWS,v 1.1891 2012/04/07 19:17:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120407
+	+ fix an inconsistency between tic/infocmp "-x" option; tic omits all
+	  non-standard capabilities, while infocmp was ignoring only the user
+	  definable capabilities.
+	+ improve special case in tic parsing of description to allow it to be
+	  followed by terminfo capabilities.  Previously the description had to
+	  be the last field on an input line to allow tic to distinguish
+	  between termcap and terminfo format while still allowing commas to be
+	  embedded in the description.
+	+ correct variable name in gen_edit.sh which broke configurability of
+	  the --with-xterm-kbs option.
+	+ revert 2011-07-16 change to "linux" alias, return to "linux2.2" -TD
+	+ further amend 20110910 change, providing for configure-script
+	  override of the "linux" terminfo entry to install and changing the
+	  default for that to "linux2.2" (Debian #665959).
 
 20120331
 	+ update Ada95/configure to use CF_DISABLE_ECHO (cf: 20120317).

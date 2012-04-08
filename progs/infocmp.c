@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.114 2012/03/11 00:10:57 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.115 2012/04/07 19:12:01 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -333,6 +333,21 @@ dump_string(char *val, char *buf)
     }
 }
 
+/*
+ * ncurses stores two types of non-standard capabilities:
+ * a) capabilities listed past the "STOP-HERE" comment in the Caps file. 
+ *    These are used in the terminfo source file to provide data for termcaps,
+ *    e.g., when there is no equivalent capability in terminfo, as well as for
+ *    widely-used non-standard capabilities.
+ * b) user-definable capabilities, via "tic -x".
+ *
+ * However, if "-x" is omitted from the tic command, both types of
+ * non-standard capability are not loaded into the terminfo database.  This
+ * macro is used for limit-checks against the symbols that tic uses to omit
+ * the two types of non-standard entry.
+ */
+#define check_user_definable(n,limit) if (!_nc_user_definable && (n) > (limit)) break
+
 static void
 compare_predicate(PredType type, PredIdx idx, const char *name)
 /* predicate function to use for entry difference reports */
@@ -346,6 +361,7 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 
     switch (type) {
     case CMP_BOOLEAN:
+	check_user_definable(idx, BOOLWRITE);
 	b1 = e1->tterm.Booleans[idx];
 	b2 = e2->tterm.Booleans[idx];
 	switch (compare) {
@@ -371,6 +387,7 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 	break;
 
     case CMP_NUMBER:
+	check_user_definable(idx, NUMWRITE);
 	n1 = e1->tterm.Numbers[idx];
 	n2 = e2->tterm.Numbers[idx];
 	dump_numeric(n1, buf1);
@@ -394,6 +411,7 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 	break;
 
     case CMP_STRING:
+	check_user_definable(idx, STRWRITE);
 	s1 = e1->tterm.Strings[idx];
 	s2 = e2->tterm.Strings[idx];
 	switch (compare) {

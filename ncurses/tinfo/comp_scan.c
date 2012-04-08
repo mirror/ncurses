@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.97 2012/03/24 22:24:19 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.99 2012/04/01 20:37:08 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -128,14 +128,19 @@ _nc_reset_input(FILE *fp, char *buf)
  *	Returns the final nonblank character on the current input buffer
  */
 static int
-last_char(void)
+last_char(int from_end)
 {
     size_t len = strlen(bufptr);
+    int result = 0;
+
     while (len--) {
-	if (!isspace(UChar(bufptr[len])))
-	    return bufptr[len];
+	if (!isspace(UChar(bufptr[len]))) {
+	    if (from_end < (int) len)
+		result = bufptr[(int) len - from_end];
+	    break;
+	}
     }
-    return 0;
+    return result;
 }
 
 /*
@@ -341,13 +346,13 @@ _nc_get_token(bool silent)
 {
     static const char terminfo_punct[] = "@%&*!#";
 
-    char *after_list;
-    char *after_name;
+    char *after_name;		/* after primary name */
+    char *after_list;		/* after primary and alias list */
     char *numchk;
     char *tok_ptr;
     char *s;
     char numbuf[80];
-    int ch;
+    int ch, c0, c1;
     int dot_flag = FALSE;
     int type;
     long number;
@@ -460,7 +465,7 @@ _nc_get_token(bool silent)
 		    after_list = tok_ptr;
 		    if (after_name == 0)
 			after_name = tok_ptr;
-		} else if (ch == ':' && last_char() != ',') {
+		} else if (ch == ':' && last_char(0) != ',') {
 		    _nc_syntax = SYN_TERMCAP;
 		    separator = ':';
 		    break;
@@ -474,12 +479,64 @@ _nc_get_token(bool silent)
 		    if (after_name == 0)
 			break;
 		    /*
-		     * If we see a comma, we assume this is terminfo unless we
-		     * subsequently run into a colon.  But we don't stop
-		     * looking for a colon until hitting a newline.  This
-		     * allows commas to be embedded in description fields of
-		     * either syntax.
+		     * We saw a comma, but are not entirely sure this is
+		     * terminfo format, since we can still be parsing the
+		     * description field (for either syntax).
+		     *
+		     * A properly formatted termcap line ends with either a
+		     * colon, or a backslash after a colon.  It is possible
+		     * to have a backslash in the middle of a capability, but
+		     * then there would be no leading whitespace on the next
+		     * line - something we want to discourage.
 		     */
+		    c0 = last_char(0);
+		    c1 = last_char(1);
+		    if (c1 != ':' && c0 != '\\' && c0 != ':') {
+			bool capability = FALSE;
+
+			/*
+			 * Since it is not termcap, assume the line is terminfo
+			 * format.  However, the comma can be embedded in a
+			 * description field.  It also can be a separator
+			 * between a description field and a capability.
+			 *
+			 * Improve the guess by checking if the next word after
+			 * the comma does not look like a capability.  In that
+			 * case, extend the description past the comma.
+			 */
+			for (s = bufptr; isspace(UChar(*s)); ++s) {
+			    ;
+			}
+			if (islower(UChar(*s))) {
+			    char *name = s;
+			    while (isalnum(UChar(*s))) {
+				++s;
+			    }
+			    if (*s == '#' || *s == '=' || *s == '@') {
+				/*
+				 * Checking solely with syntax allows us to
+				 * support extended capabilities with string
+				 * values.
+				 */
+				capability = TRUE;
+			    } else if (*s == ',') {
+				c0 = *s;
+				*s = '\0';
+				/*
+				 * Otherwise, we can handle predefined boolean
+				 * capabilities, still aided by syntax.
+				 */
+				if (_nc_find_entry(name,
+						   _nc_get_hash_table(FALSE))) {
+				    capability = TRUE;
+				}
+				*s = c0;
+			    }
+			}
+			if (capability) {
+			    break;
+			}
+		    }
 		} else
 		    ch = eat_escaped_newline(ch);
 

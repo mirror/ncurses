@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.427 $
-#	$Date: 2012/03/27 09:57:34 $
+#	$Revision: 1.428 $
+#	$Date: 2012/04/01 13:58:39 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -942,6 +942,8 @@ linux2.2|linux 2.2.x console,
 #	http://lkml.indiana.edu/hypermail/linux/kernel/0602.2/0868.html
 # Using SI/SO has the drawback that it confuses screen.  SCS would work.
 # However, SCS is buggy (see comment in Debian #515609) -TD
+# Further, this breaks longstanding workarounds for Linux console's line
+# drawing (see Debian 665959) -TD
 linux2.6|linux 2.6.x console,
 	rmacs=^O,
 	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p6%t;1%;m%?%p9%t\016%e\017%;,
@@ -953,7 +955,7 @@ linux3.0|linux 3.0 kernels,
 
 # This is Linux console for ncurses.
 linux|linux console,
-	use=linux3.0,
+	use=linux2.2,
 
 # Subject: linux 2.6.26 vt back_color_erase
 # Changes to the Linux console driver broke bce model as reported in
@@ -22709,5 +22711,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2012-03-31
 #	* correct order of use-clauses in st-256color -TD
+#
+# 2012-04-01
+#	* revert 2011-07-16 change to "linux" alias, return to "linux2.2" -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
