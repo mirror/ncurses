@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1891 2012/04/07 19:17:36 tom Exp $
+-- $Id: NEWS,v 1.1892 2012/04/14 20:28:37 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120414
+	+ add consistency check in tic for screen's "XT" capability.
+	+ add section in terminfo.src summarizing the user-defined capabilities
+	  used in that file -TD
 
 20120407
 	+ fix an inconsistency between tic/infocmp "-x" option; tic omits all

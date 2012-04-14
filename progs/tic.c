@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.165 2012/03/24 22:07:10 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.169 2012/04/14 21:34:26 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1223,7 +1223,7 @@ check_cursor(TERMTYPE *tp)
     ANDMISSING(parm_left_cursor, cursor_left);
     ANDMISSING(parm_right_cursor, cursor_right);
 
-    /* Given any of a set of cursor movement, the whole set should be present. 
+    /* Given any of a set of cursor movement, the whole set should be present.
      * Technically this is not true (we could use cursor_address to fill in
      * unsupported controls), but it is likely.
      */
@@ -1416,6 +1416,72 @@ check_printer(TERMTYPE *tp)
     ANDMISSING(parm_left_micro, micro_left);
     ANDMISSING(parm_right_micro, micro_right);
     ANDMISSING(parm_up_micro, micro_up);
+}
+
+static bool
+uses_SGR_39_49(const char *value)
+{
+    return (strstr(value, "39;49") != 0
+	    || strstr(value, "49;39") != 0);
+}
+
+/*
+ * Check consistency of termcap extensions related to "screen".
+ */
+static void
+check_screen(TERMTYPE *tp)
+{
+    if (_nc_user_definable) {
+	int have_XT = tigetflag("XT");
+	int have_XM = tigetflag("XM");
+	int have_bce = back_color_erase;
+	bool have_kmouse = FALSE;
+	bool use_sgr_39_49 = FALSE;
+	char *name = _nc_first_name(tp->term_names);
+
+	if (!VALID_BOOLEAN(have_bce)) {
+	    have_bce = FALSE;
+	}
+	if (!VALID_BOOLEAN(have_XM)) {
+	    have_XM = FALSE;
+	}
+	if (!VALID_BOOLEAN(have_XT)) {
+	    have_XT = FALSE;
+	}
+	if (VALID_STRING(key_mouse)) {
+	    have_kmouse = !strcmp("\033[M", key_mouse);
+	}
+	if (VALID_STRING(orig_colors)) {
+	    use_sgr_39_49 = uses_SGR_39_49(orig_colors);
+	} else if (VALID_STRING(orig_pair)) {
+	    use_sgr_39_49 = uses_SGR_39_49(orig_pair);
+	}
+
+	if (have_XM && have_XT) {
+	    _nc_warning("Screen's XT capability conflicts with XM");
+	} else if (have_XT
+		   && strstr(name, "screen") != 0
+		   && strchr(name, '.') != 0) {
+	    _nc_warning("Screen's \"screen\" entries should not have XT set");
+	} else if (have_XT) {
+	    if (!have_kmouse && have_bce) {
+		if (VALID_STRING(key_mouse)) {
+		    _nc_warning("Value of kmous inconsistent with screen's usage");
+		} else {
+		    _nc_warning("Expected kmous capability with XT");
+		}
+	    }
+	    if (!have_bce && max_colors > 0)
+		_nc_warning("Expected bce capability with XT");
+	    if (!use_sgr_39_49 && have_bce && max_colors > 0)
+		_nc_warning("Expected orig_colors capability with XT to have 39/49 parameters");
+	    if (VALID_STRING(to_status_line))
+		_nc_warning("\"tsl\" capability is redundant, given XT");
+	} else {
+	    if (have_kmouse && !have_XM)
+		_nc_warning("Expected XT to be set, given kmous");
+	}
+    }
 }
 
 /*
@@ -1802,6 +1868,7 @@ check_termtype(TERMTYPE *tp, bool literal)
     check_cursor(tp);
     check_keypad(tp);
     check_printer(tp);
+    check_screen(tp);
 
     /*
      * These may be mismatched because the terminal description relies on

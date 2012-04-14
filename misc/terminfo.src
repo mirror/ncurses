@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.428 $
-#	$Date: 2012/04/01 13:58:39 $
+#	$Revision: 1.433 $
+#	$Date: 2012/04/14 23:14:51 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -488,7 +488,7 @@ ansi-mini|any ansi terminal with pessimistic assumptions,
 # ansi-mtabs adds relative addressing and minimal tab support
 ansi-mtabs|any ansi terminal with pessimistic assumptions,
 	it#8,
-	ht=^I, use=ansi+local1, use=ansi-mini,
+	ht=^I, use=ansi-mini, use=ansi+local1,
 
 # ANSI X3.64 from emory!mlhhh (Hugh Hansard) via BRL
 #
@@ -3291,7 +3291,7 @@ xterm-r6|xterm-old|xterm X11R6 version,
 # This is the base xterm entry for the xterm supplied with XFree86 3.2 & up.
 # The name has been changed and some aliases have been removed.
 xterm-xf86-v32|xterm terminal emulator (XFree86 3.2 Window System),
-	OTbs, am, bce, km, mir, msgr, xenl,
+	OTbs, am, bce, km, mir, msgr, xenl, XT,
 	cols#80, it#8, lines#24, ncv@,
 	acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
@@ -3555,7 +3555,7 @@ xterm+r6f2|xterm with oldFunctionKeys and modifyFunctionKeys:2,
 #
 # This chunk is used for building the VT220/Sun/PC keyboard variants.
 xterm-basic|modern xterm terminal emulator - common,
-	OTbs, am, bce, km, mc5i, mir, msgr, xenl, AX,
+	OTbs, am, bce, km, mc5i, mir, msgr, xenl, AX, XT,
 	colors#8, cols#80, it#8, lines#24, pairs#64,
 	acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
@@ -3655,7 +3655,7 @@ xterm-1003|testing xterm-mouse,
 #	function to a block or underline.
 # Se resets the cursor style to the terminal power-on default.
 #  
-# Cs and Ce set and reset the cursor colour.
+# Cs and Cr set and reset the cursor colour.
 xterm+tmux|advanced xterm features used in tmux,
 	Cr=\E]112\007, Cs=\E]12;%p1%s\007,
 	Ms=\E]52;%p1%s;%p2%s\007, Se=\E[2 q, Ss=\E[%p1%d q,
@@ -3764,7 +3764,7 @@ xterm-noapp|xterm with cursor keys in normal mode,
 	use=xterm,
 
 xterm-24|vs100|xterms|xterm terminal emulator (X Window System),
-	lines#24, use=xterm-old,
+	lines#24, use=xterm,
 
 # This is xterm for ncurses.
 xterm|xterm terminal emulator (X Window System),
@@ -3793,7 +3793,8 @@ xterm+sl-twm|access X title line (pacify twm-descended window managers),
 #
 # xterm with bold instead of underline
 xterm-bold|xterm terminal emulator (X11R6 Window System) standout w/bold,
-	smso=\E[7m, smul=\E[1m, use=xterm-old,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;1%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
+	smso=\E[7m, smul=\E[1m, use=xterm,
 
 # See the note on ICH/ICH1 VERSUS RMIR/SMIR near the end of file
 xterm-nic|xterm with ich/ich1 suppressed for non-curses programs,
@@ -3990,7 +3991,7 @@ gnome-rh80|GNOME Terminal,
 #
 # bce and msgr are repaired.
 gnome-rh90|GNOME Terminal,
-	bce, msgr,
+	bce, msgr, XT,
 	hpa=\E[%i%p1%dG, kDC=\E[3;2~, kLFT=\EO2D, kRIT=\EO2C,
 	kb2=\E[E, kcbt=\E[Z, kend=\EOF, khome=\EOH, tbc=\E[3g,
 	vpa=\E[%i%p1%dd, use=xterm+pcf0, use=xterm+pcfkeys,
@@ -6455,7 +6456,7 @@ hp2626|hp2626a|hp2626p|hp 2626,
 	da, db,
 	lm#0, pb#19200,
 	ed=\ED\EJ$<500>\EC, indn=\E&r%p1%dD, ip=$<4>,
-	is2=\E&j@\r, rin=\E&r%p1%dU, use=hp+pfk+cr,
+	is2=\E&j@\r, rin=\E&r%p1%dU, use=hp+pfk-cr,
 	use=hp+labels, use=scrhp,
 
 # This entry is for sysline. It allocates a 23 line window with
@@ -6656,7 +6657,7 @@ hp2621b-kx-p|hp 2621b with new keyboard & printer,
 hp2622|hp2622a|hp 2622,
 	da, db,
 	lm#0, pb#19200,
-	is2=\E&dj@\r, use=hp+pfk+cr, use=hp+labels, use=scrhp,
+	is2=\E&dj@\r, use=hp+pfk-cr, use=hp+labels, use=scrhp,
 
 # The 2623 is a 2622 with extra graphics hardware.
 hp2623|hp2623a|hp 2623,
@@ -21302,6 +21303,102 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # CF for civis and CO for cvvis.  Finally, they define a boolean :ct:
 # that flags color terminals.
 #
+# Extensions added after ncurses 5.0 generally use the "-x" option of tic and
+# infocmp to manipulate user-definable capabilities.  Those that are intended
+# for use in either terminfo or termcap use 2-character names.  Extended
+# function keys do not use 2-character names, and are available only with
+# terminfo.
+#
+# As of mid-2012, no other terminfo/termcap implementation than ncurses
+# supports this extension; termcap libraries can as noted above make limited
+# use of the feature.
+#
+# ncurses makes explicit checks for a few user-definable capabilities:  AX, U8,
+# XM.
+#
+# SCREEN Extensions:
+#
+# The screen program uses the termcap interface.  It recognizes a few useful
+# nonstandard capabilities.  Those are used in this file.
+#
+#       AX   (bool)  Does  understand  ANSI  set  default fg/bg color (\E[39m /
+#                    \E[49m).
+#       G0   (bool)  Terminal can deal with ISO 2022  font  selection sequences.
+#       E0   (str)   Switch charset 'G0' back to standard charset.
+#       S0   (str)   Switch charset 'G0' to the specified charset.
+#       XT   (bool)  Terminal understands special xterm sequences  (OSC,  mouse
+#                    tracking).
+#
+# AX is relatively straightforward; it is interpreted by ncurses to say that
+# SGR 39/49 reset the terminal's foreground and background colors to their
+# "default".
+#
+# XT is harder, since screen's manpage does not give more details.  For that,
+# we must read screen's source-code.  When XT is set, screen assumes
+#
+# a) OSC 1 sets the title string, e.g., for the icon.  Recent versions of
+#    screen may also set the terminal's name, which is (for xterm) distinct
+#    from the icon name.
+# b) OSC 20 sets the background pixmap.  This is an rxvt feature.
+# c) OSC 39 and OSC 49 set the default foreground/background colors.  Again
+#    this is an rxvt feature.
+# d) certain mode settings enable the mouse: 9, 1000, 1001, 1002, 1003.
+#    These are from xterm, although xterm accepts mouse codes that may not be
+#    recognized by screen, e.g., 1005, 1006.
+# e) colors beyond 0..7 are implemented by xterm's aixterm-like 16-color
+#    sequence.  However, because screen uses only termcap, the values returned
+#    by Af/Ab are not usable because they rely on expressions that termcap
+#    does not support.  Therefore, screen uses a hardcoded string to work
+#    around the limitation.
+# f) all entries named "*xterm*" or "*rxvt*" have the bce flag set.
+#
+# The other ISO-2022 features are rarely used, but provided here to make
+# screen's termcap features available.
+#
+# XTERM Extensions:
+#
+# Most of the xterm extensions are for function-keys.  Since patch #94 (in
+# 1999), xterm has supported shift/control/alt/meta modifiers which produce
+# additional function-key strings.  Some other developers copied the feature,
+# though they did not follow xterm's lead in patch #167 (in 2002), to make
+# these key definitions less ambiguous.
+#
+# A few terminals provide similar functionality (sending distinct keys when
+# a modifier is used), including rxvt.
+#
+# These are the extended keys defined in this file:
+#
+# kDC3 kDC4 kDC5 kDC6 kDC7 kDN kDN3 kDN4 kDN5 kDN6 kDN7 kEND3 kEND4 kEND5 kEND6
+# kEND7 kHOM3 kHOM4 kHOM5 kHOM6 kHOM7 kIC3 kIC4 kIC5 kIC6 kIC7 kLFT3 kLFT4
+# kLFT5 kLFT6 kLFT7 kNXT3 kNXT4 kNXT5 kNXT6 kNXT7 kPRV3 kPRV4 kPRV5 kPRV6 kPRV7
+# kRIT3 kRIT4 kRIT5 kRIT6 kRIT7 kUP kUP3 kUP4 kUP5 kUP6 kUP7 ka2 kb1 kb3 kc2
+#
+# Here are the other xterm-related extensions which are used in this file:
+#
+# Cr is a string capability which resets the cursor color
+# Cs is a string capability which sets the cursor color to a given value.
+#    The single string parameter is the color name/number, according to the
+#    implementation.
+# Ms modifies the selection/clipboard.  Its parameters are
+#	p1 = the storage unit (clipboard, selection or cut buffer)
+#	p2 = the base64-encoded clipboard content.
+# Se resets the cursor style to the terminal power-on default.
+# Ss is a string capability with one numeric parameter.  It is used to set the
+#    cursor style as described by the DECSCUSR function to a block or
+#    underline.
+# XM is a string capability which overrides ncurses's built-in string which
+#    enables xterm mouse mode.
+#
+# Miscellaneous extensions:
+#
+# gsbom/grbom are used to enable/disable real bold (not intensity bright) mode.
+#    This was implemented for the Hurd.
+# E3 clears the terminal's scrollback buffer.  This was implemented in the
+#    Linux 3.0 kernel as a security feature.
+# U8 is a numeric capability which denotes a terminal emulator which does not
+#    support VT100 SI/SO when processing UTF-8 encoding.  Set this to a nonzero
+#    value to enable it.
+#
 ######## CHANGE HISTORY
 #
 # The last /etc/termcap version maintained by John Kunze was 8.3, dated 8/5/94.
@@ -22714,5 +22811,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2012-04-01
 #	* revert 2011-07-16 change to "linux" alias, return to "linux2.2" -TD
+#
+# 2012-04-14
+#	* document all of the user-defined capabilities in one place -TD
+#	* add XT to some places to improve usefulness for other applications
+#	  than screen, which would like to pretend that xterm's title is
+#	  a status-line. -TD
+#	* change use-clauses in ansi-mtabs, hp2626, and hp2622 based on review
+#	  of ordering and overrides -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

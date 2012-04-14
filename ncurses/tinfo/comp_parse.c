@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.81 2012/02/22 22:34:31 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.85 2012/04/14 23:30:10 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -475,7 +475,26 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		 * checking.
 		 */
 		if (_nc_check_termtype2 != sanity_check2) {
+		    SCREEN *save_SP = SP;
+		    SCREEN fake_sp;
+		    TERMINAL fake_tm;
+		    TERMINAL *save_tm = cur_term;
+
+		    /*
+		     * Setup so that tic can use ordinary terminfo interface
+		     * to obtain capability information.
+		     */
+		    memset(&fake_sp, 0, sizeof(fake_sp));
+		    memset(&fake_tm, 0, sizeof(fake_tm));
+		    fake_sp._term = &fake_tm;
+		    fake_tm.type = qp->tterm;
+		    SP = &fake_sp;
+		    set_curterm(&fake_tm);
+
 		    _nc_check_termtype2(&qp->tterm, literal);
+
+		    SP = save_SP;
+		    set_curterm(save_tm);
 		} else {
 		    fixup_acsc(&qp->tterm, literal);
 		}
