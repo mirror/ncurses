@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.169 2012/04/14 21:34:26 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.170 2012/04/21 19:59:53 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -57,6 +57,7 @@ static FILE *tmp_fp;
 static bool capdump = FALSE;	/* running as infotocap? */
 static bool infodump = FALSE;	/* running as captoinfo? */
 static bool showsummary = FALSE;
+static char **namelst = 0;
 static const char *to_remove;
 
 static void (*save_check_termtype) (TERMTYPE *, bool);
@@ -105,7 +106,7 @@ free_namelist(char **src)
 #endif
 
 static void
-cleanup(char **namelst GCC_UNUSED)
+cleanup(void)
 {
 #if NO_LEAKS
     free_namelist(namelst);
@@ -125,7 +126,6 @@ static void
 failed(const char *msg)
 {
     perror(msg);
-    cleanup((char **) 0);
     ExitProgram(EXIT_FAILURE);
 }
 
@@ -667,7 +667,6 @@ main(int argc, char *argv[])
     bool limited = TRUE;
     char *tversion = (char *) NULL;
     const char *source_file = "terminfo";
-    char **namelst = 0;
     char *outdir = (char *) NULL;
     bool check_only = FALSE;
     bool suppress_untranslatable = FALSE;
@@ -675,6 +674,7 @@ main(int argc, char *argv[])
     log_fp = stderr;
 
     _nc_progname = _nc_rootname(argv[0]);
+    atexit(cleanup);
 
     if ((infodump = same_program(_nc_progname, PROG_CAPTOINFO)) != FALSE) {
 	outform = F_TERMINFO;
@@ -764,7 +764,6 @@ main(int argc, char *argv[])
 	    break;
 	case 'V':
 	    puts(curses_version());
-	    cleanup(namelst);
 	    ExitProgram(EXIT_SUCCESS);
 	case 'c':
 	    check_only = TRUE;
@@ -836,7 +835,6 @@ main(int argc, char *argv[])
 	(void) fprintf(stderr,
 		       "%s: Sorry, -e can't be used without -I or -C\n",
 		       _nc_progname);
-	cleanup(namelst);
 	ExitProgram(EXIT_FAILURE);
     }
 #endif /* HAVE_BIG_CORE */
@@ -879,7 +877,6 @@ main(int argc, char *argv[])
 		    _nc_progname,
 		    _nc_progname,
 		    usage_string);
-	    cleanup(namelst);
 	    ExitProgram(EXIT_FAILURE);
 	}
     }
@@ -918,7 +915,6 @@ main(int argc, char *argv[])
     /* do use resolution */
     if (check_only || (!infodump && !capdump) || forceresolve) {
 	if (!_nc_resolve_uses2(TRUE, literal) && !check_only) {
-	    cleanup(namelst);
 	    ExitProgram(EXIT_FAILURE);
 	}
     }
@@ -1013,7 +1009,6 @@ main(int argc, char *argv[])
 	else
 	    fprintf(log_fp, "No entries written\n");
     }
-    cleanup(namelst);
     ExitProgram(EXIT_SUCCESS);
 }
 

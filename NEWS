@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1892 2012/04/14 20:28:37 tom Exp $
+-- $Id: NEWS,v 1.1896 2012/04/21 20:09:09 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,7 +45,22 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20120421
+	+ improve cleanup of temporary files in tic using atexit().
+	+ add msgr to vt420, similar DEC vtXXX entries -TD
+	+ add several missing vt420 capabilities from vt220 -TD
+	+ factor out ansi+pp from several entries -TD
+	+ change xterm+sl and xterm+sl-twm to include only the status-line
+	  capabilities and not "use=xterm", making them more generally useful
+	  as building-blocks -TD
+	+ add dec+sl building block, as example -TD
+
 20120414
+	+ add XT to some terminfo entries to improve usefulness for other
+	  applications than screen, which would like to pretend that xterm's
+	  title is a status-line.  -TD
+	+ change use-clauses in ansi-mtabs, hp2626, and hp2622 based on review
+	  of ordering and overrides -TD
 	+ add consistency check in tic for screen's "XT" capability.
 	+ add section in terminfo.src summarizing the user-defined capabilities
 	  used in that file -TD
@@ -74,7 +89,7 @@ it is not possible to add this information.
 	  Nicolas Boulenguez).
 	+ modify configure script to ensure that the same -On option used for
 	  the C compiler in CFLAGS is used for ADAFLAGS rather than simply
-	  using -O3 (suggested by Nicolas Boulenguez)
+	  using "-O3" (suggested by Nicolas Boulenguez)
 
 20120324
 	+ amend an old fix so that next_char() exits properly for empty files,
@@ -657,7 +672,7 @@ it is not possible to add this information.
 	+ modify configure script to provide value for HTML_DIR in
 	  Ada95/gen/Makefile.in, which depends on whether the Ada95 binding is
 	  distributed separately (report by Nicolas Boulenguez).
-	+ modify configure script to add -g and/or -O3 to ADAFLAGS if the
+	+ modify configure script to add "-g" and/or "-O3" to ADAFLAGS if the
 	  CFLAGS for the build has these options.
 	+ amend change from 20070324, to not add 1 to the result of getmaxx
 	  and getmaxy in the Ada binding (report by Nicolas Boulenguez for
@@ -7087,7 +7102,7 @@ it is not possible to add this information.
 	  handling in lynx (reported by Kim DeVaughn).
 
 990306	pre-release
-	+ add -G option to tic and infocmp, to reverse the -g option.
+	+ add -G option to tic and infocmp, to reverse the "-g" option.
 	+ recode functions in name_match.c to avoid use of strncpy, which
 	  caused a 4-fold slowdown in tic (cf: 980530).
 	+ correct a few warnings about sign-extension in recent changes.
@@ -7458,7 +7473,7 @@ it is not possible to add this information.
 	  since that is a little more efficient.
 	+ minor correction to infocmp to avoid displaying "difference" between
 	  two capabilities that are rendered in equivalent forms.
-	+ add -g option to tic/infocmp to force character constants to be
+	+ add "-g" option to tic/infocmp to force character constants to be
 	  displayed in quoted form.  Otherwise their decimal values are shown.
 	+ modify setupterm so that cancelled strings are treated the same as
 	  absent strings, cancelled and absent booleans false (does not affect
@@ -9624,7 +9639,7 @@ it is not possible to add this information.
 960810	- snapshot
 	+ correct nl()/nonl() to work as per SVr4 & XSI.
 	+ minor fixes to ncurses.c (use 'noraw()', mvscanw return-code)
-	+ refine configure-test for -g option (Tim Mooney).
+	+ refine configure-test for "-g" option (Tim Mooney).
 	+ correct interaction between O_BLANK and NEW_LINE request in form
 	  library (Juergen Pfeifer)
 
@@ -9826,7 +9841,7 @@ it is not possible to add this information.
 	+ enhancement to the control over the new PC-style soft key format.
 	  allow caller now to select whether or not one wants to have
 	  the index-line; see curs_slk.3x for documentation (Juergen Pfeifer).
-	+ typos, don't use inline with -g (Philippe De Muyter)
+	+ typos, don't use inline with "-g" (Philippe De Muyter)
 	+ fixes for menus & wattr-, slk-functions (Juergen Pfeifer)
 
 960526	- snapshot
