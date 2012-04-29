@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.170 2012/04/21 19:59:53 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.176 2012/04/29 00:23:38 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1790,7 +1790,7 @@ static void
 show_where(unsigned level)
 {
     if (_nc_tracing >= DEBUG_LEVEL(level)) {
-	char my_name[256];
+	char my_name[MAX_NAME_SIZE];
 	_nc_get_type(my_name);
 	_tracef("\"%s\", line %d, '%s'",
 		_nc_get_source(),
@@ -1802,6 +1802,55 @@ show_where(unsigned level)
 #define show_where(level)	/* nothing */
 #endif
 
+typedef struct {
+    int keycode;
+    const char *name;
+    const char *value;
+} NAME_VALUE;
+
+static NAME_VALUE *
+get_fkey_list(TERMTYPE *tp)
+{
+    NAME_VALUE *result = typeMalloc(NAME_VALUE, NUM_STRINGS(tp) + 1);
+    const struct tinfo_fkeys *all_fkeys = _nc_tinfo_fkeys;
+    int used = 0;
+    int j;
+
+    for (j = 0; all_fkeys[j].code; j++) {
+	char *a = tp->Strings[all_fkeys[j].offset];
+	if (VALID_STRING(a)) {
+	    result[used].keycode = (int) all_fkeys[j].code;
+	    result[used].name = strnames[all_fkeys[j].offset];
+	    result[used].value = a;
+	    ++used;
+	}
+    }
+#if NCURSES_XNAMES
+    for (j = STRCOUNT; j < NUM_STRINGS(tp); ++j) {
+	const char *name = ExtStrname(tp, j, strnames);
+	if (*name == 'k') {
+	    result[used].keycode = -1;
+	    result[used].name = name;
+	    result[used].value = tp->Strings[j];
+	    ++used;
+	}
+    }
+#endif
+    result[used].keycode = 0;
+    return result;
+}
+
+static void
+show_fkey_name(NAME_VALUE * data)
+{
+    if (data->keycode > 0) {
+	fprintf(stderr, " %s", keyname(data->keycode));
+	fprintf(stderr, " (capability \"%s\")", data->name);
+    } else {
+	fprintf(stderr, " capability \"%s\"", data->name);
+    }
+}
+
 /* other sanity-checks (things that we don't want in the normal
  * logic that reads a terminfo entry)
  */
@@ -1810,7 +1859,6 @@ check_termtype(TERMTYPE *tp, bool literal)
 {
     bool conflict = FALSE;
     unsigned j, k;
-    char fkeys[STRCOUNT];
 
     /*
      * A terminal entry may contain more than one keycode assigned to
@@ -1818,41 +1866,44 @@ check_termtype(TERMTYPE *tp, bool literal)
      * return one (the last one assigned).
      */
     if (!(_nc_syntax == SYN_TERMCAP && capdump)) {
-	memset(fkeys, 0, sizeof(fkeys));
-	for (j = 0; _nc_tinfo_fkeys[j].code; j++) {
-	    char *a = tp->Strings[_nc_tinfo_fkeys[j].offset];
+	char *check = calloc((size_t) (NUM_STRINGS(tp) + 1), sizeof(char));
+	NAME_VALUE *given = get_fkey_list(tp);
+
+	for (j = 0; given[j].keycode; ++j) {
+	    const char *a = given[j].value;
 	    bool first = TRUE;
-	    if (!VALID_STRING(a))
-		continue;
-	    for (k = j + 1; _nc_tinfo_fkeys[k].code; k++) {
-		char *b = tp->Strings[_nc_tinfo_fkeys[k].offset];
-		if (!VALID_STRING(b)
-		    || fkeys[k])
+
+	    for (k = j + 1; given[k].keycode; k++) {
+		const char *b = given[k].value;
+		if (check[k])
 		    continue;
 		if (!_nc_capcmp(a, b)) {
-		    fkeys[j] = 1;
-		    fkeys[k] = 1;
+		    check[j] = 1;
+		    check[k] = 1;
 		    if (first) {
 			if (!conflict) {
 			    _nc_warning("Conflicting key definitions (using the last)");
 			    conflict = TRUE;
 			}
-			fprintf(stderr, "... %s is the same as %s",
-				keyname((int) _nc_tinfo_fkeys[j].code),
-				keyname((int) _nc_tinfo_fkeys[k].code));
+			fprintf(stderr, "...");
+			show_fkey_name(given + j);
+			fprintf(stderr, " is the same as");
+			show_fkey_name(given + k);
 			first = FALSE;
 		    } else {
-			fprintf(stderr, ", %s",
-				keyname((int) _nc_tinfo_fkeys[k].code));
+			fprintf(stderr, ", ");
+			show_fkey_name(given + k);
 		    }
 		}
 	    }
 	    if (!first)
 		fprintf(stderr, "\n");
 	}
+	free(given);
+	free(check);
     }
 
-    for (j = 0; j < NUM_STRINGS(tp); j++) {
+    for_each_string(j, tp) {
 	char *a = tp->Strings[j];
 	if (VALID_STRING(a))
 	    check_params(tp, ExtStrname(tp, (int) j, strnames), a);

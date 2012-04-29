@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.80 2012/02/22 22:26:58 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.81 2012/04/29 00:20:43 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -229,7 +229,7 @@ NCURSES_EXPORT(char)
 _nc_retrace_char(int code)
 {
     T((T_RETURN("%c"), code));
-    return code;
+    return (char) code;
 }
 
 /* Trace 'int' return-values */

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.437 $
-#	$Date: 2012/04/21 19:07:11 $
+#	$Revision: 1.440 $
+#	$Date: 2012/04/28 21:37:23 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2524,6 +2524,7 @@ vt220|vt200|dec vt220,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>,
 	sgr0=\E[m\E(B, smacs=\E(0$<2>, smam=\E[?7h, smir=\E[4h,
 	smso=\E[7m, smul=\E[4m, tbc=\E[3g, use=ansi+pp,
+	use=ansi+enq,
 vt220-w|vt200-w|DEC vt220 in wide mode,
 	cols#132,
 	rs3=\E[?3h, use=vt220,
@@ -2628,7 +2629,7 @@ vt320nam|v320n|DEC VT320 in vt100 emul. mode with NO AUTO WRAP mode,
 # From: Adam Thompson <athompso@pangea.ca> Sept 10 1995
 # (vt320: uncommented <fsl> --esr)
 vt320|vt300|dec vt320 7 bit terminal,
-	am, eslok, hs, mir, msgr, xenl,
+	am, hs, mir, msgr, xenl,
 	cols#80, lines#24, wsl#80,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
@@ -2637,9 +2638,8 @@ vt320|vt300|dec vt320 7 bit terminal,
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
-	ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K, fsl=\E[0$},
-	home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL,
-	il1=\E[L, ind=\ED,
+	ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K, home=\E[H, ht=^I,
+	hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L, ind=\ED,
 	is2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h\E[1;24r\E[24;1H,
 	kbs=\177, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
 	kdch1=\E[3~, kel=\E[4~, kf10=\E[21~, kf11=\E[23~,
@@ -2656,7 +2656,7 @@ vt320|vt300|dec vt320 7 bit terminal,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>,
 	sgr0=\E[m\E(B, smacs=\E(0, smam=\E[?7h, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	tsl=\E[1$}\E[H\E[K, use=dec+pp, use=vt220+keypad,
+	use=dec+pp, use=vt220+keypad, use=dec+sl, use=ansi+enq,
 vt320-nam|vt300-nam|dec vt320 7 bit terminal with no am to make SAS happy,
 	am@,
 	is2=\E>\E[?3l\E[?4l\E[?5l\E[?7l\E[?8h\E[1;24r\E[24;1H,
@@ -2766,7 +2766,7 @@ vt400|vt400-24|dec-vt400|dec vt400 24x80 column autowrap,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>,
 	sgr0=\E[m\E(B, smacs=\E(0, smam=\E[?7h, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	tsl=\E[2$~\E[1$}\E[1;%dH,
+	tsl=\E[2$~\E[1$}\E[1;%dH, use=dec+sl,
 
 # (vt420: I removed <kf0>, it collided with <kf10>.  I also restored
 # a missing <sc> -- esr)
@@ -2775,15 +2775,15 @@ vt420|DEC VT420,
 	am, mir, msgr, xenl, xon,
 	cols#80, it#8, lines#24, vt#3,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
-	bel=^G, blink=\E[5m$<2>, bold=\E[1m$<2>,
-	clear=\E[H\E[2J$<50>, cr=^M, csr=\E[%i%p1%d;%p2%dr,
-	cub=\E[%p1%dD, cub1=^H, cud=\E[%p1%dB, cud1=^J,
-	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH$<10>,
-	cuu=\E[%p1%dA, cuu1=\E[A, dch=\E[%p1%dP, dch1=\E[P,
-	dl=\E[%p1%dM, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J$<50>,
-	el=\E[K$<3>, el1=\E[1K, enacs=\E)0,
-	flash=\E[?5h$<200/>\E[?5l, home=\E[H, ht=^I, hts=\EH,
-	ich=\E[%p1%d@, if=/usr/share/tabset/vt300,
+	bel=^G, blink=\E[5m$<2>, bold=\E[1m$<2>, civis=\E[?25l,
+	clear=\E[H\E[2J$<50>, cnorm=\E[?25h, cr=^M,
+	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
+	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
+	cup=\E[%i%p1%d;%p2%dH$<10>, cuu=\E[%p1%dA, cuu1=\E[A,
+	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
+	ech=\E[%p1%dX, ed=\E[J$<50>, el=\E[K$<3>, el1=\E[1K,
+	enacs=\E)0, flash=\E[?5h$<200/>\E[?5l, home=\E[H, ht=^I,
+	hts=\EH, ich=\E[%p1%d@, if=/usr/share/tabset/vt300,
 	il=\E[%p1%dL, il1=\E[L, ind=\ED, is2=\E[1;24r\E[24;1H,
 	is3=\E[?67h\E[64;1"p, kbs=^H, kcub1=\E[D, kcud1=\E[B,
 	kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[3~, kf1=\EOP, kf10=\E[29~,
@@ -2797,7 +2797,7 @@ vt420|DEC VT420,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>,
 	sgr0=\E[m\E(B$<2>, smacs=\E(0$<2>, smam=\E[?7h,
 	smir=\E[4h, smkx=\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	use=ansi+pp,
+	use=ansi+pp, use=dec+sl, use=ansi+enq,
 
 # DEC VT220 and up support DECUDK (user-defined keys).  DECUDK (i.e., pfx)
 # takes two parameters, the key and the string.  Translating the key is
@@ -2895,35 +2895,11 @@ vt520|DEC VT520,
 	rmso=\E[m, rmul=\E[m, rs3=\E[?67h\E[64;1"p, sc=\E7,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>,
 	sgr0=\E[m$<2>, smacs=\E(0$<2>, smam=\E[?7h, smir=\E[4h,
-	smso=\E[7m, smul=\E[4m,
+	smso=\E[7m, smul=\E[4m, use=ansi+tabs, use=ansi+enq,
+	use=dec+sl,
 
-# (vt525: I added <rmam>/<smam> based on the init string;
-# removed <rmso>=\E[m, <rmul>=\E[m, added <sc> -- esr)
-# added msgr -TD
 vt525|DEC VT525,
-	am, mir, msgr, xenl, xon,
-	cols#80, lines#24, vt#3,
-	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
-	bel=^G, blink=\E[5m$<2>, bold=\E[1m$<2>,
-	clear=\E[H\E[2J$<50>, cr=^M, csr=\E[%i%p1%d;%p2%dr,
-	cub1=^H, cud1=\E[B, cuf1=\E[C,
-	cup=\E[%i%p1%d;%p2%dH$<10>, cuu1=\E[A, dch1=\E[P,
-	dl1=\E[M, ed=\E[J$<50>, el=\E[K$<3>, home=\E[H, ht=^I,
-	if=/usr/share/tabset/vt300, il1=\E[L, ind=\ED,
-	is2=\E[1;24r\E[24;1H, is3=\E[?67h\E[64;1"p, kbs=^H,
-	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
-	kdch1=\E[3~, kf1=\EOP, kf10=\E[29~, kf2=\EOQ, kf3=\EOR,
-	kf4=\EOS, kf5=\E[17~, kf6=\E[18~, kf7=\E[19~, kf8=\E[20~,
-	kf9=\E[21~, kfnd=\E[1~, kich1=\E[2~, knp=\E[6~, kpp=\E[5~,
-	kslt=\E[4~,
-	pfx=\EP1;1|%?%{16}%p1%>%t%{0}%e%{21}%p1%>%t%{1}%e%{25}%p1%>%t%{2}%e%{27}%p1%>%t%{3}%e%{30}%p1%>%t%{4}%e%{5}%;%p1%+%d/%p2%s\E\\,
-	rc=\E8, rev=\E[7m$<2>, rf=/usr/share/tabset/vt300,
-	ri=\EM, rmacs=\E(B$<4>, rmam=\E[?7l, rmir=\E[4l,
-	rmsc=\E[?0;0r\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h,
-	rmso=\E[m, rmul=\E[m, rs3=\E[?67h\E[64;1"p, sc=\E7,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;$<2>,
-	sgr0=\E[m$<2>, smacs=\E(0$<2>, smam=\E[?7h, smir=\E[4h,
-	smso=\E[7m, smul=\E[4m,
+	use=vt520,
 
 #### VT100 emulations
 #
@@ -2987,7 +2963,7 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 # the default behavior -TD
 
 putty|PuTTY terminal emulator,
-	am, bce, bw, ccc, hs, mir, msgr, xenl, xon, XT,
+	am, bce, bw, ccc, mir, msgr, xenl, xon, XT,
 	colors#8, it#8, ncv#22, pairs#64, U8#1,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
@@ -2997,11 +2973,10 @@ putty|PuTTY terminal emulator,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\EM,
 	dch=\E[%p1%dP, dch1=\E[P,
 	dispc=%?%p1%{8}%=%t\E%%G\342\227\230\E%%@%e%p1%{10}%=%t\E%%G\342\227\231\E%%@%e%p1%{12}%=%t\E%%G\342\231\0\E%%@%e%p1%{13}%=%t\E%%G\342\231\252\E%%@%e%p1%{14}%=%t\E%%G\342\231\253\E%%@%e%p1%{15}%=%t\E%%G\342\230\274\E%%@%e%p1%{27}%=%t\E%%G\342\206\220\E%%@%e%p1%{155}%=%t\E%%G\340\202\242\E%%@%e%p1%c%;,
-	dl=\E[%p1%dM, dl1=\E[M, dsl=\E]0;\007, ech=\E[%p1%dX,
-	ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E(B\E)0,
-	flash=\E[?5h\E[?5l, fsl=^G, home=\E[H, hpa=\E[%i%p1%dG,
-	ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L, ind=^J,
-	indn=\E[%p1%dS,
+	dl=\E[%p1%dM, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K,
+	el1=\E[1K, enacs=\E(B\E)0, flash=\E[?5h\E[?5l, home=\E[H,
+	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L,
+	ind=^J, indn=\E[%p1%dS,
 	initc=\E]P%p1%x%p2%{255}%*%{1000}%/%02x%p3%{255}%*%{1000}%/%02x%p4%{255}%*%{1000}%/%02x,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>\E]R,
 	kb2=\E[G, kbs=\177, kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B,
@@ -3022,7 +2997,7 @@ putty|PuTTY terminal emulator,
 	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E[?47h,
 	smir=\E[4h, smpch=\E[11m, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, tsl=\E]0;, vpa=\E[%i%p1%dd, use=vt102+enq,
+	tbc=\E[3g, vpa=\E[%i%p1%dd, use=vt102+enq, use=xterm+sl,
 vt100-putty|Reset PuTTY to pure vt100,
 	rs2=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p,
 	use=vt100,
@@ -3801,11 +3776,9 @@ xterm-utf8|xterm with no VT100 line-drawing in UTF-8 mode,
 #    don't want to mess with icon-name when using those window managers.
 xterm+sl|access X title line and icon name,
 	hs,
-	wsl#40,
 	dsl=\E]0;\007, fsl=^G, tsl=\E]0;,
 xterm+sl-twm|access X title line (pacify twm-descended window managers),
 	hs,
-	wsl#40,
 	dsl=\E]2;\007, fsl=^G, tsl=\E]2;,
 
 # In contrast, this block can be used for a DEC vt320 and up.  There are two
@@ -3835,7 +3808,7 @@ xterm+sl-twm|access X title line (pacify twm-descended window managers),
 # can be used for this purpose is HPA, e.g., \E[5d to go to column 5.
 #
 dec+sl|DEC VTxx status line,
-	hs,
+	eslok, hs,
 	dsl=\E[1$~, fsl=\E[0$}, tsl=\E[2$~\E[1$}\E[%i%p1%d`,
 
 #
@@ -3912,6 +3885,7 @@ xtermc|xterm terminal emulator (color),
 # color stuff, I also have a status line defined as the window manager
 # title bar. [I have translated it to terminfo -- ESR]
 xterm-pcolor|xterm with color used for highlights and status line,
+	wsl#40,
 	bold=\E[1;43m, rev=\E[7;34m,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1;43%;%?%p2%t;4;42%;%?%p1%t;7;31%;%?%p3%t;7;34%;%?%p4%t;5%;%?%p7%t;8%;m,
 	smso=\E[7;31m, smul=\E[4;42m, use=xterm+sl, use=xterm-r6,
@@ -5242,18 +5216,18 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 # sequences for setting the window-title.  So you must use tsl and fsl in
 # pairs, since the latter ends the string that is loaded to the window-title.
 ncsa-m|ncsa-vt220-8|NCSA Telnet 2.6 for Macintosh in vt220-8 mode,
-	am, hs, km, mir, msgr, xenl,
+	am, km, mir, msgr, xenl,
 	acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
 	clear=\E[H\E[2J, cnorm=\E[?25h, cr=^M,
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
-	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
-	dsl=\E]0;\007, ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E)0,
-	flash=\E[?5h\E[?5l, fsl=^G, home=\E[H, ht=^I, hts=\EH,
-	ich=\E[%p1%d@, if=/usr/share/tabset/vt100,
-	il=\E[%p1%dL, il1=\E[L, ind=\n$<150*>,
+	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J,
+	el=\E[K, el1=\E[1K, enacs=\E)0, flash=\E[?5h\E[?5l,
+	home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@,
+	if=/usr/share/tabset/vt100, il=\E[%p1%dL, il1=\E[L,
+	ind=\n$<150*>,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>, kbs=^H,
 	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	kdch1=\E[4~, kend=\E[5~, kf1=\E[17~, kf10=\E[28~,
@@ -5267,8 +5241,8 @@ ncsa-m|ncsa-vt220-8|NCSA Telnet 2.6 for Macintosh in vt220-8 mode,
 	rs2=\E7\E[r\E8\E[m\E[?7h\E[?1;4;6l\E[4l\E>, sc=\E7,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;,
 	sgr0=\E[m\E(B, smacs=\E(0, smam=\E[?7h, smcup=\E7,
-	smir=\E[4h, smso=\E[7m, smul=\E[4m, tbc=\E[3g, tsl=\E]0;,
-	u8=\E[?62;1;6c, use=ansi+enq,
+	smir=\E[4h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
+	u8=\E[?62;1;6c, use=xterm+sl, use=ansi+enq,
 ncsa|NCSA Telnet 2.7 for Macintosh in vt220-8 mode,
 	use=ncsa-m, use=klone+color,
 ncsa-ns|NCSA Telnet 2.7 for Macintosh in vt220-8 mode,
@@ -5398,6 +5372,10 @@ sun-cgsix|sun-ss5|Sun SparcStation 5 console,
 # If you are using an SS5, change the sun definition to use sun-ss5.
 sun|sun1|sun2|Sun Microsystems Inc. workstation console,
 	use=sun-il,
+
+sun+sl|Sun Workstation window status line,
+	hs,
+	dsl=\E]l\E\\, fsl=\E\\, tsl=\E]l,
 
 # From: <john@ucbrenoir>  Tue Sep 24 13:14:44 1985
 sun-s|Sun Microsystems Workstation window with status line,
@@ -17426,6 +17404,7 @@ nsterm+mac|AppKit Terminal.app v41+ basic capabilities w/MacRoman alternate-char
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, use=nsterm+7,
 
+# compare with xterm+sl-twm
 nsterm+s|AppKit Terminal.app v41+ status-line (window titlebar) support,
 	hs,
 	wsl#50,
@@ -22878,5 +22857,14 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  capabilities and not "use=xterm", making them more generally useful
 #	  as building-blocks -TD
 #	* add dec+sl building block, as example -TD
+#
+# 2012-04-28
+#	* fix some inconsistencies between vt320/vt420, e.g., cnorm/civis -TD
+#	* add eslok flag to dec+sl -TD
+#	* dec+sl applies to vt320 and up -TD
+#	* drop wsl width from xterm+sl -TD
+#	* reuse xterm+sl in putty and nsca-m -TD
+#	* add ansi+tabs to vt520 -TD
+#	* add ansi+enq to vt220-vt520 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

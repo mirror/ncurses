@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.99 2012/04/01 20:37:08 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.100 2012/04/29 00:20:51 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -530,7 +530,7 @@ _nc_get_token(bool silent)
 						   _nc_get_hash_table(FALSE))) {
 				    capability = TRUE;
 				}
-				*s = c0;
+				*s = (char) c0;
 			    }
 			}
 			if (capability) {
