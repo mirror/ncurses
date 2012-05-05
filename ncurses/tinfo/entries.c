@@ -37,7 +37,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.20 2012/02/22 09:37:02 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.21 2012/05/05 20:33:44 tom Exp $")
 
 /****************************************************************************
  *
@@ -95,6 +95,9 @@ _nc_delink_entry(ENTRY * headp, TERMTYPE *tterm)
 	if (&(ep->tterm) == tterm) {
 	    if (last != 0) {
 		last->next = ep->next;
+	    }
+	    if (ep->next != 0) {
+		ep->next->last = last;
 	    }
 	    if (ep == _nc_head) {
 		_nc_head = ep->next;

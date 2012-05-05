@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.86 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.87 2012/05/05 19:40:50 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -1156,8 +1156,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
 		 * from the list.
 		 */
 		*tp = ep->tterm;
-		_nc_delink_entry(_nc_head, &(ep->tterm));
-		free(ep);
+		_nc_free_entry(_nc_head, &(ep->tterm));
 
 		/*
 		 * OK, now try to write the type to user's terminfo directory. 

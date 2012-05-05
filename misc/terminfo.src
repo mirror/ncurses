@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.440 $
-#	$Date: 2012/04/28 21:37:23 $
+#	$Revision: 1.451 $
+#	$Date: 2012/05/05 22:33:58 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1226,7 +1226,7 @@ scoansi-new|SCO Extended ANSI standard crt (5.0.6),
 	civis=\E[=0c, cnorm=\E[=1c, csr=\E[%i%p1%d;%p2%dr,
 	cvvis=\E[=2c, mgc=\E[=r, oc=\E[51m, op=\E[50m,
 	rep=\E[%p1%d;%p2%db, rmm=\E[=11L,
-	sgr=\E[0%?%p1%p3%|%t;7%;%?%p2%t;4%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;12%;m,
+	sgr=\E[0%?%p1%p3%|%t;7%;%?%p2%t;4%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;12%e;10%;m,
 	smgb=\E[=1;0m, smgbp=\E[=1;%i%p1%dm,
 	smglp=\E[=2;%i%p1%dm, smgr=\E[=3;0m,
 	smgrp=\E[=3;%i%p1%dm, smgt=\E[=0;0m,
@@ -13126,7 +13126,7 @@ d210|d214|Data General DASHER D210 series,
 	cuu=\E[%p1%dA, cuu1=\E[A, dim=\E[2m, ed=\E[J, el=\E[K,
 	el1=\E[1K, home=\E[H, ind=^J, is1=\E[<0;<1;<4l,
 	ll=\E[H\E[A, nel=^J, rev=\E[7m, rmso=\E[m, rmul=\E[m,
-	sgr=\E[%?%p1%p3%|%p6%|%t7;%;%?%p4%t5;%;%?%p2%p6%|%t4;%;%?%p1%p5%|%t2;%;m,
+	sgr=\E[%?%p4%t5;%;%?%p2%p6%|%t4;%;%?%p1%p5%|%t2;%;%?%p1%p3%|%p6%|%t7;%;m,
 	sgr0=\E[m, smso=\E[2;7m, smul=\E[4m, use=dgkeys+7b,
 
 # DASHER D210 series terminals in DG mode.
@@ -13328,7 +13328,7 @@ d410|d411|d460|d461|Data General DASHER D410/D460 series,
 	is2=\E[3;2;2;1;1;1v\E(B\E)4\017, mc4=\E[4i, mc5=\E[5i,
 	ri=\EM, rmacs=\E)4\017, rs1=\Ec\E[<2h,
 	rs2=\E[4;0;2;1;1;1v\E(B\E)4,
-	sgr=\E[%?%p1%p3%|%p6%|%t7;%;%?%p4%t5;%;%?%p2%p6%|%t4;%;%?%p1%p5%|%t2;%;m\E)%?%p9%t6\016%e4\017%;,
+	sgr=\E[%?%p1%t2;7%;%?%p3%t7;%;%?%p4%t5;%;%?%p2%t4;%;%?%p1%p5%|%t2;%;%?%p6%t4;7;%;m\E)%?%p9%t6\016%e4\017%;,
 	sgr0=\E[m\E)4\017, smacs=\E)6\016, use=d211,
 
 # Initialization string 2 sets:
@@ -13498,12 +13498,12 @@ d430c-unix-sr-ccc|d430-unix-sr-ccc|Data General D430C in DG-UNIX mode with scrol
 #
 d470c|d470|Data General DASHER D470C,
 	is1=\E[<0;<1;<2;<4l\E[1;1;80w\E[1;6;<2h,
-	sgr=\E[%?%p1%p3%|%p6%|%t7;%{1}%e%{0}%;%PR%?%p4%t5;%{1}%e%{0}%;%PB%?%p2%p6%|%t4;%{1}%e%{0}%;%PU%?%p1%p5%|%t2;%{1}%e%{0}%;%PDm\E)%?%p9%t6\016%e4\017%;,
+	sgr=\E[%?%p3%t7;%;%?%p4%t5;%;%?%p2%t4;%;%?%p6%t4;7;%;%?%p1%t2;7;%;%?%p5%t2;%;m\E)%?%p9%t6\016%e4\017%;,
 	use=dg+color, use=d460,
 
 d470c-7b|d470-7b|Data General DASHER D470C in 7 bit mode,
 	is1=\E[<0;<1;<2;<4l\E[1;1;80w\E[1;6;<2h,
-	sgr=\E[%?%p1%p3%|%p6%|%t7;%{1}%e%{0}%;%PR%?%p4%t5;%{1}%e%{0}%;%PB%?%p2%p6%|%t4;%{1}%e%{0}%;%PU%?%p1%p5%|%t2;%{1}%e%{0}%;%PDm%?%p9%t\016%e\017%;,
+	sgr=\E[%?%p3%t7;%;%?%p4%t5;%;%?%p2%t4;%;%?%p6%t4;7;%;%?%p1%t2;7;%;%?%p5%t2;%;m%?%p9%t\016%e\017%;,
 	use=dg+color, use=d460-7b,
 
 # Initialization string 2 sets:
@@ -16112,7 +16112,7 @@ ndr9500|nd9500|Newbury Data 9500,
 	pfloc=\E|%{48}%p1%+%c2%p2\031,
 	pfx=\E|%{48}%p1%+%c1%p2\031, prot=\E), ri=\Ej,
 	rmacs=\E%%, rmir=\Er, rmso=\E(, rmxon=^N,
-	sgr=\E%%\E(%?%p1%p5%p8%|%|%t\E)%;%?%p9%t\E$%;,
+	sgr=\EG0\E%%%%\E(%?%p1%p5%p8%|%|%t\E)%;%?%p9%t\E$%;,
 	sgr0=\EG0\E%%\E(, smacs=\E$, smir=\Eq, smso=\E), smxon=^O,
 	tbc=\E3, tsl=\Eg\Ef\011%p1%{32}%+%c, .kbs=^H,
 
@@ -16582,7 +16582,7 @@ tek4107|tek4109|tektronix terminals 4107 4109,
 	kbs=^H, kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA,
 	rev=\E%!1\E[7m$<2>\E%!0, ri=\EI,
 	rmso=\E%!1\E[m$<2>\E%!0, rmul=\E%!1\E[m$<2>\E%!0,
-	sgr=\E%%!1\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m$<2>\E%%!0,
+	sgr=\E%%!1\E[%?%p1%t;7;5%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5%t<0%;%?%p6%t;1%;m$<2>\E%%!0,
 	sgr0=\E%!1\E[m$<2>\E%!0, smso=\E%!1\E[7;5m$<2>\E%!0,
 	smul=\E%!1\E[4m$<2>\E%!0,
 # Tektronix 4207 with sysline.  In the ancestral termcap file this was 4107-s;
@@ -16942,7 +16942,7 @@ ibmpc|wy60-PC|wyse60-PC|IBM PC/XT running PC/IX,
 	kf9=\250, khome=\E[H, kich1=\E[^H, knp=\E[U, kpp=\E[V,
 	ll=\E[24;1H, nel=^M, rev=\E[7m, ri=\E[T\E[A,
 	rin=\E[%p1%dT\E[%p1%dA, rmso=\E[m, rmul=\E[m,
-	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m,
+	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t30;40%;m,
 	sgr0=\E[m, smso=\E[7m, smul=\E[4m,
 
 #### Apple II
@@ -18516,6 +18516,7 @@ dku7102-old|BULL Questar 200 DKU7102 (microcode version < 6),
 	use=tws-generic,
 dku7202|BULL Questar 200 DKU7202 (colour/character attributes),
 	blink=\E[0;2;4m, dim=\E[0;5m, ht=^I, is3=\E[?3h\Eb,
+	sgr=\E[0%?%p1%t;2;4;5;7%;%?%p3%t;7%;%?%p2%t;2%;%?%p4%t;2;4%;%?%p5%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	smso=\E[0;4;5;7m, smul=\E[0;2m, use=tws-generic,
 
 #=========================================================#
@@ -18722,11 +18723,12 @@ bq300-8|Bull vt320 full 8 bits 80 columns,
 	khlp=\23328~, kich1=\2332~, knp=\2336~, kpp=\2335~,
 	krdo=\23329~, kslt=\2334~, lf1=pf1, lf2=pf2, lf3=pf3,
 	lf4=pf4, mc0=\233i, mc4=\2334i, mc5=\2335i, nel=\EE, rc=\E8,
-	rev=\2337m, ri=\EM, rmacs=^O, rmam=\233?7l, rmcup=\233?7h,
-	rmir=\2334l, rmkx=\233?1l\E>, rmso=\23327m, rmul=\23324m,
-	rs1=\E[!p, rs2=\E[?3l, s0ds=\E(B, s1ds=\E(0, sc=\E7,
+	rev=\2337m, ri=\EM, rmacs=\E(B, rmam=\233?7l,
+	rmcup=\233?7h, rmir=\2334l, rmkx=\233?1l\E>,
+	rmso=\23327m, rmul=\23324m, rs1=\E[!p, rs2=\E[?3l,
+	s0ds=\E(B, s1ds=\E(0, sc=\E7,
 	sgr=\233%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m%?%p9%t\E(0%e\E(B%;,
-	sgr0=\2330m\E(B, smacs=^N, smam=\233?7h,
+	sgr0=\2330m\E(B, smacs=\E(0, smam=\233?7h,
 	smcup=\233?7l\233?1l\E(B, smir=\2334h, smso=\2337m,
 	smul=\2334m, tbc=\2333g, tsl=\2331$}\2332$~,
 bq300-8rv|Bull vt320 8-bit reverse mode 80 columns,
@@ -20538,9 +20540,9 @@ dwk|dwk-vt|dwk terminal,
 	sgr0=\EX, smacs=\EF, smso=\ET,
 env230|envision230|envision 230 graphics terminal,
 	xenl@,
-	mc0=\E[0i, mc4=\E[4i, mc5=\E[5i,
-	sgr=\E[%?%p1%t;1%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m$<2>,
-	use=vt100,
+	enacs@, mc0=\E[0i, mc4=\E[4i, mc5=\E[5i, rmacs@,
+	sgr=\E[0%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m$<2>,
+	sgr0=\E[0m$<2>, smacs@, use=vt100,
 # These execuports were impact-printer ttys with a 30- or maybe 15-cps acoustic
 # coupler attached, the whole rig fitting in a suitcase and more or less
 # portable.  Hot stuff for c.1977 :-) -- esr
@@ -20595,7 +20597,7 @@ opus3n1+|Esprit Opus3n1+ in wy60 mode with ANSI arrow keys,
 	rmacs=\EH^C, rmam=\Ed., rmcup=, rmir=\Er, rmln=\EA11,
 	rmxon=\Ec20, rs1=\E~!\E~4$<150>, rs2=\EeF$<150>,
 	rs3=\EwG\Ee($<150>,
-	sgr=%?%p8%t\E)%e\E(%;%?%p9%t\EH\002%e\EH\003%;\EG%{48}%?%p2%p6%|%t%{8}%|%;%?%p1%p3%|%p6%|%t%{4}%|%;%?%p4%t%{2}%|%;%?%p1%p5%|%t%{64}%|%;%?%p7%t%{1}%|%;%c,
+	sgr=%?%p8%t\E)%e\E(%;%?%p9%t\EH\002%e\EH\003%;\EG%{48}%?%p2%t%{8}%|%;%?%p1%p3%|%t%{4}%|%;%?%p4%t%{2}%|%;%?%p1%p5%|%t%{64}%|%;%?%p7%t%{1}%|%;%c,
 	sgr0=\E(\EH\003\EG0\EcD, smacs=\EH^B, smam=\Ed/,
 	smcup=\Ezz&\E[A\177\Ezz'\E[B\177\Ezz(\E[D\177\Ezz)\E[C\177\Ezz<\E[Q\177,
 	smir=\Eq, smln=\EA10, smxon=\Ec21, tbc=\E0, tsl=\Ez(,
@@ -22866,5 +22868,19 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* reuse xterm+sl in putty and nsca-m -TD
 #	* add ansi+tabs to vt520 -TD
 #	* add ansi+enq to vt220-vt520 -TD
+#
+# 2012-05-05
+#	* remove p6 (bold) from opus3n1+ for consistency -TD
+#	* remove acs stuff from env230 per clues in Ingres termcap -TD
+#	* modify env230 sgr/sgr0 to match other capabilities -TD
+#	* modify smacs/rmacs in bq300-8 to match sgr/sgr0 -TD
+#	* make sgr for dku7202 agree with other caps -TD
+#	* make sgr for ibmpc agree with other caps -TD
+#	* make sgr for tek4107 agree with other caps -TD
+#	* make sgr for ndr9500 agree with other caps -TD
+#	* make sgr for sco-ansi agree with other caps -TD
+#	* make sgr for d410 agree with other caps -TD
+#	* make sgr for d210 agree with other caps -TD
+#	* make sgr for d470c, d470c-7b agree with other caps -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

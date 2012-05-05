@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.40 2012/03/31 22:57:57 tom Exp $
+dnl $Id: configure.in,v 1.41 2012/05/05 20:54:52 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.40 $)
+AC_REVISION($Revision: 1.41 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -396,7 +396,6 @@ if test -n "$GCC"
 then
 	if test "$with_assertions" = no
 	then
-		AC_DEFINE(NDEBUG)
 		CPPFLAGS="$CPPFLAGS -DNDEBUG"
 	else
 		CF_ADD_ADAFLAGS(-gnata)
