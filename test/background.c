@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2006,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: background.c,v 1.9 2011/04/23 21:16:38 tom Exp $
+ * $Id: background.c,v 1.12 2012/05/12 20:58:40 tom Exp $
  */
 
 #define NEED_COLOR_CODE 1
@@ -40,9 +40,14 @@ static void
 test_background(void)
 {
     short f, b;
+    int row;
+    int chr;
 
-    pair_content(0, &f, &b);
-    printw("pair 0 contains (%d,%d)\n", f, b);
+    if (pair_content(0, &f, &b) == ERR) {
+	printw("pair 0 contains no data\n");
+    } else {
+	printw("pair 0 contains (%d,%d)\n", f, b);
+    }
     getch();
 
     printw("Initializing pair 1 to red/%s\n", color_name(default_bg));
@@ -57,7 +62,40 @@ test_background(void)
     printw("This line should be %s/blue\n", color_name(default_fg));
     getch();
 
-    printw("Resetting colors to pair 0\n");
+    printw("Initializing pair 3 to %s/cyan (ACS_HLINE)\n", color_name(default_fg));
+    init_pair(3, (short) default_fg, COLOR_CYAN);
+    printw("...and drawing a box which should be followed by lines\n");
+    bkgdset(ACS_HLINE | COLOR_PAIR(3));
+    /*
+     * Characters from vt100 line-drawing should be mapped to line-drawing,
+     * since A_ALTCHARSET is set in the background, and the character part
+     * of the background is replaced by the nonblank characters written.
+     *
+     * Characters not in the line-drawing range are usually sent as-is.
+     *
+     * With SVr4 curses it is possible to rely on this to mix uppercase text
+     * with the (lowercase) line-drawing characters.  ncurses uses some of
+     * the uppercase characters for encoding thick- and double-lines.
+     */
+    row = 7;
+    mvprintw(row++, 10, "l");
+    for (chr = 0; chr < 32; ++chr)
+	addch(' ');
+    printw("x\n");
+    chr = 32;
+    while (chr < 128) {
+	if ((chr % 32) == 0)
+	    mvprintw(row++, 10, "x");
+	addch((chr == 127) ? ' ' : chr);
+	if ((++chr % 32) == 0)
+	    printw("x\n");
+    }
+    mvprintw(row++, 10, "m");
+    for (chr = 0; chr < 32; ++chr)
+	addch(' ');
+    printw("j\n");
+    getch();
+
     bkgdset(' ' | COLOR_PAIR(0));
     printw("Default Colors\n");
     getch();
@@ -77,6 +115,10 @@ test_background(void)
 
     printw("Setting screen to pair 2\n");
     bkgd(' ' | COLOR_PAIR(2));
+    getch();
+
+    printw("Setting screen to pair 3\n");
+    bkgd(' ' | COLOR_PAIR(3));
     getch();
 
     printw("Setting screen to pair 0\n");
@@ -119,6 +161,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     int d_option = 0;
 #endif
     int n;
+
+    setlocale(LC_ALL, "");
 
     while ((n = getopt(argc, argv, "ab:df:")) != -1) {
 	switch (n) {

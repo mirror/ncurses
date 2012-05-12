@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.267 2011/10/22 17:30:14 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.268 2012/05/12 21:02:00 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -288,13 +288,12 @@ PutAttrChar(NCURSES_SP_DCLx CARG_CH_T ch)
 	    int j = CharOfD(ch);
 	    chtype temp = UChar(SP_PARM->_acs_map[j]);
 
-	    if (!(SP_PARM->_screen_acs_map[j])) {
-		RemAttr(attr, A_ALTCHARSET);
-		if (temp == 0)
-		    temp = ' ';
-	    }
-	    if (temp != 0)
+	    if (temp != 0) {
 		SetChar(my_ch, temp, AttrOf(attr));
+	    } else {
+		my_ch = CHDEREF(ch);
+		RemAttr(attr, A_ALTCHARSET);
+	    }
 	}
 	ch = CHREF(my_ch);
     }
