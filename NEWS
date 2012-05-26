@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1904 2012/05/12 23:39:01 tom Exp $
+-- $Id: NEWS,v 1.1907 2012/05/26 21:15:19 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120526
+	+ extend -c and -n options of infocmp to allow comparing more than two
+	  entries.
+	+ correct check in infocmp for number of terminal names when more than
+	  two are given.
+	+ correct typo in curs_threads.3x (report by Yanhui Shen on
+	  freebsd-hackers mailing list).
 
 20120512
 	+ corrected 'op' for bterm (report by Samuel Thibault) -TD

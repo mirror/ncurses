@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.115 2012/04/07 19:12:01 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.118 2012/05/26 21:11:32 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -334,6 +334,39 @@ dump_string(char *val, char *buf)
 }
 
 /*
+ * Show "comparing..." message for the given terminal names.
+ */
+static void
+show_comparing(char **names)
+{
+    if (itrace) {
+	switch (compare) {
+	case C_DIFFERENCE:
+	    (void) fprintf(stderr, "%s: dumping differences\n", _nc_progname);
+	    break;
+
+	case C_COMMON:
+	    (void) fprintf(stderr, "%s: dumping common capabilities\n", _nc_progname);
+	    break;
+
+	case C_NAND:
+	    (void) fprintf(stderr, "%s: dumping differences\n", _nc_progname);
+	    break;
+	}
+    }
+    if (*names) {
+	printf("comparing %s", *names++);
+	if (*names) {
+	    printf(" to %s", *names++);
+	    while (*names) {
+		printf(", %s", *names++);
+	    }
+	}
+	printf(".\n");
+    }
+}
+
+/*
  * ncurses stores two types of non-standard capabilities:
  * a) capabilities listed past the "STOP-HERE" comment in the Caps file. 
  *    These are used in the terminfo source file to provide data for termcaps,
@@ -348,24 +381,33 @@ dump_string(char *val, char *buf)
  */
 #define check_user_definable(n,limit) if (!_nc_user_definable && (n) > (limit)) break
 
+/*
+ * Use these macros to simplify loops on C_COMMON and C_NAND:
+ */
+#define for_each_entry() while (entries[extra].tterm.term_names)
+#define next_entry           (&(entries[extra++].tterm))
+
 static void
 compare_predicate(PredType type, PredIdx idx, const char *name)
 /* predicate function to use for entry difference reports */
 {
-    register ENTRY *e1 = &entries[0];
-    register ENTRY *e2 = &entries[1];
-    char buf1[MAX_STRING], buf2[MAX_STRING];
+    ENTRY *e1 = &entries[0];
+    ENTRY *e2 = &entries[1];
+    char buf1[MAX_STRING];
+    char buf2[MAX_STRING];
     int b1, b2;
     int n1, n2;
     char *s1, *s2;
+    bool found;
+    int extra = 1;
 
     switch (type) {
     case CMP_BOOLEAN:
 	check_user_definable(idx, BOOLWRITE);
 	b1 = e1->tterm.Booleans[idx];
-	b2 = e2->tterm.Booleans[idx];
 	switch (compare) {
 	case C_DIFFERENCE:
+	    b2 = next_entry->Booleans[idx];
 	    if (!(b1 == ABSENT_BOOLEAN && b2 == ABSENT_BOOLEAN) && b1 != b2)
 		(void) printf("\t%s: %s%s%s.\n",
 			      name,
@@ -375,13 +417,35 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 	    break;
 
 	case C_COMMON:
-	    if (b1 == b2 && b1 != ABSENT_BOOLEAN)
-		(void) printf("\t%s= %s.\n", name, dump_boolean(b1));
+	    if (b1 != ABSENT_BOOLEAN) {
+		found = TRUE;
+		for_each_entry() {
+		    b2 = next_entry->Booleans[idx];
+		    if (b1 != b2) {
+			found = FALSE;
+			break;
+		    }
+		}
+		if (found) {
+		    (void) printf("\t%s= %s.\n", name, dump_boolean(b1));
+		}
+	    }
 	    break;
 
 	case C_NAND:
-	    if (b1 == ABSENT_BOOLEAN && b2 == ABSENT_BOOLEAN)
-		(void) printf("\t!%s.\n", name);
+	    if (b1 == ABSENT_BOOLEAN) {
+		found = TRUE;
+		for_each_entry() {
+		    b2 = next_entry->Booleans[idx];
+		    if (b1 != b2) {
+			found = FALSE;
+			break;
+		    }
+		}
+		if (found) {
+		    (void) printf("\t!%s.\n", name);
+		}
+	    }
 	    break;
 	}
 	break;
@@ -389,23 +453,47 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
     case CMP_NUMBER:
 	check_user_definable(idx, NUMWRITE);
 	n1 = e1->tterm.Numbers[idx];
-	n2 = e2->tterm.Numbers[idx];
-	dump_numeric(n1, buf1);
-	dump_numeric(n2, buf2);
 	switch (compare) {
 	case C_DIFFERENCE:
-	    if (!((n1 == ABSENT_NUMERIC && n2 == ABSENT_NUMERIC)) && n1 != n2)
+	    n2 = next_entry->Numbers[idx];
+	    if (!((n1 == ABSENT_NUMERIC && n2 == ABSENT_NUMERIC)) && n1 != n2) {
+		dump_numeric(n1, buf1);
+		dump_numeric(n2, buf2);
 		(void) printf("\t%s: %s, %s.\n", name, buf1, buf2);
+	    }
 	    break;
 
 	case C_COMMON:
-	    if (n1 != ABSENT_NUMERIC && n2 != ABSENT_NUMERIC && n1 == n2)
-		(void) printf("\t%s= %s.\n", name, buf1);
+	    if (n1 != ABSENT_NUMERIC) {
+		found = TRUE;
+		for_each_entry() {
+		    n2 = next_entry->Numbers[idx];
+		    if (n1 != n2) {
+			found = FALSE;
+			break;
+		    }
+		}
+		if (found) {
+		    dump_numeric(n1, buf1);
+		    (void) printf("\t%s= %s.\n", name, buf1);
+		}
+	    }
 	    break;
 
 	case C_NAND:
-	    if (n1 == ABSENT_NUMERIC && n2 == ABSENT_NUMERIC)
-		(void) printf("\t!%s.\n", name);
+	    if (n1 == ABSENT_NUMERIC) {
+		found = TRUE;
+		for_each_entry() {
+		    n2 = next_entry->Numbers[idx];
+		    if (n1 != n2) {
+			found = FALSE;
+			break;
+		    }
+		}
+		if (found) {
+		    (void) printf("\t!%s.\n", name);
+		}
+	    }
 	    break;
 	}
 	break;
@@ -413,9 +501,9 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
     case CMP_STRING:
 	check_user_definable(idx, STRWRITE);
 	s1 = e1->tterm.Strings[idx];
-	s2 = e2->tterm.Strings[idx];
 	switch (compare) {
 	case C_DIFFERENCE:
+	    s2 = next_entry->Strings[idx];
 	    if (capcmp(idx, s1, s2)) {
 		dump_string(s1, buf1);
 		dump_string(s2, buf2);
@@ -425,13 +513,35 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 	    break;
 
 	case C_COMMON:
-	    if (s1 && s2 && !capcmp(idx, s1, s2))
-		(void) printf("\t%s= '%s'.\n", name, TIC_EXPAND(s1));
+	    if (s1 != ABSENT_STRING) {
+		found = TRUE;
+		for_each_entry() {
+		    s2 = next_entry->Strings[idx];
+		    if (capcmp(idx, s1, s2) != 0) {
+			found = FALSE;
+			break;
+		    }
+		}
+		if (found) {
+		    (void) printf("\t%s= '%s'.\n", name, TIC_EXPAND(s1));
+		}
+	    }
 	    break;
 
 	case C_NAND:
-	    if (!s1 && !s2)
-		(void) printf("\t!%s.\n", name);
+	    if (s1 == ABSENT_STRING) {
+		found = TRUE;
+		for_each_entry() {
+		    s2 = next_entry->Strings[idx];
+		    if (s2 != s1) {
+			found = FALSE;
+			break;
+		    }
+		}
+		if (found) {
+		    (void) printf("\t!%s.\n", name);
+		}
+	    }
 	    break;
 	}
 	break;
@@ -450,16 +560,36 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 	    break;
 
 	case C_COMMON:
-	    if (e1->nuses && e2->nuses && useeq(e1, e2)) {
-		(void) fputs("\tuse: ", stdout);
-		print_uses(e1, stdout);
-		fputs(".\n", stdout);
+	    if (e1->nuses) {
+		found = TRUE;
+		for_each_entry() {
+		    e2 = &entries[extra++];
+		    if (e2->nuses != e1->nuses || !useeq(e1, e2)) {
+			found = FALSE;
+			break;
+		    }
+		}
+		if (found) {
+		    (void) fputs("\tuse: ", stdout);
+		    print_uses(e1, stdout);
+		    fputs(".\n", stdout);
+		}
 	    }
 	    break;
 
 	case C_NAND:
-	    if (!e1->nuses && !e2->nuses)
-		(void) printf("\t!use.\n");
+	    if (!e1->nuses) {
+		for_each_entry() {
+		    e2 = &entries[extra++];
+		    if (e2->nuses != e1->nuses) {
+			found = FALSE;
+			break;
+		    }
+		}
+		if (found) {
+		    (void) printf("\t!use.\n");
+		}
+	    }
 	    break;
 	}
     }
@@ -953,6 +1083,11 @@ file_comparison(int argc, char *argv[])
 #endif
 	    if (!(entryeq(&qp->tterm, &rp->tterm) && useeq(qp, rp))) {
 		char name1[NAMESIZE], name2[NAMESIZE];
+		char *names[3];
+
+		names[0] = name1;
+		names[1] = name2;
+		names[2] = 0;
 
 		entries[0] = *qp;
 		entries[1] = *rp;
@@ -962,29 +1097,17 @@ file_comparison(int argc, char *argv[])
 
 		switch (compare) {
 		case C_DIFFERENCE:
-		    if (itrace)
-			(void) fprintf(stderr,
-				       "%s: dumping differences\n",
-				       _nc_progname);
-		    (void) printf("comparing %s to %s.\n", name1, name2);
+		    show_comparing(names);
 		    compare_entry(compare_predicate, &entries->tterm, quiet);
 		    break;
 
 		case C_COMMON:
-		    if (itrace)
-			(void) fprintf(stderr,
-				       "%s: dumping common capabilities\n",
-				       _nc_progname);
-		    (void) printf("comparing %s to %s.\n", name1, name2);
+		    show_comparing(names);
 		    compare_entry(compare_predicate, &entries->tterm, quiet);
 		    break;
 
 		case C_NAND:
-		    if (itrace)
-			(void) fprintf(stderr,
-				       "%s: dumping differences\n",
-				       _nc_progname);
-		    (void) printf("comparing %s to %s.\n", name1, name2);
+		    show_comparing(names);
 		    compare_entry(compare_predicate, &entries->tterm, quiet);
 		    break;
 
@@ -1543,9 +1666,6 @@ main(int argc, char *argv[])
     if (sortmode == S_DEFAULT)
 	sortmode = S_TERMINFO;
 
-    /* set up for display */
-    dump_init(tversion, outform, sortmode, mwidth, mheight, itrace, formatted);
-
     /* make sure we have at least one terminal name to work with */
     if (optind >= argc)
 	argv[argc++] = terminal_env();
@@ -1554,9 +1674,23 @@ main(int argc, char *argv[])
     if (compare != C_DEFAULT && optind >= argc - 1)
 	argv[argc++] = terminal_env();
 
+    /* exactly one terminal name with no options means display it */
     /* exactly two terminal names with no options means do -d */
-    if (argc - optind == 2 && compare == C_DEFAULT)
-	compare = C_DIFFERENCE;
+    if (compare == C_DEFAULT) {
+	switch (argc - optind) {
+	default:
+	    fprintf(stderr, "%s: too many names to compare\n", _nc_progname);
+	    ExitProgram(EXIT_FAILURE);
+	case 1:
+	    break;
+	case 2:
+	    compare = C_DIFFERENCE;
+	    break;
+	}
+    }
+
+    /* set up for display */
+    dump_init(tversion, outform, sortmode, mwidth, mheight, itrace, formatted);
 
     if (!filecompare) {
 	/* grab the entries */
@@ -1668,27 +1802,17 @@ main(int argc, char *argv[])
 		break;
 
 	    case C_DIFFERENCE:
-		if (itrace)
-		    (void) fprintf(stderr, "%s: dumping differences\n", _nc_progname);
-		(void) printf("comparing %s to %s.\n", tname[0], tname[1]);
+		show_comparing(tname);
 		compare_entry(compare_predicate, &entries->tterm, quiet);
 		break;
 
 	    case C_COMMON:
-		if (itrace)
-		    (void) fprintf(stderr,
-				   "%s: dumping common capabilities\n",
-				   _nc_progname);
-		(void) printf("comparing %s to %s.\n", tname[0], tname[1]);
+		show_comparing(tname);
 		compare_entry(compare_predicate, &entries->tterm, quiet);
 		break;
 
 	    case C_NAND:
-		if (itrace)
-		    (void) fprintf(stderr,
-				   "%s: dumping differences\n",
-				   _nc_progname);
-		(void) printf("comparing %s to %s.\n", tname[0], tname[1]);
+		show_comparing(tname);
 		compare_entry(compare_predicate, &entries->tterm, quiet);
 		break;
 
@@ -1709,15 +1833,16 @@ main(int argc, char *argv[])
 		break;
 	    }
 	}
-    } else if (compare == C_USEALL)
+    } else if (compare == C_USEALL) {
 	(void) fprintf(stderr, "Sorry, -u doesn't work with -F\n");
-    else if (compare == C_DEFAULT)
+    } else if (compare == C_DEFAULT) {
 	(void) fprintf(stderr, "Use `tic -[CI] <file>' for this.\n");
-    else if (argc - optind != 2)
+    } else if (argc - optind != 2) {
 	(void) fprintf(stderr,
 		       "File comparison needs exactly two file arguments.\n");
-    else
+    } else {
 	file_comparison(argc - optind, argv + optind);
+    }
 
     MAIN_LEAKS();
     ExitProgram(EXIT_SUCCESS);
