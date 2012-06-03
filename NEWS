@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1907 2012/05/26 21:15:19 tom Exp $
+-- $Id: NEWS,v 1.1909 2012/06/02 20:21:26 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120602
+	+ add kdch1 aka "Remove" to vt220 and vt220-8 entries -TD
+	+ add kdch1, etc., to qvt108 -TD
+	+ add dl1/il1 to some entries based on dl/il values -TD
+	+ add dl to simpleterm -TD
+	+ add consistency-checks in tic for insert-line vs delete-line
+	  controls, and insert/delete-char keys
+	+ correct no-leaks logic in infocmp when doing comparisons, fixing
+	  duplicate free of entries given via the command-line, and freeing
+	  entries loaded from the last-but-one of files specified on the
+	  command-line.
+	+ add kdch1 to wsvt25 entry from NetBSD CVS (reported by David Lord,
+	  analysis by Martin Husemann).
+	+ add cnorm/civis to wsvt25 entry from NetBSD CVS (report/analysis by
+	  Onno van der Linden).
 
 20120526
 	+ extend -c and -n options of infocmp to allow comparing more than two

@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.118 2012/05/26 21:11:32 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.119 2012/06/02 15:55:33 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -87,16 +87,34 @@ static int compare;
 static bool ignorepads;		/* ignore pad prefixes when diffing */
 
 #if NO_LEAKS
+
+typedef struct {
+    ENTRY *head;
+    ENTRY *tail;
+} ENTERED;
+
+static ENTERED *entered;
+
 #undef ExitProgram
 static void ExitProgram(int code) GCC_NORETURN;
 /* prototype is to get gcc to accept the noreturn attribute */
 static void
 ExitProgram(int code)
 {
-    while (termcount-- > 0)
-	_nc_free_termtype(&entries[termcount].tterm);
+    int n;
+
+    for (n = 0; n < termcount; ++n) {
+	ENTRY *new_head = _nc_head;
+	ENTRY *new_tail = _nc_tail;
+	_nc_head = entered[n].head;
+	_nc_tail = entered[n].tail;
+	_nc_free_entries(entered[n].head);
+	_nc_head = new_head;
+	_nc_tail = new_tail;
+    }
     _nc_leaks_dump_entry();
     free(entries);
+    free(entered);
     _nc_free_tic(code);
 }
 #endif
@@ -959,6 +977,10 @@ file_comparison(int argc, char *argv[])
 	if (freopen(argv[n], "r", stdin) == 0)
 	    _nc_err_abort("Can't open %s", argv[n]);
 
+#if NO_LEAKS
+	entered[n].head = _nc_head;
+	entered[n].tail = _nc_tail;
+#endif
 	_nc_head = _nc_tail = 0;
 
 	/* parse entries out of the source file */
@@ -1654,6 +1676,9 @@ main(int argc, char *argv[])
     tfile = typeMalloc(path, maxterms);
     tname = typeCalloc(char *, maxterms);
     entries = typeCalloc(ENTRY, maxterms);
+#if NO_LEAKS
+    entered = typeCalloc(ENTERED, maxterms);
+#endif
 
     if (tfile == 0
 	|| tname == 0

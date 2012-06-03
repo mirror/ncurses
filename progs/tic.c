@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.176 2012/04/29 00:23:38 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.177 2012/06/02 17:19:31 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1212,6 +1212,11 @@ check_cursor(TERMTYPE *tp)
     int count;
     char *list[4];
 
+    /* it is rare to have an insert-line feature without a matching delete */
+    ANDMISSING(parm_insert_line, insert_line);
+    ANDMISSING(parm_delete_line, delete_line);
+    ANDMISSING(parm_insert_line, parm_delete_line);
+
     /* if we have a parameterized form, then the non-parameterized is easy */
     ANDMISSING(parm_down_cursor, cursor_down);
     ANDMISSING(parm_up_cursor, cursor_up);
@@ -1385,6 +1390,12 @@ check_keypad(TERMTYPE *tp)
 	if (*show != '\0')
 	    _nc_warning("vt100 keypad map incomplete:%s", show);
     }
+
+    /*
+     * These warnings are useful for consistency checks - it is possible that
+     * there are real terminals with mismatches in these 
+     */
+    ANDMISSING(key_ic, key_dc);
 }
 
 static void
