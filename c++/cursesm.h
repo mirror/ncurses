@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2005,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesm.h,v 1.27 2011/09/17 21:37:01 tom Exp $
+// $Id: cursesm.h,v 1.28 2012/06/08 17:43:56 Richard.Yao Exp $
 
 #ifndef NCURSES_CURSESM_H_incl
 #define NCURSES_CURSESM_H_incl 1
@@ -636,23 +636,23 @@ protected:
   }
 
 public:
-  NCursesUserMenu (NCursesMenuItem Items[],
+  NCursesUserMenu (NCursesMenuItem* Items[],
 		   const T* p_UserData = STATIC_CAST(T*)(0),
 		   bool with_frame=FALSE,
 		   bool autoDelete_Items=FALSE)
-    : NCursesMenu (&Items, with_frame, autoDelete_Items) {
+    : NCursesMenu (Items, with_frame, autoDelete_Items) {
       if (menu)
 	set_user (const_cast<void *>(p_UserData));
   };
 
-  NCursesUserMenu (NCursesMenuItem Items[],
+  NCursesUserMenu (NCursesMenuItem* Items[],
 		   int nlines,
 		   int ncols,
 		   int begin_y = 0,
 		   int begin_x = 0,
 		   const T* p_UserData = STATIC_CAST(T*)(0),
 		   bool with_frame=FALSE)
-    : NCursesMenu (&Items, nlines, ncols, begin_y, begin_x, with_frame) {
+    : NCursesMenu (Items, nlines, ncols, begin_y, begin_x, with_frame) {
       if (menu)
 	set_user (const_cast<void *>(p_UserData));
   };

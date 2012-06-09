@@ -971,6 +971,14 @@
 ./ncurses/win32con/gettimeofday.c
 ./ncurses/win32con/wcwidth.c
 ./ncurses/win32con/win_driver.c
+./package/debian/changelog
+./package/debian/compat
+./package/debian/control
+./package/debian/copyright
+./package/debian/rules
+./package/debian/source/format
+./package/debian/watch
+./package/ncurses.spec
 ./panel/Makefile.in
 ./panel/headers
 ./panel/llib-lpanel

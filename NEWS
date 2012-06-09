@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1909 2012/06/02 20:21:26 tom Exp $
+-- $Id: NEWS,v 1.1914 2012/06/08 23:10:50 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120608
+	+ fix an uninitialized variable in -c/-n logic for infocmp changes
+	  (cf: 20120526).
+	+ corrected fix for building c++ binding with clang 3.0 (report/patch
+	  by Richard Yao, Gentoo #417613, cf: 20110409)
+	+ correct configure check for working poll, fixing the case where stdin
+	  is redirected, e.g., in rpm/dpkg builds (Debian #676461).
+	+ add rpm- and dpkg-scripts, to test those build-environments.
+	  The resulting packages are used only for testing.
 
 20120602
 	+ add kdch1 aka "Remove" to vt220 and vt220-8 entries -TD

@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.119 2012/06/02 15:55:33 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.120 2012/06/08 23:05:25 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -597,6 +597,7 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 
 	case C_NAND:
 	    if (!e1->nuses) {
+		found = TRUE;
 		for_each_entry() {
 		    e2 = &entries[extra++];
 		    if (e2->nuses != e1->nuses) {

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.611 2012/04/01 00:13:31 tom Exp $
+dnl $Id: aclocal.m4,v 1.612 2012/06/08 16:25:28 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1687,14 +1687,17 @@ AC_CACHE_CHECK(for openpty header,cf_cv_func_openpty,[
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_POLL version: 5 updated: 2012/01/25 17:55:38
+dnl CF_FUNC_POLL version: 6 updated: 2012/06/08 12:22:55
 dnl ------------
 dnl See if the poll function really works.  Some platforms have poll(), but
 dnl it does not work for terminals or files.
 AC_DEFUN([CF_FUNC_POLL],[
 AC_CACHE_CHECK(if poll really works,cf_cv_working_poll,[
 AC_TRY_RUN([
+#include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
 #ifdef HAVE_POLL_H
 #include <poll.h>
 #else
@@ -1716,9 +1719,13 @@ int main() {
 	if (ret < 0 || (myfds.revents & POLLNVAL)) {
 		ret = -1;
 	} else {
+		int fd = 0;
+		if (!isatty(fd)) {
+			fd = open("/dev/tty", O_RDWR);
+		}
 
 		/* also check with standard input */
-		myfds.fd = 0;
+		myfds.fd = fd;
 		myfds.events = POLLIN;
 		myfds.revents = 0;
 
@@ -1727,7 +1734,7 @@ int main() {
 			ret = 0;
 		}
 	}
-	${cf_cv_main_return:-return}(ret != 0);
+	${cf_cv_main_return:-return}(ret < 0);
 }],
 	[cf_cv_working_poll=yes],
 	[cf_cv_working_poll=no],
