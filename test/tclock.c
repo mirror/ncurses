@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.30 2011/03/22 09:16:00 tom Exp $ */
+/* $Id: tclock.c,v 1.31 2012/06/09 19:17:02 tom Exp $ */
 
 #include <test.priv.h>
 
@@ -216,12 +216,12 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	attroff(A_REVERSE);
 
 	if (has_colors())
-	    (void) attrset(COLOR_PAIR(1));
+	    (void) attrset((attr_t) COLOR_PAIR(1));
 
 	dline(1, cx, cy, cx + sdx, cy - sdy, 'O');
 
 	if (has_colors())
-	    (void) attrset(COLOR_PAIR(0));
+	    (void) attrset((attr_t) COLOR_PAIR(0));
 
 	text = ctime(&tim);
 	MvPrintw(2, 0, "%.*s", (int) (strlen(text) - 1), text);

@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.84 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.86 2012/06/16 16:59:05 tom Exp $")
 
 static int total_written;
 
@@ -372,7 +372,22 @@ _nc_write_entry(TERMTYPE *const tp)
     if (start_time > 0 &&
 	stat(filename, &statbuf) >= 0
 	&& statbuf.st_mtime >= start_time) {
+#if HAVE_LINK && !USE_SYMLINKS
+	/*
+	 * If the file has more than one link, the reason for the previous
+	 * write could be that the current primary name used to be an alias for
+	 * the previous entry.  In that case, unlink the file so that we will
+	 * not modify the previous entry as we write this one.
+	 */
+	if (statbuf.st_nlink > 1) {
+	    _nc_warning("name redefined.");
+	    unlink(filename);
+	} else {
+	    _nc_warning("name multiply defined.");
+	}
+#else
 	_nc_warning("name multiply defined.");
+#endif
     }
 
     check_writeable(first_name[0]);

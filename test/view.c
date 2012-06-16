@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.84 2011/12/10 15:42:34 tom Exp $
+ * $Id: view.c,v 1.85 2012/06/09 20:29:33 tom Exp $
  */
 
 #include <test.priv.h>
@@ -356,7 +356,7 @@ main(int argc, char *argv[])
 	if (has_colors()) {
 	    start_color();
 	    init_pair(my_pair, COLOR_WHITE, COLOR_BLUE);
-	    bkgd(COLOR_PAIR(my_pair));
+	    bkgd((chtype) COLOR_PAIR(my_pair));
 	} else {
 	    try_color = FALSE;
 	}

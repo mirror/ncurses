@@ -44,7 +44,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: m_item_new.c,v 1.32 2012/03/10 23:41:36 tom Exp $")
+MODULE_ID("$Id: m_item_new.c,v 1.33 2012/06/09 23:55:15 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -223,7 +223,7 @@ set_menu_mark(MENU * menu, const char *mark)
 	  if (menu->mark)
 	    {
 	      if (menu != &_nc_Default_Menu)
-		menu->status |= _MARK_ALLOCATED;
+		SetStatus(menu, _MARK_ALLOCATED);
 	    }
 	  else
 	    {

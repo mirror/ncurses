@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.100 2012/03/11 00:37:16 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.101 2012/06/10 00:28:04 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -601,8 +601,8 @@ Synchronize_Buffer(FORM *form)
 {
   if (form->status & _WINDOW_MODIFIED)
     {
-      form->status &= (unsigned short) (~_WINDOW_MODIFIED);
-      form->status |= _FCHECK_REQUIRED;
+      ClrStatus(form, _WINDOW_MODIFIED);
+      SetStatus(form, _FCHECK_REQUIRED);
       Window_To_Buffer(form, form->current);
       wmove(form->w, form->currow, form->curcol);
     }
@@ -653,7 +653,7 @@ Field_Grown(FIELD *field, int amount)
 	    growth = Minimum(field->maxgrow - field->dcols, growth);
 	  field->dcols += growth;
 	  if (field->dcols == field->maxgrow)
-	    field->status &= (unsigned short) (~_MAY_GROW);
+	    ClrStatus(field, _MAY_GROW);
 	}
       else
 	{
@@ -662,7 +662,7 @@ Field_Grown(FIELD *field, int amount)
 	    growth = Minimum(field->maxgrow - field->drows, growth);
 	  field->drows += growth;
 	  if (field->drows == field->maxgrow)
-	    field->status &= (unsigned short) (~_MAY_GROW);
+	    ClrStatus(field, _MAY_GROW);
 	}
       /* drows, dcols changed, so we get really the new buffer length */
       new_buflen = Buffer_Length(field);
@@ -674,7 +674,7 @@ Field_Grown(FIELD *field, int amount)
 	  field->drows = old_drows;
 	  if ((single_line_field && (field->dcols != field->maxgrow)) ||
 	      (!single_line_field && (field->drows != field->maxgrow)))
-	    field->status |= _MAY_GROW;
+	    SetStatus(field, _MAY_GROW);
 	}
       else
 	{
@@ -753,7 +753,7 @@ Field_Grown(FIELD *field, int amount)
 		   (field->dcols != field->maxgrow)) ||
 		  (!single_line_field &&
 		   (field->drows != field->maxgrow)))
-		field->status |= _MAY_GROW;
+		SetStatus(field, _MAY_GROW);
 	      free(newbuf);
 	    }
 	}
@@ -897,19 +897,19 @@ _nc_Refresh_Current_Field(FORM *form)
 		  if (form->currow < form->toprow)
 		    {
 		      form->toprow = form->currow;
-		      field->status |= _NEWTOP;
+		      SetStatus(field, _NEWTOP);
 		    }
 		  if (form->currow >= row_after_bottom)
 		    {
 		      form->toprow = form->currow - field->rows + 1;
-		      field->status |= _NEWTOP;
+		      SetStatus(field, _NEWTOP);
 		    }
 		  if (field->status & _NEWTOP)
 		    {
 		      /* means we have to copy whole range */
 		      first_modified_row = form->toprow;
 		      first_unmodified_row = first_modified_row + field->rows;
-		      field->status &= (unsigned short)(~_NEWTOP);
+		      ClrStatus(field, _NEWTOP);
 		    }
 		  else
 		    {
@@ -1131,7 +1131,7 @@ Display_Or_Erase_Field(FIELD *field, bool bEraseFlag)
 	  else
 	    Buffer_To_Window(field, win);
 	}
-      field->status &= (unsigned short)(~_NEWTOP);
+      ClrStatus(field, _NEWTOP);
     }
   wsyncup(win);
   delwin(win);
@@ -1175,13 +1175,13 @@ Synchronize_Field(FIELD *field)
 	  else
 	    Buffer_To_Window(field, form->w);
 
-	  field->status |= _NEWTOP;
+	  SetStatus(field, _NEWTOP);
 	  res = _nc_Refresh_Current_Field(form);
 	}
       else
 	res = Display_Field(field);
     }
-  field->status |= _CHANGED;
+  SetStatus(field, _CHANGED);
   return (res);
 }
 
@@ -1272,7 +1272,7 @@ _nc_Synchronize_Attributes(FIELD *field)
 		      field->rows - 1, field->cols - 1, 0);
 	      wsyncup(formwin);
 	      Buffer_To_Window(field, form->w);
-	      field->status |= _NEWTOP;		/* fake refresh to paint all */
+	      SetStatus(field, _NEWTOP);	/* fake refresh to paint all */
 	      _nc_Refresh_Current_Field(form);
 	    }
 	}
@@ -1328,32 +1328,32 @@ _nc_Synchronize_Options(FIELD *field, Field_Options newopts)
 	    }
 	  if (form->curpage == field->page)
 	    {
-	      if ((unsigned) changed_opts & O_VISIBLE)
+	      if ((unsigned)changed_opts & O_VISIBLE)
 		{
-		  if ((unsigned) newopts & O_VISIBLE)
+		  if ((unsigned)newopts & O_VISIBLE)
 		    res = Display_Field(field);
 		  else
 		    res = Erase_Field(field);
 		}
 	      else
 		{
-		  if (((unsigned) changed_opts & O_PUBLIC) &&
-		      ((unsigned) newopts & O_VISIBLE))
+		  if (((unsigned)changed_opts & O_PUBLIC) &&
+		      ((unsigned)newopts & O_VISIBLE))
 		    res = Display_Field(field);
 		}
 	    }
 	}
     }
 
-  if ((unsigned) changed_opts & O_STATIC)
+  if ((unsigned)changed_opts & O_STATIC)
     {
       bool single_line_field = Single_Line_Field(field);
       int res2 = E_OK;
 
-      if ((unsigned) newopts & O_STATIC)
+      if ((unsigned)newopts & O_STATIC)
 	{
 	  /* the field becomes now static */
-	  field->status &= (unsigned short)(~_MAY_GROW);
+	  ClrStatus(field, _MAY_GROW);
 	  /* if actually we have no hidden columns, justification may
 	     occur again */
 	  if (single_line_field &&
@@ -1371,7 +1371,7 @@ _nc_Synchronize_Options(FIELD *field, Field_Options newopts)
 	      (single_line_field && (field->dcols < field->maxgrow)) ||
 	      (!single_line_field && (field->drows < field->maxgrow)))
 	    {
-	      field->status |= _MAY_GROW;
+	      SetStatus(field, _MAY_GROW);
 	      /* a field with justification now changes its behavior,
 	         so we must redisplay it */
 	      if (single_line_field &&
@@ -1433,9 +1433,9 @@ _nc_Set_Current_Field(FORM *form, FIELD *newfield)
 	      if (field->drows > field->rows)
 		{
 		  if (form->toprow == 0)
-		    field->status &= (unsigned short)(~_NEWTOP);
+		    ClrStatus(field, _NEWTOP);
 		  else
-		    field->status |= _NEWTOP;
+		    SetStatus(field, _NEWTOP);
 		}
 	      else
 		{
@@ -1469,7 +1469,7 @@ _nc_Set_Current_Field(FORM *form, FIELD *newfield)
 	delwin(form->w);
       form->w = new_window;
 
-      form->status &= (unsigned short)(~_WINDOW_MODIFIED);
+      ClrStatus(form, _WINDOW_MODIFIED);
       Set_Field_Window_Attributes(field, form->w);
 
       if (Has_Invisible_Parts(field))
@@ -1998,7 +1998,7 @@ Vertical_Scrolling(int (*const fct) (FORM *), FORM *form)
     {
       res = fct(form);
       if (res == E_OK)
-	form->current->status |= _NEWTOP;
+	SetStatus(form, _NEWTOP);
     }
   return (res);
 }
@@ -2538,7 +2538,7 @@ Field_Editing(int (*const fct) (FORM *), FORM *form)
 	    {
 	      res = fct(form);
 	      if (res == E_OK)
-		form->status |= _WINDOW_MODIFIED;
+		SetStatus(form, _WINDOW_MODIFIED);
 	    }
 	}
     }
@@ -2579,7 +2579,7 @@ FE_New_Line(FORM *form)
 	     handled in the generic routine. The reason is,
 	     that FN_Next_Field may fail, but the form is
 	     definitively changed */
-	  form->status |= _WINDOW_MODIFIED;
+	  SetStatus(form, _WINDOW_MODIFIED);
 	  returnCode(Inter_Field_Navigation(FN_Next_Field, form));
 	}
       else
@@ -2595,7 +2595,7 @@ FE_New_Line(FORM *form)
 	  wclrtoeol(form->w);
 	  form->currow++;
 	  form->curcol = 0;
-	  form->status |= _WINDOW_MODIFIED;
+	  SetStatus(form, _WINDOW_MODIFIED);
 	  returnCode(E_OK);
 	}
     }
@@ -2627,7 +2627,7 @@ FE_New_Line(FORM *form)
 	  wmove(form->w, form->currow, form->curcol);
 	  winsertln(form->w);
 	  myADDNSTR(form->w, bp, (int)(t - bp));
-	  form->status |= _WINDOW_MODIFIED;
+	  SetStatus(form, _WINDOW_MODIFIED);
 	  returnCode(E_OK);
 	}
     }
@@ -2926,7 +2926,7 @@ static int
 EM_Overlay_Mode(FORM *form)
 {
   T((T_CALLED("EM_Overlay_Mode(%p)"), (void *)form));
-  form->status |= _OVLMODE;
+  SetStatus(form, _OVLMODE);
   returnCode(E_OK);
 }
 
@@ -2942,7 +2942,7 @@ static int
 EM_Insert_Mode(FORM *form)
 {
   T((T_CALLED("EM_Insert_Mode(%p)"), (void *)form));
-  form->status &= (unsigned short)(~_OVLMODE);
+  ClrStatus(form, _OVLMODE);
   returnCode(E_OK);
 }
 
@@ -3172,8 +3172,8 @@ _nc_Internal_Validation(FORM *form)
     {
       if (!Check_Field(form, field->type, field, (TypeArgument *)(field->arg)))
 	return FALSE;
-      form->status &= (unsigned short)(~_FCHECK_REQUIRED);
-      field->status |= _CHANGED;
+      ClrStatus(form, _FCHECK_REQUIRED);
+      SetStatus(field, _CHANGED);
       Synchronize_Linked_Fields(field);
     }
   return TRUE;
@@ -4000,13 +4000,13 @@ Data_Entry(FORM *form, int c)
   int result = E_REQUEST_DENIED;
 
   T((T_CALLED("Data_Entry(%p,%s)"), (void *)form, _tracechtype((chtype)c)));
-  if (((unsigned) field->opts & O_EDIT)
+  if (((unsigned)field->opts & O_EDIT)
 #if FIX_FORM_INACTIVE_BUG
-      && ((unsigned) field->opts & O_ACTIVE)
+      && ((unsigned)field->opts & O_ACTIVE)
 #endif
     )
     {
-      if (((unsigned) field->opts & O_BLANK) &&
+      if (((unsigned)field->opts & O_BLANK) &&
 	  First_Position_In_Current_Field(form) &&
 	  !(form->status & _FCHECK_REQUIRED) &&
 	  !(form->status & _WINDOW_MODIFIED))
@@ -4036,8 +4036,8 @@ Data_Entry(FORM *form, int c)
 	  bool End_Of_Field = (((field->drows - 1) == form->currow) &&
 			       ((field->dcols - 1) == form->curcol));
 
-	  form->status |= _WINDOW_MODIFIED;
-	  if (End_Of_Field && !Growable(field) && ((unsigned) field->opts & O_AUTOSKIP))
+	  SetStatus(form, _WINDOW_MODIFIED);
+	  if (End_Of_Field && !Growable(field) && ((unsigned)field->opts & O_AUTOSKIP))
 	    result = Inter_Field_Navigation(FN_Next_Field, form);
 	  else
 	    {
@@ -4247,7 +4247,7 @@ form_driver(FORM *form, int c)
 	NULL			/* Choice Request is generic           */
       };
       size_t nMethods = (sizeof(Generic_Methods) / sizeof(Generic_Methods[0]));
-      size_t method = (size_t)((BI->keycode >> ID_Shft) & 0xffff);	/* see ID_Mask */
+      size_t method = (size_t) ((BI->keycode >> ID_Shft) & 0xffff);	/* see ID_Mask */
 
       if ((method >= nMethods) || !(BI->cmd))
 	res = E_SYSTEM_ERROR;
@@ -4402,14 +4402,14 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
   if (!field || !value || ((buffer < 0) || (buffer > field->nbuf)))
     RETURN(E_BAD_ARGUMENT);
 
-  len = (unsigned) Buffer_Length(field);
+  len = (unsigned)Buffer_Length(field);
 
   if (Growable(field))
     {
       /* for a growable field we must assume zero terminated strings, because
          somehow we have to detect the length of what should be copied.
        */
-      unsigned vlen = (unsigned) strlen(value);
+      unsigned vlen = (unsigned)strlen(value);
 
       if (vlen > len)
 	{
@@ -4634,7 +4634,7 @@ _nc_Widen_String(char *source, int *lengthp)
 	    break;
 	  result = typeCalloc(wchar_t, need);
 
-	  *lengthp = (int) need;
+	  *lengthp = (int)need;
 	  if (result == 0)
 	    break;
 	}

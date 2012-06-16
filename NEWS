@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1914 2012/06/08 23:10:50 tom Exp $
+-- $Id: NEWS,v 1.1918 2012/06/16 19:19:48 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120616
+	+ add configure check to distinguish clang from gcc to eliminate
+	  warnings about unused command-line parameters when compiler warnings
+	  are enabled.
+	+ improve behavior when updating terminfo entries which are hardlinked
+	  by allowing for the possibility that an alias has been repurposed to
+	  a new primary name.
+	+ fix some strict compiler warnings based on package scripts.
+	+ further fixes for configure check for working poll (Debian #676461).
 
 20120608
 	+ fix an uninitialized variable in -c/-n logic for infocmp changes

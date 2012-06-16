@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.38 2010/11/14 00:58:45 tom Exp $
+ * $Id: cardfile.c,v 1.39 2012/06/09 20:30:32 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -414,7 +414,7 @@ cardfile(char *fname)
 	if ((win = newwin(panel_high, panel_wide, y, x)) == 0)
 	    break;
 
-	wbkgd(win, COLOR_PAIR(pair_2));
+	wbkgd(win, (chtype) COLOR_PAIR(pair_2));
 	keypad(win, TRUE);
 	p->panel = new_panel(win);
 	box(win, 0, 0);
@@ -588,7 +588,7 @@ main(int argc, char *argv[])
 	    start_color();
 	    init_pair(pair_1, COLOR_WHITE, COLOR_BLUE);
 	    init_pair(pair_2, COLOR_WHITE, COLOR_CYAN);
-	    bkgd(COLOR_PAIR(pair_1));
+	    bkgd((chtype) COLOR_PAIR(pair_1));
 	} else {
 	    try_color = FALSE;
 	}

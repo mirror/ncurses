@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.370 2011/09/17 21:57:49 tom Exp $
+$Id: ncurses.c,v 1.371 2012/06/09 20:30:32 tom Exp $
 
 ***************************************************************************/
 
@@ -2972,7 +2972,7 @@ wide_slk_test(void)
 #endif
 	default:
 	    if (cycle_attr(c, &at_code, &attr)) {
-		slk_attr_set(attr, (fg || bg), NULL);
+		slk_attr_set(attr, (short) (fg || bg), NULL);
 		slk_touch();
 		slk_noutrefresh();
 		break;
@@ -5229,7 +5229,7 @@ flushinp_test(WINDOW *win)
 #ifdef A_COLOR
     if (use_colors) {
 	init_pair(2, COLOR_CYAN, COLOR_BLUE);
-	wbkgd(subWin, COLOR_PAIR(2) | ' ');
+	wbkgd(subWin, (chtype) (COLOR_PAIR(2) | ' '));
     }
 #endif
     (void) wattrset(subWin, A_BOLD);
@@ -6059,11 +6059,11 @@ overlap_test_1_attr(WINDOW *win, int flavor, int col)
 	break;
     case 2:
 	init_pair(cpair, COLOR_BLUE, COLOR_WHITE);
-	(void) wattrset(win, (attr_t) COLOR_PAIR(cpair) | A_NORMAL);
+	(void) wattrset(win, (int) (COLOR_PAIR(cpair) | A_NORMAL));
 	break;
     case 3:
 	init_pair(cpair, COLOR_WHITE, COLOR_BLUE);
-	(void) wattrset(win, (attr_t) COLOR_PAIR(cpair) | A_BOLD);
+	(void) wattrset(win, (int) (COLOR_PAIR(cpair) | A_BOLD));
 	break;
     }
 }

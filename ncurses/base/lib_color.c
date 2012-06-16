@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.104 2011/10/22 15:53:42 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.105 2012/06/09 20:34:11 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -748,8 +748,8 @@ NCURSES_SP_NAME(pair_content) (NCURSES_SP_DCLx
     if (!ValidPair(pair)) {
 	result = ERR;
     } else {
-	NCURSES_COLOR_T fg = FORE_OF(SP_PARM->_color_pairs[pair]);
-	NCURSES_COLOR_T bg = BACK_OF(SP_PARM->_color_pairs[pair]);
+	NCURSES_COLOR_T fg = (NCURSES_COLOR_T) FORE_OF(SP_PARM->_color_pairs[pair]);
+	NCURSES_COLOR_T bg = (NCURSES_COLOR_T) BACK_OF(SP_PARM->_color_pairs[pair]);
 
 #if NCURSES_EXT_FUNCS
 	if (fg == COLOR_DEFAULT)
@@ -810,7 +810,7 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
 
     if (old_pair >= 0
 	&& SP_PARM != 0
-	&& pair_content(old_pair, &old_fg, &old_bg) != ERR) {
+	&& pair_content((short) old_pair, &old_fg, &old_bg) != ERR) {
 	if ((isDefaultColor(fg) && !isDefaultColor(old_fg))
 	    || (isDefaultColor(bg) && !isDefaultColor(old_bg))) {
 #if NCURSES_EXT_FUNCS

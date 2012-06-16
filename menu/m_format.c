@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_format.c,v 1.17 2012/03/10 23:43:41 tom Exp $")
+MODULE_ID("$Id: m_format.c,v 1.18 2012/06/09 23:54:02 tom Exp $")
 
 #define minimum(a,b) ((a)<(b) ? (a): (b))
 
@@ -96,7 +96,7 @@ set_menu_format(MENU * menu, int rows, int cols)
       menu->toprow = 0;
       menu->curitem = *(menu->items);
       assert(menu->curitem);
-      menu->status |= _LINK_NEEDED;
+      SetStatus(menu, _LINK_NEEDED);
       _nc_Calculate_Item_Length_and_Width(menu);
     }
   else

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: background.c,v 1.12 2012/05/12 20:58:40 tom Exp $
+ * $Id: background.c,v 1.13 2012/06/09 20:30:33 tom Exp $
  */
 
 #define NEED_COLOR_CODE 1
@@ -52,13 +52,13 @@ test_background(void)
 
     printw("Initializing pair 1 to red/%s\n", color_name(default_bg));
     init_pair(1, COLOR_RED, (short) default_bg);
-    bkgdset(' ' | COLOR_PAIR(1));
+    bkgdset((chtype) (' ' | COLOR_PAIR(1)));
     printw("RED/BLACK\n");
     getch();
 
     printw("Initializing pair 2 to %s/blue\n", color_name(default_fg));
     init_pair(2, (short) default_fg, COLOR_BLUE);
-    bkgdset(' ' | COLOR_PAIR(2));
+    bkgdset((chtype) (' ' | COLOR_PAIR(2)));
     printw("This line should be %s/blue\n", color_name(default_fg));
     getch();
 
@@ -86,7 +86,7 @@ test_background(void)
     while (chr < 128) {
 	if ((chr % 32) == 0)
 	    mvprintw(row++, 10, "x");
-	addch((chr == 127) ? ' ' : chr);
+	addch((chtype) ((chr == 127) ? ' ' : chr));
 	if ((++chr % 32) == 0)
 	    printw("x\n");
     }
@@ -96,33 +96,33 @@ test_background(void)
     printw("j\n");
     getch();
 
-    bkgdset(' ' | COLOR_PAIR(0));
+    bkgdset((chtype) (' ' | COLOR_PAIR(0)));
     printw("Default Colors\n");
     getch();
 
     printw("Resetting colors to pair 1\n");
-    bkgdset(' ' | COLOR_PAIR(1));
+    bkgdset((chtype) (' ' | COLOR_PAIR(1)));
     printw("This line should be red/%s\n", color_name(default_bg));
     getch();
 
     printw("Setting screen to pair 0\n");
-    bkgd(' ' | COLOR_PAIR(0));
+    bkgd((chtype) (' ' | COLOR_PAIR(0)));
     getch();
 
     printw("Setting screen to pair 1\n");
-    bkgd(' ' | COLOR_PAIR(1));
+    bkgd((chtype) (' ' | COLOR_PAIR(1)));
     getch();
 
     printw("Setting screen to pair 2\n");
-    bkgd(' ' | COLOR_PAIR(2));
+    bkgd((chtype) (' ' | COLOR_PAIR(2)));
     getch();
 
     printw("Setting screen to pair 3\n");
-    bkgd(' ' | COLOR_PAIR(3));
+    bkgd((chtype) (' ' | COLOR_PAIR(3)));
     getch();
 
     printw("Setting screen to pair 0\n");
-    bkgd(' ' | COLOR_PAIR(0));
+    bkgd((chtype) (' ' | COLOR_PAIR(0)));
     getch();
 }
 

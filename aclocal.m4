@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.612 2012/06/08 16:25:28 tom Exp $
+dnl $Id: aclocal.m4,v 1.614 2012/06/16 18:59:48 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -996,6 +996,39 @@ then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_CLANG_COMPILER version: 1 updated: 2012/06/16 14:55:39
+dnl -----------------
+dnl Check if the given compiler is really clang.  clang's C driver defines
+dnl __GNUC__ (fooling the configure script into setting $GCC to yes) but does
+dnl not ignore some gcc options.
+dnl
+dnl This macro should be run "soon" after AC_PROG_CC or AC_PROG_CPLUSPLUS, to
+dnl ensure that it is not mistaken for gcc/g++.  It is normally invoked from
+dnl the wrappers for gcc and g++ warnings.
+dnl
+dnl $1 = GCC (default) or GXX
+dnl $2 = INTEL_COMPILER (default) or INTEL_CPLUSPLUS
+dnl $3 = CFLAGS (default) or CXXFLAGS
+AC_DEFUN([CF_CLANG_COMPILER],[
+ifelse([$2],,CLANG_COMPILER,[$2])=no
+
+if test "$ifelse([$1],,[$1],GCC)" = yes ; then
+	AC_MSG_CHECKING(if this is really Clang ifelse([$1],GXX,C++,C) compiler)
+	cf_save_CFLAGS="$ifelse([$3],,CFLAGS,[$3])"
+	ifelse([$3],,CFLAGS,[$3])="$ifelse([$3],,CFLAGS,[$3]) -Qunused-arguments"
+	AC_TRY_COMPILE([],[
+#ifdef __clang__
+#else
+make an error
+#endif
+],[ifelse([$2],,CLANG_COMPILER,[$2])=yes
+cf_save_CFLAGS="$cf_save_CFLAGS -Qunused-arguments"
+],[])
+	ifelse([$3],,CFLAGS,[$3])="$cf_save_CFLAGS"
+	AC_MSG_RESULT($ifelse([$2],,CLANG_COMPILER,[$2]))
+fi
+])
+dnl ---------------------------------------------------------------------------
 dnl CF_CPP_PARAM_INIT version: 5 updated: 2011/12/03 16:54:03
 dnl -----------------
 dnl Check if the C++ compiler accepts duplicate parameter initialization.  This
@@ -1135,7 +1168,7 @@ cerr << "testing" << endl;
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_C_INLINE version: 3 updated: 2010/05/01 15:14:41
+dnl CF_C_INLINE version: 4 updated: 2012/06/16 14:55:39
 dnl -----------
 dnl Check if the C compiler supports "inline".
 dnl $1 is the name of a shell variable to set if inline is supported
@@ -1146,6 +1179,9 @@ $1=
 if test "$ac_cv_c_inline" != no ; then
   $1=inline
   if test "$INTEL_COMPILER" = yes
+  then
+    :
+  elif test "$CLANG_COMPILER" = yes
   then
     :
   elif test "$GCC" = yes
@@ -1687,7 +1723,7 @@ AC_CACHE_CHECK(for openpty header,cf_cv_func_openpty,[
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_POLL version: 6 updated: 2012/06/08 12:22:55
+dnl CF_FUNC_POLL version: 7 updated: 2012/06/09 16:22:17
 dnl ------------
 dnl See if the poll function really works.  Some platforms have poll(), but
 dnl it does not work for terminals or files.
@@ -1708,7 +1744,7 @@ int main() {
 	int ret;
 
 	/* check for Darwin bug with respect to "devices" */
-	myfds.fd = open("/dev/null", 1);
+	myfds.fd = open("/dev/null", 1);	/* O_WRONLY */
 	if (myfds.fd < 0)
 		myfds.fd = 0;
 	myfds.events = POLLIN;
@@ -1721,17 +1757,17 @@ int main() {
 	} else {
 		int fd = 0;
 		if (!isatty(fd)) {
-			fd = open("/dev/tty", O_RDWR);
+			fd = open("/dev/tty", 2);	/* O_RDWR */
 		}
 
-		/* also check with standard input */
-		myfds.fd = fd;
-		myfds.events = POLLIN;
-		myfds.revents = 0;
-
-		ret = poll(&myfds, 1, 100);
-		if (ret < 0) {
-			ret = 0;
+		if (fd >= 0) {
+			/* also check with standard input */
+			myfds.fd = fd;
+			myfds.events = POLLIN;
+			myfds.revents = 0;
+			ret = poll(&myfds, 1, 100);
+		} else {
+			ret = -1;
 		}
 	}
 	${cf_cv_main_return:-return}(ret < 0);
@@ -1940,7 +1976,7 @@ if test "$GCC" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 28 updated: 2012/03/31 20:10:46
+dnl CF_GCC_WARNINGS version: 29 updated: 2012/06/16 14:55:39
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -1963,6 +1999,7 @@ AC_DEFUN([CF_GCC_WARNINGS],
 [
 AC_REQUIRE([CF_GCC_VERSION])
 CF_INTEL_COMPILER(GCC,INTEL_COMPILER,CFLAGS)
+CF_CLANG_COMPILER(GCC,CLANG_COMPILER,CFLAGS)
 
 cat > conftest.$ac_ext <<EOF
 #line __oline__ "${as_me:-configure}"
@@ -2446,21 +2483,21 @@ if test "$GXX" = yes; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GXX_VERSION version: 6 updated: 2010/10/23 15:44:18
+dnl CF_GXX_VERSION version: 7 updated: 2012/06/16 14:55:39
 dnl --------------
 dnl Check for version of g++
 AC_DEFUN([CF_GXX_VERSION],[
 AC_REQUIRE([AC_PROG_CPP])
 GXX_VERSION=none
 if test "$GXX" = yes; then
-	AC_MSG_CHECKING(version of g++)
+	AC_MSG_CHECKING(version of ${CXX:-g++})
 	GXX_VERSION="`${CXX:-g++} --version| sed -e '2,$d' -e 's/^.*(GCC) //' -e 's/^[[^0-9.]]*//' -e 's/[[^0-9.]].*//'`"
 	test -z "$GXX_VERSION" && GXX_VERSION=unknown
 	AC_MSG_RESULT($GXX_VERSION)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GXX_WARNINGS version: 6 updated: 2010/08/14 18:25:37
+dnl CF_GXX_WARNINGS version: 7 updated: 2012/06/16 14:55:39
 dnl ---------------
 dnl Check if the compiler supports useful warning options.
 dnl
@@ -2483,6 +2520,7 @@ AC_DEFUN([CF_GXX_WARNINGS],
 [
 
 CF_INTEL_COMPILER(GXX,INTEL_CPLUSPLUS,CXXFLAGS)
+CF_CLANG_COMPILER(GXX,CLANG_CPLUSPLUS,CXXFLAGS)
 
 AC_REQUIRE([CF_GXX_VERSION])
 

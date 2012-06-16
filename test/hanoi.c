@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.31 2010/11/14 01:01:07 tom Exp $
+ * $Id: hanoi.c,v 1.32 2012/06/09 20:30:32 tom Exp $
  */
 
 #include <test.priv.h>
@@ -57,7 +57,7 @@
 #define MIDPEG			39
 #define RIGHTPEG		59
 
-#define LENTOIND(x)		(((x)-1)/2)
+#define LENTOIND(x)		(((int)(x)-1)/2)
 #define OTHER(a,b)		(3-((a)+(b)))
 
 struct Peg {
@@ -255,7 +255,7 @@ DisplayTiles(void)
 		memset(TileBuf, ' ', len);
 		TileBuf[len] = '\0';
 		if (has_colors())
-		    (void) attrset(COLOR_PAIR(LENTOIND(len)));
+		    (void) attrset((attr_t) COLOR_PAIR(LENTOIND(len)));
 		else
 		    (void) attrset(A_REVERSE);
 		MvAddStr(BASELINE - (SlotNo + 1),

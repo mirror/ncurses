@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracedmp.c,v 1.32 2009/04/18 21:01:38 tom Exp $")
+MODULE_ID("$Id: lib_tracedmp.c,v 1.33 2012/06/09 20:29:33 tom Exp $")
 
 #ifdef TRACE
 
@@ -111,7 +111,7 @@ _tracedump(const char *name, WINDOW *win)
 	    if (multicolumn) {
 		ep = my_buffer;
 		for (j = 0; j < width; ++j) {
-		    chtype test = WidecExt(win->_line[n].text[j]);
+		    int test = WidecExt(win->_line[n].text[j]);
 		    if (test) {
 			ep[j] = (char) (test + '0');
 		    } else {

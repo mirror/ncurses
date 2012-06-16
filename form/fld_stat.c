@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_stat.c,v 1.13 2012/03/11 00:37:16 tom Exp $")
+MODULE_ID("$Id: fld_stat.c,v 1.14 2012/06/10 00:13:09 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -51,9 +51,9 @@ set_field_status(FIELD *field, bool status)
   Normalize_Field(field);
 
   if (status)
-    field->status |= _CHANGED;
+    SetStatus(field, _CHANGED);
   else
-    field->status &= (unsigned short)(~_CHANGED);
+    ClrStatus(field, _CHANGED);
 
   RETURN(E_OK);
 }

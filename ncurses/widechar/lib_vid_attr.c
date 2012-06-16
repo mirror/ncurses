@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.15 2011/05/28 21:25:07 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.16 2012/06/09 20:29:33 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); NCURSES_SP_NAME(tputs)(NCURSES_SP_ARGx mode, 1, outc)
 
@@ -120,7 +120,7 @@ NCURSES_SP_NAME(vid_puts) (NCURSES_SP_DCLx
 	 * A_ALTCHARSET (256) down 2 to line up.  We use the NCURSES_BITS
 	 * macro so this will work properly for the wide-character layout.
 	 */
-	unsigned value = no_color_video;
+	unsigned value = (unsigned) no_color_video;
 	attr_t mask = NCURSES_BITS((value & 63)
 				   | ((value & 192) << 1)
 				   | ((value & 256) >> 2), 8);

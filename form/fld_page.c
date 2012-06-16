@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_page.c,v 1.11 2012/03/11 00:37:16 tom Exp $")
+MODULE_ID("$Id: fld_page.c,v 1.12 2012/06/10 00:12:47 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -54,9 +54,9 @@ set_new_page(FIELD *field, bool new_page_flag)
     RETURN(E_CONNECTED);
 
   if (new_page_flag)
-    field->status |= _NEWPAGE;
+    SetStatus(field, _NEWPAGE);
   else
-    field->status &= (unsigned short) (~_NEWPAGE);
+    ClrStatus(field, _NEWPAGE);
 
   RETURN(E_OK);
 }

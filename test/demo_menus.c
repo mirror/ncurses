@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.33 2012/01/14 17:20:39 tom Exp $
+ * $Id: demo_menus.c,v 1.34 2012/06/09 20:30:33 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -225,8 +225,8 @@ menu_create(ITEM ** items, int count, int ncols, MenuNo number)
     result = new_menu(items);
 
     if (has_colors()) {
-	set_menu_fore(result, COLOR_PAIR(1));
-	set_menu_back(result, COLOR_PAIR(2));
+	set_menu_fore(result, (chtype) COLOR_PAIR(1));
+	set_menu_back(result, (chtype) COLOR_PAIR(2));
     }
 
     set_menu_format(result, maxrow, maxcol);

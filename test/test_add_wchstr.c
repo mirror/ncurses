@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009,2010,2011 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2010,2011,2012 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.15 2011/01/15 18:15:11 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.16 2012/06/09 20:29:33 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -357,7 +357,7 @@ test_add_wchstr(int level)
     if (has_colors()) {
 	start_color();
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);
-	wbkgdset(work, COLOR_PAIR(1) | ' ');
+	wbkgdset(work, (chtype) (COLOR_PAIR(1) | ' '));
     }
 
     while ((ch = read_linedata(work)) != ERR && !isQUIT(ch)) {

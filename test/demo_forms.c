@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.38 2011/01/15 18:15:11 tom Exp $
+ * $Id: demo_forms.c,v 1.39 2012/06/09 20:30:32 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -108,7 +108,7 @@ make_field(int frow, int fcol, int rows, int cols)
 	set_field_just(f, j_value);
 	if (d_option) {
 	    if (has_colors()) {
-		set_field_fore(f, COLOR_PAIR(2));
+		set_field_fore(f, (chtype) COLOR_PAIR(2));
 		set_field_back(f, A_UNDERLINE | COLOR_PAIR(3));
 	    } else {
 		set_field_fore(f, A_BOLD);
@@ -257,7 +257,7 @@ show_current_field(WINDOW *win, FORM * form)
     int currow, curcol;
 
     if (has_colors()) {
-	wbkgd(win, COLOR_PAIR(1));
+	wbkgd(win, (chtype) COLOR_PAIR(1));
     }
     werase(win);
     form_getyx(form, currow, curcol);
@@ -309,15 +309,15 @@ show_current_field(WINDOW *win, FORM * form)
 	}
 
 	waddch(win, ' ');
-	(void) wattrset(win, field_fore(field));
+	(void) wattrset(win, (int) field_fore(field));
 	waddstr(win, "fore");
-	wattroff(win, field_fore(field));
+	wattroff(win, (int) field_fore(field));
 
 	waddch(win, '/');
 
-	(void) wattrset(win, field_back(field));
+	(void) wattrset(win, (int) field_back(field));
 	waddstr(win, "back");
-	wattroff(win, field_back(field));
+	wattroff(win, (int) field_back(field));
 
 	wprintw(win, ", pad '%c'",
 		field_pad(field));
@@ -531,7 +531,7 @@ main(int argc, char *argv[])
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);
 	init_pair(2, COLOR_GREEN, COLOR_BLACK);
 	init_pair(3, COLOR_CYAN, COLOR_BLACK);
-	bkgd(COLOR_PAIR(1));
+	bkgd((chtype) COLOR_PAIR(1));
 	refresh();
     }
 
@@ -540,6 +540,7 @@ main(int argc, char *argv[])
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }
+
 #else
 int
 main(void)

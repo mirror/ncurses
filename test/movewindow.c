@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.34 2012/02/05 01:16:47 tom Exp $
+ * $Id: movewindow.c,v 1.35 2012/06/09 20:30:32 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -542,7 +542,7 @@ fill_with_pattern(WINDOW *win)
     getmaxyx(win, y1, x1);
     for (y = 0; y < y1; ++y) {
 	for (x = 0; x < x1; ++x) {
-	    MvWAddCh(win, y, x, ch);
+	    MvWAddCh(win, y, x, (chtype) ch);
 	    if (++ch > 'z')
 		ch = 'a';
 	}

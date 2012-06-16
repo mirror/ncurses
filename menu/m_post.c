@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.30 2012/03/10 23:43:41 tom Exp $")
+MODULE_ID("$Id: m_post.c,v 1.31 2012/06/09 23:54:35 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -305,7 +305,7 @@ post_menu(MENU * menu)
   else
     RETURN(E_NOT_CONNECTED);
 
-  menu->status |= _POSTED;
+  SetStatus(menu, _POSTED);
 
   if (!(menu->opt & O_ONEVALUE))
     {
@@ -369,7 +369,7 @@ unpost_menu(MENU * menu)
   delwin(menu->win);
   menu->win = (WINDOW *)0;
 
-  menu->status &= (unsigned short)(~_POSTED);
+  ClrStatus(menu, _POSTED);
 
   RETURN(E_OK);
 }

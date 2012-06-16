@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: mf_common.h,v 0.23 2012/03/10 23:43:41 tom Exp $ */
+/* $Id: mf_common.h,v 0.24 2012/06/10 00:06:54 tom Exp $ */
 
 /* Common internal header for menu and form library */
 
@@ -82,13 +82,16 @@ extern int errno;
 #define _POSTED         (0x01U)	/* menu or form is posted                  */
 #define _IN_DRIVER      (0x02U)	/* menu or form is processing hook routine */
 
+#define SetStatus(target,mask) (target)->status |= (unsigned short) (mask)
+#define ClrStatus(target,mask) (target)->status = (unsigned short) (target->status & (~mask))
+
 /* Call object hook */
 #define Call_Hook( object, handler ) \
    if ( (object) != 0 && ((object)->handler) != (void *) 0 )\
    {\
-	(object)->status |= (unsigned short) (_IN_DRIVER);\
+	SetStatus(object, _IN_DRIVER);\
 	(object)->handler(object);\
-	(object)->status &= (unsigned short) (~_IN_DRIVER);\
+	ClrStatus(object, _IN_DRIVER);\
    }
 
 #endif /* MF_COMMON_H_incl */

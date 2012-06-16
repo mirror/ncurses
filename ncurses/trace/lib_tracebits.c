@@ -34,7 +34,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_tracebits.c,v 1.22 2012/02/22 22:26:58 tom Exp $")
+MODULE_ID("$Id: lib_tracebits.c,v 1.23 2012/06/09 19:55:46 tom Exp $")
 
 #if HAVE_SYS_TERMIO_H
 #include <sys/termio.h>		/* needed for ISC */
@@ -190,7 +190,7 @@ _nc_trace_ttymode(TTY * tty)
 		    CS_DATA(CS8),
 	    };
 	    const char *result = "CSIZE? ";
-	    int value = (tty->c_cflag & CSIZE);
+	    int value = (int) (tty->c_cflag & CSIZE);
 	    unsigned n;
 
 	    if (value != 0) {
