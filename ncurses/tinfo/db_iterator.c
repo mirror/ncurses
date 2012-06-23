@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.31 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.33 2012/06/23 00:16:58 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -96,10 +96,13 @@ static bool
 update_getenv(const char *name, DBDIRS which)
 {
     bool result = FALSE;
-    char *value = getenv(name);
 
     if (which < dbdLAST) {
-	if (my_vars[which].name == 0 || strcmp(my_vars[which].name, name)) {
+	char *value = getenv(name);
+
+	if ((value = getenv(name)) == 0 || (value = strdup(value)) == 0) {
+	    ;
+	} else if (my_vars[which].name == 0 || strcmp(my_vars[which].name, name)) {
 	    FreeIfNeeded(my_vars[which].value);
 	    my_vars[which].name = name;
 	    my_vars[which].value = value;
@@ -112,6 +115,8 @@ update_getenv(const char *name, DBDIRS which)
 	    FreeIfNeeded(my_vars[which].value);
 	    my_vars[which].value = value;
 	    result = TRUE;
+	} else {
+	    free(value);
 	}
     }
     return result;
@@ -240,6 +245,7 @@ _nc_next_db(DBDIRS * state, int *offset)
 NCURSES_EXPORT(void)
 _nc_first_db(DBDIRS * state, int *offset)
 {
+    bool cache_has_expired = FALSE;
     *state = dbdTIC;
     *offset = 0;
 
@@ -248,11 +254,14 @@ _nc_first_db(DBDIRS * state, int *offset)
     /* build a blob containing all of the strings we will use for a lookup
      * table.
      */
-    if (my_blob == 0) {
+    if (my_blob == 0 || (cache_has_expired = cache_expired())) {
 	size_t blobsize = 0;
 	const char *values[dbdLAST];
 	struct stat *my_stat;
 	int j, k;
+
+	if (cache_has_expired)
+	    free_cache();
 
 	for (j = 0; j < dbdLAST; ++j)
 	    values[j] = 0;
@@ -387,9 +396,16 @@ _nc_first_db(DBDIRS * state, int *offset)
 void
 _nc_db_iterator_leaks(void)
 {
+    DBDIRS which;
+
     if (my_blob != 0)
 	FreeAndNull(my_blob);
     if (my_list != 0)
 	FreeAndNull(my_list);
+    for (which = 0; which < dbdLAST; ++which) {
+	my_vars[which].name = 0;
+	FreeIfNeeded(my_vars[which].value);
+	my_vars[which].value = 0;
+    }
 }
 #endif
