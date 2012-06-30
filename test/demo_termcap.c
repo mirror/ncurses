@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.20 2012/06/22 22:37:05 tom Exp $
+ * $Id: demo_termcap.c,v 1.21 2012/06/30 22:02:56 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -88,7 +88,7 @@ save_screen(void)
 static char *
 make_dbitem(char *p, char *q)
 {
-    char *result = malloc(strlen(e_opt) + 2 + p - q);
+    char *result = malloc(strlen(e_opt) + 2 + (size_t) (p - q));
     sprintf(result, "%s=%.*s", e_opt, p - q, q);
     return result;
 }

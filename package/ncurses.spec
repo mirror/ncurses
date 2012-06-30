@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Release: 5.9
-Version: 20120622
+Version: 20120630
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{release}-%{version}.tgz
@@ -43,6 +43,7 @@ RPATH_LIST=../lib:%{_prefix}/lib \
 	--enable-ext-colors \
 	--enable-ext-mouse \
 	--enable-hard-tabs \
+	--enable-interop \
 	--enable-rpath \
 	--enable-sp-funcs \
 	--enable-warnings \

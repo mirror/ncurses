@@ -5312,7 +5312,7 @@ case ".$withval" in #(vi
   ;;
 .[a-zA-Z]:[\\/]*) #(vi OS/2 EMX
   ;;
-.\${*prefix}*) #(vi
+.\${*prefix}*|.\${*dir}*) #(vi
   eval withval="$withval"
   case ".$withval" in #(vi
   .NONE/*)
@@ -9979,7 +9979,7 @@ case ".$PKG_CONFIG" in #(vi
   ;;
 .[a-zA-Z]:[\\/]*) #(vi OS/2 EMX
   ;;
-.\${*prefix}*) #(vi
+.\${*prefix}*|.\${*dir}*) #(vi
   eval PKG_CONFIG="$PKG_CONFIG"
   case ".$PKG_CONFIG" in #(vi
   .NONE/*)

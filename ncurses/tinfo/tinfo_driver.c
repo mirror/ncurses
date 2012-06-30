@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.18 2012/02/18 20:34:55 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.19 2012/06/30 22:01:10 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -753,7 +753,7 @@ drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
     if (old_pair >= 0
 	&& sp != 0
 	&& NCURSES_SP_NAME(pair_content) (NCURSES_SP_ARGx
-					  old_pair,
+					  (short) old_pair,
 					  &old_fg,
 					  &old_bg) !=ERR) {
 	if ((isDefaultColor(fg) && !isDefaultColor(old_fg))

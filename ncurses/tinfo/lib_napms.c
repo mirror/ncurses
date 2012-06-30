@@ -51,7 +51,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: lib_napms.c,v 1.22 2012/03/17 21:14:51 tom Exp $")
+MODULE_ID("$Id: lib_napms.c,v 1.23 2012/06/30 22:08:24 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(napms) (NCURSES_SP_DCLx int ms)
@@ -63,6 +63,9 @@ NCURSES_SP_NAME(napms) (NCURSES_SP_DCLx int ms)
 	CallDriver_1(SP_PARM, nap, ms);
     }
 #else /* !USE_TERM_DRIVER */
+#if NCURSES_SP_FUNCS
+    (void) sp;
+#endif
 #if HAVE_NANOSLEEP
     {
 	struct timespec request, remaining;

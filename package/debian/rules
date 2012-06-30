@@ -49,6 +49,7 @@ configure-stamp:
 		--enable-ext-colors \
 		--enable-ext-mouse \
 		--enable-hard-tabs \
+		--enable-interop \
 		--enable-rpath \
 		--enable-sp-funcs \
 		--enable-warnings \

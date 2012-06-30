@@ -868,6 +868,12 @@
 ./ncurses/llib-lncursest
 ./ncurses/llib-lncursestw
 ./ncurses/llib-lncursesw
+./ncurses/llib-ltic
+./ncurses/llib-ltictw
+./ncurses/llib-lticw
+./ncurses/llib-ltinfo
+./ncurses/llib-ltinfotw
+./ncurses/llib-ltinfow
 ./ncurses/modules
 ./ncurses/tinfo/MKcaptab.awk
 ./ncurses/tinfo/MKcaptab.sh

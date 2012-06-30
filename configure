@@ -21811,7 +21811,7 @@ do
 		mv $cf_dir/Makefile.out $cf_dir/Makefile
 
 		$AWK -f $srcdir/mk-0th.awk \
-			libname="${cf_dir}${LIB_SUFFIX}" subsets="$LIB_SUBSETS" \
+			libname="${cf_dir}${LIB_SUFFIX}" subsets="$LIB_SUBSETS" ticlib="$TICS_LIB_SUFFIX" termlib="$TINFO_LIB_SUFFIX" \
 			$srcdir/$cf_dir/modules >>$cf_dir/Makefile
 
 		for cf_subset in $cf_subsets

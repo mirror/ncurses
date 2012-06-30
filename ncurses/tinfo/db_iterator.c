@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.33 2012/06/23 00:16:58 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.34 2012/06/30 16:30:10 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -98,7 +98,7 @@ update_getenv(const char *name, DBDIRS which)
     bool result = FALSE;
 
     if (which < dbdLAST) {
-	char *value = getenv(name);
+	char *value;
 
 	if ((value = getenv(name)) == 0 || (value = strdup(value)) == 0) {
 	    ;
