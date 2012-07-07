@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: resizeterm.c,v 1.44 2011/09/03 18:29:11 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.45 2012/07/07 17:07:23 tom Exp $")
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
@@ -484,7 +484,6 @@ NCURSES_SP_NAME(resizeterm) (NCURSES_SP_DCLx int ToLines, int ToCols)
 	    result = NCURSES_SP_NAME(resize_term) (NCURSES_SP_ARGx ToLines, ToCols);
 
 #if USE_SIGWINCH
-	    safe_ungetch(SP_PARM, KEY_RESIZE);	/* so application can know this */
 	    clearok(CurScreen(SP_PARM), TRUE);	/* screen contents are unknown */
 
 	    /* ripped-off lines are a special case: if we did not lengthen
@@ -514,6 +513,9 @@ NCURSES_SP_NAME(resizeterm) (NCURSES_SP_DCLx int ToLines, int ToCols)
 	    }
 #endif
 	}
+#if USE_SIGWINCH
+	safe_ungetch(SP_PARM, KEY_RESIZE);	/* so application can know this */
+#endif
     }
 
     returnCode(result);

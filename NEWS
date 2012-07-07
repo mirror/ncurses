@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1923 2012/06/30 23:05:08 tom Exp $
+-- $Id: NEWS,v 1.1926 2012/07/07 19:59:58 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120707
+	+ add ncurses_mingw.h to installed headers (prompted by patch by
+	  Juergen Pfeifer).
+	+ clarify return-codes from wgetch() in response to SIGWINCH (prompted
+	  by Novell #769788).
+	+ modify resizeterm() to always push a KEY_RESIZE onto the fifo, even
+	  if screensize is unchanged.  Modify _nc_update_screensize() to push a
+	  KEY_RESIZE if there was a SIGWINCH, even if it does not call
+	  resizeterm().  These changes eliminate the case where a SIGWINCH is
+	  received, but ERR returned from wgetch or wgetnstr because the screen
+	  dimensions did not change (Novell #769788).
 
 20120630
 	+ add --enable-interop to sample package scripts (suggested by Juergen

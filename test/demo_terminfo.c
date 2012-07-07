@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.12 2012/06/30 22:03:22 tom Exp $
+ * $Id: demo_terminfo.c,v 1.13 2012/07/07 23:37:13 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -70,7 +70,7 @@ static char *
 make_dbitem(char *p, char *q)
 {
     char *result = malloc(strlen(e_opt) + 2 + (size_t) (p - q));
-    sprintf(result, "%s=%.*s", e_opt, p - q, q);
+    sprintf(result, "%s=%.*s", e_opt, (int) (p - q), q);
     return result;
 }
 

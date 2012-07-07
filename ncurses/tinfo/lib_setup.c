@@ -47,7 +47,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.143 2012/02/29 11:50:19 Werner.Fink Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.145 2012/07/07 20:35:27 tom Exp $")
 
 /****************************************************************************
  *
@@ -399,8 +399,11 @@ _nc_update_screensize(SCREEN *sp)
      */
     if (sp != 0
 	&& sp->_resize != 0) {
-	if ((new_lines != old_lines) || (new_cols != old_cols))
+	if ((new_lines != old_lines) || (new_cols != old_cols)) {
 	    sp->_resize(NCURSES_SP_ARGx new_lines, new_cols);
+	} else if (sp->_sig_winch && (sp->_ungetch != 0)) {
+	    sp->_ungetch(SP_PARM, KEY_RESIZE);	/* so application can know this */
+	}
 	sp->_sig_winch = FALSE;
     }
 }
@@ -666,7 +669,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	    const TERMTYPE *fallback = _nc_fallback(tname);
 
 	    if (fallback) {
-		_nc_copy_termtype(&(termp->type),fallback);
+		_nc_copy_termtype(&(termp->type), fallback);
 		status = TGETENT_YES;
 	    }
 	}

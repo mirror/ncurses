@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.371 2012/06/09 20:30:32 tom Exp $
+$Id: ncurses.c,v 1.372 2012/07/07 18:09:38 tom Exp $
 
 ***************************************************************************/
 
@@ -783,6 +783,15 @@ resize_boxes(unsigned level, WINDOW *win)
 #define remember_boxes(level,text,frame)	/* nothing */
 #endif
 
+/*
+ * Return-code is OK/ERR or a keyname.
+ */
+static const char *
+ok_keyname(int code)
+{
+    return ((code == OK) ? "OK" : ((code == ERR) ? "ERR" : keyname(code)));
+}
+
 static void
 wgetch_test(unsigned level, WINDOW *win, int delay)
 {
@@ -824,9 +833,11 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
 	} else if (c == 'g') {
 	    waddstr(win, "getstr test: ");
 	    echo();
-	    wgetnstr(win, buf, sizeof(buf) - 1);
+	    c = wgetnstr(win, buf, sizeof(buf) - 1);
 	    noecho();
-	    wprintw(win, "I saw %d characters:\n\t`%s'.", (int) strlen(buf), buf);
+	    wprintw(win, "I saw %d characters:\n\t`%s' (%s).",
+		    (int) strlen(buf), buf,
+		    ok_keyname(c));
 	    wclrtoeol(win);
 	    wgetch_wrap(win, first_y);
 	} else if (c == 'k') {

@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.499 2012/03/10 21:16:32 tom Exp $
+ * $Id: curses.priv.h,v 1.501 2012/07/07 20:47:07 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1159,6 +1159,7 @@ struct screen {
 	 */
 #if USE_SIZECHANGE
 	int		(*_resize)(NCURSES_SP_DCLx int y, int x);
+	int		(*_ungetch)(SCREEN *, int);
 #endif
 
 	/*
