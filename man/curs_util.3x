@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.33 2011/12/17 23:31:30 tom Exp $
+.\" $Id: curs_util.3x,v 1.35 2012/07/15 00:23:52 tom Exp $
 .TH curs_util 3X ""
 .de bP
 .IP \(bu 4
@@ -44,6 +44,7 @@
 \fBputwin\fR,
 \fBunctrl\fR,
 \fBuse_env\fR,
+\fBuse_tioctl\fR,
 \fBwunctrl\fR \- miscellaneous \fBcurses\fR utility routines
 .ad
 .hy
@@ -63,6 +64,8 @@
 \fBvoid nofilter(void);\fR
 .br
 \fBvoid use_env(bool f);\fR
+.br
+\fBvoid use_tioctl(bool f);\fR
 .br
 \fBint putwin(WINDOW *win, FILE *filep);\fR
 .br
@@ -123,16 +126,45 @@ using a different value of \fB$TERM\fP.
 The limitation arises because the \fBfilter\fP routine modifies the
 in-memory copy of the terminal information.
 .PP
-The \fBuse_env\fR routine, if used, is called before \fBinitscr\fR or
-\fBnewterm\fR are called.  When called with \fBFALSE\fR as an
-argument, the values of \fBlines\fR and \fBcolumns\fR specified in the
-\fIterminfo\fR database will be used, even if environment variables
-\fBLINES\fR and \fBCOLUMNS\fR (used by default) are set, or if
-\fBcurses\fR is running in a window (in which case default behavior
-would be to use the window size if \fBLINES\fR and \fBCOLUMNS\fR are
-not set).
-Note that setting \fBLINES\fR or \fBCOLUMNS\fR overrides the
-corresponding size which may be obtained from the operating system.
+The \fBuse_env\fR routine, if used,
+should be called before \fBinitscr\fR or
+\fBnewterm\fR are called
+(because those compute the screen size).
+It modifies the way \fBncurses\fP treats environment variables
+when determining the screen size.
+.bP
+Normally ncurses looks first at the terminal database for the screen size.
+.IP
+If \fBuse_env\fP was called with \fBFALSE\fP for parameter,
+it stops here.
+.bP
+Then it asks for the screen size via operating system calls.
+If successful,
+it overrides the values from the terminal database.
+.bP
+Finally, ncurses examines the
+\fBLINES\fR or \fBCOLUMNS\fR environment variables,
+using a value in those to override the results
+from the operating system or terminal database.
+.IP
+Ncurses also updates the screen size in response to SIGWINCH,
+unless overridden by the \fBLINES\fR or \fBCOLUMNS\fR environment variables,
+.PP
+The \fBuse_tioctl\fR routine, if used,
+should be called before \fBinitscr\fR or \fBnewterm\fR are called
+(because those compute the screen size).
+After \fBuse_tioctl\fR is called with \fBTRUE\fR as an argument,
+ncurses modifies the last step in its computation of screen size as follows:
+.bP
+checks if the \fBLINES\fR and \fBCOLUMNS\fR environment variables
+are set to a number greater than zero.
+.bP
+for each, ncurses updates the corresponding environment variable
+with the value that it has obtained via operating system call
+or from the terminal database.
+.bP
+ncurses re-fetches the value of the environment variables so that
+it is still the environment variables which set the screen size.
 .PP
 The \fBputwin\fR routine writes all data associated with window \fIwin\fR into
 the file to which \fIfilep\fR points.  This information can be later retrieved
@@ -233,8 +265,8 @@ merged from all terminal descriptions which have been loaded.
 The \fBuse_extended_names\fP function controls whether this data is
 loaded when the terminal description is read by the library.
 .PP
-The \fBnofilter\fP routine is specific to ncurses.
-It was not supported on Version 7, BSD or System V implementations.
+The \fBnofilter\fP and \fBuse_tioctl\fP routines are specific to ncurses.
+They were not supported on Version 7, BSD or System V implementations.
 It is recommended that any code depending on ncurses extensions
 be conditioned using NCURSES_VERSION.
 .SH SEE ALSO

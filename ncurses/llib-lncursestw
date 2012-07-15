@@ -4234,6 +4234,17 @@ void	use_env(
 		NCURSES_BOOL f)
 		{ /* void */ }
 
+#undef use_tioctl_sp
+void	use_tioctl_sp(
+		SCREEN	*sp, 
+		NCURSES_BOOL f)
+		{ /* void */ }
+
+#undef use_tioct
+void	use_tioct(
+		NCURSES_BOOL f)
+		{ /* void */ }
+
 #undef _nc_get_screensize
 void	_nc_get_screensize(
 		SCREEN	*sp, 

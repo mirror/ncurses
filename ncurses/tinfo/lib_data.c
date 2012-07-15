@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.63 2011/10/08 21:03:29 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.64 2012/07/14 21:01:49 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -255,6 +255,7 @@ NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {
     NULL,			/* _tputs_trace */
 #endif
 #endif
+    FALSE,			/* use_tioctl */
 };
 /* *INDENT-ON* */
 

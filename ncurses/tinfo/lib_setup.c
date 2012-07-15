@@ -37,6 +37,7 @@
  * Terminal setup routines common to termcap and terminfo:
  *
  *		use_env(bool)
+ *		use_tioctl(bool)
  *		setupterm(char *, int, int *)
  */
 
@@ -47,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.145 2012/07/07 20:35:27 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.147 2012/07/14 23:59:26 tom Exp $")
 
 /****************************************************************************
  *
@@ -231,6 +232,21 @@ NCURSES_SP_NAME(use_env) (NCURSES_SP_DCLx bool f)
     returnVoid;
 }
 
+NCURSES_EXPORT(void)
+NCURSES_SP_NAME(use_tioctl) (NCURSES_SP_DCLx bool f)
+{
+    T((T_CALLED("use_tioctl(%p,%d)"), (void *) SP_PARM, (int) f));
+#if NCURSES_SP_FUNCS
+    START_TRACE();
+    if (IsPreScreen(SP_PARM)) {
+	SP_PARM->_use_tioctl = f;
+    }
+#else
+    _nc_prescreen.use_tioctl = f;
+#endif
+    returnVoid;
+}
+
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(void)
 use_env(bool f)
@@ -238,6 +254,15 @@ use_env(bool f)
     T((T_CALLED("use_env(%d)"), (int) f));
     START_TRACE();
     _nc_prescreen.use_env = f;
+    returnVoid;
+}
+
+NCURSES_EXPORT(void)
+use_tioctl(bool f)
+{
+    T((T_CALLED("use_tioctl(%d)"), (int) f));
+    START_TRACE();
+    _nc_prescreen.use_tioctl = f;
     returnVoid;
 }
 #endif
@@ -287,7 +312,9 @@ _nc_get_screensize(SCREEN *sp,
 	    int screendata[2];
 	    _scrsize(screendata);
 	    *colp = screendata[0];
-	    *linep = screendata[1];
+	    *linep = ((sp != 0 && sp->_filtered)
+		      ? 1
+		      : screendata[1]);
 	    T(("EMX screen size: environment LINES = %d COLUMNS = %d",
 	       *linep, *colp));
 	}
@@ -312,6 +339,18 @@ _nc_get_screensize(SCREEN *sp,
 		(errno == EINTR);
 	}
 #endif /* HAVE_SIZECHANGE */
+
+	if (_nc_prescreen.use_tioctl) {
+	    /*
+	     * If environment variables are used, update them.
+	     */
+	    if ((sp == 0 || !sp->_filtered) && _nc_getenv_num("LINES") > 0) {
+		_nc_setenv_num("LINES", *linep);
+	    }
+	    if (_nc_getenv_num("COLUMNS") > 0) {
+		_nc_setenv_num("COLUMNS", *colp);
+	    }
+	}
 
 	/*
 	 * Finally, look for environment variables.

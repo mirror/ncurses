@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.53 2012/02/19 21:02:32 tom Exp $
+# $Id: ncurses_defs,v 1.54 2012/07/14 21:03:29 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -104,6 +104,7 @@ HAVE_PANEL_H
 HAVE_POLL
 HAVE_POLL_H
 HAVE_PURIFY
+HAVE_PUTENV
 HAVE_PUTWC 
 HAVE_PUTWIN	1
 HAVE_REGEXPR_H_FUNCS
@@ -117,6 +118,7 @@ HAVE_SCR_DUMP 1
 HAVE_SELECT
 HAVE_SETBUF
 HAVE_SETBUFFER
+HAVE_SETENV
 HAVE_SETUPTERM	1
 HAVE_SETVBUF
 HAVE_SGTTY_H

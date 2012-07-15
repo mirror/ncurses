@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.501 2012/07/07 20:47:07 tom Exp $
+ * $Id: curses.priv.h,v 1.502 2012/07/14 21:14:30 tom Exp $
  *
  *	curses.priv.h
  *
@@ -941,6 +941,7 @@ typedef struct {
 	const char	*_tputs_trace;
 #endif
 #endif
+	bool		use_tioctl;
 } NCURSES_PRESCREEN;
 
 /*
@@ -1217,6 +1218,8 @@ struct screen {
 	 */
 	bool		_screen_acs_fix;
 #endif
+
+	bool		_use_tioctl;
 };
 
 extern NCURSES_EXPORT_VAR(SCREEN *) _nc_screen_chain;
@@ -1958,8 +1961,8 @@ extern NCURSES_EXPORT(int) _nc_outch (int);
 extern NCURSES_EXPORT(int) _nc_putp(const char *, const char *);
 extern NCURSES_EXPORT(int) _nc_putp_flush(const char *, const char *);
 extern NCURSES_EXPORT(int) _nc_read_termcap_entry (const char *const, TERMTYPE *const);
-extern NCURSES_EXPORT(int) _nc_setupscreen (int, int, FILE *, int, int);
 extern NCURSES_EXPORT(int) _nc_setup_tinfo(const char *, TERMTYPE *);
+extern NCURSES_EXPORT(int) _nc_setupscreen (int, int, FILE *, int, int);
 extern NCURSES_EXPORT(int) _nc_timed_wait (SCREEN *, int, int, int * EVENTLIST_2nd(_nc_eventlist *));
 extern NCURSES_EXPORT(void) _nc_do_color (int, int, int, NCURSES_OUTC);
 extern NCURSES_EXPORT(void) _nc_flush (void);
@@ -1973,6 +1976,7 @@ extern NCURSES_EXPORT(void) _nc_make_oldhash (int i);
 extern NCURSES_EXPORT(void) _nc_scroll_oldhash (int n, int top, int bot);
 extern NCURSES_EXPORT(void) _nc_scroll_optimize (void);
 extern NCURSES_EXPORT(void) _nc_set_buffer (FILE *, int);
+extern NCURSES_EXPORT(void) _nc_setenv_num (const char *, int);
 extern NCURSES_EXPORT(void) _nc_signal_handler (int);
 extern NCURSES_EXPORT(void) _nc_synchook (WINDOW *);
 extern NCURSES_EXPORT(void) _nc_trace_tries (TRIES *);

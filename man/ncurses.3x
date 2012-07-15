@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.106 2011/12/17 23:19:59 tom Exp $
+.\" $Id: ncurses.3x,v 1.107 2012/07/14 21:13:06 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .de bP
@@ -637,6 +637,7 @@ use_default_colors/\fBdefault_colors\fR(3X)*
 use_env/\fBcurs_util\fR(3X)
 use_extended_names/\fBcurs_extend\fR(3X)*
 use_legacy_coding/\fBlegacy_coding\fR(3X)*
+use_tioctl/\fBcurs_util\fR(3X)
 vid_attr/\fBcurs_terminfo\fR(3X)
 vid_puts/\fBcurs_terminfo\fR(3X)
 vidattr/\fBcurs_terminfo\fR(3X)
@@ -789,7 +790,9 @@ For best results, \fBlines\fR and \fBcols\fR should not be specified in
 a terminal description for terminals which are run as emulations.
 .IP
 Use the \fBuse_env\fR function to disable all use of external environment
-(including system calls) to determine the screen size.
+(but not including system calls) to determine the screen size.
+Use the \fBuse_tioctl\fR function to update \fBCOLUMNS\fP or \fBLINES\fP
+to match the screen size obtained from system calls or the terminal database.
 .TP 5
 ESCDELAY
 Specifies the total time, in milliseconds, for which ncurses will

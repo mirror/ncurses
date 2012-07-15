@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.19 2012/06/30 22:01:10 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.21 2012/07/15 00:20:43 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -342,14 +342,18 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *linep, int *colp)
 {
     SCREEN *sp;
     bool useEnv = TRUE;
+    bool useTioctl = TRUE;
 
     AssertTCB();
     sp = TCB->csp;		/* can be null here */
 
     if (sp) {
 	useEnv = sp->_use_env;
-    } else
+	useTioctl = sp->_use_tioctl;
+    } else {
 	useEnv = _nc_prescreen.use_env;
+	useTioctl = _nc_prescreen.use_tioctl;
+    }
 
     /* figure out the size of the screen */
     T(("screen size: terminfo lines = %d columns = %d", lines, columns));
@@ -365,7 +369,9 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *linep, int *colp)
 	    int screendata[2];
 	    _scrsize(screendata);
 	    *colp = screendata[0];
-	    *linep = screendata[1];
+	    *linep = ((sp != 0 && sp->_filtered)
+		      ? 1
+		      : screendata[1]);
 	    T(("EMX screen size: environment LINES = %d COLUMNS = %d",
 	       *linep, *colp));
 	}
@@ -393,6 +399,20 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *linep, int *colp)
 	    }
 	}
 #endif /* HAVE_SIZECHANGE */
+
+	if (useTioctl) {
+	    char buf[128];
+
+	    /*
+	     * If environment variables are used, update them.
+	     */
+	    if ((sp == 0 || !sp->_filtered) && _nc_getenv_num("LINES") > 0) {
+		_nc_setenv_num("LINES", *linep);
+	    }
+	    if (_nc_getenv_num("COLUMNS") > 0) {
+		_nc_setenv_num("COLUMNS", *colp);
+	    }
+	}
 
 	/*
 	 * Finally, look for environment variables.
