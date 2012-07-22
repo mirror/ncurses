@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.67 2012/03/10 23:22:21 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.68 2012/07/21 22:55:59 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -345,6 +345,21 @@ show_termcap(int db_index, int db_limit, char *buffer, DescHook hook)
 }
 #endif
 
+#if USE_DATABASE
+static char *
+copy_entryname(DIRENT * src)
+{
+    size_t len = NAMLEN(src);
+    char *result = malloc(len + 1);
+    if (result == 0)
+	failed("copy entryname");
+    memcpy(result, src->d_name, len);
+    result[len] = '\0';
+
+    return result;
+}
+#endif
+
 static int
 typelist(int eargc, char *eargv[],
 	 bool verbosity,
@@ -372,24 +387,28 @@ typelist(int eargc, char *eargv[],
 		(void) printf("#\n#%s:\n#\n", eargv[i]);
 
 	    while ((subdir = readdir(termdir)) != 0) {
-		size_t len = NAMLEN(subdir);
-		size_t cwd_len = len + strlen(eargv[i]) + 3;
-		char name_1[PATH_MAX];
+		size_t cwd_len;
+		char *name_1;
 		DIR *entrydir;
 		DIRENT *entry;
 
+		name_1 = copy_entryname(subdir);
+		if (isDotname(name_1)) {
+		    free(name_1);
+		    continue;
+		}
+
+		cwd_len = NAMLEN(subdir) + strlen(eargv[i]) + 3;
 		cwd_buf = typeRealloc(char, cwd_len, cwd_buf);
 		if (cwd_buf == 0)
 		    failed("realloc cwd_buf");
 
 		assert(cwd_buf != 0);
 
-		strncpy(name_1, subdir->d_name, len)[len] = '\0';
-		if (isDotname(name_1))
-		    continue;
-
 		_nc_SPRINTF(cwd_buf, _nc_SLIMIT(cwd_len)
-			    "%s/%.*s/", eargv[i], (int) len, name_1);
+			    "%s/%s/", eargv[i], name_1);
+		free(name_1);
+
 		if (chdir(cwd_buf) != 0)
 		    continue;
 
@@ -399,15 +418,16 @@ typelist(int eargc, char *eargv[],
 		    continue;
 		}
 		while ((entry = readdir(entrydir)) != 0) {
-		    char name_2[PATH_MAX];
+		    char *name_2;
 		    TERMTYPE lterm;
 		    char *cn;
 		    int status;
 
-		    len = NAMLEN(entry);
-		    strncpy(name_2, entry->d_name, len)[len] = '\0';
-		    if (isDotname(name_2) || !_nc_is_file_path(name_2))
+		    name_2 = copy_entryname(entry);
+		    if (isDotname(name_2) || !_nc_is_file_path(name_2)) {
+			free(name_2);
 			continue;
+		    }
 
 		    status = _nc_read_file_entry(name_2, &lterm);
 		    if (status <= 0) {
@@ -415,6 +435,7 @@ typelist(int eargc, char *eargv[],
 			(void) fprintf(stderr,
 				       "%s: couldn't open terminfo file %s.\n",
 				       _nc_progname, name_2);
+			free(name_2);
 			return (EXIT_FAILURE);
 		    }
 
@@ -425,6 +446,7 @@ typelist(int eargc, char *eargv[],
 			hook(i, eargc, cn, &lterm);
 		    }
 		    _nc_free_termtype(&lterm);
+		    free(name_2);
 		}
 		closedir(entrydir);
 	    }

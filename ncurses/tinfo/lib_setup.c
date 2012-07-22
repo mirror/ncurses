@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.147 2012/07/14 23:59:26 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.148 2012/07/21 18:05:41 tom Exp $")
 
 /****************************************************************************
  *
@@ -304,7 +304,7 @@ _nc_get_screensize(SCREEN *sp,
     *linep = (int) lines;
     *colp = (int) columns;
 
-    if (_nc_prescreen.use_env) {
+    if (_nc_prescreen.use_env || _nc_prescreen.use_tioctl) {
 	int value;
 
 #ifdef __EMX__
@@ -340,31 +340,33 @@ _nc_get_screensize(SCREEN *sp,
 	}
 #endif /* HAVE_SIZECHANGE */
 
-	if (_nc_prescreen.use_tioctl) {
-	    /*
-	     * If environment variables are used, update them.
-	     */
-	    if ((sp == 0 || !sp->_filtered) && _nc_getenv_num("LINES") > 0) {
-		_nc_setenv_num("LINES", *linep);
+	if (_nc_prescreen.use_env) {
+	    if (_nc_prescreen.use_tioctl) {
+		/*
+		 * If environment variables are used, update them.
+		 */
+		if ((sp == 0 || !sp->_filtered) && _nc_getenv_num("LINES") > 0) {
+		    _nc_setenv_num("LINES", *linep);
+		}
+		if (_nc_getenv_num("COLUMNS") > 0) {
+		    _nc_setenv_num("COLUMNS", *colp);
+		}
 	    }
-	    if (_nc_getenv_num("COLUMNS") > 0) {
-		_nc_setenv_num("COLUMNS", *colp);
-	    }
-	}
 
-	/*
-	 * Finally, look for environment variables.
-	 *
-	 * Solaris lets users override either dimension with an environment
-	 * variable.
-	 */
-	if ((value = _nc_getenv_num("LINES")) > 0) {
-	    *linep = value;
-	    T(("screen size: environment LINES = %d", *linep));
-	}
-	if ((value = _nc_getenv_num("COLUMNS")) > 0) {
-	    *colp = value;
-	    T(("screen size: environment COLUMNS = %d", *colp));
+	    /*
+	     * Finally, look for environment variables.
+	     *
+	     * Solaris lets users override either dimension with an environment
+	     * variable.
+	     */
+	    if ((value = _nc_getenv_num("LINES")) > 0) {
+		*linep = value;
+		T(("screen size: environment LINES = %d", *linep));
+	    }
+	    if ((value = _nc_getenv_num("COLUMNS")) > 0) {
+		*colp = value;
+		T(("screen size: environment COLUMNS = %d", *colp));
+	    }
 	}
 
 	/* if we can't get dynamic info about the size, use static */

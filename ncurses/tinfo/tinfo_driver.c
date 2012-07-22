@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.21 2012/07/15 00:20:43 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.23 2012/07/22 00:45:34 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -361,7 +361,7 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *linep, int *colp)
     *linep = (int) lines;
     *colp = (int) columns;
 
-    if (useEnv) {
+    if (useEnv || useTioctl) {
 	int value;
 
 #ifdef __EMX__
@@ -400,33 +400,33 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *linep, int *colp)
 	}
 #endif /* HAVE_SIZECHANGE */
 
-	if (useTioctl) {
-	    char buf[128];
+	if (useEnv) {
+	    if (useTioctl) {
+		/*
+		 * If environment variables are used, update them.
+		 */
+		if ((sp == 0 || !sp->_filtered) && _nc_getenv_num("LINES") > 0) {
+		    _nc_setenv_num("LINES", *linep);
+		}
+		if (_nc_getenv_num("COLUMNS") > 0) {
+		    _nc_setenv_num("COLUMNS", *colp);
+		}
+	    }
 
 	    /*
-	     * If environment variables are used, update them.
+	     * Finally, look for environment variables.
+	     *
+	     * Solaris lets users override either dimension with an environment
+	     * variable.
 	     */
-	    if ((sp == 0 || !sp->_filtered) && _nc_getenv_num("LINES") > 0) {
-		_nc_setenv_num("LINES", *linep);
+	    if ((value = _nc_getenv_num("LINES")) > 0) {
+		*linep = value;
+		T(("screen size: environment LINES = %d", *linep));
 	    }
-	    if (_nc_getenv_num("COLUMNS") > 0) {
-		_nc_setenv_num("COLUMNS", *colp);
+	    if ((value = _nc_getenv_num("COLUMNS")) > 0) {
+		*colp = value;
+		T(("screen size: environment COLUMNS = %d", *colp));
 	    }
-	}
-
-	/*
-	 * Finally, look for environment variables.
-	 *
-	 * Solaris lets users override either dimension with an environment
-	 * variable.
-	 */
-	if ((value = _nc_getenv_num("LINES")) > 0) {
-	    *linep = value;
-	    T(("screen size: environment LINES = %d", *linep));
-	}
-	if ((value = _nc_getenv_num("COLUMNS")) > 0) {
-	    *colp = value;
-	    T(("screen size: environment COLUMNS = %d", *colp));
 	}
 
 	/* if we can't get dynamic info about the size, use static */

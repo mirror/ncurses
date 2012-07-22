@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.372 2012/07/07 18:09:38 tom Exp $
+$Id: ncurses.c,v 1.373 2012/07/21 17:40:21 tom Exp $
 
 ***************************************************************************/
 
@@ -6497,6 +6497,7 @@ usage(void)
 	,"  -a f,b   set default-colors (assumed white-on-black)"
 	,"  -d       use default-colors if terminal supports them"
 #endif
+	,"  -E       call use_env(FALSE) to ignore $LINES and $COLUMNS"
 #if USE_SOFTKEYS
 	,"  -e fmt   specify format for soft-keys test (e)"
 #endif
@@ -6508,6 +6509,9 @@ usage(void)
 	,"  -p file  rgb values to use in 'd' rather than ncurses's builtin"
 #if USE_LIBPANEL
 	,"  -s msec  specify nominal time for panel-demo (default: 1, to hold)"
+#endif
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714)
+	,"  -T       call use_tioctl(TRUE) to allow SIGWINCH to override environment"
 #endif
 #ifdef TRACE
 	,"  -t mask  specify default trace-level (may toggle with ^T)"
@@ -6695,7 +6699,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((c = getopt(argc, argv, "a:de:fhmp:s:t:")) != -1) {
+    while ((c = getopt(argc, argv, "a:dEe:fhmp:s:Tt:")) != -1) {
 	switch (c) {
 #ifdef NCURSES_VERSION
 	case 'a':
@@ -6706,6 +6710,9 @@ main(int argc, char *argv[])
 	    default_colors = TRUE;
 	    break;
 #endif
+	case 'E':
+	    use_env(FALSE);
+	    break;
 	case 'e':
 	    my_e_param = atoi(optarg);
 #ifdef NCURSES_VERSION
@@ -6733,6 +6740,11 @@ main(int argc, char *argv[])
 #if USE_LIBPANEL
 	case 's':
 	    nap_msec = (int) atol(optarg);
+	    break;
+#endif
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714)
+	case 'T':
+	    use_tioctl(TRUE);
 	    break;
 #endif
 #ifdef TRACE

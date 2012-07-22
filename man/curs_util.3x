@@ -1,3 +1,4 @@
+'\" t
 .\"***************************************************************************
 .\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
 .\"                                                                          *
@@ -26,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.35 2012/07/15 00:23:52 tom Exp $
+.\" $Id: curs_util.3x,v 1.36 2012/07/21 18:51:10 tom Exp $
 .TH curs_util 3X ""
 .de bP
 .IP \(bu 4
@@ -136,14 +137,15 @@ when determining the screen size.
 Normally ncurses looks first at the terminal database for the screen size.
 .IP
 If \fBuse_env\fP was called with \fBFALSE\fP for parameter,
-it stops here.
+it stops here unless
+If \fBuse_tioctl\fP was also called with \fBTRUE\fP for parameter.
 .bP
 Then it asks for the screen size via operating system calls.
 If successful,
 it overrides the values from the terminal database.
 .bP
-Finally, ncurses examines the
-\fBLINES\fR or \fBCOLUMNS\fR environment variables,
+Finally (unless \fBuse_env\fP was called with \fBFALSE\fP parameter),
+ncurses examines the \fBLINES\fR or \fBCOLUMNS\fR environment variables,
 using a value in those to override the results
 from the operating system or terminal database.
 .IP
@@ -165,6 +167,30 @@ or from the terminal database.
 .bP
 ncurses re-fetches the value of the environment variables so that
 it is still the environment variables which set the screen size.
+.PP
+The \fBuse_env\fP and \fBuse_tioctl\fP routines combine as
+summarized here:
+.TS
+center tab(/);
+l l l
+_ _ _
+lw7 lw7 lw40.
+\fIuse_env\fR/\fIuse_tioctl\fR/\fISummary\fR
+TRUE/FALSE/T{
+This is the default behavior.
+ncurses uses operating system calls
+unless overridden by $LINES or $COLUMNS environment variables.
+T}
+TRUE/TRUE/T{
+ncurses updates $LINES and $COLUMNS based on operating system calls.
+T}
+FALSE/TRUE/T{
+ncurses ignores $LINES and $COLUMNS, uses operating system calls to obtain size.
+T}
+FALSE/FALSE/T{
+ncurses relies on the terminal database to determine size.
+T}
+.TE
 .PP
 The \fBputwin\fR routine writes all data associated with window \fIwin\fR into
 the file to which \fIfilep\fR points.  This information can be later retrieved

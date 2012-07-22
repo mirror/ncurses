@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.101 2012/06/10 00:28:04 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.102 2012/07/21 23:23:08 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4229,7 +4229,10 @@ form_driver(FORM *form, int c)
 
   if ((c >= MIN_FORM_COMMAND && c <= MAX_FORM_COMMAND) &&
       ((bindings[c - MIN_FORM_COMMAND].keycode & Key_Mask) == c))
-    BI = &(bindings[c - MIN_FORM_COMMAND]);
+    {
+      TR(TRACE_CALLS, ("form_request %s", form_request_name(c)));
+      BI = &(bindings[c - MIN_FORM_COMMAND]);
+    }
 
   if (BI)
     {
@@ -4256,9 +4259,13 @@ form_driver(FORM *form, int c)
 	  Generic_Method fct = Generic_Methods[method];
 
 	  if (fct)
-	    res = fct(BI->cmd, form);
+	    {
+	      res = fct(BI->cmd, form);
+	    }
 	  else
-	    res = (BI->cmd) (form);
+	    {
+	      res = (BI->cmd) (form);
+	    }
 	}
     }
 #ifdef NCURSES_MOUSE_VERSION
