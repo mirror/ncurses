@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.460 $
-#	$Date: 2012/06/02 20:15:40 $
+#	$Revision: 1.464 $
+#	$Date: 2012/07/28 19:10:53 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -321,7 +321,7 @@ vanilla|dumb tty,
 # DEL and ^C are hardcoded to act as kill characters.
 # ^D acts as a line break (just like newline).
 # It also interprets
-#      \033];xxx\007 
+#      \033];xxx\007
 # for compatibility with xterm -TD
 9term|Plan9 terminal emulator for X,
 	am,
@@ -959,6 +959,7 @@ linux2.6|linux 2.6.x console,
 	sgr0=\E[m\017, smacs=^N, use=linux2.2,
 
 # The 3.0 kernel adds support for clearing scrollback buffer (capability E3).
+# It is the same as xterm's erase-saved-lines feature.
 linux3.0|linux 3.0 kernels,
 	E3=\E[3;J, use=linux2.6,
 
@@ -2982,7 +2983,8 @@ putty|PuTTY terminal emulator,
 	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E[?47h,
 	smir=\E[4h, smpch=\E[11m, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, vpa=\E[%i%p1%dd, use=vt102+enq, use=xterm+sl,
+	tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3;J, use=vt102+enq,
+	use=xterm+sl,
 vt100-putty|Reset PuTTY to pure vt100,
 	rs2=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p,
 	use=vt100,
@@ -3237,7 +3239,7 @@ xterm-r5|xterm R5 version,
 # added khome/kend, hts based on the R6 xterm code - TD
 # (khome/kend do not actually work in X11R5 or X11R6, but many people use this
 # for compatibility with other emulators).
-xterm-r6|xterm-old|xterm X11R6 version,
+xterm-r6|xterm X11R6 version,
 	OTbs, am, km, mir, msgr, xenl,
 	cols#80, it#8, lines#24,
 	acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
@@ -3263,6 +3265,8 @@ xterm-r6|xterm-old|xterm X11R6 version,
 	sgr0=\E[m, smacs=^N, smcup=\E7\E[?47h, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 	use=vt100+enq,
+xterm-old|antique xterm version,
+	use=xterm-r6,
 # This is the base xterm entry for the xterm supplied with XFree86 3.2 & up.
 # The name has been changed and some aliases have been removed.
 xterm-xf86-v32|xterm terminal emulator (XFree86 3.2 Window System),
@@ -3554,8 +3558,8 @@ xterm-basic|modern xterm terminal emulator - common,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
 	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smcup=\E[?1049h,
 	smir=\E[4h, smkx=\E[?1h\E=, smm=\E[?1034h, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, use=ansi+pp,
-	use=xterm+kbs, use=vt100+enq,
+	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3;J,
+	use=ansi+pp, use=xterm+kbs, use=vt100+enq,
 
 # From: David J. MacKenzie <djm@va.pubnix.com>, 14 Nov 1997
 # In retrospect, something like xterm-r6 was intended here -TD
@@ -3625,11 +3629,11 @@ xterm-1003|testing xterm-mouse,
 # Ms modifies the selection/clipboard.  Its parameters are
 #	p1 = the storage unit (clipboard, selection or cut buffer)
 #	p2 = the base64-encoded clipboard content.
-# 
+#
 # Ss is used to set the cursor style as described by the DECSCUSR
 #	function to a block or underline.
 # Se resets the cursor style to the terminal power-on default.
-#  
+#
 # Cs and Cr set and reset the cursor colour.
 xterm+tmux|advanced xterm features used in tmux,
 	Cr=\E]112\007, Cs=\E]12;%p1%s\007,
@@ -3739,7 +3743,7 @@ xterm-noapp|xterm with cursor keys in normal mode,
 	use=xterm,
 
 xterm-24|vs100|xterms|xterm terminal emulator (X Window System),
-	lines#24, use=xterm,
+	lines#24, use=xterm-old,
 
 # This is xterm for ncurses.
 xterm|xterm terminal emulator (X Window System),
@@ -3801,8 +3805,8 @@ dec+sl|DEC VTxx status line,
 #
 # xterm with bold instead of underline
 xterm-bold|xterm terminal emulator (X11R6 Window System) standout w/bold,
-	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;1%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
-	smso=\E[7m, smul=\E[1m, use=xterm,
+	sgr=%?%p9%t\016%e\017%;B\E[0%?%p6%t;1%;%?%p2%t;1%;%?%p1%p3%|%t;7%;m,
+	smso=\E[7m, smul=\E[1m, use=xterm-old,
 
 # See the note on ICH/ICH1 VERSUS RMIR/SMIR near the end of file
 xterm-nic|xterm with ich/ich1 suppressed for non-curses programs,
@@ -5060,7 +5064,7 @@ screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm,
 	bce@, bw,
 	invis@, kIC@, kNXT@, kPRV@, meml@, memu@,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m,
-	use=screen+fkeys, use=xterm-new,
+	E3@, use=screen+fkeys, use=xterm-new,
 # xterm-r6 does not really support khome/kend unless it is propped up by
 # the translations resource.
 screen.xterm-r6|screen customized for X11R6 xterm,
@@ -16077,7 +16081,7 @@ ncr7901|ncr 7901 model,
 # Manufactured in the early/mid eighties, behaves almost the same as a
 # Televideo 950.  Take a 950, change its cabinet for a more 80s-ish one (but
 # keep the same keyboard layout), add an optional 25-line mode, replace the DIP
-# switches with a menu and remove the "lock line" feature (ESC !  1 and ESC ! 
+# switches with a menu and remove the "lock line" feature (ESC !  1 and ESC !
 # 2), here is the NDR 9500.  Even the line-lock, albeit disabled, is
 # recognized:  if you type in "ESC !", the next (third) character is not
 # echoed, showing that the terminal was actually waiting for a parameter!
@@ -21415,7 +21419,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # gsbom/grbom are used to enable/disable real bold (not intensity bright) mode.
 #    This was implemented for the Hurd.
 # E3 clears the terminal's scrollback buffer.  This was implemented in the
-#    Linux 3.0 kernel as a security feature.
+#    Linux 3.0 kernel as a security feature.  It matches a feature which was
+#    added in xterm patch #107.
 # U8 is a numeric capability which denotes a terminal emulator which does not
 #    support VT100 SI/SO when processing UTF-8 encoding.  Set this to a nonzero
 #    value to enable it.
@@ -22886,5 +22891,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* add kdch1, etc., to qvt108 -TD
 #	* add dl1/il1 to some entries based on dl/il values -TD
 #	* add dl to simpleterm -TD
+#
+# 2012-06-10
+#	* modify some older xterm entries to align with xterm source -TD
+#	* separate "xterm-old" alias from "xterm-r6" -TD
+#
+# 2012-07-28
+#	* add E3 to xterm-basic and putty -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

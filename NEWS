@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1931 2012/07/21 23:24:40 tom Exp $
+-- $Id: NEWS,v 1.1936 2012/07/29 00:02:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120728
+	+ correct path for ncurses_mingw.h in include/headers, in case build
+	  is done outside source-tree (patch by Roumen Petrov).
+	+ modify some older xterm entries to align with xterm source -TD
+	+ separate "xterm-old" alias from "xterm-r6" -TD
+	+ add E3 extended capability to xterm-basic and putty -TD
+	+ parenthesize parameters of other macros in curses.h -TD
+	+ parenthesize parameter of COLOR_PAIR and PAIR_NUMBER in curses.h
+	  in case it happens to be a comma-expression, etc.  (patch by Nick
+	  Black).
 
 20120721
 	+ improved form_request_by_name() and menu_request_by_name().
