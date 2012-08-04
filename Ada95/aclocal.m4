@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.51 2012/06/30 21:28:18 tom Exp $
+dnl $Id: aclocal.m4,v 1.52 2012/08/04 18:12:47 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -772,7 +772,7 @@ AC_SUBST(SHOW_CC)
 AC_SUBST(ECHO_CC)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 7 updated: 2011/12/10 18:58:47
+dnl CF_ENABLE_PC_FILES version: 9 updated: 2012/08/04 13:59:54
 dnl ------------------
 dnl This is the "--enable-pc-files" option, which is available if there is a
 dnl pkg-config configuration on the local machine.
@@ -781,16 +781,15 @@ AC_REQUIRE([CF_PKG_CONFIG])
 AC_REQUIRE([CF_WITH_PKG_CONFIG_LIBDIR])
 
 if test "$PKG_CONFIG" != none ; then
-	if test -n "$PKG_CONFIG_LIBDIR" && test -d "$PKG_CONFIG_LIBDIR" ; then
-		AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
-		AC_ARG_ENABLE(pc-files,
-			[  --enable-pc-files       generate and install .pc files for pkg-config],
-			[enable_pc_files=$enableval],
-			[enable_pc_files=no])
-		AC_MSG_RESULT($enable_pc_files)
-	elif test -z "$PKG_CONFIG_LIBDIR" || test "$PKG_CONFIG_LIBDIR" != no; then
-		enable_pc_files=no
-		AC_MSG_WARN(did not find $PKG_CONFIG library)
+	AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
+	AC_ARG_ENABLE(pc-files,
+		[  --enable-pc-files       generate and install .pc files for pkg-config],
+		[enable_pc_files=$enableval],
+		[enable_pc_files=no])
+	AC_MSG_RESULT($enable_pc_files)
+	if test "$enable_pc_files" != no
+	then
+		CF_PATH_SYNTAX(PKG_CONFIG_LIBDIR)
 	fi
 else
 	enable_pc_files=no

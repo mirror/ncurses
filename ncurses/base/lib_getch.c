@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.124 2012/01/21 19:21:29 KO.Myung-Hun Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.125 2012/08/04 17:11:37 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -163,7 +163,7 @@ check_mouse_activity(SCREEN *sp, int delay EVENTLIST_2nd(_nc_eventlist * evl))
 static NCURSES_INLINE int
 fifo_peek(SCREEN *sp)
 {
-    int ch = sp->_fifo[peek];
+    int ch = (peek >= 0) ? sp->_fifo[peek] : ERR;
     TR(TRACE_IEVENT, ("peeking at %d", peek));
 
     p_inc();
@@ -173,15 +173,16 @@ fifo_peek(SCREEN *sp)
 static NCURSES_INLINE int
 fifo_pull(SCREEN *sp)
 {
-    int ch;
-    ch = sp->_fifo[head];
+    int ch = (head >= 0) ? sp->_fifo[head] : ERR;
+
     TR(TRACE_IEVENT, ("pulling %s from %d", _nc_tracechar(sp, ch), head));
 
     if (peek == head) {
 	h_inc();
 	peek = head;
-    } else
+    } else {
 	h_inc();
+    }
 
 #ifdef TRACE
     if (USE_TRACEF(TRACE_IEVENT)) {
@@ -200,7 +201,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
     int mask = 0;
 
     (void) mask;
-    if (tail == -1)
+    if (tail < 0)
 	return ERR;
 
 #ifdef HIDE_EINTR
@@ -716,10 +717,11 @@ kgetch(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 
 	if (ptr->value != 0) {	/* sequence terminated */
 	    TR(TRACE_IEVENT, ("end of sequence"));
-	    if (peek == tail)
+	    if (peek == tail) {
 		fifo_clear(sp);
-	    else
+	    } else {
 		head = peek;
+	    }
 	    return (ptr->value);
 	}
 

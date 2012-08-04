@@ -6226,7 +6226,7 @@ if test $ac_cv_func_tgoto = yes; then
   cf_term_lib=predefined
 else
 
-        for cf_term_lib in $cf_check_list otermcap termcap termlib unknown
+        for cf_term_lib in $cf_check_list otermcap termcap tinfo termlib unknown
         do
             as_ac_Lib=`echo "ac_cv_lib_$cf_term_lib''_tgoto" | $as_tr_sh`
 echo "$as_me:6232: checking for tgoto in -l$cf_term_lib" >&5

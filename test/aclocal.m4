@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.77 2012/06/30 21:29:31 tom Exp $
+dnl $Id: aclocal.m4,v 1.78 2012/08/04 18:14:48 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -711,7 +711,7 @@ fi
 AC_CHECK_HEADERS($cf_cv_ncurses_header)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_LIBS version: 35 updated: 2011/08/09 21:06:37
+dnl CF_CURSES_LIBS version: 36 updated: 2012/07/07 21:02:48
 dnl --------------
 dnl Look for the curses libraries.  Older curses implementations may require
 dnl termcap/termlib to be linked as well.  Call CF_CURSES_CPPFLAGS first.
@@ -791,7 +791,7 @@ if test ".$ac_cv_func_initscr" != .yes ; then
     # Check for library containing tgoto.  Do this before curses library
     # because it may be needed to link the test-case for initscr.
     AC_CHECK_FUNC(tgoto,[cf_term_lib=predefined],[
-        for cf_term_lib in $cf_check_list otermcap termcap termlib unknown
+        for cf_term_lib in $cf_check_list otermcap termcap tinfo termlib unknown
         do
             AC_CHECK_LIB($cf_term_lib,tgoto,[break])
         done
