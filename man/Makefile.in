@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.45 2010/11/27 21:45:27 tom Exp $
+# $Id: Makefile.in,v 1.46 2012/08/11 21:31:56 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -41,6 +41,7 @@ DESTDIR		= @DESTDIR@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
+datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 

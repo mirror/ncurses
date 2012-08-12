@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.464 $
-#	$Date: 2012/07/28 19:10:53 $
+#	$Revision: 1.466 $
+#	$Date: 2012/08/11 15:27:54 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -17182,6 +17182,8 @@ mac-w|macterminal-w|Apple Macintosh with Macterminal in 132 column mode,
 #
 #     echo "$TERM_PROGRAM" "$TERM_PROGRAM_VERSION"
 #
+# For Apple_Terminal v309+, use "nsterm-256color" (or "nsterm-bce")
+#
 # For Apple_Terminal v200+, use "nsterm-16color" (a.k.a. "nsterm")
 #
 # For Apple_Terminal v71+/v100+, use "nsterm-bce".
@@ -17484,6 +17486,10 @@ nsterm-c-s|AppKit Terminal.app v51+ w/MacRoman charset (full color w/statusline)
 # and it is still not settable from the preferences dialog. This is
 # tracked under rdar://problem/7365108 and rdar://problem/7365134
 # in Apple's bug reporter.
+#
+# In OS X 10.7 (Leopard) the TERM which can be set in the preferences dialog
+# defaults to xterm-color.  Alternative selections are ansi, dtterm, rxvt,
+# vt52, vt100, vt102 and xterm.
 nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
 	bw@, mir, npc,
 	civis=\E[?25l, cnorm=\E[?25h, dch=\E[%p1%dP, dch1=\E[P,
@@ -17495,10 +17501,10 @@ nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
 	kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, khome=\E[H,
 	knp=\E[6~, kpp=\E[5~, rmcup=\E[2J\E[?47l\E8, rmir=\E[4l,
 	smcup=\E7\E[?47h, smir=\E[4h, vpa=\E[%i%p1%dd,
-	use=nsterm-c-s-acs,
+	kLFT5=\E[5D, kRIT5=\E[5C, use=nsterm-c-s-acs,
 
 # The versions of Terminal.app in Mac OS X version 10.3.x seem to have
-# the background color erase bug. The newer version 240.2 in Mac OS X
+# the background color erase feature. The newer version 240.2 in Mac OS X
 # version 10.5 does not.
 #
 # This entry is based on newsgroup comments by Alain Bench, Christian Ebert,
@@ -17510,12 +17516,40 @@ nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
 #	defaults write com.apple.Terminal TermCapString nsterm-bce
 #
 # and that it is not set in Terminal's preferences dialog.
+#
+# Modified for OS X 10.8, omitting bw based on testing with tack -TD
+#
+# Notes:
+# * The terminal description matches the default settings.
+# * The keyboard is configurable via a dialog.
+# * By default khome, kend, knext and kprev are honored only with a
+#   shift-modifier.
+# * There are bindings for control left/right arrow (but not up/down).
+#   Added those to nsterm-16color, which is the version used for OS X 10.6
+# * "Allow VT100 application keypage mode" is by default disabled.
+#   There is no way to press keypad-comma unless application mode is enabled
+#   and used.
+# * 132-column mode stopped working during vttest's tests.  Consider it broken.
+# * CHT, REP, SU, SD are buggy.
+# * ECH works (also in Leopard), but is not used here for compatibility.
+# * The terminal preferences dialog replaces xterm-color by xterm-16color and
+#   xterm-256color.  However, it adds "nsterm", so it is possible to use the
+#   nsterm entry from this file to override the MacPorts (20110404) or
+#   system (20081102) copy of this file.
 nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (bce),
-	bce, bw, use=nsterm-16color,
+	bce, use=nsterm-16color,
+
+# This is tested with OS X 10.8 (Mountain Lion), 2012/08/11
+#	TERM_PROGRAM_VERSION=309
+# Earlier reports state that these differences also apply to OS X 10.7 (Lion),
+#	TERM_PROGRAM_VERSION=303
+nsterm-256color|Terminal.app in OS X 10.8,
+	ccc@,
+	initc@, use=xterm+256color, use=nsterm-bce,
 
 # This is an alias which should always point to the "current" version
 nsterm|Apple_Terminal|AppKit Terminal.app,
-	use=nsterm-16color,
+	use=nsterm-256color,
 
 # iTerm.app from http://iterm.sourceforge.net/ is an alternative (and
 # more featureful) terminal emulator for Mac OS X. It is similar
@@ -22898,5 +22932,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2012-07-28
 #	* add E3 to xterm-basic and putty -TD
+#
+# 2012-08-11
+#	* add nsterm-256color, make this the default nsterm -TD
+#	* remove bw from nsterm-bce, per testing with tack -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

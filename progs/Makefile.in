@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.88 2012/03/17 16:45:38 tom Exp $
+# $Id: Makefile.in,v 1.89 2012/08/11 21:31:56 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -61,6 +61,7 @@ exec_prefix	= @exec_prefix@
 bindir		= @bindir@
 libdir		= @libdir@
 includedir	= @includedir@
+datarootdir	= @datarootdir@
 datadir		= @datadir@
 
 LIBTOOL		= @LIBTOOL@

@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.46 2011/03/28 23:45:08 tom Exp $
+#  $Id: Makefile.in,v 1.47 2012/08/11 21:31:56 tom Exp $
 #
 .SUFFIXES:
 
@@ -42,6 +42,7 @@ srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 bindir		= @bindir@
+datarootdir	= @datarootdir@
 datadir		= @datadir@
 libdir		= @libdir@
 includedir	= @includedir@

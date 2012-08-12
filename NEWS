@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1940 2012/08/04 18:14:29 tom Exp $
+-- $Id: NEWS,v 1.1942 2012/08/11 21:30:05 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120811
+	+ update autoconf patch to 2.52.20120811, adding --datarootdir
+	  (prompted by discussion with Erwin Waterlander).
+	+ improve description of --enable-reentrant option in README and the
+	  INSTALL file.
+	+ add nsterm-256color, make this the default nsterm -TD
+	+ remove bw from nsterm-bce, per testing with tack -TD
 
 20120804
 	+ update test/configure, adding check for tinfo library.

@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: run_tic.in,v 1.32 2011/02/23 23:30:15 tom Exp $
+# $Id: run_tic.in,v 1.33 2012/08/11 21:45:47 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -48,6 +48,7 @@ echo '** Building terminfo database, please wait...'
 : ${bindir:=@bindir@}
 : ${top_srcdir:=@top_srcdir@}
 : ${srcdir:=@srcdir@}
+: ${datarootdir:=@datarootdir@}
 : ${datadir:=@datadir@}
 : ${TIC_PATH:=@TIC_PATH@}
 : ${ticdir:=@TERMINFO@}

@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.27 2011/08/13 22:11:20 tom Exp $
+# $Id: ncurses-config.in,v 1.28 2012/08/11 21:45:20 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2010,2011 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -36,6 +36,7 @@ exec_prefix="@exec_prefix@"
 bindir="@bindir@"
 includedir="@includedir@"
 libdir="@libdir@"
+datarootdir="@datarootdir@"
 datadir="@datadir@"
 mandir="@mandir@"
 
