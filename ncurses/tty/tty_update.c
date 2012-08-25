@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.268 2012/05/12 21:02:00 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.271 2012/08/25 21:04:03 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -209,7 +209,9 @@ PutAttrChar(NCURSES_SP_DCLx CARG_CH_T ch)
 {
     int chlen = 1;
     NCURSES_CH_T my_ch;
+#if USE_WIDEC_SUPPORT
     PUTC_DATA;
+#endif
     NCURSES_CH_T tilde;
     NCURSES_CH_T attr = CHDEREF(ch);
 
@@ -303,18 +305,10 @@ PutAttrChar(NCURSES_SP_DCLx CARG_CH_T ch)
     }
 
     UpdateAttrs(SP_PARM, attr);
+    PUTC(CHDEREF(ch));
 #if !USE_WIDEC_SUPPORT
-    /* FIXME - we do this special case for signal handling, should see how to
-     * make it work for wide characters.
-     */
-    if (SP_PARM->_outch != 0) {
-	SP_PARM->_outch(NCURSES_SP_ARGx UChar(ch));
-    } else
+    COUNT_OUTCHARS(1);
 #endif
-    {
-	PUTC(CHDEREF(ch), SP_PARM->_ofp);	/* macro's fastest... */
-	COUNT_OUTCHARS(1);
-    }
     SP_PARM->_curscol += chlen;
     if (char_padding) {
 	TPUTS_TRACE("char_padding");

@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.84 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.86 2012/08/25 21:22:08 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -119,7 +119,17 @@ delay_output(int ms)
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_DCL0)
 {
-    (void) fflush(NC_OUTPUT(SP_PARM));
+    if (SP_PARM->_ofd >= 0) {
+	if (SP_PARM->out_inuse) {
+	    size_t amount = SP->out_inuse;
+	    /*
+	     * Help a little, if the write is interrupted, by first resetting
+	     * our amount.
+	     */
+	    SP->out_inuse = 0;
+	    (void) write(SP_PARM->_ofd, SP_PARM->out_buffer, amount);
+	}
+    }
 }
 
 #if NCURSES_SP_FUNCS
@@ -138,17 +148,23 @@ NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_DCLx int ch)
     COUNT_OUTCHARS(1);
 
     if (HasTInfoTerminal(SP_PARM)
-	&& SP_PARM != 0
-	&& SP_PARM->_cleanup) {
-	char tmp = (char) ch;
-	/*
-	 * POSIX says write() is safe in a signal handler, but the
-	 * buffered I/O is not.
-	 */
-	if (write(fileno(NC_OUTPUT(SP_PARM)), &tmp, (size_t) 1) == -1)
-	    rc = ERR;
+	&& SP_PARM != 0) {
+	if (SP_PARM->out_buffer != 0) {
+	    if (SP_PARM->out_inuse + 1 >= SP_PARM->out_limit)
+		NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
+	    SP_PARM->out_buffer[SP_PARM->out_inuse++] = (char) ch;
+	} else {
+	    char tmp = (char) ch;
+	    /*
+	     * POSIX says write() is safe in a signal handler, but the
+	     * buffered I/O is not.
+	     */
+	    if (write(fileno(NC_OUTPUT(SP_PARM)), &tmp, (size_t) 1) == -1)
+		rc = ERR;
+	}
     } else {
-	if (putc(ch, NC_OUTPUT(SP_PARM)) == EOF)
+	char tmp = (char) ch;
+	if (write(fileno(stdout), &tmp, (size_t) 1) == -1)
 	    rc = ERR;
     }
     return rc;

@@ -402,7 +402,7 @@ _nc_db_iterator_leaks(void)
 	FreeAndNull(my_blob);
     if (my_list != 0)
 	FreeAndNull(my_list);
-    for (which = 0; which < dbdLAST; ++which) {
+    for (which = 0; (int) which < dbdLAST; ++which) {
 	my_vars[which].name = 0;
 	FreeIfNeeded(my_vars[which].value);
 	my_vars[which].value = 0;

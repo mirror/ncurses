@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,122 +42,19 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: setbuf.c,v 1.17 2011/10/22 16:34:50 tom Exp $")
+MODULE_ID("$Id: setbuf.c,v 1.19 2012/08/25 20:48:05 tom Exp $")
 
 /*
- * If the output file descriptor is connected to a tty (the typical case) it
- * will probably be line-buffered.  Keith Bostic pointed out that we don't want
- * this; it hoses people running over networks by forcing out a bunch of small
- * packets instead of one big one, so screen updates on ptys look jerky.
- * Restore block buffering to prevent this minor lossage.
- *
- * The buffer size is a compromise.  Ideally we'd like a buffer that can hold
- * the maximum possible update size (the whole screen plus cup commands to
- * change lines as it's painted).  On a 66-line xterm this can become
- * excessive.  So we min it with the amount of data we think we can get through
- * two Ethernet packets (maximum packet size - 100 for TCP/IP overhead).
- *
- * Why two ethernet packets?  It used to be one, on the theory that said
- * packets define the maximum size of atomic update.  But that's less than the
- * 2000 chars on a 25 x 80 screen, and we don't want local updates to flicker
- * either.  Two packet lengths will handle up to a 35 x 80 screen.
- *
- * The magic '6' is the estimated length of the end-of-line cup sequence to go
- * to the next line.  It's generous.  We used to mess with the buffering in
- * init_mvcur() after cost computation, but that lost the sequences emitted by
- * init_acs() in setupscreen().
- *
- * "The setvbuf function may be used only after the stream pointed to by stream
- * has been associated with an open file and before any other operation is
- * performed on the stream." (ISO 7.9.5.6.)
- *
- * Grrrr...
- *
- * On a lighter note, many implementations do in fact allow an application to
- * reset the buffering after it has been written to.  We try to do this because
- * otherwise we leave stdout in buffered mode after endwin() is called.  (This
- * also happens with SVr4 curses).
- *
- * There are pros/cons:
- *
- * con:
- *	There is no guarantee that we can reestablish buffering once we've
- *	dropped it.
- *
- *	We _may_ lose data if the implementation does not coordinate this with
- *	fflush.
- *
- * pro:
- *	An implementation is more likely to refuse to change the buffering than
- *	to do it in one of the ways mentioned above.
- *
- *	The alternative is to have the application try to change buffering
- *	itself, which is certainly no improvement.
- *
- * Just in case it does not work well on a particular system, the calls to
- * change buffering are all via the macro NC_BUFFERED.  Some implementations
- * do indeed get confused by changing setbuf on/off, and will overrun the
- * buffer.  So we disable this by default (there may yet be a workaround).
+ * Obsolete entrypoint retained for binary compatbility.
  */
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_DCLx FILE *ofp, int buffered)
 {
-    int Cols;
-    int Lines;
-
-    if (0 == SP_PARM)
-	return;
-
-    Cols = *(ptrCols(SP_PARM));
-    Lines = *(ptrLines(SP_PARM));
-
-    /* optional optimization hack -- do before any output to ofp */
-#if HAVE_SETVBUF || HAVE_SETBUFFER
-    if (SP_PARM->_buffered != buffered) {
-	unsigned buf_len;
-	char *buf_ptr;
-
-	if (getenv("NCURSES_NO_SETBUF") != 0)
-	    return;
-
-	fflush(ofp);
-#ifdef __DJGPP__
-	setmode(ofp, O_BINARY);
+#if NCURSES_SP_FUNCS
+    (void) SP_PARM;
 #endif
-	if (buffered != 0) {
-	    buf_len = (unsigned) min(Lines * (Cols + 6), 2800);
-	    if ((buf_ptr = SP_PARM->_setbuf) == 0) {
-		if ((buf_ptr = typeMalloc(char, buf_len)) == NULL)
-		      return;
-		SP_PARM->_setbuf = buf_ptr;
-		/* Don't try to free this! */
-	    }
-#if !USE_SETBUF_0
-	    else
-		return;
-#endif
-	} else {
-#if !USE_SETBUF_0
-	    return;
-#else
-	    buf_len = 0;
-	    buf_ptr = 0;
-#endif
-	}
-
-#if HAVE_SETVBUF
-#ifdef SETVBUF_REVERSED		/* pre-svr3? */
-	(void) setvbuf(ofp, buf_ptr, buf_len, buf_len ? _IOFBF : _IOLBF);
-#else
-	(void) setvbuf(ofp, buf_ptr, buf_len ? _IOFBF : _IOLBF, (size_t) buf_len);
-#endif
-#elif HAVE_SETBUFFER
-	(void) setbuffer(ofp, buf_ptr, (int) buf_len);
-#endif
-
-	SP_PARM->_buffered = buffered;
-    }
-#endif /* HAVE_SETVBUF || HAVE_SETBUFFER */
+    (void) ofp;
+    (void) buffered;
 }
 
 #if NCURSES_SP_FUNCS

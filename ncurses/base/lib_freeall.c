@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.60 2011/10/22 16:34:50 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.61 2012/08/25 19:52:47 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -129,8 +129,9 @@ _nc_freeall(void)
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_free_and_exit) (NCURSES_SP_DCLx int code)
 {
-    char *last_setbuf = (SP_PARM != 0) ? SP_PARM->_setbuf : 0;
+    char *last_buffer = (SP_PARM != 0) ? SP_PARM->out_buffer : 0;
 
+    NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
     NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_ARG);
 #ifdef TRACE
     trace(0);			/* close trace file, freeing its setbuf */
@@ -139,8 +140,7 @@ NCURSES_SP_NAME(_nc_free_and_exit) (NCURSES_SP_DCLx int code)
 	free(_nc_varargs("?", fake));
     }
 #endif
-    fclose(stdout);
-    FreeIfNeeded(last_setbuf);
+    FreeIfNeeded(last_buffer);
     exit(code);
 }
 

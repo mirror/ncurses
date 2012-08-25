@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <SigAction.h>
 
-MODULE_ID("$Id: lib_tstp.c,v 1.45 2011/10/22 15:37:42 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.46 2012/08/25 19:52:47 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -134,7 +134,7 @@ signal_name(int sig)
 
 #if USE_SIGTSTP
 static void
-tstp(int dummy GCC_UNUSED)
+handle_SIGTSTP(int dummy GCC_UNUSED)
 {
     SCREEN *sp = CURRENT_SCREEN;
     sigset_t mask, omask;
@@ -144,7 +144,8 @@ tstp(int dummy GCC_UNUSED)
     int sigttou_blocked;
 #endif
 
-    T(("tstp() called"));
+    _nc_globals.have_sigtstp = 1;
+    T(("handle_SIGTSTP() called"));
 
     /*
      * The user may have changed the prog_mode tty bits, so save them.
@@ -235,7 +236,7 @@ tstp(int dummy GCC_UNUSED)
 #endif /* USE_SIGTSTP */
 
 static void
-cleanup(int sig)
+handle_SIGINT(int sig)
 {
     SCREEN *sp = CURRENT_SCREEN;
 
@@ -267,7 +268,6 @@ cleanup(int sig)
 	    for (each_screen(scan)) {
 		if (scan->_ofp != 0
 		    && isatty(fileno(scan->_ofp))) {
-		    scan->_cleanup = TRUE;
 		    scan->_outch = NCURSES_SP_NAME(_nc_outch);
 		}
 		set_term(scan);
@@ -282,7 +282,7 @@ cleanup(int sig)
 
 #if USE_SIGWINCH
 static void
-sigwinch(int sig GCC_UNUSED)
+handle_SIGWINCH(int sig GCC_UNUSED)
 {
     _nc_globals.have_sigwinch = 1;
 # if USE_PTHREADS_EINTR
@@ -384,7 +384,7 @@ _nc_signal_handler(int enable)
 #ifdef SA_RESTART
 		new_sigaction.sa_flags |= SA_RESTART;
 #endif /* SA_RESTART */
-		new_sigaction.sa_handler = tstp;
+		new_sigaction.sa_handler = handle_SIGTSTP;
 		(void) sigaction(SIGTSTP, &new_sigaction, NULL);
 	    } else {
 		ignore_tstp = TRUE;
@@ -395,10 +395,10 @@ _nc_signal_handler(int enable)
 
     if (!_nc_globals.init_signals) {
 	if (enable) {
-	    CatchIfDefault(SIGINT, cleanup);
-	    CatchIfDefault(SIGTERM, cleanup);
+	    CatchIfDefault(SIGINT, handle_SIGINT);
+	    CatchIfDefault(SIGTERM, handle_SIGINT);
 #if USE_SIGWINCH
-	    CatchIfDefault(SIGWINCH, sigwinch);
+	    CatchIfDefault(SIGWINCH, handle_SIGWINCH);
 #endif
 	    _nc_globals.init_signals = TRUE;
 	}

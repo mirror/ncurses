@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.502 2012/07/14 21:14:30 tom Exp $
+ * $Id: curses.priv.h,v 1.505 2012/08/25 20:49:15 tom Exp $
  *
  *	curses.priv.h
  *
@@ -814,6 +814,7 @@ typedef struct {
  * Global data which is not specific to a screen.
  */
 typedef struct {
+	SIG_ATOMIC_T	have_sigtstp;
 	SIG_ATOMIC_T	have_sigwinch;
 	SIG_ATOMIC_T	cleanup_nested;
 
@@ -962,11 +963,13 @@ extern NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen;
  */
 
 struct screen {
-	int		_ifd;		/* input file ptr for screen	    */
+	int		_ifd;		/* input file descriptor for screen */
+	int		_ofd;		/* output file descriptor for screen */
 	FILE		*_ofp;		/* output file ptr for screen	    */
-	char		*_setbuf;	/* buffered I/O for output	    */
+	char		*out_buffer;	/* output buffer		    */
+	size_t		out_limit;	/* output buffer size		    */
+	size_t		out_inuse;	/* output buffer current use	    */
 	bool		_filtered;	/* filter() was called		    */
-	bool		_buffered;	/* setvbuf uses _setbuf data	    */
 	bool		_prescreen;	/* is in prescreen phase	    */
 	bool		_use_env;	/* LINES & COLS from environment?   */
 	int		_checkfd;	/* filedesc for typeahead check	    */
@@ -1179,7 +1182,6 @@ struct screen {
 	int		*_oldnum_list;
 	int		_oldnum_size;
 
-	bool		_cleanup;	/* cleanup after int/quit signal */
 	NCURSES_SP_OUTC	_outch;		/* output handler if not putc */
 
 	int		_legacy_coding;	/* see use_legacy_coding() */
@@ -1383,9 +1385,9 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define PUTC_DATA	char PUTC_buf[MB_LEN_MAX]; int PUTC_i, PUTC_n; \
 			mbstate_t PUT_st; wchar_t PUTC_ch
 #define PUTC_INIT	init_mb (PUT_st)
-#define PUTC(ch,b)	do { if(!isWidecExt(ch)) {				    \
+#define PUTC(ch)	do { if(!isWidecExt(ch)) {				    \
 			if (Charable(ch)) {					    \
-			    fputc(CharOf(ch), b);				    \
+			    NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx CharOf(ch)); \
 			    COUNT_OUTCHARS(1);					    \
 			} else {						    \
 			    PUTC_INIT;						    \
@@ -1397,10 +1399,14 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 						       (ch).chars[PUTC_i], &PUT_st); \
 				if (PUTC_n <= 0) {				    \
 				    if (PUTC_ch && is8bits(PUTC_ch) && PUTC_i == 0) \
-					putc(PUTC_ch,b);			    \
+					NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx CharOf(ch)); \
 				    break;					    \
+				} else {					    \
+				    int PUTC_j;					    \
+				    for (PUTC_j = 0; PUTC_j < PUTC_n; ++PUTC_j) {   \
+					NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx PUTC_buf[PUTC_j]); \
+				    }						    \
 				}						    \
-				IGNORE_RC(fwrite(PUTC_buf, (size_t) PUTC_n, (size_t) 1, b)); \
 			    }							    \
 			    COUNT_OUTCHARS(PUTC_i);				    \
 			} } } while (0)
@@ -1444,8 +1450,8 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define CHDEREF(wch)	wch
 #define ARG_CH_T	NCURSES_CH_T
 #define CARG_CH_T	NCURSES_CH_T
-#define PUTC_DATA	int data = 0
-#define PUTC(ch,b)	do { data = CharOf(ch); putc(data,b); } while (0)
+#define PUTC_DATA	/* nothing */
+#define PUTC(ch)	NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx ch)
 
 #define BLANK		(' '|A_NORMAL)
 #define ZEROS		('\0'|A_NORMAL)

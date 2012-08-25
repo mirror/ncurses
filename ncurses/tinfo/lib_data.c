@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.64 2012/07/14 21:01:49 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.65 2012/08/25 18:38:43 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -114,6 +114,7 @@ NCURSES_EXPORT_VAR(SCREEN *) SP = NULL; /* Some linkers require initialized data
 #define TGETENT_0s { TGETENT_0, TGETENT_0, TGETENT_0, TGETENT_0 }
 
 NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
+    0,				/* have_sigtstp */
     0,				/* have_sigwinch */
     0,				/* cleanup_nested */
 

@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.141 2012/07/07 20:37:40 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.143 2012/08/25 20:10:40 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -188,18 +188,7 @@ delscreen(SCREEN *sp)
 	FreeIfNeeded(sp->_acs_map);
 	FreeIfNeeded(sp->_screen_acs_map);
 
-	/*
-	 * If the associated output stream has been closed, we can discard the
-	 * set-buffer.  Limit the error check to EBADF, since fflush may fail
-	 * for other reasons than trying to operate upon a closed stream.
-	 */
-	if (sp->_ofp != 0
-	    && sp->_setbuf != 0
-	    && fflush(sp->_ofp) != 0
-	    && errno == EBADF) {
-	    free(sp->_setbuf);
-	}
-
+	NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
 	NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx sp->_term);
 	free(sp);
 
@@ -383,7 +372,15 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     sp->_lines = (NCURSES_SIZE_T) slines;
     sp->_lines_avail = (NCURSES_SIZE_T) slines;
     sp->_columns = (NCURSES_SIZE_T) scolumns;
+
+    fflush(output);
+    sp->_ofd = output ? fileno(output) : -1;
     sp->_ofp = output;
+    sp->out_limit = (size_t) (slines * scolumns);
+    if ((sp->out_buffer = malloc(sp->out_limit)) == 0)
+	sp->out_limit = 0;
+    sp->out_inuse = 0;
+
     SP_PRE_INIT(sp);
     SetNoPadding(sp);
 
