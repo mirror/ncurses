@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.34 2012/06/30 16:30:10 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.35 2012/08/25 21:55:00 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory

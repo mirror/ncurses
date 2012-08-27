@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.143 2012/08/25 20:10:40 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.144 2012/08/26 21:11:49 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -376,7 +376,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     fflush(output);
     sp->_ofd = output ? fileno(output) : -1;
     sp->_ofp = output;
-    sp->out_limit = (size_t) (slines * scolumns);
+    sp->out_limit = (size_t) ((2 + slines) * (6 + scolumns));
     if ((sp->out_buffer = malloc(sp->out_limit)) == 0)
 	sp->out_limit = 0;
     sp->out_inuse = 0;

@@ -6385,7 +6385,7 @@ esac
 done
 IFS="$ac_save_ifs"
 
-eval 'TERMINFO_DIRS="$cf_dst_path"'
+eval TERMINFO_DIRS="$cf_dst_path"
 
 echo "$as_me:6390: result: $TERMINFO_DIRS" >&5
 echo "${ECHO_T}$TERMINFO_DIRS" >&6
@@ -6436,7 +6436,7 @@ echo "$as_me: error: expected a pathname, not \"$withval\"" >&2;}
 esac
 
 fi
-TERMINFO="$withval"
+eval TERMINFO="$withval"
 
 echo "$as_me:6441: result: $TERMINFO" >&5
 echo "${ECHO_T}$TERMINFO" >&6
@@ -6622,7 +6622,7 @@ esac
 done
 IFS="$ac_save_ifs"
 
-eval 'TERMPATH="$cf_dst_path"'
+eval TERMPATH="$cf_dst_path"
 
 echo "$as_me:6627: result: $TERMPATH" >&5
 echo "${ECHO_T}$TERMPATH" >&6
@@ -19667,7 +19667,7 @@ echo "$as_me: error: expected a pathname, not \"$withval\"" >&2;}
 esac
 
 fi
-ADA_INCLUDE="$withval"
+eval ADA_INCLUDE="$withval"
 
 echo "$as_me:19672: result: $ADA_INCLUDE" >&5
 echo "${ECHO_T}$ADA_INCLUDE" >&6
@@ -19715,7 +19715,7 @@ echo "$as_me: error: expected a pathname, not \"$withval\"" >&2;}
 esac
 
 fi
-ADA_OBJECTS="$withval"
+eval ADA_OBJECTS="$withval"
 
 echo "$as_me:19720: result: $ADA_OBJECTS" >&5
 echo "${ECHO_T}$ADA_OBJECTS" >&6
