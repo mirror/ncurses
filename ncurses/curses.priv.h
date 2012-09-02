@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.505 2012/08/25 20:49:15 tom Exp $
+ * $Id: curses.priv.h,v 1.506 2012/09/01 19:21:05 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1451,7 +1451,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define ARG_CH_T	NCURSES_CH_T
 #define CARG_CH_T	NCURSES_CH_T
 #define PUTC_DATA	/* nothing */
-#define PUTC(ch)	NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx ch)
+#define PUTC(ch)	NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx (int) ch)
 
 #define BLANK		(' '|A_NORMAL)
 #define ZEROS		('\0'|A_NORMAL)

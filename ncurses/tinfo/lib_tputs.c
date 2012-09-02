@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.86 2012/08/25 21:22:08 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.87 2012/09/01 23:34:17 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -119,7 +119,7 @@ delay_output(int ms)
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_DCL0)
 {
-    if (SP_PARM->_ofd >= 0) {
+    if (SP_PARM != 0 && SP_PARM->_ofd >= 0) {
 	if (SP_PARM->out_inuse) {
 	    size_t amount = SP->out_inuse;
 	    /*

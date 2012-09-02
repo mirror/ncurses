@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1945 2012/08/26 21:12:55 tom Exp $
+-- $Id: NEWS,v 1.1949 2012/09/01 23:35:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120901
+	+ add a null-pointer check in _nc_flush (cf: 20120825).
+	+ fix a case in _nc_scroll_optimize() where the _oldnums_list array
+	  might not be allocated.
+	+ improve comparisons in configure.in for unset shell variables.
 
 20120826
 	+ increase size of ncurses' output-buffer, in case of very small
@@ -69,7 +75,7 @@ it is not possible to add this information.
 	+ update test/configure, adding check for tinfo library.
 	+ improve limit-checks for the getch fifo (report by Werner Fink).
 	+ fix a remaining mismatch between $with_echo and the symbols updated
-	  by CF_DISABLE_ECHO affecting parameters for mk-2nd.awk (report by
+	  for CF_DISABLE_ECHO affecting parameters for mk-2nd.awk (report by
 	  Sven Joachim, cf:  20120317).
 	+ modify followup check for pkg-config's library directory in the
 	  --enable-pc-files option to validate syntax (report by Sven Joachim,

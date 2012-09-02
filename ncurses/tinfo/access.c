@@ -36,7 +36,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: access.c,v 1.22 2012/02/22 22:34:31 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.23 2012/09/01 19:21:29 tom Exp $")
 
 #ifdef __TANDEM
 #define ROOT_UID 65535
@@ -60,7 +60,7 @@ _nc_rootname(char *path)
     result = temp;
 #if !MIXEDCASE_FILENAMES
     for (s = result; *s != '\0'; ++s) {
-	*s = LOWERCASE(*s);
+	*s = (char) LOWERCASE(*s);
     }
 #endif
 #if defined(PROG_EXT)

@@ -147,7 +147,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.49 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.50 2012/09/01 23:24:49 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -193,14 +193,21 @@ NCURSES_SP_NAME(_nc_scroll_optimize) (NCURSES_SP_DCL0)
 #if !defined(SCROLLDEBUG) && !defined(HASHDEBUG)
 #if USE_HASHMAP
     /* get enough storage */
-    if (OLDNUM_SIZE(SP_PARM) < screen_lines(SP_PARM)) {
+    assert(OLDNUM_SIZE(SP_PARM) >= 0);
+    assert(screen_lines(SP_PARM) > 0);
+    if ((oldnums(SP_PARM) == 0)
+	|| (OLDNUM_SIZE(SP_PARM) < screen_lines(SP_PARM))) {
+	int need_lines = ((OLDNUM_SIZE(SP_PARM) < screen_lines(SP_PARM))
+			  ? screen_lines(SP_PARM)
+			  : OLDNUM_SIZE(SP_PARM));
 	int *new_oldnums = typeRealloc(int,
-				       (size_t) screen_lines(SP_PARM),
+				       (size_t) need_lines,
 				       oldnums(SP_PARM));
 	if (!new_oldnums)
 	    return;
+	FreeIfNeeded(oldnums(SP_PARM));
 	oldnums(SP_PARM) = new_oldnums;
-	OLDNUM_SIZE(SP_PARM) = screen_lines(SP_PARM);
+	OLDNUM_SIZE(SP_PARM) = need_lines;
     }
     /* calculate the indices */
     NCURSES_SP_NAME(_nc_hash_map) (NCURSES_SP_ARG);

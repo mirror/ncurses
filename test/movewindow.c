@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.35 2012/06/09 20:30:32 tom Exp $
+ * $Id: movewindow.c,v 1.36 2012/09/01 23:54:00 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -198,7 +198,6 @@ selectcell(WINDOW *parent,
 			i = event.y - uli;
 			j = event.x - ulj;
 		    }
-		    moved = TRUE;
 		} else {
 		    beep();
 		    break;
