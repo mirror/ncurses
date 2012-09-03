@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1949 2012/09/01 23:35:55 tom Exp $
+-- $Id: NEWS,v 1.1950 2012/09/02 16:59:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,9 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20120902
+	+ regenerate configure script (report by Sven Joachim, cf: 20120901).
 
 20120901
 	+ add a null-pointer check in _nc_flush (cf: 20120825).
