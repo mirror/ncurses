@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.148 2012/07/21 18:05:41 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.149 2012/09/03 16:19:14 tom Exp $")
 
 /****************************************************************************
  *
@@ -546,7 +546,9 @@ NCURSES_EXPORT(int)
 _nc_unicode_locale(void)
 {
     int result = 0;
-#if HAVE_LANGINFO_CODESET
+#if defined(__MINGW32__) && USE_WIDEC_SUPPORT
+    result = 1;
+#elif HAVE_LANGINFO_CODESET
     char *env = nl_langinfo(CODESET);
     result = !strcmp(env, "UTF-8");
     T(("_nc_unicode_locale(%s) ->%d", env, result));

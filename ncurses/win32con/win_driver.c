@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.11 2012/02/18 20:28:25 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.13 2012/09/03 16:20:24 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -102,7 +102,7 @@ MapColor(bool fore, int color)
 }
 
 static WORD
-MapAttr(TERMINAL_CONTROL_BLOCK * TCB, WORD res, chtype ch)
+MapAttr(TERMINAL_CONTROL_BLOCK * TCB, WORD res, attr_t ch)
 {
     if (ch & A_COLOR) {
 	int p;
@@ -134,8 +134,67 @@ MapAttr(TERMINAL_CONTROL_BLOCK * TCB, WORD res, chtype ch)
     return res;
 }
 
+#if USE_WIDEC_SUPPORT
+/*
+ * TODO: support surrogate pairs
+ * TODO: support combining characters
+ * TODO: support acsc
+ * TODO: check wcwidth of base character, fill if needed for double-width
+ * TODO: _nc_wacs should be part of sp.
+ */
 static BOOL
-con_write(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, chtype *str, int n)
+con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int n)
+{
+    CHAR_INFO ci[n];
+    COORD loc, siz;
+    SMALL_RECT rec;
+    int i;
+    cchar_t ch;
+    SCREEN *sp;
+
+    AssertTCB();
+
+    if (TCB == 0 || InvalidConsoleHandle(TCB->hdl))
+	return FALSE;
+
+    SetSP();
+
+    for (i = 0; i < n; i++) {
+	ch = str[i];
+	ci[i].Char.UnicodeChar = CharOf(ch);
+	ci[i].Attributes = MapAttr(TCB,
+				   PropOf(TCB)->SBI.wAttributes,
+				   AttrOf(ch));
+	if (AttrOf(ch) & A_ALTCHARSET) {
+	    if (_nc_wacs) {
+		int which = CharOf(ch);
+		if (which > 0
+		    && which < ACS_LEN
+		    && CharOf(_nc_wacs[which]) != 0) {
+		    ci[i].Char.UnicodeChar = CharOf(_nc_wacs[which]);
+		} else {
+		    ci[i].Char.UnicodeChar = ' ';
+		}
+	    }
+	}
+    }
+
+    loc.X = (short) 0;
+    loc.Y = (short) 0;
+    siz.X = (short) n;
+    siz.Y = 1;
+
+    rec.Left = (short) x;
+    rec.Top = (short) y;
+    rec.Right = (short) (x + n - 1);
+    rec.Bottom = rec.Top;
+
+    return WriteConsoleOutputW(TCB->hdl, ci, siz, loc, &rec);
+}
+#define con_write(tcb, y, x, str, n) con_write16(tcb, y, x, str, n)
+#else
+static BOOL
+con_write8(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, chtype *str, int n)
 {
     CHAR_INFO ci[n];
     COORD loc, siz;
@@ -176,6 +235,8 @@ con_write(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, chtype *str, int n)
 
     return WriteConsoleOutput(TCB->hdl, ci, siz, loc, &rec);
 }
+#define con_write(tcb, y, x, str, n) con_write8(tcb, y, x, str, n)
+#endif
 
 #define MARK_NOCHANGE(win,row) \
 		win->_line[row].firstchar = _NOCHANGE; \
@@ -196,16 +257,27 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 
     if ((CurScreen(sp)->_clear || NewScreen(sp)->_clear)) {
 	int x;
+#if USE_WIDEC_SUPPORT
+	cchar_t empty[Width];
+	wchar_t blank[2] =
+	{
+	    L' ', L'\0'
+	};
+
+	for (x = 0; x < Width; x++)
+	    setcchar(&empty[x], blank, 0, 0, 0);
+#else
 	chtype empty[Width];
 
 	for (x = 0; x < Width; x++)
 	    empty[x] = ' ';
+#endif
 
 	for (y = 0; y < nonempty; y++) {
 	    con_write(TCB, y, 0, empty, Width);
 	    memcpy(empty,
 		   CurScreen(sp)->_line[y].text,
-		   Width * sizeof(chtype));
+		   Width * sizeof(empty[0]));
 	}
 	CurScreen(sp)->_clear = FALSE;
 	NewScreen(sp)->_clear = FALSE;
@@ -218,13 +290,13 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 	    x1 = NewScreen(sp)->_line[y].lastchar;
 	    n = x1 - x0 + 1;
 	    if (n > 0) {
-		memcpy(CurScreen(sp)->_line[y].text + x0,
-		       NewScreen(sp)->_line[y].text + x0,
-		       n * sizeof(chtype));
+		memcpy(&CurScreen(sp)->_line[y].text[x0],
+		       &NewScreen(sp)->_line[y].text[x0],
+		       n * sizeof(CurScreen(sp)->_line[y].text[x0]));
 		con_write(TCB,
 			  y,
 			  x0,
-			  ((chtype *) CurScreen(sp)->_line[y].text) + x0, n);
+			  &CurScreen(sp)->_line[y].text[x0], n);
 
 		/* mark line changed successfully */
 		if (y <= NewScreen(sp)->_maxy) {
