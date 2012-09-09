@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.34 2012/06/09 20:30:33 tom Exp $
+ * $Id: demo_menus.c,v 1.35 2012/09/09 00:01:20 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -867,7 +867,7 @@ main(int argc, char *argv[])
 #endif /* HAVE_RIPOFFLINE */
 #ifdef TRACE
 	case 't':
-	    trace(strtoul(optarg, 0, 0));
+	    trace((unsigned) strtoul(optarg, 0, 0));
 	    break;
 #endif
 	default:

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.373 2012/07/21 17:40:21 tom Exp $
+$Id: ncurses.c,v 1.377 2012/09/08 23:58:58 tom Exp $
 
 ***************************************************************************/
 
@@ -3011,15 +3011,46 @@ wide_slk_test(void)
 #endif
 #endif /* SLK_INIT */
 
-/* ISO 6429:  codes 0x80 to 0x9f may be control characters that cause the
+static void
+show_256_chars(int repeat, attr_t attr, short pair)
+{
+    unsigned first = 0;
+    unsigned last = 255;
+    unsigned code;
+    int count;
+
+    erase();
+    attron(A_BOLD);
+    MvPrintw(0, 20, "Display of Character Codes %#0x to %#0x",
+	     first, last);
+    attroff(A_BOLD);
+    refresh();
+
+    for (code = first; code <= last; ++code) {
+	int row = (int) (2 + (code / 16));
+	int col = (int) (5 * (code % 16));
+	mvaddch(row, col, colored_chtype(code, attr, pair));
+	for (count = 1; count < repeat; ++count) {
+	    addch(colored_chtype(code, attr, pair));
+	}
+    }
+
+}
+
+/*
+ * Show a slice of 32 characters, allowing those to be repeated up to the
+ * screen's width.
+ *
+ * ISO 6429:  codes 0x80 to 0x9f may be control characters that cause the
  * terminal to perform functions.  The remaining codes can be graphic.
  */
 static void
-show_upper_chars(unsigned first, int repeat, attr_t attr, short pair)
+show_upper_chars(int base, int pagesize, int repeat, attr_t attr, short pair)
 {
-    bool C1 = (first == 128);
     unsigned code;
-    unsigned last = first + 31;
+    unsigned first = (unsigned) base;
+    unsigned last = first + (unsigned) pagesize - 2;
+    bool C1 = (first == 128);
     int reply;
 
     erase();
@@ -3031,8 +3062,8 @@ show_upper_chars(unsigned first, int repeat, attr_t attr, short pair)
 
     for (code = first; code <= last; code++) {
 	int count = repeat;
-	int row = 2 + ((int) (code - first) % 16);
-	int col = ((int) (code - first) / 16) * COLS / 2;
+	int row = 2 + ((int) (code - first) % (pagesize / 2));
+	int col = ((int) (code - first) / (pagesize / 2)) * COLS / 2;
 	char tmp[80];
 	sprintf(tmp, "%3u (0x%x)", code, code);
 	MvPrintw(row, col, "%*s: ", COLS / 4, tmp);
@@ -3206,6 +3237,7 @@ static void
 acs_display(void)
 {
     int c = 'a';
+    int pagesize = 32;
     char *term = getenv("TERM");
     const char *pch_kludge = ((term != 0 && strstr(term, "linux"))
 			      ? "p=PC, "
@@ -3232,6 +3264,13 @@ acs_display(void)
 		ToggleAcs(last_show_acs, show_pc_chars);
 	    else
 		beep();
+	    break;
+	case 'w':
+	    if (pagesize == 32) {
+		pagesize = 256;
+	    } else {
+		pagesize = 32;
+	    }
 	    break;
 	case 'x':
 	    ToggleAcs(last_show_acs, show_box_chars);
@@ -3276,15 +3315,18 @@ acs_display(void)
 	    }
 	    break;
 	}
-	if (last_show_acs != 0)
+	if (pagesize != 32) {
+	    show_256_chars(repeat, attr, pair);
+	} else if (last_show_acs != 0) {
 	    last_show_acs(repeat, attr, pair);
-	else
-	    show_upper_chars((unsigned) (digit * 32 + 128), repeat, attr, pair);
+	} else {
+	    show_upper_chars(digit * pagesize + 128, pagesize, repeat, attr, pair);
+	}
 
 	MvPrintw(LINES - 3, 0,
 		 "Note: ANSI terminals may not display C1 characters.");
 	MvPrintw(LINES - 2, 0,
-		 "Select: a=ACS, x=box, %s0=C1, 1-3,+/- non-ASCII, </> repeat, ESC=quit",
+		 "Select: a=ACS, w=all x=box, %s0=C1, 1-3,+/- non-ASCII, </> repeat, ESC=quit",
 		 pch_kludge);
 	if (use_colors) {
 	    MvPrintw(LINES - 1, 0,
@@ -3323,6 +3365,53 @@ merge_wide_attr(cchar_t *dst, const cchar_t *src, attr_t attr, short pair)
     return dst;
 }
 
+/*
+ * Header/legend take up no more than 8 lines, leaving 16 lines on a 24-line
+ * display.  If there are no repeats, we could normally display 16 lines of 64
+ * characters (1024 total).  However, taking repeats and double-width cells
+ * into account, use 256 characters for the page.
+ */
+static void
+show_paged_widechars(int base,
+		     int pagesize,
+		     int repeat,
+		     int space,
+		     attr_t attr,
+		     short pair)
+{
+    int first = base * pagesize;
+    int last = first + pagesize - 1;
+    int per_line = 16;
+    cchar_t temp;
+    wchar_t code;
+    wchar_t codes[10];
+
+    erase();
+    attron(A_BOLD);
+    MvPrintw(0, 20, "Display of Character Codes %#x to %#x", first, last);
+    attroff(A_BOLD);
+
+    for (code = first; (int) code <= last; code++) {
+	int row = (2 + ((int) code - first) / per_line);
+	int col = 5 * ((int) code % per_line);
+	int count;
+
+	memset(&codes, 0, sizeof(codes));
+	codes[0] = code;
+	setcchar(&temp, codes, attr, pair, 0);
+	move(row, col);
+	if (wcwidth(code) == 0 && code != 0) {
+	    addch((chtype) space |
+		  (A_REVERSE ^ attr) |
+		  (attr_t) COLOR_PAIR(pair));
+	}
+	add_wch(&temp);
+	for (count = 1; count < repeat; ++count) {
+	    add_wch(&temp);
+	}
+    }
+}
+
 static void
 show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 {
@@ -3343,11 +3432,13 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 	int count = repeat;
 	int y, x;
 
-	memset(&codes, 0, sizeof(codes));
-	codes[0] = code;
 	sprintf(tmp, "%3ld (0x%lx)", (long) code, (long) code);
 	MvPrintw(row, col, "%*s: ", COLS / 4, tmp);
+
+	memset(&codes, 0, sizeof(codes));
+	codes[0] = code;
 	setcchar(&temp, codes, attr, pair, 0);
+
 	do {
 	    /*
 	     * Give non-spacing characters something to combine with.  If we
@@ -3361,10 +3452,10 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
 		      (attr_t) COLOR_PAIR(pair));
 	    }
 	    /*
-	     * This could use add_wch(), but is done for comparison with the
-	     * normal 'f' test (and to make a test-case for echo_wchar()).
-	     * The screen will flicker because the erase() at the top of the
-	     * function is met by the builtin refresh() in echo_wchar().
+	     * This uses echo_wchar(), for comparison with the normal 'f'
+	     * test (and to make a test-case for echo_wchar()).  The screen
+	     * may flicker because the erase() at the top of the function
+	     * is met by the builtin refresh() in echo_wchar().
 	     */
 	    echo_wchar(&temp);
 	    /*
@@ -3692,6 +3783,7 @@ wide_acs_display(void)
     int digit = 0;
     int repeat = 1;
     int space = ' ';
+    int pagesize = 32;
     chtype attr = A_NORMAL;
     int fg = COLOR_BLACK;
     int bg = COLOR_BLACK;
@@ -3717,6 +3809,13 @@ wide_acs_display(void)
 	    ToggleAcs(last_show_wacs, show_wacs_chars_thick);
 	    break;
 #endif
+	case 'w':
+	    if (pagesize == 32) {
+		pagesize = 256;
+	    } else {
+		pagesize = 32;
+	    }
+	    break;
 	case 'x':
 	    ToggleAcs(last_show_wacs, show_wbox_chars);
 	    break;
@@ -3750,20 +3849,25 @@ wide_acs_display(void)
 	    }
 	    break;
 	}
-	if (last_show_wacs != 0)
+	if (pagesize != 32) {
+	    show_paged_widechars(digit, pagesize, repeat, space, attr, pair);
+	} else if (last_show_wacs != 0) {
 	    last_show_wacs(repeat, attr, pair);
-	else
+	} else {
 	    show_upper_widechars(digit * 32 + 128, repeat, space, attr, pair);
+	}
 
-	MvPrintw(LINES - 3, 0,
-		 "Select: a/d/t WACS, x box, u UTF-8, 0-9,+/- non-ASCII, </> repeat, ESC=quit");
+	MvPrintw(LINES - 4, 0,
+		 "Select: a/d/t WACS, w=all x=box, u UTF-8, ^L repaint");
+	MvPrintw(LINES - 3, 2,
+		 "0-9,+/- non-ASCII, </> repeat, _ space, ESC=quit");
 	if (use_colors) {
-	    MvPrintw(LINES - 2, 0,
+	    MvPrintw(LINES - 2, 2,
 		     "v/V, f/F, b/B cycle through video attributes (%s) and color %d/%d.",
 		     attrs_to_cycle[at_code].name,
 		     fg, bg);
 	} else {
-	    MvPrintw(LINES - 2, 0,
+	    MvPrintw(LINES - 2, 2,
 		     "v/V cycles through video attributes (%s).",
 		     attrs_to_cycle[at_code].name);
 	}
