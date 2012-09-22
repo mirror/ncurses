@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.149 2012/09/03 16:19:14 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.150 2012/09/22 18:46:12 tom Exp $")
 
 /****************************************************************************
  *
@@ -636,7 +636,11 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
     if (tname == 0) {
 	tname = getenv("TERM");
 	if (tname == 0 || *tname == '\0') {
+#ifdef USE_TERM_DRIVER
+	    tname = "unknown";
+#else
 	    ret_error0(TGETENT_ERR, "TERM environment variable not set.\n");
+#endif
 	}
     }
 

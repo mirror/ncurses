@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.232 2012/07/28 18:17:43 tom Exp $ */
+/* $Id: curses.h.in,v 1.233 2012/09/16 21:05:02 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -1311,7 +1311,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
  * Export fallback function for use in C++ binding.
  */
 #if !@HAVE_VSSCANF@
-#define vsscanf(a,b,c) _nc_vsscanf((a),(b),(c))
+#define vsscanf(a,b,c) _nc_vsscanf(a,b,c)
 NCURSES_EXPORT(int) vsscanf(const char *, const char *, va_list);
 #endif
 

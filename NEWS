@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1953 2012/09/08 22:05:39 tom Exp $
+-- $Id: NEWS,v 1.1957 2012/09/22 20:11:31 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,14 +45,23 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20120922
+	+ modify setupterm to set its copy of TERM to "unknown" if configured
+	  for the terminal driver and TERM was null or empty.
+	+ modify treatment of TERM variable for MinGW port to allow explicit
+	  use of the windows console driver by checking if $TERM is set to
+	  "#win32con" or an abbreviation of that.
+	+ undo recent change to fallback definition of vsscanf() to build with
+	  older Solaris compilers (cf: 20120728).
+
 20120908
 	+ add test-screens to test/ncurses to show 256-characters at a time,
-	  to help with mingw port.
+	  to help with MinGW port.
 
 20120903
 	+ simplify varargs logic in lib_printw.c; va_copy is no longer needed
 	  there.
-	+ modifications for mingw port to make wide-character display usable.
+	+ modifications for MinGW port to make wide-character display usable.
 
 20120902
 	+ regenerate configure script (report by Sven Joachim, cf: 20120901).

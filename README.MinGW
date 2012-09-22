@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README.MinGW,v 1.8 2012/01/21 23:55:33 tom Exp $
+-- $Id: README.MinGW,v 1.9 2012/09/22 17:46:04 tom Exp $
 -- Author: Juergen Pfeifer
 -------------------------------------------------------------------------------
 
@@ -55,8 +55,9 @@ to provide the includes, libraries and DLLs to be used with the more
 common traditional development environments on Windows, mainly with
 Microsoft Visual Studio.
 
-It is necessary to unset the TERM environment variable, to activate the
-Windows console-driver.
+The TERM environment variable must be set specially to active the Windows
+console-driver.  The driver checks if TERM is set to "#win32con" (explicit
+use) or if TERM is unset or empty (implicit).
 
 Please also make sure that MSYS links to the correct directory containing
 your MinGW toolchain. For TDM this is usually C:\MinGW64. In your Windows
@@ -83,7 +84,9 @@ hooks for interop, I recommend using these options:
 	  --enable-term-driver
 	  --enable-interop
 
-This is the configuration commandline as I'm using it at the moment (assuming environment variable MINGW_ROOT to hold the root directory name of your MinGW build):
+This is the configuration commandline as I'm using it at the moment (assuming
+environment variable MINGW_ROOT to hold the root directory name of your MinGW
+build):
 
 ./configure \
 	--prefix=$MINGW_ROOT \
@@ -120,7 +123,7 @@ experimental.
 
 A lot is still TODO, e.g.:
 
-  - Wide Character support
+  - Wide Character support (display is workable, but input untested)
     The Win32Con driver should actually only use Unicode in the
     future.
   - Thread support (locking). If using TDM toolchain this is done by
@@ -131,5 +134,5 @@ A lot is still TODO, e.g.:
   - Workarounds for MinGW's filesystem access are necessary to make infocmp
     work (though tic works).
 
-To support terminfo, we need to have an ioctl() simulation for the
-serial and networked Terminals.
+To support terminfo, we would need to have an ioctl() simulation for the
+serial and networked terminals.
