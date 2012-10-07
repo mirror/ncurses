@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.76 2012/03/17 16:45:38 tom Exp $
+#  $Id: Makefile.in,v 1.77 2012/10/06 18:58:48 tom Exp $
 #
 .SUFFIXES:
 
@@ -36,7 +36,7 @@ SHELL		= /bin/sh
 VPATH		= @srcdir@
 THIS		= Makefile
 
-x		= @PROG_EXT@
+x		= @EXEEXT@
 
 top_srcdir	= @top_srcdir@
 DESTDIR		= @DESTDIR@

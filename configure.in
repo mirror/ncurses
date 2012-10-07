@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.553 2012/09/01 19:53:17 tom Exp $
+dnl $Id: configure.in,v 1.558 2012/10/06 22:22:28 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
-AC_PREREQ(2.13.20020210)
-AC_REVISION($Revision: 1.553 $)
+AC_PREREQ(2.52.20030208)
+AC_REVISION($Revision: 1.558 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -69,15 +69,11 @@ else
 	cf_PROG_CC="gcc cc"
 fi
 
-AC_PROG_CC($cf_PROG_CC)
-CF_GCC_VERSION
+CF_PROG_CC($cf_PROG_CC)
 
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
 CF_PROG_CC_C_O(CC)
-AC_ISC_POSIX
-CF_ANSI_CC_REQD
-CF_PROG_EXT
 CF_PROG_LDCONFIG
 
 dnl DEFECT in autoconf 2.12:	an attempt to set policy, this breaks the
@@ -191,7 +187,7 @@ if test "$enable_mixedcase" = "auto" ; then
 else
     cf_cv_mixedcase=$enable_mixedcase
     if test "x$enable_mixedcase" = "xyes" ; then
-        AC_DEFINE(MIXEDCASE_FILENAMES)
+        AC_DEFINE(MIXEDCASE_FILENAMES,1,[Define to 1 if tic should assume mixed-case filenames])
     fi
 fi
 
@@ -314,6 +310,7 @@ CF_WITH_LIB_PREFIX(cf_prefix)
 
 LIB_SUFFIX=
 AC_SUBST(LIB_SUFFIX)
+CF_PATHSEP
 
 ###############################################################################
 
@@ -349,13 +346,13 @@ if test "$with_gpm" != no ; then
 		else
 			CF_LIB_SONAME([#include <gpm.h>],[if (Gpm_Open(0,0)) Gpm_Close();],gpm)
 		fi
-		test "$cf_cv_gpm_soname" != "unknown" && AC_DEFINE_UNQUOTED(LIBGPM_SONAME,"$cf_cv_gpm_soname")
+		test "$cf_cv_gpm_soname" != "unknown" && AC_DEFINE_UNQUOTED(LIBGPM_SONAME,"$cf_cv_gpm_soname",[Define as needed to set the gpm share library soname])
 		SHLIB_LIST="-ldl $SHLIB_LIST"
 	else
 		SHLIB_LIST="-lgpm $SHLIB_LIST"
 		CF_ADD_LIB(gpm,TEST_LIBS)
 	fi
-	AC_DEFINE(HAVE_LIBGPM)
+	AC_DEFINE(HAVE_LIBGPM,1,[Define to 1 if we have the gpm library])
 	CF_CHECK_GPM_WGETCH
 fi
 
@@ -441,7 +438,7 @@ esac
 AC_SUBST(TERMINFO_SRC)
 
 if test "$use_database" != no ; then
-	AC_DEFINE(USE_DATABASE)
+	AC_DEFINE(USE_DATABASE,1,[Define to 1 if we should use the terminal database])
 
 	AC_MSG_CHECKING(which terminfo source-file will be installed)
 	AC_ARG_WITH(database,
@@ -513,7 +510,7 @@ CF_WITH_PATHLIST(terminfo-dirs,
 	DATADIR/terminfo,
 	${datadir}/terminfo)
 AC_MSG_RESULT($TERMINFO_DIRS)
-test -n "$TERMINFO_DIRS" && AC_DEFINE_UNQUOTED(TERMINFO_DIRS,"$TERMINFO_DIRS")
+test -n "$TERMINFO_DIRS" && AC_DEFINE_UNQUOTED(TERMINFO_DIRS,"$TERMINFO_DIRS",[Define as needed to predefine the TERMINFO_DIR searchlist])
 
 AC_MSG_CHECKING(for default terminfo directory)
 CF_WITH_PATH(default-terminfo-dir,
@@ -522,7 +519,7 @@ CF_WITH_PATH(default-terminfo-dir,
 	DATADIR/terminfo,
 	${datadir}/terminfo)
 AC_MSG_RESULT($TERMINFO)
-AC_DEFINE_UNQUOTED(TERMINFO,"$TERMINFO")
+AC_DEFINE_UNQUOTED(TERMINFO,"$TERMINFO",[Define to set the default terminal database path])
 
 fi
 
@@ -549,7 +546,7 @@ int main() {
 	[with_big_core=no],
 	[with_big_core=no])])
 AC_MSG_RESULT($with_big_core)
-test "x$with_big_core" = "xyes" && AC_DEFINE(HAVE_BIG_CORE)
+test "x$with_big_core" = "xyes" && AC_DEFINE(HAVE_BIG_CORE,1,[Define to 1 if machine has ample memory for tic])
 
 ### ISO C only guarantees 512-char strings, we have tables which load faster
 ### when constructed using "big" strings.  More than the C compiler, the awk
@@ -579,21 +576,21 @@ if test "x$with_termcap" != "xyes" ; then
 			AC_ERROR(You have disabled the database w/o specifying fallbacks)
 		fi
 	fi
-	AC_DEFINE(PURE_TERMINFO)
+	AC_DEFINE(PURE_TERMINFO,1,[Define to 1 if we should support only terminfo])
 else
 
 if test "$with_ticlib" != no ; then
 	AC_ERROR(Options --with-ticlib and --enable-termcap cannot be combined)
 fi
 
-AC_DEFINE(USE_TERMCAP)
+AC_DEFINE(USE_TERMCAP,1,[Define to 1 if we should support termcap])
 AC_MSG_CHECKING(for list of termcap files)
 CF_WITH_PATHLIST(termpath,
 	[  --with-termpath=XXX     specify list of termcap files],
 	TERMPATH,
 	/etc/termcap:/usr/share/misc/termcap)
 AC_MSG_RESULT($TERMPATH)
-test -n "$TERMPATH" && AC_DEFINE_UNQUOTED(TERMPATH,"$TERMPATH")
+test -n "$TERMPATH" && AC_DEFINE_UNQUOTED(TERMPATH,"$TERMPATH",[Define to set the termcap searchlist])
 
 ###	use option --enable-getcap to use a hacked getcap for reading termcaps
 AC_MSG_CHECKING(if fast termcap-loader is needed)
@@ -602,7 +599,7 @@ AC_ARG_ENABLE(getcap,
 	[with_getcap=$enableval],
 	[with_getcap=no])
 AC_MSG_RESULT($with_getcap)
-test "x$with_getcap" = "xyes" && AC_DEFINE(USE_GETCAP)
+test "x$with_getcap" = "xyes" && AC_DEFINE(USE_GETCAP,1,[Define to 1 to use fast termcap-loader])
 
 AC_MSG_CHECKING(if translated termcaps will be cached in ~/.terminfo)
 AC_ARG_ENABLE(getcap-cache,
@@ -610,7 +607,7 @@ AC_ARG_ENABLE(getcap-cache,
 	[with_getcap_cache=$enableval],
 	[with_getcap_cache=no])
 AC_MSG_RESULT($with_getcap_cache)
-test "x$with_getcap_cache" = "xyes" && AC_DEFINE(USE_GETCAP_CACHE)
+test "x$with_getcap_cache" = "xyes" && AC_DEFINE(USE_GETCAP_CACHE,1,[Define to 1 if translated termcap should be stored in $HOME/.terminfo])
 
 fi
 
@@ -621,7 +618,7 @@ AC_ARG_ENABLE(home-terminfo,
 	[with_home_terminfo=$enableval],
 	[with_home_terminfo=yes])
 AC_MSG_RESULT($with_home_terminfo)
-test "x$with_home_terminfo" = "xyes" && AC_DEFINE(USE_HOME_TERMINFO)
+test "x$with_home_terminfo" = "xyes" && AC_DEFINE(USE_HOME_TERMINFO,1,[Define to 1 if $HOME/.terminfo feature is wanted])
 
 AC_MSG_CHECKING(if you want to use restricted environment when running as root)
 AC_ARG_ENABLE(root-environ,
@@ -629,7 +626,7 @@ AC_ARG_ENABLE(root-environ,
 	[with_root_environ=$enableval],
 	[with_root_environ=yes])
 AC_MSG_RESULT($with_root_environ)
-test "x$with_root_environ" = xyes && AC_DEFINE(USE_ROOT_ENVIRON)
+test "x$with_root_environ" = xyes && AC_DEFINE(USE_ROOT_ENVIRON,1,[Define to 1 if environment should be restricted for root user])
 
 ###   Use option --enable-symlinks to make tic use symlinks, not hard links
 ###   to reduce storage requirements for the terminfo database.
@@ -661,8 +658,8 @@ if test "$with_symlinks" = no ; then
     AC_MSG_RESULT($with_links)
 fi
 
-test "x$with_links" = xyes && AC_DEFINE(USE_LINKS)
-test "x$with_symlinks" = xyes && AC_DEFINE(USE_SYMLINKS)
+test "x$with_links" = xyes && AC_DEFINE(USE_LINKS,1,[Define to 1 if hardlinks should be used in terminfo database])
+test "x$with_symlinks" = xyes && AC_DEFINE(USE_SYMLINKS,1,[Define to 1 if symbolic links should be used in terminfo database])
 
 ###   use option --enable-broken-linker to force on use of broken-linker support
 AC_MSG_CHECKING(if you want broken-linker support code)
@@ -674,12 +671,12 @@ AC_MSG_RESULT($with_broken_linker)
 
 BROKEN_LINKER=0
 if test "x$with_broken_linker" = xyes ; then
-	AC_DEFINE(BROKEN_LINKER)
+	AC_DEFINE(BROKEN_LINKER,1,[Define to 1 to work around linkers which cannot link data-only modules])
 	BROKEN_LINKER=1
 elif test "$DFT_LWR_MODEL" = shared ; then
 	case $cf_cv_system_name in #(vi
 	cygwin*)
-		AC_DEFINE(BROKEN_LINKER)
+		AC_DEFINE(BROKEN_LINKER,1,[Define to 1 to work around linkers which cannot link data-only modules])
 		BROKEN_LINKER=1
 		CF_VERBOSE(cygwin linker is broken anyway)
 		;;
@@ -694,7 +691,7 @@ AC_ARG_ENABLE(bsdpad,
 	[with_bsdpad=$enableval],
 	[with_bsdpad=no])
 AC_MSG_RESULT($with_bsdpad)
-test "x$with_bsdpad" = xyes && AC_DEFINE(BSD_TPUTS)
+test "x$with_bsdpad" = xyes && AC_DEFINE(BSD_TPUTS,1,[Define to 1 to recognize BSD-style prefix padding])
 
 ###   use option --enable-widec to turn on use of wide-character support
 NCURSES_CH_T=chtype
@@ -726,8 +723,8 @@ AC_ARG_ENABLE(widec,
 AC_MSG_RESULT($with_widec)
 if test "x$with_widec" = xyes ; then
 	LIB_SUFFIX="w${LIB_SUFFIX}"
-	AC_DEFINE(USE_WIDEC_SUPPORT)
-	AC_DEFINE(NCURSES_WIDECHAR)
+	AC_DEFINE(USE_WIDEC_SUPPORT,1,[Define to 1 to compile with wide-char/UTF-8 code])
+	AC_DEFINE(NCURSES_WIDECHAR,1,[Define to 1 to compile with wide-char/UTF-8 code])
 
 	CF_CHECK_WCHAR_H
 
@@ -745,7 +742,7 @@ if test "x$with_widec" = xyes ; then
 	CF_WCHAR_TYPE(wint_t,    NCURSES_WINT_T,    NCURSES_OK_WINT_T)
 
 	if test "$NCURSES_MBSTATE_T" != 0; then
-		AC_DEFINE(NEED_MBSTATE_T_DEF)
+		AC_DEFINE(NEED_MBSTATE_T_DEF,1,[Define to 1 if we must declare mbstate_t])
 	fi
 fi
 AC_SUBST(NCURSES_CH_T)
@@ -876,7 +873,7 @@ AC_ARG_WITH(rcs-ids,
 	[with_rcs_ids=$withval],
 	[with_rcs_ids=no])
 AC_MSG_RESULT($with_rcs_ids)
-test "x$with_rcs_ids" = xyes && AC_DEFINE(USE_RCS_IDS)
+test "x$with_rcs_ids" = xyes && AC_DEFINE(USE_RCS_IDS,1,[Define to 1 to compile-in RCS identifiers])
 
 ###############################################################################
 CF_MAN_PAGES([ captoinfo clear infocmp infotocap tabs tic toe tput tset ])
@@ -893,17 +890,17 @@ AC_ARG_ENABLE(ext-funcs,
 AC_MSG_RESULT($with_ext_funcs)
 if test "x$with_ext_funcs" = xyes ; then
 	NCURSES_EXT_FUNCS=1
-	AC_DEFINE(HAVE_ASSUME_DEFAULT_COLORS)
-	AC_DEFINE(HAVE_CURSES_VERSION)
-	AC_DEFINE(HAVE_HAS_KEY)
-	AC_DEFINE(HAVE_RESIZETERM)
-	AC_DEFINE(HAVE_RESIZE_TERM)
-	AC_DEFINE(HAVE_TERM_ENTRY_H)
-	AC_DEFINE(HAVE_USE_DEFAULT_COLORS)
-	AC_DEFINE(HAVE_USE_SCREEN)
-	AC_DEFINE(HAVE_USE_WINDOW)
-	AC_DEFINE(HAVE_WRESIZE)
-	AC_DEFINE(NCURSES_EXT_FUNCS)
+	AC_DEFINE(HAVE_ASSUME_DEFAULT_COLORS,1,[Define to 1 to enable assume_default_colors() function])
+	AC_DEFINE(HAVE_CURSES_VERSION,1,[Define to 1 to enable curses_version() function])
+	AC_DEFINE(HAVE_HAS_KEY,1,[Define to 1 to enable has_key() function])
+	AC_DEFINE(HAVE_RESIZETERM,1,[Define to 1 to enable resizeterm() function])
+	AC_DEFINE(HAVE_RESIZE_TERM,1,[Define to 1 to enable resize_term() function])
+	AC_DEFINE(HAVE_TERM_ENTRY_H,1,[Define to 1 to enable term_entry() function])
+	AC_DEFINE(HAVE_USE_DEFAULT_COLORS,1,[Define to 1 to enable use_default_colors() function])
+	AC_DEFINE(HAVE_USE_SCREEN,1,[Define to 1 to enable use_screen() function])
+	AC_DEFINE(HAVE_USE_WINDOW,1,[Define to 1 to enable use_window() function])
+	AC_DEFINE(HAVE_WRESIZE,1,[Define to 1 to enable wresize() function])
+	AC_DEFINE(NCURSES_EXT_FUNCS,1,[Define to 1 to enable ncurses extended functions])
 	GENERATED_EXT_FUNCS=generated
 else
 	NCURSES_EXT_FUNCS=0
@@ -920,7 +917,7 @@ AC_ARG_ENABLE(sp-funcs,
 AC_MSG_RESULT($with_sp_funcs)
 if test "x$with_sp_funcs" = xyes ; then
 	NCURSES_SP_FUNCS=1
-	AC_DEFINE(NCURSES_SP_FUNCS)
+	AC_DEFINE(NCURSES_SP_FUNCS,1,[Define to 1 to enable experimental SCREEN-extensions])
 	GENERATED_SP_FUNCS=generated
 else
 	NCURSES_SP_FUNCS=0
@@ -936,7 +933,7 @@ AC_ARG_ENABLE(term-driver,
 	[with_term_driver=no])
 AC_MSG_RESULT($with_term_driver)
 if test "x$with_term_driver" = xyes ; then
-	AC_DEFINE(USE_TERM_DRIVER)
+	AC_DEFINE(USE_TERM_DRIVER,1,[Define to 1 to enable experimental terminal-driver])
 	if test "x$with_sp_funcs" != xyes ; then
 		AC_MSG_ERROR(The term-driver option relies upon sp-funcs)
 	fi
@@ -971,7 +968,7 @@ if test "x$with_ext_colors" = xyes ; then
 		CF_NCURSES_ABI_6
 	fi
 	NCURSES_EXT_COLORS=1
-	AC_DEFINE(NCURSES_EXT_COLORS)
+	AC_DEFINE(NCURSES_EXT_COLORS,1,[Define to 1 to compile for 256-color support])
 fi
 AC_SUBST(NCURSES_EXT_COLORS)
 
@@ -995,7 +992,7 @@ AC_ARG_ENABLE(no-padding,
 	[with_no_padding=$enableval],
 	[with_no_padding=$with_ext_funcs])
 AC_MSG_RESULT($with_no_padding)
-test "x$with_no_padding" = xyes && AC_DEFINE(NCURSES_NO_PADDING)
+test "x$with_no_padding" = xyes && AC_DEFINE(NCURSES_NO_PADDING,1,[Define to 1 to compile with $NCURSES_NO_PADDING code])
 
 AC_CHECK_SIZEOF([signed char], 0)
 if test "$ac_cv_sizeof_signed_char" = 1 ; then
@@ -1019,7 +1016,7 @@ AC_ARG_ENABLE(sigwinch,
 	[with_sigwinch=$enableval],
 	[with_sigwinch=$with_ext_funcs])
 AC_MSG_RESULT($with_sigwinch)
-test "x$with_sigwinch" = xyes && AC_DEFINE(USE_SIGWINCH)
+test "x$with_sigwinch" = xyes && AC_DEFINE(USE_SIGWINCH,1,[Define to 1 to compile with SIGWINCH handler])
 
 ###   use option --enable-tcap-names to allow user to define new capabilities
 AC_MSG_CHECKING(if you want user-definable terminal capabilities like termcap)
@@ -1048,7 +1045,7 @@ AC_ARG_ENABLE(hard-tabs,
 	[  --enable-hard-tabs      compile with hard-tabs code],,
 	[enable_hard_tabs=$with_develop])
 AC_MSG_RESULT($enable_hard_tabs)
-test "x$enable_hard_tabs" = xyes && AC_DEFINE(USE_HARD_TABS)
+test "x$enable_hard_tabs" = xyes && AC_DEFINE(USE_HARD_TABS,1,[Define to 1 to compile with hard-tabs code])
 
 ###   use option --enable-xmc-glitch to turn on use of magic-cookie optimize
 AC_MSG_CHECKING(if you want limited support for xmc)
@@ -1056,7 +1053,7 @@ AC_ARG_ENABLE(xmc-glitch,
 	[  --enable-xmc-glitch     compile with support for xmc (magic-cookie)],,
 	[enable_xmc_glitch=$with_develop])
 AC_MSG_RESULT($enable_xmc_glitch)
-test "x$enable_xmc_glitch" = xyes && AC_DEFINE(USE_XMC_SUPPORT)
+test "x$enable_xmc_glitch" = xyes && AC_DEFINE(USE_XMC_SUPPORT,1,[Define to 1 to compile with support for xmc (magic-cookie)])
 
 ###############################################################################
 # These are just experimental, probably should not be in a package:
@@ -1068,7 +1065,7 @@ AC_ARG_ENABLE(assumed-color,
 	[with_assumed_color=$enableval],
 	[with_assumed_color=yes])
 AC_MSG_RESULT($with_assumed_color)
-test "x$with_assumed_color" = xyes && AC_DEFINE(USE_ASSUMED_COLOR)
+test "x$with_assumed_color" = xyes && AC_DEFINE(USE_ASSUMED_COLOR,1,[Define to 1 to assume things about default-colors])
 
 ###   use option --enable-hashmap to turn on use of hashmap scrolling logic
 AC_MSG_CHECKING(if you want hashmap scrolling-optimization code)
@@ -1077,7 +1074,7 @@ AC_ARG_ENABLE(hashmap,
 	[with_hashmap=$enableval],
 	[with_hashmap=yes])
 AC_MSG_RESULT($with_hashmap)
-test "x$with_hashmap" = xyes && AC_DEFINE(USE_HASHMAP)
+test "x$with_hashmap" = xyes && AC_DEFINE(USE_HASHMAP,1,[Define to 1 to compile with hashmap scrolling-optimization])
 
 ###   use option --enable-colorfgbg to turn on use of $COLORFGBG environment
 AC_MSG_CHECKING(if you want colorfgbg code)
@@ -1086,7 +1083,7 @@ AC_ARG_ENABLE(colorfgbg,
 	[with_colorfgbg=$enableval],
 	[with_colorfgbg=no])
 AC_MSG_RESULT($with_colorfgbg)
-test "x$with_colorfgbg" = xyes && AC_DEFINE(USE_COLORFGBG)
+test "x$with_colorfgbg" = xyes && AC_DEFINE(USE_COLORFGBG,1,[Define to 1 to compile-in experimental $COLORFGBG code])
 
 ###   use option --enable-interop to turn on use of bindings used for interop
 AC_MSG_CHECKING(if you want interop bindings)
@@ -1113,7 +1110,7 @@ if test "x$with_pthread" != xno; then
 			[use_pthreads_eintr=no])
 		AC_MSG_RESULT($use_pthreads_eintr)
 		if test "x$use_pthreads_eintr" = xyes ; then
-			AC_DEFINE(USE_PTHREADS_EINTR)
+			AC_DEFINE(USE_PTHREADS_EINTR,1,[Define to 1 to enable EINTR in wgetch with pthreads])
 		fi])
 
 	AC_MSG_CHECKING(if you want to use weak-symbols for pthreads)
@@ -1129,13 +1126,13 @@ if test "x$with_pthread" != xno; then
 	fi
 
 	if test "x$cf_cv_weak_symbols" = xyes ; then
-		AC_DEFINE(USE_WEAK_SYMBOLS)
+		AC_DEFINE(USE_WEAK_SYMBOLS,1,[Define to 1 to enable weak-symbols for pthreads])
 	fi
 fi
 
 PTHREAD=
 if test "x$with_pthread" = "xyes" ; then
-    AC_DEFINE(USE_PTHREADS)
+    AC_DEFINE(USE_PTHREADS,1,[Define to 1 to use pthreads feature])
     enable_reentrant=yes
     if test "x$cf_cv_weak_symbols" = xyes ; then
         PTHREAD=-lpthread
@@ -1165,7 +1162,7 @@ if test "x$with_reentrant" = xyes ; then
 	else
 		LIB_SUFFIX="t${LIB_SUFFIX}"
 	fi
-	AC_DEFINE(USE_REENTRANT)
+	AC_DEFINE(USE_REENTRANT,1,[Define to 1 to use experimental reentrant feature])
 	CF_NCURSES_ABI_6
 else
 	cf_cv_enable_reentrant=0
@@ -1190,7 +1187,7 @@ else
 	NCURSES_WRAP_PREFIX=_nc_
 fi
 AC_SUBST(NCURSES_WRAP_PREFIX)
-AC_DEFINE_UNQUOTED(NCURSES_WRAP_PREFIX,"$NCURSES_WRAP_PREFIX")
+AC_DEFINE_UNQUOTED(NCURSES_WRAP_PREFIX,"$NCURSES_WRAP_PREFIX",[Define to override _nc_ prefix])
 
 AC_MSG_CHECKING(if you want experimental safe-sprintf code)
 AC_ARG_ENABLE(safe-sprintf,
@@ -1198,7 +1195,7 @@ AC_ARG_ENABLE(safe-sprintf,
 	[with_safe_sprintf=$enableval],
 	[with_safe_sprintf=no])
 AC_MSG_RESULT($with_safe_sprintf)
-test "x$with_safe_sprintf" = xyes && AC_DEFINE(USE_SAFE_SPRINTF)
+test "x$with_safe_sprintf" = xyes && AC_DEFINE(USE_SAFE_SPRINTF,1,[Define to 1 to compile with experimental safe-sprintf code])
 
 ###   use option --disable-scroll-hints to turn off use of scroll-hints scrolling logic
 # when hashmap is used scroll hints are useless
@@ -1209,7 +1206,7 @@ AC_ARG_ENABLE(scroll-hints,
 	[with_scroll_hints=$enableval],
 	[with_scroll_hints=yes])
 AC_MSG_RESULT($with_scroll_hints)
-test "x$with_scroll_hints" = xyes && AC_DEFINE(USE_SCROLL_HINTS)
+test "x$with_scroll_hints" = xyes && AC_DEFINE(USE_SCROLL_HINTS,1,[Define to 1 to compile without scroll-hints code])
 fi
 
 AC_MSG_CHECKING(if you want experimental wgetch-events code)
@@ -1218,7 +1215,7 @@ AC_ARG_ENABLE(wgetch-events,
 	[with_wgetch_events=$enableval],
 	[with_wgetch_events=no])
 AC_MSG_RESULT($with_wgetch_events)
-test "x$with_wgetch_events" = xyes && AC_DEFINE(NCURSES_WGETCH_EVENTS)
+test "x$with_wgetch_events" = xyes && AC_DEFINE(NCURSES_WGETCH_EVENTS,1,[Define to 1 to compile with experimental wgetch-events code])
 
 ###############################################################################
 CF_HELP_MESSAGE(Testing/development Options:)
@@ -1270,17 +1267,17 @@ fi
 
 ###	use option --disable-leaks to suppress "permanent" leaks, for testing
 CF_DISABLE_LEAKS
-AC_DEFINE(HAVE_NC_ALLOC_H)
+AC_DEFINE(HAVE_NC_ALLOC_H,1,[Define to 1 if we have nc_alloc.h header])
 
 ###	use option --enable-expanded to generate certain macros as functions
 AC_ARG_ENABLE(expanded,
 	[  --enable-expanded       test: generate functions for certain macros],
-	[test "x$enableval" = xyes && AC_DEFINE(NCURSES_EXPANDED)])
+	[test "x$enableval" = xyes && AC_DEFINE(NCURSES_EXPANDED,1,[Define to 1 to generate functions for certain macros])])
 
 ###	use option --disable-macros to suppress macros in favor of functions
 AC_ARG_ENABLE(macros,
 	[  --disable-macros        test: use functions rather than macros],
-	[test "$enableval" = no && AC_DEFINE(NCURSES_NOMACROS)])
+	[test "$enableval" = no && AC_DEFINE(NCURSES_NOMACROS,1,[Define to 1 to use functions rather than macros])])
 
 # Normally we only add trace() to the debug-library.  Allow this to be
 # extended to all models of the ncurses library:
@@ -1315,10 +1312,10 @@ case $cf_cv_system_name in #(vi
 	;;
 *)
 AC_CHECK_FUNC(gettimeofday,
-	AC_DEFINE(HAVE_GETTIMEOFDAY),[
+	AC_DEFINE(HAVE_GETTIMEOFDAY,1,[Define to 1 if we have gettimeofday function]),[
 
 AC_CHECK_LIB(bsd, gettimeofday,
-	AC_DEFINE(HAVE_GETTIMEOFDAY)
+	AC_DEFINE(HAVE_GETTIMEOFDAY,1,[Define to 1 if we have gettimeofday function])
 	CF_ADD_LIB(bsd))])dnl CLIX: bzero, select, gettimeofday
 	;;
 esac
@@ -1450,8 +1447,8 @@ AC_FUNC_VFORK
 # special check for test/ditto.c
 CF_FUNC_OPENPTY
 if test "$cf_cv_func_openpty" != no ; then
-    AC_DEFINE_UNQUOTED(USE_OPENPTY_HEADER,<$cf_cv_func_openpty>)
-    AC_DEFINE(USE_XTERM_PTY)
+    AC_DEFINE_UNQUOTED(USE_OPENPTY_HEADER,<$cf_cv_func_openpty>,[Define to actual header for openpty function])
+    AC_DEFINE(USE_XTERM_PTY,1,[Define to 1 if we should assume xterm pseudoterminal interface])
     if test "x$cf_cv_lib_util" = xyes ; then
         CF_ADD_LIB(util,TEST_LIBS)
     fi
@@ -1460,7 +1457,7 @@ AC_SUBST(TEST_LIBS)
 AC_SUBST(TEST_LIBS2)
 
 if test "$with_hashed_db" != no ; then
-	AC_DEFINE(USE_HASHED_DB)
+	AC_DEFINE(USE_HASHED_DB,1,[Define to 1 if we should build terminfo in hashed database])
 	CF_HASHED_DB($with_hashed_db)
 fi
 
@@ -1829,7 +1826,7 @@ NCURSES_TREE=
 AC_SUBST(NCURSES_TREE)
 
 ### predefined stuff for the test programs
-AC_DEFINE(HAVE_SLK_COLOR)
+AC_DEFINE(HAVE_SLK_COLOR,1,[Define to 1 if we have slk_color for test-programs])
 
 ### Construct the list of subdirectories for which we'll customize makefiles
 ### with the appropriate compile-rules.
@@ -1848,9 +1845,9 @@ NCURSES_SHLIB2='sh $(top_srcdir)/misc/shlib'
 AC_SUBST(NCURSES_SHLIB2)
 
 # values to use as strings
-AC_DEFINE_UNQUOTED(NCURSES_PATHSEP,'$PATH_SEPARATOR')
+AC_DEFINE_UNQUOTED(NCURSES_PATHSEP,'$PATH_SEPARATOR',[Define to override ':' as library path-separator])
 
-AC_DEFINE_UNQUOTED(NCURSES_VERSION_STRING, "${NCURSES_MAJOR}.${NCURSES_MINOR}.${NCURSES_PATCH}")
+AC_DEFINE_UNQUOTED(NCURSES_VERSION_STRING, "${NCURSES_MAJOR}.${NCURSES_MINOR}.${NCURSES_PATCH}",[Define to 1 if machine has ample memory for tic])
 
 ### Now that we're done running tests, add the compiler-warnings, if any
 CF_ADD_CFLAGS($EXTRA_CFLAGS)

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.133 2012/08/11 21:31:56 tom Exp $
+# $Id: Makefile.in,v 1.135 2012/10/06 18:58:03 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -108,7 +108,7 @@ BUILD_LIBS	= @BUILD_LIBS@
 # is compiled into the build, or are test-programs that are not installed.
 
 BUILD_EXEEXT	= @BUILD_EXEEXT@
-x		= @PROG_EXT@
+x		= @EXEEXT@
 
 CFLAGS_LIBTOOL	= $(CCFLAGS)
 CFLAGS_NORMAL	= $(CCFLAGS)
@@ -136,7 +136,7 @@ ABI_VERSION	= @cf_cv_abi_version@
 
 RANLIB		= @LIB_PREP@
 
-LIBRARIES	= @LIBS_TO_MAKE@
+LIBRARIES	= @Libs_To_Make@
 
 LINT		= @LINT@
 LINT_OPTS	= @LINT_OPTS@

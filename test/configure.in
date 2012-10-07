@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.104 2012/03/17 17:29:03 tom Exp $
+dnl $Id: configure.in,v 1.108 2012/10/06 22:33:49 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -38,7 +38,7 @@ dnl It's only for testing purposes.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl ---------------------------------------------------------------------------
-AC_PREREQ(2.13.20020210)
+AC_PREREQ(2.52.20030208)
 AC_INIT(ncurses.c)
 AC_CONFIG_HEADER(ncurses_cfg.h:ncurses_tst.hin)
 
@@ -49,7 +49,7 @@ CF_CHECK_CACHE
 AC_ARG_PROGRAM
 
 AC_PROG_MAKE_SET
-AC_PROG_CC
+CF_PROG_CC
 AC_PROG_CPP
 AC_PROG_AWK
 CF_PROG_INSTALL
@@ -93,28 +93,29 @@ cf_cv_libtype=
 AC_EXEEXT
 AC_OBJEXT
 
-CF_ANSI_CC_REQD
 CF_GCC_ATTRIBUTES
 CF_XOPEN_SOURCE
-AC_C_CONST
 CF_SIG_ATOMIC_T
 
+dnl ---------------------------------------------------------------------------
+CF_HELP_MESSAGE(General Options:)
+CF_PKG_CONFIG
 CF_DISABLE_ECHO
-CF_ENABLE_WARNINGS
-
-CF_DISABLE_LEAKS
 
 dnl ---------------------------------------------------------------------------
+CF_HELP_MESSAGE(Curses Version-dependent Options:)
+CF_NCURSES_WRAP_PREFIX
+
 AC_MSG_CHECKING(if you want to check for wide-character functions)
 CF_ARG_DISABLE(widec,
-	[  --disable-widec           disable checks for wide-character functions],
+	[  --disable-widec         disable checks for wide-character functions],
 	cf_enable_widec=no,
 	cf_enable_widec=yes,
 	yes)
 AC_MSG_RESULT($cf_enable_widec)
 
-
 dnl ---------------------------------------------------------------------------
+CF_HELP_MESSAGE(Curses Version-dependent Options:)
 CF_WITH_NCURSES_ETC
 
 case $cf_cv_screen in
@@ -269,7 +270,7 @@ then
 		[cf_cv_widechar_funcs=no])
 	])
 	if test "$cf_cv_widechar_funcs" != no ; then
-		AC_DEFINE(USE_WIDEC_SUPPORT,1)
+		AC_DEFINE(USE_WIDEC_SUPPORT,1,[Define to 1 to enable wide-character support in (n)curses])
 	else
 		AC_DEFINE(USE_WIDEC_SUPPORT,0)
 	fi
@@ -279,8 +280,8 @@ fi
 
 CF_SYS_TIME_SELECT
 CF_FUNC_CURSES_VERSION
-CF_CURSES_ACS_MAP
 
+CF_CURSES_ACS_MAP
 if test "$cf_enable_widec" = yes; then
 	CF_CURSES_WACS_MAP
 	CF_CURSES_WACS_SYMBOLS
@@ -309,6 +310,10 @@ fi
 CF_CURSES_CHECK_DATA(boolnames)
 CF_CURSES_CHECK_DATA(boolfnames)
 
+dnl ---------------------------------------------------------------------------
+CF_HELP_MESSAGE(Testing/development Options:)
+CF_ENABLE_WARNINGS
+CF_DISABLE_LEAKS
 CF_DISABLE_RPATH_HACK
 
 TEST_ARGS="$LIBS"
