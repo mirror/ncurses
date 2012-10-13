@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.466 $
-#	$Date: 2012/08/11 15:27:54 $
+#	$Revision: 1.467 $
+#	$Date: 2012/10/13 23:17:51 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4042,6 +4042,14 @@ vte-2008|VTE in GNOME Terminal snapshot 2.22.3,
 gnome-2008|GNOME Terminal snapshot 2.22.3,
 	use=vte-2008,
 
+# GNOME Terminal 3.6.0 (2012)
+# VTE 0.34.1 refers to an unreleased version as of 2012-10-13 (0.34.0 was
+# released 2012-09-26, 0.34.1 has not been marked in git) -TD
+vte-2012|VTE 0.34.1,
+	ritm=\E[23m, sitm=\E[3m, use=xterm+pcc2, use=gnome-fc5,
+gnome-2012|GNOME Terminal 3.6.0,
+	use=vte-2012,
+
 # GNOME terminal may automatically use the contents of the "xterm" terminfo to
 # supply key information which is not built into the program.  With 2.22.3,
 # this list is built into the program (which addresses the inadvertant use of
@@ -4070,7 +4078,7 @@ gnome+pcfkeys|VTE's variation on xterm+pcfkeys,
 	use=vte+pcfkeys,
 
 vte|VTE aka GNOME Terminal,
-	use=vte-2008,
+	use=vte-2012,
 gnome|GNOME Terminal,
 	use=vte,
 
@@ -4087,7 +4095,7 @@ gnome-256color|GNOME Terminal with xterm 256-colors,
 # Since most of the terminfo-related behavior is due to the VTE library,
 # the terminfo is the same as gnome-terminal.
 xfce|Xfce Terminal,
-	use=vte,
+	use=vte-2008,
 
 #### Other GNOME
 # Multi-Gnome-Terminal 1.6.2
@@ -22936,5 +22944,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2012-08-11
 #	* add nsterm-256color, make this the default nsterm -TD
 #	* remove bw from nsterm-bce, per testing with tack -TD
+#
+# 2012-10-12
+#       * add vte-2012, gnome-2012, making these the defaults for vte/gnome
+#	  (patch by Christian Persch).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
