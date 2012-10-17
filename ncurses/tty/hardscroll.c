@@ -147,7 +147,7 @@ AUTHOR
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: hardscroll.c,v 1.50 2012/09/01 23:24:49 tom Exp $")
+MODULE_ID("$Id: hardscroll.c,v 1.51 2012/10/17 09:01:10 tom Exp $")
 
 #if defined(SCROLLDEBUG) || defined(HASHDEBUG)
 
@@ -205,7 +205,6 @@ NCURSES_SP_NAME(_nc_scroll_optimize) (NCURSES_SP_DCL0)
 				       oldnums(SP_PARM));
 	if (!new_oldnums)
 	    return;
-	FreeIfNeeded(oldnums(SP_PARM));
 	oldnums(SP_PARM) = new_oldnums;
 	OLDNUM_SIZE(SP_PARM) = need_lines;
     }

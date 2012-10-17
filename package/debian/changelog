@@ -1,8 +1,8 @@
-ncurses6 (5.9-20121013) unstable; urgency=low
+ncurses6 (5.9-20121017) unstable; urgency=low
 
-  * latest weekly patch
+  * Redhat #866989
 
- -- Thomas E. Dickey <dickey@invisible-island.net>  Sat, 13 Oct 2012 19:21:12 -0400
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Wed, 17 Oct 2012 05:47:25 -0400
 
 ncurses6 (5.9-20120608) unstable; urgency=low
 
