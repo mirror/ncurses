@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.41 2008/11/16 00:19:59 juergen Exp $
+# $Id: ncurses_defs,v 1.42 2012/10/27 17:33:29 tom Exp $
 ##############################################################################
-# Copyright (c) 2000-2007,2008 Free Software Foundation, Inc.                #
+# Copyright (c) 2000-2008,2012 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -33,7 +33,6 @@
 
 BROKEN_LINKER
 BSD_TPUTS
-CC_HAS_PROTOS
 CPP_HAS_PARAM_INIT
 CURSES_ACS_ARRAY	acs_map
 CURSES_WACS_ARRAY	_nc_wacs

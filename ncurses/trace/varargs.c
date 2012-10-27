@@ -34,7 +34,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: varargs.c,v 1.10 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: varargs.c,v 1.11 2012/10/27 21:03:28 tom Exp $")
 
 #ifdef TRACE
 
@@ -170,9 +170,11 @@ _nc_varargs(const char *fmt, va_list ap)
 			}
 			MyLength += strlen(param) + 2;
 			MyBuffer = typeRealloc(char, MyLength, MyBuffer);
-			_nc_SPRINTF(MyBuffer + strlen(MyBuffer),
-				    _nc_SLIMIT(MyLength - strlen(MyBuffer))
-				    ", %s", param);
+			if (MyBuffer != 0) {
+			    _nc_SPRINTF(MyBuffer + strlen(MyBuffer),
+					_nc_SLIMIT(MyLength - strlen(MyBuffer))
+					", %s", param);
+			}
 		    }
 		}
 		used = atUnknown;
@@ -182,7 +184,7 @@ _nc_varargs(const char *fmt, va_list ap)
 	}
     }
 
-    return (MyBuffer);
+    return (MyBuffer ? MyBuffer : dummy);
 }
 #else
 EMPTY_MODULE(_nc_varargs)

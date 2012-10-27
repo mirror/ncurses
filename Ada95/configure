@@ -1690,7 +1690,7 @@ GCC_VERSION=none
 if test "$GCC" = yes ; then
 	echo "$as_me:1691: checking version of $CC" >&5
 echo $ECHO_N "checking version of $CC... $ECHO_C" >&6
-	GCC_VERSION="`${CC} --version 2>/dev/null | sed -e '2,$d' -e 's/^.*(\(GCC\|Debian\)[^)]*) //' -e 's/^[^0-9.]*//' -e 's/[^0-9.].*//'`"
+	GCC_VERSION="`${CC} --version 2>/dev/null | sed -e '2,$d' -e 's/^.*(GCC[^)]*) //' -e 's/^.*(Debian[^)]*) //' -e 's/^[^0-9.]*//' -e 's/[^0-9.].*//'`"
 	test -z "$GCC_VERSION" && GCC_VERSION=unknown
 	echo "$as_me:1695: result: $GCC_VERSION" >&5
 echo "${ECHO_T}$GCC_VERSION" >&6

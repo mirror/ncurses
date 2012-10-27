@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.177 2012/06/02 17:19:31 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.178 2012/10/27 19:57:21 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -294,8 +294,10 @@ put_translate(int c)
     if (in_name) {
 	if (used + 1 >= have) {
 	    have += 132;
-	    namebuf = typeRealloc(char, have, namebuf);
-	    suffix = typeRealloc(char, have, suffix);
+	    if ((namebuf = typeRealloc(char, have, namebuf)) == 0)
+		  failed("put_translate namebuf");
+	    if ((suffix = typeRealloc(char, have, suffix)) == 0)
+		  failed("put_translate suffix");
 	}
 	if (c == '\n' || c == '@') {
 	    namebuf[used++] = '\0';
@@ -488,7 +490,8 @@ make_namelist(char *src)
 		}
 	    }
 	    if (pass == 1) {
-		dst = typeCalloc(char *, nn + 1);
+		if ((dst = typeCalloc(char *, nn + 1)) == 0)
+		      failed("make_namelist");
 		rewind(fp);
 	    }
 	}
@@ -510,8 +513,10 @@ make_namelist(char *src)
 		if (mark == '\0')
 		    break;
 	    }
-	    if (pass == 1)
-		dst = typeCalloc(char *, nn + 1);
+	    if (pass == 1) {
+		if ((dst = typeCalloc(char *, nn + 1)) == 0)
+		      failed("make_namelist");
+	    }
 	}
     }
     if (showsummary && (dst != 0)) {
@@ -550,6 +555,8 @@ valid_db_path(const char *nominal)
     size_t need = strlen(nominal) + sizeof(suffix);
     char *result = malloc(need);
 
+    if (result == 0)
+	failed("valid_db_path");
     _nc_STRCPY(result, nominal, need);
     if (strcmp(result + need - sizeof(suffix), suffix)) {
 	_nc_STRCAT(result, suffix, need);
@@ -1827,6 +1834,9 @@ get_fkey_list(TERMTYPE *tp)
     int used = 0;
     int j;
 
+    if (result == 0)
+	failed("get_fkey_list");
+
     for (j = 0; all_fkeys[j].code; j++) {
 	char *a = tp->Strings[all_fkeys[j].offset];
 	if (VALID_STRING(a)) {
@@ -1879,6 +1889,9 @@ check_termtype(TERMTYPE *tp, bool literal)
     if (!(_nc_syntax == SYN_TERMCAP && capdump)) {
 	char *check = calloc((size_t) (NUM_STRINGS(tp) + 1), sizeof(char));
 	NAME_VALUE *given = get_fkey_list(tp);
+
+	if (check == 0)
+	    failed("check_termtype");
 
 	for (j = 0; given[j].keycode; ++j) {
 	    const char *a = given[j].value;

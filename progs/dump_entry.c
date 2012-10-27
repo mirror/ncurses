@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.100 2012/06/09 21:44:40 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.101 2012/10/27 19:45:17 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -101,12 +101,21 @@ static const char *separator, *trailer;
 #endif
 
 static void
+failed(const char *s)
+{
+    perror(s);
+    ExitProgram(EXIT_FAILURE);
+}
+
+static void
 strncpy_DYN(DYNBUF * dst, const char *src, size_t need)
 {
     size_t want = need + dst->used + 1;
     if (want > dst->size) {
 	dst->size += (want + 1024);	/* be generous */
 	dst->text = typeRealloc(char, dst->size, dst->text);
+	if (dst->text == 0)
+	    failed("strncpy_DYN");
     }
     (void) strncpy(dst->text + dst->used, src, need);
     dst->used += need;

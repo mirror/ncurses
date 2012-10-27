@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.54 2012/07/14 21:03:29 tom Exp $
+# $Id: ncurses_defs,v 1.55 2012/10/27 17:16:05 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -33,7 +33,6 @@
 
 BROKEN_LINKER
 BSD_TPUTS
-CC_HAS_PROTOS
 CGETENT_CONST	/* nothing */
 CPP_HAS_PARAM_INIT
 CURSES_ACS_ARRAY	acs_map

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2010,2011,2012 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2010-2011,2012 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.16 2012/06/09 20:29:33 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.17 2012/10/27 19:37:30 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -90,6 +90,8 @@ static size_t temp_length;
 	if (need > temp_length) { \
 	    temp_length = need * 2; \
 	    temp_buffer = typeRealloc(cchar_t, temp_length, temp_buffer); \
+	    if (!temp_buffer) \
+		failed("TempBuffer"); \
 	} \
 	have[0] = 0; \
 	have[1] = 0; \

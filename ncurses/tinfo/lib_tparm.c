@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.86 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.87 2012/10/27 21:28:21 tom Exp $")
 
 /*
  *	char *
@@ -128,9 +128,7 @@ get_space(size_t need)
     need += TPS(out_used);
     if (need > TPS(out_size)) {
 	TPS(out_size) = need * 2;
-	TPS(out_buff) = typeRealloc(char, TPS(out_size), TPS(out_buff));
-	if (TPS(out_buff) == 0)
-	    _nc_err_abort(MSG_NO_MEMORY);
+	TYPE_REALLOC(char, TPS(out_size), TPS(out_buff));
     }
 }
 

@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.144 2012/08/26 21:11:49 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.146 2012/10/27 23:04:17 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -261,8 +261,8 @@ extract_fgbg(char *src, int *result)
 }
 #endif
 
-#define ReturnScreenError() _nc_set_screen(0); \
-                            returnCode(ERR)
+#define ReturnScreenError() { _nc_set_screen(0); \
+                            returnCode(ERR); } while (0)
 
 /* OS-independent screen initializations */
 NCURSES_EXPORT(int)
@@ -582,6 +582,9 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     NCURSES_SP_NAME(_nc_init_acs) (NCURSES_SP_ARG);
 #if USE_WIDEC_SUPPORT
     _nc_init_wacs();
+    if (_nc_wacs == 0) {
+	ReturnScreenError();
+    }
 
     sp->_screen_acs_fix = (_nc_unicode_locale()
 			   && _nc_locale_breaks_acs(sp->_term));

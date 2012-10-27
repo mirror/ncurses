@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.638 2012/10/06 22:44:38 tom Exp $
+dnl $Id: aclocal.m4,v 1.639 2012/10/27 17:13:57 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1897,7 +1897,7 @@ rm -rf conftest*
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_VERSION version: 6 updated: 2012/10/06 18:38:34
+dnl CF_GCC_VERSION version: 7 updated: 2012/10/18 06:46:33
 dnl --------------
 dnl Find version of gcc
 AC_DEFUN([CF_GCC_VERSION],[
@@ -1905,7 +1905,7 @@ AC_REQUIRE([AC_PROG_CC])
 GCC_VERSION=none
 if test "$GCC" = yes ; then
 	AC_MSG_CHECKING(version of $CC)
-	GCC_VERSION="`${CC} --version 2>/dev/null | sed -e '2,$d' -e 's/^.*(\(GCC\|Debian\)[[^)]]*) //' -e 's/^[[^0-9.]]*//' -e 's/[[^0-9.]].*//'`"
+	GCC_VERSION="`${CC} --version 2>/dev/null | sed -e '2,$d' -e 's/^.*(GCC[[^)]]*) //' -e 's/^.*(Debian[[^)]]*) //' -e 's/^[[^0-9.]]*//' -e 's/[[^0-9.]].*//'`"
 	test -z "$GCC_VERSION" && GCC_VERSION=unknown
 	AC_MSG_RESULT($GCC_VERSION)
 fi
@@ -6717,7 +6717,7 @@ eval $3="$withval"
 AC_SUBST($3)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PATHLIST version: 8 updated: 2012/09/29 15:04:19
+dnl CF_WITH_PATHLIST version: 9 updated: 2012/10/18 05:05:24
 dnl ----------------
 dnl Process an option specifying a list of colon-separated paths.
 dnl
@@ -6738,7 +6738,7 @@ cf_dst_path=
 for cf_src_path in $withval
 do
   CF_PATH_SYNTAX(cf_src_path)
-  test -n "$cf_dst_path" && cf_dst_path="${cf_dst_path}:"
+  test -n "$cf_dst_path" && cf_dst_path="${cf_dst_path}$PATH_SEPARATOR"
   cf_dst_path="${cf_dst_path}${cf_src_path}"
 done
 IFS="$ac_save_ifs"
@@ -6754,7 +6754,17 @@ esac
 cf_dst_path=`echo "$cf_dst_path" | sed -e 's/\\\\/\\\\\\\\/g'`
 ])
 
-eval $3="$cf_dst_path"
+# This may use the prefix/exec_prefix symbols which will only yield "NONE"
+# so we have to check/work around.  We do prefer the result of "eval"...
+eval cf_dst_eval="$cf_dst_path"
+case "x$cf_dst_eval" in #(vi
+xNONE*) #(vi
+	$3=$cf_dst_path
+	;;
+*)
+	$3="$cf_dst_eval"
+	;;
+esac
 AC_SUBST($3)dnl
 
 ])dnl

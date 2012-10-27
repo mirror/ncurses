@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.85 2012/04/14 23:30:10 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.86 2012/10/27 21:48:03 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -348,9 +348,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		    DEBUG(2, ("%s: resolving use=%s (compiled)",
 			      child, lookfor));
 
-		    rp = typeMalloc(ENTRY, 1);
-		    if (rp == 0)
-			_nc_err_abort(MSG_NO_MEMORY);
+		    TYPE_MALLOC(ENTRY, 1, rp);
 		    rp->tterm = thisterm;
 		    rp->nuses = 0;
 		    rp->next = lastread;

@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Release: 5.9
-Version: 20121017
+Version: 20121026
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{release}-%{version}.tgz
@@ -65,6 +65,8 @@ make
 rm -rf $RPM_BUILD_ROOT
 
 make install.libs install.progs
+rm -f test/ncurses
+( cd test && make ncurses LOCAL_LIBDIR=%{_libdir} && mv ncurses $RPM_BUILD_ROOT/%{_bindir}/ncurses6 )
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_datadir}/*
 
 %changelog
+
+* Sat Oct 26 2012 Thomas E. Dickey
+- add ncurses program as "ncurses6" to provide demonstration.
 
 * Fri Jun 08 2012 Thomas E. Dickey
 - initial version.

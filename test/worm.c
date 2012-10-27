@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2008,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.60 2010/11/13 20:21:21 tom Exp $
+  $Id: worm.c,v 1.61 2012/10/27 19:37:17 tom Exp $
 */
 
 #include <test.priv.h>
@@ -200,6 +200,14 @@ static const struct options {
     { 0, { 0, 0, 0 } }
 };
 /* *INDENT-ON* */
+
+static void
+failed(const char *s)
+{
+    perror(s);
+    endwin();
+    ExitProgram(EXIT_FAILURE);
+}
 
 static void
 cleanup(void)
@@ -391,6 +399,8 @@ update_refs(WINDOW *win)
     if (last_x != COLS - 1) {
 	for (y = 0; y <= last_y; y++) {
 	    refs[y] = typeRealloc(int, (size_t) COLS, refs[y]);
+	    if (!refs[y])
+		failed("update_refs");
 	    for (x = last_x + 1; x < COLS; x++)
 		refs[y][x] = 0;
 	}
@@ -402,6 +412,8 @@ update_refs(WINDOW *win)
 	refs = typeRealloc(int *, (size_t) LINES, refs);
 	for (y = last_y + 1; y < LINES; y++) {
 	    refs[y] = typeMalloc(int, (size_t) COLS);
+	    if (!refs[y])
+		failed("update_refs");
 	    for (x = 0; x < COLS; x++)
 		refs[y][x] = 0;
 	}

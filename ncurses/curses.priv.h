@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.506 2012/09/01 19:21:05 tom Exp $
+ * $Id: curses.priv.h,v 1.507 2012/10/27 21:23:14 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1509,6 +1509,20 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define FreeAndNull(p)   free(p); p = 0
 
 #include <nc_alloc.h>
+
+/*
+ * Use these for tic/infocmp malloc failures.  Generally the ncurses library
+ * tries to limp along after a failure.
+ */
+#define TYPE_MALLOC(type, size, name) \
+	name = typeMalloc(type, size); \
+	if (name == 0) \
+	    _nc_err_abort(MSG_NO_MEMORY)
+
+#define TYPE_REALLOC(type, size, name) \
+	name = typeRealloc(type, size, name); \
+	if (name == 0) \
+	    _nc_err_abort(MSG_NO_MEMORY)
 
 /*
  * TTY bit definition for converting tabs to spaces.

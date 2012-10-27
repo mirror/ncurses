@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.78 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.79 2012/10/27 21:43:45 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -145,27 +145,27 @@ _nc_extend_names(ENTRY * entryp, char *name, int token_type)
 	case BOOLEAN:
 	    tp->ext_Booleans++;
 	    tp->num_Booleans++;
-	    tp->Booleans = typeRealloc(NCURSES_SBOOL, tp->num_Booleans, tp->Booleans);
+	    TYPE_REALLOC(NCURSES_SBOOL, tp->num_Booleans, tp->Booleans);
 	    for_each_value(tp->num_Booleans)
 		tp->Booleans[last] = tp->Booleans[last - 1];
 	    break;
 	case NUMBER:
 	    tp->ext_Numbers++;
 	    tp->num_Numbers++;
-	    tp->Numbers = typeRealloc(short, tp->num_Numbers, tp->Numbers);
+	    TYPE_REALLOC(short, tp->num_Numbers, tp->Numbers);
 	    for_each_value(tp->num_Numbers)
 		tp->Numbers[last] = tp->Numbers[last - 1];
 	    break;
 	case STRING:
 	    tp->ext_Strings++;
 	    tp->num_Strings++;
-	    tp->Strings = typeRealloc(char *, tp->num_Strings, tp->Strings);
+	    TYPE_REALLOC(char *, tp->num_Strings, tp->Strings);
 	    for_each_value(tp->num_Strings)
 		tp->Strings[last] = tp->Strings[last - 1];
 	    break;
 	}
 	actual = NUM_EXT_NAMES(tp);
-	tp->ext_Names = typeRealloc(char *, actual, tp->ext_Names);
+	TYPE_REALLOC(char *, actual, tp->ext_Names);
 	while (--actual > offset)
 	    tp->ext_Names[actual] = tp->ext_Names[actual - 1];
 	tp->ext_Names[offset] = _nc_save_str(name);

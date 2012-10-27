@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.377 2012/09/08 23:58:58 tom Exp $
+$Id: ncurses.c,v 1.378 2012/10/27 19:37:56 tom Exp $
 
 ***************************************************************************/
 
@@ -165,6 +165,14 @@ typedef struct {
 static RGB_DATA *all_colors;
 
 static void main_menu(bool);
+
+static void
+failed(const char *s)
+{
+    perror(s);
+    endwin();
+    ExitProgram(EXIT_FAILURE);
+}
 
 /* The behavior of mvhline, mvvline for negative/zero length is unspecified,
  * though we can rely on negative x/y values to stop the macro.
@@ -723,6 +731,8 @@ remember_boxes(unsigned level, WINDOW *txt_win, WINDOW *box_win)
 	len_winstack = need;
 	winstack = typeRealloc(WINSTACK, len_winstack, winstack);
     }
+    if (!winstack)
+	failed("remember_boxes");
     winstack[level].text = txt_win;
     winstack[level].frame = box_win;
 }
@@ -1034,6 +1044,8 @@ wcstos(const wchar_t *src)
 		free(result);
 		result = 0;
 	    }
+	} else {
+	    failed("wcstos");
 	}
     }
     return result;
@@ -4302,9 +4314,11 @@ acs_and_scroll(void)
 	switch (c) {
 	case CTRL('C'):
 	    if ((neww = typeCalloc(FRAME, 1)) == 0) {
+		failed("acs_and_scroll");
 		goto breakout;
 	    }
 	    if ((neww->wind = getwindow()) == (WINDOW *) 0) {
+		failed("acs_and_scroll");
 		free(neww);
 		goto breakout;
 	    }
@@ -4393,6 +4407,8 @@ acs_and_scroll(void)
 		    neww->wind = getwin(fp);
 
 		    wrefresh(neww->wind);
+		} else {
+		    failed("acs_and_scroll");
 		}
 		(void) fclose(fp);
 	    }
@@ -5567,6 +5583,8 @@ tracetrace(unsigned tlevel)
 	for (n = 0; t_tbl[n].name != 0; n++)
 	    need += strlen(t_tbl[n].name) + 2;
 	buf = typeMalloc(char, need);
+	if (!buf)
+	    failed("tracetrace");
     }
     sprintf(buf, "0x%02x = {", tlevel);
     if (tlevel == 0) {
@@ -6915,6 +6933,8 @@ main(int argc, char *argv[])
 	if (can_change_color()) {
 	    short cp;
 	    all_colors = typeMalloc(RGB_DATA, (unsigned) max_colors);
+	    if (!all_colors)
+		failed("all_colors");
 	    for (cp = 0; cp < max_colors; ++cp) {
 		color_content(cp,
 			      &all_colors[cp].red,

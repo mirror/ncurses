@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.72 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.73 2012/10/27 21:27:02 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -114,9 +114,7 @@ init_string(void)
 /* initialize 'my_string', 'my_length' */
 {
     if (my_string == 0)
-	my_string = typeMalloc(char, my_length = 256);
-    if (my_string == 0)
-	_nc_err_abort(MSG_NO_MEMORY);
+	TYPE_MALLOC(char, my_length = 256, my_string);
 
     *my_string = '\0';
     return my_string;

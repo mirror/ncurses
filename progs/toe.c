@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.68 2012/07/21 22:55:59 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.69 2012/10/27 20:01:20 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -99,6 +99,8 @@ new_termdata(void)
     if (want >= len_termdata) {
 	len_termdata = (2 * want) + 10;
 	ptr_termdata = typeRealloc(TERMDATA, len_termdata, ptr_termdata);
+	if (ptr_termdata == 0)
+	    failed("ptr_termdata");
     }
 
     return ptr_termdata + use_termdata++;
@@ -702,6 +704,8 @@ main(int argc, char *argv[])
 	    }
 	    if (!pass) {
 		eargv = allocArgv(count);
+		if (eargv == 0)
+		    failed("eargv");
 	    } else {
 		code = typelist((int) count, eargv, header, hook);
 		freeArgv(eargv);
@@ -714,6 +718,8 @@ main(int argc, char *argv[])
 	char **eargv = allocArgv(2);
 	size_t count = 0;
 
+	if (eargv == 0)
+	    failed("eargv");
 	_nc_first_db(&state, &offset);
 	if ((path = _nc_next_db(&state, &offset)) != 0) {
 	    eargv[count++] = strmalloc(path);

@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.119 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.120 2012/10/27 21:51:07 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -252,9 +252,9 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 	ptr->num_Numbers = UShort(NUMCOUNT + ext_num_count);
 	ptr->num_Strings = UShort(STRCOUNT + ext_str_count);
 
-	ptr->Booleans = typeRealloc(NCURSES_SBOOL, ptr->num_Booleans, ptr->Booleans);
-	ptr->Numbers = typeRealloc(short, ptr->num_Numbers, ptr->Numbers);
-	ptr->Strings = typeRealloc(char *, ptr->num_Strings, ptr->Strings);
+	TYPE_REALLOC(NCURSES_SBOOL, ptr->num_Booleans, ptr->Booleans);
+	TYPE_REALLOC(short, ptr->num_Numbers, ptr->Numbers);
+	TYPE_REALLOC(char *, ptr->num_Strings, ptr->Strings);
 
 	TR(TRACE_DATABASE, ("extended header is %d/%d/%d(%d:%d)",
 			    ext_bool_count, ext_num_count, ext_str_count,

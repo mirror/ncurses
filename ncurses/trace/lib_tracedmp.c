@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_tracedmp.c,v 1.33 2012/06/09 20:29:33 tom Exp $")
+MODULE_ID("$Id: lib_tracedmp.c,v 1.34 2012/10/27 20:54:42 tom Exp $")
 
 #ifdef TRACE
 
@@ -70,6 +70,8 @@ _tracedump(const char *name, WINDOW *win)
     if (++width + 1 > (int) my_length) {
 	my_length = (unsigned) (2 * (width + 1));
 	my_buffer = typeRealloc(char, my_length, my_buffer);
+	if (my_buffer == 0)
+	    return;
     }
 
     for (n = 0; n <= win->_maxy; ++n) {

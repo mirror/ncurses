@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.56 2012/02/22 22:34:31 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.57 2012/10/27 21:32:23 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -73,7 +73,7 @@ _nc_init_entry(TERMTYPE *const tp)
 #endif
 
     if (stringbuf == 0)
-	stringbuf = (char *) malloc((size_t) MAX_STRTAB);
+	TYPE_MALLOC(char, (size_t) MAX_STRTAB, stringbuf);
 
 #if NCURSES_XNAMES
     tp->num_Booleans = BOOLCOUNT;
@@ -84,11 +84,11 @@ _nc_init_entry(TERMTYPE *const tp)
     tp->ext_Strings = 0;
 #endif
     if (tp->Booleans == 0)
-	tp->Booleans = typeMalloc(NCURSES_SBOOL, BOOLCOUNT);
+	TYPE_MALLOC(NCURSES_SBOOL, BOOLCOUNT, tp->Booleans);
     if (tp->Numbers == 0)
-	tp->Numbers = typeMalloc(short, NUMCOUNT);
+	TYPE_MALLOC(short, NUMCOUNT, tp->Numbers);
     if (tp->Strings == 0)
-	tp->Strings = typeMalloc(char *, STRCOUNT);
+	TYPE_MALLOC(char *, STRCOUNT, tp->Strings);
 
     for_each_boolean(i, tp)
 	tp->Booleans[i] = FALSE;
@@ -194,8 +194,7 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 	    useoffsets[i] = (int) (ep->uses[i].name - stringbuf);
     }
 
-    if ((tp->str_table = typeMalloc(char, next_free)) == (char *) 0)
-	  _nc_err_abort(MSG_NO_MEMORY);
+    TYPE_MALLOC(char, next_free, tp->str_table);
     (void) memcpy(tp->str_table, stringbuf, next_free);
 
     tp->term_names = tp->str_table + n;
@@ -221,8 +220,7 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 		    length += strlen(tp->ext_Names[i]) + 1;
 		    offsets[i] = (int) (tp->ext_Names[i] - stringbuf);
 		}
-		if ((tp->ext_str_table = typeMalloc(char, length)) == 0)
-		      _nc_err_abort(MSG_NO_MEMORY);
+		TYPE_MALLOC(char, length, tp->ext_str_table);
 		for (i = 0, offset = 0; i < n; i++) {
 		    tp->ext_Names[i] = tp->ext_str_table + offset;
 		    _nc_STRCPY(tp->ext_Names[i],

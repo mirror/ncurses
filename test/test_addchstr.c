@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addchstr.c,v 1.14 2012/06/09 20:29:33 tom Exp $
+ * $Id: test_addchstr.c,v 1.15 2012/10/27 19:31:42 tom Exp $
  *
  * Demonstrate the waddchstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
@@ -101,6 +101,8 @@ ChStr(const char *source)
 	if (need > temp_length) {
 	    temp_length = need * 2;
 	    temp_buffer = typeRealloc(chtype, temp_length, temp_buffer);
+	    if (!temp_buffer)
+		failed("TempBuffer");
 	}
 	do {
 	    const char *s;

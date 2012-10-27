@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.39 2012/06/09 20:30:32 tom Exp $
+ * $Id: cardfile.c,v 1.40 2012/10/27 19:37:56 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -68,6 +68,14 @@ static CARD *all_cards;
 static bool try_color = FALSE;
 static char default_name[] = "cardfile.dat";
 
+static void
+failed(const char *s)
+{
+    perror(s);
+    endwin();
+    ExitProgram(EXIT_FAILURE);
+}
+
 #if !HAVE_STRDUP
 #define strdup my_strdup
 static char *
@@ -76,6 +84,8 @@ strdup(const char *s)
     char *p = typeMalloc(char, strlen(s) + 1);
     if (p)
 	strcpy(p, s);
+    else
+	failed("strdup");
     return (p);
 }
 #endif /* not HAVE_STRDUP */
@@ -146,6 +156,8 @@ add_content(CARD * card, const char *content)
 	}
 	if (card->content)
 	    strcpy(card->content + offset, content);
+	else
+	    failed("add_content");
     }
 }
 

@@ -16,6 +16,7 @@ CC_STRICT = $(CC_NORMAL) -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissi
 
 MY_DIR=/usr/local/ncurses6
 MYDATA=/usr/local/ncurses/share/terminfo
+BUILD_DIR=$(CURDIR)/debian/ncurses6
 
 CFLAGS = $(CC_NORMAL)
 
@@ -92,7 +93,10 @@ install-stamp: build-stamp
 	dh_clean -k
 	dh_installdirs
 
-	$(MAKE) install.libs install.progs DESTDIR=$(CURDIR)/debian/ncurses6
+	$(MAKE) install.libs install.progs DESTDIR=$(BUILD_DIR)
+
+	( cd test && make ncurses LOCAL_LIBDIR=$(MY_DIR)/lib )
+	mv test/ncurses $(BUILD_DIR)$(MY_DIR)/bin/ncurses6
 
 	touch install-stamp
 

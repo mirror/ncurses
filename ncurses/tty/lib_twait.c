@@ -75,7 +75,7 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.64 2012/02/18 20:32:55 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.65 2012/10/27 20:42:47 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, int first)
@@ -229,8 +229,11 @@ _nc_timed_wait(SCREEN *sp MAYBE_UNUSED,
     memset(fd_list, 0, sizeof(fd_list));
 
 #ifdef NCURSES_WGETCH_EVENTS
-    if ((mode & TW_EVENT) && evl)
+    if ((mode & TW_EVENT) && evl) {
 	fds = typeMalloc(struct pollfd, MIN_FDS + evl->count);
+	if (fds == 0)
+	    return TW_NONE;
+    }
 #endif
 
     if (mode & TW_INPUT) {
