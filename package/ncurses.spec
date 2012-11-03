@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Release: 5.9
-Version: 20121026
+Version: 20121102
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{release}-%{version}.tgz
@@ -21,6 +21,7 @@ This package is used for testing ABI 6.
 
 %prep
 
+%define debug_package %{nil}
 %setup -q -n ncurses-%{release}-%{version}
 
 %build

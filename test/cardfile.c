@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.40 2012/10/27 19:37:56 tom Exp $
+ * $Id: cardfile.c,v 1.41 2012/11/03 19:26:50 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -75,20 +75,6 @@ failed(const char *s)
     endwin();
     ExitProgram(EXIT_FAILURE);
 }
-
-#if !HAVE_STRDUP
-#define strdup my_strdup
-static char *
-strdup(const char *s)
-{
-    char *p = typeMalloc(char, strlen(s) + 1);
-    if (p)
-	strcpy(p, s);
-    else
-	failed("strdup");
-    return (p);
-}
-#endif /* not HAVE_STRDUP */
 
 static const char *
 skip(const char *buffer)

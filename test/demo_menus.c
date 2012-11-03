@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.35 2012/09/09 00:01:20 tom Exp $
+ * $Id: demo_menus.c,v 1.36 2012/11/03 19:27:01 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -108,18 +108,6 @@ static MENU *mpFile;
 static MENU *mpSelect;
 
 static bool loaded_file = FALSE;
-
-#if !HAVE_STRDUP
-#define strdup my_strdup
-static char *
-strdup(char *s)
-{
-    char *p = typeMalloc(char, strlen(s) + 1);
-    if (p)
-	strcpy(p, s);
-    return (p);
-}
-#endif /* not HAVE_STRDUP */
 
 /* Common function to allow ^T to toggle trace-mode in the middle of a test
  * so that trace-files can be made smaller.

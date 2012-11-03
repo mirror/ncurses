@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: doalloc.c,v 1.10 2012/02/22 22:34:31 tom Exp $")
+MODULE_ID("$Id: doalloc.c,v 1.11 2012/11/03 19:27:41 tom Exp $")
 
 NCURSES_EXPORT(void *)
 _nc_doalloc(void *oldp, size_t amount)
@@ -56,21 +56,3 @@ _nc_doalloc(void *oldp, size_t amount)
     }
     return newp;
 }
-
-#if !HAVE_STRDUP
-NCURSES_EXPORT(char *)
-_nc_strdup(const char *src)
-{
-    char *dst;
-    if (src != 0) {
-	size_t need = strlen(src) + 1;
-	dst = typeMalloc(char, need);
-	if (dst != 0) {
-	    _nc_STRCPY(dst, src, need);
-	}
-    } else {
-	dst = 0;
-    }
-    return dst;
-}
-#endif

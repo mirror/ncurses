@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.467 $
-#	$Date: 2012/10/13 23:17:51 $
+#	$Revision: 1.469 $
+#	$Date: 2012/11/03 18:58:05 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4043,10 +4043,15 @@ gnome-2008|GNOME Terminal snapshot 2.22.3,
 	use=vte-2008,
 
 # GNOME Terminal 3.6.0 (2012)
-# VTE 0.34.1 refers to an unreleased version as of 2012-10-13 (0.34.0 was
-# released 2012-09-26, 0.34.1 has not been marked in git) -TD
+# VTE 0.34.1 was marked in git 2012-10-15 (three days after patch was applied
+# in ncurses).  It inherited from gnome-fc5, which broke the modified forms
+# of f1-f4 -TD
+#
+# Testing with tack shows that flash does not/has not worked -TD
 vte-2012|VTE 0.34.1,
-	ritm=\E[23m, sitm=\E[3m, use=xterm+pcc2, use=gnome-fc5,
+	flash@, ritm=\E[23m, sitm=\E[3m, use=vte-2008,
+# Version 3.6.1 sets TERM to xterm-256color (still hardcoded), which has
+# 61 differences from a correct entry for gnome terminal.
 gnome-2012|GNOME Terminal 3.6.0,
 	use=vte-2012,
 
@@ -4084,7 +4089,7 @@ gnome|GNOME Terminal,
 
 # palette is hardcoded...
 vte-256color|VTE with xterm 256-colors,
-	initc@, use=xterm+256color, use=vte,
+	use=xterm+256color, use=vte,
 gnome-256color|GNOME Terminal with xterm 256-colors,
 	use=vte-256color,
 
@@ -22948,5 +22953,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2012-10-12
 #       * add vte-2012, gnome-2012, making these the defaults for vte/gnome
 #	  (patch by Christian Persch).
+#
+# 2012-11-02
+#	* reviewed vte-2012, reverted most of the change since it was incorrect
+#	  based on testing with tack -TD
+#	* un-cancel the initc in vte-256color, since this was implemented
+#	  starting with version 0.20 in 2009 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.639 2012/10/27 17:13:57 tom Exp $
+dnl $Id: aclocal.m4,v 1.640 2012/11/03 19:39:23 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1564,37 +1564,6 @@ else
 	AC_MSG_ERROR(Cannot find dlsym function)
 fi
 ])
-dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_MEMMOVE version: 8 updated: 2012/10/04 20:12:20
-dnl ---------------
-dnl Check for memmove, or a bcopy that can handle overlapping copy.  If neither
-dnl is found, add our own version of memmove to the list of objects.
-AC_DEFUN([CF_FUNC_MEMMOVE],
-[
-AC_CHECK_FUNC(memmove,,[
-AC_CHECK_FUNC(bcopy,[
-	AC_CACHE_CHECK(if bcopy does overlapping moves,cf_cv_good_bcopy,[
-		AC_TRY_RUN([
-int main() {
-	static char data[] = "abcdefghijklmnopqrstuwwxyz";
-	char temp[40];
-	bcopy(data, temp, sizeof(data));
-	bcopy(temp+10, temp, 15);
-	bcopy(temp+5, temp+15, 10);
-	${cf_cv_main_return:-return} (strcmp(temp, "klmnopqrstuwwxypqrstuwwxyz"));
-}
-		],
-		[cf_cv_good_bcopy=yes],
-		[cf_cv_good_bcopy=no],
-		[cf_cv_good_bcopy=unknown])
-		])
-	],[cf_cv_good_bcopy=no])
-	if test "$cf_cv_good_bcopy" = yes ; then
-		AC_DEFINE(USE_OK_BCOPY,1,[Define to 1 to use bcopy when memmove is unavailable])
-	else
-		AC_DEFINE(USE_MY_MEMMOVE,1,[Define to 1 to use replacement function when memmove is unavailable])
-	fi
-])])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FUNC_NANOSLEEP version: 4 updated: 2012/10/06 17:56:13
 dnl -----------------

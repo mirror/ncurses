@@ -851,7 +851,6 @@
 ./ncurses/base/lib_wattron.c
 ./ncurses/base/lib_winch.c
 ./ncurses/base/lib_window.c
-./ncurses/base/memmove.c
 ./ncurses/base/nc_panel.c
 ./ncurses/base/resizeterm.c
 ./ncurses/base/safe_sprintf.c

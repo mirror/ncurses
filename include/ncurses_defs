@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.55 2012/10/27 17:16:05 tom Exp $
+# $Id: ncurses_defs,v 1.57 2012/11/03 19:42:04 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -128,7 +128,6 @@ HAVE_SLK_COLOR
 HAVE_SLK_INIT	1
 HAVE_SNPRINTF
 HAVE_STDINT_H
-HAVE_STRDUP
 HAVE_STRLCAT
 HAVE_STRLCPY
 HAVE_STRSTR
@@ -208,8 +207,6 @@ USE_HASHED_DB
 USE_HASHMAP
 USE_HOME_TERMINFO
 USE_LINKS
-USE_MY_MEMMOVE
-USE_OK_BCOPY
 USE_PTHREADS_EINTR
 USE_RCS_IDS
 USE_REENTRANT

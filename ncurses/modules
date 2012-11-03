@@ -1,6 +1,6 @@
-# $Id: modules,v 1.117 2010/08/07 18:41:02 tom Exp $
+# $Id: modules,v 1.118 2012/11/03 19:44:28 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -115,7 +115,6 @@ tty_update	lib		$(serial)	$(HEADER_DEPS)
 varargs		lib		$(trace)	$(HEADER_DEPS)
 
 # Modules for porting
-memmove		lib		$(base)		$(HEADER_DEPS)
 vsscanf 	lib		$(base)		$(HEADER_DEPS)
 
 # actually an extension, but with its own configure option (--disable-leaks)

@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.507 2012/10/27 21:23:14 tom Exp $
+ * $Id: curses.priv.h,v 1.508 2012/11/03 19:41:04 tom Exp $
  *
  *	curses.priv.h
  *
@@ -182,17 +182,6 @@ extern int errno;
 #else
 #define use_terminfo_vars() _nc_env_access()
 extern NCURSES_EXPORT(int) _nc_env_access (void);
-#endif
-
-/*
- * Not all platforms have memmove; some have an equivalent bcopy.  (Some may
- * have neither).
- */
-#if USE_OK_BCOPY
-#define memmove(d,s,n) bcopy(s,d,n)
-#elif USE_MY_MEMMOVE
-#define memmove(d,s,n) _nc_memmove(d,s,n)
-extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
 #endif
 
 /*

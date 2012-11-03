@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.108 2012/10/06 22:33:49 tom Exp $
+dnl $Id: configure.in,v 1.109 2012/11/03 19:26:33 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -174,7 +174,6 @@ CF_GETOPT_HEADER
 
 AC_CHECK_FUNCS( \
 gettimeofday \
-strdup \
 )
 
 if test "$cf_enable_widec" = yes; then

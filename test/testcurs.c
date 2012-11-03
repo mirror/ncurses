@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.44 2012/06/09 19:10:45 tom Exp $
+ * $Id: testcurs.c,v 1.45 2012/11/03 19:27:18 tom Exp $
  */
 
 #include <test.priv.h>
@@ -44,18 +44,6 @@ static const COMMAND command[] =
     {"Output Test", outputTest}
 };
 #define MAX_OPTIONS (int) SIZEOF(command)
-
-#if !HAVE_STRDUP
-#define strdup my_strdup
-static char *
-strdup(char *s)
-{
-    char *p = typeMalloc(char, strlen(s) + 1);
-    if (p)
-	strcpy(p, s);
-    return (p);
-}
-#endif /* not HAVE_STRDUP */
 
 static int width, height;
 

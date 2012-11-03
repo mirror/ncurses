@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,8 +26,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.27 2011/10/15 21:11:24 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.28 2012/11/03 21:56:15 tom Exp $
 .TH curs_termcap 3X ""
+.de bP
+.IP \(bu 4
+..
 .na
 .hy 0
 .ds n 5
@@ -94,15 +97,13 @@ if the terminfo database could not be found.
 .PP
 This differs from the \fItermcap\fP library in two ways:
 .RS 3
-.TP 3
--
+.bP
 The emulation ignores the buffer pointer \fIbp\fR.
 The \fItermcap\fP library would store a copy of the terminal
 description in the area referenced by this pointer.
 However, ncurses stores its terminal descriptions in compiled
 binary form, which is not the same thing.
-.TP 3
--
+.bP
 There is a difference in return codes.
 The \fItermcap\fP library does not check if the terminal
 description is marked with the \fIgeneric\fP capability,
