@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.469 $
-#	$Date: 2012/11/03 18:58:05 $
+#	$Revision: 1.470 $
+#	$Date: 2012/11/04 15:59:03 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4826,7 +4826,7 @@ st-256color|simpleterm with 256 colors,
 	ccc@,
 	initc@, use=xterm+256color, use=simpleterm,
 
-### TERMINATOR
+#### TERMINATOR
 # http://software.jessies.org/terminator/
 # Tested using their Debian package org.jessies.terminator 6.104.3256 on 64-bit
 # Debian/current -TD (2011/8/20)
@@ -22741,7 +22741,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2009-12-12
 #	* updated nsterm* entries (Benjamin Sittler, Emanuele Giaquinta)
 #
-# 2009-12-12
+# 2009-12-19
 #	* add bw (auto-left-margin) to nsterm* entries (Benjamin Sittler)
 #	* rename minix to minix-1.7, add minix entry for Minux3 -TD
 #

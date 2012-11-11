@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.640 2012/11/03 19:39:23 tom Exp $
+dnl $Id: aclocal.m4,v 1.643 2012/11/11 00:17:28 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2716,7 +2716,7 @@ AC_DEFUN([CF_HELP_MESSAGE],
 [AC_DIVERT_HELP([$1])dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INCLUDE_DIRS version: 6 updated: 2009/01/06 19:37:40
+dnl CF_INCLUDE_DIRS version: 7 updated: 2012/11/10 19:15:05
 dnl ---------------
 dnl Construct the list of include-options according to whether we're building
 dnl in the source directory or using '--srcdir=DIR' option.  If we're building
@@ -2724,21 +2724,21 @@ dnl with gcc, don't append the includedir if it happens to be /usr/include,
 dnl since that usually breaks gcc's shadow-includes.
 AC_DEFUN([CF_INCLUDE_DIRS],
 [
-CPPFLAGS="$CPPFLAGS -I. -I../include"
-if test "$srcdir" != "."; then
-	CPPFLAGS="$CPPFLAGS -I\${srcdir}/../include"
-fi
 if test "$GCC" != yes; then
-	CPPFLAGS="$CPPFLAGS -I\${includedir}"
+	CPPFLAGS="-I\${includedir} $CPPFLAGS"
 elif test "$includedir" != "/usr/include"; then
 	if test "$includedir" = '${prefix}/include' ; then
 		if test $prefix != /usr ; then
-			CPPFLAGS="$CPPFLAGS -I\${includedir}"
+			CPPFLAGS="-I\${includedir} $CPPFLAGS"
 		fi
 	else
-		CPPFLAGS="$CPPFLAGS -I\${includedir}"
+		CPPFLAGS="-I\${includedir} $CPPFLAGS"
 	fi
 fi
+if test "$srcdir" != "."; then
+	CPPFLAGS="-I\${srcdir}/../include $CPPFLAGS"
+fi
+CPPFLAGS="-I. -I../include $CPPFLAGS"
 AC_SUBST(CPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------

@@ -19460,21 +19460,21 @@ echo "${ECHO_T}$LIB_SUBSETS" >&6
 
 ### Construct the list of include-directories to be generated
 
-CPPFLAGS="$CPPFLAGS -I. -I../include"
-if test "$srcdir" != "."; then
-	CPPFLAGS="$CPPFLAGS -I\${srcdir}/../include"
-fi
 if test "$GCC" != yes; then
-	CPPFLAGS="$CPPFLAGS -I\${includedir}"
+	CPPFLAGS="-I\${includedir} $CPPFLAGS"
 elif test "$includedir" != "/usr/include"; then
 	if test "$includedir" = '${prefix}/include' ; then
 		if test $prefix != /usr ; then
-			CPPFLAGS="$CPPFLAGS -I\${includedir}"
+			CPPFLAGS="-I\${includedir} $CPPFLAGS"
 		fi
 	else
-		CPPFLAGS="$CPPFLAGS -I\${includedir}"
+		CPPFLAGS="-I\${includedir} $CPPFLAGS"
 	fi
 fi
+if test "$srcdir" != "."; then
+	CPPFLAGS="-I\${srcdir}/../include $CPPFLAGS"
+fi
+CPPFLAGS="-I. -I../include $CPPFLAGS"
 
 ACPPFLAGS="-I. -I../include -I../../include $ACPPFLAGS"
 if test "$srcdir" != "."; then
