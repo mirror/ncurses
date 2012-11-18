@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.30 2010/12/19 01:38:45 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.31 2012/11/18 02:12:43 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.
@@ -148,8 +148,9 @@ NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 
 	FreeIfNeeded(termp->_termname);
 #if USE_HOME_TERMINFO
-	if (_nc_globals.home_terminfo != 0)
+	if (_nc_globals.home_terminfo != 0) {
 	    FreeAndNull(_nc_globals.home_terminfo);
+	}
 #endif
 #ifdef USE_TERM_DRIVER
 	if (TCB->drv)

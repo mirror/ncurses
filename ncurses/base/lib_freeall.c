@@ -39,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.61 2012/08/25 19:52:47 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.62 2012/11/17 23:53:03 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -70,19 +70,21 @@ NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 
 	    /* Delete only windows that're not a parent */
 	    for (each_window(SP_PARM, p)) {
+		WINDOW *p_win = &(p->win);
 		bool found = FALSE;
 
 		for (each_window(SP_PARM, q)) {
+		    WINDOW *q_win = &(q->win);
 		    if ((p != q)
-			&& (q->win._flags & _SUBWIN)
-			&& (&(p->win) == q->win._parent)) {
+			&& (q_win->_flags & _SUBWIN)
+			&& (p_win == q_win->_parent)) {
 			found = TRUE;
 			break;
 		    }
 		}
 
 		if (!found) {
-		    if (delwin(&(p->win)) != ERR)
+		    if (delwin(p_win) != ERR)
 			deleted = TRUE;
 		    break;
 		}

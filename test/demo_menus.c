@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.36 2012/11/03 19:27:01 tom Exp $
+ * $Id: demo_menus.c,v 1.37 2012/11/18 00:18:54 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -269,12 +269,15 @@ menu_destroy(MENU * m)
 		free((char *) blob);
 	    }
 	    free(items);
+	    items = 0;
 	}
 #ifdef TRACE
 	if ((count > 0) && (m == mpTrace)) {
 	    ITEM **ip = items;
-	    while (*ip)
-		free(*ip++);
+	    if (ip != 0) {
+		while (*ip)
+		    free(*ip++);
+	    }
 	}
 #endif
     }
@@ -386,6 +389,8 @@ build_select_menu(MenuNo number, char *filename)
 		}
 		loaded_file = TRUE;
 	    }
+	    if (ap == 0)
+		free(items);
 	}
     }
     if (ap == 0) {

@@ -37,7 +37,7 @@
 #define USE_LIBTINFO
 #include <progs.priv.h>
 
-MODULE_ID("$Id: tabs.c,v 1.24 2012/10/27 19:53:53 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.25 2012/11/18 01:21:47 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
@@ -116,22 +116,24 @@ decode_tabs(const char *tab_list)
 	}
     }
 
-    /*
-     * If there is only one value, then it is an option such as "-8".
-     */
-    if ((n == 0) && (value > 0)) {
-	int step = value;
-	while (n < max_cols - 1) {
-	    result[n++] = value;
-	    value += step;
+    if (result != 0) {
+	/*
+	 * If there is only one value, then it is an option such as "-8".
+	 */
+	if ((n == 0) && (value > 0)) {
+	    int step = value;
+	    while (n < max_cols - 1) {
+		result[n++] = value;
+		value += step;
+	    }
 	}
-    }
 
-    /*
-     * Add the last value, if any.
-     */
-    result[n++] = value + prior;
-    result[n] = 0;
+	/*
+	 * Add the last value, if any.
+	 */
+	result[n++] = value + prior;
+	result[n] = 0;
+    }
 
     return result;
 }

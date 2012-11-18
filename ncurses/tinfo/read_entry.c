@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.120 2012/10/27 21:51:07 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.121 2012/11/18 01:18:47 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -279,6 +279,8 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 	}
 
 	TR(TRACE_DATABASE, ("READ extended-offsets @%d", offset));
+	if ((unsigned) (ext_str_count + (int) need) >= (MAX_ENTRY_SIZE / 2))
+	    return (TGETENT_NO);
 	if ((ext_str_count || need)
 	    && !read_shorts(buf, ext_str_count + (int) need))
 	    return (TGETENT_NO);
@@ -315,7 +317,7 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 	}
 
 	if (need) {
-	    if (ext_str_count >= (MAX_ENTRY_SIZE * 2))
+	    if (ext_str_count >= (MAX_ENTRY_SIZE / 2))
 		return (TGETENT_NO);
 	    if ((ptr->ext_Names = TYPE_CALLOC(char *, need)) == 0)
 		  return (TGETENT_NO);

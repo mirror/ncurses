@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.378 2012/10/27 19:37:56 tom Exp $
+$Id: ncurses.c,v 1.379 2012/11/18 00:56:44 tom Exp $
 
 ***************************************************************************/
 
@@ -1095,7 +1095,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	} else if (c == 'g') {
 	    waddstr(win, "getstr test: ");
 	    echo();
-	    code = wgetn_wstr(win, wint_buf, sizeof(wint_buf) - 1);
+	    code = wgetn_wstr(win, wint_buf, BUFSIZ - 1);
 	    noecho();
 	    if (code == ERR) {
 		wprintw(win, "wgetn_wstr returns an error.");
@@ -1660,6 +1660,7 @@ get_wide_background(void)
     short pair;
     wchar_t wch[10];
 
+    memset(&ch, 0, sizeof(ch));
     if (getbkgrnd(&ch) != ERR) {
 	if (getcchar(&ch, wch, &attr, &pair, 0) != ERR) {
 	    result = attr;
@@ -2182,7 +2183,7 @@ wide_color_test(void)
     bool opt_wide = FALSE;
     bool opt_nums = FALSE;
     bool opt_xchr = FALSE;
-    wchar_t buffer[10];
+    wchar_t buffer[80];
     WINDOW *helpwin;
 
     if (COLORS * COLORS == COLOR_PAIRS) {
@@ -5758,10 +5759,9 @@ display_form(FORM * f)
 	set_form_sub(f, derwin(w, rows, cols, 1, 2));
 	box(w, 0, 0);
 	keypad(w, TRUE);
+	if (post_form(f) != E_OK)
+	    wrefresh(w);
     }
-
-    if (post_form(f) != E_OK)
-	wrefresh(w);
 }
 
 static void

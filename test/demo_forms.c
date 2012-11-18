@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.39 2012/06/09 20:30:32 tom Exp $
+ * $Id: demo_forms.c,v 1.40 2012/11/18 01:22:44 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -153,10 +153,10 @@ display_form(FORM * f)
 	set_form_sub(f, derwin(w, rows, cols, 1, 2));
 	box(w, 0, 0);
 	keypad(w, TRUE);
-    }
 
-    if (post_form(f) != E_OK)
-	wrefresh(w);
+	if (post_form(f) != E_OK)
+	    wrefresh(w);
+    }
 }
 
 static void

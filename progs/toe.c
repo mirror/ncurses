@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.69 2012/10/27 20:01:20 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.70 2012/11/17 23:39:42 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -437,7 +437,10 @@ typelist(int eargc, char *eargv[],
 			(void) fprintf(stderr,
 				       "%s: couldn't open terminfo file %s.\n",
 				       _nc_progname, name_2);
+			free(cwd_buf);
 			free(name_2);
+			closedir(entrydir);
+			closedir(termdir);
 			return (EXIT_FAILURE);
 		    }
 

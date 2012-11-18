@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.31 2010/11/13 20:44:21 tom Exp $
+ * $Id: knight.c,v 1.32 2012/11/17 23:46:31 tom Exp $
  */
 
 #include <test.priv.h>
@@ -614,8 +614,8 @@ play(void)
 		    ny = history[movecount].y;
 		    nx = history[movecount].x;
 		    if (nx < 0 || ny < 0) {
-			ny = lastrow;
-			nx = lastcol;
+			ny = (lastrow >= 0) ? lastrow : 0;
+			nx = (lastcol >= 0) ? lastcol : 0;
 		    }
 		    movecount = 0;
 		    board[ny][nx] = FALSE;

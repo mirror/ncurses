@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: insdelln.c,v 1.6 2012/06/09 20:29:33 tom Exp $
+ * $Id: insdelln.c,v 1.7 2012/11/18 00:37:58 tom Exp $
  *
  * test-driver for deleteln, wdeleteln, insdelln, winsdelln, insertln, winsertln
  */
@@ -175,6 +175,8 @@ do_subwindow(WINDOW *win, STATUS * sp, void func(WINDOW *))
 	delwin(win1);
 	touchwin(win);
     } else {
+	if (win1)
+	    delwin(win1);
 	beep();
     }
 }

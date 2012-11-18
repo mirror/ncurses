@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.122 2012/10/27 19:50:50 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.123 2012/11/17 23:15:10 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1220,7 +1220,7 @@ any_initializer(const char *fmt, const char *type)
 	need = (strlen(entries->tterm.term_names)
 		+ strlen(type)
 		+ strlen(fmt));
-	initializer = (char *) malloc(need);
+	initializer = (char *) malloc(need + 1);
 	if (initializer == 0)
 	    failed("any_initializer");
     }

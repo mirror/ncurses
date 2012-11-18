@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.53 2012/06/09 20:30:32 tom Exp $
+ * $Id: bs.c,v 1.54 2012/11/18 00:57:48 tom Exp $
  */
 
 #include <test.priv.h>
@@ -863,7 +863,9 @@ plyturn(void)
 	    m = " You'll pick up survivors from my %s, I hope...!";
 	    break;
 	}
-	(void) printw(m, ss->name);
+	if (m != 0) {
+	    (void) printw(m, ss->name);
+	}
 	(void) beep();
     }
     return (hit);

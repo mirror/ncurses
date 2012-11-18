@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2008,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
 #include <curses.priv.h>
 #include <tic.h>
 
-MODULE_ID("$Id: name_match.c,v 1.21 2011/08/13 20:23:12 tom Exp $")
+MODULE_ID("$Id: name_match.c,v 1.22 2012/11/18 02:10:17 tom Exp $")
 
 #define FirstName _nc_globals.first_name
 
@@ -62,8 +62,9 @@ _nc_first_name(const char *const sp)
 
 #if NO_LEAKS
     if (sp == 0) {
-	if (FirstName != 0)
+	if (FirstName != 0) {
 	    FreeAndNull(FirstName);
+	}
     } else
 #endif
     {

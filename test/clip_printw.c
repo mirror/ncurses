@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.8 2012/06/09 20:30:32 tom Exp $
+ * $Id: clip_printw.c,v 1.9 2012/11/18 00:39:48 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
@@ -207,6 +207,8 @@ do_subwindow(WINDOW *win, STATUS * sp, void func(WINDOW *))
 	delwin(win1);
 	touchwin(win);
     } else {
+	if (win1)
+	    delwin(win1);
 	beep();
     }
 }
@@ -337,12 +339,13 @@ test_clipping(WINDOW *win)
 		need = (unsigned) getmaxx(win) - 1;
 		strcpy(fmt, "%c%s%c");
 	    }
-	    if ((buffer = typeMalloc(char, need)) != 0) {
+	    if ((buffer = typeMalloc(char, need + 1)) != 0) {
 		for (j = 0; j < need; ++j) {
 		    buffer[j] = (char) ('A' + (j % 26));
 		}
 		buffer[need - 1] = '\0';
 		st.status = clip_wprintw(win, fmt, '[', buffer, ']');
+		free(buffer);
 	    }
 	    break;
 	case 'w':

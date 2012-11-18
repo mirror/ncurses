@@ -44,7 +44,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.8 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.9 2012/11/18 01:30:03 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -118,6 +118,18 @@ _nc_make_hash_table(struct name_table_entry *table,
  */
 
 #define MAX_COLUMNS BUFSIZ	/* this _has_ to be worst-case */
+
+static int
+count_columns(char **list)
+{
+    int result = 0;
+    if (list != 0) {
+	while (*list++) {
+	    ++result;
+	}
+    }
+    return result;
+}
 
 static char **
 parse_columns(char *buffer)
@@ -201,6 +213,13 @@ main(int argc, char **argv)
 	list = parse_columns(buffer);
 	if (list == 0)		/* blank or comment */
 	    continue;
+	if (column > count_columns(list)) {
+	    fprintf(stderr, "expected %d columns, have %d:\n%s\n",
+		    column,
+		    count_columns(list),
+		    buffer);
+	    exit(EXIT_FAILURE);
+	}
 	name_table[n].nte_link = -1;	/* end-of-hash */
 	name_table[n].nte_name = strdup(list[column]);
 	if (!strcmp(list[2], "bool")) {
