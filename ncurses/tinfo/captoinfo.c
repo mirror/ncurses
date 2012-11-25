@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.73 2012/10/27 21:27:02 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.75 2012/11/24 20:48:54 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -704,7 +704,8 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 		   && ((in0 == 4 && in1 == 10 && in2 == 48)
 		       || (in0 == 3 && in1 == 9 && in2 == 38))) {
 	    /* dumb-down an optimized case from xterm-256color for termcap */
-	    str = strstr(str, ";m");
+	    if ((str = strstr(str, ";m")) == 0)
+		break;		/* cannot happen */
 	    ++str;
 	    if (in2 == 48) {
 		bufptr = save_string(bufptr, "[48;5;%dm");
@@ -846,7 +847,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	 * but that may not be the end of the string.
 	 */
 	assert(str != 0);
-	if (*str == '\0')
+	if (str == 0 || *str == '\0')
 	    break;
 
     }				/* endwhile (*str) */

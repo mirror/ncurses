@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addchstr.c,v 1.15 2012/10/27 19:31:42 tom Exp $
+ * $Id: test_addchstr.c,v 1.16 2012/11/24 19:51:05 tom Exp $
  *
  * Demonstrate the waddchstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
@@ -239,6 +239,15 @@ test_adds(int level)
 	(void) cbreak();	/* take input chars one at a time, no wait for \n */
 	(void) noecho();	/* don't echo input */
 	keypad(stdscr, TRUE);
+
+	/*
+	 * Show the characters added in color, to distinguish from those that
+	 * are shifted.
+	 */
+	if (has_colors()) {
+	    start_color();
+	    init_pair(1, COLOR_WHITE, COLOR_BLUE);
+	}
     }
 
     limit = LINES - 5;
@@ -272,13 +281,7 @@ test_adds(int level)
 
     doupdate();
 
-    /*
-     * Show the characters added in color, to distinguish from those that
-     * are shifted.
-     */
     if (has_colors()) {
-	start_color();
-	init_pair(1, COLOR_WHITE, COLOR_BLUE);
 	show_attr = (attr_t) COLOR_PAIR(1);
 	wbkgdset(work, show_attr | ' ');
     } else {

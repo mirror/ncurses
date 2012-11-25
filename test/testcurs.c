@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.45 2012/11/03 19:27:18 tom Exp $
+ * $Id: testcurs.c,v 1.46 2012/11/24 19:38:20 tom Exp $
  */
 
 #include <test.priv.h>
@@ -681,9 +681,11 @@ padTest(WINDOW *dummy GCC_UNUSED)
 	raw();
 	wgetch(pad);
 
-	spad = subpad(pad, 12, 25, 6, 52);
-	MvWAddStr(spad, 2, 2, "This is a new subpad");
-	box(spad, 0, 0);
+	if ((spad = subpad(pad, 12, 25, 6, 52)) != 0) {
+	    MvWAddStr(spad, 2, 2, "This is a new subpad");
+	    box(spad, 0, 0);
+	    delwin(spad);
+	}
 	prefresh(pad, 0, 0, 0, 0, 15, 75);
 	keypad(pad, TRUE);
 	raw();
