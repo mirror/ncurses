@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.508 2012/11/03 19:41:04 tom Exp $
+ * $Id: curses.priv.h,v 1.511 2012/12/02 01:41:23 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2038,6 +2038,23 @@ extern NCURSES_EXPORT(int) _nc_eventlist_timeout(_nc_eventlist *);
  * Wide-character macros to hide some platform-differences.
  */
 #if USE_WIDEC_SUPPORT
+
+#if defined(__MINGW32__)
+/*
+ * MinGW has wide-character functions, but they do not work correctly.
+ */
+
+extern int __MINGW_NOTHROW _nc_wctomb(char *, wchar_t);
+#define wctomb(s,wc) _nc_wctomb(s,wc)
+
+extern int __MINGW_NOTHROW _nc_mbtowc(wchar_t *, const char *, size_t);
+#define mbtowc(pwc,s,n) _nc_mbtowc(pwc,s,n)
+
+extern int __MINGW_NOTHROW _nc_mblen(const char *, size_t);
+#define mblen(s,n) _nc_mblen(s, n)
+
+#endif /* __MINGW32__ */
+
 #if HAVE_MBTOWC && HAVE_MBLEN
 #define reset_mbytes(state) IGNORE_RC(mblen(NULL, (size_t) 0)), IGNORE_RC(mbtowc(NULL, NULL, (size_t) 0))
 #define count_mbytes(buffer,length,state) mblen(buffer,length)
@@ -2052,7 +2069,8 @@ extern NCURSES_EXPORT(int) _nc_eventlist_timeout(_nc_eventlist *);
 #else
 make an error
 #endif
-#endif
+
+#endif /* USE_WIDEC_SUPPORT */
 
 /*
  * Not everyone has vsscanf(), but we'd like to use it for scanw().

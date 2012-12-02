@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.114 2011/10/29 19:59:55 tom Exp $ */
+/* $Id: test.priv.h,v 1.115 2012/12/02 00:46:34 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -757,6 +757,8 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #define Trace(p)		/* nothing */
 #define USE_TRACE 0
 #endif
+
+#define Trace2(p)		/* nothing */
 
 #define MvAddCh         (void) mvaddch
 #define MvWAddCh        (void) mvwaddch

@@ -1113,6 +1113,8 @@
 ./test/tracemunch
 ./test/view.c
 ./test/widechars-utf8.txt
+./test/widechars.c
+./test/widechars.h
 ./test/worm.c
 ./test/xmas.c
 ./test/xterm-16color.dat

@@ -50,10 +50,11 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.85 2012/06/09 20:29:33 tom Exp $
+ * $Id: view.c,v 1.88 2012/12/01 23:19:49 tom Exp $
  */
 
 #include <test.priv.h>
+#include <widechars.h>
 
 #include <time.h>
 
@@ -80,23 +81,6 @@
 #include <sys/stream.h>
 #include <sys/ptem.h>
 #endif
-
-#if USE_WIDEC_SUPPORT
-#if HAVE_MBTOWC && HAVE_MBLEN
-#define reset_mbytes(state) IGNORE_RC(mblen(NULL, 0)), IGNORE_RC(mbtowc(NULL, NULL, 0))
-#define count_mbytes(buffer,length,state) mblen(buffer,length)
-#define check_mbytes(wch,buffer,length,state) \
-	(int) mbtowc(&wch, buffer, length)
-#define state_unused
-#elif HAVE_MBRTOWC && HAVE_MBRLEN
-#define reset_mbytes(state) init_mb(state)
-#define count_mbytes(buffer,length,state) mbrlen(buffer,length,&state)
-#define check_mbytes(wch,buffer,length,state) \
-	(int) mbrtowc(&wch, buffer, length, &state)
-#else
-make an error
-#endif
-#endif				/* USE_WIDEC_SUPPORT */
 
 static RETSIGTYPE finish(int sig) GCC_NORETURN;
 static void show_all(const char *tag);
@@ -280,7 +264,13 @@ main(int argc, char *argv[])
 #endif
 #ifdef TRACE
 	case 'T':
-	    trace((unsigned) atoi(optarg));
+	    {
+		char *next = 0;
+		int tvalue = strtol(optarg, &next, 0);
+		if (tvalue < 0 || (next != 0 && *next != 0))
+		    usage();
+		trace((unsigned) tvalue);
+	    }
 	    break;
 	case 't':
 	    trace(TRACE_CALLS);
@@ -308,7 +298,7 @@ main(int argc, char *argv[])
 	(void) signal(SIGWINCH, adjust);	/* arrange interrupts to resize */
 #endif
 
-    /* slurp the file */
+    Trace(("slurp the file"));
     for (lptr = &vec_lines[0]; (lptr - vec_lines) < MAXLINES; lptr++) {
 	char temp[BUFSIZ], *s, *d;
 	int col;
@@ -316,8 +306,26 @@ main(int argc, char *argv[])
 	if (fgets(buf, sizeof(buf), fp) == 0)
 	    break;
 
-	/* convert tabs so that shift will work properly */
+#if USE_WIDEC_SUPPORT
+	if (lptr == vec_lines) {
+	    if (!memcmp("﻿", buf, 3)) {
+		Trace(("trim BOM"));
+		s = buf + 3;
+		d = buf;
+		do {
+		} while ((*d++ = *s++) != '\0');
+	    }
+	}
+#endif
+
+	/* convert tabs and nonprinting chars so that shift will work properly */
 	for (s = buf, d = temp, col = 0; (*d = *s) != '\0'; s++) {
+	    if (*d == '\r') {
+		if (s[1] == '\n')
+		    continue;
+		else
+		    break;
+	    }
 	    if (*d == '\n') {
 		*d = '\0';
 		break;

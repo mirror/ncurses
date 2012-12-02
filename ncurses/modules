@@ -1,4 +1,4 @@
-# $Id: modules,v 1.118 2012/11/03 19:44:28 tom Exp $
+# $Id: modules,v 1.119 2012/12/02 00:51:44 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -235,6 +235,7 @@ lib_driver      lib             $(base)		$(HEADER_DEPS)
 @ port_win32con
 gettimeofday	lib		$(win32con)	$(HEADER_DEPS)
 wcwidth		lib             $(win32con)	$(HEADER_DEPS)
+widechars	lib             $(wide)		$(HEADER_DEPS)
 win_driver	lib             $(win32con)	$(HEADER_DEPS)
 
 @ port_tinfo
