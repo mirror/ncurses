@@ -1,6 +1,6 @@
 // * this is for making emacs happy: -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 2007-2009,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include "internal.h"
 #include "cursesw.h"
 
-MODULE_ID("$Id: cursesw.cc,v 1.52 2011/09/17 22:12:10 tom Exp $")
+MODULE_ID("$Id: cursesw.cc,v 1.53 2012/12/08 22:06:41 tom Exp $")
 
 #define COLORS_NEED_INITIALIZATION  -1
 #define COLORS_NOT_INITIALIZED       0
@@ -192,7 +192,6 @@ NCursesWindow::NCursesWindow()
     constructing();
 
     w = static_cast<WINDOW *>(0);
-    set_keyboard();
 }
 
 NCursesWindow::NCursesWindow(int nlines, int ncols, int begin_y, int begin_x)

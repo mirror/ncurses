@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.32 2012/11/17 23:46:31 tom Exp $
+ * $Id: knight.c,v 1.33 2012/12/09 00:14:28 tom Exp $
  */
 
 #include <test.priv.h>
@@ -300,7 +300,7 @@ mark_possibles(int prow, int pcol, chtype mark)
     }
 }
 
-static void
+static bool
 find_next_move(int *y, int *x)
 {
     unsigned j, k;
@@ -309,6 +309,7 @@ find_next_move(int *y, int *x)
     int next = 0;
     int oldy, oldx;
     int newy, newx;
+    bool result = FALSE;
 
     if (movecount > 1) {
 	oldy = history[movecount - 1].y;
@@ -335,9 +336,27 @@ find_next_move(int *y, int *x)
 	    *y = oldy + offsets[next].y;
 	    *x = oldx + offsets[next].x;
 	}
-    } else {
-	beep();
+	result = TRUE;
     }
+    return result;
+}
+
+static void
+count_next_moves(int y, int x)
+{
+    int count = 0;
+    unsigned j;
+
+    wprintw(msgwin, "\nMove %d", movecount);
+    for (j = 0; j < SIZEOF(offsets); j++) {
+	int newy = y + offsets[j].y;
+	int newx = x + offsets[j].x;
+	if (chksqr(newy, newx)) {
+	    ++count;
+	}
+    }
+    wprintw(msgwin, ", gives %d choices", count);
+    wclrtoeol(msgwin);
 }
 
 static void
@@ -652,7 +671,10 @@ play(void)
 	    case 'a':
 		nx = col;
 		ny = rw;
-		find_next_move(&ny, &nx);
+		if (find_next_move(&ny, &nx))
+		    count_next_moves(ny, nx);
+		else
+		    beep();
 		break;
 
 	    case 'F':

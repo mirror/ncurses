@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.379 2012/11/18 00:56:44 tom Exp $
+$Id: ncurses.c,v 1.382 2012/12/09 00:56:24 tom Exp $
 
 ***************************************************************************/
 
@@ -2244,7 +2244,7 @@ wide_color_test(void)
 
 	    if (row >= 0 && move(row, col) != ERR) {
 		init_pair(pair, InxToFG(i), InxToBG(i));
-		color_set(pair, NULL);
+		(void) color_set(pair, NULL);
 		if (opt_acsc)
 		    attr_on((attr_t) A_ALTCHARSET, NULL);
 		if (opt_bold)
@@ -4244,7 +4244,8 @@ getwindow(void)
     outerbox(ul, lr, TRUE);
     refresh();
 
-    wrefresh(rwindow);
+    if (rwindow != 0)
+	wrefresh(rwindow);
 
     move(0, 0);
     clrtoeol();
@@ -6826,7 +6827,14 @@ main(int argc, char *argv[])
 #ifdef NCURSES_VERSION
 	case 'a':
 	    assumed_colors = TRUE;
-	    sscanf(optarg, "%d,%d", &default_fg, &default_bg);
+	    switch (sscanf(optarg, "%d,%d", &default_fg, &default_bg)) {
+	    case 0:
+		default_fg = COLOR_WHITE;
+		/* FALLTHRU */
+	    case 1:
+		default_bg = COLOR_BLACK;
+		break;
+	    }
 	    break;
 	case 'd':
 	    default_colors = TRUE;

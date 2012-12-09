@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.511 2012/12/02 01:41:23 tom Exp $
+ * $Id: curses.priv.h,v 1.512 2012/12/08 20:19:40 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2159,9 +2159,9 @@ extern NCURSES_EXPORT(int) _nc_get_tty_mode(TTY *);
 
 #define SetSafeOutcWrapper(outc)	    \
     SCREEN* sp = CURRENT_SCREEN;            \
+    struct screen outc_wrapper;		    \
     if (sp==0) {                            \
-	struct screen dummy;		    \
-	sp = &dummy;                        \
+	sp = &outc_wrapper;                 \
 	memset(sp,0,sizeof(struct screen)); \
 	sp->_outch = _nc_outc_wrapper;      \
     }\

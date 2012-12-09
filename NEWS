@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.1979 2012/12/02 01:51:32 tom Exp $
+-- $Id: NEWS,v 1.1992 2012/12/09 00:24:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,26 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20121208
+	+ modify test/knight.c to show the number of choices possible for
+	  each position in automove option, e.g., to allow user to follow
+	  Warnsdorff's rule to solve the puzzle.
+	+ modify test/hanoi.c to show the minimum number of moves possible for
+	  the given number of tiles (prompted by patch by Lucas Gioia).
+	> fixes based on Coverity report:
+	+ remove a few redundant checks.
+	+ correct logic in test/bs.c, when randomly placing a specific type of
+	  ship.
+	+ check return value from remove/unlink in tic.
+	+ check return value from sscanf in test/ncurses.c
+	+ fix a null dereference in c++/cursesw.cc
+	+ fix two instances of uninitialized variables when configuring for the
+	  terminal driver.
+	+ correct scope of variable used in SetSafeOutcWrapper macro.
+	+ set umask when calling mkstemp in tic.
+	+ initialize wbkgrndset() temporary variable when extended-colors are
+	  used.
 
 20121201
 	+ also replace MinGW's wctomb(), fixing a problem with setcchar().

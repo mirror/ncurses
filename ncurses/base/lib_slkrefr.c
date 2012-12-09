@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_slkrefr.c,v 1.27 2012/06/09 20:29:33 tom Exp $")
+MODULE_ID("$Id: lib_slkrefr.c,v 1.28 2012/12/08 22:31:14 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels    InfoOf(SP_PARM).numlabels
@@ -108,9 +108,7 @@ slk_intern_refresh(SCREEN *sp)
 		    if (fmt == 4)
 			slk_paint_info(slk->win);
 		    wmove(slk->win, SLK_LINES(fmt) - 1, slk->ent[i].ent_x);
-		    if (sp->_slk) {
-			(void) wattrset(slk->win, (int) AttrOf(sp->_slk->attr));
-		    }
+		    (void) wattrset(slk->win, (int) AttrOf(slk->attr));
 		    waddstr(slk->win, slk->ent[i].form_text);
 		    /* if we simulate SLK's, it's looking much more
 		       natural to use the current ATTRIBUTE also

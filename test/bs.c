@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.54 2012/11/18 00:57:48 tom Exp $
+ * $Id: bs.c,v 1.56 2012/12/08 23:35:58 tom Exp $
  */
 
 #include <test.priv.h>
@@ -426,9 +426,10 @@ initgame(void)
 	placeship(COMPUTER, ss, FALSE);
     }
 
-    ss = (ship_t *) NULL;
     do {
 	char c, docked[SHIPTYPES + 2], *cp = docked;
+
+	ss = (ship_t *) NULL;
 
 	/* figure which ships still wait to be placed */
 	*cp++ = 'R';
@@ -459,13 +460,14 @@ initgame(void)
 	do {
 	    c = (char) getch();
 	} while
-	    (!(strchr("hjklrR", c) || c == FF));
+	    (!(strchr("hjkl8462rR", c) || c == FF));
 
 	if (c == FF) {
 	    (void) clearok(stdscr, TRUE);
 	    (void) refresh();
+	} else if (ss == 0) {
+	    beep();		/* simple to verify, unlikely to happen */
 	} else if (c == 'r') {
-	    assert(ss != 0);
 	    prompt(1, "Random-placing your %s", ss->name);
 	    randomplace(PLAYER, ss);
 	    placeship(PLAYER, ss, TRUE);
@@ -481,7 +483,6 @@ initgame(void)
 		}
 	    error((char *) NULL);
 	} else if (strchr("hjkl8462", c)) {
-	    assert(ss != 0);
 	    ss->x = curx;
 	    ss->y = cury;
 

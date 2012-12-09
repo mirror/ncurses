@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.151 2012/11/18 00:24:56 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.154 2012/12/08 22:01:26 tom Exp $")
 
 /****************************************************************************
  *
@@ -438,8 +438,7 @@ _nc_update_screensize(SCREEN *sp)
      * We're doing it this way because those functions belong to the upper
      * ncurses library, while this resides in the lower terminfo library.
      */
-    if (sp != 0
-	&& sp->_resize != 0) {
+    if (sp->_resize != 0) {
 	if ((new_lines != old_lines) || (new_cols != old_cols)) {
 	    sp->_resize(NCURSES_SP_ARGx new_lines, new_cols);
 	} else if (sp->_sig_winch && (sp->_ungetch != 0)) {
@@ -683,6 +682,9 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	&& _nc_name_match(termp->type.term_names, tname, "|")) {
 	T(("reusing existing terminal information and mode-settings"));
 	code = OK;
+#ifdef USE_TERM_DRIVER
+	TCB = (TERMINAL_CONTROL_BLOCK *) termp;
+#endif
     } else {
 #ifdef USE_TERM_DRIVER
 	termp = (TERMINAL *) typeCalloc(TERMINAL_CONTROL_BLOCK, 1);
@@ -845,7 +847,7 @@ _nc_setupterm(NCURSES_CONST char *tname,
 	      int reuse)
 {
     int res;
-    TERMINAL *termp;
+    TERMINAL *termp = 0;
     res = TINFO_SETUP_TERM(&termp, tname, Filedes, errret, reuse);
     if (ERR != res)
 	NCURSES_SP_NAME(set_curterm) (CURRENT_SCREEN_PRE, termp);

@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.178 2012/10/27 19:57:21 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.180 2012/12/08 22:17:22 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -108,6 +108,8 @@ free_namelist(char **src)
 static void
 cleanup(void)
 {
+    int rc;
+
 #if NO_LEAKS
     free_namelist(namelst);
 #endif
@@ -115,10 +117,12 @@ cleanup(void)
 	fclose(tmp_fp);
     if (to_remove != 0) {
 #if HAVE_REMOVE
-	remove(to_remove);
+	rc = remove(to_remove);
 #else
-	unlink(to_remove);
+	rc = unlink(to_remove);
 #endif
+	if (rc != 0)
+	    perror(to_remove);
     }
 }
 
@@ -376,9 +380,11 @@ open_tempfile(char *filename)
     _nc_STRCPY(filename, "/tmp/XXXXXX", PATH_MAX);
 #if HAVE_MKSTEMP
     {
+	int oldmask = umask(077);
 	int fd = mkstemp(filename);
 	if (fd >= 0)
 	    result = fdopen(fd, "w");
+	umask(oldmask);
     }
 #else
     if (tmpnam(filename) != 0)
