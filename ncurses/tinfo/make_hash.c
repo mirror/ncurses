@@ -44,7 +44,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.9 2012/11/18 01:30:03 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.10 2012/12/16 00:40:14 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -275,8 +275,7 @@ main(int argc, char **argv)
 	printf("static struct name_table_entry *_nc_%s_table = 0;\n\n", root_name);
     } else {
 
-	printf("static struct name_table_entry %s _nc_%s_table[] =\n",
-	       bigstring ? "" : "const",
+	printf("static struct name_table_entry const _nc_%s_table[] =\n",
 	       root_name);
 	printf("{\n");
 	for (n = 0; n < CAPTABSIZE; n++) {

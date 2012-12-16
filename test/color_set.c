@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2006,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2008,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_set.c,v 1.6 2008/02/10 00:18:01 tom Exp $
+ * $Id: color_set.c,v 1.7 2012/12/15 22:04:14 tom Exp $
  */
 
 #include <test.priv.h>
@@ -48,7 +48,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     if (has_colors()) {
 	start_color();
 
-	pair_content(0, &f, &b);
+	(void) pair_content(0, &f, &b);
 	printw("pair 0 contains (%d,%d)\n", f, b);
 	getch();
 

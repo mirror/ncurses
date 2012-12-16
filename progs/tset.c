@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.89 2012/02/22 22:50:47 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.90 2012/12/15 23:01:17 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -473,9 +473,6 @@ add_mapping(const char *port, char *arg)
 	*arg++ = '\0';
 	mapp->speed = tbaudrate(p);
     }
-
-    if (arg == (char *) 0)	/* Non-optional type. */
-	goto badmopt;
 
     mapp->type = arg;
 

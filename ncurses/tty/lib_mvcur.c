@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.127 2011/10/22 16:09:52 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.128 2012/12/15 20:59:27 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -285,7 +285,7 @@ NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_mvcur_resume) (NCURSES_SP_DCL0)
 /* what to do at initialization time and after each shellout */
 {
-    if (SP_PARM && !IsTermInfo(SP_PARM))
+    if (!SP_PARM || !IsTermInfo(SP_PARM))
 	return;
 
     /* initialize screen for cursor access */
@@ -327,13 +327,14 @@ NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
 /* initialize the cost structure */
 {
-    if (SP_PARM->_ofp && isatty(fileno(SP_PARM->_ofp)))
+    if (SP_PARM->_ofp && isatty(fileno(SP_PARM->_ofp))) {
 	SP_PARM->_char_padding = ((BAUDBYTE * 1000 * 10)
 				  / (BAUDRATE(SP_PARM) > 0
 				     ? BAUDRATE(SP_PARM)
 				     : 9600));
-    else
+    } else {
 	SP_PARM->_char_padding = 1;	/* must be nonzero */
+    }
     if (SP_PARM->_char_padding <= 0)
 	SP_PARM->_char_padding = 1;	/* must be nonzero */
     TR(TRACE_CHARPUT | TRACE_MOVE, ("char_padding %d msecs", SP_PARM->_char_padding));

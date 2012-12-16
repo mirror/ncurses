@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.512 2012/12/08 20:19:40 tom Exp $
+ * $Id: curses.priv.h,v 1.514 2012/12/15 20:03:45 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1418,7 +1418,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 				AttrOf(dst) |= (attr_t) (ext + 1)
 
 #define if_WIDEC(code)  code
-#define Charable(ch)	((SP_PARM != 0 && SP_PARM->_legacy_coding)	\
+#define Charable(ch)	((SP_PARM->_legacy_coding)			\
 			 || (AttrOf(ch) & A_ALTCHARSET)			\
 			 || (!isWidecExt(ch) &&				\
 			     (ch).chars[1] == L'\0' &&			\
@@ -2046,6 +2046,7 @@ extern NCURSES_EXPORT(int) _nc_eventlist_timeout(_nc_eventlist *);
 
 extern int __MINGW_NOTHROW _nc_wctomb(char *, wchar_t);
 #define wctomb(s,wc) _nc_wctomb(s,wc)
+#define wcrtomb(s,wc,n) _nc_wctomb(s,wc)
 
 extern int __MINGW_NOTHROW _nc_mbtowc(wchar_t *, const char *, size_t);
 #define mbtowc(pwc,s,n) _nc_mbtowc(pwc,s,n)

@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.180 2012/12/08 22:17:22 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.182 2012/12/16 00:03:12 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -552,7 +552,7 @@ matches(char **needle, const char *haystack)
     return (code);
 }
 
-static const char *
+static char *
 valid_db_path(const char *nominal)
 {
     struct stat sb;
@@ -623,7 +623,7 @@ static void
 show_databases(const char *outdir)
 {
     bool specific = (outdir != 0) || getenv("TERMINFO") != 0;
-    const char *result;
+    char *result;
     const char *tried = 0;
 
     if (outdir == 0) {
@@ -631,6 +631,7 @@ show_databases(const char *outdir)
     }
     if ((result = valid_db_path(outdir)) != 0) {
 	printf("%s\n", result);
+	free(result);
     } else {
 	tried = outdir;
     }
@@ -638,6 +639,7 @@ show_databases(const char *outdir)
     if ((outdir = _nc_home_terminfo())) {
 	if ((result = valid_db_path(outdir)) != 0) {
 	    printf("%s\n", result);
+	    free(result);
 	} else if (!specific) {
 	    tried = outdir;
 	}

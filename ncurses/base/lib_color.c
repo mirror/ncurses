@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.105 2012/06/09 20:34:11 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.106 2012/12/15 19:14:34 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -804,7 +804,8 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
 				    1, outc);
 	    return;
 	} else if (SP_PARM != 0) {
-	    pair_content((short) pair, &fg, &bg);
+	    if (pair_content((short) pair, &fg, &bg) == ERR)
+		return;
 	}
     }
 

@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.154 2012/12/08 22:01:26 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.155 2012/12/15 19:04:54 tom Exp $")
 
 /****************************************************************************
  *
@@ -438,7 +438,7 @@ _nc_update_screensize(SCREEN *sp)
      * We're doing it this way because those functions belong to the upper
      * ncurses library, while this resides in the lower terminfo library.
      */
-    if (sp->_resize != 0) {
+    if (sp != 0 && sp->_resize != 0) {
 	if ((new_lines != old_lines) || (new_cols != old_cols)) {
 	    sp->_resize(NCURSES_SP_ARGx new_lines, new_cols);
 	} else if (sp->_sig_winch && (sp->_ungetch != 0)) {

@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.61 2012/10/27 19:37:17 tom Exp $
+  $Id: worm.c,v 1.62 2012/12/15 18:32:40 tom Exp $
 */
 
 #include <test.priv.h>
@@ -431,6 +431,7 @@ main(int argc, char *argv[])
     struct worm *w;
     int *ip;
     bool done = FALSE;
+    int max_refs;
 
     setlocale(LC_ALL, "");
 
@@ -513,8 +514,9 @@ main(int argc, char *argv[])
     }
 #endif /* A_COLOR */
 
-    refs = typeMalloc(int *, (size_t) LINES);
-    for (y = 0; y < LINES; y++) {
+    max_refs = LINES;
+    refs = typeMalloc(int *, (size_t) max_refs);
+    for (y = 0; y < max_refs; y++) {
 	refs[y] = typeMalloc(int, (size_t) COLS);
 	for (x = 0; x < COLS; x++) {
 	    refs[y][x] = 0;
@@ -608,7 +610,7 @@ main(int argc, char *argv[])
     Trace(("Cleanup"));
     cleanup();
 #ifdef NO_LEAKS
-    for (y = 0; y < LINES; y++) {
+    for (y = 0; y < max_refs; y++) {
 	free(refs[y]);
     }
     free(refs);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insch.c,v 1.32 2009/10/24 22:04:35 tom Exp $")
+MODULE_ID("$Id: lib_insch.c,v 1.33 2012/12/15 22:51:12 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -82,7 +82,7 @@ _nc_insert_ch(SCREEN *sp, WINDOW *win, chtype ch)
 #if USE_WIDEC_SUPPORT
 	       WINDOW_EXT(win, addch_used) == 0 &&
 #endif
-	       is8bits(ChCharOf(ch)) &&
+	       is8bits(ch) &&
 	       (isprint(ChCharOf(ch)) ||
 		(ChAttrOf(ch) & A_ALTCHARSET) ||
 		(sp != 0 && sp->_legacy_coding && !iscntrl(ChCharOf(ch))))) {
@@ -101,7 +101,7 @@ _nc_insert_ch(SCREEN *sp, WINDOW *win, chtype ch)
 		*temp1 = _nc_render(win, wch);
 		win->_curx++;
 	    }
-	} else if (is8bits(ChCharOf(ch)) && iscntrl(ChCharOf(ch))) {
+	} else if (is8bits(ch) && iscntrl(ChCharOf(ch))) {
 	    s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx ChCharOf(ch));
 	    while (*s != '\0') {
 		code = _nc_insert_ch(sp, win, ChAttrOf(ch) | UChar(*s));

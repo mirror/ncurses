@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.101 2012/10/27 19:45:17 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.102 2012/12/15 18:25:56 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -99,6 +99,8 @@ static const char *separator, *trailer;
 #define NumIndirect(j)  ((sortmode == S_NOSORT) ? (j) : num_indirect[j])
 #define StrIndirect(j)  ((sortmode == S_NOSORT) ? (j) : str_indirect[j])
 #endif
+
+static void failed(const char *) GCC_NORETURN;
 
 static void
 failed(const char *s)
@@ -828,7 +830,9 @@ fmt_entry(TERMTYPE *tterm,
 	    }
 	}
 	/* e.g., trimmed_sgr0 */
-	if (capability != tterm->Strings[i])
+	if (capability != ABSENT_STRING &&
+	    capability != CANCELLED_STRING &&
+	    capability != tterm->Strings[i])
 	    free(capability);
     }
     len += (int) (num_strings * 2);

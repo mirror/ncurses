@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.14 2012/09/22 19:15:14 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.15 2012/12/15 19:39:49 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -143,9 +143,10 @@ MapAttr(TERMINAL_CONTROL_BLOCK * TCB, WORD res, attr_t ch)
  * TODO: _nc_wacs should be part of sp.
  */
 static BOOL
-con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int n)
+con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int limit)
 {
-    CHAR_INFO ci[n];
+    int actual = 0;
+    CHAR_INFO ci[limit];
     COORD loc, siz;
     SMALL_RECT rec;
     int i;
@@ -159,34 +160,37 @@ con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int n)
 
     SetSP();
 
-    for (i = 0; i < n; i++) {
+    for (i = actual = 0; i < limit; i++) {
 	ch = str[i];
-	ci[i].Char.UnicodeChar = CharOf(ch);
-	ci[i].Attributes = MapAttr(TCB,
-				   PropOf(TCB)->SBI.wAttributes,
-				   AttrOf(ch));
+	if (isWidecExt(ch))
+	    continue;
+	ci[actual].Char.UnicodeChar = CharOf(ch);
+	ci[actual].Attributes = MapAttr(TCB,
+					PropOf(TCB)->SBI.wAttributes,
+					AttrOf(ch));
 	if (AttrOf(ch) & A_ALTCHARSET) {
 	    if (_nc_wacs) {
 		int which = CharOf(ch);
 		if (which > 0
 		    && which < ACS_LEN
 		    && CharOf(_nc_wacs[which]) != 0) {
-		    ci[i].Char.UnicodeChar = CharOf(_nc_wacs[which]);
+		    ci[actual].Char.UnicodeChar = CharOf(_nc_wacs[which]);
 		} else {
-		    ci[i].Char.UnicodeChar = ' ';
+		    ci[actual].Char.UnicodeChar = ' ';
 		}
 	    }
 	}
+	++actual;
     }
 
     loc.X = (short) 0;
     loc.Y = (short) 0;
-    siz.X = (short) n;
+    siz.X = (short) actual;
     siz.Y = 1;
 
     rec.Left = (short) x;
     rec.Top = (short) y;
-    rec.Right = (short) (x + n - 1);
+    rec.Right = (short) (x + limit - 1);
     rec.Bottom = rec.Top;
 
     return WriteConsoleOutputW(TCB->hdl, ci, siz, loc, &rec);

@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.271 2012/08/25 21:04:03 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.272 2012/12/15 21:00:19 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -1076,24 +1076,22 @@ ClrToEOL(NCURSES_SP_DCLx NCURSES_CH_T blank, int needclear)
 {
     int j;
 
-    if (SP_PARM != 0) {
-	if (CurScreen(SP_PARM) != 0
-	    && SP_PARM->_cursrow >= 0) {
-	    for (j = SP_PARM->_curscol; j < screen_columns(SP_PARM); j++) {
-		if (j >= 0) {
-		    NCURSES_CH_T *cp =
-		    &(CurScreen(SP_PARM)->_line[SP_PARM->_cursrow].text[j]);
+    if (CurScreen(SP_PARM) != 0
+	&& SP_PARM->_cursrow >= 0) {
+	for (j = SP_PARM->_curscol; j < screen_columns(SP_PARM); j++) {
+	    if (j >= 0) {
+		NCURSES_CH_T *cp =
+		&(CurScreen(SP_PARM)->_line[SP_PARM->_cursrow].text[j]);
 
-		    if (!CharEq(*cp, blank)) {
-			*cp = blank;
-			needclear = TRUE;
-		    }
+		if (!CharEq(*cp, blank)) {
+		    *cp = blank;
+		    needclear = TRUE;
 		}
 	    }
 	}
     }
 
-    if (needclear && (SP_PARM != 0)) {
+    if (needclear) {
 	UpdateAttrs(SP_PARM, blank);
 	TPUTS_TRACE("clr_eol");
 	if (clr_eol && SP_PARM->_el_cost <= (screen_columns(SP_PARM) - SP_PARM->_curscol)) {
@@ -1116,9 +1114,6 @@ static void
 ClrToEOS(NCURSES_SP_DCLx NCURSES_CH_T blank)
 {
     int row, col;
-
-    if (0 == SP_PARM)
-	return;
 
     row = SP_PARM->_cursrow;
     col = SP_PARM->_curscol;
@@ -2155,33 +2150,33 @@ _nc_screen_init(void)
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_screen_wrap) (NCURSES_SP_DCL0)
 {
-    if (SP_PARM == 0)
-	return;
+    if (SP_PARM != 0) {
 
-    UpdateAttrs(SP_PARM, normal);
+	UpdateAttrs(SP_PARM, normal);
 #if NCURSES_EXT_FUNCS
-    if (SP_PARM->_coloron
-	&& !SP_PARM->_default_color) {
-	static const NCURSES_CH_T blank = NewChar(BLANK_TEXT);
-	SP_PARM->_default_color = TRUE;
-	NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_ARGx
-				       -1,
-				       0,
-				       FALSE,
-				       NCURSES_SP_NAME(_nc_outch));
-	SP_PARM->_default_color = FALSE;
+	if (SP_PARM->_coloron
+	    && !SP_PARM->_default_color) {
+	    static const NCURSES_CH_T blank = NewChar(BLANK_TEXT);
+	    SP_PARM->_default_color = TRUE;
+	    NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_ARGx
+					   -1,
+					   0,
+					   FALSE,
+					   NCURSES_SP_NAME(_nc_outch));
+	    SP_PARM->_default_color = FALSE;
 
-	TINFO_MVCUR(NCURSES_SP_ARGx
-		    SP_PARM->_cursrow,
-		    SP_PARM->_curscol,
-		    screen_lines(SP_PARM) - 1,
-		    0);
+	    TINFO_MVCUR(NCURSES_SP_ARGx
+			SP_PARM->_cursrow,
+			SP_PARM->_curscol,
+			screen_lines(SP_PARM) - 1,
+			0);
 
-	ClrToEOL(NCURSES_SP_ARGx blank, TRUE);
-    }
+	    ClrToEOL(NCURSES_SP_ARGx blank, TRUE);
+	}
 #endif
-    if (SP_PARM->_color_defs) {
-	NCURSES_SP_NAME(_nc_reset_colors) (NCURSES_SP_ARG);
+	if (SP_PARM->_color_defs) {
+	    NCURSES_SP_NAME(_nc_reset_colors) (NCURSES_SP_ARG);
+	}
     }
 }
 
