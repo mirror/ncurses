@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.24 2012/07/28 20:12:11 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.25 2012/12/22 21:44:10 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1150,7 +1150,8 @@ _nc_cookie_init(SCREEN *sp)
 
     /* initialize normal acs before wide, since we use mapping in the latter */
 #if !USE_WIDEC_SUPPORT
-    if (_nc_unicode_locale() && _nc_locale_breaks_acs(sp->_term)) {
+    sp->_screen_unicode = _nc_unicode_locale();
+    if (sp->screen_unicode && _nc_locale_breaks_acs(sp->_term)) {
 	acs_chars = NULL;
 	ena_acs = NULL;
 	enter_alt_charset_mode = NULL;

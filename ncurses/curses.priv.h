@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.514 2012/12/15 20:03:45 tom Exp $
+ * $Id: curses.priv.h,v 1.515 2012/12/22 21:20:22 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1208,6 +1208,7 @@ struct screen {
 	 * UTF-8, but do not permit ACS at the same time (see tty_update.c).
 	 */
 	bool		_screen_acs_fix;
+	bool		_screen_unicode;
 #endif
 
 	bool		_use_tioctl;

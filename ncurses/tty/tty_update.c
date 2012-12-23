@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.272 2012/12/15 21:00:19 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.273 2012/12/22 21:38:17 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -276,6 +276,11 @@ PutAttrChar(NCURSES_SP_DCLx CARG_CH_T ch)
 	 */
 	if (SP_PARM->_screen_acs_fix
 	    && SP_PARM->_screen_acs_map[CharOf(my_ch)]) {
+	    RemAttr(attr, A_ALTCHARSET);
+	    my_ch = _nc_wacs[CharOf(my_ch)];
+	} else if (SP_PARM->_screen_unicode
+		   && !SP_PARM->_screen_acs_map[CharOf(my_ch)]
+		   && _nc_wacs[CharOf(my_ch)].chars[0]) {
 	    RemAttr(attr, A_ALTCHARSET);
 	    my_ch = _nc_wacs[CharOf(my_ch)];
 	}

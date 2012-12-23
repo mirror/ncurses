@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.643 2012/11/11 00:17:28 tom Exp $
+dnl $Id: aclocal.m4,v 1.644 2012/12/23 00:45:32 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5227,7 +5227,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 70 updated: 2012/02/25 15:20:07
+dnl CF_SHARED_OPTS version: 71 updated: 2012/12/22 19:34:47
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5283,6 +5283,7 @@ AC_DEFUN([CF_SHARED_OPTS],
 	AC_MSG_RESULT($cf_cv_shlib_version)
 
 	cf_cv_rm_so_locs=no
+	cf_try_cflags=
 
 	# Some less-capable ports of gcc support only -fpic
 	CC_SHARED_OPTS=
@@ -5335,7 +5336,7 @@ CF_EOF
 		chmod +x mk_shared_lib.sh
 		;;
 	darwin*) #(vi
-		EXTRA_CFLAGS="-no-cpp-precomp"
+		cf_try_cflags="no-cpp-precomp"
 		CC_SHARED_OPTS="-dynamic"
 		MK_SHARED_LIB='${CC} ${CFLAGS} -dynamiclib -install_name ${libdir}/`basename $[@]` -compatibility_version ${ABI_VERSION} -current_version ${ABI_VERSION} -o $[@]'
 		test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=abi
@@ -5553,6 +5554,33 @@ CF_EOF
 		esac
 		;;
 	esac
+
+	if test -n "$cf_try_cflags"
+	then
+cat > conftest.$ac_ext <<EOF
+#line __oline__ "${as_me:-configure}"
+#include <stdio.h>
+int main(int argc, char *argv[[]])
+{
+	printf("hello\n");
+	return (argv[[argc-1]] == 0) ;
+}
+EOF
+		cf_save_CFLAGS="$CFLAGS"
+		for cf_opt in $cf_try_cflags
+		do
+			CFLAGS="$cf_save_CFLAGS -$cf_opt"
+			AC_MSG_CHECKING(if CFLAGS option -$cf_opt works)
+			if AC_TRY_EVAL(ac_compile); then
+				AC_MSG_RESULT(yes)
+				cf_save_CFLAGS="$CFLAGS"
+			else
+				AC_MSG_RESULT(no)
+			fi
+		done
+		CFLAGS="$cf_save_CFLAGS"
+	fi
+
 
 	# RPATH_LIST is a colon-separated list of directories
 	test -n "$cf_ld_rpath_opt" && MK_SHARED_LIB="$MK_SHARED_LIB $cf_ld_rpath_opt\${RPATH_LIST}"

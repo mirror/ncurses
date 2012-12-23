@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.146 2012/10/27 23:04:17 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.147 2012/12/22 21:30:04 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -581,12 +581,13 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 
     NCURSES_SP_NAME(_nc_init_acs) (NCURSES_SP_ARG);
 #if USE_WIDEC_SUPPORT
+    sp->_screen_unicode = _nc_unicode_locale();
     _nc_init_wacs();
     if (_nc_wacs == 0) {
 	ReturnScreenError();
     }
 
-    sp->_screen_acs_fix = (_nc_unicode_locale()
+    sp->_screen_acs_fix = (sp->_screen_unicode
 			   && _nc_locale_breaks_acs(sp->_term));
 #endif
     env = _nc_get_locale();
