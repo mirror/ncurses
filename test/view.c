@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.88 2012/12/01 23:19:49 tom Exp $
+ * $Id: view.c,v 1.89 2012/12/29 22:38:28 tom Exp $
  */
 
 #include <test.priv.h>
@@ -565,7 +565,7 @@ show_all(const char *tag)
     printw("%.*s", COLS, temp);
     clrtoeol();
     this_time = time((time_t *) 0);
-    strcpy(temp, ctime(&this_time));
+    strncpy(temp, ctime(&this_time), 30);
     if ((i = (int) strlen(temp)) != 0) {
 	temp[--i] = 0;
 	if (move(0, COLS - i - 2) != ERR)

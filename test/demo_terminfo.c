@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.13 2012/07/07 23:37:13 tom Exp $
+ * $Id: demo_terminfo.c,v 1.15 2012/12/29 23:36:22 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -283,7 +283,7 @@ demo_terminfo(char *name)
 	    }
 #endif
 	} else {
-	    char temp[10];
+	    char temp[80];
 	    static const char *xterm_keys[] =
 	    {
 		"kDC", "kDN", "kEND", "kHOM", "kIC",
@@ -292,9 +292,9 @@ demo_terminfo(char *name)
 	    for (n = 0; n < SIZEOF(xterm_keys); ++n) {
 		for (mod = 0; mod < 8; ++mod) {
 		    if (mod == 0)
-			strcpy(temp, xterm_keys[n]);
+			sprintf(temp, "%.*s", 8, xterm_keys[n]);
 		    else
-			sprintf(temp, "%s%d", xterm_keys[n], mod);
+			sprintf(temp, "%.*s%d", 8, xterm_keys[n], mod);
 		    dumpit(temp);
 		}
 	    }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2007,2008 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2008,2012 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.20 2010/11/14 00:59:35 tom Exp $
+ * $Id: demo_defkey.c,v 1.21 2012/12/29 22:55:39 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -106,7 +106,7 @@ visible(const char *string)
 	for (pass = 0; pass < 2; ++pass) {
 	    for (n = 0; string[n] != '\0'; ++n) {
 		char temp[80];
-		strcpy(temp, visichar(string[n]));
+		strncpy(temp, visichar(string[n]), sizeof(temp) - 2);
 		if (pass)
 		    strcat(result, temp);
 		else

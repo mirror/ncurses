@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.102 2012/12/15 18:25:56 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.104 2012/12/30 00:51:13 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -873,11 +873,41 @@ fmt_entry(TERMTYPE *tterm,
 	    tp[0] = '\0';
 
 	    if (box_ok) {
+		char *tmp = _nc_tic_expand(boxchars,
+					   (outform == F_TERMINFO),
+					   numbers);
 		_nc_STRCPY(buffer, "box1=", sizeof(buffer));
-		_nc_STRCAT(buffer,
-			   _nc_tic_expand(boxchars,
-					  outform == F_TERMINFO, numbers),
-			   sizeof(buffer));
+		while (*tmp != '\0') {
+		    size_t have = strlen(buffer);
+		    size_t next = strlen(tmp);
+		    size_t want = have + next + 1;
+		    size_t last = next;
+		    char save = '\0';
+
+		    /*
+		     * If the expanded string is too long for the buffer,
+		     * chop it off and save the location where we chopped it.
+		     */
+		    if (want >= sizeof(buffer)) {
+			save = tmp[last];
+			tmp[last] = '\0';
+		    }
+		    _nc_STRCAT(buffer, tmp, sizeof(buffer));
+
+		    /*
+		     * If we chopped the buffer, replace the missing piece and
+		     * shift everything to append the remainder.
+		     */
+		    if (save != '\0') {
+			next = 0;
+			tmp[last] = save;
+			while ((tmp[next] = tmp[last + next]) != '\0') {
+			    ++next;
+			}
+		    } else {
+			break;
+		    }
+		}
 		WRAP_CONCAT;
 	    }
 	}

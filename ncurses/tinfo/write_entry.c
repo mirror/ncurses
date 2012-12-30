@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.86 2012/06/16 16:59:05 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.87 2012/12/29 23:12:22 tom Exp $")
 
 static int total_written;
 
@@ -273,16 +273,21 @@ _nc_write_entry(TERMTYPE *const tp)
     char name_list[MAX_TERMINFO_LENGTH];
     char *first_name, *other_names;
     char *ptr;
+    const char *term_names = tp->term_names;
+    size_t name_size = strlen(term_names);
 
-    assert(strlen(tp->term_names) != 0);
-    assert(strlen(tp->term_names) < sizeof(name_list));
+    if (name_size == 0) {
+	_nc_syserr_abort("no terminal name found.");
+    } else if (name_size >= sizeof(name_list) - 1) {
+	_nc_syserr_abort("terminal name too long: %s", term_names);
+    }
 
-    _nc_STRCPY(name_list, tp->term_names, sizeof(name_list));
+    _nc_STRCPY(name_list, term_names, sizeof(name_list));
     DEBUG(7, ("Name list = '%s'", name_list));
 
     first_name = name_list;
 
-    ptr = &name_list[strlen(name_list) - 1];
+    ptr = &name_list[name_size - 1];
     other_names = ptr + 1;
 
     while (ptr > name_list && *ptr != '|')
@@ -316,8 +321,8 @@ _nc_write_entry(TERMTYPE *const tp)
 	    buffer[0] = 0;
 
 	    memset(&key, 0, sizeof(key));
-	    key.data = tp->term_names;
-	    key.size = strlen(tp->term_names);
+	    key.data = term_names;
+	    key.size = name_size;
 
 	    memset(&data, 0, sizeof(data));
 	    data.data = buffer;
@@ -328,12 +333,12 @@ _nc_write_entry(TERMTYPE *const tp)
 	    buffer[0] = 2;
 
 	    key.data = name_list;
-	    key.size = strlen(name_list);
+	    key.size = name_size;
 
 	    _nc_STRCPY(buffer + 1,
-		       tp->term_names,
+		       term_names,
 		       sizeof(buffer) - 1);
-	    data.size = strlen(tp->term_names) + 1;
+	    data.size = name_size + 1;
 
 	    _nc_db_put(capdb, &key, &data);
 

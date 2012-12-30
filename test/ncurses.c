@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.382 2012/12/09 00:56:24 tom Exp $
+$Id: ncurses.c,v 1.386 2012/12/29 23:37:55 tom Exp $
 
 ***************************************************************************/
 
@@ -1919,7 +1919,7 @@ show_color_name(int y, int x, int color, bool wide)
 	} else if (color < 0) {
 	    strcpy(temp, "default");
 	} else {
-	    strcpy(temp, the_color_names[color]);
+	    sprintf(temp, "%.*s", 16, the_color_names[color]);
 	}
 	printw("%-*.*s", width, width, temp);
     }
@@ -3728,7 +3728,7 @@ show_2_wacs(int n, const char *name, const char *code, attr_t attr, short pair)
 
     MvPrintw(row, col, "%*s : ", COLS / 4, name);
     (void) attr_set(attr, pair, 0);
-    addstr(strcpy(temp, code));
+    addstr(strncpy(temp, code, 20));
     (void) attr_set(A_NORMAL, 0, 0);
     return n + 1;
 }
@@ -5786,55 +5786,60 @@ edit_secure(FIELD * me, int c)
     if (field_info(me, &rows, &cols, &frow, &fcol, &nrow, &nbuf) == E_OK
 	&& nbuf > 0) {
 	char *source = field_buffer(me, 1);
-	char temp[80];
+	size_t have = (source ? strlen(source) : 0) + 1;
+	size_t need = 80 + have;
+	char *temp = malloc(need);
 	long len;
 
-	strcpy(temp, source ? source : "");
-	len = (long) (char *) field_userptr(me);
-	if (c <= KEY_MAX) {
-	    if (isgraph(c) && (len + 1) < (int) sizeof(temp)) {
-		temp[len++] = (char) c;
-		temp[len] = 0;
-		set_field_buffer(me, 1, temp);
-		c = '*';
+	if (temp != 0) {
+	    strncpy(temp, source ? source : "", have + 1);
+	    len = (long) (char *) field_userptr(me);
+	    if (c <= KEY_MAX) {
+		if (isgraph(c) && (len + 1) < (int) sizeof(temp)) {
+		    temp[len++] = (char) c;
+		    temp[len] = 0;
+		    set_field_buffer(me, 1, temp);
+		    c = '*';
+		} else {
+		    c = 0;
+		}
 	    } else {
-		c = 0;
-	    }
-	} else {
-	    switch (c) {
-	    case REQ_BEG_FIELD:
-	    case REQ_CLR_EOF:
-	    case REQ_CLR_EOL:
-	    case REQ_DEL_LINE:
-	    case REQ_DEL_WORD:
-	    case REQ_DOWN_CHAR:
-	    case REQ_END_FIELD:
-	    case REQ_INS_CHAR:
-	    case REQ_INS_LINE:
-	    case REQ_LEFT_CHAR:
-	    case REQ_NEW_LINE:
-	    case REQ_NEXT_WORD:
-	    case REQ_PREV_WORD:
-	    case REQ_RIGHT_CHAR:
-	    case REQ_UP_CHAR:
-		c = 0;		/* we don't want to do inline editing */
-		break;
-	    case REQ_CLR_FIELD:
-		if (len) {
-		    temp[0] = 0;
-		    set_field_buffer(me, 1, temp);
+		switch (c) {
+		case REQ_BEG_FIELD:
+		case REQ_CLR_EOF:
+		case REQ_CLR_EOL:
+		case REQ_DEL_LINE:
+		case REQ_DEL_WORD:
+		case REQ_DOWN_CHAR:
+		case REQ_END_FIELD:
+		case REQ_INS_CHAR:
+		case REQ_INS_LINE:
+		case REQ_LEFT_CHAR:
+		case REQ_NEW_LINE:
+		case REQ_NEXT_WORD:
+		case REQ_PREV_WORD:
+		case REQ_RIGHT_CHAR:
+		case REQ_UP_CHAR:
+		    c = 0;	/* we don't want to do inline editing */
+		    break;
+		case REQ_CLR_FIELD:
+		    if (len) {
+			temp[0] = 0;
+			set_field_buffer(me, 1, temp);
+		    }
+		    break;
+		case REQ_DEL_CHAR:
+		case REQ_DEL_PREV:
+		    if (len) {
+			temp[--len] = 0;
+			set_field_buffer(me, 1, temp);
+		    }
+		    break;
 		}
-		break;
-	    case REQ_DEL_CHAR:
-	    case REQ_DEL_PREV:
-		if (len) {
-		    temp[--len] = 0;
-		    set_field_buffer(me, 1, temp);
-		}
-		break;
 	    }
+	    set_field_userptr(me, (void *) len);
+	    free(temp);
 	}
-	set_field_userptr(me, (void *) len);
     }
     return c;
 }

@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesf.h,v 1.30 2012/06/08 17:43:56 Richard.Yao Exp $
+// $Id: cursesf.h,v 1.31 2012/12/29 21:49:58 tom Exp $
 
 #ifndef NCURSES_CURSESF_H_incl
 #define NCURSES_CURSESF_H_incl 1
@@ -61,7 +61,7 @@ class NCURSES_IMPEXP NCursesFieldType
 protected:
   FIELDTYPE* fieldtype;
 
-  inline void OnError(int err) const THROWS(NCursesFormException) {
+  inline void OnError(int err) const THROW2(NCursesException const, NCursesFormException) {
     if (err!=E_OK)
       THROW(new NCursesFormException (err));
   }
@@ -109,7 +109,7 @@ protected:
   NCursesFieldType* ftype;   // Associated field type
 
   // Error handler
-  inline void OnError (int err) const THROWS(NCursesFormException) {
+  inline void OnError (int err) const THROW2(NCursesException const, NCursesFormException) {
     if (err != E_OK)
       THROW(new NCursesFormException (err));
   }
@@ -391,7 +391,7 @@ protected:
 		 bool with_frame,
 		 bool autoDeleteFields);
 
-  inline void OnError (int err) const THROWS(NCursesFormException) {
+  inline void OnError (int err) const THROW2(NCursesException const, NCursesFormException) {
     if (err != E_OK)
       THROW(new NCursesFormException (err));
   }

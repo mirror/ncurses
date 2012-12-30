@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.75 2012/11/24 20:48:54 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.77 2012/12/30 00:50:40 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -532,10 +532,13 @@ save_tc_char(char *bufptr, int c1)
 	    bufptr = save_char(bufptr, '\\');
 	bufptr = save_char(bufptr, c1);
     } else {
-	if (c1 == (c1 & 0x1f))	/* iscntrl() returns T on 255 */
-	    _nc_STRCPY(temp, unctrl((chtype) c1), sizeof(temp));
-	else
-	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp)) "\\%03o", c1);
+	if (c1 == (c1 & 0x1f)) {	/* iscntrl() returns T on 255 */
+	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+			"%.20s", unctrl((chtype) c1));
+	} else {
+	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+			"\\%03o", c1);
+	}
 	bufptr = save_string(bufptr, temp);
     }
     return bufptr;

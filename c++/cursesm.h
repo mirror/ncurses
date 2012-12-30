@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesm.h,v 1.28 2012/06/08 17:43:56 Richard.Yao Exp $
+// $Id: cursesm.h,v 1.29 2012/12/29 21:48:33 tom Exp $
 
 #ifndef NCURSES_CURSESM_H_incl
 #define NCURSES_CURSESM_H_incl 1
@@ -53,7 +53,7 @@ class NCURSES_IMPEXP NCursesMenuItem
 protected:
   ITEM *item;
 
-  inline void OnError (int err) const THROWS(NCursesMenuException) {
+  inline void OnError (int err) const THROW2(NCursesException const, NCursesMenuException) {
     if (err != E_OK)
       THROW(new NCursesMenuException (err));
   }
@@ -253,7 +253,7 @@ protected:
 		 bool with_frame,
 		 bool autoDeleteItems);
 
-  inline void OnError (int err) const THROWS(NCursesMenuException) {
+  inline void OnError (int err) const THROW2(NCursesException const, NCursesMenuException) {
     if (err != E_OK)
       THROW(new NCursesMenuException (this, err));
   }
