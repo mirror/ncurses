@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.89 2012/12/29 22:38:28 tom Exp $
+ * $Id: view.c,v 1.90 2013/01/05 23:18:13 tom Exp $
  */
 
 #include <test.priv.h>
@@ -81,6 +81,9 @@
 #include <sys/stream.h>
 #include <sys/ptem.h>
 #endif
+
+#undef CTRL
+#define CTRL(x)	((x) & 0x1f)
 
 static RETSIGTYPE finish(int sig) GCC_NORETURN;
 static void show_all(const char *tag);
@@ -121,6 +124,7 @@ usage(void)
 #if defined(KEY_RESIZE)
 	," -r       use old-style sigwinch handler rather than KEY_RESIZE"
 #endif
+	," -s       start in single-step mode, waiting for input"
 #ifdef TRACE
 	," -t       trace screen updates"
 	," -T NUM   specify trace mask"
@@ -229,6 +233,7 @@ main(int argc, char *argv[])
     int value = 0;
     bool done = FALSE;
     bool got_number = FALSE;
+    bool single_step = TRUE;
 #if CAN_RESIZE
     bool nonposix_resize = FALSE;
 #endif
@@ -244,7 +249,7 @@ main(int argc, char *argv[])
     (void) signal(SIGINT, finish);	/* arrange interrupts to terminate */
 #endif
 
-    while ((i = getopt(argc, argv, "cin:rtT:")) != -1) {
+    while ((i = getopt(argc, argv, "cin:rstT:")) != -1) {
 	switch (i) {
 	case 'c':
 	    try_color = TRUE;
@@ -262,6 +267,9 @@ main(int argc, char *argv[])
 	    nonposix_resize = TRUE;
 	    break;
 #endif
+	case 's':
+	    single_step = TRUE;
+	    break;
 #ifdef TRACE
 	case 'T':
 	    {
@@ -357,7 +365,8 @@ main(int argc, char *argv[])
     (void) nonl();		/* tell curses not to do NL->CR/NL on output */
     (void) cbreak();		/* take input chars one at a time, no wait for \n */
     (void) noecho();		/* don't echo input */
-    nodelay(stdscr, TRUE);
+    if (!single_step)
+	nodelay(stdscr, TRUE);
     idlok(stdscr, TRUE);	/* allow use of insert/delete line */
 
     if (try_color) {
@@ -477,6 +486,9 @@ main(int argc, char *argv[])
 	case ' ':
 	    nodelay(stdscr, TRUE);
 	    my_delay = 0;
+	    break;
+	case CTRL('L'):
+	    redrawwin(stdscr);
 	    break;
 	case ERR:
 	    if (!my_delay)

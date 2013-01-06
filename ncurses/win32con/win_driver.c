@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,9 +38,11 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.15 2012/12/15 19:39:49 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.16 2013/01/05 23:16:54 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
+
+#define EXP_OPTIMIZE 0
 
 #define AssertTCB() assert(TCB!=0 && TCB->magic==WINMAGIC)
 #define SetSP() assert(TCB->csp!=0); sp = TCB->csp; (void) sp
@@ -242,6 +244,81 @@ con_write8(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, chtype *str, int n)
 #define con_write(tcb, y, x, str, n) con_write8(tcb, y, x, str, n)
 #endif
 
+#if EXP_OPTIMIZE
+/*
+ * Comparing new/current screens, determine the last column-index for a change
+ * beginning on the given row,col position.  Unlike a serial terminal, there is
+ * no cost for "moving" the "cursor" on the line as we update it.
+ */
+static int
+find_end_of_change(SCREEN *sp, int row, int col)
+{
+    int result = col;
+    struct ldat *curdat = CurScreen(sp)->_line + row;
+    struct ldat *newdat = NewScreen(sp)->_line + row;
+
+    while (col <= newdat->lastchar) {
+#if USE_WIDEC_SUPPORT
+	if (isWidecExt(curdat->text[col]) || isWidecExt(newdat->text[col])) {
+	    result = col;
+	} else if (memcmp(&curdat->text[col],
+			  &newdat->text[col],
+			  sizeof(curdat->text[0]))) {
+	    result = col;
+	} else {
+	    break;
+	}
+#else
+	if (curdat->text[col] != newdat->text[col]) {
+	    result = col;
+	} else {
+	    break;
+	}
+#endif
+	++col;
+    }
+    return result;
+}
+
+/*
+ * Given a row,col position at the end of a change-chunk, look for the
+ * beginning of the next change-chunk.
+ */
+static int
+find_next_change(SCREEN *sp, int row, int col)
+{
+    struct ldat *curdat = CurScreen(sp)->_line + row;
+    struct ldat *newdat = NewScreen(sp)->_line + row;
+    int result = newdat->lastchar + 1;
+
+    while (++col <= newdat->lastchar) {
+#if USE_WIDEC_SUPPORT
+	if (isWidecExt(curdat->text[col]) != isWidecExt(newdat->text[col])) {
+	    result = col;
+	    break;
+	} else if (memcmp(&curdat->text[col],
+			  &newdat->text[col],
+			  sizeof(curdat->text[0]))) {
+	    result = col;
+	    break;
+	}
+#else
+	if (curdat->text[col] != newdat->text[col]) {
+	    result = col;
+	    break;
+	}
+#endif
+    }
+    return result;
+}
+
+#define EndChange(first) \
+	find_end_of_change(sp, y, first)
+#define NextChange(last) \
+	find_next_change(sp, y, last)
+
+#endif /* EXP_OPTIMIZE */
+
 #define MARK_NOCHANGE(win,row) \
 		win->_line[row].firstchar = _NOCHANGE; \
 		win->_line[row].lastchar  = _NOCHANGE
@@ -291,6 +368,32 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
     for (y = 0; y < nonempty; y++) {
 	x0 = NewScreen(sp)->_line[y].firstchar;
 	if (x0 != _NOCHANGE) {
+#if EXP_OPTIMIZE
+	    int x2;
+	    int limit = NewScreen(sp)->_line[y].lastchar;
+	    while ((x1 = EndChange(x0)) <= limit) {
+		while ((x2 = NextChange(x1)) <= limit && x2 <= (x1 + 2)) {
+		    x1 = x2;
+		}
+		n = x1 - x0 + 1;
+		memcpy(&CurScreen(sp)->_line[y].text[x0],
+		       &NewScreen(sp)->_line[y].text[x0],
+		       n * sizeof(CurScreen(sp)->_line[y].text[x0]));
+		con_write(TCB,
+			  y,
+			  x0,
+			  &CurScreen(sp)->_line[y].text[x0], n);
+		x0 = NextChange(x1);
+	    }
+
+	    /* mark line changed successfully */
+	    if (y <= NewScreen(sp)->_maxy) {
+		MARK_NOCHANGE(NewScreen(sp), y);
+	    }
+	    if (y <= CurScreen(sp)->_maxy) {
+		MARK_NOCHANGE(CurScreen(sp), y);
+	    }
+#else
 	    x1 = NewScreen(sp)->_line[y].lastchar;
 	    n = x1 - x0 + 1;
 	    if (n > 0) {
@@ -310,6 +413,7 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 		    MARK_NOCHANGE(CurScreen(sp), y);
 		}
 	    }
+#endif
 	}
     }
 
