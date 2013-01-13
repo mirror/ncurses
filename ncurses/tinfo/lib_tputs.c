@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.88 2012/12/08 20:01:20 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.93 2013/01/12 20:57:32 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -178,13 +178,48 @@ _nc_outch(int ch)
 }
 #endif
 
+/*
+ * This is used for the putp special case.
+ */
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(_nc_putchar) (NCURSES_SP_DCLx int ch)
+{
+    (void) SP_PARM;
+    return putchar(ch);
+}
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_putchar(int ch)
+{
+    return putchar(ch);
+}
+#endif
+
+/*
+ * putp is special - per documentation it calls tputs with putchar as the
+ * parameter for outputting characters.  This means that it uses stdio, which
+ * is not signal-safe.  Applications call this entrypoint; we do not call it
+ * from within the library.
+ */
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(putp) (NCURSES_SP_DCLx const char *string)
 {
     return NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				   string, 1, NCURSES_SP_NAME(_nc_outch));
+				   string, 1, NCURSES_SP_NAME(_nc_putchar));
 }
 
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+putp(const char *string)
+{
+    return NCURSES_SP_NAME(putp) (CURRENT_SCREEN, string);
+}
+#endif
+
+/*
+ * Use these entrypoints rather than "putp" within the library.
+ */
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_DCLx
 			   const char *name GCC_UNUSED,
@@ -194,18 +229,13 @@ NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_DCLx
 
     if (string != 0) {
 	TPUTS_TRACE(name);
-	rc = NCURSES_SP_NAME(putp) (NCURSES_SP_ARGx string);
+	rc = NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
+				     string, 1, NCURSES_SP_NAME(_nc_outch));
     }
     return rc;
 }
 
 #if NCURSES_SP_FUNCS
-NCURSES_EXPORT(int)
-putp(const char *string)
-{
-    return NCURSES_SP_NAME(putp) (CURRENT_SCREEN, string);
-}
-
 NCURSES_EXPORT(int)
 _nc_putp(const char *name, const char *string)
 {

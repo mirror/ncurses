@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.128 2012/12/15 20:59:27 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.131 2013/01/12 22:21:29 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -175,6 +175,9 @@ MODULE_ID("$Id: lib_mvcur.c,v 1.128 2012/12/15 20:59:27 tom Exp $")
 static bool profiling = FALSE;
 static float diff;
 #endif /* MAIN */
+
+#undef NCURSES_OUTC_FUNC
+#define NCURSES_OUTC_FUNC myOutCh
 
 #define OPT_SIZE 512
 
@@ -274,10 +277,9 @@ reset_scroll_region(NCURSES_SP_DCL0)
 /* Set the scroll-region to a known state (the default) */
 {
     if (change_scroll_region) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-				   "change_scroll_region",
-				   TPARM_2(change_scroll_region,
-					   0, screen_lines(SP_PARM) - 1));
+	NCURSES_PUTP2("change_scroll_region",
+		      TPARM_2(change_scroll_region,
+			      0, screen_lines(SP_PARM) - 1));
     }
 }
 
@@ -290,9 +292,7 @@ NCURSES_SP_NAME(_nc_mvcur_resume) (NCURSES_SP_DCL0)
 
     /* initialize screen for cursor access */
     if (enter_ca_mode) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-				   "enter_ca_mode",
-				   enter_ca_mode);
+	NCURSES_PUTP2("enter_ca_mode", enter_ca_mode);
     }
 
     /*
@@ -482,9 +482,7 @@ NCURSES_SP_NAME(_nc_mvcur_wrap) (NCURSES_SP_DCL0)
     }
 
     if (exit_ca_mode) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-				   "exit_ca_mode",
-				   exit_ca_mode);
+	NCURSES_PUTP2("exit_ca_mode", exit_ca_mode);
     }
     /*
      * Reset terminal's tab counter.  There's a long-time bug that
@@ -944,9 +942,14 @@ onscreen_mvcur(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew, int ovw)
 	return (ERR);
 }
 
-NCURSES_EXPORT(int)
-TINFO_MVCUR(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew)
-/* optimized cursor move from (yold, xold) to (ynew, xnew) */
+/*
+ * optimized cursor move from (yold, xold) to (ynew, xnew)
+ */
+static int
+_nc_real_mvcur(NCURSES_SP_DCLx
+	       int yold, int xold,
+	       int ynew, int xnew,
+	       NCURSES_SP_OUTC myOutCh)
 {
     NCURSES_CH_T oldattr;
     int code;
@@ -995,18 +998,14 @@ TINFO_MVCUR(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew)
 
 		if (l > 0) {
 		    if (carriage_return) {
-			NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-						   "carriage_return",
-						   carriage_return);
+			NCURSES_PUTP2("carriage_return", carriage_return);
 		    } else
 			NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx '\r');
 		    xold = 0;
 
 		    while (l > 0) {
 			if (newline) {
-			    NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-						       "newline",
-						       newline);
+			    NCURSES_PUTP2("newline", newline);
 			} else
 			    NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx '\n');
 			l--;
@@ -1043,13 +1042,63 @@ TINFO_MVCUR(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew)
     returnCode(code);
 }
 
-#if NCURSES_SP_FUNCS && !defined(USE_TERM_DRIVER)
+/*
+ * These entrypoints are used within the library.
+ */
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(_nc_mvcur) (NCURSES_SP_DCLx
+			    int yold, int xold,
+			    int ynew, int xnew)
+{
+    return _nc_real_mvcur(NCURSES_SP_ARGx yold, xold, ynew, xnew,
+			  NCURSES_SP_NAME(_nc_outch));
+}
+
+#if NCURSES_SP_FUNCS
+NCURSES_EXPORT(int)
+_nc_mvcur(int yold, int xold,
+	  int ynew, int xnew)
+{
+    return NCURSES_SP_NAME(_nc_mvcur) (CURRENT_SCREEN, yold, xold, ynew, xnew);
+}
+#endif
+
+#if defined(USE_TERM_DRIVER)
+/*
+ * The terminal driver does not support the external "mvcur()".
+ */
+NCURSES_EXPORT(int)
+TINFO_MVCUR(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew)
+{
+    return _nc_real_mvcur(NCURSES_SP_ARGx
+			  yold, xold,
+			  ynew, xnew,
+			  NCURSES_SP_NAME(_nc_outch));
+}
+
+#else /* !USE_TERM_DRIVER */
+
+/*
+ * These entrypoints support users of the library.
+ */
+NCURSES_EXPORT(int)
+NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx int yold, int xold, int ynew,
+			int xnew)
+{
+    return _nc_real_mvcur(NCURSES_SP_ARGx
+			  yold, xold,
+			  ynew, xnew,
+			  NCURSES_SP_NAME(_nc_putchar));
+}
+
+#if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
 mvcur(int yold, int xold, int ynew, int xnew)
 {
     return NCURSES_SP_NAME(mvcur) (CURRENT_SCREEN, yold, xold, ynew, xnew);
 }
 #endif
+#endif /* USE_TERM_DRIVER */
 
 #if defined(TRACE) || defined(NCURSES_TEST)
 NCURSES_EXPORT_VAR(int) _nc_optimize_enable = OPTIMIZE_ALL;

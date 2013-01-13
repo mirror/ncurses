@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1999-2010,2011 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1999-2011,2013 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.36 2011/12/17 23:31:40 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.37 2013/01/12 18:11:40 tom Exp $
 .TH curs_terminfo 3X ""
 .ds n 5
 .na
@@ -77,7 +77,7 @@
 .br
 \fBint vidattr(chtype \fR\fIattrs\fR\fB);\fR
 .br
-\fBint vid_puts(attr_t \fR\fIattrs\fR\fB, short \fR\fIpair\fR\fB, void *\fR\fIopts\fR\fB, int (*\fR\fIputc\fR\fB)(char));\fR
+\fBint vid_puts(attr_t \fR\fIattrs\fR\fB, short \fR\fIpair\fR\fB, void *\fR\fIopts\fR\fB, int (*\fR\fIputc\fR\fB)(int));\fR
 .br
 \fBint vid_attr(attr_t \fR\fIattrs\fR\fB, short \fR\fIpair\fR\fB, void *\fR\fIopts\fR\fB);\fR
 .br

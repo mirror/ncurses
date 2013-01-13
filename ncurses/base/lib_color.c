@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.106 2012/12/15 19:14:34 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.107 2013/01/12 17:25:36 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -264,8 +264,7 @@ reset_color_pair(NCURSES_SP_DCL0)
 
     (void) SP_PARM;
     if (orig_pair != 0) {
-	TPUTS_TRACE("orig_pair");
-	putp(orig_pair);
+	(void) NCURSES_PUTP2("orig_pair", orig_pair);
 	result = TRUE;
     }
     return result;
@@ -292,8 +291,7 @@ NCURSES_SP_NAME(_nc_reset_colors) (NCURSES_SP_DCL0)
     result = CallDriver(SP_PARM, rescolors);
 #else
     if (orig_colors != 0) {
-	TPUTS_TRACE("orig_colors");
-	putp(orig_colors);
+	NCURSES_PUTP2("orig_colors", orig_colors);
 	result = TRUE;
     }
 #endif
@@ -553,11 +551,11 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx short pair, short f, short b)
 	    tp[f].red, tp[f].green, tp[f].blue,
 	    tp[b].red, tp[b].green, tp[b].blue));
 
-	TPUTS_TRACE("initialize_pair");
-	putp(TPARM_7(initialize_pair,
-		     pair,
-		     tp[f].red, tp[f].green, tp[f].blue,
-		     tp[b].red, tp[b].green, tp[b].blue));
+	NCURSES_PUTP2("initialize_pair",
+		      TPARM_7(initialize_pair,
+			      pair,
+			      tp[f].red, tp[f].green, tp[f].blue,
+			      tp[b].red, tp[b].green, tp[b].blue));
     }
 #endif
 
@@ -615,8 +613,8 @@ NCURSES_SP_NAME(init_color) (NCURSES_SP_DCLx
 #ifdef USE_TERM_DRIVER
 	CallDriver_4(SP_PARM, initcolor, color, r, g, b);
 #else
-	TPUTS_TRACE("initialize_color");
-	putp(TPARM_4(initialize_color, color, r, g, b));
+	NCURSES_PUTP2("initialize_color",
+		      TPARM_4(initialize_color, color, r, g, b));
 #endif
 	SP_PARM->_color_defs = max(color + 1, SP_PARM->_color_defs);
 

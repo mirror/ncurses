@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.90 2013/01/05 23:18:13 tom Exp $
+ * $Id: view.c,v 1.91 2013/01/13 01:00:44 tom Exp $
  */
 
 #include <test.priv.h>
@@ -274,7 +274,7 @@ main(int argc, char *argv[])
 	case 'T':
 	    {
 		char *next = 0;
-		int tvalue = strtol(optarg, &next, 0);
+		int tvalue = (int) strtol(optarg, &next, 0);
 		if (tvalue < 0 || (next != 0 && *next != 0))
 		    usage();
 		trace((unsigned) tvalue);

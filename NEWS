@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2008 2013/01/05 23:28:30 tom Exp $
+-- $Id: NEWS,v 1.2010 2013/01/12 18:12:21 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130112
+	+ correct prototype in manpage for vid_puts.
+	+ drop ncurses/tty/tty_display.h, ncurses/tty/tty_input.h, since they
+	  are unused in the current driver model.
+	+ modify mvcur to use stdout except when called within the ncurses
+	  library.
+	+ modify vidattr and vid_attr to use stdout as documented in manpage.
+	+ amend changes made to buffering in 20120825 so that the low-level
+	  putp() call uses stdout rather than ncurses' internal buffering.
+	  The putp_sp() call does the same, for consistency (Redhat #892674).
 
 20130105
 	+ add "-s" option to test/view.c to allow it to start in single-step

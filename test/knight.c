@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.33 2012/12/09 00:14:28 tom Exp $
+ * $Id: knight.c,v 1.34 2013/01/13 00:40:33 tom Exp $
  */
 
 #include <test.priv.h>
@@ -123,9 +123,9 @@ init_program(void)
 	(void) init_pair(PLUS_COLOR, (short) COLOR_RED, (short) bg);
 	(void) init_pair(MINUS_COLOR, (short) COLOR_GREEN, (short) bg);
 
-	trail |= COLOR_PAIR(TRAIL_COLOR);
-	plus |= COLOR_PAIR(PLUS_COLOR);
-	minus |= COLOR_PAIR(MINUS_COLOR);
+	trail |= (chtype) COLOR_PAIR(TRAIL_COLOR);
+	plus |= (chtype) COLOR_PAIR(PLUS_COLOR);
+	minus |= (chtype) COLOR_PAIR(MINUS_COLOR);
     }
 #ifdef NCURSES_MOUSE_VERSION
     (void) mousemask(BUTTON1_CLICKED, (mmask_t *) NULL);

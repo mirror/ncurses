@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
  * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is
  * just as good.
  *
- * $Id: blue.c,v 1.33 2009/10/24 21:03:35 tom Exp $
+ * $Id: blue.c,v 1.34 2013/01/13 01:06:17 tom Exp $
  */
 
 #include <test.priv.h>
@@ -202,8 +202,8 @@ printcard(int value)
     if (value == NOCARD)
 	(void) addstr("   ");
     else {
-	addch(ranks[value % SUIT_LENGTH][0] | COLOR_PAIR(BLUE_ON_WHITE));
-	addch(ranks[value % SUIT_LENGTH][1] | COLOR_PAIR(BLUE_ON_WHITE));
+	addch(ranks[value % SUIT_LENGTH][0] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
+	addch(ranks[value % SUIT_LENGTH][1] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
 	addch(suits[value / SUIT_LENGTH]);
     }
     (void) addch(' ');

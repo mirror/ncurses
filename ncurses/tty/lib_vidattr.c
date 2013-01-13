@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -69,7 +69,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.62 2011/05/28 21:22:04 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.63 2013/01/12 18:00:54 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -324,7 +324,7 @@ NCURSES_SP_NAME(vidattr) (NCURSES_SP_DCLx chtype newmode)
     T((T_CALLED("vidattr(%p,%s)"), (void *) SP_PARM, _traceattr(newmode)));
     returnCode(NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx
 					 newmode,
-					 NCURSES_SP_NAME(_nc_outch)));
+					 NCURSES_SP_NAME(_nc_putchar)));
 }
 
 #if NCURSES_SP_FUNCS

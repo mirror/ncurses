@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.16 2012/06/09 20:29:33 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.17 2013/01/12 18:01:35 tom Exp $")
 
 #define doPut(mode) TPUTS_TRACE(#mode); NCURSES_SP_NAME(tputs)(NCURSES_SP_ARGx mode, 1, outc)
 
@@ -278,7 +278,7 @@ NCURSES_SP_NAME(vid_attr) (NCURSES_SP_DCLx
 					  newmode,
 					  pair,
 					  opts,
-					  NCURSES_SP_NAME(_nc_outch)));
+					  NCURSES_SP_NAME(_nc_putchar)));
 }
 
 #if NCURSES_SP_FUNCS

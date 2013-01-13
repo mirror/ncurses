@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.515 2012/12/22 21:20:22 tom Exp $
+ * $Id: curses.priv.h,v 1.521 2013/01/12 21:53:35 tom Exp $
  *
  *	curses.priv.h
  *
@@ -395,11 +395,7 @@ color_t;
 #define SET_WINDOW_PAIR(w,p)	(w)->_color = (p)
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b) && GetPair(a) == GetPair(b))
 
-#if NCURSES_SP_FUNCS
-#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vid_attr)(sp, attr, (short) pair, 0)
-#else
-#define VIDATTR(sp,attr,pair)	vid_attr(attr, (short) pair, 0)
-#endif
+#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vid_puts)(NCURSES_SP_ARGx attr, (short) pair, 0, NCURSES_OUTC_FUNC)
 
 #else /* !NCURSES_EXT_COLORS */
 
@@ -412,13 +408,13 @@ color_t;
 				WINDOW_ATTRS(w) |= (A_COLOR & (attr_t) ColorPair(p))
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b))
 
-#if NCURSES_SP_FUNCS
-#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vidattr)(sp, attr)
-#else
-#define VIDATTR(sp,attr,pair)	vidattr(attr)
-#endif
+#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vidputs)(NCURSES_SP_ARGx attr, NCURSES_OUTC_FUNC)
 
 #endif /* NCURSES_EXT_COLORS */
+
+#define NCURSES_OUTC_FUNC       NCURSES_SP_NAME(_nc_outch)
+#define NCURSES_PUTP2(name,value)    NCURSES_SP_NAME(_nc_putp)(NCURSES_SP_ARGx name, value)
+#define NCURSES_PUTP2_FLUSH(name,value)    NCURSES_SP_NAME(_nc_putp_flush)(NCURSES_SP_ARGx name, value)
 
 #if NCURSES_NO_PADDING
 #define GetNoPadding(sp)	((sp) ? (sp)->_no_padding : _nc_prescreen._no_padding)
@@ -1242,7 +1238,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
     sp->_endwin = TRUE;                         \
     sp->_cursor = -1;                           \
     WindowList(sp) = 0;                         \
-    sp->_outch = NCURSES_SP_NAME(_nc_outch);    \
+    sp->_outch = NCURSES_OUTC_FUNC;             \
     sp->jump = 0                                \
 
 /* usually in <limits.h> */
@@ -1377,7 +1373,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define PUTC_INIT	init_mb (PUT_st)
 #define PUTC(ch)	do { if(!isWidecExt(ch)) {				    \
 			if (Charable(ch)) {					    \
-			    NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx CharOf(ch)); \
+			    NCURSES_OUTC_FUNC (NCURSES_SP_ARGx CharOf(ch)); \
 			    COUNT_OUTCHARS(1);					    \
 			} else {						    \
 			    PUTC_INIT;						    \
@@ -1389,12 +1385,12 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 						       (ch).chars[PUTC_i], &PUT_st); \
 				if (PUTC_n <= 0) {				    \
 				    if (PUTC_ch && is8bits(PUTC_ch) && PUTC_i == 0) \
-					NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx CharOf(ch)); \
+					NCURSES_OUTC_FUNC (NCURSES_SP_ARGx CharOf(ch)); \
 				    break;					    \
 				} else {					    \
 				    int PUTC_j;					    \
 				    for (PUTC_j = 0; PUTC_j < PUTC_n; ++PUTC_j) {   \
-					NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx PUTC_buf[PUTC_j]); \
+					NCURSES_OUTC_FUNC (NCURSES_SP_ARGx PUTC_buf[PUTC_j]); \
 				    }						    \
 				}						    \
 			    }							    \
@@ -1441,7 +1437,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define ARG_CH_T	NCURSES_CH_T
 #define CARG_CH_T	NCURSES_CH_T
 #define PUTC_DATA	/* nothing */
-#define PUTC(ch)	NCURSES_SP_NAME(_nc_outch) (NCURSES_SP_ARGx (int) ch)
+#define PUTC(ch)	NCURSES_OUTC_FUNC (NCURSES_SP_ARGx (int) ch)
 
 #define BLANK		(' '|A_NORMAL)
 #define ZEROS		('\0'|A_NORMAL)
@@ -1866,6 +1862,8 @@ extern NCURSES_EXPORT(int) _nc_insert_ch(SCREEN *, WINDOW *, chtype);
 /* lib_mvcur.c */
 #define INFINITY	1000000	/* cost: too high to use */
 
+extern NCURSES_EXPORT(int) _nc_mvcur(int yold, int xold, int ynew, int xnew);
+
 extern NCURSES_EXPORT(void) _nc_mvcur_init (void);
 extern NCURSES_EXPORT(void) _nc_mvcur_resume (void);
 extern NCURSES_EXPORT(void) _nc_mvcur_wrap (void);
@@ -1968,6 +1966,7 @@ extern NCURSES_EXPORT(int) _nc_getenv_num (const char *);
 extern NCURSES_EXPORT(int) _nc_keypad (SCREEN *, int);
 extern NCURSES_EXPORT(int) _nc_ospeed (int);
 extern NCURSES_EXPORT(int) _nc_outch (int);
+extern NCURSES_EXPORT(int) _nc_putchar (int);
 extern NCURSES_EXPORT(int) _nc_putp(const char *, const char *);
 extern NCURSES_EXPORT(int) _nc_putp_flush(const char *, const char *);
 extern NCURSES_EXPORT(int) _nc_read_termcap_entry (const char *const, TERMTYPE *const);
@@ -2278,7 +2277,7 @@ extern NCURSES_EXPORT(int)      TINFO_MVCUR(SCREEN*, int, int, int, int);
 #else
 #define TINFO_HAS_KEY           NCURSES_SP_NAME(has_key)
 #define TINFO_DOUPDATE          NCURSES_SP_NAME(doupdate)
-#define TINFO_MVCUR             NCURSES_SP_NAME(mvcur)
+#define TINFO_MVCUR             NCURSES_SP_NAME(_nc_mvcur)
 #endif
 
 /*
@@ -2351,7 +2350,9 @@ extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_curs_set)(SCREEN*,int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_get_tty_mode)(SCREEN*,TTY*);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_mcprint)(SCREEN*,char*, int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_msec_cost)(SCREEN*, const char *, int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_mvcur)(SCREEN*, int, int, int, int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_outch)(SCREEN*, int);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_putchar)(SCREEN*, int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_putp)(SCREEN*, const char *, const char*);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_putp_flush)(SCREEN*, const char *, const char *);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_resetty)(SCREEN*);

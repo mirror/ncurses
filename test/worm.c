@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.62 2012/12/15 18:32:40 tom Exp $
+  $Id: worm.c,v 1.63 2013/01/13 01:00:11 tom Exp $
 */
 
 #include <test.priv.h>
@@ -502,7 +502,7 @@ main(int argc, char *argv[])
 
 #define SET_COLOR(num, fg) \
 	    init_pair(num+1, (short) fg, (short) bg); \
-	    flavor[num] |= COLOR_PAIR(num+1) | A_BOLD
+	    flavor[num] |= (chtype) COLOR_PAIR(num+1) | A_BOLD
 
 	SET_COLOR(0, COLOR_GREEN);
 	SET_COLOR(1, COLOR_RED);

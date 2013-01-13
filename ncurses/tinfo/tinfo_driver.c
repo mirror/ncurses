@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.26 2013/01/05 23:25:36 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.29 2013/01/12 22:01:43 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -184,22 +184,18 @@ drv_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB, int beepFlag)
     /* FIXME: should make sure that we are not in altchar mode */
     if (beepFlag) {
 	if (bell) {
-	    res = NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx "bell", bell);
+	    res = NCURSES_PUTP2("bell", bell);
 	    NCURSES_SP_NAME(_nc_flush) (sp);
 	} else if (flash_screen) {
-	    res = NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-					     "flash_screen",
-					     flash_screen);
+	    res = NCURSES_PUTP2("flash_screen", flash_screen);
 	    NCURSES_SP_NAME(_nc_flush) (sp);
 	}
     } else {
 	if (flash_screen) {
-	    res = NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-					     "flash_screen",
-					     flash_screen);
+	    res = NCURSES_PUTP2("flash_screen", flash_screen);
 	    NCURSES_SP_NAME(_nc_flush) (sp);
 	} else if (bell) {
-	    res = NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx "bell", bell);
+	    res = NCURSES_PUTP2("bell", bell);
 	    NCURSES_SP_NAME(_nc_flush) (sp);
 	}
     }
@@ -315,7 +311,7 @@ drv_rescol(TERMINAL_CONTROL_BLOCK * TCB)
     SetSP();
 
     if (orig_pair != 0) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx "orig_pair", orig_pair);
+	NCURSES_PUTP2("orig_pair", orig_pair);
 	result = TRUE;
     }
     return result;
@@ -331,7 +327,7 @@ drv_rescolors(TERMINAL_CONTROL_BLOCK * TCB)
     SetSP();
 
     if (orig_colors != 0) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx "orig_colors", orig_colors);
+	NCURSES_PUTP2("orig_colors", orig_colors);
 	result = TRUE;
     }
     return result;
@@ -693,12 +689,11 @@ drv_initpair(TERMINAL_CONTROL_BLOCK * TCB, int pair, int f, int b)
 	    tp[f].red, tp[f].green, tp[f].blue,
 	    tp[b].red, tp[b].green, tp[b].blue));
 
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-				   "initialize_pair",
-				   TPARM_7(initialize_pair,
-					   pair,
-					   tp[f].red, tp[f].green, tp[f].blue,
-					   tp[b].red, tp[b].green, tp[b].blue));
+	NCURSES_PUTP2("initialize_pair",
+		      TPARM_7(initialize_pair,
+			      pair,
+			      tp[f].red, tp[f].green, tp[f].blue,
+			      tp[b].red, tp[b].green, tp[b].blue));
     }
 }
 
@@ -730,9 +725,8 @@ drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
 
     AssertTCB();
     if (initialize_color != NULL) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-				   "initialize_color",
-				   TPARM_4(initialize_color, color, r, g, b));
+	NCURSES_PUTP2("initialize_color",
+		      TPARM_4(initialize_color, color, r, g, b));
     }
 }
 
@@ -896,7 +890,7 @@ drv_mvcur(TERMINAL_CONTROL_BLOCK * TCB, int yold, int xold, int ynew, int xnew)
 {
     SCREEN *sp = TCB->csp;
     AssertTCB();
-    return TINFO_MVCUR(sp, yold, xold, ynew, xnew);
+    return NCURSES_SP_NAME(_nc_mvcur) (sp, yold, xold, ynew, xnew);
 }
 
 static void
@@ -906,9 +900,8 @@ drv_hwlabel(TERMINAL_CONTROL_BLOCK * TCB, int labnum, char *text)
 
     AssertTCB();
     if (labnum > 0 && labnum <= num_labels) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx
-				   "plab_norm",
-				   TPARM_2(plab_norm, labnum, text));
+	NCURSES_PUTP2("plab_norm",
+		      TPARM_2(plab_norm, labnum, text));
     }
 }
 
@@ -919,9 +912,9 @@ drv_hwlabelOnOff(TERMINAL_CONTROL_BLOCK * TCB, int OnFlag)
 
     AssertTCB();
     if (OnFlag) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx "label_on", label_on);
+	NCURSES_PUTP2("label_on", label_on);
     } else {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx "label_off", label_off);
+	NCURSES_PUTP2("label_off", label_off);
     }
 }
 
@@ -986,7 +979,7 @@ drv_initacs(TERMINAL_CONTROL_BLOCK * TCB, chtype *real_map, chtype *fake_map)
     AssertTCB();
     assert(sp != 0);
     if (ena_acs != NULL) {
-	NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx "ena_acs", ena_acs);
+	NCURSES_PUTP2("ena_acs", ena_acs);
     }
 #if NCURSES_EXT_FUNCS
     /*
@@ -1223,7 +1216,7 @@ __nc_putp(SCREEN *sp, const char *name GCC_UNUSED, const char *value)
     int rc = ERR;
 
     if (value) {
-	rc = NCURSES_SP_NAME(_nc_putp) (NCURSES_SP_ARGx name, value);
+	rc = NCURSES_PUTP2(name, value);
     }
     return rc;
 }

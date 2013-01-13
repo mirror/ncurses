@@ -949,8 +949,6 @@
 ./ncurses/tty/lib_tstp.c
 ./ncurses/tty/lib_twait.c
 ./ncurses/tty/lib_vidattr.c
-./ncurses/tty/tty_display.h
-./ncurses/tty/tty_input.h
 ./ncurses/tty/tty_update.c
 ./ncurses/wcwidth.h
 ./ncurses/widechar/charable.c
@@ -1107,6 +1105,8 @@
 ./test/test_instr.c
 ./test/test_inwstr.c
 ./test/test_opaque.c
+./test/test_vid_puts.c
+./test/test_vidputs.c
 ./test/testaddch.c
 ./test/testcurs.c
 ./test/testscanw.c

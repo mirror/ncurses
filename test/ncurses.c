@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.386 2012/12/29 23:37:55 tom Exp $
+$Id: ncurses.c,v 1.387 2013/01/13 00:40:17 tom Exp $
 
 ***************************************************************************/
 
@@ -3908,7 +3908,7 @@ test_sgr_attributes(void)
 	/* Use non-default colors if possible to exercise bce a little */
 	if (use_colors) {
 	    init_pair(1, COLOR_WHITE, COLOR_BLUE);
-	    normal |= COLOR_PAIR(1);
+	    normal |= (chtype) COLOR_PAIR(1);
 	}
 	bkgdset(normal);
 	erase();

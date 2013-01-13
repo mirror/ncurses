@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2013 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -25,63 +25,124 @@
  * sale, use or other dealings in this Software without prior written       *
  * authorization.                                                           *
  ****************************************************************************/
-
-/****************************************************************************
- *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
- *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-on                 *
- *     and: Juergen Pfeifer                         2009                    *
- ****************************************************************************/
-
 /*
- *	flash.c
+ * $Id: test_vidputs.c,v 1.3 2013/01/13 00:58:54 tom Exp $
  *
- *	The routine flash().
- *
+ * Demonstrate the vidputs and vidattr functions.
+ * Thomas Dickey - 2013/01/12
  */
 
-#include <curses.priv.h>
+#define USE_TINFO
+#include <test.priv.h>
 
-#ifndef CUR
-#define CUR SP_TERMTYPE
-#endif
+#if HAVE_SETUPTERM
 
-MODULE_ID("$Id: lib_flash.c,v 1.13 2013/01/12 17:26:07 tom Exp $")
+#define valid(s) ((s != 0) && s != (char *)-1)
 
-/*
- *	flash()
- *
- *	Flash the current terminal's screen if possible.   If not,
- *	sound the audible bell if one exists.
- *
- */
+static FILE *my_fp;
+static bool p_opt = FALSE;
 
-NCURSES_EXPORT(int)
-NCURSES_SP_NAME(flash) (NCURSES_SP_DCL0)
+static
+TPUTS_PROTO(outc, c)
 {
-    int res = ERR;
+    int rc = c;
 
-    T((T_CALLED("flash(%p)"), (void *) SP_PARM));
-#ifdef USE_TERM_DRIVER
-    if (SP_PARM != 0)
-	res = CallDriver_1(SP_PARM, doBeepOrFlash, FALSE);
-#else
-    if (HasTerminal(SP_PARM)) {
-	/* FIXME: should make sure that we are not in altchar mode */
-	if (flash_screen) {
-	    res = NCURSES_PUTP2_FLUSH("flash_screen", flash_screen);
-	} else if (bell) {
-	    res = NCURSES_PUTP2_FLUSH("bell", bell);
-	}
-    }
-#endif
-    returnCode(res);
+    rc = putc(c, my_fp);
+    TPUTS_RETURN(rc);
 }
 
-#if NCURSES_SP_FUNCS
-NCURSES_EXPORT(int)
-flash(void)
+static bool
+outs(char *s)
 {
-    return NCURSES_SP_NAME(flash) (CURRENT_SCREEN);
+    if (valid(s)) {
+	tputs(s, 1, outc);
+	return TRUE;
+    }
+    return FALSE;
+}
+
+static void
+cleanup(void)
+{
+    outs(exit_attribute_mode);
+    if (!outs(orig_colors))
+	outs(orig_pair);
+    outs(cursor_normal);
+}
+
+static void
+change_attr(chtype attr)
+{
+    if (p_opt) {
+	vidputs(attr, outc);
+    } else {
+	vidattr(attr);
+    }
+}
+
+static void
+test_vidputs(void)
+{
+    fprintf(my_fp, "Name: ");
+    change_attr(A_BOLD);
+    fputs("Bold", my_fp);
+    change_attr(A_REVERSE);
+    fputs(" Reverse", my_fp);
+    change_attr(A_NORMAL);
+    fputs("\n", my_fp);
+}
+
+static void
+usage(void)
+{
+    static const char *tbl[] =
+    {
+	"Usage: test_vidputs [options]"
+	,""
+	,"Options:"
+	,"  -e      use stderr (default stdout)"
+	,"  -p      use vidputs (default vidattr)"
+    };
+    unsigned n;
+    for (n = 0; n < SIZEOF(tbl); ++n)
+	fprintf(stderr, "%s\n", tbl[n]);
+    ExitProgram(EXIT_FAILURE);
+}
+
+int
+main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+{
+    int ch;
+
+    my_fp = stdout;
+
+    while ((ch = getopt(argc, argv, "ep")) != -1) {
+	switch (ch) {
+	case 'e':
+	    my_fp = stderr;
+	    break;
+	case 'p':
+	    p_opt = TRUE;
+	    break;
+	default:
+	    usage();
+	    break;
+	}
+    }
+    if (optind < argc)
+	usage();
+
+    setupterm((char *) 0, 1, (int *) 0);
+    test_vidputs();
+    cleanup();
+    ExitProgram(EXIT_SUCCESS);
+}
+#else
+int
+main(int argc GCC_UNUSED,
+     char *argv[]GCC_UNUSED)
+{
+    fprintf(stderr, "This program requires terminfo\n");
+    exit(EXIT_FAILURE);
 }
 #endif
