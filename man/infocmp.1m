@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.51 2012/05/26 21:32:01 tom Exp $
+.\" $Id: infocmp.1m,v 1.52 2013/01/19 21:23:07 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -130,6 +130,16 @@ the \fBtermcap\fR format.
 parameterized information, and anything not converted will be plainly marked in
 the output and commented out.
 These should be edited by hand.
+.PP
+For best results when converting to \fBtermcap\fP format,
+you should use both \fB\-C\fP and \fB\-r\fP.
+Normally a termcap description is limited to 1023 bytes.
+@INFOCMP@ trims away less essential parts to make it fit.
+If you are converting to one of the (rare) termcap implementations
+which accept an unlimited size of termcap,
+you may want to add the \fB\-T\fP option.
+More often however, you must help the termcap implementation,
+and trim excess whitespace (use the \fB\-0\fP option for that).
 .PP
 All padding information for strings will be collected together and placed
 at the beginning of the string where \fBtermcap\fR expects it.
@@ -477,6 +487,8 @@ The \fB\-F\fR option of \fB@INFOCMP@\fR(1M) should be a \fB@TOE@\fR(1M) mode.
 \fB@TOE@\fR(1M),
 \fBcurses\fR(3X),
 \fBterminfo\fR(\*n).
+.sp
+http://invisible-island.net/ncurses/tctest.html
 .PP
 This describes \fBncurses\fR
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).

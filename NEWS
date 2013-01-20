@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2010 2013/01/12 18:12:21 tom Exp $
+-- $Id: NEWS,v 1.2014 2013/01/20 01:05:06 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130119
+	+ fixes for issues found by Coverity:
+	  + fix memory leak in safe_sprintf.c
+	  + add check for return-value in tty_update.c
+	  + correct initialization for -s option in test/view.c
+	  + add check for numeric overflow in lib_instr.c
+	  + improve error-checking in copywin
+	+ add advice in infocmp manpage for termcap users (Debian #698469).
+	+ add "-y" option to test/demo_termcap and test/demo_terminfo to
+	  demonstrate behavior with/without extended capabilities.
+	+ updated termcap manpage to document legacy termcap behavior for
+	  matching capability names.
+	+ modify name-comparison for tgetstr, etc., to accommodate legacy
+	  applications as well as to improve compatbility with BSD 4.2
+	  termcap implementations (Debian #698299) (cf: 980725).
 
 20130112
 	+ correct prototype in manpage for vid_puts.

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_overlay.c,v 1.29 2009/10/24 23:21:31 tom Exp $")
+MODULE_ID("$Id: lib_overlay.c,v 1.30 2013/01/19 22:31:19 tom Exp $")
 
 static int
 overlap(const WINDOW *const src, WINDOW *const dst, int const flag)
@@ -160,6 +160,7 @@ copywin(const WINDOW *src, WINDOW *dst,
 	/* make sure rectangle exists in source */
 	if ((sminrow + dmaxrow - dminrow) <= (src->_maxy + 1) &&
 	    (smincol + dmaxcol - dmincol) <= (src->_maxx + 1)) {
+	    bool copied = FALSE;
 
 	    T(("rectangle exists in source"));
 
@@ -172,10 +173,18 @@ copywin(const WINDOW *src, WINDOW *dst,
 		     dy <= dmaxrow;
 		     sy++, dy++) {
 
+		    if (dy < 0 || sy < 0)
+			continue;
+
 		    touched = FALSE;
 		    for (dx = dmincol, sx = smincol;
 			 dx <= dmaxcol;
 			 sx++, dx++) {
+
+			if (dx < 0 || sx < 0)
+			    continue;
+			copied = TRUE;
+
 			if (over) {
 			    if ((CharOf(src->_line[sy].text[sx]) != L(' ')) &&
 				(!CharEq(dst->_line[dy].text[dx],
@@ -201,7 +210,8 @@ copywin(const WINDOW *src, WINDOW *dst,
 		    }
 		}
 		T(("finished copywin"));
-		rc = OK;
+		if (copied)
+		    rc = OK;
 	    }
 	}
 	_nc_unlock_global(curses);

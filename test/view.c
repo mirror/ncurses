@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.91 2013/01/13 01:00:44 tom Exp $
+ * $Id: view.c,v 1.92 2013/01/20 00:11:24 tom Exp $
  */
 
 #include <test.priv.h>
@@ -233,7 +233,7 @@ main(int argc, char *argv[])
     int value = 0;
     bool done = FALSE;
     bool got_number = FALSE;
-    bool single_step = TRUE;
+    bool single_step = FALSE;
 #if CAN_RESIZE
     bool nonposix_resize = FALSE;
 #endif

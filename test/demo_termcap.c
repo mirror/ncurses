@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.22 2012/07/07 23:37:27 tom Exp $
+ * $Id: demo_termcap.c,v 1.23 2013/01/19 19:30:52 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -337,6 +337,9 @@ usage(void)
 	" -q       quiet (prints only counts)",
 	" -r COUNT repeat for given count",
 	" -s       print string-capabilities",
+#ifdef NCURSES_VERSION
+	" -y       disable extended capabilities",
+#endif
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
@@ -357,7 +360,7 @@ main(int argc, char *argv[])
     int repeat;
     int r_opt = 1;
 
-    while ((n = getopt(argc, argv, "abd:e:nqr:s")) != -1) {
+    while ((n = getopt(argc, argv, "abd:e:nqr:sy")) != -1) {
 	switch (n) {
 	case 'a':
 	    a_opt = TRUE;
@@ -384,6 +387,11 @@ main(int argc, char *argv[])
 	case 's':
 	    s_opt = TRUE;
 	    break;
+#ifdef NCURSES_VERSION
+	case 'y':
+	    use_extended_names(FALSE);
+	    break;
+#endif
 	default:
 	    usage();
 	    break;

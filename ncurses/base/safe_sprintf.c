@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,13 +27,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1997                        *
+ *  Author: Thomas E. Dickey        1997-on                                 *
  ****************************************************************************/
 
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: safe_sprintf.c,v 1.26 2012/02/22 22:40:24 tom Exp $")
+MODULE_ID("$Id: safe_sprintf.c,v 1.27 2013/01/20 01:04:32 tom Exp $")
 
 #if USE_SAFE_SPRINTF
 
@@ -114,6 +114,7 @@ _nc_printf_length(const char *fmt, va_list ap)
 				"%d", ival);
 		    fmt_len += strlen(fmt_arg);
 		    if ((format = _nc_doalloc(format, fmt_len)) == 0) {
+			free(buffer);
 			return -1;
 		    }
 		    --f;

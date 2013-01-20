@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.274 2013/01/12 17:24:22 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.275 2013/01/20 00:34:46 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -491,11 +491,12 @@ can_clear_with(NCURSES_SP_DCLx ARG_CH_T ch)
 	    return FALSE;
 	if ((pair = GetPair(CHDEREF(ch))) != 0) {
 	    short fg, bg;
-	    NCURSES_SP_NAME(pair_content) (NCURSES_SP_ARGx
-					   (short) pair,
-					   &fg, &bg);
-	    if (fg != C_MASK || bg != C_MASK)
+	    if (NCURSES_SP_NAME(pair_content) (NCURSES_SP_ARGx
+					       (short) pair,
+					       &fg, &bg) == ERR
+		|| (fg != C_MASK || bg != C_MASK)) {
 		return FALSE;
+	    }
 	}
 #else
 	if (AttrOfD(ch) & A_COLOR)

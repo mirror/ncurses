@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.78 2012/02/22 22:34:31 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.79 2013/01/19 18:20:05 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -62,6 +62,15 @@ NCURSES_EXPORT_VAR(char *) BC = 0;
 #define LAST_BUF MyCache[CacheInx].last_bufp
 #define LAST_USE MyCache[CacheInx].last_used
 #define LAST_SEQ MyCache[CacheInx].sequence
+
+/*
+ * Termcap names are matched only using the first two bytes.
+ * Ignore any extended names longer than two bytes, to avoid problems
+ * with legacy code which passes in parameters whose use is long forgotten.
+ */
+#define ValidCap(cap) (((cap)[0] != '\0') && ((cap)[1] != '\0'))
+#define SameCap(a,b)  (((a)[0] == (b)[0]) && ((a)[1] == (b)[1]))
+#define ValidExt(ext) (ValidCap(ext) && (ext)[2] == '\0')
 
 /***************************************************************************
  *
@@ -202,12 +211,13 @@ tgetent(char *bufp, const char *name)
 static bool
 same_tcname(const char *a, const char *b)
 {
-    fprintf(stderr, "compare(%s,%s)\n", a, b);
-    return !strncmp(a, b, (size_t) 2);
+    bool code = SameCap(a, b);
+    fprintf(stderr, "compare(%s,%s) %s\n", a, b, code ? "same" : "diff");
+    return code;
 }
 
 #else
-#define same_tcname(a,b) !strncmp(a, b, (size_t) 2)
+#define same_tcname(a,b) SameCap(a,b)
 #endif
 
 /***************************************************************************
@@ -226,7 +236,7 @@ NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
     int i, j;
 
     T((T_CALLED("tgetflag(%p, %s)"), (void *) SP_PARM, id));
-    if (HasTInfoTerminal(SP_PARM)) {
+    if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;
 
@@ -239,7 +249,7 @@ NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 	    j = -1;
 	    for_each_ext_boolean(i, tp) {
 		const char *capname = ExtBoolname(tp, i, boolcodes);
-		if (same_tcname(id, capname)) {
+		if (same_tcname(id, capname) && ValidExt(capname)) {
 		    j = i;
 		    break;
 		}
@@ -278,7 +288,7 @@ NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
     int i, j;
 
     T((T_CALLED("tgetnum(%p, %s)"), (void *) SP_PARM, id));
-    if (HasTInfoTerminal(SP_PARM)) {
+    if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;
 
@@ -291,7 +301,7 @@ NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 	    j = -1;
 	    for_each_ext_number(i, tp) {
 		const char *capname = ExtNumname(tp, i, numcodes);
-		if (same_tcname(id, capname)) {
+		if (same_tcname(id, capname) && ValidExt(capname)) {
 		    j = i;
 		    break;
 		}
@@ -330,7 +340,7 @@ NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
     int i, j;
 
     T((T_CALLED("tgetstr(%s,%p)"), id, (void *) area));
-    if (HasTInfoTerminal(SP_PARM)) {
+    if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;
 
@@ -343,7 +353,7 @@ NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 	    j = -1;
 	    for_each_ext_string(i, tp) {
 		const char *capname = ExtStrname(tp, i, strcodes);
-		if (same_tcname(id, capname)) {
+		if (same_tcname(id, capname) && ValidExt(capname)) {
 		    j = i;
 		    break;
 		}

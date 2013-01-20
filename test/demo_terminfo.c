@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.15 2012/12/29 23:36:22 tom Exp $
+ * $Id: demo_terminfo.c,v 1.16 2013/01/19 19:30:58 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -325,6 +325,7 @@ usage(void)
 	" -s       print string-capabilities",
 #ifdef NCURSES_VERSION
 	" -x       print extended capabilities",
+	" -y       disable extended capabilities",
 #endif
     };
     unsigned n;
@@ -341,8 +342,11 @@ main(int argc, char *argv[])
     int repeat;
     char *name;
     int r_opt = 1;
+#ifdef NCURSES_VERSION
+    bool xy_opt = TRUE;		/* by default, use_extended_names is true */
+#endif
 
-    while ((n = getopt(argc, argv, "bd:e:fnqr:sx")) != -1) {
+    while ((n = getopt(argc, argv, "bd:e:fnqr:sxy")) != -1) {
 	switch (n) {
 	case 'b':
 	    b_opt = TRUE;
@@ -372,7 +376,10 @@ main(int argc, char *argv[])
 #ifdef NCURSES_VERSION
 	case 'x':
 	    x_opt = TRUE;
-	    use_extended_names(TRUE);
+	    xy_opt = TRUE;
+	    break;
+	case 'y':
+	    xy_opt = FALSE;
 	    break;
 #endif
 	default:
@@ -380,6 +387,10 @@ main(int argc, char *argv[])
 	    break;
 	}
     }
+
+#ifdef NCURSES_VERSION
+    use_extended_names(xy_opt);
+#endif
 
     if (!(b_opt || n_opt || s_opt || x_opt)) {
 	b_opt = TRUE;
