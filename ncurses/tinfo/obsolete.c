@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2013 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,22 +27,16 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
- *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-on                 *
- *     and: Juergen Pfeifer                         2008                    *
+ *  Author: Thomas E. Dickey                        2013                    *
  ****************************************************************************/
 
 /*
-**	setbuf.c
-**
-**	Support for set_term(), reset_shell_mode(), reset_prog_mode().
-**
+**	Support for obsolete features.
 */
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: setbuf.c,v 1.19 2012/08/25 20:48:05 tom Exp $")
+MODULE_ID("$Id: obsolete.c,v 1.1 2013/01/26 22:07:51 tom Exp $")
 
 /*
  * Obsolete entrypoint retained for binary compatbility.
@@ -64,3 +58,45 @@ _nc_set_buffer(FILE *ofp, int buffered)
     NCURSES_SP_NAME(_nc_set_buffer) (CURRENT_SCREEN, ofp, buffered);
 }
 #endif
+
+#if !HAVE_STRDUP
+NCURSES_EXPORT(char *)
+_nc_strdup(const char *s)
+{
+    char *result = 0;
+    if (s != 0) {
+	size_t need = strlen(s);
+	result = malloc(need + 1);
+	if (result != 0) {
+	    strcpy(result, s);
+	}
+    }
+    return result;
+}
+#endif
+
+#if USE_MY_MEMMOVE
+#define DST ((char *)s1)
+#define SRC ((const char *)s2)
+NCURSES_EXPORT(void *)
+_nc_memmove(void *s1, const void *s2, size_t n)
+{
+    if (n != 0) {
+	if ((DST + n > SRC) && (SRC + n > DST)) {
+	    static char *bfr;
+	    static size_t length;
+	    register size_t j;
+	    if (length < n) {
+		length = (n * 3) / 2;
+		bfr = typeRealloc(char, length, bfr);
+	    }
+	    for (j = 0; j < n; j++)
+		bfr[j] = SRC[j];
+	    s2 = bfr;
+	}
+	while (n-- != 0)
+	    DST[n] = SRC[n];
+    }
+    return s1;
+}
+#endif /* USE_MY_MEMMOVE */

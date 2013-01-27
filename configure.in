@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.560 2012/11/03 19:39:31 tom Exp $
+dnl $Id: configure.in,v 1.562 2013/01/26 20:59:15 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.560 $)
+AC_REVISION($Revision: 1.562 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -45,11 +45,7 @@ CF_SUBST_NCURSES_VERSION
 CF_WITH_REL_VERSION(NCURSES)
 CF_WITH_ABI_VERSION
 
-CF_CHECK_CACHE([AC_CANONICAL_SYSTEM])
-AC_ARG_WITH(system-type,
-[  --with-system-type=XXX  test: override derived host system-type],
-[AC_MSG_WARN(overriding system type to $withval)
- cf_cv_system_name=$withval])
+CF_WITH_SYSTYPE
 
 ###	Save the given $CFLAGS to allow user-override.
 cf_user_CFLAGS="$CFLAGS"
@@ -479,7 +475,7 @@ AC_SUBST(WHICH_XTERM)
 
 AC_MSG_CHECKING(if xterm backspace sends BS or DEL)
 AC_ARG_WITH(xterm-kbs,
-	[  --with-xterm-kbs=XXX     specify if xterm backspace sends BS or DEL],
+	[  --with-xterm-kbs=XXX    specify if xterm backspace sends BS or DEL],
 	[with_xterm_kbs=$withval],
 	[with_xterm_kbs=BS])
 case x$with_xterm_kbs in
@@ -1409,6 +1405,7 @@ setenv \
 setvbuf \
 sigaction \
 sigvec \
+strdup \
 strstr \
 tcgetpgrp \
 times \
@@ -1438,6 +1435,7 @@ AC_TYPE_SIGNAL
 AC_CHECK_TYPE(intptr_t, long)
 CF_TYPE_SIGACTION
 CF_SIZECHANGE
+CF_FUNC_MEMMOVE
 CF_FUNC_POLL
 CF_VA_COPY
 AC_FUNC_VFORK

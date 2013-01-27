@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.57 2012/11/03 19:42:04 tom Exp $
+# $Id: ncurses_defs,v 1.58 2013/01/26 20:12:26 tom Exp $
 ##############################################################################
-# Copyright (c) 2000-2011,2012 Free Software Foundation, Inc.                #
+# Copyright (c) 2000-2012,2013 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -128,6 +128,7 @@ HAVE_SLK_COLOR
 HAVE_SLK_INIT	1
 HAVE_SNPRINTF
 HAVE_STDINT_H
+HAVE_STRDUP
 HAVE_STRLCAT
 HAVE_STRLCPY
 HAVE_STRSTR
@@ -207,6 +208,8 @@ USE_HASHED_DB
 USE_HASHMAP
 USE_HOME_TERMINFO
 USE_LINKS
+USE_MY_MEMMOVE
+USE_OK_BCOPY
 USE_PTHREADS_EINTR
 USE_RCS_IDS
 USE_REENTRANT

@@ -28,24 +28,20 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.45 2012/10/06 22:42:31 tom Exp $
+dnl $Id: configure.in,v 1.46 2013/01/26 21:26:06 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.45 $)
+AC_REVISION($Revision: 1.46 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
 CF_TOP_BUILDDIR
 
-CF_CHECK_CACHE([AC_CANONICAL_SYSTEM])
-AC_ARG_WITH(system-type,
-[  --with-system-type=XXX  test: override derived host system-type],
-[AC_MSG_WARN(overriding system type to $withval)
- cf_cv_system_name=$withval])
+CF_WITH_SYSTYPE
 
 ###	Save the given $CFLAGS to allow user-override.
 cf_user_CFLAGS="$CFLAGS"

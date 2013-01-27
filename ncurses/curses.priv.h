@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.521 2013/01/12 21:53:35 tom Exp $
+ * $Id: curses.priv.h,v 1.523 2013/01/26 21:51:56 tom Exp $
  *
  *	curses.priv.h
  *
@@ -85,6 +85,12 @@ extern "C" {
 #include <stdio.h>
 
 #include <errno.h>
+
+#if defined __hpux
+#  ifndef EILSEQ
+#    define EILSEQ 47
+#  endif
+#endif
 
 #ifndef PATH_MAX
 # if defined(_POSIX_PATH_MAX)
@@ -182,6 +188,17 @@ extern int errno;
 #else
 #define use_terminfo_vars() _nc_env_access()
 extern NCURSES_EXPORT(int) _nc_env_access (void);
+#endif
+
+/*
+ * Not all platforms have memmove; some have an equivalent bcopy.  (Some may
+ * have neither).
+ */
+#if USE_OK_BCOPY
+#define memmove(d,s,n) bcopy(s,d,n)
+#elif USE_MY_MEMMOVE
+#define memmove(d,s,n) _nc_memmove(d,s,n)
+extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
 #endif
 
 /*

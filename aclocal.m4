@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.644 2012/12/23 00:45:32 tom Exp $
+dnl $Id: aclocal.m4,v 1.648 2013/01/26 21:29:17 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1306,7 +1306,7 @@ AC_ARG_ENABLE(rpath,
 AC_MSG_RESULT($cf_cv_enable_rpath)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_STRING_HACKS version: 2 updated: 2012/10/06 17:56:13
+dnl CF_ENABLE_STRING_HACKS version: 3 updated: 2013/01/26 16:26:12
 dnl ----------------------
 dnl On a few platforms, the compiler and/or loader nags with untruthful
 dnl comments stating that "most" uses of strcat/strcpy/sprintf are incorrect,
@@ -1325,7 +1325,7 @@ AC_DEFUN([CF_ENABLE_STRING_HACKS],
 [
 AC_MSG_CHECKING(if you want to work around bogus compiler/loader warnings)
 AC_ARG_ENABLE(string-hacks,
-	[  --enable-string-hacks  work around bogus compiler/loader warnings],
+	[  --enable-string-hacks   work around bogus compiler/loader warnings],
 	[with_string_hacks=$enableval],
 	[with_string_hacks=no])
 AC_MSG_RESULT($with_string_hacks)
@@ -1564,6 +1564,37 @@ else
 	AC_MSG_ERROR(Cannot find dlsym function)
 fi
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_FUNC_MEMMOVE version: 8 updated: 2012/10/04 20:12:20
+dnl ---------------
+dnl Check for memmove, or a bcopy that can handle overlapping copy.  If neither
+dnl is found, add our own version of memmove to the list of objects.
+AC_DEFUN([CF_FUNC_MEMMOVE],
+[
+AC_CHECK_FUNC(memmove,,[
+AC_CHECK_FUNC(bcopy,[
+	AC_CACHE_CHECK(if bcopy does overlapping moves,cf_cv_good_bcopy,[
+		AC_TRY_RUN([
+int main() {
+	static char data[] = "abcdefghijklmnopqrstuwwxyz";
+	char temp[40];
+	bcopy(data, temp, sizeof(data));
+	bcopy(temp+10, temp, 15);
+	bcopy(temp+5, temp+15, 10);
+	${cf_cv_main_return:-return} (strcmp(temp, "klmnopqrstuwwxypqrstuwwxyz"));
+}
+		],
+		[cf_cv_good_bcopy=yes],
+		[cf_cv_good_bcopy=no],
+		[cf_cv_good_bcopy=unknown])
+		])
+	],[cf_cv_good_bcopy=no])
+	if test "$cf_cv_good_bcopy" = yes ; then
+		AC_DEFINE(USE_OK_BCOPY,1,[Define to 1 to use bcopy when memmove is unavailable])
+	else
+		AC_DEFINE(USE_MY_MEMMOVE,1,[Define to 1 to use replacement function when memmove is unavailable])
+	fi
+])])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FUNC_NANOSLEEP version: 4 updated: 2012/10/06 17:56:13
 dnl -----------------
@@ -5227,7 +5258,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 71 updated: 2012/12/22 19:34:47
+dnl CF_SHARED_OPTS version: 72 updated: 2013/01/26 16:26:12
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5349,6 +5380,14 @@ CF_EOF
 		if test $cf_cv_ldflags_search_paths_first = yes; then
 			LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
 		fi
+		;;
+	hpux[[7-8]]*) #(vi
+		# HP-UX 8.07 ld lacks "+b" option used for libdir search-list 
+		if test "$GCC" != yes; then
+			CC_SHARED_OPTS='+Z'
+		fi
+		MK_SHARED_LIB='${LD} -b -o $[@]'
+		INSTALL_LIB="-m 555"
 		;;
 	hpux*) #(vi
 		# (tested with gcc 2.7.2 -- I don't have c89)
@@ -6904,6 +6943,26 @@ AC_ARG_WITH(sysmouse,
 AC_MSG_RESULT($cf_with_sysmouse)
 test "$cf_with_sysmouse" = yes && AC_DEFINE(USE_SYSMOUSE,1,[Define to 1 if we can/should use the sysmouse interface])
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_SYSTYPE version: 1 updated: 2013/01/26 16:26:12
+dnl ---------------
+dnl For testing, override the derived host system-type which is used to decide
+dnl things such as the linker commands used to build shared libraries.  This is
+dnl normally chosen automatically based on the type of system which you are
+dnl building on.  We use it for testing the configure script.
+dnl
+dnl This is different from the --host option: it is used only for testing parts
+dnl of the configure script which would not be reachable with --host since that
+dnl relies on the build environment being real, rather than mocked up.
+AC_DEFUN([CF_WITH_SYSTYPE],[
+CF_CHECK_CACHE([AC_CANONICAL_SYSTEM])
+AC_ARG_WITH(system-type,
+	[  --with-system-type=XXX  test: override derived host system-type],
+[AC_MSG_WARN(overriding system type to $withval)
+	cf_cv_system_name=$withval
+	host_os=$withval
+])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_WITH_VALGRIND version: 1 updated: 2006/12/14 18:00:21

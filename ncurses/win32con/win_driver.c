@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.16 2013/01/05 23:16:54 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.17 2013/01/27 00:47:42 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -70,6 +70,7 @@ static const LONG keylist[] =
 typedef struct props {
     CONSOLE_SCREEN_BUFFER_INFO SBI;
     bool progMode;
+    TERM_HANDLE lastOut;
     DWORD map[MAPSIZE];
     DWORD rmap[MAPSIZE];
     WORD pairs[NUMPAIRS];
@@ -323,6 +324,15 @@ find_next_change(SCREEN *sp, int row, int col)
 		win->_line[row].firstchar = _NOCHANGE; \
 		win->_line[row].lastchar  = _NOCHANGE
 
+static void
+selectActiveHandle(TERMINAL_CONTROL_BLOCK * TCB)
+{
+    if (PropOf(TCB)->lastOut != TCB->hdl) {
+	PropOf(TCB)->lastOut = TCB->hdl;
+	SetConsoleActiveScreenBuffer(PropOf(TCB)->lastOut);
+    }
+}
+
 static int
 drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 {
@@ -431,7 +441,7 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 
 	TCB->drv->hwcur(TCB, 0, 0, CurScreen(sp)->_cury, CurScreen(sp)->_curx);
     }
-    SetConsoleActiveScreenBuffer(TCB->hdl);
+    selectActiveHandle(TCB);
     return OK;
 }
 
@@ -668,7 +678,8 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
     sp = TCB->csp;
 
     PropOf(TCB)->progMode = progFlag;
-    SetConsoleActiveScreenBuffer(progFlag ? TCB->hdl : TCB->out);
+    PropOf(TCB)->lastOut = progFlag ? TCB->hdl : TCB->out;
+    SetConsoleActiveScreenBuffer(PropOf(TCB)->lastOut);
 
     if (progFlag) /* prog mode */  {
 	if (defFlag) {
@@ -1178,8 +1189,7 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
 			    }
 			    continue;
 			default:
-			    SetConsoleActiveScreenBuffer(!PropOf(TCB)->progMode ?
-							 TCB->hdl : TCB->out);
+			    selectActiveHandle(TCB);
 			    continue;
 			}
 		    }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.10 2012/12/16 00:40:14 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.11 2013/01/26 22:00:11 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -58,6 +58,23 @@ MODULE_ID("$Id: make_hash.c,v 1.10 2012/12/16 00:40:14 tom Exp $")
 #undef MODULE_ID
 #define MODULE_ID(id)		/*nothing */
 #include <tinfo/doalloc.c>
+
+static void
+failed(const char *s)
+{
+    perror(s);
+    exit(EXIT_FAILURE);
+}
+
+static char *
+strmalloc(char *s)
+{
+    char *result = malloc(strlen(s) + 1);
+    if (result == 0)
+    	failed("strmalloc");
+    strcpy(result, s);
+    return result;
+}
 
 /*
  *	int hash_function(string)
@@ -221,7 +238,7 @@ main(int argc, char **argv)
 	    exit(EXIT_FAILURE);
 	}
 	name_table[n].nte_link = -1;	/* end-of-hash */
-	name_table[n].nte_name = strdup(list[column]);
+	name_table[n].nte_name = strmalloc(list[column]);
 	if (!strcmp(list[2], "bool")) {
 	    name_table[n].nte_type = BOOLEAN;
 	    name_table[n].nte_index = BoolCount++;

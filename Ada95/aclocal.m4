@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010-2011,2012 Free Software Foundation, Inc.              *
+dnl Copyright (c) 2010-2012,2013 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.63 2012/12/23 00:58:27 tom Exp $
+dnl $Id: aclocal.m4,v 1.64 2013/01/26 22:15:40 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2833,7 +2833,7 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 71 updated: 2012/12/22 19:34:47
+dnl CF_SHARED_OPTS version: 72 updated: 2013/01/26 16:26:12
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -2955,6 +2955,14 @@ CF_EOF
 		if test $cf_cv_ldflags_search_paths_first = yes; then
 			LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
 		fi
+		;;
+	hpux[[7-8]]*) #(vi
+		# HP-UX 8.07 ld lacks "+b" option used for libdir search-list 
+		if test "$GCC" != yes; then
+			CC_SHARED_OPTS='+Z'
+		fi
+		MK_SHARED_LIB='${LD} -b -o $[@]'
+		INSTALL_LIB="-m 555"
 		;;
 	hpux*) #(vi
 		# (tested with gcc 2.7.2 -- I don't have c89)
@@ -3637,6 +3645,26 @@ if test "$with_pthread" != no ; then
     ])
 fi
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_SYSTYPE version: 1 updated: 2013/01/26 16:26:12
+dnl ---------------
+dnl For testing, override the derived host system-type which is used to decide
+dnl things such as the linker commands used to build shared libraries.  This is
+dnl normally chosen automatically based on the type of system which you are
+dnl building on.  We use it for testing the configure script.
+dnl
+dnl This is different from the --host option: it is used only for testing parts
+dnl of the configure script which would not be reachable with --host since that
+dnl relies on the build environment being real, rather than mocked up.
+AC_DEFUN([CF_WITH_SYSTYPE],[
+CF_CHECK_CACHE([AC_CANONICAL_SYSTEM])
+AC_ARG_WITH(system-type,
+	[  --with-system-type=XXX  test: override derived host system-type],
+[AC_MSG_WARN(overriding system type to $withval)
+	cf_cv_system_name=$withval
+	host_os=$withval
+])
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_XOPEN_SOURCE version: 42 updated: 2012/01/07 08:26:49
 dnl ---------------

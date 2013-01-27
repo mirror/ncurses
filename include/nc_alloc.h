@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: nc_alloc.h,v 1.20 2012/11/03 19:31:35 tom Exp $ */
+/* $Id: nc_alloc.h,v 1.22 2013/01/26 21:56:51 tom Exp $ */
 
 #ifndef NC_ALLOC_included
 #define NC_ALLOC_included 1
@@ -94,6 +94,11 @@ extern NCURSES_EXPORT(void) NCURSES_SP_NAME(_nc_free_and_exit)(SCREEN*, int) GCC
 
 /* doalloc.c */
 extern NCURSES_EXPORT(void *) _nc_doalloc(void *, size_t);
+#if !HAVE_STRDUP
+#undef strdup
+#define strdup _nc_strdup
+extern NCURSES_EXPORT(char *) _nc_strdup(const char *);
+#endif
 
 /* entries.c */
 extern NCURSES_EXPORT(void) _nc_leaks_tinfo(void);

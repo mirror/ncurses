@@ -921,10 +921,10 @@
 ./ncurses/tinfo/make_hash.c
 ./ncurses/tinfo/make_keys.c
 ./ncurses/tinfo/name_match.c
+./ncurses/tinfo/obsolete.c
 ./ncurses/tinfo/parse_entry.c
 ./ncurses/tinfo/read_entry.c
 ./ncurses/tinfo/read_termcap.c
-./ncurses/tinfo/setbuf.c
 ./ncurses/tinfo/strings.c
 ./ncurses/tinfo/tinfo_driver.c
 ./ncurses/tinfo/trim_sgr0.c
