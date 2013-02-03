@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.41 2012/02/29 11:57:03 tom Exp $ */
+/* $Id: term_entry.h,v 1.43 2013/02/02 20:07:23 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -47,46 +47,46 @@ extern "C" {
 
 #include <term.h>
 
-/* db_iterator.c */
-typedef enum {
-    dbdTIC = 0,
+    /*
+     * see db_iterator.c - this enumeration lists the places searched for a
+     * terminal description and defines the order in which they are searched.
+     */
+    typedef enum {
+	dbdTIC = 0,		/* special, used by tic when writing entry */
 #if USE_DATABASE
-    dbdEnvOnce,
-    dbdHome,
-    dbdEnvList,
-    dbdCfgList,
-    dbdCfgOnce,
+	dbdEnvOnce,		/* the $TERMINFO environment variable */
+	dbdHome,		/* $HOME/.terminfo */
+	dbdEnvList,		/* the $TERMINFO_DIRS environment variable */
+	dbdCfgList,		/* the compiled-in TERMINFO_DIRS value */
+	dbdCfgOnce,		/* the compiled-in TERMINFO value */
 #endif
 #if USE_TERMCAP
-    dbdEnvOnce2,
-    dbdEnvList2,
-    dbdCfgList2,
+	dbdEnvOnce2,		/* the $TERMCAP environment variable */
+	dbdEnvList2,		/* the $TERMPATH environment variable */
+	dbdCfgList2,		/* the compiled-in TERMPATH */
 #endif
-    dbdLAST
-} DBDIRS;
+	dbdLAST
+    } DBDIRS;
 
 #define MAX_USES	32
 #define MAX_CROSSLINKS	16
 
-typedef struct entry {
-	TERMTYPE	tterm;
-	unsigned	nuses;
-	struct
-        {
-	    char		*name;
-	    struct entry	*link;
-	    long		line;
-        }
-	uses[MAX_USES];
-	int		ncrosslinks;
-	struct entry	*crosslinks[MAX_CROSSLINKS];
-	long		cstart, cend;
-	long		startline;
-	struct entry	*next;
-	struct entry	*last;
-}
-ENTRY;
-
+    typedef struct entry {
+	TERMTYPE tterm;
+	unsigned nuses;
+	struct {
+	    char *name;
+	    struct entry *link;
+	    long line;
+	} uses[MAX_USES];
+	int ncrosslinks;
+	struct entry *crosslinks[MAX_CROSSLINKS];
+	long cstart, cend;
+	long startline;
+	struct entry *next;
+	struct entry *last;
+    } ENTRY;
+/* *INDENT-OFF* */
 #if NCURSES_XNAMES
 #define NUM_BOOLEANS(tp) (tp)->num_Booleans
 #define NUM_NUMBERS(tp)  (tp)->num_Numbers
@@ -184,9 +184,9 @@ extern NCURSES_IMPEXP void NCURSES_API (*_nc_check_termtype2)(TERMTYPE *, bool);
 
 /* trace_xnames.c */
 extern NCURSES_EXPORT(void) _nc_trace_xnames (TERMTYPE *);
+/* *INDENT-ON* */
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* NCURSES_TERM_ENTRY_H_incl */
+#endif				/* NCURSES_TERM_ENTRY_H_incl */

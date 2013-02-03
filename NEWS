@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2018 2013/01/27 01:52:49 tom Exp $
+-- $Id: NEWS,v 1.2020 2013/02/03 00:19:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130202
+	+ correct initialization in knight.c which let it occasionally make
+	  an incorrect move (cf: 20001028).
+	+ improve documentation of the terminfo/termcap search path.
 
 20130126
 	+ further fixes to mvcur to pass callback function (cf: 20130112),

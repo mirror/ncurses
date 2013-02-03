@@ -27,9 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.52 2013/01/19 21:23:07 tom Exp $
+.\" $Id: infocmp.1m,v 1.53 2013/02/02 22:07:35 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ds n 5
+.de bP
+.IP \(bu 4
+..
 .ds d @TERMINFO@
 .SH NAME
 \fB@INFOCMP@\fR \- compare or print out \fIterminfo\fR descriptions
@@ -230,20 +233,25 @@ superfluous.
 \fB@INFOCMP@\fR will flag any other \fItermname use=\fR fields that
 were not needed.
 .SS Changing Databases [\-A \fIdirectory\fR] [\-B \fIdirectory\fR]
-The location of the compiled \fBterminfo\fR database is taken from the
-environment variable \fBTERMINFO\fR\ .
-If the variable is not defined, or the
-terminal is not found in that location, the system \fBterminfo\fR database,
-in \fB@TERMINFO@\fR, will be used.
-The options \fB\-A\fR
-and \fB\-B\fR may be used to override this location.
-The \fB\-A\fR option will
-set \fBTERMINFO\fR for the first \fItermname\fR and the \fB\-B\fR option will
-set \fBTERMINFO\fR for the other \fItermnames\fR.
-With this, it is possible to
+Like other \fBncurses\fP utilities,
+@INFOCMP@ looks for the terminal descriptions in several places.
+You can use the \fBTERMINFO\fP and \fBTERMINFO_DIRS\fP environment variables
+to override the compiled-in default list of places to search
+(see \fBcurses\fP(3X) for details).
+.PP
+You can also use the options \fB\-A\fR
+and \fB\-B\fR to override the list of places to search
+when comparing terminal descriptions:
+.bP
+The \fB\-A\fR option sets the location for the first \fItermname\fR
+.bP
+The \fB\-B\fR option sets the location for the other \fItermnames\fR.
+.PP
+Using these options, it is possible to
 compare descriptions for a terminal with the same name located in two different
 databases.
-This is useful for comparing descriptions for the same terminal
+For instance,
+you can use this feature for comparing descriptions for the same terminal
 created by different people.
 .SS Other Options
 .TP 5

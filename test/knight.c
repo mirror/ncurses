@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.34 2013/01/13 00:40:33 tom Exp $
+ * $Id: knight.c,v 1.35 2013/02/03 00:16:59 tom Exp $
  */
 
 #include <test.priv.h>
@@ -306,7 +306,7 @@ find_next_move(int *y, int *x)
     unsigned j, k;
     int found = -1;
     int first = -1;
-    int next = 0;
+    int next = -1;
     int oldy, oldx;
     int newy, newx;
     bool result = FALSE;

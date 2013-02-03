@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.57 2012/03/01 12:02:54 tom Exp $
+.\" $Id: terminfo.tail,v 1.58 2013/02/02 21:45:47 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -130,27 +130,36 @@ in the example above.
 .PP
 .SS Fetching Compiled Descriptions
 .PP
+The \fBncurses\fP library searches for terminal descriptions in several places.
+It uses only the first description found.
+The library has a compiled-in list of places to search
+which can be overridden by environment variables.
+Before starting to search,
+\fBncurses\fP eliminates duplicates in its search list.
+.bP
 If the environment variable TERMINFO is set, it is interpreted as the pathname
 of a directory containing the compiled description you are working on.
-Only
-that directory is searched.
-.PP
-If TERMINFO is not set, the \fBncurses\fR version of the terminfo reader code
-will instead look in the directory \fB$HOME/.terminfo\fR
+Only that directory is searched.
+.bP
+If TERMINFO is not set,
+\fBncurses\fR will instead look in the directory \fB$HOME/.terminfo\fR
 for a compiled description.
-If it fails to find one there, and the environment variable TERMINFO_DIRS is
-set, it will interpret the contents of that variable as a list of colon-
-separated directories (or database files) to be searched
-(an empty entry is interpreted as a command to search \fI\*d\fR).
-If no description is found in any of the
-TERMINFO_DIRS directories, the fetch fails.
-.PP
-If neither TERMINFO nor TERMINFO_DIRS is set, the last place tried will be the
-system terminfo directory, \fI\*d\fR.
-.PP
-(Neither the \fB$HOME/.terminfo\fR lookups nor TERMINFO_DIRS extensions are
-supported under stock System V terminfo/curses.)
-.PP
+.bP
+Next, if the environment variable TERMINFO_DIRS is set,
+\fBncurses\fR will interpret the contents of that variable
+as a list of colon-separated directories (or database files) to be searched.
+.IP
+An empty directory name (i.e., if the variable begins or ends
+with a colon, or contains adacent colons)
+is interpreted as the system location \fI\*d\fR.
+.bP
+Finally, \fBncurses\fP searches these compiled-in locations:
+.RS
+.bP
+a list of directories (@TERMINFO_DIRS@), and
+.bP
+the system terminfo directory, \fI\*d\fR (the compiled-in default).
+.RE
 .SS Preparing Descriptions
 .PP
 We now outline how to prepare descriptions of terminals.
@@ -1541,8 +1550,10 @@ those brought in by \fBuse\fR references.
 A capability can be canceled by placing \fBxx@\fR to the left of the
 use reference that imports it, where \fIxx\fP is the capability.
 For example, the entry
+.RS
 .PP
-	2621\-nl, smkx@, rmkx@, use=2621,
+2621\-nl, smkx@, rmkx@, use=2621,
+.RE
 .PP
 defines a 2621\-nl that does not have the \fBsmkx\fR or \fBrmkx\fR capabilities,
 and hence does not turn on the function key labels when in visual mode.
@@ -1638,6 +1649,11 @@ of terminfo (under HP\-UX and AIX) which diverged from System V terminfo after
 SVr1, and have added extension capabilities to the string table that (in the
 binary format) collide with System V and XSI Curses extensions.
 .SH EXTENSIONS
+.PP
+Searching for terminal descriptions in
+\fB$HOME/.terminfo\fR and TERMINFO_DIRS 
+is not supported by older implementations.
+.PP
 Some SVr4 \fBcurses\fR implementations, and all previous to SVr4, do not
 interpret the %A and %O operators in parameter strings.
 .PP
@@ -1679,9 +1695,9 @@ capability (\fBset_pglen\fR).
 .PP
 \fBSVr1, Ultrix\fR \-\-
 These support a restricted subset of terminfo capabilities.
-The booleans
-end with \fBxon_xoff\fR; the numerics with \fBwidth_status_line\fR; and the
-strings with \fBprtr_non\fR.
+The booleans end with \fBxon_xoff\fR;
+the numerics with \fBwidth_status_line\fR;
+and the strings with \fBprtr_non\fR.
 .PP
 \fBHP/UX\fR \-\-
 Supports the SVr1 subset, plus the SVr[234] numerics \fBnum_labels\fR,

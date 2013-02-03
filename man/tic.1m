@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.55 2012/03/24 21:21:05 tom Exp $
+.\" $Id: tic.1m,v 1.57 2013/02/02 22:09:02 tom Exp $
 .TH @TIC@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
@@ -109,15 +109,17 @@ it looks for the directory \fI$HOME/.terminfo\fR
 (or hashed database \fI$HOME/.terminfo.db)\fR;
 if that location exists, the entry is placed there.
 .PP
-Libraries that read terminfo entries are expected to check for
+Libraries that read terminfo entries are expected to check in succession
 .bP
-a location specified with the TERMINFO variable first,
+a location specified with the TERMINFO environment variable,
 .bP
-look in \fI$HOME/.terminfo\fR if TERMINFO is not set, next
+\fI$HOME/.terminfo\fR,
 .bP
-directories listed in the TERMINFO_DIRS symbol, and
+directories listed in the TERMINFO_DIRS environment variable,
 .bP
-finally look in the system terminfo database (\fI\*d\fR).
+a compiled-in list of directories (@TERMINFO_DIRS@), and
+.bP
+the system terminfo database (\fI\*d\fR).
 .SS OPTIONS
 .TP
 \fB\-0\fR
@@ -326,9 +328,7 @@ terminal entry currently being compiled, \fB@TIC@\fR reads in the binary
 from \fB\*d\fR to complete the entry.
 (Entries created from
 \fIfile\fR will be used first.
-If the environment variable
-\fBTERMINFO\fR is set, that database location is searched instead of
-\fB\*d\fR.)  \fB@TIC@\fR duplicates the capabilities in
+\fB@TIC@\fR duplicates the capabilities in
 \fIentry\fR\-\fIname\fR for the current entry, with the exception of
 those capabilities that explicitly are defined in the current entry.
 .PP
@@ -352,7 +352,7 @@ This \fB@TIC@\fR does not do that, but it does warn when
 description fields may be treated that way and check them for dangerous
 characters.
 .SH EXTENSIONS
-Unlike the stock SVr4 \fB@TIC@\fR command, this implementation can actually
+Unlike the SVr4 \fB@TIC@\fR command, this implementation can actually
 compile termcap sources.
 In fact, entries in terminfo and termcap syntax can
 be mixed in a single source file.

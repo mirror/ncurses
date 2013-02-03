@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_wacs.c,v 1.12 2012/10/27 21:58:03 tom Exp $")
+MODULE_ID("$Id: lib_wacs.c,v 1.13 2013/02/02 17:10:48 tom Exp $")
 
 NCURSES_EXPORT_VAR(cchar_t) * _nc_wacs = 0;
 
@@ -126,7 +126,7 @@ _nc_init_wacs(void)
 
 	    m = table[n].map;
 	    if (active && (wide == 1)) {
-		SetChar(_nc_wacs[m], table[n].value[active], A_NORMAL);
+		SetChar(_nc_wacs[m], table[n].value[1], A_NORMAL);
 	    } else if (acs_map[m] & A_ALTCHARSET) {
 		SetChar(_nc_wacs[m], m, A_ALTCHARSET);
 	    } else {
