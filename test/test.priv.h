@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.115 2012/12/02 00:46:34 tom Exp $ */
+/* $Id: test.priv.h,v 1.117 2013/02/10 01:00:04 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -174,8 +174,20 @@
 #define HAVE_SLK_INIT 0
 #endif
 
+#ifndef HAVE_SYS_IOCTL_H
+#define HAVE_SYS_IOCTL_H 0
+#endif
+
+#ifndef HAVE_SYS_SELECT_H
+#define HAVE_SYS_SELECT_H 0
+#endif
+
 #ifndef HAVE_TERMATTRS
 #define HAVE_TERMATTRS 0
+#endif
+
+#ifndef HAVE_TERMIOS_H
+#define HAVE_TERMIOS_H 0
 #endif
 
 #ifndef HAVE_TERMNAME
@@ -628,8 +640,28 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #define EXIT_FAILURE 1
 #endif
 
-#ifdef __MINGW32__
+#if defined(__MINGW32__)
+
+#if defined(PDCURSES)
+#ifdef WINVER
+#  if WINVER < 0x0501
+#    error WINVER must at least be 0x0501
+#  endif  
+#else
+#  define WINVER 0x0501
+#endif
+#include <windows.h>
+#include <sys/time.h>	/* for struct timeval */
+#undef sleep
+#define sleep(n) Sleep((n) * 1000)
+#define SIGHUP  1
+#define SIGKILL 9
+#define getlogin() "username"
+
+#else
 #include <nc_mingw.h>
+#endif
+
 /* conflicts in test/firstlast.c */
 #undef large
 #undef small

@@ -10389,12 +10389,12 @@ case \$i in #(vi
 	if test ! -f $cf_man_alias ; then
 cat >>$cf_man_alias <<-CF_EOF2
 		s,@DATADIR@,\$datadir,g
-		s,@TERMINFO@,\$TERMINFO,g
-		s,@TERMINFO_DIRS@,\$TERMINFO_DIRS,g
-		s,@NCURSES_MAJOR@,\$NCURSES_MAJOR,g
-		s,@NCURSES_MINOR@,\$NCURSES_MINOR,g
-		s,@NCURSES_PATCH@,\$NCURSES_PATCH,g
-		s,@NCURSES_OSPEED@,\$NCURSES_OSPEED,g
+		s,@TERMINFO@,\${TERMINFO:="no default value"},g
+		s,@TERMINFO_DIRS@,\${TERMINFO_DIRS:="no default value"},g
+		s,@NCURSES_MAJOR@,\${NCURSES_MAJOR:="no default value"},g
+		s,@NCURSES_MINOR@,\${NCURSES_MINOR:="no default value"},g
+		s,@NCURSES_PATCH@,\${NCURSES_PATCH:="no default value"},g
+		s,@NCURSES_OSPEED@,\${NCURSES_OSPEED:="no default value"},g
 CF_EOF
 
 	for cf_name in  captoinfo clear infocmp infotocap tabs tic toe tput tset

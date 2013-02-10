@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2020 2013/02/03 00:19:36 tom Exp $
+-- $Id: NEWS,v 1.2021 2013/02/09 22:39:26 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130209
+	+ modify test/configure script to make it simpler to override names
+	  of curses-related libraries, to help with linking with pdcurses in
+	  mingw environment.
+	+ if the --with-terminfo-dirs configure option is not used, there is
+	  no corresponding compiled-in value for that.  Fill in "no default
+	  value" for that part of the manpage substitution.
 
 20130202
 	+ correct initialization in knight.c which let it occasionally make

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.649 2013/02/02 22:15:00 tom Exp $
+dnl $Id: aclocal.m4,v 1.650 2013/02/09 17:55:03 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4092,7 +4092,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 42 updated: 2013/02/02 17:13:57
+dnl CF_MAN_PAGES version: 43 updated: 2013/02/09 12:53:45
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -4210,12 +4210,12 @@ case \$i in #(vi
 	if test ! -f $cf_man_alias ; then
 cat >>$cf_man_alias <<-CF_EOF2
 		s,@DATADIR@,\$datadir,g
-		s,@TERMINFO@,\$TERMINFO,g
-		s,@TERMINFO_DIRS@,\$TERMINFO_DIRS,g
-		s,@NCURSES_MAJOR@,\$NCURSES_MAJOR,g
-		s,@NCURSES_MINOR@,\$NCURSES_MINOR,g
-		s,@NCURSES_PATCH@,\$NCURSES_PATCH,g
-		s,@NCURSES_OSPEED@,\$NCURSES_OSPEED,g
+		s,@TERMINFO@,\${TERMINFO:="no default value"},g
+		s,@TERMINFO_DIRS@,\${TERMINFO_DIRS:="no default value"},g
+		s,@NCURSES_MAJOR@,\${NCURSES_MAJOR:="no default value"},g
+		s,@NCURSES_MINOR@,\${NCURSES_MINOR:="no default value"},g
+		s,@NCURSES_PATCH@,\${NCURSES_PATCH:="no default value"},g
+		s,@NCURSES_OSPEED@,\${NCURSES_OSPEED:="no default value"},g
 CF_EOF
 	ifelse($1,,,[
 	for cf_name in $1
