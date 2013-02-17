@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.387 2013/01/13 00:40:17 tom Exp $
+$Id: ncurses.c,v 1.388 2013/02/16 18:56:30 tom Exp $
 
 ***************************************************************************/
 
@@ -6922,7 +6922,7 @@ main(int argc, char *argv[])
     bkgdset(BLANK);
 
     /* tests, in general, will want these modes */
-    use_colors = monochrome ? FALSE : has_colors();
+    use_colors = (bool) (monochrome ? FALSE : has_colors());
 
     if (use_colors) {
 	start_color();

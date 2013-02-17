@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.35 2013/02/03 00:16:59 tom Exp $
+ * $Id: knight.c,v 1.36 2013/02/16 19:53:08 tom Exp $
  */
 
 #include <test.priv.h>
@@ -130,6 +130,9 @@ init_program(void)
 #ifdef NCURSES_MOUSE_VERSION
     (void) mousemask(BUTTON1_CLICKED, (mmask_t *) NULL);
 #endif /* NCURSES_MOUSE_VERSION */
+#if defined(PDCURSES)
+    mouse_set(BUTTON1_RELEASED);
+#endif
 
     oldch = minus;
 }
@@ -577,8 +580,9 @@ play(void)
 		nx = col + 1;
 		break;
 
-#ifdef NCURSES_MOUSE_VERSION
+#ifdef KEY_MOUSE
 	    case KEY_MOUSE:
+#ifdef NCURSES_MOUSE_VERSION
 		{
 		    MEVENT myevent;
 
@@ -595,6 +599,24 @@ play(void)
 		    }
 		}
 #endif /* NCURSES_MOUSE_VERSION */
+#ifdef PDCURSES
+		{
+		    int test_y, test_x;
+		    request_mouse_pos();
+		    test_y = MOUSE_Y_POS + 0;
+		    test_x = MOUSE_X_POS + 1;
+		    if (test_y >= CY(0) && test_y <= CY(BDEPTH)
+			&& test_x >= CX(0) && test_x <= CX(BWIDTH)) {
+			ny = CYINV(test_y);
+			nx = CXINV(test_x);
+			wmove(helpwin, 0, 0);
+			wrefresh(helpwin);
+			ungetch('\n');
+		    }
+		    break;
+		}
+#endif /* PDCURSES */
+#endif /* KEY_MOUSE */
 
 	    case KEY_B2:
 	    case '\n':

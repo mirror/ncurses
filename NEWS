@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2021 2013/02/09 22:39:26 tom Exp $
+-- $Id: NEWS,v 1.2023 2013/02/16 21:51:17 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130216
+	+ modify test/testcurs.c to work with mouse for ncurses as it does for
+	  pdcurses.
+	+ modify test/knight.c to work with mouse for pdcurses as it does for
+	  ncurses.
+	+ modify internal recursion in wgetch() which handles cooked mode to
+	  check if the call to wgetnstr() returned an error.  This can happen
+	  when both nocbreak() and nodelay() are set, for instance (report by
+	  Nils Christopher Brause) (cf: 960418).
+	+ fixes for issues found by Coverity:
+	  + add a check for valid position in ClearToEOS()
+	  + fix in lib_twait.c when --enable-wgetch-events is used, pointer
+	    use after free.
+	  + improve a limit-check in make_hash.c
+	  + fix a memory leak in hashed_db.c
 
 20130209
 	+ modify test/configure script to make it simpler to override names

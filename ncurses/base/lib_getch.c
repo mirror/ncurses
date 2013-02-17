@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.125 2012/08/04 17:11:37 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.126 2013/02/16 18:30:37 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -439,11 +439,11 @@ _nc_wgetch(WINDOW *win,
 	/* ungetch in reverse order */
 #ifdef NCURSES_WGETCH_EVENTS
 	rc = recur_wgetnstr(win, buf);
-	if (rc != KEY_EVENT)
+	if (rc != KEY_EVENT && rc != ERR)
 	    safe_ungetch(sp, '\n');
 #else
-	(void) recur_wgetnstr(win, buf);
-	safe_ungetch(sp, '\n');
+	if (recur_wgetnstr(win, buf) != ERR)
+	    safe_ungetch(sp, '\n');
 #endif
 	for (bufp = buf + strlen(buf); bufp > buf; bufp--)
 	    safe_ungetch(sp, bufp[-1]);

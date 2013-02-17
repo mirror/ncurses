@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.46 2012/11/24 19:38:20 tom Exp $
+ * $Id: testcurs.c,v 1.47 2013/02/16 20:29:04 tom Exp $
  */
 
 #include <test.priv.h>
@@ -341,6 +341,9 @@ inputTest(WINDOW *win)
     typeahead(-1);
 #endif
 
+#ifdef NCURSES_MOUSE_VERSION
+    mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
+#endif
 #if defined(PDCURSES)
     mouse_set(ALL_MOUSE_EVENTS);
 #endif
@@ -355,8 +358,38 @@ inputTest(WINDOW *win)
 	    wprintw(win, "Key Pressed: %c", c);
 	else
 	    wprintw(win, "Key Pressed: %s", unctrl(UChar(c)));
-#if defined(PDCURSES)
+#ifdef KEY_MOUSE
+#define ButtonChanged(n) ((event.bstate) & NCURSES_MOUSE_MASK(1, 037))
+#define ButtonPressed(n) ((event.bstate) & NCURSES_MOUSE_MASK(1, NCURSES_BUTTON_PRESSED))
+#define ButtonDouble(n)  ((event.bstate) & NCURSES_MOUSE_MASK(1, NCURSES_DOUBLE_CLICKED))
+#define ButtonTriple(n)  ((event.bstate) & NCURSES_MOUSE_MASK(1, NCURSES_TRIPLE_CLICKED))
+#define ButtonRelease(n) ((event.bstate) & NCURSES_MOUSE_MASK(1, NCURSES_BUTTON_RELEASED))
 	if (c == KEY_MOUSE) {
+	    MEVENT event;
+	    int button = 0;
+
+	    getmouse(&event);
+	    if (ButtonChanged(1))
+		button = 1;
+	    else if (ButtonChanged(2))
+		button = 2;
+	    else if (ButtonChanged(3))
+		button = 3;
+	    else
+		button = 0;
+	    wmove(win, 4, 18);
+	    wprintw(win, "Button %d: ", button);
+	    if (ButtonPressed(button))
+		wprintw(win, "pressed: ");
+	    else if (ButtonDouble(button))
+		wprintw(win, "double: ");
+	    else if (ButtonTriple(button))
+		wprintw(win, "triple: ");
+	    else
+		wprintw(win, "released: ");
+	    wprintw(win, " Position: Y: %d X: %d", event.y, event.x);
+#if defined(NCURSES_MOUSE_VERSION)
+#elif defined(PDCURSES)
 	    int button = 0;
 	    request_mouse_pos();
 	    if (BUTTON_CHANGED(1))
@@ -378,8 +411,9 @@ inputTest(WINDOW *win)
 	    else
 		wprintw(win, "released: ");
 	    wprintw(win, " Position: Y: %d X: %d", MOUSE_Y_POS, MOUSE_X_POS);
+#endif /* PDCURSES */
 	}
-#endif
+#endif /* KEY_MOUSE */
 	wrefresh(win);
 	if (c == ' ')
 	    break;

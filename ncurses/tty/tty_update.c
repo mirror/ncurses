@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.275 2013/01/20 00:34:46 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.276 2013/02/16 21:12:02 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -1117,6 +1117,11 @@ ClrToEOS(NCURSES_SP_DCLx NCURSES_CH_T blank)
 
     row = SP_PARM->_cursrow;
     col = SP_PARM->_curscol;
+
+    if (row < 0)
+	row = 0;
+    if (col < 0)
+	col = 0;
 
     UpdateAttrs(SP_PARM, blank);
     TPUTS_TRACE("clr_eos");

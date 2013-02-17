@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.59 2012/12/16 00:20:49 tom Exp $
+ * $Id: bs.c,v 1.60 2013/02/16 19:54:37 tom Exp $
  */
 
 #include <test.priv.h>
@@ -956,7 +956,7 @@ cpufire(int x, int y)
     bool hit, sunk;
     ship_t *ss = NULL;
 
-    hit = board[PLAYER][x][y];
+    hit = (bool) board[PLAYER][x][y];
     hits[COMPUTER][x][y] = (hit ? MARK_HIT : MARK_MISS);
     MvPrintw(PROMPTLINE, 0,
 	     "I shoot at %c%d. I %s!", y + 'A', x, hit ? "hit" :

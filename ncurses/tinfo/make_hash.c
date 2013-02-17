@@ -44,7 +44,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.11 2013/01/26 22:00:11 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.12 2013/02/16 21:27:50 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -155,7 +155,7 @@ parse_columns(char *buffer)
 
     int col = 0;
 
-    if (list == 0 && (list = typeCalloc(char *, MAX_COLUMNS)) == 0)
+    if (list == 0 && (list = typeCalloc(char *, (MAX_COLUMNS + 1))) == 0)
 	  return (0);
 
     if (*buffer != '#') {

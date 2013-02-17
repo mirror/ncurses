@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2008,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2011,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #if USE_HASHED_DB
 
-MODULE_ID("$Id: hashed_db.c,v 1.15 2011/08/13 21:08:08 tom Exp $")
+MODULE_ID("$Id: hashed_db.c,v 1.16 2013/02/16 21:50:03 tom Exp $")
 
 #if HASHED_DB_API >= 2
 static DBC *cursor;
@@ -105,6 +105,8 @@ make_connection(DB * db, const char *path, bool modify)
 	if (p->path != 0) {
 	    p->next = connections;
 	    connections = p;
+	} else {
+	    free(p);
 	}
     }
 }
