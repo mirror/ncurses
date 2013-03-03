@@ -1,8 +1,51 @@
-.\" $Id: terminfo.tail,v 1.58 2013/02/02 21:45:47 tom Exp $
+.\" $Id: terminfo.tail,v 1.61 2013/03/03 00:06:39 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
 .ps +1
+.SS User-Defined Capabilities
+.
+The preceding section listed the \fIpredefined\fP capabilities.
+They deal with some special features for terminals no longer
+(or possibly never) produced.
+Occasionally there are special features of newer terminals which
+are awkward or impossible to represent by reusing the predefined
+capabilities.
+.PP
+\fBncurses\fP addresses this limitation by allowing user-defined capabilities.
+The \fB@TIC@\fP and \fB@INFOCMP@\fP programs provide
+the \fB\-x\fP option for this purpose.
+When \fB\-x\fP is set,
+\fB@TIC@\fP treats unknown capabilities as user-defined.
+That is, if \fB@TIC@\fP encounters a capability name
+which it does not recognize,
+it infers its type (boolean, number or string) from the syntax
+and makes an extended table entry for that capability.
+The \fBuse_extended_names\fP function makes this information
+conditionally available to applications.
+The ncurses library provides the data leaving most of the behavior
+to applications:
+.bP
+User-defined capability strings whose name begins
+with \*(``k\*('' are treated as function keys.
+.bP
+The types (boolean, number, string) determined by \fB@TIC@\fP
+can be inferred by successful calls on \fBtigetflag\fP, etc.
+.bP
+If the capability name happens to be two characters,
+the capability is also available through the termcap interface.
+.PP
+While termcap is said to be extensible because it does not use a predefined set
+of capabilities,
+in practice it has been limited to the capabilities defined by
+terminfo implementations.
+As a rule,
+user-defined capabilities intended for use by termcap applications should
+be limited to booleans and numbers to avoid running past the 1023 byte
+limit assumed by termcap implementations and their applications.
+In particular, providing extended sets of function keys (past the 60
+numbered keys and the handful of special named keys) is best done using
+the longer names available using terminfo.
 .
 .SS A Sample Entry
 .
@@ -39,13 +82,18 @@ of what a \fBterminfo\fR entry for a modern terminal typically looks like.
 .PP
 Entries may continue onto multiple lines by placing white space at
 the beginning of each line except the first.
-Comments may be included on lines beginning with ``#''.
+Comments may be included on lines beginning with \*(``#\*(''.
 Capabilities in
 .I terminfo
 are of three types:
+.bP
 Boolean capabilities which indicate that the terminal has
-some particular feature, numeric capabilities giving the size of the terminal
-or the size of particular delays, and string
+some particular feature,
+.bP
+numeric capabilities giving the size of the terminal
+or the size of particular delays, and
+.bP
+string
 capabilities, which give a sequence which can be used to perform particular
 terminal operations.
 .PP
@@ -850,9 +898,9 @@ which have no sgr string.
 The only drawback to adding an sgr string is that termcap also
 assumes that sgr0 does not exit alternate character set mode.
 .PP
-Terminals with the ``magic cookie'' glitch
+Terminals with the \*(``magic cookie\*('' glitch
 .RB ( xmc )
-deposit special ``cookies'' when they receive mode-setting sequences,
+deposit special \*(``cookies\*('' when they receive mode-setting sequences,
 which affect the display algorithm rather than having extra bits for
 each character.
 Some terminals, such as the HP 2621, automatically leave standout
@@ -897,6 +945,7 @@ to the unshifted HP 2621 keys).
 If the keypad can be set to transmit or not transmit,
 give these codes as \fBsmkx\fR and \fBrmkx\fR.
 Otherwise the keypad is assumed to always transmit.
+.PP
 The codes sent by the left arrow, right arrow, up arrow, down arrow,
 and home keys can be given as
 \fBkcub1, kcuf1, kcuu1, kcud1, \fRand\fB khome\fR respectively.
@@ -904,41 +953,60 @@ If there are function keys such as f0, f1, ..., f10, the codes they send
 can be given as \fBkf0, kf1, ..., kf10\fR.
 If these keys have labels other than the default f0 through f10, the labels
 can be given as \fBlf0, lf1, ..., lf10\fR.
+.PP
 The codes transmitted by certain other special keys can be given:
+.bP
 .B kll
 (home down),
+.bP
 .B kbs
 (backspace),
+.bP
 .B ktbc
 (clear all tabs),
+.bP
 .B kctab
 (clear the tab stop in this column),
+.bP
 .B kclr
 (clear screen or erase key),
+.bP
 .B kdch1
 (delete character),
+.bP
 .B kdl1
 (delete line),
+.bP
 .B krmir
 (exit insert mode),
+.bP
 .B kel
 (clear to end of line),
+.bP
 .B ked
 (clear to end of screen),
+.bP
 .B kich1
 (insert character or enter insert mode),
+.bP
 .B kil1
 (insert line),
+.bP
 .B knp
 (next page),
+.bP
 .B kpp
 (previous page),
+.bP
 .B kind
 (scroll forward/down),
+.bP
 .B kri
 (scroll backward/up),
+.bP
 .B khts
 (set a tab stop in this column).
+.PP
 In addition, if the keypad has a 3 by 3 array of keys including the four
 arrow keys, the other five keys can be given as
 .BR ka1 ,
@@ -982,7 +1050,7 @@ If the terminal has hardware tabs, the command to advance to the next
 tab stop can be given as
 .B ht
 (usually control I).
-A ``back-tab'' command which moves leftward to the preceding tab stop can
+A \*(``back-tab\*('' command which moves leftward to the preceding tab stop can
 be given as
 .BR cbt .
 By convention, if the teletype modes indicate that tabs are being
@@ -1329,6 +1397,7 @@ magenta	\fBCOLOR_MAGENTA\fR	5	max,0,max
 yellow	\fBCOLOR_YELLOW\fR	6	max,max,0
 white	\fBCOLOR_WHITE\fR	7	max,max,max
 .TE
+.PP
 It is important to not confuse the two sets of color capabilities;
 otherwise red/blue will be interchanged on the display.
 .PP
@@ -1446,13 +1515,13 @@ how to talk to the terminal.
 .I virtual
 terminal descriptions for which the escape sequences are known.)
 .PP
-If the terminal has a ``meta key'' which acts as a shift key,
+If the terminal has a \*(``meta key\*('' which acts as a shift key,
 setting the 8th bit of any character transmitted, this fact can
 be indicated with
 .BR km .
 Otherwise, software will assume that the 8th bit is parity and it
 will usually be cleared.
-If strings exist to turn this ``meta mode'' on and off, they
+If strings exist to turn this \*(``meta mode\*('' on and off, they
 can be given as
 .B smm
 and
@@ -1514,7 +1583,7 @@ should indicate \fBxt\fR (destructive tabs).
 Note: the variable indicating this is now `dest_tabs_magic_smso'; in
 older versions, it was teleray_glitch.
 This glitch is also taken to mean that it is not possible to position
-the cursor on top of a ``magic cookie'',
+the cursor on top of a \*(``magic cookie\*('',
 that to erase standout mode it is instead necessary to use
 delete and insert line.
 The ncurses implementation ignores this glitch.

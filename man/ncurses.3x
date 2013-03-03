@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.110 2013/02/02 22:13:18 tom Exp $
+.\" $Id: ncurses.3x,v 1.111 2013/03/02 22:15:25 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .de bP
@@ -917,13 +917,38 @@ Mandatory padding is used as a part of special control
 sequences such as \fIflash\fR.
 .TP 5
 NCURSES_NO_SETBUF
-Normally \fBncurses\fR enables buffered output during terminal initialization.
-This is done (as in SVr4 curses) for performance reasons.
+This setting is obsolete.
+Before changes
+.RS
+.bP
+started with 5.9 patch 20120825 
+and
+.bP
+continued
+though 5.9 patch 20130126
+.RE
+.IP
+\fBncurses\fR enabled buffered output during terminal initialization.
+This was done (as in SVr4 curses) for performance reasons.
 For testing purposes, both of \fBncurses\fR and certain applications,
-this feature is made optional.
+this feature was made optional.
 Setting the NCURSES_NO_SETBUF variable
-disables output buffering, leaving the output in the original (usually
+disabled output buffering, leaving the output in the original (usually
 line buffered) mode.
+.IP
+In the current implementation,
+ncurses performs its own buffering and does not require this workaround.
+It does not modify the buffering of the standard output.
+.IP
+The reason for the change was to make the behavior for interrupts and
+other signals more robust.
+One drawback is that certain nonconventional programs would mix
+ordinary stdio calls with ncurses calls and (usually) work.
+This is no longer possible since ncurses is not using
+the buffered standard output but its own output (to the same file descriptor).
+As a special case, the low-level calls such as \fBputp\fP still use the
+standard output.
+But high-level curses calls do not.
 .TP 5
 NCURSES_NO_UTF8_ACS
 During initialization, the \fBncurses\fR library

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2012 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2012,2013 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
 
 #if USE_WIDEC_SUPPORT
 
-MODULE_ID("$Id: widechars.c,v 1.4 2012/12/02 01:50:59 tom Exp $")
+MODULE_ID("$Id: widechars.c,v 1.5 2013/03/02 18:55:51 tom Exp $")
 
 #if defined(__MINGW32__)
 /*
@@ -46,9 +46,9 @@ _nc_mbtowc(wchar_t *pwc, const char *s, size_t n)
 
     if (s != 0 && n != 0) {
 	/*
-	 * MultiByteToWideChar() can decide to return more than one wide-character.
-	 * We want only one. Ignore any trailing null, both in the initial count
-	 * and in the conversion.
+	 * MultiByteToWideChar() can decide to return more than one
+	 * wide-character.  We want only one.  Ignore any trailing null, both
+	 * in the initial count and in the conversion.
 	 */
 	count = 0;
 	for (try = 1; try <= (int) n; ++try) {
@@ -67,6 +67,7 @@ _nc_mbtowc(wchar_t *pwc, const char *s, size_t n)
 	    result = -1;
 	} else {
 	    wchar_t actual[2];
+	    memset(&actual, 0, sizeof(actual));
 	    count = MultiByteToWideChar(CP_UTF8,
 					MB_ERR_INVALID_CHARS,
 					s,

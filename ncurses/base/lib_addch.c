@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.125 2011/10/22 16:51:31 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.126 2013/03/02 21:06:47 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -412,10 +412,12 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 #endif
     const char *s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx t);
     int tabsize = 8;
+
     /*
      * If we are using the alternate character set, forget about locale.
      * Otherwise, if unctrl() returns a single-character or the locale
-     * claims the code is printable, treat it that way.
+     * claims the code is printable (and not also a control character),
+     * treat it that way.
      */
     if ((AttrOf(ch) & A_ALTCHARSET)
 	|| (
@@ -425,14 +427,15 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 	       s[1] == 0
 	)
 	|| (
-	       isprint(t)
+	       (isprint(t) && !iscntrl(t))
 #if USE_WIDEC_SUPPORT
 	       || ((sp == 0 || !sp->_legacy_coding) &&
 		   (WINDOW_EXT(win, addch_used)
-		    || !_nc_is_charable(CharOf(ch))))
+		    || !_nc_is_charable(t)))
 #endif
-	))
+	)) {
 	return waddch_literal(win, ch);
+    }
 
     /*
      * Handle carriage control and other codes that are not printable, or are
