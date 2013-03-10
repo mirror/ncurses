@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tic.1m,v 1.53 2011/12/17 23:13:19 tom Exp @
+  * @Id: tic.1m,v 1.57 2013/02/02 22:09:02 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -64,8 +64,8 @@
 
        As described in <STRONG><A HREF="term.5.html">term(5)</A></STRONG>, the  database  may  be  either  a
        directory  tree  (one file per terminal entry) or a hashed
-       database (one record per entry).  The <STRONG>tic</STRONG> writes only  one
-       type of entry, depending on how it was built:
+       database (one record per entry).  The <STRONG>tic</STRONG>  command  writes
+       only one type of entry, depending on how it was built:
 
        <STRONG>o</STRONG>   For  directory  trees,  the top-level directory, e.g.,
            /usr/share/terminfo, specifies  the  location  of  the
@@ -79,16 +79,20 @@
            as the default directory name  (only  adding  a  ".db"
            suffix).
 
-       The  results  are  normally  placed in the system terminfo
-       database  <STRONG>/usr/share/terminfo</STRONG>.   The   compiled   terminal
-       description   can   be  placed  in  a  different  terminfo
-       database.  There are two ways to achieve this:
+       In  either  case  (directory or hashed database), <STRONG>tic</STRONG> will
+       create the container if it does not exist.  For  a  direc-
+       tory,  this  would  be the "terminfo" leaf, versus a "ter-
+       minfo.db" file.
 
-       <STRONG>o</STRONG>   First, you may override the system default by  setting
-           the  variable  <STRONG>TERMINFO</STRONG> in your shell environment to a
-           valid database location, e.g., an  existing  directory
-           (for  directory  trees) or valid location for a hashed
-           database.
+       The results are normally placed  in  the  system  terminfo
+       database   <STRONG>/usr/share/terminfo</STRONG>.    The  compiled  terminal
+       description can be placed in a  different  terminfo  data-
+       base.  There are two ways to achieve this:
+
+       <STRONG>o</STRONG>   First,  you  may override the system default either by
+           using the <STRONG>-o</STRONG> option, or by setting the  variable  <STRONG>TER-</STRONG>
+           <STRONG>MINFO</STRONG>  in  your  shell environment to a valid database
+           location.
 
        <STRONG>o</STRONG>   Secondly, if <STRONG>tic</STRONG> cannot write  in  <EM>/usr/share/terminfo</EM>
            or  the  location  specified using your TERMINFO vari-
@@ -97,10 +101,23 @@
            exists, the entry is placed there.
 
        Libraries that read terminfo entries are expected to check
-       for a location specified with the TERMINFO variable first,
-       look at  <EM>$HOME/.terminfo</EM>  if  TERMINFO  is  not  set,  and
-       finally look in <EM>/usr/share/terminfo</EM>.
+       in succession
 
+       <STRONG>o</STRONG>   a  location  specified  with  the TERMINFO environment
+           variable,
+
+       <STRONG>o</STRONG>   <EM>$HOME/.terminfo</EM>,
+
+       <STRONG>o</STRONG>   directories listed in  the  TERMINFO_DIRS  environment
+           variable,
+
+       <STRONG>o</STRONG>   a       compiled-in      list      of      directories
+           (/usr/local/ncurses/share/terminfo:/usr/share/ter-
+           minfo), and
+
+       <STRONG>o</STRONG>   the system terminfo database (<EM>/usr/share/terminfo</EM>).
+
+   <STRONG>OPTIONS</STRONG>
        <STRONG>-0</STRONG>     restricts the output to a single line
 
        <STRONG>-1</STRONG>     restricts the output to a single column
@@ -177,121 +194,122 @@
               from termcap to terminfo, the compiler makes a num-
               ber of assumptions about  the  defaults  of  string
               capabilities  <STRONG>reset1_string</STRONG>,  <STRONG>carriage_return</STRONG>, <STRONG>cur-</STRONG>
-              <STRONG>sor_left</STRONG>,   <STRONG>cursor_down</STRONG>,    <STRONG>scroll_forward</STRONG>,    <STRONG>tab</STRONG>,
-              <STRONG>newline</STRONG>,  <STRONG>key_backspace</STRONG>,  <STRONG>key_left</STRONG>,  and  <STRONG>key_down</STRONG>,
-              then attempts to use obsolete termcap  capabilities
-              to  deduce  correct  values.  It also normally sup-
-              presses output  of  obsolete  termcap  capabilities
-              such  as  <STRONG>bs</STRONG>.   This  option  forces a more literal
-              translation that also preserves the obsolete  capa-
-              bilities.
+              <STRONG>sor_left</STRONG>, <STRONG>cursor_down</STRONG>,  <STRONG>scroll_forward</STRONG>,  <STRONG>tab</STRONG>,  <STRONG>new-</STRONG>
+              <STRONG>line</STRONG>,  <STRONG>key_backspace</STRONG>,  <STRONG>key_left</STRONG>, and <STRONG>key_down</STRONG>, then
+              attempts to use obsolete  termcap  capabilities  to
+              deduce correct values.  It also normally suppresses
+              output of obsolete termcap capabilities such as <STRONG>bs</STRONG>.
+              This  option forces a more literal translation that
+              also preserves the obsolete capabilities.
 
-       <STRONG>-o</STRONG><EM>dir</EM>  Write  compiled entries to given database location.
+       <STRONG>-o</STRONG><EM>dir</EM>  Write compiled entries to given database  location.
               Overrides the TERMINFO environment variable.
 
        <STRONG>-R</STRONG><EM>subset</EM>
-              Restrict output to a given subset.  This option  is
-              for  use  with  archaic  versions  of terminfo like
+              Restrict  output to a given subset.  This option is
+              for use with  archaic  versions  of  terminfo  like
               those on SVr1, Ultrix, or HP/UX that do not support
-              the  full set of SVR4/XSI Curses terminfo; and out-
+              the full set of SVR4/XSI Curses terminfo; and  out-
               right broken ports like AIX 3.x that have their own
-              extensions  incompatible  with SVr4/XSI.  Available
+              extensions incompatible with  SVr4/XSI.   Available
               subsets  are  "SVr1",  "Ultrix",  "HP",  "BSD"  and
               "AIX"; see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for details.
 
-       <STRONG>-r</STRONG>     Force  entry  resolution (so there are no remaining
-              tc capabilities) even  when  doing  translation  to
-              termcap  format.   This  may  be  needed if you are
-              preparing a termcap  file  for  a  termcap  library
-              (such  as  GNU  termcap  through version 1.3 or BSD
-              termcap through 4.3BSD) that does not handle multi-
-              ple tc capabilities per entry.
+       <STRONG>-r</STRONG>     Force entry resolution (so there are  no  remaining
+              tc  capabilities)  even  when  doing translation to
+              termcap format.  This may be needed if you are pre-
+              paring  a  termcap file for a termcap library (such
+              as GNU termcap through version 1.3 or  BSD  termcap
+              through  4.3BSD)  that  does not handle multiple tc
+              capabilities per entry.
 
        <STRONG>-s</STRONG>     Summarize the compile by showing the database loca-
               tion into which entries are written, and the number
               of entries which are compiled.
 
        <STRONG>-T</STRONG>     eliminates size-restrictions on the generated text.
-              This is mainly useful  for  testing  and  analysis,
-              since  the compiled descriptions are limited (e.g.,
+              This  is  mainly  useful  for testing and analysis,
+              since the compiled descriptions are limited  (e.g.,
               1023 for termcap, 4096 for terminfo).
 
-       <STRONG>-t</STRONG>     tells <STRONG>tic</STRONG> to  discard  commented-out  capabilities.
+       <STRONG>-t</STRONG>     tells  <STRONG>tic</STRONG>  to  discard commented-out capabilities.
               Normally when translating from terminfo to termcap,
               untranslatable capabilities are commented-out.
 
-       <STRONG>-U</STRONG>   tells <STRONG>tic</STRONG> to not post-process the data after  parsing
-            the  source  file.  Normally, it infers data which is
-            commonly missing in older terminfo data, or in  term-
+       <STRONG>-U</STRONG>   tells  <STRONG>tic</STRONG> to not post-process the data after parsing
+            the source file.  Normally, it infers data  which  is
+            commonly  missing in older terminfo data, or in term-
             caps.
 
        <STRONG>-V</STRONG>   reports the version of ncurses which was used in this
             program, and exits.
 
-       <STRONG>-v</STRONG><EM>n</EM>  specifies that (verbose) output be written  to  stan-
-            dard  error trace information showing <STRONG>tic</STRONG>'s progress.
-            The optional parameter <EM>n</EM> is a number from  1  to  10,
-            inclusive,  indicating the desired level of detail of
-            information.  If <EM>n</EM> is omitted, the default  level  is
-            1.   If  <EM>n</EM> is specified and greater than 1, the level
+       <STRONG>-v</STRONG><EM>n</EM>  specifies  that  (verbose) output be written to stan-
+            dard error trace information showing <STRONG>tic</STRONG>'s  progress.
+            The  optional  parameter  <EM>n</EM> is a number from 1 to 10,
+            inclusive, indicating the desired level of detail  of
+            information.   If  <EM>n</EM> is omitted, the default level is
+            1.  If <EM>n</EM> is specified and greater than 1,  the  level
             of detail is increased.
 
-       <STRONG>-w</STRONG><EM>n</EM>  specifies the width of the output.  The parameter  is
+            The debug flag levels are as follows:
+
+            1      Names of files created and linked
+
+            2      Information related to the ``use'' facility
+
+            3      Statistics from the hashing algorithm
+
+            5      String-table memory allocations
+
+            7      Entries into the string-table
+
+            8      List of tokens encountered by scanner
+
+            9      All  values  computed  in  construction of the
+                   hash table
+
+            If the debug level <EM>n</EM> is not given, it is taken to  be
+            one.
+
+       <STRONG>-w</STRONG><EM>n</EM>  specifies  the width of the output.  The parameter is
             optional.  If it is omitted, it defaults to 60.
 
        <STRONG>-x</STRONG>   Treat unknown capabilities as user-defined.  That is,
-            if you supply a capability name which  <STRONG>tic</STRONG>  does  not
+            if  you  supply  a capability name which <STRONG>tic</STRONG> does not
             recognize, it will infer its type (boolean, number or
-            string) from the syntax and make  an  extended  table
+            string)  from  the  syntax and make an extended table
             entry  for  that.   User-defined  capability  strings
-            whose name begins with ``k'' are treated as  function
+            whose  name begins with ``k'' are treated as function
             keys.
 
-       <EM>file</EM> contains  one  or more <STRONG>terminfo</STRONG> terminal descriptions
-            in source format [see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].  Each description
-            in  the file describes the capabilities of a particu-
-            lar terminal.
+   <STRONG>PARAMETERS</STRONG>
+       <EM>file</EM>   contains one or more <STRONG>terminfo</STRONG> terminal descriptions
+              in  source format [see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].  Each descrip-
+              tion in the file describes the  capabilities  of  a
+              particular terminal.
 
-       The debug flag levels are as follows:
+              If  <EM>file</EM>  is  ``-'', then the data is read from the
+              standard input.  The <EM>file</EM> parameter may also be the
+              path of a character-device.
 
-       1      Names of files created and linked
-
-       2      Information related to the ``use'' facility
-
-       3      Statistics from the hashing algorithm
-
-       5      String-table memory allocations
-
-       7      Entries into the string-table
-
-       8      List of tokens encountered by scanner
-
-       9      All values computed in construction of the hash ta-
-              ble
-
-       If  the debug level <EM>n</EM> is not given, it is taken to be one.
-
+   <STRONG>PROCESSING</STRONG>
        All but one of the capabilities recognized by <STRONG>tic</STRONG> are doc-
        umented in <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.  The exception is the <STRONG>use</STRONG> capabil-
        ity.
 
-       When a <STRONG>use</STRONG>=<EM>entry</EM>-<EM>name</EM> field is discovered  in  a  terminal
-       entry  currently  being  compiled, <STRONG>tic</STRONG> reads in the binary
-       from <STRONG>/usr/share/terminfo</STRONG> to complete the entry.   (Entries
-       created  from <EM>file</EM> will be used first.  If the environment
-       variable  <STRONG>TERMINFO</STRONG>  is  set,  that  database  location  is
-       searched  instead of <STRONG>/usr/share/terminfo</STRONG>.)  <STRONG>tic</STRONG> duplicates
-       the capabilities in <EM>entry</EM>-<EM>name</EM> for the current entry, with
-       the  exception  of  those capabilities that explicitly are
+       When  a  <STRONG>use</STRONG>=<EM>entry</EM>-<EM>name</EM>  field is discovered in a terminal
+       entry currently being compiled, <STRONG>tic</STRONG> reads  in  the  binary
+       from  <STRONG>/usr/share/terminfo</STRONG> to complete the entry.  (Entries
+       created from <EM>file</EM> will be used first.  <STRONG>tic</STRONG> duplicates  the
+       capabilities in <EM>entry</EM>-<EM>name</EM> for the current entry, with the
+       exception  of  those  capabilities  that  explicitly   are
        defined in the current entry.
 
-       When   an   entry,   e.g.,   <STRONG>entry_name_1</STRONG>,   contains    a
-       <STRONG>use=</STRONG><EM>entry</EM>_<EM>name</EM>_<EM>2</EM>   field,  any  canceled  capabilities  in
-       <EM>entry</EM>_<EM>name</EM>_<EM>2</EM> must also appear in <STRONG>entry_name_1</STRONG> before  <STRONG>use=</STRONG>
+       When    an   entry,   e.g.,   <STRONG>entry_name_1</STRONG>,   contains   a
+       <STRONG>use=</STRONG><EM>entry</EM>_<EM>name</EM>_<EM>2</EM>  field,  any  canceled  capabilities   in
+       <EM>entry</EM>_<EM>name</EM>_<EM>2</EM>  must also appear in <STRONG>entry_name_1</STRONG> before <STRONG>use=</STRONG>
        for these capabilities to be canceled in <STRONG>entry_name_1</STRONG>.
-
-       If  the environment variable <STRONG>TERMINFO</STRONG> is set, the compiled
-       results are placed there instead of <STRONG>/usr/share/terminfo</STRONG>.
 
        Total compiled entries cannot exceed 4096 bytes.  The name
        field  cannot  exceed 512 bytes.  Terminal names exceeding
@@ -307,35 +325,35 @@
        treated description fields with no whitespace in  them  as
        additional  aliases  or short names.  This <STRONG>tic</STRONG> does not do
        that, but it does warn  when  description  fields  may  be
-       treated  that way and check them for dangerous characters.
+       treated that way and check them for dangerous characters.
 
 
 </PRE>
 <H2>EXTENSIONS</H2><PRE>
-       Unlike the stock SVr4 <STRONG>tic</STRONG> command, this implementation can
-       actually  compile  termcap  sources.   In fact, entries in
-       terminfo and termcap syntax  can  be  mixed  in  a  single
-       source  file.   See  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  for  the list of termcap
-       names taken to be equivalent to terminfo names.
+       Unlike the SVr4 <STRONG>tic</STRONG> command, this implementation can actu-
+       ally compile termcap sources.  In fact,  entries  in  ter-
+       minfo  and  termcap syntax can be mixed in a single source
+       file.  See <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for the list of termcap names taken
+       to be equivalent to terminfo names.
 
-       The SVr4 manual pages are  not  clear  on  the  resolution
-       rules  for  <STRONG>use</STRONG>  capabilities.  This implementation of <STRONG>tic</STRONG>
+       The  SVr4  manual  pages  are  not clear on the resolution
+       rules for <STRONG>use</STRONG> capabilities.  This  implementation  of  <STRONG>tic</STRONG>
        will find <STRONG>use</STRONG> targets anywhere in the source file, or any-
-       where  in the file tree rooted at <STRONG>TERMINFO</STRONG> (if <STRONG>TERMINFO</STRONG> is
+       where in the file tree rooted at <STRONG>TERMINFO</STRONG> (if <STRONG>TERMINFO</STRONG>  is
        defined), or in the user's <EM>$HOME/.terminfo</EM> database (if it
-       exists),  or  (finally) anywhere in the system's file tree
+       exists), or (finally) anywhere in the system's  file  tree
        of compiled entries.
 
-       The error messages from this <STRONG>tic</STRONG> have the same  format  as
-       GNU  C  error  messages,  and can be parsed by GNU Emacs's
+       The  error  messages from this <STRONG>tic</STRONG> have the same format as
+       GNU C error messages, and can be  parsed  by  GNU  Emacs's
        compile facility.
 
-       The <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-C</STRONG>, <STRONG>-G</STRONG>, <STRONG>-I</STRONG>, <STRONG>-N</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>,  <STRONG>-e</STRONG>,  <STRONG>-f</STRONG>,  <STRONG>-g</STRONG>,
-       <STRONG>-o</STRONG>,  <STRONG>-r</STRONG>,  <STRONG>-s</STRONG>,  <STRONG>-t</STRONG>  and  <STRONG>-x</STRONG> options are not supported under
+       The  <STRONG>-0</STRONG>,  <STRONG>-1</STRONG>,  <STRONG>-C</STRONG>, <STRONG>-G</STRONG>, <STRONG>-I</STRONG>, <STRONG>-N</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>,
+       <STRONG>-o</STRONG>, <STRONG>-r</STRONG>, <STRONG>-s</STRONG>, <STRONG>-t</STRONG> and <STRONG>-x</STRONG>  options  are  not  supported  under
        SVr4.  The SVr4 <STRONG>-c</STRONG> mode does not report bad use links.
 
-       System V does not compile entries to or read entries  from
-       your  <EM>$HOME/.terminfo</EM>  database unless TERMINFO is explic-
+       System  V does not compile entries to or read entries from
+       your <EM>$HOME/.terminfo</EM> database unless TERMINFO  is  explic-
        itly set to it.
 
 
@@ -347,10 +365,10 @@
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
-       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,    <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
+       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,    <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,   <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20120107).
+       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20130309).
 
 
 </PRE>

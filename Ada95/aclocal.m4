@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.64 2013/01/26 22:15:40 tom Exp $
+dnl $Id: aclocal.m4,v 1.65 2013/03/09 21:39:08 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -39,7 +39,7 @@ dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 dnl ---------------------------------------------------------------------------
-dnl CF_ACVERSION_CHECK version: 3 updated: 2012/10/03 18:39:53
+dnl CF_ACVERSION_CHECK version: 4 updated: 2013/03/04 19:52:56
 dnl ------------------
 dnl Conditionally generate script according to whether we're using a given autoconf.
 dnl
@@ -48,6 +48,7 @@ dnl $2 = code to use if AC_ACVERSION is at least as high as $1.
 dnl $3 = code to use if AC_ACVERSION is older than $1.
 define([CF_ACVERSION_CHECK],
 [
+ifdef([AC_ACVERSION], ,[m4_copy([m4_PACKAGE_VERSION],[AC_ACVERSION])])dnl
 ifdef([m4_version_compare],
 [m4_if(m4_version_compare(m4_defn([AC_ACVERSION]), [$1]), -1, [$3], [$2])],
 [CF_ACVERSION_COMPARE(
@@ -1574,7 +1575,7 @@ CPPFLAGS="-I. -I../include $CPPFLAGS"
 AC_SUBST(CPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INTEL_COMPILER version: 4 updated: 2010/05/26 05:38:42
+dnl CF_INTEL_COMPILER version: 5 updated: 2013/02/10 10:41:05
 dnl -----------------
 dnl Check if the given compiler is really the Intel compiler for Linux.  It
 dnl tries to imitate gcc, but does not return an error when it finds a mismatch
@@ -1588,6 +1589,7 @@ dnl $1 = GCC (default) or GXX
 dnl $2 = INTEL_COMPILER (default) or INTEL_CPLUSPLUS
 dnl $3 = CFLAGS (default) or CXXFLAGS
 AC_DEFUN([CF_INTEL_COMPILER],[
+AC_REQUIRE([AC_CANONICAL_HOST])
 ifelse([$2],,INTEL_COMPILER,[$2])=no
 
 if test "$ifelse([$1],,[$1],GCC)" = yes ; then
@@ -3666,7 +3668,7 @@ AC_ARG_WITH(system-type,
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 42 updated: 2012/01/07 08:26:49
+dnl CF_XOPEN_SOURCE version: 43 updated: 2013/02/10 10:41:05
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -3676,6 +3678,7 @@ dnl Parameters:
 dnl	$1 is the nominal value for _XOPEN_SOURCE
 dnl	$2 is the nominal value for _POSIX_C_SOURCE
 AC_DEFUN([CF_XOPEN_SOURCE],[
+AC_REQUIRE([AC_CANONICAL_HOST])
 
 cf_XOPEN_SOURCE=ifelse([$1],,500,[$1])
 cf_POSIX_C_SOURCE=ifelse([$2],,199506L,[$2])

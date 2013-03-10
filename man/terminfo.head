@@ -26,15 +26,15 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.20 2013/03/02 23:52:37 tom Exp $
+.\" $Id: terminfo.head,v 1.21 2013/03/09 22:11:36 tom Exp $
 .TH terminfo 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@
-.de bP
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
+.de bP
 .IP \(bu 4
 ..
 .SH NAME

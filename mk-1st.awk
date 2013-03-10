@@ -1,6 +1,6 @@
-# $Id: mk-1st.awk,v 1.88 2012/02/25 20:22:09 tom Exp $
+# $Id: mk-1st.awk,v 1.90 2013/03/10 00:09:14 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -34,6 +34,7 @@
 #	name		  (library name, e.g., "ncurses", "panel", "forms", "menus")
 #	traces		  ("all" or "DEBUG", to control whether tracing is compiled in)
 #	MODEL		  (e.g., "DEBUG", uppercase; toupper is not portable)
+#	CXX_MODEL	  (e.g., "DEBUG", uppercase)
 #	model		  (directory into which we compile, e.g., "obj")
 #	prefix		  (e.g., "lib", for Unix-style libraries)
 #	suffix		  (e.g., "_g.a", for debug libraries)
@@ -248,6 +249,7 @@ BEGIN	{
 					printf "#  name:          %s\n", name 
 					printf "#  traces:        %s\n", traces 
 					printf "#  MODEL:         %s\n", MODEL 
+					printf "#  CXX_MODEL:     %s\n", CXX_MODEL 
 					printf "#  model:         %s\n", model 
 					printf "#  prefix:        %s\n", prefix 
 					printf "#  suffix:        %s\n", suffix 
@@ -296,12 +298,15 @@ BEGIN	{
 			if ( found == 0 )
 			{
 				printf "%s_OBJS =", OBJS
-				if ( $2 == "lib" )
-					found = 1
-				else
-					found = 2
+				if ( $2 == "lib" ) {
+					found = 1;
+				} else if ( $2 == "c++" && CXX_MODEL == "SHARED" ) {
+					found = 1;
+				} else {
+					found = 2;
+				}
 			}
-			printf " \\\n\t../%s/%s$o", model, $1
+			printf " \\\n\t../%s/%s$o", model, $1;
 		}
 	}
 END	{

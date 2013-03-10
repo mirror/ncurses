@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2001-2010,2011 Free Software Foundation, Inc.              *
+  * Copyright (c) 2001-2011,2012 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wch.3x,v 1.14 2011/01/15 15:27:43 tom Exp @
+  * @Id: curs_add_wch.3x,v 1.15 2012/11/03 23:03:59 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -77,17 +77,17 @@
            ous  character  at  that  location  is removed.  A new
            character specified by <EM>wch</EM> is placed at that  location
            with  rendition  specified  by  <EM>wch</EM>.   The cursor then
-           advances to the next spacing character on the  screen.
+           advances to the next spacing character on the screen.
 
        <STRONG>o</STRONG>   If <EM>wch</EM> refers to a non-spacing character, all previous
-           characters at that location are preserved.   The  non-
-           spacing  characters  of  <EM>wch</EM>  are added to the spacing
-           complex character, and the rendition specified by  <EM>wch</EM>
+           characters  at  that location are preserved.  The non-
+           spacing characters of <EM>wch</EM> are  added  to  the  spacing
+           complex  character, and the rendition specified by <EM>wch</EM>
            is ignored.
 
-       <STRONG>o</STRONG>   If  the  character  part  of  <EM>wch</EM>  is  a tab, newline,
-           backspace or other control character,  the  window  is
-           updated  and the cursor moves as if <STRONG>addch</STRONG> were called.
+       <STRONG>o</STRONG>   If the character  part  of  <EM>wch</EM>  is  a  tab,  newline,
+           backspace  or  other  control character, the window is
+           updated and the cursor moves as if <STRONG>addch</STRONG> were called.
 
        The <STRONG>echo_wchar</STRONG> function is functionally  equivalent  to  a
        call to <STRONG>add_wch</STRONG> followed by a call to <STRONG>refresh</STRONG>.  Similarly,
@@ -104,15 +104,14 @@
        characters.   These  symbols  correspond to the same VT100
        line-drawing set as <STRONG><A HREF="addch.3x.html">addch(3x)</A></STRONG>.
 
-
        <EM>Name</EM>              <EM>Unicode</EM>    <EM>Default</EM>   <EM>Description</EM>
        ----------------------------------------------------------------
        WACS_BLOCK        0x25ae     #         solid square block
        WACS_BOARD        0x2592     #         board of squares
        WACS_BTEE         0x2534     +         bottom tee
        WACS_BULLET       0x00b7     o         bullet
-
        WACS_CKBOARD      0x2592     :         checker board (stipple)
+
        WACS_DARROW       0x2193     v         arrow pointing down
        WACS_DEGREE       0x00b0     '         degree symbol
        WACS_DIAMOND      0x25c6     +         diamond
@@ -144,7 +143,6 @@
        The wide-character configuration of ncurses  also  defines
        symbols for thick- and double-lines:
 
-
        <EM>Name</EM>              <EM>Unicode</EM>   <EM>Default</EM>   <EM>Description</EM>
        ---------------------------------------------------------------------
        WACS_T_ULCORNER   0x250f    +         thick upper left corner
@@ -172,7 +170,7 @@
 
 
 </PRE>
-<H2>RETURN VALUES</H2><PRE>
+<H2>RETURN VALUE</H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on
        success.
 

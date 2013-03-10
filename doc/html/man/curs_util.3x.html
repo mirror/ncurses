@@ -1,7 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <!-- 
+  * t
   ****************************************************************************
-  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.33 2011/12/17 23:31:30 tom Exp @
+  * @Id: curs_util.3x,v 1.36 2012/07/21 18:51:10 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -48,8 +49,8 @@
 </PRE>
 <H2>NAME</H2><PRE>
        <STRONG>delay_output</STRONG>, <STRONG>filter</STRONG>, <STRONG>flushinp</STRONG>, <STRONG>getwin</STRONG>, <STRONG>key_name</STRONG>, <STRONG>keyname</STRONG>,
-       <STRONG>nofilter</STRONG>, <STRONG>putwin</STRONG>, <STRONG>unctrl</STRONG>, <STRONG>use_env</STRONG>, <STRONG>wunctrl</STRONG> - miscellaneous
-       <STRONG>curses</STRONG> utility routines
+       <STRONG>nofilter</STRONG>, <STRONG>putwin</STRONG>, <STRONG>unctrl</STRONG>, <STRONG>use_env</STRONG>, <STRONG>use_tioctl</STRONG>, <STRONG>wunctrl</STRONG> -
+       miscellaneous <STRONG>curses</STRONG> utility routines
 
 
 </PRE>
@@ -63,6 +64,7 @@
        <STRONG>void</STRONG> <STRONG>filter(void);</STRONG>
        <STRONG>void</STRONG> <STRONG>nofilter(void);</STRONG>
        <STRONG>void</STRONG> <STRONG>use_env(bool</STRONG> <STRONG>f);</STRONG>
+       <STRONG>void</STRONG> <STRONG>use_tioctl(bool</STRONG> <STRONG>f);</STRONG>
        <STRONG>int</STRONG> <STRONG>putwin(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>FILE</STRONG> <STRONG>*filep);</STRONG>
        <STRONG>WINDOW</STRONG> <STRONG>*getwin(FILE</STRONG> <STRONG>*filep);</STRONG>
        <STRONG>int</STRONG> <STRONG>delay_output(int</STRONG> <STRONG>ms);</STRONG>
@@ -122,16 +124,66 @@
        <STRONG>$TERM</STRONG>.   The  limitation arises because the <STRONG>filter</STRONG> routine
        modifies the in-memory copy of the terminal information.
 
-       The <STRONG>use_env</STRONG> routine, if used, is called before <STRONG>initscr</STRONG>  or
-       <STRONG>newterm</STRONG>  are  called.   When called with <STRONG>FALSE</STRONG> as an argu-
-       ment, the values of <STRONG>lines</STRONG> and  <STRONG>columns</STRONG>  specified  in  the
-       <EM>terminfo</EM>  database will be used, even if environment vari-
-       ables <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG> (used by default) are set,  or  if
-       <STRONG>curses</STRONG>  is  running in a window (in which case default be-
-       havior would be to  use  the  window  size  if  <STRONG>LINES</STRONG>  and
-       <STRONG>COLUMNS</STRONG>  are not set).  Note that setting <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG>
-       overrides the corresponding size  which  may  be  obtained
-       from the operating system.
+       The <STRONG>use_env</STRONG> routine, if  used,  should  be  called  before
+       <STRONG>initscr</STRONG>  or  <STRONG>newterm</STRONG> are called (because those compute the
+       screen size).  It modifies the way <STRONG>ncurses</STRONG> treats environ-
+       ment variables when determining the screen size.
+
+       <STRONG>o</STRONG>   Normally  ncurses looks first at the terminal database
+           for the screen size.
+
+           If <STRONG>use_env</STRONG> was called with  <STRONG>FALSE</STRONG>  for  parameter,  it
+           stops  here  unless If <STRONG>use_tioctl</STRONG> was also called with
+           <STRONG>TRUE</STRONG> for parameter.
+
+       <STRONG>o</STRONG>   Then it asks for the screen size via operating  system
+           calls.   If  successful,  it overrides the values from
+           the terminal database.
+
+       <STRONG>o</STRONG>   Finally (unless <STRONG>use_env</STRONG> was called with <STRONG>FALSE</STRONG>  parame-
+           ter),  ncurses  examines the <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG> environ-
+           ment variables, using a value in those to override the
+           results  from  the  operating system or terminal data-
+           base.
+
+           Ncurses also updates the screen size  in  response  to
+           SIGWINCH,  unless  overridden  by the <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG>
+           environment variables,
+
+       The <STRONG>use_tioctl</STRONG> routine, if used, should be  called  before
+       <STRONG>initscr</STRONG>  or  <STRONG>newterm</STRONG> are called (because those compute the
+       screen size).  After <STRONG>use_tioctl</STRONG> is called with <STRONG>TRUE</STRONG> as  an
+       argument,  ncurses  modifies the last step in its computa-
+       tion of screen size as follows:
+
+       <STRONG>o</STRONG>   checks if the <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG> environment  variables
+           are set to a number greater than zero.
+
+       <STRONG>o</STRONG>   for  each,  ncurses updates the corresponding environ-
+           ment variable with the value that it has obtained  via
+           operating system call or from the terminal database.
+
+       <STRONG>o</STRONG>   ncurses  re-fetches the value of the environment vari-
+           ables so that it is still  the  environment  variables
+           which set the screen size.
+
+       The  <STRONG>use_env</STRONG> and <STRONG>use_tioctl</STRONG> routines combine as summarized
+       here:
+
+     <EM>use</EM><STRONG>_</STRONG><EM>env</EM>   <EM>use</EM><STRONG>_</STRONG><EM>tioctl</EM>   <EM>Summary</EM>
+     ----------------------------------------------------------------
+     TRUE      FALSE        This is the default  behavior.   ncurses
+                            uses operating system calls unless over-
+                            ridden by $LINES or $COLUMNS environment
+                            variables.
+     TRUE      TRUE         ncurses   updates  $LINES  and  $COLUMNS
+                            based on operating system calls.
+
+     FALSE     TRUE         ncurses ignores $LINES and $COLUMNS, us-
+                            es  operating  system  calls  to  obtain
+                            size.
+     FALSE     FALSE        ncurses relies on the terminal  database
+                            to determine size.
 
        The  <STRONG>putwin</STRONG> routine writes all data associated with window
        <EM>win</EM> into the file to which <EM>filep</EM> points.  This information
@@ -241,16 +293,17 @@
        loaded when the terminal description is read  by  the  li-
        brary.
 
-       The  <STRONG>nofilter</STRONG>  routine is specific to ncurses.  It was not
-       supported on Version 7, BSD or System  V  implementations.
-       It  is  recommended that any code depending on ncurses ex-
-       tensions be conditioned using NCURSES_VERSION.
+       The  <STRONG>nofilter</STRONG>  and  <STRONG>use_tioctl</STRONG>  routines  are  specific to
+       ncurses.  They were not supported on  Version  7,  BSD  or
+       System V implementations.  It is recommended that any code
+       depending  on  ncurses  extensions  be  conditioned  using
+       NCURSES_VERSION.
 
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG>curs_ker-</STRONG>
-       <STRONG><A HREF="curs_kernel.3x.html">nel(3x)</A></STRONG>,   <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>,   <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,  <STRONG>lega-</STRONG>
+       <STRONG><A HREF="curs_kernel.3x.html">nel(3x)</A></STRONG>,  <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>,   <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,   <STRONG>lega-</STRONG>
        <STRONG><A HREF="legacy_coding.3x.html">cy_coding(3x)</A></STRONG>.
 
 

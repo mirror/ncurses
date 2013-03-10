@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Release: 5.9
-Version: 20130302
+Version: 20130309
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{release}-%{version}.tgz
@@ -55,6 +55,7 @@ RPATH_LIST=../lib:%{_prefix}/lib \
 	--with-termlib \
 	--with-ticlib \
 	--with-trace \
+	--with-cxx-shared \
 	--with-xterm-kbs=DEL \
 	--without-ada \
 	--without-debug \
@@ -80,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_datadir}/*
 
 %changelog
+
+* Sat Mar 09 2013 Thomas E. Dickey
+- add --with-cxx-shared option to demonstrate c++ binding as shared library
 
 * Sat Oct 26 2012 Thomas E. Dickey
 - add ncurses program as "ncurses6" to provide demonstration.

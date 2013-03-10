@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.650 2013/02/09 17:55:03 tom Exp $
+dnl $Id: aclocal.m4,v 1.654 2013/03/10 00:23:09 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -62,7 +62,7 @@ AC_DEFUN([AM_LANGINFO_CODESET],
   fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ACVERSION_CHECK version: 3 updated: 2012/10/03 18:39:53
+dnl CF_ACVERSION_CHECK version: 4 updated: 2013/03/04 19:52:56
 dnl ------------------
 dnl Conditionally generate script according to whether we're using a given autoconf.
 dnl
@@ -71,6 +71,7 @@ dnl $2 = code to use if AC_ACVERSION is at least as high as $1.
 dnl $3 = code to use if AC_ACVERSION is older than $1.
 define([CF_ACVERSION_CHECK],
 [
+ifdef([AC_ACVERSION], ,[m4_copy([m4_PACKAGE_VERSION],[AC_ACVERSION])])dnl
 ifdef([m4_version_compare],
 [m4_if(m4_version_compare(m4_defn([AC_ACVERSION]), [$1]), -1, [$3], [$2])],
 [CF_ACVERSION_COMPARE(
@@ -2773,7 +2774,7 @@ CPPFLAGS="-I. -I../include $CPPFLAGS"
 AC_SUBST(CPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INTEL_COMPILER version: 4 updated: 2010/05/26 05:38:42
+dnl CF_INTEL_COMPILER version: 5 updated: 2013/02/10 10:41:05
 dnl -----------------
 dnl Check if the given compiler is really the Intel compiler for Linux.  It
 dnl tries to imitate gcc, but does not return an error when it finds a mismatch
@@ -2787,6 +2788,7 @@ dnl $1 = GCC (default) or GXX
 dnl $2 = INTEL_COMPILER (default) or INTEL_CPLUSPLUS
 dnl $3 = CFLAGS (default) or CXXFLAGS
 AC_DEFUN([CF_INTEL_COMPILER],[
+AC_REQUIRE([AC_CANONICAL_HOST])
 ifelse([$2],,INTEL_COMPILER,[$2])=no
 
 if test "$ifelse([$1],,[$1],GCC)" = yes ; then
@@ -3066,7 +3068,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 67 updated: 2012/10/06 13:36:35
+dnl CF_LIB_RULES version: 69 updated: 2013/03/09 19:22:30
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -3121,6 +3123,8 @@ do
 		for cf_item in $cf_LIST_MODELS
 		do
 			CF_LIB_SUFFIX($cf_item,cf_suffix,cf_depsuf)
+			cf_libname=$cf_dir
+			test "$cf_dir" = c++ && cf_libname=ncurses++
 			if test $cf_item = shared ; then
 			if test "$cf_cv_do_symlinks" = yes ; then
 				case "$cf_cv_shlib_version" in #(vi
@@ -3180,17 +3184,17 @@ do
 			case $cf_cv_shlib_version in #(vi
 			cygdll) #(vi
 				cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
-				Libs_To_Make="$Libs_To_Make ../lib/cyg${cf_dir}${cf_cygsuf}"
+				Libs_To_Make="$Libs_To_Make ../lib/cyg${cf_libname}${cf_cygsuf}"
 				continue
 				;;
 			mingw)
 				cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
-				Libs_To_Make="$Libs_To_Make ../lib/lib${cf_dir}${cf_cygsuf}"
+				Libs_To_Make="$Libs_To_Make ../lib/lib${cf_libname}${cf_cygsuf}"
 				continue
 				;;
 			esac
 			fi
-			Libs_To_Make="$Libs_To_Make ../lib/${cf_prefix}${cf_dir}${cf_suffix}"
+			Libs_To_Make="$Libs_To_Make ../lib/${cf_prefix}${cf_libname}${cf_suffix}"
 		done
 
 		if test $cf_dir = ncurses ; then
@@ -3226,6 +3230,12 @@ do
 			cf_subsets=`echo "$LIB_SUBSETS" | sed -e 's/^termlib.* //'`
 		fi
 
+		if test $cf_dir = c++; then
+			if test "x$with_shared_cxx" != xyes; then
+				Libs_To_Make='../lib/$(LIBNAME)'
+			fi
+		fi
+
 		sed -e "s%@Libs_To_Make@%$Libs_To_Make%" \
 		    -e "s%@SHARED_LIB@%$SHARED_LIB%" \
 			$cf_dir/Makefile >$cf_dir/Makefile.out
@@ -3240,8 +3250,15 @@ do
 			cf_subdirs=
 			for cf_item in $cf_LIST_MODELS
 			do
+
 			echo "Appending rules for ${cf_item} model (${cf_dir}: ${cf_subset})"
 			CF_UPPER(cf_ITEM,$cf_item)
+
+			CXX_MODEL=$cf_ITEM
+			if test "$CXX_MODEL" = SHARED; then
+				test "x$with_shared_cxx" = xno && CXX_MODEL=NORMAL
+			fi
+
 			CF_LIB_SUFFIX($cf_item,cf_suffix,cf_depsuf)
 			CF_OBJ_SUBDIR($cf_item,cf_subdir)
 
@@ -3259,6 +3276,8 @@ do
 					cf_libname=$TICS_LIB_SUFFIX
 					;;
 				esac
+			elif test $cf_dir = c++ ; then
+				cf_libname=ncurses++$LIB_SUFFIX
 			else
 				cf_libname=${cf_libname}$LIB_SUFFIX
 			fi
@@ -3310,6 +3329,7 @@ do
 				name=${cf_libname}${cf_dir_suffix} \
 				traces=$LIB_TRACING \
 				MODEL=$cf_ITEM \
+				CXX_MODEL=$CXX_MODEL \
 				model=$cf_subdir \
 				prefix=$cf_prefix \
 				suffix=$cf_suffix \
@@ -6974,7 +6994,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 42 updated: 2012/01/07 08:26:49
+dnl CF_XOPEN_SOURCE version: 43 updated: 2013/02/10 10:41:05
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -6984,6 +7004,7 @@ dnl Parameters:
 dnl	$1 is the nominal value for _XOPEN_SOURCE
 dnl	$2 is the nominal value for _POSIX_C_SOURCE
 AC_DEFUN([CF_XOPEN_SOURCE],[
+AC_REQUIRE([AC_CANONICAL_HOST])
 
 cf_XOPEN_SOURCE=ifelse([$1],,500,[$1])
 cf_POSIX_C_SOURCE=ifelse([$2],,199506L,[$2])

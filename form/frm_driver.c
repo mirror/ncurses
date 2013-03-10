@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.102 2012/07/21 23:23:08 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.103 2013/03/09 22:48:47 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -1211,7 +1211,7 @@ Synchronize_Linked_Fields(FIELD *field)
     return (E_SYSTEM_ERROR);
 
   for (linked_field = field->link;
-       linked_field != field;
+       (linked_field != field) && (linked_field != 0);
        linked_field = linked_field->link)
     {
       if (((syncres = Synchronize_Field(linked_field)) != E_OK) &&

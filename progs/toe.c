@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.70 2012/11/17 23:39:42 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.71 2013/03/09 22:45:23 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -259,8 +259,11 @@ term_description(TERMTYPE *tp)
 {
     const char *desc;
 
-    if ((desc = strrchr(tp->term_names, '|')) == 0 || *++desc == '\0')
+    if (tp->term_names == 0
+	|| (desc = strrchr(tp->term_names, '|')) == 0
+	|| (*++desc == '\0')) {
 	desc = "(No description)";
+    }
 
     return desc;
 }

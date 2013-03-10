@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2026 2013/03/02 23:55:06 tom Exp $
+-- $Id: NEWS,v 1.2030 2013/03/09 22:42:05 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,21 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130309
+	+ amend change to toe.c for reading from /dev/zero, to ensure that
+	  there is a buffer for the temporary filename (cf: 20120324).
+	+ regenerated html manpages.
+	+ fix typo in terminfo.head (report by Sven Joachim, cf: 20130302).
+	+ updated some autoconf macros:
+	  + CF_ACVERSION_CHECK, from byacc 1.9 20130304
+	  + CF_INTEL_COMPILER, CF_XOPEN_SOURCE from luit 2.0-20130217
+	+ add configure option --with-cxx-shared to permit building
+	  libncurses++ as a shared library when using g++, e.g., the same
+	  limitations as libtool but better integrated with the usual build
+	  configuration (Redhat 911540).
+	+ modify MKkey_defs.sh to filter out build-path which was unnecessarily
+	  shown in curses.h (Debian #689131).
 
 20130302
 	+ add section to terminfo manpage discussing user-defined capabilities.

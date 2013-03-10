@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.182 2012/12/16 00:03:12 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.184 2013/03/09 23:14:07 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -396,13 +396,17 @@ open_tempfile(char *filename)
 static FILE *
 copy_input(FILE *source, const char *filename, char *alt_file)
 {
+    char my_altfile[PATH_MAX];
     FILE *result = 0;
-    FILE *target = open_tempfile(alt_file);
+    FILE *target = 0;
     int ch;
+
+    if (alt_file == 0)
+	alt_file = my_altfile;
 
     if (source == 0) {
 	failed("copy_input (source)");
-    } else if (target == 0) {
+    } else if ((target = open_tempfile(alt_file)) == 0) {
 	failed("copy_input (target)");
     } else {
 	clearerr(source);

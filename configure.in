@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.562 2013/01/26 20:59:15 tom Exp $
+dnl $Id: configure.in,v 1.563 2013/03/09 21:15:51 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.562 $)
+AC_REVISION($Revision: 1.563 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -268,6 +268,17 @@ AC_ARG_WITH(profile,
 AC_MSG_RESULT($with_profile)
 test "x$with_profile" = "xyes" && cf_list_models="$cf_list_models profile"
 
+fi
+
+if test "X$cf_with_cxx_binding" != Xno; then
+if test "x$with_shared" = "xyes"; then
+AC_MSG_CHECKING(if you want to build C++ shared libraries)
+AC_ARG_WITH(cxx-shared,
+	[  --with-cxx-shared       generate C++ shared-libraries],
+	[with_shared_cxx=$withval],
+	[with_shared_cxx=no])
+AC_MSG_RESULT($with_shared_cxx)
+fi
 fi
 
 ###############################################################################
@@ -1658,13 +1669,17 @@ CF_OBJ_SUBDIR($DFT_LWR_MODEL,DFT_OBJ_SUBDIR)dnl
 AC_SUBST(DFT_OBJ_SUBDIR)dnl the default object-directory ("obj")
 AC_MSG_RESULT($DFT_OBJ_SUBDIR)
 
-# libtool thinks it can make c++ shared libraries (perhaps only g++)
 if test "x$cf_with_cxx" = xyes ; then
 AC_MSG_CHECKING(c++ library-dependency suffix)
 if test "$with_libtool" != "no"; then
+	# libtool thinks it can make c++ shared libraries (perhaps only g++)
+	CXX_LIB_SUFFIX=$DFT_DEP_SUFFIX
+elif test "$with_shared_cxx" != "no"; then
+	# also for g++ users...
 	CXX_LIB_SUFFIX=$DFT_DEP_SUFFIX
 else
-	CF_LIB_SUFFIX(normal,CXX_LIB_SUFFIX,CXX_DEP_SUFFIX)dnl we normally make a static library
+	# we normally make a static library because C/C++ library rules differ
+	CF_LIB_SUFFIX(normal,CXX_LIB_SUFFIX,CXX_DEP_SUFFIX)
 fi
 AC_MSG_RESULT($CXX_LIB_SUFFIX)
 AC_SUBST(CXX_LIB_SUFFIX)
@@ -1965,6 +1980,7 @@ cf_with_ada="$cf_with_ada"
 cf_with_cxx_binding="$cf_with_cxx_binding"
 cf_with_manpages="$cf_with_manpages"
 cf_with_tests="$cf_with_tests"
+with_shared_cxx="$with_shared_cxx"
 host="$host"
 target="$target"
 
