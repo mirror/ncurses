@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.563 2013/03/09 21:15:51 tom Exp $
+dnl $Id: configure.in,v 1.564 2013/03/16 23:32:24 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.563 $)
+AC_REVISION($Revision: 1.564 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1903,6 +1903,17 @@ AC_SUBST(MAKE_TESTS)
 
 ADAHTML_DIR=../../doc/html/ada
 AC_SUBST(ADAHTML_DIR)
+
+# these could be configurable, but are not currently
+PANEL_NAME=panel
+MENU_NAME=menu
+FORM_NAME=form
+CXX_NAME=ncurses++
+
+AC_SUBST(PANEL_NAME)
+AC_SUBST(MENU_NAME)
+AC_SUBST(FORM_NAME)
+AC_SUBST(CXX_NAME)
 
 SUB_SCRIPTS=
 

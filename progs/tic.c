@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.184 2013/03/09 23:14:07 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.185 2013/03/17 00:57:05 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -432,7 +432,7 @@ copy_input(FILE *source, const char *filename, char *alt_file)
 	 */
 	result = fopen(alt_file, "r+");
 	fclose(target);
-	to_remove = alt_file;
+	to_remove = strdup(alt_file);
     }
     return result;
 }

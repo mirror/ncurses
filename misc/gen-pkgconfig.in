@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.14 2012/01/01 01:48:23 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.15 2013/03/16 23:33:34 tom Exp $
 ##############################################################################
-# Copyright (c) 2009-2010,2011 Free Software Foundation, Inc.                #
+# Copyright (c) 2009-2012,2013 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -39,10 +39,10 @@
 # library, except that the tinfo library does not depend on ncurses.
 LIB_NAME=@LIB_NAME@
 TINFO_NAME=@TINFO_NAME@
-PANEL_NAME=panel # @PANEL_NAME@
-MENU_NAME=menu # @MENU_NAME@
-FORM_NAME=form # @FORM_NAME@
-CXX_NAME=ncurses++ # @CXX_NAME@
+PANEL_NAME=@PANEL_NAME@
+MENU_NAME=@MENU_NAME@
+FORM_NAME=@FORM_NAME@
+CXX_NAME=@CXX_NAME@
 DFT_DEP_SUFFIX=@DFT_DEP_SUFFIX@
 TINFO_ARG_SUFFIX=@TINFO_ARG_SUFFIX@
 CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@

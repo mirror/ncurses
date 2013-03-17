@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.654 2013/03/10 00:23:09 tom Exp $
+dnl $Id: aclocal.m4,v 1.658 2013/03/12 13:40:56 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3232,7 +3232,28 @@ do
 
 		if test $cf_dir = c++; then
 			if test "x$with_shared_cxx" != xyes; then
-				Libs_To_Make='../lib/$(LIBNAME)'
+				cf_list=
+				for cf_item in $Libs_To_Make
+				do
+					case $cf_item in
+					*.a)
+						;;
+					*)
+						cf_item=`echo "$cf_item" | sed -e 's/\.so.*/.a/'`
+						;;
+					esac
+					for cf_test in $cf_list
+					do
+						if test "$cf_test" = "$cf_item"
+						then
+							cf_LIST_MODELS=`echo "$cf_LIST_MODELS" | sed -e 's/normal//'`
+							cf_item=
+							break
+						fi
+					done
+					test -n "$cf_item" && cf_list="$cf_list $cf_item"
+				done
+				Libs_To_Make="$cf_list"
 			fi
 		fi
 
@@ -3256,7 +3277,15 @@ do
 
 			CXX_MODEL=$cf_ITEM
 			if test "$CXX_MODEL" = SHARED; then
-				test "x$with_shared_cxx" = xno && CXX_MODEL=NORMAL
+				case $cf_cv_shlib_version in #(vi
+				cygdll|mingw) #(vi
+					test "x$with_shared_cxx" = xno && CF_VERBOSE(overriding CXX_MODEL to SHARED)
+					with_shared_cxx=yes
+					;;
+				*)
+					test "x$with_shared_cxx" = xno && CXX_MODEL=NORMAL
+					;;
+				esac
 			fi
 
 			CF_LIB_SUFFIX($cf_item,cf_suffix,cf_depsuf)

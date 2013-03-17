@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.104 2012/12/30 00:51:13 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.107 2013/03/17 00:27:15 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -491,7 +491,7 @@ has_params(const char *src)
 }
 
 static char *
-fmt_complex(char *src, int level)
+fmt_complex(TERMTYPE *tterm, const char *capability, char *src, int level)
 {
     bool percent = FALSE;
     bool params = has_params(src);
@@ -527,13 +527,15 @@ fmt_complex(char *src, int level)
 		    strncpy_DYN(&tmpbuf, "%", 1);
 		    strncpy_DYN(&tmpbuf, src, 1);
 		    if (*src++ == '?') {
-			src = fmt_complex(src, level + 1);
+			src = fmt_complex(tterm, capability, src, level + 1);
 			if (*src != '\0' && *src != '%') {
 			    strncpy_DYN(&tmpbuf, "\n", 1);
 			    indent_DYN(&tmpbuf, level + 1);
 			}
 		    } else if (level == 1) {
-			_nc_warning("%%%c without %%?", *src);
+			_nc_warning("%s: %%%c without %%? in %s",
+				    _nc_first_name(tterm->term_names),
+				    *src, capability);
 		    }
 		}
 		continue;
@@ -547,9 +549,17 @@ fmt_complex(char *src, int level)
 		    indent_DYN(&tmpbuf, level);
 		    strncpy_DYN(&tmpbuf, "%", 1);
 		    strncpy_DYN(&tmpbuf, src++, 1);
+		    if (src[0] == '%'
+			&& src[1] != '\0'
+			&& (strchr("?e;", src[1])) == 0) {
+			tmpbuf.text[tmpbuf.used++] = '\n';
+			indent_DYN(&tmpbuf, level);
+		    }
 		    return src;
 		}
-		_nc_warning("%%; without %%?");
+		_nc_warning("%s: %%; without %%? in %s",
+			    _nc_first_name(tterm->term_names),
+			    capability);
 	    }
 	    break;
 	case 'p':
@@ -820,7 +830,7 @@ fmt_entry(TERMTYPE *tterm,
 		if (pretty
 		    && (outform == F_TERMINFO
 			|| outform == F_VARIABLE)) {
-		    fmt_complex(src, 1);
+		    fmt_complex(tterm, name, src, 1);
 		} else {
 		    strcpy_DYN(&tmpbuf, src);
 		}

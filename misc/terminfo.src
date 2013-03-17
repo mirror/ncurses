@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.470 $
-#	$Date: 2012/11/04 15:59:03 $
+#	$Revision: 1.472 $
+#	$Date: 2013/03/16 22:39:31 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1025,7 +1025,7 @@ kon|kon2|jfbterm|Kanji ON Linux console,
 # you use a 512-character console font. This uses bold for bright
 # foreground colors and blink for bright background colors.
 linux-16color|linux console with 16 colors,
-	colors#16, ncv#54, pairs#256,
+	colors#16, ncv#62, pairs#256,
 	setab=\E[4%p1%{8}%m%d%?%p1%{8}%>%t;5%e%p1%{8}%=%t;2%e;25%;m,
 	setaf=\E[3%p1%{8}%m%d%?%p1%{8}%>%t;1%e%p1%{8}%=%t;2%e;21%;m,
 	use=linux,
@@ -4890,7 +4890,7 @@ terminator|Terminator no line wrap,
 	rs2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l\E>,
 	s0ds=\E(B, s1ds=\E(0, sc=\E7, setab=\E[48;5;%p1%dm,
 	setaf=\E[38;5;%p1%dm,
-	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%;m%?%p9%t\E(0%e\E(B%;,
+	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e\E(B%;,
 	sgr0=\E[m\E(B, smacs=\E(0, smcup=\E7\E[?47h, smir=\E[4h,
 	smso=\E[7m, smul=\E[4m, tbc=\E[3g, tsl=\E]2;%p1,
 	vpa=\E[%i%p1%dd,
@@ -5431,13 +5431,13 @@ sun-type4|Sun Workstation console with type 4 keyboard,
 # It supports bold, but not underline -TD (2009-09-19)
 sun-color|Sun Microsystems Workstation console with color support (IA systems),
 	colors#8, ncv#3, pairs#64,
-	cub=\E[%p1%dD, cud=\E[%p1%dB, cuf=\E[%p1%dC,
+	bold=\E[1m, cub=\E[%p1%dD, cud=\E[%p1%dB, cuf=\E[%p1%dC,
 	cuu=\E[%p1%dA, home=\E[H, op=\E[0m, rs2=\E[s,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
-	sgr=\E[0%?%p1;1%;%?%p3%;7%;m, sgr0=\E[m, smso=\E[1m,
-	use=sun,
+	sgr=\E[0%?%p6%t;1%;%?%p1%p3%|%t;7%;m, sgr0=\E[m,
+	smso=\E[7m, use=sun,
 
 #### Iris consoles
 #
@@ -22959,5 +22959,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  based on testing with tack -TD
 #	* un-cancel the initc in vte-256color, since this was implemented
 #	  starting with version 0.20 in 2009 -TD
+#
+# 2013-03-16
+#	* correct typo in sgr string for sun-color,
+#	  add bold for consistency with sgr,
+#	  change smso for consistency with sgr -TD
+#	* correct typo in sgr string for terminator -TD
+#	* add blink to the attributes masked by ncv in linux-16color (report
+#	  by Benjamin Sittler)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

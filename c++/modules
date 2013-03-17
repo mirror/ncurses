@@ -1,5 +1,5 @@
 # Program modules
-# $Id: modules,v 1.7 2006/12/24 00:53:08 tom Exp $
+# $Id: modules,v 1.9 2013/03/13 09:57:40 tom Exp $
 ##############################################################################
 # Copyright (c) 1998,2006 Free Software Foundation, Inc.                     #
 #                                                                            #
@@ -34,12 +34,11 @@
 @ base
 cursesf		c++		$(srcdir)	$(cursesf_h) $(cursesapp_h)
 cursesm		c++		$(srcdir)	$(cursesm_h) $(cursesapp_h)
-cursesp		c++		$(srcdir)	$(cursesp_h)
 cursesw		c++		$(srcdir)	$(cursesw_h)
 cursespad	c++		$(srcdir)	$(cursesw_h)
+cursesp		c++		$(srcdir)	$(cursesp_h)
 cursslk		c++		$(srcdir)	$(cursslk_h) $(cursesapp_h)
 cursesapp	c++		$(srcdir)	$(cursesapp_h)
 cursesmain	c++		$(srcdir)	$(cursesapp_h)
-demo		c++		$(srcdir)	$(cursesf_h) $(cursesm_h) $(cursesapp_h)
 
 # vile:makemode

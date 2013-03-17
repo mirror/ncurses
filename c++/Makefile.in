@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.97 2013/03/09 21:22:49 tom Exp $
+# $Id: Makefile.in,v 1.101 2013/03/13 09:45:11 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -153,33 +153,12 @@ depend :
 tags:
 	$(CTAGS) *.[h] *.cc
 
-# Build a conventional library for installing, since a shared library would
-# pull in all of the ncurses libraries (panel, menu, form, ncurses) as direct
-# dependencies.
-LIB_OBJS = \
-	$(MODEL)/cursesf$o \
-	$(MODEL)/cursesm$o \
-	$(MODEL)/cursesw$o \
-	$(MODEL)/cursespad$o \
-	$(MODEL)/cursesp$o \
-	$(MODEL)/cursslk$o \
-	$(MODEL)/cursesapp$o \
-	$(MODEL)/cursesmain$o
-
-../lib/$(LIBNAME_NORMAL) : $(LIB_OBJS)
-	$(CXX_AR) $(CXX_ARFLAGS) $@ $?
-	$(RANLIB) $@
-
-../lib/$(LIBNAME_LIBTOOL) : $(LIB_OBJS)
-	cd ../lib && $(LIBTOOL_LINK) $(CXX) $(CXXFLAGS) \
-		-o $(LIBNAME) $(LIB_OBJS:$o=.lo) \
-		-rpath $(INSTALL_PREFIX)$(libdir) \
-		$(LIBTOOL_VERSION) $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(LDFLAGS_LIBTOOL) $(SHLIB_LIST)
-
 OBJS_DEMO = $(MODEL)/demo$o
 
 $(MODEL)/demo$o : $(srcdir)/demo.cc \
 	$(cursesf_h) $(cursesm_h) $(cursesapp_h)
+	@echo 'compiling demo (obj_s)'
+	@$(LIBTOOL_COMPILE) $(CXX) $(CFLAGS_DEFAULT) -c $(srcdir)/demo.cc -o $@
 
 demo$x:	$(OBJS_DEMO) \
 	$(LIBRARIES)  \
@@ -193,21 +172,13 @@ etip.h:	$(srcdir)/etip.h.in $(srcdir)/edit_cfg.sh
 $(DESTDIR)$(libdir) :
 	mkdir -p $@
 
-install \
-install.libs:: $(LIBRARIES) $(DESTDIR)$(libdir)
-	$(LIBTOOL_INSTALL) $(INSTALL_LIB) $(LIBRARIES) $(DESTDIR)$(libdir)/$(LIBNAME)
-
-uninstall \
-uninstall.libs::
-	-$(LIBTOOL_UNINSTALL) rm -f $(DESTDIR)$(libdir)/$(LIBNAME)
-
 mostlyclean ::
 	-rm -f core tags TAGS *~ *.bak *.i *.ii *.ln *.atac trace
 
 clean :: mostlyclean
 	-sh -c "if test -n '$x' ; then $(MAKE) clean x=''; fi"
 	-rm -rf $(MODEL)/SunWS_cache
-	-$(LIBTOOL_CLEAN) rm -f demo$x $(AUTO_SRC) $(LIBRARIES) $(LIB_OBJS) $(OBJS_DEMO)
+	-$(LIBTOOL_CLEAN) rm -f demo$x $(AUTO_SRC) $(LIBRARIES) $(OBJS_DEMO)
 	-rm -rf .libs
 
 distclean :: clean
