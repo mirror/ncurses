@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.658 2013/03/12 13:40:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.660 2013/03/23 22:34:35 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3068,7 +3068,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 69 updated: 2013/03/09 19:22:30
+dnl CF_LIB_RULES version: 70 updated: 2013/03/23 17:00:30
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -3126,73 +3126,58 @@ do
 			cf_libname=$cf_dir
 			test "$cf_dir" = c++ && cf_libname=ncurses++
 			if test $cf_item = shared ; then
-			if test "$cf_cv_do_symlinks" = yes ; then
-				case "$cf_cv_shlib_version" in #(vi
-				rel) #(vi
-					case "$cf_cv_system_name" in #(vi
-					darwin*)
-					case .${LIB_SUFFIX} in
-					.tw*)
-						cf_suffix=`echo $cf_suffix | sed 's/^tw//'`
-						cf_suffix=tw'.${REL_VERSION}'"$cf_suffix"
+				if test -n "${LIB_SUFFIX}"
+				then
+					cf_shared_suffix=`echo "$cf_suffix" | sed 's/^'"${LIB_SUFFIX}"'//'`
+				else
+					cf_shared_suffix="$cf_suffix"
+				fi
+				if test "$cf_cv_do_symlinks" = yes ; then
+					cf_version_name=
+
+					case "$cf_cv_shlib_version" in #(vi
+					rel) #(vi
+						cf_version_name=REL_VERSION
 						;;
-					.t*)
-						cf_suffix=`echo $cf_suffix | sed 's/^t//'`
-						cf_suffix=t'.${REL_VERSION}'"$cf_suffix"
-						;;
-					.w*)
-						cf_suffix=`echo $cf_suffix | sed 's/^w//'`
-						cf_suffix=w'.${REL_VERSION}'"$cf_suffix"
-						;;
-					*)
-						cf_suffix='.${REL_VERSION}'"$cf_suffix"
+					abi)
+						cf_version_name=ABI_VERSION
 						;;
 					esac
-					;; #(vi
-					*) cf_suffix="$cf_suffix"'.${REL_VERSION}' ;;
-					esac
+
+					if test -n "$cf_version_name"
+					then
+						case "$cf_cv_system_name" in #(vi
+						darwin*)
+							# "w", etc?
+							cf_suffix="${LIB_SUFFIX}"'.${'$cf_version_name'}'"$cf_shared_suffix"
+							;; #(vi
+						*)
+							cf_suffix="$cf_suffix"'.${'$cf_version_name'}'
+							;;
+						esac
+					fi
+					if test -n "${LIB_SUFFIX}"
+					then
+						cf_shared_suffix=`echo "$cf_suffix" | sed 's/^'"${LIB_SUFFIX}"'//'`
+					else
+						cf_shared_suffix="$cf_suffix"
+					fi
+				fi
+				# cygwin needs import library, and has unique naming convention
+				# use autodetected ${cf_prefix} for import lib and static lib, but
+				# use 'cyg' prefix for shared lib.
+				case $cf_cv_shlib_version in #(vi
+				cygdll) #(vi
+					cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
+					Libs_To_Make="$Libs_To_Make ../lib/cyg${cf_libname}${cf_cygsuf}"
+					continue
 					;;
-				abi)
-					case "$cf_cv_system_name" in #(vi
-					darwin*)
-					case .${LIB_SUFFIX} in
-					.tw*)
-						cf_suffix=`echo $cf_suffix | sed 's/^tw//'`
-						cf_suffix=tw'.${ABI_VERSION}'"$cf_suffix"
-						;;
-					.t*)
-						cf_suffix=`echo $cf_suffix | sed 's/^t//'`
-						cf_suffix=t'.${ABI_VERSION}'"$cf_suffix"
-						;;
-					.w*)
-						cf_suffix=`echo $cf_suffix | sed 's/^w//'`
-						cf_suffix=w'.${ABI_VERSION}'"$cf_suffix"
-						;;
-					*)
-						cf_suffix='.${ABI_VERSION}'"$cf_suffix"
-						;;
-					esac
-					;; #(vi
-					*) cf_suffix="$cf_suffix"'.${ABI_VERSION}' ;;
-					esac
+				mingw)
+					cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
+					Libs_To_Make="$Libs_To_Make ../lib/lib${cf_libname}${cf_cygsuf}"
+					continue
 					;;
 				esac
-			fi
-			# cygwin needs import library, and has unique naming convention
-			# use autodetected ${cf_prefix} for import lib and static lib, but
-			# use 'cyg' prefix for shared lib.
-			case $cf_cv_shlib_version in #(vi
-			cygdll) #(vi
-				cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
-				Libs_To_Make="$Libs_To_Make ../lib/cyg${cf_libname}${cf_cygsuf}"
-				continue
-				;;
-			mingw)
-				cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
-				Libs_To_Make="$Libs_To_Make ../lib/lib${cf_libname}${cf_cygsuf}"
-				continue
-				;;
-			esac
 			fi
 			Libs_To_Make="$Libs_To_Make ../lib/${cf_prefix}${cf_libname}${cf_suffix}"
 		done
@@ -3239,7 +3224,7 @@ do
 					*.a)
 						;;
 					*)
-						cf_item=`echo "$cf_item" | sed -e 's/\.so.*/.a/'`
+						cf_item=`echo "$cf_item" | sed -e "s,"$cf_shared_suffix",.a,"`
 						;;
 					esac
 					for cf_test in $cf_list
