@@ -21815,7 +21815,7 @@ do
 		fi
 
 		if test $cf_dir = c++; then
-			if test "x$with_shared_cxx" != xyes; then
+			if test "x$with_shared_cxx" != xyes && test -n "$cf_shared_suffix"; then
 				cf_list=
 				for cf_item in $Libs_To_Make
 				do
