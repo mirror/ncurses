@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.661 2013/03/24 21:10:41 tom Exp $
+dnl $Id: aclocal.m4,v 1.662 2013/04/06 22:06:57 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -912,6 +912,27 @@ if test "$cf_cv_check_gpm_wgetch" != yes ; then
 fi
 ])])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_LIBTOOL_VERSION version: 1 updated: 2013/04/06 18:03:09
+dnl ------------------------
+dnl Show the version of libtool
+dnl
+dnl Save the version in a cache variable - this is not entirely a good thing,
+dnl but the version string from libtool is very ugly, and for bug reports it
+dnl might be useful to have the original string.
+AC_DEFUN([CF_CHECK_LIBTOOL_VERSION],[
+if test -n "$LIBTOOL" && test "$LIBTOOL" != none
+then
+	AC_MSG_CHECKING(version of $LIBTOOL)
+	CF_LIBTOOL_VERSION
+	AC_MSG_RESULT($cf_cv_libtool_version)
+	if test -z "$cf_cv_libtool_version" ; then
+		AC_MSG_ERROR(This is not GNU libtool)
+	fi
+else
+	AC_MSG_ERROR(GNU libtool has not been found)
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_CHECK_WCHAR_H version: 1 updated: 2011/10/29 15:01:05
 dnl ----------------
 dnl Check if wchar.h can be used, i.e., without defining _XOPEN_SOURCE_EXTENDED
@@ -1529,6 +1550,15 @@ AC_DEFUN([CF_FIXUP_ADAFLAGS],[
 		;;
 	esac
 	AC_MSG_RESULT($ADAFLAGS)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_FORGET_TOOL version: 1 updated: 2013/04/06 18:03:09
+dnl --------------
+dnl Forget that we saw the given tool.
+AC_DEFUN([CF_FORGET_TOOL],[
+unset ac_cv_prog_ac_ct_$1
+unset ac_ct_$1
+unset $1
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FUNC_DLSYM version: 3 updated: 2012/10/06 11:17:15
@@ -3049,6 +3079,18 @@ fi
 CF_SUBDIR_PATH($1,$2,lib)
 
 $1="$cf_library_path_list [$]$1"
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_LIBTOOL_VERSION version: 1 updated: 2013/04/06 18:03:09
+dnl ------------------
+AC_DEFUN([CF_LIBTOOL_VERSION],[
+if test -n "$LIBTOOL" && test "$LIBTOOL" != none
+then
+	cf_cv_libtool_version=`$LIBTOOL --version 2>&1 | sed -e '/^$/d' |sed -e '2,$d' -e 's/([[^)]]*)//g' -e 's/^[[^1-9]]*//' -e 's/[[^0-9.]].*//'`
+else
+	cf_cv_libtool_version=
+fi
+test -z "$cf_cv_libtool_version" && unset cf_cv_libtool_version
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_LIB_PREFIX version: 9 updated: 2012/01/21 19:28:10
@@ -6600,7 +6642,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 28 updated: 2011/07/02 15:40:32
+dnl CF_WITH_LIBTOOL version: 29 updated: 2013/04/06 18:03:09
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -6670,7 +6712,14 @@ ifdef([AC_PROG_LIBTOOL],[
 		CF_PATH_SYNTAX(with_libtool)
 		LIBTOOL=$with_libtool
 	else
-		AC_PATH_PROG(LIBTOOL,libtool)
+		AC_CHECK_TOOLS(LIBTOOL,[libtool glibtool],none)
+		CF_LIBTOOL_VERSION
+		if test -z "$cf_cv_libtool_version" && test "$LIBTOOL" = libtool
+		then
+			CF_FORGET_TOOL(LIBTOOL)
+			AC_CHECK_TOOLS(LIBTOOL,[glibtool],none)
+			CF_LIBTOOL_VERSION
+		fi
 	fi
 	if test -z "$LIBTOOL" ; then
 		AC_MSG_ERROR(Cannot find libtool)
@@ -6686,17 +6735,7 @@ ifdef([AC_PROG_LIBTOOL],[
 	LIB_UNINSTALL='${LIBTOOL} --mode=uninstall'
 	LIB_PREP=:
 
-	# Show the version of libtool
-	AC_MSG_CHECKING(version of libtool)
-
-	# Save the version in a cache variable - this is not entirely a good
-	# thing, but the version string from libtool is very ugly, and for
-	# bug reports it might be useful to have the original string. "("
-	cf_cv_libtool_version=`$LIBTOOL --version 2>&1 | sed -e '/^$/d' |sed -e '2,$d' -e 's/([[^)]]*)//g' -e 's/^[[^1-9]]*//' -e 's/[[^0-9.]].*//'`
-	AC_MSG_RESULT($cf_cv_libtool_version)
-	if test -z "$cf_cv_libtool_version" ; then
-		AC_MSG_ERROR(This is not GNU libtool)
-	fi
+	CF_CHECK_LIBTOOL_VERSION
 
 	# special hack to add -no-undefined (which libtool should do for itself)
 	LT_UNDEF=

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.101 2013/03/13 09:45:11 tom Exp $
+# $Id: Makefile.in,v 1.103 2013/03/30 21:03:33 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -124,19 +124,23 @@ LINK_DEBUG	= $(LINK_FLAGS)
 LINK_PROFILE	= $(LINK_FLAGS)
 LINK_SHARED	= $(LINK_FLAGS)
 
+# flags for test-programs
 TEST_LIBS	= @TEST_LIBS@
 TEST_ARGS	= @LDFLAGS_STATIC@ @TEST_ARGS@ @LDFLAGS_SHARED@ 
-
-LDFLAGS		= $(TEST_ARGS) @LDFLAGS@ \
+TEST_LDFLAGS	= $(TEST_ARGS) @LDFLAGS@ \
 	@LD_MODEL@ $(TEST_LIBS) @LIBS@ @LOCAL_LDFLAGS@ $(CXXLIBS)
 
-LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
-LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
-LDFLAGS_DEBUG	= $(LDFLAGS) $(CFLAGS_DEBUG)
-LDFLAGS_PROFILE	= $(LDFLAGS) $(CFLAGS_PROFILE)
-LDFLAGS_SHARED	= $(LDFLAGS) $(CFLAGS_SHARED) @LD_SHARED_OPTS@
+LDFLAGS_LIBTOOL	= $(TEST_LDFLAGS) $(CFLAGS_LIBTOOL)
+LDFLAGS_NORMAL	= $(TEST_LDFLAGS) $(CFLAGS_NORMAL)
+LDFLAGS_DEBUG	= $(TEST_LDFLAGS) $(CFLAGS_DEBUG)
+LDFLAGS_PROFILE	= $(TEST_LDFLAGS) $(CFLAGS_PROFILE)
+LDFLAGS_SHARED	= $(TEST_LDFLAGS) $(CFLAGS_SHARED) @LD_SHARED_OPTS@
 
 LDFLAGS_DEFAULT	= $(LINK_@DFT_UPR_MODEL@) $(LDFLAGS_@DFT_UPR_MODEL@)
+
+# flags for library built by this makefile
+LDFLAGS		= $(TEST_ARGS) @LDFLAGS@ \
+	@LD_MODEL@ $(TEST_LIBS) @LIBS@ $(CXXLIBS)
 
 AUTO_SRC	= \
 		etip.h
@@ -156,7 +160,10 @@ tags:
 OBJS_DEMO = $(MODEL)/demo$o
 
 $(MODEL)/demo$o : $(srcdir)/demo.cc \
-	$(cursesf_h) $(cursesm_h) $(cursesapp_h)
+		$(internal_h) \
+		$(cursesf_h) \
+		$(cursesm_h) \
+		$(cursesapp_h)
 	@echo 'compiling demo (obj_s)'
 	@$(LIBTOOL_COMPILE) $(CXX) $(CFLAGS_DEFAULT) -c $(srcdir)/demo.cc -o $@
 
@@ -188,8 +195,16 @@ realclean :: distclean
 
 ###############################################################################
 
+internal_h	= $(srcdir)/internal.h \
+		  $(INCDIR)/ncurses_cfg.h \
+		  $(INCDIR)/nc_mingw.h \
+		  $(INCDIR)/nc_string.h
+
+etip_h		= etip.h \
+		  $(INCDIR)/ncurses_dll.h
+
 cursesw_h	= $(srcdir)/cursesw.h \
-		  etip.h \
+		  $(etip_h) \
 		  $(INCDIR)/curses.h
 
 cursesp_h	= $(srcdir)/cursesp.h \

@@ -61,6 +61,7 @@ configure-stamp:
 		--with-termlib \
 		--with-ticlib \
 		--with-trace \
+		--with-cxx-shared \
 		--with-xterm-kbs=DEL \
 		--without-ada \
 		--without-debug \

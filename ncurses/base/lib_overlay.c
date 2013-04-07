@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_overlay.c,v 1.30 2013/01/19 22:31:19 tom Exp $")
+MODULE_ID("$Id: lib_overlay.c,v 1.31 2013/04/06 23:47:13 tom Exp $")
 
 static int
 overlap(const WINDOW *const src, WINDOW *const dst, int const flag)
@@ -151,7 +151,10 @@ copywin(const WINDOW *src, WINDOW *dst,
        dminrow, dmincol,
        dmaxrow, dmaxcol, over));
 
-    if (src && dst) {
+    if (src != 0
+	&& dst != 0
+	&& dmaxrow >= dminrow
+	&& dmaxcol >= dmincol) {
 	_nc_lock_global(curses);
 
 	bk = AttrOf(dst->_nc_bkgd);
