@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.65 2013/03/09 21:39:08 tom Exp $
+dnl $Id: aclocal.m4,v 1.66 2013/04/13 23:00:18 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -516,7 +516,7 @@ case "$CC" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CFG_DEFAULTS version: 8 updated: 2011/06/04 20:09:13
+dnl CF_CFG_DEFAULTS version: 9 updated: 2013/04/13 18:58:32
 dnl ---------------
 dnl Determine the default configuration into which we'll install ncurses.  This
 dnl can be overridden by the user's command-line options.  There's two items to
@@ -534,7 +534,7 @@ AC_MSG_CHECKING(for prefix)
 if test "x$prefix" = "xNONE" ; then
 	case "$cf_cv_system_name" in
 		# non-vendor systems don't have a conflict
-	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|k*bsd*-gnu)
+	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|k*bsd*-gnu|mingw*)
 		prefix=/usr
 		;;
 	*)	prefix=$ac_default_prefix

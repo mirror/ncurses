@@ -1154,7 +1154,7 @@ echo $ECHO_N "checking for prefix... $ECHO_C" >&6
 if test "x$prefix" = "xNONE" ; then
 	case "$cf_cv_system_name" in
 		# non-vendor systems don't have a conflict
-	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|k*bsd*-gnu)
+	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|k*bsd*-gnu|mingw*)
 		prefix=/usr
 		;;
 	*)	prefix=$ac_default_prefix

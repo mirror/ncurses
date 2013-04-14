@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2043 2013/04/06 23:48:25 tom Exp $
+-- $Id: NEWS,v 1.2046 2013/04/13 22:51:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130413
+	+ add MinGW to cases where ncurses installs by default into /usr
+	  (prompted by discussion with Daniel Silva Ferreira).
+	+ add -D option to infocmp's usage-message (patch by Miroslav Lichvar).
+	+ add a missing 'int' type for main function in configure check for
+	  type of bool variable, to work with clang 3.2 (report by Dmitri
+	  Gribenko).
+	+ improve configure check for static_cast, to work with clang 3.2
+	  (report by Dmitri Gribenko).
+	+ re-order rule for demo.o and macros defining header dependencies in
+	  c++/Makefile.in to accommodate gmake (report by Dmitri Gribenko).
 
 20130406
 	+ improve parameter checking in copywin().

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.123 2012/11/17 23:15:10 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.124 2013/04/13 22:15:14 Miroslav.Lichvar Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1165,6 +1165,7 @@ usage(void)
 	,"  -R subset (see manpage)"
 	,"  -T    eliminate size limits (test)"
 	,"  -U    eliminate post-processing of entries"
+	,"  -D    print database locations"
 	,"  -V    print version"
 #if NCURSES_XNAMES
 	,"  -a    with -F, list commented-out caps"

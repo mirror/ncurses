@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.662 2013/04/06 22:06:57 tom Exp $
+dnl $Id: aclocal.m4,v 1.666 2013/04/13 22:59:35 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -492,7 +492,7 @@ else	AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_BOOL_SIZE version: 12 updated: 2006/12/16 12:33:30
+dnl CF_BOOL_SIZE version: 13 updated: 2013/04/13 18:03:21
 dnl ------------
 dnl Test for the size of 'bool' in the configured C++ compiler (e.g., a type).
 dnl Don't bother looking for bool.h, since it's been deprecated.
@@ -526,7 +526,7 @@ AC_CACHE_VAL(cf_cv_type_of_bool,[
 
 #endif
 
-main()
+int main()
 {
 	FILE *fp = fopen("cf_test.out", "w");
 	if (fp != 0) {
@@ -678,7 +678,7 @@ case "$CC" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CFG_DEFAULTS version: 8 updated: 2011/06/04 20:09:13
+dnl CF_CFG_DEFAULTS version: 9 updated: 2013/04/13 18:58:32
 dnl ---------------
 dnl Determine the default configuration into which we'll install ncurses.  This
 dnl can be overridden by the user's command-line options.  There's two items to
@@ -696,7 +696,7 @@ AC_MSG_CHECKING(for prefix)
 if test "x$prefix" = "xNONE" ; then
 	case "$cf_cv_system_name" in
 		# non-vendor systems don't have a conflict
-	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|k*bsd*-gnu)
+	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|k*bsd*-gnu|mingw*)
 		prefix=/usr
 		;;
 	*)	prefix=$ac_default_prefix
@@ -1022,7 +1022,7 @@ fi
 test "$cf_cv_cpp_param_init" = yes && AC_DEFINE(CPP_HAS_PARAM_INIT,1,[Define to 1 if C++ has parameter initialization])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CPP_STATIC_CAST version: 2 updated: 2012/10/06 17:56:13
+dnl CF_CPP_STATIC_CAST version: 3 updated: 2013/04/13 18:03:21
 dnl ------------------
 dnl Check if the C++ compiler accepts static_cast in generics.  This appears to
 dnl not be supported in g++ before 3.0
@@ -1044,7 +1044,7 @@ public:
 	       int begin_x = 0)
   {
   }
-
+  NCursesPanel();
   ~NCursesPanel();
 };
 
