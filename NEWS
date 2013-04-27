@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2046 2013/04/13 22:51:41 tom Exp $
+-- $Id: NEWS,v 1.2049 2013/04/27 21:56:59 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130427
+	+ fix clang 3.2 warning in progs/dump_entry.c
+	+ drop AC_TYPE_SIGNAL check; ncurses relies on c89 and later.
 
 20130413
 	+ add MinGW to cases where ncurses installs by default into /usr

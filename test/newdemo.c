@@ -2,7 +2,7 @@
  *  newdemo.c	-	A demo program using PDCurses. The program illustrate
  *  	 		the use of colours for text output.
  *
- * $Id: newdemo.c,v 1.39 2012/12/29 23:39:08 tom Exp $
+ * $Id: newdemo.c,v 1.40 2013/04/27 19:46:53 tom Exp $
  */
 
 #include <test.priv.h>
@@ -47,7 +47,7 @@ static const char *messages[] =
 /*
  *  Trap interrupt
  */
-static RETSIGTYPE
+static void
 trap(int sig GCC_UNUSED)
 {
     endwin();

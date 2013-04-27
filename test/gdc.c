@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.36 2012/12/29 22:51:57 tom Exp $
+ * $Id: gdc.c,v 1.37 2013/04/27 19:50:17 tom Exp $
  */
 
 #include <test.priv.h>
@@ -60,7 +60,7 @@ static int sigtermed = 0;
 static bool redirected = FALSE;
 static bool hascolor = FALSE;
 
-static RETSIGTYPE
+static void
 sighndl(int signo)
 {
     signal(signo, sighndl);

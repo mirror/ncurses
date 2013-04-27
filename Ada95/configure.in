@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010-2011,2012 Free Software Foundation, Inc.              *
+dnl Copyright (c) 2010-2012,2013 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.46 2013/01/26 21:26:06 tom Exp $
+dnl $Id: configure.in,v 1.47 2013/04/27 19:50:17 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.46 $)
+AC_REVISION($Revision: 1.47 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -460,8 +460,6 @@ CF_LINK_DATAONLY
 
 ###	Checks for library functions.
 CF_MKSTEMP
-
-AC_TYPE_SIGNAL
 
 dnl We'll do our own -g libraries, unless the user's overridden via $CFLAGS
 if test -z "$cf_user_CFLAGS" && test "$with_no_leaks" = no ; then

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <SigAction.h>
 
-MODULE_ID("$Id: lib_tstp.c,v 1.46 2012/08/25 19:52:47 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.47 2013/04/27 19:50:17 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -300,7 +300,7 @@ handle_SIGWINCH(int sig GCC_UNUSED)
  * handler.
  */
 static int
-CatchIfDefault(int sig, RETSIGTYPE (*handler) (int))
+CatchIfDefault(int sig, void (*handler) (int))
 {
     int result;
 #if HAVE_SIGACTION || HAVE_SIGVEC
@@ -330,7 +330,7 @@ CatchIfDefault(int sig, RETSIGTYPE (*handler) (int))
 	result = FALSE;
     }
 #else /* !HAVE_SIGACTION */
-    RETSIGTYPE (*ohandler) (int);
+    void (*ohandler) (int);
 
     ohandler = signal(sig, SIG_IGN);
     if (ohandler == SIG_DFL

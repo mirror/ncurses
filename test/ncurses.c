@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.388 2013/02/16 18:56:30 tom Exp $
+$Id: ncurses.c,v 1.389 2013/04/27 19:46:53 tom Exp $
 
 ***************************************************************************/
 
@@ -6663,7 +6663,7 @@ set_terminal_modes(void)
 }
 
 #ifdef SIGUSR1
-static RETSIGTYPE
+static void
 announce_sig(int sig)
 {
     (void) fprintf(stderr, "Handled signal %d\r\n", sig);

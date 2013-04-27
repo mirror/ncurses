@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.107 2013/03/17 00:27:15 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.108 2013/04/27 21:45:19 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -73,7 +73,7 @@ static NCURSES_CONST char *const *bool_names;
 static NCURSES_CONST char *const *num_names;
 static NCURSES_CONST char *const *str_names;
 
-static const char *separator, *trailer;
+static const char *separator = "", *trailer = "";
 
 /* cover various ports and variants of terminfo */
 #define V_ALLCAPS	0	/* all capabilities (SVr4, XSI, ncurses) */

@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.92 2013/01/20 00:11:24 tom Exp $
+ * $Id: view.c,v 1.93 2013/04/27 19:46:53 tom Exp $
  */
 
 #include <test.priv.h>
@@ -85,7 +85,7 @@
 #undef CTRL
 #define CTRL(x)	((x) & 0x1f)
 
-static RETSIGTYPE finish(int sig) GCC_NORETURN;
+static void finish(int sig) GCC_NORETURN;
 static void show_all(const char *tag);
 
 #if defined(SIGWINCH) && defined(TIOCGWINSZ) && HAVE_RESIZE_TERM
@@ -95,7 +95,7 @@ static void show_all(const char *tag);
 #endif
 
 #if CAN_RESIZE
-static RETSIGTYPE adjust(int sig);
+static void adjust(int sig);
 static int interrupted;
 static bool waiting = FALSE;
 #endif
@@ -507,7 +507,7 @@ main(int argc, char *argv[])
     finish(0);			/* we're done */
 }
 
-static RETSIGTYPE
+static void
 finish(int sig)
 {
     endwin();
@@ -534,7 +534,7 @@ finish(int sig)
  * The 'wrefresh(curscr)' is needed to force the refresh to start from the top
  * of the screen -- some xterms mangle the bitmap while resizing.
  */
-static RETSIGTYPE
+static void
 adjust(int sig)
 {
     if (waiting || sig == 0) {

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: firework.c,v 1.28 2013/01/13 01:06:17 tom Exp $
+ * $Id: firework.c,v 1.29 2013/04/27 19:46:53 tom Exp $
  */
 #include <test.priv.h>
 
@@ -41,7 +41,7 @@ cleanup(void)
     endwin();
 }
 
-static RETSIGTYPE
+static void
 onsig(int n GCC_UNUSED)
 {
     cleanup();

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.63 2013/01/13 01:00:11 tom Exp $
+  $Id: worm.c,v 1.64 2013/04/27 19:50:17 tom Exp $
 */
 
 #include <test.priv.h>
@@ -217,7 +217,7 @@ cleanup(void)
     endwin();
 }
 
-static RETSIGTYPE
+static void
 onsig(int sig GCC_UNUSED)
 {
     cleanup();

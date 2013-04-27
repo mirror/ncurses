@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.474 $
-#	$Date: 2013/03/23 20:42:52 $
+#	$Revision: 1.475 $
+#	$Date: 2013/03/30 19:51:04 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -21245,7 +21245,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # assigned in System V terminfo.  There are some variant extension sets out
 # there.  We try to describe them here.
 #
-# XENIX extensions:
+#### XENIX extensions:
 #
 # The XENIX extensions include a set of function-key capabilities as follows:
 #
@@ -21310,7 +21310,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # When translating a termcap file, ncurses tic will do this automatically.
 # The double forms characters don't fit the SVr4 terminfo model.
 #
-# AT&T Extensions:
+#### AT&T Extensions:
 #
 # The old AT&T 5410, 5420, 5425, pc6300plus, 610, and s4 entries used a set of
 # nonstandard capabilities.  Its signature is the KM capability, used to name
@@ -21321,7 +21321,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # FL=:LO: (enable soft labels), FE=:LF: (disable soft labels), CI=:vi: (make
 # cursor invisible), and CV=:ve: (make cursor normal).
 #
-# HP Extensions
+#### HP Extensions
 #
 # The HP library (as of mid-1995, their term.h file version 70.1) appears to
 # have the System V capabilities up to SVr1 level.  After that, it supports
@@ -21330,7 +21330,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # label_off, and key_f11..key_f63 capabilities like SVr4's.  This makes the
 # HP binary format incompatible with SVr4's.
 #
-# IBM Extensions
+#### IBM Extensions
 #
 # There is a set of nonstandard terminfos used by IBM's AIX operating system.
 # The AIX terminfo library diverged from SVr1 terminfo, and replaces all
@@ -21358,7 +21358,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # The box2 characters are the double-line versions of these forms graphics.
 # The AIX binary terminfo format is incompatible with SVr4's.
 #
-# Iris console extensions:
+#### Iris console extensions:
 #
 # HS is half-intensity start; HE is half-intensity end
 # CT is color terminal type (for Curses & rogue)
@@ -21367,13 +21367,15 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # The ncurses tic utility recognizes HS as an alias for mh <dim>.
 #
-# TC Extensions:
+#### TC Extensions:
 #
 # There is a set of extended termcaps associated with something
 # called the "Terminal Control" or TC package created by MainStream Systems,
 # Winfield Kansas.  This one also uses GS/GE for as/ae, and also uses
 # CF for civis and CO for cvvis.  Finally, they define a boolean :ct:
 # that flags color terminals.
+#
+######## NCURSES USER-DEFINABLE CAPABILITIES
 #
 # Extensions added after ncurses 5.0 generally use the "-x" option of tic and
 # infocmp to manipulate user-definable capabilities.  Those that are intended
@@ -21388,7 +21390,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # ncurses makes explicit checks for a few user-definable capabilities:  AX, U8,
 # XM.
 #
-# SCREEN Extensions:
+#### SCREEN Extensions:
 #
 # The screen program uses the termcap interface.  It recognizes a few useful
 # nonstandard capabilities.  Those are used in this file.
@@ -21427,7 +21429,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # The other ISO-2022 features are rarely used, but provided here to make
 # screen's termcap features available.
 #
-# XTERM Extensions:
+#### XTERM Extensions:
 #
 # Most of the xterm extensions are for function-keys.  Since patch #94 (in
 # 1999), xterm has supported shift/control/alt/meta modifiers which produce
@@ -21461,7 +21463,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # XM is a string capability which overrides ncurses's built-in string which
 #    enables xterm mouse mode.
 #
-# Miscellaneous extensions:
+#### Miscellaneous extensions:
 #
 # gsbom/grbom are used to enable/disable real bold (not intensity bright) mode.
 #    This was implemented for the Hurd.
