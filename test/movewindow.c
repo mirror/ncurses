@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.38 2012/12/15 18:36:40 tom Exp $
+ * $Id: movewindow.c,v 1.39 2013/05/04 19:41:02 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -494,34 +494,32 @@ move_derwin(WINDOW *win)
 
     if (parent != 0) {
 	bool top = (parent == stdscr);
-	if (!top) {
-	    int min_col = top ? COL_MIN : 0;
-	    int max_col = top ? COL_MAX : getmaxx(parent);
-	    int min_line = top ? LINE_MIN : 0;
-	    int max_line = top ? LINE_MAX : getmaxy(parent);
-	    PAIR *tmp;
-	    bool more;
+	int min_col = top ? COL_MIN : 0;
+	int max_col = top ? COL_MAX : getmaxx(parent);
+	int min_line = top ? LINE_MIN : 0;
+	int max_line = top ? LINE_MAX : getmaxy(parent);
+	PAIR *tmp;
+	bool more;
 
-	    show_derwin(win);
-	    while ((tmp = selectcell(parent,
-				     win,
-				     min_line, min_col,
-				     max_line, max_col,
-				     TRUE,
-				     &more)) != 0) {
-		if (mvderwin(win, tmp->y, tmp->x) != ERR) {
-		    refresh_all(win);
-		    doupdate();
-		    repaint_one(win);
-		    doupdate();
-		    result = TRUE;
-		    show_derwin(win);
-		} else {
-		    flash();
-		}
-		if (!more)
-		    break;
+	show_derwin(win);
+	while ((tmp = selectcell(parent,
+				 win,
+				 min_line, min_col,
+				 max_line, max_col,
+				 TRUE,
+				 &more)) != 0) {
+	    if (mvderwin(win, tmp->y, tmp->x) != ERR) {
+		refresh_all(win);
+		doupdate();
+		repaint_one(win);
+		doupdate();
+		result = TRUE;
+		show_derwin(win);
+	    } else {
+		flash();
 	    }
+	    if (!more)
+		break;
 	}
     }
     head_line("done");

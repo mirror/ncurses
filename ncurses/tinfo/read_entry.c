@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.121 2012/11/18 01:18:47 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.122 2013/05/04 22:53:42 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -124,7 +124,7 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
     int offset = 0;
     int name_size, bool_count, num_count, str_count, str_size;
     int i;
-    char buf[MAX_ENTRY_SIZE + 1];
+    char buf[MAX_ENTRY_SIZE + 2];
     char *string_table;
     unsigned want, have;
 
@@ -159,7 +159,7 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
     want = (unsigned) (str_size + name_size + 1);
     if (str_size) {
 	/* try to allocate space for the string table */
-	if (str_count * 2 >= (int) sizeof(buf)
+	if (str_count * 2 >= MAX_ENTRY_SIZE
 	    || (string_table = typeMalloc(char, want)) == 0) {
 	    return (TGETENT_NO);
 	}
@@ -238,9 +238,9 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 	unsigned need = (unsigned) (ext_bool_count + ext_num_count + ext_str_count);
 	int base = 0;
 
-	if (need >= sizeof(buf)
-	    || ext_str_size >= (int) sizeof(buf)
-	    || ext_str_limit >= (int) sizeof(buf)
+	if (need >= (MAX_ENTRY_SIZE / 2)
+	    || ext_str_size >= MAX_ENTRY_SIZE
+	    || ext_str_limit >= MAX_ENTRY_SIZE
 	    || ext_bool_count < 0
 	    || ext_num_count < 0
 	    || ext_str_count < 0

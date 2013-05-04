@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2049 2013/04/27 21:56:59 tom Exp $
+-- $Id: NEWS,v 1.2053 2013/05/04 23:03:37 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130504
+	+ fixes for issues found by Coverity:
+	  + correct FNKEY() macro in progs/dump_entry.c, allowing kf11-kf63 to
+	    display when infocmp's -R option is used for HP or AIX subsets.
+	  + fix dead-code issue with test/movewindow.c
+	  + improve limited-checking in _nc_read_termtype().
 
 20130427
 	+ fix clang 3.2 warning in progs/dump_entry.c
@@ -2706,7 +2713,7 @@ it is not possible to add this information.
 	+ modify configure script to quiet c++ build with libtool when the
 	  --disable-echo option is used.
 	+ modify configure script to disable ada95 if libtool is selected,
-	  writing a warning message (addresses FreeBSD ports/114493).
+	  writing a warning message (addresses FreeBSD #114493).
 	+ update config.guess, config.sub
 
 20070707
@@ -5272,7 +5279,7 @@ it is not possible to add this information.
 	+ modify lib_screen.c and lib_newwin.c to maintain the SCREEN-specific
 	  pointers for curscr/stdscr/newscr when scr_save() and scr_restore()
 	  modify the global curscr/stdscr/newscr variables.  Fixes Redhat
-	  #68199 dated 2002-07-07.
+	  #68199.
 	+ add checks for null pointer in calls to tparm() and tgoto() based on
 	  FreeBSD bug report.  If ncurses were built with termcap support, and
 	  the first call to tgoto() were a zero-length string, the result would

@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.108 2013/04/27 21:45:19 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.109 2013/05/04 18:48:56 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -309,7 +309,11 @@ dump_predicate(PredType type, PredIdx idx)
 static void set_obsolete_termcaps(TERMTYPE *tp);
 
 /* is this the index of a function key string? */
-#define FNKEY(i)	(((i)<= 65 && (i)>= 75) || ((i)<= 216 && (i)>= 268))
+#define FNKEY(i) \
+    (((i) >= STR_IDX(key_f0) && \
+      (i) <= STR_IDX(key_f9)) || \
+     ((i) >= STR_IDX(key_f11) && \
+      (i) <= STR_IDX(key_f63)))
 
 /*
  * If we configure with a different Caps file, the offsets into the arrays
