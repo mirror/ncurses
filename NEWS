@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2055 2013/05/11 20:22:04 tom Exp $
+-- $Id: NEWS,v 1.2058 2013/05/18 22:52:45 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130518
+	+ corrected ifdefs in test/testcurs.c to allow comparison of mouse
+	  interface versus pdcurses (cf: 20130316).
+	+ add pow() to configure-check for math library, needed since
+	  20121208 for test/hanoi (Debian #708056).
+	+ regenerated html manpages.
+	+ update doctype used for html documentation.
 
 20130511
 	+ move nsterm-related entries out of "obsolete" section to more

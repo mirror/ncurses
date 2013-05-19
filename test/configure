@@ -2593,7 +2593,7 @@ else
 int
 main ()
 {
-double x = rand(); printf("result = %g\n", sin(x))
+double x = rand(); printf("result = %g\n", pow(sin(x),x))
   ;
   return 0;
 }

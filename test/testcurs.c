@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.47 2013/02/16 20:29:04 tom Exp $
+ * $Id: testcurs.c,v 1.48 2013/05/18 22:05:06 tom Exp $
  */
 
 #include <test.priv.h>
@@ -359,12 +359,13 @@ inputTest(WINDOW *win)
 	else
 	    wprintw(win, "Key Pressed: %s", unctrl(UChar(c)));
 #ifdef KEY_MOUSE
+	if (c == KEY_MOUSE) {
+#if defined(NCURSES_MOUSE_VERSION)
 #define ButtonChanged(n) ((event.bstate) & NCURSES_MOUSE_MASK(1, 037))
 #define ButtonPressed(n) ((event.bstate) & NCURSES_MOUSE_MASK(1, NCURSES_BUTTON_PRESSED))
 #define ButtonDouble(n)  ((event.bstate) & NCURSES_MOUSE_MASK(1, NCURSES_DOUBLE_CLICKED))
 #define ButtonTriple(n)  ((event.bstate) & NCURSES_MOUSE_MASK(1, NCURSES_TRIPLE_CLICKED))
 #define ButtonRelease(n) ((event.bstate) & NCURSES_MOUSE_MASK(1, NCURSES_BUTTON_RELEASED))
-	if (c == KEY_MOUSE) {
 	    MEVENT event;
 	    int button = 0;
 
@@ -388,7 +389,6 @@ inputTest(WINDOW *win)
 	    else
 		wprintw(win, "released: ");
 	    wprintw(win, " Position: Y: %d X: %d", event.y, event.x);
-#if defined(NCURSES_MOUSE_VERSION)
 #elif defined(PDCURSES)
 	    int button = 0;
 	    request_mouse_pos();
@@ -411,7 +411,7 @@ inputTest(WINDOW *win)
 	    else
 		wprintw(win, "released: ");
 	    wprintw(win, " Position: Y: %d X: %d", MOUSE_Y_POS, MOUSE_X_POS);
-#endif /* PDCURSES */
+#endif /* NCURSES_VERSION vs PDCURSES */
 	}
 #endif /* KEY_MOUSE */
 	wrefresh(win);

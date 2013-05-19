@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insch.c,v 1.34 2013/05/11 18:56:44 tom Exp $")
+MODULE_ID("$Id: lib_insch.c,v 1.35 2013/05/18 21:58:56 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -102,7 +102,7 @@ _nc_insert_ch(SCREEN *sp, WINDOW *win, chtype ch)
 		win->_curx++;
 	    }
 	} else if (iscntrl(ch8)) {
-	    s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx ch8);
+	    s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx (chtype) ch8);
 	    while (*s != '\0') {
 		code = _nc_insert_ch(sp, win, ChAttrOf(ch) | UChar(*s));
 		if (code != OK)
@@ -122,7 +122,7 @@ _nc_insert_ch(SCREEN *sp, WINDOW *win, chtype ch)
 		code = _nc_insert_wch(win, &wch);
 	    } else if (count == -1) {
 		/* handle EILSEQ */
-		s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx ch8);
+		s = NCURSES_SP_NAME(unctrl) (NCURSES_SP_ARGx (chtype) ch8);
 		if (strlen(s) > 1) {
 		    while (*s != '\0') {
 			code = _nc_insert_ch(sp, win,

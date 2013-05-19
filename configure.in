@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.565 2013/04/27 19:37:40 tom Exp $
+dnl $Id: configure.in,v 1.566 2013/05/18 21:53:41 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.565 $)
+AC_REVISION($Revision: 1.566 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1327,7 +1327,7 @@ AC_CHECK_LIB(bsd, gettimeofday,
 	;;
 esac
 
-CF_MATH_LIB(MATH_LIB,sin(x))
+CF_MATH_LIB(MATH_LIB,pow(sin(x),x))
 AC_SUBST(MATH_LIB)
 
 ###	Checks for header files.

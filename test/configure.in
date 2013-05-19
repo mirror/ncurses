@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.111 2013/04/27 19:45:29 tom Exp $
+dnl $Id: configure.in,v 1.112 2013/05/18 21:53:54 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -56,7 +56,7 @@ CF_PROG_INSTALL
 CF_PROG_LINT
 CF_MAKE_TAGS
 
-CF_MATH_LIB(MATH_LIB,sin(x))
+CF_MATH_LIB(MATH_LIB,pow(sin(x),x))
 AC_SUBST(MATH_LIB)
 
 dnl Things that we don't need (or must override) if we're not building ncurses
