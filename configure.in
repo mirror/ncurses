@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.566 2013/05/18 21:53:41 tom Exp $
+dnl $Id: configure.in,v 1.567 2013/05/25 20:15:02 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.566 $)
+AC_REVISION($Revision: 1.567 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -444,8 +444,9 @@ os2*) #(vi
 esac
 AC_SUBST(TERMINFO_SRC)
 
+NCURSES_USE_DATABASE=0
 if test "$use_database" != no ; then
-	AC_DEFINE(USE_DATABASE,1,[Define to 1 if we should use the terminal database])
+	NCURSES_USE_DATABASE=1
 
 	AC_MSG_CHECKING(which terminfo source-file will be installed)
 	AC_ARG_WITH(database,
@@ -461,6 +462,7 @@ if test "$use_database" != no ; then
 else
 	with_hashed_db=no
 fi
+AC_SUBST(NCURSES_USE_DATABASE)
 
 AC_MSG_CHECKING(for list of fallback descriptions)
 AC_ARG_WITH(fallbacks,
@@ -577,6 +579,7 @@ AC_ARG_ENABLE(termcap,
 	[with_termcap=no])
 AC_MSG_RESULT($with_termcap)
 
+NCURSES_USE_TERMCAP=0
 if test "x$with_termcap" != "xyes" ; then
 	if test "$use_database" = no ; then
 		if test -z "$with_fallback" ; then
@@ -586,37 +589,38 @@ if test "x$with_termcap" != "xyes" ; then
 	AC_DEFINE(PURE_TERMINFO,1,[Define to 1 if we should support only terminfo])
 else
 
-if test "$with_ticlib" != no ; then
-	AC_ERROR(Options --with-ticlib and --enable-termcap cannot be combined)
+	if test "$with_ticlib" != no ; then
+		AC_ERROR(Options --with-ticlib and --enable-termcap cannot be combined)
+	fi
+
+	NCURSES_USE_TERMCAP=1
+	AC_MSG_CHECKING(for list of termcap files)
+	CF_WITH_PATHLIST(termpath,
+		[  --with-termpath=XXX     specify list of termcap files],
+		TERMPATH,
+		/etc/termcap:/usr/share/misc/termcap)
+	AC_MSG_RESULT($TERMPATH)
+	test -n "$TERMPATH" && AC_DEFINE_UNQUOTED(TERMPATH,"$TERMPATH",[Define to set the termcap searchlist])
+
+	###	use option --enable-getcap to use a hacked getcap for reading termcaps
+	AC_MSG_CHECKING(if fast termcap-loader is needed)
+	AC_ARG_ENABLE(getcap,
+		[  --enable-getcap         fast termcap load, no xrefs to terminfo],
+		[with_getcap=$enableval],
+		[with_getcap=no])
+	AC_MSG_RESULT($with_getcap)
+	test "x$with_getcap" = "xyes" && AC_DEFINE(USE_GETCAP,1,[Define to 1 to use fast termcap-loader])
+
+	AC_MSG_CHECKING(if translated termcaps will be cached in ~/.terminfo)
+	AC_ARG_ENABLE(getcap-cache,
+		[  --enable-getcap-cache   cache translated termcaps in ~/.terminfo],
+		[with_getcap_cache=$enableval],
+		[with_getcap_cache=no])
+	AC_MSG_RESULT($with_getcap_cache)
+	test "x$with_getcap_cache" = "xyes" && AC_DEFINE(USE_GETCAP_CACHE,1,[Define to 1 if translated termcap should be stored in $HOME/.terminfo])
+
 fi
-
-AC_DEFINE(USE_TERMCAP,1,[Define to 1 if we should support termcap])
-AC_MSG_CHECKING(for list of termcap files)
-CF_WITH_PATHLIST(termpath,
-	[  --with-termpath=XXX     specify list of termcap files],
-	TERMPATH,
-	/etc/termcap:/usr/share/misc/termcap)
-AC_MSG_RESULT($TERMPATH)
-test -n "$TERMPATH" && AC_DEFINE_UNQUOTED(TERMPATH,"$TERMPATH",[Define to set the termcap searchlist])
-
-###	use option --enable-getcap to use a hacked getcap for reading termcaps
-AC_MSG_CHECKING(if fast termcap-loader is needed)
-AC_ARG_ENABLE(getcap,
-	[  --enable-getcap         fast termcap load, no xrefs to terminfo],
-	[with_getcap=$enableval],
-	[with_getcap=no])
-AC_MSG_RESULT($with_getcap)
-test "x$with_getcap" = "xyes" && AC_DEFINE(USE_GETCAP,1,[Define to 1 to use fast termcap-loader])
-
-AC_MSG_CHECKING(if translated termcaps will be cached in ~/.terminfo)
-AC_ARG_ENABLE(getcap-cache,
-	[  --enable-getcap-cache   cache translated termcaps in ~/.terminfo],
-	[with_getcap_cache=$enableval],
-	[with_getcap_cache=no])
-AC_MSG_RESULT($with_getcap_cache)
-test "x$with_getcap_cache" = "xyes" && AC_DEFINE(USE_GETCAP_CACHE,1,[Define to 1 if translated termcap should be stored in $HOME/.terminfo])
-
-fi
+AC_SUBST(NCURSES_USE_TERMCAP)
 
 ###   Use option --disable-home-terminfo to completely remove ~/.terminfo
 AC_MSG_CHECKING(if ~/.terminfo is wanted)

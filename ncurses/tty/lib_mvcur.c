@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.132 2013/01/27 01:40:01 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.133 2013/05/25 23:59:41 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -952,7 +952,8 @@ static int
 _nc_real_mvcur(NCURSES_SP_DCLx
 	       int yold, int xold,
 	       int ynew, int xnew,
-	       NCURSES_SP_OUTC myOutCh)
+	       NCURSES_SP_OUTC myOutCh,
+	       int ovw)
 {
     NCURSES_CH_T oldattr;
     int code;
@@ -1002,15 +1003,17 @@ _nc_real_mvcur(NCURSES_SP_DCLx
 		if (l > 0) {
 		    if (carriage_return) {
 			NCURSES_PUTP2("carriage_return", carriage_return);
-		    } else
+		    } else {
 			myOutCh(NCURSES_SP_ARGx '\r');
+		    }
 		    xold = 0;
 
 		    while (l > 0) {
 			if (newline) {
 			    NCURSES_PUTP2("newline", newline);
-			} else
+			} else {
 			    myOutCh(NCURSES_SP_ARGx '\n');
+			}
 			l--;
 		    }
 		}
@@ -1030,7 +1033,7 @@ _nc_real_mvcur(NCURSES_SP_DCLx
 	    ynew = screen_lines(SP_PARM) - 1;
 
 	/* destination location is on screen now */
-	code = onscreen_mvcur(NCURSES_SP_ARGx yold, xold, ynew, xnew, TRUE, myOutCh);
+	code = onscreen_mvcur(NCURSES_SP_ARGx yold, xold, ynew, xnew, ovw, myOutCh);
 
 	/*
 	 * Restore attributes if we disabled them before moving.
@@ -1054,7 +1057,8 @@ NCURSES_SP_NAME(_nc_mvcur) (NCURSES_SP_DCLx
 			    int ynew, int xnew)
 {
     return _nc_real_mvcur(NCURSES_SP_ARGx yold, xold, ynew, xnew,
-			  NCURSES_SP_NAME(_nc_outch));
+			  NCURSES_SP_NAME(_nc_outch),
+			  TRUE);
 }
 
 #if NCURSES_SP_FUNCS
@@ -1076,7 +1080,8 @@ TINFO_MVCUR(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew)
     return _nc_real_mvcur(NCURSES_SP_ARGx
 			  yold, xold,
 			  ynew, xnew,
-			  NCURSES_SP_NAME(_nc_outch));
+			  NCURSES_SP_NAME(_nc_outch),
+			  TRUE);
 }
 
 #else /* !USE_TERM_DRIVER */
@@ -1091,7 +1096,8 @@ NCURSES_SP_NAME(mvcur) (NCURSES_SP_DCLx int yold, int xold, int ynew,
     return _nc_real_mvcur(NCURSES_SP_ARGx
 			  yold, xold,
 			  ynew, xnew,
-			  NCURSES_SP_NAME(_nc_putchar));
+			  NCURSES_SP_NAME(_nc_putchar),
+			  FALSE);
 }
 
 #if NCURSES_SP_FUNCS

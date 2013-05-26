@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.43 2013/02/02 20:07:23 tom Exp $ */
+/* $Id: term_entry.h,v 1.44 2013/05/25 20:13:38 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -53,14 +53,14 @@ extern "C" {
      */
     typedef enum {
 	dbdTIC = 0,		/* special, used by tic when writing entry */
-#if USE_DATABASE
+#if NCURSES_USE_DATABASE
 	dbdEnvOnce,		/* the $TERMINFO environment variable */
 	dbdHome,		/* $HOME/.terminfo */
 	dbdEnvList,		/* the $TERMINFO_DIRS environment variable */
 	dbdCfgList,		/* the compiled-in TERMINFO_DIRS value */
 	dbdCfgOnce,		/* the compiled-in TERMINFO value */
 #endif
-#if USE_TERMCAP
+#if NCURSES_USE_TERMCAP
 	dbdEnvOnce2,		/* the $TERMCAP environment variable */
 	dbdEnvList2,		/* the $TERMPATH environment variable */
 	dbdCfgList2,		/* the compiled-in TERMPATH */

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.155 2012/12/15 19:04:54 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.156 2013/05/25 20:20:08 tom Exp $")
 
 /****************************************************************************
  *
@@ -455,7 +455,7 @@ _nc_update_screensize(SCREEN *sp)
  *
  ****************************************************************************/
 
-#if USE_DATABASE || USE_TERMCAP
+#if NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP
 /*
  * Return 1 if entry found, 0 if not found, -1 if database not accessible,
  * just like tgetent().
@@ -707,7 +707,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 		       "Could not find any driver to handle this terminal.\n");
 	}
 #else
-#if USE_DATABASE || USE_TERMCAP
+#if NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP
 	status = _nc_setup_tinfo(tname, &termp->type);
 #else
 	status = TGETENT_NO;

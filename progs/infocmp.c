@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.124 2013/04/13 22:15:14 Miroslav.Lichvar Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.125 2013/05/25 20:13:24 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1745,7 +1745,7 @@ main(int argc, char *argv[])
 	    tname[termcount] = argv[optind];
 
 	    if (directory) {
-#if USE_DATABASE
+#if NCURSES_USE_DATABASE
 #if MIXEDCASE_FILENAMES
 #define LEAF_FMT "%c"
 #else

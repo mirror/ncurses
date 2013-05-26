@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.59 2013/04/27 19:46:53 tom Exp $
+# $Id: ncurses_defs,v 1.60 2013/05/25 20:12:34 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2012,2013 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -199,7 +199,6 @@ TERMPATH	"none"
 TIME_WITH_SYS_TIME
 TYPEOF_CHTYPE
 USE_COLORFGBG
-USE_DATABASE
 USE_GETCAP
 USE_GETCAP_CACHE
 USE_HARD_TABS
@@ -218,7 +217,6 @@ USE_SIGWINCH
 USE_STRING_HACKS
 USE_SYMLINKS
 USE_SYSMOUSE
-USE_TERMCAP
 USE_WEAK_SYMBOLS
 USE_WIDEC_SUPPORT
 USE_XMC_SUPPORT

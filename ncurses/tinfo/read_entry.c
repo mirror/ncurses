@@ -41,11 +41,11 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.122 2013/05/04 22:53:42 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.123 2013/05/25 20:17:49 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
-#if USE_DATABASE
+#if NCURSES_USE_DATABASE
 static void
 convert_shorts(char *buf, short *Numbers, int count)
 {
@@ -432,7 +432,7 @@ make_dir_filename(char *filename,
 {
     bool result = FALSE;
 
-#if USE_TERMCAP
+#if NCURSES_USE_TERMCAP
     if (_nc_is_dir_path(path))
 #endif
     {
@@ -524,7 +524,7 @@ _nc_read_tic_entry(char *filename,
     if (make_dir_filename(filename, limit, path, name)) {
 	code = _nc_read_file_entry(filename, tp);
     }
-#if USE_TERMCAP
+#if NCURSES_USE_TERMCAP
     else if (code != TGETENT_YES) {
 	code = _nc_read_termcap_entry(name, tp);
 	_nc_SPRINTF(filename, _nc_SLIMIT(PATH_MAX)
@@ -533,7 +533,7 @@ _nc_read_tic_entry(char *filename,
 #endif
     return code;
 }
-#endif /* USE_DATABASE */
+#endif /* NCURSES_USE_DATABASE */
 
 /*
  *	_nc_read_entry(char *name, char *filename, TERMTYPE *tp)
@@ -559,7 +559,7 @@ _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
 	|| strchr(name, NCURSES_PATHSEP) != 0) {
 	TR(TRACE_DATABASE, ("illegal or missing entry name '%s'", name));
     } else {
-#if USE_DATABASE
+#if NCURSES_USE_DATABASE
 	DBDIRS state;
 	int offset;
 	const char *path;
@@ -573,7 +573,7 @@ _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
 		break;
 	    }
 	}
-#elif USE_TERMCAP
+#elif NCURSES_USE_TERMCAP
 	if (code != TGETENT_YES) {
 	    code = _nc_read_termcap_entry(name, tp);
 	    _nc_SPRINTF(filename, _nc_SLIMIT(PATH_MAX)

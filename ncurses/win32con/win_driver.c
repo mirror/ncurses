@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.18 2013/03/02 19:48:06 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.19 2013/05/25 20:16:46 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -469,7 +469,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
 	int status;
 
 	code = FALSE;
-#if (USE_DATABASE || USE_TERMCAP)
+#if (NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP)
 	status = _nc_setup_tinfo(tname, &my_term.type);
 #else
 	status = TGETENT_NO;

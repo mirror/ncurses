@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.29 2013/01/12 22:01:43 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.30 2013/05/25 20:16:46 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -119,7 +119,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     sp = TCB->csp;
     TCB->magic = TCBMAGIC;
 
-#if (USE_DATABASE || USE_TERMCAP)
+#if (NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP)
     status = _nc_setup_tinfo(tname, &termp->type);
 #else
     status = TGETENT_NO;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,11 +33,11 @@
 #include <curses.priv.h>
 #include <tic.h>
 
-MODULE_ID("$Id: name_match.c,v 1.22 2012/11/18 02:10:17 tom Exp $")
+MODULE_ID("$Id: name_match.c,v 1.23 2013/05/25 20:20:08 tom Exp $")
 
 #define FirstName _nc_globals.first_name
 
-#if USE_TERMCAP && NCURSES_XNAMES
+#if NCURSES_USE_TERMCAP && NCURSES_XNAMES
 static const char *
 skip_index(const char *name)
 {
@@ -73,7 +73,7 @@ _nc_first_name(const char *const sp)
 
 	if (FirstName != 0) {
 	    const char *src = sp;
-#if USE_TERMCAP && NCURSES_XNAMES
+#if NCURSES_USE_TERMCAP && NCURSES_XNAMES
 	    src = skip_index(sp);
 #endif
 	    for (n = 0; n < MAX_NAME_SIZE; n++) {
