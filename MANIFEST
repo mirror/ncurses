@@ -1041,6 +1041,7 @@
 ./test/demo_altkeys.c
 ./test/demo_defkey.c
 ./test/demo_forms.c
+./test/demo_forms.txt
 ./test/demo_keyok.c
 ./test/demo_menus.c
 ./test/demo_panels.c

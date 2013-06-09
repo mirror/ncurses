@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.185 2013/03/17 00:57:05 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.186 2013/06/08 16:50:47 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1456,6 +1456,7 @@ uses_SGR_39_49(const char *value)
 static void
 check_screen(TERMTYPE *tp)
 {
+#if NCURSES_XNAMES
     if (_nc_user_definable) {
 	int have_XT = tigetflag("XT");
 	int have_XM = tigetflag("XM");
@@ -1507,6 +1508,7 @@ check_screen(TERMTYPE *tp)
 		_nc_warning("Expected XT to be set, given kmous");
 	}
     }
+#endif
 }
 
 /*

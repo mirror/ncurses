@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.477 $
-#	$Date: 2013/05/11 20:03:48 $
+#	$Revision: 1.478 $
+#	$Date: 2013/06/07 23:27:32 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1210,6 +1210,21 @@ nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
 #   xterm-256color.  However, it adds "nsterm", so it is possible to use the
 #   nsterm entry from this file to override the MacPorts (20110404) or
 #   system (20081102) copy of this file.
+# + In OS X 10.8 (Mountain Lion) the TERM which can be set in the preferences
+#   dialog defaults to xterm-256color.  Alternative selections are ansi,
+#   dtterm, rxvt, vt52, vt100, vt102, xterm and xterm-16color.  However,
+#   the menu says "Declare terminal as" without promising to actually emulate
+#   the corresponding terminals.  Indeed, changing TERM does not affect the
+#   emulation itself.  This means that
+#   + the function-keys do not match for dtterm for kf1-kf4 as well as
+#     khome/kend
+#   + the color model is the same for each setting of TERM (does not match
+#     ansi or dtterm).
+#   + the shift/control/meta key modifiers from rxvt and xterm variants are not
+#     recognised except for a few special cases, i.e., kRIT5 and kLFT5.
+#   + the vt52 emulation does not give a usable shell because screen-clearing
+#     does not work as expected.
+#   + selecting "xterm" or "xterm-16color" sets TERM to "xterm-256color".
 nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (bce),
 	bce, use=nsterm-16color,
 
@@ -22999,5 +23014,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* move nsterm-related entries out of "obsolete" section to more
 #	  plausible "ansi consoles" -TD
 #	* additional cleanup of table-of-contents by reordering -TD
+#
+# 2013-06-07
+#	* added note to clarify Terminal.app's non-emulation of the various
+#	  terminal types listed in the preferences dialog -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

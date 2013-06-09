@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.26 2012/10/27 21:23:17 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.27 2013/06/08 16:54:50 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -476,7 +476,9 @@ _nc_align_termtype(TERMTYPE *to, TERMTYPE *from)
 NCURSES_EXPORT(void)
 _nc_copy_termtype(TERMTYPE *dst, const TERMTYPE *src)
 {
+#if NCURSES_XNAMES
     unsigned i;
+#endif
 
     *dst = *src;		/* ...to copy the sizes and string-tables */
 
@@ -506,5 +508,4 @@ _nc_copy_termtype(TERMTYPE *dst, const TERMTYPE *src)
 	dst->ext_Names = 0;
     }
 #endif
-
 }

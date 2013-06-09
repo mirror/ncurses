@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2061 2013/05/26 00:08:21 tom Exp $
+-- $Id: NEWS,v 1.2069 2013/06/08 21:00:03 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,24 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130608
+	+ add to test/demo_forms.c examples of using the menu-hooks as well
+	  as showing how the menu item user-data can be used to pass a callback
+	  function pointer.
+	+ add test/dots_termcap.c
+	+ remove setupterm call from test/demo_termcap.c
+	+ build-fix if --disable-ext-funcs configure option is used.
+	+ modified test/edit_field.c and test/demo_forms.c to move the lengths
+	  into a user-data structure, keeping the original string for later
+	  expansion to free-format input/out demo.
+	+ modified test/demo_forms.c to load data from file.
+	+ added note to clarify Terminal.app's non-emulation of the various
+	  terminal types listed in the preferences dialog -TD
+	+ fix regression in error-reporting in lib_setup.c (Debian #711134,
+	  cf: 20121117).
+	+ build-fix for a case where --enable-broken_linker and
+	  --enable-reentrant options are combined (report by George R Goffe).
 
 20130525
 	+ modify mvcur() to distinguish between internal use by the ncurses

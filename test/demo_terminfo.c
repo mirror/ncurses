@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.16 2013/01/19 19:30:58 tom Exp $
+ * $Id: demo_terminfo.c,v 1.17 2013/06/08 16:52:47 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -388,7 +388,7 @@ main(int argc, char *argv[])
 	}
     }
 
-#ifdef NCURSES_VERSION
+#if NCURSES_XNAMES
     use_extended_names(xy_opt);
 #endif
 

@@ -1,4 +1,4 @@
-# $Id: programs,v 1.21 2013/01/13 00:46:13 tom Exp $
+# $Id: programs,v 1.22 2013/06/08 16:34:31 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2009,2013 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -48,6 +48,7 @@ demo_terminfo	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	demo_terminfo
 ditto		$(LDFLAGS_THREADS)	$(LOCAL_LIBS)	ditto
 dots		$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	dots
 dots_mvcur	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_mvcur
+dots_termcap	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	dots_termcap
 echochar	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	echochar
 filter		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	filter
 firework	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	firework

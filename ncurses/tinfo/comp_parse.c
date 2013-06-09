@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.87 2013/05/25 20:20:08 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.88 2013/06/03 11:05:54 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -486,12 +486,12 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		    memset(&fake_tm, 0, sizeof(fake_tm));
 		    fake_sp._term = &fake_tm;
 		    fake_tm.type = qp->tterm;
-		    SP = &fake_sp;
+		    _nc_set_screen(&fake_sp);
 		    set_curterm(&fake_tm);
 
 		    _nc_check_termtype2(&qp->tterm, literal);
 
-		    SP = save_SP;
+		    _nc_set_screen(save_SP);
 		    set_curterm(save_tm);
 		} else {
 		    fixup_acsc(&qp->tterm, literal);

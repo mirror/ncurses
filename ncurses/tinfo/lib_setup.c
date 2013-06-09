@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.156 2013/05/25 20:20:08 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.157 2013/06/06 01:01:18 tom Exp $")
 
 /****************************************************************************
  *
@@ -783,14 +783,12 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	if ((VALID_STRING(cursor_address)
 	     || (VALID_STRING(cursor_down) && VALID_STRING(cursor_home)))
 	    && VALID_STRING(clear_screen)) {
-	    free(termp);
 	    ret_error1(TGETENT_YES, "terminal is not really generic.\n", tname);
 	} else {
-	    free(termp);
+	    del_curterm(termp);
 	    ret_error1(TGETENT_NO, "I need something more specific.\n", tname);
 	}
     } else if (hard_copy) {
-	free(termp);
 	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", tname);
     }
 #endif

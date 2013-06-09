@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.79 2013/01/19 18:20:05 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.80 2013/06/08 16:48:47 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -233,7 +233,7 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
     int result = 0;		/* Solaris returns zero for missing flag */
-    int i, j;
+    int j = -1;
 
     T((T_CALLED("tgetflag(%p, %s)"), (void *) SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
@@ -246,7 +246,7 @@ NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 	}
 #if NCURSES_XNAMES
 	else {
-	    j = -1;
+	    int i;
 	    for_each_ext_boolean(i, tp) {
 		const char *capname = ExtBoolname(tp, i, boolcodes);
 		if (same_tcname(id, capname) && ValidExt(capname)) {
@@ -285,7 +285,7 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
     int result = ABSENT_NUMERIC;
-    int i, j;
+    int j = -1;
 
     T((T_CALLED("tgetnum(%p, %s)"), (void *) SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
@@ -298,7 +298,7 @@ NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 	}
 #if NCURSES_XNAMES
 	else {
-	    j = -1;
+	    int i;
 	    for_each_ext_number(i, tp) {
 		const char *capname = ExtNumname(tp, i, numcodes);
 		if (same_tcname(id, capname) && ValidExt(capname)) {
@@ -337,7 +337,7 @@ NCURSES_EXPORT(char *)
 NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 {
     char *result = NULL;
-    int i, j;
+    int j = -1;
 
     T((T_CALLED("tgetstr(%s,%p)"), id, (void *) area));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
@@ -350,7 +350,7 @@ NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 	}
 #if NCURSES_XNAMES
 	else {
-	    j = -1;
+	    int i;
 	    for_each_ext_string(i, tp) {
 		const char *capname = ExtStrname(tp, i, strcodes);
 		if (same_tcname(id, capname) && ValidExt(capname)) {

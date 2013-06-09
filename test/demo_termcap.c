@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.23 2013/01/19 19:30:52 tom Exp $
+ * $Id: demo_termcap.c,v 1.24 2013/06/08 16:58:49 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -62,28 +62,6 @@ static int db_item;
 static long total_values;
 
 #define isCapName(c) (isgraph(c) && strchr("^#=:\\", c) == 0)
-
-#if NO_LEAKS && USE_CODE_LISTS
-
-#define MYSCR struct _myscr
-MYSCR {
-    MYSCR *next;
-    TERMINAL *term;
-};
-
-static MYSCR *my_screens;
-
-static void
-save_screen(void)
-{
-    MYSCR *obj = malloc(sizeof(MYSCR));
-    obj->next = my_screens;
-    obj->term = cur_term;
-    my_screens = obj;
-}
-#else
-#define save_screen()		/* nothing */
-#endif
 
 static char *
 make_dbitem(char *p, char *q)
@@ -278,42 +256,39 @@ demo_termcap(NCURSES_CONST char *name)
 {
     unsigned n;
     NCURSES_CONST char *cap;
+    char buffer[1024];
 
     if (db_list) {
 	putenv(next_dbitem());
     }
     printf("Terminal type \"%s\"\n", name);
-#if HAVE_SETUPTERM
-    setupterm(name, 1, (int *) 0);
-#else
-    setterm(name);
-#endif
-    save_screen();
+    if (tgetent(buffer, name) >= 0) {
 
-    if (b_opt) {
-	for (n = 0;; ++n) {
-	    cap = boolcodes[n];
-	    if (cap == 0)
-		break;
-	    dumpit(cap);
+	if (b_opt) {
+	    for (n = 0;; ++n) {
+		cap = boolcodes[n];
+		if (cap == 0)
+		    break;
+		dumpit(cap);
+	    }
 	}
-    }
 
-    if (n_opt) {
-	for (n = 0;; ++n) {
-	    cap = numcodes[n];
-	    if (cap == 0)
-		break;
-	    dumpit(cap);
+	if (n_opt) {
+	    for (n = 0;; ++n) {
+		cap = numcodes[n];
+		if (cap == 0)
+		    break;
+		dumpit(cap);
+	    }
 	}
-    }
 
-    if (s_opt) {
-	for (n = 0;; ++n) {
-	    cap = strcodes[n];
-	    if (cap == 0)
-		break;
-	    dumpit(cap);
+	if (s_opt) {
+	    for (n = 0;; ++n) {
+		cap = strcodes[n];
+		if (cap == 0)
+		    break;
+		dumpit(cap);
+	    }
 	}
     }
 }
@@ -387,7 +362,7 @@ main(int argc, char *argv[])
 	case 's':
 	    s_opt = TRUE;
 	    break;
-#ifdef NCURSES_VERSION
+#if NCURSES_XNAMES
 	case 'y':
 	    use_extended_names(FALSE);
 	    break;
@@ -435,20 +410,6 @@ main(int argc, char *argv[])
 		demo_termcap(dumb);
 	    }
 	}
-#if NO_LEAKS
-	/*
-	 * ncurses' tgetent() interface caches some entries and its no-leaks
-	 * code discards those.  The calls to setupterm() on the other hand
-	 * are not cached, and each call allocates a chunk of memory, even
-	 * if the same terminal type is requested repeatedly.
-	 */
-	while (my_screens != 0) {
-	    MYSCR *next = my_screens->next;
-	    del_curterm(my_screens->term);
-	    free(my_screens);
-	    my_screens = next;
-	}
-#endif
     }
 #endif /* USE_CODE_LISTS */
 
