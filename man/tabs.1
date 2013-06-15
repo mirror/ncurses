@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2008-2010,2011 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2008-2011,2013 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,13 +26,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.9 2011/12/17 23:31:59 tom Exp $
+.\" $Id: tabs.1,v 1.10 2013/06/11 00:56:40 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
 .SH NAME
 \fB@TABS@\fR \- set tabs on a terminal
 .SH SYNOPSIS
-\fB@TABS@\fR [\fB\-v\fR[\fIn\fR]] [\fB\-ahuUV\fR] \fIfile...\fR
+\fB@TABS@\fR [\fIoptions\fR]] \fI[tabstop-list]\fR
 .br
 .SH DESCRIPTION
 .PP
@@ -61,6 +61,9 @@ The second data line shows the actual tab-stops, marked with asterisks.
 .B \-n
 This option tells \fB@TABS@\fP to check the options and run any debugging
 option, but not to modify the terminal settings.
+.TP
+\fB\-V\fR
+reports the version of ncurses which was used in this program, and exits.
 .PP
 The \fB@TABS@\fP program processes a single list of tab stops.
 The last option to be processed which defines a list is the one that

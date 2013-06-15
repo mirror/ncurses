@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.666 2013/04/13 22:59:35 tom Exp $
+dnl $Id: aclocal.m4,v 1.668 2013/06/15 16:22:56 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3673,7 +3673,7 @@ fi
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SUFFIX version: 18 updated: 2012/02/25 15:20:07
+dnl CF_LIB_SUFFIX version: 19 updated: 2013/06/15 11:58:48
 dnl -------------
 dnl Compute the library file-suffix from the given model name
 dnl $1 = model name
@@ -3682,7 +3682,6 @@ dnl $3 = dependency variable to set (actual filename)
 dnl The variable $LIB_SUFFIX, if set, prepends the variable to set.
 AC_DEFUN([CF_LIB_SUFFIX],
 [
-	AC_REQUIRE([CF_SUBST_NCURSES_VERSION])
 	case $1 in #(vi
 	libtool) #(vi
 		$2='.la'
@@ -5335,7 +5334,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 72 updated: 2013/01/26 16:26:12
+dnl CF_SHARED_OPTS version: 73 updated: 2013/06/15 12:17:19
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5361,7 +5360,6 @@ dnl
 dnl Some loaders leave 'so_locations' lying around.  It's nice to clean up.
 AC_DEFUN([CF_SHARED_OPTS],
 [
-	AC_REQUIRE([CF_SUBST_NCURSES_VERSION])
 	AC_REQUIRE([CF_LD_RPATH_OPT])
 	LOCAL_LDFLAGS=
 	LOCAL_LDFLAGS2=

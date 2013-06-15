@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,10 +37,11 @@
 #define USE_LIBTINFO
 #include <progs.priv.h>
 
-MODULE_ID("$Id: tabs.c,v 1.25 2012/11/18 01:21:47 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.34 2013/06/11 08:18:27 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
+static char *prg_name;
 static int max_cols;
 
 static void
@@ -101,8 +102,8 @@ decode_tabs(const char *tab_list)
 	    result[n] = value + prior;
 	    if (n > 0 && result[n] <= result[n - 1]) {
 		fprintf(stderr,
-			"tab-stops are not in increasing order: %d %d\n",
-			value, result[n - 1]);
+			"%s: tab-stops are not in increasing order: %d %d\n",
+			prg_name, value, result[n - 1]);
 		free(result);
 		result = 0;
 		break;
@@ -122,6 +123,7 @@ decode_tabs(const char *tab_list)
 	 */
 	if ((n == 0) && (value > 0)) {
 	    int step = value;
+	    value = 1;
 	    while (n < max_cols - 1) {
 		result[n++] = value;
 		value += step;
@@ -293,7 +295,7 @@ add_to_tab_list(char **append, const char *value)
  * Check for illegal characters in the tab-list.
  */
 static bool
-legal_tab_list(const char *program, const char *tab_list)
+legal_tab_list(const char *tab_list)
 {
     bool result = TRUE;
 
@@ -305,20 +307,32 @@ legal_tab_list(const char *program, const char *tab_list)
 		if (!(isdigit(ch) || ch == ',' || ch == '+')) {
 		    fprintf(stderr,
 			    "%s: unexpected character found '%c'\n",
-			    program, ch);
+			    prg_name, ch);
 		    result = FALSE;
 		    break;
 		}
 	    }
 	} else {
-	    fprintf(stderr, "%s: trailing comma found '%s'\n", program, tab_list);
+	    fprintf(stderr, "%s: trailing comma found '%s'\n", prg_name, tab_list);
 	    result = FALSE;
 	}
     } else {
-	fprintf(stderr, "%s: no tab-list given\n", program);
+	fprintf(stderr, "%s: no tab-list given\n", prg_name);
 	result = FALSE;
     }
     return result;
+}
+
+static char *
+skip_list(char *value)
+{
+    while (*value != '\0' &&
+	   (isdigit(UChar(*value)) ||
+	    isspace(UChar(*value)) ||
+	    strchr("+,", UChar(*value)) != 0)) {
+	++value;
+    }
+    return value;
 }
 
 static void
@@ -343,6 +357,7 @@ usage(void)
 	,"  -s       SNOBOL"
 	,"  -u       UNIVAC 1100 Assembler"
 	,"  -T name  use terminal type 'name'"
+	,"  -V       print version"
 	,""
 	,"A tabstop-list is an ordered list of column numbers, e.g., 1,11,21"
 	,"or 1,+10,+10 which is the same."
@@ -367,6 +382,8 @@ main(int argc, char *argv[])
     char *append = 0;
     const char *tab_list = 0;
 
+    prg_name = _nc_rootname(argv[0]);
+
     if ((term_name = getenv("TERM")) == 0)
 	term_name = "ansi+tabs";
 
@@ -378,23 +395,25 @@ main(int argc, char *argv[])
 	    while ((ch = *++option) != '\0') {
 		switch (ch) {
 		case 'a':
-		    switch (*option) {
+		    switch (*++option) {
+		    default:
 		    case '\0':
 			tab_list = "1,10,16,36,72";
+			option--;
 			/* Assembler, IBM S/370, first format */
 			break;
 		    case '2':
 			tab_list = "1,10,16,40,72";
 			/* Assembler, IBM S/370, second format */
 			break;
-		    default:
-			usage();
 		    }
 		    break;
 		case 'c':
-		    switch (*option) {
+		    switch (*++option) {
+		    default:
 		    case '\0':
 			tab_list = "1,8,12,16,20,55";
+			option--;
 			/* COBOL, normal format */
 			break;
 		    case '2':
@@ -405,8 +424,6 @@ main(int argc, char *argv[])
 			tab_list = "1,6,10,14,18,22,26,30,34,38,42,46,50,54,58,62,67";
 			/* COBOL compact format extended */
 			break;
-		    default:
-			usage();
 		    }
 		    break;
 		case 'd':	/* ncurses extension */
@@ -437,17 +454,22 @@ main(int argc, char *argv[])
 			term_name = option;
 		    } else {
 			term_name = argv[n++];
+			option--;
 		    }
 		    option += ((int) strlen(option)) - 1;
 		    continue;
+		case 'V':
+		    puts(curses_version());
+		    ExitProgram(EXIT_SUCCESS);
 		default:
 		    if (isdigit(UChar(*option))) {
-			tab_list = option;
-			++n;
+			char *copy = strdup(option);
+			*skip_list(copy) = '\0';
+			tab_list = copy;
+			option = skip_list(option) - 1;
 		    } else {
 			usage();
 		    }
-		    option += ((int) strlen(option)) - 1;
 		    break;
 		}
 	    }
@@ -491,12 +513,12 @@ main(int argc, char *argv[])
     if (!VALID_STRING(clear_all_tabs)) {
 	fprintf(stderr,
 		"%s: terminal type '%s' cannot reset tabs\n",
-		argv[0], term_name);
+		prg_name, term_name);
     } else if (!VALID_STRING(set_tab)) {
 	fprintf(stderr,
 		"%s: terminal type '%s' cannot set tabs\n",
-		argv[0], term_name);
-    } else if (legal_tab_list(argv[0], tab_list)) {
+		prg_name, term_name);
+    } else if (legal_tab_list(tab_list)) {
 	int *list = decode_tabs(tab_list);
 
 	if (!no_op)

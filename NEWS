@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2069 2013/06/08 21:00:03 tom Exp $
+-- $Id: NEWS,v 1.2072 2013/06/15 21:16:04 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130615
+	+ minor changes to some configure macros to make them more reusable.
+	+ fixes for tabs program (prompted by report by Nick Andrik):
+	  + corrected logic in command-line parsing of -a and -c predefined
+	    tab-lists options.
+	  + allow "-0" and "-8" options to be combined with others, e.g.,"-0d".
+	  + make warning messages more consistent with the other utilities by
+	    not printing the full pathname of the program.
+	  + add -V option for consistency with other utilities.
+	+ fix off-by-one in columns for tabs program when processing an option
+	  such as "-5" (patch by Nick Andrik).
 
 20130608
 	+ add to test/demo_forms.c examples of using the menu-hooks as well

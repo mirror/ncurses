@@ -1050,6 +1050,7 @@
 ./test/ditto.c
 ./test/dots.c
 ./test/dots_mvcur.c
+./test/dots_termcap.c
 ./test/echochar.c
 ./test/edit_field.c
 ./test/edit_field.h
