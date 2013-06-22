@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.64 2013/04/27 19:50:17 tom Exp $
+  $Id: worm.c,v 1.65 2013/06/22 20:01:41 tom Exp $
 */
 
 #include <test.priv.h>
@@ -362,8 +362,7 @@ draw_all_worms(void)
     if (first) {
 	first = FALSE;
 	for (n = 0, w = &worm[0]; n < number; n++, w++) {
-	    int rc;
-	    rc = pthread_create(&(w->thread), NULL, start_worm, w);
+	    (void) pthread_create(&(w->thread), NULL, start_worm, w);
 	}
     }
 #else

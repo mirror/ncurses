@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.103 2013/03/09 22:48:47 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.104 2013/06/22 20:02:55 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4534,7 +4534,7 @@ field_buffer(const FIELD *field, int buffer)
 
 	      init_mb(state);
 	      next = _nc_wcrtomb(0, data[n].chars[0], &state);
-	      if (!isEILSEQ(next))
+	      if (next > 0)
 		need += next;
 	    }
 	}

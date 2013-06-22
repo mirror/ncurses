@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.61 2013/03/03 00:06:39 tom Exp $
+.\" $Id: terminfo.tail,v 1.65 2013/06/22 19:00:26 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -53,30 +53,37 @@ The following entry, describing an ANSI-standard terminal, is representative
 of what a \fBterminfo\fR entry for a modern terminal typically looks like.
 .PP
 .nf
-.in -2
-.ta .3i
 .ft CW
 \s-2ansi|ansi/pc-term compatible with color,
-        mc5i,
-        colors#8, ncv#3, pairs#64,
-        cub=\\E[%p1%dD, cud=\\E[%p1%dB, cuf=\\E[%p1%dC,
-        cuu=\\E[%p1%dA, dch=\\E[%p1%dP, dl=\\E[%p1%dM,
-        ech=\\E[%p1%dX, el1=\\E[1K, hpa=\\E[%p1%dG, ht=\\E[I,
-        ich=\\E[%p1%d@, il=\\E[%p1%dL, indn=\\E[%p1%dS, .indn=\\E[%p1%dT,
-        kbs=^H, kcbt=\\E[Z, kcub1=\\E[D, kcud1=\\E[B,
-        kcuf1=\\E[C, kcuu1=\\E[A, kf1=\\E[M, kf10=\\E[V,
-        kf11=\\E[W, kf12=\\E[X, kf2=\\E[N, kf3=\\E[O, kf4=\\E[P,
-        kf5=\\E[Q, kf6=\\E[R, kf7=\\E[S, kf8=\\E[T, kf9=\\E[U,
-        kich1=\\E[L, mc4=\\E[4i, mc5=\\E[5i, nel=\\r\\E[S,
-        op=\\E[37;40m, rep=%p1%c\\E[%p2%{1}%\-%db,
-        rin=\\E[%p1%dT, s0ds=\\E(B, s1ds=\\E)B, s2ds=\\E*B,
-        s3ds=\\E+B, setab=\\E[4%p1%dm, setaf=\\E[3%p1%dm,
-        setb=\\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
-        setf=\\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
-        sgr=\\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p8%t;11%;%?%p9%t;12%;m,
-        sgr0=\\E[0;10m, tbc=\\E[2g, u6=\\E[%d;%dR, u7=\\E[6n,
-        u8=\\E[?%[;0123456789]c, u9=\\E[c, vpa=\\E[%p1%dd,\s+2
-.in +2
+	am, mc5i, mir, msgr,
+	colors#8, cols#80, it#8, lines#24, ncv#3, pairs#64,
+	acsc=+\\020\\,\\021-\\030.^Y0\\333`\\004a\\261f\\370g\\361h\\260
+	     j\\331k\\277l\\332m\\300n\\305o~p\\304q\\304r\\304s_t\\303
+	     u\\264v\\301w\\302x\\263y\\363z\\362{\\343|\\330}\\234~\\376,
+	bel=^G, blink=\\E[5m, bold=\\E[1m, cbt=\\E[Z, clear=\\E[H\\E[J,
+	cr=^M, cub=\\E[%p1%dD, cub1=\\E[D, cud=\\E[%p1%dB, cud1=\\E[B,
+	cuf=\\E[%p1%dC, cuf1=\\E[C, cup=\\E[%i%p1%d;%p2%dH,
+	cuu=\\E[%p1%dA, cuu1=\\E[A, dch=\\E[%p1%dP, dch1=\\E[P,
+	dl=\\E[%p1%dM, dl1=\\E[M, ech=\\E[%p1%dX, ed=\\E[J, el=\\E[K,
+	el1=\\E[1K, home=\\E[H, hpa=\\E[%i%p1%dG, ht=\\E[I, hts=\\EH,
+	ich=\\E[%p1%d@, il=\\E[%p1%dL, il1=\\E[L, ind=^J,
+	indn=\\E[%p1%dS, invis=\\E[8m, kbs=^H, kcbt=\\E[Z, kcub1=\\E[D,
+	kcud1=\\E[B, kcuf1=\\E[C, kcuu1=\\E[A, khome=\\E[H, kich1=\\E[L,
+	mc4=\\E[4i, mc5=\\E[5i, nel=\\r\\E[S, op=\\E[39;49m,
+	rep=%p1%c\\E[%p2%{1}%-%db, rev=\\E[7m, rin=\\E[%p1%dT,
+	rmacs=\\E[10m, rmpch=\\E[10m, rmso=\\E[m, rmul=\\E[m,
+	s0ds=\\E(B, s1ds=\\E)B, s2ds=\\E*B, s3ds=\\E+B,
+	setab=\\E[4%p1%dm, setaf=\\E[3%p1%dm,
+	sgr=\\E[0;10%?%p1%t;7%;
+	           %?%p2%t;4%;
+		   %?%p3%t;7%;
+		   %?%p4%t;5%;
+		   %?%p6%t;1%;
+		   %?%p7%t;8%;
+		   %?%p9%t;11%;m,
+	sgr0=\\E[0;10m, smacs=\\E[11m, smpch=\\E[11m, smso=\\E[7m,
+	smul=\\E[4m, tbc=\\E[3g, u6=\\E[%i%d;%dR, u7=\\E[6n,
+	u8=\\E[?%[;0123456789]c, u9=\\E[c, vpa=\\E[%i%p1%dd,
 .fi
 .ft R
 .PP
@@ -350,6 +357,7 @@ Thus the model 33 teletype is described as
 	bel=^G, cols#72, cr=^M, cud1=^J, hc, ind=^J, os,\s+1
 .\".in +2
 .ft R
+.fi
 .PP
 while the Lear Siegler \s-1ADM-3\s0 is described as
 .PP
@@ -866,6 +874,7 @@ either standout or reverse modes are turned on.
 .PP
 Writing out the above sequences, along with their dependencies yields
 .PP
+.ne 11
 .TS
 center;
 l l l
@@ -873,6 +882,7 @@ l l l
 lw18 lw14 lw18.
 \fBsequence	when to output	terminfo translation\fP
 
+.ft CW
 \\E[0	always	\\E[0
 ;1	if p1 or p6	%?%p1%p6%|%t;1%;
 ;4	if p2	%?%p2%|%t;4%;
@@ -881,14 +891,17 @@ lw18 lw14 lw18.
 ;8	if p7	%?%p7%|%t;8%;
 m	always	m
 ^N or ^O	if p9 ^N, else ^O	%?%p9%t^N%e^O%;
+.ft R
 .TE
 .PP
 Putting this all together into the sgr sequence gives:
 .PP
+.ft CW
 .nf
-    sgr=\\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;
-        %?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\\016%e\\017%;,
+    sgr=\\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p4%t;5%;
+        %?%p1%p3%|%t;7%;%?%p7%t;8%;m%?%p9%t\\016%e\\017%;,
 .fi
+.ft R
 .PP
 Remember that if you specify sgr, you must also specify sgr0.
 Also, some implementations rely on sgr being given if sgr0 is,

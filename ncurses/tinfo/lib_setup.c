@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.157 2013/06/06 01:01:18 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.158 2013/06/22 19:59:08 tom Exp $")
 
 /****************************************************************************
  *
@@ -687,7 +687,9 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 #endif
     } else {
 #ifdef USE_TERM_DRIVER
-	termp = (TERMINAL *) typeCalloc(TERMINAL_CONTROL_BLOCK, 1);
+	TERMINAL_CONTROL_BLOCK *my_tcb;
+	my_tcb = typeCalloc(TERMINAL_CONTROL_BLOCK, 1);
+	termp = &(my_tcb->term);
 #else
 	termp = typeCalloc(TERMINAL, 1);
 #endif
