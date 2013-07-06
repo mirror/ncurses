@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.668 2013/06/15 16:22:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.671 2013/07/06 21:45:26 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3673,7 +3673,7 @@ fi
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SUFFIX version: 19 updated: 2013/06/15 11:58:48
+dnl CF_LIB_SUFFIX version: 21 updated: 2013/07/06 17:44:26
 dnl -------------
 dnl Compute the library file-suffix from the given model name
 dnl $1 = model name
@@ -3682,24 +3682,20 @@ dnl $3 = dependency variable to set (actual filename)
 dnl The variable $LIB_SUFFIX, if set, prepends the variable to set.
 AC_DEFUN([CF_LIB_SUFFIX],
 [
-	case $1 in #(vi
-	libtool) #(vi
+	case X$1 in #(vi
+	Xlibtool) #(vi
 		$2='.la'
 		$3=[$]$2
 		;;
-	normal) #(vi
-		$2='.a'
-		$3=[$]$2
-		;;
-	debug) #(vi
+	Xdebug) #(vi
 		$2='_g.a'
 		$3=[$]$2
 		;;
-	profile) #(vi
+	Xprofile) #(vi
 		$2='_p.a'
 		$3=[$]$2
 		;;
-	shared) #(vi
+	Xshared) #(vi
 		case $cf_cv_system_name in
 		aix[[5-7]]*) #(vi
 			$2='.a'
@@ -3725,10 +3721,16 @@ AC_DEFUN([CF_LIB_SUFFIX],
 				;;
 			esac
 			;;
-		*)	$2='.so'
+		*) #(vi
+			$2='.so'
 			$3=[$]$2
 			;;
 		esac
+		;;
+	*)
+		$2='.a'
+		$3=[$]$2
+		;;
 	esac
 	test -n "$LIB_SUFFIX" && $2="${LIB_SUFFIX}[$]{$2}"
 	test -n "$LIB_SUFFIX" && $3="${LIB_SUFFIX}[$]{$3}"
@@ -5334,7 +5336,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 73 updated: 2013/06/15 12:17:19
+dnl CF_SHARED_OPTS version: 74 updated: 2013/07/06 16:04:47
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5514,10 +5516,13 @@ CF_EOF
 	mingw*) #(vi
 		cf_cv_shlib_version=mingw
 		cf_cv_shlib_version_infix=mingw
+		if test "$DFT_LWR_MODEL" = "shared" ; then
+			LOCAL_LDFLAGS="-Wl,--enable-auto-import"
+			LOCAL_LDFLAGS2="$LOCAL_LDFLAGS"
+			EXTRA_LDFLAGS="-Wl,--enable-auto-import $EXTRA_LDFLAGS"
+		fi
 		CC_SHARED_OPTS=
 		MK_SHARED_LIB='sh ../mk_shared_lib.sh [$]@ [$]{CC} [$]{CFLAGS}'
-		#MK_SHARED_LIB='${CC} ${CFLAGS} -mdll -Wl,-soname,'$cf_cv_shared_soname',-stats -o $[@]'
-		#MK_SHARED_LIB='${DLLTOOL} --export-all-symbols --output-exp --output-lib $[@]'
 		cat >mk_shared_lib.sh <<-CF_EOF
 		#!/bin/sh
 		SHARED_LIB=\[$]1
@@ -5528,7 +5533,7 @@ CF_EOF
 		** SHARED_LIB \[$]SHARED_LIB
 		** IMPORT_LIB \[$]IMPORT_LIB
 EOF
-		exec \[$]* -shared -Wl,--out-implib=../lib/\[$]{IMPORT_LIB} -Wl,--export-all-symbols -o ../lib/\[$]{SHARED_LIB}
+		exec \[$]* -shared -Wl,--enable-auto-import,--out-implib=../lib/\[$]{IMPORT_LIB} -Wl,--export-all-symbols -o ../lib/\[$]{SHARED_LIB}
 CF_EOF
 		chmod +x mk_shared_lib.sh
 		;;

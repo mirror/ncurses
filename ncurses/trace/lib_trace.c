@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.81 2012/04/29 00:20:43 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.82 2013/07/06 19:42:09 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -339,8 +339,9 @@ _nc_locked_tracef(const char *fmt,...)
     _nc_va_tracef(fmt, ap);
     va_end(ap);
 
-    if (--(_nc_globals.nested_tracef) == 0)
+    if (--(_nc_globals.nested_tracef) == 0) {
 	_nc_unlock_global(tracef);
+    }
 }
 #endif /* USE_REENTRANT */
 

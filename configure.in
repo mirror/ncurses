@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.567 2013/05/25 20:15:02 tom Exp $
+dnl $Id: configure.in,v 1.571 2013/07/06 21:43:56 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.567 $)
+AC_REVISION($Revision: 1.571 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -196,6 +196,7 @@ dnl These are standard among *NIX systems, but not when cross-compiling
 AC_CHECK_TOOL(RANLIB, ranlib, ':')
 AC_CHECK_TOOL(LD, ld, ld)
 AC_CHECK_TOOL(AR, ar, ar)
+AC_CHECK_TOOL(NM, nm, nm)
 CF_AR_FLAGS
 
 dnl Special option for use by system-builders: the install-prefix is used to
@@ -1598,6 +1599,11 @@ dnl At the moment we support no other Ada95 compiler.
 	fi
 else
 	cf_with_ada=no
+fi
+
+# do this "late" to avoid conflict with header-checks
+if test "x$with_widec" = xyes ; then
+	AC_CHECK_SIZEOF(wchar_t)
 fi
 
 ### Construct the ncurses library-subsets, if any, from this set of keywords:
