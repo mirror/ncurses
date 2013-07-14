@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.88 2013/06/03 11:05:54 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.89 2013/07/13 21:55:32 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -162,18 +162,15 @@ name_ending(char *name)
 static bool
 remove_collision(char *n1, char *n2)
 {
-    char *p1 = n1;
     char *p2 = n2;
     char *pstart, *qstart, *pend, *qend;
     bool removed = FALSE;
 
 #if NCURSES_USE_TERMCAP && NCURSES_XNAMES
     if ((_nc_syntax == SYN_TERMCAP) && _nc_user_definable) {
-	p1 = n1 = skip_index(n1);
+	n1 = skip_index(n1);
 	p2 = n2 = skip_index(n2);
     }
-#else
-    (void) p1;
 #endif
 
     for (pstart = n1; (pend = name_ending(pstart)); pstart = next_name(pend)) {

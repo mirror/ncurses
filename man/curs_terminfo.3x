@@ -26,8 +26,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.37 2013/01/12 18:11:40 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.38 2013/07/13 23:12:13 tom Exp $
 .TH curs_terminfo 3X ""
+.de bP
+.IP \(bu 4
+..
 .ds n 5
 .na
 .hy 0
@@ -150,11 +153,17 @@ If \fBERR\fR is returned, examine \fIerrret\fR:
 .TP 5
 .B 1
 means that the terminal is hardcopy, cannot be used for curses applications.
+.IP
+\fBsetupterm\fP determines if the entry is a hardcopy type by
+checking the \fIhc\fP (\fIhardcopy\fP) capability.
 .TP 5
 .B 0
 means that the terminal could not be found,
 or that it is a generic type,
 having too little information for curses applications to run.
+.IP
+\fBsetupterm\fP determines if the entry is a generic type by
+checking the \fIgn\fP (\fIgeneric\fP) capability.
 .TP 5
 .B \-1
 means that the \fBterminfo\fR database could not be found.
@@ -275,7 +284,7 @@ Routines that return pointers always return \fBNULL\fR on error.
 .PP
 X/Open defines no error conditions.
 In this implementation
-.RS
+.RS 5
 .TP 5
 \fBdel_curterm\fP
 returns an error
@@ -313,6 +322,31 @@ be considered non-portable.  All other functions are as described by X/Open.
 \fBsetupterm\fP copies the terminal name to the array \fBttytype\fP.
 This is not part of X/Open Curses, but is assumed by some applications.
 .PP
+If configured to use the terminal-driver,
+e.g., for the MinGW port,
+.bP
+\fBsetupterm\fP interprets a missing/empty TERM variable as the
+special value ``unknown''.
+.bP
+\fBsetupterm\fP allows explicit use of the
+the windows console driver by checking if $TERM is set to
+``#win32con'' or an abbreviation of that string.
+.PP
+Older versions of \fBncurses\fP assumed that the file descriptor passed to
+\fBsetupterm\fP from \fBinitscr\fP or \fBnewterm\fP uses buffered I/O,
+and would write to the corresponding stream.
+In addition to the limitation that the terminal was left in block-buffered
+mode on exit (like SystemV curses),
+it was problematic because \fBncurses\fP
+did not allow a reliable way to cleanup on receiving SIGTSTP.
+The current version uses output buffers managed directly by \fBncurses\fP.
+Some of the low-level functions described in this manual page write
+to the standard output.
+They are not signal-safe.
+The high-level functions in \fBncurses\fP use
+alternate versions of these functions
+using the more reliable buffering scheme.
+.PP
 In System V Release 4, \fBset_curterm\fR has an \fBint\fR return type and
 returns \fBOK\fR or \fBERR\fR.  We have chosen to implement the X/Open Curses
 semantics.
@@ -337,7 +371,7 @@ X/Open Curses Issue 7 proposed the \fBtiparam\fP function in mid-2009.
 X/Open notes that after calling \fBmvcur\fR, the curses state may not match the
 actual terminal state, and that an application should touch and refresh
 the window before resuming normal curses calls.
-Both ncurses and System V Release 4 curses implement \fBmvcur\fR using
+Both \fBncurses\fP and System V Release 4 curses implement \fBmvcur\fR using
 the SCREEN data allocated in either \fBinitscr\fR or \fBnewterm\fR.
 So though it is documented as a terminfo function,
 \fBmvcur\fR is really a curses function which is not well specified.

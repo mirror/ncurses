@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.123 2013/05/25 20:17:49 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.124 2013/07/13 20:06:43 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -107,7 +107,7 @@ fake_read(char *src, int *offset, int limit, char *dst, unsigned want)
     return (int) want;
 }
 
-#define Read(buf, count) fake_read(buffer, &offset, limit, buf, (unsigned) count)
+#define Read(buf, count) fake_read(buffer, &offset, limit, (char *) buf, (unsigned) count)
 
 #define read_shorts(buf, count) \
 	(Read(buf, (count)*2) == (int) (count)*2)

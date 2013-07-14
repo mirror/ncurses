@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.87 2012/05/05 19:40:50 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.88 2013/07/13 22:11:06 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -791,13 +791,11 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
     int i;
     char pathbuf[PBUFSIZ];	/* holds raw path of filenames */
     CGETENT_CONST char *pathvec[PVECSIZ];	/* point to names in pathbuf */
-    CGETENT_CONST char **pvec;	/* holds usable tail of path vector */
     NCURSES_CONST char *termpath;
     string_desc desc;
 
     *lineno = 1;
     fname = pathvec;
-    pvec = pathvec;
     p = pathbuf;
     cp = use_terminfo_vars()? getenv("TERMCAP") : NULL;
 
