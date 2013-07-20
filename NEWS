@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2079 2013/07/13 23:21:51 tom Exp $
+-- $Id: NEWS,v 1.2080 2013/07/20 19:13:11 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130720
+	+ further improvements for setupterm manpage, clarifying the
+	  initialization of cur_term.
 
 20130713
 	+ improve manpages for initscr and setupterm.

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,8 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.36 2012/07/21 18:51:10 tom Exp $
+.\" $Id: curs_util.3x,v 1.37 2013/07/20 19:43:45 tom Exp $
 .TH curs_util 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .IP \(bu 4
 ..
@@ -84,10 +88,12 @@ Printing characters are displayed as is.
 The corresponding \fBwunctrl\fR returns a printable representation of
 a wide character.
 .PP
-The \fBkeyname\fR routine returns a character string corresponding to the key \fIc\fR:
+The \fBkeyname\fR routine returns a character string
+corresponding to the key \fIc\fR:
 .RS 3
 .bP
-Printable characters are displayed as themselves, e.g., a one-character string containing the key.
+Printable characters are displayed as themselves,
+e.g., a one-character string containing the key.
 .bP
 Control characters are displayed in the \fB^\fR\fIX\fR notation.
 .bP
@@ -203,7 +209,8 @@ data.  It returns a pointer to the new window.
 The \fBdelay_output\fR routine inserts an \fIms\fR millisecond pause
 in output.  This routine should not be used extensively because
 padding characters are used rather than a CPU pause.
-If no padding character is specified, this uses \fBnapms\fR to perform the delay.
+If no padding character is specified,
+this uses \fBnapms\fR to perform the delay.
 .PP
 The \fBflushinp\fR routine throws away any typeahead that has been typed by the
 user and has not yet been read by the program.
@@ -241,12 +248,13 @@ the parameter is in the range 128\-159, i.e., a C1 control code.
 If \fBuse_legacy_coding\fP has been called with a \fB2\fP parameter,
 \fBunctrl\fP returns the parameter, i.e., a one-character string with
 the parameter as the first character.
-Otherwise, it returns ``~@'', ``~A'', etc., analogous to ``^@'', ``^A'', C0 controls.
+Otherwise, it returns \*(``~@\*('', \*(``~A\*('', etc.,
+analogous to \*(``^@\*('', \*(``^A\*('', C0 controls.
 .IP
 X/Open Curses does not document whether \fBunctrl\fP can be called before
 initializing curses.
 This implementation permits that,
-and returns the ``~@'', etc., values in that case.
+and returns the \*(``~@\*('', etc., values in that case.
 .bP
 parameter values outside the 0 to 255 range.
 \fBunctrl\fP returns a null pointer.
@@ -272,13 +280,13 @@ change the output of \fBunctrl\fP.
 Likewise, the \fBmeta\fP function allows the caller to change the
 output of \fBkeyname\fP, i.e.,
 it determines whether to use the `M\-' prefix
-for ``meta'' keys (codes in the range 128 to 255).
+for \*(``meta\*('' keys (codes in the range 128 to 255).
 Both \fBuse_legacy_coding\fP and \fBmeta\fP succeed only after
 curses is initialized. 
 X/Open Curses does not document the treatment of codes 128 to 159.
-When treating them as ``meta'' keys
+When treating them as \*(``meta\*('' keys
 (or if \fBkeyname\fP is called before initializing curses),
-this implementation returns strings ``M\-^@'', ``M\-^A'', etc.
+this implementation returns strings \*(``M\-^@\*('', \*(``M\-^A\*('', etc.
 .PP
 The \fBkeyname\fP function may return the names of user-defined
 string capabilities which are defined in the terminfo entry via the \fB\-x\fP

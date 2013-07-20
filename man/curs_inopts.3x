@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,8 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.17 2012/04/28 19:09:15 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.18 2013/07/20 19:42:02 tom Exp $
 .TH curs_inopts 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .na
 .hy 0
 .SH NAME
@@ -188,11 +192,13 @@ Hence, these routines provide the same functionality as \fBnodelay\fR,
 plus the additional capability of being able to block for only
 \fIdelay\fR milliseconds (where \fIdelay\fR is positive).
 .PP
-The \fBcurses\fR library does ``line-breakout optimization'' by looking for
-typeahead periodically while updating the screen.  If input is found,
-and it is coming from a tty, the current update is postponed until
-\fBrefresh\fR or \fBdoupdate\fR is called again.  This allows faster
-response to commands typed in advance.  Normally, the input FILE
+The \fBcurses\fR library does \*(``line-breakout optimization\*(''
+by looking for typeahead periodically while updating the screen.
+If input is found, and it is coming from a tty,
+the current update is postponed until
+\fBrefresh\fR or \fBdoupdate\fR is called again.
+This allows faster response to commands typed in advance.
+Normally, the input FILE
 pointer passed to \fBnewterm\fR, or \fBstdin\fR in the case that
 \fBinitscr\fR was used, will be used to do this typeahead checking.
 The \fBtypeahead\fR routine specifies that the file descriptor

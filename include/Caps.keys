@@ -29,7 +29,7 @@
 # Author: Thomas Dickey
 #    and: Ilya Zakharevich
 #
-# $Id: Caps.keys,v 1.5 2011/10/15 23:19:52 tom Exp $
+# $Id: Caps.keys,v 1.6 2013/07/20 17:59:24 tom Exp $
 #
 # This is an adaptation of ncurses' termcap/terminfo capability table, which
 # is illustrates an experimental extension to describe alt-, shift- and
@@ -229,11 +229,11 @@ move_standout_mode		msgr	bool	ms	-	-	YBCGE	safe to move while in standout mode
 over_strike			os	bool	os	-	-	YBCG-	terminal can overstrike
 status_line_esc_ok		eslok	bool	es	-	-	YB-G-	escape can be used on the status line
 dest_tabs_magic_smso		xt	bool	xt	-	-	YBCGE	tabs destructive, magic so char (t1061)
-tilde_glitch			hz	bool	hz	-	-	YB-GE	can't print ~'s (hazeltine)
+tilde_glitch			hz	bool	hz	-	-	YB-GE	cannot print ~'s (hazeltine)
 transparent_underline		ul	bool	ul	-	-	YBCGE	underline character overstrikes
 xon_xoff			xon	bool	xo	-	-	YB---	terminal uses xon/xoff handshaking
-needs_xon_xoff			nxon	bool	nx	-	-	-----	padding won't work, xon/xoff required
-prtr_silent			mc5i	bool	5i	-	-	-----	printer won't echo on screen
+needs_xon_xoff			nxon	bool	nx	-	-	-----	padding will not work, xon/xoff required
+prtr_silent			mc5i	bool	5i	-	-	-----	printer will not echo on screen
 hard_cursor			chts	bool	HC	-	-	-----	cursor is hard to see
 non_rev_rmcup			nrrmc	bool	NR	-	-	-----	smcup does not reverse rmcup
 no_pad_char			npc	bool	NP	-	-	-----	pad character does not exist
@@ -277,7 +277,7 @@ maximum_windows			wnum	num	MW	-	-	-----	maximum number of defineable windows
 # These came in with SVr4's color support
 max_colors			colors	num	Co	-	-	-----	maximum number of colors on screen
 max_pairs			pairs	num	pa	-	-	-----	maximum number of color-pairs on the screen
-no_color_video			ncv	num	NC	-	-	-----	video attributes that can't be used with colors
+no_color_video			ncv	num	NC	-	-	-----	video attributes that cannot be used with colors
 #%.TE
 #%.ad
 #%

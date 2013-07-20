@@ -27,9 +27,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.111 2013/03/02 22:15:25 tom Exp $
+.\" $Id: ncurses.3x,v 1.112 2013/07/20 19:29:59 tom Exp $
 .hy 0
 .TH ncurses 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .IP \(bu 4
 ..
@@ -43,7 +47,7 @@
 .SH DESCRIPTION
 The \fBncurses\fR library routines give the user a terminal-independent method
 of updating character screens with reasonable optimization.
-This implementation is ``new curses'' (ncurses) and
+This implementation is \*(``new curses\*('' (ncurses) and
 is the approved replacement for
 4.4BSD classic curses, which has been discontinued.
 This describes \fBncurses\fR
