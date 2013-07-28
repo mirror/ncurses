@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.571 2013/07/06 21:43:56 tom Exp $
+dnl $Id: configure.in,v 1.572 2013/07/27 22:19:11 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.571 $)
+AC_REVISION($Revision: 1.572 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -403,6 +403,8 @@ AC_MSG_RESULT($cf_cv_do_relink)
 	;;
 esac
 
+# we will build libraries one-level down.
+rel_builddir=..
 CF_SHARED_OPTS
 if test "$CC_SHARED_OPTS" = "unknown"; then
 	for model in $cf_list_models; do

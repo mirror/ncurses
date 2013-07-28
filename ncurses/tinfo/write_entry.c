@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.87 2012/12/29 23:12:22 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.88 2013/07/27 15:52:18 tom Exp $")
 
 static int total_written;
 
@@ -333,7 +333,7 @@ _nc_write_entry(TERMTYPE *const tp)
 	    buffer[0] = 2;
 
 	    key.data = name_list;
-	    key.size = name_size;
+	    key.size = strlen(name_list);
 
 	    _nc_STRCPY(buffer + 1,
 		       term_names,

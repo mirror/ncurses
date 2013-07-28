@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.671 2013/07/06 21:45:26 tom Exp $
+dnl $Id: aclocal.m4,v 1.673 2013/07/27 22:15:13 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5221,7 +5221,7 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK version: 9 updated: 2011/02/13 13:31:33
+dnl CF_RPATH_HACK version: 10 updated: 2013/07/22 18:27:50
 dnl -------------
 AC_DEFUN([CF_RPATH_HACK],
 [
@@ -5272,6 +5272,8 @@ AC_TRY_LINK([#include <stdio.h>],
 	CF_RPATH_HACK_2(LIBS)
 
 	CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+else
+	AC_MSG_RESULT(no)
 fi
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
@@ -5336,18 +5338,19 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 74 updated: 2013/07/06 16:04:47
+dnl CF_SHARED_OPTS version: 79 updated: 2013/07/27 17:57:16
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
 dnl library.
 dnl
-dnl Note: ${LOCAL_LDFLAGS} is used to link executables that will run within the
-dnl build-tree, i.e., by making use of the libraries that are compiled in ../lib
-dnl We avoid compiling-in a ../lib path for the shared library since that can
-dnl lead to unexpected results at runtime.
-dnl ${LOCAL_LDFLAGS2} has the same intention but assumes that the shared libraries
-dnl are compiled in ../../lib
+dnl Notes:
+dnl a) ${LOCAL_LDFLAGS} is used to link executables that will run within
+dnl the build-tree, i.e., by making use of the libraries that are compiled in
+dnl $rel_builddir/lib We avoid compiling-in a $rel_builddir/lib path for the
+dnl shared library since that can lead to unexpected results at runtime.
+dnl b) ${LOCAL_LDFLAGS2} has the same intention but assumes that the shared
+dnl libraries are compiled in ../../lib
 dnl
 dnl The variable 'cf_cv_do_symlinks' is used to control whether we configure
 dnl to install symbolic links to the rel/abi versions of shared libraries.
@@ -5363,10 +5366,12 @@ dnl Some loaders leave 'so_locations' lying around.  It's nice to clean up.
 AC_DEFUN([CF_SHARED_OPTS],
 [
 	AC_REQUIRE([CF_LD_RPATH_OPT])
+	RM_SHARED_OPTS=
 	LOCAL_LDFLAGS=
 	LOCAL_LDFLAGS2=
 	LD_SHARED_OPTS=
 	INSTALL_LIB="-m 644"
+	: ${rel_builddir:=.}
 
 	cf_cv_do_symlinks=no
 	cf_ld_rpath_opt=
@@ -5426,7 +5431,8 @@ AC_DEFUN([CF_SHARED_OPTS],
 		;;
 	cygwin*) #(vi
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='sh ../mk_shared_lib.sh [$]@ [$]{CC} [$]{CFLAGS}'
+		MK_SHARED_LIB='sh '$rel_builddir'/mk_shared_lib.sh [$]@ [$]{CC} [$]{CFLAGS}'
+		RM_SHARED_OPTS="$RM_SHARED_OPTS $rel_builddir/mk_shared_lib.sh *.dll.a"
 		cf_cv_shlib_version=cygdll
 		cf_cv_shlib_version_infix=cygdll
 		cat >mk_shared_lib.sh <<-CF_EOF
@@ -5439,7 +5445,7 @@ AC_DEFUN([CF_SHARED_OPTS],
 		** SHARED_LIB \[$]SHARED_LIB
 		** IMPORT_LIB \[$]IMPORT_LIB
 EOF
-		exec \[$]* -shared -Wl,--out-implib=../lib/\[$]{IMPORT_LIB} -Wl,--export-all-symbols -o ../lib/\[$]{SHARED_LIB}
+		exec \[$]* -shared -Wl,--out-implib=\[$]{IMPORT_LIB} -Wl,--export-all-symbols -o \[$]{SHARED_LIB}
 CF_EOF
 		chmod +x mk_shared_lib.sh
 		;;
@@ -5522,7 +5528,8 @@ CF_EOF
 			EXTRA_LDFLAGS="-Wl,--enable-auto-import $EXTRA_LDFLAGS"
 		fi
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='sh ../mk_shared_lib.sh [$]@ [$]{CC} [$]{CFLAGS}'
+		MK_SHARED_LIB='sh '$rel_builddir'/mk_shared_lib.sh [$]@ [$]{CC} [$]{CFLAGS}'
+		RM_SHARED_OPTS="$RM_SHARED_OPTS $rel_builddir/mk_shared_lib.sh *.dll.a"
 		cat >mk_shared_lib.sh <<-CF_EOF
 		#!/bin/sh
 		SHARED_LIB=\[$]1
@@ -5533,7 +5540,7 @@ CF_EOF
 		** SHARED_LIB \[$]SHARED_LIB
 		** IMPORT_LIB \[$]IMPORT_LIB
 EOF
-		exec \[$]* -shared -Wl,--enable-auto-import,--out-implib=../lib/\[$]{IMPORT_LIB} -Wl,--export-all-symbols -o ../lib/\[$]{SHARED_LIB}
+		exec \[$]* -shared -Wl,--enable-auto-import,--out-implib=\[$]{IMPORT_LIB} -Wl,--export-all-symbols -o \[$]{SHARED_LIB}
 CF_EOF
 		chmod +x mk_shared_lib.sh
 		;;
@@ -5562,7 +5569,7 @@ CF_EOF
 			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
-		MK_SHARED_LIB='${LD} -shared -Bshareable -soname=`basename $[@]` -o $[@]'
+		MK_SHARED_LIB='${CC} -Wl,-shared -Wl,-Bshareable -soname=`basename $[@]` -o $[@]'
 		;;
 	netbsd*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
@@ -5580,7 +5587,7 @@ CF_EOF
 			CF_SHARED_SONAME
 			MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname' -o $[@]'
 		else
-			MK_SHARED_LIB='${LD} -shared -Bshareable -o $[@]'
+			MK_SHARED_LIB='${CC} -Wl,-shared -Wl,-Bshareable -o $[@]'
 		fi
 		;;
 	osf*|mls+*) #(vi
@@ -5705,6 +5712,8 @@ EOF
 	test -n "$cf_ld_rpath_opt" && MK_SHARED_LIB="$MK_SHARED_LIB $cf_ld_rpath_opt\${RPATH_LIST}"
 	test -z "$RPATH_LIST" && RPATH_LIST="\${libdir}"
 
+	test $cf_cv_rm_so_locs = yes && RM_SHARED_OPTS="$RM_SHARED_OPTS so_locations"
+
 	CF_VERBOSE(CC_SHARED_OPTS: $CC_SHARED_OPTS)
 	CF_VERBOSE(MK_SHARED_LIB:  $MK_SHARED_LIB)
 
@@ -5712,11 +5721,15 @@ EOF
 	AC_SUBST(LD_RPATH_OPT)
 	AC_SUBST(LD_SHARED_OPTS)
 	AC_SUBST(MK_SHARED_LIB)
+	AC_SUBST(RM_SHARED_OPTS)
+
 	AC_SUBST(LINK_PROGS)
 	AC_SUBST(LINK_TESTS)
+
 	AC_SUBST(EXTRA_LDFLAGS)
 	AC_SUBST(LOCAL_LDFLAGS)
 	AC_SUBST(LOCAL_LDFLAGS2)
+
 	AC_SUBST(INSTALL_LIB)
 	AC_SUBST(RPATH_LIST)
 ])dnl
@@ -6213,12 +6226,12 @@ AC_MSG_RESULT($cf_cv_sys_time_select)
 test "$cf_cv_sys_time_select" = yes && AC_DEFINE(HAVE_SYS_TIME_SELECT,1,[Define to 1 if we can include <sys/time.h> with <sys/select.h>])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_TOP_BUILDDIR version: 1 updated: 2006/10/15 16:33:23
+dnl CF_TOP_BUILDDIR version: 2 updated: 2013/07/27 17:38:32
 dnl ---------------
 dnl Define a top_builddir symbol, for applications that need an absolute path.
 AC_DEFUN([CF_TOP_BUILDDIR],
 [
-top_builddir=`pwd`
+top_builddir=ifelse($1,,`pwd`,$1)
 AC_SUBST(top_builddir)
 ])dnl
 dnl ---------------------------------------------------------------------------

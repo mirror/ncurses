@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2080 2013/07/20 19:13:11 tom Exp $
+-- $Id: NEWS,v 1.2083 2013/07/27 22:24:47 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130727
+	+ improve configure macros from ongoing work on cdk, dialog, xterm:
+	  + CF_ADD_LIB_AFTER - fix a problem with -Wl options
+	  + CF_RPATH_HACK - add missing result-message
+	  + CF_SHARED_OPTS - modify to use $rel_builddir in cygwin and mingw
+	    dll symbols (which can be overridden) rather than explicit "../".
+	  + CF_SHARED_OPTS - modify NetBSD and DragonFly symbols to use ${CC}
+	    rather than ${LD} to improve rpath support.
+	  + CF_SHARED_OPTS - add a symbol to denote the temporary files that
+	    are created by the macro, to simplify clean-rules.
+	  + CF_X_ATHENA - trim extra libraries to work with -Wl,--as-needed
+	+ fix a regression in hashed-database support for NetBSD, which uses
+	  the key-size differently from other implementations (cf: 20121229).
 
 20130720
 	+ further improvements for setupterm manpage, clarifying the

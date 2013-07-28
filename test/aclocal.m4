@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.86 2013/03/09 21:41:33 tom Exp $
+dnl $Id: aclocal.m4,v 1.87 2013/07/27 22:25:56 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -263,7 +263,7 @@ dnl $1 = libraries to add, with the "-l", etc.
 dnl $2 = variable to update (default $LIBS)
 AC_DEFUN([CF_ADD_LIBS],[ifelse($2,,LIBS,[$2])="$1 [$]ifelse($2,,LIBS,[$2])"])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_LIB_AFTER version: 2 updated: 2010/11/08 20:33:46
+dnl CF_ADD_LIB_AFTER version: 3 updated: 2013/07/09 21:27:22
 dnl ----------------
 dnl Add a given library after another, e.g., following the one it satisfies a
 dnl dependency for.
@@ -272,7 +272,7 @@ dnl $1 = the first library
 dnl $2 = its dependency
 AC_DEFUN([CF_ADD_LIB_AFTER],[
 CF_VERBOSE(...before $LIBS)
-LIBS=`echo "$LIBS" | sed -e "s/[[ 	]][[ 	]]*/ /g" -e "s,$1 ,$1 $2 ," -e 's/  / /g'`
+LIBS=`echo "$LIBS" | sed -e "s/[[ 	]][[ 	]]*/ /g" -e "s%$1 %$1 $2 %" -e 's%  % %g'`
 CF_VERBOSE(...after  $LIBS)
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -2549,7 +2549,7 @@ $1=`echo "$2" | \
 		-e 's/-[[UD]]'"$3"'\(=[[^ 	]]*\)\?[$]//g'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK version: 9 updated: 2011/02/13 13:31:33
+dnl CF_RPATH_HACK version: 10 updated: 2013/07/22 18:27:50
 dnl -------------
 AC_DEFUN([CF_RPATH_HACK],
 [
@@ -2600,6 +2600,8 @@ AC_TRY_LINK([#include <stdio.h>],
 	CF_RPATH_HACK_2(LIBS)
 
 	CF_VERBOSE(...checked EXTRA_LDFLAGS $EXTRA_LDFLAGS)
+else
+	AC_MSG_RESULT(no)
 fi
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
@@ -2786,12 +2788,12 @@ ncursesw/term.h)
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_TOP_BUILDDIR version: 1 updated: 2006/10/15 16:33:23
+dnl CF_TOP_BUILDDIR version: 2 updated: 2013/07/27 17:38:32
 dnl ---------------
 dnl Define a top_builddir symbol, for applications that need an absolute path.
 AC_DEFUN([CF_TOP_BUILDDIR],
 [
-top_builddir=`pwd`
+top_builddir=ifelse($1,,`pwd`,$1)
 AC_SUBST(top_builddir)
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -2839,7 +2841,23 @@ EOF
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_TRY_PKG_CONFIG version: 4 updated: 2010/06/14 17:42:30
+dnl CF_TRIM_X_LIBS version: 2 updated: 2013/07/09 21:27:22
+dnl --------------
+dnl Trim extra base X libraries added as a workaround for inconsistent library
+dnl dependencies returned by "new" pkg-config files.
+AC_DEFUN([CF_TRIM_X_LIBS],[
+	for cf_trim_lib in Xmu Xt X11
+	do
+		case "$LIBS" in
+		*-l$cf_trim_lib\ *-l$cf_trim_lib*)
+			LIBS=`echo "$LIBS " | sed -e 's/  / /g' -e 's%-l'"$cf_trim_lib"' %%' -e 's/ $//'`
+			CF_VERBOSE(..trimmed $LIBS)
+			;;
+		esac
+	done
+])
+dnl ---------------------------------------------------------------------------
+dnl CF_TRY_PKG_CONFIG version: 5 updated: 2013/07/06 21:27:06
 dnl -----------------
 dnl This is a simple wrapper to use for pkg-config, for libraries which may be
 dnl available in that form.
@@ -2860,6 +2878,8 @@ if test "$PKG_CONFIG" != none && "$PKG_CONFIG" --exists $1; then
 	CF_ADD_LIBS($cf_pkgconfig_libs)
 	ifelse([$2],,:,[$2])
 else
+	cf_pkgconfig_incs=
+	cf_pkgconfig_libs=
 	ifelse([$3],,:,[$3])
 fi
 ])
@@ -3270,7 +3290,7 @@ make an error
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_X_ATHENA version: 20 updated: 2010/11/09 05:18:02
+dnl CF_X_ATHENA version: 21 updated: 2013/07/06 21:27:06
 dnl -----------
 dnl Check for Xaw (Athena) libraries
 dnl
@@ -3329,6 +3349,8 @@ if test "$PKG_CONFIG" != none ; then
 			CF_UPPER(cf_x_athena_LIBS,HAVE_LIB_$cf_x_athena)
 			AC_DEFINE_UNQUOTED($cf_x_athena_LIBS)
 
+			CF_TRIM_X_LIBS
+
 AC_CACHE_CHECK(for usable $cf_x_athena/Xmu package,cf_cv_xaw_compat,[
 AC_TRY_LINK([
 #include <X11/Xmu/CharSet.h>
@@ -3344,7 +3366,15 @@ int check = XmuCompareISOLatin1("big", "small")
 					;;
 				*)
 					CF_VERBOSE(work around broken package)
-					CF_TRY_PKG_CONFIG(xmu,,[CF_ADD_LIB_AFTER(-lXt,-lXmu)])
+					cf_save_xmu="$LIBS"
+					cf_first_lib=`echo "$cf_save_xmu" | sed -e 's/^[ ][ ]*//' -e 's/ .*//'`
+					CF_TRY_PKG_CONFIG(xmu,[
+							LIBS="$cf_save_xmu"
+							CF_ADD_LIB_AFTER($cf_first_lib,$cf_pkgconfig_libs)
+						],[
+							CF_ADD_LIB_AFTER($cf_first_lib,-lXmu)
+						])
+					CF_TRIM_X_LIBS
 					;;
 				esac
 			fi
