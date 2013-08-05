@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.35 2012/10/06 17:31:01 tom Exp $
+# $Id: Makefile.in,v 1.36 2013/08/03 22:58:52 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -54,8 +54,11 @@ datarootdir	= @datarootdir@
 bindir		= @bindir@
 ticdir		= @TERMINFO@
 includedir	= @includedir@
+includesubdir	= @includesubdir@
 libdir		= @libdir@
 mandir		= @mandir@
+
+INCLUDEDIR	= ${DESTDIR}${includedir}${includesubdir}
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -76,17 +79,17 @@ preinstall :
 	@ echo ''
 	@ echo '      bin directory: '$(bindir)
 	@ echo '      lib directory: '$(libdir)
-	@ echo '  include directory: '$(includedir)
+	@ echo '  include directory: '$(INCLUDEDIR)
 	@ echo '      man directory: '$(mandir)
 @MAKE_TERMINFO@	@ echo ' terminfo directory: '$(ticdir)
 	@ echo ''
-	@ test "$(includedir)" = "$(prefix)/include" || \
+	@ test "$(INCLUDEDIR)" = "$(prefix)/include" || \
 		echo '** Include-directory is not in a standard location'
-	@ test ! -f $(includedir)/termcap.h || \
-		fgrep NCURSES_VERSION $(includedir)/termcap.h >/dev/null || \
+	@ test ! -f $(INCLUDEDIR)/termcap.h || \
+		fgrep NCURSES_VERSION $(INCLUDEDIR)/termcap.h >/dev/null || \
 		echo '** Will overwrite non-ncurses termcap.h'
-	@ test ! -f $(includedir)/curses.h || \
-		fgrep NCURSES_VERSION $(includedir)/curses.h >/dev/null || \
+	@ test ! -f $(INCLUDEDIR)/curses.h || \
+		fgrep NCURSES_VERSION $(INCLUDEDIR)/curses.h >/dev/null || \
 		echo '** Will overwrite non-ncurses curses.h'
 
 distclean \

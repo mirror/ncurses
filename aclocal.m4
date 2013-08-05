@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.673 2013/07/27 22:15:13 tom Exp $
+dnl $Id: aclocal.m4,v 1.674 2013/08/03 22:18:08 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3482,12 +3482,14 @@ CF_EOF
 fi
 done
 
+if test "x$cf_with_db_install" = xyes; then
 cat >> Makefile <<CF_EOF
 
 install.libs uninstall.libs \\
 install.data uninstall.data ::
 $MAKE_TERMINFO	cd misc && \${MAKE} \${TOP_MFLAGS} \[$]@
 CF_EOF
+fi
 
 if test "x$cf_with_manpages" = xyes; then
 cat >> Makefile <<CF_EOF
@@ -6005,7 +6007,9 @@ done
 if test "x$cf_with_tests" != "xno" ; then
 	SRC_SUBDIRS="$SRC_SUBDIRS test"
 fi
-test -z "$MAKE_TERMINFO" && SRC_SUBDIRS="$SRC_SUBDIRS misc"
+if test "x$cf_with_db_install" = xyes; then
+	test -z "$MAKE_TERMINFO" && SRC_SUBDIRS="$SRC_SUBDIRS misc"
+fi
 if test "$cf_with_cxx_binding" != no; then
 	PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ncurses++${DFT_ARG_SUFFIX}"
 	SRC_SUBDIRS="$SRC_SUBDIRS c++"

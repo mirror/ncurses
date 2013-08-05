@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.572 2013/07/27 22:19:11 tom Exp $
+dnl $Id: configure.in,v 1.573 2013/08/03 22:59:09 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.572 $)
+AC_REVISION($Revision: 1.573 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -123,6 +123,13 @@ AC_MSG_RESULT($cf_with_cxx_binding)
 AC_MSG_CHECKING(if you want to build with Ada95)
 AC_MSG_RESULT($cf_with_ada)
 
+AC_MSG_CHECKING(if you want to install terminal database)
+AC_ARG_ENABLE(db-install,
+	[  --disable-db-install    suppress install of terminal database],
+	[cf_with_db_install=$enableval],
+	[cf_with_db_install=yes])
+AC_MSG_RESULT($cf_with_db_install)
+
 AC_MSG_CHECKING(if you want to install manpages)
 AC_ARG_WITH(manpages,
 	[  --without-manpages      suppress install of manpages],
@@ -132,14 +139,14 @@ AC_MSG_RESULT($cf_with_manpages)
 
 AC_MSG_CHECKING(if you want to build programs such as tic)
 AC_ARG_WITH(progs,
-	[  --without-progs         suppress build with programs (e.g., tic)],
+	[  --without-progs         suppress build/install with programs (e.g., tic)],
 	[cf_with_progs=$withval],
 	[cf_with_progs=yes])
 AC_MSG_RESULT($cf_with_progs)
 
 AC_MSG_CHECKING(if you want to build test-programs)
 AC_ARG_WITH(tests,
-	[  --without-tests         suppress build with test-programs],
+	[  --without-tests         suppress build/install with test-programs],
 	[cf_with_tests=$withval],
 	[cf_with_tests=yes])
 AC_MSG_RESULT($cf_with_tests)
@@ -1823,10 +1830,15 @@ normal|debug|profile)
 esac
 
 AC_MSG_CHECKING(where we will install curses.h)
-test "$with_overwrite" = no && \
-test "x$includedir" = 'x${prefix}/include' && \
-	includedir='${prefix}/include/ncurses'${LIB_SUFFIX}
-AC_MSG_RESULT($includedir)
+AC_SUBST(includesubdir)
+includesubdir=
+if test "$with_overwrite" = no && \
+ ( test "x$includedir" = 'x${prefix}/include' || \
+   test "x$includedir" = "x${prefix}/include" )
+then
+	includesubdir="/ncurses${LIB_SUFFIX}"
+fi
+AC_MSG_RESULT(${includedir}${includesubdir})
 
 ### Resolve a conflict between normal and wide-curses by forcing applications
 ### that will need libutf8 to add it to their configure script.
@@ -2000,6 +2012,7 @@ cf_cv_system_name="$cf_cv_system_name"
 cf_cv_term_driver="$with_term_driver"
 cf_with_ada="$cf_with_ada"
 cf_with_cxx_binding="$cf_with_cxx_binding"
+cf_with_db_install="$cf_with_db_install"
 cf_with_manpages="$cf_with_manpages"
 cf_with_tests="$cf_with_tests"
 with_shared_cxx="$with_shared_cxx"

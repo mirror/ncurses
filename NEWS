@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2083 2013/07/27 22:24:47 tom Exp $
+-- $Id: NEWS,v 1.2085 2013/08/05 00:51:45 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130805
+	+ minor fixes to the --disable-overwrite logic, to ensure that the
+	  configured $(includedir) is not cancelled by the mingwxx-filesystem
+	  rpm macros.
+	+ add --disable-db-install configure option, to simplify building
+	  cross-compile support packages.
+	+ add mingw-ncurses.spec file, for testing cross-compiles.
 
 20130727
 	+ improve configure macros from ongoing work on cdk, dialog, xterm:

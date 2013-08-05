@@ -981,6 +981,7 @@
 ./package/debian/rules
 ./package/debian/source/format
 ./package/debian/watch
+./package/mingw-ncurses.spec
 ./package/ncurses.spec
 ./panel/Makefile.in
 ./panel/headers

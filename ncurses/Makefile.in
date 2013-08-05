@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.137 2013/07/06 18:32:22 tom Exp $
+# $Id: Makefile.in,v 1.138 2013/08/04 20:20:45 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -66,6 +66,9 @@ libdir		= @libdir@
 includedir	= @includedir@
 datarootdir	= @datarootdir@
 datadir		= @datadir@
+includesubdir	= @includesubdir@
+
+INCLUDEDIR	= $(DESTDIR)$(includedir)$(includesubdir)
 
 LIBTOOL		= @LIBTOOL@
 LIBTOOL_CLEAN	= @LIB_CLEAN@
