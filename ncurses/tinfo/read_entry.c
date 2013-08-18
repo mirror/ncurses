@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.124 2013/07/13 20:06:43 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.125 2013/08/17 19:06:59 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -114,6 +114,36 @@ fake_read(char *src, int *offset, int limit, char *dst, unsigned want)
 
 #define even_boundary(value) \
     if ((value) % 2 != 0) Read(buf, 1)
+
+NCURSES_EXPORT(void)
+_nc_init_termtype(TERMTYPE *const tp)
+{
+    unsigned i;
+
+#if NCURSES_XNAMES
+    tp->num_Booleans = BOOLCOUNT;
+    tp->num_Numbers = NUMCOUNT;
+    tp->num_Strings = STRCOUNT;
+    tp->ext_Booleans = 0;
+    tp->ext_Numbers = 0;
+    tp->ext_Strings = 0;
+#endif
+    if (tp->Booleans == 0)
+	TYPE_MALLOC(NCURSES_SBOOL, BOOLCOUNT, tp->Booleans);
+    if (tp->Numbers == 0)
+	TYPE_MALLOC(short, NUMCOUNT, tp->Numbers);
+    if (tp->Strings == 0)
+	TYPE_MALLOC(char *, STRCOUNT, tp->Strings);
+
+    for_each_boolean(i, tp)
+	tp->Booleans[i] = FALSE;
+
+    for_each_number(i, tp)
+	tp->Numbers[i] = ABSENT_NUMERIC;
+
+    for_each_string(i, tp)
+	tp->Strings[i] = ABSENT_STRING;
+}
 
 /*
  * Return TGETENT_YES if read, TGETENT_NO if not found or garbled.

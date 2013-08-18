@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.186 2013/06/08 16:50:47 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.187 2013/08/17 21:15:15 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1224,12 +1224,62 @@ check_ansi_cursor(char *list[4])
 }
 
 #define EXPECTED(name) if (!PRESENT(name)) _nc_warning("expected " #name)
+#define UNEXPECTED(name) if (PRESENT(name)) _nc_warning("unexpected " #name ", for %s", why)
+
+static void
+check_noaddress(TERMTYPE *tp, const char *why)
+{
+    UNEXPECTED(column_address);
+    UNEXPECTED(cursor_address);
+    UNEXPECTED(cursor_home);
+    UNEXPECTED(cursor_mem_address);
+    UNEXPECTED(cursor_to_ll);
+    UNEXPECTED(row_address);
+    UNEXPECTED(row_address);
+}
 
 static void
 check_cursor(TERMTYPE *tp)
 {
     int count;
     char *list[4];
+
+    if (hard_copy) {
+	check_noaddress(tp, "hard_copy");
+    } else if (generic_type) {
+	check_noaddress(tp, "generic_type");
+    } else if (strchr(tp->term_names, '+') == 0) {
+	int y = 0;
+	int x = 0;
+	if (PRESENT(column_address))
+	    ++y;
+	if (PRESENT(cursor_address))
+	    y = x = 10;
+	if (PRESENT(cursor_home))
+	    ++y, ++x;
+	if (PRESENT(cursor_mem_address))
+	    y = x = 10;
+	if (PRESENT(cursor_to_ll))
+	    ++y, ++x;
+	if (PRESENT(row_address))
+	    ++x;
+	if (PRESENT(cursor_down))
+	    ++y;
+	if (PRESENT(cursor_up))
+	    ++y;
+	if (PRESENT(cursor_left))
+	    ++x;
+	if (PRESENT(cursor_right))
+	    ++x;
+	if (x < 2 && y < 2) {
+	    _nc_warning("terminal lacks cursor addressing");
+	} else {
+	    if (x < 2)
+		_nc_warning("terminal lacks cursor column-addressing");
+	    if (y < 2)
+		_nc_warning("terminal lacks cursor row-addressing");
+	}
+    }
 
     /* it is rare to have an insert-line feature without a matching delete */
     ANDMISSING(parm_insert_line, insert_line);
@@ -1412,7 +1462,7 @@ check_keypad(TERMTYPE *tp)
 
     /*
      * These warnings are useful for consistency checks - it is possible that
-     * there are real terminals with mismatches in these 
+     * there are real terminals with mismatches in these
      */
     ANDMISSING(key_ic, key_dc);
 }

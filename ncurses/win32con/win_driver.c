@@ -38,7 +38,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.19 2013/05/25 20:16:46 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.20 2013/08/17 19:25:30 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -492,7 +492,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
 
     if (code) {
 	if ((TCB->term.type.Booleans) == 0) {
-	    _nc_init_entry(&(TCB->term.type));
+	    _nc_init_termtype(&(TCB->term.type));
 	}
     }
 

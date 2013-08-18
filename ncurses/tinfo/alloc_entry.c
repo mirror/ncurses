@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.57 2012/10/27 21:32:23 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.58 2013/08/17 19:20:38 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -61,8 +61,6 @@ NCURSES_EXPORT(void)
 _nc_init_entry(TERMTYPE *const tp)
 /* initialize a terminal type data block */
 {
-    unsigned i;
-
 #if NO_LEAKS
     if (tp == 0) {
 	if (stringbuf != 0) {
@@ -75,31 +73,9 @@ _nc_init_entry(TERMTYPE *const tp)
     if (stringbuf == 0)
 	TYPE_MALLOC(char, (size_t) MAX_STRTAB, stringbuf);
 
-#if NCURSES_XNAMES
-    tp->num_Booleans = BOOLCOUNT;
-    tp->num_Numbers = NUMCOUNT;
-    tp->num_Strings = STRCOUNT;
-    tp->ext_Booleans = 0;
-    tp->ext_Numbers = 0;
-    tp->ext_Strings = 0;
-#endif
-    if (tp->Booleans == 0)
-	TYPE_MALLOC(NCURSES_SBOOL, BOOLCOUNT, tp->Booleans);
-    if (tp->Numbers == 0)
-	TYPE_MALLOC(short, NUMCOUNT, tp->Numbers);
-    if (tp->Strings == 0)
-	TYPE_MALLOC(char *, STRCOUNT, tp->Strings);
-
-    for_each_boolean(i, tp)
-	tp->Booleans[i] = FALSE;
-
-    for_each_number(i, tp)
-	tp->Numbers[i] = ABSENT_NUMERIC;
-
-    for_each_string(i, tp)
-	tp->Strings[i] = ABSENT_STRING;
-
     next_free = 0;
+
+    _nc_init_termtype(tp);
 }
 
 NCURSES_EXPORT(ENTRY *)
@@ -137,7 +113,7 @@ _nc_save_str(const char *const string)
 	next_free += len;
 	result = (stringbuf + old_next_free);
     } else {
-	_nc_warning("Too much data, some is lost");
+	_nc_warning("Too much data, some is lost: %s", string);
     }
     return result;
 }
