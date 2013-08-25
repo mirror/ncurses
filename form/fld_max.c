@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_max.c,v 1.12 2012/06/10 00:21:24 tom Exp $")
+MODULE_ID("$Id: fld_max.c,v 1.13 2013/08/24 22:59:28 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -63,7 +63,7 @@ set_max_field(FIELD *field, int maxgrow)
 	}
       field->maxgrow = maxgrow;
       ClrStatus(field, _MAY_GROW);
-      if (!(field->opts & O_STATIC))
+      if (!((unsigned)field->opts & O_STATIC))
 	{
 	  if ((maxgrow == 0) ||
 	      (single_line_field && (field->dcols < maxgrow)) ||

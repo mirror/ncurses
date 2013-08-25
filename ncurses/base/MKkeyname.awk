@@ -1,6 +1,6 @@
-# $Id: MKkeyname.awk,v 1.47 2012/02/22 22:35:41 tom Exp $
+# $Id: MKkeyname.awk,v 1.48 2013/08/24 17:37:22 tom Exp $
 ##############################################################################
-# Copyright (c) 1999-2010,2012 Free Software Foundation, Inc.                #
+# Copyright (c) 1999-2012,2013 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -65,6 +65,7 @@ END {
 	print ""
 	print "#define SIZEOF_TABLE 256"
 	print "#define MyTable _nc_globals.keyname_table"
+	print "#define MyInit  _nc_globals.init_keyname"
 	print ""
 	print "NCURSES_EXPORT(NCURSES_CONST char *)"
 	print "safe_keyname (SCREEN *sp, int c)"
@@ -96,12 +97,26 @@ END {
 	print "		if (result == 0 && (c >= 0 && c < SIZEOF_TABLE)) {"
 	print "			if (MyTable == 0)"
 	print "				MyTable = typeCalloc(char *, SIZEOF_TABLE);"
+	print ""
 	print "			if (MyTable != 0) {"
+	print "				int m_prefix = (sp == 0 || sp->_use_meta);"
+	print ""
+	print "				/* if sense of meta() changed, discard cached data */"
+	print "				if (MyInit != (m_prefix + 1)) {"
+	print "					MyInit = m_prefix + 1;"
+	print "					for (i = 0; i < SIZEOF_TABLE; ++i) {"
+	print "						if (MyTable[i]) {"
+	print "							FreeAndNull(MyTable[i]);"
+	print "						}"
+	print "					}"
+	print "				}"
+	print ""
+	print "				/* create and cache result as needed */"
 	print "				if (MyTable[c] == 0) {"
 	print "					int cc = c;"
 	print "					p = name;"
 	print "#define P_LIMIT (sizeof(name) - (size_t) (p - name))"
-	print "					if (cc >= 128 && (sp == 0 || sp->_use_meta)) {"
+	print "					if (cc >= 128 && m_prefix) {"
 	print "						_nc_STRCPY(p, \"M-\", P_LIMIT);"
 	print "						p += 2;"
 	print "						cc -= 128;"

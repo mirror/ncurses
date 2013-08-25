@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.104 2013/06/22 20:02:55 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.106 2013/08/25 00:02:15 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -187,7 +187,7 @@ static int FE_Delete_Previous(FORM *);
 
 /* Macro to set the attributes for a fields window */
 #define Set_Field_Window_Attributes(field,win) \
-(  wbkgdset((win),(chtype)((field)->pad | (field)->back)), \
+(  wbkgdset((win),(chtype)((chtype)((field)->pad) | (field)->back)), \
    (void) wattrset((win), (int)(field)->fore) )
 
 /* Logic to decide whether or not a field really appears on the form */
@@ -4397,8 +4397,8 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
 {
   FIELD_CELL *p;
   int res = E_OK;
-  unsigned int i;
-  unsigned int len;
+  int i;
+  int len;
 
 #if USE_WIDEC_SUPPORT
   FIELD_CELL *widevalue = 0;
@@ -4409,14 +4409,14 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
   if (!field || !value || ((buffer < 0) || (buffer > field->nbuf)))
     RETURN(E_BAD_ARGUMENT);
 
-  len = (unsigned)Buffer_Length(field);
+  len = Buffer_Length(field);
 
   if (Growable(field))
     {
       /* for a growable field we must assume zero terminated strings, because
          somehow we have to detect the length of what should be copied.
        */
-      unsigned vlen = (unsigned)strlen(value);
+      int vlen = (int)strlen(value);
 
       if (vlen > len)
 	{
@@ -4446,7 +4446,7 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
       delwin(field->working);
       field->working = newpad(1, Buffer_Length(field) + 1);
     }
-  len = (unsigned)Buffer_Length(field);
+  len = Buffer_Length(field);
   wclear(field->working);
   (void)mvwaddstr(field->working, 0, 0, value);
 
@@ -4456,7 +4456,7 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
     }
   else
     {
-      for (i = 0; i < (unsigned)field->drows; ++i)
+      for (i = 0; i < field->drows; ++i)
 	{
 	  (void)mvwin_wchnstr(field->working, 0, (int)i * field->dcols,
 			      widevalue + ((int)i * field->dcols),

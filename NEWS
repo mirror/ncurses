@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2089 2013/08/17 21:17:42 tom Exp $
+-- $Id: NEWS,v 1.2093 2013/08/24 22:44:49 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130824
+	+ fix some gcc 4.8 -Wconversion warnings.
+	+ change format of dpkg test-scripts to quilted to work around bug
+	  introduced by Debian #700177.
+	+ discard cached keyname() values if meta() is changed after a value
+	  was cached using (report by Kurban Mallachiev).
 
 20130816
 	+ add checks in tic to warn about terminals which lack cursor

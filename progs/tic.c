@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.187 2013/08/17 21:15:15 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.188 2013/08/24 21:48:21 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -380,11 +380,11 @@ open_tempfile(char *filename)
     _nc_STRCPY(filename, "/tmp/XXXXXX", PATH_MAX);
 #if HAVE_MKSTEMP
     {
-	int oldmask = umask(077);
+	int oldmask = (int) umask(077);
 	int fd = mkstemp(filename);
 	if (fd >= 0)
 	    result = fdopen(fd, "w");
-	umask(oldmask);
+	umask((mode_t) oldmask);
     }
 #else
     if (tmpnam(filename) != 0)

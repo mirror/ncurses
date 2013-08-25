@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.523 2013/01/26 21:51:56 tom Exp $
+ * $Id: curses.priv.h,v 1.525 2013/08/24 22:39:52 tom Exp $
  *
  *	curses.priv.h
  *
@@ -835,6 +835,7 @@ typedef struct {
 
 	char		*first_name;
 	char		**keyname_table;
+	int		init_keyname;
 
 	int		slk_format;
 
@@ -1333,8 +1334,8 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 #define UChar(c)	((unsigned char)(c))
 #define UShort(c)	((unsigned short)(c))
-#define ChCharOf(c)	((c) & (chtype)A_CHARTEXT)
-#define ChAttrOf(c)	((c) & (chtype)A_ATTRIBUTES)
+#define ChCharOf(c)	((chtype)(c) & (chtype)A_CHARTEXT)
+#define ChAttrOf(c)	((chtype)(c) & (chtype)A_ATTRIBUTES)
 
 #ifndef MB_LEN_MAX
 #define MB_LEN_MAX 8 /* should be >= MB_CUR_MAX, but that may be a function */
