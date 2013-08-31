@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.30 2013/05/25 20:16:46 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.32 2013/08/31 15:22:46 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -955,6 +955,11 @@ drv_conattr(TERMINAL_CONTROL_BLOCK * TCB)
     if (sp && sp->_coloron)
 	attrs |= A_COLOR;
 
+#if USE_ITALIC
+    if (enter_italics_mode)
+	attrs |= A_ITALIC;
+#endif
+
     return (attrs);
 }
 
@@ -1081,16 +1086,7 @@ _nc_cookie_init(SCREEN *sp)
 
     if (magic_cookie_glitch > 0) {	/* tvi, wyse */
 
-	sp->_xmc_triggers = sp->_ok_attributes & (
-						     A_STANDOUT |
-						     A_UNDERLINE |
-						     A_REVERSE |
-						     A_BLINK |
-						     A_DIM |
-						     A_BOLD |
-						     A_INVIS |
-						     A_PROTECT
-	    );
+	sp->_xmc_triggers = sp->_ok_attributes & XMC_CONFLICT;
 #if 0
 	/*
 	 * We "should" treat colors as an attribute.  The wyse350 (and its

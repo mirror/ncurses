@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.525 2013/08/24 22:39:52 tom Exp $
+ * $Id: curses.priv.h,v 1.527 2013/08/31 17:02:41 tom Exp $
  *
  *	curses.priv.h
  *
@@ -378,6 +378,16 @@ color_t;
 #include <term_entry.h>
 
 #include <nc_tparm.h>
+
+/*
+ * Simplify ifdef's for the "*_ATTR" macros in case italics are not configured.
+ */
+#ifdef A_ITALIC
+#define USE_ITALIC 1
+#else
+#define USE_ITALIC 0
+#define A_ITALIC 0
+#endif
 
 /*
  * Use these macros internally, to make tracing less verbose.  But leave the
@@ -1089,6 +1099,9 @@ struct screen {
 	/* used in lib_vidattr.c */
 	bool		_use_rmso;	/* true if we may use 'rmso'	     */
 	bool		_use_rmul;	/* true if we may use 'rmul'	     */
+#if USE_ITALIC
+	bool		_use_ritm;	/* true if we may use 'ritm'	     */
+#endif
 
 #if USE_KLIBC_KBD
 	bool		_extended_key;	/* true if an extended key	     */
@@ -1704,7 +1717,9 @@ extern	NCURSES_EXPORT(void) name (void); \
 	NCURSES_EXPORT(void) name (void) { }
 
 #define ALL_BUT_COLOR ((chtype)~(A_COLOR))
-#define NONBLANK_ATTR (A_NORMAL|A_BOLD|A_DIM|A_BLINK)
+#define NONBLANK_ATTR (A_BOLD | A_DIM | A_BLINK | A_ITALIC)
+#define TPARM_ATTR    (A_STANDOUT | A_UNDERLINE | A_REVERSE | A_BLINK | A_DIM | A_BOLD | A_ALTCHARSET | A_INVIS | A_PROTECT)
+#define XMC_CONFLICT  (A_STANDOUT | A_UNDERLINE | A_REVERSE | A_BLINK | A_DIM | A_BOLD | A_INVIS | A_PROTECT | A_ITALIC)
 #define XMC_CHANGES(c) ((c) & SP_PARM->_xmc_suppress)
 
 #define toggle_attr_on(S,at) {\

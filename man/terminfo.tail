@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.65 2013/06/22 19:00:26 tom Exp $
+.\" $Id: terminfo.tail,v 1.67 2013/08/31 12:11:03 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -55,35 +55,35 @@ of what a \fBterminfo\fR entry for a modern terminal typically looks like.
 .nf
 .ft CW
 \s-2ansi|ansi/pc-term compatible with color,
-	am, mc5i, mir, msgr,
-	colors#8, cols#80, it#8, lines#24, ncv#3, pairs#64,
-	acsc=+\\020\\,\\021-\\030.^Y0\\333`\\004a\\261f\\370g\\361h\\260
-	     j\\331k\\277l\\332m\\300n\\305o~p\\304q\\304r\\304s_t\\303
-	     u\\264v\\301w\\302x\\263y\\363z\\362{\\343|\\330}\\234~\\376,
-	bel=^G, blink=\\E[5m, bold=\\E[1m, cbt=\\E[Z, clear=\\E[H\\E[J,
-	cr=^M, cub=\\E[%p1%dD, cub1=\\E[D, cud=\\E[%p1%dB, cud1=\\E[B,
-	cuf=\\E[%p1%dC, cuf1=\\E[C, cup=\\E[%i%p1%d;%p2%dH,
-	cuu=\\E[%p1%dA, cuu1=\\E[A, dch=\\E[%p1%dP, dch1=\\E[P,
-	dl=\\E[%p1%dM, dl1=\\E[M, ech=\\E[%p1%dX, ed=\\E[J, el=\\E[K,
-	el1=\\E[1K, home=\\E[H, hpa=\\E[%i%p1%dG, ht=\\E[I, hts=\\EH,
-	ich=\\E[%p1%d@, il=\\E[%p1%dL, il1=\\E[L, ind=^J,
-	indn=\\E[%p1%dS, invis=\\E[8m, kbs=^H, kcbt=\\E[Z, kcub1=\\E[D,
-	kcud1=\\E[B, kcuf1=\\E[C, kcuu1=\\E[A, khome=\\E[H, kich1=\\E[L,
-	mc4=\\E[4i, mc5=\\E[5i, nel=\\r\\E[S, op=\\E[39;49m,
-	rep=%p1%c\\E[%p2%{1}%-%db, rev=\\E[7m, rin=\\E[%p1%dT,
-	rmacs=\\E[10m, rmpch=\\E[10m, rmso=\\E[m, rmul=\\E[m,
-	s0ds=\\E(B, s1ds=\\E)B, s2ds=\\E*B, s3ds=\\E+B,
-	setab=\\E[4%p1%dm, setaf=\\E[3%p1%dm,
-	sgr=\\E[0;10%?%p1%t;7%;
-	           %?%p2%t;4%;
-		   %?%p3%t;7%;
-		   %?%p4%t;5%;
-		   %?%p6%t;1%;
-		   %?%p7%t;8%;
-		   %?%p9%t;11%;m,
-	sgr0=\\E[0;10m, smacs=\\E[11m, smpch=\\E[11m, smso=\\E[7m,
-	smul=\\E[4m, tbc=\\E[3g, u6=\\E[%i%d;%dR, u7=\\E[6n,
-	u8=\\E[?%[;0123456789]c, u9=\\E[c, vpa=\\E[%i%p1%dd,
+        am, mc5i, mir, msgr,
+        colors#8, cols#80, it#8, lines#24, ncv#3, pairs#64,
+        acsc=+\\020\\,\\021-\\030.^Y0\\333`\\004a\\261f\\370g\\361h\\260
+             j\\331k\\277l\\332m\\300n\\305o~p\\304q\\304r\\304s_t\\303
+             u\\264v\\301w\\302x\\263y\\363z\\362{\\343|\\330}\\234~\\376,
+        bel=^G, blink=\\E[5m, bold=\\E[1m, cbt=\\E[Z, clear=\\E[H\\E[J,
+        cr=^M, cub=\\E[%p1%dD, cub1=\\E[D, cud=\\E[%p1%dB, cud1=\\E[B,
+        cuf=\\E[%p1%dC, cuf1=\\E[C, cup=\\E[%i%p1%d;%p2%dH,
+        cuu=\\E[%p1%dA, cuu1=\\E[A, dch=\\E[%p1%dP, dch1=\\E[P,
+        dl=\\E[%p1%dM, dl1=\\E[M, ech=\\E[%p1%dX, ed=\\E[J, el=\\E[K,
+        el1=\\E[1K, home=\\E[H, hpa=\\E[%i%p1%dG, ht=\\E[I, hts=\\EH,
+        ich=\\E[%p1%d@, il=\\E[%p1%dL, il1=\\E[L, ind=^J,
+        indn=\\E[%p1%dS, invis=\\E[8m, kbs=^H, kcbt=\\E[Z, kcub1=\\E[D,
+        kcud1=\\E[B, kcuf1=\\E[C, kcuu1=\\E[A, khome=\\E[H, kich1=\\E[L,
+        mc4=\\E[4i, mc5=\\E[5i, nel=\\r\\E[S, op=\\E[39;49m,
+        rep=%p1%c\\E[%p2%{1}%-%db, rev=\\E[7m, rin=\\E[%p1%dT,
+        rmacs=\\E[10m, rmpch=\\E[10m, rmso=\\E[m, rmul=\\E[m,
+        s0ds=\\E(B, s1ds=\\E)B, s2ds=\\E*B, s3ds=\\E+B,
+        setab=\\E[4%p1%dm, setaf=\\E[3%p1%dm,
+        sgr=\\E[0;10%?%p1%t;7%;
+                   %?%p2%t;4%;
+                   %?%p3%t;7%;
+                   %?%p4%t;5%;
+                   %?%p6%t;1%;
+                   %?%p7%t;8%;
+                   %?%p9%t;11%;m,
+        sgr0=\\E[0;10m, smacs=\\E[11m, smpch=\\E[11m, smso=\\E[7m,
+        smul=\\E[4m, tbc=\\E[3g, u6=\\E[%i%d;%dR, u7=\\E[6n,
+        u8=\\E[?%[;0123456789]c, u9=\\E[c, vpa=\\E[%i%p1%dd,
 .fi
 .ft R
 .PP
@@ -354,7 +354,7 @@ Thus the model 33 teletype is described as
 .ft CW
 .\".in -2
 \s-133\||\|tty33\||\|tty\||\|model 33 teletype,
-	bel=^G, cols#72, cr=^M, cud1=^J, hc, ind=^J, os,\s+1
+        bel=^G, cols#72, cr=^M, cud1=^J, hc, ind=^J, os,\s+1
 .\".in +2
 .ft R
 .fi
@@ -366,8 +366,8 @@ while the Lear Siegler \s-1ADM-3\s0 is described as
 .ft CW
 .\".in -2
 \s-1adm3\||\|3\||\|lsi adm3,
-	am, bel=^G, clear=^Z, cols#80, cr=^M, cub1=^H, cud1=^J,
-	ind=^J, lines#24,\s+1
+        am, bel=^G, clear=^Z, cols#80, cr=^M, cub1=^H, cud1=^J,
+        ind=^J, lines#24,\s+1
 .\".in +2
 .ft R
 .fi
@@ -1447,18 +1447,25 @@ attributes understood by \fBcurses\fR is as follows:
 .PP
 .TS
 center;
-l c c
-lw25 lw2 lw10.
-\fBAttribute	Bit	Decimal\fR
-A_STANDOUT	0	1
-A_UNDERLINE	1	2
-A_REVERSE	2	4
-A_BLINK   	3	8
-A_DIM      	4	16
-A_BOLD    	5	32
-A_INVIS   	6	64
-A_PROTECT	7	128
-A_ALTCHARSET	8	256
+l l l l
+lw20 lw2 lw10 lw10.
+\fBAttribute	Bit	Decimal	Set by\fR
+A_STANDOUT	0	1	sgr
+A_UNDERLINE	1	2	sgr
+A_REVERSE	2	4	sgr
+A_BLINK   	3	8	sgr
+A_DIM      	4	16	sgr
+A_BOLD    	5	32	sgr
+A_INVIS   	6	64	sgr
+A_PROTECT	7	128	sgr
+A_ALTCHARSET	8	256	sgr
+A_HORIZONTAL	9	512	sgr1
+A_LEFT	10	1024	sgr1
+A_LOW	11	2048	sgr1
+A_RIGHT	12	4096	sgr1
+A_TOP	13	8192	sgr1
+A_VERTICAL	14	16384	sgr1
+A_ITALIC	15	32768	sitm
 .TE
 .PP
 For example, on many IBM PC consoles, the underline attribute collides with the
@@ -1762,6 +1769,15 @@ Be careful assigning the \fBkmous\fR capability.
 The \fBncurses\fR wants to
 interpret it as \fBKEY_MOUSE\fR, for use by terminals and emulators like xterm
 that can return mouse-tracking information in the keyboard-input stream.
+.PP
+X/Open Curses does not mention italics.
+Portable applications must assume that numeric capabilities are
+signed 16-bit values.
+This includes the \fIno_color_video\fP (ncv) capability.
+The 32768 mask value used for italics with ncv can be confused with
+an absent or cancelled ncv.
+If italics should work with colors,
+then the ncv value must be specified, even if it is zero.
 .PP
 Different commercial ports of terminfo and curses support different subsets of
 the XSI Curses standard and (in some cases) different extension sets.

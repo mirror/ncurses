@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.234 2013/08/24 22:48:56 tom Exp $ */
+/* $Id: curses.h.in,v 1.235 2013/08/31 13:13:05 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -243,6 +243,10 @@ extern "C" {
 #define WA_RIGHT	A_RIGHT
 #define WA_TOP		A_TOP
 #define WA_VERTICAL	A_VERTICAL
+
+#if @NCURSES_EXT_FUNCS@
+#define WA_ITALIC	A_ITALIC	/* ncurses extension */
+#endif
 
 /* colors */
 #define COLOR_BLACK	0
@@ -1058,6 +1062,10 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #define A_RIGHT		NCURSES_BITS(@cf_cv_1UL@,20)
 #define A_TOP		NCURSES_BITS(@cf_cv_1UL@,21)
 #define A_VERTICAL	NCURSES_BITS(@cf_cv_1UL@,22)
+
+#if @NCURSES_EXT_FUNCS@
+#define A_ITALIC	NCURSES_BITS(@cf_cv_1UL@,23)	/* ncurses extension */
+#endif
 
 /*
  * Most of the pseudo functions are macros that either provide compatibility

@@ -69,27 +69,27 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.63 2013/01/12 18:00:54 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.67 2013/08/31 20:08:59 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx mode, 1, outc)
 
-#define TurnOn(mask,mode) \
+#define TurnOn(mask, mode) \
 	if ((turn_on & mask) && mode) { doPut(mode); }
 
-#define TurnOff(mask,mode) \
+#define TurnOff(mask, mode) \
 	if ((turn_off & mask) && mode) { doPut(mode); turn_off &= ~mask; }
 
 	/* if there is no current screen, assume we *can* do color */
-#define SetColorsIf(why,old_attr) \
+#define SetColorsIf(why, old_attr) \
 	if (can_color && (why)) { \
 		int old_pair = PairNumber(old_attr); \
 		TR(TRACE_ATTRS, ("old pair = %d -- new pair = %d", old_pair, pair)); \
 		if ((pair != old_pair) \
 		 || (fix_pair0 && (pair == 0)) \
 		 || (reverse ^ ((old_attr & A_REVERSE) != 0))) { \
-		     NCURSES_SP_NAME(_nc_do_color)(NCURSES_SP_ARGx \
+		     NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_ARGx \
 				     (short) old_pair, \
 				     (short) pair, \
 				     reverse, outc); \
@@ -139,6 +139,9 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 	    A_BOLD,
 	    A_INVIS,
 	    A_PROTECT,
+#if USE_ITALIC
+	    A_ITALIC,
+#endif
 	};
 	unsigned n;
 	int used = 0;
@@ -229,6 +232,11 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 		if (!SP_PARM || SP_PARM->_use_rmso) {
 		    TurnOff(A_STANDOUT, exit_standout_mode);
 		}
+#if USE_ITALIC
+		if (!SP_PARM || SP_PARM->_use_ritm) {
+		    TurnOff(A_ITALIC, exit_italics_mode);
+		}
+#endif
 	    }
 	    PreviousAttr &= ALL_BUT_COLOR;
 	}
@@ -251,6 +259,15 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 				    1, outc);
 	    PreviousAttr &= ALL_BUT_COLOR;
 	}
+#if USE_ITALIC
+	if (!SP_PARM || SP_PARM->_use_ritm) {
+	    if (turn_on & A_ITALIC) {
+		TurnOn(A_ITALIC, enter_italics_mode);
+	    } else if (turn_off & A_ITALIC) {
+		TurnOff(A_ITALIC, exit_italics_mode);
+	    }
+	}
+#endif
 	SetColorsIf((pair != 0) || fix_pair0, PreviousAttr);
     } else {
 
@@ -265,7 +282,11 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 	if (!SP_PARM || SP_PARM->_use_rmso) {
 	    TurnOff(A_STANDOUT, exit_standout_mode);
 	}
-
+#if USE_ITALIC
+	if (!SP_PARM || SP_PARM->_use_ritm) {
+	    TurnOff(A_ITALIC, exit_italics_mode);
+	}
+#endif
 	if (turn_off && exit_attribute_mode) {
 	    doPut(exit_attribute_mode);
 	    turn_on |= (newmode & ALL_BUT_COLOR);
@@ -284,6 +305,9 @@ NCURSES_SP_NAME(vidputs) (NCURSES_SP_DCLx
 	TurnOn(A_PROTECT,	enter_protected_mode);
 	TurnOn(A_INVIS,		enter_secure_mode);
 	TurnOn(A_UNDERLINE,	enter_underline_mode);
+#if USE_ITALIC
+	TurnOn(A_ITALIC,	enter_italics_mode);
+#endif
 #if USE_WIDEC_SUPPORT
 	TurnOn(A_HORIZONTAL,	enter_horizontal_hl_mode);
 	TurnOn(A_LEFT,		enter_left_hl_mode);
@@ -345,7 +369,7 @@ NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
     if (HasTerminal(SP_PARM)) {
 #ifdef USE_TERM_DRIVER
 	attrs = CallDriver(SP_PARM, conattr);
-#else
+#else /* ! USE_TERM_DRIVER */
 
 	if (enter_alt_charset_mode)
 	    attrs |= A_ALTCHARSET;
@@ -377,7 +401,12 @@ NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
 	if (SP_PARM->_coloron)
 	    attrs |= A_COLOR;
 
+#if USE_ITALIC
+	if (enter_italics_mode)
+	    attrs |= A_ITALIC;
 #endif
+
+#endif /* USE_TERM_DRIVER */
     }
     returnChtype(attrs);
 }

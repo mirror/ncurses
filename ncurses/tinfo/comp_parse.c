@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.89 2013/07/13 21:55:32 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.90 2013/08/31 15:22:31 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -547,6 +547,7 @@ sanity_check2(TERMTYPE *tp, bool literal)
 #endif /* __UNUSED__ */
 	PAIRED(enter_standout_mode, exit_standout_mode);
 	PAIRED(enter_underline_mode, exit_underline_mode);
+	PAIRED(enter_italics_mode, exit_italics_mode);
     }
 
     /* we do this check/fix in postprocess_termcap(), but some packagers

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.88 2012/01/21 19:21:29 KO.Myung-Hun Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.89 2013/08/31 14:56:50 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -307,7 +307,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	    /* compute movement costs so we can do better move optimization */
 #ifdef USE_TERM_DRIVER
 	    TCBOf(SP_PARM)->drv->scinit(SP_PARM);
-#else
+#else /* ! USE_TERM_DRIVER */
 	    /*
 	     * Check for mismatched graphic-rendition capabilities.  Most SVr4
 	     * terminfo trees contain entries that have rmul or rmso equated to
@@ -320,13 +320,16 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 #define SGR0_TEST(mode) (mode != 0) && (exit_attribute_mode == 0 || strcmp(mode, exit_attribute_mode))
 	    SP_PARM->_use_rmso = SGR0_TEST(exit_standout_mode);
 	    SP_PARM->_use_rmul = SGR0_TEST(exit_underline_mode);
+#if USE_ITALIC
+	    SP_PARM->_use_ritm = SGR0_TEST(exit_italics_mode);
+#endif
 
 	    /* compute movement costs so we can do better move optimization */
 	    _nc_mvcur_init();
 
 	    /* initialize terminal to a sane state */
 	    _nc_screen_init();
-#endif
+#endif /* USE_TERM_DRIVER */
 
 	    /* Initialize the terminal line settings. */
 	    _nc_initscr(NCURSES_SP_ARG);
