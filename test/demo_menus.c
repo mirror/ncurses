@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.50 2013/06/08 21:38:37 tom Exp $
+ * $Id: demo_menus.c,v 1.51 2013/09/07 16:20:08 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -595,7 +595,7 @@ perform_trace_menu(int cmd)
     int result;
 
     for (ip = menu_items(mpTrace); *ip; ip++) {
-	MENU_DATA *td = item_userptr(*ip);
+	MENU_DATA *td = (MENU_DATA *) item_userptr(*ip);
 	unsigned mask = td->mask;
 	if (mask == 0)
 	    set_item_value(*ip, _nc_tracing == 0);
@@ -610,7 +610,7 @@ perform_trace_menu(int cmd)
 	    newtrace = 0;
 	    for (ip = menu_items(mpTrace); *ip; ip++) {
 		if (item_value(*ip)) {
-		    MENU_DATA *td = item_userptr(*ip);
+		    MENU_DATA *td = (MENU_DATA *) item_userptr(*ip);
 		    newtrace |= td->mask;
 		}
 	    }
@@ -859,7 +859,7 @@ perform_menus(void)
 	if (code == E_UNKNOWN_COMMAND
 	    || code == E_NOT_POSTED) {
 	    ITEM *item = current_item(last_menu);
-	    MENU_DATA *td = item_userptr(item);
+	    MENU_DATA *td = (MENU_DATA *) item_userptr(item);
 	    td->func((int) td->mask);
 	}
 	if (code == E_REQUEST_DENIED)

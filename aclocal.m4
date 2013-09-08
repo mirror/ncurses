@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.675 2013/08/17 18:43:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.676 2013/09/07 18:00:53 Alexey.Pavlov Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -678,7 +678,7 @@ case "$CC" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CFG_DEFAULTS version: 9 updated: 2013/04/13 18:58:32
+dnl CF_CFG_DEFAULTS version: 10 updated: 2013/09/07 13:54:05
 dnl ---------------
 dnl Determine the default configuration into which we'll install ncurses.  This
 dnl can be overridden by the user's command-line options.  There's two items to
@@ -696,7 +696,7 @@ AC_MSG_CHECKING(for prefix)
 if test "x$prefix" = "xNONE" ; then
 	case "$cf_cv_system_name" in
 		# non-vendor systems don't have a conflict
-	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|k*bsd*-gnu|mingw*)
+	openbsd*|freebsd*|mirbsd*|linux*|cygwin*|msys*|k*bsd*-gnu|mingw*)
 		prefix=/usr
 		;;
 	*)	prefix=$ac_default_prefix
@@ -2141,7 +2141,7 @@ fi
 AC_SUBST(PRAGMA_UNREF)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_PROJECTS version: 2 updated: 2011/03/23 20:24:41
+dnl CF_GNAT_PROJECTS version: 3 updated: 2013/09/07 13:54:05
 dnl ----------------
 dnl GNAT projects are configured with ".gpr" project files.
 dnl GNAT libraries are a further development, using the project feature.
@@ -2158,7 +2158,7 @@ case $cf_gnat_version in #(vi
 	;;
 *)
 	case $cf_cv_system_name in #(vi
-	cygwin*) #(vi
+	cygwin* | msys*) #(vi
 		;;
 	*)
 		mkdir conftest.src conftest.bin conftest.lib
@@ -3110,7 +3110,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 73 updated: 2013/08/03 18:18:08
+dnl CF_LIB_RULES version: 74 updated: 2013/09/07 13:54:05
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -3131,7 +3131,7 @@ cf_prefix=$LIB_PREFIX
 AC_REQUIRE([CF_SUBST_NCURSES_VERSION])
 
 case $cf_cv_shlib_version in #(vi
-cygdll|mingw)
+cygdll|msysdll|mingw)
 	TINFO_NAME=$TINFO_ARG_SUFFIX
 	TINFO_SUFFIX=.dll
 	;;
@@ -3212,6 +3212,11 @@ do
 				cygdll) #(vi
 					cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
 					Libs_To_Make="$Libs_To_Make ../lib/cyg${cf_libname}${cf_cygsuf}"
+					continue
+					;;
+				msysdll) #(vi
+					cf_cygsuf=`echo "$cf_suffix" | sed -e 's/\.dll/\${ABI_VERSION}.dll/'`
+					Libs_To_Make="$Libs_To_Make ../lib/msys-${cf_libname}${cf_cygsuf}"
 					continue
 					;;
 				mingw)
@@ -3305,7 +3310,7 @@ do
 			CXX_MODEL=$cf_ITEM
 			if test "$CXX_MODEL" = SHARED; then
 				case $cf_cv_shlib_version in #(vi
-				cygdll|mingw) #(vi
+				cygdll|msysdll|mingw) #(vi
 					test "x$with_shared_cxx" = xno && CF_VERBOSE(overriding CXX_MODEL to SHARED)
 					with_shared_cxx=yes
 					;;
@@ -3675,7 +3680,7 @@ fi
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SUFFIX version: 21 updated: 2013/07/06 17:44:26
+dnl CF_LIB_SUFFIX version: 22 updated: 2013/09/07 13:54:05
 dnl -------------
 dnl Compute the library file-suffix from the given model name
 dnl $1 = model name
@@ -3703,7 +3708,7 @@ AC_DEFUN([CF_LIB_SUFFIX],
 			$2='.a'
 			$3=[$]$2
 			;;
-		cygwin*|mingw*) #(vi
+		cygwin*|msys*|mingw*) #(vi
 			$2='.dll'
 			$3='.dll.a'
 			;;
@@ -4537,7 +4542,7 @@ ifelse($1,,[
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_MIXEDCASE_FILENAMES version: 4 updated: 2012/10/02 20:55:03
+dnl CF_MIXEDCASE_FILENAMES version: 5 updated: 2013/09/07 13:54:05
 dnl ----------------------
 dnl Check if the file-system supports mixed-case filenames.  If we're able to
 dnl create a lowercase name and see it as uppercase, it doesn't support that.
@@ -4546,7 +4551,7 @@ AC_DEFUN([CF_MIXEDCASE_FILENAMES],
 AC_CACHE_CHECK(if filesystem supports mixed-case filenames,cf_cv_mixedcase,[
 if test "$cross_compiling" = yes ; then
 	case $target_alias in #(vi
-	*-os2-emx*|*-msdosdjgpp*|*-cygwin*|*-mingw32*|*-uwin*) #(vi
+	*-os2-emx*|*-msdosdjgpp*|*-cygwin*|*-msys*|*-mingw32*|*-uwin*) #(vi
 		cf_cv_mixedcase=no
 		;;
 	*)
@@ -4691,7 +4696,7 @@ else
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_OBJ_SUBDIR version: 4 updated: 2002/02/23 20:38:31
+dnl CF_OBJ_SUBDIR version: 5 updated: 2013/09/07 13:54:05
 dnl -------------
 dnl Compute the object-directory name from the given model name
 AC_DEFUN([CF_OBJ_SUBDIR],
@@ -4703,7 +4708,7 @@ AC_DEFUN([CF_OBJ_SUBDIR],
 	profile) $2='obj_p' ;;
 	shared)
 		case $cf_cv_system_name in #(vi
-		cygwin) #(vi
+		cygwin | msys) #(vi
 			$2='objects' ;;
 		*)
 			$2='obj_s' ;;
@@ -5223,7 +5228,7 @@ define([CF_REMOVE_LIB],
 $1=`echo "$2" | sed -e 's/-l$3[[ 	]]//g' -e 's/-l$3[$]//'`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_RPATH_HACK version: 10 updated: 2013/07/22 18:27:50
+dnl CF_RPATH_HACK version: 11 updated: 2013/09/01 13:02:00
 dnl -------------
 AC_DEFUN([CF_RPATH_HACK],
 [
@@ -5240,8 +5245,8 @@ if test -n "$LD_RPATH_OPT" ; then
 
 AC_TRY_LINK([#include <stdio.h>],
 		[printf("Hello");],
-		[cf_rpath_oops=`$cf_ldd_prog conftest$ac_exeext | fgrep ' not found' | sed -e 's% =>.*$%%' |sort -u`
-		 cf_rpath_list=`$cf_ldd_prog conftest$ac_exeext | fgrep / | sed -e 's%^.*[[ 	]]/%/%' -e 's%/[[^/]][[^/]]*$%%' |sort -u`])
+		[cf_rpath_oops=`$cf_ldd_prog conftest$ac_exeext | fgrep ' not found' | sed -e 's% =>.*$%%' |sort | uniq`
+		 cf_rpath_list=`$cf_ldd_prog conftest$ac_exeext | fgrep / | sed -e 's%^.*[[ 	]]/%/%' -e 's%/[[^/]][[^/]]*$%%' |sort | uniq`])
 
 		# If we passed the link-test, but get a "not found" on a given library,
 		# this could be due to inept reconfiguration of gcc to make it only
@@ -5340,7 +5345,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 81 updated: 2013/08/03 18:18:08
+dnl CF_SHARED_OPTS version: 82 updated: 2013/09/07 13:54:05
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5441,6 +5446,26 @@ AC_DEFUN([CF_SHARED_OPTS],
 		#!/bin/sh
 		SHARED_LIB=\[$]1
 		IMPORT_LIB=\`echo "\[$]1" | sed -e 's/cyg/lib/' -e 's/[[0-9]]*\.dll[$]/.dll.a/'\`
+		shift
+		cat <<-EOF
+		Linking shared library
+		** SHARED_LIB \[$]SHARED_LIB
+		** IMPORT_LIB \[$]IMPORT_LIB
+EOF
+		exec \[$]* -shared -Wl,--out-implib=\[$]{IMPORT_LIB} -Wl,--export-all-symbols -o \[$]{SHARED_LIB}
+CF_EOF
+		chmod +x mk_shared_lib.sh
+		;;
+	msys*) #(vi
+		CC_SHARED_OPTS=
+		MK_SHARED_LIB='sh '$rel_builddir'/mk_shared_lib.sh [$]@ [$]{CC} [$]{CFLAGS}'
+		RM_SHARED_OPTS="$RM_SHARED_OPTS $rel_builddir/mk_shared_lib.sh *.dll.a"
+		cf_cv_shlib_version=msysdll
+		cf_cv_shlib_version_infix=msysdll
+		cat >mk_shared_lib.sh <<-CF_EOF
+		#!/bin/sh
+		SHARED_LIB=\[$]1
+		IMPORT_LIB=\`echo "\[$]1" | sed -e 's/msys-/lib/' -e 's/[[0-9]]*\.dll[$]/.dll.a/'\`
 		shift
 		cat <<-EOF
 		Linking shared library
@@ -6662,7 +6687,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 29 updated: 2013/04/06 18:03:09
+dnl CF_WITH_LIBTOOL version: 30 updated: 2013/09/07 13:54:05
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -6760,7 +6785,7 @@ ifdef([AC_PROG_LIBTOOL],[
 	# special hack to add -no-undefined (which libtool should do for itself)
 	LT_UNDEF=
 	case "$cf_cv_system_name" in #(vi
-	cygwin*|mingw32*|uwin*|aix[[4-7]]) #(vi
+	cygwin*|msys*|mingw32*|uwin*|aix[[4-7]]) #(vi
 		LT_UNDEF=-no-undefined
 		;;
 	esac
@@ -7067,7 +7092,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 43 updated: 2013/02/10 10:41:05
+dnl CF_XOPEN_SOURCE version: 44 updated: 2013/09/07 13:54:05
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -7087,7 +7112,7 @@ case $host_os in #(vi
 aix[[4-7]]*) #(vi
 	cf_xopen_source="-D_ALL_SOURCE"
 	;;
-cygwin) #(vi
+cygwin | msys) #(vi
 	cf_XOPEN_SOURCE=600
 	;;
 darwin[[0-8]].*) #(vi

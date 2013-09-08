@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.31 2012/06/09 19:17:02 tom Exp $ */
+/* $Id: tclock.c,v 1.32 2013/09/07 23:12:30 Ray.Donnelly Exp $ */
 
 #include <test.priv.h>
 
@@ -135,8 +135,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     short my_bg = COLOR_BLACK;
 #if HAVE_GETTIMEOFDAY
     struct timeval current;
-    double fraction = 0.0;
 #endif
+    double fraction = 0.0;
 
     setlocale(LC_ALL, "");
 

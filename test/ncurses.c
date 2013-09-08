@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.392 2013/08/31 20:47:55 tom Exp $
+$Id: ncurses.c,v 1.393 2013/09/07 19:17:48 tom Exp $
 
 ***************************************************************************/
 
@@ -3071,7 +3071,7 @@ show_256_chars(int repeat, attr_t attr, short pair)
     for (code = first; code <= last; ++code) {
 	int row = (int) (2 + (code / 16));
 	int col = (int) (5 * (code % 16));
-	mvaddch(row, col, colored_chtype(code, attr, pair));
+	IGNORE_RC(mvaddch(row, col, colored_chtype(code, attr, pair)));
 	for (count = 1; count < repeat; ++count) {
 	    addch(colored_chtype(code, attr, pair));
 	}

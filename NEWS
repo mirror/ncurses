@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2096 2013/08/31 20:36:47 tom Exp $
+-- $Id: NEWS,v 1.2101 2013/09/07 23:16:19 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130907
+	+ build-fixes for MSYS for two test-programs (patches by Ray Donnelly,
+	  Alexey Pavlov).
+	+ revert change to two of the dpkg format files, to work with dpkg
+	  before/after Debian #700177.
+	+ fix gcc -Wconversion warning in wattr_get() macro.
+	+ add msys and msysdll to known host/configuration types (patch by
+	  Alexey Pavlov).
+	+ modify CF_RPATH_HACK configure macro to not rely upon "-u" option
+	  of sort, improving portability.
+	+ minor improvements for test-programs from reviewing Solaris port.
+	+ update config.guess, config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20130831
 	+ modify test/ncurses.c b/B tests to display lines only for the

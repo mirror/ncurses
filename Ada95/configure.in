@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.47 2013/04/27 19:50:17 tom Exp $
+dnl $Id: configure.in,v 1.48 2013/09/07 17:54:05 Alexey.Pavlov Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.47 $)
+AC_REVISION($Revision: 1.48 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -530,6 +530,9 @@ if test "$DFT_LWR_MODEL" = shared ; then
 	case $cf_cv_system_name in #(vi
 	cygwin*)
 		# "lib" files have ".dll.a" suffix, "cyg" files have ".dll"
+		;;
+	msys*)
+		# "lib" files have ".dll.a" suffix, "msys-" files have ".dll"
 		;;
 	esac
 fi

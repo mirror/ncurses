@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.117 2013/02/10 01:00:04 tom Exp $ */
+/* $Id: test.priv.h,v 1.119 2013/09/07 18:49:43 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -607,6 +607,16 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #define TIGETSTR(ti,tc) tgetstr(tc,&area_pointer)
 #endif
 
+/*
+ * So far (2013 - more than ten years), only ncurses implements
+ * use_extended_names().
+ */
+#if defined(NCURSES_VERSION) && defined(HAVE_TERM_ENTRY_H) && HAVE_TERM_ENTRY_H
+#define NCURSES_XNAMES 1
+#else
+#define NCURSES_XNAMES 0
+#endif
+
 /* ncurses implements tparm() with varargs, X/Open with a fixed-parameter list
  * (which is incompatible with legacy usage, doesn't solve any problems).
  */
@@ -646,12 +656,12 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #ifdef WINVER
 #  if WINVER < 0x0501
 #    error WINVER must at least be 0x0501
-#  endif  
+#  endif
 #else
 #  define WINVER 0x0501
 #endif
 #include <windows.h>
-#include <sys/time.h>	/* for struct timeval */
+#include <sys/time.h>		/* for struct timeval */
 #undef sleep
 #define sleep(n) Sleep((n) * 1000)
 #define SIGHUP  1
