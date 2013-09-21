@@ -5879,7 +5879,7 @@ CF_EOF
 		cf_cv_shared_soname='`basename $@`'
 	fi
 
-		MK_SHARED_LIB='${CC} -Wl,-shared -Wl,-Bshareable -soname=`basename $@` -o $@'
+		MK_SHARED_LIB='${LD} -shared -Bshareable -soname=`basename $@` -o $@'
 		;;
 	netbsd*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
@@ -7224,7 +7224,7 @@ case $host_os in #(vi
 aix[4-7]*) #(vi
 	cf_xopen_source="-D_ALL_SOURCE"
 	;;
-cygwin | msys) #(vi
+cygwin|msys) #(vi
 	cf_XOPEN_SOURCE=600
 	;;
 darwin[0-8].*) #(vi
@@ -19661,7 +19661,7 @@ case $cf_gnat_version in #(vi
 	;;
 *)
 	case $cf_cv_system_name in #(vi
-	cygwin* | msys*) #(vi
+	cygwin*|msys*) #(vi
 		;;
 	*)
 		mkdir conftest.src conftest.bin conftest.lib
@@ -20304,7 +20304,7 @@ echo $ECHO_N "checking default object directory... $ECHO_C" >&6
 	profile) DFT_OBJ_SUBDIR='obj_p' ;;
 	shared)
 		case $cf_cv_system_name in #(vi
-		cygwin | msys) #(vi
+		cygwin|msys) #(vi
 			DFT_OBJ_SUBDIR='objects' ;;
 		*)
 			DFT_OBJ_SUBDIR='obj_s' ;;
@@ -20802,7 +20802,7 @@ do
 	profile) cf_subdir='obj_p' ;;
 	shared)
 		case $cf_cv_system_name in #(vi
-		cygwin | msys) #(vi
+		cygwin|msys) #(vi
 			cf_subdir='objects' ;;
 		*)
 			cf_subdir='obj_s' ;;
@@ -22437,7 +22437,7 @@ echo "${as_me:-configure}:22370: testing overriding CXX_MODEL to SHARED ..." 1>&
 	profile) cf_subdir='obj_p' ;;
 	shared)
 		case $cf_cv_system_name in #(vi
-		cygwin | msys) #(vi
+		cygwin|msys) #(vi
 			cf_subdir='objects' ;;
 		*)
 			cf_subdir='obj_s' ;;

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.676 2013/09/07 18:00:53 Alexey.Pavlov Exp $
+dnl $Id: aclocal.m4,v 1.678 2013/09/21 21:36:28 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2141,7 +2141,7 @@ fi
 AC_SUBST(PRAGMA_UNREF)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_PROJECTS version: 3 updated: 2013/09/07 13:54:05
+dnl CF_GNAT_PROJECTS version: 4 updated: 2013/09/07 14:05:46
 dnl ----------------
 dnl GNAT projects are configured with ".gpr" project files.
 dnl GNAT libraries are a further development, using the project feature.
@@ -2158,7 +2158,7 @@ case $cf_gnat_version in #(vi
 	;;
 *)
 	case $cf_cv_system_name in #(vi
-	cygwin* | msys*) #(vi
+	cygwin*|msys*) #(vi
 		;;
 	*)
 		mkdir conftest.src conftest.bin conftest.lib
@@ -4696,7 +4696,7 @@ else
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_OBJ_SUBDIR version: 5 updated: 2013/09/07 13:54:05
+dnl CF_OBJ_SUBDIR version: 6 updated: 2013/09/07 14:06:10
 dnl -------------
 dnl Compute the object-directory name from the given model name
 AC_DEFUN([CF_OBJ_SUBDIR],
@@ -4708,7 +4708,7 @@ AC_DEFUN([CF_OBJ_SUBDIR],
 	profile) $2='obj_p' ;;
 	shared)
 		case $cf_cv_system_name in #(vi
-		cygwin | msys) #(vi
+		cygwin|msys) #(vi
 			$2='objects' ;;
 		*)
 			$2='obj_s' ;;
@@ -5345,7 +5345,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 82 updated: 2013/09/07 13:54:05
+dnl CF_SHARED_OPTS version: 83 updated: 2013/09/21 17:34:53
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5596,7 +5596,7 @@ CF_EOF
 			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
-		MK_SHARED_LIB='${CC} -Wl,-shared -Wl,-Bshareable -soname=`basename $[@]` -o $[@]'
+		MK_SHARED_LIB='${LD} -shared -Bshareable -soname=`basename $[@]` -o $[@]'
 		;;
 	netbsd*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
@@ -7092,7 +7092,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 44 updated: 2013/09/07 13:54:05
+dnl CF_XOPEN_SOURCE version: 45 updated: 2013/09/07 14:06:25
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -7112,7 +7112,7 @@ case $host_os in #(vi
 aix[[4-7]]*) #(vi
 	cf_xopen_source="-D_ALL_SOURCE"
 	;;
-cygwin | msys) #(vi
+cygwin|msys) #(vi
 	cf_XOPEN_SOURCE=600
 	;;
 darwin[[0-8]].*) #(vi

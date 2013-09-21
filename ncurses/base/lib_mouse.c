@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.140 2013/01/12 16:35:34 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.141 2013/09/21 19:09:19 tom Exp $")
 
 #include <tic.h>
 
@@ -112,7 +112,7 @@ make an error
 #undef buttons			/* symbol conflict in consio.h */
 #undef mouse_info		/* symbol conflict in consio.h */
 #include <osreldate.h>
-#if (__FreeBSD_version >= 400017)
+#if defined(__DragonFly_version) || (defined(__FreeBSD__) && (__FreeBSD_version >= 400017))
 #include <sys/consio.h>
 #include <sys/fbio.h>
 #else
