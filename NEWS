@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2104 2013/09/21 20:41:37 tom Exp $
+-- $Id: NEWS,v 1.2109 2013/09/28 22:55:29 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20130928
+	+ some build-fixes for ncurses-examples with NetBSD-6.0 curses, though
+	  it lacks some common functions such as use_env() which is not yet
+	  addressed.
+	+ build-fix and some compiler warning fixes for ncurses-examples with
+	  OpenBSD 5.3
+	+ fix a possible null-pointer reference in a trace message from newterm.
+	+ quiet a few warnings from NetBSD 6.0 namespace pollution by
+	  nonstandard popcount() function in standard strings.h header.
+	+ ignore g++ 4.2.1 warnings for "-Weffc++" in c++/cursesmain.cc
+	+ fix a few overlooked places for --enable-string-hacks option.
 
 20130921
 	+ fix typo in curs_attr.3x (patch by Sven Joachim, cf: 20130831).

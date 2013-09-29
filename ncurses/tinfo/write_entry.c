@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.88 2013/07/27 15:52:18 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.89 2013/09/28 20:20:30 tom Exp $")
 
 static int total_written;
 
@@ -273,7 +273,7 @@ _nc_write_entry(TERMTYPE *const tp)
     char name_list[MAX_TERMINFO_LENGTH];
     char *first_name, *other_names;
     char *ptr;
-    const char *term_names = tp->term_names;
+    char *term_names = tp->term_names;
     size_t name_size = strlen(term_names);
 
     if (name_size == 0) {

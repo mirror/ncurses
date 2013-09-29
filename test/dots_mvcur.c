@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.8 2013/05/25 22:58:22 tom Exp $
+ * $Id: dots_mvcur.c,v 1.10 2013/09/28 22:44:18 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -53,7 +53,7 @@ TPUTS_PROTO(outc, c)
 
     if (interrupted) {
 	char tmp = (char) c;
-	if (write(STDOUT_FILENO, &tmp, 1) == -1)
+	if (write(STDOUT_FILENO, &tmp, (size_t) 1) == -1)
 	    rc = EOF;
     } else {
 	if (putc(c, stdout) == EOF)
@@ -63,7 +63,7 @@ TPUTS_PROTO(outc, c)
 }
 
 static bool
-outs(char *s)
+outs(const char *s)
 {
     if (valid(s)) {
 	tputs(s, 1, outc);
@@ -108,6 +108,7 @@ main(int argc GCC_UNUSED,
     double r;
     double c;
     SCREEN *sp;
+    int my_colors;
 
     CATCHALL(onsig);
 
@@ -116,11 +117,12 @@ main(int argc GCC_UNUSED,
     outs(clear_screen);
     outs(cursor_home);
     outs(cursor_invisible);
-    if (max_colors > 1) {
+    my_colors = max_colors;
+    if (my_colors > 1) {
 	if (!valid(set_a_foreground)
 	    || !valid(set_a_background)
 	    || (!valid(orig_colors) && !valid(orig_pair)))
-	    max_colors = -1;
+	    my_colors = -1;
     }
 
     r = (double) (lines - 4);
@@ -137,8 +139,8 @@ main(int argc GCC_UNUSED,
 	    y0 = y;
 	}
 
-	if (max_colors > 0) {
-	    z = (int) (ranf() * max_colors);
+	if (my_colors > 0) {
+	    z = (int) (ranf() * my_colors);
 	    if (ranf() > 0.01) {
 		tputs(tparm2(set_a_foreground, z), 1, outc);
 	    } else {

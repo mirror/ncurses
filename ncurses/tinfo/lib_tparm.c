@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.88 2013/01/26 17:07:05 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.89 2013/09/28 20:46:56 tom Exp $")
 
 /*
  *	char *
@@ -107,6 +107,7 @@ MODULE_ID("$Id: lib_tparm.c,v 1.88 2013/01/26 17:07:05 tom Exp $")
 NCURSES_EXPORT_VAR(int) _nc_tparm_err = 0;
 
 #define TPS(var) _nc_prescreen.tparm_state.var
+#define popcount _nc_popcount	/* workaround for NetBSD 6.0 defect */
 
 #if NO_LEAKS
 NCURSES_EXPORT(void)

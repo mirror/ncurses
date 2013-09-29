@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_vid_puts.c,v 1.4 2013/01/13 01:04:14 tom Exp $
+ * $Id: test_vid_puts.c,v 1.5 2013/09/28 22:42:29 tom Exp $
  *
  * Demonstrate the vid_puts and vid_attr functions.
  * Thomas Dickey - 2013/01/12
@@ -52,7 +52,7 @@ TPUTS_PROTO(outc, c)
 }
 
 static bool
-outs(char *s)
+outs(const char *s)
 {
     if (valid(s)) {
 	tputs(s, 1, outc);

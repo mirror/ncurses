@@ -36,7 +36,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: getenv_num.c,v 1.4 2012/07/14 21:17:19 tom Exp $")
+MODULE_ID("$Id: getenv_num.c,v 1.5 2013/09/28 20:25:08 tom Exp $")
 
 NCURSES_EXPORT(int)
 _nc_getenv_num(const char *name)
@@ -61,11 +61,11 @@ _nc_setenv_num(const char *name, int value)
     if (name != 0 && value >= 0) {
 	char buffer[128];
 #if HAVE_SETENV
-	sprintf(buffer, "%d", value);
+	_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer)) "%d", value);
 	setenv(name, buffer, 1);
 #elif HAVE_PUTENV
 	char *s;
-	sprintf(buffer, "%s=%d", name, value);
+	_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer)) "%s=%d", name, value);
 	if ((s = strdup(buffer)) != 0)
 	    putenv(s);
 #endif

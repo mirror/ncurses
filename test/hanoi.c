@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.34 2012/12/08 16:41:56 tom Exp $
+ * $Id: hanoi.c,v 1.35 2013/09/28 22:02:17 tom Exp $
  */
 
 #include <test.priv.h>
@@ -231,7 +231,7 @@ DisplayTiles(void)
     erase();
     MvAddStr(1, 24, "T O W E R S   O F   H A N O I");
     MvAddStr(3, 34, "SJR 1990");
-    MvPrintw(19, 5, "Moves : %d of %.0f", NMoves, pow(2.0, NTiles) - 1);
+    MvPrintw(19, 5, "Moves : %d of %.0f", NMoves, pow(2.0, (float) NTiles) - 1);
     (void) attrset(A_REVERSE);
     MvAddStr(BASELINE, 8,
 	     "                                                               ");

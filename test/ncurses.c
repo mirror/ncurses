@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.393 2013/09/07 19:17:48 tom Exp $
+$Id: ncurses.c,v 1.394 2013/09/28 21:58:37 tom Exp $
 
 ***************************************************************************/
 
@@ -2851,7 +2851,7 @@ slk_test(void)
 	    MvAddStr(SLK_WORK, 0, "Please enter the label value: ");
 	    strcpy(buf, "");
 	    if ((s = slk_label(c - '0')) != 0) {
-		strncpy(buf, s, 8);
+		strncpy(buf, s, (size_t) 8);
 	    }
 	    wGetstring(stdscr, buf, 8);
 	    slk_set((c - '0'), buf, fmt);
@@ -4348,7 +4348,7 @@ acs_and_scroll(void)
 	transient((FRAME *) 0, (char *) 0);
 	switch (c) {
 	case CTRL('C'):
-	    if ((neww = typeCalloc(FRAME, 1)) == 0) {
+	    if ((neww = typeCalloc(FRAME, (size_t) 1)) == 0) {
 		failed("acs_and_scroll");
 		goto breakout;
 	    }
@@ -4430,7 +4430,7 @@ acs_and_scroll(void)
 	    if ((fp = fopen(DUMPFILE, "r")) == (FILE *) 0) {
 		transient(current, "Can't open screen dump file");
 	    } else {
-		if ((neww = typeCalloc(FRAME, 1)) != 0) {
+		if ((neww = typeCalloc(FRAME, (size_t) 1)) != 0) {
 
 		    neww->next = current ? current->next : 0;
 		    neww->last = current;
@@ -6792,7 +6792,7 @@ main_menu(bool top)
 	command = 0;
 	for (;;) {
 	    char ch = '\0';
-	    if (read(fileno(stdin), &ch, 1) <= 0) {
+	    if (read(fileno(stdin), &ch, (size_t) 1) <= 0) {
 		if (command == 0)
 		    command = 'q';
 		break;

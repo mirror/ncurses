@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.51 2013/09/07 16:20:08 tom Exp $
+ * $Id: demo_menus.c,v 1.52 2013/09/28 21:55:02 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -407,7 +407,7 @@ build_select_menu(MenuNo number, char *filename)
     MENU_DATA *ap = 0;
     MENU_DATA *myList = 0;
     int i;
-    unsigned count = 0;
+    size_t count = 0;
 
     if (filename != 0) {
 	struct stat sb;

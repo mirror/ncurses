@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.37 2013/04/27 19:50:17 tom Exp $
+ * $Id: gdc.c,v 1.38 2013/09/28 21:58:32 tom Exp $
  */
 
 #include <test.priv.h>
@@ -293,7 +293,7 @@ main(int argc, char *argv[])
 	}
 
 	/* this depends on the detailed format of ctime(3) */
-	(void) strncpy(buf, ctime(&now), 30);
+	(void) strncpy(buf, ctime(&now), (size_t) 30);
 	(void) strcpy(buf + 10, buf + 19);
 	MvAddStr(16, 30, buf);
 

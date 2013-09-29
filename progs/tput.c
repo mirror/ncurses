@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.48 2012/02/18 21:51:17 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.49 2013/09/28 20:57:25 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -303,7 +303,7 @@ tput(int argc, char *argv[])
     } else if (s != ABSENT_STRING) {
 	if (argc > 1) {
 	    int k;
-	    int popcount;
+	    int ignored;
 	    long numbers[1 + NUM_PARM];
 	    char *strings[1 + NUM_PARM];
 	    char *p_is_s[NUM_PARM];
@@ -334,7 +334,7 @@ tput(int argc, char *argv[])
 		break;
 	    case Numbers:
 	    default:
-		(void) _nc_tparm_analyze(s, p_is_s, &popcount);
+		(void) _nc_tparm_analyze(s, p_is_s, &ignored);
 #define myParam(n) (p_is_s[n - 1] != 0 ? ((TPARM_ARG) strings[n]) : numbers[n])
 		s = TPARM_9(s,
 			    myParam(1),

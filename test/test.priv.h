@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.119 2013/09/07 18:49:43 tom Exp $ */
+/* $Id: test.priv.h,v 1.121 2013/09/28 22:43:22 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -162,6 +162,10 @@
 #define HAVE_RIPOFFLINE 0
 #endif
 
+#ifndef HAVE_SCR_DUMP
+#define HAVE_SCR_DUMP 0
+#endif
+
 #ifndef HAVE_SETUPTERM
 #define HAVE_SETUPTERM 0
 #endif
@@ -192,6 +196,10 @@
 
 #ifndef HAVE_TERMNAME
 #define HAVE_TERMNAME 0
+#endif
+
+#ifndef HAVE_TERM_ENTRY_H
+#define HAVE_TERM_ENTRY_H 0
 #endif
 
 #ifndef HAVE_TGETENT
@@ -611,7 +619,8 @@ extern char *strnames[], *strcodes[], *strfnames[];
  * So far (2013 - more than ten years), only ncurses implements
  * use_extended_names().
  */
-#if defined(NCURSES_VERSION) && defined(HAVE_TERM_ENTRY_H) && HAVE_TERM_ENTRY_H
+#if defined(NCURSES_XNAMES)
+#elif defined(NCURSES_VERSION) && defined(HAVE_TERM_ENTRY_H) && HAVE_TERM_ENTRY_H
 #define NCURSES_XNAMES 1
 #else
 #define NCURSES_XNAMES 0

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.41 2012/11/03 19:26:50 tom Exp $
+ * $Id: cardfile.c,v 1.42 2013/09/28 22:02:17 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -107,7 +107,7 @@ add_title(const char *title)
 	    break;
     }
 
-    card = typeCalloc(CARD, 1);
+    card = typeCalloc(CARD, (size_t) 1);
     card->title = strdup(title);
     card->content = strdup("");
 
@@ -335,7 +335,7 @@ form_virtualize(WINDOW *w)
 static FIELD **
 make_fields(CARD * p, int form_high, int form_wide)
 {
-    FIELD **f = typeCalloc(FIELD *, 3);
+    FIELD **f = typeCalloc(FIELD *, (size_t) 3);
 
     f[0] = new_field(1, form_wide, 0, 0, 0, 0);
     set_field_back(f[0], A_REVERSE);

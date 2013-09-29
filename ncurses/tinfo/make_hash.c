@@ -44,7 +44,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.12 2013/02/16 21:27:50 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.13 2013/09/28 20:55:47 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -69,10 +69,11 @@ failed(const char *s)
 static char *
 strmalloc(char *s)
 {
-    char *result = malloc(strlen(s) + 1);
+    size_t need = strlen(s) + 1;
+    char *result = malloc(need);
     if (result == 0)
-    	failed("strmalloc");
-    strcpy(result, s);
+	failed("strmalloc");
+    _nc_STRCPY(result, s, need);
     return result;
 }
 

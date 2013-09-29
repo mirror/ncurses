@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.18 2013/09/07 17:37:20 tom Exp $
+ * $Id: demo_terminfo.c,v 1.19 2013/09/28 21:50:01 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -37,7 +37,12 @@
 #include <test.priv.h>
 
 #if NCURSES_XNAMES
+#if HAVE_TERM_ENTRY_H
 #include <term_entry.h>
+#else
+#undef NCURSES_XNAMES
+#define NCURSES_XNAMES 0
+#endif
 #endif
 
 #if HAVE_TIGETSTR

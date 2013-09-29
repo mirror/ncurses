@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.45 2013/09/21 22:51:50 tom Exp $
+ * $Id: demo_forms.c,v 1.46 2013/09/28 21:55:54 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -139,7 +139,7 @@ read_data(const char *filename)
 	int more = 0;
 	int item = 0;
 
-	my_data = typeCalloc(MY_DATA, 100);	/* FIXME */
+	my_data = typeCalloc(MY_DATA, (size_t) 100);	/* FIXME */
 	while (fgets(buffer, sizeof(buffer), fp) != 0) {
 	    chomp(buffer);
 	    if (more) {

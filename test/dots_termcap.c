@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.6 2013/09/07 23:12:30 Ray.Donnelly Exp $
+ * $Id: dots_termcap.c,v 1.7 2013/09/28 21:50:35 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -105,7 +105,7 @@ TPUTS_PROTO(outc, c)
 
     if (interrupted) {
 	char tmp = (char) c;
-	if (write(STDOUT_FILENO, &tmp, 1) == -1)
+	if (write(STDOUT_FILENO, &tmp, (size_t) 1) == -1)
 	    rc = EOF;
     } else {
 	rc = putc(c, stdout);
