@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.110 2013/08/04 20:23:20 tom Exp $
+# $Id: Makefile.in,v 1.111 2013/10/05 23:46:10 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -47,6 +47,8 @@ MODEL		= ../@DFT_OBJ_SUBDIR@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
+datarootdir	= @datarootdir@
+
 bindir		= @bindir@
 libdir		= @libdir@
 includedir	= @includedir@

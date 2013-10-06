@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 2001-2010,2011 Free Software Foundation, Inc.                #
+# Copyright (c) 2001-2011,2013 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -29,7 +29,7 @@
 # Author: Thomas Dickey
 #    and: Ilya Zakharevich
 #
-# $Id: Caps.keys,v 1.6 2013/07/20 17:59:24 tom Exp $
+# $Id: Caps.keys,v 1.7 2013/07/20 17:59:24 tom Exp $
 #
 # This is an adaptation of ncurses' termcap/terminfo capability table, which
 # is illustrates an experimental extension to describe alt-, shift- and
