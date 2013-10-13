@@ -190,6 +190,7 @@
 ./Ada95/src/terminal_interface-curses-text_io.ads
 ./Ada95/src/terminal_interface-curses-trace.adb_p
 ./Ada95/src/terminal_interface.ads
+./COPYING
 ./INSTALL
 ./MANIFEST
 ./Makefile.in
@@ -995,6 +996,7 @@
 ./package/debian/rules
 ./package/debian/source/format
 ./package/debian/watch
+./package/mingw-ncurses.nsi
 ./package/mingw-ncurses.spec
 ./package/ncurses.spec
 ./panel/Makefile.in

@@ -3468,7 +3468,7 @@ else
 
 if test "$cross_compiling" = yes ; then
 	case $target_alias in #(vi
-	*-os2-emx*|*-msdosdjgpp*|*-cygwin*|*-msys*|*-mingw32*|*-uwin*) #(vi
+	*-os2-emx*|*-msdosdjgpp*|*-cygwin*|*-msys*|*-mingw*|*-uwin*) #(vi
 		cf_cv_mixedcase=no
 		;;
 	*)
@@ -8955,7 +8955,7 @@ if test -n "${CFLAGS}${CPPFLAGS}" ; then
 		-I*)
 			cf_header_path=`echo ".$cf_header_path" |sed -e 's/^...//' -e 's,/include$,,'`
 
-test "$cf_header_path" != "NONE" && \
+test "x$cf_header_path" != "xNONE" && \
 test -d "$cf_header_path" && \
  {
 	test -n "$verbose" && echo "	... testing for include-directories under $cf_header_path"
@@ -8976,9 +8976,9 @@ fi
 
 cf_search=
 
-test "/usr" != "$prefix" && \
+test "x/usr" != "x$prefix" && \
 test -d "/usr" && \
-(test $prefix = NONE || test "/usr" != "$prefix") && {
+(test -z "$prefix" || test x$prefix = xNONE || test "x/usr" != "x$prefix") && {
 	test -n "$verbose" && echo "	... testing for include-directories under /usr"
 	test -d /usr/include &&          cf_search="$cf_search /usr/include"
 	test -d /usr/include/utf8 &&       cf_search="$cf_search /usr/include/utf8"
@@ -8987,7 +8987,7 @@ test -d "/usr" && \
 	test -d /usr/utf8/include/utf8 &&    cf_search="$cf_search /usr/utf8/include/utf8"
 }
 
-test "$prefix" != "NONE" && \
+test "x$prefix" != "xNONE" && \
 test -d "$prefix" && \
  {
 	test -n "$verbose" && echo "	... testing for include-directories under $prefix"
@@ -8998,9 +8998,9 @@ test -d "$prefix" && \
 	test -d $prefix/utf8/include/utf8 &&    cf_search="$cf_search $prefix/utf8/include/utf8"
 }
 
-test "/usr/local" != "$prefix" && \
+test "x/usr/local" != "x$prefix" && \
 test -d "/usr/local" && \
-(test $prefix = NONE || test "/usr/local" != "$prefix") && {
+(test -z "$prefix" || test x$prefix = xNONE || test "x/usr/local" != "x$prefix") && {
 	test -n "$verbose" && echo "	... testing for include-directories under /usr/local"
 	test -d /usr/local/include &&          cf_search="$cf_search /usr/local/include"
 	test -d /usr/local/include/utf8 &&       cf_search="$cf_search /usr/local/include/utf8"
@@ -9009,9 +9009,9 @@ test -d "/usr/local" && \
 	test -d /usr/local/utf8/include/utf8 &&    cf_search="$cf_search /usr/local/utf8/include/utf8"
 }
 
-test "/opt" != "$prefix" && \
+test "x/opt" != "x$prefix" && \
 test -d "/opt" && \
-(test $prefix = NONE || test "/opt" != "$prefix") && {
+(test -z "$prefix" || test x$prefix = xNONE || test "x/opt" != "x$prefix") && {
 	test -n "$verbose" && echo "	... testing for include-directories under /opt"
 	test -d /opt/include &&          cf_search="$cf_search /opt/include"
 	test -d /opt/include/utf8 &&       cf_search="$cf_search /opt/include/utf8"
@@ -9020,9 +9020,9 @@ test -d "/opt" && \
 	test -d /opt/utf8/include/utf8 &&    cf_search="$cf_search /opt/utf8/include/utf8"
 }
 
-test "$HOME" != "$prefix" && \
+test "x$HOME" != "x$prefix" && \
 test -d "$HOME" && \
-(test $prefix = NONE || test "$HOME" != "$prefix") && {
+(test -z "$prefix" || test x$prefix = xNONE || test "x$HOME" != "x$prefix") && {
 	test -n "$verbose" && echo "	... testing for include-directories under $HOME"
 	test -d $HOME/include &&          cf_search="$cf_search $HOME/include"
 	test -d $HOME/include/utf8 &&       cf_search="$cf_search $HOME/include/utf8"
@@ -9117,7 +9117,7 @@ if test -n "${LDFLAGS}${LIBS}" ; then
 		-L*)
 			cf_library_path=`echo ".$cf_library_path" |sed -e 's/^...//' -e 's,/lib$,,'`
 
-test "$cf_library_path" != "NONE" && \
+test "x$cf_library_path" != "xNONE" && \
 test -d "$cf_library_path" && \
  {
 	test -n "$verbose" && echo "	... testing for lib-directories under $cf_library_path"
@@ -9136,9 +9136,9 @@ fi
 
 cf_search=
 
-test "/usr" != "$prefix" && \
+test "x/usr" != "x$prefix" && \
 test -d "/usr" && \
-(test $prefix = NONE || test "/usr" != "$prefix") && {
+(test -z "$prefix" || test x$prefix = xNONE || test "x/usr" != "x$prefix") && {
 	test -n "$verbose" && echo "	... testing for lib-directories under /usr"
 	test -d /usr/lib &&          cf_search="$cf_search /usr/lib"
 	test -d /usr/lib/utf8 &&       cf_search="$cf_search /usr/lib/utf8"
@@ -9147,7 +9147,7 @@ test -d "/usr" && \
 	test -d /usr/utf8/lib/utf8 &&    cf_search="$cf_search /usr/utf8/lib/utf8"
 }
 
-test "$prefix" != "NONE" && \
+test "x$prefix" != "xNONE" && \
 test -d "$prefix" && \
  {
 	test -n "$verbose" && echo "	... testing for lib-directories under $prefix"
@@ -9158,9 +9158,9 @@ test -d "$prefix" && \
 	test -d $prefix/utf8/lib/utf8 &&    cf_search="$cf_search $prefix/utf8/lib/utf8"
 }
 
-test "/usr/local" != "$prefix" && \
+test "x/usr/local" != "x$prefix" && \
 test -d "/usr/local" && \
-(test $prefix = NONE || test "/usr/local" != "$prefix") && {
+(test -z "$prefix" || test x$prefix = xNONE || test "x/usr/local" != "x$prefix") && {
 	test -n "$verbose" && echo "	... testing for lib-directories under /usr/local"
 	test -d /usr/local/lib &&          cf_search="$cf_search /usr/local/lib"
 	test -d /usr/local/lib/utf8 &&       cf_search="$cf_search /usr/local/lib/utf8"
@@ -9169,9 +9169,9 @@ test -d "/usr/local" && \
 	test -d /usr/local/utf8/lib/utf8 &&    cf_search="$cf_search /usr/local/utf8/lib/utf8"
 }
 
-test "/opt" != "$prefix" && \
+test "x/opt" != "x$prefix" && \
 test -d "/opt" && \
-(test $prefix = NONE || test "/opt" != "$prefix") && {
+(test -z "$prefix" || test x$prefix = xNONE || test "x/opt" != "x$prefix") && {
 	test -n "$verbose" && echo "	... testing for lib-directories under /opt"
 	test -d /opt/lib &&          cf_search="$cf_search /opt/lib"
 	test -d /opt/lib/utf8 &&       cf_search="$cf_search /opt/lib/utf8"
@@ -9180,9 +9180,9 @@ test -d "/opt" && \
 	test -d /opt/utf8/lib/utf8 &&    cf_search="$cf_search /opt/utf8/lib/utf8"
 }
 
-test "$HOME" != "$prefix" && \
+test "x$HOME" != "x$prefix" && \
 test -d "$HOME" && \
-(test $prefix = NONE || test "$HOME" != "$prefix") && {
+(test -z "$prefix" || test x$prefix = xNONE || test "x$HOME" != "x$prefix") && {
 	test -n "$verbose" && echo "	... testing for lib-directories under $HOME"
 	test -d $HOME/lib &&          cf_search="$cf_search $HOME/lib"
 	test -d $HOME/lib/utf8 &&       cf_search="$cf_search $HOME/lib/utf8"
@@ -20193,7 +20193,7 @@ if test "$GCC" != yes; then
 	CPPFLAGS="-I\${includedir} $CPPFLAGS"
 elif test "$includedir" != "/usr/include"; then
 	if test "$includedir" = '${prefix}/include' ; then
-		if test $prefix != /usr ; then
+		if test x$prefix != x/usr ; then
 			CPPFLAGS="-I\${includedir} $CPPFLAGS"
 		fi
 	else
@@ -20213,7 +20213,7 @@ if test "$GCC" != yes; then
 	ACPPFLAGS="$ACPPFLAGS -I\${includedir}"
 elif test "$includedir" != "/usr/include"; then
 	if test "$includedir" = '${prefix}/include' ; then
-		if test $prefix != /usr ; then
+		if test x$prefix != /usr ; then
 			ACPPFLAGS="$ACPPFLAGS -I\${includedir}"
 		fi
 	else

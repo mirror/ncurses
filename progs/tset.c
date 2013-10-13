@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.91 2013/03/23 21:38:08 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.92 2013/10/12 22:17:20 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -792,14 +792,14 @@ reset_mode(void)
     mode.c_cc[VWERASE] = CHK(mode.c_cc[VWERASE], CWERASE);
 #endif
 
-    mode.c_iflag &= ~(IGNBRK | PARMRK | INPCK | ISTRIP | INLCR | IGNCR
+    mode.c_iflag &= ~((unsigned) (IGNBRK | PARMRK | INPCK | ISTRIP | INLCR | IGNCR
 #ifdef IUCLC
-		      | IUCLC
+				  | IUCLC
 #endif
 #ifdef IXANY
-		      | IXANY
+				  | IXANY
 #endif
-		      | IXOFF);
+				  | IXOFF));
 
     mode.c_iflag |= (BRKINT | IGNPAR | ICRNL | IXON
 #ifdef IMAXBEL
@@ -807,44 +807,44 @@ reset_mode(void)
 #endif
 	);
 
-    mode.c_oflag &= ~(0
+    mode.c_oflag &= ~((unsigned) (0
 #ifdef OLCUC
-		      | OLCUC
+				  | OLCUC
 #endif
 #ifdef OCRNL
-		      | OCRNL
+				  | OCRNL
 #endif
 #ifdef ONOCR
-		      | ONOCR
+				  | ONOCR
 #endif
 #ifdef ONLRET
-		      | ONLRET
+				  | ONLRET
 #endif
 #ifdef OFILL
-		      | OFILL
+				  | OFILL
 #endif
 #ifdef OFDEL
-		      | OFDEL
+				  | OFDEL
 #endif
 #ifdef NLDLY
-		      | NLDLY
+				  | NLDLY
 #endif
 #ifdef CRDLY
-		      | CRDLY
+				  | CRDLY
 #endif
 #ifdef TABDLY
-		      | TABDLY
+				  | TABDLY
 #endif
 #ifdef BSDLY
-		      | BSDLY
+				  | BSDLY
 #endif
 #ifdef VTDLY
-		      | VTDLY
+				  | VTDLY
 #endif
 #ifdef FFDLY
-		      | FFDLY
+				  | FFDLY
 #endif
-	);
+		      ));
 
     mode.c_oflag |= (OPOST
 #ifdef ONLCR
@@ -852,19 +852,19 @@ reset_mode(void)
 #endif
 	);
 
-    mode.c_cflag &= ~(CSIZE | CSTOPB | PARENB | PARODD | CLOCAL);
+    mode.c_cflag &= ~((unsigned) (CSIZE | CSTOPB | PARENB | PARODD | CLOCAL));
     mode.c_cflag |= (CS8 | CREAD);
-    mode.c_lflag &= ~(ECHONL | NOFLSH
+    mode.c_lflag &= ~((unsigned) (ECHONL | NOFLSH
 #ifdef TOSTOP
-		      | TOSTOP
+				  | TOSTOP
 #endif
 #ifdef ECHOPTR
-		      | ECHOPRT
+				  | ECHOPRT
 #endif
 #ifdef XCASE
-		      | XCASE
+				  | XCASE
 #endif
-	);
+		      ));
 
     mode.c_lflag |= (ISIG | ICANON | ECHO | ECHOE | ECHOK
 #ifdef ECHOCTL
@@ -911,14 +911,23 @@ static void
 set_control_chars(void)
 {
 #ifdef TERMIOS
-    if (DISABLED(mode.c_cc[VERASE]) || terasechar >= 0)
-	mode.c_cc[VERASE] = (terasechar >= 0) ? terasechar : default_erase();
+    if (DISABLED(mode.c_cc[VERASE]) || terasechar >= 0) {
+	mode.c_cc[VERASE] = UChar((terasechar >= 0)
+				  ? terasechar
+				  : default_erase());
+    }
 
-    if (DISABLED(mode.c_cc[VINTR]) || intrchar >= 0)
-	mode.c_cc[VINTR] = (intrchar >= 0) ? intrchar : CINTR;
+    if (DISABLED(mode.c_cc[VINTR]) || intrchar >= 0) {
+	mode.c_cc[VINTR] = UChar((intrchar >= 0)
+				 ? intrchar
+				 : CINTR);
+    }
 
-    if (DISABLED(mode.c_cc[VKILL]) || tkillchar >= 0)
-	mode.c_cc[VKILL] = (tkillchar >= 0) ? tkillchar : CKILL;
+    if (DISABLED(mode.c_cc[VKILL]) || tkillchar >= 0) {
+	mode.c_cc[VKILL] = UChar((tkillchar >= 0)
+				 ? tkillchar
+				 : CKILL);
+    }
 #endif
 }
 
@@ -974,9 +983,9 @@ set_conversions(void)
     if (newline != (char *) 0 && newline[0] == '\n' && !newline[1]) {
 	/* Newline, not linefeed. */
 #ifdef ONLCR
-	mode.c_oflag &= ~ONLCR;
+	mode.c_oflag &= ~((unsigned) ONLCR);
 #endif
-	mode.c_iflag &= ~ICRNL;
+	mode.c_iflag &= ~((unsigned) ICRNL);
     }
 #ifdef __OBSOLETE__
     if (tgetflag("HD"))		/* Half duplex. */

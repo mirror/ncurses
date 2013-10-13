@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2112 2013/10/05 23:46:51 tom Exp $
+-- $Id: NEWS,v 1.2117 2013/10/12 23:15:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20131012
+	+ fix a few compiler warnings in progs and test.
+	+ minor fix to package/debian-mingw/rules, do not strip dll's.
+	+ minor fixes to configure script for empty $prefix, e.g., when doing
+	  cross-compiles to MinGW.
+	+ add script for building test-packages of binaries cross-compiled to
+	  MinGW using NSIS.
 
 20131005
 	+ minor fixes for ncurses-example package and makefile.

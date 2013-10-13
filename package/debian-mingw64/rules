@@ -117,7 +117,7 @@ binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs NEWS
-	dh_strip
+	# dh_strip
 	dh_compress
 	dh_fixperms
 	dh_installdeb
