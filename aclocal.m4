@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.680 2013/10/12 20:45:47 tom Exp $
+dnl $Id: aclocal.m4,v 1.681 2013/10/14 08:26:40 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -88,7 +88,7 @@ define([CF_ACVERSION_COMPARE],
 [ifelse([$8], , ,[$8])],
 [ifelse([$9], , ,[$9])])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADA_INCLUDE_DIRS version: 7 updated: 2013/10/12 16:45:09
+dnl CF_ADA_INCLUDE_DIRS version: 8 updated: 2013/10/14 04:24:07
 dnl -------------------
 dnl Construct the list of include-options for the C programs in the Ada95
 dnl binding.
@@ -102,7 +102,7 @@ if test "$GCC" != yes; then
 	ACPPFLAGS="$ACPPFLAGS -I\${includedir}"
 elif test "$includedir" != "/usr/include"; then
 	if test "$includedir" = '${prefix}/include' ; then
-		if test x$prefix != /usr ; then
+		if test x$prefix != x/usr ; then
 			ACPPFLAGS="$ACPPFLAGS -I\${includedir}"
 		fi
 	else

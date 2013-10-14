@@ -11858,7 +11858,7 @@ if test "$GCC" != yes; then
 	ACPPFLAGS="$ACPPFLAGS -I\${includedir}"
 elif test "$includedir" != "/usr/include"; then
 	if test "$includedir" = '${prefix}/include' ; then
-		if test x$prefix != /usr ; then
+		if test x$prefix != x/usr ; then
 			ACPPFLAGS="$ACPPFLAGS -I\${includedir}"
 		fi
 	else

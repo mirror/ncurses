@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2117 2013/10/12 23:15:23 tom Exp $
+-- $Id: NEWS,v 1.2119 2013/10/14 08:33:15 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,9 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20131014
+	+ fix new typo in CF_ADA_INCLUDE_DIRS macro (report by Roumen Petrov).
 
 20131012
 	+ fix a few compiler warnings in progs and test.
