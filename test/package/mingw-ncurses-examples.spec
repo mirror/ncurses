@@ -1,17 +1,23 @@
 %?mingw_package_header
 
+%define AppProgram ncurses-examples
+# $Id: mingw-ncurses-examples.spec,v 1.1 2013/10/19 22:04:58 tom Exp $
 Summary: shared libraries for terminal handling
-Name: mingw32-ncurses6
+Name: mingw32-ncurses6-examples
 Release: 5.9
 Version: 20131019
 License: X11
 Group: Development/Libraries
-Source: ncurses-%{release}-%{version}.tgz
+Source: ncurses-examples-%{version}.tgz
 # URL: http://invisible-island.net/ncurses/
+
+BuildRequires:  mingw32-ncurses6
 
 BuildRequires:  mingw32-filesystem >= 95
 BuildRequires:  mingw32-gcc
 BuildRequires:  mingw32-binutils
+
+BuildRequires:  mingw64-ncurses6
 
 BuildRequires:  mingw64-filesystem >= 95
 BuildRequires:  mingw64-gcc
@@ -20,7 +26,7 @@ BuildRequires:  mingw64-binutils
 %define CC_NORMAL -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 %define CC_STRICT %{CC_NORMAL} -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wwrite-strings -ansi -pedantic
 
-%description -n mingw32-ncurses6
+%description -n mingw32-ncurses6-examples
 Cross-compiling support for ncurses to mingw32.
 
 The ncurses library routines are a terminal-independent method of
@@ -28,10 +34,10 @@ updating character screens with reasonable optimization.
 
 This package is used for testing ABI 6 with cross-compiles to MinGW.
 
-%package -n mingw64-ncurses6
+%package -n mingw64-ncurses6-examples
 Summary:        Curses library for MinGW64
 
-%description -n mingw64-ncurses6
+%description -n mingw64-ncurses6-examples
 Cross-compiling support for ncurses to mingw64.
 
 The ncurses library routines are a terminal-independent method of
@@ -41,40 +47,17 @@ This package is used for testing ABI 6 with cross-compiles to MinGW.
 
 %prep
 
+# override location of bindir, e.g., to avoid conflict with pdcurses
+%global mingw32_bindir %{mingw32_exec_prefix}/bin/%{AppProgram} 
+%global mingw64_bindir %{mingw64_exec_prefix}/bin/%{AppProgram} 
+
 %define CFG_OPTS \\\
 	--disable-echo \\\
-	--disable-db-install \\\
-	--disable-getcap \\\
-	--disable-hard-tabs \\\
-	--disable-leaks \\\
-	--disable-macros \\\
-	--disable-overwrite \\\
-	--disable-termcap \\\
-	--enable-const \\\
-	--enable-ext-colors \\\
-	--enable-ext-mouse \\\
-	--enable-interop \\\
-	--enable-sp-funcs \\\
-	--enable-term-driver \\\
 	--enable-warnings \\\
-	--enable-widec \\\
-	--verbose \\\
-	--with-cxx-shared \\\
-	--with-develop \\\
-	--with-fallbacks=unknown,rxvt \\\
-	--with-shared \\\
-	--with-tparm-arg=intptr_t \\\
-	--with-trace \\\
-	--with-xterm-kbs=DEL \\\
-	--without-ada \\\
-	--without-debug \\\
-	--with-install-prefix=$RPM_BUILD_ROOT \\\
-	--without-manpages \\\
-	--without-progs \\\
-	--without-tests
+	--verbose
 
 %define debug_package %{nil}
-%setup -q -n ncurses-%{release}-%{version}
+%setup -q -n ncurses-examples-%{version}
 
 %build
 mkdir BUILD-W32
@@ -82,6 +65,7 @@ pushd BUILD-W32
 CFLAGS="%{CC_NORMAL}" \
 CC=%{mingw32_cc} \
 %mingw32_configure %{CFG_OPTS}
+cp config.status /tmp/ming32-config.status
 make
 popd
 
@@ -90,6 +74,7 @@ pushd BUILD-W64
 CFLAGS="%{CC_NORMAL}" \
 CC=%{mingw64_cc} \
 %mingw64_configure %{CFG_OPTS}
+cp config.status /tmp/ming64-config.status
 make
 popd
 
@@ -97,11 +82,11 @@ popd
 rm -rf $RPM_BUILD_ROOT
 
 pushd BUILD-W32
-%{mingw32_make} install
+%{mingw32_make} install DESTDIR=$RPM_BUILD_ROOT
 popd
 
 pushd BUILD-W64
-%{mingw64_make} install
+%{mingw64_make} install DESTDIR=$RPM_BUILD_ROOT
 popd
 
 %clean
@@ -110,17 +95,13 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 
-%files -n mingw32-ncurses6
+%files -n mingw32-ncurses6-examples
 %{mingw32_bindir}/*
-%{mingw32_includedir}/*
-%{mingw32_libdir}/*
 
-%files -n mingw64-ncurses6
+%files -n mingw64-ncurses6-examples
 %{mingw64_bindir}/*
-%{mingw64_includedir}/*
-%{mingw64_libdir}/*
 
 %changelog
 
-* Sat Aug 03 2013 Thomas E. Dickey
-- initial version, using mingw-pdcurses package as a guide.
+* Sat Oct 19 2013 Thomas E. Dickey
+- initial version

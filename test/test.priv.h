@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.121 2013/09/28 22:43:22 tom Exp $ */
+/* $Id: test.priv.h,v 1.122 2013/10/20 00:25:18 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -677,6 +677,10 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #define SIGKILL 9
 #define getlogin() "username"
 
+#elif defined(HAVE_NCURSESW_NCURSES_H)
+#include <ncursesw/nc_mingw.h>
+#elif defined(HAVE_NCURSES_NCURSES_H)
+#include <ncurses/nc_mingw.h>
 #else
 #include <nc_mingw.h>
 #endif

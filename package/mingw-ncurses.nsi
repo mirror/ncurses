@@ -1,4 +1,4 @@
-; $Id: mingw-ncurses.nsi,v 1.5 2013/10/14 08:22:29 tom Exp $
+; $Id: mingw-ncurses.nsi,v 1.7 2013/10/19 20:17:03 tom Exp $
 
 ; TODO add examples
 ; TODO bump ABI to 6
@@ -10,7 +10,7 @@
 !define VERSION_MAJOR "5"
 !define VERSION_MINOR "9"
 !define VERSION_YYYY  "2013"
-!define VERSION_MMDD  "1014"
+!define VERSION_MMDD  "1019"
 !define VERSION_PATCH ${VERSION_YYYY}${VERSION_MMDD}
 
 !define MY_ABI   "5"
@@ -33,7 +33,6 @@ SetCompressor /SOLID lzma
 
 VIAddVersionKey ProductName "${SUBKEY}"
 VIAddVersionKey CompanyName "http://invisible-island.net"
-VIAddVersionKey LegalCopyright "© 2013, Thomas E. Dickey"
 VIAddVersionKey FileDescription "NCurses Installer (MinGW)"
 VIAddVersionKey FileVersion ${VERSION_FULL}
 VIAddVersionKey ProductVersion ${VERSION_FULL}
