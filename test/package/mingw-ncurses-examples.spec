@@ -1,14 +1,16 @@
+Summary: ncurses-examples - example/test programs from ncurses
 %?mingw_package_header
 
 %define AppProgram ncurses-examples
-# $Id: mingw-ncurses-examples.spec,v 1.1 2013/10/19 22:04:58 tom Exp $
-Summary: shared libraries for terminal handling
+%define AppVersion MAJOR.MINOR
+%define AppRelease YYYYMMDD
+# $Id: mingw-ncurses-examples.spec,v 1.3 2013/10/26 23:30:21 tom Exp $
 Name: mingw32-ncurses6-examples
-Release: 5.9
-Version: 20131019
+Version: %{AppVersion}
+Release: %{AppRelease}
 License: X11
 Group: Development/Libraries
-Source: ncurses-examples-%{version}.tgz
+Source: ncurses-examples-%{release}.tgz
 # URL: http://invisible-island.net/ncurses/
 
 BuildRequires:  mingw32-ncurses6
@@ -57,7 +59,7 @@ This package is used for testing ABI 6 with cross-compiles to MinGW.
 	--verbose
 
 %define debug_package %{nil}
-%setup -q -n ncurses-examples-%{version}
+%setup -q -n ncurses-examples-%{release}
 
 %build
 mkdir BUILD-W32

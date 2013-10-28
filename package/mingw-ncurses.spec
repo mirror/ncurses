@@ -2,11 +2,11 @@
 
 Summary: shared libraries for terminal handling
 Name: mingw32-ncurses6
-Release: 5.9
-Version: 20131019
+Version: 5.9
+Release: 20131027
 License: X11
 Group: Development/Libraries
-Source: ncurses-%{release}-%{version}.tgz
+Source: ncurses-%{version}-%{release}.tgz
 # URL: http://invisible-island.net/ncurses/
 
 BuildRequires:  mingw32-filesystem >= 95
@@ -74,7 +74,7 @@ This package is used for testing ABI 6 with cross-compiles to MinGW.
 	--without-tests
 
 %define debug_package %{nil}
-%setup -q -n ncurses-%{release}-%{version}
+%setup -q -n ncurses-%{version}-%{release}
 
 %build
 mkdir BUILD-W32

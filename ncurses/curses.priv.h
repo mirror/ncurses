@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.527 2013/08/31 17:02:41 tom Exp $
+ * $Id: curses.priv.h,v 1.528 2013/10/28 00:02:27 tom Exp $
  *
  *	curses.priv.h
  *
@@ -350,7 +350,7 @@ color_t;
 #define HasTerminal(sp)      (((sp) != 0) && (0 != ((sp)->_term)))
 #define IsValidScreen(sp)    (HasTerminal(sp) && !IsPreScreen(sp))
 
-#if BROKEN_LINKER || USE_REENTRANT
+#if USE_REENTRANT
 #define CurTerm              _nc_prescreen._cur_term
 #else
 #define CurTerm              cur_term
