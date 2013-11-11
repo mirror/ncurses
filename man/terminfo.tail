@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.67 2013/08/31 12:11:03 tom Exp $
+.\" $Id: terminfo.tail,v 1.68 2013/11/09 15:20:48 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -113,15 +113,15 @@ ANSI-standard terminals have
 (i.e., an automatic return and line-feed
 when the end of a line is reached) is indicated by the capability \fBam\fR.
 Hence the description of ansi includes \fBam\fR.
-Numeric capabilities are followed by the character `#' and then a positive value.
+Numeric capabilities are followed by the character \*(``#\*('' and then a positive value.
 Thus \fBcols\fR, which indicates the number of columns the terminal has,
-gives the value `80' for ansi.
+gives the value \*(``80\*('' for ansi.
 Values for numeric capabilities may be specified in decimal, octal or hexadecimal,
 using the C programming language conventions (e.g., 255, 0377 and 0xff or 0xFF).
 .PP
 Finally, string valued capabilities, such as \fBel\fR (clear to end of line
-sequence) are given by the two-character code, an `=', and then a string
-ending at the next following `,'.
+sequence) are given by the two-character code, an \*(``=\*('', and then a string
+ending at the next following \*(``,\*(''.
 .PP
 A number of escape sequences are provided in the string valued capabilities
 for easy encoding of characters there.
@@ -160,8 +160,8 @@ $<..> brackets, as in \fBel\fP=\eEK$<5>, and padding characters are supplied by
 .I tputs
 to provide this delay.
 The delay must be a number with at most one decimal
-place of precision; it may be followed by suffixes `*' or '/' or both.
-A `*'
+place of precision; it may be followed by suffixes \*(``*\*('' or \*(``/\*('' or both.
+A \*(``*\*(''
 indicates that the padding required is proportional to the number of lines
 affected by the operation, and the amount given is the per-affected-unit
 padding required.
@@ -170,7 +170,7 @@ number of
 .IR lines
 affected.)  Normally, padding is advisory if the device has the \fBxon\fR
 capability; it is used for cost computation but does not trigger delays.
-A `/'
+A \*(``/\*(''
 suffix indicates that the padding is mandatory and forces a delay of the given
 number of milliseconds even on devices for which \fBxon\fR is present to
 indicate flow control.
@@ -233,7 +233,7 @@ or bugs in the screen-handling code of the test program.
 .PP
 To get the padding for insert line right (if the terminal manufacturer
 did not document it) a severe test is to edit a large file at 9600 baud,
-delete 16 or so lines from the middle of the screen, then hit the `u'
+delete 16 or so lines from the middle of the screen, then hit the \*(``u\*(''
 key several times quickly.
 If the terminal messes up, more padding is usually needed.
 A similar test can be used for insert character.
@@ -277,7 +277,7 @@ given as
 and
 .BR cud1 .
 These local cursor motions should not alter the text they pass over,
-for example, you would not normally use `\fBcuf1\fP=\ ' because the
+for example, you would not normally use \*(``\fBcuf1\fP=\ \*('' because the
 space would erase the character moved over.
 .PP
 A very important point here is that the local cursor motions encoded
@@ -376,9 +376,8 @@ while the Lear Siegler \s-1ADM-3\s0 is described as
 .PP
 Cursor addressing and other strings requiring parameters
 in the terminal are described by a
-parameterized string capability, with
-.IR printf (3)
-like escapes \fB%x\fR in it.
+parameterized string capability,
+with \fIprintf\fP-like escapes such as \fI%x\fR in it.
 For example, to address the cursor, the
 .B cup
 capability is given, using two parameters:
@@ -401,34 +400,34 @@ e.g., in the \fBsgr\fP string.
 The \fB%\fR encodings have the following meanings:
 .PP
 .TP 5
-\s-1%%
-outputs `%'
+\fB%%\fP
+outputs \*(``%\*(''
 .TP
-%\fI[[\fP:\fI]flags][width[.precision]][\fPdoxXs\fI]\fP
-as in \fBprintf\fP, flags are [\-+#] and space.
-Use a `:' to allow the next character to be a `\-' flag,
+\fB%\fP\fI[[\fP:\fI]flags][width[.precision]][\fP\fBdoxXs\fP\fI]\fP
+as in \fBprintf\fP, flags are \fI[\-+#]\fP and \fIspace\fP.
+Use a \*(``:\*('' to allow the next character to be a \*(``\-\*('' flag,
 avoiding interpreting "%\-" as an operator.
 .TP
-%c
+\f(CW%c\fP
 print pop() like %c in \fBprintf\fP
 .TP
-%s
+\fB%s\fP
 print pop() like %s in \fBprintf\fP
 .TP
-%p[1\-9]
+\fB%p\fP\fI[1\-9]\fP
 push \fIi\fP'th parameter
 .TP
-%P[a\-z]
-set dynamic variable [a\-z] to pop()
+\fB%P\fP\fI[a\-z]\fP
+set dynamic variable \fI[a\-z]\fP to pop()
 .TP
-%g[a\-z]
-get dynamic variable [a\-z] and push it
+\fB%g\fP\fI[a\-z]/\fP
+get dynamic variable \fI[a\-z]\fP and push it
 .TP
-%P[A\-Z]
-set static variable [a\-z] to pop()
+\fB%P\fP\fI[A\-Z]\fP
+set static variable \fI[a\-z]\fP to \fIpop()\fP
 .TP
-%g[A\-Z]
-get static variable [a\-z] and push it
+\fB%g\fP\fI[A\-Z]\fP
+get static variable \fI[a\-z]\fP and push it
 .IP
 The terms "static" and "dynamic" are misleading.
 Historically, these are simply two different sets of variables,
@@ -436,43 +435,43 @@ whose values are not reset between calls to \fBtparm\fP.
 However, that fact is not documented in other implementations.
 Relying on it will adversely impact portability to other implementations.
 .TP
-%'\fIc\fP'
+\fB%'\fP\fIc\fP\fB'\fP
 char constant \fIc\fP
 .TP
-%{\fInn\fP}
+\fB%{\fP\fInn\fP\fB}\fP
 integer constant \fInn\fP
 .TP
-%l
+\fB%l\fP
 push strlen(pop)
 .TP
-%+ %\- %* %/ %m
-arithmetic (%m is mod): push(pop() op pop())
+\fB%+\fP, \fB%\-\fP, \fB%*\fP, \fB%/\fP, \fB%m\fP
+arithmetic (%m is mod): \fIpush(pop() op pop())\fP
 .TP
-%& %| %^
-bit operations (AND, OR and exclusive-OR): push(pop() op pop())
+\fB%&\fP, \fB%|\fP, \fB%^\fP
+bit operations (AND, OR and exclusive-OR): \fIpush(pop() op pop())\fP
 .TP
-%= %> %<
-logical operations: push(pop() op pop())
+\fB%=\fP, \fB%>\fP, \fB%<\fP
+logical operations: \fIpush(pop() op pop())\fP
 .TP
-%A, %O
+\fB%A\fP, \fB%O\fP
 logical AND and OR operations (for conditionals)
 .TP
-%! %~
+\fB%!\fP, \fB%~\fP
 unary operations (logical and bit complement): push(op pop())
 .TP
-%i
+\fB%i\fP
 add 1 to first two parameters (for ANSI terminals)
 .TP
-%? \fIexpr\fP %t \fIthenpart\fP %e \fIelsepart\fP %;
+\fB%?\fP \fIexpr\fP \fB%t\fP \fIthenpart\fP \fB%e\fP \fIelsepart\fP \fB%;\fP
 This forms an if-then-else.
-The %e \fIelsepart\fP is optional.
-Usually the %? \fIexpr\fP part pushes a value onto the stack,
-and %t pops it from the stack, testing if it is nonzero (true).
-If it is zero (false), control passes to the %e (else) part.
+The \fB%e\fP \fIelsepart\fP is optional.
+Usually the \fB%?\fP \fIexpr\fP part pushes a value onto the stack,
+and \fB%t\fP pops it from the stack, testing if it is nonzero (true).
+If it is zero (false), control passes to the \fB%e\fP (else) part.
 .IP
 It is possible to form else-if's a la Algol 68:
 .RS
-%? c\d1\u %t b\d1\u %e c\d2\u %t b\d2\u %e c\d3\u %t b\d3\u %e c\d4\u %t b\d4\u %e %;
+\fB%?\fP c\d1\u \fB%t\fP b\d1\u \fB%e\fP c\d2\u \fB%t\fP b\d2\u \fB%e\fP c\d3\u \fB%t\fP b\d3\u \fB%e\fP c\d4\u \fB%t\fP b\d4\u \fB%e\fP \fB%;\fP
 .RE
 .IP
 where c\di\u are conditions, b\di\u are bodies.
@@ -485,7 +484,7 @@ The \fB\-f\fP option splits the string into lines with the parts indented.
 .PP
 Binary operations are in postfix form with the operands in the usual order.
 That is, to get x\-5 one would use "%gx%{5}%-".
-%P and %g variables are
+\fB%P\fP and \fB%g\fP variables are
 persistent across escape-string evaluations.
 .PP
 Consider the HP2645, which, to get to row 3 and column 12, needs
@@ -509,7 +508,7 @@ This turns out to be essential for the Ann Arbor 4080.)
 .PP
 A final example is the \s-1LSI ADM\s0-3a, which uses row and column
 offset by a blank character, thus \*(lqcup=\eE=%p1%' '%+%c%p2%' '%+%c\*(rq.
-After sending `\eE=', this pushes the first parameter, pushes the
+After sending \*(``\eE=\*('', this pushes the first parameter, pushes the
 ASCII value for a space (32), adds them (pushing the sum on the stack
 in place of the two previous values) and outputs that value as a character.
 Then the same is done for the second parameter.
@@ -724,7 +723,7 @@ If post insert padding is needed, give this as a number of milliseconds
 in \fBip\fR (a string option).
 Any other sequence which may need to be
 sent after an insert of a single character may also be given in \fBip\fR.
-If your terminal needs both to be placed into an `insert mode' and
+If your terminal needs both to be placed into an \*(``insert mode\*('' and
 a special code to precede each inserted character, then both
 .BR smir / rmir
 and
@@ -1238,7 +1237,7 @@ Only the first character of the
 string is used.
 .PP
 .SS Status Lines
-Some terminals have an extra `status line' which is not normally used by
+Some terminals have an extra \*(``status line\*('' which is not normally used by
 software (and thus not counted in the terminal's \fBlines\fR capability).
 .PP
 The simplest case is a status line which is cursor-addressable but not
@@ -1330,7 +1329,7 @@ character pairs right to left in sequence; these become the ACSC string.
 .PP
 .SS Color Handling
 .PP
-Most color terminals are either `Tektronix-like' or `HP-like'.
+Most color terminals are either \*(``Tektronix-like\*('' or \*(``HP-like\*(''.
 Tektronix-like
 terminals have a predefined set of N colors (where N usually 8), and can set
 character-cell foreground and background characters independently, mixing them
@@ -1504,7 +1503,7 @@ this can be indicated with the parameterized string
 .BR rep .
 The first parameter is the character to be repeated and the second
 is the number of times to repeat it.
-Thus, tparm(repeat_char, 'x', 10) is the same as `xxxxxxxxxx'.
+Thus, tparm(repeat_char, 'x', 10) is the same as \*(``xxxxxxxxxx\*(''.
 .PP
 If the terminal has a settable command character, such as the \s-1TEKTRONIX\s+1 4025,
 this can be indicated with
@@ -1585,7 +1584,7 @@ is in effect.
 .PP
 .SS Glitches and Braindamage
 .PP
-Hazeltine terminals, which do not allow `~' characters to be displayed should
+Hazeltine terminals, which do not allow \*(``~\*('' characters to be displayed should
 indicate \fBhz\fR.
 .PP
 Terminals which ignore a line-feed immediately after an \fBam\fR wrap,
@@ -1600,7 +1599,7 @@ is required to get rid of standout
 .PP
 Teleray terminals, where tabs turn all characters moved over to blanks,
 should indicate \fBxt\fR (destructive tabs).
-Note: the variable indicating this is now `dest_tabs_magic_smso'; in
+Note: the variable indicating this is now \*(``dest_tabs_magic_smso\*(''; in
 older versions, it was teleray_glitch.
 This glitch is also taken to mean that it is not possible to position
 the cursor on top of a \*(``magic cookie\*('',
@@ -1614,7 +1613,7 @@ or control C characters, has
 indicating that the f1 key is used for escape and f2 for control C.
 (Only certain Superbees have this problem, depending on the ROM.)
 Note that in older terminfo versions, this capability was called
-`beehive_glitch'; it is now `no_esc_ctl_c'.
+\*(``beehive_glitch\*(''; it is now \*(``no_esc_ctl_c\*(''.
 .PP
 Other specific terminal problems may be corrected by adding more
 capabilities of the form \fBx\fR\fIx\fR.

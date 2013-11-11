@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.89 2013/09/28 20:46:56 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.90 2013/11/09 14:53:05 tom Exp $")
 
 /*
  *	char *
@@ -53,7 +53,7 @@ MODULE_ID("$Id: lib_tparm.c,v 1.89 2013/09/28 20:46:56 tom Exp $")
  *
  *	     Cursor addressing and other strings  requiring  parame-
  *	ters in the terminal are described by a parameterized string
- *	capability, with like escapes %x in  it.   For  example,  to
+ *	capability, with escapes like %x in  it.   For  example,  to
  *	address  the  cursor, the cup capability is given, using two
  *	parameters: the row and column to  address  to.   (Rows  and
  *	columns  are  numbered  from  zero and refer to the physical

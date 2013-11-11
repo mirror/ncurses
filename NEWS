@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2130 2013/11/02 21:42:02 tom Exp $
+-- $Id: NEWS,v 1.2134 2013/11/11 02:07:02 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,9 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20131110
+	+ minor cleanup of terminfo.tail
 
 20131102
 	+ use TS extension to describe xterm's title-escapes -TD
