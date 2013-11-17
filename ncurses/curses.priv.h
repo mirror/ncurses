@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.528 2013/10/28 00:02:27 tom Exp $
+ * $Id: curses.priv.h,v 1.529 2013/11/16 19:44:28 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2344,12 +2344,13 @@ extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 #endif
 
 #ifdef USE_TERM_DRIVER
-#define IsTermInfo(sp)       (TCBOf(sp) && ((TCBOf(sp)->drv->isTerminfo)))
+#define IsTermInfo(sp)       ((TCBOf(sp) != 0) && ((TCBOf(sp)->drv->isTerminfo)))
+#define HasTInfoTerminal(sp) ((0 != TerminalOf(sp)) && IsTermInfo(sp))
 #else
 #define IsTermInfo(sp)       TRUE
+#define HasTInfoTerminal(sp) (0 != TerminalOf(sp))
 #endif
 
-#define HasTInfoTerminal(sp) ((0 != TerminalOf(sp)) && IsTermInfo(sp))
 #define IsValidTIScreen(sp)  (HasTInfoTerminal(sp))
 
 /*

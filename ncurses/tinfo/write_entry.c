@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.89 2013/09/28 20:20:30 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.90 2013/11/16 19:58:14 tom Exp $")
 
 static int total_written;
 
@@ -93,7 +93,7 @@ check_writeable(int code)
     char dir[sizeof(LEAF_FMT)];
     char *s = 0;
 
-    if (code == 0 || (s = strchr(dirnames, code)) == 0)
+    if (code == 0 || (s = (strchr) (dirnames, code)) == 0)
 	_nc_err_abort("Illegal terminfo subdirectory \"" LEAF_FMT "\"", code);
 
     if (verified[s - dirnames])

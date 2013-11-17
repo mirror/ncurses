@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.101 2012/12/08 22:19:25 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.102 2013/11/16 19:57:50 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -380,7 +380,7 @@ _nc_get_token(bool silent)
 
     if (end_of_stream()) {
 	yyin = 0;
-	(void) next_char();		/* frees its allocated memory */
+	(void) next_char();	/* frees its allocated memory */
 	if (tok_buf != 0) {
 	    if (_nc_curr_token.tk_name == tok_buf)
 		_nc_curr_token.tk_name = 0;
@@ -432,7 +432,7 @@ _nc_get_token(bool silent)
 #if NCURSES_EXT_FUNCS
 	    && !(ch == '.' && _nc_disable_period)
 #endif
-	    && !strchr(terminfo_punct, (char) ch)) {
+	    && ((strchr) (terminfo_punct, (char) ch) == 0)) {
 	    if (!silent)
 		_nc_warning("Illegal character (expected alphanumeric or %s) - '%s'",
 			    terminfo_punct, unctrl(UChar(ch)));

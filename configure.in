@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.574 2013/09/07 17:54:05 Alexey.Pavlov Exp $
+dnl $Id: configure.in,v 1.576 2013/11/16 23:22:48 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.574 $)
+AC_REVISION($Revision: 1.576 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1271,7 +1271,7 @@ AC_MSG_RESULT($with_warnings)
 
 if test "x$with_warnings" = "xyes"; then
  	CF_ADD_ADAFLAGS(-gnatg)
-	CF_GCC_WARNINGS(Wdeclaration-after-statement Wextra Wno-unknown-pragmas Wswitch-enum)
+	CF_GCC_WARNINGS(Wno-unknown-pragmas Wswitch-enum)
 	if test "x$cf_with_cxx" = xyes ; then
 		CF_GXX_WARNINGS(Wno-unused)
 	fi
@@ -1947,6 +1947,19 @@ AC_SUBST(PANEL_NAME)
 AC_SUBST(MENU_NAME)
 AC_SUBST(FORM_NAME)
 AC_SUBST(CXX_NAME)
+
+# workaround for g++ versus Solaris (20131116)
+case $cf_cv_system_name in #(vi
+solaris2*) #(vi
+	case "x$CPPFLAGS" in #(vi
+	*-D_XOPEN_SOURCE_EXTENDED*)
+		CF_VERBOSE(moving _XOPEN_SOURCE_EXTENDED to work around g++ problem)
+		CFLAGS="$CFLAGS -D_XOPEN_SOURCE_EXTENDED"
+		CPPFLAGS=`echo "x$CPPFLAGS" | sed -e  's/^.//' -e 's/-D_XOPEN_SOURCE_EXTENDED//'`
+		;;
+	esac
+	;;
+esac
 
 SUB_SCRIPTS=
 

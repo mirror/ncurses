@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.109 2013/05/04 18:48:56 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.110 2013/11/16 19:58:01 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -876,7 +876,7 @@ fmt_entry(TERMTYPE *tterm,
 
 	    tp = boxchars;
 	    for (cp = acstrans; *cp; cp++) {
-		sp = strchr(acs_chars, *cp);
+		sp = (strchr) (acs_chars, *cp);
 		if (sp)
 		    *tp++ = sp[1];
 		else {

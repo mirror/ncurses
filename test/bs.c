@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.61 2013/04/27 19:46:53 tom Exp $
+ * $Id: bs.c,v 1.62 2013/11/16 19:57:56 tom Exp $
  */
 
 #include <test.priv.h>
@@ -444,7 +444,7 @@ initgame(void)
 	do {
 	    c = (char) getcoord(PLAYER);
 	} while
-	    (!strchr(docked, c));
+	    (!(strchr) (docked, c));
 
 	if (c == 'R')
 	    (void) ungetch('R');

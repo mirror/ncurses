@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.188 2013/08/24 21:48:21 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.189 2013/11/16 19:58:09 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1140,7 +1140,7 @@ keypad_index(const char *string)
     long result = -1;
 
     if ((ch = keypad_final(string)) != '\0') {
-	test = strchr(list, ch);
+	test = (strchr) (list, ch);
 	if (test != 0)
 	    result = (long) (test - list);
     }

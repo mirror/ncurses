@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.126 2013/06/08 16:51:33 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.127 2013/11/16 20:26:09 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -788,7 +788,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
     const assoc *ap;
     int tp_lines = tp->Numbers[2];
 
-    if (cap == ABSENT_STRING || cap == CANCELLED_STRING)
+    if (!VALID_STRING(cap))
 	return;
     (void) printf("%s: ", name);
 
@@ -804,12 +804,13 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	for (i = 0; i < STRCOUNT; i++) {
 	    char *cp = tp->Strings[i];
 
-	    /* don't use soft-key capabilities */
-	    if (strnames[i][0] == 'k' && strnames[i][0] == 'f')
+	    /* don't use function-key capabilities */
+	    if (strnames[i][0] == 'k' && strnames[i][1] == 'f')
 		continue;
 
-	    if (cp != ABSENT_STRING && cp != CANCELLED_STRING && cp[0] && cp
-		!= cap) {
+	    if (VALID_STRING(cp) &&
+		cp[0] != '\0' &&
+		cp != cap) {
 		len = strlen(cp);
 		(void) strncpy(buf2, sp, len);
 		buf2[len] = '\0';
