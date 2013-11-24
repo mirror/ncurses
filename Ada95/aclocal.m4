@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.76 2013/11/16 20:06:15 tom Exp $
+dnl $Id: aclocal.m4,v 1.77 2013/11/23 18:31:02 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -605,7 +605,7 @@ if test ".$system_name" != ".$cf_cv_system_name" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CLANG_COMPILER version: 1 updated: 2012/06/16 14:55:39
+dnl CF_CLANG_COMPILER version: 2 updated: 2013/11/19 19:23:35
 dnl -----------------
 dnl Check if the given compiler is really clang.  clang's C driver defines
 dnl __GNUC__ (fooling the configure script into setting $GCC to yes) but does
@@ -616,7 +616,7 @@ dnl ensure that it is not mistaken for gcc/g++.  It is normally invoked from
 dnl the wrappers for gcc and g++ warnings.
 dnl
 dnl $1 = GCC (default) or GXX
-dnl $2 = INTEL_COMPILER (default) or INTEL_CPLUSPLUS
+dnl $2 = CLANG_COMPILER (default)
 dnl $3 = CFLAGS (default) or CXXFLAGS
 AC_DEFUN([CF_CLANG_COMPILER],[
 ifelse([$2],,CLANG_COMPILER,[$2])=no
@@ -1056,7 +1056,7 @@ if test "$GCC" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 30 updated: 2013/11/16 13:56:26
+dnl CF_GCC_WARNINGS version: 31 updated: 2013/11/19 19:23:35
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -1128,23 +1128,22 @@ then
 	EXTRA_CFLAGS=
 	cf_warn_CONST=""
 	test "$with_ext_const" = yes && cf_warn_CONST="Wwrite-strings"
+	cf_gcc_warnings="Wignored-qualifiers Wlogical-op Wvarargs"
+	test "x$CLANG_COMPILER" = xyes && cf_gcc_warnings=
 	for cf_opt in W Wall \
 		Wbad-function-cast \
 		Wcast-align \
 		Wcast-qual \
 		Wdeclaration-after-statement \
 		Wextra \
-		Wignored-qualifiers \
 		Winline \
-		Wlogical-op \
 		Wmissing-declarations \
 		Wmissing-prototypes \
 		Wnested-externs \
 		Wpointer-arith \
 		Wshadow \
 		Wstrict-prototypes \
-		Wundef \
-		Wvarargs $cf_warn_CONST $1
+		Wundef $cf_gcc_warnings $cf_warn_CONST $1
 	do
 		CFLAGS="$cf_save_CFLAGS $EXTRA_CFLAGS -$cf_opt"
 		if AC_TRY_EVAL(ac_compile); then

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.395 2013/10/12 22:09:33 tom Exp $
+$Id: ncurses.c,v 1.396 2013/11/23 21:43:51 tom Exp $
 
 ***************************************************************************/
 
@@ -1731,7 +1731,7 @@ wide_show_attr(int row, int skip, bool arrow, chtype attr, short pair, const cha
 	attr_t old_attr = 0;
 	short old_pair = 0;
 
-	(void) (attr_get)(&old_attr, &old_pair, 0);
+	(void) (attr_get) (&old_attr, &old_pair, 0);
 	(void) attr_set(attr, pair, 0);
 	addwstr(wide_attr_test_string);
 	(void) attr_set(old_attr, old_pair, 0);
@@ -5822,13 +5822,13 @@ edit_secure(FIELD * me, int c)
 	size_t have = (source ? strlen(source) : 0) + 1;
 	size_t need = 80 + have;
 	char *temp = malloc(need);
-	long len;
+	size_t len;
 
 	if (temp != 0) {
 	    strncpy(temp, source ? source : "", have + 1);
-	    len = (long) (char *) field_userptr(me);
+	    len = (size_t) (char *) field_userptr(me);
 	    if (c <= KEY_MAX) {
-		if (isgraph(c) && (len + 1) < (int) sizeof(temp)) {
+		if (isgraph(c) && (len + 1) < sizeof(temp)) {
 		    temp[len++] = (char) c;
 		    temp[len] = 0;
 		    set_field_buffer(me, 1, temp);
