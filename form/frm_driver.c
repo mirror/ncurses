@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.106 2013/08/25 00:02:15 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.109 2013/12/08 01:06:41 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -3982,6 +3982,94 @@ PN_Last_Page(FORM *form)
   Helper routines for the core form driver.
   --------------------------------------------------------------------------*/
 
+# if USE_WIDEC_SUPPORT
+/*---------------------------------------------------------------------------
+|   Facility      :  libnform
+|   Function      :  static int Data_Entry_w(FORM * form, wchar_t c)
+|
+|   Description   :  Enter the wide character c into at the current
+|                    position of the current field of the form.
+|
+|   Return Values :  E_OK              - success
+|                    E_REQUEST_DENIED  - driver could not process the request
+|                    E_SYSTEM_ERROR    -
++--------------------------------------------------------------------------*/
+static int
+Data_Entry_w(FORM *form, wchar_t c)
+{
+  FIELD *field = form->current;
+  int result = E_REQUEST_DENIED;
+
+  T((T_CALLED("Data_Entry(%p,%s)"), (void *)form, _tracechtype((chtype)c)));
+  if (((unsigned)field->opts & O_EDIT)
+#if FIX_FORM_INACTIVE_BUG
+      && ((unsigned)field->opts & O_ACTIVE)
+#endif
+    )
+    {
+      wchar_t given[2];
+      cchar_t temp_ch;
+
+      given[0] = c;
+      given[1] = 1;
+      setcchar(&temp_ch, given, 0, 0, (void *)0);
+      if (((unsigned)field->opts & O_BLANK) &&
+	  First_Position_In_Current_Field(form) &&
+	  !(form->status & _FCHECK_REQUIRED) &&
+	  !(form->status & _WINDOW_MODIFIED))
+	werase(form->w);
+
+      if (form->status & _OVLMODE)
+	{
+	  wadd_wch(form->w, &temp_ch);
+	}
+      else
+	/* no _OVLMODE */
+	{
+	  bool There_Is_Room = Is_There_Room_For_A_Char_In_Line(form);
+
+	  if (!(There_Is_Room ||
+		((Single_Line_Field(field) && Growable(field)))))
+	    RETURN(E_REQUEST_DENIED);
+
+	  if (!There_Is_Room && !Field_Grown(field, 1))
+	    RETURN(E_SYSTEM_ERROR);
+
+	  wins_wch(form->w, &temp_ch);
+	}
+
+      if ((result = Wrapping_Not_Necessary_Or_Wrapping_Ok(form)) == E_OK)
+	{
+	  bool End_Of_Field = (((field->drows - 1) == form->currow) &&
+			       ((field->dcols - 1) == form->curcol));
+
+	  form->status |= _WINDOW_MODIFIED;
+	  if (End_Of_Field && !Growable(field) && ((unsigned)field->opts & O_AUTOSKIP))
+	    result = Inter_Field_Navigation(FN_Next_Field, form);
+	  else
+	    {
+	      if (End_Of_Field && Growable(field) && !Field_Grown(field, 1))
+		result = E_SYSTEM_ERROR;
+	      else
+		{
+		  /*
+		   * We have just added a byte to the form field.  It may have
+		   * been part of a multibyte character.  If it was, the
+		   * addch_used field is nonzero and we should not try to move
+		   * to a new column.
+		   */
+		  if (WINDOW_EXT(form->w, addch_used) == 0)
+		    IFN_Next_Character(form);
+
+		  result = E_OK;
+		}
+	    }
+	}
+    }
+  RETURN(result);
+}
+# endif
+
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
 |   Function      :  static int Data_Entry(FORM * form,int c)
@@ -4367,6 +4455,195 @@ form_driver(FORM *form, int c)
   _nc_Refresh_Current_Field(form);
   RETURN(res);
 }
+
+# if USE_WIDEC_SUPPORT
+/*---------------------------------------------------------------------------
+|   Facility      :  libnform
+|   Function      :  int form_driver_w(FORM * form,int type,wchar_t  c)
+|
+|   Description   :  This is the workhorse of the forms system.
+|
+|                    Input is either a key code (request) or a wide char
+|                    returned by e.g. get_wch (). The type must be passed
+|                    as well,so that we are able to determine whether the char
+|                    is a multibyte char or a request.
+
+|                    If it is a request, the form driver executes
+|                    the request and returns the result. If it is data
+|                    (printable character), it enters the data into the
+|                    current position in the current field. If it is not
+|                    recognized, the form driver assumes it is an application
+|                    defined command and returns E_UNKNOWN_COMMAND.
+|                    Application defined command should be defined relative
+|                    to MAX_FORM_COMMAND, the maximum value of a request.
+|
+|   Return Values :  E_OK              - success
+|                    E_SYSTEM_ERROR    - system error
+|                    E_BAD_ARGUMENT    - an argument is incorrect
+|                    E_NOT_POSTED      - form is not posted
+|                    E_INVALID_FIELD   - field contents are invalid
+|                    E_BAD_STATE       - called from inside a hook routine
+|                    E_REQUEST_DENIED  - request failed
+|                    E_NOT_CONNECTED   - no fields are connected to the form
+|                    E_UNKNOWN_COMMAND - command not known
++--------------------------------------------------------------------------*/
+NCURSES_EXPORT(int)
+form_driver_w(FORM *form, int type, wchar_t c)
+{
+  const Binding_Info *BI = (Binding_Info *) 0;
+  int res = E_UNKNOWN_COMMAND;
+
+  T((T_CALLED("form_driver(%p,%d)"), (void *)form, c));
+
+  if (!form)
+    RETURN(E_BAD_ARGUMENT);
+
+  if (!(form->field))
+    RETURN(E_NOT_CONNECTED);
+
+  assert(form->page);
+
+  if (c == FIRST_ACTIVE_MAGIC)
+    {
+      form->current = _nc_First_Active_Field(form);
+      RETURN(E_OK);
+    }
+
+  assert(form->current &&
+	 form->current->buf &&
+	 (form->current->form == form)
+    );
+
+  if (form->status & _IN_DRIVER)
+    RETURN(E_BAD_STATE);
+
+  if (!(form->status & _POSTED))
+    RETURN(E_NOT_POSTED);
+
+  /* check if this is a keycode or a (wide) char */
+  if (type == KEY_CODE_YES)
+    {
+      if ((c >= MIN_FORM_COMMAND && c <= MAX_FORM_COMMAND) &&
+	  ((bindings[c - MIN_FORM_COMMAND].keycode & Key_Mask) == c))
+	BI = &(bindings[c - MIN_FORM_COMMAND]);
+    }
+
+  if (BI)
+    {
+      typedef int (*Generic_Method) (int (*const) (FORM *), FORM *);
+      static const Generic_Method Generic_Methods[] =
+      {
+	Page_Navigation,	/* overloaded to call field&form hooks */
+	Inter_Field_Navigation,	/* overloaded to call field hooks      */
+	NULL,			/* Intra-Field is generic              */
+	Vertical_Scrolling,	/* Overloaded to check multi-line      */
+	Horizontal_Scrolling,	/* Overloaded to check single-line     */
+	Field_Editing,		/* Overloaded to mark modification     */
+	NULL,			/* Edit Mode is generic                */
+	NULL,			/* Field Validation is generic         */
+	NULL			/* Choice Request is generic           */
+      };
+      size_t nMethods = (sizeof(Generic_Methods) / sizeof(Generic_Methods[0]));
+      size_t method = (size_t) (BI->keycode >> ID_Shft) & 0xffff;	/* see ID_Mask */
+
+      if ((method >= nMethods) || !(BI->cmd))
+	res = E_SYSTEM_ERROR;
+      else
+	{
+	  Generic_Method fct = Generic_Methods[method];
+
+	  if (fct)
+	    res = fct(BI->cmd, form);
+	  else
+	    res = (BI->cmd) (form);
+	}
+    }
+#ifdef NCURSES_MOUSE_VERSION
+  else if (KEY_MOUSE == c)
+    {
+      MEVENT event;
+      WINDOW *win = form->win ? form->win : StdScreen(Get_Form_Screen(form));
+      WINDOW *sub = form->sub ? form->sub : win;
+
+      getmouse(&event);
+      if ((event.bstate & (BUTTON1_CLICKED |
+			   BUTTON1_DOUBLE_CLICKED |
+			   BUTTON1_TRIPLE_CLICKED))
+	  && wenclose(win, event.y, event.x))
+	{			/* we react only if the click was in the userwin, that means
+				   * inside the form display area or at the decoration window.
+				 */
+	  int ry = event.y, rx = event.x;	/* screen coordinates */
+
+	  res = E_REQUEST_DENIED;
+	  if (mouse_trafo(&ry, &rx, FALSE))
+	    {			/* rx, ry are now "curses" coordinates */
+	      if (ry < sub->_begy)
+		{		/* we clicked above the display region; this is
+				   * interpreted as "scroll up" request
+				 */
+		  if (event.bstate & BUTTON1_CLICKED)
+		    res = form_driver(form, REQ_PREV_FIELD);
+		  else if (event.bstate & BUTTON1_DOUBLE_CLICKED)
+		    res = form_driver(form, REQ_PREV_PAGE);
+		  else if (event.bstate & BUTTON1_TRIPLE_CLICKED)
+		    res = form_driver(form, REQ_FIRST_FIELD);
+		}
+	      else if (ry > sub->_begy + sub->_maxy)
+		{		/* we clicked below the display region; this is
+				   * interpreted as "scroll down" request
+				 */
+		  if (event.bstate & BUTTON1_CLICKED)
+		    res = form_driver(form, REQ_NEXT_FIELD);
+		  else if (event.bstate & BUTTON1_DOUBLE_CLICKED)
+		    res = form_driver(form, REQ_NEXT_PAGE);
+		  else if (event.bstate & BUTTON1_TRIPLE_CLICKED)
+		    res = form_driver(form, REQ_LAST_FIELD);
+		}
+	      else if (wenclose(sub, event.y, event.x))
+		{		/* Inside the area we try to find the hit item */
+		  int i;
+
+		  ry = event.y;
+		  rx = event.x;
+		  if (wmouse_trafo(sub, &ry, &rx, FALSE))
+		    {
+		      int min_field = form->page[form->curpage].pmin;
+		      int max_field = form->page[form->curpage].pmax;
+
+		      for (i = min_field; i <= max_field; ++i)
+			{
+			  FIELD *field = form->field[i];
+
+			  if (Field_Is_Selectable(field)
+			      && Field_encloses(field, ry, rx) == E_OK)
+			    {
+			      res = _nc_Set_Current_Field(form, field);
+			      if (res == E_OK)
+				res = _nc_Position_Form_Cursor(form);
+			      if (res == E_OK
+				  && (event.bstate & BUTTON1_DOUBLE_CLICKED))
+				res = E_UNKNOWN_COMMAND;
+			      break;
+			    }
+			}
+		    }
+		}
+	    }
+	}
+      else
+	res = E_REQUEST_DENIED;
+    }
+#endif /* NCURSES_MOUSE_VERSION */
+  else if (type == OK)
+    {
+      res = Data_Entry_w(form, c);
+    }
+
+  _nc_Refresh_Current_Field(form);
+  RETURN(res);
+}
+# endif	/* USE_WIDEC_SUPPORT */
 
 /*----------------------------------------------------------------------------
   Field-Buffer manipulation routines.

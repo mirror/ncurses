@@ -1,4 +1,4 @@
-# $Id: programs,v 1.22 2013/06/08 16:34:31 tom Exp $
+# $Id: programs,v 1.24 2013/12/07 18:06:24 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2009,2013 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -54,6 +54,7 @@ filter		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	filter
 firework	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	firework
 firstlast	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	firstlast
 foldkeys	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	foldkeys
+form_driver_w	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	form_driver_w
 gdc		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	gdc
 hanoi		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	hanoi
 hashtest	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	hashtest
