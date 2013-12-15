@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2008,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: dump_entry.h,v 1.32 2011/08/06 16:33:05 tom Exp $
+ * $Id: dump_entry.h,v 1.33 2013/12/15 01:08:03 tom Exp $
  *
  * Dump control definitions and variables
  */
@@ -67,10 +67,10 @@ typedef int (*PredFunc) (PredType, PredIdx);
 typedef void (*PredHook) (PredType, PredIdx, const char *);
 
 extern NCURSES_CONST char *nametrans(const char *);
-extern int fmt_entry(TERMTYPE *, PredFunc, bool, bool, bool, int);
+extern int fmt_entry(TERMTYPE *, PredFunc, int, int, int, int);
 extern int show_entry(void);
 extern void compare_entry(PredHook, TERMTYPE *, bool);
-extern void dump_entry(TERMTYPE *, bool, bool, int, PredFunc);
+extern void dump_entry(TERMTYPE *, int, int, int, PredFunc);
 extern void dump_init(const char *, int, int, int, int, unsigned, bool);
 extern void dump_uses(const char *, bool);
 extern void repair_acsc(TERMTYPE *tp);

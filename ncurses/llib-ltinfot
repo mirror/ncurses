@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2012,2013 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2013 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 2012                                           *
+ *  Author: Thomas E. Dickey 2013                                           *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -102,12 +102,17 @@ void	_nc_copy_termtype(
 
 /* ./codes.c */
 
-#undef boolcodes
-char	*const boolcodes[] = {0};
-#undef numcodes
-char	*const numcodes[] = {0};
-#undef strcodes
-char	*const strcodes[] = {0};
+#undef _nc_boolcodes
+char	*const *_nc_boolcodes(void)
+		{ return(*(char **)0); }
+
+#undef _nc_numcodes
+char	*const *_nc_numcodes(void)
+		{ return(*(char **)0); }
+
+#undef _nc_strcodes
+char	*const *_nc_strcodes(void)
+		{ return(*(char **)0); }
 
 /* ./comp_captab.c */
 
@@ -319,8 +324,9 @@ void	_nc_init_keytry(
 
 /* ./tinfo/lib_acs.c */
 
-#undef acs_map
-chtype	acs_map[128];
+#undef _nc_acs_map
+chtype	*_nc_acs_map(void)
+		{ return(*(chtype **)0); }
 
 #undef _nc_init_acs_sp
 void	_nc_init_acs_sp(
@@ -361,8 +367,18 @@ int	baudrate(void)
 
 /* ./tinfo/lib_cur_term.c */
 
-#undef cur_term
-TERMINAL *cur_term;
+#undef _nc_get_cur_term_sp
+TERMINAL *_nc_get_cur_term_sp(
+		SCREEN	*sp)
+		{ return(*(TERMINAL **)0); }
+
+#undef _nc_get_cur_term
+TERMINAL *_nc_get_cur_term(void)
+		{ return(*(TERMINAL **)0); }
+
+#undef _nc_cur_term
+TERMINAL *_nc_cur_term(void)
+		{ return(*(TERMINAL **)0); }
 
 #undef set_curterm_sp
 TERMINAL *set_curterm_sp(
@@ -388,12 +404,18 @@ int	del_curterm(
 
 /* ./tinfo/lib_data.c */
 
-#undef stdscr
-WINDOW	*stdscr;
-#undef curscr
-WINDOW	*curscr;
-#undef newscr
-WINDOW	*newscr;
+#undef _nc_stdscr
+WINDOW	*_nc_stdscr(void)
+		{ return(*(WINDOW **)0); }
+
+#undef _nc_curscr
+WINDOW	*_nc_curscr(void)
+		{ return(*(WINDOW **)0); }
+
+#undef _nc_newscr
+WINDOW	*_nc_newscr(void)
+		{ return(*(WINDOW **)0); }
+
 #undef _nc_screen_chain
 SCREEN	*_nc_screen_chain;
 #undef SP
@@ -407,6 +429,30 @@ NCURSES_PRESCREEN _nc_prescreen;
 SCREEN	*_nc_screen_of(
 		WINDOW	*win)
 		{ return(*(SCREEN **)0); }
+
+#undef _nc_init_pthreads
+void	_nc_init_pthreads(void)
+		{ /* void */ }
+
+#undef _nc_mutex_init
+void	_nc_mutex_init(
+		pthread_mutex_t *obj)
+		{ /* void */ }
+
+#undef _nc_mutex_lock
+int	_nc_mutex_lock(
+		pthread_mutex_t *obj)
+		{ return(*(int *)0); }
+
+#undef _nc_mutex_trylock
+int	_nc_mutex_trylock(
+		pthread_mutex_t *obj)
+		{ return(*(int *)0); }
+
+#undef _nc_mutex_unlock
+int	_nc_mutex_unlock(
+		pthread_mutex_t *obj)
+		{ return(*(int *)0); }
 
 /* ./tinfo/lib_has_cap.c */
 
@@ -474,13 +520,16 @@ char	*keyname(
 
 /* ./tinfo/lib_longname.c */
 
+#undef longname_sp
+char	*longname_sp(
+		SCREEN	*sp)
+		{ return(*(char **)0); }
+
 #undef longname
 char	*longname(void)
 		{ return(*(char **)0); }
 
 /* ./tinfo/lib_napms.c */
-
-#include <sys/time.h>
 
 #undef napms_sp
 int	napms_sp(
@@ -669,14 +718,36 @@ int	intrflush(
 #include <sys/ioctl.h>
 #include <langinfo.h>
 
-#undef ttytype
-char	ttytype[256];
-#undef LINES
-int	LINES;
-#undef COLS
-int	COLS;
-#undef TABSIZE
-int	TABSIZE;
+#undef _nc_ttytype
+char	*_nc_ttytype(void)
+		{ return(*(char **)0); }
+
+#undef _nc_ptr_Lines
+int	*_nc_ptr_Lines(
+		SCREEN	*sp)
+		{ return(*(int **)0); }
+
+#undef _nc_LINES
+int	_nc_LINES(void)
+		{ return(*(int *)0); }
+
+#undef _nc_ptr_Cols
+int	*_nc_ptr_Cols(
+		SCREEN	*sp)
+		{ return(*(int **)0); }
+
+#undef _nc_COLS
+int	_nc_COLS(void)
+		{ return(*(int *)0); }
+
+#undef _nc_ptr_Tabsize
+int	*_nc_ptr_Tabsize(
+		SCREEN	*sp)
+		{ return(*(int **)0); }
+
+#undef _nc_TABSIZE
+int	_nc_TABSIZE(void)
+		{ return(*(int *)0); }
 
 #undef set_tabsize_sp
 int	set_tabsize_sp(
@@ -1018,10 +1089,24 @@ int	tputs(
 
 #undef _nc_tracing
 unsigned _nc_tracing;
-#undef _nc_tputs_trace
-const char *_nc_tputs_trace = {0};
-#undef _nc_outchars
-long	_nc_outchars;
+
+#undef _nc__nc_tputs_trace
+const char *_nc__nc_tputs_trace(void)
+		{ return(*(const char **)0); }
+
+#undef _nc__nc_outchars
+long	_nc__nc_outchars(void)
+		{ return(*(long *)0); }
+
+#undef _nc_set_tputs_trace
+void	_nc_set_tputs_trace(
+		const char *s)
+		{ /* void */ }
+
+#undef _nc_count_outchars
+void	_nc_count_outchars(
+		long	increment)
+		{ /* void */ }
 
 #undef trace
 void	trace(
@@ -1083,6 +1168,17 @@ SCREEN	*_nc_retrace_sp(
 WINDOW	*_nc_retrace_win(
 		WINDOW	*code)
 		{ return(*(WINDOW **)0); }
+
+#undef _nc_use_tracef
+int	_nc_use_tracef(
+		unsigned mask)
+		{ return(*(int *)0); }
+
+#undef _nc_locked_tracef
+void	_nc_locked_tracef(
+		const char *fmt, 
+		...)
+		{ /* void */ }
 
 /* ./trace/lib_traceatr.c */
 
@@ -1238,6 +1334,8 @@ int	resetty(void)
 
 /* ./tty/lib_twait.c */
 
+#include <sys/time.h>
+
 #undef _nc_timed_wait
 int	_nc_timed_wait(
 		SCREEN	*sp, 
@@ -1262,18 +1360,29 @@ int	_nc_name_match(
 
 /* ./names.c */
 
-#undef boolnames
-char	*const boolnames[] = {0};
-#undef boolfnames
-char	*const boolfnames[] = {0};
-#undef numnames
-char	*const numnames[] = {0};
-#undef numfnames
-char	*const numfnames[] = {0};
-#undef strnames
-char	*const strnames[] = {0};
-#undef strfnames
-char	*const strfnames[] = {0};
+#undef _nc_boolnames
+char	*const *_nc_boolnames(void)
+		{ return(*(char **)0); }
+
+#undef _nc_boolfnames
+char	*const *_nc_boolfnames(void)
+		{ return(*(char **)0); }
+
+#undef _nc_numnames
+char	*const *_nc_numnames(void)
+		{ return(*(char **)0); }
+
+#undef _nc_numfnames
+char	*const *_nc_numfnames(void)
+		{ return(*(char **)0); }
+
+#undef _nc_strnames
+char	*const *_nc_strnames(void)
+		{ return(*(char **)0); }
+
+#undef _nc_strfnames
+char	*const *_nc_strfnames(void)
+		{ return(*(char **)0); }
 
 /* ./tinfo/obsolete.c */
 

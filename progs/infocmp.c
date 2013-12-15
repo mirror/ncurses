@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.127 2013/11/16 20:26:09 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.128 2013/12/15 01:06:52 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -818,7 +818,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 		if (_nc_capcmp(cp, buf2))
 		    continue;
 
-#define ISRS(s)	(!strncmp((s), "is", 2) || !strncmp((s), "rs", 2))
+#define ISRS(s)	(!strncmp((s), "is", (size_t) 2) || !strncmp((s), "rs", (size_t) 2))
 		/*
 		 * Theoretically we just passed the test for translation
 		 * (equality once the padding is stripped).  However, there

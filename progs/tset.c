@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.92 2013/10/12 22:17:20 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.93 2013/12/15 01:05:56 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -635,13 +635,14 @@ get_termcap_entry(char *userarg)
      * real entry from /etc/termcap.  This prevents us from being fooled
      * by out of date stuff in the environment.
      */
-  found:if ((p = getenv("TERMCAP")) != 0 && !_nc_is_abs_path(p)) {
+  found:
+    if ((p = getenv("TERMCAP")) != 0 && !_nc_is_abs_path(p)) {
 	/* 'unsetenv("TERMCAP")' is not portable.
 	 * The 'environ' array is better.
 	 */
 	int n;
 	for (n = 0; environ[n] != 0; n++) {
-	    if (!strncmp("TERMCAP=", environ[n], 8)) {
+	    if (!strncmp("TERMCAP=", environ[n], (size_t) 8)) {
 		while ((environ[n] = environ[n + 1]) != 0) {
 		    n++;
 		}

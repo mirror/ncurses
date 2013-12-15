@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.576 2013/11/16 23:22:48 tom Exp $
+dnl $Id: configure.in,v 1.577 2013/12/15 00:03:02 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.576 $)
+AC_REVISION($Revision: 1.577 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1960,6 +1960,17 @@ solaris2*) #(vi
 	esac
 	;;
 esac
+
+# AC_CHECK_SIZEOF demands a literal parameter, no variables.  So we do this.
+case "x$NCURSES_OSPEED" in #(vi
+*short*) #(vi
+	cf_compatible=1
+	;;
+*)
+	cf_compatible=0
+	;;
+esac
+AC_DEFINE_UNQUOTED(NCURSES_OSPEED_COMPAT,$cf_compatible,[Define to 1 if termcap variable ospeed is short])
 
 SUB_SCRIPTS=
 

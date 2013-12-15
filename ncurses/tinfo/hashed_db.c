@@ -36,7 +36,7 @@
 
 #if USE_HASHED_DB
 
-MODULE_ID("$Id: hashed_db.c,v 1.16 2013/02/16 21:50:03 tom Exp $")
+MODULE_ID("$Id: hashed_db.c,v 1.17 2013/12/15 00:33:01 tom Exp $")
 
 #if HASHED_DB_API >= 2
 static DBC *cursor;
@@ -286,7 +286,7 @@ NCURSES_EXPORT(bool)
 _nc_db_have_index(DBT * key, DBT * data, char **buffer, int *size)
 {
     bool result = FALSE;
-    int used = data->size - 1;
+    int used = (int) data->size - 1;
     char *have = (char *) data->data;
 
     (void) key;
@@ -309,7 +309,7 @@ NCURSES_EXPORT(bool)
 _nc_db_have_data(DBT * key, DBT * data, char **buffer, int *size)
 {
     bool result = FALSE;
-    int used = data->size - 1;
+    int used = (int) data->size - 1;
     char *have = (char *) data->data;
 
     if (*have++ == 0) {

@@ -46,7 +46,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_options.c,v 1.75 2013/11/16 19:25:39 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.76 2013/12/14 22:23:58 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
@@ -56,7 +56,11 @@ idlok(WINDOW *win, bool flag)
 
     if (win) {
 	SCREEN *sp = _nc_screen_of(win);
-	if (sp != 0 && IsTermInfo(sp)) {
+	if (sp != 0
+#ifdef USE_TERM_DRIVER
+	    && IsTermInfo(sp)
+#endif
+	    ) {
 	    sp->_nc_sp_idlok =
 		win->_idlok = (flag && (NCURSES_SP_NAME(has_il) (NCURSES_SP_ARG)
 					|| change_scroll_region));

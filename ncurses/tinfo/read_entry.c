@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.125 2013/08/17 19:06:59 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.126 2013/12/15 00:35:36 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -434,9 +434,9 @@ make_db_filename(char *filename, unsigned limit, const char *const path)
 {
     static const char suffix[] = DBM_SUFFIX;
 
-    unsigned lens = sizeof(suffix) - 1;
-    unsigned size = strlen(path);
-    unsigned test = lens + size;
+    size_t lens = sizeof(suffix) - 1;
+    size_t size = strlen(path);
+    size_t test = lens + size;
     bool result = FALSE;
 
     if (test < limit) {
@@ -520,7 +520,7 @@ _nc_read_tic_entry(char *filename,
 	 * (source/binary) by checking the lengths.
 	 */
 	while (_nc_db_get(capdbp, &key, &data) == 0) {
-	    int used = data.size - 1;
+	    int used = (int) data.size - 1;
 	    char *have = (char *) data.data;
 
 	    if (*have++ == 0) {

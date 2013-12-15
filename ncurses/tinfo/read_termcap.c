@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.88 2013/07/13 22:11:06 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.89 2013/12/15 00:32:43 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -770,7 +770,7 @@ copy_tc_token(char *dst, const char *src, size_t len)
 	    dst = 0;
 	    break;
 	}
-	*dst++ = ch;
+	*dst++ = (char) ch;
     }
     return dst;
 }
@@ -887,7 +887,7 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
 	    }
 	    if (ignore != TRUE) {
 		list[count++] = tok;
-		pd = copy_tc_token(pd, tok, TBUFSIZ - (2 + pd - bp));
+		pd = copy_tc_token(pd, tok, (size_t) (TBUFSIZ - (2 + pd - bp)));
 		if (pd == 0) {
 		    i = -1;
 		    break;

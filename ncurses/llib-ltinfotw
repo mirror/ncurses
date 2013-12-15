@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2012 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2012,2013 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -293,6 +293,12 @@ int	use_extended_names(
 int	_nc_getenv_num(
 		const char *name)
 		{ return(*(int *)0); }
+
+#undef _nc_setenv_num
+void	_nc_setenv_num(
+		const char *name, 
+		int	value)
+		{ /* void */ }
 
 /* ./tinfo/home_terminfo.c */
 
@@ -765,14 +771,14 @@ void	use_env_sp(
 		NCURSES_BOOL f)
 		{ /* void */ }
 
-#undef use_env
-void	use_env(
-		NCURSES_BOOL f)
-		{ /* void */ }
-
 #undef use_tioctl_sp
 void	use_tioctl_sp(
 		SCREEN	*sp, 
+		NCURSES_BOOL f)
+		{ /* void */ }
+
+#undef use_env
+void	use_env(
 		NCURSES_BOOL f)
 		{ /* void */ }
 
@@ -962,7 +968,7 @@ int	_nc_tparm_err;
 int	_nc_tparm_analyze(
 		const char *string, 
 		char	*p_is_s[9], 
-		int	*popcount)
+		int	*_nc_popcount)
 		{ return(*(int *)0); }
 
 #undef tparm
@@ -1022,9 +1028,25 @@ int	_nc_outch(
 		int	ch)
 		{ return(*(int *)0); }
 
+#undef _nc_putchar_sp
+int	_nc_putchar_sp(
+		SCREEN	*sp, 
+		int	ch)
+		{ return(*(int *)0); }
+
+#undef _nc_putchar
+int	_nc_putchar(
+		int	ch)
+		{ return(*(int *)0); }
+
 #undef putp_sp
 int	putp_sp(
 		SCREEN	*sp, 
+		const char *string)
+		{ return(*(int *)0); }
+
+#undef putp
+int	putp(
 		const char *string)
 		{ return(*(int *)0); }
 
@@ -1032,11 +1054,6 @@ int	putp_sp(
 int	_nc_putp_sp(
 		SCREEN	*sp, 
 		const char *name, 
-		const char *string)
-		{ return(*(int *)0); }
-
-#undef putp
-int	putp(
 		const char *string)
 		{ return(*(int *)0); }
 
@@ -1378,9 +1395,29 @@ char	*const *_nc_strnames(void)
 char	*const *_nc_strfnames(void)
 		{ return(*(char **)0); }
 
+/* ./tinfo/obsolete.c */
+
+#undef _nc_set_buffer_sp
+void	_nc_set_buffer_sp(
+		SCREEN	*sp, 
+		FILE	*ofp, 
+		int	buffered)
+		{ /* void */ }
+
+#undef _nc_set_buffer
+void	_nc_set_buffer(
+		FILE	*ofp, 
+		int	buffered)
+		{ /* void */ }
+
 /* ./tinfo/read_entry.c */
 
 #include <hashed_db.h>
+
+#undef _nc_init_termtype
+void	_nc_init_termtype(
+		TERMTYPE *const tp)
+		{ /* void */ }
 
 #undef _nc_read_termtype
 int	_nc_read_termtype(
@@ -1408,21 +1445,6 @@ int	_nc_read_entry(
 
 #undef _nc_read_termcap
 void	_nc_read_termcap(void)
-		{ /* void */ }
-
-/* ./tinfo/setbuf.c */
-
-#undef _nc_set_buffer_sp
-void	_nc_set_buffer_sp(
-		SCREEN	*sp, 
-		FILE	*ofp, 
-		int	buffered)
-		{ /* void */ }
-
-#undef _nc_set_buffer
-void	_nc_set_buffer(
-		FILE	*ofp, 
-		int	buffered)
 		{ /* void */ }
 
 /* ./tinfo/strings.c */

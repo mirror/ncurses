@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.72 2013/05/25 20:13:07 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.74 2013/12/15 01:08:28 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -232,9 +232,9 @@ make_db_name(char *dst, const char *src, unsigned limit)
     static const char suffix[] = DBM_SUFFIX;
 
     bool result = FALSE;
-    unsigned lens = sizeof(suffix) - 1;
-    unsigned size = strlen(src);
-    unsigned need = lens + size;
+    size_t lens = sizeof(suffix) - 1;
+    size_t size = strlen(src);
+    size_t need = lens + size;
 
     if (need <= limit) {
 	if (size >= lens
@@ -367,7 +367,7 @@ copy_entryname(DIRENT * src)
 
 static int
 typelist(int eargc, char *eargv[],
-	 bool verbosity,
+	 int verbosity,
 	 DescHook hook)
 /* apply a function to each entry in given terminfo directories */
 {
@@ -721,7 +721,7 @@ main(int argc, char *argv[])
 	DBDIRS state;
 	int offset;
 	const char *path;
-	char **eargv = allocArgv(2);
+	char **eargv = allocArgv((size_t) 2);
 	size_t count = 0;
 
 	if (eargv == 0)

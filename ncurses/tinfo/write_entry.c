@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.90 2013/11/16 19:58:14 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.91 2013/12/14 21:29:42 tom Exp $")
 
 static int total_written;
 
@@ -191,7 +191,10 @@ _nc_set_writedir(char *dir)
     char actual[PATH_MAX];
 
     if (dir == 0
-	&& use_terminfo_vars())
+#ifndef USE_ROOT_ENVIRON
+	&& use_terminfo_vars()
+#endif
+	)
 	dir = getenv("TERMINFO");
 
     if (dir != 0)
