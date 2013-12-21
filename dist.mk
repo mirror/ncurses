@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: dist.mk,v 1.961 2013/12/14 17:30:25 tom Exp $
+# $Id: dist.mk,v 1.964 2013/12/21 21:50:22 tom Exp $
 # Makefile for creating ncurses distributions.
 #
 # This only needs to be used directly as a makefile by developers, but
@@ -37,7 +37,7 @@ SHELL = /bin/sh
 # These define the major/minor/patch versions of ncurses.
 NCURSES_MAJOR = 5
 NCURSES_MINOR = 9
-NCURSES_PATCH = 20131214
+NCURSES_PATCH = 20131221
 
 # We don't append the patch to the version, since this only applies to releases
 VERSION = $(NCURSES_MAJOR).$(NCURSES_MINOR)
@@ -99,7 +99,13 @@ doc/hackguide.doc: doc/html/hackguide.html
 MANPROG	= tbl | nroff -mandoc -rLL=65n -rLT=71n -Tascii
 
 manhtml:
-	@rm -f doc/html/man/*.html
+	@for f in doc/html/man/*.html; do \
+	   test -f $$f || continue; \
+	   case $$f in \
+	   */index.html) ;; \
+	   *) rm -f $$f ;; \
+	   esac; \
+	done
 	@mkdir -p doc/html/man
 	@rm -f subst.tmp ;
 	@for f in man/*.[0-9]*; do \
@@ -136,9 +142,15 @@ manhtml:
 			-e 's/>/\&gt;/g' \
 	   >> doc/html/man/$$g ;\
 	   echo '-->' >> doc/html/man/$$g ;\
-	   ./edit_man.sh normal editing /usr/man man $$f | $(MANPROG) | tr '\255' '-' | $(MAN2HTML) -title "$$T" | \
-	   sed -f subst.sed |\
-	   sed -e 's/"curses.3x.html"/"ncurses.3x.html"/g' \
+	   ./edit_man.sh normal editing /usr/man man $$f | \
+		   $(MANPROG) | \
+		   tr '\255' '-' | \
+		   $(MAN2HTML) \
+		   	-title "$$T" \
+			-aliases man/manhtml.aliases \
+			-externs man/manhtml.externs | \
+		   sed -f subst.sed |\
+		   sed -e 's/"curses.3x.html"/"ncurses.3x.html"/g' \
 	   >> doc/html/man/$$g ;\
 	done
 	@rm -f subst.sed

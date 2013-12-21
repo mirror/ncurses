@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inopts.3x,v 1.17 2012/04/28 19:09:15 tom Exp @
+  * @Id: curs_inopts.3x,v 1.18 2013/07/20 19:42:02 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -135,7 +135,7 @@
 
        Initially, whether the terminal returns 7 or 8 significant
        bits on input depends on the control mode of the tty driv-
-       er  [see  <STRONG><A HREF="termio.7.html">termio(7)</A></STRONG>].  To force 8 bits to be returned, in-
+       er  [see  <STRONG>termio(7)</STRONG>].  To force 8 bits to be returned, in-
        voke <STRONG>meta</STRONG>(<EM>win</EM>, <STRONG>TRUE</STRONG>); this is equivalent, under POSIX,  to
        setting  the CS8 flag on the terminal.  To force 7 bits to
        be returned, invoke <STRONG>meta</STRONG>(<EM>win</EM>, <STRONG>FALSE</STRONG>); this is  equivalent,
@@ -168,7 +168,7 @@
 
        When the <STRONG>noqiflush</STRONG> routine is used, normal flush of  input
        and  output queues associated with the <STRONG>INTR</STRONG>, <STRONG>QUIT</STRONG> and <STRONG>SUSP</STRONG>
-       characters will not be done [see <STRONG><A HREF="termio.7.html">termio(7)</A></STRONG>].  When <STRONG>qiflush</STRONG>
+       characters will not be done [see <STRONG>termio(7)</STRONG>].  When <STRONG>qiflush</STRONG>
        is  called,  the queues will be flushed when these control
        characters are read.  You may want to call <STRONG>noqiflush()</STRONG>  in
        a  signal handler if you want output to continue as though
@@ -185,7 +185,7 @@
        additional capability of being able to block for only  <EM>de-</EM>
        <EM>lay</EM> milliseconds (where <EM>delay</EM> is positive).
 
-       The  <STRONG>curses</STRONG> library does ``line-breakout optimization'' by
+       The  <STRONG>curses</STRONG>  library  does "line-breakout optimization" by
        looking for  typeahead  periodically  while  updating  the
        screen.   If  input is found, and it is coming from a tty,
        the current update is postponed until <STRONG>refresh</STRONG> or  <STRONG>doupdate</STRONG>
@@ -280,7 +280,7 @@
 </PRE>
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>,        <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>, <STRONG><A HREF="define_key.3x.html">define_key(3x)</A></STRONG>, <STRONG><A HREF="termio.7.html">termio(7)</A></STRONG>
+       <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>, <STRONG><A HREF="define_key.3x.html">define_key(3x)</A></STRONG>, <STRONG>termio(7)</STRONG>
 
 
 

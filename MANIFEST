@@ -659,6 +659,8 @@
 ./man/legacy_coding.3x
 ./man/make_sed.sh
 ./man/man_db.renames
+./man/manhtml.aliases
+./man/manhtml.externs
 ./man/manlinks.sed
 ./man/menu.3x
 ./man/menu_attributes.3x
@@ -869,9 +871,11 @@
 ./ncurses/llib-lncursestw
 ./ncurses/llib-lncursesw
 ./ncurses/llib-ltic
+./ncurses/llib-ltict
 ./ncurses/llib-ltictw
 ./ncurses/llib-lticw
 ./ncurses/llib-ltinfo
+./ncurses/llib-ltinfot
 ./ncurses/llib-ltinfotw
 ./ncurses/llib-ltinfow
 ./ncurses/modules
@@ -1075,6 +1079,7 @@
 ./test/firework.c
 ./test/firstlast.c
 ./test/foldkeys.c
+./test/form_driver_w.c
 ./test/gdc.6
 ./test/gdc.c
 ./test/hanoi.c

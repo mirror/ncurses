@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.36 2012/07/21 18:51:10 tom Exp @
+  * @Id: curs_util.3x,v 1.37 2013/07/20 19:43:45 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -243,58 +243,57 @@
               control code.  If <STRONG>use_legacy_coding</STRONG> has been called
               with  a  <STRONG>2</STRONG> parameter, <STRONG>unctrl</STRONG> returns the parameter,
               i.e., a one-character string with the parameter  as
-              the first character.  Otherwise, it returns ``~@'',
-              ``~A'', etc., analogous to ``^@'', ``^A'', C0  con-
-              trols.
+              the  first  character.  Otherwise, it returns "~@",
+              "~A", etc., analogous to "^@", "^A", C0 controls.
 
-              X/Open  Curses does not document whether <STRONG>unctrl</STRONG> can
-              be called before initializing curses.  This  imple-
-              mentation  permits  that,  and  returns the ``~@'',
-              etc., values in that case.
+              X/Open Curses does not document whether <STRONG>unctrl</STRONG>  can
+              be  called before initializing curses.  This imple-
+              mentation permits that, and returns the "~@", etc.,
+              values in that case.
 
-          <STRONG>o</STRONG>   parameter values outside the 0 to 255 range.   <STRONG>unc-</STRONG>
+          <STRONG>o</STRONG>   parameter  values outside the 0 to 255 range.  <STRONG>unc-</STRONG>
               <STRONG>trl</STRONG> returns a null pointer.
 
        The SVr4 documentation describes the action of <STRONG>filter</STRONG> only
-       in the vaguest terms.  The  description  here  is  adapted
-       from  the  XSI Curses standard (which erroneously fails to
+       in  the  vaguest  terms.   The description here is adapted
+       from the XSI Curses standard (which erroneously  fails  to
        describe the disabling of <STRONG>cuu</STRONG>).
 
-       The strings returned by <STRONG>unctrl</STRONG> in this implementation  are
-       determined  at  compile time, showing C1 controls from the
-       upper-128 codes with a `~' prefix rather than `^'.   Other
-       implementations  have different conventions.  For example,
-       they may show both sets of control  characters  with  `^',
-       and  strip the parameter to 7 bits.  Or they may ignore C1
-       controls and treat all of the upper-128  codes  as  print-
+       The  strings returned by <STRONG>unctrl</STRONG> in this implementation are
+       determined at compile time, showing C1 controls  from  the
+       upper-128  codes with a `~' prefix rather than `^'.  Other
+       implementations have different conventions.  For  example,
+       they  may  show  both sets of control characters with `^',
+       and strip the parameter to 7 bits.  Or they may ignore  C1
+       controls  and  treat  all of the upper-128 codes as print-
        able.  This implementation uses 8 bits but does not modify
        the string to reflect locale.  The <STRONG>use_legacy_coding</STRONG> func-
        tion allows the caller to change the output of <STRONG>unctrl</STRONG>.
 
-       Likewise,  the  <STRONG>meta</STRONG>  function allows the caller to change
-       the output of <STRONG>keyname</STRONG>, i.e., it determines whether to  use
-       the  `M-' prefix for ``meta'' keys (codes in the range 128
-       to 255).  Both <STRONG>use_legacy_coding</STRONG> and <STRONG>meta</STRONG> succeed only af-
-       ter  curses  is initialized.  X/Open Curses does not docu-
-       ment the treatment of codes 128  to  159.   When  treating
-       them as ``meta'' keys (or if <STRONG>keyname</STRONG> is called before ini-
-       tializing curses),  this  implementation  returns  strings
-       ``M-^@'', ``M-^A'', etc.
+       Likewise, the <STRONG>meta</STRONG> function allows the  caller  to  change
+       the  output of <STRONG>keyname</STRONG>, i.e., it determines whether to use
+       the `M-' prefix for "meta" keys (codes in the range 128 to
+       255).   Both <STRONG>use_legacy_coding</STRONG> and <STRONG>meta</STRONG> succeed only after
+       curses is initialized.  X/Open Curses  does  not  document
+       the  treatment of codes 128 to 159.  When treating them as
+       "meta" keys (or if <STRONG>keyname</STRONG> is called  before  initializing
+       curses),   this  implementation  returns  strings  "M-^@",
+       "M-^A", etc.
 
-       The  <STRONG>keyname</STRONG> function may return the names of user-defined
-       string capabilities which are defined in the terminfo  en-
-       try  via  the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG>.  This implementation auto-
-       matically assigns at  run-time  keycodes  to  user-defined
-       strings  which  begin  with  "k".   The  keycodes start at
-       KEY_MAX, but are not guaranteed to be the same  value  for
-       different  runs because user-defined codes are merged from
-       all terminal descriptions which  have  been  loaded.   The
-       <STRONG>use_extended_names</STRONG>  function controls whether this data is
-       loaded when the terminal description is read  by  the  li-
+       The <STRONG>keyname</STRONG> function may return the names of  user-defined
+       string  capabilities which are defined in the terminfo en-
+       try via the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG>.  This  implementation  auto-
+       matically  assigns  at  run-time  keycodes to user-defined
+       strings which begin  with  "k".   The  keycodes  start  at
+       KEY_MAX,  but  are not guaranteed to be the same value for
+       different runs because user-defined codes are merged  from
+       all  terminal  descriptions  which  have been loaded.  The
+       <STRONG>use_extended_names</STRONG> function controls whether this data  is
+       loaded  when  the  terminal description is read by the li-
        brary.
 
-       The  <STRONG>nofilter</STRONG>  and  <STRONG>use_tioctl</STRONG>  routines  are  specific to
-       ncurses.  They were not supported on  Version  7,  BSD  or
+       The <STRONG>nofilter</STRONG>  and  <STRONG>use_tioctl</STRONG>  routines  are  specific  to
+       ncurses.   They  were  not  supported on Version 7, BSD or
        System V implementations.  It is recommended that any code
        depending  on  ncurses  extensions  be  conditioned  using
        NCURSES_VERSION.
@@ -303,7 +302,7 @@
 </PRE>
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG>curs_ker-</STRONG>
-       <STRONG><A HREF="curs_kernel.3x.html">nel(3x)</A></STRONG>,  <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>,   <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,   <STRONG>lega-</STRONG>
+       <STRONG><A HREF="curs_kernel.3x.html">nel(3x)</A></STRONG>,   <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>,   <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,  <STRONG>lega-</STRONG>
        <STRONG><A HREF="legacy_coding.3x.html">cy_coding(3x)</A></STRONG>.
 
 
