@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2151 2013/12/21 22:25:52 tom Exp $
+-- $Id: NEWS,v 1.2155 2014/01/18 23:59:51 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140118
+	+ apply includesubdir variable which was introduced in 20130805 to
+	  gen-pkgconfig.in (Debian #735782).
 
 20131221
 	+ further improved man2html, used this to fix broken links in html

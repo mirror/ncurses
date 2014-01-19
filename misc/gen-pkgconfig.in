@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.15 2013/03/16 23:33:34 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.16 2014/01/18 20:21:45 tom Exp $
 ##############################################################################
-# Copyright (c) 2009-2012,2013 Free Software Foundation, Inc.                #
+# Copyright (c) 2009-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -49,12 +49,12 @@ CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@
 
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
-includedir="@includedir@"
+includedir="@includedir@@includesubdir@"
 libdir="@libdir@"
 
 show_prefix='@prefix@'
 show_exec_prefix='@exec_prefix@'
-show_includedir='@includedir@'
+show_includedir='@includedir@@includesubdir@'
 show_libdir='@libdir@'
 
 MAIN_LIBRARY="${LIB_NAME}@DFT_ARG_SUFFIX@"
@@ -103,8 +103,6 @@ do
 
 	echo "** creating ${name}.pc"
 	cat >${name}.pc <<EOF
-# vile:makemode
-
 prefix=$show_prefix
 exec_prefix=$show_exec_prefix
 libdir=$show_libdir
