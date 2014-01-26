@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.61 2013/08/24 23:30:46 tom Exp $
+    $Id: gen.c,v 1.62 2014/01/26 00:21:52 Nicolas.Boulenguez Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -116,6 +116,7 @@ find_pos(char *s, unsigned len, int *low, int *high)
  * record type defined in the binding.
  * We are only dealing with record types which are of 32 or 16
  * bit size, i.e. they fit into an (u)int or a (u)short.
+ * Any pair with a 0 attr field will be ignored.
  */
 static void
 gen_reps(
@@ -132,19 +133,21 @@ gen_reps(
   assert(nap != NULL);
 
   for (i = 0; nap[i].name != (char *)0; i++)
-    {
-      l = (int)strlen(nap[i].name);
-      if (l > width)
-	width = l;
-    }
+    if (nap[i].attr)
+      {
+	l = (int)strlen(nap[i].name);
+	if (l > width)
+	  width = l;
+      }
   assert(width > 0);
 
   printf("   type %s is\n", name);
   printf("      record\n");
   for (i = 0; nap[i].name != (char *)0; i++)
-    {
-      printf("         %-*s : Boolean;\n", width, nap[i].name);
-    }
+    if (nap[i].attr)
+      {
+	printf("         %-*s : Boolean;\n", width, nap[i].name);
+      }
   printf("      end record;\n");
   printf("   pragma Convention (C, %s);\n\n", name);
 
@@ -152,13 +155,14 @@ gen_reps(
   printf("      record\n");
 
   for (i = 0; nap[i].name != (char *)0; i++)
-    {
-      a = nap[i].attr;
-      l = find_pos((char *)&a, sizeof(a), &low, &high);
-      if (l >= 0)
-	printf("         %-*s at 0 range %2d .. %2d;\n", width, nap[i].name,
-	       low - bias, high - bias);
-    }
+    if (nap[i].attr)
+      {
+	a = nap[i].attr;
+	l = find_pos((char *)&a, sizeof(a), &low, &high);
+	if (l >= 0)
+	  printf("         %-*s at 0 range %2d .. %2d;\n", width, nap[i].name,
+		 low - bias, high - bias);
+      }
   printf("      end record;\n");
   printf("   pragma Warnings (Off);");
   printf("   for %s'Size use %d;\n", name, len_bits);
@@ -243,54 +247,26 @@ gen_attr_set(const char *name)
    * 1999-2000), the ifdef's also were needed since the proposed bit-layout
    * for wide characters allocated 16-bits for A_CHARTEXT, leaving too few
    * bits for a few of the A_xxx symbols.
+   * Some preprocessors are not able to test the values because they
+   * now (2014) contain an explicit cast to chtype, so we avoid ifdef.
    */
   static const name_attribute_pair nap[] =
   {
-#ifdef A_STANDOUT
     {"Stand_Out", A_STANDOUT},
-#endif
-#ifdef A_UNDERLINE
     {"Under_Line", A_UNDERLINE},
-#endif
-#ifdef A_REVERSE
     {"Reverse_Video", A_REVERSE},
-#endif
-#ifdef A_BLINK
     {"Blink", A_BLINK},
-#endif
-#ifdef A_DIM
     {"Dim_Character", A_DIM},
-#endif
-#ifdef A_BOLD
     {"Bold_Character", A_BOLD},
-#endif
-#ifdef A_ALTCHARSET
     {"Alternate_Character_Set", A_ALTCHARSET},
-#endif
-#ifdef A_INVIS
     {"Invisible_Character", A_INVIS},
-#endif
-#ifdef A_PROTECT
     {"Protected_Character", A_PROTECT},
-#endif
-#ifdef A_HORIZONTAL
     {"Horizontal", A_HORIZONTAL},
-#endif
-#ifdef A_LEFT
     {"Left", A_LEFT},
-#endif
-#ifdef A_LOW
     {"Low", A_LOW},
-#endif
-#ifdef A_RIGHT
     {"Right", A_RIGHT},
-#endif
-#ifdef A_TOP
     {"Top", A_TOP},
-#endif
-#ifdef A_VERTICAL
     {"Vertical", A_VERTICAL},
-#endif
     {(char *)0, 0}
   };
   chtype attr = A_ATTRIBUTES & ~A_COLOR;

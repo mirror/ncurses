@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2155 2014/01/18 23:59:51 tom Exp $
+-- $Id: NEWS,v 1.2157 2014/01/26 00:20:39 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140125
+	+ remove unnecessary ifdef's in Ada95/gen/gen.c, which reportedly do
+	  not work as is with gcc 4.8 due to fixes using chtype cast made for
+	  new compiler warnings by gcc 4.8 in 20130824 (Debian #735753, patch
+	  by Nicolas Boulenguez).
 
 20140118
 	+ apply includesubdir variable which was introduced in 20130805 to
