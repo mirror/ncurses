@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.26 2012/03/24 18:37:17 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.27 2014/02/01 22:10:42 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch
@@ -47,7 +47,7 @@ NCURSES_EXPORT(int)
 setcchar(cchar_t *wcval,
 	 const wchar_t *wch,
 	 const attr_t attrs,
-	 short color_pair,
+	 NCURSES_PAIRS_T color_pair,
 	 const void *opts)
 {
     unsigned i;
@@ -56,7 +56,7 @@ setcchar(cchar_t *wcval,
 
     TR(TRACE_CCALLS, (T_CALLED("setcchar(%p,%s,%lu,%d,%p)"),
 		      (void *) wcval, _nc_viswbuf(wch),
-		      (unsigned long) attrs, color_pair, opts));
+		      (unsigned long) attrs, (int) color_pair, opts));
 
     if (opts != NULL
 	|| wch == NULL
@@ -96,7 +96,7 @@ NCURSES_EXPORT(int)
 getcchar(const cchar_t *wcval,
 	 wchar_t *wch,
 	 attr_t *attrs,
-	 short *color_pair,
+	 NCURSES_PAIRS_T *color_pair,
 	 void *opts)
 {
     wchar_t *wp;
@@ -125,7 +125,7 @@ getcchar(const cchar_t *wcval,
 	    code = ERR;
 	} else if (len >= 0) {
 	    *attrs = AttrOf(*wcval) & A_ATTRIBUTES;
-	    *color_pair = (short) GetPair(*wcval);
+	    *color_pair = (NCURSES_PAIRS_T) GetPair(*wcval);
 	    wmemcpy(wch, wcval->chars, (size_t) len);
 	    wch[len] = L'\0';
 	    code = OK;

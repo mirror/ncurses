@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_instr.c,v 1.20 2013/01/20 01:58:13 tom Exp $")
+MODULE_ID("$Id: lib_instr.c,v 1.21 2014/02/01 22:09:27 tom Exp $")
 
 NCURSES_EXPORT(int)
 winnstr(WINDOW *win, char *str, int n)
@@ -64,7 +64,7 @@ winnstr(WINDOW *win, char *str, int n)
 	    cchar_t *cell = &(win->_line[row].text[col]);
 	    wchar_t *wch;
 	    attr_t attrs;
-	    short pair;
+	    NCURSES_PAIRS_T pair;
 	    int n2;
 	    bool done = FALSE;
 	    mbstate_t state;

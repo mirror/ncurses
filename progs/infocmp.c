@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.128 2013/12/15 01:06:52 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.129 2014/02/01 22:11:03 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -858,7 +858,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	/* now check for standard-mode sequences */
 	if (!expansion
 	    && (csi = skip_csi(sp)) != 0
-	    && (len = strspn(sp + csi, "0123456789;"))
+	    && (len = (strspn) (sp + csi, "0123456789;"))
 	    && (len < sizeof(buf3))
 	    && (next = (size_t) csi + len)
 	    && ((sp[next] == 'h') || (sp[next] == 'l'))) {
@@ -879,7 +879,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	if (!expansion
 	    && (csi = skip_csi(sp)) != 0
 	    && sp[csi] == '?'
-	    && (len = strspn(sp + csi + 1, "0123456789;"))
+	    && (len = (strspn) (sp + csi + 1, "0123456789;"))
 	    && (len < sizeof(buf3))
 	    && (next = (size_t) csi + 1 + len)
 	    && ((sp[next] == 'h') || (sp[next] == 'l'))) {
@@ -899,7 +899,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	/* now check for ECMA highlight sequences */
 	if (!expansion
 	    && (csi = skip_csi(sp)) != 0
-	    && (len = strspn(sp + csi, "0123456789;")) != 0
+	    && (len = (strspn) (sp + csi, "0123456789;")) != 0
 	    && (len < sizeof(buf3))
 	    && (next = (size_t) csi + len)
 	    && sp[next] == 'm') {

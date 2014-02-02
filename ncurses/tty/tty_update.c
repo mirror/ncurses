@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.276 2013/02/16 21:12:02 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.277 2014/02/01 22:09:27 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -490,7 +490,7 @@ can_clear_with(NCURSES_SP_DCLx ARG_CH_T ch)
 	if (SP_PARM->_default_fg != C_MASK || SP_PARM->_default_bg != C_MASK)
 	    return FALSE;
 	if ((pair = GetPair(CHDEREF(ch))) != 0) {
-	    short fg, bg;
+	    NCURSES_COLOR_T fg, bg;
 	    if (NCURSES_SP_NAME(pair_content) (NCURSES_SP_ARGx
 					       (short) pair,
 					       &fg, &bg) == ERR

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: background.c,v 1.13 2012/06/09 20:30:33 tom Exp $
+ * $Id: background.c,v 1.14 2014/02/01 22:10:42 tom Exp $
  */
 
 #define NEED_COLOR_CODE 1
@@ -39,31 +39,31 @@ static int default_fg = COLOR_WHITE;
 static void
 test_background(void)
 {
-    short f, b;
+    NCURSES_COLOR_T f, b;
     int row;
     int chr;
 
     if (pair_content(0, &f, &b) == ERR) {
 	printw("pair 0 contains no data\n");
     } else {
-	printw("pair 0 contains (%d,%d)\n", f, b);
+	printw("pair 0 contains (%d,%d)\n", (int) f, (int) b);
     }
     getch();
 
     printw("Initializing pair 1 to red/%s\n", color_name(default_bg));
-    init_pair(1, COLOR_RED, (short) default_bg);
+    init_pair(1, COLOR_RED, (NCURSES_COLOR_T) default_bg);
     bkgdset((chtype) (' ' | COLOR_PAIR(1)));
     printw("RED/BLACK\n");
     getch();
 
     printw("Initializing pair 2 to %s/blue\n", color_name(default_fg));
-    init_pair(2, (short) default_fg, COLOR_BLUE);
+    init_pair(2, (NCURSES_COLOR_T) default_fg, COLOR_BLUE);
     bkgdset((chtype) (' ' | COLOR_PAIR(2)));
     printw("This line should be %s/blue\n", color_name(default_fg));
     getch();
 
     printw("Initializing pair 3 to %s/cyan (ACS_HLINE)\n", color_name(default_fg));
-    init_pair(3, (short) default_fg, COLOR_CYAN);
+    init_pair(3, (NCURSES_COLOR_T) default_fg, COLOR_CYAN);
     printw("...and drawing a box which should be followed by lines\n");
     bkgdset(ACS_HLINE | COLOR_PAIR(3));
     /*

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.122 2013/10/20 00:25:18 tom Exp $ */
+/* $Id: test.priv.h,v 1.123 2014/02/01 22:09:27 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -424,6 +424,14 @@ extern int optind;
 #define NCURSES_CH_T cchar_t
 #endif
 
+#ifndef NCURSES_COLOR_T
+#define NCURSES_COLOR_T short
+#endif
+
+#ifndef NCURSES_PAIRS_T
+#define NCURSES_PAIRS_T short
+#endif
+
 #ifndef NCURSES_OPAQUE
 #define NCURSES_OPAQUE 0
 #endif
@@ -546,7 +554,7 @@ extern char *strnames[], *strcodes[], *strfnames[];
 	if ((count = getcchar(s, NULL, NULL, NULL, NULL)) > 0) { \
 	    wchar_t test_wch[CCHARW_MAX + 2]; \
 	    attr_t test_attrs; \
-	    short test_pair; \
+	    NCURSES_PAIRS_T test_pair; \
 	    \
 	    if (getcchar( s, test_wch, &test_attrs, &test_pair, NULL) == OK \
 		&& test_wch[0] != L'\0') { \

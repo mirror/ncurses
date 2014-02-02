@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2008,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_set.c,v 1.7 2012/12/15 22:04:14 tom Exp $
+ * $Id: color_set.c,v 1.8 2014/02/01 22:10:42 tom Exp $
  */
 
 #include <test.priv.h>
@@ -38,7 +38,7 @@
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
-    short f, b;
+    NCURSES_COLOR_T f, b;
     int i;
 
     initscr();
@@ -49,7 +49,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	start_color();
 
 	(void) pair_content(0, &f, &b);
-	printw("pair 0 contains (%d,%d)\n", f, b);
+	printw("pair 0 contains (%d,%d)\n", (int) f, (int) b);
 	getch();
 
 	printw("Initializing pair 1 to red/black\n");

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.529 2013/11/16 19:44:28 tom Exp $
+ * $Id: curses.priv.h,v 1.530 2014/02/01 22:09:27 tom Exp $
  *
  *	curses.priv.h
  *
@@ -288,14 +288,6 @@ typedef TRIES {
  * Structure for palette tables
  */
 
-typedef struct
-{
-    short red, green, blue;	/* what color_content() returns */
-    short r, g, b;		/* params to init_color() */
-    int init;			/* true if we called init_color() */
-}
-color_t;
-
 #define MAXCOLUMNS    135
 #define MAXLINES      66
 #define FIFO_SIZE     MAXCOLUMNS+2  /* for nocbreak mode input */
@@ -319,6 +311,14 @@ color_t;
 #define NCURSES_OPAQUE 0
 
 #include <curses.h>	/* we'll use -Ipath directive to get the right one! */
+
+typedef struct
+{
+    NCURSES_COLOR_T red, green, blue;	/* what color_content() returns */
+    NCURSES_COLOR_T r, g, b;		/* params to init_color() */
+    int init;			/* true if we called init_color() */
+}
+color_t;
 
 /*
  * If curses.h did not expose the SCREEN-functions, then we do not need the
@@ -2400,7 +2400,7 @@ extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_set_tty_mode)(SCREEN*, TTY*)
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_setupscreen)(SCREEN**, int, int, FILE *, int, int);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tgetent)(SCREEN*,char*,const char *);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_tigetnum)(SCREEN*,NCURSES_CONST char*);
-extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vid_attr)(SCREEN *, attr_t, short, void *);
+extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vid_attr)(SCREEN *, attr_t, NCURSES_COLOR_T, void *);
 extern NCURSES_EXPORT(int)      NCURSES_SP_NAME(_nc_vidputs)(SCREEN*,chtype,int(*) (SCREEN*, int));
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_do_color)(SCREEN*, int, int, int, NCURSES_SP_OUTC);
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_do_xmc_glitch)(SCREEN*, attr_t);

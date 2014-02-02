@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.21 2013/08/31 20:09:12 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.22 2014/02/01 22:09:27 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -68,7 +68,7 @@ MODULE_ID("$Id: lib_vid_attr.c,v 1.21 2013/08/31 20:09:12 tom Exp $")
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(vid_puts) (NCURSES_SP_DCLx
 			   attr_t newmode,
-			   short pair,
+			   NCURSES_PAIRS_T pair,
 			   void *opts GCC_UNUSED,
 			   NCURSES_SP_OUTC outc)
 {
@@ -267,7 +267,7 @@ NCURSES_SP_NAME(vid_puts) (NCURSES_SP_DCLx
 
     returnCode(OK);
 #else
-    T((T_CALLED("vid_puts(%s,%d)"), _traceattr(newmode), pair));
+    T((T_CALLED("vid_puts(%s,%d)"), _traceattr(newmode), (int) pair));
     set_color(newmode, pair);
     returnCode(NCURSES_SP_NAME(vidputs) (NCURSES_SP_ARGx newmode, outc));
 #endif
@@ -276,7 +276,7 @@ NCURSES_SP_NAME(vid_puts) (NCURSES_SP_DCLx
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
 vid_puts(attr_t newmode,
-	 short pair,
+	 NCURSES_PAIRS_T pair,
 	 void *opts GCC_UNUSED,
 	 NCURSES_OUTC outc)
 {
@@ -293,10 +293,10 @@ vid_puts(attr_t newmode,
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(vid_attr) (NCURSES_SP_DCLx
 			   attr_t newmode,
-			   short pair,
+			   NCURSES_PAIRS_T pair,
 			   void *opts)
 {
-    T((T_CALLED("vid_attr(%s,%d)"), _traceattr(newmode), pair));
+    T((T_CALLED("vid_attr(%s,%d)"), _traceattr(newmode), (int) pair));
     returnCode(NCURSES_SP_NAME(vid_puts) (NCURSES_SP_ARGx
 					  newmode,
 					  pair,
@@ -306,7 +306,7 @@ NCURSES_SP_NAME(vid_attr) (NCURSES_SP_DCLx
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-vid_attr(attr_t newmode, short pair, void *opts)
+vid_attr(attr_t newmode, NCURSES_PAIRS_T pair, void *opts)
 {
     return NCURSES_SP_NAME(vid_attr) (CURRENT_SCREEN, newmode, pair, opts);
 }

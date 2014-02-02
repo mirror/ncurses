@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.62 2014/01/26 00:21:52 Nicolas.Boulenguez Exp $
+    $Id: gen.c,v 1.64 2014/02/01 19:52:47 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program generates various record structures and constants from the
@@ -57,8 +57,13 @@
 #include <menu.h>
 #include <form.h>
 
-#define UChar(c)	((unsigned char)(c))
+#undef UCHAR
+#undef UINT
+#define UChar(c)	((UCHAR)(c))
 #define RES_NAME "Reserved"
+
+typedef unsigned char UCHAR;
+typedef unsigned int UINT;
 
 static const char *model = "";
 static int little_endian = 0;
@@ -70,45 +75,43 @@ typedef struct
   }
 name_attribute_pair;
 
-static int
-find_pos(char *s, unsigned len, int *low, int *high)
+static UCHAR
+bit_is_set(const UCHAR * const data,
+	   const UINT offset)
 {
-  unsigned int i, j;
-  int l = 0;
+  const UCHAR byte = data[offset >> 3];
+  UINT bit;
 
-  *high = -1;
-  *low = (int)(8 * len);
+  if (little_endian)
+    bit = offset;		/* offset */
+  else				/* or */
+    bit = ~offset;		/* 7 - offset */
+  bit &= 7;			/* modulo 8 */
+  return byte & (UCHAR) (1 << bit);
+}
 
-  for (i = 0; i < len; i++, s++)
+/* Find lowest and highest used offset in a byte array. */
+/* Returns 0 if and only if all bits are unset. */
+static int
+find_pos(const UCHAR * const data,
+	 const UINT sizeof_data,
+	 UINT * const low,
+	 UINT * const high)
+{
+  const UINT last = (sizeof_data << 3) - 1;
+  UINT offset;
+
+  for (offset = last; !bit_is_set(data, offset); offset--)
+    if (!offset)		/* All bits are 0. */
+      return 0;
+  *high = offset;
+
+  for (offset = 0; !bit_is_set(data, offset); offset++)
     {
-      if (*s)
-	{
-	  for (j = 0; j < 8 * sizeof(char); j++)
-
-	    {
-	      if (((little_endian && ((*s) & 0x01)) ||
-		   (!little_endian && ((*s) & 0x80))))
-		{
-		  if (l > *high)
-		    *high = l;
-		  if (l < *low)
-		    *low = l;
-		}
-	      l++;
-	      if (little_endian)
-		{
-		  *s >>= 1;
-		}
-	      else
-		{
-		  *s = (char)(*s << 1);
-		}
-	    }
-	}
-      else
-	l += 8;
     }
-  return (*high >= 0 && (*low <= *high)) ? *low : -1;
+  *low = offset;
+
+  return -1;
 }
 
 /*
@@ -122,13 +125,13 @@ static void
 gen_reps(
 	  const name_attribute_pair * nap,	/* array of name_attribute_pair records */
 	  const char *name,	/* name of the represented record type  */
-	  int len,		/* size of the record in bytes          */
-	  int bias)
+	  const UINT len,	/* size of the record in bytes          */
+	  const UINT bias)
 {
-  const int len_bits = (8 * len);
-  int i, l, low, high;
+  const UINT len_bits = len << 3;
+  int i, l;
+  UINT low, high;
   int width = strlen(RES_NAME) + 3;
-  unsigned long a;
 
   assert(nap != NULL);
 
@@ -157,11 +160,9 @@ gen_reps(
   for (i = 0; nap[i].name != (char *)0; i++)
     if (nap[i].attr)
       {
-	a = nap[i].attr;
-	l = find_pos((char *)&a, sizeof(a), &low, &high);
-	if (l >= 0)
+	if (find_pos((const UCHAR *)(&(nap[i].attr)) + bias, len, &low, &high))
 	  printf("         %-*s at 0 range %2d .. %2d;\n", width, nap[i].name,
-		 low - bias, high - bias);
+		 low, high);
       }
   printf("      end record;\n");
   printf("   pragma Warnings (Off);");
@@ -176,10 +177,9 @@ chtype_rep(const char *name, attr_t mask)
 {
   attr_t x = (attr_t)-1;
   attr_t t = x & mask;
-  int low, high;
-  int l = find_pos((char *)&t, sizeof(t), &low, &high);
+  UINT low, high;
 
-  if (l >= 0)
+  if (find_pos((const UCHAR *)(&t), sizeof(t), &low, &high))
     printf("         %-5s at 0 range %2d .. %2d;\n", name, low, high);
 }
 
@@ -200,10 +200,9 @@ gen_chtype_rep(const char *name)
 static void
 mrep_rep(const char *name, void *rec)
 {
-  int low, high;
-  int l = find_pos((char *)rec, sizeof(MEVENT), &low, &high);
+  UINT low, high;
 
-  if (l >= 0)
+  if (find_pos((const UCHAR *)rec, sizeof(MEVENT), &low, &high))
     printf("         %-7s at 0 range %3d .. %3d;\n", name, low, high);
 }
 
@@ -289,7 +288,9 @@ gen_attr_set(const char *name)
 	}
       attr = attr >> 1;
     }
-  gen_reps(nap, name, (len + 7) / 8, little_endian ? start : 0);
+  gen_reps(nap, name,
+	   (UINT) ((len + 7) / 8),
+	   (UINT) (little_endian ? start >> 3 : 0));
 }
 
 static void
@@ -312,7 +313,9 @@ gen_trace(const char *name)
     {"Attributes_And_Colors", TRACE_ATTRS},
     {(char *)0, 0}
   };
-  gen_reps(nap, name, sizeof(int), 0);
+
+  gen_reps(nap, name, sizeof(UINT),
+	   little_endian ? 0 : sizeof(nap[0].attr) - sizeof(UINT));
 }
 
 static void
@@ -340,7 +343,9 @@ gen_menu_opt_rep(const char *name)
 #endif
     {(char *)0, 0}
   };
-  gen_reps(nap, name, sizeof(int), 0);
+
+  gen_reps(nap, name, sizeof(Menu_Options),
+	   little_endian ? 0 : sizeof(nap[0].attr) - sizeof(Menu_Options));
 }
 
 static void
@@ -353,7 +358,9 @@ gen_item_opt_rep(const char *name)
 #endif
     {(char *)0, 0}
   };
-  gen_reps(nap, name, sizeof(int), 0);
+
+  gen_reps(nap, name, sizeof(Item_Options),
+	   little_endian ? 0 : sizeof(nap[0].attr) - sizeof(Item_Options));
 }
 
 static void
@@ -369,7 +376,9 @@ gen_form_opt_rep(const char *name)
 #endif
     {(char *)0, 0}
   };
-  gen_reps(nap, name, sizeof(int), 0);
+
+  gen_reps(nap, name, sizeof(Form_Options),
+	   little_endian ? 0 : sizeof(nap[0].attr) - sizeof(Form_Options));
 }
 
 /*
@@ -412,7 +421,9 @@ gen_field_opt_rep(const char *name)
 #endif
     {(char *)0, 0}
   };
-  gen_reps(nap, name, sizeof(int), 0);
+
+  gen_reps(nap, name, sizeof(Field_Options),
+	   little_endian ? 0 : sizeof(nap[0].attr) - sizeof(Field_Options));
 }
 
 /*

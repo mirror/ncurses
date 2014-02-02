@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.396 2013/11/23 21:43:51 tom Exp $
+$Id: ncurses.c,v 1.397 2014/02/01 22:29:37 tom Exp $
 
 ***************************************************************************/
 
@@ -157,9 +157,9 @@ static bool use_colors;		/* true if we use colors */
 static int max_pairs;		/* ...and the number of color pairs */
 
 typedef struct {
-    short red;
-    short green;
-    short blue;
+    NCURSES_COLOR_T red;
+    NCURSES_COLOR_T green;
+    NCURSES_COLOR_T blue;
 } RGB_DATA;
 
 static RGB_DATA *all_colors;
@@ -1301,29 +1301,29 @@ show_color_attr(int fg, int bg, int tx)
 }
 
 static bool
-cycle_color_attr(int ch, short *fg, short *bg, short *tx)
+cycle_color_attr(int ch, NCURSES_COLOR_T *fg, NCURSES_COLOR_T *bg, NCURSES_COLOR_T *tx)
 {
     bool error = FALSE;
 
     if (use_colors) {
 	switch (ch) {
 	case 'f':
-	    *fg = (short) (*fg + 1);
+	    *fg = (NCURSES_COLOR_T) (*fg + 1);
 	    break;
 	case 'F':
-	    *fg = (short) (*fg - 1);
+	    *fg = (NCURSES_COLOR_T) (*fg - 1);
 	    break;
 	case 'b':
-	    *bg = (short) (*bg + 1);
+	    *bg = (NCURSES_COLOR_T) (*bg + 1);
 	    break;
 	case 'B':
-	    *bg = (short) (*bg - 1);
+	    *bg = (NCURSES_COLOR_T) (*bg - 1);
 	    break;
 	case 't':
-	    *tx = (short) (*tx + 1);
+	    *tx = (NCURSES_COLOR_T) (*tx + 1);
 	    break;
 	case 'T':
-	    *tx = (short) (*tx - 1);
+	    *tx = (NCURSES_COLOR_T) (*tx - 1);
 	    break;
 	default:
 	    beep();
@@ -1331,17 +1331,17 @@ cycle_color_attr(int ch, short *fg, short *bg, short *tx)
 	    break;
 	}
 	if (*fg >= COLORS)
-	    *fg = (short) min_colors;
+	    *fg = (NCURSES_COLOR_T) min_colors;
 	if (*fg < min_colors)
-	    *fg = (short) (COLORS - 1);
+	    *fg = (NCURSES_COLOR_T) (COLORS - 1);
 	if (*bg >= COLORS)
-	    *bg = (short) min_colors;
+	    *bg = (NCURSES_COLOR_T) min_colors;
 	if (*bg < min_colors)
-	    *bg = (short) (COLORS - 1);
+	    *bg = (NCURSES_COLOR_T) (COLORS - 1);
 	if (*tx >= COLORS)
 	    *tx = -1;
 	if (*tx < -1)
-	    *tx = (short) (COLORS - 1);
+	    *tx = (NCURSES_COLOR_T) (COLORS - 1);
     } else {
 	beep();
 	error = TRUE;
@@ -1493,7 +1493,13 @@ init_attr_list(ATTR_TBL * target, attr_t attrs)
 }
 
 static bool
-attr_getc(int *skip, short *fg, short *bg, short *tx, int *ac, unsigned *kc, unsigned limit)
+attr_getc(int *skip,
+	  NCURSES_COLOR_T *fg,
+	  NCURSES_COLOR_T *bg,
+	  NCURSES_COLOR_T *tx,
+	  int *ac,
+	  unsigned *kc,
+	  unsigned limit)
 {
     bool result = TRUE;
     bool error = FALSE;
@@ -1559,9 +1565,9 @@ attr_test(void)
 {
     int n;
     int skip = get_xmc();
-    short fg = COLOR_BLACK;	/* color pair 0 is special */
-    short bg = COLOR_BLACK;
-    short tx = -1;
+    NCURSES_COLOR_T fg = COLOR_BLACK;	/* color pair 0 is special */
+    NCURSES_COLOR_T bg = COLOR_BLACK;
+    NCURSES_COLOR_T tx = -1;
     int ac = 0;
     unsigned j, k;
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
@@ -1581,8 +1587,8 @@ attr_test(void)
 	    chtype extras = (chtype) ac;
 
 	    if (use_colors) {
-		short pair = (short) (fg != COLOR_BLACK || bg != COLOR_BLACK);
-		if (pair != 0) {
+		NCURSES_PAIRS_T pair = 0;
+		if ((fg != COLOR_BLACK) || (bg != COLOR_BLACK)) {
 		    pair = 1;
 		    if (init_pair(pair, fg, bg) == ERR) {
 			beep();
@@ -1668,7 +1674,7 @@ wide_init_attr_string(void)
 }
 
 static void
-set_wide_background(short pair)
+set_wide_background(NCURSES_PAIRS_T pair)
 {
     cchar_t normal;
     wchar_t blank[2];
@@ -1686,7 +1692,7 @@ get_wide_background(void)
     attr_t result = A_NORMAL;
     attr_t attr;
     cchar_t ch;
-    short pair;
+    NCURSES_PAIRS_T pair;
     wchar_t wch[10];
 
     memset(&ch, 0, sizeof(ch));
@@ -1699,7 +1705,12 @@ get_wide_background(void)
 }
 
 static int
-wide_show_attr(int row, int skip, bool arrow, chtype attr, short pair, const char *name)
+wide_show_attr(int row,
+	       int skip,
+	       bool arrow,
+	       chtype attr,
+	       NCURSES_PAIRS_T pair,
+	       const char *name)
 {
     int ncv = get_ncv();
     chtype test = attr & ~WA_ALTCHARSET;
@@ -1729,7 +1740,7 @@ wide_show_attr(int row, int skip, bool arrow, chtype attr, short pair, const cha
 	}
     } else {
 	attr_t old_attr = 0;
-	short old_pair = 0;
+	NCURSES_PAIRS_T old_pair = 0;
 
 	(void) (attr_get) (&old_attr, &old_pair, 0);
 	(void) attr_set(attr, pair, 0);
@@ -1777,8 +1788,8 @@ wide_show_attr(int row, int skip, bool arrow, chtype attr, short pair, const cha
 
 static bool
 wide_attr_getc(int *skip,
-	       short *fg, short *bg,
-	       short *tx, int *ac,
+	       NCURSES_COLOR_T *fg, NCURSES_COLOR_T *bg,
+	       NCURSES_COLOR_T *tx, int *ac,
 	       unsigned *kc, unsigned limit)
 {
     bool result = TRUE;
@@ -1845,9 +1856,9 @@ wide_attr_test(void)
 {
     int n;
     int skip = get_xmc();
-    short fg = COLOR_BLACK;	/* color pair 0 is special */
-    short bg = COLOR_BLACK;
-    short tx = -1;
+    NCURSES_COLOR_T fg = COLOR_BLACK;	/* color pair 0 is special */
+    NCURSES_COLOR_T bg = COLOR_BLACK;
+    NCURSES_COLOR_T tx = -1;
     int ac = 0;
     unsigned j, k;
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
@@ -1863,11 +1874,11 @@ wide_attr_test(void)
 
 	do {
 	    int row = 2;
-	    short pair = 0;
-	    short extras = 0;
+	    NCURSES_PAIRS_T pair = 0;
+	    NCURSES_PAIRS_T extras = 0;
 
 	    if (use_colors) {
-		pair = (short) (fg != COLOR_BLACK || bg != COLOR_BLACK);
+		pair = (NCURSES_PAIRS_T) (fg != COLOR_BLACK || bg != COLOR_BLACK);
 		if (pair != 0) {
 		    pair = 1;
 		    if (init_pair(pair, fg, bg) == ERR) {
@@ -2011,7 +2022,7 @@ color_legend(WINDOW *helpwin, bool wide)
 static void
 color_test(void)
 {
-    short i;
+    NCURSES_PAIRS_T i;
     int top = 0, width;
     int base_row = 0;
     int grid_top = top + 3;
@@ -2072,16 +2083,16 @@ color_test(void)
 	    show_color_name(top + 2, (i + 1) * width, i + min_colors, opt_wide);
 
 	/* show a grid of colors, with color names/ numbers on the left */
-	for (i = (short) (base_row * per_row); i < pairs_max; i++) {
+	for (i = (NCURSES_PAIRS_T) (base_row * per_row); i < pairs_max; i++) {
 	    int row = grid_top + (i / per_row) - base_row;
 	    int col = (i % per_row + 1) * width;
-	    short pair = i;
+	    NCURSES_PAIRS_T pair = i;
 
-#define InxToFG(i) (short) ((i % (COLORS - min_colors)) + min_colors)
-#define InxToBG(i) (short) ((i / (COLORS - min_colors)) + min_colors)
+#define InxToFG(i) (NCURSES_COLOR_T) ((i % (COLORS - min_colors)) + min_colors)
+#define InxToBG(i) (NCURSES_COLOR_T) ((i / (COLORS - min_colors)) + min_colors)
 	    if (row >= 0 && move(row, col) != ERR) {
-		short fg = InxToFG(i);
-		short bg = InxToBG(i);
+		NCURSES_COLOR_T fg = InxToFG(i);
+		NCURSES_COLOR_T bg = InxToBG(i);
 
 		init_pair(pair, fg, bg);
 		attron((attr_t) COLOR_PAIR(pair));
@@ -2093,7 +2104,7 @@ color_test(void)
 		    attron((attr_t) A_REVERSE);
 
 		if (opt_nums) {
-		    sprintf(numbered, "{%02X}", i);
+		    sprintf(numbered, "{%02X}", (int) i);
 		    hello = numbered;
 		}
 		printw("%-*.*s", width, width, hello);
@@ -2278,7 +2289,7 @@ wide_color_test(void)
 	for (i = (base_row * per_row); i < pairs_max; i++) {
 	    int row = grid_top + (i / per_row) - base_row;
 	    int col = (i % per_row + 1) * width;
-	    short pair = (short) i;
+	    NCURSES_PAIRS_T pair = (NCURSES_PAIRS_T) i;
 
 	    if (row >= 0 && move(row, col) != ERR) {
 		init_pair(pair, InxToFG(i), InxToBG(i));
@@ -2409,21 +2420,21 @@ wide_color_test(void)
 #endif /* USE_WIDEC_SUPPORT */
 
 static void
-change_color(short current, int field, int value, int usebase)
+change_color(NCURSES_PAIRS_T current, int field, int value, int usebase)
 {
-    short red, green, blue;
+    NCURSES_COLOR_T red, green, blue;
 
     color_content(current, &red, &green, &blue);
 
     switch (field) {
     case 0:
-	red = (short) (usebase ? (red + value) : value);
+	red = (NCURSES_COLOR_T) (usebase ? (red + value) : value);
 	break;
     case 1:
-	green = (short) (usebase ? (green + value) : value);
+	green = (NCURSES_COLOR_T) (usebase ? (green + value) : value);
 	break;
     case 2:
-	blue = (short) (usebase ? (blue + value) : value);
+	blue = (NCURSES_COLOR_T) (usebase ? (blue + value) : value);
 	break;
     }
 
@@ -2434,7 +2445,7 @@ change_color(short current, int field, int value, int usebase)
 static void
 init_all_colors(void)
 {
-    short c;
+    NCURSES_PAIRS_T c;
 
     for (c = 0; c < COLORS; ++c)
 	init_color(c,
@@ -2460,18 +2471,20 @@ color_edit(void)
     refresh();
 
     for (i = 0; i < max_colors; i++)
-	init_pair((short) i, (short) COLOR_WHITE, (short) i);
+	init_pair((NCURSES_PAIRS_T) i,
+		  (NCURSES_COLOR_T) COLOR_WHITE,
+		  (NCURSES_COLOR_T) i);
 
     MvPrintw(LINES - 2, 0, "Number: %d", value);
 
     do {
-	short red, green, blue;
+	NCURSES_COLOR_T red, green, blue;
 
 	attron(A_BOLD);
 	MvAddStr(0, 20, "Color RGB Value Editing");
 	attroff(A_BOLD);
 
-	for (i = (short) top_color;
+	for (i = (NCURSES_COLOR_T) top_color;
 	     (i - top_color < page_size)
 	     && (i < max_colors); i++) {
 	    char numeric[80];
@@ -2485,30 +2498,30 @@ color_edit(void)
 	    addstr("        ");
 	    (void) attrset(A_NORMAL);
 
-	    color_content((short) i, &red, &green, &blue);
+	    color_content((NCURSES_PAIRS_T) i, &red, &green, &blue);
 	    addstr("   R = ");
 	    if (current == i && field == 0)
 		attron(A_STANDOUT);
-	    printw("%04d", red);
+	    printw("%04d", (int) red);
 	    if (current == i && field == 0)
 		(void) attrset(A_NORMAL);
 	    addstr(", G = ");
 	    if (current == i && field == 1)
 		attron(A_STANDOUT);
-	    printw("%04d", green);
+	    printw("%04d", (int) green);
 	    if (current == i && field == 1)
 		(void) attrset(A_NORMAL);
 	    addstr(", B = ");
 	    if (current == i && field == 2)
 		attron(A_STANDOUT);
-	    printw("%04d", blue);
+	    printw("%04d", (int) blue);
 	    if (current == i && field == 2)
 		(void) attrset(A_NORMAL);
 	    (void) attrset(A_NORMAL);
 	    printw(" ( %3d %3d %3d )",
-		   scaled_rgb(red),
-		   scaled_rgb(green),
-		   scaled_rgb(blue));
+		   (int) scaled_rgb(red),
+		   (int) scaled_rgb(green),
+		   (int) scaled_rgb(blue));
 	}
 
 	MvAddStr(LINES - 3, 0,
@@ -2572,15 +2585,15 @@ color_edit(void)
 	    break;
 
 	case '+':
-	    change_color((short) current, field, value, 1);
+	    change_color((NCURSES_PAIRS_T) current, field, value, 1);
 	    break;
 
 	case '-':
-	    change_color((short) current, field, -value, 1);
+	    change_color((NCURSES_PAIRS_T) current, field, -value, 1);
 	    break;
 
 	case '=':
-	    change_color((short) current, field, value, 0);
+	    change_color((NCURSES_PAIRS_T) current, field, value, 0);
 	    break;
 
 	case '?':
@@ -2607,7 +2620,9 @@ color_edit(void)
 	    endwin();
 	    main_menu(FALSE);
 	    for (i = 0; i < max_colors; i++)
-		init_pair((short) i, (short) COLOR_WHITE, (short) i);
+		init_pair((NCURSES_PAIRS_T) i,
+			  (NCURSES_COLOR_T) COLOR_WHITE,
+			  (NCURSES_COLOR_T) i);
 	    refresh();
 	    break;
 
@@ -2674,7 +2689,7 @@ cycle_attr(int ch, unsigned *at_code, chtype *attr, ATTR_TBL * list, unsigned li
 }
 
 static bool
-cycle_colors(int ch, int *fg, int *bg, short *pair)
+cycle_colors(int ch, int *fg, int *bg, NCURSES_PAIRS_T *pair)
 {
     bool result = FALSE;
 
@@ -2702,10 +2717,12 @@ cycle_colors(int ch, int *fg, int *bg, short *pair)
 	    break;
 	}
 	if (result) {
-	    *pair = (short) (*fg != COLOR_BLACK || *bg != COLOR_BLACK);
+	    *pair = (NCURSES_PAIRS_T) (*fg != COLOR_BLACK || *bg != COLOR_BLACK);
 	    if (*pair != 0) {
 		*pair = 1;
-		if (init_pair(*pair, (short) *fg, (short) *bg) == ERR) {
+		if (init_pair(*pair,
+			      (NCURSES_COLOR_T) *fg,
+			      (NCURSES_COLOR_T) *bg) == ERR) {
 		    result = FALSE;
 		}
 	    }
@@ -2764,7 +2781,7 @@ slk_help(void)
 static void
 call_slk_color(int fg, int bg)
 {
-    init_pair(1, (short) bg, (short) fg);
+    init_pair(1, (NCURSES_COLOR_T) bg, (NCURSES_COLOR_T) fg);
     slk_color(1);
     MvPrintw(SLK_WORK, 0, "Colors %d/%d\n", fg, bg);
     clrtoeol();
@@ -2786,7 +2803,7 @@ slk_test(void)
 #if HAVE_SLK_COLOR
     int fg = COLOR_BLACK;
     int bg = COLOR_WHITE;
-    short pair = 0;
+    NCURSES_PAIRS_T pair = 0;
 #endif
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
     unsigned my_size = init_attr_list(my_list, termattrs());
@@ -2910,7 +2927,7 @@ wide_slk_test(void)
     unsigned at_code = 0;
     int fg = COLOR_BLACK;
     int bg = COLOR_WHITE;
-    short pair = 0;
+    NCURSES_PAIRS_T pair = 0;
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
     unsigned my_size = init_attr_list(my_list, term_attrs());
 
@@ -3008,13 +3025,13 @@ wide_slk_test(void)
 
 	case 'F':
 	    if (use_colors) {
-		fg = (short) ((fg + 1) % COLORS);
+		fg = (NCURSES_COLOR_T) ((fg + 1) % COLORS);
 		call_slk_color(fg, bg);
 	    }
 	    break;
 	case 'B':
 	    if (use_colors) {
-		bg = (short) ((bg + 1) % COLORS);
+		bg = (NCURSES_COLOR_T) ((bg + 1) % COLORS);
 		call_slk_color(fg, bg);
 	    }
 	    break;
@@ -3025,7 +3042,7 @@ wide_slk_test(void)
 #endif
 	default:
 	    if (cycle_attr(c, &at_code, &attr, my_list, my_size)) {
-		slk_attr_set(attr, (short) (fg || bg), NULL);
+		slk_attr_set(attr, (NCURSES_COLOR_T) (fg || bg), NULL);
 		slk_touch();
 		slk_noutrefresh();
 		break;
@@ -3054,7 +3071,7 @@ wide_slk_test(void)
 #endif /* SLK_INIT */
 
 static void
-show_256_chars(int repeat, attr_t attr, short pair)
+show_256_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 {
     unsigned first = 0;
     unsigned last = 255;
@@ -3087,7 +3104,7 @@ show_256_chars(int repeat, attr_t attr, short pair)
  * terminal to perform functions.  The remaining codes can be graphic.
  */
 static void
-show_upper_chars(int base, int pagesize, int repeat, attr_t attr, short pair)
+show_upper_chars(int base, int pagesize, int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 {
     unsigned code;
     unsigned first = (unsigned) base;
@@ -3129,7 +3146,7 @@ show_upper_chars(int base, int pagesize, int repeat, attr_t attr, short pair)
 #define PC_COLS 4
 
 static void
-show_pc_chars(int repeat, attr_t attr, short pair)
+show_pc_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 {
     unsigned code;
 
@@ -3170,7 +3187,7 @@ show_pc_chars(int repeat, attr_t attr, short pair)
 }
 
 static void
-show_box_chars(int repeat, attr_t attr, short pair)
+show_box_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 {
     (void) repeat;
 
@@ -3217,7 +3234,7 @@ show_1_acs(int n, int repeat, const char *name, chtype code)
 }
 
 static void
-show_acs_chars(int repeat, attr_t attr, short pair)
+show_acs_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 /* display the ACS character set */
 {
     int n;
@@ -3290,8 +3307,8 @@ acs_display(void)
     int fg = COLOR_BLACK;
     int bg = COLOR_BLACK;
     unsigned at_code = 0;
-    short pair = 0;
-    void (*last_show_acs) (int, attr_t, short) = 0;
+    NCURSES_PAIRS_T pair = 0;
+    void (*last_show_acs) (int, attr_t, NCURSES_PAIRS_T) = 0;
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
     unsigned my_size = init_attr_list(my_list, termattrs());
 
@@ -3392,7 +3409,7 @@ acs_display(void)
 
 #if USE_WIDEC_SUPPORT
 static cchar_t *
-merge_wide_attr(cchar_t *dst, const cchar_t *src, attr_t attr, short pair)
+merge_wide_attr(cchar_t *dst, const cchar_t *src, attr_t attr, NCURSES_PAIRS_T pair)
 {
     int count;
 
@@ -3421,7 +3438,7 @@ show_paged_widechars(int base,
 		     int repeat,
 		     int space,
 		     attr_t attr,
-		     short pair)
+		     NCURSES_PAIRS_T pair)
 {
     int first = base * pagesize;
     int last = first + pagesize - 1;
@@ -3457,7 +3474,7 @@ show_paged_widechars(int base,
 }
 
 static void
-show_upper_widechars(int first, int repeat, int space, attr_t attr, short pair)
+show_upper_widechars(int first, int repeat, int space, attr_t attr, NCURSES_PAIRS_T pair)
 {
     cchar_t temp;
     wchar_t code;
@@ -3530,7 +3547,7 @@ show_1_wacs(int n, int repeat, const char *name, const cchar_t *code)
 #define MERGE_ATTR(wch) merge_wide_attr(&temp, wch, attr, pair)
 
 static void
-show_wacs_chars(int repeat, attr_t attr, short pair)
+show_wacs_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 /* display the wide-ACS character set */
 {
     cchar_t temp;
@@ -3590,7 +3607,7 @@ show_wacs_chars(int repeat, attr_t attr, short pair)
 
 #ifdef WACS_D_PLUS
 static void
-show_wacs_chars_double(int repeat, attr_t attr, short pair)
+show_wacs_chars_double(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 /* display the wide-ACS character set */
 {
     cchar_t temp;
@@ -3651,7 +3668,7 @@ show_wacs_chars_double(int repeat, attr_t attr, short pair)
 
 #ifdef WACS_T_PLUS
 static void
-show_wacs_chars_thick(int repeat, attr_t attr, short pair)
+show_wacs_chars_thick(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 /* display the wide-ACS character set */
 {
     cchar_t temp;
@@ -3715,7 +3732,7 @@ show_wacs_chars_thick(int repeat, attr_t attr, short pair)
 #define MERGE_ATTR(n,wch) merge_wide_attr(&temp[n], wch, attr, pair)
 
 static void
-show_wbox_chars(int repeat, attr_t attr, short pair)
+show_wbox_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 {
     cchar_t temp[8];
 
@@ -3750,7 +3767,7 @@ show_wbox_chars(int repeat, attr_t attr, short pair)
 #undef MERGE_ATTR
 
 static int
-show_2_wacs(int n, const char *name, const char *code, attr_t attr, short pair)
+show_2_wacs(int n, const char *name, const char *code, attr_t attr, NCURSES_PAIRS_T pair)
 {
     const int height = 16;
     int row = 2 + (n % height);
@@ -3767,7 +3784,7 @@ show_2_wacs(int n, const char *name, const char *code, attr_t attr, short pair)
 #define SHOW_UTF8(n, name, code) show_2_wacs(n, name, code, attr, pair)
 
 static void
-show_utf8_chars(int repeat, attr_t attr, short pair)
+show_utf8_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 {
     int n;
 
@@ -3832,8 +3849,8 @@ wide_acs_display(void)
     int fg = COLOR_BLACK;
     int bg = COLOR_BLACK;
     unsigned at_code = 0;
-    short pair = 0;
-    void (*last_show_wacs) (int, attr_t, short) = 0;
+    NCURSES_PAIRS_T pair = 0;
+    void (*last_show_wacs) (int, attr_t, NCURSES_PAIRS_T) = 0;
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
     unsigned my_size = init_attr_list(my_list, term_attrs());
 
@@ -4632,7 +4649,7 @@ saywhat(NCURSES_CONST char *text)
 	mkpanel(rows,cols,tly,tlx) - alloc a win and panel and associate them
 --------------------------------------------------------------------------*/
 static PANEL *
-mkpanel(short color, int rows, int cols, int tly, int tlx)
+mkpanel(NCURSES_COLOR_T color, int rows, int cols, int tly, int tlx)
 {
     WINDOW *win;
     PANEL *pan = 0;
@@ -4641,8 +4658,10 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 	if ((pan = new_panel(win)) == 0) {
 	    delwin(win);
 	} else if (use_colors) {
-	    short fg = (short) ((color == COLOR_BLUE) ? COLOR_WHITE : COLOR_BLACK);
-	    short bg = color;
+	    NCURSES_COLOR_T fg = (NCURSES_COLOR_T) ((color == COLOR_BLUE)
+						    ? COLOR_WHITE
+						    : COLOR_BLACK);
+	    NCURSES_COLOR_T bg = color;
 
 	    init_pair(color, fg, bg);
 	    wbkgdset(win, (attr_t) (COLOR_PAIR(color) | ' '));
@@ -6220,7 +6239,7 @@ overlap_helpitem(int state, int item, char *message)
 static void
 overlap_test_1_attr(WINDOW *win, int flavor, int col)
 {
-    short cpair = (short) (1 + (flavor * 2) + col);
+    NCURSES_PAIRS_T cpair = (NCURSES_PAIRS_T) (1 + (flavor * 2) + col);
 
     switch (flavor) {
     case 0:
@@ -6243,7 +6262,7 @@ overlap_test_1_attr(WINDOW *win, int flavor, int col)
 static void
 overlap_test_2_attr(WINDOW *win, int flavor, int col)
 {
-    short cpair = (short) (9 + (flavor * 2) + col);
+    NCURSES_PAIRS_T cpair = (NCURSES_PAIRS_T) (9 + (flavor * 2) + col);
 
     switch (flavor) {
     case 0:
@@ -6977,7 +6996,7 @@ main(int argc, char *argv[])
 	max_pairs = COLOR_PAIRS;	/* was > 256 ? 256 : COLOR_PAIRS */
 
 	if (can_change_color()) {
-	    short cp;
+	    NCURSES_PAIRS_T cp;
 	    all_colors = typeMalloc(RGB_DATA, (unsigned) max_colors);
 	    if (!all_colors)
 		failed("all_colors");
@@ -7005,9 +7024,10 @@ main(int argc, char *argv[])
 				   && okRGB(red)
 				   && okRGB(green)
 				   && okRGB(blue)) {
-			    all_colors[c].red = (short) ((red * 1000) / scale);
-			    all_colors[c].green = (short) ((green * 1000) / scale);
-			    all_colors[c].blue = (short) ((blue * 1000) / scale);
+#define Scaled(n) (NCURSES_COLOR_T) (((n) * 1000) / scale)
+			    all_colors[c].red = Scaled(red);
+			    all_colors[c].green = Scaled(green);
+			    all_colors[c].blue = Scaled(blue);
 			}
 		    }
 		    fclose(fp);
