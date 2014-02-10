@@ -31,7 +31,7 @@
  ****************************************************************************/
 
 /*
- * $Id: form_driver_w.c,v 1.10 2014/02/01 20:49:39 Gaute.Hope Exp $
+ * $Id: form_driver_w.c,v 1.11 2014/02/09 22:20:27 tom Exp $
  *
  * Test form_driver_w (int, int, wchar_t), a wide char aware
  * replacement of form_driver.
@@ -86,7 +86,7 @@ main(void)
 	wint_t ch;
 	int ret = get_wch(&ch);
 
-	mvprintw(8, 10, "Got %d (%#x), type: %s", ch, ch,
+	mvprintw(8, 10, "Got %d (%#x), type: %s", (int) ch, (int) ch,
 		 (ret == KEY_CODE_YES)
 		 ? "KEY_CODE_YES"
 		 : ((ret == OK)

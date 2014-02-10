@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.109 2013/12/08 01:06:41 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.110 2014/02/10 00:42:48 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4493,7 +4493,7 @@ form_driver_w(FORM *form, int type, wchar_t c)
   const Binding_Info *BI = (Binding_Info *) 0;
   int res = E_UNKNOWN_COMMAND;
 
-  T((T_CALLED("form_driver(%p,%d)"), (void *)form, c));
+  T((T_CALLED("form_driver(%p,%d)"), (void *)form, (int) c));
 
   if (!form)
     RETURN(E_BAD_ARGUMENT);
