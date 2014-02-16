@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,12 +33,13 @@
 /*
  * TODO - GetMousePos(POINT * result) from ntconio.c
  * TODO - implement nodelay
+ * TODO - when $NCGDB is set, implement non-buffered output, like PDCurses
  */
 
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.20 2013/08/17 19:25:30 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.23 2014/02/15 23:21:44 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -50,6 +51,8 @@ MODULE_ID("$Id: win_driver.c,v 1.20 2013/08/17 19:25:30 tom Exp $")
 #define SetSP()     assert(TCB->csp != 0); sp = TCB->csp; (void) sp
 
 #define GenMap(vKey,key) MAKELONG(key, vKey)
+
+#define AdjustY(p) ((p)->buffered ? 0 : (p)->SBI.srWindow.Top)
 
 static const LONG keylist[] =
 {
@@ -76,6 +79,9 @@ typedef struct props {
     DWORD map[MAPSIZE];
     DWORD rmap[MAPSIZE];
     WORD pairs[NUMPAIRS];
+    bool buffered;
+    COORD origin;
+    CHAR_INFO *save_screen;
 } Properties;
 
 #define PropOf(TCB) ((Properties*)TCB->prop)
@@ -157,6 +163,7 @@ con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int limit)
     int i;
     cchar_t ch;
     SCREEN *sp;
+    Properties *p = PropOf(TCB);
 
     AssertTCB();
 
@@ -191,7 +198,7 @@ con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int limit)
     siz.Y = 1;
 
     rec.Left = (short) x;
-    rec.Top = (short) y;
+    rec.Top = (short) y + AdjustY(p);
     rec.Right = (short) (x + limit - 1);
     rec.Bottom = rec.Top;
 
@@ -222,7 +229,7 @@ con_write8(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, chtype *str, int n)
 	if (ChAttrOf(ch) & A_ALTCHARSET) {
 	    if (sp->_acs_map)
 		ci[i].Char.AsciiChar =
-		    ChCharOf(NCURSES_SP_NAME(_nc_acs_char) (sp, ChCharOf(ch)));
+		ChCharOf(NCURSES_SP_NAME(_nc_acs_char) (sp, ChCharOf(ch)));
 	}
     }
 
@@ -539,6 +546,41 @@ drv_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB,
     return (code);
 }
 
+static bool
+get_SBI(TERMINAL_CONTROL_BLOCK * TCB)
+{
+    bool rc = FALSE;
+    Properties *p = PropOf(TCB);
+    if (GetConsoleScreenBufferInfo(TCB->hdl, &(p->SBI))) {
+	T(("GetConsoleScreenBufferInfo"));
+	T(("... buffer(X:%d Y:%d)",
+	   p->SBI.dwSize.X,
+	   p->SBI.dwSize.Y));
+	T(("... window(X:%d Y:%d)",
+	   p->SBI.dwMaximumWindowSize.X,
+	   p->SBI.dwMaximumWindowSize.Y));
+	T(("... cursor(X:%d Y:%d)",
+	   p->SBI.dwCursorPosition.X,
+	   p->SBI.dwCursorPosition.Y));
+	T(("... display(Top:%d Bottom:%d Left:%d Right:%d)",
+	   p->SBI.srWindow.Top,
+	   p->SBI.srWindow.Bottom,
+	   p->SBI.srWindow.Left,
+	   p->SBI.srWindow.Right));
+	if (p->buffered) {
+	    p->origin.X = 0;
+	    p->origin.Y = 0;
+	} else {
+	    p->origin.X = p->SBI.srWindow.Left;
+	    p->origin.Y = p->SBI.srWindow.Top;
+	}
+	rc = TRUE;
+    } else {
+	T(("GetConsoleScreenBufferInfo ERR"));
+    }
+    return rc;
+}
+
 static void
 drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
 	     int fore,
@@ -547,11 +589,12 @@ drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
 {
     AssertTCB();
 
-    if (okConsoleHandle(TCB)) {
+    if (okConsoleHandle(TCB) &&
+	PropOf(TCB) != 0) {
 	WORD a = MapColor(fore, color);
 	a = ((PropOf(TCB)->SBI.wAttributes) & (fore ? 0xfff8 : 0xff8f)) | a;
 	SetConsoleTextAttribute(TCB->hdl, a);
-	GetConsoleScreenBufferInfo(TCB->hdl, &(PropOf(TCB)->SBI));
+	get_SBI(TCB);
     }
 }
 
@@ -564,7 +607,7 @@ drv_rescol(TERMINAL_CONTROL_BLOCK * TCB)
     if (okConsoleHandle(TCB)) {
 	WORD a = FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_GREEN;
 	SetConsoleTextAttribute(TCB->hdl, a);
-	GetConsoleScreenBufferInfo(TCB->hdl, &(PropOf(TCB)->SBI));
+	get_SBI(TCB);
 	res = TRUE;
     }
     return res;
@@ -592,10 +635,18 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *Lines, int *Cols)
     T((T_CALLED("win32con::drv_size(%p)"), TCB));
 
     if (okConsoleHandle(TCB) &&
+	PropOf(TCB) != 0 &&
 	Lines != NULL &&
 	Cols != NULL) {
-	*Lines = (int) (PropOf(TCB)->SBI.dwSize.Y);
-	*Cols = (int) (PropOf(TCB)->SBI.dwSize.X);
+	if (PropOf(TCB)->buffered) {
+	    *Lines = (int) (PropOf(TCB)->SBI.dwSize.Y);
+	    *Cols = (int) (PropOf(TCB)->SBI.dwSize.X);
+	} else {
+	    *Lines = (int) (PropOf(TCB)->SBI.srWindow.Bottom + 1 -
+			    PropOf(TCB)->SBI.srWindow.Top);
+	    *Cols = (int) (PropOf(TCB)->SBI.srWindow.Right + 1 -
+			   PropOf(TCB)->SBI.srWindow.Left);
+	}
 	result = OK;
     }
     returnCode(result);
@@ -793,6 +844,90 @@ drv_release(TERMINAL_CONTROL_BLOCK * TCB)
     returnVoid;
 }
 
+/*
+ * Attempt to save the screen contents.  PDCurses does this if
+ * PDC_RESTORE_SCREEN is set, giving the same visual appearance on restoration
+ * as if the library had allocated a console buffer.
+ */
+static bool
+save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
+{
+    bool result = FALSE;
+    Properties *p = PropOf(TCB);
+    COORD bufferSize;
+    COORD bufferCoord;
+    SMALL_RECT readRegion;
+    size_t want;
+
+    bufferSize.X = p->SBI.dwSize.X;
+    bufferSize.Y = p->SBI.dwSize.Y;
+    want = bufferSize.X * bufferSize.Y;
+
+    if ((p->save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
+	bufferCoord.X = bufferCoord.Y = 0;
+
+	readRegion.Top = 0;
+	readRegion.Left = 0;
+	readRegion.Bottom = bufferSize.Y - 1;
+	readRegion.Right = bufferSize.X - 1;
+
+	T(("... reading console buffer %dx%d into %d,%d - %d,%d at %d,%d",
+	   bufferSize.Y, bufferSize.X,
+	   readRegion.Top,
+	   readRegion.Left,
+	   readRegion.Bottom,
+	   readRegion.Right,
+	   bufferCoord.Y,
+	   bufferCoord.X));
+
+	if (ReadConsoleOutput(TCB->hdl,
+			      p->save_screen,
+			      bufferSize,
+			      bufferCoord,
+			      &readRegion)) {
+	    result = TRUE;
+	} else {
+	    T((" error %#lx", (unsigned long) GetLastError()));
+	    FreeAndNull(p->save_screen);
+
+	    bufferSize.X = p->SBI.srWindow.Right - p->SBI.srWindow.Left + 1;
+	    bufferSize.Y = p->SBI.srWindow.Bottom - p->SBI.srWindow.Top + 1;
+	    want = bufferSize.X * bufferSize.Y;
+
+	    if ((p->save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
+		bufferCoord.X = bufferCoord.Y = 0;
+
+		readRegion.Top = p->SBI.srWindow.Top;
+		readRegion.Left = p->SBI.srWindow.Left;
+		readRegion.Bottom = p->SBI.srWindow.Bottom;
+		readRegion.Right = p->SBI.srWindow.Right;
+
+		T(("... reading console window %dx%d into %d,%d - %d,%d at %d,%d",
+		   bufferSize.Y, bufferSize.X,
+		   readRegion.Top,
+		   readRegion.Left,
+		   readRegion.Bottom,
+		   readRegion.Right,
+		   bufferCoord.Y,
+		   bufferCoord.X));
+
+		if (ReadConsoleOutput(TCB->hdl,
+				      p->save_screen,
+				      bufferSize,
+				      bufferCoord,
+				      &readRegion)) {
+		    result = TRUE;
+		} else {
+		    T((" error %#lx", (unsigned long) GetLastError()));
+		}
+	    }
+	}
+    }
+
+    T(("... save original screen contents %s", result ? "ok" : "err"));
+    return result;
+}
+
 static void
 drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 {
@@ -806,6 +941,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 	BOOL b = AllocConsole();
 	WORD a;
 	int i;
+	bool buffered = TRUE;
 
 	if (!b)
 	    b = AttachConsole(ATTACH_PARENT_PROCESS);
@@ -813,18 +949,31 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 	TCB->inp = GetStdHandle(STD_INPUT_HANDLE);
 	TCB->out = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	if (getenv("NCGDB"))
+	if (getenv("NCGDB")) {
 	    TCB->hdl = TCB->out;
-	else
+	    buffered = FALSE;
+	} else {
 	    TCB->hdl = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE,
 						 0,
 						 NULL,
 						 CONSOLE_TEXTMODE_BUFFER,
 						 NULL);
+	}
 
-	if (!InvalidConsoleHandle(TCB->hdl)) {
-	    TCB->prop = typeCalloc(Properties, 1);
-	    GetConsoleScreenBufferInfo(TCB->hdl, &(PropOf(TCB)->SBI));
+	if (InvalidConsoleHandle(TCB->hdl)) {
+	    returnVoid;
+	} else if ((TCB->prop = typeCalloc(Properties, 1)) != 0) {
+	    PropOf(TCB)->buffered = buffered;
+	    if (!get_SBI(TCB)) {
+		FreeAndNull(TCB->prop);		/* force error in drv_size */
+		returnVoid;
+	    }
+	    if (!buffered) {
+		if (!save_original_screen(TCB)) {
+		    FreeAndNull(TCB->prop);	/* force error in drv_size */
+		    returnVoid;
+		}
+	    }
 	}
 
 	TCB->info.initcolor = TRUE;
@@ -956,9 +1105,10 @@ drv_mvcur(TERMINAL_CONTROL_BLOCK * TCB,
 {
     int ret = ERR;
     if (okConsoleHandle(TCB)) {
+	Properties *p = PropOf(TCB);
 	COORD loc;
 	loc.X = (short) x;
-	loc.Y = (short) y;
+	loc.Y = (short) y + AdjustY(p);
 	SetConsoleCursorPosition(TCB->hdl, loc);
 	ret = OK;
     }
@@ -1245,6 +1395,7 @@ handle_mouse(TERMINAL_CONTROL_BLOCK * TCB, MOUSE_EVENT_RECORD mer)
      * FIXME: implement continuous event-tracking.
      */
     if (sp->_drv_mouse_new_buttons != sp->_drv_mouse_old_buttons) {
+	Properties *p = PropOf(TCB);
 
 	memset(&work, 0, sizeof(work));
 
@@ -1261,7 +1412,7 @@ handle_mouse(TERMINAL_CONTROL_BLOCK * TCB, MOUSE_EVENT_RECORD mer)
 	}
 
 	work.x = mer.dwMousePosition.X;
-	work.y = mer.dwMousePosition.Y;
+	work.y = mer.dwMousePosition.Y - AdjustY(p);
 
 	sp->_drv_mouse_fifo[sp->_drv_mouse_tail] = work;
 	sp->_drv_mouse_tail += 1;
