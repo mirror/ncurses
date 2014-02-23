@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.23 2014/02/15 23:21:44 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.24 2014/02/23 01:23:29 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -52,7 +52,7 @@ MODULE_ID("$Id: win_driver.c,v 1.23 2014/02/15 23:21:44 tom Exp $")
 
 #define GenMap(vKey,key) MAKELONG(key, vKey)
 
-#define AdjustY(p) ((p)->buffered ? 0 : (p)->SBI.srWindow.Top)
+#define AdjustY(p) ((p)->buffered ? 0 : (int) (p)->SBI.srWindow.Top)
 
 static const LONG keylist[] =
 {
@@ -198,7 +198,7 @@ con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int limit)
     siz.Y = 1;
 
     rec.Left = (short) x;
-    rec.Top = (short) y + AdjustY(p);
+    rec.Top = (SHORT) (y + AdjustY(p));
     rec.Right = (short) (x + limit - 1);
     rec.Bottom = rec.Top;
 
@@ -375,7 +375,7 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 		con_write(TCB, y, 0, empty, Width);
 		memcpy(empty,
 		       CurScreen(sp)->_line[y].text,
-		       Width * sizeof(empty[0]));
+		       (size_t) Width * sizeof(empty[0]));
 	    }
 	    CurScreen(sp)->_clear = FALSE;
 	    NewScreen(sp)->_clear = FALSE;
@@ -416,7 +416,7 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 		if (n > 0) {
 		    memcpy(&CurScreen(sp)->_line[y].text[x0],
 			   &NewScreen(sp)->_line[y].text[x0],
-			   n * sizeof(CurScreen(sp)->_line[y].text[x0]));
+			   (size_t) n * sizeof(CurScreen(sp)->_line[y].text[x0]));
 		    con_write(TCB,
 			      y,
 			      x0,
@@ -592,7 +592,7 @@ drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
     if (okConsoleHandle(TCB) &&
 	PropOf(TCB) != 0) {
 	WORD a = MapColor(fore, color);
-	a = ((PropOf(TCB)->SBI.wAttributes) & (fore ? 0xfff8 : 0xff8f)) | a;
+	a |= (WORD) ((PropOf(TCB)->SBI.wAttributes) & (fore ? 0xfff8 : 0xff8f));
 	SetConsoleTextAttribute(TCB->hdl, a);
 	get_SBI(TCB);
     }
@@ -682,17 +682,17 @@ drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 	if (lflag & ICANON)
 	    dwFlag |= ENABLE_LINE_INPUT;
 	else
-	    dwFlag &= ~ENABLE_LINE_INPUT;
+	    dwFlag &= (DWORD) (~ENABLE_LINE_INPUT);
 
 	if (lflag & ECHO)
 	    dwFlag |= ENABLE_ECHO_INPUT;
 	else
-	    dwFlag &= ~ENABLE_ECHO_INPUT;
+	    dwFlag &= (DWORD) (~ENABLE_ECHO_INPUT);
 
 	if (iflag & BRKINT)
 	    dwFlag |= ENABLE_PROCESSED_INPUT;
 	else
-	    dwFlag &= ~ENABLE_PROCESSED_INPUT;
+	    dwFlag &= (DWORD) (~ENABLE_PROCESSED_INPUT);
 
 	dwFlag |= ENABLE_MOUSE_INPUT;
 
@@ -708,17 +708,17 @@ drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 	if (dwFlag & ENABLE_LINE_INPUT)
 	    lflag |= ICANON;
 	else
-	    lflag &= ~ICANON;
+	    lflag &= (tcflag_t) (~ICANON);
 
 	if (dwFlag & ENABLE_ECHO_INPUT)
 	    lflag |= ECHO;
 	else
-	    lflag &= ~ECHO;
+	    lflag &= (tcflag_t) (~ECHO);
 
 	if (dwFlag & ENABLE_PROCESSED_INPUT)
 	    iflag |= BRKINT;
 	else
-	    iflag &= ~BRKINT;
+	    iflag &= (tcflag_t) (~BRKINT);
 
 	TCB->term.Nttyb.c_iflag = iflag;
 	TCB->term.Nttyb.c_lflag = lflag;
@@ -745,7 +745,7 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
     if (progFlag) /* prog mode */  {
 	if (defFlag) {
 	    if ((drv_sgmode(TCB, FALSE, &(_term->Nttyb)) == OK)) {
-		_term->Nttyb.c_oflag &= ~OFLAGS_TABS;
+		_term->Nttyb.c_oflag &= (tcflag_t) (~OFLAGS_TABS);
 		code = OK;
 	    }
 	} else {
@@ -861,15 +861,15 @@ save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
 
     bufferSize.X = p->SBI.dwSize.X;
     bufferSize.Y = p->SBI.dwSize.Y;
-    want = bufferSize.X * bufferSize.Y;
+    want = (size_t) (bufferSize.X * bufferSize.Y);
 
     if ((p->save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
 	bufferCoord.X = bufferCoord.Y = 0;
 
 	readRegion.Top = 0;
 	readRegion.Left = 0;
-	readRegion.Bottom = bufferSize.Y - 1;
-	readRegion.Right = bufferSize.X - 1;
+	readRegion.Bottom = (SHORT) (bufferSize.Y - 1);
+	readRegion.Right = (SHORT) (bufferSize.X - 1);
 
 	T(("... reading console buffer %dx%d into %d,%d - %d,%d at %d,%d",
 	   bufferSize.Y, bufferSize.X,
@@ -890,9 +890,11 @@ save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
 	    T((" error %#lx", (unsigned long) GetLastError()));
 	    FreeAndNull(p->save_screen);
 
-	    bufferSize.X = p->SBI.srWindow.Right - p->SBI.srWindow.Left + 1;
-	    bufferSize.Y = p->SBI.srWindow.Bottom - p->SBI.srWindow.Top + 1;
-	    want = bufferSize.X * bufferSize.Y;
+	    bufferSize.X = (SHORT) (p->SBI.srWindow.Right
+				    - p->SBI.srWindow.Left + 1);
+	    bufferSize.Y = (SHORT) (p->SBI.srWindow.Bottom
+				    - p->SBI.srWindow.Top + 1);
+	    want = (size_t) (bufferSize.X * bufferSize.Y);
 
 	    if ((p->save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
 		bufferCoord.X = bufferCoord.Y = 0;
@@ -991,7 +993,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 
 	if (GetNumberOfConsoleMouseButtons(&num_buttons)) {
 	    T(("mouse has %ld buttons", num_buttons));
-	    TCB->info.numbuttons = num_buttons;
+	    TCB->info.numbuttons = (int) num_buttons;
 	} else {
 	    TCB->info.numbuttons = 1;
 	}
@@ -1000,7 +1002,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 
 	for (i = 0; i < (N_INI + FKEYS); i++) {
 	    if (i < N_INI)
-		PropOf(TCB)->rmap[i] = PropOf(TCB)->map[i] = keylist[i];
+		PropOf(TCB)->rmap[i] = PropOf(TCB)->map[i] = (DWORD) keylist[i];
 	    else
 		PropOf(TCB)->rmap[i] = PropOf(TCB)->map[i] =
 		    GenMap((VK_F1 + (i - N_INI)), (KEY_F(1) + (i - N_INI)));
@@ -1108,7 +1110,7 @@ drv_mvcur(TERMINAL_CONTROL_BLOCK * TCB,
 	Properties *p = PropOf(TCB);
 	COORD loc;
 	loc.X = (short) x;
-	loc.Y = (short) y + AdjustY(p);
+	loc.Y = (short) (y + AdjustY(p));
 	SetConsoleCursorPosition(TCB->hdl, loc);
 	ret = OK;
     }
@@ -1194,7 +1196,7 @@ drv_initacs(TERMINAL_CONTROL_BLOCK * TCB,
     SetSP();
 
     for (n = 0; n < SIZEOF(table); ++n) {
-	real_map[table[n].acs_code] = table[n].use_code | A_ALTCHARSET;
+	real_map[table[n].acs_code] = (chtype) table[n].use_code | A_ALTCHARSET;
 	if (sp != 0)
 	    sp->_screen_acs_map[table[n].acs_code] = TRUE;
     }
@@ -1281,7 +1283,7 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
     SCREEN *sp;
     INPUT_RECORD inp_rec;
     BOOL b;
-    DWORD nRead = 0, rc = -1;
+    DWORD nRead = 0, rc = (DWORD) (-1);
     int code = 0;
     FILETIME fstart;
     FILETIME fend;
@@ -1303,7 +1305,7 @@ drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
 
     while (true) {
 	GetSystemTimeAsFileTime(&fstart);
-	rc = WaitForSingleObject(TCB->inp, milliseconds);
+	rc = WaitForSingleObject(TCB->inp, (DWORD) milliseconds);
 	GetSystemTimeAsFileTime(&fend);
 	diff = (int) tdiff(fstart, fend);
 	milliseconds = Adjust(milliseconds, diff);
@@ -1401,12 +1403,14 @@ handle_mouse(TERMINAL_CONTROL_BLOCK * TCB, MOUSE_EVENT_RECORD mer)
 
 	if (sp->_drv_mouse_new_buttons) {
 
-	    work.bstate |= decode_mouse(TCB, sp->_drv_mouse_new_buttons);
+	    work.bstate |= (mmask_t) decode_mouse(TCB, sp->_drv_mouse_new_buttons);
 
 	} else {
 
 	    /* cf: BUTTON_PRESSED, BUTTON_RELEASED */
-	    work.bstate |= (decode_mouse(TCB, sp->_drv_mouse_old_buttons) >> 1);
+	    work.bstate |= (mmask_t) (decode_mouse(TCB,
+						   sp->_drv_mouse_old_buttons)
+				      >> 1);
 
 	    result = TRUE;
 	}
@@ -1473,7 +1477,7 @@ static int
 drv_nap(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED, int ms)
 {
     T((T_CALLED("win32con::drv_nap(%p, %d)"), TCB, ms));
-    Sleep(ms);
+    Sleep((DWORD) ms);
     returnCode(OK);
 }
 

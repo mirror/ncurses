@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.481 $
-#	$Date: 2013/11/02 20:56:05 $
+#	$Revision: 1.484 $
+#	$Date: 2014/02/22 21:03:37 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2372,6 +2372,43 @@ wsvt25|NetBSD wscons in 25 line DEC VT220 mode,
 wsvt25m|NetBSD wscons in 25 line DEC VT220 mode with Meta,
 	km, use=wsvt25,
 
+# NetBSD 6.x still uses wscons, with minor changes (2014/02/22) -TD
+#
+# TERM is by default vt100 for the console, wsvt25 for other ttys.
+# Initial testing set TERM=xterm, based on comments by developers, found too
+# many differences to continue in that path.  However, test-results may be
+# useful to people curious about compatibility with xterm.
+#
+# Testing with tack:
+# -----------------
+# Failed: cbt, bel, flash, cvvis, smul (color), blink, invis
+# There is color-bleeding in the color-pairs screen.
+# Attributes do not work with color
+# Failed: vpa/hpa
+# Failed: kf1-kf4, kf13-kf48, khome, kend
+# 	(effectively xterm-r6 for function-keys)
+# None of the function or cursor key-modifiers are encoded.
+# Console hangs in the smm/rmm test if TERM=xterm, does not show test
+#
+# Testing with vttest:
+# -------------------
+# Identifies as vt220 with selective erase
+# 	(however, selective erase refers to DECSCA, SPA)
+# Does not implement vt52
+# Uses spaces to simulate double-size characters
+# Does not support 8-bit controls
+# Does not support VT220 reports
+# Does not support send/receive mode
+# Supports ECH (like rxvt)
+# Does not support DECSCA
+# Does not support any of the ISO-6429 cursor-movement
+# Does not support any of the ISO-6429 miscellaneous tests
+# 	(SL/SR also leave unexpected char on screen too)
+# Background does not change in menu 11.6.9 (SGR 22-27)
+# None of the xterm special features tests work
+netbsd6|NetBSD wscons in 25 line DEC VT100 mode,
+	kbs=\177, use=wsvt25,
+
 # `rasterconsole' provided by 4.4BSD, NetBSD and OpenBSD on SPARC, and
 # DECstation/pmax.
 rcons|BSD rasterconsole,
@@ -2522,6 +2559,52 @@ cons60l1|cons60-iso|freebsd console w/iso 8859-1 chars (60 lines),
 	lines#60, use=cons25l1,
 cons60l1-m|cons60-iso-m|freebsd console w/iso 8859-1 chars (60-line mono),
 	lines#60, use=cons25l1-m,
+
+# Starting with FreeBSD 8, an alternative configuration for syscons is provided,
+# which is intended to be xterm-compatible.  See for example
+#	http://svnweb.freebsd.org/base/stable/8/sys/dev/syscons/
+# in particular scterm-teken.c
+#
+# For FreeBSD 9 and 10:
+# --------------------
+# The /etc/ttys entries for console and other ttys are all configured to set
+# TERM=xterm.
+#
+# Testing with tack:
+# There is no VT100 line-drawing (uses +'s and -'s)
+# Shifted f1-f12 give cons25 codes, rather than xterm function-keys
+#
+# Testing with vttest:
+# Menu 2 diamonds don't work, blink ditto, light background ditto
+# The terminal identifies itself as VT100 with AVO
+# There is no VT52 support
+# There is no doublesize character support
+# The terminal supports ECH (like rxvt)
+# The terminal does not support send/receive mode
+# The terminal supports all of the ISO-6429 cursor-movement
+# The terminal supports some of the ISO-6429 miscellaneous tests
+#	(SL/SR also leave unexpected char on screen too)
+#
+# Considering cons25 as a base, the line-drawing mostly works, but is missing
+# the cells which happen to have ASCII control-character values:
+#	-    ^X    arrow pointing up
+#	.    ^Y    arrow pointing down
+#	i    ^Y    lantern
+#	`    ^D    diamond
+#
+# Those are removed from this entry's acsc string to avoid confusion.
+# The resulting description provides correct line-drawing and function-keys -TD
+teken|syscons with teken,
+	bw@, mir, xenl,
+	acsc=0\333a\260f\370g\361h\261j\331k\277l\332m\300n\305q\304t\303u\264v\301w\302x\263y\363z\362~\371,
+	civis=\E[?25l, cnorm=\E[?25h, cvvis@, hpa=\E[%i%p1%dG,
+	hts=\EH, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
+	kdch1=\E[3~, kend=\E[F, kent=^M, kf1=\EOP, kf10=\E[21~,
+	kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
+	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
+	khome=\E[H, kich1=\E[2~, knp=\E[6~, kpp=\E[5~, rmir=\E[4l,
+	smir=\E[4h, tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n,
+	u8=\E[?1;2c, u9=\E[c, vpa=\E[%i%p1%dd, use=cons25,
 
 #### 386BSD and BSD/OS Consoles
 #
@@ -4064,10 +4147,15 @@ xterm-88color|xterm with 88 colors,
 # These two are used to demonstrate the any-event mouse support, i.e., by
 # using an extended name "XM" which tells ncurses to put the terminal into
 # a special mode when initializing the xterm mouse.
-xterm-1002|testing xterm-mouse,
+xterm+sm+1002|testing xterm-mouse,
 	XM=\E[?1002%?%p1%{1}%=%th%el%;, use=xterm-new,
-xterm-1003|testing xterm-mouse,
+xterm+sm+1003|testing xterm-mouse,
 	XM=\E[?1003%?%p1%{1}%=%th%el%;, use=xterm-new,
+
+xterm-1002|testing xterm-mouse,
+	use=xterm+sm+1002, use=xterm-new,
+xterm-1003|testing xterm-mouse,
+	use=xterm+sm+1003, use=xterm-new,
 
 # This chunk is based on suggestions by Ailin Nemui and Nicholas Marriott, who
 # asked for some of xterm's advanced features to be added to its terminfo
@@ -23029,5 +23117,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  http://git.savannah.gnu.org/cgit/hurd/hurd.git/log/console/display.c
 #	  (Debian #727119).
 #	* simplify pfkey expression in ansi.sys -TD
+#
+# 2013-11-10
+#	* split-out building blocks xterm+sm+1002 and xterm+sm+1003 -TD
+#
+# 2014-02-22
+#	* updated notes for wsvt25 based on tack and vttest -TD
+#	* add teken entry to show actual properties of FreeBSD's "xterm"
+#	  console -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

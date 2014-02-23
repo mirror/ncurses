@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.127 2013/03/17 00:30:29 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.128 2014/02/23 01:21:08 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -427,7 +427,7 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
 	       s[1] == 0
 	)
 	|| (
-	       (isprint(t) && !iscntrl(t))
+	       (isprint((int)t) && !iscntrl((int)t))
 #if USE_WIDEC_SUPPORT
 	       || ((sp == 0 || !sp->_legacy_coding) &&
 		   (WINDOW_EXT(win, addch_used)

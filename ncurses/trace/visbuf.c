@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.42 2012/10/27 20:58:50 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.43 2014/02/23 01:21:08 tom Exp $")
 
 #define NUM_VISBUFS 4
 
@@ -69,7 +69,7 @@ _nc_vischar(char *tp, unsigned c LIMIT_ARG)
     if (c == '"' || c == '\\') {
 	*tp++ = '\\';
 	*tp++ = (char) c;
-    } else if (is7bits(c) && (isgraph(c) || c == ' ')) {
+    } else if (is7bits((int)c) && (isgraph((int)c) || c == ' ')) {
 	*tp++ = (char) c;
     } else if (c == '\n') {
 	*tp++ = '\\';
