@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.141 2013/09/21 19:09:19 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.142 2014/03/08 20:32:59 tom Exp $")
 
 #include <tic.h>
 
@@ -668,7 +668,7 @@ initialize_mousetype(SCREEN *sp)
 #endif /* USE_SYSMOUSE */
 
 #ifdef USE_TERM_DRIVER
-    CallDriver(sp, initmouse);
+    CallDriver(sp, td_initmouse);
 #else
     /* we know how to recognize mouse events under "xterm" */
     if (key_mouse != 0) {

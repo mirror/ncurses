@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.126 2013/02/16 18:30:37 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.127 2014/03/08 20:32:59 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -133,7 +133,7 @@ check_mouse_activity(SCREEN *sp, int delay EVENTLIST_2nd(_nc_eventlist * evl))
     int rc;
 
 #ifdef USE_TERM_DRIVER
-    rc = TCBOf(sp)->drv->testmouse(TCBOf(sp), delay EVENTLIST_2nd(evl));
+    rc = TCBOf(sp)->drv->td_testmouse(TCBOf(sp), delay EVENTLIST_2nd(evl));
 #else
 #if USE_SYSMOUSE
     if ((sp->_mouse_type == M_SYSMOUSE)
@@ -268,7 +268,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
     {				/* Can block... */
 #ifdef USE_TERM_DRIVER
 	int buf;
-	n = CallDriver_1(sp, read, &buf);
+	n = CallDriver_1(sp, td_read, &buf);
 	ch = buf;
 #else
 	unsigned char c2 = 0;

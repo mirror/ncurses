@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.112 2013/07/20 19:29:59 tom Exp $
+.\" $Id: ncurses.3x,v 1.115 2014/03/08 22:07:02 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -760,14 +760,6 @@ The following environment symbols are useful for customizing the
 runtime behavior of the \fBncurses\fR library.
 The most important ones have been already discussed in detail.
 .TP 5
-BAUDRATE
-The debugging library checks this environment variable when the application
-has redirected output to a file.
-The variable's numeric value is used for the baudrate.
-If no value is found, \fBncurses\fR uses 9600.
-This allows testers to construct repeatable test-cases
-that take into account costs that depend on baudrate.
-.TP 5
 CC
 When set, change occurrences of the command_character
 (i.e., the \fBcmdch\fP capability)
@@ -777,6 +769,14 @@ Very few terminfo entries provide this feature.
 Because this name is also used in development environments to represent
 the C compiler's name, \fBncurses\fR ignores it if it does not happen to
 be a single character.
+.TP 5
+BAUDRATE
+The debugging library checks this environment variable when the application
+has redirected output to a file.
+The variable's numeric value is used for the baudrate.
+If no value is found, \fBncurses\fR uses 9600.
+This allows testers to construct repeatable test-cases
+that take into account costs that depend on baudrate.
 .TP 5
 COLUMNS
 Specify the width of the screen in characters.
@@ -867,6 +867,17 @@ For example, to tell ncurses to not assume anything
 about the colors, set this to "\-1,\-1".
 To make it green-on-black, set it to "2,0".
 Any positive value from zero to the terminfo \fBmax_colors\fR value is allowed.
+.TP 5
+NCURSES_CONSOLE2
+This applies only to the MinGW port of ncurses.
+.IP
+The \fBConsole2\fP program's handling of the Microsoft Console API call
+\fBCreateConsoleScreenBuffer\fP is defective.
+Applications which use this will hang.
+However, it is possible to simulate the action of this call by
+mapping coordinates,
+explicitly saving and restoring the original screen contents.
+Setting the environment variable \fBNCGDB\fP has the same effect.
 .TP 5
 NCURSES_GPM_TERMS
 This applies only to ncurses configured to use the GPM interface.
@@ -1130,6 +1141,16 @@ If the headers are installed allowing overwrite,
 the wide-character library's headers should be installed last,
 to allow applications to be built using either library
 from the same set of headers.
+.TP 5
+\-\-with\-pthread
+The configure script renames the library.
+All of the library names have a "t" appended to them
+(before any "w" added by \fB\-\-enable\-widec\fP).
+.IP
+The global variables such as \fBLINES\fP are replaced by macros to
+allow read-only access.
+At the same time, setter-functions are provided to set these values.
+Some applications (very few) may require changes to work with this convention.
 .TP 5
 \-\-with\-shared
 .TP

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: resizeterm.c,v 1.45 2012/07/07 17:07:23 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.46 2014/03/08 20:32:59 tom Exp $")
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
@@ -397,7 +397,7 @@ NCURSES_SP_NAME(resize_term) (NCURSES_SP_DCLx int ToLines, int ToCols)
 	    screen_columns(SP_PARM) = (NCURSES_SIZE_T) ToCols;
 
 #ifdef USE_TERM_DRIVER
-	    CallDriver_2(SP_PARM, setsize, ToLines, ToCols);
+	    CallDriver_2(SP_PARM, td_setsize, ToLines, ToCols);
 #else
 	    lines = (NCURSES_SIZE_T) ToLines;
 	    columns = (NCURSES_SIZE_T) ToCols;

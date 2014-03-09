@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2174 2014/03/01 23:17:47 tom Exp $
+-- $Id: NEWS,v 1.2177 2014/03/08 22:10:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140308
+	+ modify ifdef in read_entry.c to handle the case where
+	  NCURSES_USE_DATABASE is not defined (patch by Xin Li).
+	+ add cast in form_driver_w() to fix ARM build (patch by Xin Li).
+	+ add logic to win_driver.c to save/restore screen contents when not
+	  allocating a console-buffer (cf: 20140215).
 
 20140301
 	+ clarify error-returns from newwin (report by Ruslan Nabioullin).

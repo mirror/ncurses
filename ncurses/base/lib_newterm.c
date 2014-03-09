@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.90 2013/09/28 21:02:56 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.91 2014/03/08 20:32:59 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -306,7 +306,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 
 	    /* compute movement costs so we can do better move optimization */
 #ifdef USE_TERM_DRIVER
-	    TCBOf(SP_PARM)->drv->scinit(SP_PARM);
+	    TCBOf(SP_PARM)->drv->td_scinit(SP_PARM);
 #else /* ! USE_TERM_DRIVER */
 	    /*
 	     * Check for mismatched graphic-rendition capabilities.  Most SVr4

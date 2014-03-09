@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -69,7 +69,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vidattr.c,v 1.67 2013/08/31 20:08:59 tom Exp $")
+MODULE_ID("$Id: lib_vidattr.c,v 1.68 2014/03/08 20:32:59 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -368,7 +368,7 @@ NCURSES_SP_NAME(termattrs) (NCURSES_SP_DCL0)
 
     if (HasTerminal(SP_PARM)) {
 #ifdef USE_TERM_DRIVER
-	attrs = CallDriver(SP_PARM, conattr);
+	attrs = CallDriver(SP_PARM, td_conattr);
 #else /* ! USE_TERM_DRIVER */
 
 	if (enter_alt_charset_mode)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.28 2012/01/21 19:21:29 KO.Myung-Hun Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.29 2014/03/08 20:32:59 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
@@ -57,7 +57,7 @@ NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
 	    result = ERR;
 	} else {
 #ifdef USE_TERM_DRIVER
-	    result = CallDriver_2(SP_PARM, sgmode, FALSE, buf);
+	    result = CallDriver_2(SP_PARM, td_sgmode, FALSE, buf);
 #else
 	    for (;;) {
 		if (GET_TTY(termp->Filedes, buf) != 0) {
@@ -102,7 +102,7 @@ NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_DCLx TTY * buf)
 	    result = ERR;
 	} else {
 #ifdef USE_TERM_DRIVER
-	    result = CallDriver_2(SP_PARM, sgmode, TRUE, buf);
+	    result = CallDriver_2(SP_PARM, td_sgmode, TRUE, buf);
 #else
 	    for (;;) {
 		if ((SET_TTY(termp->Filedes, buf) != 0)
@@ -145,7 +145,7 @@ NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_DCL0)
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
-	rc = CallDriver_2(SP_PARM, mode, FALSE, TRUE);
+	rc = CallDriver_2(SP_PARM, td_mode, FALSE, TRUE);
 #else
 	/*
 	 * If XTABS was on, remove the tab and backtab capabilities.
@@ -183,7 +183,7 @@ NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_DCL0)
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
-	rc = CallDriver_2(SP_PARM, mode, TRUE, TRUE);
+	rc = CallDriver_2(SP_PARM, td_mode, TRUE, TRUE);
 #else
 	/*
 	 * Turn off the XTABS bit in the tty structure if it was on.
@@ -219,13 +219,12 @@ NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_DCL0)
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
-	rc = CallDriver_2(SP_PARM, mode, TRUE, FALSE);
+	rc = CallDriver_2(SP_PARM, td_mode, TRUE, FALSE);
 #else
 	if (_nc_set_tty_mode(&termp->Nttyb) == OK) {
 	    if (SP_PARM) {
 		if (SP_PARM->_keypad_on)
 		    _nc_keypad(SP_PARM, TRUE);
-		NC_BUFFERED(SP_PARM, TRUE);
 	    }
 	    rc = OK;
 	}
@@ -252,12 +251,11 @@ NCURSES_SP_NAME(reset_shell_mode) (NCURSES_SP_DCL0)
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
-	rc = CallDriver_2(SP_PARM, mode, FALSE, FALSE);
+	rc = CallDriver_2(SP_PARM, td_mode, FALSE, FALSE);
 #else
 	if (SP_PARM) {
 	    _nc_keypad(SP_PARM, FALSE);
 	    _nc_flush();
-	    NC_BUFFERED(SP_PARM, FALSE);
 	}
 	rc = _nc_set_tty_mode(&termp->Ottyb);
 #endif

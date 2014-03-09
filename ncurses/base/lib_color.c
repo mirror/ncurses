@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.109 2014/02/01 22:22:30 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.110 2014/03/08 20:04:44 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -188,7 +188,7 @@ static void
 set_background_color(NCURSES_SP_DCLx int bg, NCURSES_SP_OUTC outc)
 {
 #ifdef USE_TERM_DRIVER
-    CallDriver_3(SP_PARM, color, FALSE, bg, outc);
+    CallDriver_3(SP_PARM, td_color, FALSE, bg, outc);
 #else
     if (set_a_background) {
 	TPUTS_TRACE("set_a_background");
@@ -208,7 +208,7 @@ static void
 set_foreground_color(NCURSES_SP_DCLx int fg, NCURSES_SP_OUTC outc)
 {
 #ifdef USE_TERM_DRIVER
-    CallDriver_3(SP_PARM, color, TRUE, fg, outc);
+    CallDriver_3(SP_PARM, td_color, TRUE, fg, outc);
 #else
     if (set_a_foreground) {
 	TPUTS_TRACE("set_a_foreground");
@@ -258,7 +258,7 @@ static bool
 reset_color_pair(NCURSES_SP_DCL0)
 {
 #ifdef USE_TERM_DRIVER
-    return CallDriver(SP_PARM, rescol);
+    return CallDriver(SP_PARM, td_rescol);
 #else
     bool result = FALSE;
 
@@ -288,7 +288,7 @@ NCURSES_SP_NAME(_nc_reset_colors) (NCURSES_SP_DCL0)
 	result = TRUE;
 
 #ifdef USE_TERM_DRIVER
-    result = CallDriver(SP_PARM, rescolors);
+    result = CallDriver(SP_PARM, td_rescolors);
 #else
     if (orig_colors != 0) {
 	NCURSES_PUTP2("orig_colors", orig_colors);
@@ -547,7 +547,7 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx
 	SET_SCREEN_PAIR(SP_PARM, (chtype) (~0));	/* force attribute update */
 
 #ifdef USE_TERM_DRIVER
-    CallDriver_3(SP_PARM, initpair, pair, f, b);
+    CallDriver_3(SP_PARM, td_initpair, pair, f, b);
 #else
     if (initialize_pair && InPalette(f) && InPalette(b)) {
 	const color_t *tp = DefaultPalette;
@@ -625,7 +625,7 @@ NCURSES_SP_NAME(init_color) (NCURSES_SP_DCLx
 	}
 
 #ifdef USE_TERM_DRIVER
-	CallDriver_4(SP_PARM, initcolor, color, r, g, b);
+	CallDriver_4(SP_PARM, td_initcolor, color, r, g, b);
 #else
 	NCURSES_PUTP2("initialize_color",
 		      TPARM_4(initialize_color, color, r, g, b));
@@ -811,7 +811,7 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
 			       NCURSES_SP_OUTC outc)
 {
 #ifdef USE_TERM_DRIVER
-    CallDriver_4(SP_PARM, docolor, old_pair, pair, reverse, outc);
+    CallDriver_4(SP_PARM, td_docolor, old_pair, pair, reverse, outc);
 #else
     NCURSES_COLOR_T fg = COLOR_DEFAULT;
     NCURSES_COLOR_T bg = COLOR_DEFAULT;

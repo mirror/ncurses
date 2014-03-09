@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_driver.c,v 1.4 2012/09/22 19:32:46 tom Exp $")
+MODULE_ID("$Id: lib_driver.c,v 1.5 2014/03/08 20:32:59 tom Exp $")
 
 typedef struct DriverEntry {
     const char *name;
@@ -77,7 +77,7 @@ _nc_get_driver(TERMINAL_CONTROL_BLOCK * TCB, const char *name, int *errret)
 		continue;
 	    }
 	}
-	if (res->CanHandle(TCB, name, errret)) {
+	if (res->td_CanHandle(TCB, name, errret)) {
 	    use = res;
 	    break;
 	}
@@ -93,7 +93,7 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(has_key) (SCREEN *sp, int keycode)
 {
     T((T_CALLED("has_key(%p, %d)"), (void *) sp, keycode));
-    returnCode(IsValidTIScreen(sp) ? CallDriver_1(sp, kyExist, keycode) : FALSE);
+    returnCode(IsValidTIScreen(sp) ? CallDriver_1(sp, td_kyExist, keycode) : FALSE);
 }
 
 NCURSES_EXPORT(int)
@@ -108,7 +108,7 @@ NCURSES_SP_NAME(_nc_mcprint) (SCREEN *sp, char *data, int len)
     int code = ERR;
 
     if (0 != TerminalOf(sp))
-	code = CallDriver_2(sp, print, data, len);
+	code = CallDriver_2(sp, td_print, data, len);
     return (code);
 }
 
@@ -126,7 +126,7 @@ NCURSES_SP_NAME(doupdate) (SCREEN *sp)
     T((T_CALLED("doupdate(%p)"), (void *) sp));
 
     if (IsValidScreen(sp))
-	code = CallDriver(sp, update);
+	code = CallDriver(sp, td_update);
 
     returnCode(code);
 }
@@ -144,7 +144,7 @@ NCURSES_SP_NAME(mvcur) (SCREEN *sp, int yold, int xold, int ynew, int xnew)
     TR(TRACE_CALLS | TRACE_MOVE, (T_CALLED("mvcur(%p,%d,%d,%d,%d)"),
 				  (void *) sp, yold, xold, ynew, xnew));
     if (HasTerminal(sp)) {
-	code = CallDriver_4(sp, hwcur, yold, xold, ynew, xnew);
+	code = CallDriver_4(sp, td_hwcur, yold, xold, ynew, xnew);
     }
     returnCode(code);
 }

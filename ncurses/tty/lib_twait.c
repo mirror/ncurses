@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -75,7 +75,7 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.67 2013/02/18 09:22:27 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.68 2014/03/08 20:32:59 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, int first)
@@ -102,7 +102,7 @@ _nc_gettime(TimeType * t0, int first)
     if (first) {
 	*t0 = t1;
     }
-    res = (t1 - *t0) * 1000;
+    res = (long) ((t1 - *t0) * 1000);
 #endif
     TR(TRACE_IEVENT, ("%s time: %ld msec", first ? "get" : "elapsed", res));
     return res;

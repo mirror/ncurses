@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.32 2013/08/31 15:22:46 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.33 2014/03/08 20:33:38 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -537,7 +537,6 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 		if (sp) {
 		    if (sp->_keypad_on)
 			_nc_keypad(sp, TRUE);
-		    NC_BUFFERED(sp, TRUE);
 		}
 		code = OK;
 	    }
@@ -563,7 +562,6 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 	    if (sp) {
 		_nc_keypad(sp, FALSE);
 		NCURSES_SP_NAME(_nc_flush) (sp);
-		NC_BUFFERED(sp, FALSE);
 	    }
 	    code = drv_sgmode(TCB, TRUE, &(_term->Ottyb));
 	}
@@ -665,7 +663,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
      * baudrate.
      */
     if (isatty(trm->Filedes)) {
-	TCB->drv->mode(TCB, TRUE, TRUE);
+	TCB->drv->td_mode(TCB, TRUE, TRUE);
     }
 }
 
@@ -868,11 +866,11 @@ drv_testmouse(TERMINAL_CONTROL_BLOCK * TCB,
     } else
 #endif
     {
-	rc = TCBOf(sp)->drv->twait(TCBOf(sp),
-				   TWAIT_MASK,
-				   delay,
-				   (int *) 0
-				   EVENTLIST_2nd(evl));
+	rc = TCBOf(sp)->drv->td_twait(TCBOf(sp),
+				      TWAIT_MASK,
+				      delay,
+				      (int *) 0
+				      EVENTLIST_2nd(evl));
 #if USE_SYSMOUSE
 	if ((sp->_mouse_type == M_SYSMOUSE)
 	    && (sp->_sysmouse_head < sp->_sysmouse_tail)

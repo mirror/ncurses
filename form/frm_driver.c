@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.110 2014/02/10 00:42:48 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.111 2014/03/08 22:08:20 Xin.Li Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4493,7 +4493,7 @@ form_driver_w(FORM *form, int type, wchar_t c)
   const Binding_Info *BI = (Binding_Info *) 0;
   int res = E_UNKNOWN_COMMAND;
 
-  T((T_CALLED("form_driver(%p,%d)"), (void *)form, (int) c));
+  T((T_CALLED("form_driver(%p,%d)"), (void *)form, (int)c));
 
   if (!form)
     RETURN(E_BAD_ARGUMENT);
@@ -4503,7 +4503,7 @@ form_driver_w(FORM *form, int type, wchar_t c)
 
   assert(form->page);
 
-  if (c == FIRST_ACTIVE_MAGIC)
+  if (c == (wchar_t)FIRST_ACTIVE_MAGIC)
     {
       form->current = _nc_First_Active_Field(form);
       RETURN(E_OK);

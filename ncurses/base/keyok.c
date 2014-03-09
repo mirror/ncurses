@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: keyok.c,v 1.13 2012/11/18 02:14:35 tom Exp $")
+MODULE_ID("$Id: keyok.c,v 1.14 2014/03/08 20:32:59 tom Exp $")
 
 /*
  * Enable (or disable) ncurses' interpretation of a keycode by adding (or
@@ -53,7 +53,7 @@ NCURSES_SP_NAME(keyok) (NCURSES_SP_DCLx int c, bool flag)
     if (HasTerminal(SP_PARM)) {
 	T((T_CALLED("keyok(%p, %d,%d)"), (void *) SP_PARM, c, flag));
 #ifdef USE_TERM_DRIVER
-	code = CallDriver_2(sp, kyOk, c, flag);
+	code = CallDriver_2(sp, td_kyOk, c, flag);
 #else
 	T((T_CALLED("keyok(%d,%d)"), c, flag));
 	if (c >= 0) {

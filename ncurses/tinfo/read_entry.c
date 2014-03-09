@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.126 2013/12/15 00:35:36 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.127 2014/03/08 22:07:31 Xin.Li Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -114,6 +114,7 @@ fake_read(char *src, int *offset, int limit, char *dst, unsigned want)
 
 #define even_boundary(value) \
     if ((value) % 2 != 0) Read(buf, 1)
+#endif
 
 NCURSES_EXPORT(void)
 _nc_init_termtype(TERMTYPE *const tp)
@@ -145,6 +146,7 @@ _nc_init_termtype(TERMTYPE *const tp)
 	tp->Strings[i] = ABSENT_STRING;
 }
 
+#if NCURSES_USE_DATABASE
 /*
  * Return TGETENT_YES if read, TGETENT_NO if not found or garbled.
  */

@@ -28,18 +28,18 @@
 
 /****************************************************************************
  *  Author: Juergen Pfeifer                                                 *
+ *     and: Thomas E. Dickey                                                *
  ****************************************************************************/
 
 /*
  * TODO - GetMousePos(POINT * result) from ntconio.c
  * TODO - implement nodelay
- * TODO - when $NCGDB is set, implement non-buffered output, like PDCurses
  */
 
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.24 2014/02/23 01:23:29 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.28 2014/03/08 21:44:53 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -79,7 +79,8 @@ typedef struct props {
     DWORD map[MAPSIZE];
     DWORD rmap[MAPSIZE];
     WORD pairs[NUMPAIRS];
-    bool buffered;
+    bool buffered;		/* normally allocate console-buffer */
+    bool window_only;		/* ..if not, we save buffer or window-only */
     COORD origin;
     CHAR_INFO *save_screen;
 } Properties;
@@ -125,16 +126,22 @@ MapAttr(TERMINAL_CONTROL_BLOCK * TCB, WORD res, attr_t ch)
 	if (p > 0 && p < NUMPAIRS && TCB != 0 && sp != 0) {
 	    WORD a;
 	    a = PropOf(TCB)->pairs[p];
-	    res = (res & 0xff00) | a;
+	    res = (WORD) ((res & 0xff00) | a);
 	}
     }
 
-    if (ch & A_REVERSE)
-	res = ((res & 0xff00) | (((res & 0x07) << 4) | ((res & 0x70) >> 4)));
+    if (ch & A_REVERSE) {
+	res = (WORD) ((res & 0xff00) |
+		      (((res & 0x07) << 4) |
+		       ((res & 0x70) >> 4)));
+    }
 
-    if (ch & A_STANDOUT)
-	res = ((res & 0xff00) | (((res & 0x07) << 4) | ((res & 0x70) >> 4))
-	       | BACKGROUND_INTENSITY);
+    if (ch & A_STANDOUT) {
+	res = (WORD) ((res & 0xff00) |
+		      (((res & 0x07) << 4) |
+		       ((res & 0x70) >> 4)) |
+		      BACKGROUND_INTENSITY);
+    }
 
     if (ch & A_BOLD)
 	res |= FOREGROUND_INTENSITY;
@@ -336,6 +343,42 @@ selectActiveHandle(TERMINAL_CONTROL_BLOCK * TCB)
     }
 }
 
+static bool
+restore_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
+{
+    COORD bufferCoord;
+    SMALL_RECT writeRegion;
+    Properties *p = PropOf(TCB);
+    bool result = FALSE;
+
+    if (p->window_only) {
+	writeRegion.Top = p->SBI.srWindow.Top;
+	writeRegion.Left = p->SBI.srWindow.Left;
+	writeRegion.Bottom = p->SBI.srWindow.Bottom;
+	writeRegion.Right = p->SBI.srWindow.Right;
+	T(("... restoring window"));
+    } else {
+	writeRegion.Top = 0;
+	writeRegion.Left = 0;
+	writeRegion.Bottom = (SHORT) (p->SBI.dwSize.Y - 1);
+	writeRegion.Right = (SHORT) (p->SBI.dwSize.X - 1);
+	T(("... restoring entire buffer"));
+    }
+
+    bufferCoord.X = bufferCoord.Y = 0;
+
+    if (WriteConsoleOutput(TCB->hdl,
+			   p->save_screen,
+			   p->SBI.dwSize,
+			   bufferCoord,
+			   &writeRegion)) {
+	result = TRUE;
+	mvcur(-1, -1, LINES - 2, 0);
+    }
+    T(("... restore original screen contents %s", result ? "ok" : "err"));
+    return result;
+}
+
 static int
 drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 {
@@ -446,9 +489,9 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 	    CurScreen(sp)->_curx = NewScreen(sp)->_curx;
 	    CurScreen(sp)->_cury = NewScreen(sp)->_cury;
 
-	    TCB->drv->hwcur(TCB,
-			    0, 0,
-			    CurScreen(sp)->_cury, CurScreen(sp)->_curx);
+	    TCB->drv->td_hwcur(TCB,
+			       0, 0,
+			       CurScreen(sp)->_cury, CurScreen(sp)->_curx);
 	}
 	selectActiveHandle(TCB);
 	result = OK;
@@ -738,6 +781,7 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
     AssertTCB();
     sp = TCB->csp;
 
+    T((T_CALLED("win32con::drv_mode(%p, prog=%d, def=%d)"), TCB, progFlag, defFlag));
     PropOf(TCB)->progMode = progFlag;
     PropOf(TCB)->lastOut = progFlag ? TCB->hdl : TCB->out;
     SetConsoleActiveScreenBuffer(PropOf(TCB)->lastOut);
@@ -754,7 +798,6 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 		if (sp) {
 		    if (sp->_keypad_on)
 			_nc_keypad(sp, TRUE);
-		    NC_BUFFERED(sp, TRUE);
 		}
 		code = OK;
 	    }
@@ -770,9 +813,12 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 	    if (sp) {
 		_nc_keypad(sp, FALSE);
 		NCURSES_SP_NAME(_nc_flush) (sp);
-		NC_BUFFERED(sp, FALSE);
 	    }
 	    code = drv_sgmode(TCB, TRUE, &(_term->Ottyb));
+	    if (!PropOf(TCB)->buffered) {
+		if (!restore_original_screen(TCB))
+		    code = ERR;
+	    }
 	}
     }
 
@@ -919,6 +965,7 @@ save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
 				      bufferCoord,
 				      &readRegion)) {
 		    result = TRUE;
+		    p->window_only = TRUE;
 		} else {
 		    T((" error %#lx", (unsigned long) GetLastError()));
 		}
@@ -951,7 +998,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 	TCB->inp = GetStdHandle(STD_INPUT_HANDLE);
 	TCB->out = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	if (getenv("NCGDB")) {
+	if (getenv("NCGDB") || getenv("NCURSES_CONSOLE2")) {
 	    TCB->hdl = TCB->out;
 	    buffered = FALSE;
 	} else {
@@ -966,6 +1013,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 	    returnVoid;
 	} else if ((TCB->prop = typeCalloc(Properties, 1)) != 0) {
 	    PropOf(TCB)->buffered = buffered;
+	    PropOf(TCB)->window_only = FALSE;
 	    if (!get_SBI(TCB)) {
 		FreeAndNull(TCB->prop);		/* force error in drv_size */
 		returnVoid;
@@ -1005,7 +1053,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 		PropOf(TCB)->rmap[i] = PropOf(TCB)->map[i] = (DWORD) keylist[i];
 	    else
 		PropOf(TCB)->rmap[i] = PropOf(TCB)->map[i] =
-		    GenMap((VK_F1 + (i - N_INI)), (KEY_F(1) + (i - N_INI)));
+		    (DWORD) GenMap((VK_F1 + (i - N_INI)), (KEY_F(1) + (i - N_INI)));
 	}
 	qsort(PropOf(TCB)->map,
 	      (size_t) (MAPSIZE),
@@ -1090,11 +1138,11 @@ drv_testmouse(TERMINAL_CONTROL_BLOCK * TCB, int delay)
     if (sp->_drv_mouse_head < sp->_drv_mouse_tail) {
 	rc = TW_MOUSE;
     } else {
-	rc = TCBOf(sp)->drv->twait(TCBOf(sp),
-				   TWAIT_MASK,
-				   delay,
-				   (int *) 0
-				   EVENTLIST_2nd(evl));
+	rc = TCBOf(sp)->drv->td_twait(TCBOf(sp),
+				      TWAIT_MASK,
+				      delay,
+				      (int *) 0
+				      EVENTLIST_2nd(evl));
     }
 
     return rc;

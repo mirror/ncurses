@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.133 2013/05/25 23:59:41 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.134 2014/03/08 20:32:59 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -1187,7 +1187,6 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     baudrate();
 
     _nc_mvcur_init();
-    NC_BUFFERED(FALSE);
 
     (void) puts("The mvcur tester.  Type ? for help");
 

@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.530 2014/02/01 22:09:27 tom Exp $
+ * $Id: curses.priv.h,v 1.531 2014/03/08 19:58:54 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2118,8 +2118,6 @@ extern NCURSES_EXPORT_VAR(int *) _nc_oldnums;
 
 #define USE_SETBUF_0 0
 
-#define NC_BUFFERED(sp,flag) NCURSES_SP_NAME(_nc_set_buffer)(NCURSES_SP_ARGx sp->_ofp, flag)
-
 #define NC_OUTPUT(sp) ((sp != 0) ? sp->_ofp : stdout)
 
 /*
@@ -2228,40 +2226,40 @@ typedef struct _termInfo
 
 typedef struct term_driver {
     bool   isTerminfo;
-    bool   (*CanHandle)(struct DriverTCB*, const char*, int*);
-    void   (*init)(struct DriverTCB*);
-    void   (*release)(struct DriverTCB*);
-    int    (*size)(struct DriverTCB*, int* Line, int *Cols);
-    int    (*sgmode)(struct DriverTCB*, int setFlag, TTY*);
-    chtype (*conattr)(struct DriverTCB*);
-    int    (*hwcur)(struct DriverTCB*, int yold, int xold, int y, int x);
-    int    (*mode)(struct DriverTCB*, int progFlag, int defFlag);
-    bool   (*rescol)(struct DriverTCB*);
-    bool   (*rescolors)(struct DriverTCB*);
-    void   (*color)(struct DriverTCB*, int fore, int color, int(*)(SCREEN*, int));
-    int    (*doBeepOrFlash)(struct DriverTCB*, int);
-    void   (*initpair)(struct DriverTCB*, int, int, int);
-    void   (*initcolor)(struct DriverTCB*, int, int, int, int);
-    void   (*docolor)(struct DriverTCB*, int, int, int, int(*)(SCREEN*, int));
-    void   (*initmouse)(struct DriverTCB*);
-    int    (*testmouse)(struct DriverTCB*, int EVENTLIST_2nd(_nc_eventlist*));
-    void   (*setfilter)(struct DriverTCB*);
-    void   (*hwlabel)(struct DriverTCB*, int, char*);
-    void   (*hwlabelOnOff)(struct DriverTCB*, int);
-    int    (*update)(struct DriverTCB*);
-    int    (*defaultcolors)(struct DriverTCB*, int, int);
-    int    (*print)(struct DriverTCB*, char*, int);
-    int    (*getsize)(struct DriverTCB*, int*, int*);
-    int    (*setsize)(struct DriverTCB*, int, int);
-    void   (*initacs)(struct DriverTCB*, chtype*, chtype*);
-    void   (*scinit)(SCREEN *);
-    void   (*scexit)(SCREEN *);
-    int    (*twait)(struct DriverTCB*, int, int, int* EVENTLIST_2nd(_nc_eventlist*));
-    int    (*read)(struct DriverTCB*, int*);
-    int    (*nap)(struct DriverTCB*, int);
-    int    (*kpad)(struct DriverTCB*, int);
-    int    (*kyOk)(struct DriverTCB*, int, int);
-    bool   (*kyExist)(struct DriverTCB*, int);
+    bool   (*td_CanHandle)(struct DriverTCB*, const char*, int*);
+    void   (*td_init)(struct DriverTCB*);
+    void   (*td_release)(struct DriverTCB*);
+    int    (*td_size)(struct DriverTCB*, int* Line, int *Cols);
+    int    (*td_sgmode)(struct DriverTCB*, int setFlag, TTY*);
+    chtype (*td_conattr)(struct DriverTCB*);
+    int    (*td_hwcur)(struct DriverTCB*, int yold, int xold, int y, int x);
+    int    (*td_mode)(struct DriverTCB*, int progFlag, int defFlag);
+    bool   (*td_rescol)(struct DriverTCB*);
+    bool   (*td_rescolors)(struct DriverTCB*);
+    void   (*td_color)(struct DriverTCB*, int fore, int color, int(*)(SCREEN*, int));
+    int    (*td_doBeepOrFlash)(struct DriverTCB*, int);
+    void   (*td_initpair)(struct DriverTCB*, int, int, int);
+    void   (*td_initcolor)(struct DriverTCB*, int, int, int, int);
+    void   (*td_docolor)(struct DriverTCB*, int, int, int, int(*)(SCREEN*, int));
+    void   (*td_initmouse)(struct DriverTCB*);
+    int    (*td_testmouse)(struct DriverTCB*, int EVENTLIST_2nd(_nc_eventlist*));
+    void   (*td_setfilter)(struct DriverTCB*);
+    void   (*td_hwlabel)(struct DriverTCB*, int, char*);
+    void   (*td_hwlabelOnOff)(struct DriverTCB*, int);
+    int    (*td_update)(struct DriverTCB*);
+    int    (*td_defaultcolors)(struct DriverTCB*, int, int);
+    int    (*td_print)(struct DriverTCB*, char*, int);
+    int    (*td_getsize)(struct DriverTCB*, int*, int*);
+    int    (*td_setsize)(struct DriverTCB*, int, int);
+    void   (*td_initacs)(struct DriverTCB*, chtype*, chtype*);
+    void   (*td_scinit)(SCREEN *);
+    void   (*td_scexit)(SCREEN *);
+    int    (*td_twait)(struct DriverTCB*, int, int, int* EVENTLIST_2nd(_nc_eventlist*));
+    int    (*td_read)(struct DriverTCB*, int*);
+    int    (*td_nap)(struct DriverTCB*, int);
+    int    (*td_kpad)(struct DriverTCB*, int);
+    int    (*td_kyOk)(struct DriverTCB*, int, int);
+    bool   (*td_kyExist)(struct DriverTCB*, int);
 } TERM_DRIVER;
 
 typedef struct DriverTCB

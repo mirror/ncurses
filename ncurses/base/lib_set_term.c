@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.148 2013/08/31 13:33:06 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.149 2014/03/08 20:32:59 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -351,7 +351,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	slines = 1;
 	SET_LINES(slines);
 #ifdef USE_TERM_DRIVER
-	CallDriver(sp, setfilter);
+	CallDriver(sp, td_setfilter);
 #else
 	clear_screen = 0;
 	cursor_down = parm_down_cursor = 0;
