@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_global.c,v 1.27 2012/06/10 00:09:15 tom Exp $")
+MODULE_ID("$Id: m_global.c,v 1.28 2014/03/15 20:37:22 tom Exp $")
 
 static char mark[] = "-";
 /* *INDENT-OFF* */
@@ -568,7 +568,9 @@ _nc_New_TopRow_and_CurrentItem(
 
       cur_item = menu->curitem;
       assert(cur_item);
-      menu->toprow = (short)new_toprow;
+      menu->toprow = (short)(((menu->rows - menu->frows) >= 0)
+			     ? min(menu->rows - menu->frows, new_toprow)
+			     : 0);
       menu->curitem = new_current_item;
 
       if (mterm_called)
@@ -590,7 +592,9 @@ _nc_New_TopRow_and_CurrentItem(
     }
   else
     {				/* if we are not posted, this is quite simple */
-      menu->toprow = (short)new_toprow;
+      menu->toprow = (short)(((menu->rows - menu->frows) >= 0)
+			     ? min(menu->rows - menu->frows, new_toprow)
+			     : 0);
       menu->curitem = new_current_item;
     }
 }

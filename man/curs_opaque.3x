@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2007-2010,2013 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2007-2013,2014 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_opaque.3x,v 1.10 2013/07/20 19:42:29 tom Exp $
+.\" $Id: curs_opaque.3x,v 1.11 2014/03/15 19:24:23 tom Exp $
 .TH curs_opaque 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -78,6 +78,8 @@
 .br
 \fBWINDOW * wgetparent(const WINDOW *win);\fR
 .br
+\fBint wgetdelay(const WINDOW *win);\fR
+.br
 \fBint wgetscrreg(const WINDOW *win, int *top, int *bottom);\fR
 .br
 .SH DESCRIPTION
@@ -122,6 +124,9 @@ i.e., created by \fBsubwin\fP or \fBderwin\fP
 .TP 5
 \fBis_syncok\fR
 returns the value set in \fBsyncok\fR
+.TP 5
+\fBwgetdelay\fR
+returns the delay timeout as set in \fBwtimeout\fP.
 .TP 5
 \fBwgetparent\fR
 returns the parent WINDOW pointer for subwindows,

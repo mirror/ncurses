@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.237 2014/02/01 22:08:12 tom Exp $ */
+/* $Id: curses.h.in,v 1.238 2014/03/15 19:04:15 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -930,6 +930,7 @@ extern NCURSES_EXPORT(bool) is_pad (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ *
 extern NCURSES_EXPORT(bool) is_scrollok (const WINDOW *);	/* @GENERATED_EXT_FUNCS@ */
 extern NCURSES_EXPORT(bool) is_subwin (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
 extern NCURSES_EXPORT(bool) is_syncok (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
+extern NCURSES_EXPORT(int) wgetdelay (const WINDOW *);		/* @GENERATED_EXT_FUNCS@ */
 extern NCURSES_EXPORT(int) wgetscrreg (const WINDOW *, int *, int *); /* @GENERATED_EXT_FUNCS@ */
 
 #else
@@ -1349,6 +1350,7 @@ NCURSES_EXPORT(int) vsscanf(const char *, const char *, va_list);
 #define is_scrollok(win)	((win) ? (win)->_scroll : FALSE)
 #define is_subwin(win)		((win) ? ((win)->_flags & _SUBWIN) != 0 : FALSE)
 #define is_syncok(win)		((win) ? (win)->_sync : FALSE)
+#define wgetdelay(win)		((win) ? (win)->_delay : 0)
 #define wgetparent(win)		((win) ? (win)->_parent : 0)
 #define wgetscrreg(win,t,b)	((win) ? (*(t) = (win)->_regtop, *(b) = (win)->_regbottom, OK) : ERR)
 #endif

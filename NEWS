@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2177 2014/03/08 22:10:41 tom Exp $
+-- $Id: NEWS,v 1.2180 2014/03/15 20:39:44 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140315
+	+ modify _nc_New_TopRow_and_CurrentItem() to ensure that the menu's
+	  top-row is adjusted as needed to ensure that the current item is
+	  on the screen (patch by Johann Klammer).
+	+ add wgetdelay() to retrieve _delay member of WINDOW if it happens to
+	  be opaque, e.g., in the pthread configuration (prompted by patch by
+	  Soren Brinkmann).
 
 20140308
 	+ modify ifdef in read_entry.c to handle the case where
