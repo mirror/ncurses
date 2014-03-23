@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.577 2013/12/15 00:03:02 tom Exp $
+dnl $Id: configure.in,v 1.578 2014/03/22 22:58:09 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.577 $)
+AC_REVISION($Revision: 1.578 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1898,6 +1898,7 @@ CF_ADD_CFLAGS($EXTRA_CFLAGS)
 
 ### Define substitutions for header files to avoid name-pollution
 CF_SUBST_IF(["x$cf_cv_have_tcgetattr" = xyes], HAVE_TCGETATTR, 1, 0)
+CF_SUBST_IF(["x$ac_cv_header_stdint_h" = xyes], HAVE_STDINT_H, 1, 0)
 CF_SUBST_IF(["x$ac_cv_header_termio_h" = xyes], HAVE_TERMIO_H, 1, 0)
 CF_SUBST_IF(["x$ac_cv_header_termios_h" = xyes], HAVE_TERMIOS_H, 1, 0)
 
@@ -1971,6 +1972,18 @@ case "x$NCURSES_OSPEED" in #(vi
 	;;
 esac
 AC_DEFINE_UNQUOTED(NCURSES_OSPEED_COMPAT,$cf_compatible,[Define to 1 if termcap variable ospeed is short])
+
+case "x$cf_cv_typeof_chtype" in
+xshort|xint|xlong)
+	cf_cv_typeof_chtype="unsigned $cf_cv_typeof_chtype"
+	;;
+esac
+
+case "x$cf_cv_typeof_mmask_t" in
+xshort|xint|xlong)
+	cf_cv_typeof_mmask_t="unsigned $cf_cv_typeof_mmask_t"
+	;;
+esac
 
 SUB_SCRIPTS=
 

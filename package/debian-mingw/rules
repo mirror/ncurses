@@ -40,6 +40,8 @@ CONFIG_OPTIONS = \
 	--enable-warnings \
 	--enable-widec \
 	--verbose \
+	--with-chtype=uint32_t \
+	--with-mmask_t=uint32_t \
 	--with-cxx-shared \
 	--with-develop \
 	--with-fallbacks=unknown,rxvt \

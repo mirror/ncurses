@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.238 2014/03/15 19:04:15 tom Exp $ */
+/* $Id: curses.h.in,v 1.239 2014/03/22 22:57:35 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -58,6 +58,10 @@
  * Definitions to facilitate DLL's.
  */
 #include <ncurses_dll.h>
+
+#if @HAVE_STDINT_H@
+#include <stdint.h>
+#endif
 
 /*
  * User-definable tweak to disable the include of <stdbool.h>.
@@ -156,8 +160,8 @@
 typedef unsigned chtype;
 typedef unsigned mmask_t;
 #else
-typedef unsigned @cf_cv_typeof_chtype@ chtype;
-typedef unsigned @cf_cv_typeof_mmask_t@ mmask_t;
+typedef @cf_cv_typeof_chtype@ chtype;
+typedef @cf_cv_typeof_mmask_t@ mmask_t;
 #endif
 
 /*
