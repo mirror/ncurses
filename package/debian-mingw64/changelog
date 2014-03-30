@@ -1,8 +1,8 @@
-ncurses6 (5.9-20140323) unstable; urgency=low
+ncurses6 (5.9-20140329) unstable; urgency=low
 
   * latest weekly patch
 
- -- Thomas E. Dickey <dickey@invisible-island.net>  Sun, 23 Mar 2014 16:59:54 -0400
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Wed, 26 Mar 2014 15:51:51 -0400
 
 ncurses6 (5.9-20131005) unstable; urgency=low
 

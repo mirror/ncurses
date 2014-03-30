@@ -46,7 +46,7 @@
 #include <hashed_db.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.189 2013/11/16 19:58:09 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.190 2014/03/29 19:45:18 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1113,6 +1113,17 @@ check_colors(TERMTYPE *tp)
 	    || set_color_pair)) {
 	if (!VALID_STRING(orig_pair) && !VALID_STRING(orig_colors))
 	    _nc_warning("expected either op/oc string for resetting colors");
+    }
+    if (can_change) {
+	if (!VALID_STRING(initialize_pair) &&
+	    !VALID_STRING(initialize_color)) {
+	    _nc_warning("expected initc or initp because ccc is given");
+	}
+    } else {
+	if (VALID_STRING(initialize_pair) ||
+	    VALID_STRING(initialize_color)) {
+	    _nc_warning("expected ccc because initc is given");
+	}
     }
 }
 
