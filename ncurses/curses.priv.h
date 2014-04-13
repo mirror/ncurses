@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.531 2014/03/08 19:58:54 tom Exp $
+ * $Id: curses.priv.h,v 1.533 2014/04/13 00:16:21 tom Exp $
  *
  *	curses.priv.h
  *
@@ -177,6 +177,18 @@ extern int errno;
 #define USE_SIZECHANGE 0
 #undef USE_SIGWINCH
 #define USE_SIGWINCH 0
+#endif
+
+/*
+ * When building in the MSYS2 environment, the automatic discovery of
+ * the path separator in configure doesn't work properly. So, if building
+ * for MinGW, we enforce the correct Windows PATH separator
+ */
+#ifdef __MINGW32__
+#  ifdef NCURSES_PATHSEP
+#    undef NCURSES_PATHSEP
+#  endif
+#  define NCURSES_PATHSEP ';'
 #endif
 
 /*
@@ -2226,6 +2238,7 @@ typedef struct _termInfo
 
 typedef struct term_driver {
     bool   isTerminfo;
+    const char* (*td_name)(struct DriverTCB*);
     bool   (*td_CanHandle)(struct DriverTCB*, const char*, int*);
     void   (*td_init)(struct DriverTCB*);
     void   (*td_release)(struct DriverTCB*);

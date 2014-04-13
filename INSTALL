@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.168 2013/08/03 23:15:23 tom Exp $
+-- $Id: INSTALL,v 1.170 2014/04/12 23:10:33 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -833,10 +833,15 @@ SUMMARY OF CONFIGURE OPTIONS:
 	filesystem-based terminfo entries.
 
 	Use the parameter value to give the install-prefix used for the
-	datbase, e.g.,
+	database, e.g.,
 		--with-hashed-db=/usr/local/BigBase
 	to find the corresponding include- and lib-directories under the
-	given directory.
+	given directory.  Alternatively, you can specify a directory leaf
+	name, e.g., 
+		--with-hashed-db=db4
+	to make the configure script look for files in a subdirectory such as
+		/usr/include/db4/db.h
+		/usr/lib/db4/libdb.so
 
 	See also the --enable-getcap option.
 

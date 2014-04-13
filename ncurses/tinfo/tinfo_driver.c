@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.33 2014/03/08 20:33:38 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.37 2014/04/13 00:17:08 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -106,6 +106,13 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
     return TINFO_DOUPDATE(TCB->csp);
 }
 
+static const char *
+drv_Name(TERMINAL_CONTROL_BLOCK * TCB)
+{
+    (void) TCB;
+    return "tinfo";
+}
+
 static bool
 drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 {
@@ -113,6 +120,8 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     int status;
     TERMINAL *termp;
     SCREEN *sp;
+
+    T((T_CALLED("tinfo::drv_CanHandle(%p)"), TCB));
 
     assert(TCB != 0 && tname != 0);
     termp = (TERMINAL *) TCB;
@@ -169,7 +178,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", tname);
     }
 
-    return result;
+    returnBool(result);
 }
 
 static int
@@ -1001,7 +1010,7 @@ drv_initacs(TERMINAL_CONTROL_BLOCK * TCB, chtype *real_map, chtype *fake_map)
 	size_t i;
 	for (i = 1; i < ACS_LEN; ++i) {
 	    if (real_map[i] == 0) {
-		real_map[i] = i;
+		real_map[i] = (chtype) i;
 		if (real_map != fake_map) {
 		    if (sp != 0)
 			sp->_screen_acs_map[i] = TRUE;
@@ -1303,6 +1312,7 @@ drv_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int key)
 
 NCURSES_EXPORT_VAR (TERM_DRIVER) _nc_TINFO_DRIVER = {
     TRUE,
+	drv_Name,		/* Name */
 	drv_CanHandle,		/* CanHandle */
 	drv_init,		/* init */
 	drv_release,		/* release */

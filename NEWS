@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2187 2014/03/29 23:49:01 tom Exp $
+-- $Id: NEWS,v 1.2191 2014/04/12 16:23:01 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140412
+	+ modify configure script:
+	  + drop the -no-gcc option from Intel compiler, from lynx changes.
+	  + extend the --with-hashed-db configure option to simplify building
+	    with different versions of Berkeley database using FreeBSD ports.
+	+ improve initialization for MinGW port (patch by Juergen Pfeifer):
+	  + enforce Windows-style path-separator if cross-compiling,
+	  + add a driver-name method to each of the drivers,
+	  + allow the Windows driver name to match "unknown", ignoring case,
+	  + lengthen the built-in name for the Windows console driver to
+	    "#win32console", and
+	  + move the comparison of driver-names allowing abbreviation, e.g.,
+	    to "#win32con" into the Windows console driver.
 
 20140329
 	+ add check in tic for mismatch between ccc and initp/initc
@@ -150,7 +164,7 @@ it is not possible to add this information.
 	  recognized by clang.
 
 20131116
-	+ add special case to configure script to move _XOPEN_SOURCE_EXTENDED 
+	+ add special case to configure script to move _XOPEN_SOURCE_EXTENDED
 	  definition from CPPFLAGS to CFLAGS if it happens to be needed for
 	  Solaris, because g++ errors with that definition (report by
 	  Jean-Pierre Flori, Sage #15268).
@@ -563,7 +577,7 @@ it is not possible to add this information.
 	  a null-pointer check in _nc_mvcur_resume.
 	+ correct display of double-width characters with MinGW port (report
 	  by Erwin Waterlander).
-	+ replace MinGW's wcrtomb(), fixing a problem with _nc_viscbuf 
+	+ replace MinGW's wcrtomb(), fixing a problem with _nc_viscbuf
 	> fixes based on Coverity report:
 	+ correct coloring in test/bs.c
 	+ correct check for 8-bit value in _nc_insert_ch().
@@ -652,7 +666,7 @@ it is not possible to add this information.
 	  first corrects pattern used for Mac OS X's customization of gcc.
 
 20121017
-	+ fix change to _nc_scroll_optimize(), which incorrectly freed memory 
+	+ fix change to _nc_scroll_optimize(), which incorrectly freed memory
 	  (Redhat #866989).
 
 20121013
@@ -1005,7 +1019,7 @@ it is not possible to add this information.
 	+ make sgr for aaa-unk, aaa-rv agree with other caps -TD
 	+ make sgr for avt-ns agree with other caps -TD
 	+ amend fix intended to separate fixups for acsc to allow "tic -cv" to
-	  give verbose warnings (cf:  20110730). 
+	  give verbose warnings (cf:  20110730).
 	+ modify misc/gen-edit.sh to make the location of the tabset directory
 	  consistent with misc/Makefile.in, i.e., using ${datadir}/tabset
 	  (Debian #653435, patch by Sven Joachim).
@@ -1037,7 +1051,7 @@ it is not possible to add this information.
 	  + drop mk-dlls.sh script.
 	  + change recommended regular expression library.
 	  + modify rain.c to allow for threaded configuraton.
-	  + modify tset.c to allow for case when size-change logic is not used. 
+	  + modify tset.c to allow for case when size-change logic is not used.
 
 20111231
 	+ modify toe's report when -a and -s options are combined, to add
@@ -4434,7 +4448,7 @@ it is not possible to add this information.
 	  However that did find a coding error in Assume_Default_Colors().
 	+ modify several terminfo entries to ensure xterm mouse and cursor
 	  visibility are reset in rs2 string:  hurd, putty, gnome,
-	  konsole-base, mlterm, Eterm, screen (Debian #265784, Debian #55637). 
+	  konsole-base, mlterm, Eterm, screen (Debian #265784, Debian #55637).
 	  The xterm entries are left alone - old ones for compatibility, and
 	  the new ones do not require this change. -TD
 

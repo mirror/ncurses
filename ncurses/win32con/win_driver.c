@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.28 2014/03/08 21:44:53 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.31 2014/04/13 00:16:07 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -379,6 +379,13 @@ restore_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
     return result;
 }
 
+static const char *
+drv_name(TERMINAL_CONTROL_BLOCK * TCB)
+{
+    (void) TCB;
+    return "win32console";
+}
+
 static int
 drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 {
@@ -508,44 +515,36 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
 
     T((T_CALLED("win32con::drv_CanHandle(%p)"), TCB));
 
-    assert(TCB != 0);
-    assert(tname != 0);
+    assert((TCB != 0) && (tname != 0));
 
     TCB->magic = WINMAGIC;
-    if (*tname == 0 || *tname == 0 || *tname == '#') {
+
+    if (tname == 0 || *tname == 0)
 	code = TRUE;
-    } else {
-	TERMINAL my_term;
-	int status;
-
-	code = FALSE;
-#if (NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP)
-	status = _nc_setup_tinfo(tname, &my_term.type);
-#else
-	status = TGETENT_NO;
-#endif
-	if (status != TGETENT_YES) {
-	    const TERMTYPE *fallback = _nc_fallback(tname);
-
-	    if (fallback) {
-		my_term.type = *fallback;
-		status = TGETENT_YES;
-	    } else if (!strcmp(tname, "unknown")) {
-		code = TRUE;
-	    }
+    else if (tname != 0 && *tname == '#') {
+	/*
+	 * Use "#" (a character which cannot begin a terminal's name) to
+	 * select specific driver from the table.
+	 *
+	 * In principle, we could have more than one non-terminfo driver,
+	 * e.g., "win32gui".
+	 */
+	size_t n = strlen(tname + 1);
+	if (n != 0
+	    && (strncmp(tname + 1, "win32console", n) == 0)) {
+	    code = TRUE;
 	}
-	if (status == TGETENT_YES) {
-	    if (generic_type || hard_copy)
-		code = TRUE;
-	}
+    } else if (tname != 0 && stricmp(tname, "unknown") == 0) {
+	code = TRUE;
     }
 
-    if (code) {
-	if ((TCB->term.type.Booleans) == 0) {
-	    _nc_init_termtype(&(TCB->term.type));
-	}
+    /*
+     * This is intentional, to avoid unnecessary breakage of applications
+     * using <term.h> symbols.
+     */
+    if (code && (TCB->term.type.Booleans == 0)) {
+	_nc_init_termtype(&(TCB->term.type));
     }
-
     returnBool(code);
 }
 
@@ -1608,6 +1607,7 @@ drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, int flag)
 
 NCURSES_EXPORT_VAR (TERM_DRIVER) _nc_WIN_DRIVER = {
     FALSE,
+	drv_name,		/* Name */
 	drv_CanHandle,		/* CanHandle */
 	drv_init,		/* init */
 	drv_release,		/* release */

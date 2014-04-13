@@ -10012,7 +10012,7 @@ if { (eval echo "$as_me:10003: \"$ac_compile\"") >&5
   echo "$as_me:10012: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   INTEL_COMPILER=yes
-cf_save_CFLAGS="$cf_save_CFLAGS -we147 -no-gcc"
+cf_save_CFLAGS="$cf_save_CFLAGS -we147"
 
 else
   echo "$as_me: failed program was:" >&5

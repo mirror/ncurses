@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.686 2014/02/10 00:37:02 tom Exp $
+dnl $Id: aclocal.m4,v 1.688 2014/04/12 22:28:53 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1533,6 +1533,40 @@ ifelse([$5],,AC_MSG_WARN(Cannot find $3 library),[$5])
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_FIND_SUB_INCDIR version: 1 updated: 2014/04/12 16:47:01
+dnl ------------------
+dnl Find an include-directory with the given leaf-name.  This is useful for
+dnl example with FreeBSD ports, which use this convention to distinguish
+dnl different versions of the same port.
+AC_DEFUN([CF_FIND_SUB_INCDIR],[
+	CF_SUBDIR_PATH(cf_search,$1,include)
+	for cf_item in $cf_search
+	do
+		case $cf_item in #(vi
+		*/$1)
+			CF_ADD_INCDIR($cf_item)
+			;;
+		esac
+	done
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_FIND_SUB_LIBDIR version: 1 updated: 2014/04/12 16:47:01
+dnl ------------------
+dnl Find a library-directory with the given leaf-name.  This is useful for
+dnl example with FreeBSD ports, which use this convention to distinguish
+dnl different versions of the same port.
+AC_DEFUN([CF_FIND_SUB_LIBDIR],[
+	CF_SUBDIR_PATH(cf_search,$1,lib)
+	for cf_item in $cf_search
+	do
+		case $cf_item in #(vi
+		*/$1)
+			CF_ADD_LIBDIR($cf_item)
+			;;
+		esac
+	done
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_FIXUP_ADAFLAGS version: 1 updated: 2012/03/31 18:48:10
 dnl -----------------
 dnl make ADAFLAGS consistent with CFLAGS
@@ -2585,7 +2619,7 @@ AC_LANG_RESTORE
 AC_SUBST(EXTRA_CXXFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HASHED_DB version: 4 updated: 2010/05/29 16:31:02
+dnl CF_HASHED_DB version: 5 updated: 2014/04/12 16:47:01
 dnl ------------
 dnl Look for an instance of the Berkeley hashed database.
 dnl
@@ -2600,6 +2634,16 @@ yes|*able*) #(vi
     if test -d "$1" ; then
         CF_ADD_INCDIR($1/include)
         CF_ADD_LIBDIR($1/lib)
+	else
+		case "$1" in #(vi
+		./*|../*|/*)
+			AC_MSG_WARN(no such directory $1)
+			;; #(vi
+		*)
+			CF_FIND_SUB_INCDIR($1)
+			CF_FIND_SUB_LIBDIR($1)
+			;;
+		esac
     fi
 esac
 ])
@@ -2692,7 +2736,7 @@ done
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HASHED_DB_VERSION version: 3 updated: 2007/12/01 15:01:37
+dnl CF_HASHED_DB_VERSION version: 4 updated: 2014/04/12 16:47:01
 dnl --------------------
 dnl Given that we have the header file for hashed database, find the version
 dnl information.
@@ -2701,7 +2745,7 @@ AC_DEFUN([CF_HASHED_DB_VERSION],
 AC_CACHE_CHECK(for version of db, cf_cv_hashed_db_version,[
 cf_cv_hashed_db_version=unknown
 
-for cf_db_version in 1 2 3 4 5
+for cf_db_version in 1 2 3 4 5 6
 do
 	CF_MSG_LOG(checking for db version $cf_db_version)
 	AC_TRY_COMPILE([
@@ -2809,7 +2853,7 @@ CPPFLAGS="-I. -I../include $CPPFLAGS"
 AC_SUBST(CPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INTEL_COMPILER version: 5 updated: 2013/02/10 10:41:05
+dnl CF_INTEL_COMPILER version: 6 updated: 2014/03/17 13:13:07
 dnl -----------------
 dnl Check if the given compiler is really the Intel compiler for Linux.  It
 dnl tries to imitate gcc, but does not return an error when it finds a mismatch
@@ -2838,7 +2882,7 @@ if test "$ifelse([$1],,[$1],GCC)" = yes ; then
 make an error
 #endif
 ],[ifelse([$2],,INTEL_COMPILER,[$2])=yes
-cf_save_CFLAGS="$cf_save_CFLAGS -we147 -no-gcc"
+cf_save_CFLAGS="$cf_save_CFLAGS -we147"
 ],[])
 		ifelse([$3],,CFLAGS,[$3])="$cf_save_CFLAGS"
 		AC_MSG_RESULT($ifelse([$2],,INTEL_COMPILER,[$2]))
