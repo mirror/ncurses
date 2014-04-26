@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.134 2014/03/08 20:32:59 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.135 2014/04/26 18:47:20 juergen Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -327,7 +327,7 @@ NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
 /* initialize the cost structure */
 {
-    if (SP_PARM->_ofp && isatty(fileno(SP_PARM->_ofp))) {
+    if (SP_PARM->_ofp && NC_ISATTY(fileno(SP_PARM->_ofp))) {
 	SP_PARM->_char_padding = ((BAUDBYTE * 1000 * 10)
 				  / (BAUDRATE(SP_PARM) > 0
 				     ? BAUDRATE(SP_PARM)

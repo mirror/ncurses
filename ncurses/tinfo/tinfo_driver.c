@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.37 2014/04/13 00:17:08 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.38 2014/04/26 18:47:20 juergen Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -385,7 +385,7 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *linep, int *colp)
 	/* try asking the OS */
 	{
 	    TERMINAL *termp = (TERMINAL *) TCB;
-	    if (isatty(termp->Filedes)) {
+	    if (NC_ISATTY(termp->Filedes)) {
 		STRUCT_WINSIZE size;
 
 		errno = 0;
@@ -671,7 +671,7 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
      * _nc_setupscreen().  Do it now anyway, so we can initialize the
      * baudrate.
      */
-    if (isatty(trm->Filedes)) {
+    if (NC_ISATTY(trm->Filedes)) {
 	TCB->drv->td_mode(TCB, TRUE, TRUE);
     }
 }

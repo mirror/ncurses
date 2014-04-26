@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.31 2014/04/13 00:16:07 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.33 2014/04/26 19:32:05 juergen Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
@@ -71,6 +71,7 @@ static const LONG keylist[] =
 #define FKEYS 24
 #define MAPSIZE (FKEYS + N_INI)
 #define NUMPAIRS 64
+#define HANDLE_CAST(f) (HANDLE)(intptr_t)(f)
 
 typedef struct props {
     CONSOLE_SCREEN_BUFFER_INFO SBI;
@@ -86,6 +87,111 @@ typedef struct props {
 } Properties;
 
 #define PropOf(TCB) ((Properties*)TCB->prop)
+
+#if WINVER >= 0x0600
+/*   This function tests, whether or not the ncurses application
+     is running as a descendant of MSYS2/cygwin mintty terminal
+     application. mintty doesn't use Windows Console for it's screen
+     I/O, so the native Windows _isatty doesn't recognize it as
+     character device. But we can discover we are at the end of an
+     Pipe and can query to server side of the pipe, looking whether
+     or not this is mintty.
+ */
+static int
+_ismintty(int fd, LPHANDLE pMinTTY)
+{
+    HANDLE handle;
+    DWORD dw;
+
+    handle = HANDLE_CAST(_get_osfhandle(fd));
+    if (handle == INVALID_HANDLE_VALUE)
+	return 0;
+
+    dw = GetFileType(handle);
+    if (dw == FILE_TYPE_PIPE) {
+	if (GetNamedPipeInfo(handle, 0, 0, 0, 0)) {
+	    ULONG pPid;
+	    /* Requires NT6 */
+	    if (GetNamedPipeServerProcessId(handle, &pPid)) {
+		TCHAR buf[MAX_PATH];
+		DWORD len = 0;
+		/* These security attributes may allow us to
+		   create a remote thread in mintty to manipulate
+		   the terminal state remotely */
+		HANDLE pHandle = OpenProcess(PROCESS_CREATE_THREAD
+					     | PROCESS_QUERY_INFORMATION
+					     | PROCESS_VM_OPERATION
+					     | PROCESS_VM_WRITE
+					     | PROCESS_VM_READ,
+					     FALSE,
+					     pPid);
+		if (pMinTTY)
+		    *pMinTTY = INVALID_HANDLE_VALUE;
+		if (pHandle == INVALID_HANDLE_VALUE)
+		    return 0;
+		if (len = GetProcessImageFileName(pHandle,
+						  buf,
+						  (DWORD) (sizeof(buf) /
+							   sizeof(*buf)))) {
+		    TCHAR *pos = _tcsrchr(buf, _T('\\'));
+		    if (pos) {
+			pos++;
+			if (_tcsnicmp(pos, _TEXT("mintty.exe"), 10) == 0) {
+			    if (pMinTTY)
+				*pMinTTY = pHandle;
+			    return 1;
+			}
+		    }
+		}
+	    }
+	}
+    }
+    return 0;
+}
+#endif
+
+/*   Our replacement for the systems _isatty to include also
+     a test for mintty. This is called from the NC_ISATTY macro
+     defined in curses.priv.h
+ */
+int
+_nc_mingw_isatty(int fd)
+{
+    if (_isatty(fd))
+	return 1;
+#if WINVER < 0x0600
+    return 0;
+#else
+    return _ismintty(fd, NULL);
+#endif
+}
+
+/*   Borrowed from ansicon project.
+     Check whether or not a I/O handle is associated with
+     a Windows console.
+*/
+static BOOL
+IsConsoleHandle(HANDLE hdl)
+{
+    DWORD dwFlag = 0;
+    if (!GetConsoleMode(hdl, &dwFlag)) {
+	return (int) WriteConsoleA(hdl, NULL, 0, &dwFlag, NULL);
+    }
+    return (int) (dwFlag & ENABLE_PROCESSED_OUTPUT);
+}
+
+/*   This is used when running in terminfo mode to discover,
+     whether or not the "terminal" is actually a Windows
+     Console. It's the responsibilty of the console to deal
+     with the terminal escape sequences that are sent by
+     terminfo.
+ */
+int
+_nc_mingw_isconsole(int fd)
+{
+    HANDLE hdl = HANDLE_CAST(_get_osfhandle(fd));
+    return (int) IsConsoleHandle(hdl);
+}
 
 int
 _nc_mingw_ioctl(int fd GCC_UNUSED,
@@ -380,14 +486,14 @@ restore_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static const char *
-drv_name(TERMINAL_CONTROL_BLOCK * TCB)
+wcon_name(TERMINAL_CONTROL_BLOCK * TCB)
 {
     (void) TCB;
     return "win32console";
 }
 
 static int
-drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
+wcon_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 {
     int result = ERR;
     int y, nonempty, n, x0, x1, Width, Height;
@@ -396,7 +502,7 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
     AssertTCB();
     SetSP();
 
-    T((T_CALLED("win32con::drv_doupdate(%p)"), TCB));
+    T((T_CALLED("win32con::wcon_doupdate(%p)"), TCB));
     if (okConsoleHandle(TCB)) {
 
 	Width = screen_columns(sp);
@@ -507,13 +613,13 @@ drv_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static bool
-drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
-	      const char *tname,
-	      int *errret GCC_UNUSED)
+wcon_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
+	       const char *tname,
+	       int *errret GCC_UNUSED)
 {
     bool code = FALSE;
 
-    T((T_CALLED("win32con::drv_CanHandle(%p)"), TCB));
+    T((T_CALLED("win32con::wcon_CanHandle(%p)"), TCB));
 
     assert((TCB != 0) && (tname != 0));
 
@@ -549,8 +655,8 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static int
-drv_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB,
-		int beepFlag GCC_UNUSED)
+wcon_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB,
+		 int beepFlag GCC_UNUSED)
 {
     SCREEN *sp;
     int res = ERR;
@@ -562,9 +668,9 @@ drv_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static int
-drv_print(TERMINAL_CONTROL_BLOCK * TCB,
-	  char *data GCC_UNUSED,
-	  int len GCC_UNUSED)
+wcon_print(TERMINAL_CONTROL_BLOCK * TCB,
+	   char *data GCC_UNUSED,
+	   int len GCC_UNUSED)
 {
     SCREEN *sp;
 
@@ -575,9 +681,9 @@ drv_print(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static int
-drv_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB,
-		  int fg GCC_UNUSED,
-		  int bg GCC_UNUSED)
+wcon_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB,
+		   int fg GCC_UNUSED,
+		   int bg GCC_UNUSED)
 {
     SCREEN *sp;
     int code = ERR;
@@ -624,10 +730,10 @@ get_SBI(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static void
-drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
-	     int fore,
-	     int color,
-	     int (*outc) (SCREEN *, int) GCC_UNUSED)
+wcon_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
+	      int fore,
+	      int color,
+	      int (*outc) (SCREEN *, int) GCC_UNUSED)
 {
     AssertTCB();
 
@@ -641,7 +747,7 @@ drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static bool
-drv_rescol(TERMINAL_CONTROL_BLOCK * TCB)
+wcon_rescol(TERMINAL_CONTROL_BLOCK * TCB)
 {
     bool res = FALSE;
 
@@ -656,7 +762,7 @@ drv_rescol(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static bool
-drv_rescolors(TERMINAL_CONTROL_BLOCK * TCB)
+wcon_rescolors(TERMINAL_CONTROL_BLOCK * TCB)
 {
     int result = FALSE;
     SCREEN *sp;
@@ -668,13 +774,13 @@ drv_rescolors(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static int
-drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *Lines, int *Cols)
+wcon_size(TERMINAL_CONTROL_BLOCK * TCB, int *Lines, int *Cols)
 {
     int result = ERR;
 
     AssertTCB();
 
-    T((T_CALLED("win32con::drv_size(%p)"), TCB));
+    T((T_CALLED("win32con::wcon_size(%p)"), TCB));
 
     if (okConsoleHandle(TCB) &&
 	PropOf(TCB) != 0 &&
@@ -695,16 +801,16 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *Lines, int *Cols)
 }
 
 static int
-drv_setsize(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED,
-	    int l GCC_UNUSED,
-	    int c GCC_UNUSED)
+wcon_setsize(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED,
+	     int l GCC_UNUSED,
+	     int c GCC_UNUSED)
 {
     AssertTCB();
     return ERR;
 }
 
 static int
-drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
+wcon_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 {
     DWORD dwFlag = 0;
     tcflag_t iflag;
@@ -771,7 +877,7 @@ drv_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 }
 
 static int
-drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
+wcon_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 {
     SCREEN *sp;
     TERMINAL *_term = (TERMINAL *) TCB;
@@ -780,20 +886,20 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
     AssertTCB();
     sp = TCB->csp;
 
-    T((T_CALLED("win32con::drv_mode(%p, prog=%d, def=%d)"), TCB, progFlag, defFlag));
+    T((T_CALLED("win32con::wcon_mode(%p, prog=%d, def=%d)"), TCB, progFlag, defFlag));
     PropOf(TCB)->progMode = progFlag;
     PropOf(TCB)->lastOut = progFlag ? TCB->hdl : TCB->out;
     SetConsoleActiveScreenBuffer(PropOf(TCB)->lastOut);
 
     if (progFlag) /* prog mode */  {
 	if (defFlag) {
-	    if ((drv_sgmode(TCB, FALSE, &(_term->Nttyb)) == OK)) {
+	    if ((wcon_sgmode(TCB, FALSE, &(_term->Nttyb)) == OK)) {
 		_term->Nttyb.c_oflag &= (tcflag_t) (~OFLAGS_TABS);
 		code = OK;
 	    }
 	} else {
 	    /* reset_prog_mode */
-	    if (drv_sgmode(TCB, TRUE, &(_term->Nttyb)) == OK) {
+	    if (wcon_sgmode(TCB, TRUE, &(_term->Nttyb)) == OK) {
 		if (sp) {
 		    if (sp->_keypad_on)
 			_nc_keypad(sp, TRUE);
@@ -804,7 +910,7 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
     } else {			/* shell mode */
 	if (defFlag) {
 	    /* def_shell_mode */
-	    if (drv_sgmode(TCB, FALSE, &(_term->Ottyb)) == OK) {
+	    if (wcon_sgmode(TCB, FALSE, &(_term->Ottyb)) == OK) {
 		code = OK;
 	    }
 	} else {
@@ -813,7 +919,7 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 		_nc_keypad(sp, FALSE);
 		NCURSES_SP_NAME(_nc_flush) (sp);
 	    }
-	    code = drv_sgmode(TCB, TRUE, &(_term->Ottyb));
+	    code = wcon_sgmode(TCB, TRUE, &(_term->Ottyb));
 	    if (!PropOf(TCB)->buffered) {
 		if (!restore_original_screen(TCB))
 		    code = ERR;
@@ -825,12 +931,12 @@ drv_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 }
 
 static void
-drv_screen_init(SCREEN *sp GCC_UNUSED)
+wcon_screen_init(SCREEN *sp GCC_UNUSED)
 {
 }
 
 static void
-drv_wrap(SCREEN *sp GCC_UNUSED)
+wcon_wrap(SCREEN *sp GCC_UNUSED)
 {
 }
 
@@ -878,9 +984,9 @@ MapKey(TERMINAL_CONTROL_BLOCK * TCB, WORD vKey)
 }
 
 static void
-drv_release(TERMINAL_CONTROL_BLOCK * TCB)
+wcon_release(TERMINAL_CONTROL_BLOCK * TCB)
 {
-    T((T_CALLED("win32con::drv_release(%p)"), TCB));
+    T((T_CALLED("win32con::wcon_release(%p)"), TCB));
 
     AssertTCB();
     if (TCB->prop)
@@ -977,11 +1083,11 @@ save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static void
-drv_init(TERMINAL_CONTROL_BLOCK * TCB)
+wcon_init(TERMINAL_CONTROL_BLOCK * TCB)
 {
     DWORD num_buttons;
 
-    T((T_CALLED("win32con::drv_init(%p)"), TCB));
+    T((T_CALLED("win32con::wcon_init(%p)"), TCB));
 
     AssertTCB();
 
@@ -1014,12 +1120,12 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 	    PropOf(TCB)->buffered = buffered;
 	    PropOf(TCB)->window_only = FALSE;
 	    if (!get_SBI(TCB)) {
-		FreeAndNull(TCB->prop);		/* force error in drv_size */
+		FreeAndNull(TCB->prop);		/* force error in wcon_size */
 		returnVoid;
 	    }
 	    if (!buffered) {
 		if (!save_original_screen(TCB)) {
-		    FreeAndNull(TCB->prop);	/* force error in drv_size */
+		    FreeAndNull(TCB->prop);	/* force error in wcon_size */
 		    returnVoid;
 		}
 	    }
@@ -1071,10 +1177,10 @@ drv_init(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static void
-drv_initpair(TERMINAL_CONTROL_BLOCK * TCB,
-	     int pair,
-	     int f,
-	     int b)
+wcon_initpair(TERMINAL_CONTROL_BLOCK * TCB,
+	      int pair,
+	      int f,
+	      int b)
 {
     SCREEN *sp;
 
@@ -1088,11 +1194,11 @@ drv_initpair(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static void
-drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
-	      int color GCC_UNUSED,
-	      int r GCC_UNUSED,
-	      int g GCC_UNUSED,
-	      int b GCC_UNUSED)
+wcon_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
+	       int color GCC_UNUSED,
+	       int r GCC_UNUSED,
+	       int g GCC_UNUSED,
+	       int b GCC_UNUSED)
 {
     SCREEN *sp;
 
@@ -1101,11 +1207,11 @@ drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static void
-drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
-	     int old_pair GCC_UNUSED,
-	     int pair GCC_UNUSED,
-	     int reverse GCC_UNUSED,
-	     int (*outc) (SCREEN *, int) GCC_UNUSED
+wcon_do_color(TERMINAL_CONTROL_BLOCK * TCB,
+	      int old_pair GCC_UNUSED,
+	      int pair GCC_UNUSED,
+	      int reverse GCC_UNUSED,
+	      int (*outc) (SCREEN *, int) GCC_UNUSED
 )
 {
     SCREEN *sp;
@@ -1115,7 +1221,7 @@ drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static void
-drv_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
+wcon_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
 {
     SCREEN *sp;
 
@@ -1126,7 +1232,7 @@ drv_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static int
-drv_testmouse(TERMINAL_CONTROL_BLOCK * TCB, int delay)
+wcon_testmouse(TERMINAL_CONTROL_BLOCK * TCB, int delay)
 {
     int rc = 0;
     SCREEN *sp;
@@ -1148,9 +1254,9 @@ drv_testmouse(TERMINAL_CONTROL_BLOCK * TCB, int delay)
 }
 
 static int
-drv_mvcur(TERMINAL_CONTROL_BLOCK * TCB,
-	  int yold GCC_UNUSED, int xold GCC_UNUSED,
-	  int y, int x)
+wcon_mvcur(TERMINAL_CONTROL_BLOCK * TCB,
+	   int yold GCC_UNUSED, int xold GCC_UNUSED,
+	   int y, int x)
 {
     int ret = ERR;
     if (okConsoleHandle(TCB)) {
@@ -1165,9 +1271,9 @@ drv_mvcur(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static void
-drv_hwlabel(TERMINAL_CONTROL_BLOCK * TCB,
-	    int labnum GCC_UNUSED,
-	    char *text GCC_UNUSED)
+wcon_hwlabel(TERMINAL_CONTROL_BLOCK * TCB,
+	     int labnum GCC_UNUSED,
+	     char *text GCC_UNUSED)
 {
     SCREEN *sp;
 
@@ -1176,8 +1282,8 @@ drv_hwlabel(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static void
-drv_hwlabelOnOff(TERMINAL_CONTROL_BLOCK * TCB,
-		 int OnFlag GCC_UNUSED)
+wcon_hwlabelOnOff(TERMINAL_CONTROL_BLOCK * TCB,
+		  int OnFlag GCC_UNUSED)
 {
     SCREEN *sp;
 
@@ -1186,7 +1292,7 @@ drv_hwlabelOnOff(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static chtype
-drv_conattr(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED)
+wcon_conattr(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED)
 {
     chtype res = A_NORMAL;
     res |= (A_BOLD | A_DIM | A_REVERSE | A_STANDOUT | A_COLOR);
@@ -1194,7 +1300,7 @@ drv_conattr(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED)
 }
 
 static void
-drv_setfilter(TERMINAL_CONTROL_BLOCK * TCB)
+wcon_setfilter(TERMINAL_CONTROL_BLOCK * TCB)
 {
     SCREEN *sp;
 
@@ -1203,9 +1309,9 @@ drv_setfilter(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static void
-drv_initacs(TERMINAL_CONTROL_BLOCK * TCB,
-	    chtype *real_map GCC_UNUSED,
-	    chtype *fake_map GCC_UNUSED)
+wcon_initacs(TERMINAL_CONTROL_BLOCK * TCB,
+	     chtype *real_map GCC_UNUSED,
+	     chtype *fake_map GCC_UNUSED)
 {
 #define DATA(a,b) { a, b }
     static struct {
@@ -1321,11 +1427,11 @@ decode_mouse(TERMINAL_CONTROL_BLOCK * TCB, int mask)
 }
 
 static int
-drv_twait(TERMINAL_CONTROL_BLOCK * TCB,
-	  int mode,
-	  int milliseconds,
-	  int *timeleft
-	  EVENTLIST_2nd(_nc_eventlist * evl))
+wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
+	   int mode,
+	   int milliseconds,
+	   int *timeleft
+	   EVENTLIST_2nd(_nc_eventlist * evl))
 {
     SCREEN *sp;
     INPUT_RECORD inp_rec;
@@ -1473,7 +1579,7 @@ handle_mouse(TERMINAL_CONTROL_BLOCK * TCB, MOUSE_EVENT_RECORD mer)
 }
 
 static int
-drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
+wcon_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 {
     SCREEN *sp;
     int n = 1;
@@ -1488,7 +1594,7 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 
     memset(&inp_rec, 0, sizeof(inp_rec));
 
-    T((T_CALLED("win32con::drv_read(%p)"), TCB));
+    T((T_CALLED("win32con::wcon_read(%p)"), TCB));
     while ((b = ReadConsoleInput(TCB->inp, &inp_rec, 1, &nRead))) {
 	if (b && nRead > 0) {
 	    if (inp_rec.EventType == KEY_EVENT) {
@@ -1521,15 +1627,15 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 }
 
 static int
-drv_nap(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED, int ms)
+wcon_nap(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED, int ms)
 {
-    T((T_CALLED("win32con::drv_nap(%p, %d)"), TCB, ms));
+    T((T_CALLED("win32con::wcon_nap(%p, %d)"), TCB, ms));
     Sleep((DWORD) ms);
     returnCode(OK);
 }
 
 static bool
-drv_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int keycode)
+wcon_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int keycode)
 {
     SCREEN *sp;
     WORD nKey;
@@ -1542,7 +1648,7 @@ drv_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int keycode)
 
     AssertTCB();
 
-    T((T_CALLED("win32con::drv_kyExist(%p, %d)"), TCB, keycode));
+    T((T_CALLED("win32con::wcon_kyExist(%p, %d)"), TCB, keycode));
     res = bsearch(&key,
 		  PropOf(TCB)->rmap,
 		  (size_t) (N_INI + FKEYS),
@@ -1558,7 +1664,7 @@ drv_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int keycode)
 }
 
 static int
-drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, int flag GCC_UNUSED)
+wcon_kpad(TERMINAL_CONTROL_BLOCK * TCB, int flag GCC_UNUSED)
 {
     SCREEN *sp;
     int code = ERR;
@@ -1566,7 +1672,7 @@ drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, int flag GCC_UNUSED)
     AssertTCB();
     sp = TCB->csp;
 
-    T((T_CALLED("win32con::drv_kpad(%p, %d)"), TCB, flag));
+    T((T_CALLED("win32con::wcon_kpad(%p, %d)"), TCB, flag));
     if (sp) {
 	code = OK;
     }
@@ -1574,7 +1680,7 @@ drv_kpad(TERMINAL_CONTROL_BLOCK * TCB, int flag GCC_UNUSED)
 }
 
 static int
-drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, int flag)
+wcon_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, int flag)
 {
     int code = ERR;
     SCREEN *sp;
@@ -1586,7 +1692,7 @@ drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, int flag)
     AssertTCB();
     SetSP();
 
-    T((T_CALLED("win32con::drv_keyok(%p, %d, %d)"), TCB, keycode, flag));
+    T((T_CALLED("win32con::wcon_keyok(%p, %d, %d)"), TCB, keycode, flag));
     if (sp) {
 	res = bsearch(&key,
 		      PropOf(TCB)->rmap,
@@ -1607,39 +1713,39 @@ drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, int flag)
 
 NCURSES_EXPORT_VAR (TERM_DRIVER) _nc_WIN_DRIVER = {
     FALSE,
-	drv_name,		/* Name */
-	drv_CanHandle,		/* CanHandle */
-	drv_init,		/* init */
-	drv_release,		/* release */
-	drv_size,		/* size */
-	drv_sgmode,		/* sgmode */
-	drv_conattr,		/* conattr */
-	drv_mvcur,		/* hwcur */
-	drv_mode,		/* mode */
-	drv_rescol,		/* rescol */
-	drv_rescolors,		/* rescolors */
-	drv_setcolor,		/* color */
-	drv_dobeepflash,	/* DoBeepFlash */
-	drv_initpair,		/* initpair */
-	drv_initcolor,		/* initcolor */
-	drv_do_color,		/* docolor */
-	drv_initmouse,		/* initmouse */
-	drv_testmouse,		/* testmouse */
-	drv_setfilter,		/* setfilter */
-	drv_hwlabel,		/* hwlabel */
-	drv_hwlabelOnOff,	/* hwlabelOnOff */
-	drv_doupdate,		/* update */
-	drv_defaultcolors,	/* defaultcolors */
-	drv_print,		/* print */
-	drv_size,		/* getsize */
-	drv_setsize,		/* setsize */
-	drv_initacs,		/* initacs */
-	drv_screen_init,	/* scinit */
-	drv_wrap,		/* scexit */
-	drv_twait,		/* twait */
-	drv_read,		/* read */
-	drv_nap,		/* nap */
-	drv_kpad,		/* kpad */
-	drv_keyok,		/* kyOk */
-	drv_kyExist		/* kyExist */
+	wcon_name,		/* Name */
+	wcon_CanHandle,		/* CanHandle */
+	wcon_init,		/* init */
+	wcon_release,		/* release */
+	wcon_size,		/* size */
+	wcon_sgmode,		/* sgmode */
+	wcon_conattr,		/* conattr */
+	wcon_mvcur,		/* hwcur */
+	wcon_mode,		/* mode */
+	wcon_rescol,		/* rescol */
+	wcon_rescolors,		/* rescolors */
+	wcon_setcolor,		/* color */
+	wcon_dobeepflash,	/* DoBeepFlash */
+	wcon_initpair,		/* initpair */
+	wcon_initcolor,		/* initcolor */
+	wcon_do_color,		/* docolor */
+	wcon_initmouse,		/* initmouse */
+	wcon_testmouse,		/* testmouse */
+	wcon_setfilter,		/* setfilter */
+	wcon_hwlabel,		/* hwlabel */
+	wcon_hwlabelOnOff,	/* hwlabelOnOff */
+	wcon_doupdate,		/* update */
+	wcon_defaultcolors,	/* defaultcolors */
+	wcon_print,		/* print */
+	wcon_size,		/* getsize */
+	wcon_setsize,		/* setsize */
+	wcon_initacs,		/* initacs */
+	wcon_screen_init,	/* scinit */
+	wcon_wrap,		/* scexit */
+	wcon_twait,		/* twait */
+	wcon_read,		/* read */
+	wcon_nap,		/* nap */
+	wcon_kpad,		/* kpad */
+	wcon_keyok,		/* kyOk */
+	wcon_kyExist		/* kyExist */
 };

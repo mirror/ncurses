@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.127 2014/03/08 20:32:59 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.128 2014/04/26 18:47:20 juergen Exp $")
 
 #include <fifo_defs.h>
 
@@ -259,7 +259,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
     } else
 #endif
 #if USE_KLIBC_KBD
-    if (isatty(sp->_ifd) && sp->_cbreak) {
+    if (NC_ISATTY(sp->_ifd) && sp->_cbreak) {
 	ch = _read_kbd(0, 1, !sp->_raw);
 	n = (ch == -1) ? -1 : 1;
 	sp->_extended_key = (ch == 0);

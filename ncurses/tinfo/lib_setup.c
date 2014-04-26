@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.159 2014/03/08 20:32:59 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.160 2014/04/26 18:47:20 juergen Exp $")
 
 /****************************************************************************
  *
@@ -321,7 +321,7 @@ _nc_get_screensize(SCREEN *sp,
 #endif
 #if HAVE_SIZECHANGE
 	/* try asking the OS */
-	if (isatty(cur_term->Filedes)) {
+	if (NC_ISATTY(cur_term->Filedes)) {
 	    STRUCT_WINSIZE size;
 
 	    errno = 0;
@@ -655,7 +655,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
      * Allow output redirection.  This is what SVr3 does.  If stdout is
      * directed to a file, screen updates go to standard error.
      */
-    if (Filedes == STDOUT_FILENO && !isatty(Filedes))
+    if (Filedes == STDOUT_FILENO && !NC_ISATTY(Filedes))
 	Filedes = STDERR_FILENO;
 
     /*
@@ -752,7 +752,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	 * _nc_setupscreen().  Do it now anyway, so we can initialize the
 	 * baudrate.
 	 */
-	if (isatty(Filedes)) {
+	if (NC_ISATTY(Filedes)) {
 	    def_prog_mode();
 	    baudrate();
 	}

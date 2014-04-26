@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2193 2014/04/19 18:33:37 tom Exp $
+-- $Id: NEWS,v 1.2196 2014/04/26 20:31:03 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140426
+	+ add --disable-lib-suffixes option (adapted from patch by Juergen
+	  Pfeifer).
+	+ merge some changes from Juergen Pfeifer's work with MSYS2, to
+	  simplify later merging:
+	  + use NC_ISATTY() macro for isatty() in library
+	  + add _nc_mingw_isatty() and related functions to windows-driver
+	  + rename terminal driver entrypoints to simplify grep's
+	+ remove a check in the sp-funcs flavor of newterm() which allowed only
+	  the first call to newterm() to succeed (report by Thomas Beierlein,
+	  cf: 20090927).
 
 20140419
 	+ update config.guess, config.sub from

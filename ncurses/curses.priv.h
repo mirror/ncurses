@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.533 2014/04/13 00:16:21 tom Exp $
+ * $Id: curses.priv.h,v 1.535 2014/04/26 18:45:36 juergen Exp $
  *
  *	curses.priv.h
  *
@@ -2350,6 +2350,8 @@ extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, int *, int *);
 #ifdef __MINGW32__
 #include <nc_mingw.h>
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_WIN_DRIVER;
+extern NCURSES_EXPORT(int)  _nc_mingw_isatty(int fd);
+extern NCURSES_EXPORT(int)  _nc_mingw_isconsole(int fd);
 #endif
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 #endif
@@ -2459,6 +2461,12 @@ extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_keyname (SCREEN *, int);
 extern NCURSES_EXPORT(int) _nc_ungetch (SCREEN *, int);
 extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *, chtype);
 
+#endif
+
+#ifndef __MINGW32__
+#  define NC_ISATTY(fd) isatty(fd)
+#else
+#  define NC_ISATTY(fd) _nc_mingw_isatty(fd)
 #endif
 
 #ifdef __cplusplus

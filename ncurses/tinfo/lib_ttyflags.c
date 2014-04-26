@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.29 2014/03/08 20:32:59 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.30 2014/04/26 18:47:20 juergen Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
@@ -107,7 +107,7 @@ NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_DCLx TTY * buf)
 	    for (;;) {
 		if ((SET_TTY(termp->Filedes, buf) != 0)
 #if USE_KLIBC_KBD
-		    && !isatty(termp->Filedes)
+		    && !NC_ISATTY(termp->Filedes)
 #endif
 		    ) {
 		    if (errno == EINTR)

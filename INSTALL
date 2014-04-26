@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.170 2014/04/12 23:10:33 tom Exp $
+-- $Id: INSTALL,v 1.171 2014/04/26 20:30:01 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -336,6 +336,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 
     --disable-largefile
 	Disable compiler flags needed to use large-file interfaces.
+
+    --disable-lib-suffixes
+	Suppress the "w", "t" or "tw" suffixes which normally would be added
+	to the library names for the --enable-widec and --with-pthread options.
 
     --disable-libtool-version
 	when using --with-libtool, control how the major/minor version numbers
