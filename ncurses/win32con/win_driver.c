@@ -37,22 +37,34 @@
  */
 
 #include <curses.priv.h>
+#include <tchar.h>
+#include <io.h>
+
+#define PSAPI_VERSION 2
+#include <psapi.h>
+
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.33 2014/04/26 19:32:05 juergen Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.36 2014/05/03 20:48:51 tom Exp $")
+
+#ifndef __GNUC__
+#  error We need GCC to compile for MinGW
+#endif
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 
 #define EXP_OPTIMIZE 0
 
-#define okConsoleHandle(TCB) (TCB != 0 && !InvalidConsoleHandle(TCB->hdl))
+#define array_length(a) (sizeof(a)/sizeof(a[0]))
+
+#define okConsoleHandle(TCB) (TCB != 0 && CON.hdl != INVALID_HANDLE_VALUE)
 
 #define AssertTCB() assert(TCB != 0 && (TCB->magic == WINMAGIC))
 #define SetSP()     assert(TCB->csp != 0); sp = TCB->csp; (void) sp
 
 #define GenMap(vKey,key) MAKELONG(key, vKey)
 
-#define AdjustY(p) ((p)->buffered ? 0 : (int) (p)->SBI.srWindow.Top)
+#define AdjustY() (CON.buffered ? 0 : (int) CON.SBI.srWindow.Top)
 
 static const LONG keylist[] =
 {
@@ -67,142 +79,36 @@ static const LONG keylist[] =
     GenMap(VK_DELETE, KEY_DC),
     GenMap(VK_INSERT, KEY_IC)
 };
-#define N_INI ((int)(sizeof(keylist)/sizeof(keylist[0])))
+#define N_INI ((int)array_length(keylist))
 #define FKEYS 24
 #define MAPSIZE (FKEYS + N_INI)
 #define NUMPAIRS 64
-#define HANDLE_CAST(f) (HANDLE)(intptr_t)(f)
 
-typedef struct props {
-    CONSOLE_SCREEN_BUFFER_INFO SBI;
-    bool progMode;
-    TERM_HANDLE lastOut;
+/*   A process can only have a single console, so it's save
+     to maintain all the information about it in a single
+     static scructure.
+ */
+static struct {
+    BOOL initialized;
+    BOOL buffered;
+    BOOL window_only;
+    BOOL progMode;
+    BOOL isMinTTY;
+    BOOL isTermInfoConsole;
+    HANDLE out;
+    HANDLE inp;
+    HANDLE hdl;
+    HANDLE lastOut;
+    int numButtons;
     DWORD map[MAPSIZE];
     DWORD rmap[MAPSIZE];
     WORD pairs[NUMPAIRS];
-    bool buffered;		/* normally allocate console-buffer */
-    bool window_only;		/* ..if not, we save buffer or window-only */
     COORD origin;
     CHAR_INFO *save_screen;
-} Properties;
+    CONSOLE_SCREEN_BUFFER_INFO SBI;
+} CON;
 
-#define PropOf(TCB) ((Properties*)TCB->prop)
-
-#if WINVER >= 0x0600
-/*   This function tests, whether or not the ncurses application
-     is running as a descendant of MSYS2/cygwin mintty terminal
-     application. mintty doesn't use Windows Console for it's screen
-     I/O, so the native Windows _isatty doesn't recognize it as
-     character device. But we can discover we are at the end of an
-     Pipe and can query to server side of the pipe, looking whether
-     or not this is mintty.
- */
-static int
-_ismintty(int fd, LPHANDLE pMinTTY)
-{
-    HANDLE handle;
-    DWORD dw;
-
-    handle = HANDLE_CAST(_get_osfhandle(fd));
-    if (handle == INVALID_HANDLE_VALUE)
-	return 0;
-
-    dw = GetFileType(handle);
-    if (dw == FILE_TYPE_PIPE) {
-	if (GetNamedPipeInfo(handle, 0, 0, 0, 0)) {
-	    ULONG pPid;
-	    /* Requires NT6 */
-	    if (GetNamedPipeServerProcessId(handle, &pPid)) {
-		TCHAR buf[MAX_PATH];
-		DWORD len = 0;
-		/* These security attributes may allow us to
-		   create a remote thread in mintty to manipulate
-		   the terminal state remotely */
-		HANDLE pHandle = OpenProcess(PROCESS_CREATE_THREAD
-					     | PROCESS_QUERY_INFORMATION
-					     | PROCESS_VM_OPERATION
-					     | PROCESS_VM_WRITE
-					     | PROCESS_VM_READ,
-					     FALSE,
-					     pPid);
-		if (pMinTTY)
-		    *pMinTTY = INVALID_HANDLE_VALUE;
-		if (pHandle == INVALID_HANDLE_VALUE)
-		    return 0;
-		if (len = GetProcessImageFileName(pHandle,
-						  buf,
-						  (DWORD) (sizeof(buf) /
-							   sizeof(*buf)))) {
-		    TCHAR *pos = _tcsrchr(buf, _T('\\'));
-		    if (pos) {
-			pos++;
-			if (_tcsnicmp(pos, _TEXT("mintty.exe"), 10) == 0) {
-			    if (pMinTTY)
-				*pMinTTY = pHandle;
-			    return 1;
-			}
-		    }
-		}
-	    }
-	}
-    }
-    return 0;
-}
-#endif
-
-/*   Our replacement for the systems _isatty to include also
-     a test for mintty. This is called from the NC_ISATTY macro
-     defined in curses.priv.h
- */
-int
-_nc_mingw_isatty(int fd)
-{
-    if (_isatty(fd))
-	return 1;
-#if WINVER < 0x0600
-    return 0;
-#else
-    return _ismintty(fd, NULL);
-#endif
-}
-
-/*   Borrowed from ansicon project.
-     Check whether or not a I/O handle is associated with
-     a Windows console.
-*/
-static BOOL
-IsConsoleHandle(HANDLE hdl)
-{
-    DWORD dwFlag = 0;
-    if (!GetConsoleMode(hdl, &dwFlag)) {
-	return (int) WriteConsoleA(hdl, NULL, 0, &dwFlag, NULL);
-    }
-    return (int) (dwFlag & ENABLE_PROCESSED_OUTPUT);
-}
-
-/*   This is used when running in terminfo mode to discover,
-     whether or not the "terminal" is actually a Windows
-     Console. It's the responsibilty of the console to deal
-     with the terminal escape sequences that are sent by
-     terminfo.
- */
-int
-_nc_mingw_isconsole(int fd)
-{
-    HANDLE hdl = HANDLE_CAST(_get_osfhandle(fd));
-    return (int) IsConsoleHandle(hdl);
-}
-
-int
-_nc_mingw_ioctl(int fd GCC_UNUSED,
-		long int request GCC_UNUSED,
-		struct termios *arg GCC_UNUSED)
-{
-    return 0;
-    endwin();
-    fprintf(stderr, "TERMINFO currently not supported on Windows.\n");
-    exit(1);
-}
+static BOOL console_initialized = FALSE;
 
 static WORD
 MapColor(bool fore, int color)
@@ -220,18 +126,15 @@ MapColor(bool fore, int color)
 }
 
 static WORD
-MapAttr(TERMINAL_CONTROL_BLOCK * TCB, WORD res, attr_t ch)
+MapAttr(WORD res, attr_t ch)
 {
     if (ch & A_COLOR) {
 	int p;
-	SCREEN *sp;
 
-	AssertTCB();
-	SetSP();
 	p = PairNumber(ch);
-	if (p > 0 && p < NUMPAIRS && TCB != 0 && sp != 0) {
+	if (p > 0 && p < NUMPAIRS) {
 	    WORD a;
-	    a = PropOf(TCB)->pairs[p];
+	    a = CON.pairs[p];
 	    res = (WORD) ((res & 0xff00) | a);
 	}
     }
@@ -276,10 +179,8 @@ con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int limit)
     int i;
     cchar_t ch;
     SCREEN *sp;
-    Properties *p = PropOf(TCB);
 
     AssertTCB();
-
     SetSP();
 
     for (i = actual = 0; i < limit; i++) {
@@ -287,8 +188,7 @@ con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int limit)
 	if (isWidecExt(ch))
 	    continue;
 	ci[actual].Char.UnicodeChar = CharOf(ch);
-	ci[actual].Attributes = MapAttr(TCB,
-					PropOf(TCB)->SBI.wAttributes,
+	ci[actual].Attributes = MapAttr(CON.SBI.wAttributes,
 					AttrOf(ch));
 	if (AttrOf(ch) & A_ALTCHARSET) {
 	    if (_nc_wacs) {
@@ -311,11 +211,11 @@ con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int limit)
     siz.Y = 1;
 
     rec.Left = (short) x;
-    rec.Top = (SHORT) (y + AdjustY(p));
+    rec.Top = (SHORT) (y + AdjustY());
     rec.Right = (short) (x + limit - 1);
     rec.Bottom = rec.Top;
 
-    return WriteConsoleOutputW(TCB->hdl, ci, siz, loc, &rec);
+    return WriteConsoleOutputW(CON.hdl, ci, siz, loc, &rec);
 }
 #define con_write(tcb, y, x, str, n) con_write16(tcb, y, x, str, n)
 #else
@@ -330,14 +230,12 @@ con_write8(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, chtype *str, int n)
     SCREEN *sp;
 
     AssertTCB();
-
     SetSP();
 
     for (i = 0; i < n; i++) {
 	ch = str[i];
 	ci[i].Char.AsciiChar = ChCharOf(ch);
-	ci[i].Attributes = MapAttr(TCB,
-				   PropOf(TCB)->SBI.wAttributes,
+	ci[i].Attributes = MapAttr(CON.SBI.wAttributes,
 				   ChAttrOf(ch));
 	if (ChAttrOf(ch) & A_ALTCHARSET) {
 	    if (sp->_acs_map)
@@ -356,7 +254,7 @@ con_write8(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, chtype *str, int n)
     rec.Right = (short) (x + n - 1);
     rec.Bottom = rec.Top;
 
-    return WriteConsoleOutput(TCB->hdl, ci, siz, loc, &rec);
+    return WriteConsoleOutput(CON.hdl, ci, siz, loc, &rec);
 }
 #define con_write(tcb, y, x, str, n) con_write8(tcb, y, x, str, n)
 #endif
@@ -441,41 +339,40 @@ find_next_change(SCREEN *sp, int row, int col)
 		win->_line[row].lastchar  = _NOCHANGE
 
 static void
-selectActiveHandle(TERMINAL_CONTROL_BLOCK * TCB)
+selectActiveHandle(void)
 {
-    if (PropOf(TCB)->lastOut != TCB->hdl) {
-	PropOf(TCB)->lastOut = TCB->hdl;
-	SetConsoleActiveScreenBuffer(PropOf(TCB)->lastOut);
+    if (CON.lastOut != CON.hdl) {
+	CON.lastOut = CON.hdl;
+	SetConsoleActiveScreenBuffer(CON.lastOut);
     }
 }
 
 static bool
-restore_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
+restore_original_screen(void)
 {
     COORD bufferCoord;
     SMALL_RECT writeRegion;
-    Properties *p = PropOf(TCB);
     bool result = FALSE;
 
-    if (p->window_only) {
-	writeRegion.Top = p->SBI.srWindow.Top;
-	writeRegion.Left = p->SBI.srWindow.Left;
-	writeRegion.Bottom = p->SBI.srWindow.Bottom;
-	writeRegion.Right = p->SBI.srWindow.Right;
+    if (CON.window_only) {
+	writeRegion.Top = CON.SBI.srWindow.Top;
+	writeRegion.Left = CON.SBI.srWindow.Left;
+	writeRegion.Bottom = CON.SBI.srWindow.Bottom;
+	writeRegion.Right = CON.SBI.srWindow.Right;
 	T(("... restoring window"));
     } else {
 	writeRegion.Top = 0;
 	writeRegion.Left = 0;
-	writeRegion.Bottom = (SHORT) (p->SBI.dwSize.Y - 1);
-	writeRegion.Right = (SHORT) (p->SBI.dwSize.X - 1);
+	writeRegion.Bottom = (SHORT) (CON.SBI.dwSize.Y - 1);
+	writeRegion.Right = (SHORT) (CON.SBI.dwSize.X - 1);
 	T(("... restoring entire buffer"));
     }
 
     bufferCoord.X = bufferCoord.Y = 0;
 
-    if (WriteConsoleOutput(TCB->hdl,
-			   p->save_screen,
-			   p->SBI.dwSize,
+    if (WriteConsoleOutput(CON.hdl,
+			   CON.save_screen,
+			   CON.SBI.dwSize,
 			   bufferCoord,
 			   &writeRegion)) {
 	result = TRUE;
@@ -606,7 +503,7 @@ wcon_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 			       0, 0,
 			       CurScreen(sp)->_cury, CurScreen(sp)->_curx);
 	}
-	selectActiveHandle(TCB);
+	selectActiveHandle();
 	result = OK;
     }
     returnCode(result);
@@ -637,7 +534,8 @@ wcon_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
 	 */
 	size_t n = strlen(tname + 1);
 	if (n != 0
-	    && (strncmp(tname + 1, "win32console", n) == 0)) {
+	    && ((strncmp(tname + 1, "win32console", n) == 0)
+		|| (strncmp(tname + 1, "win32con", n) == 0))) {
 	    code = TRUE;
 	}
     } else if (tname != 0 && stricmp(tname, "unknown") == 0) {
@@ -650,6 +548,11 @@ wcon_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
      */
     if (code && (TCB->term.type.Booleans == 0)) {
 	_nc_init_termtype(&(TCB->term.type));
+    }
+
+    if (!code) {
+	if (_nc_mingw_isconsole(0))
+	    CON.isTermInfoConsole = TRUE;
     }
     returnBool(code);
 }
@@ -695,32 +598,31 @@ wcon_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB,
 }
 
 static bool
-get_SBI(TERMINAL_CONTROL_BLOCK * TCB)
+get_SBI(void)
 {
     bool rc = FALSE;
-    Properties *p = PropOf(TCB);
-    if (GetConsoleScreenBufferInfo(TCB->hdl, &(p->SBI))) {
+    if (GetConsoleScreenBufferInfo(CON.hdl, &(CON.SBI))) {
 	T(("GetConsoleScreenBufferInfo"));
 	T(("... buffer(X:%d Y:%d)",
-	   p->SBI.dwSize.X,
-	   p->SBI.dwSize.Y));
+	   CON.SBI.dwSize.X,
+	   CON.SBI.dwSize.Y));
 	T(("... window(X:%d Y:%d)",
-	   p->SBI.dwMaximumWindowSize.X,
-	   p->SBI.dwMaximumWindowSize.Y));
+	   CON.SBI.dwMaximumWindowSize.X,
+	   CON.SBI.dwMaximumWindowSize.Y));
 	T(("... cursor(X:%d Y:%d)",
-	   p->SBI.dwCursorPosition.X,
-	   p->SBI.dwCursorPosition.Y));
+	   CON.SBI.dwCursorPosition.X,
+	   CON.SBI.dwCursorPosition.Y));
 	T(("... display(Top:%d Bottom:%d Left:%d Right:%d)",
-	   p->SBI.srWindow.Top,
-	   p->SBI.srWindow.Bottom,
-	   p->SBI.srWindow.Left,
-	   p->SBI.srWindow.Right));
-	if (p->buffered) {
-	    p->origin.X = 0;
-	    p->origin.Y = 0;
+	   CON.SBI.srWindow.Top,
+	   CON.SBI.srWindow.Bottom,
+	   CON.SBI.srWindow.Left,
+	   CON.SBI.srWindow.Right));
+	if (CON.buffered) {
+	    CON.origin.X = 0;
+	    CON.origin.Y = 0;
 	} else {
-	    p->origin.X = p->SBI.srWindow.Left;
-	    p->origin.Y = p->SBI.srWindow.Top;
+	    CON.origin.X = CON.SBI.srWindow.Left;
+	    CON.origin.Y = CON.SBI.srWindow.Top;
 	}
 	rc = TRUE;
     } else {
@@ -737,12 +639,11 @@ wcon_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
 {
     AssertTCB();
 
-    if (okConsoleHandle(TCB) &&
-	PropOf(TCB) != 0) {
+    if (okConsoleHandle(TCB)) {
 	WORD a = MapColor(fore, color);
-	a |= (WORD) ((PropOf(TCB)->SBI.wAttributes) & (fore ? 0xfff8 : 0xff8f));
-	SetConsoleTextAttribute(TCB->hdl, a);
-	get_SBI(TCB);
+	a |= (WORD) ((CON.SBI.wAttributes) & (fore ? 0xfff8 : 0xff8f));
+	SetConsoleTextAttribute(CON.hdl, a);
+	get_SBI();
     }
 }
 
@@ -754,8 +655,8 @@ wcon_rescol(TERMINAL_CONTROL_BLOCK * TCB)
     AssertTCB();
     if (okConsoleHandle(TCB)) {
 	WORD a = FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_GREEN;
-	SetConsoleTextAttribute(TCB->hdl, a);
-	get_SBI(TCB);
+	SetConsoleTextAttribute(CON.hdl, a);
+	get_SBI();
 	res = TRUE;
     }
     return res;
@@ -783,17 +684,16 @@ wcon_size(TERMINAL_CONTROL_BLOCK * TCB, int *Lines, int *Cols)
     T((T_CALLED("win32con::wcon_size(%p)"), TCB));
 
     if (okConsoleHandle(TCB) &&
-	PropOf(TCB) != 0 &&
 	Lines != NULL &&
 	Cols != NULL) {
-	if (PropOf(TCB)->buffered) {
-	    *Lines = (int) (PropOf(TCB)->SBI.dwSize.Y);
-	    *Cols = (int) (PropOf(TCB)->SBI.dwSize.X);
+	if (CON.buffered) {
+	    *Lines = (int) (CON.SBI.dwSize.Y);
+	    *Cols = (int) (CON.SBI.dwSize.X);
 	} else {
-	    *Lines = (int) (PropOf(TCB)->SBI.srWindow.Bottom + 1 -
-			    PropOf(TCB)->SBI.srWindow.Top);
-	    *Cols = (int) (PropOf(TCB)->SBI.srWindow.Right + 1 -
-			   PropOf(TCB)->SBI.srWindow.Left);
+	    *Lines = (int) (CON.SBI.srWindow.Bottom + 1 -
+			    CON.SBI.srWindow.Top);
+	    *Cols = (int) (CON.SBI.srWindow.Right + 1 -
+			   CON.SBI.srWindow.Left);
 	}
 	result = OK;
     }
@@ -825,7 +725,7 @@ wcon_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 	iflag = buf->c_iflag;
 	lflag = buf->c_lflag;
 
-	GetConsoleMode(TCB->inp, &dwFlag);
+	GetConsoleMode(CON.inp, &dwFlag);
 
 	if (lflag & ICANON)
 	    dwFlag |= ENABLE_LINE_INPUT;
@@ -846,12 +746,12 @@ wcon_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 
 	buf->c_iflag = iflag;
 	buf->c_lflag = lflag;
-	SetConsoleMode(TCB->inp, dwFlag);
+	SetConsoleMode(CON.inp, dwFlag);
 	TCB->term.Nttyb = *buf;
     } else {
 	iflag = TCB->term.Nttyb.c_iflag;
 	lflag = TCB->term.Nttyb.c_lflag;
-	GetConsoleMode(TCB->inp, &dwFlag);
+	GetConsoleMode(CON.inp, &dwFlag);
 
 	if (dwFlag & ENABLE_LINE_INPUT)
 	    lflag |= ICANON;
@@ -887,9 +787,9 @@ wcon_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
     sp = TCB->csp;
 
     T((T_CALLED("win32con::wcon_mode(%p, prog=%d, def=%d)"), TCB, progFlag, defFlag));
-    PropOf(TCB)->progMode = progFlag;
-    PropOf(TCB)->lastOut = progFlag ? TCB->hdl : TCB->out;
-    SetConsoleActiveScreenBuffer(PropOf(TCB)->lastOut);
+    CON.progMode = progFlag;
+    CON.lastOut = progFlag ? CON.hdl : CON.out;
+    SetConsoleActiveScreenBuffer(CON.lastOut);
 
     if (progFlag) /* prog mode */  {
 	if (defFlag) {
@@ -920,8 +820,8 @@ wcon_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 		NCURSES_SP_NAME(_nc_flush) (sp);
 	    }
 	    code = wcon_sgmode(TCB, TRUE, &(_term->Ottyb));
-	    if (!PropOf(TCB)->buffered) {
-		if (!restore_original_screen(TCB))
+	    if (!CON.buffered) {
+		if (!restore_original_screen())
 		    code = ERR;
 	    }
 	}
@@ -959,17 +859,15 @@ keycompare(const void *el1, const void *el2)
 }
 
 static int
-MapKey(TERMINAL_CONTROL_BLOCK * TCB, WORD vKey)
+MapKey(WORD vKey)
 {
     WORD nKey = 0;
     void *res;
     LONG key = GenMap(vKey, 0);
     int code = -1;
 
-    AssertTCB();
-
     res = bsearch(&key,
-		  PropOf(TCB)->map,
+		  CON.map,
 		  (size_t) (N_INI + FKEYS),
 		  sizeof(keylist[0]),
 		  keycompare);
@@ -1001,20 +899,19 @@ wcon_release(TERMINAL_CONTROL_BLOCK * TCB)
  * as if the library had allocated a console buffer.
  */
 static bool
-save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
+save_original_screen(void)
 {
     bool result = FALSE;
-    Properties *p = PropOf(TCB);
     COORD bufferSize;
     COORD bufferCoord;
     SMALL_RECT readRegion;
     size_t want;
 
-    bufferSize.X = p->SBI.dwSize.X;
-    bufferSize.Y = p->SBI.dwSize.Y;
+    bufferSize.X = CON.SBI.dwSize.X;
+    bufferSize.Y = CON.SBI.dwSize.Y;
     want = (size_t) (bufferSize.X * bufferSize.Y);
 
-    if ((p->save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
+    if ((CON.save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
 	bufferCoord.X = bufferCoord.Y = 0;
 
 	readRegion.Top = 0;
@@ -1031,29 +928,29 @@ save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
 	   bufferCoord.Y,
 	   bufferCoord.X));
 
-	if (ReadConsoleOutput(TCB->hdl,
-			      p->save_screen,
+	if (ReadConsoleOutput(CON.hdl,
+			      CON.save_screen,
 			      bufferSize,
 			      bufferCoord,
 			      &readRegion)) {
 	    result = TRUE;
 	} else {
 	    T((" error %#lx", (unsigned long) GetLastError()));
-	    FreeAndNull(p->save_screen);
+	    FreeAndNull(CON.save_screen);
 
-	    bufferSize.X = (SHORT) (p->SBI.srWindow.Right
-				    - p->SBI.srWindow.Left + 1);
-	    bufferSize.Y = (SHORT) (p->SBI.srWindow.Bottom
-				    - p->SBI.srWindow.Top + 1);
+	    bufferSize.X = (SHORT) (CON.SBI.srWindow.Right
+				    - CON.SBI.srWindow.Left + 1);
+	    bufferSize.Y = (SHORT) (CON.SBI.srWindow.Bottom
+				    - CON.SBI.srWindow.Top + 1);
 	    want = (size_t) (bufferSize.X * bufferSize.Y);
 
-	    if ((p->save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
+	    if ((CON.save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
 		bufferCoord.X = bufferCoord.Y = 0;
 
-		readRegion.Top = p->SBI.srWindow.Top;
-		readRegion.Left = p->SBI.srWindow.Left;
-		readRegion.Bottom = p->SBI.srWindow.Bottom;
-		readRegion.Right = p->SBI.srWindow.Right;
+		readRegion.Top = CON.SBI.srWindow.Top;
+		readRegion.Left = CON.SBI.srWindow.Left;
+		readRegion.Bottom = CON.SBI.srWindow.Bottom;
+		readRegion.Right = CON.SBI.srWindow.Right;
 
 		T(("... reading console window %dx%d into %d,%d - %d,%d at %d,%d",
 		   bufferSize.Y, bufferSize.X,
@@ -1064,13 +961,13 @@ save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
 		   bufferCoord.Y,
 		   bufferCoord.X));
 
-		if (ReadConsoleOutput(TCB->hdl,
-				      p->save_screen,
+		if (ReadConsoleOutput(CON.hdl,
+				      CON.save_screen,
 				      bufferSize,
 				      bufferCoord,
 				      &readRegion)) {
 		    result = TRUE;
-		    p->window_only = TRUE;
+		    CON.window_only = TRUE;
 		} else {
 		    T((" error %#lx", (unsigned long) GetLastError()));
 		}
@@ -1085,50 +982,13 @@ save_original_screen(TERMINAL_CONTROL_BLOCK * TCB)
 static void
 wcon_init(TERMINAL_CONTROL_BLOCK * TCB)
 {
-    DWORD num_buttons;
-
     T((T_CALLED("win32con::wcon_init(%p)"), TCB));
 
     AssertTCB();
 
     if (TCB) {
-	BOOL b = AllocConsole();
-	WORD a;
-	int i;
-	bool buffered = TRUE;
-
-	if (!b)
-	    b = AttachConsole(ATTACH_PARENT_PROCESS);
-
-	TCB->inp = GetStdHandle(STD_INPUT_HANDLE);
-	TCB->out = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	if (getenv("NCGDB") || getenv("NCURSES_CONSOLE2")) {
-	    TCB->hdl = TCB->out;
-	    buffered = FALSE;
-	} else {
-	    TCB->hdl = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE,
-						 0,
-						 NULL,
-						 CONSOLE_TEXTMODE_BUFFER,
-						 NULL);
-	}
-
-	if (InvalidConsoleHandle(TCB->hdl)) {
+	if (CON.hdl == INVALID_HANDLE_VALUE) {
 	    returnVoid;
-	} else if ((TCB->prop = typeCalloc(Properties, 1)) != 0) {
-	    PropOf(TCB)->buffered = buffered;
-	    PropOf(TCB)->window_only = FALSE;
-	    if (!get_SBI(TCB)) {
-		FreeAndNull(TCB->prop);		/* force error in wcon_size */
-		returnVoid;
-	    }
-	    if (!buffered) {
-		if (!save_original_screen(TCB)) {
-		    FreeAndNull(TCB->prop);	/* force error in wcon_size */
-		    returnVoid;
-		}
-	    }
 	}
 
 	TCB->info.initcolor = TRUE;
@@ -1144,34 +1004,9 @@ wcon_init(TERMINAL_CONTROL_BLOCK * TCB)
 	TCB->info.nocolorvideo = 1;
 	TCB->info.tabsize = 8;
 
-	if (GetNumberOfConsoleMouseButtons(&num_buttons)) {
-	    T(("mouse has %ld buttons", num_buttons));
-	    TCB->info.numbuttons = (int) num_buttons;
-	} else {
-	    TCB->info.numbuttons = 1;
-	}
-
+	TCB->info.numbuttons = CON.numButtons;
 	TCB->info.defaultPalette = _nc_cga_palette;
 
-	for (i = 0; i < (N_INI + FKEYS); i++) {
-	    if (i < N_INI)
-		PropOf(TCB)->rmap[i] = PropOf(TCB)->map[i] = (DWORD) keylist[i];
-	    else
-		PropOf(TCB)->rmap[i] = PropOf(TCB)->map[i] =
-		    (DWORD) GenMap((VK_F1 + (i - N_INI)), (KEY_F(1) + (i - N_INI)));
-	}
-	qsort(PropOf(TCB)->map,
-	      (size_t) (MAPSIZE),
-	      sizeof(keylist[0]),
-	      keycompare);
-	qsort(PropOf(TCB)->rmap,
-	      (size_t) (MAPSIZE),
-	      sizeof(keylist[0]),
-	      rkeycompare);
-
-	a = MapColor(true, COLOR_WHITE) | MapColor(false, COLOR_BLACK);
-	for (i = 0; i < NUMPAIRS; i++)
-	    PropOf(TCB)->pairs[i] = a;
     }
     returnVoid;
 }
@@ -1189,7 +1024,7 @@ wcon_initpair(TERMINAL_CONTROL_BLOCK * TCB,
 
     if ((pair > 0) && (pair < NUMPAIRS) && (f >= 0) && (f < 8)
 	&& (b >= 0) && (b < 8)) {
-	PropOf(TCB)->pairs[pair] = MapColor(true, f) | MapColor(false, b);
+	CON.pairs[pair] = MapColor(true, f) | MapColor(false, b);
     }
 }
 
@@ -1260,11 +1095,10 @@ wcon_mvcur(TERMINAL_CONTROL_BLOCK * TCB,
 {
     int ret = ERR;
     if (okConsoleHandle(TCB)) {
-	Properties *p = PropOf(TCB);
 	COORD loc;
 	loc.X = (short) x;
-	loc.Y = (short) (y + AdjustY(p));
-	SetConsoleCursorPosition(TCB->hdl, loc);
+	loc.Y = (short) (y + AdjustY());
+	SetConsoleCursorPosition(CON.hdl, loc);
 	ret = OK;
     }
     return ret;
@@ -1389,13 +1223,12 @@ Adjust(int milliseconds, int diff)
 		     RIGHTMOST_BUTTON_PRESSED)
 
 static int
-decode_mouse(TERMINAL_CONTROL_BLOCK * TCB, int mask)
+decode_mouse(SCREEN *sp, int mask)
 {
-    SCREEN *sp;
     int result = 0;
 
-    AssertTCB();
-    SetSP();
+    (void) sp;
+    assert(sp && console_initialized);
 
     if (mask & FROM_LEFT_1ST_BUTTON_PRESSED)
 	result |= BUTTON1_PRESSED;
@@ -1407,7 +1240,7 @@ decode_mouse(TERMINAL_CONTROL_BLOCK * TCB, int mask)
 	result |= BUTTON4_PRESSED;
 
     if (mask & RIGHTMOST_BUTTON_PRESSED) {
-	switch (TCB->info.numbuttons) {
+	switch (CON.numButtons) {
 	case 1:
 	    result |= BUTTON1_PRESSED;
 	    break;
@@ -1427,13 +1260,14 @@ decode_mouse(TERMINAL_CONTROL_BLOCK * TCB, int mask)
 }
 
 static int
-wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
-	   int mode,
-	   int milliseconds,
-	   int *timeleft
-	   EVENTLIST_2nd(_nc_eventlist * evl))
+console_twait(
+		 SCREEN *sp,
+		 HANDLE fd,
+		 int mode,
+		 int milliseconds,
+		 int *timeleft
+		 EVENTLIST_2nd(_nc_eventlist * evl))
 {
-    SCREEN *sp;
     INPUT_RECORD inp_rec;
     BOOL b;
     DWORD nRead = 0, rc = (DWORD) (-1);
@@ -1443,10 +1277,9 @@ wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
     int diff;
     bool isImmed = (milliseconds == 0);
 
-#define CONSUME() ReadConsoleInput(TCB->inp,&inp_rec,1,&nRead)
+#define CONSUME() ReadConsoleInput(fd,&inp_rec,1,&nRead)
 
-    AssertTCB();
-    SetSP();
+    assert(sp);
 
     TR(TRACE_IEVENT, ("start twait: %d milliseconds, mode: %d",
 		      milliseconds, mode));
@@ -1458,7 +1291,7 @@ wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
 
     while (true) {
 	GetSystemTimeAsFileTime(&fstart);
-	rc = WaitForSingleObject(TCB->inp, (DWORD) milliseconds);
+	rc = WaitForSingleObject(fd, (DWORD) milliseconds);
 	GetSystemTimeAsFileTime(&fend);
 	diff = (int) tdiff(fstart, fend);
 	milliseconds = Adjust(milliseconds, diff);
@@ -1468,9 +1301,9 @@ wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
 
 	if (rc == WAIT_OBJECT_0) {
 	    if (mode) {
-		b = GetNumberOfConsoleInputEvents(TCB->inp, &nRead);
+		b = GetNumberOfConsoleInputEvents(fd, &nRead);
 		if (b && nRead > 0) {
-		    b = PeekConsoleInput(TCB->inp, &inp_rec, 1, &nRead);
+		    b = PeekConsoleInput(fd, &inp_rec, 1, &nRead);
 		    if (b && nRead > 0) {
 			switch (inp_rec.EventType) {
 			case KEY_EVENT:
@@ -1480,7 +1313,7 @@ wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
 
 				if (inp_rec.Event.KeyEvent.bKeyDown) {
 				    if (0 == ch) {
-					int nKey = MapKey(TCB, vk);
+					int nKey = MapKey(vk);
 					if ((nKey < 0) || FALSE == sp->_keypad_on) {
 					    CONSUME();
 					    continue;
@@ -1494,7 +1327,7 @@ wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
 			    }
 			    continue;
 			case MOUSE_EVENT:
-			    if (decode_mouse(TCB,
+			    if (decode_mouse(sp,
 					     (inp_rec.Event.MouseEvent.dwButtonState
 					      & BUTTON_MASK)) == 0) {
 				CONSUME();
@@ -1504,7 +1337,7 @@ wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
 			    }
 			    continue;
 			default:
-			    selectActiveHandle(TCB);
+			    selectActiveHandle();
 			    continue;
 			}
 		    }
@@ -1532,15 +1365,34 @@ wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
     return code;
 }
 
-static bool
-handle_mouse(TERMINAL_CONTROL_BLOCK * TCB, MOUSE_EVENT_RECORD mer)
+static int
+wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
+	   int mode,
+	   int milliseconds,
+	   int *timeleft
+	   EVENTLIST_2nd(_nc_eventlist * evl))
 {
     SCREEN *sp;
-    MEVENT work;
-    bool result = FALSE;
+    int code;
 
     AssertTCB();
     SetSP();
+
+    code = console_twait(sp,
+			 CON.inp,
+			 mode,
+			 milliseconds,
+			 timeleft EVENTLIST_2nd(_nc_eventlist * evl));
+    return code;
+}
+
+static bool
+handle_mouse(SCREEN *sp, MOUSE_EVENT_RECORD mer)
+{
+    MEVENT work;
+    bool result = FALSE;
+
+    assert(sp);
 
     sp->_drv_mouse_old_buttons = sp->_drv_mouse_new_buttons;
     sp->_drv_mouse_new_buttons = mer.dwButtonState & BUTTON_MASK;
@@ -1550,18 +1402,17 @@ handle_mouse(TERMINAL_CONTROL_BLOCK * TCB, MOUSE_EVENT_RECORD mer)
      * FIXME: implement continuous event-tracking.
      */
     if (sp->_drv_mouse_new_buttons != sp->_drv_mouse_old_buttons) {
-	Properties *p = PropOf(TCB);
 
 	memset(&work, 0, sizeof(work));
 
 	if (sp->_drv_mouse_new_buttons) {
 
-	    work.bstate |= (mmask_t) decode_mouse(TCB, sp->_drv_mouse_new_buttons);
+	    work.bstate |= (mmask_t) decode_mouse(sp, sp->_drv_mouse_new_buttons);
 
 	} else {
 
 	    /* cf: BUTTON_PRESSED, BUTTON_RELEASED */
-	    work.bstate |= (mmask_t) (decode_mouse(TCB,
+	    work.bstate |= (mmask_t) (decode_mouse(sp,
 						   sp->_drv_mouse_old_buttons)
 				      >> 1);
 
@@ -1569,7 +1420,7 @@ handle_mouse(TERMINAL_CONTROL_BLOCK * TCB, MOUSE_EVENT_RECORD mer)
 	}
 
 	work.x = mer.dwMousePosition.X;
-	work.y = mer.dwMousePosition.Y - AdjustY(p);
+	work.y = mer.dwMousePosition.Y - AdjustY();
 
 	sp->_drv_mouse_fifo[sp->_drv_mouse_tail] = work;
 	sp->_drv_mouse_tail += 1;
@@ -1582,47 +1433,14 @@ static int
 wcon_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 {
     SCREEN *sp;
-    int n = 1;
-    INPUT_RECORD inp_rec;
-    BOOL b;
-    DWORD nRead;
-    WORD vk;
+    int n;
 
     AssertTCB();
     assert(buf);
     SetSP();
 
-    memset(&inp_rec, 0, sizeof(inp_rec));
-
     T((T_CALLED("win32con::wcon_read(%p)"), TCB));
-    while ((b = ReadConsoleInput(TCB->inp, &inp_rec, 1, &nRead))) {
-	if (b && nRead > 0) {
-	    if (inp_rec.EventType == KEY_EVENT) {
-		if (!inp_rec.Event.KeyEvent.bKeyDown)
-		    continue;
-		*buf = (int) inp_rec.Event.KeyEvent.uChar.AsciiChar;
-		vk = inp_rec.Event.KeyEvent.wVirtualKeyCode;
-		if (*buf == 0) {
-		    if (sp->_keypad_on) {
-			*buf = MapKey(TCB, vk);
-			if (0 > (*buf))
-			    continue;
-			else
-			    break;
-		    } else
-			continue;
-		} else {	/* *buf != 0 */
-		    break;
-		}
-	    } else if (inp_rec.EventType == MOUSE_EVENT) {
-		if (handle_mouse(TCB, inp_rec.Event.MouseEvent)) {
-		    *buf = KEY_MOUSE;
-		    break;
-		}
-	    }
-	    continue;
-	}
-    }
+    n = _nc_mingw_console_read(sp, CON.inp, buf);
     returnCode(n);
 }
 
@@ -1635,22 +1453,16 @@ wcon_nap(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED, int ms)
 }
 
 static bool
-wcon_kyExist(TERMINAL_CONTROL_BLOCK * TCB, int keycode)
+wcon_kyExist(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED, int keycode)
 {
-    SCREEN *sp;
     WORD nKey;
     void *res;
     bool found = FALSE;
     LONG key = GenMap(0, (WORD) keycode);
 
-    AssertTCB();
-    SetSP();
-
-    AssertTCB();
-
-    T((T_CALLED("win32con::wcon_kyExist(%p, %d)"), TCB, keycode));
+    T((T_CALLED("win32con::wcon_kyExist(%d)"), keycode));
     res = bsearch(&key,
-		  PropOf(TCB)->rmap,
+		  CON.rmap,
 		  (size_t) (N_INI + FKEYS),
 		  sizeof(keylist[0]),
 		  rkeycompare);
@@ -1670,7 +1482,7 @@ wcon_kpad(TERMINAL_CONTROL_BLOCK * TCB, int flag GCC_UNUSED)
     int code = ERR;
 
     AssertTCB();
-    sp = TCB->csp;
+    SetSP();
 
     T((T_CALLED("win32con::wcon_kpad(%p, %d)"), TCB, flag));
     if (sp) {
@@ -1680,7 +1492,9 @@ wcon_kpad(TERMINAL_CONTROL_BLOCK * TCB, int flag GCC_UNUSED)
 }
 
 static int
-wcon_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, int flag)
+wcon_keyok(TERMINAL_CONTROL_BLOCK * TCB,
+	   int keycode,
+	   int flag)
 {
     int code = ERR;
     SCREEN *sp;
@@ -1689,13 +1503,14 @@ wcon_keyok(TERMINAL_CONTROL_BLOCK * TCB, int keycode, int flag)
     void *res;
     LONG key = GenMap(0, (WORD) keycode);
 
+    T((T_CALLED("win32con::wcon_keyok(%p, %d, %d)"), TCB, keycode, flag));
+
     AssertTCB();
     SetSP();
 
-    T((T_CALLED("win32con::wcon_keyok(%p, %d, %d)"), TCB, keycode, flag));
     if (sp) {
 	res = bsearch(&key,
-		      PropOf(TCB)->rmap,
+		      CON.rmap,
 		      (size_t) (N_INI + FKEYS),
 		      sizeof(keylist[0]),
 		      rkeycompare);
@@ -1749,3 +1564,355 @@ NCURSES_EXPORT_VAR (TERM_DRIVER) _nc_WIN_DRIVER = {
 	wcon_keyok,		/* kyOk */
 	wcon_kyExist		/* kyExist */
 };
+
+/* --------------------------------------------------------- */
+
+static HANDLE
+get_handle(int fd)
+{
+    intptr_t value = _get_osfhandle(fd);
+    return (HANDLE) value;
+}
+
+#if WINVER >= 0x0600
+/*   This function tests, whether or not the ncurses application
+     is running as a descendant of MSYS2/cygwin mintty terminal
+     application. mintty doesn't use Windows Console for it's screen
+     I/O, so the native Windows _isatty doesn't recognize it as
+     character device. But we can discover we are at the end of an
+     Pipe and can query to server side of the pipe, looking whether
+     or not this is mintty.
+ */
+static int
+_ismintty(int fd, LPHANDLE pMinTTY)
+{
+    HANDLE handle = get_handle(fd);
+    DWORD dw;
+    int code = 0;
+
+    T((T_CALLED("win32con::_ismintty(%d, %p)"), fd, pMinTTY));
+
+    if (handle != INVALID_HANDLE_VALUE) {
+	dw = GetFileType(handle);
+	if (dw == FILE_TYPE_PIPE) {
+	    if (GetNamedPipeInfo(handle, 0, 0, 0, 0)) {
+		ULONG pPid;
+		/* Requires NT6 */
+		if (GetNamedPipeServerProcessId(handle, &pPid)) {
+		    TCHAR buf[MAX_PATH];
+		    DWORD len = 0;
+		    /* These security attributes may allow us to
+		       create a remote thread in mintty to manipulate
+		       the terminal state remotely */
+		    HANDLE pHandle = OpenProcess(
+						    PROCESS_CREATE_THREAD
+						    | PROCESS_QUERY_INFORMATION
+						    | PROCESS_VM_OPERATION
+						    | PROCESS_VM_WRITE
+						    | PROCESS_VM_READ,
+						    FALSE,
+						    pPid);
+		    if (pMinTTY)
+			*pMinTTY = INVALID_HANDLE_VALUE;
+		    if (pHandle != INVALID_HANDLE_VALUE) {
+			if ((len = GetProcessImageFileName(
+							      pHandle,
+							      buf,
+							      (DWORD)
+							      array_length(buf)))) {
+			    TCHAR *pos = _tcsrchr(buf, _T('\\'));
+			    if (pos) {
+				pos++;
+				if (_tcsnicmp(pos, _TEXT("mintty.exe"), 10)
+				    == 0) {
+				    if (pMinTTY)
+					*pMinTTY = pHandle;
+				    code = 1;
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	}
+    }
+    returnCode(code);
+}
+#endif
+
+/*   Borrowed from ansicon project.
+     Check wether or not a I/O handle is associated with
+     a Windows console.
+*/
+static BOOL
+IsConsoleHandle(HANDLE hdl)
+{
+    DWORD dwFlag = 0;
+    if (!GetConsoleMode(hdl, &dwFlag)) {
+	return (int) WriteConsoleA(hdl, NULL, 0, &dwFlag, NULL);
+    }
+    return (int) (dwFlag & ENABLE_PROCESSED_OUTPUT);
+}
+
+/*   Our replacement for the systems _isatty to include also
+     a test for mintty. This is called from the NC_ISATTY macro
+     defined in curses.priv.h
+ */
+int
+_nc_mingw_isatty(int fd)
+{
+    if (_isatty(fd))
+	return 1;
+#if WINVER < 0x0600
+    return 0;
+#else
+    return _ismintty(fd, NULL);
+#endif
+}
+
+/*   This is used when running in terminfo mode to discover,
+     whether or not the "terminal" is actually a Windows
+     Console. It's the responsibilty of the console to deal
+     with the terminal escape sequences that are sent by
+     terminfo.
+ */
+int
+_nc_mingw_isconsole(int fd)
+{
+    HANDLE hdl = get_handle(fd);
+    int code = 0;
+
+    T((T_CALLED("win32con::_nc_mingw_isconsole(%d)"), fd));
+
+    code = (int) IsConsoleHandle(hdl);
+
+    returnCode(code);
+}
+
+#define TC_PROLOGUE(fd) \
+    SCREEN *sp;                                               \
+    TERMINAL *term = 0;                                       \
+    int code = ERR;                                           \
+    if (_nc_screen_chain==0)                                  \
+      return 0;                                               \
+    for (each_screen(sp)) {                                   \
+        if (sp->_term && sp->_term->Filedes==fd) {            \
+	    term = sp->_term;                                 \
+	    break;                                            \
+        }                                                     \
+    }                                                         \
+    assert(term!=0)
+
+int
+_nc_mingw_tcsetattr(
+		       int fd,
+		       int optional_action GCC_UNUSED,
+		       const struct termios *arg)
+{
+    TC_PROLOGUE(fd);
+
+    if (_nc_mingw_isconsole(fd)) {
+	DWORD dwFlag = 0;
+	HANDLE ofd = get_handle(fd);
+	if (ofd != INVALID_HANDLE_VALUE) {
+	    if (arg) {
+		if (arg->c_lflag & ICANON)
+		    dwFlag |= ENABLE_LINE_INPUT;
+		else
+		    dwFlag = dwFlag & (DWORD) (~ENABLE_LINE_INPUT);
+
+		if (arg->c_lflag & ECHO)
+		    dwFlag = dwFlag | ENABLE_ECHO_INPUT;
+		else
+		    dwFlag = dwFlag & (DWORD) (~ENABLE_ECHO_INPUT);
+
+		if (arg->c_iflag & BRKINT)
+		    dwFlag |= ENABLE_PROCESSED_INPUT;
+		else
+		    dwFlag = dwFlag & (DWORD) (~ENABLE_PROCESSED_INPUT);
+	    }
+	    dwFlag |= ENABLE_MOUSE_INPUT;
+	    SetConsoleMode(ofd, dwFlag);
+	    code = OK;
+	}
+    }
+    if (arg)
+	term->Nttyb = *arg;
+
+    return code;
+}
+
+int
+_nc_mingw_tcgetattr(int fd, struct termios *arg)
+{
+    TC_PROLOGUE(fd);
+
+    if (_nc_mingw_isconsole(fd)) {
+	if (arg)
+	    *arg = term->Nttyb;
+    }
+    return code;
+}
+
+int
+_nc_mingw_tcflush(int fd, int queue)
+{
+    TC_PROLOGUE(fd);
+
+    if (_nc_mingw_isconsole(fd)) {
+	if (queue == TCIFLUSH) {
+	    BOOL b = FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+	    if (!b)
+		return (int) GetLastError();
+	}
+    }
+    return code;
+}
+
+int
+_nc_mingw_testmouse(
+		       SCREEN *sp,
+		       HANDLE fd,
+		       int delay)
+{
+    int rc = 0;
+
+    assert(sp);
+
+    if (sp->_drv_mouse_head < sp->_drv_mouse_tail) {
+	rc = TW_MOUSE;
+    } else {
+	rc = console_twait(sp,
+			   fd,
+			   TWAIT_MASK,
+			   delay,
+			   (int *) 0
+			   EVENTLIST_2nd(evl));
+    }
+    return rc;
+}
+
+int
+_nc_mingw_console_read(
+			  SCREEN *sp,
+			  HANDLE fd,
+			  int *buf)
+{
+    int n = 1;
+    INPUT_RECORD inp_rec;
+    BOOL b;
+    DWORD nRead;
+    WORD vk;
+
+    assert(sp);
+    assert(buf);
+
+    memset(&inp_rec, 0, sizeof(inp_rec));
+
+    T((T_CALLED("_nc_mingw_console_read(%p)"), sp));
+
+    while ((b = ReadConsoleInput(fd, &inp_rec, 1, &nRead))) {
+	if (b && nRead > 0) {
+	    if (inp_rec.EventType == KEY_EVENT) {
+		if (!inp_rec.Event.KeyEvent.bKeyDown)
+		    continue;
+		*buf = (int) inp_rec.Event.KeyEvent.uChar.AsciiChar;
+		vk = inp_rec.Event.KeyEvent.wVirtualKeyCode;
+		if (*buf == 0) {
+		    if (sp->_keypad_on) {
+			*buf = MapKey(vk);
+			if (0 > (*buf))
+			    continue;
+			else
+			    break;
+		    } else
+			continue;
+		} else {	/* *buf != 0 */
+		    break;
+		}
+	    } else if (inp_rec.EventType == MOUSE_EVENT) {
+		if (handle_mouse(sp,
+				 inp_rec.Event.MouseEvent)) {
+		    *buf = KEY_MOUSE;
+		    break;
+		}
+	    }
+	    continue;
+	}
+    }
+    returnCode(n);
+}
+
+static
+__attribute__((constructor))
+     void _enter_console(void)
+{
+    if (!console_initialized) {
+	int i;
+	DWORD num_buttons;
+	WORD a;
+	BOOL buffered = TRUE;
+	BOOL b;
+
+	if (_nc_mingw_isatty(0)) {
+	    CON.isMinTTY = TRUE;
+	}
+
+	for (i = 0; i < (N_INI + FKEYS); i++) {
+	    if (i < N_INI)
+		CON.rmap[i] = CON.map[i] =
+		    (DWORD) keylist[i];
+	    else
+		CON.rmap[i] = CON.map[i] =
+		    (DWORD) GenMap((VK_F1 + (i - N_INI)),
+				   (KEY_F(1) + (i - N_INI)));
+	}
+	qsort(CON.map,
+	      (size_t) (MAPSIZE),
+	      sizeof(keylist[0]),
+	      keycompare);
+	qsort(CON.rmap,
+	      (size_t) (MAPSIZE),
+	      sizeof(keylist[0]),
+	      rkeycompare);
+
+	if (GetNumberOfConsoleMouseButtons(&num_buttons)) {
+	    CON.numButtons = num_buttons;
+	} else {
+	    CON.numButtons = 1;
+	}
+
+	a = MapColor(true, COLOR_WHITE) | MapColor(false, COLOR_BLACK);
+	for (i = 0; i < NUMPAIRS; i++)
+	    CON.pairs[i] = a;
+
+	CON.inp = GetStdHandle(STD_INPUT_HANDLE);
+	CON.out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	b = AllocConsole();
+
+	if (!b)
+	    b = AttachConsole(ATTACH_PARENT_PROCESS);
+
+	if (getenv("NCGDB") || getenv("NCURSES_CONSOLE2")) {
+	    CON.hdl = CON.out;
+	    buffered = FALSE;
+	} else {
+	    CON.hdl = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE,
+						0,
+						NULL,
+						CONSOLE_TEXTMODE_BUFFER,
+						NULL);
+	}
+
+	if (CON.hdl != INVALID_HANDLE_VALUE) {
+	    CON.buffered = buffered;
+	    get_SBI();
+	    if (buffered) {
+		save_original_screen();
+	    }
+	}
+
+	console_initialized = TRUE;
+    }
+}

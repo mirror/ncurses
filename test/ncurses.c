@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.397 2014/02/01 22:29:37 tom Exp $
+$Id: ncurses.c,v 1.398 2014/05/03 19:38:16 juergen Exp $
 
 ***************************************************************************/
 
@@ -6690,7 +6690,7 @@ usage(void)
 #if USE_LIBPANEL
 	,"  -s msec  specify nominal time for panel-demo (default: 1, to hold)"
 #endif
-#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714)
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714) && !defined(__MINGW32__)
 	,"  -T       call use_tioctl(TRUE) to allow SIGWINCH to override environment"
 #endif
 #ifdef TRACE
@@ -6929,7 +6929,7 @@ main(int argc, char *argv[])
 	    nap_msec = (int) atol(optarg);
 	    break;
 #endif
-#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714)
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714) && !defined(__MINGW32__)
 	case 'T':
 	    use_tioctl(TRUE);
 	    break;

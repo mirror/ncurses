@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.491 $
-#	$Date: 2014/03/29 23:45:51 $
+#	$Revision: 1.492 $
+#	$Date: 2014/05/03 23:19:22 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3420,6 +3420,17 @@ vt520|DEC VT520,
 
 vt525|DEC VT525,
 	use=vt520,
+
+# I just got a brand new Boundless VT520 with that company's "ANSI 2011"
+# Keyboard, which replaces the old LK41R-AA keyboard.
+#
+# In trying to get the function keys to work, I had to cobble my own
+# terminfo.src entry, since the existing vt520 entry doesn't include most of
+# the function keys.  If I blend the entries for "vt420f" and "vt220+keypad"
+# I seem to get them all -Mike Gran
+vt520ansi|Boundless VT520 ANSI,
+	use=ansi+rca, use=vt420f, use=vt220+keypad,
+	use=ansi+tabs,
 
 #### VT100 emulations
 #
@@ -23288,5 +23299,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  get the 256-color feature half-implemented -TD
 #	* updated "st" entry (leaving the 0.1.1 version as "simpleterm") to
 #	  0.4.1 -TD
+#
+# 2014-05-03
+#	* add vt520ansi (Mike Gran)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

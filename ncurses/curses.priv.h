@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.535 2014/04/26 18:45:36 juergen Exp $
+ * $Id: curses.priv.h,v 1.537 2014/05/03 21:20:12 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2212,7 +2212,6 @@ extern NCURSES_EXPORT(int) _nc_get_tty_mode(TTY *);
     sp->jump = outc
 
 #ifdef USE_TERM_DRIVER
-typedef void* TERM_HANDLE;
 
 typedef struct _termInfo
 {
@@ -2278,9 +2277,6 @@ typedef struct term_driver {
 typedef struct DriverTCB
 {
     TERMINAL      term;   /* needs to be the first Element !!! */
-    TERM_HANDLE   inp;    /* The input handle of the Terminal */
-    TERM_HANDLE   out;    /* The output handle of the Terminal in shell mode */
-    TERM_HANDLE   hdl;    /* The output handle of the Terminal in prog  mode */
     TERM_DRIVER*  drv;    /* The driver for that Terminal */
     SCREEN*       csp;    /* The screen that owns that Terminal */
     TerminalInfo  info;   /* Driver independent core capabilities of the Terminal */
@@ -2352,16 +2348,37 @@ extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, int *, int *);
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_WIN_DRIVER;
 extern NCURSES_EXPORT(int)  _nc_mingw_isatty(int fd);
 extern NCURSES_EXPORT(int)  _nc_mingw_isconsole(int fd);
+extern NCURSES_EXPORT(int) _nc_mingw_console_read(
+    SCREEN *sp,
+    HANDLE  fd,
+    int *buf);
+extern NCURSES_EXPORT(int) _nc_mingw_testmouse(
+    SCREEN * sp,
+    HANDLE fd,
+    int delay);
+#else
 #endif
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 #endif
 
-#ifdef USE_TERM_DRIVER
-#define IsTermInfo(sp)       ((TCBOf(sp) != 0) && ((TCBOf(sp)->drv->isTerminfo)))
-#define HasTInfoTerminal(sp) ((0 != TerminalOf(sp)) && IsTermInfo(sp))
+#if defined(USE_TERM_DRIVER) && defined(__MINGW32__)
+#define NC_ISATTY(fd) _nc_mingw_isatty(fd)
 #else
-#define IsTermInfo(sp)       TRUE
-#define HasTInfoTerminal(sp) (0 != TerminalOf(sp))
+#define NC_ISATTY(fd) isatty(fd)
+#endif
+
+#ifdef USE_TERM_DRIVER
+#  define IsTermInfo(sp)       ((TCBOf(sp) != 0) && ((TCBOf(sp)->drv->isTerminfo)))
+#  define HasTInfoTerminal(sp) ((0 != TerminalOf(sp)) && IsTermInfo(sp))
+#  ifdef __MINGW32__
+#    define IsTermInfoOnConsole(sp) (IsTermInfo(sp)&&_nc_mingw_isconsole(TerminalOf(sp)->Filedes))
+#else
+#    define IsTermInfoOnConsole(sp) FALSE
+#  endif
+#else
+#  define IsTermInfo(sp)       TRUE
+#  define HasTInfoTerminal(sp) (0 != TerminalOf(sp))
+#  define IsTermInfoOnConsole(sp) FALSE
 #endif
 
 #define IsValidTIScreen(sp)  (HasTInfoTerminal(sp))
@@ -2461,12 +2478,6 @@ extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_keyname (SCREEN *, int);
 extern NCURSES_EXPORT(int) _nc_ungetch (SCREEN *, int);
 extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *, chtype);
 
-#endif
-
-#ifndef __MINGW32__
-#  define NC_ISATTY(fd) isatty(fd)
-#else
-#  define NC_ISATTY(fd) _nc_mingw_isatty(fd)
 #endif
 
 #ifdef __cplusplus

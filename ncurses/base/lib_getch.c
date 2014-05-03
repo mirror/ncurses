@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.128 2014/04/26 18:47:20 juergen Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.130 2014/05/03 20:49:50 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -133,7 +133,16 @@ check_mouse_activity(SCREEN *sp, int delay EVENTLIST_2nd(_nc_eventlist * evl))
     int rc;
 
 #ifdef USE_TERM_DRIVER
+    TERMINAL_CONTROL_BLOCK *TCB = TCBOf(sp);
     rc = TCBOf(sp)->drv->td_testmouse(TCBOf(sp), delay EVENTLIST_2nd(evl));
+# ifdef __MINGW32__
+    /* if we emulate terminfo on console, we have to use the console routine */
+    if (IsTermInfoOnConsole(sp)) {
+	HANDLE fd = (HANDLE) _get_osfhandle(sp->_ifd);
+	rc = _nc_mingw_testmouse(sp, fd, delay EVENTLIST_2nd(evl));
+    } else
+# endif
+	rc = TCB->drv->td_testmouse(TCB, delay EVENTLIST_2nd(evl));
 #else
 #if USE_SYSMOUSE
     if ((sp->_mouse_type == M_SYSMOUSE)
@@ -268,7 +277,14 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
     {				/* Can block... */
 #ifdef USE_TERM_DRIVER
 	int buf;
-	n = CallDriver_1(sp, td_read, &buf);
+#ifdef __MINGW32__
+	if (NC_ISATTY(sp->_ifd) && IsTermInfoOnConsole(sp) && sp->_cbreak)
+	    n = _nc_mingw_console_read(sp,
+				       (HANDLE) _get_osfhandle(sp->_ifd),
+				       &buf);
+	else
+#endif
+	    n = CallDriver_1(sp, td_read, &buf);
 	ch = buf;
 #else
 	unsigned char c2 = 0;

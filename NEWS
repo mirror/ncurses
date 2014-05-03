@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2196 2014/04/26 20:31:03 tom Exp $
+-- $Id: NEWS,v 1.2199 2014/05/03 23:22:01 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140503
+	+ add vt520ansi terminfo entry (patch by Mike Gran)
+	+ further improve MinGW support for the scenario where there is an
+	  ANSI-escapes handler such as ansicon running in the console window
+	  (patch by Juergen Pfeifer).
 
 20140426
 	+ add --disable-lib-suffixes option (adapted from patch by Juergen
