@@ -45,7 +45,7 @@
 
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.36 2014/05/03 20:48:51 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.38 2014/05/10 21:50:00 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -1758,6 +1758,7 @@ int
 _nc_mingw_tcflush(int fd, int queue)
 {
     TC_PROLOGUE(fd);
+    (void) term;
 
     if (_nc_mingw_isconsole(fd)) {
 	if (queue == TCIFLUSH) {
@@ -1877,7 +1878,7 @@ __attribute__((constructor))
 	      rkeycompare);
 
 	if (GetNumberOfConsoleMouseButtons(&num_buttons)) {
-	    CON.numButtons = num_buttons;
+	    CON.numButtons = (int) num_buttons;
 	} else {
 	    CON.numButtons = 1;
 	}

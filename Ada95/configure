@@ -2912,7 +2912,7 @@ all :
 CF_EOF
 		cf_result=`${MAKE:-make} -k -f cf_makeflags.tmp 2>/dev/null | fgrep -v "ing directory" | sed -e 's,[ 	]*$,,'`
 		case "$cf_result" in
-		.*k)
+		.*k|.*kw)
 			cf_result=`${MAKE:-make} -k -f cf_makeflags.tmp CC=cc 2>/dev/null`
 			case "$cf_result" in
 			.*CC=*)	cf_cv_makeflags=

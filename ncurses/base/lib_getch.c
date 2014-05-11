@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.130 2014/05/03 20:49:50 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.131 2014/05/10 20:36:57 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -124,6 +124,17 @@ _nc_use_meta(WINDOW *win)
     return (sp ? sp->_use_meta : 0);
 }
 
+#ifdef USE_TERM_DRIVER
+# ifdef __MINGW32__
+static HANDLE
+_nc_get_handle(int fd)
+{
+    intptr_t value = _get_osfhandle(fd);
+    return (HANDLE) value;
+}
+# endif
+#endif
+
 /*
  * Check for mouse activity, returning nonzero if we find any.
  */
@@ -138,7 +149,7 @@ check_mouse_activity(SCREEN *sp, int delay EVENTLIST_2nd(_nc_eventlist * evl))
 # ifdef __MINGW32__
     /* if we emulate terminfo on console, we have to use the console routine */
     if (IsTermInfoOnConsole(sp)) {
-	HANDLE fd = (HANDLE) _get_osfhandle(sp->_ifd);
+	HANDLE fd = _nc_get_handle(sp->_ifd);
 	rc = _nc_mingw_testmouse(sp, fd, delay EVENTLIST_2nd(evl));
     } else
 # endif
@@ -280,7 +291,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 #ifdef __MINGW32__
 	if (NC_ISATTY(sp->_ifd) && IsTermInfoOnConsole(sp) && sp->_cbreak)
 	    n = _nc_mingw_console_read(sp,
-				       (HANDLE) _get_osfhandle(sp->_ifd),
+				       _nc_get_handle(sp->_ifd),
 				       &buf);
 	else
 #endif
