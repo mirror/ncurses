@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_initscr.3x,v 1.19 2013/07/20 19:34:14 tom Exp @
+  * @Id: curs_initscr.3x,v 1.20 2014/03/01 22:31:22 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -86,22 +86,34 @@
        use <STRONG>newterm</STRONG>.  The routine <STRONG>newterm</STRONG> should  be  called  once
        for each terminal.  It returns a variable of type <STRONG>SCREEN</STRONG> <STRONG>*</STRONG>
        which should be saved as a  reference  to  that  terminal.
-       The  arguments  are the <EM>type</EM> of the terminal to be used in
-       place of <STRONG>$TERM</STRONG>, a file pointer for output to the terminal,
-       and  another  file pointer for input from the terminal (if
-       <EM>type</EM> is <STRONG>NULL</STRONG>, <STRONG>$TERM</STRONG> will be used).  The program must  also
-       call  <STRONG>endwin</STRONG>  for  each terminal being used before exiting
-       from <STRONG>curses</STRONG>.  If <STRONG>newterm</STRONG> is called more than once for  the
-       same  terminal, the first terminal referred to must be the
-       last one for which <STRONG>endwin</STRONG> is called.
+       <STRONG>newterm</STRONG>'s arguments are
 
-       A program should always call <STRONG>endwin</STRONG> before exiting or  es-
-       caping  from  <STRONG>curses</STRONG>  mode  temporarily.  This routine re-
-       stores tty modes, moves the cursor to the lower  left-hand
-       corner  of  the  screen  and  resets the terminal into the
-       proper non-visual mode.  Calling <STRONG>refresh</STRONG> or <STRONG>doupdate</STRONG> after
-       a  temporary  escape  causes  the program to resume visual
-       mode.
+       <STRONG>o</STRONG>   the <EM>type</EM> of the terminal to be used in place of <STRONG>$TERM</STRONG>,
+
+       <STRONG>o</STRONG>   a file pointer for output to the terminal, and
+
+       <STRONG>o</STRONG>   another file pointer for input from the terminal
+
+       If the <EM>type</EM> parameter is <STRONG>NULL</STRONG>, <STRONG>$TERM</STRONG> will be used.
+
+       The  program must also call <STRONG>endwin</STRONG> for each terminal being
+       used before exiting from <STRONG>curses</STRONG>.   If  <STRONG>newterm</STRONG>  is  called
+       more  than  once for the same terminal, the first terminal
+       referred to must be the  last  one  for  which  <STRONG>endwin</STRONG>  is
+       called.
+
+       A  program should always call <STRONG>endwin</STRONG> before exiting or es-
+       caping from <STRONG>curses</STRONG> mode temporarily.  This routine
+
+       <STRONG>o</STRONG>   restores tty modes,
+
+       <STRONG>o</STRONG>   moves the cursor to the lower left-hand corner of  the
+           screen and
+
+       <STRONG>o</STRONG>   resets the terminal into the proper non-visual mode.
+
+       Calling <STRONG>refresh</STRONG> or <STRONG>doupdate</STRONG> after a temporary escape caus-
+       es the program to resume visual mode.
 
        The <STRONG>isendwin</STRONG> routine  returns  <STRONG>TRUE</STRONG>  if  <STRONG>endwin</STRONG>  has  been
        called without any subsequent calls to <STRONG>wrefresh</STRONG>, and <STRONG>FALSE</STRONG>
@@ -128,8 +140,17 @@
        Routines that return pointers always return <STRONG>NULL</STRONG> on error.
 
        X/Open  defines  no error conditions.  In this implementa-
-       tion <STRONG>endwin</STRONG> returns an error if the terminal was not  ini-
-       tialized.
+       tion
+
+       <STRONG>o</STRONG>   <STRONG>endwin</STRONG> returns an error if the terminal was  not  ini-
+           tialized.
+
+       <STRONG>o</STRONG>   <STRONG>newterm</STRONG> returns an error if it cannot allocate the da-
+           ta structures for the screen,  or  for  the  top-level
+           windows  within  the  screen, i.e., <STRONG>curscr</STRONG>, <STRONG>newscr</STRONG>, or
+           <STRONG>stdscr</STRONG>.
+
+       <STRONG>o</STRONG>   <STRONG>set_term</STRONG> returns no error.
 
 
 </PRE>
@@ -139,20 +160,20 @@
 
 </PRE>
 <H2>PORTABILITY</H2><PRE>
-       These  functions are described in the XSI Curses standard,
+       These functions are described in the XSI Curses  standard,
        Issue 4.  It specifies that portable applications must not
        call <STRONG>initscr</STRONG> more than once.
 
        Old versions of curses, e.g., BSD 4.4, may have returned a
-       null pointer from  <STRONG>initscr</STRONG>  when  an  error  is  detected,
-       rather  than  exiting.   It is safe but redundant to check
+       null  pointer  from  <STRONG>initscr</STRONG>  when  an  error is detected,
+       rather than exiting.  It is safe but  redundant  to  check
        the return value of <STRONG>initscr</STRONG> in XSI Curses.
 
        If the TERM variable is missing or empty, <STRONG>initscr</STRONG> uses the
-       value  "unknown", which normally corresponds to a terminal
-       entry with the <EM>generic</EM> (<EM>gn</EM>) capability.   Generic  entries
+       value "unknown", which normally corresponds to a  terminal
+       entry  with  the <EM>generic</EM> (<EM>gn</EM>) capability.  Generic entries
        are detected by <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG> and cannot be used for full-
-       screen operation.   Other  implementations  may  handle  a
+       screen  operation.   Other  implementations  may  handle a
        missing/empty TERM variable differently.
 
 

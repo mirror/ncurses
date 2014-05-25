@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.112 2013/07/20 19:29:59 tom Exp @
+  * @Id: ncurses.3x,v 1.117 2014/05/24 20:29:27 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -63,7 +63,7 @@
        sonable optimization.  This implementation is "new curses"
        (ncurses) and is the approved replacement for 4.4BSD clas-
        sic  curses,  which has been discontinued.  This describes
-       <STRONG>ncurses</STRONG> version 5.9 (patch 20131221).
+       <STRONG>ncurses</STRONG> version 5.9 (patch 20140524).
 
        The <STRONG>ncurses</STRONG> library emulates the curses library of  System
        V  Release  4  UNIX,  and  XPG4 (X/Open Portability Guide)
@@ -774,15 +774,6 @@
        ing the runtime behavior of the <STRONG>ncurses</STRONG> library.  The most
        important ones have been already discussed in detail.
 
-       BAUDRATE
-            The  debugging  library checks this environment vari-
-            able when the application has redirected output to  a
-            file.   The  variable's numeric value is used for the
-            baudrate.  If no value is found, <STRONG>ncurses</STRONG>  uses  9600.
-            This  allows  testers  to  construct repeatable test-
-            cases that take into account  costs  that  depend  on
-            baudrate.
-
        CC   When set, change occurrences of the command_character
             (i.e., the <STRONG>cmdch</STRONG> capability) of the  loaded  terminfo
             entries to the value of this variable.  Very few ter-
@@ -792,6 +783,15 @@
             ronments  to represent the C compiler's name, <STRONG>ncurses</STRONG>
             ignores it if it does not happen to be a single char-
             acter.
+
+       BAUDRATE
+            The  debugging  library checks this environment vari-
+            able when the application has redirected output to  a
+            file.   The  variable's numeric value is used for the
+            baudrate.  If no value is found, <STRONG>ncurses</STRONG>  uses  9600.
+            This  allows  testers  to  construct repeatable test-
+            cases that take into account  costs  that  depend  on
+            baudrate.
 
        COLUMNS
             Specify  the  width  of  the  screen  in  characters.
@@ -892,6 +892,17 @@
             tive value from zero to the terminfo <STRONG>max_colors</STRONG> value
             is allowed.
 
+       NCURSES_CONSOLE2
+            This applies only to the MinGW port of ncurses.
+
+            The <STRONG>Console2</STRONG> program's handling of the Microsoft Con-
+            sole API call <STRONG>CreateConsoleScreenBuffer</STRONG> is defective.
+            Applications which use this will hang.   However,  it
+            is  possible  to  simulate the action of this call by
+            mapping coordinates, explicitly saving and  restoring
+            the  original  screen contents.  Setting the environ-
+            ment variable <STRONG>NCGDB</STRONG> has the same effect.
+
        NCURSES_GPM_TERMS
             This applies only to ncurses configured  to  use  the
             GPM interface.
@@ -912,7 +923,7 @@
             variable to disable the feature.  You can also adjust
             your <STRONG>stty</STRONG> settings to avoid the problem.
 
-       NCURSES_NO_MAGIC_COOKIES
+       NCURSES_NO_MAGIC_COOKIE
             Some  terminals  use  a  magic-cookie  feature  which
             requires  special  handling  to make highlighting and
             other video attributes  display  properly.   You  can
@@ -1156,6 +1167,17 @@
             library's headers should be installed last, to  allow
             applications  to  be  built using either library from
             the same set of headers.
+
+       --with-pthread
+            The configure script renames the library.  All of the
+            library names have a "t" appended to them (before any
+            "w" added by <STRONG>--enable-widec</STRONG>).
+
+            The global variables such as <STRONG>LINES</STRONG>  are  replaced  by
+            macros  to allow read-only access.  At the same time,
+            setter-functions are provided to  set  these  values.
+            Some  applications  (very few) may require changes to
+            work with this convention.
 
        --with-shared
 

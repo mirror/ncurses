@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.492 $
-#	$Date: 2014/05/03 23:19:22 $
+#	$Revision: 1.494 $
+#	$Date: 2014/05/24 16:04:53 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -7814,10 +7814,10 @@ adm20|lear siegler adm20,
 	sgr0=\E(, smso=\E),
 adm21|lear siegler adm21,
 	xmc#1,
-	bel=^G, cr=^M, cud1=^J, dch1=\EW, dl1=30*\ER, ed=\EY, el=\ET,
-	ich1=\EQ, il1=30*\EE, ind=^J, invis@, kbs=^H, kcub1=^H,
-	kcud1=^J, kcuf1=^L, kcuu1=^K, khome=^^, use=adm+sgr,
-	use=adm3a,
+	bel=^G, cr=^M, cud1=^J, dch1=\EW, dl1=\ER$<30*>, ed=\EY,
+	el=\ET, ich1=\EQ, il1=\EE$<30*>, ind=^J, invis@, kbs=^H,
+	kcub1=^H, kcud1=^J, kcuf1=^L, kcuu1=^K, khome=^^,
+	use=adm+sgr, use=adm3a,
 # (adm22: ":em=:" was an obvious typo for ":ei=:"; also,
 # removed obsolete ":kn#7:ma=j^Jk^P^K^Pl ^R^L^L :";
 # removed bogus-looking \200 from before <cup>. -- esr)
@@ -11584,8 +11584,8 @@ att605-pc|ATT 605 in pc term mode,
 	kdl1=\E[M, kend=\E[F, kf1=\E[M, kf10=\E[V, kf2=\E[N,
 	kf3=\E[O, kf4=\E[P, kf5=\E[Q, kf6=\E[R, kf7=\E[S, kf8=\E[T,
 	kf9=\E[U, khome=\E[H, kich1=\E[@, knp=\E[G, kpp=\E[I,
-	rmsc=400\E[50;0|, smsc=250\E[?11l\E[50;1|, xoffc=g,
-	xonc=e, use=att605,
+	rmsc=\E[50;0|$<400>, smsc=\E[?11l\E[50;1|$<250>,
+	xoffc=g, xonc=e, use=att605,
 att605-w|AT&T 605-w 132 column 102 key keyboard,
 	cols#132, wsl#132,
 	is1=\E[8;0|\E[?4;5;13;15l\E[13;20l\E[?3;7h\E[12h\E(B\E)0,
@@ -13768,7 +13768,7 @@ dg210|dg-ansi|Data General 210/211,
 dg211|Data General d211,
 	cnorm=^L, cvvis=^L^R, ht=^I, ind@, kbs=^Y, kf0@, kf1@, kf2@, kf3@,
 	kf4@, kf5@, kf6@, kf7@, kf8@, kf9@, lf0@, nel=^M^Z, rmcup=^L,
-	rmso=\036E$<\0/>, smcup=^L^R, smso=\036D$<5/>, use=dg200,
+	rmso=\036E$<0/>, smcup=^L^R, smso=\036D$<5/>, use=dg200,
 
 # dg450 from Cornell (not official)
 dg450|dg6134|data general 6134,
@@ -14749,7 +14749,7 @@ sb1|beehive superbee,
 	smso=\E_1, smul=\E_0, tbc=\E3,
 sbi|superbee|beehive superbee at Indiana U.,
 	xsb,
-	cr=\r$<1>, il1=1\EN\EL$<9>\EQ \EP$<9> \EO\ER\EA,
+	cr=\r$<1>, il1=\EN$<1>\EL$<9>\EQ \EP$<9> \EO\ER\EA,
 	use=sb1,
 # Alternate (older) description of Superbee - f1=escape, f2=^C.
 # Note: there are at least 3 kinds of superbees in the world.  The sb1
@@ -18287,7 +18287,7 @@ megatek|pegasus workstation terminal emulator,
 xerox820|x820|Xerox 820,
 	am,
 	cols#80, lines#24,
-	bel=^G, clear=1^Z, cr=^M, cub1=^H, cud1=^J, cuf1=^L,
+	bel=^G, clear=\032$<1>, cr=^M, cub1=^H, cud1=^J, cuf1=^L,
 	cup=\E=%p1%{32}%+%c%p2%{32}%+%c, cuu1=^K, ed=^Q, el=^X,
 	home=^^, ind=^J,
 
@@ -19338,7 +19338,7 @@ h19|heath|h19-b|heathkit|heath-19|z19|zenith|heathkit h19,
 	clear=\EE, cnorm=\Ey4, cr=^M, cub1=^H, cud1=\EB, cuf1=\EC,
 	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, cvvis=\Ex4,
 	dch1=\EN, ed=\EJ, el=\EK, fsl=\Ek\Ey5, home=\EH, ht=^I, ind=^J,
-	ip=<1.5/>, kbs=^H, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
+	ip=$<1.5/>, kbs=^H, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
 	kcuu1=\EA, kf1=\ES, kf2=\ET, kf3=\EU, kf4=\EV, kf5=\EW,
 	kf6=\EP, kf7=\EQ, kf8=\ER, khome=\EH, lf6=blue, lf7=red,
 	lf8=white, ri=\EI, rmacs=\EG, rmir=\EO, rmso=\Eq, smacs=\EF,
@@ -20098,12 +20098,11 @@ ti924-8|Texas Instruments 924 VDT 8859/1 8 bit CTRL,
 	cup=%i\E[%p1%d;%p2%dH, cuu1=\E[A, cvvis=\E[?31h,
 	dl1=\E[M, ed=\E[J, el=\E[K, home=\E[H, ht=^I, hts=\EH,
 	il1=\E[L, ind=\ED, kbs=^H, kcub1=\E[D, kcud1=\E[B,
-	kcuf1=\E[C, kcuu1=\E[A, kdch1=P$<\233>, kf1=P$<\217>,
-	kf2=Q$<\217>, kf3=R$<\217>, kf4=S$<\217>, kf5=~$<\23316>,
-	kf6=~$<\23317>, kf7=~$<\23318>, kf8=~$<\23319>,
-	kf9=~$<\23320>, kich1=@$<\233>, rc=\E8, rev=\E[7m, ri=\EM,
-	rmso=\E[m, rmul=\E[m, sc=\E7, sgr0=\E[m, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g,
+	kcuf1=\E[C, kcuu1=\E[A, kdch1=\233P, kf1=\217P, kf2=\217Q,
+	kf3=\217R, kf4=\217S, kf5=\23316~, kf6=\23317~,
+	kf7=\23318~, kf8=\23319~, kf9=\23320~, kich1=\233@, rc=\E8,
+	rev=\E[7m, ri=\EM, rmso=\E[m, rmul=\E[m, sc=\E7, sgr0=\E[m,
+	smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 ti924w|Texas Instruments 924 VDT 7 bit - 132 column mode,
 	cols#132, use=ti924,
 ti924-8w|Texas Instruments 924 VDT 8 bit - 132 column mode,
@@ -20772,7 +20771,7 @@ aj510|Anderson-Jacobson model 510,
 	cols#80, lines#24,
 	clear=^L, cub1=^H, cuf1=\EX,
 	cup=\E#%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EY,
-	dch1=.1*\E'D, dl1=\E&D$<2*/>, ed=\E'P, el=\E'L, ich1=,
+	dch1=\E'D$<.1*>, dl1=\E&D$<2*/>, ed=\E'P, el=\E'L, ich1=,
 	il1=\E&I$<2*/>, ip=$<.1*/>, kcub1=\EW, kcud1=\EZ,
 	kcuf1=\EX, kcuu1=\EY, pad=\177, rmcup=\E"N, rmir=\E'J,
 	rmso=\E"I, rmul=\E"U, smcup=\E"N, smir=\E'I, smso=\E"I,
@@ -23302,5 +23301,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2014-05-03
 #	* add vt520ansi (Mike Gran)
+#
+# 2014-05-24
+#	* correct several entries which had termcap-style padding used in
+#	  terminfo: adm21, aj510, alto-h19, att605-pc, x820 -TD
+#	* correct syntax for padding in some entries: dg211, h19 -TD
+#	* correct ti924-8 which had confused padding versus octal escapes -TD
+#	* correct padding in sbi entry -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

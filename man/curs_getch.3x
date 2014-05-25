@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.37 2012/07/07 20:04:56 tom Exp $
+.\" $Id: curs_getch.3x,v 1.39 2014/05/24 20:16:31 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -71,14 +71,21 @@ In half-delay mode,
 the program waits until a character is typed or the
 specified timeout has been reached.
 .PP
-Unless \fBnoecho\fR has been set,
+If \fBecho\fR is enabled, and the window is not a pad,
 then the character will also be echoed into the
 designated window according to the following rules:
-if the character is the current erase character, left arrow, or backspace,
+.bP
+If the character is the current erase character, left arrow, or backspace,
 the cursor is moved one space to the left and that screen position is erased
 as if \fBdelch\fR had been called.
+.bP
 If the character value is any other \fBKEY_\fR define, the user is alerted
 with a \fBbeep\fR call.
+.bP
+If the character is a carriage-return,
+and if \fBnl\fP is enabled,
+it is translated to a line-feed after echoing.
+.bP
 Otherwise the character is simply output to the screen.
 .PP
 If the window is not a pad, and it has been moved or modified since the last
@@ -89,7 +96,8 @@ If \fBkeypad\fR is \fBTRUE\fR, and a function key is pressed, the token for
 that function key is returned instead of the raw characters.
 Possible function
 keys are defined in \fB<curses.h>\fR as macros with values outside the range
-of 8-bit characters whose names begin with \fBKEY_\fR. Thus, a variable
+of 8-bit characters whose names begin with \fBKEY_\fR.
+Thus, a variable
 intended to hold the return value of a function key must be of short size or
 larger.
 .PP
@@ -111,12 +119,12 @@ The following function keys, defined in \fB<curses.h>\fR, might be returned by
 \fBgetch\fR if \fBkeypad\fR has been enabled.
 Note that not all of these are
 necessarily supported on any particular terminal.
-.sp
+.PP
 .TS
 center tab(/) ;
-l l
 l l .
 \fIName\fR/\fIKey\fR \fIname\fR
+_
 KEY_BREAK/Break key
 KEY_DOWN/The four arrow keys ...
 KEY_UP

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.80 2014/05/10 21:08:22 tom Exp $
+dnl $Id: aclocal.m4,v 1.82 2014/05/24 21:09:10 Nicolas.Boulenguez Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1207,35 +1207,6 @@ AC_SUBST(cf_compile_generics)
 AC_SUBST(cf_generic_objects)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_PRAGMA_UNREF version: 1 updated: 2010/06/19 15:22:18
-dnl --------------------
-dnl Check if the gnat pragma "Unreferenced" works.
-AC_DEFUN([CF_GNAT_PRAGMA_UNREF],[
-AC_CACHE_CHECK(if GNAT pragma Unreferenced works,cf_cv_pragma_unreferenced,[
-CF_GNAT_TRY_LINK([procedure conftest;],
-[with Text_IO;
-with GNAT.OS_Lib;
-procedure conftest is
-   test : Integer;
-   pragma Unreferenced (test);
-begin
-   test := 1;
-   Text_IO.Put ("Hello World");
-   Text_IO.New_Line;
-   GNAT.OS_Lib.OS_Exit (0);
-end conftest;],
-	[cf_cv_pragma_unreferenced=yes],
-	[cf_cv_pragma_unreferenced=no])])
-
-# if the pragma is supported, use it (needed in the Trace code).
-if test $cf_cv_pragma_unreferenced = yes ; then
-	PRAGMA_UNREF=TRUE
-else
-	PRAGMA_UNREF=FALSE
-fi
-AC_SUBST(PRAGMA_UNREF)
-])dnl
-dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_PROJECTS version: 4 updated: 2013/09/07 14:05:46
 dnl ----------------
 dnl GNAT projects are configured with ".gpr" project files.
@@ -1244,7 +1215,6 @@ AC_DEFUN([CF_GNAT_PROJECTS],
 [
 AC_REQUIRE([CF_GNAT_VERSION])
 
-cf_gnat_libraries=no
 cf_gnat_projects=no
 
 AC_MSG_CHECKING(if GNAT supports project files)
@@ -1256,28 +1226,17 @@ case $cf_gnat_version in #(vi
 	cygwin*|msys*) #(vi
 		;;
 	*)
-		mkdir conftest.src conftest.bin conftest.lib
-		cd conftest.src
-		rm -rf conftest* *~conftest*
+		mkdir conftest
+		cd conftest
+		mkdir lib obj
 		cat >>library.gpr <<CF_EOF
 project Library is
-  Kind := External ("LIB_KIND");
   for Library_Name use "ConfTest";
-  for Object_Dir use ".";
-  for Library_ALI_Dir use External("LIBRARY_DIR");
-  for Library_Version use External ("SONAME");
-  for Library_Kind use Kind;
-  for Library_Dir use External("BUILD_DIR");
-  Source_Dir := External ("SOURCE_DIR");
-  for Source_Dirs use (Source_Dir);
-  package Compiler is
-     for Default_Switches ("Ada") use
-       ("-g",
-        "-O2",
-        "-gnatafno",
-        "-gnatVa",   -- All validity checks
-        "-gnatwa");  -- Activate all optional errors
-  end Compiler;
+  for Object_Dir use "obj";
+  for Library_Version use "libConfTest.so.1";
+  for Library_Kind use "dynamic";
+  for Library_Dir use "lib";
+  for Source_Dirs use (".");
 end Library;
 CF_EOF
 		cat >>confpackage.ads <<CF_EOF
@@ -1295,52 +1254,16 @@ package body ConfPackage is
    end conftest;
 end ConfPackage;
 CF_EOF
-		if ( $cf_ada_make $ADAFLAGS \
-				-Plibrary.gpr \
-				-XBUILD_DIR=`cd ../conftest.bin;pwd` \
-				-XLIBRARY_DIR=`cd ../conftest.lib;pwd` \
-				-XSOURCE_DIR=`pwd` \
-				-XSONAME=libConfTest.so.1 \
-				-XLIB_KIND=static 1>&AC_FD_CC 2>&1 ) ; then
+		if ( $cf_ada_make -Plibrary.gpr 1>&AC_FD_CC 2>&1 ); then
 			cf_gnat_projects=yes
 		fi
 		cd ..
-		if test -f conftest.lib/confpackage.ali
-		then
-			cf_gnat_libraries=yes
-		fi
-		rm -rf conftest* *~conftest*
+		rm -rf conftest
 		;;
 	esac
 	;;
 esac
 AC_MSG_RESULT($cf_gnat_projects)
-
-if test $cf_gnat_projects = yes
-then
-	AC_MSG_CHECKING(if GNAT supports libraries)
-	AC_MSG_RESULT($cf_gnat_libraries)
-fi
-
-if test "$cf_gnat_projects" = yes
-then
-	USE_OLD_MAKERULES="#"
-	USE_GNAT_PROJECTS=""
-else
-	USE_OLD_MAKERULES=""
-	USE_GNAT_PROJECTS="#"
-fi
-
-if test "$cf_gnat_libraries" = yes
-then
-	USE_GNAT_LIBRARIES=""
-else
-	USE_GNAT_LIBRARIES="#"
-fi
-
-AC_SUBST(USE_OLD_MAKERULES)
-AC_SUBST(USE_GNAT_PROJECTS)
-AC_SUBST(USE_GNAT_LIBRARIES)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_SIGINT version: 1 updated: 2011/03/27 20:07:59
@@ -3519,9 +3442,10 @@ dnl ---------------------
 dnl Command-line option to specify if an Ada95 shared-library should be built,
 dnl and optionally what its soname should be.
 AC_DEFUN([CF_WITH_ADA_SHAREDLIB],[
+AC_REQUIRE([CF_GNAT_PROJECTS])
 AC_MSG_CHECKING(if an Ada95 shared-library should be built)
 AC_ARG_WITH(ada-sharedlib,
-	[  --with-ada-sharedlib=XX build Ada95 shared-library],
+	[  --with-ada-sharedlib=soname build shared-library (requires GNAT projects)],
 	[with_ada_sharedlib=$withval],
 	[with_ada_sharedlib=no])
 AC_MSG_RESULT($with_ada_sharedlib)
@@ -3531,6 +3455,10 @@ MAKE_ADA_SHAREDLIB="#"
 
 if test "x$with_ada_sharedlib" != xno
 then
+	if test "$cf_gnat_projects" != yes
+	then
+		AC_MSG_ERROR(ada-sharedlib requires GNAT support for shared library projects,1)
+	fi
 	MAKE_ADA_SHAREDLIB=
 	if test "x$with_ada_sharedlib" != xyes
 	then

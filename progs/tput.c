@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -38,8 +39,7 @@
  * Ross Ridge's mytinfo package.
  */
 
-#define USE_LIBTINFO
-#include <progs.priv.h>
+#include <tparm_type.h>
 
 #if !PURE_TERMINFO
 #include <dump_entry.h>
@@ -47,17 +47,11 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.49 2013/09/28 20:57:25 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.50 2014/05/21 16:57:16 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
 #define FLUSH		fflush(stdout)
-
-typedef enum {
-    Numbers = 0
-    ,Num_Str
-    ,Num_Str_Str
-} TParams;
 
 static char *prg_name;
 static bool is_init = FALSE;
@@ -88,39 +82,6 @@ check_aliases(const char *name)
 {
     is_init = same_program(name, PROG_INIT);
     is_reset = same_program(name, PROG_RESET);
-}
-
-/*
- * Lookup the type of call we should make to tparm().  This ignores the actual
- * terminfo capability (bad, because it is not extensible), but makes this
- * code portable to platforms where sizeof(int) != sizeof(char *).
- */
-static TParams
-tparm_type(const char *name)
-{
-#define TD(code, longname, ti, tc) {code,longname},{code,ti},{code,tc}
-    TParams result = Numbers;
-    /* *INDENT-OFF* */
-    static const struct {
-	TParams code;
-	const char *name;
-    } table[] = {
-	TD(Num_Str,	"pkey_key",	"pfkey",	"pk"),
-	TD(Num_Str,	"pkey_local",	"pfloc",	"pl"),
-	TD(Num_Str,	"pkey_xmit",	"pfx",		"px"),
-	TD(Num_Str,	"plab_norm",	"pln",		"pn"),
-	TD(Num_Str_Str, "pkey_plab",	"pfxl",		"xl"),
-    };
-    /* *INDENT-ON* */
-
-    unsigned n;
-    for (n = 0; n < SIZEOF(table); n++) {
-	if (!strcmp(name, table[n].name)) {
-	    result = table[n].code;
-	    break;
-	}
-    }
-    return result;
 }
 
 static int

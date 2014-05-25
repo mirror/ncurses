@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2011,2014 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2014 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,91 +27,26 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author:  Nicolas Boulenguez, 2011                                      *
+ *  Author: Thomas E. Dickey                                                *
  ****************************************************************************/
 
 /*
-    Version Control
-    $Id: c_varargs_to_ada.c,v 1.6 2014/05/24 21:32:18 tom Exp $
-  --------------------------------------------------------------------------*/
-/*
-  */
+ * $Id: tparm_type.h,v 1.1 2014/05/21 16:57:56 tom Exp $
+ *
+ * determine expected/actual number of parameters to setup for tparm
+ */
+#ifndef TPARM_TYPE_H
+#define TPARM_TYPE_H 1
 
-#include "c_varargs_to_ada.h"
+#define USE_LIBTINFO
+#include <progs.priv.h>
 
-int
-set_field_type_alnum(FIELD *field,
-		     int minimum_width)
-{
-  return set_field_type(field, TYPE_ALNUM, minimum_width);
-}
+typedef enum {
+    Numbers = 0
+    ,Num_Str
+    ,Num_Str_Str
+} TParams;
 
-int
-set_field_type_alpha(FIELD *field,
-		     int minimum_width)
-{
-  return set_field_type(field, TYPE_ALPHA, minimum_width);
-}
+extern TParams tparm_type(const char *name);
 
-int
-set_field_type_enum(FIELD *field,
-		    char **value_list,
-		    int case_sensitive,
-		    int unique_match)
-{
-  return set_field_type(field, TYPE_ENUM, value_list, case_sensitive,
-			unique_match);
-}
-
-int
-set_field_type_integer(FIELD *field,
-		       int precision,
-		       long minimum,
-		       long maximum)
-{
-  return set_field_type(field, TYPE_INTEGER, precision, minimum, maximum);
-}
-
-int
-set_field_type_numeric(FIELD *field,
-		       int precision,
-		       double minimum,
-		       double maximum)
-{
-  return set_field_type(field, TYPE_NUMERIC, precision, minimum, maximum);
-}
-
-int
-set_field_type_regexp(FIELD *field,
-		      char *regular_expression)
-{
-  return set_field_type(field, TYPE_REGEXP, regular_expression);
-}
-
-int
-set_field_type_ipv4(FIELD *field)
-{
-  return set_field_type(field, TYPE_IPV4);
-}
-
-int
-set_field_type_user(FIELD *field,
-		    FIELDTYPE *fieldtype,
-		    void *arg)
-{
-  return set_field_type(field, fieldtype, arg);
-}
-
-void *
-void_star_make_arg(va_list *list)
-{
-  return va_arg(*list, void *);
-}
-
-#ifdef TRACE
-void
-_traces(const char *fmt, char *arg)
-{
-  _tracef(fmt, arg);
-}
-#endif
+#endif /* TPARM_TYPE_H */

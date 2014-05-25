@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2011,2014 Free Software Foundation, Inc.                   *
+ * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,91 +27,42 @@
  ****************************************************************************/
 
 /****************************************************************************
- *   Author:  Nicolas Boulenguez, 2011                                      *
+ *  Author: Thomas E. Dickey                                                *
  ****************************************************************************/
 
+#include <tparm_type.h>
+
+MODULE_ID("$Id: tparm_type.c,v 1.1 2014/05/21 16:50:57 tom Exp $")
+
 /*
-    Version Control
-    $Id: c_varargs_to_ada.c,v 1.6 2014/05/24 21:32:18 tom Exp $
-  --------------------------------------------------------------------------*/
-/*
-  */
-
-#include "c_varargs_to_ada.h"
-
-int
-set_field_type_alnum(FIELD *field,
-		     int minimum_width)
+ * Lookup the type of call we should make to tparm().  This ignores the actual
+ * terminfo capability (bad, because it is not extensible), but makes this
+ * code portable to platforms where sizeof(int) != sizeof(char *).
+ */
+TParams
+tparm_type(const char *name)
 {
-  return set_field_type(field, TYPE_ALNUM, minimum_width);
-}
+#define TD(code, longname, ti, tc) {code,longname},{code,ti},{code,tc}
+    TParams result = Numbers;
+    /* *INDENT-OFF* */
+    static const struct {
+	TParams code;
+	const char *name;
+    } table[] = {
+	TD(Num_Str,	"pkey_key",	"pfkey",	"pk"),
+	TD(Num_Str,	"pkey_local",	"pfloc",	"pl"),
+	TD(Num_Str,	"pkey_xmit",	"pfx",		"px"),
+	TD(Num_Str,	"plab_norm",	"pln",		"pn"),
+	TD(Num_Str_Str, "pkey_plab",	"pfxl",		"xl"),
+    };
+    /* *INDENT-ON* */
 
-int
-set_field_type_alpha(FIELD *field,
-		     int minimum_width)
-{
-  return set_field_type(field, TYPE_ALPHA, minimum_width);
+    unsigned n;
+    for (n = 0; n < SIZEOF(table); n++) {
+	if (!strcmp(name, table[n].name)) {
+	    result = table[n].code;
+	    break;
+	}
+    }
+    return result;
 }
-
-int
-set_field_type_enum(FIELD *field,
-		    char **value_list,
-		    int case_sensitive,
-		    int unique_match)
-{
-  return set_field_type(field, TYPE_ENUM, value_list, case_sensitive,
-			unique_match);
-}
-
-int
-set_field_type_integer(FIELD *field,
-		       int precision,
-		       long minimum,
-		       long maximum)
-{
-  return set_field_type(field, TYPE_INTEGER, precision, minimum, maximum);
-}
-
-int
-set_field_type_numeric(FIELD *field,
-		       int precision,
-		       double minimum,
-		       double maximum)
-{
-  return set_field_type(field, TYPE_NUMERIC, precision, minimum, maximum);
-}
-
-int
-set_field_type_regexp(FIELD *field,
-		      char *regular_expression)
-{
-  return set_field_type(field, TYPE_REGEXP, regular_expression);
-}
-
-int
-set_field_type_ipv4(FIELD *field)
-{
-  return set_field_type(field, TYPE_IPV4);
-}
-
-int
-set_field_type_user(FIELD *field,
-		    FIELDTYPE *fieldtype,
-		    void *arg)
-{
-  return set_field_type(field, fieldtype, arg);
-}
-
-void *
-void_star_make_arg(va_list *list)
-{
-  return va_arg(*list, void *);
-}
-
-#ifdef TRACE
-void
-_traces(const char *fmt, char *arg)
-{
-  _tracef(fmt, arg);
-}
-#endif

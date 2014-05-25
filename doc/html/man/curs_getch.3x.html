@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.37 2012/07/07 20:04:56 tom Exp @
+  * @Id: curs_getch.3x,v 1.39 2014/05/24 20:16:31 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -76,14 +76,24 @@
        waits  until a character is typed or the specified timeout
        has been reached.
 
-       Unless <STRONG>noecho</STRONG> has been set, then the character  will  also
-       be echoed into the designated window according to the fol-
-       lowing rules: if the character is the current erase  char-
-       acter,  left  arrow, or backspace, the cursor is moved one
-       space to the left and that screen position is erased as if
-       <STRONG>delch</STRONG> had been called.  If the character value is any oth-
-       er <STRONG>KEY_</STRONG> define, the user is  alerted  with  a  <STRONG>beep</STRONG>  call.
-       Otherwise the character is simply output to the screen.
+       If <STRONG>echo</STRONG> is enabled, and the window is not a pad, then  the
+       character  will  also be echoed into the designated window
+       according to the following rules:
+
+       <STRONG>o</STRONG>   If the character is the current erase character,  left
+           arrow,  or backspace, the cursor is moved one space to
+           the left and that screen  position  is  erased  as  if
+           <STRONG>delch</STRONG> had been called.
+
+       <STRONG>o</STRONG>   If  the  character value is any other <STRONG>KEY_</STRONG> define, the
+           user is alerted with a <STRONG>beep</STRONG> call.
+
+       <STRONG>o</STRONG>   If the character is a carriage-return, and  if  <STRONG>nl</STRONG>  is
+           enabled,  it  is translated to a line-feed after echo-
+           ing.
+
+       <STRONG>o</STRONG>   Otherwise  the  character  is  simply  output  to  the
+           screen.
 
        If the window is not a pad, and it has been moved or modi-
        fied since the last call to  <STRONG>wrefresh</STRONG>,  <STRONG>wrefresh</STRONG>  will  be
@@ -93,7 +103,7 @@
        ken for that function key is returned instead of  the  raw
        characters.   Possible function keys are defined in <STRONG>&lt;curs-</STRONG>
        <STRONG>es.h&gt;</STRONG> as macros with values outside  the  range  of  8-bit
-       characters  whose  names begin with <STRONG>KEY_</STRONG>. Thus, a variable
+       characters  whose names begin with <STRONG>KEY_</STRONG>.  Thus, a variable
        intended to hold the return value of a function  key  must
        be of short size or larger.
 
@@ -116,8 +126,8 @@
        that not all of these are  necessarily  supported  on  any
        particular terminal.
 
-
             <EM>Name</EM>            <EM>Key</EM> <EM>name</EM>
+            -------------------------------------------------
             KEY_BREAK       Break key
             KEY_DOWN        The four arrow keys ...
             KEY_UP
@@ -168,6 +178,7 @@
             KEY_MESSAGE     Message key
             KEY_MOUSE       Mouse event read
             KEY_MOVE        Move key
+
             KEY_NEXT        Next object key
             KEY_OPEN        Open key
             KEY_OPTIONS     Options key
@@ -178,7 +189,6 @@
             KEY_REPLACE     Replace key
             KEY_RESIZE      Screen resized
             KEY_RESTART     Restart key
-
             KEY_RESUME      Resume key
             KEY_SAVE        Save key
             KEY_SBEG        Shifted beginning key

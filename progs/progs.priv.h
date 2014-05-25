@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,12 +30,15 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.39 2012/02/22 22:11:27 tom Exp $
+ * $Id: progs.priv.h,v 1.40 2014/05/21 17:00:19 tom Exp $
  *
  *	progs.priv.h
  *
  *	Header file for curses utility programs
  */
+
+#ifndef PROGS_PRIV_H
+#define PROGS_PRIV_H 1
 
 #include <ncurses_cfg.h>
 
@@ -200,3 +203,5 @@ extern int optind;
 #define UChar(c)    ((unsigned char)(c))
 
 #define SIZEOF(v) (sizeof(v)/sizeof(v[0]))
+
+#endif /* PROGS_PRIV_H */

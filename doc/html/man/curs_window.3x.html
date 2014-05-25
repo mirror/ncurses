@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_window.3x,v 1.17 2010/12/04 18:38:55 tom Exp @
+  * @Id: curs_window.3x,v 1.18 2014/03/01 23:36:38 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -56,13 +56,16 @@
 <H2>SYNOPSIS</H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>WINDOW</STRONG> <STRONG>*newwin(int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG> <STRONG>int</STRONG> <STRONG>begin_y,</STRONG>
-             <STRONG>int</STRONG> <STRONG>begin_x);</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*newwin(</STRONG>
+             <STRONG>int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG>
+             <STRONG>int</STRONG> <STRONG>begin_y,</STRONG> <STRONG>int</STRONG> <STRONG>begin_x);</STRONG>
        <STRONG>int</STRONG> <STRONG>delwin(WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvwin(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
-       <STRONG>WINDOW</STRONG> <STRONG>*subwin(WINDOW</STRONG> <STRONG>*orig,</STRONG> <STRONG>int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*subwin(WINDOW</STRONG> <STRONG>*orig,</STRONG>
+             <STRONG>int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG>
              <STRONG>int</STRONG> <STRONG>begin_y,</STRONG> <STRONG>int</STRONG> <STRONG>begin_x);</STRONG>
-       <STRONG>WINDOW</STRONG> <STRONG>*derwin(WINDOW</STRONG> <STRONG>*orig,</STRONG> <STRONG>int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*derwin(WINDOW</STRONG> <STRONG>*orig,</STRONG>
+             <STRONG>int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG>
              <STRONG>int</STRONG> <STRONG>begin_y,</STRONG> <STRONG>int</STRONG> <STRONG>begin_x);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvderwin(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>par_y,</STRONG> <STRONG>int</STRONG> <STRONG>par_x);</STRONG>
        <STRONG>WINDOW</STRONG> <STRONG>*dupwin(WINDOW</STRONG> <STRONG>*win);</STRONG>
@@ -76,10 +79,16 @@
 <H2>DESCRIPTION</H2><PRE>
        Calling <STRONG>newwin</STRONG> creates and returns a pointer to a new win-
        dow with the given number of lines and columns.  The upper
-       left-hand  corner of the window is at line <EM>begin</EM>_<EM>y</EM>, column
-       <EM>begin</EM>_<EM>x</EM>.  If either <EM>nlines</EM> or <EM>ncols</EM> is zero, they  default
-       to  <STRONG>LINES</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>y</EM> and <STRONG>COLS</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>x</EM>.  A new full-screen
-       window is created by calling <STRONG>newwin(0,0,0,0)</STRONG>.
+       left-hand corner of the window is at
+              line <EM>begin</EM>_<EM>y</EM>,
+              column <EM>begin</EM>_<EM>x</EM>
+
+       If either <EM>nlines</EM> or <EM>ncols</EM> is zero, they default to
+              <STRONG>LINES</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>y</EM> and
+              <STRONG>COLS</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>x</EM>.
+
+       A   new   full-screen   window   is   created  by  calling
+       <STRONG>newwin(0,0,0,0)</STRONG>.
 
        Calling <STRONG>delwin</STRONG> deletes the named window, freeing all memo-
        ry associated with it (it does not actually erase the win-
@@ -95,13 +104,11 @@
        Calling <STRONG>subwin</STRONG> creates and returns a pointer to a new win-
        dow with the given number of lines, <EM>nlines</EM>,  and  columns,
        <EM>ncols</EM>.   The  window  is at position (<EM>begin</EM>_<EM>y</EM>, <EM>begin</EM>_<EM>x</EM>) on
-       the screen.  (This position is relative to the screen, and
-       not to the window <EM>orig</EM>.)  The window is made in the middle
-       of the window <EM>orig</EM>, so that changes  made  to  one  window
-       will  affect  both  windows.   The subwindow shares memory
-       with the window <EM>orig</EM>.  When using this routine, it is nec-
-       essary  to call <STRONG>touchwin</STRONG> or <STRONG>touchline</STRONG> on <EM>orig</EM> before call-
-       ing <STRONG>wrefresh</STRONG> on the subwindow.
+       the screen.  The subwindow shares memory with  the  window
+       <EM>orig</EM>,  so that changes made to one window will affect both
+       windows.  When using this routine, it is necessary to call
+       <STRONG>touchwin</STRONG>  or  <STRONG>touchline</STRONG> on <EM>orig</EM> before calling <STRONG>wrefresh</STRONG> on
+       the subwindow.
 
        Calling <STRONG>derwin</STRONG> is the same as calling <STRONG>subwin,</STRONG> except  that
        <EM>begin</EM>_<EM>y</EM> and <EM>begin</EM>_<EM>x</EM> are relative to the origin of the win-
@@ -143,30 +150,50 @@
        X/Open defines no error conditions.  In  this  implementa-
        tion
 
-              <STRONG>delwin</STRONG>
-                   returns  an  error  if  the  window pointer is
-                   null, or if the window is the parent of anoth-
-                   er window.
+       <STRONG>delwin</STRONG>
+            returns an error if the window pointer is null, or if
+            the window is the parent of another window.
 
-                   This  implementation  also maintains a list of
-                   windows, and checks that the pointer passed to
-                   <STRONG>delwin</STRONG>  is  one  that it created, returning an
-                   error if it was not..
+       <STRONG>derwin</STRONG>
+            returns an error if  the  parent  window  pointer  is
+            null,  or  if  any  of its ordinates or dimensions is
+            negative, or if the resulting window does not fit in-
+            side the parent window.
 
-              <STRONG>mvderwin</STRONG>
-                   returns an error  if  the  window  pointer  is
-                   null,  or  if some part of the window would be
-                   placed off-screen.
+       <STRONG>dupwin</STRONG>
+            returns an error if the window pointer is null.
 
-              <STRONG>mvwin</STRONG>
-                   returns an error  if  the  window  pointer  is
-                   null,  or if the window is really a pad, or if
-                   some part of the window would be  placed  off-
-                   screen.
+            This implementation also maintains a list of windows,
+            and checks that the pointer passed to <STRONG>delwin</STRONG>  is  one
+            that it created, returning an error if it was not..
 
-              <STRONG>syncok</STRONG>
-                   returns  an  error  if  the  window pointer is
-                   null.
+       <STRONG>mvderwin</STRONG>
+            returns an error if the window pointer is null, or if
+            some part of the window would be placed off-screen.
+
+       <STRONG>mvwin</STRONG>
+            returns an error if the window pointer is null, or if
+            the  window  is  really a pad, or if some part of the
+            window would be placed off-screen.
+
+       <STRONG>newwin</STRONG>
+            will fail if either of  its  beginning  ordinates  is
+            negative, or if either the number of lines or columns
+            is negative.
+
+       <STRONG>syncok</STRONG>
+            returns an error if the window pointer is null.
+
+       <STRONG>subwin</STRONG>
+            returns an error if  the  parent  window  pointer  is
+            null,  or  if  any  of its ordinates or dimensions is
+            negative, or if the resulting window does not fit in-
+            side the parent window.
+
+       The  functions which return a window pointer may also fail
+       if there is insufficient memory for its  data  structures.
+       Any  of  these  functions  will fail if the screen has not
+       been initialized, i.e., with <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.
 
 
 </PRE>

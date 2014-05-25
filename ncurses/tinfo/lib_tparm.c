@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.90 2013/11/09 14:53:05 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.92 2014/05/23 00:33:45 tom Exp $")
 
 /*
  *	char *
@@ -466,6 +466,8 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
     int i;
     const char *cp = string;
     size_t len2;
+    bool termcap_hack;
+    bool incremented_two;
 
     if (cp == NULL)
 	return NULL;
@@ -481,6 +483,8 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
     number = _nc_tparm_analyze(cp, p_is_s, &popcount);
     if (TPS(fmt_buff) == 0)
 	return NULL;
+
+    incremented_two = FALSE;
 
     if (number > NUM_PARM)
 	number = NUM_PARM;
@@ -514,7 +518,9 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
      * style, which means tparam() will expand termcap strings OK.
      */
     TPS(stack_ptr) = 0;
+    termcap_hack = FALSE;
     if (popcount == 0) {
+	termcap_hack = TRUE;
 	popcount = number;
 	for (i = number - 1; i >= 0; i--) {
 	    if (p_is_s[i])
@@ -573,10 +579,11 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
 		cp++;
 		i = (UChar(*cp) - '1');
 		if (i >= 0 && i < NUM_PARM) {
-		    if (p_is_s[i])
+		    if (p_is_s[i]) {
 			spush(p_is_s[i]);
-		    else
+		    } else {
 			npush((int) param[i]);
+		    }
 		}
 		break;
 
@@ -691,10 +698,26 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
 		break;
 
 	    case 'i':
-		if (p_is_s[0] == 0)
-		    param[0]++;
-		if (p_is_s[1] == 0)
-		    param[1]++;
+		/*
+		 * Increment the first two parameters -- if they are numbers
+		 * rather than strings.  As a side effect, assign into the
+		 * stack; if this is termcap, then the stack was populated
+		 * using the termcap hack above rather than via the terminfo
+		 * 'p' case.
+		 */
+		if (!incremented_two) {
+		    incremented_two = TRUE;
+		    if (p_is_s[0] == 0) {
+			param[0]++;
+			if (termcap_hack)
+			    TPS(stack)[0].data.num = (int) param[0];
+		    }
+		    if (p_is_s[1] == 0) {
+			param[1]++;
+			if (termcap_hack)
+			    TPS(stack)[1].data.num = (int) param[1];
+		    }
+		}
 		break;
 
 	    case '?':

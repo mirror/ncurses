@@ -26,92 +26,21 @@
  * authorization.                                                           *
  ****************************************************************************/
 
-/****************************************************************************
- *   Author:  Nicolas Boulenguez, 2011                                      *
- ****************************************************************************/
+#ifndef __C_THREADED_VARIABLES_H
+#define __C_THREADED_VARIABLES_H
 
-/*
-    Version Control
-    $Id: c_varargs_to_ada.c,v 1.6 2014/05/24 21:32:18 tom Exp $
-  --------------------------------------------------------------------------*/
-/*
-  */
+#include <curses.h>
 
-#include "c_varargs_to_ada.h"
+extern WINDOW *stdscr_as_function(void);
+extern WINDOW *curscr_as_function(void);
 
-int
-set_field_type_alnum(FIELD *field,
-		     int minimum_width)
-{
-  return set_field_type(field, TYPE_ALNUM, minimum_width);
-}
+extern int LINES_as_function(void);
+extern int LINES_as_function(void);
+extern int COLS_as_function(void);
+extern int TABSIZE_as_function(void);
+extern int COLORS_as_function(void);
+extern int COLOR_PAIRS_as_function(void);
 
-int
-set_field_type_alpha(FIELD *field,
-		     int minimum_width)
-{
-  return set_field_type(field, TYPE_ALPHA, minimum_width);
-}
+extern chtype acs_map_as_function(char /* index */ );
 
-int
-set_field_type_enum(FIELD *field,
-		    char **value_list,
-		    int case_sensitive,
-		    int unique_match)
-{
-  return set_field_type(field, TYPE_ENUM, value_list, case_sensitive,
-			unique_match);
-}
-
-int
-set_field_type_integer(FIELD *field,
-		       int precision,
-		       long minimum,
-		       long maximum)
-{
-  return set_field_type(field, TYPE_INTEGER, precision, minimum, maximum);
-}
-
-int
-set_field_type_numeric(FIELD *field,
-		       int precision,
-		       double minimum,
-		       double maximum)
-{
-  return set_field_type(field, TYPE_NUMERIC, precision, minimum, maximum);
-}
-
-int
-set_field_type_regexp(FIELD *field,
-		      char *regular_expression)
-{
-  return set_field_type(field, TYPE_REGEXP, regular_expression);
-}
-
-int
-set_field_type_ipv4(FIELD *field)
-{
-  return set_field_type(field, TYPE_IPV4);
-}
-
-int
-set_field_type_user(FIELD *field,
-		    FIELDTYPE *fieldtype,
-		    void *arg)
-{
-  return set_field_type(field, fieldtype, arg);
-}
-
-void *
-void_star_make_arg(va_list *list)
-{
-  return va_arg(*list, void *);
-}
-
-#ifdef TRACE
-void
-_traces(const char *fmt, char *arg)
-{
-  _tracef(fmt, arg);
-}
-#endif
+#endif /* __C_THREADED_VARIABLES_H */

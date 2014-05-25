@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.32 2011/01/15 14:15:10 tom Exp @
+  * @Id: curs_addch.3x,v 1.33 2014/05/24 19:47:41 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -71,19 +71,33 @@
        character <EM>ch</EM> into the given window at its  current  window
        position,  which  is then advanced.  They are analogous to
        <STRONG>putchar</STRONG> in <STRONG>stdio(3)</STRONG>.  If the advance is at the right  mar-
-       gin,  the  cursor  automatically wraps to the beginning of
-       the next line.  At the bottom  of  the  current  scrolling
-       region,  if  <STRONG>scrollok</STRONG>  is enabled, the scrolling region is
-       scrolled up one line.
+       gin:
+
+       <STRONG>o</STRONG>   The cursor automatically wraps to the beginning of the
+           next line.
+
+       <STRONG>o</STRONG>   At the bottom of the current scrolling region, and  if
+           <STRONG>scrollok</STRONG>  is enabled, the scrolling region is scrolled
+           up one line.
+
+       <STRONG>o</STRONG>   If <STRONG>scrollok</STRONG> is not enabled, writing a character at the
+           lower  right  margin  succeeds.   However, an error is
+           returned because it is not possible to wrap to  a  new
+           line
 
        If <EM>ch</EM> is a tab, newline, or backspace, the cursor is moved
-       appropriately within the window.  Backspace moves the cur-
-       sor one character left; at the left edge of  a  window  it
-       does  nothing.   Newline  does  a <STRONG>clrtoeol</STRONG>, then moves the
-       cursor to  the  window  left  margin  on  the  next  line,
-       scrolling  the  window if on the last line.  Tabs are con-
-       sidered to be at every eighth column.   The  tab  interval
-       may be altered by setting the <STRONG>TABSIZE</STRONG> variable.
+       appropriately within the window:
+
+       <STRONG>o</STRONG>   Backspace moves the cursor one character left; at  the
+           left edge of a window it does nothing.
+
+       <STRONG>o</STRONG>   Newline  does a <STRONG>clrtoeol</STRONG>, then moves the cursor to the
+           window left margin on the  next  line,  scrolling  the
+           window if on the last line.
+
+       <STRONG>o</STRONG>   Tabs are considered to be at every eighth column.  The
+           tab interval may be altered  by  setting  the  <STRONG>TABSIZE</STRONG>
+           variable.
 
        If <EM>ch</EM> is any control character other than tab, newline, or
        backspace, it is drawn  in  <STRONG>^</STRONG><EM>X</EM>  notation.   Calling  <STRONG>winch</STRONG>

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2007-2010,2013 Free Software Foundation, Inc.              *
+  * Copyright (c) 2007-2013,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_opaque.3x,v 1.10 2013/07/20 19:42:29 tom Exp @
+  * @Id: curs_opaque.3x,v 1.11 2014/03/15 19:24:23 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -69,6 +69,7 @@
        <STRONG>bool</STRONG> <STRONG>is_subwin(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>bool</STRONG> <STRONG>is_syncok(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>WINDOW</STRONG> <STRONG>*</STRONG> <STRONG>wgetparent(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wgetdelay(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>int</STRONG> <STRONG>wgetscrreg(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>*top,</STRONG> <STRONG>int</STRONG> <STRONG>*bottom);</STRONG>
 
 
@@ -115,6 +116,9 @@
 
        <STRONG>is_syncok</STRONG>
             returns the value set in <STRONG>syncok</STRONG>
+
+       <STRONG>wgetdelay</STRONG>
+            returns the delay timeout as set in <STRONG>wtimeout</STRONG>.
 
        <STRONG>wgetparent</STRONG>
             returns  the parent WINDOW pointer for subwindows, or

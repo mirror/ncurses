@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 1998-2000,2006 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2006,2014 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKparametrized.sh,v 1.6 2006/04/22 21:36:16 tom Exp $
+# $Id: MKparametrized.sh,v 1.7 2014/05/24 15:07:19 tom Exp $
 #
 # MKparametrized.sh -- generate indirection vectors for various sort methods
 #
@@ -53,10 +53,11 @@ EOF
 # this, that would be cleaner....
 
 ${AWK-awk} <$CAPS '
-$3 != "str"	{next;}
-$1 ~ /^acs_/	{print "-1,\t/* ", $2, " */"; count++; next;}
-$0 ~ /#[0-9]/	{print "1,\t/* ", $2, " */"; count++; next;}
-		{print "0,\t/* ", $2, " */"; count++;}
-END		{printf("} /* %d entries */;\n\n", count);}
+$3 != "str"		{next;}
+$1 ~ /^acs_/		{print "-1,\t/* ", $2, " */"; count++; next;}
+$1 ~ /^label_format/	{print "-1,\t/* ", $2, " */"; count++; next;}
+$0 ~ /#[0-9]/		{print "1,\t/* ", $2, " */"; count++; next;}
+			{print "0,\t/* ", $2, " */"; count++;}
+END			{printf("} /* %d entries */;\n\n", count);}
 '
 

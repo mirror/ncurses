@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.58 2013/07/20 19:31:25 tom Exp $
+.\" $Id: tic.1m,v 1.60 2014/05/24 22:00:11 tom Exp $
 .TH @TIC@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -152,6 +152,20 @@ but commented out with two preceding dots.
 The actual format used incorporates some improvements for escaped characters
 from terminfo format.
 For a stricter BSD-compatible translation, add the \fB\-K\fR option.
+.IP
+If this is combined with \fB\-c\fR, \fB@TIC@\fR makes additional checks
+to report cases where the terminfo values do not have an exact equivalent
+in termcap form.
+For example:
+.RS
+.bP
+\fBsgr\fP usually will not convert, because termcap lacks the ability to
+work with more than two parameters, and because termcap lacks many of
+the arithmetic/logical operators used in terminfo.
+.bP
+capabilities with more than one delay or with delays before the end of
+the string will not convert completely.
+.RE
 .TP
 \fB\-c\fR
 tells \fB@TIC@\fP to only check \fIfile\fR for errors, including syntax problems and
@@ -164,6 +178,11 @@ as well as buggy checking for the buffer length
 (and a documented limit in terminfo),
 these entries may cause core
 dumps with other implementations.
+.IP
+\fB@TIC@\fP checks string capabilities to ensure that those with parameters
+will be valid expressions.
+It does this check only for the predefined string capabilities;
+those which are defined with the \fB\-x\fP option are ignored.
 .TP
 \fB\-D\fR
 tells \fB@TIC@\fP to print the database locations that it knows about, and exit.

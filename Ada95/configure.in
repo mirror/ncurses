@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010-2012,2013 Free Software Foundation, Inc.              *
+dnl Copyright (c) 2010-2013,2014 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.49 2013/11/16 20:06:37 tom Exp $
+dnl $Id: configure.in,v 1.52 2014/05/24 21:31:05 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.49 $)
+AC_REVISION($Revision: 1.52 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -478,8 +478,6 @@ if test "$cf_with_ada" != "no" ; then
 
 		CF_GNAT_GENERICS
 		CF_GNAT_SIGINT
-		CF_GNAT_PRAGMA_UNREF
-		CF_GNAT_PROJECTS
 
 		CF_WITH_ADA_COMPILER
 
@@ -594,9 +592,7 @@ AC_OUTPUT( \
 	$SUB_MAKEFILES \
 	doc/adacurses${DFT_ARG_SUFFIX}-config.1:doc/MKada_config.in \
 	Makefile,[
-if test -z "$USE_OLD_MAKERULES" ; then
 	$AWK -f $srcdir/mk-1st.awk <$srcdir/src/modules >>src/Makefile
-fi
 ],[
 ### Special initialization commands, used to pass information from the
 ### configuration-run into config.status
@@ -611,7 +607,6 @@ LN_S="$LN_S"
 NCURSES_MAJOR="$NCURSES_MAJOR"
 NCURSES_MINOR="$NCURSES_MINOR"
 NCURSES_PATCH="$NCURSES_PATCH"
-USE_OLD_MAKERULES="$USE_OLD_MAKERULES"
 cf_cv_abi_version="$cf_cv_abi_version"
 cf_cv_rel_version="$cf_cv_rel_version"
 cf_cv_rm_so_locs="$cf_cv_rm_so_locs"

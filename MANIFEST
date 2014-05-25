@@ -128,9 +128,11 @@
 ./Ada95/samples/tour.adb
 ./Ada95/samples/tour.ads
 ./Ada95/src/Makefile.in
+./Ada95/src/c_threaded_variables.c
+./Ada95/src/c_threaded_variables.h
 ./Ada95/src/c_varargs_to_ada.c
 ./Ada95/src/c_varargs_to_ada.h
-./Ada95/src/library.gpr
+./Ada95/src/library.gpr.sed
 ./Ada95/src/modules
 ./Ada95/src/ncurses_compat.c
 ./Ada95/src/terminal_interface-curses-aux.adb
@@ -333,6 +335,7 @@
 ./doc/html/ada/terminal_interface-curses-trace__ads.htm
 ./doc/html/ada/terminal_interface-curses__adb.htm
 ./doc/html/ada/terminal_interface-curses__ads.htm
+./doc/html/ada/terminal_interface-curses_constants__ads.htm
 ./doc/html/ada/terminal_interface__ads.htm
 ./doc/html/announce.html
 ./doc/html/hackguide.html
@@ -1040,6 +1043,8 @@
 ./progs/tabs.c
 ./progs/tic.c
 ./progs/toe.c
+./progs/tparm_type.c
+./progs/tparm_type.h
 ./progs/tput.c
 ./progs/transform.c
 ./progs/tset.c
