@@ -32,7 +32,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.68 2014/05/24 21:34:53 tom Exp $
+    $Id: gen.c,v 1.69 2014/05/31 21:00:08 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program prints on its standard output the source for the
@@ -153,7 +153,7 @@ find_pos(const UCHAR * const data,
     UINT first, last;                                                   \
     record mask;                                                        \
     memset (&mask, 0, sizeof (mask));                                   \
-    mask.field = -1;                                                    \
+    memset (&mask.field, 0xff, sizeof(mask.field));                     \
     if (!find_pos ((UCHAR *)&mask, sizeof (mask), &first, &last))       \
       my_error ("failed to locate" #record "_" #field);                 \
     print_constant (#record "_" #field "_First", first);                \

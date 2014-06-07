@@ -31,7 +31,7 @@
  ****************************************************************************/
 
 /*
- * $Id: form_driver_w.c,v 1.11 2014/02/09 22:20:27 tom Exp $
+ * $Id: form_driver_w.c,v 1.12 2014/06/01 20:37:19 tom Exp $
  *
  * Test form_driver_w (int, int, wchar_t), a wide char aware
  * replacement of form_driver.
@@ -41,7 +41,7 @@
 
 #include <test.priv.h>
 
-#if USE_WIDEC_SUPPORT && USE_LIBFORM
+#if USE_WIDEC_SUPPORT && USE_LIBFORM && (defined(NCURSES_VERSION_PATCH) && NCURSES_VERSION_PATCH >= 20131207)
 
 #include <form.h>
 

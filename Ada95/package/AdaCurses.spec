@@ -2,7 +2,7 @@ Summary: AdaCurses - Ada95 binding for ncurses
 %define AppProgram AdaCurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: AdaCurses.spec,v 1.12 2011/04/01 00:08:32 tom Exp $
+# $Id: AdaCurses.spec,v 1.13 2014/06/07 17:49:23 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -68,11 +68,11 @@ make install               DESTDIR=$RPM_BUILD_ROOT
 %changelog
 # each patch should add its ChangeLog entries here
 
-* Thu Mar 31 2010 Thomas Dickey
+* Thu Mar 31 2011 Thomas Dickey
 - use --with-shared option for consistency with --with-ada-sharelib
 - ensure that MY_DATADIR is set when installing examples
 - add ada_libdir symbol to handle special case where libdir is /usr/lib64
 - use --disable-rpath-link to link sample programs without rpath
 
-* Fri Mar 25 2010 Thomas Dickey
+* Fri Mar 25 2011 Thomas Dickey
 - initial version

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.580 2014/05/24 21:23:43 tom Exp $
+dnl $Id: configure.in,v 1.582 2014/06/01 14:05:06 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.580 $)
+AC_REVISION($Revision: 1.582 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1353,6 +1353,8 @@ fi
 
 AC_SUBST(ADA_TRACE)
 
+CF_DISABLE_GNAT_PROJECTS
+
 ###	Checks for libraries.
 case $cf_cv_system_name in #(vi
 *mingw32*) #(vi
@@ -1620,6 +1622,7 @@ dnl At the moment we support no other Ada95 compiler.
 
 			CF_GNAT_GENERICS
 			CF_GNAT_SIGINT
+			CF_GNAT_PROJECTS
 
 			CF_WITH_ADA_COMPILER
 
@@ -2017,7 +2020,9 @@ fi
 CF_LIB_RULES($SRC_SUBDIRS)
 
 if test "x$cf_with_ada" = "xyes" && test "x$cf_cv_prog_gnat_correct" = "xyes"; then
+if test -z "$USE_OLD_MAKERULES" ; then
 	$AWK -f $srcdir/Ada95/mk-1st.awk <$srcdir/Ada95/src/modules >>Ada95/src/Makefile
+fi
 fi
 ],[
 ### Special initialization commands, used to pass information from the
@@ -2050,6 +2055,7 @@ TINFO_ARG_SUFFIX="$TINFO_ARG_SUFFIX"
 TINFO_LIB_SUFFIX="$TINFO_LIB_SUFFIX"
 TINFO_NAME="$TINFO_NAME"
 TINFO_SUFFIX="$TINFO_SUFFIX"
+USE_OLD_MAKERULES="$USE_OLD_MAKERULES"
 WITH_CURSES_H="$with_curses_h"
 WITH_ECHO="${enable_echo:=yes}"
 WITH_OVERWRITE="$with_overwrite"

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.52 2014/05/24 21:31:05 tom Exp $
+dnl $Id: configure.in,v 1.55 2014/06/01 16:40:55 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.52 $)
+AC_REVISION($Revision: 1.55 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -67,7 +67,6 @@ AC_SYS_LONG_FILE_NAMES
 # if we find pkg-config, check if we should install the ".pc" files.
 CF_PKG_CONFIG
 CF_WITH_PKG_CONFIG_LIBDIR
-CF_ENABLE_PC_FILES
 
 AC_MSG_CHECKING(if you want to build test-programs)
 AC_ARG_WITH(tests,
@@ -432,6 +431,8 @@ fi
 
 AC_SUBST(ADA_TRACE)
 
+CF_DISABLE_GNAT_PROJECTS
+
 ###	Checks for libraries.
 case $cf_cv_system_name in #(vi
 *mingw32*) #(vi
@@ -478,6 +479,7 @@ if test "$cf_with_ada" != "no" ; then
 
 		CF_GNAT_GENERICS
 		CF_GNAT_SIGINT
+		CF_GNAT_PROJECTS
 
 		CF_WITH_ADA_COMPILER
 
@@ -547,17 +549,6 @@ CF_ADD_CFLAGS($EXTRA_CFLAGS)
 
 ################################################################################
 
-if test x"$enable_pc_files" = xyes ; then \
-SUB_MAKEFILES="$SUB_MAKEFILES misc/gen-pkgconfig:misc/gen-pkgconfig.in"
-MAKE_PC_FILES=
-else
-MAKE_PC_FILES="#"
-fi
-AC_SUBST(MAKE_PC_FILES)
-AC_SUBST(cross_compiling)
-
-################################################################################
-
 TEST_ARG2=
 AC_SUBST(TEST_ARG2)
 
@@ -592,7 +583,9 @@ AC_OUTPUT( \
 	$SUB_MAKEFILES \
 	doc/adacurses${DFT_ARG_SUFFIX}-config.1:doc/MKada_config.in \
 	Makefile,[
+if test -z "$USE_OLD_MAKERULES" ; then
 	$AWK -f $srcdir/mk-1st.awk <$srcdir/src/modules >>src/Makefile
+fi
 ],[
 ### Special initialization commands, used to pass information from the
 ### configuration-run into config.status
@@ -607,6 +600,7 @@ LN_S="$LN_S"
 NCURSES_MAJOR="$NCURSES_MAJOR"
 NCURSES_MINOR="$NCURSES_MINOR"
 NCURSES_PATCH="$NCURSES_PATCH"
+USE_OLD_MAKERULES="$USE_OLD_MAKERULES"
 cf_cv_abi_version="$cf_cv_abi_version"
 cf_cv_rel_version="$cf_cv_rel_version"
 cf_cv_rm_so_locs="$cf_cv_rm_so_locs"

@@ -1,7 +1,7 @@
 #! /bin/sh
-# $Id: adacurses-config.in,v 1.6 2010/03/06 21:05:01 tom Exp $
+# $Id: adacurses-config.in,v 1.9 2014/06/07 19:32:22 Pascal.Pignard Exp $
 ##############################################################################
-# Copyright (c) 2007-2009,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 2007-2010,2014 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -40,7 +40,7 @@ ADA_OBJECTS=@ADA_OBJECTS@
 
 VERSION=@NCURSES_MAJOR@.@NCURSES_MINOR@.@NCURSES_PATCH@
 
-CFLAGS="-I$ADA_INCLUDE -aO$ADA_OBJECTS"
+CFLAGS="-aI$ADA_INCLUDE -aO$ADA_OBJECTS"
 LIBS="-L$ADA_OBJECTS -lAdaCurses"
 
 THIS="adacurses"
@@ -57,19 +57,21 @@ case "x$1" in
 		;;
 	x)
 		# if no parameter is given, give what gnatmake needs
-		echo "$CFLAGS -i -largs $LIBS"
+		echo "$CFLAGS -largs $LIBS"
 		;;
 	x--help)
 		cat <<ENDHELP
 Usage: ${THIS}-config [options]
 
 Options:
-  --cflags           echos the C compiler flags needed to compile with ${THIS}
-  --libs             echos the libraries needed to link with ${THIS}
+  --cflags           echos the gnat (Ada compiler) flags needed to compile with ${THIS}
+  --libs             echos the gnat libraries needed to link with ${THIS}
 
   --version          echos the release+patchdate version of ${THIS}
 
   --help             prints this message
+
+If no options are given, echos the full set of flags needed by gnatmake.
 ENDHELP
 		;;
 	*)

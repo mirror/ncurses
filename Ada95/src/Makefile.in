@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.68 2014/05/24 21:29:11 tom Exp $
+#  $Id: Makefile.in,v 1.69 2014/06/01 00:10:58 tom Exp $
 #
 .SUFFIXES:
 
@@ -97,6 +97,16 @@ BUILD_DIR_LIB	= $(BUILD_DIR)/lib
 SOURCE_DIR_SRC	= $(SOURCE_DIR)/src
 
 ADAMAKE         = @cf_ada_make@
+ADAMAKEFLAGS    = \
+	-P$(GNAT_PROJECT) \
+	-XBUILD_DIR=`cd $(BUILD_DIR);pwd` \
+	-XSOURCE_DIR=`cd $(SOURCE_DIR);pwd` \
+	-XSOURCE_DIR2=`cd $(srcdir);pwd` \
+	-XLIB_NAME=$(LIB_NAME) \
+	-XSONAME=$(SONAME)
+
+CARGS           = -cargs $(ADAFLAGS)
+LARGS           =
 
 STATIC_LIBNAME	= lib$(LIB_NAME).a
 SHARED_LIBNAME	= $(SONAME)
@@ -210,7 +220,7 @@ $(ABASE)-trace.adb : $(srcdir)/$(ABASE)-trace.adb_p
 ###############################################################################
 # Use these definitions when building a shared library.
 SHARED_C_OBJS	= c_varargs_to_ada.o c_threaded_variables.o ncurses_compat.o
-SHARED_OBJS 	= $(SHARED_C_OBJS) $(LIBOBJS) @cf_generic_objects@
+SHARED_OBJS 	= $(SHARED_C_OBJS) @USE_OLD_MAKERULES@$(LIBOBJS) @cf_generic_objects@
 
 c_varargs_to_ada.o :	$(srcdir)/c_varargs_to_ada.c
 	$(CC) $(CFLAGS_DEFAULT) -c -o $@ $(srcdir)/c_varargs_to_ada.c
@@ -224,7 +234,7 @@ ncurses_compat.o :	$(srcdir)/ncurses_compat.c
 ###############################################################################
 # Use these definitions when building a static library.
 STATIC_C_OBJS	= static_c_varargs_to_ada.o static_c_threaded_variables.o static_ncurses_compat.o
-STATIC_OBJS 	= $(STATIC_C_OBJS) $(LIBOBJS) @cf_generic_objects@
+STATIC_OBJS 	= $(STATIC_C_OBJS) @USE_OLD_MAKERULES@$(LIBOBJS) @cf_generic_objects@
 
 static_c_varargs_to_ada.o :	$(srcdir)/c_varargs_to_ada.c
 	$(CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/c_varargs_to_ada.c
@@ -237,10 +247,40 @@ static_ncurses_compat.o :	$(srcdir)/ncurses_compat.c
 
 ###############################################################################
 
-$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) :: \
-		$(BUILD_DIR_LIB) \
-		$(STATIC_OBJS)
-	$(AR) $(ARFLAGS) $@ $(STATIC_OBJS)
+@USE_OLD_MAKERULES@$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) :: \
+@USE_OLD_MAKERULES@		$(BUILD_DIR_LIB) \
+@USE_OLD_MAKERULES@		$(STATIC_OBJS)
+@USE_OLD_MAKERULES@	$(AR) $(ARFLAGS) $@ $(STATIC_OBJS)
+
+$(BUILD_DIR)/static-ali : ; mkdir -p $@
+$(BUILD_DIR)/static-obj : ; mkdir -p $@
+
+STATIC_DIRS = \
+	$(BUILD_DIR_LIB) \
+	$(BUILD_DIR)/static-ali \
+	$(BUILD_DIR)/static-obj
+
+@USE_GNAT_PROJECTS@$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) :: \
+@USE_GNAT_PROJECTS@		$(ABASE)-trace.adb \
+@USE_GNAT_PROJECTS@		$(STATIC_C_OBJS) \
+@USE_GNAT_PROJECTS@		$(STATIC_DIRS)
+@USE_GNAT_PROJECTS@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
+@USE_GNAT_PROJECTS@	$(AR) $(ARFLAGS) $@ $(STATIC_C_OBJS)
+@USE_GNAT_PROJECTS@
+@USE_GNAT_LIBRARIES@install \
+@USE_GNAT_LIBRARIES@install.libs :: \
+@USE_GNAT_LIBRARIES@		$(ADA_OBJECTS)
+@USE_GNAT_LIBRARIES@	$(INSTALL_LIB) \
+@USE_GNAT_LIBRARIES@		$(BUILD_DIR)/static-ali/*.ali \
+@USE_GNAT_LIBRARIES@		$(ADA_OBJECTS)
+
+uninstall \
+uninstall.libs ::
+	@rm -f $(ADA_OBJECTS)/$(STATIC_LIBNAME)
+
+@USE_GNAT_LIBRARIES@uninstall \
+@USE_GNAT_LIBRARIES@uninstall.libs ::
+@USE_GNAT_LIBRARIES@	@$(SHELL) -c 'for name in $(BUILD_DIR)/static-ali/*.ali ; do rm -f $(ADA_OBJECTS)/`basename $$name`; done'
 
 $(BUILD_DIR)/dynamic-ali : ; mkdir -p $@
 $(BUILD_DIR)/dynamic-obj : ; mkdir -p $@
@@ -250,29 +290,13 @@ SHARED_DIRS = \
 	$(BUILD_DIR)/dynamic-ali \
 	$(BUILD_DIR)/dynamic-obj
 
-GPR_EMPTY :=
-GPR_SPACE := $(GPR_EMPTY) $(GPR_EMPTY)
-GPR_COMMA := ,
-GPR_LIST = ("$(subst $(GPR_SPACE),"$(GPR_COMMA) ",$(strip $(1)))")
-$(GNAT_PROJECT) : $(GNAT_PROJECT).sed
-	sed \
-	-e "s|External (\"BUILD_DIR\")|\"`cd $(BUILD_DIR);pwd`\"|" \
-	-e 's/External ("LIB_NAME")/"$(LIB_NAME)"/' \
-	-e 's/External ("SONAME")/"$(SONAME)"/' \
-	-e 's/External_As_List\ ("ADAFLAGS", " ")/$(call GPR_LIST,$(ADAFLAGS))/' \
-	-e 's/External_As_List\ ("LDFLAGS", " ")/$(call GPR_LIST,$(LDFLAGS))/' \
-	$< > $@
-clean ::
-	rm -rf $(GNAT_PROJECT)
-
 @MAKE_ADA_SHAREDLIB@all :: $(BUILD_DIR_LIB)/$(SHARED_LIBNAME)
 @MAKE_ADA_SHAREDLIB@$(BUILD_DIR_LIB)/$(SHARED_LIBNAME) :: \
-@MAKE_ADA_SHAREDLIB@		$(GNAT_PROJECT) \
 @MAKE_ADA_SHAREDLIB@		$(ABASE)-trace.adb \
 @MAKE_ADA_SHAREDLIB@		$(SHARED_DIRS) \
 @MAKE_ADA_SHAREDLIB@		$(SHARED_OBJS)
 @MAKE_ADA_SHAREDLIB@	cp $(SHARED_OBJS) $(BUILD_DIR)/dynamic-obj/
-@MAKE_ADA_SHAREDLIB@	$(ADAMAKE) -P$(GNAT_PROJECT)
+@MAKE_ADA_SHAREDLIB@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
 
 install \
 install.libs :: $(ADA_INCLUDE)
@@ -310,6 +334,6 @@ uninstall.libs ::
 @MAKE_ADA_SHAREDLIB@	rm -f $(LIBDIR)/$(SHARED_LIBNAME)
 
 clean ::
-	rm -rf $(BUILD_DIR)/dynamic-ali
-	rm -rf $(BUILD_DIR)/dynamic-obj
+	rm -rf $(BUILD_DIR)/*-ali
+	rm -rf $(BUILD_DIR)/*-obj
 	rm -rf $(BUILD_DIR_LIB)

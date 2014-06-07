@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.494 $
-#	$Date: 2014/05/24 16:04:53 $
+#	$Revision: 1.500 $
+#	$Date: 2014/06/07 17:07:45 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3426,7 +3426,7 @@ vt525|DEC VT525,
 #
 # In trying to get the function keys to work, I had to cobble my own
 # terminfo.src entry, since the existing vt520 entry doesn't include most of
-# the function keys.  If I blend the entries for "vt420f" and "vt220+keypad"
+# the function keys.  If I blend the entries for "vt420f" and "vt220+keypad"
 # I seem to get them all -Mike Gran
 vt520ansi|Boundless VT520 ANSI,
 	use=ansi+rca, use=vt420f, use=vt220+keypad,
@@ -4087,24 +4087,25 @@ xterm-basic|modern xterm terminal emulator - common,
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
-	cvvis=\E[?12;25h, dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM,
-	dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K,
-	flash=\E[?5h$<100/>\E[?5l, home=\E[H, hpa=\E[%i%p1%dG,
-	ht=^I, hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L,
-	ind=^J, invis=\E[8m, is2=\E[!p\E[?3;4l\E[4l\E>,
-	kmous=\E[M, meml=\El, memu=\Em, op=\E[39;49m, rc=\E8,
-	rev=\E[7m, ri=\EM, rmacs=\E(B, rmam=\E[?7l,
-	rmcup=\E[?1049l, rmir=\E[4l, rmkx=\E[?1l\E>,
-	rmm=\E[?1034l, rmso=\E[27m, rmul=\E[24m, rs1=\Ec,
-	rs2=\E[!p\E[?3;4l\E[4l\E>, sc=\E7, setab=\E[4%p1%dm,
-	setaf=\E[3%p1%dm,
+	cvvis=\E[?12;25h, dch=\E[%p1%dP, dch1=\E[P, dim=\E[2m,
+	dl=\E[%p1%dM, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K,
+	el1=\E[1K, flash=\E[?5h$<100/>\E[?5l, home=\E[H,
+	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, ich=\E[%p1%d@,
+	il=\E[%p1%dL, il1=\E[L, ind=^J, invis=\E[8m,
+	is2=\E[!p\E[?3;4l\E[4l\E>, kmous=\E[M, meml=\El,
+	memu=\Em, op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM,
+	ritm=\E[23m, rmacs=\E(B, rmam=\E[?7l, rmcup=\E[?1049l,
+	rmir=\E[4l, rmkx=\E[?1l\E>, rmm=\E[?1034l, rmso=\E[27m,
+	rmul=\E[24m, rs1=\Ec, rs2=\E[!p\E[?3;4l\E[4l\E>, sc=\E7,
+	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
-	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
-	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smcup=\E[?1049h,
-	smir=\E[4h, smkx=\E[?1h\E=, smm=\E[?1034h, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3;J,
-	use=ansi+pp, use=xterm+kbs, use=vt100+enq,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
+	sgr0=\E(B\E[m, sitm=\E[3m, smacs=\E(0, smam=\E[?7h,
+	smcup=\E[?1049h, smir=\E[4h, smkx=\E[?1h\E=,
+	smm=\E[?1034h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
+	vpa=\E[%i%p1%dd, E3=\E[3;J, use=ansi+pp, use=xterm+kbs,
+	use=vt100+enq,
 
 # From: David J. MacKenzie <djm@va.pubnix.com>, 14 Nov 1997
 # In retrospect, something like xterm-r6 was intended here -TD
@@ -5294,9 +5295,11 @@ decansi|ANSI emulation with DEC compatibility hacks,
 	u7=\E[6n, vpa=\E[%i%p1%dd,
 
 #### VWM
+# http://vwm.sourceforge.net/
 #
-# vwmterm is a terminal emulator written for the VWM console window manager
-#
+# VWM 2.0.2 (2009-05-01)
+# vwmterm is a terminal emulator written for the VWM console window manager.
+# This version is obsolete, replaced by libvterm in 2.1.0 (2009-10-23).
 vwmterm|(vwm term),
 	am, bce, ccc, mir, msgr, npc, xenl, xon,
 	colors#8, pairs#64,
@@ -5472,7 +5475,7 @@ st-256color|stterm-256color|simpleterm with 256 colors,
 	use=xterm+256color, use=st,
 
 #### TERMINATOR
-# http://software.jessies.org/terminator/
+# https://code.google.com/p/jessies/
 # Tested using their Debian package org.jessies.terminator 6.104.3256 on 64-bit
 # Debian/current -TD (2011/8/20)
 #
@@ -5698,9 +5701,9 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 	nel=\EE, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O,
 	rmcup=\E[?1049l, rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[23m,
 	rmul=\E[24m, rs2=\Ec\E[?1000l\E[?25h, sc=\E7,
-	sgr=\E[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smcup=\E[?1049h, smir=\E[4h,
-	smkx=\E[?1h\E=, smso=\E[3m, smul=\E[4m, tbc=\E[3g, E0=\E(B,
+	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g, E0=\E(B,
 	S0=\E(%p1%c, use=ecma+color,
 # The bce and status-line entries are from screen 3.9.13 (and require some
 # changes to .screenrc).
@@ -5781,7 +5784,7 @@ screen+fkeys|function-keys according to screen,
 screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm,
 	bce@, bw,
 	invis@, kIC@, kNXT@, kPRV@, meml@, memu@,
-	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;m,
 	E3@, use=screen+fkeys, use=xterm-new,
 # xterm-r6 does not really support khome/kend unless it is propped up by
 # the translations resource.
@@ -18142,7 +18145,7 @@ osexec|Osborne executive,
 #
 
 # See
-#	http://www.minix3.org/manpages/man4/console.4.html
+#	http://www.minix3.org/manpages/html4/console.html
 minix|minix console (v3),
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
 	kdch1=\177, kend=\E[Y, kf0=\E[21~, kf1=\E[11~, kf10=\E[21~,
@@ -23308,5 +23311,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* correct syntax for padding in some entries: dg211, h19 -TD
 #	* correct ti924-8 which had confused padding versus octal escapes -TD
 #	* correct padding in sbi entry -TD
+#
+# 2014-06-07
+#	* update xterm-new to patch #305 -TD
+#	+ change screen's smso to use SGR 7 (ECMA-80 reverse) rather than SGR 3
+#	  (italic).  This was a long-ago typo in screen 3.1.1 which was
+#	  overlooked until a few terminal emulators implemented the feature -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
