@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2221 2014/06/07 22:17:18 tom Exp $
+-- $Id: NEWS,v 1.2222 2014/06/09 21:56:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140609
+	> fix regression in screen terminfo entries (reports by Christian
+	  Ebert, Gabriele Balducci) -TD
+	+ revert the change to screen; see notes for why this did not work -TD
+	+ cancel sitm/ritm for entries which extend "screen", to work around
+	  screen's hardcoded behavior for SGR 3 -TD
 
 20140607
 	+ separate masking for sgr in vidputs from sitm/ritm, which do not

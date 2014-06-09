@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.500 $
-#	$Date: 2014/06/07 17:07:45 $
+#	$Revision: 1.501 $
+#	$Date: 2014/06/09 21:40:50 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5679,7 +5679,56 @@ eterm-color|Emacs term.el terminal emulator term-protocol-version 0.96,
 #      S0   (str)   Switch charset 'G0' to the specified charset.
 #      E0   (str)   Switch charset 'G0' back to standard charset.
 #
-# tested with screen 3.09.08
+# Initially tested with screen 3.09.08
+#
+# According to its manual page
+#
+#      Screen is a full-screen window manager that multiplexes a physical
+#      terminal between several processes (typically interactive shells).  Each
+#      virtual terminal provides the functions of a DEC VT100 terminal and, in
+#      addition, several control functions from the ISO 6429 (ECMA 48, ANSI
+#      X3.64) and ISO 2022 standards (e.g.  insert/delete line and support for
+#      multiple character sets).
+#
+# However, there is a design error in its support for video highlights.  The
+# program uses a table (rendlist) which equates the SGR codes to terminal
+# capabilities.  That, and color-decoding are hardcoded in screen; its behavior
+# is modified only by the presence or absence of the corresponding capabilities.
+# Not by their values.
+#
+# If screen sets the TERMCAP variable, it uses hardcoded strings which
+# correspond to the rendlist table.
+#
+# The table gives this information:
+#
+#	SGR	capability
+#	---	---------
+#	1	bold
+#	2	dim
+#	3	standout
+#	4	underline
+#	5	blink
+#	-	(unused 6)
+#	7	reverse
+#	-	(unused 8-21)
+#	22	reset bold, standout and dim
+#	23	reset standout
+#	24	reset underline
+#	25	reset blink
+#	-	(unused 26)
+#	27	reset reverse
+#
+# ECMA-48 differs from this: 3 and 23 set and reset italics, respectively.
+# ECMA-48 does not define "standout" - that is a termcap/terminfo abstraction.
+# Without some redesign of screen, it is not possible to extend the set of
+# capabilities.  Substitution would be possible, e.g., sending italics in
+# place of underline.
+#
+# Because screen uses hard-coded parsing, it does not check if two capabilities
+# use the same value.  For example, changing standout to be the same as any of
+# the other capabilities will confuse screen.  Curses applications which use
+# sgr are not impacted (because that usually resets all capabilities before
+# setting any), but termcap applications do not use sgr -TD
 screen|VT 100/ANSI X3.64 virtual terminal,
 	OTbs, OTpt, am, km, mir, msgr, xenl, G0,
 	colors#8, cols#80, it#8, lines#24, ncv@, pairs#64, U8#1,
@@ -5701,9 +5750,9 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 	nel=\EE, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O,
 	rmcup=\E[?1049l, rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[23m,
 	rmul=\E[24m, rs2=\Ec\E[?1000l\E[?25h, sc=\E7,
-	sgr=\E[0%?%p6%t;1%;%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smcup=\E[?1049h, smir=\E[4h,
-	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g, E0=\E(B,
+	smkx=\E[?1h\E=, smso=\E[3m, smul=\E[4m, tbc=\E[3g, E0=\E(B,
 	S0=\E(%p1%c, use=ecma+color,
 # The bce and status-line entries are from screen 3.9.13 (and require some
 # changes to .screenrc).
@@ -5764,6 +5813,12 @@ screen-256color-bce-s|GNU Screen with 256 colors, BCE, and status line,
 screen+fkeys|function-keys according to screen,
 	kend=\E[4~, kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, kfnd@,
 	khome=\E[1~, kslt@,
+
+# See explanation before "screen" entry.  Cancel italics so that applications
+# do not assume screen supports the feature.  Add this tweak to entries which
+# extend screen for terminals which do support italics.
+screen+italics|screen cannot support italics,
+	ritm@, sitm@,
 #
 # Here are a few customized entries which are useful -TD
 #
@@ -5784,8 +5839,8 @@ screen+fkeys|function-keys according to screen,
 screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm,
 	bce@, bw,
 	invis@, kIC@, kNXT@, kPRV@, meml@, memu@,
-	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;m,
-	E3@, use=screen+fkeys, use=xterm-new,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m,
+	E3@, use=screen+italics, use=screen+fkeys, use=xterm-new,
 # xterm-r6 does not really support khome/kend unless it is propped up by
 # the translations resource.
 screen.xterm-r6|screen customized for X11R6 xterm,
@@ -5807,11 +5862,11 @@ screen.Eterm|screen in Eterm,
 screen.mrxvt|screen in mrxvt,
 	use=screen+fkeys, use=mrxvt,
 screen.vte|screen in any VTE-based terminal,
-	use=screen+fkeys, use=vte,
+	use=screen+italics, use=screen+fkeys, use=vte,
 screen.gnome|screen in GNOME Terminal,
-	use=screen+fkeys, use=gnome,
+	use=screen+italics, use=screen+fkeys, use=gnome,
 screen.konsole|screen in KDE console window,
-	use=screen+fkeys, use=konsole,
+	use=screen+italics, use=screen+fkeys, use=konsole,
 # fix the backspace key
 screen.linux|screen in linux console,
 	bw,
@@ -5834,7 +5889,7 @@ screen.mlterm|screen in mlterm,
 #	defbce on
 screen-bce.xterm-new|screen optimized for modern xterm,
 	bce,
-	ech@, use=screen.xterm-new,
+	ech@, use=screen+italics, use=screen.xterm-new,
 screen-bce.rxvt|screen optimized for rxvt,
 	bce,
 	ech@, use=screen.rxvt,
@@ -5846,10 +5901,10 @@ screen-bce.mrxvt|screen optimized for mrxvt,
 	ech@, use=screen.mrxvt,
 screen-bce.gnome|screen optimized for GNOME-Terminal,
 	bce,
-	ech@, use=screen.gnome,
+	ech@, use=screen+italics, use=screen.gnome,
 screen-bce.konsole|screen optimized for KDE console window,
 	bce,
-	ech@, use=screen.konsole,
+	ech@, use=screen+italics, use=screen.konsole,
 screen-bce.linux|screen optimized for linux console,
 	bce,
 	ech@, use=screen.linux,
@@ -23317,5 +23372,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ change screen's smso to use SGR 7 (ECMA-80 reverse) rather than SGR 3
 #	  (italic).  This was a long-ago typo in screen 3.1.1 which was
 #	  overlooked until a few terminal emulators implemented the feature -TD
+#
+# 2014-06-09
+#	+ revert the change to screen; see notes for why this did not work -TD
+#	+ cancel sitm/ritm for entries which extend "screen", to work around
+#	  screen's hardcoded behavior for SGR 3 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
