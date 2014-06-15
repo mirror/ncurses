@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2222 2014/06/09 21:56:55 tom Exp $
+-- $Id: NEWS,v 1.2226 2014/06/14 23:48:11 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140614
+	+ fix dereference before null check found by Coverity in tic.c 
+	  (cf: 20140524).
+	+ fix sign-extension bug in read_entry.c which prevented "toe" from
+	  reading empty "screen+italics" entry.
+	+ modify sgr for screen.xterm-new to support dim capability -TD
+	+ add dim capability to nsterm+7 -TD
+	+ cancel dim capability for iterm -TD
+	+ add dim, invis capabilities to vte-2012 -TD
+	+ add sitm/ritm to konsole-base and mlterm3 -TD
 
 20140609
 	> fix regression in screen terminfo entries (reports by Christian

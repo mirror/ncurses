@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.204 2014/05/24 15:47:40 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.207 2014/06/15 00:36:45 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1809,8 +1809,6 @@ parse_delay_value(const char *src, double *delays, int *always)
 static const char *
 parse_ti_delay(const char *ti, double *delays)
 {
-    int star = 0;
-
     *delays = 0.0;
     while (*ti != '\0') {
 	if (*ti == '\\') {
@@ -1827,8 +1825,6 @@ parse_ti_delay(const char *ti, double *delays)
 	} else {
 	    ++ti;
 	}
-	if (star)
-	    *delays = -(*delays);
     }
     return ti;
 }
@@ -1902,13 +1898,13 @@ check_infotocap(TERMTYPE *tp, int i, char *value)
 		  ? parametrized[i]
 		  : 0);
     int to_char = 0;
-    char *ti_value = _nc_tic_expand(value, TRUE, to_char);
-    char *tc_value = _nc_infotocap(name, ti_value, params);
+    char *ti_value;
+    char *tc_value;
     bool embedded;
 
-    if (ti_value == ABSENT_STRING) {
+    if ((ti_value = _nc_tic_expand(value, TRUE, to_char)) == ABSENT_STRING) {
 	_nc_warning("tic-expansion of %s failed", name);
-    } else if (tc_value == ABSENT_STRING) {
+    } else if ((tc_value = _nc_infotocap(name, ti_value, params)) == ABSENT_STRING) {
 	_nc_warning("tic-conversion of %s failed", name);
     } else if (params > 0) {
 	int limit = 5;

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.501 $
-#	$Date: 2014/06/09 21:40:50 $
+#	$Revision: 1.508 $
+#	$Date: 2014/06/14 21:16:34 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1052,26 +1052,26 @@ nsterm+7|AppKit Terminal.app v41+ basic capabilities w/ASCII charset,
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
-	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
-	home=\E[H, ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L, ind=^J,
-	invis=\E[8m, kbs=\177, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
-	kcuu1=\EOA, kent=\EOM, rc=\E8, rev=\E[7m, ri=\EM,
+	dim=\E[2m, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K,
+	el1=\E[1K, home=\E[H, ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L,
+	ind=^J, invis=\E[8m, kbs=\177, kcub1=\EOD, kcud1=\EOB,
+	kcuf1=\EOC, kcuu1=\EOA, kent=\EOM, rc=\E8, rev=\E[7m, ri=\EM,
 	rmam=\E[?7l, rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m,
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;8%;m,
 	sgr0=\E[m, smam=\E[?7h, smkx=\E[?1h\E=, smso=\E[7m,
 	smul=\E[4m, tbc=\E[3g, use=vt100+enq, use=vt100+pfkeys,
 
 nsterm+acs|AppKit Terminal.app v41+ basic capabilities w/VT100 alternate-charset,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	enacs=\E(B\E)0, rmacs=^O,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, use=nsterm+7,
 
 nsterm+mac|AppKit Terminal.app v41+ basic capabilities w/MacRoman alternate-charset,
 	acsc=+\335\,\334-\366.\3770#`\327a\:f\241g\261h#i\360jjkkllmmnno\370p\370q\321rrssttuuvvwwxxy\262z\263{\271|\255}\243~\245,
 	enacs=\E(B\E)0, rmacs=^O,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, use=nsterm+7,
 
 # compare with xterm+sl-twm
@@ -1246,10 +1246,11 @@ nsterm|Apple_Terminal|AppKit Terminal.app,
 #
 # NOTE: When tack tests (csr) + (nel) iTerm.app crashes, so (csr) is
 # disabled.
-iTerm.app|iTerm.app terminal emulator for Mac OS X,
+iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 	bce, bw@,
-	csr@, kend=\EOF, khome=\EOH, use=xterm+256setaf,
-	use=nsterm-16color,
+	csr@, dim@, kend=\EOF, khome=\EOH,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
+	use=xterm+256setaf, use=nsterm-16color,
 
 # xnuppc - Darwin PowerPC Console (a.k.a. "darwin")
 #
@@ -4611,7 +4612,10 @@ gnome-2008|GNOME Terminal snapshot 2.22.3,
 #
 # Testing with tack shows that flash does not/has not worked -TD
 vte-2012|VTE 0.34.1,
-	flash@, ritm=\E[23m, sitm=\E[3m, use=vte-2008,
+	ncv#16,
+	dim=\E[2m, flash@, invis=\E[8m, ritm=\E[23m,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p5%t;2%;%?%p7%t;8%;%?%p1%p3%|%t;7%;m%?%p9%t\016%e\017%;,
+	sitm=\E[3m, use=vte-2008,
 # Version 3.6.1 sets TERM to xterm-256color (still hardcoded), which has
 # 61 differences from a correct entry for gnome terminal.
 gnome-2012|GNOME Terminal 3.6.0,
@@ -4713,6 +4717,9 @@ kvt|KDE terminal,
 # Updated for konsole 1.6.6:
 #    add control-key modifiers for function-keys, etc.
 #
+# Updated for konsole 2.12.4:
+#    add sitm/ritm
+#
 # vttest menu 1 shows that both konsole and gnome terminal do wrapping
 # different from xterm (and vt100's).  They have the same behavior in this
 # detail, but it is unclear which copies the other.
@@ -4724,11 +4731,11 @@ konsole-base|KDE console window,
 	hpa=\E[%i%p1%dG, indn=\E[%p1%dS, kbs=\177, kdch1=\E[3~,
 	kend=\E[4~, kf1@, kf10@, kf11@, kf12@, kf13@, kf14@, kf15@, kf16@,
 	kf17@, kf18@, kf19@, kf2@, kf20@, kf3@, kf4@, kf5@, kf6@, kf7@, kf8@,
-	kf9@, kfnd@, khome=\E[1~, kslt@, rin=\E[%p1%dT, rmam=\E[?7l,
-	rmso=\E[27m, rmul=\E[24m,
+	kf9@, kfnd@, khome=\E[1~, kslt@, rin=\E[%p1%dT, ritm=\E[23m,
+	rmam=\E[?7l, rmso=\E[27m, rmul=\E[24m,
 	rs2=\E7\E[r\E8\E[m\E[?7h\E[?1;3;4;6l\E[4l\E>\E[?1000l\E[?25h,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
-	sgr0=\E[0m\017, smam=\E[?7h, vpa=\E[%i%p1%dd,
+	sgr0=\E[0m\017, sitm=\E[3m, smam=\E[?7h, vpa=\E[%i%p1%dd,
 	use=ecma+color, use=xterm-r6,
 konsole-linux|KDE console window with linux keyboard,
 	kf1=\E[[A, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf13@,
@@ -4781,8 +4788,8 @@ mlterm|multi lingual terminal emulator,
 # mlterm.ti; this entry is based on testing with tack and vttest -TD
 mlterm3|multi lingual terminal emulator,
 	kf1=\E[11~, kf2=\E[12~, kf3=\E[13~, kf4=\E[14~,
-	use=xterm+app, use=xterm+pcf0, use=xterm+pcc2,
-	use=xterm+pce2, use=mlterm2,
+	ritm=\E[23m, sitm=\E[3m, use=xterm+app, use=xterm+pcf0,
+	use=xterm+pcc2, use=xterm+pce2, use=mlterm2,
 
 # This is mlterm 2.9.3's mlterm.ti, with some additions/corrections -TD
 #
@@ -5839,7 +5846,7 @@ screen+italics|screen cannot support italics,
 screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm,
 	bce@, bw,
 	invis@, kIC@, kNXT@, kPRV@, meml@, memu@,
-	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;m,
 	E3@, use=screen+italics, use=screen+fkeys, use=xterm-new,
 # xterm-r6 does not really support khome/kend unless it is propped up by
 # the translations resource.
@@ -23374,8 +23381,17 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  overlooked until a few terminal emulators implemented the feature -TD
 #
 # 2014-06-09
+#	> fix regression in screen terminfo entries (reports by Christian
+#	  Ebert, Gabriele Balducci) -TD
 #	+ revert the change to screen; see notes for why this did not work -TD
 #	+ cancel sitm/ritm for entries which extend "screen", to work around
 #	  screen's hardcoded behavior for SGR 3 -TD
+#
+# 2014-06-14
+#	+ modify sgr for screen.xterm-new to support dim capability -TD
+#	+ add dim capability to nsterm+7 -TD
+#	+ cancel dim capability for iterm -TD
+#	+ add dim, invis capabilities to vte-2012 -TD
+#	+ add sitm/ritm to konsole-base and mlterm3 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
