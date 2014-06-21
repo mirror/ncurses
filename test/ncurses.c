@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.398 2014/05/03 19:38:16 juergen Exp $
+$Id: ncurses.c,v 1.401 2014/06/21 18:37:29 tom Exp $
 
 ***************************************************************************/
 
@@ -1998,6 +1998,10 @@ color_legend(WINDOW *helpwin, bool wide)
 	      "  a/A     toggle altcharset off/on");
     MvWPrintw(helpwin, row++, col,
 	      "  b/B     toggle bold off/on");
+    if (has_colors()) {
+	MvWPrintw(helpwin, row++, col,
+		  "  c/C     cycle used-colors through 8,16,...,COLORS");
+    }
     MvWPrintw(helpwin, row++, col,
 	      "  n/N     toggle text/number on/off");
     MvWPrintw(helpwin, row++, col,
@@ -2018,6 +2022,35 @@ color_legend(WINDOW *helpwin, bool wide)
 
 #define set_color_test(name, value) if (name != value) { name = value; base_row = 0; }
 
+static int
+color_cycle(int current, int step)
+{
+    int result = current;
+    if (step < 0) {
+	if (current <= 8) {
+	    result = COLORS;
+	} else {
+	    result = 8;
+	    if ((result * 2) > COLORS) {
+		result = COLORS;
+	    } else {
+		while ((result * 2) < current) {
+		    result *= 2;
+		}
+	    }
+	}
+    } else {
+	if (current >= COLORS) {
+	    result = 8;
+	} else {
+	    result *= 2;
+	}
+	if (result > COLORS)
+	    result = COLORS;
+    }
+    return result;
+}
+
 /* generate a color test pattern */
 static void
 color_test(void)
@@ -2027,7 +2060,8 @@ color_test(void)
     int base_row = 0;
     int grid_top = top + 3;
     int page_size = (LINES - grid_top);
-    int pairs_max = PAIR_NUMBER(A_COLOR) + 1;
+    int pairs_max;
+    int colors_max = COLORS;
     int row_limit;
     int per_row;
     char numbered[80];
@@ -2040,23 +2074,24 @@ color_test(void)
     bool opt_wide = FALSE;
     WINDOW *helpwin;
 
-    if (COLORS * COLORS == COLOR_PAIRS) {
-	int limit = (COLORS - min_colors) * (COLORS - min_colors);
-	if (pairs_max > limit)
-	    pairs_max = limit;
-    } else {
-	if (pairs_max > COLOR_PAIRS)
-	    pairs_max = COLOR_PAIRS;
-    }
-
     while (!done) {
 	int shown = 0;
+
+	pairs_max = PAIR_NUMBER(A_COLOR) + 1;
+	if (colors_max * colors_max <= COLOR_PAIRS) {
+	    int limit = (colors_max - min_colors) * (colors_max - min_colors);
+	    if (pairs_max > limit)
+		pairs_max = limit;
+	} else {
+	    if (pairs_max > COLOR_PAIRS)
+		pairs_max = COLOR_PAIRS;
+	}
 
 	/* this assumes an 80-column line */
 	if (opt_wide) {
 	    width = 4;
 	    hello = "Test";
-	    per_row = (COLORS > 8) ? 16 : 8;
+	    per_row = (colors_max > 8) ? 16 : 8;
 	} else {
 	    width = 8;
 	    hello = "Hello";
@@ -2067,9 +2102,12 @@ color_test(void)
 	row_limit = (pairs_max + per_row - 1) / per_row;
 
 	move(0, 0);
-	(void) printw("There are %d color pairs and %d colors%s\n",
-		      pairs_max, COLORS,
-		      min_colors ? " besides 'default'" : "");
+	(void) printw("There are %d color pairs and %d colors",
+		      pairs_max, COLORS);
+	if (colors_max != COLORS)
+	    (void) printw(" (using %d colors)", colors_max);
+	if (min_colors)
+	    (void) addstr(" besides 'default'");
 
 	clrtobot();
 	MvPrintw(top + 1, 0,
@@ -2088,8 +2126,8 @@ color_test(void)
 	    int col = (i % per_row + 1) * width;
 	    NCURSES_PAIRS_T pair = i;
 
-#define InxToFG(i) (NCURSES_COLOR_T) ((i % (COLORS - min_colors)) + min_colors)
-#define InxToBG(i) (NCURSES_COLOR_T) ((i / (COLORS - min_colors)) + min_colors)
+#define InxToFG(i) (NCURSES_COLOR_T) ((i % (colors_max - min_colors)) + min_colors)
+#define InxToBG(i) (NCURSES_COLOR_T) ((i / (colors_max - min_colors)) + min_colors)
 	    if (row >= 0 && move(row, col) != ERR) {
 		NCURSES_COLOR_T fg = InxToFG(i);
 		NCURSES_COLOR_T bg = InxToBG(i);
@@ -2131,6 +2169,12 @@ color_test(void)
 	    break;
 	case 'B':
 	    opt_bold = TRUE;
+	    break;
+	case 'c':
+	    colors_max = color_cycle(colors_max, -1);
+	    break;
+	case 'C':
+	    colors_max = color_cycle(colors_max, 1);
 	    break;
 	case 'n':
 	    opt_nums = FALSE;
@@ -2221,6 +2265,7 @@ wide_color_test(void)
     int grid_top = top + 3;
     int page_size = (LINES - grid_top);
     int pairs_max = (unsigned short) (-1);
+    int colors_max = COLORS;
     int row_limit;
     int per_row;
     char numbered[80];
@@ -2235,23 +2280,24 @@ wide_color_test(void)
     wchar_t buffer[80];
     WINDOW *helpwin;
 
-    if (COLORS * COLORS == COLOR_PAIRS) {
-	int limit = (COLORS - min_colors) * (COLORS - min_colors);
-	if (pairs_max > limit)
-	    pairs_max = limit;
-    } else {
-	if (pairs_max > COLOR_PAIRS)
-	    pairs_max = COLOR_PAIRS;
-    }
-
     while (!done) {
 	int shown = 0;
+
+	pairs_max = (unsigned short) (-1);
+	if (colors_max * colors_max <= COLOR_PAIRS) {
+	    int limit = (colors_max - min_colors) * (colors_max - min_colors);
+	    if (pairs_max > limit)
+		pairs_max = limit;
+	} else {
+	    if (pairs_max > COLOR_PAIRS)
+		pairs_max = COLOR_PAIRS;
+	}
 
 	/* this assumes an 80-column line */
 	if (opt_wide) {
 	    width = 4;
 	    hello = "Test";
-	    per_row = (COLORS > 8) ? 16 : 8;
+	    per_row = (colors_max > 8) ? 16 : 8;
 	} else {
 	    width = 8;
 	    hello = "Hello";
@@ -2270,9 +2316,12 @@ wide_color_test(void)
 	row_limit = (pairs_max + per_row - 1) / per_row;
 
 	move(0, 0);
-	(void) printw("There are %d color pairs and %d colors%s\n",
-		      pairs_max, COLORS,
-		      min_colors ? " besides 'default'" : "");
+	(void) printw("There are %d color pairs and %d colors",
+		      pairs_max, COLORS);
+	if (colors_max != COLORS)
+	    (void) printw(" (using %d colors)", colors_max);
+	if (min_colors)
+	    (void) addstr(" besides 'default'");
 
 	clrtobot();
 	MvPrintw(top + 1, 0,
@@ -2333,6 +2382,12 @@ wide_color_test(void)
 	    break;
 	case 'B':
 	    opt_bold = TRUE;
+	    break;
+	case 'c':
+	    colors_max = color_cycle(colors_max, -1);
+	    break;
+	case 'C':
+	    colors_max = color_cycle(colors_max, 1);
 	    break;
 	case 'n':
 	    opt_nums = FALSE;

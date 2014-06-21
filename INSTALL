@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.171 2014/04/26 20:30:01 tom Exp $
+-- $Id: INSTALL,v 1.172 2014/06/21 18:53:42 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -987,10 +987,22 @@ SUMMARY OF CONFIGURE OPTIONS:
 	shared libraries, you may encounter problems with the linker.
 	For example, it may prevent you from running  the build tree's
 	copy of tic (for installing the terminfo database) because it
-	loads the system's copy of the ncurses shared libraries.  In that
-	case, using the misc/shlib script may be helpful, since it sets
-	$LD_LIBRARY_PATH to point to the build tree, e.g.,
+	loads the system's copy of the ncurses shared libraries.
+	
+	In that case, using the misc/shlib script may be helpful, since it
+	sets $LD_LIBRARY_PATH to point to the build tree, e.g.,
+
 		./misc/shlib make install
+
+	Alternatively, for most platforms, the linker accepts a list of
+	directories which will be searched for libraries at run-time.  The
+	configure script allows you to modify this list using the
+	RPATH_LIST environment variable.  It is a colon-separated list of
+	directories (default:  the "libdir" set via the configure script).
+	If you set that to put "../lib" first in the list, the linker will
+	look first at the build-directory, and avoid conflict with libraries
+	already installed.  One drawback to this approach is that libraries
+	can be accidentally searched in any "../lib" directory.
 
 	NOTE: If you use the --with-ada-sharedlib option, you should also
 	set this option, to ensure that C-language modules needed for the

@@ -1,6 +1,6 @@
-# $Id: programs,v 1.24 2013/12/07 18:06:24 tom Exp $
+# $Id: programs,v 1.25 2014/06/21 15:28:49 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2009,2013 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -47,6 +47,7 @@ demo_termcap	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	demo_termcap
 demo_terminfo	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	demo_terminfo
 ditto		$(LDFLAGS_THREADS)	$(LOCAL_LIBS)	ditto
 dots		$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	dots
+dots_curses	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_curses
 dots_mvcur	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_mvcur
 dots_termcap	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	dots_termcap
 echochar	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	echochar

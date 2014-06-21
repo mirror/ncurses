@@ -20515,7 +20515,7 @@ echo $ECHO_N "checking default library-dependency suffix... $ECHO_C" >&6
 	Xshared) #(vi
 		case $cf_cv_system_name in
 		aix[5-7]*) #(vi
-			DFT_LIB_SUFFIX='.a'
+			DFT_LIB_SUFFIX='.so'
 			DFT_DEP_SUFFIX=$DFT_LIB_SUFFIX
 			;;
 		cygwin*|msys*|mingw*) #(vi
@@ -20601,7 +20601,7 @@ else
 	Xshared) #(vi
 		case $cf_cv_system_name in
 		aix[5-7]*) #(vi
-			CXX_LIB_SUFFIX='.a'
+			CXX_LIB_SUFFIX='.so'
 			CXX_DEP_SUFFIX=$CXX_LIB_SUFFIX
 			;;
 		cygwin*|msys*|mingw*) #(vi
@@ -22491,7 +22491,7 @@ do
 	Xshared) #(vi
 		case $cf_cv_system_name in
 		aix[5-7]*) #(vi
-			cf_suffix='.a'
+			cf_suffix='.so'
 			cf_depsuf=$cf_suffix
 			;;
 		cygwin*|msys*|mingw*) #(vi
@@ -22703,7 +22703,7 @@ echo "${as_me:-configure}:22680: testing overriding CXX_MODEL to SHARED ..." 1>&
 	Xshared) #(vi
 		case $cf_cv_system_name in
 		aix[5-7]*) #(vi
-			cf_suffix='.a'
+			cf_suffix='.so'
 			cf_depsuf=$cf_suffix
 			;;
 		cygwin*|msys*|mingw*) #(vi

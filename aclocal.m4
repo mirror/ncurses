@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.698 2014/06/01 15:35:36 tom Exp $
+dnl $Id: aclocal.m4,v 1.700 2014/06/21 21:50:00 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -62,7 +62,7 @@ AC_DEFUN([AM_LANGINFO_CODESET],
   fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ACVERSION_CHECK version: 4 updated: 2013/03/04 19:52:56
+dnl CF_ACVERSION_CHECK version: 5 updated: 2014/06/04 19:11:49
 dnl ------------------
 dnl Conditionally generate script according to whether we're using a given autoconf.
 dnl
@@ -71,7 +71,7 @@ dnl $2 = code to use if AC_ACVERSION is at least as high as $1.
 dnl $3 = code to use if AC_ACVERSION is older than $1.
 define([CF_ACVERSION_CHECK],
 [
-ifdef([AC_ACVERSION], ,[m4_copy([m4_PACKAGE_VERSION],[AC_ACVERSION])])dnl
+ifdef([AC_ACVERSION], ,[ifdef([AC_AUTOCONF_VERSION],[m4_copy([AC_AUTOCONF_VERSION],[AC_ACVERSION])],[m4_copy([m4_PACKAGE_VERSION],[AC_ACVERSION])])])dnl
 ifdef([m4_version_compare],
 [m4_if(m4_version_compare(m4_defn([AC_ACVERSION]), [$1]), -1, [$3], [$2])],
 [CF_ACVERSION_COMPARE(
@@ -3706,7 +3706,7 @@ fi
 ])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SUFFIX version: 22 updated: 2013/09/07 13:54:05
+dnl CF_LIB_SUFFIX version: 23 updated: 2014/06/21 17:47:12
 dnl -------------
 dnl Compute the library file-suffix from the given model name
 dnl $1 = model name
@@ -3731,7 +3731,7 @@ AC_DEFUN([CF_LIB_SUFFIX],
 	Xshared) #(vi
 		case $cf_cv_system_name in
 		aix[[5-7]]*) #(vi
-			$2='.a'
+			$2='.so'
 			$3=[$]$2
 			;;
 		cygwin*|msys*|mingw*) #(vi

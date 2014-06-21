@@ -1075,6 +1075,7 @@
 ./test/demo_terminfo.c
 ./test/ditto.c
 ./test/dots.c
+./test/dots_curses.c
 ./test/dots_mvcur.c
 ./test/dots_termcap.c
 ./test/echochar.c
