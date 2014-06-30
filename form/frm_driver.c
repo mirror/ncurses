@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.111 2014/03/08 22:08:20 Xin.Li Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.112 2014/06/28 16:28:22 Leon.Winter Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -1998,7 +1998,7 @@ Vertical_Scrolling(int (*const fct) (FORM *), FORM *form)
     {
       res = fct(form);
       if (res == E_OK)
-	SetStatus(form, _NEWTOP);
+	SetStatus(form->current, _NEWTOP);
     }
   return (res);
 }

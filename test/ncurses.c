@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.401 2014/06/21 18:37:29 tom Exp $
+$Id: ncurses.c,v 1.408 2014/06/28 21:45:40 tom Exp $
 
 ***************************************************************************/
 
@@ -303,7 +303,7 @@ wGetstring(WINDOW *win, char *buffer, int limit)
 
 #if USE_WIDEC_SUPPORT
 static wchar_t
-fullwidth_of(int ch)
+fullwidth_digit(int ch)
 {
     return (ch + 0xff10 - '0');
 }
@@ -313,7 +313,7 @@ make_fullwidth_text(wchar_t *target, const char *source)
 {
     int ch;
     while ((ch = *source++) != 0) {
-	*target++ = fullwidth_of(ch);
+	*target++ = fullwidth_digit(ch);
     }
     *target = 0;
 }
@@ -334,7 +334,7 @@ make_fullwidth_digit(cchar_t *target, int digit)
 {
     wchar_t source[2];
 
-    source[0] = fullwidth_of(digit + '0');
+    source[0] = fullwidth_digit(digit + '0');
     source[1] = 0;
     setcchar(target, source, A_NORMAL, 0, 0);
 }
@@ -1252,8 +1252,13 @@ my_termattrs(void)
 #define termattrs() my_termattrs()
 #endif
 
-#define MAX_ATTRSTRING 31
-#define LEN_ATTRSTRING 26
+#define ATTRSTRING_1ST 32	/* ' ' */
+#define ATTRSTRING_END 126	/* '~' */
+
+#define COL_ATTRSTRING 25
+#define MARGIN_4_ATTRS (COL_ATTRSTRING + 8)
+#define LEN_ATTRSTRING (COLS - MARGIN_4_ATTRS)
+#define MAX_ATTRSTRING (ATTRSTRING_END + 1 - ATTRSTRING_1ST)
 
 static char attr_test_string[MAX_ATTRSTRING + 1];
 
@@ -1352,12 +1357,14 @@ cycle_color_attr(int ch, NCURSES_COLOR_T *fg, NCURSES_COLOR_T *bg, NCURSES_COLOR
 static void
 adjust_attr_string(int adjust)
 {
-    int first = ((int) UChar(attr_test_string[0])) + adjust;
-    int last = first + LEN_ATTRSTRING;
+    char save = attr_test_string[0];
+    int first = ((int) UChar(save)) + adjust;
+    int j, k;
 
-    if (first >= ' ' && last <= '~') {	/* 32..126 */
-	int j, k;
-	for (j = 0, k = first; j < MAX_ATTRSTRING && k <= last; ++j, ++k) {
+    if (first >= ATTRSTRING_1ST) {
+	for (j = 0, k = first; j < MAX_ATTRSTRING; ++j, ++k) {
+	    if (k > ATTRSTRING_END)
+		break;
 	    attr_test_string[j] = (char) k;
 	    if (((k + 1 - first) % 5) == 0) {
 		if (++j >= MAX_ATTRSTRING)
@@ -1365,23 +1372,40 @@ adjust_attr_string(int adjust)
 		attr_test_string[j] = ' ';
 	    }
 	}
-	while (j < MAX_ATTRSTRING)
-	    attr_test_string[j++] = ' ';
-	attr_test_string[j] = '\0';
-    } else {
-	beep();
+	if ((LEN_ATTRSTRING - j) > 5) {
+	    attr_test_string[0] = save;
+	    adjust_attr_string(adjust - 1);
+	} else {
+	    while (j < MAX_ATTRSTRING)
+		attr_test_string[j++] = ' ';
+	    attr_test_string[j] = '\0';
+	}
     }
+}
+
+/*
+ * Prefer the right-end of the string for starting, since that maps to the
+ * VT100 line-drawing.
+ */
+static int
+default_attr_string(void)
+{
+    int result = (ATTRSTRING_END - LEN_ATTRSTRING);
+    result += (LEN_ATTRSTRING / 5);
+    if (result < ATTRSTRING_1ST)
+	result = ATTRSTRING_1ST;
+    return result;
 }
 
 static void
 init_attr_string(void)
 {
-    attr_test_string[0] = 'a';
+    attr_test_string[0] = (char) default_attr_string();
     adjust_attr_string(0);
 }
 
 static int
-show_attr(int row, int skip, bool arrow, chtype attr, const char *name)
+show_attr(WINDOW *win, int row, int skip, bool arrow, chtype attr, const char *name)
 {
     int ncv = get_ncv();
     chtype test = attr & (chtype) (~A_ALTCHARSET);
@@ -1389,7 +1413,7 @@ show_attr(int row, int skip, bool arrow, chtype attr, const char *name)
     if (arrow)
 	MvPrintw(row, 5, "-->");
     MvPrintw(row, 8, "%s mode:", name);
-    MvPrintw(row, 24, "|");
+    MvPrintw(row, COL_ATTRSTRING - 1, "|");
     if (skip)
 	printw("%*s", skip, " ");
     /*
@@ -1397,22 +1421,23 @@ show_attr(int row, int skip, bool arrow, chtype attr, const char *name)
      * character at a time (to pass its rendition directly), and use the
      * string operation for the other attributes.
      */
+    wmove(win, 0, 0);
     if (attr & A_ALTCHARSET) {
 	const char *s;
 	chtype ch;
 
 	for (s = attr_test_string; *s != '\0'; ++s) {
 	    ch = UChar(*s);
-	    addch(ch | attr);
+	    (void) waddch(win, ch | attr);
 	}
     } else {
-	(void) attrset(attr);
-	addstr(attr_test_string);
-	attroff(attr);
+	(void) wattrset(win, attr);
+	(void) waddstr(win, attr_test_string);
+	(void) wattroff(win, attr);
     }
     if (skip)
 	printw("%*s", skip, " ");
-    printw("|");
+    MvPrintw(row, COL_ATTRSTRING + LEN_ATTRSTRING, "|");
     if (test != A_NORMAL) {
 	if (!(termattrs() & test)) {
 	    printw(" (N/A)");
@@ -1570,10 +1595,18 @@ attr_test(void)
     NCURSES_COLOR_T tx = -1;
     int ac = 0;
     unsigned j, k;
+    WINDOW *my_wins[SIZEOF(attrs_to_test)];
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
     unsigned my_size = init_attr_list(my_list, termattrs());
 
     if (my_size > 1) {
+	for (j = 0; j < my_size; ++j) {
+	    my_wins[j] = subwin(stdscr,
+				1, LEN_ATTRSTRING,
+				2 + (int) (2 * j), COL_ATTRSTRING);
+	    scrollok(my_wins[j], FALSE);
+	}
+
 	if (skip < 0)
 	    skip = 0;
 
@@ -1614,7 +1647,7 @@ attr_test(void)
 
 	    for (j = 0; j < my_size; ++j) {
 		bool arrow = (j == k);
-		row = show_attr(row, n, arrow,
+		row = show_attr(my_wins[j], row, n, arrow,
 				extras |
 				my_list[j].attr |
 				my_list[k].attr,
@@ -1645,12 +1678,14 @@ static wchar_t wide_attr_test_string[MAX_ATTRSTRING + 1];
 static void
 wide_adjust_attr_string(int adjust)
 {
-    int first = ((int) UChar(wide_attr_test_string[0])) + adjust;
-    int last = first + LEN_ATTRSTRING;
+    char save = (char) wide_attr_test_string[0];
+    int first = ((int) UChar(save)) + adjust;
+    int j, k;
 
-    if (first >= ' ' && last <= '~') {	/* 32..126 */
-	int j, k;
-	for (j = 0, k = first; j < MAX_ATTRSTRING && k <= last; ++j, ++k) {
+    if (first >= ATTRSTRING_1ST) {
+	for (j = 0, k = first; j < MAX_ATTRSTRING; ++j, ++k) {
+	    if (k > ATTRSTRING_END)
+		break;
 	    wide_attr_test_string[j] = k;
 	    if (((k + 1 - first) % 5) == 0) {
 		if (++j >= MAX_ATTRSTRING)
@@ -1658,18 +1693,21 @@ wide_adjust_attr_string(int adjust)
 		wide_attr_test_string[j] = ' ';
 	    }
 	}
-	while (j < MAX_ATTRSTRING)
-	    wide_attr_test_string[j++] = ' ';
-	wide_attr_test_string[j] = '\0';
-    } else {
-	beep();
+	if ((LEN_ATTRSTRING - j) > 5) {
+	    wide_attr_test_string[0] = save;
+	    wide_adjust_attr_string(adjust - 1);
+	} else {
+	    while (j < MAX_ATTRSTRING)
+		wide_attr_test_string[j++] = ' ';
+	    wide_attr_test_string[j] = '\0';
+	}
     }
 }
 
 static void
 wide_init_attr_string(void)
 {
-    wide_attr_test_string[0] = 'a';
+    wide_attr_test_string[0] = default_attr_string();
     wide_adjust_attr_string(0);
 }
 
@@ -1705,7 +1743,8 @@ get_wide_background(void)
 }
 
 static int
-wide_show_attr(int row,
+wide_show_attr(WINDOW *win,
+	       int row,
 	       int skip,
 	       bool arrow,
 	       chtype attr,
@@ -1718,7 +1757,7 @@ wide_show_attr(int row,
     if (arrow)
 	MvPrintw(row, 5, "-->");
     MvPrintw(row, 8, "%s mode:", name);
-    MvPrintw(row, 24, "|");
+    MvPrintw(row, COL_ATTRSTRING - 1, "|");
     if (skip)
 	printw("%*s", skip, " ");
 
@@ -1727,6 +1766,7 @@ wide_show_attr(int row,
      * character at a time (to pass its rendition directly), and use the
      * string operation for the other attributes.
      */
+    wmove(win, 0, 0);
     if (attr & WA_ALTCHARSET) {
 	const wchar_t *s;
 	cchar_t ch;
@@ -1736,20 +1776,20 @@ wide_show_attr(int row,
 	    fill[0] = *s;
 	    fill[1] = L'\0';
 	    setcchar(&ch, fill, attr, pair, 0);
-	    add_wch(&ch);
+	    (void) wadd_wch(win, &ch);
 	}
     } else {
 	attr_t old_attr = 0;
 	NCURSES_PAIRS_T old_pair = 0;
 
-	(void) (attr_get) (&old_attr, &old_pair, 0);
-	(void) attr_set(attr, pair, 0);
-	addwstr(wide_attr_test_string);
-	(void) attr_set(old_attr, old_pair, 0);
+	(void) (wattr_get) (win, &old_attr, &old_pair, 0);
+	(void) wattr_set(win, attr, pair, 0);
+	(void) waddwstr(win, wide_attr_test_string);
+	(void) wattr_set(win, old_attr, old_pair, 0);
     }
     if (skip)
 	printw("%*s", skip, " ");
-    printw("|");
+    MvPrintw(row, COL_ATTRSTRING + LEN_ATTRSTRING, "|");
     if (test != A_NORMAL) {
 	if (!(term_attrs() & test)) {
 	    printw(" (N/A)");
@@ -1862,9 +1902,17 @@ wide_attr_test(void)
     int ac = 0;
     unsigned j, k;
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
+    WINDOW *my_wins[SIZEOF(attrs_to_test)];
     unsigned my_size = init_attr_list(my_list, term_attrs());
 
     if (my_size > 1) {
+	for (j = 0; j < my_size; ++j) {
+	    my_wins[j] = subwin(stdscr,
+				1, LEN_ATTRSTRING,
+				2 + (int) (2 * j), COL_ATTRSTRING);
+	    scrollok(my_wins[j], FALSE);
+	}
+
 	if (skip < 0)
 	    skip = 0;
 
@@ -1900,7 +1948,7 @@ wide_attr_test(void)
 	    MvAddStr(0, 20, "Character attribute test display");
 
 	    for (j = 0; j < my_size; ++j) {
-		row = wide_show_attr(row, n, j == k,
+		row = wide_show_attr(my_wins[j], row, n, (j == k),
 				     ((attr_t) ac |
 				      my_list[j].attr |
 				      my_list[k].attr),
@@ -4752,13 +4800,13 @@ pflush(void)
 	fill_panel(win)
 --------------------------------------------------------------------------*/
 static void
-init_panel(void)
+init_panel(WINDOW *win)
 {
     register int y, x;
 
     for (y = 0; y < LINES - 1; y++) {
 	for (x = 0; x < COLS; x++)
-	    wprintw(stdscr, "%d", (y + x) % 10);
+	    wprintw(win, "%d", (y + x) % 10);
     }
 }
 
@@ -4784,7 +4832,7 @@ fill_panel(PANEL * pan)
 
 #if USE_WIDEC_SUPPORT
 static void
-init_wide_panel(void)
+init_wide_panel(WINDOW *win)
 {
     int digit;
     cchar_t temp[10];
@@ -4796,7 +4844,7 @@ init_wide_panel(void)
 	int y, x;
 	getyx(stdscr, y, x);
 	digit = (y + x / 2) % 10;
-    } while (add_wch(&temp[digit]) != ERR);
+    } while (wadd_wch(win, &temp[digit]) != ERR);
 }
 
 static void
@@ -4850,7 +4898,7 @@ canned_panel(PANEL * px[MAX_PANELS + 1], NCURSES_CONST char *cmd)
 }
 
 static void
-demo_panels(void (*InitPanel) (void), void (*FillPanel) (PANEL *))
+demo_panels(void (*InitPanel) (WINDOW *), void (*FillPanel) (PANEL *))
 {
     int count;
     int itmp;
@@ -4859,7 +4907,7 @@ demo_panels(void (*InitPanel) (void), void (*FillPanel) (PANEL *))
     scrollok(stdscr, FALSE);	/* we don't want stdscr to scroll! */
     refresh();
 
-    InitPanel();
+    InitPanel(stdscr);
     for (count = 0; count < 5; count++) {
 	px[1] = mkpanel(COLOR_RED,
 			LINES / 2 - 2,

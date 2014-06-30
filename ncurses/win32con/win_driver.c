@@ -45,7 +45,7 @@
 
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.38 2014/05/10 21:50:00 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.39 2014/06/29 22:48:17 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -1909,7 +1909,7 @@ __attribute__((constructor))
 	if (CON.hdl != INVALID_HANDLE_VALUE) {
 	    CON.buffered = buffered;
 	    get_SBI();
-	    if (buffered) {
+	    if (!buffered) {
 		save_original_screen();
 	    }
 	}

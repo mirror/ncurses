@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.1 2014/06/21 16:07:50 tom Exp $
+ * $Id: dots_curses.c,v 1.2 2014/06/28 20:33:24 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
@@ -106,7 +106,7 @@ main(int argc GCC_UNUSED,
 	    for (bg = 0; bg < COLORS; bg++) {
 		int pair = mypair(fg, bg);
 		if (pair > 0)
-		    init_pair(pair, fg, bg);
+		    init_pair((short) pair, (short) fg, (short) bg);
 	    }
 	}
     }
@@ -142,7 +142,7 @@ main(int argc GCC_UNUSED,
 		napms(1);
 	    }
 	}
-	addch(p);
+	addch((chtype) p);
 	refresh();
 	++total_chars;
     }
