@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2234 2014/06/29 23:43:38 tom Exp $
+-- $Id: NEWS,v 1.2236 2014/07/05 20:39:04 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140705
+	+ add w/W toggle to ncurses.c 'B' test, to demonstrate permutation of
+	  video-attributes and colors with double-width character strings.
 
 20140629
 	+ correct check in win_driver.c for saving screen contents, e.g., when

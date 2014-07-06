@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.408 2014/06/28 21:45:40 tom Exp $
+$Id: ncurses.c,v 1.410 2014/07/05 22:23:34 tom Exp $
 
 ***************************************************************************/
 
@@ -1292,6 +1292,10 @@ attr_legend(WINDOW *helpwin)
 	      "  a/A     toggle ACS (alternate character set) mapping");
     MvWPrintw(helpwin, row, col,
 	      "  v/V     toggle video attribute to combine with each line");
+#if USE_WIDEC_SUPPORT
+    MvWPrintw(helpwin, row, col,
+	      "  w/W     toggle normal/wide (double-width) test-characters");
+#endif
 }
 
 static void
@@ -1422,6 +1426,7 @@ show_attr(WINDOW *win, int row, int skip, bool arrow, chtype attr, const char *n
      * string operation for the other attributes.
      */
     wmove(win, 0, 0);
+    werase(win);
     if (attr & A_ALTCHARSET) {
 	const char *s;
 	chtype ch;
@@ -1673,20 +1678,59 @@ attr_test(void)
 }
 
 #if USE_WIDEC_SUPPORT
+static bool use_fullwidth;
 static wchar_t wide_attr_test_string[MAX_ATTRSTRING + 1];
+
+#define FULL_LO 0xff00
+#define FULL_HI 0xff5e
+#define HALF_LO 0x20
+
+#define isFullWidth(ch)   ((ch) >= FULL_LO && (ch) <= FULL_HI)
+#define ToNormalWidth(ch) (((ch) - FULL_LO) + HALF_LO)
+#define ToFullWidth(ch)   (((ch) - HALF_LO) + FULL_LO)
+
+/*
+ * Returns an ASCII code in [32..126]
+ */
+static wchar_t
+normal_wchar(int ch)
+{
+    wchar_t result = ch;
+    if (isFullWidth(ch))
+	result = ToNormalWidth(ch);
+    return result;
+}
+
+/*
+ * Returns either an ASCII code in in [32..126] or full-width in
+ * [0xff00..0xff5e], according to use_fullwidth setting.
+ */
+static wchar_t
+target_wchar(int ch)
+{
+    wchar_t result = ch;
+    if (use_fullwidth) {
+	if (!isFullWidth(ch))
+	    result = ToFullWidth(ch);
+    } else {
+	if (isFullWidth(ch))
+	    result = ToNormalWidth(ch);
+    }
+    return result;
+}
 
 static void
 wide_adjust_attr_string(int adjust)
 {
-    char save = (char) wide_attr_test_string[0];
-    int first = ((int) UChar(save)) + adjust;
+    wchar_t save = wide_attr_test_string[0];
+    int first = ((int) normal_wchar(save)) + adjust;
     int j, k;
 
     if (first >= ATTRSTRING_1ST) {
 	for (j = 0, k = first; j < MAX_ATTRSTRING; ++j, ++k) {
 	    if (k > ATTRSTRING_END)
 		break;
-	    wide_attr_test_string[j] = k;
+	    wide_attr_test_string[j] = target_wchar(k);
 	    if (((k + 1 - first) % 5) == 0) {
 		if (++j >= MAX_ATTRSTRING)
 		    break;
@@ -1707,6 +1751,7 @@ wide_adjust_attr_string(int adjust)
 static void
 wide_init_attr_string(void)
 {
+    use_fullwidth = FALSE;
     wide_attr_test_string[0] = default_attr_string();
     wide_adjust_attr_string(0);
 }
@@ -1767,6 +1812,7 @@ wide_show_attr(WINDOW *win,
      * string operation for the other attributes.
      */
     wmove(win, 0, 0);
+    werase(win);
     if (attr & WA_ALTCHARSET) {
 	const wchar_t *s;
 	cchar_t ch;
@@ -1871,6 +1917,14 @@ wide_attr_getc(int *skip,
 		*kc += 1;
 		if (*kc >= limit)
 		    *kc = 0;
+		break;
+	    case 'w':
+		use_fullwidth = FALSE;
+		wide_adjust_attr_string(0);
+		break;
+	    case 'W':
+		use_fullwidth = TRUE;
+		wide_adjust_attr_string(0);
 		break;
 	    case '<':
 		wide_adjust_attr_string(-1);
