@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.537 2014/05/03 21:20:12 tom Exp $
+ * $Id: curses.priv.h,v 1.538 2014/07/12 20:06:11 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1458,11 +1458,11 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 				AttrOf(dst) |= (attr_t) (ext + 1)
 
 #define if_WIDEC(code)  code
-#define Charable(ch)	((SP_PARM->_legacy_coding)			\
+#define Charable(ch)	(((SP_PARM->_legacy_coding)			\
 			 || (AttrOf(ch) & A_ALTCHARSET)			\
-			 || (!isWidecExt(ch) &&				\
+			 || (!isWidecExt(ch))) &&			\
 			     (ch).chars[1] == L'\0' &&			\
-			     _nc_is_charable(CharOf(ch))))
+			     _nc_is_charable(CharOf(ch)))
 
 #define L(ch)		L ## ch
 #else /* }{ */

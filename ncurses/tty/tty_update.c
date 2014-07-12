@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.277 2014/02/01 22:09:27 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.279 2014/07/12 23:16:30 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -179,7 +179,7 @@ position_check(NCURSES_SP_DCLx int expected_y, int expected_x, char *legend)
     }
 }
 #else
-#define position_check(sp, expected_y, expected_x, legend)	/* nothing */
+#define position_check(expected_y, expected_x, legend)	/* nothing */
 #endif /* POSITION_DEBUG */
 
 /****************************************************************************
@@ -194,13 +194,17 @@ GoTo(NCURSES_SP_DCLx int const row, int const col)
     TR(TRACE_MOVE, ("GoTo(%p, %d, %d) from (%d, %d)",
 		    (void *) SP_PARM, row, col, SP_PARM->_cursrow, SP_PARM->_curscol));
 
-    position_check(SP_PARM, SP_PARM->_cursrow, SP_PARM->_curscol, "GoTo");
+    position_check(NCURSES_SP_ARGx
+		   SP_PARM->_cursrow,
+		   SP_PARM->_curscol, "GoTo");
 
     TINFO_MVCUR(NCURSES_SP_ARGx
 		SP_PARM->_cursrow,
 		SP_PARM->_curscol,
 		row, col);
-    position_check(SP_PARM, SP_PARM->_cursrow, SP_PARM->_curscol, "GoTo2");
+    position_check(NCURSES_SP_ARGx
+		   SP_PARM->_cursrow,
+		   SP_PARM->_curscol, "GoTo2");
 }
 
 static NCURSES_INLINE void
@@ -390,7 +394,7 @@ PutCharLR(NCURSES_SP_DCLx const ARG_CH_T ch)
 
 	PutAttrChar(NCURSES_SP_ARGx ch);
 	SP_PARM->_curscol--;
-	position_check(SP_PARM,
+	position_check(NCURSES_SP_ARGx
 		       SP_PARM->_cursrow,
 		       SP_PARM->_curscol,
 		       "exit_am_mode");
@@ -449,7 +453,7 @@ wrap_cursor(NCURSES_SP_DCL0)
     } else {
 	SP_PARM->_curscol--;
     }
-    position_check(SP_PARM,
+    position_check(NCURSES_SP_ARGx
 		   SP_PARM->_cursrow,
 		   SP_PARM->_curscol,
 		   "wrap_cursor");
@@ -469,7 +473,9 @@ PutChar(NCURSES_SP_DCLx const ARG_CH_T ch)
     if (SP_PARM->_curscol >= screen_columns(SP_PARM))
 	wrap_cursor(NCURSES_SP_ARG);
 
-    position_check(SP_PARM, SP_PARM->_cursrow, SP_PARM->_curscol, "PutChar");
+    position_check(NCURSES_SP_ARGx
+		   SP_PARM->_cursrow,
+		   SP_PARM->_curscol, "PutChar");
 }
 
 /*
@@ -1570,7 +1576,7 @@ ClearScreen(NCURSES_SP_DCLx NCURSES_CH_T blank)
 	    UpdateAttrs(SP_PARM, blank);
 	    NCURSES_PUTP2("clear_screen", clear_screen);
 	    SP_PARM->_cursrow = SP_PARM->_curscol = 0;
-	    position_check(SP_PARM,
+	    position_check(NCURSES_SP_ARGx
 			   SP_PARM->_cursrow,
 			   SP_PARM->_curscol,
 			   "ClearScreen");
@@ -1660,7 +1666,9 @@ InsStr(NCURSES_SP_DCLx NCURSES_CH_T * line, int count)
 	    count--;
 	}
     }
-    position_check(SP_PARM, SP_PARM->_cursrow, SP_PARM->_curscol, "InsStr");
+    position_check(NCURSES_SP_ARGx
+		   SP_PARM->_cursrow,
+		   SP_PARM->_curscol, "InsStr");
 }
 
 /*
