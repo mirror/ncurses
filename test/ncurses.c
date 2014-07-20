@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.410 2014/07/05 22:23:34 tom Exp $
+$Id: ncurses.c,v 1.411 2014/07/19 22:56:40 tom Exp $
 
 ***************************************************************************/
 
@@ -6834,7 +6834,9 @@ usage(void)
 	,"  -a f,b   set default-colors (assumed white-on-black)"
 	,"  -d       use default-colors if terminal supports them"
 #endif
+#if HAVE_USE_ENV
 	,"  -E       call use_env(FALSE) to ignore $LINES and $COLUMNS"
+#endif
 #if USE_SOFTKEYS
 	,"  -e fmt   specify format for soft-keys test (e)"
 #endif
@@ -7054,9 +7056,11 @@ main(int argc, char *argv[])
 	    default_colors = TRUE;
 	    break;
 #endif
+#if HAVE_USE_ENV
 	case 'E':
 	    use_env(FALSE);
 	    break;
+#endif
 	case 'e':
 	    my_e_param = atoi(optarg);
 #ifdef NCURSES_VERSION

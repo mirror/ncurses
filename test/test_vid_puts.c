@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2013,2014 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_vid_puts.c,v 1.5 2013/09/28 22:42:29 tom Exp $
+ * $Id: test_vid_puts.c,v 1.6 2014/07/19 23:09:28 tom Exp $
  *
  * Demonstrate the vid_puts and vid_attr functions.
  * Thomas Dickey - 2013/01/12
@@ -35,7 +35,7 @@
 #define USE_TINFO
 #include <test.priv.h>
 
-#if USE_WIDEC_SUPPORT && HAVE_SETUPTERM
+#if USE_WIDEC_SUPPORT && HAVE_SETUPTERM && HAVE_VID_PUTS
 
 #define valid(s) ((s != 0) && s != (char *)-1)
 

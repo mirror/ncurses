@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.24 2013/06/08 16:58:49 tom Exp $
+ * $Id: demo_termcap.c,v 1.26 2014/07/19 22:49:52 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -50,9 +50,10 @@
 #if USE_CODE_LISTS
 static bool b_opt = FALSE;
 static bool n_opt = FALSE;
-static bool q_opt = FALSE;
 static bool s_opt = FALSE;
 #endif
+
+static bool q_opt = FALSE;
 
 static char *d_opt;
 static char *e_opt;

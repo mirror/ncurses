@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.123 2014/02/01 22:09:27 tom Exp $ */
+/* $Id: test.priv.h,v 1.125 2014/07/19 23:06:27 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -226,12 +226,24 @@
 #define HAVE_USE_DEFAULT_COLORS 0
 #endif
 
+#ifndef HAVE_USE_ENV
+#define HAVE_USE_ENV 0
+#endif
+
 #ifndef HAVE_USE_SCREEN
 #define HAVE_USE_SCREEN 0
 #endif
 
 #ifndef HAVE_USE_WINDOW
 #define HAVE_USE_WINDOW 0
+#endif
+
+#ifndef HAVE_VIDPUTS
+#define HAVE_VIDPUTS 0
+#endif
+
+#ifndef HAVE_VID_PUTS
+#define HAVE_VID_PUTS 0
 #endif
 
 #ifndef HAVE_WRESIZE

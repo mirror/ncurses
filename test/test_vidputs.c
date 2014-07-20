@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2013,2014 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_vidputs.c,v 1.4 2013/09/28 22:45:21 tom Exp $
+ * $Id: test_vidputs.c,v 1.5 2014/07/19 23:09:58 tom Exp $
  *
  * Demonstrate the vidputs and vidattr functions.
  * Thomas Dickey - 2013/01/12
@@ -35,7 +35,7 @@
 #define USE_TINFO
 #include <test.priv.h>
 
-#if HAVE_SETUPTERM
+#if HAVE_SETUPTERM && HAVE_VIDPUTS
 
 #define valid(s) ((s != 0) && s != (char *)-1)
 

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2239 2014/07/12 20:24:13 tom Exp $
+-- $Id: NEWS,v 1.2242 2014/07/19 23:04:08 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140719
+	+ make workarounds for compiling test-programs with NetBSD curses.
+	+ improve configure macro CF_ADD_LIBS, to eliminate repeated -l/-L
+	  options, from xterm changes.
 
 20140712
 	+ correct Charable() macro check for A_ALTCHARSET in wide-characters.

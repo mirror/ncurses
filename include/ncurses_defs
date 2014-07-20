@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.62 2013/12/14 23:52:07 tom Exp $
+# $Id: ncurses_defs,v 1.65 2014/07/19 23:15:24 tom Exp $
 ##############################################################################
-# Copyright (c) 2000-2012,2013 Free Software Foundation, Inc.                #
+# Copyright (c) 2000-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -165,9 +165,12 @@ HAVE_UNCTRL_H	1
 HAVE_UNISTD_H
 HAVE_UNLINK
 HAVE_USE_DEFAULT_COLORS
+HAVE_USE_ENV	1
 HAVE_USE_SCREEN
 HAVE_USE_WINDOW
 HAVE_VFSCANF
+HAVE_VIDPUTS	1
+HAVE_VID_PUTS	1
 HAVE_VSNPRINTF
 HAVE_VSSCANF
 HAVE_WCSRTOMBS
