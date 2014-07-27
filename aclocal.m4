@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.701 2014/07/19 14:30:02 tom Exp $
+dnl $Id: aclocal.m4,v 1.704 2014/07/26 22:56:21 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -120,7 +120,7 @@ AC_DEFUN([CF_ADD_ADAFLAGS],[
 	AC_SUBST(ADAFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_CFLAGS version: 10 updated: 2010/05/26 05:38:42
+dnl CF_ADD_CFLAGS version: 11 updated: 2014/07/22 05:32:57
 dnl -------------
 dnl Copy non-preprocessor flags to $CFLAGS, preprocessor flags to $CPPFLAGS
 dnl The second parameter if given makes this macro verbose.
@@ -145,7 +145,7 @@ no)
 		-D*)
 			cf_tst_cflags=`echo ${cf_add_cflags} |sed -e 's/^-D[[^=]]*='\''\"[[^"]]*//'`
 
-			test "${cf_add_cflags}" != "${cf_tst_cflags}" \
+			test "x${cf_add_cflags}" != "x${cf_tst_cflags}" \
 				&& test -z "${cf_tst_cflags}" \
 				&& cf_fix_cppflags=yes
 
@@ -182,7 +182,7 @@ yes)
 
 	cf_tst_cflags=`echo ${cf_add_cflags} |sed -e 's/^[[^"]]*"'\''//'`
 
-	test "${cf_add_cflags}" != "${cf_tst_cflags}" \
+	test "x${cf_add_cflags}" != "x${cf_tst_cflags}" \
 		&& test -z "${cf_tst_cflags}" \
 		&& cf_fix_cppflags=no
 	;;
@@ -2126,7 +2126,7 @@ rm -rf conftest*
 AC_SUBST(EXTRA_CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GETOPT_HEADER version: 5 updated: 2012/10/06 16:39:58
+dnl CF_GETOPT_HEADER version: 6 updated: 2014/07/22 14:45:54
 dnl ----------------
 dnl Check for getopt's variables which are commonly defined in stdlib.h,
 dnl unistd.h or (nonstandard) in getopt.h
@@ -2145,7 +2145,10 @@ AC_TRY_COMPILE([
 done
 ])
 if test $cf_cv_getopt_header != none ; then
-	AC_DEFINE(HAVE_GETOPT_HEADER,1,[Define to 1 if we need to include getopt.h])
+	AC_DEFINE(HAVE_GETOPT_HEADER,1,[Define to 1 if getopt variables are declared in header])
+fi
+if test $cf_cv_getopt_header = getopt.h ; then
+	AC_DEFINE(NEED_GETOPT_H,1,[Define to 1 if we must include getopt.h])
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -2822,7 +2825,7 @@ AC_DEFUN([CF_HELP_MESSAGE],
 [AC_DIVERT_HELP([$1])dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INCLUDE_DIRS version: 8 updated: 2013/10/12 16:45:09
+dnl CF_INCLUDE_DIRS version: 9 updated: 2014/07/26 18:54:28
 dnl ---------------
 dnl Construct the list of include-options according to whether we're building
 dnl in the source directory or using '--srcdir=DIR' option.  If we're building
@@ -2844,7 +2847,11 @@ fi
 if test "$srcdir" != "."; then
 	CPPFLAGS="-I\${srcdir}/../include $CPPFLAGS"
 fi
-CPPFLAGS="-I. -I../include $CPPFLAGS"
+CPPFLAGS="-I../include $CPPFLAGS"
+if test "$srcdir" != "."; then
+	CPPFLAGS="-I\${srcdir} $CPPFLAGS"
+fi
+CPPFLAGS="-I. $CPPFLAGS"
 AC_SUBST(CPPFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -7148,7 +7155,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 46 updated: 2014/02/09 19:30:15
+dnl CF_XOPEN_SOURCE version: 47 updated: 2014/07/23 17:11:49
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -7199,6 +7206,9 @@ irix[[56]].*) #(vi
 linux*|gnu*|mint*|k*bsd*-gnu) #(vi
 	CF_GNU_SOURCE
 	;;
+minix*) #(vi
+	cf_xopen_source="-D_NETBSD_SOURCE" # POSIX.1-2001 features are ifdef'd with this...
+	;;
 mirbsd*) #(vi
 	# setting _XOPEN_SOURCE or _POSIX_SOURCE breaks <sys/select.h> and other headers which use u_int / u_short types
 	cf_XOPEN_SOURCE=
@@ -7235,7 +7245,7 @@ solaris2.*) #(vi
 esac
 
 if test -n "$cf_xopen_source" ; then
-	CF_ADD_CFLAGS($cf_xopen_source)
+	CF_ADD_CFLAGS($cf_xopen_source,true)
 fi
 
 dnl In anything but the default case, we may have system-specific setting

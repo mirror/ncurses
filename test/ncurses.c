@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.411 2014/07/19 22:56:40 tom Exp $
+$Id: ncurses.c,v 1.412 2014/07/27 00:24:00 tom Exp $
 
 ***************************************************************************/
 
@@ -1436,9 +1436,9 @@ show_attr(WINDOW *win, int row, int skip, bool arrow, chtype attr, const char *n
 	    (void) waddch(win, ch | attr);
 	}
     } else {
-	(void) wattrset(win, attr);
+	(void) wattrset(win, (int) attr);
 	(void) waddstr(win, attr_test_string);
-	(void) wattroff(win, attr);
+	(void) wattroff(win, (int) attr);
     }
     if (skip)
 	printw("%*s", skip, " ");
@@ -6407,11 +6407,11 @@ overlap_test_1_attr(WINDOW *win, int flavor, int col)
 	break;
     case 2:
 	init_pair(cpair, COLOR_BLUE, COLOR_WHITE);
-	(void) wattrset(win, (int) (COLOR_PAIR(cpair) | A_NORMAL));
+	(void) wattrset(win, (int) ((chtype) COLOR_PAIR(cpair) | A_NORMAL));
 	break;
     case 3:
 	init_pair(cpair, COLOR_WHITE, COLOR_BLUE);
-	(void) wattrset(win, (int) (COLOR_PAIR(cpair) | A_BOLD));
+	(void) wattrset(win, (int) ((chtype) COLOR_PAIR(cpair) | A_BOLD));
 	break;
     }
 }

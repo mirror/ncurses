@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.112 2014/06/28 16:28:22 Leon.Winter Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.114 2014/07/26 20:46:51 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -172,15 +172,16 @@ static int FE_Delete_Previous(FORM *);
    instead of a derived window because it contains invisible parts.
    This is true for non-public fields and for scrollable fields. */
 #define Has_Invisible_Parts(field)     \
-  (!((unsigned)(field)->opts & O_PUBLIC) || \
+  (!(Field_Has_Option(field, O_PUBLIC)) || \
    Is_Scroll_Field(field))
 
 /* Logic to decide whether or not a field needs justification */
 #define Justification_Allowed(field)        \
    (((field)->just != NO_JUSTIFICATION)  && \
     (Single_Line_Field(field))           && \
-    (((field)->dcols == (field)->cols)   && \
-    ((unsigned)(field)->opts & O_STATIC)))
+    ((Field_Has_Option(field, O_STATIC)  && \
+     ((field)->dcols == (field)->cols))  || \
+    Field_Has_Option(field, O_DYNAMIC_JUSTIFY)))
 
 /* Logic to determine whether or not a dynamic field may still grow */
 #define Growable(field) ((field)->status & _MAY_GROW)
@@ -194,7 +195,7 @@ static int FE_Delete_Previous(FORM *);
 #define Field_Really_Appears(field)         \
   ((field->form)                          &&\
    (field->form->status & _POSTED)        &&\
-   ((unsigned)field->opts & O_VISIBLE)    &&\
+   (Field_Has_Option(field, O_VISIBLE))   &&\
    (field->page == field->form->curpage))
 
 /* Logic to determine whether or not we are on the first position in the
@@ -860,7 +861,7 @@ _nc_Refresh_Current_Field(FORM *form)
   field = form->current;
   formwin = Get_Form_Window(form);
 
-  if ((unsigned)field->opts & O_PUBLIC)
+  if (Field_Has_Option(field, O_PUBLIC))
     {
       if (Is_Scroll_Field(field))
 	{
@@ -983,21 +984,22 @@ Perform_Justification(FIELD *field, WINDOW *win)
 
   if (len > 0)
     {
-      assert(win && (field->drows == 1) && (field->dcols == field->cols));
+      assert(win && (field->drows == 1));
 
-      switch (field->just)
-	{
-	case JUSTIFY_LEFT:
-	  break;
-	case JUSTIFY_CENTER:
-	  col = (field->cols - len) / 2;
-	  break;
-	case JUSTIFY_RIGHT:
-	  col = field->cols - len;
-	  break;
-	default:
-	  break;
-	}
+      if (field->cols - len >= 0)
+	switch (field->just)
+	  {
+	  case JUSTIFY_LEFT:
+	    break;
+	  case JUSTIFY_CENTER:
+	    col = (field->cols - len) / 2;
+	    break;
+	  case JUSTIFY_RIGHT:
+	    col = field->cols - len;
+	    break;
+	  default:
+	    break;
+	  }
 
       wmove(win, 0, col);
       myADDNSTR(win, bp, len);
@@ -1111,7 +1113,7 @@ Display_Or_Erase_Field(FIELD *field, bool bEraseFlag)
     return E_SYSTEM_ERROR;
   else
     {
-      if ((unsigned)field->opts & O_VISIBLE)
+      if (Field_Has_Option(field, O_VISIBLE))
 	{
 	  Set_Field_Window_Attributes(field, win);
 	}
@@ -1124,7 +1126,7 @@ Display_Or_Erase_Field(FIELD *field, bool bEraseFlag)
 
   if (!bEraseFlag)
     {
-      if ((unsigned)field->opts & O_PUBLIC)
+      if (Field_Has_Option(field, O_PUBLIC))
 	{
 	  if (Justification_Allowed(field))
 	    Perform_Justification(field, win);
@@ -1170,7 +1172,7 @@ Synchronize_Field(FIELD *field)
 	  form->currow = form->curcol = form->toprow = form->begincol = 0;
 	  werase(form->w);
 
-	  if (((unsigned)field->opts & O_PUBLIC) && Justification_Allowed(field))
+	  if ((Field_Has_Option(field, O_PUBLIC)) && Justification_Allowed(field))
 	    Undo_Justification(field, form->w);
 	  else
 	    Buffer_To_Window(field, form->w);
@@ -1256,7 +1258,7 @@ _nc_Synchronize_Attributes(FIELD *field)
 	  werase(form->w);
 	  wmove(form->w, form->currow, form->curcol);
 
-	  if ((unsigned)field->opts & O_PUBLIC)
+	  if (Field_Has_Option(field, O_PUBLIC))
 	    {
 	      if (Justification_Allowed(field))
 		Undo_Justification(field, form->w);
@@ -1424,11 +1426,11 @@ _nc_Set_Current_Field(FORM *form, FIELD *newfield)
       !(form->status & _POSTED))
     {
       if ((form->w) &&
-	  ((unsigned)field->opts & O_VISIBLE) &&
+	  (Field_Has_Option(field, O_VISIBLE)) &&
 	  (field->form->curpage == field->page))
 	{
 	  _nc_Refresh_Current_Field(form);
-	  if ((unsigned)field->opts & O_PUBLIC)
+	  if (Field_Has_Option(field, O_PUBLIC))
 	    {
 	      if (field->drows > field->rows)
 		{
@@ -1444,7 +1446,24 @@ _nc_Set_Current_Field(FORM *form, FIELD *newfield)
 		      Window_To_Buffer(form, field);
 		      werase(form->w);
 		      Perform_Justification(field, form->w);
-		      wsyncup(form->w);
+		      if (Field_Has_Option(field, O_DYNAMIC_JUSTIFY) &&
+			  (form->w->_parent == 0))
+			{
+			  copywin(form->w,
+				  Get_Form_Window(form),
+				  0,
+				  0,
+				  field->frow,
+				  field->fcol,
+				  field->frow,
+				  field->cols + field->fcol - 1,
+				  0);
+			  wsyncup(Get_Form_Window(form));
+			}
+		      else
+			{
+			  wsyncup(form->w);
+			}
 		    }
 		}
 	    }
@@ -2430,7 +2449,7 @@ Wrapping_Not_Necessary_Or_Wrapping_Ok(FORM *form)
   int result = E_REQUEST_DENIED;
   bool Last_Row = ((field->drows - 1) == form->currow);
 
-  if (((unsigned)field->opts & O_WRAP) &&	/* wrapping wanted     */
+  if ((Field_Has_Option(field, O_WRAP)) &&	/* wrapping wanted     */
       (!Single_Line_Field(field)) &&	/* must be multi-line  */
       (There_Is_No_Room_For_A_Char_In_Line(form)) &&	/* line is full        */
       (!Last_Row || Growable(field)))	/* there are more lines */
@@ -3111,7 +3130,7 @@ Check_Field(FORM *form, FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
 {
   if (typ)
     {
-      if ((unsigned)field->opts & O_NULLOK)
+      if (Field_Has_Option(field, O_NULLOK))
 	{
 	  FIELD_CELL *bp = field->buf;
 
@@ -3168,7 +3187,7 @@ _nc_Internal_Validation(FORM *form)
 
   Synchronize_Buffer(form);
   if ((form->status & _FCHECK_REQUIRED) ||
-      (!((unsigned)field->opts & O_PASSOK)))
+      (!(Field_Has_Option(field, O_PASSOK))))
     {
       if (!Check_Field(form, field->type, field, (TypeArgument *)(field->arg)))
 	return FALSE;
@@ -3273,7 +3292,7 @@ _nc_First_Active_Field(FORM *form)
 	  do
 	    {
 	      field = (field == last_on_page) ? first : field + 1;
-	      if (((unsigned)(*field)->opts & O_VISIBLE))
+	      if (Field_Has_Option(*field, O_VISIBLE))
 		break;
 	    }
 	  while (proposed != (*field));
@@ -4001,9 +4020,9 @@ Data_Entry_w(FORM *form, wchar_t c)
   int result = E_REQUEST_DENIED;
 
   T((T_CALLED("Data_Entry(%p,%s)"), (void *)form, _tracechtype((chtype)c)));
-  if (((unsigned)field->opts & O_EDIT)
+  if ((Field_Has_Option(field, O_EDIT))
 #if FIX_FORM_INACTIVE_BUG
-      && ((unsigned)field->opts & O_ACTIVE)
+      && (Field_Has_Option(field, O_ACTIVE))
 #endif
     )
     {
@@ -4013,7 +4032,7 @@ Data_Entry_w(FORM *form, wchar_t c)
       given[0] = c;
       given[1] = 1;
       setcchar(&temp_ch, given, 0, 0, (void *)0);
-      if (((unsigned)field->opts & O_BLANK) &&
+      if ((Field_Has_Option(field, O_BLANK)) &&
 	  First_Position_In_Current_Field(form) &&
 	  !(form->status & _FCHECK_REQUIRED) &&
 	  !(form->status & _WINDOW_MODIFIED))
@@ -4044,7 +4063,7 @@ Data_Entry_w(FORM *form, wchar_t c)
 			       ((field->dcols - 1) == form->curcol));
 
 	  form->status |= _WINDOW_MODIFIED;
-	  if (End_Of_Field && !Growable(field) && ((unsigned)field->opts & O_AUTOSKIP))
+	  if (End_Of_Field && !Growable(field) && (Field_Has_Option(field, O_AUTOSKIP)))
 	    result = Inter_Field_Navigation(FN_Next_Field, form);
 	  else
 	    {
@@ -4088,13 +4107,13 @@ Data_Entry(FORM *form, int c)
   int result = E_REQUEST_DENIED;
 
   T((T_CALLED("Data_Entry(%p,%s)"), (void *)form, _tracechtype((chtype)c)));
-  if (((unsigned)field->opts & O_EDIT)
+  if ((Field_Has_Option(field, O_EDIT))
 #if FIX_FORM_INACTIVE_BUG
-      && ((unsigned)field->opts & O_ACTIVE)
+      && (Field_Has_Option(field, O_ACTIVE))
 #endif
     )
     {
-      if (((unsigned)field->opts & O_BLANK) &&
+      if ((Field_Has_Option(field, O_BLANK)) &&
 	  First_Position_In_Current_Field(form) &&
 	  !(form->status & _FCHECK_REQUIRED) &&
 	  !(form->status & _WINDOW_MODIFIED))
@@ -4125,7 +4144,7 @@ Data_Entry(FORM *form, int c)
 			       ((field->dcols - 1) == form->curcol));
 
 	  SetStatus(form, _WINDOW_MODIFIED);
-	  if (End_Of_Field && !Growable(field) && ((unsigned)field->opts & O_AUTOSKIP))
+	  if (End_Of_Field && !Growable(field) && (Field_Has_Option(field, O_AUTOSKIP)))
 	    result = Inter_Field_Navigation(FN_Next_Field, form);
 	  else
 	    {

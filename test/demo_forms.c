@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.46 2013/09/28 21:55:54 tom Exp $
+ * $Id: demo_forms.c,v 1.48 2014/07/27 00:26:01 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -208,7 +208,7 @@ make_field(const char *label, int frow, int fcol, int rows, int cols)
 	if (d_option) {
 	    if (has_colors()) {
 		set_field_fore(f, (chtype) COLOR_PAIR(2));
-		set_field_back(f, A_UNDERLINE | COLOR_PAIR(3));
+		set_field_back(f, (A_UNDERLINE | (chtype) COLOR_PAIR(3)));
 	    } else {
 		set_field_fore(f, A_BOLD);
 	    }

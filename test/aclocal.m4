@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.99 2014/07/19 22:45:05 tom Exp $
+dnl $Id: aclocal.m4,v 1.100 2014/07/26 21:32:03 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -66,7 +66,7 @@ define([CF_ACVERSION_COMPARE],
 [ifelse([$8], , ,[$8])],
 [ifelse([$9], , ,[$9])])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_CFLAGS version: 10 updated: 2010/05/26 05:38:42
+dnl CF_ADD_CFLAGS version: 11 updated: 2014/07/22 05:32:57
 dnl -------------
 dnl Copy non-preprocessor flags to $CFLAGS, preprocessor flags to $CPPFLAGS
 dnl The second parameter if given makes this macro verbose.
@@ -91,7 +91,7 @@ no)
 		-D*)
 			cf_tst_cflags=`echo ${cf_add_cflags} |sed -e 's/^-D[[^=]]*='\''\"[[^"]]*//'`
 
-			test "${cf_add_cflags}" != "${cf_tst_cflags}" \
+			test "x${cf_add_cflags}" != "x${cf_tst_cflags}" \
 				&& test -z "${cf_tst_cflags}" \
 				&& cf_fix_cppflags=yes
 
@@ -128,7 +128,7 @@ yes)
 
 	cf_tst_cflags=`echo ${cf_add_cflags} |sed -e 's/^[[^"]]*"'\''//'`
 
-	test "${cf_add_cflags}" != "${cf_tst_cflags}" \
+	test "x${cf_add_cflags}" != "x${cf_tst_cflags}" \
 		&& test -z "${cf_tst_cflags}" \
 		&& cf_fix_cppflags=no
 	;;
@@ -412,7 +412,7 @@ if test ".$system_name" != ".$cf_cv_system_name" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_CFLAGS version: 2 updated: 2001/12/30 19:09:58
+dnl CF_CHECK_CFLAGS version: 3 updated: 2014/07/22 05:32:57
 dnl ---------------
 dnl Conditionally add to $CFLAGS and $CPPFLAGS values which are derived from
 dnl a build-configuration such as imake.  These have the pitfall that they
@@ -424,10 +424,10 @@ CF_VERBOSE(checking additions to CFLAGS)
 cf_check_cflags="$CFLAGS"
 cf_check_cppflags="$CPPFLAGS"
 CF_ADD_CFLAGS($1,yes)
-if test "$cf_check_cflags" != "$CFLAGS" ; then
+if test "x$cf_check_cflags" != "x$CFLAGS" ; then
 AC_TRY_LINK([#include <stdio.h>],[printf("Hello world");],,
 	[CF_VERBOSE(test-compile failed.  Undoing change to \$CFLAGS)
-	 if test "$cf_check_cppflags" != "$CPPFLAGS" ; then
+	 if test "x$cf_check_cppflags" != "x$CPPFLAGS" ; then
 		 CF_VERBOSE(but keeping change to \$CPPFLAGS)
 	 fi
 	 CFLAGS="$cf_check_flags"])
@@ -1529,7 +1529,7 @@ rm -rf conftest*
 AC_SUBST(EXTRA_CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GETOPT_HEADER version: 5 updated: 2012/10/06 16:39:58
+dnl CF_GETOPT_HEADER version: 6 updated: 2014/07/22 14:45:54
 dnl ----------------
 dnl Check for getopt's variables which are commonly defined in stdlib.h,
 dnl unistd.h or (nonstandard) in getopt.h
@@ -1548,7 +1548,10 @@ AC_TRY_COMPILE([
 done
 ])
 if test $cf_cv_getopt_header != none ; then
-	AC_DEFINE(HAVE_GETOPT_HEADER,1,[Define to 1 if we need to include getopt.h])
+	AC_DEFINE(HAVE_GETOPT_HEADER,1,[Define to 1 if getopt variables are declared in header])
+fi
+if test $cf_cv_getopt_header = getopt.h ; then
+	AC_DEFINE(NEED_GETOPT_H,1,[Define to 1 if we must include getopt.h])
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -3196,7 +3199,7 @@ AC_TRY_LINK([
 test $cf_cv_need_xopen_extension = yes && CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE_EXTENDED"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 46 updated: 2014/02/09 19:30:15
+dnl CF_XOPEN_SOURCE version: 47 updated: 2014/07/23 17:11:49
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -3247,6 +3250,9 @@ irix[[56]].*) #(vi
 linux*|gnu*|mint*|k*bsd*-gnu) #(vi
 	CF_GNU_SOURCE
 	;;
+minix*) #(vi
+	cf_xopen_source="-D_NETBSD_SOURCE" # POSIX.1-2001 features are ifdef'd with this...
+	;;
 mirbsd*) #(vi
 	# setting _XOPEN_SOURCE or _POSIX_SOURCE breaks <sys/select.h> and other headers which use u_int / u_short types
 	cf_XOPEN_SOURCE=
@@ -3283,7 +3289,7 @@ solaris2.*) #(vi
 esac
 
 if test -n "$cf_xopen_source" ; then
-	CF_ADD_CFLAGS($cf_xopen_source)
+	CF_ADD_CFLAGS($cf_xopen_source,true)
 fi
 
 dnl In anything but the default case, we may have system-specific setting

@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.106 2013/08/04 20:20:45 tom Exp $
+# $Id: Makefile.in,v 1.107 2014/07/26 22:51:31 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -83,7 +83,7 @@ CXXFLAGS	= @CXXFLAGS@ @EXTRA_CXXFLAGS@
 CXXLIBS		= @CXXLIBS@
 
 INCDIR		= ../include
-CPPFLAGS	= -I../c++ -I$(INCDIR) -I$(srcdir) -DHAVE_CONFIG_H @CPPFLAGS@
+CPPFLAGS	= -DHAVE_CONFIG_H @CPPFLAGS@
 
 CTAGS		= @CTAGS@
 ETAGS		= @ETAGS@

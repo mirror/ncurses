@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.48 2013/05/18 22:05:06 tom Exp $
+ * $Id: testcurs.c,v 1.49 2014/07/27 00:25:14 tom Exp $
  */
 
 #include <test.priv.h>
@@ -286,7 +286,7 @@ inputTest(WINDOW *win)
 #ifdef A_COLOR
     if (has_colors()) {
 	init_pair(2, COLOR_WHITE, COLOR_RED);
-	wbkgd(subWin, COLOR_PAIR(2) | A_BOLD);
+	wbkgd(subWin, (chtype) COLOR_PAIR(2) | A_BOLD);
     } else
 	wbkgd(subWin, A_BOLD);
 #else

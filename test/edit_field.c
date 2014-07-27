@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2011,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: edit_field.c,v 1.22 2013/09/28 22:02:17 tom Exp $
+ * $Id: edit_field.c,v 1.23 2014/07/26 08:30:51 tom Exp $
  *
  * A wrapper for form_driver() which keeps track of the user's editing changes
  * for each field, and makes the resulting length available as a
@@ -325,6 +325,7 @@ set_buffer_length(FIELD * f, int length)
 void
 init_edit_field(FIELD * f, char *value)
 {
+    char empty[1];
     FieldAttrs *ptr = field_attrs(f);
     if (ptr == 0) {
 	int rows, cols, frow, fcol, nrow, nbuf;
@@ -335,6 +336,10 @@ init_edit_field(FIELD * f, char *value)
 	    ptr->row_count = nrow;
 	    ptr->row_lengths = typeCalloc(int, (size_t) nrow + 1);
 	}
+    }
+    if (value == 0) {
+	value = empty;
+	*value = '\0';
     }
     set_field_userptr(f, (void *) ptr);
     set_field_buffer(f, 0, value);	/* will be formatted */

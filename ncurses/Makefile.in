@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.139 2013/08/04 20:20:45 tom Exp $
+# $Id: Makefile.in,v 1.141 2014/07/26 23:16:55 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -98,13 +98,13 @@ CPP		= @CPP@
 CFLAGS		= @CFLAGS@
 
 INCDIR		= $(srcdir)/../include
-CPPFLAGS	= -DHAVE_CONFIG_H -I../ncurses -I$(srcdir) @CPPFLAGS@
+CPPFLAGS	= -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
-BUILD_CPPFLAGS	= -I../include -DUSE_BUILD_CC @BUILD_CPPFLAGS@
+BUILD_CPPFLAGS	= -DHAVE_CONFIG_H -DUSE_BUILD_CC -I../ncurses -I$(srcdir) -I../include -I$(INCDIR) @BUILD_CPPFLAGS@ 
 BUILD_CC	= @BUILD_CC@
-BUILD_CCFLAGS	= -DHAVE_CONFIG_H -I../ncurses -I$(srcdir) -I$(INCDIR) $(BUILD_CPPFLAGS) @BUILD_CFLAGS@
+BUILD_CCFLAGS	= @BUILD_CFLAGS@
 BUILD_LDFLAGS	= @BUILD_LDFLAGS@
 BUILD_LIBS	= @BUILD_LIBS@
 
@@ -225,12 +225,12 @@ keys.list :	$(tinfo)/MKkeys_list.sh
 make_keys$(BUILD_EXEEXT) : \
 		$(tinfo)/make_keys.c \
 		names.c
-	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) $(tinfo)/make_keys.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
+	$(BUILD_CC) -o $@ $(BUILD_CPPFLAGS) $(BUILD_CCFLAGS) $(tinfo)/make_keys.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 
 make_hash$(BUILD_EXEEXT) : \
 		$(tinfo)/make_hash.c \
 		../include/hashsize.h
-	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) $(tinfo)/make_hash.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
+	$(BUILD_CC) -o $@ $(BUILD_CPPFLAGS) $(BUILD_CCFLAGS) $(tinfo)/make_hash.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 
 ./expanded.c : $(srcdir)/curses.priv.h $(serial)/MKexpanded.sh
 	sh -e $(serial)/MKexpanded.sh "$(CPP)" $(CPPFLAGS) > $@
