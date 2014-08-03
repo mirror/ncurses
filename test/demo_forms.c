@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.48 2014/07/27 00:26:01 tom Exp $
+ * $Id: demo_forms.c,v 1.49 2014/08/02 23:11:57 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -398,13 +398,13 @@ show_current_field(WINDOW *win, FORM * form)
 	}
 
 	waddch(win, ' ');
-	(void) wattrset(win, (int) field_fore(field));
+	(void) wattrset(win, AttrArg(field_fore(field), 0));
 	waddstr(win, "fore");
 	wattroff(win, (int) field_fore(field));
 
 	waddch(win, '/');
 
-	(void) wattrset(win, (int) field_back(field));
+	(void) wattrset(win, AttrArg(field_back(field), 0));
 	waddstr(win, "back");
 	wattroff(win, (int) field_back(field));
 

@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.69 2014/06/01 00:10:58 tom Exp $
+#  $Id: Makefile.in,v 1.70 2014/08/02 20:31:47 tom Exp $
 #
 .SUFFIXES:
 
@@ -215,7 +215,7 @@ BASEDEPS=$(ABASE).ads $(ABASE)-aux.ads $(ABASE).adb
 
 $(ABASE)-trace.adb : $(srcdir)/$(ABASE)-trace.adb_p
 	rm -f $@
-	$(ADAPREP) -DADA_TRACE=@ADA_TRACE@ $(srcdir)/$(ABASE)-trace.adb_p $@
+	$(ADAPREP) -DADA_TRACE=@ADA_TRACE@ @GNATPREP_OPTS@ $(srcdir)/$(ABASE)-trace.adb_p $@
 
 ###############################################################################
 # Use these definitions when building a shared library.

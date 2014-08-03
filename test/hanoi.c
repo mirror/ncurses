@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.35 2013/09/28 22:02:17 tom Exp $
+ * $Id: hanoi.c,v 1.36 2014/08/02 17:24:07 tom Exp $
  */
 
 #include <test.priv.h>
@@ -254,7 +254,7 @@ DisplayTiles(void)
 		memset(TileBuf, ' ', len);
 		TileBuf[len] = '\0';
 		if (has_colors())
-		    (void) attrset((attr_t) COLOR_PAIR(LENTOIND(len)));
+		    (void) attrset(AttrArg(COLOR_PAIR(LENTOIND(len)), 0));
 		else
 		    (void) attrset(A_REVERSE);
 		MvAddStr(BASELINE - (SlotNo + 1),

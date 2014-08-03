@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.40 2012/01/21 23:54:47 tom Exp $
+ * $Id: rain.c,v 1.41 2014/08/02 17:24:07 tom Exp $
  */
 #include <test.priv.h>
 
@@ -102,10 +102,7 @@ next_j(int j)
 	--j;
     if (has_colors()) {
 	int z = (int) (3 * ranf());
-	chtype color = (chtype) COLOR_PAIR(z);
-	if (z)
-	    color |= A_BOLD;
-	(void) attrset(color);
+	(void) attrset(AttrArg(COLOR_PAIR(z), (z ? A_BOLD : A_NORMAL)));
     }
     return j;
 }

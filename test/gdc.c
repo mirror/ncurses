@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.40 2014/02/15 17:34:36 tom Exp $
+ * $Id: gdc.c,v 1.41 2014/08/02 16:36:20 tom Exp $
  */
 
 #include <test.priv.h>
@@ -89,7 +89,7 @@ drawbox(bool scrolling)
     int n;
 
     if (hascolor)
-	(void) attrset((attr_t) COLOR_PAIR(PAIR_FRAMES));
+	(void) attrset(AttrArg(COLOR_PAIR(PAIR_FRAMES), 0));
 
     MvAddCh(YBASE - 1, XBASE - 1, ACS_ULCORNER);
     hline(ACS_HLINE, XLENGTH);
@@ -113,7 +113,7 @@ drawbox(bool scrolling)
     vline(ACS_VLINE, YDEPTH);
 
     if (hascolor)
-	(void) attrset((attr_t) COLOR_PAIR(PAIR_OTHERS));
+	(void) attrset(AttrArg(COLOR_PAIR(PAIR_OTHERS), 0));
 }
 
 static void
@@ -274,7 +274,7 @@ main(int argc, char *argv[])
 	init_pair(PAIR_DIGITS, COLOR_BLACK, COLOR_RED);
 	init_pair(PAIR_OTHERS, COLOR_RED, bg);
 	init_pair(PAIR_FRAMES, COLOR_WHITE, bg);
-	(void) attrset((attr_t) COLOR_PAIR(PAIR_OTHERS));
+	(void) attrset(AttrArg(COLOR_PAIR(PAIR_OTHERS), 0));
     }
 
   restart:

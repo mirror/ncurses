@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.125 2014/07/19 23:06:27 tom Exp $ */
+/* $Id: test.priv.h,v 1.128 2014/08/02 23:40:53 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -846,6 +846,15 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #define MvWHLine        (void) mvwhline
 #define MvVLine         (void) mvvline
 #define MvWVLine        (void) mvwvline
+
+/*
+ * The macro likely uses unsigned values, while X/Open prototype uses int.
+ */
+#if defined(wattrset) || defined(PDCURSES)
+#define AttrArg(p,a)    (attr_t) ((attr_t)(p) | (attr_t)(a))
+#else
+#define AttrArg(p,a)    (int) ((attr_t)(p) | (attr_t)(a))
+#endif
 
 /*
  * Workaround for defective implementation of gcc attribute warn_unused_result

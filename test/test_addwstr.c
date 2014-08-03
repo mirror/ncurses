@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addwstr.c,v 1.11 2012/12/16 00:11:18 tom Exp $
+ * $Id: test_addwstr.c,v 1.12 2014/08/02 17:24:55 tom Exp $
  *
  * Demonstrate the waddwstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -137,7 +137,7 @@ ColOf(wchar_t *buffer, int length, int margin)
 	    result += 2;
 	    break;
 	default:
-	    result += wcwidth(ch);
+	    result += wcwidth((wchar_t) ch);
 	    if (ch < 32)
 		++result;
 	    break;
@@ -398,7 +398,7 @@ test_inserts(int level)
 	    ch = '\b';
 	    /* FALLTHRU */
 	default:
-	    buffer[length++] = ch;
+	    buffer[length++] = (wchar_t) ch;
 	    buffer[length] = '\0';
 
 	    /* put the string in, one character at a time */

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2007-2008,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: key_names.c,v 1.4 2008/10/11 20:22:37 tom Exp $
+ * $Id: key_names.c,v 1.5 2014/08/02 17:24:55 tom Exp $
  */
 
 #include <test.priv.h>
@@ -77,7 +77,7 @@ main(int argc, char *argv[])
 	endwin();
     }
     for (n = -1; n < KEY_MAX + 512; n++) {
-	const char *result = key_name(n);
+	const char *result = key_name((wchar_t) n);
 	if (result != 0)
 	    printf("%d(%5o):%s\n", n, n, result);
     }

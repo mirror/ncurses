@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.582 2014/06/01 14:05:06 tom Exp $
+dnl $Id: configure.in,v 1.583 2014/08/02 20:35:31 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.582 $)
+AC_REVISION($Revision: 1.583 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1358,6 +1358,7 @@ CF_DISABLE_GNAT_PROJECTS
 ###	Checks for libraries.
 case $cf_cv_system_name in #(vi
 *mingw32*) #(vi
+	CPPFLAGS="$CPPFLAGS -DWINVER=0x0501"
 	LIBS=" -lpsapi $LIBS"
 	;;
 *)
@@ -1619,6 +1620,8 @@ dnl At the moment we support no other Ada95 compiler.
 		if test	"x$cf_cv_prog_gnat_correct" = xyes; then
 			CF_ADD_ADAFLAGS(-gnatpn)
 			CF_FIXUP_ADAFLAGS
+
+			CF_GNATPREP_OPT_T
 
 			CF_GNAT_GENERICS
 			CF_GNAT_SIGINT

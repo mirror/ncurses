@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.704 2014/07/26 22:56:21 tom Exp $
+dnl $Id: aclocal.m4,v 1.706 2014/08/02 22:38:39 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2150,6 +2150,17 @@ fi
 if test $cf_cv_getopt_header = getopt.h ; then
 	AC_DEFINE(NEED_GETOPT_H,1,[Define to 1 if we must include getopt.h])
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_GNATPREP_OPT_T version: 1 updated: 2014/08/02 18:37:25
+dnl -----------------
+AC_DEFUN([CF_GNATPREP_OPT_T],[
+AC_CACHE_CHECK(if GNATPREP supports -T option,cf_cv_gnatprep_opt_t,[
+cf_cv_gnatprep_opt_t=no
+gnatprep -T 2>/dev/null >/dev/null && cf_cv_gnatprep_opt_t=yes
+])
+test "$cf_cv_gnatprep_opt_t" = yes && GNATPREP_OPTS="-T $GNATPREP_OPTS"
+AC_SUBST(GNATPREP_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_GENERICS version: 2 updated: 2011/03/23 20:24:41

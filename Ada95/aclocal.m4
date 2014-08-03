@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.90 2014/07/26 22:58:13 tom Exp $
+dnl $Id: aclocal.m4,v 1.91 2014/08/02 22:40:45 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1204,6 +1204,17 @@ fi
 rm -rf conftest*
 
 AC_SUBST(EXTRA_CFLAGS)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_GNATPREP_OPT_T version: 1 updated: 2014/08/02 18:37:25
+dnl -----------------
+AC_DEFUN([CF_GNATPREP_OPT_T],[
+AC_CACHE_CHECK(if GNATPREP supports -T option,cf_cv_gnatprep_opt_t,[
+cf_cv_gnatprep_opt_t=no
+gnatprep -T 2>/dev/null >/dev/null && cf_cv_gnatprep_opt_t=yes
+])
+test "$cf_cv_gnatprep_opt_t" = yes && GNATPREP_OPTS="-T $GNATPREP_OPTS"
+AC_SUBST(GNATPREP_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_GENERICS version: 2 updated: 2011/03/23 20:24:41

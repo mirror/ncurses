@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.9 2012/11/18 00:39:48 tom Exp $
+ * $Id: clip_printw.c,v 1.10 2014/08/02 23:13:29 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
@@ -331,7 +331,7 @@ test_clipping(WINDOW *win)
     do {
 	switch (st.ch) {
 	case '.':		/* change from current position */
-	    (void) wattrset(win, (int) (st.attr | (chtype) COLOR_PAIR(st.pair)));
+	    (void) wattrset(win, AttrArg(COLOR_PAIR(st.pair), st.attr));
 	    if (st.count > 0) {
 		need = (unsigned) st.count + 1;
 		sprintf(fmt, "%%c%%%ds%%c", st.count);

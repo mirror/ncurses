@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2008,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2010,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.37 2010/05/01 22:19:02 tom Exp $
+ * $Id: demo_panels.c,v 1.38 2014/08/02 17:24:07 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -406,7 +406,7 @@ make_fullwidth_digit(cchar_t *target, int digit)
 {
     wchar_t source[2];
 
-    source[0] = digit + 0xff10;
+    source[0] = (wchar_t) (digit + 0xff10);
     source[1] = 0;
     setcchar(target, source, A_NORMAL, 0, 0);
 }

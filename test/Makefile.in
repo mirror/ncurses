@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.112 2014/07/26 22:51:31 tom Exp $
+# $Id: Makefile.in,v 1.113 2014/08/02 15:45:05 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -75,7 +75,7 @@ CC		= @CC@
 CPP		= @CPP@
 
 CFLAGS		= @CFLAGS@ @EXTRA_CFLAGS@
-CPPFLAGS	= -DHAVE_CONFIG_H @CPPFLAGS@
+CPPFLAGS	= -I. -I$(srcdir) -I../test -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 

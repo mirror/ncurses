@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2246 2014/07/26 22:50:27 tom Exp $
+-- $Id: NEWS,v 1.2250 2014/08/02 20:51:48 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140802
+	+ minor portability fixes for MinGW:
+	  + ensure WINVER is defined in makefiles rather than using headers
+	  + add check for gnatprep "-T" option
+	  + work around bug introduced by gcc 4.8.1 in MinGW which breaks
+	    "trace" feature:
+	    http://stackoverflow.com/questions/20877689/gcc-4-8-1-minggw-d-option-does-not-work-as-usual
+	+ fix most compiler warnings for Cygwin ncurses-examples.
+	+ restore "redundant" -I options in test/Makefile.in, since they are
+	  typically needed when building the derived ncurses-examples package
+	  (cf: 20140726).
 
 20140726
 	+ eliminate some redundant -I options used for building libraries, and

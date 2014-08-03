@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.52 2013/09/28 21:55:02 tom Exp $
+ * $Id: demo_menus.c,v 1.53 2014/08/02 17:24:07 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -315,7 +315,7 @@ menu_destroy(MENU * m)
 	if ((count > 0) && (m == mpSelect)) {
 	    if (blob && loaded_file) {
 		Trace(("freeing blob %p", blob));
-		free((char *) blob);
+		free((void *) blob);
 	    }
 	    free(items);
 	    items = 0;

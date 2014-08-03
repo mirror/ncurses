@@ -2,7 +2,7 @@
  *  newdemo.c	-	A demo program using PDCurses. The program illustrate
  *  	 		the use of colours for text output.
  *
- * $Id: newdemo.c,v 1.40 2013/04/27 19:46:53 tom Exp $
+ * $Id: newdemo.c,v 1.41 2014/08/02 23:10:56 tom Exp $
  */
 
 #include <test.priv.h>
@@ -84,7 +84,7 @@ set_colors(WINDOW *win, int pair, int foreground, int background)
 	if (pair > COLOR_PAIRS)
 	    pair = COLOR_PAIRS;
 	init_pair((short) pair, (short) foreground, (short) background);
-	(void) wattrset(win, (int) COLOR_PAIR(pair));
+	(void) wattrset(win, AttrArg(COLOR_PAIR(pair), 0));
     }
 }
 
@@ -96,7 +96,7 @@ use_colors(WINDOW *win, int pair, chtype attrs)
 	    pair = COLOR_PAIRS;
 	attrs |= (chtype) COLOR_PAIR(pair);
     }
-    (void) wattrset(win, (int) attrs);
+    (void) wattrset(win, AttrArg(attrs, 0));
     return attrs;
 }
 

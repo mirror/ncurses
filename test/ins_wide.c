@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.20 2012/12/16 00:51:02 tom Exp $
+ * $Id: ins_wide.c,v 1.21 2014/08/02 17:24:55 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -132,7 +132,7 @@ ColOf(wchar_t *buffer, int length, int margin)
 	    result += 2;
 	    break;
 	default:
-	    result += wcwidth(ch);
+	    result += wcwidth((wchar_t) ch);
 	    if (ch < 32)
 		++result;
 	    break;
@@ -390,7 +390,7 @@ test_inserts(int level)
 	    }
 	    break;
 	default:
-	    buffer[length++] = ch;
+	    buffer[length++] = (wchar_t) ch;
 	    buffer[length] = '\0';
 
 	    /* put the string in, one character at a time */

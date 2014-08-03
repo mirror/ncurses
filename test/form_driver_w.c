@@ -31,7 +31,7 @@
  ****************************************************************************/
 
 /*
- * $Id: form_driver_w.c,v 1.12 2014/06/01 20:37:19 tom Exp $
+ * $Id: form_driver_w.c,v 1.13 2014/08/02 17:24:55 tom Exp $
  *
  * Test form_driver_w (int, int, wchar_t), a wide char aware
  * replacement of form_driver.
@@ -123,7 +123,7 @@ main(void)
 		done = TRUE;
 		break;
 	    default:
-		form_driver_w(my_form, OK, ch);
+		form_driver_w(my_form, OK, (wchar_t) ch);
 		break;
 	    }
 	    break;

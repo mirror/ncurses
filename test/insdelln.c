@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: insdelln.c,v 1.7 2012/11/18 00:37:58 tom Exp $
+ * $Id: insdelln.c,v 1.9 2014/08/02 23:09:32 tom Exp $
  *
  * test-driver for deleteln, wdeleteln, insdelln, winsdelln, insertln, winsertln
  */
@@ -302,7 +302,7 @@ test_winsdelln(WINDOW *win)
     init_status(win, &st);
 
     do {
-	(void) wattrset(win, (int) (st.attr | (attr_t) COLOR_PAIR(st.pair)));
+	(void) wattrset(win, AttrArg(COLOR_PAIR(st.pair), st.attr));
 	switch (st.ch) {
 	case 'i':
 	    for (n = 0; n < st.count; ++n)
@@ -343,7 +343,7 @@ test_insdelln(void)
     init_status(stdscr, &st);
 
     do {
-	(void) attrset(st.attr | (attr_t) COLOR_PAIR(st.pair));
+	(void) attrset(AttrArg(COLOR_PAIR(st.pair), st.attr));
 	switch (st.ch) {
 	case 'i':
 	    for (n = 0; n < st.count; ++n)

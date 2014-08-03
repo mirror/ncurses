@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2010-2011,2012 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2010-2012,2014 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.20 2012/12/16 00:12:04 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.21 2014/08/02 17:24:55 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -103,7 +103,7 @@ static size_t temp_length;
 	     && (temp = unctrl((chtype) have[0])) != 0 \
 	     && strlen(temp) > 1) { \
 		while (*temp != '\0') { \
-		    have[0] = *temp++; \
+		    have[0] = (wchar_t) *temp++; \
 		    setcchar(&temp_buffer[n++], have, A_NORMAL, 0, NULL); \
 		} \
 	    } else { \
@@ -210,7 +210,7 @@ ColOf(wchar_t *buffer, int length, int margin)
 	    result += 2;
 	    break;
 	default:
-	    result += wcwidth(ch);
+	    result += wcwidth((wchar_t) ch);
 	    if (ch < 32)
 		++result;
 	    break;
@@ -468,7 +468,7 @@ test_add_wchstr(int level)
 	    }
 	    break;
 	default:
-	    buffer[length++] = ch;
+	    buffer[length++] = (wchar_t) ch;
 	    buffer[length] = '\0';
 
 	    /* put the string in, one character at a time */
