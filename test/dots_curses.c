@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.2 2014/06/28 20:33:24 tom Exp $
+ * $Id: dots_curses.c,v 1.3 2014/08/09 22:28:42 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
@@ -82,7 +82,7 @@ set_colors(int fg, int bg)
 {
     int pair = mypair(fg, bg);
     if (pair > 0) {
-	attron((attr_t) COLOR_PAIR(mypair(fg, bg)));
+	attron(COLOR_PAIR(mypair(fg, bg)));
     }
 }
 
@@ -127,7 +127,7 @@ main(int argc GCC_UNUSED,
 	    z = (int) (ranf() * COLORS);
 	    if (ranf() > 0.01) {
 		set_colors(fg = z, bg);
-		attron((attr_t) COLOR_PAIR(mypair(fg, bg)));
+		attron(COLOR_PAIR(mypair(fg, bg)));
 	    } else {
 		set_colors(fg, bg = z);
 		napms(1);

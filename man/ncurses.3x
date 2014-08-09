@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.117 2014/05/24 20:29:27 tom Exp $
+.\" $Id: ncurses.3x,v 1.119 2014/08/09 20:54:30 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -1021,6 +1021,21 @@ file \fBtrace\fR to the current directory.
 TERM
 Denotes your terminal type.
 Each terminal type is distinct, though many are similar.
+.IP
+\fBTERM\fP is commonly set by terminal emulators to help
+applications find a workable terminal description.
+Some of those choose a popular approximation, e.g.,
+\*(``ansi\*('', \*(``vt100\*('', \*(``xterm\*('' rather than an exact fit.
+Not infrequently, your application will have problems with that approach,
+e.g., incorrect function-key definitions.
+.IP
+If you set \fBTERM\fP in your environment,
+it has no effect on the operation of the terminal emulator.
+It only affects the way applications work within the terminal.
+Likewise, as a general rule (\fBxterm\fP being a rare exception),
+terminal emulators which allow you to
+specify \fBTERM\fP as a parameter or configuration value do
+not change their behavior to match that setting.
 .TP 5
 TERMCAP
 If the \fBncurses\fR library has been configured with \fItermcap\fR

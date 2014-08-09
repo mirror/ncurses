@@ -34,6 +34,9 @@
 /*
  * TODO - GetMousePos(POINT * result) from ntconio.c
  * TODO - implement nodelay
+ * TODO - implement flash
+ * TODO - improve screen-repainting, using implied wraparound
+ * TODO - if non-buffered, change buffer size (temporarily) to window-size - SetConsoleScreenBufferSize
  */
 
 #include <curses.priv.h>
@@ -45,7 +48,7 @@
 
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.39 2014/06/29 22:48:17 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.43 2014/08/09 20:31:40 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -105,6 +108,8 @@ static struct {
     WORD pairs[NUMPAIRS];
     COORD origin;
     CHAR_INFO *save_screen;
+    COORD save_size;
+    SMALL_RECT save_region;
     CONSOLE_SCREEN_BUFFER_INFO SBI;
 } CON;
 
@@ -161,12 +166,64 @@ MapAttr(WORD res, attr_t ch)
     return res;
 }
 
+#if 0				/* def TRACE */
+static void
+dump_screen(const char *fn, int ln)
+{
+    int max_cells = (CON.SBI.dwSize.Y * (1 + CON.SBI.dwSize.X)) + 1;
+    char output[max_cells];
+    CHAR_INFO save_screen[max_cells];
+    COORD save_size;
+    SMALL_RECT save_region;
+    COORD bufferCoord;
+
+    T(("dump_screen %s@%d", fn, ln));
+
+    save_region.Top = CON.SBI.srWindow.Top;
+    save_region.Left = CON.SBI.srWindow.Left;
+    save_region.Bottom = CON.SBI.srWindow.Bottom;
+    save_region.Right = CON.SBI.srWindow.Right;
+
+    save_size.X = (SHORT) (save_region.Right - save_region.Left + 1);
+    save_size.Y = (SHORT) (save_region.Bottom - save_region.Top + 1);
+
+    bufferCoord.X = bufferCoord.Y = 0;
+
+    if (ReadConsoleOutput(CON.hdl,
+			  save_screen,
+			  save_size,
+			  bufferCoord,
+			  &save_region)) {
+	int i, j;
+	int ij = 0;
+	int k = 0;
+
+	for (i = save_region.Top; i <= save_region.Bottom; ++i) {
+	    for (j = save_region.Left; j <= save_region.Right; ++j) {
+		output[k++] = save_screen[ij++].Char.AsciiChar;
+	    }
+	    output[k++] = '\n';
+	}
+	output[k] = 0;
+
+	T(("DUMP: %d,%d - %d,%d",
+	   save_region.Top,
+	   save_region.Left,
+	   save_region.Bottom,
+	   save_region.Right));
+	T(("%s", output));
+    }
+}
+
+#else
+#define dump_screen(fn,ln)	/* nothing */
+#endif
+
 #if USE_WIDEC_SUPPORT
 /*
  * TODO: support surrogate pairs
  * TODO: support combining characters
  * TODO: support acsc
- * TODO: check wcwidth of base character, fill if needed for double-width
  * TODO: _nc_wacs should be part of sp.
  */
 static BOOL
@@ -205,14 +262,14 @@ con_write16(TERMINAL_CONTROL_BLOCK * TCB, int y, int x, cchar_t *str, int limit)
 	++actual;
     }
 
-    loc.X = (short) 0;
-    loc.Y = (short) 0;
-    siz.X = (short) actual;
+    loc.X = (SHORT) 0;
+    loc.Y = (SHORT) 0;
+    siz.X = (SHORT) actual;
     siz.Y = 1;
 
-    rec.Left = (short) x;
+    rec.Left = (SHORT) x;
     rec.Top = (SHORT) (y + AdjustY());
-    rec.Right = (short) (x + limit - 1);
+    rec.Right = (SHORT) (x + limit - 1);
     rec.Bottom = rec.Top;
 
     return WriteConsoleOutputW(CON.hdl, ci, siz, loc, &rec);
@@ -351,34 +408,30 @@ static bool
 restore_original_screen(void)
 {
     COORD bufferCoord;
-    SMALL_RECT writeRegion;
     bool result = FALSE;
+    SMALL_RECT save_region = CON.save_region;
 
-    if (CON.window_only) {
-	writeRegion.Top = CON.SBI.srWindow.Top;
-	writeRegion.Left = CON.SBI.srWindow.Left;
-	writeRegion.Bottom = CON.SBI.srWindow.Bottom;
-	writeRegion.Right = CON.SBI.srWindow.Right;
-	T(("... restoring window"));
-    } else {
-	writeRegion.Top = 0;
-	writeRegion.Left = 0;
-	writeRegion.Bottom = (SHORT) (CON.SBI.dwSize.Y - 1);
-	writeRegion.Right = (SHORT) (CON.SBI.dwSize.X - 1);
-	T(("... restoring entire buffer"));
-    }
+    T(("... restoring %s", CON.window_only ? "window" : "entire buffer"));
 
     bufferCoord.X = bufferCoord.Y = 0;
 
     if (WriteConsoleOutput(CON.hdl,
 			   CON.save_screen,
-			   CON.SBI.dwSize,
+			   CON.save_size,
 			   bufferCoord,
-			   &writeRegion)) {
+			   &save_region)) {
 	result = TRUE;
 	mvcur(-1, -1, LINES - 2, 0);
+	T(("... restore original screen contents ok %dx%d (%d,%d - %d,%d)",
+	   CON.save_size.Y,
+	   CON.save_size.X,
+	   save_region.Top,
+	   save_region.Left,
+	   save_region.Bottom,
+	   save_region.Right));
+    } else {
+	T(("... restore original screen contents err"));
     }
-    T(("... restore original screen contents %s", result ? "ok" : "err"));
     return result;
 }
 
@@ -405,6 +458,23 @@ wcon_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 	Width = screen_columns(sp);
 	Height = screen_lines(sp);
 	nonempty = min(Height, NewScreen(sp)->_maxy + 1);
+
+	T(("... %dx%d clear cur:%d new:%d",
+	   Height, Width,
+	   CurScreen(sp)->_clear,
+	   NewScreen(sp)->_clear));
+
+	if (SP_PARM->_endwin) {
+
+	    T(("coming back from shell mode"));
+	    NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_ARG);
+
+	    NCURSES_SP_NAME(_nc_mvcur_resume) (NCURSES_SP_ARG);
+	    NCURSES_SP_NAME(_nc_screen_resume) (NCURSES_SP_ARG);
+	    SP_PARM->_mouse_resume(SP_PARM);
+
+	    SP_PARM->_endwin = FALSE;
+	}
 
 	if ((CurScreen(sp)->_clear || NewScreen(sp)->_clear)) {
 	    int x;
@@ -433,6 +503,8 @@ wcon_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 	    CurScreen(sp)->_clear = FALSE;
 	    NewScreen(sp)->_clear = FALSE;
 	    touchwin(NewScreen(sp));
+	    T(("... cleared %dx%d lines @%d of screen", nonempty, Width,
+	       AdjustY()));
 	}
 
 	for (y = 0; y < nonempty; y++) {
@@ -562,11 +634,12 @@ wcon_dobeepflash(TERMINAL_CONTROL_BLOCK * TCB,
 		 int beepFlag GCC_UNUSED)
 {
     SCREEN *sp;
-    int res = ERR;
+    int res = OK;
 
     AssertTCB();
     SetSP();
 
+    MessageBeep(MB_ICONWARNING);	/* MB_OK might be better */
     return res;
 }
 
@@ -807,6 +880,7 @@ wcon_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 		code = OK;
 	    }
 	}
+	T(("... buffered:%d, clear:%d", CON.buffered, CurScreen(sp)->_clear));
     } else {			/* shell mode */
 	if (defFlag) {
 	    /* def_shell_mode */
@@ -827,7 +901,7 @@ wcon_mode(TERMINAL_CONTROL_BLOCK * TCB, int progFlag, int defFlag)
 	}
     }
 
-    return (code);
+    returnCode(code);
 }
 
 static void
@@ -893,85 +967,78 @@ wcon_release(TERMINAL_CONTROL_BLOCK * TCB)
     returnVoid;
 }
 
-/*
- * Attempt to save the screen contents.  PDCurses does this if
- * PDC_RESTORE_SCREEN is set, giving the same visual appearance on restoration
- * as if the library had allocated a console buffer.
- */
 static bool
-save_original_screen(void)
+read_screen_data(void)
 {
     bool result = FALSE;
-    COORD bufferSize;
     COORD bufferCoord;
-    SMALL_RECT readRegion;
     size_t want;
 
-    bufferSize.X = CON.SBI.dwSize.X;
-    bufferSize.Y = CON.SBI.dwSize.Y;
-    want = (size_t) (bufferSize.X * bufferSize.Y);
+    CON.save_size.X = (SHORT) (CON.save_region.Right
+			       - CON.save_region.Left + 1);
+    CON.save_size.Y = (SHORT) (CON.save_region.Bottom
+			       - CON.save_region.Top + 1);
+
+    want = (size_t) (CON.save_size.X * CON.save_size.Y);
 
     if ((CON.save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
 	bufferCoord.X = bufferCoord.Y = 0;
 
-	readRegion.Top = 0;
-	readRegion.Left = 0;
-	readRegion.Bottom = (SHORT) (bufferSize.Y - 1);
-	readRegion.Right = (SHORT) (bufferSize.X - 1);
-
-	T(("... reading console buffer %dx%d into %d,%d - %d,%d at %d,%d",
-	   bufferSize.Y, bufferSize.X,
-	   readRegion.Top,
-	   readRegion.Left,
-	   readRegion.Bottom,
-	   readRegion.Right,
+	T(("... reading console %s %dx%d into %d,%d - %d,%d at %d,%d",
+	   CON.window_only ? "window" : "buffer",
+	   CON.save_size.Y, CON.save_size.X,
+	   CON.save_region.Top,
+	   CON.save_region.Left,
+	   CON.save_region.Bottom,
+	   CON.save_region.Right,
 	   bufferCoord.Y,
 	   bufferCoord.X));
 
 	if (ReadConsoleOutput(CON.hdl,
 			      CON.save_screen,
-			      bufferSize,
+			      CON.save_size,
 			      bufferCoord,
-			      &readRegion)) {
+			      &CON.save_region)) {
 	    result = TRUE;
 	} else {
 	    T((" error %#lx", (unsigned long) GetLastError()));
 	    FreeAndNull(CON.save_screen);
+	}
+    }
 
-	    bufferSize.X = (SHORT) (CON.SBI.srWindow.Right
-				    - CON.SBI.srWindow.Left + 1);
-	    bufferSize.Y = (SHORT) (CON.SBI.srWindow.Bottom
-				    - CON.SBI.srWindow.Top + 1);
-	    want = (size_t) (bufferSize.X * bufferSize.Y);
+    return result;
+}
 
-	    if ((CON.save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
-		bufferCoord.X = bufferCoord.Y = 0;
+/*
+ * Attempt to save the screen contents.  PDCurses does this if
+ * PDC_RESTORE_SCREEN is set, giving the same visual appearance on
+ * restoration as if the library had allocated a console buffer.  MSDN
+ * says that the data which can be read is limited to 64Kb (and may be
+ * less).
+ */
+static bool
+save_original_screen(void)
+{
+    bool result = FALSE;
 
-		readRegion.Top = CON.SBI.srWindow.Top;
-		readRegion.Left = CON.SBI.srWindow.Left;
-		readRegion.Bottom = CON.SBI.srWindow.Bottom;
-		readRegion.Right = CON.SBI.srWindow.Right;
+    CON.save_region.Top = 0;
+    CON.save_region.Left = 0;
+    CON.save_region.Bottom = (SHORT) (CON.SBI.dwSize.Y - 1);
+    CON.save_region.Right = (SHORT) (CON.SBI.dwSize.X - 1);
 
-		T(("... reading console window %dx%d into %d,%d - %d,%d at %d,%d",
-		   bufferSize.Y, bufferSize.X,
-		   readRegion.Top,
-		   readRegion.Left,
-		   readRegion.Bottom,
-		   readRegion.Right,
-		   bufferCoord.Y,
-		   bufferCoord.X));
+    if (read_screen_data()) {
+	result = TRUE;
+    } else {
 
-		if (ReadConsoleOutput(CON.hdl,
-				      CON.save_screen,
-				      bufferSize,
-				      bufferCoord,
-				      &readRegion)) {
-		    result = TRUE;
-		    CON.window_only = TRUE;
-		} else {
-		    T((" error %#lx", (unsigned long) GetLastError()));
-		}
-	    }
+	CON.save_region.Top = CON.SBI.srWindow.Top;
+	CON.save_region.Left = CON.SBI.srWindow.Left;
+	CON.save_region.Bottom = CON.SBI.srWindow.Bottom;
+	CON.save_region.Right = CON.SBI.srWindow.Right;
+
+	CON.window_only = TRUE;
+
+	if (read_screen_data()) {
+	    result = TRUE;
 	}
     }
 
@@ -1208,11 +1275,11 @@ tdiff(FILETIME fstart, FILETIME fend)
 static int
 Adjust(int milliseconds, int diff)
 {
-    if (milliseconds == INFINITY)
-	return milliseconds;
-    milliseconds -= diff;
-    if (milliseconds < 0)
-	milliseconds = 0;
+    if (milliseconds != INFINITY) {
+	milliseconds -= diff;
+	if (milliseconds < 0)
+	    milliseconds = 0;
+    }
     return milliseconds;
 }
 
@@ -1641,17 +1708,21 @@ _ismintty(int fd, LPHANDLE pMinTTY)
 #endif
 
 /*   Borrowed from ansicon project.
-     Check wether or not a I/O handle is associated with
+     Check whether or not an I/O handle is associated with
      a Windows console.
 */
 static BOOL
 IsConsoleHandle(HANDLE hdl)
 {
     DWORD dwFlag = 0;
+    BOOL result;
+
     if (!GetConsoleMode(hdl, &dwFlag)) {
-	return (int) WriteConsoleA(hdl, NULL, 0, &dwFlag, NULL);
+	result = (int) WriteConsoleA(hdl, NULL, 0, &dwFlag, NULL);
+    } else {
+	result = (int) (dwFlag & ENABLE_PROCESSED_OUTPUT);
     }
-    return (int) (dwFlag & ENABLE_PROCESSED_OUTPUT);
+    return result;
 }
 
 /*   Our replacement for the systems _isatty to include also
@@ -1661,13 +1732,16 @@ IsConsoleHandle(HANDLE hdl)
 int
 _nc_mingw_isatty(int fd)
 {
-    if (_isatty(fd))
-	return 1;
-#if WINVER < 0x0600
-    return 0;
-#else
-    return _ismintty(fd, NULL);
+    int result = 0;
+
+    if (_isatty(fd)) {
+	result = 1;
+    } else {
+#if WINVER >= 0x0600
+	result = _ismintty(fd, NULL);
 #endif
+    }
+    return result;
 }
 
 /*   This is used when running in terminfo mode to discover,
@@ -1693,15 +1767,15 @@ _nc_mingw_isconsole(int fd)
     SCREEN *sp;                                               \
     TERMINAL *term = 0;                                       \
     int code = ERR;                                           \
-    if (_nc_screen_chain==0)                                  \
-      return 0;                                               \
+    if (_nc_screen_chain == 0)                                \
+        return 0;                                             \
     for (each_screen(sp)) {                                   \
-        if (sp->_term && sp->_term->Filedes==fd) {            \
-	    term = sp->_term;                                 \
-	    break;                                            \
+        if (sp->_term && (sp->_term->Filedes == fd)) {        \
+            term = sp->_term;                                 \
+            break;                                            \
         }                                                     \
     }                                                         \
-    assert(term!=0)
+    assert(term != 0)
 
 int
 _nc_mingw_tcsetattr(
@@ -1855,6 +1929,7 @@ __attribute__((constructor))
 	BOOL buffered = TRUE;
 	BOOL b;
 
+	START_TRACE();
 	if (_nc_mingw_isatty(0)) {
 	    CON.isMinTTY = TRUE;
 	}
@@ -1896,9 +1971,11 @@ __attribute__((constructor))
 	    b = AttachConsole(ATTACH_PARENT_PROCESS);
 
 	if (getenv("NCGDB") || getenv("NCURSES_CONSOLE2")) {
-	    CON.hdl = CON.out;
+	    T(("... will not buffer console"));
 	    buffered = FALSE;
+	    CON.hdl = CON.out;
 	} else {
+	    T(("... creating console buffer"));
 	    CON.hdl = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE,
 						0,
 						NULL,

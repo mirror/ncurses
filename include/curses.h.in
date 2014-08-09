@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.240 2014/08/02 16:01:30 tom Exp $ */
+/* $Id: curses.h.in,v 1.241 2014/08/09 20:39:44 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -74,12 +74,6 @@
  * NCURSES_ATTR_T is used to quiet compiler warnings when building ncurses
  * configured using --disable-macros.
  */
-#ifdef NCURSES_NOMACROS
-#ifndef NCURSES_ATTR_T
-#define NCURSES_ATTR_T attr_t
-#endif
-#endif /* NCURSES_NOMACROS */
-
 #ifndef NCURSES_ATTR_T
 #define NCURSES_ATTR_T int
 #endif

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2010,2011 Free Software Foundation, Inc.                   *
+  * Copyright (c) 2010-2011,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: MKada_config.in,v 1.5 2011/03/26 14:44:51 tom Exp @
+  * @Id: MKada_config.in,v 1.8 2014/06/07 19:32:52 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -78,12 +78,66 @@
        <STRONG>--help</STRONG> prints a  list  of  the  <STRONG>adacurses-config</STRONG>  script's
               options.
 
+       If  no options are given, <STRONG>adacurses-config</STRONG> prints the com-
+       bination of <STRONG>--cflags</STRONG> and <STRONG>--libs</STRONG> that <STRONG>gnatmake</STRONG> expects (see
+       example).
+
+
+</PRE>
+<H2>EXAMPLE</H2><PRE>
+       For example, supposing that you want to compile the "Hello
+       World!"   program  for  AdaCurses.   Make  a  file   named
+       "hello.adb":
+              with Terminal_Interface.Curses; use Terminal_Interface.Curses;
+
+              procedure Hello is
+
+                 Visibility : Cursor_Visibility := Invisible;
+                 done : Boolean := False;
+                 c : Key_Code;
+
+              begin
+
+                 Init_Screen;
+                 Set_Echo_Mode (False);
+
+                 Set_Cursor_Visibility (Visibility);
+                 Set_Timeout_Mode (Standard_Window, Non_Blocking, 0);
+
+                 Move_Cursor (Line =&gt; Lines / 2, Column =&gt; (Columns - 12) / 2);
+                 Add (Str =&gt; "Hello World!");
+
+                 while not done loop
+
+                    c := Get_Keystroke (Standard_Window);
+                    case c is
+                    when Character'Pos ('q') =&gt; done := True;
+                    when others =&gt; null;
+                    end case;
+
+                    Nap_Milli_Seconds (50);
+
+                 end loop;
+
+                 End_Windows;
+
+              end Hello;
+
+       Then, using
+              gnatmake  `adacurses-config  --cflags` hello -largs
+              `adacurses-config --libs`
+
+       or (simpler):
+              gnatmake hello `adacurses-config`
+
+       you will compile and link the program.
+
 
 </PRE>
 <H2>SEE ALSO</H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20140524).
+       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20140809).
 
 
 

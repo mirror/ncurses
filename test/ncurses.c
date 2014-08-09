@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.414 2014/08/02 23:10:26 tom Exp $
+$Id: ncurses.c,v 1.415 2014/08/09 22:28:42 tom Exp $
 
 ***************************************************************************/
 
@@ -2235,13 +2235,13 @@ color_test(void)
 		NCURSES_COLOR_T bg = InxToBG(i);
 
 		init_pair(pair, fg, bg);
-		attron((attr_t) COLOR_PAIR(pair));
+		attron(COLOR_PAIR(pair));
 		if (opt_acsc)
-		    attron((attr_t) A_ALTCHARSET);
+		    attron(A_ALTCHARSET);
 		if (opt_bold)
-		    attron((attr_t) A_BOLD);
+		    attron(A_BOLD);
 		if (opt_revs)
-		    attron((attr_t) A_REVERSE);
+		    attron(A_REVERSE);
 
 		if (opt_nums) {
 		    sprintf(numbered, "{%02X}", (int) i);
@@ -2446,11 +2446,11 @@ wide_color_test(void)
 		init_pair(pair, InxToFG(i), InxToBG(i));
 		(void) color_set(pair, NULL);
 		if (opt_acsc)
-		    attr_on((attr_t) A_ALTCHARSET, NULL);
+		    attr_on(A_ALTCHARSET, NULL);
 		if (opt_bold)
-		    attr_on((attr_t) A_BOLD, NULL);
+		    attr_on(A_BOLD, NULL);
 		if (opt_revs)
-		    attr_on((attr_t) A_REVERSE, NULL);
+		    attr_on(A_REVERSE, NULL);
 
 		if (opt_nums) {
 		    sprintf(numbered, "{%02X}", i);

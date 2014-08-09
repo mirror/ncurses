@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.117 2014/05/24 20:29:27 tom Exp @
+  * @Id: ncurses.3x,v 1.119 2014/08/09 20:54:30 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -63,7 +63,7 @@
        sonable optimization.  This implementation is "new curses"
        (ncurses) and is the approved replacement for 4.4BSD clas-
        sic  curses,  which has been discontinued.  This describes
-       <STRONG>ncurses</STRONG> version 5.9 (patch 20140524).
+       <STRONG>ncurses</STRONG> version 5.9 (patch 20140809).
 
        The <STRONG>ncurses</STRONG> library emulates the curses library of  System
        V  Release  4  UNIX,  and  XPG4 (X/Open Portability Guide)
@@ -1040,6 +1040,22 @@
 
        TERM Denotes  your  terminal  type.  Each terminal type is
             distinct, though many are similar.
+
+            <STRONG>TERM</STRONG> is commonly set by terminal  emulators  to  help
+            applications  find  a  workable terminal description.
+            Some of those choose a popular  approximation,  e.g.,
+            "ansi",  "vt100",  "xterm"  rather than an exact fit.
+            Not infrequently, your application will have problems
+            with that approach, e.g., incorrect function-key def-
+            initions.
+
+            If you set <STRONG>TERM</STRONG> in your environment, it has no effect
+            on  the  operation of the terminal emulator.  It only
+            affects the way applications work within  the  termi-
+            nal.  Likewise, as a general rule (<STRONG>xterm</STRONG> being a rare
+            exception), terminal emulators  which  allow  you  to
+            specify <STRONG>TERM</STRONG> as a parameter or configuration value do
+            not change their behavior to match that setting.
 
        TERMCAP
             If the <STRONG>ncurses</STRONG> library has been configured with <EM>term-</EM>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey <dickey@clark.net> 1998
  *
- * $Id: filter.c,v 1.15 2012/06/09 20:30:32 tom Exp $
+ * $Id: filter.c,v 1.16 2014/08/09 22:35:51 tom Exp $
  */
 #include <test.priv.h>
 
@@ -48,7 +48,7 @@
  */
 
 static int
-new_command(char *buffer, int length, attr_t underline)
+new_command(char *buffer, int length, int underline)
 {
     int code;
 
@@ -99,7 +99,7 @@ main(int argc, char *argv[])
 {
     int ch;
     char buffer[80];
-    attr_t underline;
+    int underline;
     bool i_option = FALSE;
 
     setlocale(LC_ALL, "");
@@ -133,7 +133,7 @@ main(int argc, char *argv[])
 	    background = -1;
 #endif
 	init_pair(1, COLOR_CYAN, (short) background);
-	underline = (attr_t) COLOR_PAIR(1);
+	underline = COLOR_PAIR(1);
     } else {
 	underline = A_UNDERLINE;
     }

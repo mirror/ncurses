@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.62 2013/11/16 19:57:56 tom Exp $
+ * $Id: bs.c,v 1.63 2014/08/09 22:27:12 tom Exp $
  */
 
 #include <test.priv.h>
@@ -369,7 +369,7 @@ initgame(void)
 	MvAddCh(PYBASE + i, PXBASE - 3, (chtype) (i + 'A'));
 #ifdef A_COLOR
 	if (has_colors())
-	    attron((attr_t) COLOR_PAIR(COLOR_BLUE));
+	    attron(COLOR_PAIR(COLOR_BLUE));
 #endif /* A_COLOR */
 	(void) addch(' ');
 	for (j = 0; j < BWIDTH; j++)
@@ -387,7 +387,7 @@ initgame(void)
 	MvAddCh(CYBASE + i, CXBASE - 3, (chtype) (i + 'A'));
 #ifdef A_COLOR
 	if (has_colors())
-	    attron((attr_t) COLOR_PAIR(COLOR_BLUE));
+	    attron(COLOR_PAIR(COLOR_BLUE));
 #endif /* A_COLOR */
 	(void) addch(' ');
 	for (j = 0; j < BWIDTH; j++)
@@ -771,7 +771,7 @@ hitship(int x, int y)
 				    cgoto(y1, x1);
 #ifdef A_COLOR
 				    if (has_colors())
-					attron((attr_t) COLOR_PAIR(COLOR_GREEN));
+					attron(COLOR_PAIR(COLOR_GREEN));
 #endif /* A_COLOR */
 				    (void) addch(MARK_MISS);
 #ifdef A_COLOR
@@ -797,7 +797,7 @@ hitship(int x, int y)
 			pgoto(y1, x1);
 #ifdef A_COLOR
 			if (has_colors())
-			    attron((attr_t) COLOR_PAIR(COLOR_RED));
+			    attron(COLOR_PAIR(COLOR_RED));
 #endif /* A_COLOR */
 			(void) addch(SHOWHIT);
 #ifdef A_COLOR
@@ -836,9 +836,9 @@ plyturn(void)
 #ifdef A_COLOR
     if (has_colors()) {
 	if (hit)
-	    attron((attr_t) COLOR_PAIR(COLOR_RED));
+	    attron(COLOR_PAIR(COLOR_RED));
 	else
-	    attron((attr_t) COLOR_PAIR(COLOR_GREEN));
+	    attron(COLOR_PAIR(COLOR_GREEN));
     }
 #endif /* A_COLOR */
     (void) addch((chtype) hits[PLAYER][curx][cury]);
@@ -969,9 +969,9 @@ cpufire(int x, int y)
 #ifdef A_COLOR
     if (has_colors()) {
 	if (hit)
-	    attron((attr_t) COLOR_PAIR(COLOR_RED));
+	    attron(COLOR_PAIR(COLOR_RED));
 	else
-	    attron((attr_t) COLOR_PAIR(COLOR_GREEN));
+	    attron(COLOR_PAIR(COLOR_GREEN));
     }
 #endif /* A_COLOR */
     (void) addch((chtype) (hit ? SHOWHIT : SHOWSPLASH));

@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.41 2014/08/02 16:36:20 tom Exp $
+ * $Id: gdc.c,v 1.42 2014/08/09 22:28:42 tom Exp $
  */
 
 #include <test.priv.h>
@@ -121,13 +121,13 @@ standt(int on)
 {
     if (on) {
 	if (hascolor) {
-	    attron((attr_t) COLOR_PAIR(PAIR_DIGITS));
+	    attron(COLOR_PAIR(PAIR_DIGITS));
 	} else {
 	    attron(A_STANDOUT);
 	}
     } else {
 	if (hascolor) {
-	    attron((attr_t) COLOR_PAIR(PAIR_OTHERS));
+	    attron(COLOR_PAIR(PAIR_OTHERS));
 	} else {
 	    attroff(A_STANDOUT);
 	}
