@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2014 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu.3x,v 1.21 2010/12/04 18:40:45 tom Exp $
+.\" $Id: menu.3x,v 1.22 2014/08/16 20:32:08 tom Exp $
 .TH menu 3X ""
 .SH NAME
 \fBmenu\fR \- curses extension for programming menus
@@ -166,9 +166,6 @@ System error occurred (see \fBerrno\fR).
 .TP 5
 .B E_UNKNOWN_COMMAND
 The menu driver code saw an unknown request code.
-.SH SEE ALSO
-\fBcurses\fR(3X) and related pages whose names begin "menu_" for detailed
-descriptions of the entry points.
 .SH NOTES
 The header file \fB<menu.h>\fR automatically includes the header files
 \fB<curses.h>\fR and \fB<eti.h>\fR.
@@ -183,5 +180,8 @@ Version 7 or BSD versions.
 Juergen Pfeifer.  Manual pages and adaptation for ncurses by Eric
 S. Raymond.
 .SH SEE ALSO
+\fBcurses\fR(3X) and related pages whose names begin "menu_" for detailed
+descriptions of the entry points.
+.PP
 This describes \fBncurses\fR
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.415 2014/08/09 22:28:42 tom Exp $
+$Id: ncurses.c,v 1.416 2014/08/16 23:30:20 tom Exp $
 
 ***************************************************************************/
 
@@ -1640,6 +1640,7 @@ attr_test(void)
 			beep();
 		    } else {
 			extras |= (chtype) COLOR_PAIR(pair);
+			normal &= ~A_COLOR;
 		    }
 		}
 	    }
@@ -1653,6 +1654,7 @@ attr_test(void)
 	    for (j = 0; j < my_size; ++j) {
 		bool arrow = (j == k);
 		row = show_attr(my_wins[j], row, n, arrow,
+				normal |
 				extras |
 				my_list[j].attr |
 				my_list[k].attr,
