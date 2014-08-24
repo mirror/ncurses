@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.279 2014/07/12 23:16:30 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.280 2014/08/23 19:25:18 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -628,6 +628,7 @@ PutRange(NCURSES_SP_DCLx
 	 int first, int last)
 {
     int i, j, same;
+    int rc;
 
     TR(TRACE_CHARPUT, ("PutRange(%p, %p, %p, %d, %d, %d)",
 		       (void *) SP_PARM,
@@ -655,9 +656,11 @@ PutRange(NCURSES_SP_DCLx
 	 * Always return 1 for the next GoTo() after a PutRange() if we found
 	 * identical characters at end of interval
 	 */
-	return (same == 0 ? i : 1);
+	rc = (same == 0 ? i : 1);
+    } else {
+	rc = EmitRange(NCURSES_SP_ARGx ntext + first, last - first + 1);
     }
-    return EmitRange(NCURSES_SP_ARGx ntext + first, last - first + 1);
+    return rc;
 }
 
 /* leave unbracketed here so 'indent' works */
@@ -1492,9 +1495,17 @@ TransformLine(NCURSES_SP_DCLx int const lineno)
 	    if (oLastChar < nLastChar) {
 		int m = max(nLastNonblank, oLastNonblank);
 #if USE_WIDEC_SUPPORT
-		while (isWidecExt(newLine[n + 1]) && n) {
-		    --n;
-		    --oLastChar;
+		if (n) {
+		    while (isWidecExt(newLine[n + 1]) && n) {
+			--n;
+			--oLastChar;	/* increase cost */
+		    }
+		} else if (n >= firstChar &&
+			   isWidecBase(newLine[n])) {
+		    while (isWidecExt(newLine[n + 1])) {
+			++n;
+			++oLastChar;	/* decrease cost */
+		    }
 		}
 #endif
 		GoTo(NCURSES_SP_ARGx lineno, n + 1);
@@ -1514,8 +1525,9 @@ TransformLine(NCURSES_SP_DCLx int const lineno)
 		if (DelCharCost(SP_PARM, oLastChar - nLastChar)
 		    > SP_PARM->_el_cost + nLastNonblank - (n + 1)) {
 		    if (PutRange(NCURSES_SP_ARGx oldLine, newLine, lineno,
-				 n + 1, nLastNonblank))
-			  GoTo(NCURSES_SP_ARGx lineno, nLastNonblank + 1);
+				 n + 1, nLastNonblank)) {
+			GoTo(NCURSES_SP_ARGx lineno, nLastNonblank + 1);
+		    }
 		    ClrToEOL(NCURSES_SP_ARGx blank, FALSE);
 		} else {
 		    /*
