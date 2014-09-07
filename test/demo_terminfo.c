@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.34 2014/08/31 23:11:39 tom Exp $
+ * $Id: demo_terminfo.c,v 1.37 2014/09/05 08:44:49 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -306,6 +306,12 @@ abcdefghijklmnopqrstuvwxyz_";
     del_curterm(cur_term);
 }
 
+#if USE_CODE_LISTS
+#define fullname(type,n) f_opt ? type##fnames[n] : my_##type##codes[n]
+#else
+#define fullname(type,n) my_##type##codes[n]
+#endif
+
 static void
 demo_terminfo(char *name)
 {
@@ -321,7 +327,7 @@ demo_terminfo(char *name)
 
     if (b_opt) {
 	for (n = 0;; ++n) {
-	    cap = f_opt ? boolfnames[n] : my_boolcodes[n];
+	    cap = fullname(bool, n);
 	    if (cap == 0)
 		break;
 	    dumpit(cap);
@@ -330,7 +336,7 @@ demo_terminfo(char *name)
 
     if (n_opt) {
 	for (n = 0;; ++n) {
-	    cap = f_opt ? numfnames[n] : my_numcodes[n];
+	    cap = fullname(num, n);
 	    if (cap == 0)
 		break;
 	    dumpit(cap);
@@ -339,7 +345,7 @@ demo_terminfo(char *name)
 
     if (s_opt) {
 	for (n = 0;; ++n) {
-	    cap = f_opt ? strfnames[n] : my_strcodes[n];
+	    cap = fullname(str, n);
 	    if (cap == 0)
 		break;
 	    dumpit(cap);
@@ -411,6 +417,8 @@ typedef enum {
 static void
 parse_description(const char *input_name)
 {
+    static char empty[1];
+
     FILE *fp;
     struct stat sb;
     size_t count_bools = 0;
@@ -628,10 +636,10 @@ parse_description(const char *input_name)
 			 * known order.
 			 */
 			if (count_strs) {
-			    my_strvalues[count_strs] = "";
+			    my_strvalues[count_strs] = empty;
 			    my_strcodes[count_strs++] = &my_blob[j];
 			} else if (count_nums) {
-			    my_numvalues[count_nums] = "";
+			    my_numvalues[count_nums] = empty;
 			    my_numcodes[count_nums++] = &my_blob[j];
 			} else {
 			    my_boolcodes[count_bools++] = &my_blob[j];
@@ -706,7 +714,7 @@ copy_code_list(NCURSES_CONST char *const *list)
 {
     int pass;
     size_t count;
-    size_t length = 0;
+    size_t length = 1;
     char **result = 0;
     char *blob = 0;
     char *unused = 0;
@@ -825,7 +833,7 @@ main(int argc, char *argv[])
 	}
     }
 
-#if NCURSES_XNAMES
+#if HAVE_USE_EXTENDED_NAMES
     use_extended_names(x_opt);
 #endif
 

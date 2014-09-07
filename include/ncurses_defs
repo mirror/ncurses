@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.65 2014/07/19 23:15:24 tom Exp $
+# $Id: ncurses_defs,v 1.66 2014/09/05 08:46:16 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -166,6 +166,7 @@ HAVE_UNISTD_H
 HAVE_UNLINK
 HAVE_USE_DEFAULT_COLORS
 HAVE_USE_ENV	1
+HAVE_USE_EXTENDED_NAMES
 HAVE_USE_SCREEN
 HAVE_USE_WINDOW
 HAVE_VFSCANF

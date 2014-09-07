@@ -3,7 +3,7 @@
 Summary: shared libraries for terminal handling
 Name: mingw32-ncurses6
 Version: 5.9
-Release: 20140831
+Release: 20140906
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz

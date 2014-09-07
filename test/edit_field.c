@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: edit_field.c,v 1.23 2014/07/26 08:30:51 tom Exp $
+ * $Id: edit_field.c,v 1.24 2014/09/05 08:39:52 tom Exp $
  *
  * A wrapper for form_driver() which keeps track of the user's editing changes
  * for each field, and makes the resulting length available as a
@@ -389,7 +389,7 @@ edit_field(FORM * form, int *result)
 	    length = before_off;
 	    break;
 	case REQ_CLR_EOL:
-	    if (before_row + 1 == before->rows)
+	    if ((int) (before_row + 1) == (int) (before->rows))
 		length = before_off;
 	    break;
 	case REQ_CLR_FIELD:

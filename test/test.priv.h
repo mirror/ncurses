@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.128 2014/08/02 23:40:53 tom Exp $ */
+/* $Id: test.priv.h,v 1.130 2014/09/05 08:45:09 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -228,6 +228,10 @@
 
 #ifndef HAVE_USE_ENV
 #define HAVE_USE_ENV 0
+#endif
+
+#ifndef HAVE_USE_EXTENDED_NAMES
+#define HAVE_USE_EXTENDED_NAMES 0
 #endif
 
 #ifndef HAVE_USE_SCREEN
@@ -663,9 +667,9 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #define ExitProgram(code) _nc_free_tinfo(code)
 #endif
 #else
-#define typeMalloc(type,n) (type *) malloc((n) * sizeof(type))
-#define typeCalloc(type,elts) (type *) calloc((elts), sizeof(type))
-#define typeRealloc(type,n,p) (type *) realloc(p, (n) * sizeof(type))
+#define typeMalloc(type,n) (type *) malloc((size_t)(n) * sizeof(type))
+#define typeCalloc(type,elts) (type *) calloc((size_t)(elts), sizeof(type))
+#define typeRealloc(type,n,p) (type *) realloc(p, (size_t)(n) * sizeof(type))
 #endif
 
 #ifndef ExitProgram

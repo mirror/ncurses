@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.48 2012/12/09 01:01:19 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.49 2014/09/04 09:36:20 tom Exp $")
 
 /*
  * Set the window's background information.
@@ -127,7 +127,7 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 	NCURSES_CH_T old_bkgrnd;
 
 	memset(&old_bkgrnd, 0, sizeof(old_bkgrnd));
-	wgetbkgrnd(win, &old_bkgrnd);
+	(void) wgetbkgrnd(win, &old_bkgrnd);
 
 	(void) wbkgrndset(win, CHREF(new_bkgd));
 	(void) wattrset(win, (int) AttrOf(win->_nc_bkgd));

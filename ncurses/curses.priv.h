@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.538 2014/07/12 20:06:11 tom Exp $
+ * $Id: curses.priv.h,v 1.539 2014/09/04 22:52:07 tom Exp $
  *
  *	curses.priv.h
  *
@@ -314,7 +314,7 @@ typedef TRIES {
 #undef _XOPEN_SOURCE_EXTENDED
 #undef _XPG5
 #define _nc_bkgd    _bkgd
-#define wgetbkgrnd(win, wch)	*wch = win->_bkgd
+#define wgetbkgrnd(win, wch)	((*wch = win->_bkgd) != 0 ? OK : ERR)
 #define wbkgrnd	    wbkgd
 #endif
 
