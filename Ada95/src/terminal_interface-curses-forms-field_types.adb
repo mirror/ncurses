@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.27 $
---  $Date: 2014/05/24 21:31:05 $
+--  $Revision: 1.28 $
+--  $Date: 2014/09/13 19:00:47 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Terminal_Interface.Curses.Aux; use Terminal_Interface.Curses.Aux;
@@ -76,9 +76,10 @@ package body Terminal_Interface.Curses.Forms.Field_Types is
          return null;
       else
          if Low_Level = M_Builtin_Router or else
-           Low_Level = M_Generic_Type or else
-           Low_Level = M_Choice_Router or else
-           Low_Level = M_Generic_Choice then
+            Low_Level = M_Generic_Type or else
+            Low_Level = M_Choice_Router or else
+            Low_Level = M_Generic_Choice
+         then
             Arg := Argument_Access
          (Argument_Conversions.To_Pointer (Get_Arg (Fld)));
             if Arg = null then

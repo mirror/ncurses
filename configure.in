@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.583 2014/08/02 20:35:31 tom Exp $
+dnl $Id: configure.in,v 1.584 2014/09/14 00:21:22 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.583 $)
+AC_REVISION($Revision: 1.584 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -92,6 +92,37 @@ else
 		cf_with_cxx=no; CXX=""; GXX="";])dnl
 	AC_PROG_CXX
 	popdef([AC_MSG_ERROR])dnl
+
+	AC_LANG_PUSH(C++)
+	if test "x$cf_with_cxx" != xno
+	then
+		# Several of the C++ configurations do not work, particularly when
+		# cross-compiling (20140913 -TD)
+		AC_MSG_CHECKING(if $CXX works)
+
+		save_CPPFLAGS="$CPPFLAGS"
+		eval cf_includedir=${includedir}
+		CPPFLAGS="$CPPFLAGS -I${cf_includedir}"
+		AC_TRY_COMPILE([
+#include <stdlib.h>
+#include <stdio.h>
+],
+		[
+		printf("Hello world!\n")
+		],
+		[cf_cxx_works=yes],
+		[cf_cxx_works=no])
+		CPPFLAGS="$save_CPPFLAGS"
+
+		AC_MSG_RESULT($cf_cxx_works)
+		if test "x$cf_cxx_works" = xno
+		then
+			AC_MSG_WARN([Ignore $CXX, since it cannot compile hello-world.])
+			cf_with_cxx=no; CXX=""; GXX="";
+		fi
+	fi
+	AC_LANG_POP
+
 	# autoconf 2.5x removed the error (hardcoding it to g++, or just blank)
 	if test "$CXX" = "g++" ; then
 		AC_PATH_PROG(CXX,g++)

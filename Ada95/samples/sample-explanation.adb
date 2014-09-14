@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control
---  $Revision: 1.26 $
---  $Date: 2011/03/26 22:33:29 $
+--  $Revision: 1.27 $
+--  $Date: 2014/09/13 19:10:18 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  Poor mans help system. This scans a sequential file for key lines and
@@ -321,8 +321,10 @@ package body Sample.Explanation is
       Outer :
       loop
          exit Outer when not Next_Line;
-         if Last = (1 + Key'Length) and then Key = Buffer (2 .. Last)
-           and then Buffer (1) = '#' then
+         if Last = (1 + Key'Length)
+           and then Key = Buffer (2 .. Last)
+           and then Buffer (1) = '#'
+         then
             loop
                exit when not Next_Line;
                exit when Buffer (1) = '#';

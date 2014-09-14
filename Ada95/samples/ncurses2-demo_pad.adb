@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2008,2011 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2011,2014 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.8 $
---  $Date: 2011/03/23 00:44:12 $
+--  $Revision: 1.9 $
+--  $Date: 2014/09/13 19:10:18 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -437,7 +437,8 @@ procedure ncurses2.demo_pad is
                --  pan rightwards
                --  if (basex + portx - (pymax > porty) < pxmax)
                if basex + portx -
-                   Column_Position (greater (pymax, porty)) < pxmax then
+                   Column_Position (greater (pymax, porty)) < pxmax
+               then
                   --  if basex + portx  < pxmax or
                   --      (pymax > porty and basex + portx - 1 < pxmax) then
                   basex := basex + 1;
@@ -457,7 +458,8 @@ procedure ncurses2.demo_pad is
                --  pan downwards
                --  same as if (basey + porty - (pxmax > portx) < pymax)
                if basey + porty -
-                   Line_Position (greater (pxmax, portx)) < pymax then
+                   Line_Position (greater (pxmax, portx)) < pymax
+               then
                   --  if (basey + porty  < pymax) or
                   --      (pxmax > portx and basey + porty - 1 < pymax) then
                   basey := basey + 1;
