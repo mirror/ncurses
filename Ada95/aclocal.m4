@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.91 2014/08/02 22:40:45 tom Exp $
+dnl $Id: aclocal.m4,v 1.92 2014/09/20 21:09:49 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1559,25 +1559,12 @@ AC_DEFUN([CF_HELP_MESSAGE],
 [AC_DIVERT_HELP([$1])dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_INCLUDE_DIRS version: 9 updated: 2014/07/26 18:54:28
+dnl CF_INCLUDE_DIRS version: 10 updated: 2014/09/19 20:58:42
 dnl ---------------
 dnl Construct the list of include-options according to whether we're building
-dnl in the source directory or using '--srcdir=DIR' option.  If we're building
-dnl with gcc, don't append the includedir if it happens to be /usr/include,
-dnl since that usually breaks gcc's shadow-includes.
+dnl in the source directory or using '--srcdir=DIR' option.
 AC_DEFUN([CF_INCLUDE_DIRS],
 [
-if test "$GCC" != yes; then
-	CPPFLAGS="-I\${includedir} $CPPFLAGS"
-elif test "$includedir" != "/usr/include"; then
-	if test "$includedir" = '${prefix}/include' ; then
-		if test x$prefix != x/usr ; then
-			CPPFLAGS="-I\${includedir} $CPPFLAGS"
-		fi
-	else
-		CPPFLAGS="-I\${includedir} $CPPFLAGS"
-	fi
-fi
 if test "$srcdir" != "."; then
 	CPPFLAGS="-I\${srcdir}/../include $CPPFLAGS"
 fi
@@ -3728,7 +3715,7 @@ AC_ARG_WITH(system-type,
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 47 updated: 2014/07/23 17:11:49
+dnl CF_XOPEN_SOURCE version: 48 updated: 2014/09/01 12:29:14
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -3810,6 +3797,10 @@ sco*) #(vi
 solaris2.*) #(vi
 	cf_xopen_source="-D__EXTENSIONS__"
 	cf_cv_xopen_source=broken
+	;;
+sysv4.2uw2.*) # Novell/SCO UnixWare 2.x (tested on 2.1.2)
+	cf_XOPEN_SOURCE=
+	cf_POSIX_C_SOURCE=
 	;;
 *)
 	CF_TRY_XOPEN_SOURCE

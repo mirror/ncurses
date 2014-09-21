@@ -17,6 +17,7 @@ CC_NORMAL = -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 CC_STRICT = $(CC_NORMAL) -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wwrite-strings -ansi -pedantic
 
 TARGET    = x86_64-w64-mingw32
+MINGW_BIN = /usr/bin
 MINGW_TOP = /usr/$(TARGET)
 MINGW_TMP = $(CURDIR)/debian/mingw64-ncurses6
 
@@ -107,6 +108,13 @@ install-stamp: build-stamp
 	dh_installdirs
 
 	$(MAKE) install.libs DESTDIR=$(MINGW_TMP)
+
+	mkdir -p $(MINGW_TMP)$(MINGW_BIN)
+	for name in $(MINGW_TMP)$(MINGW_TOP)/bin/*-config; \
+	do \
+		base=`basename $$name`; \
+		ln -v $$name $(MINGW_TMP)$(MINGW_BIN)/$(TARGET)-$$base; \
+	done
 
 	touch install-stamp
 

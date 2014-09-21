@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2270 2014/09/13 23:18:55 tom Exp $
+-- $Id: NEWS,v 1.2275 2014/09/20 22:43:35 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140920
+	+ add ncurses*-config to bin-directory of sample package-scripts.
+	+ add check to ensure that getopt is available; this is a problem in
+	  some older cross-compiler environments.
+	+ expanded on the description of --disable-overwrite in INSTALL
+	  (prompted by reports by Joakim Tjernlund, Thomas Klausner).
+	  See Gentoo #522586 and NetBSD #49200 for examples.
+	  which relates to the clarified guidelines.
+	+ remove special logic from CF_INCLUDE_DIRS which adds the directory
+	  for the --includedir from the build (report by Joakim Tjernlund).
+	+ add case for Unixware to CF_XOPEN_SOURCE, from lynx changes.
+	+ update config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20140913
 	+ add a configure check to ignore some of the plethora of non-working

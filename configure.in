@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.584 2014/09/14 00:21:22 tom Exp $
+dnl $Id: configure.in,v 1.585 2014/09/20 20:42:49 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.584 $)
+AC_REVISION($Revision: 1.585 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1479,6 +1479,7 @@ AC_CHECK_FUNCS( \
 getcwd \
 getegid \
 geteuid \
+getopt \
 getttynam \
 issetugid \
 poll \
@@ -1497,6 +1498,12 @@ tcgetpgrp \
 times \
 vsnprintf \
 )
+
+if test "x$ac_cv_func_getopt" = xno &&
+   test "x$cf_with_progs$cf_with_tests" != xnono; then
+	AC_MSG_ERROR(getopt is required for building programs)
+fi
+
 if test "x$with_getcap" = "xyes" ; then
 	CF_CGETENT
 fi

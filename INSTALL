@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.172 2014/06/21 18:53:42 tom Exp $
+-- $Id: INSTALL,v 1.174 2014/09/20 00:51:37 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -389,6 +389,37 @@ SUMMARY OF CONFIGURE OPTIONS:
 	installed into a subdirectory, e.g., /usr/local/include/ncurses,
 	rather than the include directory.  This makes it simpler to avoid
 	compile-time conflicts with other versions of curses.h
+
+	Putting the header files into a subdirectory assumes that applications
+	will follow the (standard) practice of including the headers with
+	reference to the subdirectory name.  For instance, the normal ncurses
+	header would be included using
+
+		#include <ncurses/curses.h>
+		#include <ncurses/term.h>
+
+	while the ncursesw headers would be found this way:
+
+		#include <ncursesw/curses.h>
+		#include <ncursesw/term.h>
+
+	In either case (with or without the --disable-overwrite option),
+	almost all applications are designed to include a related set of
+	curses header files from the same directory.
+
+	Manipulating the --includedir configure option to put header files
+	directly in a subdirectory of the normal include-directory defeats
+	this, and breaks builds of portable applications.  Likewise, putting
+	some headers in /usr/include, and others in a subdirectory is a good
+	way to break builds.
+
+	When configured with --disable-overwrite, the installed header files'
+	embedded #include's are adjusted to use the same style of includes
+	noted above.  In particular, the unctrl.h header is included from
+	curses.h, which means that a makefile which tells the compiler to
+	include directly from the subdirectory will fail to compile correctly.
+	Without some special effort, it will either fail to compile at all,
+	or the compiler may find a different unctrl.h file.
 
     --disable-relink
 	If --enable-rpath is given, the generated makefiles normally will
@@ -841,7 +872,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 		--with-hashed-db=/usr/local/BigBase
 	to find the corresponding include- and lib-directories under the
 	given directory.  Alternatively, you can specify a directory leaf
-	name, e.g., 
+	name, e.g.,
 		--with-hashed-db=db4
 	to make the configure script look for files in a subdirectory such as
 		/usr/include/db4/db.h
@@ -988,7 +1019,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 	For example, it may prevent you from running  the build tree's
 	copy of tic (for installing the terminfo database) because it
 	loads the system's copy of the ncurses shared libraries.
-	
+
 	In that case, using the misc/shlib script may be helpful, since it
 	sets $LD_LIBRARY_PATH to point to the build tree, e.g.,
 

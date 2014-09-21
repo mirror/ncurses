@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.116 2014/09/05 08:43:30 tom Exp $
+dnl $Id: configure.in,v 1.117 2014/09/20 21:03:23 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -175,8 +175,13 @@ unistd.h \
 CF_GETOPT_HEADER
 
 AC_CHECK_FUNCS( \
+getopt \
 gettimeofday \
 )
+
+if test "x$ac_cv_func_getopt" = xno; then
+	AC_MSG_ERROR(getopt is required for building programs)
+fi
 
 if test "$cf_enable_widec" = yes; then
 AC_CHECK_FUNCS( \
