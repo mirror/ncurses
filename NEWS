@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2275 2014/09/20 22:43:35 tom Exp $
+-- $Id: NEWS,v 1.2281 2014/09/27 22:15:56 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20140927
+	+ implement curs_set in win_driver.c
+	+ implement flash in win_driver.c
+	+ fix an infinite loop in win_driver.c if the command-window loses
+	  focus.
+	+ improve the non-buffered mode, i.e., NCURSES_CONSOLE2, of
+	  win_driver.c by temporarily changing the buffer-size to match the
+	  window-size to eliminate the scrollback.  Also enforce a minimum
+	  screen-size of 24x80 in the non-buffered mode.
+	+ modify generated misc/Makefile to suppress install.data from the
+	  dependencies if the --disable-db-install option is used, compensating
+	  for the top-level makefile changes used to add ncurses*-config in the
+	  20140920 changes (report by Steven Honeyman).
 
 20140920
 	+ add ncurses*-config to bin-directory of sample package-scripts.
@@ -156,7 +170,7 @@ it is not possible to add this information.
 	+ add test/dots_curses.c, for comparison with the low-level examples.
 
 20140614
-	+ fix dereference before null check found by Coverity in tic.c 
+	+ fix dereference before null check found by Coverity in tic.c
 	  (cf: 20140524).
 	+ fix sign-extension bug in read_entry.c which prevented "toe" from
 	  reading empty "screen+italics" entry.

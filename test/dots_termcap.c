@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.7 2013/09/28 21:50:35 tom Exp $
+ * $Id: dots_termcap.c,v 1.8 2014/09/25 09:00:56 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -154,7 +154,7 @@ static void
 my_napms(int ms)
 {
 #if defined(__MINGW32__) || !HAVE_GETTIMEOFDAY
-    Sleep(ms);
+    Sleep((DWORD) ms);
 #else
     struct timeval data;
     data.tv_sec = 0;

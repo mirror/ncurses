@@ -46,7 +46,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_options.c,v 1.77 2014/03/08 20:32:59 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.78 2014/09/27 21:55:24 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
@@ -196,11 +196,13 @@ NCURSES_SP_NAME(curs_set) (NCURSES_SP_DCLx int vis)
 
     if (SP_PARM != 0 && vis >= 0 && vis <= 2) {
 	int cursor = SP_PARM->_cursor;
-	bool bBuiltIn = !IsTermInfo(SP_PARM);
 	if (vis == cursor) {
 	    code = cursor;
 	} else {
-	    if (!bBuiltIn) {
+#ifdef USE_TERM_DRIVER
+	    code = CallDriver_1(SP_PARM, td_cursorSet, vis);
+#else
+	    if (IsTermInfo(SP_PARM)) {
 		switch (vis) {
 		case 2:
 		    code = NCURSES_PUTP2_FLUSH("cursor_visible",
@@ -215,8 +217,10 @@ NCURSES_SP_NAME(curs_set) (NCURSES_SP_DCLx int vis)
 					       cursor_invisible);
 		    break;
 		}
-	    } else
+	    } else {
 		code = ERR;
+	    }
+#endif
 	    if (code != ERR)
 		code = (cursor == -1 ? 1 : cursor);
 	    SP_PARM->_cursor = vis;

@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.114 2014/07/26 20:46:51 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.115 2014/09/25 21:55:24 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4924,7 +4924,7 @@ _nc_Widen_String(char *source, int *lengthp)
 	    {
 	      if (pass)
 		{
-		  result[need] = source[passed];
+		  result[need] = (wchar_t)source[passed];
 		}
 	      ++need;
 	      ++passed;

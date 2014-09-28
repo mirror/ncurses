@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.539 2014/09/04 22:52:07 tom Exp $
+ * $Id: curses.priv.h,v 1.540 2014/09/27 21:44:28 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2272,6 +2272,7 @@ typedef struct term_driver {
     int    (*td_kpad)(struct DriverTCB*, int);
     int    (*td_kyOk)(struct DriverTCB*, int, int);
     bool   (*td_kyExist)(struct DriverTCB*, int);
+    int    (*td_cursorSet)(struct DriverTCB*, int);
 } TERM_DRIVER;
 
 typedef struct DriverTCB

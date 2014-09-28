@@ -42,12 +42,12 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.43 2014/02/23 01:21:08 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.44 2014/09/25 08:51:13 tom Exp $")
 
 #define NUM_VISBUFS 4
 
 #define NormalLen(len) (size_t) (((size_t)(len) + 1) * 4)
-#define WideLen(len)   (size_t) (((size_t)(len) + 1) * 4 * MB_CUR_MAX)
+#define WideLen(len)   (size_t) (((size_t)(len) + 1) * 4 * (size_t) MB_CUR_MAX)
 
 #ifdef TRACE
 static const char d_quote[] = StringOf(D_QUOTE);
@@ -69,7 +69,7 @@ _nc_vischar(char *tp, unsigned c LIMIT_ARG)
     if (c == '"' || c == '\\') {
 	*tp++ = '\\';
 	*tp++ = (char) c;
-    } else if (is7bits((int)c) && (isgraph((int)c) || c == ' ')) {
+    } else if (is7bits((int) c) && (isgraph((int) c) || c == ' ')) {
 	*tp++ = (char) c;
     } else if (c == '\n') {
 	*tp++ = '\\';
