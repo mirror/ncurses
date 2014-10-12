@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.49 2014/08/02 23:11:57 tom Exp $
+ * $Id: demo_forms.c,v 1.50 2014/10/10 00:38:00 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -172,6 +172,7 @@ read_data(const char *filename)
 		failed("expected a colon");
 	    }
 	}
+	fclose(fp);
     } else {
 	failed(filename);
     }

@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.92 2014/05/23 00:33:45 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.93 2014/10/11 03:04:31 tom Exp $")
 
 /*
  *	char *
@@ -253,6 +253,9 @@ parse_format(const char *s, char *format, int *len)
 	    case 'x':		/* FALLTHRU */
 	    case 'X':		/* FALLTHRU */
 	    case 's':
+#ifdef EXP_XTERM_1005
+	    case 'u':
+#endif
 		*format++ = *s;
 		done = TRUE;
 		break;
@@ -372,6 +375,9 @@ _nc_tparm_analyze(const char *string, char *p_is_s[NUM_PARM], int *popcount)
 	    case 'x':		/* FALLTHRU */
 	    case 'X':		/* FALLTHRU */
 	    case 'c':		/* FALLTHRU */
+#ifdef EXP_XTERM_1005
+	    case 'u':
+#endif
 		if (lastpop <= 0)
 		    number++;
 		lastpop = -1;
@@ -567,6 +573,20 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
 		save_char(npop());
 		break;
 
+#ifdef EXP_XTERM_1005
+	    case 'u':
+		{
+		    unsigned char target[10];
+		    unsigned source = (unsigned) npop();
+		    int rc = _nc_conv_to_utf8(target, source, (unsigned)
+					      sizeof(target));
+		    int n;
+		    for (n = 0; n < rc; ++n) {
+			save_char(target[n]);
+		    }
+		}
+		break;
+#endif
 	    case 'l':
 		npush((int) strlen(spop()));
 		break;

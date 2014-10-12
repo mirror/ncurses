@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.416 2014/08/16 23:30:20 tom Exp $
+$Id: ncurses.c,v 1.417 2014/10/10 09:09:41 tom Exp $
 
 ***************************************************************************/
 
@@ -943,7 +943,7 @@ begin_getch_test(void)
     refresh();
 
 #ifdef NCURSES_MOUSE_VERSION
-    mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
+    mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, (mmask_t *) 0);
 #endif
 
     (void) printw("Delay in 10ths of a second (<CR> for blocking input)? ");

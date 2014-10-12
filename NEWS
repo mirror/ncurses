@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2281 2014/09/27 22:15:56 tom Exp $
+-- $Id: NEWS,v 1.2287 2014/10/11 17:49:17 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20141011
+	+ add experimental support for xterm's 1005 mouse mode, to use in a
+	  demonstration of its limitations.
+	+ add experimental support for "%u" format to terminfo.
+	+ modify test/ncurses.c to also show position reports in 'a' test.
+	+ minor formatting fixes to _nc_trace_mmask_t, make this function
+	  exported to help with debugging mouse changes.
+	+ improve behavior of wheel-mice for xterm protocol, noting that there
+	  are only button-presses for buttons "4" and "5", so there is no need
+	  to wait to combine events into double-clicks (report/analysis by
+	  Greg Field).
+	+ provide examples xterm-1005 and xterm-1006 terminfo entries -TD
+	+ implement decoder for xterm SGR 1006 mouse mode.
 
 20140927
 	+ implement curs_set in win_driver.c

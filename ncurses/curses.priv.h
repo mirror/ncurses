@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.540 2014/09/27 21:44:28 tom Exp $
+ * $Id: curses.priv.h,v 1.544 2014/10/11 19:30:58 tom Exp $
  *
  *	curses.priv.h
  *
@@ -676,6 +676,14 @@ typedef enum {
 #endif
 } MouseType;
 
+typedef enum {
+    	MF_X10 = 0		/* conventional 3-byte format */
+	, MF_SGR1006		/* xterm private mode 1006, SGR-style */
+#ifdef EXP_XTERM_1005
+	, MF_XTERM_1005		/* xterm UTF-8 private mode 1005 */
+#endif
+} MouseFormat;
+
 /*
  * Structures for scrolling.
  */
@@ -1145,6 +1153,7 @@ struct screen {
 	mmask_t		_mouse_mask;	/* set via mousemask() */
 	mmask_t		_mouse_mask2;	/* OR's in press/release bits */
 	mmask_t		_mouse_bstate;
+	MouseFormat	_mouse_format;	/* type of xterm mouse protocol */
 	NCURSES_CONST char *_mouse_xtermcap; /* string to enable/disable mouse */
 	MEVENT		_mouse_events[EV_MAX];	/* hold the last mouse event seen */
 	MEVENT		*_mouse_eventp;	/* next free slot in event queue */
@@ -2004,6 +2013,7 @@ extern NCURSES_EXPORT(char *) _nc_trace_buf (int, size_t);
 extern NCURSES_EXPORT(char *) _nc_trace_bufcat (int, const char *);
 extern NCURSES_EXPORT(char *) _nc_tracechar (SCREEN *, int);
 extern NCURSES_EXPORT(char *) _nc_tracemouse (SCREEN *, MEVENT const *);
+extern NCURSES_EXPORT(char *) _nc_trace_mmask_t (SCREEN *, mmask_t);
 extern NCURSES_EXPORT(int) _nc_access (const char *, int);
 extern NCURSES_EXPORT(int) _nc_baudrate (int);
 extern NCURSES_EXPORT(int) _nc_freewin (WINDOW *);
@@ -2479,6 +2489,11 @@ extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_keyname (SCREEN *, int);
 extern NCURSES_EXPORT(int) _nc_ungetch (SCREEN *, int);
 extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *, chtype);
 
+#endif
+
+#ifdef EXP_XTERM_1005
+NCURSES_EXPORT(int) _nc_conv_to_utf8(unsigned char *, unsigned, unsigned);
+NCURSES_EXPORT(int) _nc_conv_to_utf32(unsigned *, const char *, unsigned);
 #endif
 
 #ifdef __cplusplus

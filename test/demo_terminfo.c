@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.37 2014/09/05 08:44:49 tom Exp $
+ * $Id: demo_terminfo.c,v 1.38 2014/10/10 00:35:28 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -453,6 +453,7 @@ parse_description(const char *input_name)
     if ((fp = fopen(input_name, "r")) == 0)
 	failed("cannot open input-file");
     len = fread(my_blob, sizeof(char), (size_t) sb.st_size, fp);
+    my_blob[sb.st_size] = '\0';
     fclose(fp);
 
     /*

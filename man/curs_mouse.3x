@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2013 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.39 2013/06/22 18:09:42 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.40 2014/10/10 09:31:18 tom Exp $
 .TH curs_mouse 3X ""
 .na
 .hy 0
@@ -135,7 +135,7 @@ REPORT_MOUSE_POSITION	report mouse movement
 _
 .TE
 .PP
-Once a class of mouse events have been made visible in a window,
+Once a class of mouse events has been made visible in a window,
 calling the \fBwgetch\fR function on that window may return
 \fBKEY_MOUSE\fR as an indicator that a mouse event has been queued.
 To read the event data and pop the event off the queue, call
@@ -283,10 +283,17 @@ corresponds to private mode 1000 of xterm:
 .RS
 \\E[?1000%?%p1%{1}%=%th%el%;
 .RE
+.PP
 The z member in the event structure is not presently used.
 It is intended
 for use with touch screens (which may be pressure-sensitive) or with
 3D-mice/trackballs/power gloves.
+.PP
+The \fBALL_MOUSE_EVENTS\fP class does not include \fBREPORT_MOUSE_POSITION\fP.
+They are distinct.
+For example, in xterm,
+wheel/scrolling mice send position reports as a sequence of
+presses of buttons 4 or 5 without matching button-releases.
 .SH BUGS
 Mouse events under xterm will not in fact be ignored during cooked mode,
 if they have been enabled by \fBmousemask\fR.
