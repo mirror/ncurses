@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: resizeterm.c,v 1.46 2014/03/08 20:32:59 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.47 2014/10/13 08:56:49 tom Exp $")
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
@@ -347,7 +347,7 @@ NCURSES_SP_NAME(resize_term) (NCURSES_SP_DCLx int ToLines, int ToCols)
        (SP_PARM == 0) ? -1 : screen_lines(SP_PARM),
        (SP_PARM == 0) ? -1 : screen_columns(SP_PARM)));
 
-    if (SP_PARM == 0) {
+    if (SP_PARM == 0 || ToLines <= 0 || ToCols <= 0) {
 	returnCode(ERR);
     }
 
@@ -466,7 +466,7 @@ NCURSES_SP_NAME(resizeterm) (NCURSES_SP_DCLx int ToLines, int ToCols)
        (SP_PARM == 0) ? -1 : screen_lines(SP_PARM),
        (SP_PARM == 0) ? -1 : screen_columns(SP_PARM)));
 
-    if (SP_PARM != 0) {
+    if (SP_PARM != 0 && ToLines > 0 && ToCols > 0) {
 	result = OK;
 	SP_PARM->_sig_winch = FALSE;
 

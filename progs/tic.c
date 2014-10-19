@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.207 2014/06/15 00:36:45 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.208 2014/10/18 09:34:29 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1891,12 +1891,15 @@ same_ti_tc(const char *ti, const char *tc, bool * embedded)
  * Check terminfo to termcap translation.
  */
 static void
-check_infotocap(TERMTYPE *tp, int i, char *value)
+check_infotocap(TERMTYPE *tp, int i, const char *value)
 {
     const char *name = ExtStrname(tp, i, strnames);
-    int params = ((i < (int) SIZEOF(parametrized))
+    int params = (((i < (int) SIZEOF(parametrized)) &&
+		   (i < STRCOUNT))
 		  ? parametrized[i]
-		  : 0);
+		  : ((*value == 'k')
+		     ? 0
+		     : has_params(value)));
     int to_char = 0;
     char *ti_value;
     char *tc_value;

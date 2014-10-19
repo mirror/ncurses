@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.111 2013/12/15 01:05:20 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.114 2014/10/18 09:32:54 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -470,7 +470,7 @@ indent_DYN(DYNBUF * buffer, int level)
 	strncpy_DYN(buffer, "\t", (size_t) 1);
 }
 
-static bool
+bool
 has_params(const char *src)
 {
     bool result = FALSE;
@@ -791,10 +791,13 @@ fmt_entry(TERMTYPE *tterm,
 			    "%s@", name);
 		WRAP_CONCAT;
 	    } else if (outform == F_TERMCAP || outform == F_TCONVERR) {
-		int params = ((i < (int) SIZEOF(parametrized))
-			      ? parametrized[i]
-			      : 0);
 		char *srccap = _nc_tic_expand(capability, TRUE, numbers);
+		int params = (((i < (int) SIZEOF(parametrized)) &&
+			       (i < STRCOUNT))
+			      ? parametrized[i]
+			      : ((*srccap == 'k')
+				 ? 0
+				 : has_params(srccap)));
 		char *cv = _nc_infotocap(name, srccap, params);
 
 		if (cv == 0) {

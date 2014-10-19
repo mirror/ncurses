@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.524 $
-#	$Date: 2014/10/11 23:02:12 $
+#	$Revision: 1.525 $
+#	$Date: 2014/10/19 01:16:56 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5702,7 +5702,7 @@ terminator|Terminator no line wrap,
 #### TERMINOLOGY
 # http://enlightenment.org
 #
-# Tested terminology-0.3.0, using tack and vttest.  This is not a vt100
+# Tested terminology-0.3.0, 0.6.1, using tack and vttest.  This is not a vt100
 # emulator, nor is it compatible with xterm, but it uses a few features from
 # both -TD
 #
@@ -5718,20 +5718,21 @@ terminator|Terminator no line wrap,
 #	no blink
 #	uses bce model for colors, but (see below) fails the vttest screens
 #	has partial support for 256color feature.
-#	tack cursor-keys:
+#	tack function-keys (a subset of xterm+pcf0), and
+#	tack cursor-keys (a subset of xterm+pce2):
 #			ctrl+shift (ignored)
 #		2	shift
 #			shift-alt modifier -> shift (2)
 #		3	alt
 #		4
 #		5	ctrl
-#	tack modifiers do not work for fkeys
+#	tack modifiers did not work for fkeys in 0.3.0; subset works in 0.6.1
 #	ctrl + khome/kend works - none of the other modifiers do
 # vttest -
 #	spits lots of messages from termptyesc.c especially in vttest.
 #	no 132-column mode
 #	fails menu 1, 2 (definitely not vt100-compatible)
-#	primary and
+#	primary (claims vt420 with several options, apparently none work) and
 #	secondary report says (perhaps... vt420): \E[>41;285;0c
 #	CHA, HPR, VPA, CNL, CPL work
 #	BCE with ED/EL - fail
@@ -5742,6 +5743,10 @@ terminator|Terminator no line wrap,
 #	X10 and Normal mouse work
 #	Any-event mouse works
 #	Mouse button-event works
+#
+# This description uses xterm+pcf0, which is misleading because the program
+# does not handle combinations of modifiers - but listing them all would
+# involve more effort than its developers spent -TD
 terminology|EFL-based terminal emulator,
 	mc5i@, xon@,
 	blink@, ed@, el@, el1@, invis=\E[8m, kLFT=\E[1;2D,
@@ -5756,7 +5761,7 @@ terminology|EFL-based terminal emulator,
 	kLFT3=\E[1;3D, kLFT4=\E[1;4D, kLFT5=\E[1;5D,
 	kLFT6=\E[1;6D, kLFT7=\E[1;7D, kRIT3=\E[1;3C,
 	kRIT4=\E[1;4C, kRIT5=\E[1;5C, kRIT6=\E[1;6C,
-	kRIT7=\E[1;7C, kUP=\E[1;2A, use=vt100,
+	kRIT7=\E[1;7C, kUP=\E[1;2A, use=xterm+pcf0, use=vt100,
 	use=xterm+256setaf,
 
 ######## UNIX VIRTUAL TERMINALS, VIRTUAL CONSOLES, AND TELNET CLIENTS
@@ -23563,5 +23568,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2014-10-11
 #	+ add xterm-x10mouse, xterm-x11mouse, etc. -TD
+#
+# 2014-10-18
+#	+ reviewed terminology 0.6.1, add function key definitions.  None of
+#	  the vt100-compatibility issues were improved -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

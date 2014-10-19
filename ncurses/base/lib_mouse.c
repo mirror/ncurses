@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.162 2014/10/12 00:03:37 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.163 2014/10/18 10:32:02 tom Exp $")
 
 #include <tic.h>
 
@@ -1097,7 +1097,7 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
 			    kbuf + grabbed, 1);
 	if (res == -1)
 	    break;
-	grabbed += res;
+	grabbed += (size_t) res;
 	if (grabbed > 1) {
 	    size_t check = 1;
 	    int n;
@@ -1105,10 +1105,11 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
 	    for (n = 0; n < 2; ++n) {
 		if (check >= grabbed)
 		    break;
-		rc = _nc_conv_to_utf32(&coords[n], kbuf + check, grabbed - check);
+		rc = _nc_conv_to_utf32(&coords[n], kbuf + check, (unsigned)
+				       (grabbed - check));
 		if (!rc)
 		    break;
-		check += rc;
+		check += (size_t) rc;
 	    }
 	    if (n >= 2)
 		break;
@@ -1127,8 +1128,8 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
 
     result = decode_X10_bstate(sp, eventp, UChar(kbuf[0]));
 
-    eventp->x = (coords[0] - ' ') - 1;
-    eventp->y = (coords[1] - ' ') - 1;
+    eventp->x = (int) (coords[0] - ' ') - 1;
+    eventp->y = (int) (coords[1] - ' ') - 1;
 
     return result;
 }
