@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.163 2014/10/18 10:32:02 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.164 2014/10/25 08:24:23 tom Exp $")
 
 #include <tic.h>
 
@@ -432,7 +432,7 @@ enable_xterm_mouse(SCREEN *sp, int enable)
 
 #if USE_GPM_SUPPORT
 static bool
-allow_gpm_mouse(SCREEN *sp)
+allow_gpm_mouse(SCREEN *sp GCC_UNUSED)
 {
     bool result = FALSE;
 

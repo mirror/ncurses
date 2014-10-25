@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.586 2014/09/23 22:18:46 tom Exp $
+dnl $Id: configure.in,v 1.587 2014/10/25 00:21:04 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.586 $)
+AC_REVISION($Revision: 1.587 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1388,7 +1388,7 @@ CF_DISABLE_GNAT_PROJECTS
 
 ###	Checks for libraries.
 case $cf_cv_system_name in #(vi
-*mingw32*) #(vi
+*mingw32*|*mingw64*) #(vi
 	CPPFLAGS="$CPPFLAGS -DWINVER=0x0501"
 	LIBS=" -lpsapi $LIBS"
 	;;
@@ -1722,8 +1722,9 @@ LIB_SUBSETS="${LIB_SUBSETS}base"
 if test "$with_term_driver" != no ; then
 	LIB_SUBSETS="${LIB_SUBSETS}+port_drivers"
 	case $cf_cv_system_name in #(vi
-	*mingw32*) #(vi
+	*mingw32*|*mingw64*) #(vi
 		LIB_SUBSETS="${LIB_SUBSETS}+port_tinfo+port_win32con"
+		CPPFLAGS="$CPPFLAGS -DUSE_WIN32CON_DRIVER"
 		;;
 	*) #(vi
 		LIB_SUBSETS="${LIB_SUBSETS}+port_tinfo"

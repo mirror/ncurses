@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.130 2014/09/05 08:45:09 tom Exp $ */
+/* $Id: test.priv.h,v 1.131 2014/10/25 01:20:34 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -683,7 +683,7 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #define EXIT_FAILURE 1
 #endif
 
-#if defined(__MINGW32__)
+#if defined(__MINGW32__) || defined(USE_WIN32CON_DRIVER)
 
 #if defined(PDCURSES)
 #ifdef WINVER

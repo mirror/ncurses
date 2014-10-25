@@ -39,7 +39,14 @@
  */
 
 #include <curses.priv.h>
+
+#ifdef __MINGW32__
 #include <tchar.h>
+#else
+#include <windows.h>
+#include <wchar.h>
+#endif
+
 #include <io.h>
 
 #define PSAPI_VERSION 2
@@ -47,7 +54,7 @@
 
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.51 2014/09/27 22:17:36 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.52 2014/10/25 00:24:24 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -1893,7 +1900,12 @@ _nc_mingw_isatty(int fd)
 {
     int result = 0;
 
-    if (_isatty(fd)) {
+#ifdef __MING32__
+#define SysISATTY(fd) _isatty(fd)
+#else
+#define SysISATTY(fd) isatty(fd)
+#endif
+    if (SysISATTY(fd)) {
 	result = 1;
     } else {
 #if WINVER >= 0x0600

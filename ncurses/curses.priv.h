@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.544 2014/10/11 19:30:58 tom Exp $
+ * $Id: curses.priv.h,v 1.545 2014/10/24 23:57:28 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2354,7 +2354,7 @@ extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, int *, int *);
 #endif /* !USE_TERM_DRIVER */
 
 #ifdef USE_TERM_DRIVER
-#ifdef __MINGW32__
+#if defined(USE_WIN32CON_DRIVER)
 #include <nc_mingw.h>
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_WIN_DRIVER;
 extern NCURSES_EXPORT(int)  _nc_mingw_isatty(int fd);
@@ -2372,7 +2372,7 @@ extern NCURSES_EXPORT(int) _nc_mingw_testmouse(
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 #endif
 
-#if defined(USE_TERM_DRIVER) && defined(__MINGW32__)
+#if defined(USE_TERM_DRIVER) && defined(USE_WIN32CON_DRIVER)
 #define NC_ISATTY(fd) _nc_mingw_isatty(fd)
 #else
 #define NC_ISATTY(fd) isatty(fd)
@@ -2381,7 +2381,7 @@ extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 #ifdef USE_TERM_DRIVER
 #  define IsTermInfo(sp)       ((TCBOf(sp) != 0) && ((TCBOf(sp)->drv->isTerminfo)))
 #  define HasTInfoTerminal(sp) ((0 != TerminalOf(sp)) && IsTermInfo(sp))
-#  ifdef __MINGW32__
+#  if defined(USE_WIN32CON_DRIVER)
 #    define IsTermInfoOnConsole(sp) (IsTermInfo(sp)&&_nc_mingw_isconsole(TerminalOf(sp)->Filedes))
 #else
 #    define IsTermInfoOnConsole(sp) FALSE
