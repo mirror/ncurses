@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.160 2014/04/26 18:47:20 juergen Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.161 2014/11/01 12:33:16 tom Exp $")
 
 /****************************************************************************
  *
@@ -574,7 +574,7 @@ NCURSES_EXPORT(int)
 _nc_locale_breaks_acs(TERMINAL * termp)
 {
     const char *env_name = "NCURSES_NO_UTF8_ACS";
-    char *env;
+    const char *env;
     int value;
     int result = 0;
 

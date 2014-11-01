@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.545 2014/10/24 23:57:28 tom Exp $
+ * $Id: curses.priv.h,v 1.546 2014/11/01 13:52:34 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1625,7 +1625,8 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 
 #define TR(n, a)	if (USE_TRACEF(n)) _nc_locked_tracef a
 #define T(a)		TR(TRACE_CALLS, a)
-#define TRACE_RETURN(value,type)     return _nc_retrace_##type(value)
+#define TRACE_RETURN(value,type)     return _nc_retrace_##type((type)(value))
+#define TRACE_RETURN1(value,dst)     return _nc_retrace_##dst(value)
 #define TRACE_RETURN2(value,dst,src) return _nc_retrace_##dst##_##src(value)
 #define TRACE_RETURN_SP(value,type)  return _nc_retrace_##type(SP_PARM, value)
 
@@ -1634,18 +1635,18 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)
 #define returnBits(code)	TRACE_RETURN(code,unsigned)
 #define returnBool(code)	TRACE_RETURN(code,bool)
-#define returnCPtr(code)	TRACE_RETURN(code,cptr)
-#define returnCVoidPtr(code)	TRACE_RETURN(code,cvoid_ptr)
+#define returnCPtr(code)	TRACE_RETURN1(code,cptr)
+#define returnCVoidPtr(code)	TRACE_RETURN1(code,cvoid_ptr)
 #define returnChar(code)	TRACE_RETURN(code,char)
 #define returnChtype(code)	TRACE_RETURN(code,chtype)
 #define returnCode(code)	TRACE_RETURN(code,int)
 #define returnIntAttr(code)	TRACE_RETURN2(code,int,attr_t)
 #define returnMMask(code)	TRACE_RETURN_SP(code,mmask_t)
-#define returnPtr(code)		TRACE_RETURN(code,ptr)
-#define returnSP(code)		TRACE_RETURN(code,sp)
+#define returnPtr(code)		TRACE_RETURN1(code,ptr)
+#define returnSP(code)		TRACE_RETURN1(code,sp)
 #define returnVoid		T((T_RETURN(""))); return
-#define returnVoidPtr(code)	TRACE_RETURN(code,void_ptr)
-#define returnWin(code)		TRACE_RETURN(code,win)
+#define returnVoidPtr(code)	TRACE_RETURN1(code,void_ptr)
+#define returnWin(code)		TRACE_RETURN1(code,win)
 
 extern NCURSES_EXPORT(NCURSES_BOOL)     _nc_retrace_bool (int);
 extern NCURSES_EXPORT(NCURSES_CONST void *) _nc_retrace_cvoid_ptr (NCURSES_CONST void *);

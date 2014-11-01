@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.164 2014/10/25 08:24:23 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.165 2014/11/01 12:27:59 tom Exp $")
 
 #include <tic.h>
 
@@ -446,8 +446,8 @@ allow_gpm_mouse(SCREEN *sp GCC_UNUSED)
 #endif
 	/* GPM does printf's without checking if stdout is a terminal */
     if (NC_ISATTY(fileno(stdout))) {
-	char *list = getenv("NCURSES_GPM_TERMS");
-	char *env = getenv("TERM");
+	const char *list = getenv("NCURSES_GPM_TERMS");
+	const char *env = getenv("TERM");
 	if (list != 0) {
 	    if (env != 0) {
 		result = _nc_name_match(list, env, "|:");
@@ -608,7 +608,7 @@ initialize_mousetype(SCREEN *sp)
 	    int rc;
 
 	    if (!sp->_emxmouse_buttons[0]) {
-		char *s = getenv("MOUSE_BUTTONS_123");
+		const char *s = getenv("MOUSE_BUTTONS_123");
 
 		sp->_emxmouse_buttons[0] = 1;
 		if (s && strlen(s) >= 3) {

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.91 2013/12/14 21:29:42 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.92 2014/11/01 14:47:00 tom Exp $")
 
 static int total_written;
 
@@ -185,7 +185,7 @@ make_db_root(const char *path)
  * Set the write directory for compiled entries.
  */
 NCURSES_EXPORT(void)
-_nc_set_writedir(char *dir)
+_nc_set_writedir(const char *dir)
 {
     const char *destination;
     char actual[PATH_MAX];

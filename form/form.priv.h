@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.37 2014/07/27 00:21:42 tom Exp $ */
+/* $Id: form.priv.h,v 0.38 2014/11/01 13:56:14 tom Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
@@ -220,11 +220,11 @@ extern NCURSES_EXPORT(wchar_t *) _nc_Widen_String(char *, int *);
 
 #ifdef TRACE
 
-#define returnField(code)	TRACE_RETURN(code,field)
-#define returnFieldPtr(code)	TRACE_RETURN(code,field_ptr)
-#define returnForm(code)	TRACE_RETURN(code,form)
-#define returnFieldType(code)	TRACE_RETURN(code,field_type)
-#define returnFormHook(code)	TRACE_RETURN(code,form_hook)
+#define returnField(code)	TRACE_RETURN1(code,field)
+#define returnFieldPtr(code)	TRACE_RETURN1(code,field_ptr)
+#define returnForm(code)	TRACE_RETURN1(code,form)
+#define returnFieldType(code)	TRACE_RETURN1(code,field_type)
+#define returnFormHook(code)	TRACE_RETURN1(code,form_hook)
 
 extern NCURSES_EXPORT(FIELD **)	    _nc_retrace_field_ptr (FIELD **);
 extern NCURSES_EXPORT(FIELD *)	    _nc_retrace_field (FIELD *);

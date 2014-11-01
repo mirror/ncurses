@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.44 2013/05/25 20:13:38 tom Exp $ */
+/* $Id: term_entry.h,v 1.45 2014/11/01 14:47:00 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -170,7 +170,7 @@ extern NCURSES_EXPORT(int) _nc_parse_entry (ENTRY *, int, bool);
 extern NCURSES_EXPORT(int) _nc_capcmp (const char *, const char *);
 
 /* write_entry.c: writing an entry to the file system */
-extern NCURSES_EXPORT(void) _nc_set_writedir (char *);
+extern NCURSES_EXPORT(void) _nc_set_writedir (const char *);
 extern NCURSES_EXPORT(void) _nc_write_entry (TERMTYPE *const);
 
 /* comp_parse.c: entry list handling */

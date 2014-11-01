@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2013,2014 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.38 2013/12/14 21:23:20 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.39 2014/11/01 14:47:00 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -187,7 +187,7 @@ _nc_tic_dir(const char *path)
 	    HaveTicDirectory = TRUE;
 	} else if (HaveTicDirectory == 0) {
 	    if (use_terminfo_vars()) {
-		char *envp;
+		const char *envp;
 		if ((envp = getenv("TERMINFO")) != 0)
 		    return _nc_tic_dir(envp);
 	    }
