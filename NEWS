@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2295 2014/11/01 13:57:28 tom Exp $
+-- $Id: NEWS,v 1.2300 2014/11/16 00:46:19 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20141115
+	+ improve description of limits for color values and color pairs in
+	  curs_color.3x (prompted by patch by Tim van der Molen).
+	+ add VERSION file, using first field in that to record the ABI version
+	  used for configure --with-libtool --disable-libtool-version
+	+ add configure options for applying the ".map" and ".sym" files to
+	  the ncurses, form, menu and panel libraries.
+	+ add ".map" and ".sym" files to show exported symbols, e.g., for
+	  symbol-versioning.
 
 20141101
 	+ improve strict compiler-warnings by adding a cast in TRACE_RETURN

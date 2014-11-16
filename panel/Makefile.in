@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.62 2013/08/04 20:23:32 tom Exp $
+# $Id: Makefile.in,v 1.65 2014/11/15 13:54:00 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -51,6 +51,7 @@ o		= .@OBJEXT@
 
 MODEL		= @DFT_LWR_MODEL@
 DESTDIR		= @DESTDIR@
+top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
@@ -63,7 +64,10 @@ includesubdir	= @includesubdir@
 
 INCLUDEDIR	= $(DESTDIR)$(includedir)$(includesubdir)
 
+PACKAGE		= @PACKAGE@
+
 LIBTOOL		= @LIBTOOL@
+LIBTOOL_OPTS	= @LIBTOOL_OPTS@ @EXPORT_SYMS@
 LIBTOOL_CLEAN	= @LIB_CLEAN@
 LIBTOOL_COMPILE	= @LIB_COMPILE@
 LIBTOOL_LINK	= @LIB_LINK@
@@ -89,7 +93,7 @@ CC		= @CC@
 CPP		= @CPP@
 CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= -I@top_srcdir@/ncurses -DHAVE_CONFIG_H @CPPFLAGS@
+CPPFLAGS	= -I${top_srcdir}/ncurses -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
@@ -108,6 +112,7 @@ SHLIB_DIRS	= -L../lib
 SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@LIB_SUFFIX@ @SHLIB_LIST@
 
 RPATH_LIST	= @RPATH_LIST@
+VERSIONED_SYMS	= @VERSIONED_SYMS@
 MK_SHARED_LIB	= @MK_SHARED_LIB@
 
 NCURSES_MAJOR	= @NCURSES_MAJOR@

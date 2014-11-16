@@ -28,19 +28,20 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.587 2014/10/25 00:21:04 tom Exp $
+dnl $Id: configure.in,v 1.590 2014/11/15 01:35:36 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.587 $)
+AC_REVISION($Revision: 1.590 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
 CF_TOP_BUILDDIR
 CF_SUBST_NCURSES_VERSION
+CF_VERSION_INFO(NCURSES,ncurses)
 
 CF_WITH_REL_VERSION(NCURSES)
 CF_WITH_ABI_VERSION
@@ -444,13 +445,20 @@ esac
 # we will build libraries one-level down.
 rel_builddir=..
 CF_SHARED_OPTS
-if test "$CC_SHARED_OPTS" = "unknown"; then
-	for model in $cf_list_models; do
-		if test "$model" = "shared"; then
+for model in $cf_list_models; do
+	case $model in #(vi
+	libtool)
+		CF_WITH_LIBTOOL_OPTS
+		CF_WITH_EXPORT_SYMS
+		;;
+	shared) #(vi
+		if test "$CC_SHARED_OPTS" = "unknown"; then
 			AC_ERROR(Shared libraries are not supported in this version)
 		fi
-	done
-fi
+		CF_WITH_VERSIONED_SYMS
+		;;
+	esac
+done
 
 # pretend that ncurses==ncursesw==ncursest
 AC_MSG_CHECKING(if you want to disable library suffixes)
@@ -2059,6 +2067,14 @@ AC_SUBST(MISC_INSTALL_DATA)
 AC_SUBST(MISC_UNINSTALL_DATA)
 
 SUB_SCRIPTS=
+
+dnl Override the package used for exported symbols
+if test -n "$PACKAGE"
+then
+	PACKAGE="${PACKAGE}${DFT_ARG_SUFFIX}"
+	export PACKAGE
+	echo "package: $PACKAGE"
+fi
 
 AC_OUTPUT( \
 	include/MKterm.h.awk \

@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 5.9
-Release: 20141101
+Release: 20141115
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -58,6 +58,7 @@ RPATH_LIST=../lib:%{_prefix}/lib \
 	--with-ticlib \
 	--with-trace \
 	--with-cxx-shared \
+	--with-versioned-syms \
 	--with-xterm-kbs=DEL \
 	--without-ada \
 	--without-debug \

@@ -202,6 +202,7 @@
 ./README.MinGW
 ./README.emx
 ./TO-DO
+./VERSION
 ./aclocal.m4
 ./announce.html.in
 ./c++/Makefile.in
@@ -1005,7 +1006,15 @@
 ./package/debian/watch
 ./package/mingw-ncurses.nsi
 ./package/mingw-ncurses.spec
+./package/ncurses.map
 ./package/ncurses.spec
+./package/ncurses.sym
+./package/ncursest.map
+./package/ncursest.sym
+./package/ncursestw.map
+./package/ncursestw.sym
+./package/ncursesw.map
+./package/ncursesw.sym
 ./panel/Makefile.in
 ./panel/headers
 ./panel/llib-lpanel

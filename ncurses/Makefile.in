@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.141 2014/07/26 23:16:55 tom Exp $
+# $Id: Makefile.in,v 1.144 2014/11/15 13:54:00 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -70,7 +70,10 @@ includesubdir	= @includesubdir@
 
 INCLUDEDIR	= $(DESTDIR)$(includedir)$(includesubdir)
 
+PACKAGE		= @PACKAGE@
+
 LIBTOOL		= @LIBTOOL@
+LIBTOOL_OPTS	= @LIBTOOL_OPTS@ @EXPORT_SYMS@
 LIBTOOL_CLEAN	= @LIB_CLEAN@
 LIBTOOL_COMPILE	= @LIB_COMPILE@
 LIBTOOL_LINK	= @LIB_LINK@
@@ -131,6 +134,7 @@ TINFO_LIST	= $(SHLIB_DIRS) @TINFO_LIST@
 TICS_LIST	= $(SHLIB_DIRS) @TICS_LIST@
 
 RPATH_LIST	= @RPATH_LIST@
+VERSIONED_SYMS	= @VERSIONED_SYMS@
 MK_SHARED_LIB	= @MK_SHARED_LIB@
 
 NCURSES_MAJOR	= @NCURSES_MAJOR@

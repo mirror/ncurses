@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.174 2014/09/20 00:51:37 tom Exp $
+-- $Id: INSTALL,v 1.178 2014/11/16 00:03:32 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -351,6 +351,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 
 	Use --disable-libtool-version to use the libtool -version-info feature.
 	This corresponds to the setting used before patch 20100515.
+
+	Starting with patch 20141115, using this option causes the configure
+	script to apply the top-level VERSION file to the ABI version used
+	for libtool.
 
     --disable-leaks
 	For testing, compile-in code that frees memory that normally would not
@@ -825,6 +829,11 @@ SUMMARY OF CONFIGURE OPTIONS:
 	For testing, compile and link with Gray Watson's dmalloc library.
 	This also sets the --disable-leaks option.
 
+    --with-export-syms[=XXX]
+	Limit exported symbols using libtool.  The configure script
+	automatically chooses an appropriate ".sym" file, which lists the
+	symbols which are part of the ABI.
+
     --with-fallbacks=XXX
 	Specify a list of fallback terminal descriptions which will be
 	compiled into the ncurses library.  See CONFIGURING FALLBACK ENTRIES.
@@ -919,6 +928,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	aclocal.m4 for CF_PROG_LIBTOOL, and ensure that you build configure
 	using the appropriate patch for autoconf from
 		http://invisible-island.net/autoconf/
+
+    --with-libtool-opts=XXX
+	Specify additional libtool options.
 
     --with-manpage-aliases
 	Tell the configure script you wish to create entries in the
@@ -1102,6 +1114,19 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-trace
 	Configure the trace() function as part of the all models of the ncurses
 	library.  Normally it is part of the debug (libncurses_g) library only.
+
+    --with-versioned-syms[=XXX]
+	The Solaris, GNU and reportedly some other linkers (ld) accept a
+	"--version-script" option which tells the linker to annotate the
+	resulting objects with version identifiers.  The configure script
+	will automatically apply a suitable ".map" file to provide this
+	information for Linux.  Solaris mapfiles differ:
+
+	a) comments are not accepted
+	b) wildcards are not accepted
+	c) each symbol listed in the map file must exist in the library
+
+	Use "objdump -T" on a library to see the annotations.
 
     --with-xterm-kbs=XXX
 	Configure xterm's terminfo entries to use either BS (^H, i.e., ASCII

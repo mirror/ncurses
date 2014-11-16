@@ -26,11 +26,16 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.35 2010/12/20 00:50:58 tom Exp $
+.\" $Id: curs_color.3x,v 1.36 2014/11/16 00:44:29 tom Exp $
 .TH curs_color 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .IP \(bu 4
 ..
+.ds n 5
 .na
 .hy 0
 .SH NAME
@@ -63,99 +68,135 @@
 .br
 .SH DESCRIPTION
 .SS Overview
-\fBcurses\fR support color attributes on terminals with that capability.  To
-use these routines \fBstart_color\fR must be called, usually right after
-\fBinitscr\fR.  Colors are always used in pairs (referred to as color-pairs).
+\fBcurses\fR support color attributes on terminals with that capability.
+To use these routines \fBstart_color\fR must be called, usually right after
+\fBinitscr\fR.
+Colors are always used in pairs (referred to as color-pairs).
 A color-pair consists of a foreground color (for characters) and a background
-color (for the blank field on which the characters are displayed).  A
-programmer initializes a color-pair with the routine \fBinit_pair\fR.  After it
-has been initialized, \fBCOLOR_PAIR\fR(\fIn\fR), a macro defined in
+color (for the blank field on which the characters are displayed).
+A programmer initializes a color-pair with the routine \fBinit_pair\fR.
+After it has been initialized, \fBCOLOR_PAIR\fR(\fIn\fR), a macro defined in
 \fB<curses.h>\fR, can be used as a new video attribute.
 .PP
 If a terminal is capable of redefining colors, the programmer can use the
-routine \fBinit_color\fR to change the definition of a color.  The routines
-\fBhas_colors\fR and \fBcan_change_color\fR return \fBTRUE\fR or \fBFALSE\fR,
+routine \fBinit_color\fR to change the definition of a color.
+The routines \fBhas_colors\fR and \fBcan_change_color\fR
+return \fBTRUE\fR or \fBFALSE\fR,
 depending on whether the terminal has color capabilities and whether the
-programmer can change the colors.  The routine \fBcolor_content\fR allows a
+programmer can change the colors.
+The routine \fBcolor_content\fR allows a
 programmer to extract the amounts of red, green, and blue components in an
-initialized color.  The routine \fBpair_content\fR allows a programmer to find
+initialized color.
+The routine \fBpair_content\fR allows a programmer to find
 out how a given color-pair is currently defined.
 .SS Routine Descriptions
-The \fBstart_color\fR routine requires no arguments.  It must be
-called if the programmer wants to use colors, and before any other
-color manipulation routine is called.  It is good practice to call
-this routine right after \fBinitscr\fR.  \fBstart_color\fR initializes
-eight basic colors (black, red, green, yellow, blue, magenta, cyan,
+The \fBstart_color\fR routine requires no arguments.
+It must be called if the programmer wants to use colors, and before any other
+color manipulation routine is called.
+It is good practice to call this routine right after \fBinitscr\fR.
+\fBstart_color\fR initializes eight basic colors (black, red, green, yellow, blue, magenta, cyan,
 and white), and two global variables, \fBCOLORS\fR and
 \fBCOLOR_PAIRS\fR (respectively defining the maximum number of colors
-and color-pairs the terminal can support).  It also restores the
-colors on the terminal to the values they had when the terminal was
+and color-pairs the terminal can support).
+It also restores the colors on the terminal to the values they had when the terminal was
 just turned on.
 .PP
-The \fBinit_pair\fR routine changes the definition of a color-pair.  It takes
-three arguments: the number of the color-pair to be changed, the foreground
-color number, and the background color number.
-For portable applications:
+These limits apply to color values and color pairs.
+Values outside these limits are not legal, and may result in a runtime error:
 .bP
-The value of the first argument
-must be between \fB1\fR and \fBCOLOR_PAIRS\-1\fR,
-except that if default colors are used (see \fBuse_default_colors\fP)
-the upper limit is adjusted to allow for extra pairs which use
-a default color in foreground and/or background.
+\fBCOLORS\fP corresponds to the terminal database's \fBmax_colors\fP capability,
+which is typically a signed 16-bit integer (see \fBterminfo\fR(\*n)).
 .bP
-The value of the second and
-third arguments must be between 0 and \fBCOLORS\fR.
-Color pair 0 is assumed to be white on black,
+color values are expected to be in the range \fB0\fP to \fBCOLORS\-1\fP,
+inclusive (including \fB0\fP and \fBCOLORS\-1\fP).
+.bP
+a special color value \fB\-1\fP is used in certain extended functions
+to denote the \fIdefault color\fP (see \fBuse_default_colors\fP).
+.bP
+\fBCOLOR_PAIRS\fP corresponds to the terminal database's \fBmax_pairs\fP capability,
+which is typically a signed 16-bit integer (see \fBterminfo\fR(\*n)).
+.bP
+legal color pair values are in the range \fB1\fP to \fBCOLOR_PAIRS\-1\fP,
+inclusive.
+.bP
+color pair \fB0\fP is special; it denotes \*(``no color\*(''.
+.IP
+Color pair \fB0\fP is assumed to be white on black,
 but is actually whatever the terminal implements before color is initialized.
 It cannot be modified by the application.
 .PP
-If the color-pair was previously
-initialized, the screen is refreshed and all occurrences of that color-pair
+The \fBinit_pair\fR routine changes the definition of a color-pair.
+It takes three arguments: the number of the color-pair to be changed, the foreground
+color number, and the background color number.
+For portable applications:
+.bP
+The first argument must be a legal color pair value.
+If default colors are used (see \fBuse_default_colors\fP)
+the upper limit is adjusted to allow for extra pairs which use
+a default color in foreground and/or background.
+.bP
+The second and third arguments must be legal color values.
+.PP
+If the color-pair was previously initialized,
+the screen is refreshed and all occurrences of that color-pair
 are changed to the new definition.
 .PP
-As an extension, ncurses allows you to set color pair 0 via
+As an extension, ncurses allows you to set color pair \fB0\fP via
 the \fBassume_default_colors\fR routine, or to specify the use of
 default colors (color number \fB\-1\fR) if you first invoke the
 \fBuse_default_colors\fR routine.
 .PP
-The \fBinit_color\fR routine changes the definition of a color.  It takes four
-arguments: the number of the color to be changed followed by three RGB values
-(for the amounts of red, green, and blue components).  The value of the first
-argument must be between \fB0\fR and \fBCOLORS\fR.  (See the section
-\fBColors\fR for the default color index.)  Each of the last three arguments
-must be a value between 0 and 1000.  When \fBinit_color\fR is used, all
+The \fBinit_color\fR routine changes the definition of a color.
+It takes four arguments: the number of the color to be changed followed by three RGB values
+(for the amounts of red, green, and blue components).
+The first argument must be a legal color value;
+default colors are not allowed here.
+(See the section \fBColors\fR for the default color index.)
+Each of the last three arguments
+must be a value in the range \fB0\fP through \fB1000\fP.
+When \fBinit_color\fR is used, all
 occurrences of that color on the screen immediately change to the new
 definition.
 .PP
-The \fBhas_colors\fR routine requires no arguments.  It returns \fBTRUE\fR if
-the terminal can manipulate colors; otherwise, it returns \fBFALSE\fR.  This
-routine facilitates writing terminal-independent programs.  For example, a
-programmer can use it to decide whether to use color or some other video
-attribute.
+The \fBhas_colors\fR routine requires no arguments.
+It returns \fBTRUE\fR if
+the terminal can manipulate colors; otherwise, it returns \fBFALSE\fR.
+This routine facilitates writing terminal-independent programs.
+For example, a programmer can use it to decide
+whether to use color or some other video attribute.
 .PP
-The \fBcan_change_color\fR routine requires no arguments.  It returns
-\fBTRUE\fR if the terminal supports colors and can change their definitions;
-other, it returns \fBFALSE\fR.  This routine facilitates writing
-terminal-independent programs.
+The \fBcan_change_color\fR routine requires no arguments.
+It returns \fBTRUE\fR if the terminal supports colors
+and can change their definitions;
+other, it returns \fBFALSE\fR.
+This routine facilitates writing terminal-independent programs.
 .PP
 The \fBcolor_content\fR routine gives programmers a way to find the intensity
-of the red, green, and blue (RGB) components in a color.  It requires four
-arguments: the color number, and three addresses of \fBshort\fRs for storing
+of the red, green, and blue (RGB) components in a color.
+It requires four arguments: the color number, and three addresses
+of \fBshort\fRs for storing
 the information about the amounts of red, green, and blue components in the
-given color.  The value of the first argument must be between 0 and
-\fBCOLORS\fR.  The values that are stored at the addresses pointed to by the
-last three arguments are between 0 (no component) and 1000 (maximum amount of
-component).
+given color.
+The first argument must be a legal color value, i.e.,
+\fB0\fP through \fBCOLORS\-1\fP, inclusive.
+The values that are stored at the addresses pointed to by the
+last three arguments are in the range
+\fB0\fP (no component) through \fB1000\fP (maximum amount of component), inclusive.
 .PP
 The \fBpair_content\fR routine allows programmers to find out what colors a
-given color-pair consists of.  It requires three arguments: the color-pair
+given color-pair consists of.
+It requires three arguments: the color-pair
 number, and two addresses of \fBshort\fRs for storing the foreground and the
-background color numbers.  The value of the first argument must be between 1
-and \fBCOLOR_PAIRS\-1\fR.  The values that are stored at the addresses pointed
-to by the second and third arguments are between 0 and \fBCOLORS\fR.
+background color numbers.
+The first argument must be a legal color value,
+i.e., in the range \fB1\fP through \fBCOLOR_PAIRS\-1\fR, inclusive.
+The values that are stored at the addresses pointed
+to by the second and third arguments are in the
+range \fB0\fP through \fBCOLORS\fR, inclusive.
 .SS Colors
-In \fB<curses.h>\fR the following macros are defined.  These are the default
-colors.  \fBcurses\fR also assumes that \fBCOLOR_BLACK\fR is the default
+In \fB<curses.h>\fR the following macros are defined.
+These are the default colors.
+\fBcurses\fR also assumes that \fBCOLOR_BLACK\fR is the default
 background color for all terminals.
 .PP
 .nf
@@ -178,10 +219,10 @@ completion.
 .PP
 X/Open defines no error conditions.
 This implementation will return \fBERR\fR on attempts to
-use color values outside the range 0 to COLORS\-1
+use color values outside the range \fB0\fP to COLORS\-1
 (except for the default colors extension),
-or use color pairs outside the range 0 to COLOR_PAIRS\-1.
-Color values used in \fBinit_color\fP must be in the range 0 to 1000.
+or use color pairs outside the range \fB0\fP to \fBCOLOR_PAIRS\-1\fP.
+Color values used in \fBinit_color\fP must be in the range \fB0\fP to \fB1000\fP.
 An error is returned from all functions
 if the terminal has not been initialized.
 An error is returned from secondary functions such as \fBinit_pair\fP
@@ -200,21 +241,24 @@ returns an error if the color table cannot be allocated.
 In the \fIncurses\fR implementation, there is a separate color activation flag,
 color palette, color pairs table, and associated COLORS and COLOR_PAIRS counts
 for each screen; the \fBstart_color\fR function only affects the current
-screen.  The SVr4/XSI interface is not really designed with this in mind, and
+screen.
+The SVr4/XSI interface is not really designed with this in mind, and
 historical implementations may use a single shared color palette.
 .PP
 Note that setting an implicit background color via a color pair affects only
-character cells that a character write operation explicitly touches.  To change
+character cells that a character write operation explicitly touches.
+To change
 the background color used when parts of a window are blanked by erasing or
 scrolling operations, see \fBcurs_bkgd\fR(3X).
 .PP
 Several caveats apply on 386 and 486 machines with VGA-compatible graphics:
 .bP
-COLOR_YELLOW is actually brown.  To get yellow, use COLOR_YELLOW combined with
-the \fBA_BOLD\fR attribute.
+COLOR_YELLOW is actually brown.
+To get yellow, use COLOR_YELLOW combined with the \fBA_BOLD\fR attribute.
 .bP
-The A_BLINK attribute should in theory cause the background to go bright.  This
-often fails to work, and even some cards for which it mostly works (such as the
+The A_BLINK attribute should in theory cause the background to go bright.
+This often fails to work, and even some cards for which it mostly works
+(such as the
 Paradise and compatibles) do the wrong thing when you try to set a bright
 "yellow" background (you get a blinking yellow foreground instead).
 .bP
