@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.178 2014/11/16 00:03:32 tom Exp $
+-- $Id: INSTALL,v 1.179 2014/12/06 13:31:57 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -364,11 +364,17 @@ SUMMARY OF CONFIGURE OPTIONS:
 	a screen, since (even after calling endwin()), it must be available
 	for use in the next call to refresh().  There are also chunks of
 	memory held for performance reasons.  That makes it hard to analyze
-	curses applications for memory leaks.  To work around this, build
-	a debugging version of the ncurses library which frees those chunks
+	curses applications for memory leaks.  To work around this, build a
+	debugging version of the ncurses library which frees those chunks
 	which it can, and provides the _nc_free_and_exit() function to free
-	the remainder on exit.  The ncurses utility and test programs use this
-	feature, e.g., via the ExitProgram() macro.
+	the remainder and then exit.  The ncurses utility and test programs
+	use this feature, e.g., via the ExitProgram() macro.
+
+	Because this lies outside of the library's intended usage, it is not
+	normally considered part of the ABI.  If there were some (as yet
+	unplanned) extension which frees memory in a manner that would let the
+	library resume and reallocate memory, then that would not use a "_nc_"
+	prefix.
 
     --disable-lp64
 	The header files will ignore use of the _LP64 symbol to make chtype
