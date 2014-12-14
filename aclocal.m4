@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.719 2014/12/06 13:37:21 tom Exp $
+dnl $Id: aclocal.m4,v 1.720 2014/12/13 23:51:50 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1336,7 +1336,7 @@ if test "$cf_disable_rpath_hack" = no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 9 updated: 2012/08/04 13:59:54
+dnl CF_ENABLE_PC_FILES version: 10 updated: 2014/12/13 18:48:46
 dnl ------------------
 dnl This is the "--enable-pc-files" option, which is available if there is a
 dnl pkg-config configuration on the local machine.
@@ -1344,20 +1344,26 @@ AC_DEFUN([CF_ENABLE_PC_FILES],[
 AC_REQUIRE([CF_PKG_CONFIG])
 AC_REQUIRE([CF_WITH_PKG_CONFIG_LIBDIR])
 
-if test "$PKG_CONFIG" != none ; then
+if test "x$PKG_CONFIG" != xnone
+then
 	AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
-	AC_ARG_ENABLE(pc-files,
-		[  --enable-pc-files       generate and install .pc files for pkg-config],
-		[enable_pc_files=$enableval],
-		[enable_pc_files=no])
-	AC_MSG_RESULT($enable_pc_files)
-	if test "$enable_pc_files" != no
-	then
-		CF_PATH_SYNTAX(PKG_CONFIG_LIBDIR)
-	fi
 else
-	enable_pc_files=no
+	AC_MSG_CHECKING(if we should install .pc files)
 fi
+
+AC_ARG_ENABLE(pc-files,
+	[  --enable-pc-files       generate and install .pc files for pkg-config],
+	[enable_pc_files=$enableval],
+	[enable_pc_files=no])
+AC_MSG_RESULT($enable_pc_files)
+if test "x$enable_pc_files" != xno
+then
+	CF_PATH_SYNTAX(PKG_CONFIG_LIBDIR)
+	MAKE_PC_FILES=
+else
+	MAKE_PC_FILES="#"
+fi
+AC_SUBST(MAKE_PC_FILES)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ENABLE_RPATH version: 2 updated: 2010/03/27 18:39:42
@@ -4841,7 +4847,7 @@ case ".[$]$1" in #(vi
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 7 updated: 2011/04/29 04:53:22
+dnl CF_PKG_CONFIG version: 8 updated: 2014/12/13 18:48:46
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
 AC_DEFUN([CF_PKG_CONFIG],
@@ -4870,6 +4876,8 @@ esac
 test -z "$PKG_CONFIG" && PKG_CONFIG=none
 if test "$PKG_CONFIG" != none ; then
 	CF_PATH_SYNTAX(PKG_CONFIG)
+else
+	AC_MSG_WARN(pkg-config is not installed)
 fi
 
 AC_SUBST(PKG_CONFIG)
@@ -7154,45 +7162,70 @@ AC_SUBST($3)dnl
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 2 updated: 2011/12/10 18:58:47
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 3 updated: 2014/12/13 18:48:46
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
-if test "$PKG_CONFIG" != none ; then
-	AC_MSG_CHECKING(for $PKG_CONFIG library directory)
-	AC_ARG_WITH(pkg-config-libdir,
-		[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
-		[PKG_CONFIG_LIBDIR=$withval],
-		[PKG_CONFIG_LIBDIR=yes])
+AC_MSG_CHECKING(for $PKG_CONFIG library directory)
+AC_ARG_WITH(pkg-config-libdir,
+	[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
+	[PKG_CONFIG_LIBDIR=$withval],
+	[PKG_CONFIG_LIBDIR=yes])
 
-	case x$PKG_CONFIG_LIBDIR in #(vi
-	x/*) #(vi
-		;;
-	xyes) #(vi
-		# look for the library directory using the same prefix as the executable
+case x$PKG_CONFIG_LIBDIR in #(vi
+x/*) #(vi
+	;;
+xyes) #(vi
+	# Look for the library directory using the same prefix as the executable
+	if test "x$PKG_CONFIG" = xnone
+	then
+		cf_path=$prefix
+	else
 		cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`
-		case x`(arch) 2>/dev/null` in #(vi
-		*64) #(vi
-			for cf_config in $cf_path/share $cf_path/lib64 $cf_path/lib32 $cf_path/lib
-			do
-				if test -d $cf_config/pkgconfig
-				then
-					PKG_CONFIG_LIBDIR=$cf_config/pkgconfig
-					break
-				fi
-			done
-			;;
-		*)
-			PKG_CONFIG_LIBDIR=$cf_path/lib/pkgconfig
-			;;
-		esac
+	fi
+
+	# If you don't like using the default architecture, you have to specify the
+	# intended library directory and corresponding compiler/linker options.
+	#
+	# This case allows for Debian's 2014-flavor of multiarch, along with the
+	# most common variations before that point.  Some other variants spell the
+	# directory differently, e.g., "pkg-config", and put it in unusual places. 
+	# pkg-config has always been poorly standardized, which is ironic...
+	case x`(arch) 2>/dev/null` in #(vi
+	*64) #(vi
+		cf_search_path="\
+			$cf_path/lib/*64-linux-gnu \
+			$cf_path/share \
+			$cf_path/lib64 \
+			$cf_path/lib32 \
+			$cf_path/lib"
 		;;
 	*)
+		cf_search_path="\
+			$cf_path/lib/*-linux-gnu \
+			$cf_path/share \
+			$cf_path/lib32 \
+			$cf_path/lib"
 		;;
 	esac
 
-	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
-fi
+	CF_VERBOSE(list...)
+	for cf_config in $cf_search_path
+	do
+		CF_VERBOSE(checking $cf_config/pkgconfig)
+		if test -d $cf_config/pkgconfig
+		then
+			PKG_CONFIG_LIBDIR=$cf_config/pkgconfig
+			AC_MSG_CHECKING(done)
+			break
+		fi
+	done
+	;;
+*)
+	;;
+esac
+
+AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
 
 AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl

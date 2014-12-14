@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 5.9
-Release: 20141206
+Release: 20141213
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -10,7 +10,8 @@ Source: ncurses-%{version}-%{release}.tgz
 %define CC_NORMAL -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 %define CC_STRICT %{CC_NORMAL} -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wwrite-strings -ansi -pedantic
 
-%define _prefix /usr/local/ncurses6
+%global _prefix /usr/local/ncurses6
+%global MY_PKG /usr/lib64/pkgconfig
 %define MYDATA /usr/local/ncurses/share/terminfo
 
 %description
@@ -45,6 +46,7 @@ RPATH_LIST=../lib:%{_prefix}/lib \
 	--enable-ext-mouse \
 	--enable-hard-tabs \
 	--enable-interop \
+	--enable-pc-files \
 	--enable-rpath \
 	--enable-sp-funcs \
 	--enable-warnings \
@@ -58,6 +60,8 @@ RPATH_LIST=../lib:%{_prefix}/lib \
 	--with-ticlib \
 	--with-trace \
 	--with-cxx-shared \
+	--with-pc-suffix=6 \
+	--with-pkg-config-libdir=%{MY_PKG} \
 	--with-versioned-syms \
 	--with-xterm-kbs=DEL \
 	--without-ada \
@@ -81,6 +85,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %{_includedir}/*
 %{_libdir}/*
+%{MY_PKG}/*.pc
 #%{_datadir}/*
 
 %changelog

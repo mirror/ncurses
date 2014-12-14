@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2307 2014/12/06 23:03:44 tom Exp $
+-- $Id: NEWS,v 1.2314 2014/12/14 00:42:06 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,21 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20141213
+	+ modify misc/gen-pkgconfig.in to add -I option for include-directory
+	  when using both --prefix and --disable-overwrite (report by Misty
+	  De Meo).
+	+ add configure option --with-pc-suffix to allow minor renaming of
+	  ".pc" files and the corresponding library.  Use this in the test
+	  package for ncurses6.
+	+ modify configure script so that if pkg-config is not installed, it
+	  is still possible to install ".pc" files (report by Misty De Meo).
+	+ updated ".sym" files, removing symbols which are marked as "local"
+	  in the corresponding ".map" files.
+	+ updated ".map" files to reflect move of comp_captab and comp_hash
+	  from tic-library to tinfo-library in 20090711 (report by Sven
+	  Joachim).
 
 20141206
 	+ updated ".map" files so that each symbol that may be shared across
@@ -253,7 +268,7 @@ it is not possible to add this information.
 	  overlap with sgr functionality.
 	+ remove unneeded -i option from adacurses-config; put -a in the -I
 	  option for consistency (patch by Pascal Pignard).
-	+ update xterm-new to patch #305 -TD
+	+ update xterm-new terminfo entry to xterm patch #305 -TD
 	+ change format of test-scripts for Debian Ada95 and ncurses-examples
 	  packages to quilted to work around Debian #700177 (cf: 20130907).
 	+ build fix for form_driver_w.c as part of ncurses-examples package for

@@ -51,6 +51,7 @@ configure-stamp:
 		--enable-ext-mouse \
 		--enable-hard-tabs \
 		--enable-interop \
+		--enable-pc-files \
 		--enable-rpath \
 		--enable-sp-funcs \
 		--enable-warnings \
@@ -59,6 +60,7 @@ configure-stamp:
 		--with-chtype=uint32_t \
 		--with-mmask_t=uint32_t \
 		--with-develop \
+		--with-pc-suffix=6 \
 		--with-shared \
 		--with-termlib \
 		--with-ticlib \

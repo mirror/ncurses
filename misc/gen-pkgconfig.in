@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.16 2014/01/18 20:21:45 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.19 2014/12/14 00:38:23 tom Exp $
 ##############################################################################
 # Copyright (c) 2009-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -47,6 +47,7 @@ DFT_DEP_SUFFIX=@DFT_DEP_SUFFIX@
 TINFO_ARG_SUFFIX=@TINFO_ARG_SUFFIX@
 CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@
 
+suffix=@PC_MODULE_SUFFIX@
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
 includedir="@includedir@@includesubdir@"
@@ -66,7 +67,14 @@ FORM_LIBRARY="${FORM_NAME}@DFT_ARG_SUFFIX@"
 if test "$includedir" = "/usr/include" ; then
 	CFLAGS=
 else
-	CFLAGS="-I\${includedir}"
+	includetop=`echo "$includedir" | sed -e 's,/include/[^/]*$,/include/,'`
+	test "$includetop" = "/usr/include" && includetop="$includedir"
+	if test "x$includetop" != "$includedir"
+	then
+		CFLAGS="-I${includetop} -I\${includedir}"
+	else
+		CFLAGS="-I\${includedir}"
+	fi
 fi
 
 if test "$libdir" = "/usr/lib" ; then
@@ -87,22 +95,22 @@ do
 	elif test $name = $SUB_LIBRARY ; then
 		desc="$desc terminal interface library"
 	elif expr $name : ".*${CXX_NAME}.*" >/dev/null ; then
-		reqs="$PANEL_LIBRARY, $MENU_LIBRARY, $FORM_LIBRARY, $MAIN_LIBRARY"
+		reqs="$PANEL_LIBRARY${suffix}, $MENU_LIBRARY${suffix}, $FORM_LIBRARY${suffix}, $MAIN_LIBRARY${suffix}"
 		desc="$desc add-on library"
 	else
-		reqs="$MAIN_LIBRARY"
+		reqs="$MAIN_LIBRARY${suffix}"
 		desc="$desc add-on library"
 	fi
 
 	if test $name != $SUB_LIBRARY && test $SUB_LIBRARY != $MAIN_LIBRARY ; then
 		if test $name != $TINFO_NAME ; then
 			test -n "$reqs" && reqs="$reqs, "
-			reqs="${reqs}${SUB_LIBRARY}"
+			reqs="${reqs}${SUB_LIBRARY}${suffix}"
 		fi
 	fi
 
 	echo "** creating ${name}.pc"
-	cat >${name}.pc <<EOF
+	cat >${name}${suffix}.pc <<EOF
 prefix=$show_prefix
 exec_prefix=$show_exec_prefix
 libdir=$show_libdir
@@ -110,7 +118,7 @@ includedir=$show_includedir
 major_version=@NCURSES_MAJOR@
 version=@NCURSES_MAJOR@.@NCURSES_MINOR@.@NCURSES_PATCH@
 
-Name: $name
+Name: ${name}${suffix}
 Description: $desc
 Version: \${version}
 URL: http://invisible-island.net/ncurses

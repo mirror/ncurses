@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.179 2014/12/06 13:31:57 tom Exp $
+-- $Id: INSTALL,v 1.180 2014/12/14 00:13:57 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -996,6 +996,11 @@ SUMMARY OF CONFIGURE OPTIONS:
 	applications that required knowledge of the ospeed variable, i.e.,
 	those using termcap, do not use the higher speeds.  Your application
 	(or system, in general) may or may not.
+
+    --with-pc-suffix=SUFFIX
+	If ".pc" files are installed, optionally add a suffix to the files
+	and corresponding package names to separate unusual configurations.
+	If no option value is given (or if it is "none"), no suffix is added.
 
     --with-pkg-config=[DIR]
 	Check for pkg-config, optionally specifying its path.
