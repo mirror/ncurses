@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.60 2014/11/15 13:54:00 tom Exp $
+# $Id: Makefile.in,v 1.61 2014/12/20 20:28:09 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -110,6 +110,7 @@ SHLIB_DIRS	= -L../lib
 SHLIB_LIST	= $(SHLIB_DIRS) -lncurses@LIB_SUFFIX@ @SHLIB_LIST@
 
 RPATH_LIST	= @RPATH_LIST@
+RESULTING_SYMS	= @RESULTING_SYMS@
 VERSIONED_SYMS	= @VERSIONED_SYMS@
 MK_SHARED_LIB	= @MK_SHARED_LIB@
 

@@ -2,7 +2,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2010,2013 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_mouse.3x,v 1.39 2013/06/22 18:09:42 tom Exp @
+  * @Id: curs_mouse.3x,v 1.40 2014/10/10 09:31:18 tom Exp @
 -->
 <HTML>
 <HEAD>
@@ -137,7 +137,7 @@
        REPORT_MOUSE_POSITION    report mouse movement
        ---------------------------------------------------------------------
 
-       Once a class of mouse events have been made visible  in  a
+       Once a class of mouse events has been made  visible  in  a
        window, calling the <STRONG>wgetch</STRONG> function on that window may re-
        turn <STRONG>KEY_MOUSE</STRONG> as an indicator that a mouse event has been
        queued.   To read the event data and pop the event off the
@@ -268,10 +268,17 @@
        is initialized for mouse operation.  The default, if <STRONG>XM</STRONG> is
        not found, corresponds to private mode 1000 of xterm:
               \E[?1000%?%p1%{1}%=%th%el%;
+
        The z member in the event structure is not presently used.
        It is intended for use with touch screens  (which  may  be
        pressure-sensitive)   or   with   3D-mice/trackballs/power
        gloves.
+
+       The  <STRONG>ALL_MOUSE_EVENTS</STRONG>   class   does   not   include   <STRONG>RE-</STRONG>
+       <STRONG>PORT_MOUSE_POSITION</STRONG>.   They are distinct.  For example, in
+       xterm, wheel/scrolling mice send position reports as a se-
+       quence  of presses of buttons 4 or 5 without matching but-
+       ton-releases.
 
 
 </PRE>
@@ -307,9 +314,6 @@
                                                          <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>
 </PRE>
 <HR>
-<ADDRESS>
-Man(1) output converted with
-<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
-</ADDRESS>
+Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
 </BODY>
 </HTML>

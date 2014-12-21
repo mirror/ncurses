@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.96 2013/09/07 17:54:05 Alexey.Pavlov Exp $
+# $Id: mk-1st.awk,v 1.98 2014/12/20 23:54:22 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -220,7 +220,7 @@ function shlib_build(directory) {
 			printf "\t\t%s/%s \\\n", directory, termlib_end_of();
 			suffix = save_suffix
 		}
-		printf "\t\t$(%s_OBJS)\n", OBJS
+		printf "\t\t$(RESULTING_SYMS) $(%s_OBJS)\n", OBJS
 		printf "\t@echo linking $@\n"
 		if ( is_ticlib() ) {
 			make_shlib(OBJS, "TICS_LIST")
