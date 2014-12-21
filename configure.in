@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.594 2014/12/21 00:00:25 tom Exp $
+dnl $Id: configure.in,v 1.595 2014/12/21 17:25:38 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.594 $)
+AC_REVISION($Revision: 1.595 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2098,14 +2098,11 @@ then
 	UNALTERED_SYMS=`echo "$RESULTING_SYMS" | sed -e 's/\\$/\\\\$/g'`
 	case $cf_cv_abi_version in
 	[[6789]])
-		if test -n "$VERSIONED_SYMS"
-		then
-			CF_VERBOSE(will map symbols to ABI=$cf_cv_abi_version)
-		fi
+		CF_VERBOSE(will map symbols to ABI=$cf_cv_abi_version)
 		RESULTING_SYMS=resulting.map
 		;;
 	*)
-		RESULTING_SYMS="$UNALTERED_SYMS"
+		CF_VERBOSE(will map symbols to default ABI)
 		;;
 	esac
 else
