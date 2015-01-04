@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2322 2014/12/27 17:39:19 tom Exp $
+-- $Id: NEWS,v 1.2327 2015/01/03 20:47:28 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150103
+	+ modify_nc_flush() to retry if interrupted (patch by Stian Skjelstad).
+	+ change map files to make _nc_freeall a global, since it may be used
+	  via the Ada95 binding when checking for memory leaks.
+	+ improve sed script used in 20141220 to account for wide-, threaded-
+	  variations in ABI 6.
 
 20141227
 	+ regenerate ".map" files, using step overlooked in 20141213 to use

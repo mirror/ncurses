@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.595 2014/12/21 17:25:38 tom Exp $
+dnl $Id: configure.in,v 1.596 2015/01/03 20:44:55 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.595 $)
+AC_REVISION($Revision: 1.596 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1550,6 +1550,7 @@ else
 	AC_FUNC_SETVBUF_REVERSED
 fi
 AC_CHECK_TYPE(intptr_t, long)
+AC_CHECK_TYPE(ssize_t, int)
 CF_TYPE_SIGACTION
 CF_SIZECHANGE
 CF_FUNC_MEMMOVE

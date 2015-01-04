@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.93 2013/01/12 20:57:32 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.96 2015/01/03 23:51:23 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -121,13 +121,26 @@ NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_DCL0)
 {
     if (SP_PARM != 0 && SP_PARM->_ofd >= 0) {
 	if (SP_PARM->out_inuse) {
+	    char *buf = SP_PARM->out_buffer;
 	    size_t amount = SP->out_inuse;
-	    /*
-	     * Help a little, if the write is interrupted, by first resetting
-	     * our amount.
-	     */
+	    ssize_t res;
+
 	    SP->out_inuse = 0;
-	    IGNORE_RC(write(SP_PARM->_ofd, SP_PARM->out_buffer, amount));
+	    while (amount) {
+		res = write(SP_PARM->_ofd, buf, amount);
+
+		if (res > 0) {
+		    /* if the write was incomplete, try again */
+		    amount -= (size_t) res;
+		    buf += res;
+		} else if (errno == EAGAIN) {
+		    continue;
+		} else if (errno == EINTR) {
+		    continue;
+		} else {
+		    break;	/* an error we can not recover from */
+		}
+	    }
 	}
     }
 }
