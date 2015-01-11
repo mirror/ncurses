@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -54,7 +54,7 @@
 
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.52 2014/10/25 00:24:24 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.54 2015/01/10 23:13:24 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -96,14 +96,27 @@ static const LONG keylist[] =
     GenMap(VK_DELETE, KEY_DC),
     GenMap(VK_INSERT, KEY_IC)
 };
+static const LONG ansi_keys[] =
+{
+    GenMap(VK_PRIOR, 'I'),
+    GenMap(VK_NEXT, 'Q'),
+    GenMap(VK_END, 'O'),
+    GenMap(VK_HOME, 'H'),
+    GenMap(VK_LEFT, 'K'),
+    GenMap(VK_UP, 'H'),
+    GenMap(VK_RIGHT, 'M'),
+    GenMap(VK_DOWN, 'P'),
+    GenMap(VK_DELETE, 'S'),
+    GenMap(VK_INSERT, 'R')
+};
 #define N_INI ((int)array_length(keylist))
 #define FKEYS 24
 #define MAPSIZE (FKEYS + N_INI)
 #define NUMPAIRS 64
 
-/*   A process can only have a single console, so it's save
+/*   A process can only have a single console, so it's safe
      to maintain all the information about it in a single
-     static scructure.
+     static structure.
  */
 static struct {
     BOOL initialized;
@@ -117,6 +130,7 @@ static struct {
     HANDLE hdl;
     HANDLE lastOut;
     int numButtons;
+    DWORD ansi_map[MAPSIZE];
     DWORD map[MAPSIZE];
     DWORD rmap[MAPSIZE];
     WORD pairs[NUMPAIRS];
@@ -1097,6 +1111,29 @@ MapKey(WORD vKey)
     return code;
 }
 
+static int
+AnsiKey(WORD vKey)
+{
+    WORD nKey = 0;
+    void *res;
+    LONG key = GenMap(vKey, 0);
+    int code = -1;
+
+    res = bsearch(&key,
+		  CON.ansi_map,
+		  (size_t) (N_INI + FKEYS),
+		  sizeof(keylist[0]),
+		  keycompare);
+    if (res) {
+	key = *((LONG *) res);
+	nKey = LOWORD(key);
+	code = (int) (nKey & 0x7fff);
+	if (nKey & 0x8000)
+	    code = -code;
+    }
+    return code;
+}
+
 static void
 wcon_release(TERMINAL_CONTROL_BLOCK * TCB)
 {
@@ -1524,7 +1561,7 @@ console_twait(
 				if (inp_rec.Event.KeyEvent.bKeyDown) {
 				    if (0 == ch) {
 					int nKey = MapKey(vk);
-					if ((nKey < 0) || FALSE == sp->_keypad_on) {
+					if (nKey < 0) {
 					    CONSUME();
 					    continue;
 					}
@@ -2064,18 +2101,28 @@ _nc_mingw_console_read(
 		    continue;
 		*buf = (int) inp_rec.Event.KeyEvent.uChar.AsciiChar;
 		vk = inp_rec.Event.KeyEvent.wVirtualKeyCode;
-		if (*buf == 0) {
-		    if (sp->_keypad_on) {
-			*buf = MapKey(vk);
-			if (0 > (*buf))
-			    continue;
-			else
-			    break;
-		    } else
-			continue;
-		} else {	/* *buf != 0 */
-		    break;
+		/*
+		 * There are 24 virtual function-keys, and typically
+		 * 12 function-keys on a keyboard.  Use the shift-modifier
+		 * to provide the remaining 12 keys.
+		 */
+		if (vk >= VK_F1 && vk <= VK_F12) {
+		    if (inp_rec.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED) {
+			vk = (WORD) (vk + 12);
+		    }
 		}
+		if (*buf == 0) {
+		    int key = MapKey(vk);
+		    if (key < 0)
+			continue;
+		    if (sp->_keypad_on) {
+			*buf = key;
+		    } else {
+			ungetch('\0');
+			*buf = AnsiKey(vk);
+		    }
+		}
+		break;
 	    } else if (inp_rec.EventType == MOUSE_EVENT) {
 		if (handle_mouse(sp,
 				 inp_rec.Event.MouseEvent)) {
@@ -2106,14 +2153,23 @@ __attribute__((constructor))
 	}
 
 	for (i = 0; i < (N_INI + FKEYS); i++) {
-	    if (i < N_INI)
+	    if (i < N_INI) {
 		CON.rmap[i] = CON.map[i] =
 		    (DWORD) keylist[i];
-	    else
+		CON.ansi_map[i] = (DWORD) ansi_keys[i];
+	    } else {
 		CON.rmap[i] = CON.map[i] =
 		    (DWORD) GenMap((VK_F1 + (i - N_INI)),
 				   (KEY_F(1) + (i - N_INI)));
+		CON.ansi_map[i] =
+		    (DWORD) GenMap((VK_F1 + (i - N_INI)),
+				   (';' + (i - N_INI)));
+	    }
 	}
+	qsort(CON.ansi_map,
+	      (size_t) (MAPSIZE),
+	      sizeof(keylist[0]),
+	      keycompare);
 	qsort(CON.map,
 	      (size_t) (MAPSIZE),
 	      sizeof(keylist[0]),

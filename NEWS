@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2327 2015/01/03 20:47:28 tom Exp $
+-- $Id: NEWS,v 1.2334 2015/01/10 23:31:24 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150110
+	+ add a step to generating ".map" files, to declare any remaining
+	  symbols beginning with "_" as local, at the last version node.
+	+ improve configure checks for pkg-config, addressing a variant found
+	  with FreeBSD ports.
+	+ modify win_driver.c to provide characters for special keys, like
+	  ansi.sys, when keypad mode is off, rather than returning nothing at
+	  all (discussion with Eli Zaretskii).
+	+ add "broken_linker" and "hashed-db" configure options to combinations
+	  use for generating the ".map" and ".sym" files.
+	+ avoid using "ld" directly when creating shared library, to simplify
+	  cross-compiles.  Also drop "-Bsharable" option from shared-library
+	  rules for FreeBSD and DragonFly (FreeBSD #196592).
+	+ fix a memory leak in form library Free_RegularExpression_Type()
+	  (report by Pavel Balaev).
 
 20150103
 	+ modify_nc_flush() to retry if interrupted (patch by Stian Skjelstad).

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.727 2015/01/03 20:48:02 tom Exp $
+dnl $Id: aclocal.m4,v 1.729 2015/01/10 22:05:24 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1336,7 +1336,7 @@ if test "$cf_disable_rpath_hack" = no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 10 updated: 2014/12/13 18:48:46
+dnl CF_ENABLE_PC_FILES version: 11 updated: 2015/01/10 17:03:43
 dnl ------------------
 dnl This is the "--enable-pc-files" option, which is available if there is a
 dnl pkg-config configuration on the local machine.
@@ -1356,10 +1356,19 @@ AC_ARG_ENABLE(pc-files,
 	[enable_pc_files=$enableval],
 	[enable_pc_files=no])
 AC_MSG_RESULT($enable_pc_files)
+
 if test "x$enable_pc_files" != xno
 then
-	CF_PATH_SYNTAX(PKG_CONFIG_LIBDIR)
-	MAKE_PC_FILES=
+	case "x$PKG_CONFIG_LIBDIR" in #(vi
+	xno|xyes) #(vi
+		AC_MSG_WARN(no PKG_CONFIG_LIBDIR was found)
+		MAKE_PC_FILES="#"
+		;;
+	*)
+		CF_PATH_SYNTAX(PKG_CONFIG_LIBDIR)
+		MAKE_PC_FILES=
+		;;
+	esac
 else
 	MAKE_PC_FILES="#"
 fi
@@ -5439,7 +5448,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 84 updated: 2013/11/03 06:26:10
+dnl CF_SHARED_OPTS version: 85 updated: 2015/01/10 13:38:03
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5702,7 +5711,7 @@ CF_EOF
 			EXTRA_LDFLAGS="${cf_ld_rpath_opt}\${RPATH_LIST} $EXTRA_LDFLAGS"
 		fi
 		CF_SHARED_SONAME
-		MK_SHARED_LIB='${LD} -shared -Bshareable -soname=`basename $[@]` -o $[@]'
+		MK_SHARED_LIB='${CC} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
 		;;
 	netbsd*) #(vi
 		CC_SHARED_OPTS="$CC_SHARED_OPTS -DPIC"
@@ -7176,7 +7185,7 @@ AC_SUBST($3)dnl
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 3 updated: 2014/12/13 18:48:46
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 4 updated: 2015/01/10 17:03:43
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
@@ -7219,7 +7228,8 @@ xyes) #(vi
 			$cf_path/lib/*-linux-gnu \
 			$cf_path/share \
 			$cf_path/lib32 \
-			$cf_path/lib"
+			$cf_path/lib \
+			$cf_path/libdata"
 		;;
 	esac
 
