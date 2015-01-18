@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2334 2015/01/10 23:31:24 tom Exp $
+-- $Id: NEWS,v 1.2338 2015/01/17 23:19:11 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150117
+	+ improve description in INSTALL of the --with-versioned-syms option.
+	+ add combination of --with-hashed-db and --with-ticlib to
+	  configurations for ".map" files (report by Werner Fink).
 
 20150110
 	+ add a step to generating ".map" files, to declare any remaining

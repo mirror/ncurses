@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.180 2014/12/14 00:13:57 tom Exp $
+-- $Id: INSTALL,v 1.183 2015/01/17 23:20:46 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1129,15 +1129,27 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-versioned-syms[=XXX]
 	The Solaris, GNU and reportedly some other linkers (ld) accept a
 	"--version-script" option which tells the linker to annotate the
-	resulting objects with version identifiers.  The configure script
-	will automatically apply a suitable ".map" file to provide this
-	information for Linux.  Solaris mapfiles differ:
+	resulting objects with version identifiers.
+	
+	Use "objdump -T" on a library to see the annotations.
+
+	The configure script will automatically apply a suitable ".map" file to
+	provide this information for Linux.  Solaris mapfiles differ:
 
 	a) comments are not accepted
-	b) wildcards are not accepted
+	b) wildcards are not accepted, except for a special case of "_*".
 	c) each symbol listed in the map file must exist in the library
 
-	Use "objdump -T" on a library to see the annotations.
+	The Solaris limitations conflict with the development goal of providing
+	a small set of ".map" files as examples, which cover the most common
+	configurations.  Because that coverage is done by merging together
+	several builds, some symbols will be listed in the the ".map" files
+	that do not happen to be present in one configuration or another.
+
+	These sample ".map" files will not cover all possible combinations.
+	In some cases, e.g., when using the --with-weak-symbols option, you
+	may prefer to use a different ".map" file by setting this option's
+	value.
 
     --with-xterm-kbs=XXX
 	Configure xterm's terminfo entries to use either BS (^H, i.e., ASCII
