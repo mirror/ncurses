@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.183 2015/01/17 23:20:46 tom Exp $
+-- $Id: INSTALL,v 1.184 2015/01/24 23:24:22 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1130,11 +1130,11 @@ SUMMARY OF CONFIGURE OPTIONS:
 	The Solaris, GNU and reportedly some other linkers (ld) accept a
 	"--version-script" option which tells the linker to annotate the
 	resulting objects with version identifiers.
-	
+
 	Use "objdump -T" on a library to see the annotations.
 
-	The configure script will automatically apply a suitable ".map" file to
-	provide this information for Linux.  Solaris mapfiles differ:
+	The configure script attempts to automatically apply a suitable ".map"
+	file to provide this information for Linux.  Solaris mapfiles differ:
 
 	a) comments are not accepted
 	b) wildcards are not accepted, except for a special case of "_*".
@@ -1145,6 +1145,12 @@ SUMMARY OF CONFIGURE OPTIONS:
 	configurations.  Because that coverage is done by merging together
 	several builds, some symbols will be listed in the the ".map" files
 	that do not happen to be present in one configuration or another.
+
+	The sample ".map" (and ".sym") files are generated using a set of
+	scripts which build several configurations for each release version,
+	checking to see which of the "_nc_" symbols can be made local.  In
+	addition to the ncurses libraries and programs, the symbols used
+	by the "tack" program are made global.
 
 	These sample ".map" files will not cover all possible combinations.
 	In some cases, e.g., when using the --with-weak-symbols option, you

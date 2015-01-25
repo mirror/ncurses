@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.596 2015/01/03 20:44:55 tom Exp $
+dnl $Id: configure.in,v 1.597 2015/01/21 23:34:29 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.596 $)
+AC_REVISION($Revision: 1.597 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2094,20 +2094,31 @@ then
 	echo "package: $PACKAGE"
 fi
 
+UNALTERED_SYMS=
+cf_filter_syms=no
+
 if test -n "$RESULTING_SYMS"
 then
-	UNALTERED_SYMS=`echo "$RESULTING_SYMS" | sed -e 's/\\$/\\\\$/g'`
 	case $cf_cv_abi_version in
 	[[6789]])
 		CF_VERBOSE(will map symbols to ABI=$cf_cv_abi_version)
-		RESULTING_SYMS=resulting.map
+		cf_filter_syms=yes
 		;;
 	*)
 		CF_VERBOSE(will map symbols to default ABI)
 		;;
 	esac
-else
-	UNALTERED_SYMS=
+fi
+
+if test "x$WILDCARD_SYMS" = xno
+then
+	cf_filter_syms=yes
+fi
+
+UNALTERED_SYMS=`echo "$RESULTING_SYMS" | sed -e 's/\\$/\\\\$/g'`
+if test $cf_filter_syms = yes
+then
+	RESULTING_SYMS=resulting.map
 fi
 AC_SUBST(UNALTERED_SYMS)
 
@@ -2164,6 +2175,7 @@ TINFO_NAME="$TINFO_NAME"
 TINFO_SUFFIX="$TINFO_SUFFIX"
 UNALTERED_SYMS="$UNALTERED_SYMS"
 USE_OLD_MAKERULES="$USE_OLD_MAKERULES"
+WILDCARD_SYMS="$WILDCARD_SYMS"
 WITH_CURSES_H="$with_curses_h"
 WITH_ECHO="${enable_echo:=yes}"
 WITH_OVERWRITE="$with_overwrite"

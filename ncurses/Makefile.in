@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.145 2014/12/20 20:28:09 tom Exp $
+# $Id: Makefile.in,v 1.146 2015/01/21 10:24:18 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -264,9 +264,6 @@ tags:
 
 @MAKE_UPPER_TAGS@TAGS:
 @MAKE_UPPER_TAGS@	$(ETAGS) *.[ch] */*.[ch]
-
-ncurses.map : $(LIBRARIES)
-	$(NM) -p $(LIBRARIES) >$@
 
 mostlyclean ::
 	-rm -f core tags TAGS *~ *.bak *.i *.ln *.atac trace
