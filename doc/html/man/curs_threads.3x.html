@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 2008-2012,2014 Free Software Foundation, Inc.              *
@@ -31,8 +30,11 @@
   * ***************************************************************************
   * ***************************************************************************
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_threads 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -41,19 +43,18 @@
 <H1>curs_threads 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>                                       <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>use_screen</STRONG>, <STRONG>use_window</STRONG> - <STRONG>curses</STRONG> thread support
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>typedef</STRONG> <STRONG>int</STRONG> <STRONG>(*NCURSES_WINDOW_CB)(WINDOW</STRONG> <STRONG>*,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
@@ -68,7 +69,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This  implementation can be configured to provide rudimen-
        tary support for multi-threaded applications.  This  makes
        a  different set of libraries, e.g., <EM>libncursest</EM> since the
@@ -108,7 +109,9 @@
        a  <EM>data</EM>  parameter, and returning the value from the user-
        supplied function to the application.
 
-   <STRONG>USAGE</STRONG>
+
+</PRE>
+<H3><a name="h3-USAGE">USAGE</a></H3><PRE>
        All of the ncurses library functions assume that  the  lo-
        cale  is  not altered during operation.  In addition, they
        use data which is maintained within a hierarchy of scopes.
@@ -601,17 +604,17 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These functions all return TRUE or FALSE, except as noted.
 
 
 </PRE>
-<H2>NOTES</H2><PRE>
+<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Both a macro and a function are provided for each name.
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  are  specific  to ncurses.  They were not
        supported on Version 7, BSD or System  V  implementations.
        It  is  recommended that any code depending on ncurses ex-
@@ -619,14 +622,27 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
 
 
 
                                                        <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-USAGE">USAGE</a></li>
+</ul>
+</li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 2010,2013 Free Software Foundation, Inc.                   *
@@ -29,8 +28,11 @@
   ****************************************************************************
   * @Id: curs_variables.3x,v 1.6 2013/12/21 18:41:32 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_variables 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -39,20 +41,19 @@
 <H1>curs_variables 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>                                   <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>COLORS</STRONG>, <STRONG>COLOR_PAIRS</STRONG>, <STRONG>COLS</STRONG>, <STRONG>ESCDELAY</STRONG>, <STRONG>LINES</STRONG>, <STRONG>TABSIZE</STRONG>,
        <STRONG>curscr</STRONG>, <STRONG>newscr</STRONG>, <STRONG>stdscr</STRONG> - <STRONG>curses</STRONG> global variables
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>COLOR_PAIRS;</STRONG>
@@ -67,7 +68,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This page summarizes variables provided by the <STRONG>curses</STRONG>  li-
        brary.   A more complete description is given in the <STRONG>curs-</STRONG>
        <STRONG><A HREF="ncurses.3x.html">es(3x)</A></STRONG> manual page.
@@ -78,7 +79,9 @@
        <EM>es</EM>'s  state.   In  either  case, applications should treat
        them as read-only to avoid confusing the library.
 
-   <STRONG>COLOR_PAIRS</STRONG>
+
+</PRE>
+<H3><a name="h3-COLOR_PAIRS">COLOR_PAIRS</a></H3><PRE>
        After initializing curses, this variable contains the num-
        ber of color pairs which the terminal can support.  Usual-
        ly the number of color pairs  will  be  the  product  <STRONG>COL-</STRONG>
@@ -91,47 +94,63 @@
            ited  by  the number of color pairs that can be repre-
            sented in a <EM>signed</EM> <EM>short</EM> value.
 
-   <STRONG>COLORS</STRONG>
+
+</PRE>
+<H3><a name="h3-COLORS">COLORS</a></H3><PRE>
        After initializing curses, this variable contains the num-
        ber of colors which the terminal can support.
 
-   <STRONG>COLS</STRONG>
+
+</PRE>
+<H3><a name="h3-COLS">COLS</a></H3><PRE>
        After  initializing  curses,  this  variable  contains the
        width of the screen, i.e., the number of columns.
 
-   <STRONG>ESCDELAY</STRONG>
+
+</PRE>
+<H3><a name="h3-ESCDELAY">ESCDELAY</a></H3><PRE>
        This variable holds the number of milliseconds to wait af-
        ter reading an escape character, to distinguish between an
        individual escape character entered on the  keyboard  from
        escape  sequences  sent  by cursor- and function-keys (see
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
 
-   <STRONG>LINES</STRONG>
+
+</PRE>
+<H3><a name="h3-LINES">LINES</a></H3><PRE>
        After initializing  curses,  this  variable  contains  the
        height of the screen, i.e., the number of lines.
 
-   <STRONG>TABSIZE</STRONG>
+
+</PRE>
+<H3><a name="h3-TABSIZE">TABSIZE</a></H3><PRE>
        This  variable  holds  the  number  of columns used by the
        <EM>curses</EM> library when converting a tab character  to  spaces
        as it adds the tab to a window (see <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>.
 
-   <STRONG>The</STRONG> <STRONG>Current</STRONG> <STRONG>Screen</STRONG>
+
+</PRE>
+<H3><a name="h3-The-Current-Screen">The Current Screen</a></H3><PRE>
        This implementation of curses uses a special window <STRONG>curscr</STRONG>
        to record its updates to the terminal screen.
 
-   <STRONG>The</STRONG> <STRONG>New</STRONG> <STRONG>Screen</STRONG>
+
+</PRE>
+<H3><a name="h3-The-New-Screen">The New Screen</a></H3><PRE>
        This implementation of curses uses a special window <STRONG>newscr</STRONG>
        to  hold  updates  to  the terminal screen before applying
        them to <STRONG>curscr</STRONG>.
 
-   <STRONG>The</STRONG> <STRONG>Standard</STRONG> <STRONG>Screen</STRONG>
+
+</PRE>
+<H3><a name="h3-The-Standard-Screen">The Standard Screen</a></H3><PRE>
        Upon initializing curses, a default window called  <STRONG>stdscr</STRONG>,
        which  is  the  size  of  the terminal screen, is created.
        Many curses functions use this window.
 
 
 </PRE>
-<H2>NOTES</H2><PRE>
+<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The   curses   library   is   initialized   using   either
        <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, or <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>.
 
@@ -141,13 +160,13 @@
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        ESCDELAY  and TABSIZE are extensions, not provided in most
        other implementations of curses.
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,      <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>,       <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>,
        <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>, <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
@@ -155,7 +174,27 @@
 
                                                      <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-COLOR_PAIRS">COLOR_PAIRS</a></li>
+<li><a href="#h3-COLORS">COLORS</a></li>
+<li><a href="#h3-COLS">COLS</a></li>
+<li><a href="#h3-ESCDELAY">ESCDELAY</a></li>
+<li><a href="#h3-LINES">LINES</a></li>
+<li><a href="#h3-TABSIZE">TABSIZE</a></li>
+<li><a href="#h3-The-Current-Screen">The Current Screen</a></li>
+<li><a href="#h3-The-New-Screen">The New Screen</a></li>
+<li><a href="#h3-The-Standard-Screen">The Standard Screen</a></li>
+</ul>
+</li>
+<li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 1999-2011,2013 Free Software Foundation, Inc.              *
@@ -34,8 +33,11 @@
   * ***************************************************************************
   * ***************************************************************************
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_terminfo 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -44,14 +46,13 @@
 <H1>curs_terminfo 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>                                     <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>del_curterm</STRONG>, <STRONG>mvcur</STRONG>, <STRONG>putp</STRONG>, <STRONG>restartterm</STRONG>, <STRONG>set_curterm</STRONG>,
        <STRONG>setterm</STRONG>, <STRONG>setupterm</STRONG>, <STRONG>tigetflag</STRONG>, <STRONG>tigetnum</STRONG>, <STRONG>tigetstr</STRONG>, <STRONG>tiparm</STRONG>,
        <STRONG>tparm</STRONG>, <STRONG>tputs</STRONG>, <STRONG>vid_attr</STRONG>, <STRONG>vid_puts</STRONG>, <STRONG>vidattr</STRONG>, <STRONG>vidputs</STRONG> -
@@ -59,7 +60,7 @@
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
        <STRONG>#include</STRONG> <STRONG>&lt;term.h&gt;</STRONG>
 
@@ -83,14 +84,16 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These low-level routines must be called by  programs  that
        have to deal directly with the <STRONG>terminfo</STRONG> database to handle
        certain terminal capabilities, such as  programming  func-
        tion  keys.   For all other functionality, <STRONG>curses</STRONG> routines
        are more suitable and their use is recommended.
 
-   <STRONG>Initialization</STRONG>
+
+</PRE>
+<H3><a name="h3-Initialization">Initialization</a></H3><PRE>
        Initially, <STRONG>setupterm</STRONG> should  be  called.   Note  that  <STRONG>se-</STRONG>
        <STRONG>tupterm</STRONG>  is  automatically  called by <STRONG>initscr</STRONG> and <STRONG>newterm</STRONG>.
        This  defines  the  set  of  terminal-dependent  variables
@@ -178,7 +181,9 @@
        <STRONG>setterm</STRONG> routine is provided for BSD compatibility, and  is
        not recommended for new programs.
 
-   <STRONG>The</STRONG> <STRONG>Terminal</STRONG> <STRONG>State</STRONG>
+
+</PRE>
+<H3><a name="h3-The-Terminal-State">The Terminal State</a></H3><PRE>
        The  <STRONG>setupterm</STRONG>  routine  stores  its information about the
        terminal in a <STRONG>TERMINAL</STRONG> structure pointed to by the  global
        variable  <STRONG>cur_term</STRONG>.   If  it  detects an error, or decides
@@ -214,7 +219,9 @@
        tty  state  bits,  calls  <STRONG>setupterm</STRONG>, and then restores the
        bits.
 
-   <STRONG>Formatting</STRONG> <STRONG>Output</STRONG>
+
+</PRE>
+<H3><a name="h3-Formatting-Output">Formatting Output</a></H3><PRE>
        The <STRONG>tparm</STRONG> routine instantiates the string <EM>str</EM> with parame-
        ters  <EM>pi</EM>.  A pointer is returned to the result of <EM>str</EM> with
        the parameters applied.
@@ -223,7 +230,9 @@
        rather  than  a fixed-parameter list.  Its numeric parame-
        ters are integers (int) rather than longs.
 
-   <STRONG>Output</STRONG> <STRONG>Functions</STRONG>
+
+</PRE>
+<H3><a name="h3-Output-Functions">Output Functions</a></H3><PRE>
        The <STRONG>tputs</STRONG>  routine  applies  padding  information  to  the
        string  <EM>str</EM>  and  outputs  it.  The <EM>str</EM> must be a terminfo
        string variable or the return value from  <STRONG>tparm</STRONG>,  <STRONG>tgetstr</STRONG>,
@@ -257,7 +266,9 @@
        takes effect immediately (rather  than  at  the  next  re-
        fresh).
 
-   <STRONG>Terminal</STRONG> <STRONG>Capability</STRONG> <STRONG>Functions</STRONG>
+
+</PRE>
+<H3><a name="h3-Terminal-Capability-Functions">Terminal Capability Functions</a></H3><PRE>
        The  <STRONG>tigetflag</STRONG>,  <STRONG>tigetnum</STRONG> and <STRONG>tigetstr</STRONG> routines return the
        value of the capability corresponding to the <STRONG>terminfo</STRONG> <EM>cap-</EM>
        <EM>name</EM>  passed  to them, such as <STRONG>xenl</STRONG>.  The <EM>capname</EM> for each
@@ -288,7 +299,9 @@
        <STRONG>0</STRONG>      if  it  is canceled or absent from the terminal de-
               scription.
 
-   <STRONG>Terminal</STRONG> <STRONG>Capability</STRONG> <STRONG>Names</STRONG>
+
+</PRE>
+<H3><a name="h3-Terminal-Capability-Names">Terminal Capability Names</a></H3><PRE>
        These null-terminated arrays contain  the  short  terminfo
        names  ("codes"), the <STRONG>termcap</STRONG> names, and the long terminfo
        names ("fnames") for each of the predefined <STRONG>terminfo</STRONG> vari-
@@ -301,7 +314,7 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines  that  return  an integer return <STRONG>ERR</STRONG> upon failure
        and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value  other  than
        <STRONG>ERR</STRONG>")  upon  successful completion, unless otherwise noted
@@ -336,7 +349,7 @@
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        X/Open notes that <STRONG>vidattr</STRONG> and <STRONG>vidputs</STRONG> may be macros.
 
        The  function  <STRONG>setterm</STRONG> is not described by X/Open and must
@@ -414,7 +427,7 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,  <STRONG>curs_term-</STRONG>
        <STRONG><A HREF="curs_termcap.3x.html">cap(3x)</A></STRONG>,  <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>, <STRONG>putc(3)</STRONG>,
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
@@ -423,7 +436,24 @@
 
                                                       <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-Initialization">Initialization</a></li>
+<li><a href="#h3-The-Terminal-State">The Terminal State</a></li>
+<li><a href="#h3-Formatting-Output">Formatting Output</a></li>
+<li><a href="#h3-Output-Functions">Output Functions</a></li>
+<li><a href="#h3-Terminal-Capability-Functions">Terminal Capability Functions</a></li>
+<li><a href="#h3-Terminal-Capability-Names">Terminal Capability Names</a></li>
+</ul>
+</li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

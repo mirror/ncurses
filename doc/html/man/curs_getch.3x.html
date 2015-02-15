@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   * t
   ****************************************************************************
@@ -30,8 +29,11 @@
   ****************************************************************************
   * @Id: curs_getch.3x,v 1.39 2014/05/24 20:16:31 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_getch 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -40,20 +42,19 @@
 <H1>curs_getch 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>                                           <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>getch</STRONG>, <STRONG>wgetch</STRONG>, <STRONG>mvgetch</STRONG>, <STRONG>mvwgetch</STRONG>, <STRONG>ungetch</STRONG>, <STRONG>has_key</STRONG> - get
        (or push back) characters from <STRONG>curses</STRONG> terminal keyboard
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>getch(void);</STRONG>
@@ -65,7 +66,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <STRONG>getch</STRONG>, <STRONG>wgetch</STRONG>, <STRONG>mvgetch</STRONG> and <STRONG>mvwgetch</STRONG>, routines  read  a
        character  from the window.  In no-delay mode, if no input
        is waiting, the value <STRONG>ERR</STRONG> is returned.  In delay mode, the
@@ -120,7 +121,9 @@
        be returned by the next call to <STRONG>wgetch</STRONG>.  There is just one
        input queue for all windows.
 
-   <STRONG>Function</STRONG> <STRONG>Keys</STRONG>
+
+</PRE>
+<H3><a name="h3-Function-Keys">Function Keys</a></H3><PRE>
        The following function keys, defined in <STRONG>&lt;curses.h&gt;</STRONG>,  might
        be  returned  by  <STRONG>getch</STRONG>  if <STRONG>keypad</STRONG> has been enabled.  Note
        that not all of these are  necessarily  supported  on  any
@@ -243,7 +246,7 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon  failure  and  an
        integer value other than <STRONG>ERR</STRONG> (<STRONG>OK</STRONG> in the case of ungetch())
        upon successful completion.
@@ -261,7 +264,7 @@
 
 
 </PRE>
-<H2>NOTES</H2><PRE>
+<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Use of the escape key by a programmer for a single charac-
        ter function is discouraged, as it will cause a  delay  of
        up to one second while the keypad code looks for a follow-
@@ -311,7 +314,7 @@
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The *get* functions are described in the XSI Curses  stan-
        dard,  Issue  4.   They  read single-byte characters only.
        The standard specifies that they return  <STRONG>ERR</STRONG>  on  failure,
@@ -344,7 +347,7 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>,       <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>,
        <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>,   <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>,   <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,   <STRONG>re-</STRONG>
        <STRONG><A HREF="resizeterm.3x.html">sizeterm(3x)</A></STRONG>.
@@ -356,7 +359,20 @@
 
                                                          <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-Function-Keys">Function Keys</a></li>
+</ul>
+</li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

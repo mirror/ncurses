@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 1998-2010,2014 Free Software Foundation, Inc.              *
@@ -29,8 +28,11 @@
   ****************************************************************************
   * @Id: curs_window.3x,v 1.18 2014/03/01 23:36:38 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_window 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -39,21 +41,20 @@
 <H1>curs_window 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>                                         <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>newwin</STRONG>, <STRONG>delwin</STRONG>, <STRONG>mvwin</STRONG>, <STRONG>subwin</STRONG>, <STRONG>derwin</STRONG>, <STRONG>mvderwin</STRONG>, <STRONG>dupwin</STRONG>,
        <STRONG>wsyncup</STRONG>, <STRONG>syncok</STRONG>, <STRONG>wcursyncup</STRONG>, <STRONG>wsyncdown</STRONG> - create <STRONG>curses</STRONG>
        windows
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>WINDOW</STRONG> <STRONG>*newwin(</STRONG>
@@ -76,7 +77,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        Calling <STRONG>newwin</STRONG> creates and returns a pointer to a new win-
        dow with the given number of lines and columns.  The upper
        left-hand corner of the window is at
@@ -140,7 +141,7 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines that return an integer return the integer <STRONG>ERR</STRONG> up-
        on  failure  and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value
        other than <STRONG>ERR</STRONG>") upon successful completion.
@@ -197,7 +198,7 @@
 
 
 </PRE>
-<H2>NOTES</H2><PRE>
+<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        If many small changes are made to the window, the  <STRONG>wsyncup</STRONG>
        option could degrade performance.
 
@@ -205,7 +206,7 @@
 
 
 </PRE>
-<H2>BUGS</H2><PRE>
+<H2><a name="h2-BUGS">BUGS</a></H2><PRE>
        The  subwindow  functions (<EM>subwin</EM>, <EM>derwin</EM>, <EM>mvderwin</EM>, <STRONG>wsyn-</STRONG>
        <STRONG>cup</STRONG>, <STRONG>wsyncdown</STRONG>, <STRONG>wcursyncup</STRONG>, <STRONG>syncok</STRONG>) are flaky, incomplete-
        ly implemented, and not well tested.
@@ -220,13 +221,13 @@
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,  <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>,  <STRONG>curs_vari-</STRONG>
        <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>
 
@@ -234,7 +235,17 @@
 
                                                         <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-BUGS">BUGS</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

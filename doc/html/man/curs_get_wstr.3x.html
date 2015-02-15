@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 2002-2010,2012 Free Software Foundation, Inc.              *
@@ -29,8 +28,11 @@
   ****************************************************************************
   * @Id: curs_get_wstr.3x,v 1.9 2012/11/03 23:03:59 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_get_wstr 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -39,21 +41,20 @@
 <H1>curs_get_wstr 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>                                     <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>get_wstr</STRONG>, <STRONG>getn_wstr</STRONG>, <STRONG>wget_wstr</STRONG>, <STRONG>wgetn_wstr</STRONG>, <STRONG>mvget_wstr</STRONG>,
        <STRONG>mvgetn_wstr</STRONG>, <STRONG>mvwget_wstr</STRONG>, <STRONG>mvwgetn_wstr</STRONG> - get an array of
        wide characters from a curses terminal keyboard
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>get_wstr(wint_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>);</STRONG>
@@ -67,7 +68,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  effect  of <STRONG>get_wstr</STRONG> is as though a series of calls to
        <STRONG>get_wch</STRONG> were made, until a newline, other end-of-line,  or
        end-of-file condition is processed.  An end-of-file condi-
@@ -103,7 +104,7 @@
 
 
 </PRE>
-<H2>NOTES</H2><PRE>
+<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Using <STRONG>get_wstr</STRONG>, <STRONG>mvget_wstr</STRONG>, <STRONG>mvwget_wstr</STRONG>, or  <STRONG>wget_wstr</STRONG>  to
        read  a  line  that overflows the array pointed to by <STRONG>wstr</STRONG>
        causes  undefined  results.    The   use   of   <STRONG>getn_wstr</STRONG>,
@@ -118,7 +119,7 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All of these functions return <STRONG>OK</STRONG> upon  successful  comple-
        tion.  Otherwise, they return <STRONG>ERR</STRONG>.
 
@@ -135,7 +136,7 @@
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  functions are described in The Single Unix Specifi-
        cation, Version 2.  No error conditions are defined.  This
        implementation  returns ERR if the window pointer is null,
@@ -150,14 +151,23 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        Functions: <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_get_wch.3x.html">curs_get_wch(3x)</A></STRONG>, <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>.
 
 
 
                                                       <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

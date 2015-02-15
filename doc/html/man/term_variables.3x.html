@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 2011,2013 Free Software Foundation, Inc.                   *
@@ -29,8 +28,11 @@
   ****************************************************************************
   * @Id: term_variables.3x,v 1.4 2013/12/21 22:17:39 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>term_variables 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -39,21 +41,20 @@
 <H1>term_variables 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>                                   <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>SP</STRONG>, <STRONG>acs_map</STRONG>, <STRONG>boolcodes</STRONG>, <STRONG>boolfnames</STRONG>, <STRONG>boolnames</STRONG>, <STRONG>cur_term</STRONG>,
        <STRONG>numcodes</STRONG>, <STRONG>numfnames</STRONG>, <STRONG>numnames</STRONG>, <STRONG>strcodes</STRONG>, <STRONG>strfnames</STRONG>,
        <STRONG>strnames</STRONG>, <STRONG>ttytype</STRONG> - <STRONG>curses</STRONG> terminfo global variables
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
        <STRONG>#include</STRONG> <STRONG>&lt;term.h&gt;</STRONG>
 
@@ -72,7 +73,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This  page summarizes variables provided by the <STRONG>curses</STRONG> li-
        brary's low-level terminfo interface.  A more complete de-
        scription is given in the <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG> manual page.
@@ -83,7 +84,9 @@
        plications should treat them as read-only to avoid confus-
        ing the library.
 
-   <STRONG>Alternate</STRONG> <STRONG>Character</STRONG> <STRONG>Set</STRONG> <STRONG>Mapping</STRONG>
+
+</PRE>
+<H3><a name="h3-Alternate-Character-Set-Mapping">Alternate Character Set Mapping</a></H3><PRE>
        After  initializing the curses or terminfo interfaces, the
        <STRONG>acs_map</STRONG> array holds information used  to  translate  cells
        with  the  <STRONG>A_ALTCHARSET</STRONG>  video attribute into line-drawing
@@ -96,7 +99,9 @@
        The comparable data for the wide-character  library  is  a
        private variable.
 
-   <STRONG>Current</STRONG> <STRONG>Terminal</STRONG> <STRONG>Data</STRONG>
+
+</PRE>
+<H3><a name="h3-Current-Terminal-Data">Current Terminal Data</a></H3><PRE>
        After  initializing the curses or terminfo interfaces, the
        <STRONG>cur_term</STRONG> contains data describing  the  current  terminal.
        This variable is also set as a side-effect of <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>
@@ -107,7 +112,9 @@
        screens.  Alternatively, one can  save  the  return  value
        from <STRONG>newterm</STRONG> or <STRONG>setupterm</STRONG> to reuse in <STRONG>set_term</STRONG>.
 
-   <STRONG>Terminfo</STRONG> <STRONG>Names</STRONG>
+
+</PRE>
+<H3><a name="h3-Terminfo-Names">Terminfo Names</a></H3><PRE>
        The  <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>  and <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG> programs use lookup tables for
        the long and short names of terminfo capabilities, as well
        as  the  corresponding  names  for  termcap  capabilities.
@@ -123,20 +130,22 @@
        These  are  the  corresponding  names used for termcap de-
        scriptions: boolcodes, numcodes, and strcodes.
 
-   <STRONG>Terminal</STRONG> <STRONG>Type</STRONG>
+
+</PRE>
+<H3><a name="h3-Terminal-Type">Terminal Type</a></H3><PRE>
        On initialization of the curses  or  terminfo  interfaces,
        <STRONG>setupterm</STRONG> copies the terminal name to the array <STRONG>ttytype</STRONG>.
 
 
 </PRE>
-<H2>NOTES</H2><PRE>
+<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The  low-level  terminfo  interface  is  initialized using
        <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>.  The upper-level curses interface uses  the
        low-level terminfo interface, internally.
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        X/Open  Curses  does  not describe any of these except for
        <STRONG>cur_term</STRONG>.  (The inclusion of <STRONG>cur_term</STRONG>  appears  to  be  an
        oversight, since other comparable low-level information is
@@ -148,7 +157,7 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,      <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>,      <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>,
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
@@ -156,7 +165,22 @@
 
                                                      <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-Alternate-Character-Set-Mapping">Alternate Character Set Mapping</a></li>
+<li><a href="#h3-Current-Terminal-Data">Current Terminal Data</a></li>
+<li><a href="#h3-Terminfo-Names">Terminfo Names</a></li>
+<li><a href="#h3-Terminal-Type">Terminal Type</a></li>
+</ul>
+</li>
+<li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

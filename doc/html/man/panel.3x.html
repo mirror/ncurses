@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
@@ -29,8 +28,11 @@
   ****************************************************************************
   * @Id: panel.3x,v 1.17 2010/10/02 23:22:44 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>panel 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -39,19 +41,18 @@
 <H1>panel 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="panel.3x.html">panel(3x)</A></STRONG>                                                     <STRONG><A HREF="panel.3x.html">panel(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        panel - panel stack extension for curses
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;panel.h&gt;</STRONG>
 
        <STRONG>cc</STRONG> <STRONG>[flags]</STRONG> <STRONG>sourcefiles</STRONG> <STRONG>-lpanel</STRONG> <STRONG>-lncurses</STRONG>
@@ -74,7 +75,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        Panels  are  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>  windows with the added feature of
        depth.  Panel functions allow the use of  stacked  windows
        and  ensure  the  proper  portions  of each window and the
@@ -95,7 +96,7 @@
 
 
 </PRE>
-<H2>FUNCTIONS</H2><PRE>
+<H2><a name="h2-FUNCTIONS">FUNCTIONS</a></H2><PRE>
        <STRONG>new_panel(win)</STRONG>
               allocates   a   <STRONG>PANEL</STRONG> structure, associates it with
               <STRONG>win</STRONG>, places the panel  on  the  top  of  the  stack
@@ -173,14 +174,14 @@
 
 
 </PRE>
-<H2>DIAGNOSTICS</H2><PRE>
+<H2><a name="h2-DIAGNOSTICS">DIAGNOSTICS</a></H2><PRE>
        Each  routine  that  returns  a pointer returns <STRONG>NULL</STRONG> if an
        error occurs. Each  routine  that  returns  an  int  value
        returns <STRONG>OK</STRONG> if it executes successfully and <STRONG>ERR</STRONG> if not.
 
 
 </PRE>
-<H2>COMPATIBILITY</H2><PRE>
+<H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
        Reasonable  care  has been taken to  ensure  compatibility
        with  the  native  panel  facility  introduced  in  SVr3.2
        (inspection of the SVr4 manual pages suggests the program-
@@ -200,7 +201,7 @@
 
 
 </PRE>
-<H2>NOTE</H2><PRE>
+<H2><a name="h2-NOTE">NOTE</a></H2><PRE>
        In your library list, libpanel.a should  be  before  libn-
        curses.a;  that  is,  you want to say `-lpanel -lncurses',
        not the other way around (which would usually give a link-
@@ -208,21 +209,21 @@
 
 
 </PRE>
-<H2>FILES</H2><PRE>
+<H2><a name="h2-FILES">FILES</a></H2><PRE>
        panel.h interface for the panels library
 
        libpanel.a the panels library itself
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,
 
-       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20141220).
+       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20150215).
 
 
 </PRE>
-<H2>AUTHOR</H2><PRE>
+<H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Originally   written   by   Warren  Tucker  &lt;wht@n4hgf.mt-
        park.ga.us&gt;, primarily to assist  in  porting  u386mon  to
        systems  without  a native panels library.  Repackaged for
@@ -232,7 +233,19 @@
 
                                                               <STRONG><A HREF="panel.3x.html">panel(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-FUNCTIONS">FUNCTIONS</a></li>
+<li><a href="#h2-DIAGNOSTICS">DIAGNOSTICS</a></li>
+<li><a href="#h2-COMPATIBILITY">COMPATIBILITY</a></li>
+<li><a href="#h2-NOTE">NOTE</a></li>
+<li><a href="#h2-FILES">FILES</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+<li><a href="#h2-AUTHOR">AUTHOR</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

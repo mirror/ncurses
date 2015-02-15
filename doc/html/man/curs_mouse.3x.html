@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   * t
   ****************************************************************************
@@ -30,8 +29,11 @@
   ****************************************************************************
   * @Id: curs_mouse.3x,v 1.40 2014/10/10 09:31:18 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_mouse 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -40,21 +42,20 @@
 <H1>curs_mouse 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>                                           <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>has_mouse</STRONG>, <STRONG>getmouse</STRONG>, <STRONG>ungetmouse</STRONG>, <STRONG>mousemask</STRONG>, <STRONG>wenclose</STRONG>,
        <STRONG>mouse_trafo</STRONG>, <STRONG>wmouse_trafo</STRONG>, <STRONG>mouseinterval</STRONG> - mouse interface
        through curses
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>typedef</STRONG> <STRONG>unsigned</STRONG> <STRONG>long</STRONG> <STRONG>mmask_t;</STRONG>
@@ -77,7 +78,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These  functions provide an interface to mouse events from
        <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>.  Mouse events are  represented  by  <STRONG>KEY_MOUSE</STRONG>
        pseudo-key values in the <STRONG>wgetch</STRONG> input stream.
@@ -206,7 +207,7 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        <STRONG>getmouse</STRONG>  and <STRONG>ungetmouse</STRONG> return the integer <STRONG>ERR</STRONG> upon fail-
        ure or <STRONG>OK</STRONG> upon successful completion.
 
@@ -230,7 +231,7 @@
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These calls were designed for  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>,  and  are  not
        found in SVr4 curses, 4.4BSD curses, or any other previous
        version of curses.
@@ -282,7 +283,7 @@
 
 
 </PRE>
-<H2>BUGS</H2><PRE>
+<H2><a name="h2-BUGS">BUGS</a></H2><PRE>
        Mouse events under xterm will not in fact be ignored  dur-
        ing  cooked  mode, if they have been enabled by <STRONG>mousemask</STRONG>.
        Instead, the xterm mouse report sequence  will  appear  in
@@ -305,7 +306,7 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,   <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>,   <STRONG>curs_vari-</STRONG>
        <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>.
 
@@ -313,7 +314,16 @@
 
                                                          <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-BUGS">BUGS</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

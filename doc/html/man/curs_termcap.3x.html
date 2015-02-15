@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
@@ -29,8 +28,11 @@
   ****************************************************************************
   * @Id: curs_termcap.3x,v 1.30 2013/01/19 15:58:48 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_termcap 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -39,21 +41,20 @@
 <H1>curs_termcap 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>                                       <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>PC</STRONG>, <STRONG>UP</STRONG>, <STRONG>BC</STRONG>, <STRONG>ospeed</STRONG>, <STRONG>tgetent</STRONG>, <STRONG>tgetflag</STRONG>, <STRONG>tgetnum</STRONG>, <STRONG>tgetstr</STRONG>,
        <STRONG>tgoto</STRONG>, <STRONG>tputs</STRONG> - direct <STRONG>curses</STRONG> interface to the terminfo
        capability database
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
        <STRONG>#include</STRONG> <STRONG>&lt;term.h&gt;</STRONG>
 
@@ -71,7 +72,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These  routines  are included as a conversion aid for pro-
        grams that use the <EM>termcap</EM> library.  Their parameters  are
        the  same and the routines are emulated using the <EM>terminfo</EM>
@@ -79,7 +80,9 @@
        bilities  of  entries  for which a terminfo entry has been
        compiled.
 
-   <STRONG>INITIALIZATION</STRONG>
+
+</PRE>
+<H3><a name="h3-INITIALIZATION">INITIALIZATION</a></H3><PRE>
        The <STRONG>tgetent</STRONG> routine loads the entry for <EM>name</EM>.  It returns:
 
           1  on success,
@@ -104,7 +107,9 @@
               is  marked  with  the <EM>generic</EM> capability, or if the
               terminal description has cursor-addressing.
 
-   <STRONG>CAPABILITY</STRONG> <STRONG>VALUES</STRONG>
+
+</PRE>
+<H3><a name="h3-CAPABILITY-VALUES">CAPABILITY VALUES</a></H3><PRE>
        The <STRONG>tgetflag</STRONG> routine gets the boolean entry for <EM>id</EM>, or ze-
        ro if it is not available.
 
@@ -120,7 +125,9 @@
        Only the first two characters of the <STRONG>id</STRONG> parameter of <STRONG>tget-</STRONG>
        <STRONG>flag</STRONG>, <STRONG>tgetnum</STRONG> and <STRONG>tgetstr</STRONG> are compared in lookups.
 
-   <STRONG>FORMATTING</STRONG> <STRONG>CAPABILITIES</STRONG>
+
+</PRE>
+<H3><a name="h3-FORMATTING-CAPABILITIES">FORMATTING CAPABILITIES</a></H3><PRE>
        The  <STRONG>tgoto</STRONG>  routine  instantiates  the parameters into the
        given capability.  The output from this routine is  to  be
        passed to <STRONG>tputs</STRONG>.
@@ -129,7 +136,9 @@
        manual page.  It can retrieve capabilities by either term-
        cap or terminfo name.
 
-   <STRONG>GLOBAL</STRONG> <STRONG>VARIABLES</STRONG>
+
+</PRE>
+<H3><a name="h3-GLOBAL-VARIABLES">GLOBAL VARIABLES</a></H3><PRE>
        The variables <STRONG>PC</STRONG>, <STRONG>UP</STRONG> and <STRONG>BC</STRONG> are set by <STRONG>tgetent</STRONG> to the ter-
        minfo   entry's   data   for   <STRONG>pad_char</STRONG>,   <STRONG>cursor_up</STRONG>   and
        <STRONG>backspace_if_not_bs</STRONG>,  respectively.   <STRONG>UP</STRONG>  is  not  used by
@@ -140,7 +149,7 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Except where explicitly noted, routines that return an in-
        teger return <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4 only  specifies
        "an integer value other than <STRONG>ERR</STRONG>") upon successful comple-
@@ -150,7 +159,7 @@
 
 
 </PRE>
-<H2>BUGS</H2><PRE>
+<H2><a name="h2-BUGS">BUGS</a></H2><PRE>
        If you call <STRONG>tgetstr</STRONG> to fetch <STRONG>ca</STRONG> or any other parameterized
        string,  be aware that it will be returned in terminfo no-
        tation, not the older and not-quite-compatible termcap no-
@@ -176,7 +185,7 @@
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.  However, they are marked TO BE WITHDRAWN  and  may
        be removed in future versions.
@@ -218,7 +227,7 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>, <STRONG>putc(3)</STRONG>.
 
        http://invisible-island.net/ncurses/tctest.html
@@ -227,7 +236,23 @@
 
                                                        <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-INITIALIZATION">INITIALIZATION</a></li>
+<li><a href="#h3-CAPABILITY-VALUES">CAPABILITY VALUES</a></li>
+<li><a href="#h3-FORMATTING-CAPABILITIES">FORMATTING CAPABILITIES</a></li>
+<li><a href="#h3-GLOBAL-VARIABLES">GLOBAL VARIABLES</a></li>
+</ul>
+</li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-BUGS">BUGS</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

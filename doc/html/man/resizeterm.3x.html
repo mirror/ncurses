@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
@@ -30,8 +29,11 @@
   * Author: Thomas E. Dickey 1996-on
   * @Id: resizeterm.3x,v 1.17 2013/06/22 20:41:54 tom Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>resizeterm 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -40,20 +42,19 @@
 <H1>resizeterm 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>                                           <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>is_term_resized</STRONG>,  <STRONG>resize_term</STRONG>,  <STRONG>resizeterm</STRONG>  -  change  the
        curses terminal size
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>bool</STRONG> <STRONG>is_term_resized(int</STRONG> <STRONG>lines,</STRONG> <STRONG>int</STRONG> <STRONG>columns);</STRONG>
@@ -62,7 +63,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This is an extension to the curses library.   It  provides
        callers  with  a hook into the <STRONG>ncurses</STRONG> data to resize win-
        dows, primarily for use by programs running in an X Window
@@ -89,7 +90,7 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Except as noted, these functions return  the  integer  <STRONG>ERR</STRONG>
        upon  failure and <STRONG>OK</STRONG> on success.  They will fail if either
        of the dimensions are less than or equal to zero, or if an
@@ -97,7 +98,7 @@
 
 
 </PRE>
-<H2>NOTES</H2><PRE>
+<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        While these functions are intended to be used to support a
        signal handler (i.e., for SIGWINCH), care should be  taken
        to  avoid invoking them in a context where <STRONG>malloc</STRONG> or <STRONG>real-</STRONG>
@@ -118,12 +119,12 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>.
 
 
 </PRE>
-<H2>AUTHOR</H2><PRE>
+<H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Thomas Dickey (from an equivalent function written in 1988
        for BSD curses).
 
@@ -131,7 +132,16 @@
 
                                                          <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+<li><a href="#h2-AUTHOR">AUTHOR</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>

@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <!-- 
   ****************************************************************************
   * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *
@@ -30,8 +29,11 @@
   * Author: Thomas E. Dickey 1997,1999,2000,2005
   * @Id: default_colors.3x,v 1.23 2011/01/03 21:52:27 Tim.van.der.Molen Exp @
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>default_colors 3x</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -40,20 +42,19 @@
 <H1>default_colors 3x</H1>
 <HR>
 <PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>                                   <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>
 
 
 
 
 </PRE>
-<H2>NAME</H2><PRE>
+<H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>use_default_colors</STRONG>, <STRONG>assume_default_colors</STRONG> - use terminal's
        default colors
 
 
 </PRE>
-<H2>SYNOPSIS</H2><PRE>
+<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>use_default_colors(void);</STRONG>
@@ -61,7 +62,7 @@
 
 
 </PRE>
-<H2>DESCRIPTION</H2><PRE>
+<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <EM>use</EM><STRONG>_</STRONG><EM>default</EM><STRONG>_</STRONG><EM>colors()</EM> and <EM>assume</EM><STRONG>_</STRONG><EM>default</EM><STRONG>_</STRONG><EM>colors()</EM> func-
        tions are extensions to the curses library.  They are used
        with terminals that support ISO 6429 color, or equivalent.
@@ -111,7 +112,7 @@
 
 
 </PRE>
-<H2>RETURN VALUE</H2><PRE>
+<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These functions return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG>
        on success.  They will fail if either  the  terminal  does
        not  support  the <EM>orig</EM><STRONG>_</STRONG><EM>pair</EM> or <EM>orig</EM><STRONG>_</STRONG><EM>colors</EM> capability.  If
@@ -120,7 +121,7 @@
 
 
 </PRE>
-<H2>NOTES</H2><PRE>
+<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Associated  with  this  extension,  the <STRONG>init_pair</STRONG> function
        accepts negative arguments to specify  default  foreground
        or background colors.
@@ -150,7 +151,7 @@
 
 
 </PRE>
-<H2>PORTABILITY</H2><PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines are specific to  ncurses.   They  were  not
        supported  on  Version 7, BSD or System V implementations.
        It is recommended that any code depending on them be  con-
@@ -158,12 +159,12 @@
 
 
 </PRE>
-<H2>SEE ALSO</H2><PRE>
+<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>, <STRONG>ded(1)</STRONG>.
 
 
 </PRE>
-<H2>AUTHOR</H2><PRE>
+<H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Thomas  Dickey  (from  an analysis of the requirements for
        color xterm for XFree86 3.1.2C, February 1996).
 
@@ -171,7 +172,17 @@
 
                                                      <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>
 </PRE>
-<HR>
-Man(1) output converted with <a href="http://invisible-island.net/scripts/readme.html#others_scripts">man2html</a>
+<div class="nav">
+<ul>
+<li><a href="#h2-NAME">NAME</a></li>
+<li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
+<li><a href="#h2-AUTHOR">AUTHOR</a></li>
+</ul>
+</div>
 </BODY>
 </HTML>
