@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 5.9
-Release: 20150214
+Release: 20150221
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -10,8 +10,13 @@ Source: ncurses-%{version}-%{release}.tgz
 %define CC_NORMAL -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 %define CC_STRICT %{CC_NORMAL} -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wwrite-strings -ansi -pedantic
 
+# save value before redefining
+%global sys_libdir %{_libdir}
+
+# redefine...
 %global _prefix /usr/local/ncurses6
-%global MY_PKG /usr/lib64/pkgconfig
+
+%global MY_PKG %{sys_libdir}/pkgconfig
 %define MYDATA /usr/local/ncurses/share/terminfo
 
 %description
@@ -86,7 +91,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 %{_libdir}/*
 %{MY_PKG}/*.pc
-#%{_datadir}/*
 
 %changelog
 

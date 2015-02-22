@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.597 2015/01/21 23:34:29 tom Exp $
+dnl $Id: configure.in,v 1.599 2015/02/21 21:12:07 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.597 $)
+AC_REVISION($Revision: 1.599 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -479,10 +479,11 @@ done
 
 # pretend that ncurses==ncursesw==ncursest
 AC_MSG_CHECKING(if you want to disable library suffixes)
-AC_ARG_ENABLE(lib-suffixes,
+CF_ARG_DISABLE(lib-suffixes,
 	[  --disable-lib-suffixes  disable library suffixes],
-	[disable_lib_suffixes=$enableval],
-	[disable_lib_suffixes=no])
+	[disable_lib_suffixes=yes],
+	[disable_lib_suffixes=no],
+	no)
 AC_MSG_RESULT($disable_lib_suffixes)
 
 ### If we're building with rpath, try to link non-standard libs that way too.
@@ -788,7 +789,9 @@ NCURSES_WCHAR_T=0
 NCURSES_WINT_T=0
 
 # Check to define _XOPEN_SOURCE "automatically"
+CPPFLAGS_before_XOPEN="$CPPFLAGS"
 CF_XOPEN_SOURCE(500)
+CPPFLAGS_after_XOPEN="$CPPFLAGS"
 
 # Work around breakage on OS X
 CF_SIGWINCH
@@ -2037,7 +2040,7 @@ AC_SUBST(CXX_NAME)
 
 # workaround for g++ versus Solaris (20131116)
 case $cf_cv_system_name in #(vi
-solaris2*) #(vi
+solaris2*)
 	case "x$CPPFLAGS" in #(vi
 	*-D_XOPEN_SOURCE_EXTENDED*)
 		CF_VERBOSE(moving _XOPEN_SOURCE_EXTENDED to work around g++ problem)
@@ -2047,6 +2050,26 @@ solaris2*) #(vi
 	esac
 	;;
 esac
+
+# Help to automatically enable the extended curses features when using either
+# the *-config or the ".pc" files by adding defines.
+AC_MSG_CHECKING(for defines to add to ncurses${DFT_ARG_SUFFIX}${cf_cv_abi_version}-config script)
+PKG_CFLAGS=
+for cf_loop1 in $CPPFLAGS_after_XOPEN
+do
+	cf_found=no
+	for cf_loop2 in $CPPFLAGS_before_XOPEN
+	do
+		if test "x$cf_loop1" = "x$cf_loop2"
+		then
+			cf_found=yes
+			break
+		fi
+	done
+	test "$cf_found" = no && PKG_CFLAGS="$PKG_CFLAGS $cf_loop1"
+done
+AC_MSG_RESULT($PKG_CFLAGS)
+AC_SUBST(PKG_CFLAGS)
 
 # AC_CHECK_SIZEOF demands a literal parameter, no variables.  So we do this.
 case "x$NCURSES_OSPEED" in #(vi

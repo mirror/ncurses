@@ -3,7 +3,7 @@
 Summary: shared libraries for terminal handling
 Name: mingw32-ncurses6
 Version: 5.9
-Release: 20150214
+Release: 20150221
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -119,16 +119,15 @@ popd
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
-%defattr(-,root,root,-)
-
 %files -n mingw32-ncurses6
+%defattr(-,root,root,-)
 %{_bindir}/%{mingw32_target}-*
 %{mingw32_bindir}/*
 %{mingw32_includedir}/*
 %{mingw32_libdir}/*
 
 %files -n mingw64-ncurses6
+%defattr(-,root,root,-)
 %{_bindir}/%{mingw64_target}-*
 %{mingw64_bindir}/*
 %{mingw64_includedir}/*

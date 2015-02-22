@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.30 2012/11/11 00:14:28 tom Exp $
+# $Id: ncurses-config.in,v 1.32 2015/02/21 21:36:16 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2011,2012 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2012,2015 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -97,7 +97,7 @@ while test $# -gt 0; do
 		;;
 	# compile/link
 	--cflags)
-		INCS=
+		INCS="@PKG_CFLAGS@"
 		if test "x@WITH_OVERWRITE@" = xno ; then
 			INCS="$INCS -I${includedir}/${THIS}"
 		fi
